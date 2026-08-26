@@ -2,21 +2,41 @@
 
 Верифицированный ресерч для обязательного блока требований, который закладывается во **все 8 проектов** курса.
 
-## Статус
+## Статус: ✅ завершён
 
-🔄 В работе — рой из 5 исследовательских агентов.
+Рой из 5 исследователей + независимый верификатор. **157 источников**, 35 отдельных проверок фактуры.
+
+## Главный артефакт
+
+➡️ **[`GROWTH-MECHANICS-REQUIREMENTS.md`](GROWTH-MECHANICS-REQUIREMENTS.md)** — обязательный блок
+требований. Подаётся в КАЖДЫЙ `/replicate` как ограничение наравне с Architecture Constraints.
 
 ## Структура
 
-| Файл | Содержание | Статус |
+| Файл | Содержание | Источников |
 |---|---|---|
-| `GROWTH-MECHANICS-REQUIREMENTS.md` | **Главный артефакт** — обязательный блок требований для `/replicate` | ⬜ |
-| `verification-report.md` | Отчёт проверяющего агента по фактуре | ⬜ |
-| `sources/01-virality-loops.md` | Виральность: типы loops, K-factor, badge-attribution, антипаттерны | 🔄 |
-| `sources/02-affiliate-programs.md` | Партнёрка: трекинг, комиссии, вебхуки биллинга, юр./налоги РФ, anti-fraud | 🔄 |
-| `sources/03-influencer-partnerships.md` | Блогеры и люди с аудиторией: экономика сделок, reseller, амбассадоры | 🔄 |
-| `sources/04-growth-drivers-models.md` | Каркас роста: growth loops, драйверы, SEO UGC, метрики, приоритизация | 🔄 |
-| `sources/05-requirements-integration.md` | Как встроить обязательный блок в `/replicate` и quality gates | 🔄 |
+| [`GROWTH-MECHANICS-REQUIREMENTS.md`](GROWTH-MECHANICS-REQUIREMENTS.md) | **Главный артефакт** — матрица loop'ов, 4 обязательных FR, quality gates, non-negotiable ограничения | сводный |
+| [`verification-report.md`](verification-report.md) | Независимая проверка: 20 ✅ / 9 ⚠️ / 2 ❌ / 4 🔍, 6 блокеров | 35 проверок |
+| [`sources/01-virality-loops.md`](sources/01-virality-loops.md) | Типология loops, K-factor, badge-attribution, антипаттерны, review gating | 32 |
+| [`sources/02-affiliate-programs.md`](sources/02-affiliate-programs.md) | Трекинг, комиссии, вебхуки биллинга, юр./налоги РФ, anti-fraud | 34 |
+| [`sources/03-influencer-partnerships.md`](sources/03-influencer-partnerships.md) | Блогеры и люди с аудиторией, reseller, экономика сделок | 47 |
+| [`sources/04-growth-drivers-models.md`](sources/04-growth-drivers-models.md) | Каркас роста, драйверы, SEO UGC, метрики, приоритизация | 38 |
+| [`sources/05-requirements-integration.md`](sources/05-requirements-integration.md) | Точки встраивания в `/replicate`, формат FR, quality gates | 6 внешних + локальные |
+
+## Что верификатор опроверг или поправил
+
+| # | Было | Стало |
+|---|---|---|
+| 1 | FTC штраф $51,744 | **$53,088** — актуальная индексированная сумма ($51,744 это 2024 год) |
+| 2 | НДФЛ на ГПХ 13% | ❌ **Опровергнуто.** С 01.01.2026 прогрессивная шкала 13/15/18/20/22%, пороги 2,4/5/20/50 млн ₽ |
+| 3 | LinkedIn «до $1500 на участника» | **~$10** на рядового участника; $1,500 — incentive award только 9 истцам |
+| 4 | Яндекс «селективная фильтрация запрещена правилами» | Обоснованный вывод, **не цитата** (у Google — дословный запрет) |
+| 5 | Chatbase 20% recurring (HIGH) | 30% и MEDIUM; white-label цена ($39 vs $199) не подтверждена ни в одной версии |
+| 6 | K-factor 0.3–0.7 подан как факт | **MEDIUM** везде: единого индустриального стандарта нет |
+| 7 | SkyEng × Яндекс как партнёрство | ❌ **Не подтверждено** — конкуренты, не партнёры |
+
+Битых ссылок `[S-NN]` — **0** по всем пяти файлам. Дисциплина `⚠️ НЕ ПОДТВЕРЖДЕНО` соблюдена:
+неподтверждённые цифры нигде не просочились в другие файлы как факт.
 
 ## Правила верификации
 
