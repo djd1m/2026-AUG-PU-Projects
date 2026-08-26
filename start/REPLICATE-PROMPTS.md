@@ -5,11 +5,33 @@
 
 > Основание: [`/research/GROWTH-MECHANICS-REQUIREMENTS.md`](../research/GROWTH-MECHANICS-REQUIREMENTS.md)
 
+## Стек задан пайплайном — не переопределять
+
+`p-replicator` несёт **Architecture Constraints** во всех проектах. Это не рекомендация, а рамка:
+
+| Аспект | Решение |
+|---|---|
+| Архитектура | Distributed Monolith в монорепо |
+| Контейнеризация | Docker + Docker Compose |
+| **База данных** | **PostgreSQL в контейнере** |
+| Инфраструктура | VPS (AdminVPS/HOSTKEY) |
+| Деплой | Docker Compose direct deploy |
+| AI Integration | MCP-серверы |
+
+**В постановку стек не дублируется.** Пишите только то, что специфично для продукта: фреймворк
+приложения, библиотеки обработки (ffmpeg, Whisper), расширения БД (pgvector), дополнительные
+сервисы compose (n8n, GPU-воркер).
+
+⚠️ **Не называйте managed-сервисы, заменяющие компоненты стека.** Supabase, PlanetScale, Firebase,
+Neon и подобные подменяют Postgres-в-контейнере и ломают распределённый монолит: сервис уезжает
+из compose во внешнее облако, деплой на VPS перестаёт быть самодостаточным. Нужен Postgres —
+он уже есть в стеке. Нужны auth или storage — это сервисы монолита, а не чужое облако.
+
 ## Анатомия хорошего запроса
 
 `/replicate` принимает свободный текст и передаёт его в Phase 1 (`sparc-prd-mini`) вместе с блоками
-контекста. Пайплайн уже несёт **Architecture Constraints** (Distributed Monolith, Docker Compose,
-VPS, MCP) — их дублировать не нужно. А вот growth-блока в нём нет, его подаём мы.
+контекста. **Architecture Constraints пайплайн подаёт сам** — дублировать не нужно.
+А вот growth-блока в нём нет, его подаём мы.
 
 Рабочая постановка состоит из шести частей:
 
