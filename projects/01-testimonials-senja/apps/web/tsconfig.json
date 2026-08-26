@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "jsx": "preserve",
+    "allowJs": true,
+    "incremental": true,
+    "types": ["vitest/globals", "node"],
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@proofwall/db": ["../../packages/db/src/index.ts"],
+      "@proofwall/db/*": ["../../packages/db/src/*"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "tests", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
+}
