@@ -93,34 +93,24 @@ erDiagram
 задаётся контекст арендатора** в соединении (раньше это делал Supabase через `auth.uid()`, теперь —
 наш собственный код).
 
-1. **RLS на каждой таблице с `project_id`, роль `app_authenticated`.** Аутентифицированный путь
-   (дашборд, модерация) открывает транзакцию и первым делом задаёт контекст арендатора:
+1. **RLS на каждой таблице с `project_id`, роль `app_authenticated`.** Дашборд/модерация открывают
+   транзакцию и первым делом задают контекст арендатора:
    ```sql
-   -- в начале транзакции, до любого запроса приложения:
    SET LOCAL app.current_account_id = '<account_id из проверенной сессии>';
-
    create policy "tenant_isolation_select" on testimonials
-     for select using (
-       project_id in (
-         select id from projects
-         where account_id = current_setting('app.current_account_id')::uuid
-       )
-     );
-   -- аналогично для update/delete
+     for select using (project_id in (
+       select id from projects where account_id = current_setting('app.current_account_id')::uuid
+     ));  -- аналогично для update/delete
    ```
-   `SET LOCAL` действует только внутри текущей транзакции — следующий запрос из пула соединений
-   не наследует чужой контекст. Это гарантирует, что даже баг в клиентском коде дашборда не даст
-   прочитать чужой проект — RLS работает на уровне Postgres, а не приложения.
+   `SET LOCAL` действует только внутри текущей транзакции — следующий запрос из пула не наследует
+   чужой контекст; даже баг в клиентском коде не даст прочитать чужой проект.
 
 2. **Явная проверка `project_id` в каждом публичном API-роуте, роль `app_service` (BYPASSRLS).**
-   Анонимные пути (форма сбора, виджет, Wall of Love) обращаются к Postgres через отдельную роль
-   БД с атрибутом `BYPASSRLS` — RLS для них осознанно обходится (нет `account_id`, который можно
-   было бы подставить в `SET LOCAL`), поэтому для них изоляция — обязанность кода: каждый запрос
-   обязан резолвить `slug → project_id` и фильтровать `.where('project_id', projectId).where('status',
-   'approved')`. Ни один API-роут не принимает `project_id` напрямую от клиента — только `slug`,
-   который резолвится сервером. `app_service` — это прямой аналог Supabase service-role: тот же
-   принцип (доверенный серверный код обходит RLS осознанно), но роль своя, объявленная в
-   `packages/db`-миграциях, а не выданная платформой.
+   Анонимные пути (форма, виджет, Wall of Love) идут через роль `BYPASSRLS` — RLS осознанно
+   обходится (нет `account_id` для `SET LOCAL`), изоляция — обязанность кода: каждый запрос
+   резолвит `slug → project_id` и фильтрует `.where('project_id', projectId).where('status',
+   'approved')`. Ни один роут не принимает `project_id` от клиента, только `slug`. `app_service` —
+   аналог Supabase service-role, но роль своя, объявлена в `packages/db`-миграциях.
 
 Тест-контракт: интеграционный тест «проект A не может прочитать отзыв проекта B» гоняется и через
 аутентифицированный дашборд-путь (проверяет RLS + `SET LOCAL`), и через анонимный API (проверяет
