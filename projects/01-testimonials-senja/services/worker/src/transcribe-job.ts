@@ -44,7 +44,9 @@ export type ClaimResult =
   | { status: "completed"; testimonialId: string }
   | { status: "failed"; testimonialId: string };
 
-const defaultLogError: TranscribeJobDeps["logError"] = (event, testimonialId, err) => {
+type LogErrorFn = (event: string, testimonialId: string, err: unknown) => void;
+
+const defaultLogError: LogErrorFn = (event, testimonialId, err) => {
   console.error(`[worker] ${event}`, { testimonialId, err });
 };
 
