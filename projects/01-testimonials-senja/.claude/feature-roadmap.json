@@ -110,7 +110,7 @@
     {
       "id": "FR-005",
       "title": "Публичная страница Wall of Love (SSR, schema.org/Review, экранирование при рендере)",
-      "status": "next",
+      "status": "done",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -119,12 +119,17 @@
       ],
       "depends_on": [
         "FR-004"
+      ],
+      "files": [
+        "apps/web/src/lib/wall.ts",
+        "apps/web/src/app/w/[slug]/page.tsx",
+        "apps/web/tests/wall.test.ts"
       ]
     },
     {
       "id": "FR-GROWTH-005",
       "title": "Порог содержательности и noindex для /w/<slug> — anti scaled-content-abuse (ADR-004)",
-      "status": "planned",
+      "status": "next",
       "priority": "high",
       "tags": [
         "mvp",
@@ -138,7 +143,7 @@
     {
       "id": "FR-006",
       "title": "Встраиваемый виджет: Shadow DOM, ≤30KB gzip, badge_required с сервера (ADR-001)",
-      "status": "planned",
+      "status": "next",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -232,5 +237,5 @@
       ]
     }
   ],
-  "last_completed": "FR-004"
+  "last_completed": "FR-005"
 }
