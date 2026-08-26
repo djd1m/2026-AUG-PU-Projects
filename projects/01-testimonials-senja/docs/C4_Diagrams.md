@@ -58,9 +58,9 @@ C4Container
     Rel(web, db, "SET LOCAL app.current_account_id; RLS-scoped запросы дашборда (роль app_authenticated)", "SQL")
     Rel(web, db, "upsert widget_installs, insert analytics_events", "SQL")
     Rel(web, storage, "Presigned URL для загрузки/показа видео", "S3 API")
-    Rel(worker, db, "Поллинг pending_transcription (SELECT ... FOR UPDATE SKIP LOCKED)", "SQL")
+    Rel(worker, db, "Поллинг transcript_status='pending' (SELECT ... FOR UPDATE SKIP LOCKED)", "SQL")
     Rel(worker, storage, "Presigned GET URL для видео", "S3 API")
-    Rel(worker, mcp, "transcribe_video(video_url)", "MCP protocol")
+    Rel(worker, mcp, "transcribe_video(presigned GET URL из video_object_key)", "MCP protocol")
     Rel(mcp, claude, "Транскрипция аудио-дорожки", "HTTPS")
     Rel(mcp, storage, "Скачивание видео по presigned URL", "HTTPS (S3 API)")
 ```
