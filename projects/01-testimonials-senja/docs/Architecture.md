@@ -356,6 +356,7 @@ services:
   mcp-claude:
     build: ./services/mcp-claude
     environment:
+      - PAYMENT_WEBHOOK_SECRET   # HMAC входящих вебхуков оплаты (FR-GROWTH-002 @security)
       - ANTHROPIC_API_KEY
     expose: ["7331"]
 

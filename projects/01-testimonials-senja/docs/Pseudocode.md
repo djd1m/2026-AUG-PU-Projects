@@ -352,7 +352,22 @@ function onSignup(request):
   if attribution.source is not null:
     createAttributionRecord(account_id = newAccount.id, partner_id = attribution.partner_id,
                              source = attribution.source, status = "pending")  # НЕ начисляем на регистрации
-function onPaymentWebhook(event):
+function onPaymentWebhook(raw_body, headers):
+  # ШАГ 1 — подпись, ДО всего остального (FR-GROWTH-002 @security).
+  # Порядок принципиален: если сначала записать event.id, а подпись проверить после,
+  # злоумышленник шлёт поддельный вебхук с угаданным id → мы его записываем →
+  # настоящий вебхук отбрасывается как дубль. Комиссия не начисляется никогда.
+  # Считаем HMAC от СЫРОГО тела: любая пере-сериализация JSON ломает подпись.
+  expected = hmacSha256(raw_body, env.PAYMENT_WEBHOOK_SECRET)
+  if not constantTimeEquals(expected, headers.signature):   # не ==, защита от timing-атаки
+    auditLog("webhook_signature_invalid", { ip: request.ip })
+    return HTTP 400                                 # НЕ 200: провайдер должен увидеть отказ
+  if isReplayTooOld(headers.timestamp, max_age = 5 minutes):
+    auditLog("webhook_timestamp_stale", { ip: request.ip })
+    return HTTP 400                                 # защита от повтора старого валидного тела
+
+  event = parseJson(raw_body)                       # парсим ТОЛЬКО после проверки подписи
+
   if webhookEventStore.exists(event.id):           # идемпотентность по event id (@security)
     return HTTP 200                                 # уже обработан — тихий no-op
   webhookEventStore.record(event.id)
