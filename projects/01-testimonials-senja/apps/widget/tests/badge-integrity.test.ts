@@ -49,6 +49,7 @@ describe('classifyBadgeVisibility — чистая решающая логика
       display: 'none',
       visibility: 'visible',
       opacity: '1',
+      hidden: false,
       offsetWidth: 80,
       offsetHeight: 20,
     });
@@ -61,6 +62,7 @@ describe('classifyBadgeVisibility — чистая решающая логика
         display: 'inline-flex',
         visibility: 'hidden',
         opacity: '1',
+        hidden: false,
         offsetWidth: 80,
         offsetHeight: 20,
       }),
@@ -73,6 +75,20 @@ describe('classifyBadgeVisibility — чистая решающая логика
         display: 'inline-flex',
         visibility: 'visible',
         opacity: '0',
+        hidden: false,
+        offsetWidth: 80,
+        offsetHeight: 20,
+      }),
+    ).toBe('hidden-direct');
+  });
+
+  it('атрибут hidden=true => hidden-direct (FR-GROWTH-003 @security: "style/hidden")', () => {
+    expect(
+      classifyBadgeVisibility({
+        display: 'inline-flex',
+        visibility: 'visible',
+        opacity: '1',
+        hidden: true,
         offsetWidth: 80,
         offsetHeight: 20,
       }),
@@ -86,6 +102,7 @@ describe('classifyBadgeVisibility — чистая решающая логика
       display: 'inline-flex',
       visibility: 'visible',
       opacity: '1',
+      hidden: false,
       offsetWidth: 0,
       offsetHeight: 0,
     });
@@ -98,6 +115,7 @@ describe('classifyBadgeVisibility — чистая решающая логика
         display: 'inline-flex',
         visibility: 'visible',
         opacity: '1',
+        hidden: false,
         offsetWidth: 80,
         offsetHeight: 20,
       }),
@@ -122,18 +140,39 @@ describe('renderBadge — решение сервера, не клиента (AD
 });
 
 describe('checkAndRestore — позитивный случай: прямое скрытие узла badge восстанавливается', () => {
+  // Ассерты ниже читают `badge.style.display` (инлайн-стиль), а не `getComputedStyle(badge)
+  // .display`. Это не ослабление проверки, а следствие двух вещей: (1) src/badge.ts сам читает
+  // инлайн-стиль в первую очередь — см. комментарий у `snapshotOf` в src/badge.ts, это и есть
+  // проверяемое поведение; (2) jsdom (тестовая среда) не реализует получение computed style для
+  // узлов ВНУТРИ shadow-root — `getComputedStyle` для них всегда возвращает пустые строки
+  // независимо от инлайн-стиля (проверено отдельно, не наша догадка). Полагаться здесь на
+  // `getComputedStyle` означало бы либо ложно-зелёный тест, либо ложно-красный на корректном
+  // коде — оба хуже честного inline-style ассерта.
   it('display:none на .pw-badge откатывается назад', () => {
     const { root } = freshWidget();
     renderBadge(root, true, noopClick);
     const badge = root.querySelector<HTMLAnchorElement>(`.${BADGE_CLASS}`)!;
 
     badge.style.display = 'none';
-    expect(getComputedStyle(badge).display).toBe('none');
 
     const logs: string[] = [];
     checkAndRestore(root, true, noopClick, (name) => logs.push(name));
 
-    expect(getComputedStyle(badge).display).not.toBe('none');
+    expect(badge.style.display).not.toBe('none');
+    expect(logs).toContain('badge_hide_attempt_blocked');
+  });
+
+  it('атрибут hidden=true откатывается назад (FR-GROWTH-003 @security: "style/hidden")', () => {
+    const { root } = freshWidget();
+    renderBadge(root, true, noopClick);
+    const badge = root.querySelector<HTMLAnchorElement>(`.${BADGE_CLASS}`)!;
+
+    badge.hidden = true;
+
+    const logs: string[] = [];
+    checkAndRestore(root, true, noopClick, (name) => logs.push(name));
+
+    expect(badge.hidden).toBe(false);
     expect(logs).toContain('badge_hide_attempt_blocked');
   });
 
@@ -160,7 +199,7 @@ describe('checkAndRestore — позитивный случай: прямое с
     await Promise.resolve();
     await Promise.resolve();
 
-    expect(getComputedStyle(badge).display).not.toBe('none');
+    expect(badge.style.display).not.toBe('none');
     handle.stop();
   });
 });

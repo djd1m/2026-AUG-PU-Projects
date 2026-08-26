@@ -25,7 +25,18 @@ export class ClaudeApiError extends Error {
   }
 }
 
-export class McpClaudeClient {
+/**
+ * Узкий интерфейс, которым transcribe-job.ts пользуется вместо конкретного класса —
+ * `McpClaudeClient` хранит приватные поля (транспорт, флаг подключения), поэтому
+ * структурно ему не может соответствовать простой тестовый объект-подделка; интерфейс
+ * решает это стандартным приёмом (dependency inversion) и не требует mock-библиотек
+ * в tests/skip-locked.test.ts / tests/transcribe-job.test.ts.
+ */
+export interface TranscribeClient {
+  transcribeVideo(videoUrl: string): Promise<string>;
+}
+
+export class McpClaudeClient implements TranscribeClient {
   private client: Client;
   private connected = false;
 

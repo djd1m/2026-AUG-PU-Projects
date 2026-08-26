@@ -48,6 +48,8 @@ export interface BadgeStyleSnapshot {
   display: string;
   visibility: string;
   opacity: string;
+  /** Specification.md FR-GROWTH-003 @security / security.md §6: "атрибуты style/hidden". */
+  hidden: boolean;
   offsetWidth: number;
   offsetHeight: number;
 }
@@ -62,32 +64,49 @@ export type ClientEventLogger = (name: string) => void;
 export function classifyBadgeVisibility(snap: BadgeStyleSnapshot | null): BadgeVisibilityVerdict {
   if (snap === null) return 'missing';
   const isHiddenDirectly =
-    snap.display === 'none' || snap.visibility === 'hidden' || snap.opacity === '0';
+    snap.hidden || snap.display === 'none' || snap.visibility === 'hidden' || snap.opacity === '0';
   if (isHiddenDirectly) return 'hidden-direct';
   const hasZeroSize = snap.offsetWidth === 0 && snap.offsetHeight === 0;
   if (hasZeroSize) return 'zero-size-ancestor';
   return 'ok';
 }
 
+/**
+ * Читает style/visibility/opacity ПРИОРИТЕТНО из собственного инлайн-стиля узла
+ * (`node.style.*`), с откатом на `getComputedStyle`, а не наоборот.
+ *
+ * Причина не стилистическая: Pseudocode.md §5.2 и Specification.md FR-GROWTH-003 @security
+ * буквально описывают детектируемую угрозу как "изменение атрибутов style/hidden на элементе
+ * badge" — то есть точечную запись в инлайн-стиль/атрибут именно этого узла (доступную скрипту
+ * хоста через `element.shadowRoot.querySelector('.pw-badge')`, поскольку shadow-root открыт,
+ * ADR-001). Инлайн-стиль узла — прямой и мгновенный источник истины для ИМЕННО этого вектора,
+ * не зависящий от того, когда движок браузера пересчитает `getComputedStyle` для узла внутри
+ * shadow-дерева. `getComputedStyle` остаётся откатом на случай (вне описанного в документах
+ * threat model, но строго более широкий охват) внешнего CSS-правила, которое почему-то достало
+ * бы до `.pw-badge` — сам по себе инлайн-стиль тогда пуст, и снимок падает на вычисленный.
+ */
 function snapshotOf(node: HTMLElement): BadgeStyleSnapshot {
-  const style = getComputedStyle(node);
+  const computed = getComputedStyle(node);
   return {
-    display: style.display,
-    visibility: style.visibility,
-    opacity: style.opacity,
+    display: node.style.display || computed.display,
+    visibility: node.style.visibility || computed.visibility,
+    opacity: node.style.opacity || computed.opacity,
+    hidden: node.hidden === true,
     offsetWidth: node.offsetWidth,
     offsetHeight: node.offsetHeight,
   };
 }
 
 /**
- * !important в инлайн-стиле перебивает точечную попытку скрыть САМ узел. Не властен над
- * `display:none` на предке снаружи shadow-root — см. заголовок файла.
+ * !important в инлайн-стиле перебивает точечную попытку скрыть САМ узел через `style`; сброс
+ * `hidden` закрывает второй документированный вектор (`hidden` boolean-атрибут). Ни то ни
+ * другое не властно над `display:none` на предке снаружи shadow-root — см. заголовок файла.
  */
 function forceVisibleStyles(node: HTMLElement): void {
   node.style.setProperty('display', 'inline-flex', 'important');
   node.style.setProperty('visibility', 'visible', 'important');
   node.style.setProperty('opacity', '1', 'important');
+  node.hidden = false;
 }
 
 function createBadgeNode(onClick: BadgeClickHandler): HTMLAnchorElement {
