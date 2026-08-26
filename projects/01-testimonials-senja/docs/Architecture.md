@@ -78,7 +78,7 @@ erDiagram
 | `projects` | `id`, `account_id`, `slug` unique, `branding jsonb`, `tier enum(free,paid)`, `noindex bool` | Единица арендатора; **всё в системе принадлежит проекту** |
 | `testimonials` | `id`, `project_id` NOT NULL, `status enum(pending,approved,rejected,hidden)`, `text`, `video_object_key`, `transcript`, `transcript_status enum(pending,completed,failed) default pending`, `transcript_source enum(machine) default machine` | FR-002…FR-004 |
 | `widget_installs` | `id`, `project_id`, `domain`, `first_seen_at`, `last_seen_at`, unique(`project_id`,`domain`) | Источник **метрики недели** и события `widget_installed` |
-| `rate_limit_events` | `id`, `scope`, `key`, `created_at`, index(`scope`,`key`,`created_at`) | Единый счётчик скользящего окна для anti-fraud/rate-limit, см. 3.3 |
+| `rate_limit_events` | `id`, `scope`, `key`, `created_at`, index(`scope`,`key`,`created_at`) | Единый счётчик скользящего окна для anti-fraud/rate-limit, см. §3.4 |
 | `analytics_events` | `id`, `project_id` nullable, `account_id` nullable, `event_type`, `domain`, `metadata jsonb`, `created_at` | Единый append-only журнал §6 |
 | `partner_codes` | `id`, `code` unique, `partner_name`, `status enum(active,revoked)` | FR-GROWTH-004 |
 | `referral_attributions` | `id`, `account_id` nullable до сайнапа, `partner_code_id`, `source enum(cookie,promo_code)`, `status enum(pending,converted,blocked)` | FR-GROWTH-002 |
@@ -120,17 +120,14 @@ erDiagram
 
 Коротко, без изобретательства сверх нужд MVP:
 
-- Пароль хешируется при регистрации (`argon2id`/`bcrypt`) в `accounts.password_hash`, сверяется
-  константным по времени сравнением при входе.
-- Сессия — непрозрачный токен в httpOnly+Secure cookie; в `sessions` хранится не сам токен, а его
-  хеш (`token_hash`) — как и с паролем, компрометация БД не даёт захватить активные сессии.
-- Логаут = `revoked_at = now()` для строки сессии; логаут «на всех устройствах» = revoke всех
-  строк `account_id`. TTL сессии — sliding-разумный дефолт, точное число не зафиксировано в
-  исходных документах — `[GAP: TTL сессии/политика ротации — реализовать разумный дефолт]`.
-- Middleware `apps/web` на каждый запрос дашборда: cookie → валидная (не revoked, не expired)
-  сессия → `account_id` → открывает транзакцию под ролью `app_authenticated`, делает `SET LOCAL
-  app.current_account_id` (см. §3.1) — дальше все запросы этой транзакции автоматически
-  RLS-scoped.
+- Пароль хешируется (`argon2id`/`bcrypt`) в `accounts.password_hash`, сверяется константным по
+  времени сравнением при входе.
+- Сессия — непрозрачный токен в httpOnly+Secure cookie; в `sessions` хранится хеш токена
+  (`token_hash`), не сам токен — компрометация БД не даёт захватить активные сессии.
+- Логаут = `revoked_at = now()`; «на всех устройствах» = revoke всех строк `account_id`. TTL —
+  разумный дефолт — `[GAP: TTL сессии/политика ротации — реализовать разумный дефолт]`.
+- Middleware на каждый запрос дашборда: cookie → валидная сессия → `account_id` → транзакция под
+  `app_authenticated`, `SET LOCAL app.current_account_id` (§3.1) — запросы RLS-scoped автоматически.
 
 ### 3.3 Момент ценности и метрика недели — одна гранулярность (PRD §2.4.1, находка C-1)
 
@@ -149,11 +146,10 @@ RETURNING id;
 ```
 
 `ON CONFLICT ... RETURNING` сама защищает от гонки при двух параллельных рендерах одного нового
-домена — строку в `RETURNING` получает только один из вызовов, только он инициирует события.
-Повторный рендер известного домена — по определению конфликт — не порождает событий вовсе.
-Следствие: share-CTA (`invite_shown`) показывается **при каждой новой установке на новый домен**,
-не только при первой в жизни проекта. Канонические имена (`widget_installs`,
-`/api/widget/config`) — см. §10.
+домена — строку получает только один вызов, только он инициирует события. Повторный рендер
+известного домена — конфликт по определению — не порождает событий вовсе. Следствие: share-CTA
+(`invite_shown`) показывается **при каждой новой установке на новый домен**, не только при первой
+в жизни проекта. Канонические имена (`widget_installs`, `/api/widget/config`) — см. §10.
 
 ### 3.4 Anti-fraud и rate limiting — один механизм на три требования (находка W-1)
 
@@ -193,12 +189,10 @@ select count(*) from rate_limit_events
 очереди видео.
 
 **Очистка:** `services/worker` (уже поллит Postgres для очереди видео, §5) дополнительно раз в час
-удаляет строки старше 24 часов — не заводим сервис ради TTL, который Redis дал бы «бесплатно»,
-потому что самый широкий порог здесь — 1 час.
+удаляет строки старше 24 часов — самый широкий порог здесь 1 час, отдельный сервис под TTL не нужен.
 
-**Путь миграции при росте** (тот же стиль, что и переход MinIO→volume в §5): заменить SQL-запрос
-в помощнике на Redis `INCR`+`EXPIRE` — контракт (`scope, key, window, limit → exceeded: bool`) не
-меняется.
+**Путь миграции при росте** (тот же стиль, что и MinIO→volume в §5): заменить SQL-запрос в
+помощнике на Redis `INCR`+`EXPIRE` — контракт (`scope, key, window, limit → exceeded: bool`) не меняется.
 
 ## 4. Схема виджета
 
@@ -216,14 +210,11 @@ select count(*) from rate_limit_events
 1. Скрипт находит свой `<script>`-тег, читает `data-slug`, определяет `window.location.hostname`.
 2. `GET /api/widget/config?slug=acme&domain=host.example.com` — единственный сетевой запрос.
 3. Сервер (Next.js API route, соединение с Postgres под ролью `app_service`):
-   - резолвит `slug → project`,
-   - **читает `project.tier` из БД** и вычисляет `badge_required = tier !== 'paid'`,
+   - резолвит `slug → project`, **читает `project.tier`**, вычисляет `badge_required = tier !== 'paid'`,
    - атомарная вставка в `widget_installs (project_id, domain)` с `ON CONFLICT DO NOTHING
-     RETURNING id` (см. §3.3) — строка вернулась ⇒ новый домен ⇒ пишет **оба** события,
-     `widget_installed` и `invite_shown` (метрика недели и share-CTA, см. §6); конфликт ⇒ ни
-     одного события, только `last_seen_at` обновляется отдельно,
-   - пишет событие `badge_impression`,
-   - возвращает JSON: `{ testimonials: [...approved], branding, badge_required }`.
+     RETURNING id` (§3.3) — строка вернулась ⇒ новый домен ⇒ пишет **оба** события,
+     `widget_installed`+`invite_shown` (§6); конфликт ⇒ ни одного события, только `last_seen_at`,
+   - пишет `badge_impression`, возвращает JSON: `{ testimonials: [...approved], branding, badge_required }`.
 4. Клиент рендерит карточки внутри shadow-root; если `badge_required`, рендерит badge-элемент.
 
 ### 4.3 Почему проверка тарифа обязана быть серверной
@@ -241,9 +232,8 @@ API-ключа проекта, невозможно: подделка ответ
 
 - **Storage:** объектное хранилище — **MinIO** (S3-совместимое API), контейнер docker-compose,
   приватный bucket `testimonial-videos`, key `project_id/testimonial_id.ext`. Публичный доступ —
-  только через presigned URL с TTL (стандартный механизм S3-API), выдаваемый API-роутом Wall of
-  Love/виджета (никогда не отдаём постоянный публичный URL — совместимо с NFR по
-  мульти-арендности).
+  только через presigned URL с TTL, выдаваемый API-роутом Wall of Love/виджета (никогда не отдаём
+  постоянный публичный URL — совместимо с NFR по мульти-арендности).
   - **Почему MinIO, а не просто Docker volume:** presigned upload/download — часть S3-протокола;
     голый bind-mount не умеет выдавать временные подписанные ссылки, а значит заставил бы
     проксировать видео через `apps/web` (противоречит следующему пункту). MinIO даёт S3 API
@@ -287,10 +277,9 @@ API-ключа проекта, невозможно: подделка ответ
 
 Все обработчики событий — тонкие вставки в уже существующие серверные пути (нет отдельного
 «аналитического сервиса» ради простоты недели). `metadata jsonb` хранит контекст (domain, UTM,
-partner_code) без изменения схемы под каждое новое поле. `widget_installed`/`invite_shown`
-пишутся из одного и того же места кода одним и тем же условием (§3.3) — это осознанно, а не
-дублирование: PRD §2.4.1 требует, чтобы оба события имели идентичную гранулярность и идентичное
-условие срабатывания.
+partner_code) без изменения схемы под каждое новое поле. `widget_installed`/`invite_shown` пишутся
+из одного места кода одним условием (§3.3) — осознанно, не дублирование: PRD §2.4.1 требует
+идентичной гранулярности и условия срабатывания для обоих.
 
 ## 7. Docker Compose
 
@@ -386,14 +375,10 @@ volumes:
   caddy_data:
 ```
 
-**Порядок запуска (найдено при валидации, W-4 — короткий синтаксис `depends_on: [a, b]` в Compose
-ждёт только старта контейнера, не его здоровья; исправлено на длинный синтаксис с
-`condition: service_healthy`):** `postgres` и `minio` стартуют первыми, и `web`/`worker` реально
-ждут, пока оба пройдут healthcheck (не просто запустятся) — `condition: service_healthy` в
-`depends_on`. `mcp-claude` не имеет healthcheck на этой неделе, поэтому от него требуется только
-`service_started`. Порядок: `postgres`+`minio` healthy → `mcp-claude` started → `web`/`worker` →
-`caddy`. Миграции (`packages/db`) прогоняются CI-шагом до `up -d` на новых версиях образа `web`,
-не как отдельный сервис compose.
+**Порядок запуска (W-4 — короткий синтаксис `depends_on: [a, b]` ждёт только старта контейнера, не
+здоровья; исправлено на `condition: service_healthy`):** `postgres`+`minio` healthy → `mcp-claude`
+started (нет healthcheck на этой неделе) → `web`/`worker` → `caddy`. Миграции (`packages/db`)
+прогоняются CI-шагом до `up -d` на новых версиях образа `web`, не отдельным сервисом compose.
 
 **Что бэкапить (теперь наша ответственность, раньше — задача Supabase):**
 - `postgres`: логический дамп (`pg_dump` по расписанию, cron вне compose) — консистентность важнее
@@ -420,9 +405,8 @@ volumes:
   (`proofwall.app/w/<slug>`), без кастомного CNAME клиента — `[GAP: нужно решение по Q3 PRD —
   собственный поддомен vs CNAME клиента; блокирует SEO-стратегию FR-GROWTH-005 за пределами MVP]`.
 - **Откат:** предыдущий tag образа хранится в registry; откат — `docker compose up -d` с прошлым
-  тегом. Данные (`postgres`, `minio`) не откатываются вместе с образом — откат кода не равен
-  откату схемы БД, миграции пишутся обратимыми там, где это дёшево. Отдельного blue/green нет —
-  вне scope недели.
+  тегом. Данные не откатываются вместе с образом — откат кода не равен откату схемы БД, миграции
+  пишутся обратимыми там, где дёшево. Blue/green — вне scope недели.
 
 ## 9. Миграция со стека Supabase
 
@@ -432,20 +416,19 @@ Architecture Constraints пайплайна (`containers: Docker + Docker Compos
 Architecture, без потери принятых продуктовых и ADR-решений:
 
 - **Postgres** переехал из managed-облака Supabase в контейнер `postgres` docker-compose (§7).
-- **Supabase Auth** заменён аутентификацией внутри монолита: `accounts.password_hash` +
-  `sessions` (§3.2) — тот же контракт «владелец залогинен → есть `account_id`», другая реализация.
-- **Supabase Storage** заменён контейнером **MinIO** (S3-совместимое API, §5) — presigned
-  upload/download сохранён как паттерн, изменился только эндпоинт.
-- **RLS не убирался и не менялся** — это фича PostgreSQL, а не Supabase; изменился только способ
-  задать контекст арендатора (`SET LOCAL app.current_account_id` вместо `auth.uid()`, §3.1).
-- Все ADR-001…006, схема данных (кроме `accounts`/`sessions`), growth-события §6 и разбиение
-  монорепо §2 остались как есть — конфликт был только в инфраструктурном слое.
+- **Supabase Auth** заменён аутентификацией внутри монолита: `accounts.password_hash` + `sessions`
+  (§3.2) — тот же контракт «владелец залогинен → есть `account_id`», другая реализация.
+- **Supabase Storage** заменён контейнером **MinIO** (§5) — presigned upload/download сохранён как
+  паттерн, изменился только эндпоинт.
+- **RLS не убирался** — фича PostgreSQL, а не Supabase; изменился только способ задать контекст
+  арендатора (`SET LOCAL app.current_account_id` вместо `auth.uid()`, §3.1).
+- ADR-001…006, схема данных (кроме `accounts`/`sessions`), growth-события §6 и разбиение монорепо
+  §2 остались как есть — конфликт был только в инфраструктурном слое.
 
 ## 10. Канонические имена (находка W-10)
 
-Валидация нашла расхождения между `Architecture.md` и `Pseudocode.md` в именах одних и тех же
-сущностей. Ниже — зафиксированный канон; при доработке `Pseudocode.md` приводится к этой таблице,
-не наоборот.
+Валидация нашла расхождения в именах между `Architecture.md` и `Pseudocode.md`. Ниже — канон;
+`Pseudocode.md` приводится к этой таблице, не наоборот.
 
 | Сущность | Канон (этот документ) | Не использовать | Почему канон — этот вариант |
 |---|---|---|---|
