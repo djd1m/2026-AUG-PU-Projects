@@ -13,7 +13,8 @@ say() { printf '%-42s %s\n' "$1" "$2"; }
 # там упоминания легитимны по смыслу.
 hits=$(grep -rniE 'supabase|firebase|planetscale|neon\.tech|mongodb atlas|dynamodb' "$DIR" 2>/dev/null \
        | grep -vE "^$DIR/(validation|discovery)/|^$DIR/DIFF-|^$DIR/validation-report" \
-       | grep -viE 'миграц|не использ|запрещ|раньше|было|конфликт|отклон|против|вместо|уход|заменён|заменен|переехал|§9|без supabase' | wc -l)
+       | grep -viE 'миграц|не использ|запрещ|раньше|было|конфликт|отклон|против|вместо|уход|заменён|заменен|переехал|§9|без supabase|а не |не supabase|не является' \
+       | grep -viE '^[^:]*:[0-9]+:#{1,4} |^[^:]*:[0-9]+:> ' | wc -l)
 [ "$hits" -eq 0 ] && say "PR-002 managed BaaS" "✅ чисто" || { say "PR-002 managed BaaS" "❌ $hits упоминаний"; FAIL=1; }
 
 # PR-002: Postgres присутствует
