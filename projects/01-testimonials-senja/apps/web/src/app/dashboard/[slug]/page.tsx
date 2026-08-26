@@ -11,6 +11,7 @@ import { withAccount } from '@proofwall/db';
 import { currentAccountId } from '@/lib/current-session';
 import { buildProjectUrls } from '@/lib/urls';
 import { ModerationList, type Item } from './moderation-list';
+import { ShareCta, type Install } from './share-cta';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,7 +46,13 @@ export default async function DashboardPage({ params }: Params) {
         order by (status = 'pending') desc, created_at desc`,
       [project.id],
     );
-    return { project, items: items.rows };
+    // Домены, где виджет уже отрендерился — источник share-CTA (FR-GROWTH-001).
+    const installs = await client.query<Install>(
+      `select domain, first_seen_at from widget_installs
+        where project_id = $1 order by first_seen_at desc`,
+      [project.id],
+    );
+    return { project, items: items.rows, installs: installs.rows };
   });
 
   const project = data?.project ?? null;
@@ -71,6 +78,8 @@ export default async function DashboardPage({ params }: Params) {
           <a href={urls.wall_of_love}>{urls.wall_of_love}</a>
         </dd>
       </dl>
+
+      <ShareCta slug={project.slug} wallUrl={urls.wall_of_love} installs={data?.installs ?? []} />
 
       <h2 style={{ fontSize: '1.1rem', marginTop: '2rem' }}>
         Отзывы

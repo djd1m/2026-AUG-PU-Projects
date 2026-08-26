@@ -172,7 +172,7 @@
     {
       "id": "FR-GROWTH-001",
       "title": "widget_installed + invite_shown (момент ценности) и share-CTA на каждый новый домен",
-      "status": "next",
+      "status": "done",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -181,6 +181,14 @@
       ],
       "depends_on": [
         "FR-006"
+      ],
+      "files": [
+        "apps/web/src/lib/widget-install.ts",
+        "apps/web/src/app/api/widget/config/route.ts",
+        "apps/web/src/app/api/share/route.ts",
+        "apps/web/src/app/dashboard/[slug]/share-cta.tsx",
+        "apps/web/tests/widget-install.test.ts",
+        "apps/web/tests/share-cta-guard.test.ts"
       ]
     },
     {
@@ -251,5 +259,5 @@
       ]
     }
   ],
-  "last_completed": "FR-006"
+  "last_completed": "FR-GROWTH-001"
 }
