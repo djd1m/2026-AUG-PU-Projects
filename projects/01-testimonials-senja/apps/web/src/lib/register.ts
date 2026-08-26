@@ -26,6 +26,7 @@ import { onProjectCreated } from './content-threshold';
 import { parseBadgeAttribution } from './badge';
 import { emitEvents } from './widget-install';
 import { createPendingAttribution, resolveAttribution } from './referral';
+import { onSignupViaPartnerCode } from './partner';
 
 export interface RegisterInput {
   email: unknown;
@@ -41,6 +42,8 @@ export interface RegisterInput {
   promo_code?: unknown;
   /** FR-GROWTH-002: пассивная метка pw_ref из cookie. */
   cookie_ref?: unknown;
+  /** FR-GROWTH-004 @security: IP регистрирующегося — ключ детекта массовой накрутки. */
+  client_ip?: unknown;
 }
 
 export type RegisterResult =
@@ -137,7 +140,14 @@ export async function registerAccountAndProject(
     promoCode: typeof input.promo_code === 'string' ? input.promo_code : null,
     cookieRef: typeof input.cookie_ref === 'string' ? input.cookie_ref : null,
   });
-  if (referral) await createPendingAttribution(client, accountId, referral);
+  if (referral) {
+    await createPendingAttribution(client, accountId, referral);
+    // FR-GROWTH-004 @security: детект МАССОВОЙ накрутки с одного IP. Регистрация при этом
+    // НЕ блокируется — за одним NAT могут сидеть живые люди; блокируется только атрибуция.
+    const ip = typeof input.client_ip === 'string' ? input.client_ip : 'unknown';
+    const usedCode = typeof input.promo_code === 'string' ? input.promo_code : (input.cookie_ref as string) ?? '';
+    await onSignupViaPartnerCode(client, ip, accountId, usedCode);
+  }
 
   const attribution = parseBadgeAttribution(typeof input.utm_query === 'string' ? input.utm_query : null);
   if (attribution) {

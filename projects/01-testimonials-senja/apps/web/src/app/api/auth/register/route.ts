@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 import { withService } from '@proofwall/db';
 import { registerAccountAndProject, type RegisterInput } from '@/lib/register';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
+import { extractClientIP } from '@/lib/client-ip';
+import { REF_COOKIE } from '@/lib/referral';
 
 // Роут ходит в БД — статически его пререндерить нельзя.
 export const dynamic = 'force-dynamic';
@@ -22,9 +24,22 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   // Каст безопасен: все поля RegisterInput объявлены как unknown и проверяются
   // внутри registerAccountAndProject — тип здесь описывает форму, а не доверие к вводу.
-  const result = await withService((client) =>
-    registerAccountAndProject(client, body as RegisterInput),
-  );
+  // IP и реферальная cookie берутся из ЗАПРОСА, а не из тела: клиент не должен иметь
+  // возможности назвать чужой IP (обход anti-fraud) или подставить чужую метку.
+  const cookieRef = request.headers
+    .get('cookie')
+    ?.split(';')
+    .map((c) => c.trim())
+    .find((c) => c.startsWith(`${REF_COOKIE}=`))
+    ?.slice(REF_COOKIE.length + 1);
+
+  const input: RegisterInput = {
+    ...(body as RegisterInput),
+    client_ip: extractClientIP(request),
+    cookie_ref: cookieRef,
+  };
+
+  const result = await withService((client) => registerAccountAndProject(client, input));
 
   if (!result.ok) {
     return NextResponse.json(result.body, { status: result.status });

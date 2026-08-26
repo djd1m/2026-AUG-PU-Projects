@@ -279,7 +279,7 @@
     {
       "id": "FR-GROWTH-004",
       "title": "Персональные партнёрские коды + anti-fraud по IP на регистрациях",
-      "status": "next",
+      "status": "done",
       "priority": "medium",
       "tags": [
         "mvp",
@@ -287,8 +287,14 @@
       ],
       "depends_on": [
         "FR-GROWTH-002"
+      ],
+      "files": [
+        "apps/web/src/lib/partner.ts",
+        "apps/web/src/lib/register.ts",
+        "apps/web/src/app/api/auth/register/route.ts",
+        "apps/web/tests/partner.test.ts"
       ]
     }
   ],
-  "last_completed": "FR-GROWTH-002"
+  "last_completed": "FR-GROWTH-004"
 }
