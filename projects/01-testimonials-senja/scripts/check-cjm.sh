@@ -61,15 +61,22 @@ PID=$(curl -s -m 20 -X POST "$BASE/api/testimonials" -H 'content-type: applicati
   | python3 -c 'import sys,json;print(json.load(sys.stdin).get("public_id",""))' 2>/dev/null)
 [ -n "$PID" ] && ok "отзыв принят" || fail "отзыв не принят"
 
+# Считаем СОВПАДЕНИЯ, а не строки: HTML приходит одной строкой, и `grep -c` вернул бы
+# единицу и для одной карточки, и для пяти — проверка проходила бы вне зависимости от
+# того, сколько отзывов на самом деле отрендерилось.
+# -i обязателен: React отдаёт атрибут как itemType (camelCase). Для браузера регистр
+# атрибута не важен, для grep — важен.
+cards() { curl -s -m 20 "$BASE/w/$SLUG" | grep -oi 'itemtype="https://schema\.org/Review"' | wc -l | tr -d ' '; }
+
 # --- 5. До модерации отзыва на стене НЕТ -----------------------------------
-n=$(curl -s -m 20 "$BASE/w/$SLUG" | grep -c 'schema.org/Review')
+n=$(cards)
 [ "$n" = "0" ] && ok "неодобренный отзыв на стене не показан" || fail "на стене $n карточек до модерации"
 
 # --- 6. Владелец одобряет, отзыв появляется --------------------------------
 c=$(code -X POST -b "pw_session=$COOKIE" -H 'content-type: application/json' \
      -d '{"status":"approved"}' "$BASE/api/testimonials/$PID/moderate")
 [ "$c" = "200" ] && ok "модерация прошла" || fail "модерация -> $c"
-n=$(curl -s -m 20 "$BASE/w/$SLUG" | grep -c 'schema.org/Review')
+n=$(cards)
 [ "$n" = "1" ] && ok "одобренный отзыв виден на стене" || fail "на стене $n карточек после одобрения"
 
 # --- 7. Петля роста: badge ведёт СЮДА и несёт метки ------------------------

@@ -9,7 +9,7 @@ describe('readBranding — дефолты', () => {
     for (const input of [{}, null, undefined, 'строка', 42]) {
       const b = readBranding(input);
       expect(b.heading).toBe('Оставьте отзыв');
-      expect(b.accent_color).toBe('#111111');
+      expect(b.accent_color).toBe('#6701ef');
       expect(b.logo_url).toBeNull();
     }
   });
@@ -38,7 +38,7 @@ describe('accent_color — попадает в атрибут style, поэто�
     '',
     '#gggggg',
   ])('отклоняет %j и падает на дефолт', (value) => {
-    expect(readBranding({ accent_color: value }).accent_color).toBe('#111111');
+    expect(readBranding({ accent_color: value }).accent_color).toBe('#6701ef');
   });
 
   it('принимает корректный hex в обоих регистрах', () => {

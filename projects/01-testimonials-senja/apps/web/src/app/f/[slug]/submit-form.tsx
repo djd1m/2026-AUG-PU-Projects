@@ -21,17 +21,10 @@ export function SubmitForm({ slug, branding }: { slug: string; branding: Brandin
 
   if (done) {
     return (
-      <section
-        style={{
-          marginTop: '2rem',
-          padding: '2rem',
-          borderRadius: 12,
-          border: `2px solid ${branding.accent_color}`,
-          textAlign: 'center',
-        }}
-      >
-        <p style={{ margin: 0, fontWeight: 600 }}>Спасибо! Отзыв отправлен.</p>
-        <p style={{ margin: '0.5rem 0 0', color: '#666' }}>
+      <section className="thanks" style={{ borderColor: branding.accent_color }}>
+        <span className="thanks__mark" style={{ background: branding.accent_color }}>✓</span>
+        <p className="thanks__title">Спасибо! Отзыв отправлен.</p>
+        <p className="muted small" style={{ marginTop: 6 }}>
           Он появится на странице после проверки владельцем.
         </p>
       </section>
@@ -66,8 +59,8 @@ export function SubmitForm({ slug, branding }: { slug: string; branding: Brandin
   }
 
   return (
-    <form onSubmit={submit} style={{ display: 'grid', gap: '1rem', marginTop: '2rem' }}>
-      <label style={{ display: 'grid', gap: '0.35rem' }}>
+    <form onSubmit={submit} className="form" style={{ marginTop: 22 }}>
+      <label className="field">
         <span>Ваше имя</span>
         <input
           required
@@ -75,18 +68,18 @@ export function SubmitForm({ slug, branding }: { slug: string; branding: Brandin
           maxLength={NAME_MAX}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          style={inputStyle}
+          className="input"
         />
       </label>
 
-      <label style={{ display: 'grid', gap: '0.35rem' }}>
+      <label className="field">
         <span>
           Роль или компания <span style={{ color: '#888' }}>(необязательно)</span>
         </span>
-        <input value={role} onChange={(e) => setRole(e.target.value)} style={inputStyle} />
+        <input value={role} onChange={(e) => setRole(e.target.value)} className="input" />
       </label>
 
-      <label style={{ display: 'grid', gap: '0.35rem' }}>
+      <label className="field">
         <span>Отзыв</span>
         <textarea
           required
@@ -95,15 +88,15 @@ export function SubmitForm({ slug, branding }: { slug: string; branding: Brandin
           rows={6}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          style={{ ...inputStyle, resize: 'vertical' }}
+          className="textarea"
         />
-        <small style={{ color: text.length > TEXT_MAX ? '#b00020' : '#888' }}>
+        <small className="counter" style={text.length > TEXT_MAX ? { color: 'var(--danger)' } : undefined}>
           {text.length} / {TEXT_MAX}
         </small>
       </label>
 
       {errors.length > 0 && (
-        <ul style={{ color: '#b00020', margin: 0, paddingLeft: '1.2rem' }}>
+        <ul className="errors">
           {errors.map((e) => (
             <li key={e}>{e}</li>
           ))}
@@ -113,15 +106,8 @@ export function SubmitForm({ slug, branding }: { slug: string; branding: Brandin
       <button
         type="submit"
         disabled={sending}
-        style={{
-          padding: '0.7rem 1rem',
-          borderRadius: 8,
-          border: 'none',
-          background: sending ? '#bbb' : branding.accent_color,
-          color: '#fff',
-          fontSize: '1rem',
-          cursor: sending ? 'not-allowed' : 'pointer',
-        }}
+        className="btn btn--primary btn--block"
+        style={sending ? undefined : { background: branding.accent_color }}
       >
         {sending ? 'Отправляем…' : 'Отправить отзыв'}
       </button>
@@ -129,10 +115,3 @@ export function SubmitForm({ slug, branding }: { slug: string; branding: Brandin
   );
 }
 
-const inputStyle: React.CSSProperties = {
-  padding: '0.6rem 0.7rem',
-  borderRadius: 8,
-  border: '1px solid #ccc',
-  fontSize: '1rem',
-  fontFamily: 'inherit',
-};

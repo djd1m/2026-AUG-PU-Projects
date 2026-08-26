@@ -12,7 +12,7 @@ import { currentAccountId } from '@/lib/current-session';
 import { buildProjectUrls } from '@/lib/urls';
 import { ModerationList, type Item } from './moderation-list';
 import { ShareCta, type Install } from './share-cta';
-import { isTier, tierSummary } from '@/lib/tariff';
+import { isPaid, isTier, tierSummary } from '@/lib/tariff';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,56 +62,66 @@ export default async function DashboardPage({ params }: Params) {
   if (!project) notFound();
 
   const urls = buildProjectUrls(project.slug);
+  const tier = tierSummary(isTier(project.tier) ? project.tier : 'free');
+  const pending = data?.items.filter((i) => i.status === 'pending').length ?? 0;
 
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '3rem 1.25rem' }}>
-      <h1 style={{ fontSize: '1.5rem' }}>Проект {project.slug}</h1>
-      {/* Описание тарифа берётся из того же модуля, что и правило про badge (FR-007) —
-          иначе дашборд однажды пообещает не то, что делает виджет. */}
-      <p style={{ color: '#666', marginTop: 0 }}>
-        Тариф: {tierSummary(isTier(project.tier) ? project.tier : 'free').label}
-        {' · '}
-        {tierSummary(isTier(project.tier) ? project.tier : 'free').badge}
-      </p>
+    <main className="stage">
+      <div className="brand">
+        <span className="brand__mark" aria-hidden="true">◆</span>
+        Proofwall
+      </div>
 
-      <h2 style={{ fontSize: '1.1rem', marginTop: '2rem' }}>Ссылки</h2>
-      <dl>
-        <dt style={{ fontWeight: 600 }}>Форма сбора</dt>
-        <dd style={{ marginLeft: 0, marginBottom: '1rem' }}>
-          <a href={urls.submission_form}>{urls.submission_form}</a>
-        </dd>
-        <dt style={{ fontWeight: 600 }}>Стена любви</dt>
-        <dd style={{ marginLeft: 0, marginBottom: '1rem' }}>
-          <a href={urls.wall_of_love}>{urls.wall_of_love}</a>
-        </dd>
-      </dl>
-
-      <ShareCta slug={project.slug} wallUrl={urls.wall_of_love} installs={data?.installs ?? []} />
-
-      <h2 style={{ fontSize: '1.1rem', marginTop: '2rem' }}>
-        Отзывы
-        {data && data.items.some((i) => i.status === 'pending') && (
-          <span style={{ color: '#7a5200', fontSize: '0.9rem', fontWeight: 400 }}>
-            {' '}· {data.items.filter((i) => i.status === 'pending').length} на проверке
+      <div className="card">
+        <div className="between">
+          <div>
+            <p className="eyebrow">Проект</p>
+            <h1>{project.slug}</h1>
+          </div>
+          <span className={`chip ${isPaid(project.tier) ? 'chip--accent' : ''}`}>
+            {tier.label}
           </span>
-        )}
-      </h2>
-      <ModerationList initial={data?.items ?? []} />
+        </div>
+        <p className="small muted" style={{ marginTop: 8 }}>{tier.badge}</p>
 
-      <h2 style={{ fontSize: '1.1rem', marginTop: '2rem' }}>Виджет на свой сайт</h2>
-      {/* Вставляется как текст через {}, React экранирует сам — угловые скобки сниппета
-          не станут разметкой (правило экранирования при рендере, FR-002/005/006). */}
-      <pre
-        style={{
-          background: '#f6f6f6',
-          padding: '1rem',
-          borderRadius: 8,
-          overflowX: 'auto',
-          fontSize: '0.85rem',
-        }}
-      >
-        <code>{urls.widget_snippet}</code>
-      </pre>
+        <hr className="divider" />
+
+        <h2>Ссылки</h2>
+        <div className="links">
+          <LinkRow label="Форма сбора" hint="дайте её клиенту" href={urls.submission_form} />
+          <LinkRow label="Стена любви" hint="публичная страница" href={urls.wall_of_love} />
+        </div>
+
+        <h2 style={{ marginTop: 32 }}>Виджет на свой сайт</h2>
+        <p className="small muted" style={{ marginTop: 6, marginBottom: 12 }}>
+          Один тег в любое место разметки. Отзывы появятся там же, где вы его вставите.
+        </p>
+        {/* Вставляется как текст через {}, React экранирует сам — угловые скобки сниппета
+            не станут разметкой (правило экранирования при рендере, FR-002/005/006). */}
+        <pre className="snippet"><code>{urls.widget_snippet}</code></pre>
+
+        <ShareCta slug={project.slug} wallUrl={urls.wall_of_love} installs={data?.installs ?? []} />
+
+        <hr className="divider" />
+
+        <div className="between" style={{ marginBottom: 16 }}>
+          <h2>Отзывы</h2>
+          {pending > 0 && <span className="chip chip--warn">{pending} на проверке</span>}
+        </div>
+        <ModerationList initial={data?.items ?? []} />
+      </div>
     </main>
+  );
+}
+
+function LinkRow({ label, hint, href }: { label: string; hint: string; href: string }) {
+  return (
+    <div className="linkRow">
+      <div className="linkRow__meta">
+        <strong>{label}</strong>
+        <span className="small muted">{hint}</span>
+      </div>
+      <a href={href} className="linkRow__url">{href}</a>
+    </div>
   );
 }

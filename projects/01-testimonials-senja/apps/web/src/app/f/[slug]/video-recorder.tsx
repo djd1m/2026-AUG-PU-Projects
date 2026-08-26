@@ -124,27 +124,26 @@ export function VideoRecorder({ slug, branding }: { slug: string; branding: Bran
 
   if (done) {
     return (
-      <section style={{ marginTop: '2rem', padding: '2rem', borderRadius: 12, border: `2px solid ${branding.accent_color}`, textAlign: 'center' }}>
-        <p style={{ margin: 0, fontWeight: 600 }}>Спасибо! Видео отправлено.</p>
-        <p style={{ margin: '0.5rem 0 0', color: '#666' }}>Оно появится после проверки владельцем.</p>
+      <section className="thanks" style={{ borderColor: branding.accent_color }}>
+        <span className="thanks__mark" style={{ background: branding.accent_color }}>✓</span>
+        <p className="thanks__title">Спасибо! Видео отправлено.</p>
+        <p className="muted small" style={{ marginTop: 6 }}>Оно появится после проверки владельцем.</p>
       </section>
     );
   }
 
   return (
-    <form onSubmit={submit} style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+    <form onSubmit={submit} className="form" style={{ marginTop: 22 }}>
       {notice && (
-        <p style={{ margin: 0, padding: '0.75rem', background: '#fff6e5', borderRadius: 8, color: '#7a5200' }}>
-          {notice}
-        </p>
+        <p className="notice">{notice}</p>
       )}
 
       {mode === 'choose' && (
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <button type="button" onClick={startRecording} style={secondaryButton}>
+        <div className="row">
+          <button type="button" onClick={startRecording} className="btn btn--ghost btn--sm">
             Записать с камеры
           </button>
-          <button type="button" onClick={() => setMode('file')} style={secondaryButton}>
+          <button type="button" onClick={() => setMode('file')} className="btn btn--ghost btn--sm">
             Загрузить файл
           </button>
         </div>
@@ -154,28 +153,29 @@ export function VideoRecorder({ slug, branding }: { slug: string; branding: Bran
         ref={videoRef}
         muted
         playsInline
-        style={{ width: '100%', borderRadius: 8, background: '#000', display: mode === 'recording' ? 'block' : 'none' }}
+        className="recorder__video"
+        style={{ display: mode === 'recording' ? 'block' : 'none' }}
       />
 
       {mode === 'recording' && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <button type="button" onClick={() => recorderRef.current?.stop()} style={secondaryButton}>
+        <div className="row">
+          <button type="button" onClick={() => recorderRef.current?.stop()} className="btn btn--ghost btn--sm">
             Остановить
           </button>
-          <span style={{ color: elapsed > MAX_DURATION_SEC - 15 ? '#b00020' : '#666' }}>
+          <span className="small" style={{ color: elapsed > MAX_DURATION_SEC - 15 ? 'var(--danger)' : 'var(--muted)' }}>
             {elapsed} / {MAX_DURATION_SEC} с
           </span>
         </div>
       )}
 
       {mode === 'recorded' && blob && (
-        <p style={{ margin: 0, color: '#0a7d33' }}>
+        <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 600 }}>
           Записано {duration} с ({Math.round(blob.size / 1024)} КБ). Заполните имя и отправьте.
         </p>
       )}
 
       {mode === 'file' && (
-        <label style={{ display: 'grid', gap: '0.35rem' }}>
+        <label className="field">
           <span>Видеофайл (webm или mp4, до 120 с и 100 МБ)</span>
           <input
             type="file"
@@ -199,23 +199,23 @@ export function VideoRecorder({ slug, branding }: { slug: string; branding: Bran
 
       {(mode === 'recorded' || mode === 'file') && (
         <>
-          <label style={{ display: 'grid', gap: '0.35rem' }}>
+          <label className="field">
             <span>Ваше имя</span>
-            <input required minLength={2} maxLength={80} value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
+            <input required minLength={2} maxLength={80} value={name} onChange={(e) => setName(e.target.value)} className="input" />
           </label>
-          <label style={{ display: 'grid', gap: '0.35rem' }}>
+          <label className="field">
             <span>Роль или компания <span style={{ color: '#888' }}>(необязательно)</span></span>
-            <input value={role} onChange={(e) => setRole(e.target.value)} style={inputStyle} />
+            <input value={role} onChange={(e) => setRole(e.target.value)} className="input" />
           </label>
-          <label style={{ display: 'grid', gap: '0.35rem' }}>
+          <label className="field">
             <span>Подпись к видео <span style={{ color: '#888' }}>(необязательно)</span></span>
-            <input value={caption} onChange={(e) => setCaption(e.target.value)} style={inputStyle} />
+            <input value={caption} onChange={(e) => setCaption(e.target.value)} className="input" />
           </label>
         </>
       )}
 
       {errors.length > 0 && (
-        <ul style={{ color: '#b00020', margin: 0, paddingLeft: '1.2rem' }}>
+        <ul className="errors">
           {errors.map((e) => (
             <li key={e}>{e}</li>
           ))}
@@ -226,15 +226,8 @@ export function VideoRecorder({ slug, branding }: { slug: string; branding: Bran
         <button
           type="submit"
           disabled={sending || !blob}
-          style={{
-            padding: '0.7rem 1rem',
-            borderRadius: 8,
-            border: 'none',
-            background: sending || !blob ? '#bbb' : branding.accent_color,
-            color: '#fff',
-            fontSize: '1rem',
-            cursor: sending || !blob ? 'not-allowed' : 'pointer',
-          }}
+          className="btn btn--primary btn--block"
+          style={sending || !blob ? undefined : { background: branding.accent_color }}
         >
           {sending ? 'Отправляем…' : 'Отправить видео'}
         </button>
@@ -243,19 +236,4 @@ export function VideoRecorder({ slug, branding }: { slug: string; branding: Bran
   );
 }
 
-const inputStyle: React.CSSProperties = {
-  padding: '0.6rem 0.7rem',
-  borderRadius: 8,
-  border: '1px solid #ccc',
-  fontSize: '1rem',
-  fontFamily: 'inherit',
-};
 
-const secondaryButton: React.CSSProperties = {
-  padding: '0.6rem 0.9rem',
-  borderRadius: 8,
-  border: '1px solid #ccc',
-  background: '#fff',
-  fontSize: '0.95rem',
-  cursor: 'pointer',
-};

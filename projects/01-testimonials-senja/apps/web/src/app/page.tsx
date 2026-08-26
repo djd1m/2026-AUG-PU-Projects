@@ -12,6 +12,12 @@ type SlugState =
   | { kind: 'taken'; slug: string }
   | { kind: 'invalid'; reason: string };
 
+const BENEFITS = [
+  'Текстовые и видео-отзывы по одной ссылке — клиенту не нужно регистрироваться',
+  'Модерация: на стену попадает только то, что вы одобрили',
+  'Виджет на свой сайт одним тегом, 2,4 КБ и без блокировки загрузки',
+];
+
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -66,11 +72,7 @@ export default function SignupPage() {
             ...(desiredSlug.trim() ? { desired_slug: desiredSlug } : {}),
           }),
         });
-        const data = (await res.json()) as {
-          project_slug?: string;
-          errors?: string[];
-          error?: string;
-        };
+        const data = (await res.json()) as { project_slug?: string; errors?: string[]; error?: string };
         if (res.status === 201 && data.project_slug) {
           // Сессионная cookie уже установлена ответом — уходим на дашборд.
           window.location.href = `/dashboard/${data.project_slug}`;
@@ -89,95 +91,87 @@ export default function SignupPage() {
   const slugBlocked = slugState.kind === 'taken' || slugState.kind === 'invalid';
 
   return (
-    <main style={{ maxWidth: 460, margin: '0 auto', padding: '3rem 1.25rem' }}>
-      <h1 style={{ fontSize: '1.5rem' }}>Создать проект</h1>
-      <p style={{ color: '#666' }}>Получите ссылку на форму сбора, стену отзывов и виджет.</p>
+    <main className="stage">
+      <div className="brand">
+        <span className="brand__mark" aria-hidden="true">◆</span>
+        Proofwall
+      </div>
 
-      <form onSubmit={submit} style={{ display: 'grid', gap: '1rem', marginTop: '2rem' }}>
-        <label style={{ display: 'grid', gap: '0.35rem' }}>
-          <span>Email</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle}
-          />
-        </label>
+      <div className="hero card">
+        <section className="hero__pitch">
+          <p className="eyebrow">Соберите доказательства</p>
+          <h1 className="hero__title">
+            Отзывы клиентов, которые <span className="hero__accent">работают на вас</span>
+          </h1>
+          <p className="lede hero__lede">
+            Одна ссылка — клиент оставляет отзыв текстом или на видео. Вы одобряете, и он
+            появляется на публичной странице и в виджете на вашем сайте.
+          </p>
 
-        <label style={{ display: 'grid', gap: '0.35rem' }}>
-          <span>Пароль (минимум 8 символов)</span>
-          <input
-            type="password"
-            required
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
-          />
-        </label>
-
-        <label style={{ display: 'grid', gap: '0.35rem' }}>
-          <span>Название проекта</span>
-          <input value={projectName} onChange={(e) => setProjectName(e.target.value)} style={inputStyle} />
-        </label>
-
-        <label style={{ display: 'grid', gap: '0.35rem' }}>
-          <span>
-            Адрес проекта <span style={{ color: '#888' }}>(необязательно — выведем из названия)</span>
-          </span>
-          <input
-            value={desiredSlug}
-            onChange={(e) => setDesiredSlug(e.target.value)}
-            placeholder="acme"
-            style={inputStyle}
-          />
-          <SlugHint state={slugState} />
-        </label>
-
-        {errors.length > 0 && (
-          <ul style={{ color: '#b00020', margin: 0, paddingLeft: '1.2rem' }}>
-            {errors.map((e) => (
-              <li key={e}>{e}</li>
+          <ul className="ticks">
+            {BENEFITS.map((b) => (
+              <li key={b}>
+                <span className="ticks__mark" aria-hidden="true">✓</span>
+                {b}
+              </li>
             ))}
           </ul>
-        )}
+        </section>
 
-        <button
-          type="submit"
-          disabled={submitting || slugBlocked}
-          style={{
-            padding: '0.7rem 1rem',
-            borderRadius: 8,
-            border: 'none',
-            background: submitting || slugBlocked ? '#bbb' : '#111',
-            color: '#fff',
-            fontSize: '1rem',
-            cursor: submitting || slugBlocked ? 'not-allowed' : 'pointer',
-          }}
-        >
-          {submitting ? 'Создаём…' : 'Создать проект'}
-        </button>
-      </form>
+        <section className="hero__form">
+          <h2 className="hero__formTitle">Создать проект</h2>
+          <p className="small muted" style={{ marginTop: 4 }}>
+            Три адреса сразу: форма сбора, стена отзывов и сниппет виджета.
+          </p>
+
+          <form onSubmit={submit} className="form" style={{ marginTop: 20 }}>
+            <label className="field">
+              <span>Email</span>
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="input" />
+            </label>
+
+            <label className="field">
+              <span>Пароль <span className="field__hint">минимум 8 символов</span></span>
+              <input
+                type="password" required minLength={8} value={password}
+                onChange={(e) => setPassword(e.target.value)} className="input"
+              />
+            </label>
+
+            <label className="field">
+              <span>Название проекта</span>
+              <input value={projectName} onChange={(e) => setProjectName(e.target.value)} className="input" />
+            </label>
+
+            <label className="field">
+              <span>Адрес <span className="field__hint">необязательно — выведем из названия</span></span>
+              <input
+                value={desiredSlug} onChange={(e) => setDesiredSlug(e.target.value)}
+                placeholder="acme" className="input"
+              />
+              <SlugHint state={slugState} />
+            </label>
+
+            {errors.length > 0 && (
+              <ul className="errors">
+                {errors.map((e) => <li key={e}>{e}</li>)}
+              </ul>
+            )}
+
+            <button type="submit" disabled={submitting || slugBlocked} className="btn btn--primary btn--block">
+              {submitting ? 'Создаём…' : 'Создать проект'}
+            </button>
+          </form>
+        </section>
+      </div>
     </main>
   );
 }
 
 function SlugHint({ state }: { state: SlugState }) {
   if (state.kind === 'idle') return null;
-  const map = {
-    checking: { text: 'Проверяем…', color: '#888' },
-    available: { text: `Свободен: /w/${'slug' in state ? state.slug : ''}`, color: '#0a7d33' },
-    taken: { text: 'Уже занят — выберите другой', color: '#b00020' },
-    invalid: { text: `Неверный формат — ${'reason' in state ? state.reason : ''}`, color: '#b00020' },
-  } as const;
-  const hint = map[state.kind];
-  return <small style={{ color: hint.color }}>{hint.text}</small>;
+  if (state.kind === 'checking') return <small className="muted">Проверяем…</small>;
+  if (state.kind === 'available') return <small style={{ color: 'var(--ok)' }}>Свободен: /w/{state.slug}</small>;
+  if (state.kind === 'taken') return <small style={{ color: 'var(--danger)' }}>Уже занят — выберите другой</small>;
+  return <small style={{ color: 'var(--danger)' }}>Неверный формат — {state.reason}</small>;
 }
-
-const inputStyle: React.CSSProperties = {
-  padding: '0.6rem 0.7rem',
-  borderRadius: 8,
-  border: '1px solid #ccc',
-  fontSize: '1rem',
-};

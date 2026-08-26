@@ -12,7 +12,7 @@ export function IntakeTabs({ slug, branding }: { slug: string; branding: Brandin
 
   return (
     <div>
-      <div role="tablist" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem' }}>
+      <div role="tablist" className="tabs">
         {(['text', 'video'] as const).map((key) => (
           <button
             key={key}
@@ -20,17 +20,9 @@ export function IntakeTabs({ slug, branding }: { slug: string; branding: Brandin
             role="tab"
             aria-selected={tab === key}
             onClick={() => setTab(key)}
-            style={{
-              padding: '0.5rem 0.9rem',
-              borderRadius: 8,
-              cursor: 'pointer',
-              fontSize: '0.95rem',
-              border: tab === key ? `2px solid ${branding.accent_color}` : '1px solid #ccc',
-              background: tab === key ? '#fff' : '#f6f6f6',
-              fontWeight: tab === key ? 600 : 400,
-            }}
+            className={`tabs__btn${tab === key ? ' is-active' : ''}`}
           >
-            {key === 'text' ? 'Написать текстом' : 'Записать видео'}
+            {key === 'text' ? '✍️ Написать текстом' : '🎥 Записать видео'}
           </button>
         ))}
       </div>

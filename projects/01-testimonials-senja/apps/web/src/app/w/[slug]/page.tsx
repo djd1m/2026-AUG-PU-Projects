@@ -38,9 +38,10 @@ export default async function WallPage({ params }: Params) {
   const items = await getApprovedTestimonials(project.id);
   const branding = readBranding(project.branding);
   const pageUrl = `${baseUrl()}/w/${project.slug}`;
+  const accent = branding.accent_color;
 
   return (
-    <main style={{ maxWidth: 760, margin: '0 auto', padding: '3rem 1.25rem' }}>
+    <main className="stage stage--mid">
       {items.length > 0 && (
         <script
           type="application/ld+json"
@@ -50,76 +51,93 @@ export default async function WallPage({ params }: Params) {
         />
       )}
 
-      <header>
+      <header className="wallHead">
         {branding.logo_url && (
           // eslint-disable-next-line @next/next/no-img-element -- логотип с произвольного домена
-          <img src={branding.logo_url} alt="" style={{ maxHeight: 48, marginBottom: '1rem', display: 'block' }} />
+          <img src={branding.logo_url} alt="" className="wallHead__logo" />
         )}
-        <h1 style={{ fontSize: '1.75rem', color: branding.accent_color, marginBottom: '0.25rem' }}>
-          Отзывы
-        </h1>
-        <p style={{ color: '#666', marginTop: 0 }}>
-          {items.length > 0 ? `${items.length} шт.` : 'Пока ни одного одобренного отзыва'}
+        <p className="eyebrow" style={{ color: 'var(--on-ink-dim)' }}>Стена любви</p>
+        <h1 className="wallHead__title">Что говорят клиенты</h1>
+        <p className="wallHead__count">
+          {items.length > 0
+            ? `${items.length} ${plural(items.length, 'отзыв', 'отзыва', 'отзывов')}`
+            : 'Пока ни одного одобренного отзыва'}
         </p>
       </header>
 
       {items.length === 0 ? (
-        <section
-          style={{
-            marginTop: '2rem',
-            padding: '2rem',
-            border: '1px dashed #d0d0d0',
-            borderRadius: 12,
-            textAlign: 'center',
-            color: '#666',
-          }}
-        >
-          <p style={{ margin: 0 }}>Здесь появятся отзывы после проверки владельцем.</p>
-          <p style={{ margin: '0.5rem 0 0' }}>
-            Оставить свой: <code>/f/{project.slug}</code>
-          </p>
-        </section>
+        <div className="card">
+          <div className="empty">
+            <p style={{ margin: 0, fontWeight: 600, color: 'var(--text)' }}>
+              Здесь появятся отзывы после проверки владельцем.
+            </p>
+            <p style={{ margin: '8px 0 0' }}>
+              Оставить свой: <code>/f/{project.slug}</code>
+            </p>
+          </div>
+        </div>
       ) : (
-        <div style={{ display: 'grid', gap: '1rem', marginTop: '2rem' }}>
+        <div className="wall">
           {items.map((item) => (
             <article
               key={item.id}
+              className="quote"
               itemScope
               itemType="https://schema.org/Review"
-              style={{ border: '1px solid #e8e8e8', borderRadius: 12, padding: '1.25rem' }}
+              style={{ ['--quote-accent' as string]: accent }}
             >
+              <span className="quote__mark" aria-hidden="true">“</span>
+
               {item.text && (
-                <p itemProp="reviewBody" style={{ margin: 0, whiteSpace: 'pre-wrap', fontSize: '1.05rem' }}>
-                  {item.text}
-                </p>
+                <p itemProp="reviewBody" className="quote__body">{item.text}</p>
               )}
 
               {item.has_video && item.transcript && (
-                <p style={{ margin: item.text ? '0.75rem 0 0' : 0, color: '#555', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>
-                  🎥 {item.transcript}
+                <p className="quote__transcript">
+                  <span className="chip chip--accent">🎥 расшифровка</span> {item.transcript}
                 </p>
               )}
               {item.has_video && !item.transcript && (
-                <p style={{ margin: item.text ? '0.75rem 0 0' : 0, color: '#888' }}>🎥 Видео-отзыв</p>
+                <p className="quote__transcript"><span className="chip">🎥 видео-отзыв</span></p>
               )}
 
               <footer
                 itemProp="author"
                 itemScope
                 itemType="https://schema.org/Person"
-                style={{ marginTop: '1rem', fontSize: '0.95rem' }}
+                className="quote__author"
               >
-                <strong itemProp="name">{item.author_name}</strong>
-                {item.author_role && (
-                  <span itemProp="jobTitle" style={{ color: '#666' }}>
-                    {' '}· {item.author_role}
-                  </span>
-                )}
+                <span className="quote__avatar" aria-hidden="true">
+                  {initial(item.author_name)}
+                </span>
+                <span>
+                  <strong itemProp="name">{item.author_name}</strong>
+                  {item.author_role && (
+                    <span itemProp="jobTitle" className="quote__role">{item.author_role}</span>
+                  )}
+                </span>
               </footer>
             </article>
           ))}
         </div>
       )}
+
+      <p className="wallFoot">
+        Собрано через <a href={baseUrl()}>Proofwall</a>
+      </p>
     </main>
   );
+}
+
+/** Первая буква имени для аватара-заглушки. Имя авторское — берём безопасно. */
+function initial(name: string): string {
+  return (name.trim()[0] ?? '?').toUpperCase();
+}
+
+function plural(n: number, one: string, few: string, many: string): string {
+  const m10 = n % 10;
+  const m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
+  return many;
 }

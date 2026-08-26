@@ -1,7 +1,7 @@
 // GET /f/<slug> — форма сбора отзыва (FR-002).
 //
 // Текст (FR-002) и видео (FR-003). Загрузка ФОТО к текстовому отзыву из AC FR-002
-// ещё не реализована — колонка photo_url в схеме есть, интерфейс загрузки нет.
+// ещё не реализована — колонка photo_url в схеме есть, интерфейса загрузки нет.
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -27,21 +27,26 @@ export default async function FormPage({ params }: Params) {
   const branding = readBranding(project.branding);
 
   return (
-    <main style={{ maxWidth: 560, margin: '0 auto', padding: '3rem 1.25rem' }}>
-      {branding.logo_url && (
-        // eslint-disable-next-line @next/next/no-img-element -- логотип владельца с произвольного
-        // домена; next/image потребовал бы заранее объявленного allowlist'а хостов.
-        <img
-          src={branding.logo_url}
-          alt=""
-          style={{ maxHeight: 48, marginBottom: '1rem', display: 'block' }}
-        />
-      )}
-      {/* heading подставляется через {} — React экранирует его сам, разметка владельца
-          не станет разметкой страницы. */}
-      <h1 style={{ fontSize: '1.5rem', color: branding.accent_color }}>{branding.heading}</h1>
+    <main className="stage stage--narrow">
+      <div className="card" style={{ ['--brand' as string]: branding.accent_color }}>
+        {branding.logo_url && (
+          // eslint-disable-next-line @next/next/no-img-element -- логотип владельца с произвольного
+          // домена; next/image потребовал бы заранее объявленного allowlist'а хостов.
+          <img src={branding.logo_url} alt="" className="formHead__logo" />
+        )}
+        {/* heading подставляется через {} — React экранирует его сам, разметка владельца
+            не станет разметкой страницы. */}
+        <h1 style={{ color: 'var(--brand)' }}>{branding.heading}</h1>
+        <p className="lede" style={{ marginTop: 10 }}>
+          Займёт минуту. Регистрироваться не нужно.
+        </p>
 
-      <IntakeTabs slug={project.slug} branding={branding} />
+        <IntakeTabs slug={project.slug} branding={branding} />
+      </div>
+
+      <p className="wallFoot">
+        Отзывы собирает <a href="/">Proofwall</a>
+      </p>
     </main>
   );
 }

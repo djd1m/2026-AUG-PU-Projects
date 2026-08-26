@@ -54,64 +54,39 @@ export function ShareCta({ slug, wallUrl, installs }: { slug: string; wallUrl: s
   }
 
   return (
-    <section
-      style={{
-        marginTop: '2rem',
-        padding: '1.25rem',
-        borderRadius: 12,
-        border: '2px solid #0a7d33',
-        background: '#f3fbf5',
-      }}
-    >
-      <p style={{ margin: 0, fontWeight: 600 }}>
+    <section className="share">
+      <p className="share__title">
         Виджет заработал на {installs.length === 1 ? 'новом сайте' : `${installs.length} сайтах`}
       </p>
-      <p style={{ margin: '0.35rem 0 0', color: '#444' }}>
+      <p className="small muted" style={{ marginTop: 6 }}>
         Последний: <code>{latest.domain}</code>
       </p>
 
       {sent ? (
-        <p style={{ margin: '0.75rem 0 0', color: '#0a7d33' }}>Ссылка на стену готова к публикации.</p>
+        <p style={{ margin: '12px 0 0', color: 'var(--ok)', fontWeight: 600 }}>Ссылка на стену готова к публикации.</p>
       ) : confirming ? (
-        <div style={{ marginTop: '0.9rem' }}>
-          <p style={{ margin: '0 0 0.6rem' }}>
+        <div style={{ marginTop: 14 }}>
+          <p style={{ margin: '0 0 10px' }}>
             Опубликовать ссылку <code>{wallUrl}</code>? Ничего не отправится, пока вы не подтвердите.
           </p>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button type="button" onClick={confirmShare} style={primary}>
+          <div className="row">
+            <button type="button" onClick={confirmShare} className="btn btn--primary btn--sm">
               Поделиться
             </button>
-            <button type="button" onClick={() => setConfirming(false)} style={secondary}>
+            <button type="button" onClick={() => setConfirming(false)} className="btn btn--ghost btn--sm">
               Отмена
             </button>
           </div>
         </div>
       ) : (
-        <button type="button" onClick={() => setConfirming(true)} style={{ ...primary, marginTop: '0.9rem' }}>
+        <button type="button" onClick={() => setConfirming(true)} className="btn btn--primary btn--sm" style={{ marginTop: 14 }}>
           Поделиться стеной отзывов
         </button>
       )}
 
-      {error && <p style={{ color: '#b00020', margin: '0.6rem 0 0' }}>{error}</p>}
+      {error && <p style={{ color: 'var(--danger)', margin: '10px 0 0' }}>{error}</p>}
     </section>
   );
 }
 
-const primary: React.CSSProperties = {
-  padding: '0.55rem 1rem',
-  borderRadius: 8,
-  border: 'none',
-  background: '#0a7d33',
-  color: '#fff',
-  fontSize: '0.95rem',
-  cursor: 'pointer',
-};
 
-const secondary: React.CSSProperties = {
-  padding: '0.55rem 1rem',
-  borderRadius: 8,
-  border: '1px solid #ccc',
-  background: '#fff',
-  fontSize: '0.95rem',
-  cursor: 'pointer',
-};
