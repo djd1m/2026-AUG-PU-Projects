@@ -1,13 +1,13 @@
 // GET /f/<slug> — форма сбора отзыва (FR-002).
 //
-// Видео-путь (FR-003), загрузка фото и очередь транскрипции здесь ещё не реализованы:
-// им нужен слой объектного хранилища, который приходит вместе с FR-003.
+// Текст (FR-002) и видео (FR-003). Загрузка ФОТО к текстовому отзыву из AC FR-002
+// ещё не реализована — колонка photo_url в схеме есть, интерфейс загрузки нет.
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { findProjectBySlug } from '@/lib/project';
 import { readBranding } from '@/lib/branding';
-import { SubmitForm } from './submit-form';
+import { IntakeTabs } from './intake-tabs';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +41,7 @@ export default async function FormPage({ params }: Params) {
           не станет разметкой страницы. */}
       <h1 style={{ fontSize: '1.5rem', color: branding.accent_color }}>{branding.heading}</h1>
 
-      <SubmitForm slug={project.slug} branding={branding} />
+      <IntakeTabs slug={project.slug} branding={branding} />
     </main>
   );
 }

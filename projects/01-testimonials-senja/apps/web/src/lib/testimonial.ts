@@ -9,6 +9,7 @@
 import { createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { rateLimit } from '@proofwall/db';
+import { sniffContainer, validateVideoConstraints } from './video';
 
 export const RATE_LIMIT_SCOPE = 'form_submission';
 export const RATE_LIMIT_THRESHOLD = 5; // FR-002 AC: «не более 5 отправок с одного IP в час на проект»
@@ -122,5 +123,98 @@ export async function submitTextTestimonial(
   );
 
   // public_id трактуется как id (см. комментарий в 003_core.sql) — uuid непоследователен.
+  return { ok: true, status: 201, publicId: testimonialId };
+}
+
+// ───────────────────────────── FR-003: видео-отзыв ─────────────────────────────
+
+export interface VideoSubmitInput {
+  name?: unknown;
+  role?: unknown;
+  text_caption?: unknown;
+  video: { bytes: Uint8Array; mime: string; duration_sec: number };
+}
+
+export type VideoSubmitResult =
+  | SubmitResult
+  | { ok: false; status: 503; body: { error: string } };
+
+/**
+ * Pseudocode §1 + §1.1, видео-ветвь. Порядок шагов тот же, что у текста, и по той же
+ * причине; отличие одно — единственный легитимный откат квоты (W-5): сбой ХРАНИЛИЩА
+ * происходит уже после списания, и вины автора в нём нет.
+ */
+export async function submitVideoTestimonial(
+  client: PoolClient,
+  slug: string,
+  ip: string,
+  input: VideoSubmitInput,
+  upload: (projectId: string, bytes: Uint8Array, mime: string) => Promise<string>,
+): Promise<VideoSubmitResult> {
+  const projectRes = await client.query<{ id: string }>(
+    'select id from projects where slug = $1 and deactivated = false',
+    [slug],
+  );
+  const project = projectRes.rows[0];
+  if (!project) return { ok: false, status: 404, body: { error: 'не найдено' } };
+
+  const key = rateLimitKey(ip, project.id);
+  if (await rateLimit.exceeded(RATE_LIMIT_SCOPE, key, RATE_LIMIT_WINDOW, RATE_LIMIT_THRESHOLD, client)) {
+    return { ok: false, status: 429, body: { error: 'слишком много отправок, попробуйте позже' } };
+  }
+
+  const errors: string[] = [];
+  const name = typeof input.name === 'string' ? input.name.trim() : '';
+  if (name.length < NAME_MIN || name.length > NAME_MAX) {
+    errors.push(`name: ${NAME_MIN}-${NAME_MAX} символов`);
+  }
+  errors.push(
+    ...validateVideoConstraints({
+      duration_sec: input.video.duration_sec,
+      size_bytes: input.video.bytes.byteLength,
+      mime: input.video.mime,
+    }),
+  );
+  // Заявленный тип обязан совпадать с содержимым — иначе в хранилище уедет что угодно
+  // под видом видео, и воркер получит его на распаковку.
+  const sniffed = sniffContainer(input.video.bytes);
+  if (sniffed === null || sniffed !== input.video.mime) {
+    errors.push('video: содержимое файла не соответствует заявленному формату');
+  }
+  if (errors.length > 0) return { ok: false, status: 400, body: { errors } };
+
+  const rlEventId = await rateLimit.record(RATE_LIMIT_SCOPE, key, client);
+
+  let objectKey: string;
+  try {
+    objectKey = await upload(project.id, input.video.bytes, input.video.mime);
+  } catch (err) {
+    // ЕДИНСТВЕННЫЙ легитимный откат квоты (W-5): инфраструктурный сбой после списания.
+    await rateLimit.revoke(rlEventId, client);
+    console.error('testimonial_storage_failed', { projectId: project.id, err });
+    return { ok: false, status: 503, body: { error: 'сервис временно недоступен, попробуйте ещё раз' } };
+  }
+
+  const role = typeof input.role === 'string' && input.role.trim() !== '' ? input.role : null;
+  // Подпись автора — это НЕ транскрипт: FR-NFR-SEC-002 требует, чтобы расшифровка речи
+  // жила отдельным полем и никогда не попадала в text.
+  const caption = typeof input.text_caption === 'string' ? input.text_caption : '';
+
+  const inserted = await client.query<{ id: string }>(
+    `insert into testimonials
+       (project_id, author_name, author_role, text, video_object_key,
+        transcript, transcript_status, transcript_source, status)
+     values ($1, $2, $3, $4, $5, null, 'pending', 'machine', 'pending')
+     returning id`,
+    [project.id, input.name as string, role, caption, objectKey],
+  );
+  const testimonialId = inserted.rows[0]!.id;
+
+  await client.query(
+    `insert into audit_log (project_id, entity_type, entity_id, actor_id, action)
+     values ($1, 'testimonial', $2, 'public', 'testimonial_created')`,
+    [project.id, testimonialId],
+  );
+
   return { ok: true, status: 201, publicId: testimonialId };
 }
