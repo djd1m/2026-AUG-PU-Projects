@@ -2,20 +2,25 @@
 
 > SPARC Phase: **Pseudocode**. Источник: [`Specification.md`](Specification.md), [`PRD.md`](PRD.md). Алгоритмы для каждого FR. Стек (Architecture Constraints p-replicator): монорепо-монолит, Docker Compose, **PostgreSQL в контейнере**, MCP-серверы; Next.js + отдельный бандл виджета.
 >
-> **Итерация 1 после валидации Phase 2:** правки C-1, C-2, W-5, W-8, W-9 (см. Refinement.md), W-10. Имена — по [`Architecture.md`](Architecture.md); отдельного раздела «Канонические имена» там пока нет, использованы имена из основного текста (§3, §4.2, §5).
+> **Итерация 1 после валидации Phase 2:** правки C-1, C-2, W-5, W-8, W-9 (см. Refinement.md), W-10. Имена — по [`Architecture.md`](Architecture.md); отдельного раздела «Канонические имена» там пока нет, использованы имена из основного текста (§3, §4.2, §5). **Итерация 2:** rate-limit сведён к одному помощнику (Architecture §3.4, W-1), добавлен §7.3 (FR-008).
 
 ---
 ## 1. Приём отзыва: текст (FR-002) и видео (FR-003)
 
+> **Rate limiting — единый помощник (Architecture §3.4, `packages/db`, `rate_limit_events`).** Три
+> требования (это, FR-GROWTH-004 §8, FR-GROWTH-005 §6) используют один помощник, не три стора:
+> `rateLimitCount(scope,key,window)` — COUNT без побочных эффектов; `rateLimitRecord(scope,key)` —
+> INSERT, возвращает `id` (для отката, W-5); `rateLimitRevoke(id)` — DELETE строки при откате. Везде `exceeded = count >= порог`.
+
 ```
 function submitTestimonial(request):
-  # --- Rate limit: 5 отправок с IP в час на проект (FR-NFR-SEC-003) ---
+  # --- Rate limit: FR-NFR-SEC-003, scope=form_submission, key=ip+project_id, окно 1ч, порог 5 ---
   project = findProjectBySlug(request.slug)
   if project is null:
     return HTTP 404  # не раскрываем, существовал ли слаг
   ip = extractClientIP(request)
-  key = hash(ip + project.id)
-  if rateLimitStore.count(key, window = 1 hour) >= 5:
+  rl_key = hash(ip + project.id)
+  if rateLimitCount("form_submission", rl_key, window = 1 hour) >= 5:
     return HTTP 429  # без деталей о лимите — anti-enumeration
   # --- Валидация на границе (W-5: видео-ограничения проверяются ЗДЕСЬ, до списания квоты) ---
   errors = []
@@ -30,9 +35,9 @@ function submitTestimonial(request):
     errors.append("type: ожидается text|video")
   if errors is not empty:
     return HTTP 400 { errors }
-  # W-5: квота списывается ТОЛЬКО после успешной валидации (не заранее с возвратом при отказе —
-  # это исключает гонку/двойной decrement на параллельных невалидных запросах).
-  rateLimitStore.increment(key, window = 1 hour)
+  # W-5: событие списывается ТОЛЬКО после успешной валидации (не заранее с возвратом при отказе —
+  # это исключает гонку/двойной откат на параллельных невалидных запросах).
+  rl_event_id = rateLimitRecord("form_submission", rl_key)
   try:
     if request.type == "text":
       testimonial = createTestimonial(
@@ -47,7 +52,7 @@ function submitTestimonial(request):
       testimonial = handleVideoTestimonial(project, request)  # §1.1 — видео уже валидно
   catch StorageError as e:
     # Единственное исключение: инфраструктурный сбой ПОСЛЕ списания квоты — вины автора нет.
-    rateLimitStore.decrement(key, window = 1 hour)
+    rateLimitRevoke(rl_event_id)
     logError("testimonial_storage_failed", project.id, e)
     return HTTP 503 { error: "сервис временно недоступен, попробуйте ещё раз" }
   writeAuditLog(action = "testimonial_created", entity = testimonial.id, actor = "public")
@@ -59,7 +64,7 @@ function submitTestimonial(request):
 ### 1.1 Видео-путь (FR-003): валидация, загрузка, асинхронная транскрипция
 
 ```
-# Чистая функция без побочных эффектов — вызывается ДО rateLimitStore.increment (W-5)
+# Чистая функция без побочных эффектов — вызывается ДО rateLimitRecord (W-5)
 function validateVideoConstraints(video):
   errors = []
   if video is null:
@@ -315,7 +320,9 @@ function renderWallOfLovePage(slug):
 
 ```
 function onProjectCreated(account_id, project):
-  if countProjectsCreatedByAccount(account_id, window = 1 hour) > 20:
+  # FR-GROWTH-005 @security — общий помощник (см. §1, Architecture §3.4): scope=project_created, key=account_id
+  rateLimitRecord("project_created", account_id)
+  if rateLimitCount("project_created", account_id, window = 1 hour) >= 20:
     setProjectNoindex(project.id, forced = true)
     writeAuditLog(action = "forced_noindex_bulk_creation", entity = project.id,
                   reason = "over_20_projects_per_hour")
@@ -397,21 +404,35 @@ function getPendingAttribution(account_id):         # окно атрибуци�
   return attribution
 ```
 
+## 7.3 FR-008: инициация checkout и обновление тарифа
+```
+function initiateCheckout(project_id, actor):   # actor — app_authenticated владелец проекта
+  session = paymentProvider.createCheckoutSession(project_id)  # [GAP: выбор платёжного провайдера]
+  createCheckoutSession(project_id, session.id, status = "pending")
+  return HTTP 200 { redirect_url: session.redirect_url }
+function applyTariffUpgrade(raw_body):  # вызывается ПОСЛЕ onPaymentWebhook (§7.2, не меняется), если тот вернул 200
+  event = parseJson(raw_body)
+  if event.type == "payment_succeeded" and event.checkout_session_id is not empty:
+    cs = getCheckoutSessionByProviderId(event.checkout_session_id)
+    if cs is not null:
+      setProjectTier(cs.project_id, "paid"); updateCheckoutSession(cs.id, { status: "completed" })  # идемпотентно: paid→paid — no-op
+```
+
 ---
 ## 8. Anti-fraud: накрутка регистраций по партнёрскому коду
 
-Отдельно от self-referral (§7.2) — детект **массовой** накрутки с одного IP (FR-GROWTH-004 `@security`): >50 регистраций по одному коду с одного IP за 10 минут.
+Отдельно от self-referral (§7.2) — детект **массовой** накрутки с одного IP (FR-GROWTH-004 `@security`), только для регистраций с непустым `partner_code_id`: общий помощник (см. §1, Architecture §3.4) — scope=signup_via_partner_code, key=ip, окно 10 минут, порог 50.
 
 ```
 function onSignupViaPartnerCode(code, request):
   ip = extractClientIP(request)
-  if signupStore.countByCodeAndIP(code, ip, window = 10 minutes) > 50:
-    flagSignupAsSuspectedFraud(request.new_account_id, reason = "over_50_per_ip_per_10min")
+  rateLimitRecord("signup_via_partner_code", ip)
+  if rateLimitCount("signup_via_partner_code", ip, window = 10 minutes) >= 50:
     writeAuditLog(action = "suspected_fraud_flagged", entity = request.new_account_id,
-                  code = code, ip_hash = hash(ip))
-    blockCommissionUntilManualReview(request.new_account_id)   # без начисления до ручной проверки
-    return
-  signupStore.record(code, ip, timestamp = now())
+                  reason = "suspected_fraud", code = code, ip_hash = hash(ip))
+    attribution = findAttribution(request.new_account_id, status = "pending")  # регистрация НЕ блокируется
+    if attribution is not null:
+      updateAttribution(attribution.id, { status: "blocked" })  # getPendingAttribution (§7.2) её не найдёт
 function revokePartnerCode(code):
   setPartnerCodeStatus(code, "revoked")   # только НОВЫЕ атрибуции; история immutable, откат не выполняется
 ```
