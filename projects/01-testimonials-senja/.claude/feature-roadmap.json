@@ -129,7 +129,7 @@
     {
       "id": "FR-GROWTH-005",
       "title": "Порог содержательности и noindex для /w/<slug> — anti scaled-content-abuse (ADR-004)",
-      "status": "next",
+      "status": "done",
       "priority": "high",
       "tags": [
         "mvp",
@@ -138,6 +138,12 @@
       ],
       "depends_on": [
         "FR-005"
+      ],
+      "files": [
+        "apps/web/src/lib/content-threshold.ts",
+        "apps/web/src/lib/register.ts",
+        "apps/web/src/app/api/testimonials/[id]/moderate/route.ts",
+        "apps/web/tests/content-threshold.test.ts"
       ]
     },
     {
@@ -237,5 +243,5 @@
       ]
     }
   ],
-  "last_completed": "FR-005"
+  "last_completed": "FR-GROWTH-005"
 }

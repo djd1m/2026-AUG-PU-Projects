@@ -11,6 +11,7 @@ import {
   resolveOwnership,
   type Status,
 } from '@/lib/moderation';
+import { recomputeContentThreshold } from '@/lib/content-threshold';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,14 +55,30 @@ export async function POST(
     return NextResponse.json({ error: `недопустимый переход ${from} -> ${to}` }, { status: 400 });
   }
 
-  const applied = await withAccount(accountId, (c) => applyTransition(c, id, from, to, accountId));
-  if (!applied) {
+  // Переход и пересчёт порога — ОДНА транзакция: иначе между ними существует момент,
+  // когда отзыв уже одобрен, а noindex ещё не снят (или наоборот), и краш в этом окне
+  // оставил бы индексируемость рассогласованной с контентом.
+  const outcome = await withAccount(accountId, async (c) => {
+    const applied = await applyTransition(c, id, from, to, accountId);
+    if (!applied) return null;
+    // Пересчёт нужен только когда меняется множество approved (Pseudocode §2).
+    const touchesApproved = from === 'approved' || to === 'approved';
+    const threshold = touchesApproved ? await recomputeContentThreshold(c, own.projectId!) : null;
+    return { threshold };
+  });
+
+  if (!outcome) {
     // 0 строк — состояние успели сменить параллельно (или RLS не пустила).
     return NextResponse.json({ error: 'состояние изменилось, обновите страницу' }, { status: 409 });
   }
 
-  // Переход в/из approved влияет на видимость и на порог содержательности —
-  // recomputeContentThreshold появится вместе с FR-GROWTH-005 (Pseudocode §6).
-
-  return NextResponse.json({ id, from, to }, { status: 200 });
+  return NextResponse.json(
+    {
+      id,
+      from,
+      to,
+      ...(outcome.threshold ? { indexable: !outcome.threshold.noindex } : {}),
+    },
+    { status: 200 },
+  );
 }

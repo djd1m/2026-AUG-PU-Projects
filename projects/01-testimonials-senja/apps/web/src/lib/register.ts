@@ -22,6 +22,7 @@ import { PASSWORD_MIN_LENGTH } from './password';
 import { generateSessionToken, hashSessionToken, SESSION_TTL_MS } from './session';
 import { isValidEmail, normalizeEmail } from './validation';
 import { buildProjectUrls, type ProjectUrls } from './urls';
+import { onProjectCreated } from './content-threshold';
 
 export interface RegisterInput {
   email: unknown;
@@ -109,6 +110,11 @@ export async function registerAccountAndProject(
      values ($1, 'project', $2, $3, 'account_and_project_created')`,
     [projectId, projectId, accountId],
   );
+
+  // FR-GROWTH-005 @security: массовое создание проектов одним аккаунтом. Проект и так
+  // рождается с noindex=true — здесь важен СЛЕД в аудите, иначе «почему не индексируется»
+  // становится загадкой.
+  await onProjectCreated(client, accountId, projectId);
 
   return { ok: true, status: 201, accountId, slug, token, urls: buildProjectUrls(slug) };
 }
