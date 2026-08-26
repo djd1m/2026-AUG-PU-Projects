@@ -14,7 +14,7 @@
 import { cleanupRateLimitEvents, startCleanupSchedule } from "./cleanup-job.js";
 import { loadConfig } from "./config.js";
 import { createPool } from "./db.js";
-import { McpClaudeClient } from "./mcp-client.js";
+import { TranscribeServiceClient } from "./transcribe-client.js";
 import { createS3Client, generatePresignedGetUrl } from "./storage.js";
 import { startTranscriptionPoll } from "./transcribe-job.js";
 
@@ -23,19 +23,20 @@ async function main(): Promise<void> {
 
   const pool = createPool(config.databaseUrl);
   const s3 = createS3Client(config);
-  const mcpClient = new McpClaudeClient(config.mcpClaudeUrl);
-  await mcpClient.connect();
+  // Plain HTTP-клиент (D-007) — не MCP: нет отдельного connect()/close() жизненного цикла,
+  // каждый вызов transcribeVideo() — независимый fetch(). См. transcribe-client.ts.
+  const transcribeClient = new TranscribeServiceClient(config.transcribeServiceUrl);
 
   console.log("[worker] запущен", {
     pollIntervalMs: config.pollIntervalMs,
     cleanupIntervalMs: config.cleanupIntervalMs,
-    mcpClaudeUrl: config.mcpClaudeUrl,
+    transcribeServiceUrl: config.transcribeServiceUrl,
   });
 
   const stopTranscription = startTranscriptionPoll(
     {
       pool,
-      mcpClient,
+      transcribeClient,
       presignVideoUrl: (videoObjectKey) =>
         generatePresignedGetUrl(s3, config.s3Bucket, videoObjectKey, config.presignedUrlTtlSeconds),
     },
@@ -57,7 +58,6 @@ async function main(): Promise<void> {
     console.log(`[worker] получен ${signal}, останавливаюсь`);
     stopTranscription();
     stopCleanup();
-    await mcpClient.close();
     await pool.end();
     process.exit(0);
   };
@@ -66,7 +66,7 @@ async function main(): Promise<void> {
   process.on("SIGINT", () => void shutdown("SIGINT"));
 }
 
-// см. mcp-claude/src/server.ts — тот же приём: не запускать main() при импорте
+// см. services/transcribe/src/server.ts — тот же приём: не запускать main() при импорте
 // модулей тестами.
 const isDirectRun = !!process.argv[1] && /index\.(js|ts)$/.test(process.argv[1]);
 if (isDirectRun) {

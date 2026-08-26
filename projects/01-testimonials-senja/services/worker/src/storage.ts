@@ -4,7 +4,7 @@
  * Presigned GET URL из `video_object_key` (Architecture §5, шаг 3): "Worker формирует
  * presigned GET URL ИЗ video_object_key" — не из video_url, такого поля в схеме нет
  * (канон Architecture §10: `video_object_key`, "НЕ video_url" — постоянная ссылка на
- * MinIO не хранится нигде, она истекает и живёт только на время вызова mcp-claude).
+ * MinIO не хранится нигде, она истекает и живёт только на время вызова services/transcribe).
  *
  * MinIO — S3-совместимое API (Architecture §5), поэтому используем официальный AWS
  * SDK v3 с `forcePathStyle: true` и кастомным `endpoint` — стандартный способ

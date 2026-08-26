@@ -37,7 +37,7 @@ services:
       - S3_BUCKET
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
-      - MCP_CLAUDE_URL=http://mcp-claude:7331
+      - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
       - PAYMENT_WEBHOOK_SECRET   # FR-008: onPaymentWebhook/applyTariffUpgrade исполняются в apps/web (§3.5)
     ports: ["3000:3000"]
     depends_on:
@@ -45,7 +45,7 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-      mcp-claude:
+      transcribe:
         condition: service_started
 
   worker:
@@ -56,19 +56,21 @@ services:
       - S3_BUCKET
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
-      - MCP_CLAUDE_URL=http://mcp-claude:7331
+      - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
     depends_on:
       postgres:
         condition: service_healthy
       minio:
         condition: service_healthy
-      mcp-claude:
+      transcribe:
         condition: service_started
 
-  mcp-claude:
-    build: ./services/mcp-claude
+  # D-007 / ADR-005: раньше mcp-claude — Claude API не принимает аудио, переехало на OpenAI STT.
+  transcribe:
+    build: ./services/transcribe
     environment:
-      - ANTHROPIC_API_KEY        # только он: сервис делает ТОЛЬКО транскрипцию (ADR-005)
+      - OPENAI_API_KEY           # только он: сервис делает ТОЛЬКО транскрипцию (ADR-005)
+      - OPENAI_TRANSCRIBE_MODEL  # опционально; дефолт gpt-4o-mini-transcribe (config.ts)
     expose: ["7331"]
 
   caddy:

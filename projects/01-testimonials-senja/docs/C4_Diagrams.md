@@ -18,7 +18,7 @@ C4Context
     System(proofwall, "Proofwall", "Сбор отзывов, модерация, Wall of Love, встраиваемый виджет; включает свою БД и хранилище")
 
     System_Ext(clientSite, "Сайт клиента-владельца", "Сторонний сайт, на который встроен <script>")
-    System_Ext(claude, "Claude API", "Транскрипция видео-отзывов (только речь → текст)")
+    System_Ext(openaiStt, "OpenAI STT", "Транскрипция видео-отзывов (только речь → текст). D-007/ADR-005: изначально здесь был Claude API — не принимает аудио, технически невозможно")
     System_Ext(payments, "Платёжный провайдер", "Оплата тарифа, вебхуки о платеже")
 
     Rel(owner, proofwall, "Создаёт проект, модерирует, вставляет виджет, логинится", "HTTPS")
@@ -26,7 +26,7 @@ C4Context
     Rel(clientSite, proofwall, "Загружает /widget.js, запрашивает конфигурацию", "HTTPS")
     Rel(visitor, proofwall, "Видит виджет и badge внутри страницы клиента")
     Rel(partner, proofwall, "Приводит трафик по персональному коду")
-    Rel(proofwall, claude, "Транскрибирует видео через MCP-сервер", "HTTPS (MCP)")
+    Rel(proofwall, openaiStt, "Транскрибирует видео через services/transcribe", "HTTPS (REST)")
     Rel(payments, proofwall, "Уведомляет о платеже", "Webhook")
 ```
 
@@ -38,13 +38,13 @@ C4Container
 
     Person(visitor, "Посетитель сайта клиента")
     System_Ext(clientSite, "Сайт клиента", "Хост-страница со встроенным <script>")
-    System_Ext(claude, "Claude API")
+    System_Ext(openaiStt, "OpenAI STT")
 
     Container_Boundary(monorepo, "Proofwall (сервисы одного docker-compose стека на VPS)") {
         Container(widget, "Widget Bundle", "Vanilla TS, ≤30KB gzip", "Рендерит карточки отзывов и badge внутри Shadow DOM")
         Container(web, "Next.js App", "apps/web", "Дашборд, аутентификация владельцев, /f/<slug>, /w/<slug>, API-роуты (в т.ч. /api/widget/config)")
-        Container(worker, "Video Worker", "services/worker", "Поллит очередь видео, вызывает MCP-сервер")
-        Container(mcp, "MCP Claude Server", "services/mcp-claude", "Единственная точка доступа к Claude API; один tool: transcribe_video")
+        Container(worker, "Video Worker", "services/worker", "Поллит очередь видео, вызывает сервис транскрипции")
+        Container(transcribe, "Transcribe Service", "services/transcribe", "Единственная точка доступа к OpenAI STT; один путь: POST /transcribe (D-007/ADR-005 — раньше MCP-сервер к Claude API)")
         Container(caddy, "Caddy", "reverse proxy", "TLS, раздача /widget.js с кэшем")
         ContainerDb(db, "PostgreSQL", "контейнер postgres, RLS-политики per-tenant", "Роли: app_authenticated (RLS), app_service (BYPASSRLS, анонимные пути)")
         ContainerDb(storage, "MinIO", "контейнер minio, S3 API", "Видео-файлы, presigned upload/download URL")
@@ -60,9 +60,9 @@ C4Container
     Rel(web, storage, "Presigned URL для загрузки/показа видео", "S3 API")
     Rel(worker, db, "Поллинг transcript_status='pending' (SELECT ... FOR UPDATE SKIP LOCKED)", "SQL")
     Rel(worker, storage, "Presigned GET URL для видео", "S3 API")
-    Rel(worker, mcp, "transcribe_video(presigned GET URL из video_object_key)", "MCP protocol")
-    Rel(mcp, claude, "Транскрипция аудио-дорожки", "HTTPS")
-    Rel(mcp, storage, "Скачивание видео по presigned URL", "HTTPS (S3 API)")
+    Rel(worker, transcribe, "POST /transcribe { video_url } (presigned GET URL из video_object_key)", "HTTP/JSON")
+    Rel(transcribe, openaiStt, "Транскрипция аудио-дорожки", "HTTPS (REST)")
+    Rel(transcribe, storage, "Скачивание видео по presigned URL", "HTTPS (S3 API)")
 ```
 
 ## Уровень 3 — Component (внутри `apps/web`: рендер виджета + проверка тарифа)

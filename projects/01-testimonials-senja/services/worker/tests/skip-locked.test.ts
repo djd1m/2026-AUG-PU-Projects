@@ -13,7 +13,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type pg from "pg";
 import { claimAndProcessOneTestimonial } from "../src/transcribe-job.js";
-import type { TranscribeClient } from "../src/mcp-client.js";
+import type { TranscribeClient } from "../src/transcribe-client.js";
 import { createTestPool, dropSchema, setupSchema, testDatabaseUrl, truncateAll } from "./helpers/test-db.js";
 
 const hasTestDb = !!testDatabaseUrl();
@@ -35,7 +35,7 @@ describe.skipIf(!hasTestDb)("SKIP LOCKED: два параллельных вор
     await pool.end();
   });
 
-  function fakeMcpClient(text: string, delayMs = 0): TranscribeClient {
+  function fakeTranscribeClient(text: string, delayMs = 0): TranscribeClient {
     return {
       async transcribeVideo() {
         if (delayMs > 0) await new Promise((r) => setTimeout(r, delayMs));
@@ -57,12 +57,12 @@ describe.skipIf(!hasTestDb)("SKIP LOCKED: два параллельных вор
     // блокировке Postgres, но был бы чувствителен к скорости сети/диска в CI.
     const depsA = {
       pool,
-      mcpClient: fakeMcpClient("расшифровка от воркера A", 200),
+      transcribeClient: fakeTranscribeClient("расшифровка от воркера A", 200),
       presignVideoUrl: async (key: string) => `https://minio.test/${key}?presigned=A`,
     };
     const depsB = {
       pool,
-      mcpClient: fakeMcpClient("расшифровка от воркера B", 0),
+      transcribeClient: fakeTranscribeClient("расшифровка от воркера B", 0),
       presignVideoUrl: async (key: string) => `https://minio.test/${key}?presigned=B`,
     };
 
@@ -100,7 +100,7 @@ describe.skipIf(!hasTestDb)("SKIP LOCKED: два параллельных вор
       Array.from({ length: N }, (_, i) =>
         claimAndProcessOneTestimonial({
           pool,
-          mcpClient: fakeMcpClient(`расшифровка #${i}`, 50),
+          transcribeClient: fakeTranscribeClient(`расшифровка #${i}`, 50),
           presignVideoUrl: async (key: string) => `https://minio.test/${key}`,
         }),
       ),

@@ -10,16 +10,17 @@
 1. **Очередь транскрипции** (`src/transcribe-job.ts`, Architecture §5): забирает строки
    `testimonials` со статусом `transcript_status = 'pending'` через
    `SELECT ... FOR UPDATE SKIP LOCKED`, формирует presigned GET URL из
-   `video_object_key` (не из `video_url` — канон Architecture §10), вызывает единственный
-   tool `services/mcp-claude` (`transcribe_video`), пишет `transcript`/`transcript_source`/
+   `video_object_key` (не из `video_url` — канон Architecture §10), вызывает единственную
+   операцию `services/transcribe` (`POST /transcribe`), пишет `transcript`/`transcript_source`/
    `transcript_status` обратно.
 2. **Очистка `rate_limit_events`** (`src/cleanup-job.ts`, Architecture §3.4): раз в час
    удаляет строки старше 24 часов из единой таблицы, обслуживающей три анти-фрод
    требования (FR-NFR-SEC-003, FR-GROWTH-004, FR-GROWTH-005).
 
-Worker **не имеет** `ANTHROPIC_API_KEY` и никогда не вызывает Claude API напрямую — только
-HTTP к `services/mcp-claude` (ADR-005, coding-style.md §1). Секрет физически недостижим из
-этого процесса.
+Worker **не имеет** `OPENAI_API_KEY` и никогда не вызывает внешний STT-провайдер напрямую —
+только HTTP к `services/transcribe` (ADR-005, coding-style.md §1). Секрет физически недостижим
+из этого процесса. (D-007: до пивота на OpenAI STT здесь стоял `ANTHROPIC_API_KEY` и MCP-вызов
+к `services/mcp-claude` — граница осталась той же, сменился только провайдер и транспорт.)
 
 ## `SELECT ... FOR UPDATE SKIP LOCKED` — что это гарантирует и чего не гарантирует
 
@@ -28,7 +29,7 @@ HTTP к `services/mcp-claude` (ADR-005, coding-style.md §1). Секрет фи�
 
 **Осознанный компромисс** (см. подробный комментарий в `src/transcribe-job.ts`): транзакция,
 держащая блокировку строки, остаётся открытой на всё время обработки — включая сетевой вызов
-к `mcp-claude` (скачивание видео + Claude API, потенциально десятки секунд). Альтернатива
+к `services/transcribe` (скачивание видео + вызов OpenAI STT, потенциально десятки секунд). Альтернатива
 (промежуточный статус `in_progress` + короткие транзакции) потребовала бы четвёртого значения
 enum `transcript_status`, а канон Architecture §10 явно фиксирует ровно три
 (`pending`/`completed`/`failed`). При масштабе одной MVP-недели длинная транзакция — приемлемая
@@ -37,9 +38,9 @@ enum `transcript_status`, а канон Architecture §10 явно фиксир�
 ## Presigned URL никогда не попадает в БД
 
 `src/storage.ts` генерирует presigned GET URL из `video_object_key` по требованию, с TTL
-10 минут (`WORKER_PRESIGNED_TTL_SECONDS`, Pseudocode §1.1). URL передаётся в `mcp-claude`
-через MCP-вызов и забывается сразу после — ни в одной таблице `video_url`/presigned-ссылка не
-хранится (Architecture §5, §10).
+10 минут (`WORKER_PRESIGNED_TTL_SECONDS`, Pseudocode §1.1). URL передаётся в `services/transcribe`
+через `POST /transcribe` и забывается сразу после — ни в одной таблице `video_url`/presigned-ссылка
+не хранится (Architecture §5, §10).
 
 ## Почему прямой SQL, а не `@proofwall/db`
 
@@ -54,10 +55,10 @@ SQL по снипетам из Architecture.md §5 и §3.4 — самодост
 
 ## Исправление Dockerfile (Phase 2)
 
-`ffmpeg` перенесён из `services/worker/Dockerfile` в `services/mcp-claude/Dockerfile` —
-извлечение аудио-дорожки закреплено за mcp-claude (Architecture §5, шаги 3-4), worker передаёт
-только presigned URL. Подробное обоснование — `services/mcp-claude/README.md` раздел
-«Исправление Dockerfile».
+`ffmpeg` перенесён из `services/worker/Dockerfile` в `services/transcribe/Dockerfile` (тогда ещё
+`services/mcp-claude/Dockerfile`) — извлечение аудио-дорожки закреплено за этим сервисом
+(Architecture §5, шаги 3-4), worker передаёт только presigned URL. Подробное обоснование —
+`services/transcribe/README.md`.
 
 ## Тесты
 
@@ -78,7 +79,7 @@ Postgres (testing.md §1: "Integration ... с реальной тестовой 
 ```bash
 npm install
 cp ../../.env.example ../../.env
-npm run dev      # tsx watch, локально без Docker (нужен доступный mcp-claude и Postgres)
+npm run dev      # tsx watch, локально без Docker (нужен доступный services/transcribe и Postgres)
 npm run build    # tsc → dist/index.js (то, что запускает Dockerfile)
 ```
 

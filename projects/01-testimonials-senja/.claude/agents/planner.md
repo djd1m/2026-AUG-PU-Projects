@@ -21,7 +21,7 @@ description: >
 |---|---|---|---|
 | FR-001 | `registerAccountAndProject`, `normalizeSlug`, `ensureUniqueSlug` | §9 | Явно введённый слаг не подменяется молча; авто-слаг донабирается случайным суффиксом |
 | FR-002/003 | `submitTestimonial`, `validateVideoConstraints`, `handleVideoTestimonial` | §1, §1.1 | Rate-limit списывается **после** валидации (W-5), не до |
-| FR-003 | `transcribeVideoJob`, `onCameraAccessRequest` | §1.1, §1.2 | Транскрипт — отдельное поле, `ClaudeApiError` → `transcript_status='failed'`, не блокирует публикацию |
+| FR-003 | `transcribeVideoJob`, `onCameraAccessRequest` | §1.1, §1.2 | Транскрипт — отдельное поле, `SttApiError` → `transcript_status='failed'`, не блокирует публикацию |
 | FR-004 | `moderateTestimonial`, `ALLOWED_TRANSITIONS` | §2 | Проверка владения ДО любого действия; переход в/из `approved` вызывает `recomputeContentThreshold` |
 | FR-005 | `renderWallOfLovePage` | §6 | Всегда доступна людям по прямой ссылке, `noindex` влияет только на директиву роботам |
 | FR-006 | `widgetBootstrap`, `fetchWidgetConfig` | §3 | Async, не блокирует `window.onload`; таймаут 300мс → `renderEmptyPlaceholder` |

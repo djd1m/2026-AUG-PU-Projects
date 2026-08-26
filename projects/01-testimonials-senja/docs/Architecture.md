@@ -5,9 +5,18 @@
 > pattern = Distributed Monolith (Monorepo), containers = Docker + Docker Compose,
 > infrastructure = VPS (AdminVPS/HOSTKEY), deploy = Docker Compose direct deploy,
 > ai_integration = MCP servers. Стек продукта: Next.js + **PostgreSQL в контейнере compose** +
-> **MinIO (S3-совместимое объектное хранилище) в контейнере compose** + Claude API (только через
-> MCP) + отдельный JS-виджет. Managed BaaS (Supabase, Firebase, Neon и т.п.) не используется —
-> см. §9 «Миграция со стека Supabase».
+> **MinIO (S3-совместимое объектное хранилище) в контейнере compose** + OpenAI STT (через
+> изолирующий сервис `services/transcribe`) + отдельный JS-виджет. Managed BaaS (Supabase,
+> Firebase, Neon и т.п.) не используется — см. §9 «Миграция со стека Supabase».
+>
+> **D-007 / ADR-005:** constraint `ai_integration = MCP servers` был написан под Claude API
+> (MCP — протокол Anthropic для tool-use). Claude API технически не может транскрибировать
+> аудио (не принимает его ни в одном content-блоке), поэтому единственная AI-интеграция проекта
+> переехала на OpenAI STT — обычный REST-вызов, MCP-протокол здесь не участвует технически.
+> `services/transcribe` остаётся изолирующим сервисом-обёрткой (единая точка обращения к внешнему
+> провайдеру, тот же принцип, что constraint требовал от MCP-сервера), но говорит по HTTP, не по
+> MCP. См. `docs/ADR.md` ADR-005 «Что изменилось и почему» для полного обоснования отклонения от
+> буквы constraint при сохранении его духа (изоляция AI-вызова в отдельный сервис).
 
 ## 1. Обзор системы и границы
 
@@ -15,10 +24,11 @@ Proofwall — distributed monolith в одном монорепозитории.
 контейнерах, которыми мы владеем и которые деплоятся вместе на один VPS.
 
 - **Внутри границы:** Next.js-приложение (дашборд, форма сбора, публичная стена, API-роуты,
-  аутентификация владельцев), отдельно собираемый JS-бандл виджета, MCP-сервер транскрипции,
-  фоновый воркер очереди видео, **PostgreSQL** (основная БД) и **MinIO** (хранилище видео) —
-  оба как контейнеры docker-compose нашего стека, а не внешние сервисы.
-- **На границе (внешние системы):** Claude API (только через MCP-сервер, см. §5), платёжный
+  аутентификация владельцев), отдельно собираемый JS-бандл виджета, сервис транскрипции
+  `services/transcribe`, фоновый воркер очереди видео, **PostgreSQL** (основная БД) и **MinIO**
+  (хранилище видео) — оба как контейнеры docker-compose нашего стека, а не внешние сервисы.
+- **На границе (внешние системы):** OpenAI STT (только через сервис `services/transcribe`, см. §5;
+  D-007/ADR-005 — раньше здесь был Claude API за MCP-протоколом, технически невозможно), платёжный
   провайдер (webhook, см. ADR-006), сайт клиента-владельца (хост для виджета) и его посетители.
 - **Вне scope недели** (см. PRD §1.2): импорт с 30+ платформ, AI-редактирование отзывов, роли/seats,
   Zapier и публичный API. Ни один компонент ниже не проектируется «с запасом» под эти фичи.
@@ -34,7 +44,7 @@ proofwall/
 │   ├── web/                 # Next.js: дашборд, /f/<slug>, /w/<slug>, все API-роуты, аутентификация
 │   └── widget/               # Отдельный билд: только JS-виджет, свой esbuild/vite конфиг
 ├── services/
-│   ├── mcp-claude/           # MCP-сервер: единственная точка входа к Claude API
+│   ├── transcribe/           # Единственная точка входа к внешнему STT-провайдеру (OpenAI)
 │   └── worker/                # Фоновый обработчик очереди видео (polling jobs-таблицы)
 ├── packages/
 │   ├── shared-types/          # TS-типы: Testimonial, Project, AnalyticsEvent и т.д.
@@ -49,10 +59,13 @@ proofwall/
 отдельный минимальный тулчейн (vanilla TS + esbuild), без React, публикуется как статический файл
 по пути `/widget.js` (см. §8).
 
-**Почему `services/mcp-claude` — отдельный сервис, а не библиотека в `apps/web`:** Constraint
-`ai_integration: MCP servers` требует не вызывать Claude API напрямую из бизнес-кода. MCP-сервер
-физически предоставляет **только один инструмент — `transcribe_video`**: граница FR-NFR-SEC-002
-(ADR-005) выражена в наборе доступных tool'ов, а не в промпте, который можно случайно изменить.
+**Почему `services/transcribe` — отдельный сервис, а не библиотека в `apps/web`:** тот же принцип
+изоляции, который constraint `ai_integration: MCP servers` требовал от MCP-сервера — не вызывать
+внешний AI/STT-провайдер напрямую из бизнес-кода. Сервис физически предоставляет **только один
+путь — `POST /transcribe`**: граница FR-NFR-SEC-002 (ADR-005) выражена в наборе доступных путей
+(раньше — MCP-tool'ов), а не в промпте, который можно случайно изменить. Транспорт сменился с MCP
+на plain HTTP при переезде с Claude API на OpenAI STT (D-007) — см. Architecture Constraints выше
+и `docs/ADR.md` ADR-005.
 
 ## 3. Модель данных
 
@@ -209,7 +222,7 @@ redirect_url}` провайдер-агностичен.
 projects.tier='paid'`. Идемпотентно по природе (`paid`→`paid` не меняет состояние), отдельного
 стора не требуется — в отличие от комиссии в §7.2. Отклонённый/просроченный платёж не даёт
 `payment_succeeded` — тариф не трогается. `web` дополнительно получает `PAYMENT_WEBHOOK_SECRET`
-(уже объявлен под `mcp-claude`, §7) — вебхук-роут физически исполняется в `apps/web` (§2).
+(уже объявлен у `web`, §7) — вебхук-роут физически исполняется в `apps/web` (§2).
 
 ## 4. Схема виджета
 
@@ -266,14 +279,15 @@ API-ключа проекта, невозможно: подделка ответ
      §10) и `transcript_status = 'pending'`.
   2. `services/worker` поллит записи `transcript_status = 'pending'` (`SELECT ... FOR UPDATE SKIP
      LOCKED` по Postgres — без Redis ради простоты недели, тот же принцип, что и в §3.4).
-  3. Worker формирует presigned GET URL **из `video_object_key`** и вызывает `services/mcp-claude`
-     (MCP, инструмент `transcribe_video(video_url)`) — presigned URL живёт только на время вызова,
-     в БД не попадает.
-  4. MCP-сервер скачивает видео, отправляет аудио-дорожку в Claude API **только с промптом
-     транскрипции**, возвращает текст воркеру.
+  3. Worker формирует presigned GET URL **из `video_object_key`** и вызывает `services/transcribe`
+     (`POST /transcribe { video_url }`) — presigned URL живёт только на время вызова, в БД не
+     попадает.
+  4. `services/transcribe` скачивает видео, отправляет аудио-дорожку в OpenAI STT (D-007/ADR-005
+     — раньше здесь стоял Claude API за MCP-протоколом; Claude API не принимает аудио, невыполнимо
+     технически), возвращает текст воркеру.
   5. Worker пишет `transcript`, `transcript_source = 'machine'`, `transcript_status = 'completed'`.
-     Неудачный вызов MCP → `transcript_status = 'failed'`, отзыв виден в модерации без
-     транскрипта; retry — `[GAP: политика повторных попыток — вне scope MVP-недели]`.
+     Неудачный вызов `services/transcribe` → `transcript_status = 'failed'`, отзыв виден в
+     модерации без транскрипта; retry — `[GAP: политика повторных попыток — вне scope MVP-недели]`.
 - **На Wall of Love** транскрипт рендерится с явной пометкой «Машинная расшифровка» — того требует
   FR-NFR-SEC-002 / ADR-005.
 
@@ -343,7 +357,7 @@ services:
       - S3_BUCKET
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
-      - MCP_CLAUDE_URL=http://mcp-claude:7331
+      - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
       - PAYMENT_WEBHOOK_SECRET   # FR-008: onPaymentWebhook/applyTariffUpgrade исполняются в apps/web (§3.5)
     ports: ["3000:3000"]
     depends_on:
@@ -351,7 +365,7 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-      mcp-claude:
+      transcribe:
         condition: service_started
 
   worker:
@@ -362,19 +376,21 @@ services:
       - S3_BUCKET
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
-      - MCP_CLAUDE_URL=http://mcp-claude:7331
+      - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
     depends_on:
       postgres:
         condition: service_healthy
       minio:
         condition: service_healthy
-      mcp-claude:
+      transcribe:
         condition: service_started
 
-  mcp-claude:
-    build: ./services/mcp-claude
+  # D-007 / ADR-005: раньше mcp-claude — Claude API не принимает аудио, переехало на OpenAI STT.
+  transcribe:
+    build: ./services/transcribe
     environment:
-      - ANTHROPIC_API_KEY        # только он: сервис делает ТОЛЬКО транскрипцию (ADR-005)
+      - OPENAI_API_KEY           # только он: сервис делает ТОЛЬКО транскрипцию (ADR-005)
+      - OPENAI_TRANSCRIBE_MODEL  # опционально; дефолт gpt-4o-mini-transcribe
     expose: ["7331"]
 
   caddy:
@@ -394,7 +410,7 @@ volumes:
 ```
 
 **Порядок запуска (W-4 — короткий синтаксис `depends_on: [a, b]` ждёт только старта контейнера, не
-здоровья; исправлено на `condition: service_healthy`):** `postgres`+`minio` healthy → `mcp-claude`
+здоровья; исправлено на `condition: service_healthy`):** `postgres`+`minio` healthy → `transcribe`
 started (нет healthcheck на этой неделе) → `web`/`worker` → `caddy`. Миграции (`packages/db`)
 прогоняются CI-шагом до `up -d` на новых версиях образа `web`, не отдельным сервисом compose.
 
@@ -454,7 +470,7 @@ Architecture, без потери принятых продуктовых и ADR
 | Путь конфигурации виджета | `GET /api/widget/config` | `/api/widget-config` | Уже используется в §4.2, §6, ADR-002 — три независимых места ссылаются на этот путь |
 | Поле файла видео | `testimonials.video_object_key` | `video_url` | NFR по мульти-арендности требует не хранить постоянный публичный URL; presigned URL истекает, поэтому в БД хранится ключ объекта, а не ссылка (§5) |
 | Поле текста транскрипта | `testimonials.transcript` | `video_transcript` | Короче, без избыточного префикса `video_` (таблица и так `testimonials`, поле уже про видео-отзыв) |
-| Поле статуса транскрипции | `testimonials.transcript_status enum(pending,completed,failed)` | `pending_transcription bool` | Булево не могло выразить неудачный вызов MCP; enum добавляет `failed` без изменения количества полей (§5) |
+| Поле статуса транскрипции | `testimonials.transcript_status enum(pending,completed,failed)` | `pending_transcription bool` | Булево не могло выразить неудачный вызов сервиса транскрипции; enum добавляет `failed` без изменения количества полей (§5) |
 | Поле источника транскрипта | `testimonials.transcript_source enum(machine)` | `video_transcript_is_machine bool` | Единообразно с `transcript_status`/`transcript`; расширяемо, если когда-нибудь появится ручная расшифровка — не в scope MVP |
 | Момент ценности | `widget_installed` + `invite_shown`, оба на `widget_installs` | отдельная таблица/поле под `invite_shown` | PRD §2.4.1 (пересмотрено): оба события — одна гранулярность (`project_id`,`domain`), см. §3.3 |
 

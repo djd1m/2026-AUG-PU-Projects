@@ -2,25 +2,25 @@
  * tests/transcribe.test.ts
  *
  * Юнит-уровень (testing.md §1): чистые/изолируемые пути transcribe.ts без реальной сети
- * и без реального ffmpeg/Claude API. Сетевой путь скачивания видео и путь ошибок Claude
+ * и без реального ffmpeg/OpenAI API. Сетевой путь скачивания видео и путь ошибок STT-провайдера
  * замокан — это не интеграционный тест полного pipeline (для этого нужен бы реальный
  * ffmpeg-бинарник и реальный видеофайл, что вне объёма Phase 2 генерации сервисов).
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { ClaudeApiError, transcribeVideo } from "../src/transcribe.js";
-import type { McpClaudeConfig } from "../src/config.js";
+import { SttApiError, transcribeVideo } from "../src/transcribe.js";
+import type { TranscribeConfig } from "../src/config.js";
 
-const CONFIG: McpClaudeConfig = {
+const CONFIG: TranscribeConfig = {
   port: 0,
-  anthropicApiKey: "sk-test-not-a-real-key",
+  openaiApiKey: "sk-test-not-a-real-key",
   transcribeModel: "test-model-placeholder",
   maxVideoBytes: 100 * 1024 * 1024,
   maxDurationSeconds: 120,
 };
 
 describe("transcribeVideo — ошибка скачивания видео", () => {
-  it("оборачивает сетевую ошибку в ClaudeApiError (не роняет процесс)", async () => {
+  it("оборачивает сетевую ошибку в SttApiError (не роняет процесс)", async () => {
     const originalFetch = global.fetch;
     global.fetch = vi.fn(async () => {
       throw new Error("network unreachable");
@@ -29,13 +29,13 @@ describe("transcribeVideo — ошибка скачивания видео", () 
     try {
       await expect(
         transcribeVideo({ video_url: "https://minio.example/testimonial-videos/x.mp4" }, CONFIG),
-      ).rejects.toBeInstanceOf(ClaudeApiError);
+      ).rejects.toBeInstanceOf(SttApiError);
     } finally {
       global.fetch = originalFetch;
     }
   });
 
-  it("отклоняет HTTP-ответ не-2xx (истёкший presigned URL) как ClaudeApiError", async () => {
+  it("отклоняет HTTP-ответ не-2xx (истёкший presigned URL) как SttApiError", async () => {
     const originalFetch = global.fetch;
     global.fetch = vi.fn(
       async () =>
@@ -45,7 +45,7 @@ describe("transcribeVideo — ошибка скачивания видео", () 
     try {
       await expect(
         transcribeVideo({ video_url: "https://minio.example/testimonial-videos/x.mp4" }, CONFIG),
-      ).rejects.toBeInstanceOf(ClaudeApiError);
+      ).rejects.toBeInstanceOf(SttApiError);
     } finally {
       global.fetch = originalFetch;
     }
@@ -77,11 +77,11 @@ describe("transcribeVideo — ошибка скачивания видео", () 
   });
 });
 
-describe("ClaudeApiError", () => {
+describe("SttApiError", () => {
   it("сохраняет исходную причину (cause) для логирования", () => {
     const cause = new Error("original");
-    const err = new ClaudeApiError("wrapped", cause);
-    expect(err.name).toBe("ClaudeApiError");
+    const err = new SttApiError("wrapped", cause);
+    expect(err.name).toBe("SttApiError");
     expect(err.cause).toBe(cause);
     expect(err).toBeInstanceOf(Error);
   });

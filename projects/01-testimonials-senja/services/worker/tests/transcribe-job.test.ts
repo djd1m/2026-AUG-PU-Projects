@@ -2,8 +2,8 @@
  * tests/transcribe-job.test.ts
  *
  * ТЗ Phase 2: "тест на путь failed". Проверяет Pseudocode §1.1:
- *   "catch ClaudeApiError as e: updateTestimonial(..., { transcript_status: 'failed' })"
- * — неудачный вызов mcp-claude переводит отзыв в терминальное состояние `failed`,
+ *   "catch SttApiError as e: updateTestimonial(..., { transcript_status: 'failed' })"
+ * — неудачный вызов services/transcribe переводит отзыв в терминальное состояние `failed`,
  * НЕ роняет воркер и НЕ оставляет строку в `pending` навсегда.
  *
  * Интеграционный уровень (реальная Postgres) — та же схема, что и skip-locked.test.ts.
@@ -12,7 +12,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type pg from "pg";
 import { claimAndProcessOneTestimonial } from "../src/transcribe-job.js";
-import { ClaudeApiError, type TranscribeClient } from "../src/mcp-client.js";
+import { SttApiError, type TranscribeClient } from "../src/transcribe-client.js";
 import { createTestPool, dropSchema, setupSchema, testDatabaseUrl, truncateAll } from "./helpers/test-db.js";
 
 const hasTestDb = !!testDatabaseUrl();
@@ -42,18 +42,18 @@ describe.skipIf(!hasTestDb)("transcribeVideoJob — путь failed и путь 
     return rows[0]!.id;
   }
 
-  it("ClaudeApiError → transcript_status='failed', отзыв остаётся видимым (transcript NULL)", async () => {
+  it("SttApiError → transcript_status='failed', отзыв остаётся видимым (transcript NULL)", async () => {
     const testimonialId = await insertPending("project-1/broken.webm");
 
     const failingClient: TranscribeClient = {
       async transcribeVideo() {
-        throw new ClaudeApiError("mcp-claude: ffmpeg завершился с кодом 1");
+        throw new SttApiError("services/transcribe: ffmpeg завершился с кодом 1");
       },
     };
 
     const result = await claimAndProcessOneTestimonial({
       pool,
-      mcpClient: failingClient,
+      transcribeClient: failingClient,
       presignVideoUrl: async (key) => `https://minio.test/${key}`,
     });
 
@@ -78,7 +78,7 @@ describe.skipIf(!hasTestDb)("transcribeVideoJob — путь failed и путь 
 
     const result = await claimAndProcessOneTestimonial({
       pool,
-      mcpClient: okClient,
+      transcribeClient: okClient,
       presignVideoUrl: async (key) => `https://minio.test/${key}`,
     });
 
@@ -95,25 +95,25 @@ describe.skipIf(!hasTestDb)("transcribeVideoJob — путь failed и путь 
     });
   });
 
-  it("непредвиденная ошибка (не ClaudeApiError) — строка НЕ помечается failed, ошибка пробрасывается", async () => {
+  it("непредвиденная ошибка (не SttApiError) — строка НЕ помечается failed, ошибка пробрасывается", async () => {
     await insertPending("project-1/unexpected.webm");
 
     const throwingClient: TranscribeClient = {
       async transcribeVideo() {
-        throw new Error("это не ClaudeApiError — например, баг в коде");
+        throw new Error("это не SttApiError — например, баг в коде");
       },
     };
 
     await expect(
       claimAndProcessOneTestimonial({
         pool,
-        mcpClient: throwingClient,
+        transcribeClient: throwingClient,
         presignVideoUrl: async (key) => `https://minio.test/${key}`,
       }),
-    ).rejects.toThrow("это не ClaudeApiError");
+    ).rejects.toThrow("это не SttApiError");
 
     // Транзакция откатилась — строка осталась pending, а не тихо стала failed по
-    // причине, не связанной с Claude API (важно для отладки: баг в коде не должен
+    // причине, не связанной с STT-провайдером (важно для отладки: баг в коде не должен
     // маскироваться под «неудачную транскрипцию»).
     const { rows } = await pool.query(`SELECT transcript_status FROM testimonials`);
     expect(rows[0]?.transcript_status).toBe("pending");
@@ -122,7 +122,7 @@ describe.skipIf(!hasTestDb)("transcribeVideoJob — путь failed и путь 
   it("очередь пуста → { status: 'empty' }, ничего не падает", async () => {
     const result = await claimAndProcessOneTestimonial({
       pool,
-      mcpClient: {
+      transcribeClient: {
         async transcribeVideo() {
           throw new Error("не должен вызываться — очередь пуста");
         },

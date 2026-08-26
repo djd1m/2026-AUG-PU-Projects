@@ -18,14 +18,14 @@ claude
 Стек — Docker Compose, все сервисы свои (Architecture §7, §9 — без managed BaaS):
 
 ```bash
-cp .env.example .env        # заполнить DATABASE_URL, SESSION_SECRET, S3_*, PAYMENT_WEBHOOK_SECRET, ANTHROPIC_API_KEY
+cp .env.example .env        # заполнить DATABASE_URL, SESSION_SECRET, S3_*, PAYMENT_WEBHOOK_SECRET, OPENAI_API_KEY
 docker compose up -d postgres minio
 docker compose run --rm web npm run db:migrate   # packages/db миграции
 docker compose up -d
 ```
 
 `depends_on: condition: service_healthy` на `postgres`/`minio` (Architecture §7, W-4) — `web`/
-`worker` не стартуют, пока БД и хранилище не отвечают health-check. `mcp-claude` не имеет
+`worker` не стартуют, пока БД и хранилище не отвечают health-check. `transcribe` не имеет
 health-check на этой неделе (`condition: service_started`).
 
 Проверить, что всё поднялось:

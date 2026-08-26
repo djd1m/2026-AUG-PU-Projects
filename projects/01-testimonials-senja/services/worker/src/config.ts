@@ -2,9 +2,10 @@
  * Конфигурация services/worker из переменных окружения.
  *
  * Источник переменных: docs/Architecture.md §7 (docker-compose), .env.example.
- * Секрет ANTHROPIC_API_KEY сюда НЕ входит намеренно — worker вызывает Claude только
- * через HTTP к services/mcp-claude, ключ ему не нужен и не должен быть доступен
- * (ADR-005, .claude/rules/security.md §5: "web и worker его не получают").
+ * Секрет OPENAI_API_KEY сюда НЕ входит намеренно — worker вызывает внешний STT-провайдер
+ * только через HTTP к services/transcribe, ключ ему не нужен и не должен быть доступен
+ * (ADR-005, .claude/rules/security.md §5: "web и worker его не получают" — раньше это
+ * правило звучало про ANTHROPIC_API_KEY, D-007 сменил провайдера, инвариант тот же).
  */
 
 function requireEnv(env: NodeJS.ProcessEnv, name: string): string {
@@ -25,13 +26,13 @@ export interface WorkerConfig {
   /** MinIO игнорирует регион, но AWS SDK v3 требует непустое значение. */
   s3Region: string;
 
-  /** Architecture §7: канон http://mcp-claude:7331 внутри docker-сети. */
-  mcpClaudeUrl: string;
+  /** Architecture §7: канон http://transcribe:7331 внутри docker-сети. */
+  transcribeServiceUrl: string;
 
   /** Пауза между итерациями поллинга очереди видео, если очередь пуста. */
   pollIntervalMs: number;
   /**
-   * TTL presigned GET URL, который worker выдаёт mcp-claude (Pseudocode §1.1:
+   * TTL presigned GET URL, который worker выдаёт services/transcribe (Pseudocode §1.1:
    * "presigned_url = generatePresignedGetUrl(video_object_key, ttl = 10 minutes)").
    */
   presignedUrlTtlSeconds: number;
@@ -52,7 +53,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): WorkerConfig {
     s3SecretKey: requireEnv(env, "S3_SECRET_KEY"),
     s3Region: env.S3_REGION ?? "us-east-1",
 
-    mcpClaudeUrl: requireEnv(env, "MCP_CLAUDE_URL"),
+    transcribeServiceUrl: requireEnv(env, "TRANSCRIBE_SERVICE_URL"),
 
     pollIntervalMs: Number(env.WORKER_POLL_INTERVAL_MS ?? 5_000),
     presignedUrlTtlSeconds: Number(env.WORKER_PRESIGNED_TTL_SECONDS ?? 10 * 60), // 10 минут

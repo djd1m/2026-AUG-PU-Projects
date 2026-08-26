@@ -100,12 +100,12 @@ function transcribeVideoJob(testimonial_id, video_object_key):
   try:
     presigned_url = generatePresignedGetUrl(video_object_key, ttl = 10 minutes)  # только для этого вызова, не хранится
     audio = extractAudioTrack(presigned_url)
-    transcript_text = claudeApi.transcribe(audio)   # MCP tool transcribe_video, ТОЛЬКО расшифровка речи
+    transcript_text = sttApi.transcribe(audio)   # POST /transcribe на services/transcribe (D-007: OpenAI STT, не Claude API — см. ADR-005), ТОЛЬКО расшифровка речи
     # FR-NFR-SEC-002: транскрипт — ОТДЕЛЬНОЕ поле, никогда не пишется в testimonial.text
     updateTestimonial(testimonial_id, {
       transcript: transcript_text, transcript_source: 'machine', transcript_status: 'completed'
     })
-  catch ClaudeApiError as e:
+  catch SttApiError as e:
     # Канон Architecture §10 даёт transcript_status enum(pending,completed,failed) —
     # неудача выразима в схеме, а не только в логах.
     updateTestimonial(testimonial_id, { transcript_status: 'failed' })
@@ -562,6 +562,6 @@ function getPartnerCohortDashboard(partner_code):
 ## Открытые вопросы
 
 - [GAP: точное определение "внешнего домена" — allowlist поддоменов клиента или просто `!= OUR_APP_DOMAIN`; влияет на §4 при staging/preview-доменах владельца]
-- [GAP: политика повторной попытки транскрипции при `ClaudeApiError` — одна попытка или retry с backoff; §1.1 сейчас ставит `transcript_status: 'failed'` без ретрая, но статус позволяет вернуть строку в очередь]
+- [GAP: политика повторной попытки транскрипции при `SttApiError` — одна попытка или retry с backoff; §1.1 сейчас ставит `transcript_status: 'failed'` без ретрая, но статус позволяет вернуть строку в очередь]
 - [GAP: ставка комиссии по умолчанию (`partner.rate`) — не задана в PRD/Specification]
 - [GAP: способ аутентификации партнёра для доступа к своему когортному дашборду (§10) — не описан в PRD/Specification]

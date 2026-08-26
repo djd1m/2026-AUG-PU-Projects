@@ -1,8 +1,8 @@
 {
-  "name": "@proofwall/mcp-claude",
-  "version": "0.1.0",
+  "name": "@proofwall/transcribe",
+  "version": "0.2.0",
   "private": true,
-  "description": "Единственная точка входа к Claude API. ADR-005: ровно один MCP-tool — transcribe_video.",
+  "description": "Единственная точка входа к внешнему STT-провайдеру (OpenAI). ADR-005: сервис не принимает текст отзыва на вход — только видео/аудио, выход — расшифровка.",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
@@ -14,8 +14,6 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.120.0",
-    "@modelcontextprotocol/sdk": "^1.30.0",
     "express": "^5.2.0",
     "zod": "^4.4.0"
   },

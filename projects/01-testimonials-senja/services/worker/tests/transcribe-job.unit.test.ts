@@ -9,7 +9,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import { claimAndProcessOneTestimonial } from "../src/transcribe-job.js";
-import { ClaudeApiError, type TranscribeClient } from "../src/mcp-client.js";
+import { SttApiError, type TranscribeClient } from "../src/transcribe-client.js";
 import type { Pool, PoolClient } from "../src/db.js";
 
 function fakePoolClient(selectRows: Array<{ id: string; video_object_key: string }>) {
@@ -34,7 +34,7 @@ describe("claimAndProcessOneTestimonial — последовательность
 
     const result = await claimAndProcessOneTestimonial({
       pool,
-      mcpClient: { transcribeVideo: vi.fn() } as unknown as TranscribeClient,
+      transcribeClient: { transcribeVideo: vi.fn() } as unknown as TranscribeClient,
       presignVideoUrl: vi.fn(),
     });
 
@@ -47,14 +47,14 @@ describe("claimAndProcessOneTestimonial — последовательность
     const { client, queries } = fakePoolClient([{ id: "t-1", video_object_key: "k1" }]);
     const pool = { connect: vi.fn(async () => client) } as unknown as Pool;
 
-    const mcpClient: TranscribeClient = { transcribeVideo: vi.fn().mockResolvedValue("текст") };
+    const transcribeClient: TranscribeClient = { transcribeVideo: vi.fn().mockResolvedValue("текст") };
     const presignVideoUrl = vi.fn().mockResolvedValue("https://minio.test/k1?sig=x");
 
-    const result = await claimAndProcessOneTestimonial({ pool, mcpClient, presignVideoUrl });
+    const result = await claimAndProcessOneTestimonial({ pool, transcribeClient, presignVideoUrl });
 
     expect(result).toEqual({ status: "completed", testimonialId: "t-1" });
     expect(presignVideoUrl).toHaveBeenCalledWith("k1");
-    expect(mcpClient.transcribeVideo).toHaveBeenCalledWith("https://minio.test/k1?sig=x");
+    expect(transcribeClient.transcribeVideo).toHaveBeenCalledWith("https://minio.test/k1?sig=x");
     expect(queries).toEqual([
       "BEGIN",
       expect.stringContaining("SELECT"),
@@ -63,17 +63,17 @@ describe("claimAndProcessOneTestimonial — последовательность
     ]);
   });
 
-  it("ClaudeApiError: BEGIN → SELECT → UPDATE(...failed) → COMMIT (не ROLLBACK)", async () => {
+  it("SttApiError: BEGIN → SELECT → UPDATE(...failed) → COMMIT (не ROLLBACK)", async () => {
     const { client, queries } = fakePoolClient([{ id: "t-2", video_object_key: "k2" }]);
     const pool = { connect: vi.fn(async () => client) } as unknown as Pool;
 
-    const mcpClient: TranscribeClient = {
-      transcribeVideo: vi.fn().mockRejectedValue(new ClaudeApiError("ffmpeg упал")),
+    const transcribeClient: TranscribeClient = {
+      transcribeVideo: vi.fn().mockRejectedValue(new SttApiError("ffmpeg упал")),
     };
 
     const result = await claimAndProcessOneTestimonial({
       pool,
-      mcpClient,
+      transcribeClient,
       presignVideoUrl: vi.fn().mockResolvedValue("https://minio.test/k2"),
     });
 
@@ -86,17 +86,17 @@ describe("claimAndProcessOneTestimonial — последовательность
     const { client, queries } = fakePoolClient([{ id: "t-3", video_object_key: "k3" }]);
     const pool = { connect: vi.fn(async () => client) } as unknown as Pool;
 
-    const mcpClient: TranscribeClient = {
-      transcribeVideo: vi.fn().mockRejectedValue(new Error("баг, не ClaudeApiError")),
+    const transcribeClient: TranscribeClient = {
+      transcribeVideo: vi.fn().mockRejectedValue(new Error("баг, не SttApiError")),
     };
 
     await expect(
       claimAndProcessOneTestimonial({
         pool,
-        mcpClient,
+        transcribeClient,
         presignVideoUrl: vi.fn().mockResolvedValue("https://minio.test/k3"),
       }),
-    ).rejects.toThrow("баг, не ClaudeApiError");
+    ).rejects.toThrow("баг, не SttApiError");
 
     expect(queries[queries.length - 1]).toBe("ROLLBACK");
     expect((client as unknown as { release: () => void }).release).toHaveBeenCalledOnce();

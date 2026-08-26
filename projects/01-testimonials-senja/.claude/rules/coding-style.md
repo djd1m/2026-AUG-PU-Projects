@@ -1,7 +1,8 @@
 # Coding Style Rules — Proofwall
 
 Источник: `docs/Architecture.md` §2, §4, §10. Стек: Next.js (`apps/web`) + vanilla TS-виджет
-(`apps/widget`) + MCP-сервер (`services/mcp-claude`) + воркер (`services/worker`) на монорепо.
+(`apps/widget`) + сервис транскрипции (`services/transcribe`) + воркер (`services/worker`) на
+монорепо.
 
 ## 1. Разбиение монорепо — не смешивать пакеты
 
@@ -11,7 +12,7 @@ proofwall/
 │   ├── web/            # Next.js: дашборд, /f/<slug>, /w/<slug>, все API-роуты, аутентификация
 │   └── widget/          # ТОЛЬКО JS-виджет, отдельный esbuild/vite, БЕЗ React
 ├── services/
-│   ├── mcp-claude/      # Единственная точка входа к Claude API — единственный tool transcribe_video
+│   ├── transcribe/      # Единственная точка входа к внешнему STT-провайдеру (OpenAI) — единственный путь POST /transcribe
 │   └── worker/           # Фоновый обработчик очереди видео (поллинг jobs-таблицы)
 ├── packages/
 │   ├── shared-types/     # TS-типы: Testimonial, Project, AnalyticsEvent
@@ -25,10 +26,11 @@ proofwall/
 рендера хоста (FR-NFR-PERF-001); Next.js chunk неизбежно тянет фреймворк-рантайм. Не импортировать
 ничего из `apps/web` или `packages/ui` (React) в `apps/widget` — это молча сломает бюджет бандла.
 
-**Почему `services/mcp-claude` — отдельный сервис, а не библиотека в `apps/web`:** граница
-FR-NFR-SEC-002 (ADR-005) выражена в наборе доступных tool'ов MCP-сервера, а не в промпте внутри
-общего кода. Не вызывать Claude API напрямую из `apps/web`/`worker` — только через MCP-клиент к
-`services/mcp-claude`.
+**Почему `services/transcribe` — отдельный сервис, а не библиотека в `apps/web`:** граница
+FR-NFR-SEC-002 (ADR-005) выражена в наборе доступных путей сервиса, а не в промпте внутри
+общего кода. Не вызывать внешний STT-провайдер напрямую из `apps/web`/`worker` — только через
+HTTP-клиент к `services/transcribe` (D-007: раньше здесь был MCP-клиент к Claude API —
+см. `docs/ADR.md` ADR-005).
 
 ## 2. Канонические имена (Architecture §10) — не переизобретать
 
@@ -72,7 +74,7 @@ FR-NFR-SEC-002 (ADR-005) выражена в наборе доступных too
 
 ## 5. Docker Compose
 
-Сервисы: `postgres`, `minio`, `web`, `worker`, `mcp-claude`, `caddy`. Все — наши, managed-BaaS
+Сервисы: `postgres`, `minio`, `web`, `worker`, `transcribe`, `caddy`. Все — наши, managed-BaaS
 (Supabase/Firebase/Neon) не используется — см. `CLAUDE.md` и Architecture §9. `depends_on` для
 `postgres`/`minio` — `condition: service_healthy` (не короткий синтаксис `depends_on: [a,b]`,
 который ждёт только старта контейнера, не здоровья — найденный и исправленный баг W-4).

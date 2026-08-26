@@ -42,8 +42,8 @@ MVP считается done (Completion.md §1), когда одновремен
 | Деплой | CI → образы → миграции → `docker compose -f docker-compose.prod.yml up -d` по SSH |
 | БД | **PostgreSQL в контейнере compose** — managed BaaS (Supabase/Firebase/Neon) запрещён; см. Architecture §9 «Миграция со стека Supabase» — Postgres/RLS остались, изменился только слой инфраструктуры |
 | Хранилище видео | **MinIO** (S3-совместимое, контейнер compose), presigned URL с TTL, никогда постоянная публичная ссылка |
-| AI-интеграция | Claude API **только через MCP-сервер** `services/mcp-claude`, единственный tool `transcribe_video` (ADR-005) |
-| Монорепо | `apps/web`, `apps/widget`, `services/mcp-claude`, `services/worker`, `packages/{shared-types,db,ui}` |
+| AI-интеграция | Внешний STT-провайдер (OpenAI) **только через сервис** `services/transcribe`, единственный путь `POST /transcribe` (ADR-005; D-007 — изначально планировался Claude API, технически невозможен, см. `docs/ADR.md`) |
+| Монорепо | `apps/web`, `apps/widget`, `services/transcribe`, `services/worker`, `packages/{shared-types,db,ui}` |
 
 ## Основной growth loop: BADGE LOOP — это цель проекта, не украшение
 
@@ -87,11 +87,13 @@ Loop ломается, если тариф проверяется на клие�
 
 ## Non-negotiable ограничения
 
-1. **FTC-граница применения Claude (ADR-005, PRD §4.4).** Claude API — **только** для
-   транскрипции речи видео-отзыва, через единственный MCP-tool `transcribe_video`. Инструмента
-   «переписать/улучшить/сгенерировать текст отзыва» не должно существовать в кодовой базе —
-   граница на уровне набора tool'ов MCP-сервера, а не промпта. Штраф FTC Rule 16 CFR Part 465 —
-   до $53,088 за нарушение. Подробности — `.claude/rules/security.md`.
+1. **FTC-граница применения AI-транскрипции (ADR-005, PRD §4.4).** Внешний STT-провайдер
+   (OpenAI) — **только** для транскрипции речи видео-отзыва, через единственный путь
+   `POST /transcribe` сервиса `services/transcribe`. Пути «переписать/улучшить/сгенерировать
+   текст отзыва» не должно существовать в кодовой базе — граница на уровне набора путей сервиса,
+   а не промпта. Штраф FTC Rule 16 CFR Part 465 — до $53,088 за нарушение. Подробности —
+   `.claude/rules/security.md`. (D-007: изначально здесь стоял Claude API за MCP-протоколом —
+   Claude API технически не принимает аудио, см. `docs/ADR.md` ADR-005.)
 2. **XSS: экранирование на рендере, не на приёме.** FR-002/003 сохраняют ввод побайтово как есть
    (это условие побайтового совпадения из FR-NFR-SEC-002, не забытая санитизация). FR-005/006
    обязаны экранировать при рендере — SSR-страница `/w/<slug>` и виджет на произвольном чужом
