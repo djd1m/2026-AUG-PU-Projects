@@ -7,6 +7,7 @@ import {
   ensureUniqueSlug,
   isValidSlug,
   normalizeSlug,
+  normalizeSlugDeterministic,
   randomAlphaNum,
 } from '../src/lib/slug';
 
@@ -103,5 +104,30 @@ describe('ensureUniqueSlug — Pseudocode §9', () => {
 
   it('после 10 неудачных попыток бросает, а не зацикливается', async () => {
     await expect(ensureUniqueSlug('busy', async () => true)).rejects.toThrow(/10 попыток/);
+  });
+});
+
+describe('normalizeSlugDeterministic — ничего не выдумывает', () => {
+  it('НЕ добирает слишком короткий ввод суффиксом (в отличие от normalizeSlug)', () => {
+    // Ровно этот случай протаскивал "ab" мимо проверки формата и создавал "ab-x7q".
+    expect(normalizeSlugDeterministic('ab')).toBe('ab');
+    expect(isValidSlug(normalizeSlugDeterministic('ab'))).toBe(false);
+    expect(isValidSlug(normalizeSlug('ab'))).toBe(true);
+  });
+
+  it('пустой вход остаётся пустым, а не превращается в случайный слаг', () => {
+    expect(normalizeSlugDeterministic('')).toBe('');
+    expect(normalizeSlugDeterministic('---')).toBe('');
+    expect(normalizeSlug('')).toMatch(SLUG_PATTERN);
+  });
+
+  it('детерминирован: один вход — всегда один выход', () => {
+    for (const s of ['My Slug', 'a-b-c', 'ПРИВЕТ мир']) {
+      expect(normalizeSlugDeterministic(s)).toBe(normalizeSlugDeterministic(s));
+    }
+  });
+
+  it('приводит регистр и пробелы так же, как normalizeSlug', () => {
+    expect(normalizeSlugDeterministic('My Cool Project')).toBe('my-cool-project');
   });
 });
