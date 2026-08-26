@@ -7,6 +7,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'node',
+    // Направляет пул из src/index.ts на тестовую БД ДО загрузки модулей — см. env-setup.ts.
+    setupFiles: ['./tests/env-setup.ts'],
     fileParallelism: false,
     testTimeout: 15000,
     hookTimeout: 15000,
