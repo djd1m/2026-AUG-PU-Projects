@@ -1,0 +1,111 @@
+{
+  "generated_from": "docs/PRD.md §1.2 + §4.1 + §4.2, docs/Specification.md",
+  "generated_at": "2026-08-26",
+  "note": "Порядок — по риску и зависимостям growth loop (badge loop), не по номеру FR-требования. См. CLAUDE.md 'Основной growth loop'.",
+  "features": [
+    {
+      "id": "FR-001",
+      "title": "Регистрация владельца и создание проекта (слаг, 3 ссылки: форма/стена/виджет)",
+      "status": "next",
+      "priority": "high",
+      "tags": ["mvp", "foundation"],
+      "depends_on": []
+    },
+    {
+      "id": "FR-002",
+      "title": "Форма сбора — текстовый отзыв (rate limit 5/час/IP, приём без санитизации)",
+      "status": "planned",
+      "priority": "high",
+      "tags": ["mvp", "security"],
+      "depends_on": ["FR-001"]
+    },
+    {
+      "id": "FR-003",
+      "title": "Форма сбора — видео-отзыв + очередь транскрипции через MCP (ADR-005, граница Claude/FTC)",
+      "status": "planned",
+      "priority": "high",
+      "tags": ["mvp", "security", "ftc-compliance"],
+      "depends_on": ["FR-001"]
+    },
+    {
+      "id": "FR-004",
+      "title": "Модерация: pending/approved/rejected/hidden, audit log, cross-project 403",
+      "status": "planned",
+      "priority": "high",
+      "tags": ["mvp", "security"],
+      "depends_on": ["FR-002", "FR-003"]
+    },
+    {
+      "id": "FR-005",
+      "title": "Публичная страница Wall of Love (SSR, schema.org/Review, экранирование при рендере)",
+      "status": "planned",
+      "priority": "critical",
+      "tags": ["mvp", "growth-dependency", "security"],
+      "depends_on": ["FR-004"]
+    },
+    {
+      "id": "FR-GROWTH-005",
+      "title": "Порог содержательности и noindex для /w/<slug> — anti scaled-content-abuse (ADR-004)",
+      "status": "planned",
+      "priority": "high",
+      "tags": ["mvp", "growth", "seo"],
+      "depends_on": ["FR-005"]
+    },
+    {
+      "id": "FR-006",
+      "title": "Встраиваемый виджет: Shadow DOM, ≤30KB gzip, badge_required с сервера (ADR-001)",
+      "status": "planned",
+      "priority": "critical",
+      "tags": ["mvp", "growth-critical", "perf", "security"],
+      "depends_on": ["FR-005"]
+    },
+    {
+      "id": "FR-GROWTH-001",
+      "title": "widget_installed + invite_shown (момент ценности) и share-CTA на каждый новый домен",
+      "status": "planned",
+      "priority": "critical",
+      "tags": ["mvp", "growth-critical", "metric-of-the-week"],
+      "depends_on": ["FR-006"]
+    },
+    {
+      "id": "FR-007",
+      "title": "Тарифы free/paid как атрибут проекта, серверная проверка (не в клиенте)",
+      "status": "planned",
+      "priority": "critical",
+      "tags": ["mvp", "growth-critical"],
+      "depends_on": ["FR-006"]
+    },
+    {
+      "id": "FR-GROWTH-003",
+      "title": "Badge loop: обязательный badge на free, anti-tamper MutationObserver (ADR-002)",
+      "status": "planned",
+      "priority": "critical",
+      "tags": ["mvp", "growth-critical", "security"],
+      "depends_on": ["FR-007"]
+    },
+    {
+      "id": "FR-008",
+      "title": "Checkout + webhook оплаты, идемпотентность по event_id (ADR-006), апгрейд тарифа",
+      "status": "planned",
+      "priority": "high",
+      "tags": ["mvp", "security", "payments"],
+      "depends_on": ["FR-007"]
+    },
+    {
+      "id": "FR-GROWTH-002",
+      "title": "Партнёрская атрибуция: приоритет промокода над cookie (ADR-003), self-referral guard",
+      "status": "planned",
+      "priority": "medium",
+      "tags": ["mvp", "growth"],
+      "depends_on": ["FR-008"]
+    },
+    {
+      "id": "FR-GROWTH-004",
+      "title": "Персональные партнёрские коды + anti-fraud по IP на регистрациях",
+      "status": "planned",
+      "priority": "medium",
+      "tags": ["mvp", "growth"],
+      "depends_on": ["FR-GROWTH-002"]
+    }
+  ]
+}
