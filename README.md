@@ -16,3 +16,32 @@
 ```bash
 npm install -g @dzhechkov/harness-cli @dzhechkov/p-replicator @dzhechkov/skills-feature-adr ruflo
 ```
+
+## Установлено в проект
+
+Все три skill-пака и ruflo проинициализированы в этом репозитории:
+
+- **feature-adr** (`skills-feature-adr init`) — 46 файлов: скилл `feature-adr` (11 модулей),
+  `explore`, `problem-solver-enhanced`, `frontend-design`, команда `/feature-adr`, правила, шард.
+- **p-replicator** (`p-replicator init`) — 134 файла: 10 skill-паков, команды `/replicate` и `/harvest`,
+  4 агента-оркестратора, правила пайплайна, хуки (`.claude/hooks/`, `settings.json`).
+- **ruflo** (`ruflo init --no-global --no-signup --no-skills-sh --no-codex-detect`) —
+  30 скиллов, 16 команд, 17 агентов, `.claude/helpers/`, MCP-сервер `claude-flow` в `.mcp.json`,
+  V3-рантайм в `.claude-flow/`, корневой `CLAUDE.md`.
+
+`.claude/settings.json` смёржен: хуки p-replicator сохранены, ruflo добавил `env` и `permissions`.
+
+Рантайм-состояние (`ruvector.db`, `.swarm/`, `.claude-flow/{data,logs,sessions}`) — в `.gitignore`.
+
+### Проверка здоровья
+
+```bash
+skills-feature-adr doctor   # 6/6 checks passed
+p-replicator doctor         # all passed (1 optional warning)
+ruflo doctor                # 20 passed, 8 warnings (все опциональные)
+```
+
+### Что ещё не сделано
+
+`dz init --target claude` (harness-cli) не запускался — он поставит ещё ~14 skill-паков
+поверх текущих и может пересечься с уже установленным. Скажи, если нужно.
