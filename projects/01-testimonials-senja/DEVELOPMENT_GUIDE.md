@@ -44,6 +44,20 @@ DATABASE_URL="postgres://proofwall:<пароль>@${PGHOST_IP}:5432/proofwall" n
 W-4) — `web`/`worker` не стартуют, пока зависимости не отвечают health-check. У `transcribe`
 health-check появился в Phase 3 (`GET /health`), поэтому его ждут по здоровью, а не по старту.
 
+Тестовая база — отдельная, миграции накатываются в неё тем же раннером:
+
+```bash
+docker compose exec -T postgres psql -U proofwall -d postgres -c "create database proofwall_test"
+TEST_DB="postgres://proofwall:<пароль>@${PGHOST_IP}:5432/proofwall_test"
+DATABASE_URL="$TEST_DB" npm run db:migrate
+TEST_DATABASE_URL="$TEST_DB" npm test          # 62 теста: 23 widget + 9 transcribe + 12 worker + 18 db
+```
+
+Достаточно одного `TEST_DATABASE_URL` — пул `packages/db/src/index.ts` перенаправляется на него
+через `packages/db/tests/env-setup.ts`. Тесты `services/worker` работают в отдельной схеме
+Postgres `worker_test` и не трогают таблицы `public` (D-008) — поэтому `npm test` идемпотентен:
+второй прогон подряд даёт тот же результат.
+
 Проверить, что всё поднялось:
 
 ```bash
