@@ -259,7 +259,7 @@
     {
       "id": "FR-GROWTH-002",
       "title": "Партнёрская атрибуция: приоритет промокода над cookie (ADR-003), self-referral guard",
-      "status": "next",
+      "status": "done",
       "priority": "medium",
       "tags": [
         "mvp",
@@ -267,12 +267,19 @@
       ],
       "depends_on": [
         "FR-008"
+      ],
+      "files": [
+        "packages/db/migrations/009_partner_owner.sql",
+        "apps/web/src/lib/referral.ts",
+        "apps/web/src/lib/register.ts",
+        "apps/web/src/app/api/webhooks/payment/route.ts",
+        "apps/web/tests/referral.test.ts"
       ]
     },
     {
       "id": "FR-GROWTH-004",
       "title": "Персональные партнёрские коды + anti-fraud по IP на регистрациях",
-      "status": "planned",
+      "status": "next",
       "priority": "medium",
       "tags": [
         "mvp",
@@ -283,5 +290,5 @@
       ]
     }
   ],
-  "last_completed": "FR-008"
+  "last_completed": "FR-GROWTH-002"
 }

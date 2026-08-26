@@ -25,6 +25,7 @@ import { buildProjectUrls, type ProjectUrls } from './urls';
 import { onProjectCreated } from './content-threshold';
 import { parseBadgeAttribution } from './badge';
 import { emitEvents } from './widget-install';
+import { createPendingAttribution, resolveAttribution } from './referral';
 
 export interface RegisterInput {
   email: unknown;
@@ -36,6 +37,10 @@ export interface RegisterInput {
    * Замыкает петлю: badge на чужом сайте → клик → регистрация, и мы знаем, ЧЕЙ виджет привёл.
    */
   utm_query?: unknown;
+  /** FR-GROWTH-002: явно введённый партнёрский код. Приоритетнее cookie (ADR-003). */
+  promo_code?: unknown;
+  /** FR-GROWTH-002: пассивная метка pw_ref из cookie. */
+  cookie_ref?: unknown;
 }
 
 export type RegisterResult =
@@ -126,6 +131,14 @@ export async function registerAccountAndProject(
   // FR-GROWTH-003: регистрация пришла по badge — фиксируем замкнувшуюся петлю.
   // Событие пишется на НОВЫЙ проект, но его metadata несёт слаг ПРИВЕДШЕГО проекта:
   // иначе нельзя ответить, чей именно виджет сработал.
+  // FR-GROWTH-002: партнёрская атрибуция создаётся со статусом pending — начисление
+  // происходит по оплате, а не по регистрации (Pseudocode §7.2).
+  const referral = await resolveAttribution(client, {
+    promoCode: typeof input.promo_code === 'string' ? input.promo_code : null,
+    cookieRef: typeof input.cookie_ref === 'string' ? input.cookie_ref : null,
+  });
+  if (referral) await createPendingAttribution(client, accountId, referral);
+
   const attribution = parseBadgeAttribution(typeof input.utm_query === 'string' ? input.utm_query : null);
   if (attribution) {
     await client.query(

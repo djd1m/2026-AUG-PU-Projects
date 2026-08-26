@@ -8,6 +8,7 @@ import { NextResponse } from 'next/server';
 import { withService } from '@proofwall/db';
 import { applyTariffUpgrade, claimWebhookEvent, verifyWebhookSignature } from '@/lib/payment';
 import { extractClientIP } from '@/lib/client-ip';
+import { convertAttributionOnPayment } from '@/lib/referral';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,13 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   // ── ШАГ 2: разбор ТОЛЬКО после проверки подписи ─────────────────────────
-  let event: { id?: unknown; type?: unknown; checkout_session_id?: unknown };
+  let event: {
+    id?: unknown;
+    type?: unknown;
+    checkout_session_id?: unknown;
+    account_id?: unknown;
+    amount?: unknown;
+  };
   try {
     event = JSON.parse(rawBody);
   } catch {
@@ -60,10 +67,20 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     // ── ШАГ 4: применение тарифа ──────────────────────────────────────────
     const upgrade = await applyTariffUpgrade(client, event.checkout_session_id);
-    return upgrade.applied ? ('upgraded' as const) : ('unknown_session' as const);
 
-    // FR-GROWTH-002 (начисление партнёру и проверка self-referral) подключается здесь же,
-    // после апгрейда — приходит со своей фичей роадмапа.
+    // ── ШАГ 5: партнёрское начисление (FR-GROWTH-002) ─────────────────────
+    // Выполняется ПОСЛЕ апгрейда и в той же транзакции: сбой начисления не должен
+    // оставить оплатившего без тарифа, а откат тарифа — без причины.
+    if (typeof event.account_id === 'string' && event.account_id !== '') {
+      await convertAttributionOnPayment(
+        client,
+        event.account_id,
+        event.id as string,
+        typeof event.amount === 'number' ? event.amount : 0,
+      );
+    }
+
+    return upgrade.applied ? ('upgraded' as const) : ('unknown_session' as const);
   });
 
   // 200 на всё, что прошло подпись: провайдер не должен ретраить события, которые мы
