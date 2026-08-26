@@ -149,7 +149,7 @@
     {
       "id": "FR-006",
       "title": "Встраиваемый виджет: Shadow DOM, ≤30KB gzip, badge_required с сервера (ADR-001)",
-      "status": "next",
+      "status": "done",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -159,12 +159,20 @@
       ],
       "depends_on": [
         "FR-005"
+      ],
+      "files": [
+        "apps/web/src/lib/widget-config.ts",
+        "apps/web/src/app/api/widget/config/route.ts",
+        "apps/web/src/lib/urls.ts",
+        "scripts/copy-widget-to-public.mjs",
+        "package.json",
+        "apps/web/tests/widget-config.test.ts"
       ]
     },
     {
       "id": "FR-GROWTH-001",
       "title": "widget_installed + invite_shown (момент ценности) и share-CTA на каждый новый домен",
-      "status": "planned",
+      "status": "next",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -178,7 +186,7 @@
     {
       "id": "FR-007",
       "title": "Тарифы free/paid как атрибут проекта, серверная проверка (не в клиенте)",
-      "status": "planned",
+      "status": "next",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -243,5 +251,5 @@
       ]
     }
   ],
-  "last_completed": "FR-GROWTH-005"
+  "last_completed": "FR-006"
 }

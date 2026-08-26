@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "build:widget": "npm run build --workspace apps/widget",
+    "build:widget": "npm run build --workspace apps/widget && node scripts/copy-widget-to-public.mjs",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "tsc --noEmit -p tsconfig.base.json",

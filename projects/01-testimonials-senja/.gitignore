@@ -10,3 +10,7 @@ build/
 *.log
 coverage/
 .DS_Store
+
+# Бандл виджета раскладывается сборкой (scripts/copy-widget-to-public.mjs), не коммитится
+apps/web/public/widget.*.js
+apps/web/public/widget-manifest.json
