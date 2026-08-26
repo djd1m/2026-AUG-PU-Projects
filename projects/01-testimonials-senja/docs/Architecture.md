@@ -197,23 +197,19 @@ select count(*) from rate_limit_events
 
 ### 3.5 Checkout и обновление тарифа (FR-008)
 
-Инициация — API-роут `apps/web` (`POST /api/checkout`, роль `app_authenticated`, только владелец
-проекта): создаёт `checkout_sessions (project_id, provider_session_id, status='pending')` и
-обращается к провайдеру за сессией/ссылкой `[GAP: выбор платёжного провайдера, см. §11]` —
-контракт `project_id → { provider_session_id, redirect_url }` провайдер-агностичен.
+Инициация — `apps/web` (`POST /api/checkout`, роль `app_authenticated`, владелец проекта): создаёт
+`checkout_sessions (project_id, provider_session_id, status='pending')`, обращается к провайдеру
+`[GAP: выбор платёжного провайдера, см. §11]` — контракт `project_id → {provider_session_id,
+redirect_url}` провайдер-агностичен.
 
-Подтверждение идёт через **тот же вебхук-канал**, что и FR-GROWTH-002: `onPaymentWebhook`
-(Pseudocode §7.2 — подпись/идемпотентность/self-referral, этой правкой не меняется) уже
-возвращает HTTP 200 только после успешной проверки подписи. Отдельный шаг `applyTariffUpgrade`
-(Pseudocode §7.3, новый) вызывается той же route-обёрткой ПОСЛЕ `onPaymentWebhook`, тем же
-`raw_body`: резолвит `event.checkout_session_id → checkout_sessions.project_id` и ставит
-`projects.tier = 'paid'`. Отдельного стора идемпотентности не требуется — `tier = 'paid'`
-естественно идемпотентен (повтор не меняет состояние), в отличие от начисления комиссии в §7.2.
-Отклонённый/просроченный/неудачный платёж не порождает `payment_succeeded` — тариф не трогается.
-
-`web` дополнительно получает `PAYMENT_WEBHOOK_SECRET` (объявлен под `mcp-claude`, §7, не меняется
-этой правкой) — сам вебхук-роут (`onPaymentWebhook`/`applyTariffUpgrade`) физически исполняется в
-`apps/web`, единственном месте API-роутов (§2).
+Подтверждение — тот же вебхук-канал, что и FR-GROWTH-002: `onPaymentWebhook` (Pseudocode §7.2 —
+подпись/идемпотентность/self-referral, не меняется) возвращает HTTP 200 только после проверки
+подписи; отдельный шаг `applyTariffUpgrade` (Pseudocode §7.3, новый) та же route-обёртка вызывает
+ПОСЛЕ него тем же `raw_body`: `event.checkout_session_id → checkout_sessions.project_id →
+projects.tier='paid'`. Идемпотентно по природе (`paid`→`paid` не меняет состояние), отдельного
+стора не требуется — в отличие от комиссии в §7.2. Отклонённый/просроченный платёж не даёт
+`payment_succeeded` — тариф не трогается. `web` дополнительно получает `PAYMENT_WEBHOOK_SECRET`
+(уже объявлен под `mcp-claude`, §7) — вебхук-роут физически исполняется в `apps/web` (§2).
 
 ## 4. Схема виджета
 
