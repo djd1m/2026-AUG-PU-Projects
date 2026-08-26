@@ -14,3 +14,7 @@ ruvector.db-*
 *.db-wal
 *.db-shm
 node_modules/
+
+# Временные файлы агентов
+*.tmp
+*.bak
