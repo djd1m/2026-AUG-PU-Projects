@@ -238,7 +238,7 @@
     {
       "id": "FR-008",
       "title": "Checkout + webhook оплаты, идемпотентность по event_id (ADR-006), апгрейд тарифа",
-      "status": "next",
+      "status": "done",
       "priority": "high",
       "tags": [
         "mvp",
@@ -247,12 +247,19 @@
       ],
       "depends_on": [
         "FR-007"
+      ],
+      "files": [
+        "apps/web/src/lib/payment.ts",
+        "apps/web/src/lib/tariff.ts",
+        "apps/web/src/app/api/checkout/route.ts",
+        "apps/web/src/app/api/webhooks/payment/route.ts",
+        "apps/web/tests/payment.test.ts"
       ]
     },
     {
       "id": "FR-GROWTH-002",
       "title": "Партнёрская атрибуция: приоритет промокода над cookie (ADR-003), self-referral guard",
-      "status": "planned",
+      "status": "next",
       "priority": "medium",
       "tags": [
         "mvp",
@@ -276,5 +283,5 @@
       ]
     }
   ],
-  "last_completed": "FR-GROWTH-003"
+  "last_completed": "FR-008"
 }

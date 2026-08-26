@@ -28,6 +28,15 @@ export function badgeRequiredFor(tierFromDatabase: unknown): boolean {
   return tierFromDatabase !== 'paid';
 }
 
+/**
+ * «Тариф уже платный?» — тот же единственный источник, что и badgeRequiredFor.
+ * Отдельная функция, а не `!badgeRequiredFor(x)` на месте вызова: отрицание правила
+ * про badge читается как «badge не нужен», и смысл «оплачено» в нём теряется.
+ */
+export function isPaid(tierFromDatabase: unknown): boolean {
+  return tierFromDatabase === 'paid';
+}
+
 /** Человекочитаемое описание для дашборда — что именно даёт переход. */
 export function tierSummary(tier: Tier): { label: string; badge: string } {
   return tier === 'paid'
