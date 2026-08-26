@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "_comment": "Default hooks + statusline shipped by @dzhechkov/p-replicator init. Cross-platform Node scripts (no bash dependencies). Auto-commits roadmap/insights/plans on Stop, injects relevant insights on SessionStart. Statusline displays pipeline+roadmap+toolkit dashboard above the prompt. Project-specific hooks (DDD, fitness functions, etc.) are merged in by /replicate Phase 3.",
+  "_comment": "Default hooks + statusline shipped by @dzhechkov/p-replicator init. Cross-platform Node scripts (no bash dependencies). Auto-commits roadmap/insights/plans on Stop, injects relevant insights on SessionStart. Statusline displays pipeline+roadmap+toolkit dashboard above the prompt. Project-specific hooks (DDD, fitness functions, etc.) are merged in by /replicate Phase 3. ВАЖНО: пути к хукам абсолютные через $CLAUDE_PROJECT_DIR. Относительный '.claude/hooks/...' считается от ТЕКУЩЕГО каталога, и при работе внутри projects/<имя>/ разворачивался в projects/<имя>/.claude/hooks/... — файлов там нет, все Stop-хуки падали с MODULE_NOT_FOUND.",
   "statusLine": {
     "type": "command",
-    "command": "node .claude/hooks/statusline.cjs"
+    "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/statusline.cjs\""
   },
   "hooks": {
     "SessionStart": [
@@ -12,7 +12,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/session-insights.cjs",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-insights.cjs\"",
             "timeout": 5
           }
         ]
@@ -24,17 +24,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/autocommit-roadmap.cjs",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/autocommit-roadmap.cjs\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/autocommit-insights.cjs",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/autocommit-insights.cjs\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node .claude/hooks/autocommit-plans.cjs",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/autocommit-plans.cjs\"",
             "timeout": 10
           }
         ]
