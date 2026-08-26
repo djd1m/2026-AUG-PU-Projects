@@ -68,6 +68,16 @@ if [ -f "$PROJ_ROOT/docker-compose.yml" ]; then
   else
     say "Порты: хостовая часть в переменных" "✅"
   fi
+  # Правило №0: хранилище наружу — компрометация, а не неудобство (инцидент 2026-08-26).
+  db_pub=$(grep -B6 -E '^[[:space:]]*ports:' "$PROJ_ROOT/docker-compose.yml" \
+    | grep -oE 'image:[[:space:]]*[^[:space:]]*(postgres|mysql|mariadb|mongo|redis|elastic|minio|rabbitmq|pgvector)[^[:space:]]*' | head -3)
+  if [ -n "$db_pub" ]; then
+    say "БД публикует порт наружу" "❌ $(echo "$db_pub" | tr '\n' ' ') — заменить ports: на expose:"
+    FAIL=1
+  else
+    say "Хранилища не смотрят в интернет" "✅"
+  fi
+
   if [ -x "$(dirname "$0")/check-port-conflicts.sh" ]; then
     if bash "$(dirname "$0")/check-port-conflicts.sh" "$PROJ_ROOT" >/dev/null 2>&1; then
       say "Порты: конфликтов на машине нет" "✅"

@@ -106,6 +106,55 @@ if [ ${#WANTED[@]} -eq 0 ]; then
   exit 0
 fi
 
+# --- Правило №0: БД не публикуется наружу ------------------------------------
+# Заслужено инцидентом: тестовый Postgres с -p 55432:5432 и паролем postgres был
+# взломан из интернета примерно за час (COPY ... TO PROGRAM -> червь-майнер).
+# Проверка детерминированная, потому что цена ошибки — компрометация, а не неудобство.
+echo "== БД и хранилища не смотрят в интернет =="
+DB_PORTS='5432|3306|27017|6379|9200|9300|5672|11211|9000'
+DB_IMAGES='postgres|mysql|mariadb|mongo|redis|elasticsearch|opensearch|minio|rabbitmq|memcached|clickhouse|pgvector'
+
+db_exposed=""
+config_ok=0
+if command -v docker >/dev/null 2>&1; then
+  # Сначала УБЕЖДАЕМСЯ, что конфиг вообще читается. Иначе пустой вывод неотличим от
+  # «нарушений нет», и проверка зеленеет именно там, где должна была сработать.
+  if docker compose -f "$COMPOSE" --project-directory "$PROJECT_DIR" config >/dev/null 2>&1; then
+    config_ok=1
+  fi
+  # `docker compose config` печатает каждый сервис с его image и published/target портами.
+  db_exposed=$(docker compose -f "$COMPOSE" --project-directory "$PROJECT_DIR" config 2>/dev/null \
+    | awk -v imgs="$DB_IMAGES" -v prts="$DB_PORTS" '
+        /^  [a-zA-Z0-9_-]+:$/ { svc=$1; sub(/:$/,"",svc); isdb=0 }
+        /^[[:space:]]*image:/ { if ($2 ~ imgs) isdb=1 }
+        /^[[:space:]]*host_ip:/ { hip=$2 }
+        /^[[:space:]]*target:/ { tgt=$2 }
+        /^[[:space:]]*published:/ {
+          pub=$2; gsub(/"/,"",pub)
+          # Публикация на ПЕТЛЮ законна: так поднимается тестовое окружение, где тесты
+          # идут с хоста. Опасна только привязка ко всем интерфейсам — её docker
+          # печатает как host_ip: 0.0.0.0 либо не печатает вовсе.
+          loopback = (hip ~ /^127\./ || hip == "::1")
+          if ((isdb || tgt ~ "^(" prts ")$") && !loopback) print svc " (порт " pub " -> " tgt ")"
+          hip = ""
+        }')
+fi
+
+if [ -n "$db_exposed" ]; then
+  while IFS= read -r line; do
+    [ -n "$line" ] && fail "$line — хранилище опубликовано наружу. Заменить ports: на expose:"
+  done <<<"$db_exposed"
+  echo "     Соседи по сети compose достучатся по имени сервиса и без публикации."
+  echo "     Правило: .claude/rules/docker-ports.md, «Правило №0»."
+elif [ "$config_ok" -eq 1 ]; then
+  ok "ни одно хранилище не публикует порт наружу"
+else
+  # НЕ зеленеем: конфиг не прочитан, значит проверка не выполнена.
+  fail "не удалось прочитать конфиг ($COMPOSE) — проверка на публикацию БД НЕ выполнена"
+  echo "     Причина обычно в незаданной переменной; посмотреть: docker compose -f $COMPOSE config"
+fi
+echo
+
 echo "== Конфликты портов с уже занятым на этой машине =="
 for p in "${WANTED[@]}"; do
   if [ -n "${BUSY_BY[$p]:-}" ]; then

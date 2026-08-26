@@ -127,6 +127,11 @@ Always pass these constraints to sparc-prd-mini (Phase 1):
 - Infrastructure: VPS (AdminVPS/HOSTKEY)
 - Deploy: Docker Compose direct deploy
 - AI Integration: MCP servers
+- **Никаких прямых подключений к БД снаружи.** Postgres, Redis, MinIO и любые другие
+  хранилища объявляются ТОЛЬКО через `expose:`, никогда через `ports:`. Наружу смотрят
+  лишь reverse-proxy и приложение. Это инвариант архитектуры, а не свойство одного файла —
+  он распространяется и на разовые `docker run` в отладке (там обязателен явный
+  `127.0.0.1` и случайный пароль). Заслужено компрометацией: [`PR-012`](../../harness-forge/PR-012-db-never-published.md)
 - **Порты: хостовая часть только через `${VAR:-default}`, никогда числом** —
   машина не пустая, см. [`docker-ports.md`](docker-ports.md)
 

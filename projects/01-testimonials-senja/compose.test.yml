@@ -1,0 +1,51 @@
+# Окружение для интеграционных тестов (packages/db, apps/web, services/worker).
+#
+# Тесты гоняются С ХОСТА (`npm test`), а сервисы — в контейнерах, поэтому порты здесь
+# ПУБЛИКУЮТСЯ — в отличие от боевого docker-compose.yml, где у хранилищ только `expose:`.
+#
+# Ровно поэтому каждая публикация ниже прибита к 127.0.0.1 ЯВНО.
+# Форма `-p 5432:5432` (без адреса) открывает порт на ВСЕ интерфейсы, включая публичный IP.
+# Это не теория: 2026-08-26 тестовый Postgres, поднятый так, с паролем `postgres`, был
+# взломан из интернета примерно за час — `COPY … TO PROGRAM` дал выполнение команд,
+# и в контейнер лёг червь-майнер. Разбор: /harness-forge/PR-012-db-never-published.md
+#
+# Пароли берутся из окружения и НЕ имеют дефолтов — забытая переменная должна ронять
+# запуск, а не молча поднимать базу с предсказуемым паролем:
+#
+#   export TEST_PG_PASSWORD=$(openssl rand -hex 24)
+#   export TEST_MINIO_PASSWORD=$(openssl rand -hex 24)
+#   docker compose -f compose.test.yml up -d
+#
+# Порты по умолчанию смещены, чтобы не конфликтовать с боевым стеком на той же машине
+# (.claude/rules/docker-ports.md).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: proofwall_test
+      POSTGRES_PASSWORD: "${TEST_PG_PASSWORD:?задайте TEST_PG_PASSWORD=$(openssl rand -hex 24)}"
+      POSTGRES_DB: proofwall_test
+    # 127.0.0.1 ОБЯЗАТЕЛЕН. Не убирать. См. шапку файла.
+    ports: ["127.0.0.1:${TEST_PG_PORT:-55432}:5432"]
+    # Тестовая база одноразовая — том не нужен, tmpfs ещё и быстрее.
+    tmpfs: ["/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: proofwall_test
+      MINIO_ROOT_PASSWORD: "${TEST_MINIO_PASSWORD:?задайте TEST_MINIO_PASSWORD=$(openssl rand -hex 24)}"
+    ports: ["127.0.0.1:${TEST_MINIO_PORT:-59000}:9000"]
+    tmpfs: ["/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "mc ready local || exit 1"]
+      interval: 2s
+      timeout: 3s
+      retries: 15

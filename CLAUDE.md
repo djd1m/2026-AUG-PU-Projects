@@ -11,6 +11,15 @@
 - NEVER add a `Co-Authored-By` trailer to user commits unless this project's `.claude/settings.json` has `attribution.commit` set (#2078). The Claude Code Bash tool may suggest one in its default commit-message template — ignore it. `Co-Authored-By` is semantic authorship attribution under git/GitHub convention; the tool is the facilitator, not a co-author.
 - Keep files under 500 lines
 - Validate input at system boundaries
+- **NEVER publish a database port.** Postgres, Redis, MinIO, MySQL, Mongo, Elasticsearch —
+  только `expose:` в compose, никогда `ports:`. Для разового `docker run` в отладке
+  обязательны явный `127.0.0.1` в публикации И случайный пароль:
+  `docker run -p 127.0.0.1:55432:5432 -e POSTGRES_PASSWORD="$(openssl rand -hex 24)"`.
+  Форма `-p 55432:5432` публикует на ВСЕ интерфейсы, включая публичный IP машины.
+  Заслужено компрометацией 2026-08-26: тестовый Postgres с паролем `postgres` взломан
+  из интернета за час, в контейнер лёг червь-майнер. «Необычный» номер порта защитой
+  не является. Дефолтные учётные данные (`postgres/postgres`, `minioadmin/minioadmin`) —
+  не «временно для тестов», а готовая точка входа
 - NEVER start a container (`docker compose up`, `docker run -p`) before checking port
   conflicts: `bash scripts/check-port-conflicts.sh <проект>`. Эта машина держит десяток
   чужих контейнеров — `80`, `443`, `8080`, `11432` и другие уже заняты. При генерации

@@ -82,27 +82,54 @@ RLS/rate-limit/идемпотентность не эмулируются юни
 миграциями:
 
 ```bash
-# поднять тестовую Postgres (когда появится compose.test.yml в корне репозитория — см. GAP ниже)
-docker compose -f ../../compose.test.yml up -d postgres
+# Всё из КОРНЯ проекта (projects/01-testimonials-senja).
 
-# накатить миграции на тестовую БД
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/proofwall_test npm run migrate
+# 1. Разово: случайные пароли в .env.test (файл в .gitignore, права 600).
+#    compose.test.yml требует их жёстко — забытая переменная роняет запуск,
+#    а не поднимает базу с предсказуемым паролем.
+bash scripts/init-test-env.sh
 
-# прогнать тесты
-TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/proofwall_test npm test
+# 2. Поднять окружение. Порты прибиты к 127.0.0.1 — см. предупреждение ниже.
+docker compose --env-file .env.test -f compose.test.yml up -d
+
+# 3. Накатить миграции
+set -a; . ./.env.test; set +a
+export TEST_DATABASE_URL="postgres://proofwall_test:${TEST_PG_PASSWORD}@127.0.0.1:${TEST_PG_PORT}/proofwall_test"
+DATABASE_URL="$TEST_DATABASE_URL" npm run migrate --workspace packages/db
+
+# 4. Прогнать тесты (S3_* нужны только тестам apps/web на видео)
+S3_ENDPOINT="http://127.0.0.1:${TEST_MINIO_PORT}" S3_ACCESS_KEY=proofwall_test \
+S3_SECRET_KEY="$TEST_MINIO_PASSWORD" S3_BUCKET=testimonial-videos \
+DATABASE_URL="$TEST_DATABASE_URL" npm test
+
+# Убрать за собой (данные в tmpfs, стираются вместе с контейнерами)
+docker compose --env-file .env.test -f compose.test.yml down -v
 ```
+
+> ⚠️ **Тестовую БД нельзя публиковать наружу.** В `compose.test.yml` порты прибиты к
+> `127.0.0.1` ЯВНО, и убирать этот адрес нельзя: форма `ports: ["55432:5432"]` без адреса
+> публикует порт на ВСЕ интерфейсы, включая публичный IP машины.
+>
+> Это не теория. 2026-08-26 тестовый Postgres, поднятый командой
+> `docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres` (её рекомендовал этот самый файл),
+> был скомпрометирован из интернета примерно за час: перебор пароля → `COPY … TO PROGRAM`
+> → червь-майнер в контейнере. Разбор и правило:
+> [`/harness-forge/PR-012-db-never-published.md`](../../../../harness-forge/PR-012-db-never-published.md),
+> [`.claude/rules/docker-ports.md`](../../../../.claude/rules/docker-ports.md).
+>
+> Проверить перед запуском: `bash scripts/check-port-conflicts.sh compose.test.yml`
 
 `TEST_DATABASE_URL` (или `DATABASE_URL`, если первого нет) — единственная переменная, которую
 читают тесты (`tests/setup.ts`). Каждый тестовый файл выполняется последовательно
 (`vitest.config.ts`: `fileParallelism: false`) и очищает все таблицы (`TRUNCATE ... CASCADE`)
 перед каждым тестом.
 
-**[GAP: `compose.test.yml` — тестовая Postgres-схема для CI — упоминается в
-`DEVELOPMENT_GUIDE.md` §3 и `.claude/rules/testing.md`, но сам файл не входит в scope
-`packages/db` (это корневой файл docker-compose) — его создание не описано ни в одном документе,
-за которым закреплён `packages/db`.]** До его появления — поднять Postgres 16 вручную
-(`docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres:16-alpine`) и передать
-`TEST_DATABASE_URL` явно.
+`TEST_DATABASE_URL` (или `DATABASE_URL`, если первого нет) — единственная переменная,
+которую читают тесты (`tests/setup.ts`).
+
+*(Ранее здесь стоял `[GAP]` про отсутствующий `compose.test.yml` и рекомендация поднять
+Postgres вручную через `docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres`. Файл создан,
+рекомендация удалена: именно она привела к компрометации — см. предупреждение выше.)*
 
 Что покрыто (порядок — по риску проекта, `.claude/rules/testing.md` §1):
 
