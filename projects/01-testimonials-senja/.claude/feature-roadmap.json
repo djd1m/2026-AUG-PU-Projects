@@ -42,7 +42,7 @@
     {
       "id": "FR-002",
       "title": "Форма сбора — текстовый отзыв (rate limit 5/час/IP, приём без санитизации)",
-      "status": "next",
+      "status": "done",
       "priority": "high",
       "tags": [
         "mvp",
@@ -50,6 +50,16 @@
       ],
       "depends_on": [
         "FR-001"
+      ],
+      "files": [
+        "apps/web/src/lib/testimonial.ts",
+        "apps/web/src/lib/client-ip.ts",
+        "apps/web/src/lib/branding.ts",
+        "apps/web/src/app/api/testimonials/route.ts",
+        "apps/web/src/app/f/[slug]/page.tsx",
+        "apps/web/src/app/f/[slug]/submit-form.tsx",
+        "apps/web/tests/testimonial.test.ts",
+        "apps/web/tests/branding.test.ts"
       ]
     },
     {
@@ -205,5 +215,5 @@
       ]
     }
   ],
-  "last_completed": "FR-001"
+  "last_completed": "FR-002"
 }
