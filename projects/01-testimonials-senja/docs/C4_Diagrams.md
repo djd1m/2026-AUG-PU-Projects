@@ -2,6 +2,8 @@
 
 > Ключевой поток для детализации: **рендер виджета с серверной проверкой тарифа**
 > (FR-006, FR-GROWTH-003). См. [`Architecture.md`](Architecture.md) §4 для прозы.
+> Postgres и MinIO — контейнеры нашего docker-compose стека, не внешние системы (см.
+> [Architecture.md §9](Architecture.md#9-миграция-со-стека-supabase)).
 
 ## Уровень 1 — System Context
 
@@ -13,19 +15,17 @@ C4Context
     Person(owner, "Владелец проекта", "Инди-хакер / агентство, собирает и модерирует отзывы")
     Person(partner, "Партнёр с аудиторией", "Владелец рассылки/канала, приводит трафик по коду")
 
-    System(proofwall, "Proofwall", "Сбор отзывов, модерация, Wall of Love, встраиваемый виджет")
+    System(proofwall, "Proofwall", "Сбор отзывов, модерация, Wall of Love, встраиваемый виджет; включает свою БД и хранилище")
 
     System_Ext(clientSite, "Сайт клиента-владельца", "Сторонний сайт, на который встроен <script>")
-    System_Ext(supabase, "Supabase", "Managed Postgres + Auth + Storage")
     System_Ext(claude, "Claude API", "Транскрипция видео-отзывов (только речь → текст)")
     System_Ext(payments, "Платёжный провайдер", "Оплата тарифа, вебхуки о платеже")
 
-    Rel(owner, proofwall, "Создаёт проект, модерирует, вставляет виджет", "HTTPS")
+    Rel(owner, proofwall, "Создаёт проект, модерирует, вставляет виджет, логинится", "HTTPS")
     Rel(visitor, clientSite, "Открывает страницу")
     Rel(clientSite, proofwall, "Загружает /widget.js, запрашивает конфигурацию", "HTTPS")
     Rel(visitor, proofwall, "Видит виджет и badge внутри страницы клиента")
     Rel(partner, proofwall, "Приводит трафик по персональному коду")
-    Rel(proofwall, supabase, "Читает/пишет данные, авторизует, хранит видео", "HTTPS")
     Rel(proofwall, claude, "Транскрибирует видео через MCP-сервер", "HTTPS (MCP)")
     Rel(payments, proofwall, "Уведомляет о платеже", "Webhook")
 ```
@@ -38,32 +38,31 @@ C4Container
 
     Person(visitor, "Посетитель сайта клиента")
     System_Ext(clientSite, "Сайт клиента", "Хост-страница со встроенным <script>")
+    System_Ext(claude, "Claude API")
 
-    Container_Boundary(monorepo, "Proofwall (monorepo)") {
+    Container_Boundary(monorepo, "Proofwall (сервисы одного docker-compose стека на VPS)") {
         Container(widget, "Widget Bundle", "Vanilla TS, ≤30KB gzip", "Рендерит карточки отзывов и badge внутри Shadow DOM")
-        Container(web, "Next.js App", "apps/web", "Дашборд, /f/<slug>, /w/<slug>, API-роуты (в т.ч. /api/widget/config)")
+        Container(web, "Next.js App", "apps/web", "Дашборд, аутентификация владельцев, /f/<slug>, /w/<slug>, API-роуты (в т.ч. /api/widget/config)")
         Container(worker, "Video Worker", "services/worker", "Поллит очередь видео, вызывает MCP-сервер")
         Container(mcp, "MCP Claude Server", "services/mcp-claude", "Единственная точка доступа к Claude API; один tool: transcribe_video")
         Container(caddy, "Caddy", "reverse proxy", "TLS, раздача /widget.js с кэшем")
+        ContainerDb(db, "PostgreSQL", "контейнер postgres, RLS-политики per-tenant", "Роли: app_authenticated (RLS), app_service (BYPASSRLS, анонимные пути)")
+        ContainerDb(storage, "MinIO", "контейнер minio, S3 API", "Видео-файлы, presigned upload/download URL")
     }
-
-    ContainerDb_Ext(db, "Supabase Postgres", "RLS-политики per-tenant")
-    Container_Ext(storage, "Supabase Storage", "Видео-файлы, signed URLs")
-    Container_Ext(auth, "Supabase Auth", "Аккаунты владельцев")
-    System_Ext(claude, "Claude API")
 
     Rel(clientSite, caddy, "GET /widget.js", "HTTPS")
     Rel(visitor, widget, "Рендер внутри страницы (в браузере посетителя)")
     Rel(widget, caddy, "GET /api/widget/config?slug=&domain=", "HTTPS fetch")
     Rel(caddy, web, "proxy_pass")
-    Rel(web, db, "SELECT approved testimonials, project.tier (service-role)", "SQL")
+    Rel(web, db, "SELECT approved testimonials, project.tier (роль app_service)", "SQL")
+    Rel(web, db, "SET LOCAL app.current_account_id; RLS-scoped запросы дашборда (роль app_authenticated)", "SQL")
     Rel(web, db, "upsert widget_installs, insert analytics_events", "SQL")
-    Rel(web, auth, "Проверка сессии владельца (дашборд)")
-    Rel(web, storage, "Signed URL для видео")
-    Rel(worker, db, "Поллинг pending_transcription", "SQL")
+    Rel(web, storage, "Presigned URL для загрузки/показа видео", "S3 API")
+    Rel(worker, db, "Поллинг pending_transcription (SELECT ... FOR UPDATE SKIP LOCKED)", "SQL")
+    Rel(worker, storage, "Presigned GET URL для видео", "S3 API")
     Rel(worker, mcp, "transcribe_video(video_url)", "MCP protocol")
     Rel(mcp, claude, "Транскрипция аудио-дорожки", "HTTPS")
-    Rel(mcp, storage, "Скачивание видео по signed URL", "HTTPS")
+    Rel(mcp, storage, "Скачивание видео по presigned URL", "HTTPS (S3 API)")
 ```
 
 ## Уровень 3 — Component (внутри `apps/web`: рендер виджета + проверка тарифа)
@@ -82,7 +81,7 @@ C4Component
         Component(eventWriter, "AnalyticsEventWriter", "module", "Единая точка записи в analytics_events (badge_impression и др.)")
     }
 
-    ContainerDb_Ext(db, "Supabase Postgres (service-role client)")
+    ContainerDb(db, "PostgreSQL", "роль app_service, BYPASSRLS — анонимный путь виджета")
 
     Rel(widget, route, "fetch(slug, domain)", "HTTPS/JSON")
     Rel(route, resolver, "resolve(slug)")
@@ -102,5 +101,9 @@ C4Component
   исключает подмену тарифа на клиенте (см. [ADR-002](ADR.md#adr-002)).
 - `TierPolicy` — единственное место в кодовой базе, принимающее решение о badge. Дублирования этой
   логики в других роутах быть не должно (проверяется код-ревью / линт-правилом на импорт модуля).
+- `PostgreSQL` и `MinIO` показаны как обычные контейнеры системы (`ContainerDb`/`Container`), а не
+  `_Ext` — это наши сервисы в том же docker-compose стеке, не внешняя managed-зависимость
+  (см. [Architecture.md §9](Architecture.md#9-миграция-со-стека-supabase)).
 - Уровень 3 намеренно ограничен одним потоком (виджет + тариф), как задано в требовании к документу;
-  остальные потоки (модерация, партнёрская атрибуция) детализируются по необходимости отдельно.
+  остальные потоки (модерация, партнёрская атрибуция, аутентификация) детализируются по
+  необходимости отдельно.

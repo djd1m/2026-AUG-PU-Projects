@@ -4,17 +4,22 @@
 > Architecture Constraints пайплайна (не обсуждаются в этом документе, только выражаются):
 > pattern = Distributed Monolith (Monorepo), containers = Docker + Docker Compose,
 > infrastructure = VPS (AdminVPS/HOSTKEY), deploy = Docker Compose direct deploy,
-> ai_integration = MCP servers. Стек продукта: Next.js + Supabase + Claude API + отдельный JS-виджет.
+> ai_integration = MCP servers. Стек продукта: Next.js + **PostgreSQL в контейнере compose** +
+> **MinIO (S3-совместимое объектное хранилище) в контейнере compose** + Claude API (только через
+> MCP) + отдельный JS-виджет. Managed BaaS (Supabase, Firebase, Neon и т.п.) не используется —
+> см. §9 «Миграция со стека Supabase».
 
 ## 1. Обзор системы и границы
 
-Proofwall — distributed monolith в одном монорепозитории. Границы системы:
+Proofwall — distributed monolith в одном монорепозитории. Все данные и файлы продукта живут в
+контейнерах, которыми мы владеем и которые деплоятся вместе на один VPS.
 
-- **Внутри границы:** Next.js-приложение (дашборд, форма сбора, публичная стена, API-роуты),
-  отдельно собираемый JS-бандл виджета, MCP-сервер транскрипции, фоновый воркер очереди видео.
-- **На границе (внешние системы):** Supabase (Postgres + Auth + Storage) как managed-зависимость,
-  Claude API (только через MCP-сервер, см. §5), платёжный провайдер (webhook, см. ADR-006),
-  сайт клиента-владельца (хост для виджета) и его посетители.
+- **Внутри границы:** Next.js-приложение (дашборд, форма сбора, публичная стена, API-роуты,
+  аутентификация владельцев), отдельно собираемый JS-бандл виджета, MCP-сервер транскрипции,
+  фоновый воркер очереди видео, **PostgreSQL** (основная БД) и **MinIO** (хранилище видео) —
+  оба как контейнеры docker-compose нашего стека, а не внешние сервисы.
+- **На границе (внешние системы):** Claude API (только через MCP-сервер, см. §5), платёжный
+  провайдер (webhook, см. ADR-006), сайт клиента-владельца (хост для виджета) и его посетители.
 - **Вне scope недели** (см. PRD §1.2): импорт с 30+ платформ, AI-редактирование отзывов, роли/seats,
   Zapier и публичный API. Ни один компонент ниже не проектируется «с запасом» под эти фичи.
 
@@ -26,14 +31,14 @@ Proofwall — distributed monolith в одном монорепозитории.
 ```
 proofwall/
 ├── apps/
-│   ├── web/                 # Next.js: дашборд, /f/<slug>, /w/<slug>, все API-роуты
+│   ├── web/                 # Next.js: дашборд, /f/<slug>, /w/<slug>, все API-роуты, аутентификация
 │   └── widget/               # Отдельный билд: только JS-виджет, свой esbuild/vite конфиг
 ├── services/
 │   ├── mcp-claude/           # MCP-сервер: единственная точка входа к Claude API
 │   └── worker/                # Фоновый обработчик очереди видео (polling jobs-таблицы)
 ├── packages/
 │   ├── shared-types/          # TS-типы: Testimonial, Project, AnalyticsEvent и т.д.
-│   ├── db/                    # Supabase migrations, RLS policies, generated types
+│   ├── db/                    # SQL-миграции (Postgres), RLS-политики, сгенерированные типы
 │   └── ui/                    # Общие React-компоненты дашборда и формы (НЕ виджета)
 ├── docker-compose.yml
 └── docker-compose.prod.yml
@@ -57,6 +62,7 @@ Constraint `ai_integration: MCP servers` требует, чтобы Claude API �
 ```mermaid
 erDiagram
     ACCOUNTS ||--o{ PROJECTS : owns
+    ACCOUNTS ||--o{ SESSIONS : "authenticates via"
     PROJECTS ||--o{ TESTIMONIALS : contains
     PROJECTS ||--o{ WIDGET_INSTALLS : "installed on domains"
     PROJECTS ||--o{ ANALYTICS_EVENTS : emits
@@ -70,9 +76,10 @@ erDiagram
 
 | Таблица | Ключевые поля | Назначение |
 |---|---|---|
-| `accounts` | `id` (= `auth.users.id`), `email` | Владелец, привязан к Supabase Auth |
+| `accounts` | `id`, `email` unique, `password_hash`, `created_at` | Владелец. Аутентификация — внутри монолита, см. §3.2 |
+| `sessions` | `id`, `account_id`, `token_hash`, `expires_at`, `revoked_at` | Активные сессии владельцев (§3.2) |
 | `projects` | `id`, `account_id`, `slug` unique, `branding jsonb`, `tier enum(free,paid)`, `noindex bool` | Единица арендатора; **всё в системе принадлежит проекту** |
-| `testimonials` | `id`, `project_id` NOT NULL, `status enum(pending,approved,rejected,hidden)`, `text`, `video_url`, `video_transcript`, `video_transcript_is_machine bool default true` | FR-002…FR-004 |
+| `testimonials` | `id`, `project_id` NOT NULL, `status enum(pending,approved,rejected,hidden)`, `text`, `video_object_key`, `video_transcript`, `video_transcript_is_machine bool default true` | FR-002…FR-004 |
 | `widget_installs` | `id`, `project_id`, `domain`, `first_seen_at`, `last_seen_at`, unique(`project_id`,`domain`) | Источник **метрики недели** и события `widget_installed` |
 | `analytics_events` | `id`, `project_id` nullable, `account_id` nullable, `event_type`, `domain`, `metadata jsonb`, `created_at` | Единый append-only журнал §6 |
 | `partner_codes` | `id`, `code` unique, `partner_name`, `status enum(active,revoked)` | FR-GROWTH-004 |
@@ -83,28 +90,59 @@ erDiagram
 
 ### 3.1 Мульти-арендная изоляция (FR-NFR-SEC-001) — где именно проверяется
 
-Изоляция проверяется в **двух независимых местах**, и оба обязательны (defense in depth):
+Изоляция проверяется в **двух независимых местах**, и оба обязательны (defense in depth). RLS —
+фича самого PostgreSQL, поэтому уход от Supabase её никак не меняет; меняется только то, **как
+задаётся контекст арендатора** в соединении (раньше это делал Supabase через `auth.uid()`, теперь —
+наш собственный код).
 
-1. **Supabase RLS на каждой таблице с `project_id`.** Для аутентифицированного пути (дашборд,
-   модерация) политика вида:
+1. **RLS на каждой таблице с `project_id`, роль `app_authenticated`.** Аутентифицированный путь
+   (дашборд, модерация) открывает транзакцию и первым делом задаёт контекст арендатора:
    ```sql
+   -- в начале транзакции, до любого запроса приложения:
+   SET LOCAL app.current_account_id = '<account_id из проверенной сессии>';
+
    create policy "tenant_isolation_select" on testimonials
      for select using (
-       project_id in (select id from projects where account_id = auth.uid())
+       project_id in (
+         select id from projects
+         where account_id = current_setting('app.current_account_id')::uuid
+       )
      );
-   -- аналогично для update/delete; insert — только через service-role в API-роуте формы
+   -- аналогично для update/delete
    ```
-   Это гарантирует, что даже баг в клиентском коде дашборда не даст прочитать чужой проект —
-   RLS работает на уровне Postgres, а не приложения.
+   `SET LOCAL` действует только внутри текущей транзакции — следующий запрос из пула соединений
+   не наследует чужой контекст. Это гарантирует, что даже баг в клиентском коде дашборда не даст
+   прочитать чужой проект — RLS работает на уровне Postgres, а не приложения.
 
-2. **Явная проверка `project_id` в каждом публичном API-роуте.** Анонимные пути (форма сбора,
-   виджет, Wall of Love) обращаются к Supabase **сервисной ролью** (RLS обходится намеренно), поэтому
-   для них изоляция — обязанность кода: каждый запрос обязан резолвить `slug → project_id` и
-   фильтровать `.eq('project_id', projectId).eq('status', 'approved')`. Ни один API-роут не
-   принимает `project_id` напрямую от клиента — только `slug`, который резолвится сервером.
+2. **Явная проверка `project_id` в каждом публичном API-роуте, роль `app_service` (BYPASSRLS).**
+   Анонимные пути (форма сбора, виджет, Wall of Love) обращаются к Postgres через отдельную роль
+   БД с атрибутом `BYPASSRLS` — RLS для них осознанно обходится (нет `account_id`, который можно
+   было бы подставить в `SET LOCAL`), поэтому для них изоляция — обязанность кода: каждый запрос
+   обязан резолвить `slug → project_id` и фильтровать `.where('project_id', projectId).where('status',
+   'approved')`. Ни один API-роут не принимает `project_id` напрямую от клиента — только `slug`,
+   который резолвится сервером. `app_service` — это прямой аналог Supabase service-role: тот же
+   принцип (доверенный серверный код обходит RLS осознанно), но роль своя, объявленная в
+   `packages/db`-миграциях, а не выданная платформой.
 
 Тест-контракт: интеграционный тест «проект A не может прочитать отзыв проекта B» гоняется и через
-аутентифицированный дашборд-путь (проверяет RLS), и через анонимный API (проверяет фильтрацию в коде).
+аутентифицированный дашборд-путь (проверяет RLS + `SET LOCAL`), и через анонимный API (проверяет
+фильтрацию в коде под `app_service`).
+
+### 3.2 Аутентификация владельцев (без Supabase Auth)
+
+Коротко, без изобретательства сверх нужд MVP:
+
+- Пароль хешируется при регистрации (`argon2id`/`bcrypt`) в `accounts.password_hash`, сверяется
+  константным по времени сравнением при входе.
+- Сессия — непрозрачный токен в httpOnly+Secure cookie; в `sessions` хранится не сам токен, а его
+  хеш (`token_hash`) — как и с паролем, компрометация БД не даёт захватить активные сессии.
+- Логаут = `revoked_at = now()` для строки сессии; логаут «на всех устройствах» = revoke всех
+  строк `account_id`. TTL сессии — sliding-разумный дефолт, точное число не зафиксировано в
+  исходных документах — `[GAP: TTL сессии/политика ротации — реализовать разумный дефолт]`.
+- Middleware `apps/web` на каждый запрос дашборда: cookie → валидная (не revoked, не expired)
+  сессия → `account_id` → открывает транзакцию под ролью `app_authenticated`, делает `SET LOCAL
+  app.current_account_id` (см. §3.1) — дальше все запросы этой транзакции автоматически
+  RLS-scoped.
 
 ## 4. Схема виджета
 
@@ -121,7 +159,7 @@ erDiagram
 
 1. Скрипт находит свой `<script>`-тег, читает `data-slug`, определяет `window.location.hostname`.
 2. `GET /api/widget/config?slug=acme&domain=host.example.com` — единственный сетевой запрос.
-3. Сервер (Next.js API route, service-role Supabase-клиент):
+3. Сервер (Next.js API route, соединение с Postgres под ролью `app_service`):
    - резолвит `slug → project`,
    - **читает `project.tier` из БД** и вычисляет `badge_required = tier !== 'paid'`,
    - `upsert` в `widget_installs (project_id, domain)` — если это первая запись для пары
@@ -145,17 +183,30 @@ API-ключа проекта, невозможно: подделка ответ
 
 ## 5. Хранение и обработка видео
 
-- **Storage:** Supabase Storage, приватный bucket `testimonial-videos`, path `project_id/testimonial_id.ext`.
-  Публичный доступ — только через signed URL с TTL, выдаваемый API-роутом Wall of Love/виджета
-  (никогда не отдаём permanent public URL — совместимо с NFR по мульти-арендности).
-- **Приём:** форма загружает файл напрямую в Storage через presigned upload URL (не проксируется
+- **Storage:** объектное хранилище — **MinIO** (S3-совместимое API), контейнер docker-compose,
+  приватный bucket `testimonial-videos`, key `project_id/testimonial_id.ext`. Публичный доступ —
+  только через presigned URL с TTL (стандартный механизм S3-API), выдаваемый API-роутом Wall of
+  Love/виджета (никогда не отдаём постоянный публичный URL — совместимо с NFR по
+  мульти-арендности).
+  - **Почему MinIO, а не просто Docker volume:** presigned upload/download URL — это часть
+    S3-протокола; голый bind-mount том не умеет выдавать временные подписанные ссылки, а значит
+    заставил бы проксировать загрузку и отдачу видео через `apps/web`, что прямо противоречит
+    следующему пункту (не проксировать тело видео через serverless-путь). MinIO даёт S3 API
+    «бесплатно» в своём контейнере, сохраняя presigned-паттерн без внешнего облака.
+  - **Путь миграции на голый volume** (если MinIO когда-то станет избыточным для масштаба):
+    хранить файлы на bind-mount томе `videos_data:/data`, отдавать через отдельный
+    authenticated-роут `apps/web` с собственной короткоживущей подписанной ссылкой (HMAC над
+    `object_key + expiry`), проверяемой в middleware. Меняется только реализация выдачи ссылки —
+    контракт `signed URL с TTL`, на который завязан §4 и Wall of Love, не меняется.
+- **Приём:** форма загружает файл напрямую в MinIO через presigned upload URL (не проксируется
   через `apps/web`, чтобы не упереться в лимиты serverless-функций по размеру тела запроса).
 - **Транскрипция — очередь, не синхронный вызов:**
   1. После успешной загрузки видео в `testimonials` пишется строка `pending_transcription = true`.
   2. `services/worker` поллит эту очередь (простой `SELECT ... FOR UPDATE SKIP LOCKED` по
      Postgres — без Redis/доп. инфраструктуры ради простоты недели).
-  3. Worker вызывает `services/mcp-claude` по MCP-протоколу, инструмент `transcribe_video(video_url)`.
-  4. MCP-сервер скачивает видео по signed URL, отправляет аудио-дорожку в Claude API **только с
+  3. Worker формирует presigned GET URL на объект в MinIO и вызывает `services/mcp-claude` по
+     MCP-протоколу, инструмент `transcribe_video(video_url)`.
+  4. MCP-сервер скачивает видео по presigned URL, отправляет аудио-дорожку в Claude API **только с
      промптом транскрипции**, получает текст, возвращает его воркеру.
   5. Worker пишет результат в `testimonials.video_transcript`, помечает
      `video_transcript_is_machine = true`, `pending_transcription = false`.
@@ -173,7 +224,7 @@ API-ключа проекта, невозможно: подделка ответ
 | `invite_sent` | `apps/web`, API-роут `/api/share` | Владелец подтвердил диалог публикации (FR-GROWTH-001 @security — без подтверждения запрос не уходит) |
 | `badge_impression` | `apps/web`, API-роут `/api/widget/config` | Каждый ответ конфигурации виджета с `badge_required = true` |
 | `badge_click` | `apps/web`, API-роут `/api/widget/badge-click` (виджет шлёт `navigator.sendBeacon`, сервер валидирует и пишет событие + добавляет UTM) | Клик по badge-ссылке |
-| `signup_from_badge` | `apps/web`, обработчик после Supabase Auth callback | Регистрация с UTM-меткой источника badge в query/cookie |
+| `signup_from_badge` | `apps/web`, обработчик после успешной регистрации (модуль аутентификации, §3.2) | Регистрация с UTM-меткой источника badge в query/cookie |
 | `widget_installed` | `apps/web`, API-роут `/api/widget/config` (§4.2 п.3) | Первая запись пары `(project_id, domain)` в `widget_installs` |
 | `referral_attributed` | `apps/web`, платёжный webhook-обработчик (см. ADR-006) | Оплата с непустой `referral_attributions` |
 
@@ -183,25 +234,55 @@ partner_code) без изменения схемы под каждое ново�
 
 ## 7. Docker Compose
 
+Все сервисы — наши; managed-зависимостей больше нет. Одна команда `docker compose up` поднимает
+полный стек.
+
 ```yaml
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD       # секреты — только имена переменных, значения в .env / secrets
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+
+  minio:
+    image: minio/minio
+    command: server /data
+    environment:
+      - MINIO_ROOT_USER
+      - MINIO_ROOT_PASSWORD
+    volumes:
+      - minio_data:/data
+    expose: ["9000"]
+
   web:
     build: ./apps/web
     environment:
-      - SUPABASE_URL
-      - SUPABASE_SERVICE_ROLE_KEY   # секреты — только имена переменных, значения в .env / secrets
-      - SUPABASE_ANON_KEY
+      - DATABASE_URL             # postgres:// строка, включает роли app_authenticated/app_service
+      - SESSION_SECRET
+      - S3_ENDPOINT
+      - S3_BUCKET
+      - S3_ACCESS_KEY
+      - S3_SECRET_KEY
       - MCP_CLAUDE_URL=http://mcp-claude:7331
     ports: ["3000:3000"]
-    depends_on: [mcp-claude]
+    depends_on: [postgres, minio, mcp-claude]
 
   worker:
     build: ./services/worker
     environment:
-      - SUPABASE_URL
-      - SUPABASE_SERVICE_ROLE_KEY
+      - DATABASE_URL
+      - S3_ENDPOINT
+      - S3_BUCKET
+      - S3_ACCESS_KEY
+      - S3_SECRET_KEY
       - MCP_CLAUDE_URL=http://mcp-claude:7331
-    depends_on: [mcp-claude]
+    depends_on: [postgres, minio, mcp-claude]
 
   mcp-claude:
     build: ./services/mcp-claude
@@ -218,15 +299,23 @@ services:
     depends_on: [web]
 
 volumes:
+  postgres_data:
+  minio_data:
   caddy_data:
 ```
 
-**Supabase не входит в docker-compose** — это managed-зависимость (облачный проект), а не
-самостоятельно хостимый сервис. Обоснование: самохостинг Supabase (Postgres + GoTrue + Storage +
-Realtime как отдельный docker-compose stack) — существенная операционная нагрузка, несовместимая с
-недельным MVP и не требуемая constraint'ом (`containers: Docker + Docker Compose` относится к
-нашим сервисам, а не обязывает самохостить каждую внешнюю зависимость). При росте нагрузки —
-кандидат на пересмотр отдельным ADR.
+**Порядок запуска:** `postgres` и `minio` — первыми (healthcheck перед стартом зависимых), затем
+`mcp-claude` (не зависит ни от кого), затем `web`/`worker`, затем `caddy`. Миграции (`packages/db`)
+прогоняются CI-шагом до `up -d` на новых версиях образа `web`, не как отдельный сервис compose.
+
+**Что бэкапить (теперь наша ответственность, раньше — задача Supabase):**
+- `postgres`: логический дамп (`pg_dump`) по расписанию (cron на VPS вне compose, либо
+  `docker compose exec postgres pg_dump ...`), а не сырое копирование тома — консистентность
+  важнее скорости для объёма данных недели.
+- `minio_data`: зеркалирование содержимого бакета (`mc mirror`) на внешнее хранилище/другой VPS.
+  Дамп БД и зеркало видео стоит синхронизировать по времени — `testimonials.video_object_key`
+  ссылается на файл в MinIO, рассинхрон бэкапов создаёт «битые» ссылки после restore.
+- `caddy_data` бэкапить не обязательно — переиздаётся автоматически (Let's Encrypt).
 
 `widget.js` собирается в CI и копируется в `apps/web/public/widget.js` на этапе билда — отдельного
 контейнера для виджета не заводим, раздаёт его `web`/`caddy`.
@@ -235,9 +324,9 @@ Realtime как отдельный docker-compose stack) — существен�
 
 - **Инфраструктура:** один VPS (AdminVPS/HOSTKEY), Docker + Docker Compose, без оркестратора —
   оправдано масштабом «одна неделя, один продукт».
-- **Пайплайн:** CI (GitHub Actions) → build образов → `docker compose -f docker-compose.prod.yml
-  pull && up -d` по SSH на VPS. Секреты — через CI secrets, инжектятся в `.env` на сервере, не
-  коммитятся.
+- **Пайплайн:** CI (GitHub Actions) → build образов → миграции `packages/db` → `docker compose -f
+  docker-compose.prod.yml pull && up -d` по SSH на VPS. Секреты — через CI secrets, инжектятся в
+  `.env` на сервере, не коммитятся.
 - **TLS/reverse proxy:** Caddy перед `web` — автоматический HTTPS по домену, отдаёт `widget.js` с
   агрессивным `Cache-Control` (файл версионируется по content-hash в имени при билде, чтобы кэш
   не мешал релизам).
@@ -245,11 +334,32 @@ Realtime как отдельный docker-compose stack) — существен�
   (`proofwall.app/w/<slug>`), без кастомного CNAME клиента — `[GAP: нужно решение по Q3 PRD —
   собственный поддомен vs CNAME клиента; блокирует SEO-стратегию FR-GROWTH-005 за пределами MVP]`.
 - **Откат:** предыдущий tag образа хранится в registry; откат — `docker compose up -d` с прошлым
-  тегом. Отдельного blue/green нет — вне scope недели.
+  тегом. Данные (`postgres`, `minio`) не откатываются вместе с образом — откат кода не равен
+  откату схемы БД, миграции пишутся обратимыми там, где это дёшево. Отдельного blue/green нет —
+  вне scope недели.
 
-## 9. Открытые пробелы (GAP)
+## 9. Миграция со стека Supabase
+
+В исходную постановку задачи по ошибке попал Supabase (managed BaaS) — прямой конфликт с
+Architecture Constraints пайплайна (`containers: Docker + Docker Compose`, база данных должна жить
+в контейнере compose на своём VPS, а не в стороннем облаке). Решение пересмотрено на этапе
+Architecture, без потери принятых продуктовых и ADR-решений:
+
+- **Postgres** переехал из managed-облака Supabase в контейнер `postgres` docker-compose (§7).
+- **Supabase Auth** заменён аутентификацией внутри монолита: `accounts.password_hash` +
+  `sessions` (§3.2) — тот же контракт «владелец залогинен → есть `account_id`», другая реализация.
+- **Supabase Storage** заменён контейнером **MinIO** (S3-совместимое API, §5) — presigned
+  upload/download сохранён как паттерн, изменился только эндпоинт.
+- **RLS не убирался и не менялся** — это фича PostgreSQL, а не Supabase; изменился только способ
+  задать контекст арендатора (`SET LOCAL app.current_account_id` вместо `auth.uid()`, §3.1).
+- Все ADR-001…006, схема данных (кроме `accounts`/`sessions`), growth-события §6 и разбиение
+  монорепо §2 остались как есть — конфликт был только в инфраструктурном слое.
+
+## 10. Открытые пробелы (GAP)
 
 - `[GAP: нужна конкретная цена платного тарифа (PRD Q1) — влияет только на биллинг-копирайт, не на схему данных]`
 - `[GAP: нужен лимит бесплатного тарифа по числу отзывов (PRD Q2) — влияет на constraint в `projects`/`testimonials`, схема готова принять любое число]`
 - `[GAP: нужно решение по домену Wall of Love (PRD Q3) — влияет на §8 и на будущую поддержку CNAME]`
 - `[GAP: нужен выбор платёжного провайдера (Stripe и т.п. не назван в исходных документах) — ADR-006 описывает контракт идемпотентности провайдер-агностично]`
+- `[GAP: TTL сессии владельца и политика ротации/revoke-all не зафиксированы в исходных документах — реализовать разумный дефолт (§3.2)]`
+- `[GAP: политика бэкапов Postgres/MinIO (частота, retention, offsite-копия) не зафиксирована в исходных документах — реализовать разумный дефолт (ежедневный `pg_dump` + `mc mirror`), уточнить при росте нагрузки]`
