@@ -1,0 +1,22 @@
+# TLS-терминация и раздача виджета — ADR-007.
+#
+# Без HTTPS badge loop физически не работает: виджет грузится на чужие
+# HTTPS-сайты, и скрипт по HTTP браузер блокирует как mixed content — молча.
+{
+	email {$ACME_EMAIL}
+}
+
+{$APP_DOMAIN} {
+	encode gzip zstd
+
+	# Виджет версионируется по content-hash в имени файла (ADR-007),
+	# поэтому кэшируется агрессивно — новая версия = новое имя.
+	@widget path /widget.*.js
+	header @widget Cache-Control "public, max-age=31536000, immutable"
+
+	# Виджет встраивается на ЧУЖИЕ домены — CORS обязателен.
+	@widgetapi path /api/widget/*
+	header @widgetapi Access-Control-Allow-Origin "*"
+
+	reverse_proxy web:3000
+}

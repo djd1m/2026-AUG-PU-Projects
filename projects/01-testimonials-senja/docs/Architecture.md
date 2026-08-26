@@ -374,8 +374,7 @@ services:
   mcp-claude:
     build: ./services/mcp-claude
     environment:
-      - PAYMENT_WEBHOOK_SECRET   # HMAC входящих вебхуков оплаты (FR-GROWTH-002 @security)
-      - ANTHROPIC_API_KEY
+      - ANTHROPIC_API_KEY        # только он: сервис делает ТОЛЬКО транскрипцию (ADR-005)
     expose: ["7331"]
 
   caddy:
