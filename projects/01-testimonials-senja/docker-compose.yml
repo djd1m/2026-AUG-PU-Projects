@@ -43,9 +43,14 @@ services:
       - S3_SECRET_KEY
       - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
       - PAYMENT_WEBHOOK_SECRET   # FR-008: onPaymentWebhook/applyTariffUpgrade исполняются в apps/web (§3.5)
-    # Хостовая часть — через переменную: на машине, где 3000 занят другим проектом,
-    # правится .env, а не общий compose (см. .claude/rules/docker-ports.md).
-    ports: ["${WEB_PORT:-3000}:3000"]
+    # НЕ публикуется наружу. Единственная дверь снаружи — caddy.
+    #
+    # Публикация web ломала бы rate limit 5/час/IP: extractClientIP доверяет ПОСЛЕДНЕМУ
+    # элементу X-Forwarded-For, потому что его дописывает Caddy. При прямом доступе к
+    # web:3000 этот элемент задаёт сам клиент — и, меняя заголовок, обходит лимит
+    # полностью. Проверено на живом контейнере: с ротацией XFF проходят все запросы
+    # подряд, с одним адресом — пять и затем 429.
+    expose: ["3000"]
     depends_on:
       postgres:
         condition: service_healthy

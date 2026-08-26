@@ -78,6 +78,14 @@ describe('normalizeDomain — домен попадает в unique-ключ, з
     }
   });
 
+  it('ЛИТЕРАЛЬНОЕ "null" из Origin — это отсутствие домена, а не домен', () => {
+    // Браузер шлёт Origin: null для file:// и sandboxed iframe. До правки эта строка
+    // уезжала в utm_content ссылки badge как "null" — поймано браузерной проверкой.
+    for (const v of ['null', 'NULL', ' null ', 'undefined']) {
+      expect(normalizeDomain(v), v).toBeNull();
+    }
+  });
+
   it('наш собственный домен распознаётся', () => {
     expect(isOwnDomain('proofwall.test')).toBe(true);
     expect(isOwnDomain('localhost')).toBe(true);

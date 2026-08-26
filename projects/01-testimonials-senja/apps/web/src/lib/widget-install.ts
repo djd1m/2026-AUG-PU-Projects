@@ -28,6 +28,10 @@ export function normalizeDomain(raw: string | null | undefined): string | null {
   if (!raw) return null;
   let value = raw.trim().toLowerCase();
   if (value === '') return null;
+  // Браузер шлёт ЛИТЕРАЛЬНОЕ "null" в Origin для file:// и песочниц (sandboxed iframe,
+  // data:). Это не домен, а отсутствие домена — и в метку источника оно попадать
+  // не должно ни в каком виде.
+  if (value === 'null' || value === 'undefined') return null;
   try {
     // Referer/Origin приходят как URL; голый хост тоже должен приниматься.
     if (value.includes('://')) value = new URL(value).hostname;

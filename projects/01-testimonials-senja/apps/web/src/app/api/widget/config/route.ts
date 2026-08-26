@@ -4,7 +4,7 @@
 import { NextResponse } from 'next/server';
 import { withService } from '@proofwall/db';
 import { buildWidgetConfig, safeDefault } from '@/lib/widget-config';
-import { emitEvents, recordInstallAndInviteIfNeeded } from '@/lib/widget-install';
+import { emitEvents, normalizeDomain, recordInstallAndInviteIfNeeded } from '@/lib/widget-install';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,10 +37,14 @@ export async function GET(request: Request): Promise<NextResponse> {
   // то есть сторона, которую атакующий контролирует полностью. Поэтому заголовок в
   // приоритете, а параметр — только фолбэк для окружений, где Origin не приходит.
   const url = new URL(request.url);
-  const domain =
+  // Нормализуем СРАЗУ и один раз. Сырой Origin — не домен: для file:// и песочниц
+  // браузер шлёт литеральное "null", и оно уезжало в utm_content ссылки badge
+  // строкой "null" (поймано браузерной проверкой, а не тестом).
+  const domain = normalizeDomain(
     request.headers.get('origin') ??
-    request.headers.get('referer') ??
-    url.searchParams.get('domain');
+      request.headers.get('referer') ??
+      url.searchParams.get('domain'),
+  );
 
   const config = await withService(async (client) => {
     const cfg = await buildWidgetConfig(client, slug, domain);

@@ -155,6 +155,38 @@ else
 fi
 echo
 
+# --- За reverse-proxy приложение тоже не публикуется ---------------------------
+# Если в compose есть reverse-proxy (caddy/nginx/traefik), то он и есть единственная
+# дверь. Опубликованное рядом приложение позволяет обойти прокси — а вместе с ним и
+# всё, что прокси гарантирует. Конкретный случай, ради которого проверка появилась:
+# extractClientIP доверяет ПОСЛЕДНЕМУ элементу X-Forwarded-For, потому что его
+# дописывает Caddy; при прямом доступе этот элемент задаёт клиент и обходит rate limit
+# сменой заголовка (найдено вторым мнением, воспроизведено на живом контейнере).
+echo "== За reverse-proxy приложение не публикуется =="
+if [ "$config_ok" -eq 1 ]; then
+  proxy_present=$(docker compose -f "$COMPOSE" --project-directory "$PROJECT_DIR" config 2>/dev/null \
+    | grep -cE '^[[:space:]]*image:[[:space:]]*(docker\.io/library/)?(caddy|nginx|traefik|haproxy)')
+  if [ "${proxy_present:-0}" -gt 0 ]; then
+    app_pub=$(docker compose -f "$COMPOSE" --project-directory "$PROJECT_DIR" config 2>/dev/null \
+      | awk '
+          /^  [a-zA-Z0-9_-]+:$/ { svc=$1; sub(/:$/,"",svc); isproxy=0 }
+          /^[[:space:]]*image:/ { if ($2 ~ /(caddy|nginx|traefik|haproxy)/) isproxy=1 }
+          /^[[:space:]]*published:/ { if (!isproxy) print svc }' | sort -u | tr "\n" " ")
+    if [ -n "$app_pub" ]; then
+      fail "есть reverse-proxy, но наружу публикуют также: $app_pub"
+      echo "     Прокси обходится прямым обращением — вместе со всем, что он гарантирует."
+      echo "     Заменить ports: на expose: у всего, кроме прокси."
+    else
+      ok "наружу смотрит только reverse-proxy"
+    fi
+  else
+    ok "reverse-proxy в compose нет — проверка неприменима"
+  fi
+else
+  fail "конфиг не прочитан — проверка «только прокси наружу» НЕ выполнена"
+fi
+echo
+
 echo "== Конфликты портов с уже занятым на этой машине =="
 for p in "${WANTED[@]}"; do
   if [ -n "${BUSY_BY[$p]:-}" ]; then
