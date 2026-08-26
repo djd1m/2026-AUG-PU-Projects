@@ -1,0 +1,25 @@
+# Контекст сборки — корень репозитория (см. build.context в docker-compose.yml),
+# поэтому исключения перечислены от корня.
+node_modules
+**/node_modules
+**/dist
+**/.next
+**/coverage
+
+# Секреты не должны попадать в слой образа НИКОГДА.
+.env
+.env.*
+!.env.example
+
+# Тесты и документация в рантайм-образе не нужны.
+**/tests
+docs
+decisions
+harness-forge
+*.md
+!README.md
+
+.git
+.github
+.claude
+*.log
