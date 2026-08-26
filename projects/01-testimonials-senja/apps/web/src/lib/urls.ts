@@ -4,10 +4,30 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-/** BASE_URL для абсолютных ссылок. За Caddy web не знает свой внешний адрес сам. */
+export const DEFAULT_BASE_URL = 'http://localhost:3000';
+
+/**
+ * BASE_URL для абсолютных ссылок. За Caddy web не знает свой внешний адрес сам.
+ *
+ * Значение ВАЛИДИРУЕТСЯ, а не просто подчищается. Причина конкретная: в окружении
+ * встречается `BASE_URL="/"` — после срезания хвостового слеша от него остаётся пустая
+ * строка, и каждый последующий `new URL(path, base)` падает с «Invalid URL». Поймано
+ * тестом badge-ссылки, а не чтением. Непригодное значение = как будто его нет.
+ */
 export function baseUrl(): string {
-  const raw = process.env.BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
-  return raw.replace(/\/+$/, '');
+  for (const candidate of [process.env.BASE_URL, process.env.NEXT_PUBLIC_BASE_URL, DEFAULT_BASE_URL]) {
+    if (!candidate) continue;
+    const trimmed = candidate.trim().replace(/\/+$/, '');
+    if (trimmed === '') continue;
+    try {
+      const url = new URL(trimmed);
+      // Только http(s): ссылки уходят наружу, в письма и на чужие сайты.
+      if (url.protocol === 'http:' || url.protocol === 'https:') return trimmed;
+    } catch {
+      // Относительный или битый адрес — не абсолютная база, пробуем следующий вариант.
+    }
+  }
+  return DEFAULT_BASE_URL;
 }
 
 /**

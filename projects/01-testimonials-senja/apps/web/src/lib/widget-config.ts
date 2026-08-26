@@ -8,6 +8,8 @@
 
 import type { PoolClient } from 'pg';
 import { badgeRequiredFor } from './tariff';
+import { buildBadgeUrl } from './badge';
+import { baseUrl } from './urls';
 
 export const TESTIMONIAL_LIMIT = 50; // Pseudocode §5.1
 
@@ -24,6 +26,12 @@ export interface WidgetConfigResponse {
   testimonials: WidgetTestimonial[];
   badge_required: boolean;
   project_slug: string;
+  /**
+   * Куда ведёт badge. Строится на сервере (FR-GROWTH-003): виджет живёт на чужом домене
+   * и не знает наш публичный адрес. Присутствует только когда badge требуется —
+   * на paid-тарифе поле отсутствует, и рисовать нечего.
+   */
+  badge_url?: string;
 }
 
 /**
@@ -32,20 +40,26 @@ export interface WidgetConfigResponse {
  * выглядеть там сломанным блоком; а badge по умолчанию требуется, потому что
  * «не смогли проверить тариф» обязано означать самый строгий вариант, а не самый мягкий.
  */
-export function safeDefault(slug: string): WidgetConfigResponse {
-  return { testimonials: [], badge_required: true, project_slug: slug };
+export function safeDefault(slug: string, domain?: string | null): WidgetConfigResponse {
+  return {
+    testimonials: [],
+    badge_required: true,
+    project_slug: slug,
+    badge_url: buildBadgeUrl(baseUrl(), slug, domain),
+  };
 }
 
 export async function buildWidgetConfig(
   client: PoolClient,
   slug: string,
+  domain?: string | null,
 ): Promise<WidgetConfigResponse> {
   const projectRes = await client.query<{ id: string; slug: string; tier: string }>(
     'select id, slug, tier from projects where slug = $1 and deactivated = false',
     [slug],
   );
   const project = projectRes.rows[0];
-  if (!project) return safeDefault(slug);
+  if (!project) return safeDefault(slug, domain);
 
   // Тариф читается ИЗ БД и нигде больше. Ни query, ни заголовки, ни тело не участвуют.
   // Само правило — в lib/tariff.ts: один источник на всё приложение (FR-007).
@@ -66,5 +80,7 @@ export async function buildWidgetConfig(
     testimonials: items.rows,
     badge_required: badgeRequired,
     project_slug: project.slug,
+    // Только при badge_required: на paid ссылка не нужна и не должна утекать в ответ.
+    ...(badgeRequired ? { badge_url: buildBadgeUrl(baseUrl(), project.slug, domain) } : {}),
   };
 }

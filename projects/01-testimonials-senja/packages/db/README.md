@@ -97,10 +97,15 @@ set -a; . ./.env.test; set +a
 export TEST_DATABASE_URL="postgres://proofwall_test:${TEST_PG_PASSWORD}@127.0.0.1:${TEST_PG_PORT}/proofwall_test"
 DATABASE_URL="$TEST_DATABASE_URL" npm run migrate --workspace packages/db
 
-# 4. Прогнать тесты (S3_* нужны только тестам apps/web на видео)
+# 4. Прогнать тесты.
+#    ОБЕ переменные обязательны: apps/web читает DATABASE_URL, services/worker —
+#    TEST_DATABASE_URL. Забыть вторую = 8 тестов воркера уйдут в skip, а набор
+#    останется «зелёным» — молчаливый пропуск, который легко не заметить.
+#    S3_* нужны только тестам apps/web на видео.
+DATABASE_URL="$TEST_DATABASE_URL" TEST_DATABASE_URL="$TEST_DATABASE_URL" \
 S3_ENDPOINT="http://127.0.0.1:${TEST_MINIO_PORT}" S3_ACCESS_KEY=proofwall_test \
 S3_SECRET_KEY="$TEST_MINIO_PASSWORD" S3_BUCKET=testimonial-videos \
-DATABASE_URL="$TEST_DATABASE_URL" npm test
+npm test
 
 # Убрать за собой (данные в tmpfs, стираются вместе с контейнерами)
 docker compose --env-file .env.test -f compose.test.yml down -v

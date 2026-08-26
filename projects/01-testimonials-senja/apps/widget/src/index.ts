@@ -74,7 +74,7 @@ export async function widgetBootstrap(): Promise<void> {
   }
 
   renderTestimonials(root, config.testimonials);
-  renderBadge(root, config.badge_required, onBadgeClick); // FR-GROWTH-003 — решение сервера
+  renderBadge(root, config.badge_required, onBadgeClick, config.badge_url); // FR-GROWTH-003 — решение сервера
 
   // ПРИМЕЧАНИЕ ПО РАСХОЖДЕНИЮ Pseudocode.md ↔ Architecture.md (см. .claude/rules/
   // p-replicator-known-gaps.md PR-003): Pseudocode.md §3 записывает

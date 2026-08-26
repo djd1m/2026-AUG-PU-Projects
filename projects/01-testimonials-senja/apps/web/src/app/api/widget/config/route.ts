@@ -30,7 +30,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   // серверное (ADR-002). Их отсутствие в коде и есть реализация инварианта.
 
   if (slug === '') {
-    return NextResponse.json(safeDefault(''), { status: 200, headers: CORS });
+    return NextResponse.json(safeDefault('', null), { status: 200, headers: CORS });
   }
 
   // Домен для FR-GROWTH-001. Origin ставит БРАУЗЕР, а query-параметр — скрипт виджета,
@@ -43,7 +43,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     url.searchParams.get('domain');
 
   const config = await withService(async (client) => {
-    const cfg = await buildWidgetConfig(client, slug);
+    const cfg = await buildWidgetConfig(client, slug, domain);
     // Проект существует ровно тогда, когда слаг совпал с возвращённым (safeDefault
     // отдаёт исходную строку и пустой список — писать установку не для чего).
     const resolved = await client.query<{ id: string }>(

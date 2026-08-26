@@ -60,6 +60,9 @@ export default function SignupPage() {
             email,
             password,
             project_name: projectName,
+            // UTM-метки со страницы: сюда попадает переход по badge с чужого сайта
+            // (FR-GROWTH-003). Сервер сам решит, наш это источник или чужой.
+            utm_query: typeof window !== 'undefined' ? window.location.search : '',
             ...(desiredSlug.trim() ? { desired_slug: desiredSlug } : {}),
           }),
         });

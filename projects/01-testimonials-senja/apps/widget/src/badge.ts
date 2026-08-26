@@ -109,12 +109,16 @@ function forceVisibleStyles(node: HTMLElement): void {
   node.hidden = false;
 }
 
-function createBadgeNode(onClick: BadgeClickHandler): HTMLAnchorElement {
+function createBadgeNode(onClick: BadgeClickHandler, badgeUrl?: string): HTMLAnchorElement {
   const a = document.createElement('a');
   a.className = BADGE_CLASS;
   a.target = '_blank';
   a.rel = 'noopener noreferrer nofollow';
   a.textContent = 'Powered by Proofwall'; // статичная строка — не пользовательский ввод
+  // href приходит с сервера с UTM-метками (FR-GROWTH-003). Схема проверяется здесь,
+  // потому что значение приходит по сети: javascript:/data: в href badge выполнились бы
+  // на ЧУЖОМ сайте, где стоит виджет.
+  if (badgeUrl && /^https?:\/\//i.test(badgeUrl)) a.href = badgeUrl;
   a.addEventListener('click', onClick);
   return a;
 }
@@ -124,12 +128,17 @@ function createBadgeNode(onClick: BadgeClickHandler): HTMLAnchorElement {
  * сервера (ADR-002/FR-GROWTH-003): виджет безусловно рендерит badge при `true` и безусловно не
  * рендерит при `false`, без собственной логики "если free — показать".
  */
-export function renderBadge(root: ShadowRoot, badgeRequired: boolean, onClick: BadgeClickHandler): void {
+export function renderBadge(
+  root: ShadowRoot,
+  badgeRequired: boolean,
+  onClick: BadgeClickHandler,
+  badgeUrl?: string,
+): void {
   const slot = root.querySelector<HTMLElement>(BADGE_SLOT_SELECTOR);
   if (!slot) return;
   slot.replaceChildren();
   if (!badgeRequired) return;
-  slot.appendChild(createBadgeNode(onClick));
+  slot.appendChild(createBadgeNode(onClick, badgeUrl));
 }
 
 export interface BadgeWatchHandle {

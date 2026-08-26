@@ -81,17 +81,36 @@ describe('ADR-002 — badge решает сервер', () => {
     });
   });
 
-  it('ответ содержит РОВНО три поля контракта — ничего лишнего не подтекает', async () => {
+  it('ответ содержит РОВНО поля контракта — ничего лишнего не подтекает', async () => {
     await inRollback(async (c) => {
-      const { slug } = await makeProject(c);
-      const cfg = await buildWidgetConfig(c, slug);
-      expect(Object.keys(cfg).sort()).toEqual(['badge_required', 'project_slug', 'testimonials']);
+      const { slug, projectId } = await makeProject(c);
+      // free: плюс badge_url (FR-GROWTH-003) — куда ведёт badge.
+      expect(Object.keys(await buildWidgetConfig(c, slug)).sort()).toEqual([
+        'badge_required', 'badge_url', 'project_slug', 'testimonials',
+      ]);
+      // paid: badge не рисуется, значит и ссылка не нужна и не отдаётся.
+      await c.query("update projects set tier = 'paid' where id = $1", [projectId]);
+      expect(Object.keys(await buildWidgetConfig(c, slug)).sort()).toEqual([
+        'badge_required', 'project_slug', 'testimonials',
+      ]);
     });
   });
 
-  it('badge_required вычисляется из БД, а не из аргументов — их просто нет', () => {
-    // Сигнатура принимает только client и slug: передать hide_badge физически некуда.
-    expect(buildWidgetConfig.length).toBe(2);
+  it('среди аргументов нет НИ ОДНОГО, которым клиент переопределил бы badge', () => {
+    // Проверяем ИМЕНА параметров, а не их количество: счётчик ломается при любом
+    // безобидном расширении (так и вышло, когда добавился domain), а смысл проверки —
+    // «нет входа для hide_badge/tier», и он именами и выражается.
+    const params = buildWidgetConfig
+      .toString()
+      .slice(buildWidgetConfig.toString().indexOf('(') + 1)
+      .split(')')[0]!
+      .split(',')
+      .map((p) => p.trim().split(/[:=\s]/)[0])
+      .filter(Boolean);
+    expect(params).toEqual(['client', 'slug', 'domain']);
+    for (const forbidden of ['tier', 'badge', 'badgeRequired', 'hideBadge', 'hide_badge']) {
+      expect(params, forbidden).not.toContain(forbidden);
+    }
   });
 });
 
@@ -99,7 +118,13 @@ describe('безопасный дефолт (Pseudocode §5.1)', () => {
   it('неизвестный слаг → пустой список и badge_required = true, а НЕ 404', async () => {
     await inRollback(async (c) => {
       const cfg = await buildWidgetConfig(c, 'no-such-project-at-all');
-      expect(cfg).toEqual({ testimonials: [], badge_required: true, project_slug: 'no-such-project-at-all' });
+      expect(cfg).toMatchObject({
+        testimonials: [],
+        badge_required: true,
+        project_slug: 'no-such-project-at-all',
+      });
+      // Даже у несуществующего проекта badge обязателен, а значит нужна и ссылка.
+      expect(cfg.badge_url).toBeTruthy();
     });
   });
 

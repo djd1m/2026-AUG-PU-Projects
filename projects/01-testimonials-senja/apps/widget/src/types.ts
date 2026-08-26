@@ -35,6 +35,13 @@ export interface WidgetConfigResponse {
    */
   badge_required: boolean;
   project_slug: string;
+  /**
+   * FR-GROWTH-003: адрес, куда ведёт badge, с UTM-метками источника. Строится СЕРВЕРОМ —
+   * виджет стоит на чужом домене и не знает публичный адрес приложения. Приходит только
+   * когда `badge_required = true`; без него badge остался бы ссылкой в никуда, и петля
+   * роста была бы разомкнута.
+   */
+  badge_url?: string;
   /** [GAP: форма branding не описана в документах — Architecture §4.2 упоминает поле по имени] */
   branding?: Record<string, unknown>;
 }

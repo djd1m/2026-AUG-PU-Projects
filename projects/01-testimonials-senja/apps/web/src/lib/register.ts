@@ -23,12 +23,19 @@ import { generateSessionToken, hashSessionToken, SESSION_TTL_MS } from './sessio
 import { isValidEmail, normalizeEmail } from './validation';
 import { buildProjectUrls, type ProjectUrls } from './urls';
 import { onProjectCreated } from './content-threshold';
+import { parseBadgeAttribution } from './badge';
+import { emitEvents } from './widget-install';
 
 export interface RegisterInput {
   email: unknown;
   password: unknown;
   project_name?: unknown;
   desired_slug?: unknown;
+  /**
+   * Строка запроса со страницы регистрации — источник UTM-меток badge (FR-GROWTH-003).
+   * Замыкает петлю: badge на чужом сайте → клик → регистрация, и мы знаем, ЧЕЙ виджет привёл.
+   */
+  utm_query?: unknown;
 }
 
 export type RegisterResult =
@@ -115,6 +122,19 @@ export async function registerAccountAndProject(
   // рождается с noindex=true — здесь важен СЛЕД в аудите, иначе «почему не индексируется»
   // становится загадкой.
   await onProjectCreated(client, accountId, projectId);
+
+  // FR-GROWTH-003: регистрация пришла по badge — фиксируем замкнувшуюся петлю.
+  // Событие пишется на НОВЫЙ проект, но его metadata несёт слаг ПРИВЕДШЕГО проекта:
+  // иначе нельзя ответить, чей именно виджет сработал.
+  const attribution = parseBadgeAttribution(typeof input.utm_query === 'string' ? input.utm_query : null);
+  if (attribution) {
+    await client.query(
+      `insert into analytics_events (project_id, account_id, event_type, domain, metadata)
+       values ($1, $2, 'signup_from_badge', $3, jsonb_build_object(
+         'utm_source', $4::text, 'referrer_project_slug', $5::text, 'referrer_domain', $3::text))`,
+      [projectId, accountId, attribution.content, attribution.source, attribution.campaign],
+    );
+  }
 
   return { ok: true, status: 201, accountId, slug, token, urls: buildProjectUrls(slug) };
 }

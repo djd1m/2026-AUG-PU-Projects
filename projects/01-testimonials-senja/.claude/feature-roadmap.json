@@ -213,7 +213,7 @@
     {
       "id": "FR-GROWTH-003",
       "title": "Badge loop: обязательный badge на free, anti-tamper MutationObserver (ADR-002)",
-      "status": "next",
+      "status": "done",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -222,6 +222,17 @@
       ],
       "depends_on": [
         "FR-007"
+      ],
+      "files": [
+        "apps/web/src/lib/badge.ts",
+        "apps/web/src/app/api/widget/badge-click/route.ts",
+        "apps/web/src/lib/widget-config.ts",
+        "apps/web/src/lib/register.ts",
+        "apps/web/src/lib/urls.ts",
+        "apps/widget/src/badge.ts",
+        "apps/widget/src/types.ts",
+        "apps/web/tests/badge.test.ts",
+        "apps/widget/tests/badge-link.test.ts"
       ]
     },
     {
@@ -265,5 +276,5 @@
       ]
     }
   ],
-  "last_completed": "FR-007"
+  "last_completed": "FR-GROWTH-003"
 }
