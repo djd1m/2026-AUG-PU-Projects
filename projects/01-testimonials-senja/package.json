@@ -1,0 +1,25 @@
+{
+  "name": "proofwall",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Сбор видео-отзывов и «Стена любви» — клон Senja.io",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:widget": "npm run build --workspace apps/widget",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "tsc --noEmit -p tsconfig.base.json",
+    "db:migrate": "npm run migrate --workspace packages/db",
+    "up": "docker compose up -d --build",
+    "down": "docker compose down",
+    "logs": "docker compose logs -f"
+  }
+}

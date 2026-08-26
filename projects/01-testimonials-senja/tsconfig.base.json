@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "skipLibCheck": true,
+    "declaration": true,
+    "sourceMap": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@proofwall/db": ["packages/db/src/index.ts"],
+      "@proofwall/db/*": ["packages/db/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".next", "**/*.test.ts"]
+}
