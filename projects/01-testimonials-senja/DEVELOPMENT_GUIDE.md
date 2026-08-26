@@ -17,22 +17,39 @@ claude
 
 Стек — Docker Compose, все сервисы свои (Architecture §7, §9 — без managed BaaS):
 
+> ⚠️ **`apps/web` ещё не написан** — в папке лежит только `Dockerfile`. Поэтому
+> `docker compose up -d` целиком пока падает на сборке `web`, а вместе с ним не поднимается
+> `caddy` (`depends_on: web`). Работают четыре сервиса из шести. Полный разбор и обоснование —
+> `decisions/D-008-web-app-missing.md`; `apps/web` пишется в `/run mvp`.
+
 ```bash
-cp .env.example .env        # заполнить DATABASE_URL, SESSION_SECRET, S3_*, PAYMENT_WEBHOOK_SECRET, OPENAI_API_KEY
-docker compose up -d postgres minio
-docker compose run --rm web npm run db:migrate   # packages/db миграции
-docker compose up -d
+cp .env.example .env        # заполнить POSTGRES_PASSWORD, DATABASE_URL, SESSION_SECRET, S3_*, PAYMENT_WEBHOOK_SECRET, OPENAI_API_KEY
+docker compose up -d postgres minio transcribe
 ```
 
-`depends_on: condition: service_healthy` на `postgres`/`minio` (Architecture §7, W-4) — `web`/
-`worker` не стартуют, пока БД и хранилище не отвечают health-check. `transcribe` не имеет
-health-check на этой неделе (`condition: service_started`).
+Миграции. `packages/db` — не контейнер compose, а workspace монорепо, поэтому раннер
+запускается с хоста. `DATABASE_URL` из `.env` указывает на хост `postgres` — имя, которое
+резолвится **внутри** сети compose; с хоста нужен адрес контейнера:
+
+```bash
+PGHOST_IP=$(docker compose exec -T postgres hostname -i | tr -d '\r')
+DATABASE_URL="postgres://proofwall:<пароль>@${PGHOST_IP}:5432/proofwall" npm run db:migrate
+```
+
+Раннер идемпотентен: применённые миграции отмечаются в `schema_migrations`, повторный
+запуск — no-op (проверено). Когда появится `apps/web`, тот же шаг сведётся к
+`docker compose run --rm web npm run db:migrate`.
+
+`depends_on: condition: service_healthy` на `postgres`/`minio`/`transcribe` (Architecture §7,
+W-4) — `web`/`worker` не стартуют, пока зависимости не отвечают health-check. У `transcribe`
+health-check появился в Phase 3 (`GET /health`), поэтому его ждут по здоровью, а не по старту.
 
 Проверить, что всё поднялось:
 
 ```bash
-docker compose ps
-curl -f http://localhost:3000/api/widget/config?slug=test   # ожидается 404/пустой ответ, не 5xx
+docker compose ps                                  # postgres/minio/transcribe — healthy
+bash scripts/check-compose-buildable.sh            # сборочный контракт compose (D-008)
+docker compose exec transcribe node -e "fetch('http://127.0.0.1:7331/health').then(r=>r.text()).then(console.log)"
 ```
 
 ## 2. Порядок реализации фич
