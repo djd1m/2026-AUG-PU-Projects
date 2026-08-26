@@ -145,40 +145,40 @@ erDiagram
   app.current_account_id` (см. §3.1) — дальше все запросы этой транзакции автоматически
   RLS-scoped.
 
-### 3.3 Момент ценности vs метрика недели — два разных события (PRD §2.4.1, находка C-1)
+### 3.3 Момент ценности и метрика недели — одна гранулярность (PRD §2.4.1, находка C-1)
 
-`invite_shown` и `widget_installed` — намеренно **разные** события с разной уникальностью, а не
-одна и та же запись под двумя именами:
+PRD §2.4.1 фиксирует: **считаем сайты, а не людей**. `widget_installed` и `invite_shown` — оба
+события на **одну и ту же** гранулярность — пару (`project_id`, `domain`) — и оба живут за счёт
+**одной** таблицы `widget_installs`, `unique(project_id, domain)`; отдельная таблица или столбец
+под `invite_shown` не нужны:
 
-| Событие | Когда | Уникальность | Где хранится факт «уже случилось» |
-|---|---|---|---|
-| `widget_installed` | виджет впервые отрендерился на **новом** домене | на каждую пару (`project_id`,`domain`) | `widget_installs`, `unique(project_id, domain)` — upsert в §4.2 п.3 |
-| `invite_shown` | владелец впервые увидел свою стену живой на внешнем домене | **один раз на проект** | `projects.invite_shown_at` (nullable timestamptz) |
+| Событие | Когда | Уникальность |
+|---|---|---|
+| `widget_installed` | виджет впервые отрендерился на новом домене | на каждую пару (`project_id`, `domain`) |
+| `invite_shown` | владелец увидел стену живой на новом домене | та же пара (`project_id`, `domain`) |
 
-Уникальность `invite_shown` не требует отдельной таблицы: `projects` уже даёт ровно одну строку на
-проект, поэтому единственность обеспечивается условным апдейтом одного столбца, а не вторым
-`unique`-индексом:
+**Механизм дедупликации — атомарная вставка, отдельной проверки не требуется:**
 
 ```sql
--- дашборд SSR, при каждом рендере страницы проекта:
--- 1) есть ли хоть одна установка?
-SELECT EXISTS(SELECT 1 FROM widget_installs WHERE project_id = $1) AS has_install;
--- 2) если has_install И invite_shown_at ещё не проставлен — это первый показ:
-UPDATE projects SET invite_shown_at = now()
-  WHERE id = $1 AND invite_shown_at IS NULL
-  RETURNING id;               -- вернулась строка ⇒ CTA рендерим и пишем событие invite_shown
-                               -- 0 строк ⇒ уже показывали, событие не пишем повторно
+INSERT INTO widget_installs (project_id, domain, first_seen_at, last_seen_at)
+VALUES ($1, $2, now(), now())
+ON CONFLICT (project_id, domain) DO NOTHING
+RETURNING id;
+-- строка вернулась ⇒ это НОВЫЙ домен для проекта ⇒ пишем ОБА события:
+--   widget_installed (метрика недели) и invite_shown (share-CTA)
+-- 0 строк (конфликт) ⇒ домен уже известен ⇒ не пишем ни одного события,
+--   только last_seen_at обновляется отдельным UPDATE (не влияет на события)
 ```
-`RETURNING`-проверка — тот же приём идемпотентности, что и `unique`-constraint в ADR-006: только
-один одновременный вызов может выиграть условный `UPDATE ... WHERE invite_shown_at IS NULL`.
 
-**Явное следствие для реализации** (снимает саму находку C-1): установка виджета на **первом**
-домене проекта порождает **оба** события — `widget_installed` немедленно при упсерте
-`widget_installs`, `invite_shown` при следующем визите владельца в дашборд (п.2 выше находит
-`has_install = true` и пустой `invite_shown_at`). Установка на **втором и любом следующем** домене
-того же проекта порождает **только** `widget_installed` — `invite_shown_at` уже не `NULL`, второй
-`UPDATE` вернёт 0 строк. Таблица `widget_installs` (не `widget_install_events`) и путь
-`/api/widget/config` (не `/api/widget-config`) — канонические имена, см. §10.
+`ON CONFLICT ... RETURNING` — это и есть защита от гонки при двух параллельных рендерах одного и
+того же нового домена: только одна из двух параллельных вставок получит строку в `RETURNING`,
+только она инициирует события. Второй вызов увидит конфликт и не породит дубликат ни для
+`widget_installed`, ни для `invite_shown`. Повторный рендер на уже известном домене — по
+определению конфликт — не порождает ни одного события, ровно как того требует PRD §2.4.1.
+Явное следствие: share-CTA (`invite_shown`) показывается **при каждой новой установке на новый
+домен**, а не только при первой в жизни проекта. Таблица `widget_installs` (не
+`widget_install_events`) и путь `/api/widget/config` (не `/api/widget-config`) — канонические
+имена, см. §10.
 
 ### 3.4 Anti-fraud и rate limiting — один механизм на три требования (находка W-1)
 
@@ -262,8 +262,10 @@ IP+проект), единый FK создал бы ложную связнос�
 3. Сервер (Next.js API route, соединение с Postgres под ролью `app_service`):
    - резолвит `slug → project`,
    - **читает `project.tier` из БД** и вычисляет `badge_required = tier !== 'paid'`,
-   - `upsert` в `widget_installs (project_id, domain)` — если это первая запись для пары
-     `(project_id, domain)`, пишет событие `widget_installed` (метрика недели, см. §6),
+   - атомарная вставка в `widget_installs (project_id, domain)` с `ON CONFLICT DO NOTHING
+     RETURNING id` (см. §3.3) — строка вернулась ⇒ новый домен ⇒ пишет **оба** события,
+     `widget_installed` и `invite_shown` (метрика недели и share-CTA, см. §6); конфликт ⇒ ни
+     одного события, только `last_seen_at` обновляется отдельно,
    - пишет событие `badge_impression`,
    - возвращает JSON: `{ testimonials: [...approved], branding, badge_required }`.
 4. Клиент рендерит карточки внутри shadow-root; если `badge_required`, рендерит badge-элемент.
@@ -326,17 +328,20 @@ API-ключа проекта, невозможно: подделка ответ
 
 | Событие | Где инструментируется | Триггер |
 |---|---|---|
-| `invite_shown` | `apps/web`, дашборд SSR-компонент | Первый успешный рендер виджета на **внешнем** домене владельца (см. §4.2 п.3) — читает `widget_installs`, показывает CTA |
+| `widget_installed` | `apps/web`, API-роут `/api/widget/config` (§3.3, §4.2 п.3) | `ON CONFLICT DO NOTHING RETURNING id` в `widget_installs` вернул строку — новая пара (`project_id`, `domain`) |
+| `invite_shown` | `apps/web`, тот же API-роут `/api/widget/config`, тот же момент | Та же успешная вставка — один и тот же новый домен показывает и метрику, и share-CTA владельцу (PRD §2.4.1) |
 | `invite_sent` | `apps/web`, API-роут `/api/share` | Владелец подтвердил диалог публикации (FR-GROWTH-001 @security — без подтверждения запрос не уходит) |
 | `badge_impression` | `apps/web`, API-роут `/api/widget/config` | Каждый ответ конфигурации виджета с `badge_required = true` |
 | `badge_click` | `apps/web`, API-роут `/api/widget/badge-click` (виджет шлёт `navigator.sendBeacon`, сервер валидирует и пишет событие + добавляет UTM) | Клик по badge-ссылке |
 | `signup_from_badge` | `apps/web`, обработчик после успешной регистрации (модуль аутентификации, §3.2) | Регистрация с UTM-меткой источника badge в query/cookie |
-| `widget_installed` | `apps/web`, API-роут `/api/widget/config` (§4.2 п.3) | Первая запись пары `(project_id, domain)` в `widget_installs` |
 | `referral_attributed` | `apps/web`, платёжный webhook-обработчик (см. ADR-006) | Оплата с непустой `referral_attributions` |
 
 Все обработчики событий — тонкие вставки в уже существующие серверные пути (нет отдельного
 «аналитического сервиса» ради простоты недели). `metadata jsonb` хранит контекст (domain, UTM,
-partner_code) без изменения схемы под каждое новое поле.
+partner_code) без изменения схемы под каждое новое поле. `widget_installed`/`invite_shown`
+пишутся из одного и того же места кода одним и тем же условием (§3.3) — это осознанно, а не
+дублирование: PRD §2.4.1 требует, чтобы оба события имели идентичную гранулярность и идентичное
+условие срабатывания.
 
 ## 7. Docker Compose
 
@@ -355,6 +360,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   minio:
     image: minio/minio
@@ -365,6 +373,11 @@ services:
     volumes:
       - minio_data:/data
     expose: ["9000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   web:
     build: ./apps/web
@@ -377,7 +390,13 @@ services:
       - S3_SECRET_KEY
       - MCP_CLAUDE_URL=http://mcp-claude:7331
     ports: ["3000:3000"]
-    depends_on: [postgres, minio, mcp-claude]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      mcp-claude:
+        condition: service_started
 
   worker:
     build: ./services/worker
@@ -388,7 +407,13 @@ services:
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
       - MCP_CLAUDE_URL=http://mcp-claude:7331
-    depends_on: [postgres, minio, mcp-claude]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      mcp-claude:
+        condition: service_started
 
   mcp-claude:
     build: ./services/mcp-claude
@@ -402,7 +427,9 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
-    depends_on: [web]
+    depends_on:
+      web:
+        condition: service_started
 
 volumes:
   postgres_data:
@@ -410,9 +437,14 @@ volumes:
   caddy_data:
 ```
 
-**Порядок запуска:** `postgres` и `minio` — первыми (healthcheck перед стартом зависимых), затем
-`mcp-claude` (не зависит ни от кого), затем `web`/`worker`, затем `caddy`. Миграции (`packages/db`)
-прогоняются CI-шагом до `up -d` на новых версиях образа `web`, не как отдельный сервис compose.
+**Порядок запуска (найдено при валидации, W-4 — короткий синтаксис `depends_on: [a, b]` в Compose
+ждёт только старта контейнера, не его здоровья; исправлено на длинный синтаксис с
+`condition: service_healthy`):** `postgres` и `minio` стартуют первыми, и `web`/`worker` реально
+ждут, пока оба пройдут healthcheck (не просто запустятся) — `condition: service_healthy` в
+`depends_on`. `mcp-claude` не имеет healthcheck на этой неделе, поэтому от него требуется только
+`service_started`. Порядок: `postgres`+`minio` healthy → `mcp-claude` started → `web`/`worker` →
+`caddy`. Миграции (`packages/db`) прогоняются CI-шагом до `up -d` на новых версиях образа `web`,
+не как отдельный сервис compose.
 
 **Что бэкапить (теперь наша ответственность, раньше — задача Supabase):**
 - `postgres`: логический дамп (`pg_dump`) по расписанию (cron на VPS вне compose, либо
@@ -461,7 +493,23 @@ Architecture, без потери принятых продуктовых и ADR
 - Все ADR-001…006, схема данных (кроме `accounts`/`sessions`), growth-события §6 и разбиение
   монорепо §2 остались как есть — конфликт был только в инфраструктурном слое.
 
-## 10. Открытые пробелы (GAP)
+## 10. Канонические имена (находка W-10)
+
+Валидация нашла расхождения между `Architecture.md` и `Pseudocode.md` в именах одних и тех же
+сущностей. Ниже — зафиксированный канон; при доработке `Pseudocode.md` приводится к этой таблице,
+не наоборот.
+
+| Сущность | Канон (этот документ) | Не использовать | Почему канон — этот вариант |
+|---|---|---|---|
+| Таблица установок | `widget_installs` | `widget_install_events` | Уже используется во всех местах Architecture.md/C4/ADR-006-стиля идемпотентности; переименование добавило бы правку без пользы |
+| Путь конфигурации виджета | `GET /api/widget/config` | `/api/widget-config` | Уже используется в §4.2, §6, ADR-002 — три независимых места ссылаются на этот путь |
+| Поле файла видео | `testimonials.video_object_key` | `video_url` | NFR по мульти-арендности требует не хранить постоянный публичный URL; presigned URL истекает, поэтому в БД хранится ключ объекта, а не ссылка (§5) |
+| Поле текста транскрипта | `testimonials.transcript` | `video_transcript` | Короче, без избыточного префикса `video_` (таблица и так `testimonials`, поле уже про видео-отзыв) |
+| Поле статуса транскрипции | `testimonials.transcript_status enum(pending,completed,failed)` | `pending_transcription bool` | Булево не могло выразить неудачный вызов MCP; enum добавляет `failed` без изменения количества полей (§5) |
+| Поле источника транскрипта | `testimonials.transcript_source enum(machine)` | `video_transcript_is_machine bool` | Единообразно с `transcript_status`/`transcript`; расширяемо, если когда-нибудь появится ручная расшифровка — не в scope MVP |
+| Момент ценности | `widget_installed` + `invite_shown`, оба на `widget_installs` | отдельная таблица/поле под `invite_shown` | PRD §2.4.1 (пересмотрено): оба события — одна гранулярность (`project_id`,`domain`), см. §3.3 |
+
+## 11. Открытые пробелы (GAP)
 
 - `[GAP: нужна конкретная цена платного тарифа (PRD Q1) — влияет только на биллинг-копирайт, не на схему данных]`
 - `[GAP: нужен лимит бесплатного тарифа по числу отзывов (PRD Q2) — влияет на constraint в `projects`/`testimonials`, схема готова принять любое число]`
