@@ -1,32 +1,15 @@
-// POST /api/checkout — FR-008, инициация оплаты владельцем проекта (Pseudocode §7.3).
+// POST /api/checkout — инициация оплаты владельцем проекта (FR-008, Pseudocode §7.3).
 
 import { NextResponse } from 'next/server';
 import { withAccount } from '@proofwall/db';
 import { currentAccountId } from '@/lib/current-session';
-import { recordCheckoutSession, type CheckoutProvider } from '@/lib/payment';
+import { createRemotePayment, PaymentProviderError, recordCheckoutSession, isStub } from '@/lib/payment';
+import { baseUrl } from '@/lib/urls';
 
 export const dynamic = 'force-dynamic';
 
-/**
- * Провайдер оплаты не выбран ни одним документом проекта ([GAP] в 005_payments.sql).
- * Заглушка НЕ притворяется рабочей: без явного PAYMENT_PROVIDER_URL роут отвечает 501,
- * а не выдаёт фиктивную ссылку. Зелёный checkout при отсутствующей интеграции —
- * ровно тот класс лжи, против которого написано правило «сценарий добавлен ≠ требование
- * закрыто» (p-replicator-known-gaps.md §3).
- */
-const provider: CheckoutProvider = async (projectId) => {
-  const base = process.env.PAYMENT_PROVIDER_URL;
-  if (!base) throw new Error('PAYMENT_PROVIDER_NOT_CONFIGURED');
-  const res = await fetch(`${base.replace(/\/+$/, '')}/sessions`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ project_id: projectId }),
-  });
-  if (!res.ok) throw new Error(`провайдер оплаты ответил ${res.status}`);
-  const data = (await res.json()) as { session_id?: string; redirect_url?: string };
-  if (!data.session_id || !data.redirect_url) throw new Error('провайдер вернул неполный ответ');
-  return { providerSessionId: data.session_id, redirectUrl: data.redirect_url };
-};
+/** [GAP: цена платного тарифа не зафиксирована ни в PRD, ни в Specification.] */
+const PRICE_RUB = Number(process.env.PAID_TIER_PRICE_RUB ?? '990');
 
 export async function POST(request: Request): Promise<NextResponse> {
   const accountId = await currentAccountId();
@@ -51,16 +34,17 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!projectId) return NextResponse.json({ error: 'не найдено' }, { status: 404 });
 
   try {
-    // Провайдер вызывается ВНЕ транзакции: держать соединение пула всё время ответа
-    // стороннего сервиса нельзя. Строка пишется сразу после — до того, как владелец
-    // успеет оплатить и вебхук придёт искать, к какому проекту относится сессия.
-    const session = await provider(projectId);
+    // Обращение к ЮKassa — ВНЕ транзакции: держать соединение пула всё время ответа
+    // стороннего сервиса нельзя.
+    const session = await createRemotePayment(projectId, PRICE_RUB, `${baseUrl()}/dashboard/${slug}`);
     await withAccount(accountId, (client) => recordCheckoutSession(client, projectId, session));
-    return NextResponse.json({ redirect_url: session.redirectUrl }, { status: 200 });
+    return NextResponse.json({ redirect_url: session.redirectUrl, stub: isStub() }, { status: 200 });
   } catch (err) {
-    if ((err as Error).message === 'PAYMENT_PROVIDER_NOT_CONFIGURED') {
+    if (err instanceof PaymentProviderError && err.message === 'PAYMENT_PROVIDER_NOT_CONFIGURED') {
+      // 501, а не фиктивная ссылка: зелёный checkout при отсутствующей интеграции —
+      // ровно тот класс лжи, против которого «сценарий добавлен ≠ требование закрыто».
       return NextResponse.json(
-        { error: 'приём оплаты не подключён: не задан PAYMENT_PROVIDER_URL' },
+        { error: 'приём оплаты не подключён: задайте YOOKASSA_SHOP_ID и YOOKASSA_SECRET_KEY (или PAYMENTS_STUB=true)' },
         { status: 501 },
       );
     }

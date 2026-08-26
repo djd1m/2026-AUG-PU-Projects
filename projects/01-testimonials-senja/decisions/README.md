@@ -16,6 +16,9 @@
 | [D-004](D-004-rate-limit-store.md) | Счётчики anti-fraud | таблица Postgres, не Redis | принято агентом |
 | [D-005](D-005-tls-termination.md) | TLS-терминация | Caddy (ADR-007) | принято агентом |
 | [D-006](D-006-toolkit-location.md) | Где живёт тулкит проекта | в папке проекта | **подтверждено владельцем** |
+| [D-007](D-007-transcription-engine.md) | Движок транскрипции | OpenAI STT, не Claude API (ADR-005) | принято агентом |
+| [D-008](D-008-web-app-missing.md) | `apps/web` был одним Dockerfile | зафиксировать пробел, не генерировать скелет | принято агентом |
+| [D-009](D-009-yookassa-not-stripe.md) | Провайдер оплаты | ЮKassa; HMAC из ADR-006 удалён — провайдер не подписывает | **выбрано владельцем** |
 
 ## Правило
 

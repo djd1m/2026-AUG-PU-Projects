@@ -9,12 +9,12 @@ if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
 process.env.DATABASE_URL = DB_URL;
 process.env.SESSION_SECRET = 'test-secret-at-least-16-chars-long';
 
-const SECRET = 'webhook-secret-for-tests';
+process.env.PAYMENTS_STUB = 'true'; // до импорта: модуль читает переменную при вызовах
 const { withService, closePool } = await import('@proofwall/db');
 const { registerAccountAndProject } = await import('../src/lib/register');
 const {
-  signWebhook, verifyWebhookSignature, claimWebhookEvent, applyTariffUpgrade,
-  recordCheckoutSession, MAX_WEBHOOK_AGE_MS,
+  verifyWebhookOrigin, claimWebhookEvent, applyTariffUpgrade, recordCheckoutSession,
+  createRemotePayment, fetchRemotePayment, isStub, YOOKASSA_NETWORKS, CURRENCY, PROVIDER,
 } = await import('../src/lib/payment');
 
 /**
@@ -44,7 +44,7 @@ async function asOwner<T>(c: PoolClient, accountId: string, fn: () => Promise<T>
 }
 
 beforeAll(() => {
-  process.env.PAYMENT_WEBHOOK_SECRET = SECRET;
+  process.env.PAYMENTS_STUB = 'true';
 });
 
 async function inRollback<T>(fn: (c: PoolClient) => Promise<T>): Promise<T> {
@@ -83,77 +83,55 @@ afterAll(async () => {
   await closePool();
 });
 
-describe('подпись вебхука', () => {
-  const body = '{"id":"evt_1","type":"payment_succeeded"}';
-
-  it('корректная подпись принимается', () => {
-    const ts = Date.now();
-    expect(verifyWebhookSignature(body, signWebhook(body, SECRET, ts), String(ts))).toMatchObject({ ok: true });
+describe('подлинность уведомления — адрес источника (D-009)', () => {
+  it('ЮKassa не подписывает уведомления, поэтому проверки подписи здесь НЕТ', async () => {
+    // Фиксируем осознанное отличие от ADR-006: модуль не экспортирует ничего про HMAC.
+    const mod = await import('../src/lib/payment');
+    for (const gone of ['signWebhook', 'verifyWebhookSignature', 'MAX_WEBHOOK_AGE_MS']) {
+      expect(mod, gone).not.toHaveProperty(gone);
+    }
+    expect(PROVIDER).toBe('yookassa');
+    expect(CURRENCY).toBe('RUB');
   });
 
-  it('ИНВАРИАНТ: подпись считается от СЫРОГО тела — пере-сериализация ломает её', () => {
-    const ts = Date.now();
-    const sig = signWebhook(body, SECRET, ts);
-    // Тот же объект, но другой порядок ключей/пробелы — типичный результат JSON.parse→stringify.
-    const reserialized = JSON.stringify(JSON.parse(body), null, 2);
-    expect(verifyWebhookSignature(reserialized, sig, String(ts)).ok).toBe(false);
+  it.each(['185.71.76.5', '185.71.77.30', '77.75.153.99', '77.75.156.11', '77.75.156.35',
+           '77.75.154.200', '2a02:5180:abcd::1'])('адрес ЮKassa %s принимается', (ip) => {
+    expect(verifyWebhookOrigin(ip)).toMatchObject({ ok: true });
   });
 
-  it('метка времени входит в подпись — подменить её незаметно нельзя', () => {
-    const ts = Date.now();
-    const sig = signWebhook(body, SECRET, ts);
-    expect(verifyWebhookSignature(body, sig, String(ts + 1)).ok).toBe(false);
-  });
+  it.each(['8.8.8.8', '127.0.0.1', '10.0.0.1', '185.71.76.32', '77.75.153.128', '2a02:5181::1'])(
+    'чужой адрес %s отклоняется', (ip) => {
+      expect(verifyWebhookOrigin(ip)).toMatchObject({ ok: false, reason: 'foreign_ip' });
+    },
+  );
 
-  it('чужой секрет не проходит', () => {
-    const ts = Date.now();
-    expect(verifyWebhookSignature(body, signWebhook(body, 'другой-секрет', ts), String(ts))).toMatchObject({
-      ok: false, reason: 'bad_signature',
-    });
-  });
-
-  it('мусор вместо подписи не роняет проверку', () => {
-    const ts = String(Date.now());
-    for (const bad of ['', 'не-hex', 'ab', 'zz'.repeat(32), '0'.repeat(63)]) {
-      expect(verifyWebhookSignature(body, bad, ts).ok, bad).toBe(false);
+  it('отсутствие адреса — отказ, а не «пропустить»', () => {
+    for (const v of ['', '   ', null, undefined, 'unknown']) {
+      expect(verifyWebhookOrigin(v as string), String(v)).toMatchObject({ ok: false, reason: 'no_ip' });
     }
   });
 
-  it('без заголовков — отказ', () => {
-    const ts = String(Date.now());
-    expect(verifyWebhookSignature(body, null, ts)).toMatchObject({ ok: false, reason: 'missing_headers' });
-    expect(verifyWebhookSignature(body, 'ab'.repeat(32), null)).toMatchObject({ ok: false, reason: 'missing_headers' });
+  it('список сетей взят из документации ЮKassa и зашит в код', () => {
+    // Вынесенный в переменную окружения, он однажды приедет пустым — и это «пускать всех».
+    expect(YOOKASSA_NETWORKS).toContain('185.71.76.0/27');
+    expect(YOOKASSA_NETWORKS).toContain('2a02:5180::/32');
+    expect(YOOKASSA_NETWORKS.length).toBe(7);
+  });
+});
+
+describe('перезапрос статуса — второй, более сильный рубеж', () => {
+  it('в режиме заглушки к ЮKassa не ходим', async () => {
+    expect(isStub()).toBe(true);
+    const p = await fetchRemotePayment('any-id');
+    expect(p).toMatchObject({ id: 'any-id', status: 'succeeded', paid: true });
   });
 
-  it('FAIL-CLOSED: без PAYMENT_WEBHOOK_SECRET не принимается ничего', () => {
-    const saved = process.env.PAYMENT_WEBHOOK_SECRET;
-    delete process.env.PAYMENT_WEBHOOK_SECRET;
-    const ts = Date.now();
-    // Без секрета «принять всё» означало бы бесплатный апгрейд тарифа кому угодно.
-    expect(verifyWebhookSignature(body, signWebhook(body, SECRET, ts), String(ts))).toMatchObject({
-      ok: false, reason: 'no_secret',
-    });
-    process.env.PAYMENT_WEBHOOK_SECRET = saved;
-  });
-
-  it('старое валидное тело отбрасывается (защита от повтора)', () => {
-    const old = Date.now() - MAX_WEBHOOK_AGE_MS - 1000;
-    expect(verifyWebhookSignature(body, signWebhook(body, SECRET, old), String(old))).toMatchObject({
-      ok: false, reason: 'stale',
-    });
-  });
-
-  it('метка из БУДУЩЕГО тоже подозрительна', () => {
-    const future = Date.now() + MAX_WEBHOOK_AGE_MS + 1000;
-    expect(verifyWebhookSignature(body, signWebhook(body, SECRET, future), String(future))).toMatchObject({
-      ok: false, reason: 'stale',
-    });
-  });
-
-  it('на границе окна ещё принимается', () => {
-    const now = Date.now();
-    const edge = now - MAX_WEBHOOK_AGE_MS + 500;
-    expect(verifyWebhookSignature(body, signWebhook(body, SECRET, edge), String(edge), now).ok).toBe(true);
+  it('без учётных данных и без заглушки — явная ошибка, а не тихий пропуск', async () => {
+    process.env.PAYMENTS_STUB = 'false';
+    delete process.env.YOOKASSA_SHOP_ID;
+    delete process.env.YOOKASSA_SECRET_KEY;
+    await expect(fetchRemotePayment('x')).rejects.toThrow(/YOOKASSA_SHOP_ID/);
+    process.env.PAYMENTS_STUB = 'true';
   });
 });
 

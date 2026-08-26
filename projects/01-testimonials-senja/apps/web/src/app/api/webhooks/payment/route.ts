@@ -1,90 +1,102 @@
-// POST /api/webhooks/payment — FR-008, ADR-006.
+// POST /api/webhooks/payment — уведомления ЮKassa (FR-008, ADR-006, D-009).
 //
-// Порядок шагов ниже — не стилистика, а требование Pseudocode §7.2. Менять его нельзя:
-// проверка подписи ОБЯЗАНА идти до записи event_id, иначе подделка с угаданным id
-// вытесняет настоящий вебхук, и оплата не применяется никогда.
+// Порядок шагов — требование, а не стиль: подлинность подтверждается ДО записи
+// event_id. При обратном порядке подделка с угаданным идентификатором вытеснит
+// настоящее уведомление, и оплата не применится никогда.
 
 import { NextResponse } from 'next/server';
 import { withService } from '@proofwall/db';
-import { applyTariffUpgrade, claimWebhookEvent, verifyWebhookSignature } from '@/lib/payment';
-import { extractClientIP } from '@/lib/client-ip';
+import {
+  applyTariffUpgrade,
+  claimWebhookEvent,
+  fetchRemotePayment,
+  PaymentProviderError,
+  verifyWebhookOrigin,
+} from '@/lib/payment';
 import { convertAttributionOnPayment } from '@/lib/referral';
+import { extractClientIP } from '@/lib/client-ip';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(request: Request): Promise<NextResponse> {
-  // СЫРОЕ тело: HMAC считается по нему побайтово. request.json() здесь недопустим —
-  // пере-сериализация сломала бы подпись даже при верном содержимом.
-  const rawBody = await request.text();
-
-  // ── ШАГ 1: подпись, до всего остального ─────────────────────────────────
-  const verdict = verifyWebhookSignature(
-    rawBody,
-    request.headers.get('x-webhook-signature'),
-    request.headers.get('x-webhook-timestamp'),
+async function audit(action: string, actor: string, reason: string): Promise<void> {
+  await withService((client) =>
+    client.query(
+      // project_id = null: на этом шаге проект ещё неизвестен, событие привязано к источнику.
+      `insert into audit_log (project_id, entity_type, entity_id, actor_id, action, reason)
+       values (null, 'webhook', gen_random_uuid(), $1, $2, $3)`,
+      [actor, action, reason],
+    ),
   );
+}
 
-  if (!verdict.ok) {
-    const action = verdict.reason === 'stale' ? 'webhook_timestamp_stale' : 'webhook_signature_invalid';
-    await withService((client) =>
-      client.query(
-        // project_id = null: на этом шаге проект ещё неизвестен — событие привязано к источнику.
-        `insert into audit_log (project_id, entity_type, entity_id, actor_id, action, reason)
-         values (null, 'webhook', gen_random_uuid(), $1, $2, $3)`,
-        [extractClientIP(request), action, verdict.reason],
-      ),
-    );
-    // 400, а НЕ 200: провайдер должен увидеть отказ и повторить/поднять тревогу.
-    return NextResponse.json({ error: 'invalid webhook' }, { status: 400 });
+export async function POST(request: Request): Promise<NextResponse> {
+  const ip = extractClientIP(request);
+
+  // ── ШАГ 1: адрес источника из списка сетей ЮKassa ───────────────────────
+  const origin = verifyWebhookOrigin(ip);
+  if (!origin.ok) {
+    await audit('webhook_origin_rejected', ip, origin.reason);
+    // 400, а не 200: у ЮKassa отказ должен быть виден, а не проглочен.
+    return NextResponse.json({ error: 'unknown origin' }, { status: 400 });
   }
 
-  // ── ШАГ 2: разбор ТОЛЬКО после проверки подписи ─────────────────────────
-  let event: {
-    id?: unknown;
-    type?: unknown;
-    checkout_session_id?: unknown;
-    account_id?: unknown;
-    amount?: unknown;
+  let body: {
+    event?: unknown;
+    object?: { id?: unknown; status?: unknown; metadata?: Record<string, unknown> };
   };
   try {
-    event = JSON.parse(rawBody);
+    body = await request.json();
   } catch {
     return NextResponse.json({ error: 'invalid json' }, { status: 400 });
   }
-  if (typeof event.id !== 'string' || event.id === '') {
-    return NextResponse.json({ error: 'event id required' }, { status: 400 });
+
+  const event = typeof body.event === 'string' ? body.event : '';
+  const paymentId = typeof body.object?.id === 'string' ? body.object.id : '';
+  if (event === '' || paymentId === '') {
+    return NextResponse.json({ error: 'event and object.id required' }, { status: 400 });
   }
 
+  // У ЮKassa нет отдельного идентификатора события — есть тип события и id объекта.
+  // Пара из них устойчива и различает payment.succeeded и payment.canceled по одному платежу.
+  const eventId = `${event}:${paymentId}`;
+
   const outcome = await withService(async (client) => {
-    // ── ШАГ 3: идемпотентность на уровне схемы ────────────────────────────
-    const isNew = await claimWebhookEvent(client, event.id as string, event);
-    if (!isNew) return 'duplicate' as const;
+    // ── ШАГ 2: идемпотентность на уровне схемы ────────────────────────────
+    if (!(await claimWebhookEvent(client, eventId, body))) return 'duplicate' as const;
+    if (event !== 'payment.succeeded') return 'ignored' as const;
 
-    if (event.type !== 'payment_succeeded') return 'ignored' as const;
-    if (typeof event.checkout_session_id !== 'string' || event.checkout_session_id === '') {
-      return 'no_session' as const;
+    // ── ШАГ 3: статус перезапрашивается у ЮKassa ──────────────────────────
+    // Тело уведомления не является источником истины о том, оплачено ли. Этот шаг
+    // сильнее проверки адреса: он не зависит от точности определения IP.
+    let remote;
+    try {
+      remote = await fetchRemotePayment(paymentId);
+    } catch (err) {
+      if (err instanceof PaymentProviderError) return 'provider_unavailable' as const;
+      throw err;
     }
+    if (!remote) return 'unknown_payment' as const;
+    if (!remote.paid || remote.status !== 'succeeded') return 'not_paid' as const;
 
-    // ── ШАГ 4: применение тарифа ──────────────────────────────────────────
-    const upgrade = await applyTariffUpgrade(client, event.checkout_session_id);
+    // ── ШАГ 4: тариф ──────────────────────────────────────────────────────
+    const upgrade = await applyTariffUpgrade(client, paymentId);
 
     // ── ШАГ 5: партнёрское начисление (FR-GROWTH-002) ─────────────────────
-    // Выполняется ПОСЛЕ апгрейда и в той же транзакции: сбой начисления не должен
-    // оставить оплатившего без тарифа, а откат тарифа — без причины.
-    if (typeof event.account_id === 'string' && event.account_id !== '') {
-      await convertAttributionOnPayment(
-        client,
-        event.account_id,
-        event.id as string,
-        typeof event.amount === 'number' ? event.amount : 0,
-      );
+    const accountId = body.object?.metadata?.['account_id'];
+    if (typeof accountId === 'string' && accountId !== '') {
+      await convertAttributionOnPayment(client, accountId, eventId, remote.amount);
     }
 
     return upgrade.applied ? ('upgraded' as const) : ('unknown_session' as const);
   });
 
-  // 200 на всё, что прошло подпись: провайдер не должен ретраить события, которые мы
-  // сознательно проигнорировали (дубль, чужой тип, неизвестная сессия) — иначе он
-  // будет долбить их до исчерпания своих попыток.
+  if (outcome === 'provider_unavailable') {
+    // 500 намеренно: ЮKassa повторит уведомление, и это правильный исход —
+    // мы не смогли проверить платёж, а не отвергли его.
+    return NextResponse.json({ status: outcome }, { status: 500 });
+  }
+
+  // 200 на всё остальное: ЮKassa повторяет, пока не получит 200, и ретраить то,
+  // что мы сознательно проигнорировали, незачем.
   return NextResponse.json({ status: outcome }, { status: 200 });
 }
