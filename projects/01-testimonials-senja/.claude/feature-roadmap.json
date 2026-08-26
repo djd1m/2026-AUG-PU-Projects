@@ -6,106 +6,204 @@
     {
       "id": "FR-001",
       "title": "Регистрация владельца и создание проекта (слаг, 3 ссылки: форма/стена/виджет)",
-      "status": "next",
+      "status": "done",
       "priority": "high",
-      "tags": ["mvp", "foundation"],
-      "depends_on": []
+      "tags": [
+        "mvp",
+        "foundation"
+      ],
+      "depends_on": [],
+      "files": [
+        "apps/web/package.json",
+        "apps/web/tsconfig.json",
+        "apps/web/next.config.mjs",
+        "apps/web/vitest.config.ts",
+        "apps/web/Dockerfile",
+        "apps/web/src/lib/slug.ts",
+        "apps/web/src/lib/password.ts",
+        "apps/web/src/lib/session.ts",
+        "apps/web/src/lib/validation.ts",
+        "apps/web/src/lib/urls.ts",
+        "apps/web/src/lib/register.ts",
+        "apps/web/src/lib/project.ts",
+        "apps/web/src/lib/current-session.ts",
+        "apps/web/src/app/layout.tsx",
+        "apps/web/src/app/page.tsx",
+        "apps/web/src/app/api/auth/register/route.ts",
+        "apps/web/src/app/api/projects/slug-available/route.ts",
+        "apps/web/src/app/f/[slug]/page.tsx",
+        "apps/web/src/app/w/[slug]/page.tsx",
+        "apps/web/src/app/dashboard/[slug]/page.tsx",
+        "apps/web/tests/slug.test.ts",
+        "apps/web/tests/auth-primitives.test.ts",
+        "apps/web/tests/register.test.ts"
+      ]
     },
     {
       "id": "FR-002",
       "title": "Форма сбора — текстовый отзыв (rate limit 5/час/IP, приём без санитизации)",
-      "status": "planned",
+      "status": "next",
       "priority": "high",
-      "tags": ["mvp", "security"],
-      "depends_on": ["FR-001"]
+      "tags": [
+        "mvp",
+        "security"
+      ],
+      "depends_on": [
+        "FR-001"
+      ]
     },
     {
       "id": "FR-003",
       "title": "Форма сбора — видео-отзыв + очередь транскрипции через OpenAI STT (ADR-005, граница FTC)",
-      "status": "planned",
+      "status": "next",
       "priority": "high",
-      "tags": ["mvp", "security", "ftc-compliance"],
-      "depends_on": ["FR-001"]
+      "tags": [
+        "mvp",
+        "security",
+        "ftc-compliance"
+      ],
+      "depends_on": [
+        "FR-001"
+      ]
     },
     {
       "id": "FR-004",
       "title": "Модерация: pending/approved/rejected/hidden, audit log, cross-project 403",
       "status": "planned",
       "priority": "high",
-      "tags": ["mvp", "security"],
-      "depends_on": ["FR-002", "FR-003"]
+      "tags": [
+        "mvp",
+        "security"
+      ],
+      "depends_on": [
+        "FR-002",
+        "FR-003"
+      ]
     },
     {
       "id": "FR-005",
       "title": "Публичная страница Wall of Love (SSR, schema.org/Review, экранирование при рендере)",
       "status": "planned",
       "priority": "critical",
-      "tags": ["mvp", "growth-dependency", "security"],
-      "depends_on": ["FR-004"]
+      "tags": [
+        "mvp",
+        "growth-dependency",
+        "security"
+      ],
+      "depends_on": [
+        "FR-004"
+      ]
     },
     {
       "id": "FR-GROWTH-005",
       "title": "Порог содержательности и noindex для /w/<slug> — anti scaled-content-abuse (ADR-004)",
       "status": "planned",
       "priority": "high",
-      "tags": ["mvp", "growth", "seo"],
-      "depends_on": ["FR-005"]
+      "tags": [
+        "mvp",
+        "growth",
+        "seo"
+      ],
+      "depends_on": [
+        "FR-005"
+      ]
     },
     {
       "id": "FR-006",
       "title": "Встраиваемый виджет: Shadow DOM, ≤30KB gzip, badge_required с сервера (ADR-001)",
       "status": "planned",
       "priority": "critical",
-      "tags": ["mvp", "growth-critical", "perf", "security"],
-      "depends_on": ["FR-005"]
+      "tags": [
+        "mvp",
+        "growth-critical",
+        "perf",
+        "security"
+      ],
+      "depends_on": [
+        "FR-005"
+      ]
     },
     {
       "id": "FR-GROWTH-001",
       "title": "widget_installed + invite_shown (момент ценности) и share-CTA на каждый новый домен",
       "status": "planned",
       "priority": "critical",
-      "tags": ["mvp", "growth-critical", "metric-of-the-week"],
-      "depends_on": ["FR-006"]
+      "tags": [
+        "mvp",
+        "growth-critical",
+        "metric-of-the-week"
+      ],
+      "depends_on": [
+        "FR-006"
+      ]
     },
     {
       "id": "FR-007",
       "title": "Тарифы free/paid как атрибут проекта, серверная проверка (не в клиенте)",
       "status": "planned",
       "priority": "critical",
-      "tags": ["mvp", "growth-critical"],
-      "depends_on": ["FR-006"]
+      "tags": [
+        "mvp",
+        "growth-critical"
+      ],
+      "depends_on": [
+        "FR-006"
+      ]
     },
     {
       "id": "FR-GROWTH-003",
       "title": "Badge loop: обязательный badge на free, anti-tamper MutationObserver (ADR-002)",
       "status": "planned",
       "priority": "critical",
-      "tags": ["mvp", "growth-critical", "security"],
-      "depends_on": ["FR-007"]
+      "tags": [
+        "mvp",
+        "growth-critical",
+        "security"
+      ],
+      "depends_on": [
+        "FR-007"
+      ]
     },
     {
       "id": "FR-008",
       "title": "Checkout + webhook оплаты, идемпотентность по event_id (ADR-006), апгрейд тарифа",
       "status": "planned",
       "priority": "high",
-      "tags": ["mvp", "security", "payments"],
-      "depends_on": ["FR-007"]
+      "tags": [
+        "mvp",
+        "security",
+        "payments"
+      ],
+      "depends_on": [
+        "FR-007"
+      ]
     },
     {
       "id": "FR-GROWTH-002",
       "title": "Партнёрская атрибуция: приоритет промокода над cookie (ADR-003), self-referral guard",
       "status": "planned",
       "priority": "medium",
-      "tags": ["mvp", "growth"],
-      "depends_on": ["FR-008"]
+      "tags": [
+        "mvp",
+        "growth"
+      ],
+      "depends_on": [
+        "FR-008"
+      ]
     },
     {
       "id": "FR-GROWTH-004",
       "title": "Персональные партнёрские коды + anti-fraud по IP на регистрациях",
       "status": "planned",
       "priority": "medium",
-      "tags": ["mvp", "growth"],
-      "depends_on": ["FR-GROWTH-002"]
+      "tags": [
+        "mvp",
+        "growth"
+      ],
+      "depends_on": [
+        "FR-GROWTH-002"
+      ]
     }
-  ]
+  ],
+  "last_completed": "FR-001"
 }
