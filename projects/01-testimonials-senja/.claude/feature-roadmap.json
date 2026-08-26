@@ -89,7 +89,7 @@
     {
       "id": "FR-004",
       "title": "Модерация: pending/approved/rejected/hidden, audit log, cross-project 403",
-      "status": "next",
+      "status": "done",
       "priority": "high",
       "tags": [
         "mvp",
@@ -98,12 +98,19 @@
       "depends_on": [
         "FR-002",
         "FR-003"
+      ],
+      "files": [
+        "apps/web/src/lib/moderation.ts",
+        "apps/web/src/app/api/testimonials/[id]/moderate/route.ts",
+        "apps/web/src/app/dashboard/[slug]/moderation-list.tsx",
+        "apps/web/src/app/dashboard/[slug]/page.tsx",
+        "apps/web/tests/moderation.test.ts"
       ]
     },
     {
       "id": "FR-005",
       "title": "Публичная страница Wall of Love (SSR, schema.org/Review, экранирование при рендере)",
-      "status": "planned",
+      "status": "next",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -225,5 +232,5 @@
       ]
     }
   ],
-  "last_completed": "FR-003"
+  "last_completed": "FR-004"
 }
