@@ -65,7 +65,7 @@
     {
       "id": "FR-003",
       "title": "Форма сбора — видео-отзыв + очередь транскрипции через OpenAI STT (ADR-005, граница FTC)",
-      "status": "next",
+      "status": "done",
       "priority": "high",
       "tags": [
         "mvp",
@@ -74,12 +74,22 @@
       ],
       "depends_on": [
         "FR-001"
+      ],
+      "files": [
+        "apps/web/src/lib/video.ts",
+        "apps/web/src/lib/storage.ts",
+        "apps/web/src/lib/testimonial.ts",
+        "apps/web/src/app/api/testimonials/video/route.ts",
+        "apps/web/src/app/f/[slug]/video-recorder.tsx",
+        "apps/web/src/app/f/[slug]/intake-tabs.tsx",
+        "apps/web/tests/video.test.ts",
+        "apps/web/tests/storage.test.ts"
       ]
     },
     {
       "id": "FR-004",
       "title": "Модерация: pending/approved/rejected/hidden, audit log, cross-project 403",
-      "status": "planned",
+      "status": "next",
       "priority": "high",
       "tags": [
         "mvp",
@@ -215,5 +225,5 @@
       ]
     }
   ],
-  "last_completed": "FR-002"
+  "last_completed": "FR-003"
 }
