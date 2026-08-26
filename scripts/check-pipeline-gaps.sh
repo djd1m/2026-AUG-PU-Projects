@@ -55,6 +55,29 @@ if [ -f "$DIR/discovery/CJM_Variants.md" ]; then
   say "PR-007 CJM → требования" "⚠️ проверить вручную: механизма нет"
 fi
 
+# Порты compose: хостовая часть не должна быть зашита числом, и не должна конфликтовать
+# с уже занятым на машине (.claude/rules/docker-ports.md). Проект 01: сгенерированный
+# compose просил 80/443, занятые чужим reverse-proxy.
+PROJ_ROOT="$(dirname "$DIR")"
+if [ -f "$PROJ_ROOT/docker-compose.yml" ]; then
+  hardcoded=$(grep -oE '^[[:space:]]*ports:.*' "$PROJ_ROOT/docker-compose.yml" \
+    | grep -vE '\$\{[A-Za-z_]' | grep -oE '"[0-9]+:[0-9]+"' | tr '\n' ' ')
+  if [ -n "$hardcoded" ]; then
+    say "Порты: хостовая часть числом" "❌ зашито: $hardcoded — вынести в \${VAR:-default}"
+    FAIL=1
+  else
+    say "Порты: хостовая часть в переменных" "✅"
+  fi
+  if [ -x "$(dirname "$0")/check-port-conflicts.sh" ]; then
+    if bash "$(dirname "$0")/check-port-conflicts.sh" "$PROJ_ROOT" >/dev/null 2>&1; then
+      say "Порты: конфликтов на машине нет" "✅"
+    else
+      say "Порты: КОНФЛИКТ" "❌ compose up упадёт — bash scripts/check-port-conflicts.sh $PROJ_ROOT"
+      FAIL=1
+    fi
+  fi
+fi
+
 # Реестр незакрытых GAP
 g=$(grep -rc '\[GAP' "$DIR" 2>/dev/null | awk -F: '{s+=$2} END {print s+0}')
 say "Открытых [GAP]" "$g — просмотреть перед Phase 3"

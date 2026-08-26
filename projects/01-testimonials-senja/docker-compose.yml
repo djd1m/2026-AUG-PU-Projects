@@ -43,7 +43,9 @@ services:
       - S3_SECRET_KEY
       - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
       - PAYMENT_WEBHOOK_SECRET   # FR-008: onPaymentWebhook/applyTariffUpgrade исполняются в apps/web (§3.5)
-    ports: ["3000:3000"]
+    # Хостовая часть — через переменную: на машине, где 3000 занят другим проектом,
+    # правится .env, а не общий compose (см. .claude/rules/docker-ports.md).
+    ports: ["${WEB_PORT:-3000}:3000"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -83,7 +85,10 @@ services:
 
   caddy:
     image: caddy:2-alpine
-    ports: ["80:80", "443:443"]
+    # 80/443 — самые конфликтные порты на любой машине: их почти всегда уже слушает
+    # чужой reverse-proxy. На этой машине их занимает контейнер ai-hub-tls-proxy,
+    # поэтому значения по умолчанию вынесены в переменные, а не зашиты.
+    ports: ["${HTTP_PORT:-80}:80", "${HTTPS_PORT:-443}:443"]
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data

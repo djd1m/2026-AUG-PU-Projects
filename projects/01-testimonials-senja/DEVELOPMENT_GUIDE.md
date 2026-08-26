@@ -17,15 +17,27 @@ claude
 
 Стек — Docker Compose, все сервисы свои (Architecture §7, §9 — без managed BaaS):
 
-> ⚠️ **`apps/web` ещё не написан** — в папке лежит только `Dockerfile`. Поэтому
-> `docker compose up -d` целиком пока падает на сборке `web`, а вместе с ним не поднимается
-> `caddy` (`depends_on: web`). Работают четыре сервиса из шести. Полный разбор и обоснование —
-> `decisions/D-008-web-app-missing.md`; `apps/web` пишется в `/run mvp`.
+> ⚠️ **Сначала проверь порты, потом поднимай.** Машина не пустая: `80` и `443` почти всегда
+> уже слушает чужой reverse-proxy, и `docker compose up` упадёт с `port is already allocated`,
+> оставив стек поднятым наполовину. Проверка детерминированная, занимает секунду:
+>
+> ```bash
+> bash scripts/check-port-conflicts.sh .     # 0 — чисто, 1 — конфликт
+> ```
+>
+> При конфликте — задать свободные значения в `.env` (`WEB_PORT`, `HTTP_PORT`, `HTTPS_PORT`);
+> `docker-compose.yml` править не нужно, хостовые порты в нём уже вынесены в переменные.
+> Правило целиком — `.claude/rules/docker-ports.md` в корне репозитория.
 
 ```bash
 cp .env.example .env        # заполнить POSTGRES_PASSWORD, DATABASE_URL, SESSION_SECRET, S3_*, PAYMENT_WEBHOOK_SECRET, OPENAI_API_KEY
-docker compose up -d postgres minio transcribe
+bash scripts/check-port-conflicts.sh .      # ОБЯЗАТЕЛЬНО до up
+docker compose up -d
 ```
+
+`apps/web` реализован (FR-001…FR-003) — образ собирается и стартует, `docker compose up -d`
+поднимает стек целиком. Историю дефекта, из-за которого раньше не собирался ни один образ,
+см. `decisions/D-008-web-app-missing.md`.
 
 Миграции. `packages/db` — не контейнер compose, а workspace монорепо, поэтому раннер
 запускается с хоста. `DATABASE_URL` из `.env` указывает на хост `postgres` — имя, которое

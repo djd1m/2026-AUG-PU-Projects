@@ -71,6 +71,12 @@ All generated files go directly into the project. Never create a separate output
 | Dev guide | `DEVELOPMENT_GUIDE.md` |
 | Scaffolds | `docker-compose.yml`, `Dockerfile`, `.gitignore` |
 
+> **Генерация compose — обязательный шаг.** Хостовые порты выносятся в `${VAR:-default}`
+> и объявляются в `.env.example`; результат проверяется
+> `bash scripts/check-port-conflicts.sh <проект>` ДО того, как отдан пользователю.
+> Правило и разбор: [`docker-ports.md`](docker-ports.md). Основание — прогон проекта 01,
+> где сгенерированный compose просил занятые `80`/`443`.
+
 ## Alternative entry: starting from existing technical documentation
 
 The pipeline officially supports starting from user-provided technical
@@ -121,6 +127,8 @@ Always pass these constraints to sparc-prd-mini (Phase 1):
 - Infrastructure: VPS (AdminVPS/HOSTKEY)
 - Deploy: Docker Compose direct deploy
 - AI Integration: MCP servers
+- **Порты: хостовая часть только через `${VAR:-default}`, никогда числом** —
+  машина не пустая, см. [`docker-ports.md`](docker-ports.md)
 
 ## Git Discipline During Pipeline
 
@@ -174,7 +182,7 @@ data extracted from SPARC docs.
 - `.claude/commands/feature-ent.md` — IF DDD docs (idea2prd-manual)
 - `.mcp.json` — IF external integrations
 - `CLAUDE.md`, `README.md`, `DEVELOPMENT_GUIDE.md`
-- `docker-compose.yml`, `Dockerfile`, `.gitignore`
+- `docker-compose.yml`, `Dockerfile`, `.gitignore` (порты — по `docker-ports.md`)
 - `docs/*` — all SPARC documentation
 
 ### Post-pipeline verification
