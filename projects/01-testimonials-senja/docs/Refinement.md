@@ -11,7 +11,7 @@
 | Уровень | Что покрывает | Инструмент (класс) |
 |---|---|---|
 | Unit | Чистая логика: `resolveAttribution`, `recomputeContentThreshold`, переходы состояний в `ALLOWED_TRANSITIONS`, валидация полей формы, расчёт комиссии | Юнит-фреймворк JS/TS с моками БД |
-| Integration | Обработчики API с реальной тестовой БД: `submitTestimonial`, `moderateTestimonial`, `apiWidgetConfig`, `onPaymentWebhook` (включая идемпотентность и self-referral), rate limit на реальном сторе | Тестовая Postgres-схема (Supabase local/test project) |
+| Integration | Обработчики API с реальной тестовой БД: `submitTestimonial`, `moderateTestimonial`, `apiWidgetConfig`, `onPaymentWebhook` (включая идемпотентность и self-referral), rate limit на реальном сторе | Тестовая Postgres-схема в контейнере (`docker compose -f compose.test.yml`) |
 | E2E | Полный путь пользователя: форма → модерация → публичная стена → виджет на внешней странице; путь регистрация → атрибуция → оплата → комиссия | Браузерный E2E-раннер |
 
 **Принцип распределения:** всё, что выражается как чистая функция от входа к выходу (переходы

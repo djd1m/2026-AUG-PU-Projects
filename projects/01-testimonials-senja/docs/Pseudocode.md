@@ -2,7 +2,9 @@
 
 > SPARC Phase: **Pseudocode**. Источник: [`Specification.md`](Specification.md), [`PRD.md`](PRD.md).
 > Алгоритмы для каждого FR из Specification. Явная обработка ошибок и граничных случаев.
-> Стек: Next.js + Supabase (Postgres + Storage + Auth) + Claude API + отдельный JS-виджет.
+> Стек (Architecture Constraints p-replicator): распределённый монолит в монорепо,
+> Docker + Docker Compose, **PostgreSQL в контейнере**, MCP-серверы. Приложение — Next.js,
+> виджет — отдельный бандл, Claude API через MCP.
 
 ---
 
