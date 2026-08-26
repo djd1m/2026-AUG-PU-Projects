@@ -1,0 +1,789 @@
+<title>Три пути Senja-клона</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --ground:#E7E9EC;
+  --surface:#F8F9FA;
+  --surface-2:#EFF1F3;
+  --ink:#12161C;
+  --ink-2:#3C4552;
+  --muted:#697484;
+  --line:#CBD1D8;
+  --line-soft:#DDE2E7;
+  --accent:#136F63;
+  --vc:#136F63;
+  --a:#A64F18;
+  --b:#136F63;
+  --c:#39479B;
+  --risk:#9E3535;
+  --ok:#2F6B4F;
+  --shadow:0 1px 2px rgba(18,22,28,.06),0 8px 24px -12px rgba(18,22,28,.18);
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1216;
+    --surface:#161B21;
+    --surface-2:#1D242B;
+    --ink:#E6EAEE;
+    --ink-2:#B6BFC9;
+    --muted:#8792A0;
+    --line:#2C353E;
+    --line-soft:#232B33;
+    --accent:#46B3A2;
+    --vc:#46B3A2;
+    --a:#DE8A4B;
+    --b:#46B3A2;
+    --c:#8B98E8;
+    --risk:#D9736F;
+    --ok:#63B98C;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1216;
+  --surface:#161B21;
+  --surface-2:#1D242B;
+  --ink:#E6EAEE;
+  --ink-2:#B6BFC9;
+  --muted:#8792A0;
+  --line:#2C353E;
+  --line-soft:#232B33;
+  --accent:#46B3A2;
+  --vc:#46B3A2;
+  --a:#DE8A4B;
+  --b:#46B3A2;
+  --c:#8B98E8;
+  --risk:#D9736F;
+  --ok:#63B98C;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--vc,var(--accent)) 55%,transparent);transition:border-color .15s,color .15s}
+a:hover{color:var(--vc,var(--accent));border-bottom-color:var(--vc,var(--accent))}
+a:focus-visible,button:focus-visible{outline:2px solid var(--vc,var(--accent));outline-offset:2px;border-radius:2px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ── masthead ─────────────────────────── */
+.masthead{border-bottom:1px solid var(--line);background:var(--surface)}
+.masthead .wrap{padding-top:34px;padding-bottom:28px}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+}
+.eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--muted)}
+h1{
+  font-family:var(--display);font-weight:600;font-size:clamp(30px,4.6vw,50px);
+  line-height:1.08;letter-spacing:-.015em;margin:14px 0 10px;text-wrap:balance;max-width:19ch;
+}
+.standfirst{max-width:62ch;color:var(--ink-2);font-size:16.5px;margin:0}
+.factbar{
+  display:flex;flex-wrap:wrap;gap:0;margin-top:24px;
+  border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--surface-2);
+}
+.fact{flex:1 1 190px;padding:12px 16px;border-right:1px solid var(--line)}
+.fact:last-child{border-right:0}
+.fact dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:0 0 3px}
+.fact dd{margin:0;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+.fact dd a{border-bottom-style:dotted}
+
+/* ── variant rail ─────────────────────── */
+.rail{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.rail .wrap{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch;padding-top:0;padding-bottom:0}
+.tabs{display:flex;flex:1 1 auto;min-width:0;gap:0;overflow-x:auto;scrollbar-width:thin}
+.tab{
+  appearance:none;background:none;border:0;border-bottom:3px solid transparent;
+  padding:13px 18px 11px;cursor:pointer;text-align:left;color:var(--muted);
+  font-family:var(--body);white-space:nowrap;display:flex;gap:10px;align-items:baseline;
+}
+.tab .tk{font-family:var(--mono);font-size:12px;letter-spacing:.1em;opacity:.75}
+.tab .tn{font-size:15px;font-weight:500}
+.tab:hover{color:var(--ink-2);background:var(--surface-2)}
+.tab[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--vc);background:var(--surface-2)}
+.tab[aria-pressed="true"] .tk{opacity:1;color:var(--vc)}
+.railtools{display:flex;align-items:center;gap:8px;padding:9px 0}
+
+.btn{
+  appearance:none;font-family:var(--body);font-size:13px;font-weight:500;cursor:pointer;
+  background:var(--surface);color:var(--ink-2);border:1px solid var(--line);
+  border-radius:3px;padding:7px 12px;transition:background .15s,color .15s,border-color .15s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.btn:hover{background:var(--surface-2);color:var(--ink);border-color:var(--muted)}
+.btn[aria-pressed="true"]{background:var(--vc);border-color:var(--vc);color:#fff}
+.btn.primary{background:var(--vc);border-color:var(--vc);color:#fff}
+.btn.primary:hover{filter:brightness(1.08);color:#fff}
+.btn.copied{background:var(--ok);border-color:var(--ok);color:#fff}
+
+/* ── sections ─────────────────────────── */
+section{padding:46px 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+.sec-head h2{
+  font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.01em;margin:0;
+}
+.sec-head .note{font-size:14px;color:var(--muted);max-width:56ch}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+
+/* ── thesis card ──────────────────────── */
+.thesis{
+  border:1px solid var(--line);border-left:4px solid var(--vc);border-radius:3px;
+  background:var(--surface);padding:22px 24px;display:grid;gap:18px;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);box-shadow:var(--shadow);
+}
+@media (max-width:760px){.thesis{grid-template-columns:1fr}}
+.thesis h3{font-family:var(--display);font-size:23px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+.thesis .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--vc);margin-bottom:8px}
+.thesis p{margin:0 0 10px;color:var(--ink-2);font-size:15.5px}
+.thesis p:last-child{margin-bottom:0}
+.meta-list{display:grid;gap:11px;align-content:start}
+.meta-list div{display:grid;grid-template-columns:106px 1fr;gap:12px;font-size:14px;align-items:baseline}
+.meta-list dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta-list dd{margin:0;color:var(--ink-2)}
+.risk dd{color:var(--risk)}
+
+/* ── journey filmstrip ────────────────── */
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:940px){.strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.strip{grid-template-columns:1fr}}
+.step{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.step-top{
+  display:flex;align-items:baseline;gap:10px;padding:11px 14px 9px;
+  border-bottom:1px solid var(--line-soft);background:var(--surface-2);
+}
+.stepno{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--vc);letter-spacing:.06em}
+.stepname{font-size:13.5px;font-weight:600;letter-spacing:.005em}
+.step-body{padding:14px;display:flex;flex-direction:column;gap:11px;flex:1}
+.mock{
+  border:1px dashed var(--line);border-radius:3px;background:var(--ground);
+  padding:13px;font-size:13.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:9px;
+}
+.mock .mh{font-family:var(--display);font-size:17px;line-height:1.25;color:var(--ink);font-weight:600;text-wrap:balance}
+.mock .ms{font-size:13px;color:var(--muted)}
+.mock .mrow{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.pill{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;padding:3px 8px;border-radius:2px;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink-2);white-space:nowrap;
+}
+.pill.on{border-color:var(--vc);color:var(--vc)}
+.pill.seal{border-color:var(--ok);color:var(--ok)}
+.pill.warn{border-color:var(--risk);color:var(--risk)}
+.thesis .pill{white-space:normal}
+.field{
+  border:1px solid var(--line);border-radius:2px;background:var(--surface);
+  padding:7px 9px;font-family:var(--mono);font-size:12px;color:var(--muted);
+}
+.fakebtn{
+  display:inline-block;background:var(--vc);color:#fff;border-radius:2px;
+  padding:6px 11px;font-size:12.5px;font-weight:500;
+}
+.bars{display:grid;gap:5px}
+.bar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:12px;font-family:var(--mono)}
+.bar .track{height:6px;background:var(--line-soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--vc);border-radius:2px}
+.bar .lbl{grid-column:1/-1;font-family:var(--body);font-size:12px;color:var(--muted);margin-bottom:-2px}
+
+.step-why{font-size:13px;color:var(--ink-2);margin:0}
+.step-why strong{font-weight:600;color:var(--ink)}
+.cites{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:4px}
+.cite{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;padding:2px 7px;border-radius:2px;
+  border:1px solid var(--line);color:var(--muted);border-bottom:1px solid var(--line);
+}
+.cite:hover{color:var(--vc);border-color:var(--vc)}
+
+/* CJM overlay band */
+.cjm-band{
+  display:none;gap:8px;padding:9px 14px;background:var(--surface-2);
+  border-top:1px solid var(--line-soft);flex-wrap:wrap;
+}
+body.overlay .cjm-band{display:flex}
+.cjm-band span{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted)}
+.cjm-band b{color:var(--ink-2);font-weight:500}
+.cjm-band .emo{color:var(--vc)}
+
+/* ── comparison ───────────────────────── */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line-soft)}
+thead th{
+  background:var(--surface-2);border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500;
+}
+thead th.va{color:var(--a)}thead th.vb{color:var(--b)}thead th.vc-h{color:var(--c)}
+tbody th{
+  font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;white-space:nowrap;background:var(--surface);
+}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+td.is-active{background:color-mix(in srgb,var(--vc) 9%,transparent)}
+
+/* ── handoff ──────────────────────────── */
+.handoff{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.handoff{grid-template-columns:1fr}}
+.payload{
+  border:1px solid var(--line);border-radius:3px;background:var(--surface);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.payload header{
+  padding:11px 14px;border-bottom:1px solid var(--line-soft);background:var(--surface-2);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.payload header h3{font-size:13.5px;margin:0;font-weight:600}
+.payload header .sub{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.05em}
+.payload pre{
+  margin:0;padding:13px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.62;
+  color:var(--ink-2);white-space:pre-wrap;word-break:break-word;
+  max-height:270px;overflow:auto;background:var(--surface);flex:1;
+}
+.payload footer{padding:10px 14px;border-top:1px solid var(--line-soft);background:var(--surface-2)}
+.hint{font-size:13px;color:var(--muted);margin:12px 0 0;max-width:70ch}
+
+/* ── sources ──────────────────────────── */
+.sources{columns:2;column-gap:34px}
+@media (max-width:720px){.sources{columns:1}}
+.sources ol{margin:0;padding-left:22px}
+.sources li{break-inside:avoid;margin-bottom:9px;font-size:13.5px;color:var(--ink-2)}
+.sources li a{border-bottom-style:dotted}
+.contested{
+  margin-top:20px;border:1px solid var(--risk);border-radius:3px;padding:14px 16px;
+  background:color-mix(in srgb,var(--risk) 7%,transparent);font-size:14px;color:var(--ink-2);
+}
+.contested strong{color:var(--risk)}
+
+footer.page{border-top:1px solid var(--line);background:var(--surface);padding:26px 0;font-size:13px;color:var(--muted)}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);
+  background:var(--ink);color:var(--ground);padding:10px 18px;border-radius:3px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.05em;opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .22s;z-index:60;box-shadow:var(--shadow);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">
+      <span>/replicate · phase 0</span><span class="dot"></span>
+      <span>module 2.5 — cjm prototype</span><span class="dot"></span>
+      <span>checkpoint: ожидает утверждения</span>
+    </p>
+    <h1>Три пути к клону Senja</h1>
+    <p class="standfirst">
+      Категория «собери и покажи отзыв» — красный океан: дно цены уже
+      <a href="https://senja.io/famewall-alternative">$9 в месяц у Famewall</a>.
+      Копия в лоб проигрывает ценой. Поэтому три варианта пути пользователя расходятся не в UI,
+      а в том, <em>какой Aha-момент</em> продукт продаёт и <em>на какой микротренд 2026</em> он ставит.
+      Выберите один — он станет <code>{CHOSEN_CJM}</code> и определит MVP-скоуп.
+    </p>
+    <dl class="factbar">
+      <div class="fact"><dt>оригинал</dt><dd><a href="https://senja.io/">Senja.io</a></dd></div>
+      <div class="fact"><dt>выручка</dt><dd><a href="https://www.thesuccessfulprojects.com/how-two-indie-hackers-built-a-successful-micro-saas-senja-io-1m-arr/">$1M ARR, ноя 2025</a></dd></div>
+      <div class="fact"><dt>платящих</dt><dd>≈3 000 · bootstrapped</dd></div>
+      <div class="fact"><dt>ARPU</dt><dd>≈$27–28 / мес</dd></div>
+      <div class="fact"><dt>оценка</dt><dd><a href="https://www.g2.com/products/senja/reviews">4.6 / 5 на G2</a></dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Выбор варианта CJM">
+  <div class="wrap">
+    <div class="tabs" aria-label="Варианты CJM" id="tabs"></div>
+    <div class="railtools">
+      <button class="btn" id="overlayBtn" aria-pressed="false">CJM-разметка</button>
+      <button class="btn primary" id="lockBtn">Скопировать выбор</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section id="thesis-sec">
+    <div class="wrap">
+      <div class="thesis" id="thesis"></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Путь пользователя, шесть шагов</h2>
+        <p class="note">Нумерация — реальная последовательность: каждый экран возможен только после предыдущего.
+          Включите «CJM-разметку», чтобы увидеть стадию, AARRR и эмоцию под каждым шагом.</p>
+      </div>
+      <div class="strip" id="strip"></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Сравнение</h2>
+        <p class="note">Подсвечена колонка активного варианта.</p>
+      </div>
+      <div class="tablewrap" tabindex="0" role="group" aria-label="Таблица сравнения вариантов"><table id="cmp"></table></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Передача в Claude Code</h2>
+        <p class="note">Три готовых пейлоада для активного варианта. Нажмите «Копировать» — и вставьте в CLI, ничего не редактируя. Ссылки на первоисточники внутри пейлоадов сохраняются в markdown.</p>
+      </div>
+      <div class="handoff" id="handoff"></div>
+      <p class="hint">Первый пейлоад продолжает пайплайн с Phase 1 (<code>sparc-prd-mini</code>, MANUAL).
+        Второй — только YAML-блок <code>{CHOSEN_CJM}</code>, если хотите вставить его в существующий контекст.
+        Третий — <code>.claude/feature-roadmap.json</code> для <code>/next</code> и <code>/go</code>.</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Первоисточники</h2>
+        <p class="note">Каждое число выше опирается на один из этих документов.</p>
+      </div>
+      <div class="sources">
+        <ol>
+          <li><a href="https://senja.io/">Senja — главная</a>: позиционирование и модули продукта.</li>
+          <li><a href="https://senja.io/testimonial-software/collect">Senja Collect</a>: импорт с 30+ платформ, видео-транскрипция.</li>
+          <li><a href="https://senja.io/pricing">Senja Pricing</a>: free forever на 15 отзывов.</li>
+          <li><a href="https://coldiq.com/tools/senja">ColdIQ</a>: Starter ≈$29/мес (2 seats), Pro ≈$59/мес (5 seats).</li>
+          <li><a href="https://www.thesuccessfulprojects.com/how-two-indie-hackers-built-a-successful-micro-saas-senja-io-1m-arr/">The Successful Projects</a>: $30k MRR → $50k MRR → $1M ARR при ~3 000 платящих.</li>
+          <li><a href="https://www.indiehackers.com/post/how-a-young-entrepreneur-hit-32k-mrr-with-product-led-growth-and-seo-8nbqKzfYAYzcGVjhRb4M">Indie Hackers</a>: build in public + SEO + PLG как движок роста.</li>
+          <li><a href="https://senja.io/about">Senja About</a>: команда — Wilson Bright и Olly Meakings.</li>
+          <li><a href="https://www.g2.com/products/senja/reviews">G2</a>: рейтинг 4.6/5.</li>
+          <li><a href="https://vouchpost.com/blog/senja-alternative">VouchPost</a>: критика ограничений кастомизации виджетов.</li>
+          <li><a href="https://reviewnexa.com/senja-io-review/">ReviewNexa</a>: ограничения free-плана, надзор за AI-редактированием.</li>
+          <li><a href="https://wiserreview.com/blog/senja-alternatives/">WiserReview</a>: «Senja wins on UX».</li>
+          <li><a href="https://senja.io/famewall-alternative">Senja vs Famewall</a> · <a href="https://senja.io/trustmary-alternative">vs Trustmary</a> · <a href="https://senja.io/compare/vocalvideo-alternative">vs Vocal Video</a>: карта конкурентов.</li>
+          <li><strong>MT-1</strong> <a href="https://www.getpassionfruit.com/blog/how-ai-search-treats-user-generated-content-reviews-forums-and-community-posts">Passionfruit</a>: UGC даёт 5.9–16.9% всех AI-цитат и трактуется как первичное свидетельство.</li>
+          <li><strong>MT-2</strong> <a href="https://www.omnibound.ai/blog/generative-engine-optimization-statistics">Omnibound</a>: zero-click 56%→69%; конверсия ChatGPT 15.9% против 1.76% у organic.</li>
+          <li><strong>MT-3</strong> <a href="https://contentauthenticity.org/blog/the-state-of-content-authenticity-in-2026">Content Authenticity Initiative</a> и <a href="https://en.wikipedia.org/wiki/Content_Credentials">Content Credentials</a>: C2PA идёт к ISO-стандартизации к 2026.</li>
+          <li><strong>MT-4</strong> <a href="https://www.ftc.gov/news-events/news/press-releases/2024/08/federal-trade-commission-announces-final-rule-banning-fake-reviews-testimonials">FTC</a>, <a href="https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers">FTC Q&amp;A</a>, <a href="https://www.federalregister.gov/documents/2024/08/22/2024-18519/trade-regulation-rule-on-the-use-of-consumer-reviews-and-testimonials">Federal Register</a>: запрет AI-отзывов, штраф $51 744 за нарушение.</li>
+          <li><strong>MT-5</strong> <a href="https://www.mirakl.com/blog/top-5-ai-trends-in-b2b-reshaping-commerce-in-2026">Mirakl / Gartner</a>: AI-агенты опосредуют &gt;$15 трлн B2B-закупок к 2028.</li>
+          <li><strong>MT-6</strong> <a href="https://www.ewrdigital.com/blog/211-day-journey-dark-social-b2b-content-strategy">EWR Digital</a> и <a href="https://12amagency.com/blog/b2b-marketing-trends/">12AM Agency</a>: 70–80% research до контакта с продажами, цикл ~211 дней.</li>
+          <li><strong>MT-7</strong> <a href="https://www.podcastvideos.com/b2b-video-marketing-trends-2026/">PodcastVideos</a>: вертикальное видео &lt;90 сек — лучший формат discovery.</li>
+          <li><strong>MT-8</strong> <a href="https://influee.co/blog/ugc-trends">Influee</a> и <a href="https://www.moburst.com/ugc-best-practices-in-2026-what-the-data-actually-says-about-content-that-converts/">Moburst</a>: 80% считают реальных клиентов самым достоверным источником, 60% — UGC самой аутентичной формой.</li>
+        </ol>
+      </div>
+      <p class="contested">
+        <strong>Противоречие, которое надо проверить руками.</strong>
+        <a href="https://vouchpost.com/blog/senja-alternative">VouchPost</a> утверждает, что Senja не тянет отзывы с G2, Capterra и Google Reviews.
+        Это прямо противоречит <a href="https://senja.io/testimonial-software/collect">странице самой Senja</a> про импорт с 30+ платформ, включая G2 и Trustpilot.
+        Источник — маркетинговый материал конкурента. Не стройте на нём позиционирование, пока не проверите в живом продукте.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    Phase 0 из <code>/replicate</code> · собрано скиллом <code>reverse-engineering-unicorn</code>, модуль 2.5 ·
+    после утверждения запускается Phase 1 (<code>sparc-prd-mini</code>) и создаются 11 SPARC-документов в <code>docs/</code>.
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const ARCH = `Architecture Constraints:
+  pattern: "Distributed Monolith (Monorepo)"
+  containers: "Docker + Docker Compose"
+  infrastructure: "VPS (AdminVPS/HOSTKEY)"
+  deploy: "Docker Compose direct deploy (SSH / CI pipeline)"
+  ai_integration: "MCP servers"`;
+
+const V = {
+  A:{
+    key:"A", tag:"СКОРОСТЬ", name:"Speed-to-Proof", color:"var(--a)",
+    slug:"speed-to-proof",
+    thesis:"Точная реплика того, что уже работает у Senja, выкрученная по одной оси — времени до первого виджета. Пользователь не регистрируется, не заполняет форму и ничего не пишет: он вставляет домен и через несколько секунд видит на экране стену из отзывов, которые уже существуют в интернете.",
+    thesis2:"Это самый дешёвый в постройке вариант и самый уязвимый: у Senja те же 30+ источников, а у Famewall — цена от $9.",
+    aha:"«Мы нашли 47 ваших отзывов по всему интернету — вот готовая Wall of Love», ещё до регистрации",
+    hook:"Functional job сегмента S1: «мои отзывы разбросаны по восьми местам»",
+    paywall:"Сразу после Aha — виджет готов, но с чужим бейджем",
+    segment:"S1 — indie hacker и solo-SaaS",
+    hypo:"Time-to-first-widget меньше пяти минут выигрывает категорию",
+    risk:"Паритет фич и ценовая война: Famewall уже $9/мес",
+    trends:["MT-7","MT-8"],
+    steps:[
+      {n:"01",name:"Landing",stage:"Awareness",aarrr:"Acquisition",emo:"Скепсис: «ещё один виджет-тул»",
+       mock:{h:"Ваши отзывы уже существуют. Соберём их за 5 минут.",s:"Вставьте домен — найдём всё, что о вас написали на 30+ платформах.",field:"https://",btn:"Найти мои отзывы",pills:[]},
+       why:"Обещание <strong>без регистрации</strong> — единственный способ обогнать конкурента, у которого тот же набор функций.",
+       cites:[["Senja: импорт с 30+ платформ","https://senja.io/testimonial-software/collect"]]},
+      {n:"02",name:"Onboarding",stage:"Consideration",aarrr:"Activation",emo:"Любопытство: «а что он найдёт?»",
+       mock:{h:"Сканируем 30+ источников",s:"14 секунд. Уходить не нужно.",pills:[["G2",1],["Trustpilot",1],["X",1],["LinkedIn",1],["Shopify",1],["Email",0]]},
+       why:"Живой прогресс по источникам — это <strong>витрина широты охвата</strong>, а не индикатор загрузки.",
+       cites:[["Senja Collect","https://senja.io/testimonial-software/collect"]]},
+      {n:"03",name:"Aha Moment",stage:"Activation",aarrr:"Activation",emo:"Удивление: «я не написал ни строчки»",
+       mock:{h:"Нашли 47 отзывов",s:"Вот ваша Wall of Love. Вставьте одной строкой кода.",pills:[["★ 4.8 · 47 отзывов",1],["12 с видео",0]],btn:"Вставить на сайт"},
+       why:"Ценность показана <strong>на данных пользователя</strong>, а не на демо-контенте. Это и есть весь продукт в одном экране.",
+       cites:[["«Senja wins on UX»","https://wiserreview.com/blog/senja-alternatives/"]]},
+      {n:"04",name:"Core Loop",stage:"Retention",aarrr:"Retention",emo:"Спокойствие: «оно работает само»",
+       mock:{h:"3 новых отзыва за неделю",s:"Письмо в понедельник. Одобрить — один клик.",pills:[["Одобрить все",1],["Посмотреть",0]]},
+       why:"Еженедельный дайджест удерживает <strong>без открытия приложения</strong> — цикл живёт в почте.",
+       cites:[]},
+      {n:"05",name:"Paywall",stage:"Purchase",aarrr:"Revenue",emo:"Раздражение и готовность платить одновременно",
+       mock:{h:"Уберите чужой бейдж",s:"$19/мес — свой домен, без брендинга, неограниченные отзывы.",pills:[["Free: 15 отзывов",0],["Pro: ∞",1]],btn:"Перейти на Pro"},
+       why:"Платёж в пике эмоции, пока виджет ещё на экране. Модель <strong>ровно как у оригинала</strong>: снятие бейджа — платное.",
+       cites:[["Senja Pricing","https://senja.io/pricing"],["Критика: бейдж за деньги","https://vouchpost.com/blog/senja-alternative"]]},
+      {n:"06",name:"Share",stage:"Advocacy",aarrr:"Referral",emo:"Гордость: «смотрите, что о нас пишут»",
+       mock:{h:"Powered by",s:"Каждый бесплатный виджет несёт ссылку. Это и есть канал.",pills:[["→ 1 виджет = 340 показов/мес",1]]},
+       why:"Классический вирусный контур бесплатного тарифа: <strong>бейдж, который вы продаёте право снять</strong>, одновременно приводит следующего пользователя.",
+       cites:[["PLG как движок Senja","https://www.indiehackers.com/post/how-a-young-entrepreneur-hit-32k-mrr-with-product-led-growth-and-seo-8nbqKzfYAYzcGVjhRb4M"]]}
+    ],
+    mvp:["import-engine-30-platforms","wall-of-love-widget","one-line-embed","weekly-digest-approve","branding-paywall","powered-by-viral-loop"]
+  },
+  B:{
+    key:"B", tag:"ДОВЕРИЕ", name:"Proof-of-Human", color:"var(--b)",
+    slug:"proof-of-human",
+    thesis:"Ставка на то, что в 2026 дефицитен не отзыв, а доказательство, что за отзывом стоял человек. Каждая видеозапись подписывается Content Credentials по стандарту C2PA прямо в момент съёмки, а вся история изменений складывается в выгружаемый audit trail под правило FTC.",
+    thesis2:"Продукт продаёт не красивый виджет, а снятый юридический и репутационный риск. Отсюда другой сегмент, другой ценник и другая скорость выхода на выручку.",
+    aha:"Отзыв получает печать «Verified human · снято на камеру» и кнопку «Скачать FTC audit trail»",
+    hook:"Emotional и регуляторный job S2/S3: «мой proof примут за AI-фейк» и «$51 744 за нарушение»",
+    paywall:"После результата — когда собран первый verified-пакет и сгенерирован compliance-отчёт",
+    segment:"S2/S3 — B2B SaaS с юристами, агентства, health и fintech",
+    hypo:"Штраф и флуд AI-фейков создают срочность, которой нет у виджет-инструментов",
+    risk:"Рынок ещё не осознал боль — длинный и дорогой education cycle",
+    trends:["MT-3","MT-4","MT-7","MT-8"],
+    steps:[
+      {n:"01",name:"Landing",stage:"Awareness",aarrr:"Acquisition",emo:"Тревога: «а мои отзывы вообще законны?»",
+       mock:{h:"В 2026 отзыв без подписи — просто текст.",s:"FTC запретила AI-сгенерированные отзывы. Штраф — $51 744 за нарушение.",btn:"Проверить мои отзывы",pills:[["Правило в силе с 21.10.2024",0]]},
+       why:"Вход через <strong>регуляторный страх</strong>, а не через удобство. Это единственная боль в категории, у которой есть дедлайн и цена.",
+       cites:[["FTC: final rule","https://www.ftc.gov/news-events/news/press-releases/2024/08/federal-trade-commission-announces-final-rule-banning-fake-reviews-testimonials"],["Federal Register","https://www.federalregister.gov/documents/2024/08/22/2024-18519/trade-regulation-rule-on-the-use-of-consumer-reviews-and-testimonials"]]},
+      {n:"02",name:"Onboarding",stage:"Consideration",aarrr:"Activation",emo:"Осторожность: «это сложно настроить?»",
+       mock:{h:"Как записываем?",s:"Verified capture пишет камерой и подписывает файл в момент съёмки.",pills:[["Verified capture · C2PA",1],["Обычный импорт",0]]},
+       why:"Развилка на входе делает верификацию <strong>дефолтом, а не опцией</strong>. Второй путь остаётся — но он визуально помечен как непроверенный.",
+       cites:[["C2PA Content Credentials","https://en.wikipedia.org/wiki/Content_Credentials"]]},
+      {n:"03",name:"Aha Moment",stage:"Activation",aarrr:"Activation",emo:"Облегчение: «теперь это доказуемо»",
+       mock:{h:"«Сократили онбординг с 6 недель до 4 дней»",s:"Мария К., Head of Ops · 00:47",pills:[["✓ Verified human",2],["Снято на камеру · 12 авг 2026",2]],btn:"Скачать FTC audit trail"},
+       why:"Печать — <strong>видимый артефакт</strong>, которого нет ни у кого в категории. Google уже читает C2PA в «About this image», YouTube показывает лейбл «Captured with a camera».",
+       cites:[["State of Content Authenticity 2026","https://contentauthenticity.org/blog/the-state-of-content-authenticity-in-2026"],["FTC Q&A","https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers"]]},
+      {n:"04",name:"Core Loop",stage:"Retention",aarrr:"Retention",emo:"Контроль: «я вижу свой риск цифрой»",
+       mock:{h:"Compliance-дашборд",bars:[["Verified",38,81],["Без верификации",9,19],["С раскрытием incentive",4,9]]},
+       why:"Возврат в продукт даёт не новый отзыв, а <strong>снижение красной цифры</strong>. Незакрытый риск — лучший триггер удержания, чем дайджест.",
+       cites:[["FTC Q&A: раскрытие связей","https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers"]]},
+      {n:"05",name:"Paywall",stage:"Purchase",aarrr:"Revenue",emo:"Расчёт: «дешевле подписки, чем штрафа»",
+       mock:{h:"Ваш первый compliance-отчёт готов",s:"$49/мес — выгрузка отчётов, неограниченные verified-записи, хранение доказательств.",pills:[["Отчёт за август · PDF",1]],btn:"Разблокировать выгрузку"},
+       why:"Платёж <strong>после доказанной ценности</strong>: пользователь уже держит в руках документ. Цена сравнивается со штрафом, а не с ценой виджета.",
+       cites:[["Штраф $51 744","https://www.ftc.gov/news-events/news/press-releases/2024/08/federal-trade-commission-announces-final-rule-banning-fake-reviews-testimonials"]]},
+      {n:"06",name:"Invite",stage:"Advocacy",aarrr:"Referral",emo:"Уверенность: «нам есть что показать»",
+       mock:{h:"Печать кликабельна",s:"Ведёт на страницу проверки на вашем домене: кто, когда, чем подписано.",pills:[["verify.вашдомен.ru/t/8f2c",1]]},
+       why:"Referral идёт <strong>через доверие, а не через бейдж «сделано в»</strong>: посетитель кликает печать, попадает на страницу проверки и видит, чем она сделана.",
+       cites:[["80% доверяют реальным клиентам","https://influee.co/blog/ugc-trends"]]}
+    ],
+    mvp:["c2pa-verified-capture","audit-trail-export","compliance-dashboard","incentive-disclosure-tagging","public-verification-page","verified-badge-widget"]
+  },
+  C:{
+    key:"C", tag:"ВИДИМОСТЬ", name:"Proof Engine для AI", color:"var(--c)",
+    slug:"ai-proof-engine",
+    thesis:"Ставка на смену канала: покупатель всё чаще не гуглит, а спрашивает у модели. Отзывы перестают быть картинкой на лендинге и становятся машиночитаемым слоем — schema.org/Review, llms.txt и MCP-эндпоинт, который агент может прочитать напрямую.",
+    thesis2:"Продукт продаёт измеримую видимость в ответах ИИ. Самый большой потенциал и самый большой технический риск: сначала нужно доказать, что цитирования вообще измеримы.",
+    aha:"Дашборд: «Вас процитировали 0 раз из 20 покупательских промптов. Конкурента — 14»",
+    hook:"Social job S2/S4: «хочу, чтобы ИИ рекомендовал меня, а не конкурента»",
+    paywall:"После N дней — когда накопился тренд цитирований и данные стали lock-in",
+    segment:"S2/S4 — growth-команды, маркетологи, авторы курсов",
+    hypo:"«Меня не видит ИИ» — боль острее, чем «у меня некрасивый виджет»",
+    risk:"Атрибуция AI-цитирований технически шаткая: метрика может оказаться шумом",
+    trends:["MT-1","MT-2","MT-5","MT-6"],
+    steps:[
+      {n:"01",name:"Landing",stage:"Awareness",aarrr:"Acquisition",emo:"Укол: «а ведь правда, я не проверял»",
+       mock:{h:"ChatGPT рекомендует конкурента. Ему нечего процитировать про вас.",s:"Zero-click вырос с 56% до 69% за год. Ответ теперь важнее ссылки.",field:"вашдомен.ru",btn:"Проверить видимость"},
+       why:"Вход через <strong>потерю, а не через выгоду</strong>. Конкретный конкурент в ответе модели — самая быстрая демонстрация проблемы.",
+       cites:[["Zero-click 56%→69%","https://www.omnibound.ai/blog/generative-engine-optimization-statistics"]]},
+      {n:"02",name:"Onboarding",stage:"Consideration",aarrr:"Activation",emo:"Напряжённое ожидание",
+       mock:{h:"Прогоняем 20 покупательских промптов",s:"ChatGPT · Perplexity · Gemini. «Лучший инструмент для…», «альтернатива…», «стоит ли…».",pills:[["ChatGPT",1],["Perplexity",1],["Gemini",1],["20 промптов",0]]},
+       why:"Онбординг = <strong>диагностика</strong>. Пользователь ничего не настраивает — он ждёт результат анализа, который сам по себе ценен.",
+       cites:[["Закупщики используют LLM для discovery","https://www.mirakl.com/blog/top-5-ai-trends-in-b2b-reshaping-commerce-in-2026"]]},
+      {n:"03",name:"Aha Moment",stage:"Activation",aarrr:"Activation",emo:"Тревожная ясность: «разрыв виден цифрой»",
+       mock:{h:"0 упоминаний из 20",bars:[["Вы",0,3],["Конкурент",14,70]],s:"Ваши отзывы не структурированы — моделям нечего цитировать.",btn:"Опубликовать proof-слой"},
+       why:"Разрыв показан <strong>рядом с конкурентом</strong>. UGC и форумы дают 5.9–16.9% всех цитат ИИ — значит слот существует и он занят кем-то другим.",
+       cites:[["UGC = 5.9–16.9% AI-цитат","https://www.getpassionfruit.com/blog/how-ai-search-treats-user-generated-content-reviews-forums-and-community-posts"]]},
+      {n:"04",name:"Core Loop",stage:"Retention",aarrr:"Retention",emo:"Азарт: «цифра растёт»",
+       mock:{h:"Неделя 3 · 6 цитирований",s:"Очередь: под промпт «лучший инструмент для онбординга» не хватает отзыва про скорость внедрения.",pills:[["+4 за неделю",1],["Запросить отзыв",0]]},
+       why:"Цикл замыкается: трекер показывает пробел → продукт говорит, <strong>какого именно отзыва не хватает</strong> → пользователь его собирает.",
+       cites:[["70–80% research до контакта с продажами","https://www.ewrdigital.com/blog/211-day-journey-dark-social-b2b-content-strategy"]]},
+      {n:"05",name:"Paywall",stage:"Purchase",aarrr:"Revenue",emo:"Нежелание терять накопленное",
+       mock:{h:"14 дней данных собрано",s:"$39/мес — история цитирований, алерты и сравнение с конкурентами.",pills:[["График за 14 дней",1],["Дальше — платно",0]]},
+       why:"Платёж <strong>после привычки</strong>: накопленный ряд данных нельзя унести, и это честный lock-in — LLM-визитёры конвертят 15.9% против 1.76% у organic.",
+       cites:[["Конверсия LLM-трафика","https://www.omnibound.ai/blog/generative-engine-optimization-statistics"]]},
+      {n:"06",name:"Invite",stage:"Advocacy",aarrr:"Referral",emo:"Ощущение рычага",
+       mock:{h:"Публичный proof-эндпоинт",s:"/proof · llms.txt · MCP-сервер. Агенты читают ваши отзывы напрямую.",pills:[["schema.org/Review",1],["llms.txt",1],["MCP",1]]},
+       why:"Дистрибуция без людей: <strong>агенты приводят трафик сами</strong>. Gartner ждёт, что ИИ-агенты опосредуют более $15 трлн B2B-закупок к 2028.",
+       cites:[["Gartner: $15 трлн к 2028","https://www.mirakl.com/blog/top-5-ai-trends-in-b2b-reshaping-commerce-in-2026"]]}
+    ],
+    mvp:["prompt-panel-runner","ai-citation-tracker","schema-org-proof-layer","llms-txt-generator","mcp-proof-server","gap-to-testimonial-queue"]
+  }
+};
+
+const TRENDS = {
+  "MT-1":["UGC даёт 5.9–16.9% всех AI-цитат","https://www.getpassionfruit.com/blog/how-ai-search-treats-user-generated-content-reviews-forums-and-community-posts"],
+  "MT-2":["Zero-click 56%→69%; LLM-трафик конвертит 15.9%","https://www.omnibound.ai/blog/generative-engine-optimization-statistics"],
+  "MT-3":["C2PA Content Credentials идут к ISO-стандартизации к 2026","https://contentauthenticity.org/blog/the-state-of-content-authenticity-in-2026"],
+  "MT-4":["FTC-правило запрещает AI-отзывы, штраф $51 744","https://www.ftc.gov/news-events/news/press-releases/2024/08/federal-trade-commission-announces-final-rule-banning-fake-reviews-testimonials"],
+  "MT-5":["AI-агенты опосредуют >$15 трлн B2B-закупок к 2028","https://www.mirakl.com/blog/top-5-ai-trends-in-b2b-reshaping-commerce-in-2026"],
+  "MT-6":["70–80% research в dark funnel, цикл ~211 дней","https://www.ewrdigital.com/blog/211-day-journey-dark-social-b2b-content-strategy"],
+  "MT-7":["Вертикальное видео <90 сек — лучший формат discovery","https://www.podcastvideos.com/b2b-video-marketing-trends-2026/"],
+  "MT-8":["80% доверяют реальным клиентам, 60% — UGC самая аутентичная форма","https://influee.co/blog/ugc-trends"]
+};
+
+const ROWS = [
+  ["Aha Moment","aha"],["Entry Hook","hook"],["Paywall","paywall"],
+  ["Сегмент","segment"],["Гипотеза","hypo"],["Главный риск","risk"]
+];
+
+let cur = "A";
+try{ const s = localStorage.getItem("senja-cjm-variant"); if(s && V[s]) cur = s; }catch(e){}
+
+const $ = s => document.querySelector(s);
+const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function renderTabs(){
+  $("#tabs").innerHTML = Object.values(V).map(v=>
+    `<button class="tab" id="tab-${v.key}" aria-pressed="${v.key===cur}" data-k="${v.key}">
+      <span class="tk">${v.key} · ${v.tag}</span><span class="tn">${esc(v.name)}</span>
+    </button>`).join("");
+}
+
+function renderThesis(){
+  const v = V[cur];
+  $("#thesis").innerHTML = `
+    <div>
+      <p class="kicker">Вариант ${v.key} · ${v.tag}</p>
+      <h3>${esc(v.name)}</h3>
+      <p>${v.thesis}</p>
+      <p>${v.thesis2}</p>
+      <div class="mrow" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:14px">
+        ${v.trends.map(t=>`<a class="pill on" href="${TRENDS[t][1]}" title="${esc(TRENDS[t][0])}">${t} · ${esc(TRENDS[t][0])}</a>`).join("")}
+      </div>
+    </div>
+    <dl class="meta-list">
+      ${ROWS.map(([lab,k])=>`<div class="${k==='risk'?'risk':''}"><dt>${lab}</dt><dd>${esc(v[k])}</dd></div>`).join("")}
+    </dl>`;
+}
+
+function mockHTML(m){
+  let out = "";
+  if(m.h) out += `<div class="mh">${esc(m.h)}</div>`;
+  if(m.field) out += `<div class="field">${esc(m.field)}</div>`;
+  if(m.bars) out += `<div class="bars">${m.bars.map(([l,n,w])=>
+      `<div class="bar"><span class="lbl">${esc(l)}</span><div class="track"><div class="fill" style="width:${w}%"></div></div><span>${n}</span></div>`).join("")}</div>`;
+  if(m.pills && m.pills.length) out += `<div class="mrow">${m.pills.map(([t,on])=>
+      `<span class="pill ${on===1?'on':on===2?'seal':''}">${esc(t)}</span>`).join("")}</div>`;
+  if(m.s) out += `<div class="ms">${esc(m.s)}</div>`;
+  if(m.btn) out += `<div><span class="fakebtn">${esc(m.btn)}</span></div>`;
+  return out;
+}
+
+function renderStrip(){
+  const v = V[cur];
+  $("#strip").innerHTML = v.steps.map(s=>`
+    <article class="step">
+      <div class="step-top"><span class="stepno">${s.n}</span><span class="stepname">${esc(s.name)}</span></div>
+      <div class="step-body">
+        <div class="mock">${mockHTML(s.mock)}</div>
+        <p class="step-why">${s.why}</p>
+        <div class="cites">${s.cites.map(([t,u])=>`<a class="cite" href="${u}">↗ ${esc(t)}</a>`).join("")}</div>
+      </div>
+      <div class="cjm-band">
+        <span>стадия <b>${esc(s.stage)}</b></span>
+        <span>aarrr <b>${esc(s.aarrr)}</b></span>
+        <span class="emo">${esc(s.emo)}</span>
+      </div>
+    </article>`).join("");
+}
+
+function renderCmp(){
+  const ks = ["A","B","C"];
+  const cls = {A:"va",B:"vb",C:"vc-h"};
+  $("#cmp").innerHTML = `
+    <thead><tr><th scope="col">Развилка</th>${ks.map(k=>
+      `<th scope="col" class="${cls[k]}">${k} · ${esc(V[k].name)}</th>`).join("")}</tr></thead>
+    <tbody>${ROWS.map(([lab,f])=>`<tr><th scope="row">${lab}</th>${ks.map(k=>
+      `<td class="${k===cur?'is-active':''}">${esc(V[k][f])}</td>`).join("")}</tr>`).join("")}
+      <tr><th scope="row">Микротренды</th>${ks.map(k=>
+      `<td class="${k===cur?'is-active':''}">${V[k].trends.map(t=>
+        `<a href="${TRENDS[t][1]}">${t}</a>`).join(" · ")}</td>`).join("")}</tr>
+    </tbody>`;
+}
+
+function payloads(){
+  const v = V[cur];
+  const trendLines = v.trends.map(t=>`  - ${t}: ${TRENDS[t][0]} — ${TRENDS[t][1]}`).join("\n");
+  const stepLines = v.steps.map(s=>`  ${s.n} ${s.name} [${s.stage} / ${s.aarrr}]: ${s.mock.h}`).join("\n");
+
+  const chosen =
+`CHOSEN_CJM:
+  variant: "${v.key} — ${v.name}"
+  slug: "${v.slug}"
+  aha_moment: "${v.aha}"
+  entry_hook: "${v.hook}"
+  paywall_timing: "${v.paywall}"
+  target_segment: "${v.segment}"
+  hypothesis: "${v.hypo}"
+  primary_risk: "${v.risk}"
+  screens:
+${stepLines}
+  micro_trends:
+${trendLines}
+  source_of_record: "docs/discovery/CJM_Variants.md"`;
+
+  const handoff =
+`Продолжай /replicate для проекта «клон Senja.io».
+
+Phase 0 (Product Discovery) завершён и утверждён. Бриф лежит в
+docs/discovery/Product_Discovery_Brief.md, варианты CJM — в
+docs/discovery/CJM_Variants.md.
+
+Я выбрал вариант ${v.key} — «${v.name}».
+
+${chosen}
+
+${ARCH}
+
+Product Context:
+  original: "Senja.io — https://senja.io/ , $1M ARR при ~3000 платящих
+    (https://www.thesuccessfulprojects.com/how-two-indie-hackers-built-a-successful-micro-saas-senja-io-1m-arr/),
+    4.6/5 на G2 (https://www.g2.com/products/senja/reviews)"
+  key_competitors: ["Senja", "Testimonial.to", "Trustmary", "Vocal Video", "Famewall (от $9/мес)"]
+  differentiation: "${v.hypo}"
+  monetization: "freemium, ARPU-ориентир $27–28/мес (https://senja.io/pricing)"
+
+Security Pattern:
+  api_keys_input: "UI Settings > Integrations"
+  storage: "Encrypted IndexedDB (AES-GCM 256-bit)"
+  key_derivation: "PBKDF2 from user password"
+  server_side: "No key storage on backend"
+
+Запусти Phase 1 (sparc-prd-mini, режим MANUAL) и запиши 11 SPARC-документов
+в docs/. MVP-скоуп = экраны выбранного варианта.
+
+Открытый вопрос, который надо проверить руками перед позиционированием:
+VouchPost (https://vouchpost.com/blog/senja-alternative) утверждает, что Senja
+не импортирует с G2/Capterra/Google, но собственная страница Senja
+(https://senja.io/testimonial-software/collect) заявляет импорт с 30+ платформ
+включая G2 и Trustpilot. Источник — конкурент, проверить в живом продукте.`;
+
+  const roadmap = JSON.stringify({
+    project:"senja-clone",
+    chosen_cjm:`${v.key} — ${v.name}`,
+    generated_from:"docs/discovery/CJM_Variants.md",
+    features: v.mvp.map((id,i)=>({
+      id, priority: i<3 ? "P0" : "P1",
+      status:"planned",
+      cjm_step: v.steps[i] ? `${v.steps[i].n} ${v.steps[i].name}` : null,
+      blocked_by: i===0 ? [] : [v.mvp[i-1]]
+    }))
+  }, null, 2);
+
+  return [
+    {t:"Продолжить пайплайн", sub:"вставить в claude code", body:handoff},
+    {t:"Только {CHOSEN_CJM}", sub:"yaml-блок", body:chosen},
+    {t:"feature-roadmap.json", sub:".claude/feature-roadmap.json", body:roadmap}
+  ];
+}
+
+function renderHandoff(){
+  $("#handoff").innerHTML = payloads().map((p,i)=>`
+    <div class="payload">
+      <header><h3>${esc(p.t)}</h3><span class="sub">${esc(p.sub)}</span></header>
+      <pre id="pl-${i}" tabindex="0" role="group" aria-label="Пейлоад: ${esc(p.t)}">${esc(p.body)}</pre>
+      <footer><button class="btn primary" data-copy="${i}">Копировать</button></footer>
+    </div>`).join("");
+}
+
+function render(){
+  document.documentElement.style.setProperty("--vc", V[cur].color);
+  renderTabs(); renderThesis(); renderStrip(); renderCmp(); renderHandoff();
+}
+
+let toastT;
+function toast(msg){
+  const el = $("#toast"); el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove("show"), 2200);
+}
+
+async function copy(text, btn){
+  let ok = false;
+  try{ await navigator.clipboard.writeText(text); ok = true; }
+  catch(e){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      ok = document.execCommand("copy"); ta.remove();
+    }catch(e2){ ok = false; }
+  }
+  if(ok){
+    toast("Скопировано в буфер");
+    if(btn){ const t = btn.textContent; btn.textContent="Скопировано"; btn.classList.add("copied");
+      setTimeout(()=>{btn.textContent=t; btn.classList.remove("copied");},1600); }
+  } else {
+    toast("Буфер недоступен — выделите текст и скопируйте вручную");
+  }
+  return ok;
+}
+
+document.addEventListener("click", e=>{
+  const tab = e.target.closest(".tab");
+  if(tab){
+    const wasFocused = tab === document.activeElement;
+    cur = tab.dataset.k;
+    try{localStorage.setItem("senja-cjm-variant",cur);}catch(err){}
+    render();
+    if(wasFocused) document.getElementById("tab-"+cur).focus();
+    return;
+  }
+  const cp = e.target.closest("[data-copy]");
+  if(cp){ copy(payloads()[+cp.dataset.copy].body, cp); return; }
+});
+
+$("#tabs").addEventListener("keydown", e=>{
+  const ks = ["A","B","C"];
+  if(e.key!=="ArrowRight" && e.key!=="ArrowLeft") return;
+  e.preventDefault();
+  const i = ks.indexOf(cur);
+  cur = ks[(i + (e.key==="ArrowRight"?1:ks.length-1)) % ks.length];
+  try{localStorage.setItem("senja-cjm-variant",cur);}catch(err){}
+  render(); document.getElementById("tab-"+cur).focus();
+});
+
+$("#overlayBtn").addEventListener("click", e=>{
+  const on = document.body.classList.toggle("overlay");
+  e.currentTarget.setAttribute("aria-pressed", String(on));
+});
+
+$("#lockBtn").addEventListener("click", e=>{
+  copy(payloads()[0].body, e.currentTarget);
+});
+
+render();
+</script>
