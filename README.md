@@ -1,5 +1,25 @@
 # 2026-AUG-PU-Projects
 
+## Проекты курса
+
+8 недель — 8 продуктов. Полный список, ссылки на оригиналы и статус:
+**[`projects/README.md`](projects/README.md)**
+
+| # | Проект | Оригинал |
+|---|---|---|
+| 01 | Сбор видео-отзывов и «Стена любви» | [Senja.io](https://senja.io/) |
+| 02 | Умный QR для отзывов о компании | [NiceJob](https://nicejob.com/) · [Birdeye](https://www.birdeye.com/) · [Podium](https://www.podium.com/) |
+| 03 | Партнёрская программа за 15 минут | [Rewardful](https://rewardful.com/) |
+| 04 | ИИ-трекер калорий по фото | [Cal AI](https://www.calai.app/) |
+| 05 | Нарезка вирусных клипов из подкаста | [OpusClip](https://www.opus.pro/) |
+| 06 | ИИ-продавец на данных клиента | [Chatbase](https://www.chatbase.co/) |
+| 07 | Cold email с прогревом доменов | [Instantly](https://instantly.ai/) · [Smartlead](https://www.smartlead.ai/) |
+| 08 | Редизайн комнаты по фото | [Interior AI](https://interiorai.com/) |
+
+Главный продукт курса — **рост**, а не прототип. Обязательный блок требований по механикам
+роста и виральности: [`research/GROWTH-MECHANICS-REQUIREMENTS.md`](research/GROWTH-MECHANICS-REQUIREMENTS.md).
+Готовые постановки для `/replicate`: [`start/REPLICATE-PROMPTS.md`](start/REPLICATE-PROMPTS.md).
+
 ## Установленный тулчейн
 
 Глобально установлены (npm, Node 22):

@@ -1,6 +1,6 @@
 # 07. Cold email с прогревом доменов
 
-> **Неделя 07** · `аутрич` · референс: **Instantly.ai ($40M+ ARR) и Smartlead**
+> **Неделя 07** · `аутрич` · референс: **[Instantly.ai](https://instantly.ai/) ($40M+ ARR) и [Smartlead](https://www.smartlead.ai/)**
 
 ## Что делаем
 
