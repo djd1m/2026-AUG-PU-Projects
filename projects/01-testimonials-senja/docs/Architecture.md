@@ -78,9 +78,10 @@ erDiagram
 |---|---|---|
 | `accounts` | `id`, `email` unique, `password_hash`, `created_at` | Владелец. Аутентификация — внутри монолита, см. §3.2 |
 | `sessions` | `id`, `account_id`, `token_hash`, `expires_at`, `revoked_at` | Активные сессии владельцев (§3.2) |
-| `projects` | `id`, `account_id`, `slug` unique, `branding jsonb`, `tier enum(free,paid)`, `noindex bool` | Единица арендатора; **всё в системе принадлежит проекту** |
-| `testimonials` | `id`, `project_id` NOT NULL, `status enum(pending,approved,rejected,hidden)`, `text`, `video_object_key`, `video_transcript`, `video_transcript_is_machine bool default true` | FR-002…FR-004 |
+| `projects` | `id`, `account_id`, `slug` unique, `branding jsonb`, `tier enum(free,paid)`, `noindex bool`, `invite_shown_at timestamptz null` | Единица арендатора; **всё в системе принадлежит проекту**. `invite_shown_at` — момент ценности, см. 3.3.1 |
+| `testimonials` | `id`, `project_id` NOT NULL, `status enum(pending,approved,rejected,hidden)`, `text`, `video_object_key`, `transcript`, `transcript_status enum(pending,completed,failed) default pending`, `transcript_source enum(machine) default machine` | FR-002…FR-004 |
 | `widget_installs` | `id`, `project_id`, `domain`, `first_seen_at`, `last_seen_at`, unique(`project_id`,`domain`) | Источник **метрики недели** и события `widget_installed` |
+| `rate_limit_events` | `id`, `scope`, `key`, `created_at`, index(`scope`,`key`,`created_at`) | Единый счётчик скользящего окна для anti-fraud/rate-limit, см. 3.3 |
 | `analytics_events` | `id`, `project_id` nullable, `account_id` nullable, `event_type`, `domain`, `metadata jsonb`, `created_at` | Единый append-only журнал §6 |
 | `partner_codes` | `id`, `code` unique, `partner_name`, `status enum(active,revoked)` | FR-GROWTH-004 |
 | `referral_attributions` | `id`, `account_id` nullable до сайнапа, `partner_code_id`, `source enum(cookie,promo_code)`, `status enum(pending,converted,blocked)` | FR-GROWTH-002 |
@@ -144,6 +145,105 @@ erDiagram
   app.current_account_id` (см. §3.1) — дальше все запросы этой транзакции автоматически
   RLS-scoped.
 
+### 3.3 Момент ценности vs метрика недели — два разных события (PRD §2.4.1, находка C-1)
+
+`invite_shown` и `widget_installed` — намеренно **разные** события с разной уникальностью, а не
+одна и та же запись под двумя именами:
+
+| Событие | Когда | Уникальность | Где хранится факт «уже случилось» |
+|---|---|---|---|
+| `widget_installed` | виджет впервые отрендерился на **новом** домене | на каждую пару (`project_id`,`domain`) | `widget_installs`, `unique(project_id, domain)` — upsert в §4.2 п.3 |
+| `invite_shown` | владелец впервые увидел свою стену живой на внешнем домене | **один раз на проект** | `projects.invite_shown_at` (nullable timestamptz) |
+
+Уникальность `invite_shown` не требует отдельной таблицы: `projects` уже даёт ровно одну строку на
+проект, поэтому единственность обеспечивается условным апдейтом одного столбца, а не вторым
+`unique`-индексом:
+
+```sql
+-- дашборд SSR, при каждом рендере страницы проекта:
+-- 1) есть ли хоть одна установка?
+SELECT EXISTS(SELECT 1 FROM widget_installs WHERE project_id = $1) AS has_install;
+-- 2) если has_install И invite_shown_at ещё не проставлен — это первый показ:
+UPDATE projects SET invite_shown_at = now()
+  WHERE id = $1 AND invite_shown_at IS NULL
+  RETURNING id;               -- вернулась строка ⇒ CTA рендерим и пишем событие invite_shown
+                               -- 0 строк ⇒ уже показывали, событие не пишем повторно
+```
+`RETURNING`-проверка — тот же приём идемпотентности, что и `unique`-constraint в ADR-006: только
+один одновременный вызов может выиграть условный `UPDATE ... WHERE invite_shown_at IS NULL`.
+
+**Явное следствие для реализации** (снимает саму находку C-1): установка виджета на **первом**
+домене проекта порождает **оба** события — `widget_installed` немедленно при упсерте
+`widget_installs`, `invite_shown` при следующем визите владельца в дашборд (п.2 выше находит
+`has_install = true` и пустой `invite_shown_at`). Установка на **втором и любом следующем** домене
+того же проекта порождает **только** `widget_installed` — `invite_shown_at` уже не `NULL`, второй
+`UPDATE` вернёт 0 строк. Таблица `widget_installs` (не `widget_install_events`) и путь
+`/api/widget/config` (не `/api/widget-config`) — канонические имена, см. §10.
+
+### 3.4 Anti-fraud и rate limiting — один механизм на три требования (находка W-1)
+
+Три Must-требования из Specification.md — один и тот же класс задачи: «не более N событий за
+интервал T по такому-то ключу», то есть счётчик в скользящем окне:
+
+| Требование | `scope` | `key` | окно | порог |
+|---|---|---|---|---|
+| FR-NFR-SEC-003 (форма) | `form_submission` | `ip || ':' || project_id` | 1 час | 5 |
+| FR-GROWTH-004 `@security` (партнёрский код) | `signup_via_partner_code` | `ip` (только для регистраций с непустым `referral_attributions.partner_code_id`) | 10 минут | 50 |
+| FR-GROWTH-005 `@security` (создание проектов) | `project_created` | `account_id` | 1 час | 20 |
+
+**Решение: одна таблица Postgres, без Redis.**
+
+```sql
+create table rate_limit_events (
+  id bigserial primary key,
+  scope text not null,
+  key text not null,
+  created_at timestamptz not null default now()
+);
+create index rate_limit_events_scope_key_created_idx
+  on rate_limit_events (scope, key, created_at desc);
+```
+
+Единый серверный помощник (`packages/db`, вызывается из трёх соответствующих API-роутов
+`apps/web`, а не размазан по коду каждого роута отдельно):
+
+```sql
+insert into rate_limit_events (scope, key) values ($scope, $key);
+select count(*) from rate_limit_events
+  where scope = $scope and key = $key and created_at > now() - $window::interval;
+-- count >= порог ⇒ helper возвращает exceeded = true, роут решает, что делать дальше
+```
+
+**Действие при превышении — разное для каждого случая, механизм подсчёта — один:**
+- FR-NFR-SEC-003: роут формы отвечает 429, отправка не создаёт `testimonials`.
+- FR-GROWTH-004: регистрация не блокируется (не наказываем добросовестного пользователя по
+  чужому паттерну IP), но пишется `audit_log` (`reason = 'suspected_fraud'`),
+  `referral_attributions.status` для этих записей → `blocked` — комиссия не начисляется
+  (ADR-006 уже даёт безопасное «не начислить», отменять начисленное не требуется).
+- FR-GROWTH-005: новые проекты аккаунта получают принудительный `noindex = true` — это уже
+  описанное поведение ADR-004, здесь только появляется механизм, которым оно вычисляется.
+
+**Почему Postgres, а не Redis, при масштабе «одна неделя, один VPS»:** таблица с
+b-tree индексом `(scope, key, created_at)` даёт `COUNT` за доли миллисекунды на объёмах
+в тысячи строк — ровно тот трафик, который получит недельный MVP. Redis добавил бы четвёртый
+контейнер, отдельную (не)стратегию бэкапа и новый режим отказа (что делать при недоступном
+Redis — fail-open или fail-closed), не улучшая ничего на этом масштабе. Это тот же аргумент,
+которым в §5 уже обосновано `SELECT ... FOR UPDATE SKIP LOCKED` вместо Redis/BullMQ для очереди
+видео — решение согласовано с прецедентом, а не изобретено заново.
+
+Таблица не привязана внешним ключом ни к чему конкретному (`key` — составной текст, разный формат
+на каждый `scope`) — это осознанно: разные scope адресуют разные сущности (IP, аккаунт, пара
+IP+проект), единый FK создал бы ложную связность.
+
+**Очистка:** `services/worker` (уже поллит Postgres для очереди видео, см. §5) дополнительно раз в
+час удаляет строки старше 24 часов — не заводим отдельный сервис ради TTL, который Redis дал бы
+«бесплатно», потому что самый широкий порог здесь — 1 час, и 24-часовой запас с большим отрывом
+покрывает любую разумную задержку между проверками.
+
+**Путь миграции, если масштаб вырастет** (тот же стиль, что и переход MinIO→volume в §5): при
+реальной нагрузке заменить SQL-запрос в помощнике на Redis `INCR`+`EXPIRE` — контракт помощника
+(`scope, key, window, limit → exceeded: bool`) не меняется, меняется только реализация под ним.
+
 ## 4. Схема виджета
 
 ### 4.1 Изоляция от стилей хоста
@@ -201,15 +301,21 @@ API-ключа проекта, невозможно: подделка ответ
 - **Приём:** форма загружает файл напрямую в MinIO через presigned upload URL (не проксируется
   через `apps/web`, чтобы не упереться в лимиты serverless-функций по размеру тела запроса).
 - **Транскрипция — очередь, не синхронный вызов:**
-  1. После успешной загрузки видео в `testimonials` пишется строка `pending_transcription = true`.
-  2. `services/worker` поллит эту очередь (простой `SELECT ... FOR UPDATE SKIP LOCKED` по
-     Postgres — без Redis/доп. инфраструктуры ради простоты недели).
-  3. Worker формирует presigned GET URL на объект в MinIO и вызывает `services/mcp-claude` по
-     MCP-протоколу, инструмент `transcribe_video(video_url)`.
-  4. MCP-сервер скачивает видео по presigned URL, отправляет аудио-дорожку в Claude API **только с
+  1. После успешной загрузки видео в `testimonials` пишется `video_object_key` (ключ объекта в
+     MinIO, **не** presigned URL — presigned-ссылка временная и не переживёт до момента, когда до
+     неё дойдёт очередь; см. §10 «Канонические имена») и `transcript_status = 'pending'`.
+  2. `services/worker` поллит записи с `transcript_status = 'pending'` (простой
+     `SELECT ... FOR UPDATE SKIP LOCKED` по Postgres — без Redis/доп. инфраструктуры ради
+     простоты недели; тот же принцип применён к anti-fraud счётчикам в §3.4).
+  3. Worker формирует presigned GET URL **из `video_object_key`** на объект в MinIO и вызывает
+     `services/mcp-claude` по MCP-протоколу, инструмент `transcribe_video(video_url)` — presigned
+     URL живёт только на время этого вызова, в БД он не попадает.
+  4. МCP-сервер скачивает видео по presigned URL, отправляет аудио-дорожку в Claude API **только с
      промптом транскрипции**, получает текст, возвращает его воркеру.
-  5. Worker пишет результат в `testimonials.video_transcript`, помечает
-     `video_transcript_is_machine = true`, `pending_transcription = false`.
+  5. Worker пишет результат в `testimonials.transcript`, `transcript_source = 'machine'`,
+     `transcript_status = 'completed'`. Если вызов MCP не удался —
+     `transcript_status = 'failed'`, отзыв остаётся видимым в модерации без транскрипта; авто-retry
+     — `[GAP: политика повторных попыток транскрипции не зафиксирована — вне scope MVP-недели]`.
 - **На Wall of Love** транскрипт рендерится с явной пометкой «Машинная расшифровка» — того требует
   FR-NFR-SEC-002 / ADR-005.
 
