@@ -1,19 +1,44 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // baseUrl ОБЯЗАН быть переопределён: унаследованный из tsconfig.base.json "." считается
+    // относительно БАЗОВОГО файла (корень монорепо), и тогда "./src/*" указывает мимо apps/web.
+    "baseUrl": ".",
     "noEmit": true,
     "declaration": false,
     "jsx": "preserve",
     "allowJs": true,
     "incremental": true,
-    "types": ["vitest/globals", "node"],
-    "plugins": [{ "name": "next" }],
+    "types": [
+      "vitest/globals",
+      "node"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@proofwall/db": ["../../packages/db/src/index.ts"],
-      "@proofwall/db/*": ["../../packages/db/src/*"],
-      "@/*": ["./src/*"]
-    }
+      "@proofwall/db": [
+        "../../packages/db/src/index.ts"
+      ],
+      "@proofwall/db/*": [
+        "../../packages/db/src/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "isolatedModules": true
   },
-  "include": ["src", "tests", "next-env.d.ts", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", ".next"]
+  "include": [
+    "src",
+    "tests",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
 }

@@ -5,11 +5,15 @@
 // то есть образу не нужен компилятор. Сравнение — argon2.verify, оно константное по времени;
 // собственного `===` по хешам здесь нет намеренно.
 
-import { hash, verify, Algorithm } from '@node-rs/argon2';
+import { hash, verify } from '@node-rs/argon2';
 
 export const PASSWORD_MIN_LENGTH = 8; // Pseudocode §9: «password: минимум 8 символов»
 
-const OPTIONS = { algorithm: Algorithm.Argon2id } as const;
+// Числовой литерал, а не Algorithm.Argon2id: это ambient const enum, а Next принудительно
+// включает isolatedModules, при котором обращение к нему не компилируется. Значение 2 закреплено
+// не комментарием, а тестом «хеш помечен $argon2id$» — если апстрим переставит номера, упадёт
+// тест, а не продакшен (лестница стоимости обнаружения, слой 1).
+const OPTIONS = { algorithm: 2 } as const;
 
 export function hashPassword(plain: string): Promise<string> {
   return hash(plain, OPTIONS);

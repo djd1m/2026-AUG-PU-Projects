@@ -24,7 +24,8 @@ export function randomAlphaNum(length: number): string {
   while (out.length < length) {
     for (const byte of randomBytes(length * 2)) {
       if (byte < limit) {
-        out.push(ALPHABET[byte % ALPHABET.length]);
+        // `byte % length` всегда в диапазоне — noUncheckedIndexedAccess этого не выводит.
+        out.push(ALPHABET[byte % ALPHABET.length]!);
         if (out.length === length) break;
       }
     }
