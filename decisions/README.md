@@ -12,6 +12,7 @@
 | [D-003](D-003-object-storage.md) | Хранилище видео | MinIO как сервис compose | принято агентом |
 | [D-004](D-004-rate-limit-store.md) | Счётчики anti-fraud | таблица Postgres, не Redis | принято агентом |
 | [D-005](D-005-tls-termination.md) | TLS-терминация | Caddy (ADR-007) | принято агентом |
+| [D-006](D-006-toolkit-location.md) | Где живёт тулкит проекта | в папке проекта | **подтверждено владельцем** |
 
 ## Правило
 
