@@ -12,6 +12,7 @@ import { currentAccountId } from '@/lib/current-session';
 import { buildProjectUrls } from '@/lib/urls';
 import { ModerationList, type Item } from './moderation-list';
 import { ShareCta, type Install } from './share-cta';
+import { isTier, tierSummary } from '@/lib/tariff';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,7 +66,13 @@ export default async function DashboardPage({ params }: Params) {
   return (
     <main style={{ maxWidth: 720, margin: '0 auto', padding: '3rem 1.25rem' }}>
       <h1 style={{ fontSize: '1.5rem' }}>Проект {project.slug}</h1>
-      <p style={{ color: '#666', marginTop: 0 }}>Тариф: {project.tier}</p>
+      {/* Описание тарифа берётся из того же модуля, что и правило про badge (FR-007) —
+          иначе дашборд однажды пообещает не то, что делает виджет. */}
+      <p style={{ color: '#666', marginTop: 0 }}>
+        Тариф: {tierSummary(isTier(project.tier) ? project.tier : 'free').label}
+        {' · '}
+        {tierSummary(isTier(project.tier) ? project.tier : 'free').badge}
+      </p>
 
       <h2 style={{ fontSize: '1.1rem', marginTop: '2rem' }}>Ссылки</h2>
       <dl>

@@ -7,6 +7,7 @@
 // функция их даже не читает.
 
 import type { PoolClient } from 'pg';
+import { badgeRequiredFor } from './tariff';
 
 export const TESTIMONIAL_LIMIT = 50; // Pseudocode §5.1
 
@@ -47,7 +48,8 @@ export async function buildWidgetConfig(
   if (!project) return safeDefault(slug);
 
   // Тариф читается ИЗ БД и нигде больше. Ни query, ни заголовки, ни тело не участвуют.
-  const badgeRequired = project.tier !== 'paid';
+  // Само правило — в lib/tariff.ts: один источник на всё приложение (FR-007).
+  const badgeRequired = badgeRequiredFor(project.tier);
 
   const items = await client.query<WidgetTestimonial>(
     // Анонимный путь под app_service (BYPASSRLS): фильтр по project_id обязателен в коде.

@@ -194,7 +194,7 @@
     {
       "id": "FR-007",
       "title": "Тарифы free/paid как атрибут проекта, серверная проверка (не в клиенте)",
-      "status": "next",
+      "status": "done",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -202,12 +202,18 @@
       ],
       "depends_on": [
         "FR-006"
+      ],
+      "files": [
+        "apps/web/src/lib/tariff.ts",
+        "apps/web/src/lib/widget-config.ts",
+        "apps/web/src/app/dashboard/[slug]/page.tsx",
+        "apps/web/tests/tariff.test.ts"
       ]
     },
     {
       "id": "FR-GROWTH-003",
       "title": "Badge loop: обязательный badge на free, anti-tamper MutationObserver (ADR-002)",
-      "status": "planned",
+      "status": "next",
       "priority": "critical",
       "tags": [
         "mvp",
@@ -221,7 +227,7 @@
     {
       "id": "FR-008",
       "title": "Checkout + webhook оплаты, идемпотентность по event_id (ADR-006), апгрейд тарифа",
-      "status": "planned",
+      "status": "next",
       "priority": "high",
       "tags": [
         "mvp",
@@ -259,5 +265,5 @@
       ]
     }
   ],
-  "last_completed": "FR-GROWTH-001"
+  "last_completed": "FR-007"
 }
