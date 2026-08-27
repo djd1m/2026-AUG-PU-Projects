@@ -17,3 +17,6 @@ apps/web/public/widget-manifest.json
 
 # Пароли тестового окружения — генерируются scripts/init-test-env.sh
 .env.test
+
+# артефакт инкрементальной сборки tsc
+*.tsbuildinfo
