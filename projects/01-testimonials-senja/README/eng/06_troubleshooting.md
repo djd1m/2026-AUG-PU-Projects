@@ -101,6 +101,25 @@ The file's **content** is checked, not its extension. Rejected: files that are n
 files larger than 5 MB, and files whose content does not match the declared type. SVG is always
 forbidden — it is an XML document capable of executing code on your domain.
 
+## After 30 days the owner loses access to the dashboard
+
+**This is a known MVP limitation, not a breakage.**
+
+There is **no sign-in**: neither an `/api/auth/login` route nor a sign-in page exists.
+The password verification function is written and covered by tests, but nothing calls it —
+the password is set at registration and never checked again anywhere.
+
+Dashboard access comes solely from the session cookie issued at registration. Its lifetime
+is **30 days absolute, with no renewal on activity**. Once it expires the owner cannot get
+back in, by password or otherwise.
+
+**Workaround today:** register a new project under a new slug. Testimonials of the old
+project stay in the database, but they can no longer be managed.
+
+**What it takes to close:** a sign-in route calling the already existing `verifyPassword`,
+plus a form page. Sign-in appears in neither the PRD nor the Specification — it was left
+out of MVP scope rather than lost in implementation.
+
 ## The general rule
 
 The three worst defects of this project had the same shape: **every module is correct, and the

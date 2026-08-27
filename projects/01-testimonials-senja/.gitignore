@@ -20,3 +20,6 @@ apps/web/public/widget-manifest.json
 
 # артефакт инкрементальной сборки tsc
 *.tsbuildinfo
+
+# Локальные учётные данные стенда. НИКОГДА не коммитить.
+.secrets/
