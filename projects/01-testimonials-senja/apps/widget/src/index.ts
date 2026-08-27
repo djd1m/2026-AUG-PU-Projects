@@ -73,7 +73,7 @@ export async function widgetBootstrap(): Promise<void> {
     return;
   }
 
-  renderTestimonials(root, config.testimonials);
+  renderTestimonials(root, config.testimonials, apiBase);
   renderBadge(root, config.badge_required, onBadgeClick, config.badge_url); // FR-GROWTH-003 — решение сервера
 
   // ПРИМЕЧАНИЕ ПО РАСХОЖДЕНИЮ Pseudocode.md ↔ Architecture.md (см. .claude/rules/

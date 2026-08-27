@@ -65,6 +65,15 @@ const CSS = `
   font-style: italic;
   color: #777;
 }
+.pw-photo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+  flex: none;
+  background: #eee;
+}
 .pw-badge-slot {
   display: flex;
 }

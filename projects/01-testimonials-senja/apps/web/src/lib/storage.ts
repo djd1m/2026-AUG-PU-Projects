@@ -6,9 +6,17 @@
 // ПИШЕТ объекты, а воркер только подписывает GET-ссылки.
 
 import { randomUUID } from 'node:crypto';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 export const VIDEO_BUCKET = process.env.S3_BUCKET ?? 'testimonial-videos';
+
+/**
+ * Фото лежат в ОТДЕЛЬНОМ бакете, а не рядом с видео. Причина не в аккуратности:
+ * у них разный режим доступа. Видео отдаётся только по presigned-ссылке в момент
+ * обработки, фото — публично, через наш роут, каждому посетителю витрины. Смешав их
+ * в одном бакете, однажды получишь общую политику на оба.
+ */
+export const PHOTO_BUCKET = process.env.S3_PHOTO_BUCKET ?? 'testimonial-photos';
 
 /** Инфраструктурный сбой — отдельный тип: Pseudocode §1 отличает его от вины автора (503 + откат квоты). */
 export class StorageError extends Error {
@@ -41,7 +49,13 @@ export function resetS3Client(): void {
   cached = null;
 }
 
-const EXT: Record<string, string> = { 'video/webm': 'webm', 'video/mp4': 'mp4' };
+const EXT: Record<string, string> = {
+  'video/webm': 'webm',
+  'video/mp4': 'mp4',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+};
 
 /**
  * Ключ объекта — projectId/uuid.ext. Имя файла, присланное автором, НЕ используется:
@@ -73,4 +87,48 @@ export async function uploadVideo(
   // Возвращается КЛЮЧ, не URL: постоянных ссылок на MinIO не существует, presigned
   // выдаются в момент нужды (канон Architecture §10 — video_object_key, НЕ video_url).
   return objectKey;
+}
+
+/**
+ * Загрузка фото. Content-Type пишется тот, что МЫ определили по сигнатуре, а не тот,
+ * что прислал клиент: иначе объект в хранилище уже несёт чужой тип, и роут отдачи
+ * унаследует его, даже если сам проверяет содержимое.
+ */
+export async function uploadPhoto(
+  projectId: string,
+  body: Uint8Array,
+  mime: string,
+): Promise<string> {
+  const objectKey = buildObjectKey(projectId, mime);
+  try {
+    await s3Client().send(
+      new PutObjectCommand({
+        Bucket: PHOTO_BUCKET,
+        Key: objectKey,
+        Body: body,
+        ContentType: mime,
+        // Ни при каких условиях не как вложение-документ: браузер не должен
+        // предлагать «скачать и открыть» файл, пришедший от постороннего.
+        ContentDisposition: 'inline',
+      }),
+    );
+  } catch (cause) {
+    throw new StorageError(`не удалось сохранить фото в ${PHOTO_BUCKET}`, { cause });
+  }
+  return objectKey;
+}
+
+/** Читает фото из хранилища для отдачи через наш роут. null — объекта нет. */
+export async function readPhoto(objectKey: string): Promise<Uint8Array | null> {
+  try {
+    const res = await s3Client().send(
+      new GetObjectCommand({ Bucket: PHOTO_BUCKET, Key: objectKey }),
+    );
+    if (!res.Body) return null;
+    return new Uint8Array(await res.Body.transformToByteArray());
+  } catch (err) {
+    const name = (err as { name?: string }).name;
+    if (name === 'NoSuchKey' || name === 'NotFound') return null;
+    throw new StorageError(`не удалось прочитать фото ${objectKey}`, { cause: err });
+  }
 }

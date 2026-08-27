@@ -392,3 +392,31 @@ code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
   border-radius: var(--r-md); font-size: 14px;
 }
 .recorder__video { width: 100%; border-radius: var(--r-md); background: #000; }
+
+/* ── Выбор фото ─────────────────────────────────────────────────────────── */
+
+.photoPick {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+.photoPick__thumb {
+  width: 56px; height: 56px; flex: none;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  background: var(--surface-3);
+}
+.photoPick__meta { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.photoPick__meta > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.quote__avatar--photo { object-fit: cover; padding: 0; }
+.modItem__photo {
+  margin-top: 12px;
+  max-width: 180px; max-height: 180px;
+  border-radius: var(--r-md);
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--line);
+}

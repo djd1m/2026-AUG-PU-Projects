@@ -55,11 +55,42 @@ done
 c=$(code -b "pw_session=$COOKIE" "$BASE/dashboard/$SLUG")
 [ "$c" = "200" ] && ok "/dashboard/$SLUG открывается" || fail "/dashboard/$SLUG -> $c"
 
-# --- 4. Клиент оставляет отзыв ---------------------------------------------
-PID=$(curl -s -m 20 -X POST "$BASE/api/testimonials" -H 'content-type: application/json' \
-  -d "{\"slug\":\"$SLUG\",\"type\":\"text\",\"name\":\"CJM клиент\",\"text\":\"Проверочный отзыв достаточной длины для валидации границ.\"}" \
+# --- 4. Клиент оставляет отзыв С ФОТО (FR-002) -----------------------------
+# Фото прикладывается ВСЕГДА, чтобы ветка проверки отдачи изображения (шаг 9)
+# выполнялась на каждом прогоне, а не пропускалась молча.
+PHOTO=$(mktemp /tmp/cjm-XXXX.png)
+python3 - "$PHOTO" <<'INNER'
+import zlib, struct, sys
+def chunk(t, d):
+    c = t + d
+    return struct.pack('>I', len(d)) + c + struct.pack('>I', zlib.crc32(c) & 0xffffffff)
+w = h = 16
+raw = b''.join(bytes([0]) + bytes([40, 120, 220] * w) for _ in range(h))
+open(sys.argv[1], 'wb').write(
+    b'\x89PNG\r\n\x1a\n'
+    + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0))
+    + chunk(b'IDAT', zlib.compress(raw))
+    + chunk(b'IEND', b''))
+INNER
+
+PID=$(curl -s -m 30 -X POST "$BASE/api/testimonials" \
+  -F "slug=$SLUG" -F "type=text" -F "name=CJM клиент" \
+  -F "text=Проверочный отзыв достаточной длины для валидации границ." \
+  -F "photo=@$PHOTO;type=image/png" \
   | python3 -c 'import sys,json;print(json.load(sys.stdin).get("public_id",""))' 2>/dev/null)
-[ -n "$PID" ] && ok "отзыв принят" || fail "отзыв не принят"
+[ -n "$PID" ] && ok "отзыв с фото принят" || fail "отзыв не принят"
+
+# SVG под видом PNG обязан быть отвергнут: он умеет <script> и выполнился бы
+# на НАШЕМ домене, уведя сессию владельца.
+SVG=$(mktemp /tmp/cjm-XXXX.svg)
+printf '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>' > "$SVG"
+svg_code=$(curl -s -o /dev/null -w '%{http_code}' -m 20 -X POST "$BASE/api/testimonials" \
+  -F "slug=$SLUG" -F "type=text" -F "name=Проверка" \
+  -F "text=Проверка отклонения скриптового изображения на приёме." \
+  -F "photo=@$SVG;type=image/png")
+[ "$svg_code" = "400" ] && ok "SVG под видом PNG отвергнут" \
+  || fail "SVG под видом PNG принят с кодом $svg_code — это XSS на нашем домене"
+rm -f "$PHOTO" "$SVG"
 
 # Считаем СОВПАДЕНИЯ, а не строки: HTML приходит одной строкой, и `grep -c` вернул бы
 # единицу и для одной карточки, и для пяти — проверка проходила бы вне зависимости от
@@ -91,6 +122,34 @@ case "$burl" in
   *utm_campaign=$SLUG*) ok "метка источника называет приведший проект" ;;
   *) fail "в badge_url нет utm_campaign=$SLUG" ;;
 esac
+
+# --- 8. CORS-заголовок ровно ОДИН ------------------------------------------
+# Два Access-Control-Allow-Origin ломают кросс-доменный запрос ЦЕЛИКОМ: браузер
+# отвергает ответ. Дубль возникает, когда заголовок ставят и прокси, и приложение.
+# Коварство в том, что curl показывает оба и выглядит нормально — видно только в
+# браузере. Найдено на живом стенде: виджет не грузился НИ НА ОДНОМ чужом сайте.
+n=$(curl -s -D- -o /dev/null -m 20 "$BASE/api/widget/config?slug=$SLUG" \
+     -H 'Origin: https://client-site.example' | grep -ci 'access-control-allow-origin')
+case "$n" in
+  1) ok "CORS-заголовок ровно один" ;;
+  0) fail "CORS-заголовка нет — виджет не загрузится на чужом домене" ;;
+  *) fail "Access-Control-Allow-Origin отдан $n раза — браузер отвергнет ответ целиком.
+     Убрать дубль: заголовок должен ставить кто-то ОДИН (приложение или прокси)" ;;
+esac
+
+# --- 9. Фото отдаётся безопасно (FR-002) -----------------------------------
+photo=$(curl -s -m 20 "$BASE/w/$SLUG" | grep -oE '/api/photo/[a-z0-9-]+/[a-z0-9-]+\.(jpg|png|webp)' | head -1)
+if [ -n "$photo" ]; then
+  hdr=$(curl -s -D- -o /dev/null -m 20 "$BASE$photo")
+  grep -qi 'x-content-type-options: *nosniff' <<<"$hdr" \
+    && ok "фото отдаётся с nosniff" \
+    || fail "фото без X-Content-Type-Options: nosniff — браузер может угадать тип сам"
+  grep -qiE 'content-type: *image/(jpeg|png|webp)' <<<"$hdr" \
+    && ok "фото отдаётся с типом изображения" \
+    || fail "фото отдаётся не как изображение"
+else
+  ok "фото к отзывам не приложено — проверка отдачи неприменима"
+fi
 
 echo
 [ "$FAIL" -eq 0 ] && echo "Путь клиента проходит целиком." \

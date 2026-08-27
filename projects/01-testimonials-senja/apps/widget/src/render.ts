@@ -34,16 +34,23 @@ export function buildSkeleton(root: ShadowRoot): void {
 }
 
 /** Pseudocode.md §3: рендер карточек отзывов внутри shadow-root. */
-export function renderTestimonials(root: ShadowRoot, testimonials: WidgetTestimonial[]): void {
+export function renderTestimonials(
+  root: ShadowRoot,
+  testimonials: WidgetTestimonial[],
+  apiBase = '',
+): void {
   const list = root.querySelector<HTMLElement>('.pw-list');
   if (!list) return;
   list.replaceChildren(); // идемпотентно на повторный вызов (напр. будущий ре-фетч конфига)
   for (const testimonial of testimonials) {
-    list.appendChild(renderCard(testimonial));
+    list.appendChild(renderCard(apiBase, testimonial));
   }
 }
 
-function renderCard(testimonial: WidgetTestimonial): HTMLElement {
+/** Ровно то, что выдаёт наш сервер: /api/photo/<projectId>/<uuid>.<ext>. */
+const PHOTO_PATH = /^\/api\/photo\/[a-z0-9-]+\/[a-z0-9-]+\.(jpg|png|webp)$/i;
+
+function renderCard(apiBase: string, testimonial: WidgetTestimonial): HTMLElement {
   const card = document.createElement('article');
   card.className = CARD_CLASS;
 
@@ -52,8 +59,26 @@ function renderCard(testimonial: WidgetTestimonial): HTMLElement {
   text.textContent = testimonial.text; // см. правило вверху файла — только textContent
   card.appendChild(text);
 
+  // Фото автора, если приложено. src собирается из apiBase — относительный путь
+  // на чужом домене указал бы на сайт владельца (см. комментарий в types.ts).
+  // Схема проверяется: значение приходит по сети, а javascript:/data: в src
+  // выполнились бы в контексте ЧУЖОГО сайта, где стоит виджет.
   const author = document.createElement('footer');
   author.className = 'pw-author';
+
+  // Путь проверяется на ТОЧНОЕ соответствие нашему роуту, а не «начинается со слеша».
+  // Форма "//evil.example/x.jpg" тоже начинается со слеша, но при пустом apiBase это
+  // протокол-относительный URL — браузер ушёл бы на чужой домен (поймано тестом).
+  if (typeof testimonial.photo_url === 'string' && PHOTO_PATH.test(testimonial.photo_url)) {
+    const photo = document.createElement('img');
+    photo.className = 'pw-photo';
+    photo.alt = '';
+    photo.loading = 'lazy';
+    photo.width = 32;
+    photo.height = 32;
+    photo.src = apiBase + testimonial.photo_url;
+    author.appendChild(photo);
+  }
 
   const name = document.createElement('span');
   name.className = 'pw-author-name';

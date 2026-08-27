@@ -20,6 +20,7 @@ export interface WidgetTestimonial {
   text: string;
   transcript: string | null;
   transcript_source: 'machine' | null;
+  photo_url: string | null;
 }
 
 export interface WidgetConfigResponse {
@@ -67,7 +68,7 @@ export async function buildWidgetConfig(
 
   const items = await client.query<WidgetTestimonial>(
     // Анонимный путь под app_service (BYPASSRLS): фильтр по project_id обязателен в коде.
-    `select id, author_name, author_role, text, transcript,
+    `select id, author_name, author_role, text, transcript, photo_url,
             case when transcript is not null then transcript_source else null end as transcript_source
        from testimonials
       where project_id = $1 and status = 'approved'

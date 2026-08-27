@@ -249,3 +249,102 @@ describe('FR-002 rate limit — 5/час/IP на проект', () => {
     expect(rateLimitKey('1.2.3.4', 'p1')).not.toBe(rateLimitKey('1.2.3.4', 'p2'));
   });
 });
+
+// ─────────────────────── FR-002: фото к отзыву ───────────────────────
+
+describe('FR-002 фото к текстовому отзыву', () => {
+  const jpeg = (n = 64) => { const b = new Uint8Array(n); b.set([0xff, 0xd8, 0xff], 0); return b; };
+  const png = (n = 64) => {
+    const b = new Uint8Array(n);
+    b.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], 0);
+    return b;
+  };
+  const goodText = { type: 'text' as const, name: 'Иван', text: 'нормальный текст отзыва' };
+
+  it('фото сохраняется, в колонке лежит путь НАШЕГО роута', async () => {
+    await inRollback(async (c) => {
+      const slug = await makeProject(c);
+      const res = await submitTextTestimonial(
+        c, slug, '1.1.1.1',
+        { ...goodText, photo: { bytes: jpeg(), mime: 'image/jpeg' } },
+        async (projectId, _b, mime) => `${projectId}/photo-key.${mime === 'image/jpeg' ? 'jpg' : 'png'}`,
+      );
+      expect(res.status).toBe(201);
+      if (!res.ok) return;
+      const row = await c.query('select photo_url from testimonials where id = $1', [res.publicId]);
+      // Не адрес хранилища: прямая ссылка означала бы публичный бакет либо
+      // presigned-ссылку, которая истекает.
+      expect(row.rows[0].photo_url).toMatch(/^\/api\/photo\/[0-9a-f-]{36}\/photo-key\.jpg$/);
+    });
+  });
+
+  it('без фото photo_url остаётся NULL', async () => {
+    await inRollback(async (c) => {
+      const slug = await makeProject(c);
+      const res = await submitTextTestimonial(c, slug, '1.1.1.2', goodText, async () => 'k');
+      if (!res.ok) throw new Error('ожидался успех');
+      const row = await c.query('select photo_url from testimonials where id = $1', [res.publicId]);
+      expect(row.rows[0].photo_url).toBeNull();
+    });
+  });
+
+  it('ИНВАРИАНТ: SVG под видом PNG отклоняется и в хранилище НЕ попадает', async () => {
+    await inRollback(async (c) => {
+      const slug = await makeProject(c);
+      let uploaded = false;
+      const res = await submitTextTestimonial(
+        c, slug, '1.1.1.3',
+        {
+          ...goodText,
+          photo: {
+            bytes: new TextEncoder().encode('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'),
+            mime: 'image/png',
+          },
+        },
+        async () => { uploaded = true; return 'k'; },
+      );
+      expect(res.status).toBe(400);
+      expect(uploaded).toBe(false);
+    });
+  });
+
+  it('невалидное фото НЕ списывает квоту (W-5)', async () => {
+    await inRollback(async (c) => {
+      const slug = await makeProject(c);
+      const bad = { ...goodText, photo: { bytes: png(), mime: 'image/jpeg' } };
+      for (let i = 0; i < 10; i += 1) {
+        expect((await submitTextTestimonial(c, slug, '1.1.1.4', bad, async () => 'k')).status).toBe(400);
+      }
+      const good = await submitTextTestimonial(c, slug, '1.1.1.4', goodText, async () => 'k');
+      expect(good.status).toBe(201);
+    });
+  });
+
+  it('W-5: сбой хранилища фото → 503 и квота ВОЗВРАЩАЕТСЯ', async () => {
+    await inRollback(async (c) => {
+      const slug = await makeProject(c);
+      const withPhoto = { ...goodText, photo: { bytes: jpeg(), mime: 'image/jpeg' } };
+      const failing = async () => { throw new Error('minio down'); };
+      for (let i = 0; i < RATE_LIMIT_THRESHOLD; i += 1) {
+        expect((await submitTextTestimonial(c, slug, '1.1.1.5', withPhoto, failing)).status).toBe(503);
+      }
+      const after = await submitTextTestimonial(c, slug, '1.1.1.5', withPhoto, async () => 'ok/k.jpg');
+      expect(after.status).toBe(201);
+    });
+  });
+
+  it('текстовые поля при отправке с фото по-прежнему сохраняются побайтово', async () => {
+    await inRollback(async (c) => {
+      const slug = await makeProject(c);
+      const payload = '<script>alert(1)</script>';
+      const res = await submitTextTestimonial(
+        c, slug, '1.1.1.6',
+        { type: 'text', name: 'Автор', text: payload, photo: { bytes: png(), mime: 'image/png' } },
+        async () => 'p/k.png',
+      );
+      if (!res.ok) throw new Error('ожидался успех');
+      const row = await c.query('select text from testimonials where id = $1', [res.publicId]);
+      expect(row.rows[0].text).toBe(payload);
+    });
+  });
+});

@@ -107,9 +107,23 @@ export default async function WallPage({ params }: Params) {
                 itemType="https://schema.org/Person"
                 className="quote__author"
               >
-                <span className="quote__avatar" aria-hidden="true">
-                  {initial(item.author_name)}
-                </span>
+                {item.photo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- отдаётся нашим
+                  // роутом /api/photo с проверкой содержимого и nosniff; next/image
+                  // потребовал бы отдельной конфигурации для собственного же пути.
+                  <img
+                    src={item.photo_url}
+                    alt=""
+                    className="quote__avatar quote__avatar--photo"
+                    loading="lazy"
+                    width={38}
+                    height={38}
+                  />
+                ) : (
+                  <span className="quote__avatar" aria-hidden="true">
+                    {initial(item.author_name)}
+                  </span>
+                )}
                 <span>
                   <strong itemProp="name">{item.author_name}</strong>
                   {item.author_role && (

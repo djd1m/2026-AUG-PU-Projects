@@ -9,6 +9,8 @@ export interface WallItem {
   text: string;
   transcript: string | null;
   has_video: boolean;
+  /** Путь нашего роута отдачи, не адрес хранилища (FR-002). null — фото не приложено. */
+  photo_url: string | null;
   created_at: string;
 }
 
@@ -21,7 +23,7 @@ export interface WallItem {
 export async function getApprovedTestimonials(projectId: string): Promise<WallItem[]> {
   return withService(async (client) => {
     const { rows } = await client.query<WallItem>(
-      `select id, author_name, author_role, text, transcript,
+      `select id, author_name, author_role, text, transcript, photo_url,
               (video_object_key is not null) as has_video, created_at
          from testimonials
         where project_id = $1 and status = 'approved'

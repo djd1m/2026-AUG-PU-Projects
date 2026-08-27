@@ -13,6 +13,7 @@ export interface Item {
   text: string;
   transcript: string | null;
   has_video: boolean;
+  photo_url: string | null;
   created_at: string;
 }
 
@@ -91,6 +92,10 @@ export function ModerationList({ initial }: { initial: Item[] }) {
             <p className="small muted" style={{ marginTop: 8 }}>
               🎥 Видео{item.transcript ? ' · расшифровка готова' : ' · расшифровка в очереди'}
             </p>
+          )}
+          {item.photo_url && (
+            // eslint-disable-next-line @next/next/no-img-element -- см. комментарий на стене
+            <img src={item.photo_url} alt="" className="modItem__photo" loading="lazy" />
           )}
           {item.text && <p className="modItem__text">{item.text}</p>}
           {item.transcript && (

@@ -14,9 +14,13 @@
 	@widget path /widget.*.js
 	header @widget Cache-Control "public, max-age=31536000, immutable"
 
-	# Виджет встраивается на ЧУЖИЕ домены — CORS обязателен.
-	@widgetapi path /api/widget/*
-	header @widgetapi Access-Control-Allow-Origin "*"
+	# CORS для /api/widget/* здесь НЕ ставится — его выставляет само приложение
+	# (apps/web/src/app/api/widget/config/route.ts), и оно же знает, каким роутам он
+	# нужен. Два экземпляра Access-Control-Allow-Origin ломают запрос ЦЕЛИКОМ: браузер
+	# отвергает ответ, и виджет не грузится ни на одном чужом сайте.
+	#
+	# Дефект коварен тем, что curl показывает оба заголовка и выглядит нормально —
+	# видно его только в браузере, на кросс-доменном запросе. Найден на живом стенде.
 
 	reverse_proxy web:3000
 }

@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { rateLimit } from '@proofwall/db';
 import { sniffContainer, validateVideoConstraints } from './video';
+import { validatePhoto } from './photo';
 
 export const RATE_LIMIT_SCOPE = 'form_submission';
 export const RATE_LIMIT_THRESHOLD = 5; // FR-002 AC: «не более 5 отправок с одного IP в час на проект»
@@ -25,13 +26,19 @@ export interface SubmitInput {
   name?: unknown;
   role?: unknown;
   text?: unknown;
+  /**
+   * Необязательное фото автора (AC FR-002). Приходит уже прочитанным в память —
+   * лимит 5 МБ проверяется роутом ДО чтения, чтобы не тянуть в буфер что угодно.
+   */
+  photo?: { bytes: Uint8Array; mime: string };
 }
 
 export type SubmitResult =
   | { ok: true; status: 201; publicId: string }
   | { ok: false; status: 400; body: { errors: string[] } }
   | { ok: false; status: 404; body: { error: string } }
-  | { ok: false; status: 429; body: { error: string } };
+  | { ok: false; status: 429; body: { error: string } }
+  | { ok: false; status: 503; body: { error: string } };
 
 /**
  * Ключ лимита — хеш от ip+project_id (Pseudocode §1 `rl_key = hash(ip + project.id)`).
@@ -82,6 +89,7 @@ export async function submitTextTestimonial(
   slug: string,
   ip: string,
   input: SubmitInput,
+  uploadPhoto?: (projectId: string, bytes: Uint8Array, mime: string) => Promise<string>,
 ): Promise<SubmitResult> {
   const projectRes = await client.query<{ id: string }>(
     'select id from projects where slug = $1 and deactivated = false',
@@ -100,19 +108,44 @@ export async function submitTextTestimonial(
   }
 
   const errors = validateTextSubmission(input);
+
+  // Фото проверяется ДО списания квоты, как и всё остальное (W-5). Чистая функция,
+  // без побочных эффектов — в хранилище пока ничего не уходит.
+  if (input.photo) {
+    const verdict = validatePhoto(input.photo.bytes, input.photo.mime);
+    if (!verdict.ok) errors.push(verdict.error);
+  }
+
   if (errors.length > 0) return { ok: false, status: 400, body: { errors } };
 
   // W-5: квота списывается ТОЛЬКО после успешной валидации — это исключает гонку и двойной
   // откат на параллельных невалидных запросах.
-  await rateLimit.record(RATE_LIMIT_SCOPE, key, client);
+  const rlEventId = await rateLimit.record(RATE_LIMIT_SCOPE, key, client);
 
   const role = typeof input.role === 'string' && input.role.trim() !== '' ? input.role : null;
 
+  // Фото кладётся в хранилище ПОСЛЕ списания квоты — как и видео, и по той же причине:
+  // сбой хранилища не вина автора, но и бесплатных попыток он давать не должен.
+  let photoUrl: string | null = null;
+  if (input.photo && uploadPhoto) {
+    try {
+      const key = await uploadPhoto(project.id, input.photo.bytes, input.photo.mime);
+      // В колонке лежит ПУТЬ НАШЕГО РОУТА, а не адрес хранилища. Прямая ссылка
+      // означала бы публичный бакет либо presigned-ссылку, которая истекает —
+      // и витрина через час показывала бы битые картинки.
+      photoUrl = `/api/photo/${key}`;
+    } catch (err) {
+      await rateLimit.revoke(rlEventId, client);
+      console.error('photo_storage_failed', { projectId: project.id, err });
+      return { ok: false, status: 503, body: { error: 'сервис временно недоступен, попробуйте ещё раз' } } as SubmitResult;
+    }
+  }
+
   const inserted = await client.query<{ id: string }>(
-    `insert into testimonials (project_id, author_name, author_role, text, status)
-     values ($1, $2, $3, $4, 'pending') returning id`,
+    `insert into testimonials (project_id, author_name, author_role, text, photo_url, status)
+     values ($1, $2, $3, $4, $5, 'pending') returning id`,
     // Ни trim, ни escape, ни strip тегов: см. правило в шапке файла.
-    [project.id, input.name as string, role, input.text as string],
+    [project.id, input.name as string, role, input.text as string, photoUrl],
   );
   const testimonialId = inserted.rows[0]!.id;
 
