@@ -126,6 +126,27 @@ it ("sign in as owner A"). So sign-in was not deliberately cut from scope — it
 between documents**: the architecture presupposed it, no requirement described it, and the
 pseudocode never implemented it.
 
+## Behind an existing reverse proxy: recreating the container breaks the proxy link
+
+**Symptom.** After `docker compose up -d --build` the deployment answers `502`, even though
+the container is healthy and serves `200` internally.
+
+**Cause.** Attaching the service to a foreign proxy's network (`docker network connect`) is
+*container* state, not compose-file state. Recreating the container loses it.
+
+**Fix after every recreation:**
+
+```bash
+docker network connect <proxy-network> <web-container-name>
+```
+
+For the first few seconds after attaching, the proxy may still answer `502` — it holds the
+previous address. This clears by itself; retry after a few seconds.
+
+**Why compose cannot fix it.** The network belongs to another project, and declaring it
+`external` in our `docker-compose.yml` would make our stack unstartable on a machine without
+that proxy. Deploying behind an existing proxy is a manual step, and it has to be remembered.
+
 ## The general rule
 
 The three worst defects of this project had the same shape: **every module is correct, and the
