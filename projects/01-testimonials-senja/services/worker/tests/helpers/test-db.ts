@@ -57,9 +57,21 @@ export async function createTestPool(): Promise<pg.Pool> {
 
 export async function setupSchema(pool: pg.Pool): Promise<void> {
   await pool.query(`
+    -- ВНИМАНИЕ: эта схема — не копия боевой, а её сокращение, и каждое расхождение
+    -- прячет ровно те дефекты, которые тесты должны ловить. Конкретный случай:
+    -- video_object_key здесь стоял NOT NULL, тогда как в 003_core.sql он NULLABLE.
+    -- Из-за этого текстовый отзыв (без видео) в тестовой БД существовать не мог —
+    -- и баг «воркер забирает текстовые отзывы и встаёт навсегда» был невоспроизводим
+    -- в тестах, хотя на стенде заблокировал очередь 21 строкой.
+    -- Правило: колонки, участвующие в ОТБОРЕ строк, обязаны совпадать с боевой схемой
+    -- по nullability и типу. Иначе фикстура доказывает не то, что нужно.
     CREATE TABLE IF NOT EXISTS testimonials (
       id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-      video_object_key text NOT NULL,
+      project_id uuid,
+      author_name text NOT NULL DEFAULT 'Автор',
+      text text NOT NULL DEFAULT '',
+      status text NOT NULL DEFAULT 'pending',
+      video_object_key text,
       transcript text,
       transcript_source text NOT NULL DEFAULT 'machine',
       transcript_status text NOT NULL DEFAULT 'pending'

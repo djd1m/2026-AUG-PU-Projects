@@ -67,9 +67,18 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
     // Architecture §5, шаг 2: SELECT ... FOR UPDATE SKIP LOCKED — без Redis/очереди,
     // тот же принцип простоты, что и в §3.4.
     const { rows } = await client.query<{ id: string; video_object_key: string }>(
+      // video_object_key IS NOT NULL — обязательное условие, а не оптимизация.
+      // transcript_status по умолчанию 'pending' У ВСЕХ строк (003_core.sql), включая
+      // ТЕКСТОВЫЕ отзывы, у которых видео нет. Без этого фильтра воркер забирает
+      // текстовый отзыв, падает на presigned-ссылке («No value provided for input
+      // HTTP label: Key») и берёт ТУ ЖЕ строку снова — ORDER BY created_at всегда
+      // возвращает самую старую. Очередь не движется, и настоящее видео за этими
+      // строками не расшифровывается НИКОГДА. Наблюдалось на стенде: 21 текстовый
+      // отзыв заблокировал очередь целиком.
       `SELECT id, video_object_key
          FROM testimonials
         WHERE transcript_status = 'pending'
+          AND video_object_key IS NOT NULL
         ORDER BY created_at
         FOR UPDATE SKIP LOCKED
         LIMIT 1`,

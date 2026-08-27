@@ -135,3 +135,67 @@ describe.skipIf(!hasTestDb)("transcribeVideoJob — путь failed и путь 
     expect(result).toEqual({ status: "empty" });
   });
 });
+
+describe.skipIf(!hasTestDb)("очередь не забирает текстовые отзывы", () => {
+  let pool: pg.Pool;
+
+  beforeAll(async () => {
+    pool = await createTestPool();
+    await setupSchema(pool);
+  });
+  afterEach(async () => { await truncateAll(pool); });
+  afterAll(async () => { await dropSchema(pool); await pool.end(); });
+
+  it("текстовый отзыв НЕ попадает в очередь, и видео за ним обрабатывается", async () => {
+    // transcript_status по умолчанию 'pending' у ВСЕХ строк (003_core.sql), включая
+    // текстовые отзывы без видео. Без фильтра по video_object_key воркер забирал
+    // текстовую строку, падал на presigned-ссылке и брал ТУ ЖЕ строку снова —
+    // ORDER BY created_at всегда возвращает самую старую. Очередь стояла намертво,
+    // и настоящее видео за этими строками не расшифровывалось никогда.
+    // Наблюдалось на стенде: 21 текстовый отзыв заблокировал обработку целиком.
+    // Текстовый отзыв СТАРШЕ видео — именно он был бы выбран первым.
+    await pool.query(
+      `insert into testimonials (author_name, text, created_at)
+       values ('Текстовый', 'отзыв без видео', now() - interval '1 hour')`,
+    );
+    await pool.query(
+      `insert into testimonials (author_name, video_object_key) values ('Видео', 'k/v.webm')`,
+    );
+
+    // Вызываем НАСТОЯЩУЮ функцию воркера, а не повторяем её SQL: тест, который
+    // выполняет собственный запрос с нужным фильтром, не может упасть в принципе.
+    const seen: string[] = [];
+    const client: TranscribeClient = {
+      transcribeVideo: async () => {
+        seen.push("вызван");
+        return "расшифровка";
+      },
+    };
+
+    const result = await claimAndProcessOneTestimonial({
+      pool,
+      transcribeClient: client,
+      presignVideoUrl: async (key) => {
+        // Ключ обязан быть непустым: на текстовой строке он NULL, и presign упал бы
+        // с «No value provided for input HTTP label: Key» — ровно так и было на стенде.
+        expect(key, "воркер взял строку без video_object_key").toBeTruthy();
+        return `https://minio.test/${key}`;
+      },
+    });
+
+    // Обработана должна быть ВИДЕО-строка, хотя текстовая старше на час.
+    expect(result.status).toBe("completed");
+    expect(seen).toHaveLength(1);
+
+    const check = await pool.query<{ author_name: string; transcript_status: string }>(
+      `SELECT author_name, transcript_status FROM testimonials WHERE transcript IS NOT NULL`,
+    );
+    expect(check.rows[0]?.author_name).toBe("Видео");
+
+    // Текстовая строка осталась нетронутой — её никто не пытался расшифровывать.
+    const untouched = await pool.query<{ transcript_status: string }>(
+      `SELECT transcript_status FROM testimonials WHERE author_name = 'Текстовый'`,
+    );
+    expect(untouched.rows[0]?.transcript_status).toBe("pending");
+  });
+});
