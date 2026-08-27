@@ -1,7 +1,7 @@
 {
   "generated_from": "docs/PRD.md §1.2 + §4.1 + §4.2, docs/Specification.md",
   "generated_at": "2026-08-26",
-  "note": "Порядок — по риску и зависимостям growth loop (badge loop), не по номеру FR-требования. См. CLAUDE.md 'Основной growth loop'.",
+  "note": "Порядок — по риску и зависимостям growth loop (badge loop), не по номеру FR-требования. См. CLAUDE.md 'Основной growth loop'. | 2026-08-27: добавлены FR-009..FR-014 (реализуемое) и DEC-001..DEC-004 (решения владельца, реализации не подлежат).",
   "features": [
     {
       "id": "FR-001",
@@ -293,6 +293,221 @@
         "apps/web/src/lib/register.ts",
         "apps/web/src/app/api/auth/register/route.ts",
         "apps/web/tests/partner.test.ts"
+      ]
+    },
+    {
+      "id": "FR-009",
+      "status": "planned",
+      "priority": "high",
+      "tags": [
+        "mvp-gap",
+        "auth",
+        "blocker"
+      ],
+      "depends_on": [],
+      "title": "Вход в систему: маршрут и страница (сейчас входа НЕТ, через 30 дней владелец теряет кабинет)",
+      "why": "verifyPassword написана и покрыта тестами, но не вызывается ниоткуда. Доступ даёт только cookie сессии на 30 дней без продления. По истечении владелец не может войти ничем. Вход не описан ни в PRD, ни в Specification — не входил в объём MVP.",
+      "acceptance": [
+        "POST /api/auth/login: email+пароль -> httpOnly-cookie сессии, токен НЕ в теле ответа",
+        "Неверная пара email/пароль и несуществующий email дают ОДИНАКОВЫЙ ответ и одинаковое время",
+        "Лимит попыток входа по IP (тот же механизм, что у формы отзыва)",
+        "Страница входа со ссылкой на неё из /dashboard/<slug> при истёкшей сессии",
+        "Тест: сессия, выданная входом, неотличима по свойствам от выданной регистрацией"
+      ],
+      "files": [
+        "apps/web/src/app/api/auth/login/route.ts",
+        "apps/web/src/app/login/page.tsx",
+        "apps/web/src/lib/login.ts",
+        "apps/web/tests/login.test.ts"
+      ]
+    },
+    {
+      "id": "FR-010",
+      "status": "planned",
+      "priority": "medium",
+      "tags": [
+        "auth"
+      ],
+      "depends_on": [
+        "FR-009"
+      ],
+      "title": "Смена пароля и завершение чужих сессий из кабинета",
+      "why": "Пароль сейчас задаётся один раз при регистрации и не может быть изменён. Скомпрометированный пароль нечем отозвать.",
+      "acceptance": [
+        "Смена пароля требует текущий пароль",
+        "Смена пароля завершает ВСЕ прочие сессии аккаунта, текущую оставляет",
+        "Тест: старая cookie после смены пароля не даёт доступа"
+      ],
+      "files": [
+        "apps/web/src/app/api/auth/password/route.ts",
+        "apps/web/tests/password-change.test.ts"
+      ]
+    },
+    {
+      "id": "FR-011",
+      "status": "planned",
+      "priority": "medium",
+      "tags": [
+        "growth",
+        "auth"
+      ],
+      "depends_on": [
+        "FR-009"
+      ],
+      "title": "Партнёрский кабинет: партнёр смотрит свою когорту сам",
+      "why": "Pseudocode §10: getPartnerCohortDashboard предполагается вызываемой из админки владельца продукта, способ аутентификации партнёра не описан. Партнёр сейчас не видит своих начислений.",
+      "acceptance": [
+        "Партнёр видит ТОЛЬКО свою когорту и свои начисления",
+        "Тест на межпартнёрскую изоляцию: чужая когорта недоступна и не отличима от несуществующей"
+      ],
+      "files": [
+        "apps/web/src/app/partner/[code]/page.tsx",
+        "apps/web/tests/partner-dashboard.test.ts"
+      ]
+    },
+    {
+      "id": "FR-012",
+      "status": "planned",
+      "priority": "medium",
+      "tags": [
+        "reliability",
+        "worker"
+      ],
+      "depends_on": [],
+      "title": "Политика повтора транскрипции при сбое STT",
+      "why": "Pseudocode §1.1 ставит transcript_status='failed' без повтора, хотя статус позволяет вернуть строку в очередь. Разовый сетевой сбой сейчас навсегда лишает отзыв расшифровки.",
+      "acceptance": [
+        "Ограниченное число повторов с возрастающей задержкой, счётчик в схеме",
+        "Исчерпание повторов -> 'failed', отзыв остаётся валидным и модерируемым",
+        "Тест: повтор НЕ создаёт вторую расшифровку у одного отзыва"
+      ],
+      "files": [
+        "services/worker/src/transcribe-job.ts",
+        "packages/db/migrations/",
+        "services/worker/tests/"
+      ]
+    },
+    {
+      "id": "FR-013",
+      "status": "planned",
+      "priority": "low",
+      "tags": [
+        "growth",
+        "widget"
+      ],
+      "depends_on": [],
+      "title": "Точное определение «внешнего домена» для staging- и preview-поддоменов",
+      "why": "Pseudocode §4: сейчас непонятно, allowlist поддоменов клиента или просто != OUR_APP_DOMAIN. Влияет на детект установки виджета: preview-домен владельца может засчитаться как внешний.",
+      "acceptance": [
+        "Правило зафиксировано явно и покрыто таблицей примеров в тесте",
+        "Нормализация домена перед сравнением (тот же приём, что у widget_installs)"
+      ],
+      "files": [
+        "apps/web/src/lib/widget-install.ts",
+        "apps/web/tests/widget-install.test.ts"
+      ]
+    },
+    {
+      "id": "FR-014",
+      "status": "planned",
+      "priority": "medium",
+      "tags": [
+        "growth",
+        "import"
+      ],
+      "depends_on": [],
+      "title": "Импорт отзывов из CSV",
+      "why": "Референс (Senja) импортирует с 30+ площадок — это его главный аргумент против пустой стены. Приоритет относительно других фич следующей недели — решение владельца (см. DEC-003).",
+      "acceptance": [
+        "Загрузка CSV с сопоставлением колонок, предпросмотр до записи",
+        "Импортированные отзывы получают статус pending и помечены источником",
+        "Повторный импорт того же файла не дублирует строки"
+      ],
+      "files": [
+        "apps/web/src/app/api/import/route.ts",
+        "apps/web/src/lib/csv-import.ts",
+        "apps/web/tests/csv-import.test.ts"
+      ]
+    },
+    {
+      "id": "DEC-001",
+      "status": "blocked",
+      "priority": "high",
+      "tags": [
+        "decision",
+        "owner"
+      ],
+      "depends_on": [],
+      "blocked_on": "owner-decision",
+      "title": "РЕШЕНИЕ: цена платного тарифа в рублях",
+      "why": "В .env.example стоит заглушка PAID_TIER_PRICE_RUB=990 с пометкой [GAP]. Число не зафиксировано ни в PRD, ни в Specification. Влияет на биллинг-копирайт, не на схему данных.",
+      "acceptance": [
+        "Число зафиксировано в Specification и в .env.example, пометка [GAP] снята"
+      ],
+      "files": [
+        ".env.example",
+        "docs/Specification.md"
+      ]
+    },
+    {
+      "id": "DEC-002",
+      "status": "blocked",
+      "priority": "high",
+      "tags": [
+        "decision",
+        "owner",
+        "metrics"
+      ],
+      "depends_on": [],
+      "blocked_on": "owner-decision",
+      "title": "РЕШЕНИЕ: целевое число метрики недели",
+      "why": "Completion.md:104 — определение метрики есть, целевого значения нет. Метрика без порога создаёт иллюзию измеримости: любой результат можно объявить успехом задним числом (PR-004). D-001 задаёт полосы: <5 — loop не запустился, 5-20 — рабочий диапазон, >20 — проверить на накрутку.",
+      "acceptance": [
+        "Формат «<название> — цель <число> за <срок>» в Completion.md, пометка [GAP] снята"
+      ],
+      "files": [
+        "docs/Completion.md"
+      ]
+    },
+    {
+      "id": "DEC-003",
+      "status": "blocked",
+      "priority": "medium",
+      "tags": [
+        "decision",
+        "owner"
+      ],
+      "depends_on": [],
+      "blocked_on": "owner-decision",
+      "title": "РЕШЕНИЕ: приоритет CSV-импорта относительно других фич следующей недели",
+      "why": "Solution_Strategy.md:135 — решение принимается после первых данных по time-to-first-widget.",
+      "acceptance": [
+        "Приоритет FR-014 выставлен, пометка [GAP] снята"
+      ],
+      "files": [
+        "docs/Solution_Strategy.md",
+        ".claude/feature-roadmap.json"
+      ]
+    },
+    {
+      "id": "DEC-004",
+      "status": "blocked",
+      "priority": "medium",
+      "tags": [
+        "decision",
+        "owner",
+        "legal"
+      ],
+      "depends_on": [],
+      "blocked_on": "owner-decision",
+      "title": "РЕШЕНИЕ: текст ToS про публикацию отзывов",
+      "why": "ADR.md:86 — нужен продуктовый текст о том, на что соглашается автор отзыва при отправке. Отзыв рендерится на чужих сайтах, поэтому согласие несущее, а не формальное.",
+      "acceptance": [
+        "Текст согласован и выведен на форме отправки отзыва"
+      ],
+      "files": [
+        "docs/ADR.md",
+        "apps/web/src/app/f/[slug]/submit-form.tsx"
       ]
     }
   ],
