@@ -117,8 +117,14 @@ back in, by password or otherwise.
 project stay in the database, but they can no longer be managed.
 
 **What it takes to close:** a sign-in route calling the already existing `verifyPassword`,
-plus a form page. Sign-in appears in neither the PRD nor the Specification — it was left
-out of MVP scope rather than lost in implementation.
+plus a form page. Tracked as `FR-009` in `.claude/feature-roadmap.json`.
+
+**How this happened.** The PRD and the Specification contain no mention of sign-in — but
+`Architecture.md:455` relies on it directly ("the same contract 'the owner is signed in →
+there is an `account_id`'"), and `Refinement.md:188` builds an integration test on top of
+it ("sign in as owner A"). So sign-in was not deliberately cut from scope — it was **lost
+between documents**: the architecture presupposed it, no requirement described it, and the
+pseudocode never implemented it.
 
 ## The general rule
 
