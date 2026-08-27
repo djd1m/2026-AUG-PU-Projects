@@ -26,7 +26,10 @@ type Params = { params: Promise<{ slug: string }> };
 export default async function DashboardPage({ params }: Params) {
   const { slug } = await params;
   const accountId = await currentAccountId();
-  if (!accountId) redirect('/');
+  // FR-009.3: без сессии — на вход, а не на витрину продукта. До FR-009 здесь стоял
+  // redirect('/'), и владелец с истёкшей сессией просто попадал на лендинг без всякого
+  // способа вернуться: входа не существовало.
+  if (!accountId) redirect(`/login?next=/dashboard/${encodeURIComponent(slug)}`);
 
   // Обе выборки — в ОДНОЙ транзакции под app_authenticated: RLS фильтрует их сама,
   // отдельного `where account_id` нет намеренно (Architecture §3.1).

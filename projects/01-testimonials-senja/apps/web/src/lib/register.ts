@@ -18,8 +18,8 @@ import {
   normalizeSlug,
   normalizeSlugDeterministic,
 } from './slug';
-import { PASSWORD_MIN_LENGTH } from './password';
-import { generateSessionToken, hashSessionToken, SESSION_TTL_MS } from './session';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from './password';
+import { createSession } from './session';
 import { isValidEmail, normalizeEmail } from './validation';
 import { buildProjectUrls, type ProjectUrls } from './urls';
 import { onProjectCreated } from './content-threshold';
@@ -66,6 +66,10 @@ export async function registerAccountAndProject(
   if (!isValidEmail(input.email)) errors.push('email: некорректный формат');
   if (typeof input.password !== 'string' || input.password.length < PASSWORD_MIN_LENGTH) {
     errors.push(`password: минимум ${PASSWORD_MIN_LENGTH} символов`);
+  } else if (input.password.length > PASSWORD_MAX_LENGTH) {
+    // NFR-009.10. Проверка ДО hashPassword: argon2 memory-hard, и считать его от
+    // произвольно длинного ввода на неаутентифицированном маршруте нельзя.
+    errors.push(`password: не более ${PASSWORD_MAX_LENGTH} символов`);
   }
   if (errors.length > 0) return { ok: false, status: 400, body: { errors } };
 
@@ -114,11 +118,8 @@ export async function registerAccountAndProject(
   );
   const projectId = project.rows[0]!.id;
 
-  const token = generateSessionToken();
-  await client.query(
-    'insert into sessions (account_id, token_hash, expires_at) values ($1, $2, $3)',
-    [accountId, hashSessionToken(token), new Date(Date.now() + SESSION_TTL_MS)],
-  );
+  // Через общую точку (NFR-009.6): второй INSERT здесь означал бы второй класс сессий.
+  const token = await createSession(client, accountId);
 
   await client.query(
     `insert into audit_log (project_id, entity_type, entity_id, actor_id, action)

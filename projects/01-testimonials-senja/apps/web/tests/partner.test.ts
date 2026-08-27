@@ -119,6 +119,10 @@ describe('выдача и отзыв кода', () => {
   });
 });
 
+// Оба теста ниже делают FRAUD_THRESHOLD регистраций подряд, каждая — один argon2
+// (~50 мс). Дефолтные 5000 мс vitest их не покрывают: тест не медленный по ошибке,
+// он ровно настолько долгий по существу. Явный таймаут честнее, чем сокращать
+// порог и проверять не тот сценарий.
 describe('@security — массовая накрутка регистраций с одного IP', () => {
   it(`до ${FRAUD_THRESHOLD} регистраций флага нет`, async () => {
     await inRollback(async (c) => {
@@ -150,7 +154,7 @@ describe('@security — массовая накрутка регистраций
       const attr = await c.query('select status, reason from referral_attributions where id = $1', [lastAttr]);
       expect(attr.rows[0]).toMatchObject({ status: 'blocked', reason: 'suspected_fraud' });
     });
-  });
+  }, 30_000);
 
   it('заблокированная атрибуция НЕ даёт начисления', async () => {
     await inRollback(async (c) => {
@@ -167,7 +171,7 @@ describe('@security — массовая накрутка регистраций
         outcome: 'no_attribution',
       });
     });
-  });
+  }, 30_000);
 
   it('другой IP не наказан за чужую накрутку', async () => {
     await inRollback(async (c) => {

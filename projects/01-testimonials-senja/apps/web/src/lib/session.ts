@@ -9,6 +9,7 @@
 // радужной таблицей по 256-битным токенам.
 
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import type { PoolClient } from 'pg';
 
 export const SESSION_COOKIE = 'pw_session';
 
@@ -60,4 +61,24 @@ export function sessionCookieOptions(): {
     path: '/',
     maxAge: Math.floor(SESSION_TTL_MS / 1000),
   };
+}
+
+/**
+ * ЕДИНСТВЕННАЯ точка выдачи сессии (NFR-009.6). До FR-009 её не существовало: `insert into
+ * sessions` был вкомпилирован в тело регистрационной транзакции, и вход, скопировав его,
+ * создал бы ВТОРОЙ класс сессий — с теми же константами сегодня и разъехавшийся завтра.
+ *
+ * Инвариант закреплён не комментарием, а стражем по исходнику: `insert into sessions`
+ * встречается ровно в одном файле проекта (tests/login.test.ts).
+ *
+ * Клиент передаётся снаружи: вызывающий уже находится в транзакции, и открывать вторую
+ * значит потерять атомарность с тем, ради чего сессия выдаётся.
+ */
+export async function createSession(client: PoolClient, accountId: string): Promise<string> {
+  const token = generateSessionToken();
+  await client.query(
+    'insert into sessions (account_id, token_hash, expires_at) values ($1, $2, $3)',
+    [accountId, hashSessionToken(token), new Date(Date.now() + SESSION_TTL_MS)],
+  );
+  return token;
 }
