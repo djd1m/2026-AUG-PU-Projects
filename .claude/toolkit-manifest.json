@@ -1,0 +1,105 @@
+{
+  "last_harvest": "2026-08-27",
+  "source_project": "projects/01-testimonials-senja",
+  "artifacts": [
+    {
+      "name": "deployment-seams",
+      "category": "rule",
+      "maturity": "alpha",
+      "path": ".claude/rules/deployment-seams.md",
+      "version": 1,
+      "summary": "Дефект живёт в стыке кода и конфигурации; три детерминированных стража",
+      "earned_by": "три дефекта на живом стенде: обходимый rate limit, ссылки на localhost, дублированный CORS"
+    },
+    {
+      "name": "docker-ports",
+      "category": "rule",
+      "maturity": "beta",
+      "path": ".claude/rules/docker-ports.md",
+      "version": 2,
+      "summary": "БД не публикуется никогда; хостовые порты только через ${VAR:-default}",
+      "earned_by": "компрометация тестового Postgres 2026-08-26 + конфликт 80/443 при генерации compose"
+    },
+    {
+      "name": "source-parsing-invariant-guard",
+      "category": "pattern",
+      "maturity": "alpha",
+      "path": ".claude/patterns/source-parsing-invariant-guard.md",
+      "version": 1,
+      "summary": "Тест, читающий исходник, для требований вида «ни одного / только / нигде»",
+      "earned_by": "дважды поймал реальное дублирование правила тарифа у знавшего о правиле автора"
+    },
+    {
+      "name": "rls-tenant-transaction",
+      "category": "pattern",
+      "maturity": "alpha",
+      "path": ".claude/patterns/rls-tenant-transaction.md",
+      "version": 1,
+      "summary": "Изоляция арендаторов через роль БД и SET LOCAL в транзакции",
+      "earned_by": "работающая реализация с RLS-тестами; несущее ограничение — BYPASSRLS у withService"
+    },
+    {
+      "name": "cjm-acceptance-gate",
+      "category": "pattern",
+      "maturity": "alpha",
+      "path": ".claude/patterns/cjm-acceptance-gate.md",
+      "version": 1,
+      "summary": "Приёмка сквозным путём клиента; проверка ПОЛЬЗУЕТСЯ выданными артефактами",
+      "earned_by": "BASE_URL не был проброшен — все выданные ссылки вели на localhost, тесты зелёные"
+    },
+    {
+      "name": "check-env-wiring",
+      "category": "snippet",
+      "maturity": "alpha",
+      "path": ".claude/snippets/bash/check-env-wiring.sh",
+      "version": 1,
+      "summary": "Переменная читается кодом, но не проброшена сервису в compose",
+      "verified": "прогнан на проекте-источнике, совпал с проектной версией"
+    },
+    {
+      "name": "cidr-match",
+      "category": "snippet",
+      "maturity": "alpha",
+      "path": ".claude/snippets/typescript/cidr-match.ts",
+      "version": 1,
+      "summary": "Принадлежность IP сети в нотации CIDR, IPv4 + IPv6, без зависимостей",
+      "verified": "tsc --strict чистый; 7 поведенческих проверок, включая пустую маску"
+    },
+    {
+      "name": "safe-json-ld",
+      "category": "snippet",
+      "maturity": "alpha",
+      "path": ".claude/snippets/typescript/safe-json-ld.ts",
+      "version": 1,
+      "summary": "JSON-LD в <script> без stored XSS",
+      "verified": "tsc --strict чистый; 2 поведенческие проверки"
+    },
+    {
+      "name": "sniff-image-magic-bytes",
+      "category": "snippet",
+      "maturity": "alpha",
+      "path": ".claude/snippets/typescript/sniff-image-magic-bytes.ts",
+      "version": 1,
+      "summary": "Тип изображения по содержимому; SVG запрещён явно",
+      "verified": "tsc --strict чистый; 3 поведенческие проверки, включая SVG под видом PNG"
+    },
+    {
+      "name": "compose.test.yml",
+      "category": "template",
+      "maturity": "alpha",
+      "path": ".claude/templates/compose.test.yml",
+      "version": 1,
+      "summary": "Тестовый стек: явный 127.0.0.1, пароли без дефолтов, своё имя проекта",
+      "earned_by": "компрометация 2026-08-26 + вытеснение контейнеров одноимённым боевым стеком"
+    },
+    {
+      "name": "init-test-env",
+      "category": "template",
+      "maturity": "alpha",
+      "path": ".claude/templates/init-test-env.sh",
+      "version": 1,
+      "summary": "Генерация .env.test со случайными паролями; идемпотентен",
+      "earned_by": "чтобы не было повода написать пароль руками"
+    }
+  ]
+}
