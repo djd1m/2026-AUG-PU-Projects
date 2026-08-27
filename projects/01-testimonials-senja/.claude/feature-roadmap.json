@@ -297,7 +297,7 @@
     },
     {
       "id": "FR-009",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "tags": [
         "mvp-gap",
@@ -315,11 +315,23 @@
         "Тест: сессия, выданная входом, неотличима по свойствам от выданной регистрацией"
       ],
       "files": [
+        "apps/web/src/lib/login.ts",
+        "apps/web/src/lib/next-path.ts",
+        "apps/web/src/lib/session.ts",
+        "apps/web/src/lib/project.ts",
+        "apps/web/src/lib/password.ts",
+        "apps/web/src/lib/register.ts",
         "apps/web/src/app/api/auth/login/route.ts",
         "apps/web/src/app/login/page.tsx",
-        "apps/web/src/lib/login.ts",
-        "apps/web/tests/login.test.ts"
-      ]
+        "apps/web/src/app/login/login-form.tsx",
+        "apps/web/src/app/dashboard/[slug]/page.tsx",
+        "packages/db/src/index.ts",
+        "apps/web/tests/login.test.ts",
+        "apps/web/tests/login-route.test.ts",
+        "docs/features/fr-009-login/",
+        "decisions/D-010-argon2-in-transaction.md"
+      ],
+      "review": "2 blocker закрыты, 4 high / 6 medium / 5 low — в docs/features/fr-009-login/review-report.md"
     },
     {
       "id": "FR-010",
@@ -511,5 +523,5 @@
       ]
     }
   ],
-  "last_completed": "FR-GROWTH-004"
+  "last_completed": "FR-009"
 }

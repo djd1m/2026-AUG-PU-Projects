@@ -138,19 +138,30 @@ describe('отказ неразличим — иначе учётки переч
   it('время ответа для НЕСУЩЕСТВУЮЩЕЙ учётки сопоставимо с неверным паролем', async () => {
     await inRollback(async (c) => {
       const { email } = await makeOwner(c);
+      // ЭТО ДЫМОВАЯ ПРОВЕРКА, а не несущая. Несущая — страж по исходнику ниже
+      // («в login.ts нет return до verifyPassword»): он детерминирован, а измерение
+      // времени на общей машине зависит от соседей по CPU. Порог и число замеров
+      // подобраны так, чтобы тест ловил ПОРЯДКОВУЮ разницу (ранний возврат делает
+      // ответ в десятки раз быстрее) и не мигал от обычного шума планировщика.
+      const SAMPLES = 7;
       const measure = async (mail: string, pass: string) => {
         const times: number[] = [];
-        for (let i = 0; i < 3; i += 1) {
+        for (let i = 0; i < SAMPLES; i += 1) {
           const t0 = performance.now();
           await attemptLogin(c, mail, pass, `8.8.${i}.${Math.floor(Math.random() * 250)}`);
           times.push(performance.now() - t0);
         }
-        return times.sort((a, b) => a - b)[1]!; // медиана из трёх
+        times.sort((a, b) => a - b);
+        return times[Math.floor(SAMPLES / 2)]!; // медиана
       };
+      // Чередуем, чтобы прогрев и дрейф нагрузки задевали обе выборки одинаково.
       const absent = await measure('nobody@example.com', PASSWORD);
       const wrong = await measure(email, 'wrong-password-here');
-      const ratio = Math.max(absent, wrong) / Math.max(1, Math.min(absent, wrong));
-      expect(ratio, `медианы разошлись в ${ratio.toFixed(1)}x — ранний возврат вернулся?`).toBeLessThan(2);
+      const absent2 = await measure('nobody-2@example.com', PASSWORD);
+      const a = Math.min(absent, absent2);
+      const ratio = Math.max(a, wrong) / Math.max(1, Math.min(a, wrong));
+      expect(ratio, `медианы разошлись в ${ratio.toFixed(1)}x — ранний возврат вернулся?`)
+        .toBeLessThan(4);
     });
   });
 });
@@ -289,9 +300,14 @@ describe('стражи по исходнику', () => {
 
   it('размер тела считается по байтам, а не по Content-Length', () => {
     const route = read('app/api/auth/login/route.ts');
-    expect(route, 'Content-Length присылает клиент, а при chunked его нет вовсе')
+    // РЕГИСТРОНЕЗАВИСИМО: toContain регистрозависим, и 'Content-Length' с заглавных
+    // проходил бы мимо — fetch регистр заголовков игнорирует (ревью B-2).
+    expect(route.toLowerCase(), 'Content-Length присылает клиент, а при chunked его нет вовсе')
       .not.toContain('content-length');
-    expect(route).toContain('byteLength');
+    // Наличия строки byteLength мало: ветка при ней может быть мёртвой. Настоящее
+    // доказательство — поведенческий тест с потоковым телом в tests/login-route.test.ts.
+    expect(route).toMatch(/total\s*\+=\s*value\.byteLength/);
+    expect(route).toMatch(/if\s*\(\s*total\s*>\s*max\s*\)/);
   });
 
   it('верхняя граница пароля применяется и на РЕГИСТРАЦИИ, не только на входе', () => {

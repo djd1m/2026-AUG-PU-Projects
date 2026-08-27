@@ -1,18 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { safeNextPath } from '@/lib/next-path';
 
-/**
- * `?next=` принимается ТОЛЬКО как относительный путь (FR-009.5).
- *
- * Проверка «начинается со слеша» дырявая: `//evil.example/x` тоже начинается со слеша и
- * является протокол-относительным адресом. Этот же дефект уже ловился в виджете, поэтому
- * здесь сразу точная форма пути, а не префикс.
- */
-function safeNext(value: string | undefined): string | null {
-  if (!value) return null;
-  return /^\/[A-Za-z0-9/_-]*$/.test(value) ? value : null;
-}
 
 export function LoginForm({ next }: { next?: string }) {
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +28,7 @@ export function LoginForm({ next }: { next?: string }) {
       }
       const body = (await res.json()) as { projects?: { slug: string }[] };
       const target =
-        safeNext(next) ??
+        safeNextPath(next) ??
         (body.projects?.[0] ? `/dashboard/${body.projects[0].slug}` : '/');
       window.location.assign(target);
     } catch {
