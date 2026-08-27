@@ -48,6 +48,9 @@ export interface ProjectSummary { slug: string; urls: ProjectUrls }
 | `lib/register.ts` | переводится на `createSession` | Иначе точек станет две и инвариант рухнет в момент введения |
 | `lib/project.ts` | **добавляется** `listProjectsForAccount(client, accountId)` | FR-009.4; сейчас есть только поиск по слагу |
 | `app/dashboard/[slug]/page.tsx` | переход на `/login` при отсутствии сессии | FR-009.3 |
+| `lib/password.ts` | **[v5] добавляется** `PASSWORD_MAX_LENGTH = 200` | NFR-009.10 |
+| `lib/register.ts` | **[v5]** проверка верхней границы пароля | NFR-009.10: закрыть вход и оставить регистрацию открытой значит закрыть одну дверь из двух |
+| `packages/db/src/index.ts` | **[v5]** `max: 30`, `connectionTimeoutMillis: 5000` | D-010 / NFR-009.11 |
 
 Правка `register.ts` — часть этой фичи, а не «заодно»: вынести общую функцию и не
 перевести на неё единственного существующего потребителя значит создать ровно ту

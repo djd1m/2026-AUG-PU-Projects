@@ -22,7 +22,9 @@ FAIL=0
 # сборка или тестовое окружение. Список ЯВНЫЙ — молчаливых исключений быть не должно.
 # NEXT_PHASE ставит сам Next на время сборки (phase-production-build); в рантайме её
 # нет и быть не должно — по ней urls.ts отличает сборку от прода, где BASE_URL обязателен.
-ALLOWED='NODE_ENV|NEXT_PHASE|PGPOOL_MAX|TEST_DATABASE_URL|S3_REGION|YOOKASSA_API_URL|PAYMENT_PROVIDER|NEXT_PUBLIC_[A-Z0-9_]*'
+# PGPOOL_MAX и PGPOOL_CONNECTION_TIMEOUT_MS убраны из исключений (D-010): теперь
+# они приходят из compose, и страж обязан проверять их проброс, а не пропускать.
+ALLOWED='NODE_ENV|NEXT_PHASE|TEST_DATABASE_URL|S3_REGION|YOOKASSA_API_URL|PAYMENT_PROVIDER|NEXT_PUBLIC_[A-Z0-9_]*'
 
 COMPOSE_ARGS=()
 if [ "$#" -gt 0 ]; then for f in "$@"; do COMPOSE_ARGS+=(-f "$f"); done

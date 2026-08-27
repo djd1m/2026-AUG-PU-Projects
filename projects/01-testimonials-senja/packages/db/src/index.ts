@@ -14,7 +14,14 @@ import { Pool, type PoolConfig } from 'pg';
 function buildPoolConfig(): PoolConfig {
   return {
     connectionString: process.env.DATABASE_URL,
-    max: Number(process.env.PGPOOL_MAX ?? 10),
+    // D-010: 30, а не 10. argon2 при входе считается внутри транзакции и держит
+    // соединение ~50 мс; при пуле в 10 поток входов вычерпывал бы его и клал бы
+    // вместе с входом дашборд, витрину, виджет и приём отзывов.
+    max: Number(process.env.PGPOOL_MAX ?? 30),
+    // БЕЗ ЭТОГО pg.Pool ждёт свободное соединение БЕСКОНЕЧНО (pg-pool/index.js:206):
+    // исчерпание пула выражалось бы тихой очередью, а не отказом. Недоступность
+    // ресурса обязана быть отказом — .claude/rules/fail-closed-defaults.md, п. 5.
+    connectionTimeoutMillis: Number(process.env.PGPOOL_CONNECTION_TIMEOUT_MS ?? 5000),
   };
 }
 

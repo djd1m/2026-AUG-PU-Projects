@@ -23,7 +23,7 @@ function login(request):
     # [v4] Content-Length ДОВЕРЯТЬ НЕЛЬЗЯ: его присылает клиент, а при
     # Transfer-Encoding: chunked его нет вовсе — сравнение с null даёт false,
     # и тело любого размера буферизуется в память. Считаем БАЙТЫ при чтении.
-    text = readAtMost(request.body, MAX_LOGIN_BODY)   # обрывает поток на пределе
+    text = readAtMost(request.body, MAX_LOGIN_BODY)   # [v5] 4096 байт, обрывает поток на пределе
     if text is TooLarge:  return PayloadTooLarge                          # 413
     body = parseJson(text)  or  return BadRequest                         # 400
 
@@ -31,6 +31,9 @@ function login(request):
     # [v3] Нестроковые значения не роняют маршрут и не доходят до normalizeEmail.
     email    = (typeof body.email    === "string") ? normalizeEmail(body.email) : ""
     password = (typeof body.password === "string") ? body.password            : ""
+    # [v5] Верхняя граница пароля — 200. Без неё argon2 считается от чего угодно;
+    # длину проверяем ДО транзакции, чтобы мусор не занимал соединение вовсе.
+    if password.length > PASSWORD_MAX_LENGTH:  password = ""   # трактуем как неверный
 
     keyIp   = hashKey("login_ip",    ip)
     keyPair = hashKey("login_pair",  email + "|" + ip)   # [v3] ПАРА, не email
