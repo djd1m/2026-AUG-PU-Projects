@@ -16,7 +16,7 @@
     "build:widget": "npm run build --workspace apps/widget && node scripts/copy-widget-to-public.mjs",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
-    "typecheck": "tsc --noEmit -p tsconfig.base.json",
+    "typecheck": "npm run typecheck --workspaces --if-present",
     "db:migrate": "npm run migrate --workspace packages/db",
     "up": "docker compose up -d --build",
     "down": "docker compose down",

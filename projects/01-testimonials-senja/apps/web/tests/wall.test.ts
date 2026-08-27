@@ -26,6 +26,7 @@ const item = (over: Partial<WallItem> = {}): WallItem => ({
   text: 'обычный текст',
   transcript: null,
   has_video: false,
+  photo_url: null,
   created_at: '2026-08-26T10:00:00.000Z',
   ...over,
 });
