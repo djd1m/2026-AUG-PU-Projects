@@ -310,6 +310,32 @@ describe('стражи по исходнику', () => {
     expect(route).toMatch(/if\s*\(\s*total\s*>\s*max\s*\)/);
   });
 
+  it('normalizeEmail ОБЪЯВЛЕН ровно в одном файле', () => {
+    // Два независимых экземпляра — не дублирование, а мина: регистрация нормализует email
+    // одним способом, вход другим, и в день расхождения владелец не войдёт НИКОГДА.
+    const offenders = sourceFiles(SRC).filter((f) =>
+      /export\s+function\s+normalizeEmail\b/.test(strip(readFileSync(f, 'utf8'))),
+    );
+    expect(offenders.map((f) => path.relative(SRC, f)))
+      .toEqual([path.join('lib', 'validation.ts')]);
+  });
+
+  it('конфиг пула не читает числа через голый Number(process.env)', () => {
+    // Number('') === 0: пустое значение давало max: 0 (pg возвращается к 10) и
+    // connectionTimeoutMillis: 0 (ожидание снова бесконечное) — обе меры D-010
+    // отключались молча, ровно тем способом, от которого защищают.
+    const db = strip(readFileSync(
+      path.resolve(__dirname, '../../../packages/db/src/index.ts'), 'utf8'));
+    expect(db).not.toMatch(/Number\(\s*process\.env\.PGPOOL/);
+    expect(db).toContain('positiveIntFromEnv');
+  });
+
+  it('warmUpDummyHash вызывается в проде, а не только в тестах', () => {
+    const route = read('app/api/auth/login/route.ts');
+    expect(route, 'экспорт без вызова — ложное обещание: выглядит мерой, мерой не является')
+      .toContain('warmUpDummyHash()');
+  });
+
   it('верхняя граница пароля применяется и на РЕГИСТРАЦИИ, не только на входе', () => {
     expect(read('lib/register.ts'), 'закрыть вход и оставить регистрацию — одна дверь из двух')
       .toContain('PASSWORD_MAX_LENGTH');

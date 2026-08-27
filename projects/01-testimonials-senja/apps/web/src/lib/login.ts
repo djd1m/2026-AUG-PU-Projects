@@ -26,6 +26,10 @@ import { createHash } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { rateLimit } from '@proofwall/db';
 import { hashPassword, PASSWORD_MAX_LENGTH, verifyPassword } from './password';
+// Нормализация email — ЕДИНСТВЕННЫМ объявлением из validation.ts, тем же, что у регистрации.
+// Свой экземпляр здесь был бы не дублированием, а миной: разойдутся — и владелец не войдёт
+// в существующий аккаунт никогда. Страж в tests/login.test.ts это и стережёт.
+export { normalizeEmailFromInput as normalizeEmail } from './validation';
 import { createSession } from './session';
 import { listProjectsForAccount, type ProjectSummary } from './project';
 
@@ -42,10 +46,6 @@ export const WINDOW = { seconds: 3600 } as const;
  *  ip="1.2"+email="3.4" и ip="1.2.3"+email=".4" дали бы один ключ. */
 export function hashKey(...parts: string[]): string {
   return createHash('sha256').update(parts.join('|')).digest('hex');
-}
-
-export function normalizeEmail(value: unknown): string {
-  return typeof value === 'string' ? value.trim().toLowerCase() : '';
 }
 
 export type LoginResult =

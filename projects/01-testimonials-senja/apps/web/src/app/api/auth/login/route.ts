@@ -6,11 +6,18 @@
 
 import { NextResponse } from 'next/server';
 import { withService } from '@proofwall/db';
-import { attemptLogin, normalizeEmail } from '@/lib/login';
+import { attemptLogin, normalizeEmail, warmUpDummyHash } from '@/lib/login';
 import { extractClientIP } from '@/lib/client-ip';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
+
+// Прогрев заглушечного хеша при загрузке модуля, а не на первом запросе.
+// Без него ПЕРВЫЙ вход после старта процесса платит ~50 мс за argon2 заглушки — и только
+// в ветке «аккаунта нет», то есть ровно там, где разница во времени и есть оракул.
+// Экспорт без единого вызова в проде (как было) — ложное обещание: функция выглядит мерой,
+// а мерой не является.
+void warmUpDummyHash();
 
 /** Тело входа — это {"email":"…","password":"…"}. 4096 байт с большим запасом. */
 export const MAX_LOGIN_BODY = 4096;

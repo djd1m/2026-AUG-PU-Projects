@@ -21,6 +21,15 @@ export function normalizeEmail(value: string): string {
   return value.trim().toLowerCase();
 }
 
+/**
+ * Тот же normalizeEmail, но для НЕПРОВЕРЕННОГО ввода: нестроковое значение — пустая строка.
+ * Живёт рядом с базовой функцией НАМЕРЕННО: два объявления нормализации в разных файлах
+ * разойдутся, и в этот день владелец не сможет войти в существующий аккаунт никогда.
+ */
+export function normalizeEmailFromInput(value: unknown): string {
+  return typeof value === 'string' ? normalizeEmail(value) : '';
+}
+
 export function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
 }
