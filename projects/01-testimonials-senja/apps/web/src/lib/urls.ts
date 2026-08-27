@@ -7,6 +7,36 @@ import path from 'node:path';
 export const DEFAULT_BASE_URL = 'http://localhost:3000';
 
 /**
+ * Переменные, у которых НЕТ ПРАВА НА ДЕФОЛТ в проде.
+ *
+ * Общее у них одно: они определяют то, что продукт отдаёт НАРУЖУ. Разумный дефолт у
+ * такой переменной превращает «неправильно настроено» в «молча неверно»: он снимает
+ * единственный дешёвый сигнал — падение при старте — и переносит обнаружение на
+ * человека, который откроет ссылку в проде.
+ *
+ * Так и произошло: BASE_URL не был объявлен в docker-compose.yml, дефолт сработал,
+ * приложение стартовало, 408 тестов были зелёными, все страницы открывались — и КАЖДАЯ
+ * выданная владельцу ссылка вела на http://localhost:3000, то есть на машину посетителя.
+ * Нашёл владелец продукта, а не проверка.
+ *
+ * Отсюда общее наблюдение прогона: тихие отказы кучкуются там, где есть graceful
+ * fallback. У каждого P0 был запасной путь, оставлявший систему «здоровой».
+ * Правило: .claude/rules/silent-fallbacks.md
+ */
+function assertConfiguredInProduction(value: string | undefined): void {
+  if (process.env.NODE_ENV !== 'production') return;
+  // Сборка Next выполняется с NODE_ENV=production, но внешний адрес ей не нужен и
+  // не передаётся. Отличаем сборку от рантайма: на этапе сборки его знать неоткуда.
+  if (process.env.NEXT_PHASE === 'phase-production-build') return;
+  if (value) return;
+  throw new Error(
+    'BASE_URL не задан. Он определяет КАЖДУЮ выдаваемую наружу ссылку (форма, витрина, ' +
+      'сниппет виджета, badge). Дефолта у него нет намеренно: с дефолтом все ссылки молча ' +
+      'повели бы на localhost. Объявить в environment сервиса web в docker-compose.yml.',
+  );
+}
+
+/**
  * BASE_URL для абсолютных ссылок. За Caddy web не знает свой внешний адрес сам.
  *
  * Значение ВАЛИДИРУЕТСЯ, а не просто подчищается. Причина конкретная: в окружении
@@ -15,6 +45,20 @@ export const DEFAULT_BASE_URL = 'http://localhost:3000';
  * тестом badge-ссылки, а не чтением. Непригодное значение = как будто его нет.
  */
 export function baseUrl(): string {
+  const configured = [process.env.BASE_URL, process.env.NEXT_PUBLIC_BASE_URL].find((c) => {
+    if (!c) return false;
+    const t = c.trim().replace(/\/+$/, '');
+    if (t === '') return false;
+    try {
+      const u = new URL(t);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  });
+  // Падаем ДО того, как отдадим наружу неверную ссылку. В dev/test дефолт законен.
+  assertConfiguredInProduction(configured);
+
   for (const candidate of [process.env.BASE_URL, process.env.NEXT_PUBLIC_BASE_URL, DEFAULT_BASE_URL]) {
     if (!candidate) continue;
     const trimmed = candidate.trim().replace(/\/+$/, '');
