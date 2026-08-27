@@ -49,7 +49,7 @@ bash scripts/check-cjm.sh "$BASE_URL"
 
 Хостовые порты задаются **в `.env`**, а не правкой `docker-compose.yml`:
 
-```
+```ini
 WEB_PORT=3000
 HTTP_PORT=80
 HTTPS_PORT=443

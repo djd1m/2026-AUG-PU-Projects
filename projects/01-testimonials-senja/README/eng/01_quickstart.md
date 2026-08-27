@@ -49,7 +49,7 @@ Leave it as is for local development.
 
 Host ports are set **in `.env`**, not by editing `docker-compose.yml`:
 
-```
+```ini
 WEB_PORT=3000
 HTTP_PORT=80
 HTTPS_PORT=443

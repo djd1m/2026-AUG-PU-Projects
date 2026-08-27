@@ -5,7 +5,7 @@
 A distributed monolith in an npm workspaces monorepo. One Compose stack, six
 services, one shared database.
 
-```
+```text
                     internet
                        │
                    ┌───▼────┐
