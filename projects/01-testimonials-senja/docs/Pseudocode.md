@@ -414,7 +414,7 @@ function getPendingAttribution(account_id):         # окно атрибуци�
 ## 7.3 FR-008: инициация checkout и обновление тарифа
 ```
 function initiateCheckout(project_id, actor):   # actor — app_authenticated владелец проекта
-  session = paymentProvider.createCheckoutSession(project_id)  # [GAP: выбор платёжного провайдера]
+  session = yookassa.createPayment(project_id)  # провайдер выбран: ЮKassa, decisions/D-009
   createCheckoutSession(project_id, session.id, status = "pending")
   return HTTP 200 { redirect_url: session.redirect_url }
 function applyTariffUpgrade(raw_body):  # вызывается ПОСЛЕ onPaymentWebhook (§7.2, не меняется), если тот вернул 200
@@ -563,5 +563,5 @@ function getPartnerCohortDashboard(partner_code):
 
 - [GAP: точное определение "внешнего домена" — allowlist поддоменов клиента или просто `!= OUR_APP_DOMAIN`; влияет на §4 при staging/preview-доменах владельца]
 - [GAP: политика повторной попытки транскрипции при `SttApiError` — одна попытка или retry с backoff; §1.1 сейчас ставит `transcript_status: 'failed'` без ретрая, но статус позволяет вернуть строку в очередь]
-- [GAP: ставка комиссии по умолчанию (`partner.rate`) — не задана в PRD/Specification]
+- Ставка комиссии по умолчанию (`partner.rate`) — **30 %**, как у référence-продукта (Senja). Верхнего предела нет; для сравнения, Trustmary ограничивает выплату €1500. Решение владельца продукта 2026-08-26.
 - [GAP: способ аутентификации партнёра для доступа к своему когортному дашборду (§10) — не описан в PRD/Specification]
