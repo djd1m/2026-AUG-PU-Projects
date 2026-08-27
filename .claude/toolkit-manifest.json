@@ -100,6 +100,42 @@
       "version": 1,
       "summary": "Генерация .env.test со случайными паролями; идемпотентен",
       "earned_by": "чтобы не было повода написать пароль руками"
+    },
+    {
+      "name": "guard-must-be-able-to-fail",
+      "category": "rule",
+      "maturity": "alpha",
+      "path": ".claude/rules/guard-must-be-able-to-fail.md",
+      "version": 1,
+      "summary": "Проверка, ни разу не показавшая красное, не является проверкой",
+      "earned_by": "пять стражей одного проекта молча зеленели, включая страж безопасности на нечитаемом конфиге"
+    },
+    {
+      "name": "fail-closed-defaults",
+      "category": "rule",
+      "maturity": "alpha",
+      "path": ".claude/rules/fail-closed-defaults.md",
+      "version": 1,
+      "summary": "Отсутствие данных означает самое строгое, а не самое разрешающее",
+      "earned_by": "пустая маска CIDR давала /0 (пускать всех); пустой allowlist из env; BASE_URL=\"/\"; неопознанный тариф"
+    },
+    {
+      "name": "security-operation-order",
+      "category": "rule",
+      "maturity": "alpha",
+      "path": ".claude/rules/security-operation-order.md",
+      "version": 1,
+      "summary": "Порядок проверок и есть защита; недоступность источника истины — исключение, не значение",
+      "earned_by": "заявка на event_id коммитилась до перезапроса статуса — оплата терялась навсегда (0501766)"
+    },
+    {
+      "name": "compose-hygiene",
+      "category": "rule",
+      "maturity": "alpha",
+      "path": ".claude/rules/compose-hygiene.md",
+      "version": 1,
+      "summary": "name у доп. compose, явные теги образов, restart, сборка монорепо — всё проверяется grep'ом",
+      "earned_by": "вытеснение тестового стека (117 тестов), воркер лежал 9 часов, не собирался ни один образ"
     }
   ]
 }
