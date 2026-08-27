@@ -37,7 +37,7 @@
 ### 🔵 Режим DEEP
 
 > ⚙️ **После формирования плана, загрузи:**
-> `view(/mnt/skills/user/brutal-honesty-review/SKILL.md)`
+> `view(.claude/skills/brutal-honesty-review/SKILL.md)`
 > Применяй **Bach Mode (BS-detection)** к финальному playbook.
 
 #### BS-Detection Quality Gate

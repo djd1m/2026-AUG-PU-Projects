@@ -37,7 +37,7 @@
 ### 🔵 Режим DEEP
 
 > ⚙️ **Загрузи:**
-> 1. `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)` — адаптивный поиск отзывов
+> 1. `view(.claude/skills/goap-research-ed25519/SKILL.md)` — адаптивный поиск отзывов
 > 2. `view(references/jtbd-canvas.md)` — JTBD framework + примеры
 
 **GOAP State Assessment:**
@@ -73,7 +73,7 @@ sample_size_factor: 1.0 (≥20 reviews), 0.8 (10-19), 0.5 (<10)
 
 ### 🟣 Режим VERIFIED
 
-> ⚙️ **Дополнительно:** `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)`
+> ⚙️ **Дополнительно:** `view(.claude/skills/goap-research-ed25519/SKILL.md)`
 
 Всё из DEEP, плюс:
 - Каждая цитата клиента получает `source_hash` и, где доступно, provenance signature

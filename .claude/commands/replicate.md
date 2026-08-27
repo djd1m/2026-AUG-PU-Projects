@@ -166,9 +166,37 @@ Read the skill: `.claude/skills/reverse-engineering-unicorn/SKILL.md`
 | M2: Product & Customers | Always | JTBD, Value Prop, segments |
 | M3: Market & Competition | Always | TAM/SAM, competitors, Blue Ocean |
 | M4: Business & Finance | If monetization | Unit economics |
-| M5: Growth Engine | If B2C/PLG | Channels, integrations |
+| M5: Growth Engine | If acquisition/adoption in scope (incl. B2B) | Channels, integrations |
 
-**Output:** Product Discovery Brief → passed as pre-filled context to Phase 1
+M5 is no longer gated on PRODUCT TYPE. The module branches on type itself — *«Если B2B → sales-led
+growth, не product-led»* — so gating it outside disabled the one branch it declares, and every B2B
+project got an empty `### Growth Channels` slot.
+
+The condition is APPLICABILITY, not type, and the difference matters in both directions: `Always`
+would over-promise, because M5's outputs are CAC, channels and loops, and an internal tool with no
+acquisition objective has nothing to put in them. So: run it whenever acquisition or adoption is in
+scope — which includes B2B — and skip it when neither is. The cost is visible rather than
+discovered: a B2B run now spends M5's time.
+
+Honest limit: line 62 of the module says to *switch* to a sales-led framework; it does not define
+one. A B2B run gets the type-appropriate instruction, not a type-appropriate playbook.
+
+**Output — WRITE FIRST, then hand off. Both, in this order:**
+
+1. **Write** the full Product Discovery Brief to `docs/product-discovery-brief.md`.
+2. **Then** pass it to Phase 1 as pre-filled context, exactly as before.
+
+The hand-off is unchanged; the file is an ADDITION. Until this was added the brief existed only in
+the conversation — it made Phase 1 skip its own Phase 0 (`sparc-prd-mini/SKILL.md:993-999`) and then
+vanished, so the M5 growth analysis had no artifact any later step could read. Nothing downstream was
+ignoring it: there was nothing to ignore.
+
+The file MUST include M5's `Growth Requirements Seed` table verbatim when M5 ran — that table is the
+only place `FR-GROWTH-nnn` obligations exist before Phase 1 promotes them.
+
+**When this file is absent it means Phase 0 did not run** — the `--from-docs` / `--skip-discovery`
+entry skips Phase 0 entirely (see the alternative-entry section). Absence is NOT evidence that the
+project has no growth requirements, and no consumer may read it that way.
 
 **Checkpoint:**
 ```
@@ -240,7 +268,48 @@ Created [N] documents in docs/
 ═══════════════════════════════════════════════════════════════
 ```
 
+### Прерванный прогон: как продолжить с того места
+
+`/replicate` — интерактивный конвейер с четырьмя чекпоинтами, и продолжить его можно **уже сейчас,
+без всякой новой машинерии**. Три сигнала, каждый существует независимо от этого раздела:
+
+| Вопрос | Чем отвечается |
+|---|---|
+| До какой фазы дошли? | `git log --oneline` — после КАЖДОЙ фазы делается свой коммит (`docs: SPARC…`, `docs: validation report…`, `feat: Claude Code toolkit…`, `chore: initial project setup…`) |
+| Документы Фазы 1 дописаны? | `node .claude/hooks/check-docs-complete.cjs .` — `0` дописаны, `1` названо, чего не хватает, `2` Фаза 1 не запускалась |
+| Тулкит Фазы 3 сгенерирован? | `npx @dzhechkov/p-replicator verify` — раздел «Post-/replicate» |
+
+**Как продолжить:** посмотрите последний коммит фазы, затем скажите `/replicate` прямым текстом:
+*«продолжай с Фазы 3, Фазы 0-2 уже сделаны»*. Конвейер интерактивный — человек на чекпоинте и есть
+механизм возобновления.
+
+**Почему здесь нет автоматического определения фазы.** Оно рассматривалось (бэклог `58575b07`) и
+сознательно НЕ реализовано: три сигнала выше уже дают ответ, а свежая логика ветвления в
+интерактивном конвейере — это то, что может сработать неверно ровно тогда, когда прогон и так пошёл
+не по плану. Запись решения важнее самого решения: если вы вернётесь к этому вопросу, начинайте с
+того, что перечисленного выше оказалось недостаточно.
+
 ### Phase 2: VALIDATION
+
+**Шаг 2.0 — ДЕТЕРМИНИРОВАННАЯ ПРОВЕРКА ПОЛНОТЫ. Выполняется ПЕРВОЙ, до запуска роя.**
+
+```bash
+node .claude/hooks/check-docs-complete.cjs .
+```
+
+| Код | Что делать |
+|:---:|---|
+| `0` | продолжайте — рой валидации запускается |
+| `1` | **НЕ запускайте рой.** Вернитесь в Фазу 1 и допишите названные документы |
+| `2` | проверка не выполнена — почините вызов и повторите; это НЕ «всё в порядке» |
+
+Причина, по которой шаг стоит здесь, а не внутри роя: существование файла, его пустота и
+незаполненный шаблон решаются сорока строками кода. Отправлять на этот вопрос рой агентов — значит
+платить вероятностной проверкой за то, что решается детерминированно. Рою остаётся то, ради чего он
+и нужен: тестируемость, полнота требований, реализуемость.
+
+Ограничение, которое проверка печатает сама: она доказывает, что документы НАПИСАНЫ, а не что они
+верны. Верность — работа роя.
 
 Read the skill: `.claude/skills/requirements-validator/SKILL.md`
 
@@ -255,6 +324,10 @@ Read the skill: `.claude/skills/requirements-validator/SKILL.md`
 | `validator-architecture` | Architecture.md | Target constraints, completeness |
 | `validator-pseudocode` | Pseudocode.md | Story coverage, implementability |
 | `validator-coherence` | Cross-document | Consistency, no contradictions |
+| `validator-dependencies` | `Architecture.md` → `## External Dependencies` | Every external capability a requirement relies on has a verdict and, where CONFIRMED, evidence that names that capability |
+
+The sixth lens is the only one that looks OUTSIDE the documents. The other five compare our own
+output with our own output, which cannot discover that a service does not do what we assumed.
 
 **Process (iterative, max 3 iterations):**
 
@@ -270,7 +343,16 @@ Read the skill: `.claude/skills/requirements-validator/SKILL.md`
 - Happy path (1-2), Error handling (2-3), Edge cases (1-2), Security
 - Save as `docs/test-scenarios.md`
 
-**Save validation report:** `docs/validation-report.md`
+**Save validation report:** `docs/validation-report.md`. Its **first line** must be exactly one of
+
+```
+**Verdict:** 🟢 READY
+**Verdict:** 🟡 CAVEATS
+**Verdict:** 🔴 NEEDS WORK
+```
+
+and no other line in the file may begin with `**Verdict:**`. Phase 3 reads that one line and nothing
+else — an unanchored verdict is a verdict Phase 3 can find in an example or a quoted history.
 
 Git commit: `docs: validation report and BDD scenarios`
 
@@ -278,9 +360,85 @@ Git commit: `docs: validation report and BDD scenarios`
 
 | Verdict | Conditions | Action |
 |---------|-----------|--------|
-| 🟢 READY | All scores ≥50, average ≥70, no contradictions | → Phase 3 |
-| 🟡 CAVEATS | Warnings exist, no blocked, limitations described | → Phase 3 with notes |
-| 🔴 NEEDS WORK | Blocked items exist | → Return to Phase 1 |
+| 🟢 READY | All scores ≥50, average ≥70, no contradictions, **no item on the blocking floor**, **no external dependency `UNCONFIRMED` or `CONTRADICTED`** | → Phase 3 |
+| 🟡 CAVEATS | Warnings exist, no blocked, limitations described, **every `UNCONFIRMED` dependency NAMED row by row** | → Phase 3 with notes |
+| 🔴 NEEDS WORK | Blocked items exist, **or any item has `Testable = 0` or `Completeness = 0`**, **or any external dependency is `CONTRADICTED`** | → Return to Phase 1 |
+
+**The blocking floor** (`skills/requirements-validator/references/scoring-system.md` → "Blocking
+floor"): the weakest link decides, never the average. An item with no acceptance criteria totals
+72/100 and would otherwise read as READY.
+
+**Шаг 2.9 — ПОКРЫТИЕ РЕШЕНИЙ (обязательный, до чекпойнта).**
+
+Every decision in `docs/ADR.md` carries an id `ADR-<nnn>` — three digits, assigned in order, never
+reused even after a decision is superseded.
+
+**Where to look, named file by file.** «Across the docs» is not an instruction. Search EXACTLY these,
+and no others:
+
+```
+docs/PRD.md · docs/Solution_Strategy.md · docs/Specification.md · docs/Pseudocode.md
+docs/Architecture.md · docs/Refinement.md · docs/Completion.md · docs/C4_Diagrams.md
+```
+
+**Two files are EXCLUDED, and the first exclusion is the one that makes this check work at all:**
+
+- `docs/ADR.md` itself. Its own headings contain every id, so counting them would make every decision
+  appear named and the check would pass by construction — always, on any project.
+- `docs/validation-report.md`. This step WRITES into it. Counting it would let the previous run's
+  output satisfy the next run: the check would start proving itself.
+
+**What counts as a mention.** The exact token `ADR-<nnn>`, case-sensitive, in one of the files above.
+Not a title, not a paraphrase, not a link whose text merely resembles it. One occurrence is enough;
+repeats are not counted twice.
+
+**A superseded decision needs no current mention.** If a decision's own entry says it is superseded,
+list it in a third column rather than as a gap — it was replaced, not forgotten.
+
+Write a `## Decision Coverage` block into `docs/validation-report.md` — **in every case**, including
+the one where everything is covered, because an absent block and a block saying "all covered" are
+indistinguishable to the next reader:
+
+```
+## Decision Coverage
+
+Decisions in docs/ADR.md: [N]  ·  named downstream: [M]  ·  superseded: [S]
+
+Recorded but named nowhere:
+| Decision | Title |
+|---|---|
+| ADR-… | … |
+
+Named downstream but absent from docs/ADR.md:
+| Reference | Where |
+|---|---|
+| ADR-… | docs/… |
+```
+
+**Both tables are required, and both may be the single word `none`.** A one-way check is half a
+check: without the second table, a document referring to `ADR-009` that nobody ever wrote reads
+exactly like coverage. `none` is written out rather than left blank, because an empty table and a
+forgotten table look identical.
+
+**Three states of the ADR file, and each has its own line — the block is written in all three:**
+
+| State | What to write in the block |
+|---|---|
+| `docs/ADR.md` absent | *"docs/ADR.md is absent, so no decision ids were collected from it. The second table below still applies."* |
+| present but containing no `ADR-<nnn>` id | *"docs/ADR.md exists but records no decision ids."* |
+| present with ids | the counts and the two tables above |
+
+Note what the first line does NOT say. It says the FILE is absent — not that the project recorded no
+architectural decisions. Decisions may live somewhere this pipeline does not look, and claiming
+otherwise would be asserting something this step cannot see. **In all three states the second table
+still runs**: a downstream reference to a decision that does not exist is a defect whether or not an
+ADR file was ever written.
+
+**What this establishes, and what it does not.** It establishes that a decision is NAMED somewhere
+downstream. It does NOT establish that the decision was implemented — no comparison of identifiers
+can. So it catches *"the decision was written down and then forgotten"*; it does not catch *"someone
+mentioned it in a sentence and built something else"*. Say so here rather than letting a later reader
+assume the stronger thing.
 
 **Checkpoint:**
 ```
@@ -295,6 +453,18 @@ Iterations: N/3
 
 ### Phase 3: TOOLKIT GENERATION
 
+**Precondition — check it before reading anything else. The toolkit is built ON the validated docs,
+so an unvalidated input is not a smaller toolkit, it is a wrong one:**
+
+1. `docs/validation-report.md` must EXIST. If it is absent, Phase 2 did not run or did not finish —
+   do NOT generate anything; return to Phase 2 and say so.
+2. Its **first line** must be `**Verdict:**` followed by 🟢 READY or 🟡 CAVEATS. Read ONLY that
+   line: a verdict word anywhere else in the document — an example, a quoted history, a summary —
+   is NOT the verdict. On 🔴 NEEDS WORK, on no such first line, or on more than one line starting
+   with `**Verdict:**`, do NOT generate anything; return to Phase 2 and say which of the four it was.
+3. On 🟡, carry the report's stated limitations into the toolkit's own notes — a caveat that stops at
+   the phase boundary was never recorded.
+
 Read the skill: `.claude/skills/cc-toolkit-generator-enhanced/SKILL.md`
 
 **Goal:** Generate project-specific Claude Code instruments IN-PLACE.
@@ -305,7 +475,7 @@ Read the skill: `.claude/skills/cc-toolkit-generator-enhanced/SKILL.md`
 - **Pre-shipped by `npx p-replicator init` — do NOT overwrite or regenerate:**
   - All 10 skills in `.claude/skills/`
   - All 11 commands: `/replicate`, `/harvest`, `/start`, `/plan`, `/feature`, `/go`, `/run`, `/next`, `/myinsights`, `/docs`, `/deploy`
-  - All 5 rules: `replicate-pipeline`, `skill-interface-protocol`, `git-workflow`, `insights-capture`, `feature-lifecycle`
+  - All 6 rules: `replicate-pipeline`, `skill-interface-protocol`, `git-workflow`, `insights-capture`, `feature-lifecycle`, `docker-ports`
   - All 4 pipeline agents: `replicate-coordinator`, `product-discoverer`, `doc-validator`, `harvest-coordinator`
   - `.claude/settings.json` + cross-platform Node hook scripts in `.claude/hooks/`
 - Phase 3 generates ONLY project-specific artifacts derived from SPARC docs (see below).
@@ -369,10 +539,14 @@ Git commit: `feat: Claude Code toolkit for [project-name]`
 
 **Generate scaffold files:**
 
-1. `docker-compose.yml` — from Architecture.md services
+1. `docker-compose.yml` — from Architecture.md services, **if not exists** (a run over a tree that already has one must not discard it either — the guard is symmetric)
 2. `Dockerfile` — from Architecture.md tech stack
 3. `.gitignore` — if not exists
 4. `docs/features/` — create empty directory for future features
+
+> `docker-compose.yml`, `.gitignore` и `README.md` позже читает `/start` (Phase 1). Он обязан их СОХРАНИТЬ и
+> менять только по названной причине — правило `if not exists` записано на его стороне. Оба конца
+> рекомендованной последовательности договорены в тексте, а не совпадают по случайности.
 
 **Git operations:**
 ```bash
@@ -467,7 +641,7 @@ PRINCIPLE: User enters keys via UI → stored encrypted in browser → NEVER sen
 
 ### NEVER
 - Don't duplicate explore/research phases — sparc-prd-mini does this internally
-- Never skip validation — toolkit is built on validated docs
+- Never skip validation — toolkit is built on validated docs. The enforcing check is Phase 3's precondition, which reads the first `**Verdict:**` line of `docs/validation-report.md`
 - Never use base cc-toolkit-generator — only enhanced version
 - Don't overwrite template files (generic commands, rules, settings.json)
 

@@ -425,7 +425,7 @@ APPROVE / REQUEST_CHANGES / COMMENT
    - Context diagram summary
    - Container descriptions
 
-2. Extract from `docs/adr/`:
+2. Extract from `detected_docs.idea2prd.adrs` (docs/adr/*.md or the single docs/ADR.md):
    - Top 5-10 most important ADRs
    - Architecture-related decisions
 
@@ -448,7 +448,7 @@ APPROVE / REQUEST_CHANGES / COMMENT
 1. Extract from `docs/fitness/`:
    - All fitness functions as checklist
 
-2. Extract from `docs/adr/`:
+2. Extract from `detected_docs.idea2prd.adrs` (docs/adr/*.md or the single docs/ADR.md):
    - Key decisions affecting code
 
 3. Extract from `docs/ddd/tactical/`:

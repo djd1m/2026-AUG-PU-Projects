@@ -12,7 +12,7 @@ When generating the toolkit, **copy these skills from the user's skill set** int
 # Source paths (Claude.ai user skills)
 /mnt/skills/user/sparc-prd-mini/          → .claude/skills/sparc-prd-mini/
 /mnt/skills/user/explore/                  → .claude/skills/explore/
-/mnt/skills/user/goap-research/            → .claude/skills/goap-research/
+/mnt/skills/user/goap-research/            → .claude/skills/goap-research-ed25519/
 /mnt/skills/user/problem-solver-enhanced/  → .claude/skills/problem-solver-enhanced/
 /mnt/skills/user/requirements-validator/   → .claude/skills/requirements-validator/
 /mnt/skills/user/brutal-honesty-review/    → .claude/skills/brutal-honesty-review/
@@ -26,7 +26,7 @@ After copying, rewrite ALL `view()` paths in `sparc-prd-mini/SKILL.md`:
 External skill paths (3):
 ```
 /mnt/skills/user/explore/SKILL.md            → .claude/skills/explore/SKILL.md
-/mnt/skills/user/goap-research/SKILL.md      → .claude/skills/goap-research/SKILL.md
+/mnt/skills/user/goap-research/SKILL.md      → .claude/skills/goap-research-ed25519/SKILL.md
 /mnt/skills/user/problem-solver-enhanced/SKILL.md → .claude/skills/problem-solver-enhanced/SKILL.md
 ```
 

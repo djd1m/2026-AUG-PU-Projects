@@ -345,6 +345,6 @@ src/
 1. From `.ai-context/coding-standards.md`:
    - Direct integration
 
-2. From `docs/adr/`:
+2. From `detected_docs.idea2prd.adrs` (docs/adr/*.md or the single docs/ADR.md):
    - Extract coding-related decisions
    - Extract rejected alternatives as anti-patterns

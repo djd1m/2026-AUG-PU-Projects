@@ -422,7 +422,7 @@ Copy these 6 skills from the user's skill set into `.claude/skills/`:
 |---|-------|-------------|-------------|
 | 11 | sparc-prd-mini | `/mnt/skills/user/sparc-prd-mini/` | `.claude/skills/sparc-prd-mini/` |
 | 12 | explore | `/mnt/skills/user/explore/` | `.claude/skills/explore/` |
-| 13 | goap-research | `/mnt/skills/user/goap-research/` | `.claude/skills/goap-research/` |
+| 13 | goap-research | `/mnt/skills/user/goap-research/` | `.claude/skills/goap-research-ed25519/` |
 | 14 | problem-solver-enhanced | `/mnt/skills/user/problem-solver-enhanced/` | `.claude/skills/problem-solver-enhanced/` |
 | 15 | requirements-validator | `/mnt/skills/user/requirements-validator/` | `.claude/skills/requirements-validator/` |
 | 16 | brutal-honesty-review | `/mnt/skills/user/brutal-honesty-review/` | `.claude/skills/brutal-honesty-review/` |
@@ -438,7 +438,7 @@ After copying, rewrite ALL `view()` paths in `sparc-prd-mini/SKILL.md`:
 External skill paths (3 rewrites):
 ```
 /mnt/skills/user/explore/SKILL.md                    -> .claude/skills/explore/SKILL.md
-/mnt/skills/user/goap-research/SKILL.md               -> .claude/skills/goap-research/SKILL.md
+/mnt/skills/user/goap-research/SKILL.md               -> .claude/skills/goap-research-ed25519/SKILL.md
 /mnt/skills/user/problem-solver-enhanced/SKILL.md     -> .claude/skills/problem-solver-enhanced/SKILL.md
 ```
 
@@ -458,10 +458,12 @@ Lines 951-953: Dependency Version Note -- update paths to .claude/skills/
 
 **Note on `goap-research` name mapping:** The skill name `goap-research` in the
 lifecycle context maps to `goap-research-ed25519` in this repository. Ensure the
-correct directory name is used when copying.
+correct directory name is used when copying — the **Output paths** below therefore name
+`goap-research-ed25519`, not `goap-research`. Until 2026-08-27 they named the short form, which is
+the alias and never a real directory: the list contradicted the note directly above it.
 
 **Output paths:** `.claude/skills/sparc-prd-mini/`, `.claude/skills/explore/`,
-`.claude/skills/goap-research/`, `.claude/skills/problem-solver-enhanced/`,
+`.claude/skills/goap-research-ed25519/`, `.claude/skills/problem-solver-enhanced/`,
 `.claude/skills/requirements-validator/`, `.claude/skills/brutal-honesty-review/`
 
 ---

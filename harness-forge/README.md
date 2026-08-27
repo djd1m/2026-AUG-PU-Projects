@@ -27,6 +27,7 @@
 | PR-016 | [Тестовый compose вытесняет боевой стек](PR-016-test-compose-name-collision.md) | коллизия имён в scaffold | P1 |
 | PR-017 | [В тулките нет слоя проверенных артефактов](PR-017-toolkit-lacks-artifact-layer.md) | неполный pre-shipped контракт | P1 |
 | PR-018 | [Стражи принимаются без доказательства, что падают](PR-018-guard-never-proven-to-fail.md) | отсутствует мета-проверка | **P0** |
+| PR-019 | [`check-ports.cjs` удваивает относительный путь](PR-019-check-ports-relative-path.md) | баг, однострочный фикс | P2 |
 
 ## Принцип, по которому оформлены заявки
 

@@ -38,7 +38,7 @@
 
 ### 🔵 Режим DEEP
 
-> ⚙️ **Перед началом:** `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)`
+> ⚙️ **Перед началом:** `view(.claude/skills/goap-research-ed25519/SKILL.md)`
 > Примени GOAP-методологию вместо статического списка.
 
 **Phase 1 — State Assessment:**
@@ -110,7 +110,7 @@ confidence = base_reliability × recency_factor
 ### 🟣 Режим VERIFIED (Ed25519)
 
 > ⚙️ **Перед началом:** 
-> 1. `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)`
+> 1. `view(.claude/skills/goap-research-ed25519/SKILL.md)`
 > 2. Установи зависимости:
 > ```bash
 > python3 -m venv .venv
@@ -120,8 +120,8 @@ confidence = base_reliability × recency_factor
 > 3. Запусти инициализацию:
 > ```python
 > # Скопируй и запусти скрипт из:
-> # /mnt/skills/user/goap-research-ed25519/scripts/ed25519_verifier.py
-> # /mnt/skills/user/goap-research-ed25519/scripts/goap_planner.py
+> # .claude/skills/goap-research-ed25519/scripts/ed25519_verifier.py
+> # .claude/skills/goap-research-ed25519/scripts/goap_planner.py
 > ```
 
 **Всё из режима DEEP, плюс:**

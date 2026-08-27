@@ -1,7 +1,7 @@
 # Module: Detect & Parse
 
 Phase 1 of the CC-Toolkit-Generator Enhanced pipeline.
-Scans the documentation directory, detects the pipeline type, identifies project
+Scans the PROJECT ROOT (see `docs_path` below — it is the root, not `docs/`), detects the pipeline type, identifies project
 characteristics, and builds the Internal Project Model (IPM) used by all
 subsequent modules.
 
@@ -11,7 +11,7 @@ subsequent modules.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `docs_path` | string | Path to documentation directory. In Claude.ai context this is `/mnt/user-data/uploads/`. In Claude Code / replicate context this is `docs/` (project root). |
+| `docs_path` | string | The directory every probe below resolves from. In Claude.ai context: `/mnt/user-data/uploads/`. In Claude Code / replicate context: **the PROJECT ROOT** — not `docs/`. It has to be the root, because the probes reach both `.ai-context/` (a root-level directory, beside `.claude/`) and `docs/…` below it; anchoring at `docs/` would force `../` on half of them. |
 
 No prior module output is required. This is the foundation module.
 
@@ -25,7 +25,7 @@ Scan `docs_path` recursively and catalog every file by category.
 
 ```
 SCAN docs_path FOR:
-  # SPARC pipeline files (top-level or docs/)
+  # SPARC pipeline files — under docs/ (replicate.md:233-243 writes them all there)
   PRD.md
   Solution_Strategy.md
   Specification.md
@@ -41,7 +41,8 @@ SCAN docs_path FOR:
   docs/prd/PRD.md
   docs/ddd/strategic/    # bounded-contexts.md, context-map.md
   docs/ddd/tactical/     # aggregates/, entities/, value-objects/, events/, repositories/
-  docs/adr/*.md          # ADR-001-*.md, ADR-002-*.md, ...
+  docs/adr/*.md          # ADR-001-*.md, ADR-002-*.md, ... (directory shape)
+  docs/ADR.md            # single-file shape — /replicate writes ALL decisions here
   docs/c4/*.mermaid      # context.mermaid, container.mermaid, component.mermaid
   docs/pseudocode/*.pseudo
   docs/tests/*.feature   # Gherkin scenarios
@@ -72,13 +73,18 @@ def detect_pipeline(docs_path: str) -> str:
     has_ddd       = exists(f"{docs_path}/docs/ddd/")
     has_ai_context = exists(f"{docs_path}/.ai-context/")
     has_gherkin   = glob(f"{docs_path}/docs/tests/*.feature")
-    has_adr       = len(glob(f"{docs_path}/docs/adr/*.md")) > 5
-    has_sparc_arch = exists(f"{docs_path}/Architecture.md")
-    has_sparc_sol  = exists(f"{docs_path}/Solution_Strategy.md")
+    # Pipeline-IDENTITY marker: the docs/adr/ DIRECTORY is an idea2prd fingerprint. The
+    # expression is deliberately unchanged (>5) so routing stays byte-identical for every
+    # existing project. The DECISION-presence flag `has_adr` (see Collector below) never
+    # participates in routing: it can now be true via docs/ADR.md — a /replicate fingerprint,
+    # not an idea2prd one — and flipping routing on it would silently reroute SPARC projects.
+    has_idea2prd_adr_dir = len(glob(f"{docs_path}/docs/adr/*.md")) > 5
+    has_sparc_arch = exists(f"{docs_path}/docs/Architecture.md")      # replicate.md:237 writes it here
+    has_sparc_sol  = exists(f"{docs_path}/docs/Solution_Strategy.md") # replicate.md:234 writes it here
 
     if has_ddd and has_ai_context:
         return "IDEA2PRD_FULL"      # Complete idea2prd-manual output
-    elif has_ddd or has_adr:
+    elif has_ddd or has_idea2prd_adr_dir:
         return "IDEA2PRD_PARTIAL"   # Partial idea2prd output
     elif has_sparc_arch and has_sparc_sol:
         return "SPARC"              # Full SPARC documentation set
@@ -88,12 +94,49 @@ def detect_pipeline(docs_path: str) -> str:
         return "MINIMAL"            # Basic PRD only, or mixed
 ```
 
+### ADR collector — ONE normalizer for both storage shapes
+
+ADRs arrive in two shapes: a `docs/adr/*.md` directory (idea2prd-manual, one decision per file) and
+a single `docs/ADR.md` (what `/replicate` writes). ONE collector handles both; no other step in this
+skill may glob ADR paths for itself — every consumer iterates `detected_docs.idea2prd.adrs`.
+
+```python
+def collect_adrs(docs_path: str) -> list:
+    entries = []
+    for f in glob(f"{docs_path}/docs/adr/*.md"):           # shape A: one decision per file
+        entries.append({ "id": id_from_filename(f),        # ADR-001-title.md -> "ADR-001"
+                         "title": first_heading(f),
+                         "source_path": f })
+    single = f"{docs_path}/docs/ADR.md"                    # shape B: /replicate's single file
+    if exists(single):
+        for section in split_on_h2_headings(read(single)): # each "## ..." heading opens one decision
+            entries.append({ "id": id_from_heading(section),   # "## ADR-003: X" -> "ADR-003"; else slug of title
+                             "title": heading_title(section),
+                             "source_path": single })
+    # STABLE-FIRST dedupe: keep the FIRST entry for a given id (falling back to title when an id is
+    # absent), and directory entries are appended first — so "directory wins" is a property of the
+    # ORDER above, not an unstated convention inside the helper.
+    return dedupe_stable_first_by_id_then_title(entries)   # both shapes present -> merged, no double-count
+
+has_adr = len(collect_adrs(docs_path)) > 0   # THE one definition — decisions, not files
+```
+
+Worked examples (the behavioural contract, verbatim acid ids):
+
+- **A1** — `docs/ADR.md` with two `##` sections ⇒ 2 entries, `has_adr: true`. The single-file shape
+  is a first-class citizen, not a fallback.
+- **A4** — `docs/ADR.md` exists but holds prose with NO `##` headings ⇒ 0 entries,
+  `has_adr: false`. A file is not a decision; presence of the path never flips the flag by itself.
+- **A5** — BOTH shapes present and `docs/adr/ADR-002-caching.md` duplicates the id of a `## ADR-002`
+  section ⇒ one merged list, the duplicate dropped (directory entry wins — it is the finer-grained
+  source).
+
 | Pipeline | Minimum Docs | Typical File Count |
 |----------|-------------|-------------------|
 | IDEA2PRD_FULL | `docs/ddd/` + `.ai-context/` | 30-50 files |
 | IDEA2PRD_PARTIAL | `docs/ddd/` or `docs/adr/` (>5) | 15-30 files |
-| SPARC | `Architecture.md` + `Solution_Strategy.md` | 8-11 files |
-| SPARC_MINIMAL | `Architecture.md` only | 2-5 files |
+| SPARC | `docs/Architecture.md` + `docs/Solution_Strategy.md` | 8-11 files |
+| SPARC_MINIMAL | `docs/Architecture.md` only | 2-5 files |
 | MINIMAL | PRD.md only | 1-3 files |
 
 ### Step 3: Detect Project Characteristics
@@ -116,7 +159,7 @@ IF any keyword found → has_external_apis = true
 #### 3b. `has_database`
 
 ```
-SCAN Architecture.md, Specification.md, docker-compose.yml,
+SCAN docs/Architecture.md, docs/Specification.md, docker-compose.yml (project root),
      ADR-*-data.md, repositories/*.md FOR:
   keywords: "PostgreSQL", "Postgres", "MongoDB", "MySQL", "Redis",
             "database", "Prisma", "TypeORM", "Drizzle", "Knex",
@@ -185,7 +228,7 @@ IPM = {
         events:         [paths] | [],
         repositories:   [paths] | []
       },
-      adrs:             [paths] | [],
+      adrs:             [{id, title, source_path}] | [],   // collect_adrs() output — entries, not bare paths
       c4_diagrams:      [paths] | [],
       pseudocode:       [paths] | [],
       gherkin_tests:    [paths] | [],
@@ -217,7 +260,7 @@ IPM = {
     has_ddd_strategic:  bool,   // same as has_ddd (alias for readability)
     has_gherkin:        bool,   // detected_docs.idea2prd.gherkin_tests non-empty
     has_fitness:        bool,   // detected_docs.idea2prd.fitness non-empty
-    has_adr:            bool,   // detected_docs.idea2prd.adr length > 0
+    has_adr:            bool,   // collect_adrs() output non-empty — the ONE definition (see ADR collector)
     has_c4:             bool,   // detected_docs.idea2prd.c4 non-empty
     has_ai_context:     bool,   // detected_docs.ai_context.readme non-null
     has_pseudocode:     bool,   // detected_docs.sparc.pseudocode OR idea2prd.pseudocode non-null
@@ -291,7 +334,7 @@ All of the following must be satisfied before the IPM is considered valid:
 
 | Check | Condition | Action on Failure |
 |-------|-----------|-------------------|
-| Minimum docs | SPARC: at least `PRD.md` + `Architecture.md` present | Halt. Ask user to upload missing docs. |
+| Minimum docs | SPARC: at least `docs/PRD.md` + `docs/Architecture.md` present | Halt. Ask user to upload missing docs. |
 | Minimum docs | idea2prd: at least `docs/ddd/` directory present | Halt. Ask user to upload missing docs. |
 | Pipeline resolved | `pipeline_type` is not ambiguous | If mixed signals, default to "SPARC" with unified mapping. |
 | Characteristics scanned | All 4 characteristic flags have been evaluated | Re-scan if any flag is missing. |

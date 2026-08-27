@@ -17,7 +17,25 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const CWD = process.cwd();
+// The project root, never the process cwd: a `cd` inside any tool call moves cwd for the rest of
+// the session, and these hooks are non-blocking, so a wrong anchor fails SILENTLY. CLAUDE_PROJECT_DIR
+// first — the host is authoritative about what the project is. `__dirname` second: a hook always
+// lives at <project>/.claude/hooks/<x>.cjs, so its own location settles the root with no cooperation
+// from anyone, which is what keeps this working when the variable is absent (hand-run, older host).
+const ENV_ROOT = process.env.CLAUDE_PROJECT_DIR;
+// isAbsolute, not just truthy: a RELATIVE value would still be resolved against the drifting
+// cwd, which is the very bug this anchor exists to remove.
+const ROOT = (ENV_ROOT && path.isAbsolute(ENV_ROOT))
+  ? ENV_ROOT
+  : path.resolve(__dirname, '..', '..');
+
+const CWD = ROOT;
+
+// Two questions, two names. WHERE THE INSTRUMENTS ARE is answered by the hook's own location and is
+// correct from any cwd; WHICH PROJECT'S ROADMAP TO SHOW is a different question, answered by the
+// survey below. Collapsing them into one anchor is what made the status line report half the truth
+// from every directory: the toolkit half from the project directory, the roadmap half from the root.
+const TOOLKIT_ROOT = ROOT;
 const NOW = Date.now();
 
 // ─── ANSI helpers ─────────────────────────────────────────────────────────
@@ -77,8 +95,8 @@ function parseState() {
   return state;
 }
 
-function parseRoadmap() {
-  const r = safeReadJson(path.join(CWD, '.claude', 'feature-roadmap.json'));
+function summariseRoadmap(file) {
+  const r = safeReadJson(file);
   if (!r || !Array.isArray(r.features)) return null;
   const features = r.features;
   const total = features.length;
@@ -87,7 +105,48 @@ function parseRoadmap() {
   const blocked = features.filter((f) => f.status === 'blocked').length;
   const mvp = features.filter((f) => f.priority === 'mvp');
   const mvpDone = mvp.filter((f) => f.status === 'done').length;
-  return { total, done, inProgress, blocked, mvpTotal: mvp.length, mvpDone };
+  // A roadmap that does not match the schema used to render "mvp 0/0" and say nothing, so the
+  // divergence became permanent: the number was right, the reader learned nothing. `priority` is a
+  // CLOSED set (.claude/commands/next.md). Anything else — a value like "critical", or MVP moved
+  // into `tags` leaving no `priority` at all — is marked, never silently counted as zero.
+  const PRIORITIES = ['mvp', 'high', 'medium', 'low'];
+  // EVERY feature must carry a priority from the set. Counting only the ones that already have a
+  // string hid the mixed case: one valid entry beside a missing or non-string sibling passed
+  // silently, which is the most likely real roadmap of all.
+  const offSchemaCount = features.filter(
+    (f) => typeof f.priority !== 'string' || !PRIORITIES.includes(f.priority)).length;
+  return { total, done, inProgress, blocked, mvpTotal: mvp.length, mvpDone, offSchemaCount };
+}
+
+function parseRoadmap() {
+  return summariseRoadmap(path.join(CWD, '.claude', 'feature-roadmap.json'));
+}
+
+// A SURVEY, not a guess. The roadmap may live one level DOWN (a course with projects/01-app), which
+// is why walking upward does not treat this symptom. Enumerating is honest where guessing is not,
+// and a cwd-based guess is exactly the drift this whole line of work removed.
+// This runs on EVERY prompt, so the survey is bounded on both axes: how many entries it will look
+// at, and how large a file it will parse. Without those bounds a projects/ directory with hundreds
+// of entries, or one enormous roadmap, would add its cost to every keystroke's status line.
+const SUB_SCAN_LIMIT = 24;              // entries examined per render
+const SUB_ROADMAP_MAX_BYTES = 512 * 1024;
+
+function parseSubProjects() {
+  const base = path.join(CWD, 'projects');
+  const out = [];
+  let looked = 0;
+  for (const name of safeListDir(base).sort()) {       // sorted: the same render every time
+    if (looked >= SUB_SCAN_LIMIT) break;
+    looked += 1;
+    const dir = path.join(base, name);
+    if (!safeRun(() => fs.statSync(dir).isDirectory(), false)) continue;   // a FILE named projects/x
+    const file = path.join(dir, '.claude', 'feature-roadmap.json');
+    const size = safeRun(() => fs.statSync(file).size, -1);
+    if (size < 0 || size > SUB_ROADMAP_MAX_BYTES) continue;                // absent or absurd
+    const sum = summariseRoadmap(file);
+    if (sum) out.push({ name, ...sum });                                   // malformed → skipped
+  }
+  return out;
 }
 
 function parseSparcDocs() {
@@ -155,7 +214,7 @@ function parseInsights() {
 }
 
 function parseToolkit() {
-  const dir = path.join(CWD, '.claude');
+  const dir = path.join(TOOLKIT_ROOT, '.claude');
   const skills = safeListDir(path.join(dir, 'skills')).filter((d) => {
     return safeRun(() => fs.statSync(path.join(dir, 'skills', d)).isDirectory(), false);
   }).length;
@@ -176,13 +235,13 @@ function parseExpectedToolkit() {
     skillsExpected: 10,
     commandsExpected: 11,
     agentsExpected: 4,    // pre-shipped only (project agents are extra)
-    rulesExpected: 5,     // pre-shipped only (project rules are extra)
-    hooksExpected: 6,     // 4 v1.4.1 hooks + statusline + state-update (v1.5.0)
+    rulesExpected: 6,     // pre-shipped only (project rules are extra)
+    hooksExpected: 9,     // 4 v1.4.1 hooks + statusline + state-update + 3 deliberate checks
   };
 }
 
 function parseSettingsStatus(manifest) {
-  const settingsPath = path.join(CWD, '.claude', 'settings.json');
+  const settingsPath = path.join(TOOLKIT_ROOT, '.claude', 'settings.json');
   if (!exists(settingsPath)) return 'missing';
   const cur = safeReadJson(settingsPath);
   if (!cur) return 'corrupt';
@@ -211,11 +270,53 @@ function parseKeysarium() {
 function parseDomain() {
   const claudeMd = safeReadText(path.join(CWD, 'CLAUDE.md'));
   if (!claudeMd) return null;
-  // Heuristic keyword search
-  const banking = /банк|bank|финт|fintech|gigachat|yandexgpt|ФЗ-152|ЦБ|ФСТЭК/i;
-  const retail = /retail|e-commerce|ecommerce|ритейл|рекоменд|conversion/i;
-  const enterprise = /enterprise|b2b|legacy|sla|change\s*management/i;
-  const healthcare = /health|medical|клиник|hipaa|ФЗ-323/i;
+  // Heuristic keyword search, with UNICODE word boundaries.
+  //
+  // Without them this was wrong in four ways at once, all reproduced: "healthchecks" made a project
+  // medical, "translate" and "slack" made it enterprise (`sla` sits inside both), and "embankment"
+  // made it a bank.
+  //
+  // `\b` is NOT the fix and would quietly break the Russian half: it is defined over \w =
+  // [A-Za-z0-9_], so there is no word boundary between a space and `б`. MEASURED —
+  // /\bбанк/.test('банк России') is FALSE. Hence Unicode lookarounds with the `u` flag.
+  //
+  // Two kinds of term, deliberately distinguished. A STEM is meant to match inflections — `банк` in
+  // «банкинг», `финт` in «финтех», `рекоменд` in «рекомендательный» — so it takes a LEFT boundary
+  // only. A WHOLE WORD (`sla`, `bank`, `conversion`) takes both, because matching it inside another
+  // word is exactly the defect.
+  const L = '(?<![\\p{L}\\p{N}])';   // start of a word, in any alphabet
+  const R = '(?![\\p{L}\\p{N}])';    // end of a word
+  const stem = (alts) => new RegExp(L + '(?:' + alts + ')', 'iu');
+  const word = (alts) => new RegExp(L + '(?:' + alts + ')' + R, 'iu');
+
+  // A LEFT-only boundary is not enough for every Russian stem, and cross-family QE named the
+  // counter-examples: «Сервис организации банкетов» is not a bank, «Финты в футболе» is not fintech,
+  // «ЦБС городской библиотеки» is not the central bank. So the ambiguous stems are spelled out with
+  // their real inflections and right-bounded, and the two-letter acronym `цб` is dropped outright —
+  // two letters cannot be made safe by any boundary.
+  const bankingStem = stem('банковск|финтех|фз-152|фстэк');
+  const bankingWord = word('банк(?:а|у|ом|е|и|ов|ам|ами|ах|инг)?|bank(?:ing|s|er|ers)?'
+    + '|fintech|gigachat|yandexgpt');
+  // `retail` IS a stem — "Retailer inventory analytics" is retail and whole-word-only missed it.
+  // `conversion` alone is not: "Video conversion service" is not commerce. It needs its qualifier.
+  const retailStem = stem('ритейл|рекоменд|retail');
+  // `\\w` is [A-Za-z0-9_] and does NOT cover Cyrillic — the same trap as `\\b`, one level down:
+  // «конверси» + \\w* + a right boundary fails on «конверсию», because `ю` is neither \\w nor a
+  // boundary. Use \\p{L}. And the Russian term needs its qualifier for the same reason the English
+  // one does: «конверсия файлов» is no more commerce than "video conversion" is.
+  const retailWord = word('e-?commerce|conversion\\s+rate'
+    + '|конверси\\p{L}*\\s+(?:воронк|продаж|лид)\\p{L}*');
+  const enterpriseWord = word('enterprise(?:s)?|b2b|legacy|sla|change\\s*management');
+  // `health` alone cannot be made right: bounded it stops matching "healthcare", unbounded it matches
+  // "healthcheck". So it is replaced by the forms that actually mean the domain — including the
+  // space-separated "health tech", which the first version missed.
+  const healthcareStem = stem('медицин|клиник|фз-323');
+  const healthcareWord = word('health[\\s-]?(?:care|tech)|healthcare|medical|hipaa');
+
+  const banking = { test: (t) => bankingStem.test(t) || bankingWord.test(t) };
+  const retail = { test: (t) => retailStem.test(t) || retailWord.test(t) };
+  const enterprise = enterpriseWord;
+  const healthcare = { test: (t) => healthcareStem.test(t) || healthcareWord.test(t) };
   if (banking.test(claudeMd)) return 'banking';
   if (retail.test(claudeMd)) return 'retail';
   if (enterprise.test(claudeMd)) return 'enterprise';
@@ -281,22 +382,47 @@ function buildPipeline(state) {
   return parts.join('  ' + dim('│') + '  ');
 }
 
-function buildRoadmap(roadmap, domain) {
+function buildRoadmap(roadmap, domain, subProjects) {
+  const subs = Array.isArray(subProjects) ? subProjects : [];
   if (!roadmap) {
+    // No roadmap at the root. If sub-projects have one, report THEIRS — labelled as theirs. The old
+    // line said "no roadmap yet" while thirteen features sat one directory down.
+    if (subs.length > 0) {
+      const total = subs.reduce((n, s) => n + s.total, 0);
+      const done = subs.reduce((n, s) => n + s.done, 0);
+      const where = subs.length === 1 ? subs[0].name : subs.length + ' projects';
+      return [
+        `🎯 ${bold('Roadmap')}`,
+        `${dim('in')} ${cyan(where)}`,
+        `${dotBar(done, total, 8)} ${dim('Done')} ${green(done + '/' + total)}`,
+      ].join(`  ${dim('│')}  `);
+    }
     return `🎯 ${bold('Roadmap')}  ${dim('— no roadmap yet (run /next or /replicate)')}`;
   }
-  const { total, done, inProgress, blocked, mvpTotal, mvpDone } = roadmap;
+  const { total, done, inProgress, blocked, mvpTotal, mvpDone, offSchemaCount } = roadmap;
   const dotbar = dotBar(done, total, 8);
   const parts = [
     `🎯 ${bold('Roadmap')}`,
-    `${dotbar} mvp ${green(mvpDone + '/' + mvpTotal)}`,
-    `${dim('Done')} ${green(done + '/' + total)}`,
+    // The bar is drawn from done/total, so it is captioned Done. It used to sit beside `mvp`, which
+    // it never showed — one glyph and two different quantities, read as one statement. The bar is
+    // CORRECT and stays; the caption is what was wrong, and hiding a working indicator to mask a
+    // wrong caption would have been the wrong half of the fix.
+    `${dotbar} ${dim('Done')} ${green(done + '/' + total)}`,
+    offSchemaCount > 0
+      // The known count is still knowledge — replacing it with '?' throws away what WAS established
+      // and tells the reader less than before. Show both: what is counted, and how much was not.
+      ? `${dim('mvp')} ${green(mvpDone + '/' + mvpTotal)} ${yellow('⚠' + offSchemaCount)} ${dim('schema')}`
+      : `${dim('mvp')} ${green(mvpDone + '/' + mvpTotal)}`,
   ];
   if (inProgress) {
     parts.push(`${dim('▶')} ${cyan(inProgress.id)}`);
   }
   if (blocked > 0) {
     parts.push(`${red('Blocked')} ${blocked}`);
+  }
+  if (subs.length > 0) {
+    const subTotal = subs.reduce((n, s) => n + s.total, 0);
+    parts.push(`${dim('+' + subs.length + ' sub')} ${green(String(subTotal))}`);
   }
   if (domain) {
     parts.push(`${dim('Domain:')} ${cyan(domain)}`);
@@ -367,6 +493,7 @@ function main() {
   const manifest = safeRun(() => parseManifest(), null);
   const state = safeRun(() => parseState(), null);
   const roadmap = safeRun(() => parseRoadmap(), null);
+  const subProjects = safeRun(() => parseSubProjects(), []);
   const sparc = safeRun(() => parseSparcDocs(), { present: 0, total: 11 });
   const validation = safeRun(() => parseValidationScore(), null);
   const adrs = safeRun(() => parseAdrs(), 0);
@@ -384,7 +511,7 @@ function main() {
   const lines = [
     buildHeader(manifest),
     buildPipeline(state),
-    buildRoadmap(roadmap, domain),
+    buildRoadmap(roadmap, domain, subProjects),
     buildDocs(sparc, validation, plans, adrs, lastHarvest),
     buildToolkit(toolkit, expected),
     buildStatus(insights, lastTest, mcpServers, settingsStatus, keysarium),

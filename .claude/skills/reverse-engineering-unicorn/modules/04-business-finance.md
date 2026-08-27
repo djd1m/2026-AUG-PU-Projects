@@ -41,8 +41,8 @@
 ### 🔵 Режим DEEP
 
 > ⚙️ **Загрузи:**
-> 1. `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)` — адаптивный research
-> 2. `view(/mnt/skills/user/problem-solver-enhanced/SKILL.md)` — Modules 1, 6
+> 1. `view(.claude/skills/goap-research-ed25519/SKILL.md)` — адаптивный research
+> 2. `view(.claude/skills/problem-solver-enhanced/SKILL.md)` — Modules 1, 6
 
 #### PHASE A: GOAP Financial Research
 
@@ -111,7 +111,7 @@ Physical: "Команда должна быть БОЛЬШОЙ (для скор�
 
 ### 🟣 Режим VERIFIED
 
-> ⚙️ **Дополнительно:** `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)`
+> ⚙️ **Дополнительно:** `view(.claude/skills/goap-research-ed25519/SKILL.md)`
 
 Всё из DEEP, плюс:
 - Все benchmark числа получают source_hash; issuer-grade crypto используется только при valid signature under pinned active key

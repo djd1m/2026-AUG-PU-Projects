@@ -64,6 +64,13 @@ Always flag these terms and suggest specific replacements:
 
 **Score <50 = BLOCKED from development.** Provide rewrite suggestions.
 
+**Blocking floor — the weakest link decides, never the average.** Independently of the score, a
+requirement is BLOCKED if `Testable = 0` (no acceptance criteria) or `Completeness = 0` (rubric "No
+AC"). A story can total 72/100 with neither, and 72 reads as "minor fixes" in the table above. A non-zero `Testable` or `Completeness` REQUIRES quoting the acceptance criteria it scores — no quote
+means 0, because the agent that scores is the agent the floor binds. The
+floor is closed at those two: `Measurable` and `Traceability` are deliberately excluded — see
+`references/scoring-system.md` → "Blocking floor" for the worked case and the reason.
+
 ## Output Format
 
 ### Requirements Analysis Report
@@ -126,6 +133,58 @@ apply additional security validation:
 - Input injection scenario (SQL, XSS, command)
 - Cross-tenant access attempt (if multi-tenant)
 - Rate limiting / brute force scenario (if auth endpoint)
+
+### Growth Traceability (scoring: +5 present / +0 not applicable / -10 applicable but absent)
+
+Phase 0's M5 module analyses how a competitor grows and emits a `Growth Requirements Seed` table of
+`FR-GROWTH-<nnn>` draft obligations into `docs/product-discovery-brief.md`. This criterion asks one
+question: **did those obligations survive into `docs/Specification.md`, or were they analysed and
+dropped?**
+
+**APPLICABILITY — decide this FIRST, and it is not about project type.** The criterion applies when
+**acquisition or adoption is in scope** — the same condition `/replicate` already gates M5 on
+("If acquisition/adoption in scope (incl. B2B)"). Concretely:
+
+| Situation | Applicable? | Score |
+|---|:---:|---|
+| `docs/product-discovery-brief.md` exists and its seed table has ≥1 `FR-GROWTH-nnn` row | YES | +5 traced · -10 not traced |
+| The brief exists and its seed table says `нет` / is empty | no | +0 |
+| No acquisition or adoption objective (internal tool, on-prem, replacement of an existing internal system) | no | +0 |
+| `docs/product-discovery-brief.md` is ABSENT | no | +0 — see below |
+
+**An absent brief is +0, never -10.** Absence means Phase 0 did not run (the `--from-docs` entry
+skips it). Penalising a project for not running an optional phase would send every `--from-docs`
+project into a permanent NEEDS WORK loop, which is the exact trap already closed for the Measurable
+criterion. "Phase 0 did not run" is not "the growth requirements are missing".
+
+**What TRACED means.** For each `FR-GROWTH-nnn` row in the brief, one of two things is true in
+`docs/Specification.md`:
+
+- the id `FR-GROWTH-nnn` appears (case-sensitive, the exact token — not a title, not a paraphrase), **or**
+- the requirement was consciously rejected, and the rejection is written down with its reason.
+
+A silently dropped row is the defect. A row rejected on the record is not.
+
+| Check | Red Flags |
+|-------|-----------|
+| Every non-SPECULATIVE seed row is traced or rejected on the record | ids present in the brief, absent from the Specification, no rejection noted |
+| Rejections carry a reason | "не берём" with no reason — indistinguishable from forgetting |
+| `SPECULATIVE` rows were not promoted silently | a `[H]`-sourced row promoted to a firm requirement with no human decision recorded |
+
+**Scoring Bonus:** +5 if every applicable seed row is traced or rejected on the record, +0 if not
+applicable per the table above, -10 if the seed table carries rows and the Specification traces none
+of them (BLOCKED if the score drops below 50).
+
+**This criterion scores OUTSIDE the 100-point INVEST/SMART table**, exactly like Security. It adds no
+weight to any existing criterion — the weight table and everything derived from it are unchanged.
+
+**Honest limit.** This proves an obligation was CARRIED FORWARD, not that it was built, and not that
+copying the competitor's growth move is lawful. Legality is not assessed anywhere in this pipeline.
+
+**Deterministic counterpart.** `node .claude/hooks/check-growth-trace.cjs .` answers the same
+question mechanically (0 traced · 1 rows present and none traced · 2 the check did not run). This
+section is a prose gate read by a model; the utility is the deterministic one. Run it when the answer
+has to be more than a judgement.
 
 ### BDD Scenario Generation
 

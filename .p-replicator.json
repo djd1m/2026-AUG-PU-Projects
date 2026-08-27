@@ -1,6 +1,6 @@
 {
-  "version": "1.5.18",
-  "installedAt": "2026-08-26T10:34:44.876Z",
+  "version": "1.9.0",
+  "installedAt": "2026-08-27T10:43:56.501Z",
   "components": [
     "skills",
     "commands",
@@ -28,9 +28,13 @@
     ".claude/hooks/autocommit-insights.cjs",
     ".claude/hooks/autocommit-plans.cjs",
     ".claude/hooks/autocommit-roadmap.cjs",
+    ".claude/hooks/check-docs-complete.cjs",
+    ".claude/hooks/check-growth-trace.cjs",
+    ".claude/hooks/check-ports.cjs",
     ".claude/hooks/session-insights.cjs",
     ".claude/hooks/state-update.cjs",
     ".claude/hooks/statusline.cjs",
+    ".claude/rules/docker-ports.md",
     ".claude/rules/feature-lifecycle.md",
     ".claude/rules/git-workflow.md",
     ".claude/rules/insights-capture.md",
@@ -151,7 +155,7 @@
       "_comment": "Default hooks + statusline shipped by @dzhechkov/p-replicator init. Cross-platform Node scripts (no bash dependencies). Auto-commits roadmap/insights/plans on Stop, injects relevant insights on SessionStart. Statusline displays pipeline+roadmap+toolkit dashboard above the prompt. Project-specific hooks (DDD, fitness functions, etc.) are merged in by /replicate Phase 3.",
       "statusLine": {
         "type": "command",
-        "command": "node .claude/hooks/statusline.cjs"
+        "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/statusline.cjs\""
       },
       "hooks": {
         "SessionStart": [
@@ -160,7 +164,7 @@
             "hooks": [
               {
                 "type": "command",
-                "command": "node .claude/hooks/session-insights.cjs",
+                "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-insights.cjs\"",
                 "timeout": 5
               }
             ]
@@ -172,17 +176,17 @@
             "hooks": [
               {
                 "type": "command",
-                "command": "node .claude/hooks/autocommit-roadmap.cjs",
+                "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/autocommit-roadmap.cjs\"",
                 "timeout": 10
               },
               {
                 "type": "command",
-                "command": "node .claude/hooks/autocommit-insights.cjs",
+                "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/autocommit-insights.cjs\"",
                 "timeout": 10
               },
               {
                 "type": "command",
-                "command": "node .claude/hooks/autocommit-plans.cjs",
+                "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/autocommit-plans.cjs\"",
                 "timeout": 10
               }
             ]

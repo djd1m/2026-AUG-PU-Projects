@@ -139,7 +139,7 @@ List ALL documentation files the /start should read.
 ```markdown
    - `docs/ddd/strategic/` → bounded contexts, context map
    - `docs/ddd/tactical/` → aggregates, entities, events
-   - `docs/adr/` → technology decisions
+   - `detected_docs.idea2prd.adrs` (docs/adr/ or docs/ADR.md) → technology decisions
    - `docs/tests/*.feature` → Gherkin test scenarios
 ```
 

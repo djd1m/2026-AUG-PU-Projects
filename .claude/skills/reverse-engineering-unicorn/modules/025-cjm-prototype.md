@@ -99,7 +99,15 @@ why_now: [из M2 Section E — 4 фактора]
 
 ### Step 3: Generate React Prototype
 
-> ⚙️ `view(/mnt/skills/public/frontend-design/SKILL.md)` — для design quality
+> ⚙️ **`frontend-design` — OPTIONAL, ВНЕШНИЙ.** Этот пакет его не отгружает. Пути вида
+> `.claude/skills/frontend-design/` здесь намеренно НЕТ: он выглядел бы рабочим и не резолвился бы,
+> а путь, который врёт, хуже честно чужого.
+>
+> Если навык установлен — читайте его для design quality. **Fallback, если его нет:** стройте
+> прототип по секции ниже, она самодостаточна; в отчёте пометьте, что оценка design quality не
+> проводилась. Молча пропускать нельзя (см. `.claude/rules/skill-interface-protocol.md` §6).
+>
+> Установить: `dz init --select frontend-design`.
 > ⚙️ `view(examples/noom-cjm-example.md)` — few-shot: структура .jsx
 
 **Создай один .jsx файл** со следующей архитектурой:

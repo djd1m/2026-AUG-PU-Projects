@@ -28,9 +28,9 @@ sparc-prd-mini/
 
 | Phase | Skill | Path | What it provides |
 |-------|-------|------|------------------|
-| Phase 0: Explore | `explore` | `/mnt/skills/user/explore/SKILL.md` | Socratic questioning → Product Brief |
-| Phase 1: Research | `goap-research-ed25519` | `/mnt/skills/user/goap-research-ed25519/SKILL.md` | GOAP A* + OODA → Research Findings |
-| Phase 2: Solve | `problem-solver-enhanced` | `/mnt/skills/user/problem-solver-enhanced/SKILL.md` | 9 modules + TRIZ → Solution Strategy |
+| Phase 0: Explore | `explore` | `.claude/skills/explore/SKILL.md` | Socratic questioning → Product Brief |
+| Phase 1: Research | `goap-research-ed25519` | `.claude/skills/goap-research-ed25519/SKILL.md` | GOAP A* + OODA → Research Findings |
+| Phase 2: Solve | `problem-solver-enhanced` | `.claude/skills/problem-solver-enhanced/SKILL.md` | 9 modules + TRIZ → Solution Strategy |
 
 **Принцип:** Каждый внешний скилл — Single Source of Truth. Обновление оригинала автоматически подхватывается здесь.
 
@@ -164,7 +164,7 @@ Checkpoint после каждой фазы. Пользователь подтв
 ### Phase 0: EXPLORE (делегация → explore skill)
 
 ```
-view("/mnt/skills/user/explore/SKILL.md")
+view(".claude/skills/explore/SKILL.md")
 → Применить Socratic questioning к текущей задаче
 → Scope: уточнить продукт, аудиторию, features, constraints
 ```
@@ -216,7 +216,7 @@ view("/mnt/skills/user/explore/SKILL.md")
 ### Phase 1: RESEARCH (делегация → goap-research-ed25519 skill)
 
 ```
-view("/mnt/skills/user/goap-research-ed25519/SKILL.md")
+view(".claude/skills/goap-research-ed25519/SKILL.md")
 → Применить GOAP planning к продуктовому research
 → State Assessment → Gap Analysis → Plan → OODA Execution
 ```
@@ -290,7 +290,7 @@ view("/mnt/skills/user/goap-research-ed25519/SKILL.md")
 ### Phase 2: SOLVE (делегация → problem-solver-enhanced skill)
 
 ```
-view("/mnt/skills/user/problem-solver-enhanced/SKILL.md")
+view(".claude/skills/problem-solver-enhanced/SKILL.md")
 → Применить 9-модульный framework к продуктовой проблеме
 → Включая TRIZ для разрешения противоречий
 ```
@@ -382,15 +382,23 @@ view("/mnt/skills/user/problem-solver-enhanced/SKILL.md")
 
 **User Story Format:**
 ```
-As a [persona],
+US-<nnn>: As a [persona],
 I want to [action],
 So that [benefit].
 
 Acceptance Criteria:
+[SC-<story-id>-1]
 Given [context]
 When [action]
 Then [expected result]
 ```
+
+Every user story carries an ID `US-<nnn>` — three digits, assigned in order, never reused even after
+a story is deleted. Every acceptance scenario under it carries `SC-<US-id>-<n>`, numbered from 1
+within its story: the scenarios of `US-007` are `SC-US-007-1`, `SC-US-007-2`, and so on. Phase 4
+traces algorithms back to these IDs, and there is nothing to trace to if a scenario has no name — nor
+anything reliable to trace to if two scenarios can end up with the same name, which is what the
+never-reused rule prevents.
 
 **PRD Generation:**
 ```
@@ -437,6 +445,7 @@ type EntityName = {
 ## Core Algorithms
 
 ### Algorithm: [Name]
+REALISES: [SC-… ids this algorithm implements, comma-separated]
 INPUT: [parameters]
 OUTPUT: [result]
 
@@ -470,6 +479,54 @@ Response (4xx/5xx):
 ## Error Handling Strategy
 [Error categories and responses]
 ```
+
+**Шаг 4.9 — ПОКРЫТИЕ СЦЕНАРИЕВ (обязательный, до чекпойнта).**
+
+Re-read `Specification.md` and collect every `SC-` scenario ID. Collect every algorithm's `REALISES`
+line from `Pseudocode.md`. Write a `## Scenario Coverage` block into `Pseudocode.md` — **in every
+case, including the one where everything is covered**, because an absent block and a block saying
+"all covered" are indistinguishable to the next reader:
+
+```
+## Scenario Coverage
+
+Scenarios in Specification.md: [N]  ·  claimed by an algorithm: [M]
+
+Not claimed by any algorithm:
+| Scenario | Reason |
+|---|---|
+| SC-… | ui-only |
+
+Claimed by an algorithm but absent from Specification.md:
+| Algorithm | Claimed ID |
+|---|---|
+| [name] | SC-… |
+```
+
+**Both tables are required, and both may be the single word `none`.** A traceability check that runs
+one way only is half a check: without the second table an algorithm can declare `REALISES: SC-US-009-3`
+for a scenario nobody ever wrote, and the dangling reference reads exactly like coverage. `none` is
+written out rather than left blank, because an empty table and a forgotten table look identical.
+
+**Reasons are a CLOSED list of five**, and nothing else is accepted:
+
+| Reason | Means |
+|---|---|
+| `ui-only` | realised entirely in the interface, no algorithm to write |
+| `external-service` | performed by a third party, see `Architecture.md` → External Dependencies |
+| `out-of-mvp-scope` | deliberately not built yet |
+| `data-only` | satisfied by a schema or constraint, not by a procedure |
+| `config-only` | satisfied by OUR OWN configuration — a server setting, a header, a policy file — with no procedure to write |
+
+Free text is NOT a reason, and `N/A` is NOT a reason. A field that accepts anything records nothing:
+the whole value of the list is that an unclaimed scenario has to be one of a small number of
+recognisable things, and if it is none of them, the gap is real and belongs in the algorithms.
+
+**What this establishes, and what it does not.** It establishes that a CLAIM exists and that its two
+ends name each other. It does NOT establish that the algorithm's steps actually perform the check the
+scenario describes — no comparison of names can. So this catches *"nobody wrote anything about this
+scenario"*; it does not catch *"someone wrote a line that mentions it"*. Say so here rather than
+letting a later reader assume the stronger thing.
 
 **[MANUAL] CP4:**
 ```
@@ -541,6 +598,51 @@ graph TB
 | Queue | | |
 | Infrastructure | | |
 
+## External Dependencies
+
+Every capability this product needs from someone else's service. One row per capability, not one row
+per vendor: "sends email" and "reports bounces" are two questions, and a provider can do one without
+the other.
+
+| Capability needed | Provider / API | Evidence | Verdict | Requirements relying on it |
+|---|---|---|---|---|
+| [what the product needs it to DO] | [service] | [link to the provider's own docs naming this capability] · checked [YYYY-MM-DD] | CONFIRMED | [REQ ids] |
+
+**Evidence — what counts, and what does not.** Evidence is a link to the PROVIDER'S OWN documentation
+that names the specific capability, plus the date it was checked, plus **a short verbatim QUOTE from
+that page stating the capability**. These do NOT count, and each is a way this check gets faked: a
+landing page or marketing page; a pricing page; recollection — "the model knows this API supports
+it"; and **a URL nobody opened** — a plausible-looking link is the cheapest possible forgery, which
+is exactly why the quote is required and the link alone is not enough. A capability nobody could cite
+is not confirmed, and saying so is the point of the middle verdict.
+
+**Verdicts — exactly three, because two would hide a difference that matters:**
+
+| Verdict | Means | Consequence in Phase 2 |
+|---|---|---|
+| CONFIRMED | cited, and the citation names this capability | none |
+| UNCONFIRMED | nobody could produce a citation | the REQUIREMENTS in that row's last column cannot enter Phase 3 — defer, remove or replace them. Unrelated work continues; the run is 🟡 CAVEATS at best and the row is NAMED in the report |
+| CONTRADICTED | the provider's own docs say it cannot | 🔴 NEEDS WORK — the requirement rests on something that is not there |
+
+`UNCONFIRMED` is not a failure to be hidden; it is the honest state of a project on a machine with no
+web access. Collapsing it into CONFIRMED overstates what is known; collapsing it into CONTRADICTED
+blocks work that may be perfectly fine — and would push people to write a citation that isn't one,
+which is how a gate becomes theatre.
+
+But it does not pass for free either. **The consequence is scoped to the REQUIREMENT, not to the
+run:** the requirements listed in an `UNCONFIRMED` row do not enter Phase 3 until they are deferred,
+removed, or rewritten onto something confirmable. Everything not resting on that capability proceeds.
+Without this scoping an inventory of nothing but `UNCONFIRMED` rows would reach Phase 3 with a
+caveat, and external feasibility would never have to be established at all — the check would be
+optional in practice while looking mandatory on paper.
+
+**If this product has no external dependencies**, write exactly that: *"No external dependencies —
+this product calls no third-party service."* An empty section and an absent section are
+indistinguishable, and only one of them means anything.
+
+Names in the row above are PLACEHOLDERS. Do not copy a real provider or a real capability from any
+example: what an API can do drifts, and a stale fact recorded as evidence is worse than none.
+
 ## Data Architecture
 [Data models, relationships, storage strategy]
 
@@ -550,6 +652,46 @@ graph TB
 ## Scalability Considerations
 [Horizontal/vertical scaling, bottlenecks]
 ```
+
+**Шаг 5.9 — СВЕРКА С ПСЕВДОКОДОМ (обязательный, до чекпойнта).**
+
+Фаза 4 написала модель данных ДО того, как эта фаза выбрала хранилище и технологии, и до сих пор
+ничто их не сверяло. Именно отсюда берутся расхождения, которые всплывают уже в коде: поле осталось
+булевым, когда схема получила перечисление; алгоритм пользуется полем, которого в схеме нет; у
+статуса три значения в одном документе и пять в другом.
+
+Перечитай в `Pseudocode.md` ДВЕ секции — `## Data Structures` и `## Core Algorithms` — и сверь их с
+тем, что выбрано ЗДЕСЬ. Алгоритмы нужны обязательно: расхождение «алгоритм читает поле, которого в
+схеме нет» по одним лишь структурам данных не обнаруживается. Ищи три вида расхождений:
+
+- **смена типа** — поле объявлено одним типом, а хранилище требует другого (булево против перечисления);
+- **отсутствующая колонка** — алгоритм читает или пишет поле, которого в схеме нет;
+- **несовпадение набора значений** — у одного и того же поля разное число допустимых значений.
+
+Какую сторону править — решается по РОЛИ документа, а не по старшинству. `Pseudocode.md` держит
+ЛОГИЧЕСКУЮ модель (что означает поле), `Architecture.md` — ФИЗИЧЕСКУЮ (где и как оно лежит).
+Поэтому: если эта фаза ввела осознанное физическое ограничение (тип хранилища, индекс, длина) —
+правится `Pseudocode.md`; если выбранная технология НАРУШАЕТ требуемую семантику (теряются значения,
+исчезает состояние, которым пользуется алгоритм) — меняется выбор ЗДЕСЬ, потому что требование
+старше удобства реализации. Секция `## Data Architecture` этого документа остаётся на месте, но
+описывает отображение на хранилище и связи, а НЕ пересказывает список полей: второй экземпляр списка
+становится вторым местом, где начинается расхождение.
+
+Результат записывается в `Architecture.md` ВСЕГДА, отдельным блоком:
+
+```markdown
+## Reconciliation with Pseudocode
+
+| Сущность.поле | Вид расхождения | Что сделано |
+|---|---|---|
+| … | смена типа / отсутствующая колонка / несовпадение набора значений | … |
+```
+
+Если сверка не нашла ничего — блок всё равно пишется, и он ОБЯЗАН назвать, что именно
+сверялось: «Расхождений с `Pseudocode.md` не найдено. Сверены сущности: <перечисление>; алгоритмы:
+<перечисление>.» Одна фраза «расхождений нет» без перечня — это церемония, которую модель напишет
+не глядя; перечень делает утверждение проверяемым. Молчание не является результатом сверки: по нему
+нельзя отличить «сверили и чисто» от «не сверяли».
 
 **[MANUAL] CP5:**
 ```
@@ -948,8 +1090,8 @@ sparc-prd-mini MANUAL
 ## Dependency Version Note
 
 Этот скилл ссылается на внешние зависимости через `view()`. Если поведение изменилось неожиданно, проверь обновления в:
-- `/mnt/skills/user/explore/SKILL.md`
-- `/mnt/skills/user/goap-research-ed25519/SKILL.md`
-- `/mnt/skills/user/problem-solver-enhanced/SKILL.md`
+- `.claude/skills/explore/SKILL.md`
+- `.claude/skills/goap-research-ed25519/SKILL.md`
+- `.claude/skills/problem-solver-enhanced/SKILL.md`
 
 Собственная методология: `references/sparc-methodology.md`

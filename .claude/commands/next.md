@@ -81,6 +81,22 @@ Blocked: <count> (run /next blocked to see)
 
 ### Schema fields (post v1.5.0)
 
+**This table is THE schema for `.claude/feature-roadmap.json`.** It is the only one: any other
+document that shows the file's fields must point here rather than restate them, because two
+descriptions of one file are two chances to be wrong and only one of them can be right.
+
+**Who creates the file** — both answers are true, in different modes, and this is the one place that
+says so:
+
+- after `/replicate`, Phase 3 generates it from the PRD MVP scope;
+- in Mode 2 (an existing project where `init` added the toolkit and `/replicate` never ran), the user
+  writes it by hand if they want batch automation via `/run mvp`; ad-hoc `/feature <id>` needs no
+  roadmap at all.
+
+`priority` is a CLOSED set — `mvp`, `high`, `medium`, `low`. A value outside it is not a new priority,
+it is a roadmap this toolkit cannot read: the status line counts MVP by `priority === 'mvp'` and will
+mark the file rather than quietly report zero.
+
 | Field | Required | Populated by | Purpose |
 |-------|----------|--------------|---------|
 | `id` | yes | initial roadmap generation | Stable kebab-case slug |

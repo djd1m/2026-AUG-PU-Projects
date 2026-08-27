@@ -12,7 +12,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-insights.cjs\"",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-insights.cjs\"",
             "timeout": 5
           }
         ]
@@ -24,17 +24,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/autocommit-roadmap.cjs\"",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/autocommit-roadmap.cjs\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/autocommit-insights.cjs\"",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/autocommit-insights.cjs\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/autocommit-plans.cjs\"",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/autocommit-plans.cjs\"",
             "timeout": 10
           }
         ]

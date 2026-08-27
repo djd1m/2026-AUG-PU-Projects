@@ -188,9 +188,9 @@ If specific .ai-context file missing, extract from:
 |---------|----------------|------------------|
 | Overview | docs/prd/PRD.md | Research_Findings.md |
 | Architecture | docs/c4/*.mermaid | Architecture.md |
-| Key Decisions | docs/adr/*.md | Solution_Strategy.md |
+| Key Decisions | detected_docs.idea2prd.adrs (docs/adr/*.md or docs/ADR.md) | Solution_Strategy.md |
 | Domain Model | docs/ddd/strategic/ | Specification.md |
-| Tech Stack | docs/adr/*-technology.md | Architecture.md |
+| Tech Stack | adrs entries titled *technology* | Architecture.md |
 | Testing | docs/tests/*.feature | Refinement.md |
 | Deployment | docs/completion/ | Completion.md |
 

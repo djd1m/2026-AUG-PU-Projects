@@ -53,6 +53,34 @@ Total Score = INVEST Score (50%) + SMART Score (30%) + Quality Score (20%)
 | 50-69 | Fair | 🔶 REWORK | Significant clarification needed |
 | **0-49** | **Poor** | **🚫 BLOCKED** | **Requires complete rewrite** |
 
+### Blocking floor (overrides the total, both directions)
+
+**The weakest link decides, never the average.** A requirement is BLOCKED — whatever its total says —
+if either of these is zero:
+
+| Criterion | Zero means | Why it vetoes |
+|-----------|-----------|---------------|
+| `Testable` (INVEST, 8) | no acceptance criteria exist | the gate exists to block untestable requirements |
+| `Completeness` (Quality, 10) | "No AC" on the rubric above | nothing states what "done" is |
+
+Without this floor the total alone lets an untestable requirement through. Worked case: a story with
+NO acceptance criteria and NO test links loses `Testable` 8, `Completeness` 10 and `Traceability` 10,
+keeps everything else, and totals **72/100** — above the 70 line, filed as "fix minor issues, then
+proceed". The floor blocks it on `Testable = 0` and `Completeness = 0`.
+
+**The floor keys on the artifact, not on the number you wrote.** The same agent scores these
+criteria AND is bound by the floor, so a score is not evidence of anything — reporting `Testable = 4`
+("vague AC") on a story with no AC at all evades the veto without lying about the rubric. Therefore:
+
+> A non-zero `Testable` or `Completeness` REQUIRES quoting the acceptance criteria being scored —
+> the actual text, with its document and heading. `Testable = 4` means the AC exist and are vague:
+> quote them. **No quote ⇒ the score is 0 ⇒ the floor applies.**
+
+**The floor is CLOSED at these two.** `Measurable` and `Traceability` are deliberately NOT on it: a
+requirement with no number is often correct ("the user can export the report as PDF" is specific,
+testable and unmeasurable), so vetoing on `Measurable` would turn a false pass into a false block.
+Widening this list needs the same kind of worked case as the one above.
+
 ## Quality Gate Rules
 
 ### BLOCKED (Score < 50)

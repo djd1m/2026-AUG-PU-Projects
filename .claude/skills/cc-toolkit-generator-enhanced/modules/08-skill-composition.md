@@ -201,8 +201,8 @@ FOR each copied_file IN target_skill_directory:
 
 ```
 # Before (claude.ai format):
-Read `/mnt/skills/user/explore/SKILL.md` for clarification protocol.
-Scan `/mnt/user-data/uploads/` for documents.
+Read `.claude/skills/explore/SKILL.md` for clarification protocol.
+Scan `docs/` for documents.
 Write output to `/output/validation-report.md`.
 
 # After (Claude Code local format):

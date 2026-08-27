@@ -19,7 +19,7 @@ Read from: `.claude/skills/reverse-engineering-unicorn/SKILL.md`
 | M2: Product & Customers | Always | JTBD, Value Prop, segments |
 | M3: Market & Competition | Always | TAM/SAM, competitors, Blue Ocean Canvas |
 | M4: Business & Finance | If monetization model needed | Unit economics |
-| M5: Growth Engine | If B2C/PLG | Channels, integrations, viral loops |
+| M5: Growth Engine | If acquisition/adoption in scope (incl. B2B) | Channels, integrations, viral loops |
 
 ## Output Format
 

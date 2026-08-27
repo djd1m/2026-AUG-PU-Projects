@@ -40,8 +40,8 @@
 ### 🔵 Режим DEEP
 
 > ⚙️ **Загрузи перед началом:**
-> 1. `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)` — для рыночного research
-> 2. `view(/mnt/skills/user/problem-solver-enhanced/SKILL.md)` — Modules 4, 5, 6 — для конкурентного анализа
+> 1. `view(.claude/skills/goap-research-ed25519/SKILL.md)` — для рыночного research
+> 2. `view(.claude/skills/problem-solver-enhanced/SKILL.md)` — Modules 4, 5, 6 — для конкурентного анализа
 
 #### PHASE A: GOAP Market Research
 
@@ -159,7 +159,7 @@ Incumbent  │  (-2, +1)    |  (0, +2)       │  Ценовая война
 
 ### 🟣 Режим VERIFIED (Ed25519)
 
-> ⚙️ **Дополнительно:** `view(/mnt/skills/user/goap-research-ed25519/SKILL.md)`
+> ⚙️ **Дополнительно:** `view(.claude/skills/goap-research-ed25519/SKILL.md)`
 
 Всё из режима DEEP, плюс:
 

@@ -4,13 +4,21 @@ Templates for generating a feature navigation and contextual suggestion system.
 Combines CLAUDE.md roadmap, SessionStart hook for dynamic context, `/next` command,
 and `feature-navigator` skill for on-demand roadmap navigation.
 
-Architecture: **feature-roadmap.json** as single source of truth → consumed by hook, skill, and command.
+Architecture: **feature-roadmap.json** as the system's single data file → consumed by hook, skill,
+and command. (The SCHEMA of that file is defined once, in `.claude/commands/next.md`; this document
+describes the system built on it, not the file's fields.)
 
 ---
 
 ## 1. Data File Template: `feature-roadmap.json`
 
-Generate as `.claude/feature-roadmap.json` — pre-populate from project's PRD/Specification:
+Generate as `.claude/feature-roadmap.json` — pre-populate from project's PRD/Specification.
+
+**Fields: follow `.claude/commands/next.md`, which holds the single schema.** In particular every
+feature carries `priority` from the closed set `mvp | high | medium | low`; a roadmap without it
+cannot be read by the shipped status line. The sketch below shows only the ENVELOPE and this system's
+OPTIONAL extensions — `project`, `current_sprint`, `description`, `sprint`, `files` — which the
+canonical schema does not forbid:
 
 ```json
 {
@@ -21,6 +29,7 @@ Generate as `.claude/feature-roadmap.json` — pre-populate from project's PRD/S
       "id": "{{feature-id}}",
       "name": "{{Feature Name}}",
       "description": "{{Brief description of the feature}}",
+      "priority": "mvp|high|medium|low",
       "status": "done|in_progress|next|planned|blocked",
       "files": ["src/path/to/main-file.ts"],
       "depends_on": ["{{other-feature-id}}"],

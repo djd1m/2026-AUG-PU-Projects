@@ -211,7 +211,7 @@ EXTRACT events/*.md:
 ### From ADRs
 
 ```
-FOR EACH adr/*.md:
+FOR EACH entry IN detected_docs.idea2prd.adrs (read entry.source_path):
   EXTRACT:
     - Title → Rule/skill name candidate
     - Status → (if Accepted) include, (if Deprecated) exclude
@@ -348,7 +348,7 @@ IF fitness has architecture rules: +5 to ddd-validator
 ### From ADR Integration Decisions
 
 ```
-SCAN adr/*.md for:
+SCAN detected_docs.idea2prd.adrs (each entry.source_path) for:
   - "GitHub" → @modelcontextprotocol/server-github
   - "PostgreSQL", "Postgres" → @modelcontextprotocol/server-postgres
   - "MongoDB" → @modelcontextprotocol/server-mongodb

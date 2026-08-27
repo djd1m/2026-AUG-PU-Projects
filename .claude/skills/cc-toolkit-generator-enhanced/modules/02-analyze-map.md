@@ -128,7 +128,9 @@ DDD TACTICAL:
     - Event handlers           → PostToolUse hooks (P2)
 
 ADR DOCUMENTS:
-  FOR EACH adr/*.md:
+  # via detected_docs.idea2prd.adrs — the Module-1 collector output, BOTH storage
+  # shapes (docs/adr/*.md AND the single docs/ADR.md). Never glob ADR paths here.
+  FOR EACH entry IN detected_docs.idea2prd.adrs (read entry.source_path):
     CLASSIFY by keywords:
       "security", "auth", "encryption"  → security.md rule
       "performance", "scale", "cache"   → performance rules
@@ -217,8 +219,8 @@ aggregates/ has >3 files          → ddd-validator.md (+8), +5 if >7 files
 aggregates/ has >5 files          → aggregate-patterns/ (+5)
 events/ has >3 files              → event-handlers/ (+5)
 events/ has >0 files              → event-handlers/ (+10)
-docs/adr/ has >10 files           → architect.md (+10)
-docs/adr/ has >15 files           → architect.md (+5 additional)
+adrs has >10 decisions            → architect.md (+10)   # detected_docs.idea2prd.adrs — decisions, not files
+adrs has >15 decisions            → architect.md (+5 additional)
 docs/tests/*.feature exists       → testing-patterns/ (+10), tdd-guide.md (+8)
 tests/ has >10 scenarios          → testing-patterns/ (+5)
 docs/fitness/ exists              → fitness-functions.md (+10)
@@ -226,10 +228,10 @@ fitness has >5 functions          → validation hooks (+5)
 .ai-context/ exists               → INTEGRATE into CLAUDE.md, project-context/ (+10)
 .ai-context/ has >4 files         → project-context/ RECOMMEND
 
-# ADR Security Boost
-FOR EACH adr/*.md containing "security": security.md += 2
-FOR EACH adr/*.md containing "authentication": security.md += 1
-FOR EACH adr/*.md containing "encryption": security.md += 1
+# ADR Security Boost (over detected_docs.idea2prd.adrs — read each entry.source_path)
+FOR EACH adr entry containing "security": security.md += 2
+FOR EACH adr entry containing "authentication": security.md += 1
+FOR EACH adr entry containing "encryption": security.md += 1
 ```
 
 #### 4c. Assign Priority Tiers

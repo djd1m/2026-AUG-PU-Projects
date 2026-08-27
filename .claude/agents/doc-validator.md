@@ -15,7 +15,7 @@ Read from: `.claude/skills/requirements-validator/SKILL.md`
 
 ## Swarm Strategy
 
-Launch 5 parallel validation agents using Task tool:
+Launch 6 parallel validation agents using Task tool:
 
 | Agent | Scope | Criteria | Tool |
 |-------|-------|----------|------|
@@ -24,6 +24,7 @@ Launch 5 parallel validation agents using Task tool:
 | `validator-architecture` | Architecture.md | Target constraints compliance, completeness | Task |
 | `validator-pseudocode` | Pseudocode.md | Story coverage, implementability | Task |
 | `validator-coherence` | Cross-document | Consistency, no contradictions | Task |
+| `validator-dependencies` | `Architecture.md` → `## External Dependencies` | Every external capability a requirement relies on has a verdict and, where CONFIRMED, evidence that names that capability | Task |
 
 ## Scoring System
 

@@ -13,7 +13,9 @@ def detect_pipeline(uploads_path: str) -> str:
     has_ddd = exists(f"{uploads_path}/docs/ddd/")
     has_ai_context = exists(f"{uploads_path}/.ai-context/")
     has_gherkin = glob(f"{uploads_path}/docs/tests/*.feature")
-    has_adr = len(glob(f"{uploads_path}/docs/adr/*.md")) > 5
+    # Shape marker only (mirrors Module 1 detect_pipeline). The DECISION flag has_adr is
+    # defined ONCE, in Module 1 ADR collector — never redefined here.
+    has_idea2prd_adr_dir = len(glob(f"{uploads_path}/docs/adr/*.md")) > 5
     has_sparc = exists(f"{uploads_path}/Architecture.md")
     
     if has_ddd and has_ai_context:
@@ -124,7 +126,7 @@ if len(events) > 5:
 ```python
 score = 10  # base (always somewhat useful)
 
-adrs = glob("docs/adr/*.md")
+adrs = detected_docs.idea2prd.adrs   # Module-1 collector: both storage shapes
 if len(adrs) > 5:
     score += 5
 if len(adrs) > 10:
@@ -145,8 +147,8 @@ if exists("docs/c4/container.mermaid"):
 ```python
 security_boost = 0
 
-for adr in glob("docs/adr/*.md"):
-    content = read(adr)
+for adr in detected_docs.idea2prd.adrs:   # both storage shapes
+    content = read(adr.source_path)
     if "security" in content.lower():
         security_boost += 2
     if "authentication" in content.lower():

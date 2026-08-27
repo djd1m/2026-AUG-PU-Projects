@@ -39,6 +39,15 @@ view() .claude/skills/[skill-name]/references/[file].md
 
 Skills originating from claude.ai use `/mnt/` paths. Apply these rewrites in order:
 
+> **The ten skills this package ships no longer need this.** Since p-replicator 1.8.0 their paths are
+> pre-baked: `.claude/skills/<name>/` resolves directly, with no rewrite step. The table below stays
+> because a skill YOU bring from claude.ai still needs it — and because the toolkit generator's own
+> output-scanning instructions describe this transform.
+>
+> One case the table cannot express: a skill referenced but NOT installed. Rewriting its path yields
+> a local-looking path that resolves to nothing, which is worse than an obviously foreign one. Declare
+> it OPTIONAL with a fallback (§6) instead.
+
 | Source Pattern | Target Pattern | Notes |
 |----------------|----------------|-------|
 | `/mnt/skills/user/[name]/` | `.claude/skills/[name]/` | Skill root directories |
