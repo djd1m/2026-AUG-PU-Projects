@@ -10,50 +10,77 @@
 **уже сработавший лимит нельзя обойти мусорным телом** — исчерпав попытки, атакующий не
 может продолжать нагружать argon2, подсовывая тела, которые падают раньше проверки.
 
+**[v3] «Первым» — среди шагов алгоритма, а не относительно чтения сокета.** В ревизии 2
+требование «лимит до разбора тела» затащило `parseJson` внутрь транзакции и создало отказ
+в обслуживании всему приложению. Разбор тела к алгоритму аутентификации не относится: он
+происходит вне транзакции, а лимит остаётся первым шагом внутри неё.
+
 ```
 function login(request):
-    ip = extractClientIP(request)
+    # ── ВНЕ ТРАНЗАКЦИИ: чтение сокета и разбор тела ────────────────────────
+    # [v3] Соединение пула НЕ удерживается, пока клиент дописывает тело.
+    # Десять медленных POST иначе вычерпывают пул из 10 и кладут всё приложение.
+    if contentLength(request) > MAX_LOGIN_BODY:  return PayloadTooLarge   # 413
+    body = parseJson(request)  or  return BadRequest                      # 400
+
+    ip       = extractClientIP(request)
+    # [v3] Нестроковые значения не роняют маршрут и не доходят до normalizeEmail.
+    email    = (typeof body.email    === "string") ? normalizeEmail(body.email) : ""
+    password = (typeof body.password === "string") ? body.password            : ""
+
+    keyIp   = hashKey("login_ip",    ip)
+    keyPair = hashKey("login_pair",  email + "|" + ip)   # [v3] ПАРА, не email
 
     result = withService(client -> {
 
-        # ── ШАГ 1: оба лимита ДО всего остального ──────────────────────────
-        # Ключ по IP известен сразу. Ключ по email — только после разбора тела,
-        # поэтому проверка разбита на две: грубая по IP здесь, точная по email ниже.
-        if rateLimit.exceeded("login_ip", hashKey(ip), HOUR, 30, client):
-            return TooMany
+        # ── ШАГ 1: сериализация по ключам — иначе лимита нет ───────────────
+        # [v3] exceeded(COUNT) и record(INSERT) не атомарны: под READ COMMITTED
+        # параллельные запросы все видят count = 0 и все проходят. Блокировка
+        # держится до конца транзакции и снимается сама.
+        client.query("select pg_advisory_xact_lock(hashtext($1))", [keyPair])
+        client.query("select pg_advisory_xact_lock(hashtext($1))", [keyIp])
 
-        body = parseJson(request)  or  return BadRequest      # 400 — ошибка формата
-        email    = normalizeEmail(body.email)                 # trim + toLowerCase
-        password = (typeof body.password === "string") ? body.password : ""
+        # ── ШАГ 2: оба лимита ─────────────────────────────────────────────
+        if rateLimit.exceeded("login_ip",   keyIp,   HOUR, 30, client):  return TooMany
+        if rateLimit.exceeded("login_pair", keyPair, HOUR,  5, client):  return TooMany
 
-        if rateLimit.exceeded("login_email", hashKey(email), HOUR, 5, client):
-            return TooMany
-
-        # ── ШАГ 2: поиск аккаунта ──────────────────────────────────────────
+        # ── ШАГ 3: поиск аккаунта ─────────────────────────────────────────
         account = selectAccountByEmail(client, email)
 
-        # ── ШАГ 3: argon2 считается ВСЕГДА ─────────────────────────────────
-        # Это и есть NFR-009.2. Ранний возврат при account = null сделал бы ответ
-        # заметно быстрее и превратил бы вход в оракул существования учётки.
+        # ── ШАГ 4: argon2 считается ВСЕГДА ────────────────────────────────
+        # NFR-009.2. Ранний возврат при account = null сделал бы ответ заметно
+        # быстрее и превратил бы вход в оракул существования учётки.
         storedHash = account ? account.password_hash : dummyHash()
-        ok = verifyPassword(storedHash, password)             # константное по времени
+        ok = verifyPassword(storedHash, password)          # константное по времени
 
         if account is null or not ok:
-            # [v2] NFR-009.4: ЗАПИСЬ в оба счётчика — отдельная операция, без неё
-            # лимит никогда не срабатывает, а критерий «429 при превышении» зеленеет.
-            rateLimit.record("login_ip",    hashKey(ip),    client)
-            rateLimit.record("login_email", hashKey(email), client)
-            return Unauthorized                               # ОДИН И ТОТ ЖЕ ответ
+            # NFR-009.4: запись — отдельная операция. Без неё лимит не срабатывает
+            # никогда, а критерий «429 при превышении» зеленеет на засеянной таблице.
+            rateLimit.record("login_ip",   keyIp,   client)
+            rateLimit.record("login_pair", keyPair, client)
+            return Unauthorized                            # ОДИН И ТОТ ЖЕ ответ
 
-        # ── ШАГ 4: сессия — ЕДИНСТВЕННОЙ общей функцией ────────────────────
-        token    = createSession(client, account.id)          # [v2] см. ниже
-        projects = listProjectsForAccount(client, account.id) # [v2] FR-009.4
+        # [v3] При УСПЕХЕ не пишем ничего: иначе активный владелец запирает себя сам.
+
+        # ── ШАГ 5: сессия — ЕДИНСТВЕННОЙ общей функцией ───────────────────
+        token    = createSession(client, account.id)
+        projects = listProjectsForAccount(client, account.id)
         return Ok(account.id, token, projects)
     })
 
-    # Ответ строится СНАРУЖИ транзакции — тело и код для всех отказных веток одинаковы.
+    # Ответ строится СНАРУЖИ транзакции; тело и код для всех отказных веток одинаковы.
     ...
 ```
+
+## [v3] Почему блокировка, а не «просто посчитать»
+
+Порядок «сначала проверить, потом записать» верен логически и бесполезен под нагрузкой:
+между `COUNT` и `INSERT` лежит выборка аккаунта и argon2, то есть окно гонки около 20 мс.
+`pg_advisory_xact_lock` сериализует запросы **по ключу**: разные учётки друг друга не
+задерживают, а параллельный перебор одной превращается в последовательный — что и требуется.
+
+Побочный эффект осознан: argon2 считается под блокировкой, то есть попытки по одному ключу
+идут строго друг за другом. Для контроля перебора это не издержка, а ровно нужное поведение.
 
 ## [v2] `createSession` — общая точка выдачи
 
