@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { safeNextPath } from '@/lib/next-path';
 
-
 export function LoginForm({ next }: { next?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -21,7 +20,7 @@ export function LoginForm({ next }: { next?: string }) {
       });
       if (!res.ok) {
         // Текст берём с сервера как есть: он намеренно одинаков для неверного пароля и
-        // несуществующей учётки — различать их на клиенте было бы возвратом того же оракула.
+        // несуществующей учётки — различать их на клиенте значило бы вернуть тот же оракул.
         const body = (await res.json().catch(() => null)) as { error?: string } | null;
         setError(body?.error ?? 'не удалось войти');
         return;
@@ -39,37 +38,30 @@ export function LoginForm({ next }: { next?: string }) {
   }
 
   return (
-    <form onSubmit={submit} className="mt-8 flex flex-col gap-4">
-      <label className="flex flex-col gap-1 text-sm">
-        Почта
-        <input
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          className="rounded-md border border-[var(--border)] px-3 py-2"
-        />
+    <form onSubmit={submit} className="form" style={{ marginTop: 20 }}>
+      <label className="field">
+        <span>Email</span>
+        <input name="email" type="email" required autoComplete="email" className="input" />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
-        Пароль
+
+      <label className="field">
+        <span>Пароль</span>
         <input
           name="password"
           type="password"
           required
           autoComplete="current-password"
-          className="rounded-md border border-[var(--border)] px-3 py-2"
+          className="input"
         />
       </label>
+
       {error ? (
-        <p role="alert" className="text-sm text-[var(--danger,#b00)]">
-          {error}
-        </p>
+        <ul className="errors" role="alert">
+          <li>{error}</li>
+        </ul>
       ) : null}
-      <button
-        type="submit"
-        disabled={busy}
-        className="rounded-md bg-[var(--accent)] px-4 py-2 font-medium text-white disabled:opacity-60"
-      >
+
+      <button type="submit" disabled={busy} className="btn btn--primary btn--block">
         {busy ? 'Проверяем…' : 'Войти'}
       </button>
     </form>

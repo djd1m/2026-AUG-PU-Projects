@@ -1,7 +1,9 @@
 // GET /login — FR-009.3.
 //
-// Существует потому, что до FR-009 вернуться в кабинет было НЕЧЕМ: сессия жила 30 дней
-// без продления, а входа не было вовсе.
+// Вёрстка — классами дизайн-системы из globals.css (stage, card, field, input, btn),
+// теми же, что на главной. Сырые утилиты со ссылками на переменные здесь были ошибкой:
+// половина имён не совпала с реальными токенами (--border вместо --line), поля остались
+// без границ, и страница выглядела чужой на своём же сайте.
 
 import type { Metadata } from 'next';
 import { LoginForm } from './login-form';
@@ -17,13 +19,26 @@ type Props = { searchParams: Promise<{ next?: string }> };
 
 export default async function LoginPage({ searchParams }: Props) {
   const { next } = await searchParams;
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-16">
-      <h1 className="text-2xl font-semibold tracking-tight">Вход</h1>
-      <p className="mt-2 text-sm text-[var(--muted)]">
-        Введите почту и пароль, указанные при создании проекта.
-      </p>
-      <LoginForm next={next} />
+    <main className="stage stage--narrow">
+      <div className="brand">
+        <span className="brand__mark" aria-hidden="true">◆</span>
+        Proofwall
+      </div>
+
+      <div className="card">
+        <h1 className="hero__formTitle">Вход</h1>
+        <p className="small muted" style={{ marginTop: 4 }}>
+          Почта и пароль, указанные при создании проекта.
+        </p>
+
+        <LoginForm next={next} />
+
+        <p className="small muted" style={{ marginTop: 20 }}>
+          Ещё нет проекта? <a href="/">Создать</a> — это займёт минуту.
+        </p>
+      </div>
     </main>
   );
 }
