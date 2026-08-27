@@ -1,8 +1,10 @@
 // FR-008 — приём оплаты. Три свойства, каждое из которых при поломке стоит денег:
-// подпись раньше записи события, идемпотентность на уровне схемы, апгрейд тарифа.
+// подлинность раньше записи события, идемпотентность на уровне схемы, апгрейд тарифа.
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { PoolClient } from 'pg';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 const DB_URL = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
 if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
@@ -310,5 +312,82 @@ describe('граница ролей вокруг оплаты (007_rls.sql)', ()
       expect(mine).toHaveLength(1);
       expect(mine[0].project_id).toBe(a.projectId);
     });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Регрессия: недоступность провайдера не должна «съедать» уведомление.
+//
+// Найдено разбором кода, не тестами. Цепочка, стоившая бы денег: заявка на event_id
+// ставится ШАГОМ 2, перезапрос статуса — ШАГОМ 3. Пока недоступность провайдера
+// возвращалась ЗНАЧЕНИЕМ, колбэк withService завершался штатно, транзакция
+// КОММИТИЛАСЬ вместе с заявкой, роут отдавал 500, ЮKassa повторяла уведомление,
+// повтор упирался в занятый event_id и коротил в 'duplicate' с кодом 200.
+// Оплата не применялась НИКОГДА: деньги списаны, тариф не повышен, повторить нечем.
+//
+// Лечится тем, что недоступность — ИСКЛЮЧЕНИЕ: откат освобождает заявку.
+// ─────────────────────────────────────────────────────────────────────────────
+// Уборки за собой здесь НЕТ намеренно: схема не даёт app_service удалять из
+// webhook_events (только вставка — журнал событий неизменяем, 007_rls.sql). Строки
+// уникальны по времени прогона, а тестовая БД одноразовая (tmpfs в compose.test.yml).
+describe('провайдер недоступен — уведомление остаётся повторяемым', () => {
+  it('исключение внутри транзакции ОТКАТЫВАЕТ заявку на event_id', async () => {
+    const id = `evt-rollback-${Date.now()}`;
+
+    await expect(
+      withService(async (c) => {
+        expect(await claimWebhookEvent(c, id, { first: true })).toBe(true);
+        throw new Error('провайдер недоступен');
+      }),
+    ).rejects.toThrow('провайдер недоступен');
+
+    // Повтор обязан пройти по ПОЛНОМУ пути, а не упереться в занятый идентификатор.
+    await withService(async (c) => {
+      expect(
+        await claimWebhookEvent(c, id, { retry: true }),
+        'заявка не была освобождена — повтор уйдёт в duplicate, оплата потеряна',
+      ).toBe(true);
+    });
+  });
+
+  it('штатный возврат из транзакции заявку КОММИТИТ — почему возврат тут и опасен', async () => {
+    const id = `evt-commit-${Date.now()}`;
+
+    await withService(async (c) => {
+      expect(await claimWebhookEvent(c, id, {})).toBe(true);
+      return 'provider_unavailable'; // ровно то, как было написано до починки
+    });
+
+    await withService(async (c) => {
+      expect(
+        await claimWebhookEvent(c, id, {}),
+        'заявка пережила транзакцию — это и есть механизм потери оплаты',
+      ).toBe(false);
+    });
+  });
+});
+
+// Свойство КОДА, а не одного прогона: ветка недоступности провайдера обязана
+// БРОСАТЬ. Поведенческий тест выше проверяет транзакцию; этот — что роут ею
+// пользуется правильно и завтра не вернётся к `return`.
+describe('роут вебхука: недоступность провайдера выражена исключением', () => {
+  const ROUTE = path.resolve(__dirname, '../src/app/api/webhooks/payment/route.ts');
+  const code = readFileSync(ROUTE, 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '');
+
+  it('не возвращает provider_unavailable из колбэка withService', () => {
+    expect(code).not.toMatch(/return\s+'provider_unavailable'\s+as\s+const/);
+  });
+
+  it('ветка PaymentProviderError бросает', () => {
+    expect(code).toMatch(/instanceof\s+PaymentProviderError\)\s*throw\s+new\s+ProviderUnavailable/);
+  });
+
+  it('500 отдаётся снаружи транзакции — из catch, а не из колбэка', () => {
+    const catchAt = code.indexOf('catch (err)');
+    const fiveHundred = code.indexOf('status: 500');
+    expect(catchAt, 'нет внешнего catch').toBeGreaterThan(-1);
+    expect(fiveHundred).toBeGreaterThan(catchAt);
   });
 });
