@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       - POSTGRES_DB
       - POSTGRES_USER
@@ -17,6 +18,7 @@ services:
     # Тег закреплён: `minio/minio` без тега = :latest — невоспроизводимая сборка,
     # на VPS через месяц приедет другой образ (D-008, Phase 3 /start).
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
     command: server /data
     environment:
       - MINIO_ROOT_USER
@@ -34,6 +36,7 @@ services:
     build:
       context: .                        # корень монорепо: package-lock.json только здесь
       dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
     environment:
       - DATABASE_URL             # postgres:// строка, включает роли app_authenticated/app_service
       - SESSION_SECRET
@@ -77,6 +80,13 @@ services:
     build:
       context: .                        # корень монорепо: package-lock.json только здесь
       dockerfile: services/worker/Dockerfile
+    # Перезапуск обязателен, и вот почему конкретно: воркер стартует раньше, чем
+    # накачены миграции (они запускаются отдельным шагом, см. DEVELOPMENT_GUIDE),
+    # падает на `relation "testimonials" does not exist` и БОЛЬШЕ НЕ ПОДНИМАЕТСЯ.
+    # На стенде это выглядело так: пять сервисов healthy, приложение работает,
+    # а транскрипция не происходит вовсе — воркер лежал девять часов, и об этом
+    # не сообщил никто. `unless-stopped` превращает гонку старта в задержку.
+    restart: unless-stopped
     environment:
       - DATABASE_URL
       - S3_ENDPOINT
@@ -98,6 +108,7 @@ services:
     build:
       context: .                        # корень монорепо: package-lock.json только здесь
       dockerfile: services/transcribe/Dockerfile
+    restart: unless-stopped
     environment:
       - OPENAI_API_KEY           # только он: сервис делает ТОЛЬКО транскрипцию (ADR-005)
       - OPENAI_TRANSCRIBE_MODEL  # опционально; дефолт gpt-4o-mini-transcribe (config.ts)
@@ -105,6 +116,7 @@ services:
 
   caddy:
     image: caddy:2-alpine
+    restart: unless-stopped
     # 80/443 — самые конфликтные порты на любой машине: их почти всегда уже слушает
     # чужой reverse-proxy. На этой машине их занимает контейнер ai-hub-tls-proxy,
     # поэтому значения по умолчанию вынесены в переменные, а не зашиты.
