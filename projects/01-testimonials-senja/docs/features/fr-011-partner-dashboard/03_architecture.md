@@ -13,7 +13,8 @@
 | `apps/web/src/app/api/partner/session/route.ts` | **новый** — приём токена, cookie | FR-011.3, NFR-011.6 |
 | `apps/web/src/app/partner/page.tsx` | **новый** — форма ввода токена | FR-011.3 |
 | `apps/web/src/app/partner/dashboard/page.tsx` | **новый** — сам кабинет | FR-011.4, .5 |
-| `apps/web/tests/partner-dashboard.test.ts` | **новый** | AC-011.1 – .15 |
+| `apps/web/tests/partner-dashboard.test.ts` | **новый** | AC-011.1 – .25 |
+| `apps/web/src/lib/partner.ts` | правка (H-6): ставка не подставляется как явный `NULL` — колонка опускается из INSERT, чтобы сработал `default 0.3000`. Без этого `commissions` не создаются вовсе и кабинет показывает ноль каждому | AC-011.25 |
 | `apps/web/tests/login.test.ts` | правка: маршрут в список стража предела тела | AC-011.13 |
 | `apps/web/tests/design-tokens.test.ts` | правка: страницы в `PAGES` | — |
 
@@ -49,7 +50,10 @@ create unique index if not exists partner_codes_dashboard_token_hash_idx
 
 ```ts
 export type PartnerAuth =
-  | { ok: true; partnerCodeId: string; code: string }
+  // code ЗДЕСЬ НЕТ намеренно: это публичное значение, и оно не должно ехать дальше по стеку.
+  // Ревизия 2 объявляла его в типе, противореча собственному псевдокоду ровно на том пункте,
+  // который в ней и чинили.
+  | { ok: true; partnerCodeId: string }
   | { ok: false; tooMany: boolean };   // причины НЕТ — см. NFR-011.3
 ```
 

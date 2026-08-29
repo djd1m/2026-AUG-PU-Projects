@@ -36,7 +36,8 @@ PARTNER_WINDOW      = { seconds: 3600 }
 +  // Токен выдаётся здесь же: отдельная функция потребовала бы второй транзакции
 +  // и оставила бы окно, где код есть, а кабинета к нему нет.
 +  const token = randomBytes(PARTNER_TOKEN_BYTES).toString('base64url');
-   for (let attempt = 0; attempt < 10; attempt += 1) {
+   let attempt = 0;
+   while (true) {                       // ← НАСТОЯЩИЙ код: while, а не for.
      const code = generateCode(partnerName);
      const inserted = await client.query(
 -      `insert into partner_codes (code, partner_name, commission_rate, owner_account_id)
@@ -49,9 +50,25 @@ PARTNER_WINDOW      = { seconds: 3600 }
      ...
 -    return { id, code };
 +    return { id, code, dashboard_token: token };
+     attempt += 1;
+     if (attempt > 10) throw new Error('не удалось подобрать уникальный код партнёра за 10 попыток');
    }
  }
 ```
+
+**Контекстные строки выше — настоящий код, а не пересказ.** В ревизии 2 они были записаны как
+`for (let attempt = 0; attempt < 10; …)`, чего в `partner.ts` нет. Реализованный буквально, тот
+diff превращал явный отказ в **тихий**: после десяти коллизий цикл `for` просто заканчивался,
+функция доходила до конца и возвращала `undefined`, а вызывающий получал `undefined.id`. Это
+`fail-closed-defaults.md` наизнанку — исчерпание попыток переставало быть отказом.
+
+**И ставка по умолчанию (H-6, AC-011.25).** `issuePartnerCode` передаёт `commissionRate ?? null`,
+а явный `NULL` **отменяет** `default 0.3000` колонки (проверено прогоном: `insert … values (…,
+null, …)` даёт пусто, `insert` без колонки даёт `0.3000`). Дальше `convertAttributionOnPayment`
+при `commission_rate = null` не создаёт строку `commissions` вовсе — и кабинет показал бы
+**ноль каждому партнёру навсегда**. Это дефект не FR-011, но FR-011 — ровно та фича, которая
+предъявляет его партнёру, поэтому починка входит в объём: колонка опускается из INSERT, когда
+ставка не задана явно.
 
 Возвращаемое значение **дополняется**, а не заменяется: `{ id, code }` остаются на месте, и
 восемь тестов, деструктурирующих `id`, продолжают работать. Это и стережёт AC-011.19.
@@ -93,35 +110,51 @@ function POST(request):
 ```
 
 ```
-function authenticatePartner(client, token, ip):
-    keyIp = hashKey(PARTNER_IP_SCOPE, ip)
+# ДВЕ транзакции, и это несущее решение (B-1).
+#
+# Транзакция 1 — только счётчик. Лок ЖДУЩИЙ и по адресу: он восстанавливает атомарность
+# «проверил → записал», которую ревизия 2 потеряла, разведя ключ лока и ключ счётчика
+# (измерено: 40 одновременных попыток при пороге 30 проходили все сорок).
+# Ждущий лок здесь допустим, хотя FR-009 его запретил: там ожидание длилось argon2 (~50 мс)
+# и держало соединение пула, здесь оно длится один COUNT плюс один INSERT — микросекунды.
+# Добросовестный партнёр за тем же NAT получает очередь, а не отказ.
+#
+# Четыре вопроса shared-resource-verification.md, отвеченные прямо здесь:
+#   что удерживается — соединение пула и лок по адресу, на время двух дешёвых запросов;
+#   сколько единиц всего — пул 30, порог счётчика 30 на адрес в час;
+#   кто ещё в очереди — весь продукт делит тот же пул, поэтому секция и сделана короткой;
+#   кого наказывает насыщение — только тех, кто с ЭТОГО адреса, и очередью, а не отказом.
 
-    # ЛОК — по ПАРЕ (адрес, хеш токена). Лок по одному адресу отвергал бы ВТОРОГО
-    # добросовестного партнёра за тем же NAT на второй одновременной попытке, не дойдя
-    # ни до счётчика, ни до сверки: ровно то, что FR-009 уже чинил (login.ts:16-18).
-    # СЧЁТЧИК при этом остаётся по адресу — ключ по токену давал бы атакующему свежий
-    # бюджет на каждый пробуемый токен. Задачи разные, ключи разные.
-    keyLock = hashKey(PARTNER_IP_SCOPE, ip, sha256(token))
-    if not try_advisory_xact_lock(PARTNER_LOCK_NAMESPACE, hashtext(keyLock)): return TooMany
-    if rateLimit.exceeded(PARTNER_IP_SCOPE, keyIp, PARTNER_WINDOW, PARTNER_IP_THRESHOLD, client):
-        return TooMany
+function checkAndRecordAttempt(ip) -> allowed:          # транзакция 1, короткая
+    withService(client -> {
+        keyIp = hashKey(PARTNER_IP_SCOPE, ip)
+        advisory_xact_lock(PARTNER_LOCK_NAMESPACE, hashtext(keyIp))    # ЖДУЩИЙ
+        if rateLimit.exceeded(PARTNER_IP_SCOPE, keyIp, PARTNER_WINDOW, PARTNER_IP_THRESHOLD, client):
+            return false
+        rateLimit.record(PARTNER_IP_SCOPE, keyIp, client)
+        return true
+    })
+    # Запись ВСЕГДА, а не только при неудаче: здесь считаются ПОПЫТКИ предъявления,
+    # а не промахи. Иначе верный токен, предъявляемый в цикле, не считался бы ничем.
 
-    # Сверка ПО ХЕШУ и в SQL, по уникальному индексу (AC-011.15). Открытых строк не
-    # сравниваем: восстановить токен из хеша нельзя, а равенство по 64 hex-символам
-    # выполняет БД.
-    #
-    # status = 'active' стоит ЗДЕСЬ, а не отдельной проверкой с другим ответом:
-    # «код отозван» отдельным текстом было бы оракулом (NFR-011.3).
+function resolvePartnerByToken(client, token):          # транзакция 2
+    # Хеш считается В КОДЕ. Сырой токен в SQL не уезжает вовсе: он попал бы в
+    # pg_stat_statements, в log_statement при отладке и в текст ошибки при сбое —
+    # то есть ровно в журнал, названный третьей из трёх утечек (NFR-011.5, AC-011.21).
+    tokenHash = sha256(token)
+
+    # status = 'active' ЗДЕСЬ, а не отдельной проверкой с другим ответом: «код отозван»
+    # отдельным текстом было бы оракулом (NFR-011.3). И проверяется он на КАЖДОМ показе,
+    # иначе отзыв не имел бы силы до истечения cookie (AC-011.6), а ротация не отбирала бы
+    # доступ у прежнего держателя токена (AC-011.24).
     row = SELECT id FROM partner_codes
-           WHERE dashboard_token_hash = sha256($token) AND status = 'active'
+           WHERE dashboard_token_hash = $tokenHash AND status = 'active'
+    return row ? { partnerCodeId: row.id } : null
+    # ВОЗВРАЩАЕТСЯ id, а не code: публичное значение дальше по стеку не едет (H-1 прохода 1).
 
-    if row is null:
-        rateLimit.record(PARTNER_IP_SCOPE, keyIp, client)      # AC-011.12
-        return null
-
-    return { partnerCodeId: row.id }
-    # ВОЗВРАЩАЕТСЯ id, а не code. Дальше по стеку публичное значение не едет вовсе —
-    # иначе граница модуля кончается на один вызов раньше, чем нужно (H-1).
+function authenticatePartner(token, ip):
+    if not checkAndRecordAttempt(ip):  return TooMany
+    return withService(c -> resolvePartnerByToken(c, token))
 ```
 
 ## Дашборд
