@@ -24,7 +24,7 @@ void warmUpDummyHash();
 // email, пустой пароль, нестроковые поля. Различимость — оракул перечисления учёток.
 const UNAUTHORIZED = { error: 'неверный email или пароль' } as const;
 // Без счётчика и времени сброса — та же анти-перечислительная логика, что у формы отзыва.
-const TOO_MANY = { error: 'слишком много попыток, попробуйте позже' } as const;
+export const TOO_MANY = { error: 'слишком много попыток, попробуйте позже' } as const;
 
 export async function POST(request: Request): Promise<NextResponse> {
   const raw = await readBodyAtMost(request, MAX_JSON_BODY);

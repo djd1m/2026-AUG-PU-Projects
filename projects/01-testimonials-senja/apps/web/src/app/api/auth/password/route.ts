@@ -14,6 +14,9 @@ import { changePassword, validNewPassword } from '@/lib/password-change';
 import { extractClientIP } from '@/lib/client-ip';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
 import { MAX_JSON_BODY, readBodyAtMost } from '@/lib/request-body';
+// ТОТ ЖЕ литерал, что у входа — ИМПОРТОМ, а не копией: прежде здесь стояла вторая копия
+// строки, а комментарий утверждал, что это тот же литерал.
+import { TOO_MANY } from '../login/route';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,8 +24,10 @@ export const dynamic = 'force-dynamic';
 // поэтому делается; различимость по ВРЕМЕНИ остаётся и принята осознанно — вор уже
 // знает, что сессия жива, потому что ею же и дошёл до этого маршрута.
 const UNAUTHORIZED = { error: 'неверный текущий пароль' } as const;
-// ТОТ ЖЕ литерал, что у входа: два разных текста «слишком много попыток» разъехались бы.
-const TOO_MANY = { error: 'слишком много попыток, попробуйте позже' } as const;
+// ТОТ ЖЕ литерал, что у входа — ИМПОРТОМ, а не копией. Прежде здесь стояла вторая копия
+// строки, а комментарий утверждал, что это тот же литерал: ровно то расхождение, которое
+// он обещал предотвратить, только уже случившееся.
+
 // Конкурентная смена — не перебор. 429 здесь вводил бы владельца в заблуждение.
 const BUSY = { error: 'смена пароля уже выполняется, повторите через несколько секунд' } as const;
 
@@ -68,9 +73,26 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   const ip = extractClientIP(request);
-  const result = await withAccount(accountId, (client) =>
-    changePassword(client, { accountId, ip, current, next }),
-  );
+
+  // set local lock_timeout действует на ВСЕ операторы транзакции, а не только на захват
+  // advisory-лока (тот TRY и ждать не умеет). Реально таймаут срабатывает на UPDATE, и
+  // Postgres бросает 55P03 — без этой обработки владелец получал 500 ровно на том
+  // сценарии, ради которого введён 409. Ревью воспроизвело: «МАРШРУТ БРОСИЛ НАРУЖУ:
+  // canceling statement due to lock timeout».
+  let result: Awaited<ReturnType<typeof changePassword>>;
+  try {
+    result = await withAccount(accountId, (client) =>
+      changePassword(client, { accountId, ip, current, next }),
+    );
+  } catch (err) {
+    const code = (err as { code?: string } | null)?.code;
+    // 55P03 lock_not_available, 40P01 deadlock_detected — обе означают «повтори», а не
+    // «сломалось». Всё остальное пробрасывается: настоящие дефекты обязаны быть видны.
+    if (code === '55P03' || code === '40P01') {
+      return NextResponse.json(BUSY, { status: 409 });
+    }
+    throw err;
+  }
 
   if (!result.ok) {
     if (result.reason === 'too_many') return NextResponse.json(TOO_MANY, { status: 429 });

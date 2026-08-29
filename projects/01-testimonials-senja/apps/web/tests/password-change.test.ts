@@ -7,6 +7,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
+import type { PoolClient } from 'pg';
 
 const DB_URL = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
 if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
@@ -21,7 +22,7 @@ const { attemptLogin, hashKey } = await import('../src/lib/login');
 const {
   changePassword, validNewPassword,
   PWCHANGE_PAIR_SCOPE, PWCHANGE_IP_SCOPE,
-  PWCHANGE_PAIR_THRESHOLD, PWCHANGE_IP_THRESHOLD,
+  PWCHANGE_PAIR_THRESHOLD, PWCHANGE_IP_THRESHOLD, PWCHANGE_SUCCESS_THRESHOLD,
   PWCHANGE_WINDOW, PWCHANGE_LOCK_NAMESPACE,
 } = await import('../src/lib/password-change');
 
@@ -252,36 +253,118 @@ describe('AC-010.19 — конкурентная смена это 409, а не 
   });
 });
 
+describe('AC-010.26 [ревью B-1] — конкурентные смены одного аккаунта сериализуются', () => {
+  it('N одновременных смен с РАЗНЫХ адресов: ровно одна ok, остальные busy', async () => {
+    const o = await makeOwner();
+    const N = 5;
+
+    // Ключ ЛИМИТА — пара, поэтому разные адреса дают разные ключи и разные локи по паре.
+    // До второго лока (по одному accountId) все N читали старый хеш, все проверяли его
+    // успешно и все возвращали ok — «последний записавший побеждает». Владелец получал
+    // 200 и cookie, уже отозванную чужим UPDATE, а пароль в базе — чужой.
+    const results = await Promise.all(
+      Array.from({ length: N }, (_, i) => change(o, OLD, `${NEW}-${i}`, ip())),
+    );
+    const ok = results.filter((r) => r.ok);
+    const busy = results.filter((r) => !r.ok && r.reason === 'busy');
+
+    // Падает при: убрать лок PWCHANGE_ACCOUNT_LOCK_NAMESPACE.
+    expect(ok.length, `успешных ${ok.length}, а должна быть ровно одна: ${JSON.stringify(results)}`)
+      .toBe(1);
+    expect(busy.length).toBe(N - 1);
+
+    // И старый пароль после этого не работает НИ РАЗУ.
+    const login = await withService((c) => attemptLogin(c, o.email, OLD, ip()));
+    expect(login.ok, 'старый пароль пережил конкурентную смену').toBe(false);
+  });
+});
+
+describe('AC-010.27 [ревью B-2] — грубый лимит по IP стережётся отдельно', () => {
+  it(`${PWCHANGE_IP_THRESHOLD} неверных попыток с одного адреса по РАЗНЫМ аккаунтам → 429`, async () => {
+    // Прежде удаление ТОЛЬКО проверки по IP оставляло все 37 тестов зелёными: AC-010.15
+    // видел запись (её никто не трогал), AC-010.10 срабатывал на паре, AC-010.16 проходил
+    // с другого адреса. Счётчик писали и не читали — зеркало того самого дефекта, который
+    // эта фича чинит в sessions.revoked_at.
+    const shared = ip();
+    const perAccount = 4;                       // меньше порога пары (5) — пара не сработает
+    const accounts = Math.ceil((PWCHANGE_IP_THRESHOLD + 2) / perAccount);
+    let sawTooMany = false;
+
+    outer: for (let a = 0; a < accounts; a += 1) {
+      const o = await makeOwner();
+      for (let i = 0; i < perAccount; i += 1) {
+        const r = await change(o, 'не-тот', NEW, shared);
+        if (!r.ok && r.reason === 'too_many') { sawTooMany = true; break outer; }
+      }
+    }
+    // Падает при: убрать ТОЛЬКО exceeded(PWCHANGE_IP_SCOPE, …).
+    expect(sawTooMany, 'грубый лимит по IP не сработал ни разу за 32 попытки').toBe(true);
+  });
+});
+
+describe('AC-010.28 [ревью H-1] — успешные смены тоже ограничены', () => {
+  it(`больше ${PWCHANGE_SUCCESS_THRESHOLD} успешных смен подряд не проходят`, async () => {
+    // Прогон ревью: 20 успешных смен подряд за 1131 мс, каждая по два argon2 и 19 МиБ.
+    // Комментарий в коде утверждал, что путь успеха «самоограничивается» — неверно:
+    // рабочая cookie выдаётся в том же ответе, а новый пароль вызывающий выбирает сам.
+    const o = await makeOwner();
+    let current = OLD;
+    let blocked = false;
+    for (let i = 0; i < PWCHANGE_SUCCESS_THRESHOLD + 2; i += 1) {
+      const next = `${NEW}-loop-${i}`;
+      const r = await change(o, current, next, ip());
+      if (!r.ok) {
+        expect(r.reason, `смена ${i + 1} отклонена не лимитом`).toBe('too_many');
+        blocked = true;
+        break;
+      }
+      current = next;
+    }
+    // Падает при: убрать exceeded/record по PWCHANGE_SUCCESS_SCOPE.
+    expect(blocked, 'цикл смен пароля не ограничен ничем').toBe(true);
+  });
+});
+
 describe('AC-010.12 — отказ между двумя UPDATE не оставляет частичного состояния', () => {
   it('индуцированный сбой на отзыве сессий откатывает и смену пароля', async () => {
     const o = await makeOwner();
     const session = await issueSession(o.accountId);
     const before = await storedHash(o.accountId);
 
-    // Механизм индукции: на корректной реализации между двумя UPDATE ничего не падает
-    // само, и «разнести по двум транзакциям» без сбоя дало бы тот же результат.
-    // Ограничение запрещает ТОЛЬКО запись revoked_at; вставку новых сессий (revoked_at
-    // пуст) оно пропускает, а FR-010 — единственный писатель этой колонки во всём
-    // проекте, поэтому параллельные тесты оно не заденет.
-    // DDL выполняет ВЛАДЕЛЕЦ таблицы: withService переключает роль на app_service,
-    // которому alter table не принадлежит («must be owner of table sessions»).
-    const ddl = await pool.connect();
-    // NOT VALID — обязательно: соседние тесты уже проставили revoked_at, и обычная
-    // форма отвергла бы ограничение на существующих строках. NOT VALID пропускает
-    // проверку прошлого, но ДЕЙСТВУЕТ на новые записи — то есть ровно на тот UPDATE,
-    // ради срыва которого ограничение и ставится.
-    await ddl.query(
-      'alter table sessions add constraint tmp_fr010_fail check (revoked_at is null) not valid');
-    try {
-      await expect(change(o, OLD, NEW), 'сбой не пробросился наружу').rejects.toThrow();
-      // Падает при M7: заменить один withAccount на два последовательных.
-      expect(await storedHash(o.accountId), 'пароль сменён, а сессии нет — частичное состояние')
-        .toBe(before);
-      expect(await sessionAlive(session)).toBe(true);
-    } finally {
-      await ddl.query('alter table sessions drop constraint tmp_fr010_fail');
-      ddl.release();
-    }
+    // Механизм индукции БЕЗ DDL. Прежняя версия вешала на общую таблицу sessions
+    // ограничение CHECK, и пока оно висело, параллельные тестовые ФАЙЛЫ этой же фичи
+    // падали на своих законных сменах пароля — набор врал красным примерно раз в десять
+    // прогонов. Комментарий там утверждал, что «FR-010 единственный писатель revoked_at,
+    // поэтому не заденет»: писатель действительно единственный, но вызывают его ТРИ файла,
+    // и запускаются они одновременно.
+    //
+    // Подменённый клиент роняет ровно второй UPDATE этой транзакции и не трогает схему,
+    // поэтому соседям он невидим по построению, а не по рассуждению.
+    const failOnRevoke = (client: PoolClient): PoolClient =>
+      new Proxy(client, {
+        get(target, prop, recv) {
+          if (prop !== 'query') return Reflect.get(target, prop, recv);
+          return (text: unknown, params?: unknown) => {
+            const sql = typeof text === 'string' ? text : (text as { text?: string })?.text ?? '';
+            if (/update\s+sessions/i.test(sql)) {
+              return Promise.reject(new Error('индуцированный сбой на отзыве сессий'));
+            }
+            return (target.query as (t: unknown, p?: unknown) => unknown)(text, params);
+          };
+        },
+      }) as PoolClient;
+
+    await expect(
+      withAccount(o.accountId, (c) =>
+        changePassword(failOnRevoke(c), { accountId: o.accountId, ip: ip(), current: OLD, next: NEW }),
+      ),
+      'сбой не пробросился наружу',
+    ).rejects.toThrow();
+
+    // Падает при M7: заменить один withAccount на два последовательных.
+    expect(await storedHash(o.accountId), 'пароль сменён, а сессии нет — частичное состояние')
+      .toBe(before);
+    expect(await sessionAlive(session)).toBe(true);
   });
 });
 

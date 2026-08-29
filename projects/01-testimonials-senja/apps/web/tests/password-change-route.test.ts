@@ -22,7 +22,7 @@ vi.mock('next/headers', () => ({
   }),
 }));
 
-const { withService, closePool } = await import('@proofwall/db');
+const { pool, withService, closePool } = await import('@proofwall/db');
 const { registerAccountAndProject } = await import('../src/lib/register');
 const { createSession, hashSessionToken } = await import('../src/lib/session');
 const { MAX_JSON_BODY } = await import('../src/lib/request-body');
@@ -180,5 +180,34 @@ describe('AC-010.6 / NFR-010.6 — успех выдаёт новую cookie в 
     expect(setCookie.toLowerCase()).toContain('httponly');
     // Токен в теле прочитал бы любой скрипт на странице.
     expect(JSON.stringify(await res.json())).not.toContain(token!);
+  });
+});
+
+
+describe('[ревью H-2] удержанная строка даёт 409, а не 500', () => {
+  it('lock_timeout на UPDATE отображается в busy, а не пробрасывается наружу', async () => {
+    // `set local lock_timeout` действует на ВСЕ операторы транзакции, а не только на захват
+    // advisory-лока (тот TRY и ждать не умеет). Реально таймаут срабатывает на select … for
+    // update и на UPDATE. Без обработки Postgres бросал 55P03, withAccount пробрасывал, и
+    // владелец получал 500 — ровно на том сценарии, ради которого введён 409. Форма при 500
+    // не получает JSON и показывает запасное «не удалось сменить пароль»: человек не узнаёт,
+    // что нужно просто повторить.
+    const owner = await makeOwner();
+    await login(owner.accountId);
+
+    const holder = await pool.connect();
+    try {
+      await holder.query('begin');
+      await holder.query('select id from accounts where id = $1 for update', [owner.accountId]);
+
+      const res = await post({ current_password: OLD, new_password: NEW });
+      // Падает при: убрать catch по 55P03/40P01 в маршруте.
+      expect(res.status, 'удержанная строка обязана дать 409 «повторите», а не 500').toBe(409);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error, 'тело 409 должно объяснять, что делать').toBeTruthy();
+    } finally {
+      await holder.query('rollback');
+      holder.release();
+    }
   });
 });
