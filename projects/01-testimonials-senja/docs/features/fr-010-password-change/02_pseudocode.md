@@ -1,6 +1,12 @@
 # FR-010 · Псевдокод
 
-> **Ревизия 2.** Изменено против ревизии 1: ключ лимита стал парой (B-5), `accountId`
+> **Ревизия 3.** Против ревизии 2 три правки, все по блокерам: argon2 нового пароля
+> переехал ВНУТРЬ транзакции, после проверки текущего (B-7 — снаружи он оказывался
+> до лимитера и давал бесплатное жжение CPU); константы получили свои имена `PWCHANGE_*`
+> (B-8 — прежние совпадали с экспортами `login.ts`); счётчик считается по каждому scope
+> отдельно (B-9).
+>
+> **Ревизия 2** изменяла против ревизии 1: ключ лимита стал парой (B-5), `accountId`
 > получает статус параметра, а не поля тела (B-1), argon2 нового пароля вынесен из
 > транзакции (H-1), лок обрёл пространство имён и таймаут (H-2, H-4), неудача захвата
 > лока отделена от исчерпания лимита (H-3), пороги названы числами (M-2).
@@ -11,16 +17,21 @@
 независимо от кода» было неисполнимо: прибивать нечего.
 
 ```
-PAIR_SCOPE     = 'pwchange_pair'   # ключ = (accountId, ip)
-PAIR_THRESHOLD = 5
-IP_SCOPE       = 'pwchange_ip'     # ключ = (ip); 30, а не 5 — за NAT сидят живые люди
-IP_THRESHOLD   = 30
-WINDOW         = 3600 секунд
-LOCK_NAMESPACE = 90_010            # у входа 90_009; важна только несовпадаемость
+PWCHANGE_PAIR_SCOPE     = 'pwchange_pair'   # ключ = (accountId, ip)
+PWCHANGE_PAIR_THRESHOLD = 5
+PWCHANGE_IP_SCOPE       = 'pwchange_ip'     # ключ = (ip); 30, а не 5 — за NAT живые люди
+PWCHANGE_IP_THRESHOLD   = 30
+PWCHANGE_WINDOW         = { seconds: 3600 }
+PWCHANGE_LOCK_NAMESPACE = 90_010            # у входа 90_009; важна несовпадаемость
 ```
 
-`hashKey`, `WINDOW` и форму ключа берём из `lib/login.ts` — вторым объявлением они
-разойдутся, и это будет тихо (AC-010.24).
+**Имена свои, значения свои — намеренно (B-8).** `lib/login.ts` уже экспортирует
+`PAIR_SCOPE`, `PAIR_THRESHOLD`, `IP_SCOPE`, `IP_THRESHOLD`, `WINDOW`, `LOCK_NAMESPACE` —
+ровно эти шесть. Переиспользовать их значило бы связать две фичи: правка порога входа
+молча изменила бы лимит смены пароля, и никакой тест этого не заметил бы.
+
+Из `login.ts` импортируется **только `hashKey`** — она про форму ключа, а не про политику,
+и второе её объявление разошлось бы с первым тихо (AC-010.24).
 
 ## Порядок
 
@@ -46,18 +57,13 @@ function POST(request):
     if not validNewPassword(next):  return 400
     if next === current:            return 400      # FR-010.5
 
-    # argon2 нового пароля — СНАРУЖИ транзакции (NFR-010.8, H-1). Соединение пула
-    # ещё не взято, держать нечего.
-    #
-    # ЦЕНА, названная вслух: хеш считается и тогда, когда текущий пароль окажется
-    # неверным, — то есть неудачная попытка стоит двух argon2 вместо одного. Это
-    # осознанный размен: процессорное время дешевле соединения пула, а число попыток
-    # ограничено парным счётчиком (5/час). Обратный порядок — «сначала проверить,
-    # потом хешировать» — вернул бы argon2 внутрь транзакции.
-    nextHash = await hashPassword(next)
-
+    # argon2 нового пароля здесь НЕ считается (B-7, NFR-010.8). Ревизия 2 ставила его
+    # тут — и тем самым ДО лимитера, который живёт внутри changePassword. Запрос,
+    # обречённый на 429, всё равно оплачивал полный хеш: 38 мс CPU и 19 МиБ на попытку,
+    # без потолка, из одной валидной cookie. Тот же CPU считает argon2 входа, то есть
+    # вход деградировал бы вместе. Хеш нужен ТОЛЬКО на пути успеха — там он и считается.
     result = await withAccount(accountId, client ->
-        changePassword(client, { accountId, ip, current, nextHash }))
+        changePassword(client, { accountId, ip, current, next }))
 
     switch result:
         busy         -> 409  BUSY         # AC-010.19: конкурентная смена, не перебор
@@ -69,7 +75,7 @@ function POST(request):
                         # пределами транзакции: она уже закоммичена (tenant.ts:33).
 
 # ── ЛОГИКА: lib/password-change.ts — про HTTP не знает ─────────────────────────
-function changePassword(client, { accountId, ip, current, nextHash }):
+function changePassword(client, { accountId, ip, current, next }):
 
     # ── ШАГ 0: пояс на случай, если лок всё же удержится (NFR-010.9) ───────────
     client.query("set local lock_timeout = '250ms'")
@@ -79,18 +85,19 @@ function changePassword(client, { accountId, ip, current, nextHash }):
     # с украденной cookie возможность запереть владельца пятью неверными попытками:
     # владелец не сменит пароль, а других путей отзыва в системе нет. То же решение
     # и по той же причине принято на входе (lib/login.ts:36-37).
-    keyPair = hashKey(PAIR_SCOPE, accountId, ip)
-    keyIp   = hashKey(IP_SCOPE, ip)
+    keyPair = hashKey(PWCHANGE_PAIR_SCOPE, accountId, ip)
+    keyIp   = hashKey(PWCHANGE_IP_SCOPE, ip)
 
     # Лок TRY по паре: проверка и запись счётчика иначе не атомарны — под READ COMMITTED
     # сто параллельных запросов увидят count = 0 и пройдут все.
     # Двухаргументная форма: одноаргументная даёт 32 бита и столкнулась бы с локами
     # входа в той же БД (NFR-010.9).
-    if not pg_try_advisory_xact_lock(LOCK_NAMESPACE, hashtext(keyPair)):
+    if not pg_try_advisory_xact_lock(PWCHANGE_LOCK_NAMESPACE, hashtext(keyPair)):
         return busy          # НЕ too_many: это конкуренция, а не перебор (H-3, AC-010.19)
 
-    if rateLimit.exceeded(IP_SCOPE,   keyIp,   WINDOW, IP_THRESHOLD,   client): return too_many
-    if rateLimit.exceeded(PAIR_SCOPE, keyPair, WINDOW, PAIR_THRESHOLD, client): return too_many
+    # До этой черты argon2 не считается НИ РАЗУ (AC-010.25).
+    if rateLimit.exceeded(PWCHANGE_IP_SCOPE,   keyIp,   PWCHANGE_WINDOW, PWCHANGE_IP_THRESHOLD,   client): return too_many
+    if rateLimit.exceeded(PWCHANGE_PAIR_SCOPE, keyPair, PWCHANGE_WINDOW, PWCHANGE_PAIR_THRESHOLD, client): return too_many
 
     # ── ШАГ 2: текущий пароль ─────────────────────────────────────────────────
     # ФИЛЬТР ПО ВЛАДЕЛЬЦУ ОБЯЗАТЕЛЕН, и у accounts он называется id, а не account_id
@@ -102,12 +109,24 @@ function changePassword(client, { accountId, ip, current, nextHash }):
     # Единственный argon2 внутри транзакции: ему нужен хеш из БД. Вынести наружу
     # означало бы читать хеш отдельной транзакцией и получить TOCTOU (NFR-010.8).
     if not verifyPassword(row.password_hash, current):
-        rateLimit.record(PAIR_SCOPE, keyPair, client)   # AC-010.15 проверяет, что это здесь
-        rateLimit.record(IP_SCOPE,   keyIp,   client)
+        # ДВЕ строки на одну попытку — по одной на ключ. AC-010.15 считает их
+        # ПО SCOPE, а не суммарно: суммарный счёт «ровно +1» был бы красным здесь
+        # и зелёным на мутации «убрать запись только по IP» (B-9).
+        rateLimit.record(PWCHANGE_PAIR_SCOPE, keyPair, client)
+        rateLimit.record(PWCHANGE_IP_SCOPE,   keyIp,   client)
         return unauthorized                             # тот же ответ, что «нет аккаунта»
 
     # ── ШАГ 3: пароль и сессии — ОДНОЙ транзакцией (NFR-010.1) ────────────────
-    # Записываем ГОТОВЫЙ хеш: argon2 посчитан снаружи.
+    # ЗДЕСЬ и только здесь считается argon2 нового пароля. Мы уже знаем, что текущий
+    # пароль верен, лимит не исчерпан и лок наш, — то есть путь злоупотребления сюда
+    # не доходит и хеша не оплачивает (B-7).
+    #
+    # Цена: на пути УСПЕХА транзакция удерживает соединение ещё ~38 мс. Это принято:
+    # смена пароля — операция редкая, аутентифицированная и самоограничивающаяся
+    # (после успеха сессия сменилась). Вынести хеш наружу нельзя, не разорвав
+    # атомарность с проверкой: между verify и UPDATE появился бы TOCTOU.
+    nextHash = await hashPassword(next)
+
     UPDATE accounts SET password_hash = $nextHash WHERE id = $accountId
 
     # ВСЕ сессии, включая текущую. «Прочие» оставили бы вора внутри: кража cookie
@@ -145,6 +164,11 @@ function changePassword(client, { accountId, ip, current, nextHash }):
 
 **Не отзываем сессии до проверки пароля.** Иначе неверная попытка выбрасывала бы владельца —
 и это была бы вторая кнопка «запереть владельца», рядом с той, что убрана в B-5.
+
+**Не считаем argon2 нового пароля до проверки текущего.** Он нужен ровно один раз и
+ровно на пути успеха. Любое более раннее место — до лимитера, до лока или до `verify` —
+даёт неаутентифицированной по сути попытке право сжечь 38 мс CPU и 19 МиБ, а число таких
+попыток ограничивает уже не лимитер, а только пропускная способность машины.
 
 **Не собираем HTTP-ответ внутри транзакции.** `withAccount` возвращает данные, ответ строит
 маршрут (NFR-010.6, NFR-010.8).
