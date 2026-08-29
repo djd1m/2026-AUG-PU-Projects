@@ -50,7 +50,12 @@ shared_for() {  # $1 — каталог сервиса; печатает кат�
   for pkg in packages/*/; do
     [ -d "$pkg/src" ] || continue
     name=$(python3 -c "import json,sys;print(json.load(open('$pkg/package.json'))['name'])" 2>/dev/null) || continue
-    grep -rqF "$name" "$1/src" 2>/dev/null && printf '%s/src ' "$pkg"
+    # Комментарии ИСКЛЮЧЕНЫ и здесь. services/worker/src/db.ts упоминает @proofwall/db
+    # в комментарии («работаем напрямую по SQL, а не через @proofwall/db») — и страж
+    # решал, что воркер этот пакет использует. Ложная связь тянула в его список чужие
+    # переменные. Тот же класс, что чтение комментариев ниже; исправлено вместе.
+    grep -rhv -E '^\s*(//|\*|/\*)' "$1/src" 2>/dev/null | grep -qF "$name" \
+      && printf '%s/src ' "$pkg"
   done
 }
 
