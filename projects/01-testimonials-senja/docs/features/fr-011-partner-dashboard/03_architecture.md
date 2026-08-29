@@ -1,12 +1,15 @@
 # FR-011 · Архитектура
 
+> **Ревизия 2.** Снято неверное утверждение о границе модуля (H-1), `issuePartnerCode`
+> описан как дополнение, а не замена (B-3), добавлена ротация токена без перевыпуска кода (H-5).
+
 ## Что меняется
 
 | Файл | Изменение | Требование |
 |---|---|---|
 | `packages/db/migrations/012_partner_dashboard_token.sql` | **новый** — `dashboard_token_hash` + уникальный индекс | FR-011.1, .2 |
 | `apps/web/src/lib/partner-auth.ts` | **новый** — выдача, хеширование, сверка токена | FR-011.2, NFR-011.1, .3, .4, .5 |
-| `apps/web/src/lib/partner.ts` | правка: `issuePartnerCode` выдаёт токен | FR-011.1 |
+| `apps/web/src/lib/partner.ts` | правка **дополнением**: `issuePartnerCode` дополнительно выдаёт токен (сигнатура, `id`, `audit_log`, `commission_rate`, `owner_account_id` и цикл подбора кода сохраняются); добавляются `rotateDashboardToken` и `getPartnerCohortDashboardById` | FR-011.1, .6, NFR-011.1 |
 | `apps/web/src/app/api/partner/session/route.ts` | **новый** — приём токена, cookie | FR-011.3, NFR-011.6 |
 | `apps/web/src/app/partner/page.tsx` | **новый** — форма ввода токена | FR-011.3 |
 | `apps/web/src/app/partner/dashboard/page.tsx` | **новый** — сам кабинет | FR-011.4, .5 |
@@ -36,9 +39,13 @@ create unique index if not exists partner_codes_dashboard_token_hash_idx
 `{ partnerCodeId, code } | null | TooMany`. Маршрут превращает это в ответ и ставить cookie;
 страница читает cookie и вызывает ту же функцию.
 
-**Тип — это и есть реализация NFR-011.1.** Идентификатор партнёра НЕ является входным
-параметром ни одной функции этого модуля: он всегда результат сверки токена. Ошибка «взяли
-партнёра из адреса» невозможна по сигнатуре, а не по внимательности.
+**Тип закрывает бо́льшую часть NFR-011.1, но не всё — и первая редакция это переоценила.**
+Идентификатор партнёра не является входом ни одной функции `partner-auth.ts`. Однако
+последним вызовом страницы была `getPartnerCohortDashboard(c, partner.code)`, а её параметр —
+`code`, то есть ПУБЛИЧНОЕ значение: граница кончалась на один вызов раньше, чем нужно.
+Поэтому вводится `getPartnerCohortDashboardById(client, partnerCodeId)`, и по этому пути
+публичный код не едет вовсе. Утверждение «невозможно по сигнатуре» верно только после
+этой правки, и то лишь для двух модулей — остальное закрывает страж AC-011.20.
 
 ```ts
 export type PartnerAuth =

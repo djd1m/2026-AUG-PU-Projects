@@ -1,5 +1,10 @@
 # FR-011 · Псевдокод
 
+> **Ревизия 2.** Три правки по блокерам: выдача токена показана как **diff** к существующей
+> функции, а не как новая (B-3 — прежний вид ломал 10 вызовов и терял self-referral);
+> лок берётся по **паре**, а не по IP (B-2); дальше по стеку едет `partner_code_id`, а не
+> публичный `code` (H-1).
+
 ## Константы
 
 ```
@@ -15,20 +20,54 @@ PARTNER_WINDOW      = { seconds: 3600 }
 есть только предъявительский секрет. А пара «токен + IP» дала бы атакующему **свежий бюджет
 на каждый пробуемый токен** — то есть отменила бы лимит ровно там, где он нужен.
 
-## Выдача токена — при создании партнёрского кода
+## Выдача токена — DIFF к существующей `issuePartnerCode`
+
+Функция уже существует (`partner.ts:31-62`) и несёт пять свойств, каждое из которых сломала бы
+переписанная версия: сигнатуру `(client, partnerName, options)` — её используют 10 вызовов;
+возврат `{ id, code }` — восемь вызовов деструктурируют `id`; цикл подбора кода с
+`on conflict (code) do nothing` на 10 попыток; запись `partner_code_issued` в `audit_log`;
+поля `commission_rate` и `owner_account_id`, без которых перестаёт ловиться self-referral
+(`referral.ts:117`).
+
+Поэтому — **только добавление**, тремя строками:
+
+```diff
+ export async function issuePartnerCode(client, partnerName, options) {
++  // Токен выдаётся здесь же: отдельная функция потребовала бы второй транзакции
++  // и оставила бы окно, где код есть, а кабинета к нему нет.
++  const token = randomBytes(PARTNER_TOKEN_BYTES).toString('base64url');
+   for (let attempt = 0; attempt < 10; attempt += 1) {
+     const code = generateCode(partnerName);
+     const inserted = await client.query(
+-      `insert into partner_codes (code, partner_name, commission_rate, owner_account_id)
+-       values ($1, $2, $3, $4) on conflict (code) do nothing returning id`,
++      `insert into partner_codes (code, partner_name, commission_rate, owner_account_id,
++                                  dashboard_token_hash)
++       values ($1, $2, $3, $4, $5) on conflict (code) do nothing returning id`,
+       ...
+     );
+     ...
+-    return { id, code };
++    return { id, code, dashboard_token: token };
+   }
+ }
+```
+
+Возвращаемое значение **дополняется**, а не заменяется: `{ id, code }` остаются на месте, и
+восемь тестов, деструктурирующих `id`, продолжают работать. Это и стережёт AC-011.19.
+
+### Ротация утраченного токена — в ТОЙ ЖЕ строке
 
 ```
-function issuePartnerCode(client, { partnerName, actorId }):    # существующая функция
-    code  = generateCode(partnerName)
+function rotateDashboardToken(client, code):
     token = randomBytes(PARTNER_TOKEN_BYTES) -> base64url
-
-    INSERT INTO partner_codes (code, partner_name, dashboard_token_hash)
-           VALUES ($code, $partnerName, sha256($token))
-
-    # Токен возвращается ОДИН раз и больше не восстановим: в БД лежит только хеш.
-    # Та же дисциплина, что у сессий (session.ts): компрометация БД не даёт доступа.
-    return { code, dashboard_token: token }
+    UPDATE partner_codes SET dashboard_token_hash = sha256($token) WHERE code = $code
+    return token
 ```
+
+**Не перевыпуск кода.** Перевыпуск создаёт новую строку, а все начисления привязаны к
+`partner_code_id` старой — партнёр увидел бы нули вместо своей истории, а его прежние
+реферальные ссылки перестали бы быть его ссылками (AC-011.22).
 
 ## Вход партнёра
 
@@ -57,7 +96,13 @@ function POST(request):
 function authenticatePartner(client, token, ip):
     keyIp = hashKey(PARTNER_IP_SCOPE, ip)
 
-    if not try_advisory_xact_lock(PARTNER_LOCK_NAMESPACE, hashtext(keyIp)): return TooMany
+    # ЛОК — по ПАРЕ (адрес, хеш токена). Лок по одному адресу отвергал бы ВТОРОГО
+    # добросовестного партнёра за тем же NAT на второй одновременной попытке, не дойдя
+    # ни до счётчика, ни до сверки: ровно то, что FR-009 уже чинил (login.ts:16-18).
+    # СЧЁТЧИК при этом остаётся по адресу — ключ по токену давал бы атакующему свежий
+    # бюджет на каждый пробуемый токен. Задачи разные, ключи разные.
+    keyLock = hashKey(PARTNER_IP_SCOPE, ip, sha256(token))
+    if not try_advisory_xact_lock(PARTNER_LOCK_NAMESPACE, hashtext(keyLock)): return TooMany
     if rateLimit.exceeded(PARTNER_IP_SCOPE, keyIp, PARTNER_WINDOW, PARTNER_IP_THRESHOLD, client):
         return TooMany
 
@@ -75,6 +120,8 @@ function authenticatePartner(client, token, ip):
         return null
 
     return { partnerCodeId: row.id }
+    # ВОЗВРАЩАЕТСЯ id, а не code. Дальше по стеку публичное значение не едет вовсе —
+    # иначе граница модуля кончается на один вызов раньше, чем нужно (H-1).
 ```
 
 ## Дашборд
@@ -92,7 +139,11 @@ function PartnerDashboardPage():
                                                   # иначе отзыв не имел бы силы до
                                                   # истечения cookie
 
-    data = withService(c -> getPartnerCohortDashboard(c, partner.code))
+    # По ID, а не по коду: getPartnerCohortDashboard в нынешнем виде принимает code
+    # (partner.ts:132), то есть ПУБЛИЧНОЕ значение — и утверждение «ошибка невозможна по
+    # сигнатуре» на ней ломалось. Функция получает вариант по id; прежняя остаётся для
+    # совместимости, но на этом пути не используется.
+    data = withService(c -> getPartnerCohortDashboardById(c, partner.partnerCodeId))
     render(data)
 ```
 
@@ -121,6 +172,10 @@ function PartnerDashboardPage():
 
 **Не проверяем статус кода только при входе.** Отзыв обязан действовать немедленно, иначе
 он не отзыв, а «перестанет работать через тридцать дней».
+
+**Не логируем токен нигде.** Ни `console.*`, ни `audit_log` на пути аутентификации не
+принимают переменную токена. Журнал назван третьей из трёх утечек и переживает остальные две
+(AC-011.21).
 
 **Не заводим партнёру пароль и учётную запись.** Это отдельная фича с регистрацией,
 восстановлением и почтой — ничего из этого в MVP нет. Предъявительский токен назван
