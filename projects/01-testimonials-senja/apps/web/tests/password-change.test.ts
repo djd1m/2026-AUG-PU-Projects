@@ -1,0 +1,423 @@
+// FR-010 — смена пароля и завершение ВСЕХ сессий.
+//
+// Три ревизии валидации ушли на то, чтобы критерии стали РАЗБОРЧИВЫМИ. Каждый тест ниже
+// снабжён строкой «падает при»: если её вырезать из кода, тест обязан покраснеть. Тест без
+// такого ответа в набор не берётся — он подтверждает существование кода, а не его работу.
+
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import path from 'node:path';
+
+const DB_URL = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
+if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
+process.env.DATABASE_URL = DB_URL;
+process.env.SESSION_SECRET = 'test-secret-at-least-16-chars-long';
+process.env.BASE_URL = 'https://proofwall.test';
+
+const { pool, withAccount, withService, closePool, rateLimit } = await import('@proofwall/db');
+const { registerAccountAndProject } = await import('../src/lib/register');
+const { createSession, hashSessionToken } = await import('../src/lib/session');
+const { attemptLogin, hashKey } = await import('../src/lib/login');
+const {
+  changePassword, validNewPassword,
+  PWCHANGE_PAIR_SCOPE, PWCHANGE_IP_SCOPE,
+  PWCHANGE_PAIR_THRESHOLD, PWCHANGE_IP_THRESHOLD,
+  PWCHANGE_WINDOW, PWCHANGE_LOCK_NAMESPACE,
+} = await import('../src/lib/password-change');
+
+afterAll(async () => { await closePool(); });
+
+const SRC = path.resolve(__dirname, '../src');
+const strip = (code: string) =>
+  code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+const read = (rel: string) => strip(readFileSync(path.resolve(SRC, rel), 'utf8'));
+function sourceFiles(dir: string): string[] {
+  const out: string[] = [];
+  for (const e of readdirSync(dir)) {
+    const full = path.join(dir, e);
+    if (statSync(full).isDirectory()) out.push(...sourceFiles(full));
+    else if (/\.tsx?$/.test(full)) out.push(full);
+  }
+  return out;
+}
+
+const OLD = 'old-correct-horse-battery';
+const NEW = 'new-correct-horse-battery';
+let seq = 0;
+
+interface Owner { accountId: string; email: string; slug: string; }
+
+/** Настоящая транзакция: changePassword открывает свою, откатить общую нельзя. */
+async function makeOwner(): Promise<Owner> {
+  seq += 1;
+  const slug = `pwc-${seq}-${Date.now().toString(36)}`;
+  const email = `${slug}@example.com`;
+  const r = await withService((c) =>
+    registerAccountAndProject(c, { email, password: OLD, desired_slug: slug, project_name: 'PWC' }),
+  );
+  if (!r.ok) throw new Error(`регистрация не удалась: ${JSON.stringify(r.body)}`);
+  const { rows } = await withService((c) =>
+    c.query<{ id: string }>('select id from accounts where email = $1', [email]),
+  );
+  return { accountId: rows[0]!.id, email, slug };
+}
+
+/** Уникальный ключ на тест — И МЕЖДУ ПРОГОНАМИ.
+ *
+ *  Первая версия давала `10.x.y.7` от счётчика, который обнуляется при старте набора.
+ *  Ключ грубого лимита строится только по адресу, порог 30, окно ЧАС, а таблица
+ *  rate_limit_events между прогонами не чистится — поэтому после шести прогонов подряд
+ *  один и тот же адрес набирал 30 записей, и ПЕРВАЯ же попытка возвращала too_many.
+ *  Тест зеленел ровно до того момента, пока окно не заполнится, и падал «через раз».
+ *
+ *  На этом уровне ключ никуда не парсится — он только хешируется, — поэтому берём
+ *  заведомо уникальную строку вместо правдоподобного адреса. */
+const RUN = `${process.pid}-${Date.now().toString(36)}`;
+function ip(): string {
+  seq += 1;
+  return `testkey-${RUN}-${seq}`;
+}
+
+async function issueSession(accountId: string): Promise<string> {
+  return withService((c) => createSession(c, accountId));
+}
+
+async function sessionAlive(token: string): Promise<boolean> {
+  const { rows } = await withService((c) =>
+    c.query('select 1 from sessions where token_hash = $1 and revoked_at is null', [
+      hashSessionToken(token),
+    ]),
+  );
+  return rows.length === 1;
+}
+
+async function storedHash(accountId: string): Promise<string> {
+  const { rows } = await withService((c) =>
+    c.query<{ password_hash: string }>('select password_hash from accounts where id = $1', [accountId]),
+  );
+  return rows[0]!.password_hash;
+}
+
+const change = (o: Owner, current: string, next: string, addr = ip()) =>
+  withAccount(o.accountId, (c) => changePassword(c, { accountId: o.accountId, ip: addr, current, next }));
+
+// ─────────────────────────────────────────────────────────────────────────────
+describe('AC-010.1 / AC-010.2 — пароль действительно сменился', () => {
+  it('верный текущий → ok, и вход НОВЫМ паролем работает', async () => {
+    const o = await makeOwner();
+    const r = await change(o, OLD, NEW);
+    expect(r.ok, JSON.stringify(r)).toBe(true);
+
+    // Падает при: убрать `update accounts set password_hash`.
+    const login = await withService((c) => attemptLogin(c, o.email, NEW, ip()));
+    expect(login.ok, 'новым паролем войти не удалось').toBe(true);
+  });
+
+  it('вход СТАРЫМ паролем после смены → отказ', async () => {
+    const o = await makeOwner();
+    expect((await change(o, OLD, NEW)).ok).toBe(true);
+    const login = await withService((c) => attemptLogin(c, o.email, OLD, ip()));
+    expect(login.ok, 'старый пароль всё ещё принимается').toBe(false);
+  });
+});
+
+describe('AC-010.3 / AC-010.14 / AC-010.4 — объём отзыва', () => {
+  it('cookie, КОТОРОЙ аутентифицирован запрос, мертва; вторая тоже; новая жива', async () => {
+    const o = await makeOwner();
+    const authenticating = await issueSession(o.accountId); // та самая
+    const otherDevice = await issueSession(o.accountId);    // второе устройство
+
+    const r = await change(o, OLD, NEW);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+
+    // AC-010.3 — падает при: дописать `and token_hash <> $current` (отзыв «прочих»).
+    // Именно эта строка различает «все» и «прочие»: вторую сессию гасят ОБА варианта.
+    expect(await sessionAlive(authenticating), 'текущая сессия пережила смену — вор остался внутри')
+      .toBe(false);
+
+    // AC-010.14 — падает при: заменить на `and token_hash = $current` (отзыв только текущей).
+    expect(await sessionAlive(otherDevice), 'вторая сессия пережила смену').toBe(false);
+
+    // AC-010.4 — падает при: поменять местами отзыв и выдачу, либо убрать createSession.
+    expect(await sessionAlive(r.token), 'выданная сессия мертва — владелец заперт').toBe(true);
+  });
+});
+
+describe('AC-010.5 / AC-010.6 — изоляция аккаунтов', () => {
+  it('сессии и пароль ДРУГОГО аккаунта не тронуты', async () => {
+    const victim = await makeOwner();
+    const actor = await makeOwner();
+    const victimSession = await issueSession(victim.accountId);
+    const victimHash = await storedHash(victim.accountId);
+
+    expect((await change(actor, OLD, NEW)).ok).toBe(true);
+
+    // AC-010.5 — падает при: убрать `and account_id = $1` из отзыва сессий.
+    expect(await sessionAlive(victimSession), 'чужая сессия отозвана').toBe(true);
+    // AC-010.6 — падает при: убрать `where id = $2` из смены пароля.
+    expect(await storedHash(victim.accountId), 'чужой пароль изменён').toBe(victimHash);
+  });
+});
+
+describe('AC-010.7 — неверный текущий пароль ничего не меняет', () => {
+  it('отказ, пароль прежний, сессии живы', async () => {
+    const o = await makeOwner();
+    const session = await issueSession(o.accountId);
+    const before = await storedHash(o.accountId);
+
+    const r = await change(o, 'совершенно-не-тот-пароль', NEW);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toBe('unauthorized');
+    expect(await storedHash(o.accountId), 'пароль изменён при неверном текущем').toBe(before);
+    expect(await sessionAlive(session), 'сессии отозваны при неверном текущем').toBe(true);
+  });
+});
+
+describe('AC-010.15 — счётчик пишется, и по КАЖДОМУ ключу отдельно', () => {
+  it('одна неверная попытка = +1 в паре И +1 в IP, считая по scope', async () => {
+    const o = await makeOwner();
+    const addr = ip();
+    const keyPair = hashKey(PWCHANGE_PAIR_SCOPE, o.accountId, addr);
+    const keyIp = hashKey(PWCHANGE_IP_SCOPE, addr);
+
+    const before = {
+      pair: await withService((c) => rateLimit.count(PWCHANGE_PAIR_SCOPE, keyPair, PWCHANGE_WINDOW, c)),
+      ip: await withService((c) => rateLimit.count(PWCHANGE_IP_SCOPE, keyIp, PWCHANGE_WINDOW, c)),
+    };
+    await change(o, 'не-тот', NEW, addr);
+    const after = {
+      pair: await withService((c) => rateLimit.count(PWCHANGE_PAIR_SCOPE, keyPair, PWCHANGE_WINDOW, c)),
+      ip: await withService((c) => rateLimit.count(PWCHANGE_IP_SCOPE, keyIp, PWCHANGE_WINDOW, c)),
+    };
+
+    // Считаем ПО SCOPE, а не суммарно. Суммарное «ровно +1» было бы красным здесь
+    // (верный код пишет две строки) и зелёным на мутации «убрать запись только по IP».
+    // Падает при M8b: убрать record(PWCHANGE_IP_SCOPE, …).
+    expect(after.ip - before.ip, 'грубый счётчик по IP не пишется').toBe(1);
+    // Падает при M8c: убрать record(PWCHANGE_PAIR_SCOPE, …).
+    expect(after.pair - before.pair, 'тугой счётчик по паре не пишется').toBe(1);
+  });
+});
+
+describe('AC-010.10 / AC-010.16 — лимит достигается НАСТОЯЩИМИ попытками', () => {
+  it(`${PWCHANGE_PAIR_THRESHOLD} неверных подряд → следующая даёт too_many`, async () => {
+    const o = await makeOwner();
+    const addr = ip();
+    for (let i = 0; i < PWCHANGE_PAIR_THRESHOLD; i += 1) {
+      const r = await change(o, 'не-тот', NEW, addr);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.reason, `попытка ${i + 1} не должна быть too_many`).toBe('unauthorized');
+    }
+    // Порог набран записями самой фичи, а не засевом — падает при: убрать rateLimit.exceeded.
+    const blocked = await change(o, OLD, NEW, addr);
+    expect(blocked.ok).toBe(false);
+    if (!blocked.ok) expect(blocked.reason).toBe('too_many');
+  });
+
+  it('исчерпанная пара НЕ мешает тому же владельцу с другого адреса', async () => {
+    const o = await makeOwner();
+    const thief = ip();
+    for (let i = 0; i < PWCHANGE_PAIR_THRESHOLD; i += 1) await change(o, 'не-тот', NEW, thief);
+    expect((await change(o, OLD, NEW, thief)).ok, 'пара не исчерпана — тест не проверяет ничего').toBe(false);
+
+    // ГЛАВНОЕ: вор не запирает владельца. Падает при M10 — ключ по одному accountId.
+    const owner = await change(o, OLD, NEW, ip());
+    expect(owner.ok, 'вор с украденной cookie запер владельца — защита стала кнопкой её отключения')
+      .toBe(true);
+  });
+});
+
+describe('AC-010.19 — конкурентная смена это 409, а не 429', () => {
+  it('занятый advisory-лок даёт busy, а не too_many', async () => {
+    const o = await makeOwner();
+    const addr = ip();
+    const keyPair = hashKey(PWCHANGE_PAIR_SCOPE, o.accountId, addr);
+
+    const holder = await pool.connect();
+    try {
+      await holder.query('begin');
+      await holder.query('select pg_advisory_xact_lock($1, hashtext($2))', [
+        PWCHANGE_LOCK_NAMESPACE, keyPair,
+      ]);
+      const r = await change(o, OLD, NEW, addr);
+      expect(r.ok).toBe(false);
+      // Падает при M15: вернуть too_many на неудачу захвата. «Слишком много попыток»
+      // на конкуренцию — ответ, не соответствующий происходящему.
+      if (!r.ok) expect(r.reason).toBe('busy');
+    } finally {
+      await holder.query('rollback');
+      holder.release();
+    }
+  });
+});
+
+describe('AC-010.12 — отказ между двумя UPDATE не оставляет частичного состояния', () => {
+  it('индуцированный сбой на отзыве сессий откатывает и смену пароля', async () => {
+    const o = await makeOwner();
+    const session = await issueSession(o.accountId);
+    const before = await storedHash(o.accountId);
+
+    // Механизм индукции: на корректной реализации между двумя UPDATE ничего не падает
+    // само, и «разнести по двум транзакциям» без сбоя дало бы тот же результат.
+    // Ограничение запрещает ТОЛЬКО запись revoked_at; вставку новых сессий (revoked_at
+    // пуст) оно пропускает, а FR-010 — единственный писатель этой колонки во всём
+    // проекте, поэтому параллельные тесты оно не заденет.
+    // DDL выполняет ВЛАДЕЛЕЦ таблицы: withService переключает роль на app_service,
+    // которому alter table не принадлежит («must be owner of table sessions»).
+    const ddl = await pool.connect();
+    // NOT VALID — обязательно: соседние тесты уже проставили revoked_at, и обычная
+    // форма отвергла бы ограничение на существующих строках. NOT VALID пропускает
+    // проверку прошлого, но ДЕЙСТВУЕТ на новые записи — то есть ровно на тот UPDATE,
+    // ради срыва которого ограничение и ставится.
+    await ddl.query(
+      'alter table sessions add constraint tmp_fr010_fail check (revoked_at is null) not valid');
+    try {
+      await expect(change(o, OLD, NEW), 'сбой не пробросился наружу').rejects.toThrow();
+      // Падает при M7: заменить один withAccount на два последовательных.
+      expect(await storedHash(o.accountId), 'пароль сменён, а сессии нет — частичное состояние')
+        .toBe(before);
+      expect(await sessionAlive(session)).toBe(true);
+    } finally {
+      await ddl.query('alter table sessions drop constraint tmp_fr010_fail');
+      ddl.release();
+    }
+  });
+});
+
+describe('AC-010.8 / AC-010.9 — границы нового пароля', () => {
+  it('короче 8 и длиннее 200 отвергаются, годный принимается', () => {
+    expect(validNewPassword('a'.repeat(7))).toBe(false);
+    expect(validNewPassword('a'.repeat(8))).toBe(true);
+    expect(validNewPassword('a'.repeat(200))).toBe(true);
+    expect(validNewPassword('a'.repeat(201))).toBe(false);
+    for (const bad of [null, undefined, 42, {}, ['a'.repeat(10)], true]) {
+      expect(validNewPassword(bad), JSON.stringify(bad)).toBe(false);
+    }
+  });
+});
+
+// ─── Стражи по исходнику ──────────────────────────────────────────────────────
+describe('AC-010.13 — каждый запрос к accounts/sessions фильтрует по владельцу', () => {
+  // ФАКТИЧЕСКИЕ имена ключей: у accounts это id, у sessions — account_id. Формулировка
+  // «account_id у обеих» падала бы на ВЕРНОЙ реализации (ревизия 1, блокер B-2).
+  const FILES = ['lib/password-change.ts', 'app/api/auth/password/route.ts'];
+
+  it.each(FILES)('%s: обращения к accounts несут where id = $', (rel) => {
+    const code = read(rel);
+    for (const stmt of code.split(';')) {
+      if (!/\baccounts\b/.test(stmt)) continue;
+      expect(stmt.replace(/\s+/g, ' '), `запрос к accounts без фильтра владельца: ${stmt.trim()}`)
+        .toMatch(/where id = \$/i);
+    }
+  });
+
+  it.each(FILES)('%s: обращения к sessions несут where account_id = $', (rel) => {
+    const code = read(rel);
+    for (const stmt of code.split(';')) {
+      // INSERT в sessions здесь быть не должно вовсе — выдача только через createSession,
+      // и это стережёт отдельный страж login.test.ts. Проверяем update/select.
+      if (!/\bsessions\b/.test(stmt) || !/\b(update|select|delete)\b/i.test(stmt)) continue;
+      expect(stmt.replace(/\s+/g, ' '), `запрос к sessions без account_id: ${stmt.trim()}`)
+        .toMatch(/where account_id = \$/i);
+    }
+  });
+});
+
+describe('AC-010.17 — accountId приходит из сессии, а не из тела', () => {
+  it('lib не знает про HTTP вовсе', () => {
+    const code = read('lib/password-change.ts');
+    for (const forbidden of ['next/headers', 'cookies(', 'request.', 'NextRequest', '.json()']) {
+      expect(code, `${forbidden} в логике = появился доступ к запросу`).not.toContain(forbidden);
+    }
+    expect(code, 'accountId обязан быть параметром').toMatch(/accountId:\s*string/);
+  });
+
+  it('маршрут берёт accountId ТОЛЬКО из currentAccountId()', () => {
+    const code = read('app/api/auth/password/route.ts');
+    expect(code).toContain('await currentAccountId()');
+    // Ни одна строка, читающая тело, не смеет упоминать идентификатор аккаунта.
+    for (const line of code.split('\n')) {
+      if (/\bbody\b|\bparsed\b/.test(line)) {
+        expect(line, `идентификатор аккаунта читается из тела: ${line.trim()}`)
+          .not.toMatch(/account_?[Ii]d/);
+      }
+    }
+  });
+});
+
+describe('AC-010.22 / AC-010.23 — порядок операций закреплён по исходнику', () => {
+  it('разбор тела — вне withAccount', () => {
+    const code = read('app/api/auth/password/route.ts');
+    // Позиция ВЫЗОВА, а не импорта: `withAccount` в строке import стоит первым и
+    // делал бы страж красным на верном коде.
+    const body = code.indexOf('await readBodyAtMost(');
+    const tx = code.indexOf('await withAccount(');
+    expect(body, 'вызов readBodyAtMost не найден').toBeGreaterThan(-1);
+    expect(tx, 'вызов withAccount не найден').toBeGreaterThan(-1);
+    expect(body, 'разбор тела внутри транзакции удерживает соединение пула').toBeLessThan(tx);
+  });
+
+  it('hashPassword стоит ПОСЛЕ verifyPassword и после обоих лимитов', () => {
+    const code = read('lib/password-change.ts');
+    const exceeded = code.lastIndexOf('rateLimit.exceeded');
+    const verify = code.indexOf('verifyPassword(account.password_hash');
+    const hash = code.indexOf('hashPassword(next)');
+    expect(hash, 'hashPassword(next) не найден').toBeGreaterThan(-1);
+    // Падает при M13: перенести hashPassword в начало.
+    expect(verify, 'хеш нового пароля считается до проверки текущего').toBeLessThan(hash);
+    // Падает при M13b: перенести hashPassword до лимитера (дефект ревизии 2).
+    expect(exceeded, 'хеш считается до лимитера — обречённый на 429 запрос платит argon2')
+      .toBeLessThan(hash);
+  });
+
+  it('advisory-лок двухаргументный, с пространством имён и таймаутом', () => {
+    const code = read('lib/password-change.ts');
+    expect(code).toContain('pg_try_advisory_xact_lock($1, hashtext($2))');
+    // Падает при M14: одноаргументная форма даёт 32 бита и сталкивается с локами входа.
+    expect(code).toContain('PWCHANGE_LOCK_NAMESPACE');
+    expect(code, 'ждущий лок копит ожидающих, каждый держит соединение')
+      .not.toMatch(/[^_]pg_advisory_xact_lock/);
+    expect(code).toContain('lock_timeout');
+  });
+});
+
+describe('AC-010.24 — hashKey одним объявлением, пороги свои', () => {
+  it('hashKey объявлен ровно в одном файле проекта', () => {
+    const impls = sourceFiles(SRC).filter((f) =>
+      /export\s+function\s+hashKey/.test(strip(readFileSync(f, 'utf8'))),
+    );
+    // Падает при M16: скопировать hashKey в password-change.ts.
+    expect(impls.map((f) => path.relative(SRC, f))).toEqual([path.join('lib', 'login.ts')]);
+  });
+
+  it('пороги НЕ импортируются из входа — иначе две фичи связаны', () => {
+    const code = read('lib/password-change.ts');
+    // Остаётся зелёным на M16b по построению: страж про hashKey, а не про пороги.
+    // Эта проверка — обратная: она требует, чтобы связи НЕ появилось.
+    expect(code, 'правка порога входа молча меняла бы лимит смены пароля')
+      .not.toMatch(/import\s*\{[^}]*\bPAIR_THRESHOLD\b[^}]*\}\s*from\s*'\.\/login'/);
+    expect(code).toContain('PWCHANGE_PAIR_THRESHOLD = 5');
+    expect(code).toContain('PWCHANGE_IP_THRESHOLD = 30');
+  });
+});
+
+describe('AC-010.20 — форма попадает в дизайн-систему', () => {
+  it('классы системы и autocomplete на обоих полях', () => {
+    const code = readFileSync(path.resolve(SRC, 'app/dashboard/[slug]/change-password.tsx'), 'utf8');
+    for (const cls of ['form', 'field', 'input', 'btn']) {
+      expect(code, `нет класса ${cls} — форма верстается в обход системы`)
+        .toMatch(new RegExp(`className="[^"]*\\b${cls}\\b`));
+    }
+    expect(code).toContain('autoComplete="current-password"');
+    expect(code).toContain('autoComplete="new-password"');
+  });
+});
+
+describe('AC-010.21 — новый маршрут закрыт пределом тела', () => {
+  it('route.ts вызывает readBodyAtMost, своей копии предела нет', () => {
+    const code = read('app/api/auth/password/route.ts');
+    expect(code).toContain('readBodyAtMost');
+    expect(code).toContain('MAX_JSON_BODY');
+  });
+});

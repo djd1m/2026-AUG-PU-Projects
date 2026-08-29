@@ -11,6 +11,7 @@ import { withAccount } from '@proofwall/db';
 import { currentAccountId } from '@/lib/current-session';
 import { buildProjectUrls } from '@/lib/urls';
 import { ModerationList, type Item } from './moderation-list';
+import { ChangePassword } from './change-password';
 import { ShareCta, type Install } from './share-cta';
 import { isPaid, isTier, tierSummary } from '@/lib/tariff';
 
@@ -112,6 +113,15 @@ export default async function DashboardPage({ params }: Params) {
           {pending > 0 && <span className="chip chip--warn">{pending} на проверке</span>}
         </div>
         <ModerationList initial={data?.items ?? []} />
+
+        <hr className="divider" />
+
+        <h2>Пароль</h2>
+        <p className="small muted" style={{ marginTop: 6 }}>
+          Смена пароля завершает сессии на ВСЕХ устройствах, включая это, и тут же
+          выдаёт этому браузеру новую. Так украденная cookie перестаёт работать.
+        </p>
+        <ChangePassword />
       </div>
     </main>
   );

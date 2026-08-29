@@ -323,10 +323,18 @@ describe('стражи по исходнику', () => {
       .not.toMatch(/[^_]pg_advisory_xact_lock/);
   });
 
-  it('предел тела применён на ОБОИХ неаутентифицированных маршрутах', () => {
+  it('предел тела применён на ВСЕХ маршрутах, принимающих JSON-тело', () => {
     // L-2 ревью: у входа предел был, у регистрации нет — закрытой оставалась одна
     // дверь из двух. Реализация одна (lib/request-body.ts), копий быть не должно.
-    for (const rel of ['app/api/auth/login/route.ts', 'app/api/auth/register/route.ts']) {
+    //
+    // FR-010 добавил третий маршрут. Он АУТЕНТИФИЦИРОВАН, и соблазн его сюда не
+    // вносить реален — но сессия могла быть украдена, а список, не пополняемый вместе
+    // с маршрутами, воспроизводит ровно ту находку L-2, ради которой страж и написан.
+    for (const rel of [
+      'app/api/auth/login/route.ts',
+      'app/api/auth/register/route.ts',
+      'app/api/auth/password/route.ts',
+    ]) {
       expect(read(rel), `${rel} не ограничивает размер тела`).toContain('readBodyAtMost');
     }
     const impls = sourceFiles(SRC).filter((f) =>
