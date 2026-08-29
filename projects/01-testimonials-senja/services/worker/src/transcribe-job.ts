@@ -159,19 +159,25 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
       // здесь уходил бы в ОБРЕЧЁННУЮ транзакцию, когда исходная ошибка пришла от
       // client.query: транзакция уже в abort, запрос падает с 25P02 и ПОДМЕНЯЕТ исходное
       // исключение. Тогда не выполнятся ни откат, ни проброс (NFR-012.6, NFR-012.7).
+      // Счётчик пишется ОТНОСИТЕЛЬНО, а условие включает статус (ревью M-1).
+      // Учётная транзакция в ветке не-SttApiError идёт уже БЕЗ FOR UPDATE: откат снял
+      // блокировку, и до COMMIT проходят три сетевых обмена, в течение которых строку
+      // может взять другой воркер. Абсолютное значение, вычисленное из строки,
+      // прочитанной в ОТКАЧЕННОЙ транзакции, затёрло бы чужой инкремент; условие по
+      // статусу не даёт воскресить уже завершённую строку.
       const SCHEDULE_SQL = `UPDATE testimonials
-            SET transcript_attempts = $2,
-                transcript_next_attempt_at = clock_timestamp() + ($3 || ' milliseconds')::interval
-          WHERE id = $1`;
+            SET transcript_attempts = transcript_attempts + 1,
+                transcript_next_attempt_at = clock_timestamp() + ($2 || ' milliseconds')::interval
+          WHERE id = $1 AND transcript_status = 'pending'`;
       const GIVE_UP_SQL = `UPDATE testimonials
-            SET transcript_status = 'failed', transcript_attempts = $2
-          WHERE id = $1`;
+            SET transcript_status = 'failed', transcript_attempts = transcript_attempts + 1
+          WHERE id = $1 AND transcript_status = 'pending'`;
 
       if (err instanceof SttApiError) {
         if (attempts >= MAX_ATTEMPTS) {
           // Исчерпали. Отзыв остаётся валидным и модерируемым даже без транскрипта
           // (канон Architecture §10: enum допускает failed).
-          await client.query(GIVE_UP_SQL, [row.id, attempts]);
+          await client.query(GIVE_UP_SQL, [row.id]);
           await client.query("COMMIT");
       settled = true;
           logError("transcription_failed", row.id, err);
@@ -179,7 +185,7 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
         }
         // Строка ОСТАЁТСЯ pending — это и есть возврат в очередь. Новых значений
         // статуса не вводим: ожидание выражается парой «pending + срок в будущем».
-        await client.query(SCHEDULE_SQL, [row.id, attempts, String(delayMs)]);
+        await client.query(SCHEDULE_SQL, [row.id, String(delayMs)]);
         await client.query("COMMIT");
       settled = true;
         logError("transcription_retry_scheduled", row.id, err);
@@ -208,13 +214,16 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
         await client.query("BEGIN");
         await client.query(
           attempts >= MAX_ATTEMPTS ? GIVE_UP_SQL : SCHEDULE_SQL,
-          attempts >= MAX_ATTEMPTS ? [row.id, attempts] : [row.id, attempts, String(delayMs)],
+          attempts >= MAX_ATTEMPTS ? [row.id] : [row.id, String(delayMs)],
         );
         await client.query("COMMIT");
       settled = true;
-      } catch {
+      } catch (recordErr) {
         // Учесть не вышло — БД действительно недоступна, делать больше нечего.
-        // Состояние соединения разберёт внешний обработчик.
+        // Состояние соединения разберёт внешний обработчик, но НАСТОЯЩУЮ причину
+        // отдаём ему мы: иначе в событие release пула уйдёт исходная ошибка, а та,
+        // из-за которой упал учёт, не попадёт никуда (ревью L-1).
+        logError("transcription_attempt_record_failed", row.id, recordErr);
       }
 
       // Исходная ошибка НЕ теряется ни на одном пути: супервизор обязан её увидеть.

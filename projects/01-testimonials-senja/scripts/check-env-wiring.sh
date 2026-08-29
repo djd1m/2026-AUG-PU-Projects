@@ -69,6 +69,10 @@ for svc_dir in apps/web services/worker services/transcribe; do
   # ДВЕ формы чтения, и вторая обязательна. Прямое `process.env.NAME` находится
   # регэкспом, но имя может уехать в СТРОКОВЫЙ аргумент помощника
   # (`positiveIntFromEnv('PGPOOL_MAX', 30)`) — тогда первая форма его не видит.
+  # Кавычки ОБЕ: воркер пишет "PGPOOL_MAX", веб — 'PGPOOL_MAX'. Шаблон под одну из них
+  # молча пропускал половину кода — тот же класс, что чтение комментариев ниже.
+  # ЗАКРЫВАЮЩУЮ кавычку не захватываем: с ней имя переставало быть концом строки,
+  # и следующий grep с якорем $ не находил ничего. Страж молчал при живом пробеле.
   # Помощники перечислены явно: молчаливое расширение шаблона однажды начнёт ловить
   # посторонние строки и утопит настоящие потери в шуме.
   ENV_HELPERS='positiveIntFromEnv'
@@ -81,8 +85,9 @@ for svc_dir in apps/web services/worker services/transcribe; do
   # shellcheck disable=SC2086
   code=$(grep -rhv -E '^\s*(//|\*|/\*)' $scan_dirs 2>/dev/null)
   used=$( { printf '%s\n' "$code" | grep -oE 'process\.env\.[A-Z][A-Z0-9_]*' | sed 's/.*env\.//';
-            printf '%s\n' "$code" | grep -oE "(${ENV_HELPERS})\('[A-Z][A-Z0-9_]*'" \
-              | grep -oE "'[A-Z][A-Z0-9_]*'" | tr -d "'"; } | sort -u)
+            printf '%s\n' "$code" \
+              | grep -oE "(${ENV_HELPERS})\((\"|')[A-Z][A-Z0-9_]*" \
+              | grep -oE '[A-Z][A-Z0-9_]*$'; } | sort -u)
   [ -z "$used" ] && continue
 
   passed=$(docker compose "${COMPOSE_ARGS[@]}" config 2>/dev/null \
