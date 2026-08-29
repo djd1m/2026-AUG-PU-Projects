@@ -141,12 +141,20 @@ export async function changePassword(
   // ФИЛЬТР ПО ВЛАДЕЛЬЦУ ОБЯЗАТЕЛЕН, и у accounts он называется id, а не account_id
   // (003_core.sql:9). RLS к accounts НЕ применяется (007_rls.sql:31), хотя update
   // этой роли выдан: забыть фильтр — значит сменить пароль ЧУЖОМУ аккаунту.
-  // FOR UPDATE — пояс к advisory-локу выше. Голый SELECT под READ COMMITTED строку НЕ
-  // блокирует, и прежний комментарий, утверждавший, что «внутри транзакции TOCTOU
-  // невозможен», был просто неверен. Благодаря локу ожидания здесь не возникает, но
-  // строка защищена и от путей, которые лока не берут.
+  // Блокировки строки здесь НЕТ намеренно — ни FOR UPDATE, ни FOR NO KEY UPDATE.
+  //
+  // Обе версии брались ДО argon2 и удерживались всё время проверки (~22 мс). Поток попыток
+  // вора при этом держал строку почти непрерывно, и владелец проходил 1 попытку из 6 —
+  // то есть запирание владельца возвращалось, только уже через строчную блокировку вместо
+  // advisory-лока. Седьмое подряд повторение одного класса, и найдено оно СВОИМ ЖЕ тестом.
+  // FOR UPDATE вдобавок блокировал вход в аккаунт: insert into sessions берёт на
+  // родительской строке FOR KEY SHARE, а он конфликтует ровно с FOR UPDATE.
+  //
+  // Гонку закрывает сравнение-и-замена в самом UPDATE (шаг 4): строка меняется, только
+  // если хеш всё ещё тот, который мы проверили. Блокировка живёт ровно время UPDATE —
+  // микросекунды, — и брать её заранее не нужно вовсе.
   const found = await client.query<{ password_hash: string }>(
-    'select password_hash from accounts where id = $1 for update',
+    'select password_hash from accounts where id = $1',
     [accountId],
   );
   const account = found.rows[0] ?? null;
@@ -174,7 +182,20 @@ export async function changePassword(
   // самоограничивается (после успеха сессия сменилась).
   const nextHash = await hashPassword(next);
 
-  await client.query('update accounts set password_hash = $1 where id = $2', [nextHash, accountId]);
+  // СРАВНЕНИЕ-И-ЗАМЕНА. `and password_hash = $3` — это и есть защита от гонки: если между
+  // нашим чтением и этой строкой кто-то успел сменить пароль, условие не выполнится и
+  // затронуто будет НОЛЬ строк.
+  const updated = await client.query(
+    'update accounts set password_hash = $1 where id = $2 and password_hash = $3',
+    [nextHash, accountId, account.password_hash],
+  );
+  if (updated.rowCount === 0) {
+    // Проиграли гонку: пароль уже сменил кто-то другой. `unauthorized` здесь семантически
+    // верен — «текущий пароль», который мы проверили, действительно перестал быть текущим.
+    // Транзакция откатывать нечего: до этой строки мы ничего не писали, кроме счётчика,
+    // а он относится к попытке и остаётся законно.
+    return { ok: false, reason: 'unauthorized' };
+  }
 
   // ВСЕ сессии, включая текущую (пункт 4 в шапке).
   await client.query(

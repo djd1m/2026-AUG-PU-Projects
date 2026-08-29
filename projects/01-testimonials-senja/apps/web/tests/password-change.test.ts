@@ -304,7 +304,10 @@ describe('AC-010.29 [ревью B-1\u2032] — вор не может запер
     // взять лок, и тест оставался ЗЕЛЁНЫМ даже с возвращённым локом — то есть был зелёным
     // по построению. Дефект проявляется только при непрерывной занятости ресурса, поэтому
     // вор шлёт K параллельных потоков без пауз.
-    const K = 3;
+    // K=6, а не 3: ревью замерило, что при K=3 страж ловил возврат дефекта лишь в 3
+    // прогонах из 8. Страж, ловящий через раз, не отличим от отсутствующего в тот прогон,
+    // когда он промолчал.
+    const K = 6;
     let stop = false;
     const thieves = Array.from({ length: K }, async () => {
       // Вор пароля не знает — у него только украденная cookie. Его попытки обречены, но
@@ -317,18 +320,62 @@ describe('AC-010.29 [ревью B-1\u2032] — вор не может запер
       while (!stop) await change(o, 'вор-пароля-не-знает', `${NEW}-thief`, ip());
     });
 
-    let ownerOk = false;
-    for (let i = 0; i < 8 && !ownerOk; i += 1) {
-      const r = await change(o, OLD, `${NEW}-owner`, ownerIp);
-      if (r.ok) ownerOk = true;
-      else await new Promise((r2) => setTimeout(r2, 60));  // пауза человека между кликами
+    // Утверждается ДОЛЯ успеха, а не «хотя бы раз». «Хотя бы раз из восьми» — слишком
+    // слабое требование: владелец, которому нужно восемь попыток, чтобы выгнать вора,
+    // практически заперт, а страж при этом зелен.
+    let ownerOk = 0;
+    const ATTEMPTS = 6;
+    // Текущий пароль ОБНОВЛЯЕТСЯ после каждой удачи. Первая версия этого цикла подавала
+    // OLD на каждой итерации и потому давала ровно 1 успех из 6 — стабильно, независимо от
+    // вора: после первой смены OLD перестаёт быть текущим. Число выглядело как запирание
+    // владельца, а было дефектом теста. Отличило их постоянство: конкуренция даёт разброс,
+    // а здесь было ровно 1 в каждом из трёх прогонов.
+    let currentPw = OLD;
+    for (let i = 0; i < ATTEMPTS; i += 1) {
+      const nextPw = `${NEW}-owner-${i}`;
+      const r = await change(o, currentPw, nextPw, ownerIp);
+      if (r.ok) { ownerOk += 1; currentPw = nextPw; }
+      await new Promise((r2) => setTimeout(r2, 60));  // пауза человека между кликами
     }
     stop = true;
     await Promise.all(thieves);
 
     // Падает при: вернуть TRY-лок по одному accountId.
-    expect(ownerOk, 'владелец не смог сменить пароль под потоком вора — вор заперт в аккаунте')
-      .toBe(true);
+    expect(ownerOk, `владелец прошёл ${ownerOk} из ${ATTEMPTS} — под потоком вора он заперт`)
+      .toBeGreaterThanOrEqual(ATTEMPTS - 1);
+  });
+});
+
+describe('AC-010.32 [ревью H-1] — смена пароля не блокирует ВХОД в тот же аккаунт', () => {
+  it('пока строка аккаунта удерживается сменой, createSession проходит', async () => {
+    // sessions.account_id — внешний ключ на accounts(id), а INSERT в дочернюю таблицу берёт
+    // на РОДИТЕЛЬСКОЙ строке блокировку FOR KEY SHARE. Она конфликтует ровно с одним видом
+    // строчной блокировки — с FOR UPDATE. То есть при `for update` вход в аккаунт вставал
+    // бы в очередь за сменой пароля и через lock_timeout получал 55P03, а маршрут входа его
+    // не ловит и отдал бы 500. Замерено ревью: при 16 одновременных сменах 2 входа из 10.
+    //
+    // FOR NO KEY UPDATE сериализует смены между собой ровно так же, но вход пропускает.
+    const o = await makeOwner();
+
+    const holder = await pool.connect();
+    try {
+      await holder.query('begin');
+      // Худший случай: кто-то удерживает строку аккаунта самой сильной блокировкой.
+      // changePassword теперь не берёт её вовсе (сравнение-и-замена в UPDATE), но вход
+      // обязан проходить даже когда строку держит кто-то другой.
+      await holder.query('select password_hash from accounts where id = $1 for no key update',
+        [o.accountId]);
+
+      // Вход в ЭТОТ ЖЕ аккаунт, пока строка удерживается. Падает при: заменить на FOR UPDATE.
+      const token = await withService(async (c) => {
+        await c.query("set local lock_timeout = '250ms'");
+        return createSession(c, o.accountId);
+      });
+      expect(await sessionAlive(token), 'вход не прошёл во время смены пароля').toBe(true);
+    } finally {
+      await holder.query('rollback');
+      holder.release();
+    }
   });
 });
 
