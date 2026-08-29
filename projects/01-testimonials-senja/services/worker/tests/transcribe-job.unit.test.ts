@@ -44,7 +44,7 @@ describe("claimAndProcessOneTestimonial — последовательность
   });
 
   it("успех: BEGIN → SELECT → UPDATE(...completed) → COMMIT", async () => {
-    const { client, queries } = fakePoolClient([{ id: "t-1", video_object_key: "k1" }]);
+    const { client, queries } = fakePoolClient([{ id: "t-1", video_object_key: "k1", transcript_attempts: 0 }]);
     const pool = { connect: vi.fn(async () => client) } as unknown as Pool;
 
     const transcribeClient: TranscribeClient = { transcribeVideo: vi.fn().mockResolvedValue("текст") };
@@ -63,8 +63,10 @@ describe("claimAndProcessOneTestimonial — последовательность
     ]);
   });
 
-  it("SttApiError: BEGIN → SELECT → UPDATE(...failed) → COMMIT (не ROLLBACK)", async () => {
-    const { client, queries } = fakePoolClient([{ id: "t-2", video_object_key: "k2" }]);
+  // FR-012: несущее утверждение теста — «на ошибке ПРОВАЙДЕРА мы COMMIT, а не ROLLBACK» —
+  // сохранено. Изменился исход первой попытки: не failed сразу, а планирование повтора.
+  it("SttApiError на ПЕРВОЙ попытке: BEGIN → SELECT → UPDATE(срок) → COMMIT (не ROLLBACK)", async () => {
+    const { client, queries } = fakePoolClient([{ id: "t-2", video_object_key: "k2", transcript_attempts: 0 }]);
     const pool = { connect: vi.fn(async () => client) } as unknown as Pool;
 
     const transcribeClient: TranscribeClient = {
@@ -77,13 +79,13 @@ describe("claimAndProcessOneTestimonial — последовательность
       presignVideoUrl: vi.fn().mockResolvedValue("https://minio.test/k2"),
     });
 
-    expect(result).toEqual({ status: "failed", testimonialId: "t-2" });
-    expect(queries).not.toContain("ROLLBACK");
+    expect(result).toEqual({ status: "retry_scheduled", testimonialId: "t-2", attempts: 1 });
+    expect(queries, "ошибка провайдера не должна откатывать транзакцию").not.toContain("ROLLBACK");
     expect(queries[queries.length - 1]).toBe("COMMIT");
   });
 
   it("непредвиденная ошибка: ROLLBACK, ошибка пробрасывается, release всё равно вызван", async () => {
-    const { client, queries } = fakePoolClient([{ id: "t-3", video_object_key: "k3" }]);
+    const { client, queries } = fakePoolClient([{ id: "t-3", video_object_key: "k3", transcript_attempts: 0 }]);
     const pool = { connect: vi.fn(async () => client) } as unknown as Pool;
 
     const transcribeClient: TranscribeClient = {
@@ -98,7 +100,14 @@ describe("claimAndProcessOneTestimonial — последовательность
       }),
     ).rejects.toThrow("баг, не SttApiError");
 
-    expect(queries[queries.length - 1]).toBe("ROLLBACK");
+    // FR-012: ROLLBACK по-прежнему ОБЯЗАТЕЛЕН — отзыв не помечается failed по причине,
+    // не связанной с провайдером. Но после отката идёт учёт попытки ОТДЕЛЬНОЙ транзакцией
+    // на том же соединении: без него строка осталась бы pending без срока, и ORDER BY
+    // created_at выбирал бы ЕЁ ЖЕ каждый тик, блокируя очередь навсегда.
+    const rollbackAt = queries.indexOf("ROLLBACK");
+    expect(rollbackAt, "откат обязателен").toBeGreaterThan(-1);
+    expect(queries.slice(rollbackAt), "после отката обязан идти учёт попытки")
+      .toEqual(["ROLLBACK", "BEGIN", expect.stringContaining("UPDATE testimonials"), "COMMIT"]);
     expect((client as unknown as { release: () => void }).release).toHaveBeenCalledOnce();
   });
 });

@@ -11,7 +11,7 @@
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type pg from "pg";
-import { claimAndProcessOneTestimonial } from "../src/transcribe-job.js";
+import { claimAndProcessOneTestimonial, MAX_ATTEMPTS } from "../src/transcribe-job.js";
 import { SttApiError, type TranscribeClient } from "../src/transcribe-client.js";
 import { createTestPool, dropSchema, setupSchema, testDatabaseUrl, truncateAll } from "./helpers/test-db.js";
 
@@ -42,8 +42,16 @@ describe.skipIf(!hasTestDb)("transcribeVideoJob — путь failed и путь 
     return rows[0]!.id;
   }
 
-  it("SttApiError → transcript_status='failed', отзыв остаётся видимым (transcript NULL)", async () => {
+  // FR-012 изменил, КОГДА наступает failed, а не наступает ли: теперь после исчерпания
+  // попыток, а не на первом сбое. Утверждение теста — «отзыв остаётся видимым, транскрипт
+  // NULL» — сохранено полностью; изменилось только условие входа. Первый сбой проверяется
+  // отдельно в transcribe-retry.test.ts (AC-012.1).
+  it("SttApiError на ПОСЛЕДНЕЙ попытке → transcript_status='failed', отзыв остаётся видимым (transcript NULL)", async () => {
     const testimonialId = await insertPending("project-1/broken.webm");
+    await pool.query(
+      `UPDATE testimonials SET transcript_attempts = $2 WHERE id = $1`,
+      [testimonialId, MAX_ATTEMPTS - 1],
+    );
 
     const failingClient: TranscribeClient = {
       async transcribeVideo() {

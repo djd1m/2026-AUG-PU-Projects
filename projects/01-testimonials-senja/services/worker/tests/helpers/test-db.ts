@@ -33,7 +33,13 @@ export function testDatabaseUrl(): string | undefined {
   return process.env.TEST_DATABASE_URL;
 }
 
-export async function createTestPool(): Promise<pg.Pool> {
+/**
+ * `max` параметризован ради AC-012.14: проверка «соединение вернулось в пул пригодным»
+ * при пуле в 10 неразборчива — второй прогон возьмёт ДРУГОЕ соединение и пройдёт при
+ * живом дефекте. С пулом в одно соединение отравленное будет переиспользовано,
+ * и тест упадёт. Умолчание прежнее.
+ */
+export async function createTestPool(max = 10): Promise<pg.Pool> {
   const url = testDatabaseUrl();
   if (!url) {
     throw new Error("TEST_DATABASE_URL не задан — вызывающий тест должен был это проверить");
@@ -45,7 +51,7 @@ export async function createTestPool(): Promise<pg.Pool> {
   await bootstrap.query(`CREATE SCHEMA IF NOT EXISTS ${TEST_SCHEMA}`);
   await bootstrap.end();
 
-  const pool = new pg.Pool({ connectionString: url, max: 10 });
+  const pool = new pg.Pool({ connectionString: url, max });
   // search_path выставляется на КАЖДОЕ новое соединение пула: пул открывает их лениво,
   // разово выставленный путь достался бы только первому. pg сохраняет порядок запросов
   // в пределах соединения, поэтому SET гарантированно выполнится раньше запросов теста.

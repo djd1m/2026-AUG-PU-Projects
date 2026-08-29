@@ -39,8 +39,29 @@ export interface TranscribeJobDeps {
   logError?: (event: string, testimonialId: string, err: unknown) => void;
 }
 
+/**
+ * FR-012. Первая попытка + два повтора. Числа названы ЗДЕСЬ, а не «разумным дефолтом
+ * по месту»: требование без числа непроверяемо. Тест прибивает их независимо —
+ * порог, следующий за кодом, не является порогом.
+ *
+ * Верхняя граница мала намеренно: цель — пережить разовый сбой сети, а не ждать
+ * восстановления сервиса часами. Провайдер, лежащий дольше пары минут, — случай для
+ * ручного повтора, которого в объёме нет.
+ */
+export const MAX_ATTEMPTS = 3;
+export const RETRY_BASE_MS = 60_000;
+
+/** Возрастающая задержка: 1 мин после первой неудачи, 2 мин после второй. */
+export function retryDelayMs(attempts: number): number {
+  return RETRY_BASE_MS * 2 ** (attempts - 1);
+}
+
 export type ClaimResult =
   | { status: "empty" }
+  // FR-012: отличается от "failed" НАМЕРЕННО. Логи и вызывающий код обязаны различать
+  // «больше не пытаемся» и «попробуем позже» — иначе разбор инцидента упрётся в
+  // одинаковую запись для двух разных состояний.
+  | { status: "retry_scheduled"; testimonialId: string; attempts: number }
   | { status: "completed"; testimonialId: string }
   | { status: "failed"; testimonialId: string };
 
@@ -61,12 +82,21 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
   const logError = deps.logError ?? defaultLogError;
 
   const client = await pool.connect();
+  // Заполняется, когда состояние соединения под сомнением. finally отдаёт его в
+  // release(err), и pg УНИЧТОЖАЕТ клиента вместо возврата в пул: release() без
+  // аргумента отката НЕ делает, и соединение в состоянии abort роняло бы любой
+  // следующий запрос, включая BEGIN (NFR-012.8).
+  let poisoned: Error | undefined;
   try {
     await client.query("BEGIN");
 
     // Architecture §5, шаг 2: SELECT ... FOR UPDATE SKIP LOCKED — без Redis/очереди,
     // тот же принцип простоты, что и в §3.4.
-    const { rows } = await client.query<{ id: string; video_object_key: string }>(
+    const { rows } = await client.query<{
+      id: string;
+      video_object_key: string;
+      transcript_attempts: number;
+    }>(
       // video_object_key IS NOT NULL — обязательное условие, а не оптимизация.
       // transcript_status по умолчанию 'pending' У ВСЕХ строк (003_core.sql), включая
       // ТЕКСТОВЫЕ отзывы, у которых видео нет. Без этого фильтра воркер забирает
@@ -75,10 +105,16 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
       // возвращает самую старую. Очередь не движется, и настоящее видео за этими
       // строками не расшифровывается НИКОГДА. Наблюдалось на стенде: 21 текстовый
       // отзыв заблокировал очередь целиком.
-      `SELECT id, video_object_key
+      `SELECT id, video_object_key, transcript_attempts
          FROM testimonials
         WHERE transcript_status = 'pending'
           AND video_object_key IS NOT NULL
+          -- FR-012: срок в УСЛОВИИ, а не проверкой после выборки. Проверка после
+          -- означала бы, что воркер берёт строку, отпускает и берёт снова — цикл
+          -- вхолостую, сжигающий соединение. Здесь строка просто не выбирается.
+          -- now() уместен: это ПЕРВЫЙ оператор транзакции, время её начала и есть
+          -- текущее. В UPDATE ниже — наоборот, только clock_timestamp().
+          AND (transcript_next_attempt_at IS NULL OR transcript_next_attempt_at <= now())
         ORDER BY created_at
         FOR UPDATE SKIP LOCKED
         LIMIT 1`,
@@ -109,26 +145,76 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
       await client.query("COMMIT");
       return { status: "completed", testimonialId: row.id };
     } catch (err) {
+      const attempts = row.transcript_attempts + 1;
+      const delayMs = retryDelayMs(attempts);
+
+      // Срок вычисляет СЕРВЕР БД внутри самого UPDATE. Отдельный SELECT clock_timestamp()
+      // здесь уходил бы в ОБРЕЧЁННУЮ транзакцию, когда исходная ошибка пришла от
+      // client.query: транзакция уже в abort, запрос падает с 25P02 и ПОДМЕНЯЕТ исходное
+      // исключение. Тогда не выполнятся ни откат, ни проброс (NFR-012.6, NFR-012.7).
+      const SCHEDULE_SQL = `UPDATE testimonials
+            SET transcript_attempts = $2,
+                transcript_next_attempt_at = clock_timestamp() + ($3 || ' milliseconds')::interval
+          WHERE id = $1`;
+      const GIVE_UP_SQL = `UPDATE testimonials
+            SET transcript_status = 'failed', transcript_attempts = $2
+          WHERE id = $1`;
+
       if (err instanceof SttApiError) {
-        // Pseudocode §1.1, catch SttApiError: канон Architecture §10 даёт enum
-        // transcript_status(pending,completed,failed) — неудача выразима в схеме.
-        // Отзыв остаётся валидным и модерируемым даже без транскрипта.
+        if (attempts >= MAX_ATTEMPTS) {
+          // Исчерпали. Отзыв остаётся валидным и модерируемым даже без транскрипта
+          // (канон Architecture §10: enum допускает failed).
+          await client.query(GIVE_UP_SQL, [row.id, attempts]);
+          await client.query("COMMIT");
+          logError("transcription_failed", row.id, err);
+          return { status: "failed", testimonialId: row.id };
+        }
+        // Строка ОСТАЁТСЯ pending — это и есть возврат в очередь. Новых значений
+        // статуса не вводим: ожидание выражается парой «pending + срок в будущем».
+        await client.query(SCHEDULE_SQL, [row.id, attempts, String(delayMs)]);
+        await client.query("COMMIT");
+        logError("transcription_retry_scheduled", row.id, err);
+        return { status: "retry_scheduled", testimonialId: row.id, attempts };
+      }
+
+      // Неожиданная ошибка (обрыв соединения с БД и т.п.). Отзыв НЕ помечаем failed по
+      // причине, не связанной с провайдером, — это решение сохранено с первой версии.
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        // Откат не удался — состояние соединения неизвестно. Возвращать такое в пул
+        // молча нельзя: на нём упадёт любой следующий запрос, включая BEGIN.
+        poisoned = err instanceof Error ? err : new Error(String(err));
+        throw err;
+      }
+
+      // Учёт попытки ОТДЕЛЬНОЙ транзакцией на ТОМ ЖЕ соединении.
+      //
+      // Отдельной — потому что предыдущая откачена. Тем же соединением — потому что
+      // второе, взятое пока первое не отпущено, удваивало бы удержание пула ровно
+      // тогда, когда сбои идут потоком.
+      //
+      // Учёт нужен, иначе строка остаётся pending без срока, ORDER BY created_at
+      // выбирает ЕЁ ЖЕ на каждом тике, и одна «ядовитая» запись блокирует всю очередь
+      // навсегда, повторяясь каждые pollIntervalMs.
+      try {
+        await client.query("BEGIN");
         await client.query(
-          `UPDATE testimonials SET transcript_status = 'failed' WHERE id = $1`,
-          [row.id],
+          attempts >= MAX_ATTEMPTS ? GIVE_UP_SQL : SCHEDULE_SQL,
+          attempts >= MAX_ATTEMPTS ? [row.id, attempts] : [row.id, attempts, String(delayMs)],
         );
         await client.query("COMMIT");
-        logError("transcription_failed", row.id, err);
-        return { status: "failed", testimonialId: row.id };
+      } catch {
+        // Учесть не вышло — БД действительно недоступна, делать больше нечего.
+        // Состояние соединения после этого неизвестно, поэтому в пул его не возвращаем.
+        poisoned = err instanceof Error ? err : new Error(String(err));
       }
-      // Неожиданная ошибка (обрыв соединения с БД и т.п.) — откатываем, НЕ помечаем
-      // отзыв как failed по причине, не связанной с STT-провайдером, и пробрасываем выше,
-      // чтобы её увидел супервизор процесса, а не проглатывали молча.
-      await client.query("ROLLBACK");
+
+      // Исходная ошибка НЕ теряется ни на одном пути: супервизор обязан её увидеть.
       throw err;
     }
   } finally {
-    client.release();
+    client.release(poisoned);
   }
 }
 
