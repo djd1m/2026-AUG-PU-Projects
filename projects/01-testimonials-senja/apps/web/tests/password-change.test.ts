@@ -482,6 +482,11 @@ describe('AC-010.24 — hashKey одним объявлением, пороги 
       .not.toMatch(/import\s*\{[^}]*\bPAIR_THRESHOLD\b[^}]*\}\s*from\s*'\.\/login'/);
     expect(code).toContain('PWCHANGE_PAIR_THRESHOLD = 5');
     expect(code).toContain('PWCHANGE_IP_THRESHOLD = 30');
+    // Окно тоже прибито ЧИСЛОМ. Прежде оно только импортировалось и передавалось в count,
+    // а его значение не утверждалось ни разу: правка на { seconds: 1 } превратила бы часовой
+    // лимит в секундный, и AC-010.10 со своими пятью попытками за ~200 мс не заметил бы.
+    expect(PWCHANGE_WINDOW.seconds, 'окно лимита не закреплено — час мог бы стать секундой')
+      .toBe(3600);
   });
 });
 
@@ -500,7 +505,10 @@ describe('AC-010.20 — форма попадает в дизайн-систем
 describe('AC-010.21 — новый маршрут закрыт пределом тела', () => {
   it('route.ts вызывает readBodyAtMost, своей копии предела нет', () => {
     const code = read('app/api/auth/password/route.ts');
-    expect(code).toContain('readBodyAtMost');
-    expect(code).toContain('MAX_JSON_BODY');
+    // ВЫЗОВ, а не импорт. Прежняя форма toContain('readBodyAtMost') находила подстроку в
+    // строке import: убери вызов, оставь импорт — страж остался бы зелёным, и заявленная
+    // мутация его не роняла. Таблица трассировки при этом утверждала проверку, которой нет.
+    expect(code, 'предел тела не ВЫЗЫВАЕТСЯ, а только импортируется')
+      .toMatch(/await\s+readBodyAtMost\(\s*request\s*,\s*MAX_JSON_BODY\s*\)/);
   });
 });

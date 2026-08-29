@@ -22,6 +22,15 @@ export function ChangePassword() {
     const form = event.currentTarget;
     const data = new FormData(form);
     try {
+      // Подтверждение проверяется НА КЛИЕНТЕ и на сервер не уходит: серверу оно не нужно,
+      // а лишнее поле в теле — лишняя поверхность. Опечатка в единственном поле сменила бы
+      // пароль на неизвестный владельцу, а восстановления в системе нет: окно на исправление
+      // — до первой чистки cookie, после чего аккаунт потерян безвозвратно.
+      if (data.get('new_password') !== data.get('new_password_confirm')) {
+        setError('новый пароль и подтверждение не совпадают');
+        return;
+      }
+
       const res = await fetch('/api/auth/password', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -65,6 +74,19 @@ export function ChangePassword() {
         <span>Новый пароль</span>
         <input
           name="new_password"
+          type="password"
+          required
+          minLength={8}
+          maxLength={200}
+          autoComplete="new-password"
+          className="input"
+        />
+      </label>
+
+      <label className="field">
+        <span>Новый пароль ещё раз</span>
+        <input
+          name="new_password_confirm"
           type="password"
           required
           minLength={8}
