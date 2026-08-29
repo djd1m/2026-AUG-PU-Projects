@@ -1,5 +1,5 @@
 ---
-description: Capture and recall development insights. Append a new insight to `.claude/insights/index.md` with structured fields (problem, solution, tags). Auto-injected into context on SessionStart for relevant tasks.
+description: Capture and recall development insights. Append a new insight to `.claude/insights/index.md` with structured fields (problem, solution, tags). The three most recent are injected into context at SessionStart.
 argument-hint: '[recall <query> | <free-form insight>]'
 ---
 
@@ -8,9 +8,24 @@ argument-hint: '[recall <query> | <free-form insight>]'
 ## Purpose
 
 Build a project-local knowledge base of "грабли" (rakes) — errors, workarounds,
-discoveries — so they don't have to be re-learned. Insights are auto-loaded
-into Claude Code context on each session start (via `SessionStart` hook in
-`.claude/settings.json`) when their tags match the current task.
+discoveries — so they don't have to be re-learned.
+
+**What actually happens, stated exactly.** The `SessionStart` hook
+(`.claude/hooks/session-insights.cjs`, wired in `.claude/settings.json`) reads
+`.claude/insights/index.md` and injects the **three most recent entries**, by their
+order in the file. It prints them under the heading *"Recent project insights"* —
+which is what they are.
+
+**There is no tag matching, and it is not an omission.** The hook fires at
+`SessionStart`, BEFORE you have said anything, so there is no current task to match
+tags against. Tags remain useful for a human reading or grepping the file, and for
+`/myinsights recall <query>`, which searches on demand — when a query exists.
+
+**The consequence, so nobody is surprised by it.** The file is append-only and the
+hook takes the LAST three. As a project accumulates entries — `insights-capture.md`
+plans for 50+ — earlier ones stop being injected. Selection by relevance would need
+to happen at a moment when a task is known; that is a separate design question, and
+it is filed rather than quietly implied here.
 
 ## Modes
 
@@ -69,4 +84,6 @@ mistakes without manual recall.
 
 - `.claude/rules/insights-capture.md` — when/how to capture
 - `.claude/hooks/session-insights.cjs` — session injection
-- `/harvest` — extracts reusable patterns from insights at project end
+- `/harvest` — extracts reusable knowledge at project end. **Honest limit:** it does
+  NOT read `.claude/insights/index.md` today (`grep -ci insight` over `harvest.md`
+  returns 0). The capture→harvest link is a stated intention, not a wired path.

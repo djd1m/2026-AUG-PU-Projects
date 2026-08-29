@@ -218,11 +218,21 @@ describe('FR-001 граничные случаи (Pseudocode §9)', () => {
       const dup = email();
       await registerAccountAndProject(c, { email: dup, password: 'password-long-enough', desired_slug: 'atomic-one' });
       // Второй заход падает на занятом email ПОСЛЕ проверки — аккаунт не должен появиться.
-      const before = await c.query('select count(*)::int as n from accounts');
+      //
+      // Считаем СВОИ строки, а не всю таблицу. Глобальный count(*) здесь был скрытой
+      // миной: тесты идут параллельно, а маршрутные тесты (login-route.test.ts) КОММИТЯТ
+      // настоящие регистрации — маршрут открывает свою транзакцию, откатить её нечем.
+      // Чужая запись попадала между before и after, и тест падал на ровном месте,
+      // сообщая о нарушении атомарности, которого нет.
+      const mine = () => c.query<{ n: number }>(
+        'select count(*)::int as n from accounts where email = $1', [dup],
+      );
+      const before = await mine();
       const res = await registerAccountAndProject(c, { email: dup, password: 'password-long-enough', desired_slug: 'atomic-two' });
       expect(res.status).toBe(409);
-      const after = await c.query('select count(*)::int as n from accounts');
-      expect(after.rows[0].n).toBe(before.rows[0].n);
+      const after = await mine();
+      expect(after.rows[0]!.n, 'повторная регистрация создала второй аккаунт на тот же email')
+        .toBe(before.rows[0]!.n);
       const orphan = await c.query('select 1 from projects where slug = $1', ['atomic-two']);
       expect(orphan.rowCount).toBe(0);
     });

@@ -198,10 +198,19 @@ function parsePlans() {
   return safeListDir(dir).filter((f) => f.endsWith('.md')).length;
 }
 
+/**
+ * THREE states, because two were not enough.
+ *
+ * `{count:0}` was returned both for a carrier that does not exist and for one that exists and holds
+ * nothing — so a project that had never recorded an insight rendered identically to one being used
+ * and found empty. That indistinguishability is what let 27 recorded insights become 0 across four
+ * real projects without any surface saying so (MEASURED 2026-08-27).
+ */
 function parseInsights() {
   const p = path.join(CWD, '.claude', 'insights', 'index.md');
   const text = safeReadText(p);
-  if (!text) return { count: 0, lastDate: null };
+  if (text === null || text === undefined) return { count: 0, lastDate: null, started: false };
+  if (!text.trim()) return { count: 0, lastDate: null, started: true };
   const headings = text.match(/^##\s+\d{4}-\d{2}-\d{2}/gm) || [];
   // Last date: extract from last heading
   let lastDate = null;
@@ -210,7 +219,7 @@ function parseInsights() {
     const m = last.match(/\d{4}-\d{2}-\d{2}/);
     if (m) lastDate = m[0];
   }
-  return { count: headings.length, lastDate };
+  return { count: headings.length, lastDate, started: true };
 }
 
 function parseToolkit() {
@@ -467,7 +476,9 @@ function buildToolkit(toolkit, expected) {
 
 function buildStatus(insights, lastTest, mcpServers, settingsStatus, keysarium) {
   const parts = [];
-  parts.push(`💡 ${bold('Insights')} ${insights.count > 0 ? green('●' + insights.count) : '0'}` +
+  // '0' meant two different things: no carrier at all, and a carrier holding nothing. A dash
+  // says the first; a zero says the second. The reader can now tell which one they are looking at.
+  parts.push(`💡 ${bold('Insights')} ${insights.count > 0 ? green('●' + insights.count) : insights.started ? '0' : dim('—')}` +
     (insights.lastDate ? ` ${dim('(' + insights.lastDate + ')')}` : ''));
 
   if (lastTest && typeof lastTest.passed === 'number') {
@@ -498,7 +509,7 @@ function main() {
   const validation = safeRun(() => parseValidationScore(), null);
   const adrs = safeRun(() => parseAdrs(), 0);
   const plans = safeRun(() => parsePlans(), 0);
-  const insights = safeRun(() => parseInsights(), { count: 0, lastDate: null });
+  const insights = safeRun(() => parseInsights(), { count: 0, lastDate: null, started: false });
   const toolkit = safeRun(() => parseToolkit(), { skills: 0, commands: 0, agents: 0, rules: 0, hooks: 0 });
   const expected = parseExpectedToolkit();
   const settingsStatus = safeRun(() => parseSettingsStatus(manifest), null);

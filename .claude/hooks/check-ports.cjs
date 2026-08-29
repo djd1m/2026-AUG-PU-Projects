@@ -59,8 +59,19 @@ function cannotCheck(reason, hint) {
   process.exit(2);
 }
 
+/**
+ * Absolutise ONCE, at the boundary.
+ *
+ * The invariant this restores: one frame of reference per path. A relative `-f` handed to a
+ * subprocess whose cwd we also override is resolved TWICE against two different origins, and the
+ * directory component appears twice. Keeping the argument relative past this point is what made
+ * `check-ports.cjs projects/01` report `.../projects/01/projects/01/docker-compose.yml`.
+ *
+ * Absolute from here on means the existence checks, the `-f` argument and the printed cure all name
+ * the same object — so the cure REPRODUCES the failure instead of refuting it.
+ */
 function resolveCompose(arg) {
-  const target = arg || '.';
+  const target = path.resolve(process.cwd(), arg || '.');
   let file = target;
   try {
     if (fs.statSync(target).isDirectory()) file = path.join(target, 'docker-compose.yml');
@@ -74,16 +85,37 @@ function resolveCompose(arg) {
 /** The normalised config. Parsing the raw YAML would re-implement `extends`, interpolation and the
  *  short `"5432:5432"` form — and the short form is exactly where a hand parser gets host_ip wrong. */
 function normalisedConfig(file) {
-  const r = spawnSync('docker', ['compose', '-f', file, 'config'],
-    { encoding: 'utf8', cwd: path.dirname(path.resolve(file)) });
+  // NO cwd override — deliberately, and the deletion is the fix rather than a tidy-up.
+  //
+  // It used to be `cwd: path.dirname(path.resolve(file))`, which is how the doubling happened: `-f`
+  // was relative and got re-resolved against the cwd this very option installed. Absolutising `file`
+  // alone would have made the line harmless while leaving the false premise that compose needs its
+  // cwd set — and the next relative path added here would reopen the class.
+  //
+  // MEASURED (Compose v5.1.1), same absolute -f from two different cwds, byte-identical output:
+  //   project name        -> from the file's directory, not cwd
+  //   build: ./app        -> context resolved under the file's directory
+  //   .env discovery      -> the project-dir .env won; the cwd's .env was NOT even a fallback
+  //   env_file: ./x.env   -> compose still demanded the project-dir copy
+  // All three candidate justifications are project-directory-derived, and the project directory
+  // comes from the -f path. Scoped honestly: this is Compose v2+ semantics; v1 differed.
+  const r = spawnSync('docker', ['compose', '-f', file, 'config'], { encoding: 'utf8' });
   if (r.error && r.error.code === 'ENOENT') {
     cannotCheck('docker недоступен на этой машине',
       'без него нормализованный конфиг получить нечем, а разбирать YAML руками — значит ошибиться на короткой форме портов');
   }
   if (r.status !== 0) {
+    // Report, do not guess. The old hint said "обычно это незаданная переменная" — a cause that
+    // CANNOT produce this exit: a plain unset ${VAR} makes `docker compose config` exit 0 with a
+    // warning; only the required form ${VAR:?msg} exits 1. It named a subset of an already-narrow
+    // class while the actual cause was this checker's own invocation.
+    //
+    // And the cure now carries the ABSOLUTE path actually passed. It used to print the relative form
+    // without the cwd override — i.e. the invocation that SUCCEEDS — so the tool handed the user a
+    // reproducer that refuted it.
     const why = String(r.stderr || '').trim().split('\n')[0] || 'причина неизвестна';
     cannotCheck('docker compose config вернул ошибку: ' + why,
-      'обычно это незаданная переменная; посмотреть: docker compose -f ' + file + ' config');
+      'повторить ровно то, что делали мы: docker compose -f ' + file + ' config');
   }
   return String(r.stdout || '');
 }

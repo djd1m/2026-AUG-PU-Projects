@@ -70,13 +70,43 @@ Enhanced hooks and commands for DDD-aware Claude Code instruments.
 #!/bin/bash
 # Validates aggregate doesn't exceed size limits
 # Source: Fitness Function FF-02
+#
+# THREE exit codes, and the third is the point:
+#   0  within limits
+#   1  over the limit — the count and the limit are both reported
+#   2  THE CHECK DID NOT RUN — unreadable file, or an unsubstituted threshold
+#
+# A guard that answers "OK" when it could not look turns an unknown into a reassurance. MEASURED
+# before this contract existed: four declarations minified onto ONE line reported OK against a limit
+# of two, a missing file reported OK, and an unsubstituted {{...}} placeholder reported OK FOREVER —
+# `[ 4 -gt "{{MAX_ENTITIES_FROM_FITNESS}}" ]` is an invalid comparison, so the `if` is simply false.
 
 FILE="$1"
 MAX_ENTITIES={{MAX_ENTITIES_FROM_FITNESS}}
 MAX_METHODS={{MAX_METHODS_FROM_FITNESS}}
 
-# Count entities (rough heuristic)
-ENTITY_COUNT=$(grep -c "class.*Entity" "$FILE" 2>/dev/null || echo 0)
+if [ -z "$FILE" ]; then
+    echo "⚠️  check did NOT run: no file given (usage: $0 <file>)"
+    exit 2
+fi
+if [ ! -r "$FILE" ]; then
+    echo "⚠️  check did NOT run: cannot read $FILE"
+    exit 2
+fi
+# An unsubstituted placeholder must REFUSE, not pass. Otherwise a generator that failed to
+# substitute ships a guard that can never say no, and says nothing about it.
+case "$MAX_ENTITIES" in
+    ''|*[!0-9]*)
+        echo "⚠️  check did NOT run: MAX_ENTITIES is not a number ('$MAX_ENTITIES')."
+        echo "    The generator did not substitute {{MAX_ENTITIES_FROM_FITNESS}}."
+        exit 2
+        ;;
+esac
+
+# OCCURRENCES, not lines: `grep -c` counts matching LINES, so four declarations on one line count
+# as one. `|| true` because grep exits 1 when nothing matches, which is a legitimate count of zero.
+ENTITY_COUNT=$(grep -oE "class[A-Za-z0-9_ ]*Entity" "$FILE" | wc -l | tr -d ' ')
+[ -z "$ENTITY_COUNT" ] && ENTITY_COUNT=0
 
 if [ "$ENTITY_COUNT" -gt "$MAX_ENTITIES" ]; then
     echo "❌ VIOLATION: Aggregate has $ENTITY_COUNT entities (max: $MAX_ENTITIES)"
@@ -84,7 +114,7 @@ if [ "$ENTITY_COUNT" -gt "$MAX_ENTITIES" ]; then
     exit 1
 fi
 
-echo "✅ Aggregate size OK"
+echo "✅ Aggregate size OK ($ENTITY_COUNT entities, max $MAX_ENTITIES)"
 exit 0
 ```
 
@@ -114,7 +144,13 @@ if [ "$VIOLATIONS" -gt 0 ]; then
     echo "Found $VIOLATIONS potential DDD violations"
 fi
 
-exit 0  # Warnings only, don't block
+# ADVISORY, by design and stated out loud. This reporter never blocks: it prints what it noticed
+# and exits 0 whatever it found. That is a legitimate shape — but a reader must not mistake a
+# reporter for a gate, so it says so in its OWN OUTPUT rather than only in a comment nobody reads.
+echo ""
+echo "ℹ️  advisory only — this reporter never blocks (exit 0 regardless of findings)."
+echo "    For a check that can refuse, see validate-aggregate-size.sh (exit 0/1/2)."
+exit 0
 ```
 
 ---

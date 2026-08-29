@@ -15,17 +15,33 @@ echo ""
 
 # Check if test directory argument provided
 if [ -z "$1" ]; then
+    echo "⚠️  check did NOT run: no argument given"
     echo "Usage: $0 <test-directory>"
-    exit 1
+    exit 2
 fi
 
 TEST_DIR="$1"
 
+# ── Findings counter ─────────────────────────────────────────────────────────
+#
+# This script DETECTED correctly and could not FAIL. MEASURED 2026-08-27: deliberately awful input
+# produced red verdicts on screen and exit 0, while a nonexistent path exited 1 — "I could not
+# check" was louder than "I found violations", so any gate reading 1 could not tell them apart.
+#
+# Nothing about the detection changed. What was missing is that nobody counted.
+#
+#   0  ran, found nothing
+#   1  ran, found violations — the count is printed
+#   2  COULD NOT CHECK: no argument, or a target that does not exist
+FINDINGS=0
+finding() { FINDINGS=$((FINDINGS + 1)); }
+
+
 # Check if test directory exists
 if [ ! -d "$TEST_DIR" ]; then
-    echo -e "${RED}🔴 FAILING: Test directory '$TEST_DIR' doesn't exist${NC}"
-    echo "   → Where are the tests? Did you even write any?"
-    exit 1
+    echo "⚠️  check did NOT run: test directory '$TEST_DIR' does not exist"
+    echo "   → This is NOT a clean bill: nothing was examined."
+    exit 2
 fi
 
 # Function to assess coverage
@@ -42,7 +58,7 @@ assess_coverage() {
         coverage=$(npm run test:coverage 2>&1 | grep -oP '\d+\.\d+(?=%)' | head -1 || echo "0")
 
         if (( $(echo "$coverage < 50" | bc -l) )); then
-            echo -e "${RED}🔴 RAW: ${coverage}% coverage${NC}"
+            echo -e "${RED}🔴 RAW: ${coverage}% coverage${NC}"; finding
             echo "   → This is embarrassing. You're barely testing anything."
         elif (( $(echo "$coverage < 80" | bc -l) )); then
             echo -e "${YELLOW}🟡 ACCEPTABLE: ${coverage}% coverage${NC}"
@@ -83,7 +99,7 @@ assess_edge_cases() {
     done
 
     if [ "$found_count" -eq 0 ]; then
-        echo -e "${RED}🔴 RAW: No edge cases tested${NC}"
+        echo -e "${RED}🔴 RAW: No edge cases tested${NC}"; finding
         echo "   → You're only testing the happy path. That's not testing."
     elif [ "$found_count" -lt 3 ]; then
         echo -e "${YELLOW}🟡 ACCEPTABLE: Found $found_count edge case patterns${NC}"
@@ -102,7 +118,7 @@ assess_clarity() {
     # Check for descriptive test names
     unclear_tests=$(grep -r "test('test" "$TEST_DIR" 2>/dev/null | wc -l)
     if [ "$unclear_tests" -gt 0 ]; then
-        echo -e "${RED}🔴 RAW: Found $unclear_tests unclear test names${NC}"
+        echo -e "${RED}🔴 RAW: Found $unclear_tests unclear test names${NC}"; finding
         echo "   → 'test1', 'test2' - What are you testing? Use descriptive names."
     fi
 
@@ -129,7 +145,7 @@ assess_speed() {
         duration=$((end_time - start_time))
 
         if [ "$duration" -gt 60 ]; then
-            echo -e "${RED}🔴 RAW: Tests took ${duration}s${NC}"
+            echo -e "${RED}🔴 RAW: Tests took ${duration}s${NC}"; finding
             echo "   → Unit tests should run in seconds, not minutes."
             echo "   → Are you calling real databases/networks?"
         elif [ "$duration" -gt 10 ]; then
@@ -139,7 +155,7 @@ assess_speed() {
             echo -e "${GREEN}🟢 MICHELIN STAR: Tests took ${duration}s${NC}"
         fi
     else
-        echo -e "${RED}🔴 FAILING: Tests don't even pass${NC}"
+        echo -e "${RED}🔴 FAILING: Tests don't even pass${NC}"; finding
         echo "   → Fix your broken tests before worrying about speed."
     fi
 }
@@ -152,7 +168,7 @@ assess_stability() {
 
     # Check for flaky patterns
     if grep -ri "setTimeout\|sleep\|wait" "$TEST_DIR" > /dev/null 2>&1; then
-        echo -e "${RED}🔴 RAW: Timing-based tests detected${NC}"
+        echo -e "${RED}🔴 RAW: Timing-based tests detected${NC}"; finding
         echo "   → You're creating flaky tests. Use proper async/await."
     fi
 
@@ -166,7 +182,7 @@ assess_stability() {
     done
 
     if [ "$failures" -gt 0 ]; then
-        echo -e "${RED}🔴 RAW: Tests failed $failures/3 times${NC}"
+        echo -e "${RED}🔴 RAW: Tests failed $failures/3 times${NC}"; finding
         echo "   → FLAKY TESTS. These are worse than no tests."
         echo "   → Fix the non-determinism before merging."
     else
@@ -221,3 +237,14 @@ echo "  - 0% flaky"
 echo "  - Independent tests"
 echo ""
 echo "You know what good tests look like. Why aren't you writing them?"
+
+# ── Verdict ──────────────────────────────────────────────────────────────────
+# ADDED, never substituted: the closing prose above is this skill's character and a reader wants it.
+# What follows is the same answer in a form a gate can act on.
+echo ""
+if [ "$FINDINGS" -gt 0 ]; then
+    echo "VERDICT: $FINDINGS finding(s). Not ready."
+    exit 1
+fi
+echo "VERDICT: 0 findings."
+exit 0

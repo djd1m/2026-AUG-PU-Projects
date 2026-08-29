@@ -15,11 +15,33 @@ echo ""
 
 # Check if file argument provided
 if [ -z "$1" ]; then
+    echo "⚠️  check did NOT run: no argument given"
     echo "Usage: $0 <file-or-directory>"
-    exit 1
+    exit 2
 fi
 
 TARGET="$1"
+
+# ── Findings counter ─────────────────────────────────────────────────────────
+#
+# This script DETECTED correctly and could not FAIL. MEASURED 2026-08-27: deliberately awful input
+# produced red verdicts on screen and exit 0, while a nonexistent path exited 1 — "I could not
+# check" was louder than "I found violations", so any gate reading 1 could not tell them apart.
+#
+# Nothing about the detection changed. What was missing is that nobody counted.
+#
+#   0  ran, found nothing
+#   1  ran, found violations — the count is printed
+#   2  COULD NOT CHECK: no argument, or a target that does not exist
+FINDINGS=0
+finding() { FINDINGS=$((FINDINGS + 1)); }
+
+if [ ! -e "$TARGET" ]; then
+    echo "⚠️  check did NOT run: '$TARGET' does not exist"
+    echo "   → This is NOT a clean bill: nothing was examined."
+    exit 2
+fi
+
 
 # Function to assess correctness
 assess_correctness() {
@@ -28,7 +50,7 @@ assess_correctness() {
 
     # Check for common bug patterns
     if grep -r "TODO\|FIXME\|BUG\|HACK" "$TARGET" 2>/dev/null; then
-        echo -e "${RED}🔴 FAILING: Found TODO/FIXME/BUG/HACK comments${NC}"
+        echo -e "${RED}🔴 FAILING: Found TODO/FIXME/BUG/HACK comments${NC}"; finding
         echo "   → This code admits it's broken. Fix it before review."
         return 0
     fi
@@ -51,14 +73,14 @@ assess_performance() {
     # Check for nested loops (potential O(n²))
     nested_loops=$(grep -r "for.*{" "$TARGET" | wc -l)
     if [ "$nested_loops" -gt 5 ]; then
-        echo -e "${RED}🔴 FAILING: Found $nested_loops loops${NC}"
+        echo -e "${RED}🔴 FAILING: Found $nested_loops loops${NC}"; finding
         echo "   → Are you creating O(n²) complexity where O(n) exists?"
         echo "   → Use hash maps, sets, or better algorithms."
     fi
 
     # Check for synchronous I/O in hot paths
     if grep -r "readFileSync\|writeFileSync" "$TARGET" 2>/dev/null; then
-        echo -e "${RED}🔴 FAILING: Synchronous file I/O detected${NC}"
+        echo -e "${RED}🔴 FAILING: Synchronous file I/O detected${NC}"; finding
         echo "   → You're blocking the event loop. Use async operations."
     fi
 
@@ -74,7 +96,7 @@ assess_error_handling() {
     # Check for try/catch usage
     try_count=$(grep -r "try\|catch" "$TARGET" 2>/dev/null | wc -l)
     if [ "$try_count" -eq 0 ]; then
-        echo -e "${RED}🔴 FAILING: No error handling found${NC}"
+        echo -e "${RED}🔴 FAILING: No error handling found${NC}"; finding
         echo "   → What happens when this code fails? It crashes."
     else
         echo -e "${GREEN}✓ Found error handling (verify it's sufficient)${NC}"
@@ -82,7 +104,7 @@ assess_error_handling() {
 
     # Check for empty catch blocks
     if grep -A 1 "catch" "$TARGET" 2>/dev/null | grep -q "^\s*}"; then
-        echo -e "${RED}🔴 FAILING: Empty catch blocks detected${NC}"
+        echo -e "${RED}🔴 FAILING: Empty catch blocks detected${NC}"; finding
         echo "   → Swallowing errors silently is worse than crashing."
     fi
 }
@@ -118,7 +140,7 @@ assess_testability() {
     if [ -d "tests" ] || [ -d "test" ] || [ -d "__tests__" ]; then
         echo -e "${GREEN}✓ Test directory exists${NC}"
     else
-        echo -e "${RED}🔴 FAILING: No test directory found${NC}"
+        echo -e "${RED}🔴 FAILING: No test directory found${NC}"; finding
         echo "   → Where are the tests? Did you even test this?"
     fi
 
@@ -177,3 +199,14 @@ echo "  - Tests exist and pass"
 echo "  - Code is clear and maintainable"
 echo ""
 echo "If you wouldn't deploy this to production, don't submit it for review."
+
+# ── Verdict ──────────────────────────────────────────────────────────────────
+# ADDED, never substituted: the closing prose above is this skill's character and a reader wants it.
+# What follows is the same answer in a form a gate can act on.
+echo ""
+if [ "$FINDINGS" -gt 0 ]; then
+    echo "VERDICT: $FINDINGS finding(s). Not ready."
+    exit 1
+fi
+echo "VERDICT: 0 findings."
+exit 0
