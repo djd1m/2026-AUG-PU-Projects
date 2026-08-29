@@ -42,6 +42,18 @@ else COMPOSE_ARGS=(-f docker-compose.yml); fi
 
 echo "== Переменные, читаемые кодом, доезжают до сервиса =="
 
+# Общие пакеты монорепо сканируются ВМЕСТЕ с сервисом, который их импортирует.
+# Ревью L-5: PGPOOL_MAX и PGPOOL_CONNECTION_TIMEOUT_MS читаются в packages/db/src, а
+# цикл ходил только по apps/ и services/ — страж утверждал, что проверяет их проброс,
+# и не проверял.
+shared_for() {  # $1 — каталог сервиса; печатает каталоги общих пакетов, которые он тянет
+  for pkg in packages/*/; do
+    [ -d "$pkg/src" ] || continue
+    name=$(python3 -c "import json,sys;print(json.load(open('$pkg/package.json'))['name'])" 2>/dev/null) || continue
+    grep -rqF "$name" "$1/src" 2>/dev/null && printf '%s/src ' "$pkg"
+  done
+}
+
 for svc_dir in apps/web services/worker services/transcribe; do
   [ -d "$svc_dir/src" ] || continue
   svc=$(basename "$svc_dir")
@@ -49,8 +61,23 @@ for svc_dir in apps/web services/worker services/transcribe; do
 
   # [A-Z0-9_]+ — с ЦИФРАМИ: без них S3_ENDPOINT обрезается до "S" и даёт ложное
   # срабатывание (поймано при написании этой проверки).
-  used=$(grep -rhoE 'process\.env\.[A-Z][A-Z0-9_]*' "$svc_dir/src" 2>/dev/null \
-         | sed 's/.*env\.//' | sort -u)
+  # ДВЕ формы чтения, и вторая обязательна. Прямое `process.env.NAME` находится
+  # регэкспом, но имя может уехать в СТРОКОВЫЙ аргумент помощника
+  # (`positiveIntFromEnv('PGPOOL_MAX', 30)`) — тогда первая форма его не видит.
+  # Помощники перечислены явно: молчаливое расширение шаблона однажды начнёт ловить
+  # посторонние строки и утопит настоящие потери в шуме.
+  ENV_HELPERS='positiveIntFromEnv'
+  # shellcheck disable=SC2086
+  scan_dirs="$svc_dir/src $(shared_for "$svc_dir")"
+  # Комментарии выкидываем ДО поиска: в них имена переменных упоминаются по делу
+  # (`Number(process.env.X ?? 30)` в объяснении дефекта) и чтением не являются.
+  # Без этого страж выдавал переменную «X» — ложное срабатывание, а страж, кричащий
+  # впустую, отключают вместе с настоящими находками.
+  # shellcheck disable=SC2086
+  code=$(grep -rhv -E '^\s*(//|\*|/\*)' $scan_dirs 2>/dev/null)
+  used=$( { printf '%s\n' "$code" | grep -oE 'process\.env\.[A-Z][A-Z0-9_]*' | sed 's/.*env\.//';
+            printf '%s\n' "$code" | grep -oE "(${ENV_HELPERS})\('[A-Z][A-Z0-9_]*'" \
+              | grep -oE "'[A-Z][A-Z0-9_]*'" | tr -d "'"; } | sort -u)
   [ -z "$used" ] && continue
 
   passed=$(docker compose "${COMPOSE_ARGS[@]}" config 2>/dev/null \

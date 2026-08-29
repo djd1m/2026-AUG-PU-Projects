@@ -15,8 +15,11 @@ process.env.BASE_URL = 'https://proofwall.test';
 
 const { withService, closePool } = await import('@proofwall/db');
 const { registerAccountAndProject } = await import('../src/lib/register');
-const { POST, MAX_LOGIN_BODY } = await import('../src/app/api/auth/login/route');
+const { POST } = await import('../src/app/api/auth/login/route');
+const { MAX_JSON_BODY } = await import('../src/lib/request-body');
 const { safeNextPath } = await import('../src/lib/next-path');
+const { isReturnLoop, makeLoopMarker, LOOP_WINDOW_MS } = await import('../src/lib/login-loop');
+const { hashSessionToken } = await import('../src/lib/session');
 
 afterAll(async () => { await closePool(); });
 
@@ -119,7 +122,7 @@ describe('предел размера тела — по БАЙТАМ, а не п
   const EXPECTED_LIMIT = 4096;
 
   it('предел равен 4096 байт — константа не может уехать незаметно', () => {
-    expect(MAX_LOGIN_BODY, 'предел, следующий за тестом, не является пределом')
+    expect(MAX_JSON_BODY, 'предел, следующий за тестом, не является пределом')
       .toBe(EXPECTED_LIMIT);
   });
 
@@ -186,5 +189,87 @@ describe('?next= — только относительный путь', () => {
 
   it.each([null, undefined, 42, {}, ['/ok']])('нестроковое %j отвергается', (bad) => {
     expect(safeNextPath(bad)).toBeNull();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// M-5 ревью: проверялось, что сессия ВЫДАЁТСЯ, но не что она РАБОТАЕТ.
+describe('сессия от входа действительно открывает кабинет', () => {
+  it('токен резолвится тем же запросом, которым его ищет дашборд', async () => {
+    const { email, slug } = await makeOwner();
+    const res = await post({ email, password: PASSWORD });
+    const token = /pw_session=([^;]+)/.exec(res.headers.get('set-cookie') ?? '')?.[1];
+    expect(token).toBeTruthy();
+
+    // Дословно запрос из lib/current-session.ts: по нему дашборд и решает, впускать ли.
+    const found = await withService((c) =>
+      c.query<{ account_id: string }>(
+        `select account_id from sessions
+          where token_hash = $1 and revoked_at is null and expires_at > now()`,
+        [hashSessionToken(token!)],
+      ),
+    );
+    expect(found.rows.length, 'сессия выдана, но дашборд её не найдёт').toBe(1);
+
+    // И это тот же аккаунт, которому принадлежит проект из ответа.
+    const owner = await withService((c) =>
+      c.query<{ account_id: string }>('select account_id from projects where slug = $1', [slug]),
+    );
+    expect(found.rows[0]!.account_id).toBe(owner.rows[0]!.account_id);
+  });
+
+  it('срок жизни сессии от входа — тот же, что от регистрации', async () => {
+    const { email } = await makeOwner();
+    const token = /pw_session=([^;]+)/.exec(
+      (await post({ email, password: PASSWORD })).headers.get('set-cookie') ?? '',
+    )?.[1];
+    const { rows } = await withService((c) =>
+      c.query<{ days: number }>(
+        `select round(extract(epoch from (expires_at - now())) / 86400)::int as days
+           from sessions where token_hash = $1`,
+        [hashSessionToken(token!)],
+      ),
+    );
+    expect(rows[0]!.days, 'два класса сессий с разным TTL разъедутся молча').toBe(30);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// M-4 ревью: петля кабинет -> вход -> кабинет. Форма ошибки не показывала, потому
+// что сервер отвечал 200: с её точки зрения всё было хорошо.
+describe('обнаружение петли входа', () => {
+  const NOW = 1_700_000_000_000;
+
+  it('вернулись за ТЕМ ЖЕ адресом сразу после успеха — это петля', () => {
+    expect(isReturnLoop(makeLoopMarker('/dashboard/acme', NOW), '/dashboard/acme', NOW + 800)).toBe(true);
+  });
+
+  it('вернулись за ДРУГИМ адресом — не петля', () => {
+    expect(isReturnLoop(makeLoopMarker('/dashboard/acme', NOW), '/dashboard/other', NOW + 800)).toBe(false);
+  });
+
+  it('отметка протухла — не петля: человек мог вернуться сам', () => {
+    expect(isReturnLoop(makeLoopMarker('/dashboard/acme', NOW), '/dashboard/acme', NOW + LOOP_WINDOW_MS + 1)).toBe(false);
+  });
+
+  it('отметка из будущего — не петля', () => {
+    expect(isReturnLoop(makeLoopMarker('/dashboard/acme', NOW), '/dashboard/acme', NOW - 1)).toBe(false);
+  });
+
+  it.each([
+    ['нет отметки', null],
+    ['пустая строка', ''],
+    ['не JSON', 'не json'],
+    ['JSON, но не объект', '"строка"'],
+    ['без target', '{"ts":1}'],
+    ['без ts', '{"target":"/x"}'],
+    ['ts не число', '{"target":"/x","ts":"вчера"}'],
+    ['ts не конечное', '{"target":"/x","ts":null}'],
+  ])('%s -> не петля (ложная тревога хуже отсутствия)', (_n, raw) => {
+    expect(isReturnLoop(raw, '/dashboard/acme', NOW)).toBe(false);
+  });
+
+  it('next отсутствует — не петля', () => {
+    expect(isReturnLoop(makeLoopMarker('/dashboard/acme', NOW), null, NOW + 100)).toBe(false);
   });
 });

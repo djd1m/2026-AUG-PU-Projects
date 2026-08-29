@@ -135,6 +135,29 @@ describe('отказ неразличим — иначе учётки переч
     });
   });
 
+  it('слишком длинный пароль ДОХОДИТ до argon2, а не отсекается раньше', async () => {
+    // Ревью M-2: критерий был, проверки не было. Граница длины не отменяет вызов —
+    // она подставляет пустую строку. Пропуск argon2 сделал бы этот ответ заметно
+    // быстрее и дал бы оракул «такой пароль слишком длинный», то есть подсказку.
+    await inRollback(async (c) => {
+      const { email } = await makeOwner(c);
+      const measure = async (pass: string) => {
+        const t: number[] = [];
+        for (let i = 0; i < 5; i += 1) {
+          const t0 = performance.now();
+          await attemptLogin(c, email, pass, `4.4.${i}.${Math.floor(Math.random() * 250)}`);
+          t.push(performance.now() - t0);
+        }
+        return t.sort((a, b) => a - b)[2]!;
+      };
+      const long = await measure('x'.repeat(PASSWORD_MAX_LENGTH + 1));
+      const wrong = await measure('wrong-password-here');
+      const ratio = Math.max(long, wrong) / Math.max(1, Math.min(long, wrong));
+      expect(ratio, `длинный пароль отвечает в ${ratio.toFixed(1)}x иначе — argon2 пропущен?`)
+        .toBeLessThan(4);
+    });
+  });
+
   it('время ответа для НЕСУЩЕСТВУЮЩЕЙ учётки сопоставимо с неверным паролем', async () => {
     await inRollback(async (c) => {
       const { email } = await makeOwner(c);
@@ -265,7 +288,9 @@ describe('стражи по исходнику', () => {
     // Возвраты ДО argon2 допустимы только на лимитных ветках — они не зависят от того,
     // существует ли учётка, и потому оракула не создают.
     const before = body.slice(0, verifyAt);
-    const returns = before.match(/return\s+[^;]+/g) ?? [];
+    // \s* , а не \s+ : `return{ok:false}` без пробела прежний регэксп НЕ ВИДЕЛ,
+    // и ранний возврат в такой записи проходил мимо стража (ревью M-1).
+    const returns = before.match(/\breturn\b\s*[^;]+/g) ?? [];
     for (const r of returns) {
       expect(r, `возврат до argon2, не связанный с лимитом: ${r}`).toMatch(/tooMany:\s*true/);
     }
@@ -298,8 +323,21 @@ describe('стражи по исходнику', () => {
       .not.toMatch(/[^_]pg_advisory_xact_lock/);
   });
 
+  it('предел тела применён на ОБОИХ неаутентифицированных маршрутах', () => {
+    // L-2 ревью: у входа предел был, у регистрации нет — закрытой оставалась одна
+    // дверь из двух. Реализация одна (lib/request-body.ts), копий быть не должно.
+    for (const rel of ['app/api/auth/login/route.ts', 'app/api/auth/register/route.ts']) {
+      expect(read(rel), `${rel} не ограничивает размер тела`).toContain('readBodyAtMost');
+    }
+    const impls = sourceFiles(SRC).filter((f) =>
+      /export\s+async\s+function\s+readBodyAtMost/.test(strip(readFileSync(f, 'utf8'))),
+    );
+    expect(impls.map((f) => path.relative(SRC, f)))
+      .toEqual([path.join('lib', 'request-body.ts')]);
+  });
+
   it('размер тела считается по байтам, а не по Content-Length', () => {
-    const route = read('app/api/auth/login/route.ts');
+    const route = read('lib/request-body.ts');
     // РЕГИСТРОНЕЗАВИСИМО: toContain регистрозависим, и 'Content-Length' с заглавных
     // проходил бы мимо — fetch регистр заголовков игнорирует (ревью B-2).
     expect(route.toLowerCase(), 'Content-Length присылает клиент, а при chunked его нет вовсе')
@@ -334,6 +372,18 @@ describe('стражи по исходнику', () => {
     const route = read('app/api/auth/login/route.ts');
     expect(route, 'экспорт без вызова — ложное обещание: выглядит мерой, мерой не является')
       .toContain('warmUpDummyHash()');
+  });
+
+  it('со scope входа сравнивается ТОЛЬКО lib/login.ts', () => {
+    // Объявлен в 04_refinement.md и не был написан — ревью нашло его отсутствие (M-6).
+    // Смысл: значения scope задают, КУДА пишется счётчик. Сравнение с ними в другом
+    // файле означает вторую точку принятия того же решения, и она разъедется молча.
+    const offenders = sourceFiles(SRC).filter((f) => {
+      if (f.endsWith(path.join('lib', 'login.ts'))) return false;
+      const code = strip(readFileSync(f, 'utf8'));
+      return /['"]login_(?:pair|ip)['"]/.test(code);
+    });
+    expect(offenders.map((f) => path.relative(SRC, f))).toEqual([]);
   });
 
   it('верхняя граница пароля применяется и на РЕГИСТРАЦИИ, не только на входе', () => {

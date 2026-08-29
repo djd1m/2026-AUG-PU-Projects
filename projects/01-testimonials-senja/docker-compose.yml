@@ -94,6 +94,10 @@ services:
     # не сообщил никто. `unless-stopped` превращает гонку старта в задержку.
     restart: unless-stopped
     environment:
+      # Тот же packages/db, тот же пул — значит и те же настройки (D-010, ревью L-5).
+      # Совпадение умолчаний не оправдывает пробел: расходиться они начнут молча.
+      - PGPOOL_MAX
+      - PGPOOL_CONNECTION_TIMEOUT_MS
       - DATABASE_URL
       - S3_ENDPOINT
       - S3_BUCKET

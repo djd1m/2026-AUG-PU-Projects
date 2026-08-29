@@ -9,6 +9,7 @@ import { withService } from '@proofwall/db';
 import { attemptLogin, normalizeEmail, warmUpDummyHash } from '@/lib/login';
 import { extractClientIP } from '@/lib/client-ip';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
+import { MAX_JSON_BODY, readBodyAtMost } from '@/lib/request-body';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,40 +20,6 @@ export const dynamic = 'force-dynamic';
 // а мерой не является.
 void warmUpDummyHash();
 
-/** Тело входа — это {"email":"…","password":"…"}. 4096 байт с большим запасом. */
-export const MAX_LOGIN_BODY = 4096;
-
-/**
- * Читает тело, считая ФАКТИЧЕСКИ прочитанные байты.
- *
- * `Content-Length` доверять нельзя: его присылает клиент, а при `Transfer-Encoding: chunked`
- * его нет вовсе — сравнение с undefined дало бы false, и тело любого размера ушло бы в
- * память. Своего предела у App Router нет (`bodyParser.sizeLimit` — это Pages Router),
- * у Caddy директивы `request_body` тоже нет: других слоёв не существует.
- */
-async function readBodyAtMost(request: Request, max: number): Promise<string | null> {
-  const body = request.body;
-  if (!body) return '';
-  const reader = body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      total += value.byteLength;
-      if (total > max) {
-        await reader.cancel(); // обрываем поток, а не дочитываем до конца
-        return null;
-      }
-      chunks.push(value);
-    }
-  } finally {
-    reader.releaseLock();
-  }
-  return Buffer.concat(chunks).toString('utf8');
-}
-
 // Один и тот же ответ для всех отказов аутентификации: неверный пароль, несуществующий
 // email, пустой пароль, нестроковые поля. Различимость — оракул перечисления учёток.
 const UNAUTHORIZED = { error: 'неверный email или пароль' } as const;
@@ -60,7 +27,7 @@ const UNAUTHORIZED = { error: 'неверный email или пароль' } as 
 const TOO_MANY = { error: 'слишком много попыток, попробуйте позже' } as const;
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const raw = await readBodyAtMost(request, MAX_LOGIN_BODY);
+  const raw = await readBodyAtMost(request, MAX_JSON_BODY);
   if (raw === null) {
     return NextResponse.json({ error: 'тело запроса слишком большое' }, { status: 413 });
   }

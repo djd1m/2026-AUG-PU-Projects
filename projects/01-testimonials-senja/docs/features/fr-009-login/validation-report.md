@@ -39,7 +39,7 @@
 `revoke` для этого уже существует и снабжён комментарием ровно про этот случай
 (`packages/db/src/rate-limit.ts:58-65`):
 
-```
+```text
 tx1:  lock(pair) → lock(ip) → exceeded(ip,30) → exceeded(pair,5)
       → record(ip) → record(pair) → select password_hash
       # локи держатся микросекунды, argon2 внутри НЕТ

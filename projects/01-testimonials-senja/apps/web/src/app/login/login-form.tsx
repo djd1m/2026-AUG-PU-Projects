@@ -1,11 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { safeNextPath } from '@/lib/next-path';
+import { isReturnLoop, LOOP_MARKER_KEY, makeLoopMarker } from '@/lib/login-loop';
 
 export function LoginForm({ next }: { next?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loop, setLoop] = useState(false);
+
+  // M-4: вернулись сюда после успешного входа за тем же адресом — значит cookie
+  // до сервера не доезжает, и без этой проверки человек крутился бы молча.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(LOOP_MARKER_KEY);
+      sessionStorage.removeItem(LOOP_MARKER_KEY); // одна диагностика на цикл
+      if (isReturnLoop(raw, safeNextPath(next), Date.now())) setLoop(true);
+    } catch {
+      // sessionStorage может быть недоступен (приватный режим, политика) — тогда
+      // просто нет диагностики. Молчаливая деградация здесь уместна: она не хуже
+      // прежнего поведения, а падение формы было бы хуже.
+    }
+  }, [next]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,9 +42,18 @@ export function LoginForm({ next }: { next?: string }) {
         return;
       }
       const body = (await res.json()) as { projects?: { slug: string }[] };
+      // L-3 ревью: владелец без активных проектов уезжал на лендинг без объяснения —
+      // выглядит как «вход не сработал». Такое возможно после деактивации проекта.
+      if (!safeNextPath(next) && !body.projects?.[0]) {
+        setError('Вход выполнен, но активных проектов нет. Создайте новый на главной.');
+        return;
+      }
       const target =
         safeNextPath(next) ??
-        (body.projects?.[0] ? `/dashboard/${body.projects[0].slug}` : '/');
+        `/dashboard/${body.projects![0]!.slug}`;
+      try {
+        sessionStorage.setItem(LOOP_MARKER_KEY, makeLoopMarker(target, Date.now()));
+      } catch { /* см. выше */ }
       window.location.assign(target);
     } catch {
       setError('сеть недоступна, попробуйте ещё раз');
@@ -54,6 +79,16 @@ export function LoginForm({ next }: { next?: string }) {
           className="input"
         />
       </label>
+
+      {loop ? (
+        <ul className="errors" role="alert">
+          <li>
+            Вход проходит, но сессия не сохраняется — вас вернуло сюда. Обычно это
+            означает, что сайт открыт по <code>http://</code>, а cookie сессии помечена
+            как защищённая и браузер её отбрасывает. Откройте адрес по <code>https://</code>.
+          </li>
+        </ul>
+      ) : null}
 
       {error ? (
         <ul className="errors" role="alert">

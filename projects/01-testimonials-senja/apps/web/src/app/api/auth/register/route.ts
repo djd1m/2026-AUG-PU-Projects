@@ -2,6 +2,7 @@
 // Роут отвечает только за транспорт: разбор тела, коды, cookie. Бизнес-правила — в lib/register.ts.
 
 import { NextResponse } from 'next/server';
+import { MAX_JSON_BODY, readBodyAtMost } from '@/lib/request-body';
 import { withService } from '@proofwall/db';
 import { registerAccountAndProject, type RegisterInput } from '@/lib/register';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
@@ -14,7 +15,13 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request): Promise<NextResponse> {
   let body: unknown;
   try {
-    body = await request.json();
+    // L-2 ревью: предел был у входа и отсутствовал здесь — закрытой оставалась одна
+    // дверь из двух. Неаутентифицированный маршрут не должен читать в память что угодно.
+    const raw = await readBodyAtMost(request, MAX_JSON_BODY);
+    if (raw === null) {
+      return NextResponse.json({ errors: ['тело запроса слишком большое'] }, { status: 413 });
+    }
+    body = JSON.parse(raw);
   } catch {
     return NextResponse.json({ errors: ['тело запроса: ожидается JSON'] }, { status: 400 });
   }

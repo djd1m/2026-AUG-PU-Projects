@@ -41,6 +41,8 @@ export const PAIR_THRESHOLD = 5;
 export const IP_SCOPE = 'login_ip';
 export const IP_THRESHOLD = 30;
 export const WINDOW = { seconds: 3600 } as const;
+/** Пространство имён advisory-локов входа. Произвольная константа, важна лишь уникальность. */
+export const LOCK_NAMESPACE = 90_009;
 
 /** Хеш ключа. Сырой IP в долгоживущий журнал не пишется. Разделитель обязателен: без него
  *  ip="1.2"+email="3.4" и ip="1.2.3"+email=".4" дали бы один ключ. */
@@ -91,9 +93,15 @@ export async function attemptLogin(
   // TRY, а не ждущий: неудача захвата означает «по этому ключу прямо сейчас идёт другая
   // попытка», то есть параллельный перебор — законный повод ответить 429 сразу, не
   // вставая в очередь и не удерживая соединение.
+  // hashtext даёт 32 бита (ревью L-4). Коллизия означает, что две несвязанные попытки
+  // сериализуются друг с другом: лишняя конкуренция и редкий ложный 429. Обхода лимита
+  // она НЕ даёт — COUNT ниже фильтрует по полному ключу, а не по его хешу.
+  // Двухаргументная форма расширяет пространство до 64 бит и делает коллизию
+  // пренебрежимой; первый аргумент — постоянная «пространства имён» этой фичи,
+  // чтобы не столкнуться с чужими локами в той же БД.
   const lock = await client.query<{ locked: boolean }>(
-    'select pg_try_advisory_xact_lock(hashtext($1)) as locked',
-    [keyPair],
+    'select pg_try_advisory_xact_lock($1, hashtext($2)) as locked',
+    [LOCK_NAMESPACE, keyPair],
   );
   if (!lock.rows[0]?.locked) return { ok: false, tooMany: true };
 
