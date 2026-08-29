@@ -379,7 +379,7 @@
     },
     {
       "id": "FR-012",
-      "status": "planned",
+      "status": "done",
       "priority": "medium",
       "tags": [
         "reliability",
@@ -394,10 +394,16 @@
         "Тест: повтор НЕ создаёт вторую расшифровку у одного отзыва"
       ],
       "files": [
+        "packages/db/migrations/011_transcript_retry.sql",
         "services/worker/src/transcribe-job.ts",
-        "packages/db/migrations/",
-        "services/worker/tests/"
-      ]
+        "services/worker/src/db.ts",
+        "services/worker/tests/transcribe-retry.test.ts",
+        "services/worker/tests/transcribe-job.test.ts",
+        "services/worker/tests/transcribe-job.unit.test.ts",
+        "services/worker/tests/helpers/test-db.ts",
+        "docs/features/fr-012-transcribe-retry/"
+      ],
+      "review": "1 blocker + 3 high закрыты; H-2 и M-3 отложены как одна развилка (схема аренды) — обоснование в review-report.md"
     },
     {
       "id": "FR-013",
@@ -523,5 +529,5 @@
       ]
     }
   ],
-  "last_completed": "FR-009"
+  "last_completed": "FR-012"
 }

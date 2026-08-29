@@ -147,6 +147,37 @@ previous address. This clears by itself; retry after a few seconds.
 `external` in our `docker-compose.yml` would make our stack unstartable on a machine without
 that proxy. Deploying behind an existing proxy is a manual step, and it has to be remembered.
 
+## Migrations: `npm run migrate` inside the container does NOT work
+
+**Symptom.** `docker compose exec web npm run migrate --workspace packages/db` fails with
+`sh: tsx: not found`, exit code 127.
+
+**Cause.** The runtime image is built without dev dependencies, while the migration runner
+is TypeScript and runs through `tsx`. It is not in the container, and it should not be.
+
+**How to apply migrations for real.** The database is not published outside (and never will
+be — see the ports rule), so it cannot be reached from the host. The migration is piped into
+`psql` inside the container — the same two steps the runner performs, in one transaction:
+
+```bash
+set -a; . ./.env; set +a
+{
+  echo "BEGIN;"
+  cat packages/db/migrations/0NN_name.sql
+  echo "insert into schema_migrations (filename) values ('0NN_name.sql');"
+  echo "COMMIT;"
+} | docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1 -q
+```
+
+`ON_ERROR_STOP=1` is mandatory: without it `psql` continues after an error and records the
+migration as applied even though it did not run.
+
+**Take a backup first:**
+
+```bash
+docker compose exec -T postgres pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" | gzip > backup-$(date +%F-%H%M).sql.gz
+```
+
 ## The general rule
 
 The three worst defects of this project had the same shape: **every module is correct, and the

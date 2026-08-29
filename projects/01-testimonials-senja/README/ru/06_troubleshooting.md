@@ -148,6 +148,37 @@ docker network connect <сеть-прокси> <имя-контейнера-web>
 где этого прокси нет. Развёртывание за существующим прокси — это ручной шаг, и его
 надо помнить.
 
+## Миграции: `npm run migrate` внутри контейнера НЕ работает
+
+**Признак.** `docker compose exec web npm run migrate --workspace packages/db` падает с
+`sh: tsx: not found`, код 127.
+
+**Причина.** Рабочий образ собран без dev-зависимостей, а раннер миграций написан на
+TypeScript и запускается через `tsx`. Внутри контейнера его нет и не должно быть.
+
+**Как применять на самом деле.** База наружу не опубликована (и не будет — см. правило
+портов), поэтому с хоста к ней не подключиться. Миграция подаётся в `psql` внутри
+контейнера — теми же двумя шагами, что делает раннер, и в одной транзакции:
+
+```bash
+set -a; . ./.env; set +a
+{
+  echo "BEGIN;"
+  cat packages/db/migrations/0NN_имя.sql
+  echo "insert into schema_migrations (filename) values ('0NN_имя.sql');"
+  echo "COMMIT;"
+} | docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1 -q
+```
+
+`ON_ERROR_STOP=1` обязателен: без него `psql` продолжит после ошибки и запишет миграцию
+как применённую, хотя она не отработала.
+
+**Перед применением — резервная копия:**
+
+```bash
+docker compose exec -T postgres pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" | gzip > backup-$(date +%F-%H%M).sql.gz
+```
+
 ## Общее правило
 
 Три худших дефекта проекта имели одинаковую форму: **каждый модуль корректен, а дефект
