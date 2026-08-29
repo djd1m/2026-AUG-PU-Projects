@@ -76,6 +76,10 @@ export async function setupSchema(pool: pg.Pool): Promise<void> {
       transcript_source text NOT NULL DEFAULT 'machine',
       transcript_status text NOT NULL DEFAULT 'pending'
         CHECK (transcript_status IN ('pending', 'completed', 'failed')),
+      -- FR-012, миграция 011. Участвуют в ОТБОРЕ строк, поэтому обязаны совпадать
+      -- с боевой схемой по типу и nullability — см. правило в шапке файла.
+      transcript_attempts int NOT NULL DEFAULT 0,
+      transcript_next_attempt_at timestamptz,
       created_at timestamptz NOT NULL DEFAULT now()
     );
   `);
