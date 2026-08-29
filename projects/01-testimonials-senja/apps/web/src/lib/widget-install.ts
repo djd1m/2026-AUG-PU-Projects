@@ -43,10 +43,37 @@ export function normalizeDomain(raw: string | null | undefined): string | null {
   return value === '' ? null : value;
 }
 
-/** Домены, на которых рендер НЕ считается установкой (Pseudocode §4: превью и дашборд). */
+/** Семейство локальной разработки: рендер здесь не установка ни при каких настройках. */
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0']);
+
+/**
+ * Домены, на которых рендер НЕ считается установкой (FR-013, Pseudocode §4).
+ *
+ * Своим считается ТРИ вещи: сам APP_DOMAIN, любой его ПОДДОМЕН и семейство localhost.
+ *
+ * Поддомены добавлены потому, что до FR-013 сравнение шло на точное равенство — и виджет,
+ * отрендеренный на `staging.<наш домен>`, засчитывался как установка у клиента. Метрика
+ * growth-петли врала, а предложение поделиться срабатывало на нашем же стенде.
+ *
+ * ПРОВЕРКА ИМЕННО `'.' + own`, а не `endsWith(own)`. Без ведущей точки своим оказался бы
+ * `notproofwall.example` — чужой домен, который регистрируется за десять минут. Тот же
+ * класс, что уже ловился в этом же виджете: проверка «начинается со слеша» пропускала
+ * протокол-относительный `//evil.example`.
+ *
+ * Временные домены предпросмотра владельца (`*.vercel.app` и подобные) сюда НЕ входят
+ * сознательно — см. docs/plans/fr-013-external-domain.md, раздел «вне объёма».
+ */
 export function isOwnDomain(domain: string): boolean {
-  const own = normalizeDomain(process.env.APP_DOMAIN ?? process.env.BASE_URL ?? 'localhost');
-  return own !== null && (domain === own || domain === 'localhost' || domain === '127.0.0.1');
+  const normalized = normalizeDomain(domain);
+  if (normalized === null) return false;
+  if (LOCAL_HOSTS.has(normalized) || normalized.endsWith('.localhost')) return true;
+
+  // APP_DOMAIN не задан — своим остаётся только localhost. Это НЕ «значит всё чужое»:
+  // на незаданной переменной мы не выдумываем, чей домен, а сужаем список своих.
+  const own = normalizeDomain(process.env.APP_DOMAIN ?? process.env.BASE_URL);
+  if (own === null) return false;
+
+  return normalized === own || normalized.endsWith(`.${own}`);
 }
 
 /**

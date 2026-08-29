@@ -407,7 +407,7 @@
     },
     {
       "id": "FR-013",
-      "status": "planned",
+      "status": "done",
       "priority": "low",
       "tags": [
         "growth",
@@ -422,8 +422,10 @@
       ],
       "files": [
         "apps/web/src/lib/widget-install.ts",
-        "apps/web/tests/widget-install.test.ts"
-      ]
+        "apps/web/tests/widget-install.test.ts",
+        "docs/plans/fr-013-external-domain.md"
+      ],
+      "review": "вес /plan, не /feature (2 файла, без схемы). Временные домены предпросмотра вне объёма — обоснование в плане"
     },
     {
       "id": "FR-014",
@@ -529,5 +531,5 @@
       ]
     }
   ],
-  "last_completed": "FR-012"
+  "last_completed": "FR-013"
 }

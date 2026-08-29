@@ -1,8 +1,10 @@
 // FR-GROWTH-001 — «метрика недели». Считаем САЙТЫ, а не людей: обе метрики имеют
 // одну гранулярность (project_id, domain) и живут за счёт одной атомарной вставки.
 
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { PoolClient } from 'pg';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 const DB_URL = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
 if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
@@ -233,5 +235,74 @@ describe('ГОНКА: два первых рендера на разных ст�
       return rowCount;
     });
     expect(installs).toBe(1);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FR-013 — что считать «внешним доменом».
+//
+// До этой фичи сравнение шло на ТОЧНОЕ равенство с APP_DOMAIN, и виджет, отрендеренный
+// на нашем же `staging.<домен>`, засчитывался как установка у клиента: метрика
+// growth-петли врала, а предложение поделиться срабатывало на нашем стенде.
+//
+// Правило и его границы: docs/plans/fr-013-external-domain.md
+
+describe('FR-013 — свой домен против внешнего', () => {
+  const OWN = 'proofwall.example';
+  let saved: string | undefined;
+
+  beforeEach(() => { saved = process.env.APP_DOMAIN; process.env.APP_DOMAIN = OWN; });
+  afterEach(() => {
+    if (saved === undefined) delete process.env.APP_DOMAIN;
+    else process.env.APP_DOMAIN = saved;
+  });
+
+  // AC-013.1 — таблица примеров: для каждой строки правила свой и чужой случай.
+  it.each([
+    // свои
+    ['proofwall.example', true, 'сам APP_DOMAIN'],
+    ['staging.proofwall.example', true, 'поддомен — наш стенд, не установка у клиента'],
+    ['a.b.c.proofwall.example', true, 'поддомен любой глубины (AC-013.3)'],
+    ['Staging.Proofwall.Example', true, 'регистр не важен: сравнение ПОСЛЕ нормализации'],
+    ['www.proofwall.example', true, 'www срезается нормализацией'],
+    ['https://staging.proofwall.example:443/x', true, 'URL целиком тоже принимается'],
+    ['localhost', true, 'локальная разработка'],
+    ['127.0.0.1', true, 'то же'],
+    ['app.localhost', true, 'поддомен localhost'],
+    // чужие
+    ['acme.com', false, 'обычный клиентский сайт'],
+    ['proofwall.example.evil.com', false, 'наш домен как ПРЕФИКС чужого'],
+    ['notproofwall.example', false, 'AC-013.2: падает на endsWith(own) без точки'],
+    ['evilproofwall.example', false, 'AC-013.2: регистрируется за десять минут'],
+    ['proofwall.example.com', false, 'другая зона — другой владелец'],
+  ])('%s → свой=%s (%s)', (domain, expected) => {
+    expect(isOwnDomain(domain as string)).toBe(expected);
+  });
+
+  it('AC-013.5 — без APP_DOMAIN своим остаётся только семейство localhost', () => {
+    delete process.env.APP_DOMAIN;
+    const savedBase = process.env.BASE_URL;
+    delete process.env.BASE_URL;
+    try {
+      expect(isOwnDomain('localhost'), 'разработка обязана остаться своей').toBe(true);
+      expect(isOwnDomain('127.0.0.1')).toBe(true);
+      // Не «всё чужое по умолчанию» и не «всё своё»: список своих сужается, а не
+      // додумывается. Иначе незаданная переменная тихо меняла бы смысл метрики.
+      expect(isOwnDomain('acme.com')).toBe(false);
+      expect(isOwnDomain(OWN), 'без переменной наш домен неотличим от чужого').toBe(false);
+    } finally {
+      if (savedBase !== undefined) process.env.BASE_URL = savedBase;
+    }
+  });
+
+  it('AC-013.6 — страж: проверка поддомена идёт с ВЕДУЩЕЙ ТОЧКОЙ', () => {
+    const src = readFileSync(
+      path.resolve(__dirname, '../src/lib/widget-install.ts'), 'utf8',
+    ).replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    const fn = src.slice(src.indexOf('export function isOwnDomain'));
+    const body = fn.slice(0, fn.indexOf('\n}'));
+    expect(body, 'endsWith без точки делает своим notproofwall.example')
+      .toMatch(/endsWith\(`\.\$\{own\}`\)|endsWith\('\.' \+ own\)/);
+    expect(body).not.toMatch(/endsWith\(own\)/);
   });
 });
