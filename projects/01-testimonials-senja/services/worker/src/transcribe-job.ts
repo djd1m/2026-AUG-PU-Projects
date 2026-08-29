@@ -87,6 +87,11 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
   // аргумента отката НЕ делает, и соединение в состоянии abort роняло бы любой
   // следующий запрос, включая BEGIN (NFR-012.8).
   let poisoned: Error | undefined;
+  // true, когда транзакция уже завершена штатно (COMMIT или успешный ROLLBACK).
+  // Без него внешняя защита делала бы ЛИШНИЙ откат на каждом сбое: не опасно, но
+  // сыплет предупреждением «there is no transaction in progress» в лог, а шум в
+  // логе сбоев — это то, из-за чего перестают читать логи сбоев.
+  let settled = false;
   try {
     await client.query("BEGIN");
 
@@ -123,6 +128,7 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
     const row = rows[0];
     if (!row) {
       await client.query("COMMIT");
+      settled = true;
       return { status: "empty" };
     }
 
@@ -143,6 +149,7 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
         [transcriptText, row.id],
       );
       await client.query("COMMIT");
+      settled = true;
       return { status: "completed", testimonialId: row.id };
     } catch (err) {
       const attempts = row.transcript_attempts + 1;
@@ -166,6 +173,7 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
           // (канон Architecture §10: enum допускает failed).
           await client.query(GIVE_UP_SQL, [row.id, attempts]);
           await client.query("COMMIT");
+      settled = true;
           logError("transcription_failed", row.id, err);
           return { status: "failed", testimonialId: row.id };
         }
@@ -173,20 +181,18 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
         // статуса не вводим: ожидание выражается парой «pending + срок в будущем».
         await client.query(SCHEDULE_SQL, [row.id, attempts, String(delayMs)]);
         await client.query("COMMIT");
+      settled = true;
         logError("transcription_retry_scheduled", row.id, err);
         return { status: "retry_scheduled", testimonialId: row.id, attempts };
       }
 
       // Неожиданная ошибка (обрыв соединения с БД и т.п.). Отзыв НЕ помечаем failed по
       // причине, не связанной с провайдером, — это решение сохранено с первой версии.
-      try {
-        await client.query("ROLLBACK");
-      } catch {
-        // Откат не удался — состояние соединения неизвестно. Возвращать такое в пул
-        // молча нельзя: на нём упадёт любой следующий запрос, включая BEGIN.
-        poisoned = err instanceof Error ? err : new Error(String(err));
-        throw err;
-      }
+      // Откат обязателен: отзыв не помечаем failed по причине, не связанной с
+      // провайдером. Если откат сам упал — пробрасываем; безопасностью соединения
+      // занимается ВНЕШНИЙ обработчик, он один на все пути.
+      await client.query("ROLLBACK");
+      settled = true;
 
       // Учёт попытки ОТДЕЛЬНОЙ транзакцией на ТОМ ЖЕ соединении.
       //
@@ -198,21 +204,45 @@ export async function claimAndProcessOneTestimonial(deps: TranscribeJobDeps): Pr
       // выбирает ЕЁ ЖЕ на каждом тике, и одна «ядовитая» запись блокирует всю очередь
       // навсегда, повторяясь каждые pollIntervalMs.
       try {
+        settled = false;
         await client.query("BEGIN");
         await client.query(
           attempts >= MAX_ATTEMPTS ? GIVE_UP_SQL : SCHEDULE_SQL,
           attempts >= MAX_ATTEMPTS ? [row.id, attempts] : [row.id, attempts, String(delayMs)],
         );
         await client.query("COMMIT");
+      settled = true;
       } catch {
         // Учесть не вышло — БД действительно недоступна, делать больше нечего.
-        // Состояние соединения после этого неизвестно, поэтому в пул его не возвращаем.
-        poisoned = err instanceof Error ? err : new Error(String(err));
+        // Состояние соединения разберёт внешний обработчик.
       }
 
       // Исходная ошибка НЕ теряется ни на одном пути: супервизор обязан её увидеть.
       throw err;
     }
+  } catch (err) {
+    // ЛЮБАЯ ошибка, дошедшая сюда, оставляет состояние транзакции НЕИЗВЕСТНЫМ —
+    // не только неудавшийся ROLLBACK, ради которого флаг вводился изначально.
+    // Ревью нашло три незащищённых входа, и все реальные:
+    //   • отказ UPDATE или COMMIT в ветке SttApiError (дедлок, ограничение, отмена);
+    //   • BEGIN и SELECT, вокруг которых catch не было вовсе;
+    //   • SELECT ссылается на колонку миграции 011 — воркер, поднятый ДО миграции,
+    //     получает 42703, и это ровно тот порядок развёртывания, который предписан
+    //     («миграция, затем воркер» — два шага, и воркер их регулярно обгоняет).
+    //
+    // Отравленное соединение возвращается в пул и раздаётся следующему заёмщику
+    // ПЕРВЫМ (pg-pool отдаёт LIFO), так что очередь встаёт целиком и навсегда:
+    // процесс не падает, restart: unless-stopped не срабатывает, а в лог идёт 25P02
+    // вместо настоящей причины — И ПОСЛЕ устранения этой причины тоже.
+    if (settled) throw err;   // транзакция уже завершена — соединение чистое
+    poisoned = err instanceof Error ? err : new Error(String(err));
+    try {
+      await client.query("ROLLBACK");
+      poisoned = undefined; // откат удался — соединение чистое, вернём в пул
+    } catch {
+      // Не удался: состояние неизвестно, в пул НЕ возвращаем (release(err) уничтожит).
+    }
+    throw err;
   } finally {
     client.release(poisoned);
   }

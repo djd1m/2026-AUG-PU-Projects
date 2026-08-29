@@ -108,6 +108,9 @@ describe("claimAndProcessOneTestimonial — последовательность
     expect(rollbackAt, "откат обязателен").toBeGreaterThan(-1);
     expect(queries.slice(rollbackAt), "после отката обязан идти учёт попытки")
       .toEqual(["ROLLBACK", "BEGIN", expect.stringContaining("UPDATE testimonials"), "COMMIT"]);
+    // Внешняя защита НЕ добавляет холостого отката: транзакция уже завершена.
+    expect(queries.filter((q) => q === "ROLLBACK"), "лишний ROLLBACK сыплет предупреждением в лог")
+      .toHaveLength(1);
     expect((client as unknown as { release: () => void }).release).toHaveBeenCalledOnce();
   });
 });

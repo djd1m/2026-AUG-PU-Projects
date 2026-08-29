@@ -202,27 +202,60 @@ describe.skipIf(!hasTestDb)("FR-012 — политика повторов", () =
   });
 });
 
-// AC-012.14 — отдельный пул РОВНО НА ОДНО соединение. При пуле в 10 второй прогон
-// взял бы другое соединение и прошёл при живом дефекте: критерий был бы неразборчив.
+// AC-012.14 — пул РОВНО НА ОДНО соединение: при 10 второй прогон взял бы другое и
+// прошёл при живом дефекте. Отказ индуцируется ОГРАНИЧЕНИЕМ СХЕМЫ, а не ошибкой клиента:
+// прежняя редакция бросала TypeError из transcribeVideo, транзакция при этом НЕ в abort,
+// ROLLBACK успешен, и проверяемый механизм не исполнялся вовсе — критерий был зелёным
+// на обеих мутациях, которые объявлен ловить.
 describe.skipIf(!hasTestDb)("FR-012 — соединение возвращается в пул пригодным", () => {
   let pool: pg.Pool;
   beforeAll(async () => { pool = await createTestPool(1); await setupSchema(pool); });
+  afterEach(async () => { await truncateAll(pool); });
   afterAll(async () => { await dropSchema(pool); await pool.end(); });
 
-  it("AC-012.14 — после не-STT ошибки следующий прогон работает на том же соединении", async () => {
+  const seed = async () => {
     const { rows } = await pool.query<{ id: string }>(
-      `INSERT INTO testimonials (video_object_key) VALUES ('k/h.webm') RETURNING id`,
-    );
-    await expect(claimAndProcessOneTestimonial({
-      pool, transcribeClient: failing(new TypeError("сбой")), presignVideoUrl: presign, logError: silent,
-    })).rejects.toThrow();
+      `INSERT INTO testimonials (video_object_key) VALUES ('k/h.webm') RETURNING id`);
+    return rows[0]!.id;
+  };
 
-    // То же самое соединение. Отравленное упало бы уже на BEGIN.
+  it("AC-012.14 — отказ UPDATE внутри транзакции не отравляет соединение", async () => {
+    await seed();
+    // Ограничение ломает именно тот UPDATE, которым планируется повтор: транзакция
+    // уходит в abort, и без внешней защиты соединение вернулось бы в пул аварийным.
+    await pool.query(`ALTER TABLE testimonials ADD CONSTRAINT no_attempts CHECK (transcript_attempts = 0)`);
+    await expect(claimAndProcessOneTestimonial({
+      pool, transcribeClient: failing(new SttApiError("провайдер")), presignVideoUrl: presign, logError: silent,
+    })).rejects.toThrow();
+    await pool.query(`ALTER TABLE testimonials DROP CONSTRAINT no_attempts`);
+
+    // ТО ЖЕ соединение (пул из одного). Отравленное упало бы на BEGIN с 25P02
+    // и роняло бы КАЖДЫЙ следующий тик — очередь встала бы навсегда.
+    // Проверяем СВОЙСТВО «соединение пригодно», а не какую именно строку взяли:
+    // первая после сбоя осталась в очереди и по created_at выбирается раньше новой.
     const again = await claimAndProcessOneTestimonial({
       pool, transcribeClient: succeeding("ок"), presignVideoUrl: presign, logError: silent,
     });
-    expect(again.status, "соединение вернулось в пул непригодным?").not.toBe(undefined);
-    await pool.query(`DELETE FROM testimonials WHERE id = $1`, [rows[0]!.id]);
+    expect(again.status, "соединение вернулось в пул аварийным — очередь встала бы навсегда")
+      .toBe("completed");
+  });
+
+  it("AC-012.14 — отсутствие колонки миграции 011 не отравляет соединение", async () => {
+    // Путь, СОЗДАННЫЙ этой фичей: воркер поднят на новом коде до применения миграции.
+    // Порядок развёртывания предписывает два шага, и воркер регулярно обгоняет первый
+    // (см. комментарий к restart: unless-stopped в docker-compose.yml).
+    await seed();
+    await pool.query(`ALTER TABLE testimonials DROP COLUMN transcript_attempts`);
+    await expect(claimAndProcessOneTestimonial({
+      pool, transcribeClient: succeeding("не дойдёт"), presignVideoUrl: presign, logError: silent,
+    })).rejects.toThrow();
+    await pool.query(`ALTER TABLE testimonials ADD COLUMN transcript_attempts int NOT NULL DEFAULT 0`);
+
+    const again = await claimAndProcessOneTestimonial({
+      pool, transcribeClient: succeeding("ок"), presignVideoUrl: presign, logError: silent,
+    });
+    expect(again.status, "после применения миграции воркер обязан заработать без перезапуска")
+      .toBe("completed");
   });
 });
 
@@ -245,8 +278,21 @@ describe("FR-012 — стражи по исходнику", () => {
       .not.toMatch(/[^_]now\(\)/);
   });
 
-  it("NFR-012.8 — соединение возвращается через release с ошибкой при сомнении", () => {
-    expect(code, "release() без аргумента отката НЕ делает — отравленное уйдёт в пул")
-      .toMatch(/client\.release\(poisoned\)/);
+  it("NFR-012.8 — защита соединения стоит на ВНЕШНЕМ обработчике, а не в одной ветке", () => {
+    // Ищем ВНУТРИ нужной функции: ниже по файлу есть startTranscriptionPoll со своим
+    // catch, и поиск по всему файлу находил именно его — страж проверял не то место.
+    const from = code.indexOf("export async function claimAndProcessOneTestimonial");
+    const to = code.indexOf("export function startTranscriptionPoll");
+    expect(from, "функция не найдена").toBeGreaterThan(-1);
+    expect(to).toBeGreaterThan(from);
+    const body = code.slice(from, to);
+
+    expect(body).toMatch(/client\.release\(poisoned\)/);
+    // Внешний catch обязан существовать: отравление — свойство соединения, а не ветки.
+    const outer = body.lastIndexOf("} catch (err) {");
+    const finallyAt = body.indexOf("} finally {");
+    expect(outer, "нет внешнего catch — незащищены BEGIN, SELECT и ветка SttApiError")
+      .toBeGreaterThan(-1);
+    expect(outer, "catch должен обрамлять всё тело, а не сидеть внутри").toBeLessThan(finallyAt);
   });
 });
