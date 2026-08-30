@@ -4,6 +4,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { rateLimit } from '@proofwall/db';
+import { generateDashboardToken, hashPartnerToken } from './partner-auth';
 
 export const FRAUD_SCOPE = 'signup_via_partner_code';
 export const FRAUD_WINDOW = { seconds: 600 }; // 10 минут — Pseudocode §8
@@ -34,17 +35,38 @@ export async function issuePartnerCode(
   options: { actorId: string; ownerAccountId?: string | null; commissionRate?: number | null } = {
     actorId: 'admin',
   },
-): Promise<{ id: string; code: string }> {
+): Promise<{ id: string; code: string; dashboard_token: string }> {
+  // FR-011: токен кабинета выдаётся ЗДЕСЬ ЖЕ. Отдельная функция потребовала бы второй
+  // транзакции и оставила бы окно, где код есть, а кабинета к нему нет.
+  // Возвращаемое значение ДОПОЛНЯЕТСЯ, а не заменяется: `id` и `code` остаются на месте,
+  // и восемь существующих вызовов, деструктурирующих `id`, продолжают работать.
+  const dashboardToken = generateDashboardToken();
+  const dashboardTokenHash = hashPartnerToken(dashboardToken);
+
+  // Ставка: колонка ОПУСКАЕТСЯ, когда её не задали явно.
+  //
+  // Прежде здесь стояло `options.commissionRate ?? null`, а явный NULL ОТМЕНЯЕТ
+  // `default 0.3000` колонки (010_commission_default.sql). Дальше
+  // convertAttributionOnPayment при пустой ставке не создаёт строку `commissions` вовсе —
+  // и партнёрский кабинет показывал бы НОЛЬ каждому партнёру навсегда. Дефолт живёт в
+  // одном месте, в схеме; повторять его число здесь значило бы завести вторую копию,
+  // которая однажды разойдётся с первой.
+  const withRate = options.commissionRate !== undefined && options.commissionRate !== null;
+  const columns = `code, partner_name, status, owner_account_id, dashboard_token_hash${withRate ? ', commission_rate' : ''}`;
+  const values = `$1, $2, 'active', $3, $4${withRate ? ', $5' : ''}`;
+
   let attempt = 0;
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const code = generateCode(partnerName);
+    const params: unknown[] = [code, partnerName, options.ownerAccountId ?? null, dashboardTokenHash];
+    if (withRate) params.push(options.commissionRate);
     const { rows } = await client.query<{ id: string }>(
-      `insert into partner_codes (code, partner_name, status, commission_rate, owner_account_id)
-       values ($1, $2, 'active', $3, $4)
+      `insert into partner_codes (${columns})
+       values (${values})
        on conflict (code) do nothing
        returning id`,
-      [code, partnerName, options.commissionRate ?? null, options.ownerAccountId ?? null],
+      params,
     );
     if (rows[0]) {
       await client.query(
@@ -52,13 +74,53 @@ export async function issuePartnerCode(
          values (null, 'partner_code', $1, $2, 'partner_code_issued', $3)`,
         [rows[0].id, options.actorId, partnerName],
       );
-      return { id: rows[0].id, code };
+      return { id: rows[0].id, code, dashboard_token: dashboardToken };
     }
     // Коллизия суффикса — пробуем ещё. ON CONFLICT DO NOTHING вместо «проверить, потом
     // вставить»: последнее оставляет окно между проверкой и записью.
     attempt += 1;
     if (attempt > 10) throw new Error('не удалось подобрать уникальный код партнёра за 10 попыток');
   }
+}
+
+/**
+ * FR-011.6 — ротация токена кабинета В ТОЙ ЖЕ строке.
+ *
+ * НЕ перевыпуск кода. Перевыпуск создал бы НОВУЮ строку `partner_codes`, а все начисления
+ * привязаны к `partner_code_id` старой: партнёр увидел бы нули вместо своей истории, а его
+ * прежние реферальные ссылки перестали бы быть его ссылками. Когорта разрезана надвое,
+ * и молча.
+ *
+ * Прежний токен перестаёт работать немедленно: сверка идёт по текущему хешу на КАЖДОМ
+ * обращении, поэтому и уже выданная по нему cookie доступа больше не даёт.
+ */
+export async function rotateDashboardToken(client: PoolClient, code: string): Promise<string | null> {
+  const token = generateDashboardToken();
+  const { rowCount } = await client.query(
+    'update partner_codes set dashboard_token_hash = $1 where code = $2',
+    [hashPartnerToken(token), code],
+  );
+  return rowCount === 0 ? null : token;
+}
+
+/**
+ * FR-011.4 — та же выборка, что `getPartnerCohortDashboard`, но по ID.
+ *
+ * Существует потому, что публичный `code` не должен ехать дальше по стеку: он приходит из
+ * реферальной ссылки и известен каждому приглашённому. Утверждение «ошибка „взяли партнёра
+ * из адреса“ невозможна по сигнатуре» верно только при таком параметре.
+ * Прежняя функция остаётся для административных путей, где код и так известен.
+ */
+export async function getPartnerCohortDashboardById(
+  client: PoolClient,
+  partnerCodeId: string,
+): Promise<CohortDashboard | null> {
+  const { rows } = await client.query<{ code: string }>(
+    'select code from partner_codes where id = $1',
+    [partnerCodeId],
+  );
+  const code = rows[0]?.code;
+  return code ? getPartnerCohortDashboard(client, code) : null;
 }
 
 /**

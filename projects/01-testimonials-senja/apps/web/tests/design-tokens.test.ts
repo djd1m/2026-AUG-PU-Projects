@@ -81,6 +81,9 @@ describe('страницы верстаются дизайн-системой, �
     'app/login/page.tsx',
     'app/login/login-form.tsx',
     'app/dashboard/[slug]/change-password.tsx',
+    'app/partner/page.tsx',
+    'app/partner/login-form.tsx',
+    'app/partner/dashboard/page.tsx',
   ];
   const SYSTEM = ['stage', 'card', 'field', 'input', 'btn', 'form'];
 

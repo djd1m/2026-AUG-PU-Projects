@@ -334,6 +334,7 @@ describe('стражи по исходнику', () => {
       'app/api/auth/login/route.ts',
       'app/api/auth/register/route.ts',
       'app/api/auth/password/route.ts',
+      'app/api/partner/session/route.ts',
     ]) {
       expect(read(rel), `${rel} не ограничивает размер тела`).toContain('readBodyAtMost');
     }
