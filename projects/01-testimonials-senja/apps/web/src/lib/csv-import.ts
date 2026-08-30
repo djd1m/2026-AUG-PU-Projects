@@ -53,6 +53,9 @@ export type ParseResult =
  * недопустим: он молча съест половину отзывов и не скажет об этом.
  */
 export function parseCsvRecords(raw: string, delimiter: string): string[][] {
+  // BOM Excel ставит при каждом сохранении в CSV. Сопоставление колонок идёт по номеру, а
+  // заголовок пропускается, поэтому вреда он не наносит — но и оставлять его незачем.
+  if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1);
   const records: string[][] = [];
   let field = '';
   let record: string[] = [];
@@ -74,13 +77,26 @@ export function parseCsvRecords(raw: string, delimiter: string): string[][] {
     }
     if (ch === '"' && field === '') { inQuotes = true; i += 1; continue; }
     if (ch === delimiter) { pushField(); i += 1; continue; }
-    if (ch === '\r') { i += 1; continue; }               // CRLF и CR одинаково
+    if (ch === '\r') {
+      // ОДИНОКИЙ \r — тоже конец записи, а не мусор. Пропуск его молча склеивал заголовок с
+      // первой строкой: `name,text\rАнна,текст` давал ОДНУ запись ["name","textАнна",…].
+      // Это тихая порча данных, найденная зондом на злых входах, а не рассуждением.
+      if (raw[i + 1] === '\n') i += 1;                  // CRLF — один разделитель, не два
+      pushRecord(); i += 1; continue;
+    }
     if (ch === '\n') { pushRecord(); i += 1; continue; }
     field += ch; i += 1;
   }
   // Последняя запись без завершающего перевода строки.
   if (field !== '' || record.length > 0) pushRecord();
+  // Незакрытая кавычка: остаток файла ушёл в одно поле. Без этой пометки строка просто не
+  // прошла бы валидацию («текст пуст»), и владелец получил бы отказ с неверной причиной.
+  if (inQuotes) throw new UnclosedQuoteError();
   return records;
+}
+
+export class UnclosedQuoteError extends Error {
+  constructor() { super('в файле есть незакрытая кавычка'); this.name = 'UnclosedQuoteError'; }
 }
 
 /** Разделитель определяется по ПЕРВОЙ строке и только вне кавычек: заголовок вида
@@ -128,7 +144,15 @@ function isValidUtf8(raw: string): boolean {
 export function parseCsv(raw: string, mapping: ColumnMapping): ParseResult {
   if (!isValidUtf8(raw)) return { ok: false, error: 'файл не в кодировке UTF-8' };
 
-  const records = parseCsvRecords(raw, detectDelimiter(raw));
+  let records: string[][];
+  try {
+    records = parseCsvRecords(raw, detectDelimiter(raw));
+  } catch (err) {
+    if (err instanceof UnclosedQuoteError) {
+      return { ok: false, error: 'в файле есть незакрытая кавычка — проверьте выгрузку' };
+    }
+    throw err;
+  }
   if (records.length === 0) return { ok: false, error: 'файл пуст' };
   if (records.length === 1) return { ok: false, error: 'в файле только заголовок, строк нет' };
 
