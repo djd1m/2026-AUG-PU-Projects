@@ -18,7 +18,7 @@ const { withService, withAccount, closePool } = await import('@proofwall/db');
 const { registerAccountAndProject } = await import('../src/lib/register');
 const {
   parseCsv, parseCsvRecords, detectDelimiter, importRows, importFingerprint,
-  MAX_IMPORT_ROWS, MAX_IMPORT_BODY,
+  MAX_IMPORT_ROWS, MAX_IMPORT_BODY, TooManyRecordsError,
 } = await import('../src/lib/csv-import');
 const { NAME_MAX, TEXT_MAX } = await import('../src/lib/testimonial');
 
@@ -316,6 +316,37 @@ describe('соотношение пределов — иначе предел с
     // и сообщение будет о размере, а не о числе строк — владелец не поймёт, что делать.
     expect(MAX_IMPORT_BODY, `нужно ${needed} байт, предел ${MAX_IMPORT_BODY}`)
       .toBeGreaterThan(needed);
+  });
+});
+
+
+describe('AC-014.15 [ревью B-1] — ЦЕНА разбора ограничена числом строк, а не размером файла', () => {
+  it('файл в предел тела, но из миллиона строк, отвергается БЫСТРО', () => {
+    // Прежде предел строк проверялся ПОСЛЕ полного разбора и ограничивал сообщение, а не
+    // ресурс. Замерено ревью на теле ровно в пределе 2 МиБ: 294 мс СИНХРОННОЙ работы и
+    // +217 МиБ heap на один запрос, при норме соседнего запроса к БД 0,8 мс. Синхронной —
+    // значит процесс в это время не обслуживает никого: ни витрину, ни виджет, ни вход.
+    // Реплика web одна, поток в Node один: один аккаунт четырьмя запросами в секунду
+    // останавливал бы продукт целиком.
+        // Ровно тот размер, на котором ревью замерило 294 мс: тело в пределе MAX_IMPORT_BODY.
+    const huge = 'name,text' + '\n'.repeat(1_048_538);
+    const started = Date.now();
+    const r = parseCsv(huge, MAP);
+    const elapsed = Date.now() - started;
+
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain(String(MAX_IMPORT_ROWS));
+    // Падает при: вернуть проверку предела ПОСЛЕ разбора. Порог с большим запасом: после
+    // починки разбор прекращается на 501-й записи, то есть за микросекунды.
+    expect(elapsed, `разбор занял ${elapsed} мс — цена не ограничена числом строк`)
+      .toBeLessThan(100);
+  });
+
+  it('разбор прекращается на первой записи сверх предела', () => {
+    const rows = ['h'];
+    for (let i = 0; i < 2000; i += 1) rows.push(`a${i}`);
+    // Падает при: убрать maxRecords из parseCsvRecords.
+    expect(() => parseCsvRecords(rows.join('\n'), ',', 500)).toThrow(TooManyRecordsError);
   });
 });
 

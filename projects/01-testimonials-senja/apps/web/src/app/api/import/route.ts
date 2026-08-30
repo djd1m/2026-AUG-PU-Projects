@@ -9,10 +9,16 @@
 // уже вынес наружу.
 
 import { NextResponse } from 'next/server';
-import { withAccount } from '@proofwall/db';
+
 import { currentAccountId } from '@/lib/current-session';
 import { readBodyAtMost } from '@/lib/request-body';
-import { MAX_IMPORT_BODY, importRows, parseCsv, type ColumnMapping } from '@/lib/csv-import';
+import {
+  IMPORT_RATE_SCOPE, IMPORT_RATE_THRESHOLD, IMPORT_RATE_WINDOW,
+  MAX_IMPORT_BODY, importRows, parseCsv, type ColumnMapping,
+} from '@/lib/csv-import';
+import { hashKey } from '@/lib/login';
+import { rateLimit, withAccount, withService } from '@proofwall/db';
+import { TOO_MANY } from '../auth/login/route';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,6 +63,28 @@ export async function POST(request: Request): Promise<NextResponse> {
   const mapping: ColumnMapping = {
     name: m.name, text: m.text, role: isIndex(m.role) ? m.role : null,
   };
+
+  // ОГРАНИЧЕНИЕ ЧАСТОТЫ — ДО разбора.
+  //
+  // Разбор синхронен: пока идёт его цикл, процесс не обслуживает НИКОГО — ни витрину, ни
+  // виджет, ни форму приёма, ни вход. Замерено ревью: 294 мс на теле в пределе 2 МиБ при
+  // норме соседнего запроса 0,8 мс. Лимит, поставленный ПОСЛЕ разбора, ограничивал бы число
+  // ответов, а не цену: тот же порядок операций, что закреплён в security-operation-order.md
+  // («лимит ДО дорогой операции»), только дорогая операция здесь — процессор, а не argon2.
+  //
+  // Ключ по владельцу: за одним NAT сидят разные владельцы. Записывается КАЖДАЯ попытка, а
+  // не только неудачная: здесь считается стоимость работы, и удачный импорт стоит столько
+  // же, сколько неудачный.
+  const keyOwner = hashKey(IMPORT_RATE_SCOPE, accountId);
+  const allowed = await withService(async (client) => {
+    if (await rateLimit.exceeded(
+      IMPORT_RATE_SCOPE, keyOwner, IMPORT_RATE_WINDOW, IMPORT_RATE_THRESHOLD, client)) {
+      return false;
+    }
+    await rateLimit.record(IMPORT_RATE_SCOPE, keyOwner, client);
+    return true;
+  });
+  if (!allowed) return NextResponse.json(TOO_MANY, { status: 429 });
 
   // Разбор ВНЕ транзакции.
   const result = parseCsv(csv, mapping);

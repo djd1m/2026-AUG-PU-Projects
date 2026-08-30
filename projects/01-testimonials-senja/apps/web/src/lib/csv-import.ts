@@ -36,6 +36,17 @@ export const MAX_IMPORT_BODY = 2 * 1024 * 1024;
 
 export const IMPORT_SOURCE = 'import';
 
+/** Ограничение частоты САМОГО импорта. Маршрут пишет в БД и жжёт процессор — он ничем не
+ *  невиннее публичной формы отзыва, которая ограничена 5/час. Закрытой снова оказалась одна
+ *  дверь из двух, и снова та, что дороже.
+ *
+ *  Ключ по ВЛАДЕЛЬЦУ, а не по адресу: за одним NAT сидят разные владельцы. 20 импортов в
+ *  час — с большим запасом над живым сценарием (импорт делают раз в жизни проекта, изредка
+ *  повторяют) и на порядок ниже вредного. */
+export const IMPORT_RATE_SCOPE = 'csv_import';
+export const IMPORT_RATE_THRESHOLD = 20;
+export const IMPORT_RATE_WINDOW = { seconds: 3600 } as const;
+
 export interface ColumnMapping { name: number; text: number; role?: number | null }
 export interface ImportRow { name: string; text: string; role: string | null }
 export interface RejectedRow { line: number; errors: string[] }
@@ -52,7 +63,29 @@ export type ParseResult =
  * зависимость — это цепочка поставки ради шестидесяти строк. Наивный split(',') при этом
  * недопустим: он молча съест половину отзывов и не скажет об этом.
  */
-export function parseCsvRecords(raw: string, delimiter: string): string[][] {
+export class TooManyRecordsError extends Error {
+  constructor(readonly limit: number) {
+    super(`строк больше ${limit}`);
+    this.name = 'TooManyRecordsError';
+  }
+}
+
+/**
+ * `maxRecords` — не удобство, а ГРАНИЦА ЦЕНЫ.
+ *
+ * Прежде предел строк проверялся ПОСЛЕ полного разбора, и потому ограничивал сообщение, а
+ * не ресурс: цена определялась размером файла, а не числом строк. Замерено ревью на теле
+ * ровно в пределе 2 МиБ: 294 мс СИНХРОННОЙ работы и +217 МиБ heap на один запрос, при том
+ * что соседний запрос к БД в норме занимает 0,8 мс.
+ *
+ * Синхронной — значит, что пока идёт цикл, процесс не обслуживает НИКОГО: ни витрину, ни
+ * виджет, ни форму приёма, ни вход. Реплика web одна, поток в Node один. Один аккаунт
+ * четырьмя запросами в секунду останавливал бы продукт целиком.
+ *
+ * Теперь разбор прекращается на первой записи сверх предела, и цена ограничена числом
+ * строк — то есть тем же числом, о котором говорит сообщение.
+ */
+export function parseCsvRecords(raw: string, delimiter: string, maxRecords?: number): string[][] {
   // BOM Excel ставит при каждом сохранении в CSV. Сопоставление колонок идёт по номеру, а
   // заголовок пропускается, поэтому вреда он не наносит — но и оставлять его незачем.
   if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1);
@@ -63,7 +96,13 @@ export function parseCsvRecords(raw: string, delimiter: string): string[][] {
   let i = 0;
 
   const pushField = () => { record.push(field); field = ''; };
-  const pushRecord = () => { pushField(); records.push(record); record = []; };
+  const pushRecord = () => {
+    pushField(); records.push(record); record = [];
+    // +1 к пределу: заголовок занимает первую запись. Прекращаем СРАЗУ, не дочитывая.
+    if (maxRecords !== undefined && records.length > maxRecords + 1) {
+      throw new TooManyRecordsError(maxRecords);
+    }
+  };
 
   while (i < raw.length) {
     const ch = raw[i]!;
@@ -146,8 +185,11 @@ export function parseCsv(raw: string, mapping: ColumnMapping): ParseResult {
 
   let records: string[][];
   try {
-    records = parseCsvRecords(raw, detectDelimiter(raw));
+    records = parseCsvRecords(raw, detectDelimiter(raw), MAX_IMPORT_ROWS);
   } catch (err) {
+    if (err instanceof TooManyRecordsError) {
+      return { ok: false, error: `строк больше ${MAX_IMPORT_ROWS} — разбейте файл` };
+    }
     if (err instanceof UnclosedQuoteError) {
       return { ok: false, error: 'в файле есть незакрытая кавычка — проверьте выгрузку' };
     }
@@ -156,9 +198,11 @@ export function parseCsv(raw: string, mapping: ColumnMapping): ParseResult {
   if (records.length === 0) return { ok: false, error: 'файл пуст' };
   if (records.length === 1) return { ok: false, error: 'в файле только заголовок, строк нет' };
 
+  // Пояс: разбор уже прекращается на превышении, но проверка остаётся — она дешёвая, а
+  // страж обязан быть и на случай вызова parseCsvRecords без предела.
   const dataRows = records.slice(1);
   if (dataRows.length > MAX_IMPORT_ROWS) {
-    return { ok: false, error: `строк ${dataRows.length}, предел ${MAX_IMPORT_ROWS} — разбейте файл` };
+    return { ok: false, error: `строк больше ${MAX_IMPORT_ROWS} — разбейте файл` };
   }
 
   const rows: ImportRow[] = [];
