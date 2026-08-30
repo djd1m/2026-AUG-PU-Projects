@@ -69,6 +69,8 @@ services:
       - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
       # ЮKassa (D-009). Подписи у уведомлений нет — провайдер её не присылает;
       # подлинность подтверждается адресом источника и перезапросом статуса.
+      - YANDEX_CLIENT_ID          # вход через Yandex ID (FR-016); без него кнопка отдаёт 503
+      - YANDEX_CLIENT_SECRET
       - YOOKASSA_SHOP_ID
       - YOOKASSA_SECRET_KEY
       - PAYMENTS_STUB            # true = платежи симулируются, реальных вызовов нет

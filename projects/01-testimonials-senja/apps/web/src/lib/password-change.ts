@@ -153,12 +153,25 @@ export async function changePassword(
   // Гонку закрывает сравнение-и-замена в самом UPDATE (шаг 4): строка меняется, только
   // если хеш всё ещё тот, который мы проверили. Блокировка живёт ровно время UPDATE —
   // микросекунды, — и брать её заранее не нужно вовсе.
-  const found = await client.query<{ password_hash: string }>(
+  const found = await client.query<{ password_hash: string | null }>(
     'select password_hash from accounts where id = $1',
     [accountId],
   );
   const account = found.rows[0] ?? null;
   if (!account) return { ok: false, reason: 'unauthorized' };
+
+  // FR-016: у учётки, созданной через SSO, пароля НЕТ — password_hash равен NULL.
+  // Без этой ветки verifyPassword(NULL, …) бросит внутри argon2 и маршрут отдаст 500 там,
+  // где обязан отдать обычный отказ. 500 на смене пароля — не только грубость: он ОТЛИЧИМ
+  // снаружи от 401, то есть становится оракулом «эта учётка заведена через Яндекс».
+  //
+  // Счётчики пишутся ровно как в ветке неверного пароля ниже — двумя строками, по одной на
+  // ключ: иначе этот путь стал бы бесплатным способом обходить лимит.
+  if (account.password_hash === null) {
+    await rateLimit.record(PWCHANGE_PAIR_SCOPE, keyPair, client);
+    await rateLimit.record(PWCHANGE_IP_SCOPE, keyIp, client);
+    return { ok: false, reason: 'unauthorized' };
+  }
 
   // Единственный argon2, который считает НЕудачная попытка. Наружу не вынесен, потому что
   // ему нужен хеш из БД; от гонки защищает лок по аккаунту и FOR UPDATE выше, а НЕ сам
