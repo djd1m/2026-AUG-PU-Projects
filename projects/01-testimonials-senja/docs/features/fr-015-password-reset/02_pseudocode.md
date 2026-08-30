@@ -64,6 +64,15 @@ function issueResetToken(client, email, ip) -> { token } | null | TooMany:
     keyPair = hashKey(RESET_PAIR_SCOPE, email, ip)
     keyIp   = hashKey(RESET_IP_SCOPE, ip)
 
+    set local lock_timeout = '250ms'
+
+    # АТОМАРНОСТЬ ПРОВЕРКИ И ЗАПИСИ. Без неё exceeded(COUNT) и record(INSERT) — две операции
+    # без блокировки: под READ COMMITTED сто параллельных запросов видят count = 0, проходят
+    # все и отправляют письма все. Защищаемый здесь ресурс — ЧУЖОЙ ПОЧТОВЫЙ ЯЩИК.
+    # Первая редакция этого не имела; проект чинил тот же дефект во входе (login.ts:89-106),
+    # и сюда перенесли форму парного ключа, но не механизм.
+    if not try_advisory_xact_lock(RESET_LOCK_NAMESPACE, hashtext(keyPair)):  return TooMany
+
     if rateLimit.exceeded(RESET_IP_SCOPE,   keyIp,   RESET_WINDOW, RESET_IP_THRESHOLD):   return TooMany
     if rateLimit.exceeded(RESET_PAIR_SCOPE, keyPair, RESET_WINDOW, RESET_PAIR_THRESHOLD): return TooMany
     rateLimit.record(RESET_PAIR_SCOPE, keyPair, client)
@@ -77,13 +86,21 @@ function issueResetToken(client, email, ip) -> { token } | null | TooMany:
 
     token = randomBytes(RESET_TOKEN_BYTES) -> base64url
 
-    # Предыдущие гасятся ДО выпуска нового: две живые ссылки на один аккаунт — это две
-    # двери там, где должна быть одна.
+    # Предыдущие гасятся ДО выпуска нового. НО ОДНОГО ЭТОГО МАЛО: под READ COMMITTED UPDATE
+    # не видит ещё не закоммиченную вставку соседа и не может заблокировать строку, которой
+    # пока нет. Проверено прогоном: два параллельных выпуска давали ДВА живых токена.
     UPDATE password_reset_tokens SET used_at = now()
      WHERE account_id = $row.id AND used_at IS NULL
 
-    INSERT INTO password_reset_tokens (account_id, token_hash, expires_at)
-           VALUES ($row.id, sha256Hex(token), now() + RESET_TTL)
+    # Инвариант «одна живая ссылка» держит ОГРАНИЧЕНИЕ БД — частичный уникальный индекс по
+    # (account_id) WHERE used_at IS NULL. Проигравший получает 23505 и тот же общий ответ:
+    # письмо для этого аккаунта уже в пути. Та же форма, что `on conflict do nothing` у
+    # партнёрских кодов и `unique(payment_event_id)` у начислений.
+    try:
+        INSERT INTO password_reset_tokens (account_id, token_hash, expires_at)
+               VALUES ($row.id, sha256Hex(token), now() + RESET_TTL)
+    catch unique_violation:
+        return null
 
     return { token }
 ```

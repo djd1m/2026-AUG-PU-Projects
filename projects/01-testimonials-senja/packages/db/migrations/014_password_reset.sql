@@ -23,9 +23,18 @@ create table if not exists password_reset_tokens (
   created_at timestamptz not null default now()
 );
 
--- Частичный: гасить предыдущие приходится на каждом выпуске, и это единственный частый
--- запрос по account_id.
-create index if not exists password_reset_tokens_account_active_idx
+-- ЧАСТИЧНЫЙ УНИКАЛЬНЫЙ: у аккаунта не может быть двух живых токенов одновременно.
+--
+-- Уникальность здесь несёт нагрузку, а не ускорение. Инвариант «две живые ссылки на один
+-- аккаунт — это две двери там, где должна быть одна» пытались обеспечить связкой
+-- «UPDATE … SET used_at → INSERT», и под READ COMMITTED она НЕ РАБОТАЕТ: UPDATE не видит
+-- ещё не закоммиченную вставку соседа и не может заблокировать строку, которой пока нет.
+-- Проверено прогоном: два параллельных выпуска дают ДВА живых токена.
+--
+-- Ограничение БД закрывает это по построению, как `on conflict (code) do nothing` у
+-- партнёрских кодов и `unique(payment_event_id)` у начислений. Проигравший получает
+-- 23505 и тот же общий ответ: письмо для этого аккаунта уже в пути.
+create unique index if not exists password_reset_tokens_account_active_idx
   on password_reset_tokens (account_id) where used_at is null;
 
 -- Только app_service: весь путь восстановления идёт под ней, потому что человек не

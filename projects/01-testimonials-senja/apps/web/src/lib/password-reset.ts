@@ -41,6 +41,9 @@ export const RESET_PAIR_THRESHOLD = 5;
 export const RESET_IP_SCOPE = 'reset_ip';
 export const RESET_IP_THRESHOLD = 30;
 export const RESET_WINDOW = { seconds: 3600 } as const;
+/** Пространство advisory-локов ЭТОЙ фичи. У входа 90_009, у смены пароля 90_010.
+ *  Двухаргументная форма — 64 бита; одноаргументная столкнулась бы с чужими локами. */
+export const RESET_LOCK_NAMESPACE = 90_015;
 
 /** Свой хеш токена, а не hashSessionToken: та подмешивает SESSION_SECRET, и переиспользование
  *  связало бы два пространства секретов — ротация SESSION_SECRET обнулила бы все выданные
@@ -66,6 +69,26 @@ export async function issueResetToken(
 ): Promise<IssueResult> {
   const keyPair = hashKey(RESET_PAIR_SCOPE, email, ip);
   const keyIp = hashKey(RESET_IP_SCOPE, ip);
+
+  // Пояс на случай, если лок всё же где-то удержится.
+  await client.query("set local lock_timeout = '250ms'");
+
+  // АТОМАРНОСТЬ ПРОВЕРКИ И ЗАПИСИ СЧЁТЧИКА. Без неё exceeded(COUNT) и record(INSERT) — две
+  // операции без блокировки: под READ COMMITTED сто параллельных запросов все видят count = 0,
+  // все проходят и все отправляют письмо. Лимит обходился бы `curl --parallel`, а защищаемый
+  // здесь ресурс — ЧУЖОЙ ПОЧТОВЫЙ ЯЩИК и квота провайдера.
+  //
+  // Проект уже чинил ровно этот дефект во входе (login.ts:89-106) и закрепил стражем; сюда
+  // механизм не был перенесён — перенесли форму парного ключа, но не атомарность.
+  //
+  // TRY, а не ждущий: неудача захвата означает «по этому ключу прямо сейчас идёт другая
+  // попытка», то есть параллельный перебор — законный повод ответить сразу, не вставая в
+  // очередь и не удерживая соединение.
+  const lock = await client.query<{ locked: boolean }>(
+    'select pg_try_advisory_xact_lock($1, hashtext($2)) as locked',
+    [RESET_LOCK_NAMESPACE, keyPair],
+  );
+  if (!lock.rows[0]?.locked) return { ok: false, tooMany: true };
 
   if (await rateLimit.exceeded(RESET_IP_SCOPE, keyIp, RESET_WINDOW, RESET_IP_THRESHOLD, client)) {
     return { ok: false, tooMany: true };
@@ -97,11 +120,22 @@ export async function issueResetToken(
     [account.id],
   );
 
-  await client.query(
-    `insert into password_reset_tokens (account_id, token_hash, expires_at)
-     values ($1, $2, now() + ($3 || ' milliseconds')::interval)`,
-    [account.id, hashResetToken(token), String(RESET_TTL_MS)],
-  );
+  try {
+    await client.query(
+      `insert into password_reset_tokens (account_id, token_hash, expires_at)
+       values ($1, $2, now() + ($3 || ' milliseconds')::interval)`,
+      [account.id, hashResetToken(token), String(RESET_TTL_MS)],
+    );
+  } catch (err) {
+    // 23505 unique_violation по частичному уникальному индексу: параллельный запрос уже
+    // выпустил живой токен для этого аккаунта. Гашение выше под READ COMMITTED его не
+    // видело — ограничение БД закрывает то, чего связка UPDATE+INSERT закрыть не может.
+    // Ответ тот же общий: письмо для этого аккаунта уже в пути, второе не нужно.
+    if ((err as { code?: string } | null)?.code === '23505') {
+      return { ok: false, tooMany: false };
+    }
+    throw err;
+  }
 
   return { ok: true, token };
 }

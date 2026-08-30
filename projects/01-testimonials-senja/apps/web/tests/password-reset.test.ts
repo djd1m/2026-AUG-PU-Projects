@@ -268,6 +268,54 @@ describe('AC-015.11 / AC-015.12 / AC-015.13 — лимит парным ключ
   });
 });
 
+describe('AC-015.21 [валидация B-1] — лимит НЕ обходится параллельными запросами', () => {
+  it(`N одновременных попыток с одной пары: успешных не больше порога ${RESET_PAIR_THRESHOLD}`, async () => {
+    // Последовательный тест этого не ловит. Под READ COMMITTED без лока сто параллельных
+    // запросов видят count = 0, проходят все и отправляют письма все — а защищаемый ресурс
+    // здесь ЧУЖОЙ ПОЧТОВЫЙ ЯЩИК. Проект уже чинил это во входе (login.ts:89-106).
+    const o = await makeOwner();
+    const addr = ip();
+    const N = 12;
+    const results = await Promise.all(
+      Array.from({ length: N }, () => issue(o.email, addr)),
+    );
+    const passed = results.filter((r) => r.ok).length;
+    // Падает при: убрать pg_try_advisory_xact_lock.
+    expect(passed, `прошло ${passed} при пороге ${RESET_PAIR_THRESHOLD} — лимит обойдён`)
+      .toBeLessThanOrEqual(RESET_PAIR_THRESHOLD);
+  });
+});
+
+describe('AC-015.22 [валидация B-2] — у аккаунта не бывает двух живых ссылок', () => {
+  it('параллельный выпуск с РАЗНЫХ адресов оставляет ровно один живой токен', async () => {
+    // Связка «UPDATE … SET used_at → INSERT» под READ COMMITTED это НЕ обеспечивает:
+    // UPDATE не видит ещё не закоммиченную вставку соседа. Закрывает ограничение БД.
+    const o = await makeOwner();
+    await Promise.all([issue(o.email, ip()), issue(o.email, ip()), issue(o.email, ip())]);
+
+    const alive = await withService(async (c) => {
+      const { rows } = await c.query<{ n: string }>(
+        'select count(*)::text as n from password_reset_tokens where account_id = $1 and used_at is null',
+        [o.accountId]);
+      return Number(rows[0]!.n);
+    });
+    // Падает при: сделать индекс неуникальным.
+    expect(alive, `живых токенов ${alive} — две двери там, где должна быть одна`).toBe(1);
+  });
+});
+
+describe('AC-015.23 — лок TRY и с пространством имён, как у входа', () => {
+  it('страж по исходнику', () => {
+    const code = read('lib/password-reset.ts');
+    expect(code).toContain('pg_try_advisory_xact_lock($1, hashtext($2))');
+    expect(code).toContain('RESET_LOCK_NAMESPACE');
+    // Ждущий лок копит ожидающих, каждый из которых держит соединение общего пула.
+    expect(code, 'ждущий pg_advisory_xact_lock воспроизводит исчерпание пула')
+      .not.toMatch(/[^_]pg_advisory_xact_lock/);
+    expect(code).toContain('lock_timeout');
+  });
+});
+
 describe('AC-015.15 — отправка письма ВНЕ транзакции', () => {
   it('СТРАЖ: модуль восстановления не принимает отправителя вовсе', () => {
     const code = read('lib/password-reset.ts');

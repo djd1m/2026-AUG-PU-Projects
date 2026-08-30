@@ -85,6 +85,29 @@ export class PaymentProviderError extends Error {}
  * Перезапрашивает платёж у ЮKassa. Тело уведомления при этом НЕ используется как
  * источник истины — только как повод сходить и проверить.
  */
+/**
+ * Верхняя граница ожидания провайдера платежей.
+ *
+ * ДОБАВЛЕНО ПОСЛЕ FR-015. Найдено не ревью и не тестом, а ложной посылкой: документы FR-015
+ * утверждали, что письмо будет «первым внешним вызовом в проекте». Утверждение оказалось
+ * неверным — вызовы к ЮKassa живут здесь с FR-008, — и именно проверка этого утверждения
+ * заставила посмотреть на существующий образец.
+ *
+ * У образца таймаута не было ВООБЩЕ. Хуже: `fetchRemotePayment` вызывается ВНУТРИ транзакции
+ * (`app/api/webhooks/payment/route.ts:94`, внутри `withService`), и это осознанно — недоступность
+ * провайдера обязана быть исключением, откатывающим заявку на `event_id`, иначе повтор вебхука
+ * упрётся в занятый ключ и оплата потеряется (FR-008, security-operation-order.md). Но без
+ * таймаута соединение ОБЩЕГО пула удерживалось всё время ответа ЮKassa, а верхней границы у
+ * этого времени не существовало.
+ *
+ * 10 с — с запасом над нормальным ответом платёжного API и заметно ниже того, где удержание
+ * соединения становится проблемой. Срабатывание таймаута даёт AbortError, который
+ * `PaymentProviderError` не является и потому пробрасывается наружу — то есть транзакция
+ * откатывается, а вебхук повторится. Это верное поведение: недоступность источника истины
+ * есть отказ, а не значение (fail-closed-defaults.md).
+ */
+export const PAYMENT_TIMEOUT_MS = 10_000;
+
 export async function fetchRemotePayment(paymentId: string): Promise<RemotePayment | null> {
   if (isStub()) {
     // Заглушка отвечает «оплачено» — ровно как stub в 2026-APR-PU-LESSON-06.
@@ -96,6 +119,7 @@ export async function fetchRemotePayment(paymentId: string): Promise<RemotePayme
   const auth = Buffer.from(`${creds.shopId}:${creds.secretKey}`).toString('base64');
   const res = await fetch(`${API_BASE}/payments/${encodeURIComponent(paymentId)}`, {
     headers: { Authorization: `Basic ${auth}` },
+    signal: AbortSignal.timeout(PAYMENT_TIMEOUT_MS),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new PaymentProviderError(`ЮKassa ответила ${res.status} на запрос платежа`);
@@ -209,6 +233,9 @@ export async function createRemotePayment(
       description: `Proofwall: платный тариф для проекта ${projectId}`,
       metadata: { project_id: projectId },
     }),
+    // Та же верхняя граница, что у чтения платежа: без неё создание платежа висело бы
+    // столько, сколько молчит ЮKassa, занимая обработчик.
+    signal: AbortSignal.timeout(PAYMENT_TIMEOUT_MS),
   });
   if (!res.ok) throw new PaymentProviderError(`ЮKassa ответила ${res.status} на создание платежа`);
 

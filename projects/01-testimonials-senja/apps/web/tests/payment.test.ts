@@ -391,3 +391,21 @@ describe('роут вебхука: недоступность провайдер
     expect(fiveHundred).toBeGreaterThan(catchAt);
   });
 });
+
+describe('[FR-015, B-4] каждый внешний вызов в apps/web имеет верхнюю границу ожидания', () => {
+  it('ни один fetch не остаётся без signal', () => {
+    // Найдено ложной посылкой: документы FR-015 утверждали, что письмо будет ПЕРВЫМ внешним
+    // вызовом проекта. Утверждение было неверным — вызовы к ЮKassa живут здесь с FR-008, —
+    // и проверка этого утверждения вскрыла, что у них не было таймаута ВООБЩЕ, при том что
+    // fetchRemotePayment вызывается ВНУТРИ транзакции и удерживает соединение общего пула.
+    const files = ['src/lib/payment.ts', 'src/lib/email.ts'];
+    for (const rel of files) {
+      const code = readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+      const calls = code.split('await fetch(').length - 1;
+      const signals = code.split('AbortSignal.timeout(').length - 1;
+      expect(signals, `${rel}: вызовов fetch ${calls}, таймаутов ${signals}`)
+        .toBeGreaterThanOrEqual(calls);
+    }
+  });
+});
