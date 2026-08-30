@@ -559,6 +559,37 @@
         "packages/db/migrations/014_password_reset.sql",
         "apps/web/tests/password-reset.test.ts"
       ]
+    },
+    {
+      "id": "FR-016",
+      "status": "planned",
+      "priority": "high",
+      "tags": [
+        "auth",
+        "sso",
+        "compliance"
+      ],
+      "depends_on": [
+        "FR-009",
+        "FR-010"
+      ],
+      "title": "Вход через Yandex ID",
+      "why": "П.10 ст.8 149-ФЗ предписывает закрытый перечень способов авторизации; собственная пара email+пароль прямо в нём не названа, зацепка только подпункт 4 с двумя прочтениями и без разъяснений. Российский SSO переводит вопрос из спорной трактовки в прямо разрешённое текстом. Штрафы по ст.13.55 КоАП действуют с 07.07.2026, до 700 тыс. руб. на юрлицо.",
+      "acceptance": [
+        "Ключ учётной записи — идентификатор Яндекса, НЕ email",
+        "Автосвязывания по email НЕТ: учётка с паролем не привязывается автоматически",
+        "Привязка только из аутентифицированной сессии — доказано владение обеими сторонами",
+        "Сетевые вызовы к провайдеру вне транзакции и с таймаутом",
+        "state и PKCE обязательны; повторное использование кода отвергается"
+      ],
+      "files": [
+        "apps/web/src/lib/sso.ts",
+        "apps/web/src/lib/sso-account.ts",
+        "apps/web/src/app/api/auth/yandex/start/route.ts",
+        "apps/web/src/app/api/auth/yandex/callback/route.ts",
+        "packages/db/migrations/015_sso.sql",
+        "apps/web/tests/sso.test.ts"
+      ]
     }
   ],
   "last_completed": "FR-013"
