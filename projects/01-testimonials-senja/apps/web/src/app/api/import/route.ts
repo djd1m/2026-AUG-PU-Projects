@@ -29,6 +29,22 @@ function isIndex(value: unknown): value is number {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  // АУТЕНТИФИКАЦИЯ ПЕРВОЙ, ДО чтения тела.
+  //
+  // Предел тела здесь 2 МиБ — в 512 раз больше общего MAX_JSON_BODY. Читать и декодировать
+  // столько от КОГО УГОДНО, чтобы затем ответить 401, значит отдать неаутентифицированному
+  // клиенту право занять ~3× тела в памяти на запрос (readBodyAtMost собирает чанки, затем
+  // Buffer.concat, затем toString).
+  //
+  // Порядок обратим без потерь: currentAccountId читает cookie и телу не нужен. Это тот же
+  // принцип, что security-operation-order.md ставит первой строкой — дешёвая проверка
+  // раньше дорогой операции; здесь дорогая операция это память и процессор.
+  //
+  // ЕДИНСТВЕННЫЙ источник владельца — проверенная сессия. project_id в теле, если он там
+  // есть, не читается никем: класс, закрытый в FR-010 (NFR-010.7) и FR-011.
+  const accountId = await currentAccountId();
+  if (accountId === null) return NextResponse.json(UNAUTHORIZED, { status: 401 });
+
   const raw = await readBodyAtMost(request, MAX_IMPORT_BODY);
   if (raw === null) {
     return NextResponse.json(
@@ -44,11 +60,6 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (typeof parsed !== 'object' || parsed === null) {
     return NextResponse.json({ error: 'тело запроса: ожидается объект' }, { status: 400 });
   }
-
-  // ЕДИНСТВЕННЫЙ источник владельца — проверенная сессия. project_id в теле, если он там
-  // есть, не читается никем: класс, закрытый в FR-010 (NFR-010.7) и FR-011.
-  const accountId = await currentAccountId();
-  if (accountId === null) return NextResponse.json(UNAUTHORIZED, { status: 401 });
 
   const body = parsed as { slug?: unknown; csv?: unknown; mode?: unknown; mapping?: unknown };
   const slug = typeof body.slug === 'string' ? body.slug : '';

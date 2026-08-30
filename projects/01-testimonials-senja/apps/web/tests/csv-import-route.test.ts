@@ -5,6 +5,7 @@
 // тестами библиотеки не покрываются.
 
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
 
 const DB_URL = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
 if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
@@ -130,6 +131,31 @@ describe('AC-014.16 [ревью B-1] — импорт ограничен по ч
     // Лимит ПОСЛЕ разбора ограничивал бы число ответов, а не цену: тот же порядок операций,
     // что в security-operation-order.md, только дорогая операция здесь — процессор.
     expect(elapsed, `отказ занял ${elapsed} мс — лимит стоит после разбора`).toBeLessThan(150);
+  });
+});
+
+describe('AC-014.18 [валидация B-2] — тело НЕ читается до аутентификации', () => {
+  it('огромное тело без сессии даёт 401, а не 413', async () => {
+    // Предел тела здесь 2 МиБ — в 512 раз больше общего. Читать столько от кого угодно,
+    // чтобы затем ответить 401, значит отдать неаутентифицированному клиенту право занять
+    // ~3× тела в памяти на запрос. Порядок обратим без потерь: currentAccountId читает
+    // cookie и телу не нужен.
+    const huge = JSON.stringify({ slug: 'x', mode: 'preview', mapping: MAPPING,
+      csv: 'x'.repeat(MAX_IMPORT_BODY) });
+    // Падает при: вернуть readBodyAtMost перед currentAccountId — тогда придёт 413.
+    expect((await post(undefined, huge)).status,
+      'тело прочитано до проверки сессии').toBe(401);
+  });
+
+  it('страж по исходнику: currentAccountId вызывается ДО readBodyAtMost', () => {
+    const code = readFileSync(
+      new URL('../src/app/api/import/route.ts', import.meta.url), 'utf8')
+      .replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    const auth = code.indexOf('await currentAccountId()');
+    const body = code.indexOf('await readBodyAtMost(');
+    expect(auth).toBeGreaterThan(-1);
+    expect(body).toBeGreaterThan(-1);
+    expect(auth, 'тело читается раньше проверки сессии').toBeLessThan(body);
   });
 });
 

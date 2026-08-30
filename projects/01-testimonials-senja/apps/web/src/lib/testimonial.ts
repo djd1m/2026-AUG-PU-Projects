@@ -21,6 +21,16 @@ export const NAME_MAX = 80;
 export const TEXT_MIN = 10;
 export const TEXT_MAX = 2000;
 
+/** Предел РОЛИ. Его не было нигде: ни в этой функции, ни в схеме (`author_role text` без
+ *  длины), ни в критериях. Роль рендерится на ЧУЖИХ сайтах через виджет рядом с именем, и
+ *  строка в 100 000 символов принималась молча — не XSS, но неограниченный пользовательский
+ *  контент на единственном growth-канале, при NFR виджета «p95 отрисовки ≤300 мс».
+ *
+ *  Найдено валидацией FR-014, но дефект НЕ импорта: публичная форма принимала такую роль
+ *  ровно так же. Поэтому предел стоит в ОБЩЕЙ функции — он закрывает обе двери сразу.
+ *  120 — с запасом над «Технический директор, ООО „Ромашка“». */
+export const ROLE_MAX = 120;
+
 export interface SubmitInput {
   type?: unknown;
   name?: unknown;
@@ -72,8 +82,12 @@ export function validateTextSubmission(input: SubmitInput): string[] {
     errors.push(`text: ${TEXT_MIN}-${TEXT_MAX} символов`);
   }
 
-  if (input.role !== undefined && input.role !== null && typeof input.role !== 'string') {
-    errors.push('role: строка или отсутствует');
+  if (input.role !== undefined && input.role !== null) {
+    if (typeof input.role !== 'string') {
+      errors.push('role: строка или отсутствует');
+    } else if (input.role.length > ROLE_MAX) {
+      errors.push(`role: не длиннее ${ROLE_MAX} символов`);
+    }
   }
 
   return errors;

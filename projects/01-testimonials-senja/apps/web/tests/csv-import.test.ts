@@ -20,7 +20,7 @@ const {
   parseCsv, parseCsvRecords, detectDelimiter, importRows, importFingerprint,
   MAX_IMPORT_ROWS, MAX_IMPORT_BODY, TooManyRecordsError,
 } = await import('../src/lib/csv-import');
-const { NAME_MAX, TEXT_MAX } = await import('../src/lib/testimonial');
+const { NAME_MAX, TEXT_MAX, ROLE_MAX } = await import('../src/lib/testimonial');
 
 afterAll(async () => { await closePool(); });
 
@@ -201,6 +201,37 @@ describe('AC-014.4 / AC-014.5 — валидация ТА ЖЕ, что у фор
     for (const own of ['NAME_MIN', 'NAME_MAX', 'TEXT_MIN', 'TEXT_MAX', '.length < 2', '.length > 80']) {
       expect(code, `в импорте своя проверка ${own}`).not.toContain(own);
     }
+  });
+});
+
+describe('AC-014.17 [валидация B-1] — РОЛЬ ограничена, и на обеих дверях', () => {
+  it('роль длиннее предела отклоняется', () => {
+    const csv = ['name,text,role',
+      `Анна Петрова,Отличный сервис и быстрая поддержка,${'я'.repeat(ROLE_MAX + 1)}`].join('\n');
+    const r = parseCsv(csv, MAP);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    // Прежде роль проверялась ТОЛЬКО по типу: строка в 100 000 символов принималась молча и
+    // уходила на чужие сайты через виджет рядом с именем. Не XSS, но неограниченный
+    // пользовательский контент на единственном growth-канале.
+    expect(r.rows.length, 'роль без предела принята').toBe(0);
+    expect(r.rejected[0]!.errors.join()).toContain('role');
+  });
+
+  it('роль в пределе принимается', () => {
+    const csv = ['name,text,role',
+      `Анна Петрова,Отличный сервис и быстрая поддержка,${'я'.repeat(ROLE_MAX)}`].join('\n');
+    const r = parseCsv(csv, MAP);
+    expect(r.ok && r.rows.length).toBe(1);
+  });
+
+  it('предел стоит в ОБЩЕЙ функции, а не в импорте — значит закрыта и форма', () => {
+    const shared = read('lib/testimonial.ts');
+    expect(shared, 'предел роли не в общей функции — форма осталась открытой')
+      .toContain('ROLE_MAX');
+    const own = read('lib/csv-import.ts');
+    expect(own, 'в импорте появилась своя проверка роли — вторая дверь')
+      .not.toContain('ROLE_MAX');
   });
 });
 
