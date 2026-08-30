@@ -603,3 +603,91 @@ describe('AC-016.16 — лимит на коллбэке ДЕЙСТВУЕТ, а 
     expect(reason(r)).toBe('invalid_state');
   });
 });
+
+
+describe('AC-016.19 — успешный вход ведёт на СУЩЕСТВУЮЩУЮ страницу', () => {
+  // Первая редакция уводила на `/dashboard`, которой в приложении НЕТ (есть только
+  // `/dashboard/[slug]`), то есть успешный вход заканчивался 404. Дефект поймала сквозная
+  // проверка на стенде, а не набор тестов: тесты подтверждали, что сессия выдана, и молчали
+  // о том, открывается ли выданный адрес. Тот же класс, что BASE_URL в FR-013.
+  const pages = () => {
+    const { readdirSync, statSync } = require('node:fs') as typeof import('node:fs');
+    const walk = (dir: string, base = ''): string[] =>
+      readdirSync(dir).flatMap((e) => {
+        const full = path.join(dir, e);
+        if (statSync(full).isDirectory()) return walk(full, `${base}/${e}`);
+        return e === 'page.tsx' ? [base || '/'] : [];
+      });
+    return walk(path.resolve(SRC, 'app'));
+  };
+
+  it('маршрут не ведёт на `/dashboard` — такой страницы нет', () => {
+    const routes = pages();
+    expect(routes).not.toContain('/dashboard');
+    expect(routes).toContain('/dashboard/[slug]');
+    // СЫРОЙ текст: адрес — шаблонная строка, а strip() заменяет литералы на ''. Первая
+    // редакция обеих проверок смотрела в strip() и совпасть не могла НИКОГДА — при этом
+    // одна из них зеленела, создавая видимость проверки. Третий случай этого класса в
+    // одной фиче; вывод записан в 05_completion.md.
+    const code = raw('app/api/auth/yandex/callback/route.ts');
+    expect(code).not.toMatch(/`\$\{baseUrl\(\)\}\/dashboard`/);
+  });
+
+  it('владелец с проектом уходит на его кабинет, без проектов — на главную', () => {
+    const code = raw('app/api/auth/yandex/callback/route.ts');
+    expect(code).toMatch(/resolution\.projects\[0\]/);
+    expect(code).toMatch(/dashboard\/\$\{first\.slug\}/);
+    // Запасной путь для учётки без проектов обязан существовать
+    expect(code).toMatch(/: `\$\{baseUrl\(\)\}\/`/);
+  });
+});
+
+
+// ═════════════════════════════════════════════════════════════════════════════
+describe('AC-016.20 — гонка SSO против ОБЫЧНОЙ РЕГИСТРАЦИИ на тот же адрес', () => {
+  // Ветка появилась при починке гонки за accounts_email_key и была бы иначе непокрытой —
+  // а это самая опасная ветка фичи. Если победителем гонки оказалась регистрация, учётка
+  // получает ПАРОЛЬ, и слепое перечитывание отдало бы её через SSO: ровно тот захват,
+  // ради запрета которого написана вся фича.
+  //
+  // Проверяется ИНВАРИАНТОМ, а не ожидаемым порядком: кто выиграет — не наше дело, но ни
+  // при каком исходе SSO не смеет впустить в учётку, у которой есть пароль.
+  it('ни при каком исходе SSO не впускает в учётку с паролем', async () => {
+    for (let round = 0; round < 10; round += 1) {
+      const slug = `race2-${uniq()}`;
+      const email = `${slug}@example.com`;
+      const extId = `race2-${uniq()}`;
+
+      const [reg, sso2] = await Promise.allSettled([
+        withService((c) => registerAccountAndProject(c, {
+          email, password: PW, desired_slug: slug, project_name: 'Гонка',
+        })),
+        resolve(extId, email),
+      ]);
+
+      // Чем бы ни кончилось — учётка в БД ровно одна
+      expect(await accountRow(email), `раунд ${round}`).toHaveLength(1);
+      const row = (await accountRow(email))[0]!;
+
+      if (sso2.status === 'fulfilled' && sso2.value.kind === 'linked') {
+        // SSO впустил — значит пароля у учётки быть НЕ ДОЛЖНО
+        expect(row.password_hash, `раунд ${round}: SSO впустил в учётку С ПАРОЛЕМ`).toBeNull();
+      }
+      if (row.password_hash !== null) {
+        // Пароль есть — значит SSO обязан был отказать
+        expect(
+          sso2.status === 'fulfilled' && sso2.value.kind === 'needs_password_login',
+          `раунд ${round}: у учётки пароль, а SSO не отказал`,
+        ).toBe(true);
+      }
+      void reg;
+    }
+  }, 30_000);
+
+  it('страж: повторная проверка пароля после проигранной гонки не удалена', () => {
+    const code = read('lib/sso-account.ts');
+    // Две проверки has_password, а не одна: первая — до вставки, вторая — после конфликта.
+    expect((code.match(/has_password/g) ?? []).length).toBeGreaterThanOrEqual(4);
+    expect(code).toMatch(/if \(winner\.has_password\) return/);
+  });
+});

@@ -100,7 +100,18 @@ export async function GET(request: Request): Promise<NextResponse> {
     return clearState(back('password_account_exists'));
   }
 
-  const response = NextResponse.redirect(`${baseUrl()}/dashboard`, { status: 302 });
+  // КУДА уводить. Страницы `/dashboard` НЕ СУЩЕСТВУЕТ — есть только `/dashboard/[slug]`.
+  // Первая редакция вела на `/dashboard`, и успешный вход заканчивался бы 404. Поймано
+  // сквозной проверкой на развёрнутом стенде, а не тестом: тесты проверяют, что сессия
+  // выдана, а не что выданный адрес открывается. Тот же урок, что с BASE_URL, — проверка
+  // обязана ПОЛЬЗОВАТЬСЯ тем, что система выдала.
+  //
+  // Второй случай, которого у входа паролем не бывает: учётка, только что созданная через
+  // Яндекс, не имеет НИ ОДНОГО проекта. Её владельца ведём на главную — там форма создания.
+  const first = resolution.projects[0];
+  const target = first ? `${baseUrl()}/dashboard/${first.slug}` : `${baseUrl()}/`;
+
+  const response = NextResponse.redirect(target, { status: 302 });
   response.cookies.set(SESSION_COOKIE, resolution.token, sessionCookieOptions());
   return clearState(response);
 }
