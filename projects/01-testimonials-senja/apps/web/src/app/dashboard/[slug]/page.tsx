@@ -12,6 +12,7 @@ import { currentAccountId } from '@/lib/current-session';
 import { buildProjectUrls } from '@/lib/urls';
 import { ModerationList, type Item } from './moderation-list';
 import { ChangePassword } from './change-password';
+import { ImportForm } from './import-form';
 import { ShareCta, type Install } from './share-cta';
 import { isPaid, isTier, tierSummary } from '@/lib/tariff';
 
@@ -122,6 +123,16 @@ export default async function DashboardPage({ params }: Params) {
           выдаёт этому браузеру новую. Так украденная cookie перестаёт работать.
         </p>
         <ChangePassword />
+
+        <hr className="divider" />
+
+        <h2>Импорт отзывов</h2>
+        <p className="small muted" style={{ marginTop: 6 }}>
+          Загрузите CSV с отзывами, которые у вас уже есть. Сначала — предпросмотр: он
+          покажет, что будет импортировано и что отклонено. Импортированное попадает в
+          очередь на проверку, как и присланное через форму.
+        </p>
+        <ImportForm slug={project.slug} />
       </div>
     </main>
   );
