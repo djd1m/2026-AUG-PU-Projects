@@ -114,6 +114,23 @@ export function widgetSnippet(slug: string): string {
   return `<script src="${baseUrl()}${widgetScriptPath()}" data-slug="${slug}" async></script>`;
 }
 
+/**
+ * Ссылка восстановления пароля — FR-015.
+ *
+ * Строится ЗДЕСЬ, а не в маршруте, ровно по той причине, ради которой существует весь этот
+ * модуль: `baseUrl()` не имеет права на дефолт в проде, и собранная строкой ссылка обошла бы
+ * эту защиту. Ссылка на localhost в письме — тот самый инцидент, которым заслужено
+ * silent-fallbacks.md, и здесь он был бы дороже: человек её не просто увидит, он на неё
+ * нажмёт, и она не сработает.
+ *
+ * Токен уходит в query-параметр, и это осознанно: страница сброса — единственное место, где
+ * он нужен, и ей нужен ровно он. Утечка через Referer здесь ограничена тем, что страница не
+ * содержит внешних ресурсов, а сам токен одноразовый и живёт час.
+ */
+export function passwordResetUrl(token: string): string {
+  return `${baseUrl()}/reset?token=${encodeURIComponent(token)}`;
+}
+
 export interface ProjectUrls {
   submission_form: string;
   wall_of_love: string;

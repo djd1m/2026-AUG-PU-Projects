@@ -99,6 +99,10 @@ export function LoginForm({ next }: { next?: string }) {
       <button type="submit" disabled={busy} className="btn btn--primary btn--block">
         {busy ? 'Проверяем…' : 'Войти'}
       </button>
+
+      <p className="small muted" style={{ marginTop: 12, textAlign: 'center' }}>
+        <a href="/forgot">Забыли пароль?</a>
+      </p>
     </form>
   );
 }

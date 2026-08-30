@@ -85,6 +85,8 @@ describe('страницы верстаются дизайн-системой, �
     'app/partner/login-form.tsx',
     'app/partner/dashboard/page.tsx',
     'app/dashboard/[slug]/import-form.tsx',
+    'app/forgot/forgot-form.tsx',
+    'app/reset/reset-form.tsx',
   ];
   const SYSTEM = ['stage', 'card', 'field', 'input', 'btn', 'form'];
 
