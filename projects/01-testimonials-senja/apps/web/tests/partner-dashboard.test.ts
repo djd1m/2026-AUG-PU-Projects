@@ -20,6 +20,7 @@ const {
 } = await import('../src/lib/partner');
 const {
   resolvePartner, hashPartnerToken, PARTNER_IP_SCOPE, PARTNER_IP_THRESHOLD, PARTNER_WINDOW,
+  PARTNER_SUCCESS_SCOPE, PARTNER_SUCCESS_THRESHOLD,
 } = await import('../src/lib/partner-auth');
 const { POST } = await import('../src/app/api/partner/session/route');
 
@@ -231,6 +232,71 @@ describe('AC-011.11 / AC-011.12 / AC-011.27 — лимит считает НЕУ
     const busy = ip();
     for (let i = 0; i < PARTNER_IP_THRESHOLD; i += 1) await resolve(`мимо-${i}`, busy);
     expect((await resolve(p.token, ip())).ok).toBe(true);
+  });
+});
+
+describe('AC-011.28 [ревью H-1] — путь УСПЕХА тоже ограничен', () => {
+  it(`больше ${PARTNER_SUCCESS_THRESHOLD} успешных показов подряд не проходят`, async () => {
+    // До правки путь успеха не ограничивался НИЧЕМ: 200 последовательных сверок проходили
+    // все, а 100 одновременных показов одним токеном поднимали p95 соседнего пути с 15 до
+    // 151 мс. Обоснование «пишем только неудачу, как NFR-009.4 входа» было верным, но
+    // неполным — FR-010 этот же аргумент уже опроверг для своего пути успеха.
+    const p = await makePartner();
+    const addr = ip();
+    // Засев допустим: САМА запись проверяется соседним тестом ниже.
+    const key = hashKey(PARTNER_SUCCESS_SCOPE, p.id);
+    await withService(async (c) => {
+      for (let i = 0; i < PARTNER_SUCCESS_THRESHOLD; i += 1) {
+        await rateLimit.record(PARTNER_SUCCESS_SCOPE, key, c);
+      }
+    });
+    const r = await resolve(p.token, addr);
+    // Падает при: убрать exceeded по PARTNER_SUCCESS_SCOPE.
+    expect(r).toEqual({ ok: false, tooMany: true });
+  });
+
+  it('успех ЗАПИСЫВАЕТСЯ в свой счётчик — иначе порог недостижим', async () => {
+    const p = await makePartner();
+    const key = hashKey(PARTNER_SUCCESS_SCOPE, p.id);
+    const count = () => withService((c) => rateLimit.count(PARTNER_SUCCESS_SCOPE, key, PARTNER_WINDOW, c));
+    const before = await count();
+    expect((await resolve(p.token)).ok).toBe(true);
+    // Падает при: убрать record по PARTNER_SUCCESS_SCOPE — соседний тест остался бы зелёным
+    // на засеве, и лимит не работал бы никогда.
+    expect(await count() - before, 'успех не записан — порог недостижим').toBe(1);
+  });
+
+  it('исчерпание ОДНИМ партнёром не запирает другого с того же адреса', async () => {
+    const a = await makePartner('А');
+    const b = await makePartner('Б');
+    const shared = ip();
+    const keyA = hashKey(PARTNER_SUCCESS_SCOPE, a.id);
+    await withService(async (c) => {
+      for (let i = 0; i < PARTNER_SUCCESS_THRESHOLD; i += 1) {
+        await rateLimit.record(PARTNER_SUCCESS_SCOPE, keyA, c);
+      }
+    });
+    expect((await resolve(a.token, shared)).ok, 'А не исчерпан — тест ничего не проверяет').toBe(false);
+    // Падает при: ключ по адресу вместо личности партнёра — за одним NAT сидят разные
+    // партнёры, и общий ключ запирал бы соседа.
+    expect((await resolve(b.token, shared)).ok, 'сосед за тем же NAT заперт чужим лимитом').toBe(true);
+  });
+});
+
+describe('AC-011.29 [ревью H-3] — разбор адреса ОДНОЙ реализацией', () => {
+  it('кабинет не разбирает X-Forwarded-For сам', () => {
+    const code = read('app/partner/dashboard/page.tsx');
+    // Своя копия здесь уже была написана и уже расходилась с оригиналом: ключ счётчика у
+    // двух дверей совпадал не всегда, и лимит, заявленный общим, общим не был.
+    expect(code, 'кабинет разбирает адрес сам — вторая реализация разойдётся с первой')
+      .not.toContain("x-forwarded-for");
+    expect(code).toContain('extractClientIPFromHeaders');
+  });
+
+  it('реализация разбора адреса в проекте одна', () => {
+    const impls = sourceFiles(SRC).filter((f) =>
+      /x-forwarded-for/i.test(strip(readFileSync(f, 'utf8'))));
+    expect(impls.map((f) => path.relative(SRC, f))).toEqual([path.join('lib', 'client-ip.ts')]);
   });
 });
 

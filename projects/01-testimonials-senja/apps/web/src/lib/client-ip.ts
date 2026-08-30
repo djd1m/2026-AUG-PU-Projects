@@ -27,8 +27,17 @@ function looksLikeIp(value: string): boolean {
   return value.includes(':') && /^[0-9a-f:.\[\]]+$/i.test(value); // IPv6, в т.ч. в скобках
 }
 
-export function extractClientIP(request: Request): string {
-  const forwarded = request.headers.get('x-forwarded-for');
+/**
+ * Та же логика, но от заголовков напрямую — для серверных компонентов, где нет Request,
+ * а есть `headers()` из next/headers.
+ *
+ * Существует потому, что вторая реализация уже была написана и уже разошлась: страница
+ * партнёрского кабинета разбирала X-Forwarded-For сама, и ключ счётчика у двух дверей
+ * совпадал не всегда. Тот же класс, ради которого в проекте стерегутся единственность
+ * `readBodyAtMost` и `normalizeEmail`.
+ */
+export function extractClientIPFromHeaders(headers: Headers): string {
+  const forwarded = headers.get('x-forwarded-for');
   if (forwarded) {
     const parts = forwarded
       .split(',')
@@ -38,10 +47,14 @@ export function extractClientIP(request: Request): string {
     if (last && looksLikeIp(last)) return last;
   }
   // Caddy также умеет X-Real-IP; он однозначен (один адрес), подделка перезаписывается прокси.
-  const real = request.headers.get('x-real-ip');
+  const real = headers.get('x-real-ip');
   if (real && looksLikeIp(real.trim())) return real.trim();
 
   // Прямое обращение без прокси (локальная разработка). Единый литерал, а не пустая строка:
   // пустой ключ склеил бы всех анонимов в одно ведро молча.
   return 'unknown';
+}
+
+export function extractClientIP(request: Request): string {
+  return extractClientIPFromHeaders(request.headers);
 }

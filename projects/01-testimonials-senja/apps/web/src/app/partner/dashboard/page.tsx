@@ -10,28 +10,20 @@ import { redirect } from 'next/navigation';
 import { withService } from '@proofwall/db';
 import { PARTNER_COOKIE, resolvePartner } from '@/lib/partner-auth';
 import { getPartnerCohortDashboardById } from '@/lib/partner';
+// ТА ЖЕ функция, что у маршрута. Своя копия разбора здесь уже была написана и уже
+// расходилась с оригиналом: ключ счётчика у двух дверей совпадал не всегда, и лимит,
+// заявленный общим, общим не был.
+import { extractClientIPFromHeaders } from '@/lib/client-ip';
 import type { CohortDashboard } from '@/lib/partner';
 
 export const dynamic = 'force-dynamic';
-
-/** Тот же разбор, что у маршрутов: последний элемент X-Forwarded-For от прокси. */
-async function clientIp(): Promise<string> {
-  const h = await headers();
-  const forwarded = h.get('x-forwarded-for');
-  if (forwarded) {
-    const parts = forwarded.split(',').map((p) => p.trim()).filter(Boolean);
-    const last = parts[parts.length - 1];
-    if (last) return last;
-  }
-  return h.get('x-real-ip')?.trim() || 'unknown';
-}
 
 export default async function PartnerDashboardPage() {
   const store = await cookies();
   const token = store.get(PARTNER_COOKIE)?.value;
   if (!token) redirect('/partner');
 
-  const ip = await clientIp();
+  const ip = extractClientIPFromHeaders(await headers());
 
   // Одно соединение на весь показ. Партнёр определяется ТОЛЬКО токеном: ни адреса, ни
   // параметра, ни заголовка. Статус кода проверяется здесь же, на КАЖДОМ показе, поэтому

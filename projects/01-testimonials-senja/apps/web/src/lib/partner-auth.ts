@@ -39,6 +39,21 @@ export const PARTNER_IP_SCOPE = 'partner_token_ip';
  *  перевыполнения порога — угадать токен всё равно нельзя. */
 export const PARTNER_IP_THRESHOLD = 30;
 export const PARTNER_WINDOW = { seconds: 3600 } as const;
+/** Успешные показы тоже стоят соединения общего пула и шести запросов, и до этой правки не
+ *  ограничивались НИЧЕМ: 200 последовательных сверок проходили все, 100 одновременных
+ *  показов одним токеном поднимали p95 соседнего пути с 15 до 151 мс.
+ *
+ *  Ключ — по ЛИЧНОСТИ ПАРТНЁРА, а не по адресу: за одним NAT сидят разные партнёры, и общий
+ *  ключ запирал бы соседа. Ровно то решение, которым FR-010 снял такое же возражение
+ *  (PWCHANGE_SUCCESS_SCOPE, ключ по accountId). Обоснование «записываем только неудачу, как
+ *  NFR-009.4 входа» было верным, но неполным: предыдущая фича этот аргумент уже опровергла —
+ *  успешный путь тоже стоит ресурса.
+ *
+ *  200/час — с большим запасом над живым сценарием (партнёр смотрит когорту несколько раз в
+ *  день) и на порядок ниже вредного. Исчерпание не отбирает доступ навсегда: через час окно
+ *  сдвигается. */
+export const PARTNER_SUCCESS_SCOPE = 'partner_dashboard_success';
+export const PARTNER_SUCCESS_THRESHOLD = 200;
 
 /** Свой хеш, а НЕ hashSessionToken: та подмешивает SESSION_SECRET, и переиспользование
  *  связало бы два пространства секретов — ротация SESSION_SECRET обнулила бы все
@@ -100,6 +115,14 @@ export async function resolvePartner(
     await rateLimit.record(PARTNER_IP_SCOPE, keyIp, client);
     return { ok: false, tooMany: false };
   }
+
+  // Путь УСПЕХА тоже ограничен — ключом по личности партнёра, не по адресу.
+  const keyPartner = hashKey(PARTNER_SUCCESS_SCOPE, partner.id);
+  if (await rateLimit.exceeded(
+    PARTNER_SUCCESS_SCOPE, keyPartner, PARTNER_WINDOW, PARTNER_SUCCESS_THRESHOLD, client)) {
+    return { ok: false, tooMany: true };
+  }
+  await rateLimit.record(PARTNER_SUCCESS_SCOPE, keyPartner, client);
 
   return { ok: true, partnerCodeId: partner.id };
 }
