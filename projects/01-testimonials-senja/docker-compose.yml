@@ -37,6 +37,9 @@ services:
       context: .                        # корень монорепо: package-lock.json только здесь
       dockerfile: apps/web/Dockerfile
     restart: unless-stopped
+    networks:
+      - default
+      - talk-ai-public
     environment:
       - DATABASE_URL             # postgres:// строка, включает роли app_authenticated/app_service
       # D-010: argon2 при входе считается внутри транзакции и держит соединение ~50 мс.
@@ -142,3 +145,15 @@ volumes:
   postgres_data:
   minio_data:
   caddy_data:
+
+networks:
+  # Своя сеть проекта — по ней сервисы находят друг друга по имени.
+  default:
+  # Сеть чужого reverse-proxy (ai-hub-tls-proxy), который держит 80/443 на этой машине.
+  # ОБЪЯВЛЕНА ЗДЕСЬ НАМЕРЕННО. Прежде web подключали к ней командой
+  # `docker network connect`, а это состояние КОНТЕЙНЕРА, а не конфигурации: любое
+  # пересоздание (то есть любая выкатка) его теряло, и стенд отдавал 502 при полностью
+  # исправном приложении и нулевых ошибках в журнале. Диагноз уводит в сторону — это
+  # читается как «приложение упало», а упала связность, которой нет в файле.
+  talk-ai-public:
+    external: true
