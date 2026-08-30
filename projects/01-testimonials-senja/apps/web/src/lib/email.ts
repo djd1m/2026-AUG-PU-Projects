@@ -59,6 +59,22 @@ function requireEnv(name: string): string {
   return '';
 }
 
+/**
+ * Настроена ли почта. Спрашивает ТЕМ ЖЕ requireEnv, что и отправка, — вторая проверка
+ * рядом с первой однажды разойдётся с ней, и предикат начнёт врать про свою же отправку.
+ *
+ * Нужен для честного отказа НА ВХОДЕ в путь восстановления. Без него маршрут отвечает
+ * «письмо отправлено», выпускает токен и не отправляет ничего: ровно тот класс, что
+ * описан в .claude/rules/silent-fallbacks.md, и наблюдался на стенде 2026-08-30.
+ */
+export function mailConfigured(): boolean {
+  try {
+    return requireEnv('RESEND_API_KEY') !== '' && requireEnv('MAIL_FROM') !== '';
+  } catch {
+    return false;
+  }
+}
+
 export async function sendViaResend(message: EmailMessage): Promise<void> {
   const apiKey = requireEnv('RESEND_API_KEY');
   const from = requireEnv('MAIL_FROM');

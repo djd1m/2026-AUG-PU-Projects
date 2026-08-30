@@ -10,7 +10,7 @@ import { normalizeEmailFromInput } from '@/lib/validation';
 import { extractClientIP } from '@/lib/client-ip';
 import { MAX_JSON_BODY, readBodyAtMost } from '@/lib/request-body';
 import { issueResetToken } from '@/lib/password-reset';
-import { resetEmail, sendViaResend, type EmailSender } from '@/lib/email';
+import { mailConfigured, resetEmail, sendViaResend, type EmailSender } from '@/lib/email';
 import { passwordResetUrl } from '@/lib/urls';
 import { TOO_MANY } from '../login/route';
 
@@ -43,6 +43,23 @@ export async function handleForgot(
 
   // ТА ЖЕ нормализация, что у входа и регистрации, ЕДИНСТВЕННЫМ объявлением. Своя копия
   // однажды разойдётся, и человек не получит письма на адрес, которым зарегистрировался.
+  // ── ПОЧТА НЕ НАСТРОЕНА — отказ ЗДЕСЬ, до выпуска токена.
+  //
+  // Наблюдалось на стенде 2026-08-30: страница /forgot была живой при пустом ключе,
+  // человеку отвечали «письмо отправлено», токен выпускался и оставался в БД навсегда,
+  // а письма не было. Журнал писал reset_email_failed — то есть отказ БЫЛ виден нам и
+  // НЕ был виден тому, кто ждёт письма.
+  //
+  // Разный ответ здесь НЕ является оракулом перечисления учёток: он зависит от состояния
+  // КОНФИГУРАЦИИ, одинакового для всех адресов, а не от того, существует ли адрес. Это
+  // ровно та граница, которая отделяет допустимое различие от утечки.
+  if (!mailConfigured()) {
+    return NextResponse.json(
+      { error: 'восстановление по почте пока не настроено на этом стенде' },
+      { status: 503 },
+    );
+  }
+
   const email = normalizeEmailFromInput((parsed as { email?: unknown }).email);
   const ip = extractClientIP(request);
 

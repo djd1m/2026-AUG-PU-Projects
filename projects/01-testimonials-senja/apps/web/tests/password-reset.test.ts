@@ -13,6 +13,12 @@ if (!DB_URL) throw new Error('TEST_DATABASE_URL не задан');
 process.env.DATABASE_URL = DB_URL;
 process.env.SESSION_SECRET = 'test-secret-at-least-16-chars-long';
 process.env.BASE_URL = 'https://proofwall.test';
+// Почта в наборе считается НАСТРОЕННОЙ: отправитель всюду подменяется параметром, сети нет.
+// Без этих двух строк маршрут отвечает 503 (см. AC-015.12), и весь набор проверял бы отказ
+// конфигурации вместо логики восстановления. Ветку «почта не настроена» проверяет
+// отдельный describe, который снимает переменные у себя.
+process.env.RESEND_API_KEY = 'test-key-not-used-network-is-stubbed';
+process.env.MAIL_FROM = 'noreply@proofwall.test';
 
 const { withService, closePool, rateLimit } = await import('@proofwall/db');
 const { registerAccountAndProject } = await import('../src/lib/register');
@@ -22,7 +28,7 @@ const {
   issueResetToken, resetPassword, hashResetToken,
   RESET_PAIR_SCOPE, RESET_IP_SCOPE, RESET_PAIR_THRESHOLD, RESET_WINDOW, RESET_TTL_MS,
 } = await import('../src/lib/password-reset');
-const { resetEmail } = await import('../src/lib/email');
+const { resetEmail, mailConfigured } = await import('../src/lib/email');
 const { handleForgot } = await import('../src/app/api/auth/forgot/route');
 const { POST: resetRoute } = await import('../src/app/api/auth/reset/route');
 
@@ -396,5 +402,86 @@ describe('письмо', () => {
     expect(m.text).toContain('https://proofwall.test/reset?token=XYZ');
     expect(m.html).toContain('https://proofwall.test/reset?token=XYZ');
     expect(m.to).toBe('a@example.com');
+  });
+});
+
+
+// ═════════════════════════════════════════════════════════════════════════════
+describe('AC-015.12 — почта НЕ настроена: честный отказ вместо ложного обещания', () => {
+  // Наблюдалось на живом стенде 2026-08-30: страница /forgot работала при пустом
+  // RESEND_API_KEY, человеку отвечали «письмо отправлено», токен выпускался и оставался
+  // в БД навсегда, письма не было. Журнал писал reset_email_failed — то есть отказ был
+  // виден НАМ и не был виден тому, кто ждёт письма. Класс — silent-fallbacks.md.
+  const withoutMail = async (fn: () => Promise<void>) => {
+    const key = process.env.RESEND_API_KEY;
+    const from = process.env.MAIL_FROM;
+    delete process.env.RESEND_API_KEY;
+    delete process.env.MAIL_FROM;
+    try { await fn(); } finally {
+      if (key !== undefined) process.env.RESEND_API_KEY = key;
+      if (from !== undefined) process.env.MAIL_FROM = from;
+    }
+  };
+
+  it('mailConfigured() отвечает false при пустом ключе', async () => {
+    await withoutMail(async () => { expect(mailConfigured()).toBe(false); });
+  });
+
+  it('маршрут отвечает 503, а НЕ «письмо отправлено»', async () => {
+    await withoutMail(async () => {
+      const owner = await makeOwner();
+      let sent = 0;
+      const res = await handleForgot(
+        new Request('https://proofwall.test/api/auth/forgot', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-forwarded-for': '10.9.9.9' },
+          body: JSON.stringify({ email: owner.email }),
+        }),
+        async () => { sent += 1; },
+      );
+      expect(res.status).toBe(503);
+      const body = (await res.json()) as { error?: string; message?: string };
+      expect(body.message).toBeUndefined();
+      expect(body.error).toMatch(/не настроен/);
+      expect(sent, 'письмо не должно было даже пытаться уйти').toBe(0);
+    });
+  });
+
+  it('токен НЕ выпускается — иначе он копился бы навсегда', async () => {
+    await withoutMail(async () => {
+      const owner = await makeOwner();
+      await handleForgot(
+        new Request('https://proofwall.test/api/auth/forgot', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-forwarded-for': '10.9.9.10' },
+          body: JSON.stringify({ email: owner.email }),
+        }),
+        async () => {},
+      );
+      expect(await tokenRows(owner.accountId)).toHaveLength(0);
+    });
+  });
+
+  it('отказ НЕ зависит от существования адреса — оракула перечисления не появилось', async () => {
+    await withoutMail(async () => {
+      const owner = await makeOwner();
+      const call = (email: string, addr: string) => handleForgot(
+        new Request('https://proofwall.test/api/auth/forgot', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-forwarded-for': addr },
+          body: JSON.stringify({ email }),
+        }),
+        async () => {},
+      );
+      const real = await call(owner.email, '10.9.9.11');
+      const fake = await call(`nobody-${Date.now()}@example.com`, '10.9.9.12');
+      expect(real.status).toBe(fake.status);
+      expect(await real.json()).toEqual(await fake.json());
+    });
+  });
+
+  it('страж: проверка стоит ДО выпуска токена, а не после', () => {
+    const code = read('app/api/auth/forgot/route.ts');
+    expect(code.indexOf('mailConfigured()')).toBeLessThan(code.indexOf('issueResetToken('));
   });
 });
