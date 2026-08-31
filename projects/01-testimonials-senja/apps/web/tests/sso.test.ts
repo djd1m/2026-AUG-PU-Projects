@@ -691,3 +691,33 @@ describe('AC-016.20 — гонка SSO против ОБЫЧНОЙ РЕГИСТ�
     expect(code).toMatch(/if \(winner\.has_password\) return/);
   });
 });
+
+
+describe('AC-016.21 — тексты отказов не зовут на несуществующие страницы', () => {
+  // Владелец прочитал «привяжите в настройках», пошёл искать настройки и не нашёл:
+  // такой страницы в приложении нет. Тот же класс, что обещание письма на /forgot при
+  // ненастроенной почте — интерфейс обещает действие, которого не построено.
+  const pages = () => {
+    const { readdirSync, statSync } = require('node:fs') as typeof import('node:fs');
+    const walk = (dir: string, base = ''): string[] =>
+      readdirSync(dir).flatMap((e) => {
+        const full = path.join(dir, e);
+        if (statSync(full).isDirectory()) return walk(full, `${base}/${e}`);
+        return e === 'page.tsx' ? [base || '/'] : [];
+      });
+    return walk(path.resolve(SRC, 'app'));
+  };
+
+  it('ни один текст не отсылает в «настройки», пока их нет', () => {
+    const code = raw('app/login/page.tsx');
+    const messages = code.slice(code.indexOf('SSO_MESSAGES'), code.indexOf('export default'));
+    const hasSettingsPage = pages().some((r) => /settings|настрой/i.test(r));
+    if (!hasSettingsPage) {
+      // Ищем только в ЗНАЧЕНИЯХ сообщений, не в комментариях: объяснение, почему текст
+      // изменён, обязано упоминать настройки — иначе через месяц правку откатят.
+      const values = messages.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
+      expect(values, 'текст зовёт в настройки, которых не существует')
+        .not.toMatch(/в настройках|в настройки/);
+    }
+  });
+});
