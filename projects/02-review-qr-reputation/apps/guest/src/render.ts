@@ -195,3 +195,83 @@ export function notFoundHtml(): string {
 <style>${CSS}</style></head><body><main class="card"><h1 class="title">Страница не найдена</h1>
 <p class="lead">Проверьте ссылку или QR-код.</p></main></body></html>`;
 }
+
+
+/**
+ * ФОРМА ПРИВАТНОГО ОБРАЩЕНИЯ — отдельный документ, и это ВЫНУЖДЕННО, а не по вкусу.
+ *
+ * Три требования сходятся так, что иначе нельзя:
+ *   · страж T6 запрещает виджет оценки в разметке страницы ВЫБОРА;
+ *   · оценка внутри уже выбранной приватной формы РАЗРЕШЕНА — это часть отзыва,
+ *     а не условие показа путей;
+ *   · страница обязана работать без JS.
+ * Раскрыть форму на месте нечем, значит ей нужен свой ответ. Ослабить T6 исключением
+ * «звёзды можно внутри блока формы» нельзя: отличить это от «звёзд до развилки» по DOM
+ * одного документа — суждение о вложенности, то есть слой 4. Граница документа делает
+ * различие машинно проверяемым.
+ *
+ * Отправка — обычный <form method="post"> на контейнер приёма. Без JS: страница гостя
+ * не несёт скриптов вовсе, и это же условие байтовой идентичности соседней страницы.
+ */
+export function privateFormHtml(placeName: string, slug: string, baseUrl: string, error?: string): string {
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(placeName)}</title><style>${CSS}${FORM_CSS}</style></head>
+<body><main class="card">
+<a class="back" href="${esc(baseUrl)}/r/${esc(slug)}">← назад</a>
+<h1 class="title">Написать напрямую</h1>
+<p class="lead">Это сообщение прочитает владелец «${esc(placeName)}». На площадках оно не публикуется.</p>
+${error ? `<p class="err">${esc(error)}</p>` : ''}
+<form class="form" method="post" action="${esc(baseUrl)}/r/${esc(slug)}/private">
+  <label class="lbl" for="body">Что случилось</label>
+  <textarea class="ta" id="body" name="body" rows="6" required minlength="2" maxlength="2000"
+    placeholder="Расскажите своими словами"></textarea>
+
+  <fieldset class="rate">
+    <legend class="lbl">Оценка — если хотите</legend>
+    <!-- Оценка ВНУТРИ уже выбранной приватной формы: часть отзыва, а не условие показа
+         путей. Необязательна намеренно — обязательной она сделала бы «две звезды без
+         слов» возможными, а на такой сигнал владельцу нечем ответить. -->
+    ${[1, 2, 3, 4, 5].map((n) =>
+      `<label class="r"><input type="radio" name="rating" value="${n}"><span>${n}</span></label>`).join('')}
+  </fieldset>
+
+  <label class="lbl" for="contact">Как с вами связаться — если хотите ответа</label>
+  <input class="inp" id="contact" name="contact" maxlength="200" placeholder="телефон, почта или ник">
+
+  <button class="btn" type="submit">Отправить владельцу</button>
+</form>
+</main></body></html>`;
+}
+
+export function privateSentHtml(placeName: string, slug: string, baseUrl: string): string {
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(placeName)}</title><style>${CSS}${FORM_CSS}</style></head>
+<body><main class="card"><h1 class="title">Отправлено</h1>
+<p class="lead">Владелец «${esc(placeName)}» получит сообщение в ближайшие минуты.</p>
+<a class="btn btn--ghost" href="${esc(baseUrl)}/r/${esc(slug)}">Вернуться</a>
+</main></body></html>`;
+}
+
+const FORM_CSS = `
+.back{display:inline-block;margin:0 0 12px;color:var(--muted);text-decoration:none;font-size:14px}
+.back:hover{color:var(--brand)}
+.form{display:flex;flex-direction:column;gap:14px}
+.lbl{font-size:14px;font-weight:600;color:var(--ink)}
+.ta,.inp{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;
+  font:inherit;color:var(--ink);background:#fff;resize:vertical}
+.ta:focus,.inp:focus{outline:2px solid var(--brand);outline-offset:1px;border-color:var(--brand)}
+.rate{border:0;padding:0;margin:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rate .lbl{width:100%;margin-bottom:2px}
+.r{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--line);
+  border-radius:var(--r-pill);cursor:pointer;font-size:15px}
+.r:has(input:checked){border-color:var(--brand);background:var(--brand-soft);font-weight:600}
+.r input{margin:0}
+.btn{min-height:50px;padding:0 24px;border:0;border-radius:var(--r-pill);background:var(--brand);
+  color:#fff;font:600 16px/1 inherit;cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.btn--ghost{background:#fff;color:var(--ink);border:1px solid var(--line);margin-top:8px}
+.err{margin:0 0 14px;padding:10px 14px;border-radius:12px;background:#ffe9e8;color:#a3231e;font-size:14px}
+`;

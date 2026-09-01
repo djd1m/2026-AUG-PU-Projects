@@ -34,6 +34,7 @@ services:
       - BASE_URL
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS
+      - INTAKE_URL=http://intake:3000
     expose: ["3000"]
     networks: [default, talk-ai-public]
     depends_on:
@@ -42,6 +43,18 @@ services:
 
 
 
+
+  intake:
+    build: { context: ., dockerfile: services/intake/Dockerfile }
+    environment:
+      - DATABASE_URL_INTAKE          # роль app_intake
+      - BASE_URL                     # проверка Origin: отсутствие заголовка — отказ
+      - PGPOOL_MAX
+      - PGPOOL_CONNECTION_TIMEOUT_MS
+    expose: ["3000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
 
 volumes:
   pgdata:

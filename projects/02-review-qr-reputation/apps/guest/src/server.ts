@@ -13,7 +13,8 @@
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { pool } from './db.js';
-import { buildDoors, notFoundHtml, template, type LinkRow, type PlaceRow } from './render.js';
+import { buildDoors, notFoundHtml, privateFormHtml, privateSentHtml, template,
+  type LinkRow, type PlaceRow } from './render.js';
 import { isPlatform, resolvePlatformUrl } from './resolve.js';
 import { recordGuestEvent } from './journal.js';
 
@@ -78,6 +79,54 @@ export const server = createServer((req: IncomingMessage, res: ServerResponse) =
   });
 });
 
+const INTAKE_URL = process.env.INTAKE_URL ?? 'http://intake:3000';
+const MAX_FORM = 16 * 1024;
+
+/** Чтение формы с пределом. Ответ отдаётся, соединение не рвётся. */
+function readForm(req: IncomingMessage): Promise<URLSearchParams | null> {
+  return new Promise((resolve) => {
+    let size = 0;
+    const chunks: Buffer[] = [];
+    const t = setTimeout(() => { req.pause(); resolve(null); }, 5_000);
+    req.on('data', (c: Buffer) => {
+      size += c.length;
+      if (size > MAX_FORM) { clearTimeout(t); req.pause(); resolve(null); return; }
+      chunks.push(c);
+    });
+    req.on('end', () => { clearTimeout(t); resolve(new URLSearchParams(Buffer.concat(chunks).toString('utf8'))); });
+    req.on('error', () => { clearTimeout(t); resolve(null); });
+  });
+}
+
+/** Внешний вызов ВНЕ транзакции — её здесь и нет: у рендера нет прав на запись.
+ *  Таймаут обязателен: время ответа соседнего контейнера нам не принадлежит. */
+async function postToIntake(slug: string, form: URLSearchParams): Promise<{ ok: boolean; status: number; message: string }> {
+  const ratingRaw = form.get('rating');
+  const payload = {
+    slug,
+    body: form.get('body') ?? '',
+    rating: ratingRaw ? Number(ratingRaw) : undefined,
+    contact: form.get('contact') || undefined,
+  };
+  try {
+    const r = await fetch(`${INTAKE_URL}/api/feedback/private`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: BASE_URL },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(8_000),
+    });
+    if (r.status === 201) return { ok: true, status: 201, message: '' };
+    const b = (await r.json().catch(() => ({}))) as { errors?: string[] };
+    const msg = r.status === 429
+      ? 'Слишком много сообщений с этого адреса. Попробуйте позже.'
+      : (b.errors?.join('; ') ?? 'Не удалось отправить. Попробуйте ещё раз.');
+    return { ok: false, status: r.status === 429 ? 429 : 422, message: msg };
+  } catch {
+    // Недоступность соседа — ОТКАЗ с внятным текстом, а не тихое «отправлено».
+    return { ok: false, status: 503, message: 'Сервис временно недоступен. Попробуйте через минуту.' };
+  }
+}
+
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   // Путь берётся ДО '?'. Строка запроса не разбирается вообще: ветвить по ?rating нечем.
   const path = (req.url ?? '/').split('?')[0] ?? '/';
@@ -89,6 +138,35 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     if (place) recordGuestEvent(place.id, 'scan', null, clientIp(req), String(req.headers['user-agent'] ?? ''));
     res.writeHead(place ? 200 : 404, html);
     res.end(body);
+    return;
+  }
+
+  // ── ФОРМА ПРИВАТНОГО ОБРАЩЕНИЯ. Отдельный документ — вынужденно: страж запрещает
+  // виджет оценки на странице ВЫБОРА, а внутри уже выбранной формы оценка законна,
+  // и раскрыть форму на месте нечем, потому что страница без JS.
+  if (seg[0] === 'r' && seg[1] && seg[2] === 'private' && seg.length === 3) {
+    const place = await selectPlace(seg[1]);
+    if (!place) { res.writeHead(404, html); res.end(notFoundHtml()); return; }
+
+    if (req.method === 'POST') {
+      const form = await readForm(req);
+      if (form === null) { res.writeHead(413, html); res.end(privateFormHtml(place.name, seg[1], BASE_URL, 'Слишком длинное сообщение')); return; }
+
+      // ОТПРАВКА ИДЁТ В КОНТЕЙНЕР ПРИЁМА, а не пишется здесь. У роли рендера нет и не
+      // может быть права записи в приватные обращения — граница проходит по контейнеру,
+      // и обойти её изнутри этого процесса физически нечем.
+      const r = await postToIntake(seg[1], form);
+      if (r.ok) {
+        recordGuestEvent(place.id, 'private_door_click', null, clientIp(req), String(req.headers['user-agent'] ?? ''));
+        res.writeHead(200, html); res.end(privateSentHtml(place.name, seg[1], BASE_URL)); return;
+      }
+      res.writeHead(r.status, html);
+      res.end(privateFormHtml(place.name, seg[1], BASE_URL, r.message));
+      return;
+    }
+
+    res.writeHead(200, html);
+    res.end(privateFormHtml(place.name, seg[1], BASE_URL));
     return;
   }
 
