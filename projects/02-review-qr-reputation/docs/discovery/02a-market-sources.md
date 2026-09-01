@@ -31,6 +31,37 @@
 | 2ГИС внедряет подтверждение чеком («зелёная галочка»), часть отзывов перестала проходить модерацию | [Sostav](https://www.sostav.ru/blogs/283502/77120) |
 | 2ГИС проверяет **каждый** отзыв перед публикацией | [Помощник 2ГИС](https://help.2gis.ru/question/kak-rabotat-s-otzyvami-klientov-instrukciya-dlya-kompaniy) |
 
+### S2.1 Обратная сторона: on-premise как СПАМ-сигнал у Google
+
+Проверялось отдельно, потому что предварительный вывод брифа («скан на месте — самый чистый профиль»)
+верен для Яндекса и 2ГИС и **неверен для Google**.
+
+| Факт | Источник |
+|---|---|
+| Отзывы с одного IP (в т.ч. легитимного адреса заведения) Google может счесть искусственными | [National Law Review](https://natlawreview.com/article/are-your-law-firm-reviews-getting-caught-google-s-spam-filter-ip-address-may-be-why) |
+| Один IP / одно устройство / гостевой Wi-Fi заведения — машиночитаемый кластерный сигнал; киоски в зале прямо не рекомендуются | [Ignitingbusiness](https://www.ignitingbusiness.com/blog/how-google-business-profile-reviews-are-collected-and-filtered-for-spam) |
+| Политика Google прямо запрещает *«require or pressure users to leave ratings or write reviews while on the premises»* | [Google Maps UGC Policy](https://support.google.com/contributionpolicy/answer/7400114?hl=en) |
+| При этом Яндекс подозревает отзыв, оставленный ДАЛЕКО от организации — давление противоположное | [PR-CY](https://pr-cy.ru/news/p/10605-otzyvy-yandex-karty-moderacia) |
+
+**Разграничение, которое легко потерять:** запрет и кластерный риск сильнее всего касаются ОБЩЕГО
+устройства (планшет/киоск заведения). Личный телефон гостя — более мягкий случай, но гостевой Wi-Fi
+всё равно даёт общий IP. Отсюда требование: продукт не втягивает гостя в завершение публичного отзыва
+на Wi-Fi заведения и не поддерживает сценарий общего планшета.
+
+### S2.2 QR у международных игроков — есть, вопреки распространённому мнению
+
+| Игрок | QR для сбора отзывов | Источник |
+|---|---|---|
+| **Birdeye** | **Есть**, отдельная функция: генератор QR с настройкой макета; **destination link меняется без перепечатки** | [Birdeye Help](https://support.birdeye.com/en/articles/12654722-how-do-i-create-a-qr-code-to-generate-reviews), [Birdeye blog](https://birdeye.com/blog/google-review-qr-code/) |
+| **Birdeye Mobile Kiosk** | Есть режим «планшет в зале» — тот самый сценарий, который спам-фильтр Google наказывает | [Birdeye Support](https://support.birdeye.com/en_US/review-marketing/1205381-how-can-i-get-new-reviews-from-my-customers-mobile-kiosk) |
+| **NiceJob** | Публикует руководство «How to Create a QR Code For Google Reviews» | [NiceJob](https://get.nicejob.com/resources/how-to-create-a-qr-code-for-google-reviews-for-free) |
+| **Google Business Profile** | Генератор QR встроен в сам кабинет | [NiceJob](https://get.nicejob.com/resources/how-to-create-a-qr-code-for-google-reviews-for-free) |
+
+**Вывод:** утверждение «QR-функции нет ни у NiceJob, ни у Birdeye, ни у Podium» не подтверждается.
+Отсутствие страницы в sitemap — не доказательство отсутствия функции: у Birdeye она живёт в справочном
+центре, а не в маркетинговом разделе. Расхождения «в РФ QR есть, на Западе нет» **не существует**;
+реальное расхождение между рынками — не QR, а **роутинг по оценке** (§S4, §S6).
+
 ## S3 — Площадки: диплинки и API
 
 **Несущий раздел.** Без рабочей ссылки «оставить отзыв» продукта нет, а ситуация у трёх площадок разная —
