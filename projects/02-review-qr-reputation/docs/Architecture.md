@@ -72,12 +72,12 @@ reviewqr/
 |---|---|---|---|---|---|---|
 | `app_render` (`apps/guest`) | SELECT | SELECT | **нет вообще** | **INSERT, без SELECT** | нет | нет |
 | `app_intake` (`services/intake`) | SELECT | нет | **INSERT, без SELECT** | нет | INSERT | нет |
-| `app_notify` (`services/notifier`) | SELECT | нет | SELECT | нет | SELECT, UPDATE | нет |
+| `app_notify` (`services/notifier`) | SELECT | нет | SELECT | нет | SELECT, UPDATE | `analytics_events`: INSERT |
 | `app_owner` (`apps/web`) | ALL под RLS | ALL под RLS | SELECT под RLS | SELECT под RLS | SELECT | ALL под RLS |
 
 ```sql
 REVOKE ALL ON private_feedback FROM app_render;      -- не «не читаем», а «не можем»
-GRANT  SELECT (id, slug, name)          ON places          TO app_render;
+GRANT  SELECT (id, slug, name, branding_required) ON places    TO app_render;
 GRANT  SELECT (place_id, platform, url, link_kind) ON platform_links TO app_render;
 GRANT  INSERT                            ON guest_events    TO app_render;  -- SELECT НЕ выдаётся
 GRANT  INSERT                            ON private_feedback TO app_intake; -- SELECT НЕ выдаётся
@@ -170,7 +170,7 @@ export function recordGuestEvent(req: Request, kind: EventKind): void   // не�
 **Кэш — на нашем origin, а не на CDN.** Discovery предлагала edge-кэш по ключу `slug` («добавленная
 позже ветка не доедет до гостя — её съест кэш»). Взято свойство, отброшена площадка: edge-кэш съел
 бы вместе с веткой и **сканы**, а метрика недели считается по ним. Рендер кэшируется **в процессе**
-`apps/guest` (LRU по `slug`, инвалидация при правке карточки), наружу — `Cache-Control: no-store`:
+`apps/guest` (LRU по `slug`, инвалидация при правке карточки и смене плана), наружу — `no-store`:
 каждый скан доезжает до origin, а байты у всех одни, потому что источник один. Цена: разгрузки от
 CDN нет, на сотнях точек она и не нужна, при росте — пересматривать.
 
@@ -204,7 +204,7 @@ erDiagram
 | `accounts` | `id`, `name`, `plan enum(free,point,network,agency)`, `parent_account_id NULL`, `created_at` | Арендатор. Самоссылка — суб-аккаунты агентства, **ровно один уровень** (ADR-008) |
 | `owners` / `sessions` | `id`, `email unique`, `password_hash` / `owner_id`, `token_hash`, `expires_at`, `revoked_at` | Человек и его сессии кабинета. Аутентификация внутри монолита |
 | `account_members` | `account_id`, `owner_id`, `role enum(admin,manager,viewer)`, unique(`account_id`,`owner_id`) | Кто и с какими правами видит арендатора |
-| `places` | `id`, `account_id NOT NULL`, `slug unique`, `name`, `address`, `created_at`, `archived_at NULL` | Точка. `slug` — единственный аргумент гостевого рендера |
+| `places` | `id`, `account_id NOT NULL`, `slug unique`, `name`, `address`, `branding_required bool NOT NULL DEFAULT true`, `created_at`, `archived_at NULL` | Точка. `slug` — единственный аргумент рендера; `branding_required` денормализовано с плана, чтобы рендер не читал `accounts` (§5.1) |
 | `platform_links` | `id`, `place_id`, `platform enum(yandex_maps,twogis)`, `url`, `link_kind enum(review_form,card)`, `verified_at NULL`, unique(`place_id`,`platform`) | **Множество дверей.** Без полей условий и без хранимого порядка (§3.2) |
 | `private_feedback` | `id`, `place_id`, `body`, `rating smallint NULL`, `contact text NULL`, `created_at` | Создаётся **только** после того, как гость сам выбрал приватную дверь. Единственное место с оценкой |
 | `notifications` | `id`, `private_feedback_id`, `channel enum(telegram,max)`, `status enum(pending,sent,failed)`, `attempts`, `last_error`, `sent_at NULL` | Очередь доставки. Отделена от `private_feedback`, чтобы у `app_intake` не было UPDATE (§7.1) |
@@ -261,10 +261,10 @@ HMAC-SHA256(секрет ‖ ISO-номер-недели, IP ‖ User-Agent)`, �
    фиксирована для точки, одинакова для всех гостей, не выразима как ручка. Это и есть **Р1
    «равновесно»** (D-03): убирает и случайный A/B, и соблазн «показать сначала карты». Переход к Р2
    стоит одну строку сортировки и один порог в тесте — та дешевизна ослабления, ради которой взят Р1.
-4. Разметка: одинаковые плоские строки — одна высота, семейство, размер, начертание и цвет, ни у
-   одной нет заливки, обводки или тени, которых нет у остальных; **ни одна не за раскрытием**
-   ([`04b`](discovery/04b-shared-constraints.md) §0.2.1). Строка площадки с `link_kind = card`
-   честно несёт «карточка организации, отзыв — следующим шагом» (бриф §Т.5 п.2).
+4. Разметка: одинаковые плоские строки, ни одна не за раскрытием; бренд-строка сервиса при
+   `places.branding_required` (вычисляется **только сервером**, клиенту `plan` не передаётся).
+   Состав экрана, измеренная геометрия, два анти-паттерна с живого экрана конкурента и цифровой
+   критерий равновесности — **[`Architecture-UI.md`](Architecture-UI.md)**.
 5. `recordGuestEvent(req, 'scan')` — побочный эффект, `void` (§3.3).
 
 Ответ: HTML без инлайн-скриптов и cookie, `Cache-Control: no-store`.
