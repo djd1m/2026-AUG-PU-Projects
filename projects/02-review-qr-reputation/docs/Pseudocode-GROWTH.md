@@ -67,17 +67,26 @@ function onSignup(request):
   if a.source is not null:
     createAttribution(account_id, a.partner_id, a.source, status = "pending")   # НЕ начисляем
 
-function accrueOnPayment(account_id, payment_event_id):   # ЗОВЁТСЯ ИЗ Pseudocode §5.1, шаг 3,
-  att = findAttribution(account_id, status = "pending")   # в ТОЙ ЖЕ транзакции
+function accrueOnPayment(account_id, payment_event_id):   # ЗОВЁТСЯ ИЗ Pseudocode-OWNER §5.1
+  att = findAttribution(account_id, status = "pending")   # шаг 3, в ТОЙ ЖЕ транзакции
   if att is null: return
-  if now() - att.created_at > 90 days:                    # окно промокода — 90 дней
+  # Срок хранится ПОЛЕМ attributions.expires_at, а не вычисляется из created_at при каждой
+  # проверке: вычисление разъезжается с окном, когда окно однажды изменят, а поле — нет.
+  if now() > att.expires_at:
     updateAttribution(att.id, status = "expired"); return
-  if att.frozen: return                                   # §4: заморозка при накрутке
+  if att.status == "frozen": return                       # §4: заморозка при накрутке
   if isSelfReferral(att):
     updateAttribution(att.id, status = "rejected", reason = "self_referral")
     auditLog("self_referral_blocked", att.id)
     return                                                # ОПЛАТА ПРИ ЭТОМ ПРОХОДИТ ШТАТНО
-  recordCommission(att.partner_id, payment_event_id, amount = commissionOf(...))
+  partner = getPartner(att.partner_id)
+  if partner.status != "active": return                   # деактивирован → НОВЫХ начислений нет,
+                                                          # старые остаются к выплате
+  # UNIQUE(commissions.payment_event_id) — ВТОРАЯ гарантия «ровно один раз», независимая от
+  # webhook_events. Две независимые лучше одной сильной: они отказывают по разным причинам.
+  INSERT INTO commissions(attribution_id, payment_event_id, amount, created_at)
+    VALUES (att.id, payment_event_id, round(paymentAmount * partner.payout_rate), now())
+    ON CONFLICT (payment_event_id) DO NOTHING
   updateAttribution(att.id, status = "converted")
   emitAnalytics("referral_attributed", { partner_id: att.partner_id })
 
@@ -138,7 +147,8 @@ function onSignupViaPartnerCode(code, request):
   # условием начисления, то есть вторым местом, где однажды появится третье.
 
 function revokePartner(partner_id):
-  setPartnerStatus(partner_id, "revoked")
+  UPDATE partners SET status = 'deactivated' WHERE id = partner_id    # СТАТУС, не удаление строки:
+                                                                       # удаление отобрало бы историю
   # ТОЛЬКО новые атрибуции. Ранее начисленные комиссии остаются к выплате — история immutable,
   # пересчёт задним числом не выполняется. Владелец нового заведения ошибки НЕ видит:
   # регистрация проходит штатно, просто без атрибуции.
@@ -173,5 +183,6 @@ function partnerDashboard(partner_id) -> View:
   по накопленному годовому доходу. Захардкоженные 13 % посчитают неверное удержание у любого
   успешного партнёра, и это вскроется через год. В MVP выплат нет; при их появлении модель обязана
   вести year-to-date на партнёра (research/GROWTH-MECHANICS-REQUIREMENTS.md §6)]`
-- `[GAP: таблицы `attributions`, `partners`, `commissions` в схеме `Architecture.md` §4
-  отсутствуют — есть только `analytics_events` и `audit_log`. Нужны `arch`]`
+- `[GAP ЗАКРЫТ: `arch` добавил `partners`, `attributions`, `commissions` в `Architecture.md` §4.
+  Алгоритмы выше приведены к их полям: `attributions.expires_at`, `partners.payout_rate`,
+  `partners.status`, `UNIQUE(commissions.payment_event_id)`]`
