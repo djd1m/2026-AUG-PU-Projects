@@ -73,7 +73,7 @@ reviewqr/
 | Роль | `places` | `platform_links` | `private_feedback` | `guest_events` | `notifications` | остальное |
 |---|---|---|---|---|---|---|
 | `app_render` (`apps/guest`) | SELECT | SELECT | **нет вообще** | **INSERT, без SELECT** | нет | нет |
-| `app_intake` (`services/intake`) | SELECT | нет | **INSERT, без SELECT** | нет | INSERT | `rate_limit_events`: INSERT **и** SELECT — единственное чтение своих записей во всей матрице (§7.2); `analytics_events`: **нет** |
+| `app_intake` (`services/intake`) | SELECT | нет | **INSERT, без SELECT** | нет | INSERT | `rate_limit_events`: INSERT **и** SELECT — единственное чтение своих записей во всей матрице (§7.2), проверяется стражем T3c; `analytics_events`: INSERT без SELECT, симметрично `app_render` |
 | `app_notify` (`services/notifier`) | SELECT | нет | SELECT | нет | SELECT, UPDATE | `analytics_events`: INSERT |
 | `app_owner` (`apps/web`) | ALL под RLS | ALL под RLS | SELECT под RLS | SELECT под RLS | SELECT | ALL под RLS |
 
@@ -365,6 +365,7 @@ Owner-side воронка в `analytics_events`: `signup`, `onboarding_place_cre
 | **T1** | `check-schema-fields.sh` | По `information_schema`: колонки `/(rating\|score\|stars\|nps\|sentiment)/i` нет нигде, **кроме явного исключения `private_feedback.rating`**. Регэксп имён — `[a-z][a-z0-9_]*`, **с цифрами** |
 | **T2** | `check-schema-fields.sh` | Нет колонок `/(gating\|threshold\|min_stars\|route_by\|positive_\|negative_\|show_if\|experiment\|position\|sort_order)/i` |
 | **T3** | `check-db-grants.sh` | `role_table_grants`: у `app_render` нет SELECT на `private_feedback`, у `app_intake` есть INSERT и **нет** SELECT. Плюс со стороны приложения — `selftest-role.js` в каждом контейнере требует **ошибку прав**, а не пустую выборку |
+| **T3c** | `check-db-grants.sh` | `role_table_grants` по `rate_limit_events`: у `app_intake` есть **и** `INSERT`, **и** `SELECT`. Единственное намеренное исключение в матрице перестаёт быть строкой, которую следующий читатель примет за небрежность: его кто-то утверждает, и `REVOKE SELECT` ловится **до деплоя**, а не первым запросом гостя |
 | **T3b** | `check-routing.sh` | `GET /r/:slug` обслуживается контейнером `guest`: `selftest-role` того контейнера, который реально отвечает по внешнему адресу, возвращает «denied» |
 | **T4** / **T4b** | `check-single-door.sh` [`--go`] | N запросов `GET /r/:slug` по **внешнему** адресу, различающихся ровно одним измерением (query, cookie, UA, Accept-Language, X-Forwarded-For, время суток) → sha256 тела совпадает у всех; **список нормализаций пуст** (§3.3). `--go`: статус и `Location` у `GET /go/:slug/:platform`; `--private`: тело `GET /r/:slug/private` |
 | **T5** | `check-door-parity.sh` | В первичном рендере: число видимых дверей = `platform_links` + 1; ни один узел и ни один его предок не несёт `hidden`, `aria-hidden`, `display:none`, `visibility:hidden`, нулевой высоты, `<details>` или таба; высота, типографика, `box-shadow`, `border`, `background` совпадают у всех строк |
