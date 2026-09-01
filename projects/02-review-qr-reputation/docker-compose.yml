@@ -35,55 +35,20 @@ services:
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS
     expose: ["3000"]
+    networks: [default, talk-ai-public]
     depends_on:
       postgres: { condition: service_healthy }
     restart: unless-stopped
 
-  intake:
-    build: { context: ., dockerfile: services/intake/Dockerfile }
-    environment:
-      - DATABASE_URL_INTAKE          # роль app_intake
-      - PGPOOL_MAX
-      - PGPOOL_CONNECTION_TIMEOUT_MS
-    expose: ["3000"]
-    depends_on:
-      postgres: { condition: service_healthy }
-    restart: unless-stopped
 
-  notifier:
-    build: { context: ., dockerfile: services/notifier/Dockerfile }
-    environment:
-      - DATABASE_URL_NOTIFY          # роль app_notify
-      - TELEGRAM_BOT_TOKEN
-      - MAX_BOT_TOKEN
-    depends_on:
-      postgres: { condition: service_healthy }
-    restart: unless-stopped
 
-  web:
-    build: { context: ., dockerfile: apps/web/Dockerfile }
-    environment:
-      - DATABASE_URL_OWNER           # роль app_owner, под RLS
-      - BASE_URL
-      - SESSION_SECRET
-      - YOOKASSA_SHOP_ID
-      - YOOKASSA_SECRET_KEY
-    expose: ["3000"]
-    depends_on:
-      postgres: { condition: service_healthy }
-    restart: unless-stopped
-
-  caddy:
-    image: caddy:2.8-alpine
-    ports:
-      - "${HTTP_PORT:-3100}:80"
-      - "${HTTPS_PORT:-3101}:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddydata:/data
-    depends_on: [guest, web, intake]
-    restart: unless-stopped
 
 volumes:
   pgdata:
-  caddydata:
+
+# Внешняя сеть общего reverse-proxy. Своих 80/443 у проекта НЕТ и быть не должно:
+# опубликованный рядом сервис позволяет обойти прокси вместе со всем, что он гарантирует.
+networks:
+  talk-ai-public:
+    external: true
+  default: {}

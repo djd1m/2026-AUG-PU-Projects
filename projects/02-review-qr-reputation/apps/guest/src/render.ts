@@ -135,22 +135,57 @@ const ICON =
   'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
 
-const BRAND = '<p class="brand">Сделано на ReviewQR</p>';
+const BRAND = '<p class="brand">Сделано на <b>ReviewQR</b></p>';
 
 // Системный шрифтовой стек: веб-шрифт — это запрос к чужому хосту с телефона гостя
 // в заведении со слабой связью. Плюс любой динамически подставляемый токен вернул бы
 // вариативность в тело ответа и сломал бы T4.
-const CSS = `*{box-sizing:border-box}body{margin:0;padding:24px 16px;background:#faf9fb;
-color:#1a1a1f;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-.card{max-width:420px;margin:0 auto}.title{margin:0 0 4px;font-size:22px;line-height:1.25}
-.lead{margin:0 0 20px;color:#5c5c6b;font-size:15px}.doors{list-style:none;margin:0;padding:0}
-.door{margin:0 0 8px}
-/* ОДИН класс на все двери. Модификатора для приватной НЕ СУЩЕСТВУЕТ: строки различаются
-   только текстом. Высота 60px измерена у отраслевого образца и одинакова на всех устройствах. */
-.door__link{display:flex;align-items:center;gap:12px;min-height:60px;padding:0 16px;
-border:1px solid #e2e2ea;border-radius:10px;background:#fff;color:inherit;text-decoration:none}
-.door__title{font-weight:600}.door__note{margin-left:auto;font-size:13px;color:#5c5c6b}
-.brand{margin:24px 0 0;text-align:center;font-size:13px;color:#8a8a99}`;
+const CSS = `
+/* ТОКЕНЫ ИЗ ОРИГИНАЛА — измерены getComputedStyle, не подобраны на глаз
+   (discovery/01a-design-tokens.md). ADR-010 запрещает гостевому экрану ВЕБ-ШРИФТ:
+   это запрос к чужому хосту с телефона гостя в заведении со слабой связью, и он же
+   вернул бы вариативность в тело ответа, сломав T4. Палитру, радиусы и геометрию
+   он не запрещает — это обычные значения CSS, ноль сторонних запросов. */
+:root{
+  --ink:#00132e;        /* заголовки */
+  --text:#364459;       /* основной текст */
+  --brand:#025bde;      /* заливка первичных кнопок оригинала */
+  --brand-soft:#e1edff; /* мягкие плашки */
+  --tint:#f5f9ff;       /* фон светлых секций, 2-й по площади */
+  --line:#c1c1c1;       /* рамка карточек */
+  --muted:#6b7a90;
+  --shadow:1px 1px 19px 0 #1874fd26;  /* ЕДИНСТВЕННАЯ тень в системе оригинала */
+  --r-card:16px;        /* rounded-2xl */
+  --r-pill:100px;       /* кнопки-пилюли, высота 50px */
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 40px;background:var(--tint);color:var(--text);
+  /* Системный стек ВМЕСТО Bogart/Inter — по ADR-010. Гарнитуры не наследуем, метрику наследуем. */
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.card{max-width:440px;margin:0 auto;background:#fff;border:1px solid var(--line);
+  border-radius:var(--r-card);box-shadow:var(--shadow);padding:28px 24px 24px}
+.title{margin:0 0 6px;color:var(--ink);font-size:26px;line-height:1.2;font-weight:600;
+  letter-spacing:-.01em}
+.lead{margin:0 0 22px;color:var(--muted);font-size:15px;line-height:1.45}
+.doors{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+/* ОДИН класс на ВСЕ двери. Модификатора для приватной не существует: строки различаются
+   только текстом. Заливка, обводка, тень, цвет значка — одинаковы у всех, иначе появился бы
+   визуальный ВЕС, а равновесность проверяется побайтово (T5). */
+.door__link{display:flex;align-items:center;gap:12px;min-height:60px;padding:0 18px;
+  border:1px solid var(--line);border-radius:var(--r-pill);background:#fff;color:var(--ink);
+  text-decoration:none;font-weight:600;transition:border-color .15s,background .15s}
+.door__link:hover{border-color:var(--brand);background:var(--tint)}
+.door__link:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.door__icon{flex:none;display:flex;color:var(--brand)}
+.door__title{flex:1}
+.door__note{font-size:12px;font-weight:400;color:var(--muted);text-align:right;max-width:40%;
+  line-height:1.3}
+.brand{margin:26px 0 0;text-align:center;font-size:13px;color:var(--muted)}
+.brand b{color:var(--brand);font-weight:600}
+@media(max-width:400px){.card{padding:22px 16px 18px}.title{font-size:22px}
+  .door__note{display:none}}
+`;
 
 export function notFoundHtml(): string {
   // 404 ОДИНАКОВ для несуществующего и архивного слага: различие было бы оракулом
