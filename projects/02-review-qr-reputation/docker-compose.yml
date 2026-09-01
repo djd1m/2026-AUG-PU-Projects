@@ -60,6 +60,7 @@ services:
     build: { context: ., dockerfile: services/notifier/Dockerfile }
     environment:
       - DATABASE_URL_NOTIFY          # роль app_notify
+      - GUEST_INTERNAL_URL=http://guest:3000   # сброс кэша при истечении подписки
       - TELEGRAM_BOT_TOKEN
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS
@@ -73,6 +74,9 @@ services:
       - DATABASE_URL_OWNER           # роль app_owner, под RLS
       - BASE_URL
       - GUEST_INTERNAL_URL=http://guest:3000
+      - YOOKASSA_SHOP_ID
+      - YOOKASSA_SECRET_KEY
+      - PRICE_POINT_RUB              # цена «Точки»; не задана — 990 (гипотеза, DEC-PAY-1)
       - TELEGRAM_BOT_USERNAME
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS

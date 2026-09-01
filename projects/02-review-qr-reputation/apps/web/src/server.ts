@@ -12,6 +12,7 @@ import { withAccount, pool } from './db.js';
 import { randomBytes, createHash } from 'node:crypto';
 import { authPage, bindPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
 import { guestUrl, qrSvg } from './qr.js';
+import { createCheckout, handleYookassaWebhook, pricePointRub, PaymentNotConfigured, ProviderUnavailable } from './payment.js';
 
 const BASE_URL = (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/+$/, '');
 const SECURE = BASE_URL.startsWith('https');
@@ -56,6 +57,27 @@ export const server = createServer((req, res) => {
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const path = (req.url ?? '/').split('?')[0] ?? '/';
   const seg = path.split('/').filter(Boolean);
+
+  // ── Вебхук ЮKassa: вне сессии и вне Origin-контура (провайдер не браузер).
+  if (req.method === 'POST' && path === '/webhooks/yookassa') {
+    const raw = await readRaw(req);
+    if (raw === null) { res.writeHead(413); res.end(); return; }
+    // За Caddy клиентский адрес — ПОСЛЕДНИЙ элемент XFF (дописан нашим прокси);
+    // web не опубликован рядом с прокси, обход невозможен (страж портов).
+    const xff = String(req.headers['x-forwarded-for'] ?? '');
+    const ip = (xff.split(',').pop() ?? '').trim() || (req.socket.remoteAddress ?? '');
+    try {
+      const r = await handleYookassaWebhook(raw, ip);
+      res.writeHead(r.code); res.end();
+      // Инвалидация кэша гостя — ПОСЛЕ COMMIT (транзакция закрыта внутри обработчика;
+      // сюда слаги доезжают только с закоммиченным состоянием).
+      for (const slug of r.slugsToInvalidate) await invalidateSlug(slug);
+    } catch {
+      res.writeHead(500); res.end();   // провайдер повторит доставку — это и есть план восстановления
+    }
+    return;
+  }
+
   const session = await resolveSession(readCookie(req));
 
   // ── без сессии
@@ -94,7 +116,24 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
   if (req.method === 'GET' && path === '/dashboard') {
     const places = await listPlaces(session.accountId);
-    return html(res, 200, dashboardPage(places, BASE_URL));
+    const billing = await billingView(session.accountId);
+    return html(res, 200, dashboardPage(places, BASE_URL, undefined, billing));
+  }
+
+  if (req.method === 'POST' && path === '/billing/checkout') {
+    if (!originOk(req)) return html(res, 403, 'запрос отклонён');
+    try {
+      const { url } = await createCheckout(session.accountId);
+      return redirect(res, url);
+    } catch (e) {
+      const msg = e instanceof PaymentNotConfigured
+        ? 'приём оплаты ещё не настроен — мы уже знаем и чиним'
+        : e instanceof ProviderUnavailable
+          ? 'платёжный сервис не ответил — попробуйте через минуту, деньги не списаны'
+          : 'внутренняя ошибка';
+      const places = await listPlaces(session.accountId);
+      return html(res, 502, dashboardPage(places, BASE_URL, msg, await billingView(session.accountId)));
+    }
   }
 
   if (req.method === 'POST' && path === '/places') {
@@ -175,4 +214,36 @@ async function invalidateGuestCache(accountId: string, placeId: string): Promise
   } catch (e) {
     console.error('guest_invalidate_failed', (e as Error).message);
   }
+}
+
+function readRaw(req: IncomingMessage): Promise<string | null> {
+  return new Promise((resolve) => {
+    let size = 0; const chunks: Buffer[] = [];
+    const t = setTimeout(() => { req.pause(); resolve(null); }, 5_000);
+    req.on('data', (c: Buffer) => {
+      size += c.length;
+      if (size > 64 * 1024) { clearTimeout(t); req.pause(); resolve(null); return; }
+      chunks.push(c);
+    });
+    req.on('end', () => { clearTimeout(t); resolve(Buffer.concat(chunks).toString('utf8')); });
+    req.on('error', () => { clearTimeout(t); resolve(null); });
+  });
+}
+
+async function invalidateSlug(slug: string): Promise<void> {
+  try {
+    await fetch(`${process.env.GUEST_INTERNAL_URL ?? 'http://guest:3000'}/internal/invalidate/${slug}`,
+      { method: 'POST', signal: AbortSignal.timeout(3_000) });
+  } catch (e) { console.error('invalidate_failed', slug, (e as Error).message); }   // кэш добьёт TTL
+}
+
+export interface BillingView { plan: string | null; periodEnd: string | null; priceRub: number }
+async function billingView(accountId: string): Promise<BillingView> {
+  const r = await withAccount(accountId, (c) => c.query<{ plan: string; current_period_end: Date }>(
+    `select plan, current_period_end from subscriptions
+      where account_id = $1 and status = 'active' and current_period_end > now()`, [accountId]));
+  const row = r.rows[0];
+  return { plan: row?.plan ?? null,
+    periodEnd: row ? row.current_period_end.toISOString().slice(0, 10) : null,
+    priceRub: pricePointRub() };
 }

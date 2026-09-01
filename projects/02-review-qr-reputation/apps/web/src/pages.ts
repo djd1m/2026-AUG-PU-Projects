@@ -77,7 +77,22 @@ export interface PlaceView {
   feedback_count: number; scan_count: number;
 }
 
-export function dashboardPage(places: PlaceView[], baseUrl: string, error?: string): string {
+export interface BillingInfo { plan: string | null; periodEnd: string | null; priceRub: number }
+
+function billingBlock(b: BillingInfo | undefined): string {
+  if (!b) return '';
+  if (b.plan) return `<section class="card"><h2>План «Точка»</h2>
+  <p style="font-size:14px">Оплачен до <b>${esc(b.periodEnd ?? '')}</b>. Строка «Сделано на ReviewQR» на гостевых страницах снята.</p>
+  <form method="post" action="/billing/checkout"><button class="btn btn--ghost" type="submit">Продлить ещё 30 дней — ${b.priceRub} ₽</button></form>
+</section>`;
+  return `<section class="card"><h2>План: Free</h2>
+  <p style="font-size:14px">На гостевых страницах гостям видна строка «Сделано на ReviewQR».
+  План «Точка» её снимает — для всех точек аккаунта.</p>
+  <form method="post" action="/billing/checkout"><button class="btn" type="submit">Подключить «Точку» — ${b.priceRub} ₽ / 30 дней</button></form>
+</section>`;
+}
+
+export function dashboardPage(places: PlaceView[], baseUrl: string, error?: string, billing?: BillingInfo): string {
   const list = places.map((p) => `
 <section class="card">
   <div class="place">
@@ -108,6 +123,7 @@ export function dashboardPage(places: PlaceView[], baseUrl: string, error?: stri
 <form method="post" action="/logout" style="margin:0"><button class="btn btn--ghost" style="min-height:34px;margin:0">Выйти</button></form></nav>
 ${error ? `<p class="err">${esc(error)}</p>` : ''}
 ${list || '<p class="lead">Точек пока нет — создайте первую.</p>'}
+${billingBlock(billing)}
 <section class="card">
 <h2>Новая точка</h2>
 <form method="post" action="/places">
