@@ -126,6 +126,9 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
       const { url } = await createCheckout(session.accountId);
       return redirect(res, url);
     } catch (e) {
+      // Причина ОБЯЗАНА попасть в лог: тихий фолбэк на «попробуйте позже» уже прятал
+      // от нас 401 от провайдера (silent-fallbacks.md).
+      console.error('checkout_failed', (e as Error).message);
       const msg = e instanceof PaymentNotConfigured
         ? 'приём оплаты ещё не настроен — мы уже знаем и чиним'
         : e instanceof ProviderUnavailable
