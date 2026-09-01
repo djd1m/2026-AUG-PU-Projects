@@ -100,7 +100,7 @@ function isSelfReferral(att) -> bool:                     # три пути, з�
 
 ## 3. FR-GROWTH-003 — бренд-строку решает исключительно сервер
 
-Вычисление `badge_required` — [`Pseudocode.md`](Pseudocode.md) §1.3 (`badgeRequiredFor`,
+Вычисление `branding_required` — [`Pseudocode.md`](Pseudocode.md) §1.3 (`brandingRequiredFor`,
 fail-closed по явному множеству платных планов, колонка `NOT NULL DEFAULT true`).
 
 ```
@@ -115,10 +115,10 @@ fail-closed по явному множеству платных планов, к
 #    Носитель impression-loop здесь не DOM, а ПЕЧАТНЫЙ МАКЕТ: логотип и короткий домен на
 #    подвале счёта клиентом не правятся в принципе.
 # 3. Подмена ответа конфигурации в браузере — конфигурации нет: страница цельная, серверная.
-function badgeImpression(place_id): emitAnalytics("badge_impression", { place_id })
+function brandingImpression(place_id): emitAnalytics("branding_impression", { place_id })
 ```
 
-**Истёкшая подписка возвращает бренд-строку** не позднее 60 секунд: `recomputeBadgeRequired`
+**Истёкшая подписка возвращает бренд-строку** не позднее 60 секунд: `recomputeBrandingRequired`
 вызывается по истечении периода, гостевой LRU истекает по TTL 60 c. Успешная оплата снимает её
 в тот же срок и тем же механизмом — один путь в обе стороны, а не два.
 

@@ -19,24 +19,27 @@
 
 ---
 
-## 0. Шесть расхождений входных документов — разрешены явно
+## 0. Расхождения входных документов — разрешены явно
 
 Молчаливое разрешение расхождения — тот же класс дефекта, что тихий дефолт: система выглядит
 согласованной, а два документа расходятся дальше. Каждое разрешено здесь и вынесено на Phase 2.
+**Редакция 3.** K-1, K-2, K-3, K-6 закрыты правками `spec`; K-5, K-7…K-10 открыты.
 
 | # | Расхождение | Решение здесь | Кому подтвердить |
 |---|---|---|---|
-| K-1 | Spec NFR-SEC-002: публичных путей **два**. Arch §3.2: **три** (`/go/:slug/:platform`, ADR-004) | Реализуем **четыре** — см. K-2. Несущий запрет сохранён: роута, **принимающего оценку** и возвращающего URL или 3xx, нет | Phase 2, вместе с ADR-004 |
-| K-2 | Ни один документ не называет путь, отдающий **форму** приватной двери | Вводится `GET /r/:slug/private`. **Он структурно обязателен:** T6 запрещает виджет звёзд в разметке `/r/:slug`, FR-006 разрешает звёзды в приватной форме — значит форма физически не может жить в том же документе. Плюс FR-005 требует работы без JS, то есть раскрыть форму на месте нечем | Phase 2 |
-| K-3 | Spec FR-006: текст **10–2000**. Arch §5.3: `body` ≤ **4000** | Берём **10–2000**: число — предмет требования, а не архитектуры | `arch` |
+| ~~K-1~~ | ~~публичных путей два против трёх~~ | **ЗАКРЫТО.** `spec` внёс исчерпывающий список из **четырёх**: `GET /r/:slug` · `GET /r/:slug/private` · `GET /go/:slug/:platform` · `POST /api/feedback/private`. Несущий запрет сохранён: роута, **принимающего оценку** и возвращающего URL или 3xx, нет | — |
+| ~~K-2~~ | ~~путь, отдающий форму приватной двери, не назван~~ | **ЗАКРЫТО.** `GET /r/:slug/private` записан в NFR-SEC-002 как **вынужденный**, вместе с цепочкой T6 + FR-006 + «без JS» — чтобы через месяц его не «оптимизировали» обратно в один документ, не увидев, почему вынесли. Область T6 сужена до `/r/:slug` | — |
+| ~~K-3~~ | ~~длина `body`: 10–2000 против ≤ 4000~~ | **ЗАКРЫТО.** `arch` дал `CHECK ck_private_feedback_body: length(btrim(body)) BETWEEN 1 AND 4000` — это внешняя граница СУБД, а требование 10–2000 держит приложение. Разные слои, не противоречие | — |
 | K-4 | Spec NFR-SEC-003: у `app_render` **записи НЕТ**. Arch §3.1: `INSERT` на `guest_events` без `SELECT` | Берём Arch: гейтинг обеспечивает **чтение**; запись, результат которой некому прочитать, на ответ повлиять не может. Условие — `SELECT` не выдан, UNIQUE-индексов нет (T3, T8) | Phase 2 |
-| K-5 | Arch §4: `device_hash = HMAC(секрет‖неделя, IP‖UA)` — **сквозной между точками**. Spec FR-013: «без сквозного идентификатора между точками» | Берём Spec: `place_id` входит **в сообщение** HMAC (§1.2). Иначе одно устройство связывается между заведениями — ровно то, что FR-013 запрещает | `arch` — правка §4 |
-| K-6 | Spec FR-010: «любое значение, кроме ровно `paid`». Arch §4: `plan enum(free,point,network,agency)` | Значения `paid` в схеме нет. Берём канон Arch; fail-closed выражен **явным множеством** платных планов (§1.3) | `spec` |
+| **K-5** ⚠️ | Arch §4 (строка 232, **не исправлено**): `device_hash = HMAC(секрет‖неделя, IP‖UA)`. Spec FR-013: «без сквозного идентификатора между точками» | Берём Spec: `place_id` входит **в сообщение** HMAC (§1.2). **Это дефект, а не разночтение:** без `place_id` один телефон даёт одинаковый хэш в двух заведениях | `arch` — правка §4 **до первой миграции** |
+| ~~K-6~~ | ~~`plan = 'paid'` против `enum(free,point,network,agency)`~~ | **ЗАКРЫТО** каноном Arch. Здесь — явное множество `{point, network, agency}`, fail-closed для всего остального | — |
+| **K-7** | Таймауты названы дважды и по-разному: Spec NFR-SEC-004 — `connectionTimeoutMillis = 5000`, `statement_timeout = 5s`; выжимка `arch` — `2000` и `3000 ms` на гостевых трактах | Берём **меньшие** (`arch`): недоступность обязана становиться отказом раньше, а не позже. Но **два числа в двух документах разойдутся молча** — обязано остаться одно | `spec` + `arch` |
+| **K-8** | Кэш `/r/:slug`: Spec NFR-PERF-001 — TTL **300 c**, инвалидация ≤ 60 c; выжимка `arch` — TTL **60 c** плюс явная инвалидация | Механизм — **явная инвалидация**, TTL — страховка на случай её недоступности (§1.1). Тогда TTL обязан быть **≤ 60 c**, иначе при отказе канала требование «≤ 60 c» не выполняется. TTL 300 c его нарушает | `spec` — правка NFR-PERF-001 |
+| **K-9** | Имя поля брендинга: Arch §4 и §12 — `places.branding_required`; `Specification-GROWTH.md` §FR-GROWTH-003 — `badge_required` | Берём канон Arch: **`branding_required`**. Два имени одного поля — ровно то расхождение, которое канон §12 и заведён предотвращать | `spec` — правка `Specification-GROWTH.md` |
+| **K-10** | **Внутреннее** расхождение `Architecture.md`: §4 (строка 217) даёт `kind enum(scan, door_click)` + `platform NULL`, канон §12 — `enum(scan, public_door_click, private_door_click)` | Берём канон §12: смысл, спрятанный в `NULL`, — тихий дефект, ждущий читателя. `platform IS NOT NULL` **тогда и только тогда**, когда `kind='public_door_click'` | `arch` — привести §4 к §12 |
 
-**Схему меняет только K-5** (сообщение HMAC) и добавление `places.badge_required` (§1.3);
-остальное — тексты и маршрутизация.
-
----
+**Схему меняют два пункта:** K-5 (сообщение HMAC) и K-10 (значения enum). Остальное — тексты,
+имена и числа.
 
 ## 1. Гостевая поверхность — несущий инвариант (FR-005, FR-012, NFR-SEC-001…003)
 
@@ -52,8 +55,8 @@
 # headers(), cookies(), Date/now, гео-разбор, UA-разбор, random.
 function renderChoicePage(slug: string) -> Html:
   cached = LRU.get(slug)                    # ключ кэша — РОВНО slug, ничего больше
-  if cached is not null and not cached.expired: return cached.html   # TTL 60 c = NFR-PERF-001
-  place = selectPlace(slug)                 # SELECT id, slug, name, badge_required FROM places
+  if cached is not null and not cached.expired: return cached.html   # TTL — страховка, не механизм
+  place = selectPlace(slug)                 # SELECT id, slug, name, branding_required FROM places
   if place is null or place.archived_at is not null:
     return notFoundHtml()                   # 404 одинаков: несуществующий и чужой слаг неразличимы
   doors = []
@@ -69,8 +72,14 @@ function renderChoicePage(slug: string) -> Html:
   # Р1 «равновесно» (D-03): порядок — детерминированная перестановка ИЗ slug. Не случайная
   # (это был бы A/B), не хранимая (поля sort_order нет — NFR-SEC-002).
   doors = sortBy(doors, door -> sha256(slug + "|" + door.key))
-  html = template(place.name, doors, badge = place.badge_required)      # §1.3
-  LRU.put(slug, html, ttl = 60 seconds); return html
+  html = template(place.name, doors, branding = place.branding_required)   # §1.3
+  LRU.put(slug, html, ttl = CACHE_TTL); return html
+
+# Инвалидация — ЯВНАЯ, из владельческого тракта по внутреннему адресу (Arch §5.1): при правке
+# places(name, branding_required), правке platform_links и смене плана аккаунта. TTL — только
+# страховка на случай недоступности этого канала, и требование NFR-PERF-001 «≤ 60 c» держится
+# ИМЕННО ей, когда канал не сработал. Отсюда K-8: значение TTL обязано быть ≤ 60 c.
+function invalidateChoicePage(slug): LRU.delete(slug)
 
 # GET /r/:slug
 function handleChoicePage(req) -> Response:
@@ -117,17 +126,17 @@ function deviceHash(req: Request, place_id: UUID) -> Bytes16:
 сторону (PRD §2.5). Для ограничения частоты то же свойство означает общий счётчик у добросовестных
 соседей — поэтому порог берётся заведомо выше живого поведения (§2.1), а не «поплотнее».
 
-### 1.3 `badge_required` считает сервер — и не может ошибиться в опасную сторону
+### 1.3 `branding_required` считает сервер — и не может ошибиться в опасную сторону
 
 `app_render` не имеет прав ни на `accounts`, ни на `subscriptions` (Arch §3.1), поэтому тариф на
-гостевой странице не вычисляется — он **читается уже вычисленным** из `places.badge_required`.
+гостевой странице не вычисляется — он **читается уже вычисленным** из `places.branding_required`.
 
 ```
 # apps/web (роль app_owner): при регистрации, оплате, истечении периода, смене плана
-function recomputeBadgeRequired(place_id):
+function recomputeBrandingRequired(place_id):
   sub = getActiveSubscription(placeAccountId(place_id))      # null, если нет или период истёк
-  UPDATE places SET badge_required = badgeRequiredFor(planOf(place_id), sub) WHERE id = place_id
-function badgeRequiredFor(plan, sub) -> bool:
+  UPDATE places SET branding_required = brandingRequiredFor(planOf(place_id), sub) WHERE id = place_id
+function brandingRequiredFor(plan, sub) -> bool:
   PAID_PLANS = { "point", "network", "agency" }    # ЯВНОЕ множество, не «всё, что не free»
   if sub is null or sub.status != "active" or sub.current_period_end <= now(): return true
   return not PAID_PLANS.contains(plan)             # любое неопознанное значение → true
@@ -135,7 +144,7 @@ function badgeRequiredFor(plan, sub) -> bool:
 
 Три свойства, заслуженные проектом 01: колонка объявлена **`NOT NULL DEFAULT true`** — новая точка
 получает бренд-строку до того, как кто-либо что-либо вычислил
-([`fail-closed-defaults`](../../../.claude/rules/fail-closed-defaults.md)); `badgeRequiredFor` —
+([`fail-closed-defaults`](../../../.claude/rules/fail-closed-defaults.md)); `brandingRequiredFor` —
 **чистая функция**, поэтому проверяется списком мусорного входа (`null`, `''`, `'PAID'`, `' point'`,
 `0`, `true`, `{}`, `['point']`) одним тестом, а не ревью; снятие бренд-строки видно гостю **не
 позднее 60 c** через TTL кэша §1.1 — без канала «web → guest», которого в архитектуре нет.
@@ -170,21 +179,37 @@ function recordGuestEvent(req, kind: EventKind, place_id: UUID, platform: Platfo
 function handleDoorClick(req) -> Response:
   link = selectPlatformLink(req.path.slug, req.path.platform)   # ОБА аргумента из пути
   if link is null: return Response(status = 404)                # НЕ редирект «куда-нибудь»
-  recordGuestEvent(req, "door_click", link.place_id, req.path.platform)     # ДО редиректа
+  recordGuestEvent(req, "public_door_click", link.place_id, req.path.platform)  # ДО редиректа
   return Response(302, headers = { "Location": link.url, "Cache-Control": "no-store" })
 
 # GET /r/:slug/private  (apps/guest, app_render) — K-2
 function handlePrivateForm(req) -> Response:
   place = resolvePlace(req.path.slug)
   if place is null: return Response(status = 404)
-  recordGuestEvent(req, "door_click", place.id, null)   # platform IS NULL = приватная дверь;
-  return Response(renderPrivateForm(req.path.slug),     # отсюда берётся private_door_click
+  recordGuestEvent(req, "private_door_click", place.id, null)   # ОТДЕЛЬНОЕ значение enum,
+  return Response(renderPrivateForm(req.path.slug),             # а не platform IS NULL
                   headers = { "Cache-Control": "no-store" })
 ```
 
-**`platform IS NULL` — и есть различение дверей в метрике:** `public_door_click` =
-`door_click AND platform IS NOT NULL`, `private_door_click` = `door_click AND platform IS NULL`.
-Одно поле, две метрики, ноль новых сущностей.
+**Три условия, без которых отклонение ADR-004 перестаёт быть безопасным** (внесены `spec` в
+NFR-SEC-002; здесь они выражены кодом, а не обещанием). Роут, отдающий `3xx`, — это ровно та форма,
+которой определяется гейтинг; отличает его **только содержимое входа**, поэтому условия несущие:
+
+1. **`/go` — чистая функция пары (`slug`, `platform`).** Оба аргумента берутся из пути; `query`,
+   cookie и заголовки не читаются ни разу. Одинаковый `Location` любому запросившему.
+2. **`/go` не читает `private_feedback`.** Роль `app_render` — без `SELECT`; NFR-SEC-003
+   распространён на `/go` и `/r/:slug/private` наравне с `/r/:slug`.
+3. **Запись аналитики — «отправил и забыл».** Её отказ не меняет ни `Location`, ни код ответа: это
+   обеспечено сигнатурой `recordGuestEvent(...): void` и глушением `DbError` внутри неё (§1.4).
+   Обратное сделало бы аналитику **входом** в решение о переходе — то есть тем самым аргументом,
+   которого у функции быть не должно.
+
+**Различение дверей — отдельными значениями `guest_event_kind`, а не `platform IS NULL`.**
+Первая редакция этого документа кодировала приватную дверь как `door_click` с `platform IS NULL`;
+канон Arch §12 это отверг, и по верной причине: **смысл, спрятанный в `NULL`, — тихий дефект,
+ждущий читателя.** Значения взяты дословно из FR-012: `scan`, `public_door_click`,
+`private_door_click`. Инвариант схемы при этом сохраняется: `platform IS NOT NULL` **тогда и только
+тогда**, когда `kind = 'public_door_click'`, и это выражается CHECK-ограничением, а не соглашением.
 
 **Область действия T6 — только `/r/:slug`.** Виджет звёзд в приватной форме законен и полезен
 (FR-006: оценка здесь **выход** уже сделанного выбора, а не вход маршрутизации). Страж, применённый
@@ -200,24 +225,31 @@ function handlePrivateFeedback(req) -> Response:
   # ── ШАГ 1. Origin. Форма, которую мы отдаём, всегда заставляет браузер прислать Origin,
   #    поэтому его ОТСУТСТВИЕ — отказ, а не «старый клиент» (fail-closed).
   if req.header("Origin") != originOf(BASE_URL): return HTTP 403
-  # ── ШАГ 2. ЛИМИТ ДО ВСЕГО ОСТАЛЬНОГО и до чтения тела: ключ берётся из ЗАГОЛОВКОВ. Иначе
-  #    перебор мусорными телами бесплатен (NFR-SEC-004), а чтение тела — время, которым
-  #    управляет КЛИЕНТ.
-  if rateLimitConsume("private_device", deviceHashHeadersOnly(req), 10 min, 5) == EXCEEDED:
+  # ── ШАГ 2. ГРУБЫЙ лимит по одному адресу, ДО чтения тела. Нужен потому, что оба порога
+  #    Specification заданы «на точку», а `slug` лежит В ТЕЛЕ: без этого шага перебор мусорными
+  #    телами оплачивался бы нашим чтением, а чтение тела — время, которым управляет КЛИЕНТ.
+  #    Порог заведомо выше суммы точечных: он ловит не злоупотребление, а поток.
+  ip = extractClientIP(req)
+  if rateLimitConsume("private_ip_coarse", ip, 1 hour, 200) == EXCEEDED:
     return HTTP 429                        # без счётчика в теле — anti-enumeration
   # ── ШАГ 3. Чтение тела: жёсткий предел и таймаут, БЕЗ занятого соединения пула.
-  payload = parseJson(readBody(req, max_bytes = 16 KB, timeout = 5 s))   # → 413 / 408 / 400
-  # ── ШАГ 4. Резолв точки и лимит по точке.
+  payload = parseJson(readBody(req, max_bytes = 16 KB, timeout = 5 s))   # → 413 / 408 / 422
+  # ── ШАГ 4. Резолв точки и ОБА порога Specification — по-прежнему ДО валидации тела.
   place = selectPlaceBySlug(payload.slug)  # app_intake: SELECT places разрешён
   if place is null: return HTTP 404
-  if rateLimitConsume("private_place", place.id, 1 min, 30) == EXCEEDED: return HTTP 429
+  # 10 отправок с одного адреса в час НА ТОЧКУ. Порог намеренно с запасом: за одним операторским
+  # NAT сидят РАЗНЫЕ гости одной точки, и грубый ключ при насыщении бьёт по добросовестным.
+  if rateLimitConsume("private_ip_place", ip + "|" + place.id, 1 hour, 10) == EXCEEDED:
+    return HTTP 429
+  # 100 на точку в час суммарно — потолок, не зависящий от числа адресов.
+  if rateLimitConsume("private_place", place.id, 1 hour, 100) == EXCEEDED: return HTTP 429
   # ── ШАГ 5. Валидация: ПОСЛЕ лимита (иначе он не защищает), ДО транзакции.
   errors = []
   if not (10 <= len(payload.body) <= 2000): errors.append("body: 10-2000 символов")     # K-3
   if payload.rating is present and (not isInteger(payload.rating) or not (1 <= payload.rating <= 5)):
     errors.append("rating: целое 1-5 либо отсутствует")   # неопознанное → ОТКАЗ, не подстановка
   if payload.contact is present and len(payload.contact) > 200: errors.append("contact: до 200")
-  if errors is not empty: return HTTP 400 { errors }
+  if errors is not empty: return HTTP 422 { errors }
   # ПРИЁМ НЕ САНИРУЕТ ВВОД (FR-006): текст сохраняется побайтово. Экранирование — при рендере
   # владельцу. Санитайзер на приёме уничтожает улику необратимо.
   # ── ШАГ 6. Идентификатор порождает ПРИЛОЖЕНИЕ. У app_intake нет SELECT на private_feedback,
@@ -231,6 +263,10 @@ function handlePrivateFeedback(req) -> Response:
     INSERT INTO notifications(private_feedback_id, channel, status, attempts)
       SELECT pf_id, cb.channel, 'pending', 0 FROM channel_bindings cb
        WHERE cb.place_id = place.id AND cb.bound_at IS NOT NULL
+      ON CONFLICT (private_feedback_id, channel) DO NOTHING   # uq_notifications_feedback_channel:
+      # идемпотентность ДОСТАВКИ. Здесь она недостижима иначе — повторный прогон этой транзакции
+      # (ретрай на уровне сервера) не должен порождать второе сообщение владельцу по одному
+      # обращению. rowcount не читается: у app_intake нет SELECT, и знать его не требуется.
     # Канал не подключён → строк 0. Сообщение сохранено, момент ценности НЕ засчитывается
     # (FR-003, FR-007): владелец увидит его в кабинете и подсказку подключить мессенджер.
   # ── ШАГ 8. Ни URL, ни редиректа, ни «а теперь оставьте отзыв на картах» — последнее было бы
@@ -266,8 +302,8 @@ function rateLimitConsume(scope, key, window, limit) -> ALLOWED | EXCEEDED:
 
 **Двойная отправка формы.** Дедупликации на вставке нет: `ON CONFLICT` потребовал бы уникальности
 по `(place_id, device_hash, …)`, то есть хранения признака устройства **рядом с текстом сообщения**
-— против NFR-DATA-001. Вместо этого: POST-Redirect-GET (кнопка «назад» не переотправляет), лимит
-`private_device` 5/10 мин ограничивает ущерб сверху, а в кабинете сообщения одной точки с
+— против NFR-DATA-001. Вместо этого: POST-Redirect-GET (кнопка «назад» не переотправляет), порог
+`private_ip_place` 10/час ограничивает ущерб сверху, а в кабинете сообщения одной точки с
 совпадающим текстом в пределах 60 c показываются одной карточкой — группировка на **чтении**, где
 права на `SELECT` есть. `[GAP: если владельцы сообщат о дублях — вернуться к UNIQUE и явно
 взвесить его против NFR-DATA-001]`
@@ -291,7 +327,7 @@ function deliverLoop():
       pf   = selectPrivateFeedback(n.private_feedback_id)     # app_notify: SELECT разрешён
       bind = selectBinding(pf.place_id, n.channel)
       try:
-        sendToMessenger(n.channel, bind.chat_id, formatMessage(pf), timeout = 10 s)
+        sendToMessenger(n.channel, bind.chat_id, formatMessage(pf), timeout = 5 s)
         transaction: UPDATE notifications SET status='sent', sent_at=now() WHERE id = n.id
       catch MessengerError as e:
         if n.attempts >= 6:
@@ -312,7 +348,7 @@ function deliverLoop():
 строке, которую он и так обновляет. **Задержка = `sent_at − created_at`**; p95 ≤ 30 c (Arch §7.1),
 потолок FR-007 — 60 c. «В ту же смену» без числа непроверяемо.
 
-Три несущих свойства цикла: **`timeout = 10 s` задан явно** (вызов без таймаута ждёт бесконечно, а
+Три несущих свойства цикла: **`timeout = 5 s` задан явно** (вызов без таймаута ждёт бесконечно, а
 недоступность внешнего сервиса обязана быть отказом); **`status='sending'` ставится ДО вызова**
 (иначе перезапуск воркера в момент отправки даёт владельцу второе сообщение по той же строке);
 **исчерпание попыток видно** — `failed` + `audit_log` + явная ошибка канала в кабинете, а не
@@ -359,7 +395,8 @@ Telegram/MAX — каналы ВЛАДЕЛЬЦА, не гостя. В MVP `deliv
 | Двойной клик по двери площадки | Не разрешается и не должен: два `door_click` — две записи. Доля считается от **сканов**, а не от уникальных кликов | Дедупликация потребовала бы `SELECT` на `guest_events`, которого у рендера нет по замыслу |
 | Повторная доставка вебхука | `UNIQUE(webhook_events.event_id)` + `ON CONFLICT DO NOTHING` **после** подлинности ([OWNER](Pseudocode-OWNER.md) §5.1) | Заявка раньше подлинности делает подделку первой записью, и настоящее уведомление отбрасывается как дубль |
 | Два воркера берут одну `notifications` | `FOR UPDATE SKIP LOCKED` + `status='sending'` до вызова (§3) | Без этого перезапуск воркера шлёт владельцу второе сообщение по той же строке |
-| Оплата и рендер расходятся по `badge_required` | TTL кэша 60 c (§1.1) — NFR-PERF-001 исполнен без канала «web → guest» | Явная инвалидация между контейнерами потребовала бы связи, которой в архитектуре нет |
+| Оплата и рендер расходятся по `branding_required` | Явная инвалидация из `apps/web` по внутреннему адресу **плюс** TTL как страховка (§1.1) | Одна явная инвалидация без TTL молча растянула бы расхождение на всё время недоступности канала |
+| Инвалидация пришла раньше, чем оплата закоммичена | Инвалидация вызывается **после** COMMIT транзакции оплаты, не внутри | Вызов внутри транзакции сбросил бы кэш на ещё не видимое другим соединениям состояние — и следующий скан заново закэшировал бы старое |
 
 ---
 

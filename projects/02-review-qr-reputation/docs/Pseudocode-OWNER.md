@@ -21,7 +21,7 @@ function createPlace(account_id, slug, name, address) -> Place | Error:
   if not matches(slug, "^[a-z0-9-]{3,40}$"): return Error("slug: 3-40, a-z 0-9 дефис")
   if slug in RESERVED_SLUGS: return Error("slug занят")   # api, go, r, admin, static, health
   try:
-    INSERT INTO places(id, account_id, slug, name, address, badge_required, created_at)
+    INSERT INTO places(id, account_id, slug, name, address, branding_required, created_at)
       VALUES (uuidV4(), account_id, slug, name, address, TRUE, now())     # badge TRUE по умолчанию
   catch UniqueViolation on places_slug_key: return Error("slug занят")
   # Проверка занятости в интерфейсе (FR-001) — ПОДСКАЗКА, а не решение: между её ответом и
@@ -64,8 +64,8 @@ function savePlatformLinks(place_id, inputs, actor):
     # НИ ОДНА ссылка не изменяется: частичное сохранение оставило бы точку в состоянии,
     # о котором владелец не знает.
     emitAnalytics("onboarding_links_failed", { place_id, reasons: codesOf(results) })
-    return HTTP 400 { errors }
-  if count(results) < 1: return HTTP 400 { error: "минимум одна площадка обязательна" }
+    return HTTP 422 { errors }
+  if count(results) < 1: return HTTP 422 { error: "минимум одна площадка обязательна" }
   transaction:
     for (p, r) in results:
       INSERT INTO platform_links(place_id, platform, url, link_kind) VALUES (place_id, p, r.url, r.link_kind)
@@ -92,7 +92,7 @@ function onBotStart(channel, chat_id, token):
   b = findBindingByTokenHash(hash(token))
   if b is null or b.bound_at is not null: return         # одноразовость: повтор не связывает
   UPDATE channel_bindings SET chat_id = chat_id WHERE id = b.id
-  if not sendToMessenger(channel, chat_id, "Канал подключён.", timeout = 10 s): return
+  if not sendToMessenger(channel, chat_id, "Канал подключён.", timeout = 5 s): return
   UPDATE channel_bindings SET bound_at = now() WHERE id = b.id   # ПОДТВЕРЖДАЕТ ДОСТАВЛЕННОЕ
   emitAnalytics("onboarding_channel_bound", { place_id: b.place_id })   # СООБЩЕНИЕ (FR-003),
                                                                         # а не запись в БД
@@ -109,7 +109,7 @@ function buildPrintLayout(place, template) -> Pdf:
                                                             # СВОИМ телефоном на СВОЕЙ сети
   # NFR-LEGAL-001: ни подсказок содержания отзыва, ни упоминания вознаграждения,
   # ни блока «свободный Wi-Fi + QR отзыва» одним куском.
-  return compose(qr, place.name, warn, badge = place.badge_required ? SERVICE_LOGO : null)
+  return compose(qr, place.name, warn, badge = place.branding_required ? SERVICE_LOGO : null)
 ```
 
 ---
@@ -130,20 +130,28 @@ function onPaymentWebhook(req) -> Response:
   #    не присылает, значит держать ВИДИМОСТЬ защиты — она хуже отсутствия, потому что
   #    отсутствие видно, а видимость нет (урок проекта 01, коммит b1ccb57).
   #    Вызов ВНЕ транзакции: он не должен удерживать соединение пула.
-  remote = fetchRemotePayment(event.object.id, timeout = 10 s)   # недоступность БРОСАЕТ
+  remote = fetchRemotePayment(event.object.id, timeout = 5 s)    # недоступность БРОСАЕТ
   if remote.status != "succeeded": return HTTP 200               # ProviderUnavailable
   # ── ШАГ 3. Заявка на event_id и применение тарифа — ОДНА транзакция, ПОСЛЕ подлинности.
   try:
     transaction:
+      # event_id СОБИРАЕТСЯ: у ЮKassa отдельного идентификатора события НЕТ (канон `arch`).
+      # Ключ — '<тип события>:<id объекта>', первичный ключ pk_webhook_events(provider, event_id).
+      # Голый id объекта схлопнул бы 'succeeded' и 'canceled' по одному платежу в один ключ:
+      # второе уведомление отбросилось бы как дубль первого.
+      event_key = event.event + ":" + event.object.id
       INSERT INTO webhook_events(provider, event_id, payload, processed_at)
-        VALUES ('yookassa', event.id, event, now()) ON CONFLICT (event_id) DO NOTHING
+        VALUES ('yookassa', event_key, event, now()) ON CONFLICT (provider, event_id) DO NOTHING
       if rowcount == 0: return HTTP 200            # уже обработан — тихий, штатный no-op
       cs = SELECT * FROM checkout_sessions WHERE provider_session_id = remote.id
       if cs is null: return HTTP 200
       UPDATE checkout_sessions SET status = 'completed' WHERE id = cs.id
       upsertSubscription(cs.account_id, cs.plan, remote.paid_until, status = 'active')
-      accrueOnPayment(cs.account_id, event.id)     # [GROWTH](Pseudocode-GROWTH.md) §2, та же транзакция
-      for place in placesOf(cs.account_id): recomputeBadgeRequired(place.id)   # main §1.3, ≤ 60 c
+      accrueOnPayment(cs.account_id, event_key)     # [GROWTH](Pseudocode-GROWTH.md) §2, та же транзакция
+      for place in placesOf(cs.account_id): recomputeBrandingRequired(place.id)   # main §1.3
+  # Инвалидация кэша гостевой страницы — ПОСЛЕ коммита, а не внутри транзакции: сброс изнутри
+  # обнулил бы кэш на ещё не видимое состояние, и следующий скан закэшировал бы старое.
+  for place in placesOf(cs.account_id): invalidateChoicePage(place.slug)          # main §1.1, ≤ 60 c
   catch ProviderUnavailable:
     return HTTP 500        # РЕТРАИБЕЛЬНЫЙ отказ, транзакция ОТКАЧЕНА, event_id СВОБОДЕН
   return HTTP 200
@@ -173,8 +181,8 @@ function placeDashboard(place_id, actor) -> View:          # app_owner, RLS по
     return View(empty = "данных нет")   # НЕ «0/0» и НЕ полоса прогресса на нуле: отсутствие
                                         # данных выдавать за измеренный ноль запрещено
   return View(scans,
-    public_share  = countGuestEvents(place_id, "door_click", platform_null = false) / scans,
-    private_share = countGuestEvents(place_id, "door_click", platform_null = true)  / scans,
+    public_share  = countGuestEvents(place_id, "public_door_click") / scans,
+    private_share = countGuestEvents(place_id, "private_door_click") / scans,
     messages = countPrivateFeedback(place_id),
     # ПРОДУКТ НЕ УТВЕРЖДАЕТ, ЧТО ОТЗЫВ ОПУБЛИКОВАН: API отзывов у площадок нет — система знает
     # о переходе и не знает его судьбы. Формулировка «гость перешёл на площадку» плюс пояснение.
@@ -208,3 +216,64 @@ function assertBaseUrlConfigured():
 Сообщение объясняет **цену**, а не факт: «BASE_URL не задан» читается как придирка, и защиту снимут.
 
 ---
+
+---
+
+## 6. Требования без алгоритма — чек-листы
+
+`spec` назвал их прямо: у этих требований нет логики, которую можно выразить шагами, и попытка
+написать её породила бы ветвление там, где его быть не должно.
+
+**FR-004 (сверх сборки `https://<base>/r/<slug>` и отказа при неабсолютном `BASE_URL`, §4.3):**
+
+- [ ] макеты по умолчанию — уносимые носители: подвал счёта, оборот визитки, наклейка на упаковке
+- [ ] тейбл-тент доступен и несёт предупреждение про гостевой Wi-Fi и общее устройство
+- [ ] макета «общий планшет / стойка со сканом» **не существует** — не «не рекомендуется»
+- [ ] на плане Free макет несёт логотип сервиса и короткий домен (FR-GROWTH-003)
+
+**FR-010 (сверх `brandingRequiredFor`, §1.3 основного файла):**
+
+- [ ] цены видны **до** регистрации, формы захвата лида нет; первый CTA — «Начать бесплатно»
+- [ ] «Сеть» и «Агентство» показаны анонсом и **не оформляются** в MVP
+
+**NFR-LEGAL-001 — две нормы площадок, подтверждённые первоисточником.** Единственные внешние
+ограничения во всём досье, и ни одно не про гейтинг:
+
+- [ ] **ни подсказок содержания отзыва** — ни на `/r/:slug`, ни в печатном макете, ни в тексте
+      push, ни в письмах
+- [ ] **никаких стимулов за отзыв вообще** — берётся строжайшее из правил площадок
+- [ ] реферальное вознаграждение начисляется **только за приведённое заведение** и структурно не
+      может зависеть от отзывов: пути начисления, принимающего оценку, в системе нет
+- [ ] в продукте, маркетинге и требованиях **не встречается** ни «gating запрещён законом», ни
+      «Яндекс запрещает фильтрацию», ни «за это блокируют карточку», ни упоминания штрафа FTC.
+      Каждое опровергается за пять минут, и один пойманный неверный довод обнуляет доверие ко
+      всем остальным — **включая верные**
+
+**NFR-ARCH-001 — архитектурные ограничения.** Проверяется скриптами, не глазами:
+
+- [ ] монорепо, Docker Compose, VPS, **свой Postgres в контейнере**; managed BaaS запрещён
+- [ ] у БД **нет публикации на хост**, кроме петли — `node .claude/hooks/check-ports.cjs .`
+- [ ] хостовые порты только как `${VAR:-default}` — `bash scripts/check-port-conflicts.sh .`
+- [ ] `name:` объявлен в **каждом** compose-файле, включая тестовый: без него соседний стек молча
+      вытесняет этот, а диагноз уводит в сторону
+- [ ] образы с явными тегами; `restart: unless-stopped` у всех сервисов; `depends_on` с
+      `condition: service_healthy`, а не `service_started`
+
+**NFR-DATA-001 — персональные данные гостя:**
+
+- [ ] `contact` хранится только при явном согласии
+- [ ] `contact` не попадает **ни в один** агрегат: ни в карточку смены (FR-GROWTH-001), ни в
+      недельную сводку, ни в дашборд
+- [ ] сырые IP и User-Agent не сохраняются нигде — только `device_hash` с недельной солью
+- [ ] ретеншн `guest_events` — **90 дней**
+- [ ] данные Яндекс API ППО не сохраняются (ограничение лицензии)
+
+**NFR-A11Y-001 — доступность гостевой страницы:**
+
+- [ ] контраст не ниже AA; семантическая разметка; обе двери достижимы табом
+- [ ] страница полностью работоспособна **с отключённым JS** — это же условие пустого списка
+      нормализаций T4, поэтому пункт не косметический
+
+**NFR-UX-001 — равновесность.** Алгоритм здесь не продуктовый, а **тестовый**: собрать
+`getComputedStyle` всех строк-дверей и сравнить множества. Развёрнут в
+[`Refinement.md`](Refinement.md) §1, страж T5.3.
