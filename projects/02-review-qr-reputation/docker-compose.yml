@@ -1,0 +1,89 @@
+# reviewqr — стек разработки.
+#
+# ПОРТЫ. Хостовые номера — ТОЛЬКО через ${VAR:-default}, никогда числом: на этой машине
+# заняты 80, 443, 5432, 8080 и ещё десяток чужими контейнерами, а `docker compose up`
+# называет ОДИН конфликт за прогон, оставляя стек поднятым наполовину.
+# Перед первым запуском: bash scripts/check-port-conflicts.sh .
+#
+# ПРАВИЛО №0. У postgres НЕТ `ports:` вовсе. Соседи по сети compose ходят по имени
+# `postgres:5432` без всякой публикации. Тестовый Postgres публикуется в compose.test.yml
+# и только на петлю. Заслужено компрометацией машины 2026-08-26.
+
+name: reviewqr
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-reviewqr}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?задайте POSTGRES_PASSWORD=$(openssl rand -hex 24)}
+      POSTGRES_DB: ${POSTGRES_DB:-reviewqr}
+    # ports: НЕТ И НЕ БУДЕТ — см. шапку
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  guest:
+    build: { context: ., dockerfile: apps/guest/Dockerfile }
+    environment:
+      - DATABASE_URL_RENDER          # роль app_render: SELECT колонок places/platform_links, INSERT guest_events
+      - BASE_URL
+      - PGPOOL_MAX
+      - PGPOOL_CONNECTION_TIMEOUT_MS
+    expose: ["3000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  intake:
+    build: { context: ., dockerfile: services/intake/Dockerfile }
+    environment:
+      - DATABASE_URL_INTAKE          # роль app_intake
+      - PGPOOL_MAX
+      - PGPOOL_CONNECTION_TIMEOUT_MS
+    expose: ["3000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  notifier:
+    build: { context: ., dockerfile: services/notifier/Dockerfile }
+    environment:
+      - DATABASE_URL_NOTIFY          # роль app_notify
+      - TELEGRAM_BOT_TOKEN
+      - MAX_BOT_TOKEN
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    environment:
+      - DATABASE_URL_OWNER           # роль app_owner, под RLS
+      - BASE_URL
+      - SESSION_SECRET
+      - YOOKASSA_SHOP_ID
+      - YOOKASSA_SECRET_KEY
+    expose: ["3000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.8-alpine
+    ports:
+      - "${HTTP_PORT:-3100}:80"
+      - "${HTTPS_PORT:-3101}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+    depends_on: [guest, web, intake]
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddydata:
