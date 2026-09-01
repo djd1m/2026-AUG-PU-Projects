@@ -69,6 +69,14 @@ Generate: src/<files>, tests/<files>, package.json, README.md
 Commits: one per logical group.
 ```
 
+Before dispatch, allocate one `RUN_ID`, a unique `WORK_UNIT_ID`, and an absolute `TRACE_PATH` for
+each package. Require each Task to write a substantive body ending in `Status: completed` or
+`Status: failed` to `TRACE_PATH` before its one-line pointer. Before Phase 3 integration, verify every
+path is a regular non-symlink file, non-whitespace, post-launch, and terminal. Narrative output or
+silence is not a receipt. Name missing, stale, partial, unreadable, duplicate, failed, dead-PID, or
+probe-error packages and refuse integration/completion unless every required receipt is valid and
+completed. See `.claude/rules/swarm-file-evidence.md`.
+
 ### Phase 3: Integration (sequential)
 
 1. Verify cross-package imports

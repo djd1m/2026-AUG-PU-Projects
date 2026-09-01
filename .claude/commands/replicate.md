@@ -329,6 +329,15 @@ Read the skill: `.claude/skills/requirements-validator/SKILL.md`
 The sixth lens is the only one that looks OUTSIDE the documents. The other five compare our own
 output with our own output, which cannot discover that a service does not do what we assumed.
 
+**Positive file receipt (required).** Before dispatch, allocate one `RUN_ID` and give every
+validation lens a unique `WORK_UNIT_ID` and absolute `TRACE_PATH`. Each validator must write a
+substantive report fragment ending in `Status: completed` or `Status: failed` to `TRACE_PATH` before
+its one-line pointer. Before AGGREGATE, verify every path is a regular non-symlink file,
+non-whitespace, post-launch, and terminal. Narrative output or silence is not a receipt. Name
+missing, stale, partial, unreadable, duplicate, failed, dead-PID, or probe-error lenses and refuse
+aggregation/completion unless every required receipt is valid and completed. See
+`.claude/rules/swarm-file-evidence.md`.
+
 **Process (iterative, max 3 iterations):**
 
 ```
@@ -475,7 +484,7 @@ Read the skill: `.claude/skills/cc-toolkit-generator-enhanced/SKILL.md`
 - **Pre-shipped by `npx p-replicator init` — do NOT overwrite or regenerate:**
   - All 10 skills in `.claude/skills/`
   - All 11 commands: `/replicate`, `/harvest`, `/start`, `/plan`, `/feature`, `/go`, `/run`, `/next`, `/myinsights`, `/docs`, `/deploy`
-  - All 6 rules: `replicate-pipeline`, `skill-interface-protocol`, `git-workflow`, `insights-capture`, `feature-lifecycle`, `docker-ports`
+  - All 9 rules: `cost-of-detection-ladder`, `replicate-pipeline`, `skill-interface-protocol`, `git-workflow`, `insights-capture`, `feature-lifecycle`, `docker-ports`, `swarm-file-evidence`, `honest-configuration`
   - All 4 pipeline agents: `replicate-coordinator`, `product-discoverer`, `doc-validator`, `harvest-coordinator`
   - `.claude/settings.json` + cross-platform Node hook scripts in `.claude/hooks/`
 - Phase 3 generates ONLY project-specific artifacts derived from SPARC docs (see below).

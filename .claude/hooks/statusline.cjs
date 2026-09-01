@@ -244,8 +244,8 @@ function parseExpectedToolkit() {
     skillsExpected: 10,
     commandsExpected: 11,
     agentsExpected: 4,    // pre-shipped only (project agents are extra)
-    rulesExpected: 6,     // pre-shipped only (project rules are extra)
-    hooksExpected: 9,     // 4 v1.4.1 hooks + statusline + state-update + 3 deliberate checks
+    rulesExpected: 9,     // pre-shipped only (project rules are extra)
+    hooksExpected: 10,    // 4 event hooks + statusline + state-update + writer + 3 deliberate checks
   };
 }
 

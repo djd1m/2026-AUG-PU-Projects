@@ -154,8 +154,10 @@ are project-agnostic and can be enhanced (read by Phase 3) but never recreated.
 **Agents (4):** `replicate-coordinator`, `product-discoverer`, `doc-validator`,
 `harvest-coordinator`
 
-**Rules (6):** `replicate-pipeline`, `skill-interface-protocol`, `git-workflow`,
-`insights-capture`, `feature-lifecycle`, `docker-ports`
+**Rules (9):** `replicate-pipeline`, `skill-interface-protocol`, `git-workflow`,
+`insights-capture`, `feature-lifecycle`, `docker-ports`,
+[`cost-of-detection-ladder`](cost-of-detection-ladder.md), `swarm-file-evidence`,
+`honest-configuration`
 
 **Hooks (8 files in `.claude/hooks/`, cross-platform Node).** Only four are wired to an
 event in `.claude/settings.json`; the rest are utilities you invoke deliberately, and the

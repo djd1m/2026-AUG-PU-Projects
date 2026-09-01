@@ -1,6 +1,6 @@
 {
-  "version": "1.10.3",
-  "installedAt": "2026-08-29T12:45:36.806Z",
+  "version": "1.12.0",
+  "installedAt": "2026-09-01T14:15:40.388Z",
   "components": [
     "skills",
     "commands",
@@ -34,12 +34,16 @@
     ".claude/hooks/session-insights.cjs",
     ".claude/hooks/state-update.cjs",
     ".claude/hooks/statusline.cjs",
+    ".claude/hooks/write-insight.cjs",
+    ".claude/rules/cost-of-detection-ladder.md",
     ".claude/rules/docker-ports.md",
     ".claude/rules/feature-lifecycle.md",
     ".claude/rules/git-workflow.md",
+    ".claude/rules/honest-configuration.md",
     ".claude/rules/insights-capture.md",
     ".claude/rules/replicate-pipeline.md",
     ".claude/rules/skill-interface-protocol.md",
+    ".claude/rules/swarm-file-evidence.md",
     ".claude/settings.json",
     ".claude/skills/brutal-honesty-review/README.md",
     ".claude/skills/brutal-honesty-review/SKILL.md",
@@ -152,13 +156,25 @@
   "shippedDefaults": {
     "settings.json": {
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
-      "_comment": "Default hooks + statusline shipped by @dzhechkov/p-replicator init. Cross-platform Node scripts (no bash dependencies). Auto-commits roadmap/insights/plans on Stop, injects relevant insights on SessionStart. Statusline displays pipeline+roadmap+toolkit dashboard above the prompt. Project-specific hooks (DDD, fitness functions, etc.) are merged in by /replicate Phase 3.",
+      "_comment": "Default hooks + statusline shipped by @dzhechkov/p-replicator init. Cross-platform Node scripts (no bash dependencies). Auto-commits roadmap/insights/plans on Stop, keeps missing-carrier visibility on SessionStart, and selects insights on UserPromptSubmit. Statusline displays pipeline+roadmap+toolkit dashboard above the prompt. Project-specific hooks (DDD, fitness functions, etc.) are merged in by /replicate Phase 3.",
       "statusLine": {
         "type": "command",
         "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/statusline.cjs\""
       },
       "hooks": {
         "SessionStart": [
+          {
+            "matcher": "*",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-insights.cjs\"",
+                "timeout": 5
+              }
+            ]
+          }
+        ],
+        "UserPromptSubmit": [
           {
             "matcher": "*",
             "hooks": [

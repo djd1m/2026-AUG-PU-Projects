@@ -39,6 +39,18 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-insights.cjs\"",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   },
   "env": {
