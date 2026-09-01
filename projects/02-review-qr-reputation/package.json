@@ -10,7 +10,8 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "guards": "bash scripts/check-db-grants.sh"
+    "guards": "bash scripts/check-db-grants.sh",
+    "migrate": "tsx packages/db/src/migrate.ts"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
