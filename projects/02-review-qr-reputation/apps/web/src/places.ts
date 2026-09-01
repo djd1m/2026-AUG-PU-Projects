@@ -3,8 +3,12 @@
 
 import type { PoolClient } from 'pg';
 import { withAccount } from './db.js';
+import { slugCandidate } from './slug.js';
 
-export const SLUG_RE = /^[a-z0-9-]{3,40}$/;
+// Финальная страховка ПОСЛЕ генератора: 3–40, края без дефиса. Первая правка этого
+// regex сама содержала дефект (пропускала두 символа) — необязательная средняя группа.
+// Средняя часть обязательна: минимум 3 символа гарантирован структурой.
+export const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;
 
 export type Platform = 'yandex_maps' | 'twogis';
 
@@ -34,22 +38,34 @@ export interface PlaceSummary {
   feedback_count: number; scan_count: number;
 }
 
-export async function createPlace(accountId: string, slug: string, name: string):
-  Promise<{ ok: true; id: string } | { ok: false; error: string }> {
-  if (!SLUG_RE.test(slug)) return { ok: false, error: 'адрес: строчные латинские, цифры и дефис, 3–40' };
+export async function createPlace(accountId: string, name: string):
+  Promise<{ ok: true; id: string; slug: string } | { ok: false; error: string }> {
   if (!name.trim() || name.length > 200) return { ok: false, error: 'название: 1–200 символов' };
   return withAccount(accountId, async (c) => {
-    // Занятость — ограничением БД, не проверкой перед вставкой: параллельные создания
-    // одного слага иначе прошли бы оба.
-    try {
-      const { rows } = await c.query<{ id: string }>(
-        'insert into places (account_id, slug, name) values ($1,$2,$3) returning id',
-        [accountId, slug, name.trim()]);
-      return { ok: true as const, id: rows[0]!.id };
-    } catch (e) {
-      if ((e as { code?: string }).code === '23505') return { ok: false as const, error: 'этот адрес занят' };
-      throw e;
+    // Адрес генерируется из названия; КОЛЛИЗИЯ РАЗРЕШАЕТСЯ МОЛЧА случайным хвостом —
+    // «занято» не показывается никогда: гость сканирует, а не набирает, и красота
+    // адреса не стоит отказа в лицо новичку. Занятость ловится ограничением БД,
+    // а не проверкой перед вставкой: параллельные создания иначе прошли бы оба.
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const slug = slugCandidate(name, attempt > 0);
+      if (!SLUG_RE.test(slug)) continue;
+      // SAVEPOINT НА КАЖДУЮ ПОПЫТКУ. Ошибка ограничения отравляет транзакцию целиком:
+      // без отката к точке сохранения вторая попытка падает с «current transaction is
+      // aborted» — цикл повторов внутри одной транзакции без savepoint не работает
+      // в принципе. Найдено прогоном.
+      await c.query('savepoint create_place');
+      try {
+        const { rows } = await c.query<{ id: string }>(
+          'insert into places (account_id, slug, name) values ($1,$2,$3) returning id',
+          [accountId, slug, name.trim()]);
+        return { ok: true as const, id: rows[0]!.id, slug };
+      } catch (e) {
+        await c.query('rollback to savepoint create_place');
+        if ((e as { code?: string }).code === '23505') continue;   // хвост в следующей попытке
+        throw e;
+      }
     }
+    return { ok: false as const, error: 'не удалось подобрать адрес — попробуйте ещё раз' };
   });
 }
 

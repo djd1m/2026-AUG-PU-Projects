@@ -113,8 +113,9 @@ ${list || '<p class="lead">Точек пока нет — создайте пе�
 <form method="post" action="/places">
   <label class="lbl" for="name">Название</label>
   <input class="inp" id="name" name="name" required maxlength="200" placeholder="Кофейня «Артель»">
-  <label class="lbl" for="slug">Адрес страницы (латиницей)</label>
-  <input class="inp" id="slug" name="slug" required pattern="[a-z0-9-]{3,40}" placeholder="artel">
+  <p style="margin:8px 0 0;font-size:13px;color:var(--muted)">Адрес страницы для QR соберётся
+  из названия сам — например, «Кофейня «Артель»» получит
+  <span class="mono">/r/kofeynya-artel</span>. Он будет виден сразу после создания.</p>
   <button class="btn" type="submit">Создать</button>
 </form>
 </section>`);

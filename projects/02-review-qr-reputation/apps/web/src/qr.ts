@@ -11,7 +11,10 @@ export async function qrSvg(url: string): Promise<string> {
   return QRCode.toString(url, {
     type: 'svg',
     errorCorrectionLevel: 'M',   // выдерживает потёртость наклейки
-    margin: 2,
+    // Тихая зона — 4 модуля, КАК ТРЕБУЕТ СТАНДАРТ, а не 2 «для красоты». Урезанная зона
+    // портит сканируемость с расстояния и на мятой бумаге — то есть ровно на носителях,
+    // для которых макеты и печатаются. Найдено ревью агента slug-why.
+    margin: 4,
     color: { dark: '#00132e', light: '#ffffff' },
   });
 }

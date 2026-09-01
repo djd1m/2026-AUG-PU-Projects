@@ -46,11 +46,11 @@ describe('полный круг владельца через HTTP', () => {
   it('регистрация → кабинет → точка → ссылка → страница обращений', async () => {
     const o = await registerOwner();
     const slug = uniq('pl');
-    expect((await post('/places', { slug, name: 'Моя точка' }, o.cookie)).status).toBe(303);
+    expect((await post('/places', { name: `Моя точка ${slug}` }, o.cookie)).status).toBe(303);
 
     const dash = await (await fetch(`${base}/dashboard`, { headers: { cookie: o.cookie } })).text();
     expect(dash).toContain('Моя точка');
-    expect(dash).toContain(`/r/${slug}`);
+    expect(dash).toMatch(/\/r\/[a-z0-9-]+/);
 
     const placeId = dash.match(/\/places\/([0-9a-f-]{36})/)?.[1] ?? '';
     expect(placeId).toBeTruthy();
@@ -72,7 +72,7 @@ describe('полный круг владельца через HTTP', () => {
 describe('изоляция арендаторов — через HTTP', () => {
   it('владелец A не открывает страницу точки владельца B', async () => {
     const a = await registerOwner(); const b = await registerOwner();
-    await post('/places', { slug: uniq('pb'), name: 'Точка B' }, b.cookie);
+    await post('/places', { name: `Точка B ${uniq('pb')}` }, b.cookie);
     const dashB = await (await fetch(`${base}/dashboard`, { headers: { cookie: b.cookie } })).text();
     const placeB = dashB.match(/\/places\/([0-9a-f-]{36})/)?.[1] ?? '';
     const r = await fetch(`${base}/places/${placeB}`, { headers: { cookie: a.cookie } });
@@ -84,13 +84,13 @@ describe('изоляция арендаторов — через HTTP', () => {
 describe('защита форм: Origin, fail-closed', () => {
   it('POST с чужим Origin отклоняется', async () => {
     const o = await registerOwner();
-    const r = await post('/places', { slug: uniq('x'), name: 'X' }, o.cookie, 'http://evil.test');
+    const r = await post('/places', { name: uniq('x') }, o.cookie, 'http://evil.test');
     expect(r.status).toBe(403);
   });
 
   it('POST БЕЗ Origin отклоняется — отсутствие не «старый клиент»', async () => {
     const o = await registerOwner();
-    const r = await post('/places', { slug: uniq('x'), name: 'X' }, o.cookie, '');
+    const r = await post('/places', { name: uniq('x') }, o.cookie, '');
     expect(r.status).toBe(403);
   });
 
@@ -115,7 +115,7 @@ describe('QR и печатные макеты', () => {
   async function qrPageOf(): Promise<string> {
     const o = await registerOwner();
     const slug = uniq('qr');
-    await post('/places', { slug, name: 'QR-точка' }, o.cookie);
+    await post('/places', { name: `QR точка ${slug}` }, o.cookie);
     const dash = await (await fetch(`${base}/dashboard`, { headers: { cookie: o.cookie } })).text();
     const placeId = dash.match(/\/places\/([0-9a-f-]{36})\/qr/)?.[1] ?? '';
     return (await fetch(`${base}/places/${placeId}/qr`, { headers: { cookie: o.cookie } })).text();
@@ -152,7 +152,7 @@ describe('QR и печатные макеты', () => {
 
   it('чужой QR не открывается', async () => {
     const a = await registerOwner(); const b = await registerOwner();
-    await post('/places', { slug: uniq('qb'), name: 'B' }, b.cookie);
+    await post('/places', { name: `B ${uniq('qb')}` }, b.cookie);
     const dashB = await (await fetch(`${base}/dashboard`, { headers: { cookie: b.cookie } })).text();
     const placeB = dashB.match(/\/places\/([0-9a-f-]{36})\/qr/)?.[1] ?? '';
     const r = await fetch(`${base}/places/${placeB}/qr`, { headers: { cookie: a.cookie } });

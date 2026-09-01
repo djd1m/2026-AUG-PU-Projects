@@ -65,14 +65,14 @@ describe('регистрация и вход', () => {
 describe('изоляция арендаторов — через кабинет', () => {
   it('владелец A не видит точек владельца B', async () => {
     const a = await owner(); const b = await owner();
-    await createPlace(b.accountId, uniq('pb'), 'Точка B');
+    await createPlace(b.accountId, 'Точка B');
     const seen = await listPlaces(a.accountId);
     expect(seen.length).toBe(0);
   });
 
   it('A не может привязать ссылку к точке B — RLS, а не проверка в коде', async () => {
     const a = await owner(); const b = await owner();
-    const pb = await createPlace(b.accountId, uniq('pb'), 'Точка B');
+    const pb = await createPlace(b.accountId, 'Точка B');
     if (!pb.ok) throw new Error(pb.error);
     const r = await setPlatformLink(a.accountId, pb.id, 'yandex_maps', 'https://yandex.ru/maps/org/x/');
     expect(r.ok).toBe(false);
@@ -80,7 +80,7 @@ describe('изоляция арендаторов — через кабинет'
 
   it('A не читает обращения точки B', async () => {
     const a = await owner(); const b = await owner();
-    const pb = await createPlace(b.accountId, uniq('pb'), 'Точка B');
+    const pb = await createPlace(b.accountId, 'Точка B');
     if (!pb.ok) throw new Error(pb.error);
     await pgAdmin.query(`insert into private_feedback (place_id, body) values ($1, 'секрет гостя B')`, [pb.id]);
     const rows = await listFeedback(a.accountId, pb.id);
@@ -91,28 +91,31 @@ describe('изоляция арендаторов — через кабинет'
 describe('точки и ссылки', () => {
   it('создание → в списке, счётчики нулевые', async () => {
     const o = await owner();
-    const slug = uniq('pl');
-    const r = await createPlace(o.accountId, slug, 'Моя точка');
+    const r = await createPlace(o.accountId, 'Моя точка');
     expect(r.ok).toBe(true);
     const list = await listPlaces(o.accountId);
-    expect(list.map((p) => p.slug)).toContain(slug);
+    if (r.ok) expect(list.map((p) => p.slug)).toContain(r.slug);
     expect(list[0]?.feedback_count).toBe(0);
   });
 
-  it('параллельное создание одного слага — ровно один успех', async () => {
+  it('одинаковые названия у двух владельцев — ОБЕ точки создаются, адреса разные', async () => {
+    // «Занято» не показывается никогда: коллизия решается случайным хвостом молча.
     const a = await owner(); const b = await owner();
-    const slug = uniq('race');
     const rs = await Promise.all([
-      createPlace(a.accountId, slug, 'A'), createPlace(b.accountId, slug, 'B'),
+      createPlace(a.accountId, 'Кофейня Артель'), createPlace(b.accountId, 'Кофейня Артель'),
     ]);
-    expect(rs.filter((r) => r.ok).length, 'слаг достался обоим').toBe(1);
+    expect(rs.every((r) => r.ok)).toBe(true);
+    const slugs = rs.map((r) => (r.ok ? r.slug : ''));
+    expect(new Set(slugs).size).toBe(2);
+    expect(slugs[0]).toContain('kofeynya-artel');
   });
 
-  it('кривые слаги отвергаются', async () => {
+  it('кривой ввод НЕ отвергается — нормализуется: кириллица, пробелы, регистр', async () => {
     const o = await owner();
-    for (const bad of ['ab', 'КИРИЛЛИЦА', 'sp ace', 'x'.repeat(41), 'UPPER']) {
-      const r = await createPlace(o.accountId, bad, 'X');
-      expect(r.ok, bad).toBe(false);
+    for (const name of ['КИРИЛЛИЦА', 'sp ace point', 'UPPER Case']) {
+      const r = await createPlace(o.accountId, name);
+      expect(r.ok, name).toBe(true);
+      if (r.ok) expect(r.slug, name).toMatch(/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/);
     }
   });
 
@@ -125,7 +128,7 @@ describe('точки и ссылки', () => {
 
   it('повторная вставка ссылки — замена, а не дубль', async () => {
     const o = await owner();
-    const p = await createPlace(o.accountId, uniq('pl'), 'X');
+    const p = await createPlace(o.accountId, 'X');
     if (!p.ok) throw new Error(p.error);
     await setPlatformLink(o.accountId, p.id, 'twogis', 'https://2gis.ru/firm/1');
     await setPlatformLink(o.accountId, p.id, 'twogis', 'https://2gis.ru/firm/2');
@@ -133,5 +136,29 @@ describe('точки и ссылки', () => {
     const links = list.find((x) => x.id === p.id)?.links ?? [];
     expect(links.length).toBe(1);
     expect(links[0]?.url).toContain('/firm/2');
+  });
+});
+
+describe('транслитерация адреса', () => {
+  it('русское название превращается в читаемый адрес', async () => {
+    const { translit } = await import('../src/slug.js');
+    expect(translit('Кофейня «Артель»')).toBe('kofeynya-artel');
+    expect(translit('Щи & Борщи №1')).toBe('schi-borschi-1');
+    expect(translit('  Пробелы   и   регистр  ')).toBe('probely-i-registr');
+  });
+
+  it('пустой остаток и резерв получают случайный хвост', async () => {
+    const { slugCandidate, RESERVED } = await import('../src/slug.js');
+    expect(slugCandidate('™!!')).toMatch(/^p-[0-9a-f]{4}$/);
+    const api = slugCandidate('API');
+    expect(RESERVED.has(api), api).toBe(false);
+  });
+
+  it('хвост коллизии СЛУЧАЙНЫЙ, а не «-2»: перебор соседей не подсказывается', async () => {
+    const { slugCandidate } = await import('../src/slug.js');
+    const a = slugCandidate('Артель', true);
+    const b = slugCandidate('Артель', true);
+    expect(a).not.toBe(b);
+    expect(a).not.toMatch(/-2$/);
   });
 });

@@ -101,7 +101,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     if (!originOk(req)) return html(res, 403, 'запрос отклонён');
     const f = await readForm(req);
     if (!f) return redirect(res, '/dashboard');
-    const r = await createPlace(session.accountId, (f.get('slug') ?? '').trim(), (f.get('name') ?? '').trim());
+    const r = await createPlace(session.accountId, (f.get('name') ?? '').trim());
     if (!r.ok) return html(res, 422, dashboardPage(await listPlaces(session.accountId), BASE_URL, r.error));
     return redirect(res, '/dashboard');
   }
