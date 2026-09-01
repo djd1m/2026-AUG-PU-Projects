@@ -6,7 +6,17 @@ UA Chrome/131, локаль en-US. MCP-сервера Playwright в окруже
 `document.styleSheets`. Ни одно значение цвета или шрифта не взято «на глаз».
 
 Пометки: `[СНЯТО С САЙТА]` — прямое измерение или цитата · `[ВЫВОД]` — интерпретация ·
-`[НЕ УДАЛОСЬ]` — не загрузилось.
+`[НЕ УДАЛОСЬ]` — не установлено.
+
+**Разбор разложен на три файла** (лимит репозитория — 500 строк):
+
+| Файл | Что внутри |
+|---|---|
+| **`01-original-walkthrough.md`** (этот) | Вердикт, карта страниц, пользовательский путь, снимки, что не удалось, сводка |
+| [`01a-design-tokens.md`](01a-design-tokens.md) | Измеренные дизайн-токены: палитра, типографика, геометрия, кнопки, сравнение трёх |
+| [`01b-review-mechanics.md`](01b-review-mechanics.md) | QR, фильтрация отзывов, **экран сбора отзыва живьём** — разделы 5 и 6 |
+
+Нумерация разделов сквозная через все три файла, поэтому в `01b` заголовки начинаются с 5.
 
 ---
 
@@ -170,170 +180,19 @@ No credit card up front.
 
 ---
 
-## 5. QR-коды и фильтрация отзывов — главный раздел
+## 5. Механика отзывов → вынесена в отдельный файл
 
-### 5.1. QR: у NiceJob функция ЕСТЬ (исправлено), у двух других нет `[СНЯТО С САЙТА]`
+Два раздела, ради которых разбор и делался, лежат в
+[`01b-review-mechanics.md`](01b-review-mechanics.md) — вынесены ради лимита в 500 строк:
 
-Проверено не по впечатлению, а по картам сайта: выгружены `sitemap.xml` всех трёх (427 / 369 /
-109 204 URL) и отфильтрованы по `qr`.
-
-| Сайт | Что нашлось по «qr» |
-|---|---|
-| NiceJob | Две **статьи блога**: `/resources/how-to-create-a-google-review-qr-code-for-your-business-step-by-step` и `/resources/how-to-create-a-qr-code-for-google-reviews-for-free` |
-| Podium | Ничего |
-| Birdeye | `/integration/qrs/` — интеграция с системой по имени «QRS», к QR-кодам отношения не имеет; остальные совпадения — фамилии в SEO-страницах (`laila-qrochi`, `yqr-pole-academy`) |
-
-> **ИСПРАВЛЕНИЕ по итогам разбора справки (раздел 6).** Первая редакция этого раздела утверждала,
-> что QR — тема контент-маркетинга у всех трёх. Для Podium и Birdeye это подтвердилось, **для
-> NiceJob — нет**. Карта сайта маркетингового домена оказалась недостаточным источником: функция
-> существует, но описана только в справке, которая в `sitemap.xml` не входит. Урок для метода:
-> отсутствие в карте сайта — это отсутствие СТРАНИЦЫ, а не отсутствие ФУНКЦИИ.
-
-`[СНЯТО С САЙТА]` Статья справки **«QR Codes for Review Generation»** (Joel Pike, **9 мая 2026** —
-функции около четырёх месяцев на момент съёмки) описывает полноценный продукт:
-
-- «Every NiceJob account now has a **unique QR code generated automatically**» — код есть у каждого
-  аккаунта без настройки;
-- **брендирование**: «Your QR code will automatically include your logo»;
-- **два способа применения**: открыть на телефоне техника в конце работ либо скачать картинкой для
-  визиток, настольных подставок и счетов;
-- **Review Matching**: если клиент отсканировал и оставил отзыв **в течение 10 минут**, NiceJob
-  пытается сопоставить отзыв с клиентом из CRM, у которого на сегодня или вчера есть работа или
-  платёж;
-- **аналитика на странице Insights**: Total Scans, Click Rate, Reviews Won, Average Rating —
-  причём средняя оценка считается **отдельно по отзывам из офлайна**.
-
-`[ВЫВОД]` Ниша **не свободна**. Это меняет позиционирование: мы не первые с QR, мы конкурируем с
-функцией, которой несколько месяцев. Два следствия:
-
-1. **Одним «у нас есть QR» отличия не будет.** Отличие придётся строить на том, чего у NiceJob нет:
-   у него QR — придаток к CRM-контуру (Review Matching требует записи о работе или платеже в CRM),
-   а у нас сценарий без CRM и без контакта клиента вообще.
-2. **Планку задали.** Брендирование логотипом, счётчик сканов, click rate и отдельный средний балл
-   по офлайн-каналу — это уже не «сгенерировать картинку», а измеримый канал. Наш минимум по
-   аналитике теперь известен и он выше, чем «сколько сканов».
-
-Механика доставки у всех трёх по-прежнему **преимущественно** SMS и e-mail по базе из CRM — это
-подтверждается шагом 3 онбординга NiceJob («1 SMS + 3 письма») и цитатой клиента Podium: «we can now
-easily and quickly send the patient a link at the end of their visit». QR у NiceJob позиционируется
-явно как **дополнение**, а не замена: «QR codes work best alongside automated follow-ups, not
-instead of them».
-
-### 5.2. Что NiceJob пишет про QR по существу `[СНЯТО С САЙТА]`
-
-Статья `/resources/how-to-create-a-google-review-qr-code-…` — практическая, и в ней есть вещи,
-которые нам придётся учесть в продукте:
-
-- **Целевой URL — прямая ссылка Google.** Оба описанных способа (штатный генератор в Google
-  Business Profile через кнопку «Ask for reviews», либо сторонний генератор с брендированием)
-  ведут **прямо на форму отзыва Google**. Никакой промежуточной страницы, никакого вопроса об
-  оценке. `[ВЫВОД]` Наша страница-развилка вставляет промежуточный шаг, которого у них нет —
-  значит она обязана оправдывать себя тем, что даёт выбор площадки, а не тем, что «фильтрует».
-- **Раздел «How to Make Sure QR Code Reviews Don't Get Filtered»** — прямая цитата:
-  *«Don't set up a tablet or scan station at your office. Multiple customers scanning the same code
-  on the same network and leaving reviews within minutes of each other looks like a review ring to
-  Google's filters. The code works best when customers scan it at home, on their own connection.»*
-  `[ВЫВОД]` **Это требование к нашему продукту, а не совет.** Отзывы, оставленные пачкой с
-  одного Wi-Fi, Google отфильтрует. Значит: стационарная табличка на стойке — рискованный сценарий,
-  а сценарий «QR на счёте/визитке, клиент сканирует дома» — безопасный. Это надо заложить в
-  рекомендации по размещению и, возможно, в предупреждение в интерфейсе.
-- **«Don't offer anything in exchange for a review»** — вознаграждение за отзыв нарушает политику Google.
-- **Ссылка ломается молча:** QR-код не истекает, но целевой URL может перестать резолвиться при
-  изменениях в Business Profile, «и вы об этом не узнаете, пока кто-нибудь не скажет».
-  `[ВЫВОД]` Аргумент за динамический QR через наш редирект: цель меняется без перепечатки носителя.
-- Места размещения, которые они называют работающими: подвал счёта («самое конверсионное для
-  подрядчиков — вы отдаёте счёт в момент максимальной удовлетворённости»), оборот визитки,
-  табличка на объекте, оклейка машины, подпись в почте, карточка на стойке.
-- Прямо сказано: **QR работает вместе с автоматическими напоминаниями, а не вместо них.**
-
-### 5.3. Фильтрация отзывов (review gating) — Birdeye даёт нам готовое обоснование
-
-Это самая ценная находка разбора. Birdeye **сам когда-то делал запрещённую механику и публично
-от неё отказался**, и обе записи об этом до сих пор висят у него в журнале изменений.
-
-**Документ 1** — `/updates/birdeye-removes-sentiment-pre-check-in-review-requests/`,
-«IMPROVEMENT, Apr 23, 2018». Дословно `[СНЯТО С САЙТА]`:
-
-> «Based on Google's new policy on review solicitation released on April 12, 2018, Google does not
-> recommend sentiment pre-check for reviews. In order to ensure adherence to industry best practices,
-> Birdeye has removed the sentiment pre-check in the review requests segment. Now, **all customers
-> will have the option to write a review on Google (or any third-party site) irrespective of whether
-> or not they are promoters or detractors.** To serve better, Birdeye has added an option to display
-> **"Contact us directly"** button. This option will display under direct feedback where a customer
-> can leave private feedback on Birdeye. […] Going forward, Birdeye review request templates will not
-> have the option to pre-check customer sentiment before asking for a review. **The review sites
-> selected by the business will be shown to all customers irrespective of their sentiment.»**
-
-**Документ 2** — `/updates/prohibiting-review-gating-on-birdeye-surveys/`,
-«IMPROVEMENT, Nov 09, 2018» `[СНЯТО С САЙТА]`:
-
-> «Birdeye has removed sentiment pre-check for all the Birdeye surveys. […] Going forward, Birdeye
-> **not allow creating any new non-compliant surveys** after this launch. Businesses will only be
-> allowed to add review request question **only once and at the end of the survey**. **Display Logic
-> feature will also be disabled** for Birdeye surveys.»
-
-`[ВЫВОД]` Три вывода, каждый ложится прямо в наши требования:
-
-1. **Наша обязательная механика — не наше изобретение и не перестраховка, а отраслевой стандарт
-   с 2018 года.** «Показывать площадки ВСЕМ независимо от настроения» — формулировка Birdeye,
-   не наша. На это можно ссылаться в документации продукта и в разговоре с клиентом, который
-   спросит «а можно фильтровать?».
-2. **Приватный канал имеет отраслевое название: «Contact us directly» / «direct feedback».**
-   И — принципиально — он у Birdeye показывается **вместе** с публичными площадками, а не вместо
-   них при низкой оценке. Это ровно та развилка, которую требует наше ТЗ. Название для нашей
-   кнопки стоит брать отсюда, а не изобретать: «Написать нам напрямую», не «Пожаловаться».
-3. **Запрет распространяется на логику показа, а не только на прямой вопрос об оценке.** Birdeye
-   отключил **Display Logic** в опросах целиком и разрешил спрашивать про отзыв **только один раз
-   и только в конце**. `[ВЫВОД]` Обход через «мы не спрашиваем оценку, мы просто показываем
-   разные экраны по условию» — тот же gating. У нас не должно быть НИКАКОГО условного показа
-   площадок: оба пути видны сразу, в одном экране, без предварительного вопроса.
-
-**Дополнительно, FAQ на `/uk/reviews/`** (извлечён из JSON-LD `FAQPage`, на странице скрыт в
-аккордеонах) `[СНЯТО С САЙТА]`:
-
-> **«Can I exclude unhappy customers from my review campaigns?»** — «We recommend that you send
-> review requests to **all** your customers so that your online reputation is a true reflection of
-> your brand's customer experience. Consumers understand that no brand is perfect, and a couple of
-> bad reviews actually make your business look genuine. **Excluding unhappy customers from review
-> campaigns can also amount to review gating, which might lead to penalties from Google or other
-> legal and financial damages** for your brand.»
-
-> **«Can I exclude negative reviews from showing up on my website?»** — «We recommend that you
-> feature **all** the latest reviews on your website, irrespective of the rating. This will help
-> your brand look genuine and **prevent penalties from Google against review gating practices**.»
-
-> **«Should I offer incentives in exchange for reviews?»** — «We strongly recommend that you don't.
-> […] **Google is against review gating, which includes offering incentives for reviews.** Upon
-> detection, Google might **suspend or terminate your business profile**.»
-
-`[ВЫВОД]` Последняя цитата расширяет запрет на **наш виджет отзывов на сайте клиента**: отбор
-только положительных отзывов для показа — это тоже gating. Если в продукте будет виджет
-социального доказательства, фильтр «показывать только 4–5 звёзд» делать нельзя.
-
-### 5.4. Как выглядит запрещённое — для протокола `[ВЫВОД]`
-
-По описанию Birdeye реконструируется механика, которую они удалили и которую нам делать нельзя:
-
-```
-ЗАПРЕЩЕНО (sentiment pre-check, до апреля 2018 — стандарт отрасли):
-  «Как вам всё прошло?»  →  😀 → площадки Google/Facebook
-                         →  🙁 → приватная форма, площадки НЕ показаны
-
-ЗАПРЕЩЕНО ТАКЖЕ (display logic — обход без прямого вопроса):
-  любой условный показ площадок в зависимости от ответа, оценки или сегмента
-
-ОБЯЗАТЕЛЬНО (Birdeye после 2018, наше ТЗ):
-  один экран  →  [Оставить отзыв на Google]  [Оставить отзыв на Яндекс/2ГИС]
-                 [Написать нам напрямую]
-                 — все варианты видны сразу, без предварительного вопроса,
-                   всем без исключения
-```
-
-У NiceJob и Podium `[СНЯТО С САЙТА]` признаков предварительного вопроса об оценке на публичных
-страницах не обнаружено вовсе: NiceJob описывает механику как «SMS + 3 письма со ссылкой»,
-Podium — как «textable review invites». Экран, который видит конечный клиент, ни у одного из трёх
-на маркетинговом сайте не показан. `[НЕ УДАЛОСЬ]` увидеть реальный экран сбора отзыва — он живёт
-внутри продукта за регистрацией, а регистрироваться было запрещено заданием.
+- **QR-коды.** У NiceJob функция **есть** (с мая 2026: брендированный код, сопоставление отзыва
+  с клиентом за 10 минут, счётчики сканов и конверсии). У Podium и Birdeye — нет. Ниша не свободна.
+- **Фильтрация отзывов.** Birdeye удалил предварительный вопрос об оценке в 2018 по политике Google
+  и отключил Display Logic. NiceJob сегодня продаёт «Feedback Routing» — NPS 1–10 перед развилкой,
+  но **оба пути показываются в обеих ветках**, меняется только порядок и вес.
+- **Экран сбора отзыва** снят живьём на `review.new/nicejob`: модалка 460×395, Roboto, строки
+  площадок по 60px, приватный канал — последняя строка того же списка. Разбор десктопа и мобильного,
+  обе ветки Feedback Routing, форма Birdeye, и почему экран Podium установить не удалось.
 
 ---
 
@@ -341,24 +200,35 @@ Podium — как «textable review invites». Экран, который вид
 
 Каталог: `projects/02-review-qr-reputation/docs/discovery/screenshots/`
 
+**Интерфейс продукта — то, по чему будем строить** (снято с работающей NiceJob и из её справки):
+
 | Файл | Что на нём |
 |---|---|
-| `nicejob-home.png` | Главная NiceJob целиком (fullPage, 7612px) |
-| `nicejob-home-hero.png` | Первый экран: тёмный герой `#130a38`, serif H1, два CTA |
-| `nicejob-pricing.png` | Страница тарифов целиком |
-| `nicejob-pricing-plans.png` | **Блок тарифов крупно**: карточки $75 / $125, бейджи, пилюли CTA |
-| `nicejob-reviews.png` | Страница про сбор отзывов целиком |
-| `nicejob-reviews-steps.png` | Блок «3 easy steps» — механика подключения |
-| `nicejob-socialproof.png` | Виджеты отзывов на сайт клиента |
-| `nicejob-insights.png` | Аналитика и обратная связь |
-| `nicejob-integrations.png` | Каталог интеграций |
-| `podium-home.png`, `podium-reviews.png`, `podium-pricing.png` | Podium целиком |
-| `podium-pricing-plans.png` | **Блок тарифов Podium**: $399 / $599 / Custom, все «Talk to Sales» |
-| `birdeye-home.png`, `birdeye-reviews.png`, `birdeye-pricing.png` | Birdeye целиком |
-| `birdeye-reviews-hero.png` | Первый экран страницы отзывов Birdeye |
+| `nicejob-invite-desktop-step1.png` | **Экран сбора отзыва, десктоп.** Модалка над микросайтом: название, подзаголовок, две площадки, ссылка «Other review site options» |
+| `nicejob-invite-desktop-step2-other-options.png` | Он же раскрытый: Google · G2 · Capterra · **NiceJob (no account needed)** |
+| `nicejob-invite-mobile-step1.png` | Тот же экран на 390×844 — модалка не на всю ширину, строки те же 60px |
+| `nicejob-invite-mobile-step2-other-options.png` | Мобильный раскрытый список с логотипами площадок и шевронами |
+| `nicejob-feedback-routing-both-branches.png` | **Ключевой.** Официальная схема NiceJob: вопрос NPS 1–10 и обе ветки — обе показывают и площадки, и приватный канал, меняется только порядок и вес |
+| `nicejob-settings-feedback-routing.png` | Настройки: тумблер Feedback Routing, порог «7 and below», формулировка «highlight» |
+| `nicejob-settings-review-invite-link.png` | Настройки: адрес приглашения `review.new/nicejob` и «Auto-publish minimum rating: 4 stars» |
+| `nicejob-settings-review-sites.png` | Настройки списка площадок |
+| `nicejob-settings-optimize-order.png` | Тумблер «Optimize» — автоподбор порядка площадок |
+| `nicejob-qr-card.png` | **QR-карточка клиента:** логотип, «Leave us a review», код со скруглением, Share / Download |
+| `nicejob-qr-app.png` | QR-функция в приложении |
+| `birdeye-microsite-write-review.png` | Форма отзыва Birdeye: пять звёзд, поле, «Submit review». Выбора площадки нет |
 
-Экран регистрации NiceJob снят в `nicejob-signup` (данные в разборе, раздел 3); форма открыта,
-**ничего не отправлялось**.
+**Маркетинговые страницы:**
+
+| Файл | Что на нём |
+|---|---|
+| `nicejob-home.png`, `nicejob-home-hero.png` | Главная целиком и первый экран: тёмный герой `#130a38`, serif H1, два CTA |
+| `nicejob-pricing.png`, `nicejob-pricing-plans.png` | Тарифы целиком и блок карточек $75 / $125 крупно |
+| `nicejob-reviews.png`, `nicejob-reviews-steps.png` | Страница сбора отзывов и блок «3 easy steps» |
+| `nicejob-socialproof.png`, `nicejob-insights.png`, `nicejob-integrations.png` | Виджеты, аналитика, интеграции |
+| `podium-home.png`, `podium-reviews.png`, `podium-pricing.png`, `podium-pricing-plans.png` | Podium; в тарифах $399 / $599 / Custom, все «Talk to Sales» |
+| `birdeye-home.png`, `birdeye-reviews.png`, `birdeye-reviews-hero.png`, `birdeye-pricing.png` | Birdeye |
+
+Экран регистрации NiceJob разобран в разделе 3; форма открыта, **ничего не отправлялось**.
 
 ---
 
@@ -366,30 +236,57 @@ Podium — как «textable review invites». Экран, который вид
 
 | Что | Причина |
 |---|---|
-| Экран сбора отзыва, который видит конечный клиент (все три сайта) | Живёт внутри продукта за регистрацией. Регистрация запрещена заданием. **Главный пробел разбора**: механику развилки восстанавливаем по документации Birdeye, а не по живому экрану |
-| Цены Birdeye | `[СНЯТО С САЙТА]` На странице тарифов цен нет — вместо них форма захвата лида. Не «не загрузилось», а их сознательное решение |
-| Поиск через DuckDuckGo Lite | Запросы возвращали пустой результат — вероятно, блокировка датацентрового IP. Обойдено выгрузкой `sitemap.xml` напрямую с сайтов, что надёжнее |
-| Аккордеоны FAQ Birdeye кликом | 44 клика по заголовкам не раскрыли ответы (React-компонент без доступного триггера). Обойдено: ответы извлечены из `application/ld+json` схемы `FAQPage` — полный текст получен |
-| US-версия Birdeye | Принудительный редирект на `/uk/` по геолокации IP. Тексты FAQ британские, на существо не влияет |
+| **Экран сбора отзыва Podium** | База знаний на Salesforce Experience Cloud: раздел «Reviews, 18 статей» виден, но переходы обрабатываются скриптом и ссылок на статьи не отдают. Публичных микросайтов, как у Birdeye, у Podium нет. **Не установлен ни живьём, ни скриншотом.** Строить по нему нечего |
+| **Экран с NPS живьём** | У аккаунта NiceJob Feedback Routing выключен, поэтому предварительный вопрос на живом экране не появляется. Обе ветки известны по **официальной схеме из справки** — это их рисунок, но не живой экран. В разделе 6.4 файла `01b` помечено явно |
+| Экран сбора отзыва Birdeye по SMS-приглашению | Снята только форма на их публичном микросайте. Как выглядит именно письмо/SMS-приглашение с выбором площадки — не установлено |
+| Цены Birdeye | `[СНЯТО С САЙТА]` На странице тарифов цен нет — форма захвата лида. Не «не загрузилось», а их решение |
+| Поиск через DuckDuckGo Lite | Пустой результат, вероятно блокировка датацентрового IP. Обойдено выгрузкой `sitemap.xml` напрямую — надёжнее |
+| Аккордеоны FAQ Birdeye кликом | 44 клика не раскрыли ответы (React без доступного триггера). Обойдено через `application/ld+json` схемы `FAQPage` — текст получен полностью |
+| US-версия Birdeye | Принудительный редирект на `/uk/` по геолокации IP; на существо не влияет |
 | 6 продуктовых страниц NiceJob (Referrals, Broadcasts, Gifts, Sites, Repeats, AI Replies) | Не открывались — за пределами задачи |
-| Справочный центр `help.nicejob.com` | Отвечает 200, но не разбирался — там могла быть механика экрана отзыва. **Кандидат на добор, если нужен живой экран** |
+
+**Про метод, заслужено ошибкой этого разбора.** Первая редакция утверждала, что QR-функции нет ни у
+кого, на основании выгрузки `sitemap.xml` трёх маркетинговых доменов. У NiceJob функция есть — она
+описана только в справке, а справка в карту сайта не входит. **Отсутствие страницы в карте сайта —
+это отсутствие страницы, а не отсутствие функции.** Продуктовые возможности проверяются по справке
+и по живому продукту; карта сайта отвечает на другой вопрос.
 
 ---
 
 ## 8. Сводка: что забираем
+
+**Дизайн** (подробности в `01a-design-tokens.md`):
 
 | Что | Откуда | Как применяем |
 |---|---|---|
 | 85 CSS-переменных, шкалы 50…950 | NiceJob | Основа токенов нашей дизайн-системы |
 | `#025bde` + `#2ce080` + `#130a38` | NiceJob | Первичный / акцент / тёмный герой |
 | Bogart serif заголовки + Inter интерфейс | NiceJob | Типографическая пара; serif отличает от конкурентов |
-| Пилюля `radius:100px`, `padding:12px 24px` | NiceJob | Все кнопки |
-| Контейнер 1200px, gap 24px, паддинг 48/24 | NiceJob | Сетка |
-| Карточка `radius:16px`, рамка 1px, без тени | NiceJob | Карточки тарифов и фич |
+| Пилюля `radius:100px`, `padding:12px 24px`; карточка `radius:16px`; контейнер 1200px | NiceJob | Кнопки, карточки, сетка |
 | Тёплый фон `#fafaf7` вместо белого | Podium | Опция для фона секций |
 | Цена на видном месте + «no credit card» | NiceJob | Модель самообслуживания |
-| «Contact us directly» / «direct feedback» | Birdeye | **Название приватного канала** |
-| «Show to all irrespective of sentiment» | Birdeye, 2018 | **Формулировка обязательного требования** |
+
+**Экран сбора отзыва** (подробности в `01b-review-mechanics.md`):
+
+| Что | Откуда | Как применяем |
+|---|---|---|
+| Строка площадки 60px: логотип · название · шеврон | NiceJob, живой экран | Базовый элемент нашего экрана; 60px и на мобильном |
+| Модалка 460×395, `radius:10px`, `padding:30px`, затемнение `rgba(0,0,0,.4)` | NiceJob, живой экран | Геометрия развилки |
+| Roboto на клиентском экране вместо шрифтов сайта | NiceJob | Клиентский экран **не обязан** повторять маркетинговую типографику |
+| Свёрнутый список из 2 площадок + «Other options» | NiceJob | **Анти-паттерн для нас:** раскрытие скрывает часть путей |
+| Приватный канал приподнят тенью и скруглением | NiceJob | **Анти-паттерн для нас:** нарушает равный вес. У нас — такая же строка |
+| «(no account needed)» мелким шрифтом под названием | NiceJob | Приём для пояснения, зачем путь нужен |
+
+**Правовое и продуктовое:**
+
+| Что | Откуда | Как применяем |
+|---|---|---|
+| «Show to all irrespective of sentiment» | Birdeye, 2018 | Формулировка обязательного требования |
 | Запрет Display Logic | Birdeye, 2018 | Никакого условного показа площадок |
+| «Contact us directly» / «direct feedback» | Birdeye | Название приватного канала |
+| Симметричная инверсия веток вместо отсечения | NiceJob, Feedback Routing | **Граница отрасли:** нарушение — когда путь исчез, а не когда он второй. Наше требование строже стандарта, и это надо называть вслух |
+| «Равноправно» = равная высота, типографика, тип кнопки, без скрытых блоков | Выведено из механики NiceJob | Критерий, проверяемый скриптом, а не на глаз |
+| QR: брендирование логотипом, счётчики Scans / Click Rate / Reviews Won, средний балл по офлайну | NiceJob, май 2026 | Планка по аналитике; ниша не свободна |
+| Сопоставление отзыва с клиентом за 10 минут через CRM | NiceJob | Их привязка к CRM — наша точка отличия: работаем без CRM и без контакта |
 | «Не ставьте планшет на стойке» | NiceJob | Ограничение на сценарии размещения QR |
-| Динамический QR (цель меняется без перепечатки) | NiceJob (от противного) | Аргумент за редирект через нас |
+| Приватная связь уходит на почту владельца; кампания не останавливается | NiceJob | Решения, которые нам придётся принять осознанно |
