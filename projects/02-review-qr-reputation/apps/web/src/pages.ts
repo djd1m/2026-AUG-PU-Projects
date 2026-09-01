@@ -87,6 +87,7 @@ export function dashboardPage(places: PlaceView[], baseUrl: string, error?: stri
     <span class="chip">обращения: <b>${p.feedback_count}</b></span>
     <span class="sp" style="flex:1"></span>
     <a class="qr" href="/places/${esc(p.id)}/qr">QR и макеты</a>
+    <form method="post" action="/places/${esc(p.id)}/bind" style="display:inline;margin:0"><button class="qr" style="background:none;border:0;color:var(--brand);cursor:pointer;font:inherit;padding:0">уведомления</button></form>
     <a class="qr" href="/places/${esc(p.id)}">обращения →</a>
   </div>
   <form method="post" action="/places/${esc(p.id)}/links" style="margin-top:10px">
@@ -203,4 +204,34 @@ ${cut('Тейбл-тент', 'настольный: только для гост
 
 <a class="print" href="javascript:print()">Печать</a>
 </div></body></html>`;
+}
+
+export function bindPage(placeName: string, botUsername: string, token: string): string {
+  const link = botUsername ? `https://t.me/${botUsername}?start=${token}` : '';
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Уведомления — ${esc(placeName)}</title><style>
+body{margin:0;padding:32px 16px;background:#f5f9ff;color:#364459;
+font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.card{max-width:440px;margin:0 auto;background:#fff;border:1px solid #c1c1c1;border-radius:16px;
+box-shadow:1px 1px 19px 0 #1874fd26;padding:24px}
+h1{color:#00132e;font-size:22px;margin:0 0 8px}
+p{margin:0 0 14px}.muted{color:#6b7a90;font-size:14px}
+.btn{display:inline-block;min-height:46px;line-height:46px;padding:0 22px;border-radius:100px;
+background:#025bde;color:#fff;font-weight:600;text-decoration:none}
+.nav{max-width:440px;margin:0 auto 14px;font-size:14px}.nav a{color:#025bde;text-decoration:none}
+.err{padding:10px 14px;border-radius:12px;background:#ffe9e8;color:#a3231e;font-size:14px}
+</style></head><body>
+<nav class="nav"><a href="/dashboard">← кабинет</a></nav>
+<main class="card">
+<h1>Уведомления для «${esc(placeName)}»</h1>
+${link
+  ? `<p>Нажмите кнопку — откроется Telegram. В боте нажмите <b>Start</b>, и обращения гостей
+     начнут приходить вам сообщением в ту же минуту.</p>
+     <p><a class="btn" href="${esc(link)}">Подключить Telegram</a></p>
+     <p class="muted">Кнопка одноразовая: если передумаете или смените телефон — сгенерируйте
+     новую с этой же страницы. Старая перестанет действовать.</p>`
+  : `<p class="err">Бот уведомлений ещё не настроен на этом стенде (нет TELEGRAM_BOT_USERNAME).
+     Обращения гостей видны в кабинете — push подключится, как только бот будет заведён.</p>`}
+</main></body></html>`;
 }

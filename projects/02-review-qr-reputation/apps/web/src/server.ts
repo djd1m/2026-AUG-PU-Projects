@@ -9,7 +9,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { login, register, resolveSession, SESSION_COOKIE, SESSION_TTL_MS, type Session } from './auth.js';
 import { createPlace, listFeedback, listPlaces, setPlatformLink, type Platform } from './places.js';
 import { withAccount, pool } from './db.js';
-import { authPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
+import { randomBytes, createHash } from 'node:crypto';
+import { authPage, bindPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
 import { guestUrl, qrSvg } from './qr.js';
 
 const BASE_URL = (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/+$/, '');
@@ -118,6 +119,26 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     // Ссылки задели гостевую страницу — просим гостевой контейнер сбросить кэш точки.
     await invalidateGuestCache(session.accountId, seg[1]);
     return redirect(res, '/dashboard');
+  }
+
+  // ── Привязка Telegram: одноразовый токен → диплинк t.me. Токен показывается ОДИН раз
+  // и в БД не хранится — только его хеш, как у сессий: дамп БД не должен позволять
+  // привязать чужую точку к своему чату.
+  if (req.method === 'POST' && seg[0] === 'places' && seg[1] && seg[2] === 'bind' && seg.length === 3) {
+    if (!originOk(req)) return html(res, 403, 'запрос отклонён');
+    const places = await listPlaces(session.accountId);
+    const place = places.find((p) => p.id === seg[1]);
+    if (!place) return html(res, 404, 'не найдено');
+    const token = randomBytes(24).toString('base64url');
+    const hash = createHash('sha256').update(token).digest();
+    await withAccount(session.accountId, (c) => c.query(
+      `insert into channel_bindings (place_id, channel, bind_token_hash, chat_id, bound_at)
+       values ($1, 'telegram', $2, null, null)
+       on conflict (place_id, channel)
+       do update set bind_token_hash = excluded.bind_token_hash, chat_id = null, bound_at = null`,
+      [place.id, hash]));
+    const bot = process.env.TELEGRAM_BOT_USERNAME ?? '';
+    return html(res, 200, bindPage(place.name, bot, token));
   }
 
   if (req.method === 'GET' && seg[0] === 'places' && seg[1] && seg[2] === 'qr' && seg.length === 3) {
