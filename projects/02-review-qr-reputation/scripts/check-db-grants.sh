@@ -50,6 +50,10 @@ has app_render places            SELECT yes "резолв slug"
 has app_render platform_links    SELECT yes "двери страницы"
 
 # ── Приём: пишет, не читает
+# Колонки places проверяются У ОБЕИХ ролей. Первая редакция стража перечисляла только
+# app_render, и когда тот же дефект повторился у app_intake, страж остался зелёным:
+# защита была написана против ПЕРВОГО экземпляра класса.
+has app_intake places            SELECT yes "резолв slug на приёме, включая archived_at"
 has app_intake private_feedback  SELECT no  "принимает и не перечитывает"
 has app_intake private_feedback  INSERT yes ""
 has app_intake analytics_events  SELECT no  "аналитика не может стать входом в решение"

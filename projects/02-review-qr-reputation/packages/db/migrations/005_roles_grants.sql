@@ -40,7 +40,11 @@ REVOKE ALL ON ALL TABLES IN SCHEMA public FROM app_notify;
 -- они давали permission denied на первом же запросе. Чтением такое не ловится.
 -- Секретом archived_at не является: 404 для архивной и несуществующей точки ОДИНАКОВ.
 GRANT SELECT (id, slug, name, branding_required, archived_at) ON places        TO app_render;
-GRANT SELECT (id, slug, name)                     ON places            TO app_intake;
+-- archived_at И ЗДЕСЬ. Тот же дефект, что был у app_render, во второй роли: приём тоже
+-- обязан отличать архивную точку от живой и тоже фильтрует по этой колонке.
+-- Страж не поймал, потому что проверял права ОДНОЙ роли — защита была написана против
+-- первого экземпляра класса и не покрывала второй. Список ролей в страже расширен.
+GRANT SELECT (id, slug, name, archived_at)        ON places            TO app_intake;
 GRANT SELECT (place_id, platform, url, link_kind) ON platform_links    TO app_render;
 GRANT INSERT                                      ON guest_events      TO app_render;
 GRANT INSERT                                      ON private_feedback  TO app_intake;
