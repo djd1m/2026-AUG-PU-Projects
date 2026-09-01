@@ -13,10 +13,16 @@
 -- комментарий здесь не повторяет форму TO <роль>; иначе он даст ложное срабатывание —
 -- ровно это случилось при первой проверке и стоило ложного «гранта нет» на «грант есть».
 
-CREATE ROLE app_render LOGIN;   -- apps/guest
-CREATE ROLE app_intake LOGIN;   -- services/intake
-CREATE ROLE app_notify LOGIN;   -- services/notifier
-CREATE ROLE app_owner  LOGIN;   -- apps/web
+-- Роли создаются ИДЕМПОТЕНТНО. Они живут в КЛАСТЕРЕ, а не в базе: пересоздание базы их
+-- не удаляет, и голый CREATE ROLE падает на «role already exists». Найдено прогоном —
+-- на боевом стенде это сломало бы деплой после любого восстановления базы из дампа.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_render') THEN CREATE ROLE app_render LOGIN; END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_intake') THEN CREATE ROLE app_intake LOGIN; END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_notify') THEN CREATE ROLE app_notify LOGIN; END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_owner')  THEN CREATE ROLE app_owner  LOGIN; END IF;
+END $$;
 
 GRANT USAGE ON SCHEMA public TO app_render;
 GRANT USAGE ON SCHEMA public TO app_intake;
@@ -27,7 +33,13 @@ REVOKE ALL ON ALL TABLES IN SCHEMA public FROM app_render;
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM app_intake;
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM app_notify;
 
-GRANT SELECT (id, slug, name, branding_required)  ON places            TO app_render;
+-- archived_at ВХОДИТ В ГРАНТ. Колоночный грант требует SELECT на КАЖДУЮ упомянутую
+-- колонку, включая те, что стоят только в WHERE. Алгоритм обязан отличать архивную точку
+-- (404) от живой, значит обязан её читать. Найдено прогоном: Architecture давала грант без
+-- неё, Pseudocode требовал фильтр по ней, каждый документ был внутри себя верен, а вместе
+-- они давали permission denied на первом же запросе. Чтением такое не ловится.
+-- Секретом archived_at не является: 404 для архивной и несуществующей точки ОДИНАКОВ.
+GRANT SELECT (id, slug, name, branding_required, archived_at) ON places        TO app_render;
 GRANT SELECT (id, slug, name)                     ON places            TO app_intake;
 GRANT SELECT (place_id, platform, url, link_kind) ON platform_links    TO app_render;
 GRANT INSERT                                      ON guest_events      TO app_render;
