@@ -3,6 +3,8 @@
 import { withService } from '@proofwall/db';
 
 export interface WallItem {
+  /** form | import | demo — см. миграцию 016. */
+  source: string;
   id: string;
   author_name: string;
   author_role: string | null;
@@ -23,7 +25,10 @@ export interface WallItem {
 export async function getApprovedTestimonials(projectId: string): Promise<WallItem[]> {
   return withService(async (client) => {
     const { rows } = await client.query<WallItem>(
-      `select id, author_name, author_role, text, transcript, photo_url,
+      // source едет в выдачу, чтобы страница могла ПОМЕТИТЬ демонстрационные отзывы,
+      // а не догадываться о них по слагу проекта. Пометка следует за данными: убрали
+      // демо-строки — отметка исчезла сама, без правки кода.
+      `select id, author_name, author_role, text, transcript, photo_url, source,
               (video_object_key is not null) as has_video, created_at
          from testimonials
         where project_id = $1 and status = 'approved'

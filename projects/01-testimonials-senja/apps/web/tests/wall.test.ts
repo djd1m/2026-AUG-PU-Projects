@@ -2,6 +2,8 @@
 // приложения, где авторский текст попадает внутрь <script>, и React там не защищает.
 
 import { afterAll, describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import type { PoolClient } from 'pg';
 import type { WallItem } from '../src/lib/wall';
 
@@ -26,6 +28,7 @@ const item = (over: Partial<WallItem> = {}): WallItem => ({
   text: 'обычный текст',
   transcript: null,
   has_video: false,
+  source: 'form',
   photo_url: null,
   created_at: '2026-08-26T10:00:00.000Z',
   ...over,
@@ -199,5 +202,31 @@ describe('getApprovedTestimonials — инвариант «только approved
     expect(visible[0]!.text).toBe(payload);
     // А в JSON-LD этот же текст уже не может закрыть тег.
     expect(safeJsonLd(buildReviewJsonLd('s', 'u', visible))).not.toContain('<script>');
+  });
+});
+
+
+describe('Демонстрационные отзывы помечены — FTC 16 CFR Part 465', () => {
+  // Сочинённый отзыв, выданный за настоящий, карается штрафом до $53 088. Пометка живёт
+  // в ДАННЫХ (source='demo', миграция 016), а не в слаге проекта: убрали демо-строки —
+  // отметка исчезла сама; завели демо в другом проекте — появилась там же.
+  const read = (rel: string) =>
+    readFileSync(path.resolve(__dirname, '../src', rel), 'utf8');
+
+  it('страница стены показывает отметку, когда среди отзывов есть демо', () => {
+    const code = read('app/w/[slug]/page.tsx');
+    expect(code).toMatch(/items\.some\(\(t\) => t\.source === 'demo'\)/);
+    expect(code).toMatch(/не принадлежат реальным людям/);
+  });
+
+  it('запрос стены отдаёт source — иначе отметить нечем', () => {
+    expect(read('lib/wall.ts')).toMatch(/select id, author_name, author_role, text, transcript, photo_url, source/);
+  });
+
+  it('схема допускает demo как отдельный источник, а не подменяет им form', async () => {
+    const { rows } = await withService((c) => c.query<{ def: string }>(
+      "select pg_get_constraintdef(oid) as def from pg_constraint where conname='testimonials_source_check'"));
+    expect(rows[0]?.def).toContain("'demo'");
+    expect(rows[0]?.def).toContain("'form'");
   });
 });

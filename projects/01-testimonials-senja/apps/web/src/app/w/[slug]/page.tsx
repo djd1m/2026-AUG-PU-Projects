@@ -51,6 +51,24 @@ export default async function WallPage({ params }: Params) {
         />
       )}
 
+      {items.some((t) => t.source === 'demo') && (
+        /* ОТМЕТКА ДЕМОНСТРАЦИИ. Не украшение и не перестраховка: сочинённый отзыв,
+           выданный за настоящий, — это FTC Rule 16 CFR Part 465, до $53 088 за нарушение
+           (см. .claude/rules/security.md §5). Отметка привязана к ДАННЫМ, а не к слагу
+           проекта: убрали демо-строки — она исчезла сама, без правки кода, и наоборот
+           не забудется, если демо-данные заведут в другом проекте. */
+        <p
+          className="small"
+          role="note"
+          style={{
+            margin: '0 0 16px', padding: '10px 14px', borderRadius: 10,
+            background: 'var(--accent-tint)', color: 'var(--ink)', fontWeight: 600,
+          }}
+        >
+          Демонстрация. Отзывы ниже сочинены для показа витрины и не принадлежат реальным людям.
+        </p>
+      )}
+
       <header className="wallHead">
         {branding.logo_url && (
           // eslint-disable-next-line @next/next/no-img-element -- логотип с произвольного домена
