@@ -67,6 +67,20 @@ services:
       postgres: { condition: service_healthy }
     restart: unless-stopped
 
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    environment:
+      - DATABASE_URL_OWNER           # роль app_owner, под RLS
+      - BASE_URL
+      - GUEST_INTERNAL_URL=http://guest:3000
+      - PGPOOL_MAX
+      - PGPOOL_CONNECTION_TIMEOUT_MS
+    expose: ["3000"]
+    networks: [default, talk-ai-public]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
 volumes:
   pgdata:
 

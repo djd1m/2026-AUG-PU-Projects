@@ -182,6 +182,15 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return;
   }
 
+  // ── ВНУТРЕННИЙ маршрут: сброс кэша точки владельческим трактом после правки ссылок.
+  // Публичным он НЕ является: Caddy отвечает 404 на /internal/* ДО проксирования (см.
+  // Caddyfile), поэтому снаружи путь не существует. Изнутри сети compose он открыт —
+  // и это единственный канал web → guest. Стережёт страж в purity.test.ts.
+  if (req.method === 'POST' && seg[0] === 'internal' && seg[1] === 'invalidate' && seg[2] && seg.length === 3) {
+    invalidateChoicePage(seg[2]);
+    res.writeHead(204); res.end(); return;
+  }
+
   res.writeHead(404, html);
   res.end(notFoundHtml());
 }
