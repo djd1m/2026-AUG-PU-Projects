@@ -62,6 +62,11 @@ has app_intake rate_limit_events SELECT yes "T3c: ЕДИНСТВЕННОЕ на�
 has app_intake rate_limit_events INSERT yes ""
 
 # ── Доставка: читает приватное по назначению
+# ТРЕТЬЯ роль в проверке. Первая редакция стража перечисляла права ОДНОЙ роли, и тот же
+# дефект повторился ещё дважды, оставаясь зелёным. Правило: у каждой роли — каждая таблица,
+# которую трогает её код.
+has app_notify places            SELECT yes "имя точки в заголовке сообщения"
+has app_notify channel_bindings  SELECT yes "куда слать"
 has app_notify private_feedback  SELECT yes "текст нужен для отправки владельцу"
 has app_notify private_feedback  INSERT no  ""
 
