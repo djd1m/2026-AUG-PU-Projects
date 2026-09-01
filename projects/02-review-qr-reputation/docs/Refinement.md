@@ -162,7 +162,7 @@ expect(renderTs).toMatch(/export\s+function\s+renderChoicePage\(\s*slug\s*:\s*st
 | M-11 | виджет звёзд добавлен на `/r/:slug` | **T6** | 1 |
 | M-12 | `import { headers } from 'next/headers'` в `render.ts` | **T9** | 1 |
 | M-13 | `recordGuestEvent` переписан на `: Promise<EventId>` | **T9** | 1 |
-| M-14 | `Location` в `/go` собирается из `?to=` вместо `platform_links.url` | **T4b** | 1 |
+| M-14 | `Location` в `/go/:slug/:platform` собирается из `?to=` вместо `platform_links.url` | **T4b** | 1 |
 | M-15 | **стенд недоступен** (Caddy остановлен) | **T4, T4b, T4c, T5, T6** | **2** |
 | M-16 | **БД не отвечает** (postgres остановлен) | **T1, T2, T3, T8** | **2** |
 | M-17 | **`docker compose config` нечитаем** (битый YAML) | **T3b** | **2** |
