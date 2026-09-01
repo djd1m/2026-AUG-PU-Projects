@@ -110,3 +110,52 @@ describe('защита форм: Origin, fail-closed', () => {
     expect(msg(a)).toBe(msg(b));
   });
 });
+
+describe('QR и печатные макеты', () => {
+  async function qrPageOf(): Promise<string> {
+    const o = await registerOwner();
+    const slug = uniq('qr');
+    await post('/places', { slug, name: 'QR-точка' }, o.cookie);
+    const dash = await (await fetch(`${base}/dashboard`, { headers: { cookie: o.cookie } })).text();
+    const placeId = dash.match(/\/places\/([0-9a-f-]{36})\/qr/)?.[1] ?? '';
+    return (await fetch(`${base}/places/${placeId}/qr`, { headers: { cookie: o.cookie } })).text();
+  }
+
+  it('QR ведёт на НАШ домен, а не на площадку (ADR-001)', async () => {
+    const page = await qrPageOf();
+    expect(page).toContain('<svg');                       // код сгенерирован
+    expect(page).toMatch(/cab\.test\/r\//);               // наш адрес на макете
+    // Прямые адреса площадок в макетах запрещены: смена карточки убила бы тираж.
+    expect(page).not.toMatch(/yandex\.ru|2gis\.ru/);
+  });
+
+  it('запрещённые элементы отсутствуют: подсказки, вознаграждение', async () => {
+    const page = await qrPageOf();
+    // Единственные действующие нормы площадок: не подсказывать содержание отзыва
+    // и не обещать вознаграждение. Стережём по тексту страницы.
+    expect(page).not.toMatch(/напишите про|расскажите о (кухне|блюд|обслуж)|поставьте|5 звёзд|скидк[ау]|бонус|подар/i);
+  });
+
+  it('тейбл-тент — с предупреждением про Wi-Fi и общий планшет', async () => {
+    const page = await qrPageOf();
+    expect(page).toContain('Тейбл-тент — с оговоркой');
+    expect(page).toMatch(/своим телефоном на своей сети/);
+    expect(page).toMatch(/общий планшет/);
+    // Предупреждение стоит ПЕРЕД макетом тента, а не после: читают до печати.
+    expect(page.indexOf('с оговоркой')).toBeLessThan(page.indexOf('mk--tent'));
+  });
+
+  it('уносимые носители идут ПЕРВЫМИ — они безопасны по умолчанию', async () => {
+    const page = await qrPageOf();
+    expect(page.indexOf('Подвал счёта')).toBeLessThan(page.indexOf('Тейбл-тент'));
+  });
+
+  it('чужой QR не открывается', async () => {
+    const a = await registerOwner(); const b = await registerOwner();
+    await post('/places', { slug: uniq('qb'), name: 'B' }, b.cookie);
+    const dashB = await (await fetch(`${base}/dashboard`, { headers: { cookie: b.cookie } })).text();
+    const placeB = dashB.match(/\/places\/([0-9a-f-]{36})\/qr/)?.[1] ?? '';
+    const r = await fetch(`${base}/places/${placeB}/qr`, { headers: { cookie: a.cookie } });
+    expect(r.status).toBe(404);
+  });
+});

@@ -9,7 +9,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { login, register, resolveSession, SESSION_COOKIE, SESSION_TTL_MS, type Session } from './auth.js';
 import { createPlace, listFeedback, listPlaces, setPlatformLink, type Platform } from './places.js';
 import { withAccount, pool } from './db.js';
-import { authPage, dashboardPage, feedbackPage } from './pages.js';
+import { authPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
+import { guestUrl, qrSvg } from './qr.js';
 
 const BASE_URL = (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/+$/, '');
 const SECURE = BASE_URL.startsWith('https');
@@ -117,6 +118,14 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     // Ссылки задели гостевую страницу — просим гостевой контейнер сбросить кэш точки.
     await invalidateGuestCache(session.accountId, seg[1]);
     return redirect(res, '/dashboard');
+  }
+
+  if (req.method === 'GET' && seg[0] === 'places' && seg[1] && seg[2] === 'qr' && seg.length === 3) {
+    const places = await listPlaces(session.accountId);
+    const place = places.find((p) => p.id === seg[1]);
+    if (!place) return html(res, 404, 'не найдено');
+    const href = guestUrl(BASE_URL, place.slug);
+    return html(res, 200, qrPage(place.name, place.slug, await qrSvg(href), href));
   }
 
   if (req.method === 'GET' && seg[0] === 'places' && seg[1] && seg.length === 2) {

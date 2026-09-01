@@ -86,6 +86,7 @@ export function dashboardPage(places: PlaceView[], baseUrl: string, error?: stri
     <span class="chip">сканы: <b>${p.scan_count}</b></span>
     <span class="chip">обращения: <b>${p.feedback_count}</b></span>
     <span class="sp" style="flex:1"></span>
+    <a class="qr" href="/places/${esc(p.id)}/qr">QR и макеты</a>
     <a class="qr" href="/places/${esc(p.id)}">обращения →</a>
   </div>
   <form method="post" action="/places/${esc(p.id)}/links" style="margin-top:10px">
@@ -133,4 +134,73 @@ export function feedbackPage(placeName: string, items: FeedbackView[]): string {
 <p class="lead">Приватные обращения гостей. Видите их только вы.</p>
 ${rows || '<p class="lead">Пока пусто. Поставьте QR — обращения появятся здесь.</p>'}
 </main>`);
+}
+
+/**
+ * Страница QR и печатных макетов.
+ *
+ * ЧТО ЗДЕСЬ НАМЕРЕННО ОТСУТСТВУЕТ (NFR-LEGAL-001 и разбор модерации площадок):
+ *   · подсказки содержания отзыва («напишите про кухню») — единственная действующая
+ *     норма Яндекса, задевающая продукт: подсказывать содержание нельзя;
+ *   · упоминание вознаграждения («скидка за отзыв») — вторая норма, и она же у 2ГИС;
+ *   · блок «свободный Wi-Fi + QR отзыва» — отзывы пачкой с одного адреса читаются
+ *     антифродом как накрутка; это сочетание кажется владельцу естественным, поэтому
+ *     предупреждение стоит прямо в макетах, а не в справке.
+ * Стражи в тестах проверяют отсутствие этих элементов ПО ТЕКСТУ страницы.
+ */
+export function qrPage(placeName: string, slug: string, svg: string, guestHref: string): string {
+  const cut = (title: string, note: string, cls = '') => `
+<figure class="mk ${cls}">
+  <figcaption><b>${esc(title)}</b><span>${esc(note)}</span></figcaption>
+  <div class="mk__body">
+    <div class="mk__qr">${svg}</div>
+    <div class="mk__txt">
+      <p class="mk__name">${esc(placeName)}</p>
+      <p class="mk__cta">Расскажите, как всё прошло</p>
+      <p class="mk__url">${esc(guestHref.replace(/^https?:\/\//, ''))}</p>
+    </div>
+  </div>
+</figure>`;
+
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR — ${esc(placeName)}</title><style>
+:root{--ink:#00132e;--text:#364459;--brand:#025bde;--tint:#f5f9ff;--line:#c1c1c1;--muted:#6b7a90;
+--warn:#7a4a00;--warn-soft:#fdeed6;--r:16px}
+*{box-sizing:border-box}body{margin:0;padding:32px 16px;background:var(--tint);color:var(--text);
+font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto}
+.nav{margin-bottom:16px;font-size:14px}.nav a{color:var(--brand);text-decoration:none}
+h1{color:var(--ink);font-size:24px;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 20px;font-size:15px}
+.mk{margin:0 0 20px;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.mk figcaption{display:flex;gap:10px;align-items:baseline;padding:10px 16px;border-bottom:1px dashed var(--line);font-size:14px}
+.mk figcaption b{color:var(--ink)}.mk figcaption span{color:var(--muted);font-size:13px}
+.mk__body{display:flex;gap:18px;align-items:center;padding:18px}
+.mk__qr{flex:none;width:128px}.mk__qr svg{display:block;width:100%;height:auto}
+.mk__name{margin:0;font-weight:700;color:var(--ink)}
+.mk__cta{margin:2px 0 6px}
+.mk__url{margin:0;font-family:ui-monospace,monospace;font-size:13px;color:var(--muted)}
+.warn{margin:0 0 20px;padding:12px 16px;border-radius:12px;background:var(--warn-soft);color:var(--warn);font-size:14px}
+.print{min-height:44px;padding:0 22px;border:0;border-radius:100px;background:var(--brand);color:#fff;
+font:600 15px/44px inherit;cursor:pointer;text-decoration:none;display:inline-block}
+@media print{body{background:#fff;padding:0}.nav,.lead,.warn,.print,h1{display:none}
+.mk{page-break-inside:avoid;border:1px dashed #999}}
+</style></head><body><div class="wrap">
+<nav class="nav"><a href="/dashboard">← кабинет</a></nav>
+<h1>QR для «${esc(placeName)}»</h1>
+<p class="lead">Код ведёт на ваш адрес ${esc(guestHref)} — ссылки на площадки можно менять,
+носители перепечатывать не придётся.</p>
+
+${cut('Подвал счёта', 'уносимый носитель: гость сканирует дома, со своей сети')}
+${cut('Оборот визитки', 'уносимый: кладите в пакет с заказом')}
+${cut('Наклейка на упаковку', 'уносимый: доставка и самовывоз')}
+
+<p class="warn"><b>Тейбл-тент — с оговоркой.</b> На столе он безопасен, пока гость сканирует
+<b>своим телефоном на своей сети</b>. Не размещайте рядом пароль от гостевого Wi‑Fi и не
+предлагайте общий планшет: отзывы, ушедшие пачкой с одного адреса, площадки считают накруткой.</p>
+${cut('Тейбл-тент', 'настольный: только для гостей со своим интернетом', 'mk--tent')}
+
+<a class="print" href="javascript:print()">Печать</a>
+</div></body></html>`;
 }
