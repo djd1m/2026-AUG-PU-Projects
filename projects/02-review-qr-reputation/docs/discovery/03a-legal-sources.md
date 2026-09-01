@@ -23,11 +23,7 @@ https://support.google.com/business/answer/7400114?hl=en)
 >
 > **Discourage or prohibit negative reviews, or selectively solicit positive reviews from customers**
 >
-> When soliciting reviews, merchants should not require or pressure users to leave ratings or write reviews while on the premises, nor should they request that specific content be included.
->
-> This includes:
-> - Merchants requesting that staff solicit a certain number of reviews
-> - Merchants requesting that staff solicit reviews that include specific content, including content that identifies a staff member.
+> When soliciting reviews, merchants should not require or pressure users to leave ratings or write reviews while on the premises, nor should they request that specific content be included. This includes: Merchants requesting that staff solicit a certain number of reviews · …reviews that include specific content, including content that identifies a staff member.
 
 ### 1.2. Разрешение — блок `We do allow merchants to:`
 
@@ -36,11 +32,7 @@ https://support.google.com/business/answer/7400114?hl=en)
 ### 1.3. Раздел `Fake Engagement` (выше по документу)
 
 > Contributions to Google Maps should reflect a genuine experience at a place or business. Fake engagement is not allowed and **will be removed**.
->
-> We do not allow merchants or users to:
-> - Solicit or encourage the posting of content that does not represent a genuine experience.
-> - Offer incentives – such as payment, discounts, free goods and/or services - in exchange for posting any review or revision or removal of a negative review.
-> - Post content on a competitor's place or business to undermine that business' or product's reputation.
+> We do not allow merchants or users to: Solicit or encourage the posting of content that does not represent a genuine experience · Offer incentives – such as payment, discounts, free goods and/or services - in exchange for posting any review… · Post content on a competitor's place or business to undermine that business' or product's reputation.
 
 ### 1.4. Санкции — заключительный абзац документа
 
@@ -62,17 +54,10 @@ https://support.google.com/business/answer/7400114?hl=en)
 
 ### 2.1. Структура Правила
 
-| § | Заголовок |
-|---|---|
-| 465.1 | Definitions |
-| 465.2 | Fake or false consumer reviews, consumer testimonials, or celebrity testimonials |
-| 465.3 | [Reserved] |
-| 465.4 | Buying positive or negative consumer reviews |
-| 465.5 | Insider consumer reviews and consumer testimonials |
-| 465.6 | Company-controlled review websites or entities |
-| 465.7 | Review suppression |
-| 465.8 | Misuse of fake indicators of social media influence |
-| 465.9 | Severability |
+465.1 Definitions · 465.2 Fake or false consumer reviews/testimonials · 465.3 [Reserved] ·
+**465.4 Buying positive or negative consumer reviews** · 465.5 Insider consumer reviews ·
+465.6 Company-controlled review websites · **465.7 Review suppression** · 465.8 Misuse of fake
+indicators of social media influence · 465.9 Severability.
 
 ### 2.2. § 465.4 — дословно
 
@@ -81,15 +66,13 @@ https://support.google.com/business/answer/7400114?hl=en)
 **Норма требует вознаграждения.** Механика «спросили оценку → развели по маршрутам» без
 вознаграждения под неё не подпадает. Это не наше толкование — см. §2.4.
 
-### 2.3. § 465.7 — дословно (перечень исключений сокращён)
+### 2.3. § 465.7 — дословно (сокращено)
 
-> It is an unfair or deceptive act or practice and a violation of this part:
->
 > (a) For anyone to use an unfounded or groundless legal threat, a physical threat, intimidation, or a public false accusation in response to a consumer review… in an attempt to: (1) Prevent a review… from being written or created, or (2) Cause a review… to be removed…
 >
-> (b) For a business to materially misrepresent, expressly or by implication, that the consumer reviews of one or more of the products or services it sells **displayed in a portion of its website or platform dedicated in whole or in part to receiving and displaying consumer reviews** represent most or all the reviews submitted to the website or platform when reviews are being suppressed (i.e., not displayable) based upon their ratings or their negative sentiment. For purposes of this paragraph, a review is not considered suppressed… if the suppression occurs based on criteria for withholding reviews that are applied equally to all reviews submitted without regard to sentiment, such as when: (1) The review contains: (i) Trade secrets…, (ii) Defamatory, harassing, abusive, obscene, vulgar, or sexually explicit content, (iii) The personal information or likeness of another individual, (iv) Content that is discriminatory…, or (v) Content that is clearly false or misleading; (2) The seller reasonably believes the review is fake; or (3) The review is wholly unrelated to the products or services offered…
+> (b) For a business to materially misrepresent… that the consumer reviews… **displayed in a portion of its website or platform dedicated in whole or in part to receiving and displaying consumer reviews** represent most or all the reviews submitted… when reviews are being suppressed (i.e., not displayable) based upon their ratings or their negative sentiment. [Далее — перечень равнопримеряемых критериев-исключений: коммерческая тайна, оскорбления, чужие персональные данные, дискриминация, явно ложное; отзыв, который продавец обоснованно считает фейком; отзыв не о его товарах.]
 
-**Норма требует собственной витрины отзывов**, которая утверждает про себя, что показывает всё.
+**Норма требует собственной витрины отзывов**, утверждающей про себя, что показывает всё.
 Подтверждение из Q&A:
 
 > **Does this rule provision prohibit the selective use of particularly positive consumer reviews in marketing materials?** — No. **This provision applies only to reviews "displayed in a portion of its website or platform dedicated in whole or in part to receiving and displaying consumer reviews."** However, the use of non-representative consumer reviews in marketing could be deceptive in violation of Section 5 of the FTC Act.
@@ -122,11 +105,12 @@ https://support.google.com/business/answer/7400114?hl=en)
 
 > **Can advertising agencies, public relations firms, review brokers, or reputation management companies be liable under the rule?**
 >
-> **Yes. These entities are not immune from liability under the rule.** For example, they could be liable under Section 465.2(a) if they write, create, or sell a fake or false consumer review… They could be liable under Section 465.4 if they provide compensation or other incentives conditioned on the writing or creation of consumer reviews expressing a particular sentiment. They could also be liable under Section 465.7(a) if they engage in review suppression…
+> **Yes. These entities are not immune from liability under the rule.** …they could be liable under Section 465.4 if they provide compensation or other incentives conditioned on… a particular sentiment. They could also be liable under Section 465.7(a) if they engage in review suppression…
 
-Плюс § 465.5(b) Q&A — определение «agents» включает review management firms:
+Плюс Q&A к § 465.5(b): «The term "agents" is meant to apply to people like representatives of
+advertising agencies, public relations firms, and **review management firms**.»
 
-> The term "agents" is meant to apply to people like representatives of advertising agencies, public relations firms, and **review management firms**.
+**Описывает вид субъекта, а не юрисдикцию** — см. §2 рабочего документа.
 
 ---
 
@@ -149,15 +133,11 @@ https://support.google.com/business/answer/7400114?hl=en)
 
 > Assume that QRS Weight-Loss's manufacturer forwards reviews for its product to a third-party review website. **If it forwards only favorable reviews or omits unfavorable reviews, it is engaging in a misleading practice.**
 
-### 3.4. § 255.2(e)(8) — фильтрация на собственной витрине
+### 3.4. § 255.2(e)(8) и (e)(9) — фильтрация на своей витрине и оплата за тональность
 
-> If the retailer chose to suppress or otherwise not publish any reviews with fewer than four stars or reviews that contain negative sentiments, the product pages would be misleading as to purchasers' actual opinions of the products.
->
-> …it would be misleading if the retailer chose to filter reviews based on other factors that are **only a pretext for filtering them based on negativity**.
+> If the retailer chose to suppress or otherwise not publish any reviews with fewer than four stars or reviews that contain negative sentiments, the product pages would be misleading… it would be misleading if the retailer chose to filter reviews based on other factors that are **only a pretext for filtering them based on negativity**.
 
-### 3.5. § 255.2(e)(9) — вознаграждение, обусловленное тональностью
-
-> A manufacturer offers to pay genuine purchasers $20 each to write **positive** reviews of its products on third-party review websites. Such reviews are deceptive even if the payment is disclosed because their positive nature is **required by**, rather than being merely influenced by, the payment.
+> A manufacturer offers to pay genuine purchasers $20 each to write **positive** reviews… Such reviews are deceptive even if the payment is disclosed because their positive nature is **required by**, rather than being merely influenced by, the payment.
 
 ---
 
@@ -177,15 +157,10 @@ https://www.federalregister.gov/documents/2026/07/07/2026-13629/no-adjustment-to
 
 ### 4.2. Механизм: почему штраф не берётся автоматически
 
-Гражданский штраф по § 5(m)(1)(A) привязан к нарушению **Правила**. Нарушение § 5 FTC Act как
-такового штрафуется только при наличии одного из двух:
-- предшествующего cease-and-desist (§ 5(l)), либо
-- **Notice of Penalty Offenses** (§ 5(m)(1)(B)).
-
-FTC разослала Notice of Penalty Offenses Concerning Endorsements сотням компаний в 2021:
+Гражданский штраф по § 5(m)(1)(A) привязан к нарушению **Правила**. Нарушение § 5 как такового
+штрафуется только при предшествующем cease-and-desist (§ 5(l)) либо при полученном **Notice of
+Penalty Offenses** (§ 5(m)(1)(B)) — такие уведомления FTC разослала сотням компаний в 2021:
 https://www.ftc.gov/enforcement/penalty-offenses/endorsements
-
-> A Notice of Penalty Offenses is a document listing certain types of conduct that the FTC has determined, in one or more litigated administrative cases, to be unfair or deceptive in violation of the FTC Act.
 
 ### 4.3. Экстерриториальность — § 5(a)(4) FTC Act (US SAFE WEB Act, 2006)
 
@@ -197,11 +172,9 @@ https://www.ftc.gov/enforcement/penalty-offenses/endorsements
 
 ### 4.4. Прецедент — FTC v. Fashion Nova
 
-- Мировое соглашение, $4,2 млн (2022): https://www.ftc.gov/news-events/news/press-releases/2022/01/fashion-nova-will-pay-42-million-part-settlement-ftc-allegations-it-blocked-negative-reviews
-- Возмещение 148 351 покупателю (2025): https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-sends-refunds-consumers-affected-fashion-novas-deceptive-review-practices
-
-Компания не публиковала на собственном сайте отзывы ниже 4 звёзд. Дело **до** Правила, по
-чистому § 5. Форма санкции — не штраф за эпизод, а **возврат денег всем затронутым покупателям**.
+Мировое соглашение $4,2 млн (2022), возмещение 148 351 покупателю (2025); ссылки — §9. Компания не
+публиковала на своём сайте отзывы ниже 4 звёзд, дело **до** Правила, по чистому § 5. Форма санкции
+— не штраф за эпизод, а **возврат денег всем затронутым**.
 
 ---
 
@@ -302,6 +275,50 @@ markdown: `…/get-and-promote.md`
 
 Про способ сбора — ничего. Модерация: «Модерация может занимать до трех дней… Мы не раскрываем
 детали алгоритмов проверки.»
+
+### 5.8. Антифрод Яндекса — что заявлено публично
+
+**URL:** https://direct.yandex.ru/base/articles/kak-yandeks-proveryaet-otzyvy-v-kartah-i-poiske
+(База знаний Яндекс Директа, 22.07.2024)
+
+Заявленные цели проверки:
+
+> Чтобы в Картах и Поиске были честные отзывы, которым можно доверять…
+> Чтобы в сервисах Яндекса была **справедливая конкуренция между похожими компаниями**.
+
+Критерий, вокруг которого построена вся проверка:
+
+> Отзывы не должны нарушать требования и правила публикации, **а автор должен быть реальным клиентом**.
+
+Перечень того, на что смотрят алгоритмы и модераторы: мат и ругательства · **личный опыт** (не «мои
+друзья были») · приглашение на другой сайт · сравнение с конкурентами · реклама · неинформативность
+· персональные данные · контент для взрослых · грамматические ошибки. **Про способ приглашения и
+про отбор приглашённых — ничего.**
+
+Механизм ретроактивной перепроверки — единственное место во всём корпусе Яндекса, дающее
+операционный риск на будущее:
+
+> Иногда благодаря обращениям людей мы **обнаруживаем новые способы мошенничества с рейтингами**. В таком случае **обучаем алгоритмы и запускаем проверку заново**. Если опубликованный отзыв окажется накрученным, мы удалим его.
+
+Отдельный раздел статьи — «**Если отзыв негативный — это не повод удалять его**»:
+
+> Любому владельцу бизнеса хочется, чтобы о его компании говорили только хорошее. Но негативные отзывы тоже случаются. Мы советуем отвечать на них…
+
+### 5.9. Исследование восприятия рейтинга (для довода, не требующего нормы)
+
+**URL:** https://spiegel.medill.northwestern.edu/how-online-reviews-influence-sales/
+(Medill Spiegel Research Center, Northwestern University; впервые опубликовано 2017, страница
+подтверждает актуальность)
+
+> Is five stars "too good to be true" in the eyes of consumers? According to our research, it is. Across product categories, we found that **purchase likelihood typically peaks at ratings in the 4.0 – 4.7 range, and then begins to decrease as ratings approach 5.0**.
+
+> **Embrace negative reviews:** While it may seem counterintuitive, negative reviews can have a positive impact because they **establish credibility and authenticity**.
+
+> The purchase likelihood for a product with five reviews is **270% greater** than the purchase likelihood of a product with no reviews. But having more reviews isn't necessarily better, after a point. The marginal benefit of additional reviews begins diminishing rapidly after the first five reviews.
+
+**Область исследования — товарные отзывы в e-commerce**, не рейтинги заведений на картах.
+Перенос механизма правдоподобен, но это перенос; ссылаться как на прямое измерение нашего случая
+нельзя.
 
 ### 5.7. Что не найдено
 
@@ -469,6 +486,7 @@ RocketData, продаваемой в том числе через партнё�
 
 ## Changelog
 
+- v1.4 (2026-09-01) — добавлены §5.8 (антифрод Яндекса) и §5.9 (Spiegel/Northwestern)
 - v1.3 (2026-09-01) — §5 (Яндекс) расширен: договор, оферта, исходный markdown справки, статья Директа
 - v1.2 (2026-09-01) — §6 переписан: полный контекст нормы 2ГИС (раздел про АКЦИИ) + «Отзывы Про»
 - v1.1 (2026-09-01) — принята карта незнания (§9) из рабочего документа
