@@ -46,6 +46,7 @@ export default async function DashboardPage({ params }: Params) {
 
     const items = await client.query<Item>(
       `select id, status, author_name, author_role, text, transcript, photo_url,
+              source, source_platform, source_url, screenshot_object_key,
               (video_object_key is not null) as has_video,
               created_at
          from testimonials

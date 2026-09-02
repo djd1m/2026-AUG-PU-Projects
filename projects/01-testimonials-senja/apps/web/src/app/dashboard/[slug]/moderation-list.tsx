@@ -14,8 +14,20 @@ export interface Item {
   transcript: string | null;
   has_video: boolean;
   photo_url: string | null;
+  /** form | import | demo | platform. */
+  source: string;
+  source_platform: string | null;
+  source_url: string | null;
+  screenshot_object_key: string | null;
   created_at: string;
 }
+
+/** Подписи площадок для списка модерации. Дублировать таблицу целиком незачем: здесь нужны
+ *  только названия, а решение о площадке принимает сервер. */
+const PLATFORM_LABEL: Record<string, string> = {
+  yandex_maps: 'Яндекс.Карты', twogis: '2ГИС', otzovik: 'Отзовик',
+  flamp: 'Флампе', other: 'внешняя площадка',
+};
 
 const NEXT_STATES: Record<Item['status'], Item['status'][]> = {
   pending: ['approved', 'rejected'],
@@ -82,7 +94,9 @@ export function ModerationList({ initial }: { initial: Item[] }) {
             <div>
               {/* Всё авторское выводится через {} — React экранирует. Приём хранит
                   разметку побайтово (FR-NFR-SEC-002), безопасным её делает ЭТОТ шаг. */}
-              <strong>{item.author_name}</strong>
+              {item.author_name !== ''
+                ? <strong>{item.author_name}</strong>
+                : <strong className="muted">без имени автора</strong>}
               {item.author_role && <span className="muted"> · {item.author_role}</span>}
             </div>
             <span className={CHIP[item.status]}>{LABEL[item.status]}</span>
@@ -93,6 +107,32 @@ export function ModerationList({ initial }: { initial: Item[] }) {
               🎥 Видео{item.transcript ? ' · расшифровка готова' : ' · расшифровка в очереди'}
             </p>
           )}
+          {/* Снимок отзыва — ГЛАВНОЕ, что модератор обязан увидеть. Без него у отзыва,
+              принесённого снимком, карточка пуста: ни имени, ни текста, и владелец жал бы
+              «Опубликовать» вслепую. Модерация, в которой не видно предмета, — не модерация.
+              Найдено владельцем на живом стенде. */}
+          {item.screenshot_object_key && (
+            <a
+              href={`/api/photo/${item.screenshot_object_key}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="modItem__shot"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- наш роут /api/photo */}
+              <img src={`/api/photo/${item.screenshot_object_key}`} alt="Снимок отзыва" loading="lazy" />
+            </a>
+          )}
+
+          {item.source === 'platform' && (
+            <p className="small muted" style={{ marginTop: 8 }}>
+              {item.source_url
+                ? <a href={item.source_url} target="_blank" rel="nofollow noopener noreferrer">
+                    Первоисточник: {PLATFORM_LABEL[item.source_platform ?? ''] ?? 'внешняя площадка'} →
+                  </a>
+                : <>Перенесён с: {PLATFORM_LABEL[item.source_platform ?? ''] ?? 'внешней площадки'} · ссылки нет</>}
+            </p>
+          )}
+
           {item.photo_url && (
             // eslint-disable-next-line @next/next/no-img-element -- см. комментарий на стене
             <img src={item.photo_url} alt="" className="modItem__photo" loading="lazy" />

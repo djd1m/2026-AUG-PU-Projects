@@ -149,6 +149,21 @@ describe('форма кабинета', () => {
     expect(src).toMatch(/onPaste=\{onPaste\}/);
   });
 
+  it('страж: модератор ВИДИТ то, что одобряет — снимок и источник в списке', async () => {
+    const { readFileSync } = await import('node:fs');
+    // Запрос страницы обязан отдавать поля источника: без них список рендерит пустую
+    // карточку, и «Опубликовать» нажимается вслепую.
+    const page = code(readFileSync(new URL('../src/app/dashboard/[slug]/page.tsx', import.meta.url), 'utf8'));
+    for (const f of ['screenshot_object_key', 'source_platform', 'source_url']) {
+      expect(page, `запрос модерации без ${f}`).toContain(f);
+    }
+    const list = code(readFileSync(new URL('../src/app/dashboard/[slug]/moderation-list.tsx', import.meta.url), 'utf8'));
+    expect(list).toContain('modItem__shot');
+    expect(list).toMatch(/item\.screenshot_object_key/);
+    // И пустое имя не превращается в пустую строку без объяснения.
+    expect(list).toMatch(/без имени автора/);
+  });
+
   it('страж: обе поверхности пропускают ПУСТОГО автора', async () => {
     const { readFileSync } = await import('node:fs');
     const wall = code(readFileSync(new URL('../src/app/w/[slug]/page.tsx', import.meta.url), 'utf8'));

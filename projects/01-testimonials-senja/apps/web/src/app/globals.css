@@ -412,6 +412,12 @@ code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
 .photoPick__meta > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .quote__avatar--photo { object-fit: cover; padding: 0; }
+.modItem__shot {
+  display: block; margin-top: 12px; max-width: 100%;
+  border-radius: var(--r-md); overflow: hidden; border: 1.5px solid var(--line); line-height: 0;
+}
+.modItem__shot img { display: block; width: 100%; height: auto; max-height: 260px; object-fit: contain; background: #fff; }
+.modItem__shot:hover { border-color: var(--brand); }
 .modItem__photo {
   margin-top: 12px;
   max-width: 180px; max-height: 180px;
