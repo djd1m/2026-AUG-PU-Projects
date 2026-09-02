@@ -10,7 +10,7 @@ import { login, register, resolveSession, SESSION_COOKIE, SESSION_TTL_MS, type S
 import { createPlace, listFeedback, listPlaces, setPlatformLink, type Platform } from './places.js';
 import { withAccount, pool } from './db.js';
 import { randomBytes, createHash } from 'node:crypto';
-import { authPage, bindPage, bindStartPage, botDeepLink, dashboardPage, feedbackPage, qrPage } from './pages.js';
+import { authPage, bindPage, bindStartPage, botDeepLink, dashboardPage, feedbackPage, landingPage, qrPage } from './pages.js';
 import { guestUrl, qrSvg } from './qr.js';
 import { createCheckout, handleYookassaWebhook, pricePointRub, PaymentNotConfigured, ProviderUnavailable } from './payment.js';
 
@@ -81,7 +81,13 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   const session = await resolveSession(readCookie(req));
 
   // ── без сессии
-  if (req.method === 'GET' && (path === '/' || path === '/login'))
+  //
+  // Корень — СТРАНИЦА ПРОДУКТА, а не форма входа. Прежде «/» отдавал логин: человек, впервые
+  // пришедший по ссылке, видел два поля и кнопку и не мог узнать, что это за продукт и зачем
+  // ему кабинет. Вход остался на своём адресе и никуда не делся.
+  if (req.method === 'GET' && path === '/')
+    return session ? redirect(res, '/dashboard') : html(res, 200, landingPage(pricePointRub()));
+  if (req.method === 'GET' && path === '/login')
     return session ? redirect(res, '/dashboard') : html(res, 200, authPage('login'));
   if (req.method === 'GET' && path === '/register')
     return session ? redirect(res, '/dashboard') : html(res, 200, authPage('register'));
