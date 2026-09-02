@@ -112,6 +112,18 @@ describe('привязка', () => {
     expect(rows[0]!.h.length, 'место хеша занимают 32 случайных байта, а не NULL').toBe(32);
   });
 
+  it('голый /start НЕ молчит: объясняет, что нужна ссылка из кабинета', async () => {
+    // Ровно тот отказ, который наблюдался вживую: владелец открыл бота поиском и нажал
+    // Start. Полезная нагрузка приходит только с диплинка, поэтому текст был просто
+    // «/start» — прежний код делал continue, и не оставалось ни ответа, ни следа.
+    const sent: string[] = [];
+    const n = await pollBindings(async (_c, text) => { sent.push(text); return { ok: true, retriable: false }; },
+      tgFetch([upd(1, '/start')]));
+    expect(n).toBe(0);
+    expect(sent.length, 'бот обязан ответить: молчание неотличимо от поломки').toBe(1);
+    expect(sent[0]).toMatch(/кабинет/i);
+  });
+
   it('неизвестный токен не привязывает ничего', async () => {
     await storeHash(seedToken());
     const n = await pollBindings(async () => ({ ok: true, retriable: false }),
