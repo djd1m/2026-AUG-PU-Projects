@@ -65,6 +65,11 @@ const CSS = `
   font-style: italic;
   color: #777;
 }
+.pw-shot { display:block; width:100%; height:auto; max-height:320px; object-fit:contain;
+  margin:10px 0; border-radius:8px; border:1px solid #e4e6ee; background:#fff; }
+.pw-origin { margin:6px 0 0; font-size:12px; color:#736a87; }
+.pw-origin a { color:#6701ef; text-decoration:none; }
+.pw-origin a:hover { text-decoration:underline; }
 .pw-photo {
   width: 32px;
   height: 32px;

@@ -420,3 +420,13 @@ code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
   display: block;
   border: 1px solid var(--line);
 }
+
+/* Снимок отзыва с внешней площадки — содержимое карточки, не аватар. */
+.quote__shot{display:block;margin:12px 0;border-radius:10px;overflow:hidden;
+  border:1px solid var(--line,#e4e6ee);background:#fff;line-height:0}
+.quote__shot img{display:block;width:100%;height:auto;max-height:420px;object-fit:contain}
+.quote__shot:hover{border-color:#6701ef}
+.quote__shot:focus-visible{outline:2px solid #6701ef;outline-offset:2px}
+.quote__origin{margin:8px 0 0;font-size:13px;color:#736a87}
+.quote__origin a{color:#6701ef;text-decoration:none}
+.quote__origin a:hover{text-decoration:underline}

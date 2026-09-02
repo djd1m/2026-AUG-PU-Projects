@@ -3,7 +3,7 @@
 import { withService } from '@proofwall/db';
 
 export interface WallItem {
-  /** form | import | demo — см. миграцию 016. */
+  /** form | import | demo | platform — см. миграции 016 и 017. */
   source: string;
   id: string;
   author_name: string;
@@ -13,6 +13,12 @@ export interface WallItem {
   has_video: boolean;
   /** Путь нашего роута отдачи, не адрес хранилища (FR-002). null — фото не приложено. */
   photo_url: string | null;
+  /** Площадка-первоисточник у перенесённого отзыва: ключ из PLATFORMS. */
+  source_platform: string | null;
+  /** Ссылка на публичный отзыв у площадки. Может отсутствовать — тогда доказательство снимок. */
+  source_url: string | null;
+  /** Ключ снимка экрана в хранилище; отдаётся тем же роутом, что и фото автора. */
+  screenshot_object_key: string | null;
   created_at: string;
 }
 
@@ -29,6 +35,7 @@ export async function getApprovedTestimonials(projectId: string): Promise<WallIt
       // а не догадываться о них по слагу проекта. Пометка следует за данными: убрали
       // демо-строки — отметка исчезла сама, без правки кода.
       `select id, author_name, author_role, text, transcript, photo_url, source,
+              source_platform, source_url, screenshot_object_key,
               (video_object_key is not null) as has_video, created_at
          from testimonials
         where project_id = $1 and status = 'approved'

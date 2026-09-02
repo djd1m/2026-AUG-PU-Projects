@@ -63,6 +63,40 @@ function renderCard(apiBase: string, testimonial: WidgetTestimonial): HTMLElemen
   // на чужом домене указал бы на сайт владельца (см. комментарий в types.ts).
   // Схема проверяется: значение приходит по сети, а javascript:/data: в src
   // выполнились бы в контексте ЧУЖОГО сайта, где стоит виджет.
+  // Снимок отзыва с внешней площадки — СОДЕРЖИМОЕ карточки, а не аватар. Путь проверяется
+  // тем же выражением, что и фото автора: значение приходит по сети, и "//evil.example/x.jpg"
+  // при пустом apiBase увело бы браузер на чужой домен.
+  if (typeof testimonial.screenshot_url === 'string' && PHOTO_PATH.test(testimonial.screenshot_url)) {
+    const shot = document.createElement('img');
+    shot.className = 'pw-shot';
+    shot.alt = '';
+    shot.loading = 'lazy';
+    shot.src = apiBase + testimonial.screenshot_url;
+    card.appendChild(shot);
+  }
+
+  // Пометка источника — всегда при перенесённом отзыве, даже без ссылки: читатель обязан
+  // понимать, что смотрит на перенесённое. Собирается СОЗДАНИЕМ УЗЛОВ, не склейкой разметки:
+  // подпись и адрес приходят по сети, и innerHTML исполнил бы их на чужом сайте.
+  if (typeof testimonial.source_label === 'string' && testimonial.source_label !== '') {
+    const origin = document.createElement('p');
+    origin.className = 'pw-origin';
+    const url = testimonial.source_url;
+    if (typeof url === 'string' && /^https:\/\//i.test(url)) {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      // noopener обязателен: без него чужая площадка получает доступ к window.opener
+      // страницы ХОЗЯИНА, на которой стоит наш виджет.
+      link.rel = 'nofollow noopener noreferrer';
+      link.textContent = `Отзыв с ${testimonial.source_label} \u2192`;
+      origin.appendChild(link);
+    } else {
+      origin.textContent = `Отзыв с ${testimonial.source_label}`;
+    }
+    card.appendChild(origin);
+  }
+
   const author = document.createElement('footer');
   author.className = 'pw-author';
 

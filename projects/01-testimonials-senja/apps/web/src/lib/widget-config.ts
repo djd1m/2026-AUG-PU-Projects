@@ -11,6 +11,8 @@ import { badgeRequiredFor } from './tariff';
 import { buildBadgeUrl } from './badge';
 import { baseUrl } from './urls';
 
+import { platformLabel } from './platform-proof';
+
 export const TESTIMONIAL_LIMIT = 50; // Pseudocode §5.1
 
 export interface WidgetTestimonial {
@@ -21,6 +23,12 @@ export interface WidgetTestimonial {
   transcript: string | null;
   transcript_source: 'machine' | null;
   photo_url: string | null;
+  /** Подпись площадки-первоисточника, уже готовая к показу; null — отзыв не перенесённый. */
+  source_label: string | null;
+  /** Ссылка на публичный отзыв у площадки; может отсутствовать при наличии снимка. */
+  source_url: string | null;
+  /** Путь нашего роута отдачи снимка, не адрес хранилища. */
+  screenshot_url: string | null;
 }
 
 export interface WidgetConfigResponse {
@@ -66,9 +74,12 @@ export async function buildWidgetConfig(
   // Само правило — в lib/tariff.ts: один источник на всё приложение (FR-007).
   const badgeRequired = badgeRequiredFor(project.tier);
 
-  const items = await client.query<WidgetTestimonial>(
+  const items = await client.query<WidgetTestimonial & {
+    source: string; source_platform: string | null; screenshot_object_key: string | null;
+  }>(
     // Анонимный путь под app_service (BYPASSRLS): фильтр по project_id обязателен в коде.
     `select id, author_name, author_role, text, transcript, photo_url,
+            source, source_platform, source_url, screenshot_object_key,
             case when transcript is not null then transcript_source else null end as transcript_source
        from testimonials
       where project_id = $1 and status = 'approved'
@@ -77,8 +88,25 @@ export async function buildWidgetConfig(
     [project.id],
   );
 
+  // Подпись площадки собирается НА СЕРВЕРЕ и уезжает готовой строкой. Виджету не передаётся
+  // ни ключ площадки, ни таблица соответствий: клиент не должен решать, как назвать источник,
+  // — по той же причине, по которой он не решает, показывать ли бренд-строку.
+  const testimonials: WidgetTestimonial[] = items.rows.map((r) => ({
+    id: r.id,
+    author_name: r.author_name,
+    author_role: r.author_role,
+    text: r.text,
+    transcript: r.transcript,
+    transcript_source: r.transcript_source,
+    photo_url: r.photo_url,
+    source_label: r.source === 'platform'
+      ? (platformLabel(r.source_platform) ?? 'внешней площадки') : null,
+    source_url: r.source === 'platform' ? r.source_url : null,
+    screenshot_url: r.screenshot_object_key ? `/api/photo/${r.screenshot_object_key}` : null,
+  }));
+
   return {
-    testimonials: items.rows,
+    testimonials,
     badge_required: badgeRequired,
     project_slug: project.slug,
     // Только при badge_required: на paid ссылка не нужна и не должна утекать в ответ.

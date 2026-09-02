@@ -11,6 +11,7 @@ import { findProjectBySlug } from '@/lib/project';
 import { readBranding } from '@/lib/branding';
 import { buildReviewJsonLd, getApprovedTestimonials, safeJsonLd } from '@/lib/wall';
 import { baseUrl } from '@/lib/urls';
+import { platformLabel } from '@/lib/platform-proof';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,6 +118,42 @@ export default async function WallPage({ params }: Params) {
               )}
               {item.has_video && !item.transcript && (
                 <p className="quote__transcript"><span className="chip">🎥 видео-отзыв</span></p>
+              )}
+
+              {item.screenshot_object_key && (
+                // Снимок экрана — СОДЕРЖИМОЕ карточки, а не аватар: в слоте аватара
+                // (38 пикселей, кружок) отзыв с чужой площадки превратился бы в нечитаемую
+                // точку. Открывается в полный размер отдельной вкладкой.
+                <a
+                  className="quote__shot"
+                  href={`/api/photo/${item.screenshot_object_key}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- наш роут /api/photo:
+                      тип определяется по сигнатуре содержимого и отдаётся с nosniff. */}
+                  <img
+                    src={`/api/photo/${item.screenshot_object_key}`}
+                    alt="Снимок отзыва на площадке"
+                    loading="lazy"
+                  />
+                </a>
+              )}
+
+              {item.source === 'platform' && (
+                // Пометка источника стоит ВСЕГДА у перенесённого отзыва, даже когда ссылки
+                // нет: читатель обязан понимать, что смотрит на перенесённое, а не на
+                // написанное здесь. Ссылка делает пометку проверяемой, её отсутствие не
+                // отменяет обязанности пометить.
+                <p className="quote__origin">
+                  {item.source_url ? (
+                    <a href={item.source_url} target="_blank" rel="nofollow noopener noreferrer">
+                      Отзыв с {platformLabel(item.source_platform) ?? 'внешней площадки'} →
+                    </a>
+                  ) : (
+                    <>Отзыв с {platformLabel(item.source_platform) ?? 'внешней площадки'}</>
+                  )}
+                </p>
               )}
 
               <footer
