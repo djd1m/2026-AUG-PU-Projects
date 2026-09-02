@@ -12,6 +12,7 @@ import { currentAccountId } from '@/lib/current-session';
 import { buildProjectUrls } from '@/lib/urls';
 import { ModerationList, type Item } from './moderation-list';
 import { ChangePassword } from './change-password';
+import { PlatformForm } from './platform-form';
 import { ImportForm } from './import-form';
 import { ShareCta, type Install } from './share-cta';
 import { isPaid, isTier, tierSummary } from '@/lib/tariff';
@@ -123,6 +124,17 @@ export default async function DashboardPage({ params }: Params) {
           выдаёт этому браузеру новую. Так украденная cookie перестаёт работать.
         </p>
         <ChangePassword />
+
+        <hr className="divider" />
+
+        <h2>Отзыв с внешней площадки</h2>
+        <p className="small muted" style={{ marginTop: 6 }}>
+          Вам уже написали на Яндекс.Картах, в 2ГИС или где-то ещё? Перенесите отзыв сюда:
+          укажите ссылку на него, приложите снимок экрана — или и то и другое. На карточке
+          будет видно, откуда он, и ссылка на первоисточник. Отзыв попадёт в очередь на
+          проверку, как и присланный через форму.
+        </p>
+        <PlatformForm slug={project.slug} />
 
         <hr className="divider" />
 

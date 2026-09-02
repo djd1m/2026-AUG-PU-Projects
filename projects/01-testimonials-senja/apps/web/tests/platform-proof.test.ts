@@ -79,6 +79,38 @@ function code(src: string): string {
   return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
 }
 
+describe('форма кабинета', () => {
+  it('список площадок в форме СОВПАДАЕТ с серверным — иначе владелец выберет и получит отказ', async () => {
+    const { PLATFORM_OPTIONS } = await import('../src/app/dashboard/[slug]/platform-form');
+    const inForm = PLATFORM_OPTIONS.map((o) => o.value).sort();
+    const onServer = Object.keys(PLATFORMS).sort();
+    expect(inForm).toEqual(onServer);
+  });
+
+  it('подписи в форме совпадают с серверными — читатель и владелец видят одно название', async () => {
+    const { PLATFORM_OPTIONS } = await import('../src/app/dashboard/[slug]/platform-form');
+    for (const o of PLATFORM_OPTIONS) {
+      if (o.value === 'other') continue; // у «другого» подпись на карточке иная по смыслу
+      expect(platformLabel(o.value), o.value).toBe(o.label);
+    }
+  });
+
+  it('страж: форма не отправляет project_id — проект резолвится по slug и владельцу', async () => {
+    const { readFileSync } = await import('node:fs');
+    // Комментарии срезаются: в файле есть строка «project_id НЕ отправляется», и страж по
+    // сырому тексту поймал бы её — форма вместо смысла, третий случай этого класса за прогон.
+    const src = code(readFileSync(new URL('../src/app/dashboard/[slug]/platform-form.tsx', import.meta.url), 'utf8'));
+    expect(src).not.toContain('project_id');
+  });
+
+  it('страж: кнопка заблокирована, пока нет ни ссылки, ни файла', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync(new URL('../src/app/dashboard/[slug]/platform-form.tsx', import.meta.url), 'utf8');
+    expect(src).toMatch(/disabled=\{busy \|\| noProof\}/);
+    expect(src).toMatch(/const noProof = sourceUrl\.trim\(\) === '' && file === null/);
+  });
+});
+
 describe('стражи по исходнику', () => {
   it('снимок рендерится как СОДЕРЖИМОЕ карточки, а не в слоте аватара', async () => {
     const { readFileSync } = await import('node:fs');
