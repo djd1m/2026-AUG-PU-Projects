@@ -10,7 +10,7 @@ import { login, register, resolveSession, SESSION_COOKIE, SESSION_TTL_MS, type S
 import { createPlace, listFeedback, listPlaces, setPlatformLink, type Platform } from './places.js';
 import { withAccount, pool } from './db.js';
 import { randomBytes, createHash } from 'node:crypto';
-import { authPage, bindPage, bindStartPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
+import { authPage, bindPage, bindStartPage, botDeepLink, dashboardPage, feedbackPage, qrPage } from './pages.js';
 import { guestUrl, qrSvg } from './qr.js';
 import { createCheckout, handleYookassaWebhook, pricePointRub, PaymentNotConfigured, ProviderUnavailable } from './payment.js';
 
@@ -203,7 +203,10 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
        do update set bind_token_hash = excluded.bind_token_hash`,
       [place.id, hash]));
     const bot = process.env.TELEGRAM_BOT_USERNAME ?? '';
-    return html(res, 200, bindPage(place.name, bot, token));
+    // QR строится ИЗ ТОГО ЖЕ диплинка, что и кнопка: botDeepLink — единственное место сборки,
+    // иначе картинка и ссылка однажды разойдутся, и разойдутся молча.
+    const deep = botDeepLink(bot, token);
+    return html(res, 200, bindPage(place.name, bot, token, deep ? await qrSvg(deep) : ''));
   }
 
   if (req.method === 'GET' && seg[0] === 'places' && seg[1] && seg[2] === 'qr' && seg.length === 3) {

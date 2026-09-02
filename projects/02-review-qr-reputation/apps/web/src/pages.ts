@@ -266,8 +266,28 @@ ${bound
 </main></body></html>`;
 }
 
-export function bindPage(placeName: string, botUsername: string, token: string): string {
-  const link = botUsername ? `https://t.me/${botUsername}?start=${token}` : '';
+/** Диплинк на бота. ОДНО место постройки: страница и QR обязаны вести по одному адресу,
+ *  а две независимые сборки одной строки однажды разойдутся молча. */
+export function botDeepLink(botUsername: string, token: string): string {
+  return botUsername ? `https://t.me/${botUsername}?start=${token}` : '';
+}
+
+export function bindPage(placeName: string, botUsername: string, token: string, qr = ''): string {
+  const link = botDeepLink(botUsername, token);
+  // Три ДРУГИХ пути к одному и тому же действию — потому что t.me отказывает не у нас.
+  //
+  // Страница t.me принадлежит Telegram и делает ровно одно: передаёт управление приложению
+  // через схему tg://. Если приложение на этой машине со схемой не связано (нет десктопного
+  // клиента, браузер запретил передачу, открыто в режиме без расширений) — страница пуста, и
+  // сделать с ней нельзя НИЧЕГО: это не наш HTML. Поэтому не «чиним t.me», а обходим его:
+  //   · QR    — читает телефон, где Telegram точно установлен; браузер вообще не участвует;
+  //   · tg:// — сразу приложению, минуя страницу-посредника;
+  //   · web   — Telegram Web в этой же вкладке, если владелец в нём уже вошёл.
+  // Плюс команда текстом: она работает всегда и не зависит ни от чего, кроме самого бота.
+  const tgScheme = botUsername ? `tg://resolve?domain=${botUsername}&start=${token}` : '';
+  const webLink = botUsername
+    ? `https://web.telegram.org/k/#?tgaddr=${encodeURIComponent(tgScheme)}`
+    : '';
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Уведомления — ${esc(placeName)}</title><style>
@@ -281,6 +301,12 @@ p{margin:0 0 14px}.muted{color:#6b7a90;font-size:14px}
 background:#025bde;color:#fff;font-weight:600;text-decoration:none}
 .nav{max-width:440px;margin:0 auto 14px;font-size:14px}.nav a{color:#025bde;text-decoration:none}
 .err{padding:10px 14px;border-radius:12px;background:#ffe9e8;color:#a3231e;font-size:14px}
+.sep{border:0;border-top:1px solid #e3e9f2;margin:20px 0}
+.qr{width:180px;margin:0 0 14px;padding:10px;background:#fff;border:1px solid #d3ddec;border-radius:12px}
+.qr svg{display:block;width:100%;height:auto}
+.cmd{display:block;padding:12px 14px;border-radius:10px;background:#eef3fb;border:1px solid #d3ddec;
+font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;
+user-select:all;-webkit-user-select:all;color:#00132e}
 </style></head><body>
 <nav class="nav"><a href="/dashboard">← кабинет</a></nav>
 <main class="card">
@@ -289,8 +315,28 @@ ${link
   ? `<p>Нажмите кнопку — откроется Telegram. В боте нажмите <b>Start</b>, и обращения гостей
      начнут приходить вам сообщением в ту же минуту.</p>
      <p><a class="btn" href="${esc(link)}">Подключить Telegram</a></p>
-     <p class="muted">Кнопка одноразовая: если передумаете или смените телефон — сгенерируйте
-     новую с этой же страницы. Старая перестанет действовать.</p>`
+     <hr class="sep">
+     <p><b>Кнопка не сработала?</b> Страница <code>t.me</code> принадлежит Telegram и только
+     передаёт управление приложению — если на этом устройстве оно не подхватывается, она
+     остаётся пустой, и повторные нажатия не помогут. Обойдите её любым из трёх способов.</p>
+     ${qr ? `<p class="muted">1. Наведите камеру телефона — Telegram откроется сразу
+     на нужном боте и с кодом:</p><div class="qr">${qr}</div>` : ''}
+     <p class="muted">${qr ? '2.' : '1.'} Если Telegram установлен на этом компьютере —
+     <a href="${esc(tgScheme)}">открыть в приложении напрямую</a>, минуя страницу t.me.</p>
+     <p class="muted">${qr ? '3.' : '2.'} Если пользуетесь Telegram в браузере —
+     <a href="${esc(webLink)}" target="_blank" rel="noopener">открыть в Telegram Web</a>.</p>
+     <hr class="sep">
+     <p><b>Ничего из этого не подошло — способ, работающий всегда.</b> У бота, которого вы
+     уже запускали раньше, Telegram кнопку Start больше не показывает, и код передать нечем.
+     Тогда откройте бота
+     <a href="${esc(botUsername ? 'https://t.me/' + botUsername : '#')}">@${esc(botUsername)}</a>
+     любым способом и отправьте ему обычным сообщением вот это:</p>
+     <p><code class="cmd">/start ${esc(token)}</code></p>
+     <p class="muted">Это ровно то же самое, что делает кнопка: код в ней и код в этой строке —
+     один и тот же. Отправьте одной строкой, целиком.</p>
+     <p class="muted">Код одноразовый. Понадобится другой — выдайте новый с этой же страницы:
+     прежний перестанет действовать, а уведомления продолжат приходить в текущий чат, пока по
+     новому коду никто не нажмёт Start.</p>`
   : `<p class="err">Бот уведомлений ещё не настроен на этом стенде (нет TELEGRAM_BOT_USERNAME).
      Обращения гостей видны в кабинете — push подключится, как только бот будет заведён.</p>`}
 </main></body></html>`;
