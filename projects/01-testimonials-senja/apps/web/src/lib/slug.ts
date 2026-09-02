@@ -47,6 +47,68 @@ export function normalizeSlugDeterministic(raw: string | null | undefined): stri
   return slug.replace(/-+$/g, '');
 }
 
+
+/**
+ * Транслитерация кириллицы и разбор ссылки — ПЕРЕД общей нормализацией.
+ *
+ * Зачем. `normalizeSlugDeterministic` заменяет всё нелатинское дефисом, и это верно для своей
+ * задачи, но на двух живых видах ввода даёт мусор:
+ *
+ *   «Кофейня Артель»                    → пусто → случайный «f5q»
+ *   «https://productuniversity.ru/claude» → «https-productuniversity-ru-claude»
+ *
+ * Оба случая наблюдались на боевом стенде: второй лежит там до сих пор отдельным проектом.
+ * Причина одна — поле называется «название проекта», и люди кладут туда то, что у них под
+ * рукой: русское имя заведения или адрес сайта. Спорить с этим бесполезно, надо понимать.
+ *
+ * Ссылка разбирается в «главную метку хоста + последний сегмент пути»: `productuniversity-claude`.
+ * Не весь хост — зона (.ru, .com) в адресе стены не сообщает читателю ничего, а место занимает.
+ */
+const TRANSLIT: Record<string, string> = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y',
+  к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f',
+  х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+};
+
+/** Кириллица → латиница. Незнакомые символы не трогаются: их разберёт общая нормализация. */
+export function transliterate(raw: string): string {
+  return raw.toLowerCase().split('').map((ch) => TRANSLIT[ch] ?? ch).join('');
+}
+
+/** Если ввод — ссылка, вернуть осмысленную часть; иначе вернуть ввод как есть. */
+export function fromUrlIfUrl(raw: string): string {
+  const text = raw.trim();
+  if (!/^https?:\/\//i.test(text)) return text;
+  let u: URL;
+  try { u = new URL(text); } catch { return text; }
+
+  const host = u.hostname.toLowerCase().replace(/^www\./, '');
+  const labels = host.split('.');
+  // Главная метка — предпоследняя у обычного домена. У двухсоставных зон (co.uk, com.br)
+  // предпоследняя это часть зоны, и правило «бери вторую с конца» давало бы «co».
+  // Поймано тестом на shop.example.co.uk.
+  //
+  // ГРАНИЦА ЧЕСТНО: это не полный Public Suffix List, а короткий список самых частых
+  // вторых уровней. Полный список — файл на десятки тысяч строк, который надо обновлять;
+  // ради выбора адреса стены это несоразмерно. Промах даст менее красивый слаг, не поломку.
+  const SECOND_LEVEL = new Set(['co', 'com', 'org', 'net', 'gov', 'edu', 'ac']);
+  let mainIndex = labels.length - 2;
+  if (labels.length >= 3 && SECOND_LEVEL.has(labels[mainIndex] ?? '')) mainIndex -= 1;
+  const main = labels.length >= 2 ? (labels[mainIndex] ?? '') : (labels[0] ?? '');
+  const segments = u.pathname.split('/').filter((x) => x !== '');
+  const last = segments.length > 0 ? segments[segments.length - 1]! : '';
+  return last === '' ? main : `${main}-${last}`;
+}
+
+/**
+ * Подготовка НАЗВАНИЯ проекта к превращению в слаг. Применяется только там, где слаг
+ * выводится из названия: явно введённый слаг по-прежнему не подменяется — человек написал
+ * ровно то, что хотел, и переводить его ввод в другую письменность мы не вправе.
+ */
+export function slugSourceFromName(raw: string | null | undefined): string {
+  return transliterate(fromUrlIfUrl(raw ?? ''));
+}
+
 /**
  * Pseudocode §9 normalizeSlug: детерминированная нормализация ПЛЮС добор случайным
  * суффиксом до минимальной длины.
