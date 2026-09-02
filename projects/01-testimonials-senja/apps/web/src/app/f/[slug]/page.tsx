@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 import { findProjectBySlug } from '@/lib/project';
 import { readBranding } from '@/lib/branding';
 import { IntakeTabs } from './intake-tabs';
+import { videoIntakeEnabled } from '@/lib/video';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +42,7 @@ export default async function FormPage({ params }: Params) {
           Займёт минуту. Регистрироваться не нужно.
         </p>
 
-        <IntakeTabs slug={project.slug} branding={branding} />
+        <IntakeTabs slug={project.slug} branding={branding} videoEnabled={videoIntakeEnabled()} />
       </div>
 
       <p className="wallFoot">

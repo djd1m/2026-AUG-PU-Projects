@@ -8,7 +8,7 @@ import { withService } from '@proofwall/db';
 import { extractClientIP } from '@/lib/client-ip';
 import { submitVideoTestimonial } from '@/lib/testimonial';
 import { uploadVideo } from '@/lib/storage';
-import { MAX_SIZE_BYTES } from '@/lib/video';
+import { MAX_SIZE_BYTES, videoIntakeEnabled } from '@/lib/video';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +23,15 @@ export async function POST(request: Request): Promise<NextResponse> {
   const slug = form.get('slug');
   if (typeof slug !== 'string' || slug === '') {
     return NextResponse.json({ errors: ['slug: обязателен'] }, { status: 400 });
+  }
+
+  // Платный путь закрыт, пока владелец не включил его осознанно. Отказ ЯВНЫЙ и до
+  // чтения файла в память: тихая деградация («примем, но не расшифруем») означала бы
+  // хранение чужих видео без пользы и без предупреждения.
+  if (!videoIntakeEnabled()) {
+    return NextResponse.json(
+      { errors: ['видео-отзывы сейчас отключены владельцем — оставьте отзыв текстом'] },
+      { status: 403 });
   }
 
   const file = form.get('video');

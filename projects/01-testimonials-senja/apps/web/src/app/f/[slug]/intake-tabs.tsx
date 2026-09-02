@@ -7,13 +7,19 @@ import type { Branding } from '@/lib/branding';
 import { SubmitForm } from './submit-form';
 import { VideoRecorder } from './video-recorder';
 
-export function IntakeTabs({ slug, branding }: { slug: string; branding: Branding }) {
+export function IntakeTabs(
+  { slug, branding, videoEnabled }: { slug: string; branding: Branding; videoEnabled: boolean },
+) {
   const [tab, setTab] = useState<'text' | 'video'>('text');
+
+  // Когда платный путь закрыт, вкладки нет ВООБЩЕ — а не есть, но отвечает отказом.
+  // Показанная и неработающая кнопка это обещание, которое продукт не выполнит.
+  const tabs = videoEnabled ? (['text', 'video'] as const) : (['text'] as const);
 
   return (
     <div>
       <div role="tablist" className="tabs">
-        {(['text', 'video'] as const).map((key) => (
+        {tabs.map((key) => (
           <button
             key={key}
             type="button"
