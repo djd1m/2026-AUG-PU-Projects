@@ -104,6 +104,25 @@ describe('привязка Telegram — кнопка не убивает раб�
     return src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
   }
 
+  it('GET на адрес привязки БЕЗВРЕДЕН: токен не выдаётся просмотром', async () => {
+    // Выдача токена перезаписывает хеш и убивает прежний диплинк — это действие, и его место
+    // под POST. Браузеры и мессенджеры ходят по ссылкам сами: предзагрузка, разворачивание
+    // превью, «открыть в фоне». Токен на GET перевыпускался бы от одного лишь взгляда, и
+    // владелец терял бы диплинк, ничего не нажав.
+    const { readFileSync } = await import('node:fs');
+    const src = code(readFileSync(new URL('../src/server.js', import.meta.url).pathname
+      .replace('/server.js', '/server.ts'), 'utf8'));
+
+    const g = src.indexOf("req.method === 'GET' && seg[0] === 'places' && seg[1] && seg[2] === 'bind'");
+    const pst = src.indexOf("req.method === 'POST' && seg[0] === 'places' && seg[1] && seg[2] === 'bind'");
+    expect(g, 'ветка GET отсутствует — прямая ссылка снова тупик').toBeGreaterThan(-1);
+    expect(pst, 'ветка POST не найдена').toBeGreaterThan(g);
+
+    const getBranch = src.slice(g, pst);
+    expect(getBranch, 'GET выдаёт токен — просмотр страницы убивает действующий диплинк')
+      .not.toMatch(/randomBytes|insert into channel_bindings|update channel_bindings/);
+  });
+
   it('ветка do update НЕ трогает chat_id и bound_at', async () => {
     const { readFileSync } = await import('node:fs');
     const src = code(readFileSync(new URL('../src/server.js', import.meta.url).pathname

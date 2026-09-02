@@ -10,7 +10,7 @@ import { login, register, resolveSession, SESSION_COOKIE, SESSION_TTL_MS, type S
 import { createPlace, listFeedback, listPlaces, setPlatformLink, type Platform } from './places.js';
 import { withAccount, pool } from './db.js';
 import { randomBytes, createHash } from 'node:crypto';
-import { authPage, bindPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
+import { authPage, bindPage, bindStartPage, dashboardPage, feedbackPage, qrPage } from './pages.js';
 import { guestUrl, qrSvg } from './qr.js';
 import { createCheckout, handleYookassaWebhook, pricePointRub, PaymentNotConfigured, ProviderUnavailable } from './payment.js';
 
@@ -166,6 +166,19 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   // ── Привязка Telegram: одноразовый токен → диплинк t.me. Токен показывается ОДИН раз
   // и в БД не хранится — только его хеш, как у сессий: дамп БД не должен позволять
   // привязать чужую точку к своему чату.
+  // GET — БЕЗВРЕДНЫЙ показ страницы с кнопкой; выдача токена живёт под POST ниже.
+  // Раньше этот адрес отвечал на GET «не найдено»: владелец, пришедший по прямой ссылке
+  // или по закладке, упирался в тупик на работающем стенде.
+  if (req.method === 'GET' && seg[0] === 'places' && seg[1] && seg[2] === 'bind' && seg.length === 3) {
+    const places = await listPlaces(session.accountId);
+    const place = places.find((p) => p.id === seg[1]);
+    if (!place) return html(res, 404, 'не найдено');
+    const r = await withAccount(session.accountId, (c) => c.query<{ n: string }>(
+      `select count(*)::text as n from channel_bindings
+        where place_id = $1 and channel = 'telegram' and chat_id is not null`, [place.id]));
+    return html(res, 200, bindStartPage(place.name, place.id, r.rows[0]?.n !== '0'));
+  }
+
   if (req.method === 'POST' && seg[0] === 'places' && seg[1] && seg[2] === 'bind' && seg.length === 3) {
     if (!originOk(req)) return html(res, 403, 'запрос отклонён');
     const places = await listPlaces(session.accountId);

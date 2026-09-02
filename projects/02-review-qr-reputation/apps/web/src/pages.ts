@@ -223,6 +223,49 @@ ${cut('Тейбл-тент', 'настольный: только для гост
 </div></body></html>`;
 }
 
+export function bindStartPage(placeName: string, placeId: string, bound: boolean): string {
+  // Страница ПОД GET, и это не удобство, а требование безопасности метода.
+  //
+  // Выдача токена — действие: она перезаписывает хеш в БД и убивает прежний диплинк.
+  // Значит она обязана жить под POST, а GET обязан быть безвредным: браузеры и мессенджеры
+  // ходят по ссылкам сами (предзагрузка, разворачивание превью, «открыть в фоне»), и токен
+  // на GET перевыпускался бы от одного лишь просмотра.
+  //
+  // Но раньше GET здесь не отвечал НИЧЕМ, кроме «не найдено»: владелец, пришедший по прямой
+  // ссылке или по закладке, упирался в тупик на работающем стенде. Тот же класс, что 404 на
+  // голом /dashboard в проекте 01 — маршрут, который человек набирает руками, отвечал так,
+  // будто его нет.
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Уведомления — ${esc(placeName)}</title><style>
+body{margin:0;padding:32px 16px;background:#f5f9ff;color:#364459;
+font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.card{max-width:440px;margin:0 auto;background:#fff;border:1px solid #c1c1c1;border-radius:16px;
+box-shadow:1px 1px 19px 0 #1874fd26;padding:24px}
+h1{color:#00132e;font-size:22px;margin:0 0 8px}
+p{margin:0 0 14px}.muted{color:#6b7a90;font-size:14px}
+.btn{display:inline-block;min-height:46px;line-height:46px;padding:0 22px;border-radius:100px;
+background:#025bde;color:#fff;font-weight:600;text-decoration:none;border:0;cursor:pointer;
+font-size:16px;font-family:inherit}
+.ok{padding:10px 14px;border-radius:12px;background:#e7f7ed;color:#1c6b3c;font-size:14px}
+.nav{max-width:440px;margin:0 auto 14px;font-size:14px}.nav a{color:#025bde;text-decoration:none}
+</style></head><body>
+<nav class="nav"><a href="/dashboard">← кабинет</a></nav>
+<main class="card">
+<h1>Уведомления для «${esc(placeName)}»</h1>
+${bound
+  ? `<p class="ok">Бот уже подключён — обращения гостей приходят в Telegram.</p>
+     <p class="muted">Кнопка ниже выдаст новую ссылку, если нужно перевести уведомления на
+     другой телефон или аккаунт. Пока по новой ссылке никто не нажмёт Start, сообщения
+     продолжат приходить туда же, куда и сейчас.</p>`
+  : `<p>Обращения гостей могут приходить вам в Telegram сразу, как их оставили. Нажмите
+     кнопку — выдам одноразовую ссылку на бота.</p>`}
+<form method="post" action="/places/${esc(placeId)}/bind" style="margin:0">
+  <button class="btn" type="submit">${bound ? 'Выдать новую ссылку' : 'Получить ссылку на бота'}</button>
+</form>
+</main></body></html>`;
+}
+
 export function bindPage(placeName: string, botUsername: string, token: string): string {
   const link = botUsername ? `https://t.me/${botUsername}?start=${token}` : '';
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
