@@ -133,6 +133,17 @@ Run validation against INVEST + SMART + BDD scenario completeness.
 
 Output: `docs/features/<feature>/validation-report.md`
 
+The report carries the `Spec revision:` line and the `## Criterion scenarios` table (AC id → BDD
+scenario) in the exact format of
+`.claude/skills/requirements-validator/references/feature-report-contracts.md`. Then run:
+
+```bash
+bash "$CHECK_PIPELINE_GAPS" "${CLAUDE_PROJECT_DIR:-.}" --report-revision --criterion-scenarios
+```
+
+Same exit semantics as the Phase 1 gate: `0` advances; `1` (stale revision, AC id without a scenario
+row) returns to Phase 2; `2` stops.
+
 ### Phase 3: IMPLEMENT (parallel agents)
 
 1. Read SPARC docs from Phase 1
@@ -143,22 +154,74 @@ Output: `docs/features/<feature>/validation-report.md`
 6. Coordinator validates every trace before merge/integration
 7. Run full test suite
 
+#### Canon before dispatch (required)
+
+**The canon MUST be frozen BEFORE dispatch.** Parallel units are N writers deriving names and
+numbers from one source; the collision exists ONLY IN THE UNION, so no worker can see it and no
+receipt can catch it. The coordinator records `docs/dispatch-plan.md` — the canon path and its
+sha256 — or runs the units sequentially.
+
+The same plan MUST assign OWNERSHIP: exactly one writer per file, the coordinator included, and a
+file born by SPLITTING another gets its owner AT CREATION — ownership never travels by itself.
+
+Every EDIT and every VERDICT MUST declare the sha256 of the source it was built on; a
+mismatch with the live file is a refusal WITHOUT mutation — a read copy is a snapshot of the moment
+of reading, not of the file.
+
+Field forms and closed value lists are in the checkers' headers:
+
+```bash
+node .claude/hooks/check-canon.cjs .
+node .claude/hooks/check-file-ownership.cjs .
+node .claude/hooks/check-source-version.cjs .
+```
+
+`0` frozen and intact · `1` a defect is PROVEN and named · `2` **THE CHECK DID NOT RUN**, which is
+never "all clear".
+
 #### Positive file receipt (required)
 
 Before dispatch, allocate one `RUN_ID` and, for every independent unit, a unique `WORK_UNIT_ID`.
 Resolve `TRACE_PATH` to an absolute path unique to `(RUN_ID, WORK_UNIT_ID)` and pass both fields.
 Require the worker to write a substantive body ending in `Status: completed` or `Status: failed` to
-`TRACE_PATH` before returning a one-line pointer. Before integration, verify each path is a regular
-non-symlink file, non-whitespace, post-launch, and terminal. Narrative output or silence is not a
-receipt. Name missing, stale, partial, unreadable, duplicate, failed, dead-PID, or probe-error units
-and refuse merge/completion unless every required receipt is valid and completed. See
-`.claude/rules/swarm-file-evidence.md` for mechanics and the bounded non-atomic-write exception.
+`TRACE_PATH` before its one-line pointer. Before integration, MUST verify a regular, non-symlink,
+substantive, post-launch file with a terminal status. Narrative/chat/silence is never a receipt; any
+invalid receipt MUST block merge/completion. Full rule and bounded exception:
+`.claude/rules/swarm-file-evidence.md`.
+
+#### Threshold tests pin the number (layer-2 rule)
+
+A test of a THRESHOLD asserts the literal number; a test of a DERIVED value calls the production
+implementation. A test that computes its expectation from the production constant is green for any
+value and proves nothing.
+
+#### Blocking criterion-coverage gate
+
+`05_completion.md` MUST carry the `## Criterion coverage` table (AC id → test file → test title; format
+in `feature-report-contracts.md`). At the end of Phase 3 run:
+
+```bash
+bash "$CHECK_PIPELINE_GAPS" "${CLAUDE_PROJECT_DIR:-.}" --completion
+```
+
+`0` advances; `1` (an AC without a test, a row whose file or title does not exist) returns to
+Phase 3; `2` stops. Never downgrade either non-zero status to a warning.
 
 ### Phase 4: REVIEW (brutal-honesty-review)
 
 Read: `.claude/skills/brutal-honesty-review/SKILL.md`
 
-Findings classified by severity. Critical (blocker | high) MUST be fixed.
+Specification contract: the review receives `01_specification.md` + `validation-report.md` (a review
+not given the specification is incomplete by construction and says so) and writes
+`docs/features/<feature>/review-report.md` — `Reviewer family:` (disclosure) and `Spec revision:` in the
+first 20 lines, an AC-by-AC `## Spec conformance` table — per `feature-report-contracts.md`. Then run:
+
+```bash
+node "${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/check-review-contract.cjs" "${CLAUDE_PROJECT_DIR:-.}" "<feature>"
+```
+
+`0` advances; `1` (named contract gaps) returns to Phase 4; `2` stops. Findings classified by
+severity. Critical (blocker | high) MUST be fixed.
 
 ## Final Steps
 
@@ -172,8 +235,11 @@ Skip per-phase user confirmations. Auto-decisions:
 - Phase 1: proceed if all docs exist
 - Phase 1 traceability: proceed only when `check-pipeline-gaps.sh` exits `0`; preserve exit `1`/`2`
 - Phase 2: proceed if 🟢 or 🟡; auto-retry once on 🔴
+- Phase 2 report revision + criterion scenarios: proceed only when `--report-revision --criterion-scenarios` exits `0`; preserve exit `1`/`2`
 - Phase 3: proceed if tests + lint + build green
+- Phase 3 criterion coverage: proceed only when `--completion` exits `0`; preserve exit `1`/`2`
 - Phase 4: auto-fix `high` if straightforward; halt on `blocker`
+- Phase 4 review contract: proceed only when `check-review-contract.cjs` exits `0`; preserve exit `1`/`2`
 
 ## Related
 

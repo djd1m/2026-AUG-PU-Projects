@@ -351,17 +351,10 @@ Context flow: [summary]
 - Use `templates/pipeline-template.md` for the orchestrator
 - Substitute `{{PLACEHOLDERS}}` with domain-specific content
 
-**Master Validation Checklist:**
-- [ ] Every skill has `SKILL.md` with name, description, triggers
-- [ ] Every skill has explicit input/output format
-- [ ] Every skill has anti-pattern warnings
-- [ ] Orchestrator references all skills by correct path
-- [ ] Quality gates have scoring systems and verdicts
-- [ ] Checkpoints have user commands documented
-- [ ] Context flow matches phase ordering
-- [ ] Git commits defined for each major phase
-- [ ] No circular dependencies in skill graph
-- [ ] All templates substituted (no `{{PLACEHOLDER}}` remaining)
+**Master Validation Checklist:** every skill has `SKILL.md` (name/description/triggers), explicit
+input/output format and anti-pattern warnings; orchestrator references correct paths; quality gates
+carry scoring + verdicts; checkpoints document user commands; context flow matches phase order;
+git commits per major phase; no circular dependencies; no `{{PLACEHOLDER}}` left unsubstituted.
 
 **Checkpoint:**
 ```
@@ -403,10 +396,17 @@ When designing pipelines, identify parallelism opportunities and use swarm agent
 **Swarm Design Pattern:**
 ```
 1. DECOMPOSE: Break task into independent subtasks
-2. SPAWN: Launch parallel agents via Task tool
-3. AGGREGATE: Collect results, merge, resolve conflicts
-4. VALIDATE: Cross-check aggregate for consistency
+2. ASSIGN:    One WORK_UNIT_ID + one absolute TRACE_PATH per subtask; record the launch instant
+3. SPAWN:     Launch parallel agents via Task tool, each carrying its assignment
+4. RECEIPT:   node .claude/hooks/check-swarm-receipts.cjs <manifest>  (0 ok / 1 undelivered / 2 not run)
+5. AGGREGATE: Collect results FROM THE FILES, merge, resolve conflicts
+6. VALIDATE:  Cross-check aggregate for consistency
 ```
+
+A forged pipeline that skips steps 2 and 4 cannot tell a dead agent from a working one — both are
+silent — so it will report a stage as running when nothing is. See
+`.claude/rules/swarm-file-evidence.md`; the full seam text to paste into the forged pipeline lives
+in `cc-toolkit-generator-enhanced/references/templates/swarm-file-evidence.md` (Section 2).
 
 **Swarm Agent Template:**
 ```markdown
@@ -467,15 +467,10 @@ Skills written for claude.ai use `/mnt/skills/user/` paths. For Claude Code port
 
 ## Anti-Patterns
 
-❌ **Monolithic Skills** — skills with 1000+ lines doing everything
-❌ **Implicit Dependencies** — skills that assume others exist without declaring
-❌ **Skipping Quality Gates** — generating toolkit from unvalidated documentation
-❌ **Hardcoded Paths** — using absolute paths instead of relative/mapped
-❌ **Duplicating Logic** — copying skill content instead of view() references
-❌ **No Checkpoints** — running entire pipeline without user feedback points
-❌ **No Error Recovery** — pipeline that can't resume from a failed phase
-❌ **Over-Engineering** — creating 20 skills when 5 would suffice
-❌ **No Fallbacks** — skills that crash when an optional dependency is missing
+❌ Monolithic skills (1000+ lines) · implicit undeclared dependencies · skipping quality gates
+(toolkit from unvalidated docs) · hardcoded absolute paths · duplicating logic instead of view() ·
+no checkpoints · no error recovery / resume · over-engineering (20 skills where 5 suffice) ·
+no fallbacks for optional dependencies
 
 ## Quality Standards
 
