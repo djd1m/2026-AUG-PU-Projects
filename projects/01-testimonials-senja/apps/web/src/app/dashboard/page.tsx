@@ -43,24 +43,28 @@ export default async function DashboardIndex() {
 
   if (projects.length === 0) {
     return (
-      <main className="page">
-        <h1>Кабинет</h1>
-        <p>У вас пока нет ни одного проекта.</p>
-        <p><Link href="/">Создать проект</Link></p>
+      <main className="stage stage--narrow">
+        <div className="card stack">
+          <h1>Кабинет</h1>
+          <p className="lede">У вас пока нет ни одного проекта.</p>
+          <Link className="btn btn--primary" href="/">Создать проект</Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="page">
-      <h1>Ваши проекты</h1>
-      <ul className="stack">
-        {projects.map((p) => (
-          <li key={p.slug}>
-            <Link href={`/dashboard/${p.slug}`}>{p.slug}</Link>
-          </li>
-        ))}
-      </ul>
+    <main className="stage stage--narrow">
+      <div className="card stack">
+        <h1>Ваши проекты</h1>
+        <ul className="links">
+          {projects.map((p) => (
+            <li key={p.slug} className="linkRow">
+              <Link href={`/dashboard/${p.slug}`}>{p.slug}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </main>
   );
 }

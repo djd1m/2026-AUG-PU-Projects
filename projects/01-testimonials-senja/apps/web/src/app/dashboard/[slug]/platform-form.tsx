@@ -106,52 +106,54 @@ export function PlatformForm({ slug }: { slug: string }) {
   }
 
   return (
-    <form className="stack" onSubmit={submit} onPaste={onPaste}>
+    <form className="form" onSubmit={submit} onPaste={onPaste}>
       <label className="field">
-        <span>Снимок отзыва <em>вставьте из буфера — Ctrl+V — или выберите файл</em></span>
+        <span>Снимок отзыва<br /><span className="field__hint">вставьте из буфера — Ctrl+V — или выберите файл</span></span>
         <input
+          className="input"
           type="file"
           accept="image/jpeg,image/png,image/webp"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
         />
       </label>
-      {file && <p className="ok">Снимок вложен: {file.name || 'из буфера'}</p>}
+      {file && <p><span className="chip chip--ok">снимок вложен</span> <span className="small muted">{file.name || 'из буфера'}</span></p>}
 
       <label className="field">
         <span>…или ссылка на отзыв</span>
         <input
+          className="input"
           type="url"
           value={sourceUrl}
           onChange={(e) => setSourceUrl(e.target.value)}
           placeholder="https://yandex.ru/maps/org/…/reviews/"
         />
       </label>
-      {label && <p className="hint">Площадка определена: <strong>{label}</strong></p>}
+      {label && <p><span className="chip chip--accent">площадка определена</span> <span className="small">{label}</span></p>}
 
       {sourceUrl.trim() !== '' && file === null && (
         <label className="field">
-          <span>Текст отзыва <em>обязателен, когда нет снимка</em></span>
-          <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} rows={3} />
+          <span>Текст отзыва<br /><span className="field__hint">обязателен, когда нет снимка</span></span>
+          <textarea className="textarea" value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} rows={3} />
         </label>
       )}
 
-      <button type="button" className="linklike" onClick={() => setDetails(!details)}>
+      <button type="button" className="btn btn--ghost btn--sm" onClick={() => setDetails(!details)}>
         {details ? 'Свернуть' : 'Уточнить детали — имя автора, площадка, подпись'}
       </button>
 
       {details && (
-        <div className="stack">
+        <div className="form">
           <label className="field">
-            <span>Имя автора <em>не нужно, если оно видно на снимке</em></span>
-            <input value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
+            <span>Имя автора<br /><span className="field__hint">не нужно, если оно видно на снимке</span></span>
+            <input className="input" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
           </label>
           <label className="field">
             <span>Роль или компания</span>
-            <input value={role} onChange={(e) => setRole(e.target.value)} maxLength={120} />
+            <input className="input" value={role} onChange={(e) => setRole(e.target.value)} maxLength={120} />
           </label>
           <label className="field">
-            <span>Площадка <em>обычно определяется по ссылке</em></span>
-            <select value={effective} onChange={(e) => setPlatform(e.target.value)}>
+            <span>Площадка<br /><span className="field__hint">обычно определяется по ссылке</span></span>
+            <select className="input" value={effective} onChange={(e) => setPlatform(e.target.value)}>
               <option value="">— по ссылке —</option>
               {PLATFORM_OPTIONS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
@@ -160,21 +162,21 @@ export function PlatformForm({ slug }: { slug: string }) {
           </label>
           {file !== null && (
             <label className="field">
-              <span>Текст отзыва <em>необязательно: снимок уже показывает его</em></span>
-              <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} rows={3} />
+              <span>Текст отзыва<br /><span className="field__hint">необязательно: снимок уже показывает его</span></span>
+              <textarea className="textarea" value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} rows={3} />
             </label>
           )}
         </div>
       )}
 
-      <p className="hint">
+      <p className="small muted">
         Добавляя чужой отзыв или его снимок, вы подтверждаете, что вправе его опубликовать.
       </p>
 
       {errors.length > 0 && <ul className="errors">{errors.map((e) => <li key={e}>{e}</li>)}</ul>}
-      {done && <p className="ok">Добавлено. Отзыв ждёт вашего одобрения в списке выше.</p>}
+      {done && <p className="notice">Добавлено. Отзыв ждёт вашего одобрения в списке выше.</p>}
 
-      <button type="submit" disabled={busy || !ready}>
+      <button type="submit" className="btn btn--primary" disabled={busy || !ready}>
         {busy ? 'Добавляем…' : 'Добавить отзыв'}
       </button>
     </form>
