@@ -621,16 +621,35 @@ describe('AC-016.19 — успешный вход ведёт на СУЩЕСТВ
     return walk(path.resolve(SRC, 'app'));
   };
 
-  it('маршрут не ведёт на `/dashboard` — такой страницы нет', () => {
-    const routes = pages();
-    expect(routes).not.toContain('/dashboard');
-    expect(routes).toContain('/dashboard/[slug]');
+  it('КАЖДЫЙ адрес перехода после входа существует как страница', () => {
+    // Проверяется СВОЙСТВО, а не факт мира. Прежняя редакция утверждала «`/dashboard` нет
+    // в приложении» — это было верно в день написания и перестало быть верным 02.09.2026,
+    // когда страницу завели (владелец открыл /dashboard и увидел 404). Тест позеленеть уже
+    // не мог, хотя защищаемое им свойство — «вход не заканчивается 404» — соблюдено даже
+    // лучше прежнего. Утверждение о мире стареет вместе с миром; утверждение о свойстве нет.
+    //
     // СЫРОЙ текст: адрес — шаблонная строка, а strip() заменяет литералы на ''. Первая
-    // редакция обеих проверок смотрела в strip() и совпасть не могла НИКОГДА — при этом
-    // одна из них зеленела, создавая видимость проверки. Третий случай этого класса в
-    // одной фиче; вывод записан в 05_completion.md.
+    // редакция смотрела в strip() и совпасть не могла НИКОГДА, при этом зеленела —
+    // видимость проверки. Третий случай этого класса в одной фиче; вывод в 05_completion.md.
     const code = raw('app/api/auth/yandex/callback/route.ts');
-    expect(code).not.toMatch(/`\$\{baseUrl\(\)\}\/dashboard`/);
+    const targets = [...code.matchAll(/`\$\{baseUrl\(\)\}([^`]*)`/g)].map((m) => m[1] || '/');
+    expect(targets.length, 'адресов перехода не найдено — проверять нечего').toBeGreaterThan(0);
+
+    const routes = pages();
+    const matches = (target: string): boolean => {
+      const t = target.replace(/\?.*$/, '').split('/').filter(Boolean);
+      return routes.some((r) => {
+        const seg = r.split('/').filter(Boolean);
+        if (seg.length !== t.length) return false;
+        // Динамический сегмент маршрута принимает подстановку `${...}`, но не литерал:
+        // иначе `/dashboard/settings` сошёлся бы с `/dashboard/[slug]`.
+        return seg.every((x, i) => x === t[i] || (/^\[.+\]$/.test(x) && /\$\{.+\}/.test(t[i]!)));
+      });
+    };
+
+    for (const target of targets) {
+      expect(matches(target), `после входа уводит на ${target}, а такой страницы нет`).toBe(true);
+    }
   });
 
   it('владелец с проектом уходит на его кабинет, без проектов — на главную', () => {

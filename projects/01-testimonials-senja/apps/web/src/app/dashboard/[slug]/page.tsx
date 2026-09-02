@@ -16,6 +16,10 @@ import { PlatformForm } from './platform-form';
 import { ImportForm } from './import-form';
 import { ShareCta, type Install } from './share-cta';
 import { isPaid, isTier, tierSummary } from '@/lib/tariff';
+import { BillingBlock } from './billing-block';
+
+/** Та же цена, что в /api/checkout: одно значение, читаемое из одного места. */
+const PRICE_RUB = Number(process.env.PAID_TIER_PRICE_RUB ?? '990');
 
 export const dynamic = 'force-dynamic';
 
@@ -37,8 +41,8 @@ export default async function DashboardPage({ params }: Params) {
   // Обе выборки — в ОДНОЙ транзакции под app_authenticated: RLS фильтрует их сама,
   // отдельного `where account_id` нет намеренно (Architecture §3.1).
   const data = await withAccount(accountId, async (client) => {
-    const { rows } = await client.query<{ id: string; slug: string; tier: string }>(
-      'select id, slug, tier from projects where slug = $1',
+    const { rows } = await client.query<{ id: string; slug: string; tier: string; paid_until: Date | null }>(
+      'select id, slug, tier, paid_until from projects where slug = $1',
       [slug],
     );
     const project = rows[0] ?? null;
@@ -69,7 +73,12 @@ export default async function DashboardPage({ params }: Params) {
   if (!project) notFound();
 
   const urls = buildProjectUrls(project.slug);
-  const tier = tierSummary(isTier(project.tier) ? project.tier : 'free');
+  // Ярлык тарифа считается по ДЕЙСТВУЮЩЕЙ оплате, а не по одной колонке tier: просроченный
+  // платный обязан выглядеть бесплатным везде, иначе кабинет утверждает одно, а виджет
+  // показывает badge — и владелец узнаёт правду от клиента.
+  const paidNow = isPaid(project.tier, project.paid_until);
+  const tier = tierSummary(paidNow ? 'paid' : 'free');
+  void isTier;
   const pending = data?.items.filter((i) => i.status === 'pending').length ?? 0;
 
   return (
@@ -85,7 +94,7 @@ export default async function DashboardPage({ params }: Params) {
             <p className="eyebrow">Проект</p>
             <h1>{project.slug}</h1>
           </div>
-          <span className={`chip ${isPaid(project.tier) ? 'chip--accent' : ''}`}>
+          <span className={`chip ${paidNow ? 'chip--accent' : ''}`}>
             {tier.label}
           </span>
         </div>
@@ -106,6 +115,14 @@ export default async function DashboardPage({ params }: Params) {
         {/* Вставляется как текст через {}, React экранирует сам — угловые скобки сниппета
             не станут разметкой (правило экранирования при рендере, FR-002/005/006). */}
         <pre className="snippet"><code>{urls.widget_snippet}</code></pre>
+
+        <BillingBlock
+          slug={project.slug}
+          priceRub={PRICE_RUB}
+          paidUntil={paidNow && project.paid_until
+            ? new Date(project.paid_until).toLocaleDateString('ru-RU')
+            : null}
+        />
 
         <ShareCta slug={project.slug} wallUrl={urls.wall_of_love} installs={data?.installs ?? []} />
 

@@ -14,27 +14,68 @@ export function isTier(value: unknown): value is Tier {
   return typeof value === 'string' && (TIERS as readonly string[]).includes(value);
 }
 
+/** 30 дней — период, который продаётся (DEC-001, решение владельца 2026-09-02). */
+export const PAID_PERIOD_DAYS = 30;
+
 /**
  * Единственная функция, отвечающая на вопрос «нужен ли badge».
  *
- * Принимает ТАРИФ ИЗ БД и ничего больше. Отсутствие второго аргумента здесь —
- * не упрощение, а реализация инварианта ADR-002: не существует параметра, которым
- * клиент мог бы повлиять на ответ.
+ * Принимает ТАРИФ И СРОК ИЗ БД — и ничего больше. Отсутствие параметра, приходящего
+ * от клиента, здесь не упрощение, а реализация инварианта ADR-002: не существует
+ * значения, которым клиент мог бы повлиять на ответ. Момент времени параметром сделан
+ * ради проверяемости (иначе тест на «просрочено» пришлось бы писать через ожидание),
+ * но приходит он из системных часов, а не из запроса.
  *
- * Неизвестное/повреждённое значение тарифа трактуется как free: «не смогли
- * определить» обязано означать самый строгий вариант, а не самый мягкий.
+ * FAIL-CLOSED В ОБЕИХ ОСЯХ. Badge НЕ требуется ровно в одном случае: тариф в точности
+ * `'paid'` И срок разбирается в дату И эта дата в будущем. Всё остальное — неизвестный
+ * тариф, `null`, пустая строка, неразбираемая дата, просроченная дата — badge требуется.
+ *
+ * Почему срок вообще появился: до 018 оплата ставила `tier = 'paid'` навсегда, и продажа
+ * месяца означала бы обещать месяц, а выдавать пожизненно.
  */
-export function badgeRequiredFor(tierFromDatabase: unknown): boolean {
-  return tierFromDatabase !== 'paid';
+export function badgeRequiredFor(
+  tierFromDatabase: unknown,
+  paidUntilFromDatabase?: unknown,
+  now: Date = new Date(),
+): boolean {
+  if (tierFromDatabase !== 'paid') return true;
+  const until = toDate(paidUntilFromDatabase);
+  if (until === null) return true;
+  return until.getTime() <= now.getTime();
 }
 
 /**
- * «Тариф уже платный?» — тот же единственный источник, что и badgeRequiredFor.
- * Отдельная функция, а не `!badgeRequiredFor(x)` на месте вызова: отрицание правила
- * про badge читается как «badge не нужен», и смысл «оплачено» в нём теряется.
+ * «Оплата действует прямо сейчас?» — тот же единственный источник, что и badgeRequiredFor.
+ * Отдельная функция, а не `!badgeRequiredFor(...)` на месте вызова: отрицание правила про
+ * badge читается как «badge не нужен», и смысл «оплачено» в нём теряется.
  */
-export function isPaid(tierFromDatabase: unknown): boolean {
-  return tierFromDatabase === 'paid';
+export function isPaid(
+  tierFromDatabase: unknown,
+  paidUntilFromDatabase?: unknown,
+  now: Date = new Date(),
+): boolean {
+  return !badgeRequiredFor(tierFromDatabase, paidUntilFromDatabase, now);
+}
+
+/**
+ * Разбор срока. Непригодное значение трактуется как ОТСУТСТВУЮЩЕЕ, а не подчищается:
+ * `new Date('мусор')` даёт Invalid Date, у которого getTime() это NaN, а любое сравнение
+ * с NaN ложно — то есть «мусор» молча прошёл бы как «срок не истёк».
+ */
+function toDate(value: unknown): Date | null {
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+  if (typeof value === 'string' && value.trim() !== '') {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
+
+/** Новый срок после оплаты: продление НЕ сжигает остаток. */
+export function extendPaidUntil(current: unknown, now: Date = new Date()): Date {
+  const from = toDate(current);
+  const base = from !== null && from.getTime() > now.getTime() ? from : now;
+  return new Date(base.getTime() + PAID_PERIOD_DAYS * 24 * 60 * 60 * 1000);
 }
 
 /** Человекочитаемое описание для дашборда — что именно даёт переход. */

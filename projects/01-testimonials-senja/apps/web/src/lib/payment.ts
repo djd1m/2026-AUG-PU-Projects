@@ -14,7 +14,7 @@
 // адрес источника, и переживает любую ошибку в цепочке прокси.
 
 import type { PoolClient } from 'pg';
-import { isPaid } from './tariff';
+import { extendPaidUntil, isPaid } from './tariff';
 import { ipInAnyCidr } from './ip-range';
 
 export const PROVIDER = 'yookassa';
@@ -171,8 +171,8 @@ export async function applyTariffUpgrade(
   client: PoolClient,
   providerPaymentId: string,
 ): Promise<UpgradeResult> {
-  const { rows } = await client.query<{ id: string; project_id: string; tier: string }>(
-    `select cs.id, cs.project_id, p.tier
+  const { rows } = await client.query<{ id: string; project_id: string; tier: string; paid_until: Date | null }>(
+    `select cs.id, cs.project_id, p.tier, p.paid_until
        from checkout_sessions cs join projects p on p.id = cs.project_id
       where cs.provider_session_id = $1`,
     [providerPaymentId],
@@ -181,8 +181,13 @@ export async function applyTariffUpgrade(
   // Неизвестный платёж — не ошибка: staging и prod могут делить один магазин ЮKassa.
   if (!session) return { applied: false, reason: 'unknown_session' };
 
-  const alreadyPaid = isPaid(session.tier);
-  await client.query("update projects set tier = 'paid' where id = $1", [session.project_id]);
+  const alreadyPaid = isPaid(session.tier, session.paid_until);
+  // Срок считается ОТ БОЛЬШЕГО из «сейчас» и текущего срока: оплата за неделю до конца
+  // добавляет 30 дней к остатку, а не сжигает его. Считаем в коде, а не в SQL, чтобы
+  // правило продления жило в одном месте с правилом badge и не разошлось с ним.
+  const until = extendPaidUntil(session.paid_until);
+  await client.query("update projects set tier = 'paid', paid_until = $2 where id = $1",
+    [session.project_id, until]);
   await client.query("update checkout_sessions set status = 'completed' where id = $1", [session.id]);
   await client.query(
     `insert into audit_log (project_id, entity_type, entity_id, actor_id, action, reason)
@@ -210,9 +215,14 @@ export async function createRemotePayment(
   projectId: string,
   amount: number,
   returnUrl: string,
+  idempotenceKey: string,
 ): Promise<CheckoutSession> {
   if (isStub()) {
-    const id = `stub-${projectId}`;
+    // Заглушка тоже обязана давать РАЗНЫЕ сессии на разные попытки: прежний
+    // `stub-${projectId}` был один на проект, и вторая оплата упиралась в уникальный
+    // индекс checkout_sessions.provider_session_id — то есть заглушка воспроизводила
+    // ровно тот дефект, который чинится ниже, и прятала его от тестов.
+    const id = `stub-${idempotenceKey}`;
     return { providerSessionId: id, redirectUrl: `https://yookassa.ru/checkout/stub/${id}` };
   }
   const creds = credentials();
@@ -223,7 +233,11 @@ export async function createRemotePayment(
     method: 'POST',
     headers: {
       Authorization: `Basic ${auth}`,
-      'Idempotence-Key': `${projectId}:${amount}`,
+      // Ключ СВОЙ У КАЖДОЙ ПОПЫТКИ. Прежний `${projectId}:${amount}` совпадал у продления
+      // (тот же проект, та же сумма), и ЮKassa по контракту возвращала ПЕРВЫЙ, уже
+      // оплаченный платёж вместо нового: владелец жал «продлить», попадал на завершённую
+      // оплату и считал, что всё прошло. Денег нет, срок не продлён, в журнале ничего.
+      'Idempotence-Key': idempotenceKey,
       'content-type': 'application/json',
     },
     body: JSON.stringify({
@@ -254,11 +268,12 @@ export async function recordCheckoutSession(
   client: PoolClient,
   projectId: string,
   session: CheckoutSession,
+  idempotenceKey?: string,
 ): Promise<void> {
   await client.query(
-    `insert into checkout_sessions (project_id, provider_session_id, status)
-     values ($1, $2, 'pending')
+    `insert into checkout_sessions (project_id, provider_session_id, status, idempotence_key)
+     values ($1, $2, 'pending', $3)
      on conflict (provider_session_id) do nothing`,
-    [projectId, session.providerSessionId],
+    [projectId, session.providerSessionId, idempotenceKey ?? null],
   );
 }

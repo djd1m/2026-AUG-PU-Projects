@@ -245,6 +245,92 @@ describe('апгрейд тарифа (Pseudocode §7.3)', () => {
   });
 });
 
+describe('срок платного тарифа и продление (DEC-001: 990 ₽ / 30 дней)', () => {
+  const DAY = 24 * 3600_000;
+  const paidUntilOf = async (c: PoolClient, id: string): Promise<Date | null> => {
+    const { rows } = await c.query('select paid_until from projects where id = $1', [id]);
+    return rows[0].paid_until;
+  };
+
+  it('оплата ставит срок, а не «paid навсегда»', async () => {
+    await inRollback(async (c) => {
+      const proj = await makeProject(c);
+      const sid = `cs_term_${Date.now()}`;
+      await checkout(c, proj, sid);
+      expect(await paidUntilOf(c, proj.projectId), 'до оплаты срока быть не должно').toBeNull();
+
+      await applyTariffUpgrade(c, sid);
+      const until = await paidUntilOf(c, proj.projectId);
+      expect(until).not.toBeNull();
+      const days = (until!.getTime() - Date.now()) / DAY;
+      expect(days, `срок ${days} дней вместо 30`).toBeGreaterThan(29.9);
+      expect(days).toBeLessThan(30.1);
+    });
+  });
+
+  it('продление НЕ сжигает остаток: 30 дней прибавляются к оставшимся', async () => {
+    await inRollback(async (c) => {
+      const proj = await makeProject(c);
+      // Оплачено, до конца ещё 10 дней.
+      await c.query(
+        "update projects set tier = 'paid', paid_until = now() + interval '10 days' where id = $1",
+        [proj.projectId]);
+      const sid = `cs_ext_${Date.now()}`;
+      await checkout(c, proj, sid);
+      await applyTariffUpgrade(c, sid);
+
+      const days = ((await paidUntilOf(c, proj.projectId))!.getTime() - Date.now()) / DAY;
+      // 10 остатка + 30 новых. Если продление считать от now(), выйдет 30 — то есть
+      // досрочная оплата НАКАЗЫВАЛА БЫ того, кто платит вовремя.
+      expect(days, `после продления ${days} дней; остаток сожжён?`).toBeGreaterThan(39.9);
+      expect(days).toBeLessThan(40.1);
+    });
+  });
+
+  it('просроченный платный считается от «сейчас», а не от старой даты', async () => {
+    await inRollback(async (c) => {
+      const proj = await makeProject(c);
+      await c.query(
+        "update projects set tier = 'paid', paid_until = now() - interval '100 days' where id = $1",
+        [proj.projectId]);
+      const sid = `cs_exp_${Date.now()}`;
+      await checkout(c, proj, sid);
+      await applyTariffUpgrade(c, sid);
+
+      const days = ((await paidUntilOf(c, proj.projectId))!.getTime() - Date.now()) / DAY;
+      // Иначе первая оплата после перерыва выдала бы срок В ПРОШЛОМ, и владелец заплатил
+      // бы за уже истёкший период.
+      expect(days, `после оплаты ${days} дней`).toBeGreaterThan(29.9);
+      expect(days).toBeLessThan(30.1);
+    });
+  });
+});
+
+describe('ключ идемпотентности — свой у КАЖДОЙ попытки оплаты', () => {
+  it('два обращения дают РАЗНЫЕ сессии, иначе продление невозможно', async () => {
+    // Прежний ключ собирался как `${projectId}:${amount}`. Он обязателен по контракту
+    // ЮKassa и работает ровно как задумано: повтор с тем же ключом возвращает ТОТ ЖЕ
+    // платёж. Но у продления те же проект и сумма — значит второй месяц вернул бы первый,
+    // уже оплаченный платёж. Владелец нажал «продлить», попал на завершённую оплату и
+    // решил, что всё прошло: денег нет, срок не продлён, в журнале ничего.
+    const a = await createRemotePayment('p-1', 990, 'https://x.test/', 'ключ-первый');
+    const b = await createRemotePayment('p-1', 990, 'https://x.test/', 'ключ-второй');
+    expect(a.providerSessionId).not.toBe(b.providerSessionId);
+
+    // И зеркально: ОДИН ключ обязан давать одну сессию — ради этого ключ и существует.
+    const again = await createRemotePayment('p-1', 990, 'https://x.test/', 'ключ-первый');
+    expect(again.providerSessionId).toBe(a.providerSessionId);
+  });
+
+  it('роут выдаёт новый ключ на каждый вызов, а не выводит его из проекта и суммы', () => {
+    const code = readFileSync(path.resolve(__dirname, '../src/app/api/checkout/route.ts'), 'utf8')
+      .replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
+    expect(code, 'ключ обязан быть случайным на попытку').toMatch(/randomUUID\(\)/);
+    expect(code, 'ключ снова выводится из проекта и суммы — продление сломано')
+      .not.toMatch(/\$\{projectId\}:\$\{amount\}|\$\{projectId\}:\$\{PRICE_RUB\}/);
+  });
+});
+
 describe('checkout', () => {
   it('создаёт сессию со статусом pending и привязкой к проекту', async () => {
     await inRollback(async (c) => {

@@ -117,7 +117,7 @@ describe('badge_url в конфигурации виджета', () => {
   it('на paid badge_url ОТСУТСТВУЕТ — рисовать нечего, и ссылка не утекает', async () => {
     await inRollback(async (c) => {
       const { slug, projectId } = await makeProject(c);
-      await c.query("update projects set tier = 'paid' where id = $1", [projectId]);
+      await c.query("update projects set tier = 'paid', paid_until = now() + interval '30 days' where id = $1", [projectId]);
       const cfg = await buildWidgetConfig(c, slug, 'client.com');
       expect(cfg.badge_required).toBe(false);
       expect(cfg.badge_url).toBeUndefined();
@@ -138,7 +138,7 @@ describe('badge_url в конфигурации виджета', () => {
       const { slug, projectId } = await makeProject(c);
       // Тот же слаг, тот же тег на сайте владельца — меняется только строка в БД.
       expect((await buildWidgetConfig(c, slug, 'client.com')).badge_required).toBe(true);
-      await c.query("update projects set tier = 'paid' where id = $1", [projectId]);
+      await c.query("update projects set tier = 'paid', paid_until = now() + interval '30 days' where id = $1", [projectId]);
       const after = await buildWidgetConfig(c, slug, 'client.com');
       expect(after.badge_required).toBe(false);
       expect(after.project_slug).toBe(slug); // код на сайте владельца не менялся

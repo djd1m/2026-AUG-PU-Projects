@@ -63,8 +63,11 @@ export async function buildWidgetConfig(
   slug: string,
   domain?: string | null,
 ): Promise<WidgetConfigResponse> {
-  const projectRes = await client.query<{ id: string; slug: string; tier: string }>(
-    'select id, slug, tier from projects where slug = $1 and deactivated = false',
+  // paid_until запрашивается ВМЕСТЕ с tier: правило про badge теперь смотрит на оба, и
+  // запрос без срока молча вернул бы undefined — то есть «срока нет» — и badge остался бы
+  // включённым у оплатившего. Тот же класс, что «модерация не выбрала поля снимка».
+  const projectRes = await client.query<{ id: string; slug: string; tier: string; paid_until: Date | null }>(
+    'select id, slug, tier, paid_until from projects where slug = $1 and deactivated = false',
     [slug],
   );
   const project = projectRes.rows[0];
@@ -72,7 +75,7 @@ export async function buildWidgetConfig(
 
   // Тариф читается ИЗ БД и нигде больше. Ни query, ни заголовки, ни тело не участвуют.
   // Само правило — в lib/tariff.ts: один источник на всё приложение (FR-007).
-  const badgeRequired = badgeRequiredFor(project.tier);
+  const badgeRequired = badgeRequiredFor(project.tier, project.paid_until);
 
   const items = await client.query<WidgetTestimonial & {
     source: string; source_platform: string | null; screenshot_object_key: string | null;

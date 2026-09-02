@@ -52,6 +52,19 @@ afterAll(async () => {
 });
 
 describe('ADR-002 — badge решает сервер', () => {
+
+  it('ПРОСРОЧЕННАЯ оплата возвращает badge — срок кончился, канал роста снова работает', async () => {
+    // До 018 колонки срока не было вовсе, и одна оплата снимала badge навсегда: продавать
+    // «990 ₽ / 30 дней» при такой записи значило обещать месяц, а выдавать пожизненно.
+    await inRollback(async (c) => {
+      const { slug, projectId } = await makeProject(c);
+      await c.query(
+        "update projects set tier = 'paid', paid_until = now() - interval '1 second' where id = $1",
+        [projectId]);
+      const cfg = await buildWidgetConfig(c, slug, 'client.example');
+      expect(cfg?.badge_required, 'просроченный платный обязан снова показывать badge').toBe(true);
+    });
+  });
   it('free → badge_required = true', async () => {
     await inRollback(async (c) => {
       const { slug } = await makeProject(c);
@@ -63,7 +76,7 @@ describe('ADR-002 — badge решает сервер', () => {
   it('paid → badge_required = false', async () => {
     await inRollback(async (c) => {
       const { slug, projectId } = await makeProject(c);
-      await c.query("update projects set tier = 'paid' where id = $1", [projectId]);
+      await c.query("update projects set tier = 'paid', paid_until = now() + interval '30 days' where id = $1", [projectId]);
       const cfg = await buildWidgetConfig(c, slug);
       expect(cfg.badge_required).toBe(false);
     });
@@ -72,7 +85,7 @@ describe('ADR-002 — badge решает сервер', () => {
   it('ИНВАРИАНТ: tier НЕ уходит в ответ ни в каком виде', async () => {
     await inRollback(async (c) => {
       const { slug, projectId } = await makeProject(c);
-      await c.query("update projects set tier = 'paid' where id = $1", [projectId]);
+      await c.query("update projects set tier = 'paid', paid_until = now() + interval '30 days' where id = $1", [projectId]);
       const cfg = await buildWidgetConfig(c, slug);
       expect(cfg).not.toHaveProperty('tier');
       // И не спрятан внутри вложенных структур.
@@ -89,7 +102,7 @@ describe('ADR-002 — badge решает сервер', () => {
         'badge_required', 'badge_url', 'project_slug', 'testimonials',
       ]);
       // paid: badge не рисуется, значит и ссылка не нужна и не отдаётся.
-      await c.query("update projects set tier = 'paid' where id = $1", [projectId]);
+      await c.query("update projects set tier = 'paid', paid_until = now() + interval '30 days' where id = $1", [projectId]);
       expect(Object.keys(await buildWidgetConfig(c, slug)).sort()).toEqual([
         'badge_required', 'project_slug', 'testimonials',
       ]);
@@ -131,7 +144,7 @@ describe('безопасный дефолт (Pseudocode §5.1)', () => {
   it('деактивированный проект → тот же безопасный дефолт', async () => {
     await inRollback(async (c) => {
       const { slug, projectId } = await makeProject(c);
-      await c.query("update projects set tier = 'paid', deactivated = true where id = $1", [projectId]);
+      await c.query("update projects set tier = 'paid', paid_until = now() + interval '30 days', deactivated = true where id = $1", [projectId]);
       const cfg = await buildWidgetConfig(c, slug);
       // Даже у ОПЛАЧЕННОГО проекта: не смогли проверить — значит badge обязателен.
       expect(cfg.badge_required).toBe(true);
