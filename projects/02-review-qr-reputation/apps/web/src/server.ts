@@ -174,10 +174,20 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const token = randomBytes(24).toString('base64url');
     const hash = createHash('sha256').update(token).digest();
     await withAccount(session.accountId, (c) => c.query(
+      // Новый токен ВЫДАЁТСЯ, но действующая привязка НЕ СТИРАЕТСЯ.
+      //
+      // Прежняя редакция обнуляла chat_id и bound_at прямо здесь, и это стоило владельцу
+      // тишины: он нажал кнопку, чтобы посмотреть ссылку, — и уведомления перестали
+      // приходить, а узнал он об этом, когда клиент оставил отзыв и ничего не пришло.
+      // Кнопка уничтожала рабочее состояние без предупреждения и без отмены.
+      //
+      // Теперь так: свежий диплинк перебивает старый (хеш перезаписан), но пока по нему
+      // никто не прошёл, доставка идёт по прежнему чату. Перепривязка вступает в силу в
+      // момент УСПЕХА, а не в момент намерения.
       `insert into channel_bindings (place_id, channel, bind_token_hash, chat_id, bound_at)
        values ($1, 'telegram', $2, null, null)
        on conflict (place_id, channel)
-       do update set bind_token_hash = excluded.bind_token_hash, chat_id = null, bound_at = null`,
+       do update set bind_token_hash = excluded.bind_token_hash`,
       [place.id, hash]));
     const bot = process.env.TELEGRAM_BOT_USERNAME ?? '';
     return html(res, 200, bindPage(place.name, bot, token));

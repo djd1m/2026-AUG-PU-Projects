@@ -88,6 +88,40 @@ describe('изоляция арендаторов — через кабинет'
   });
 });
 
+describe('привязка Telegram — кнопка не убивает рабочую доставку', () => {
+  // ЧЕМ ЗАСЛУЖЕН. Владелец нажал «уведомления», чтобы посмотреть ссылку, — и уведомления
+  // перестали приходить. Прежний upsert обнулял chat_id и bound_at в момент НАЖАТИЯ, то есть
+  // уничтожал рабочее состояние по намерению, а не по результату. Отказ молчаливый: кабинет
+  // показывает страницу как ни в чём не бывало, а обнаруживается это только тем, что гость
+  // оставил отзыв и в Telegram ничего не пришло.
+  //
+  // Стережём ПО ИСХОДНИКУ, потому что поведение проявляется только на связке двух контейнеров
+  // (кабинет пишет, нотифаер читает), и интеграционный тест здесь дороже без выигрыша.
+
+  // Комментарии срезаются ДО поиска. Иначе страж ловит форму вместо смысла: объяснение выше
+  // содержит ровно те слова, которые он ищет, и зеленел бы на собственном тексте.
+  function code(src: string): string {
+    return src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
+  }
+
+  it('ветка do update НЕ трогает chat_id и bound_at', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = code(readFileSync(new URL('../src/server.js', import.meta.url).pathname
+      .replace('/server.js', '/server.ts'), 'utf8'));
+
+    const at = src.indexOf('insert into channel_bindings');
+    expect(at, 'upsert привязки не найден — страж проверяет не тот файл').toBeGreaterThan(-1);
+    const upsert = src.slice(at, src.indexOf('`', at + 10));
+    const doUpdate = upsert.slice(upsert.indexOf('do update set'));
+
+    expect(doUpdate, 'do update не найден').toMatch(/bind_token_hash\s*=\s*excluded\.bind_token_hash/);
+    expect(doUpdate, 'кнопка стирает действующий чат — молчаливая потеря уведомлений')
+      .not.toMatch(/chat_id/);
+    expect(doUpdate, 'кнопка стирает отметку привязки — доставка уходит в channel_not_bound')
+      .not.toMatch(/bound_at/);
+  });
+});
+
 describe('точки и ссылки', () => {
   it('создание → в списке, счётчики нулевые', async () => {
     const o = await owner();

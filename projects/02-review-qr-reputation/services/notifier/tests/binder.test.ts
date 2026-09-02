@@ -29,6 +29,14 @@ afterAll(async () => {
 function seedToken(): string {
   return randomBytes(24).toString('base64url');
 }
+/** Выдача НОВОГО токена кабинетом — ровно так, как это делает server.ts после починки:
+ *  хеш перезаписывается, действующая привязка НЕ трогается. */
+async function reissue(token: string): Promise<void> {
+  await pgAdmin.query(
+    `insert into channel_bindings (place_id, channel, bind_token_hash) values ($1,'telegram',$2)
+     on conflict (place_id, channel) do update set bind_token_hash=$2`,
+    [placeId, createHash('sha256').update(token).digest()]);
+}
 async function storeHash(token: string): Promise<void> {
   await pgAdmin.query(
     `insert into channel_bindings (place_id, channel, bind_token_hash) values ($1,'telegram',$2)
@@ -67,6 +75,41 @@ describe('привязка', () => {
     // Первый победил, второй НЕ перехватил чужую привязку.
     expect(rows[0]?.chat_id).toBe('777');
     expect(sent[1]).toMatch(/устарела/i);
+  });
+
+  it('выдача нового токена НЕ рвёт действующую доставку, перепривязка — по УСПЕХУ', async () => {
+    // Главный дефект этой фичи и его починка целиком. Владелец нажал «уведомления» ещё раз —
+    // прежняя редакция обнуляла chat_id прямо там, и уведомления умирали молча, ещё до того
+    // как кто-нибудь открыл диплинк. Теперь у смены привязки есть ровно один момент: успешный
+    // /start по свежему токену.
+    const t1 = seedToken(); await storeHash(t1);
+    await pollBindings(async () => ({ ok: true, retriable: false }), tgFetch([upd(1, `/start ${t1}`)]));
+
+    const t2 = seedToken(); await reissue(t2);          // кабинет выдал свежую кнопку
+    let { rows } = await pgAdmin.query<{ chat_id: string | null }>(
+      'select chat_id from channel_bindings where place_id=$1', [placeId]);
+    expect(rows[0]?.chat_id, 'доставка обязана идти по прежнему чату, пока новый не подтверждён').toBe('777');
+
+    // По старому токену уже не пройти: успешная привязка сожгла его хеш.
+    expect(await pollBindings(async () => ({ ok: true, retriable: false }),
+      tgFetch([upd(2, `/start ${t1}`, 888)]))).toBe(0);
+    ({ rows } = await pgAdmin.query('select chat_id from channel_bindings where place_id=$1', [placeId]));
+    expect(rows[0]?.chat_id).toBe('777');
+
+    // А по свежему — проходит, и вот теперь чат меняется.
+    expect(await pollBindings(async () => ({ ok: true, retriable: false }),
+      tgFetch([upd(3, `/start ${t2}`, 888)]))).toBe(1);
+    ({ rows } = await pgAdmin.query('select chat_id from channel_bindings where place_id=$1', [placeId]));
+    expect(rows[0]?.chat_id).toBe('888');
+  });
+
+  it('успешная привязка СЖИГАЕТ хеш: в таблице его больше нет', async () => {
+    const t = seedToken(); await storeHash(t);
+    await pollBindings(async () => ({ ok: true, retriable: false }), tgFetch([upd(1, `/start ${t}`)]));
+    const { rows } = await pgAdmin.query<{ h: Buffer }>(
+      'select bind_token_hash as h from channel_bindings where place_id=$1', [placeId]);
+    expect(rows[0]!.h.toString('hex')).not.toBe(createHash('sha256').update(t).digest('hex'));
+    expect(rows[0]!.h.length, 'место хеша занимают 32 случайных байта, а не NULL').toBe(32);
   });
 
   it('неизвестный токен не привязывает ничего', async () => {
