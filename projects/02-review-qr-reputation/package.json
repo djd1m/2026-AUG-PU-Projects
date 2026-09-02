@@ -8,7 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "vitest run",
+    "test": "bash scripts/test-all.sh",
+    "test:one": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "guards": "bash scripts/check-db-grants.sh",
     "migrate": "tsx packages/db/src/migrate.ts"
