@@ -1,0 +1,554 @@
+<title>Прогонный лист Proofwall</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#ffffff;
+  --tint:#f7f8fa;
+  --surface:#ffffff;
+  --ink:#1e0a3c;
+  --text:#3f3556;
+  --muted:#736a87;
+  --brand:#6701ef;
+  --brand-soft:#eee0ff;
+  --line:#d9d5e6;
+  --line-soft:#e9e7f1;
+  --danger:#a8291f;
+  --danger-bg:#fdeaef;
+  --warn:#7a5200;
+  --warn-bg:#fdf1de;
+  --ok:#1c6b4a;
+  --shadow:0 1px 2px rgba(30,10,60,.05), 0 8px 24px rgba(103,1,239,.07);
+  --r:14px;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --display:"Bitter",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#150e26; --tint:#1a1230; --surface:#1e1636;
+    --ink:#f0eaff; --text:#c3b8dd; --muted:#9186ad;
+    --brand:#b490ff; --brand-soft:#2a1d4d;
+    --line:#362a55; --line-soft:#281e44;
+    --danger:#ff9d93; --danger-bg:#331519;
+    --warn:#e5b661; --warn-bg:#2e2313;
+    --ok:#6fd3a5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#150e26; --tint:#1a1230; --surface:#1e1636;
+  --ink:#f0eaff; --text:#c3b8dd; --muted:#9186ad;
+  --brand:#b490ff; --brand-soft:#2a1d4d;
+  --line:#362a55; --line-soft:#281e44;
+  --danger:#ff9d93; --danger-bg:#331519;
+  --warn:#e5b661; --warn-bg:#2e2313;
+  --ok:#6fd3a5;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--text);
+  font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;
+  display:grid;grid-template-columns:1fr;gap:40px}
+@media(min-width:1000px){.wrap{grid-template-columns:200px 1fr;gap:48px;align-items:start}}
+
+.head{grid-column:1/-1;border-bottom:2px solid var(--ink);padding-bottom:20px;
+  display:flex;flex-wrap:wrap;gap:16px;align-items:baseline;justify-content:space-between}
+h1{font:600 34px/1.1 var(--display);color:var(--ink);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.head .meta{font:500 13px/1.5 var(--mono);color:var(--muted);text-align:right}
+.head .meta b{color:var(--brand);font-weight:500}
+
+nav{position:sticky;top:24px;font-size:14px;display:none}
+@media(min-width:1000px){nav{display:block}}
+nav ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);
+  text-decoration:none;border-left:2px solid transparent}
+nav a:hover{color:var(--brand);background:var(--tint);border-left-color:var(--brand)}
+nav a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+main{min-width:0;display:flex;flex-direction:column;gap:44px}
+section{scroll-margin-top:24px}
+h2{font:600 24px/1.2 var(--display);color:var(--ink);margin:0 0 4px;text-wrap:balance}
+h2 .num{font:500 13px/1 var(--mono);color:var(--brand);display:block;margin-bottom:8px;
+  letter-spacing:.08em;text-transform:uppercase}
+h3{font:600 17px/1.3 var(--body);color:var(--ink);margin:26px 0 8px}
+p{margin:0 0 12px;max-width:68ch}
+.lead{color:var(--muted);margin:0 0 18px;max-width:68ch}
+strong{color:var(--ink);font-weight:600}
+code{font:500 13.5px/1.4 var(--mono);background:var(--tint);border:1px solid var(--line-soft);
+  border-radius:5px;padding:1px 5px;color:var(--ink);word-break:break-word}
+a{color:var(--brand)}
+
+.alarm{background:var(--danger-bg);border:1px solid var(--danger);border-left-width:5px;
+  border-radius:var(--r);padding:20px 22px}
+.alarm h2,.alarm h2 .num,.alarm h3{color:var(--danger)}
+.alarm code{background:transparent;border-color:var(--danger);color:var(--danger)}
+
+.run{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line);margin-top:14px}
+.step{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:14px 0;
+  border-bottom:1px solid var(--line-soft)}
+@media(min-width:760px){.step{grid-template-columns:64px 1fr 1.15fr;gap:22px}}
+.tc{font:500 14px/1.7 var(--mono);color:var(--brand);font-variant-numeric:tabular-nums}
+.act{color:var(--ink);font-weight:500}
+.act em{font-style:normal;color:var(--muted);font-weight:400;display:block;font-size:14px;margin-top:3px}
+.say{color:var(--text);font-size:15px;border-left:2px solid var(--brand-soft);padding-left:14px}
+.say::before{content:"«";color:var(--muted)}
+.say::after{content:"»";color:var(--muted)}
+@media(max-width:759px){.say{grid-column:2}}
+
+.tw{overflow-x:auto;margin:14px 0 4px;border:1px solid var(--line-soft);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th{text-align:left;font:600 12px/1.4 var(--body);text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);padding:11px 14px;background:var(--tint);border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--text)}
+tr:last-child td{border-bottom:0}
+td strong{color:var(--ink)}
+.no{color:var(--danger)}
+.yes{color:var(--ok)}
+
+.tech{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.item{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--shadow)}
+.item h3{margin:0 0 6px;display:flex;gap:10px;align-items:baseline}
+.item h3 .t{font:500 12px/1 var(--mono);color:var(--brand);white-space:nowrap}
+.core{border-color:var(--brand);border-left-width:3px}
+
+pre{background:var(--tint);border:1px solid var(--line-soft);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;margin:12px 0;font:500 13px/1.65 var(--mono);color:var(--ink)}
+pre .c{color:var(--muted)}
+
+blockquote{margin:14px 0;padding:14px 20px;border-left:3px solid var(--brand);
+  background:var(--tint);border-radius:0 10px 10px 0;color:var(--ink);font-size:15.5px}
+blockquote p:last-child{margin:0}
+
+ul,ol{margin:0 0 12px;padding-left:22px;max-width:68ch}
+li{margin-bottom:6px}
+.check{list-style:none;padding:0;counter-reset:c}
+.check li{counter-increment:c;padding-left:34px;position:relative;margin-bottom:9px}
+.check li::before{content:counter(c);position:absolute;left:0;top:1px;width:22px;height:22px;
+  border-radius:50%;background:var(--brand-soft);color:var(--brand);font:500 12px/22px var(--mono);
+  text-align:center}
+
+.note{font-size:14px;color:var(--muted);max-width:68ch}
+.tag{display:inline-block;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;
+  padding:5px 8px;border-radius:99px;background:var(--brand-soft);color:var(--brand)}
+.tag.d{background:var(--danger-bg);color:var(--danger)}
+.tag.w{background:var(--warn-bg);color:var(--warn)}
+
+@media print{
+  body{background:#fff;color:#000;font-size:11pt}
+  nav,.head .meta{display:none}
+  .wrap{display:block;max-width:none;padding:0}
+  section{break-inside:avoid;margin-bottom:18pt}
+  .item,.alarm{break-inside:avoid;box-shadow:none}
+  pre,.tw{break-inside:avoid}
+  a{color:#000;text-decoration:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <h1>Прогонный лист Proofwall</h1>
+    <div class="meta">
+      2 сентября 2026 · <b>proofwall.aicoding.space</b><br>
+      20 минут: 5 продукт · 12 техника · 3 вопросы
+    </div>
+  </header>
+
+  <nav aria-label="Разделы">
+    <ol>
+      <li><a href="#blockers">Прочитать до показа</a></li>
+      <li><a href="#run-a">Прогон: клиент</a></li>
+      <li><a href="#run-b">Прогон: владелец</a></li>
+      <li><a href="#tech">Техническая часть</a></li>
+      <li><a href="#words">Опорные формулировки</a></li>
+      <li><a href="#qa">Возражения</a></li>
+      <li><a href="#risks">Риски на сцене</a></li>
+      <li><a href="#fallback">Запасные ходы</a></li>
+      <li><a href="#numbers">Числа под рукой</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="blockers" class="alarm">
+      <h2><span class="num">Прочитать до показа</span>Видео-отзыв не работает вообще</h2>
+      <p><span class="tag d">P0</span> Это заголовочная фича: на главной написано «текстом
+      <strong>или на видео</strong>», на форме есть вкладка «Записать видео». Нажатие и отправка
+      дают посетителю <strong>503</strong> на каждой попытке.</p>
+      <p>Причина названа точно: <strong>в хранилище нет бакета для видео</strong>. Есть только
+      бакет фотографий; бакет для видео не создаёт ни compose, ни код, ни один скрипт — его надо
+      было завести руками.</p>
+      <pre>[NoSuchBucket: The specified bucket does not exist]
+  BucketName: 'testimonial-videos'</pre>
+      <p><strong>Транскрибация ни разу не отрабатывала успешно за всю историю стенда</strong> —
+      единственная попытка 29 августа упала по тому же корню. В базе ноль отзывов с видео и ноль
+      расшифровок. Сам сервис расшифровки при этом жив — он просто никогда не получал работы.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Вариант</th><th>Цена</th></tr></thead>
+        <tbody>
+          <tr><td>Починить: создать бакет (~2 минуты) и <strong>проверить сквозной отправкой реального видео</strong></td><td>нужен ещё и рабочий ключ OpenAI — он задан, но ни разу не вызывался, потому что до вызова дело не доходило</td></tr>
+          <tr><td>Не чинить: убрать видео из сценария, вкладку не открывать</td><td>маршруты ниже написаны <strong>без видео</strong> — они полны и без него</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Ещё четыре вещи, которые выстрелят</h3>
+      <div class="tw"><table>
+        <thead><tr><th></th><th>Что</th><th>Что делать</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag d">P1</span></td><td><strong>5 отправок в час</strong> с адреса на проект. Проверено: 6-я и 7-я → 429. Весь зал сидит за одним NAT</td><td>Репетировать не больше трёх раз. Зрителям — мобильный интернет, не Wi-Fi зала</td></tr>
+          <tr><td><span class="tag d">P1</span></td><td>Партнёрских кодов, комиссий и атрибуций в базе <strong>ноль</strong></td><td>Страницу партнёра не открывать</td></tr>
+          <tr><td><span class="tag w">P2</span></td><td>Оплата — заглушка, и она видна: ответ честно содержит <code>stub: true</code>, кнопки оплаты в кабинете нет</td><td>Про платный тариф говорить словами</td></tr>
+          <tr><td><span class="tag w">P2</span></td><td>Кириллическое название даёт мусорный адрес: «Демо Проба» → <code>f5q</code>. В боевой базе виден живой след: проект <code>https-projects-aicoding-space</code></td><td>Вводить <strong>латинское</strong> название</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Чего не делать</h3>
+      <ol class="check">
+        <li><strong>Не запускать <code>docker compose up</code></strong> — поднимется свой caddy и упрётся в занятые порты 80/443 чужого прокси, стек упадёт посреди показа</li>
+        <li>Не показывать получение письма восстановления</li>
+        <li>Не открывать <code>.env</code> и файл с учётными данными демо-аккаунта</li>
+        <li>Не утверждать, что виджет проверен на чужом сайте — проверен на чужом Origin в заголовке</li>
+        <li><strong>Жёстко перезагрузить каждую вкладку</strong> (Ctrl+Shift+R): вкладка, открытая до пересборки, молча роняет кнопки «Создать проект» и «Опубликовать»</li>
+      </ol>
+
+      <h3>Что проверялось по подозрениям и оказалось целым</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Подозрение</th><th>Вердикт</th></tr></thead>
+        <tbody>
+          <tr><td>Вход через Яндекс сломан переездом домена</td><td class="yes"><strong>не подтвердилось.</strong> Адрес возврата строится из настройки и указывает на новый домен; Яндекс принял его и увёл на свою форму входа. Полный вход не пройден — нужна живая учётка</td></tr>
+          <tr><td>Восстановление пароля</td><td class="yes"><strong>работает на уровне API.</strong> Токен выпускается, провайдер принял запрос без ошибки. Доставка в реальный ящик не проверялась</td></tr>
+          <tr><td>Виджет: CORS и дубли заголовков</td><td class="yes"><strong>починено.</strong> С чужого Origin приходит ровно <strong>один</strong> заголовок, предзапрос отвечает 204</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="run-a">
+      <h2><span class="num">Прогон · часть 1 · 0:00 — 1:15</span>Глазами клиента</h2>
+      <p class="lead">Маршрут клиента идёт первым: он короткий, он про чужую боль и готовит
+      второй — отзыв, оставленный здесь, дальше пройдёт модерацию на глазах у зала.</p>
+      <div class="run">
+        <div class="step"><div class="tc">0:00</div><div class="act">Открыть форму сбора<em>/f/demo</em></div><div class="say">Вот что получает клиент — одна ссылка. Ни регистрации, ни пароля, ни приложения.</div></div>
+        <div class="step"><div class="tc">0:10</div><div class="act">Показать две вкладки: текстом и видео<em>вкладку видео НЕ нажимать</em></div><div class="say">Текстом или видео — на выбор клиента.</div></div>
+        <div class="step"><div class="tc">0:15</div><div class="act">Имя, роль</div><div class="say">Имя, роль — и сам отзыв.</div></div>
+        <div class="step"><div class="tc">0:30</div><div class="act">Текст отзыва, показать счётчик 0 / 2000</div><div class="say">Ограничение — две тысячи знаков, чтобы отзыв читался, а не листался.</div></div>
+        <div class="step"><div class="tc">0:50</div><div class="act">Прицепить фото<em>работает — бакет фотографий существует</em></div><div class="say">Фото по желанию — оно попадёт на карточку.</div></div>
+        <div class="step"><div class="tc">1:00</div><div class="act">«Отправить отзыв»</div><div class="say">Всё. Для клиента история закончилась — минута.</div></div>
+        <div class="step"><div class="tc">1:05</div><div class="act">Показать ответ страницы</div><div class="say">Обратите внимание: отзыв никуда не опубликован. Он ушёл владельцу на проверку.</div></div>
+      </div>
+    </section>
+
+    <section id="run-b">
+      <h2><span class="num">Прогон · часть 2 · 1:15 — 4:15</span>Глазами владельца</h2>
+      <p class="lead">Войти в кабинет <strong>до показа</strong>, вкладку держать открытой.</p>
+      <div class="run">
+        <div class="step"><div class="tc">1:15</div><div class="act">Главная страница</div><div class="say">Со стороны владельца всё начинается здесь. Регистрация — четыре поля, форма прямо на главной.</div></div>
+        <div class="step"><div class="tc">1:30</div><div class="act">Показать форму регистрации<em>если регистрируете — название латиницей</em></div><div class="say">Ни онбординга, ни мастера из семи шагов. Проект создаётся за минуту.</div></div>
+        <div class="step"><div class="tc">1:45</div><div class="act">Вкладка кабинета</div><div class="say">Сразу после создания владелец получает три адреса. Это и есть весь продукт.</div></div>
+        <div class="step"><div class="tc">1:55</div><div class="act">Блок «Ссылки»: форма сбора и стена</div><div class="say">Первая — та самая, что вы видели минуту назад. Её дают клиенту.</div></div>
+        <div class="step"><div class="tc">2:10</div><div class="act">Блок «Виджет на свой сайт» — один тег</div><div class="say">Вторая — публичная стена. Третье — один тег на свой сайт. Не плагин и не конструктор: одна строка.</div></div>
+        <div class="step"><div class="tc">2:25</div><div class="act">Прокрутить к «Отзывы» — там ждёт отзыв из маршрута А</div><div class="say">Вот отзыв, который мы только что оставили. На стену он ещё не попал.</div></div>
+        <div class="step"><div class="tc">2:35</div><div class="act">«Опубликовать»</div><div class="say">Модерация — не украшение. На стену попадает только то, что владелец одобрил: это его репутация.</div></div>
+        <div class="step"><div class="tc">2:45</div><div class="act">Открыть стену<em>/w/demo</em></div><div class="say">Стена любви. Отзыв уже здесь — публикация мгновенная.</div></div>
+        <div class="step"><div class="tc">3:00</div><div class="act">Плашка про демонстрационные отзывы<em>сильный кадр</em></div><div class="say">И отдельно: демо-отзывы помечены и в базе, и на экране. Выдать сочинённый отзыв за настоящий — это в США до 53 тысяч долларов штрафа за штуку. Пометка не косметика.</div></div>
+        <div class="step"><div class="tc">3:20</div><div class="act">Заранее подготовленная страница с виджетом на <strong>чужом</strong> домене</div><div class="say">А вот тот же виджет на чужом сайте — с чужой, специально уродливой вёрсткой. Виджет живёт в Shadow DOM: чужой CSS до него не достаёт, а наш не ломает хозяина.</div></div>
+        <div class="step"><div class="tc">3:40</div><div class="act">Кабинет: «Виджет заработал на новом сайте» и кнопка «Поделиться»</div><div class="say">Продукт заметил, что виджет встал на новый домен — и ровно в этот момент, а не при регистрации, предлагает поделиться. Момент ценности.</div></div>
+        <div class="step"><div class="tc">3:55</div><div class="act">Бейдж «Собрано через Proofwall» внизу стены</div><div class="say">На бесплатном тарифе бейдж обязателен и снимается только оплатой. Каждый чужой сайт с виджетом приводит новых владельцев — это петля роста, а не украшение.</div></div>
+        <div class="step"><div class="tc">4:10</div><div class="act">Импорт CSV: загрузить, «Предпросмотр»<em>если есть время</em></div><div class="say">Пустая стена — главная причина, по которой такие продукты бросают. Поэтому есть импорт: сначала предпросмотр, потом запись. Повторная загрузка того же файла дублей не создаёт.</div></div>
+      </div>
+    </section>
+
+    <section id="tech">
+      <h2><span class="num">Прогон · часть 3 · 10–12 минут</span>Техническая часть</h2>
+      <p class="lead">Сквозная мысль: <strong>дефект живёт в стыке, а не в модуле.</strong> Четыре
+      худших дефекта этого проекта имели одинаковую форму — каждая часть по отдельности
+      правильная, а ломалось допущение, которое одна часть делала о другой и которое нигде не
+      проверялось. Юнит-тесты зелёные, контейнеры здоровы, дефект в проде.</p>
+
+      <div class="tech">
+        <div class="item core">
+          <h3><span class="t">2 мин</span>1 · «Оплата не применялась НИКОГДА»</h3>
+          <p>Обработчик вебхука ставил заявку на идентификатор события <strong>шагом 2</strong>, а
+          перезапрашивал статус у провайдера <strong>шагом 3</strong>. Перезапрос — это и есть
+          подтверждение подлинности: у ЮKassa <strong>нет подписи уведомления</strong>, тело
+          запроса не источник истины.</p>
+          <p>Недоступность провайдера выражалась <strong>возвращаемым значением</strong>, а не
+          исключением. Колбэк транзакции завершался штатно — и транзакция <strong>коммитилась
+          вместе с заявкой</strong>. Дальше: маршрут отдавал 500, ЮKassa честно повторяла
+          уведомление, повтор упирался в уже занятый идентификатор и коротил в «дубликат» с кодом
+          200.</p>
+          <blockquote><p><strong>Деньги списаны, тариф не повышен, повторить нечем.</strong> Не
+          «иногда», а всегда, когда провайдер недоступен в момент первой доставки.</p></blockquote>
+          <p>Лечение — одна строка: <code>throw</code> вместо <code>return</code>, потому что откат
+          транзакции освобождает заявку. Что показать на экране: <strong>шапку того же файла</strong> —
+          он нарушал инвариант, записанный в собственном комментарии. Комментарий не исполняется.</p>
+          <pre>git log -1 --format=%B 0501766</pre>
+          <p class="note">Чем доказано: пять новых тестов, из них три — стражи по исходнику;
+          испытаны на способность падать: с возвращённым дефектом <code>2 failed | 35 passed</code>,
+          после починки <code>37 passed</code>. Ни один из 408 тестов раньше этого не покрывал.</p>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин</span>2 · Страж, который стережёт свойство КОДА</h3>
+          <p>Тест <strong>читает исходник</strong> роута, срезает комментарии и утверждает три
+          свойства текста: удобного <code>return</code> не встречается; ветка недоступности
+          бросает; позиция ответа 500 больше позиции <code>catch</code> — то есть 500 физически
+          отдаётся снаружи транзакции.</p>
+          <p>Плюс тест-инвентаризация: число таймаутов не меньше числа внешних вызовов. Найдено
+          ложной посылкой в документах — проверка утверждения «письмо будет первым внешним вызовом
+          проекта» вскрыла, что у вызовов к платёжному провайдеру таймаута не было
+          <strong>вообще</strong>, при том что вызов происходит <strong>внутри транзакции</strong>
+          и удерживает соединение общего пула.</p>
+          <p class="note">Такой приём применён в 14 файлах тестов.</p>
+        </div>
+
+        <div class="item core">
+          <h3><span class="t">1,5 мин</span>3 · У внешнего адреса нет права на дефолт</h3>
+          <p>Переменная с публичным адресом лежала в <code>.env</code>, но <strong>compose её не
+          пробрасывал</strong>. Дефолт <code>http://localhost:3000</code> сработал — приложение
+          стартовало, 408 тестов зелёные, все страницы открывались, — и <strong>каждая выданная
+          владельцу ссылка</strong> вела на машину посетителя. Петля роста была разомкнута на
+          публичном экземпляре. <strong>Нашёл владелец продукта, а не проверка.</strong></p>
+          <p>Правило, выросшее отсюда: значение, определяющее то, что продукт отдаёт
+          <strong>наружу</strong>, дефолта иметь не должно — разумный дефолт превращает
+          «неправильно настроено» в «молча неверно» и снимает единственный дешёвый сигнал, падение
+          при старте.</p>
+          <p>Разбор собственного промаха, записанный в коммит: проверка запускала контейнер
+          командой с переменной в аргументах, то есть <strong>в обход compose</strong> —
+          проверялась своя команда, а не конфигурация, которая идёт в дело. Лечение — сквозной
+          скрипт по пути клиента, где ключевая проверка не «ссылка есть», а <strong>«ссылка ведёт
+          сюда»</strong>.</p>
+          <pre>bash scripts/check-cjm.sh https://proofwall.aicoding.space
+<span class="c"># 18 шагов, все зелёные</span></pre>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин</span>4 · Пустая маска читалась как «принимать любой адрес»</h3>
+          <p><code>"1.2.3.4/"</code> — опечатка, но <code>Number('')</code> равен нулю, то есть без
+          проверки такая запись означала бы префикс <code>/0</code>, а <code>/0</code> — «пускать
+          всех». <strong>Одна опечатка в списке = выключенная аутентификация вебхука.</strong></p>
+          <p>Вторая ловушка того же модуля: подсеть <code>185.71.76.0/27</code> покрывает
+          <code>.0–.31</code>, но <strong>не</strong> <code>.100</code> — хотя строковый префикс
+          совпадает. Сравнение строкой недопустимо.</p>
+          <p>Третье решение того же класса: список сетей <strong>зашит в код</strong>, не в
+          переменную окружения — вынесенный наружу, он однажды приедет пустым, а пустой allowlist
+          читается как «фильтра нет».</p>
+        </div>
+
+        <div class="item core">
+          <h3><span class="t">1,5 мин</span>5 · Обходимый лимит: дефект в стыке</h3>
+          <p>Прокси <strong>дописывает</strong> адрес пира в конец заголовка, поэтому доверять
+          можно только последнему элементу — <strong>код был верен</strong>. Но compose
+          <strong>публиковал порт</strong> приложения, значит прокси можно обойти и прислать свой
+          единственный заголовок — «последний элемент» становится значением атакующего.</p>
+          <p>Воспроизведено на живом контейнере: <strong>с ротацией заголовка прошли 7 запросов при
+          пороге 5</strong>; с одним адресом — 5 и затем отказ.</p>
+          <p>Ни код, ни конфигурация по отдельности не были сломаны. Лечение структурное:
+          <code>expose:</code> вместо <code>ports:</code>, а условие теперь не подразумевается, а
+          проверяется скриптом — и скрипт проверен в обе стороны.</p>
+        </div>
+
+        <div class="item core">
+          <h3><span class="t">1,5 мин</span>6 · Двойной CORS: curl подтверждает работоспособность сломанного</h3>
+          <p>Заголовок разрешения ставили <strong>оба</strong> — и прокси, и приложение. Браузер
+          отвергает ответ с двумя такими заголовками <strong>целиком</strong>: виджет не грузился
+          ни на одном чужом сайте, петля роста была разомкнута.</p>
+          <p><strong>Обнаружено только в браузере.</strong> <code>curl</code> показывает оба
+          заголовка и выглядит нормально, потому что политику CORS не применяет вовсе.</p>
+          <pre>curl -sI -H "Origin: https://example.com" \
+  "https://proofwall.aicoding.space/api/widget/config?slug=demo" | grep -i access-control
+<span class="c"># сейчас: ровно один</span></pre>
+          <p><strong>Честная деталь как остаточный след:</strong> комментарий в коде роута до сих
+          пор утверждает «прокси ставит тот же заголовок в проде» — это неправда с момента
+          починки. Комментарий разошёлся с конфигурацией молча. Ещё одна иллюстрация к тезису
+          «комментарий не исполняется».</p>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин</span>7 · Граница FTC, закреплённая тестом</h3>
+          <p>Правило FTC (в силе с 21.10.2024) прямо запрещает отзывы, сгенерированные ИИ; штраф до
+          <strong>$53 088</strong> за нарушение.</p>
+          <p>Граница проведена <strong>архитектурно</strong>: сервис расшифровки — единственный,
+          получающий ключ модели; остальные не получают его вовсе. Контрактный тест утверждает:
+          зарегистрирован <strong>ровно один</strong> маршрут, он принимает только адрес видео, а
+          постороннее поле с текстом <strong>отвергается</strong> строгой схемой, а не игнорируется
+          молча.</p>
+          <p>То есть «переписать отзыв нейросетью» физически некуда отправить — граница не в
+          документе и не в промпте, а в тесте.</p>
+          <pre>cd services/transcribe &amp;&amp; npx vitest run   <span class="c"># 9 passed, 0,6 с</span></pre>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин</span>8 · Девять часов простоя, о которых не сообщил никто</h3>
+          <p>Воркер стартовал раньше миграций, падал на «таблицы не существует» и <strong>лежал
+          девять часов незамеченным</strong>: пять сервисов healthy, приложение работает,
+          транскрипций нет, и об этом не сообщил никто.</p>
+          <p>Лечение — <code>restart: unless-stopped</code>, превращающее гонку старта в задержку.
+          Комментарий об этом случае оставлен прямо в compose.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="words">
+      <h2><span class="num">Опорные формулировки</span>Что говорить</h2>
+
+      <h3>Открывающая история — 60 секунд</h3>
+      <blockquote><p>«Клиенты вас хвалят — в переписке, голосом, письмом. Похвалы разбросаны:
+      скриншот в мессенджере, письмо в почте, комментарий в соцсети. А на сайте пусто, и новый
+      посетитель не понимает, можно ли вам доверять.</p>
+      <p>Владелец получает ссылку и отправляет её довольному клиенту. Тот переходит и оставляет
+      отзыв — ничего не устанавливая и нигде не регистрируясь. Владелец решает, что показывать.
+      Одобренное складывается в публичную стену и в блок, который вставляется на чужой сайт одной
+      строкой.»</p></blockquote>
+      <p class="note"><strong>Для кого:</strong> инди-хакер с одним SaaS — запуск через неделю,
+      успех — стена отзывов на лендинге за вечер. Вторично — агентство с 5+ клиентами.</p>
+
+      <h3>Главная мысль</h3>
+      <blockquote><p>«Фича, которую видят только твои пользователи, не растит продукт. Растит та,
+      которую видят чужие.»</p></blockquote>
+      <p>Отсюда несущая конструкция — <strong>петля бейджа</strong>: виджет живёт на сайте клиента,
+      каждый посетитель этого сайта видит наш бренд, часть приходит к нам и ставит виджет у себя.
+      Единственный канал, работающий <strong>вообще без нашего трафика</strong>.</p>
+      <p>Практическое следствие: бейдж — часть тарифной архитектуры <strong>с первого дня</strong>,
+      а не фича на вторую неделю. И решение о нём принимает <strong>только сервер</strong>: виджету
+      поле тарифа не передаётся вообще — иначе бейдж снимался бы из devtools, и канал ломался бы в
+      первую же неделю.</p>
+
+      <h3>Про цену — говорить честно</h3>
+      <p><strong>Числа нет.</strong> Цена платного тарифа — открытое решение владельца, в дорожной
+      карте висит заблокированным. В коде есть дефолт 990 ₽, но это конфигурация, а не принятая
+      цена. Ориентир рынка: у референса Free $0 → Starter ~$29 → Pro ~$59; дно категории — $9.</p>
+
+      <h3>Метрика недели</h3>
+      <p><strong>Число установленных виджетов на внешних доменах, цель 10 за неделю.</strong>
+      Интерпретация задана заранее: меньше 5 — петля не запустилась; 5–20 — рабочий диапазон;
+      больше 20 — проверить на накрутку, прежде чем радоваться. Число названо честно как
+      <strong>гипотеза, а не расчёт</strong>. Считаем <strong>сайты, а не людей</strong>: один
+      владелец с пятью сайтами даёт впятеро больше показов, чем пятеро с одним.</p>
+    </section>
+
+    <section id="qa">
+      <h2><span class="num">Возражения</span>Что спросят и что отвечать</h2>
+
+      <h3>«Зачем это, если есть Senja за $19–29?»</h3>
+      <p>Прямой ответ: <strong>как бизнес — незачем, и в документах это написано открытым
+      текстом.</strong> Разведка называет категорию red ocean с дном цены $9 и делает вывод:
+      клон-в-лоб конкурирует ценой и проигрывает. Решение — не конкурировать ценой вообще, а
+      конкурировать <strong>скоростью до первого виджета</strong>. Дальше то, ради чего проект
+      делался: это учебный прогон конвейера — за неделю от разбора чужого продукта до работающего
+      стенда с петлёй роста, воспроизводимо.</p>
+
+      <h3>«Отзывы легко подделать»</h3>
+      <p>Три разных страха — три разных ответа.</p>
+      <ol>
+        <li><strong>Генерация отзыва ИИ</strong> закрыта архитектурно: в продукте нет пути, где модель порождает текст.</li>
+        <li><strong>Отравленный отзыв как атака на клиента:</strong> экранирование на <strong>рендере</strong>, а не на приёме — текст сохраняется побайтово, а не исполняется.</li>
+        <li><strong>Демо-данные</strong> помечены в двух местах — в данных и на экране; пометка привязана к данным, а не к адресу страницы: уберёшь демо-строки — отметка исчезнет сама.</li>
+      </ol>
+
+      <h3>«Виджет замедлит мой сайт»</h3>
+      <p><strong>2,6 КБ в сжатом виде при бюджете 30 КБ.</strong> Не блокирует рендер
+      страницы-хозяина, p95 отрисовки ≤ 300 мс. Обратную сторону назвать самому: виджет может
+      сломать вёрстку хозяина — ответ на это Shadow DOM, изоляция <strong>двусторонняя</strong>.</p>
+
+      <h3>«А если клиент напишет плохое?»</h3>
+      <p>Модерация — обязательная часть контура, а не опция. На стене видно только одобренное.
+      Честная оговорка вслух: правовая рамка «что владелец обещает автору отзыва» пока <strong>не
+      написана</strong> — решение висит открытым.</p>
+
+      <h3>«Чем это лучше скриншотов из телеграма?»</h3>
+      <p>Скриншот не встраивается · не машиночитаем (на стене рендерится разметка отзывов, которую
+      читают поисковики и AI-движки) · не проверяем (у отзыва есть статус, автор, источник и журнал
+      модерации) · ничего не растит.</p>
+
+      <h3>Честные ограничения — назвать самому</h3>
+      <ol>
+        <li><strong>Импорта с площадок нет</strong> — ядро оригинала, за неделю не реализуемо. Цена
+        решения записана прямо: без импорта продукт <strong>слабее оригинала по активации</strong>,
+        первый отзыв владелец добывает сам.</li>
+        <li><strong>Цена не решена</strong>, текст соглашения не написан, домен для публичных стен —
+        открытый вопрос.</li>
+        <li><strong>Реальный путь оплаты не проверен на живом магазине</strong> — нет ключей.
+        Проверены заглушка, отказ без учётных данных, идемпотентность, апгрейд тарифа.</li>
+        <li><strong>Аудио уходит третьей стороне</strong> — назван осознанный размен; маршрут
+        переигровки — self-hosted распознавание.</li>
+        <li><strong>Сценарий без цели</strong>: один проверочный сценарий проверяет функцию,
+        которой нет ни в одном требовании — она официально отложена. Нашёл финальный гейт.
+        Проверка, которой нечего проверять, выглядит как работающая.</li>
+      </ol>
+    </section>
+
+    <section id="risks">
+      <h2><span class="num">Риски на сцене</span>Что сломается и что делать вместо</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Риск</th><th>Шанс</th><th>Что делать вместо</th></tr></thead>
+        <tbody>
+          <tr><td>Запустили <code>docker compose up</code> — поднялся свой прокси, упёрся в занятые 80/443, стек упал</td><td><span class="tag d">высокий</span> если трогать стенд</td><td>Не трогать вообще. Перезапуск — только с demo-оверрайдом</td></tr>
+          <tr><td>Восстановление пароля: экран скажет «письмо отправлено», письма не будет</td><td><span class="tag w">средний</span></td><td><strong>Самый коварный риск.</strong> Отказ провайдера намеренно не меняет ответ пользователю. Не показывать получение письма — показывать код: явный отказ при ненастроенной почте и объяснение, почему одинаковый ответ для всех адресов важнее удобства</td></tr>
+          <tr><td>Вход через Яндекс: согласие не выдано, путь обрывается на возврате</td><td><span class="tag">низкий</span></td><td>Показать построение адреса возврата и живой редирект. Полный вход — только если проверили лично до показа. Запасной вход — обычный</td></tr>
+          <tr><td>Нет доступа в кабинет</td><td><span class="tag d">высокий</span></td><td>Пароли в защищённом файле, но <strong>он устарел</strong> — его шапка утверждает, что маршрута входа нет, а он есть. Проверить вход <strong>за день</strong>, не на сцене</td></tr>
+          <tr><td>Видео не сработает</td><td><span class="tag d">высокий</span></td><td>См. блок вверху. Не показывать загрузку; показывать контракт сервиса и очередь в коде</td></tr>
+          <tr><td>Внешняя сеть отвалилась → 502 при исправном приложении</td><td><span class="tag">низкий</span></td><td>Диагноз: 502 снаружи, а контейнеры healthy. Лечение: пересоздать приложение тем же оверрайдом</td></tr>
+          <tr><td>Сквозной скрипт на сцене создаёт мусорный проект и жжёт лимит регистраций</td><td><span class="tag w">средний</span></td><td>Прогнать <strong>один раз заранее</strong>, показывать сохранённый вывод</td></tr>
+          <tr><td>«Покажите, что виджет реально стоит на чужом сайте»</td><td><span class="tag w">средний</span></td><td>Честный ответ: проверен CORS с чужого Origin; страницы на втором origin с враждебным CSS и строгим CSP в проекте нет, и это помечено пробелом <strong>в самом тесте</strong>. Это сильнее, чем блефовать</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="fallback">
+      <h2><span class="num">Запасные ходы</span>Если стенда нет</h2>
+
+      <h3>Ход 1 — 76 тестов за 0,7 секунды <span class="tag">лучший</span></h3>
+      <pre>cd apps/web &amp;&amp; npx vitest run tests/ip-range.test.ts tests/urls.test.ts \
+  tests/tariff.test.ts tests/badge.test.ts
+<span class="c"># → 4 файла, 76 passed, 0,68 с</span></pre>
+      <p>Показывает сюжеты про внешний адрес и про CIDR сразу с зелёным прогоном.
+      <strong>Не добавлять</strong> тесты слага и порога индексации — им нужна тестовая база.</p>
+
+      <h3>Ход 2 — виджет целиком</h3>
+      <pre>cd apps/widget &amp;&amp; npx vitest run   <span class="c"># → 35 passed, 1,4 с</span></pre>
+      <p>Показывает изоляцию Shadow DOM и — главное — <strong>честную границу</strong>: тест сам
+      объявляет, чего он не доказывает (jsdom не реализует настоящий каскад CSS).</p>
+
+      <h3>Ход 3 — контракт сервиса расшифровки</h3>
+      <pre>cd services/transcribe &amp;&amp; npx vitest run   <span class="c"># → 9 passed</span></pre>
+      <p>«У сервиса нет ни одного пути, принимающего текст отзыва.»</p>
+
+      <h3>Ход 4 — страж, который ПОКАЗЫВАЕТ КРАСНОЕ <span class="tag">сильнейший офлайновый</span></h3>
+      <pre>bash scripts/check-port-conflicts.sh .
+<span class="c"># два ✅ (хранилища не наружу; наружу только прокси) и два ❌ на портах 80/443</span>
+bash scripts/check-env-wiring.sh    <span class="c"># два ✅, код 0</span></pre>
+      <p>Первый скрипт живьём печатает красное — идеальная иллюстрация правила «проверка, ни разу
+      не показавшая красное, не является проверкой».</p>
+
+      <h3>Ход 5 — история дефектов из git, без единого запуска</h3>
+      <p>Пять коммитов читаются вслух как готовые истории с числами: оплата терялась навсегда ·
+      лимит обходился заголовком · внешний адрес без дефолта · сам инцидент с localhost · двойной
+      CORS. Самый устойчивый ход: работает без сети, без Docker и без зависимостей.</p>
+    </section>
+
+    <section id="numbers">
+      <h2><span class="num">Справка</span>Числа под рукой</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Что</th><th>Значение</th></tr></thead>
+        <tbody>
+          <tr><td>Отзывов на демо-стене</td><td>6, все одобренные, все помечены как демонстрационные</td></tr>
+          <tr><td>Всего отзывов в базе</td><td>12</td></tr>
+          <tr><td>Отзывов с видео / успешных расшифровок</td><td class="no"><strong>0 / 0</strong></td></tr>
+          <tr><td>Размер виджета</td><td>6 618 байт, в сжатом виде <strong>2 635</strong> — при бюджете 30 КБ</td></tr>
+          <tr><td>Тестов в репозитории</td><td><strong>631</strong> в 48 файлах (измерено сегодня). В коммитах фигурируют 413 / 828 / 813 по разной области подсчёта — говорить «порядка шестисот», не выдавая старое за измеренное</td></tr>
+          <tr><td>Стражей по исходнику</td><td>14 файлов</td></tr>
+          <tr><td>Миграций применено</td><td>16 из 16</td></tr>
+          <tr><td>Установок виджета зафиксировано</td><td>5 доменов</td></tr>
+          <tr><td>Предел отправок</td><td><strong>5 в час</strong> на адрес и проект</td></tr>
+          <tr><td>Порог индексации стены</td><td>3 одобренных <strong>и</strong> 400 символов суммарно</td></tr>
+          <tr><td>Метрика недели</td><td>10 внешних доменов (гипотеза, не расчёт)</td></tr>
+          <tr><td>Цена</td><td class="no"><strong>решения нет</strong>; в коде дефолт 990 ₽</td></tr>
+          <tr><td>Штраф FTC за поддельный отзыв</td><td>до $53 088 за нарушение</td></tr>
+          <tr><td>Валидация</td><td>первая итерация — 68,1 и четыре блокера, включая stored-XSS в контенте, который рендерится <strong>на чужих сайтах</strong>; финальный гейт — 89,4 из 100</td></tr>
+          <tr><td>Скорость главной / стены / формы</td><td>0,066 с / 0,107 с / 0,142 с</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+</div>
