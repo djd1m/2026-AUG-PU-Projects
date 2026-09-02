@@ -1,0 +1,527 @@
+<title>Прогонный лист ReviewQR</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#ffffff;
+  --tint:#f5f9ff;
+  --surface:#ffffff;
+  --ink:#00132e;
+  --text:#364459;
+  --muted:#6b7a90;
+  --brand:#025bde;
+  --brand-soft:#e1edff;
+  --line:#ccd5e0;
+  --line-soft:#e6ecf4;
+  --danger:#a8291f;
+  --danger-bg:#fdeeec;
+  --warn:#7a5200;
+  --warn-bg:#fdf4e0;
+  --ok:#1c6b4a;
+  --shadow:0 1px 2px rgba(0,19,46,.05), 0 8px 24px rgba(24,116,253,.07);
+  --r:14px;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --display:"Bitter",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0b1524; --tint:#0f1c2e; --surface:#122032;
+    --ink:#eaf1fb; --text:#bccadb; --muted:#8497ad;
+    --brand:#63a2ff; --brand-soft:#16294a;
+    --line:#26374f; --line-soft:#1b2b40;
+    --danger:#ff9d93; --danger-bg:#2b1614;
+    --warn:#e5b661; --warn-bg:#2a2113;
+    --ok:#6fd3a5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0b1524; --tint:#0f1c2e; --surface:#122032;
+  --ink:#eaf1fb; --text:#bccadb; --muted:#8497ad;
+  --brand:#63a2ff; --brand-soft:#16294a;
+  --line:#26374f; --line-soft:#1b2b40;
+  --danger:#ff9d93; --danger-bg:#2b1614;
+  --warn:#e5b661; --warn-bg:#2a2113;
+  --ok:#6fd3a5;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--text);
+  font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;
+  display:grid;grid-template-columns:1fr;gap:40px}
+@media(min-width:1000px){.wrap{grid-template-columns:200px 1fr;gap:48px;align-items:start}}
+
+/* ── шапка */
+.head{grid-column:1/-1;border-bottom:2px solid var(--ink);padding-bottom:20px;
+  display:flex;flex-wrap:wrap;gap:16px;align-items:baseline;justify-content:space-between}
+h1{font:600 34px/1.1 var(--display);color:var(--ink);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.head .meta{font:500 13px/1.5 var(--mono);color:var(--muted);text-align:right}
+.head .meta b{color:var(--brand);font-weight:500}
+
+/* ── навигация */
+nav{position:sticky;top:24px;font-size:14px;display:none}
+@media(min-width:1000px){nav{display:block}}
+nav ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;
+  counter-reset:n}
+nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);
+  text-decoration:none;border-left:2px solid transparent}
+nav a:hover{color:var(--brand);background:var(--tint);border-left-color:var(--brand)}
+nav a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+main{min-width:0;display:flex;flex-direction:column;gap:44px}
+section{scroll-margin-top:24px}
+h2{font:600 24px/1.2 var(--display);color:var(--ink);margin:0 0 4px;text-wrap:balance}
+h2 .num{font:500 13px/1 var(--mono);color:var(--brand);display:block;margin-bottom:8px;
+  letter-spacing:.08em;text-transform:uppercase}
+h3{font:600 17px/1.3 var(--body);color:var(--ink);margin:26px 0 8px}
+p{margin:0 0 12px;max-width:68ch}
+.lead{color:var(--muted);margin:0 0 18px;max-width:68ch}
+strong{color:var(--ink);font-weight:600}
+code{font:500 13.5px/1.4 var(--mono);background:var(--tint);border:1px solid var(--line-soft);
+  border-radius:5px;padding:1px 5px;color:var(--ink);word-break:break-word}
+a{color:var(--brand)}
+
+/* ── блокер */
+.alarm{background:var(--danger-bg);border:1px solid var(--danger);border-left-width:5px;
+  border-radius:var(--r);padding:20px 22px}
+.alarm h2{color:var(--danger)}
+.alarm h2 .num{color:var(--danger)}
+.alarm code{background:transparent;border-color:var(--danger);color:var(--danger)}
+
+/* ── прогон */
+.run{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line);margin-top:14px}
+.step{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:14px 0;
+  border-bottom:1px solid var(--line-soft)}
+@media(min-width:760px){.step{grid-template-columns:64px 1fr 1.15fr;gap:22px}}
+.tc{font:500 14px/1.7 var(--mono);color:var(--brand);font-variant-numeric:tabular-nums}
+.act{color:var(--ink);font-weight:500}
+.act em{font-style:normal;color:var(--muted);font-weight:400;display:block;font-size:14px;
+  margin-top:3px}
+.say{color:var(--text);font-size:15px;border-left:2px solid var(--brand-soft);padding-left:14px}
+.say::before{content:"«";color:var(--muted)}
+.say::after{content:"»";color:var(--muted)}
+@media(max-width:759px){.say{grid-column:2}}
+
+/* ── таблицы */
+.tw{overflow-x:auto;margin:14px 0 4px;border:1px solid var(--line-soft);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th{text-align:left;font:600 12px/1.4 var(--body);text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);padding:11px 14px;background:var(--tint);border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--text)}
+tr:last-child td{border-bottom:0}
+td strong{color:var(--ink)}
+.no{color:var(--danger)}
+.yes{color:var(--ok)}
+
+/* ── карточки техники */
+.tech{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.item{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--shadow)}
+.item h3{margin:0 0 6px;display:flex;gap:10px;align-items:baseline}
+.item h3 .t{font:500 12px/1 var(--mono);color:var(--brand);white-space:nowrap}
+.core{border-color:var(--brand);border-left-width:3px}
+
+pre{background:var(--tint);border:1px solid var(--line-soft);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;margin:12px 0;font:500 13px/1.65 var(--mono);color:var(--ink)}
+pre .c{color:var(--muted)}
+
+blockquote{margin:14px 0;padding:14px 20px;border-left:3px solid var(--brand);
+  background:var(--tint);border-radius:0 10px 10px 0;color:var(--ink);font-size:15.5px}
+blockquote p:last-child{margin:0}
+
+ul,ol{margin:0 0 12px;padding-left:22px;max-width:68ch}
+li{margin-bottom:6px}
+.check{list-style:none;padding:0;counter-reset:c}
+.check li{counter-increment:c;padding-left:34px;position:relative;margin-bottom:9px}
+.check li::before{content:counter(c);position:absolute;left:0;top:1px;width:22px;height:22px;
+  border-radius:50%;background:var(--brand-soft);color:var(--brand);font:500 12px/22px var(--mono);
+  text-align:center}
+
+.note{font-size:14px;color:var(--muted);max-width:68ch}
+.tag{display:inline-block;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;
+  padding:5px 8px;border-radius:99px;background:var(--brand-soft);color:var(--brand)}
+.tag.d{background:var(--danger-bg);color:var(--danger)}
+.tag.w{background:var(--warn-bg);color:var(--warn)}
+
+@media print{
+  body{background:#fff;color:#000;font-size:11pt}
+  nav,.head .meta{display:none}
+  .wrap{display:block;max-width:none;padding:0}
+  section{break-inside:avoid;margin-bottom:18pt}
+  .item,.alarm{break-inside:avoid;box-shadow:none}
+  pre,.tw{break-inside:avoid}
+  a{color:#000;text-decoration:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <h1>Прогонный лист ReviewQR</h1>
+    <div class="meta">
+      2 сентября 2026 · <b>reviewqr.aicoding.space</b><br>
+      20 минут: 5 продукт · 12 техника · 3 вопросы
+    </div>
+  </header>
+
+  <nav aria-label="Разделы">
+    <ol>
+      <li><a href="#blocker">Сделать до показа</a></li>
+      <li><a href="#run-b">Прогон: владелец</a></li>
+      <li><a href="#run-a">Прогон: гость</a></li>
+      <li><a href="#tech">Техническая часть</a></li>
+      <li><a href="#words">Опорные формулировки</a></li>
+      <li><a href="#qa">Возражения</a></li>
+      <li><a href="#risks">Риски на сцене</a></li>
+      <li><a href="#fallback">Запасные ходы</a></li>
+      <li><a href="#numbers">Числа под рукой</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="blocker" class="alarm">
+      <h2><span class="num">Сделать до показа · 2 минуты</span>У точки нет ссылок на площадки</h2>
+      <p>Проверено на живом стенде в день показа: у «Кофейни Артель» <strong>ноль ссылок</strong>.
+      Главный тезис — «все двери равны» — на одной двери показать нечем, а переход на площадку
+      упадёт в 404 на глазах у зала.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Адрес</th><th>Сейчас</th><th>Нужно</th></tr></thead>
+        <tbody>
+          <tr><td><code>/r/kofeynya-artel</code></td><td class="no"><strong>одна</strong> дверь: «Написать нам напрямую»</td><td>три двери: 2ГИС, «написать нам», Яндекс.Карты</td></tr>
+          <tr><td><code>/go/kofeynya-artel/yandex_maps</code></td><td class="no"><strong>404</strong></td><td>302 на карточку</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Решение, и оно же лучший момент показа:</strong> вставить ссылки <strong>прямо на
+      сцене</strong>, шагом Б‑4. Зал видит пустую страницу, вы вставляете две ссылки, страница тут
+      же показывает три двери. Кэш сбрасывается явно — ждать не нужно.</p>
+      <h3>Чек-лист за 10 минут</h3>
+      <ol class="check">
+        <li>Стенд отвечает: <code>curl -s -o /dev/null -w '%{http_code}\n' https://reviewqr.aicoding.space/</code> → <code>200</code></li>
+        <li>Войти в кабинет заранее, до зала</li>
+        <li>Две ссылки на карточки — в буфере или в заметке</li>
+        <li>Телефон с Telegram в руке, чат с ботом открыт</li>
+        <li>Во второй вкладке терминала — прогретая команда запасного хода&nbsp;№2</li>
+        <li><strong>Кнопку «уведомления» у «Артели» не трогать</strong> — она разрывает действующую привязку</li>
+      </ol>
+    </section>
+
+    <section id="run-b">
+      <h2><span class="num">Прогон · часть 1 · 0:00 — 2:30</span>Глазами владельца</h2>
+      <p class="lead">Порядок «владелец → гость» выбран намеренно: сначала настраиваем, потом
+      сканируем.</p>
+      <div class="run">
+        <div class="step"><div class="tc">0:00</div><div class="act">Войти в кабинет<em>/login</em></div><div class="say">Кабинет владельца заведения — почта и пароль, ничего больше.</div></div>
+        <div class="step"><div class="tc">0:15</div><div class="act">Карточка точки<em>/dashboard — чипы «сканы» и «обращения»</em></div><div class="say">Одна точка — один адрес, один QR. Рядом сразу видно, сколько сканов и сколько обращений пришло.</div></div>
+        <div class="step"><div class="tc">0:30</div><div class="act">Блок «План „Точка"»</div><div class="say">Оплачено до 2 октября. Строка «Сделано на ReviewQR» с гостевых страниц снята — за 990 ₽ в месяц.</div></div>
+        <div class="step"><div class="tc">0:42</div><div class="act">Вставить две ссылки → «Сохранить ссылки»<em>ключевой шаг, см. блок выше</em></div><div class="say">Вот всё, что владелец делает руками: две ссылки на свои карточки. Перепечатывать ничего не придётся — QR ведёт на наш адрес, а не на площадку.</div></div>
+        <div class="step"><div class="tc">1:12</div><div class="act">Соседняя вкладка: страница гостя<em>/r/kofeynya-artel</em></div><div class="say">И страница гостя уже перестроилась — секунду назад дверь была одна.</div></div>
+        <div class="step"><div class="tc">1:22</div><div class="act">«QR и макеты»</div><div class="say">Четыре готовых печатных макета. Один QR, четыре носителя.</div></div>
+        <div class="step"><div class="tc">1:32</div><div class="act">Пролистать макеты, задержаться на предупреждении перед тейбл-тентом</div><div class="say">Обратите внимание на оговорку: тейбл-тент безопасен, только пока гость сканирует своим телефоном со своей сети. Отзывы пачкой с одного адреса площадки считают накруткой.</div></div>
+        <div class="step"><div class="tc">1:57</div><div class="act">«Печать»</div><div class="say">Печатается сразу — без вёрстки и без дизайнера.</div></div>
+        <div class="step"><div class="tc">2:05</div><div class="act">«обращения →»</div><div class="say">Здесь всё, что гости написали напрямую. Видит это только владелец — на площадки это не уходит.</div></div>
+      </div>
+    </section>
+
+    <section id="run-a">
+      <h2><span class="num">Прогон · часть 2 · 2:30 — 4:40</span>Глазами гостя</h2>
+      <div class="run">
+        <div class="step"><div class="tc">2:30</div><div class="act">Навести камеру на распечатанный QR</div><div class="say">Гость расплатился, увидел QR на подвале счёта и навёл камеру. Приложение ставить не нужно.</div></div>
+        <div class="step"><div class="tc">2:42</div><div class="act">Страница выбора: три двери</div><div class="say">Вот весь экран. Три двери, и они равны: 2ГИС, «написать нам напрямую», Яндекс.Карты. Нигде не спрашивают оценку заранее и никого не сортируют по настроению.</div></div>
+        <div class="step"><div class="tc">3:07</div><div class="act">Показать: приватная дверь <strong>в середине</strong>, не внизу</div><div class="say">Приватная дверь — элемент того же списка, а не приписка мелким шрифтом под ним. Порядок дверей задан адресом точки и не зависит от того, доволен гость или нет.</div></div>
+        <div class="step"><div class="tc">3:22</div><div class="act">Нажать «Яндекс.Карты» → 302</div><div class="say">Довольный гость уходит на площадку — и это нормальный, засчитанный исход. Мы его не удерживаем.</div></div>
+        <div class="step"><div class="tc">3:34</div><div class="act">Назад → «Написать нам напрямую»</div><div class="say">А тот, у кого претензия, пишет владельцу. Заголовок честный: это сообщение прочитает владелец, на площадках оно не публикуется.</div></div>
+        <div class="step"><div class="tc">3:49</div><div class="act">Заполнить: текст, оценка, контакт</div><div class="say">Текст обязателен, оценка — нет. Две звезды без слов владельцу бесполезны: отвечать не на что.</div></div>
+        <div class="step"><div class="tc">4:14</div><div class="act">«Отправить владельцу»</div><div class="say">Отправлено.</div></div>
+        <div class="step"><div class="tc">4:19</div><div class="act">Показать телефон с Telegram<em>приходит за 5–13 секунд</em></div><div class="say">И вот оно у владельца — в течение десяти секунд.</div></div>
+        <div class="step"><div class="tc">4:29</div><div class="act">Кабинет → «обращения →»</div><div class="say">Та же запись в кабинете, с оценкой и временем. Гость ушёл не в интернет, а к хозяину.</div></div>
+      </div>
+      <blockquote><p>Переход к технике: «Дальше начинается то, ради чего всё: страница, которая
+      обязана выглядеть одинаково для всех — и это проверяется не глазами, а сравнением sha256.»</p></blockquote>
+    </section>
+
+    <section id="tech">
+      <h2><span class="num">Прогон · часть 3 · 10–12 минут</span>Техническая часть</h2>
+      <p class="lead">Сквозная мысль, произнести в начале и в конце: <strong>защита ставится не на
+      слой «ревьюер заметит», а на самый сильный слой, который способен её выразить</strong> — тип,
+      право СУБД, схема, детерминированный тест. Всё остальное — иллюстрации к этой мысли.</p>
+      <p class="note"><span class="tag">ядро</span> не сокращать: 1, 3, 5, 6 &nbsp;·&nbsp; режутся первыми: 2, 4, 7</p>
+
+      <div class="tech">
+        <div class="item core">
+          <h3><span class="t">2 мин</span>1 · Гейтинг невыразим — три независимых слоя</h3>
+          <div class="tw"><table>
+            <thead><tr><th>Слой</th><th>Где</th><th>Что видно</th></tr></thead>
+            <tbody>
+              <tr><td>Тип</td><td><code>apps/guest/src/server.ts:43</code></td><td><code>renderChoicePage(slug: string)</code> — один аргумент. Ветвить по оценке или cookie физически не по чему</td></tr>
+              <tr><td>Права</td><td><code>005_roles_grants.sql:42–56</code></td><td>у роли <code>app_render</code> строки <code>private_feedback</code> нет ни в каком виде</td></tr>
+              <tr><td>Схема</td><td><code>check-db-grants.sh:101</code></td><td>закрытый список полей, которых <strong>не должно существовать</strong>: <code>gating_enabled</code>, <code>rating_threshold</code>, <code>show_if</code>, <code>sort_order</code></td></tr>
+            </tbody>
+          </table></div>
+          <pre><span class="c"># «permission denied» вживую, за две секунды</span>
+docker exec reviewqr-postgres-1 psql -U reviewqr -d reviewqr \
+  -c "set role app_render; select count(*) from private_feedback;"
+<span class="c"># ERROR:  permission denied for table private_feedback</span></pre>
+          <p>Обещание «все гости видят одинаковый путь» реализовано не дисциплиной и не код-ревью,
+          а невозможностью. Чтобы отфильтровать недовольных, коду пришлось бы прочитать
+          тональность — такого права у роли нет, и запрос падает при первом запуске. Один слой
+          обходится правкой за минуту; три вместе требуют правки типов, миграции прав и миграции
+          схемы одновременно — а это уже решение, видное в дифе.</p>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин</span>2 · Четыре роли СУБД = четыре контейнера</h3>
+          <p>У каждого сервиса своя строка подключения. Комментарий в <code>.env.example</code>,
+          ради которого это сделано: <strong>«пул можно перепутать в коде, а <code>DATABASE_URL</code>,
+          которого в контейнере НЕТ, — нельзя»</strong>.</p>
+          <pre>docker ps --format '{{.Names}}\t{{.Ports}}' | grep reviewqr
+<span class="c"># ни одного 0.0.0.0: — наружу смотрит только общий reverse-proxy</span></pre>
+        </div>
+
+        <div class="item core">
+          <h3><span class="t">1,5 мин</span>3 · Двенадцать запросов, один хэш</h3>
+          <p><code>apps/guest/tests/purity.test.ts:66–96</code> — двенадцать вариантов запроса,
+          каждый меняет ровно одно измерение: <code>?rating=1</code>, <code>?sentiment=bad</code>,
+          cookie <code>mood=angry</code>, три User-Agent, два языка, два разных
+          <code>X-Forwarded-For</code>. Утверждение: sha256 сырого тела совпадает у всех
+          двенадцати.</p>
+          <p><strong>Самое интересное — строки 85–88:</strong> сброс кэша перед каждым вариантом, с
+          комментарием «проверено мутацией: со случайной сортировкой страж оставался зелёным». Без
+          сброса первый запрос клал страницу в кэш, остальные одиннадцать получали её же — и
+          <strong>тест был зелёным на сломанном коде</strong>.</p>
+          <blockquote><p>«Зелёный тест» — утверждение о тесте, а не о коде, пока тест не показывали
+          красным.</p></blockquote>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин</span>4 · Конкурентный тест ловит то, чего последовательный не видит</h3>
+          <p><code>services/intake/src/limit.ts:8–16</code> — разбор дефекта дословно: первая
+          редакция считала и вставляла одним CTE, полагая, что атомарность даёт СУБД.
+          <strong>«Под READ COMMITTED каждый одновременный оператор видит СВОЙ снимок — 20
+          параллельных прошли 14 при пороге 10. Один оператор ≠ сериализация.»</strong></p>
+          <p>Починка — <code>pg_try_advisory_xact_lock</code>, именно TRY, а не ждущий: очередь за
+          локом держала бы соединения общего пула.</p>
+        </div>
+
+        <div class="item core">
+          <h3><span class="t">2 мин</span>5 · Оплата: порядок операций — это и есть защита</h3>
+          <ol>
+            <li>адрес источника — список подсетей ЮKassa <strong>зашит в код</strong>, не в переменную окружения;</li>
+            <li><strong>подлинность перезапросом статуса у провайдера</strong>, вне транзакции; недоступность провайдера — <code>throw</code>, а не возвращаемое значение;</li>
+            <li>и только теперь заявка идемпотентности, ключ <code>«&lt;тип события&gt;:&lt;id объекта&gt;»</code>.</li>
+          </ol>
+          <p>Поменять шаги 2 и 3 местами — значит позволить подделке с угаданным <code>id</code>
+          занять ключ идемпотентности первой, после чего <strong>настоящее</strong> уведомление
+          будет отброшено как дубль. В проекте 01 этот дефект был реальным: деньги списаны, тариф не
+          повышен, повтор упирается в занятый ключ и коротит в «дубль» с кодом 200 — <strong>оплата
+          не применяется никогда</strong>, и ни один из 408 тестов проекта этого не покрывал.</p>
+          <p class="note">Почему ключ составной: голый <code>id</code> схлопнул бы «оплачено» и
+          «отменено» одного платежа в один ключ.</p>
+        </div>
+
+        <div class="item core">
+          <h3><span class="t">1,5 мин</span>6 · Дефект, найденный сверкой с первоисточником</h3>
+          <p>Список подсетей был снят с документации и выглядел полным. Повторная сверка
+          <strong>в день показа</strong> нашла у ЮKassa подсеть <code>2a02:5180::/32</code>, которой
+          в списке не было, а матчер отвергал любой не-IPv4 адрес — <strong>причём в тестах это было
+          закреплено как ожидаемое поведение</strong>. Уведомление по IPv6 получало бы 400 на каждой
+          попытке доставки.</p>
+          <pre>git show dfb6497 --stat</pre>
+          <blockquote><p>Покрытие тестами не есть корректность: тест написан против того же
+          понимания, что и код, и повторяет его ошибку. Нашла не машина и не ревью — нашла сверка
+          кода с первоисточником.</p></blockquote>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1,5 мин</span>7 · Мутация, которая не применилась</h3>
+          <p>Правило проекта: страж принимается только вместе с доказательством, что он
+          <strong>падает</strong>. У самого этого рецепта обнаружился собственный тихий отказ:</p>
+          <pre>мутация внедрена, страж слеп   ->  Tests  13 passed   <span class="c">← дефект стража</span>
+мутация НЕ внедрена            ->  Tests  13 passed   <span class="c">← дефект процедуры</span></pre>
+          <p>Якорь замены не совпал ни с одним фрагментом файла, замена вернула строку без изменений
+          и молча записала её обратно. После проверки «мутация легла» те же шесть мутаций дали шесть
+          красных — страж был исправен с самого начала. Отказ направлен в <strong>худшую</strong>
+          сторону: не «плохой страж примут за хороший» (это ловится), а «хороший объявят негодным и
+          перепишут».</p>
+        </div>
+
+        <div class="item">
+          <h3><span class="t">1 мин · финал</span>8 · Кузница: 37 заявок, найденных прогонами</h3>
+          <p>Общая черта всех находок одна: проверка жила на слое «модель вспомнит», где её пропуск
+          не оставляет следов. Для аудитории, которая собирается работать с AI-ассистентами, это
+          самая переносимая часть: продукт у них будет другой, а классы отказов инструментария — те
+          же.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="words">
+      <h2><span class="num">Опорные формулировки</span>Что говорить</h2>
+
+      <h3>Открывающая история — 60 секунд</h3>
+      <blockquote><p>«Кафе. Открываю карточку на Яндекс.Картах: 4,3 и сорок семь отзывов. Спрашиваю
+      владельца: сколько у вас гостей в день? — „Человек сто". Значит за месяц около трёх тысяч
+      гостей и штук шесть новых отзывов. Вопрос один: почему остальные две тысячи девятьсот
+      девяносто четыре не написали?</p>
+      <p>И вторая половина той же истории: те, кто всё-таки пишет, чаще недовольны. О проблеме
+      владелец узнаёт из карточки на следующий день, когда извиняться уже поздно.»</p></blockquote>
+      <p class="note">Это типовая картина из скрипта продаж, а не замер конкретного заведения — так
+      и говорить.</p>
+
+      <h3>Главный критерий, дословно</h3>
+      <blockquote><p><strong>«Все посетители видят одинаковый путь к публичному отзыву, без
+      предварительной сортировки по ожидаемой тональности.»</strong></p></blockquote>
+      <p>Проверяется не код-ревью, а тестом: N запросов к развёрнутому стенду, различающихся ровно
+      одним измерением каждый, дают побайтово совпадающий ответ.</p>
+
+      <h3>Правовая рамка — говорить точно</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Нельзя</th><th>Можно</th></tr></thead>
+        <tbody>
+          <tr><td class="no">«Gating запрещён законом»</td><td class="yes">«Прямой нормы в праве РФ нет — мы проверяли»</td></tr>
+          <tr><td class="no">«Яндекс запрещает фильтрацию»</td><td class="yes">«У Яндекса прямой нормы нет, и gating отсутствует в его собственном перечне нечестных методов»</td></tr>
+          <tr><td class="no">«Конкуренты нарушают правила»</td><td class="yes">«<strong>2ГИС продаёт такой сервис сам</strong> — „Отзывы Про", публичный лендинг с тарифами»</td></tr>
+          <tr><td class="no">«За это блокируют карточку»</td><td class="yes">«Подтверждены снятие отзыва и блокировка аккаунта <strong>автора</strong>, не карточки»</td></tr>
+        </tbody>
+      </table></div>
+      <p>Что соблюдается буквально: не подсказывать содержание отзыва и <strong>не давать стимулов
+      вовсе</strong> — ни за какой отзыв.</p>
+
+      <h3>Честные ограничения — назвать самому, первым</h3>
+      <ol>
+        <li><strong>Публикацию проверить нечем.</strong> У Яндекс.Карт и 2ГИС нет API отзывов.
+        Продукт фиксирует переход на площадку — и на этом его знание кончается. Записано в схему:
+        источник счётчика отзывов — перечисление из одного значения <code>manual</code>.</li>
+        <li><strong>Одна точка на тариф.</strong> «Сеть» и «Агентство» — второй релиз.</li>
+        <li><strong>Виральности нет, и это свойство.</strong> Гость, оставивший отзыв, не приводит
+        новое заведение. Рост линеен по числу продавцов.</li>
+        <li><strong>Конкурент, вероятно, собирает публичных отзывов больше нас</strong> — гейтинг
+        усиливает публичную дверь при высокой оценке. Записано как риск в PRD.</li>
+      </ol>
+    </section>
+
+    <section id="qa">
+      <h2><span class="num">Возражения</span>Что спросят и что отвечать</h2>
+
+      <h3>«Зачем это, если есть Senja или Restolink за 900 ₽?»</h3>
+      <p>Начинать с признания: «После разведки у продукта не остаётся ни одного свойства, которого
+      нет у конкурента. Это записано в наших же документах как главный риск. QR — commodity, Яндекс
+      раздаёт его за 0 ₽. Остаётся одно расхождение — отказ от роутинга по оценке. Неделя пилота
+      нужна ровно затем, чтобы узнать, покупают ли это.»</p>
+
+      <h3>«Почему нельзя фильтровать?»</h3>
+      <blockquote><p>«<strong>Можно.</strong> Тридцать строк кода, и это не запрещено: нормы нет,
+      2ГИС такой сервис продаёт сам. Я всё равно этого не делаю. Если мы фильтруем — продаём
+      красивую цифру. Если не фильтруем — продаём то, что цифра означает. Это разные продукты, и я
+      умею делать второй. Если клиенту нужен первый — берите Restolink, серьёзно.»</p></blockquote>
+
+      <h3>«А если отзывы будут плохие?»</h3>
+      <p>«Часть пойдёт — и пойдёт вам лично, а не на карты. Сегодня недовольный гость молчит и пишет
+      в интернете через день. Здесь он пишет вам, пока ещё в зале, и у вас есть смена, чтобы всё
+      исправить.»</p>
+
+      <h3>«Кто будет клеить QR?»</h3>
+      <p>«Это узкое место, и оно измерено: шаг „напечатали и физически поставили" даёт 70 %. Поэтому
+      носители по умолчанию <strong>уносимые</strong> — подвал счёта, оборот визитки, наклейка на
+      упаковке, а не „повесить рамку".»</p>
+
+      <h3>«А Яндекс не забанит?»</h3>
+      <p>«За наш способ сбора — нет, и утверждать обратное я не буду. Подтверждены санкции за
+      накрутку: снятие отзыва и блокировка аккаунта <strong>автора</strong>, не карточки. Перечень у
+      них открытый и проверка ретроактивна — но это риск не наш, а той схемы, которая сортирует.»</p>
+
+      <h3>«Вот же редирект <code>/go</code> — это и есть роутинг!»</h3>
+      <p>Ответ готов: роута, <strong>принимающего оценку</strong>, не существует. <code>/go</code>
+      принимает дверь, которую гость <strong>уже выбрал</strong>. Редирект оставлен ради
+      измеримости: статический <code>&lt;a href&gt;</code> не даёт доли выбравших публичную дверь
+      никогда.</p>
+    </section>
+
+    <section id="risks">
+      <h2><span class="num">Риски на сцене</span>Что сломается и что делать вместо</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Риск</th><th>Шанс</th><th>Что делать вместо</th></tr></thead>
+        <tbody>
+          <tr><td>Нажали «уведомления» у «Артели» — привязка Telegram умерла</td><td><span class="tag w">средний</span></td><td>Не трогать. Если нажали — пройти <code>/start</code> по свежей ссылке, ~1 минута</td></tr>
+          <tr><td>Показываем развилку, а там одна дверь и 404</td><td><span class="tag d">высокий</span></td><td>Вставить ссылки шагом Б‑4 — см. блок вверху</td></tr>
+          <tr><td>Зал массово шлёт форму, на 11‑й приходит отказ</td><td><span class="tag w">средний</span></td><td><strong>Лимит 10/час считает всех зрителей как одного</strong> — внутренний вызов не передаёт адрес гостя. Отправлять форму самому со сцены; залу дать сканировать QR — сканы не лимитированы</td></tr>
+          <tr><td>Обещали рост счётчика «сканы», цифра стоит</td><td><span class="tag d">высокий</span></td><td>Счётчик считает уникальные устройства за неделю: десять открытий с одного ноутбука дают +1. Для роста в кадре — 2–3 зрителя со своих телефонов</td></tr>
+          <tr><td>Отправили форму дважды, пришло два сообщения</td><td><span class="tag w">средний</span></td><td>Ключа повторности у формы нет намеренно: гость мог дописать. Назвать свойством, а не оправдываться</td></tr>
+          <tr><td>Telegram задержался</td><td><span class="tag">низкий</span></td><td>Не ждать молча: открыть страницу точки в кабинете — обращение уже там</td></tr>
+          <tr><td>Кнопка оказалась «Продлить», а не «Подключить»</td><td><span class="tag d">высокий</span></td><td>Подписка активна. Зарегистрировать новый пустой аккаунт прямо на сцене</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Задержка Telegram: 5–13 секунд</strong>, обычно ближе к 5. Обещать «мгновенно» не
+      надо, «в течение десяти секунд» — честно.</p>
+      <p><strong>Провал доставки зрителю не виден:</strong> гость в любом случае увидит
+      «отправлено». Не увидит только владелец. Обращение при этом не потеряно — оно в базе и в
+      кабинете.</p>
+    </section>
+
+    <section id="fallback">
+      <h2><span class="num">Запасные ходы</span>Если стенда нет</h2>
+
+      <h3>Ход 1 — вебхук отвергает чужой адрес</h3>
+      <pre>curl -i -X POST -H 'content-type: application/json' \
+  -d '{"event":"payment.succeeded","object":{"id":"probe"}}' \
+  https://reviewqr.aicoding.space/webhooks/yookassa
+<span class="c"># → 400</span></pre>
+      <p>Кадр на 15 секунд: «мы не верим уведомлению об оплате просто потому, что оно пришло».</p>
+
+      <h3>Ход 2 — зелёные тесты без базы данных <span class="tag">главный</span></h3>
+      <pre>npx vitest run apps/web/tests/payment.test.ts -t "P-10"
+<span class="c"># → 4 passed | 12 skipped, 0,6 с</span></pre>
+      <p>Ровно те тесты, что закрыли IPv6-дефект. Рядом: <code>-t "P-8"</code> — цена только из
+      конфига, <code>-t "P-6"</code> — сброс кэша только после COMMIT.</p>
+
+      <h3>Ход 3 — типы сходятся</h3>
+      <pre>npm run typecheck   <span class="c"># → exit 0</span></pre>
+
+      <h3>Ход 4 — страж умеет отказываться</h3>
+      <pre>bash scripts/check-db-grants.sh; echo "код возврата: $?"
+<span class="c"># ❌ DATABASE_URL_SUPER не задан — проверка НЕ выполнена
+# код возврата: 2</span></pre>
+      <p>Это и есть демонстрируемый тезис, и он сильнее зелёной галочки: у стража <strong>три</strong>
+      кода возврата. <code>0</code> — чисто, <code>1</code> — нарушение доказано, <code>2</code> —
+      <strong>проверка не выполнена</strong>. Страж, отвечающий «чисто» на недоступной базе, хуже
+      отсутствующего: он превращает неизвестность в заверение.</p>
+
+      <div class="alarm" style="margin-top:18px">
+        <h3 style="margin-top:0">Чего в запасе НЕТ: <code>npm test</code> целиком</h3>
+        <p style="margin-bottom:0">Наборы требуют отдельной тестовой базы, которой на этой машине не
+        поднято — прогон даёт красное по причине, не связанной с кодом.
+        <strong>Не запускать при зрителях.</strong></p>
+      </div>
+    </section>
+
+    <section id="numbers">
+      <h2><span class="num">Справка</span>Числа под рукой</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Что</th><th>Значение</th></tr></thead>
+        <tbody>
+          <tr><td>Цена «Точки»</td><td>990 ₽ / 30 дней <span class="note">(гипотеза, не решение — так и говорить)</span></td></tr>
+          <tr><td>Оплачено до</td><td>2 октября 2026</td></tr>
+          <tr><td>Метрика недели</td><td>активные точки: ≥ 1 скан с уникального устройства. <strong>Цель первой недели — 10</strong></td></tr>
+          <tr><td>Воронка пилота</td><td>50 контактов → 30 % согласий → 75 % онбординг → 70 % поставили QR → 90 % скан = <strong>7</strong>; цель 10, на 40 % выше расчёта</td></tr>
+          <tr><td>Тестов в комплекте</td><td>93 — гость 9 · приём 16 · доставка 24 · кабинет 44</td></tr>
+          <tr><td>Заявок в кузнице</td><td>37</td></tr>
+          <tr><td>Задержка Telegram</td><td>5–13 с</td></tr>
+          <tr><td>Лимит приватных обращений</td><td>10 в час на точку (эффективно — на всех зрителей)</td></tr>
+          <tr><td>Кэш гостевой страницы</td><td>60 с, но при правке ссылок и оплате сбрасывается явно</td></tr>
+          <tr><td>Длина обращения</td><td>2–2000 знаков; текст обязателен, оценка — нет</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Четыре печатных макета</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Макет</th><th>Носитель</th><th>Что говорить</th></tr></thead>
+        <tbody>
+          <tr><td>Подвал счёта</td><td>уносимый</td><td>Гость уносит чек и сканирует дома, со своей сети. Самый безопасный: площадка не видит пачку отзывов с одного адреса</td></tr>
+          <tr><td>Оборот визитки</td><td>уносимый</td><td>Кладётся в пакет с заказом, живёт дольше чека</td></tr>
+          <tr><td>Наклейка на упаковку</td><td>уносимый</td><td>Единственный, работающий для доставки и самовывоза</td></tr>
+          <tr><td>Тейбл-тент</td><td>настольный</td><td>Единственный настольный и единственный <strong>с предупреждением</strong>: безопасен, только пока гость сканирует своим телефоном на своей сети</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+</div>
