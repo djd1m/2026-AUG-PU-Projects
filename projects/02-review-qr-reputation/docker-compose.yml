@@ -76,7 +76,7 @@ services:
       - GUEST_INTERNAL_URL=http://guest:3000
       - YOOKASSA_SHOP_ID
       - YOOKASSA_SECRET_KEY
-      - PRICE_POINT_RUB              # цена «Точки»; не задана — 990 (гипотеза, DEC-PAY-1)
+      - PRICE_POINT_RUB              # цена «Точки»; не задана — 990 (DEC-PAY-1, решено)
       - TELEGRAM_BOT_USERNAME
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS

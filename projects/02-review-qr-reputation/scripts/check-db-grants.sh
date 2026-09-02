@@ -70,6 +70,32 @@ has app_notify channel_bindings  SELECT yes "куда слать"
 has app_notify private_feedback  SELECT yes "текст нужен для отправки владельцу"
 has app_notify private_feedback  INSERT no  ""
 
+# ── Оплата: ЧЕТВЁРТАЯ роль в матрице и пять новых таблиц.
+# Перечисляются целиком, включая отрицательные строки: список только положительных прав
+# отвечает на вопрос «работает ли», но не на вопрос «а больше ничего не может?».
+has app_owner  checkout_sessions SELECT yes "вебхук находит арендатора по provider_session_id"
+has app_owner  checkout_sessions INSERT yes "создание платежа из кабинета"
+has app_owner  checkout_sessions UPDATE yes "пометка completed"
+has app_owner  webhook_events    INSERT yes "заявка идемпотентности"
+has app_owner  webhook_events    SELECT yes "ON CONFLICT..RETURNING без SELECT падает — грант парный"
+has app_owner  commissions       INSERT yes "начисление партнёру"
+has app_owner  subscriptions     INSERT yes "активация тарифа"
+has app_owner  places            UPDATE yes "снятие бренд-строки после оплаты"
+
+# Деньги недоступны гостевым ролям НИ В КАКОМ виде. Не «незачем», а невыразимо:
+# подделать событие оплаты приёмом или прочитать платежи рендером нельзя правами.
+has app_render checkout_sessions SELECT no  "гостевая поверхность денег не видит"
+has app_render webhook_events    SELECT no  ""
+has app_render subscriptions     SELECT no  "тариф решает branding_required в places, а не чтение подписки"
+has app_intake webhook_events    INSERT no  "приём не может подделать событие оплаты"
+has app_intake commissions       INSERT no  ""
+
+# Истечение подписки живёт в доставке — и ровно в объёме истечения.
+has app_notify subscriptions     UPDATE yes "гашение просроченной подписки"
+has app_notify places            UPDATE yes "возврат бренд-строки (колоночный грант)"
+has app_notify checkout_sessions SELECT no  "к платежам доставка не ходит"
+has app_notify webhook_events    INSERT no  ""
+
 # ── Отсутствие полей, которыми выражается гейтинг
 echo "== T1 · полей гейтинга не существует =="
 for col in gating_enabled rating_threshold positive_destination negative_destination show_if sort_order position; do
