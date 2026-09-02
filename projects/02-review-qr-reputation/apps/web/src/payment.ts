@@ -16,36 +16,86 @@ import { randomUUID } from 'node:crypto';
 import { pool } from './db.js';
 
 /** Подсети вебхуков ЮKassa — В КОДЕ, не в env: вынесенный список однажды приедет пустым,
- *  а пустой allowlist читается как «принимать отовсюду». Снято из документации ЮKassa,
- *  раздел «IP-адреса уведомлений», 2026-09. */
+ *  а пустой allowlist читается как «принимать отовсюду».
+ *  Сверено с https://yookassa.ru/developers/using-api/webhooks 2026-09-02.
+ *  IPv6-подсеть в списке НЕ декоративная: без неё уведомление, пришедшее по IPv6, получает 400,
+ *  провайдер повторяет его с того же адреса — и оплата не применяется НИКОГДА. */
 export const YOOKASSA_NETWORKS = [
   '185.71.76.0/27', '185.71.77.0/27', '77.75.153.0/25',
   '77.75.156.11/32', '77.75.156.35/32', '77.75.154.128/25',
+  '2a02:5180::/32',
 ] as const;
 
-/** CIDR-проверка с уроком проекта 01: ПУСТАЯ МАСКА — ОПЕЧАТКА, а не /0.
- *  Number('') === 0, и '1.2.3.4/' превращался бы в «принимать любой адрес». */
+/** Проверка принадлежности адреса списку подсетей. Работает для IPv4 и IPv6.
+ *
+ *  Урок проекта 01, сохранённый дословно: ПУСТАЯ МАСКА — ОПЕЧАТКА, а не /0. `Number('') === 0`,
+ *  и запись `1.2.3.4/` превращалась бы в «принимать любой адрес» — одна опечатка открывает дверь
+ *  всем. Поэтому пустой префикс, нечисловой префикс и префикс вне диапазона — ОТКАЗ.
+ *
+ *  Адреса сравниваются как целые (BigInt): IPv4 разворачивается в 32 бита, IPv6 — в 128.
+ *  Форма `::ffff:1.2.3.4` (так Node отдаёт IPv4-соединение на dual-stack сокете) приводится к
+ *  IPv4, иначе адрес не совпал бы ни с одной IPv4-подсетью списка. */
 export function ipInAnyCidr(ip: string, cidrs: readonly string[]): boolean {
-  const ipN = ipv4ToInt(ip);
-  if (ipN === null) return false;
+  const addr = parseIp(ip);
+  if (addr === null) return false;
   for (const cidr of cidrs) {
-    const [net, prefixRaw] = cidr.split('/');
-    if (prefixRaw === undefined || prefixRaw.trim() === '') return false;   // '1.2.3.4/' — отказ
+    const slash = cidr.lastIndexOf('/');
+    if (slash < 0) return false;                       // '1.2.3.4' без маски — отказ, не /32
+    const prefixRaw = cidr.slice(slash + 1);
+    if (prefixRaw.trim() === '') return false;         // '1.2.3.4/' — опечатка, НЕ /0
     const prefix = Number(prefixRaw);
-    if (!Number.isInteger(prefix) || prefix < 0 || prefix > 32) return false;
-    const netN = ipv4ToInt(net ?? '');
-    if (netN === null) return false;
-    const mask = prefix === 0 ? 0 : (~0 << (32 - prefix)) >>> 0;
-    if (((ipN & mask) >>> 0) === ((netN & mask) >>> 0)) return true;
+    const net = parseIp(cidr.slice(0, slash));
+    if (net === null) return false;
+    if (!Number.isInteger(prefix) || prefix < 0 || prefix > net.bits) return false;
+    if (net.bits !== addr.bits) continue;              // разные семейства не сравниваются
+    const shift = BigInt(net.bits - prefix);
+    if ((addr.value >> shift) === (net.value >> shift)) return true;
   }
   return false;
 }
-function ipv4ToInt(ip: string): number | null {
-  const m = ip.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+
+interface ParsedIp { value: bigint; bits: 32 | 128 }
+
+function parseIp(raw: string): ParsedIp | null {
+  const ip = raw.trim();
+  if (ip === '') return null;
+  const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(ip);   // IPv4 на dual-stack сокете
+  const v4 = parseIpv4(mapped ? mapped[1]! : ip);
+  if (v4 !== null) return { value: v4, bits: 32 };
+  if (!ip.includes(':')) return null;
+  const v6 = parseIpv6(ip);
+  return v6 === null ? null : { value: v6, bits: 128 };
+}
+
+function parseIpv4(ip: string): bigint | null {
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(ip);
   if (!m) return null;
-  const parts = m.slice(1).map(Number);
-  if (parts.some((p) => p > 255)) return null;
-  return ((parts[0]! << 24) | (parts[1]! << 16) | (parts[2]! << 8) | parts[3]!) >>> 0;
+  let value = 0n;
+  for (let i = 1; i <= 4; i++) {
+    const part = Number(m[i]);
+    if (part > 255) return null;
+    value = (value << 8n) | BigInt(part);
+  }
+  return value;
+}
+
+function parseIpv6(ip: string): bigint | null {
+  const zone = ip.indexOf('%');                        // fe80::1%eth0 — зона к адресу не относится
+  const bare = zone < 0 ? ip : ip.slice(0, zone);
+  const halves = bare.split('::');
+  if (halves.length > 2) return null;
+  const head = halves[0] ? halves[0]!.split(':') : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1]!.split(':') : [];
+  const groups: string[] = halves.length === 2
+    ? [...head, ...Array(8 - head.length - tail.length).fill('0'), ...tail]
+    : head;
+  if (groups.length !== 8 || 8 - head.length - tail.length < 0) return null;
+  let value = 0n;
+  for (const g of groups) {
+    if (!/^[0-9a-f]{1,4}$/i.test(g)) return null;
+    value = (value << 16n) | BigInt(parseInt(g, 16));
+  }
+  return value;
 }
 
 /** Цена — из конфига процесса. Из формы клиента НЕ принимается (AC-7).

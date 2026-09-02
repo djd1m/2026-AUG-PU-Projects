@@ -230,7 +230,29 @@ describe('P-8 цена — только из конфига', () => {
   });
 });
 
-describe('P-10 CIDR: пустота — отказ, не /0', () => {
+describe('P-10 CIDR: пустота — отказ, не /0; IPv6 — не «чужой»', () => {
+  it('IPv6-подсеть ЮKassa: адрес внутри принимается, соседний — нет', () => {
+    // Найдено сверкой с документацией 2026-09-02: у провайдера ЕСТЬ 2a02:5180::/32.
+    // Прежний матчер отвергал любой не-IPv4 адрес, то есть на уведомление по IPv6 отвечал 400
+    // на КАЖДОЙ попытке доставки — оплата не применилась бы никогда.
+    expect(ipInAnyCidr('2a02:5180::1', YOOKASSA_NETWORKS)).toBe(true);
+    expect(ipInAnyCidr('2a02:5180:ffff:ffff:ffff:ffff:ffff:ffff', YOOKASSA_NETWORKS)).toBe(true);
+    expect(ipInAnyCidr('2a02:5181::1', YOOKASSA_NETWORKS)).toBe(false);   // соседняя /32
+    expect(ipInAnyCidr('2a03:5180::1', YOOKASSA_NETWORKS)).toBe(false);
+  });
+
+  it('IPv4 на dual-stack сокете (::ffff:a.b.c.d) — это IPv4, а не чужое семейство', () => {
+    // Так Node отдаёт remoteAddress, когда слушает :: — без приведения адрес не совпал бы
+    // ни с одной IPv4-подсетью списка, и отказ выглядел бы как подделка.
+    expect(ipInAnyCidr('::ffff:185.71.76.5', YOOKASSA_NETWORKS)).toBe(true);
+    expect(ipInAnyCidr('::ffff:8.8.8.8', YOOKASSA_NETWORKS)).toBe(false);
+  });
+
+  it('разные семейства не сравниваются между собой', () => {
+    expect(ipInAnyCidr('2a02:5180::1', ['185.71.76.0/27'])).toBe(false);
+    expect(ipInAnyCidr('185.71.76.5', ['2a02:5180::/32'])).toBe(false);
+  });
+
   it('пустая маска, мусор и границы', () => {
     expect(ipInAnyCidr('1.2.3.4', ['1.2.3.4/'])).toBe(false);       // Number('')===0 — ловушка
     expect(ipInAnyCidr('1.2.3.4', ['1.2.3.4'])).toBe(false);        // без маски — отказ
@@ -238,7 +260,10 @@ describe('P-10 CIDR: пустота — отказ, не /0', () => {
     expect(ipInAnyCidr('185.71.76.32', YOOKASSA_NETWORKS)).toBe(false);  // за границей
     expect(ipInAnyCidr('77.75.156.11', YOOKASSA_NETWORKS)).toBe(true);   // /32
     expect(ipInAnyCidr('77.75.156.12', YOOKASSA_NETWORKS)).toBe(false);
-    expect(ipInAnyCidr('::1', YOOKASSA_NETWORKS)).toBe(false);           // не-IPv4 — отказ
+    expect(ipInAnyCidr('::1', YOOKASSA_NETWORKS)).toBe(false);           // валидный IPv6 вне списка
     expect(ipInAnyCidr('999.1.1.1', ['0.0.0.0/0'])).toBe(false);
+    expect(ipInAnyCidr('2a02:5180::/32', ['2a02:5180::/'])).toBe(false);  // пустая маска и в IPv6
+    expect(ipInAnyCidr('не адрес', YOOKASSA_NETWORKS)).toBe(false);
+    expect(ipInAnyCidr('2a02:5180::1::2', YOOKASSA_NETWORKS)).toBe(false); // два '::' — не адрес
   });
 });
