@@ -17,7 +17,7 @@ import { NextResponse } from 'next/server';
 
 import { currentAccountId } from '@/lib/current-session';
 import { MAX_PHOTO_BYTES, validatePhoto } from '@/lib/photo';
-import { hasProof, isPlatformKey, validateSourceUrl, type PlatformKey } from '@/lib/platform-proof';
+import { detectPlatform, hasProof, isPlatformKey, validateSourceUrl, type PlatformKey } from '@/lib/platform-proof';
 import { uploadPhoto } from '@/lib/storage';
 import { withAccount } from '@proofwall/db';
 
@@ -52,14 +52,15 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const errors: string[] = [];
   if (slug === '') errors.push('slug: обязателен');
-  if (name.length < 2 || name.length > NAME_MAX) errors.push(`name: 2-${NAME_MAX} символов`);
-  if (role.length > ROLE_MAX) errors.push(`role: не длиннее ${ROLE_MAX}`);
-  if (text.length < 2 || text.length > TEXT_MAX) errors.push(`text: 2-${TEXT_MAX} символов`);
-  if (!isPlatformKey(platformRaw)) errors.push('platform: неизвестная площадка');
 
-  const platform = platformRaw as PlatformKey;
+  // Площадка ВЫВОДИТСЯ из ссылки, если её не указали явно. Спрашивать отдельно то, что уже
+  // написано в адресе, — лишняя работа для человека и лишний повод ошибиться.
+  const platform: PlatformKey = isPlatformKey(platformRaw)
+    ? platformRaw
+    : (detectPlatform(sourceUrlRaw) ?? 'other');
+
   let sourceUrl: string | null = null;
-  if (sourceUrlRaw !== '' && isPlatformKey(platformRaw)) {
+  if (sourceUrlRaw !== '') {
     const v = validateSourceUrl(platform, sourceUrlRaw);
     if (v.ok) sourceUrl = v.url;
     else errors.push(v.error);
@@ -67,6 +68,23 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const hasFile = file instanceof File && file.size > 0;
   if (hasFile && file.size > MAX_PHOTO_BYTES) errors.push('screenshot: больше 5 MB');
+
+  // Имя и текст НЕОБЯЗАТЕЛЬНЫ, когда есть снимок: снимок и есть содержимое карточки, и на нём
+  // уже видно, кто написал. Требовать перепечатывать то, что читается на картинке, — ровно та
+  // работа, ради избавления от которой фича и делается. Пустые значения хранятся пустыми
+  // строками, а обе поверхности рендера пропускают пустой блок автора.
+  if (name !== '' && (name.length < 2 || name.length > NAME_MAX)) {
+    errors.push(`name: 2-${NAME_MAX} символов`);
+  }
+  if (role.length > ROLE_MAX) errors.push(`role: не длиннее ${ROLE_MAX}`);
+  if (text !== '' && (text.length < 2 || text.length > TEXT_MAX)) {
+    errors.push(`text: 2-${TEXT_MAX} символов`);
+  }
+  if (!hasFile && text === '') {
+    // Без снимка текст — единственное содержимое карточки. Пустая карточка со ссылкой
+    // читателю ничего не сообщает.
+    errors.push('без снимка нужен текст отзыва — иначе на стене будет пустая карточка');
+  }
 
   // Хотя бы одно доказательство. То же требование стоит ограничением в СУБД — код и схема
   // отказывают независимо друг от друга, и снятие одного не открывает путь.

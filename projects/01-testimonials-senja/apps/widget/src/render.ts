@@ -114,10 +114,14 @@ function renderCard(apiBase: string, testimonial: WidgetTestimonial): HTMLElemen
     author.appendChild(photo);
   }
 
-  const name = document.createElement('span');
-  name.className = 'pw-author-name';
-  name.textContent = testimonial.author_name;
-  author.appendChild(name);
+  // Пустое имя — законное состояние: у отзыва, принесённого снимком, автор виден на самом
+  // снимке. Пустой узел показал бы читателю пустоту там, где он ждёт человека.
+  if (testimonial.author_name !== '') {
+    const name = document.createElement('span');
+    name.className = 'pw-author-name';
+    name.textContent = testimonial.author_name;
+    author.appendChild(name);
+  }
 
   if (testimonial.author_role) {
     const role = document.createElement('span');
@@ -125,7 +129,7 @@ function renderCard(apiBase: string, testimonial: WidgetTestimonial): HTMLElemen
     role.textContent = testimonial.author_role;
     author.appendChild(role);
   }
-  card.appendChild(author);
+  if (author.childNodes.length > 0) card.appendChild(author);
 
   // security.md §5 / FR-NFR-SEC-002 сц.3: машинная расшифровка помечается явно на каждой
   // публичной поверхности рендера, не мелким шрифтом. Виджет — такая поверхность (исполняется

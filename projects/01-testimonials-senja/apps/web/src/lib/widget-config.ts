@@ -11,7 +11,7 @@ import { badgeRequiredFor } from './tariff';
 import { buildBadgeUrl } from './badge';
 import { baseUrl } from './urls';
 
-import { platformLabel } from './platform-proof';
+import { platformFrom } from './platform-proof';
 
 export const TESTIMONIAL_LIMIT = 50; // Pseudocode §5.1
 
@@ -100,7 +100,7 @@ export async function buildWidgetConfig(
     transcript_source: r.transcript_source,
     photo_url: r.photo_url,
     source_label: r.source === 'platform'
-      ? (platformLabel(r.source_platform) ?? 'внешней площадки') : null,
+      ? (platformFrom(r.source_platform) ?? 'внешней площадки') : null,
     source_url: r.source === 'platform' ? r.source_url : null,
     screenshot_url: r.screenshot_object_key ? `/api/photo/${r.screenshot_object_key}` : null,
   }));

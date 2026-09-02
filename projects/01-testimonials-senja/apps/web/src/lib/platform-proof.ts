@@ -11,8 +11,22 @@ export const PLATFORMS = {
   flamp: { label: 'Флампе', hosts: ['flamp.ru'] },
   // «Другое» принимает любой https-хост, но и подпись даёт без названия площадки: обещать
   // читателю конкретный источник, которого мы не опознали, значит обещать лишнее.
-  other: { label: 'другой источник', hosts: null as string[] | null },
+  other: { label: 'Другой источник', from: 'внешней площадки', hosts: null as string[] | null },
 } as const;
+
+/**
+ * Подпись в РОДИТЕЛЬНОМ падеже — для фразы «Отзыв с …».
+ *
+ * Названия площадок в неё подставляются как есть: «Отзыв с Яндекс.Карты» читается нормально,
+ * склонять чужой бренд мы не вправе. А вот нарицательное «другой источник» в той же позиции
+ * давало «Отзыв с другой источник» — и это увидел бы каждый читатель стены. Отдельное поле
+ * вместо склеивания: падеж — свойство слова, а не строки формата.
+ */
+export function platformFrom(key: string | null | undefined): string | null {
+  if (!isPlatformKey(key)) return null;
+  const def = PLATFORMS[key] as { label: string; from?: string };
+  return def.from ?? def.label;
+}
 
 export type PlatformKey = keyof typeof PLATFORMS;
 
@@ -61,4 +75,32 @@ export function validateSourceUrl(
  */
 export function hasProof(sourceUrl: string | null, hasScreenshot: boolean): boolean {
   return (sourceUrl !== null && sourceUrl !== '') || hasScreenshot;
+}
+
+/**
+ * Площадка ИЗ АДРЕСА, без обращения в сеть.
+ *
+ * Ключ площадки лежит в самом хосте ссылки — спрашивать его у владельца отдельно значит
+ * заставлять человека сообщать то, что уже написано в том, что он вставил. Сеть при этом не
+ * нужна: разбор адреса — чистая функция, и она не упирается ни в капчу, ни в антибот, о
+ * которые разбивается всякая попытка ПРОЧИТАТЬ страницу отзыва.
+ *
+ * Неопознанный хост — не отказ, а `other`: ссылка остаётся доказательством, просто подпись на
+ * карточке будет без названия площадки. Отказывать здесь значило бы терять отзыв из-за того,
+ * что мы не узнали сайт.
+ */
+export function detectPlatform(raw: string): PlatformKey | null {
+  let host: string;
+  try {
+    const u = new URL(raw.trim());
+    if (u.protocol !== 'https:') return null;
+    host = u.hostname.toLowerCase();
+  } catch { return null; }
+
+  for (const [key, def] of Object.entries(PLATFORMS)) {
+    const hosts = def.hosts;
+    if (hosts === null) continue;
+    if (hosts.some((h) => host === h || host.endsWith(`.${h}`))) return key as PlatformKey;
+  }
+  return 'other';
 }

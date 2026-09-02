@@ -2,7 +2,7 @@
 // в самом дешёвом слое, и этот файл годится в офлайн-набор демонстрации.
 
 import { describe, expect, it } from 'vitest';
-import { PLATFORMS, hasProof, isPlatformKey, platformLabel, validateSourceUrl } from '../src/lib/platform-proof';
+import { PLATFORMS, detectPlatform, platformFrom, hasProof, isPlatformKey, platformLabel, validateSourceUrl } from '../src/lib/platform-proof';
 
 describe('площадка из закрытого списка', () => {
   it('известные ключи принимаются, посторонние — нет', () => {
@@ -10,6 +10,13 @@ describe('площадка из закрытого списка', () => {
     for (const bad of ['', 'google', 'YANDEX_MAPS', 'yandex maps', null, undefined, 42, {}, ['yandex_maps']]) {
       expect(isPlatformKey(bad), JSON.stringify(bad)).toBe(false);
     }
+  });
+
+  it('во фразе «Отзыв с …» падеж родительный — иначе выходит «с другой источник»', () => {
+    // Читатель стены видит эту строку целиком; согласование — не мелочь оформления.
+    expect(`Отзыв с ${platformFrom('other')}`).toBe('Отзыв с внешней площадки');
+    expect(`Отзыв с ${platformFrom('yandex_maps')}`).toBe('Отзыв с Яндекс.Карты');
+    expect(platformFrom('нет такого')).toBeNull();
   });
 
   it('подпись берётся из таблицы, у неизвестного ключа её нет', () => {
@@ -59,6 +66,29 @@ describe('ссылка на первоисточник', () => {
   });
 });
 
+describe('площадка выводится из адреса — без обращения в сеть', () => {
+  it('узнаёт известные площадки, включая поддомены', () => {
+    expect(detectPlatform('https://yandex.ru/maps/org/x/1/reviews/')).toBe('yandex_maps');
+    expect(detectPlatform('https://maps.yandex.ru/org/x')).toBe('yandex_maps');
+    expect(detectPlatform('https://2gis.ru/moscow/firm/1/tab/reviews')).toBe('twogis');
+    expect(detectPlatform('https://otzovik.com/review_1.html')).toBe('otzovik');
+  });
+
+  it('неизвестный хост — «другое», а НЕ отказ: ссылка остаётся доказательством', () => {
+    expect(detectPlatform('https://example.com/review/7')).toBe('other');
+  });
+
+  it('не-ссылка и http дают null — тогда площадку спросят у владельца', () => {
+    for (const bad of ['', 'yandex.ru', 'http://yandex.ru/maps', 'не ссылка']) {
+      expect(detectPlatform(bad), bad).toBeNull();
+    }
+  });
+
+  it('подделка хоста не проходит: evilyandex.ru это «другое», не Яндекс', () => {
+    expect(detectPlatform('https://evilyandex.ru/maps')).toBe('other');
+  });
+});
+
 describe('доказательство обязано быть хотя бы одно', () => {
   it('ни ссылки, ни снимка — отказ', () => {
     expect(hasProof(null, false)).toBe(false);
@@ -103,11 +133,30 @@ describe('форма кабинета', () => {
     expect(src).not.toContain('project_id');
   });
 
-  it('страж: кнопка заблокирована, пока нет ни ссылки, ни файла', async () => {
+  it('страж: кнопка заблокирована, пока нечего добавлять', async () => {
     const { readFileSync } = await import('node:fs');
-    const src = readFileSync(new URL('../src/app/dashboard/[slug]/platform-form.tsx', import.meta.url), 'utf8');
-    expect(src).toMatch(/disabled=\{busy \|\| noProof\}/);
-    expect(src).toMatch(/const noProof = sourceUrl\.trim\(\) === '' && file === null/);
+    const src = code(readFileSync(new URL('../src/app/dashboard/[slug]/platform-form.tsx', import.meta.url), 'utf8'));
+    expect(src).toMatch(/disabled=\{busy \|\| !ready\}/);
+    // Снимка ОДНОГО достаточно; ссылки без текста — нет.
+    expect(src).toMatch(/const ready = \(file !== null\) \|\| \(sourceUrl\.trim\(\) !== '' && text\.trim\(\) !== ''\)/);
+  });
+
+  it('страж: вставка из буфера принимает и картинку, и адрес', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = code(readFileSync(new URL('../src/app/dashboard/[slug]/platform-form.tsx', import.meta.url), 'utf8'));
+    expect(src).toContain('clipboardData.files');
+    expect(src).toContain("clipboardData.getData('text')");
+    expect(src).toMatch(/onPaste=\{onPaste\}/);
+  });
+
+  it('страж: обе поверхности пропускают ПУСТОГО автора', async () => {
+    const { readFileSync } = await import('node:fs');
+    const wall = code(readFileSync(new URL('../src/app/w/[slug]/page.tsx', import.meta.url), 'utf8'));
+    expect(wall).toMatch(/item\.author_name !== ''/);
+    const widget = code(readFileSync(new URL('../../widget/src/render.ts', import.meta.url), 'utf8'));
+    expect(widget).toMatch(/testimonial\.author_name !== ''/);
+    // И пустой подвал не приклеивается к карточке.
+    expect(widget).toMatch(/author\.childNodes\.length > 0/);
   });
 });
 

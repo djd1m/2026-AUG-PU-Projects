@@ -11,7 +11,7 @@ import { findProjectBySlug } from '@/lib/project';
 import { readBranding } from '@/lib/branding';
 import { buildReviewJsonLd, getApprovedTestimonials, safeJsonLd } from '@/lib/wall';
 import { baseUrl } from '@/lib/urls';
-import { platformLabel } from '@/lib/platform-proof';
+import { platformFrom } from '@/lib/platform-proof';
 
 export const dynamic = 'force-dynamic';
 
@@ -148,14 +148,18 @@ export default async function WallPage({ params }: Params) {
                 <p className="quote__origin">
                   {item.source_url ? (
                     <a href={item.source_url} target="_blank" rel="nofollow noopener noreferrer">
-                      Отзыв с {platformLabel(item.source_platform) ?? 'внешней площадки'} →
+                      Отзыв с {platformFrom(item.source_platform) ?? 'внешней площадки'} →
                     </a>
                   ) : (
-                    <>Отзыв с {platformLabel(item.source_platform) ?? 'внешней площадки'}</>
+                    <>Отзыв с {platformFrom(item.source_platform) ?? 'внешней площадки'}</>
                   )}
                 </p>
               )}
 
+              {/* Блок автора пропускается целиком, когда имени нет: у отзыва, принесённого
+                  снимком, автор виден НА СНИМКЕ, и пустая строка с инициалом-заглушкой
+                  сообщала бы читателю несуществующего человека. */}
+              {item.author_name !== '' && (
               <footer
                 itemProp="author"
                 itemScope
@@ -186,6 +190,7 @@ export default async function WallPage({ params }: Params) {
                   )}
                 </span>
               </footer>
+              )}
             </article>
           ))}
         </div>
