@@ -50,6 +50,49 @@ describe('разбор ссылки', () => {
   });
 });
 
+describe('регрессия: адрес не превращается в кашу', () => {
+  // ЧЕМ ЗАСЛУЖЕНО. На стенде жили проекты со слагами `https-productuniversity-ru` и
+  // `https-projects-aicoding-space`: владелец вставил в поле названия ссылку, а слаг собрался
+  // из неё побуквенно вместе со схемой и зоной. Владелец сказал прямо: «почини слаг, чтобы из
+  // ссылки не получалась эта каша». Строки на стенде переименованы, но переименование чинит
+  // ДАННЫЕ, а не причину — причину стережёт этот набор.
+  //
+  // Проверяется СВОЙСТВО, а не список: ни один слаг, собранный из адреса, не начинается с
+  // обломка схемы и не несёт доменной зоны. Список примеров зеленел бы на новом адресе,
+  // которого в нём нет.
+  const URLS = [
+    'https://productuniversity.ru/claude',
+    'http://productuniversity.ru',
+    'https://projects.aicoding.space/',
+    'https://www.example.co.uk/team/page',
+    'https://sub.domain.example.org/a/b/c',
+  ];
+
+  it('схема в слаг не попадает НИКОГДА', () => {
+    for (const u of URLS) {
+      const slug = normalizeSlug(slugSourceFromName(u));
+      expect(slug, u).not.toMatch(/^https?-/);
+      expect(slug, u).not.toContain('https');
+      expect(slug, u).not.toContain('http');
+    }
+  });
+
+  it('доменная зона в слаг не попадает: она читателю ничего не сообщает', () => {
+    for (const u of URLS) {
+      const slug = normalizeSlug(slugSourceFromName(u));
+      expect(slug, u).not.toMatch(/(^|-)(ru|com|org|space|uk|net)(-|$)/);
+    }
+  });
+
+  it('слаг из адреса остаётся читаемым, а не превращается в шум', () => {
+    expect(normalizeSlug(slugSourceFromName('https://productuniversity.ru/claude'))).toBe('productuniversity-claude');
+    expect(normalizeSlug(slugSourceFromName('https://projects.aicoding.space/'))).toBe('aicoding');
+    // И зеркально: обычное название не должно тащить хвост-времянку.
+    expect(normalizeSlug(slugSourceFromName('CJM'))).toBe('cjm');
+    expect(normalizeSlug(slugSourceFromName('Кофейня «Артель»'))).toBe('kofeynya-artel');
+  });
+});
+
 describe('явно введённый слаг НЕ трогается', () => {
   it('подготовка применяется только к названию — у явного слага своя дорога', async () => {
     const { readFileSync } = await import('node:fs');
