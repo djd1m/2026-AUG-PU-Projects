@@ -14,7 +14,7 @@
 | [Архитектура](variant-architecture.md) | Границы shared/variants и единые use cases |
 | [План](variant-implementation-plan.md) | Функциональные fixtures → сравнение → протоколы/провайдеры/пилот |
 
-Это пакет draft PRD для согласования. Содержит22 уникальные пользовательские истории:6 общих и16 сценарных, с Given/When/Then. Ни наличие документа, ни работа HTML не доказывают выполнение этих критериев будущим runtime. Полный SPARC Specification/Pseudocode/Refinement/Completion ещё не создан.
+Это пакет draft PRD для согласования. Содержит23 уникальные пользовательские истории:6 общих и17 сценарных, с Given/When/Then. Ни наличие документа, ни работа HTML не доказывают выполнение этих критериев будущим runtime. Полный SPARC Specification/Pseudocode/Refinement/Completion ещё не создан.
 
 ## Передача discovery
 

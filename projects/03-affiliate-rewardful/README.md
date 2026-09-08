@@ -54,8 +54,8 @@
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | Исследование и 4 HTML CJM готовы; ожидается выбор |
-| Phase 1 — SPARC (`/replicate`) | ⬜ |
+| Phase 0 — Product Discovery | Исследование и 4 HTML CJM готовы; выбран путь подготовки4 PRD |
+| Phase 1 — SPARC (`/replicate`) | 4 draft PRD + shared PRD/план; полный SPARC ещё не завершён |
 | Phase 2 — Validation | ⬜ |
 | Phase 3 — Toolkit | ⬜ |
 | Phase 4 — Finalize | ⬜ |
@@ -75,6 +75,21 @@
 Основной payout flow: ручной реестр за предыдущий месяц, переводы до5-го следующего.
 ЮKassa — базовая интеграция; Split payments Яндекс Кассы/ЮKassa и CloudPayments — будущие кандидаты по документации без обещания production-проверки.
 
-PRD/реализация не начаты: остановка на выборе CJM по запросу владельца.
+По новому поручению подготовлены4 PRD и общий план; runtime четырёх вариантов пока не реализован.
 
 Агентные интерфейсы MCP/A2A включены в продуктовый замысел. [Влияние на A–C и новый путь D](docs/discovery/agent-interface-cjm.md). Текущий результат — интерактивный прототип, без работающих MCP/A2A endpoints.
+
+## Четыре реализации с общим кодом
+
+[Каталог вариантов: PRD и прототип каждого](variants/README.md) · [Общий PRD](shared/docs/PRD.md) · [План реализации](docs/variant-implementation-plan.md).
+
+```text
+variants/
+  a-merchant/  # docs/PRD.md, prototype/index.html, будущие src/tests
+  b-customer/
+  c-partner/
+  d-agent/
+shared/        # общий PRD и будущие runtime-пакеты
+```
+
+Каждая оболочка подключает общее ядро; денежные правила, права и provider adapters не копируются между вариантами. Выбрать можно сочетание удачных частей.

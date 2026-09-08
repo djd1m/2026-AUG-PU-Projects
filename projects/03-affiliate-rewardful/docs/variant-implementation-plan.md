@@ -6,7 +6,7 @@
 
 [Общий PRD](../shared/docs/PRD.md), [четыре локальных PRD](../variants/README.md), [архитектура](variant-architecture.md). Предлагается один backend с одной БД на окружение, четыре самостоятельных UI entry packages в variants/* и общие server/client модули в shared/*. Менять денежные правила для одной оболочки скрытым flag нельзя.
 
-Разрешение на подготовку PRD/плана получено. Перед финансовой/authorization реализацией нужен ответ на конкретный рассмотренный XL план: это граница `.claude/rules/complexity-router.md`, а не повторный запрос разрешения на документацию. Согласование F1 не выдаёт автоматически доступ к production, провайдерам или денежным операциям.
+Владелец после подготовки PRD явно разрешил продолжить `/go` по A–D после документов и минимальной обвязки. XL остановка на плане этим поручением снята для последовательной реализации F1 и доступных проверок. Production деньги/договоры/реальные выплаты не подразумеваются. Порядок: shared → A → B → C → D; перед Compose-файлами и контейнерами проверять свободные порты VPS.
 
 ## Этапы и проверяемые выходы
 
@@ -17,7 +17,7 @@
 | W2A — merchant | variants/a-merchant/src + tests: настройки/оплата/реестр/CSV/отметка | US-101…104 + общие инварианты,390/1440px | W1 |
 | W2B — customer | variants/b-customer/src + tests: opt-in/credit/применение/share | US-201…204, включая concurrent credit, identity и чужой origin | W1 |
 | W2C — partner | variants/c-partner/src + tests: terms/enroll/history/own payout | US-301…304, отсутствие чужих данных, точность статусов | W1 |
-| W2D — agent UI/task | variants/d-agent/src + tests: intent/grant/task/artifact/revoke/handoff | US-401…404 на fixture task transport, явный статус «симуляция протокола» | W1; UI handoff W2A |
+| W2D — agent UI/task | variants/d-agent/src + tests: intent/grant/task/artifact/revoke/handoff | US-401…405 на fixture task transport, включая own-credit контекст клиента, явный статус «симуляция протокола» | W1; UI handoff W2A |
 | W3 — сравнимый F1 стенд | Launcher4вариантов, один seed catalog, независимые run-клоны, общий журнал, сбор результатов | Полные journey/negative tests всех4, одинаковый dataset/rules; открытые ограничения доступны пользователю | Все W2 |
 | W4 — protocol candidate | Настоящие локальные MCP/A2A endpoints и выбранные protocol clients поверх fixture application | Transport parity, identity, timeout/cancel/late responses, повтор и отзыв после рестарта | W3 + подтверждённый контракт протоколов |
 | W5 — provider candidate | Audit/reuse ЮKassa payment code, отдельные contracts/adapters, sandbox по доступности | Evidence capability: docs-only / contract / sandbox / production; отсутствующая конфигурация не включает fake | W3 + решения денег/доступов |
@@ -45,10 +45,10 @@ W2A/B/C можно делать параллельно после замороз
 | Пара | Одно и то же задание | Что сравниваем |
 |---|---|---|
 | A UI ↔ D merchant | Подготовить/исправить/утвердить реестр | Правильность, время, исправления, стоимость принятой задачи |
-| B UI ↔ D customer | Объяснить свой credit и условие применения | Понимание, ошибки, успешность действия; D-customer добавляется как parity case |
+| B UI ↔ D customer | Объяснить свой credit и условие применения | Понимание, ошибки, успешность действия; D-customer входит в W2D как fixture parity case |
 | C UI ↔ D partner | Узнать сумму/дату/причину удержания | Правильность ответа, обращения за помощью, время |
 
-D-customer — расширение действующего D HTML, в котором пока показаны только merchant и partner; оно включается в W4 parity при необходимости сравнения B↔D. Не называть это уже реализованным сценарием.
+D-customer — обязательное расширение F1/W2D относительно действующего D HTML, в котором пока показаны только merchant и partner. Оно не называется уже реализованным сценарием. На W3 сравниваются бизнес-сценарии на fixtures; выводы о скорости/стоимости реального агента делаются только после W4 и работы с настоящим клиентом/моделью.
 
 Отдельно исследуем спрос на A/B/C по соответствующим аудиториям. Общая «конверсия победителя из4» не имеет корректного смысла при разных ролях. Для UI↔agent заданий меняем порядок предъявления, сохраняем seed version, отделяем обучение от основного замера. Малый пилот даёт направляющие наблюдения, не статистически доказанный uplift.
 
