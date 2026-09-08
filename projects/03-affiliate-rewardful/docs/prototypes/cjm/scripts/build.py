@@ -18,3 +18,12 @@ for name,variant in [('index','A'),('variant-a','A'),('variant-b','B'),('variant
     html=html.replace('href="index.html"','href="#"')
     (root/(name+'.html')).write_text(html)
 print('Built 5 standalone HTML files, embedded Rubik (OFL), CSS and JavaScript.')
+
+# Folder-local entry points are generated from the same sources, never hand-forked.
+project=root.parents[2]
+folders={'a':'a-merchant','b':'b-customer','c':'c-partner','d':'d-agent'}
+for key,folder in folders.items():
+    target=project/'variants'/folder/'prototype'/'index.html'
+    target.parent.mkdir(parents=True,exist_ok=True)
+    target.write_bytes((root/('variant-'+key+'.html')).read_bytes())
+print('Synced 4 variant-local prototypes.')
