@@ -4,3 +4,6 @@
 @media(prefers-reduced-motion:no-preference){button,a{transition:background .15s,color .15s}.scene{animation:appear .2s ease-out}@keyframes appear{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}}@media print{.lab,.header,.journey,.footer,.actions,.toast{display:none}.main{margin:0;padding:0}.scene{box-shadow:none}dialog{position:static;max-height:none;width:100%}}
 
 .scene:focus{outline:none}
+
+.agent-work{padding:38px 42px}.agent-message{padding:17px 19px;margin:10px 0;background:#f3f7fa;border-radius:10px;font-size:14px}.agent-message p{margin:8px 0}.user-message{background:#e6f3ff;color:#254e70}.agent-consent{display:flex;align-items:flex-start;gap:10px;font-size:13px;margin:22px 0}.agent-consent input{margin-top:4px}.artifact-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.agent-work .primary{font-size:13px;padding:12px 16px}.agent-work .secondary{font-size:12px}.compare-grid{grid-template-columns:repeat(2,1fr)}.nav{gap:15px}.tabs button{padding:9px 11px}.review>span{display:none}
+@media(max-width:650px){.agent-work{padding:25px 20px}.tabs{display:grid;grid-template-columns:1fr 1fr}.tabs button{width:100%;padding:10px}.compare-grid{grid-template-columns:1fr}.agent-work .work-top .chip{margin-top:4px}.artifact-heading .eyebrow{font-size:10px}.agent-work .actions .primary{width:100%}}

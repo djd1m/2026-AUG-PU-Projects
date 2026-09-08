@@ -1,0 +1,134 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "checks": 31,
+  "passed": true,
+  "findings": [
+    {
+      "name": "no draft without grant",
+      "pass": true
+    },
+    {
+      "name": "explicit grant required",
+      "pass": true
+    },
+    {
+      "name": "prepared total9600",
+      "pass": true
+    },
+    {
+      "name": "repeat retains version1",
+      "pass": true
+    },
+    {
+      "name": "unapproved export blocked",
+      "pass": true
+    },
+    {
+      "name": "approved version exports",
+      "pass": true
+    },
+    {
+      "name": "refund total8400",
+      "pass": true
+    },
+    {
+      "name": "revision invalidates approval",
+      "pass": true
+    },
+    {
+      "name": "explanation tracks corrected sum",
+      "pass": true
+    },
+    {
+      "name": "changed version export blocked",
+      "pass": true
+    },
+    {
+      "name": "new approval exports",
+      "pass": true
+    },
+    {
+      "name": "revoke blocks new export",
+      "pass": true
+    },
+    {
+      "name": "revoke blocks approval",
+      "pass": true
+    },
+    {
+      "name": "revoke blocks new revision",
+      "pass": true
+    },
+    {
+      "name": "expiry blocks approval",
+      "pass": true
+    },
+    {
+      "name": "manual UI remains available",
+      "pass": true
+    },
+    {
+      "name": "manual handoff preserves8400",
+      "pass": true
+    },
+    {
+      "name": "owner can export after agent expiry",
+      "pass": true
+    },
+    {
+      "name": "partner grant separate",
+      "pass": true
+    },
+    {
+      "name": "partner task pending",
+      "pass": true
+    },
+    {
+      "name": "duplicate pending same task",
+      "pass": true
+    },
+    {
+      "name": "late response rejected after cancel",
+      "pass": true
+    },
+    {
+      "name": "revoked partner receives no new response",
+      "pass": true
+    },
+    {
+      "name": "partner sees own4800",
+      "pass": true
+    },
+    {
+      "name": "no other partner records",
+      "pass": true
+    },
+    {
+      "name": "response not paid",
+      "pass": true
+    },
+    {
+      "name": "four candidates",
+      "pass": true
+    },
+    {
+      "name": "D saved",
+      "pass": true
+    },
+    {
+      "name": "D mix saved",
+      "pass": true
+    },
+    {
+      "name": "exports bind content versions",
+      "pass": true
+    },
+    {
+      "name": "export sums match approved versions",
+      "pass": true
+    }
+  ]
+}
