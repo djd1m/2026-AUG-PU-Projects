@@ -1,0 +1,133 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-balanced-v1",
+  "run_id": "20260908T194524Z-discovery-cjm",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "discovery-cjm",
+  "pipeline": "replicate through CJM checkpoint",
+  "tier": "S",
+  "risk_flags": [
+    "Static interactive prototype; no backend/API/money movement. Future money implementation remains XL."
+  ],
+  "profile": "compact-balanced-v1 + user-matrix-quality-first-20260908",
+  "profile_overrides": [
+    "Applied to discovery per user request; HTML instead of React; stop before PRD; preliminary market/growth research before CJM selection",
+    "S for interactive HTML instead of initial documentation-only T; substantive review on Astra high per user matrix"
+  ],
+  "baseline_revision": "c1166fb9950b55fec130ee138feaf20d6cf12055",
+  "policy_sha256": "580fc06bf9728b4d699fb86cfa384eb1ad112b11d08b14972490fb22bade77c6",
+  "started_at": "2026-09-08T19:45:24.282454+00:00",
+  "ended_at": "2026-09-08T20:10:50.233894+00:00",
+  "status": "accepted",
+  "actual_coordinator_model": null,
+  "billing_mode": "unknown",
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host does not expose coordinator actual model or per-attempt usage counters to tools.",
+    "Repository has pre-existing unrelated uncommitted policy documentation changes.",
+    "No comparison run or batch; no Specification by explicit user stop. Host version unavailable.",
+    "Actual model/effort/fallback and usage for all workers are not exposed independently by host; requested choices only.",
+    "Some delegation events were logged after dispatch; exact start/end/queue/approval wait intervals unavailable.",
+    "Dirty baseline diff hash and initial untracked file hashes were not captured; benchmark reproducibility incomplete.",
+    "Initial events include noncanonical keys; append-only corrections below retain originals.",
+    "No seeded production defect corpus or post-delivery regression observation; false-positive count not independently adjudicated.",
+    "Full replicate gate aggregate is not applicable at user-selected pre-PRD checkpoint; source path auto gate not passed. No exact provider total or per-stage active time."
+  ],
+  "metrics": {
+    "wall_clock_seconds": 1525.95144,
+    "wall_clock_scope": "run start to delivery packaging; final git transport afterward",
+    "active_compute_seconds": null,
+    "waiting_seconds": null,
+    "input_tokens_total": null,
+    "cached_input_tokens": null,
+    "output_tokens_total": null,
+    "reasoning_tokens": null,
+    "cost": null,
+    "cost_basis": "unknown"
+  },
+  "acceptance_evidence": [
+    "docs/product-discovery-brief.md",
+    "docs/source-product-profile.md",
+    "docs/discovery/cjm-review.md",
+    "docs/prototypes/cjm/tests/desktop-results.json",
+    "docs/prototypes/cjm/tests/mobile-results.json",
+    "docs/prototypes/cjm/tests/download-results.json",
+    "docs/prototypes/cjm/tests/mutation-results.json"
+  ],
+  "batch_id": null,
+  "comparison_id": null,
+  "spec_sha256": null,
+  "host": "Codex collaboration tools + Firefox WebDriver",
+  "host_version": null,
+  "final_revision": "7e87c8231c9fcc5940032104d582ecbefcd21a61",
+  "final_revision_scope": "Prototype implementation commit; final docs/telemetry stored by following commit",
+  "policy_version_at_finish": "compact-quality-first-v2",
+  "policy_sha256_at_finish": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "selected_cjm": null,
+  "checkpoint": "awaiting_user_cjm_selection",
+  "next_phase": "PRD not started",
+  "quality": {
+    "required_gates_passed": null,
+    "required_gates_scope": "Static CJM acceptance 7/7, but full replicate gates not complete: source path missing Playwright, no Specification by user request.",
+    "ac_met": 7,
+    "ac_total": 7,
+    "confirmed_findings_by_severity": {
+      "high": 1,
+      "medium": 4
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "work_units": [
+    {
+      "id": "product_research",
+      "requested_model": "gpt-5.6-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "actual_effort": null,
+      "fallback_reason": null,
+      "status": "completed",
+      "receipt": "docs/discovery/research/product-research.md",
+      "usage": null
+    },
+    {
+      "id": "market_trends",
+      "requested_model": "gpt-5.6-sol",
+      "requested_effort": "medium",
+      "actual_model": null,
+      "actual_effort": null,
+      "fallback_reason": null,
+      "status": "completed",
+      "receipt": "docs/discovery/research/market-trends.md",
+      "usage": null
+    },
+    {
+      "id": "payout_evidence",
+      "requested_model": "gpt-5.6-terra",
+      "requested_effort": "medium",
+      "actual_model": null,
+      "actual_effort": null,
+      "fallback_reason": null,
+      "status": "completed",
+      "receipt": "docs/discovery/research/payout-evidence.md",
+      "usage": null
+    },
+    {
+      "id": "cjm_review",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "actual_effort": null,
+      "fallback_reason": null,
+      "status": "completed",
+      "receipt": "docs/discovery/cjm-review.md",
+      "usage": null
+    }
+  ],
+  "status_scope": "Requested static research/CJM deliverable accepted by checks; awaiting user selection, full replicate incomplete",
+  "source_automated_gates_passed": false,
+  "baseline_dirty_hash": null,
+  "final_artifact_manifest": "evidence/artifact-sha256.json"
+}

@@ -4,6 +4,7 @@ import base64
 root=Path(__file__).resolve().parents[1]
 assets=root/'assets'
 shell=(assets/'shell.html').read_text()
+shell=shell.replace('</head>', '<!-- Embedded Rubik license:\n'+'\n'.join(line.rstrip() for line in (assets/'OFL.txt').read_text().splitlines())+'\n--></head>')
 css=(assets/'style.css').read_text()
 for font in ('rubik-regular.ttf','rubik-bold.ttf'):
     encoded=base64.b64encode((assets/font).read_bytes()).decode()

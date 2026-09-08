@@ -1,0 +1,90 @@
+# N3 — Product Discovery Brief / CJM checkpoint
+
+Дата: 2026-09-08. Статус: **три варианта подготовлены для выбора, PRD не начат**.
+Выполнена исследовательская часть `/replicate`: intelligence, JTBD/product, UI/source profile, конкуренты, предварительная экономика и growth, три HTML CJM. QUICK-метод источников с расширенным охватом модулей не равен полевому исследованию или полному аудиту закрытого продукта.
+
+## Продукт и подтверждённые основания
+
+Rewardful связывает рекомендации с оплатами SaaS, считает рекуррентные комиссии и даёт кабинеты и payout workflow. Текущий публичный pricing: $49 / $99 / $149+ в месяц, trial14 дней. Customer referral credits поддерживаются через API/webhooks и собственный UI клиента; Affiliate Finder существует. Поэтому ни «customer credits отсутствуют», ни «нет поиска партнёров» не являются преимуществами N3. [Подробный source-linked research](discovery/research/product-research.md).
+
+Кандидат N3: самостоятельный сервис учёта партнёрской программы с локальными платежными интеграциями. Proofwall/project01 — гипотеза первого пилота. В project01 уже есть referral attribution, комиссии, partner dashboard и YooKassa webhook. Код не greenfield: `apps/web/src/lib/referral.ts` конвертирует pending attribution в converted; это не доказывает готовность начисления с каждого renewal. Его повторное использование требует аудита событий и возвратов.
+
+Рынок подтверждает категорию и интерфейсные решения, но не российский спрос или готовность платить. Первичные источники не дали сопоставимого TAM/SAM, ARR Rewardful, N3 CAC/LTV. Числа экономики — формулы и иллюстративные сценарии, не прогноз. [Конкуренты, формулы, рост](discovery/research/market-trends.md).
+
+## Принятые решения и границы
+
+- ЮKassa — базовый кандидат интеграции, существующий код — исходный материал для аудита.
+- Основные выплаты: ручной реестр за предыдущий месяц, перевод до 5-го числа следующего. До100 партнёров — рабочая оценка владельца.
+- Split payments относится к Яндекс Кассе / ЮKassa. CloudPayments — отдельный кандидат. Адаптеры по документации разрешены позже, production-проверка не подразумевается. Marketplace split не отождествляем с payout API.
+- Пользователь просит остановку после HTML CJM. Ни вариант, ни PRD, ни цена, ни бонусная модель не утверждены.
+
+[Полная запись решений о выплатах](discovery/payout-decisions.md) имеет приоритет над ранними исследовательскими гипотезами. [Проверка документации провайдеров](discovery/research/payout-evidence.md).
+
+## Три CJM
+
+| Вариант | Вход | Первый ценный результат | Возврат | Оплата SaaS |
+|---|---|---|---|---|
+| [A — Быстрый запуск](prototypes/cjm/variant-a.html) | Владелец хочет запустить программу | Тестовая оплата → корректная комиссия, повтор и возврат | Месячный реестр, CSV, ручная отправка | После проверки сценария |
+| [B — Клиенты рекомендуют](prototypes/cjm/variant-b.html) | Клиент достиг пользы в Proofwall | Друг оплатил → бонус на подписку | Доступно / на проверке / использовано | Владелец после пилота; клиент бесплатно |
+| [C — Кабинет партнёра](prototypes/cjm/variant-c.html) | Автор/агентство читает открытые условия | Оплата → комиссия → понятный срок выплаты | Личная история и отметка отправки | Владелец: пробный период14 дней, гипотеза |
+
+Буквы относятся к итоговым HTML; ранние альтернативы в product-research используют собственные обозначения, там добавлено пояснение. A объединяет merchant launch и ручной operations-ledger; B — customer credits; C — external partner.
+
+Все варианты используют одну визуальную основу Rewardful: Rubik, синий CTA, белый фон, split hero. [Измерения и ограничения копирования](source-product-profile.md). Кабинеты реконструированы по документации; прямого доступа к authenticated UI не было.
+
+## Микро-паттерны и эксперимент
+
+| Наблюдение | Применение | Что измерять после запуска |
+|---|---|---|
+| Progressive onboarding, Rewardful/PartnerStack | Одна следующая задача и видимый путь | Доля подключивших валидные события; время до первого проверенного начисления |
+| Embedded enrollment, Dub/FirstPromoter | B: приглашение после полезного действия, opt-in | Доля eligible клиентов, добровольно вступивших; friend-paid conversion |
+| Detailed ledger, Dub/FirstPromoter | A/C: событие, комиссия, возврат, отправка отдельно | Споры/100 начислений; ошибки сверки; on-time payout rate |
+| Share kits, FirstPromoter/Dub | Текст и ссылка с раскрытием вознаграждения | Copy → фактический визит → оплаченная подписка; не считать copy отправкой |
+| Trial/demo before paywall | Оплата владельцем после примера/пилота | Activation → paid, support cost, удержание merchant |
+
+Источники и даты перечислены в market-trends.md. Наличие паттерна у конкурента — наблюдение, влияние на конверсию N3 — гипотеза. Не объявлять это доказанным трендом российского рынка.
+
+## Финансовая рамка и нерешённые вопросы
+
+Демо 1 990 ₽/мес., 20% комиссии, 300 ₽ бонуса, 14 дней удержания, 30 дней cookie — иллюстрации. Не утверждены тарифы, лимиты, attribution model или юридические условия. Отложенные комиссии требуют согласовать eligibility cutoff, удержание поздних оплат, возврат после отправки, документы и сверку. «До5-го» без этих правил недостаточно для финансовой спецификации.
+
+Формулы пилота: contribution margin = subscription revenue − provider/platform cost − support/operations cost; merchant affiliate contribution = attributed paid revenue − refunds − rewards − acquisition/operating costs. Credits учитывать как стоимость скидки/обязательства; они не доказывают отсутствие налоговых вопросов. Не оценивать CAC/LTV без фактических когорт.
+
+Полевые данные пока отсутствуют: список первых20–50 распространителей, интервью merchant/partner, рыночный спрос, готовность платить, реальная доступность auto payouts. Для выбора CJM достаточно сравнить сценарии; для обещаний экономики — недостаточно.
+
+## Growth Requirements Seed
+
+Ниже дословно сохранена таблица M5. Все требования условны до выбора CJM. Более поздние решения владельца о ручных выплатах уточняют FR-GROWTH-006, не отменяя прозрачность статусов.
+
+| ID | Требование (ЧЕРНОВИК) | Блок-источник | Confidence из блока | Допустимость | Статус |
+|---|---|---|---|---|---|
+| FR-GROWTH-001 | Показывать one-click share только после зафиксированного value moment выбранного продукта и требовать явное подтверждение пользователя | A/C Retention + CJM-B | manual 4/5 (локальное требование; эффект N3 не измерен) | вопросы 3/4 требуют проверки текста согласия и disclosure; 2026-09-08 | SPECULATIVE до выбора CJM |
+| FR-GROWTH-002 | Хранить атрибуцию pending до подтверждённой оплаты; повтор события не создаёт вторую комиссию; refund отражается в ledger | A Primary Loop + YooKassa | manual 5/5 для event model, 3/5 для будущей интеграции | вопрос 5 и договорный money-flow не проверены; 2026-09-08 | ЧЕРНОВИК, условно Must |
+| FR-GROWTH-003 | Показывать attribution badge на бесплатном/пилотном portal; снятие доступно только в выбранном paid tier | A Primary Loop + competitive pricing | manual 4/5 как shipped pattern, 1/5 как growth effect | вопросы 4/5; branding terms не проверены; 2026-09-08 | SPECULATIVE |
+| FR-GROWTH-004 | Выдавать персональную ссылку и промокод; считать по ним отдельные когорты до paid conversion | B Channels + project01 baseline | manual 5/5 механизм, 2/5 market effect | вопрос 4: disclosure обязателен; точная норма/текст не проверены; 2026-09-08 | ЧЕРНОВИК, условно Must |
+| FR-GROWTH-005 | Встроить enrollment/мини-dashboard N3 в initial-client UI через tenant-safe SSO, сохраняя standalone кабинет | A Primary Loop + CJM-B | manual 4/5 shipped analogs, 2/5 local preference | вопрос 5: 152-ФЗ/data roles не проверены; 2026-09-08 | SPECULATIVE до выбора CJM-B |
+| FR-GROWTH-006 | Показывать партнёру неизменяемый commission ledger с event source, суммой, причиной коррекции и отдельным payout status | C Retention + CJM-C | manual 5/5 shipped pattern, 3/5 RU semantics | payout/tax/legal statuses не проверены; 2026-09-08 | SPECULATIVE до выбора payout scope |
+
+## Выбор и остановка
+
+Откройте [общий HTML](prototypes/cjm/index.html), пройдите A/B/C, сравните, при желании оцените и сохраните вариант либо сочетание. Выбор хранится только в браузере; его можно скачать JSON. В репозитории выбор пока `null`. Это не скрытое согласование PRD.
+
+После ответа владельца: согласовать ведущий CJM и роли → закрыть спорные payout/bonus условия → перейти к PRD/SPARC, сохранив обязательные ворота. Политика будущей денежной реализации — XL. Сейчас финансовый backend отсутствует.
+
+## Манифест передачи
+
+| ID | Артефакт / решение | Статус и использование дальше |
+|---|---|---|
+| PD-PRODUCT-001 | discovery/research/product-research.md | Факты/JTBD/VOC с provenance; ранние буквы CJM переопределены итоговым brief |
+| PD-MARKET-001 | discovery/research/market-trends.md | Конкуренты и микро-паттерны; эффекты N3 не измерены |
+| PD-FINANCE-001 | Формулы unit economics и неизвестные входы | Не использовать иллюстративную цену как утверждённую |
+| PD-GROWTH-001 | Growth Requirements Seed FR-GROWTH-001…006 | В будущем сослаться или явно обосновать отказ |
+| PD-PAYOUT-001 | discovery/payout-decisions.md | Решения пользователя: ручной реестр/до5-го, ЮKassa, границы future adapters |
+| PD-PAYOUT-002 | discovery/research/payout-evidence.md | Split vs payouts, CloudPayments, документация и unknowns |
+| PD-LOOK-001 | source-product-profile.md + discovery/screenshots | Измеренный публичный облик; path gate НЕ ИЗМЕРЕНО |
+| PD-CJM-001 | prototypes/cjm/variant-a.html | Владелец / запуск / ручной реестр |
+| PD-CJM-002 | prototypes/cjm/variant-b.html | Клиент / opt-in / credit balance |
+| PD-CJM-003 | prototypes/cjm/variant-c.html | Партнёр / прозрачные условия / денежная комиссия |
+| PD-CHOICE-001 | prototypes/cjm/index.html | Сравнение/оценка/mix/export; решение владельца ожидается |
+| PD-VALIDATION-001 | prototypes/cjm/tests + discovery/cjm-review.md | Browser evidence и закрытие замечаний, только прототип |
+| PD-TELEMETRY-001 | telemetry/p-replicator/20260908T194524Z-discovery-cjm | Запрошенные модели/ограничения фактических измерений |

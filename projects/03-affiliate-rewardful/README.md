@@ -1,6 +1,6 @@
 # 03. Партнёрская программа за 15 минут
 
-> **Неделя 03** · `партнёрка` · референс: **[Rewardful](https://rewardful.com/) — 2800+ бизнесов**
+> **Неделя 03** · `партнёрка` · референс: **[Rewardful](https://rewardful.com/)**
 
 ## Простыми словами
 
@@ -54,9 +54,24 @@
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | ⬜ |
+| Phase 0 — Product Discovery | Исследование и 3 HTML CJM готовы; ожидается выбор |
 | Phase 1 — SPARC (`/replicate`) | ⬜ |
 | Phase 2 — Validation | ⬜ |
 | Phase 3 — Toolkit | ⬜ |
 | Phase 4 — Finalize | ⬜ |
 | Реализация | ⬜ |
+
+## CJM: выбрать направление
+
+[Открыть сравнение трёх вариантов](docs/prototypes/cjm/index.html) — автономный HTML, без установки.
+
+- [A — быстрый запуск и реестр владельца](docs/prototypes/cjm/variant-a.html).
+- [B — рекомендации клиентов и бонусы](docs/prototypes/cjm/variant-b.html).
+- [C — кабинет внешнего партнёра](docs/prototypes/cjm/variant-c.html).
+
+[Discovery brief](docs/product-discovery-brief.md) · [Измеренный дизайн Rewardful](docs/source-product-profile.md) · [Решения о выплатах](docs/discovery/payout-decisions.md).
+
+Основной payout flow: ручной реестр за предыдущий месяц, переводы до5-го следующего.
+ЮKassa — базовая интеграция; Split payments Яндекс Кассы/ЮKassa и CloudPayments — будущие кандидаты по документации без обещания production-проверки.
+
+PRD/реализация не начаты: остановка на выборе CJM по запросу владельца.

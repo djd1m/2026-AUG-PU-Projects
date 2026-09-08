@@ -249,6 +249,11 @@ Product Hunt содержит один резкий отзыв с обвинен
 | Must-have | embedded referral card, share link, progress, double-sided benefit, account-credit ledger, anti-fraud |
 | Rewardful lesson | custom credits поддерживаются primitives, но Rewardful требует merchant-built UI; здесь локальный продукт может сделать их first-class |
 
+> Примечание интеграции 2026-09-08: буквы A/B/C в следующем исследовательском разделе — ранние локальные обозначения, не ссылки на итоговые HTML. Финальное соответствие: HTML A = merchant launch + реестр; HTML B = customer credits; HTML C = external partner. Приоритет у product-discovery-brief.md и интерфейса.
+
+
+> Интеграция: списки обязательных кликов ниже — предложения исследователя для будущей проверки, не отчёт о реализованной приёмке. Delayed webhook, self-referral и выбор attribution-mode в текущих HTML не реализованы; production API не проверялось. Актуальный scope и результаты — product-discovery-brief.md и prototypes/cjm/tests.
+
 ## 8. Три CJM-кандидата для HTML-прототипов
 
 Это исследовательские journey-гипотезы. Они специально различаются по entry point, Aha и monetization moment, чтобы пользователь мог сравнить, а не выбрать три вариации одного экрана.

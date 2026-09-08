@@ -1,0 +1,40 @@
+# ── Default rules ────────────────────────────────────────
+User-agent: *
+Allow: /
+Disallow: /cdn-cgi/
+Disallow: /*?revgems-session-id=*
+Disallow: /*revgems-session-id=*
+
+# ── Googlebot ────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+Allow: *.js
+Allow: *.css
+Disallow: /*?revgems-session-id=*
+Disallow: /*revgems-session-id=*
+
+# ── Named AI bots — explicit allow + content signal ──────
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
+User-agent: anthropic-ai
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Google-Extended
+Allow: /
+Disallow: /*?revgems-session-id=*
+Disallow: /*revgems-session-id=*
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+
+# ── Aggressive scrapers ───────────────────────────────────
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+Disallow: /
+
+# ── Sitemap & AI content index ────────────────────────────
+Sitemap: https://www.rewardful.com/sitemap.xml
+LLMs-txt: https://www.rewardful.com/llms.txt
+
+Sitemap: https://www.rewardful.com/sitemap.xml
