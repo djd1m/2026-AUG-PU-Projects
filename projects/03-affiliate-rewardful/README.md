@@ -54,7 +54,7 @@
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | Исследование и 3 HTML CJM готовы; ожидается выбор |
+| Phase 0 — Product Discovery | Исследование и 4 HTML CJM готовы; ожидается выбор |
 | Phase 1 — SPARC (`/replicate`) | ⬜ |
 | Phase 2 — Validation | ⬜ |
 | Phase 3 — Toolkit | ⬜ |
@@ -63,11 +63,12 @@
 
 ## CJM: выбрать направление
 
-[Открыть сравнение трёх вариантов](docs/prototypes/cjm/index.html) — автономный HTML, без установки.
+[Открыть сравнение четырёх вариантов](docs/prototypes/cjm/index.html) — автономный HTML, без установки.
 
 - [A — быстрый запуск и реестр владельца](docs/prototypes/cjm/variant-a.html).
 - [B — рекомендации клиентов и бонусы](docs/prototypes/cjm/variant-b.html).
 - [C — кабинет внешнего партнёра](docs/prototypes/cjm/variant-c.html).
+- [D — через личного агента](docs/prototypes/cjm/variant-d.html).
 
 [Discovery brief](docs/product-discovery-brief.md) · [Измеренный дизайн Rewardful](docs/source-product-profile.md) · [Решения о выплатах](docs/discovery/payout-decisions.md).
 
@@ -75,3 +76,5 @@
 ЮKassa — базовая интеграция; Split payments Яндекс Кассы/ЮKassa и CloudPayments — будущие кандидаты по документации без обещания production-проверки.
 
 PRD/реализация не начаты: остановка на выборе CJM по запросу владельца.
+
+Агентные интерфейсы MCP/A2A включены в продуктовый замысел. [Влияние на A–C и новый путь D](docs/discovery/agent-interface-cjm.md). Текущий результат — интерактивный прототип, без работающих MCP/A2A endpoints.
