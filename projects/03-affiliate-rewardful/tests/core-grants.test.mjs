@@ -1,0 +1,82 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { fixture, ref, code } from './helpers/core-fixture.mjs';
+
+test('SC-US-005-1 SC-US-005-3 SC-US-006-2 scoped deterministic task yields same persisted artifact for owner handoff', async t => {
+  const f = await fixture(t);
+  const grant = await f.call('grant.create', { actions: ['dashboard', 'registry.prepare', 'registry.read'], expiresInSeconds: 3600 });
+  const delegated = { ...f.context('merchant'), grantId: grant.grantId };
+  await f.call('dashboard', {}, delegated);
+  const task = await f.call('task.create', { kind: 'registry', input: { period: '2026-08' } }, delegated, 'task-create-key');
+  assert.deepEqual(await f.call('task.create', { kind: 'registry', input: { period: '2026-08' } }, delegated, 'task-create-key'), task);
+  const result = await f.call('task.run', { taskId: task.taskId }, delegated);
+  assert.equal(result.state, 'completed'); assert.equal(result.usage, null);
+  assert.deepEqual((await f.call('task.run', { taskId: task.taskId }, delegated)).result, result.result);
+  const owner = await f.call('registry.read', { artifactId: result.result.artifactId });
+  assert.deepEqual(owner, result.result);
+  await assert.rejects(f.call('registry.approve', ref(owner), delegated), code('GRANT_SCOPE'));
+  await f.call('registry.approve', ref(owner));
+  const csv = await f.call('registry.export', ref(owner)); assert.equal(csv.hash, owner.hash);
+  assert.equal((await f.call('dashboard')).registries.length, 1);
+  const invalid = await f.call('task.create', { kind: 'registry', input: { period: 'invalid' } }, delegated);
+  const failed = await f.call('task.run', { taskId: invalid.taskId }, delegated);
+  assert.equal(failed.state, 'failed'); assert.equal(failed.error.code, 'VALIDATION');
+  assert.deepEqual(await f.call('task.run', { taskId: invalid.taskId }, delegated), failed);
+});
+test('SC-US-005-2 revoked grants reject cached task results and reads while owner keeps independent artifact rights', async t => {
+  const f = await fixture(t);
+  const grant = await f.call('grant.create', { actions: ['registry.prepare', 'registry.read'], expiresInSeconds: 3600 });
+  const delegated = { ...f.context('merchant'), grantId: grant.grantId };
+  const task = await f.call('task.create', { kind: 'registry', input: { period: '2026-08' } }, delegated);
+  const completed = await f.call('task.run', { taskId: task.taskId }, delegated, 'task-run-key');
+  await f.call('grant.revoke', { grantId: grant.grantId });
+  await assert.rejects(f.call('task.run', { taskId: task.taskId }, delegated, 'task-run-key'), code('GRANT_INACTIVE'));
+  await assert.rejects(f.call('task.read', { taskId: task.taskId }, delegated), code('GRANT_INACTIVE'));
+  await assert.rejects(f.call('registry.read', { artifactId: completed.result.artifactId }, delegated), code('GRANT_INACTIVE'));
+  const owner = await f.call('registry.read', { artifactId: completed.result.artifactId });
+  assert.equal(owner.hash, completed.result.hash); await f.call('registry.approve', ref(owner));
+});
+test('SC-US-005-2 real clock expiry and expiry during publication fail closed; demo advance also expires grants', async t => {
+  let instant = Date.parse('2026-09-08T00:00:00.000Z');
+  let publication = false, clockReads = 0;
+  const f = await fixture(t, { clock: () => instant + (publication && ++clockReads > 2 ? 2000 : 0) });
+  const grant = await f.call('grant.create', { actions: ['dashboard'], expiresInSeconds: 1 });
+  const delegated = { ...f.context('merchant'), grantId: grant.grantId };
+  publication = true;
+  await assert.rejects(f.call('dashboard', {}, delegated), code('GRANT_INACTIVE'));
+  publication = false;
+  instant += 1001;
+  await assert.rejects(f.call('dashboard', {}, delegated), code('GRANT_INACTIVE'));
+  const next = await f.call('grant.create', { actions: ['dashboard'], expiresInSeconds: 3600 });
+  await f.call('fixture.advance', { days: 1 });
+  await assert.rejects(f.call('dashboard', {}, { ...delegated, grantId: next.grantId }), code('GRANT_INACTIVE'));
+  instant += 86400000;
+  await assert.rejects(f.call('dashboard'), code('SESSION_EXPIRED'));
+});
+test('SC-US-005-4 canceled task ignores late execution and never publishes into another task', async t => {
+  const f = await fixture(t), partner = f.context('partner');
+  const grant = await f.call('grant.create', { actions: ['partner.read'], expiresInSeconds: 3600 }, partner);
+  const delegated = { ...partner, grantId: grant.grantId };
+  const first = await f.call('task.create', { kind: 'partner', input: {} }, delegated);
+  await f.call('task.cancel', { taskId: first.taskId }, partner);
+  const second = await f.call('task.create', { kind: 'partner', input: {} }, delegated);
+  const late = await f.call('task.run', { taskId: first.taskId }, delegated);
+  assert.equal(late.state, 'canceled'); assert.equal(late.result, null);
+  assert.equal((await f.call('task.read', { taskId: second.taskId }, delegated)).state, 'pending');
+  assert.equal((await f.call('task.run', { taskId: second.taskId }, delegated)).state, 'completed');
+  const anotherGrant = await f.call('grant.create', { actions: ['partner.read'], expiresInSeconds: 3600 }, partner);
+  await assert.rejects(f.call('task.read', { taskId: second.taskId }, { ...partner, grantId: anotherGrant.grantId }), code('FORBIDDEN'));
+  const ilya = f.session.actors.find(a => a.name === 'Илья');
+  await assert.rejects(f.call('task.create', { kind: 'partner', input: { partnerId: ilya.id } }, delegated).then(task => f.call('task.run', { taskId: task.taskId }, delegated)), code('FORBIDDEN'));
+});
+test('grant schema denies privilege escalation and explicit artifact scope blocks different registry', async t => {
+  const f = await fixture(t);
+  for (const action of ['registry.approve', 'registry.export', 'registry.sent', 'grant.create', 'credit.reserve'])
+    await assert.rejects(f.call('grant.create', { actions: [action], expiresInSeconds: 60 }), code('GRANT_SCOPE'));
+  await assert.rejects(f.call('grant.create', { actions: ['dashboard'], expiresInSeconds: 3601 }), code('VALIDATION'));
+  const first = await f.call('registry.prepare', { period: '2026-08' }), second = await f.call('registry.prepare', { period: '2026-08' });
+  const grant = await f.call('grant.create', { actions: ['registry.read'], expiresInSeconds: 3600, artifactId: first.artifactId });
+  const delegated = { ...f.context('merchant'), grantId: grant.grantId };
+  assert.equal((await f.call('registry.read', { artifactId: first.artifactId }, delegated)).hash, first.hash);
+  await assert.rejects(f.call('registry.read', { artifactId: second.artifactId }, delegated), code('GRANT_SCOPE'));
+});
