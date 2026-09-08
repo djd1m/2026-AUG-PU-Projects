@@ -1,0 +1,18 @@
+# Requirements Testability Analysis — c-partner
+Spec revision: sha256:03af9e0e338d19fc2c86dfa5e2d4da7525d358f8bd00f8f8fe545052c59268a8
+
+Verdict: CAVEATS; no blocking criterion. Independent Astra high review requested; actual model/usage unexposed. Base story mean 89.00/100 (rubric vectors, AC quotes and scenario table in [receipt](../../telemetry/p-replicator/20260908T204432Z-go-shared-core/evidence/f1-requirements-validation.md)). Lowest story80/100.
+
+Scope: all business AC on F1 fixtures and real UI. MCP/A2A wire, production SSO and payment integration deferred explicitly. No real model productivity claim. Preserve always-branded pilot, promo/link cohorts, B foreign-origin embed, all4 desktop/mobile and denied/error states. Tests must demonstrate invariant enforcement, not names alone.
+
+## Criterion scenarios
+| Criterion | Scenario |
+|-----------|----------|
+| AC-c-partner-3011 | SC-US-301-1 — Given есть опубликованная версия программы; When открывает public terms; Then видит тип/ставку/окно/удержание/порядок выплат, дату версии и статус участия. |
+| AC-c-partner-3012 | SC-US-301-2 — Given условия изменились; When просматривает старое начисление; Then видит применённую историческую версию, не только текущую ставку. |
+| AC-c-partner-3021 | SC-US-302-1 — Given подтвердил участие в программе; When enrollment принят по fixture policy; Then получает personal referral link/share kit, отличный от enrollment URL. |
+| AC-c-partner-3022 | SC-US-302-2 — Given тот же запрос повторён; When вступает второй раз; Then не создаются второй партнёр/дублирующая атрибуция; возвращается существующее участие. |
+| AC-c-partner-3031 | SC-US-303-1 — Given есть собственный начисленный доход; When открывает history/payout; Then видит только свои записи и причины hold/коррекции, ориентир до5-го следующего месяца. |
+| AC-c-partner-3032 | SC-US-303-2 — Given владелец пометил перевод отправленным; When обновляет статус; Then видит отправку с датой; зачисление не утверждается без отдельного подтверждения. |
+| AC-c-partner-3041 | SC-US-304-1 — Given личный grant разрешает own payout read; When UI или MCP/A2A запрашивает статус; Then возвращается один и тот же actor-scoped результат с источником/временем. |
+| AC-c-partner-3042 | SC-US-304-2 — Given в запросе указан другой partner id; When агент вызывает tool/task; Then доступ отвергается даже при известном ID; общий реестр не раскрывается. |

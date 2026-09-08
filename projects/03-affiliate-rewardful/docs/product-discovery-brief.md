@@ -78,21 +78,32 @@ Rewardful связывает рекомендации с оплатами SaaS, 
 
 ## Манифест передачи
 
-| ID | Артефакт / решение | Статус и использование дальше |
-|---|---|---|
-| PD-PRODUCT-001 | discovery/research/product-research.md | Факты/JTBD/VOC с provenance; ранние буквы CJM переопределены итоговым brief |
-| PD-MARKET-001 | discovery/research/market-trends.md | Конкуренты и микро-паттерны; эффекты N3 не измерены |
-| PD-FINANCE-001 | Формулы unit economics и неизвестные входы | Не использовать иллюстративную цену как утверждённую |
-| PD-GROWTH-001 | Growth Requirements Seed FR-GROWTH-001…006 | В будущем сослаться или явно обосновать отказ |
-| PD-PAYOUT-001 | discovery/payout-decisions.md | Решения пользователя: ручной реестр/до5-го, ЮKassa, границы future adapters |
-| PD-PAYOUT-002 | discovery/research/payout-evidence.md | Split vs payouts, CloudPayments, документация и unknowns |
-| PD-LOOK-001 | source-product-profile.md + discovery/screenshots | Измеренный публичный облик; path gate НЕ ИЗМЕРЕНО |
-| PD-CJM-001 | prototypes/cjm/variant-a.html | Владелец / запуск / ручной реестр |
-| PD-CJM-002 | prototypes/cjm/variant-b.html | Клиент / opt-in / credit balance |
-| PD-CJM-003 | prototypes/cjm/variant-c.html | Партнёр / прозрачные условия / денежная комиссия |
-| PD-CHOICE-001 | prototypes/cjm/index.html | Сравнение/оценка/mix/export; решение владельца ожидается |
-| PD-VALIDATION-001 | prototypes/cjm/tests + discovery/cjm-review.md | Browser evidence и закрытие замечаний, только прототип |
-| PD-TELEMETRY-001 | telemetry/p-replicator/20260908T194524Z-discovery-cjm | Запрошенные модели/ограничения фактических измерений |
+**Фаза 0 выполнена:** ДА
+**Проверка манифеста:** ВЫПОЛНЕНА
 
-| PD-CJM-004 | prototypes/cjm/variant-d.html | Намерение → ограниченная делегация → артефакт → контроль/ручная выплата → личный статус партнёра |
-| PD-AGENT-001…008 | discovery/agent-interface-cjm.md | Направление владельца и кандидаты требований к UI/MCP/A2A, не готовая архитектура |
+Перечень сверён с PRD/SPARC; машинная проверка запускается после записи. Исторические browser receipts относятся только к F0.
+
+| Выход | Идентификатор | Модуль / использование |
+|---|---|---|
+| discovery/research/product-research.md | PD-PRODUCT-001 | Факты/JTBD/VOC с provenance; ранние буквы CJM переопределены итоговым brief |
+| discovery/research/market-trends.md | PD-MARKET-001 | Конкуренты и микро-паттерны; эффекты N3 не измерены |
+| Формулы unit economics и неизвестные входы | PD-FINANCE-001 | Не использовать иллюстративную цену как утверждённую |
+| Growth Requirements Seed FR-GROWTH-001…006 | PD-GROWTH-001 | В будущем сослаться или явно обосновать отказ |
+| discovery/payout-decisions.md | PD-PAYOUT-001 | Решения пользователя: ручной реестр/до5-го, ЮKassa, границы future adapters |
+| discovery/research/payout-evidence.md | PD-PAYOUT-002 | Split vs payouts, CloudPayments, документация и unknowns |
+| source-product-profile.md + discovery/screenshots | PD-LOOK-001 | Измеренный публичный облик; path gate НЕ ИЗМЕРЕНО |
+| prototypes/cjm/variant-a.html | PD-CJM-001 | Владелец / запуск / ручной реестр |
+| prototypes/cjm/variant-b.html | PD-CJM-002 | Клиент / opt-in / credit balance |
+| prototypes/cjm/variant-c.html | PD-CJM-003 | Партнёр / прозрачные условия / денежная комиссия |
+| prototypes/cjm/index.html | PD-CHOICE-001 | Сравнение/оценка/mix/export; решение владельца ожидается |
+| prototypes/cjm/tests + discovery/cjm-review.md | PD-VALIDATION-001 | Browser evidence и закрытие замечаний, только прототип |
+| telemetry/p-replicator/20260908T194524Z-discovery-cjm | PD-TELEMETRY-001 | Запрошенные модели/ограничения фактических измерений |
+| prototypes/cjm/variant-d.html | PD-CJM-004 | Намерение → ограниченная делегация → артефакт → контроль/ручная выплата → личный статус партнёра |
+| Машиночитаемые возможности N3 через MCP; A2A для задач с агентом сервиса | PD-AGENT-001 | Прямое направление владельца |
+| Одна бизнес-модель прав/статусов для UI, MCP, A2A; tenant/subject checks на каждом серверном действии | PD-AGENT-002 | Смена канала не расширяет полномочия |
+| Делегация ограничена целью, субъектом, сроком; отзыв прекращает будущие действия | PD-AGENT-003 | Контролируемая автономность |
+| Утверждение привязано к версии/содержимому артефакта; изменение требует нового решения | PD-AGENT-004 | Реестр нельзя незаметно изменить после просмотра |
+| Повторы идемпотентны; ожидание, ошибка, отмена и результат различаются | PD-AGENT-005 | Агенту и человеку нужен достоверный статус |
+| MCP/A2A не создают автоматических выплат или рассылок сверх делегации | PD-AGENT-006 | Сохраняется ручной payout process владельца |
+| Обнаружение сервиса не раскрывает клиентские данные; tool/agent input не считается доверенным | PD-AGENT-007 | Клиентские агенты и внешние материалы могут ошибаться |
+| Вознаграждаем реальную рекомендацию/оплату, не вызов tool, регистрацию агента или автоматический spam | PD-AGENT-008 | Growth-модель не меняется от появления нового канала |
