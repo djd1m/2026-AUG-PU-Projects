@@ -1,0 +1,19 @@
+"""Build four standalone HTML entry points; no network or dependencies."""
+from pathlib import Path
+import base64
+root=Path(__file__).resolve().parents[1]
+assets=root/'assets'
+shell=(assets/'shell.html').read_text()
+css=(assets/'style.css').read_text()
+for font in ('rubik-regular.ttf','rubik-bold.ttf'):
+    encoded=base64.b64encode((assets/font).read_bytes()).decode()
+    css=css.replace('url('+font+')','url(data:font/ttf;base64,'+encoded+')')
+shell=shell.replace('<link rel="stylesheet" href="assets/style.css">','<style>'+css+'</style>')
+for script in ('data.js','app.js'):
+    shell=shell.replace('<script src="assets/'+script+'"></script>','<script>\n'+(assets/script).read_text()+'\n</script>')
+for name,variant in [('index','A'),('variant-a','A'),('variant-b','B'),('variant-c','C')]:
+    html=shell.replace('<body data-variant="A">','<body data-variant="'+variant+'">')
+    # Keep home working if a standalone entry is downloaded by itself.
+    html=html.replace('href="index.html"','href="#"')
+    (root/(name+'.html')).write_text(html)
+print('Built 4 standalone HTML files, embedded Rubik (OFL), CSS and JavaScript.')
