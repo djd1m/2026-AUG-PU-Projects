@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-09-08T20:50:53.108653+00:00",
+  "commands": [
+    "docker ps --format names/ports",
+    "ss -ltnH"
+  ],
+  "exit_codes": [
+    0,
+    0
+  ],
+  "candidate_ports": [
+    13030,
+    13031,
+    13032,
+    13033,
+    13034
+  ],
+  "all_candidates_free": true,
+  "database_host_ports": "forbidden including test environments",
+  "note": "Read-only snapshot before Compose files exist; repeat before up. Other tenants containers untouched."
+}

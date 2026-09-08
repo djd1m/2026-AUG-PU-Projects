@@ -1,0 +1,21 @@
+{
+  "name": "n3-four-variants",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.0 <23"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "start": "node apps/api/server.mjs",
+    "verify": "npm run build && npm test"
+  },
+  "dependencies": {
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@dzhechkov/p-replicator": "1.13.2"
+  }
+}
