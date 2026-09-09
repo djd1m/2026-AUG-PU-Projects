@@ -28,6 +28,9 @@ services:
       N3A_LISTEN_HOST: 0.0.0.0
       DATABASE_URL: postgresql://n3a_app:${N3A_DB_APP_PASSWORD:?required}@db:5432/n3a
       SESSION_SECRET: ${SESSION_SECRET:?explicit session secret required}
+      IDENTITY_SECRET: ${IDENTITY_SECRET:?explicit identity secret required}
+      ADMISSION_SECRET: ${ADMISSION_SECRET:?explicit admission secret required}
+      APP_ORIGIN: ${APP_ORIGIN:?explicit application origin required}
     ports: ["127.0.0.1:${N3A_WEB_PORT:-4183}:3000"]
     networks: [private]
     depends_on:
@@ -45,6 +48,9 @@ services:
       TEST_DATABASE_URL: postgresql://n3a_app:${N3A_DB_APP_PASSWORD:?required}@db:5432/n3a
       TEST_DATABASE_URL_MIGRATE: postgresql://n3a_migrator:${N3A_DB_MIGRATE_PASSWORD:?required}@db:5432/n3a
       SESSION_SECRET: ${SESSION_SECRET:?required}
+      IDENTITY_SECRET: ${IDENTITY_SECRET:?required}
+      ADMISSION_SECRET: ${ADMISSION_SECRET:?required}
+      APP_ORIGIN: ${APP_ORIGIN:?required}
     networks: [private]
     depends_on:
       db: { condition: service_healthy }

@@ -15,10 +15,13 @@ const env = { ...process.env,
   N3A_DB_APP_PASSWORD: randomBytes(32).toString('hex'),
   N3A_DB_MIGRATE_PASSWORD: randomBytes(32).toString('hex'),
   SESSION_SECRET: randomBytes(32).toString('base64url'),
+  IDENTITY_SECRET: randomBytes(32).toString('base64url'),
+  ADMISSION_SECRET: randomBytes(32).toString('base64url'),
+  APP_ORIGIN: 'http://localhost:4183',
   NEXT_TELEMETRY_DISABLED: '1',
 };
 // Retain a private, non-git handle for diagnosis; never put secrets in console output.
-await writeFile(path.join(runtime, 'environment.json'), JSON.stringify(Object.fromEntries(Object.entries(env).filter(([key]) => key.startsWith('N3A_') || key === 'SESSION_SECRET'))), { mode: 0o600 });
+await writeFile(path.join(runtime, 'environment.json'), JSON.stringify(Object.fromEntries(Object.entries(env).filter(([key]) => key.startsWith('N3A_') || ['SESSION_SECRET', 'IDENTITY_SECRET', 'ADMISSION_SECRET', 'APP_ORIGIN'].includes(key)))), { mode: 0o600 });
 function run(command, args, cwd = root) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd, env, stdio: 'inherit' });

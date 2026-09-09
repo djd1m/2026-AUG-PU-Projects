@@ -16,8 +16,17 @@ it('configuration and cookie boundaries reject malformed input without leaking s
     for (const SESSION_SECRET of [undefined, '', 'short', secret + '=', 'x '.repeat(40), 'A'.repeat(42), 'A'.repeat(1025), Buffer.alloc(32).toString('base64url')]) {
       expect(() => readRuntimeConfig({ DATABASE_URL: database, SESSION_SECRET })).toThrow('invalid_SESSION_SECRET');
     }
-    const config = readRuntimeConfig({ DATABASE_URL: database, SESSION_SECRET: secret });
+    const valid = { DATABASE_URL: database, SESSION_SECRET: secret, IDENTITY_SECRET: randomBytes(32).toString('base64url'),
+      ADMISSION_SECRET: randomBytes(32).toString('base64url'), APP_ORIGIN: 'https://n3a.example.test' };
+    const config = readRuntimeConfig(valid);
     expect(config.sessionSecret.equals(Buffer.from(secret, 'base64url'))).toBe(true);
+    for (const name of ['IDENTITY_SECRET', 'ADMISSION_SECRET']) {
+      for (const value of [undefined, 'short', secret + '=']) expect(() => readRuntimeConfig({ ...valid, [name]: value })).toThrow(`invalid_${name}`);
+      expect(() => readRuntimeConfig({ ...valid, [name]: secret })).toThrow('distinct_secrets_required');
+    }
+    for (const APP_ORIGIN of [undefined, '', 'http://n3a.example.test', 'https://n3a.example.test/', 'https://user@host', 'https://host/path', 'https://host#fragment'])
+      expect(() => readRuntimeConfig({ ...valid, APP_ORIGIN })).toThrow('invalid_APP_ORIGIN');
+    expect(readRuntimeConfig({ ...valid, APP_ORIGIN: 'http://localhost:4183' }).appOrigin).toBe('http://localhost:4183');
     const token = generateSessionToken();
     expect(serializeSessionCookie(token)).toBe(`__Host-n3a_session=${token}; Path=/; Max-Age=86400; Secure; HttpOnly; SameSite=Lax`);
     expect(clearSessionCookie()).toBe('__Host-n3a_session=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax');
