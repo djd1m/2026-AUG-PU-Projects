@@ -8,4 +8,5 @@ CREATE TABLE IF NOT EXISTS checkout_orders (
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS source text NOT NULL DEFAULT 'legacy' CHECK (source IN ('legacy','connector'));
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS attribution jsonb;
 ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS return_url text;
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS external boolean NOT NULL DEFAULT false;
 `;

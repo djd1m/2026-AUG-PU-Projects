@@ -4,7 +4,7 @@ import { fixture } from './core-fixture.mjs';
 export async function referralPaymentFixture(t) {
   let clock=Date.parse('2026-09-09T12:00:00Z');
   const payments=new Map(),refunds=new Map(),calls=[];
-  const faults={drop:false,beforeReturn:null};
+  const faults={drop:false,beforeReturn:null,beforeGet:null};
   const config={enabled:false,shopId:'123456',secretKey:'isolated-test-secret',testMode:true,returnUrl:'https://merchant.example/legacy'};
   const fetchImpl=async (url,options)=>{
     calls.push({url,method:options.method,key:options.headers['idempotence-key']});
@@ -20,6 +20,7 @@ export async function referralPaymentFixture(t) {
       if(faults.drop) {faults.drop=false;throw new TypeError('Isolated lost response');}
       return Response.json(payment);
     }
+    if(faults.beforeGet) await faults.beforeGet();
     const target=url.includes('/refunds/')?refunds:payments, row=target.get(url.split('/').at(-1));
     return row?Response.json(row):Response.json({error:'not_found'},{status:404});
   };

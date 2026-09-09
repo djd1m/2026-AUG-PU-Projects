@@ -29,6 +29,11 @@ export function referralHandler(app,{body,json}) {
     else if(path==='/api/integration/checkout') {
       object(input,['customerId','amountMinor','idempotencyKey'],['customerId','amountMinor','idempotencyKey']);
       data=await app.payments.connectorCheckout(token,{customerId:input.customerId,amountMinor:input.amountMinor},input.idempotencyKey);
+    } else if(path==='/api/integration/external-orders') {
+      object(input,['customerId','amountMinor','idempotencyKey'],['customerId','amountMinor','idempotencyKey']);
+      data=await app.payments.externalOrder(token,{customerId:input.customerId,amountMinor:input.amountMinor},input.idempotencyKey);
+    } else if(path==='/api/integration/external-events') {
+      data=await app.payments.externalEvent(token,input);
     } else if(path==='/api/integration/order') {
       object(input,['orderId'],['orderId']);data=await app.payments.connectorOrder(token,input.orderId);
     } else assert(false,'NOT_FOUND',404);

@@ -54,3 +54,22 @@ test('fixture mode exposes no real referral or connector routes',async t=>{
   assert.equal((await http(`/r/${randomUUID()}`)).status,404);
   assert.equal((await http('/api/integration/customers',{})).status,404);
 });
+
+test('external integration routes require server bearer and preserve exact data envelope',async t=>{
+  const x=await setup(t),http=await serve(t,x.f.app),customerId=await x.bind();
+  const headers={Authorization:`Bearer ${x.key}`};
+  const input={customerId,amountMinor:99000,idempotencyKey:randomUUID()};
+  assert.equal((await http('/api/integration/external-orders',input,{...headers,Origin:origin})).status,403);
+  assert.equal((await http('/api/integration/external-orders',input,{})).status,401);
+  const response=await http('/api/integration/external-orders',input,headers);
+  assert.equal(response.status,200);const payload=JSON.parse(response.text);assert.deepEqual(Object.keys(payload),['data']);
+  assert.equal(payload.data.amountMinor,99000);assert.equal(payload.data.currency,'RUB');assert.equal(x.calls.length,0);
+  const payment={id:randomUUID(),status:'succeeded',paid:true,refundable:false,test:true,amount:{value:'990.00',currency:'RUB'},
+    recipient:{account_id:x.config.shopId},metadata:{order_id:payload.data.orderId},captured_at:new Date(x.now()).toISOString()};
+  x.payments.set(payment.id,payment);
+  const report={orderId:payload.data.orderId,event:'payment.succeeded',objectId:payment.id};
+  assert.equal((await http('/api/integration/external-events',report,{...headers,Origin:origin})).status,403);
+  assert.equal((await http('/api/integration/external-events',{...report,amountMinor:1},headers)).status,400);
+  const paid=await http('/api/integration/external-events',report,headers);
+  assert.equal(paid.status,200);assert.deepEqual(JSON.parse(paid.text),{data:{accepted:true,orderId:report.orderId}});
+});
