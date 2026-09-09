@@ -101,3 +101,69 @@ test('external cap preserves retries; a foreign connector cannot verify another 
   assert.equal((await x.f.app.payments.externalOrder(x.key,input,key)).orderId,order.orderId);
   assert.equal(x.calls.length,before);
 });
+
+test('external public and private replay share dedup; second valid payment cannot replace order binding',async t=>{
+  const x=await setup(t),{order,payment}=await external(x);x.succeed(payment.id);
+  await Promise.all([x.f.app.payments.externalEvent(x.key,event(order,payment)),x.f.app.payments.webhook(x.notification('payment.succeeded',payment))]);
+  const second={...payment,id:randomUUID()};x.payments.set(second.id,second);
+  await assert.rejects(x.f.app.payments.externalEvent(x.key,event(order,second)),code('PAYMENT_BINDING_CONFLICT'));
+  const refund={id:randomUUID(),payment_id:payment.id,status:'succeeded',amount:{value:'990.00',currency:'RUB'},created_at:new Date(x.now()).toISOString()};
+  x.refunds.set(refund.id,refund);
+  await Promise.all([x.f.app.payments.externalEvent(x.key,{orderId:order.orderId,event:'refund.succeeded',objectId:refund.id}),x.f.app.payments.webhook(x.notification('refund.succeeded',refund))]);
+  const state=await x.command('dashboard');assert.equal(state.payments.length,1);assert.equal(state.refunds.length,1);
+  assert.equal(state.ledger.reduce((sum,row)=>sum+row.amountMinor,0),0);
+  assert.equal((await x.f.app.payments.connectorOrder(x.key,order.orderId)).paymentId,payment.id);
+});
+
+test('four stalled external provider reads leave the shared SQL pool usable and bound further admission',async t=>{
+  const x=await setup(t),{order,payment}=await external(x);x.succeed(payment.id);
+  let release,entered=0,allEntered;const gate=new Promise(r=>{release=r;});const ready=new Promise(r=>{allEntered=r;});
+  x.faults.beforeGet=async()=>{entered++;if(entered===4)allEntered();await gate;};
+  const pending=Array.from({length:4},()=>x.f.app.payments.externalEvent(x.key,event(order,payment)));
+  try {
+    await Promise.race([ready,new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('Provider entry timed out')),1500);timer.unref();})]);
+    assert.ok(await x.f.app.identity.me(x.owner.token));
+    await assert.rejects(x.f.app.payments.externalEvent(x.key,event(order,payment)),code('PROVIDER_BUSY'));
+    assert.equal(entered,4);
+  } finally {release();await Promise.all(pending);}
+  assert.equal((await x.command('dashboard')).payments.length,1);
+});
+
+test('pre-bridge schema upgrade preserves native and connector orders as nonexternal',async t=>{
+  const x=await setup(t),customerId=await x.bind(),connector=await x.checkout(customerId);
+  const native=await x.f.app.payments.checkout(x.owner.token,x.owner.membershipId,{customerId:'old-native',beneficiaryId:x.joined.actorId,amountMinor:99000,kind:'cash'},randomUUID());
+  await x.f.sql('ALTER TABLE checkout_orders DROP COLUMN external');await x.f.restart();
+  const rows=(await x.f.sql('SELECT id,external FROM checkout_orders ORDER BY id')).rows;
+  assert.equal(rows.length,2);assert.ok(rows.every(r=>r.external===false));
+  await x.settle(connector);await x.settle(native);
+  for(const orderId of [native.orderId,connector.orderId])await assert.rejects(x.f.app.payments.externalEvent(x.key,{orderId,event:'payment.succeeded',objectId:randomUUID()}),code('NOT_FOUND'));
+  assert.equal((await x.command('dashboard')).payments.length,2);
+});
+
+test('connector expiry while final order lock waits rolls back settlement and permits fresh-key replay',async t=>{
+  const {default:pg}=await import('pg');
+  const x=await setup(t),{order,payment}=await external(x);x.succeed(payment.id);
+  const pool=new pg.Pool(x.f.database),blocker=await pool.connect();
+  const pid=(await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+  x.faults.beforeGet=async()=>{
+    x.faults.beforeGet=null;await blocker.query('BEGIN');
+    await blocker.query('SELECT id FROM checkout_orders WHERE id=$1 FOR UPDATE',[order.orderId]);
+  };
+  const result=x.f.app.payments.externalEvent(x.key,event(order,payment)).then(value=>({value}),error=>({error}));
+  try {
+    let waiting=false;
+    for(let n=0;n<100;n++){
+      const row=(await pool.query('SELECT count(*)::int AS n FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))',[pid])).rows[0];
+      if(row.n>0){waiting=true;break;}
+      await new Promise(r=>setTimeout(r,10));
+    }
+    assert.equal(waiting,true,'Must observe actual final order lock wait');
+    x.advance(91*86400000);await blocker.query('ROLLBACK');
+    assert.equal((await result).error?.code,'UNAUTHENTICATED');
+    const saved=(await x.f.sql('SELECT status,provider_id FROM checkout_orders WHERE id=$1',[order.orderId])).rows[0];
+    assert.equal(saved.status,'created');assert.equal(saved.provider_id,null);
+  } finally {await blocker.query('ROLLBACK');blocker.release();await pool.end();await result;}
+  await x.reauthenticate();await x.rotate();
+  await x.f.app.payments.externalEvent(x.key,event(order,payment));
+  assert.equal((await x.command('dashboard')).payments.length,1);
+});
