@@ -1,0 +1,1 @@
+The shared root toolkit remains authoritative. Two unmodified root vendor role-map files are mirrored locally solely because packaged p-replicator1.13.2 gates refuse absent/symlinked role-map inputs. No second package/orchestrator or project configuration generated. Same compatibility mechanism asN3. Verify byte equality before gates.

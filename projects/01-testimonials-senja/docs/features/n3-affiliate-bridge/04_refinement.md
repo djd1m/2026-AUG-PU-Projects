@@ -1,0 +1,3 @@
+# Refinement
+
+Required adversarial cases: expired/reused/wrong-account/session proof; unknownYandex email collision; invalid explicitpromo; forged amount/customer/project; duplicate browser purchase; native network timeout and23hambiguity; earlywebhook; duplicate/foreign/testmode-mismatch provider event; refund-before-payment andreplay; N3outage andworker crash lease expiry; owner keyrotation duringIO; migration preserves native checkout rows; concurrent distinct extensions. Full regression, source-bound independent review, meaningful guard mutations and real browserE2E before offering UI. Test external providers explicitly distinguished from actual configured YooKassa test purchase.
