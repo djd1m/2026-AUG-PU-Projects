@@ -38,6 +38,90 @@ export function rub(minor) {
   return `${sign}${Math.floor(absolute / 100)}.${String(absolute % 100).padStart(2, '0')} ₽`;
 }
 
+function metric(parent, label, value) {
+  const box = element('div', undefined, 'row');
+  box.append(element('span', label), element('div', value, 'metric'));
+  parent.append(box);
+}
+
+export function renderAccountSummary(ui, membership, screen) {
+  ui.summary.replaceChildren();
+  const role = membership.role;
+  const summary = role === 'merchant' ? screen.primary.summary
+    : role === 'partner' ? screen.primary.personal?.summary : screen.primary.personal;
+  if (!summary || typeof summary !== 'object') {
+    ui.summary.append(element('p', 'Сводка недоступна.'));
+    return;
+  }
+  if (role === 'customer') {
+    metric(ui.summary, 'Доступный бонус', rub(summary.availableMinor));
+    metric(ui.summary, 'Удерживается', rub(summary.heldMinor));
+    metric(ui.summary, 'Зарезервировано', rub(summary.reservedMinor));
+    addFact(ui.summary, 'Назначение', summary.explanation);
+  } else {
+    metric(ui.summary, role === 'merchant' ? 'Доступно партнёрам' : 'Доступно', rub(summary.availableMinor));
+    metric(ui.summary, 'Удерживается', rub(summary.heldMinor));
+    metric(ui.summary, 'Отправлено по реестру', rub(summary.sentMinor));
+    addFact(ui.summary, 'Ориентир выплаты', summary.dueDate);
+    addFact(ui.summary, 'Пояснение', summary.explanation);
+  }
+}
+
+export function renderParticipant(ui, membership, screen) {
+  ui.merchant.hidden = true;
+  ui.participant.hidden = false;
+  ui['owner-invite'].hidden = true;
+  const { program, personal } = screen.primary;
+  ui.enroll.hidden = Boolean(program?.enrollment);
+  addFact(ui.summary, 'Условия', program?.terms);
+  addFact(ui.summary, 'Ставка', Number.isInteger(program?.policy?.bps)
+    ? `${Math.floor(program.policy.bps / 100)}.${String(program.policy.bps % 100).padStart(2, '0')}%` : 'Недоступно');
+  addFact(ui.summary, 'Версия условий', program?.policy?.version);
+  if (membership.role === 'partner' && Array.isArray(personal?.payments)) {
+    addFact(ui.summary, 'Подтверждённых оплат', personal.payments.length);
+  }
+  ui.share.replaceChildren();
+  if (screen.share) {
+    addFact(ui.share, 'Реферальная ссылка', new URL(screen.share.referralUrl, location.origin).href);
+    addFact(ui.share, 'Промокод', screen.share.promoCode);
+    addFact(ui.share, 'Раскрытие', screen.share.disclosure);
+  } else {
+    ui.share.append(element('p', program?.enrollment
+      ? 'Ссылка рекомендации временно недоступна.' : 'Подтвердите участие, чтобы получить ссылку.'));
+  }
+}
+
+export function renderPayments(ui, screen) {
+  ui.checkout.hidden = true;
+  ui['checkout-output'].replaceChildren();
+  const status = screen.payments;
+  if (!status) return void (ui['payment-status'].textContent = 'Статус ЮKassa недоступен.');
+  if (status.unavailableForRole) {
+    ui['payment-status'].textContent = 'Создание и сверка оплат доступны владельцу организации.';
+    return;
+  }
+  if (status.configured !== true) {
+    ui['payment-status'].textContent = 'ЮKassa для этой организации не подключена.';
+    return;
+  }
+  ui['payment-status'].textContent = `${status.testMode ? 'Тестовый' : 'Боевой'} магазин ЮKassa ${display(status.shopId)} настроен; API проверяется при запросе.`;
+  const select = ui.checkout.elements.beneficiaryId;
+  const partners = Array.isArray(screen.primary.partners) ? screen.primary.partners : [];
+  select.replaceChildren(...partners.map(partner => {
+    const option = element('option', display(partner.name)); option.value = partner.id; return option;
+  }));
+  ui.checkout.hidden = partners.length === 0;
+  if (!partners.length) ui['checkout-output'].append(element('p', 'Сначала пригласите партнёра и дождитесь принятия приглашения.'));
+  for (const order of Array.isArray(status.orders) ? status.orders : []) {
+    const row = element('div', undefined, 'row');
+    addFact(row, 'Заказ', order.orderId);
+    addFact(row, 'Платёж', order.paymentId);
+    addFact(row, 'Статус', order.status);
+    addFact(row, 'Сумма', rub(order.amountMinor));
+    ui['checkout-output'].append(row);
+  }
+}
+
 export function parseRub(value) {
   const match = /^(?:0|[1-9]\d{0,6})(?:\.(\d{1,2}))?$/.exec(value);
   if (!match) throw new Error('Укажите сумму в рублях с точностью до копеек.');
@@ -71,16 +155,22 @@ async function responseJson(response) {
   catch { throw new AccountApiError('Сервер вернул некорректный ответ.', 503, 'INVALID_RESPONSE'); }
 }
 
-export async function account(path, input, { get = false } = {}) {
+function boundedSignal(signal, milliseconds) {
+  const timeout = AbortSignal.timeout(milliseconds);
+  return signal ? AbortSignal.any([signal, timeout]) : timeout;
+}
+
+export async function account(path, input, { get = false, signal } = {}) {
   let response;
   try {
     response = await fetch(`/api/account/${path}`, {
       method: get ? 'GET' : 'POST',
       credentials: 'same-origin',
       ...(get ? {} : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(input) }),
-      signal: AbortSignal.timeout(14_000),
+      signal: boundedSignal(signal, 14_000),
     });
-  } catch {
+  } catch (error) {
+    if (signal?.aborted) throw error;
     throw new AccountApiError('Связь с сервером прервалась. Повторите тот же запрос.', 503, 'NETWORK');
   }
   const payload = await responseJson(response);
@@ -94,14 +184,52 @@ export async function account(path, input, { get = false } = {}) {
   return payload.data;
 }
 
+const disabledLeases = new WeakMap();
+
 export async function disableWhile(target, operation) {
   const controls = target.matches?.('button,input,select,textarea')
     ? [target]
-    : [...target.querySelectorAll('button,input,select,textarea')];
-  const previous = controls.map(control => control.disabled);
-  controls.forEach(control => { control.disabled = true; });
+    : [...target.querySelectorAll('button')];
+  controls.forEach(control => {
+    const lease = disabledLeases.get(control);
+    if (lease) lease.count += 1;
+    else {
+      disabledLeases.set(control, { count: 1, original: control.disabled });
+      control.disabled = true;
+    }
+  });
   try { return await operation(); }
-  finally { controls.forEach((control, index) => { control.disabled = previous[index]; }); }
+  finally {
+    controls.forEach(control => {
+      const lease = disabledLeases.get(control);
+      if (!lease || --lease.count > 0) return;
+      control.disabled = lease.original;
+      disabledLeases.delete(control);
+    });
+  }
+}
+
+export function createContextGuard() {
+  let generation = 0;
+  let controller = new AbortController();
+  const capture = () => Object.freeze({ generation, signal: controller.signal });
+  return {
+    capture,
+    replace() {
+      controller.abort();
+      generation += 1;
+      controller = new AbortController();
+      return capture();
+    },
+    current(context) {
+      return context?.generation === generation && !context.signal.aborted;
+    },
+    assert(context) {
+      if (context?.generation !== generation || context.signal.aborted) {
+        throw new DOMException('Рабочий контекст изменился.', 'AbortError');
+      }
+    },
+  };
 }
 
 function canonical(value) {
@@ -135,7 +263,7 @@ function sseJson(text) {
   return data ? JSON.parse(data) : null;
 }
 
-export async function mcp(token, method, params, id) {
+export async function mcp(token, method, params, id, signal) {
   let response;
   try {
     response = await fetch('/mcp', {
@@ -148,9 +276,10 @@ export async function mcp(token, method, params, id) {
         ...(method === 'initialize' ? {} : { 'mcp-protocol-version': '2025-11-25' }),
       },
       body: JSON.stringify({ jsonrpc: '2.0', id, method, params }),
-      signal: AbortSignal.timeout(10_000),
+      signal: boundedSignal(signal, 10_000),
     });
-  } catch {
+  } catch (error) {
+    if (signal?.aborted) throw error;
     throw new Error('MCP-соединение недоступно.');
   }
   const text = await response.text();

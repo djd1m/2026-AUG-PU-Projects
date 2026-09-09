@@ -1,6 +1,7 @@
 import {
-  AccountApiError, account, addDetails, addFact, byId, createMutationKeys,
-  disableWhile, display, element, mcp, parseRub, rub,
+  AccountApiError, account, addDetails, addFact, byId, createContextGuard, createMutationKeys,
+  disableWhile, display, element, mcp, parseRub, renderAccountSummary, renderParticipant,
+  renderPayments, rub,
 } from './helpers.mjs';
 
 const ui = Object.fromEntries([
@@ -18,10 +19,13 @@ const grantActions = {
   customer: ['program.read', 'credit.read', 'share.read'],
 };
 const keys = createMutationKeys();
+const contexts = createContextGuard();
 let identity = null;
 let membership = null;
 let screen = null;
 let issuedAgent = null;
+let logoutPending = false;
+let fragmentInvitation = false;
 
 function notify(message = '', error = false) {
   ui.notice.textContent = message;
@@ -36,12 +40,30 @@ function clearIssuedAgent() {
   ui['probe-agent'].hidden = true;
 }
 
-function signedOut(message = '') {
+function clearContextSecrets({ preserveIncoming = false, resetAuth = false } = {}) {
+  clearIssuedAgent();
+  ui['invitation-output'].value = '';
+  ui['invitation-output'].hidden = true;
+  ui.invite.reset();
+  if (!preserveIncoming) ui.accept.reset();
+  ui['change-password'].reset();
+  ui.password.value = '';
+  if (resetAuth) ui.login.reset();
+  ui.identity.textContent = '';
+  for (const id of ['summary', 'registries', 'share', 'checkout-output', 'agent-list', 'tasks']) {
+    ui[id].replaceChildren();
+  }
+  ui['payment-status'].textContent = '';
+  ui.workspace.hidden = true;
+}
+
+function signedOut(message = '', { invalidate = true, preserveIncoming = false } = {}) {
+  if (invalidate) contexts.replace();
   identity = null;
   membership = null;
   screen = null;
   keys.clear();
-  clearIssuedAgent();
+  clearContextSecrets({ preserveIncoming, resetAuth: true });
   ui.workspace.hidden = true;
   ui.auth.hidden = false;
   ui.membership.replaceChildren();
@@ -56,29 +78,40 @@ function report(error) {
   notify(error?.message || 'Действие не выполнено.', true);
 }
 
-async function action(target, operation, success) {
+async function action(target, operation, success, { replace = false } = {}) {
+  const context = replace ? contexts.replace() : contexts.capture();
   notify();
   try {
-    const result = await disableWhile(target, operation);
+    const result = await disableWhile(target, () => operation(context));
+    if (!contexts.current(context)) return undefined;
     if (success) notify(success);
     return result;
   } catch (error) {
+    if (!contexts.current(context) || error?.name === 'AbortError') return undefined;
     report(error);
     return undefined;
   }
 }
 
-async function command(name, input = {}, mutating = false) {
+async function request(context, path, input, options) {
+  contexts.assert(context);
+  const result = await account(path, input, { ...options, signal: context.signal });
+  contexts.assert(context);
+  return result;
+}
+
+async function command(context, name, input = {}, mutating = false) {
+  contexts.assert(context);
   const body = { membershipId: membership.membershipId, action: name, input };
   const scope = `command:${membership.membershipId}:${name}`;
   if (mutating) body.idempotencyKey = keys.key(scope, input);
-  const result = await account('command', body);
+  const result = await request(context, 'command', body);
   if (mutating) keys.complete(scope);
   return result;
 }
 
-async function optionalCommand(name) {
-  try { return await command(name); }
+async function optionalCommand(context, name) {
+  try { return await command(context, name); }
   catch (error) {
     if (error instanceof AccountApiError && error.status === 401) throw error;
     return null;
@@ -90,9 +123,10 @@ function list(value, field) {
   return Array.isArray(value?.[field]) ? value[field] : null;
 }
 
-async function loadIdentity(preferredMembershipId) {
-  identity = await account('me', undefined, { get: true });
-  const memberships = Array.isArray(identity.memberships) ? identity.memberships : [];
+async function loadIdentity(context, preferredMembershipId) {
+  const nextIdentity = await request(context, 'me', undefined, { get: true });
+  const memberships = Array.isArray(nextIdentity.memberships) ? nextIdentity.memberships : [];
+  identity = nextIdentity;
   membership = memberships.find(item => item.membershipId === preferredMembershipId)
     ?? memberships[0] ?? null;
   ui.membership.replaceChildren(...memberships.map(item => {
@@ -102,25 +136,24 @@ async function loadIdentity(preferredMembershipId) {
     return option;
   }));
   if (!membership) throw new Error('У аккаунта нет доступной организации.');
-  ui.auth.hidden = true;
-  ui.workspace.hidden = false;
-  await refreshWorkspace();
+  await refreshWorkspace(context);
 }
 
-async function refreshWorkspace() {
+async function refreshWorkspace(context = contexts.capture()) {
+  contexts.assert(context);
   const role = membership.role;
   const primaryPromise = role === 'merchant'
-    ? command('dashboard')
+    ? command(context, 'dashboard')
     : Promise.all([
-      command('program.read'),
-      command(role === 'partner' ? 'partner.read' : 'credit.read'),
+      command(context, 'program.read'),
+      command(context, role === 'partner' ? 'partner.read' : 'credit.read'),
     ]).then(([program, personal]) => ({ program, personal }));
   const [primary, grantsResult, tasksResult, payments] = await Promise.all([
     primaryPromise,
-    optionalCommand('grant.list'),
-    optionalCommand('task.list'),
+    optionalCommand(context, 'grant.list'),
+    optionalCommand(context, 'task.list'),
     role === 'merchant'
-      ? account('payment-status', { membershipId: membership.membershipId }).catch(error => {
+      ? request(context, 'payment-status', { membershipId: membership.membershipId }).catch(error => {
         if (error instanceof AccountApiError && error.status === 401) throw error;
         return null;
       })
@@ -128,10 +161,11 @@ async function refreshWorkspace() {
   ]);
   let share = null;
   if (role !== 'merchant' && primary.program?.enrollment) {
-    try { share = await command('share.read'); } catch (error) {
+    try { share = await command(context, 'share.read'); } catch (error) {
       if (error instanceof AccountApiError && error.status === 401) throw error;
     }
   }
+  contexts.assert(context);
   screen = {
     primary,
     grants: list(grantsResult, 'grants'),
@@ -140,35 +174,8 @@ async function refreshWorkspace() {
     share,
   };
   render();
-}
-
-function metric(parent, label, value) {
-  const box = element('div', undefined, 'row');
-  box.append(element('span', label), element('div', value, 'metric'));
-  parent.append(box);
-}
-
-function renderSummary() {
-  ui.summary.replaceChildren();
-  const role = membership.role;
-  const summary = role === 'merchant' ? screen.primary.summary
-    : role === 'partner' ? screen.primary.personal?.summary : screen.primary.personal;
-  if (!summary || typeof summary !== 'object') {
-    ui.summary.append(element('p', 'Сводка недоступна.'));
-    return;
-  }
-  if (role === 'customer') {
-    metric(ui.summary, 'Доступный бонус', rub(summary.availableMinor));
-    metric(ui.summary, 'Удерживается', rub(summary.heldMinor));
-    metric(ui.summary, 'Зарезервировано', rub(summary.reservedMinor));
-    addFact(ui.summary, 'Назначение', summary.explanation);
-  } else {
-    metric(ui.summary, role === 'merchant' ? 'Доступно партнёрам' : 'Доступно', rub(summary.availableMinor));
-    metric(ui.summary, 'Удерживается', rub(summary.heldMinor));
-    metric(ui.summary, 'Отправлено по реестру', rub(summary.sentMinor));
-    addFact(ui.summary, 'Ориентир выплаты', summary.dueDate);
-    addFact(ui.summary, 'Пояснение', summary.explanation);
-  }
+  ui.auth.hidden = true;
+  ui.workspace.hidden = false;
 }
 
 function registryRef(registry) {
@@ -191,15 +198,15 @@ function renderRegistries() {
     const approve = element('button', 'Утвердить реестр');
     approve.type = 'button';
     approve.disabled = registry.status !== 'draft' || !registry.rows?.length;
-    approve.addEventListener('click', () => action(approve, async () => {
-      await command('registry.approve', registryRef(registry), true);
-      await refreshWorkspace();
+    approve.addEventListener('click', () => action(approve, async context => {
+      await command(context, 'registry.approve', registryRef(registry), true);
+      await refreshWorkspace(context);
     }, 'Актуальная версия реестра утверждена.'));
     const download = element('button', 'Скачать CSV (деньги не отправляются)', 'secondary');
     download.type = 'button';
     download.disabled = !['approved', 'partially_sent', 'sent'].includes(registry.status);
-    download.addEventListener('click', () => action(download, async () => {
-      const result = await command('registry.export', registryRef(registry), true);
+    download.addEventListener('click', () => action(download, async context => {
+      const result = await command(context, 'registry.export', registryRef(registry), true);
       if (typeof result?.csv !== 'string' || typeof result?.filename !== 'string') {
         throw new Error('Экспорт не вернул CSV.');
       }
@@ -228,61 +235,6 @@ function renderMerchant() {
   renderRegistries();
 }
 
-function renderParticipant() {
-  ui.merchant.hidden = true;
-  ui.participant.hidden = false;
-  ui['owner-invite'].hidden = true;
-  const { program, personal } = screen.primary;
-  ui.enroll.hidden = Boolean(program?.enrollment);
-  addFact(ui.summary, 'Условия', program?.terms);
-  addFact(ui.summary, 'Ставка', Number.isInteger(program?.policy?.bps)
-    ? `${Math.floor(program.policy.bps / 100)}.${String(program.policy.bps % 100).padStart(2, '0')}%` : 'Недоступно');
-  addFact(ui.summary, 'Версия условий', program?.policy?.version);
-  if (membership.role === 'partner' && Array.isArray(personal?.payments)) {
-    addFact(ui.summary, 'Подтверждённых оплат', personal.payments.length);
-  }
-  ui.share.replaceChildren();
-  if (screen.share) {
-    addFact(ui.share, 'Реферальная ссылка', new URL(screen.share.referralUrl, location.origin).href);
-    addFact(ui.share, 'Промокод', screen.share.promoCode);
-    addFact(ui.share, 'Раскрытие', screen.share.disclosure);
-  } else {
-    ui.share.append(element('p', program?.enrollment
-      ? 'Ссылка рекомендации временно недоступна.' : 'Подтвердите участие, чтобы получить ссылку.'));
-  }
-}
-
-function renderPayments() {
-  ui.checkout.hidden = true;
-  ui['checkout-output'].replaceChildren();
-  const status = screen.payments;
-  if (!status) return void (ui['payment-status'].textContent = 'Статус ЮKassa недоступен.');
-  if (status.unavailableForRole) {
-    ui['payment-status'].textContent = 'Создание и сверка оплат доступны владельцу организации.';
-    return;
-  }
-  if (status.configured !== true) {
-    ui['payment-status'].textContent = 'ЮKassa для этой организации не подключена.';
-    return;
-  }
-  ui['payment-status'].textContent = `${status.testMode ? 'Тестовый' : 'Боевой'} магазин ЮKassa ${display(status.shopId)} подключён.`;
-  const select = ui.checkout.elements.beneficiaryId;
-  const partners = Array.isArray(screen.primary.partners) ? screen.primary.partners : [];
-  select.replaceChildren(...partners.map(partner => {
-    const option = element('option', display(partner.name)); option.value = partner.id; return option;
-  }));
-  ui.checkout.hidden = partners.length === 0;
-  if (!partners.length) ui['checkout-output'].append(element('p', 'Сначала пригласите партнёра и дождитесь принятия приглашения.'));
-  for (const order of Array.isArray(status.orders) ? status.orders : []) {
-    const row = element('div', undefined, 'row');
-    addFact(row, 'Заказ', order.orderId);
-    addFact(row, 'Платёж', order.paymentId);
-    addFact(row, 'Статус', order.status);
-    addFact(row, 'Сумма', rub(order.amountMinor));
-    ui['checkout-output'].append(row);
-  }
-}
-
 function renderAgents() {
   ui['agent-list'].replaceChildren();
   if (screen.grants === null) ui['agent-list'].append(element('p', 'Список ключей недоступен.'));
@@ -294,10 +246,10 @@ function renderAgents() {
     addFact(row, 'Статус', grant.revokedAt ? `отозван ${grant.revokedAt}` : 'действует');
     if (!grant.revokedAt) {
       const revoke = element('button', 'Отозвать ключ', 'secondary'); revoke.type = 'button';
-      revoke.addEventListener('click', () => action(revoke, async () => {
-        await command('grant.revoke', { grantId: grant.grantId ?? grant.id }, true);
+      revoke.addEventListener('click', () => action(revoke, async context => {
+        await command(context, 'grant.revoke', { grantId: grant.grantId ?? grant.id }, true);
         if (issuedAgent?.grantId === (grant.grantId ?? grant.id)) clearIssuedAgent();
-        await refreshWorkspace();
+        await refreshWorkspace(context);
       }, 'Ключ отозван.'));
       row.append(revoke);
     }
@@ -319,70 +271,87 @@ function renderAgents() {
 
 function render() {
   ui.identity.textContent = `${identity.email} · ${display(membership.name)} · ${roleName[membership.role] ?? membership.role}`;
-  renderSummary();
-  if (membership.role === 'merchant') renderMerchant(); else renderParticipant();
-  renderPayments();
+  renderAccountSummary(ui, membership, screen);
+  if (membership.role === 'merchant') renderMerchant(); else renderParticipant(ui, membership, screen);
+  renderPayments(ui, screen);
   renderAgents();
 }
 
 ui.login.addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui.login, async () => {
-    await account('login', { email: ui.email.value, password: ui.password.value });
-    ui.password.value = '';
-    await loadIdentity();
-  }, 'Вход выполнен.');
+  if (logoutPending) return notify('Выход ещё не подтверждён сервером. Дождитесь ответа.', true);
+  const credentials = { email: ui.email.value, password: ui.password.value };
+  clearContextSecrets({ preserveIncoming: fragmentInvitation });
+  void action(ui.login, async context => {
+    await request(context, 'login', credentials);
+    await loadIdentity(context);
+    fragmentInvitation = false;
+  }, 'Вход выполнен.', { replace: true });
 });
 
-ui.register.addEventListener('click', () => void action(ui.login, async () => {
-  await account('register', { email: ui.email.value, password: ui.password.value, name: ui.name.value });
-  ui.password.value = '';
-  await loadIdentity();
-}, 'Аккаунт и организация созданы.'));
+ui.register.addEventListener('click', () => {
+  if (logoutPending) return notify('Выход ещё не подтверждён сервером. Дождитесь ответа.', true);
+  const registration = { email: ui.email.value, password: ui.password.value, name: ui.name.value };
+  clearContextSecrets({ preserveIncoming: fragmentInvitation });
+  return void action(ui.login, async context => {
+    await request(context, 'register', registration);
+    await loadIdentity(context);
+    fragmentInvitation = false;
+  }, 'Аккаунт и организация созданы.', { replace: true });
+});
 
-ui.logout.addEventListener('click', () => void action(ui.logout, async () => {
-  await account('logout', {});
-  signedOut('Вы вышли из аккаунта.');
-}));
+ui.logout.addEventListener('click', () => {
+  const context = contexts.replace();
+  signedOut('', { invalidate: false });
+  logoutPending = true;
+  void disableWhile(ui.login, async () => {
+    try {
+      await request(context, 'logout', {});
+      if (contexts.current(context)) notify('Вы вышли из аккаунта.');
+    } catch (error) {
+      if (contexts.current(context)) notify('Кабинет закрыт локально. Сервер не подтвердил отзыв сеанса.', true);
+    } finally { if (contexts.current(context)) logoutPending = false; }
+  });
+});
 
 ui.refresh.addEventListener('click', () => void action(ui.refresh, refreshWorkspace, 'Данные обновлены.'));
-ui.membership.addEventListener('change', () => void action(ui.membership, async () => {
-  clearIssuedAgent(); keys.clear();
+ui.membership.addEventListener('change', () => void action(ui.membership, async context => {
+  clearContextSecrets(); keys.clear();
   membership = identity.memberships.find(item => item.membershipId === ui.membership.value);
   if (!membership) throw new Error('Организация недоступна.');
-  await refreshWorkspace();
-}, 'Рабочий контекст переключён.'));
+  await refreshWorkspace(context);
+}, 'Рабочий контекст переключён.', { replace: true }));
 
 ui.policy.addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui.policy, async () => {
+  void action(ui.policy, async context => {
     const form = new FormData(ui.policy);
     const bps = parseRub(form.get('percent'));
-    await command('program.save', {
+    await command(context, 'program.save', {
       kind: form.get('kind'), bps, holdDays: Number(form.get('hold')),
       windowDays: Number(form.get('window')), recurring: true,
     }, true);
-    await refreshWorkspace();
+    await refreshWorkspace(context);
   }, 'Условия опубликованы и будут применяться к новым оплатам.');
 });
 
 ui.registry.addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui.registry, async () => {
-    await command('registry.prepare', { period: new FormData(ui.registry).get('period') }, true);
-    await refreshWorkspace();
+  void action(ui.registry, async context => {
+    await command(context, 'registry.prepare', { period: new FormData(ui.registry).get('period') }, true);
+    await refreshWorkspace(context);
   }, 'Реестр подготовлен. Проверьте версию и хэш.');
 });
 
-ui.enroll.addEventListener('click', () => void action(ui.enroll, async () => {
-  await command('enrollment.join', { consent: true }, true);
-  await refreshWorkspace();
+ui.enroll.addEventListener('click', () => void action(ui.enroll, async context => {
+  await command(context, 'enrollment.join', { consent: true }, true);
+  await refreshWorkspace(context);
 }, 'Участие подтверждено.'));
 
 ui.invite.addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui.invite, async () => {
-    const result = await account('invite', {
+  void action(ui.invite, async context => {
+    const result = await request(context, 'invite', {
       membershipId: membership.membershipId,
       input: { role: new FormData(ui.invite).get('role') },
     });
@@ -394,24 +363,26 @@ ui.invite.addEventListener('submit', event => {
 
 ui.accept.addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui.accept, async () => {
+  void action(ui.accept, async context => {
     const form = new FormData(ui.accept);
-    const joined = await account('accept-invite', { invitation: form.get('invitation'), name: form.get('name') });
-    ui.accept.reset();
-    await loadIdentity(joined.membershipId);
-  }, 'Вы присоединились к организации.');
+    const joined = await request(context, 'accept-invite', { invitation: form.get('invitation'), name: form.get('name') });
+    const nextContext = contexts.replace();
+    clearContextSecrets(); keys.clear();
+    await loadIdentity(nextContext, joined.membershipId);
+    if (contexts.current(nextContext)) notify('Вы присоединились к организации.');
+  });
 });
 
 ui.checkout.addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui.checkout, async () => {
+  void action(ui.checkout, async context => {
     const form = new FormData(ui.checkout);
     const input = {
       beneficiaryId: form.get('beneficiaryId'), customerId: form.get('customerId'),
       amountMinor: parseRub(form.get('amount')), kind: 'cash',
     };
     const scope = `checkout:${membership.membershipId}`;
-    const result = await account('checkout', {
+    const result = await request(context, 'checkout', {
       membershipId: membership.membershipId, input, idempotencyKey: keys.key(scope, input),
     });
     keys.complete(scope);
@@ -433,9 +404,9 @@ ui.checkout.addEventListener('submit', event => {
   }, 'Заявка создана. Платёж станет подтверждённым только после проверки ЮKassa.');
 });
 
-ui['mint-agent'].addEventListener('click', () => void action(ui['mint-agent'], async () => {
+ui['mint-agent'].addEventListener('click', () => void action(ui['mint-agent'], async context => {
   const actions = grantActions[membership.role];
-  const result = await account('agent-token', {
+  const result = await request(context, 'agent-token', {
     membershipId: membership.membershipId, input: { actions, expiresInSeconds: 3600 },
   });
   issuedAgent = result;
@@ -447,29 +418,30 @@ ui['mint-agent'].addEventListener('click', () => void action(ui['mint-agent'], a
   ui['agent-config'].hidden = false;
   ui['agent-expires'].textContent = `Ключ действует до ${display(result.expiresAt)} и хранится только на этой странице.`;
   ui['probe-agent'].hidden = false;
-  await refreshWorkspace();
+  await refreshWorkspace(context);
 }, 'Ключ показан один раз. Скопируйте его сейчас.'));
 
-ui['probe-agent'].addEventListener('click', () => void action(ui['probe-agent'], async () => {
+ui['probe-agent'].addEventListener('click', () => void action(ui['probe-agent'], async context => {
   if (!issuedAgent?.token) throw new Error('Сначала выдайте новый ключ.');
   const initialized = await mcp(issuedAgent.token, 'initialize', {
     protocolVersion: '2025-11-25', capabilities: {},
     clientInfo: { name: 'n3-account-probe', version: '1.0.0' },
-  }, 'n3-init');
+  }, 'n3-init', context.signal);
+  contexts.assert(context);
   if (initialized?.protocolVersion !== '2025-11-25') throw new Error('MCP не подтвердил версию протокола.');
-  const tools = await mcp(issuedAgent.token, 'tools/list', {}, 'n3-tools');
+  const tools = await mcp(issuedAgent.token, 'tools/list', {}, 'n3-tools', context.signal);
+  contexts.assert(context);
   if (!Array.isArray(tools?.tools)) throw new Error('MCP не вернул список инструментов.');
   notify(`MCP подключён. Доступно инструментов: ${tools.tools.length}.`);
 }));
 
 ui['change-password'].addEventListener('submit', event => {
   event.preventDefault();
-  void action(ui['change-password'], async () => {
+  void action(ui['change-password'], async context => {
     const form = new FormData(ui['change-password']);
-    await account('password', {
+    await request(context, 'password', {
       currentPassword: form.get('currentPassword'), newPassword: form.get('newPassword'),
     });
-    ui['change-password'].reset();
     signedOut('Пароль изменён. Все сеансы и агентные ключи отозваны; войдите снова.');
   });
 });
@@ -479,14 +451,20 @@ function invitationFromFragment() {
   if (!match) return;
   try {
     const value = decodeURIComponent(match[1]);
-    if (/^[A-Za-z0-9_-]{43}$/.test(value)) ui.accept.elements.invitation.value = value;
+    if (/^[A-Za-z0-9_-]{43}$/.test(value)) {
+      ui.accept.elements.invitation.value = value;
+      fragmentInvitation = true;
+    }
     else notify('Ссылка приглашения имеет неверный формат.', true);
   } catch { notify('Ссылка приглашения имеет неверный формат.', true); }
   history.replaceState(null, '', `${location.pathname}${location.search}`);
 }
 
 invitationFromFragment();
-loadIdentity().catch(error => {
-  if (error instanceof AccountApiError && error.status === 401) signedOut();
-  else { signedOut(); report(error); }
+const initialContext = contexts.capture();
+loadIdentity(initialContext).catch(error => {
+  if (!contexts.current(initialContext)) return;
+  if (error instanceof AccountApiError && error.status === 401) {
+    signedOut('', { preserveIncoming: fragmentInvitation });
+  } else { signedOut('', { preserveIncoming: fragmentInvitation }); report(error); }
 });
