@@ -19,33 +19,41 @@
   ],
   "comparison_id": null,
   "baseline_revision": "6a5920dea8f5fcc256257bf50d520b1f0a7af72b",
-  "final_revision": null,
+  "final_revision": "8b60a59",
   "spec_sha256": "b235e4f6ae330459262df674668d5c9b283c660ba9a32f383851fc9398f92a89",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-09T19:29:32.775324+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-09T21:14:01.545049+00:00",
+  "status": "accepted",
   "actual_models": null,
   "acceptance_evidence": [
     "foundation-plan.md",
     "foundation-validation.md",
-    "bootstrap-checks.md"
+    "bootstrap-checks.md",
+    "runtime-checks.md",
+    "mutation-results.json",
+    "final-review.md",
+    "completion-adapter.md",
+    "acceptance-source-snapshot.json",
+    "acceptance-tooling-addendum.json"
   ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": null,
+    "required_gates_passed": true,
+    "ac_met": 7,
     "ac_total": 7,
-    "confirmed_findings_by_severity": {},
+    "confirmed_findings_by_severity": {
+      "medium": 3
+    },
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
     "followup_status": "pending"
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 6268770,
     "active_wall_ms": null,
     "agent_work_ms": null,
     "tokens": null,
@@ -60,10 +68,14 @@
     "tokens": "not exposed",
     "cost": "not exposed",
     "active_wall_ms": "initial context reads precede run; full wait accounting not available",
-    "final_revision": "ongoing",
-    "quality.ac_met": "not tested yet",
     "quality.known_defects_missed": "no defect oracle",
-    "quality.false_positive_findings": "no review yet",
-    "quality.regressions": "not measured"
-  }
+    "quality.false_positive_findings": "No complete classification count; preliminary password leak allegation explicitly retracted in security audit",
+    "quality.regressions": "No production followup observation; required test suites pass",
+    "final_revision_scope": "Final code/tooling checkpoint; acceptance metadata committed afterwards"
+  },
+  "requested_models": [
+    "gpt-6-astra",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra"
+  ]
 }

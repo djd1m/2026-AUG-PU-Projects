@@ -1,6 +1,6 @@
 # Foundation — completion evidence
 
-Status: implemented; independent final review pending. This evidence covers only the seven foundation criteria, not full product acceptance or production readiness.
+Status: accepted for the seven foundation criteria. This evidence covers only the seven foundation criteria, not full product acceptance or production readiness.
 
 ## Criterion coverage
 
@@ -79,3 +79,7 @@ Unmodified p-replicator1.13.2 `--completion` returns2 because its global role ta
 ## Actual image startup
 
 The Docker image built successfully. First startup failed because the host disk filled (ENOSPC); after scoped removal of our obsolete dependency backup, the same immutable image passed liveness, Russian home and non-root checks. App/test profiles were stopped explicitly; no production deployment. See runtime-checks.md for image SHA, command, failure and successful retry.
+
+## Coordinator acceptance
+
+Independent review accepted all7 criteria; `node .claude/hooks/check-review-contract.cjs projects/03a-affiliate-rewardful foundation` exited0 with7IDs/7rows. Completion status and this paragraph were updated after the review; the reviewed document version is preserved at code checkpoint8b60a59. No requirement, coverage mapping or runtime source changed. Foundation is done; next is trusted enrollment/program/partner authorization.

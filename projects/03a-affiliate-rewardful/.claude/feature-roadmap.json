@@ -16,7 +16,7 @@
       "name": "Runnable foundation and internal identity sessions",
       "description": "Reuse audited N1 Argon2/session primitives and N2 migration runner; implement the seven ACs in docs/features/foundation before mounting public enrollment/auth routes.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [],
@@ -32,11 +32,9 @@
       "name": "Identity, program policy and partner consent",
       "description": "Implement trusted enrollment, hash-only sessions, owner/partner scopes, versioned program policy, terms acceptance and personal partner assets.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
-      "blockers": [
-        "foundation"
-      ],
+      "blockers": [],
       "depends_on": [
         "foundation"
       ],
