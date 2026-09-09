@@ -1,0 +1,36 @@
+{
+  "at": "2026-09-09T09:24:45.578Z",
+  "results": [
+    {
+      "name": "membership ownership",
+      "baselineExit": 0,
+      "mutantExit": 1,
+      "killed": true
+    },
+    {
+      "name": "late session expiry",
+      "baselineExit": 0,
+      "mutantExit": 1,
+      "killed": true
+    },
+    {
+      "name": "original shop binding",
+      "baselineExit": 0,
+      "mutantExit": 1,
+      "killed": true
+    },
+    {
+      "name": "real refund beyond fixture quota",
+      "baselineExit": 0,
+      "mutantExit": 1,
+      "killed": true
+    },
+    {
+      "name": "A2A final revocation",
+      "baselineExit": 0,
+      "mutantExit": 1,
+      "killed": true
+    }
+  ],
+  "source": "actual docker compose node scripts/mutation-check.mjs --f2 output; no live source mutated"
+}

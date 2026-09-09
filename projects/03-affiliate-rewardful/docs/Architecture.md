@@ -44,3 +44,8 @@ F1 runtime: No external dependencies — this product calls no third-party servi
 Публичный веб-доступ имеет отдельные инфраструктурные зависимости: DNS sslip.io и выпуск/обновление сертификатов Let's Encrypt через Caddy. Это не интеграции денежных операций и не вызовы LLM. Функциональность локального ядра от них не зависит, доступность публичных URI — зависит.
 
 F2 capabilities пока не запускаются: YooKassa receive payment verification, marketplace split payouts, CloudPayments payments/payouts, production identity/SSO, external MCP/A2A client interoperability. Evidence/capability matrix проверяется отдельно перед этими этапами; их отсутствие не заменяется fallback на fake success.
+
+
+## F2 extension — 2026-09-09
+
+F2 implementation adds real identity, dedicated YooKassa order/verified-event integration and MCP/A2A transport. Deployment mode `hybrid` serves isolated fixture demos and real `/account` workspaces; `real` disables fixture routes. Real tenant/session authority never comes from demo bootstrap. Current implementation/setup and honest external acceptance limits: [F2 operations](f2-operations.md). Earlier F1-only statements describe the prior accepted milestone, not the new mode. F2 final browser acceptance is recorded separately in its completion/telemetry.

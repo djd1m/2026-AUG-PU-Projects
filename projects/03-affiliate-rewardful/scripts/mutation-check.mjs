@@ -59,7 +59,14 @@ const mutations=[{
  name:'D correction payment scope guard',file:'variants/d-agent/app/views.mjs',
  from:'&&payments.has(entry.paymentId)',to:'',tests:['tests/d-ui-boundary.test.mjs'],
 }];
-const selected=process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
+const f2Mutations=[
+ {name:'F2 membership ownership',file:'shared/identity/service.mjs',from:'m.id=$1 AND m.account_id=$2 FOR SHARE OF m',to:'m.id=$1 AND ($2::uuid IS NOT NULL) FOR SHARE OF m',tests:['tests/identity.test.mjs']},
+ {name:'F2 late session expiry',file:'shared/identity/service.mjs',from:'fresh(resolved.expires_at); fresh(grant.expiresAt);',to:'fresh(grant.expiresAt);',tests:['tests/identity.test.mjs']},
+ {name:'F2 original shop binding',file:'shared/payments/service.mjs',from:'previous.shop_id===config.shopId && previous.test_mode===config.testMode',to:'true',tests:['tests/payment-integration.test.mjs']},
+ {name:'F2 real refund beyond fixture quota',file:'shared/domain/events.mjs',from:"state.mode === 'real' || ",to:'',tests:['tests/real-clock.test.mjs']},
+ {name:'F2 A2A final revocation check',file:'shared/agents/a2a.mjs',from:'    await reauthenticate();',to:'',tests:['tests/agent-transport.test.mjs']},
+];
+const selected=process.argv.includes('--f2')?f2Mutations:process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
 const results=[];
 for(const mutation of selected){
  const scratch=await mkdtemp(join(tmpdir(),'n3-mutation-'));

@@ -92,3 +92,8 @@ B can be embedded via iframe; host CSS cannot cross. Parent/child messages valid
 All60 PRD scenarios traced to per-feature AC/test. Tests: tenant+subject deny, schema/prototype injection, session limit, duplicate/concurrent event, renewal, pending-refund, cumulative rounding, timeout retry, post-sent refund, competing approval, stale export, mixed sent rows, old-CSV reconciliation, concurrent credit reserve, terminal billing, revoked/expired grant, cancel/late task, restart persistence, isolation and A↔D handoff. Mutation guards on tenant deny, stale-source guard and duplicate payment. Four real browser journeys at390/1440; B foreign-origin CSS/CSP/CORS; build and exact artifact snapshot.
 
 Source capture restrictions remain in source-product-profile.md. Provider integrations stay unavailable in F1. Documentation-only YooKassa/CloudPayments adapters require primary docs and separate contract tests before F2; no invented sandbox claims.
+
+
+## F2 extension — 2026-09-09
+
+F2 implementation adds real identity, dedicated YooKassa order/verified-event integration and MCP/A2A transport. Deployment mode `hybrid` serves isolated fixture demos and real `/account` workspaces; `real` disables fixture routes. Real tenant/session authority never comes from demo bootstrap. Current implementation/setup and honest external acceptance limits: [F2 operations](f2-operations.md). Earlier F1-only statements describe the prior accepted milestone, not the new mode. F2 final browser acceptance is recorded separately in its completion/telemetry.

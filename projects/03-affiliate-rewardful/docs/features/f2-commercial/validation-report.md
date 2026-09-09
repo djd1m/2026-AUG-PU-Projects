@@ -1,0 +1,19 @@
+# Requirements validation — f2-commercial
+Spec revision: sha256:6d666a880f34fb399f0bf89e1476c37e69c3d75cd4051211457b26cc08669161
+
+Tier XL; owner authorized implementation before PLAN. Independent consequential reviews and fixes are recorded under docs/telemetry/p-replicator/20260909T085312Z-f2-auth-payments-agents/. Native YooKassa read-back replaces nonexistent provider signature, without claiming HMAC. Dedicated N3 merchant credentials remain external; protocol/API contract tests are separate from live provider acceptance. UI privacy/FormData fixes are under verification; no final acceptance yet.
+
+## Criterion scenarios
+
+| Criterion | Scenario |
+|---|---|
+| AC-f2-commercial-11 | Given configured input and proper authority; When executing the described positive and negative path; Then Bound input → Argon2id outside SQL → atomic account/empty tenant/membership/session hash → HttpOnly cookie; me omits raw token. |
+| AC-f2-commercial-12 | Given configured input and proper authority; When executing the described positive and negative path; Then Hash one-use invitation → lock valid invite → server fixed role → membership insert and consumed flag atomically; real action rejects fixture namespace. |
+| AC-f2-commercial-13 | Given configured input and proper authority; When executing the described positive and negative path; Then Cookie mutation requires exact Origin; SQL login counter has expiry/cap, KDF at most2 active; logout revokes hash, password version invalidates all sessions/agent credentials; fresh checks after waits. |
+| AC-f2-commercial-21 | Given configured input and proper authority; When executing the described positive and negative path; Then Lock tenant and bind actor/price/policy/shop/test-mode to order UUID; repeat same input/key returns saved order. Call provider outsideSQL with orderUUID. After23h ambiguous create requires reconciliation. |
+| AC-f2-commercial-22 | Given configured input and proper authority; When executing the described positive and negative path; Then Read object and originating payment for refund through authenticated provider API; validate returned ID/shop/test/RUB/amount/time, then match durable order before event processing. |
+| AC-f2-commercial-23 | Given configured input and proper authority; When executing the described positive and negative path; Then Lock order and tenant; apply verified payment then optionalrefund; persist immutable facts with unique business key in same transaction. Duplicate input returns prior result; real refund is not subject to demo history cap. |
+| AC-f2-commercial-31 | Given configured input and proper authority; When executing the described positive and negative path; Then Fixed MCP2025-11-25 StreamableHTTP SDK handler and A2A0.3JSONRPC dispatch; public card advertises only implemented synchronous capabilities. |
+| AC-f2-commercial-32 | Given configured input and proper authority; When executing the described positive and negative path; Then Hash bearer lookup joins current account version/member; tenant lock checks grant expiry/revoke/scope before dispatch and cache publication. Transport reauthenticates after operation. |
+| AC-f2-commercial-33 | Given configured input and proper authority; When executing the described positive and negative path; Then Derive command key from grant+messageId; task.create persists first, task.run applies bounded business action, task.read returns current state; terminal cancellation rejects; UI reads same task. |
+| AC-f2-commercial-41 | Given configured input and proper authority; When executing the described positive and negative path; Then Verify candidate build/imports; isolated PostgreSQL alltests; SDK/HTTP tests; A–D public desktop/mobile and real accountUI; inspect DB networks/hostports/secrets; record source hashes and provider-unconfigured limitation. |

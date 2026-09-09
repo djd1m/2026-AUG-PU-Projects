@@ -13,3 +13,8 @@
 Runtime: Node22.22.0, pg, PostgreSQL16, ES modules. Подробный контракт в docs/runtime-contract.md. Клиент импортирует только shared/client, shared/contracts, shared/ui. Source files <500 строк. API не отдаёт secret/token в журналах и ошибках. Build/tests/review до завершения, частые git commits/pushes разрешены владельцем.
 
 Лимит Codex: по просьбе владельца от 2026-09-09 во время активной работы проверять доступную телеметрию недельной квоты и сообщить, когда останется не более2% (used_percent >=98 для окна10080 минут). Не вычислять процент из токенов и не приписывать расход аккаунта одной фиче. Если актуальный счётчик недоступен, сообщать это явно. Фоновый мониторинг вне активной сессии не настроен; требование уведомить не означает автоматически остановить работу.
+
+
+## F2 extension — 2026-09-09
+
+F2 implementation adds real identity, dedicated YooKassa order/verified-event integration and MCP/A2A transport. Deployment mode `hybrid` serves isolated fixture demos and real `/account` workspaces; `real` disables fixture routes. Real tenant/session authority never comes from demo bootstrap. Current implementation/setup and honest external acceptance limits: [F2 operations](docs/f2-operations.md). Earlier F1-only statements describe the prior accepted milestone, not the new mode. F2 final browser acceptance is recorded separately in its completion/telemetry.

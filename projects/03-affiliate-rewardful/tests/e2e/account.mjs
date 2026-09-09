@@ -1,0 +1,43 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {open,until,fill,click,js,wd,element,screenshot,noOverflow} from '../helpers/browser.mjs';
+const origins=['a','b','c','d'].map(v=>`https://n3-${v}.212.192.0.33.sslip.io`);
+const evidence=new URL('../../.runtime/f2-browser/',import.meta.url).pathname;
+const password=`E2e-${randomUUID()}-!`,ownerEmail=`owner-${randomUUID()}@example.test`,partnerEmail=`partner-${randomUUID()}@example.test`;
+async function register(email,name) {await fill('#email',email);await fill('#password',password);await fill('#name',name);await click('#register');await until('return !document.querySelector("#workspace").hidden && document.querySelector("#notice").textContent.includes("созданы")');}
+async function logout() {await click('#logout');await until('return !document.querySelector("#auth").hidden');}
+async function login(email) {await fill('#email',email);await fill('#password',password);await click('#login button[type=submit]');await until('return document.querySelector("#notice").textContent.includes("Вход выполнен")');}
+
+test('real account UI desktop/mobile signup login invite scopes agent transport and durable organization across A–D',async()=>{
+ await mkdir(evidence,{recursive:true});await open(origins[0]+'/account');await until('return !!document.querySelector("#login")');
+ await wd('/cookie',undefined,'DELETE');await wd('/refresh',{});await until('return !document.querySelector("#auth").hidden');
+ await register(ownerEmail,'E2E real organization');await noOverflow();
+ assert.ok((await js('return document.querySelector("#payment-status").textContent')).includes('не подключена'));
+ await click('#policy button');await until('return document.querySelector("#notice").textContent.includes("опубликованы")');
+ await fill('#registry input','2026-08');await click('#registry button');await until('return document.querySelector("#registries").textContent.includes("2026-08")');
+ await click('#mint-agent');await until('return !document.querySelector("#agent-config").hidden');
+ await click('#probe-agent');await until('return document.querySelector("#notice").textContent.includes("MCP") && !document.querySelector("#notice").classList.contains("error")');
+ await click('#agent-list button');await until('return document.querySelector("#notice").textContent.includes("отозван")');
+ await click('#invite button');await until('return !document.querySelector("#invitation-output").hidden');
+ const invitation=await js('return document.querySelector("#invitation-output").value');
+ await js('document.querySelector("#invitation-output").value="[скрыто тестом]";document.querySelector("#agent-config").value=""');
+ await screenshot(evidence,'merchant-desktop');
+ await logout();await register(partnerEmail,'E2E participant');
+ const invitationCode=invitation.includes('#')?new URLSearchParams(new URL(invitation).hash.slice(1)).get('invite'):invitation;
+ await fill('#accept input[name=invitation]',invitationCode);await fill('#accept input[name=name]','E2E Partner');await click('#accept button');
+ await until('return !document.querySelector("#participant").hidden');await click('#enroll');await until('return document.querySelector("#share").textContent.length>10');
+ assert.equal(await js('return document.querySelector("#merchant").hidden'),true);await noOverflow();await screenshot(evidence,'partner-desktop');
+ await logout();await login(ownerEmail);await wd('/refresh',{});await until('return !document.querySelector("#workspace").hidden && document.querySelector("#registries").textContent.includes("2026-08")');
+ const cross=[];
+ for(const origin of origins) {
+  await open(origin+'/account');await until('return !!document.querySelector("#auth")');
+  if(await js('return !document.querySelector("#auth").hidden')) await login(ownerEmail);
+  await until('return document.querySelector("#identity").textContent.includes("E2E real organization")');await noOverflow();cross.push({origin,role:'merchant',persisted:true});
+ }
+ await open(origins[0]+'/mobile.html');await js('document.querySelector("#mobile-frame").src="/account"');await wd('/frame',{id:await element('#mobile-frame')});
+ await until('return location.pathname==="/account" && document.querySelector("#identity")?.textContent.includes("E2E real organization")');
+ assert.equal(await js('return innerWidth'),390);await noOverflow();await screenshot(evidence,'merchant-mobile');
+ await writeFile(evidence+'summary.json',JSON.stringify({at:new Date().toISOString(),cross,desktop:1440,mobile:390,checks:['signup','login','logout','empty-real-tenant','policy','registry','invitation','partner-scope','enrollment','MCP-probe','agent-revoke','cross-host-persistence','no-horizontal-overflow'],providerLive:false},null,2));
+});
