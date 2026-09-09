@@ -20,7 +20,9 @@ async function snapshot() {
     body:JSON.stringify({action:'dashboard',actorId:session.actors.find(a=>a.role==='merchant').id,input:{}})}).then(r=>r.json()).then(r=>r.data);`);
 }
 async function fresh() {
-  await open(base);
+  // Finish the old bootstrap before clearing storage. Firefox's JSON viewer
+  // has isolated storage, so /health cannot be used as a reset document.
+  await open(base);await until('return !!document.querySelector("#feedback, .fatal")');
   await js("for(const key of Object.keys(sessionStorage))if(key.startsWith('n3.fixture.'))sessionStorage.removeItem(key)");
   await wd('/refresh',{});await visible('dashboard-summary');
 }

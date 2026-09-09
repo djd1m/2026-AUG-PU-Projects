@@ -22,7 +22,8 @@ async function command(action,input={},options={}) {
 }
 const credit=async()=>{const r=await command('credit.read');assert.equal(r.status,200);return r.data;};
 async function fresh() {
-  await open(base);await js("for(const k of Object.keys(sessionStorage))if(k.startsWith('n3.fixture.B'))sessionStorage.removeItem(k)");
+  await open(base);await until('return !!document.querySelector("#feedback, .fatal")');
+  await js("for(const k of Object.keys(sessionStorage))if(k.startsWith('n3.fixture.B'))sessionStorage.removeItem(k)");
   await wd('/refresh',{});await visible('publish-widget');
 }
 async function enroll() {

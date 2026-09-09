@@ -1,0 +1,22 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T070308Z-go-c-partner",
+  "batch_id": "n3-four-variants-f1",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "c-partner",
+  "pipeline": "/go -> /feature",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "baseline_revision": "2f9cd978bdf1bbc2c5f1bcd963752e9d2942a30c",
+  "started_at": "2026-09-09T07:03:08.327428+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_coordinator_model": null,
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator usage not allocated; actual worker metadata collected at handoff"
+  ],
+  "metrics": {},
+  "quality": {}
+}
