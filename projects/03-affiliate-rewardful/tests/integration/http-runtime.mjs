@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { fixtureSession } from '../helpers/http-session.mjs';
+
+const base=process.env.N3_HTTP_URL || 'http://127.0.0.1:13030';
+test('live HTTP/PostgreSQL: confirmed event replay, registry approval, stale export and tenant isolation',async()=>{
+  const {session,command}=await fixtureSession(base);
+  const dashboard=(await command('dashboard')).data;
+  assert.equal(dashboard.summary.availableMinor,60000);
+  const fixture=dashboard.fixtureEvents.payment;
+  const results=await Promise.all([command('fixture.event',fixture),command('fixture.event',fixture)]);
+  assert.deepEqual(results.map(x=>x.status),[200,200]);
+  const after=(await command('dashboard')).data;
+  assert.equal(after.payments.length,dashboard.payments.length+1);
+  assert.equal(after.summary.availableMinor,80000);
+  const registry=(await command('registry.prepare',{period:'2026-08'})).data;
+  const ref={artifactId:registry.artifactId,revision:registry.revision,hash:registry.hash};
+  assert.equal(registry.amountMinor,80000);
+  assert.equal((await command('registry.export',ref)).status,409);
+  assert.equal((await command('registry.approve',ref)).status,200);
+  const exported=await command('registry.export',ref,{key:'runtime-export'});
+  assert.equal(exported.status,200);
+  assert.match(exported.data.csv,/amount_minor/);
+  assert.equal((await command('dashboard')).data.transfers.length,0,'CSV is not a transfer');
+  assert.equal((await command('fixture.event',dashboard.fixtureEvents.refund)).status,200);
+  const stale=await command('registry.export',ref,{key:'runtime-export'});
+  assert.equal(stale.status,409,'Even cached export must recheck freshness');
+  const other=await fixtureSession(base);
+  const cross=await other.command('registry.read',{artifactId:ref.artifactId},{actorId:session.actorId});
+  assert.equal(cross.status,403);
+  const correction=(await command('dashboard')).data.summary.adjustmentMinor;
+  assert.equal((await command('fixture.event',fixture)).status,200);
+  assert.equal((await command('dashboard')).data.summary.adjustmentMinor,correction);
+});

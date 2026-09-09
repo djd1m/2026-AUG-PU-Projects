@@ -8,6 +8,14 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const mutations=[{
  name:'HTTP origin denial',file:'apps/api/http.mjs',from:'if (origin && !origins.has(origin))',to:'if (false)',
  tests:['tests/http-boundary.test.mjs'],
+},{
+ name:'HTTP API malformed URL guard',file:'apps/api/http.mjs',
+ from:"try { path = new URL(req.url, 'http://n3.local').pathname; }\n    catch { return json(res, 400, { error: { code: 'INVALID_URL', message: 'Некорректный адрес запроса.' } }); }",
+ to:"path = new URL(req.url, 'http://n3.local').pathname;",tests:['tests/http-request-target.test.mjs'],
+},{
+ name:'HTTP frontend malformed URL guard',file:'apps/frontend/server.mjs',
+ from:"try { url = new URL(req.url, 'http://local'); }\n  catch { res.writeHead(400, { 'Content-Type':'text/plain; charset=utf-8' }); res.end('Некорректный адрес запроса'); return; }",
+ to:"url = new URL(req.url, 'http://local');",tests:['tests/http-request-target.test.mjs'],
 }];
 const selected=process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
 const results=[];

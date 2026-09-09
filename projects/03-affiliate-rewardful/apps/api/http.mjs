@@ -41,7 +41,9 @@ export function createHttpServer(app, { mode = 'fixture' } = {}) {
     const origin = req.headers.origin;
     if (origin && !origins.has(origin)) return json(res, 403, { error: { code: 'ORIGIN_DENIED', message: 'Источник запроса не разрешён.' } });
     if (origin) { res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Vary', 'Origin'); }
-    const path = new URL(req.url, 'http://n3.local').pathname;
+    let path;
+    try { path = new URL(req.url, 'http://n3.local').pathname; }
+    catch { return json(res, 400, { error: { code: 'INVALID_URL', message: 'Некорректный адрес запроса.' } }); }
     if (req.method === 'OPTIONS') {
       if (!['/api/demo', '/api/command'].includes(path)) return json(res, 404, { error: { code: 'NOT_FOUND' } });
       res.writeHead(204, { 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Authorization, Content-Type', 'Access-Control-Max-Age': '300' });
