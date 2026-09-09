@@ -1,0 +1,74 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20260909T170111Z-discovery-958f",
+  "project": "projects/03a-affiliate-rewardful",
+  "feature": "discovery-and-n1-reuse",
+  "pipeline": "replicate-discovery",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "started_at": "2026-09-09T17:01:11.470563+00:00",
+  "status": "awaiting_cjm_choice",
+  "baseline_revision": "89dc14a5b41c8b21e589a331a1bed4b6a8870ff1",
+  "plan_sha256": "3c7c8af52cbcfeb2570f3bab77430127114615e8c5863ff1a11236928926a990",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Exact coordinator model, provider usage, and quota counters unavailable from exposed tools."
+  ],
+  "authorization": "User approved launch; N1 first integration; manual payouts every 5th for previous month; CJM choice pending.",
+  "work_units": [
+    {
+      "id": "reuse-audit",
+      "requested_model": "gpt-5.6-terra",
+      "effort": "medium"
+    },
+    {
+      "id": "product-discovery",
+      "requested_model": "gpt-5.6-sol",
+      "effort": "high"
+    }
+  ],
+  "checkpoint_ready_at": "2026-09-09T17:24:30.287277+00:00",
+  "elapsed_wall_ms_to_checkpoint": 1398816,
+  "active_wall_ms": null,
+  "prd_started": false,
+  "implementation_started": false,
+  "chosen_cjm": null,
+  "requested_models": [
+    "gpt-5.6-terra:medium",
+    "gpt-5.6-sol:high"
+  ],
+  "actual_models": null,
+  "checks": {
+    "firefox_cjm": {
+      "passed": 110,
+      "total": 110,
+      "widths": [
+        320,
+        390,
+        768,
+        1440
+      ]
+    },
+    "source_bound_html": true,
+    "receipts_valid": 3,
+    "receipts_required": 3,
+    "independent_consistency": "passed; October label corrected by coordinator",
+    "prd_absent": true
+  },
+  "retry_notes": [
+    "Reuse receipt corrected: atomic outbox and reuse-first wording",
+    "Research receipt corrected: mandatory FR IDs and scoped variants",
+    "Browser attempts 1/2 failed at mobile overflow; fixed",
+    "Browser attempts 3/4 passed109; final changed share CTA passed110"
+  ],
+  "artifacts": [
+    "docs/prototypes/cjm/index.html",
+    "docs/prototypes/cjm/n3a-cjm-html.zip",
+    "docs/CJM_Variants.md",
+    "docs/product-discovery-brief.md",
+    "docs/discovery/reuse-inventory.md"
+  ]
+}

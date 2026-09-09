@@ -1,0 +1,32 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20260909T164907Z-planning-7c52",
+  "project": "projects/03a-affiliate-rewardful",
+  "feature": "initial-plan",
+  "pipeline": "planning-only",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "started_at": "2026-09-09T16:49:07.992325+00:00",
+  "status": "awaiting_user_approval",
+  "baseline_revision": "89dc14a5b41c8b21e589a331a1bed4b6a8870ff1",
+  "actual_model": null,
+  "model_context": "GPT-6 per session instructions; exact execution model metadata unavailable",
+  "usage": null,
+  "cost": null,
+  "telemetry_status": "partial",
+  "missing_data": [
+    "No provider usage or exact model receipt exposed.",
+    "Preliminary read-only inspection before journal creation is not timed; started_at is journal start, not complete task start."
+  ],
+  "authorization": "Create folder and plan only; implementation awaits user approval.",
+  "finished_planning_at": "2026-09-09T16:52:08.006549+00:00",
+  "elapsed_wall_ms": 180014,
+  "active_wall_ms": null,
+  "checks": {
+    "plan_structure": "passed",
+    "whitespace": "passed",
+    "application_tests": "not run: planning only"
+  },
+  "agents_spawned": 0,
+  "implementation_started": false
+}
