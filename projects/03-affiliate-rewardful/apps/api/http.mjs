@@ -59,7 +59,8 @@ export function createHttpServer(app, { mode = 'fixture', cookieSecure = true, a
     }
     try {
       if (mode !== 'fixture' && path.startsWith('/api/account/')) {
-        if (!rate(`account:${req.socket.remoteAddress}`,60)) return json(res,429,{error:{code:'RATE_LIMIT',message:'Повторите через минуту'}});
+        const authentication=['/api/account/register','/api/account/login','/api/account/password'].includes(path);
+        if (!rate(`${authentication?'auth':'account'}:${req.socket.remoteAddress}`,authentication?30:300)) return json(res,429,{error:{code:'RATE_LIMIT',message:'Повторите через минуту'}});
         if (await accounts(req,res,path)) return;
       }
       if (mode !== 'fixture' && agentHandler && await agentHandler(req,res,path)) return;

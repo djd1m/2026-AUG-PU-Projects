@@ -5,13 +5,14 @@ import { fixture,code } from './helpers/core-fixture.mjs';
 
 const pass='Commercial integration password 57!';
 async function setup(t) {
-  let clock=Date.now(),calls=[]; const payments=new Map(),refunds=new Map();
+  let clock=Date.now(),calls=[]; const faults={dropCreateResponse:false}; const payments=new Map(),refunds=new Map();
   const config={enabled:false,shopId:'123456',secretKey:'dedicated-test-key-never-production',testMode:true,returnUrl:'https://n3-a.212.192.0.33.sslip.io/account'};
   const fetchImpl=async(url,options)=>{
     calls.push({url,method:options.method,key:options.headers['idempotence-key']});
     if (options.method==='POST') {
       const input=JSON.parse(options.body); let p=[...payments.values()].find(v=>v.metadata.order_id===input.metadata.order_id);
       if (!p) { p={id:randomUUID(),status:'pending',amount:input.amount,paid:false,test:true,refundable:false,recipient:{account_id:'123456'},metadata:input.metadata,confirmation:{type:'redirect',confirmation_url:'https://yoomoney.ru/checkout/test'}};payments.set(p.id,p); }
+      if(faults.dropCreateResponse) {faults.dropCreateResponse=false;throw new TypeError("simulated lost provider response");}
       return Response.json(p);
     }
     const id=url.split('/').at(-1), obj=url.includes('/refunds/')?refunds.get(id):payments.get(id);
@@ -30,7 +31,7 @@ async function setup(t) {
   const checkout=(key=randomUUID(),body=input)=>f.app.payments.checkout(owner.token,owner.membershipId,body,key);
   const notification=(event,obj)=>JSON.stringify({type:'notification',event,object:obj});
   function succeeded(id) { clock+=1000; const p=payments.get(id); Object.assign(p,{status:'succeeded',paid:true,refundable:true,captured_at:new Date(clock).toISOString()}); return p; }
-  return {f,owner,partner,joined,command,checkout,input,notification,succeeded,payments,refunds,calls,config,advance:ms=>{clock+=ms;}};
+  return {f,owner,partner,joined,command,checkout,input,notification,succeeded,payments,refunds,calls,config,faults,advance:ms=>{clock+=ms;}};
 }
 test('real durable checkout survives retry; verified duplicate and refund-before-payment accrue and reverse once',async t=>{
   const x=await setup(t),key=randomUUID();
@@ -63,7 +64,7 @@ test('forged and mismatched provider objects never reserve dedup; later authenti
   await assert.rejects(x.f.app.payments.checkout(foreign.token,foreign.membershipId,x.input,randomUUID()),code('PAYMENT_UNCONFIGURED'));
   assert.equal((await x.f.app.payments.status(foreign.token,foreign.membershipId)).orders.length,0);
 });
-test('provider outage keeps order retryable; ambiguous creates older than23h require reconciliation',async t=>{
+test('ambiguous creates older than23h require reconciliation',async t=>{
   const x=await setup(t),order=await x.checkout();
   await x.f.sql('UPDATE checkout_orders SET provider_id=NULL,confirmation_url=NULL WHERE id=$1',[order.orderId]);
   x.advance(24*3600000);
@@ -76,4 +77,13 @@ test('shop rotation cannot retry an unbound order against a different merchant a
   await x.f.sql('UPDATE checkout_orders SET provider_id=NULL WHERE id=$1',[order.orderId]);
   x.config.shopId='654321';await x.f.restart();const before=x.calls.length;
   await assert.rejects(x.checkout(key),code('SHOP_CHANGED'));assert.equal(x.calls.length,before);
+});
+
+test('lost create response keeps durable order and retries same provider idempotence key without another payment',async t=>{
+ const x=await setup(t),key=randomUUID();x.faults.dropCreateResponse=true;
+ await assert.rejects(x.checkout(key),code('PROVIDER_UNAVAILABLE'));assert.equal(x.payments.size,1);
+ const row=(await x.f.sql('SELECT id,provider_id FROM checkout_orders WHERE command_key=$1',[key])).rows[0];assert.equal(row.provider_id,null);
+ await x.f.restart();const recovered=await x.checkout(key);
+ assert.equal(recovered.orderId,row.id);assert.equal(x.payments.size,1);
+ assert.equal(x.calls.filter(c=>c.method==='POST').every(c=>c.key===row.id),true);
 });

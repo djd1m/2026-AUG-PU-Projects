@@ -1,0 +1,84 @@
+{
+  "collected_at": "2026-09-09T09:31:02.612572+00:00",
+  "run_started_at": "2026-09-09T08:53:12Z",
+  "status": "partial active run; final tail not included",
+  "workers": [
+    {
+      "agent_id": "/root",
+      "models": [
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        }
+      ],
+      "response_count": 79,
+      "first_usage_at": "2026-09-09T08:53:12.762Z",
+      "last_usage_at": "2026-09-09T09:31:02.240Z",
+      "usage": {
+        "input_tokens": 9619627,
+        "cached_input_tokens": 9199104,
+        "output_tokens": 66839,
+        "reasoning_output_tokens": 12145,
+        "total_tokens": 9686466
+      },
+      "scope": "exclusive thread responses after run start",
+      "source": "local token_usage_record, deduplicated thread_id/response_id"
+    },
+    {
+      "agent_id": "/root/f2_payment_adapter",
+      "models": [
+        {
+          "model": "gpt-5.6-sol",
+          "effort": "high"
+        }
+      ],
+      "response_count": 73,
+      "first_usage_at": "2026-09-09T08:58:33.801Z",
+      "last_usage_at": "2026-09-09T09:30:25.640Z",
+      "usage": {
+        "input_tokens": 9965885,
+        "cached_input_tokens": 9737472,
+        "output_tokens": 58395,
+        "reasoning_output_tokens": 20184,
+        "total_tokens": 10024280
+      },
+      "scope": "exclusive thread responses after run start",
+      "source": "local token_usage_record, deduplicated thread_id/response_id"
+    },
+    {
+      "agent_id": "/root/f2_agent_transport",
+      "models": [
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        }
+      ],
+      "response_count": 61,
+      "first_usage_at": "2026-09-09T08:58:47.394Z",
+      "last_usage_at": "2026-09-09T09:24:48.496Z",
+      "usage": {
+        "input_tokens": 5718417,
+        "cached_input_tokens": 5362048,
+        "output_tokens": 29911,
+        "reasoning_output_tokens": 6446,
+        "total_tokens": 5748328
+      },
+      "scope": "exclusive thread responses after run start",
+      "source": "local token_usage_record, deduplicated thread_id/response_id"
+    }
+  ],
+  "total": {
+    "input_tokens": 25303929,
+    "cached_input_tokens": 24298624,
+    "output_tokens": 155145,
+    "reasoning_output_tokens": 38775,
+    "total_tokens": 25459074
+  },
+  "currency_cost": null,
+  "missing_data": [
+    "provider price/cost unavailable",
+    "stage exclusive token allocation unavailable",
+    "active output after collection excluded"
+  ],
+  "quota_is_separate_account_window": true
+}
