@@ -1,0 +1,41 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T111622Z-f3-referral-3b19",
+  "batch_id": "n3-commercial-priorities",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "f3-referral-funnel",
+  "pipeline": "go -> feature AUTO: PLAN VALIDATE IMPLEMENT REVIEW",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Owner approved F3 plan and put working referral funnel first; proceed autonomously through full gates.",
+    "Current coordinator remains actual host model; no global configuration switch."
+  ],
+  "risk_flags": [
+    "public attribution",
+    "financial beneficiary integrity",
+    "tenant isolation",
+    "identity registration"
+  ],
+  "baseline_revision": "a87b7e9c0182b1104bfc8c3d49cb5b4cd8f827c7",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-09T11:16:22.499285+00:00",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": [],
+  "quality": {},
+  "metrics": {},
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading before run creation; no implementation or feature design started.",
+    "Actual current model confirmation and provider usage pending; unavailable counters remain null."
+  ],
+  "actual_model": null,
+  "actual_effort": null
+}
