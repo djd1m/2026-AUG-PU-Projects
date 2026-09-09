@@ -1,4 +1,4 @@
-# Source versions at F1 dispatch
+# Source versions — F3 referral funnel
 
 **Правки и выводы:** ДА
 **Проверка версий:** ВЫПОЛНЕНА
@@ -7,6 +7,6 @@
 
 | Что | Вид | Источник | Хеш источника |
 |---|---|---|---|
-| shared implementation and integration contract | правка | docs/runtime-contract.md | 0ff2e66a413947b8948b974bb53ad0d9c242008112ec4dfff7e7b0cead6fb6c2 |
+| Referral core/client/UI and integration edits derive from frozen contract | правка | docs/features/f3-referral-funnel/02_pseudocode.md | 53e90ae6f51d79d50c88cefbe68aece9323f3935d50d9cea484784be1dc0d4e9 |
 
-Each worker receipt additionally pins actual source hashes and output commit. Specification changes require refreshed validation. This declaration does not claim enforcement of every filesystem write.
+Existing code input hashes are recorded in docs/telemetry/p-replicator/20260909T111622Z-f3-referral-3b19/evidence/pre-implementation-source-sha256.json. Each worker pins its actual input/output revision in its receipt; this declaration does not claim automatic write interception.

@@ -20,7 +20,7 @@
   ],
   "baseline_revision": "a87b7e9c0182b1104bfc8c3d49cb5b4cd8f827c7",
   "final_revision": null,
-  "spec_sha256": null,
+  "spec_sha256": "e642cb5fc5b5775863ac60ed7a33c0bc3bd8e025cd91affc92ec4ab9308e3c1a",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
@@ -29,13 +29,17 @@
   "ended_at": null,
   "status": "running",
   "acceptance_evidence": [],
-  "quality": {},
+  "quality": {
+    "validation": "READY",
+    "baseline_tests": 83,
+    "baseline_failures": 0
+  },
   "metrics": {},
   "telemetry_status": "partial",
   "missing_data": [
     "Initial instruction reading before run creation; no implementation or feature design started.",
     "Actual current model confirmation and provider usage pending; unavailable counters remain null."
   ],
-  "actual_model": null,
-  "actual_effort": null
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high"
 }

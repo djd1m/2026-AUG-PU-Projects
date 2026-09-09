@@ -1,0 +1,30 @@
+{
+  "context": {
+    "timestamp": "2026-09-09T11:15:24.785Z",
+    "model": "gpt-6-astra",
+    "effort": "high"
+  },
+  "quota": {
+    "timestamp": "2026-09-09T11:28:53.940Z",
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 10.0,
+        "window_minutes": 10080,
+        "resets_at": 1789550338
+      },
+      "secondary": null,
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "pro",
+      "rate_limit_reached_type": null
+    }
+  },
+  "sampled_at": "2026-09-09T11:29:42.821230+00:00"
+}

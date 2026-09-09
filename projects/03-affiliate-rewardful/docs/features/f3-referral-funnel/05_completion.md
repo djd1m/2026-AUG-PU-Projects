@@ -6,9 +6,9 @@ Status: planned, not implemented or accepted.
 
 Pre-deployment: full build/regression, meaningful mutation and independent review; source-bound E2E of merchant integration plus A–D; docs/gates; source/image receipts. Check VPS ports and existing container ownership before each compose start. Database has no published ports, random secrets, only backend/internal network in all environments.
 
-Sequence: build candidate; run additive schema in isolated test DB; test rollback image reading migrated legacy rows; retain previous image references; deploy API then UI A–D sequentially; health/public browser smoke; provider live acceptance only with configured dedicated merchant and actual payment. No secret is generated into version control or copied from other projects.
+Sequence: build candidate; run additive schema in isolated test DB; verify additive migration reads existing legacy rows and frontend rollback keeps compatible API; retain previous image references; deploy API then UI A–D sequentially; health/public browser smoke; provider live acceptance only with configured dedicated merchant and actual payment. No secret is generated into version control or copied from other projects.
 
-Rollback: restore previous images and keep additive tables/columns. Legacy code ignores connector snapshots, so after connector traffic starts old API must not consume new connector orders: quiesce connector/webhook ingress during rollback and reconcile outstanding orders before restoring legacy payment processor. Test this refusal/operational boundary; never silently process connector orders as legacy attribution.
+Rollback: frontend images may be restored while retaining the F3-compatible API and additive schema. After ANY connector order exists, restoring the F2 backend/webhook processor is forbidden, including after reconciliation: late duplicate/refund events remain possible indefinitely. For a backend incident, stop API ingress and forward-fix or retain a known F3-compatible image; do not resume F2 webhook processing. Deployment/operations evidence must explicitly record this boundary. No automatic destructive downgrade or schema rollback is offered.
 
 ## CI/CD and Monitoring
 

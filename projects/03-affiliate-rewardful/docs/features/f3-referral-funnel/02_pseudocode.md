@@ -13,7 +13,7 @@ REQUIREMENT: `AC-f3-referral-funnel-11`
 REALISES: SC-US-001-1
 INPUT: validated scoped request
 OUTPUT: persisted result or explicit error
-STEPS: Merchant session → lock membership/account then tenant → validate HTTPS destinations same origin, no URL credentials/fragment/reserved n3_ref query → upsert program. Issue32byte key, hash in connector table, revoke previous key atomically, bind account version, TTL90days. Auth returns tenant+expiry and a final fresh check; actor must remain merchant.
+STEPS: Merchant session → lock membership/account then tenant → validate HTTPS destinations same origin, no URL credentials/fragment/reserved n3_ref query → upsert program. Issue32byte key, hash in connector table, retain at most1credential row per tenant: delete superseded/expired row at rotation and insert the new key atomically; revoke marks that one row, bind account version, TTL90days. Authorize reads candidate credential without locking it, locks current account/membership FOR SHARE, then real tenant FOR UPDATE, then re-reads/locks credential FOR SHARE and revalidates version/revoke/expiry. Rotation follows account/membership→tenant→credential update. Auth returns tenant+expiry and a final fresh check; actor must remain merchant.
 COMPLEXITY: indexed lookups plus O(n) bounded tenant ledger projection.
 
 ### Algorithm: Visit and capture
@@ -23,7 +23,7 @@ REQUIREMENT: `AC-f3-referral-funnel-12`
 REALISES: SC-US-001-1
 INPUT: validated scoped request
 OUTPUT: persisted result or explicit error
-STEPS: Lookup membership actor in real tenant; require cash partner enrollment and configured published policy. Lock tenant; admit capped visit, random32byte token hash, frozen createdAt/expiresAt from current window. Return configured landing URL with n3_ref token and n3_ref_expires server expiry; no redirect query accepted. Tracker script serves public program window, enforces configured merchant origin, keeps existing unexpired first-touch cookie, never refreshes expiry, strips n3_ref/n3_ref_expires and emits no network identity event.
+STEPS: Lookup membership actor in real tenant; require cash partner enrollment and configured published policy. Lock tenant; admit capped visit, random32byte token hash, frozen createdAt/expiresAt from current window. Return configured landing URL with n3_ref token and n3_ref_expires server expiry; no redirect query accepted. Tracker config exposes current policy window for display only; issued n3_ref_expires is the frozen server receipt expiry. Tracker never shortens/extends an existing cookie merely because policy changed. It accepts new expiry only when future and at most365days, and backend independently enforces the row expiry. Tracker script serves public program window, enforces configured merchant origin, keeps existing unexpired first-touch cookie, never refreshes expiry, strips n3_ref/n3_ref_expires and emits no network identity event.
 COMPLEXITY: indexed lookups plus O(n) bounded tenant ledger projection.
 
 ### Algorithm: Customer binding
@@ -45,7 +45,7 @@ REQUIREMENT: `AC-f3-referral-funnel-22`
 REALISES: SC-US-001-2
 INPUT: validated scoped request
 OUTPUT: persisted result or explicit error
-STEPS: Resolve current connector; lock tenant then customer/order. Require configured matching shop, published cash policy; new order binds trusted invoice amount and saved customer attribution, source connector, frozen return URL. Commit then call provider with saved orderUUID idempotence key; reauthorize after IO. Webhook verified outsideSQL, then tenant→order locks, read durable snapshot, apply real event through domain trusted-binding path; compute zero for null beneficiary, preserve frozen recipient, policy.recurring controls later rewards. Persist order+ledger/refund atomically. Authenticated status returns only own connector order; redirect/create response never sets succeeded.
+STEPS: Resolve current connector; lock tenant then customer/order. Require configured matching shop, published cash policy; new order binds trusted invoice amount and saved customer attribution, source connector, frozen return URL. Commit then call provider with saved orderUUID idempotence key; reauthorize after IO. Webhook verified outsideSQL, then tenant→order locks, read durable snapshot, apply real event through domain trusted-binding path; compute zero for null beneficiary, preserve frozen recipient, policy.recurring controls later rewards in the SAME provider test/live mode only; a test commission cannot consume a live one-time commission. Order-derived testMode joins trusted attribution and persisted payment provenance, not browser input. Persist order+ledger/refund atomically. Authenticated status returns only own connector order; redirect/create response never sets succeeded.
 COMPLEXITY: indexed lookups plus O(n) bounded tenant ledger projection.
 
 ### Algorithm: Metrics and UI
@@ -67,7 +67,7 @@ REQUIREMENT: `AC-f3-referral-funnel-42`
 REALISES: SC-US-001-4
 INPUT: validated scoped request
 OUTPUT: persisted result or explicit error
-STEPS: Use existing fixed-pool DB transaction timeouts, connector/visitor admission, per-tenant max100000visits,10000customers,5000orders and bounded provider4active. Network outsideSQL; tenant-before-order locking. Additive tables/nullable order columns preserve legacy interpretation. Verify full build/core/account/protocol/A–D plus isolated merchant E2E, mutation failures, deployment inventory, source hashes and package gates; no external credentials means live acceptance NOTPERFORMED, not fallback.
+STEPS: Use existing fixed-pool DB transaction timeouts, public referral admission300/minute per socket peer; integration admission600/minute per socket peer, separate from account/public buckets; shared HTTP limiter bounded2048entries with60second expiry, no caller-generated bucket names; at most1credential row/tenant; per-tenant max100000visits,10000customers,5000orders and bounded provider4active. Network outsideSQL; tenant-before-order locking. Additive tables/nullable order columns preserve legacy interpretation. Verify full build/core/account/protocol/A–D plus isolated merchant E2E, mutation failures, deployment inventory, source hashes and package gates; no external credentials means live acceptance NOTPERFORMED, not fallback.
 COMPLEXITY: indexed lookups plus O(n) bounded tenant ledger projection.
 
 ## API Contracts

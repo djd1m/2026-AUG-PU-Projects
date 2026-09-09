@@ -5,4 +5,7 @@ CREATE TABLE IF NOT EXISTS checkout_orders (
  created_at timestamptz NOT NULL, provider_id text, confirmation_url text, status text NOT NULL DEFAULT 'created',
  UNIQUE(tenant_id,command_key), UNIQUE(shop_id,provider_id)
 );
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS source text NOT NULL DEFAULT 'legacy' CHECK (source IN ('legacy','connector'));
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS attribution jsonb;
+ALTER TABLE checkout_orders ADD COLUMN IF NOT EXISTS return_url text;
 `;

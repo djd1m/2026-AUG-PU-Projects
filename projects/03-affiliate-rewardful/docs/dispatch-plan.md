@@ -1,8 +1,8 @@
-# F1 shared-core dispatch
+# F3 referral funnel dispatch
 
 **Пишущий фан-аут:** ДА
-**Канон:** docs/runtime-contract.md
-**Хеш канона:** 0ff2e66a413947b8948b974bb53ad0d9c242008112ec4dfff7e7b0cead6fb6c2
+**Канон:** docs/features/f3-referral-funnel/02_pseudocode.md
+**Хеш канона:** 53e90ae6f51d79d50c88cefbe68aece9323f3935d50d9cea484784be1dc0d4e9
 **Проверка канона:** ВЫПОЛНЕНА
 **Координатор пишет:** ДА
 **Разрезы файлов:** НЕТ
@@ -12,31 +12,52 @@
 
 | Единица | Что пишет |
 |---|---|
-| core-implementation | shared/domain, shared/application, shared/infrastructure, tests/core* |
-| container-integration | apps/api, apps/frontend, scripts, config, Dockerfiles, Compose, tests/http* |
+| referral-core | New referral service/schema/helpers and dedicated service tests |
+| referral-client-ui | New tracker, merchant backend helper, account panel and integration guide/tests |
 
 ## Владение
 
 | Файл | Владелец |
 |---|---|
-| shared/domain/** | core-implementation |
-| shared/application/** | core-implementation |
-| shared/infrastructure/** | core-implementation |
-| tests/core*.test.mjs | core-implementation |
-| tests/helpers/core*.mjs | core-implementation |
-| apps/api/** | container-integration |
-| apps/frontend/** | container-integration |
-| config/** | container-integration |
-| scripts/** | container-integration |
-| docker-compose.yml | container-integration |
-| variants/*/docker-compose.yml | container-integration |
-| variants/*/Dockerfile | container-integration |
-| tests/http*.test.mjs | container-integration |
+| shared/referrals/** | referral-core |
+| tests/referral-service.test.mjs | referral-core |
+| tests/helpers/referral-fixture.mjs | referral-core |
+| shared/client/referral-tracker.mjs | referral-client-ui |
+| shared/integrations/merchant-client.mjs | referral-client-ui |
+| shared/ui/account/referrals.mjs | referral-client-ui |
+| tests/referral-client.test.mjs | referral-client-ui |
+| tests/referral-panel.test.mjs | referral-client-ui |
+| docs/integrations/referral-funnel.md | referral-client-ui |
+| shared/application/index.mjs | координатор |
+| shared/domain/events.mjs | координатор |
+| shared/domain/referral-attribution.mjs | координатор |
+| shared/payments/service.mjs | координатор |
+| shared/payments/schema.mjs | координатор |
+| shared/infrastructure/schema.mjs | координатор |
+| apps/api/http.mjs | координатор |
+| apps/api/account.mjs | координатор |
+| apps/api/referrals.mjs | координатор |
+| apps/frontend/server.mjs | координатор |
+| shared/ui/account/app.mjs | координатор |
+| shared/ui/account/index.html | координатор |
+| shared/ui/account/style.css | координатор |
+| tests/referral-payment.test.mjs | координатор |
+| tests/referral-http.test.mjs | координатор |
+| tests/helpers/referral-payment-fixture.mjs | координатор |
+| tests/helpers/referral-merchant.mjs | координатор |
+| tests/e2e/referral.mjs | координатор |
+| scripts/referral-mutation-check.mjs | координатор |
+| scripts/run-referral-e2e.mjs | координатор |
+| docs/features/f3-referral-funnel/** | координатор |
+| docs/telemetry/** | координатор |
+| docs/dispatch-plan.md | координатор |
+| docs/source-versions.md | координатор |
+| docs/plans/f3-access-and-provider-setup.md | координатор |
+| docs/f2-operations.md | координатор |
+| docs/runtime-contract.md | координатор |
+| docs/Architecture.md | координатор |
+| docs/README.md | координатор |
 | package.json | координатор |
 | package-lock.json | координатор |
-| docs/** | координатор |
-| shared/client/** | координатор |
-| shared/ui/** | координатор |
-| shared/contracts/** | координатор |
 
-Scope ownership is by directory; exact new paths must be listed in worker receipt before integration. Only core writer uses isolated worktree /tmp/n3-shared-core-work. container-integration is executed by coordinator in primary checkout; no second writer there. Variants app implementation starts sequentially after core acceptance. No cross-owned files are edited concurrently. New file split keeps the owning directory scope; any split across scope requires coordinator update before write.
+Implementation dispatch follows independent VALIDATE only. Each writer uses a separate worktree. Coordinator alone uses browser/VPS and integrates receipts. Core owns the additive referralMigration tables; coordinator owns checkout connector columns in shared/payments/schema.mjs and appends referralMigration after existing migrations. Source dispatch snapshots live under current run/evidence/. Any additional file requires an ownership entry before creation; no overlapping directory fallback.
