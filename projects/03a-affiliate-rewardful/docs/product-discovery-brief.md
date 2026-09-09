@@ -331,20 +331,20 @@ Local evidence at baseline:
 
 | Выход | Идентификатор | Модуль |
 |---|---|---|
-| Bounded product/core scope | PD-001 | discovery |
-| JTBD and interview segments | PD-002 | discovery |
-| N1 pilot learning path | PD-003 | discovery |
-| Compact M3 positioning/evidence | PD-004 | discovery |
-| Compact M4 money boundary | PD-005 | discovery |
-| Shared product backbone | PD-006 | discovery |
-| CJM A screen contract | PD-007 | discovery |
-| CJM B screen contract | PD-008 | discovery |
-| CJM C screen contract | PD-009 | discovery |
-| Comparison checkpoint | PD-010 | discovery |
-| Required meanings of `FR-GROWTH-001..004` | PD-011 | discovery |
-| Event/metric seed | PD-012 | discovery |
-| Dependency and unknown register | PD-013 | discovery |
-| Dated evidence register | PD-014 | discovery |
+| Bounded product/core scope (PD-001) | PD-HANDOFF-001 | discovery |
+| JTBD and interview segments (PD-002) | PD-HANDOFF-002 | discovery |
+| N1 pilot learning path (PD-003) | PD-HANDOFF-003 | discovery |
+| Compact M3 positioning/evidence (PD-004) | PD-HANDOFF-004 | discovery |
+| Compact M4 money boundary (PD-005) | PD-HANDOFF-005 | discovery |
+| Shared product backbone (PD-006) | PD-HANDOFF-006 | discovery |
+| CJM A screen contract (PD-007) | PD-HANDOFF-007 | discovery |
+| CJM B screen contract (PD-008) | PD-HANDOFF-008 | discovery |
+| CJM C screen contract (PD-009) | PD-HANDOFF-009 | discovery |
+| Comparison checkpoint (PD-010) | PD-HANDOFF-010 | discovery |
+| Required meanings of `FR-GROWTH-001..004` (PD-011) | PD-HANDOFF-011 | discovery |
+| Event/metric seed (PD-012) | PD-HANDOFF-012 | discovery |
+| Dependency and unknown register (PD-013) | PD-HANDOFF-013 | discovery |
+| Dated evidence register (PD-014) | PD-HANDOFF-014 | discovery |
 
 ## Execution receipt
 
