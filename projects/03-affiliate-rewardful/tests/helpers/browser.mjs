@@ -33,7 +33,8 @@ export async function until(script, timeout=15000) {
     if(await js(script))return;
     await new Promise(resolve=>setTimeout(resolve,100));
   }
-  throw new Error(`Browser condition timed out: ${script}`);
+  const visibleText=await js('return document.body.innerText.slice(0,1200)');
+  throw new Error(`Browser condition timed out: ${script}; visible UI: ${visibleText}`);
 }
 export async function open(url) {
   await wd('/frame',{id:null});
@@ -50,7 +51,15 @@ export async function mobile(url) {
 export async function screenshot(directory,name) {
   await mkdir(directory,{recursive:true});
   const target=resolve(directory,name+'.png');
-  const png=await wd('/screenshot');
+  await js('window.scrollTo(0,0);return Promise.all([document.fonts.ready,...document.getAnimations().map(a=>a.finished.catch(()=>{}))]).then(()=>true)');
+  const inMobile=await js('return innerWidth===390 && window.top!==window');
+  let png;
+  if(inMobile) {
+    await wd('/frame',{id:null});
+    const frame=await element('#mobile-frame');
+    png=await wd(`/element/${Object.values(frame)[0]}/screenshot`);
+    await wd('/frame',{id:frame});
+  } else png=await wd('/screenshot');
   await writeFile(target,Buffer.from(png,'base64'));
   return target;
 }

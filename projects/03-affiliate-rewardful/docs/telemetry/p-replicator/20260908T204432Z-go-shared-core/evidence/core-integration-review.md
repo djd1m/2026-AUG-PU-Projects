@@ -95,3 +95,17 @@ Coordinator-provided evidence, not independently reexecuted here: 27 PostgreSQL/
 No browser E2E, genuine protocol interoperability, external provider verification, or production-money test performed. All four working UI journeys remain required before product acceptance.
 
 Completed: `2026-09-09T06:12:05Z`. Recorded elapsed review window: **351 seconds (5m51s)**; includes reproduction approval/tool wait, excludes unmeasured instruction reads before first timestamp. Active time, model/provider usage and cost remain `null`. No model fallback was observed; actual execution model remains unverified.
+
+## H1 follow-up verification — resolved
+
+Source: `e9cf72a72e67f8b8cd6fd438068a86665dc17635`. Started `2026-09-09T06:12:59Z`. Scope limited to H1 fix and its direct regression; previous financial review was not repeated.
+
+**H1 is resolved at this commit.** Both API and frontend now catch exceptions from request-target URL construction and return 400 before proceeding. Exporting `createFrontendServer` permits the real frontend request handler to be tested independently, while the explicit script-entry branch retains runtime listening and environment configuration. The intentional `/join` fallback serves the static enrollment preview and does not perform enrollment or grant additional rights.
+
+Independently executed `node --test tests/http-request-target.test.mjs` from the project: **2/2 passed**, zero skips/failures, Node-reported total `263.499484 ms`. Both cases send actual raw `GET //[` bytes, assert HTTP400, and then obtain HTTP200 from the same running server (`/health` for API, `/join` for frontend). The frontend case also verifies CSP and traversal rejection. `git diff e9cf72a --` for both servers and this test was empty, binding this run to the reviewed commit's files.
+
+Inspected both added mutation definitions: each removes the corresponding URL guard and selects the raw-request regression. The coordinator reports all three HTTP mutants killed; this follow-up did not rerun mutations independently.
+
+No remaining H1 issue or additional defect found in this bounded fix review. This closes the HIGH request-target finding; outstanding UI/browser/protocol acceptance limitations elsewhere in this receipt remain unchanged. Requested model/effort `gpt-6-astra/high`; actual model/effort, token usage, cost and active time `null` because execution metadata/counters are unavailable.
+
+Follow-up completed `2026-09-09T06:13:14Z`; recorded elapsed **15 seconds**, excluding this final receipt append. No model fallback observed.

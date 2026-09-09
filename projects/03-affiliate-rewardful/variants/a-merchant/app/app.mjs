@@ -6,6 +6,7 @@ let api;
 let dashboard;
 let program;
 let editingPolicy;
+let editingKind = 'cash';
 let artifact;
 let view = 'dashboard';
 let handoff = false;
@@ -25,6 +26,7 @@ async function refreshBase() {
   [dashboard, program] = await Promise.all([
     api.command('dashboard'), api.command('program.read'),
   ]);
+  editingPolicy = program.policies.findLast(policy => policy.kind === editingKind);
 }
 
 async function refreshArtifact() {
@@ -122,6 +124,13 @@ function policyInput(form) {
 }
 
 function bindProgram() {
+  document.querySelector('#policy-kind')?.addEventListener('change', event => {
+    if (!['cash', 'credit'].includes(event.target.value)) return;
+    editingKind = event.target.value;
+    sessionStorage.setItem(`n3.fixture.A.policy-kind.${api.session.runId}`, editingKind);
+    editingPolicy = program.policies.findLast(policy => policy.kind === editingKind);
+    render();
+  });
   document.querySelector('#policy-form')?.addEventListener('submit', async event => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -182,6 +191,8 @@ function bindRegistry() {
 async function start() {
   try {
     api = await connect('A', 'merchant');
+    const storedKind = sessionStorage.getItem(`n3.fixture.A.policy-kind.${api.session.runId}`);
+    if (['cash', 'credit'].includes(storedKind)) editingKind = storedKind;
     await refreshBase();
     if (api.session.handoffArtifactId) {
       artifact = await api.command('registry.read', { artifactId: api.session.handoffArtifactId });

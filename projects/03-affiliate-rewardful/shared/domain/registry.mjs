@@ -68,7 +68,9 @@ export function approve(state, input, actorId) {
     artifact.approval = { id: id(), artifactId: artifact.id, actorId, revision: revision.revision, hash: revision.hash, approvedAt: state.clock };
     state.approvals ??= []; state.approvals.push(artifact.approval);
   }
-  artifact.status = state.transfers.some(t => t.artifactId === artifact.id) ? 'partially_sent' : 'approved';
+  const sentRows = revision.rows.filter(row => row.obligationIds.every(obligationId =>
+    state.allocations.some(a => a.obligationId === obligationId && a.transferId))).length;
+  artifact.status = sentRows === revision.rows.length ? 'sent' : sentRows ? 'partially_sent' : 'approved';
   return registryView(state, artifact);
 }
 export function csvCell(value) {

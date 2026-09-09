@@ -16,13 +16,22 @@ const mutations=[{
  name:'HTTP frontend malformed URL guard',file:'apps/frontend/server.mjs',
  from:"try { url = new URL(req.url, 'http://local'); }\n  catch { res.writeHead(400, { 'Content-Type':'text/plain; charset=utf-8' }); res.end('Некорректный адрес запроса'); return; }",
  to:"url = new URL(req.url, 'http://local');",tests:['tests/http-request-target.test.mjs'],
+},{
+ name:'A historical transfer revision guard',file:'variants/a-merchant/app/views.mjs',
+ from:'.filter(t => t.revision === artifact.revision && t.hash === artifact.hash)',to:'',
+ tests:['tests/a-registry-view.test.mjs'],
+},{
+ name:'Registry current revision status',file:'shared/domain/registry.mjs',
+ from:"artifact.status = sentRows === revision.rows.length ? 'sent' : sentRows ? 'partially_sent' : 'approved';",
+ to:"artifact.status = state.transfers.some(t => t.artifactId === artifact.id) ? 'partially_sent' : 'approved';",
+ tests:['tests/a-registry-view.test.mjs'],
 }];
 const selected=process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
 const results=[];
 for(const mutation of selected){
  const scratch=await mkdtemp(join(tmpdir(),'n3-mutation-'));
  try{
-  for(const folder of ['apps','shared','tests'])await cp(join(root,folder),join(scratch,folder),{recursive:true});
+  for(const folder of ['apps','shared','tests','variants'])await cp(join(root,folder),join(scratch,folder),{recursive:true});
   await symlink(join(root,'node_modules'),join(scratch,'node_modules'),'dir');
   const run=()=>spawnSync(process.execPath,['--test',...mutation.tests],{cwd:scratch,encoding:'utf8',timeout:120000,maxBuffer:2e6});
   const baseline=run();
