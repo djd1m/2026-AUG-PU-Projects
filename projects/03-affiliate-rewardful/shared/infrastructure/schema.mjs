@@ -1,3 +1,4 @@
+import { identityMigration } from '../identity/schema.mjs';
 export const migration = `
 CREATE TABLE IF NOT EXISTS tenants (
   id uuid PRIMARY KEY, state jsonb NOT NULL CHECK (jsonb_typeof(state) = 'object'),
@@ -37,4 +38,4 @@ END; $fn$;
 DROP TRIGGER IF EXISTS sent_allocation_guard ON allocations;
 CREATE TRIGGER sent_allocation_guard BEFORE UPDATE OR DELETE ON allocations
 FOR EACH ROW EXECUTE FUNCTION sent_allocation_guard();
-`;
+` + identityMigration;

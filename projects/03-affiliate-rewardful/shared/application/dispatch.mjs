@@ -10,7 +10,7 @@ export function dispatch(state, actor, context, action, input, now) {
     case 'dashboard': object(input, []); return dashboard(state, actor);
     case 'program.read': object(input, []); return programRead(state, actor);
     case 'program.save': {
-      const next = policy(input, state.policies.length + 1, state.clock); state.policies.push(next); return next;
+      const next = policy(input, state.policies.length + 1, state.clock); state.policies.push(next); if (state.mode === 'real') state.policyConfigured = [...new Set([...state.policyConfigured,input.kind])]; return next;
     }
     case 'enrollment.join': {
       object(input, ['consent'], ['consent']); assert(input.consent === true, 'CONSENT_REQUIRED', 400, 'Нужно добровольное согласие');
@@ -51,7 +51,7 @@ export function dispatch(state, actor, context, action, input, now) {
       assert(taskAction); authorize(state, actor, context, taskAction, input.input, now);
       assert(state.tasks.length < 200, 'DEMO_LIMIT', 429);
       const task = { id: id(), actorId: actor.id, grantId: context.grantId, kind: input.kind, input: input.input,
-        action: taskAction, state: 'pending', result: null, createdAt: state.clock, usage: null, runner: 'deterministic_fixture' };
+        action: taskAction, state: 'pending', result: null, createdAt: state.clock, usage: null, runner: state.mode === 'real' ? 'n3_application' : 'deterministic_fixture' };
       state.tasks.push(task); return { taskId: task.id, ...task };
     }
     case 'task.read': object(input, ['taskId'], ['taskId']); return taskView(ownResource(state.tasks, input.taskId));

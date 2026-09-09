@@ -19,7 +19,12 @@ export function validGrant(state, actor, grantId, now) {
   return grant;
 }
 export function authorize(state, actor, context, action, input, now) {
+  assert(!(state.mode === 'real' && action.startsWith('fixture.')), 'FIXTURE_DISABLED', 403, 'Синтетические события недоступны в реальной организации');
   assert(actions.has(action), 'UNKNOWN_ACTION', 400, 'Неизвестная операция');
+  if (action === 'task.create') {
+    const underlying = {registry:'registry.prepare',partner:'partner.read',credit:'credit.read'}[input?.kind];
+    assert(underlying); authorize(state,actor,context,underlying,input.input ?? {},now);
+  }
   const taskAction = action.startsWith('task.');
   const grantManagement = action.startsWith('grant.');
   assert(direct[actor.role]?.includes(action) || taskAction || grantManagement, 'FORBIDDEN', 403, 'Операция недоступна в этом контексте');

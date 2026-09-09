@@ -1,0 +1,61 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { fixture, code } from './helpers/core-fixture.mjs';
+
+const password='A strong unique password 72!';
+const signup=(app,name='Example')=>app.identity.register({email:`${randomUUID()}@example.test`,password,name});
+test('real registration, persistent login, tenant isolation, fixture isolation and logout',async t=>{
+  const f=await fixture(t), user=await signup(f.app), other=await signup(f.app);
+  const me=await f.app.identity.me(user.token), membership=me.memberships[0];
+  assert.equal(membership.role,'merchant'); assert.equal(me.simulated,false);
+  const call=(a,input={},key=randomUUID())=>f.app.executeReal(user.token,membership.membershipId,a,input,key);
+  const dashboard=await call('dashboard'); assert.equal(dashboard.simulated,false); assert.equal(dashboard.payments.length,0); assert.equal(dashboard.partners.length,0);
+  await assert.rejects(call('fixture.event',{}),code('FIXTURE_DISABLED'));
+  await assert.rejects(f.app.execute({token:f.session.token,actorId:membership.actorId},'dashboard'),code('FORBIDDEN'));
+  await assert.rejects(f.app.executeReal(other.token,membership.membershipId,'dashboard'),code('FORBIDDEN'));
+  await assert.rejects(f.app.identity.login({email:me.email,password:'Wrong password long enough'}),code('LOGIN_FAILED'));
+  const stored=(await f.sql('SELECT password_hash FROM accounts WHERE email=$1',[me.email])).rows[0].password_hash;
+  assert.match(stored,/^\$argon2id\$/); assert.ok(!JSON.stringify(await f.sql('SELECT * FROM user_sessions')).includes(user.token));
+  await f.restart(); const login=await f.app.identity.login({email:me.email,password});
+  assert.equal((await f.app.identity.me(login.token)).memberships[0].membershipId,membership.membershipId);
+  await f.app.identity.logout(login.token); await assert.rejects(f.app.identity.me(login.token),code('UNAUTHENTICATED'));
+});
+test('one-use role-bound invitations, concurrent acceptance, partner cannot take merchant authority',async t=>{
+  const f=await fixture(t), owner=await signup(f.app), partner=await signup(f.app), other=await signup(f.app);
+  const invitation=await f.app.identity.invite(owner.token,owner.membershipId,{role:'partner'});
+  const results=await Promise.allSettled([partner,other].map(u=>f.app.identity.acceptInvite(u.token,{invitation:invitation.invitation,name:'Partner'})));
+  assert.equal(results.filter(r=>r.status==='fulfilled').length,1);
+  const index=results.findIndex(r=>r.status==='fulfilled'), accepted=results[index].value, who=[partner,other][index];
+  assert.equal(accepted.role,'partner');
+  await assert.rejects(f.app.executeReal(who.token,accepted.membershipId,'dashboard'),code('FORBIDDEN'));
+  await assert.rejects(f.app.identity.invite(who.token,accepted.membershipId,{role:'customer'}),code('FORBIDDEN'));
+  assert.equal((await f.app.executeReal(who.token,accepted.membershipId,'partner.read')).summary.accruedMinor,0);
+});
+test('agent token scopes, durable task replay, revocation and password rotation invalidate credentials',async t=>{
+  let clock=Date.parse('2026-09-09T12:00:00Z'); const f=await fixture(t,{clock:()=>clock});
+  const owner=await signup(f.app), member=owner.membershipId;
+  const agent=await f.app.identity.mintAgent(owner.token,member,{actions:['dashboard','registry.prepare','registry.read'],expiresInSeconds:3600});
+  assert.equal((await f.app.authenticateAgent(agent.token)).grantId,agent.grantId);
+  await assert.rejects(f.app.executeAgent(agent.token,'registry.export',{},'export'),code('GRANT_SCOPE'));
+  const task=await f.app.executeAgent(agent.token,'task.create',{kind:'registry',input:{period:'2026-08'}},'task');
+  const replay=await f.app.executeAgent(agent.token,'task.create',{kind:'registry',input:{period:'2026-08'}},'task'); assert.equal(task.id,replay.id);
+  await f.app.executeAgent(agent.token,'task.run',{taskId:task.id},'run');
+  await f.app.executeReal(owner.token,member,'grant.revoke',{grantId:agent.grantId},randomUUID());
+  await assert.rejects(f.app.executeAgent(agent.token,'task.read',{taskId:task.id}),code('GRANT_INACTIVE'));
+  const next=await f.app.identity.mintAgent(owner.token,member,{actions:['dashboard'],expiresInSeconds:60});
+  clock+=61000; await assert.rejects(f.app.authenticateAgent(next.token),code('UNAUTHENTICATED'));
+  const third=await f.app.identity.mintAgent(owner.token,member,{actions:['dashboard'],expiresInSeconds:60});
+  await f.app.identity.changePassword(owner.token,{currentPassword:password,newPassword:'Replacement password strong 84!'});
+  await assert.rejects(f.app.identity.me(owner.token),code('UNAUTHENTICATED'));
+  await assert.rejects(f.app.authenticateAgent(third.token),code('UNAUTHENTICATED'));
+});
+test('concurrent signup uniqueness and bounded authentication attempts',async t=>{
+  const f=await fixture(t), email=`${randomUUID()}@example.test`;
+  const results=await Promise.allSettled([1,2].map(()=>f.app.identity.register({email,password,name:'Org'})));
+  assert.equal(results.filter(r=>r.status==='fulfilled').length,1);
+  assert.equal((await f.sql('SELECT count(*)::int AS n FROM accounts WHERE email=$1',[email])).rows[0].n,1);
+  await assert.rejects(f.app.identity.register({email,password:'x'.repeat(201),name:'Bad'}),code('VALIDATION'));
+  for(let i=0;i<10;i++) await assert.rejects(f.app.identity.login({email,password:'Wrong password long 34!'}),code('LOGIN_FAILED'));
+  await assert.rejects(f.app.identity.login({email,password}),code('AUTH_RATE_LIMIT'));
+});

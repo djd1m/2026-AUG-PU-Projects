@@ -1,3 +1,4 @@
+import { createIdentity } from '../identity/service.mjs';
 import { randomBytes } from 'node:crypto';
 import { assert, object, safeTree, str, id, hash, canonical } from '../domain/common.mjs';
 import { openDatabase, transaction } from '../infrastructure/postgres.mjs';
@@ -9,20 +10,23 @@ import { exportRegistry } from '../domain/registry.mjs';
 
 export { AppError } from '../domain/common.mjs';
 export async function createApplication(options = {}) {
-  assert((options.mode ?? process.env.N3_MODE) === 'fixture', 'FIXTURE_ONLY', 503, 'Этот стенд работает только в явно заданном fixture-режиме');
+  const mode = options.mode ?? process.env.N3_MODE;
+  assert(['fixture', 'hybrid', 'real'].includes(mode), 'MODE_REQUIRED', 503, 'Требуется явный режим работы');
   const clock = options.clock ?? (() => Date.now());
   const now = () => { const value = clock(); const number = value instanceof Date ? value.getTime() : typeof value === 'string' ? Date.parse(value) : value;
     assert(Number.isFinite(number), 'CLOCK_UNAVAILABLE', 503); return number; };
   const maxDemoRuns = options.maxDemoRuns ?? 200;
   assert(Number.isInteger(maxDemoRuns) && maxDemoRuns > 0 && maxDemoRuns <= 10000);
   const pool = await openDatabase(options);
+  const identity = createIdentity(pool, now);
   async function createDemo(input = {}) {
+    assert(mode !== 'real', 'FIXTURE_DISABLED', 403);
     safeTree(input); object(input, ['variant', 'role', 'limited'], ['variant', 'role']);
     assert(['A', 'B', 'C', 'D'].includes(input.variant) && ['merchant', 'partner', 'customer'].includes(input.role));
     assert(input.limited === undefined || typeof input.limited === 'boolean');
     return transaction(pool, async client => {
       await client.query('SELECT pg_advisory_xact_lock(330804)');
-      const count = await client.query('SELECT count(*)::int AS count FROM tenants');
+      const count = await client.query("SELECT count(*)::int AS count FROM tenants WHERE mode='fixture'");
       assert(count.rows[0].count < maxDemoRuns, 'DEMO_LIMIT', 429, 'Достигнут лимит независимых демосеансов');
       const runId = id(), state = seed(runId), token = randomBytes(32).toString('base64url');
       const actor = state.actors.find(a => a.role === input.role);
@@ -35,22 +39,23 @@ export async function createApplication(options = {}) {
       return { runId, token, actors, actorId: actor.id, clock: state.clock, seedVersion: state.seedVersion, expiresAt, simulated: true };
     });
   }
-  async function execute(context, action, input = {}, idempotencyKey) {
+  async function execute(context, action, input = {}, idempotencyKey, resolver) {
     if (context?.grantId === undefined && context && typeof context === 'object') context = Object.fromEntries(Object.entries(context).filter(([key]) => key !== 'grantId'));
-    safeTree(context); object(context, ['token', 'actorId', 'grantId'], ['token', 'actorId']);
-    str(context.token, 256); str(context.actorId); str(action, 80);
+    safeTree(context); object(context, ['token', 'actorId', 'grantId'], resolver ? ['token'] : ['token', 'actorId']);
+    str(context.token, 256); if (!resolver) str(context.actorId); str(action, 80);
     if (Object.hasOwn(context, 'grantId')) str(context.grantId);
     safeTree(input); assert(Buffer.byteLength(canonical(input)) <= 65536, 'BODY_TOO_LARGE', 413);
     return transaction(pool, async client => {
-      const sessionResult = await client.query('SELECT tenant_id, actor_ids, expires_at FROM sessions WHERE token_hash=$1', [hash(context.token)]);
-      const session = sessionResult.rows[0];
+      const session = resolver ? await resolver(client) : (await client.query("SELECT s.tenant_id,s.actor_ids,s.expires_at FROM sessions s JOIN tenants t ON t.id=s.tenant_id WHERE s.token_hash=$1 AND t.mode='fixture'", [hash(context.token)])).rows[0];
+      if (resolver) context = { token: context.token, actorId: session.actorId, ...(session.grantId ? {grantId:session.grantId} : {}) };
       assert(session, 'UNAUTHENTICATED', 401, 'Нужен действующий демосеанс');
       assert(new Date(session.expires_at).getTime() > now(), 'SESSION_EXPIRED', 403, 'Демосеанс истёк');
       assert(session.actor_ids.includes(context.actorId), 'FORBIDDEN', 403, 'Контекст не принадлежит сеансу');
       // All commands, including reads, serialize against tenant mutation and revocation.
       const tenant = await client.query('SELECT state FROM tenants WHERE id=$1 FOR UPDATE', [session.tenant_id]);
       const state = tenant.rows[0]?.state;
-      assert(state, 'NOT_FOUND', 404, 'Демосеанс не найден');
+      assert(state, 'NOT_FOUND', 404, 'Организация не найдена');
+      if (resolver) { assert(state.mode === 'real', 'FORBIDDEN',403); state.clock = new Date(now()).toISOString(); }
       const actor = state.actors.find(a => a.id === context.actorId);
       assert(actor, 'FORBIDDEN', 403, 'Контекст недоступен');
       authorize(state, actor, context, action, input, now());
@@ -85,5 +90,8 @@ export async function createApplication(options = {}) {
       return structuredClone(result);
     });
   }
-  return { createDemo, execute, close: () => pool.end() };
+  return { createDemo, execute, identity,
+    executeReal: (token, membershipId, action, input = {}, key) => execute({token}, action, input, key, client => identity.resolveUser(client, token, membershipId)),
+    executeAgent: (token, action, input = {}, key) => execute({token}, action, input, key, client => identity.resolveAgent(client, token)),
+    authenticateAgent: identity.authenticateAgent, close: () => pool.end() };
 }

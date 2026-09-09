@@ -13,7 +13,10 @@
     "verify": "npm run build && npm test"
   },
   "dependencies": {
-    "pg": "8.16.3"
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@node-rs/argon2": "2.1.0",
+    "pg": "8.16.3",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@dzhechkov/p-replicator": "1.13.2"
