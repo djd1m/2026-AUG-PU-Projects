@@ -52,7 +52,7 @@ export function n3Client(config: N3Config, fetchImpl: typeof fetch = fetch): N3C
           body: JSON.stringify(input),
         });
         const body = await boundedJson(response);
-        if (!response.ok) throw new N3Error(`N3_HTTP_${response.status}`, response.status);
+        if (response.status !== 200) throw new N3Error(`N3_HTTP_${response.status}`);
         if (!record(body) || !record(body.data)) throw new N3Error('N3_RESPONSE');
         return body.data;
       })()]);
