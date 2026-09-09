@@ -1,0 +1,38 @@
+name: proofwall-bridge-test
+services:
+  postgres:
+    image: postgres:16-alpine
+    env_file: ./.secrets/bridge-test.env
+    tmpfs: [/var/lib/postgresql/data]
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U bridge_test -d bridge_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data
+    env_file: ./.secrets/bridge-test.env
+    tmpfs: [/data]
+    networks: [storage]
+  backend:
+    image: node:22.22.0-bookworm-slim
+    working_dir: /app
+    env_file: ./.secrets/bridge-test.env
+    volumes:
+      - ${PROOFWALL_TEST_SOURCE:-.}:/app
+    networks: [database, storage]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    command: [npm, test]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+networks:
+  database:
+    internal: true
+  storage:
+    internal: true

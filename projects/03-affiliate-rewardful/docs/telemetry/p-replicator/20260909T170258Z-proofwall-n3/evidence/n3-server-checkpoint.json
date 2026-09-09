@@ -1,0 +1,36 @@
+{
+  "at": "2026-09-09T17:51:47.979582+00:00",
+  "main_source_commit": "e23ab3e",
+  "main_tests": {
+    "passed": 163,
+    "failed": 0,
+    "duration_ms": 57509.532439
+  },
+  "main_build": {
+    "checkedModules": 124,
+    "exitCode": 0
+  },
+  "baseline_commit": "f8055e3",
+  "baseline_tests": {
+    "passed": 118,
+    "failed": 0,
+    "duration_ms": 36415.316049
+  },
+  "initial_targeted": {
+    "passed": 15,
+    "failed": 1,
+    "cause": "Test refund timestamp was ahead of fixture clock; corrected test input, no production weakening"
+  },
+  "targeted_after_fix": {
+    "passed": 16,
+    "failed": 0,
+    "duration_ms": 11214.084003
+  },
+  "quota": {
+    "observed_at": "2026-09-09T17:46:24.352Z",
+    "weekly_used_percent": 40,
+    "scope": "account, not feature"
+  },
+  "usage": null,
+  "missing": "Tool-run outputs summarized from recorded receipts; no complete token usage or active time measurement."
+}
