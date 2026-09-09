@@ -10,13 +10,16 @@ export function cashSummary(state, actorId) {
   const payments = state.payments.filter(p => p.kind === 'cash' && (!actorId || p.beneficiaryId === actorId));
   const transfers = state.transfers.filter(t => !actorId || t.partnerId === actorId);
   const amount = predicate => sum(payments.filter(predicate).map(p => paymentNet(state, p.id)));
+  const unpaid = payments.filter(p => paymentNet(state, p.id) > 0 && !state.allocations.some(a => a.obligationId === p.id && a.transferId));
+  const oldest = unpaid.map(p => p.effectiveAt).sort()[0];
+  const dueDate = oldest ? new Date(Date.UTC(new Date(oldest).getUTCFullYear(), new Date(oldest).getUTCMonth() + 1, 5)).toISOString().slice(0, 10) : null;
   return { currency: 'RUB', accruedMinor: sum(payments.map(p => p.rewardMinor)),
     heldMinor: amount(p => p.availableAt > state.clock),
     availableMinor: amount(p => p.availableAt <= state.clock && !state.allocations.some(a => a.obligationId === p.id)),
     allocatedMinor: amount(p => state.allocations.some(a => a.obligationId === p.id && !a.transferId)),
     sentMinor: sum(transfers.map(t => t.amountMinor)),
     adjustmentMinor: sum(state.ledger.filter(e => e.kind === 'cash' && e.amountMinor < 0 && (!actorId || e.beneficiaryId === actorId)).map(e => e.amountMinor)),
-    dueDate: state.mode === 'real' ? new Date(Date.UTC(new Date(state.clock).getUTCFullYear(),new Date(state.clock).getUTCMonth()+1,5)).toISOString().slice(0,10) : '2026-09-05', explanation: 'Ориентир — до 5-го следующего месяца. Отметка отправки не подтверждает зачисление.' };
+    dueDate: state.mode === 'real' ? dueDate : '2026-09-05', explanation: 'Ориентир — до 5-го следующего месяца. Отметка отправки не подтверждает зачисление.' };
 }
 export function partnerRead(state, actor, input = {}) {
   ownTarget(actor, input, 'partnerId');

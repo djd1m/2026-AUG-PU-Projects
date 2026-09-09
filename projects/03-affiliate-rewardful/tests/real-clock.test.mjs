@@ -3,6 +3,22 @@ import assert from 'node:assert/strict';
 import { realState,advanceRealClock } from '../shared/identity/state.mjs';
 import { fixtureEvent } from '../shared/domain/events.mjs';
 import { id } from '../shared/domain/common.mjs';
+import { cashSummary } from '../shared/domain/projections.mjs';
+
+test('real payout due date stays with oldest unpaid earning month across clock changes',()=>{
+  const state=realState(id(),'Org',Date.parse('2026-09-09T12:00:00Z'));
+  assert.equal(cashSummary(state).dueDate,null);
+  state.payments.push({id:'old',kind:'cash',beneficiaryId:'p',rewardMinor:200,effectiveAt:'2026-08-20T00:00:00.000Z',availableAt:'2026-08-27T00:00:00.000Z'},
+    {id:'new',kind:'cash',beneficiaryId:'p',rewardMinor:300,effectiveAt:'2026-09-01T00:00:00.000Z',availableAt:'2026-09-08T00:00:00.000Z'});
+  state.ledger.push({paymentId:'old',kind:'cash',amountMinor:200},{paymentId:'new',kind:'cash',amountMinor:300});
+  assert.equal(cashSummary(state,'p').dueDate,'2026-09-05');
+  advanceRealClock(state,Date.parse('2026-10-09T00:00:00Z'));
+  assert.equal(cashSummary(state,'p').dueDate,'2026-09-05');
+  state.allocations.push({obligationId:'old',transferId:'sent'});
+  assert.equal(cashSummary(state,'p').dueDate,'2026-10-05');
+  state.ledger.push({paymentId:'new',kind:'cash',amountMinor:-300});
+  assert.equal(cashSummary(state,'p').dueDate,null);
+});
 
 test('real refunds remain possible after fixture event quota; maturity invalidates old source once',()=>{
   const now=Date.parse('2026-09-09T12:00:00Z'),state=realState(id(),'Org',now),partner={id:id(),role:'partner',name:'P'};
