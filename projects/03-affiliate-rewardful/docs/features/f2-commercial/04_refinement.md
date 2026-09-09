@@ -1,0 +1,3 @@
+# Refinement — f2-commercial
+
+Risk XL: identity, money, public agent authority. Verify negative membership/CSRF/expiry/revoke paths and concurrent register/invite/webhook races using actual isolated Postgres. Run full F1 regressions, new SDK protocol tests and browser UI tests. Mutate at least membership, provider authenticity and agent revocation guards to prove tests fail. Independent source review before final release; reconcile findings and exact tested source. Commercial provider acceptance requires dedicated N3 shop credentials and merchant onboarding; code completion cannot substitute for a real provider receipt.

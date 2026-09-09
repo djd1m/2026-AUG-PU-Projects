@@ -1,0 +1,13 @@
+# Architecture — f2-commercial
+
+Additive schema: real accounts/memberships, user sessions, invitations, agent credentials, durable checkout orders. Existing tenants carry immutable fixture/real mode; old rows remain fixture. Empty real seed has no synthetic payments, actors or invoices. Identity module owns session resolution; application owns transactional authorization and command dispatch.
+
+Reuse project01 password.ts Argon2id and session principles (random 32-byte token, hash-only storage), project02 auth.ts bounded password verification outside SQL and dummy hash for absent account; no source credentials copied. Reuse project02 payment.ts provider read-back ordering; strengthen stable checkout idempotence, amounts/shop/test-mode/refund checks. Native YooKassa does not sign notifications: verified authenticated read-back is the documented authenticity mechanism, not invented HMAC.
+
+Root integration owns schema/application/HTTP/UI/Compose/manifests. Isolated payment worker owns shared/payments/yookassa.mjs and tests/yookassa-adapter.test.mjs. Adapter createYooKassa({shopId,secretKey,testMode,fetchImpl?}) → createPayment({orderId,amountMinor,returnUrl,description}), getPayment(id), getRefund(id), verifyNotification(body). Returns normalized provider facts, never selects tenant or applies ledger. Root binds facts to durable order.
+
+Isolated agent worker owns shared/agents/* and tests/agent-transport.test.mjs. Factory createAgentHandler({authenticateAgent,executeAgent,origin}) → async handle(req,res,path) returns boolean handled. authenticateAgent(token) returns {actorId,role,actions,grantId,expiresAt}; executeAgent(token,action,input,key) resolves authority again, returns existing application result. Routes /mcp, /a2a, /.well-known/agent-card.json. Stateless MCP SDK JSON responses, A2A v0.3.0 skills for registry/partner/credit tasks. External LLM clients decide tool use; no fake LLM outputs.
+
+All outbound provider calls are fixed HTTPS api.yookassa.ru endpoints, timeout/bounded response, no credential redirects. Frontend proxy passes protocol routes and cookie headers to shared API. DB remains internal to backend; no new DB host ports. Provider configuration requires an explicit N3 shop, tenant and secret file, never another project's credentials. Manual payout baseline unchanged.
+
+Primary sources: https://modelcontextprotocol.io/specification/2025-11-25/basic/transports ; https://ts.sdk.modelcontextprotocol.io/server ; https://a2a-protocol.org/v0.3.0/specification/ ; https://yookassa.ru/developers/using-api/webhooks . Protocol versions deliberately pinned for interoperability.

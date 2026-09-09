@@ -1,0 +1,40 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T085312Z-f2-auth-payments-agents",
+  "batch_id": "n3-f2",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "auth-payments-agents",
+  "pipeline": "feature XL",
+  "tier": "XL",
+  "risk_flags": [
+    "real identity and tenant membership",
+    "verified payment/refund inputs",
+    "agent bearer authority and protocol transport"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Owner explicitly authorized implementation of all three blocks and reuse from projects1/2; no approval stop for routine plan"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "71921f10cb9fe2ff68cae1459055f7bf9783b337",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-09T08:53:12.819793+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high",
+  "acceptance_evidence": [],
+  "quality": {},
+  "metrics": {},
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial read-only reuse search precedes record.",
+    "Host version, active interval union, billedcost and stage allocation not yet available."
+  ]
+}
