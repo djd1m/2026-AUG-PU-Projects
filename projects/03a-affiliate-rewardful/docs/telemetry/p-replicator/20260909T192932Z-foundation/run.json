@@ -20,7 +20,7 @@
   "comparison_id": null,
   "baseline_revision": "6a5920dea8f5fcc256257bf50d520b1f0a7af72b",
   "final_revision": null,
-  "spec_sha256": "ebdbb78650429072e998d694460501894a5f87ca049f7af0828df826898aa8f7",
+  "spec_sha256": "b235e4f6ae330459262df674668d5c9b283c660ba9a32f383851fc9398f92a89",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
@@ -29,11 +29,15 @@
   "ended_at": null,
   "status": "running",
   "actual_models": null,
-  "acceptance_evidence": [],
+  "acceptance_evidence": [
+    "foundation-plan.md",
+    "foundation-validation.md",
+    "bootstrap-checks.md"
+  ],
   "quality": {
     "required_gates_passed": false,
     "ac_met": null,
-    "ac_total": null,
+    "ac_total": 7,
     "confirmed_findings_by_severity": {},
     "false_positive_findings": null,
     "known_defects_missed": null,
@@ -58,7 +62,6 @@
     "active_wall_ms": "initial context reads precede run; full wait accounting not available",
     "final_revision": "ongoing",
     "quality.ac_met": "not tested yet",
-    "quality.ac_total": "foundation slice being bounded",
     "quality.known_defects_missed": "no defect oracle",
     "quality.false_positive_findings": "no review yet",
     "quality.regressions": "not measured"

@@ -1,0 +1,215 @@
+{
+  "version": "1.0",
+  "project": "N3a Affiliate for N1 Proofwall",
+  "generated_from": [
+    "docs/PRD.md",
+    "docs/Specification.md",
+    "docs/Architecture.md",
+    "docs/Pseudocode.md",
+    "docs/implementation-plan.md",
+    "docs/validation-report.md"
+  ],
+  "features": [
+    {
+      "id": "foundation",
+      "number": 1,
+      "name": "Runnable foundation and internal identity sessions",
+      "description": "Reuse audited N1 Argon2/session primitives and N2 migration runner; implement the seven ACs in docs/features/foundation before mounting public enrollment/auth routes.",
+      "priority": "mvp",
+      "status": "in_progress",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [],
+      "source_ids": [
+        "FR-AUTH-001",
+        "NFR-SECURITY-001",
+        "NFR-INTEGRITY-001"
+      ]
+    },
+    {
+      "id": "identity-program-partner",
+      "number": 2,
+      "name": "Identity, program policy and partner consent",
+      "description": "Implement trusted enrollment, hash-only sessions, owner/partner scopes, versioned program policy, terms acceptance and personal partner assets.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "foundation"
+      ],
+      "depends_on": [
+        "foundation"
+      ],
+      "source_ids": [
+        "FR-AUTH-001",
+        "FR-PROGRAM-001",
+        "FR-PROGRAM-002",
+        "FR-PARTNER-001"
+      ]
+    },
+    {
+      "id": "n1-attribution-bridge",
+      "number": 3,
+      "name": "N1 attribution and authenticated bridge",
+      "description": "Capture link/cookie/promo attribution, reject self-referral, and deliver versioned authenticated N1 registration/payment/refund facts through an atomic outbox and reconciliation cursor.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "identity-program-partner"
+      ],
+      "depends_on": [
+        "identity-program-partner"
+      ],
+      "source_ids": [
+        "FR-ATTRIBUTION-001",
+        "FR-ATTRIBUTION-002",
+        "FR-N1-001",
+        "FR-GROWTH-002"
+      ]
+    },
+    {
+      "id": "payment-commission-ledger",
+      "number": 4,
+      "name": "Verified payment and commission ledger",
+      "description": "Post at most one positive commission for each eligible verified N1 payment using the attribution policy snapshot and append-only provenance.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "n1-attribution-bridge"
+      ],
+      "depends_on": [
+        "n1-attribution-bridge"
+      ],
+      "source_ids": [
+        "FR-COMMISSION-001",
+        "NFR-RELIABILITY-001",
+        "NFR-INTEGRITY-001"
+      ]
+    },
+    {
+      "id": "refund-reconciliation",
+      "number": 5,
+      "name": "Refund corrections and recovery",
+      "description": "Apply partial/full refund deltas once, tolerate reorder and replay, reconcile gaps, and preserve restore reservations and observations without rewriting history.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "payment-commission-ledger"
+      ],
+      "depends_on": [
+        "payment-commission-ledger"
+      ],
+      "source_ids": [
+        "FR-COMMISSION-002",
+        "FR-PAYOUT-004",
+        "NFR-RELIABILITY-001"
+      ]
+    },
+    {
+      "id": "monthly-registry-tax-gate",
+      "number": 6,
+      "name": "Monthly registry and tax preparation",
+      "description": "Freeze the prior calendar month, carry negative balances once, keep unknown legal/tax/YTD inputs blocked, and prepare an auditable payout without sending money.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "refund-reconciliation"
+      ],
+      "depends_on": [
+        "refund-reconciliation"
+      ],
+      "source_ids": [
+        "FR-PAYOUT-001",
+        "FR-PAYOUT-002",
+        "FR-TAX-001",
+        "FR-TAX-002",
+        "FR-TAX-003",
+        "FR-TAX-004"
+      ]
+    },
+    {
+      "id": "manual-transfer-record",
+      "number": 7,
+      "name": "Authorized manual transfer record",
+      "description": "Record owner/operator transfer evidence and actual date against the immutable due date; export remains state-free and sent does not assert bank receipt.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "monthly-registry-tax-gate"
+      ],
+      "depends_on": [
+        "monthly-registry-tax-gate"
+      ],
+      "source_ids": [
+        "FR-PAYOUT-003",
+        "FR-PAYOUT-004",
+        "FR-TAX-004"
+      ]
+    },
+    {
+      "id": "owner-partner-cjm-a",
+      "number": 8,
+      "name": "Owner and partner CJM A views",
+      "description": "Show scoped clicks, registrations, confirmed customers, ledger provenance, corrections, payable state and literal MRR unknown with accessible CJM A presentation.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "manual-transfer-record"
+      ],
+      "depends_on": [
+        "manual-transfer-record"
+      ],
+      "source_ids": [
+        "FR-DASHBOARD-001",
+        "FR-DASHBOARD-002",
+        "FR-LOOK-001",
+        "FR-LOOK-002",
+        "FR-LOOK-003"
+      ]
+    },
+    {
+      "id": "n1-growth-share-badge",
+      "number": 9,
+      "name": "N1 value-moment share and public badge",
+      "description": "Offer an intentional share only after the first real confirmed commission and enforce the separate server-side free-page badge rule without changing N1 testimonial widgets.",
+      "priority": "high",
+      "status": "blocked",
+      "complexity": "medium",
+      "blockers": [
+        "owner-partner-cjm-a"
+      ],
+      "depends_on": [
+        "owner-partner-cjm-a"
+      ],
+      "source_ids": [
+        "FR-GROWTH-001",
+        "FR-GROWTH-003",
+        "FR-GROWTH-004"
+      ]
+    },
+    {
+      "id": "d7-platform-affiliate",
+      "number": 10,
+      "name": "D7 N3a platform affiliate proposal",
+      "description": "Owner must choose lead-only pilot or specify N3a price, billing authority and verified-payment contract for monetary dogfooding. N1 sales cannot substitute for N3a sales.",
+      "priority": "high",
+      "status": "blocked",
+      "complexity": "complex",
+      "blockers": [
+        "OWNER-DECISION-D7"
+      ],
+      "depends_on": [],
+      "source_ids": [
+        "ADR-008",
+        "FR-GROWTH-001",
+        "SC-US-009-4"
+      ]
+    }
+  ]
+}

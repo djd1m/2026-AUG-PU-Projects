@@ -1,11 +1,12 @@
 # ADR — N3a, CJM A
 
-Дата: 2026-09-09. Статус решений: **предложены для конкретного XL-checkpoint до кода**. Прямые решения владельца — N1, YooKassa, CJM A, ручные выплаты 5-го за предыдущий календарный месяц — уже приняты; технические подробности ниже не изображаются реализованными.
+Дата: 2026-09-09. Статус решений: **технический план разрешён владельцем словом «продолжай»; реализация ещё не завершена**. Прямые решения владельца — N1, YooKassa, CJM A, ручные выплаты 5-го за предыдущий календарный месяц — уже приняты; технические подробности ниже не изображаются реализованными.
 
 ## ADR-001 — Отдельный модульный монолит
 
 **Контекст:** один первый клиент N1; учёт денег требует локальных атомарных операций.
 **Решение:** отдельные процессы N3a web и worker из одного проекта, собственный PostgreSQL, внутренние модули identity, programs, attribution, intake, ledger, registry, tax, growth. Никаких shared DB или runtime imports N1/N2. Identity-only session precedes partner consent; owner enrollment is trusted bootstrap, operator scopes owner-granted; partner acceptance atomically creates Membership/assets. Node 22, TypeScript и Next.js — предлагаемый совместимый с донорами стек; точные пакеты/образы фиксируются после аудита текущих donor lockfiles перед foundation.
+**Уточнение foundation 2026-09-09:** после аудита выбраны N1 Argon2id (явные ограниченные параметры), hash-only identity session с абсолютным TTL24h и N2 checksum migration runner. Точные версии, роли и security-definer seam — `features/foundation/03_architecture.md`; независимая проверка этой детализации — `features/foundation/validation-report.md`. Это не завершение всей авторизации.
 **Альтернатива:** микросервисы усложняют атомарный ledger; копирование всей N1 схемы сохраняет чужую модель долга.
 **Последствия:** отдельные web/worker пулы, миграционная роль, backup и operational ownership; перенос только минимального замыкания пригодных блоков с provenance и тестами.
 
