@@ -5,6 +5,8 @@ Work unit: `reuse-audit`
 Audited baseline: `89dc14a5b41c8b21e589a331a1bed4b6a8870ff1` (2026-09-09T15:48:34Z)
 Method: read-only source/schema/test inspection. No N1, N2, or N3a product code was changed; tests were not run.
 
+Current architecture clarification (2026-09-09): provider credentials and canonical YooKassa GET stay only in N1; N3a verifies signed N1 facts. The donor source findings below remain historical evidence; current implementation decisions are in ADR-002/003 and Architecture.md.
+
 ## Audit conclusion
 
 Use **N1 as the sole first integration** and N2 only as a donor. Neither project's
@@ -28,7 +30,7 @@ success to YooKassa without waiting for N3a.
 | Referral selection | Explicit promo code wins over cookie; an invalid explicit code deliberately does not fall back to the cookie. | Export the rule as product behavior, not the SQL module. `referral.ts:28-45`; tests `referral.test.ts`. |
 | Registration | N1 resolves the attribution during registration and writes a pending `referral_attributions` record in the same registration transaction. | Useful model for an N1 adapter: capture N3a attribution at registration before first payment. N3a needs its own attribution ID and selected source. `register.ts:141-152`, `referral.ts:61-72`. |
 | Checkout | Authenticated project owner starts a 990 RUB/30-day YooKassa redirect payment; each intentional attempt gets a new UUID idempotence key and a N1 checkout-session row. | Strong donor for timeout/idempotency concepts. N3a receives a completed-payment event, never trusts a redirect. `checkout/route.ts:20-65`, `payment.ts:214-278`. |
-| YooKassa verification | Source-network allowlist is checked, then N1 retrieves the payment from YooKassa. A failed provider lookup escapes the transaction so the YooKassa retry can reprocess. | Export the ordering and failure semantics. Do not copy the module unchanged: N3a needs its own merchant connection, money/currency validation, and support for refunds. `webhooks/payment/route.ts:51-126`, `payment.ts:66-160`. |
+| YooKassa verification | Source-network allowlist is checked, then N1 retrieves the payment from YooKassa. A failed provider lookup escapes the transaction so the YooKassa retry can reprocess. | Export the ordering and failure semantics. Do not copy the module unchanged: N1 needs correct merchant/money/currency validation and refund support; N3a validates the connection-scoped signed attestation, not provider credentials. `webhooks/payment/route.ts:51-126`, `payment.ts:66-160`. |
 | N1 billing | A verified `payment.succeeded` matches N1's `checkout_sessions`, marks it complete, and extends `projects.paid_until` by 30 days from max(now, prior expiry). | This is genuine manual renewal logic, not recurring charging. Keep N1 as billing authority. `payment.ts:169-197`, `tariff.ts:17-47`; `payment.test.ts:248-323`. |
 | N1 commission | N1 converts only the first pending attribution and inserts one commission guarded by unique `payment_event_id`. | Do **not** reuse as N3a ledger. It has no reversal/payout state and consumes the attribution after first payment. `referral.ts:85-159`; `004_growth.sql` tables; `referral.test.ts:259-279`. |
 | Partner view | N1 displays signups, converted count, conversion rate and total commission. | UI/projection ideas are reusable only. It has no payable balance, period ledger, payout registry, MRR, or reconciliation. `partner.ts:181-231`, `partner/dashboard/page.tsx:39-60`. |
@@ -89,7 +91,7 @@ success to YooKassa without waiting for N3a.
 
 | Block | Files / tests | Why it is stronger / adaptation |
 |---|---|---|
-| Correct provider-verification order | `projects/02-review-qr-reputation/apps/web/src/payment.ts:158-242`; `apps/web/tests/payment.test.ts:62-121` | Verifies YooKassa's remote status before an atomic `webhook_events` claim, preserving a real delivery after a forged/status-mismatched notification. Extract/adapt the sequence and its tests to N3a's own YooKassa ingestion where N3a is the merchant. |
+| Correct provider-verification order | `projects/02-review-qr-reputation/apps/web/src/payment.ts:158-242`; `apps/web/tests/payment.test.ts:62-121` | Verifies YooKassa's remote status before an atomic `webhook_events` claim, preserving a real delivery after a forged/status-mismatched notification. Extract/adapt the provider-verification sequence and tests in the N1 bridge; N3a receives its signed evidence and is not a separate merchant in this pilot. |
 | Subscription-period storage | `packages/db/migrations/004_billing_partners.sql:3-14`; `payment.ts:206-210` | Useful contrast for period fields, but it remains a 30-day manual renewal and has no automatic charge evidence. N3a should model business-provided subscription periods only when its contract carries them. |
 | Atomic commission plus duplicate and second-payment tests | `004_billing_partners.sql:61-71`; `apps/web/tests/payment.test.ts:162-186` | Demonstrates deliberately one-time commission, so it is a guardrail against accidentally copying the wrong behavior for N3a recurring commissions. |
 

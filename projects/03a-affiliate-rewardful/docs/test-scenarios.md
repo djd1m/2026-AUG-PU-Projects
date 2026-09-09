@@ -2,7 +2,7 @@
 
 Статус: план тестов, не выполненная приёмка. Каждый SC-ID является именованным критерием; отдельное семейство AC не вводится.
 
-Spec revision: sha256:7457c9f705230ad34b7b55ec32774e1aba3276f683be7c5af55f3825af8fe23e
+Spec revision: sha256:ebdbb78650429072e998d694460501894a5f87ca049f7af0828df826898aa8f7
 
 ## Criterion scenarios
 
@@ -374,7 +374,7 @@ Scenario: SC-US-007-4 — shared tax reservation
 Scenario: SC-US-007-5 — restore evidence
   Given перевод состоялся после backup и RecoveryGate закрывает финансовые записи
   When оператор вносит evidence о переводе
-  Then наблюдение сохранено даже без preparation; payment/refund posting и обычный confirm запрещены до сверки; повтор/конкурентная сверка и сбой до commit дают ровно оракул fixture R1 из Refinement.md без частичного sent/YTD.
+  Then наблюдение сохранено даже без preparation; payment/refund posting и обычный confirm запрещены до сверки; повтор/конкурентная сверка и сбой до commit дают ровно оракулы fixtures R1–R4 из Refinement.md без частичного sent/YTD.
 ```
 
 ```gherkin

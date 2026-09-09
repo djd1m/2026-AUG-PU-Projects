@@ -151,11 +151,13 @@ sequenceDiagram
   O->>E: actual transfer evidence optional preparation
   E->>G: allowed under closed gate record blocker and immutable observation
   E-->>O: observation ID no confirmation no YTD
-  O->>R: accountant approved actual date and inclusion evidence
+  O->>R: approved pre-transfer balances and order plus separate current inclusion plan
   R->>G: lock old and actual year guards sorted then bases and row
-  R->>G: atomically supersede old preparation and create corrected receipt
-  R->>G: one confirmation actual year income update consume reservation
+  R->>G: historical tax from pre-transfer basis then atomically supersede and persist both inputs
+  R->>G: one confirmation approved current counter deltas consume reservation
   R-->>O: operator reported sent never bank acknowledgment
 ```
 
 Payment/refund/rounding/close/ordinary tax preparation/confirmation hold RecoveryGate shared lock and require normal through commit. Restore transition takes exclusive lock. Observation and evidenced recovery remain available while closed; no ordinary transfer can occupy a reserved/blocked payer-year gap. Signup yields session-only context; acceptance of the user's own trusted invitation atomically grants partner read scope and assets, then enables program reads.
+
+Historical recovery reads no inclusive/current balances as a substitute for pre-transfer tax basis. It persists HistoricalTaxBasis and CurrentCounterPlan separately; later payments can remain in current counters with zero deltas, while a missing NPD internal amount already in declaration adds both internal and coverage. Unknown historical order/inclusion retains observation and reservation.
