@@ -2,9 +2,7 @@
 
 ## Bootstrap boundary
 
-Сейчас в проекте есть валидированные документы и project-specific toolkit. Runtime scaffold,
-package scripts, зависимости, миграции, compose и приложение создаются отдельным foundation
-этапом. До этого нельзя считать команды `test`, `build`, `dev` или контейнеры доступными.
+В проекте есть документы, toolkit и реализуемый foundation с настоящими package scripts, каркасом Next.js и миграциями. Фактическая приёмка, прогоны и ограничения — `docs/features/foundation/05_completion.md`. Публичные auth/partner/financial API в этот первый блок не входят.
 
 Общие lifecycle-инструменты читаются из корневой `.claude/`; локальные дополнения перечислены
 в `docs/toolkit-map.md`. Перед изменениями читать корневой и проектный `CLAUDE.md`, применимые
@@ -54,3 +52,11 @@ bash "$(node -p "require.resolve('@dzhechkov/p-replicator/scripts/check-pipeline
 
 Record unavailable checks as unavailable. Production rollout and real transfers remain outside
 this bootstrap authorization.
+
+## Исполняемый цикл foundation
+
+`npm run verify` проверяет типы, unit-тесты, production build и traceability. `npm run test:isolated -- --mutations` последовательно собирает приложение, проверяет конфигурацию/порты, создаёт приватный PostgreSQL и запускает unit/SQL/mutation/smoke проверки. Не запускать сборку параллельно smoke на том же `.next`.
+
+Реальные SQL-suite требуют разные `TEST_DATABASE_URL` и `TEST_DATABASE_URL_MIGRATE`; без них `npm run test:integration` завершается ошибкой, а не пропускает тесты. Предпочтителен изолированный harness: он генерирует новые секреты сам. Адреса/секреты не выводятся; диагностический handle находится в `/tmp`, результаты мутаций в игнорируемой `.runtime/`.
+
+Совместимость доноров не означает безопасность их старых зависимостей: Vitest обновлён до5.0.0, PostCSS до8.5.28; см. `docs/discovery/foundation-reuse-provenance.md`.

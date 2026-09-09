@@ -4,12 +4,37 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12.0"
   },
   "devDependencies": {
-    "@dzhechkov/p-replicator": "1.13.2"
+    "@dzhechkov/p-replicator": "1.13.2",
+    "@types/node": "22.20.1",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "typescript": "5.9.3",
+    "tsx": "4.23.12",
+    "vitest": "5.0.0"
   },
   "scripts": {
-    "check:traceability": "bash node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md"
+    "check:traceability": "bash node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md",
+    "dev": "npm run dev --workspace @n3a/web",
+    "build": "npm run build --workspace @n3a/web",
+    "start": "tsx scripts/start-web.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:workspace": "vitest run --config vitest.integration.config.ts tests/workspace.test.ts",
+    "verify:infra": "node scripts/check-foundation-infra.mjs",
+    "db:migrate": "tsx packages/db/src/migrate.ts",
+    "verify": "npm run typecheck && npm test && npm run build && npm run check:traceability",
+    "test:isolated": "node scripts/run-foundation-integration.mjs"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "overrides": {
+    "postcss": "8.5.28"
   }
 }

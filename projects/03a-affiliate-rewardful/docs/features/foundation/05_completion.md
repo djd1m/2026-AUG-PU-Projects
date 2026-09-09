@@ -1,20 +1,32 @@
-# Foundation — completion plan
+# Foundation — completion evidence
 
-Status: PLAN only. No code, real tests, deployment, fixture account, migration or payment is created by this document. The seven criteria below are **planned test targets**. They must be converted to the exact `## Criterion coverage` table only after regular test files exist and their verbatim titles are verified by the packaged checker.
+Status: implemented; independent final review pending. This evidence covers only the seven foundation criteria, not full product acceptance or production readiness.
 
-## Planned criterion tests
+## Criterion coverage
 
-| Criterion | Planned test file | Planned test title |
+| Criterion | Test file | Test title |
 |---|---|---|
 | AC-foundation-1 | tests/workspace.test.ts | built workspace serves isolated liveness contract |
 | AC-foundation-2 | packages/db/tests/migrate.integration.test.ts | migrations serialize and reject changed or missing applied history |
 | AC-foundation-3 | apps/web/tests/password.test.ts | Argon2id salts and input bounds are enforced |
 | AC-foundation-4 | apps/web/tests/kdf-admission.test.ts | KDF admission bounds active work and recovers from timeout and failure |
 | AC-foundation-5 | apps/web/tests/credentials.integration.test.ts | generic credential denial and post-KDF state recheck prevent session issuance |
-| AC-foundation-6 | apps/web/tests/session.test.ts | opaque session lifecycle rejects expired revoked and disabled identities |
+| AC-foundation-6 | packages/db/tests/auth-repository.integration.test.ts | actual opaque sessions persist only HMAC and reject expiry revocation disabled and unknown users |
 | AC-foundation-7 | packages/db/tests/roles.integration.test.ts | runtime configuration cookie and database authority fail closed |
 
-Each umbrella test may call supporting assertions in other named suite files; preserve one concrete executable title per criterion for the machine gate. This table is not coverage evidence and completion gate is intentionally not claimed passed in PLAN.
+## Executed validation
+
+`node scripts/run-foundation-integration.mjs` exited0 on 2026-09-09: strict typecheck, Next15.5.24 production build, effective infrastructure and port checks, two migrations, 9 unit tests and 13 PostgreSQL/integration/HTTP smoke tests passed. Namespace `n3a-foundation-d8cc9d20e2d8` was stopped after validation; its private volume is retained. No donor resource was used.
+
+Supporting tests establish KDF saturation without held DB clients, sanitized native/database error logging, idle PostgreSQL disconnect survival, hostile function search paths, migration rollback/lock timeout, and rejection of auth HTTP routes not implemented in this slice.
+
+Seven deliberate mutations were detected by failed assertions; original source hashes were preserved and schema restored. See `docs/telemetry/p-replicator/20260909T192932Z-foundation/mutation-results.json`. The serial green run above independently verifies the restored original source. Source hashes: `final-source-snapshot.json` in that directory.
+
+`npm audit --json` exited0 with zero reported vulnerabilities. This is dependency advisory evidence, not a guarantee of application security. Native Argon2 smoke on Node22.22.0 measured757ms and max RSS191676KiB; these are one observed test process, not latency/memory SLOs or a load test.
+
+A prior concurrent build/smoke invocation failed because BUILD_ID disappeared during rebuild. The harness now awaits typecheck and build before starting tests. Earlier mutation-run terminal output was unavailable after context transition; its persisted mutation result was inspected and a separate serial full verification was performed rather than inferring success.
+
+Dockerfile image build, browser layout checks for the real application, production deployment, N1/ЮKassa E2E and full-product financial flows are not established by these checks. Existing CJM browser results apply only to prototypes.
 
 ## Deployment Plan
 
@@ -36,7 +48,7 @@ Rollback: stop only the uniquely identified N3a test stack; retain source/lock a
 
 ## CI/CD gates
 
-Planned project commands: `npm ci`, `npm run typecheck`, `npm test`, `npm run test:integration`, `npm run build`, `npm run verify:infra`, `npm run db:migrate`, `npm start`. Scripts must become real commands during implementation. CI order is test → typecheck → build → isolated smoke; production deploy is not configured.
+Implemented project commands: `npm ci`, `npm run typecheck`, `npm test`, `npm run test:integration`, `npm run build`, `npm run verify:infra`, `npm run db:migrate`, `npm start`. The isolated harness enforces typecheck → build → infrastructure → migration → unit → optional mutations → integration/smoke; production deploy is not configured.
 
 Packaged pipeline commands run from PROJECT_ROOT, with the shared root toolkit explicitly mapped:
 

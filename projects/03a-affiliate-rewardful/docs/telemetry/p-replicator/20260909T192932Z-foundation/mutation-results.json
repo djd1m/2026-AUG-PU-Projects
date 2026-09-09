@@ -1,0 +1,89 @@
+{
+  "namespace": "n3a-foundation-8d9f0eececa5",
+  "results": [
+    {
+      "name": "runtime-startup-config",
+      "source": "scripts/start-web.ts",
+      "original_sha256": "42541d89afdde263189c341eece0eb785c4b00485f616277371706e916d08d46",
+      "mutant_sha256": "9627bd1f3d0fef21a052e28acc8f467d11c81cbaa9e1aedd20c909d4ed7fa723",
+      "exit_code": 1,
+      "failed_tests": [
+        "all declared serve commands reject missing and malformed runtime configuration"
+      ]
+    },
+    {
+      "name": "kdf-capacity",
+      "source": "apps/web/src/lib/auth/kdf-admission.ts",
+      "original_sha256": "d2618e5028b1dde8a20506ba451acc18f46cea623f70641fead9dd7fd6bbc30e",
+      "mutant_sha256": "21a2de1a64dc7fe40d6ac4ba0e799e7ea0b7907ec5979b99c0059c3b3ccf26af",
+      "exit_code": 1,
+      "failed_tests": [
+        "KDF admission bounds active work and recovers from timeout and failure",
+        "canceled native work retains its slot until settlement and queued cancellation is removed",
+        "deadline comparison rejects an expired waiter even before its timer callback"
+      ]
+    },
+    {
+      "name": "session-revocation",
+      "source": "packages/db/src/auth-repository.ts",
+      "original_sha256": "e3d6e39815a00076a7dd4015f6192d83755680c5592d0e0f2d335f4c7e806636",
+      "mutant_sha256": "7f5c152ac45bbebd715029ae844e7ff1ec5e65b2a307aa357f2e7faf55d90501",
+      "exit_code": 1,
+      "failed_tests": [
+        "actual opaque sessions persist only HMAC and reject expiry revocation disabled and unknown users"
+      ]
+    },
+    {
+      "name": "session-expiry",
+      "source": "packages/db/src/auth-repository.ts",
+      "original_sha256": "e3d6e39815a00076a7dd4015f6192d83755680c5592d0e0f2d335f4c7e806636",
+      "mutant_sha256": "51d43ed157a92e39d1ddbbc3d8f14235a612a517bf6c7b9afbddc9575953dbce",
+      "exit_code": 1,
+      "failed_tests": [
+        "actual opaque sessions persist only HMAC and reject expiry revocation disabled and unknown users"
+      ]
+    },
+    {
+      "name": "credential-state-race",
+      "source": "packages/db/migrations/001_identity_sessions.sql",
+      "original_sha256": "70106a564616aa1df6f2cf5f4df2aef72ef4fffc114d6e9647652c171cef56cc",
+      "mutant_sha256": "720ff6730d319149ab08d26d166c7ff77050717c4cdabbd9e30eb2e0456403e4",
+      "exit_code": 1,
+      "failed_tests": [
+        "generic credential denial and post-KDF state recheck prevent session issuance"
+      ]
+    },
+    {
+      "name": "migration-checksum",
+      "source": "packages/db/src/migrate.ts",
+      "original_sha256": "d63996f70dcb778deca616628eb9bcd0801a071ff87b85cb6436b88ee54271ed",
+      "mutant_sha256": "e4d701aad26a10a7e5ac0dc929056e7a32eceb65f7add9fe50d346be1aab47ce",
+      "exit_code": 1,
+      "failed_tests": [
+        "migrations serialize and reject changed or missing applied history"
+      ]
+    },
+    {
+      "name": "database-port",
+      "source": "scripts/check-foundation-infra.mjs",
+      "original_sha256": "991f24a4a494441101c0745c14ebc0105a1d8c892890453abb0031dcacb65590",
+      "mutant_sha256": "30ac7884a4376955da3e59a9e174fef93ba1dfdbecef7e26b9126fe028da5d1d",
+      "exit_code": 1,
+      "failed_tests": [
+        "isolated infrastructure refuses published database ports and donor resources"
+      ]
+    },
+    {
+      "name": "idle-pool-error",
+      "source": "packages/db/src/pool.ts",
+      "original_sha256": "b56c60405ebb74cc2d2750aa9934623e417195483fef4ffadbdc58e88b3f3394",
+      "mutant_sha256": "73c32c1ebd4ea2e6b439d0869e833120113be5f15c725ebbae272fee7a095f44",
+      "exit_code": 1,
+      "failed_tests": [
+        "idle PostgreSQL disconnect cannot crash the process or expose connection diagnostics"
+      ]
+    }
+  ],
+  "restored": true,
+  "status": "passed"
+}

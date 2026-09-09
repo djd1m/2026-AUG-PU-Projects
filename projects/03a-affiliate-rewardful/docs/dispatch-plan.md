@@ -71,4 +71,12 @@
 | README.md | координатор |
 | DEVELOPMENT_GUIDE.md | координатор |
 
+| apps/web/src/assets/rubik-regular.ttf | координатор |
+| apps/web/src/assets/rubik-bold.ttf | координатор |
+| apps/web/src/assets/OFL.txt | координатор |
+
+| packages/db/tests/pool.integration.test.ts | координатор |
+
+| scripts/mutation-check.mjs | координатор |
+
 Runtime files are assigned before creation. Coordinator also owns dispatch/source-version declarations, roadmap and run/events; the child owns only its assigned terminal receipt. New split files require an explicit ownership update before writing. This dispatch becomes active only after the independent validation receipt and packaged gate pass.
