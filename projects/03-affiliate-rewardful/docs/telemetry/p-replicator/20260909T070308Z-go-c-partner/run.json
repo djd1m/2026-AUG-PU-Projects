@@ -10,13 +10,43 @@
   "profile": "compact-quality-first-v2",
   "baseline_revision": "2f9cd978bdf1bbc2c5f1bcd963752e9d2942a30c",
   "started_at": "2026-09-09T07:03:08.327428+00:00",
-  "ended_at": null,
-  "status": "running",
-  "actual_coordinator_model": null,
+  "ended_at": "2026-09-09T07:21:19.247900+00:00",
+  "status": "accepted",
+  "actual_coordinator_model": "gpt-6-astra",
   "telemetry_status": "partial",
   "missing_data": [
-    "Coordinator usage not allocated; actual worker metadata collected at handoff"
+    "Coordinator/reviewer usage allocation pending; actualchildSolhigh measured exclusive",
+    "Active time/intervals unavailable; child459000ms excludesinitialreads",
+    "No billedcost/baseline/sevendayobservation"
   ],
-  "metrics": {},
-  "quality": {}
+  "metrics": {
+    "elapsed_wall_ms": 1090920,
+    "active_wall_ms": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "quality": {
+    "ac_met": 8,
+    "ac_total": 8,
+    "required_gates_passed": true,
+    "first_pass_acceptance": false,
+    "confirmed_findings_by_severity": {
+      "medium": 2
+    },
+    "false_positive_findings": 0,
+    "known_defects_missed": null,
+    "followup_status": "pending",
+    "full_tests": 42,
+    "browser_tests": 11,
+    "browser_scenarios": 10,
+    "scope": "C standaloneF1; globalDpending"
+  },
+  "actual_coordinator_effort": "high",
+  "final_revision": "0d5a08c (implementationd0d7403); reportcommitfollows",
+  "spec_sha256": "03af9e0e338d19fc2c86dfa5e2d4da7525d358f8bd00f8f8fe545052c59268a8",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "acceptance_evidence": [
+    "evidence/browser/browser-summary.json",
+    "evidence/c-ui-review.md"
+  ]
 }

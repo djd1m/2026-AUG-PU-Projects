@@ -1,0 +1,28 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T071850Z-go-d-agent",
+  "batch_id": "n3-four-variants-f1",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "d-agent",
+  "pipeline": "/go -> /feature",
+  "tier": "XL",
+  "risk_flags": [
+    "grant authority",
+    "exact financial artifact",
+    "cancel and late result"
+  ],
+  "profile": "compact-quality-first-v2",
+  "baseline_revision": "d0d7403e7fe1cad3d348032eeee512ee11dab762",
+  "started_at": "2026-09-09T07:18:50.534060+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_coordinator_model": "gpt-6-astra",
+  "actual_coordinator_effort": "high",
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator usage not allocated; child actual collected at handoff"
+  ],
+  "metrics": {},
+  "quality": {}
+}

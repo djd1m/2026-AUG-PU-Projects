@@ -1,0 +1,25 @@
+{
+  "variant": "C",
+  "startedAt": "2026-09-09T07:17:44.303Z",
+  "endedAt": "2026-09-09T07:17:49.385Z",
+  "checks": [
+    {
+      "viewport": 1440,
+      "document": 1428
+    },
+    {
+      "viewport": 1440,
+      "document": 1428
+    },
+    {
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "viewport": 390,
+      "document": 378
+    }
+  ],
+  "scope": "Actual Firefox C UI on shared Docker/PostgreSQL; explicit API commands set up permission and replay checks. Synthetic only.",
+  "verdictSource": "Node test exit and TAP output"
+}
