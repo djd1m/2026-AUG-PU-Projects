@@ -1,0 +1,26 @@
+# BEGIN N3 PUBLIC WEB
+n3-a.212.192.0.33.sslip.io {
+	encode gzip zstd
+	header X-Robots-Tag "noindex, nofollow"
+	reverse_proxy n3-a-frontend-1:3000
+}
+
+n3-b.212.192.0.33.sslip.io {
+	encode gzip zstd
+	header X-Robots-Tag "noindex, nofollow"
+	reverse_proxy n3-b-frontend-1:3000
+}
+
+n3-c.212.192.0.33.sslip.io {
+	encode gzip zstd
+	header X-Robots-Tag "noindex, nofollow"
+	reverse_proxy n3-c-frontend-1:3000
+}
+
+n3-d.212.192.0.33.sslip.io {
+	encode gzip zstd
+	header X-Robots-Tag "noindex, nofollow"
+	reverse_proxy n3-d-frontend-1:3000
+}
+
+# END N3 PUBLIC WEB

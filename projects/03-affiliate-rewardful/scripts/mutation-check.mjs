@@ -6,6 +6,12 @@ import { spawnSync } from 'node:child_process';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const mutations=[{
+ name:'Public origin mapping exact equality',file:'shared/contracts/deployment.mjs',
+ from:'values.includes(currentOrigin)',to:'values.some(value => currentOrigin.startsWith(value))',tests:['tests/public-origins.test.mjs'],
+},{
+ name:'Public handoff pins A destination',file:'shared/client/api.mjs',
+ from:"new URL('/',variantOrigin('A',location.origin))",to:"new URL('/',location.origin)",tests:['tests/public-origins.test.mjs'],
+},{
  name:'HTTP origin denial',file:'apps/api/http.mjs',from:'if (origin && !origins.has(origin))',to:'if (false)',
  tests:['tests/http-boundary.test.mjs'],
 },{

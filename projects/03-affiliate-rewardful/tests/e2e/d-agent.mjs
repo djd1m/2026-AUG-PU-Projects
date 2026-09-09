@@ -74,7 +74,7 @@ test('D actual browser delegated tasks and owner handoff',{timeout:210000},async
     assert.equal((await dashboard()).registries[0].approval.hash,revised.hash);await click('[data-view=result]');await screenshot(evidence,'d-revoked-owner');
     await click($('owner-handoff'));await visible('handoff-artifact');
     assert.equal(await text('artifact-id'),revised.artifactId);assert.equal(await text('artifact-hash'),revised.hash);
-    assert.equal(await js('return location.port'),'13031');assert.equal(await js('return location.hash'),'');
+    assert.equal(await js('return location.origin'),new URL(process.env.N3_A_URL || 'http://127.0.0.1:13031').origin);assert.equal(await js('return location.hash'),'');
     await screenshot(evidence,'d-to-a-handoff');
   });
   await t.test('SC-US-401-2 expired grant denies next step while owner read stays available',async()=>{

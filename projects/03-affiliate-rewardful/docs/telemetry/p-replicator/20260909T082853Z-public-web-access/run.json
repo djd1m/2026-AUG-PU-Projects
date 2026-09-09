@@ -1,0 +1,40 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T082853Z-public-web-access",
+  "batch_id": "n3-public-web",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "public-web-access",
+  "pipeline": "feature deployment",
+  "tier": "L",
+  "risk_flags": [
+    "Public HTTPS exposure",
+    "cross-origin browser contracts",
+    "shared reverse proxy"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "User explicitly authorized public web A-D and prohibited external DB access"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "be41521f510e62eafe8858eace9817d5462c4035",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-09T08:28:53.047332+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high",
+  "acceptance_evidence": [],
+  "quality": {},
+  "metrics": {},
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Read-only runtime reconnaissance before record; initial inspection duration not included.",
+    "Host version, billing cost and active interval union unavailable."
+  ]
+}

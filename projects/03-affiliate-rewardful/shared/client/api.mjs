@@ -1,3 +1,5 @@
+import { variantOrigin } from '../contracts/deployment.mjs';
+
 const READS = new Set(['dashboard','program.read','share.read','partner.read','credit.read','registry.read','task.read']);
 
 export class ApiError extends Error {
@@ -51,7 +53,7 @@ export async function connect(variant, role) {
       }
     },
     handoff(artifactId) {
-      const url=new URL(location.href);url.port='13031';url.pathname='/';url.search='';
+      const url=new URL('/',variantOrigin('A',location.origin));
       const bytes=new TextEncoder().encode(JSON.stringify({session,artifactId}));
       url.hash=new URLSearchParams({handoff:btoa(String.fromCharCode(...bytes))}).toString();
       return url.href;

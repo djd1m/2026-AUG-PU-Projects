@@ -1,6 +1,7 @@
-const allowedParents=new Set(['http://127.0.0.1:13031','http://localhost:13031']);
+import { originsFor, variantOrigin } from '../../../shared/contracts/deployment.mjs';
+const allowedParents=new Set(originsFor('A'));
 if(!allowedParents.has(location.origin))throw new Error('Open the fixture host on the A origin');
-const child=new URL(location.origin);child.port='13032';child.pathname='/';
+const child=new URL('/',variantOrigin('B',location.origin));
 child.search=new URLSearchParams({embed:'1',parentOrigin:location.origin});
 const frame=document.querySelector('#customer-frame');
 const publish=document.querySelector('#host-publish');

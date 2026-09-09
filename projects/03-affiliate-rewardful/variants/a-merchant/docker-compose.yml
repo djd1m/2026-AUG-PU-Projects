@@ -13,7 +13,7 @@ services:
       PORT: "3000"
     ports:
       - "${N3_BIND:-127.0.0.1}:${N3_A_PORT:-13031}:3000"
-    networks: [frontend]
+    networks: [frontend, public]
     healthcheck:
       test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
@@ -29,3 +29,6 @@ networks:
   frontend:
     external: true
     name: n3-frontend
+  public:
+    external: true
+    name: talk-ai-public

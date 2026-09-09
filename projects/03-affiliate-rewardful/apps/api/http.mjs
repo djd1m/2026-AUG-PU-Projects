@@ -1,8 +1,7 @@
 import { createServer } from 'node:http';
+import { apiOrigins as origins } from '../../shared/contracts/deployment.mjs';
 
 const MAX_BODY = 65536;
-const origins = new Set([13030, 13031, 13032, 13033, 13034]
-  .flatMap(port => [`http://127.0.0.1:${port}`, `http://localhost:${port}`]));
 const rates = new Map();
 function rate(key, limit, now = Date.now()) {
   let row = rates.get(key);

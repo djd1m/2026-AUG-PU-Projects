@@ -1,7 +1,5 @@
-const allowedParents = new Set([
-  'http://127.0.0.1:13031',
-  'http://localhost:13031',
-]);
+import { originsFor } from '../../../shared/contracts/deployment.mjs';
+const allowedParents = new Set(originsFor('A'));
 
 function exactOrigin(value) {
   if (!value || !allowedParents.has(value)) return null;
