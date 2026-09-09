@@ -120,3 +120,17 @@ test('cookie parser returns token evidence only and rejects expired or ambiguous
   assert.equal(referralTokenFromCookie(`n3_ref_${tenantId}=${firstToken}.${now}`, tenantId, { now }), undefined);
   assert.equal(referralTokenFromCookie(`n3_ref_${tenantId}=${firstToken}.${live}; n3_ref_${tenantId}=${secondToken}.${live}`, tenantId, { now }), undefined);
 });
+
+test('merchant external methods use fixed server routes and validate event identifiers before IO',async()=>{
+  const calls=[];
+  const client=createReferralMerchantClient({baseUrl:'https://n3.example.test',secret,fetch:async(url,options)=>{
+    calls.push({url:String(url),body:JSON.parse(options.body)});return Response.json({data:{accepted:true}});
+  }});
+  await client.reserveExternalOrder({customerId:'account-1',amountMinor:99000,idempotencyKey:'invoice-1'});
+  await client.reportExternalEvent({orderId:tenantId,event:'payment.succeeded',objectId:tenantId});
+  assert.deepEqual(calls.map(c=>c.url),['https://n3.example.test/api/integration/external-orders','https://n3.example.test/api/integration/external-events']);
+  assert.throws(()=>client.reportExternalEvent({orderId:tenantId,event:'payment.pending',objectId:tenantId}));
+  assert.throws(()=>client.reportExternalEvent({orderId:'../bad',event:'payment.succeeded',objectId:tenantId}));
+  assert.throws(()=>client.reportExternalEvent({orderId:tenantId,event:'payment.succeeded',objectId:tenantId,amountMinor:1}));
+  assert.equal(calls.length,2);
+});

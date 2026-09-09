@@ -2,7 +2,7 @@ const TOKEN = /^[A-Za-z0-9_-]{43}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const MAX_RESPONSE_BYTES = 1024 * 1024;
 const TIMEOUT_MS = 8_000;
-const ROUTES = Object.freeze({ customer: '/api/integration/customers', checkout: '/api/integration/checkout', order: '/api/integration/order' });
+const ROUTES = Object.freeze({ customer: '/api/integration/customers', checkout: '/api/integration/checkout', order: '/api/integration/order', externalOrder: '/api/integration/external-orders', externalEvent: '/api/integration/external-events' });
 
 export class ReferralMerchantError extends Error {
   constructor(message, status = 503, code = 'REFERRAL_CLIENT_ERROR') {
@@ -123,6 +123,15 @@ export function createReferralMerchantClient({ baseUrl, secret, mode = 'producti
   return Object.freeze({
     bindCustomer(input, options) { return call('customer', customerInput(input), options); },
     createCheckout(input, options) { return call('checkout', checkoutInput(input), options); },
+    reserveExternalOrder(input, options) { return call('externalOrder', checkoutInput(input), options); },
+    reportExternalEvent(input, options) {
+      exactObject(input, ['orderId', 'event', 'objectId']);
+      const providerId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (typeof input.orderId !== 'string' || !UUID.test(input.orderId)
+        || typeof input.objectId !== 'string' || !providerId.test(input.objectId)
+        || !['payment.succeeded', 'refund.succeeded'].includes(input.event)) throw new TypeError('External event is invalid.');
+      return call('externalEvent', {...input}, options);
+    },
     getOrder(input, options) {
       exactObject(input, ['orderId']);
       return call('order', { orderId: text(input.orderId, 'orderId', 160) }, options);

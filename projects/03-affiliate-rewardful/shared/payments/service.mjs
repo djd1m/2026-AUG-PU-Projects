@@ -73,7 +73,7 @@ export function createPayments({pool,identity,now,config,fetchImpl,referrals}) {
       identity.fresh(resolved.expires_at); return {orderId:order.id,paymentId:payment.id,status:current.status==='succeeded'?'succeeded':payment.status==='succeeded'?'awaiting_notification':payment.status,confirmationUrl:payment.confirmationUrl};
     });
   }
-  async function connectorCheckout(token,input,key) {
+  async function reserveConnectorOrder(token,input,key,external=false) {
     assert(referrals,'INTEGRATION_UNAVAILABLE',503);
     safeTree(input); object(input,['customerId','amountMinor'],['customerId','amountMinor']);
     str(input.customerId,160); integer(input.amountMinor,1); str(key,160);
@@ -81,10 +81,10 @@ export function createPayments({pool,identity,now,config,fetchImpl,referrals}) {
       const resolved=await referrals.authorize(client,token);
       const {state}=await identity.lockedState(client,resolved);
       assert(enabled && state.runId===config.tenantId,'PAYMENT_UNCONFIGURED',503,'ЮKassa для этой организации не подключена');
-      const commandKey=`connector:${hash(key)}`;
+      const commandKey=`${external?'external':'connector'}:${hash(key)}`;
       const previous=(await client.query('SELECT * FROM checkout_orders WHERE tenant_id=$1 AND command_key=$2',[state.runId,commandKey])).rows[0];
       if(previous) {
-        assert(previous.source==='connector' && previous.shop_id===config.shopId && previous.test_mode===config.testMode,'SHOP_CHANGED',409);
+        assert(previous.source==='connector' && previous.external===external && previous.shop_id===config.shopId && previous.test_mode===config.testMode,'SHOP_CHANGED',409);
         assert(previous.input_hash===hash(input),'IDEMPOTENCY_CONFLICT',409);referrals.fresh(resolved);return previous;
       }
       const customer=await referrals.customer(client,state.runId,input.customerId);
@@ -98,12 +98,20 @@ export function createPayments({pool,identity,now,config,fetchImpl,referrals}) {
         attributedAt:customer.attributed_at?new Date(customer.attributed_at).toISOString():null,
         registeredAt:new Date(customer.registered_at).toISOString(),testMode:config.testMode};
       const paymentInput={customerId:input.customerId,amountMinor:input.amountMinor,beneficiaryId:customer.beneficiary_id,kind:'cash'};
-      const row=(await client.query(`INSERT INTO checkout_orders(id,tenant_id,shop_id,test_mode,command_key,input_hash,input,policy_id,created_at,source,attribution,return_url)
-        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,'connector',$10,$11) RETURNING *`,
-        [id(),state.runId,config.shopId,config.testMode,commandKey,hash(input),JSON.stringify(paymentInput),policy.id,new Date(now()),JSON.stringify(attribution),program.return_url])).rows[0];
+      const row=(await client.query(`INSERT INTO checkout_orders(id,tenant_id,shop_id,test_mode,command_key,input_hash,input,policy_id,created_at,source,attribution,return_url,external)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,'connector',$10,$11,$12) RETURNING *`,
+        [id(),state.runId,config.shopId,config.testMode,commandKey,hash(input),JSON.stringify(paymentInput),policy.id,new Date(now()),JSON.stringify(attribution),program.return_url,external])).rows[0];
       referrals.fresh(resolved);return row;
     });
+    return order;
+  }
+  async function connectorCheckout(token,input,key) {
+    const order=await reserveConnectorOrder(token,input,key);
     return completeOrder(order,client=>referrals.authorize(client,token));
+  }
+  async function externalOrder(token,input,key) {
+    const order=await reserveConnectorOrder(token,input,key,true);
+    return {orderId:order.id,status:order.status,testMode:order.test_mode,amountMinor:order.input.amountMinor,currency:'RUB'};
   }
   async function connectorOrder(token,orderId) {
     assert(referrals,'INTEGRATION_UNAVAILABLE',503);str(orderId);assert(/^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(orderId));
@@ -133,6 +141,10 @@ export function createPayments({pool,identity,now,config,fetchImpl,referrals}) {
       assert(state,'FORBIDDEN',403);
       const order=(await client.query('SELECT * FROM checkout_orders WHERE id=$1 AND tenant_id=$2 AND shop_id=$3 FOR UPDATE',
         [payment.orderId,config.tenantId,config.shopId])).rows[0];
+      return applyVerified(client,state,order,payment,refund);
+    });
+  }
+  async function applyVerified(client,state,order,payment,refund) {
       assert(order,'PAYMENT_BINDING_CONFLICT',409);
       assert((!order.provider_id || order.provider_id===payment.id) && order.input.amountMinor===payment.amountMinor,
         'PAYMENT_BINDING_CONFLICT',409,'Платёж не соответствует заявке');
@@ -149,7 +161,38 @@ export function createPayments({pool,identity,now,config,fetchImpl,referrals}) {
       await persistChanges(client,state.runId,before,state);
       await client.query("UPDATE checkout_orders SET provider_id=$2,status='succeeded' WHERE id=$1",[order.id,payment.id]);
       return {accepted:true,payment:result,refund:correction};
+  }
+  async function externalEvent(token,input) {
+    assert(referrals,'INTEGRATION_UNAVAILABLE',503);
+    safeTree(input);object(input,['orderId','event','objectId'],['orderId','event','objectId']);
+    const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
+    assert(typeof input.orderId==='string' && uuid.test(input.orderId));
+    assert(typeof input.objectId==='string' && uuid.test(input.objectId));
+    assert(['payment.succeeded','refund.succeeded'].includes(input.event));
+    async function authorizedOrder(client) {
+      const resolved=await referrals.authorize(client,token);
+      const {state}=await identity.lockedState(client,resolved);
+      assert(enabled && state.runId===config.tenantId,'PAYMENT_UNCONFIGURED',503);
+      const order=(await client.query("SELECT * FROM checkout_orders WHERE id=$1 AND tenant_id=$2 AND source='connector' AND external=true FOR UPDATE",[input.orderId,state.runId])).rows[0];
+      assert(order,'NOT_FOUND',404);
+      assert(order.shop_id===config.shopId && order.test_mode===config.testMode,'SHOP_CHANGED',409);
+      referrals.fresh(resolved);return {resolved,state,order};
+    }
+    await transaction(pool,authorizedOrder);
+    const {payment,refund}=await remote(async()=>{
+      const refund=input.event==='refund.succeeded'?await provider.getRefund(input.objectId):null;
+      assert(!refund || refund.status==='succeeded','PROVIDER_UNVERIFIED',409);
+      const payment=await provider.getPayment(refund?refund.paymentId:input.objectId);
+      assert(payment.status==='succeeded' && payment.paid && payment.paidAt!==null,'PROVIDER_UNVERIFIED',409);
+      assert(payment.orderId===input.orderId,'PAYMENT_BINDING_CONFLICT',409);
+      assert(!refund || refund.amountMinor<=payment.amountMinor,'PAYMENT_BINDING_CONFLICT',409);
+      return {payment,refund};
+    });
+    return transaction(pool,async client=>{
+      const {resolved,state,order}=await authorizedOrder(client);
+      await applyVerified(client,state,order,payment,refund);
+      referrals.fresh(resolved);return {accepted:true,orderId:order.id};
     });
   }
-  return {checkout,status,webhook,connectorCheckout,connectorOrder};
+  return {checkout,status,webhook,connectorCheckout,connectorOrder,externalOrder,externalEvent};
 }
