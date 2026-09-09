@@ -7,6 +7,12 @@ const nextConfig = {
   transpilePackages: ['@proofwall/db'],
   poweredByHeader: false,
   outputFileTracingRoot: new URL('../../', import.meta.url).pathname,
+  webpack(config) {
+    // Shared worker sources use NodeNext .js specifiers; resolve their TypeScript
+    // sources when Next bundles the same server-only transport implementation.
+    config.resolve.extensionAlias = { ...config.resolve.extensionAlias, '.js': ['.ts', '.tsx', '.js'] };
+    return config;
+  },
 };
 
 export default nextConfig;
