@@ -2,7 +2,7 @@
 
 Статус: план тестов, не выполненная приёмка. Каждый SC-ID является именованным критерием; отдельное семейство AC не вводится.
 
-Spec revision: sha256:a238045ef63ef2d6084afae8e83320521fa60a0b3d37f45980382a61427dbd50
+Spec revision: sha256:7457c9f705230ad34b7b55ec32774e1aba3276f683be7c5af55f3825af8fe23e
 
 ## Criterion scenarios
 
@@ -374,7 +374,7 @@ Scenario: SC-US-007-4 — shared tax reservation
 Scenario: SC-US-007-5 — restore evidence
   Given перевод состоялся после backup и RecoveryGate закрывает финансовые записи
   When оператор вносит evidence о переводе
-  Then наблюдение сохранено даже без preparation; payment/refund posting и обычный confirm запрещены до сверки; evidence-based reconciliation атомарно обновляет резерв/YTD.
+  Then наблюдение сохранено даже без preparation; payment/refund posting и обычный confirm запрещены до сверки; повтор/конкурентная сверка и сбой до commit дают ровно оракул fixture R1 из Refinement.md без частичного sent/YTD.
 ```
 
 ```gherkin
@@ -400,9 +400,9 @@ Scenario: SC-US-013-6 — existing account and delegation
 
 ```gherkin
 Scenario: SC-US-006-6 — manual confirmation happy
-  Given замороженная строка, действующая tax preparation, payout scope, дата/evidence внешнего перевода
-  When уполномоченный оператор дважды отмечает тот же перевод
-  Then одна append-only отметка и одно изменение YTD; snapshot неизменен; sent означает заявление оператора, банковский перевод N3a не инициирует.
+  Given сентябрьская замороженная строка с due_date5октября, действующая tax preparation, payout scope, evidence перевода actual_date5октября
+  When уполномоченный оператор дважды отмечает тот же перевод, затем проверяются отдельные примеры actual_date4/6октября
+  Then для5октября одна append-only отметка и одно изменение YTD; для4/6октября обычный confirm запрещён, observation сохраняет факт, после сверки виден early/late без смены due_date; snapshot неизменен, sent — заявление оператора, N3a не переводит деньги.
 ```
 
 ```gherkin
@@ -414,7 +414,7 @@ Scenario: SC-US-004-4 — forged intake
 
 ```gherkin
 Scenario: SC-US-009-4 — proposed platform leads
-  Given владелец одобрит предложенный lead-only scope N3a, участник принимает его явные условия
-  When выдаются персональные link/code и приходит квалифицированный лид платформы
-  Then отдельный platform контекст и одна lead-запись; любая оплата N1 даёт нулевой денежный эффект в platform контексте.
+  Given тестовый контур предложения D7 (не принятая MVP-обязанность до решения владельца), участник принял явные условия
+  When owner платформенной программы дважды подтверждает квалификацию лида с evidence, stable subject_id, timestamp и принадлежащим программе asset
+  Then одна запись unique(program,subject,qualified_lead), retry возвращает её ID, конфликт asset отклонён; click/signup не квалифицируют лид автоматически; ledger платформы неизменен, оплата N1 даёт нулевой денежный эффект в platform контексте.
 ```
