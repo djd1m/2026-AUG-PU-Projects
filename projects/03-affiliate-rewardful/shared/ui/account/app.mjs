@@ -4,9 +4,10 @@ import {
   renderPayments, rub,
 } from './helpers.mjs';
 import { mountReferralPanel } from './referrals.mjs';
+import { mountAccessUI, readAccountFragment } from './access.mjs';
 
 const ui = Object.fromEntries([
-  'notice', 'auth', 'workspace', 'login', 'email', 'password', 'name', 'register', 'logout',
+  'notice', 'auth', 'workspace', 'business', 'verification-gate', 'login', 'logout',
   'identity', 'membership', 'refresh', 'summary', 'merchant', 'participant', 'owner-invite',
   'invite', 'invitation-output', 'accept', 'payment-status', 'checkout', 'checkout-output',
   'policy', 'registry', 'registries', 'enroll', 'share', 'mint-agent', 'agent-expires',
@@ -27,7 +28,13 @@ let screen = null;
 let issuedAgent = null;
 let logoutPending = false;
 let fragmentInvitation = false;
+let accessPanel;
+const incomingFragment = readAccountFragment();
+let incomingInvitation = incomingFragment.invitation;
+const preserveInitialAccess = Boolean(incomingFragment.proof);
+delete incomingFragment.invitation;
 const referralContainer=element('section');referralContainer.id='referral-funnel';
+referralContainer.hidden=true;
 ui.workspace.append(referralContainer);
 const referralPanel=mountReferralPanel({container:referralContainer,action,request,getMembership:()=>membership,notify});
 
@@ -44,8 +51,9 @@ function clearIssuedAgent() {
   ui['probe-agent'].hidden = true;
 }
 
-function clearContextSecrets({ preserveIncoming = false, resetAuth = false } = {}) {
+function clearContextSecrets({ preserveIncoming = false, preserveAccess = false } = {}) {
   referralPanel.clear();
+  referralContainer.hidden = true;
   clearIssuedAgent();
   ui['invitation-output'].value = '';
   ui['invitation-output'].hidden = true;
@@ -53,26 +61,27 @@ function clearContextSecrets({ preserveIncoming = false, resetAuth = false } = {
   for (const form of [ui.checkout, ui.policy, ui.registry]) form.reset();
   ui.checkout.elements.beneficiaryId.replaceChildren();
   if (!preserveIncoming) ui.accept.reset();
-  ui['change-password'].reset();
-  ui.password.value = '';
-  if (resetAuth) ui.login.reset();
+  accessPanel?.clearSecrets({ preserveProof: preserveAccess });
   ui.identity.textContent = '';
   for (const id of ['summary', 'registries', 'share', 'checkout-output', 'agent-list', 'tasks']) {
     ui[id].replaceChildren();
   }
   ui['payment-status'].textContent = '';
+  ui.business.hidden = true;
+  ui['verification-gate'].hidden = true;
   ui.workspace.hidden = true;
 }
 
-function signedOut(message = '', { invalidate = true, preserveIncoming = false } = {}) {
+function signedOut(message = '', { invalidate = true, preserveIncoming = false, preserveAccess = false } = {}) {
   if (invalidate) contexts.replace();
   identity = null;
   membership = null;
   screen = null;
   keys.clear();
-  clearContextSecrets({ preserveIncoming, resetAuth: true });
+  clearContextSecrets({ preserveIncoming, preserveAccess });
   ui.workspace.hidden = true;
   ui.auth.hidden = false;
+  accessPanel?.setIdentity(null);
   ui.membership.replaceChildren();
   if (message) notify(message);
 }
@@ -132,8 +141,25 @@ function list(value, field) {
 
 async function loadIdentity(context, preferredMembershipId) {
   const nextIdentity = await request(context, 'me', undefined, { get: true });
+  if (!['emailVerified', 'verificationRequired', 'hasPassword', 'yandexLinked']
+    .every(key => typeof nextIdentity?.[key] === 'boolean')) {
+    throw new Error('Сервер не вернул состояние безопасности аккаунта.');
+  }
   const memberships = Array.isArray(nextIdentity.memberships) ? nextIdentity.memberships : [];
   identity = nextIdentity;
+  accessPanel.setIdentity(identity);
+  ui.identity.textContent = `${display(identity.email)}${identity.emailVerified === true ? ' · почта подтверждена' : ' · почта не подтверждена'}`;
+  ui.auth.hidden = true;
+  ui.workspace.hidden = false;
+  if (accessPanel.securityOnly(identity)) {
+    membership = null;
+    screen = null;
+    ui.membership.replaceChildren();
+    ui.business.hidden = true;
+    ui['verification-gate'].hidden = false;
+    return;
+  }
+  ui['verification-gate'].hidden = true;
   membership = memberships.find(item => item.membershipId === preferredMembershipId)
     ?? memberships[0] ?? null;
   ui.membership.replaceChildren(...memberships.map(item => {
@@ -143,6 +169,7 @@ async function loadIdentity(context, preferredMembershipId) {
     return option;
   }));
   if (!membership) throw new Error('У аккаунта нет доступной организации.');
+  ui.business.hidden = false;
   await refreshWorkspace(context);
 }
 
@@ -186,6 +213,7 @@ async function refreshWorkspace(context = contexts.capture()) {
   render();
   ui.auth.hidden = true;
   ui.workspace.hidden = false;
+  ui.business.hidden = false;
 }
 
 function registryRef(registry) {
@@ -289,34 +317,33 @@ function render() {
   if(!referralContainer.hidden)referralPanel.render(screen.referrals,membership);else referralPanel.clear();
 }
 
-ui.login.addEventListener('submit', event => {
-  event.preventDefault();
-  if (logoutPending) return notify('Выход ещё не подтверждён сервером. Дождитесь ответа.', true);
-  const credentials = { email: ui.email.value, password: ui.password.value };
-  clearContextSecrets({ preserveIncoming: fragmentInvitation });
-  void action(ui.login, async context => {
-    await request(context, 'login', credentials);
+accessPanel = mountAccessUI({
+  action,
+  request,
+  onAuthenticated: async context => {
+    await accessPanel.loadStatus(context);
     await loadIdentity(context);
     fragmentInvitation = false;
-  }, 'Вход выполнен.', { replace: true });
+  },
+  onBeforeAuthSwitch: () => {
+    if (logoutPending) {
+      notify('Выход ещё не подтверждён сервером. Дождитесь ответа.', true);
+      return false;
+    }
+    clearContextSecrets({ preserveIncoming: fragmentInvitation });
+    return true;
+  },
+  onSignedOut: message => signedOut(message),
+  notify,
+  fragment: incomingFragment,
 });
-
-ui.register.addEventListener('click', () => {
-  if (logoutPending) return notify('Выход ещё не подтверждён сервером. Дождитесь ответа.', true);
-  const registration = { email: ui.email.value, password: ui.password.value, name: ui.name.value };
-  clearContextSecrets({ preserveIncoming: fragmentInvitation });
-  return void action(ui.login, async context => {
-    await request(context, 'register', registration);
-    await loadIdentity(context);
-    fragmentInvitation = false;
-  }, 'Аккаунт и организация созданы.', { replace: true });
-});
+delete incomingFragment.proof;
 
 ui.logout.addEventListener('click', () => {
   const context = contexts.replace();
   signedOut('', { invalidate: false });
   logoutPending = true;
-  void disableWhile(ui.login, async () => {
+  void disableWhile(ui.auth, async () => {
     try {
       await request(context, 'logout', {});
       if (contexts.current(context)) notify('Вы вышли из аккаунта.');
@@ -447,36 +474,21 @@ ui['probe-agent'].addEventListener('click', () => void action(ui['probe-agent'],
   notify(`MCP подключён. Доступно инструментов: ${tools.tools.length}.`);
 }));
 
-ui['change-password'].addEventListener('submit', event => {
-  event.preventDefault();
-  void action(ui['change-password'], async context => {
-    const form = new FormData(ui['change-password']);
-    await request(context, 'password', {
-      currentPassword: form.get('currentPassword'), newPassword: form.get('newPassword'),
-    });
-    signedOut('Пароль изменён. Все сеансы и агентные ключи отозваны; войдите снова.');
-  });
-});
-
 function invitationFromFragment() {
-  const match = /^#invite=([^&]+)$/.exec(location.hash);
-  if (!match) return;
-  try {
-    const value = decodeURIComponent(match[1]);
-    if (/^[A-Za-z0-9_-]{43}$/.test(value)) {
-      ui.accept.elements.invitation.value = value;
-      fragmentInvitation = true;
-    }
-    else notify('Ссылка приглашения имеет неверный формат.', true);
-  } catch { notify('Ссылка приглашения имеет неверный формат.', true); }
-  history.replaceState(null, '', `${location.pathname}${location.search}`);
+  if (!incomingInvitation) return;
+  ui.accept.elements.invitation.value = incomingInvitation;
+  incomingInvitation = null;
+  fragmentInvitation = true;
 }
 
 invitationFromFragment();
 const initialContext = contexts.capture();
-loadIdentity(initialContext).catch(error => {
+accessPanel.loadStatus(initialContext).then(() => loadIdentity(initialContext)).catch(error => {
   if (!contexts.current(initialContext)) return;
   if (error instanceof AccountApiError && error.status === 401) {
-    signedOut('', { preserveIncoming: fragmentInvitation });
-  } else { signedOut('', { preserveIncoming: fragmentInvitation }); report(error); }
+    signedOut('', { preserveIncoming: fragmentInvitation, preserveAccess: preserveInitialAccess });
+  } else {
+    signedOut('', { preserveIncoming: fragmentInvitation, preserveAccess: preserveInitialAccess });
+    report(error);
+  }
 });
