@@ -4,7 +4,7 @@
   "profile": "compact-quality-first-v2",
   "project_root": "projects/03a-affiliate-rewardful",
   "started_at": "2026-09-09T17:48:21.808319+00:00",
-  "status": "running",
+  "status": "blocked",
   "risk_tier": "XL",
   "scope": "Chosen CJM A → reviewed requirements and implementation plan; no application code",
   "accepted_cjm": "A",
@@ -23,7 +23,28 @@
     "Token and billing counters unavailable",
     "Pre-run context reading excluded; duration not reconstructed"
   ],
-  "stages": [],
+  "stages": [
+    {
+      "stage": "PLAN",
+      "status": "completed",
+      "result": "PRD/Specification/architecture plus three correction iterations; D7 remains proposed"
+    },
+    {
+      "stage": "VALIDATE",
+      "status": "completed",
+      "result": "Six lenses delivered; CAVEATS; no open technical blocker/high on bound candidate"
+    },
+    {
+      "stage": "INTEGRATE",
+      "status": "completed",
+      "result": "Verified receipts and documentation report assembled; Git publication follows checkpoint snapshot"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "status": "not_started",
+      "reason": "Concrete XL owner checkpoint and D7 decision pending"
+    }
+  ],
   "schema_version": "feature-telemetry-v1",
   "policy_version": "compact-quality-first-v2",
   "batch_id": null,
@@ -44,42 +65,79 @@
   ],
   "comparison_id": null,
   "baseline_revision": "bccd5bb43131a2a9b363aadabdf38de47aa9ef96",
-  "final_revision": null,
-  "spec_sha256": null,
+  "final_revision": "1e346bef85cb13cb3cb37bc0eb55e01ec5af7fad",
+  "spec_sha256": "ebdbb78650429072e998d694460501894a5f87ca049f7af0828df826898aa8f7",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
   "billing_mode": "unknown",
-  "ended_at": null,
-  "acceptance_evidence": [],
+  "ended_at": "2026-09-09T19:24:17.335394+00:00",
+  "acceptance_evidence": [
+    "docs/validation-report.md",
+    "docs/telemetry/p-replicator/20260909T174821Z-prd-a-1934/evidence/candidate-v3-gates.json",
+    "docs/telemetry/p-replicator/20260909T174821Z-prd-a-1934/evidence/receipts-verification.json"
+  ],
   "quality": {
     "required_gates_passed": false,
     "ac_met": null,
-    "ac_total": null,
-    "confirmed_findings_by_severity": {},
+    "ac_total": 51,
+    "confirmed_findings_by_severity": {
+      "blocker": 1,
+      "high": 7,
+      "medium": 3,
+      "warning": 1
+    },
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "pending"
+    "followup_status": "pending",
+    "ac_scope": "50 required scenarios of described N1 contour and1 explicit proposed D7 scenario; all are planned, runtime unexecuted",
+    "finding_count_basis": "12 adjudicated root-cause groups G01-G12 in validation-report; not sum of overlapping raw reviewer findings",
+    "open_findings_by_severity": {
+      "blocker": 0,
+      "high": 0,
+      "medium": 1,
+      "warning": 0
+    },
+    "documentation_verdict": "CAVEATS",
+    "final_lenses_delivered": 6,
+    "final_lenses_required": 6,
+    "stories_score": 90.8,
+    "acceptance_score": 90.3,
+    "blocked_stories_by_floor": 0,
+    "first_pass_acceptance": false,
+    "correction_iterations": 3
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 5755527,
     "active_wall_ms": null,
     "agent_work_ms": null,
     "tokens": null,
-    "cost": null
+    "cost": null,
+    "user_wait_ms": null,
+    "infra_wait_ms": null,
+    "measurement_scope": "Recorded run start through checkpoint snapshot; includes unsegmented inter-turn waiting; final git publication after snapshot excluded"
   },
   "telemetry_status": "partial",
   "missing_data": {
     "batch_id": "single run",
     "comparison_id": "no paired baseline",
-    "final_revision": "run ongoing",
-    "spec_sha256": "not yet produced",
     "host_version": "not exposed",
     "actual_models": "tool attestation unavailable",
     "usage": "not exposed",
-    "cost": "not exposed",
+    "cost": "Host billing/rate basis and usage not exposed",
     "active_wall_ms": "wait intervals not fully instrumented",
-    "quality.known_defects_missed": "no known defect oracle"
-  }
+    "quality.known_defects_missed": "no known defect oracle",
+    "agent_work_ms": "Incomplete worker-entry clocks; do not sum observed review tails as full work",
+    "user_wait_ms": "Inter-turn waiting start/end were not fully captured; D7 pending input overlapped useful work",
+    "infra_wait_ms": "No complete named interval accounting",
+    "tokens": "Host usage counters not exposed",
+    "quota": "Host quota not exposed",
+    "quality.ac_met": "Runtime scenarios not executed; named links are not pass results",
+    "quality.regressions": "No runtime implementation or seven-day followup",
+    "quality.false_positive_findings": "No complete separately adjudicated false-positive census",
+    "final_publication_duration": "Git publication occurs after checkpoint snapshot and is not included in elapsed"
+  },
+  "final_revision_scope": "Independently reviewed document candidate; publication adds report/telemetry and declared status-only overlay",
+  "blocking_reason": "Awaiting owner D7 business-scope decision and concrete XL-plan approval; documentation validation completed CAVEATS"
 }

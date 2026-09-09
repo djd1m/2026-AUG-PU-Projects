@@ -1,0 +1,82 @@
+{
+  "input_revision": "1e346be",
+  "checked_at": "2026-09-09T19:13:32.539894+00:00",
+  "input_sha256": {
+    "PRD.md": "c01affc243901a30ca77afad8db7cf5e665bd6f688504f87963f51f9e271f4c8",
+    "Specification.md": "ebdbb78650429072e998d694460501894a5f87ca049f7af0828df826898aa8f7",
+    "Pseudocode.md": "04e507c854972339e1beed6d727852df8bbdae3e43e304263afddbc67cbae192",
+    "Architecture.md": "ae52f38cf8ae686b931055f7067a5698b0c6c9c506ebc0c2ff5f7f4e2466bf4e",
+    "ADR.md": "545cd33be2d0a4249362bf323dbe6a05bb7e4f8ee491e92c7abff96ba4ce9463",
+    "C4_Diagrams.md": "342aefb6a6f6f9738b78eb79837c9eb9768186d0f16868e432c9fcab70d4d5b3",
+    "Refinement.md": "afd96e0545c56a5f3ca96b7a0aace28ba8e1a48e2621c31e30e286a6f27d6d5a",
+    "Completion.md": "b4dc3683129fe10d99096a4d8372223f36e0a7e6b87236fd6ca674c1260068e0",
+    "Final_Summary.md": "8979e07d0501eb99e4087f35c9f29618954bcd65696eecb23585502e910f7466",
+    "implementation-plan.md": "ce4c312180a493fa606c3f378b00305c7236931300b022f67165608ecd951d0b",
+    "test-scenarios.md": "a9f0c65c5a7435695888b39586d4e3c5775136795588869e4e040efebb8cc995",
+    "source-product-profile.md": "7d9b0a780b75446f2bc36a760511ede969795374bcc8c98dfd1eeabfc4c7a43f",
+    "product-discovery-brief.md": "2254286a9384e4974488bebc90c623e6faa70b52d228c2bdd5b4199aaf0fa9d3"
+  },
+  "checks": [
+    {
+      "check": "check-docs-complete",
+      "exit_code": 0,
+      "output": "⚠️  на глаз (НЕ блокирует — скрипт не отличает шаблон от подписи к диаграмме):\n   • Pseudocode.md: возможно незаполнено — [1..10000], [−C,0]\n✅ все обязательные документы на месте, непусты и без незаполненных шаблонов (11 проверено)\n   Ограничение: это доказывает, что документы НАПИСАНЫ, а не что они верны.\n   Верность — работа роя валидации Фазы 2; проверка лишь не даёт потратить его впустую.\n"
+    },
+    {
+      "check": "check-external-deps",
+      "exit_code": 0,
+      "output": "✅ инвентарь на месте: 4 способност(ей), у каждой вердикт из закрытой тройки (4 CONFIRMED, 0 UNCONFIRMED)\n   Ограничение: проверка НЕ ОТКРЫВАЕТ ссылку и не отличает настоящую цитату от выдуманной. Доказано, что доказательство ПРЕДЪЯВЛЕНО в требуемой форме, — не что оно истинно (слой 3).\n"
+    },
+    {
+      "check": "check-growth-trace",
+      "exit_code": 0,
+      "output": "✅ все 4 требований по росту прослежены в docs/Specification.md либо отклонены с причиной\n   Ограничение: это доказывает, что обязательство ДОНЕСЛИ, а не что его построили.\n"
+    },
+    {
+      "check": "check-handoff-manifest",
+      "exit_code": 0,
+      "output": "✅ все 14 выход(ов) Фазы 0 получили ответ по списку в 11 документ(ах) Фазы 1 — использованы либо отклонены с причиной\n   Ограничение: это доказывает, что выход ОТВЕЧЕН, а не что ответ хорош. Инсайт можно процитировать и применить неверно — этого не видит ни одна детерминированная проверка (слой 3).\n"
+    },
+    {
+      "check": "check-look-origin",
+      "exit_code": 0,
+      "output": "✅ происхождение проверено: непромотированных строк ГИПОТЕЗА/УСТАРЕЛО — 0\n"
+    },
+    {
+      "check": "check-look-trace",
+      "exit_code": 2,
+      "output": "⚠️  проверка НЕ выполнена: облик источника НЕ ИЗМЕРЕН, причина: no-browser-mcp\n    источник назван, но не снят — это честное «неизвестно», а не «требований по облику нет»; отраслевая палитра в этом состоянии остаётся фолбэком, и он помечается как фолбэк\n"
+    },
+    {
+      "check": "check-webhook-contract",
+      "exit_code": 2,
+      "output": "⚠️  проверка НЕ выполнена: повторная доставка НЕ ВОСПРОИЗВОДИЛАСЬ, причина: not-implemented\n    честное «неизвестно», а не «обработчик идемпотентен»; до закрытия причины ни один из трёх классов отказа не проверен\n"
+    },
+    {
+      "check": "check-metric-source",
+      "exit_code": 0,
+      "output": "✅ 4 метрик(и) в docs/Final_Summary.md называют источник значения из закрытого списка (журнал 1, БД 2, внешний API 0, вручную 1)\n   Ограничение: проверка НЕ ЗОВЁТ API и не знает, существует ли метод; она доказывает, что вопрос «сможем ли мы это добыть» ЗАДАН и получил один из четырёх ответов (слой 3 — сам ответ).\n"
+    },
+    {
+      "check": "role-and-scenario-trace",
+      "exit_code": 0,
+      "requirements": 36,
+      "scenarios": 51,
+      "algorithm_claims": 48,
+      "ui_only": [
+        "SC-US-012-1",
+        "SC-US-012-2",
+        "SC-US-012-3"
+      ],
+      "bdd_spec_sha256_matches": true
+    }
+  ],
+  "external_review_reuse": {
+    "original_receipt": "dependencies-v1.md",
+    "section_byte_equal": true,
+    "extraction": "heading through byte before next level2 heading",
+    "section_sha256": "8f474c56283e0dfda03a316f9896eadb7cc32656d7cd4110846899449968a903",
+    "note": "Same capability section; changes outside section only local recovery/calendaring/identity, no new provider APIs. Receipt original extractor digest differs; direct old/new bytes equality verified here."
+  },
+  "line_limit_pass": true
+}
