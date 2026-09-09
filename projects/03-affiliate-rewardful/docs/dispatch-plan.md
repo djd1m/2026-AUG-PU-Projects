@@ -35,5 +35,8 @@
 | package.json | координатор |
 | package-lock.json | координатор |
 | docs/** | координатор |
+| shared/client/** | координатор |
+| shared/ui/** | координатор |
+| shared/contracts/** | координатор |
 
 Scope ownership is by directory; exact new paths must be listed in worker receipt before integration. Only core writer uses isolated worktree /tmp/n3-shared-core-work. container-integration is executed by coordinator in primary checkout; no second writer there. Variants app implementation starts sequentially after core acceptance. No cross-owned files are edited concurrently. New file split keeps the owning directory scope; any split across scope requires coordinator update before write.

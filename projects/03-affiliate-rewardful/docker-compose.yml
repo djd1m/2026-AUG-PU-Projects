@@ -1,0 +1,75 @@
+name: n3-shared
+services:
+  postgres:
+    image: postgres:16.15-alpine
+    entrypoint: ["/bin/sh", "/etc/n3-entrypoint.sh"]
+    command: [postgres]
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: n3
+      POSTGRES_USER: n3_admin
+      POSTGRES_PASSWORD_FILE: /run/secrets/n3_db_admin_password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    secrets:
+      - n3_db_admin_password
+      - n3_db_app_password
+    expose: ["5432"]
+    networks: [database]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init-app.sh:/docker-entrypoint-initdb.d/10-app.sh:ro
+      - ./config/postgres/entrypoint.sh:/etc/n3-entrypoint.sh:ro
+    tmpfs: ["/tmp:mode=1777,size=16m"]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U n3_admin -d n3"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    mem_limit: 384m
+    cpus: 1.0
+  api:
+    image: n3-api:0.1.0
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    environment:
+      N3_MODE: fixture
+      PORT: "3000"
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: n3
+      PGUSER: n3_app
+      PGPASSWORD_FILE: /run/secrets/n3_db_app_password
+    secrets: [n3_db_app_password]
+    networks: [database, frontend]
+    ports:
+      - "${N3_BIND:-127.0.0.1}:${N3_API_PORT:-13030}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 4s
+      retries: 6
+    read_only: true
+    tmpfs: ["/tmp:mode=1777,size=64m"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    cap_add: [SETUID, SETGID]
+    mem_limit: 512m
+    cpus: 1.0
+networks:
+  database:
+    internal: true
+    name: n3-database
+  frontend:
+    name: n3-frontend
+volumes:
+  postgres_data:
+secrets:
+  n3_db_admin_password:
+    file: ./.runtime/db-admin-password
+  n3_db_app_password:
+    file: ./.runtime/db-app-password

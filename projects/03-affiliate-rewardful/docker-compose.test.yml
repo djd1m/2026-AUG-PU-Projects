@@ -1,0 +1,31 @@
+name: n3-core-test
+services:
+  backend:
+    image: node:22.22.0-bookworm-slim
+    working_dir: /app
+    command: [node, --test, "tests/core*.test.mjs"]
+    restart: unless-stopped
+    environment:
+      N3_MODE: fixture
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: n3
+      PGUSER: n3_app
+      PGPASSWORD_FILE: /run/secrets/n3_db_app_password
+    secrets: [n3_db_app_password]
+    volumes:
+      - ${N3_TEST_SOURCE:-.}:/app:ro
+    networks: [database]
+    read_only: true
+    tmpfs: ["/tmp:mode=1777,size=64m"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    cpus: 1.0
+networks:
+  database:
+    external: true
+    name: n3-database
+secrets:
+  n3_db_app_password:
+    file: ./.runtime/db-app-password
