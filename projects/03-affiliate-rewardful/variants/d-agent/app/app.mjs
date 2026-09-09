@@ -20,13 +20,13 @@ const delegated = (action,input={},options={}) => {
 };
 function save() {
   // Store references and replay keys, never cached financial results or credentials.
-  const {grant,grantDenied,logical,selectedTaskId,previousTaskId,artifactId,grantKey,refundReceipt}=state;
-  sessionStorage.setItem(storageKey(),JSON.stringify({grant,grantDenied,logical,selectedTaskId,previousTaskId,artifactId,grantKey,refundReceipt}));
+  const {grant,grantDenied,logical,selectedTaskId,previousTaskId,artifactId,grantKey}=state;
+  sessionStorage.setItem(storageKey(),JSON.stringify({grant,grantDenied,logical,selectedTaskId,previousTaskId,artifactId,grantKey}));
 }
 async function refreshOwner() {
   if(role!=='merchant')return;
   if(state.artifactId)artifact=await direct('registry.read',{artifactId:state.artifactId});
-  if(labActive)dashboard=await direct('dashboard');
+  if(labActive||state.artifactId)dashboard=await direct('dashboard');
 }
 async function refreshTask() {
   if(!state.selectedTaskId)return;
@@ -50,7 +50,7 @@ async function refresh() {
 }
 function render() {
   const common=roleSelector(role,availableRoles());
-  const result=role==='merchant'?artifactView(artifact,state,state.artifactId?api.handoff(state.artifactId):''):personalView(role,state.task);
+  const result=role==='merchant'?artifactView(artifact,state,state.artifactId?api.handoff(state.artifactId):'',dashboard):personalView(role,state.task);
   const body=common+(view==='access'?grantView(role,actor(),state):view==='result'?result:
     hero(role,state.task)+`<div class="workflow-grid">${grantView(role,actor(),state)}${taskView(role,state)}</div>`+result)+
     (role==='merchant'?ownerLab(labActive,dashboard):'');
@@ -151,7 +151,7 @@ function bind() {
     'owner-approve':[async()=>{artifact=await direct('registry.approve',exact(artifact));},'Владелец утвердил показанные revision и hash.'],
     'owner-export':[async()=>{const result=await direct('registry.export',exact(artifact));download(result.filename,result.csv);await refreshOwner();},'Утверждённый CSV скачан. Перевод не запускался.'],
     'lab-open':[async()=>{dashboard=await direct('dashboard');labActive=true;},'Лаборатория открыта явным действием владельца.'],
-    'lab-refund':[async()=>{const result=await direct('fixture.event',dashboard.fixtureEvents.refund);await refreshOwner();state.refundReceipt={...result,sourceVersion:dashboard.sourceVersion};save();},'Fixture refund обработан сервером. Пересчитайте тот же реестр новой задачей.'],
+    'lab-refund':[async()=>{await direct('fixture.event',dashboard.fixtureEvents.refund);await refreshOwner();},'Fixture refund обработан сервером. Пересчитайте тот же реестр новой задачей.'],
     'lab-advance':[async()=>{await direct('fixture.advance',{days:1});await refreshOwner();},'Часы стенда сдвинуты на день. Следующий делегированный шаг проверит срок grant.'],
     'credit-deny-reserve':[denyReserve],
   };
