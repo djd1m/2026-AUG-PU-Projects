@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import { runMigrations } from '../packages/db/src/migrate.ts';
+import { onboardingExperiments } from './onboarding-mutation-check.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const namespace = process.env.N3A_DISPOSABLE_TEST_NAMESPACE;
@@ -14,6 +15,7 @@ if (!/^n3a-foundation-[a-f0-9]{12}$/.test(namespace ?? '') || !url || new URL(ur
   throw new Error('mutation_requires_isolated_foundation_test_namespace');
 }
 const experiments = [
+  ...onboardingExperiments,
   { name: 'runtime-startup-config', file: 'scripts/start-web.ts', from: 'readRuntimeConfig(process.env);', to: '', test: 'tests/startup.test.ts' },
   { name: 'kdf-capacity', file: 'apps/web/src/lib/auth/kdf-admission.ts', from: 'this.active < 2', to: 'this.active < 3', test: 'apps/web/tests/kdf-admission.test.ts' },
   { name: 'session-revocation', file: 'packages/db/src/auth-repository.ts', from: 'AND s.revoked_at IS NULL', to: '', test: 'packages/db/tests/auth-repository.integration.test.ts' },

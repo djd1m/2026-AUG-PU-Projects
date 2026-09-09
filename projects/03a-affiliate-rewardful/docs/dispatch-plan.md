@@ -109,4 +109,9 @@
 | apps/web/src/app/api/programs/[id]/assets/[asset]/revoke/route.ts | координатор |
 | apps/web/src/app/api/programs/[id]/partner-assets/route.ts | координатор |
 
+| apps/web/next.config.ts | координатор |
+
+| scripts/prepare-onboarding-browser.mjs | координатор |
+| scripts/mutation-check.mjs | координатор |
+
 Only new SQL migrations after002 and onboarding-prefixed test/repository splits may be proposed by core. Exact paths are added here before creation. Core confirmed DTO SHA before UI launch; only the listed UI files now belong to identity-ui. UI may add named component splits after coordinator records ownership. Coordinator also owns all run/events, lifecycle reports, provenance and source receipts. Each writer has its own worktree; no donor runtime writes. Foundation prior dispatch is preserved in this run.

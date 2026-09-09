@@ -65,7 +65,7 @@ it('AC3 CSRF binds anonymous or current session context, exact Origin and expiry
   for (const context of [null, csrfBinding(randomBytes(32), anon), csrfBinding(null, randomBytes(32).toString('base64url'))])
     expect(() => verifyCsrf(request(), 'https://n3a.example.test', context, secret, now)).toThrow('csrf_rejected');
   expect(() => verifyCsrf(request(), 'https://n3a.example.test', binding, secret, now + 1_800_000)).toThrow('csrf_rejected');
-  expect(() => verifyCsrf(request(proof.token.slice(0, -2) + 'aa'), 'https://n3a.example.test', binding, secret, now)).toThrow();
+  expect(() => verifyCsrf(request(proof.token.slice(0, -43) + (proof.token.at(-43) === 'a' ? 'b' : 'a') + proof.token.slice(-42)), 'https://n3a.example.test', binding, secret, now)).toThrow();
   expect(anonymousCookie(anon)).toContain('; Path=/; Max-Age=1800; Secure; HttpOnly; SameSite=Lax');
   expect(() => readCookie(new Request('https://n3a.example.test', { headers: { cookie: 'a=x; a=y' } }), 'a')).toThrow();
 });
