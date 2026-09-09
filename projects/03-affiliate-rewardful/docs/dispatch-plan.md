@@ -48,6 +48,7 @@
 | tests/helpers/referral-payment-fixture.mjs | координатор |
 | tests/helpers/referral-merchant.mjs | координатор |
 | tests/e2e/referral.mjs | координатор |
+| tests/e2e/account.mjs | координатор |
 | scripts/referral-mutation-check.mjs | координатор |
 | scripts/run-referral-e2e.mjs | координатор |
 | docs/features/f3-referral-funnel/** | координатор |

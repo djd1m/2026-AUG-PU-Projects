@@ -1,0 +1,68 @@
+{
+  "observedAt": "2026-09-09 13:42:04 UTC",
+  "containers": [
+    {
+      "name": "/n3-shared-api-1",
+      "image": "sha256:dee8ed1930de0af27a69f196f4d14a8f2bb749deebc5d3754fc923e67bff849f",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13030"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/n3-a-frontend-1",
+      "image": "sha256:c36aef66e7fc8b71858233957a5b15fca320d45e3d761194410552f772b29dbf",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13031"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/n3-b-frontend-1",
+      "image": "sha256:6170595dc66b9b360e81fb13252b450fd8e1e341451a350d74a42b8f8caf5ce2",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13032"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/n3-c-frontend-1",
+      "image": "sha256:c1061f464c78197306bb2a1782efbe03c6362421e3475008ebb9c72272d8c24c",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13033"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/n3-d-frontend-1",
+      "image": "sha256:390813b65e2c8644ddbc152650a8d17be7e13bc36b739822c90a060f3fb31beb",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13034"
+          }
+        ]
+      }
+    }
+  ],
+  "portCheckerExit": 1,
+  "assessment": "All reported bindings belong to the same five existing Compose services being replaced; no new ports allocated. Database unchanged, no published port.",
+  "rollback": "Frontend rollback retains F3-compatible API. Old F2 API image retained for provenance only; downgrade prohibited after any connector order."
+}

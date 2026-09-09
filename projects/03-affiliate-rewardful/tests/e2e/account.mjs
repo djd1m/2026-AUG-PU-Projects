@@ -23,6 +23,13 @@ test('real account UI desktop/mobile signup login invite scopes agent transport 
  await register(ownerEmail,'E2E real organization');await noOverflow();
  assert.ok((await js('return document.querySelector("#payment-status").textContent')).includes('не подключена'));
  await click('#policy button');await until('return document.querySelector("#notice").textContent.includes("опубликованы")');
+ await fill('#referral-funnel input[name=landingUrl]','https://merchant.example/signup');
+ await fill('#referral-funnel input[name=returnUrl]','https://merchant.example/complete');
+ await click('[data-referral-action=save]');await until('return document.querySelector("#notice").textContent.includes("Адреса подключения сохранены")');
+ await click('[data-referral-action=issue]');await until('return !document.querySelector("#referral-funnel textarea").hidden');
+ assert.equal(await js('return /^[A-Za-z0-9_-]{43}$/.test(document.querySelector("#referral-funnel textarea").value)'),true);
+ await click('[data-referral-action=revoke]');await until('return document.querySelector("#notice").textContent.includes("Ключ интеграции отозван")');
+ assert.equal(await js('return document.querySelector("#referral-funnel textarea").value'),'');
  await fill('#registry input','2026-08');await click('#registry button');await until('return document.querySelector("#registries").textContent.includes("2026-08")');
  await click('#mint-agent');await until('return !document.querySelector("#agent-config").hidden');
  await click('#probe-agent');await until('return document.querySelector("#notice").textContent.includes("MCP") && !document.querySelector("#notice").classList.contains("error")');

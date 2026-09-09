@@ -1,0 +1,46 @@
+{
+  "at": "2026-09-09T13:49:23.136Z",
+  "cross": [
+    {
+      "origin": "https://n3-a.212.192.0.33.sslip.io",
+      "role": "merchant",
+      "persisted": true
+    },
+    {
+      "origin": "https://n3-b.212.192.0.33.sslip.io",
+      "role": "merchant",
+      "persisted": true
+    },
+    {
+      "origin": "https://n3-c.212.192.0.33.sslip.io",
+      "role": "merchant",
+      "persisted": true
+    },
+    {
+      "origin": "https://n3-d.212.192.0.33.sslip.io",
+      "role": "merchant",
+      "persisted": true
+    }
+  ],
+  "desktop": 1440,
+  "mobile": 390,
+  "checks": [
+    "signup",
+    "login",
+    "logout",
+    "empty-real-tenant",
+    "policy",
+    "registry",
+    "invitation",
+    "partner-scope",
+    "enrollment",
+    "MCP-probe",
+    "agent-revoke",
+    "delayed-mint-after-logout",
+    "delayed-invite-after-logout",
+    "delayed-refresh-after-membership-switch",
+    "cross-host-persistence",
+    "no-horizontal-overflow"
+  ],
+  "providerLive": false
+}

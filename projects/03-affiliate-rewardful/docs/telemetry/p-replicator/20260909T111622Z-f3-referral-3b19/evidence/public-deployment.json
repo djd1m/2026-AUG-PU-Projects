@@ -1,0 +1,122 @@
+{
+  "observedAt": "2026-09-09 13:50:53 UTC",
+  "candidate": "f8055e36b68f7ed880a8d5c28997801d0ca5cd26",
+  "documentation": "fae47b7d246cf2096cdc9a3d485a63546020fb39",
+  "containers": [
+    {
+      "name": "/n3-shared-api-1",
+      "image": "sha256:be3ccfa4b0a0119c06abfc3894b6b600d9561495550202af0117ca9b6197edce",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13030"
+          }
+        ]
+      },
+      "health": "healthy"
+    },
+    {
+      "name": "/n3-a-frontend-1",
+      "image": "sha256:ebf3cdc3a5a2878ef0b63f0ca620f025e81c763da174accea33ef36b7556899e",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13031"
+          }
+        ]
+      },
+      "health": "healthy"
+    },
+    {
+      "name": "/n3-b-frontend-1",
+      "image": "sha256:45b29d267555c99d4f56a1ebdcbd1398bff8d1353274b093efa117ad3192bbbf",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13032"
+          }
+        ]
+      },
+      "health": "healthy"
+    },
+    {
+      "name": "/n3-c-frontend-1",
+      "image": "sha256:19f854ace6a9d380db99d681ddf5e4f380a816344acb7279d365324f7034c3ca",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13033"
+          }
+        ]
+      },
+      "health": "healthy"
+    },
+    {
+      "name": "/n3-d-frontend-1",
+      "image": "sha256:f5b6f61361aff491e47fff941d65dab27a294a0e00603b8a9d5ef6dd58a5ef0f",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13034"
+          }
+        ]
+      },
+      "health": "healthy"
+    }
+  ],
+  "publicFrontendSource": [
+    {
+      "url": "https://n3-a.212.192.0.33.sslip.io/shared/ui/account/referrals.mjs",
+      "matchesCandidate": true
+    },
+    {
+      "url": "https://n3-b.212.192.0.33.sslip.io/shared/ui/account/referrals.mjs",
+      "matchesCandidate": true
+    },
+    {
+      "url": "https://n3-c.212.192.0.33.sslip.io/shared/ui/account/referrals.mjs",
+      "matchesCandidate": true
+    },
+    {
+      "url": "https://n3-d.212.192.0.33.sslip.io/shared/ui/account/referrals.mjs",
+      "matchesCandidate": true
+    }
+  ],
+  "database": {
+    "hostPorts": [],
+    "networkInternal": true,
+    "members": [
+      "n3-shared-postgres-1",
+      "n3-shared-api-1"
+    ],
+    "secrets": "64 random hex characters,0600 verified; values omitted"
+  },
+  "checks": {
+    "publicCjm": {
+      "passed": 49,
+      "durationMs": 36562.204342
+    },
+    "publicAccount": {
+      "passed": 1,
+      "durationMs": 6433.881197,
+      "additionalAssertions": [
+        "configure HTTPS merchant destinations",
+        "issue43character integration key",
+        "revoke and clear key"
+      ]
+    },
+    "publicProtocols": {
+      "passed": 1,
+      "durationMs": 1576.974253,
+      "officialMcpClient": true,
+      "a2aReplayAndRevocation": true
+    }
+  },
+  "liveProviderAcceptance": false,
+  "postReviewChanges": "Only public account E2E assertions and documentation/telemetry; production executable source remains the reviewed candidate."
+}

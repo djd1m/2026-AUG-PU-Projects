@@ -1,6 +1,6 @@
 # Completion — f3-referral-funnel
 
-Status: implemented candidate; final review and public rollout pending. No live merchant payment acceptance claimed.
+Status: accepted and deployed as the agreed referral pilot on A–D, 2026-09-09. Live merchant payment acceptance remains NOT PERFORMED.
 
 ## Deployment Plan
 
@@ -39,3 +39,13 @@ Developer: integration contract/client helper/example; QA: reproducible isolated
 Shared runtime regression:118/118 passed, including final race/cap/migration cases. Test files run sequentially because auth admission has a database-wide fail-fast lock; explicit in-test concurrency remains enabled. Isolated browser:2/2 passed, including real navigation through a separate merchant frontend/backend, provider stub, refund fulfillment, A–D desktop/mobile and delayed key suppression. Six meaningful guard mutations were detected in disposable source copies. Final execution receipts are recorded under docs/telemetry/p-replicator/20260909T111622Z-f3-referral-3b19/evidence/.
 
 New connector test payments carry provenance and remain auditable, but their amounts are excluded from payable registry/cash totals. Historical F2 facts retain their original interpretation; any old provider-test records require operator reconciliation before real payouts. An application source review found and closed the test-money and malformed-UUID defects; the formal complete-spec review follows the combined gates.
+
+## Final acceptance and public rollout
+
+Independent Phase4 review: PASS, all10 ACs met for the agreed pilot. Source candidate f8055e3; guide correction fae47b7. All five application containers healthy after rollout; frontend module bytes on all four public HTTPS origins match the reviewed source. DB has no host ports, only API/PostgreSQL in internal n3-database, random0600 secrets verified without recording their values. Existing port-checker exit1 referred only to these same already-running Compose services; ownership was checked before replacement.
+
+Public regression after rollout:49/49 CJM checks,1/1 real account journey including HTTPS destination settings/key issuance/revocation,1/1 official MCP client+A2A shared-state/replay/revoke. Isolated browser remains2/2 at1440/390; backend118/118; six targeted mutants detected. Evidence: [public deployment](../../telemetry/p-replicator/20260909T111622Z-f3-referral-3b19/evidence/public-deployment.json), [formal review](review-report.md). The post-review public test gained extra UI assertions; executable production code was unchanged. Snapshot hashes distinguish that test version from the image source.
+
+The pipeline is implemented by the installed /go and /feature workflow instructions and gates. No second orchestrator was installed. Mode2 has no pre-existing feature-roadmap.json; none was auto-generated. Feature completion and telemetry are the authoritative status for this run.
+
+Next authorized product work: f3-access-onboarding (Resend verification/reset, Yandex ID, five provider runbooks). A live shop remains one selected tenant per deployment, requires dedicated credentials/merchant acceptance, and does not automatically import an existing subscription billing system. Frontend rollback keeps the compatible F3 API; old F2 backend images retained for provenance are not an allowed rollback after a connector order exists.
