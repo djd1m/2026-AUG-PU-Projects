@@ -1,0 +1,308 @@
+TAP version 13
+# Subtest: A merchant actual browser journey
+    # Subtest: SC-US-101-2 missing rate cannot publish and field remains repairable
+    ok 1 - SC-US-101-2 missing rate cannot publish and field remains repairable
+      ---
+      duration_ms: 204.874044
+      type: 'test'
+      ...
+    # Subtest: SC-US-101-1 saved policy is visible and survives reload
+    ok 2 - SC-US-101-1 saved policy is visible and survives reload
+      ---
+      duration_ms: 324.152236
+      type: 'test'
+      ...
+    # Subtest: SC-US-101-1 credit policy selection and reload keep independent settings and noncash terms
+    ok 3 - SC-US-101-1 credit policy selection and reload keep independent settings and noncash terms
+      ---
+      duration_ms: 346.131973
+      type: 'test'
+      ...
+    # Subtest: SC-US-102-1 confirmed fixture payment displays its rule and reward once
+    ok 4 - SC-US-102-1 confirmed fixture payment displays its rule and reward once
+      ---
+      duration_ms: 494.780657
+      type: 'test'
+      ...
+    # Subtest: SC-US-103-1 registry approval exports exact version with exclusions
+    ok 5 - SC-US-103-1 registry approval exports exact version with exclusions
+      ---
+      duration_ms: 551.495467
+      type: 'test'
+      ...
+    # Subtest: SC-US-102-2 refund and replay of same payment preserve correction and stale registry guard
+    ok 6 - SC-US-102-2 refund and replay of same payment preserve correction and stale registry guard
+      ---
+      duration_ms: 512.919453
+      type: 'test'
+      ...
+    # Subtest: SC-US-103-2 manual send is separate and persists actor, date and evidence
+    ok 7 - SC-US-103-2 manual send is separate and persists actor, date and evidence
+      ---
+      duration_ms: 446.54402
+      type: 'test'
+      ...
+    # Subtest: SC-US-103-2 past transfer cannot mark a new revision obligation sent
+    ok 8 - SC-US-103-2 past transfer cannot mark a new revision obligation sent
+      ---
+      duration_ms: 485.121373
+      type: 'test'
+      ...
+    # Subtest: SC-US-104-1 invitation opens enrollment terms and never a referral link
+    ok 9 - SC-US-104-1 invitation opens enrollment terms and never a referral link
+      ---
+      duration_ms: 504.13076
+      type: 'test'
+      ...
+    # Subtest: A error recovery and mobile390 UI remain usable
+    ok 10 - A error recovery and mobile390 UI remain usable
+      ---
+      duration_ms: 1196.114207
+      type: 'test'
+      ...
+    # Subtest: SC-US-104-2 owner opens revised deterministic agent artifact in A
+    ok 11 - SC-US-104-2 owner opens revised deterministic agent artifact in A
+      ---
+      duration_ms: 448.53916
+      type: 'test'
+      ...
+    # Subtest: A navigation can be activated by keyboard
+    ok 12 - A navigation can be activated by keyboard
+      ---
+      duration_ms: 20.036118
+      type: 'test'
+      ...
+    1..12
+ok 1 - A merchant actual browser journey
+  ---
+  duration_ms: 6045.694298
+  type: 'test'
+  ...
+# Subtest: B customer actual browser journey
+    # Subtest: SC-US-201-2 reads and unchecked submit cannot enroll
+    ok 1 - SC-US-201-2 reads and unchecked submit cannot enroll
+      ---
+      duration_ms: 230.970673
+      type: 'test'
+      ...
+    # Subtest: SC-US-201-1 decline preserves product and explicit consent creates enrollment
+    ok 2 - SC-US-201-1 decline preserves product and explicit consent creates enrollment
+      ---
+      duration_ms: 480.771742
+      type: 'test'
+      ...
+    # Subtest: SC-US-204-1 share kit matches read-only agent output and copies disclosure
+    ok 3 - SC-US-204-1 share kit matches read-only agent output and copies disclosure
+      ---
+      duration_ms: 327.810597
+      type: 'test'
+      ...
+    # Subtest: SC-US-203-3 unknown keeps original reserve through reload and failed releases once
+    ok 4 - SC-US-203-3 unknown keeps original reserve through reload and failed releases once
+      ---
+      duration_ms: 947.088268
+      type: 'test'
+      ...
+    # Subtest: SC-US-203-1 confirmed application changes invoice1500 to1200 once
+    ok 5 - SC-US-203-1 confirmed application changes invoice1500 to1200 once
+      ---
+      duration_ms: 207.468884
+      type: 'test'
+      ...
+    # Subtest: SC-US-202-1 verified friend payment creates held credit with source and policy
+    ok 6 - SC-US-202-1 verified friend payment creates held credit with source and policy
+      ---
+      duration_ms: 188.729348
+      type: 'test'
+      ...
+    # Subtest: SC-US-202-2 self-referral and unpaid registration never add available bonus
+    ok 7 - SC-US-202-2 self-referral and unpaid registration never add available bonus
+      ---
+      duration_ms: 268.445996
+      type: 'test'
+      ...
+    # Subtest: SC-US-204-2 read-balance grant cannot join or reserve and customer cannot buy owner tariff
+    ok 8 - SC-US-204-2 read-balance grant cannot join or reserve and customer cannot buy owner tariff
+      ---
+      duration_ms: 124.853254
+      type: 'test'
+      ...
+    # Subtest: B error recovery, keyboard and mobile390 remain usable
+    ok 9 - B error recovery, keyboard and mobile390 remain usable
+      ---
+      duration_ms: 963.543244
+      type: 'test'
+      ...
+    # Subtest: SC-US-203-2 losing stale tab refreshes current balance after server conflict
+    ok 10 - SC-US-203-2 losing stale tab refreshes current balance after server conflict
+      ---
+      duration_ms: 830.938307
+      type: 'test'
+      ...
+    # Subtest: B embed enforces CSP CORS exact origin source schema and survives hostile host CSS
+    ok 11 - B embed enforces CSP CORS exact origin source schema and survives hostile host CSS
+      ---
+      duration_ms: 962.667504
+      type: 'test'
+      ...
+    1..11
+ok 2 - B customer actual browser journey
+  ---
+  duration_ms: 6053.514131
+  type: 'test'
+  ...
+# Subtest: C partner actual browser journey
+    # Subtest: SC-US-301-1 complete terms and participation status precede consent
+    ok 1 - SC-US-301-1 complete terms and participation status precede consent
+      ---
+      duration_ms: 352.410876
+      type: 'test'
+      ...
+    # Subtest: SC-US-302-1 explicit enrollment returns personal referral distinct from invitation
+    ok 2 - SC-US-302-1 explicit enrollment returns personal referral distinct from invitation
+      ---
+      duration_ms: 419.11448
+      type: 'test'
+      ...
+    # Subtest: SC-US-302-2 repeat enrollment returns same participant and attribution
+    ok 3 - SC-US-302-2 repeat enrollment returns same participant and attribution
+      ---
+      duration_ms: 94.452343
+      type: 'test'
+      ...
+    # Subtest: SC-US-301-2 changed terms preserve historical commission policy
+    ok 4 - SC-US-301-2 changed terms preserve historical commission policy
+      ---
+      duration_ms: 742.686356
+      type: 'test'
+      ...
+    # Subtest: SC-US-303-1 history is own scoped with hold corrections and payout schedule
+    ok 5 - SC-US-303-1 history is own scoped with hold corrections and payout schedule
+      ---
+      duration_ms: 434.725335
+      type: 'test'
+      ...
+    # Subtest: SC-US-303-2 owner send displays date but never asserts bank credit
+    ok 6 - SC-US-303-2 owner send displays date but never asserts bank credit
+      ---
+      duration_ms: 843.099541
+      type: 'test'
+      ...
+    # Subtest: SC-US-304-1 own read grant returns the UI source time and exact payout data
+    ok 7 - SC-US-304-1 own read grant returns the UI source time and exact payout data
+      ---
+      duration_ms: 136.819889
+      type: 'test'
+      ...
+    # Subtest: SC-US-304-2 known foreign partner and merchant registry remain forbidden
+    ok 8 - SC-US-304-2 known foreign partner and merchant registry remain forbidden
+      ---
+      duration_ms: 169.853201
+      type: 'test'
+      ...
+    # Subtest: C recovery keyboard and mobile390 preserve the partner journey
+    ok 9 - C recovery keyboard and mobile390 preserve the partner journey
+      ---
+      duration_ms: 1021.092654
+      type: 'test'
+      ...
+    # Subtest: C limited partner session opens own cabinet without merchant authority
+    ok 10 - C limited partner session opens own cabinet without merchant authority
+      ---
+      duration_ms: 225.122531
+      type: 'test'
+      ...
+    1..10
+ok 3 - C partner actual browser journey
+  ---
+  duration_ms: 4958.05726
+  type: 'test'
+  ...
+# Subtest: D actual browser delegated tasks and owner handoff
+    # Subtest: SC-US-401-1 consent creates only subject-scoped read and draft grant
+    ok 1 - SC-US-401-1 consent creates only subject-scoped read and draft grant
+      ---
+      duration_ms: 517.009635
+      type: 'test'
+      ...
+    # Subtest: SC-US-402-1 replay keeps logical task and one payable registry
+    ok 2 - SC-US-402-1 replay keeps logical task and one payable registry
+      ---
+      duration_ms: 848.747513
+      type: 'test'
+      ...
+    # Subtest: SC-US-403-1 owner exports only approved exact snapshot and never sends
+    ok 3 - SC-US-403-1 owner exports only approved exact snapshot and never sends
+      ---
+      duration_ms: 335.84289
+      type: 'test'
+      ...
+    # Subtest: SC-US-402-2 refund recount changes same artifact and explains exact correction
+    ok 4 - SC-US-402-2 refund recount changes same artifact and explains exact correction
+      ---
+      duration_ms: 1086.607678
+      type: 'test'
+      ...
+    # Subtest: SC-US-403-2 revoke denies cached agent read and owner continues exact revised artifact in A
+    ok 5 - SC-US-403-2 revoke denies cached agent read and owner continues exact revised artifact in A
+      ---
+      duration_ms: 964.419624
+      type: 'test'
+      ...
+    # Subtest: SC-US-401-2 expired grant denies next step while owner read stays available
+    ok 6 - SC-US-401-2 expired grant denies next step while owner read stays available
+      ---
+      duration_ms: 1099.034033
+      type: 'test'
+      ...
+    # Subtest: SC-US-404-1 partner repeat preserves same own task with no settlement side effects
+    ok 7 - SC-US-404-1 partner repeat preserves same own task with no settlement side effects
+      ---
+      duration_ms: 409.889166
+      type: 'test'
+      ...
+    # Subtest: SC-US-404-2 canceled T1 late response never completes selected T2
+    ok 8 - SC-US-404-2 canceled T1 late response never completes selected T2
+      ---
+      duration_ms: 641.576899
+      type: 'test'
+      ...
+    # Subtest: SC-US-405-1 customer agent answer matches the actual B credit UI on same session
+    ok 9 - SC-US-405-1 customer agent answer matches the actual B credit UI on same session
+      ---
+      duration_ms: 1695.782486
+      type: 'test'
+      ...
+    # Subtest: SC-US-405-2 read-only customer grant cannot reserve or apply credit
+    ok 10 - SC-US-405-2 read-only customer grant cannot reserve or apply credit
+      ---
+      duration_ms: 153.386105
+      type: 'test'
+      ...
+    # Subtest: D network recovery keyboard and mobile390 preserve task and own result
+    ok 11 - D network recovery keyboard and mobile390 preserve task and own result
+      ---
+      duration_ms: 1017.029773
+      type: 'test'
+      ...
+    # Subtest: D limited customer session exposes no merchant role or owner controls
+    ok 12 - D limited customer session exposes no merchant role or owner controls
+      ---
+      duration_ms: 470.994618
+      type: 'test'
+      ...
+    1..12
+ok 4 - D actual browser delegated tasks and owner handoff
+  ---
+  duration_ms: 9635.89095
+  type: 'test'
+  ...
+1..4
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26978.901271

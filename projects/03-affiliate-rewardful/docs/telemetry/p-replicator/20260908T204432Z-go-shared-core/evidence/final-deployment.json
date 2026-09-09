@@ -1,0 +1,97 @@
+{
+  "checked_at": "2026-09-09T07:55:50.626803+00:00",
+  "containers": [
+    {
+      "name": "n3-shared-postgres-1",
+      "image": "sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+      "health": "healthy",
+      "networks": [
+        "n3-database"
+      ],
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "name": "n3-shared-api-1",
+      "image": "sha256:77c3eaf827044724e297d719b1f9bed83da0ef785865197863d354c7bc7e5a4e",
+      "health": "healthy",
+      "networks": [
+        "n3-database",
+        "n3-frontend"
+      ],
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13030"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-a-frontend-1",
+      "image": "sha256:b4e09b7425d5f0f5f54f0576683f8c87cf1e9700bfd29ac74f75699890c6becc",
+      "health": "healthy",
+      "networks": [
+        "n3-frontend"
+      ],
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13031"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-b-frontend-1",
+      "image": "sha256:0e234aa44ac6e18859bf5c98c5094f1761c78d7bc73b8328651c60f0ebc8cf47",
+      "health": "healthy",
+      "networks": [
+        "n3-frontend"
+      ],
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13032"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-c-frontend-1",
+      "image": "sha256:1fd6dc656f1b73e7c4fbe4cd31f068cdcf2fbab693640374e3873ace391caf04",
+      "health": "healthy",
+      "networks": [
+        "n3-frontend"
+      ],
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13033"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-d-frontend-1",
+      "image": "sha256:cc2a447e9388a840f9e99c5812b1c7dd01db08f98885a2866f0fb868e6669237",
+      "health": "healthy",
+      "networks": [
+        "n3-frontend"
+      ],
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13034"
+          }
+        ]
+      }
+    }
+  ]
+}

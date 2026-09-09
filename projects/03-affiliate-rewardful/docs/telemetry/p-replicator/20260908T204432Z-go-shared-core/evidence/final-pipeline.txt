@@ -1,0 +1,22 @@
+TRACE contour=project specification=./docs/Specification.md pseudocode=./docs/Pseudocode.md
+COUNT requirements=94 algorithms=94 missing-algorithm=0 orphan-algorithm=0
+PASS contour=project bidirectional traceability complete
+TRACE contour=a-merchant specification=./docs/features/a-merchant/01_specification.md pseudocode=./docs/features/a-merchant/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=a-merchant bidirectional traceability complete
+TRACE contour=b-customer specification=./docs/features/b-customer/01_specification.md pseudocode=./docs/features/b-customer/02_pseudocode.md
+COUNT requirements=13 algorithms=13 missing-algorithm=0 orphan-algorithm=0
+PASS contour=b-customer bidirectional traceability complete
+TRACE contour=c-partner specification=./docs/features/c-partner/01_specification.md pseudocode=./docs/features/c-partner/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=c-partner bidirectional traceability complete
+TRACE contour=d-agent specification=./docs/features/d-agent/01_specification.md pseudocode=./docs/features/d-agent/02_pseudocode.md
+COUNT requirements=15 algorithms=15 missing-algorithm=0 orphan-algorithm=0
+PASS contour=d-agent bidirectional traceability complete
+TRACE contour=shared-core specification=./docs/features/shared-core/01_specification.md pseudocode=./docs/features/shared-core/02_pseudocode.md
+COUNT requirements=31 algorithms=31 missing-algorithm=0 orphan-algorithm=0
+PASS contour=shared-core bidirectional traceability complete
+VERDICT traceability=PASS features=5 gaps=0 inconclusive=0
+VERDICT completion=PASS features=5 gaps=0 inconclusive=0
+VERDICT report-revision=PASS features=5 gaps=0 inconclusive=0
+VERDICT criterion-scenarios=PASS features=5 gaps=0 inconclusive=0

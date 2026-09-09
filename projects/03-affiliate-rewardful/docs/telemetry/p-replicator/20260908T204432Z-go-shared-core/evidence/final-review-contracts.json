@@ -1,0 +1,27 @@
+[
+  {
+    "feature": "shared-core",
+    "exit": 0,
+    "output": "PASS review-contract feature=shared-core AC-ids=25 rows=25\n"
+  },
+  {
+    "feature": "a-merchant",
+    "exit": 0,
+    "output": "PASS review-contract feature=a-merchant AC-ids=8 rows=8\n"
+  },
+  {
+    "feature": "b-customer",
+    "exit": 0,
+    "output": "PASS review-contract feature=b-customer AC-ids=9 rows=9\n"
+  },
+  {
+    "feature": "c-partner",
+    "exit": 0,
+    "output": "PASS review-contract feature=c-partner AC-ids=8 rows=8\n"
+  },
+  {
+    "feature": "d-agent",
+    "exit": 0,
+    "output": "PASS review-contract feature=d-agent AC-ids=10 rows=10\n"
+  }
+]
