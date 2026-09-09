@@ -1,0 +1,66 @@
+name: proofwall-n3-e2e
+x-runtime: &runtime
+  image: node:22.22.0-bookworm-slim
+  working_dir: /app
+  env_file: ./.secrets/bridge-e2e/web.env
+  environment: &environment
+    NODE_OPTIONS: --import=/bridge/preload.mjs
+    BRIDGE_ROLE: p1
+    BRIDGE_CA: /bridge-ca.pem
+    BRIDGE_TLS_KEY: /bridge-private/key.pem
+    BRIDGE_TLS_CERT: /bridge-private/cert.pem
+    BRIDGE_SOCKET_ROOT: /bridge-sockets
+    # No video fixtures are created; unexpected transcription must fail closed.
+    TRANSCRIBE_SERVICE_URL: http://127.0.0.1:7331
+  networks: [database, storage]
+  depends_on:
+    postgres:
+      condition: service_healthy
+    minio:
+      condition: service_started
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+services:
+  postgres:
+    image: postgres:16-alpine
+    env_file: ./.secrets/bridge-e2e/database.env
+    tmpfs: [/var/lib/postgresql/data]
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U bridge_p1 -d bridge_p1"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data
+    env_file: ./.secrets/bridge-e2e/storage.env
+    tmpfs: [/data]
+    networks: [storage]
+  web:
+    <<: *runtime
+    command: [node, /bridge/p1-runtime.mjs]
+    volumes:
+      - ${PROOFWALL_E2E_SOURCE:-.}:/app
+      - ${BRIDGE_HELPERS_SOURCE:-../03-affiliate-rewardful/tests/helpers/proofwall-bridge}:/bridge:ro
+      - ./.secrets/bridge-e2e/ca.pem:/bridge-ca.pem:ro
+      - ./.secrets/bridge-e2e/key.pem:/bridge-private/key.pem:ro
+      - ./.secrets/bridge-e2e/cert.pem:/bridge-private/cert.pem:ro
+      - ../03-affiliate-rewardful/.runtime/proofwall-e2e/sockets/n3:/bridge-sockets/n3:ro
+      - ../03-affiliate-rewardful/.runtime/proofwall-e2e/sockets/providers:/bridge-sockets/providers:ro
+      - ../03-affiliate-rewardful/.runtime/proofwall-e2e/sockets/p1:/bridge-sockets/p1
+      - ../03-affiliate-rewardful/.runtime/proofwall-e2e/sockets/p1-webhook:/bridge-sockets/p1-webhook
+  worker:
+    <<: *runtime
+    command: [node, services/worker/dist/index.js]
+    volumes:
+      - ${PROOFWALL_E2E_SOURCE:-.}:/app:ro
+      - ${BRIDGE_HELPERS_SOURCE:-../03-affiliate-rewardful/tests/helpers/proofwall-bridge}:/bridge:ro
+      - ./.secrets/bridge-e2e/ca.pem:/bridge-ca.pem:ro
+      - ../03-affiliate-rewardful/.runtime/proofwall-e2e/sockets/n3:/bridge-sockets/n3:ro
+      - ../03-affiliate-rewardful/.runtime/proofwall-e2e/sockets/providers:/bridge-sockets/providers:ro
+networks:
+  database:
+    internal: true
+  storage:
+    internal: true

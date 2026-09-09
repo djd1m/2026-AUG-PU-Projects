@@ -1,0 +1,50 @@
+name: n3-proofwall-e2e
+services:
+  postgres:
+    image: postgres:16.15-alpine
+    env_file: ./.runtime/proofwall-e2e/database.env
+    tmpfs: [/var/lib/postgresql/data]
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U bridge_n3 -d bridge_n3"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  backend:
+    image: node:22.22.0-bookworm-slim
+    working_dir: /app
+    command: [node, /bridge/n3-runtime.mjs]
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: bridge_n3
+      PGUSER: bridge_n3
+      PGPASSWORD_FILE: /bridge-private/password
+      NODE_OPTIONS: --import=/bridge/preload.mjs
+      BRIDGE_ROLE: n3
+      BRIDGE_CA: /bridge-ca.pem
+      BRIDGE_TLS_KEY: /bridge-private/key.pem
+      BRIDGE_TLS_CERT: /bridge-private/cert.pem
+      BRIDGE_SOCKET_ROOT: /bridge-sockets
+      BRIDGE_OUTPUT_DIR: /bridge-output
+      YOOKASSA_SHOP_ID: "123456"
+      YOOKASSA_SECRET_KEY: isolated-bridge-provider-secret
+    volumes:
+      - ${N3_BRIDGE_SOURCE:-.}:/app:ro
+      - ./node_modules:/app/node_modules:ro
+      - ${BRIDGE_HELPERS_SOURCE:-./tests/helpers/proofwall-bridge}:/bridge:ro
+      - ./.runtime/proofwall-e2e/ca/cert.pem:/bridge-ca.pem:ro
+      - ./.runtime/proofwall-e2e/n3:/bridge-private:ro
+      - ./.runtime/proofwall-e2e/output:/bridge-output
+      - ./.runtime/proofwall-e2e/sockets/n3:/bridge-sockets/n3
+      - ./.runtime/proofwall-e2e/sockets/n3-control:/bridge-sockets/n3-control
+      - ./.runtime/proofwall-e2e/sockets/providers:/bridge-sockets/providers:ro
+    networks: [database]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+networks:
+  database:
+    internal: true

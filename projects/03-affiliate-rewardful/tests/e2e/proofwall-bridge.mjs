@@ -125,6 +125,8 @@ test('actual Proofwall browser signup, email proof, native checkout, durable N3 
   await until('return /198[.,]00/.test(document.querySelector("#summary").textContent) && /тест/i.test(document.querySelector("#summary").textContent)');
   assert.match(await js('return document.querySelector("#summary").textContent'), /выплат|реестр/i);
   await wd('/refresh', {});
+  await until('return !document.querySelector("#workspace").hidden');
+  await js('const s=document.querySelector("#membership");s.value=arguments[0];s.dispatchEvent(new Event("change",{bubbles:true}))', context.partnerMembershipId);
   await until('return /198[.,]00/.test(document.querySelector("#summary")?.textContent || "")');
   await noOverflow(); await screenshot(evidence, 'n3-partner-test-commission');
 
