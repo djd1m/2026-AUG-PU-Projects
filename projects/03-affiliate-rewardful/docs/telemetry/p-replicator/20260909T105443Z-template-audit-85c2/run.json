@@ -1,0 +1,83 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T105443Z-template-audit-85c2",
+  "batch_id": "n3-template-audit",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "rewardful-template-gap-audit",
+  "pipeline": "read-only audit, no implementation",
+  "tier": "XL review of money/tax and identity boundaries",
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "User explicitly requested separate swarm audit without changes.",
+    "Three independent read-only workers plus coordinator instead of default two: product/tracking, growth/scope, tax/source verification. No shared writer or test resources."
+  ],
+  "risk_flags": [
+    "financial reporting",
+    "tax claims",
+    "implementation vs demo claims"
+  ],
+  "baseline_revision": "3b157f457229074c390622ab2ee055759b11b85b",
+  "started_at": "2026-09-09T10:54:43.043094+00:00",
+  "status": "accepted",
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high",
+  "acceptance_evidence": [
+    "../../../audits/template-gap-audit-2026-09-09.md",
+    "evidence/product-tracking.md",
+    "evidence/growth-scope.md",
+    "evidence/tax-payouts.md",
+    "evidence/usage.json",
+    "evidence/artifact-sha256.json"
+  ],
+  "metrics": {
+    "elapsed_wall_ms": 875699,
+    "active_wall_ms": null,
+    "worker_usage": {
+      "input_tokens": 5673372,
+      "cached_input_tokens": 5318272,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 34695,
+      "reasoning_output_tokens": 3988,
+      "total_tokens": 5708067,
+      "uncached_input_tokens": 355100
+    },
+    "root_exclusive_audit_usage": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator usage cannot be allocated between concurrent F3 planning and audit; cost/billing unavailable.",
+    "No formal feature implementation spec for this read-only review; spec_sha256=null.",
+    "Active time unavailable; elapsed includes orchestration and interleaved planning.",
+    "No ground-truth defect corpus or new runtime checks; unmeasured quality fields remain null.",
+    "Historical initial delegated events were recorded after actual spawn; host timestamps now attached, not reconstructed from memory."
+  ],
+  "comparison_id": null,
+  "final_revision": "f2d0de6ef82cd1b45e80fb4ad4600a6951f5dcea",
+  "final_revision_scope": "Inspected source revision before audit-only publication; report commit is tracked by git.",
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "ended_at": "2026-09-09T11:09:18.742159+00:00",
+  "result": "Read-only audit complete and findings reported; product is not accepted as template-complete. F3 implementation still awaiting user approval.",
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": null,
+    "ac_total": null,
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "tests": "Static source/document audit only; no runtime, build or browser tests executed.",
+    "implementation_changed": false,
+    "review_corrections": [
+      "Removed conflation of credited commission and bank transfer confirmation.",
+      "Generic consultant codes distinguished from optional partner taxonomy."
+    ],
+    "source_hashes_verified": 23
+  }
+}

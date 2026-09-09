@@ -1,0 +1,126 @@
+{
+  "sampled_at": "2026-09-09T11:09:18.742159+00:00",
+  "workers": [
+    {
+      "agent_id": "/root/audit_product_tracking",
+      "thread_id": "01a085ce-99ff-73d1-b5ee-824a41a26644",
+      "source_log": "rollout-2026-09-09T10-55-04-01a085ce-99ff-73d1-b5ee-824a41a26644.jsonl",
+      "source_log_sha256": "b8095cde7333f531a132dbaad20b7901774f4299b8540f8d4bb054d3d3972d79",
+      "started_at": "2026-09-09T10:55:04.797Z",
+      "last_usage_at": "2026-09-09T11:00:14.506Z",
+      "model_evidence": [
+        {
+          "timestamp": "2026-09-09T10:55:06.432Z",
+          "model": "gpt-6-astra",
+          "effort": "high"
+        }
+      ],
+      "unique_responses": 21,
+      "usage": {
+        "input_tokens": 1537701,
+        "cached_input_tokens": 1441536,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 7651,
+        "reasoning_output_tokens": 500,
+        "total_tokens": 1545352,
+        "uncached_input_tokens": 96165
+      },
+      "status": "completed",
+      "usage_scope": "Entire dedicated audit worker thread, including growth correction follow-up where applicable; repeated cached inputs included."
+    },
+    {
+      "agent_id": "/root/audit_growth_scope",
+      "thread_id": "01a085ce-ebb6-7542-9826-94a6fe47bc60",
+      "source_log": "rollout-2026-09-09T10-55-25-01a085ce-ebb6-7542-9826-94a6fe47bc60.jsonl",
+      "source_log_sha256": "ea5b41980328e6c56321f172cffc4851898b95658d5e3aa2000d0a7942e5f2c9",
+      "started_at": "2026-09-09T10:55:25.738Z",
+      "last_usage_at": "2026-09-09T11:08:03.858Z",
+      "model_evidence": [
+        {
+          "timestamp": "2026-09-09T10:55:27.230Z",
+          "model": "gpt-5.6-sol",
+          "effort": "high"
+        },
+        {
+          "timestamp": "2026-09-09T11:06:31.401Z",
+          "model": "gpt-5.6-sol",
+          "effort": "high"
+        }
+      ],
+      "unique_responses": 25,
+      "usage": {
+        "input_tokens": 3301485,
+        "cached_input_tokens": 3120384,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 20832,
+        "reasoning_output_tokens": 3164,
+        "total_tokens": 3322317,
+        "uncached_input_tokens": 181101
+      },
+      "status": "completed",
+      "usage_scope": "Entire dedicated audit worker thread, including growth correction follow-up where applicable; repeated cached inputs included."
+    },
+    {
+      "agent_id": "/root/audit_tax_payouts",
+      "thread_id": "01a085cf-4091-7df2-9262-194a5cfafcc2",
+      "source_log": "rollout-2026-09-09T10-55-47-01a085cf-4091-7df2-9262-194a5cfafcc2.jsonl",
+      "source_log_sha256": "aa2da37e5ce2f554318b3ead9dc647bd5e26d96c7240ac7ad032fe2a42f51956",
+      "started_at": "2026-09-09T10:55:47.563Z",
+      "last_usage_at": "2026-09-09T11:00:11.282Z",
+      "model_evidence": [
+        {
+          "timestamp": "2026-09-09T10:55:49.499Z",
+          "model": "gpt-6-astra",
+          "effort": "high"
+        }
+      ],
+      "unique_responses": 14,
+      "usage": {
+        "input_tokens": 834186,
+        "cached_input_tokens": 756352,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 6212,
+        "reasoning_output_tokens": 324,
+        "total_tokens": 840398,
+        "uncached_input_tokens": 77834
+      },
+      "status": "completed",
+      "usage_scope": "Entire dedicated audit worker thread, including growth correction follow-up where applicable; repeated cached inputs included."
+    }
+  ],
+  "worker_usage_sum": {
+    "input_tokens": 5673372,
+    "cached_input_tokens": 5318272,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 34695,
+    "reasoning_output_tokens": 3988,
+    "total_tokens": 5708067,
+    "uncached_input_tokens": 355100
+  },
+  "root_exclusive_audit_usage": null,
+  "cost": null,
+  "root_usage_gap": "Coordinator worked on F3 planning and template audit in one turn; no defensible per-task allocation. Do not add whole root thread usage.",
+  "quota_snapshot": {
+    "timestamp": "2026-09-09T11:08:08.428Z",
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 7.0,
+        "window_minutes": 10080,
+        "resets_at": 1789550338
+      },
+      "secondary": null,
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "pro",
+      "rate_limit_reached_type": null
+    }
+  },
+  "interpretation": "Input total includes repeated prompt/context tokens across requests. Cached input is a subset, reasoning output is a subset of output. These are not unique document tokens or billed dollar cost."
+}

@@ -20,7 +20,7 @@
   "comparison_id": null,
   "baseline_revision": "3b157f457229074c390622ab2ee055759b11b85b",
   "final_revision": null,
-  "spec_sha256": "4b11de1136be2048202ed164fbd93c36973da1e8cb6ac599a8fe67f24f7cc4e9",
+  "spec_sha256": null,
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
@@ -29,7 +29,7 @@
   "ended_at": "2026-09-09T10:58:15.728654+00:00",
   "status": "accepted",
   "acceptance_evidence": [
-    "../../../../plans/f3-access-and-provider-setup.md",
+    "../../../plans/f3-access-and-provider-setup.md",
     "source-sha256.json"
   ],
   "quality": {
@@ -47,10 +47,12 @@
   "missing_data": [
     "Initial read-only instruction/path discovery preceded record; not backdated.",
     "Host billing and stage allocation unavailable.",
-    "Root work after separate audit began is interleaved; do not attribute all thread usage to this plan. Token allocation unavailable without per-response task mapping."
+    "Root work after separate audit began is interleaved; do not attribute all thread usage to this plan. Token allocation unavailable without per-response task mapping.",
+    "Formal F3 specification is not generated until plan approval; plan_sha256 identifies this proposal."
   ],
   "actual_model": "gpt-6-astra",
   "actual_effort": "high",
   "result": "planning complete; implementation awaiting explicit owner approval",
-  "model_evidence": "local turn_context 2026-09-09T10:46:18.026Z"
+  "model_evidence": "local turn_context 2026-09-09T10:46:18.026Z",
+  "plan_sha256": "4b11de1136be2048202ed164fbd93c36973da1e8cb6ac599a8fe67f24f7cc4e9"
 }
