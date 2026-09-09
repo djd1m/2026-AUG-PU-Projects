@@ -1,0 +1,34 @@
+{
+  "started_at": "2026-09-09T20:42:58.282212+00:00",
+  "status": "recovered_awaiting_provider_notification_configuration",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL existing approved bridge recovery",
+  "actual_model": null,
+  "usage": null,
+  "facts": [
+    "Provider GET: succeeded paid=true test=true RUB990",
+    "P1 intent pending; signup delivered; no payment outbox",
+    "N3 customer correctly attributed to requested partner"
+  ],
+  "scope": "Operational recovery through existing verified bridgeNotification; no invented webhook source or direct ledger writes; external shop notification configuration needs user check",
+  "recovered_at": "2026-09-09T20:49:59.557469+00:00",
+  "elapsed_wall_ms": 421275,
+  "active_wall_ms": null,
+  "payment_id": "3233d6ce-000f-5001-9000-1b898b27a138",
+  "p1_state": "completed",
+  "p1_paid_until": "2026-10-09T20:46:47.390Z",
+  "outbox_count": 1,
+  "outbox_delivered_at": "2026-09-09T20:46:51.327986Z",
+  "n3_payment_count": 1,
+  "n3_reward_minor": 19800,
+  "test_mode": true,
+  "repeat_reconciliation": "same paid_until; one outbox and one N3payment",
+  "review": "Independent readonly review PASS; bundle syntax PASS; no provider-create code in bundle",
+  "bundle_sha256": "ed04d6cd5fd5770a8238e53f1a2d1a7273a20574ea5ad0585aff8c5cd63941d6",
+  "limitations": [
+    "No proof that original provider webhook reached Proofwall; no recent origin rejection in audit.",
+    "Shop HTTP Basic notifications configured only in merchant dashboard; user asked to check URL/events.",
+    "No real refund executed; no live-money transaction.",
+    "Actual model/usage unavailable; requested existing reviewer Astra high."
+  ]
+}

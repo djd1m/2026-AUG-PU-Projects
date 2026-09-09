@@ -39,3 +39,12 @@ P3 `.runtime/yookassa.json`: `enabled`, `tenantId`, тот же `shopId`/`secret
 ## Доказательства
 
 [Телеметрия и квитанции](../telemetry/p-replicator/20260909T170258Z-proofwall-n3/): unit/regression, независимое ревью, изолированный браузер, публичные A–D и ограничения приёмки. [Пошаговое демо](proofwall-demo.md).
+
+
+## 9 сентября: восстановление оплаты без полученного уведомления
+
+Первая настоящая TEST-оплата 990 ₽ подтверждена authenticated GET ЮKassa, но P1 оставался pending. Операторский `projects/01-testimonials-senja/scripts/reconcile-n3-payment.ts` вызывает существующий `bridgeNotification` с payment ID внутри P1 backend: повторно проверяет провайдера и сохранённую привязку, атомарно активирует тариф и ставит событие в outbox. Публичный endpoint или поддельный IP провайдера не создаются. Исходники собираются esbuild для Node с внешним `pg`; bundle исполняется в существующем P1 web с `NODE_PATH=/app/node_modules`. Это административная процедура для конкретного проверяемого платежа, не обход оплаты и не автоматическая фоновая сверка.
+
+Результат: одно доставленное событие, одна тестовая комиссия 198 ₽. Повторная сверка сохранила прежний paid_until и не создала дублей. Квитанция: P1 `docs/telemetry/20260909-payment-reconciliation/run.json`.
+
+Автоматическую доставку уведомлений ещё необходимо подтвердить: в кабинете тестового магазина **Интеграция → HTTP-уведомления** указать `https://proofwall.aicoding.space/api/webhooks/payment` и события `payment.succeeded`, `payment.canceled`, `refund.succeeded`. Секретный ключ HTTP Basic не позволяет управлять этими настройками через webhook API; он доступен для OAuth. [Документация ЮKassa](https://yookassa.ru/developers/using-api/webhooks). Настройки самого магазина оператору недоступны, поэтому их отсутствие/неверный URL пока не доказаны.
