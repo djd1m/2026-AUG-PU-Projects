@@ -5,6 +5,25 @@
   "scope": "homepage login link and readonly mail delivery diagnosis",
   "actual_model": null,
   "usage": null,
-  "status": "running",
-  "mail_evidence": "Two recipient-specific Resend messages returned delivered; inbox placement unknown. No verification tokens read or emails sent."
+  "status": "completed",
+  "mail_evidence": "Two recipient-specific Resend messages returned delivered; inbox placement unknown. No verification tokens read or emails sent.",
+  "finished_at": "2026-09-09T20:37:33.090569+00:00",
+  "elapsed_wall_ms": 229803,
+  "checks": {
+    "production_build": "PASS",
+    "public_browser_both_login_links": "PASS",
+    "desktop_and_narrow_no_overflow": "PASS"
+  },
+  "source_commit": "9044f32",
+  "image": "proofwall-web:login-navigation-20260909",
+  "image_id": "sha256:ee9929b6969deefa6c5750627726fa8374eb952bb6a7cc125fc2b15fe425d376",
+  "active_wall_ms": null,
+  "measurement_gaps": [
+    "Actual model and per-task token usage unavailable; waiting intervals not fully measured."
+  ],
+  "browser_attempts": [
+    "sandbox EPERM",
+    "test selector syntax error",
+    "PASS"
+  ]
 }
