@@ -1,0 +1,78 @@
+{
+  "status": "accepted_f1",
+  "accepted_at": "2026-09-09T08:08:43.164003+00:00",
+  "source_revision": "298e90f6994a91aae9760b61321b657a11c321a6",
+  "profile": "compact-quality-first-v2",
+  "actual_models": {
+    "coordinator_review_core_D": "gpt-6-astra/high",
+    "A_B_C": "gpt-5.6-sol/high",
+    "demo_guides": "gpt-5.6-sol/medium"
+  },
+  "tests": {
+    "browser_node_tests": 49,
+    "browser_scenarios": 45,
+    "browser_failed": 0,
+    "browser_duration_ms": 26978.901271,
+    "postgres_tests": 44,
+    "postgres_failed": 0,
+    "current_mutants_killed": 14,
+    "build_modules": 56,
+    "functional_variants": 4,
+    "demo_pages": 5,
+    "demo_viewport_checks": 10,
+    "feature_criteria": 60,
+    "global_pipeline_modes": [
+      "traceability",
+      "completion",
+      "report-revision",
+      "criterion-scenarios"
+    ],
+    "review_contracts": 5,
+    "other_document_gates": {
+      "look": 5,
+      "growth": 6,
+      "handoff": 22,
+      "docs": 11
+    }
+  },
+  "retries_and_limitations": [
+    "Initial raw packaged completion gate failed due docs/docs path; wrapper pins source hash and only fixes path; missing-criterion negative control fails as expected.",
+    "Demo HTML first mobile receipt sampled old iframe document; exact URL wait exposed C/D blocked in foreign A frame. Final runner uses each page own-origin harness and waits exact URL; final10 viewport checks and inspected screenshots pass. Earlier snapshot receipt superseded.",
+    "D guide received mobile navigation and expiry prerequisite clarifications after49-test combined run; deployed application JS/CSS unchanged; final HTML and Docker health rechecked.",
+    "Docker builds retried for excluded docs and corrected links. Published ports checked before recreate; occupied ports belonged to same N3 container.",
+    "D isolated child full npm test lacked pg; root PostgreSQL44/44 supersedes that environment failure."
+  ],
+  "unverified": [
+    "real payment providers and bank credit",
+    "production identity",
+    "real LLM and MCP/A2A wire interoperability",
+    "billed cost and savings",
+    "seven-day observation"
+  ],
+  "usage_summary": "batch-provider-usage-summary.json",
+  "deployment": "final-deployment.json",
+  "browser": "final-e2e.tap",
+  "demo_browser": "demo-guides/browser-summary.json",
+  "source_hashes": {
+    "variants/a-merchant/app/app.mjs": "19dadc1c8cc12ad53f62bee534410566058fbdb09ba4c72444832d268bdca906",
+    "variants/a-merchant/app/views.mjs": "94051eaaae8c7e0a654f04d97391684a68e2e2a9da3638062df9a0b3609f111d",
+    "variants/d-agent/app/app.mjs": "8382309b68c74b6f83c0d6cf4dd9284b08194ac56b275d13dd6a9aa31be08d50",
+    "variants/d-agent/app/state.mjs": "f7ae6db36bb542181860d5e0608cba7d010c56be4ad41e0c9e6b33d436deca17",
+    "variants/d-agent/app/views.mjs": "90f3e5e27bba48d3fc644d88d73d4f943dfb457ad7014d3ec58c4aea183f4fc3",
+    "variants/c-partner/app/app.mjs": "093229cedd92fa5483c9888ce8d9bb1f7d3cdd41895859092706cd7556d066c9",
+    "variants/c-partner/app/views.mjs": "e168141ee9709470a56c69f2d4d5fcdb73e1ca8794d5efcb0e5304d834011808",
+    "variants/b-customer/app/embed.mjs": "e77270d91b0571bd27354e6fc46fbbc0d6265e6b46af6b0df7ecff94a86f9c00",
+    "variants/b-customer/app/app.mjs": "1869372145b1d7f436f13d2f7bf8477079c9d54636ece96b74b3ef255c65b932",
+    "variants/b-customer/app/views.mjs": "068eb81ef96b2f85392733bf90a4f3e5fff594ca5e009d7eb293df0f47b96659",
+    "variants/a-merchant/docs/demo.md": "23d8794013deec5764cf143f1e34421f33715840bf50467ea0049698068ad7d9",
+    "variants/a-merchant/docs/demo.html": "98165d1a2772c4816c003c49ef3eaa34df5c2929b057fb9dfd9743ae17ba09ff",
+    "variants/d-agent/docs/demo.md": "998d97f8528c00fef1631781bf6e8e9ec0468db623b395df78a3e18e728e5627",
+    "variants/d-agent/docs/demo.html": "eb64ebbb2313111bf2073e6664fe593242c5d2da15f08d0cdc1a619175d54786",
+    "variants/c-partner/docs/demo.md": "eed44ac86f5e804f6269e83409760557de6dfbcabeaa4a0133eb4ecdeb3c9ddc",
+    "variants/c-partner/docs/demo.html": "915c91745dfb60c54522d609b30695de81e4c5e75eae653603bd0a75e7e528e6",
+    "variants/b-customer/docs/demo.md": "0b1ee9ac389d144f68244b9c5e17895ed31b2b02b0605997f4d7d4425ae94c0b",
+    "variants/b-customer/docs/demo.html": "a80e6eacff179c497b88629b6568face373400580126a502e60e1361f3fc16ce",
+    "apps/frontend/Dockerfile": "9c2398efdeb24ccb44e0b03169cb0cf11d262323feb8c25e4467794356915f37",
+    "scripts/check-pipeline.mjs": "472eacd85343534d5ce19e5d2ae270b0287b33dd74e6a81fce5f4473363880d6"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "collected_at": "2026-09-09T08:08:43.164003+00:00",
+  "scope": "Partial unique provider response subtotal for shared-core+A/B/C/D+independent review+demo docs+coordinator since shared-go. Root collection ends07:58:16; final reporting tail excluded. Research/PRD work before shared-go excluded.",
+  "unique_responses": 630,
+  "usage": {
+    "input_tokens": 73327018,
+    "cached_input_tokens": 70606080,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 444859,
+    "reasoning_output_tokens": 97844,
+    "total_tokens": 73771877
+  },
+  "cost": null,
+  "billing_mode": "unknown",
+  "savings": null,
+  "sources": [
+    {
+      "path": "20260909T070308Z-go-c-partner/evidence/c-ui-provider-usage.json",
+      "actual_models": [
+        "gpt-5.6-sol"
+      ],
+      "actual_efforts": [
+        "high"
+      ],
+      "usage": {
+        "input_tokens": 3748161,
+        "cached_input_tokens": 3633920,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 31142,
+        "reasoning_output_tokens": 4299,
+        "total_tokens": 3779303
+      },
+      "scope": "/root/c_ui exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "20260909T064002Z-go-b-customer/evidence/b-ui-provider-usage.json",
+      "actual_models": [
+        "gpt-5.6-sol"
+      ],
+      "actual_efforts": [
+        "high"
+      ],
+      "usage": {
+        "input_tokens": 3563528,
+        "cached_input_tokens": 3417984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 29435,
+        "reasoning_output_tokens": 8688,
+        "total_tokens": 3592963
+      },
+      "scope": "/root/b_ui exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "20260909T060632Z-go-a-merchant/evidence/a-ui-provider-usage.json",
+      "actual_models": null,
+      "actual_efforts": null,
+      "usage": {
+        "input_tokens": 4066779,
+        "cached_input_tokens": 3956480,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 32988,
+        "reasoning_output_tokens": 6692,
+        "total_tokens": 4099767
+      },
+      "scope": "A UI implementation child only; unique response_id usage summed; coordinator/reviewer excluded"
+    },
+    {
+      "path": "20260909T071850Z-go-d-agent/evidence/demo-guides-provider-usage.json",
+      "actual_models": [
+        "gpt-5.6-sol"
+      ],
+      "actual_efforts": [
+        "medium"
+      ],
+      "usage": {
+        "input_tokens": 2498906,
+        "cached_input_tokens": 2390784,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 23491,
+        "reasoning_output_tokens": 1683,
+        "total_tokens": 2522397
+      },
+      "scope": "/root/demo_guides exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "20260909T071850Z-go-d-agent/evidence/d-ui-provider-usage.json",
+      "actual_models": [
+        "gpt-6-astra"
+      ],
+      "actual_efforts": [
+        "high"
+      ],
+      "usage": {
+        "input_tokens": 2061427,
+        "cached_input_tokens": 1967232,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 22181,
+        "reasoning_output_tokens": 2445,
+        "total_tokens": 2083608
+      },
+      "scope": "/root/d_ui exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "20260908T204432Z-go-shared-core/evidence/coordinator-provider-usage.json",
+      "actual_models": [
+        "gpt-6-astra"
+      ],
+      "actual_efforts": [
+        "high"
+      ],
+      "usage": {
+        "input_tokens": 40325554,
+        "cached_input_tokens": 38788096,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 206178,
+        "reasoning_output_tokens": 49663,
+        "total_tokens": 40531732
+      },
+      "scope": "Root response records after shared-go start only; exclusive coordinator, excludes children. Partial through collection: final reporting tail not yet available. Overnight idle included only in elapsed wall time, never token estimates."
+    },
+    {
+      "path": "20260908T204432Z-go-shared-core/evidence/core-provider-usage.json",
+      "actual_models": null,
+      "actual_efforts": null,
+      "usage": {
+        "input_tokens": 5113565,
+        "cached_input_tokens": 4994944,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 51365,
+        "reasoning_output_tokens": 13515,
+        "total_tokens": 5164930
+      },
+      "scope": "core implementation child only; response IDs deduplicated, summed usage equals thread total; coordinator and reviews excluded"
+    },
+    {
+      "path": "20260908T204432Z-go-shared-core/evidence/reviewer-provider-usage.json",
+      "actual_models": [
+        "gpt-6-astra"
+      ],
+      "actual_efforts": [
+        "high"
+      ],
+      "usage": {
+        "input_tokens": 11949098,
+        "cached_input_tokens": 11456640,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 48079,
+        "reasoning_output_tokens": 10859,
+        "total_tokens": 11997177
+      },
+      "scope": "Exclusive independent reviewer thread across shared-core and A/B/C/D; excludes coordinator and implementation/documentation child threads. Count once in batch, not once per feature."
+    }
+  ]
+}

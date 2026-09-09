@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-09T07:55:50.626803+00:00",
+  "checked_at": "2026-09-09T08:07:44.165836+00:00",
   "containers": [
     {
       "name": "n3-shared-postgres-1",
@@ -79,7 +79,7 @@
     },
     {
       "name": "n3-d-frontend-1",
-      "image": "sha256:cc2a447e9388a840f9e99c5812b1c7dd01db08f98885a2866f0fb868e6669237",
+      "image": "sha256:9d82ecbbea608ef6373c8d3eebeb4d6cc809f285ca2def1a5d29d30a5a0f1678",
       "health": "healthy",
       "networks": [
         "n3-frontend"

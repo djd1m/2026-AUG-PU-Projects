@@ -27,14 +27,36 @@
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-08T20:44:32.194319+00:00",
-  "ended_at": null,
-  "status": "running",
-  "actual_coordinator_model": null,
+  "ended_at": "2026-09-09T08:08:43.164003+00:00",
+  "status": "complete",
+  "actual_coordinator_model": "gpt-6-astra",
   "telemetry_status": "partial",
   "missing_data": [
-    "Actual model and usage not exposed; initial context read precedes run record. No batch/comparison or complete SPARC spec yet."
+    "Active execution interval union unknown; elapsed includes waits/interruption.",
+    "Coordinator usage snapshot ends07:58:16; final reporting tail unavailable.",
+    "Billed cost, comparison baseline, savings and seven-day follow-up unavailable."
   ],
-  "metrics": {},
-  "quality": {},
-  "acceptance_evidence": []
+  "metrics": {
+    "elapsed_wall_ms": 41050970,
+    "active_wall_ms": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "quality": {
+    "ac_met": 25,
+    "ac_total": 25,
+    "required_gates_passed": true,
+    "first_pass_acceptance": false,
+    "full_tests": 44,
+    "batch_browser_tests": 49,
+    "current_mutants_killed": 14,
+    "known_open_consequential_findings": 0,
+    "followup_status": "pending",
+    "scope": "synthetic F1; entire batch60criteria accepted, production dependencies deferred"
+  },
+  "acceptance_evidence": [
+    "../20260908T204432Z-go-shared-core/evidence/final-batch.json"
+  ],
+  "actual_coordinator_effort": "high",
+  "final_revision": "298e90f6994a91aae9760b61321b657a11c321a6"
 }

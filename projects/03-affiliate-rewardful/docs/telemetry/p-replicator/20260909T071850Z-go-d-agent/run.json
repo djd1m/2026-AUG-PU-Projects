@@ -15,14 +15,36 @@
   "profile": "compact-quality-first-v2",
   "baseline_revision": "d0d7403e7fe1cad3d348032eeee512ee11dab762",
   "started_at": "2026-09-09T07:18:50.534060+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-09T08:08:43.164003+00:00",
+  "status": "complete",
   "actual_coordinator_model": "gpt-6-astra",
   "actual_coordinator_effort": "high",
   "telemetry_status": "partial",
   "missing_data": [
-    "Coordinator usage not allocated; child actual collected at handoff"
+    "Active execution interval union unknown; elapsed includes waits/interruption.",
+    "Coordinator usage snapshot ends07:58:16; final reporting tail unavailable.",
+    "Billed cost, comparison baseline, savings and seven-day follow-up unavailable."
   ],
-  "metrics": {},
-  "quality": {}
+  "metrics": {
+    "elapsed_wall_ms": 2992630,
+    "active_wall_ms": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "quality": {
+    "ac_met": 10,
+    "ac_total": 10,
+    "required_gates_passed": true,
+    "first_pass_acceptance": false,
+    "full_tests": 44,
+    "batch_browser_tests": 49,
+    "current_mutants_killed": 14,
+    "known_open_consequential_findings": 0,
+    "followup_status": "pending",
+    "scope": "synthetic F1; entire batch60criteria accepted, production dependencies deferred"
+  },
+  "final_revision": "298e90f6994a91aae9760b61321b657a11c321a6",
+  "acceptance_evidence": [
+    "../20260908T204432Z-go-shared-core/evidence/final-batch.json"
+  ]
 }
