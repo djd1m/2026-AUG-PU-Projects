@@ -137,7 +137,8 @@ export function mountReferralPanel({ container, action, request, getMembership, 
     clear() {
       generation += 1; membershipKey = undefined;
       eraseSecret(); landing.value = ''; returning.value = '';
-      statusBox.replaceChildren(); metrics.replaceChildren(); intro.hidden = true; statusBox.hidden = true; controls.hidden = true;
+      statusBox.replaceChildren(); instructions.replaceChildren(); metrics.replaceChildren();
+      intro.hidden = true; statusBox.hidden = true; controls.hidden = true;
     },
   };
 }

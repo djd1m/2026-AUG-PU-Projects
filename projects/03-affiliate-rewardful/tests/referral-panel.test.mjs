@@ -92,3 +92,30 @@ test('partner sees only personal funnel metrics and no owner controls', () => {
   assert.doesNotMatch(container.textContent, /private\.example|Статус подключения/);
   assert.equal(walk(container).find(node => node.tagName === 'DIV' && node.children.some(child => child.tagName === 'FORM')).hidden, true);
 });
+
+test('clear removes owner status, tenant instructions and an issued key before partner render', async () => {
+  const membership = { current: { ...owner.current } };
+  const ownerStatus = { ...status, configured: true, keyActive: true,
+    landingUrl: 'https://private.example/register', returnUrl: 'https://private.example/done' };
+  const partnerStatus = { metrics: { ...status.metrics, visits: 4 } };
+  const { container, panel } = makePanel({ membership, request: async (_context, path) => {
+    if (path === 'referral-key') return { token: 'Q'.repeat(43), expiresAt: '2026-12-08T00:00:00.000Z' };
+    return ownerStatus;
+  } });
+  panel.render(ownerStatus, membership.current);
+  await actionNode(container, 'issue').listeners.click();
+  const keyOutput = walk(container).find(node => node['aria-label'] === 'Одноразовый ключ интеграции');
+  assert.equal(keyOutput.value, 'Q'.repeat(43));
+  assert.match(container.textContent, /private\.example/);
+
+  panel.clear();
+  membership.current = { membershipId: 'partner-2', tenantId: '323e4567-e89b-42d3-a456-426614174000', role: 'partner' };
+  panel.render(partnerStatus, membership.current);
+
+  assert.equal(keyOutput.value, '');
+  assert.equal(keyOutput.hidden, true);
+  assert.doesNotMatch(container.textContent,
+    /private\.example|123e4567-e89b-42d3-a456-426614174000|Q{20}|Статус подключения|Добавьте трекер/);
+  assert.match(container.textContent, /Ваш результат рекомендаций/);
+  assert.match(container.textContent, /Переходы4/);
+});
