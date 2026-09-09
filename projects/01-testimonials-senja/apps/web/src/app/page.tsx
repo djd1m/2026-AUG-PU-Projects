@@ -106,6 +106,7 @@ export default function SignupPage() {
       <div className="brand">
         <span className="brand__mark" aria-hidden="true">◆</span>
         Proofwall
+        <a href="/login" className="small" style={{ marginLeft: 'auto' }}>Войти</a>
       </div>
 
       <div className="hero card">
@@ -175,6 +176,9 @@ export default function SignupPage() {
               {submitting ? 'Создаём…' : 'Создать проект'}
             </button>
           </form>
+          <p className="small" style={{ marginTop: 16 }}>
+            Уже есть аккаунт? <a href="/login">Войти в кабинет</a>
+          </p>
         </section>
       </div>
     </main>
