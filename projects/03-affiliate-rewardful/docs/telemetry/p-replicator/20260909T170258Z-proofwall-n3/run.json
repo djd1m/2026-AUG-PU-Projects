@@ -8,16 +8,44 @@
   ],
   "profile": "compact-quality-first-v2",
   "tier": "XL",
-  "status": "running",
+  "status": "awaiting_external_acceptance",
   "started_at": "2026-09-09T17:02:58.102931+00:00",
   "baseline_revision": "89dc14a5b41c8b21e589a331a1bed4b6a8870ff1",
   "actual_model": null,
   "requested_model": "gpt-6-astra",
   "requested_effort": "high",
-  "metrics": {},
+  "metrics": {
+    "elapsed_wall_ms": 11732337,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "cost_basis": "unavailable",
+    "first_pass_acceptance": false
+  },
   "telemetry_status": "partial",
   "missing_data": [
-    "Actual host model and usage collection pending."
+    "Actual host model identities not available; requested labels are not execution proof.",
+    "Per-attempt input/output/cache usage and cost unavailable.",
+    "Waiting intervals and exact delayed stage boundaries incomplete; active work duration unavailable.",
+    "No matched model-profile baseline; token/time savings not established."
   ],
-  "authorization": "User approved plan and confirmed existing Proofwall YooKassa shop is test mode. Project02 unchanged."
+  "authorization": "User approved plan and confirmed existing Proofwall YooKassa shop is test mode. Project02 unchanged.",
+  "delivery_checkpoint_at": "2026-09-09T20:18:30.440309+00:00",
+  "requested_models": [
+    "gpt-6-astra high",
+    "gpt-5.6-sol high (scoped catalog helper)"
+  ],
+  "actual_models": null,
+  "remaining_acceptance": [
+    "Real mailbox delivery",
+    "Actual YooKassa TEST purchase and refund"
+  ],
+  "quota_snapshot": {
+    "at": "2026-09-09T19:52:28.950Z",
+    "weekly_used_percent": 60,
+    "weekly_remaining_percent": 40,
+    "feature_usage": false
+  }
 }
