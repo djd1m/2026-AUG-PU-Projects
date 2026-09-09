@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-09-09T21:13:08.183570+00:00",
+  "status": "service_restored",
+  "profile": "compact-quality-first-v2",
+  "actual_model": null,
+  "usage": null,
+  "started_at": null,
+  "elapsed_wall_ms": null,
+  "measurement_gaps": [
+    "Incident start and active intervals not captured; usage unavailable."
+  ],
+  "cause": "Root filesystem full; PostgreSQL recovery checkpoint PANIC No space left on device",
+  "actions": [
+    "Pruned unused Docker build cache older24h then older1h, preserving images/volumes",
+    "Cleaned npm downloaded package cache; installed project dependencies retained"
+  ],
+  "disk_after": {
+    "size": "158G",
+    "available": "9.4G",
+    "used_percent": 94
+  },
+  "database_recovered_at": "2026-09-09T21:06:17.360Z",
+  "checks": [
+    "PostgreSQL and API healthy",
+    "Database reads succeed; existing partner financial records present",
+    "Public login API returns401 LOGIN_FAILED for nonexistent test account rather than503",
+    "Dedicated browser account page and credential rejection PASS"
+  ],
+  "limits": [
+    "No successful login using user password performed",
+    "Earlier browser probes shared a session with concurrent tests; final probe used dedicated WebDriver",
+    "Disk still94%used; capacity management remains necessary"
+  ],
+  "data_volumes_deleted": false,
+  "database_reinitialized": false
+}
