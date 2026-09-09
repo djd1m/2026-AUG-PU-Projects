@@ -2,7 +2,7 @@
 
 Статус: план тестов, не выполненная приёмка. Каждый SC-ID является именованным критерием; отдельное семейство AC не вводится.
 
-Spec revision: sha256:36cfb78e1ac7e15e3cd5ce386ee54aa24d380af7022a0ecfeefd5c20bfd10732
+Spec revision: sha256:b4adeb8f0a98ab966bcadf1a30fc2d75764be65a5a87e16aaa0947bb0826ba76
 
 ## Criterion scenarios
 
@@ -48,6 +48,17 @@ Spec revision: sha256:36cfb78e1ac7e15e3cd5ce386ee54aa24d380af7022a0ecfeefd5c20bf
 | SC-US-013-2 | SC-US-013-2 — edge |
 | SC-US-013-3 | SC-US-013-3 — security |
 | SC-US-013-4 | SC-US-013-4 — security |
+| SC-US-003-4 | SC-US-003-4 — historical eligibility |
+| SC-US-005-4 | SC-US-005-4 — monthly permutation |
+| SC-US-006-4 | SC-US-006-4 — immutable calendar |
+| SC-US-007-4 | SC-US-007-4 — shared tax reservation |
+| SC-US-007-5 | SC-US-007-5 — restore evidence |
+| SC-US-006-5 | SC-US-006-5 — actual transfer year |
+| SC-US-013-5 | SC-US-013-5 — consent membership |
+| SC-US-013-6 | SC-US-013-6 — existing account and delegation |
+| SC-US-006-6 | SC-US-006-6 — manual confirmation happy |
+| SC-US-004-4 | SC-US-004-4 — forged intake |
+| SC-US-009-4 | SC-US-009-4 — proposed platform leads |
 
 ## BDD сценарии
 
@@ -291,9 +302,9 @@ Scenario: SC-US-012-1 — happy
 
 ```gherkin
 Scenario: SC-US-012-2 — edge
-  Given mobile viewport
+  Given viewport320/390/768/1440px
   When hero и финансовые состояния отображаются
-  Then контент становится одной колонкой без горизонтальной потери действий/статусов.
+  Then на320/390px контент становится одной колонкой; на всех ширинах document.scrollWidth≤viewport, действия достижимы клавиатурой, focus виден, поля имеют labels и статусы текстовые.
 ```
 
 ```gherkin
@@ -329,4 +340,81 @@ Scenario: SC-US-013-4 — security
   Given неуспешные попытки входа превышают настроенный лимит либо передан injection payload
   When обрабатывается следующая попытка
   Then rate limit действует до валидации, ответ не раскрывает наличие пользователя, SQL/HTML не исполняется и сессия не создаётся.
+```
+
+```gherkin
+Scenario: SC-US-003-4 — historical eligibility
+  Given клиент зарегистрировался с действующими кодом и статусом партнёра, затем код отозван/партнёр приостановлен
+  When регистрация и оплата доставлены после задержки
+  Then используется проверяемая история на registered_at; retry сохраняет решение; Attribution.status/first_paid_at согласованы с проводкой.
+```
+
+```gherkin
+Scenario: SC-US-005-4 — monthly permutation
+  Given payment100коп, комиссия1коп и два refund30коп от30сентября/1октября
+  When обе перестановки доставлены2октября до freeze сентября
+  Then месячные итоги одинаковы: сентябрь0коп отмены, октябрь1коп; freeze не зависит от доставки, оплаченная история не переписывается.
+```
+
+```gherkin
+Scenario: SC-US-006-4 — immutable calendar
+  Given программа активирована с Europe/Moscow и есть атрибуция
+  When owner меняет timezone либо приходит payment30сентября22:30UTC
+  Then смена запрещена; payment относится к октябрю; условия старой политики не меняются.
+```
+
+```gherkin
+Scenario: SC-US-007-4 — shared tax reservation
+  Given две программы одного payer/person/year с разными базами/НПД
+  When две подготовки выполняются одновременно либо вторая после commit первой
+  Then не более одного активного резерва по payer/person/year; другой получатель продолжает работу; проверяется подтверждённый совокупный НПД-лимит.
+```
+
+```gherkin
+Scenario: SC-US-007-5 — restore evidence
+  Given перевод состоялся после backup и RecoveryGate закрывает финансовые записи
+  When оператор вносит evidence о переводе
+  Then наблюдение сохранено даже без preparation; payment/refund posting и обычный confirm запрещены до сверки; evidence-based reconciliation атомарно обновляет резерв/YTD.
+```
+
+```gherkin
+Scenario: SC-US-006-5 — actual transfer year
+  Given декабрьская подготовка устарела, перевод состоялся в январе
+  When оператор сообщает дату и evidence
+  Then факт сохраняется как exception; сверка учитывает верный год без окна повторной выплаты и без молчаливого удаления резерва.
+```
+
+```gherkin
+Scenario: SC-US-013-5 — consent membership
+  Given приглашённый зарегистрировался, но ещё не принял условия
+  When он читает кабинет, затем дважды конкурентно принимает собственное приглашение
+  Then до согласия кабинет закрыт, собственный acceptance доступен session-only; после согласия одна partner membership с минимальными scopes и один набор assets.
+```
+
+```gherkin
+Scenario: SC-US-013-6 — existing account and delegation
+  Given существует User и owner владеет целевой программой
+  When User принимает связанное приглашение, owner выдаёт оператору ограниченный scope
+  Then membership создаются только доверенными переходами; чужие данные не раскрываются, клиентское role не повышает права.
+```
+
+```gherkin
+Scenario: SC-US-006-6 — manual confirmation happy
+  Given замороженная строка, действующая tax preparation, payout scope, дата/evidence внешнего перевода
+  When уполномоченный оператор дважды отмечает тот же перевод
+  Then одна append-only отметка и одно изменение YTD; snapshot неизменен; sent означает заявление оператора, банковский перевод N3a не инициирует.
+```
+
+```gherkin
+Scenario: SC-US-004-4 — forged intake
+  Given нет подписи, подпись неверна/просрочена либо merchant/environment не совпадают
+  When поступает payment/refund event
+  Then нулевой эффект ledger и отсутствие захваченного receipt; безопасный аудит без секретов, billing N1 не затронут; корректный повтор проходит заново.
+```
+
+```gherkin
+Scenario: SC-US-009-4 — proposed platform leads
+  Given владелец одобрит предложенный lead-only scope N3a, участник принимает его явные условия
+  When выдаются персональные link/code и приходит квалифицированный лид платформы
+  Then отдельный platform контекст и одна lead-запись; любая оплата N1 даёт нулевой денежный эффект в platform контексте.
 ```
