@@ -40,6 +40,18 @@ const mutations=[{
 },{
  name:'C partner boot independent of merchant',file:'variants/c-partner/app/app.mjs',
  from:"api = await connect('C', 'partner');",to:"api = await connect('C', 'partner'); await refreshLab();",tests:['tests/c-ui-boundary.test.mjs'],
+},{
+ name:'D late response selected task guard',file:'variants/d-agent/app/state.mjs',
+ from:' && selectedId === response.taskId',to:'',tests:['tests/d-ui-boundary.test.mjs'],
+},{
+ name:'D late response generation guard',file:'variants/d-agent/app/state.mjs',
+ from:'generation === capturedGeneration && ',to:'',tests:['tests/d-ui-boundary.test.mjs'],
+},{
+ name:'D correction exact source guard',file:'variants/d-agent/app/views.mjs',
+ from:'if(dashboard.sourceVersion!==artifact.sourceVersion)',to:'if(false)',tests:['tests/d-ui-boundary.test.mjs'],
+},{
+ name:'D correction payment scope guard',file:'variants/d-agent/app/views.mjs',
+ from:'&&payments.has(entry.paymentId)',to:'',tests:['tests/d-ui-boundary.test.mjs'],
 }];
 const selected=process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
 const results=[];

@@ -4,7 +4,9 @@ node_modules
 .env.*
 .git
 .claude
-docs
+docs/**
+!docs/demos
+!docs/demos/**
 dist
 **/prototype
 *.log
