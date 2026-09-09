@@ -1,0 +1,66 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T192932Z-foundation",
+  "batch_id": null,
+  "project": "projects/03a-affiliate-rewardful",
+  "feature": "foundation",
+  "pipeline": "toolkit bootstrap then feature lifecycle",
+  "tier": "XL",
+  "risk_flags": [
+    "authentication",
+    "tenant isolation",
+    "foundation for monetary ledger"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Use shared root toolkit without vendoring or global configuration changes",
+    "User continue approves concrete technical plan; D7 remains unresolved and independent N1 work continues"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "6a5920dea8f5fcc256257bf50d520b1f0a7af72b",
+  "final_revision": null,
+  "spec_sha256": "ebdbb78650429072e998d694460501894a5f87ca049f7af0828df826898aa8f7",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-09T19:29:32.775324+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_models": null,
+  "acceptance_evidence": [],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": null,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": {
+    "batch_id": "single run",
+    "comparison_id": "no paired benchmark",
+    "host_version": "not exposed",
+    "actual_models": "host attestation unavailable",
+    "tokens": "not exposed",
+    "cost": "not exposed",
+    "active_wall_ms": "initial context reads precede run; full wait accounting not available",
+    "final_revision": "ongoing",
+    "quality.ac_met": "not tested yet",
+    "quality.ac_total": "foundation slice being bounded",
+    "quality.known_defects_missed": "no defect oracle",
+    "quality.false_positive_findings": "no review yet",
+    "quality.regressions": "not measured"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "n3a-affiliate-rewardful",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@dzhechkov/p-replicator": "1.13.2"
+  },
+  "scripts": {
+    "check:traceability": "bash node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md"
+  }
+}
