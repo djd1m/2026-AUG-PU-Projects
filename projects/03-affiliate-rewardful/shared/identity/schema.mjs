@@ -23,4 +23,5 @@ CREATE TABLE IF NOT EXISTS agent_credentials (
 CREATE TABLE IF NOT EXISTS auth_attempts (
  key text PRIMARY KEY, count integer NOT NULL, until_at timestamptz NOT NULL
 );
+CREATE INDEX IF NOT EXISTS auth_attempts_expiry ON auth_attempts(until_at);
 `;

@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { once } from 'node:events';
+import { fixture } from './helpers/core-fixture.mjs';
+import { createHttpServer } from '../apps/api/http.mjs';
+import { createAgentHandler } from '../shared/agents/index.mjs';
+
+test('real cookie HTTP protects CSRF, keeps tokens out of responses, and connects scoped MCP/A2A to PostgreSQL',async t=>{
+  const f=await fixture(t),origin='https://n3-d.212.192.0.33.sslip.io';
+  const server=createHttpServer(f.app,{mode:'hybrid',agentHandler:createAgentHandler({...f.app,origin})});server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const base=`http://127.0.0.1:${server.address().port}`;
+  let cookie;
+  const post=(path,data,extra={})=>fetch(base+path,{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,...(cookie?{Cookie:cookie}:{}),...extra},body:JSON.stringify(data)});
+  const input={email:`${randomUUID()}@example.test`,password:'Secure HTTP password 66!',name:'HTTP Org'};
+  const csrf=await post('/api/account/register',input,{Origin:''});assert.equal(csrf.status,403);
+  const signup=await post('/api/account/register',input);assert.equal(signup.status,200); const setCookie=signup.headers.get('set-cookie');
+  assert.match(setCookie,/HttpOnly/);assert.match(setCookie,/Secure/);assert.match(setCookie,/SameSite=Lax/);
+  assert.equal((await signup.json()).data.token,undefined);cookie=setCookie.split(';')[0];
+  const me=await fetch(base+'/api/account/me',{headers:{Cookie:cookie}}).then(r=>r.json()); const membershipId=me.data.memberships[0].membershipId;
+  const minted=await post('/api/account/agent-token',{membershipId,input:{actions:['dashboard','registry.prepare','registry.read'],expiresInSeconds:3600}}).then(r=>r.json());assert.ok(minted.data?.token);
+  const grants=await post('/api/account/command',{membershipId,action:'grant.list'}).then(r=>r.json()); assert.equal(grants.data.length,1);
+  const tasks=await post('/api/account/command',{membershipId,action:'task.list'}).then(r=>r.json()); assert.equal(tasks.data.length,0);
+  const bearer={Authorization:`Bearer ${minted.data.token}`};
+  const a2a=await post('/a2a',{jsonrpc:'2.0',id:1,method:'message/send',params:{message:{kind:'message',role:'user',messageId:randomUUID(),parts:[{kind:'data',data:{kind:'registry',input:{period:'2026-08'}}}]}}},bearer).then(r=>r.json());
+  assert.equal(a2a.result.kind,'task'); assert.equal(a2a.result.status.state,'completed');
+  const list=await post('/mcp',{jsonrpc:'2.0',id:2,method:'tools/list'},{...bearer,Accept:'application/json, text/event-stream','MCP-Protocol-Version':'2025-11-25'});assert.equal(list.status,200);assert.ok((await list.json()).result.tools.length);
+  await post('/api/account/command',{membershipId,action:'grant.revoke',input:{grantId:minted.data.grantId},idempotencyKey:randomUUID()});
+  const revoked=await post('/a2a',{jsonrpc:'2.0',id:3,method:'tasks/get',params:{id:a2a.result.id}},bearer);assert.equal(revoked.status,403);
+  await post('/api/account/logout',{});const loggedOut=await fetch(base+'/api/account/me',{headers:{Cookie:cookie}});assert.equal(loggedOut.status,401);
+});

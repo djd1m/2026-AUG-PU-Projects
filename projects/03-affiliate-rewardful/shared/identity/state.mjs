@@ -1,4 +1,4 @@
-import { id, policy } from '../domain/common.mjs';
+import { id, policy, sourceChanged } from '../domain/common.mjs';
 
 export function realState(tenantId, name, now) {
   const at = new Date(now).toISOString();
@@ -9,4 +9,10 @@ export function realState(tenantId, name, now) {
     policies: ['cash', 'credit'].map((kind, i) => policy({ kind, bps: 2000, windowDays: 30, holdDays: 7, recurring: true }, i + 1, at)),
     payments: [], refunds: [], ledger: [], registries: [], approvals: [], allocations: [], transfers: [], exceptions: [],
     reconciliations: [], reservations: [], invoices: [], enrollments: [], grants: [], tasks: [], audit: [] };
+}
+
+export function advanceRealClock(state, now) {
+  const next=new Date(now).toISOString();
+  if (state.payments.some(p=>p.availableAt>state.clock && p.availableAt<=next)) sourceChanged(state);
+  state.clock=next;
 }

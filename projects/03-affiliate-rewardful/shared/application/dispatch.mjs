@@ -39,6 +39,8 @@ export function dispatch(state, actor, context, action, input, now) {
       object(input, ['days'], ['days']); integer(input.days, 0, 365); const next = addDays(state.clock, input.days);
       if (next !== state.clock) { state.clock = next; sourceChanged(state); } return { clock: state.clock, sourceVersion: state.sourceVersion };
     }
+    case 'grant.list': object(input,[]); return state.grants.filter(g=>g.actorId===actor.id);
+    case 'task.list': object(input,[]); return state.tasks.filter(t=>t.actorId===actor.id).map(taskView);
     case 'grant.create': return createGrant(state, actor, input, now);
     case 'grant.revoke': {
       object(input, ['grantId'], ['grantId']); const grant = ownResource(state.grants, input.grantId);

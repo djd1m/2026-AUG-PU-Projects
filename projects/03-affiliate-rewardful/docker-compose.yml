@@ -34,14 +34,15 @@ services:
       dockerfile: apps/api/Dockerfile
     restart: unless-stopped
     environment:
-      N3_MODE: fixture
+      N3_MODE: hybrid
       PORT: "3000"
       PGHOST: postgres
       PGPORT: "5432"
       PGDATABASE: n3
       PGUSER: n3_app
       PGPASSWORD_FILE: /run/secrets/n3_db_app_password
-    secrets: [n3_db_app_password]
+      N3_YOOKASSA_CONFIG_FILE: /run/secrets/n3_yookassa_config
+    secrets: [n3_db_app_password, n3_yookassa_config]
     networks: [database, frontend]
     ports:
       - "${N3_BIND:-127.0.0.1}:${N3_API_PORT:-13030}:3000"
@@ -73,3 +74,5 @@ secrets:
     file: ./.runtime/db-admin-password
   n3_db_app_password:
     file: ./.runtime/db-app-password
+  n3_yookassa_config:
+    file: ./.runtime/yookassa.json

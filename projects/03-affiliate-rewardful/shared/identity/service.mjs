@@ -3,7 +3,7 @@ import { assert, object, safeTree, str, id, hash } from '../domain/common.mjs';
 import { transaction } from '../infrastructure/postgres.mjs';
 import { persistChanges } from '../infrastructure/journal.mjs';
 import { hashPassword, verifyPassword, emailInput, passwordInput } from './password.mjs';
-import { realState } from './state.mjs';
+import { realState, advanceRealClock } from './state.mjs';
 import { createGrant, validGrant } from '../application/access.mjs';
 
 const token = () => randomBytes(32).toString('base64url');
@@ -13,12 +13,21 @@ function uuid(value) { assert(typeof value === 'string' && /^[a-f0-9-]{36}$/.tes
 export function createIdentity(pool, now) {
   async function limit(key, maximum = 10) {
     // Durable admission before KDF; no password hashing holds SQL resources.
-    const result = await pool.query(`INSERT INTO auth_attempts(key,count,until_at) VALUES($1,1,$2)
-      ON CONFLICT(key) DO UPDATE SET count=CASE WHEN auth_attempts.until_at <= $3 THEN 1 ELSE auth_attempts.count+1 END,
-      until_at=CASE WHEN auth_attempts.until_at <= $3 THEN $2 ELSE auth_attempts.until_at END RETURNING count`,
-    [hash(key), new Date(now() + 900000), new Date(now())]);
-    assert(result.rows[0].count <= maximum, 'AUTH_RATE_LIMIT', 429, 'Слишком много попыток; повторите через 15 минут');
+    await transaction(pool,async client=>{
+      const locked=(await client.query('SELECT pg_try_advisory_xact_lock(330805) AS ok')).rows[0].ok;
+      assert(locked,'AUTH_BUSY',429,'Повторите попытку позже');
+      await client.query('DELETE FROM auth_attempts WHERE until_at <= $1',[new Date(now())]);
+      const capacity=(await client.query('SELECT count(*)::int AS n FROM auth_attempts')).rows[0].n;
+      const existing=(await client.query('SELECT key FROM auth_attempts WHERE key=$1',[hash(key)])).rowCount;
+      assert(existing || capacity<10000,'AUTH_BUSY',429,'Повторите попытку позже');
+      const result=await client.query(`INSERT INTO auth_attempts(key,count,until_at) VALUES($1,1,$2)
+        ON CONFLICT(key) DO UPDATE SET count=auth_attempts.count+1 RETURNING count`,[hash(key),new Date(now()+900000)]);
+      // Admission count must commit even when request exceeds quota.
+      return result.rows[0].count;
+    }).then(count=>assert(count<=maximum,'AUTH_RATE_LIMIT',429,'Слишком много попыток; повторите через 15 минут'));
   }
+  function fresh(expiresAt) { assert(new Date(expiresAt).getTime()>now(),'UNAUTHENTICATED',401,'Сеанс истёк; войдите снова'); }
+
   async function issue(client, account) {
     const plain = token(), expiresAt = new Date(now() + ttl).toISOString();
     await client.query('INSERT INTO user_sessions(token_hash,account_id,version,expires_at) VALUES($1,$2,$3,$4)',
@@ -50,7 +59,7 @@ export function createIdentity(pool, now) {
   }
   async function lockedState(client, resolved) {
     const state = (await client.query("SELECT state FROM tenants WHERE id=$1 AND mode='real' FOR UPDATE", [resolved.tenant_id])).rows[0]?.state;
-    assert(state, 'FORBIDDEN', 403); state.clock = new Date(now()).toISOString();
+    assert(state, 'FORBIDDEN', 403); advanceRealClock(state,now());
     const actor = state.actors.find(a => a.id === resolved.actor_id); assert(actor, 'FORBIDDEN', 403);
     return { state, actor };
   }
@@ -88,6 +97,7 @@ export function createIdentity(pool, now) {
       const rows = (await client.query(`SELECT m.id,m.tenant_id,m.actor_id,t.state->>'name' AS name,
         (SELECT a FROM jsonb_array_elements(t.state->'actors') a WHERE a->>'id'=m.actor_id::text) AS actor
         FROM memberships m JOIN tenants t ON t.id=m.tenant_id WHERE m.account_id=$1 AND t.mode='real' ORDER BY m.id`, [account.id])).rows;
+      fresh(account.expires_at);
       return { email: account.email, expiresAt: account.expires_at, memberships: rows.map(r => ({ membershipId:r.id, tenantId:r.tenant_id, actorId:r.actor_id, name:r.name, role:r.actor.role })), simulated:false };
     });
   }
@@ -104,8 +114,9 @@ export function createIdentity(pool, now) {
     assert(await verifyPassword(account.password_hash,input.currentPassword), 'LOGIN_FAILED',401,'Текущий пароль не подходит');
     const next = await hashPassword(input.newPassword);
     await transaction(pool, async client => {
+      const sourceSession=await session(client, plain);
       const changed = await client.query('UPDATE accounts SET password_hash=$3,version=version+1 WHERE id=$1 AND version=$2 RETURNING id', [account.id, account.version, next]);
-      assert(changed.rowCount, 'CONFLICT',409,'Пароль уже изменился; войдите снова');
+      assert(changed.rowCount, 'CONFLICT',409,'Пароль уже изменился; войдите снова'); fresh(sourceSession.expires_at);
     });
     return { loggedOut:true };
   }
@@ -117,7 +128,7 @@ export function createIdentity(pool, now) {
       const count=(await client.query('SELECT count(*)::int AS n FROM invitations WHERE tenant_id=$1 AND expires_at>$2 AND accepted_by IS NULL',[resolved.tenant_id,new Date(now())])).rows[0].n;
       assert(count<100,'LIMIT',429);
       await client.query('INSERT INTO invitations(token_hash,tenant_id,role,expires_at) VALUES($1,$2,$3,$4)',[hash(value),state.runId,input.role,expiresAt]);
-      return { invitation:value, role:input.role, expiresAt };
+      fresh(resolved.expires_at); return { invitation:value, role:input.role, expiresAt };
     });
   }
   async function acceptInvite(plain,input) {
@@ -134,7 +145,7 @@ export function createIdentity(pool, now) {
       state.actors.push(actor); state.clock=new Date(now()).toISOString(); const membershipId=id();
       await client.query('INSERT INTO memberships(id,account_id,tenant_id,actor_id) VALUES($1,$2,$3,$4)',[membershipId,account.id,invitation.tenant_id,actor.id]);
       await client.query('UPDATE invitations SET accepted_by=$2 WHERE token_hash=$1',[hash(input.invitation),account.id]);
-      await persistChanges(client,state.runId,before,state); return {membershipId,actorId:actor.id,role:actor.role};
+      await persistChanges(client,state.runId,before,state); fresh(account.expires_at); fresh(invitation.expires_at); return {membershipId,actorId:actor.id,role:actor.role};
     });
   }
   async function mintAgent(plain,membershipId,input) {
@@ -145,7 +156,7 @@ export function createIdentity(pool, now) {
       await client.query('INSERT INTO agent_credentials(token_hash,membership_id,version,grant_id,expires_at) VALUES($1,$2,$3,$4,$5)',
         [hash(value),membershipId,account.version,grant.id,grant.expiresAt]);
       await persistChanges(client,state.runId,before,state);
-      return {token:value,grantId:grant.id,actions:grant.actions,expiresAt:grant.expiresAt};
+      fresh(resolved.expires_at); fresh(grant.expiresAt); return {token:value,grantId:grant.id,actions:grant.actions,expiresAt:grant.expiresAt};
     });
   }
   async function authenticateAgent(plain) {
@@ -155,5 +166,5 @@ export function createIdentity(pool, now) {
       return {actorId:actor.id,role:actor.role,actions:grant.actions,grantId:grant.id,expiresAt:grant.expiresAt};
     });
   }
-  return {register,login,me,logout,changePassword,invite,acceptInvite,mintAgent,authenticateAgent,resolveUser,resolveAgent,lockedState};
+  return {register,login,me,logout,changePassword,invite,acceptInvite,mintAgent,authenticateAgent,resolveUser,resolveAgent,lockedState,fresh};
 }

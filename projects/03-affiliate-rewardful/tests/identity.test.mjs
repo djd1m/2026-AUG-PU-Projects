@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { fixture, code } from './helpers/core-fixture.mjs';
+import pg from 'pg';
 
 const password='A strong unique password 72!';
 const signup=(app,name='Example')=>app.identity.register({email:`${randomUUID()}@example.test`,password,name});
@@ -58,4 +59,19 @@ test('concurrent signup uniqueness and bounded authentication attempts',async t=
   await assert.rejects(f.app.identity.register({email,password:'x'.repeat(201),name:'Bad'}),code('VALIDATION'));
   for(let i=0;i<10;i++) await assert.rejects(f.app.identity.login({email,password:'Wrong password long 34!'}),code('LOGIN_FAILED'));
   await assert.rejects(f.app.identity.login({email,password}),code('AUTH_RATE_LIMIT'));
+});
+test('session expiry while waiting for tenant lock cannot mint credentials; expired attempt counters are reclaimed',async t=>{
+  let clock=Date.now(); const f=await fixture(t,{clock:()=>clock}),owner=await signup(f.app);
+  await f.sql('UPDATE user_sessions SET expires_at=$1',[new Date(clock+1000)]);
+  const pool=new pg.Pool(f.database),client=await pool.connect();
+  try {
+    await client.query('BEGIN');await client.query('SELECT state FROM tenants WHERE id=(SELECT tenant_id FROM memberships WHERE id=$1) FOR UPDATE',[owner.membershipId]);
+    const pending=f.app.identity.mintAgent(owner.token,owner.membershipId,{actions:['dashboard'],expiresInSeconds:60});
+    const rejected=assert.rejects(pending,code('UNAUTHENTICATED'));
+    await new Promise(resolve=>setTimeout(resolve,60));clock+=2000;await client.query('COMMIT');await rejected;
+    assert.equal((await f.sql('SELECT count(*)::int AS n FROM agent_credentials')).rows[0].n,0);
+  } finally {client.release();await pool.end();}
+  await f.sql("INSERT INTO auth_attempts(key,count,until_at) VALUES('expired-test',100,$1)",[new Date(clock-1)]);
+  await signup(f.app);
+  assert.equal((await f.sql("SELECT key FROM auth_attempts WHERE key='expired-test'")).rowCount,0);
 });

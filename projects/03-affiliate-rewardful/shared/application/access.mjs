@@ -10,8 +10,8 @@ const direct = {
   partner: ['program.read', 'partner.read', 'enrollment.join', 'share.read'],
   customer: ['program.read', 'credit.read', 'credit.reserve', 'enrollment.join', 'share.read'],
 };
-export const readActions = new Set(['dashboard', 'program.read', 'share.read', 'partner.read', 'credit.read', 'registry.read', 'task.read']);
-export const actions = new Set([...Object.values(direct).flat(), 'grant.create', 'grant.revoke', 'task.create', 'task.run', 'task.read', 'task.cancel']);
+export const readActions = new Set(['dashboard', 'program.read', 'share.read', 'partner.read', 'credit.read', 'registry.read', 'task.read', 'grant.list', 'task.list']);
+export const actions = new Set([...Object.values(direct).flat(), 'grant.create', 'grant.revoke', 'task.create', 'task.run', 'task.read', 'task.cancel', 'grant.list', 'task.list']);
 export function validGrant(state, actor, grantId, now) {
   const grant = ownResource(state.grants, grantId);
   assert(grant.actorId === actor.id && !grant.revokedAt && Date.parse(grant.expiresAt) > now && grant.demoExpiresAt > state.clock,
@@ -25,15 +25,16 @@ export function authorize(state, actor, context, action, input, now) {
     const underlying = {registry:'registry.prepare',partner:'partner.read',credit:'credit.read'}[input?.kind];
     assert(underlying); authorize(state,actor,context,underlying,input.input ?? {},now);
   }
-  const taskAction = action.startsWith('task.');
+  const listing = ['grant.list','task.list'].includes(action);
+  const taskAction = action.startsWith('task.') && !listing;
   const grantManagement = action.startsWith('grant.');
-  assert(direct[actor.role]?.includes(action) || taskAction || grantManagement, 'FORBIDDEN', 403, 'Операция недоступна в этом контексте');
+  assert(direct[actor.role]?.includes(action) || taskAction || grantManagement || listing, 'FORBIDDEN', 403, 'Операция недоступна в этом контексте');
   if (action === 'partner.read') ownTarget(actor, input, 'partnerId');
   if (action === 'credit.read') ownTarget(actor, input, 'customerId');
   if (context.grantId) {
     str(context.grantId);
     const grant = validGrant(state, actor, context.grantId, now);
-    assert(!grantManagement && (taskAction || grant.actions.includes(action)), 'GRANT_SCOPE', 403, 'Операция не включена в делегацию');
+    assert(!grantManagement && !listing && (taskAction || grant.actions.includes(action)), 'GRANT_SCOPE', 403, 'Операция не включена в делегацию');
     if (grant.artifactId && !taskAction) assert(input.artifactId === grant.artifactId, 'GRANT_SCOPE', 403);
   } else assert(!['task.create', 'task.run'].includes(action), 'GRANT_REQUIRED', 403, 'Нужна действующая делегация');
   if (taskAction && action !== 'task.create') {
@@ -48,7 +49,7 @@ export function createGrant(state, actor, input, now) {
   integer(input.expiresInSeconds, 1, 3600);
   if (Object.hasOwn(input, 'artifactId')) str(input.artifactId);
   if (input.artifactId) { str(input.artifactId); assert(actor.role === 'merchant', 'GRANT_SCOPE', 403); ownResource(state.registries, input.artifactId); }
-  assert(state.grants.length < 100, 'DEMO_LIMIT', 429);
+  assert((state.mode === 'real' ? state.grants.filter(g=>!g.revokedAt && Date.parse(g.expiresAt)>now).length : state.grants.length) < 100, 'DEMO_LIMIT', 429);
   const grant = { id: id(), actorId: actor.id, role: actor.role, actions: [...new Set(input.actions)],
     artifactId: input.artifactId ?? null, expiresAt: new Date(now + input.expiresInSeconds * 1000).toISOString(),
     demoExpiresAt: new Date(Date.parse(state.clock) + input.expiresInSeconds * 1000).toISOString(), createdAt: state.clock, revokedAt: null };

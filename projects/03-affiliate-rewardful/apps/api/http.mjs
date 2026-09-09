@@ -1,9 +1,12 @@
+import { accountHandler } from './account.mjs';
 import { createServer } from 'node:http';
 import { apiOrigins as origins } from '../../shared/contracts/deployment.mjs';
 
 const MAX_BODY = 65536;
 const rates = new Map();
 function rate(key, limit, now = Date.now()) {
+  for (const [id,x] of rates) if (x.until<=now) rates.delete(id);
+  if (!rates.has(key) && rates.size>=2048) return false;
   let row = rates.get(key);
   if (!row || row.until <= now) { row = { n: 0, until: now + 60000 }; rates.set(key, row); }
   if (rates.size > 2048) for (const [id, x] of rates) if (x.until <= now) rates.delete(id);
@@ -31,8 +34,9 @@ async function body(req) {
   } catch { throw Object.assign(new Error('Некорректный JSON.'), { status: 400, code: 'INVALID_JSON' }); }
 }
 
-export function createHttpServer(app, { mode = 'fixture' } = {}) {
-  if (mode !== 'fixture') throw new Error('Only explicit fixture mode is supported.');
+export function createHttpServer(app, { mode = 'fixture', cookieSecure = true, agentHandler = null } = {}) {
+  if (!['fixture','hybrid','real'].includes(mode)) throw new Error('Unsupported mode.');
+  const accounts=accountHandler(app,{body,json,secure:cookieSecure});
   const server = createServer(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -53,6 +57,21 @@ export function createHttpServer(app, { mode = 'fixture' } = {}) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       return res.end('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Круг — лаборатория</title><h1>Круг: четыре сценария</h1><p>Функциональный стенд · синтетические данные · реальные деньги не отправляются</p><ul>' + ['A — Владелец','B — Клиент','C — Партнёр','D — Агент'].map((title,i)=>`<li><a href="http://127.0.0.1:${13031+i}/">${title}</a></li>`).join('') + '</ul><p>Каждый новый независимый сеанс использует отдельные данные. Для ручного продолжения D→A используйте ссылку внутри задачи.</p></html>');
     }
+    try {
+      if (mode !== 'fixture' && path.startsWith('/api/account/')) {
+        if (!rate(`account:${req.socket.remoteAddress}`,60)) return json(res,429,{error:{code:'RATE_LIMIT',message:'Повторите через минуту'}});
+        if (await accounts(req,res,path)) return;
+      }
+      if (mode !== 'fixture' && agentHandler && await agentHandler(req,res,path)) return;
+      if (mode !== 'fixture' && path==='/api/webhooks/yookassa' && req.method==='POST') {
+        const notification=await body(req);
+        return json(res,200,{data:await app.payments.webhook(JSON.stringify(notification))});
+      }
+    } catch(error) {
+      const status=Number.isInteger(error.status) && error.status>=400 && error.status<600 ? error.status : 503;
+      return json(res,status,{error:{code:status<500?error.code:'UNAVAILABLE',message:status<500?error.message:'Сервис временно недоступен. Повторите запрос.'}});
+    }
+    if (mode === 'real' && ['/api/demo','/api/command'].includes(path)) return json(res,403,{error:{code:'FIXTURE_DISABLED'}});
     if (!['/api/demo', '/api/command'].includes(path)) return json(res, 404, { error: { code: 'NOT_FOUND', message: 'Маршрут не найден.' } });
     if (req.method !== 'POST') return json(res, 405, { error: { code: 'METHOD', message: 'Требуется POST.' } });
     // Socket address is authoritative; forwarded headers cannot bypass quota.

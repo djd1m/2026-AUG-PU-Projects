@@ -15,7 +15,7 @@ const server = createServer(async (req, res) => {
   let url;
   try { url = new URL(req.url, 'http://local'); }
   catch { res.writeHead(400, { 'Content-Type':'text/plain; charset=utf-8' }); res.end('Некорректный адрес запроса'); return; }
-  if (url.pathname.startsWith('/api/') || url.pathname === '/health') {
+  if (url.pathname.startsWith('/api/') || ['/health','/mcp','/a2a','/.well-known/agent-card.json'].includes(url.pathname)) {
     const proxy = request(new URL(url.pathname + url.search, upstream), {
       method: req.method, headers: { ...req.headers, host: upstream.host }, timeout: 12000,
     }, remote => { res.writeHead(remote.statusCode, remote.headers); remote.pipe(res); });
@@ -26,7 +26,7 @@ const server = createServer(async (req, res) => {
   }
   if (!['GET','HEAD'].includes(req.method)) { res.writeHead(405); return res.end(); }
   try {
-    const relative = decodeURIComponent(['/', '/join'].includes(url.pathname) ? '/index.html' : url.pathname);
+    const relative = decodeURIComponent(url.pathname === '/account' ? '/shared/ui/account/index.html' : ['/', '/join'].includes(url.pathname) ? '/index.html' : url.pathname);
     const path = resolve(root, '.' + relative);
     if (!path.startsWith(root + sep) || !(await stat(path)).isFile()) throw new Error();
     const type = types[extname(path)];

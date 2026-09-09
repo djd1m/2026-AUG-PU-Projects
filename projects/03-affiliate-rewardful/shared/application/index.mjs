@@ -1,3 +1,5 @@
+import { advanceRealClock } from '../identity/state.mjs';
+import { createPayments } from '../payments/service.mjs';
 import { createIdentity } from '../identity/service.mjs';
 import { randomBytes } from 'node:crypto';
 import { assert, object, safeTree, str, id, hash, canonical } from '../domain/common.mjs';
@@ -40,6 +42,7 @@ export async function createApplication(options = {}) {
     });
   }
   async function execute(context, action, input = {}, idempotencyKey, resolver) {
+    if (!resolver) assert(mode !== 'real','FIXTURE_DISABLED',403);
     if (context?.grantId === undefined && context && typeof context === 'object') context = Object.fromEntries(Object.entries(context).filter(([key]) => key !== 'grantId'));
     safeTree(context); object(context, ['token', 'actorId', 'grantId'], resolver ? ['token'] : ['token', 'actorId']);
     str(context.token, 256); if (!resolver) str(context.actorId); str(action, 80);
@@ -55,7 +58,7 @@ export async function createApplication(options = {}) {
       const tenant = await client.query('SELECT state FROM tenants WHERE id=$1 FOR UPDATE', [session.tenant_id]);
       const state = tenant.rows[0]?.state;
       assert(state, 'NOT_FOUND', 404, 'Организация не найдена');
-      if (resolver) { assert(state.mode === 'real', 'FORBIDDEN',403); state.clock = new Date(now()).toISOString(); }
+      if (resolver) { assert(state.mode === 'real', 'FORBIDDEN',403); advanceRealClock(state,now()); }
       const actor = state.actors.find(a => a.id === context.actorId);
       assert(actor, 'FORBIDDEN', 403, 'Контекст недоступен');
       authorize(state, actor, context, action, input, now());
@@ -65,6 +68,7 @@ export async function createApplication(options = {}) {
         const previous = await client.query('SELECT input_hash,result FROM command_results WHERE tenant_id=$1 AND actor_id=$2 AND action=$3 AND command_key=$4',
           [session.tenant_id, actor.id, action, idempotencyKey]);
         if (previous.rows[0]) {
+          if (context.grantId && action === 'task.create') assert(previous.rows[0].result.grantId === context.grantId,'GRANT_SCOPE',403);
           assert(previous.rows[0].input_hash === inputHash, 'IDEMPOTENCY_CONFLICT', 409, 'Этот ключ уже использован для другого запроса');
           assert(new Date(session.expires_at).getTime() > now(), 'SESSION_EXPIRED', 403, 'Демосеанс истёк');
           authorize(state, actor, context, action, input, now());
@@ -90,7 +94,7 @@ export async function createApplication(options = {}) {
       return structuredClone(result);
     });
   }
-  return { createDemo, execute, identity,
+  return { createDemo, execute, identity, payments: createPayments({pool,identity,now,config:options.yookassaConfig,fetchImpl:options.paymentFetch}),
     executeReal: (token, membershipId, action, input = {}, key) => execute({token}, action, input, key, client => identity.resolveUser(client, token, membershipId)),
     executeAgent: (token, action, input = {}, key) => execute({token}, action, input, key, client => identity.resolveAgent(client, token)),
     authenticateAgent: identity.authenticateAgent, close: () => pool.end() };

@@ -4,7 +4,7 @@ export const paymentNet = (state, paymentId) => sum(state.ledger.filter(e => e.p
 export function registryView(state, artifact) {
   const revision = artifact.revisions.at(-1);
   return { artifactId: artifact.id, id: artifact.id, ...revision, status: artifact.status, approval: artifact.approval,
-    transfers: state.transfers.filter(t => t.artifactId === artifact.id), simulated: true };
+    transfers: state.transfers.filter(t => t.artifactId === artifact.id), simulated: state.mode !== 'real' };
 }
 function snapshot(state, period, artifactId) {
   const rowsByPartner = new Map(), exclusions = [];
@@ -83,7 +83,7 @@ export function exportRegistry(state, input) {
   const csv = [['period', 'partner_id', 'name', 'amount_minor', 'currency', 'revision', 'hash'],
     ...revision.rows.map(row => [revision.period, row.partnerId, row.name, row.amountMinor, 'RUB', revision.revision, revision.hash])]
     .map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
-  return { artifactId: artifact.id, revision: revision.revision, hash: revision.hash, csv, filename: `n3-${revision.period}-v${revision.revision}.csv`, simulated: true };
+  return { artifactId: artifact.id, revision: revision.revision, hash: revision.hash, csv, filename: `n3-${revision.period}-v${revision.revision}.csv`, simulated: state.mode !== 'real' };
 }
 function evidence(input, state) {
   str(input.evidence, 500); iso(input.sentAt);
@@ -99,7 +99,7 @@ export function sent(state, input, actorId) {
   assert(allocations.every(a => a && a.artifactId === artifact.id && a.revision === revision.revision && !a.transferId), 'ALLOCATION_CONFLICT', 409);
   sum([...state.transfers.map(t => t.amountMinor), row.amountMinor]);
   const transfer = { id: id(), artifactId: artifact.id, revision: revision.revision, hash: revision.hash, partnerId: row.partnerId,
-    amountMinor: row.amountMinor, currency: 'RUB', obligationIds: row.obligationIds, actorId, evidence: input.evidence, sentAt: iso(input.sentAt), simulated: true, credited: false };
+    amountMinor: row.amountMinor, currency: 'RUB', obligationIds: row.obligationIds, actorId, evidence: input.evidence, sentAt: iso(input.sentAt), simulated: state.mode !== 'real', credited: false };
   state.transfers.push(transfer); allocations.forEach(a => { a.transferId = transfer.id; });
   artifact.status = revision.rows.every(r => r.obligationIds.every(p => state.allocations.find(a => a.obligationId === p)?.transferId)) ? 'sent' : 'partially_sent';
   return transfer;
@@ -115,7 +115,7 @@ export function reconcile(state, input, actorId) {
   if (old) { assert(old.inputHash === hash(input), 'RECONCILIATION_CONFLICT', 409); return old; }
   const currentMinor = sum(row.obligationIds.map(p => paymentNet(state, p)));
   const record = { ...input, id: id(), businessKey, inputHash: hash(input), originalAmountMinor: row.amountMinor,
-    currentAmountMinor: currentMinor, discrepancyMinor: input.amountMinor - currentMinor, actorId, createdAt: state.clock, simulated: true };
+    currentAmountMinor: currentMinor, discrepancyMinor: input.amountMinor - currentMinor, actorId, createdAt: state.clock, simulated: state.mode !== 'real' };
   sourceChanged(state);
   // Historical CSV may have been used after approval was invalidated. Preserve that fact and bar a second settlement.
   const unsent = row.obligationIds.filter(p => !state.allocations.some(a => a.obligationId === p && a.transferId));
@@ -123,12 +123,12 @@ export function reconcile(state, input, actorId) {
     sum([...state.transfers.map(t => t.amountMinor), input.amountMinor]);
     const transfer = { id: id(), artifactId: artifact.id, revision: revision.revision, hash: revision.hash, partnerId: row.partnerId,
       amountMinor: input.amountMinor, currency: 'RUB', obligationIds: unsent, actorId, evidence: input.evidence, sentAt: iso(input.sentAt),
-      simulated: true, credited: false, reconciliationId: record.id };
+      simulated: state.mode !== 'real', credited: false, reconciliationId: record.id };
     state.transfers.push(transfer);
     for (const obligationId of unsent) state.allocations.push({ obligationId, artifactId: artifact.id, revision: revision.revision, partnerId: row.partnerId, transferId: transfer.id });
   }
   state.reconciliations.push(record);
   state.exceptions.push({ id: id(), type: 'stale_csv_reconciliation', reconciliationId: record.id, beneficiaryId: row.partnerId,
-    amountMinor: record.discrepancyMinor, kind: 'cash', createdAt: state.clock, explanation: 'Зафиксирован фактический синтетический перевод по историческому CSV; повторная выплата не разрешена' });
+    amountMinor: record.discrepancyMinor, kind: 'cash', createdAt: state.clock, explanation: state.mode === 'real' ? 'Зафиксирован ручной перевод по историческому CSV; повторная выплата не разрешена' : 'Зафиксирован фактический синтетический перевод по историческому CSV; повторная выплата не разрешена' });
   return record;
 }

@@ -8,7 +8,7 @@ export function validateEvent(event) {
   assert(['payment', 'refund'].includes(event.type));
   object(event, event.type === 'payment' ? paymentFields : refundFields,
     event.type === 'payment' ? paymentFields.filter(k => !['promo', 'cookie'].includes(k)) : refundFields);
-  assert(event.provider === 'fixture', 'PROVIDER_UNAVAILABLE', 400, 'Доступен только синтетический провайдер');
+  assert(['fixture','yookassa'].includes(event.provider), 'PROVIDER_UNAVAILABLE', 400, 'Доступен только синтетический провайдер');
   for (const field of ['accountId', 'objectId']) { str(event[field]); assert(!event[field].includes('/')); }
   integer(event.amountMinor, 1);
   if (event.type === 'refund') { str(event.paymentId); assert(!event.paymentId.includes('/')); iso(event.refundedAt); return; }
@@ -50,14 +50,15 @@ function reverse(state, payment, refund) {
     paymentId: payment.id, refundId: refund.id, beneficiaryId: payment.beneficiaryId, amountMinor: delta,
     kind: payment.kind, createdAt: state.clock, explanation: 'Исходный перевод/применение сохранён; требуется сверка, автоматического взаимозачёта нет' });
 }
-export function fixtureEvent(state, event) {
+export function fixtureEvent(state, event, policyId) {
+  assert(event.provider === (state.mode === 'real' ? 'yookassa' : 'fixture'), 'PROVIDER_UNAVAILABLE', 400);
   validateEvent(event);
   assert(Date.parse(event.type === 'payment' ? event.paidAt : event.refundedAt) <= Date.parse(state.clock));
   const businessKey = eventKey(event), inputHash = hash(event);
   const list = event.type === 'payment' ? state.payments : state.refunds;
   const previous = list.find(p => p.businessKey === businessKey);
   if (previous) { assert(previous.inputHash === inputHash, 'BUSINESS_KEY_CONFLICT', 409, 'Событие с этим идентификатором уже содержит другие данные'); return previous.result; }
-  assert(state.payments.length + state.refunds.length < 2000, 'DEMO_LIMIT', 429, 'Лимит событий демосреды');
+  assert(state.mode === 'real' || state.payments.length + state.refunds.length < 2000, 'DEMO_LIMIT', 429, 'Лимит событий демосреды');
   if (event.type === 'refund') {
     const paymentKey = `${event.provider}/${event.accountId}/${event.paymentId}`;
     const payment = state.payments.find(p => p.businessKey === paymentKey);
@@ -68,7 +69,8 @@ export function fixtureEvent(state, event) {
     return record.result;
   }
   assert(state.actors.some(a => a.id === event.beneficiaryId), 'NOT_FOUND', 404, 'Получатель не найден');
-  const currentPolicy = state.policies.findLast(p => p.kind === event.kind);
+  const currentPolicy = policyId ? state.policies.find(p=>p.id===policyId && p.kind===event.kind) : state.policies.findLast(p => p.kind === event.kind);
+  assert(currentPolicy,'POLICY_REQUIRED',409);
   const resolved = attribution(state, event, currentPolicy);
   const record = { ...event, id: id(), businessKey, inputHash, attribution: resolved, currency: 'RUB',
     policyVersion: currentPolicy.version, bps: currentPolicy.bps, policyId: currentPolicy.id,
