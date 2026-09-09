@@ -4,7 +4,7 @@
   "profile": "compact-quality-first-v2",
   "project_root": "projects/03a-affiliate-rewardful",
   "started_at": "2026-09-09T17:48:21.808319+00:00",
-  "status": "planning",
+  "status": "running",
   "risk_tier": "XL",
   "scope": "Chosen CJM A → reviewed requirements and implementation plan; no application code",
   "accepted_cjm": "A",
@@ -23,5 +23,62 @@
     "Token and billing counters unavailable",
     "Pre-run context reading excluded; duration not reconstructed"
   ],
-  "stages": []
+  "stages": [],
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "batch_id": null,
+  "project": "projects/03a-affiliate-rewardful",
+  "feature": "cjm-a-prd-plan",
+  "pipeline": "replicate planning + validation",
+  "tier": "XL",
+  "risk_flags": [
+    "money",
+    "tenant isolation",
+    "cross-project integration"
+  ],
+  "profile_overrides": [
+    "Existing discovery reused; no repeated Explore",
+    "Coordinator retains host model; no attested exact model id",
+    "Stop after reviewed XL plan before implementation; no per-document permission prompts"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "bccd5bb43131a2a9b363aadabdf38de47aa9ef96",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "ended_at": null,
+  "acceptance_evidence": [],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": null,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": {
+    "batch_id": "single run",
+    "comparison_id": "no paired baseline",
+    "final_revision": "run ongoing",
+    "spec_sha256": "not yet produced",
+    "host_version": "not exposed",
+    "actual_models": "tool attestation unavailable",
+    "usage": "not exposed",
+    "cost": "not exposed",
+    "active_wall_ms": "wait intervals not fully instrumented",
+    "quality.known_defects_missed": "no known defect oracle"
+  }
 }

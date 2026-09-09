@@ -322,24 +322,29 @@ Local evidence at baseline:
 - `projects/01-testimonials-senja/apps/web/src/lib/payment.ts`, `apps/web/src/app/api/webhooks/payment/route.ts`, `apps/web/src/lib/referral.ts` — provider/referral primitives and their limits.
 - `projects/03-affiliate-rewardful/docs/discovery/research/product-research.md`, `market-trends.md`, `proofwall-code-audit.md` — research fetched 2026-09-08, reused only as dated evidence. Its A–D applications, managed payout and agent scope are not inherited.
 
-## Handoff manifest
+## Манифест передачи
 
-| ID | Артефакт для следующего шага | Статус |
+**Фаза 0 выполнена:** да
+**Проверка манифеста:** ВЫПОЛНЕНА
+
+Формат нормализован координатором на этапе PRD 2026-09-09 без изменения PD-ID и исходных выводов. Владелец выбрал A; последующий receipt ниже описывает прежний discovery-checkpoint.
+
+| Выход | Идентификатор | Модуль |
 |---|---|---|
-| PD-001 | Bounded product/core scope | ready |
-| PD-002 | JTBD and interview segments | ready; hypotheses labeled |
-| PD-003 | N1 pilot learning path | ready; target = one real first commission in one N1 program |
-| PD-004 | Compact M3 positioning/evidence | ready; market size intentionally absent |
-| PD-005 | Compact M4 money boundary | ready; economics intentionally absent |
-| PD-006 | Shared product backbone | ready for HTML, not architecture |
-| PD-007 | CJM A screen contract | ready for HTML |
-| PD-008 | CJM B screen contract | ready for HTML |
-| PD-009 | CJM C screen contract | ready for HTML |
-| PD-010 | Comparison checkpoint | awaiting owner selection after HTML |
-| PD-011 | Required meanings of `FR-GROWTH-001..004` | ready as seeds; not Specification |
-| PD-012 | Event/metric seed | ready for prototype labels; targets unknown |
-| PD-013 | Dependency and unknown register | ready; unresolved items must survive handoff |
-| PD-014 | Dated evidence register | ready |
+| Bounded product/core scope | PD-001 | discovery |
+| JTBD and interview segments | PD-002 | discovery |
+| N1 pilot learning path | PD-003 | discovery |
+| Compact M3 positioning/evidence | PD-004 | discovery |
+| Compact M4 money boundary | PD-005 | discovery |
+| Shared product backbone | PD-006 | discovery |
+| CJM A screen contract | PD-007 | discovery |
+| CJM B screen contract | PD-008 | discovery |
+| CJM C screen contract | PD-009 | discovery |
+| Comparison checkpoint | PD-010 | discovery |
+| Required meanings of `FR-GROWTH-001..004` | PD-011 | discovery |
+| Event/metric seed | PD-012 | discovery |
+| Dependency and unknown register | PD-013 | discovery |
+| Dated evidence register | PD-014 | discovery |
 
 ## Execution receipt
 
