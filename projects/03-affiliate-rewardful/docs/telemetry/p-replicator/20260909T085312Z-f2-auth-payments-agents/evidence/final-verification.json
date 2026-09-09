@@ -1,0 +1,80 @@
+{
+  "collected_at": "2026-09-09T09:52:21.536981+00:00",
+  "implementation_revision": "a71c269868395394a620ae19dd0340ec0cf0355d",
+  "ui_revision": "a71c269868395394a620ae19dd0340ec0cf0355d",
+  "tests": {
+    "build_modules": 82,
+    "postgres": {
+      "pass": 83,
+      "fail": 0,
+      "duration_ms": 13725.78404
+    },
+    "public_cjm_browser": {
+      "pass": 49,
+      "fail": 0,
+      "duration_ms": 29964.512366
+    },
+    "real_account_browser": {
+      "pass": 1,
+      "fail": 0,
+      "duration_ms": 6947.325961
+    },
+    "public_protocol": {
+      "pass": 1,
+      "fail": 0,
+      "duration_ms": 1028.278547
+    }
+  },
+  "mutations": {
+    "core_http": {
+      "killed": 16,
+      "survived": 0,
+      "scope": "prior dd35d9c code guards unchanged in final candidate"
+    },
+    "f2": {
+      "killed": 5,
+      "survived": 0,
+      "scope": "prior dd35d9c code guards unchanged in final candidate"
+    }
+  },
+  "red_controls": [
+    "FormData policy submission failed before3713b38",
+    "new real due-date test failed before823a82a",
+    "Prior customer/amount/policy/period fields survived logout: browser red beforea71c269, green after"
+  ],
+  "deployment": {
+    "databaseHostPorts": [],
+    "databaseNetworkInternal": true,
+    "networkMembers": [
+      "n3-shared-postgres-1",
+      "n3-shared-api-1"
+    ],
+    "randomSecrets": "64hex/0600 verified; values omitted",
+    "health": "healthy"
+  },
+  "provider_live": {
+    "performed": false,
+    "reason": "No dedicated N3 merchant credentials; owner authorized code/documentation boundary"
+  },
+  "external_llm_invoked": false,
+  "screenshots": "account-browser; credentials masked before capture",
+  "backend_revision": "823a82a5b59e1eb96f8d25b4804d9abc669304f1",
+  "gates": {
+    "pipeline": {
+      "traceability": "PASS",
+      "completion": "PASS",
+      "report_revision": "PASS",
+      "criterion_scenarios": "PASS",
+      "features": 6
+    },
+    "review_contract": {
+      "status": "PASS",
+      "criteria": 10
+    },
+    "webhook_live_contract": {
+      "status": "NOTPERFORMED",
+      "exit_code": 2,
+      "reason": "no-provider; native HTTP/SQL contract tests passed separately"
+    }
+  }
+}

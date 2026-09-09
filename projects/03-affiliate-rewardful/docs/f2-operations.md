@@ -17,7 +17,7 @@
 
 На текущем VPS интеграция **не настроена**: `.runtime/yookassa.json` содержит `{"enabled":false}`. Ошибка/отсутствие конфигурации никогда не переключает реальные операции на fixture. Ключи проектов01/02 не используются. Проведены контрактные HTTP/SQL тесты; настоящая merchant sandbox/live операция не проводилась.
 
-Поддержан один явно выбранный магазин и одна реальная организация N3 на deployment. ID организации показан в кабинете и возвращается session API. Владелец VPS помещает выделенные N3 credentials в ignored `.runtime/yookassa.json` с правами0600:
+Поддержан один явно выбранный магазин и одна реальная организация N3 на deployment. ID организации (`tenantId`) возвращается `/api/account/me` для выбранного членства. Владелец VPS помещает выделенные N3 credentials в ignored `.runtime/yookassa.json` с правами0600:
 
 ```json
 {
@@ -59,3 +59,9 @@ A2A message/send:
 Повтор messageId в том же grant возвращает ту же логическую задачу; другие данные конфликтуют. `tasks/get` и `tasks/cancel` принимают `params:{"id":"TASK_ID"}`. Завершённую задачу отменить нельзя. История сохраняется в БД; UI показывает тот же task/artifact. Streaming, push notifications, фоновый nonblocking scheduler и conversational continuation не реализованы и не рекламируются. Это реальный протокольный сервер с детерминированными бизнес-операциями; внешняя LLM/агент вызывает его инструменты, встроенной LLM нет.
 
 [MCP transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports), [официальный SDK](https://ts.sdk.modelcontextprotocol.io/server), [A2A0.3.0](https://a2a-protocol.org/v0.3.0/specification/).
+
+## Границы пилота и повторная проверка
+
+Реальный кабинет общий для A–D; исходные четыре CJM-демонстрации на `/` остаются fixture. Полный перенос каждого специализированного UI на реальные бизнес-сценарии этим этапом не заявляется. В хранилище пилота сохраняются ограничения на организацию: 5000 checkout-заявок, 100 артефактов реестров, 200 задач и 5000 audit-записей. До достижения лимитов требуется отдельная миграция/архивация; удаление истории ради обхода ограничений недопустимо. Эти ограничения не превращаются в автоматические выплаты.
+
+Проверки: `npm run build`; `docker compose -f docker-compose.test.yml run --rm --no-deps backend npm test`; `node scripts/run-public-e2e.mjs`; `node --test tests/e2e/account.mjs`; `node --test tests/e2e/public-agent.mjs`; `node scripts/check-deployment.mjs`. Browser-наборы используют локальный Firefox WebDriver и выполняются последовательно. Test PostgreSQL не публикует порты. Последние результаты и точные версии: [F2 completion](features/f2-commercial/05_completion.md).

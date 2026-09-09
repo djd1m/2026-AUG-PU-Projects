@@ -80,3 +80,22 @@ Feature acceptance: shared25 + A8 + B9 + C8 + D10 =60 criteria. Per-feature acce
 `node scripts/check-pipeline.mjs` runs all four packaged modes across project and all5 features. p-replicator1.13.2 incorrectly expands the project Completion path twice. This project wrapper changes only that variable in memory, checks the original source SHA256 and fails on package changes. It does not alter the installed package or skip a contour. A missing project criterion in a temporary copy returned exit1; see pipeline-negative-control.json.
 
 F1 is accepted as a synthetic comparison stand. Real payment-provider credentials, provider sandbox/production, production identity, real MCP/A2A protocol interoperability, LLM execution and seven-day observation remain unverified.
+
+## F2 extension — real accounts, provider integration and protocols
+
+The earlier F1-only limitations above are historical. F2 adds real `/account` workspaces on all four hosts and actual MCP/A2A transports. YooKassa API integration is implemented but disabled until dedicated N3 merchant credentials are supplied and live acceptance is run. See [F2 completion](features/f2-commercial/05_completion.md) for candidate, evidence and current acceptance status. F1 fixture CJMs remain separate from the real workspace.
+
+### F2 criterion coverage
+
+| Criterion | Test file | Test title |
+|---|---|---|
+| AC-f2-commercial-11 | tests/identity.test.mjs | real registration, persistent login, tenant isolation, fixture isolation and logout |
+| AC-f2-commercial-12 | tests/identity.test.mjs | one-use role-bound invitations, concurrent acceptance, partner cannot take merchant authority |
+| AC-f2-commercial-13 | tests/account-http.test.mjs | real cookie HTTP protects CSRF, keeps tokens out of responses, and connects scoped MCP/A2A to PostgreSQL |
+| AC-f2-commercial-21 | tests/payment-integration.test.mjs | lost create response keeps durable order and retries same provider idempotence key without another payment |
+| AC-f2-commercial-22 | tests/payment-integration.test.mjs | forged and mismatched provider objects never reserve dedup; later authentic delivery succeeds with frozen policy |
+| AC-f2-commercial-23 | tests/payment-integration.test.mjs | real durable checkout survives retry; verified duplicate and refund-before-payment accrue and reverse once |
+| AC-f2-commercial-31 | tests/e2e/public-agent.mjs | public HTTPS official MCP Client and A2A share durable authorized state |
+| AC-f2-commercial-32 | tests/identity.test.mjs | agent token scopes, durable task replay, revocation and password rotation invalidate credentials |
+| AC-f2-commercial-33 | tests/agent-transport.test.mjs | A2A card and durable application task mapping: replay, changed input, current get, terminal cancel |
+| AC-f2-commercial-41 | tests/e2e/account.mjs | real account UI desktop/mobile signup login invite scopes agent transport and durable organization across A–D |

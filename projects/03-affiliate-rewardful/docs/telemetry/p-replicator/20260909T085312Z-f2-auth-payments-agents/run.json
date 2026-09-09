@@ -18,23 +18,86 @@
   ],
   "comparison_id": null,
   "baseline_revision": "71921f10cb9fe2ff68cae1459055f7bf9783b337",
-  "final_revision": null,
-  "spec_sha256": null,
+  "final_revision": "a71c269868395394a620ae19dd0340ec0cf0355d",
+  "spec_sha256": "6d666a880f34fb399f0bf89e1476c37e69c3d75cd4051211457b26cc08669161",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-09T08:53:12.819793+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-09T09:52:21.536981+00:00",
+  "status": "completed_implementation_external_validation_pending",
   "actual_model": "gpt-6-astra",
   "actual_effort": "high",
-  "acceptance_evidence": [],
-  "quality": {},
-  "metrics": {},
+  "acceptance_evidence": [
+    "evidence/final-verification.json",
+    "evidence/source-sha256.json",
+    "backend-tests.tap",
+    "evidence/public-e2e.tap",
+    "evidence/account-browser/summary.json",
+    "evidence/account-browser/public-protocol.json",
+    "ui-final-review.md"
+  ],
+  "quality": {
+    "first_pass_acceptance": false,
+    "backend_tests_passed": 83,
+    "backend_tests_failed": 0,
+    "browser_cjm_tests_passed": 49,
+    "account_browser_passed": true,
+    "public_protocol_passed": true,
+    "guard_mutants_killed": 21,
+    "guard_mutants_survived": 0,
+    "open_blocking_code_findings": 0,
+    "external_provider_acceptance": "NOTPERFORMED(no-provider)"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 3548717,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "user_wait_ms": null,
+    "infra_wait_ms": null,
+    "retry_count": null,
+    "escalation_count": 0,
+    "cost": null,
+    "measured_usage_snapshot": {
+      "input_tokens": 33291338,
+      "cached_input_tokens": 31875712,
+      "output_tokens": 206379,
+      "reasoning_output_tokens": 53401,
+      "total_tokens": 33497717
+    },
+    "usage_collected_at": "2026-09-09T09:52:58.298448+00:00",
+    "uncached_input_tokens": 1415626
+  },
   "telemetry_status": "partial",
   "missing_data": [
     "Initial read-only reuse search precedes record.",
-    "Host version, active interval union, billedcost and stage allocation not yet available."
-  ]
+    "Active interval union, exclusive stage allocation, exact retry intervals, billed cost and final response usage unavailable.",
+    "Source final revision identifies implementation; documentation publication and final response tail follow receipt collection.",
+    "Delegation event timestamps were recorded after actual launch; provider first-usage timestamps are preserved separately.",
+    "TAP evidence strips trailing whitespace from Docker banner only; no assertion or count modified."
+  ],
+  "actual_models": [
+    {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "roles": [
+        "coordinator",
+        "identity/payment integration",
+        "MCP/A2A",
+        "independent reviews"
+      ]
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "effort": "high",
+      "roles": [
+        "provider adapter",
+        "account UI"
+      ]
+    }
+  ],
+  "provider_live_calls_performed": false,
+  "global_model_config_changed": false,
+  "fallback": null
 }

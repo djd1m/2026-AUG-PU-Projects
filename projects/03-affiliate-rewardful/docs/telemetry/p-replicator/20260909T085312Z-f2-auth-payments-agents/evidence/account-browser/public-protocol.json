@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-09T09:46:13.789Z",
+  "origin": "https://n3-d.212.192.0.33.sslip.io",
+  "tlsVerification": true,
+  "mcpClient": "@modelcontextprotocol/sdk 1.30.0",
+  "tools": [
+    "dashboard",
+    "registry_prepare",
+    "registry_read",
+    "task_create",
+    "task_run",
+    "task_read",
+    "task_cancel"
+  ],
+  "oneSharedRegistry": true,
+  "oneDurableTask": true,
+  "concurrentA2aReplay": true,
+  "revokedStatus": 403,
+  "externalLlm": false
+}

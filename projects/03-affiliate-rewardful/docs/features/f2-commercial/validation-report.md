@@ -1,7 +1,7 @@
 # Requirements validation — f2-commercial
 Spec revision: sha256:6d666a880f34fb399f0bf89e1476c37e69c3d75cd4051211457b26cc08669161
 
-Tier XL; owner authorized implementation before PLAN. Independent consequential reviews and fixes are recorded under docs/telemetry/p-replicator/20260909T085312Z-f2-auth-payments-agents/. Native YooKassa read-back replaces nonexistent provider signature, without claiming HMAC. Dedicated N3 merchant credentials remain external; protocol/API contract tests are separate from live provider acceptance. UI privacy/FormData fixes are under verification; no final acceptance yet.
+Tier XL; owner authorized implementation before PLAN. Independent consequential reviews and fixes are recorded under docs/telemetry/p-replicator/20260909T085312Z-f2-auth-payments-agents/. Native YooKassa read-back replaces nonexistent provider signature, without claiming HMAC. Dedicated N3 merchant credentials remain external; protocol/API contract tests are separate from live provider acceptance. UI privacy/FormData/form-reset corrections passed final browser verification; implementation acceptance and external merchant limitation are recorded in completion.
 
 ## Criterion scenarios
 

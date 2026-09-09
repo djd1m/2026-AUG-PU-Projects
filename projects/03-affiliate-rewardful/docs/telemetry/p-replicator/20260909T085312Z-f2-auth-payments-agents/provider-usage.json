@@ -1,7 +1,7 @@
 {
-  "collected_at": "2026-09-09T09:31:02.612572+00:00",
-  "run_started_at": "2026-09-09T08:53:12Z",
-  "status": "partial active run; final tail not included",
+  "collected_at": "2026-09-09T09:52:58.298448+00:00",
+  "run_started_at": "2026-09-09T08:53:12.819793+00:00",
+  "status": "measured snapshot; final active response tail excluded",
   "workers": [
     {
       "agent_id": "/root",
@@ -11,18 +11,19 @@
           "effort": "high"
         }
       ],
-      "response_count": 79,
-      "first_usage_at": "2026-09-09T08:53:12.762Z",
-      "last_usage_at": "2026-09-09T09:31:02.240Z",
+      "response_count": 128,
+      "first_usage_at": "2026-09-09T08:55:59.913Z",
+      "last_usage_at": "2026-09-09T09:52:33.487Z",
       "usage": {
-        "input_tokens": 9619627,
-        "cached_input_tokens": 9199104,
-        "output_tokens": 66839,
-        "reasoning_output_tokens": 12145,
-        "total_tokens": 9686466
+        "input_tokens": 14931825,
+        "cached_input_tokens": 14159488,
+        "output_tokens": 98766,
+        "reasoning_output_tokens": 22463,
+        "total_tokens": 15030591
       },
-      "scope": "exclusive thread responses after run start",
-      "source": "local token_usage_record, deduplicated thread_id/response_id"
+      "scope": "exclusive identified thread responses at or after exact run start",
+      "source": "local token_usage_record, deduplicated thread_id/response_id",
+      "fallback": null
     },
     {
       "agent_id": "/root/f2_payment_adapter",
@@ -32,18 +33,19 @@
           "effort": "high"
         }
       ],
-      "response_count": 73,
+      "response_count": 98,
       "first_usage_at": "2026-09-09T08:58:33.801Z",
-      "last_usage_at": "2026-09-09T09:30:25.640Z",
+      "last_usage_at": "2026-09-09T09:45:42.809Z",
       "usage": {
-        "input_tokens": 9965885,
-        "cached_input_tokens": 9737472,
-        "output_tokens": 58395,
-        "reasoning_output_tokens": 20184,
-        "total_tokens": 10024280
+        "input_tokens": 11323006,
+        "cached_input_tokens": 11055872,
+        "output_tokens": 75043,
+        "reasoning_output_tokens": 23751,
+        "total_tokens": 11398049
       },
-      "scope": "exclusive thread responses after run start",
-      "source": "local token_usage_record, deduplicated thread_id/response_id"
+      "scope": "exclusive identified thread responses at or after exact run start",
+      "source": "local token_usage_record, deduplicated thread_id/response_id",
+      "fallback": null
     },
     {
       "agent_id": "/root/f2_agent_transport",
@@ -53,32 +55,56 @@
           "effort": "high"
         }
       ],
-      "response_count": 61,
+      "response_count": 69,
       "first_usage_at": "2026-09-09T08:58:47.394Z",
-      "last_usage_at": "2026-09-09T09:24:48.496Z",
+      "last_usage_at": "2026-09-09T09:47:45.897Z",
       "usage": {
-        "input_tokens": 5718417,
-        "cached_input_tokens": 5362048,
-        "output_tokens": 29911,
-        "reasoning_output_tokens": 6446,
-        "total_tokens": 5748328
+        "input_tokens": 7036507,
+        "cached_input_tokens": 6660352,
+        "output_tokens": 32570,
+        "reasoning_output_tokens": 7187,
+        "total_tokens": 7069077
       },
-      "scope": "exclusive thread responses after run start",
-      "source": "local token_usage_record, deduplicated thread_id/response_id"
+      "scope": "exclusive identified thread responses at or after exact run start",
+      "source": "local token_usage_record, deduplicated thread_id/response_id",
+      "fallback": null
     }
   ],
   "total": {
-    "input_tokens": 25303929,
-    "cached_input_tokens": 24298624,
-    "output_tokens": 155145,
-    "reasoning_output_tokens": 38775,
-    "total_tokens": 25459074
+    "input_tokens": 33291338,
+    "cached_input_tokens": 31875712,
+    "output_tokens": 206379,
+    "reasoning_output_tokens": 53401,
+    "total_tokens": 33497717
   },
   "currency_cost": null,
   "missing_data": [
-    "provider price/cost unavailable",
-    "stage exclusive token allocation unavailable",
-    "active output after collection excluded"
+    "billed cost/rate card unavailable",
+    "stage exclusive allocation and active wait union unavailable",
+    "active final response tail after collection excluded"
   ],
-  "quota_is_separate_account_window": true
+  "quota_is_separate_account_window": true,
+  "latest_quota_sample": {
+    "at": "2026-09-09T09:52:34.688Z",
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 5.0,
+        "window_minutes": 10080,
+        "resets_at": 1789550338
+      },
+      "secondary": null,
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "pro",
+      "rate_limit_reached_type": null
+    }
+  },
+  "collection_correction": "Earlier partial snapshot rounded run start to second; final snapshot uses exact run timestamp and excludes pre-run response records."
 }
