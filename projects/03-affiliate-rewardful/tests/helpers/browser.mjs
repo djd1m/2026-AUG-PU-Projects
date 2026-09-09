@@ -13,13 +13,18 @@ export async function wd(path, data, method) {
   const response = await fetch(base+path, {method:method || (data===undefined?'GET':'POST'),
     headers:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data),signal:AbortSignal.timeout(55000)});
   const result = await response.json();
-  if (!response.ok || result.value?.error) throw new Error(`WebDriver ${path}: ${result.value?.message || response.status}`);
+  // W3C command failures use non-2xx HTTP. A successful execute can itself
+  // return application data containing an `error` field (e.g. expected403).
+  if (!response.ok) throw new Error(`WebDriver ${path}: ${result.value?.message || response.status}`);
   return result.value;
 }
 export const js = (script,...args) => wd('/execute/sync',{script,args});
 export const element = selector => wd('/element',{using:'css selector',value:selector});
 export async function click(selector) {
   const el = await element(selector);
+  // Explicitly reveal nested iframe controls before native pointer interaction.
+  // Firefox may otherwise scroll only the child viewport and miss the click.
+  await js('arguments[0].scrollIntoView({block:"center",inline:"nearest"})',el);
   await wd(`/element/${Object.values(el)[0]}/click`,{});
 }
 export async function fill(selector,value) {

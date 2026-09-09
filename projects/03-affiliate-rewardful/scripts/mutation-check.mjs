@@ -25,6 +25,15 @@ const mutations=[{
  from:"artifact.status = sentRows === revision.rows.length ? 'sent' : sentRows ? 'partially_sent' : 'approved';",
  to:"artifact.status = state.transfers.some(t => t.artifactId === artifact.id) ? 'partially_sent' : 'approved';",
  tests:['tests/a-registry-view.test.mjs'],
+},{
+ name:'B embed parent source guard',file:'variants/b-customer/app/embed.mjs',
+ from:'event.source !== window.parent || ',to:'',tests:['tests/b-ui-boundary.test.mjs'],
+},{
+ name:'B embed exact schema guard',file:'variants/b-customer/app/embed.mjs',
+ from:' || !exactValueMoment(event.data)',to:'',tests:['tests/b-ui-boundary.test.mjs'],
+},{
+ name:'B losing reservation refresh',file:'variants/b-customer/app/app.mjs',
+ from:'if (error instanceof ApiError && error.status === 409)',to:'if (false)',tests:['tests/b-ui-boundary.test.mjs'],
 }];
 const selected=process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
 const results=[];

@@ -1,0 +1,31 @@
+name: n3-b
+services:
+  frontend:
+    image: n3-b:0.1.0
+    build:
+      context: ../..
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        VARIANT: b-customer
+    restart: unless-stopped
+    environment:
+      API_ORIGIN: http://api:3000
+      PORT: "3000"
+    ports:
+      - "${N3_BIND:-127.0.0.1}:${N3_B_PORT:-13032}:3000"
+    networks: [frontend]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 4s
+      retries: 6
+    read_only: true
+    tmpfs: ["/tmp:mode=1777,size=16m"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    mem_limit: 128m
+    cpus: 0.5
+networks:
+  frontend:
+    external: true
+    name: n3-frontend

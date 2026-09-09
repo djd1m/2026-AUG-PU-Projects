@@ -30,7 +30,7 @@ const server = createServer(async (req, res) => {
     if (!path.startsWith(root + sep) || !(await stat(path)).isFile()) throw new Error();
     const type = types[extname(path)];
     if (!type) throw new Error();
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:13030 http://127.0.0.1:13032; frame-src 'self' http://127.0.0.1:13032; frame-ancestors 'self' http://127.0.0.1:13030 http://127.0.0.1:13031; base-uri 'none'; form-action 'self'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:13030 http://127.0.0.1:13032 http://localhost:13030 http://localhost:13032; frame-src 'self' http://127.0.0.1:13032 http://localhost:13032; frame-ancestors 'self' http://127.0.0.1:13030 http://127.0.0.1:13031 http://localhost:13030 http://localhost:13031; base-uri 'none'; form-action 'self'");
     res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-cache' });
     res.end(req.method === 'HEAD' ? undefined : await readFile(path));
   } catch { res.writeHead(404, { 'Content-Type':'text/plain; charset=utf-8' }); res.end('Страница не найдена'); }

@@ -96,7 +96,8 @@ function bindProduct() {
 
 function bindCredits() {
   document.querySelector('#reserve-credit')?.addEventListener('click', event => run(event.currentTarget, async () => {
-    await api.command('credit.reserve', { amountMinor:credit.availableMinor, invoiceId:credit.invoice.id });
+    const amountMinor = Math.min(credit.availableMinor, credit.invoice.remainingMinor - credit.invoice.reservedMinor);
+    await api.command('credit.reserve', { amountMinor, invoiceId:credit.invoice.id });
     await refreshCustomer();
     render();
     feedback('Резерв создан. Итог биллинга ещё не известен и не будет выбран автоматически.');
@@ -147,7 +148,15 @@ async function run(button, operation) {
   button.disabled = true;
   button.setAttribute('aria-busy', 'true');
   try { await operation(); }
-  catch (error) { showOperationError(error); }
+  catch (error) {
+    // A confirmed conflict can mean another tab won the same credit. Read fresh
+    // server state, but never retry a mutation or resolve an unknown outcome.
+    if (error instanceof ApiError && error.status === 409) {
+      try { await refreshCustomer(); render(); }
+      catch { showOperationError(error); feedback(`${error.message} Не удалось обновить баланс. Откройте раздел повторно.`, true); return; }
+    }
+    showOperationError(error);
+  }
   finally { button.disabled = false; button.removeAttribute('aria-busy'); }
 }
 
