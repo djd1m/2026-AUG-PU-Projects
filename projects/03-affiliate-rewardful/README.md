@@ -2,6 +2,8 @@
 
 > **Неделя 03** · `партнёрка` · референс: **[Rewardful](https://rewardful.com/)**
 
+На 9 сентября: общее ядро работает в Docker/PostgreSQL; варианты [A](variants/a-merchant/README.md) и [B](variants/b-customer/README.md) прошли приёмку F1. C реализуется, D следующий. Последняя совместная браузерная проверка A/B: 25/25 тестов; общий набор: 40/40. Это стенды с синтетическими платежами. Инструкции открытия через SSH находятся в README вариантов.
+
 ## Простыми словами
 
 **Проблема.** Вы хотите, чтобы вас рекомендовали за процент от продаж. Но как понять, что клиент
@@ -55,11 +57,11 @@
 | Этап | Статус |
 |---|---|
 | Phase 0 — Product Discovery | Исследование и 4 HTML CJM готовы; выбран путь подготовки4 PRD |
-| Phase 1 — SPARC (`/replicate`) | 4 draft PRD + shared PRD/план; полный SPARC ещё не завершён |
-| Phase 2 — Validation | ⬜ |
-| Phase 3 — Toolkit | ⬜ |
-| Phase 4 — Finalize | ⬜ |
-| Реализация | ⬜ |
+| Phase 1 — SPARC (`/replicate`) | Общий комплект + 5 feature-комплектов готовы |
+| Phase 2 — Validation | 60 критериев проверены; F1 READY WITH CAVEATS |
+| Phase 3 — Toolkit | Используется общий p-replicator; runtime и проверки проекта добавлены |
+| Phase 4 — Finalize | Общая приёмка ожидает C/D |
+| Реализация | Ядро и A/B работают; C в работе, затем D |
 
 ## CJM: выбрать направление
 
@@ -75,9 +77,9 @@
 Основной payout flow: ручной реестр за предыдущий месяц, переводы до5-го следующего.
 ЮKassa — базовая интеграция; Split payments Яндекс Кассы/ЮKassa и CloudPayments — будущие кандидаты по документации без обещания production-проверки.
 
-По новому поручению подготовлены4 PRD и общий план; runtime четырёх вариантов пока не реализован.
+Подготовлены 4 PRD и общий план. A/B используют общий работающий API; C/D подключаются последовательно.
 
-Агентные интерфейсы MCP/A2A включены в продуктовый замысел. [Влияние на A–C и новый путь D](docs/discovery/agent-interface-cjm.md). Текущий результат — интерактивный прототип, без работающих MCP/A2A endpoints.
+Агентные интерфейсы MCP/A2A включены в продуктовый замысел. [Влияние на A–C и новый путь D](docs/discovery/agent-interface-cjm.md). Общее ядро уже проверяет grants и сохраняет детерминированные fixture-задачи. Настоящие MCP/A2A endpoints и подключение LLM остаются отдельным этапом.
 
 ## Четыре реализации с общим кодом
 
@@ -85,11 +87,11 @@
 
 ```text
 variants/
-  a-merchant/  # docs/PRD.md, prototype/index.html, будущие src/tests
+  a-merchant/  # docs/PRD.md, prototype/index.html, app/, docker-compose.yml
   b-customer/
   c-partner/
   d-agent/
-shared/        # общий PRD и будущие runtime-пакеты
+shared/        # домен, application, PostgreSQL, клиент API и UI-компоненты
 ```
 
 Каждая оболочка подключает общее ядро; денежные правила, права и provider adapters не копируются между вариантами. Выбрать можно сочетание удачных частей.
