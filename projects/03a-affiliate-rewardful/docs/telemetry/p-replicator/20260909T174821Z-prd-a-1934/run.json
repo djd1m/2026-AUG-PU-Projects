@@ -1,0 +1,27 @@
+{
+  "run_id": "20260909T174821Z-prd-a-1934",
+  "protocol": "feature-telemetry-v1",
+  "profile": "compact-quality-first-v2",
+  "project_root": "projects/03a-affiliate-rewardful",
+  "started_at": "2026-09-09T17:48:21.808319+00:00",
+  "status": "planning",
+  "risk_tier": "XL",
+  "scope": "Chosen CJM A → reviewed requirements and implementation plan; no application code",
+  "accepted_cjm": "A",
+  "user_constraints": [
+    "N1 first integration",
+    "YooKassa",
+    "manual payments on fifth for previous calendar month"
+  ],
+  "baseline_commit": "bccd5bb43131a2a9b363aadabdf38de47aa9ef96",
+  "actual_models": null,
+  "usage": null,
+  "cost": null,
+  "cost_basis": "unavailable",
+  "measurement_gaps": [
+    "Exact coordinator and worker execution model metadata unavailable; requested models recorded separately",
+    "Token and billing counters unavailable",
+    "Pre-run context reading excluded; duration not reconstructed"
+  ],
+  "stages": []
+}
