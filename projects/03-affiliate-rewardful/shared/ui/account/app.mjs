@@ -3,6 +3,7 @@ import {
   disableWhile, display, element, mcp, parseRub, renderAccountSummary, renderParticipant,
   renderPayments, rub,
 } from './helpers.mjs';
+import { mountReferralPanel } from './referrals.mjs';
 
 const ui = Object.fromEntries([
   'notice', 'auth', 'workspace', 'login', 'email', 'password', 'name', 'register', 'logout',
@@ -26,6 +27,9 @@ let screen = null;
 let issuedAgent = null;
 let logoutPending = false;
 let fragmentInvitation = false;
+const referralContainer=element('section');referralContainer.id='referral-funnel';
+ui.workspace.append(referralContainer);
+const referralPanel=mountReferralPanel({container:referralContainer,action,request,getMembership:()=>membership,notify});
 
 function notify(message = '', error = false) {
   ui.notice.textContent = message;
@@ -41,6 +45,7 @@ function clearIssuedAgent() {
 }
 
 function clearContextSecrets({ preserveIncoming = false, resetAuth = false } = {}) {
+  referralPanel.clear();
   clearIssuedAgent();
   ui['invitation-output'].value = '';
   ui['invitation-output'].hidden = true;
@@ -150,7 +155,7 @@ async function refreshWorkspace(context = contexts.capture()) {
       command(context, 'program.read'),
       command(context, role === 'partner' ? 'partner.read' : 'credit.read'),
     ]).then(([program, personal]) => ({ program, personal }));
-  const [primary, grantsResult, tasksResult, payments] = await Promise.all([
+  const [primary, grantsResult, tasksResult, payments, referrals] = await Promise.all([
     primaryPromise,
     optionalCommand(context, 'grant.list'),
     optionalCommand(context, 'task.list'),
@@ -160,6 +165,8 @@ async function refreshWorkspace(context = contexts.capture()) {
         return null;
       })
       : Promise.resolve({ configured: false, unavailableForRole: true, orders: [] }),
+    ['merchant','partner'].includes(role)
+      ? request(context,'referral-status',{membershipId:membership.membershipId}) : Promise.resolve(null),
   ]);
   let share = null;
   if (role !== 'merchant' && primary.program?.enrollment) {
@@ -174,6 +181,7 @@ async function refreshWorkspace(context = contexts.capture()) {
     tasks: list(tasksResult, 'tasks'),
     payments,
     share,
+    referrals,
   };
   render();
   ui.auth.hidden = true;
@@ -277,6 +285,8 @@ function render() {
   if (membership.role === 'merchant') renderMerchant(); else renderParticipant(ui, membership, screen);
   renderPayments(ui, screen);
   renderAgents();
+  referralContainer.hidden=!['merchant','partner'].includes(membership.role);
+  if(!referralContainer.hidden)referralPanel.render(screen.referrals,membership);else referralPanel.clear();
 }
 
 ui.login.addEventListener('submit', event => {

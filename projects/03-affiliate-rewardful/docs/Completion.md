@@ -99,3 +99,22 @@ The earlier F1-only limitations above are historical. F2 adds real `/account` wo
 | AC-f2-commercial-32 | tests/identity.test.mjs | agent token scopes, durable task replay, revocation and password rotation invalidate credentials |
 | AC-f2-commercial-33 | tests/agent-transport.test.mjs | A2A card and durable application task mapping: replay, changed input, current get, terminal cancel |
 | AC-f2-commercial-41 | tests/e2e/account.mjs | real account UI desktop/mobile signup login invite scopes agent transport and durable organization across A–D |
+
+## F3 referral funnel extension
+
+Current status and source-bound verification: [F3 completion](features/f3-referral-funnel/05_completion.md). This feature connects verified merchant signup and billing; the first live merchant installation remains unverified.
+
+### F3 criterion coverage
+
+| Criterion | Test file | Test title |
+|---|---|---|
+| AC-f3-referral-funnel-11 | tests/referral-service.test.mjs | referral configuration validates destinations; key is hash-only, scoped, rotated and revoked |
+| AC-f3-referral-funnel-12 | tests/e2e/referral.mjs | separate merchant UI: real redirect and first-party receipt through verified signup, authoritative checkout and provider-verified commission |
+| AC-f3-referral-funnel-13 | tests/referral-service.test.mjs | verified binding has promo precedence, strict inputs, stable retries and no secret or email leakage |
+| AC-f3-referral-funnel-14 | tests/referral-service.test.mjs | default 30 and published 60/90 day visits freeze server expiry independently of later policy |
+| AC-f3-referral-funnel-21 | tests/referral-payment.test.mjs | lost connector create response retains idempotency; foreign credentials cannot query order or redirect binding |
+| AC-f3-referral-funnel-22 | tests/referral-payment.test.mjs | connector orders freeze durable signup attribution; late renewal survives cookie expiry and refunds remain idempotent |
+| AC-f3-referral-funnel-31 | tests/referral-payment.test.mjs | test commission does not consume one-time live commission; metrics count unique live customers and survive clawback |
+| AC-f3-referral-funnel-32 | tests/e2e/referral.mjs | owner referral panel works on all A–D origins at desktop and mobile, key response cannot reappear after logout |
+| AC-f3-referral-funnel-41 | tests/referral-payment.test.mjs | literal 5000-order cap refuses extra provider work while an existing connector retry stays available |
+| AC-f3-referral-funnel-42 | tests/referral-payment.test.mjs | additive migration preserves old checkout rows and their legacy payment/refund interpretation |

@@ -49,3 +49,7 @@ F2 capabilities пока не запускаются: YooKassa receive payment v
 ## F2 extension — 2026-09-09
 
 F2 implementation adds real identity, dedicated YooKassa order/verified-event integration and MCP/A2A transport. Deployment mode `hybrid` serves isolated fixture demos and real `/account` workspaces; `real` disables fixture routes. Real tenant/session authority never comes from demo bootstrap. Current implementation/setup and honest external acceptance limits: [F2 operations](f2-operations.md). Earlier F1-only statements describe the prior accepted milestone, not the new mode. F2 final browser acceptance is recorded separately in its completion/telemetry.
+
+## F3 referral integration
+
+Distributed monolith remains: four frontend containers share one modular API and PostgreSQL on a backend-only internal network. New shared/referrals module owns immutable customer acquisition and narrow connector authority; shared/payments derives order beneficiary from that binding before external IO. HTTP/browser tracking and merchant backend client are separate surfaces. No additional orchestrator or service fleet. See [F3 architecture](features/f3-referral-funnel/03_architecture.md) and [operations](f2-operations.md).

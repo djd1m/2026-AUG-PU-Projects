@@ -30,6 +30,8 @@
 | docs/integrations/referral-funnel.md | referral-client-ui |
 | shared/application/index.mjs | координатор |
 | shared/domain/events.mjs | координатор |
+| shared/domain/registry.mjs | координатор |
+| shared/domain/projections.mjs | координатор |
 | shared/domain/referral-attribution.mjs | координатор |
 | shared/payments/service.mjs | координатор |
 | shared/payments/schema.mjs | координатор |
@@ -57,6 +59,8 @@
 | docs/runtime-contract.md | координатор |
 | docs/Architecture.md | координатор |
 | docs/README.md | координатор |
+| docs/Completion.md | координатор |
+| .claude/feature-roadmap.json | координатор |
 | package.json | координатор |
 | package-lock.json | координатор |
 

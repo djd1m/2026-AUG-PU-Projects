@@ -97,3 +97,7 @@ Source capture restrictions remain in source-product-profile.md. Provider integr
 ## F2 extension — 2026-09-09
 
 F2 implementation adds real identity, dedicated YooKassa order/verified-event integration and MCP/A2A transport. Deployment mode `hybrid` serves isolated fixture demos and real `/account` workspaces; `real` disables fixture routes. Real tenant/session authority never comes from demo bootstrap. Current implementation/setup and honest external acceptance limits: [F2 operations](f2-operations.md). Earlier F1-only statements describe the prior accepted milestone, not the new mode. F2 final browser acceptance is recorded separately in its completion/telemetry.
+
+## F3 referral runtime extension
+
+Public `/r/:actorId` and tracker.js are routed through each frontend. Three private `/api/integration/*` POST routes accept only the narrow server bearer and reject Origin-bearing requests. Owner cookie settings use the existing exact Origin allowlist. Additive referral tables plus checkout source/attribution/return_url preserve legacy rows. New connector test money is excluded from payable totals. Production ports and database isolation are unchanged. See [integration guide](integrations/referral-funnel.md) and [rollback boundary](features/f3-referral-funnel/05_completion.md).

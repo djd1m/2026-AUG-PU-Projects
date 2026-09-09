@@ -1,4 +1,5 @@
 import { accountHandler } from './account.mjs';
+import { referralHandler, referralRoute } from './referrals.mjs';
 import { createServer } from 'node:http';
 import { apiOrigins as origins } from '../../shared/contracts/deployment.mjs';
 
@@ -37,16 +38,18 @@ async function body(req) {
 export function createHttpServer(app, { mode = 'fixture', cookieSecure = true, agentHandler = null } = {}) {
   if (!['fixture','hybrid','real'].includes(mode)) throw new Error('Unsupported mode.');
   const accounts=accountHandler(app,{body,json,secure:cookieSecure});
+  const referrals=referralHandler(app,{body,json});
   const server = createServer(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'no-referrer');
     const origin = req.headers.origin;
-    if (origin && !origins.has(origin)) return json(res, 403, { error: { code: 'ORIGIN_DENIED', message: 'Источник запроса не разрешён.' } });
-    if (origin) { res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Vary', 'Origin'); }
     let path;
     try { path = new URL(req.url, 'http://n3.local').pathname; }
     catch { return json(res, 400, { error: { code: 'INVALID_URL', message: 'Некорректный адрес запроса.' } }); }
+    const referralKind=referralRoute(path);
+    if (origin && referralKind!=='public' && !origins.has(origin)) return json(res, 403, { error: { code: 'ORIGIN_DENIED', message: 'Источник запроса не разрешён.' } });
+    if (origin && referralKind!=='public') { res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Vary', 'Origin'); }
     if (req.method === 'OPTIONS') {
       if (!['/api/demo', '/api/command'].includes(path)) return json(res, 404, { error: { code: 'NOT_FOUND' } });
       res.writeHead(204, { 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Authorization, Content-Type', 'Access-Control-Max-Age': '300' });
@@ -58,6 +61,10 @@ export function createHttpServer(app, { mode = 'fixture', cookieSecure = true, a
       return res.end('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Круг — лаборатория</title><h1>Круг: четыре сценария</h1><p>Функциональный стенд · синтетические данные · реальные деньги не отправляются</p><ul>' + ['A — Владелец','B — Клиент','C — Партнёр','D — Агент'].map((title,i)=>`<li><a href="http://127.0.0.1:${13031+i}/">${title}</a></li>`).join('') + '</ul><p>Каждый новый независимый сеанс использует отдельные данные. Для ручного продолжения D→A используйте ссылку внутри задачи.</p></html>');
     }
     try {
+      if(mode!=='fixture' && referralKind) {
+        if(!rate(`${referralKind==='public'?'referral':'integration'}:${req.socket.remoteAddress}`,referralKind==='public'?300:600)) return json(res,429,{error:{code:'RATE_LIMIT',message:'Повторите через минуту'}});
+        if(await referrals(req,res,path))return;
+      }
       if (mode !== 'fixture' && path.startsWith('/api/account/')) {
         const authentication=['/api/account/register','/api/account/login','/api/account/password'].includes(path);
         if (!rate(`${authentication?'auth':'account'}:${req.socket.remoteAddress}`,authentication?30:300)) return json(res,429,{error:{code:'RATE_LIMIT',message:'Повторите через минуту'}});

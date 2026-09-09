@@ -1,0 +1,724 @@
+ Container n3-core-test-backend-run-cb17f596bb68 Creating 
+ Container n3-core-test-backend-run-cb17f596bb68 Created 
+
+> n3-four-variants@0.1.0 test
+> node --test --test-concurrency=1 tests/*.test.mjs
+
+TAP version 13
+# Subtest: SC-US-103-2 historical transfer never hides newly eligible obligations in later registry revision
+ok 1 - SC-US-103-2 historical transfer never hides newly eligible obligations in later registry revision
+  ---
+  duration_ms: 50.196608
+  type: 'test'
+  ...
+# Subtest: real cookie HTTP protects CSRF, keeps tokens out of responses, and connects scoped MCP/A2A to PostgreSQL
+ok 2 - real cookie HTTP protects CSRF, keeps tokens out of responses, and connects scoped MCP/A2A to PostgreSQL
+  ---
+  duration_ms: 568.859713
+  type: 'test'
+  ...
+# Subtest: form work keeps successful controls enabled while blocking another submit
+ok 3 - form work keeps successful controls enabled while blocking another submit
+  ---
+  duration_ms: 1.29299
+  type: 'test'
+  ...
+# Subtest: overlapping form operations keep controls disabled until the final lease ends
+ok 4 - overlapping form operations keep controls disabled until the final lease ends
+  ---
+  duration_ms: 0.422
+  type: 'test'
+  ...
+# Subtest: replaced account context rejects a delayed result even when transport ignores abort
+ok 5 - replaced account context rejects a delayed result even when transport ignores abort
+  ---
+  duration_ms: 0.97803
+  type: 'test'
+  ...
+# Subtest: official MCP SDK initializes protocol 2025-11-25, discovers tools and calls the real domain
+ok 6 - official MCP SDK initializes protocol 2025-11-25, discovers tools and calls the real domain
+  ---
+  duration_ms: 146.986082
+  type: 'test'
+  ...
+# Subtest: A2A card and durable application task mapping: replay, changed input, current get, terminal cancel
+ok 7 - A2A card and durable application task mapping: replay, changed input, current get, terminal cancel
+  ---
+  duration_ms: 86.165241
+  type: 'test'
+  ...
+# Subtest: A2A supports pending cancellation, forbids foreign task ownership and scopes
+ok 8 - A2A supports pending cancellation, forbids foreign task ownership and scopes
+  ---
+  duration_ms: 71.588496
+  type: 'test'
+  ...
+# Subtest: A2A rejects authority/context injection and unsupported protocol operations with JSON-RPC errors
+ok 9 - A2A rejects authority/context injection and unsupported protocol operations with JSON-RPC errors
+  ---
+  duration_ms: 96.800654
+  type: 'test'
+  ...
+# Subtest: standalone boundary: bearer, Origin, methods, body bounds, parsing, versions and notifications
+ok 10 - standalone boundary: bearer, Origin, methods, body bounds, parsing, versions and notifications
+  ---
+  duration_ms: 30.556431
+  type: 'test'
+  ...
+# Subtest: revocation during execution prevents result publication; internal errors never expose secrets
+ok 11 - revocation during execution prevents result publication; internal errors never expose secrets
+  ---
+  duration_ms: 9.810874
+  type: 'test'
+  ...
+# Subtest: cancellation loses a completion race safely and MCP rejects out-of-scope calls and injected input
+ok 12 - cancellation loses a completion race safely and MCP rejects out-of-scope calls and injected input
+  ---
+  duration_ms: 22.339768
+  type: 'test'
+  ...
+# Subtest: B embedding rejects wrong source origin and extra fields before showing offer
+ok 13 - B embedding rejects wrong source origin and extra fields before showing offer
+  ---
+  duration_ms: 2.768061
+  type: 'test'
+  ...
+# Subtest: B conflict refreshes the losing view but transport uncertainty never retries a mutation
+ok 14 - B conflict refreshes the losing view but transport uncertainty never retries a mutation
+  ---
+  duration_ms: 9.031284
+  type: 'test'
+  ...
+# Subtest: C failed optional lab load stays inactive and can retry without breaking partner history
+ok 15 - C failed optional lab load stays inactive and can retry without breaking partner history
+  ---
+  duration_ms: 1.557301
+  type: 'test'
+  ...
+# Subtest: C initial partner session does not request merchant lab authority
+ok 16 - C initial partner session does not request merchant lab authority
+  ---
+  duration_ms: 1.219
+  type: 'test'
+  ...
+# Subtest: SC-US-001-1 SC-US-006-1 foreign tenant resource is denied across UI/MCP/A2A fixture contexts
+ok 17 - SC-US-001-1 SC-US-006-1 foreign tenant resource is denied across UI/MCP/A2A fixture contexts
+  ---
+  duration_ms: 324.729726
+  type: 'test'
+  ...
+# Subtest: SC-US-001-2 partner cannot read merchant registry or known other partner
+ok 18 - SC-US-001-2 partner cannot read merchant registry or known other partner
+  ---
+  duration_ms: 212.109595
+  type: 'test'
+  ...
+# Subtest: SC-US-001-3 server checks selected membership, limited token cannot gain merchant through variant switch
+ok 19 - SC-US-001-3 server checks selected membership, limited token cannot gain merchant through variant switch
+  ---
+  duration_ms: 235.268564
+  type: 'test'
+  ...
+# Subtest: strict schemas, idempotent input hash and atomic bootstrap limits fail closed
+ok 20 - strict schemas, idempotent input hash and atomic bootstrap limits fail closed
+  ---
+  duration_ms: 250.49991
+  type: 'test'
+  ...
+# Subtest: credit concurrency across processes never over-reserves balance or invoice; unknown retains, success applies once
+ok 21 - credit concurrency across processes never over-reserves balance or invoice; unknown retains, success applies once
+  ---
+  duration_ms: 313.007842
+  type: 'test'
+  ...
+# Subtest: failed billing releases once; late refund keeps prior invoice and exposes negative credit adjustment
+ok 22 - failed billing releases once; late refund keeps prior invoice and exposes negative credit adjustment
+  ---
+  duration_ms: 247.773918
+  type: 'test'
+  ...
+# Subtest: explicit enrollment is idempotent, branded share kit remains own scoped, credit cannot become cash
+ok 23 - explicit enrollment is idempotent, branded share kit remains own scoped, credit cannot become cash
+  ---
+  duration_ms: 240.823445
+  type: 'test'
+  ...
+# Subtest: SC-US-003-1 integer rounding preserves original reward under cumulative partial refunds
+ok 24 - SC-US-003-1 integer rounding preserves original reward under cumulative partial refunds
+  ---
+  duration_ms: 6.701323
+  type: 'test'
+  ...
+# Subtest: schema boundary rejects prototype injection, unknown fields and unsafe policies; CSV neutralizes formulas
+ok 25 - schema boundary rejects prototype injection, unknown fields and unsafe policies; CSV neutralizes formulas
+  ---
+  duration_ms: 0.53331
+  type: 'test'
+  ...
+# Subtest: SC-US-002-1 SC-US-006-3 concurrent business payment across processes and retry after restart accrues once
+ok 26 - SC-US-002-1 SC-US-006-3 concurrent business payment across processes and retry after restart accrues once
+  ---
+  duration_ms: 458.813434
+  type: 'test'
+  ...
+# Subtest: SC-US-002-2 recurring payment IDs accrue separately and frozen policy versions survive changes
+ok 27 - SC-US-002-2 recurring payment IDs accrue separately and frozen policy versions survive changes
+  ---
+  duration_ms: 286.644163
+  type: 'test'
+  ...
+# Subtest: SC-US-002-3 unverified and unknown events cannot claim identity; verified retry can
+ok 28 - SC-US-002-3 unverified and unknown events cannot claim identity; verified retry can
+  ---
+  duration_ms: 269.288566
+  type: 'test'
+  ...
+# Subtest: SC-US-002-4 explicit promo wins and invalid promo, self-referral and expired attribution explain zero reward
+ok 29 - SC-US-002-4 explicit promo wins and invalid promo, self-referral and expired attribution explain zero reward
+  ---
+  duration_ms: 250.077709
+  type: 'test'
+  ...
+# Subtest: SC-US-003-1 pending refund, cumulative rounding and duplicate refund preserve immutable ledger; failed transaction rolls back
+ok 30 - SC-US-003-1 pending refund, cumulative rounding and duplicate refund preserve immutable ledger; failed transaction rolls back
+  ---
+  duration_ms: 291.063304
+  type: 'test'
+  ...
+# Subtest: SC-US-003-3 refund after simulated sent fact creates debt exception and never frees sent obligations
+ok 31 - SC-US-003-3 refund after simulated sent fact creates debt exception and never frees sent obligations
+  ---
+  duration_ms: 263.565494
+  type: 'test'
+  ...
+# Subtest: SC-US-005-1 SC-US-005-3 SC-US-006-2 scoped deterministic task yields same persisted artifact for owner handoff
+ok 32 - SC-US-005-1 SC-US-005-3 SC-US-006-2 scoped deterministic task yields same persisted artifact for owner handoff
+  ---
+  duration_ms: 370.625263
+  type: 'test'
+  ...
+# Subtest: SC-US-005-2 revoked grants reject cached task results and reads while owner keeps independent artifact rights
+ok 33 - SC-US-005-2 revoked grants reject cached task results and reads while owner keeps independent artifact rights
+  ---
+  duration_ms: 257.756472
+  type: 'test'
+  ...
+# Subtest: SC-US-005-2 real clock expiry and expiry during publication fail closed; demo advance also expires grants
+ok 34 - SC-US-005-2 real clock expiry and expiry during publication fail closed; demo advance also expires grants
+  ---
+  duration_ms: 230.854972
+  type: 'test'
+  ...
+# Subtest: SC-US-005-4 canceled task ignores late execution and never publishes into another task
+ok 35 - SC-US-005-4 canceled task ignores late execution and never publishes into another task
+  ---
+  duration_ms: 277.291979
+  type: 'test'
+  ...
+# Subtest: grant schema denies privilege escalation and explicit artifact scope blocks different registry
+ok 36 - grant schema denies privilege escalation and explicit artifact scope blocks different registry
+  ---
+  duration_ms: 259.284453
+  type: 'test'
+  ...
+# Subtest: SC-US-003-2 SC-US-004-1 selected month cash registry explains held, refunded and credit exclusions
+ok 37 - SC-US-003-2 SC-US-004-1 selected month cash registry explains held, refunded and credit exclusions
+  ---
+  duration_ms: 354.451097
+  type: 'test'
+  ...
+# Subtest: SC-US-004-2 SC-US-004-7 refund invalidates approval, exports including cached command and releases only unsent allocations
+ok 38 - SC-US-004-2 SC-US-004-7 refund invalidates approval, exports including cached command and releases only unsent allocations
+  ---
+  duration_ms: 359.131318
+  type: 'test'
+  ...
+# Subtest: SC-US-004-2 stale draft cannot be approved when no previous approval exists to invalidate
+ok 39 - SC-US-004-2 stale draft cannot be approved when no previous approval exists to invalidate
+  ---
+  duration_ms: 273.651738
+  type: 'test'
+  ...
+# Subtest: SC-US-004-3 SC-US-004-6 export does not send; repeated send with new key preserves one fact; mixed partner sends survive
+ok 40 - SC-US-004-3 SC-US-004-6 export does not send; repeated send with new key preserves one fact; mixed partner sends survive
+  ---
+  duration_ms: 375.172864
+  type: 'test'
+  ...
+# Subtest: SC-US-004-4 SC-US-004-5 same artifact snapshot is stable and competing approvals cannot share obligations
+ok 41 - SC-US-004-4 SC-US-004-5 same artifact snapshot is stable and competing approvals cannot share obligations
+  ---
+  duration_ms: 353.696616
+  type: 'test'
+  ...
+# Subtest: SC-US-004-7 mixed sent row remains allocated after refund and remaining row can be reapproved
+ok 42 - SC-US-004-7 mixed sent row remains allocated after refund and remaining row can be reapproved
+  ---
+  duration_ms: 332.323859
+  type: 'test'
+  ...
+# Subtest: SC-US-004-8 historical CSV actual payment creates one reconciliation and never authorizes a second transfer
+ok 43 - SC-US-004-8 historical CSV actual payment creates one reconciliation and never authorizes a second transfer
+  ---
+  duration_ms: 360.088269
+  type: 'test'
+  ...
+# Subtest: D response must match both selected task ID and request generation
+ok 44 - D response must match both selected task ID and request generation
+  ---
+  duration_ms: 1.799721
+  type: 'test'
+  ...
+# Subtest: D refund explanation uses exact server source and artifact payment scope after reload
+ok 45 - D refund explanation uses exact server source and artifact payment scope after reload
+  ---
+  duration_ms: 43.316406
+  type: 'test'
+  ...
+# Subtest: HTTP refuses unsupported production mode
+ok 46 - HTTP refuses unsupported production mode
+  ---
+  duration_ms: 1.37306
+  type: 'test'
+  ...
+# Subtest: HTTP rejects missing token before application command
+ok 47 - HTTP rejects missing token before application command
+  ---
+  duration_ms: 47.712697
+  type: 'test'
+  ...
+# Subtest: HTTP rejects hostile origin and permits explicit cross-origin preflight
+ok 48 - HTTP rejects hostile origin and permits explicit cross-origin preflight
+  ---
+  duration_ms: 13.622084
+  type: 'test'
+  ...
+# Subtest: HTTP bounds body and rejects malformed JSON without invoking core
+ok 49 - HTTP bounds body and rejects malformed JSON without invoking core
+  ---
+  duration_ms: 12.080054
+  type: 'test'
+  ...
+# Subtest: HTTP forwards exact actor grant key and input; conceals internal errors
+ok 50 - HTTP forwards exact actor grant key and input; conceals internal errors
+  ---
+  duration_ms: 61.201962
+  type: 'test'
+  ...
+# Subtest: HTTP does not accept arbitrary methods or unknown routes
+ok 51 - HTTP does not accept arbitrary methods or unknown routes
+  ---
+  duration_ms: 12.983094
+  type: 'test'
+  ...
+# Subtest: api: malformed raw URL returns400 and server survives
+ok 52 - api: malformed raw URL returns400 and server survives
+  ---
+  duration_ms: 52.266359
+  type: 'test'
+  ...
+# Subtest: frontend: malformed raw URL returns400 and server survives
+ok 53 - frontend: malformed raw URL returns400 and server survives
+  ---
+  duration_ms: 18.307236
+  type: 'test'
+  ...
+# Subtest: UI formats money without treating unknown amount as zero
+ok 54 - UI formats money without treating unknown amount as zero
+  ---
+  duration_ms: 21.648718
+  type: 'test'
+  ...
+# Subtest: UI escapes untrusted provider names and status strings
+ok 55 - UI escapes untrusted provider names and status strings
+  ---
+  duration_ms: 0.46396
+  type: 'test'
+  ...
+# Subtest: real registration, persistent login, tenant isolation, fixture isolation and logout
+ok 56 - real registration, persistent login, tenant isolation, fixture isolation and logout
+  ---
+  duration_ms: 590.524631
+  type: 'test'
+  ...
+# Subtest: one-use role-bound invitations, concurrent acceptance, partner cannot take merchant authority
+ok 57 - one-use role-bound invitations, concurrent acceptance, partner cannot take merchant authority
+  ---
+  duration_ms: 406.529655
+  type: 'test'
+  ...
+# Subtest: agent token scopes, durable task replay, revocation and password rotation invalidate credentials
+ok 58 - agent token scopes, durable task replay, revocation and password rotation invalidate credentials
+  ---
+  duration_ms: 421.187431
+  type: 'test'
+  ...
+# Subtest: concurrent signup uniqueness and bounded authentication attempts
+ok 59 - concurrent signup uniqueness and bounded authentication attempts
+  ---
+  duration_ms: 825.527874
+  type: 'test'
+  ...
+# Subtest: session expiry while waiting for tenant lock cannot mint credentials; expired attempt counters are reclaimed
+ok 60 - session expiry while waiting for tenant lock cannot mint credentials; expired attempt counters are reclaimed
+  ---
+  duration_ms: 424.150392
+  type: 'test'
+  ...
+# Subtest: real durable checkout survives retry; verified duplicate and refund-before-payment accrue and reverse once
+ok 61 - real durable checkout survives retry; verified duplicate and refund-before-payment accrue and reverse once
+  ---
+  duration_ms: 589.61216
+  type: 'test'
+  ...
+# Subtest: forged and mismatched provider objects never reserve dedup; later authentic delivery succeeds with frozen policy
+ok 62 - forged and mismatched provider objects never reserve dedup; later authentic delivery succeeds with frozen policy
+  ---
+  duration_ms: 655.723054
+  type: 'test'
+  ...
+# Subtest: ambiguous creates older than23h require reconciliation
+ok 63 - ambiguous creates older than23h require reconciliation
+  ---
+  duration_ms: 426.312532
+  type: 'test'
+  ...
+# Subtest: shop rotation cannot retry an unbound order against a different merchant account
+ok 64 - shop rotation cannot retry an unbound order against a different merchant account
+  ---
+  duration_ms: 415.267498
+  type: 'test'
+  ...
+# Subtest: lost create response keeps durable order and retries same provider idempotence key without another payment
+ok 65 - lost create response keeps durable order and retries same provider idempotence key without another payment
+  ---
+  duration_ms: 423.182501
+  type: 'test'
+  ...
+# Subtest: public origins are exact HTTPS identities and reject lookalikes
+ok 66 - public origins are exact HTTPS identities and reject lookalikes
+  ---
+  duration_ms: 54.22566
+  type: 'test'
+  ...
+# Subtest: public frontend CSP names only configured frame parents and B child
+ok 67 - public frontend CSP names only configured frame parents and B child
+  ---
+  duration_ms: 39.087444
+  type: 'test'
+  ...
+# Subtest: D handoff pins the public A origin before attaching the session fragment
+ok 68 - D handoff pins the public A origin before attaching the session fragment
+  ---
+  duration_ms: 1.70363
+  type: 'test'
+  ...
+# Subtest: real payout due date stays with oldest unpaid earning month across clock changes
+ok 69 - real payout due date stays with oldest unpaid earning month across clock changes
+  ---
+  duration_ms: 2.674041
+  type: 'test'
+  ...
+# Subtest: real refunds remain possible after fixture event quota; maturity invalidates old source once
+ok 70 - real refunds remain possible after fixture event quota; maturity invalidates old source once
+  ---
+  duration_ms: 8.105913
+  type: 'test'
+  ...
+# Subtest: tracker keeps the first live receipt, strips reserved query fields, and does not slide policy expiry
+ok 71 - tracker keeps the first live receipt, strips reserved query fields, and does not slide policy expiry
+  ---
+  duration_ms: 3.977282
+  type: 'test'
+  ...
+# Subtest: tracker replaces an expired receipt using only the frozen server expiry
+ok 72 - tracker replaces an expired receipt using only the frozen server expiry
+  ---
+  duration_ms: 1.533781
+  type: 'test'
+  ...
+# Subtest: tracker rejects malformed, overlong and wrong-origin referrals after safe origin handling
+ok 73 - tracker rejects malformed, overlong and wrong-origin referrals after safe origin handling
+  ---
+  duration_ms: 1.07055
+  type: 'test'
+  ...
+# Subtest: tracker reports blocked cookie storage and generated classic script is self-contained
+ok 74 - tracker reports blocked cookie storage and generated classic script is self-contained
+  ---
+  duration_ms: 2.538161
+  type: 'test'
+  ...
+# Subtest: merchant client uses only fixed routes, bearer auth, bounded requests and no redirects
+ok 75 - merchant client uses only fixed routes, bearer auth, bounded requests and no redirects
+  ---
+  duration_ms: 32.658232
+  type: 'test'
+  ...
+# Subtest: merchant client fails closed on transport, authority fields, verification and oversized bodies
+ok 76 - merchant client fails closed on transport, authority fields, verification and oversized bodies
+  ---
+  duration_ms: 1.44251
+  type: 'test'
+  ...
+# Subtest: cookie parser returns token evidence only and rejects expired or ambiguous cookies
+ok 77 - cookie parser returns token evidence only and rejects expired or ambiguous cookies
+  ---
+  duration_ms: 0.35083
+  type: 'test'
+  ...
+# Subtest: public redirect and classic tracker work on merchant origin; private connector rejects browser and cookie authority
+ok 78 - public redirect and classic tracker work on merchant origin; private connector rejects browser and cookie authority
+  ---
+  duration_ms: 647.194931
+  type: 'test'
+  ...
+# Subtest: public flood has bounded separate quota; forged forwarded IP cannot evade it and account remains usable
+ok 79 - public flood has bounded separate quota; forged forwarded IP cannot evade it and account remains usable
+  ---
+  duration_ms: 370.414862
+  type: 'test'
+  ...
+# Subtest: fixture mode exposes no real referral or connector routes
+ok 80 - fixture mode exposes no real referral or connector routes
+  ---
+  duration_ms: 8.131163
+  type: 'test'
+  ...
+# Subtest: owner panel renders truthful empty state and keyless tracker instructions
+ok 81 - owner panel renders truthful empty state and keyless tracker instructions
+  ---
+  duration_ms: 4.081611
+  type: 'test'
+  ...
+# Subtest: owner configuration sends exact account contract and refreshes status
+ok 82 - owner configuration sends exact account contract and refreshes status
+  ---
+  duration_ms: 1.85117
+  type: 'test'
+  ...
+# Subtest: clear prevents a delayed one-time key from repopulating the panel
+ok 83 - clear prevents a delayed one-time key from repopulating the panel
+  ---
+  duration_ms: 0.63021
+  type: 'test'
+  ...
+# Subtest: partner sees only personal funnel metrics and no owner controls
+ok 84 - partner sees only personal funnel metrics and no owner controls
+  ---
+  duration_ms: 0.48345
+  type: 'test'
+  ...
+# Subtest: clear removes owner status, tenant instructions and an issued key before partner render
+ok 85 - clear removes owner status, tenant instructions and an issued key before partner render
+  ---
+  duration_ms: 2.05837
+  type: 'test'
+  ...
+# Subtest: connector orders freeze durable signup attribution; late renewal survives cookie expiry and refunds remain idempotent
+ok 86 - connector orders freeze durable signup attribution; late renewal survives cookie expiry and refunds remain idempotent
+  ---
+  duration_ms: 747.798347
+  type: 'test'
+  ...
+# Subtest: organic checkout has null beneficiary and no reward; private customer and amount authority cannot be spoofed
+ok 87 - organic checkout has null beneficiary and no reward; private customer and amount authority cannot be spoofed
+  ---
+  duration_ms: 418.81109
+  type: 'test'
+  ...
+# Subtest: connector commission rejects a forged provider claim before dedup, then accepts authentic delivery once
+ok 88 - connector commission rejects a forged provider claim before dedup, then accepts authentic delivery once
+  ---
+  duration_ms: 414.858998
+  type: 'test'
+  ...
+# Subtest: test commission does not consume one-time live commission; metrics count unique live customers and survive clawback
+ok 89 - test commission does not consume one-time live commission; metrics count unique live customers and survive clawback
+  ---
+  duration_ms: 519.921956
+  type: 'test'
+  ...
+# Subtest: integrated referral contention shares the application pool and leaves ordinary identity requests usable
+ok 90 - integrated referral contention shares the application pool and leaves ordinary identity requests usable
+  ---
+  duration_ms: 435.252135
+  type: 'test'
+  ...
+# Subtest: credential revoked during external create cannot publish response; durable order is recoverable with rotated authority
+ok 91 - credential revoked during external create cannot publish response; durable order is recoverable with rotated authority
+  ---
+  duration_ms: 462.154855
+  type: 'test'
+  ...
+# Subtest: lost connector create response retains idempotency; foreign credentials cannot query order or redirect binding
+ok 92 - lost connector create response retains idempotency; foreign credentials cannot query order or redirect binding
+  ---
+  duration_ms: 577.473016
+  type: 'test'
+  ...
+# Subtest: webhook before connector create response keeps succeeded and accrues once without reverse lock order
+ok 93 - webhook before connector create response keeps succeeded and accrues once without reverse lock order
+  ---
+  duration_ms: 456.505433
+  type: 'test'
+  ...
+# Subtest: literal 5000-order cap refuses extra provider work while an existing connector retry stays available
+ok 94 - literal 5000-order cap refuses extra provider work while an existing connector retry stays available
+  ---
+  duration_ms: 587.64883
+  type: 'test'
+  ...
+# Subtest: additive migration preserves old checkout rows and their legacy payment/refund interpretation
+ok 95 - additive migration preserves old checkout rows and their legacy payment/refund interpretation
+  ---
+  duration_ms: 487.214564
+  type: 'test'
+  ...
+# Subtest: referral configuration validates destinations; key is hash-only, scoped, rotated and revoked
+ok 96 - referral configuration validates destinations; key is hash-only, scoped, rotated and revoked
+  ---
+  duration_ms: 440.003967
+  type: 'test'
+  ...
+# Subtest: default 30 and published 60/90 day visits freeze server expiry independently of later policy
+ok 97 - default 30 and published 60/90 day visits freeze server expiry independently of later policy
+  ---
+  duration_ms: 457.271343
+  type: 'test'
+  ...
+# Subtest: verified binding has promo precedence, strict inputs, stable retries and no secret or email leakage
+ok 98 - verified binding has promo precedence, strict inputs, stable retries and no secret or email leakage
+  ---
+  duration_ms: 407.788656
+  type: 'test'
+  ...
+# Subtest: foreign/forged evidence refuses, self referrals refuse, owner organic binding has zero beneficiary
+ok 99 - foreign/forged evidence refuses, self referrals refuse, owner organic binding has zero beneficiary
+  ---
+  duration_ms: 404.846425
+  type: 'test'
+  ...
+# Subtest: public visits require real enrolled partner and explicitly published configured cash program
+ok 100 - public visits require real enrolled partner and explicitly published configured cash program
+  ---
+  duration_ms: 548.314755
+  type: 'test'
+  ...
+# Subtest: concurrent same-customer binding creates one immutable row and unrelated tenant stays responsive
+ok 101 - concurrent same-customer binding creates one immutable row and unrelated tenant stays responsive
+  ---
+  duration_ms: 403.521904
+  type: 'test'
+  ...
+# Subtest: credential invalidation and expiry are rechecked after tenant waits and roll back customer insert
+ok 102 - credential invalidation and expiry are rechecked after tenant waits and roll back customer insert
+  ---
+  duration_ms: 404.892555
+  type: 'test'
+  ...
+# Subtest: rotation while authorization is waiting follows tenant-before-credential order without deadlock
+ok 103 - rotation while authorization is waiting follows tenant-before-credential order without deadlock
+  ---
+  duration_ms: 402.367764
+  type: 'test'
+  ...
+# Subtest: literal tenant caps reject extra visits/customers while existing customer retry remains available
+ok 104 - literal tenant caps reject extra visits/customers while existing customer retry remains available
+  ---
+  duration_ms: 4288.988351
+  type: 'test'
+  ...
+# Subtest: metrics scope partner facts, distinguish test/live and retain first commission after refund or next week
+ok 105 - metrics scope partner facts, distinguish test/live and retain first commission after refund or next week
+  ---
+  duration_ms: 465.552266
+  type: 'test'
+  ...
+# Subtest: factory refuses absent, empty, malformed, and unknown configuration
+ok 106 - factory refuses absent, empty, malformed, and unknown configuration
+  ---
+  duration_ms: 2.991961
+  type: 'test'
+  ...
+# Subtest: createPayment uses fixed transport, exact RUB decimal, and the order UUID as stable key
+ok 107 - createPayment uses fixed transport, exact RUB decimal, and the order UUID as stable key
+  ---
+  duration_ms: 32.984402
+  type: 'test'
+  ...
+# Subtest: createPayment validates every caller-controlled boundary before transport
+ok 108 - createPayment validates every caller-controlled boundary before transport
+  ---
+  duration_ms: 1.01394
+  type: 'test'
+  ...
+# Subtest: getPayment makes an authenticated GET and returns authoritative normalized facts
+ok 109 - getPayment makes an authenticated GET and returns authoritative normalized facts
+  ---
+  duration_ms: 1.1075
+  type: 'test'
+  ...
+# Subtest: getPayment rejects wrong id, amount, currency, account, mode, status, and timestamp
+ok 110 - getPayment rejects wrong id, amount, currency, account, mode, status, and timestamp
+  ---
+  duration_ms: 5.121892
+  type: 'test'
+  ...
+# Subtest: verifyNotification ignores all events except succeeded without contacting YooKassa
+ok 111 - verifyNotification ignores all events except succeeded without contacting YooKassa
+  ---
+  duration_ms: 0.642841
+  type: 'test'
+  ...
+# Subtest: payment.succeeded is accepted only after authenticated read-back and exact comparison
+ok 112 - payment.succeeded is accepted only after authenticated read-back and exact comparison
+  ---
+  duration_ms: 2.2298
+  type: 'test'
+  ...
+# Subtest: payment notification rejects forged or mismatched provider facts
+ok 113 - payment notification rejects forged or mismatched provider facts
+  ---
+  duration_ms: 3.186362
+  type: 'test'
+  ...
+# Subtest: refund.succeeded verifies refund and then its originating succeeded payment
+ok 114 - refund.succeeded verifies refund and then its originating succeeded payment
+  ---
+  duration_ms: 1.14867
+  type: 'test'
+  ...
+# Subtest: refund notification rejects refund mismatches and an unverified originating payment
+ok 115 - refund notification rejects refund mismatches and an unverified originating payment
+  ---
+  duration_ms: 6.190492
+  type: 'test'
+  ...
+# Subtest: notification body is raw, valid JSON, object-shaped, nonempty, and bounded
+ok 116 - notification body is raw, valid JSON, object-shaped, nonempty, and bounded
+  ---
+  duration_ms: 0.767531
+  type: 'test'
+  ...
+# Subtest: transport fails closed on timeout, network error, redirect, HTTP error, and non-JSON
+ok 117 - transport fails closed on timeout, network error, redirect, HTTP error, and non-JSON
+  ---
+  duration_ms: 1.72826
+  type: 'test'
+  ...
+# Subtest: provider response body is bounded by declared and actual bytes
+ok 118 - provider response body is bounded by declared and actual bytes
+  ---
+  duration_ms: 1.653611
+  type: 'test'
+  ...
+1..118
+# tests 118
+# suites 0
+# pass 118
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32032.411114

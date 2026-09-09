@@ -1,6 +1,7 @@
 import { assert, object, str, integer, iso, id, hash, sum, ownResource, sourceChanged } from './common.mjs';
 
-export const paymentNet = (state, paymentId) => sum(state.ledger.filter(e => e.paymentId === paymentId).map(e => e.amountMinor));
+export const paymentNet = (state, paymentId) => state.payments.some(p => p.id === paymentId && p.source === 'connector' && p.testMode === true)
+  ? 0 : sum(state.ledger.filter(e => e.paymentId === paymentId).map(e => e.amountMinor));
 export function registryView(state, artifact) {
   const revision = artifact.revisions.at(-1);
   return { artifactId: artifact.id, id: artifact.id, ...revision, status: artifact.status, approval: artifact.approval,
@@ -15,7 +16,8 @@ function snapshot(state, period, artifactId) {
     const amountMinor = paymentNet(state, payment.id);
     const allocation = state.allocations.find(a => a.obligationId === payment.id);
     let reason;
-    if (payment.kind !== 'cash') reason = 'subscription_credit';
+    if (payment.source === 'connector' && payment.testMode === true) reason = 'test_payment';
+    else if (payment.kind !== 'cash') reason = 'subscription_credit';
     else if (payment.effectiveAt < start || payment.effectiveAt >= end.toISOString()) reason = 'outside_period';
     else if (payment.availableAt > state.clock) reason = 'held';
     else if (allocation?.transferId) reason = 'sent';

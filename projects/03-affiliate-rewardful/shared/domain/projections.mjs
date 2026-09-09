@@ -7,7 +7,7 @@ export function ownTarget(actor, input, targetField) {
     'FORBIDDEN', 403, 'Доступны только собственные данные');
 }
 export function cashSummary(state, actorId) {
-  const payments = state.payments.filter(p => p.kind === 'cash' && (!actorId || p.beneficiaryId === actorId));
+  const payments = state.payments.filter(p => p.kind === 'cash' && !(p.source === 'connector' && p.testMode === true) && (!actorId || p.beneficiaryId === actorId));
   const transfers = state.transfers.filter(t => !actorId || t.partnerId === actorId);
   const amount = predicate => sum(payments.filter(predicate).map(p => paymentNet(state, p.id)));
   const unpaid = payments.filter(p => paymentNet(state, p.id) > 0 && !state.allocations.some(a => a.obligationId === p.id && a.transferId));
@@ -18,7 +18,7 @@ export function cashSummary(state, actorId) {
     availableMinor: amount(p => p.availableAt <= state.clock && !state.allocations.some(a => a.obligationId === p.id)),
     allocatedMinor: amount(p => state.allocations.some(a => a.obligationId === p.id && !a.transferId)),
     sentMinor: sum(transfers.map(t => t.amountMinor)),
-    adjustmentMinor: sum(state.ledger.filter(e => e.kind === 'cash' && e.amountMinor < 0 && (!actorId || e.beneficiaryId === actorId)).map(e => e.amountMinor)),
+    adjustmentMinor: sum(state.ledger.filter(e => e.kind === 'cash' && e.testMode !== true && e.amountMinor < 0 && (!actorId || e.beneficiaryId === actorId)).map(e => e.amountMinor)),
     dueDate: state.mode === 'real' ? dueDate : '2026-09-05', explanation: 'Ориентир — до 5-го следующего месяца. Отметка отправки не подтверждает зачисление.' };
 }
 export function partnerRead(state, actor, input = {}) {
@@ -27,7 +27,7 @@ export function partnerRead(state, actor, input = {}) {
     summary: cashSummary(state, actor.id), ledger: state.ledger.filter(e => e.beneficiaryId === actor.id && e.kind === 'cash'),
     payments: state.payments.filter(p => p.beneficiaryId === actor.id && p.kind === 'cash').map(p => ({ paymentId: p.id,
       amountMinor: p.amountMinor, rewardMinor: p.rewardMinor, policyVersion: p.policyVersion, attribution: p.attribution.channel,
-      paidAt: p.paidAt, availableAt: p.availableAt })),
+      paidAt: p.paidAt, availableAt: p.availableAt, ...(p.source === 'connector' ? {testMode:p.testMode} : {}) })),
     policies: state.policies.filter(p => p.kind === 'cash'), transfers: state.transfers.filter(t => t.partnerId === actor.id),
     exceptions: state.exceptions.filter(e => e.beneficiaryId === actor.id), simulated: state.mode !== 'real' };
 }

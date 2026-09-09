@@ -15,7 +15,7 @@ const server = createServer(async (req, res) => {
   let url;
   try { url = new URL(req.url, 'http://local'); }
   catch { res.writeHead(400, { 'Content-Type':'text/plain; charset=utf-8' }); res.end('Некорректный адрес запроса'); return; }
-  if (url.pathname.startsWith('/api/') || ['/health','/mcp','/a2a','/.well-known/agent-card.json'].includes(url.pathname)) {
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/r/') || ['/health','/mcp','/a2a','/.well-known/agent-card.json'].includes(url.pathname)) {
     const proxy = request(new URL(url.pathname + url.search, upstream), {
       method: req.method, headers: { ...req.headers, host: upstream.host }, timeout: 12000,
     }, remote => { res.writeHead(remote.statusCode, remote.headers); remote.pipe(res); });

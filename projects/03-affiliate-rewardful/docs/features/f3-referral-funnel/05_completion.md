@@ -1,6 +1,6 @@
 # Completion — f3-referral-funnel
 
-Status: planned, not implemented or accepted.
+Status: implemented candidate; final review and public rollout pending. No live merchant payment acceptance claimed.
 
 ## Deployment Plan
 
@@ -20,4 +20,22 @@ Developer: integration contract/client helper/example; QA: reproducible isolated
 
 ## Criterion coverage
 
-Pending implementation; no tests claimed yet. Coverage table is filled with actual test file/title evidence before IMPLEMENT advances.
+| Criterion | Test file | Test title |
+|---|---|---|
+| AC-f3-referral-funnel-11 | tests/referral-service.test.mjs | referral configuration validates destinations; key is hash-only, scoped, rotated and revoked |
+| AC-f3-referral-funnel-12 | tests/e2e/referral.mjs | separate merchant UI: real redirect and first-party receipt through verified signup, authoritative checkout and provider-verified commission |
+| AC-f3-referral-funnel-13 | tests/referral-service.test.mjs | verified binding has promo precedence, strict inputs, stable retries and no secret or email leakage |
+| AC-f3-referral-funnel-14 | tests/referral-service.test.mjs | default 30 and published 60/90 day visits freeze server expiry independently of later policy |
+| AC-f3-referral-funnel-21 | tests/referral-payment.test.mjs | lost connector create response retains idempotency; foreign credentials cannot query order or redirect binding |
+| AC-f3-referral-funnel-22 | tests/referral-payment.test.mjs | connector orders freeze durable signup attribution; late renewal survives cookie expiry and refunds remain idempotent |
+| AC-f3-referral-funnel-31 | tests/referral-payment.test.mjs | test commission does not consume one-time live commission; metrics count unique live customers and survive clawback |
+| AC-f3-referral-funnel-32 | tests/e2e/referral.mjs | owner referral panel works on all A–D origins at desktop and mobile, key response cannot reappear after logout |
+| AC-f3-referral-funnel-41 | tests/referral-payment.test.mjs | literal 5000-order cap refuses extra provider work while an existing connector retry stays available |
+| AC-f3-referral-funnel-42 | tests/referral-payment.test.mjs | additive migration preserves old checkout rows and their legacy payment/refund interpretation |
+
+
+## Candidate evidence
+
+Shared runtime regression:118/118 passed, including final race/cap/migration cases. Test files run sequentially because auth admission has a database-wide fail-fast lock; explicit in-test concurrency remains enabled. Isolated browser:2/2 passed, including real navigation through a separate merchant frontend/backend, provider stub, refund fulfillment, A–D desktop/mobile and delayed key suppression. Six meaningful guard mutations were detected in disposable source copies. Final execution receipts are recorded under docs/telemetry/p-replicator/20260909T111622Z-f3-referral-3b19/evidence/.
+
+New connector test payments carry provenance and remain auditable, but their amounts are excluded from payable registry/cash totals. Historical F2 facts retain their original interpretation; any old provider-test records require operator reconciliation before real payouts. An application source review found and closed the test-money and malformed-UUID defects; the formal complete-spec review follows the combined gates.

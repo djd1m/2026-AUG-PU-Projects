@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: separate merchant UI: real redirect and first-party receipt through verified signup, authoritative checkout and provider-verified commission
+ok 1 - separate merchant UI: real redirect and first-party receipt through verified signup, authoritative checkout and provider-verified commission
+  ---
+  duration_ms: 2845.666046
+  type: 'test'
+  ...
+# Subtest: owner referral panel works on all A–D origins at desktop and mobile, key response cannot reappear after logout
+ok 2 - owner referral panel works on all A–D origins at desktop and mobile, key response cannot reappear after logout
+  ---
+  duration_ms: 4978.616717
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7972.919856

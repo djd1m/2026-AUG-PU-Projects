@@ -38,6 +38,13 @@ export function accountHandler(app,{body,json,secure=true}) {
       result=await app.payments.checkout(token(req),input.membershipId,input.input,input.idempotencyKey);
     } else if (path==='/api/account/payment-status') {
       object(input,['membershipId'],['membershipId']); result=await app.payments.status(token(req),input.membershipId);
+    } else if (path==='/api/account/referral-settings') {
+      object(input,['membershipId','input'],['membershipId','input']);
+      result=await app.referrals.configure(token(req),input.membershipId,input.input);
+    } else if (['/api/account/referral-key','/api/account/referral-revoke','/api/account/referral-status'].includes(path)) {
+      object(input,['membershipId'],['membershipId']);
+      const method=path.endsWith('-key')?'rotate':path.endsWith('-revoke')?'revoke':'status';
+      result=await app.referrals[method](token(req),input.membershipId);
     } else assert(false,'NOT_FOUND',404,'Маршрут не найден');
     json(res,200,{data:result}); return true;
   };

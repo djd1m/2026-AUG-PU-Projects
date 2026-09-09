@@ -1,9 +1,10 @@
 import { assert, object, str, integer, iso, id, hash, reward, addDays, sourceChanged, sum } from './common.mjs';
+import { boundAttribution } from './referral-attribution.mjs';
 
 const paymentFields = ['type', 'provider', 'accountId', 'objectId', 'verified', 'status', 'customerId', 'beneficiaryId', 'kind', 'amountMinor', 'paidAt', 'promo', 'cookie'];
 const refundFields = ['type', 'provider', 'accountId', 'objectId', 'verified', 'status', 'paymentId', 'amountMinor', 'refundedAt'];
 export const eventKey = event => `${event.provider}/${event.accountId}/${event.objectId}`;
-export function validateEvent(event) {
+export function validateEvent(event, { allowUnattributed = false } = {}) {
   assert(event?.verified === true && event?.status === 'confirmed', 'UNVERIFIED_EVENT', 409, 'Подтверждение события недоступно; повторите проверку');
   assert(['payment', 'refund'].includes(event.type));
   object(event, event.type === 'payment' ? paymentFields : refundFields,
@@ -12,7 +13,9 @@ export function validateEvent(event) {
   for (const field of ['accountId', 'objectId']) { str(event[field]); assert(!event[field].includes('/')); }
   integer(event.amountMinor, 1);
   if (event.type === 'refund') { str(event.paymentId); assert(!event.paymentId.includes('/')); iso(event.refundedAt); return; }
-  str(event.customerId); str(event.beneficiaryId); iso(event.paidAt); assert(['cash', 'credit'].includes(event.kind));
+  str(event.customerId);
+  if (!(allowUnattributed && event.beneficiaryId === null)) str(event.beneficiaryId);
+  iso(event.paidAt); assert(['cash', 'credit'].includes(event.kind));
   for (const field of ['promo', 'cookie']) if (event[field] !== undefined) {
     object(event[field], field === 'promo' ? ['code', 'beneficiaryId', 'attributedAt'] : ['beneficiaryId', 'attributedAt'],
       field === 'promo' ? ['code', 'attributedAt'] : ['beneficiaryId', 'attributedAt']);
@@ -41,6 +44,7 @@ function reverse(state, payment, refund) {
   const delta = cumulative + sum(prior.map(e => e.amountMinor));
   if (delta <= 0) return;
   state.ledger.push({ id: id(), businessKey: `refund:${refund.businessKey}`, paymentId: payment.id, eventId: refund.id,
+    ...(payment.source === 'connector' ? {testMode:payment.testMode} : {}),
     beneficiaryId: payment.beneficiaryId, kind: payment.kind, currency: 'RUB', amountMinor: -delta,
     policyVersion: payment.policyVersion, effectiveAt: refund.refundedAt, availableAt: payment.availableAt,
     reason: 'refund', originalEntryId: state.ledger.find(e => e.paymentId === payment.id && e.amountMinor > 0)?.id });
@@ -50,11 +54,12 @@ function reverse(state, payment, refund) {
     paymentId: payment.id, refundId: refund.id, beneficiaryId: payment.beneficiaryId, amountMinor: delta,
     kind: payment.kind, createdAt: state.clock, explanation: 'Исходный перевод/применение сохранён; требуется сверка, автоматического взаимозачёта нет' });
 }
-export function fixtureEvent(state, event, policyId) {
+export function fixtureEvent(state, event, policyId, binding) {
   assert(event.provider === (state.mode === 'real' ? 'yookassa' : 'fixture'), 'PROVIDER_UNAVAILABLE', 400);
-  validateEvent(event);
+  assert(binding === undefined || event.type === 'payment');
+  validateEvent(event, { allowUnattributed:state.mode === 'real' && binding?.channel === 'none' });
   assert(Date.parse(event.type === 'payment' ? event.paidAt : event.refundedAt) <= Date.parse(state.clock));
-  const businessKey = eventKey(event), inputHash = hash(event);
+  const businessKey = eventKey(event), inputHash = hash(binding === undefined ? event : {event,binding});
   const list = event.type === 'payment' ? state.payments : state.refunds;
   const previous = list.find(p => p.businessKey === businessKey);
   if (previous) { assert(previous.inputHash === inputHash, 'BUSINESS_KEY_CONFLICT', 409, 'Событие с этим идентификатором уже содержит другие данные'); return previous.result; }
@@ -68,18 +73,22 @@ export function fixtureEvent(state, event, policyId) {
     if (payment) { reverse(state, payment, record); sourceChanged(state); }
     return record.result;
   }
-  assert(state.actors.some(a => a.id === event.beneficiaryId), 'NOT_FOUND', 404, 'Получатель не найден');
+  assert((binding?.channel === 'none' && event.beneficiaryId === null)
+    || state.actors.some(a => a.id === event.beneficiaryId), 'NOT_FOUND', 404, 'Получатель не найден');
   const currentPolicy = policyId ? state.policies.find(p=>p.id===policyId && p.kind===event.kind) : state.policies.findLast(p => p.kind === event.kind);
   assert(currentPolicy,'POLICY_REQUIRED',409);
-  const resolved = attribution(state, event, currentPolicy);
+  const resolved = binding === undefined ? attribution(state, event, currentPolicy)
+    : boundAttribution(state, event, currentPolicy, binding);
   const record = { ...event, id: id(), businessKey, inputHash, attribution: resolved, currency: 'RUB',
     policyVersion: currentPolicy.version, bps: currentPolicy.bps, policyId: currentPolicy.id,
     effectiveAt: iso(event.paidAt), availableAt: addDays(event.paidAt, currentPolicy.holdDays),
-    rewardMinor: resolved.eligible ? reward(event.amountMinor, currentPolicy.bps) : 0 };
+    rewardMinor: resolved.eligible ? reward(event.amountMinor, currentPolicy.bps) : 0,
+    ...(binding === undefined ? {} : {source:'connector',testMode:binding.testMode,bindingId:binding.id}) };
   record.result = { paymentId: record.id, rewardMinor: record.rewardMinor, kind: record.kind, policyVersion: record.policyVersion,
     attribution: resolved, status: record.rewardMinor ? 'accrued' : 'no_reward' };
   state.payments.push(record);
   if (record.rewardMinor) state.ledger.push({ id: id(), businessKey: `payment:${businessKey}`, paymentId: record.id, eventId: record.id,
+    ...(record.source === 'connector' ? {testMode:record.testMode} : {}),
     beneficiaryId: record.beneficiaryId, kind: record.kind, currency: 'RUB', amountMinor: record.rewardMinor,
     effectiveAt: record.effectiveAt, availableAt: record.availableAt, policyVersion: record.policyVersion, reason: 'confirmed_payment' });
   // Apply pending facts in arrival order so cumulative rounding creates one immutable delta per refund.

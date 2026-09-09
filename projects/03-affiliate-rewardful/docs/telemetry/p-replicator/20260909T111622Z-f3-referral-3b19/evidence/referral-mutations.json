@@ -1,0 +1,47 @@
+{
+  "at": "2026-09-09T13:28:35.563Z",
+  "results": [
+    {
+      "name": "credential-account-version",
+      "sourceSha256": "97388d824f8628c45421bff15ae8b4952fa4a836d6bad82f07992b75bbd5b7d4",
+      "detected": true,
+      "exitCode": 1,
+      "durationMs": 1391
+    },
+    {
+      "name": "explicit-promo-precedence",
+      "sourceSha256": "97388d824f8628c45421bff15ae8b4952fa4a836d6bad82f07992b75bbd5b7d4",
+      "detected": true,
+      "exitCode": 1,
+      "durationMs": 1342
+    },
+    {
+      "name": "server-visit-expiry",
+      "sourceSha256": "97388d824f8628c45421bff15ae8b4952fa4a836d6bad82f07992b75bbd5b7d4",
+      "detected": true,
+      "exitCode": 1,
+      "durationMs": 1467
+    },
+    {
+      "name": "durable-binding-not-cookie-renewal",
+      "sourceSha256": "b074c17425b1d634940e7a203361e906f8efa524814b818bf017e2a6a27f732f",
+      "detected": true,
+      "exitCode": 1,
+      "durationMs": 1473
+    },
+    {
+      "name": "verified-provider-claim",
+      "sourceSha256": "4bf17f1be41dbb7d9ad235a94a36ca96aa9bd128492b14fccf0af2dd2cc21ccd",
+      "detected": true,
+      "exitCode": 1,
+      "durationMs": 1358
+    },
+    {
+      "name": "test-money-payout-exclusion",
+      "sourceSha256": "5c48ff845c6c1931a54f7a904d14a77b557d5b4b851198d1e9b0d502d47b5449",
+      "detected": true,
+      "exitCode": 1,
+      "durationMs": 1374
+    }
+  ]
+}

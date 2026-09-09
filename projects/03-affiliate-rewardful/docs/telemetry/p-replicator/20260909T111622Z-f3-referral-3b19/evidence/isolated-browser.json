@@ -1,0 +1,51 @@
+{
+  "at": "2026-09-09T13:32:48.970Z",
+  "checks": [
+    {
+      "origin": "https://n3-a.212.192.0.33.sslip.io",
+      "width": 1440
+    },
+    {
+      "origin": "https://n3-a.212.192.0.33.sslip.io",
+      "width": 390
+    },
+    {
+      "origin": "https://n3-b.212.192.0.33.sslip.io",
+      "width": 1440
+    },
+    {
+      "origin": "https://n3-b.212.192.0.33.sslip.io",
+      "width": 390
+    },
+    {
+      "origin": "https://n3-c.212.192.0.33.sslip.io",
+      "width": 1440
+    },
+    {
+      "origin": "https://n3-c.212.192.0.33.sslip.io",
+      "width": 390
+    },
+    {
+      "origin": "https://n3-d.212.192.0.33.sslip.io",
+      "width": 1440
+    },
+    {
+      "origin": "https://n3-d.212.192.0.33.sslip.io",
+      "width": 390
+    }
+  ],
+  "provider": "isolated API stub",
+  "providerLive": false,
+  "checksPassed": [
+    "actual-redirect",
+    "first-party-first-touch",
+    "merchant-verified-signup",
+    "server-invoice",
+    "verified-webhook",
+    "test-live-separation",
+    "refund-fulfillment",
+    "A-D-desktop-mobile",
+    "no-overflow",
+    "late-key-after-logout"
+  ]
+}
