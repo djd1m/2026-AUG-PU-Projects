@@ -1,0 +1,24 @@
+{
+  "implementation_commit": "12ee9c005104804667bdccd636fe960711c76148",
+  "api_image": "sha256:77c3eaf827044724e297d719b1f9bed83da0ef785865197863d354c7bc7e5a4e",
+  "a_image": "sha256:2287f4fefee784672ad9539163c9dd4fd505d1c72dc37fed881d80752f21b0b2",
+  "browser_exit": 0,
+  "browser_tests": 13,
+  "browser_duration_ms": 5802.526421,
+  "full_tests": 38,
+  "full_tests_duration_ms": 11528.647536,
+  "database_host_ports": [],
+  "frontend_networks": [
+    "n3-frontend"
+  ],
+  "api_uid": 1000,
+  "hashes": {
+    "tests/e2e/a-merchant.mjs": "83ac8c542e502abed85eaf3459e4eef89794ecafdd0756eb10d63ad4fa48a351",
+    "docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/browser/a-handoff.png": "421e6b0030f1887c00a3932b680ebadbffc9a690dc4e7ce71c309953371e7d14",
+    "docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/browser/a-mobile-registry.png": "92063da0e9e2dba2bb55b5b4e0800daaf32084859b8f03ada02fb984db061d5f",
+    "docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/browser/a-mobile-policy.png": "381714ed9459fce552b11e79da246bad052730ab9598bfa7534830ef079ba96f",
+    "docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/browser/a-desktop-registry.png": "6aebf173947279c74fe047d6b362dcefc9a2f3634be04f89d9a91efc79883368",
+    "docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/browser/a-mobile-overview.png": "d09e1d88abfb62ad4ecdb25294ea685ffaf7fee892a9a884bf1b4e1452308458",
+    "docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/browser/a-desktop-overview.png": "4e9f8426c6bfa4487e97ce66e055d1e1301de899afbff8c5dabe2eda4a068477"
+  }
+}

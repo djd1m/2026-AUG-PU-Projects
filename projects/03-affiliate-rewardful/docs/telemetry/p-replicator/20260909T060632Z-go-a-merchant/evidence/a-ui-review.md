@@ -98,3 +98,32 @@ Follow-up source SHA256:
 Criterion update: AC-a-merchant-1011 now met within reviewed F1 scope; AC-a-merchant-1032 remains not met pending truthful row label. Other criterion verdicts unchanged. This follow-up does not claim browser E2E/keyboard/mobile acceptance or independently rerun the coordinator's reported mutation result.
 
 Follow-up completed `2026-09-09T06:29:14Z`; recorded elapsed **63 seconds**. Active time/model usage unavailable. Any later row-label edit supersedes the sampled views hash and requires a short recheck.
+
+## Final A1 verification — resolved at 12ee9c0
+
+Source: `12ee9c005104804667bdccd636fe960711c76148`. Started `2026-09-09T06:34:07Z`; completed `2026-09-09T06:34:18Z`; recorded elapsed **11 seconds**. Profile/requested model unchanged (`compact-quality-first-v2`, `gpt-6-astra/high`); actual model/effort, active time, usage and cost unavailable/null. No browser, container or database use.
+
+**A1 is now fully resolved. A2 remains resolved. No review finding remains open in the reviewed A scope.** Unsent UI rows now derive their own stale/approved/draft badge rather than inheriting aggregate artifact status. Current-row transfers still require exact artifact revision/hash. Core `approve` now derives aggregate status from sent allocations of the current revision's actual rows, so historical transfers do not mark a new revision partially sent. Existing allocations/exactness guards remain before this projection.
+
+Independently executed:
+
+- `node --test tests/a-registry-view.test.mjs`: exit0, one test file passed, no failures/skips, printed duration149.366213ms. Inspected the strengthened test: current revision must be approved, Anna's newly eligible10000minor obligation remains selectable, and the current table cannot contain sent or partially_sent badges.
+- Pure-domain repeated-approval assertions: initially approved; after one of two rows sent, partially_sent; after both sent, repeated approval remains sent and exactly two transfer facts remain. All assertions passed.
+- `git diff 12ee9c0 --` on core registry, A views and focused renderer test was empty, binding those checks to the stated commit.
+
+Coordinator-provided evidence: all38 PostgreSQL/general tests passed and five listed mutants killed, including core-status reversion and UI revision-filter reversion. This reviewer inspected those mutation definitions but did not independently rerun the full suite/mutations. Coordinator's browser rerun remains separate and in progress; no final browser outcome inferred.
+
+Final criterion table superseding earlier pre-fix verdicts within the same source-review/F1 scope:
+
+| Criterion | Verdict | Evidence |
+|---|---|---|
+| AC-a-merchant-1011 | met | Per-kind latest server policy selection, run-specific selected-kind persistence and credit-specific invoice preview; A2 follow-up check. |
+| AC-a-merchant-1012 | met | Explicit rate/day validation and repairable alert; server revalidation preserved. |
+| AC-a-merchant-1021 | met | Stable confirmed fixture event, visible event/rule/reward/available date from server projection. |
+| AC-a-merchant-1022 | met | Identical event replay and distinct refund identity; correction remains in refreshed server summary. |
+| AC-a-merchant-1031 | met | Exact artifact reference for approval/export, explicit exclusions, stale-source recompute flow. |
+| AC-a-merchant-1032 | met | Current obligation/revision-based sent interpretation, independent export/send, visible stored operator/date/evidence; A1 focused test and repeated-approval assertions pass. |
+| AC-a-merchant-1041 | met | Explicit same-session F1 enrollment preview/current terms, distinct from personal referral URL; no public-publication claim. |
+| AC-a-merchant-1042 | met | Provided session/artifact retained and authorized server registry loaded; revised handoff assertion in coordinator E2E source. |
+
+The final table does not certify unexecuted keyboard/browser/protocol acceptance. Those evidence limits remain as recorded above; there is no demand for broader implementation in this bounded follow-up.

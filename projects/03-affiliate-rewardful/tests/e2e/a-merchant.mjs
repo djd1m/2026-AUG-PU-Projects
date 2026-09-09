@@ -115,6 +115,7 @@ test('A merchant actual browser journey', {timeout:180000}, async t=>{
   await t.test('SC-US-104-1 invitation opens enrollment terms and never a referral link',async()=>{
     await nav('invite');const url=await js('return document.querySelector("#enrollment-link").value');
     assert.equal(new URL(url).pathname,'/join');assert.ok(!url.includes('/r/'));
+    await click($('copy-enrollment'));await until('return document.querySelector("#feedback").textContent.includes("Скопировано")');
     await open(url);await visible('enrollment-preview');assert.match(await text('enrollment-preview'),/25%/);
     await open(base);await visible('dashboard-summary');
   });
@@ -143,6 +144,11 @@ test('A merchant actual browser journey', {timeout:180000}, async t=>{
     assert.equal(await text('artifact-id'),revised.artifactId);assert.equal(await text('artifact-hash'),revised.hash);
     assert.equal(revised.revision,2);assert.equal(await js('return location.hash'),'');
     await screenshot(evidence,'a-handoff');
+  });
+  await t.test('A navigation can be activated by keyboard',async()=>{
+    await js('document.querySelector("[data-testid=nav-program]").focus()');
+    await wd('/actions',{actions:[{type:'key',id:'keyboard',actions:[{type:'keyDown',value:'\ue007'},{type:'keyUp',value:'\ue007'}]}]});
+    await visible('policy-form');
   });
   await writeFile(join(evidence,'browser-summary.json'),JSON.stringify({variant:'A',startedAt,endedAt:new Date().toISOString(),
     checks,scope:'Actual Firefox A UI via Docker/PostgreSQL. D handoff setup uses fixture task HTTP; real D UI and protocol interoperability remain separate.',

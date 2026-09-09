@@ -10,13 +10,26 @@
   "profile": "compact-quality-first-v2",
   "baseline_revision": "82efe64",
   "started_at": "2026-09-09T06:06:32.572556+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-09T06:37:51.302970+00:00",
+  "status": "complete",
   "actual_coordinator_model": null,
   "telemetry_status": "partial",
   "missing_data": [
-    "Actual model and usage unavailable; prior shared PLAN/VALIDATE reused without duplicate usage"
+    "Coordinator and reviewer usage not allocated to this run; child UI usage measured separately in evidence/a-ui-provider-usage.json",
+    "Active time and approval wait interval union unknown; no baseline/savings established"
   ],
-  "metrics": {},
-  "quality": {}
+  "metrics": {
+    "elapsed_wall_ms": 1878730,
+    "active_wall_ms": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "quality": {
+    "criteria_met": 8,
+    "first_pass_acceptance": false,
+    "full_tests": 38,
+    "browser_tests": 13,
+    "browser_scenarios": 12,
+    "scope": "A standalone F1; B/C/D/global completion pending"
+  }
 }

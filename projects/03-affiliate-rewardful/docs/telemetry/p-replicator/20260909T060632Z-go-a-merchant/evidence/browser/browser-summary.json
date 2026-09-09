@@ -1,0 +1,29 @@
+{
+  "variant": "A",
+  "startedAt": "2026-09-09T06:35:40.534Z",
+  "endedAt": "2026-09-09T06:35:46.256Z",
+  "checks": [
+    {
+      "viewport": 1440,
+      "document": 1428
+    },
+    {
+      "viewport": 1440,
+      "document": 1428
+    },
+    {
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "viewport": 390,
+      "document": 378
+    }
+  ],
+  "scope": "Actual Firefox A UI via Docker/PostgreSQL. D handoff setup uses fixture task HTTP; real D UI and protocol interoperability remain separate.",
+  "verdictSource": "Use Node test process exit and TAP result; this file records observations, not an independent pass verdict."
+}
