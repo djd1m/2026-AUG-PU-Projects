@@ -1,0 +1,51 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T135340Z-f3-access-8b71",
+  "batch_id": "n3-commercial-priorities",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "f3-access-onboarding",
+  "pipeline": "go -> feature AUTO: PLAN VALIDATE IMPLEMENT REVIEW",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Approved access/provider plan follows accepted deployed referral funnel; no renewed permission required.",
+    "Current Astra high coordinator; max two concurrent children with isolated writers.",
+    "Prior3\u20135hour estimate withdrawn after user challenged reuse assumptions; report measured work instead."
+  ],
+  "comparison_id": null,
+  "risk_flags": [
+    "account takeover",
+    "credential revocation",
+    "email proof",
+    "OAuth linking",
+    "nullable password migration",
+    "provider configuration"
+  ],
+  "baseline_revision": "1f022267e851049b7bfc44faad30ea5ae754f5a5",
+  "final_revision": null,
+  "spec_sha256": "cd341f862dfb710a859fe42600cd4856f939d20f0a4646d5415a0e2b887175a8",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-09T13:53:40.519685+00:00",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": [],
+  "quality": {
+    "baseline_backend_tests": 118,
+    "baseline_public_cjm_tests": 49,
+    "baseline_account_and_protocol_tests": 2,
+    "required_gates_passed": false,
+    "followup_status": "pending"
+  },
+  "metrics": {},
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Billing cost and active/wait split unavailable.",
+    "Specification hash and final acceptance are pending PLAN/implementation."
+  ],
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high"
+}
