@@ -45,6 +45,8 @@ function clearContextSecrets({ preserveIncoming = false, resetAuth = false } = {
   ui['invitation-output'].value = '';
   ui['invitation-output'].hidden = true;
   ui.invite.reset();
+  for (const form of [ui.checkout, ui.policy, ui.registry]) form.reset();
+  ui.checkout.elements.beneficiaryId.replaceChildren();
   if (!preserveIncoming) ui.accept.reset();
   ui['change-password'].reset();
   ui.password.value = '';

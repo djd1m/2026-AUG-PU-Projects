@@ -27,7 +27,9 @@ test('real account UI desktop/mobile signup login invite scopes agent transport 
  await click('#mint-agent');await until('return !document.querySelector("#agent-config").hidden');
  await click('#probe-agent');await until('return document.querySelector("#notice").textContent.includes("MCP") && !document.querySelector("#notice").classList.contains("error")');
  await click('#agent-list button');await until('return document.querySelector("#notice").textContent.includes("отозван")');
+ await js('document.querySelector("#checkout").elements.customerId.value="prior-customer";document.querySelector("#checkout").elements.amount.value="123.45";document.querySelector("#policy").elements.percent.value="31"');
  await holdResponse('/api/account/agent-token');await click('#mint-agent');await until('return window.__held');await logout();await releaseResponse();
+ assert.deepEqual(await js('return [document.querySelector("#checkout").elements.customerId.value,document.querySelector("#checkout").elements.amount.value,document.querySelector("#policy").elements.percent.value,document.querySelector("#registry").elements.period.value]'),['','','20','']);
  assert.equal(await js('return document.querySelector("#agent-config").value'), '');await login(ownerEmail);
  await holdResponse('/api/account/invite');await click('#invite button');await until('return window.__held');await logout();await releaseResponse();
  assert.equal(await js('return document.querySelector("#invitation-output").value'), '');await login(ownerEmail);
