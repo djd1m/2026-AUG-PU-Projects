@@ -1,4 +1,4 @@
-# Source versions — F3 referral funnel
+# Source versions — F3 access onboarding
 
 **Правки и выводы:** ДА
 **Проверка версий:** ВЫПОЛНЕНА
@@ -7,6 +7,6 @@
 
 | Что | Вид | Источник | Хеш источника |
 |---|---|---|---|
-| Referral core/client/UI and integration edits derive from frozen contract | правка | docs/features/f3-referral-funnel/02_pseudocode.md | 53e90ae6f51d79d50c88cefbe68aece9323f3935d50d9cea484784be1dc0d4e9 |
+| Access adapters, identity, UI and provider guides derive from frozen contract | правка | docs/features/f3-access-onboarding/02_pseudocode.md | fe9ff7a721ea4df3ffcac856f5215dc1690e655aa7eaf5ada1130dcee7418742 |
 
-Existing code input hashes are recorded in docs/telemetry/p-replicator/20260909T111622Z-f3-referral-3b19/evidence/pre-implementation-source-sha256.json. Each worker pins its actual input/output revision in its receipt; this declaration does not claim automatic write interception.
+Donor sources are read-only; project01 email/password-reset/sso are adapted, not imported with its accounts or secrets. Worker receipts pin base and output SHA. No write interception or external-live acceptance is implied by the declaration.

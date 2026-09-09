@@ -1,0 +1,30 @@
+# N3 access donor challenge
+RUN_ID: 20260909T135340Z-f3-access-8b71
+WORK_UNIT_ID: access-donor-challenge-1
+Baseline: 1f022267e851049b7bfc44faad30ea5ae754f5a5
+Scope: read-only donor/N3 source and approved plan audit; no source edits, deployment or credentials accessed.
+
+## Reuse justified by source
+- projects/01-testimonials-senja/apps/web/src/lib/email.ts supplies the small Resend fetch adapter, explicit configuration check, 8s timeout, sanitized status-only errors, injectable sender and reset message pattern. Adapt existing code, rather than introduce a new SDK or delivery service.
+- Donor password-reset.ts supplies random32-byte opaque tokens, SHA256 database representation, TTL, atomic used_at predicate and invalidation of prior links. forgot/route.ts already sends after the SQL transaction and gives a generic response. reset/route.ts already refuses automatic session issuance.
+- Donor sso.ts supplies Yandex endpoints, code exchange, PKCE verifier/challenge, provider-profile validation and explicit disabled configuration behavior. Existing authorize/token/profile mechanics need adaptation rather than replacement.
+- N3 shared/identity/password.mjs already uses Argon2id, bounded input and max2 admitted KDF operations. shared/identity/service.mjs already hashes outside SQL and rechecks account.version after password proof. user_sessions and agent_credentials already bind to account.version.
+- N3 shared/referrals/service.mjs resolve path compares referral_credentials.version against accounts.version under account/membership/tenant/credential locks. Reset can invalidate all three credential families through one version bump, supplemented by revoked_at updates. Do not implement a second identity authority.
+- N3 apps/api/account.mjs already supplies exact route matching, outer-origin plus mandatory Origin for writes, host-only HttpOnly SameSite=Lax session cookies. shared/ui/account/app.mjs/helpers.mjs already supplies context/abort guards and secret cleanup reusable by added auth forms.
+
+## Required deltas, concrete donor hazards
+1. Donor sso-account.ts explicitly auto-links an occupied email when password_hash IS NULL (the branch after needs_password_login and the retry winner branch). This is incompatible with the approved all-account prohibition. A distinct provider externalID must never gain an existing account by email, even if passwordless. Keep existing identity lookup by provider/externalID; refuse any email collision for new externalID.
+2. Donor callback only clears a signed state cookie in the outgoing response; it does not consume server-side state before IO. Two concurrent requests retain the same input cookie. Reuse PKCE/HMAC ideas, but implement the approved durable DELETE RETURNING state claim and bind browser hash, origin, intent, session/account/version.
+3. Donor resetPassword computes Argon2 inside its SQL transaction and revokes only sessions. N3 must preflight token, compute bounded KDF outside SQL, then lock account before flow and recheck purpose/email/account/version/expiry before atomic password/version/all-credential revoke. Never rely solely on donor session table updates.
+4. Donor issueResetToken selects every account by email; it does not require prior verified contact for SSO-only accounts. N3 must explicitly restrict passwordless recovery to previously verified email. Verification requires both the existing SSO session and email token. Provider email metadata alone cannot enable reset.
+5. Current N3 register immediately creates password/account/tenant/session. HTTP registration must become email+name pending flow without attacker-selected password, account or session. Recipient explicit POST sets password and creates exactly one verified account/org. Existing accounts instead recover while preserving IDs/memberships; pending registration must never mutate a subsequently occupied account.
+6. Donor reset limiter serializes a pair key but checks a shared IP scope; copying it does not prove atomic aggregate IP admission across different pairs. N3 needs its own durable bounded shared email/IP/pair quotas and cross-purpose cooldown. Donor provider fetch also lacks body-size bounds and explicit redirect refusal; add the frozen 64KiB/no-redirect/concurrency/shared-deadline bounds.
+7. Current frontend proxy overwrites Host with upstream.host (apps/frontend/server.mjs:20). Frozen callback comparison requires preserving original Host to the fixed backend target. Continue deriving redirects only from saved allowlisted origin, not Host.
+8. Current UI immediately loads business workspace after me and assumes membership. Enforcement needs a separate security surface for unverified sessions; checks must also exist in resolveUser, resolveAgent and referral connector authorization, including cached result paths.
+
+## Minimal robust design
+Extend N3 existing account/version authority with nullable password_hash and email_verified_at, one bounded purpose-separated email_flow row per email/purpose, short-lived one-use OAuth flows and unique provider/externalID identities. Keep provider adapters network-only and all external IO/KDF outside SQL. Lock account before mutable proofs, repeat authority/freshness checks after waits, and commit proof consumption with credential mutation. Preserve opaque host-only cookie and existing client context guard. Persist enforcement as a sticky DB policy; outage cannot downgrade it. This is integration of working donor primitives plus new registration/contact policy, not a full auth rewrite.
+
+## Validation boundary
+Source audit only; no live provider claims or executed application tests. Plan failure paths must cover pre-registration attack, nullable-password collision, contact reset before verification, token supersession/replay/expiry during waits, parallel OAuth completion, reset versus login/cached agent/referral requests, policy restart/outage and proxy origin mismatch. Terminal receipt is regular file created atomically; token/cost counters unavailable to this work unit.
+Status: completed
