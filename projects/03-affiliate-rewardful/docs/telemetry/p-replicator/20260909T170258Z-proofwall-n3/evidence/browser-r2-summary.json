@@ -1,0 +1,48 @@
+{
+  "at": "2026-09-09T19:36:40.672Z",
+  "actualProducts": [
+    "P1 Next",
+    "P1 worker",
+    "N3 API",
+    "N3 A account UI"
+  ],
+  "mockedExternal": [
+    "Resend",
+    "YooKassa"
+  ],
+  "transport": "HTTPS over isolated Unix sockets",
+  "browserAndServerCertificateVerification": true,
+  "productionDeploymentVerified": false,
+  "paymentId": "2f3bbad5-e66a-4f29-8fc0-a1100514acf2",
+  "orderId": "cce4e843-bfe9-4d8e-ba1d-b24b2943a3aa",
+  "checksPassed": [
+    "browser-referral",
+    "HttpOnly-first-touch",
+    "real-signup",
+    "forged-webhook-origin-refused",
+    "proof-required",
+    "real-mail-fragment",
+    "GET-no-proof-consumption",
+    "worker-customer-bind",
+    "native-checkout",
+    "pending-return-no-entitlement",
+    "independent-provider-reads",
+    "worker-settlement",
+    "one-test-commission",
+    "zero-live-payout",
+    "reload-persistence",
+    "duplicate-payment",
+    "partner-visible-test-commission",
+    "partial-refund-relay",
+    "duplicate-refund",
+    "manual-entitlement-review",
+    "mobile-no-overflow"
+  ],
+  "uncovered": [
+    "public DNS/Caddy",
+    "real mail delivery",
+    "real provider/shop",
+    "outage retry browser scenario",
+    "remaining A-D UI regressions"
+  ]
+}

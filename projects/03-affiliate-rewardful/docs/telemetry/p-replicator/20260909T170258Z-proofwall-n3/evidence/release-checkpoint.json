@@ -11,7 +11,19 @@
   "api_image_id": "sha256:01241f484f272f3a9cedb8586ea1bcd58e9a8d9b3c67810744c71d03703e887c",
   "frontend_a_image": "n3-a:bridge-acf124e",
   "frontend_a_image_id": "sha256:ef841997c40bca5d643ac3b924cc38668de99d23b79d4772cd3f56859d477b9a",
-  "deployed": false,
-  "public_e2e_passed": null,
-  "real_provider_acceptance": null
+  "deployed": true,
+  "public_e2e_passed": 49,
+  "real_provider_acceptance": null,
+  "public_e2e_failed": 0,
+  "public_e2e_duration_ms": 37517.330272,
+  "public_referral_smoke_passed": 1,
+  "p1_revision": "229e7ee",
+  "p1_web_image": "proofwall-web:bridge-229e7ee",
+  "p1_web_image_id": "sha256:ccd3451bcd5472f3d19ad3505e15283eced5d3995d9b7aacd81eed4e1f499d1c",
+  "p1_worker_image": "proofwall-worker:bridge-229e7ee",
+  "p1_worker_image_id": "sha256:1f95ccc4f4f16394e8a05249a6bb754d8c9dc96d256fa72a2415bc7319b448d1",
+  "p1_migration": "019_n3_bridge.sql",
+  "public_https_connector_probe": "404 CUSTOMER_NOT_FOUND as expected for nonexistent customer; authentication and configured shop gates passed, no order created",
+  "database_host_ports": [],
+  "real_mail_delivery": null
 }

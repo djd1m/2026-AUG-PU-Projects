@@ -1,0 +1,6 @@
+name: 01-testimonials-senja
+services:
+  web:
+    image: proofwall-web:bridge-229e7ee
+  worker:
+    image: proofwall-worker:bridge-229e7ee

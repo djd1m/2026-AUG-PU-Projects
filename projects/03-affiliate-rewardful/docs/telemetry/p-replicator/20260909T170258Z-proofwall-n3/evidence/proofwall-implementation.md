@@ -48,4 +48,14 @@ Transport follow-up commit: 07969894872d18bd59d89277c787a9d6cfef3469.
 Final follow-up full workspace build and typecheck PASS after exact HTTP200 change.
 Final source manifest: /tmp/proofwall-n3-source-shas.json (35 paths); SHA256 3a7db0de04137dff97ce1a1e19e4e5f251eb40ac4e498bbc5261abf9f8196080.
 Completed at: 2026-09-09T19:12:22.225023+00:00.
+
+## Independent review follow-up
+Review input: /tmp/proofwall-n3-review.md (two P2 findings).
+Fix commit: d9f5d6a140ca168a339242018ea03201f79bdcb2.
+Cancellation is now an explicit 409 N3_PAYMENT_CANCELED result from trusted persisted terminal state. The free-account billing UI exposes a new-purchase action only after that result; restarting requires an explicit click and a fresh key. Pending/ambiguous results retain the existing key, and the server continues to reuse unresolved invoices even for a newly supplied key.
+Acknowledgement returns account_id/kind/business_key/payload from its fenced UPDATE and binds only a proof whose exact account/email/accountId:proofId matches those authoritative database fields. Caller job account/kind/payload cannot influence which proof is marked bound. The canonical signup fixture uses accountId:proofId.
+Regressions: canceled first purchase→explicit fresh invoice while free; unresolved new-key retry preserves invoice; actual BillingBlock handler interactions preserve key on repeated pending and expose explicit canceled restart; old signup cannot bind replaced same-email proof; successful current job binds from persisted fields despite forged caller fields.
+Follow-up verification: full web 39 files/812 tests PASS 72.66s; new UI handler test separately PASS 1/1 in 710ms (renamed from .tsx to configured .test.ts after full-run collection, therefore not counted in 812). Full worker 7 files/39 tests PASS 3.96s including 5 outbox tests. Workspace typecheck/build PASS. No schema changes, and previous 18 DB grant regressions remain applicable.
+Final source manifest updated: 36 paths, SHA256 425e90ac939a1d694b5c62c1a50c59c9f57afdd34460ff55ef32d1b7193015a2.
+Review-fix completion timestamp: 2026-09-09T19:36:09.733069+00:00.
 Status: completed
