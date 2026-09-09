@@ -1,0 +1,56 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260909T104725Z-f3-plan-93d5",
+  "batch_id": "n3-f3",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "f3-provider-guides-email-yandex-plan",
+  "pipeline": "PLAN only; implementation requires explicit user approval",
+  "tier": "XL conservative umbrella / identity L or XL by invariant",
+  "risk_flags": [
+    "account recovery",
+    "OAuth identity linking",
+    "external mail delivery",
+    "payment setup correctness"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "User explicitly requests plan and approval before implementation"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "3b157f457229074c390622ab2ee055759b11b85b",
+  "final_revision": null,
+  "spec_sha256": "4b11de1136be2048202ed164fbd93c36973da1e8cb6ac599a8fe67f24f7cc4e9",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-09T10:47:25.167731+00:00",
+  "ended_at": "2026-09-09T10:58:15.728654+00:00",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "../../../../plans/f3-access-and-provider-setup.md",
+    "source-sha256.json"
+  ],
+  "quality": {
+    "implementation_started": false,
+    "subagents_started_for_plan": 0,
+    "external_provider_changes": false,
+    "tests": "not applicable to planning-only change; source/document inspection and diff check"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 650561,
+    "active_wall_ms": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial read-only instruction/path discovery preceded record; not backdated.",
+    "Host billing and stage allocation unavailable.",
+    "Root work after separate audit began is interleaved; do not attribute all thread usage to this plan. Token allocation unavailable without per-response task mapping."
+  ],
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high",
+  "result": "planning complete; implementation awaiting explicit owner approval",
+  "model_evidence": "local turn_context 2026-09-09T10:46:18.026Z"
+}
