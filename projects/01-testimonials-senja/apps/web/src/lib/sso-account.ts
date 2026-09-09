@@ -36,12 +36,12 @@ export type SsoProvider = 'yandex';
  */
 export type SsoResolution =
   | { kind: 'linked'; accountId: string; token: string; projects: ProjectSummary[]; created: boolean }
-  // Учётка с таким адресом есть, и у неё ЕСТЬ пароль. Не впускаем.
+  // Адрес занят другой учёткой. Нужен её исходный способ входа; имя ответа сохранено.
   | { kind: 'needs_password_login'; email: string };
 
 /**
- * Разрешает вход через внешнего провайдера. Четыре случая — ровно те, что в
- * docs/features/fr-016-yandex-id/01_specification.md.
+ * Разрешает вход через внешнего провайдера. N3 bridge запрещает также связывание
+ * с беспарольной учёткой только по совпадению неподтверждённого адреса.
  *
  * Клиент передаётся снаружи: вызывающий уже в транзакции. Открывать здесь вторую значит
  * потерять атомарность «создать учётку + привязать + выдать сессию».
@@ -71,28 +71,28 @@ export async function resolveSsoAccount(
     };
   }
 
-  // ── Идентификатор новый. Дальше решает НАЛИЧИЕ ПАРОЛЯ у учётки с таким адресом.
+  // ── Идентификатор новый. Проверяем, не занят ли адрес другой учёткой.
   const byEmail = await client.query<{ id: string; has_password: boolean }>(
     'select id, (password_hash is not null) as has_password from accounts where email = $1',
     [email],
   );
   const account = byEmail.rows[0] ?? null;
 
-  // ── СЛУЧАЙ 4 (проверяется РАНЬШЕ остальных — самый опасный, пусть будет самым заметным):
-  // адрес занят учёткой, у которой ЕСТЬ пароль. НЕ ВПУСКАЕМ.
+  // ── Адрес занят: ни наличие, ни отсутствие пароля не доказывает владение.
   //
   // Здесь и только здесь живёт защита от захвата в обе стороны. Заменить этот возврат на
   // связывание — значит внести мутацию S1, и она обязана валить AC-016.4.
-  if (account && account.has_password) {
-    return { kind: 'needs_password_login', email };
+  if (account) {
+    // Another callback may have committed since the first identity lookup. Only
+    // the exact provider identity can win that race, never equal unverified email.
+    const same = await client.query('select account_id from sso_identities where provider=$1 and external_id=$2', [provider, externalId]);
+    if (!same.rows[0]) return { kind: 'needs_password_login', email };
+    return { kind: 'linked', accountId: same.rows[0].account_id,
+      token: await createSession(client, same.rows[0].account_id),
+      projects: await listProjectsForAccount(client, same.rows[0].account_id), created: false };
   }
 
-  // ── СЛУЧАЙ 3: адрес есть, но у учётки пароля НЕТ.
-  //
-  // Такая учётка могла появиться только через SSO же. Пароля у неё нет, значит войти в неё
-  // паролем нельзя, значит подделать владение ею через нашу форму регистрации невозможно —
-  // привязка безопасна. Практический смысл: человек отвязал провайдера и заходит снова.
-  // ── СЛУЧАЙ 2: адреса нет вовсе. Создаём учётку БЕЗ ПАРОЛЯ.
+  // ── Адреса нет вовсе. Создаём учётку БЕЗ ПАРОЛЯ.
   //
   // password_hash остаётся NULL. Вход паролем в неё невозможен: login.ts коалесцирует NULL
   // в заглушечный хеш, verifyPassword не сходится, а время ответа неотличимо от «аккаунта
@@ -108,9 +108,7 @@ export async function resolveSsoAccount(
   // перечитывание отдало бы её через SSO, то есть вернуло бы ровно тот захват, ради
   // запрета которого написана вся фича. Поэтому проверка наличия пароля повторяется.
   let accountId: string;
-  if (account) {
-    accountId = account.id;
-  } else {
+  {
     const created = await client.query<{ id: string }>(
       'insert into accounts (email) values ($1) on conflict (email) do nothing returning id',
       [email],
@@ -128,6 +126,8 @@ export async function resolveSsoAccount(
       if (!winner) throw new Error('sso: учётка не создана и не найдена — состояние противоречиво');
       // ПОВТОРНАЯ проверка. Не косметика: см. абзац выше.
       if (winner.has_password) return { kind: 'needs_password_login', email };
+      const same = await client.query('select account_id from sso_identities where provider=$1 and external_id=$2', [provider, externalId]);
+      if (!same.rows[0] || same.rows[0].account_id !== winner.id) return { kind: 'needs_password_login', email };
       accountId = winner.id;
     }
   }

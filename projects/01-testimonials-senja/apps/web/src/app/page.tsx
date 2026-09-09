@@ -21,11 +21,21 @@ const BENEFITS = [
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [n3Promo, setN3Promo] = useState('');
+  const [n3Enabled, setN3Enabled] = useState(false);
   const [projectName, setProjectName] = useState('');
   const [desiredSlug, setDesiredSlug] = useState('');
   const [slugState, setSlugState] = useState<SlugState>({ kind: 'idle' });
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch('/api/n3/program', { signal: controller.signal })
+      .then(async response => { if (response.ok) setN3Enabled((await response.json()).enabled === true); })
+      .catch(() => { /* The optional field stays hidden until availability is known. */ });
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     if (desiredSlug.trim() === '') {
@@ -65,6 +75,7 @@ export default function SignupPage() {
           body: JSON.stringify({
             email,
             password,
+            ...(n3Promo ? { n3_promo_code: n3Promo } : {}),
             project_name: projectName,
             // UTM-метки со страницы: сюда попадает переход по badge с чужого сайта
             // (FR-GROWTH-003). Сервер сам решит, наш это источник или чужой.
@@ -85,7 +96,7 @@ export default function SignupPage() {
         setSubmitting(false);
       }
     },
-    [email, password, projectName, desiredSlug],
+    [email, password, projectName, desiredSlug, n3Promo],
   );
 
   const slugBlocked = slugState.kind === 'taken' || slugState.kind === 'invalid';
@@ -157,6 +168,8 @@ export default function SignupPage() {
                 {errors.map((e) => <li key={e}>{e}</li>)}
               </ul>
             )}
+            {n3Enabled && <label className="field"><span>Промокод партнёра «Круг» (необязательно)</span>
+              <input className="input" value={n3Promo} maxLength={64} onChange={e => setN3Promo(e.target.value)} /></label>}
 
             <button type="submit" disabled={submitting || slugBlocked} className="btn btn--primary btn--block">
               {submitting ? 'Создаём…' : 'Создать проект'}

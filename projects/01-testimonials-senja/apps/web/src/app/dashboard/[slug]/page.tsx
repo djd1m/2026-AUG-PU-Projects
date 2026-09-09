@@ -17,6 +17,7 @@ import { ImportForm } from './import-form';
 import { ShareCta, type Install } from './share-cta';
 import { isPaid, isTier, tierSummary } from '@/lib/tariff';
 import { BillingBlock } from './billing-block';
+import { N3Status } from './n3-status';
 
 /** Та же цена, что в /api/checkout: одно значение, читаемое из одного места. */
 const PRICE_RUB = Number(process.env.PAID_TIER_PRICE_RUB ?? '990');
@@ -116,6 +117,7 @@ export default async function DashboardPage({ params }: Params) {
             не станут разметкой (правило экранирования при рендере, FR-002/005/006). */}
         <pre className="snippet"><code>{urls.widget_snippet}</code></pre>
 
+        <N3Status />
         <BillingBlock
           slug={project.slug}
           priceRub={PRICE_RUB}

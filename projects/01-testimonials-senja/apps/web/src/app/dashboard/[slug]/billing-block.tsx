@@ -19,14 +19,18 @@ export function BillingBlock({ slug, priceRub, paidUntil }: {
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState<string | null>(null);
 
   async function pay() {
     setBusy(true); setError(null);
     try {
+      const storageKey = `pw_purchase_${slug}`;
+      const key = retryKey ?? sessionStorage.getItem(storageKey) ?? crypto.randomUUID();
+      setRetryKey(key); sessionStorage.setItem(storageKey, key);
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, request_key: key }),
       });
       const body = (await res.json().catch(() => null)) as { redirect_url?: string; error?: string } | null;
       if (!res.ok || !body?.redirect_url) {
@@ -65,6 +69,10 @@ export function BillingBlock({ slug, priceRub, paidUntil }: {
           ? `Продлить на 30 дней — ${priceRub} ₽`
           : `Оплатить 30 дней — ${priceRub} ₽`}
       </button>
+      {active && <button className="btn" type="button" disabled={busy} onClick={() => {
+        const key = crypto.randomUUID(); sessionStorage.setItem(`pw_purchase_${slug}`, key); setRetryKey(key);
+        setError('Новая покупка подготовлена. Нажмите «Продлить», чтобы оплатить следующий период.');
+      }}>Начать покупку следующего периода</button>}
     </>
   );
 }

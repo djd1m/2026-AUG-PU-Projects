@@ -28,6 +28,7 @@ import { parseBadgeAttribution } from './badge';
 import { emitEvents } from './widget-install';
 import { createPendingAttribution, resolveAttribution } from './referral';
 import { onSignupViaPartnerCode } from './partner';
+import { captureSignup, type N3Receipt } from './n3-referral';
 
 export interface RegisterInput {
   email: unknown;
@@ -61,6 +62,7 @@ async function slugTaken(client: PoolClient, slug: string): Promise<boolean> {
 export async function registerAccountAndProject(
   client: PoolClient,
   input: RegisterInput,
+  n3Receipt: N3Receipt | null = null,
 ): Promise<RegisterResult> {
   const errors: string[] = [];
 
@@ -109,6 +111,7 @@ export async function registerAccountAndProject(
     [email, passwordHash],
   );
   const accountId = account.rows[0]!.id;
+  await captureSignup(client, accountId, n3Receipt);
 
   const project = await client.query<{ id: string; slug: string }>(
     // tier='free' и noindex=true — явно, а не «по умолчанию из схемы»: FR-GROWTH-005 требует,

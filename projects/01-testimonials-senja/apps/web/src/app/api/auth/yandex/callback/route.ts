@@ -21,6 +21,7 @@ import { normalizeEmail, hashKey } from '@/lib/login';
 import { extractClientIP } from '@/lib/client-ip';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
 import { baseUrl } from '@/lib/urls';
+import { captureSignup, signupReceipt } from '@/lib/n3-referral';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,9 +89,13 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (email === '') return clearState(back('no_email'));
 
   // ── ШАГ 4: транзакция — последней и короткой.
-  const resolution = await withService((client) =>
-    resolveSsoAccount(client, 'yandex', profile.externalId, email),
-  );
+  const resolution = await withService(async (client) => {
+    const result = await resolveSsoAccount(client, 'yandex', profile.externalId, email);
+    if (result.kind === 'linked' && result.created) {
+      await captureSignup(client, result.accountId, signupReceipt(request.headers.get('cookie'), undefined));
+    }
+    return result;
+  });
 
   if (resolution.kind === 'needs_password_login') {
     // ГЛАВНЫЙ ОТКАЗ ФИЧИ. Учётка с этим адресом существует и у неё есть пароль — связать

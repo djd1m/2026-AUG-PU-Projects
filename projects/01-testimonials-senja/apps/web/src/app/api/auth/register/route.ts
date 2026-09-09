@@ -8,6 +8,8 @@ import { registerAccountAndProject, type RegisterInput } from '@/lib/register';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/session';
 import { extractClientIP } from '@/lib/client-ip';
 import { REF_COOKIE } from '@/lib/referral';
+import { signupReceipt } from '@/lib/n3-referral';
+import { n3Failure } from '@/lib/n3-http';
 
 // Роут ходит в БД — статически его пререндерить нельзя.
 export const dynamic = 'force-dynamic';
@@ -46,7 +48,10 @@ export async function POST(request: Request): Promise<NextResponse> {
     cookie_ref: cookieRef,
   };
 
-  const result = await withService((client) => registerAccountAndProject(client, input));
+  let receipt;
+  try { receipt = signupReceipt(request.headers.get('cookie'), (body as { n3_promo_code?: unknown }).n3_promo_code); }
+  catch (error) { return n3Failure(error); }
+  const result = await withService((client) => registerAccountAndProject(client, input, receipt));
 
   if (!result.ok) {
     return NextResponse.json(result.body, { status: result.status });

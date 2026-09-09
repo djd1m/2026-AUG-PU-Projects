@@ -77,6 +77,10 @@ export interface RemotePayment {
   status: 'pending' | 'waiting_for_capture' | 'succeeded' | 'canceled';
   paid: boolean;
   amount: number;
+  currency?: string;
+  test?: boolean;
+  shopId?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export class PaymentProviderError extends Error {}
@@ -129,12 +133,19 @@ export async function fetchRemotePayment(paymentId: string): Promise<RemotePayme
     status: RemotePayment['status'];
     paid: boolean;
     amount?: { value?: string };
+    test?: boolean;
+    recipient?: { account_id?: string };
+    metadata?: Record<string, unknown>;
   };
   return {
     id: data.id,
     status: data.status,
     paid: data.paid === true,
     amount: Number(data.amount?.value ?? 0),
+    currency: (data.amount as { currency?: string })?.currency,
+    test: data.test,
+    shopId: data.recipient?.account_id,
+    metadata: data.metadata,
   };
 }
 
@@ -171,15 +182,16 @@ export async function applyTariffUpgrade(
   client: PoolClient,
   providerPaymentId: string,
 ): Promise<UpgradeResult> {
-  const { rows } = await client.query<{ id: string; project_id: string; tier: string; paid_until: Date | null }>(
-    `select cs.id, cs.project_id, p.tier, p.paid_until
+  const { rows } = await client.query<{ id: string; project_id: string; status: string; tier: string; paid_until: Date | null }>(
+    `select cs.id, cs.project_id, cs.status, p.tier, p.paid_until
        from checkout_sessions cs join projects p on p.id = cs.project_id
-      where cs.provider_session_id = $1`,
+      where cs.provider_session_id = $1 for update of p, cs`,
     [providerPaymentId],
   );
   const session = rows[0];
   // Неизвестный платёж — не ошибка: staging и prod могут делить один магазин ЮKassa.
   if (!session) return { applied: false, reason: 'unknown_session' };
+  if (session.status === 'completed') return { applied: true, projectId: session.project_id, alreadyPaid: true };
 
   const alreadyPaid = isPaid(session.tier, session.paid_until);
   // Срок считается ОТ БОЛЬШЕГО из «сейчас» и текущего срока: оплата за неделю до конца
@@ -216,6 +228,7 @@ export async function createRemotePayment(
   amount: number,
   returnUrl: string,
   idempotenceKey: string,
+  metadata?: { order_id: string; proofwall_invoice_id: string },
 ): Promise<CheckoutSession> {
   if (isStub()) {
     // Заглушка тоже обязана давать РАЗНЫЕ сессии на разные попытки: прежний
@@ -245,7 +258,7 @@ export async function createRemotePayment(
       capture: true,
       confirmation: { type: 'redirect', return_url: returnUrl },
       description: `Proofwall: платный тариф для проекта ${projectId}`,
-      metadata: { project_id: projectId },
+      metadata: { project_id: projectId, ...metadata },
     }),
     // Та же верхняя граница, что у чтения платежа: без неё создание платежа висело бы
     // столько, сколько молчит ЮKassa, занимая обработчик.

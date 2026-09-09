@@ -7,6 +7,9 @@ import { withAccount } from '@proofwall/db';
 import { currentAccountId } from '@/lib/current-session';
 import { createRemotePayment, PaymentProviderError, recordCheckoutSession, isStub } from '@/lib/payment';
 import { baseUrl } from '@/lib/urls';
+import { beginN3Checkout } from '@/lib/n3-checkout';
+import { N3Error } from '@/lib/n3-runtime';
+import { n3Failure } from '@/lib/n3-http';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +43,9 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!projectId) return NextResponse.json({ error: 'не найдено' }, { status: 404 });
 
   try {
+    const bridge = await beginN3Checkout(accountId, projectId, `${baseUrl()}/dashboard/${slug}`,
+      (body as { request_key?: unknown }).request_key);
+    if (bridge) return NextResponse.json({ redirect_url: bridge.redirectUrl, stub: false }, { status: 200 });
     // Обращение к ЮKassa — ВНЕ транзакции: держать соединение пула всё время ответа
     // стороннего сервиса нельзя.
     // Ключ идемпотентности — на КАЖДУЮ попытку свой. Он защищает от повтора ОДНОГО
@@ -53,6 +59,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       recordCheckoutSession(client, projectId, session, idempotenceKey));
     return NextResponse.json({ redirect_url: session.redirectUrl, stub: isStub() }, { status: 200 });
   } catch (err) {
+    if (err instanceof N3Error) return n3Failure(err);
     if (err instanceof PaymentProviderError && err.message === 'PAYMENT_PROVIDER_NOT_CONFIGURED') {
       // 501, а не фиктивная ссылка: зелёный checkout при отсутствующей интеграции —
       // ровно тот класс лжи, против которого «сценарий добавлен ≠ требование закрыто».

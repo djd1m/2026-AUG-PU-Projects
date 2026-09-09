@@ -23,6 +23,8 @@ import {
 } from '@/lib/payment';
 import { convertAttributionOnPayment } from '@/lib/referral';
 import { extractClientIP } from '@/lib/client-ip';
+import { bridgeNotification } from '@/lib/n3-payment';
+import { N3Error } from '@/lib/n3-runtime';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,6 +80,14 @@ export async function POST(request: Request): Promise<NextResponse> {
   // У ЮKassa нет отдельного идентификатора события — есть тип события и id объекта.
   // Пара из них устойчива и различает payment.succeeded и payment.canceled по одному платежу.
   const eventId = `${event}:${paymentId}`;
+  try {
+    const bridge = await bridgeNotification(event, paymentId);
+    if (bridge !== null) return NextResponse.json({ status: bridge });
+  } catch (error) {
+    // No event claim has survived a failed bridge transaction. Capacity, N3 or
+    // provider failures remain retryable; no raw provider metadata is reflected.
+    return NextResponse.json({ status: error instanceof N3Error ? error.code : 'bridge_unavailable' }, { status: 503 });
+  }
 
   let outcome: 'duplicate' | 'ignored' | 'unknown_payment' | 'not_paid' | 'upgraded' | 'unknown_session';
   try {
@@ -104,7 +114,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       const upgrade = await applyTariffUpgrade(client, paymentId);
 
       // ── ШАГ 5: партнёрское начисление (FR-GROWTH-002) ─────────────────────
-      const accountId = body.object?.metadata?.['account_id'];
+      const owner = upgrade.applied ? (await client.query('select account_id from projects where id=$1', [upgrade.projectId])).rows[0] : null;
+      const accountId = owner?.account_id;
       if (typeof accountId === 'string' && accountId !== '') {
         await convertAttributionOnPayment(client, accountId, eventId, remote.amount);
       }
