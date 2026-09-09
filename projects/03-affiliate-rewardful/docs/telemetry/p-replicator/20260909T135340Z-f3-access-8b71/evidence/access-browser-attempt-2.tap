@@ -1,0 +1,23 @@
+TAP version 13
+# Waiting for the existing authentication admission window before the next journey.
+# Subtest: four-origin browser registration requires explicit proof and shared login security works on desktop and mobile
+ok 1 - four-origin browser registration requires explicit proof and shared login security works on desktop and mobile
+  ---
+  duration_ms: 9470.528321
+  type: 'test'
+  ...
+# Subtest: browser Yandex link recovery SSO contact legacy security gate and unconfigured providers
+ok 2 - browser Yandex link recovery SSO contact legacy security gate and unconfigured providers
+  ---
+  duration_ms: 81405.95454
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91030.761836

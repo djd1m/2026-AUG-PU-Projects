@@ -42,7 +42,8 @@ services:
       PGUSER: n3_app
       PGPASSWORD_FILE: /run/secrets/n3_db_app_password
       N3_YOOKASSA_CONFIG_FILE: /run/secrets/n3_yookassa_config
-    secrets: [n3_db_app_password, n3_yookassa_config]
+      N3_ACCESS_CONFIG_FILE: /run/secrets/n3_access_config
+    secrets: [n3_db_app_password, n3_yookassa_config, n3_access_config]
     networks: [database, frontend]
     ports:
       - "${N3_BIND:-127.0.0.1}:${N3_API_PORT:-13030}:3000"
@@ -76,3 +77,5 @@ secrets:
     file: ./.runtime/db-app-password
   n3_yookassa_config:
     file: ./.runtime/yookassa.json
+  n3_access_config:
+    file: ./.runtime/access.json

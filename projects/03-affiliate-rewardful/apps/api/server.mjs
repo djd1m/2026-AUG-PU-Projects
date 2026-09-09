@@ -3,17 +3,19 @@ import { originsFor } from '../../shared/contracts/deployment.mjs';
 import { readFileSync } from 'node:fs';
 import { createApplication } from '../../shared/application/index.mjs';
 import { createHttpServer } from './http.mjs';
+import { readAccessConfig } from '../../shared/identity/access-config.mjs';
 
 const mode=process.env.N3_MODE;
 if (!['fixture','hybrid','real'].includes(mode)) throw new Error('Explicit N3_MODE is required.');
 const yookassaConfig=process.env.N3_YOOKASSA_CONFIG_FILE ? JSON.parse(readFileSync(process.env.N3_YOOKASSA_CONFIG_FILE,'utf8')) : {enabled:false};
+const accessConfig=readAccessConfig(process.env.N3_ACCESS_CONFIG_FILE);
 const passwordFile = process.env.PGPASSWORD_FILE;
 if (!passwordFile) throw new Error('PGPASSWORD_FILE secret is required.');
 const password = readFileSync(passwordFile, 'utf8').trim();
 if (!/^[a-f0-9]{64}$/.test(password)) throw new Error('A generated 256-bit database password is required.');
 // File secrets remain0600 on host; drop root immediately after reading them.
 if (process.getuid?.() === 0) { process.setgid(1000); process.setuid(1000); }
-const app = await createApplication({ mode, yookassaConfig, database: {
+const app = await createApplication({ mode, yookassaConfig, accessConfig, database: {
   host: process.env.PGHOST, port: Number(process.env.PGPORT || 5432),
   database: process.env.PGDATABASE, user: process.env.PGUSER, password,
   max: 8, connectionTimeoutMillis: 3000, idleTimeoutMillis: 10000,

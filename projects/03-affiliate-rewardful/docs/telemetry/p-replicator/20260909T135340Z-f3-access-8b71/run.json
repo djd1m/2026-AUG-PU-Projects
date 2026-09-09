@@ -11,7 +11,7 @@
   "profile_overrides": [
     "Approved access/provider plan follows accepted deployed referral funnel; no renewed permission required.",
     "Current Astra high coordinator; max two concurrent children with isolated writers.",
-    "Prior3\u20135hour estimate withdrawn after user challenged reuse assumptions; report measured work instead."
+    "Prior3–5hour estimate withdrawn after user challenged reuse assumptions; report measured work instead."
   ],
   "comparison_id": null,
   "risk_flags": [
@@ -30,22 +30,38 @@
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-09T13:53:40.519685+00:00",
-  "ended_at": null,
-  "status": "running",
-  "acceptance_evidence": [],
+  "ended_at": "2026-09-09T15:47:35.061357+00:00",
+  "status": "interrupted",
+  "acceptance_evidence": [
+    "evidence/checkpoint-backend.tap",
+    "evidence/checkpoint-public-cjm.tap",
+    "evidence/access-browser-attempt-2.tap",
+    "evidence/core-review-receipt.md"
+  ],
   "quality": {
     "baseline_backend_tests": 118,
     "baseline_public_cjm_tests": 49,
     "baseline_account_and_protocol_tests": 2,
     "required_gates_passed": false,
-    "followup_status": "pending"
+    "followup_status": "pending",
+    "checkpoint_backend_tests": "154/154",
+    "checkpoint_public_CJM_tests": "49/49",
+    "checkpoint_existing_account_protocol_tests": "2/2",
+    "checkpoint_isolated_access_browser_tests": "2/2"
   },
-  "metrics": {},
+  "metrics": {
+    "elapsed_seconds": 6834.541672,
+    "active_seconds": null,
+    "tokens": null,
+    "cost": null
+  },
   "telemetry_status": "partial",
   "missing_data": [
-    "Billing cost and active/wait split unavailable.",
-    "Specification hash and final acceptance are pending PLAN/implementation."
+    "Full feature review, required access mutations and deployment acceptance pending.",
+    "Worker actual-model and usage metadata not collected; requested Astra high and Sol high are not actual-model evidence.",
+    "Cost, active/wait split and run-attributed token usage unavailable."
   ],
   "actual_model": "gpt-6-astra",
-  "actual_effort": "high"
+  "actual_effort": "high",
+  "checkpoint_reason": "Owner requested stable demo before class; access feature not accepted/deployed; resume final review and mutation acceptance later."
 }

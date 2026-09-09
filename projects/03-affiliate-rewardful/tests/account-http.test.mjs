@@ -14,7 +14,8 @@ test('real cookie HTTP protects CSRF, keeps tokens out of responses, and connect
   const post=(path,data,extra={})=>fetch(base+path,{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,...(cookie?{Cookie:cookie}:{}),...extra},body:JSON.stringify(data)});
   const input={email:`${randomUUID()}@example.test`,password:'Secure HTTP password 66!',name:'HTTP Org'};
   const csrf=await post('/api/account/register',input,{Origin:''});assert.equal(csrf.status,403);
-  const signup=await post('/api/account/register',input);assert.equal(signup.status,200); const setCookie=signup.headers.get('set-cookie');
+  await f.app.identity.register(input);
+  const signup=await post('/api/account/login',{email:input.email,password:input.password});assert.equal(signup.status,200); const setCookie=signup.headers.get('set-cookie');
   assert.match(setCookie,/HttpOnly/);assert.match(setCookie,/Secure/);assert.match(setCookie,/SameSite=Lax/);
   assert.equal((await signup.json()).data.token,undefined);cookie=setCookie.split(';')[0];
   const me=await fetch(base+'/api/account/me',{headers:{Cookie:cookie}}).then(r=>r.json()); const membershipId=me.data.memberships[0].membershipId;

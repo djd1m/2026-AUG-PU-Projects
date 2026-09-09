@@ -14,7 +14,6 @@
 |---|---|
 | auth-adapters | Reused Resend/Yandex HTTP primitives and provider contract tests |
 | provider-docs | Five new source-dated provider setup guides |
-| account-ui | Shared account forms/status and UI tests after API freeze |
 
 ## Владение
 
@@ -22,8 +21,8 @@
 |---|---|
 | shared/identity/providers/** | auth-adapters |
 | tests/access-providers.test.mjs | auth-adapters |
-| shared/ui/account/** | account-ui |
-| tests/access-ui.test.mjs | account-ui |
+| shared/ui/account/** | координатор |
+| tests/access-ui.test.mjs | координатор |
 | docs/integrations/yookassa.md | provider-docs |
 | docs/integrations/yandex-kassa.md | provider-docs |
 | docs/integrations/cloudpayments.md | provider-docs |
@@ -52,6 +51,7 @@
 | tests/access-oauth.test.mjs | координатор |
 | tests/access-http.test.mjs | координатор |
 | tests/access-policy.test.mjs | координатор |
+| tests/referral-service.test.mjs | координатор |
 | tests/helpers/access-fixture.mjs | координатор |
 | tests/helpers/access-browser-server.mjs | координатор |
 | tests/e2e/access.mjs | координатор |
@@ -70,9 +70,12 @@
 | docs/source-versions.md | координатор |
 | docs/plans/f3-access-and-provider-setup.md | координатор |
 | docs/README.md | координатор |
+| docs/demos/** | координатор |
 | docs/Architecture.md | координатор |
 | docs/runtime-contract.md | координатор |
 | docs/f2-operations.md | координатор |
 | docs/Completion.md | координатор |
 
 Implementation starts after independent VALIDATE. One isolated worktree per writer, maximum2concurrent children; UI starts after adapter slot frees. Coordinator alone operates browser/VPS, manifests, integration and telemetry. Each terminal receipt is checked before integration; any additional file needs explicit ownership first. Existing referral feature is accepted; its source history remains in Git, not re-executed.
+
+2026-09-09: after terminal UI receipt and cherry-pick, coordinator owns integration fixes to shared/ui/account/** and access-ui tests. Large existing referral-cap fixture setup is chunked under the same production5second statement limit; tested100000 visit cap is unchanged.

@@ -4,6 +4,10 @@
 
 | Задача | Документ |
 |---|---|
+| Повторить процесс на курсе в новой папке | [Восемь готовых запросов: шаблон → replicate → CJM → go → проверенное демо](../../../docs/lessons/n3-p-replicator-prompts.md) |
+| Показать проект на занятии за 7–10 минут | [Пошаговая инструкция с репликами ведущего](../../../docs/lessons/n3-demo-script.md) · [HTML для открытия локально](demos/class-2026-09-09.html) |
+| Настроить платёжных провайдеров | [ЮKassa](integrations/yookassa.md), [Яндекс.Касса / split](integrations/yandex-kassa.md), [CloudPayments](integrations/cloudpayments.md) |
+| Настроить почту и вход | [Resend](integrations/resend.md), [Yandex ID](integrations/yandex-id.md); новый этап пока не опубликован |
 | Подключить реферальную воронку к своему SaaS | [Трекер, серверный клиент и проверка оплаты](integrations/referral-funnel.md) |
 | Проверить текущий объём и доказательства готовности | [F3 completion](features/f3-referral-funnel/05_completion.md) |
 | Настроить кабинет, ЮKassa, MCP/A2A | [Эксплуатация](f2-operations.md) |

@@ -1,6 +1,7 @@
 import { advanceRealClock } from '../identity/state.mjs';
 import { createPayments } from '../payments/service.mjs';
 import { createIdentity } from '../identity/service.mjs';
+import { createAccess } from '../identity/access.mjs';
 import { createReferrals } from '../referrals/service.mjs';
 import { randomBytes } from 'node:crypto';
 import { assert, object, safeTree, str, id, hash, canonical } from '../domain/common.mjs';
@@ -22,6 +23,9 @@ export async function createApplication(options = {}) {
   assert(Number.isInteger(maxDemoRuns) && maxDemoRuns > 0 && maxDemoRuns <= 10000);
   const pool = await openDatabase(options);
   const identity = createIdentity(pool, now);
+  let access;
+  try { access=await createAccess({pool,identity,now,config:options.accessConfig,fetchImpl:options.accessFetch}); }
+  catch(error) { await pool.end(); throw error; }
   const referrals = createReferrals({pool,identity,now});
   async function createDemo(input = {}) {
     assert(mode !== 'real', 'FIXTURE_DISABLED', 403);
@@ -96,7 +100,7 @@ export async function createApplication(options = {}) {
       return structuredClone(result);
     });
   }
-  return { createDemo, execute, identity, referrals, payments: createPayments({pool,identity,referrals,now,config:options.yookassaConfig,fetchImpl:options.paymentFetch}),
+  return { createDemo, execute, identity, access, referrals, payments: createPayments({pool,identity,referrals,now,config:options.yookassaConfig,fetchImpl:options.paymentFetch}),
     executeReal: (token, membershipId, action, input = {}, key) => execute({token}, action, input, key, client => identity.resolveUser(client, token, membershipId)),
     executeAgent: (token, action, input = {}, key) => execute({token}, action, input, key, client => identity.resolveAgent(client, token)),
     authenticateAgent: identity.authenticateAgent, close: () => pool.end() };

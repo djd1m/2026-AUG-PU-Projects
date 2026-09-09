@@ -20,6 +20,7 @@ export function createReferrals({ pool, identity, now = Date.now }) {
     const candidate = (await client.query('SELECT account_id,tenant_id FROM referral_credentials WHERE token_hash=$1', [digest])).rows[0];
     assert(candidate, 'UNAUTHENTICATED', 401, 'Ключ недействителен');
     const account = (await client.query('SELECT id,version FROM accounts WHERE id=$1 FOR SHARE', [candidate.account_id])).rows[0];
+    if(account)await identity.assertVerified(client,account.id);
     const member = (await client.query('SELECT actor_id FROM memberships WHERE account_id=$1 AND tenant_id=$2 FOR SHARE',
       [candidate.account_id, candidate.tenant_id])).rows[0];
     const tenant = (await client.query("SELECT state FROM tenants WHERE id=$1 AND mode='real' FOR UPDATE", [candidate.tenant_id])).rows[0];

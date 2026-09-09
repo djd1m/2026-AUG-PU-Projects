@@ -28,17 +28,32 @@ export function createIdentity(pool, now) {
   }
   function fresh(expiresAt) { assert(new Date(expiresAt).getTime()>now(),'UNAUTHENTICATED',401,'Сеанс истёк; войдите снова'); }
 
+  async function verificationRequired(client) {
+    return (await client.query('SELECT verification_required FROM access_policy WHERE id=1 FOR SHARE')).rows[0].verification_required;
+  }
+  async function assertVerified(client,accountId) {
+    if(await verificationRequired(client)) {
+      const row=(await client.query('SELECT email_verified_at FROM accounts WHERE id=$1',[accountId])).rows[0];
+      assert(row?.email_verified_at,'EMAIL_VERIFICATION_REQUIRED',403,'Подтвердите почту в настройках доступа');
+    }
+  }
   async function issue(client, account) {
     const plain = token(), expiresAt = new Date(now() + ttl).toISOString();
-    await client.query('INSERT INTO user_sessions(token_hash,account_id,version,expires_at) VALUES($1,$2,$3,$4)',
-      [hash(plain), account.id, account.version, expiresAt]);
+    await client.query('INSERT INTO user_sessions(token_hash,account_id,version,expires_at,authenticated_at) VALUES($1,$2,$3,$4,$5)',
+      [hash(plain), account.id, account.version, expiresAt,new Date(now())]);
     return { token: plain, expiresAt };
   }
   async function session(client, plain) {
-    const row = (await client.query(`SELECT a.id,a.email,a.version,s.expires_at FROM user_sessions s JOIN accounts a ON a.id=s.account_id
-      WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at > $2 AND s.version=a.version FOR SHARE OF s,a`,
-    [credential(plain), new Date(now())])).rows[0];
-    assert(row, 'UNAUTHENTICATED', 401, 'Сеанс истёк; войдите снова'); return row;
+    const digest=credential(plain);
+    const candidate=(await client.query('SELECT account_id FROM user_sessions WHERE token_hash=$1',[digest])).rows[0];
+    assert(candidate,'UNAUTHENTICATED',401,'Войдите снова');
+    // Credential readers and revocation both lock account FIRST. A joined
+    // FOR SHARE OF session,account can otherwise deadlock an account-first reset.
+    const account=(await client.query('SELECT id,email,version,email_verified_at FROM accounts WHERE id=$1 FOR SHARE',[candidate.account_id])).rows[0];
+    const row=(await client.query('SELECT * FROM user_sessions WHERE token_hash=$1 FOR SHARE',[digest])).rows[0];
+    assert(account && row && row.account_id===account.id && row.version===account.version && !row.revoked_at &&
+      new Date(row.expires_at).getTime()>now(),'UNAUTHENTICATED',401,'Сеанс истёк; войдите снова');
+    return {...account,expires_at:row.expires_at};
   }
   async function membership(client, accountId, membershipId) {
     const row = (await client.query(`SELECT m.*,t.mode FROM memberships m JOIN tenants t ON t.id=m.tenant_id
@@ -46,16 +61,25 @@ export function createIdentity(pool, now) {
     assert(row?.mode === 'real', 'FORBIDDEN', 403, 'Нет доступа к организации'); return row;
   }
   async function resolveUser(client, plain, membershipId) {
-    const account = await session(client, plain), member = await membership(client, account.id, membershipId);
+    const account = await session(client, plain); await assertVerified(client,account.id);
+    const member = await membership(client, account.id, membershipId);
     return { ...member, actorId: member.actor_id, actor_ids: [member.actor_id], expires_at: account.expires_at, account_id: account.id };
   }
   async function resolveAgent(client, plain) {
-    const row = (await client.query(`SELECT c.*,m.actor_id,m.tenant_id,m.account_id,a.version AS current_version
-      FROM agent_credentials c JOIN memberships m ON m.id=c.membership_id JOIN accounts a ON a.id=m.account_id
-      JOIN tenants t ON t.id=m.tenant_id WHERE c.token_hash=$1 AND c.revoked_at IS NULL AND c.expires_at>$2
-      AND c.version=a.version AND t.mode='real' FOR SHARE OF c,m,a`, [credential(plain), new Date(now())])).rows[0];
-    assert(row, 'UNAUTHENTICATED', 401, 'Агентный ключ недействителен');
-    return { ...row, actorId: row.actor_id, actor_ids: [row.actor_id], grantId: row.grant_id };
+    const digest=credential(plain);
+    const candidate=(await client.query(`SELECT c.membership_id,m.account_id FROM agent_credentials c
+      JOIN memberships m ON m.id=c.membership_id WHERE c.token_hash=$1`,[digest])).rows[0];
+    assert(candidate,'UNAUTHENTICATED',401,'Агентный ключ недействителен');
+    const account=(await client.query('SELECT id,version FROM accounts WHERE id=$1 FOR SHARE',[candidate.account_id])).rows[0];
+    const member=(await client.query('SELECT * FROM memberships WHERE id=$1 FOR SHARE',[candidate.membership_id])).rows[0];
+    const row=(await client.query('SELECT * FROM agent_credentials WHERE token_hash=$1 FOR SHARE',[digest])).rows[0];
+    const tenant=member?(await client.query('SELECT mode FROM tenants WHERE id=$1',[member.tenant_id])).rows[0]:null;
+    assert(account && member && row && member.account_id===account.id && row.membership_id===member.id &&
+      row.version===account.version && !row.revoked_at && new Date(row.expires_at).getTime()>now() && tenant?.mode==='real',
+      'UNAUTHENTICATED',401,'Агентный ключ недействителен');
+    await assertVerified(client,account.id);
+    return {...row,account_id:account.id,actor_id:member.actor_id,tenant_id:member.tenant_id,
+      actorId:member.actor_id,actor_ids:[member.actor_id],grantId:row.grant_id};
   }
   async function lockedState(client, resolved) {
     const state = (await client.query("SELECT state FROM tenants WHERE id=$1 AND mode='real' FOR UPDATE", [resolved.tenant_id])).rows[0]?.state;
@@ -98,7 +122,8 @@ export function createIdentity(pool, now) {
         (SELECT a FROM jsonb_array_elements(t.state->'actors') a WHERE a->>'id'=m.actor_id::text) AS actor
         FROM memberships m JOIN tenants t ON t.id=m.tenant_id WHERE m.account_id=$1 AND t.mode='real' ORDER BY m.id`, [account.id])).rows;
       fresh(account.expires_at);
-      return { email: account.email, expiresAt: account.expires_at, memberships: rows.map(r => ({ membershipId:r.id, tenantId:r.tenant_id, actorId:r.actor_id, name:r.name, role:r.actor.role })), simulated:false };
+      const methods=(await client.query("SELECT password_hash IS NOT NULL AS has_password, EXISTS(SELECT 1 FROM sso_identities WHERE account_id=accounts.id) AS yandex_linked FROM accounts WHERE id=$1",[account.id])).rows[0];
+      return { email: account.email,emailVerified:!!account.email_verified_at,verificationRequired:await verificationRequired(client),hasPassword:methods.has_password,yandexLinked:methods.yandex_linked, expiresAt: account.expires_at, memberships: rows.map(r => ({ membershipId:r.id, tenantId:r.tenant_id, actorId:r.actor_id, name:r.name, role:r.actor.role })), simulated:false };
     });
   }
   async function logout(plain) {
@@ -114,6 +139,9 @@ export function createIdentity(pool, now) {
     assert(await verifyPassword(account.password_hash,input.currentPassword), 'LOGIN_FAILED',401,'Текущий пароль не подходит');
     const next = await hashPassword(input.newPassword);
     await transaction(pool, async client => {
+      // Mutation takes the final account lock mode before touching credentials;
+      // two SHARE holders upgrading to UPDATE could otherwise deadlock.
+      await client.query('SELECT id FROM accounts WHERE id=$1 FOR UPDATE',[account.id]);
       const sourceSession=await session(client, plain);
       const changed = await client.query('UPDATE accounts SET password_hash=$3,version=version+1 WHERE id=$1 AND version=$2 RETURNING id', [account.id, account.version, next]);
       assert(changed.rowCount, 'CONFLICT',409,'Пароль уже изменился; войдите снова'); fresh(sourceSession.expires_at);
@@ -134,7 +162,7 @@ export function createIdentity(pool, now) {
   async function acceptInvite(plain,input) {
     safeTree(input); object(input,['invitation','name'],['invitation','name']); str(input.name,100);
     return transaction(pool,async client=>{
-      const account=await session(client,plain);
+      const account=await session(client,plain);await assertVerified(client,account.id);
       const invitation=(await client.query('SELECT * FROM invitations WHERE token_hash=$1 AND expires_at>$2 AND accepted_by IS NULL FOR UPDATE',[credential(input.invitation),new Date(now())])).rows[0];
       assert(invitation,'INVITE_INACTIVE',409,'Приглашение использовано или истекло');
       const exists=await client.query('SELECT id FROM memberships WHERE account_id=$1 AND tenant_id=$2',[account.id,invitation.tenant_id]);
@@ -166,5 +194,5 @@ export function createIdentity(pool, now) {
       return {actorId:actor.id,role:actor.role,actions:grant.actions,grantId:grant.id,expiresAt:grant.expiresAt};
     });
   }
-  return {register,login,me,logout,changePassword,invite,acceptInvite,mintAgent,authenticateAgent,resolveUser,resolveAgent,lockedState,fresh};
+  return {register,login,me,logout,changePassword,invite,acceptInvite,mintAgent,authenticateAgent,resolveUser,resolveAgent,lockedState,fresh,session,issue,limit,assertVerified,verificationRequired};
 }

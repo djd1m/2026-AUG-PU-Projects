@@ -138,9 +138,11 @@ test('rotation while authorization is waiting follows tenant-before-credential o
 
 test('literal tenant caps reject extra visits/customers while existing customer retry remains available', async t => {
   const x = await referralFixture(t), visit = await x.visit(), bound = await x.referrals.bind(x.key.token, x.input({ customerId: 'existing', email: 'existing@example.test' }));
-  await x.pool.query(`INSERT INTO referral_visits(id,token_hash,tenant_id,beneficiary_id,policy_id,created_at,expires_at)
+  // Populate the exact same100000-row boundary in short setup statements.
+  // This VPS is shared; fixture bulk IO must respect the production5s timeout.
+  for(let start=1;start<=99998;start+=5000) await x.pool.query(`INSERT INTO referral_visits(id,token_hash,tenant_id,beneficiary_id,policy_id,created_at,expires_at)
     SELECT gen_random_uuid(),md5(g::text),tenant_id,beneficiary_id,policy_id,created_at,expires_at
-    FROM referral_visits CROSS JOIN generate_series(1,99998) g WHERE token_hash=$1`, [hash(visit.token)]);
+    FROM referral_visits CROSS JOIN generate_series($2::int,$3::int) g WHERE token_hash=$1`, [hash(visit.token),start,Math.min(start+4999,99998)]);
   const clicks = await Promise.allSettled([x.visit(), x.visit()]);
   assert.equal(clicks.filter(r => r.status === 'fulfilled').length, 1);
   assert.equal(clicks.find(r => r.status === 'rejected').reason.code, 'REFERRAL_LIMIT');

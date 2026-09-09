@@ -1,0 +1,106 @@
+TAP version 13
+# Waiting for the existing authentication admission window before the next journey.
+# Subtest: four-origin browser registration requires explicit proof and shared login security works on desktop and mobile
+not ok 1 - four-origin browser registration requires explicit proof and shared login security works on desktop and mobile
+  ---
+  duration_ms: 16583.66178
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/e2e/access.mjs:30:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Browser condition timed out: return !document.querySelector("#access-completion").hidden; visible UI: Круг демонстрация
+    Рабочий кабинет
+    Запрос принят. Если адрес подходит, письмо может прийти в течение нескольких минут. Доставка не гарантируется.
+    
+    ВАШ БИЗНЕС · ВАШИ ДАННЫЕ
+    
+    Войдите в свой Круг
+    
+    Реальный аккаунт сохраняет организацию, участников и историю. Демонстрационные данные сюда не попадают.
+    
+    Письма доступа подключены. Яндекс ID подключён. Подтверждение почты обязательно для рабочих данных.
+    
+    Вход
+    Почта
+    Пароль
+    Войти с паролемВойти через Яндекс ID
+    Новый аккаунт
+    
+    Сначала подтвердите, что почта принадлежит вам. Пароль задаётся только после перехода по письму.
+    
+    Почта
+    Название организации
+    Получить ссылку регистрации
+    
+    Повторный запрос доступен через 45 с.
+    
+    Восстановление доступа
+    
+    Ответ одинаков для всех адресов и не подтверждает существование аккаунта.
+    
+    Почта
+    Получить ссылку восстановления
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    until (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/helpers/browser.mjs:42:9)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/e2e/access.mjs:38:70)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: browser Yandex link recovery SSO contact legacy security gate and unconfigured providers
+not ok 2 - browser Yandex link recovery SSO contact legacy security gate and unconfigured providers
+  ---
+  duration_ms: 76486.231294
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/e2e/access.mjs:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Browser condition timed out: return !document.querySelector("#workspace").hidden; visible UI: Круг демонстрация
+    Рабочий кабинет
+    Сеанс завершён. Войдите снова.
+    
+    ВАШ БИЗНЕС · ВАШИ ДАННЫЕ
+    
+    Войдите в свой Круг
+    
+    Реальный аккаунт сохраняет организацию, участников и историю. Демонстрационные данные сюда не попадают.
+    
+    Письма доступа подключены. Яндекс ID подключён. Подтверждение почты обязательно для рабочих данных.
+    
+    Вход
+    Почта
+    Пароль
+    Войти с паролемВойти через Яндекс ID
+    Новый аккаунт
+    
+    Сначала подтвердите, что почта принадлежит вам. Пароль задаётся только после перехода по письму.
+    
+    Почта
+    Название организации
+    Получить ссылку регистрации
+    
+    Восстановление доступа
+    
+    Ответ одинаков для всех адресов и не подтверждает существование аккаунта.
+    
+    Почта
+    Получить ссылку восстановления
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    until (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/helpers/browser.mjs:42:9)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async login (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/e2e/access.mjs:11:141)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/tests/e2e/access.mjs:53:128)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93258.303691

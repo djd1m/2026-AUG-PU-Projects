@@ -30,6 +30,10 @@ let logoutPending = false;
 let fragmentInvitation = false;
 let accessPanel;
 const incomingFragment = readAccountFragment();
+globalThis.addEventListener('hashchange', () => {
+  const params = new URLSearchParams(location.hash.slice(1));
+  if (['invite', 'access', 'access-error', 'access-result'].some(key => params.has(key))) location.reload();
+});
 let incomingInvitation = incomingFragment.invitation;
 const preserveInitialAccess = Boolean(incomingFragment.proof);
 delete incomingFragment.invitation;
@@ -308,7 +312,7 @@ function renderAgents() {
 }
 
 function render() {
-  ui.identity.textContent = `${identity.email} · ${display(membership.name)} · ${roleName[membership.role] ?? membership.role}`;
+  ui.identity.textContent = `${identity.email} · ${display(membership.name)} · ${roleName[membership.role] ?? membership.role} · ${identity.emailVerified ? 'почта подтверждена' : 'почта не подтверждена'}`;
   renderAccountSummary(ui, membership, screen);
   if (membership.role === 'merchant') renderMerchant(); else renderParticipant(ui, membership, screen);
   renderPayments(ui, screen);

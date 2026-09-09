@@ -1,4 +1,5 @@
 import { accountHandler } from './account.mjs';
+import { accessHandler } from './access.mjs';
 import { referralHandler, referralRoute } from './referrals.mjs';
 import { createServer } from 'node:http';
 import { apiOrigins as origins } from '../../shared/contracts/deployment.mjs';
@@ -38,6 +39,7 @@ async function body(req) {
 export function createHttpServer(app, { mode = 'fixture', cookieSecure = true, agentHandler = null } = {}) {
   if (!['fixture','hybrid','real'].includes(mode)) throw new Error('Unsupported mode.');
   const accounts=accountHandler(app,{body,json,secure:cookieSecure});
+  const access=accessHandler(app,{body,json,secure:cookieSecure});
   const referrals=referralHandler(app,{body,json});
   const server = createServer(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
@@ -66,8 +68,9 @@ export function createHttpServer(app, { mode = 'fixture', cookieSecure = true, a
         if(await referrals(req,res,path))return;
       }
       if (mode !== 'fixture' && path.startsWith('/api/account/')) {
-        const authentication=['/api/account/register','/api/account/login','/api/account/password'].includes(path);
+        const authentication=['register','login','password','forgot','activate','reset','contact-email','verify-contact','yandex/start','yandex/unlink','yandex/callback'].some(name=>path===`/api/account/${name}`);
         if (!rate(`${authentication?'auth':'account'}:${req.socket.remoteAddress}`,authentication?30:300)) return json(res,429,{error:{code:'RATE_LIMIT',message:'Повторите через минуту'}});
+        if (await access(req,res,path)) return;
         if (await accounts(req,res,path)) return;
       }
       if (mode !== 'fixture' && agentHandler && await agentHandler(req,res,path)) return;
