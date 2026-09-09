@@ -79,6 +79,15 @@ export function renderParticipant(ui, membership, screen) {
   addFact(ui.summary, 'Версия условий', program?.policy?.version);
   if (membership.role === 'partner' && Array.isArray(personal?.payments)) {
     addFact(ui.summary, 'Подтверждённых оплат', personal.payments.length);
+    const testPayments = personal.payments.filter(payment => payment.testMode === true);
+    if (testPayments.length) {
+      addFact(ui.summary, 'Оплат в тестовом магазине', testPayments.length);
+      const entries = Array.isArray(personal.ledger) ? personal.ledger.filter(entry => entry.testMode === true) : null;
+      const net = entries?.every(entry => Number.isSafeInteger(entry.amountMinor))
+        ? entries.reduce((total, entry) => total + entry.amountMinor, 0) : null;
+      addFact(ui.summary, 'Тестовые комиссии с учётом возвратов', rub(net));
+      ui.summary.append(element('p', 'Тестовый магазин: эти начисления не входят в сумму к выплате.'));
+    }
   }
   ui.share.replaceChildren();
   if (screen.share) {

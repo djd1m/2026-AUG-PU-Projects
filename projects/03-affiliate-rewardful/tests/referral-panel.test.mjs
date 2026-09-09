@@ -119,3 +119,15 @@ test('clear removes owner status, tenant instructions and an issued key before p
   assert.match(container.textContent, /Ваш результат рекомендаций/);
   assert.match(container.textContent, /Переходы4/);
 });
+
+test('partner summary separates test commission and applies visible refund adjustment without exposing live ledger totals',async()=>{
+  const {renderParticipant}=await import('../shared/ui/account/helpers.mjs');
+  const ui=Object.fromEntries(['merchant','participant','owner-invite','enroll','summary','share'].map(id=>[id,new FakeNode('section')]));
+  const screen={primary:{program:{enrollment:true,policy:{bps:2000,version:1}},personal:{payments:[{testMode:true}],
+    ledger:[{testMode:true,amountMinor:19800},{testMode:false,amountMinor:99999}]}}};
+  renderParticipant(ui,{role:'partner'},screen);
+  assert.match(ui.summary.textContent,/Тестовые комиссии с учётом возвратов: 198\.00 ₽/);
+  assert.match(ui.summary.textContent,/не входят в сумму к выплате/);assert.doesNotMatch(ui.summary.textContent,/999\.99/);
+  screen.primary.personal.ledger.push({testMode:true,amountMinor:-9900});ui.summary.replaceChildren();
+  renderParticipant(ui,{role:'partner'},screen);assert.match(ui.summary.textContent,/99\.00 ₽/);assert.doesNotMatch(ui.summary.textContent,/198\.00/);
+});
