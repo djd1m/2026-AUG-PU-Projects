@@ -27,7 +27,7 @@
 | shared/ui/account/referrals.mjs | referral-client-ui |
 | tests/referral-client.test.mjs | referral-client-ui |
 | tests/referral-panel.test.mjs | referral-client-ui |
-| docs/integrations/referral-funnel.md | referral-client-ui |
+| docs/integrations/referral-funnel.md | координатор |
 | shared/application/index.mjs | координатор |
 | shared/domain/events.mjs | координатор |
 | shared/domain/registry.mjs | координатор |
@@ -65,3 +65,5 @@
 | package-lock.json | координатор |
 
 Implementation dispatch follows independent VALIDATE only. Each writer uses a separate worktree. Coordinator alone uses browser/VPS and integrates receipts. Core owns the additive referralMigration tables; coordinator owns checkout connector columns in shared/payments/schema.mjs and appends referralMigration after existing migrations. Source dispatch snapshots live under current run/evidence/. Any additional file requires an ownership entry before creation; no overlapping directory fallback.
+
+2026-09-09 handoff: after terminal referral-client receipts and cherry-pick, coordinator owns integration guide corrections requested by final reviewer. Other client files retain their completed worker attribution.
