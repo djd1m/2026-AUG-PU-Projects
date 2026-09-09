@@ -32,5 +32,27 @@
     "scope": "account, not feature"
   },
   "usage": null,
-  "missing": "Tool-run outputs summarized from recorded receipts; no complete token usage or active time measurement."
+  "missing": "Tool-run outputs summarized from recorded receipts; no complete token usage or active time measurement.",
+  "review_followup_tests": {
+    "main_commit": "c1ac69d",
+    "passed": 167,
+    "failed": 0,
+    "duration_ms": 65333.930263,
+    "build_modules": 126
+  },
+  "initial_release_candidate": {
+    "commit": "0aac8ad",
+    "tests_passed": 127,
+    "tests_failed": 0,
+    "duration_ms": 47045.658835,
+    "build_modules": 103,
+    "image": "n3-api:bridge-0aac8ad",
+    "image_manifest": "sha256:db70227e7c208d0858b8ce39aca70d18a12a2652302b1e0165a34ec568904e42"
+  },
+  "proofwall_baseline": {
+    "source": "a16c0be P1 source, migration019 applied to disposable DB",
+    "web_tests_passed": 782,
+    "failed": 0,
+    "duration_s": 38.68
+  }
 }

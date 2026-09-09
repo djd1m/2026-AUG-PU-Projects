@@ -1,0 +1,78 @@
+TRACE contour=project specification=projects/01-testimonials-senja/docs/Specification.md pseudocode=projects/01-testimonials-senja/docs/Pseudocode.md
+MALFORMED project specification line=7 value=FR-001: Регистрация и проект
+MALFORMED project specification line=19 value=FR-002: Форма сбора — текстовый отзыв
+MALFORMED project specification line=46 value=FR-003: Форма сбора — видео-отзыв
+MALFORMED project specification line=71 value=FR-004: Модерация
+MALFORMED project specification line=84 value=FR-005: Публичная страница Wall of Love
+MALFORMED project specification line=110 value=FR-006: Встраиваемый виджет
+MALFORMED project specification line=137 value=FR-007: Тарифы
+MALFORMED project specification line=150 value=FR-008: Приём оплаты
+MALFORMED project specification line=182 value=FR-GROWTH-001: One-click share в момент получения ценности
+MALFORMED project specification line=252 value=FR-GROWTH-002: Партнёрская атрибуция до платной конверсии
+MALFORMED project specification line=314 value=FR-GROWTH-003: Attribution badge на бесплатном тарифе
+MALFORMED project specification line=384 value=FR-GROWTH-004: Персональные коды партнёрам с аудиторией
+MALFORMED project specification line=429 value=FR-GROWTH-005: Индексируемость Wall of Love с самостоятельной ценностью
+MALFORMED project specification line=483 value=FR-NFR-PERF-001: Производительность виджета
+MALFORMED project specification line=486 value=FR-NFR-SEC-001: Мульти-арендная изоляция
+MALFORMED project specification line=516 value=FR-NFR-SEC-002: Граница применения AI-транскрипции (non-negotiable)
+MALFORMED project specification line=565 value=FR-NFR-SEC-003: Rate limiting и защита формы
+MALFORMED project specification line=568 value=FR-NFR-A11Y-001: Доступность публичной страницы
+GAP project specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=project report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=project criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-009-login specification=projects/01-testimonials-senja/docs/features/fr-009-login/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-009-login/02_pseudocode.md
+GAP fr-009-login specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-009-login report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=fr-009-login criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-010-password-change specification=projects/01-testimonials-senja/docs/features/fr-010-password-change/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-010-password-change/02_pseudocode.md
+GAP fr-010-password-change specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-010-password-change report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=fr-010-password-change criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-011-partner-dashboard specification=projects/01-testimonials-senja/docs/features/fr-011-partner-dashboard/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-011-partner-dashboard/02_pseudocode.md
+GAP fr-011-partner-dashboard specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-011-partner-dashboard report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=fr-011-partner-dashboard criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-012-transcribe-retry specification=projects/01-testimonials-senja/docs/features/fr-012-transcribe-retry/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-012-transcribe-retry/02_pseudocode.md
+GAP fr-012-transcribe-retry specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-012-transcribe-retry report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=fr-012-transcribe-retry criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-014-csv-import specification=projects/01-testimonials-senja/docs/features/fr-014-csv-import/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-014-csv-import/02_pseudocode.md
+GAP fr-014-csv-import specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-014-csv-import report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=fr-014-csv-import criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-015-password-reset specification=projects/01-testimonials-senja/docs/features/fr-015-password-reset/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-015-password-reset/02_pseudocode.md
+GAP fr-015-password-reset specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-015-password-reset report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=fr-015-password-reset criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=fr-016-yandex-id specification=projects/01-testimonials-senja/docs/features/fr-016-yandex-id/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/fr-016-yandex-id/02_pseudocode.md
+GAP fr-016-yandex-id specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=fr-016-yandex-id role=validation-report path=projects/01-testimonials-senja/docs/features/fr-016-yandex-id/validation-report.md missing or unreadable
+NOT-ESTABLISHED contour=fr-016-yandex-id role=validation-report path=projects/01-testimonials-senja/docs/features/fr-016-yandex-id/validation-report.md missing or unreadable
+TRACE contour=model-spend-ceiling specification=projects/01-testimonials-senja/docs/features/model-spend-ceiling/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/model-spend-ceiling/02_pseudocode.md
+GAP model-spend-ceiling specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=model-spend-ceiling report-revision line missing in validation-report.md
+NOT-ESTABLISHED contour=model-spend-ceiling criterion-scenarios table missing or malformed in validation-report.md detail=section
+TRACE contour=n3-affiliate-bridge specification=projects/01-testimonials-senja/docs/features/n3-affiliate-bridge/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/n3-affiliate-bridge/02_pseudocode.md
+COUNT requirements=6 algorithms=6 missing-algorithm=0 orphan-algorithm=0
+PASS contour=n3-affiliate-bridge bidirectional traceability complete
+TRACE contour=paid-tier-checkout specification=projects/01-testimonials-senja/docs/features/paid-tier-checkout/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/paid-tier-checkout/02_pseudocode.md
+NOT-ESTABLISHED contour=paid-tier-checkout role=specification path=projects/01-testimonials-senja/docs/features/paid-tier-checkout/01_specification.md missing or unreadable
+NOT-ESTABLISHED contour=paid-tier-checkout role=specification path=projects/01-testimonials-senja/docs/features/paid-tier-checkout/01_specification.md missing or unreadable
+NOT-ESTABLISHED contour=paid-tier-checkout role=specification path=projects/01-testimonials-senja/docs/features/paid-tier-checkout/01_specification.md missing or unreadable
+TRACE contour=platform-proof specification=projects/01-testimonials-senja/docs/features/platform-proof/01_specification.md pseudocode=projects/01-testimonials-senja/docs/features/platform-proof/02_pseudocode.md
+GAP platform-proof specification no-declared-machine-ids
+COUNT requirements=0 algorithms=0 missing-algorithm=0 orphan-algorithm=0
+NOT-ESTABLISHED contour=platform-proof role=validation-report path=projects/01-testimonials-senja/docs/features/platform-proof/validation-report.md missing or unreadable
+NOT-ESTABLISHED contour=platform-proof role=validation-report path=projects/01-testimonials-senja/docs/features/platform-proof/validation-report.md missing or unreadable
+VERDICT traceability=FAIL features=11 gaps=28 inconclusive=1
+VERDICT report-revision=NOT-ESTABLISHED features=11 gaps=0 inconclusive=11
+VERDICT criterion-scenarios=NOT-ESTABLISHED features=11 gaps=0 inconclusive=11

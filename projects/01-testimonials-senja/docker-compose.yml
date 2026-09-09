@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
+    networks: [database]
     restart: unless-stopped
     environment:
       - POSTGRES_DB
@@ -18,6 +19,7 @@ services:
     # Тег закреплён: `minio/minio` без тега = :latest — невоспроизводимая сборка,
     # на VPS через месяц приедет другой образ (D-008, Phase 3 /start).
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    networks: [storage]
     restart: unless-stopped
     command: server /data
     environment:
@@ -40,6 +42,8 @@ services:
     networks:
       - default
       - talk-ai-public
+      - database
+      - storage
     environment:
       - DATABASE_URL             # postgres:// строка, включает роли app_authenticated/app_service
       # D-010: argon2 при входе считается внутри транзакции и держит соединение ~50 мс.
@@ -76,6 +80,10 @@ services:
       - YOOKASSA_SECRET_KEY
       - PAYMENTS_STUB            # true = платежи симулируются, реальных вызовов нет
       - PAID_TIER_PRICE_RUB
+      - N3_BRIDGE_ENABLED
+      - N3_BASE_URL
+      - N3_TENANT_ID
+      - N3_CONNECTOR_KEY
     # НЕ публикуется наружу. Единственная дверь снаружи — caddy.
     #
     # Публикация web ломала бы rate limit 5/час/IP: extractClientIP доверяет ПОСЛЕДНЕМУ
@@ -93,6 +101,7 @@ services:
         condition: service_healthy
 
   worker:
+    networks: [default, database, storage]
     build:
       context: .                        # корень монорепо: package-lock.json только здесь
       dockerfile: services/worker/Dockerfile
@@ -109,6 +118,10 @@ services:
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS
       - DATABASE_URL
+      - N3_BRIDGE_ENABLED
+      - N3_BASE_URL
+      - N3_TENANT_ID
+      - N3_CONNECTOR_KEY
       - S3_ENDPOINT
       - S3_BUCKET
       - S3_PHOTO_BUCKET          # фото к отзывам — отдельный бакет: у них другой режим доступа
@@ -154,6 +167,10 @@ volumes:
   caddy_data:
 
 networks:
+  database:
+    internal: true
+  storage:
+    internal: true
   # Своя сеть проекта — по ней сервисы находят друг друга по имени.
   default:
   # Сеть чужого reverse-proxy (ai-hub-tls-proxy), который держит 80/443 на этой машине.
