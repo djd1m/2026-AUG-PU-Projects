@@ -70,7 +70,7 @@ try {
 } finally {
   if (stackStarted) {
     // Exact random namespace created by this invocation only; no volumes are deleted.
-    await run('docker', [...compose, 'down']).catch(() => { console.error('test_stack_cleanup_failed'); process.exitCode = 1; });
+    await run('docker', [...compose, '--profile', 'app', '--profile', 'test', 'down']).catch(() => { console.error('test_stack_cleanup_failed'); process.exitCode = 1; });
   }
   console.log(`Diagnostic handle: ${runtime}`);
 }

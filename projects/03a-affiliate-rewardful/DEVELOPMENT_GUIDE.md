@@ -60,3 +60,9 @@ this bootstrap authorization.
 Реальные SQL-suite требуют разные `TEST_DATABASE_URL` и `TEST_DATABASE_URL_MIGRATE`; без них `npm run test:integration` завершается ошибкой, а не пропускает тесты. Предпочтителен изолированный harness: он генерирует новые секреты сам. Адреса/секреты не выводятся; диагностический handle находится в `/tmp`, результаты мутаций в игнорируемой `.runtime/`.
 
 Совместимость доноров не означает безопасность их старых зависимостей: Vitest обновлён до5.0.0, PostCSS до8.5.28; см. `docs/discovery/foundation-reuse-provenance.md`.
+
+### Foundation acceptance checks
+
+`npm run verify` also runs the two real checker regression tests and `npm run check:completion`. The latter uses a project adapter pinned to p-replicator1.13.2 and its exact SHA because upstream doubles the global completion path. It changes only a temporary variable name, preserves original validations and exit codes, and rejects unknown upstream bytes. No vendor/root toolkit is modified.
+
+`npm run test:isolated -- --mutations --image` performs serial build/test validation plus Docker image build and startup, then stops both app/test profiles in its own namespace. Allow disk capacity for image layers; ENOSPC is a failed check.

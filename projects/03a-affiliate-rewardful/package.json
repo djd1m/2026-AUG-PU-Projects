@@ -27,8 +27,10 @@
     "test:workspace": "vitest run --config vitest.integration.config.ts tests/workspace.test.ts",
     "verify:infra": "node scripts/check-foundation-infra.mjs",
     "db:migrate": "tsx packages/db/src/migrate.ts",
-    "verify": "npm run typecheck && npm test && npm run build && npm run check:traceability",
-    "test:isolated": "node scripts/run-foundation-integration.mjs"
+    "verify": "npm run typecheck && npm test && npm run build && npm run check:traceability && npm run test:tooling && npm run check:completion",
+    "test:isolated": "node scripts/run-foundation-integration.mjs",
+    "check:completion": "node scripts/check-pipeline-completion.mjs . --completion --traceability --report-revision --criterion-scenarios",
+    "test:tooling": "node --test tests/pipeline-completion.test.mjs"
   },
   "workspaces": [
     "apps/*",
