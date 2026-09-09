@@ -66,4 +66,18 @@ describe('N3 native checkout durability', () => {
       async () => new Response(JSON.stringify({ orderId:randomUUID() })));
     await expect(call('external-orders',{})).rejects.toMatchObject({ code: 'N3_RESPONSE' });
   });
+  it('canceled first purchase requires explicit new key while unresolved retry cannot create another invoice', async () => {
+    const a=await seed();await bound(a.accountId,a.email);const oldKey=randomUUID(),newKey=randomUUID();let calls=0;
+    const deps={call:async()=>{calls++;return {orderId:randomUUID(),amountMinor:99000,currency:'RUB',testMode:true};},
+      create:async(_p:string,_a:number,_url:string,key:string)=>({providerSessionId:`pay-${key}`,redirectUrl:`https://yookassa.test/${key}`})};
+    const original=await beginN3Checkout(a.accountId,a.projectId,'https://proofwall.test/',oldKey,deps);
+    expect(await beginN3Checkout(a.accountId,a.projectId,'https://proofwall.test/',newKey,deps)).toEqual(original);
+    expect(calls).toBe(1);
+    await withService(c=>c.query("update n3_checkout_intents set state='canceled' where account_id=$1",[a.accountId]));
+    await expect(beginN3Checkout(a.accountId,a.projectId,'https://proofwall.test/',oldKey,deps)).rejects.toMatchObject({code:'N3_PAYMENT_CANCELED',status:409});
+    const next=await beginN3Checkout(a.accountId,a.projectId,'https://proofwall.test/',newKey,deps);
+    expect(next?.providerSessionId).not.toBe(original?.providerSessionId);expect(calls).toBe(2);
+    expect((await withService(c=>c.query('select paid_until from projects where id=$1',[a.projectId]))).rows[0].paid_until).toBeNull();
+    expect((await withService(c=>c.query('select id from n3_checkout_intents where account_id=$1',[a.accountId]))).rows).toHaveLength(2);
+  });
 });

@@ -39,11 +39,14 @@ export async function acknowledgeN3(pool: Pool, job: N3Job, error?: string): Pro
       `update n3_bridge_outbox set delivered_at=case when $3::text is null then now() else null end,
         last_error=$3, lease_token=null,lease_until=null,
         next_attempt_at=now()+($4::int*interval '1 second')
-        where id=$1 and lease_token=$2 and lease_until>now() and delivered_at is null returning account_id`,
+        where id=$1 and lease_token=$2 and lease_until>now() and delivered_at is null
+        returning account_id,kind,business_key,payload`,
       [job.id, job.lease_token, error ?? null, Math.min(3600, 60 * 2 ** Math.min(6, job.attempts - 1))]);
-    if (result.rowCount && !error && job.kind === 'signup') {
-      await client.query('update n3_email_proofs set bound_at=now() where account_id=$1 and email=$2',
-        [job.account_id, job.payload.email]);
+    const delivered = result.rows[0];
+    if (delivered && !error && delivered.kind === 'signup') {
+      await client.query(`update n3_email_proofs set bound_at=now() where account_id=$1 and email=$2
+        and account_id::text || ':' || id::text = $3`,
+        [delivered.account_id, delivered.payload.email, delivered.business_key]);
     }
     return !!result.rowCount;
   });

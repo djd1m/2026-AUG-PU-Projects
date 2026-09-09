@@ -38,7 +38,7 @@ describe('N3 durable outbox',()=>{
   it('network failure remains pending and successful signup acknowledgement marks binding',async()=>{
     const accountId=await seed(),email=`${accountId}@example.test`,proofId=randomUUID();
     await pool.query('insert into n3_email_proofs(account_id,id,email) values($1,$2,$3)',[accountId,proofId,email]);
-    await transaction(c=>enqueueN3(c,accountId,'signup',proofId,{customerId:accountId,email,emailVerified:true}));
+    await transaction(c=>enqueueN3(c,accountId,'signup',`${accountId}:${proofId}`,{customerId:accountId,email,emailVerified:true}));
     await runN3Batch(pool,async()=>{throw new Error('offline');});
     let job=(await pool.query('select * from n3_bridge_outbox where account_id=$1',[accountId])).rows[0];
     expect(job.delivered_at).toBeNull();expect(job.last_error).toBe('N3_DELIVERY_FAILED');
@@ -60,5 +60,18 @@ describe('N3 durable outbox',()=>{
     expect((await pool.query('select count(*)::int as n from n3_bridge_outbox where delivered_at is null')).rows[0].n).toBe(10000);
     await expect(transaction(c=>enqueueN3(c,accountId,'payment.succeeded',winner,{key:winner}))).resolves.toBeUndefined();
     await pool.query('delete from accounts where id=$1',[accountId]);
+  });
+  it('old signup cannot bind a newer same-email proof and acknowledgement uses persisted job fields',async()=>{
+    const accountId=await seed(),email=`${accountId}@example.test`,oldId=randomUUID(),newId=randomUUID();
+    await pool.query('insert into n3_email_proofs(account_id,id,email) values($1,$2,$3)',[accountId,oldId,email]);
+    await transaction(c=>enqueueN3(c,accountId,'signup',`${accountId}:${oldId}`,{customerId:accountId,email,emailVerified:true}));
+    const old=(await claimN3Jobs(pool)).find(j=>j.account_id===accountId)!;
+    await pool.query('update n3_email_proofs set id=$2 where account_id=$1',[accountId,newId]);
+    expect(await acknowledgeN3(pool,old)).toBe(true);
+    expect((await pool.query('select bound_at from n3_email_proofs where account_id=$1',[accountId])).rows[0].bound_at).toBeNull();
+    await transaction(c=>enqueueN3(c,accountId,'signup',`${accountId}:${newId}`,{customerId:accountId,email,emailVerified:true}));
+    const current=(await claimN3Jobs(pool)).find(j=>j.account_id===accountId)!;
+    expect(await acknowledgeN3(pool,{...current,account_id:randomUUID(),kind:'payment.succeeded',payload:{email:'forged@example.test'}})).toBe(true);
+    expect((await pool.query('select bound_at from n3_email_proofs where account_id=$1',[accountId])).rows[0].bound_at).not.toBeNull();
   });
 });

@@ -20,6 +20,7 @@ export function BillingBlock({ slug, priceRub, paidUntil }: {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState<string | null>(null);
+  const [canceled, setCanceled] = useState(false);
 
   async function pay() {
     setBusy(true); setError(null);
@@ -32,8 +33,9 @@ export function BillingBlock({ slug, priceRub, paidUntil }: {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ slug, request_key: key }),
       });
-      const body = (await res.json().catch(() => null)) as { redirect_url?: string; error?: string } | null;
+      const body = (await res.json().catch(() => null)) as { redirect_url?: string; error?: string; code?: string } | null;
       if (!res.ok || !body?.redirect_url) {
+        if (res.status === 409 && body?.code === 'N3_PAYMENT_CANCELED') setCanceled(true);
         setError(body?.error ?? 'не удалось начать оплату');
         return;
       }
@@ -69,10 +71,12 @@ export function BillingBlock({ slug, priceRub, paidUntil }: {
           ? `Продлить на 30 дней — ${priceRub} ₽`
           : `Оплатить 30 дней — ${priceRub} ₽`}
       </button>
-      {active && <button className="btn" type="button" disabled={busy} onClick={() => {
+      {(active || canceled) && <button className="btn" type="button" disabled={busy} onClick={() => {
         const key = crypto.randomUUID(); sessionStorage.setItem(`pw_purchase_${slug}`, key); setRetryKey(key);
-        setError('Новая покупка подготовлена. Нажмите «Продлить», чтобы оплатить следующий период.');
-      }}>Начать покупку следующего периода</button>}
+        setCanceled(false);
+        setError(active ? 'Новая покупка подготовлена. Нажмите «Продлить», чтобы оплатить следующий период.'
+          : 'Новая покупка подготовлена. Нажмите «Оплатить», чтобы продолжить.');
+      }}>{canceled ? 'Начать новую покупку после отмены' : 'Начать покупку следующего периода'}</button>}
     </>
   );
 }

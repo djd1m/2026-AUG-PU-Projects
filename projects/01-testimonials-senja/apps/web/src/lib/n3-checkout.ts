@@ -48,6 +48,7 @@ export async function beginN3Checkout(accountId: string, projectId: string, retu
   if (context.rows[0].tenant_id !== config.tenantId || isStub()) throw new N3Error('N3_CONFIGURATION');
   if (typeof requestKey !== 'string' || !N3_UUID.test(requestKey)) throw new N3Error('N3_REQUEST_KEY', 400);
   let intent = await withService(client => reserveNativeIntent(client, accountId, projectId, requestKey));
+  if (intent.state === 'canceled') throw new N3Error('N3_PAYMENT_CANCELED', 409);
   if (intent.state === 'completed' && intent.provider_id) return { providerSessionId: intent.provider_id, redirectUrl: returnUrl };
   if (intent.provider_id && intent.redirect_url) return { providerSessionId: intent.provider_id, redirectUrl: intent.redirect_url };
   if (Date.now() - new Date(intent.created_at).getTime() >= 23 * 3600_000) throw new N3Error('N3_RECONCILIATION', 409);

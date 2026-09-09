@@ -26,6 +26,7 @@ const messages: Record<string, string> = {
   N3_QUEUE_FULL: 'Доставка временно занята. Повторите позже.', N3_PROOF_REQUIRED: 'Подтвердите почту для партнёрской покупки.',
   N3_BIND_PENDING: 'Подтверждение почты сохранено. Доставка в партнёрскую программу ожидается.',
   N3_RECONCILIATION: 'Платёж требует сверки. Новый платёж автоматически не создаётся.',
+  N3_PAYMENT_CANCELED: 'Предыдущая оплата отменена. Можно явно начать новую покупку.',
 };
 export function n3Failure(error: unknown): NextResponse {
   const status = error instanceof N3Error ? error.status : 503;
