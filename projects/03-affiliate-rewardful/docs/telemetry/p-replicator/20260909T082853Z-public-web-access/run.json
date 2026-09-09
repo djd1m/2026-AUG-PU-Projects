@@ -18,23 +18,41 @@
   ],
   "comparison_id": null,
   "baseline_revision": "be41521f510e62eafe8858eace9817d5462c4035",
-  "final_revision": null,
+  "final_revision": "57d5bfe937284975aebb94442f2fa5a7ab096d01 plus final documentation and evidence commit",
   "spec_sha256": null,
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-09T08:28:53.047332+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-09T08:48:34.488914+00:00",
+  "status": "accepted",
   "actual_model": "gpt-6-astra",
   "actual_effort": "high",
-  "acceptance_evidence": [],
-  "quality": {},
-  "metrics": {},
+  "acceptance_evidence": [
+    "evidence/acceptance.json",
+    "evidence/public-e2e.tap",
+    "evidence/public-source-review.md",
+    "evidence/provider-usage.json"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "public_ui_tests": 49,
+    "core_tests": 47,
+    "guard_mutations_killed": 16,
+    "open_findings": 0,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 1181442,
+    "active_wall_ms": null,
+    "cost": null,
+    "usage": "evidence/provider-usage.json"
+  },
   "telemetry_status": "partial",
   "missing_data": [
     "Read-only runtime reconnaissance before record; initial inspection duration not included.",
-    "Host version, billing cost and active interval union unavailable."
+    "Host version, billing cost and active interval union unavailable.",
+    "Final reporting tail after provider usage sample excluded; no stage active-time union or cost."
   ]
 }

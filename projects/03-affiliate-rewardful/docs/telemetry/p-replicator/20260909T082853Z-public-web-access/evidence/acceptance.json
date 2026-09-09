@@ -1,0 +1,203 @@
+{
+  "containers": [
+    {
+      "name": "n3-shared-postgres-1",
+      "health": "healthy",
+      "image": "sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+      "ports": {},
+      "networks": [
+        "n3-database"
+      ]
+    },
+    {
+      "name": "n3-shared-api-1",
+      "health": "healthy",
+      "image": "sha256:223a093993e2d867dd53d34d1710583acb5bff530f0f052c3685bbba2760915e",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13030"
+          }
+        ]
+      },
+      "networks": [
+        "n3-database",
+        "n3-frontend"
+      ]
+    },
+    {
+      "name": "n3-a-frontend-1",
+      "health": "healthy",
+      "image": "sha256:8bc695a19e2dd8808bdeac536e5e34fb7de7742675fb64056d058704cb5694c4",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13031"
+          }
+        ]
+      },
+      "networks": [
+        "n3-frontend",
+        "talk-ai-public"
+      ]
+    },
+    {
+      "name": "n3-b-frontend-1",
+      "health": "healthy",
+      "image": "sha256:ba16cc3ae2e3ab3e82c382a3c59effd798327cc548ada9f93521ee7cd170bc5d",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13032"
+          }
+        ]
+      },
+      "networks": [
+        "n3-frontend",
+        "talk-ai-public"
+      ]
+    },
+    {
+      "name": "n3-c-frontend-1",
+      "health": "healthy",
+      "image": "sha256:851b83884a34f04571a477c34998723f90c4d6f989d46668ad7cff02141d5ded",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13033"
+          }
+        ]
+      },
+      "networks": [
+        "n3-frontend",
+        "talk-ai-public"
+      ]
+    },
+    {
+      "name": "n3-d-frontend-1",
+      "health": "healthy",
+      "image": "sha256:3be120f8d121e72d6faae849753c1b001b94e1e6d71a5554f0688d6bac132168",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13034"
+          }
+        ]
+      },
+      "networks": [
+        "n3-frontend",
+        "talk-ai-public"
+      ]
+    }
+  ],
+  "database_internal": true,
+  "database_members": [
+    "n3-shared-api-1",
+    "n3-shared-postgres-1"
+  ],
+  "public_probes": [
+    {
+      "url": "https://n3-a.212.192.0.33.sslip.io/",
+      "status": "HTTP/2 200 ",
+      "tls_verification": "default enabled"
+    },
+    {
+      "url": "https://n3-b.212.192.0.33.sslip.io/",
+      "status": "HTTP/2 200 ",
+      "tls_verification": "default enabled"
+    },
+    {
+      "url": "https://n3-c.212.192.0.33.sslip.io/",
+      "status": "HTTP/2 200 ",
+      "tls_verification": "default enabled"
+    },
+    {
+      "url": "https://n3-d.212.192.0.33.sslip.io/",
+      "status": "HTTP/2 200 ",
+      "tls_verification": "default enabled"
+    }
+  ],
+  "public_e2e_tests": 49,
+  "public_e2e_failed": 0,
+  "public_e2e_duration_ms": 32828.300038,
+  "core_tests": 47,
+  "mutants_killed": 16,
+  "build_modules": 59,
+  "independent_review": "no findings",
+  "accepted_at": "2026-09-09T08:48:34.488914+00:00",
+  "scope": "Public synthetic F1; public DNS and browser on VPS; remote web fetcher rejected sslip URLs without probing. ACME issuance and TLS/browser checks succeeded.",
+  "caddy_source_sha256": "a0766011ce8e7599ac1422a60261943ae7303918360da9008e3e293e8c1146de",
+  "caddy_bind_mount_note": "Existing file mount had prior inode. Reloaded verified internal candidate; new independent bind confirms persistent host source for recreation. Existing sites not restarted.",
+  "demo_checks": [
+    {
+      "page": "index",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1428,
+      "links": 12
+    },
+    {
+      "page": "index",
+      "width": 390,
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "page": "a",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1428,
+      "links": 3
+    },
+    {
+      "page": "a",
+      "width": 390,
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "page": "b",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1428,
+      "links": 4
+    },
+    {
+      "page": "b",
+      "width": 390,
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "page": "c",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1428,
+      "links": 3
+    },
+    {
+      "page": "c",
+      "width": 390,
+      "viewport": 390,
+      "document": 378
+    },
+    {
+      "page": "d",
+      "width": 1440,
+      "viewport": 1440,
+      "document": 1428,
+      "links": 3
+    },
+    {
+      "page": "d",
+      "width": 390,
+      "viewport": 390,
+      "document": 378
+    }
+  ]
+}
