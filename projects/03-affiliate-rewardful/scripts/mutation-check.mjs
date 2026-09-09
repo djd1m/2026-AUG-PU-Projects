@@ -34,6 +34,12 @@ const mutations=[{
 },{
  name:'B losing reservation refresh',file:'variants/b-customer/app/app.mjs',
  from:'if (error instanceof ApiError && error.status === 409)',to:'if (false)',tests:['tests/b-ui-boundary.test.mjs'],
+},{
+ name:'C optional lab activation after success',file:'variants/c-partner/app/app.mjs',
+ from:'await refreshLab();\n    labActive = true;',to:'labActive = true;\n    await refreshLab();',tests:['tests/c-ui-boundary.test.mjs'],
+},{
+ name:'C partner boot independent of merchant',file:'variants/c-partner/app/app.mjs',
+ from:"api = await connect('C', 'partner');",to:"api = await connect('C', 'partner'); await refreshLab();",tests:['tests/c-ui-boundary.test.mjs'],
 }];
 const selected=process.argv.includes('--all')?mutations:mutations.filter(x=>x.name.startsWith('HTTP'));
 const results=[];
