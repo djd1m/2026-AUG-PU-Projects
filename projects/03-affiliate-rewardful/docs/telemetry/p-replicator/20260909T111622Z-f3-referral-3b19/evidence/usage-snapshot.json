@@ -1,6 +1,6 @@
 {
   "run_id": "20260909T111622Z-f3-referral-3b19",
-  "snapshot_at": "2026-09-09T13:43:33.103215+00:00",
+  "snapshot_at": "2026-09-09T13:52:24.649507+00:00",
   "scope": "token_usage_record responses at/after run start through this snapshot; deduplicated by thread_id,response_id",
   "agents": [
     {
@@ -12,17 +12,17 @@
           "effort": "high"
         }
       ],
-      "responses": 150,
+      "responses": 169,
       "first_response": "2026-09-09T11:16:50.375Z",
-      "last_response": "2026-09-09T13:43:32.556Z",
+      "last_response": "2026-09-09T13:52:24.504Z",
       "usage": {
-        "input_tokens": 20223842,
-        "cached_input_tokens": 19796736,
+        "input_tokens": 23996258,
+        "cached_input_tokens": 23544320,
         "cache_write_input_tokens": 0,
-        "output_tokens": 93002,
-        "reasoning_output_tokens": 25462,
-        "total_tokens": 20316844,
-        "uncached_input_tokens": 427106
+        "output_tokens": 105309,
+        "reasoning_output_tokens": 31923,
+        "total_tokens": 24101567,
+        "uncached_input_tokens": 451938
       }
     },
     {
@@ -34,17 +34,17 @@
           "effort": "xhigh"
         }
       ],
-      "responses": 63,
+      "responses": 67,
       "first_response": "2026-09-09T11:17:32.601Z",
-      "last_response": "2026-09-09T13:42:22.320Z",
+      "last_response": "2026-09-09T13:44:29.358Z",
       "usage": {
-        "input_tokens": 6646388,
-        "cached_input_tokens": 6221952,
+        "input_tokens": 6859422,
+        "cached_input_tokens": 6425216,
         "cache_write_input_tokens": 0,
-        "output_tokens": 45951,
-        "reasoning_output_tokens": 14230,
-        "total_tokens": 6692339,
-        "uncached_input_tokens": 424436
+        "output_tokens": 49683,
+        "reasoning_output_tokens": 14482,
+        "total_tokens": 6909105,
+        "uncached_input_tokens": 434206
       }
     },
     {
@@ -93,12 +93,12 @@
     }
   ],
   "quota": {
-    "timestamp": "2026-09-09T13:42:43.410Z",
+    "timestamp": "2026-09-09T13:51:26.870Z",
     "limits": {
       "limit_id": "codex",
       "limit_name": null,
       "primary": {
-        "used_percent": 23.0,
+        "used_percent": 24.0,
         "window_minutes": 10080,
         "resets_at": 1789550338
       },

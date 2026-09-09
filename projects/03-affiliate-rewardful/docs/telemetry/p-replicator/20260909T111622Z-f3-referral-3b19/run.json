@@ -19,27 +19,95 @@
     "identity registration"
   ],
   "baseline_revision": "a87b7e9c0182b1104bfc8c3d49cb5b4cd8f827c7",
-  "final_revision": null,
+  "final_revision": "4998a45c485e74b9c9ec562cba35081d3047c9b3",
   "spec_sha256": "e642cb5fc5b5775863ac60ed7a33c0bc3bd8e025cd91affc92ec4ab9308e3c1a",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-09T11:16:22.499285+00:00",
-  "ended_at": null,
-  "status": "running",
-  "acceptance_evidence": [],
+  "ended_at": "2026-09-09T13:52:25.143929+00:00",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "docs/features/f3-referral-funnel/review-report.md",
+    "evidence/combined-regression.tap",
+    "evidence/isolated-browser.json",
+    "evidence/referral-mutations.json",
+    "evidence/public-deployment.json"
+  ],
   "quality": {
     "validation": "READY",
     "baseline_tests": 83,
-    "baseline_failures": 0
+    "baseline_failures": 0,
+    "required_gates_passed": true,
+    "ac_met": 10,
+    "ac_total": 10,
+    "confirmed_findings_by_severity": {
+      "high": 1,
+      "medium": 2,
+      "low": 1
+    },
+    "false_positive_findings": 0,
+    "known_defects_missed": null,
+    "regressions": {
+      "observed_in_required_checks": 0,
+      "long_term": null
+    },
+    "followup_status": "pending",
+    "followup_due_at": "2026-09-16T13:52:25.143929+00:00",
+    "backend_tests": 118,
+    "public_cjm_tests": 49,
+    "isolated_browser_tests": 2,
+    "public_account_tests": 1,
+    "public_protocol_tests": 1,
+    "live_provider_acceptance": "not_performed"
   },
-  "metrics": {},
+  "metrics": {
+    "wall_elapsed_seconds": 9362.645,
+    "active_elapsed_seconds": null,
+    "usage_snapshot_at": "2026-09-09T13:52:24.649507+00:00",
+    "usage": {
+      "input_tokens": 37029646,
+      "cached_input_tokens": 35954048,
+      "uncached_input_tokens": 1075598,
+      "output_tokens": 206535,
+      "reasoning_output_tokens": 57489,
+      "total_tokens": 37236181
+    },
+    "cost": null,
+    "currency": null,
+    "weekly_limit_snapshot": {
+      "timestamp": "2026-09-09T13:51:26.870Z",
+      "limits": {
+        "limit_id": "codex",
+        "limit_name": null,
+        "primary": {
+          "used_percent": 24.0,
+          "window_minutes": 10080,
+          "resets_at": 1789550338
+        },
+        "secondary": null,
+        "credits": {
+          "has_credits": false,
+          "unlimited": false,
+          "balance": "0"
+        },
+        "individual_limit": null,
+        "spend_control_reached": null,
+        "plan_type": "pro",
+        "rate_limit_reached_type": null
+      }
+    }
+  },
   "telemetry_status": "partial",
   "missing_data": [
-    "Initial instruction reading before run creation; no implementation or feature design started.",
-    "Actual current model confirmation and provider usage pending; unavailable counters remain null."
+    "Billing costs/rates are unavailable; token usage is measured but no numerical savings baseline exists.",
+    "Active work vs user/approval/infrastructure waiting cannot be reconstructed from wall time.",
+    "Usage snapshot excludes subsequent reporting/telemetry commit responses; allocation is by provider response timestamp.",
+    "Initial instruction reading preceded run creation; source implementation/design began after it.",
+    "Seven-day observation and live merchant/payment acceptance have not occurred."
   ],
   "actual_model": "gpt-6-astra",
-  "actual_effort": "high"
+  "actual_effort": "high",
+  "comparison_id": null
 }
