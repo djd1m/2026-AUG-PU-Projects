@@ -6,104 +6,107 @@
 
 Общие типы: `UUID`, `Timestamp` (UTC instant), `Date` (ISO local date), `Month` (YYYY-MM), `Money` (signed int64 minor units, арифметика arbitrary-precision с проверкой границ перед хранением), `Currency=RUB`, `Hash=SHA256`, `OpaqueID` (не UUID провайдера), `EvidenceRef` (закрытая ссылка/id + hash, без содержимого документа), `ReasonCode` (версионированный код причины). `?` означает nullable, не неявный default.
 
-Каждая перечисленная ниже persisted entity **содержит `id: UUID`, `created_at: Timestamp`**. Все N3a tenant-owned entities дополнительно содержат `tenant_id: UUID`; для User/Session/ProviderProof это не требуется. Все внешние ID namespace-scoped; FK на tenant/program сверяются совместно. JSON snapshot использует ровно названный тип, не произвольный объект.
+Каждая перечисленная ниже persisted entity **содержит `id: UUID`, `created_at: Timestamp`**. Все N3a tenant-owned entities дополнительно содержат `tenant_id: UUID`; для User/Session/ProviderProof/RecoveryGate это не требуется. RecoveryGate — deployment singleton; PayerYearGuard принадлежит проверенному payer ownership scope, один guard на его person/year для всех его программ, независимо от base category. Все внешние ID namespace-scoped; FK на tenant/program сверяются совместно. JSON snapshot использует ровно названный тип, не произвольный объект.
 
 | Entity | Логические поля кроме общих |
 |---|---|
 | User | identity_hash:Hash, password_hash:string, enabled:boolean |
-| EnrollmentGrant | program_id:UUID, invited_identity_hash:Hash, role:owner/partner, partner_id:UUID?, token_hash:Hash, expires_at:Timestamp, consumed_at:Timestamp?, issued_by:UUID, authority_evidence:EvidenceRef |
+| EnrollmentGrant | program_id:UUID, invited_identity_hash:Hash, role:owner/operator/partner, scopes:set(read,configure,invite,payout,tax,reconcile), partner_id:UUID?, token_hash:Hash, expires_at:Timestamp, consumed_at:Timestamp?, enrolled_user_id:UUID?, issued_by:UUID, authority_evidence:EvidenceRef |
 | Session | user_id:UUID, token_hash:Hash, expires_at:Timestamp, revoked_at:Timestamp? |
-| Membership | user_id:UUID, program_id:UUID, role:owner/operator/partner, partner_id:UUID?, scopes:set(read,configure,invite,payout,tax), status:active/revoked |
-| Program | owner_id:UUID, name:string, public_slug:string, purpose:n1_commissions/platform_leads, status:draft/active/paused, current_policy_id:UUID?, timezone:string, currency:Currency |
-| PolicyVersion | program_id:UUID, version:int, terms_hash:Hash, effective_at:Timestamp, rate_bp:int[1..10000]?, attribution_days:30/60/90, conflict_rule:explicit_promo_else_last_valid_cookie, recurring_mode:first_payment_only/every_eligible_payment, commission_months:positiveint?, currency:Currency |
-| Partner | program_id:UUID, user_id:UUID, status:invited/active/suspended, accepted_policy_id:UUID?, accepted_at:Timestamp? |
-| Invitation | program_id:UUID, partner_id:UUID, token_hash:Hash, expires_at:Timestamp, consumed_at:Timestamp? |
+| Membership | user_id:UUID, program_id:UUID, role:owner/operator/partner, partner_id:UUID?, scopes:set(read,configure,invite,payout,tax,reconcile), status:active/revoked |
+| Program | owner_id:UUID, name:string, public_slug:string, purpose:n1_commissions/platform_leads, status:draft/active/paused, current_policy_id:UUID?, timezone:string, calendar_locked_at:Timestamp?, currency:Currency |
+| PolicyVersion | program_id:UUID, version:int, terms_hash:Hash, effective_at:Timestamp, rate_bp:int[1..10000]?, attribution_days:30/60/90, conflict_rule:explicit_promo_else_last_valid_cookie, recurring_mode:every_eligible_payment, commission_duration:lifetime, currency:Currency |
+| Partner | program_id:UUID, user_id:UUID?, status:invited/active/suspended, accepted_policy_id:UUID?, accepted_at:Timestamp? |
+| Invitation | program_id:UUID, partner_id:UUID, enrollment_grant_id:UUID, token_hash:Hash, expires_at:Timestamp, consumed_at:Timestamp? |
+| EligibilityFact | program_id:UUID, subject_kind:partner/asset, subject_id:UUID, version:int, valid_from:Timestamp, status:invited/active/suspended/revoked, expires_at:Timestamp?, consent_policy_id:UUID?, actor_id:UUID, evidence:EvidenceRef |
 | PartnerAsset | program_id:UUID, partner_id:UUID, kind:link/promo, public_code:string, status:active/revoked, expires_at:Timestamp?, cohort:string |
-| Attribution | connection_id:UUID, program_id:UUID, partner_id:UUID?, customer_id:OpaqueID, project_id:OpaqueID, asset_id:UUID?, source:promo/cookie/none, reason:ReasonCode, policy_id:UUID, registered_at:Timestamp, registration_payload_hash:Hash, first_paid_at:Timestamp?, status:pending/eligible/rejected, consent_evidence:EvidenceRef? |
+| Attribution | connection_id:UUID, program_id:UUID, partner_id:UUID?, customer_id:OpaqueID, project_id:OpaqueID, asset_id:UUID?, source:promo/cookie/none, reason:ReasonCode, policy_id:UUID, registered_at:Timestamp, registration_payload_hash:Hash, eligibility_fact_ids:list(UUID), registration_eligible:boolean, eligibility_reason:ReasonCode, first_paid_at:Timestamp?, status:pending/eligible/rejected, consent_evidence:EvidenceRef? |
 | Connection | program_id:UUID, source:N1, environment:test/live, merchant_id:OpaqueID, verification_contract_ref:EvidenceRef, hmac_key_ids:set(string), status:configured/active/paused, cutover_at:Timestamp?, cutover_manifest:EvidenceRef?, reconcile_cursor:string?, verified_watermark:Timestamp? |
 | N1Outbox | N1-owned only: connection_id:UUID, event_id:UUID, event:BusinessEvent/RegistrationEvent, body_hash:Hash, sequence:int64, status:pending/leased/acknowledged, attempts:int, next_attempt_at:Timestamp, lease_until:Timestamp?, acknowledged_at:Timestamp? |
 | EventReceipt | connection_id:UUID, event_id:UUID, event_type:payment.succeeded/refund.succeeded, body_hash:Hash, provider_object_id:OpaqueID, result:applied/duplicate_business, applied_at:Timestamp |
 | ProviderProof | connection_id:UUID, object_id:OpaqueID, kind:payment/refund, merchant_id:OpaqueID, environment:test/live, status:succeeded, amount:Money, currency:Currency, parent_payment_id:OpaqueID?, occurred_at:Timestamp, fetched_at:Timestamp, response_hash:Hash, verified_by:N1, signature_event_id:UUID, event_time_basis:payment_captured_at/refund_created_at |
 | Payment | connection_id:UUID, program_id:UUID, attribution_id:UUID?, provider_payment_id:OpaqueID, customer_id:OpaqueID, checkout_id:OpaqueID, amount:Money, currency:Currency, occurred_at:Timestamp, proof_id:UUID, policy_id:UUID?, commission_amount:Money, refunded_amount:Money, reversed_commission:Money, eligible:boolean, reason:ReasonCode |
-| Refund | connection_id:UUID, payment_id:UUID, provider_refund_id:OpaqueID, amount:Money, occurred_at:Timestamp, proof_id:UUID, reversal_amount:Money |
-| LedgerEntry | program_id:UUID, partner_id:UUID, payment_id:UUID, refund_id:UUID?, policy_id:UUID, kind:commission/refund_adjustment, delta:Money, currency:Currency, occurred_at:Timestamp, accounted_month:Month, recorded_at:Timestamp, source_receipt_id:UUID |
+| Refund | connection_id:UUID, payment_id:UUID, provider_refund_id:OpaqueID, amount:Money, occurred_at:Timestamp, proof_id:UUID |
+| RefundAllocationRevision | payment_id:UUID, refund_set_hash:Hash, basis_totals:map(Month,Money), source_receipt_id:UUID |
+| LedgerEntry | program_id:UUID, partner_id:UUID, payment_id:UUID, refund_id:UUID?, policy_id:UUID, kind:commission/refund_adjustment/refund_reallocation, allocation_revision_id:UUID?, basis_month:Month, delta:Money, currency:Currency, occurred_at:Timestamp, accounted_month:Month, recorded_at:Timestamp, source_receipt_id:UUID |
 | AccountingPeriod | program_id:UUID, month:Month, timezone:string, state:open/frozen, due_date:Date, closed_at:Timestamp?, register_id:UUID? |
-| Registry | program_id:UUID, period_id:UUID, revision:int, frozen_at:Timestamp, due_date:Date, source_watermark:Timestamp, snapshot_hash:Hash |
+| Registry | program_id:UUID, period_id:UUID, revision:int, frozen_at:Timestamp, due_date:Date, source_watermark:Timestamp, snapshot_hash:Hash, audit_artifact_hash:Hash |
 | RegistryRow | registry_id:UUID, partner_id:UUID, gross_delta:Money, carry_in:Money, payable_gross:Money, carry_out:Money, initial_tax_snapshot_id:UUID?, exceptions:list(UUID), row_hash:Hash |
 | Allocation | row_id:UUID, ledger_entry_id:UUID |
 | Carry | program_id:UUID, partner_id:UUID, source_row_id:UUID, amount:Money<=0, consumed_by_row_id:UUID? |
-| TaxProfile | partner_id:UUID, payer_id:OpaqueID, person_id:OpaqueID, legal_form:individual/ip/company, npd:boolean, residency:string, base_category:string, contract_ref:EvidenceRef, valid_from:Date, valid_until:Date?, status:review/approved, status_evidence:EvidenceRef, npd_total_declared:Money?, npd_limit_evidence:EvidenceRef?, npd_receipt_evidence:EvidenceRef?, approved_by:UUID?, approved_at:Timestamp? |
+| TaxProfile | partner_id:UUID, payer_id:OpaqueID, person_id:OpaqueID, legal_form:individual/ip/company, npd:boolean, residency:string, base_category:string, contract_ref:EvidenceRef, valid_from:Date, valid_until:Date?, status:review/approved, status_evidence:EvidenceRef, npd_limit_evidence:EvidenceRef?, npd_receipt_evidence:EvidenceRef?, approved_by:UUID?, approved_at:Timestamp? |
 | TaxRule | version:string, effective_from:Date, effective_until:Date?, residency:string, base_category:string, brackets:list(upper_minor:Money?,rate_bp:int), base_rule_ref:EvidenceRef, rounding_rule_ref:EvidenceRef, npd_rules_ref:EvidenceRef, approved_by:UUID, approved_at:Timestamp |
-| TaxYTD | payer_id:OpaqueID, person_id:OpaqueID, year:int, base_category:string, opening_base:Money?, opening_withheld:Money?, opening_evidence:EvidenceRef?, paid_base:Money, withheld:Money, version:int, active_preparation_id:UUID? |
-| TaxSnapshot | row_id:UUID, profile_id:UUID, rule_id:UUID, actual_payment_date:Date, year:int, ytd_version:int?, gross:Money, taxable_base:Money?, calculated_tax:Money?, withheld_tax:Money?, net:Money?, eligibility:review/approved, reason:ReasonCode, accountant_id:UUID?, approval_ref:EvidenceRef? |
-| PayoutPreparation | row_id:UUID, request_id:UUID, tax_snapshot_id:UUID, state:prepared/canceled/sent/reconciliation_required, prepared_by:UUID, expires_at:Timestamp, transfer_reference:EvidenceRef? |
+| TaxYTD | payer_id:OpaqueID, person_id:OpaqueID, year:int, base_category:string, opening_base:Money?, opening_withheld:Money?, opening_evidence:EvidenceRef?, paid_base:Money, withheld:Money, version:int |
+| PayerYearGuard | payer_id:OpaqueID, person_id:OpaqueID, year:int, active_preparation_id:UUID?, blocked_observation_ids:set(UUID), confirmed_income:Money, npd_confirmed_income:Money, npd_declared_total:Money?, npd_covered_income:Money?, npd_evidence:EvidenceRef?, version:int |
+| TaxSnapshot | row_id:UUID, profile_id:UUID, rule_id:UUID, actual_payment_date:Date, year:int, guard_id:UUID, guard_version:int, ytd_version:int?, tax_model:withholding/npd/no_withholding, gross:Money, taxable_base:Money?, calculated_tax:Money?, withheld_tax:Money?, net:Money?, eligibility:review/approved, reason:ReasonCode, accountant_id:UUID?, approval_ref:EvidenceRef?, inclusion_evidence:EvidenceRef? |
+| PayoutPreparation | row_id:UUID, request_id:UUID, tax_snapshot_id:UUID, state:prepared/canceled/sent/reconciliation_required/superseded, replaces_id:UUID?, reconciliation_observation_id:UUID?, prepared_by:UUID, expires_at:Timestamp, transfer_reference:EvidenceRef? |
 | PayoutConfirmation | row_id:UUID, preparation_id:UUID, request_id:UUID, actor_id:UUID, actual_date:Date, gross:Money, withheld:Money, net:Money, transfer_reference:EvidenceRef, statement:operator_reported_sent |
 | ReconcileException | connection_id:UUID?, program_id:UUID, event_id:UUID?, object_id:OpaqueID?, body_hash:Hash?, reason:ReasonCode, status:open/resolved, evidence:EvidenceRef?, due_at:Timestamp?, external_transfer:TransferObservation?, resolved_by:UUID?, resolved_at:Timestamp? |
 | AuditEvent | actor_id:UUID?, program_id:UUID?, action:string, target_id:UUID?, result:string, reason:ReasonCode?, correlation_id:UUID, sanitized_evidence:EvidenceRef? |
-| GrowthEvent | program_id:UUID, partner_id:UUID?, actor_id:UUID?, kind:click/signup/first_value_offer/share_open/share_intent/badge_impression/badge_click, subject_id:OpaqueID, source_ledger_id:UUID?, client_request_id:UUID? |
+| GrowthEvent | program_id:UUID, partner_id:UUID?, actor_id:UUID?, kind:click/signup/qualified_lead/first_value_offer/share_open/share_intent/badge_impression/badge_click, asset_id:UUID?, qualification_evidence:EvidenceRef?, subject_id:OpaqueID, source_ledger_id:UUID?, client_request_id:UUID? |
 | Entitlement | program_id:UUID, capability:remove_badge, status:active/revoked, valid_until:Timestamp?, grant_evidence:EvidenceRef |
 | RecoveryGate | state:normal/reconciliation_required, backup_watermark:Timestamp?, reconciliation_evidence:EvidenceRef?, approved_by:UUID?, approved_at:Timestamp? |
 
 `BusinessEvent` is an immutable versioned transport value, not another N3a entity: `{schema_version:1,event_id:UUID,event_type:payment.succeeded|refund.succeeded,connection_id:UUID,sequence:int64,customer_id:OpaqueID,project_id:OpaqueID,checkout_id:OpaqueID,attribution_id:UUID?,program_id:UUID,partner_id:UUID?,provider_payment_id:OpaqueID,provider_refund_id:OpaqueID?,amount_minor:Money,currency:RUB,occurred_at:Timestamp,event_time_basis:payment_captured_at|refund_created_at,environment:test|live,subscription_facts:null,verification:ProviderVerification}`. Refund amount is this refund's delta. Payment occurred_at is canonical payment.captured_at; refund occurred_at is canonical refund.created_at (creation time of a refund subsequently verified succeeded, not a fictional success timestamp). The signed event_time_basis names this distinction. Missing/unparseable required timestamp or implausible future value creates a reconciliation exception; delivery/received_at is never substituted. N1 v1 carries `subscription_facts:null`; future nonnull shape requires a new version.
 
-`RegistrationEvent={schema_version:1,event_id:UUID,event_type:customer.registered,connection_id:UUID,sequence:int64,program_id:UUID,customer_id:OpaqueID,project_id:OpaqueID,registered_at:Timestamp,explicit_promo:string?,cookie_asset_id:UUID?,cookie_captured_at:Timestamp?,consent_evidence:EvidenceRef?}`. It has its own attribution endpoint; immutable payload hash and connection/customer/project uniqueness make retries stable. `TransferObservation={row_id:UUID,actual_date:Date,gross:Money,withheld:Money,net:Money,actor_id:UUID,evidence:EvidenceRef}` records an alleged external fact under review; it does not authorize a transfer or mint a valid Confirmation.
+`RegistrationEvent={schema_version:1,event_id:UUID,event_type:customer.registered,connection_id:UUID,sequence:int64,program_id:UUID,customer_id:OpaqueID,project_id:OpaqueID,registered_at:Timestamp,explicit_promo:string?,cookie_asset_id:UUID?,cookie_captured_at:Timestamp?,consent_evidence:EvidenceRef?}`. It has its own attribution endpoint; immutable payload hash and connection/customer/project uniqueness make retries stable. `TransferObservation={request_id:UUID,row_id:UUID,preparation_id:UUID?,actual_date:Date,gross:Money,withheld:Money,net:Money,actor_id:UUID,evidence:EvidenceRef}` records an alleged external fact under review; it does not authorize a transfer or mint a valid Confirmation.
 
-`ProviderVerification={object_id:OpaqueID,kind:payment/refund,merchant_id:OpaqueID,environment:test/live,status:succeeded,amount:Money,currency:RUB,parent_payment_id:OpaqueID?,occurred_at:Timestamp,fetched_at:Timestamp,response_hash:Hash,event_time_basis:payment_captured_at/refund_created_at}` is a signed N1 attestation of its canonical API lookup, stored as ProviderProof in N3a. Only N1 holds provider credentials and performs provider GET; N3a verifies connection authenticity and attested facts, then reconciles against the authenticated N1 source. No shared secrets from the YooKassa account are copied to N3a. `ProviderProof` contains sanitized verified facts, not secrets/card data. Policy months null explicitly means lifetime; duration starts first eligible confirmed payment, end is exclusive calendar-month addition in program timezone (end-of-month clamped). For first_payment_only, chronological first verified eligible payment wins; a late earlier payment creates an exception until reconciliation establishes order. Registration-time policy version stays fixed. Cross-tenant person identity is never inferred from email: payer-controlled verified identity authorizes YTD consolidation across its programs only.
+`ProviderVerification={object_id:OpaqueID,kind:payment/refund,merchant_id:OpaqueID,environment:test/live,status:succeeded,amount:Money,currency:RUB,parent_payment_id:OpaqueID?,occurred_at:Timestamp,fetched_at:Timestamp,response_hash:Hash,event_time_basis:payment_captured_at/refund_created_at}` is a signed N1 attestation of its canonical API lookup, stored as ProviderProof in N3a. Only N1 holds provider credentials and performs provider GET; N3a verifies connection authenticity and attested facts, then reconciles against the authenticated N1 source. No shared secrets from the YooKassa account are copied to N3a. `ProviderProof` contains sanitized verified facts, not secrets/card data. Pilot policy is every_eligible_payment/lifetime only; first-only and finite caps are deferred, not silently configured. first_paid_at is MIN occurred_at of all eligible verified payments, a display projection rather than an eligibility frontier. Program.timezone is immutable after activation or first attribution/ledger, including while paused; AccountingPeriod copies that calendar once. Registration-time policy version stays fixed. Cross-tenant person identity is never inferred from email: payer-controlled verified identity authorizes YTD consolidation across its programs only.
 
 ## Core Algorithms
 
 ### Algorithm: AuthenticateSession
 REQUIREMENT: `FR-AUTH-001`
-REALISES: SC-US-001-3, SC-US-002-3, SC-US-013-1, SC-US-013-2, SC-US-013-3, SC-US-013-4
+REALISES: SC-US-001-3, SC-US-002-3, SC-US-013-1, SC-US-013-2, SC-US-013-3, SC-US-013-4, SC-US-013-5, SC-US-013-6
 INPUT: explicit signup/login/logout, password, invitation/enrollment token.
 OUTPUT: authenticated session or safe denial.
 STEPS:
-1. Bound rate/body/admission first; signup requires unexpired single-use EnrollmentGrant matching identity and role/program. Pilot owner grant comes from integration owner with verified N1-owner authority evidence; an open signup never self-assigns owner/operator. Partner account may exist before acceptance, but active partner membership requires AcceptPartnerAndAssets.
-2. Adapt audited N2 scrypt password hashing and N1/N2 hash-only opaque session primitives with provenance/tests; use random salt and versioned audited work factors, generic credential error and dummy verification for missing identity. Run KDF outside transactions, proposed concurrency2 and queue8 per web process; overload429, no connection held while waiting.
-3. Signup BEGIN locks grant; recheck expiry/unconsumed and unique identity, create User and allowed Membership, consume grant atomically. Login compares hash outside transaction then rechecks enabled/revoked state before creating session. Generate high-entropy random bearer token, store only hash/expiry; COMMIT. Never log password/token, never trust submitted role or tenant.
-4. Return token only via Secure/HttpOnly/SameSite cookie for browser or authorized bearer response for private client; CSRF/Origin guards on state changes. Logout/revocation atomically sets Session.revoked_at; all requests check expiry/revocation and current Membership. IF suspended/revoked THEN deny even when cookie remains. Audit safe outcomes without identity enumeration.
-5. RETURN session context; donor code is not copied unreviewed and no admin console or external identity service is introduced.
+1. Bound rate/body/admission first. Login/signup yields identity-only session, not implicit program access. Signup requires unexpired EnrollmentGrant matching verified identity; existing User logs in and binds that same grant without duplicate account. A session can access only own enrollment/accept/logout until a Membership is active.
+2. Minimal trusted issuance: integration owner provisions pilot Program draft plus owner EnrollmentGrant with verified N1-owner evidence, never a client-selected owner. Existing program owner with invite scope creates partner placeholder+bound Invitation/Grant atomically, or operator Grant with an explicit subset of its delegable scopes (no owner/configure/invite by default). These are narrow existing onboarding operations, not a new admin product. Issuer and evidence are persisted; caller role fields ignored.
+3. Adapt audited donor scrypt with random salt/versioned work factors and hash-only opaque sessions. Generic credential failure/dummy verification for absent identity; KDF outside DB transaction, concurrency2/queue8 per web process. BEGIN locks grant if binding; create unique User or verify existing session identity; set enrolled_user_id, create Session, COMMIT. Do not consume partner grant or insert partner Membership before consent.
+4. For owner/operator grant acceptance, authenticated bound user explicitly accepts; BEGIN lock program+grant, recheck issuer authority/scope ceiling/expiry, insert unique(program,user,role) Membership with grant scopes, consume grant and audit, COMMIT. Partner grant acceptance delegates to AcceptPartnerAndAssets. Replay same grant returns own existing membership; conflicting identity returns404.
+5. Login compares hash outside transaction, rechecks User.enabled before Session creation. Return Secure/HttpOnly/SameSite cookie; CSRF/Origin on mutations. Every protected program request resolves active current Membership; identity-only session still can accept its bound invitation. Logout/revocation writes Session.revoked_at; revoked/expired session rejected even for enrollment. RETURN only authorized session context.
 COMPLEXITY: O(1) indexed records plus bounded password KDF cost.
 
 ### Algorithm: AuthorizeAndConfigure
 REQUIREMENT: `FR-PROGRAM-001`
 REQUIREMENT: `FR-PROGRAM-002`
-REALISES: SC-US-001-1, SC-US-001-2, SC-US-001-3
+REALISES: SC-US-001-1, SC-US-001-2, SC-US-001-3, SC-US-006-4
 INPUT: session, program ID, explicit policy fields, expected current version.
 OUTPUT: active version or denied/validation/conflict.
 STEPS:
 1. Apply bounded rate limit before body validation; authenticate session and server membership. IF configure scope absent THEN audit denied and RETURN 404 without existence disclosure.
-2. Validate % rate, recurring mode/duration, 30/60/90 window, RUB, timezone and terms. IF any omitted THEN RETURN 422 named fields; never insert 20% implicitly.
-3. For purpose=platform_leads, explicit lead-only terms may activate enrollment/asset tracking with rate_bp=null and no Connection; they promise no payment. The N1 monetary program still requires all monetary inputs. BEGIN; lock Program; IF expected version differs THEN rollback RETURN 409. Insert immutable PolicyVersion effective now or later; no retroactive date. Monetary activation requires selected current version and configured N1 connection readiness. Select current_policy_id only from versions with effective_at≤now; future version cannot activate early. Registration always resolves max(effective_at≤registered_at), so stale cached pointer cannot override policy. Update status, audit; COMMIT.
+2. For n1_commissions validate % rate, every-payment/lifetime acknowledgment, 30/60/90 window, RUB, timezone and terms; missing→422 named fields, no20% default. For proposed platform_leads validate explicit lead-only terms/calendar and prohibit monetary activation/rate promises; nullable rate is permitted only there.
+3. For purpose=platform_leads, explicit lead-only terms may activate enrollment/asset tracking with rate_bp=null and no Connection; they promise no payment. The N1 monetary program still requires all monetary inputs. BEGIN; lock Program; IF calendar_locked_at is nonnull and submitted timezone differs THEN rollback RETURN409 immutable_calendar. First activation atomically sets calendar_locked_at; fallback first attribution/ledger sets it if absent. IF expected version differs THEN rollback RETURN 409. Insert immutable PolicyVersion effective now or later; no retroactive date. Monetary activation requires selected current version and configured N1 connection readiness. Select current_policy_id only from versions with effective_at≤now; future version cannot activate early. Registration always resolves max(effective_at≤registered_at), so stale cached pointer cannot override policy. Update status, audit; COMMIT.
 4. RETURN version; existing Attribution.policy_id and LedgerEntry are unchanged.
 COMPLEXITY: O(1) indexed reads/writes.
 
 ### Algorithm: AcceptPartnerAndAssets
 REQUIREMENT: `FR-PARTNER-001`
 REQUIREMENT: `NFR-SECURITY-001`
-REALISES: SC-US-002-1, SC-US-002-2, SC-US-002-3, SC-US-011-3
+REALISES: SC-US-002-1, SC-US-002-2, SC-US-002-3, SC-US-011-3, SC-US-013-5, SC-US-013-6
 INPUT: session, invitation token, accepted policy ID; asset/cohort requests.
 OUTPUT: own link/promo or safe denial.
 STEPS:
-1. Authenticate; hash token, verify invitation expiry and intended partner. IF cross-partner/program asset request THEN audit and RETURN 404.
-2. BEGIN; lock invitation/partner/program; compare current terms and submitted version. IF stale THEN rollback RETURN 409 current terms; IF already consumed by this partner THEN RETURN existing assets; ELSE reject foreign/revoked token.
-3. Save explicit consent actor/time/version, activate partner; create one active link and promo with unique program public_code, collision retry bounded to 3, then explicit failure. Consume invitation atomically; COMMIT.
-4. RETURN only own assets/cohort; customer status alone never grants partner membership or codes.
+1. Authenticate identity-only session; hash token, verify own Invitation→EnrollmentGrant identity/partner/program, expiry and enrolled_user_id. This narrowly scoped acceptance endpoint requires no preexisting partner Membership; asset/ledger reads still require active Membership and own partner ID.
+2. BEGIN; lock program→grant→invitation→partner. IF invitation already consumed by this user THEN RETURN existing membership/assets after COMMIT. ELSE recheck current effective terms and submitted version; stale terms→rollback409, foreign/revoked token→404. Existing User follows exactly the same path, without resetting other memberships.
+3. Save explicit actor/time/policy consent; set Partner.user_id and active status; append EligibilityFact(active,valid_from=server now,consent_policy_id) and active asset facts. Create unique(program,user,role=partner) Membership active with scopes={read}, partner_id bound server-side. Insert one link/promo with unique public code, bounded collision retry3 then failure. Consume grant+invitation, audit and COMMIT all changes together.
+4. Owner-authorized suspension/reactivation/revocation later appends new EligibilityFact at server transaction time (unique subject/version, no backdating/deletion), then updates current-state projection and corresponding Membership access status atomically (suspended/revoked disables portal access; reactivation restores only its prior approved minimal scopes). Asset expiry belongs to its immutable fact. RETURN own assets; two concurrent acceptances cannot create a second membership or assets.
 COMPLEXITY: O(1) apart from bounded collision retries.
 
 ### Algorithm: CaptureAttribution
 REQUIREMENT: `FR-ATTRIBUTION-001`
 REQUIREMENT: `FR-ATTRIBUTION-002`
 REQUIREMENT: `FR-GROWTH-004`
-REALISES: SC-US-003-2, SC-US-003-3, SC-US-011-2
+REALISES: SC-US-003-2, SC-US-003-3, SC-US-011-2, SC-US-003-4
 INPUT: N1 registration identity, explicit promo?, valid first-party cookie?, signed connection context.
 OUTPUT: stable Attribution or rejected reason, no commission.
 STEPS:
-1. N3a program link redirects only to allowlisted N1 origin/path with opaque asset; N1 stores first-party signed referral cookie (Secure, HttpOnly, SameSite=Lax), bounded by configured window/consent. Third-party cookie is never required. Record sanitized click once by request ID.
-2. On registration N1 persists local referral source/customer/project and registration identity transactionally; registration outbox/signed idempotent attribution request retries after commit. N3a unavailability leaves attribution pending sync, not silently absent; payment waits/reconciles unresolved attribution.
-3. Authenticate N1 request, resolve policy effective at registered_at and server-side asset ownership. IF explicit promo supplied THEN validate it; invalid/revoked/expired returns rejected reason with NO cookie fallback. ELSE choose last valid unexpired cookie; ELSE source none. Window applies to click→registration, not independently to every renewal.
-4. IF verified customer matches partner/owner self-referral identity THEN reject; ambiguous identity becomes review. Save one Attribution per connection/customer/project and its snapshot, chosen source/reason. Concurrent retry returns same decision; conflicting immutable payload becomes exception.
-5. RETURN pending/rejected attribution. Signup/cancel/unverified payment cannot post money. Valid preexisting attribution is not reassigned by later cookies or code revocation.
+1. Program link redirects only to allowlisted N1 origin/path with opaque asset; N1 stores first-party signed Secure/HttpOnly/SameSite=Lax referral cookie with captured_at, bounded by policy window/consent. Record sanitized click once; no third-party cookie dependency.
+2. N1 registration commits local customer/project/referral facts and RegistrationEvent outbox together; asynchronous delivery retries. Unsynced attribution blocks monetary intake, never falls back to guessed no-referral. N3a verifies signed event and registered_at; authenticity failure cannot populate historical authority.
+3. BEGIN; lock Program and resolve policy max(effective_at≤registered_at). Resolve each asset/partner EligibilityFact by latest(valid_from,version)≤registered_at; expires_at checked at registration, not arrival. History starts at immutable creation (partner invited, asset active); a timestamp before creation/acceptance is known invalid. If historical data/consent completeness is genuinely unknown, rollback with retryable review, not a rejected current-state guess. Later suspension/reactivation/revocation does not retroactively change valid facts. Selected fact IDs and registration_eligible are saved in Attribution.
+4. Explicit promo valid at registered_at wins; explicitly invalid/revoked-then/expired-then promo rejects without cookie fallback. Otherwise choose last cookie whose asset was valid at capture and registration and whose captured_at+policy window covers registration. No source yields rejected no_referral; self-referral by verified identity yields rejected, ambiguous identity waits review. Preserve source, reason, policy and historical fact IDs.
+5. Insert unique(connection,customer,project) Attribution with pending if historical decision eligible, otherwise rejected; first_paid_at=null. Identical retry checks registration_payload_hash and returns original decision, conflicting hash→exception. Ensure calendar_locked_at set. COMMIT; RETURN pending/rejected. Current status can restrict portal access, but cannot reassign a historically valid customer's later commission.
 COMPLEXITY: O(1) indexed lookup.
 
 ### Algorithm: N1VerifiedBillingOutbox
@@ -121,7 +124,7 @@ COMPLEXITY: O(1) per payment; O(b) dispatch batch b.
 
 ### Algorithm: AuthenticateAndVerifyIntake
 REQUIREMENT: `NFR-SECURITY-002`
-REALISES: SC-US-003-3, SC-US-004-3, SC-US-005-3
+REALISES: SC-US-003-3, SC-US-004-3, SC-US-005-3, SC-US-004-4
 INPUT: POST raw bytes, connection URL, signed headers.
 OUTPUT: verified BusinessEvent/ProviderProof or deterministic error/exception.
 STEPS:
@@ -135,30 +138,30 @@ COMPLEXITY: O(bytes) for HMAC plus O(1) bounded N1 verification lookup when requ
 ### Algorithm: PostPayment
 REQUIREMENT: `FR-COMMISSION-001`
 REQUIREMENT: `FR-GROWTH-002`
-REALISES: SC-US-003-1, SC-US-004-1, SC-US-004-3, SC-US-011-1
+REALISES: SC-US-003-1, SC-US-004-1, SC-US-004-3, SC-US-011-1, SC-US-003-4
 INPUT: verified payment event/proof.
 OUTPUT: one positive commission or durable no-commission reason.
 STEPS:
-1. Reject purpose=platform_leads from monetary intake until an independently specified own billing contract exists. BEGIN; acquire program accounting lock then attribution/payment locks in stable ID order. Check cutover/RecoveryGate, attribution ownership and policy snapshot. Missing attribution synchronization, uncertain first-payment order or unsatisfied reconciliation → rollback retryable exception, not no-referral guess.
-2. Atomically insert receipt unique(connection,event_id); on conflict compare hash and return same committed result. Payment unique(connection,provider_payment_id) is separate: different transport ID with same identical business facts adds duplicate_business receipt only; differing facts become exception and rollback.
-3. Eligibility: approved partner at registered_at, non-self attribution, payment at/after cutover, after registration, verified positive RUB, policy duration from first eligible occurred_at. first_payment_only rejects later distinct payments; every_eligible_payment allows each during exclusive duration. IF ineligible THEN persist Payment with zero commission and reason plus receipt; COMMIT RETURN reason.
-4. commission = roundHalfUp(amount_minor × rate_bp / 10000) using exact nonnegative integer division. Set Payment commission_amount, refunded_amount=0,reversed_commission=0; preserve policy/proof. Choose accounted month using AssignPeriod.
-5. Insert single positive LedgerEntry unique(payment_id,kind=commission), even if rounded delta=0 (not positive-value growth); update Attribution first_paid_at only with verified chronological basis. COMMIT receipt/payment/ledger together; RETURN applied.
-COMPLEXITY: O(1) indexed operations; duration calendar arithmetic O(1).
+1. Reject platform_leads monetary intake. BEGIN; acquire RecoveryGate shared lock and require normal, then program→attribution→payment locks. Recheck cutover, ownership, source proof and persisted registration eligibility/fact IDs. Missing attribution/history→rollback retryable exception, never guessed eligibility. Every financial transaction holds this gate lock through commit; restore changes gate with exclusive lock.
+2. Atomically claim receipt unique(connection,event_id); same hash returns original outcome. Payment unique(connection,provider_payment_id) independently excludes a second commission with another transport UUID; identical business duplicate adds duplicate_business receipt only, changed facts→rollback exception.
+3. Eligibility requires registration_eligible=true, succeeded positive RUB, payment≥registered_at and cutover, original frozen percentage; every eligible payment is commissioned for lifetime in pilot. Current partner/asset status and first_paid_at never change this historical decision. If ineligible persist Payment zero/reason and receipt; Attribution stays rejected (invalid registration) or retains prior pending/eligible (this payment alone invalid); COMMIT RETURN reason.
+4. commission=roundHalfUp(amount_minor×rate_bp/10000), exact integer arithmetic. Save immutable Payment, counters0, original policy/proof; AssignPeriod chooses basis/accounted month using locked immutable calendar. Insert unique positive-kind commission LedgerEntry (zero amount allowed for audit, not growth).
+5. In same transaction set Attribution.status=eligible and first_paid_at=min(existing nonnull,occurred_at), including eligible payment with rounded commission0. Save receipt/payment/ledger together, recheck gate normal and COMMIT. Delayed earlier eligible payment adjusts only first_paid_at projection; no earlier commission is invalidated. RETURN applied.
+COMPLEXITY: O(1) indexed operations; exact integer arithmetic.
 
 ### Algorithm: PostRefund
 REQUIREMENT: `FR-COMMISSION-002`
 REQUIREMENT: `NFR-RELIABILITY-001`
-REALISES: SC-US-005-1, SC-US-005-2, SC-US-005-3
+REALISES: SC-US-005-1, SC-US-005-2, SC-US-005-3, SC-US-005-4
 INPUT: canonical succeeded refund with known parent payment.
 OUTPUT: linked immutable negative delta or duplicate.
 STEPS:
-1. BEGIN; lock program accounting then parent Payment. IF parent absent/legacy/unknown attribution THEN rollback and exception; do not consume receipt. Verify amount>0, RUB, merchant/mode and immutable parent.
-2. Claim receipt unique(connection,event_id) and refund unique(connection,provider_refund_id) atomically. IF existing identical refund THEN record duplicate_business receipt and RETURN unchanged; conflicting identity/amount → rollback exception.
-3. cumulative = Payment.refunded_amount + refund.amount. IF cumulative > Payment.amount THEN rollback exception; never silently cap bad provider facts. target = roundHalfUp(Payment.commission_amount × cumulative / Payment.amount); IF cumulative==Payment.amount THEN target=Payment.commission_amount. delta=target−Payment.reversed_commission; assert 0≤delta≤remaining commission.
-4. Store Refund including delta; append LedgerEntry(kind=refund_adjustment,delta=−delta,parent payment, original policy) if eligible, including zero correction for audit. AssignPeriod uses refund occurred_at unless parent accounted month is later or its intended period frozen; then next open period and visible late-correction reason. Update parent cumulative counters atomically.
-5. Never edit original ledger, RegistryRow or Confirmation; a sent payout yields future adjustment/carry. COMMIT refund/receipt/counters/entry together. RETURN applied. Refund permutations share the same cumulative final reversal; canceled event never undoes succeeded fact.
-COMPLEXITY: O(1) per refund under parent lock.
+1. BEGIN; shared-lock RecoveryGate and require normal; lock program→parent Payment. Missing parent/legacy/unknown attribution→rollback exception without consumed receipt. Verify immutable parent, positive amount/RUB/merchant/mode.
+2. Claim receipt and Refund unique(connection,provider_refund_id) atomically. Identical existing refund returns original outcome; changed amount/parent→rollback exception. Sum ALL persisted parent refunds plus candidate; if total>paid amount rollback, never clamp bad facts. Refund records are immutable source facts; no order-dependent reversal amount is stored on them.
+3. Canonical reconciliation over ALL parent refunds, across prior batches: sort by (occurred_at,provider_refund_id byte order). For each sorted refund i compute d_i=roundHalfUp(C×prefix_amount_i/P)−roundHalfUp(C×prefix_amount_(i−1)/P), with full total P forcing total C. Group desired negative deltas −d_i by basis month=max(refund event month,parent accounted month). Sum desired is bounded [−C,0]; same known facts always give same per-month targets.
+4. Hash canonical sorted provider refund IDs/amounts/timestamps, parent provider payment identity/amount/original commission as refund_set_hash; exclude local UUIDs/receipt IDs. Compare desired basis-month totals with actual sum of every earlier refund_adjustment/refund_reallocation LedgerEntry by basis_month. Insert one immutable RefundAllocationRevision(unique payment,set_hash) and signed difference entries per basis_month: initial negative allocation kind refund_adjustment; later changes kind refund_reallocation may be positive or negative. Unique(revision,basis_month) makes replay safe; zero difference needs no entry. Never edit earlier Refund/LedgerEntry. For a frozen basis month route new difference to next open current month while retaining basis_month and late reason; never rewrite frozen/sent history.
+5. Update parent refunded_amount=sum amounts, reversed_commission=canonical cumulative target; assert ledger refund total=−target. Receipt/refund/revision/differences/counters commit together under gate. Run the same canonical reconcile under parent locks immediately before freeze; a new earlier fact arriving after freeze gets append-only future correction. RETURN applied. For P100/C1 and Sep30 refund30 + Oct1 refund30 delivered in either order onOct2, targets are Sep0/Oct−1, even across separate batches.
+COMPLEXITY: O(r log r) for r parent refunds plus O(m) changed basis months; bounded reconciliation job for oversized parent, freeze waits for it.
 
 ### Algorithm: AssignPeriodAndFreezeRegistry
 REQUIREMENT: `FR-PAYOUT-001`
@@ -166,15 +169,15 @@ REQUIREMENT: `FR-PAYOUT-002`
 REQUIREMENT: `FR-PAYOUT-004`
 REQUIREMENT: `NFR-INTEGRITY-001`
 REQUIREMENT: `NFR-PERFORMANCE-001`
-REALISES: SC-US-006-1, SC-US-006-2, SC-US-005-2
+REALISES: SC-US-006-1, SC-US-006-2, SC-US-005-2, SC-US-005-4, SC-US-006-4
 INPUT: verified event instant for posting; or scoped owner close request for preceding month.
 OUTPUT: accounted_month or stable frozen Registry + rows.
 STEPS:
-1. AssignPeriod under program lock converts occurred_at to configured calendar month. IF month open and not before integration start THEN use it even for Sep payment arriving Oct2. ELSE choose earliest open month at/after intended month and current local month; mark late reason. Never include October occurred payment in September. Refund accounted month also cannot precede parent accounted month.
+1. AssignPeriod under program lock converts occurred_at to immutable Program.timezone; period create uses unique(program,month), copies exact timezone and due_date=5th next month. Any existing period timezone mismatch is an exception, never overwritten. IF month open and not before integration start THEN use it even for Sep payment arriving Oct2. ELSE choose earliest open month at/after intended month and current local month; mark late reason. Never include October occurred payment in September. Refund accounted month also cannot precede parent accounted month.
 2. Freeze request requires payout scope, RecoveryGate normal and local day≥5 for preceding month; missed prior months closed explicitly in chronological order, due date stays original 5th. Read/reconcile provider/N1 feeds outside transaction; unresolved financial exceptions block freeze and show incomplete preview. Preview creates no allocations/debt.
-3. BEGIN; acquire same program lock as every posting; lock period. IF already frozen THEN RETURN existing Registry/hash. Recheck watermark/exception versions after external work; on drift retry reconciliation. Capture all unallocated period LedgerEntries and predecessor negative Carry; no arbitrary hold or minimum threshold.
+3. BEGIN; shared-lock RecoveryGate and require normal, then acquire same program lock as every posting; lock period. IF already frozen THEN RETURN existing Registry/hash. Recheck watermark/exception versions after external work; on drift retry reconciliation. Under parent locks run PostRefund canonical reconciliation for every affected payment (no new receipt when set unchanged); assert period targets settled before close. Capture all unallocated period LedgerEntries and predecessor negative Carry; no arbitrary hold or minimum threshold.
 4. For each partner, gross_delta=sum(entries), carry_in=sum(unconsumed Carry.amount), payable_gross=max(0,gross_delta+carry_in), carry_out=min(0,gross_delta+carry_in). Create immutable row and unique Allocation per entry; consume each carry once. IF carry_out<0 THEN create one new Carry(source_row,amount); ELSE none. A carry is not another ledger refund and its source entries never reallocate.
-5. Attach available immutable tax preview snapshot or explicit tax-review exception; unknown tax/net remain null, never 0. Hash ordered rows+allocations+policy/proof/tax refs; save Registry, freeze period and commit atomically. Tax evidence later creates linked versioned payout receipt, never overwrites this frozen snapshot.
+5. Attach available immutable tax preview snapshot or explicit tax-review exception; unknown tax/net remain null, never 0. snapshot_hash hashes canonical economic rows (stable business IDs, month, net basis totals, carry, original policy and normalized tax inputs), excluding delivery IDs, correction-row IDs and local created_at; row_hash follows the same rule. audit_artifact_hash separately hashes full frozen rows/allocations/provenance including delivery-dependent append-only corrections. Save Registry and freeze atomically under gate. Equivalent complete business facts yield identical economic snapshot_hash, not necessarily identical audit_artifact_hash. Tax evidence later creates linked versioned payout receipt, never overwrites this frozen snapshot.
 6. RETURN stable snapshot; export is read-only and displays snapshot/preparation version, gross and known/null tax/net. Unsent positive rows remain on this registry; don't auto-carry them into another payout. Failure/timeout rolls back all allocations/close; async job reports explicit failure.
 COMPLEXITY: O(n log n) deterministic order/hash for n entries, n≤10000 pilot; batch work deadline≤60 s, no network under lock.
 
@@ -183,44 +186,45 @@ REQUIREMENT: `FR-TAX-001`
 REQUIREMENT: `FR-TAX-002`
 REQUIREMENT: `FR-TAX-003`
 REQUIREMENT: `FR-TAX-004`
-REALISES: SC-US-007-1, SC-US-007-2, SC-US-007-3
+REALISES: SC-US-007-1, SC-US-007-2, SC-US-007-3, SC-US-007-4
 INPUT: frozen row, planned actual transfer date, approved profile/rules/base/YTD/evidence, request UUID.
 OUTPUT: immutable TaxSnapshot + prepared operation, or review exception.
 STEPS:
-1. Authenticate payout/tax scope, row ownership and RecoveryGate. IF gross<=0 THEN RETURN no_transfer. Obtain verified payer/person identity, date-valid profile, contract/accountant approval, status and rule. Missing/unknown inputs → review with accrued gross still visible; no sent-ready value.
-2. Evaluate legal form, npd and contract eligibility explicitly. IF npd THEN require status evidence, accountant-approved contract eligibility, current declared aggregate income/limit evidence and receipt workflow; if unknown/lost eligibility or declared year income+payment>240000000 kopecks THEN review, no split. Applicable confirmed NPD sets payer withholding=0, not 6%; recipient-tax informational estimate is not withheld tax. Receipt evidence due after payment is tracked as an open document obligation with approved due-date rule, not an impossible prepayment condition; missing already-due receipt or unresolved eligibility blocks the next preparation.
-3. IF applicable withholding model THEN BEGIN; lock TaxYTD by payer/person/year/base across all programs plus RegistryRow. Require verified opening_base/opening_withheld (including other payments by this payer) and current paid_base/withheld. IF missing or active preparation exists THEN rollback review/conflict. IF another tax model applies THEN require explicit accountant-approved no-withholding/base rule, never infer from label.
-4. Compute taxable increment B via approved base/adjustment/deduction rule, not equal gross by assumption. Y=opening_base+paid_base. T(x)=approved rounding of sum over marginal bracket portions of x×rate; proposed applicable main-scale rates 13/15/18/20/22% with boundaries 2.4/5/20/50 million RUB from2025. due=T(Y+B)−(opening_withheld+withheld); IF due<0 or due>gross or inconsistent evidence THEN review (no silent clamp/refund). Store calculated_tax and planned withheld separately per approved rule.
-5. Require accountant evidence for this immutable calculation, date/year, rule, gross/base/withheld/net. Save TaxSnapshot with ytd_version; create unique request PayoutPreparation prepared, reserve active_preparation_id in TaxYTD (for withholding model), commit. Preparation does not count as paid YTD and cannot invoke bank API.
-6. RETURN preparation + expires_at (proposed end of local payment date). Cancellation releases reservation only if operator confirms no transfer occurred; timeout is reconciliation_required, never automatic release for an uncertain manual transfer.
-COMPLEXITY: O(k) tax brackets, k=5 in proposed main-scale rule; bounded indexed locks.
+1. Authorize payout/tax scope and row, validate gross>0 and approved date-valid payer/person/profile/contract/rules outside transaction; missing evidence→review. Ordinary preparation also rejects unresolved row TransferObservation. No tax model bypasses the shared preparation guard.
+2. BEGIN; shared-lock RecoveryGate require normal; create/lock persistent PayerYearGuard unique(payer,person,actual year), independent of program/base/tax model, then needed TaxYTD base and RegistryRow. Recheck profile/evidence versions, no Confirmation, no blocked observation and active_preparation_id=null. Same request returns existing preparation; another active prepared/reconciliation_required reservation→409 even after its transaction committed. Payer-authorized internal scope can coordinate its programs; clients cannot inspect foreign program detail through guard.
+3. IF withholding: require known opening_base/opening_withheld/evidence plus current base TaxYTD; compute B by approved base/deduction rule. Y=opening_base+paid_base; T(x)=approved rounding of marginal band portions (main-scale13/15/18/20/22%, thresholds2.4/5/20/50million RUB where applicable). due=T(Y+B)−(opening_withheld+withheld); invalid/negative/exceed-gross→review rollback, not clamp. Store calculated versus to-withhold explicitly. ELSE skip withholding formula; require approved no-withholding legal basis and set tax0/net=gross, not unknown-as0.
+4. IF NPD: under same guard require current eligibility/contract, npd_evidence, npd_declared_total and npd_covered_income. Covered income is the exact guard.npd_confirmed_income already included in the declared aggregate evidence; require 0≤covered≤npd_confirmed_income. Known total=declared_total+(npd_confirmed_income−covered_income); candidate=known total+gross (existing reserved amount cannot coexist). If candidate>240000000 or external-income evidence unknown/stale→review rollback, no split or6% withholding. New declaration replaces baseline only with approved coverage reconciliation to prevent double counting. Future receipt is due-after-payment obligation; already-due missing evidence blocks preparation.
+5. Advance guard.version and save immutable approved TaxSnapshot with resulting guard_id/version, tax_model and optional base YTD version; create prepared PayoutPreparation and persist guard.active_preparation_id in SAME commit for withholding, NPD and other models. Preparation is not paid income. Gate stays locked to commit; unrelated payer/person can proceed. RETURN preparation and expiry=end planned local transfer date.
+6. Proven no-transfer cancellation locks same guard/row, marks canceled and clears reservation atomically; expiry alone marks reconciliation_required and retains reservation. An observed transfer follows ConfirmManualTransfer observation/reconciliation modes, never cancellation merely to make room.
+COMPLEXITY: O(k) bands plus indexed guard/base/row locks; k=5 in applicable main-scale rule.
 
 ### Algorithm: ConfirmManualTransfer
 REQUIREMENT: `FR-PAYOUT-003`
-REALISES: SC-US-006-3, SC-US-007-3
-INPUT: authorized operator, preparation ID, request UUID, actual date/amounts and external evidence reference.
+REALISES: SC-US-006-3, SC-US-007-3, SC-US-007-5, SC-US-006-5, SC-US-006-6
+INPUT: authorized operator, mode, optional preparation ID, request UUID, actual date/amounts and external evidence reference.
 OUTPUT: one operator_reported_sent confirmation or reconciliation_required.
 STEPS:
-1. Authorize server payout scope and RecoveryGate; export route never calls this algorithm. IF unknown scope THEN audit and RETURN 404. Require affirmative statement that operator made the manual transfer; no bank action occurs here.
-2. BEGIN; lock payer/person/year TaxYTD then row/preparation in same order as preparation. IF row already confirmed THEN matching request/facts RETURN original confirmation; different amount/date/reference → 409 without another confirmation.
-3. Recheck tax profile/rule validity, exact actual year/date versus TaxSnapshot, accountant approval, current YTD version and reservation, net/gross/withheld equality. IF stale/changed/expired THEN persist supplied TransferObservation in a ReconcileException, mark reconciliation_required, audit and RETURN 409; do not automatically release reservation or erase a reported external fact. December preparation cannot approve January transfer. Even an unprepared/mistaken external transfer can be reported by an authorized operator into this exception path; it does not become tax-approved sent until reconciled.
-4. Insert unique Confirmation(row_id), unique request key within tenant; update prepared state→sent and TaxYTD paid_base/withheld/version, clear its reservation in same commit. NPD/no-withholding updates verified internal payment records but cannot claim total external NPD income is known.
-5. RETURN sent with actor/date/reference and statement label «оператор отметил отправку». External bank acknowledgement/receipt is not inferred; corrections after sent require new linked audit/tax correction and accountant reconciliation, not deletion or repeat transfer.
-COMPLEXITY: O(1), one serialized row and tax-year update.
+1. Three explicit modes: observe, ordinary_confirm, reconcile_observation. All authenticate own row plus payout scope; reconciliation additionally requires reconcile+tax approval. observe accepts optional preparation_id and is available even when RecoveryGate is closed. observe BEGIN locks RecoveryGate (closed allowed), then identified old/actual guards sorted and row; it inserts immutable TransferObservation in ReconcileException unique(tenant,request_id), validates hash on repeat, records evidence/actual amounts/date, and blocks row. It locks/adds observation blocker to known old/actual PayerYearGuards without replacing reservation. Unknown payer/year identity sets global RecoveryGate closed until resolved. No Confirmation/YTD/transfer action in this mode; audit and COMMIT, RETURN observation ID.
+2. Ordinary_confirm BEGIN shared-lock gate require normal; lock persistent guard→base YTD→row→preparation; validate reservation and row uniqueness. Validate readiness at actual transfer date/instant, not recording wallclock: late reporting of a transfer made within approved validity is allowed if evidence confirms unchanged inputs. Unknown/stale actual-date facts, absent preparation, changed year or closed gate cannot confirm; rollback ordinary branch and persist via observe, never erase the alleged transfer.
+3. For valid ordinary confirmation require exact approved gross/base/withheld/net, current guard/YTD versions, no blocker; atomically insert unique Confirmation(row) and request key, mark preparation sent, add gross to guard.confirmed_income/version for EVERY model, also npd_confirmed_income only for NPD-eligible income, and update base paid_base/withheld only for withholding. Clear matching reservation; COMMIT. Replays return same observation/confirmation, conflicting facts→exception.
+4. reconcile_observation is an audited exception transaction allowed under closed recovery gate. Accountant-approved immutable evidence must establish actual transfer identity/date, correct tax model/base/rules and which internal confirmations/opening balances already include it. BEGIN; shared-lock gate (closed allowed only here); lock OLD and ACTUAL payer/person/year guards in sorted key order, then all affected base YTD keys, row and preparations. Recheck evidence/version/hash and no existing conflicting Confirmation. If actual guard is held by an unrelated preparation, retain blockers and RETURN409; never steal another row's reservation.
+5. Derive corrected tax snapshot at actual date using CalculateAndPrepareTax rules within these acquired locks (no recursive ordinary active-reservation check), deducting no imaginary previous payment; if already included in reconciled opening/YTD, evidence supplies a zero incremental update, otherwise apply once. Atomically mark old unsent preparation superseded, create linked replacement(replaces_id,observation_id) and immediately mark sent with one Confirmation. Move/consume matching old guard reservation and actual guard reservation without an intermediate commit, clear only this observation's blockers; update actual-year total income, NPD income only when applicable, and base/withheld once and preserve old-year unpaid counters. Per-counter inclusion decisions for guard total/NPD income/base/withheld are persisted in the approved TaxSnapshot.inclusion_evidence; each named amount is added once or evidenced already-included, never inferred merely from total equality. No expiry-at-recording test invalidates approved evidence of an already-made transfer.
+6. Commit all guard changes+supersession+snapshot+Confirmation+evidence resolution together. If no preparation existed, same evidence transaction creates a linked reconciliation preparation and confirmation once. Uncertain evidence stays open with reservations/blockers retained. No bank request is ever issued; RETURN operator_reported_sent, not bank acknowledgment. RecoveryGate normal can be restored only by ReconcileAndRecover after all relevant external facts/receipts reconcile.
+COMPLEXITY: O(g+b) bounded old/actual guard and tax-base keys, deterministic lock order; no network while held.
 
 ### Algorithm: DashboardAndGrowth
 REQUIREMENT: `FR-DASHBOARD-001`
 REQUIREMENT: `FR-DASHBOARD-002`
 REQUIREMENT: `FR-GROWTH-001`
 REQUIREMENT: `NFR-PRIVACY-001`
-REALISES: SC-US-004-2, SC-US-008-1, SC-US-008-2, SC-US-008-3, SC-US-009-1, SC-US-009-2, SC-US-009-3
+REALISES: SC-US-004-2, SC-US-008-1, SC-US-008-2, SC-US-008-3, SC-US-009-1, SC-US-009-2, SC-US-009-3, SC-US-009-4
 INPUT: session/program/partner view, explicit share actions.
 OUTPUT: scoped ledger-derived metrics and optional recommendation draft.
 STEPS:
 1. Resolve server membership, tenant/program/partner filters before query or cache lookup. IF object outside scope THEN uniform404; no foreign rows in totals/exports. Page by stable cursor≤100; include proof/adjustment/row provenance and visible exceptions, mask sensitive fields.
 2. Count accepted clicks and registrations separately; distinct paying customer by verified eligible payments. Show accrued/adjusted/allocated/sent as different projections of the same ledger/receipts. N1 MRR=null with reason unknown because v1 subscription_facts=null; don't derive it from990/paid_until.
 3. Find first positive live non-test commission for this participant/program. IF none THEN no first-value offer. ELSE on authorized view atomically record unique first_value_offer(program,actor) linked to original ledger and show recommendation once. Subsequent refunds preserve that historical offer fact; tests/demo/duplicate events cannot trigger another.
-4. Proposed staged dogfooding (owner review required; not completed monetary dogfooding) uses a separate purpose=platform_leads program: explicit enrollment/terms, personal link/promo and N3a lead cohorts use the same Partner/Asset/Growth modules. Its leads never mint commissions or reuse N1 billing IDs. Explicit open records share_open; explicit copy/native-share handoff records share_intent with request ID dedupe. Prepare text only, include no private customer/tax data; no server email/Slack/API send. Cancel/close creates no share_intent or delivered-message metric. Dogfooding context clearly names platform recommendation, never substitutes N1 sales as platform billing.
+4. Proposed staged dogfooding (owner review required; not completed monetary dogfooding) uses a separate purpose=platform_leads program: explicit enrollment/terms, personal link/promo and N3a lead cohorts use the same Partner/Asset/Growth modules. For a qualified platform lead, an authorized platform-program owner supplies verified qualification evidence and stable lead subject ID with the valid referring asset; atomically insert GrowthEvent qualified_lead unique(program,subject,kind), returning same record on replay and rejecting conflicting attribution. Qualification is an explicit manual input, not inferred from click/signup/payment; UI metric labels this source. Its leads never mint commissions or reuse N1 billing IDs. Explicit open records share_open; explicit copy/native-share handoff records share_intent with request ID dedupe. Prepare text only, include no private customer/tax data; no server email/Slack/API send. Cancel/close creates no share_intent or delivered-message metric. Dogfooding context clearly names platform recommendation, never substitutes N1 sales as platform billing.
 5. RETURN metrics/draft; data source per value is DB or sanitized journal, not an unimplemented external API.
 COMPLEXITY: O(p) page rows plus indexed aggregates; preaggregations are rebuildable, never debt authority.
 
@@ -244,14 +248,14 @@ COMPLEXITY: O(1) public metadata + bounded render.
 ### Algorithm: ReconcileAndRecover
 REQUIREMENT: `NFR-AVAILABILITY-001`
 REQUIREMENT: `NFR-OBSERVABILITY-001`
-REALISES: SC-US-008-2
+REALISES: SC-US-008-2, SC-US-007-5, SC-US-006-5
 INPUT: bounded N1 cursor feed, signed verified facts, N3a receipts, recovery state.
 OUTPUT: accounted missing facts, visible unresolved exceptions, verified watermark.
 STEPS:
 1. Fetch N1 immutable outbox feed and N1 canonical-provider reconciliation attestations outside transactions, limit≤100, stable increasing cursor; compare checkout/payment/refund identities and receipts, not mere counts. Cursor advances only after each result durably recorded or explicit unresolved exception; incomplete ranges don't advance verified_watermark.
-2. Reprocess missing events through same HMAC/version/N1-attestation/posting invariants (replay timestamps fresh). IF feed unavailable/gap/amount mismatch THEN preserve cursor/exception and RETURN incomplete; no zero estimate or successful freeze.
-3. After restore set RecoveryGate reconciliation_required before admitting financial writes. Reconcile restored receipts/allocations/confirmations with N1 and independently retained immutable registry/export/transfer evidence, especially external transfers after backup. Unknown transfer blocks affected preparation/confirmation and freeze.
-4. Only authorized reconciliation approval with evidence returns gate to normal; never replay a bank transfer or auto-enable N1 legacy writer. Outbox replay after restore uses original event IDs and same business uniqueness.
+2. While gate normal, reprocess missing events through same HMAC/version/N1-attestation/posting invariants (replay timestamps fresh). While recovering, stage verified missing N1 facts in a bounded replay manifest/exception without ledger writes; they are not accounted and do not advance verified_watermark. IF feed unavailable/gap/amount mismatch THEN preserve cursor/exception and RETURN incomplete; no zero estimate or successful freeze.
+3. After restore set RecoveryGate reconciliation_required with exclusive lock before admitting financial writes; every payment/refund/rounding/close/ordinary prepare/confirm transaction shared-locks and checks it through commit. Only observe and evidence-backed reconcile_observation modes may write observation/recovery corrections while closed. Reconcile restored receipts/allocations/confirmations with N1 and independently retained immutable registry/export/transfer evidence, especially external transfers after backup. Unknown transfer blocks affected preparation/confirmation and freeze.
+4. Only authorized reconciliation approval with evidence, resolved transfer observations, reconciled guard/YTD/opening inclusions and a reviewed missing-fact replay manifest returns gate to normal. After unlock standard intake replays staged facts; freeze remains blocked by unresolved source exceptions until replay completes; never replay a bank transfer or auto-enable N1 legacy writer. Outbox replay after restore uses original event IDs and same business uniqueness.
 5. RETURN observed lag, accepted/duplicate/rejected/reconciliation-needed counts and watermark; RPO/RTO remain not established until measured restore drill.
 COMPLEXITY: O(b) per bounded page; O(n) reconciliation backlog.
 
@@ -263,7 +267,8 @@ Private app API: `Authorization: Bearer <opaque short-lived session token>` for 
 |---|---|---|
 | POST /api/auth/signup; POST /api/auth/login; POST /api/auth/logout | signup enrollment grant/password; login identity/password; logout session+CSRF | data:{session/user}, meta; 401/409/422/429/503; Secure cookie, no password echo |
 | POST /api/programs/{id}/policy | configure; explicit PolicyVersion inputs, expected version | data:{policy_id,status}, meta:{request_id}; 404/409/422/503 |
-| POST /api/partners/accept | session+invite token+policy_id | data:{partner_id,assets}, meta; 404/409/422/429 |
+| POST /api/programs/{id}/enrollments; POST /api/enrollments/accept | owner invite scope to issue bound partner/operator grant; identity-only session to accept own grant | data:{grant/membership_id}, meta; 404/409/422; role/scopes server-owned |
+| POST /api/partners/accept | identity-only session+own invite token+policy_id | data:{partner_id,assets}, meta; 404/409/422/429 |
 | POST /internal/v1/n1/{connection}/attributions | scoped HMAC; registration/asset facts | data:{attribution_id,status,reason}, meta; 401/409/422/503 |
 | POST /internal/v1/n1/{connection}/events | scoped HMAC; raw BusinessEvent | data:{event_id,result:applied/duplicate_business}, meta; 401/409/413/422/429/503 |
 | GET N1 /internal/v1/n3a/{connection}/events?cursor&limit | scoped connection Bearer; limit≤100 | data:{events}, meta:{next_cursor,watermark}; 401/409/429/503; adapter not built |
@@ -271,7 +276,10 @@ Private app API: `Authorization: Bearer <opaque short-lived session token>` for 
 | POST /api/programs/{id}/registries | payout; month, request_id | data:{registry_id,hash,rows}, meta; 404/409/422/503; asynchronous acceptance may return202 job ID |
 | GET /api/registries/{id}/export | payout; no mutation | CSV with immutable version/hash; 404/409/503, formula-escaped text, no secrets/full bank details |
 | POST /api/registry-rows/{id}/prepare | payout+tax authority; request_id,date,evidence | data:{preparation_id,tax_snapshot}, meta; 404/409/422/503 |
+| POST /api/registry-rows/{id}/observations | payout; request_id,optional preparation,date,amounts,evidence; allowed under recovery gate | data:{observation_id}, meta; 404/409/422/503; no sent/YTD |
+| POST /api/registry-rows/{id}/reconcile-observation | payout+reconcile+tax approval; observation_id,evidence,expected versions | data:{confirmation_id}, meta; 404/409/422/503; atomic reservation replacement |
 | POST /api/registry-rows/{id}/confirm | payout; request_id,preparation,date,amounts,reference | data:{confirmation_id,state:sent,statement}, meta; 404/409/422/503 |
+| POST /api/growth/qualified-lead | platform-program owner; stable subject,asset,qualification evidence | data:{lead_event_id}, meta; 404/409/422; no ledger effect |
 | POST /api/growth/share | scoped session; kind=open/intent,request_id | data:{draft,recorded}, meta; 404/422/429; no external send |
 | GET /programs/{public_slug} | public safe projection | HTML A+server badge; 404/429 |
 
@@ -303,12 +311,14 @@ stateDiagram-v2
     prepared --> sent: operator statement and valid actual date
     prepared --> canceled: confirmed no transfer
     prepared --> reconciliation_required: expired or conflicting external fact
-    reconciliation_required --> sent: evidenced reconciliation and new valid tax receipt
+    reconciliation_required --> superseded: atomic evidenced replacement
+    superseded --> superseded: immutable old preparation
+    prepared --> superseded: evidenced replacement if transfer already occurred
     reconciliation_required --> canceled: evidenced no transfer
   }
 ```
 
-`sent` is a projection of immutable Confirmation, not a bank status. Resolving reconciliation into sent must run ConfirmManualTransfer against an approved replacement preparation; no unguarded direct state write. EventReceipt exists only for committed terminal processing; rejected/waiting events live in ReconcileException and remain retryable. Payment terminal succeeded facts are immutable; no cancel transition reverses billing/commission, only verified refund delta.
+`sent` is a projection of immutable Confirmation, not a bank status. Resolving reconciliation uses ConfirmManualTransfer reconcile_observation: old preparation becomes superseded, replacement and confirmation created in one transaction under old/actual year guards; the replacement is a historical evidence receipt, not readiness for a new transfer. EventReceipt exists only for committed terminal processing; rejected/waiting events live in ReconcileException and remain retryable. Payment terminal succeeded facts are immutable; no cancel transition reverses billing/commission, only verified refund delta.
 
 ## Error Handling Strategy
 
@@ -325,7 +335,7 @@ Each FR/NFR has one owning REQUIREMENT declaration; helper algorithms implement 
 
 ## Scenario Coverage
 
-Scenarios in Specification.md: 40 · claimed by an algorithm: 37.
+Scenarios in Specification.md: 51 · claimed by an algorithm: 48.
 
 Not claimed by any algorithm:
 

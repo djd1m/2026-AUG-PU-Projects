@@ -65,8 +65,8 @@ flowchart LR
   Intake[Signed event intake and N1 attestation]
   Ledger[Payment refund immutable ledger]
   Registry[Month close allocations carry]
-  Tax[Versioned tax YTD preparation]
-  Confirm[Manual transfer confirmation]
+  Tax[Persistent all-model payer year guard plus base YTD]
+  Confirm[Observe external fact and evidenced confirmation]
   Read[Scoped dashboard growth badge]
   Audit[Audit exceptions recovery gate]
   Route --> Identity
@@ -83,7 +83,7 @@ flowchart LR
   Confirm --> Audit
 ```
 
-Финансовые модули — внутри одного приложения и одной N3a DB, не самостоятельные микросервисы. Read projections не могут изменять debt. Tax lock key охватывает payer/person/year across programs; program lock охватывает close и postings.
+Финансовые модули — внутри одного приложения и одной N3a DB, не самостоятельные микросервисы. Read projections не могут изменять debt. Persistent Tax guard and observation blockers охватывают payer/person/year across programs and all tax models; program lock охватывает close и postings.
 
 ## Critical sequence — successful payment, lost ACK, repeat
 
@@ -114,7 +114,7 @@ sequenceDiagram
   O->>ND: acknowledge outbox
 ```
 
-Отдельный sender event UUID не отменяет unique provider payment identity: новый transport ID той же оплаты также не начисляет повторно. Refund-before-payment ожидает parent/reconciliation; partial refunds serialизуются parent lock и кумулятивной формулой. Отказ до любого commit не оставляет consumed claim без денежного результата.
+Отдельный sender event UUID не отменяет unique provider payment identity: новый transport ID той же оплаты также не начисляет повторно. Refund-before-payment ожидает parent/reconciliation; every new partial refund recomputes ALL canonical parent refund allocations, appending period differences. Prefreeze rechecks targets; semantic hash independent of delivery history, separate audit hash preserves it. Отказ до любого commit не оставляет consumed claim без денежного результата.
 
 ## Critical sequence — freeze and late refund
 
@@ -130,12 +130,32 @@ sequenceDiagram
   R->>DB: snapshot entries allocations carry and freeze atomically
   R->>DB: COMMIT stable hash
   I->>DB: same program lock then parent payment lock
-  I->>DB: cumulative reversal plus next open period delta
+  I->>DB: canonical all-refund targets plus append-only month differences
   I->>DB: COMMIT without editing frozen row
   R-->>O: read-only CSV
   O->>O: approved tax preparation then manual external transfer
   O->>R: report actual transfer with evidence
-  R->>DB: lock payer year then row validate tax and record once
+  R->>DB: lock persistent payer year guard then base and row record once
 ```
 
 Смена фактической даты/налогового года не разрешает фиктивный sent: сохраняется external-transfer exception и нужна сверка. Из уже отправленной строки ничего не списывается повторно; следующая отрицательная сумма переносится ровно одной carry chain. Export не вызывает ConfirmManualTransfer.
+
+## Recovery exception sequence — observation is not authorization
+
+```mermaid
+sequenceDiagram
+  participant O as Authorized operator
+  participant E as Observation endpoint
+  participant G as Recovery gate and persistent year guards
+  participant R as Evidence reconciliation
+  O->>E: actual transfer evidence optional preparation
+  E->>G: allowed under closed gate record blocker and immutable observation
+  E-->>O: observation ID no confirmation no YTD
+  O->>R: accountant approved actual date and inclusion evidence
+  R->>G: lock old and actual year guards sorted then bases and row
+  R->>G: atomically supersede old preparation and create corrected receipt
+  R->>G: one confirmation actual year income update consume reservation
+  R-->>O: operator reported sent never bank acknowledgment
+```
+
+Payment/refund/rounding/close/ordinary tax preparation/confirmation hold RecoveryGate shared lock and require normal through commit. Restore transition takes exclusive lock. Observation and evidenced recovery remain available while closed; no ordinary transfer can occupy a reserved/blocked payer-year gap. Signup yields session-only context; acceptance of the user's own trusted invitation atomically grants partner read scope and assets, then enables program reads.
