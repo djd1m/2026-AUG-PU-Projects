@@ -4,7 +4,7 @@ import { checkInfrastructure } from '../scripts/check-foundation-infra.mjs';
 
 function fixture() {
   const common = { networks: { private: null }, image: `postgres@sha256:${'a'.repeat(64)}` };
-  return { services: { db: { ...common }, test: { ...common }, web: { ...common, environment: {}, ports: [{ host_ip: '127.0.0.1' }] } }, networks: { private: { internal: true } }, volumes: {} };
+  return { services: { db: { ...common }, test: { ...common }, web: { ...common, networks: { private: null, ingress: null }, environment: {}, ports: [{ host_ip: '127.0.0.1' }] } }, networks: { private: { internal: true }, ingress: { driver: 'bridge' } }, volumes: {} };
 }
 describe('isolated infrastructure', () => {
   it('refuses published database ports and donor resources', () => {
@@ -15,6 +15,12 @@ describe('isolated infrastructure', () => {
     const foreign = fixture();
     Object.assign(foreign.services.db, { volumes: [{ type: 'bind', source: '/tmp' }] });
     expect(checkInfrastructure(foreign, process.cwd())).toContain('db:foreign_mount');
+    const exposedDb = fixture();
+    Object.assign(exposedDb.services.db.networks, { ingress: null });
+    expect(checkInfrastructure(exposedDb, process.cwd())).toContain('db:foreign_network');
+    const external = fixture();
+    Object.assign(external.networks.ingress, { external: true });
+    expect(checkInfrastructure(external, process.cwd())).toContain('own_ingress_network_required');
     const privileged = fixture();
     Object.assign(privileged.services.web.environment, { DATABASE_URL_MIGRATE: 'sensitive-sentinel' });
     expect(checkInfrastructure(privileged, process.cwd())).toContain('web_privileged_credentials');

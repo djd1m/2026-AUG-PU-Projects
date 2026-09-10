@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-09-10T09:30:31.704373+00:00",
+  "namespace": "n3a-foundation-4105e617819b",
+  "session_id": 11321,
+  "command": "node scripts/run-foundation-integration.mjs --mutations",
+  "exit_code": 0,
+  "typecheck": "passed",
+  "build": "passed",
+  "infrastructure": "passed",
+  "unit": {
+    "tests": 46,
+    "files": 13,
+    "duration_seconds": 9.86
+  },
+  "postgresql_workspace": {
+    "tests": 44,
+    "files": 12,
+    "duration_seconds": 31.19
+  },
+  "mutations": {
+    "killed": 30,
+    "total": 30,
+    "source_hashes_verified": true
+  },
+  "cleanup": "own DB container and private network removed; diagnostic volume retained",
+  "tooling": {
+    "command": "npm run test:tooling",
+    "tests": 8,
+    "exit_code": 0,
+    "execution": "approved outside sandbox after spawnSync EPERM; reporter changes alone did not resolve sandbox denial"
+  },
+  "source_manifest": "final-review-inputs.json",
+  "source_changes_since_manifest": {
+    "package.json": "a7dbec91ce58e899492a36f7ea1115da67dca4dabce920c18b9915e4f4bbb479"
+  },
+  "limits": [
+    "No repeat image/browser in this final command; prior browser55 and served-image77 hash binding remain valid for unchanged application/DB sources.",
+    "New browser harness log-check branch not executed; standalone log-check.json records actual built-web logs and11synthetic values.",
+    "Run elapsed includes waits; active/model/usage attestation unavailable."
+  ]
+}

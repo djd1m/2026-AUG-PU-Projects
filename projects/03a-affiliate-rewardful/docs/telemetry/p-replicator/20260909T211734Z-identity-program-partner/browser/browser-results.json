@@ -1,0 +1,310 @@
+{
+  "started_at": "2026-09-10T09:15:36.378970+00:00",
+  "ended_at": "2026-09-10T09:16:06.522651+00:00",
+  "elapsed_wall_ms": 30143,
+  "source_sha256": {
+    "apps/web/.next/BUILD_ID": "df4e7c9f43f56de1bb99b1f570556fcc8763b34cfe8456242f98758ae53cbe29",
+    "apps/web/src/app/api/auth/csrf/route.ts": "ef792d2bb763ca14ca7aa3a77cffac9921e830f4aa51a75cc34c081e5e643f1f",
+    "apps/web/src/app/api/auth/login/route.ts": "4c5c5118287600b9793749eac6295ded6870e5e60eb1c3bb0bf0a75ca9c16b6f",
+    "apps/web/src/app/api/auth/logout/route.ts": "59775703a18cf825e1f79d557b71998e396426569fb1222a54b8cac80941b4c4",
+    "apps/web/src/app/api/auth/me/route.ts": "57d9a166761f442f026fa40712226ef5c5bcd2dee9abff84acc83f0f456a663f",
+    "apps/web/src/app/api/auth/signup/route.ts": "d6e5af2c74e9c00075c20ae2c8063cf9ff1c0013ab62668b1c767408d94d79c2",
+    "apps/web/src/app/api/enrollments/accept/route.ts": "26e98c358100fde545b500cbe3857a831355879550d5ed67086bbea00a1fbd9f",
+    "apps/web/src/app/api/enrollments/bind/route.ts": "08061f33bc997a1ccc9dca33ec200232bc89924fb71ce3ec085951daa804326f",
+    "apps/web/src/app/api/enrollments/preview/route.ts": "1f7bdcc21e394943dd1ee68ae863504d7ab5c4a600775d35a630adfe476df66e",
+    "apps/web/src/app/api/health/route.ts": "311b03e2d23a405994410b03567936613f6a341f94b6ffd2aa7f28a8e03a6304",
+    "apps/web/src/app/api/partners/accept/route.ts": "e194d28058b4b91fc87bc9422a28778f381cf7ced9f6922a3f5336181a91a1d5",
+    "apps/web/src/app/api/programs/[id]/activate/route.ts": "5260b5c980df7ad0631f391e3f22e5dadadc88e5b71925561822601ef6c02ab8",
+    "apps/web/src/app/api/programs/[id]/assets/[asset]/revoke/route.ts": "8844a420bc0247a90543a75afc78ba059285164c665371122cf09431bcf75aae",
+    "apps/web/src/app/api/programs/[id]/enrollments/[grant]/revoke/route.ts": "ddcf555cbc6dde80b40911740afe1ac5c3a88be72b06e288004f1909e9c2a90b",
+    "apps/web/src/app/api/programs/[id]/enrollments/route.ts": "5e098ddd57fc487de0f7a76752e003491fce1fb6d8d2b9b64b465b9b9ec00030",
+    "apps/web/src/app/api/programs/[id]/members/[membership]/revoke/route.ts": "392b2c653420126420a58cff159872fdfca5b2bc6ea4d0012663efdd9412e5d4",
+    "apps/web/src/app/api/programs/[id]/members/route.ts": "388ebad7f16fa31f20c98cafefcdf30ee51c5d05dbcc4c02a4531079d5c9e349",
+    "apps/web/src/app/api/programs/[id]/partner-assets/route.ts": "84558e8ac6591f86e1e5a16adb15b121faa5ce8ae1b90cac8947c8e010cda554",
+    "apps/web/src/app/api/programs/[id]/partners/[partner]/status/route.ts": "4cc41f471e35398749e627c7e353c7893a0e5c0de4601e956f5d817ffb2dd3ec",
+    "apps/web/src/app/api/programs/[id]/policy/route.ts": "cba07450ea61a9a86463525b28cf1cf85dfe21dd2bf846fb10d3ba42bc657124",
+    "apps/web/src/app/api/programs/[id]/route.ts": "e4da57320213a0d1c1de65e7d2b77871652ec1cdd8dd8ed15474919b84201ef9",
+    "apps/web/src/app/globals.css": "a22f263381ed5b576bb751d13b35f0e79b14c3a4bdd3eacd81d3a163ed12a640",
+    "apps/web/src/app/join/page.tsx": "bbda88a8a85dc36d0efab9957a4777d8c861327f57ec7e1255602ecdfff2669f",
+    "apps/web/src/app/layout.tsx": "72f560b75f75a38eac01364b20c748d15f4c254d4ff6d31cc20fd86ad8a7566a",
+    "apps/web/src/app/login/page.tsx": "df6dd5c15a94d1a9ea94d2ca164e97dd42228050ed41c31230a31792f97f4305",
+    "apps/web/src/app/onboarding/page.tsx": "4715b4244f95f08d00982731b41d47f6b33e24a4157e96b7800498f08ef17ded",
+    "apps/web/src/app/page.tsx": "8542322b64a6b8adee1bc6628c7fe8e6b80c6b107e61d9726ac3d48da8588517",
+    "apps/web/src/app/programs/[id]/partner/page.tsx": "d94879d575d66c30519f6b14a76d419002b3089bcc8dc99552fff0bc7864c110",
+    "apps/web/src/app/programs/[id]/setup/page.tsx": "5294d24627d119c9f8485f3c87762e6cd347018f073f2b51c4d50cf12519d8c1",
+    "apps/web/src/assets/OFL.txt": "3cb6a6084f5d942a8f3b5fda0f6a90dde18d7f7f1798886f4043d18f8c1a811e",
+    "apps/web/src/assets/rubik-bold.ttf": "2d6393d64232ea3e0eeff79165d80df61c0859213abdd638b0ec1e81d21098dc",
+    "apps/web/src/assets/rubik-regular.ttf": "cc6a4222027f8e57ff86a50c5ba88f12326d7223bde9bf6531538633ebad3343",
+    "apps/web/src/components/onboarding/api.ts": "0cb55b224b0c76ffbec3a483b5046eb694d352d237b138be9733a80516755b93",
+    "apps/web/src/components/onboarding/invite-form.tsx": "5e90e6d1aaf681eb35a542b10e202540b2be686ba78019969a5d78c7ef96a44d",
+    "apps/web/src/components/onboarding/join-form.tsx": "1303663480ecd3bddd94e59e7215400e55a7fbf24ce3279445078395545c417d",
+    "apps/web/src/components/onboarding/login-form.tsx": "57e850d9ec49f9910292bb1ba9d472173831c141c94cfee809dc20d9ab855a30",
+    "apps/web/src/components/onboarding/member-list.tsx": "d0eb656b1be6da46dc0f9d1aedde5489ba057f8282b43cf5712987d9698cf978",
+    "apps/web/src/components/onboarding/membership-list.tsx": "c5ed32c524ab13e68282ce71bdd3a55a8e710e4c669750bd73e75fa0eb6efa36",
+    "apps/web/src/components/onboarding/partner-assets.tsx": "6dc7c523422f19d91b1834722942ceaa4984e400d1a27d9a3a7aebb11a21e15c",
+    "apps/web/src/components/onboarding/policy-form.tsx": "13bfbd7844a50f4e221138419782e05c81d46b53f331cc01e0b626649f66f768",
+    "apps/web/src/components/onboarding/program-setup.tsx": "e88c897c081ada477e288b70b6f7c1f298042a79384c6669d89016e351768e97",
+    "apps/web/src/components/onboarding/rate.ts": "35ea8b864ee1e53dd956d8f95df1d5a4fb70f4905ff41450e6bcf914cfa4777a",
+    "apps/web/src/components/onboarding/shell.tsx": "d398146e38ec3a30ff98dba92e1d5e0479c4cc261ff178459a0e26ef33d49bc8",
+    "apps/web/src/lib/auth/config.ts": "cbf9080a76c29d3dd8f817ceff749911efa220f60a13789bca71d8b574fe98a8",
+    "apps/web/src/lib/auth/cookie.ts": "f61d3bf4d3dd6f562dffb0bc43870cc856d5a36649223c80df985a094b37cae0",
+    "apps/web/src/lib/auth/credentials.ts": "8c8bd8d70d722d89bd2a14d09a47c8232bb3721ca4fb3e8177646f9fd0ea670e",
+    "apps/web/src/lib/auth/kdf-admission.ts": "d2618e5028b1dde8a20506ba451acc18f46cea623f70641fead9dd7fd6bbc30e",
+    "apps/web/src/lib/auth/password.ts": "15e9ec01b1ff1f58299655663615bf31b95f2ce95be00b075cb3e6b9ef12891b",
+    "apps/web/src/lib/auth/session.ts": "dd8d3ff1482794d4a358da4464168b37f0d064db4293d603c1d3674c3671a262",
+    "apps/web/src/lib/http/admission.ts": "ff26f5393ee377369707ab0fe34b5ddfbdba82c7c4e5a66cff0fd79dc0663dfe",
+    "apps/web/src/lib/http/body.ts": "b22403f84ede3f34ec8f1ae98cecfb67b92fbb6af032ba54fc81f2cd3da675f9",
+    "apps/web/src/lib/http/csrf.ts": "d2f0b54e91b92bdb532130baf39c462baefec2746c5f02ddff522d34ab03fbf7",
+    "apps/web/src/lib/http/errors.ts": "5324e42e2a83b77e47751f1b3f49234a22baa4005dc4b926b658bcfc9a185b4d",
+    "apps/web/src/lib/http/handler.ts": "ff34b0c10f077de62209a9feff827c99f79159609485482d1b280db8d45c4fc5",
+    "apps/web/src/lib/http/input.ts": "ba3a6c734b9ac6db58d46877e3d83f5e529947418e84be180a8d4f35a099c063",
+    "apps/web/src/lib/onboarding/identity.ts": "ddb160ace4b64a83af1da3061b1861f8389e32fafda23fec4a5b85444b077d2e",
+    "apps/web/src/lib/onboarding/partner.ts": "1c122b63cd68c9915e18816ccc195e834b07cd30a56d9d54104f7d2ee119e310",
+    "apps/web/src/lib/onboarding/policy.ts": "8f0cbf7a034347a2462326cdbd3ffe3cac59beced31449412d2d6d49e838bd66",
+    "apps/web/src/lib/onboarding/runtime.ts": "0d2d1a05abec41061d30531e7388ed1aee64f0669010a7ed3457ba6bebfc4639",
+    "apps/web/src/lib/onboarding/service.ts": "747dc952639c88676ca27e2af6d55191c9be466a7d5534f04138cca3006d9f5e",
+    "packages/db/migrations/001_identity_sessions.sql": "70106a564616aa1df6f2cf5f4df2aef72ef4fffc114d6e9647652c171cef56cc",
+    "packages/db/migrations/002_runtime_grants.sql": "7dbded87c61478ddb2ee03dafa5c8d660cdb3dc376579b93e120234fd4a56b6e",
+    "packages/db/migrations/003_onboarding_schema.sql": "4b69a39673ef79bc59f67afe791aab89170cfeff8002f6d1730b72a212be6a1b",
+    "packages/db/migrations/004_onboarding_helpers.sql": "afb7da0b409d339774d2312642598c7bd9073aecc855ef1f56ffaee0887cecf6",
+    "packages/db/migrations/005_onboarding_enrollment.sql": "048964755085023a9f3ced39d083343f7005568c19a1582b76097644ebac2003",
+    "packages/db/migrations/006_onboarding_policy.sql": "95b20b4e8629a1fcf3caedccfa4091bd434add8a8142c57a66f75a9499486770",
+    "packages/db/migrations/007_onboarding_partner.sql": "8ed8948d2c1d5cf3651b756f5b5157a9013c691e05f3ec0283457844a9cb4546",
+    "packages/db/migrations/008_onboarding_reads.sql": "2e10ee1f001a669c20d194c6c4c1acb14a17c9d92752e934cb81eef75e96d17c",
+    "packages/db/migrations/009_onboarding_admission.sql": "eaf308525595e3cc123c0593de8577e9375f0aa8a6c73752df1e3ce328e11a7b",
+    "packages/db/migrations/010_onboarding_bootstrap.sql": "d124b5e69cb0d380308b6081ec98fda9f9b1367f1b3e1e4c7713704c65e6c6e0",
+    "packages/db/src/admission-repository.ts": "9f1685399b280fb830e5382ab49afc41cffa8f685bd289c3571b99368c5cc38d",
+    "packages/db/src/auth-repository.ts": "e3d6e39815a00076a7dd4015f6192d83755680c5592d0e0f2d335f4c7e806636",
+    "packages/db/src/index.ts": "a83c09e25f366b3cc7045042f04d576dd523f25a39413785d377168574a626d9",
+    "packages/db/src/migrate.ts": "d63996f70dcb778deca616628eb9bcd0801a071ff87b85cb6436b88ee54271ed",
+    "packages/db/src/onboarding-codecs.ts": "2dac78c6a2917e4949ff4a7f7027d82fb2d5d398317f128d888b7095d1958a41",
+    "packages/db/src/onboarding-contract.ts": "9fd30014819ca9133c648061d6b2177ba5f71883b99ff238a9bc64a1ad0b6511",
+    "packages/db/src/onboarding-repository.ts": "1b43f03b1ded5f46c1793bbdf2e66b97bc3f48735127efee740ac84b0e5c6265",
+    "packages/db/src/pool.ts": "b56c60405ebb74cc2d2750aa9934623e417195483fef4ffadbdc58e88b3f3394",
+    "tests/onboarding-browser.py": "c7c3596965ed88dc2ed768a98af4a6e1b9cca7d1fc8eb57f06b00aa9494ab251"
+  },
+  "checks": [
+    {
+      "name": "JavaScript-disabled form never puts credentials or grant in URL",
+      "pass": true
+    },
+    {
+      "name": "owner role is explicit before acceptance",
+      "pass": true
+    },
+    {
+      "name": "browser session keeps Secure HttpOnly",
+      "pass": true
+    },
+    {
+      "name": "browser secret cookie hidden from JavaScript",
+      "pass": true
+    },
+    {
+      "name": "policy persists exact terms and integer percentage",
+      "pass": true
+    },
+    {
+      "name": "private API is no-store",
+      "pass": true
+    },
+    {
+      "name": "invitation action has no false error after success",
+      "pass": true
+    },
+    {
+      "name": "one-time invitation disappears after reload",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 320",
+      "pass": true
+    },
+    {
+      "name": "owner fits 320",
+      "pass": true
+    },
+    {
+      "name": "owner labels 320",
+      "pass": true
+    },
+    {
+      "name": "owner keyboard focus 320",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 390",
+      "pass": true
+    },
+    {
+      "name": "owner fits 390",
+      "pass": true
+    },
+    {
+      "name": "owner labels 390",
+      "pass": true
+    },
+    {
+      "name": "owner keyboard focus 390",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 768",
+      "pass": true
+    },
+    {
+      "name": "owner fits 768",
+      "pass": true
+    },
+    {
+      "name": "owner labels 768",
+      "pass": true
+    },
+    {
+      "name": "owner keyboard focus 768",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 1440",
+      "pass": true
+    },
+    {
+      "name": "owner fits 1440",
+      "pass": true
+    },
+    {
+      "name": "owner labels 1440",
+      "pass": true
+    },
+    {
+      "name": "owner keyboard focus 1440",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 1440",
+      "pass": true
+    },
+    {
+      "name": "exact readable terms rendered as text",
+      "pass": true
+    },
+    {
+      "name": "stored terms cannot execute script",
+      "pass": true
+    },
+    {
+      "name": "pre-consent partner assets deny",
+      "pass": true
+    },
+    {
+      "name": "unchecked consent stays on invitation",
+      "pass": true
+    },
+    {
+      "name": "consent references exact persisted policy",
+      "pass": true
+    },
+    {
+      "name": "draft and not-ready remain explicit",
+      "pass": true
+    },
+    {
+      "name": "assets are honest and show no invented balances",
+      "pass": true
+    },
+    {
+      "name": "asset copy reports actual success",
+      "pass": true
+    },
+    {
+      "name": "partner assets survive reload",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 320",
+      "pass": true
+    },
+    {
+      "name": "partner fits 320",
+      "pass": true
+    },
+    {
+      "name": "partner labels 320",
+      "pass": true
+    },
+    {
+      "name": "partner keyboard focus 320",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 390",
+      "pass": true
+    },
+    {
+      "name": "partner fits 390",
+      "pass": true
+    },
+    {
+      "name": "partner labels 390",
+      "pass": true
+    },
+    {
+      "name": "partner keyboard focus 390",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 768",
+      "pass": true
+    },
+    {
+      "name": "partner fits 768",
+      "pass": true
+    },
+    {
+      "name": "partner labels 768",
+      "pass": true
+    },
+    {
+      "name": "partner keyboard focus 768",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 1440",
+      "pass": true
+    },
+    {
+      "name": "partner fits 1440",
+      "pass": true
+    },
+    {
+      "name": "partner labels 1440",
+      "pass": true
+    },
+    {
+      "name": "partner keyboard focus 1440",
+      "pass": true
+    },
+    {
+      "name": "actual CSS viewport 1440",
+      "pass": true
+    },
+    {
+      "name": "owner can reactivate suspended partner after reload",
+      "pass": true
+    },
+    {
+      "name": "reactivation preserves individually revoked asset",
+      "pass": true
+    },
+    {
+      "name": "no grant or credential in browser URL",
+      "pass": true
+    },
+    {
+      "name": "source snapshot stayed unchanged",
+      "pass": true
+    }
+  ],
+  "status": "passed",
+  "failure_kind": null
+}

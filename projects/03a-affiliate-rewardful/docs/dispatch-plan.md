@@ -15,6 +15,7 @@
 | identity-core | New SQL, domain, bootstrap and core tests |
 | identity-ui | Client forms, pages and CJM A styles |
 | identity-process-qe | Two new process/crash/concurrency test files |
+| canon-adapter | Pinned checker adapter and regression test |
 | координатор | Frozen contract, HTTP, runtime and shared integration |
 
 ## Владение
@@ -128,6 +129,12 @@
 | packages/db/tests/onboarding-process.integration.test.ts | identity-process-qe |
 | packages/db/tests/onboarding-process-worker.ts | identity-process-qe |
 
+| scripts/check-canon.mjs | canon-adapter |
+| tests/canon-checker.test.mjs | canon-adapter |
+
+| scripts/check-foundation-infra.mjs | координатор |
+| tests/infra.test.ts | координатор |
+
 Only new SQL migrations after002 and onboarding-prefixed test/repository splits may be proposed by core. Exact paths are added here before creation. Core confirmed DTO SHA before UI launch; only the listed UI files now belong to identity-ui. UI may add named component splits after coordinator records ownership. Coordinator also owns all run/events, lifecycle reports, provenance and source receipts. Each writer has its own worktree; no donor runtime writes. Foundation prior dispatch is preserved in this run.
 
 After the terminal UI receipt, coordinator owns the four form files above for integration corrections (password bounds, exact terms, decimal conversion, async form reset and renewed consent). Original worker hashes remain in its receipt.
@@ -139,3 +146,5 @@ After the terminal UI receipt, coordinator owns the four form files above for in
 | apps/web/src/components/onboarding/rate.ts | apps/web/src/components/onboarding/policy-form.tsx | координатор |
 
 Coordinator integrates core files after verified terminal receipt. Root now owns core production corrections and packages/db/tests/roles.integration.test.ts.
+
+Integration ownership for scripts/check-canon.mjs transfers to coordinator after terminal receipt; root only changes child stdio/timeout so checker diagnostics reach the invoking terminal.

@@ -32,7 +32,7 @@ services:
       ADMISSION_SECRET: ${ADMISSION_SECRET:?explicit admission secret required}
       APP_ORIGIN: ${APP_ORIGIN:?explicit application origin required}
     ports: ["127.0.0.1:${N3A_WEB_PORT:-4183}:3000"]
-    networks: [private]
+    networks: [private, ingress]
     depends_on:
       db: { condition: service_healthy }
   test:
@@ -57,5 +57,7 @@ services:
 networks:
   private:
     internal: true
+  ingress:
+    driver: bridge
 volumes:
   db-data:

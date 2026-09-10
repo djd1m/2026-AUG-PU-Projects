@@ -67,3 +67,13 @@ All source was read from the main repository, no tests were run because no runti
 changed. Main donor heads and selected N1 hashes were verified unchanged after inspection.
 
 Coordinator correction after receipt integration: exact donor code was re-read. N3a never holds a DB transaction across KDF/body reads; harmless repeated Promise resolution is not a vulnerability claim. This paragraph and the corrected rows supersede worker wording; original artifact SHA is retained in run events.
+
+## Integrated copy/adapt provenance
+
+Actual donor audit above remains historical; runtime does not import N1/N2. Destination hashes at the current integration checkpoint:
+
+| Destination | SHA-256 | Adaptation |
+|---|---|---|
+| apps/web/src/lib/http/body.ts | b22403f84ede3f34ec8f1ae98cecfb67b92fbb6af032ba54fc81f2cd3da675f9 | N1 bounded stream reader; additional deadline/abort/UTF8 checks |
+| apps/web/src/lib/http/csrf.ts | d2f0b54e91b92bdb532130baf39c462baefec2746c5f02ddff522d34ab03fbf7 | N2 exact Origin guard; N3a session-bound CSRF added |
+| apps/web/src/lib/onboarding/identity.ts | ddb160ace4b64a83af1da3061b1861f8389e32fafda23fec4a5b85444b077d2e | N1 bounded case/edge normalization; explicit N3a ASCII grammar and HMAC domain |

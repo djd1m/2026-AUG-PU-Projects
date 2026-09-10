@@ -1,0 +1,320 @@
+{
+  "namespace": "n3a-foundation-4105e617819b",
+  "results": [
+    {
+      "name": "http-in-flight-bound",
+      "source": "apps/web/src/lib/http/admission.ts",
+      "original_sha256": "ff26f5393ee377369707ab0fe34b5ddfbdba82c7c4e5a66cff0fd79dc0663dfe",
+      "mutant_sha256": "b6523a7764c8132f743139d7eba7c6916ebb9e51151913dae85ba0aeed628f79",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC9 permits exactly sixteen HTTP handlers and never queues the seventeenth"
+      ]
+    },
+    {
+      "name": "csrf-context-binding",
+      "source": "apps/web/src/lib/http/csrf.ts",
+      "original_sha256": "d2f0b54e91b92bdb532130baf39c462baefec2746c5f02ddff522d34ab03fbf7",
+      "mutant_sha256": "2772f610e0e63b01569001598a637518255d04dbced5e9c49329cb0b04298d44",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC3 CSRF binds anonymous or current session context, exact Origin and expiry"
+      ]
+    },
+    {
+      "name": "csrf-exact-origin",
+      "source": "apps/web/src/lib/http/csrf.ts",
+      "original_sha256": "d2f0b54e91b92bdb532130baf39c462baefec2746c5f02ddff522d34ab03fbf7",
+      "mutant_sha256": "c3480bd185901d05d794bd1f850a1a329b8cec849d836941f5a62857c14ea539",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC3 CSRF binds anonymous or current session context, exact Origin and expiry"
+      ]
+    },
+    {
+      "name": "http-body-actual-bytes",
+      "source": "apps/web/src/lib/http/body.ts",
+      "original_sha256": "b22403f84ede3f34ec8f1ae98cecfb67b92fbb6af032ba54fc81f2cd3da675f9",
+      "mutant_sha256": "842853c406b80ff34db4037351ea02a06b65ba4958e1c5ce4b34d4ded0f12a7c",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC9 bounds total body bytes and time even when cancellation never settles"
+      ]
+    },
+    {
+      "name": "forwarding-header-bypass",
+      "source": "apps/web/src/lib/http/handler.ts",
+      "original_sha256": "ff34b0c10f077de62209a9feff827c99f79159609485482d1b280db8d45c4fc5",
+      "mutant_sha256": "6063b79e547374912134871e4e1f2d42cf1512e8c6adc3aef4b1a887abe3426e",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC9 spoofed forwarding headers cannot skip the shared durable source limit"
+      ]
+    },
+    {
+      "name": "native-form-secret-url",
+      "source": "apps/web/src/components/onboarding/join-form.tsx",
+      "original_sha256": "1303663480ecd3bddd94e59e7215400e55a7fbf24ce3279445078395545c417d",
+      "mutant_sha256": "37ee851997877c05b250a8cf43f4f16cbab771f80709c6d173551354c33fde92",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC10 actual sensitive forms default to POST even without JavaScript or hydration"
+      ]
+    },
+    {
+      "name": "owner-reactivation-control",
+      "source": "apps/web/src/components/onboarding/member-list.tsx",
+      "original_sha256": "d0eb656b1be6da46dc0f9d1aedde5489ba057f8282b43cf5712987d9698cf978",
+      "mutant_sha256": "0431bbffa1fc0872469eba535b707b2f6f88b08987ad82c9e829cb4b4effe718",
+      "exit_code": 1,
+      "failed_tests": [
+        "AC8 owner can reactivate a suspended partner whose membership projection is revoked"
+      ]
+    },
+    {
+      "name": "grant-final-expiry",
+      "source": "packages/db/migrations/004_onboarding_helpers.sql",
+      "original_sha256": "afb7da0b409d339774d2312642598c7bd9073aecc855ef1f56ffaee0887cecf6",
+      "mutant_sha256": "f625938611d93d9125ecee4d54aa15c247564ccd67b73846e7c57fdc883459b3",
+      "exit_code": 1,
+      "failed_tests": [
+        "expiry during KDF and foreign identities never bind or create credentials"
+      ]
+    },
+    {
+      "name": "grant-final-revocation",
+      "source": "packages/db/migrations/004_onboarding_helpers.sql",
+      "original_sha256": "afb7da0b409d339774d2312642598c7bd9073aecc855ef1f56ffaee0887cecf6",
+      "mutant_sha256": "938d825621d91732321b10a5b0f2f5b1ffc49d9cc84eaf11f0c22410be931fb7",
+      "exit_code": 1,
+      "failed_tests": [
+        "explicit reissue is one chain tip and old/predecessor tokens cannot enroll",
+        "revocation during paused KDF fails final grant check without identity creation or held pool client",
+        "bootstrap replacement and owner acceptance serialize in both orders without a second usable tip"
+      ]
+    },
+    {
+      "name": "operator-scope-ceiling",
+      "source": "packages/db/migrations/003_onboarding_schema.sql",
+      "original_sha256": "4b69a39673ef79bc59f67afe791aab89170cfeff8002f6d1730b72a212be6a1b",
+      "mutant_sha256": "1432b51667c67cc5d0c842d6ddc353815dcd9dcaea1d2e8fb0a342d45ae2bd21",
+      "exit_code": 1,
+      "failed_tests": [
+        "SQL itself rejects forbidden scopes and cross-program asset/policy/partner relations; hostile search path cannot redirect objects"
+      ]
+    },
+    {
+      "name": "consumed-membership-recheck",
+      "source": "packages/db/migrations/004_onboarding_helpers.sql",
+      "original_sha256": "afb7da0b409d339774d2312642598c7bd9073aecc855ef1f56ffaee0887cecf6",
+      "mutant_sha256": "be00ff94a3ecf550e72b781939105be1dadfff0370352a6f825db8dfb475f7df",
+      "exit_code": 1,
+      "failed_tests": [
+        "operator grant scope ceiling and revoked membership replay cannot restore authority"
+      ]
+    },
+    {
+      "name": "owner-membership-coupling",
+      "source": "packages/db/migrations/005_onboarding_enrollment.sql",
+      "original_sha256": "048964755085023a9f3ced39d083343f7005568c19a1582b76097644ebac2003",
+      "mutant_sha256": "b3988ab4f8d7fe8e433a549a960928ab25f32da65de20eb3d1ffcc68d947b279",
+      "exit_code": 1,
+      "failed_tests": [
+        "explicit reissue is one chain tip and old/predecessor tokens cannot enroll",
+        "two simultaneous normalized registrations create one identity/session and no membership or credential overwrite",
+        "operator grant scope ceiling and revoked membership replay cannot restore authority",
+        "session revoke wins before SQL authorization lock; unrelated user lock wait uses fresh expiry after all locks",
+        "mutation holds session SHARE until commit, logout waits then denies every later mutation",
+        "bootstrap replacement and owner acceptance serialize in both orders without a second usable tip",
+        "issuer authority is current at acceptance and replay, while established membership survives issuer loss",
+        "owner assignment rolls back when membership insertion fails and private output refuses symlinks"
+      ]
+    },
+    {
+      "name": "consent-exact-policy-hash",
+      "source": "packages/db/migrations/007_onboarding_partner.sql",
+      "original_sha256": "8ed8948d2c1d5cf3651b756f5b5157a9013c691e05f3ec0283457844a9cb4546",
+      "mutant_sha256": "f7108f9d4cf2a1e540e46307b991e7cf66b0f7ee274489bfe4c849d16e061813",
+      "exit_code": 1,
+      "failed_tests": [
+        "every coupled acceptance write rolls back and leaves the invitation usable"
+      ]
+    },
+    {
+      "name": "locked-policy-timezone",
+      "source": "packages/db/migrations/006_onboarding_policy.sql",
+      "original_sha256": "95b20b4e8629a1fcf3caedccfa4091bd434add8a8142c57a66f75a9499486770",
+      "mutant_sha256": "804a6280f47569d876d5fbc8fc86e8ee36db88f94c1e6c252d01e66470b90898",
+      "exit_code": 1,
+      "failed_tests": [
+        "future policy retains paired current timezone, cannot accept future terms, and paused calendar stays locked"
+      ]
+    },
+    {
+      "name": "activation-readiness-closed",
+      "source": "packages/db/migrations/006_onboarding_policy.sql",
+      "original_sha256": "95b20b4e8629a1fcf3caedccfa4091bd434add8a8142c57a66f75a9499486770",
+      "mutant_sha256": "d97bf7ee8f434cc2604760b234182eb2cc7d7db5bd400b7c2fbfcce5aa26af0f",
+      "exit_code": 1,
+      "failed_tests": [
+        "expected version races insert one immutable version and activation is always closed"
+      ]
+    },
+    {
+      "name": "invitation-consume-coupling",
+      "source": "packages/db/migrations/007_onboarding_partner.sql",
+      "original_sha256": "8ed8948d2c1d5cf3651b756f5b5157a9013c691e05f3ec0283457844a9cb4546",
+      "mutant_sha256": "cc951ea66263e0644371b3f87062e9565d7ee257d9c98b1ef86963e5293a233a",
+      "exit_code": 1,
+      "failed_tests": [
+        "concurrent consent creates one membership, one link/promo and immutable consent/facts; injected final failure rolls everything back",
+        "every coupled acceptance write rolls back and leaves the invitation usable"
+      ]
+    },
+    {
+      "name": "revoked-asset-stays-revoked",
+      "source": "packages/db/migrations/007_onboarding_partner.sql",
+      "original_sha256": "8ed8948d2c1d5cf3651b756f5b5157a9013c691e05f3ec0283457844a9cb4546",
+      "mutant_sha256": "fc69ca168935195a1b4d3871a99cf5b9c3d86f45b3150bfeec345cb1783e970a",
+      "exit_code": 1,
+      "failed_tests": [
+        "suspension denies portal/replay, reactivation restores read only and preserves separately revoked asset/history"
+      ]
+    },
+    {
+      "name": "durable-source-ceiling",
+      "source": "packages/db/migrations/009_onboarding_admission.sql",
+      "original_sha256": "eaf308525595e3cc123c0593de8577e9375f0aa8a6c73752df1e3ce328e11a7b",
+      "mutant_sha256": "11623f53f8765c18efd874bcaca181697a7b47eab99752e44b067716f3da7dcc",
+      "exit_code": 1,
+      "failed_tests": [
+        "fixed8193 shared rows atomically admit 60 source requests, without charging global on rejection",
+        "global300 and identity10 limits persist independently across repository instances and reset in place"
+      ]
+    },
+    {
+      "name": "public-function-execute",
+      "source": "packages/db/migrations/008_onboarding_reads.sql",
+      "original_sha256": "2e10ee1f001a669c20d194c6c4c1acb14a17c9d92752e934cb81eef75e96d17c",
+      "mutant_sha256": "77c81489c3e8a9e7e5b81d985eb49f4a2eea2ded81b2e12ee797e283b2bf7fb5",
+      "exit_code": 1,
+      "failed_tests": [
+        "actual app has no table reads/DML or internal/bootstrap functions; all published functions fixed search path and PUBLIC denied"
+      ]
+    },
+    {
+      "name": "runtime-direct-user-insert",
+      "source": "packages/db/migrations/009_onboarding_admission.sql",
+      "original_sha256": "eaf308525595e3cc123c0593de8577e9375f0aa8a6c73752df1e3ce328e11a7b",
+      "mutant_sha256": "c20a7f3d4875ef6fc4bbbd488ba76a950856844921155f45a27f9dd4b03a0281",
+      "exit_code": 1,
+      "failed_tests": [
+        "runtime configuration cookie and database authority fail closed"
+      ]
+    },
+    {
+      "name": "eligibility-evidence-digest",
+      "source": "packages/db/migrations/004_onboarding_helpers.sql",
+      "original_sha256": "afb7da0b409d339774d2312642598c7bd9073aecc855ef1f56ffaee0887cecf6",
+      "mutant_sha256": "d840fe21a30a611dc97bf9af67cff0e4c9e435344585f5dffd4491419d2f71d3",
+      "exit_code": 1,
+      "failed_tests": [
+        "eligibility evidence resolves to each fact and hashes its exact versioned server event"
+      ]
+    },
+    {
+      "name": "database-network-isolation",
+      "source": "scripts/check-foundation-infra.mjs",
+      "original_sha256": "9ee498020b3396028906fa8208a5bc9a77cc78a08b24e835d64a44b4f7d18c01",
+      "mutant_sha256": "d2c11bcb52952eefde8b05b24e9fd1705b27176d14bcafa693b01037604b3925",
+      "exit_code": 1,
+      "failed_tests": [
+        "isolated infrastructure refuses published database ports and donor resources"
+      ]
+    },
+    {
+      "name": "runtime-startup-config",
+      "source": "scripts/start-web.ts",
+      "original_sha256": "42541d89afdde263189c341eece0eb785c4b00485f616277371706e916d08d46",
+      "mutant_sha256": "9627bd1f3d0fef21a052e28acc8f467d11c81cbaa9e1aedd20c909d4ed7fa723",
+      "exit_code": 1,
+      "failed_tests": [
+        "all declared serve commands reject missing and malformed runtime configuration"
+      ]
+    },
+    {
+      "name": "kdf-capacity",
+      "source": "apps/web/src/lib/auth/kdf-admission.ts",
+      "original_sha256": "d2618e5028b1dde8a20506ba451acc18f46cea623f70641fead9dd7fd6bbc30e",
+      "mutant_sha256": "21a2de1a64dc7fe40d6ac4ba0e799e7ea0b7907ec5979b99c0059c3b3ccf26af",
+      "exit_code": 1,
+      "failed_tests": [
+        "KDF admission bounds active work and recovers from timeout and failure",
+        "canceled native work retains its slot until settlement and queued cancellation is removed",
+        "deadline comparison rejects an expired waiter even before its timer callback"
+      ]
+    },
+    {
+      "name": "session-revocation",
+      "source": "packages/db/src/auth-repository.ts",
+      "original_sha256": "e3d6e39815a00076a7dd4015f6192d83755680c5592d0e0f2d335f4c7e806636",
+      "mutant_sha256": "7f5c152ac45bbebd715029ae844e7ff1ec5e65b2a307aa357f2e7faf55d90501",
+      "exit_code": 1,
+      "failed_tests": [
+        "actual opaque sessions persist only HMAC and reject expiry revocation disabled and unknown users"
+      ]
+    },
+    {
+      "name": "session-expiry",
+      "source": "packages/db/src/auth-repository.ts",
+      "original_sha256": "e3d6e39815a00076a7dd4015f6192d83755680c5592d0e0f2d335f4c7e806636",
+      "mutant_sha256": "51d43ed157a92e39d1ddbbc3d8f14235a612a517bf6c7b9afbddc9575953dbce",
+      "exit_code": 1,
+      "failed_tests": [
+        "actual opaque sessions persist only HMAC and reject expiry revocation disabled and unknown users"
+      ]
+    },
+    {
+      "name": "credential-state-race",
+      "source": "packages/db/migrations/001_identity_sessions.sql",
+      "original_sha256": "70106a564616aa1df6f2cf5f4df2aef72ef4fffc114d6e9647652c171cef56cc",
+      "mutant_sha256": "720ff6730d319149ab08d26d166c7ff77050717c4cdabbd9e30eb2e0456403e4",
+      "exit_code": 1,
+      "failed_tests": [
+        "generic credential denial and post-KDF state recheck prevent session issuance"
+      ]
+    },
+    {
+      "name": "migration-checksum",
+      "source": "packages/db/src/migrate.ts",
+      "original_sha256": "d63996f70dcb778deca616628eb9bcd0801a071ff87b85cb6436b88ee54271ed",
+      "mutant_sha256": "e4d701aad26a10a7e5ac0dc929056e7a32eceb65f7add9fe50d346be1aab47ce",
+      "exit_code": 1,
+      "failed_tests": [
+        "migrations serialize and reject changed or missing applied history"
+      ]
+    },
+    {
+      "name": "database-port",
+      "source": "scripts/check-foundation-infra.mjs",
+      "original_sha256": "9ee498020b3396028906fa8208a5bc9a77cc78a08b24e835d64a44b4f7d18c01",
+      "mutant_sha256": "780d87b6e0998975d33b2af4b7aee14f009af5095a6072a0764ed7e34058399c",
+      "exit_code": 1,
+      "failed_tests": [
+        "isolated infrastructure refuses published database ports and donor resources"
+      ]
+    },
+    {
+      "name": "idle-pool-error",
+      "source": "packages/db/src/pool.ts",
+      "original_sha256": "b56c60405ebb74cc2d2750aa9934623e417195483fef4ffadbdc58e88b3f3394",
+      "mutant_sha256": "73c32c1ebd4ea2e6b439d0869e833120113be5f15c725ebbae272fee7a095f44",
+      "exit_code": 1,
+      "failed_tests": [
+        "idle PostgreSQL disconnect cannot crash the process or expose connection diagnostics"
+      ]
+    }
+  ],
+  "restored": true,
+  "status": "passed"
+}

@@ -49,8 +49,16 @@ def request(path, data=None, method=None):
     try:
         with urllib.request.urlopen(req, timeout=45) as response:
             value = json.load(response)['value']
-    except urllib.error.HTTPError:
-        # WebDriver errors can echo form arguments. Never print the body.
+    except urllib.error.HTTPError as error:
+        # Keep only closed error code and command name; never echo form arguments/messages.
+        try:
+            detail = json.loads(error.read()).get('value', {})
+            code = detail.get('error', 'unknown')
+            if path.endswith('/url'): print('Navigation error: ' + str(detail.get('message', ''))[:700], flush=True)
+        except Exception: code = 'unknown'
+        allowed = ['session not created', 'unknown error', 'no such element', 'invalid argument', 'timeout', 'javascript error', 'element not interactable', 'no such window']
+        safe = code if code in allowed else 'unknown'
+        print('WebDriver failure: ' + safe + ' command=' + path.rsplit('/', 1)[-1], flush=True)
         raise RuntimeError('webdriver_command_failed') from None
     if isinstance(value, dict) and value.get('error'):
         raise RuntimeError('webdriver_command_failed')

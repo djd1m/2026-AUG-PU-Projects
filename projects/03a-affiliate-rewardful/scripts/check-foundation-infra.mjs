@@ -17,10 +17,13 @@ export function checkInfrastructure(config, projectRoot) {
         if (source !== base && !source.startsWith(`${base}${path.sep}`)) problems.push(`${name}:foreign_mount`);
       }
     }
-    if (!Object.hasOwn(service.networks ?? {}, 'private') || Object.keys(service.networks).length !== 1) problems.push(`${name}:foreign_network`);
+    const expectedNetworks = name === 'web' ? ['ingress', 'private'] : ['private'];
+    if (JSON.stringify(Object.keys(service.networks ?? {}).sort()) !== JSON.stringify(expectedNetworks)) problems.push(`${name}:foreign_network`);
     if (!name.startsWith('web') && !/@sha256:[a-f0-9]{64}$/.test(service.image ?? '')) problems.push(`${name}:unpinned_image`);
   }
   if (config.networks?.private?.internal !== true || config.networks?.private?.external) problems.push('private_network_required');
+  if (config.networks?.ingress?.external || config.networks?.ingress?.internal || !config.networks?.ingress) problems.push('own_ingress_network_required');
+  if (Object.keys(config.networks ?? {}).some(name => !['private', 'ingress'].includes(name))) problems.push('foreign_network');
   for (const volume of Object.values(config.volumes ?? {})) if (volume.external) problems.push('external_volume');
   const app = config.services.web.environment ?? {};
   if (Object.keys(app).some((key) => /MIGRAT|ADMIN|POSTGRES_PASSWORD/.test(key))) problems.push('web_privileged_credentials');

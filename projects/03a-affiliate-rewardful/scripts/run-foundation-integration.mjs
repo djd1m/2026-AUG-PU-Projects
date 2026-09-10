@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
+import { mkdtemp, writeFile, mkdir, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -80,6 +80,23 @@ try {
     if (browser) {
       await run('python3', ['tests/onboarding-browser.py', path.join(root, '.runtime', namespace, 'browser-fixture.json'),
         env.APP_ORIGIN, path.join(root, '.runtime', namespace, 'browser-evidence')]);
+      const fixture = JSON.parse(await readFile(path.join(root, '.runtime', namespace, 'browser-fixture.json'), 'utf8'));
+      const logs = await new Promise((resolve, reject) => {
+        const child = spawn('docker', [...compose, 'logs', '--no-color', 'web'], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] });
+        let output = ''; let oversized = false;
+        for (const stream of [child.stdout, child.stderr]) stream.on('data', chunk => {
+          output += chunk.toString(); if (output.length > 1024 * 1024) { oversized = true; child.kill(); }
+        });
+        child.on('error', () => reject(new Error('log_check_unavailable')));
+        child.on('exit', code => code === 0 && !oversized ? resolve(output) : reject(new Error('log_check_unavailable')));
+      });
+      const sensitive = [fixture.grant_token, fixture.owner.identity, fixture.owner.password,
+        fixture.partner.identity, fixture.partner.password, env.SESSION_SECRET, env.IDENTITY_SECRET,
+        env.ADMISSION_SECRET, env.N3A_DB_APP_PASSWORD, env.N3A_DB_MIGRATE_PASSWORD];
+      if (sensitive.some(value => typeof value === 'string' && value && logs.includes(value))) throw new Error('web_log_secret_exposure');
+      await writeFile(path.join(root, '.runtime', namespace, 'browser-evidence', 'log-check.json'),
+        JSON.stringify({ status: 'passed', synthetic_values_checked: sensitive.length, log_bytes: Buffer.byteLength(logs) }) + '\n');
+      console.log('PASS built web logs contain no synthetic identities, credentials or runtime secrets');
     }
   }
   console.log(`PASS foundation isolated PostgreSQL and built-workspace checks (${namespace})`);
