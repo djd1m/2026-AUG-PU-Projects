@@ -1,6 +1,6 @@
 # Identity, program and partner — completion
 
-Implementation and acceptance checklist; final independent review remains pending. Feature canonical path: `docs/features/identity-program-partner/`; five role files map exactly to `01_specification.md`, `02_pseudocode.md`, `03_architecture.md`, `04_refinement.md`, `05_completion.md`.
+Accepted implementation slice: all11 ACs met, mandatory checks passed and final independent review delivered. Feature canonical path: `docs/features/identity-program-partner/`; five role files map exactly to `01_specification.md`, `02_pseudocode.md`, `03_architecture.md`, `04_refinement.md`, `05_completion.md`.
 
 ## Completion criteria
 
@@ -9,10 +9,10 @@ The feature is accepted only after all 11 local ACs have executed evidence, mand
 | Check | Required evidence | Current status |
 |---|---|---|
 | PLAN |five substantive role documents, exact machine-key/scenario coverage, donor compatibility/ownership decisions |passed: five documents and validation-report.md |
-| VALIDATE |independent semantic review, terms/trust/atomicity/replay/admission/ownership challenge, source hashes |pending final integrated review |
-| IMPLEMENT |11 AC executable evidence, full foundation regression, source/build receipts |pending final integrated review |
-| REVIEW |independent code/security review, confirmed fixes and retests, targeted killed mutations |pending final integrated review |
-| Browser |real secure-cookie onboarding with disposable DB at4 widths, persisted data and honest inactive state |pending final integrated review |
+| VALIDATE |independent semantic review, terms/trust/atomicity/replay/admission/ownership challenge, source hashes |passed: validation and integrated verification recorded |
+| IMPLEMENT |11 AC executable evidence, full foundation regression, source/build receipts |passed: validation and integrated verification recorded |
+| REVIEW |independent code/security review, confirmed fixes and retests, targeted killed mutations |passed: final independent review-report.md |
+| Browser |real secure-cookie onboarding with disposable DB at4 widths, persisted data and honest inactive state |passed:55 checks,8 screenshots and served-image source hashes |
 | Operational bootstrap |reviewed real identity and N1-owner authority, separate provisioning credential, private manual delivery |not executed; no real user created |
 | N1 activation |actual bridge/connection/cutover/reconciliation readiness in later feature |intentionally unavailable; activation must deny |
 
@@ -72,7 +72,7 @@ Report profile `compact-quality-first-v2`, requested versus host-attested actual
 
 ## Integrated evidence and limits
 
-The table names one executable anchor per AC; the full scenario set also includes all onboarding, foundation, HTTP/DOM and process suites. Current integrated evidence:46 unit tests,44 PostgreSQL/workspace tests,29 killed mutations before the ingress guard extension,55 real Firefox checks,8 screenshots. Evidence folder: `docs/telemetry/p-replicator/20260909T211734Z-identity-program-partner/`. Final infrastructure regression and independent final review remain pending.
+The table names one executable anchor per AC; the full scenario set also includes all onboarding, foundation, HTTP/DOM and process suites. Current integrated evidence:46 unit tests,44 PostgreSQL/workspace tests,30 killed mutations including the ingress isolation guard,55 real Firefox checks,8 screenshots. Evidence folder: `docs/telemetry/p-replicator/20260909T211734Z-identity-program-partner/`. Final infrastructure regression passed in namespace n3a-foundation-4105e617819b; independent final review passed with11/11 ACs met and no unresolved blocker/high/medium.
 
 Browser-only diagnostic runner reused the exact harness-created namespace and built image;77 application/DB source hashes match the image. `image-proof.json` records actual image and served build IDs; browser report's local BUILD_ID is the separate workspace build, not the served image. `log-check.json` verifies11 synthetic identity/credential/runtime values are absent from actual web logs; raw logs/secrets were not published.
 

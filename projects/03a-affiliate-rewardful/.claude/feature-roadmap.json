@@ -32,7 +32,7 @@
       "name": "Identity, program policy and partner consent",
       "description": "Implement trusted enrollment, hash-only sessions, owner/partner scopes, versioned program policy, terms acceptance and personal partner assets.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [
@@ -51,11 +51,9 @@
       "name": "N1 attribution and authenticated bridge",
       "description": "Capture link/cookie/promo attribution, reject self-referral, and deliver versioned authenticated N1 registration/payment/refund facts through an atomic outbox and reconciliation cursor.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
-      "blockers": [
-        "identity-program-partner"
-      ],
+      "blockers": [],
       "depends_on": [
         "identity-program-partner"
       ],

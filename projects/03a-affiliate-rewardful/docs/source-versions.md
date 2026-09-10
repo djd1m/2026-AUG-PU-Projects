@@ -18,4 +18,4 @@
 | Onboarding implementation from 02_pseudocode.md | правка | docs/features/identity-program-partner/02_pseudocode.md | 85f820c5237e0d56ce15e6fa4578b5049fc0d62d2d5e5662e3dffc042625db61 |
 | Onboarding implementation from 03_architecture.md | правка | docs/features/identity-program-partner/03_architecture.md | c48fda7bcf48300a88a006bbeb1e887ddb3e0b89b179e6a759713e91047f02a4 |
 | Onboarding implementation from 04_refinement.md | правка | docs/features/identity-program-partner/04_refinement.md | cabfbc15caf3c23c8136617bf8fa855254a5d89a7c3188b6079b6ce901e4a64e |
-| Onboarding implementation from 05_completion.md | правка | docs/features/identity-program-partner/05_completion.md | 7b8d05ab12bce7508d408b4656b2a589740895a39b27f2c550914f16810b2e09 |
+| Onboarding implementation from 05_completion.md | правка | docs/features/identity-program-partner/05_completion.md | 6a10406fc424288fc7245febb2f87662448f5d3fe0db95cea62600b4f61f2e35 |

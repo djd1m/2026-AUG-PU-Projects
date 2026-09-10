@@ -6,23 +6,101 @@
   "profile": "compact-quality-first-v2",
   "tier": "XL",
   "started_at": "2026-09-09T21:17:34.060404+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-10T09:38:03.005265+00:00",
+  "status": "accepted",
   "baseline_revision": "6d643a1fe2854a3664f8ce1877039ddcac8f803b",
-  "final_revision": null,
+  "final_revision": "fcd30aca5ccb9c4f7bc3e4223bbcc8e5bcd04f1b",
   "actual_models": null,
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 44428944,
     "active_wall_ms": null,
     "tokens": null,
-    "cost": null
+    "cost": null,
+    "agent_work_ms": null,
+    "retry_count": null,
+    "escalation_count": null,
+    "cost_basis": "unavailable",
+    "first_pass_acceptance": false
   },
   "telemetry_status": "partial",
   "missing_data": {
     "actual_models": "Host attestation unavailable",
     "tokens": "Not exposed",
     "cost": "Not exposed",
-    "active_wall_ms": "No full activity/wait meter"
+    "active_wall_ms": "No full activity/wait meter",
+    "batch_id": "Standalone feature, no batch declared",
+    "comparison_id": "No paired baseline run",
+    "host_version": "Host version not exposed",
+    "actual_effort": "No host attestation",
+    "quality_unknowns": "No known-defect ground truth or seven-day observation; false-positive aggregate not reconstructed",
+    "retry_count": "Historical attempt statuses incomplete; no aggregate inferred",
+    "agent_work_ms": "No complete per-attempt duration export"
   },
-  "authorization": "User давай делай continues approved XL implementation plan; no new approval of same plan required. N1/YooKassa/manual5th/D7 pending unchanged."
+  "authorization": "User давай делай continues approved XL implementation plan; no new approval of same plan required. N1/YooKassa/manual5th/D7 pending unchanged.",
+  "policy_version": "compact-quality-first-v2",
+  "batch_id": null,
+  "pipeline": "feature",
+  "risk_flags": [
+    "authorization",
+    "persistent identity and policy schema",
+    "future financial eligibility"
+  ],
+  "profile_overrides": [
+    "Luna medium for bounded route inventory and pinned mechanical checker adapter, per user instruction"
+  ],
+  "comparison_id": null,
+  "spec_sha256": "f4a311efd12075c120fa3754102f314bcd711c0e79f073b9e5abc85bb6a825da",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "requested_models": [
+    "gpt-6-astra",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna"
+  ],
+  "acceptance_evidence": [
+    "integrated-verification.json",
+    "mutation-results.json",
+    "browser/browser-results.json",
+    "image-proof.json",
+    "log-check.json",
+    "final-review.md",
+    "../../../features/identity-program-partner/review-report.md"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 11,
+    "ac_total": 11,
+    "confirmed_findings_by_severity": {
+      "unresolved_blocker": 0,
+      "unresolved_high": 0,
+      "unresolved_medium": 0,
+      "historical_resolved": 6
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "final_revision_scope": "Reviewed application/test checkpoint; subsequent acceptance commit adds documents and telemetry only.",
+  "receipts": {
+    "valid": 11,
+    "required_current_units": 11,
+    "sha256": {
+      "identity-plan": "3ae77ee72fa99d02bb13e5ab33fce902ca156f5f024a11b01d279e80fe47eeae",
+      "identity-donors": "e0eec9ed0736153353fd2afd094f5ece7edc61ce79e714c52e30e40f2e847d9f",
+      "identity-validation": "3b3df4873bea7e7b5550bd8e10211d1f38f14b1de572e490709643a79cbd5c75",
+      "identity-core-resume": "85726d3ca2a4f6e5eabad7ca8b6623b904e1475ad1c3ea70bf839562c6332a92",
+      "identity-ui": "aedb1e45112d0d4eb452dba4062d16865e78b57a3c21867bab6507acc9c0a39f",
+      "http-review": "b5f5d3b9bad8f64a6a5aad540f28b980bc5f3c63daf11a63c35ab8add162b438",
+      "identity-process-qe": "4164baec557fbc9bf5c85a467bc19120334fd5f9dc79808d4bdfe66d3b67402e",
+      "route-audit-luna": "2533e4c1d3bfeb6b7fdb34c79b018b2098d29d142fc9c230863ed90e038b1753",
+      "integrated-review": "7828127cd8b9b8ec378eed6450613cceb158009f89bedcdbb9f5df0b6bf5e63a",
+      "canon-adapter": "23fa83a23798cdda8d57e7b0ef3ab9e6b67041b5a498b9d89dea257711fb995f",
+      "final-review": "b49ac64187575b52a6e4ed3aee86cbee9085762b042565270b0036ddd980ce19"
+    },
+    "superseded_attempt": "Original identity-core was undelivered and replaced by verified identity-core-resume; not counted as a completed original attempt."
+  }
 }

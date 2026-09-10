@@ -2,7 +2,7 @@
 
 ## Bootstrap boundary
 
-В проекте есть документы, toolkit и реализуемый foundation с настоящими package scripts, каркасом Next.js и миграциями. Фактическая приёмка, прогоны и ограничения — `docs/features/foundation/05_completion.md`. Публичные auth/partner/financial API в этот первый блок не входят.
+Foundation принята. Реализованы публичные auth/enrollment API, настройка программы, согласие партнёра и личные материалы; результаты текущего этапа — `docs/features/identity-program-partner/05_completion.md`. Интеграция N1, денежный ledger и выплаты остаются следующими этапами.
 
 Общие lifecycle-инструменты читаются из корневой `.claude/`; локальные дополнения перечислены
 в `docs/toolkit-map.md`. Перед изменениями читать корневой и проектный `CLAUDE.md`, применимые
@@ -66,3 +66,11 @@ this bootstrap authorization.
 `npm run verify` also runs the two real checker regression tests and `npm run check:completion`. The latter uses a project adapter pinned to p-replicator1.13.2 and its exact SHA because upstream doubles the global completion path. It changes only a temporary variable name, preserves original validations and exit codes, and rejects unknown upstream bytes. No vendor/root toolkit is modified.
 
 `npm run test:isolated -- --mutations --image` performs serial build/test validation plus Docker image build and startup, then stops both app/test profiles in its own namespace. Allow disk capacity for image layers; ENOSPC is a failed check.
+
+## Onboarding verification
+
+`npm run test:isolated -- --mutations --browser` проверяет приложение и PostgreSQL, собирает Docker image и проходит настоящий Firefox-сценарий владельца/партнёра на320/390/768/1440px. Нужны Docker, Firefox и geckodriver; используются только синтетические данные. Web публикует случайный localhost-порт через собственный ingress bridge; PostgreSQL и тестовый контейнер подключены только к internal private network. Harness убирает контейнеры/сети своего запуска; диагностические test volumes сохраняются и после завершения могут быть удалены по точному namespace.
+
+Для служебных проверок: `npm run test:tooling` (8 регрессионных тестов двух адаптеров), `npm run check:completion` и `npm run check:canon`. Последняя использует временную копию корневого checker с закреплённым SHA: читает единицы только из раздела `## Единицы`, сохраняя остальные проверки и коды выхода. Vendor-файлы не изменяются. Ошибка spawnSync EPERM в ограниченной песочнице требует разрешённого запуска дочерних процессов; её нельзя считать дефектом приложения или зелёной проверкой.
+
+Bootstrap владельца описан в `docs/features/identity-program-partner/05_completion.md`; runtime не создаёт пилота автоматически. Источники donor-кода и адаптации перечислены в `docs/discovery/identity-donor-audit.md`. Программа остаётся draft/not_ready до реализации и проверки N1 bridge.

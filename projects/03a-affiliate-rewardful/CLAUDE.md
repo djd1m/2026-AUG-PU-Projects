@@ -35,6 +35,6 @@ CJM HTML — демонстрация. Демо20%/990₽ и подтвержд�
 
 ## Проектный toolkit и текущая фича
 
-Локальные роли/правила/контекстные навыки перечислены в `docs/toolkit-map.md`; команды `/feature`, `/go`, `/run`, `/next`, `/myinsights` и их hooks остаются в корневой `.claude/`. Перед реализацией читать локальные `.claude/rules/`. Roadmap: `.claude/feature-roadmap.json`; текущая фича `identity-program-partner`, канон `docs/features/identity-program-partner/`; foundation принята. Планы и insights размещаются внутри проекта, когда есть содержательный результат; сами hooks не утверждаются запущенными.
+Локальные роли/правила/контекстные навыки перечислены в `docs/toolkit-map.md`; команды `/feature`, `/go`, `/run`, `/next`, `/myinsights` и их hooks остаются в корневой `.claude/`. Перед реализацией читать локальные `.claude/rules/`. Roadmap: `.claude/feature-roadmap.json`; foundation и `identity-program-partner` приняты; канон последней `docs/features/identity-program-partner/`. Следующая фича `n1-attribution-bridge` ожидает начала PLAN. Планы и insights размещаются внутри проекта, когда есть содержательный результат; сами hooks не утверждаются запущенными.
 
 Параллельные исполнители получают отдельные worktree, source SHA и owned files; coordinator интегрирует манифесты и lockfile. Выбор моделей — политика `compact-quality-first-v2`, фактическое исполнение — receipts. Детальная последовательность и проверки в `DEVELOPMENT_GUIDE.md`.
