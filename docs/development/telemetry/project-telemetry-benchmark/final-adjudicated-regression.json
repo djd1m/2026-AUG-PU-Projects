@@ -1,0 +1,383 @@
+{
+  "benchmark_version": "project-telemetry-benchmark-v1",
+  "analyzer_sha256": "33a483459b4fd657a4bc67f01a71025af89721fb4d974f7b6133e97a0cc56f4a",
+  "suites": [
+    {
+      "path": ".claude/skills/project-telemetry/benchmarks/holdout-adjudicated.json",
+      "sha256": "6c448d5480e76ad5d642bf95ef4e549b4a3420afc0c50a85abb89f7c880865ba",
+      "case_count": 11
+    }
+  ],
+  "repeat": 5,
+  "cases_passed": 11,
+  "cases_total": 11,
+  "checks_passed": 36,
+  "checks_total": 36,
+  "results": [
+    {
+      "id": "wall-clock-alias-keeps-compute-separate",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 45,
+          "actual": 45,
+          "passed": true
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 45,
+          "actual": 45.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "active_compute_ms",
+          "actual": [
+            "active_compute_ms: compute duration is not active wall; inspect separately",
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.414901
+    },
+    {
+      "id": "elapsed-seconds-alias-preserves-zero",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 0,
+          "actual": 0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": 0,
+          "actual": 0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 0,
+          "actual": 0.0,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.35787
+    },
+    {
+      "id": "completed-at-is-valid-endpoint",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 75,
+          "actual": 75.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 75,
+          "actual": 75.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.2837
+    },
+    {
+      "id": "explicit-null-remains-unknown",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.36468
+    },
+    {
+      "id": "terminal-stage-status-fallback-with-source",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "stages.1.status",
+          "actual": [
+            "missing or invalid passport field: status",
+            "stages.0.status: stage status does not determine run status",
+            "stages.1.status: stage status does not determine run status",
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.33972
+    },
+    {
+      "id": "conflicting-top-and-terminal-stage-status",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "status",
+          "actual": [
+            "stages.0.status: stage status does not determine run status",
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.35928
+    },
+    {
+      "id": "elapsed-measurement-conflicts-with-timestamps",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 60,
+          "actual": 60.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "elapsed",
+          "actual": [
+            "timestamp duration conflicts with elapsed metric (>1s)",
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.371091
+    },
+    {
+      "id": "event-aliases-and-overlapping-wait-union",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.attempt_intervals_observed",
+          "contains": "a-main",
+          "actual": [
+            {
+              "attempt_id": "a-main",
+              "stage_claimed": "IMPLEMENT",
+              "seconds": 120.0,
+              "lines": [
+                1,
+                6
+              ],
+              "status_claimed": "completed"
+            }
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.paired_wait_union_seconds",
+          "equals": 50,
+          "actual": 50.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.48419
+    },
+    {
+      "id": "reverse-time-pairs-are-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.attempt_intervals_observed",
+          "equals": [],
+          "actual": [],
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.paired_wait_union_seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "a-reverse",
+          "actual": [
+            "attempt a-reverse: negative interval",
+            "wait w-reverse: negative interval"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "w-reverse",
+          "actual": [
+            "attempt a-reverse: negative interval",
+            "wait w-reverse: negative interval"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.37182
+    },
+    {
+      "id": "usage-and-claimed-model-locations-remain-provenance",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.usage_locations",
+          "contains": "metrics.usage",
+          "actual": [
+            "metrics.usage",
+            "metrics.tokens"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.usage_locations",
+          "contains": "metrics.tokens",
+          "actual": [
+            "metrics.usage",
+            "metrics.tokens"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.actual_model_locations_unverified",
+          "contains": "actual_model",
+          "actual": [
+            "actual_model",
+            "agents"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.actual_model_locations_unverified",
+          "contains": "agents",
+          "actual": [
+            "actual_model",
+            "agents"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.28674
+    },
+    {
+      "id": "orphan-event-identifiers-stay-unpaired",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.attempt_intervals_observed",
+          "equals": [],
+          "actual": [],
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.paired_wait_union_seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "a-not-found",
+          "actual": [
+            "attempt a-not-found: incomplete or ambiguous interval",
+            "wait w-not-found: incomplete or ambiguous interval"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "w-not-found",
+          "actual": [
+            "attempt a-not-found: incomplete or ambiguous interval",
+            "wait w-not-found: incomplete or ambiguous interval"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.39456
+    }
+  ],
+  "limits": "Local extraction microbenchmark, not end-to-end agent latency, tokens, forecast calibration or a representative accuracy estimate"
+}

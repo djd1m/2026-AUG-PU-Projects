@@ -1,0 +1,20 @@
+[
+  {
+    "id": "unknown-to-zero",
+    "source_changed": true,
+    "baseline_sha256": "33a483459b4fd657a4bc67f01a71025af89721fb4d974f7b6133e97a0cc56f4a",
+    "mutant_sha256": "1b2a54b80e8432dd4be6a3cb02fe0606549675a176b045d480896a41829615a1",
+    "exit_code": 1,
+    "output": ".....F...F.F\n======================================================================\nFAIL: test_null_is_not_zero_and_seconds_are_normalized (__main__.AnalysisTests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/tmptoau075k/test_analyze.py\", line 32, in test_null_is_not_zero_and_seconds_are_normalized\n    self.assertIsNone(r['active']['seconds'])\nAssertionError: 0 is not None\n\n======================================================================\nFAIL: test_timestamp_conflict_and_invalid_number (__main__.AnalysisTests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/tmptoau075k/test_analyze.py\", line 101, in test_timestamp_conflict_and_invalid_number\n    self.assertIsNone(r['active']['seconds'])\nAssertionError: 0 is not None\n\n======================================================================\nFAIL: test_zero_preserved_and_conflict_not_silently_selected (__main__.AnalysisTests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/tmptoau075k/test_analyze.py\", line 38, in test_zero_preserved_and_conflict_not_silently_selected\n    self.assertIsNone(r['elapsed']['seconds'])\nAssertionError: 0 is not None\n\n----------------------------------------------------------------------\nRan 12 tests in 0.017s\n\nFAILED (failures=3)\n",
+    "result": "killed"
+  },
+  {
+    "id": "double-count-waits",
+    "source_changed": true,
+    "baseline_sha256": "33a483459b4fd657a4bc67f01a71025af89721fb4d974f7b6133e97a0cc56f4a",
+    "mutant_sha256": "3d207be555a2f5ad795a6f64e7be63defb0b6d313417cc765f680734d1e5581c",
+    "exit_code": 1,
+    "output": ".......F....\n======================================================================\nFAIL: test_overlapping_waits_union_and_attempts_remain_separate (__main__.AnalysisTests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/tmp5omk94vx/test_analyze.py\", line 64, in test_overlapping_waits_union_and_attempts_remain_separate\n    self.assertEqual(r['paired_wait_union_seconds'], 30)\nAssertionError: 40.0 != 30\n\n----------------------------------------------------------------------\nRan 12 tests in 0.018s\n\nFAILED (failures=1)\n",
+    "result": "killed"
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "run_id": "project-telemetry-benchmark",
+  "status": "completed",
+  "started_at": "2026-09-10T13:20:52.112277+00:00",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "scope": "Local skill extraction and interpretation calibration; no product changes",
+  "baseline_revision": "cb35d1494728b89f9dc853532724c8dd595b308f",
+  "baseline_script_sha256": "277ba0ed123d0a3dabfb45c78cc2ccc6ccb9627193cfab3296ea8d48e363b0cf",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Host actual-model/usage metadata unavailable",
+    "Initial source reads preceded record",
+    "Active wall time not measured",
+    "No baseline semantic A/B: agent thread limit reached",
+    "Weekly quota unavailable"
+  ],
+  "ended_at": "2026-09-10T13:41:46.535229+00:00",
+  "elapsed_wall_ms": 1254423,
+  "active_wall_ms": null,
+  "final_code_revision": "0b65f6bff760ed574bebddf10290782ffd99364c",
+  "routing_note": "Mechanical router S; conservative M for analyzer output contract change",
+  "delegations": [
+    {
+      "task": "independent holdout author; subsequent candidate semantic smoke",
+      "requested_model": "gpt-5.6-sol",
+      "requested_reasoning": "high",
+      "actual_model": null,
+      "usage": null
+    }
+  ],
+  "checks": {
+    "release_cases": "26/26",
+    "release_assertions": "59/59",
+    "existing_tests": "12/12",
+    "mutants_killed": "2/2",
+    "candidate_semantic_smoke": "6/6",
+    "first_blind_holdout": "4/11"
+  },
+  "artifacts": {
+    "report": "report.md",
+    "validation": "validation.json"
+  }
+}

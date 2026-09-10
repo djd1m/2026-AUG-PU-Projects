@@ -1,0 +1,382 @@
+{
+  "benchmark_version": "project-telemetry-benchmark-v1",
+  "analyzer_sha256": "277ba0ed123d0a3dabfb45c78cc2ccc6ccb9627193cfab3296ea8d48e363b0cf",
+  "suites": [
+    {
+      "path": ".claude/skills/project-telemetry/benchmarks/holdout-adjudicated.json",
+      "sha256": "6c448d5480e76ad5d642bf95ef4e549b4a3420afc0c50a85abb89f7c880865ba",
+      "case_count": 11
+    }
+  ],
+  "repeat": 5,
+  "cases_passed": 4,
+  "cases_total": 11,
+  "checks_passed": 27,
+  "checks_total": 36,
+  "results": [
+    {
+      "id": "wall-clock-alias-keeps-compute-separate",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 45,
+          "actual": null,
+          "passed": false
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 45,
+          "actual": 45.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "active_compute_ms",
+          "actual": [
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": false
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.28433
+    },
+    {
+      "id": "elapsed-seconds-alias-preserves-zero",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 0,
+          "actual": null,
+          "passed": false
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": 0,
+          "actual": 0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 0,
+          "actual": 0.0,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.28686
+    },
+    {
+      "id": "completed-at-is-valid-endpoint",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 75,
+          "actual": null,
+          "passed": false
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 75,
+          "actual": {
+            "benchmark_missing_field": "runs.0.elapsed_from_timestamps_seconds"
+          },
+          "passed": false
+        },
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.28458
+    },
+    {
+      "id": "explicit-null-remains-unknown",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": null,
+          "actual": {
+            "benchmark_missing_field": "runs.0.elapsed_from_timestamps_seconds"
+          },
+          "passed": false
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.264021
+    },
+    {
+      "id": "terminal-stage-status-fallback-with-source",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "stages.1.status",
+          "actual": [
+            "missing or invalid passport field: status",
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": false
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.29011
+    },
+    {
+      "id": "conflicting-top-and-terminal-stage-status",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "status",
+          "actual": [
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": false
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.29398
+    },
+    {
+      "id": "elapsed-measurement-conflicts-with-timestamps",
+      "passed": false,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 60,
+          "actual": 60.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "elapsed",
+          "actual": [
+            "events.jsonl empty; chronology unknown"
+          ],
+          "passed": false
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.278331
+    },
+    {
+      "id": "event-aliases-and-overlapping-wait-union",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.attempt_intervals_observed",
+          "contains": "a-main",
+          "actual": [
+            {
+              "attempt_id": "a-main",
+              "stage_claimed": "IMPLEMENT",
+              "seconds": 120.0,
+              "lines": [
+                1,
+                6
+              ],
+              "status_claimed": "completed"
+            }
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.paired_wait_union_seconds",
+          "equals": 50,
+          "actual": 50.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.52631
+    },
+    {
+      "id": "reverse-time-pairs-are-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.attempt_intervals_observed",
+          "equals": [],
+          "actual": [],
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.paired_wait_union_seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "a-reverse",
+          "actual": [
+            "attempt a-reverse: negative interval",
+            "wait w-reverse: negative interval"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "w-reverse",
+          "actual": [
+            "attempt a-reverse: negative interval",
+            "wait w-reverse: negative interval"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.49053
+    },
+    {
+      "id": "usage-and-claimed-model-locations-remain-provenance",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.usage_locations",
+          "contains": "metrics.usage",
+          "actual": [
+            "metrics.usage",
+            "metrics.tokens"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.usage_locations",
+          "contains": "metrics.tokens",
+          "actual": [
+            "metrics.usage",
+            "metrics.tokens"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.actual_model_locations_unverified",
+          "contains": "actual_model",
+          "actual": [
+            "actual_model",
+            "agents"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.actual_model_locations_unverified",
+          "contains": "agents",
+          "actual": [
+            "actual_model",
+            "agents"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.39424
+    },
+    {
+      "id": "orphan-event-identifiers-stay-unpaired",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.attempt_intervals_observed",
+          "equals": [],
+          "actual": [],
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.paired_wait_union_seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "a-not-found",
+          "actual": [
+            "attempt a-not-found: incomplete or ambiguous interval",
+            "wait w-not-found: incomplete or ambiguous interval"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "w-not-found",
+          "actual": [
+            "attempt a-not-found: incomplete or ambiguous interval",
+            "wait w-not-found: incomplete or ambiguous interval"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.43678
+    }
+  ],
+  "limits": "Local extraction microbenchmark, not end-to-end agent latency, tokens, forecast calibration or a representative accuracy estimate"
+}

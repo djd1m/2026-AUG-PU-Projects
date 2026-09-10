@@ -1,0 +1,312 @@
+{
+  "benchmark_version": "project-telemetry-benchmark-v1",
+  "analyzer_sha256": "c1290a6583854f5a9da117c81a9ebedea0dffba277f388d8c4988ed739f00002",
+  "suites": [
+    {
+      "path": ".claude/skills/project-telemetry/benchmarks/development.json",
+      "sha256": "53f76e822e4c358f4faee8dc4f65d5044b8c3bfa3ea458fd38353cff71dab117",
+      "case_count": 15
+    }
+  ],
+  "repeat": 5,
+  "cases_passed": 15,
+  "cases_total": 15,
+  "checks_passed": 23,
+  "checks_total": 23,
+  "results": [
+    {
+      "id": "real-20260908T194524Z-discovery-cjm",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 1525.95144,
+          "actual": 1525.95144,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.4613
+    },
+    {
+      "id": "real-20260908T201412Z-agent-cjm-e004",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 372.956169,
+          "actual": 372.956169,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.38904
+    },
+    {
+      "id": "real-20260908T203242Z-four-prds",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 709.931754,
+          "actual": 709.931754,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.41255
+    },
+    {
+      "id": "real-20260909T135340Z-f3-access-8b71",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 6834.541672,
+          "actual": 6834.541672,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.3736
+    },
+    {
+      "id": "terminal-stage",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": "completed",
+          "actual": "completed",
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.38462
+    },
+    {
+      "id": "phase-not-status",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.39017
+    },
+    {
+      "id": "status-conflict",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.status_claimed",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "conflicting status",
+          "actual": [
+            "conflicting status aliases"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.37792
+    },
+    {
+      "id": "completed-endpoint",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed_from_timestamps_seconds",
+          "equals": 120,
+          "actual": 120.0,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.411701
+    },
+    {
+      "id": "usage-locators",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.usage_locations",
+          "contains": "metrics.measured_usage_snapshot",
+          "actual": [
+            "metrics.measured_usage_snapshot",
+            "metrics.worker_usage"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.usage_locations",
+          "contains": "metrics.worker_usage",
+          "actual": [
+            "metrics.measured_usage_snapshot",
+            "metrics.worker_usage"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.38499
+    },
+    {
+      "id": "duration-conflict",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "conflicting metric",
+          "actual": [
+            "conflicting metric aliases: elapsed_wall_ms, metrics.elapsed_seconds"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.40689
+    },
+    {
+      "id": "compute-not-wall",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.active.seconds",
+          "equals": null,
+          "actual": null,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.38969
+    },
+    {
+      "id": "zero",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.active.seconds",
+          "equals": 0,
+          "actual": 0.0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.elapsed.seconds",
+          "equals": 0,
+          "actual": 0.0,
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.41361
+    },
+    {
+      "id": "legacy-coverage",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.events.coverage.interval_event_count",
+          "equals": 0,
+          "actual": 0,
+          "passed": true
+        },
+        {
+          "path": "runs.0.events.coverage.unsupported_event_types",
+          "contains": "delegation_start",
+          "actual": {
+            "delegation_start": 1
+          },
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "unsupported event",
+          "actual": [
+            "unsupported event types; inventory only: delegation_start"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.42177
+    },
+    {
+      "id": "model-single",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.model_claims.0.values",
+          "equals": [
+            "model-a"
+          ],
+          "actual": [
+            "model-a"
+          ],
+          "passed": true
+        },
+        {
+          "path": "runs.0.model_claims.0.field",
+          "equals": "actual_model",
+          "actual": "actual_model",
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.381941
+    },
+    {
+      "id": "model-conflict",
+      "passed": true,
+      "checks": [
+        {
+          "path": "runs.0.model_claims_consistent",
+          "equals": false,
+          "actual": false,
+          "passed": true
+        },
+        {
+          "path": "runs.0.issues",
+          "contains": "conflicting model",
+          "actual": [
+            "conflicting model aliases"
+          ],
+          "passed": true
+        }
+      ],
+      "exception": null,
+      "sources_unchanged": true,
+      "median_extract_ms": 0.39249
+    }
+  ],
+  "limits": "Local extraction microbenchmark, not end-to-end agent latency, tokens, forecast calibration or a representative accuracy estimate"
+}

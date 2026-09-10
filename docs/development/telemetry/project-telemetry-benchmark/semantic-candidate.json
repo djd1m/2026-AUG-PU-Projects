@@ -1,0 +1,68 @@
+[
+  {
+    "id": "model-alias",
+    "result": "model-sol",
+    "evidence_fields": [
+      "actual_model",
+      "actual_models",
+      "source",
+      "source_sha256",
+      "raw_host_log_available"
+    ],
+    "explanation": "The export claims model-sol through actual_model; the null plural alias does not cancel that claim. The known export hash identifies bytes but does not independently verify runtime identity, and the raw host log is unavailable."
+  },
+  {
+    "id": "partial-acceptance",
+    "result": false,
+    "evidence_fields": [
+      "status",
+      "scope",
+      "provider",
+      "native_test_pilot.tests_passed",
+      "native_test_pilot.provider",
+      "native_test_pilot.n3_enabled"
+    ],
+    "explanation": "Completed is a process claim, the stated checkout used a mock provider, and the real-TEST native pilot had N3 disabled. These facts do not establish an end-to-end real-provider agent-to-N3 purchase chain."
+  },
+  {
+    "id": "inclusive-usage",
+    "result": 100,
+    "evidence_fields": [
+      "parent.scope",
+      "parent.total_tokens",
+      "child.total_tokens"
+    ],
+    "explanation": "The parent total explicitly includes the child, so adding 40 would double-count the same covered usage. The unique inclusive total represented by the pair is 100 tokens."
+  },
+  {
+    "id": "cost-share",
+    "result": null,
+    "evidence_fields": [
+      "coordinator_tokens_share",
+      "input_cache_share",
+      "tariffs",
+      "scope"
+    ],
+    "explanation": "Token share does not determine billed-cost share, tariffs are absent, cached input has distinct billing semantics, and coordinator work includes product implementation. The unnecessary-orchestration fraction is unsupported."
+  },
+  {
+    "id": "pause-cause",
+    "result": false,
+    "evidence_fields": [
+      "last_event",
+      "resumed_hours_later",
+      "reason"
+    ],
+    "explanation": "An approval request precedes the gap, but the record explicitly leaves approval wait versus session interruption unresolved. It does not conclusively attribute the whole eight hours to approval waiting."
+  },
+  {
+    "id": "forecast",
+    "result": null,
+    "evidence_fields": [
+      "runs",
+      "new_task",
+      "wait_intervals"
+    ],
+    "explanation": "The three runs have materially different scopes from each other and from a complete new commercial product, and wait intervals are unavailable. They cannot support a calibrated P80 for the requested task."
+  }
+]

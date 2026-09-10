@@ -1,0 +1,48 @@
+{
+  "passed": 6,
+  "total": 6,
+  "checks": [
+    {
+      "id": "model-alias",
+      "passed": true,
+      "evidence_fields_present": true,
+      "explanation_review": "Coordinator read: supports result within scope"
+    },
+    {
+      "id": "partial-acceptance",
+      "passed": true,
+      "evidence_fields_present": true,
+      "explanation_review": "Coordinator read: supports result within scope"
+    },
+    {
+      "id": "inclusive-usage",
+      "passed": true,
+      "evidence_fields_present": true,
+      "explanation_review": "Coordinator read: supports result within scope"
+    },
+    {
+      "id": "cost-share",
+      "passed": true,
+      "evidence_fields_present": true,
+      "explanation_review": "Coordinator read: supports result within scope"
+    },
+    {
+      "id": "pause-cause",
+      "passed": true,
+      "evidence_fields_present": true,
+      "explanation_review": "Coordinator read: supports result within scope"
+    },
+    {
+      "id": "forecast",
+      "passed": true,
+      "evidence_fields_present": true,
+      "explanation_review": "Coordinator read: supports result within scope"
+    }
+  ],
+  "classification": "one candidate smoke after holdout unblinding; not blind A/B",
+  "baseline_not_run": "fresh evaluator spawn rejected: agent thread limit reached",
+  "requested_model": "gpt-5.6-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null
+}

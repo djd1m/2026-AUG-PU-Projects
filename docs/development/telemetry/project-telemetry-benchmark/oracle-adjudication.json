@@ -1,0 +1,26 @@
+{
+  "at": "2026-09-10T13:31:09.493175+00:00",
+  "original_sha256": "27cd8324954c89ea94cf1ce406807e9489180175f83a1167df671ce1d2286ccb",
+  "corrected_sha256": "6c448d5480e76ad5d642bf95ef4e549b4a3420afc0c50a85abb89f7c880865ba",
+  "holdout_author_agreed": true,
+  "rules": [
+    "Completed stage is not completed run",
+    "Run status claim and nested stage status are distinct scopes, not aliases",
+    "Paired waits do not establish exhaustive wait logging; active stays unknown"
+  ],
+  "changed_checks": {
+    "terminal-stage-status-fallback-with-source": [
+      "runs.0.status_claimed",
+      null
+    ],
+    "conflicting-top-and-terminal-stage-status": [
+      "runs.0.status_claimed",
+      "completed"
+    ],
+    "event-aliases-and-overlapping-wait-union": [
+      "runs.0.active.seconds",
+      null
+    ]
+  },
+  "limits": "Corrected after unblinding; later score is regression, not independent holdout accuracy"
+}
