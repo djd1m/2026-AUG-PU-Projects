@@ -1,0 +1,242 @@
+{
+  "recorded_at": "2026-09-10T09:33:20.874113+00:00",
+  "source_head": "12a4917fa6f36c3249925e1bfc53225c0390b9f7",
+  "projects": [
+    {
+      "path": "projects/01-testimonials-senja",
+      "changed_files_since_baseline": 119,
+      "note": "P1 feature scope"
+    },
+    {
+      "path": "projects/02-review-qr-reputation",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    },
+    {
+      "path": "projects/03a-affiliate-rewardful",
+      "changed_files_since_baseline": 87,
+      "note": "Changes outside P1 include independent concurrent work; not attributed to this feature."
+    },
+    {
+      "path": "projects/04-calorie-vision-cal-ai",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    },
+    {
+      "path": "projects/06-rag-sales-chatbase",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    },
+    {
+      "path": "projects/07-cold-email-warmup",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    },
+    {
+      "path": "projects/08-interior-ai-redesign",
+      "changed_files_since_baseline": 0,
+      "note": "No committed source changes since baseline"
+    }
+  ],
+  "containers": [
+    {
+      "name": "proofwall-agent-payments-test-postgres-1",
+      "image": "postgres:16-alpine",
+      "image_id": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416",
+      "started_at": "2026-09-10T07:20:55.291792121Z",
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "name": "proofwall-agent-payments-test-minio-1",
+      "image": "minio/minio:RELEASE.2025-04-22T22-12-26Z",
+      "image_id": "sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e",
+      "started_at": "2026-09-10T07:20:55.293045272Z",
+      "ports": {
+        "9000/tcp": null
+      }
+    },
+    {
+      "name": "01-testimonials-senja-web-1",
+      "image": "proofwall-web:login-navigation-20260909",
+      "image_id": "sha256:bf97e7699245cb9a6d921454eabdbc1a2c0589b4b878b8e3827c7cfef5d94c42",
+      "started_at": "2026-09-09T20:34:53.208534855Z",
+      "ports": {
+        "3000/tcp": null
+      }
+    },
+    {
+      "name": "n3-d-frontend-1",
+      "image": "n3-d:bridge-acf124e",
+      "image_id": "sha256:cff1d4dccd053adaffdceda822bc8223c62b383553b1321730e3ce82e96d8844",
+      "started_at": "2026-09-09T19:51:32.393287837Z",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13034"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-c-frontend-1",
+      "image": "n3-c:bridge-acf124e",
+      "image_id": "sha256:9472f81c57abb7c162063e77407a9714e4579f1f55f64c39f16149ab8bdc0a71",
+      "started_at": "2026-09-09T19:51:31.092586533Z",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13033"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-b-frontend-1",
+      "image": "n3-b:bridge-acf124e",
+      "image_id": "sha256:be01cd62fc6ed064a2bb6488ec7e794482de66d228b9432e1a09d7ef7478985b",
+      "started_at": "2026-09-09T19:51:29.868994176Z",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13032"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-a-frontend-1",
+      "image": "n3-a:bridge-acf124e",
+      "image_id": "sha256:aa7fb18a9ca2926fa9dc352afa4b3fcd676a76675bda530acd645d480bcd3ee9",
+      "started_at": "2026-09-09T19:51:28.688239804Z",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13031"
+          }
+        ]
+      }
+    },
+    {
+      "name": "01-testimonials-senja-worker-1",
+      "image": "proofwall-worker:bridge-229e7ee",
+      "image_id": "sha256:7d97052b83418eae119ca65ff9a5e2868b41e01adbffed1ce07366d7f4250c03",
+      "started_at": "2026-09-09T19:51:00.66365843Z",
+      "ports": {}
+    },
+    {
+      "name": "01-testimonials-senja-postgres-1",
+      "image": "postgres:16-alpine",
+      "image_id": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416",
+      "started_at": "2026-09-09T19:50:54.768850226Z",
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "name": "01-testimonials-senja-minio-1",
+      "image": "minio/minio:RELEASE.2025-04-22T22-12-26Z",
+      "image_id": "sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e",
+      "started_at": "2026-09-09T19:50:54.766001315Z",
+      "ports": {
+        "9000/tcp": null
+      }
+    },
+    {
+      "name": "n3-shared-api-1",
+      "image": "n3-api:bridge-acf124e",
+      "image_id": "sha256:0c8c85bbd59ccbbbe02dc0a0ec5e53902da359ae831328949b1792d070cb0217",
+      "started_at": "2026-09-09T19:50:42.704689949Z",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "13030"
+          }
+        ]
+      }
+    },
+    {
+      "name": "n3-shared-postgres-1",
+      "image": "postgres:16.15-alpine",
+      "image_id": "sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+      "started_at": "2026-09-08T21:03:51.021555322Z",
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "name": "reviewqr-web-1",
+      "image": "reviewqr-web",
+      "image_id": "sha256:52babd18f89b8437e6265115141057c435f1b0e69f2a87473cfaec70dee50d8b",
+      "started_at": "2026-09-02T18:13:15.099963043Z",
+      "ports": {
+        "3000/tcp": null
+      }
+    },
+    {
+      "name": "reviewqr-notifier-1",
+      "image": "reviewqr-notifier",
+      "image_id": "sha256:8dfb0082ab3144f423e26496c040afce3568d387a46e238e1ad4ad858cad1399",
+      "started_at": "2026-09-02T17:26:57.164739327Z",
+      "ports": {}
+    },
+    {
+      "name": "01-testimonials-senja-transcribe-1",
+      "image": "01-testimonials-senja-transcribe",
+      "image_id": "sha256:772c35187f4898748af04fe90c0b95d121f8ae2878201dde45c503f1872e2043",
+      "started_at": "2026-09-02T11:56:17.495205555Z",
+      "ports": {
+        "7331/tcp": null
+      }
+    },
+    {
+      "name": "reviewqr-intake-1",
+      "image": "reviewqr-intake",
+      "image_id": "sha256:a384e13888f6fe60547f44f9da84748051474d854592dd477faed6fc89e908a7",
+      "started_at": "2026-09-01T18:35:50.379386964Z",
+      "ports": {
+        "3000/tcp": null
+      }
+    },
+    {
+      "name": "reviewqr-guest-1",
+      "image": "reviewqr-guest",
+      "image_id": "sha256:02541753ff947fe6dc7f8c953b00202319110db24bd380cb2fde9f22331b21e5",
+      "started_at": "2026-09-01T18:14:41.809578496Z",
+      "ports": {
+        "3000/tcp": null
+      }
+    },
+    {
+      "name": "reviewqr-postgres-1",
+      "image": "postgres:16.4-alpine",
+      "image_id": "sha256:5660c2cbfea50c7a9127d17dc4e48543eedd3d7a41a595a2dfa572471e37e64c",
+      "started_at": "2026-09-01T17:21:37.535955347Z",
+      "ports": {
+        "5432/tcp": null
+      }
+    }
+  ],
+  "limits": [
+    "Inventory at completion, not historical baseline reconstruction.",
+    "Public UI smoke covers deployed course P1/P2/N3 A-D only. Other projects are not claimed browser-tested.",
+    "Unrelated VPS containers excluded; no production deployment by this feature."
+  ],
+  "lineage": "Integrated tests source339e688 and browser runtimeb2343b0: P1 changes between revisions are docs/telemetry only; unrelated project03a commits are independent."
+}

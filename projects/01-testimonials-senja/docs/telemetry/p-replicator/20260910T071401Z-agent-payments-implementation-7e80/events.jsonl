@@ -4,3 +4,6 @@
 {"timestamp": "2026-09-10T08:55:30.730776+00:00", "stage": "REVIEW", "event": "public_ui_smoke_pass_8_existing_deployments", "new_candidate_deployed": false, "usage": null}
 {"timestamp": "2026-09-10T09:05:24.121608+00:00", "stage": "TEST", "event": "integrated_full_regression_and_next_build_pass", "total": 1016, "usage": null}
 {"timestamp": "2026-09-10T09:20:16.076760+00:00", "stage": "TEST", "event": "host_usage_limit_reached_agents_stopped_user_notified", "usage": null, "weekly_remaining_percent": null}
+{"timestamp": "2026-09-10T09:25:28.561080+00:00", "stage": "TEST", "event": "user_authorized_resume", "usage": null}
+{"at": "2026-09-10T09:35:21.754060+00:00", "stage": "REVIEW", "event": "browser_acceptance_integrated", "agent_scenarios_passed": 11, "human_journeys_passed": 5, "accepted_receipts": ["agent-e2e-resumed.md", "human-cjm-resumed.md"], "receipt_validation": "regular, non-symlink, substantive, terminal completed; agent runtime hashes verified", "test_commit": "12a4917", "usage": null}
+{"at": "2026-09-10T09:36:32.290151+00:00", "stage": "REVIEW", "event": "implementation_checkpoint_with_caveats", "criteria_met": 11, "criteria_unverifiable": ["AC-agent-purchase-11"], "receipts": "3/3", "usage": null, "public_deployment": false}
