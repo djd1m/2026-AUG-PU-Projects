@@ -1,0 +1,249 @@
+{
+  "schema_version": "project-telemetry-analysis-v1",
+  "read_at": "2026-09-10T12:49:12.450041+00:00",
+  "root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/01-testimonials-senja/docs/telemetry",
+  "run_count": 7,
+  "issues": [],
+  "runs": [
+    {
+      "path": "20260909-login-navigation/run.json",
+      "issues": [
+        "missing or invalid passport field: run_id",
+        "events.jsonl missing; chronology unknown"
+      ],
+      "sha256": "8303dfea600ee8de52653b19e15b29e53e4a7b6e9f7057adefdded9c6e987cb9",
+      "run_id": null,
+      "status_claimed": "completed",
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-09T20:33:43.287721+00:00",
+      "elapsed": {
+        "seconds": 229.803,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 229.803
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "elapsed_from_timestamps_seconds": 229.80284810066223,
+      "usage_locations": [],
+      "actual_model_locations_unverified": [],
+      "events": null
+    },
+    {
+      "path": "20260909-payment-reconciliation/run.json",
+      "issues": [
+        "missing or invalid passport field: run_id",
+        "events.jsonl missing; chronology unknown"
+      ],
+      "sha256": "650abf003fc13443453c31a7ba732a9b39ba6261568d09cef16036b22b4e2807",
+      "run_id": null,
+      "status_claimed": "recovered_awaiting_provider_notification_configuration",
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-09T20:42:58.282212+00:00",
+      "elapsed": {
+        "seconds": 421.27500000000003,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 421.27500000000003
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "usage_locations": [],
+      "actual_model_locations_unverified": [],
+      "events": null
+    },
+    {
+      "path": "20260910-agent-purchase-plan/run.json",
+      "issues": [
+        "missing or invalid passport field: status",
+        "events.jsonl missing; chronology unknown"
+      ],
+      "sha256": "07baec3961cb1323d785fa6293af0b8894e82979bcd9b41f24de12cb7cfe629b",
+      "run_id": "20260910-agent-purchase-plan",
+      "status_claimed": null,
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-10T06:50:32.301258+00:00",
+      "elapsed": {
+        "seconds": 229.90200000000002,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 229.90200000000002
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "usage_locations": [],
+      "actual_model_locations_unverified": [],
+      "events": null
+    },
+    {
+      "path": "20260910-agentic-payments-research/run.json",
+      "issues": [
+        "missing or invalid passport field: run_id"
+      ],
+      "sha256": "4718b25740b32a7a7b191c9a38aadb806fb7e1dbd390c6cb07f6ca35866afe44",
+      "run_id": null,
+      "status_claimed": "completed",
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-10T06:56:38.922026+00:00",
+      "elapsed": {
+        "seconds": 561.3530000000001,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 561.3530000000001
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "elapsed_from_timestamps_seconds": 561.3530030250549,
+      "usage_locations": [],
+      "actual_model_locations_unverified": [
+        "agents"
+      ],
+      "events": {
+        "sha256": "563f8baa00d50a9bc5fa923684faf4fb931a28cfaee6c654c22d539c546aeb9d",
+        "parsed_lines": 1,
+        "event_counts_observed": {
+          "correction": 1
+        },
+        "attempt_intervals_observed": [],
+        "paired_wait_union_seconds": null,
+        "interpretation": "Observed intervals only; no completeness, causality or critical-path claim"
+      }
+    },
+    {
+      "path": "p-replicator/20260910-agent-payments-public-pilot/run.json",
+      "issues": [
+        "events.jsonl missing; chronology unknown"
+      ],
+      "sha256": "6260492d4cc7395aefc24e05532674d1d9b524a3fb26bd85d8715a95bd6acf43",
+      "run_id": "20260910-agent-payments-public-pilot",
+      "status_claimed": "completed_with_scope_limits",
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-10T09:58:34.245108+00:00",
+      "elapsed": {
+        "seconds": 6346.572,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 6346.572
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "elapsed_from_timestamps_seconds": 6346.5725820064545,
+      "usage_locations": [],
+      "actual_model_locations_unverified": [
+        "agents"
+      ],
+      "events": null
+    },
+    {
+      "path": "p-replicator/20260910T070614Z-agent-payments-module-3116/run.json",
+      "issues": [],
+      "sha256": "e1994a4cb183e90f73d498d1d0e9ffb64acc411144ab60434dad40cca5c98cda",
+      "run_id": "20260910T070614Z-agent-payments-module-3116",
+      "status_claimed": "accepted",
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-10T07:06:14.002577+00:00",
+      "elapsed": {
+        "seconds": 224.309,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 224.309
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "elapsed_from_timestamps_seconds": 224.30933499336243,
+      "usage_locations": [],
+      "actual_model_locations_unverified": [],
+      "events": {
+        "sha256": "c2aa1c4f9e6164f272895c78465300bb028b62edfea55124224f1cc107d4147c",
+        "parsed_lines": 1,
+        "event_counts_observed": {
+          "gate_result": 1
+        },
+        "attempt_intervals_observed": [],
+        "paired_wait_union_seconds": null,
+        "interpretation": "Observed intervals only; no completeness, causality or critical-path claim"
+      }
+    },
+    {
+      "path": "p-replicator/20260910T071401Z-agent-payments-implementation-7e80/run.json",
+      "issues": [],
+      "sha256": "684593eddf56a4b1dcfb4bab7a375133d2a385749fd9796c4508f3b3d879563f",
+      "run_id": "20260910T071401Z-agent-payments-implementation-7e80",
+      "status_claimed": "completed_with_caveats",
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-10T07:14:01.649004+00:00",
+      "elapsed": {
+        "seconds": 8550.641,
+        "sources": [
+          {
+            "field": "elapsed_wall_ms",
+            "seconds": 8550.641
+          }
+        ]
+      },
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "elapsed_from_timestamps_seconds": 8550.64114689827,
+      "usage_locations": [],
+      "actual_model_locations_unverified": [
+        "agents"
+      ],
+      "events": {
+        "sha256": "c097d3046dd6eb1b78cd7ce6cfc95c0919c7d56a29e405dc9a1af3332a60a3a0",
+        "parsed_lines": 9,
+        "event_counts_observed": {
+          "finding": 1,
+          "integration_checkpoint": 1,
+          "initial_review_changes_required_core_fixed_host_pending": 1,
+          "public_ui_smoke_pass_8_existing_deployments": 1,
+          "integrated_full_regression_and_next_build_pass": 1,
+          "host_usage_limit_reached_agents_stopped_user_notified": 1,
+          "user_authorized_resume": 1,
+          "browser_acceptance_integrated": 1,
+          "implementation_checkpoint_with_caveats": 1
+        },
+        "attempt_intervals_observed": [],
+        "paired_wait_union_seconds": null,
+        "interpretation": "Observed intervals only; no completeness, causality or critical-path claim"
+      }
+    }
+  ],
+  "limits": [
+    "No automatic usage aggregation, cost, forecast or verified acceptance",
+    "Source hashes identify bytes; repository revision must be recorded by caller",
+    "Snapshots are per-file, not an atomic snapshot of an active run"
+  ],
+  "extractor_exit_code": 2
+}

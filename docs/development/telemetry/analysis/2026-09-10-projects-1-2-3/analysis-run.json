@@ -1,0 +1,51 @@
+{
+  "analysis_version": "project-telemetry-analysis-run-v1",
+  "started_at": "2026-09-10T12:48:30.655798+00:00",
+  "status": "completed",
+  "scope": [
+    "01-testimonials-senja",
+    "02-review-qr-reputation",
+    "03-affiliate-rewardful variants A-D and shared"
+  ],
+  "excluded": [
+    "03a-affiliate-rewardful is a separate project, not variant A of N3"
+  ],
+  "baseline_revision": "d491ff4b4ccfadccde52e8b23076b201ccc6474d",
+  "profile": "compact-quality-first-v2",
+  "mode": "diagnose",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Execution model and usage metadata unavailable",
+    "Instruction/discovery reads preceded record creation",
+    "Active work/wait union unavailable",
+    "No host usage or current weekly-limit counter",
+    "Initial instruction reads not included in recorded elapsed"
+  ],
+  "skill_sha256": "44eda5f707d6c8a60d9a29133a5319dbe5018d6311c84074444d42095e86dc09",
+  "delegation": [
+    {
+      "work_unit": "p1",
+      "requested_model": "gpt-5.6-sol",
+      "requested_effort": "high",
+      "actual_model": null
+    },
+    {
+      "work_unit": "p2",
+      "requested_model": "gpt-5.6-sol",
+      "requested_effort": "high",
+      "actual_model": null
+    }
+  ],
+  "ended_at": "2026-09-10T13:04:02.887449+00:00",
+  "elapsed_wall_ms": 932232,
+  "active_wall_ms": null,
+  "findings_scope": "Historical project evidence; no new product acceptance",
+  "checks": [
+    "25 passports/19 journals",
+    "68 source hashes",
+    "630 saved provider responses deduplicated and totals reconciled",
+    "report review considered; corrections/source clarification recorded"
+  ],
+  "script_sha256": "277ba0ed123d0a3dabfb45c78cc2ccc6ccb9627193cfab3296ea8d48e363b0cf"
+}

@@ -1,0 +1,68 @@
+{
+  "kind": "Arithmetic verification of saved response exports; host logs/billing not reread",
+  "source": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T204432Z-go-shared-core/evidence/batch-provider-usage-summary.json",
+  "source_sha256": "fb2e25157f9eac7d2448b1d97a16a315f56b38c58afcac7c78aca55c66dfc45a",
+  "scope": "Partial unique provider response subtotal for shared-core+A/B/C/D+independent review+demo docs+coordinator since shared-go. Root collection ends07:58:16; final reporting tail excluded. Research/PRD work before shared-go excluded.",
+  "unique_responses": 630,
+  "duplicate_responses": 0,
+  "totals": {
+    "input_tokens": 73327018,
+    "cached_input_tokens": 70606080,
+    "output_tokens": 444859,
+    "total_tokens": 73771877
+  },
+  "coordinator_total_tokens_share": 0.5494198283717249,
+  "cached_input_share": 0.9628931044216199,
+  "cost": null,
+  "sources": [
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T070308Z-go-c-partner/evidence/c-ui-provider-usage.json",
+      "sha256": "be9c2f4236f5de76c042210f6b15d99086f54962e49a31802e3bc539b5956694",
+      "records": 37,
+      "scope": "/root/c_ui exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T064002Z-go-b-customer/evidence/b-ui-provider-usage.json",
+      "sha256": "d5ad895ec9574829627c4f5d08370e2c3c0bc167bddfd304f36a2b55af14e638",
+      "records": 33,
+      "scope": "/root/b_ui exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T060632Z-go-a-merchant/evidence/a-ui-provider-usage.json",
+      "sha256": "2f4cc9d1ad3af767749138356328b651a61037fb340b5040b37f23ebf1d907bf",
+      "records": 43,
+      "scope": "A UI implementation child only; unique response_id usage summed; coordinator/reviewer excluded"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T071850Z-go-d-agent/evidence/demo-guides-provider-usage.json",
+      "sha256": "44ff2b75f60bd48b535f52ca9ab147e74e0eee70658c6be9614e2cf683024842",
+      "records": 27,
+      "scope": "/root/demo_guides exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T071850Z-go-d-agent/evidence/d-ui-provider-usage.json",
+      "sha256": "202ba76394fe6814e96734a3c93d634d800fe3d437876b8d81371b06b99414a0",
+      "records": 28,
+      "scope": "/root/d_ui exclusive child thread; coordinator and reviewer excluded"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T204432Z-go-shared-core/evidence/coordinator-provider-usage.json",
+      "sha256": "cb11f0a3dae5fefd5c0f5c7a2e20f56db2c0430a93950fb2cb59776e4fa1242a",
+      "records": 304,
+      "scope": "Root response records after shared-go start only; exclusive coordinator, excludes children. Partial through collection: final reporting tail not yet available. Overnight idle included only in elapsed wall time, never token estimates."
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T204432Z-go-shared-core/evidence/core-provider-usage.json",
+      "sha256": "2e6f6989f570cb4d68170130871ce448adb5c53a6e3da0aeb741849e4ea88549",
+      "records": 63,
+      "scope": "core implementation child only; response IDs deduplicated, summed usage equals thread total; coordinator and reviews excluded"
+    },
+    {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T204432Z-go-shared-core/evidence/reviewer-provider-usage.json",
+      "sha256": "c637fee6894c90267358b67dc0c3a1aaa0640a826e90d210da6c20ab9886ec25",
+      "records": 95,
+      "scope": "Exclusive independent reviewer thread across shared-core and A/B/C/D; excludes coordinator and implementation/documentation child threads. Count once in batch, not once per feature."
+    }
+  ],
+  "interpretation": "Partial batch only; neither stage-exclusive overhead nor monetary proportions; not complete project cost"
+}
