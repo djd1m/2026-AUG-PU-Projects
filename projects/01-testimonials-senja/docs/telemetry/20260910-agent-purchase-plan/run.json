@@ -1,0 +1,24 @@
+{
+  "run_id": "20260910-agent-purchase-plan",
+  "started_at": "2026-09-10T06:50:32.301258+00:00",
+  "stage": "plan_ready_awaiting_approval",
+  "risk": "XL: money, identity, authorization",
+  "profile": "compact-quality-first-v2",
+  "actual_model": null,
+  "usage": null,
+  "scope": "Planning only; implementation awaits plan approval",
+  "measurement_gaps": [
+    "Initial inspection precedes timer",
+    "Actual model and usage unavailable"
+  ],
+  "planning_completed_at": "2026-09-10T06:54:22.203344+00:00",
+  "elapsed_wall_ms": 229902,
+  "active_wall_ms": null,
+  "checks": {
+    "mermaid": "pass",
+    "local_links": "pass",
+    "provider_sources": "YooKassa official docs read 2026-09-10",
+    "implementation_tests": "not applicable: plan only"
+  },
+  "provider_capability_actual_shop_verified": false
+}
