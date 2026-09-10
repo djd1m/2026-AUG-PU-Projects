@@ -42,10 +42,12 @@ change runtime. Other concurrent monorepo work is not covered by this equivalenc
 [integrated regression](../../telemetry/p-replicator/20260910T071401Z-agent-payments-implementation-7e80/integrated-tests.json),
 [setup and human involvement](operations.md).
 
-Real YooKassa TEST saved-method acceptance is separate and has not been performed.
+The initial local receipt below predates public provider acceptance. See the
+[public pilot](public-pilot.md) and its telemetry for the subsequent real TEST run.
 No live payment or public rollout is claimed. P1 gateway container build passed;
-web production Next build and Docker dependency stage passed. A complete new web
-runtime Docker image has not yet been built or deployed.
+web production Next build and Docker dependency stage passed. A complete new web runtime image was subsequently built and deployed only to
+the isolated public pilot (Next build `9IB9BvmtgGJceHgW07HGX`). The main
+Proofwall deployment remains on its previous image.
 
 Deployment only from source-bound tested candidate; module disabled until activation. Human CJM must remain available with module disabled and enabled; P2 untouched. Existing public payment behavior cannot be used to claim new agent checkout works.
 
@@ -60,5 +62,19 @@ No specification was weakened to hide the gap.
 
 Three resumed terminal receipts accepted: agent browser, human browser, independent
 review (3/3 substantive regular files, completed markers, source binding checked).
-Runtime deployment, real TEST PSP saved-method acceptance, and any further work needed
-to establish the full all-project invariant remain separate outstanding steps.
+Subsequently, an isolated public runtime and actual TEST saved-method acceptance
+passed; see the public pilot receipt. Full all-project conformance, N3 integration
+in that separate pilot, and a main-application rollout remain distinct steps.
+
+## Subsequent public TEST acceptance — 2026-09-10
+
+[Public pilot and demo](public-pilot.md): actual hosted first purchase and saved-method
+renewal succeeded against the existing YooKassa TEST shop. Independent provider/DB
+readback confirms matching TEST account/order, 990 RUB each, saved method, active
+entitlement, exactly two owned orders/attempts/reservations. Public browser revocation
+subsequently denies A2A access. Renewal eligibility dates changed only for the owned
+synthetic account; production policy and provider history were unchanged.
+
+This does not establish real provider refund acceptance or a combined agent→N3
+chain. The public pilot intentionally leaves N3 disabled and does not receive the
+ordinary checkout webhook; use the documented agent purchase flow.
