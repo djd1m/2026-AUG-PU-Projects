@@ -38,8 +38,13 @@ it('built workspace serves isolated liveness contract', async () => {
     expect(html).toContain('lang="ru"');
     expect(html).toContain('<main>');
     expect(html).toContain('Готовимся к открытию');
-    for (const route of ['/api/auth/login', '/api/auth/register', '/api/auth/logout', '/api/enrollment']) {
+    for (const route of ['/api/auth/register', '/api/enrollment']) {
       expect((await fetch(`${origin}${route}`, { method: 'POST' })).status).toBe(404);
+    }
+    for (const route of ['/api/auth/login', '/api/auth/signup', '/api/auth/logout']) {
+      const rejected = await fetch(`${origin}${route}`, { method: 'POST' });
+      expect(rejected.status).toBe(403);
+      expect(rejected.headers.get('cache-control')).toBe('no-store');
     }
     expect(log).not.toContain(process.env.SESSION_SECRET);
     expect(log).not.toContain(process.env.DATABASE_URL);

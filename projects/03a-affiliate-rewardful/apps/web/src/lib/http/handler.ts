@@ -82,7 +82,7 @@ export function createApi(getRuntime: () => Promise<ApiRuntime>, guard = process
           response.headers.append('Set-Cookie', clearAnonymousCookie());
           return response;
         }
-        if (!tokenHash) throw new OnboardingError('unauthorized');
+        if (!tokenHash || !await sessions.resolve(token)) throw new OnboardingError('unauthorized');
         const session = { sessionTokenHash: tokenHash };
         if (action === 'bind' || action === 'preview' || action === 'accept' || action === 'acceptPartner') {
           const b = input.object(body, action === 'acceptPartner' ? ['grant_token', 'policy_id', 'terms_hash', 'accepted'] : ['grant_token']);

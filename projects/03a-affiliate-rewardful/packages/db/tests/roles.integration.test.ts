@@ -9,7 +9,8 @@ beforeAll(migrateFixture);
 afterAll(async () => { await removeUsers(pools.migrate, ids); await pools.app.end(); await pools.migrate.end(); });
 it('runtime configuration cookie and database authority fail closed', async () => {
   expect(() => readRuntimeConfig({})).toThrow();
-  const config = readRuntimeConfig({ DATABASE_URL: pools.urls.app, SESSION_SECRET: randomBytes(32).toString('base64url') });
+  const config = readRuntimeConfig({ DATABASE_URL: pools.urls.app, SESSION_SECRET: randomBytes(32).toString('base64url'),
+    IDENTITY_SECRET: randomBytes(32).toString('base64url'), ADMISSION_SECRET: randomBytes(32).toString('base64url'), APP_ORIGIN: 'https://n3a.example.test' });
   expect(config.sessionSecret.length).toBe(32);
   const cookie = serializeSessionCookie(generateSessionToken());
   for (const attribute of ['Secure', 'HttpOnly', 'SameSite=Lax', 'Path=/', 'Max-Age=86400']) expect(cookie).toContain(attribute);

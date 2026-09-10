@@ -116,3 +116,12 @@ it('AC9 spoofed forwarding headers cannot skip the shared durable source limit',
   expect(f.counters.chargeSource).toHaveBeenCalledTimes(3);
   expect(f.repository.resolveSession).not.toHaveBeenCalled(); expect(f.invoked).not.toHaveBeenCalled();
 });
+
+it('AC3 invalid canonical session denies all protected reads before object lookup', async () => {
+ const f=fixture(); const cookie=`${SESSION_COOKIE}=${randomBytes(32).toString('base64url')}`;
+ for(const action of ['me','program','members','assets'] as Action[]){
+ const response=await f.api(new Request(origin+'/api/test',{headers:{cookie}}),action,{id:randomUUID()});
+ expect(response.status).toBe(401);
+ }
+ expect(f.invoked).not.toHaveBeenCalled();
+});

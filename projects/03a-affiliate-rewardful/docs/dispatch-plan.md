@@ -14,6 +14,7 @@
 |---|---|
 | identity-core | New SQL, domain, bootstrap and core tests |
 | identity-ui | Client forms, pages and CJM A styles |
+| identity-process-qe | Two new process/crash/concurrency test files |
 | координатор | Frozen contract, HTTP, runtime and shared integration |
 
 ## Владение
@@ -122,6 +123,11 @@
 
 | .gitignore | координатор |
 
+
+| packages/db/tests/roles.integration.test.ts | координатор |
+| packages/db/tests/onboarding-process.integration.test.ts | identity-process-qe |
+| packages/db/tests/onboarding-process-worker.ts | identity-process-qe |
+
 Only new SQL migrations after002 and onboarding-prefixed test/repository splits may be proposed by core. Exact paths are added here before creation. Core confirmed DTO SHA before UI launch; only the listed UI files now belong to identity-ui. UI may add named component splits after coordinator records ownership. Coordinator also owns all run/events, lifecycle reports, provenance and source receipts. Each writer has its own worktree; no donor runtime writes. Foundation prior dispatch is preserved in this run.
 
 After the terminal UI receipt, coordinator owns the four form files above for integration corrections (password bounds, exact terms, decimal conversion, async form reset and renewed consent). Original worker hashes remain in its receipt.
@@ -131,3 +137,5 @@ After the terminal UI receipt, coordinator owns the four form files above for in
 | Новый файл | Разрезан из | Владелец |
 |---|---|---|
 | apps/web/src/components/onboarding/rate.ts | apps/web/src/components/onboarding/policy-form.tsx | координатор |
+
+Coordinator integrates core files after verified terminal receipt. Root now owns core production corrections and packages/db/tests/roles.integration.test.ts.
