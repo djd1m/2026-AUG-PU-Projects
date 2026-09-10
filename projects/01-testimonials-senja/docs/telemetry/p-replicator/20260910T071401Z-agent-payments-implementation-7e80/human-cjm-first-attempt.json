@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-09-10T09:13:23Z",
+  "ended_at": "2026-09-10T09:13:44Z",
+  "candidate": "b2343b00208195b3365380146cecdd417f32c6a8",
+  "runs": [
+    {
+      "variant": "a",
+      "module_enabled": false,
+      "started_at": "2026-09-10T09:13:30Z",
+      "ended_at": "2026-09-10T09:13:42Z",
+      "exit_code": 1,
+      "evidence": "/tmp/agent-payments-implementation-7e80/human-cjm-evidence/a-disabled",
+      "actual_environment": {
+        "enabled": "false",
+        "agentShopConfigured": false,
+        "agentKeyConfigured": false
+      },
+      "authority_counts": {
+        "grants": 0,
+        "mandates": 0
+      }
+    }
+  ],
+  "expected_runs": 5
+}

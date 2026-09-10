@@ -5,7 +5,7 @@
   "profile": "compact-quality-first-v2",
   "tier": "XL",
   "stage": "TEST",
-  "status": "running",
+  "status": "paused_usage_limit",
   "started_at": "2026-09-10T07:14:01.649004+00:00",
   "baseline_revision": "4c3bef4c01f5a987c7537674ae6766ce7d5f25f5",
   "authorization": "User approved implementation after modular architecture: действуй",
@@ -64,7 +64,8 @@
   "gate_notes": [
     "Pinned p-replicator 1.13.2 restored in ignored node_modules; pre-shipped verify PASS",
     "Whole legacy P1 traceability FAIL (28 gaps, 2 inconclusive). Existing source-hashed check-feature-catalog.mjs supports scoped feature validation; full-project success will not be claimed.",
-    "Core receipt incorrectly labels v1 profile; actual requested routing follows compact-quality-first-v2. Corrected followup requested; original receipt retained."
+    "Core receipt incorrectly labels v1 profile; actual requested routing follows compact-quality-first-v2. Corrected followup requested; original receipt retained.",
+    "Scoped completion criterion-to-test gate PASS; final review and browser acceptance not passed. Production npm audit reports preexisting postcss/qs advisories (same versions at baseline), no blanket security acceptance."
   ],
   "baseline_tests": {
     "web": 813,
@@ -83,7 +84,7 @@
     "actual_model": null,
     "spec_sha256": "937b23634f89f589a7cd8e6e5c0afd6f3b1ad0bfc8c3e102363d9ca4e9a9fbc4"
   },
-  "updated_at": "2026-09-10T09:05:24.121608+00:00",
+  "updated_at": "2026-09-10T09:20:16.076760+00:00",
   "implementation_checks": {
     "core_commit": "d96ce31",
     "core_tests": {
@@ -133,7 +134,10 @@
   "concurrency_exception": "Temporarily 3 children: independent review, host integration, core review fixes required by host human-CJM blocker. Separate writing worktrees.",
   "usage_limit_monitoring": {
     "weekly_remaining": null,
-    "reason": "No runtime counter available; user requests notification at 2% remaining"
+    "reason": "No runtime counter available; user requests notification at 2% remaining",
+    "notification": "usage limit reached",
+    "host_retry_after": "2026-09-16 09:18",
+    "percent_remaining": null
   },
   "review": {
     "status": "CHANGES_REQUIRED_INITIAL_SNAPSHOT",
@@ -156,5 +160,13 @@
     "human A disabled + A-D enabled browser",
     "actual gateway-host agent browser",
     "integrated source review"
-  ]
+  ],
+  "pause_reason": "Both active child agents returned host usage-limit error; user notified immediately. No 2-percent warning or remaining counter was available.",
+  "paused_at": "2026-09-10T09:20:16.076760+00:00",
+  "elapsed_wall_ms_to_pause": 7574428,
+  "browser_acceptance": {
+    "human": "FAIL first A-disabled attempt before signup/payment: missing referral cookie; 4 enabled runs not started",
+    "agent": "FAIL after ordinary login: expected agent page, observed dashboard; earlier snap profile permission issue corrected",
+    "final_receipts": "missing: agents stopped by host usage limit, no success claim"
+  }
 }
