@@ -1,0 +1,76 @@
+name: proofwall-agent-pilot
+# Independent TEST pilot. No shared P1/N3 data or application network.
+# Only the existing HTTPS proxy joins ingress; no host ports are published.
+services:
+  postgres:
+    image: postgres:16-alpine
+    env_file: ./.secrets/agent-pilot/database.env
+    networks: [database]
+    volumes: [agent_pilot_pg:/var/lib/postgresql/data]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data
+    env_file: ./.secrets/agent-pilot/storage.env
+    networks: [storage]
+    volumes: [agent_pilot_storage:/data]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:9000/minio/health/live]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  web:
+    image: ${AGENT_PILOT_WEB_IMAGE:-proofwall-web:agent-pilot-186f8b3}
+    env_file: ./.secrets/agent-pilot/web.env
+    networks: [database, storage, gateway, ingress, egress]
+    restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      minio: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  worker:
+    image: ${AGENT_PILOT_WORKER_IMAGE:-proofwall-worker:agent-pilot-186f8b3}
+    env_file: ./.secrets/agent-pilot/worker.env
+    networks: [database, storage, gateway, egress]
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      web: {condition: service_healthy}
+  agent-api:
+    image: ${AGENT_PILOT_GATEWAY_IMAGE:-proofwall-agent-api:test-3828a74}
+    env_file: ./.secrets/agent-pilot/gateway.env
+    networks: [gateway, ingress]
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      web: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+networks:
+  database: {internal: true}
+  storage: {internal: true}
+  gateway: {internal: true}
+  ingress: {internal: true}
+  egress: {}
+volumes:
+  agent_pilot_pg: {}
+  agent_pilot_storage: {}

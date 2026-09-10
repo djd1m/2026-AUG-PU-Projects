@@ -1,0 +1,71 @@
+{
+  "at": "2026-09-10T10:23:03.206250+00:00",
+  "containers": [
+    {
+      "name": "/proofwall-agent-pilot-web-1",
+      "image_tag": "proofwall-web:agent-pilot-186f8b3",
+      "image_id": "sha256:1279b80cfc58defce413c088f665e54826cdd94b3f9ce987396f408b2dbaaa78",
+      "ports": {
+        "3000/tcp": null
+      },
+      "networks": [
+        "proofwall-agent-pilot_database",
+        "proofwall-agent-pilot_egress",
+        "proofwall-agent-pilot_gateway",
+        "proofwall-agent-pilot_ingress",
+        "proofwall-agent-pilot_storage"
+      ],
+      "started_at": "2026-09-10T10:09:00.860687166Z"
+    },
+    {
+      "name": "/proofwall-agent-pilot-worker-1",
+      "image_tag": "proofwall-worker:agent-pilot-186f8b3",
+      "image_id": "sha256:480a295a00390d2a082555eab80136b04b9ef8fa5492b4f03ac1b23bb1fa218c",
+      "ports": {},
+      "networks": [
+        "proofwall-agent-pilot_database",
+        "proofwall-agent-pilot_egress",
+        "proofwall-agent-pilot_gateway",
+        "proofwall-agent-pilot_storage"
+      ],
+      "started_at": "2026-09-10T10:09:11.884415751Z"
+    },
+    {
+      "name": "/proofwall-agent-pilot-agent-api-1",
+      "image_tag": "proofwall-agent-api:test-3828a74",
+      "image_id": "sha256:b5d7e7edb76bd3e09cf3e3ad5d60ffdf7d652094f0fdd2f4fa28b4d50994c281",
+      "ports": {
+        "3000/tcp": null
+      },
+      "networks": [
+        "proofwall-agent-pilot_gateway",
+        "proofwall-agent-pilot_ingress"
+      ],
+      "started_at": "2026-09-10T10:09:11.885376281Z"
+    },
+    {
+      "name": "/proofwall-agent-pilot-postgres-1",
+      "image_tag": "postgres:16-alpine",
+      "image_id": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416",
+      "ports": {
+        "5432/tcp": null
+      },
+      "networks": [
+        "proofwall-agent-pilot_database"
+      ],
+      "started_at": "2026-09-10T10:07:57.092180432Z"
+    },
+    {
+      "name": "/proofwall-agent-pilot-minio-1",
+      "image_tag": "minio/minio:RELEASE.2025-04-22T22-12-26Z",
+      "image_id": "sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e",
+      "ports": {
+        "9000/tcp": null
+      },
+      "networks": [
+        "proofwall-agent-pilot_storage"
+      ],
+      "started_at": "2026-09-10T10:07:57.093589572Z"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "run_id": "20260910-agent-payments-public-pilot",
+  "started_at": "2026-09-10T09:58:34.245108+00:00",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "status": "running",
+  "stage": "PUBLIC_UI_TEST",
+  "authorization": "User confirms existing P1 TEST shop, requests deployed demo after UI E2E; prior implementation approval persists",
+  "scope": "Isolated public pilot; existing P1 TEST credentials; no live charges or changes to existing human deployment",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Runtime model metadata and weekly usage not exposed"
+  ],
+  "agents": [
+    {
+      "id": "payments_review",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "work_unit": "pilot-review",
+      "receipt": "pilot-review.md"
+    },
+    {
+      "id": "payments_core",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "work_unit": "public-ui",
+      "receipt_pending": "/tmp/agent-payments-public-pilot-ui.md"
+    }
+  ],
+  "updated_at": "2026-09-10T10:23:03.165480+00:00",
+  "runtime_source": "186f8b3",
+  "build_id": "9IB9BvmtgGJceHgW07HGX",
+  "provider_read_only": {
+    "test": true,
+    "status": "enabled",
+    "payment_methods": [
+      "yoo_money",
+      "bank_card"
+    ],
+    "same_existing_p1_test_shop": true
+  },
+  "caveats": [
+    "Native isolated pilot; N3 disabled to preserve existing program origin.",
+    "Existing shop webhook unchanged; known-ID payments polled. Refund/lost-ID recovery separate.",
+    "Initial Caddy reload encountered old bind-mounted inode; exact current host config reloaded via stdin restoring N3 and adding pilot. Existing routes checked200 afterwards."
+  ]
+}
