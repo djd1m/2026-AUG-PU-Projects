@@ -1,5 +1,6 @@
+import { failure } from '@/lib/agent-payments/http';
 import { NextResponse } from 'next/server';
-import { body, failure, gatewayAuthority, requireEnabled } from '@/lib/agent-payments/security';
+import { body, gatewayAuthority, requireEnabled } from '@/lib/agent-payments/security';
 import { dispatchCommand } from '@/lib/agent-payments/commands';
 import { paymentEngine } from '@/lib/agent-payments/runtime';
 export const dynamic = 'force-dynamic';

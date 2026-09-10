@@ -15,6 +15,7 @@ import { enqueueN3 } from '../../../../../services/worker/src/n3-outbox';
 import { n3Config, n3Client, externalOrderResult } from '../n3-runtime';
 import { AgentHostError, merchantId } from './security';
 import { verified } from './identity';
+import { importLegacySpend } from './history';
 
 export const PRODUCT = 'proofwall-paid-30-days';
 export const TERMS = 'proofwall-paid-30-days-v1';
@@ -38,6 +39,7 @@ export async function lockProject(client: PoolClient, scope: Scope) {
 }
 export async function offer(scope: Scope, productId: string, now = new Date()) {
   if (productId !== PRODUCT) throw new AgentHostError('PRODUCT_NOT_FOUND', 404);
+  await importLegacySpend(scope, now, moscowMonth(now));
   return withService(async (client) => {
     const row = (
       await client.query(
@@ -102,6 +104,13 @@ export async function prepareAttribution(scope: Scope, orderId: string, required
       [scope.resourceId],
     );
     if (human.rowCount) throw new AgentHostError('HUMAN_PAYMENT_PENDING', 409);
+    await client.query('reset role');
+    const coreOrder = await client.query(
+      "select 1 from agent_payments.orders where id=$1 and merchant=$2 and buyer=$3 and resource=$4 and data->>'paymentStatus'='prepared'",
+      [orderId, scope.merchantId, scope.buyerId, scope.resourceId],
+    );
+    await client.query('set local role app_service');
+    if (!coreOrder.rowCount) throw new AgentHostError('ORDER_CANCELED', 409);
     let invoiceId: string | null = null;
     if (required) {
       const proof = await client.query(

@@ -1,3 +1,4 @@
+import { failure } from '@/lib/agent-payments/http';
 // POST /api/checkout — инициация оплаты владельцем проекта (FR-008, Pseudocode §7.3).
 
 import { randomUUID } from 'node:crypto';
@@ -11,7 +12,7 @@ import { beginN3Checkout } from '@/lib/n3-checkout';
 import { N3Error } from '@/lib/n3-runtime';
 import { n3Failure } from '@/lib/n3-http';
 import { reserveHumanCheckout, attachHumanPayment, releaseUndispatchedHuman } from '@/lib/agent-payments/legacy';
-import { AgentHostError, failure } from '@/lib/agent-payments/security';
+import { AgentHostError } from '@/lib/agent-payments/security';
 
 export const dynamic = 'force-dynamic';
 

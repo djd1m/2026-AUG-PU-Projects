@@ -4,7 +4,7 @@ import { fetchRemotePayment, applyTariffUpgrade, claimWebhookEvent, isStub, type
 import { saveNativeSession, type N3Intent } from './n3-checkout';
 import { enqueueN3 } from '../../../../services/worker/src/n3-outbox';
 import { N3Error, N3_UUID, record } from './n3-runtime';
-import { observeLegacyPayment } from './agent-payments/legacy';
+import { observeLegacyPayment, releaseCanceledHuman } from './agent-payments/legacy';
 import { agentPaymentNotification } from './agent-payments/notification';
 
 export interface VerifiedRefund { id: string; paymentId: string; amountMinor: number }
@@ -45,6 +45,7 @@ export async function applyBridgePayment(client: PoolClient, payment: RemotePaym
   if (event === 'payment.canceled') {
     if (payment.status !== 'canceled') throw new N3Error('N3_PROVIDER_PENDING');
     if (intent.state !== 'completed') await client.query("update n3_checkout_intents set state='canceled',provider_id=$2 where id=$1", [intent.id, payment.id]);
+    await releaseCanceledHuman(client,intent.project_id,payment.id);
     return 'canceled';
   }
   if (!payment.paid || payment.status !== 'succeeded') throw new N3Error('N3_PROVIDER_PENDING');

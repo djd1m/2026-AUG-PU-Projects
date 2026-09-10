@@ -6,6 +6,10 @@ import { AgentHostError, requireEnabled } from './security';
 let cached: PaymentsEngine | undefined;
 export function paymentEngine(): PaymentsEngine {
   requireEnabled();
+  return reconciliationEngine();
+}
+/** Existing dispatched orders remain recoverable when new issuance is disabled. */
+export function reconciliationEngine(): PaymentsEngine {
   if (cached) return cached;
   const shopId = process.env.AGENT_YOOKASSA_TEST_SHOP_ID,
     secretKey = process.env.AGENT_YOOKASSA_TEST_SECRET_KEY;

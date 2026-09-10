@@ -39,3 +39,6 @@ alter table agent_payment_email_proofs enable row level security;
 alter table agent_payment_orders enable row level security;
 alter table agent_payment_human_checkouts enable row level security;
 alter table agent_payment_refund_reviews enable row level security;
+
+-- Fair bounded reconciliation without modifying portable engine-owned state.
+alter table agent_payment_orders add column if not exists last_reconciled_at timestamptz;

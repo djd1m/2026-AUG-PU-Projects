@@ -1,8 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import { withService } from '@proofwall/db';
-import { lockBuyer, observeHumanSpend } from '@course/agent-payments';
+import { lockBuyer, observeHumanSpend, abandonUndispatched } from '@course/agent-payments';
 import { baseUrl } from '../urls';
+import { isStub } from '../payment';
 import { AgentHostError, enabled, merchantId } from './security';
 import { lockProject, moscowMonth } from './host';
 
@@ -16,6 +17,26 @@ export async function reserveHumanCheckout(
     await lockProject(client, scope);
     await client.query('reset role');
     await lockBuyer(client, scope);
+    const abandoned = await abandonUndispatched(client, scope);
+    await client.query('set local role app_service');
+    for (const id of abandoned) {
+      const mapping = (
+        await client.query(
+          'select invoice_id from agent_payment_orders where order_id=$1 for update',
+          [id],
+        )
+      ).rows[0];
+      if (mapping?.invoice_id)
+        await client.query(
+          "update n3_checkout_intents set state='canceled' where id=$1 and state<>'completed'",
+          [mapping.invoice_id],
+        );
+      await client.query(
+        "update agent_payment_orders set state='canceled' where order_id=$1 and state<>'completed'",
+        [id],
+      );
+    }
+    await client.query('reset role');
     const current = await client.query(
       `select id from agent_payments.orders where merchant=$1 and buyer=$2 and resource=$3
       and data->>'paymentStatus' in ('prepared','action_required','pending','unknown') order by id limit 1`,
@@ -62,7 +83,22 @@ export async function observeLegacyPayment(
   providerId: string,
   minor: string,
 ) {
-  if (!enabled()) return;
+  if (isStub()) {
+    // A simulated checkout is not verified monetary spend. Release only its own host hold.
+    await client.query(
+      'delete from agent_payment_human_checkouts where project_id=$1 and provider_id=$2',
+      [projectId, providerId],
+    );
+    return;
+  }
+  if (
+    !(
+      await client.query(
+        "select exists(select 1 from pg_catalog.pg_tables where schemaname='agent_payments' and tablename='human_spend') as ledger",
+      )
+    ).rows[0].ledger
+  )
+    return;
   const owner = (await client.query('select account_id from projects where id=$1', [projectId]))
     .rows[0];
   if (!owner) throw new AgentHostError('PROJECT_NOT_FOUND', 404);
@@ -87,4 +123,33 @@ export async function releaseUndispatchedHuman(projectId: string) {
         [projectId],
       ),
     );
+}
+
+/** Caller has independently fetched a canceled PSP payment; unknown results never use this. */
+export async function releaseCanceledHuman(
+  client: PoolClient,
+  projectId: string,
+  providerId: string,
+) {
+  const owner = (
+    await client.query('select account_id from projects where id=$1 for update', [projectId])
+  ).rows[0];
+  if (!owner) return false;
+  const checkout = (
+    await client.query(
+      'select id,idempotence_key from checkout_sessions where project_id=$1 and provider_session_id=$2 for update',
+      [projectId, providerId],
+    )
+  ).rows[0];
+  const deleted = await client.query(
+    `delete from agent_payment_human_checkouts where project_id=$1
+    and (provider_id=$2 or (provider_id is null and request_key=$3)) returning project_id`,
+    [projectId, providerId, checkout?.idempotence_key ?? null],
+  );
+  if (deleted.rowCount && checkout)
+    await client.query(
+      "update checkout_sessions set status='expired' where id=$1 and status='pending'",
+      [checkout.id],
+    );
+  return Boolean(deleted.rowCount);
 }

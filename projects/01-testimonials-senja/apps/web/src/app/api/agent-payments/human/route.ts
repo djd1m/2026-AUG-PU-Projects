@@ -1,3 +1,4 @@
+import { failure } from '@/lib/agent-payments/http';
 import { NextResponse } from 'next/server';
 import { withService } from '@proofwall/db';
 import { n3Authority } from '@/lib/n3-http';
@@ -17,7 +18,6 @@ import {
 import {
   body,
   csrf,
-  failure,
   fields,
   humanCsrf,
   requireEnabled,

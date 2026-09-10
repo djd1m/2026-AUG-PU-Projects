@@ -26,7 +26,7 @@ import { extractClientIP } from '@/lib/client-ip';
 import { bridgeNotification } from '@/lib/n3-payment';
 import { N3Error } from '@/lib/n3-runtime';
 import { agentPaymentNotification } from '@/lib/agent-payments/notification';
-import { observeLegacyPayment } from '@/lib/agent-payments/legacy';
+import { observeLegacyPayment, releaseCanceledHuman } from '@/lib/agent-payments/legacy';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,12 +93,12 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ status: error instanceof N3Error ? error.code : 'bridge_unavailable' }, { status: 503 });
   }
 
-  let outcome: 'duplicate' | 'ignored' | 'unknown_payment' | 'not_paid' | 'upgraded' | 'unknown_session';
+  let outcome: 'duplicate' | 'ignored' | 'unknown_payment' | 'not_paid' | 'upgraded' | 'unknown_session' | 'canceled';
   try {
     outcome = await withService(async (client) => {
       // ── ШАГ 2: идемпотентность на уровне схемы ────────────────────────────
       if (!(await claimWebhookEvent(client, eventId, body))) return 'duplicate' as const;
-      if (event !== 'payment.succeeded') return 'ignored' as const;
+      if (event !== 'payment.succeeded' && event!=='payment.canceled') return 'ignored' as const;
 
       // ── ШАГ 3: статус перезапрашивается у ЮKassa ──────────────────────────
       // Тело уведомления не является источником истины о том, оплачено ли. Этот шаг
@@ -112,6 +112,12 @@ export async function POST(request: Request): Promise<NextResponse> {
         throw err;
       }
       if (!remote) return 'unknown_payment' as const;
+      if(event==='payment.canceled'){
+        if(remote.status!=='canceled'||remote.paid)throw new ProviderUnavailable();
+        const session=(await client.query('select project_id from checkout_sessions where provider_session_id=$1',[paymentId])).rows[0];
+        const released=session?await releaseCanceledHuman(client,session.project_id,paymentId):false;
+        return released?'canceled' as const:'ignored' as const;
+      }
       if (!remote.paid || remote.status !== 'succeeded') return 'not_paid' as const;
 
       // ── ШАГ 4: тариф ──────────────────────────────────────────────────────

@@ -1,14 +1,8 @@
+import { failure } from '@/lib/agent-payments/http';
 import { NextResponse } from 'next/server';
 import { extractClientIP } from '@/lib/client-ip';
 import { verifyWebhookOrigin } from '@/lib/payment';
-import {
-  body,
-  requireEnabled,
-  failure,
-  record,
-  string,
-  AgentHostError,
-} from '@/lib/agent-payments/security';
+import { body, record, string, AgentHostError } from '@/lib/agent-payments/security';
 import {
   agentPaymentNotification,
   agentNotificationReference,
@@ -16,7 +10,6 @@ import {
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
-    requireEnabled();
     if (!verifyWebhookOrigin(extractClientIP(request)).ok)
       throw new AgentHostError('WEBHOOK_ORIGIN', 400);
     const input = await body(request);

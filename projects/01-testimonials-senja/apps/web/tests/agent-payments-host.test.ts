@@ -37,6 +37,9 @@ beforeAll(async () => {
         'utf8',
       ),
     );
+  await pool.query(
+    'alter table agent_payment_orders add column if not exists last_reconciled_at timestamptz',
+  );
   await migrate(pool);
   process.env.AGENT_PAYMENTS_ENABLED = 'true';
 });
@@ -54,7 +57,7 @@ async function buyer() {
     human: { ...scope, humanId: a.accountId, consentReference: 'test-explicit' },
   };
 }
-function engineHarness(failFulfillment = false) {
+function engineHarness(failFulfillment = false, pending = false) {
   let calls = 0;
   const results = new Map<string, ProviderResult>();
   const provider: ProviderPort = {
@@ -71,7 +74,7 @@ function engineHarness(failFulfillment = false) {
         orderId: req.orderId,
         attemptId: req.attemptId,
         amount: req.amount,
-        status: 'succeeded',
+        status: pending ? 'pending' : 'succeeded',
       };
       results.set(result.providerId, result);
       return result;
@@ -191,9 +194,9 @@ describe('Proofwall agent host persisted authority and settlement', () => {
       ).rows[0].n,
     ).toBe(2);
   });
-  it('manual checkout shares an existing agent operation; manual-first reservation blocks autonomous admission', async () => {
+  it('manual checkout shares an accepted agent operation; manual-first reservation blocks autonomous admission', async () => {
     const a = await buyer(),
-      { engine } = engineHarness();
+      { engine } = engineHarness(false, true);
     const grant = await engine.issueGrant(a.human, {
       audience: 'proofwall-agent-api',
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
@@ -204,6 +207,7 @@ describe('Proofwall agent host persisted authority and settlement', () => {
         quoteId: quote.quoteId,
         idempotencyKey: randomUUID(),
       });
+    await engine.approveOrder(a.human, { orderId: order.orderId, saveMethod: false });
     const reserved = await reserveHumanCheckout(a.accountId, a.projectId);
     expect(reserved?.redirectUrl).toContain(order.orderId);
     const b = await buyer();

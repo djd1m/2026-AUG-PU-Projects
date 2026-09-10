@@ -1,5 +1,6 @@
 import { withService } from '@proofwall/db';
-import { paymentEngine } from './runtime';
+import { reconciliationEngine } from './runtime';
+import { lockProject } from './host';
 import { enabled, merchantId, UUID, AgentHostError } from './security';
 
 /** Body metadata is only a lookup hint; the module re-fetches and verifies every PSP field. */
@@ -8,10 +9,7 @@ export async function agentPaymentNotification(
   objectId: string,
   metadata?: Record<string, unknown>,
 ): Promise<string | null> {
-  if (!enabled()) {
-    if (metadata?.module_order_id) throw new AgentHostError('FEATURE_DISABLED', 503);
-    return null;
-  }
+  if (!enabled() && !metadata?.module_order_id) return null;
   if (!['payment.succeeded', 'payment.canceled', 'refund.succeeded'].includes(event)) return null;
   const hinted = metadata?.module_order_id;
   const row = (
@@ -30,28 +28,12 @@ export async function agentPaymentNotification(
   if (row.provider_id && event !== 'refund.succeeded' && row.provider_id !== objectId)
     throw new AgentHostError('ORDER_MAPPING', 409);
   const scope = { merchantId: merchantId(), buyerId: row.account_id, resourceId: row.project_id };
-  const engine = paymentEngine();
+  const engine = reconciliationEngine();
   const order =
     event === 'refund.succeeded'
       ? await engine.reconcileRefund(scope, row.order_id, objectId)
       : await engine.reconcile(scope, row.order_id, objectId);
-  if (order.paymentStatus === 'canceled')
-    await withService(async (c) => {
-      const mapping = (
-        await c.query('select invoice_id from agent_payment_orders where order_id=$1', [
-          row.order_id,
-        ])
-      ).rows[0];
-      if (mapping.invoice_id)
-        await c.query(
-          "update n3_checkout_intents set state='canceled' where id=$1 and state<>'completed'",
-          [mapping.invoice_id],
-        );
-      await c.query(
-        "update agent_payment_orders set state='canceled' where order_id=$1 and state<>'completed'",
-        [row.order_id],
-      );
-    });
+  if (order.paymentStatus === 'canceled') await recordCancellation(row.order_id, scope);
   return order.paymentStatus;
 }
 
@@ -62,7 +44,7 @@ export async function agentNotificationReference(
 ): Promise<Record<string, unknown>> {
   const shop = process.env.AGENT_YOOKASSA_TEST_SHOP_ID,
     key = process.env.AGENT_YOOKASSA_TEST_SECRET_KEY;
-  if (!enabled() || !shop || !key?.startsWith('test_'))
+  if (!shop || !key?.startsWith('test_'))
     throw new AgentHostError('TEST_PROVIDER_NOT_CONFIGURED', 503);
   if (!/^[A-Za-z0-9_-]{1,128}$/.test(id)) throw new AgentHostError('INVALID_INPUT');
   const get = async (path: string) => {
@@ -98,4 +80,27 @@ export async function agentNotificationReference(
   )
     throw new AgentHostError('PAYMENT_UNVERIFIED', 409);
   return metadata;
+}
+
+export async function recordCancellation(
+  orderId: string,
+  scope: { merchantId: string; buyerId: string; resourceId: string },
+) {
+  await withService(async (c) => {
+    await lockProject(c, scope);
+    const mapping = (
+      await c.query('select invoice_id from agent_payment_orders where order_id=$1 for update', [
+        orderId,
+      ])
+    ).rows[0];
+    if (mapping?.invoice_id)
+      await c.query(
+        "update n3_checkout_intents set state='canceled' where id=$1 and state<>'completed'",
+        [mapping.invoice_id],
+      );
+    await c.query(
+      "update agent_payment_orders set state='canceled' where order_id=$1 and state<>'completed'",
+      [orderId],
+    );
+  });
 }
