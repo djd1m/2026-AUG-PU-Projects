@@ -1,0 +1,41 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260910T100054Z-self-service-expansion",
+  "project": "projects/03a-affiliate-rewardful",
+  "feature": "self-service-expansion",
+  "pipeline": "scope-change-plan",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "started_at": "2026-09-10T10:00:54.848495+00:00",
+  "ended_at": "2026-09-10T10:07:28.393206+00:00",
+  "status": "accepted",
+  "baseline_revision": "4f72669af5018b88a6a9ad9e38efbc3846cfd18d",
+  "actual_models": null,
+  "metrics": {
+    "elapsed_wall_ms": 393544,
+    "active_wall_ms": null,
+    "tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host model/usage not exposed; no active/wait meter. Preliminary read-only context and source discovery preceded this planning run and are not assigned fabricated timing."
+  ],
+  "authorization": "User asks to broaden N3a to merchant self-service within minutes. N3 concurrent work must not be disturbed; source donor read-only. Platform choice pending asynchronous answer. This run prepares scope and concrete plan; no production action.",
+  "acceptance_scope": "Product scope planning only; implementation and platform decision pending",
+  "acceptance_evidence": [
+    "scope-review.md",
+    "plan-inputs.json"
+  ],
+  "quality": {
+    "required_planning_gates_passed": true,
+    "unresolved_blocker_high_medium": 0,
+    "resolved_medium": 1,
+    "implementation_accepted": false
+  },
+  "requested_models": [
+    "coordinator inherited",
+    "gpt-6-astra high"
+  ]
+}

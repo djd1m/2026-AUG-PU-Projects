@@ -35,6 +35,12 @@ CJM HTML — демонстрация. Демо20%/990₽ и подтвержд�
 
 ## Проектный toolkit и текущая фича
 
-Локальные роли/правила/контекстные навыки перечислены в `docs/toolkit-map.md`; команды `/feature`, `/go`, `/run`, `/next`, `/myinsights` и их hooks остаются в корневой `.claude/`. Перед реализацией читать локальные `.claude/rules/`. Roadmap: `.claude/feature-roadmap.json`; foundation и `identity-program-partner` приняты; канон последней `docs/features/identity-program-partner/`. Следующая фича `n1-attribution-bridge` ожидает начала PLAN. Планы и insights размещаются внутри проекта, когда есть содержательный результат; сами hooks не утверждаются запущенными.
+Локальные роли/правила/контекстные навыки перечислены в `docs/toolkit-map.md`; команды `/feature`, `/go`, `/run`, `/next`, `/myinsights` и их hooks остаются в корневой `.claude/`. Перед реализацией читать локальные `.claude/rules/`. Roadmap: `.claude/feature-roadmap.json`; foundation и `identity-program-partner` приняты; канон последней `docs/features/identity-program-partner/`. Следующая фича `merchant-connector-foundation` ожидает начала PLAN; затем `n1-attribution-bridge` станет первым адаптером принятого контракта. Планы и insights размещаются внутри проекта, когда есть содержательный результат; сами hooks не утверждаются запущенными.
 
 Параллельные исполнители получают отдельные worktree, source SHA и owned files; coordinator интегрирует манифесты и lockfile. Выбор моделей — политика `compact-quality-first-v2`, фактическое исполнение — receipts. Детальная последовательность и проверки в `DEVELOPMENT_GUIDE.md`.
+
+## Расширение продукта2026-09-10
+
+Владелец выбрал самостоятельное подключение независимых магазинов без разработчика. Актуальные PRD0.3 и docs/plans/2026-09-10-self-service-expansion.md заменяют N1-only ограничение цели; N1 остаётся первым проверочным адаптером, ЮKassa и ручные5th сохраняются. Первая внешняя платформа ожидает выбора. Принятый offline identity bootstrap не является готовым массовым merchant enrollment: его заменяет отдельный проверяемый install/ownership/recovery путь, без ослабления старых grants.
+
+N3 разрешён только как read-only донор. Владелец явно потребовал не мешать его отдельной сессии: никаких записей в03-affiliate-rewardful, переключений/stash/reset его checkout, управления его контейнерами/процессами/портами, общих secrets/DB/networks. Переносить только проверенные конкретные bytes с SHA в отдельный worktree N3a. Общие git-операции только с явными N3a paths; чужие изменения не включать.

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "project": "N3a Affiliate for N1 Proofwall",
+  "project": "N3a self-service affiliate platform",
   "generated_from": [
     "docs/PRD.md",
     "docs/Specification.md",
@@ -46,16 +46,31 @@
       ]
     },
     {
+      "id": "merchant-connector-foundation",
+      "name": "Self-service merchant and connector contracts",
+      "status": "planned",
+      "priority": "mvp",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "identity-program-partner"
+      ],
+      "description": "PLAN new store ownership/enrollment/recovery, generic connector/capability contract and guest/base policy before extending N1-only trust. Implementation not started."
+    },
+    {
       "id": "n1-attribution-bridge",
       "number": 3,
       "name": "N1 attribution and authenticated bridge",
       "description": "Capture link/cookie/promo attribution, reject self-referral, and deliver versioned authenticated N1 registration/payment/refund facts through an atomic outbox and reconciliation cursor.",
       "priority": "mvp",
-      "status": "next",
+      "status": "blocked",
       "complexity": "complex",
-      "blockers": [],
+      "blockers": [
+        "merchant-connector-foundation"
+      ],
       "depends_on": [
-        "identity-program-partner"
+        "identity-program-partner",
+        "merchant-connector-foundation"
       ],
       "source_ids": [
         "FR-ATTRIBUTION-001",
@@ -63,6 +78,22 @@
         "FR-N1-001",
         "FR-GROWTH-002"
       ]
+    },
+    {
+      "id": "merchant-self-service-plugin",
+      "name": "First self-service store plugin and installation wizard",
+      "status": "blocked",
+      "priority": "mvp",
+      "complexity": "complex",
+      "blockers": [
+        "merchant-connector-foundation",
+        "STORE-PLATFORM-CHOICE"
+      ],
+      "depends_on": [
+        "merchant-connector-foundation",
+        "n1-attribution-bridge"
+      ],
+      "description": "Ready-to-install plugin/app and owner wizard for selected platform/gateway; catalog cannot advertise unsupported combinations. Monetary readiness additionally depends on accepted ledger/refund/registry capabilities."
     },
     {
       "id": "payment-commission-ledger",
@@ -207,5 +238,7 @@
         "SC-US-009-4"
       ]
     }
-  ]
+  ],
+  "scope_revision": "2026-09-10-self-service-expansion",
+  "scope_plan": "docs/plans/2026-09-10-self-service-expansion.md"
 }
