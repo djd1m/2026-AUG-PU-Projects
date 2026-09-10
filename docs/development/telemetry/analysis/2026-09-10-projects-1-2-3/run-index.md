@@ -42,4 +42,3 @@
 | [20260909T111622Z-f3-referral-3b19](https://github.com/djd1m/2026-AUG-PU-Projects/blob/d491ff4b4ccfadccde52e8b23076b201ccc6474d/projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T111622Z-f3-referral-3b19/run.json) | accepted | 156.04 | metrics.wall_elapsed_seconds |
 | [20260909T135340Z-f3-access-8b71](https://github.com/djd1m/2026-AUG-PU-Projects/blob/d491ff4b4ccfadccde52e8b23076b201ccc6474d/projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T135340Z-f3-access-8b71/run.json) | interrupted | 113.91 | metrics.elapsed_seconds (прочитано вручную; extractor не поддерживает) |
 | [20260909T170258Z-proofwall-n3](https://github.com/djd1m/2026-AUG-PU-Projects/blob/d491ff4b4ccfadccde52e8b23076b201ccc6474d/projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T170258Z-proofwall-n3/run.json) | awaiting_external_acceptance | 195.54 | metrics.elapsed_wall_ms |
-
