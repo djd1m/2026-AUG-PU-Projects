@@ -22,3 +22,11 @@ test('configured backend and credentials cannot be supplied by a tool argument',
   await assert.rejects(call('approveOrder', { orderId: 'x' }, 'token', 'ip'));
   assert.equal(calls, 0);
 });
+
+test('core lowercase policy errors remain actionable without reflecting private messages', async () => {
+  const call = backendClient({ ...options, fetchImpl: async () => new Response(JSON.stringify({
+    error: { code: 'budget_exceeded', message: 'private provider detail' },
+  }), { status: 409 }) });
+  await assert.rejects(call('payment_execute', { orderId: 'order' }, 'buyer', 'ip'),
+    error => error.code === 'budget_exceeded' && error.status === 409 && !error.message.includes('private'));
+});

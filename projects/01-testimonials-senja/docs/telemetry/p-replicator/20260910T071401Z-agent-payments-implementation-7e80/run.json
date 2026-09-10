@@ -83,7 +83,7 @@
     "actual_model": null,
     "spec_sha256": "937b23634f89f589a7cd8e6e5c0afd6f3b1ad0bfc8c3e102363d9ca4e9a9fbc4"
   },
-  "updated_at": "2026-09-10T08:46:38.650579+00:00",
+  "updated_at": "2026-09-10T08:55:30.730776+00:00",
   "implementation_checks": {
     "core_commit": "d96ce31",
     "core_tests": {
@@ -115,7 +115,13 @@
       "status": "BUILD_PASS",
       "image_id": "sha256:b5d7e7edb76bd3e09cf3e3ad5d60ffdf7d652094f0fdd2f4fa28b4d50994c281"
     },
-    "initial_integrated_next_build": "PASS before followup host/core revisions; repeat required"
+    "initial_integrated_next_build": "PASS before followup host/core revisions; repeat required",
+    "public_ui_smoke": {
+      "status": "PASS",
+      "pages": 8,
+      "new_candidate_deployed": false,
+      "artifact": "public-ui-smoke.json"
+    }
   },
   "concurrency_exception": "Temporarily 3 children: independent review, host integration, core review fixes required by host human-CJM blocker. Separate writing worktrees.",
   "usage_limit_monitoring": {
@@ -138,5 +144,12 @@
       "reason": "New agent and old Sol followup rejected agent thread limit; reused independent Astra reviewer",
       "actual_model": null
     }
+  ],
+  "work_units_pending": [
+    "host cancellation activation edge fix",
+    "immutable candidate build",
+    "human A disabled + A-D enabled browser",
+    "actual gateway-host agent browser",
+    "integrated source review"
   ]
 }
