@@ -3,8 +3,8 @@
   "started_at": "2026-09-10T09:58:34.245108+00:00",
   "profile": "compact-quality-first-v2",
   "tier": "XL",
-  "status": "running",
-  "stage": "PUBLIC_UI_TEST",
+  "status": "completed_with_scope_limits",
+  "stage": "COMPLETE",
   "authorization": "User confirms existing P1 TEST shop, requests deployed demo after UI E2E; prior implementation approval persists",
   "scope": "Isolated public pilot; existing P1 TEST credentials; no live charges or changes to existing human deployment",
   "actual_model": null,
@@ -38,7 +38,7 @@
       "receipt_pending": "/tmp/agent-payments-pilot-human-smoke.md"
     }
   ],
-  "updated_at": "2026-09-10T10:30:33.049650+00:00",
+  "updated_at": "2026-09-10T11:44:20.817690+00:00",
   "runtime_source": "186f8b3",
   "build_id": "9IB9BvmtgGJceHgW07HGX",
   "provider_read_only": {
@@ -63,6 +63,38 @@
     "public_https": "PASS",
     "existing_public_browser_smoke": "8/8 PASS",
     "first_real_test_payment": "PASS saved method and tariff verified via provider + DB",
-    "public_agent_final": "pending"
-  }
+    "public_agent_final": "PASS14/14; source/image-bound terminal receipt accepted",
+    "real_test_saved_renewal": "PASS authoritative PSP and ledger; exactly2orders/2attempts/2reservations",
+    "revocation": "PASS root browser execution; mandate and grant revoked; subsequent A2A401",
+    "scoped_document_gates": "PASS traceability/revision/scenarios/completion and review contract"
+  },
+  "approval_waits": [
+    "Child revoke command did not return for1283s; root interrupted, tool reported abortedbyuser; no execution evidence. Root then completed revoke/close via explicit approved commands.",
+    "Initial root revoke approval interrupted by incoming status question; reissued, passed."
+  ],
+  "finished_at": "2026-09-10T11:44:20.817690+00:00",
+  "elapsed_wall_ms": 6346572,
+  "active_compute_ms": null,
+  "public_ui_scenarios": 14,
+  "terminal_receipts": {
+    "valid": 3,
+    "required": 3,
+    "files": [
+      "pilot-review.md",
+      "human-smoke.md",
+      "public-ui.md"
+    ],
+    "public_ui_owner": "root takeover; child financial/browser execution and root cleanup attributed separately"
+  },
+  "harness_commits": [
+    "f05a85c",
+    "a35b8e9"
+  ],
+  "remaining": [
+    "N3 combined agent chain",
+    "ordinary pilot checkout webhook routing",
+    "provider refund/lost-ID recovery",
+    "main Proofwall rollout"
+  ],
+  "takeover": "Root interrupted pending_init packaging agent, took sole worktree ownership, finalized and verified evidence without more financial calls"
 }
