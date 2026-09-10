@@ -10,4 +10,8 @@ export const onboardingExperiments = [
     from: 'if (total > max)', to: 'if (false)', test: 'apps/web/tests/onboarding-http.test.ts' },
   { name: 'forwarding-header-bypass', file: 'apps/web/src/lib/http/handler.ts',
     from: 'await runtime.admission.source();', to: "if (!request.headers.has('x-forwarded-for')) await runtime.admission.source();", test: 'apps/web/tests/onboarding-http-routes.test.ts' },
+  { name: 'native-form-secret-url', file: 'apps/web/src/components/onboarding/join-form.tsx',
+    from: '<form method="post"', to: '<form', test: 'apps/web/tests/onboarding-render.test.ts' },
+  { name: 'owner-reactivation-control', file: 'apps/web/src/components/onboarding/member-list.tsx',
+    from: "(member.status === 'active' || member.partner_status === 'suspended')", to: "member.status === 'active'", test: 'apps/web/tests/onboarding-render.test.ts' },
 ];

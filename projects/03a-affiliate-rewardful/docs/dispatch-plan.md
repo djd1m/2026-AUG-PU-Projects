@@ -2,7 +2,7 @@
 
 **Пишущий фан-аут:** да
 **Координатор пишет:** да
-**Разрезы файлов:** нет
+**Разрезы файлов:** да
 **Проверка владения:** ВЫПОЛНЕНА
 **Канон:** packages/db/src/onboarding-contract.ts
 **Хеш канона:** 9fd30014819ca9133c648061d6b2177ba5f71883b99ff238a9bc64a1ad0b6511
@@ -79,15 +79,15 @@
 | apps/web/src/app/programs/[id]/setup/page.tsx | identity-ui |
 | apps/web/src/app/programs/[id]/partner/page.tsx | identity-ui |
 | apps/web/src/components/onboarding/api.ts | identity-ui |
-| apps/web/src/components/onboarding/shell.tsx | identity-ui |
-| apps/web/src/components/onboarding/login-form.tsx | identity-ui |
-| apps/web/src/components/onboarding/join-form.tsx | identity-ui |
+| apps/web/src/components/onboarding/shell.tsx | координатор |
+| apps/web/src/components/onboarding/login-form.tsx | координатор |
+| apps/web/src/components/onboarding/join-form.tsx | координатор |
 | apps/web/src/components/onboarding/membership-list.tsx | identity-ui |
 | apps/web/src/components/onboarding/program-setup.tsx | identity-ui |
 | apps/web/src/components/onboarding/partner-assets.tsx | identity-ui |
-| apps/web/src/components/onboarding/policy-form.tsx | identity-ui |
-| apps/web/src/components/onboarding/invite-form.tsx | identity-ui |
-| apps/web/src/components/onboarding/member-list.tsx | identity-ui |
+| apps/web/src/components/onboarding/policy-form.tsx | координатор |
+| apps/web/src/components/onboarding/invite-form.tsx | координатор |
+| apps/web/src/components/onboarding/member-list.tsx | координатор |
 
 | apps/web/src/app/api/auth/csrf/route.ts | координатор |
 | apps/web/src/app/api/auth/signup/route.ts | координатор |
@@ -114,4 +114,20 @@
 | scripts/prepare-onboarding-browser.mjs | координатор |
 | scripts/mutation-check.mjs | координатор |
 
+| apps/web/tests/onboarding-ui.test.ts | координатор |
+
+| apps/web/src/components/onboarding/rate.ts | координатор |
+
+| apps/web/tests/onboarding-render.test.ts | координатор |
+
+| .gitignore | координатор |
+
 Only new SQL migrations after002 and onboarding-prefixed test/repository splits may be proposed by core. Exact paths are added here before creation. Core confirmed DTO SHA before UI launch; only the listed UI files now belong to identity-ui. UI may add named component splits after coordinator records ownership. Coordinator also owns all run/events, lifecycle reports, provenance and source receipts. Each writer has its own worktree; no donor runtime writes. Foundation prior dispatch is preserved in this run.
+
+After the terminal UI receipt, coordinator owns the four form files above for integration corrections (password bounds, exact terms, decimal conversion, async form reset and renewed consent). Original worker hashes remain in its receipt.
+
+## События разреза
+
+| Новый файл | Разрезан из | Владелец |
+|---|---|---|
+| apps/web/src/components/onboarding/rate.ts | apps/web/src/components/onboarding/policy-form.tsx | координатор |

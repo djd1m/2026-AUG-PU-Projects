@@ -4,20 +4,31 @@ import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createServer } from 'node:net';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const repository = path.resolve(root, '../..');
 const namespace = `n3a-foundation-${randomBytes(6).toString('hex')}`;
 const runtime = await mkdtemp(path.join(tmpdir(), `${namespace}-`));
+const webPort = await new Promise((resolve, reject) => {
+  const probe = createServer();
+  probe.once('error', reject);
+  probe.listen(0, '127.0.0.1', () => {
+    const port = probe.address().port;
+    probe.close((error) => error ? reject(error) : resolve(port));
+  });
+});
+const browser = process.argv.includes('--browser');
 const env = { ...process.env,
   N3A_COMPOSE_PROJECT: namespace,
+  N3A_WEB_PORT: String(webPort),
   N3A_DB_ADMIN_PASSWORD: randomBytes(32).toString('hex'),
   N3A_DB_APP_PASSWORD: randomBytes(32).toString('hex'),
   N3A_DB_MIGRATE_PASSWORD: randomBytes(32).toString('hex'),
   SESSION_SECRET: randomBytes(32).toString('base64url'),
   IDENTITY_SECRET: randomBytes(32).toString('base64url'),
   ADMISSION_SECRET: randomBytes(32).toString('base64url'),
-  APP_ORIGIN: 'http://localhost:4183',
+  APP_ORIGIN: `http://localhost:${webPort}`,
   NEXT_TELEMETRY_DISABLED: '1',
 };
 // Retain a private, non-git handle for diagnosis; never put secrets in console output.
@@ -45,7 +56,8 @@ try {
     await run('docker', [...compose, 'run', '--rm', '--no-deps', 'test', 'node', '--import', 'tsx', 'scripts/mutation-check.mjs']);
   }
   await run('docker', [...compose, 'run', '--rm', '--no-deps', 'test', 'npm', 'run', 'test:integration']);
-  if (process.argv.includes('--image')) {
+  if (process.argv.includes('--image') || browser) {
+    if (browser) await run('docker', [...compose, 'run', '--rm', '--no-deps', 'test', 'node', '--import', 'tsx', 'scripts/prepare-onboarding-browser.mjs']);
     await run('docker', [...compose, 'build', 'web']);
     await run('docker', [...compose, 'up', '-d', '--no-build', '--wait', 'web']);
     await run('docker', [...compose, 'exec', '-T', 'web', 'node', '-e', `
@@ -65,6 +77,10 @@ try {
         console.log('PASS built image startup, liveness, Russian home and non-root user');
       })().catch(() => { console.error('image_smoke_failed'); process.exitCode = 1; });
     `]);
+    if (browser) {
+      await run('python3', ['tests/onboarding-browser.py', path.join(root, '.runtime', namespace, 'browser-fixture.json'),
+        env.APP_ORIGIN, path.join(root, '.runtime', namespace, 'browser-evidence')]);
+    }
   }
   console.log(`PASS foundation isolated PostgreSQL and built-workspace checks (${namespace})`);
 } catch (error) {
