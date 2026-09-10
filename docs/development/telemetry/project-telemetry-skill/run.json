@@ -1,0 +1,42 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "project-telemetry-skill",
+  "scope": "Shared local telemetry analysis skill; no product runtime changes",
+  "profile": "compact-quality-first-v2",
+  "tier": "S",
+  "started_at": "2026-09-10T12:24:39.394931+00:00",
+  "status": "accepted",
+  "baseline_revision": "36b17cae877f5cf9204cf59a1c97eb1eece1db60",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Host model/usage metadata unavailable",
+    "Initial instruction reads preceded this run record; no reconstructed start time",
+    "Active work and complete wait intervals not measured; elapsed starts at passport creation"
+  ],
+  "placement_reason": "Shared toolkit task, recorded outside individual product telemetry",
+  "ended_at": "2026-09-10T12:35:44.385528+00:00",
+  "elapsed_wall_ms": 664991,
+  "active_wall_ms": null,
+  "telemetry_status": "partial",
+  "quality": {
+    "tests_passed": 12,
+    "mutation": "killed",
+    "independent_review": "PASS",
+    "real_runs_read": 31,
+    "runtime_modified": false
+  },
+  "acceptance_evidence": [
+    "tests.txt",
+    "mutation.txt",
+    "corpus-check.json",
+    "cli-check.json",
+    "review.md"
+  ],
+  "models": {
+    "coordinator_actual": null,
+    "review_requested": "gpt-5.6-sol",
+    "review_requested_effort": "high",
+    "review_actual": null
+  }
+}

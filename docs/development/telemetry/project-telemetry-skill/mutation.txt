@@ -1,0 +1,14 @@
+Mutation: accept first numeric alias despite conflict
+...........F
+======================================================================
+FAIL: test_zero_preserved_and_conflict_not_silently_selected (__main__.AnalysisTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpya68j7iq/test_analyze.py", line 38, in test_zero_preserved_and_conflict_not_silently_selected
+    self.assertIsNone(r['elapsed']['seconds'])
+AssertionError: 1.0 is not None
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.015s
+
+FAILED (failures=1)

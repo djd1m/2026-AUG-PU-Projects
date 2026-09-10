@@ -1,0 +1,68 @@
+{
+  "read_at": "2026-09-10T12:34:21.201776+00:00",
+  "kind": "extractor verification, not causal project audit",
+  "script_sha256": "277ba0ed123d0a3dabfb45c78cc2ccc6ccb9627193cfab3296ea8d48e363b0cf",
+  "projects": [
+    {
+      "project": "01-testimonials-senja",
+      "run_count": 7,
+      "runs_with_issues": 5,
+      "runs_with_elapsed": 7,
+      "runs_with_active": 0,
+      "source_hashes": {
+        "20260909-login-navigation/run.json": "8303dfea600ee8de52653b19e15b29e53e4a7b6e9f7057adefdded9c6e987cb9",
+        "20260909-payment-reconciliation/run.json": "650abf003fc13443453c31a7ba732a9b39ba6261568d09cef16036b22b4e2807",
+        "20260910-agent-purchase-plan/run.json": "07baec3961cb1323d785fa6293af0b8894e82979bcd9b41f24de12cb7cfe629b",
+        "20260910-agentic-payments-research/run.json": "4718b25740b32a7a7b191c9a38aadb806fb7e1dbd390c6cb07f6ca35866afe44",
+        "p-replicator/20260910-agent-payments-public-pilot/run.json": "6260492d4cc7395aefc24e05532674d1d9b524a3fb26bd85d8715a95bd6acf43",
+        "p-replicator/20260910T070614Z-agent-payments-module-3116/run.json": "e1994a4cb183e90f73d498d1d0e9ffb64acc411144ab60434dad40cca5c98cda",
+        "p-replicator/20260910T071401Z-agent-payments-implementation-7e80/run.json": "684593eddf56a4b1dcfb4bab7a375133d2a385749fd9796c4508f3b3d879563f"
+      },
+      "inputs_unchanged": true
+    },
+    {
+      "project": "03-affiliate-rewardful",
+      "run_count": 18,
+      "runs_with_issues": 12,
+      "runs_with_elapsed": 14,
+      "runs_with_active": 0,
+      "source_hashes": {
+        "20260910-agent-scenario/run.json": "f77dfad8a0893757c6a668de740a6a711983d5b08365fe28d807c8c0ddd9a106",
+        "20260910-proofwall-bcd/run.json": "9271b45d680e62612646902e4975b3bcc963614ec3377a5ede0cac214db33aa7",
+        "p-replicator/20260908T194524Z-discovery-cjm/run.json": "3b3217beddd608b0a449b07eb8f36f4449282d029be83379d22328065fc6cb6d",
+        "p-replicator/20260908T201412Z-agent-cjm-e004/run.json": "feefb7ded2231d46447bc36aeac68f8313e76dbed06b1b2e52d8820ecbb2b266",
+        "p-replicator/20260908T203242Z-four-prds/run.json": "edcc4d98ae01514cdd161262e66de13ff4fcf824b548949767df5ecb2fcc63ba",
+        "p-replicator/20260908T204432Z-go-shared-core/run.json": "b814ed5b57f882b33163dfe8ee3b6e1a7237c66d29d59ace2dc71a30c6ec6566",
+        "p-replicator/20260909T060632Z-go-a-merchant/run.json": "de6392e4b4121488238956506537a249edc47720877bdcb23a8f288d387ed7d3",
+        "p-replicator/20260909T064002Z-go-b-customer/run.json": "123499553c0397d332722f8d5d6910b36a5dae8280fb05efd177409e801fb82e",
+        "p-replicator/20260909T070308Z-go-c-partner/run.json": "071da82ff735e65b482f18c3215c5bd6c80c530cc60c0b1b30a67cd7b492194f",
+        "p-replicator/20260909T071850Z-go-d-agent/run.json": "e7e6650d640b1e45171eab69d1d18238c6429d459d6fc305eb53d0e724566a4f",
+        "p-replicator/20260909T082635Z-status-reconciliation/run.json": "5776985b9287bfd66ee1b53b9606bc136141b21af828fb70abf0ae3d384d0c11",
+        "p-replicator/20260909T082853Z-public-web-access/run.json": "3a9db003dcb789ccf9fe5a60df1edb8f4991d152800685e6192f8c23f44101f6",
+        "p-replicator/20260909T085312Z-f2-auth-payments-agents/run.json": "70500beae86fd5e33dfcdc6004b6233f539c2804eb42f17dcc0ad3128b2ef114",
+        "p-replicator/20260909T104725Z-f3-plan-93d5/run.json": "7634188763ac87dc723326efc1156bad8a3ba6cf12d8869bc7e0878a5479d07c",
+        "p-replicator/20260909T105443Z-template-audit-85c2/run.json": "dc0fd5dfa10c16498b00e0210e0cbb0556f1d0b74cc55c54751979a7a5d5a997",
+        "p-replicator/20260909T111622Z-f3-referral-3b19/run.json": "f162fd3624ebe5a8e3a7b31e521d17f81eabddffa970bec7cf5807bfce535758",
+        "p-replicator/20260909T135340Z-f3-access-8b71/run.json": "d6ff08e5acdec692d33cff4041b51b7b8b59ce9570139e43b505c4abaee8ad44",
+        "p-replicator/20260909T170258Z-proofwall-n3/run.json": "782fd57779190f1d4637bdd30525584364f3e0650d905b0123bd9359204a373e"
+      },
+      "inputs_unchanged": true
+    },
+    {
+      "project": "03a-affiliate-rewardful",
+      "run_count": 6,
+      "runs_with_issues": 6,
+      "runs_with_elapsed": 5,
+      "runs_with_active": 0,
+      "source_hashes": {
+        "p-replicator/20260909T164907Z-planning-7c52/run.json": "d2e33ba1e359f2c7dae20c662d6ca4ce059c3c86a7bac6ea8109381bc9878c52",
+        "p-replicator/20260909T170111Z-discovery-958f/run.json": "7f8f93047306698ba199950bb01b4c538c795fc122521439a9a4903b7cd01a2f",
+        "p-replicator/20260909T174821Z-prd-a-1934/run.json": "6ab92c134c5a678122fb941b88d3df7f9020ee07ec866869c02c93c6a85a6ee2",
+        "p-replicator/20260909T192932Z-foundation/run.json": "975299425c22a847a7993ed00230f3f30a6cf4309fa386258b8e116b6094b0e8",
+        "p-replicator/20260909T211734Z-identity-program-partner/run.json": "751cd876a046f1b88eeb12c069beefb4c3dbf1d7044958db45a2ba5a194e13f2",
+        "p-replicator/20260910T100054Z-self-service-expansion/run.json": "f527538b14f0e01368ae4186f411e8d10643248abf2da6ed5c907af7b1369a74"
+      },
+      "inputs_unchanged": true
+    }
+  ]
+}
