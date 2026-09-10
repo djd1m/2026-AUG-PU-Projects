@@ -47,3 +47,20 @@ Official guidance verified on 2026-09-10:
   provide the genuine verification link from the sent test email.
 
 This stage is native Proofwall only. It does not claim an agent-to-N3 attribution chain.
+
+Recorded acceptance: **14/14 PASS**, two actual YooKassa TEST payments of990 RUB.
+The first payment used explicit browser consent; the second used the saved method
+and independent mandate after coordinator-owned synthetic month/window setup.
+Both PSP/ledger readbacks independently matched TEST account/order/amount, saved
+method, active tariff, and exactly two orders/attempts/reservations.
+
+Coordinator executed final browser revocation and close after a child tool approval
+wait was interrupted. Revocation denied subsequent A2A access401. Packaging was
+finished by the coordinator after interrupting a pending agent initialization;
+this is not attributed as an all-author execution. Evidence in `close.json` contains
+the final14records. No further payment calls were made during packaging.
+
+The configured shop is shared with the old production runtime. Its unchanged
+webhook may write operational unknown-event records there; this harness never
+directly targets production accounts or changes production tariffs. Refund recovery,
+ordinary pilot checkout callbacks and N3 integration are separate pending work.

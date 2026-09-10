@@ -1,7 +1,7 @@
 {
   "status": "PASS",
-  "phase": "mandate",
-  "at": "2026-09-10T10:55:22.424Z",
+  "phase": "revoke",
+  "at": "2026-09-10T11:33:02.097Z",
   "webOrigin": "https://proofwall-agent.212.192.0.33.sslip.io",
   "gatewayOrigin": "https://proofwall-mcp.212.192.0.33.sslip.io",
   "records": [
@@ -71,6 +71,11 @@
       "name": "saved-method renewal replay and A2A completed task preserve second order",
       "status": "PASS",
       "at": "2026-09-10T10:55:22.422Z"
+    },
+    {
+      "name": "public browser revocation denies subsequent agent access",
+      "status": "PASS",
+      "at": "2026-09-10T11:33:02.096Z"
     }
   ],
   "orderId": "d97d9db3-8ac2-4333-b6a8-cecbc613673a",
@@ -83,6 +88,6 @@
     "hostedStarted": true,
     "settled": true,
     "renewed": true,
-    "revoked": false
+    "revoked": true
   }
 }

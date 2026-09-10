@@ -2,7 +2,7 @@
   "run_id": "20260910-agent-payments-public-pilot",
   "work_unit_id": "public-ui",
   "started_at": "2026-09-10T10:08:31Z",
-  "status": "waiting_for_scoped_renewal_fixture",
+  "status": "completed_with_scope_limits",
   "profile": "compact-quality-first-v2",
   "requested_model": "gpt-6-astra",
   "requested_effort": "high",
@@ -13,7 +13,7 @@
   "missing_data": [
     "Actual serving model, effort, usage and active compute time unavailable"
   ],
-  "safety_envelope": "Only dedicated pilot origins, one synthetic Resend delivered+ recipient, official YooKassa TEST card, no live funds or production P1/P2/N3 writes",
+  "safety_envelope": "Dedicated pilot origins and synthetic recipient/card only; no direct production app mutations. Shared shop webhook may write unknown-event operational records in old production.",
   "prepared_at": "2026-09-10T10:14:29.264933+00:00",
   "preparation_checks": [
     "Five JavaScript module syntax checks PASS",
@@ -35,5 +35,13 @@
     ]
   },
   "public_first_payment": "PASS: actual TEST provider, saved method, succeeded/active, replay same order",
-  "independent_mandate": "PASS: explicit browser consent; autonomousEligible false before fixture"
+  "independent_mandate": "PASS: explicit browser consent; autonomousEligible false before fixture",
+  "last_wait_update_at": "2026-09-10T10:48:25.327972+00:00",
+  "remaining": "No pending public-ui execution; N3/refund/ordinary pilot checkout outside this acceptance",
+  "finished_at": "2026-09-10T11:43:20.070046+00:00",
+  "actual_saved_renewal": "PASS",
+  "revocation": "PASS coordinator execution; A2A401",
+  "browser_close": "PASS coordinator execution",
+  "recorded_scenarios": 14,
+  "packaging_owner": "root takeover after interrupted pending_init agent"
 }
