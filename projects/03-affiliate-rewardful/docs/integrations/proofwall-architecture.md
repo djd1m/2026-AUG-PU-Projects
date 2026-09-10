@@ -112,7 +112,7 @@ sequenceDiagram
   participant K as Proofwall worker
   participant Y as ЮKassa TEST
   B->>N: GET /r/partnerActorId
-  N->>D: Проверить программу и партнёра; записать переход
+  N->>D: Проверить программу и партнёра, записать переход
   N-->>B: 302 на Proofwall /n3/start с токеном
   B->>W: Переход, регистрация и подтверждение email
   K->>N: customers: customerId, emailVerified, источник
@@ -129,7 +129,7 @@ sequenceDiagram
   Note over W,K: Тариф и outbox сохраняются в одной транзакции P1
   K->>N: external-events: orderId, payment.succeeded, paymentId
   N->>Y: GET payment по серверным credentials
-  N->>D: Проверить заказ; атомарно сохранить факт и комиссию
+  N->>D: Проверить заказ, атомарно сохранить факт и комиссию
   N-->>K: accepted:true и orderId
 ```
 
