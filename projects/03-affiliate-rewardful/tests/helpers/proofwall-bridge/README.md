@@ -1,5 +1,19 @@
 # Isolated real Proofwall browser bridge
 
+## Variant selection (2026-09-10)
+
+Set `BRIDGE_N3_VARIANT=a|b|c|d` consistently for both Compose runtimes, the initializer
+(`--bind`) and the host runner. Default is `a`; other values fail closed. The fixture
+selects that variant's static app and HTTPS hostname; the private bootstrap records
+the selected variant. Test TLS certificates cover all four N3 hostnames.
+Each variant requires a new N3 fixture process/schema and rebinding the P1 connector
+before restarting P1 web/worker. Run sequentially with separate evidence directories.
+The account page is shared across variants: this test proves the cash referral bridge
+through `/account`, not B-specific credit checkout or D MCP/A2A execution.
+
+Acceptance for B/C/D, public ingress checks and exact limitations:
+[2026-09-10 report](../../../docs/telemetry/20260910-proofwall-bcd/report.md).
+
 This harness runs actual P1 Next/worker and N3 application routes. Only YooKassa and Resend are emulated. Root owns all compose files, credentials, migrations, builds, container startup and scheduling. The runner never calls Docker.
 
 Runtime contract:
