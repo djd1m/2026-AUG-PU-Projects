@@ -1,0 +1,26 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20260910-project-work-companion",
+  "project": ".",
+  "feature": "project-work-companion",
+  "profile": "compact-quality-first-v2",
+  "pipeline": "M bounded implementation and independent review",
+  "tier": "M",
+  "status": "running",
+  "started_at": "2026-09-10T14:54:17.412209+00:00",
+  "baseline_revision": "50bf296799e98c67a0ba96b26634dff364453531",
+  "approval": {
+    "source": "User message: реализуй",
+    "plan": "docs/development/telemetry/project-work-companion-plan/plan.md",
+    "sha256": "06a9a019ed8b1f1b35f37a643383444a5a436d955a2ca23db3cf194f64f96825"
+  },
+  "actual_model": null,
+  "metrics": {
+    "active_wall_ms": null,
+    "usage": null
+  },
+  "missing_data": [
+    "Host actual model and usage unavailable; initial context reads preceded implementation passport"
+  ],
+  "telemetry_status": "partial"
+}

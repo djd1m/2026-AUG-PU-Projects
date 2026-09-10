@@ -1,0 +1,42 @@
+[
+  {
+    "id": "start",
+    "expected": "Proceed within authorization after route/scope/AC; no invented mandatory approval/checkpoint."
+  },
+  {
+    "id": "approval",
+    "expected": "No implementation; present plan and wait."
+  },
+  {
+    "id": "donor",
+    "expected": "Assess provenance/compatibility; adapt or reject with reason, not blindly copy."
+  },
+  {
+    "id": "unknown",
+    "expected": "Insufficient comparable data; no calibrated P80 or savings; null usage."
+  },
+  {
+    "id": "ready",
+    "expected": "Ready preflight; E2E not yet passed; no execution from checker."
+  },
+  {
+    "id": "blocked",
+    "expected": "Blocked/inconclusive; no E2E pass or auto mutations."
+  },
+  {
+    "id": "resume",
+    "expected": "Resume with new attempt, preserve run/history/authorization; checkpoint N/A reason; no reapproval solely pause."
+  },
+  {
+    "id": "drift",
+    "expected": "Reconcile source/run, re-route heightened risk; old approval not for new payment scope; no blind resume."
+  },
+  {
+    "id": "delivery",
+    "expected": "No; validate real fresh attributable artifacts/source; marker insufficient."
+  },
+  {
+    "id": "portable",
+    "expected": "Resolve roots explicitly; diagnose unavailable named dependency; no install/invented zero, independent work may continue."
+  }
+]

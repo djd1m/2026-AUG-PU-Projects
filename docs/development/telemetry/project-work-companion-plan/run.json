@@ -1,7 +1,7 @@
 {
   "run_id": "project-work-companion-plan",
   "started_at": "2026-09-10T14:16:13.581910+00:00",
-  "status": "blocked",
+  "status": "accepted",
   "scope": "Planning only; implementation requires user approval",
   "profile": "compact-quality-first-v2",
   "actual_model": null,
@@ -12,7 +12,8 @@
     "ROUTE start was not timestamped before dispatch; not reconstructed",
     "Planner first delegated attempt rejected by thread limit; fallback CLI launch declaration retained separately",
     "Host version/billing/actual execution metadata unavailable",
-    "CLI emitted an unlabeled trailing 52,690; not interpreted as total billable usage"
+    "CLI emitted an unlabeled trailing 52,690; not interpreted as total billable usage",
+    "Approval observation time recorded during implementation; precise user-message timestamp unavailable; wait duration not calculated"
   ],
   "tier": "M",
   "risk_flags": [
@@ -51,7 +52,7 @@
   "host_version": null,
   "billing_mode": "unknown",
   "comparison_id": null,
-  "ended_at": null,
+  "ended_at": "2026-09-10T15:08:25.916052+00:00",
   "acceptance_evidence": [
     "plan.md",
     "plan-review.md",
@@ -72,7 +73,9 @@
     "usage": null
   },
   "telemetry_status": "partial",
-  "block_reason": "Awaiting explicit user approval of plan/team/models/skills; planning complete, implementation not started",
   "plan_completed_at": "2026-09-10T14:23:03.432347+00:00",
-  "implementation_started": false
+  "implementation_started": false,
+  "approval_observed_at": "2026-09-10T15:08:25.916052+00:00",
+  "approval_source": "User message: реализуй",
+  "implementation_run": "docs/telemetry/p-replicator/20260910-project-work-companion"
 }
