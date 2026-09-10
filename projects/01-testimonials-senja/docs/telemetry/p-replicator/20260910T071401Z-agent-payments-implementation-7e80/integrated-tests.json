@@ -1,0 +1,90 @@
+{
+  "at": "2026-09-10T09:04:54.203Z",
+  "results": [
+    {
+      "workspace": "apps/web",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 27609,
+      "summary": [
+        " Test Files  44 passed (44)",
+        "      Tests  848 passed (848)"
+      ],
+      "passed": 848,
+      "log_sha256": "6b6e35db5ad0b922ccbe11fbea8cd7f634a584db3dab95d8e6ab374c65600a70"
+    },
+    {
+      "workspace": "apps/widget",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 2429,
+      "summary": [
+        " Test Files  5 passed (5)",
+        "      Tests  35 passed (35)"
+      ],
+      "passed": 35,
+      "log_sha256": "0eed3b89102be18ba495d3e998ee813f7cc7c706d6cbe21023d11219658e7d6e"
+    },
+    {
+      "workspace": "services/transcribe",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 1363,
+      "summary": [],
+      "passed": 9,
+      "log_sha256": "c744d40816910d54334a66e12f064fa1fe0a93e01afc74fd285c25e848a75b8a"
+    },
+    {
+      "workspace": "services/worker",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 4926,
+      "summary": [],
+      "passed": 42,
+      "log_sha256": "95d08e0f0a537e6d6ae040509d125c2f60bed07eed3ee86065b1353a9d8b1a28"
+    },
+    {
+      "workspace": "packages/db",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 3289,
+      "summary": [
+        " Test Files  4 passed (4)",
+        "      Tests  18 passed (18)"
+      ],
+      "passed": 18,
+      "log_sha256": "b4fdcf5f76b34c1af3e16839390ff789263af066e293cdb9c0ca29eee1f923d6"
+    },
+    {
+      "workspace": "packages/agent-payments",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 4248,
+      "summary": [
+        "# tests 58",
+        "# pass 58",
+        "# fail 0",
+        "# skipped 0"
+      ],
+      "passed": 58,
+      "log_sha256": "fa1504e4595c1514479487334c85cd52a961206220edbde4711b87d34a9f1a3c"
+    },
+    {
+      "workspace": "services/agent-api",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_ms": 716,
+      "summary": [
+        "# tests 6",
+        "# pass 6",
+        "# fail 0",
+        "# skipped 0"
+      ],
+      "passed": 6,
+      "log_sha256": "b868fe4d63b9878df3d79343d8222a835c9beaf8482767bda47d39d3311e5d59"
+    }
+  ],
+  "total_passed": 1016,
+  "source_revision": "339e688",
+  "build_id": "T72HtODyBT3GucyLfM4Wh"
+}
