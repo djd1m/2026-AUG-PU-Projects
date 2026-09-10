@@ -1,0 +1,54 @@
+{
+  "started_at": "2026-09-10T06:56:38.922026+00:00",
+  "profile": "compact-quality-first-v2",
+  "stage": "completed",
+  "agents": [
+    {
+      "task": "payments_global",
+      "requested_model": "gpt-5.6-sol",
+      "actual_model": null,
+      "requested_effort": "high",
+      "trace_path": "/tmp/agentic-payments-20260910-receipts/payments_global.md",
+      "trace_pre_delivery_state": "absent"
+    },
+    {
+      "task": "payments_russia",
+      "requested_model": "gpt-5.6-sol",
+      "actual_model": null,
+      "requested_effort": "high",
+      "trace_path": "/tmp/agentic-payments-20260910-receipts/payments_russia.md",
+      "trace_pre_delivery_state": "absent"
+    },
+    {
+      "task": "payments_build_buy",
+      "requested_model": "gpt-6-astra",
+      "actual_model": null,
+      "requested_effort": "medium",
+      "trace_path": "/tmp/agentic-payments-20260910-receipts/payments_build_buy.md",
+      "trace_pre_delivery_state": "absent"
+    }
+  ],
+  "usage": null,
+  "measurement_gaps": [
+    "Model selection requested through spawn API; independent runtime usage not available",
+    "Initial delegation precedes recorded timer",
+    "Original read-only assignments omitted file receipts; explicit /tmp receipt delivery follow-ups issued before final synthesis. Original prelaunch receipt protocol not satisfied.",
+    "Receipt bodies retained in /tmp only; committed hashes are not persistent full evidence. No benchmark or usage counters."
+  ],
+  "scope": "Read-only sources and documentation; no implementation",
+  "coordinator": {
+    "actual_model": null,
+    "reason": "Runtime model metadata unavailable"
+  },
+  "status": "completed",
+  "ended_at": "2026-09-10T07:06:00.275029+00:00",
+  "elapsed_wall_ms": 561353,
+  "telemetry_status": "partial",
+  "active_wall_ms": null,
+  "checks": {
+    "source_review": "PASS",
+    "receipts": "3/3 PASS",
+    "relative_links": "PASS"
+  },
+  "artifact": "docs/research/agentic-payments-build-vs-buy.md"
+}
