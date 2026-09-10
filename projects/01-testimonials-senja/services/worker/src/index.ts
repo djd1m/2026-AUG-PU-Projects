@@ -19,6 +19,7 @@ import { createS3Client, generatePresignedGetUrl } from "./storage.js";
 import { startTranscriptionPoll } from "./transcribe-job.js";
 import { n3Client, n3Config } from './n3-client.js';
 import { startN3Poll } from './n3-outbox.js';
+import { startAgentPaymentsPoll } from './agent-payments-poll.js';
 
 async function main(): Promise<void> {
   const config = loadConfig();
@@ -26,6 +27,7 @@ async function main(): Promise<void> {
   const pool = createPool(config.databaseUrl);
   const bridgeConfig = n3Config();
   const stopBridge = bridgeConfig ? startN3Poll(pool, n3Client(bridgeConfig)) : () => {};
+  const stopAgentPayments = startAgentPaymentsPoll();
   const s3 = createS3Client(config);
   // Plain HTTP-клиент (D-007) — не MCP: нет отдельного connect()/close() жизненного цикла,
   // каждый вызов transcribeVideo() — независимый fetch(). См. transcribe-client.ts.
@@ -63,6 +65,7 @@ async function main(): Promise<void> {
     stopTranscription();
     stopCleanup();
     stopBridge();
+    stopAgentPayments();
     await pool.end();
     process.exit(0);
   };

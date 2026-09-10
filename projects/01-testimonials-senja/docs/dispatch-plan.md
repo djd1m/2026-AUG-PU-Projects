@@ -13,16 +13,17 @@
 | Единица | Что пишет |
 |---|---|
 | core | packages/agent-payments/** |
+| host | apps/web/**, packages/db/migrations/020_agent_payments_host.sql |
 
 ## Владение
 
 | Файл | Владелец |
 |---|---|
 | packages/agent-payments/** | core |
-| apps/web/** | координатор |
+| apps/web/** | host |
 | services/agent-api/** | координатор |
 | services/worker/** | координатор |
-| packages/db/** | координатор |
+| packages/db/migrations/020_agent_payments_host.sql | host |
 | docs/** | координатор |
 | package.json | координатор |
 | package-lock.json | координатор |

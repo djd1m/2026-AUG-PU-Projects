@@ -4,7 +4,7 @@
   "run_id": "20260910T071401Z-agent-payments-implementation-7e80",
   "profile": "compact-quality-first-v2",
   "tier": "XL",
-  "stage": "VALIDATE",
+  "stage": "IMPLEMENT",
   "status": "running",
   "started_at": "2026-09-10T07:14:01.649004+00:00",
   "baseline_revision": "4c3bef4c01f5a987c7537674ae6766ce7d5f25f5",
@@ -29,11 +29,42 @@
       "actual_model": null,
       "trace_path": "/tmp/agent-payments-implementation-7e80/integration-map.md",
       "prelaunch_exists": false
+    },
+    {
+      "id": "payments_core",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "usage": null,
+      "started_at": null,
+      "missing_data": "Dispatch timestamps unavailable in persisted record; no reconstruction",
+      "profile": "compact-quality-first-v2"
+    },
+    {
+      "id": "payments_host",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "usage": null,
+      "started_at": null,
+      "missing_data": "Dispatch timestamps unavailable in persisted record; no reconstruction",
+      "profile": "compact-quality-first-v2"
+    },
+    {
+      "id": "payments_review",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "usage": null,
+      "started_at": null,
+      "missing_data": "Dispatch timestamps unavailable in persisted record; no reconstruction",
+      "profile": "compact-quality-first-v2"
     }
   ],
   "gate_notes": [
     "Pinned p-replicator 1.13.2 restored in ignored node_modules; pre-shipped verify PASS",
-    "Whole legacy P1 traceability FAIL (28 gaps, 2 inconclusive). Existing source-hashed check-feature-catalog.mjs supports scoped feature validation; full-project success will not be claimed."
+    "Whole legacy P1 traceability FAIL (28 gaps, 2 inconclusive). Existing source-hashed check-feature-catalog.mjs supports scoped feature validation; full-project success will not be claimed.",
+    "Core receipt incorrectly labels v1 profile; actual requested routing follows compact-quality-first-v2. Corrected followup requested; original receipt retained."
   ],
   "baseline_tests": {
     "web": 813,
@@ -51,5 +82,31 @@
     "requested_effort": "high",
     "actual_model": null,
     "spec_sha256": "937b23634f89f589a7cd8e6e5c0afd6f3b1ad0bfc8c3e102363d9ca4e9a9fbc4"
+  },
+  "updated_at": "2026-09-10T08:37:42.123323+00:00",
+  "implementation_checks": {
+    "core_commit": "d96ce31",
+    "core_tests": {
+      "passed": 44,
+      "postgres": 30,
+      "provider_fixtures": 14,
+      "real_provider_acceptance": false
+    },
+    "core_mutations_killed": 3,
+    "core_extraction": "PASS",
+    "core_manifest_hashes": "20/20 verified",
+    "gateway_tests": {
+      "passed": 5,
+      "backend": "HTTP fixture; actual MCP SDK"
+    },
+    "worker_poll_tests": {
+      "passed": 3,
+      "build": "PASS"
+    }
+  },
+  "concurrency_exception": "Temporarily 3 children: independent review, host integration, core review fixes required by host human-CJM blocker. Separate writing worktrees.",
+  "usage_limit_monitoring": {
+    "weekly_remaining": null,
+    "reason": "No runtime counter available; user requests notification at 2% remaining"
   }
 }
