@@ -81,7 +81,7 @@ def _guard_checkpoint(record, ctx):
     _strings(pause.get("approval_ids"), "pause.approval_ids", ctx, allow_empty=True)
     approval = record.get("approval") if isinstance(record.get("approval"), dict) else {}
     evidence = approval.get("evidence") if isinstance(approval.get("evidence"), dict) else {}
-    if approval.get("requirement") == "required" and evidence.get("id") not in pause.get("approval_ids", []):
+    if evidence.get("id") and evidence["id"] not in pause.get("approval_ids", []):
         ctx.error("pause.approval_ids: applicable approval must be preserved")
     mode = pause.get("continuation_mode")
     checkpoint = _dict(pause.get("checkpoint"), "pause.checkpoint", ctx)
@@ -240,6 +240,10 @@ def validate(record, ctx):
         _nonempty(source.get(key), f"source.{key}", ctx)
     if source.get("build_revision") is not None:
         _nonempty(source.get("build_revision"), "source.build_revision", ctx)
+    for key in ("source_revision", "build_revision"):
+        source_key = "current_revision" if key == "source_revision" else key
+        if ctx.expected.get(key) and source.get(source_key) != ctx.expected[key]:
+            ctx.error(f"source.{source_key}: differs from caller expectation")
     for key in ("requirements", "architecture"):
         refs = _list(source.get(key), f"source.{key}", ctx)
         if not refs:
