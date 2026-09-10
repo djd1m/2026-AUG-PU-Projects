@@ -1,0 +1,42 @@
+{
+  "name": "@course/agent-payments",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./provider-yookassa": {
+      "types": "./dist/provider-yookassa.d.ts",
+      "default": "./dist/provider-yookassa.js"
+    },
+    "./transport-http": {
+      "types": "./dist/transport-http.d.ts",
+      "default": "./dist/transport-http.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:postgres": "npm run build && node --test test/postgres.test.mjs"
+  },
+  "dependencies": {
+    "pg": "8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.0",
+    "@types/pg": "8.23.1",
+    "typescript": "5.9.3"
+  }
+}

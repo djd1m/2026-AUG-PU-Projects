@@ -1,0 +1,274 @@
+TAP version 13
+# Subtest: two independent hosts own different product prices without attribution
+ok 1 - two independent hosts own different product prices without attribution
+  ---
+  duration_ms: 121.962884
+  type: 'test'
+  ...
+# Subtest: hash-only grants reject foreign audience, merchant, bearer and resource
+ok 2 - hash-only grants reject foreign audience, merchant, bearer and resource
+  ---
+  duration_ms: 35.662453
+  type: 'test'
+  ...
+# Subtest: grant alone and saved method alone require human approval; no create call
+ok 3 - grant alone and saved method alone require human approval; no create call
+  ---
+  duration_ms: 27.78994
+  type: 'test'
+  ...
+# Subtest: mandate without saved method requires hosted human approval
+ok 4 - mandate without saved method requires hosted human approval
+  ---
+  duration_ms: 24.267538
+  type: 'test'
+  ...
+# Subtest: explicit human payment saves method, separate consent, public DTO never reveals reference
+ok 5 - explicit human payment saves method, separate consent, public DTO never reveals reference
+  ---
+  duration_ms: 46.072887
+  type: 'test'
+  ...
+# Subtest: distinct keys race same billing period: one dispatch and one fulfillment
+ok 6 - distinct keys race same billing period: one dispatch and one fulfillment
+  ---
+  duration_ms: 189.142167
+  type: 'test'
+  ...
+# Subtest: same order concurrent execution and repeated settlement never duplicate
+ok 7 - same order concurrent execution and repeated settlement never duplicate
+  ---
+  duration_ms: 188.294258
+  type: 'test'
+  ...
+# Subtest: same idempotency key has stable order and conflicts with different quote
+ok 8 - same idempotency key has stable order and conflicts with different quote
+  ---
+  duration_ms: 29.55746
+  type: 'test'
+  ...
+# Subtest: new mandate and grant do not reset shared budget
+ok 9 - new mandate and grant do not reset shared budget
+  ---
+  duration_ms: 56.55299
+  type: 'test'
+  ...
+# Subtest: manual spending reduces agent budget but explicit extra human payments bypass caps
+ok 10 - manual spending reduces agent budget but explicit extra human payments bypass caps
+  ---
+  duration_ms: 63.721972
+  type: 'test'
+  ...
+# Subtest: human observed duplicate is idempotent and payload conflicts
+ok 11 - human observed duplicate is idempotent and payload conflicts
+  ---
+  duration_ms: 10.752764
+  type: 'test'
+  ...
+# Subtest: price, terms, eligibility and expiry changes prevent autonomous dispatch
+ok 12 - price, terms, eligibility and expiry changes prevent autonomous dispatch
+  ---
+  duration_ms: 68.212945
+  type: 'test'
+  ...
+# Subtest: mandate revocation and expiry prevent autonomous dispatch
+ok 13 - mandate revocation and expiry prevent autonomous dispatch
+  ---
+  duration_ms: 49.717197
+  type: 'test'
+  ...
+# Subtest: revoke committed between reservation and dispatch fence prevents provider call
+ok 14 - revoke committed between reservation and dispatch fence prevents provider call
+  ---
+  duration_ms: 28.935621
+  type: 'test'
+  ...
+# Subtest: lost response persists hold across engine restart; provider ID hint recovers without create
+ok 15 - lost response persists hold across engine restart; provider ID hint recovers without create
+  ---
+  duration_ms: 81.357319
+  type: 'test'
+  ...
+# Subtest: untrusted wrong provider evidence cannot settle or release budget
+ok 16 - untrusted wrong provider evidence cannot settle or release budget
+  ---
+  duration_ms: 38.215193
+  type: 'test'
+  ...
+# Subtest: fulfillment rollback rolls back entitlement, spend, events; query recovery commits once
+ok 17 - fulfillment rollback rolls back entitlement, spend, events; query recovery commits once
+  ---
+  duration_ms: 25.71332
+  type: 'test'
+  ...
+# Subtest: partial refund replay and late paid preserve gross spend and cumulative correction
+ok 18 - partial refund replay and late paid preserve gross spend and cumulative correction
+  ---
+  duration_ms: 69.999095
+  type: 'test'
+  ...
+# Subtest: required attribution refuses dispatch until acknowledged
+ok 19 - required attribution refuses dispatch until acknowledged
+  ---
+  duration_ms: 13.469164
+  type: 'test'
+  ...
+# Subtest: durable event acknowledgement is scoped and persisted across restart
+ok 20 - durable event acknowledgement is scoped and persisted across restart
+  ---
+  duration_ms: 24.680819
+  type: 'test'
+  ...
+# Subtest: transport delegates same authority and refuses human consent command
+ok 21 - transport delegates same authority and refuses human consent command
+  ---
+  duration_ms: 5.098702
+  type: 'test'
+  ...
+# Subtest: provider account switch after reserve is refused before any network
+ok 22 - provider account switch after reserve is refused before any network
+  ---
+  duration_ms: 32.800472
+  type: 'test'
+  ...
+# Subtest: forged provider merchant account cannot settle
+ok 23 - forged provider merchant account cannot settle
+  ---
+  duration_ms: 35.763583
+  type: 'test'
+  ...
+# Subtest: refund arriving before lost paid response reconciles verified payment first
+ok 24 - refund arriving before lost paid response reconciles verified payment first
+  ---
+  duration_ms: 37.503593
+  type: 'test'
+  ...
+# Subtest: payment evidence survives fulfillment rollback for polling without webhook hint
+ok 25 - payment evidence survives fulfillment rollback for polling without webhook hint
+  ---
+  duration_ms: 33.554102
+  type: 'test'
+  ...
+# Subtest: human can approve existing prepared order after original agent grant revocation
+ok 26 - human can approve existing prepared order after original agent grant revocation
+  ---
+  duration_ms: 25.620259
+  type: 'test'
+  ...
+# Subtest: revocation after accepted dispatch fence reconciles already sent payment
+ok 27 - revocation after accepted dispatch fence reconciles already sent payment
+  ---
+  duration_ms: 35.075303
+  type: 'test'
+  ...
+# Subtest: unknown past provider idempotency window never creates a fresh charge
+ok 28 - unknown past provider idempotency window never creates a fresh charge
+  ---
+  duration_ms: 22.929898
+  type: 'test'
+  ...
+# Subtest: refund amount cannot exceed paid gross
+ok 29 - refund amount cannot exceed paid gross
+  ---
+  duration_ms: 39.437094
+  type: 'test'
+  ...
+# Subtest: boundary money rejects float, zero, negative and noncanonical minor values
+ok 30 - boundary money rejects float, zero, negative and noncanonical minor values
+  ---
+  duration_ms: 20.622377
+  type: 'test'
+  ...
+# Subtest: reject live configuration before network
+ok 31 - reject live configuration before network
+  ---
+  duration_ms: 1.85828
+  type: 'test'
+  ...
+# Subtest: TEST create sends stable key, exact minor amount and scoped metadata
+ok 32 - TEST create sends stable key, exact minor amount and scoped metadata
+  ---
+  duration_ms: 29.079831
+  type: 'test'
+  ...
+# Subtest: query without provider ID never calls create
+ok 33 - query without provider ID never calls create
+  ---
+  duration_ms: 0.29291
+  type: 'test'
+  ...
+# Subtest: reject provider live mismatch
+ok 34 - reject provider live mismatch
+  ---
+  duration_ms: 0.69912
+  type: 'test'
+  ...
+# Subtest: reject provider account mismatch
+ok 35 - reject provider account mismatch
+  ---
+  duration_ms: 0.62275
+  type: 'test'
+  ...
+# Subtest: reject provider amount mismatch
+ok 36 - reject provider amount mismatch
+  ---
+  duration_ms: 0.585041
+  type: 'test'
+  ...
+# Subtest: reject provider currency mismatch
+ok 37 - reject provider currency mismatch
+  ---
+  duration_ms: 0.52536
+  type: 'test'
+  ...
+# Subtest: reject provider metadata mismatch
+ok 38 - reject provider metadata mismatch
+  ---
+  duration_ms: 0.63968
+  type: 'test'
+  ...
+# Subtest: reject provider paid mismatch
+ok 39 - reject provider paid mismatch
+  ---
+  duration_ms: 0.76777
+  type: 'test'
+  ...
+# Subtest: reject provider status mismatch
+ok 40 - reject provider status mismatch
+  ---
+  duration_ms: 0.834351
+  type: 'test'
+  ...
+# Subtest: reject provider url mismatch
+ok 41 - reject provider url mismatch
+  ---
+  duration_ms: 1.61223
+  type: 'test'
+  ...
+# Subtest: saved method flow omits hosted confirmation and uses backend-only method
+ok 42 - saved method flow omits hosted confirmation and uses backend-only method
+  ---
+  duration_ms: 0.864121
+  type: 'test'
+  ...
+# Subtest: host metadata cannot override reserved module binding
+ok 43 - host metadata cannot override reserved module binding
+  ---
+  duration_ms: 0.32406
+  type: 'test'
+  ...
+# Subtest: refund verifies parent TEST account server side
+ok 44 - refund verifies parent TEST account server side
+  ---
+  duration_ms: 0.95227
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1642.581266

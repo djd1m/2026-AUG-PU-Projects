@@ -1,0 +1,43 @@
+{
+  "run_id": "20260910T071401Z-agent-payments-implementation-7e80",
+  "work_unit_id": "core",
+  "profile": "compact-balanced-v1",
+  "risk": "XL: payments, authority, concurrency",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "started_at": null,
+  "checked_at": "2026-09-10T08:30:22.789165+00:00",
+  "elapsed_wall_ms": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Coordinator did not capture authoritative work-unit start timestamp",
+    "Runtime actual model/effort and token/cost counters are unavailable; requested model is not proof of actual execution"
+  ],
+  "checks": {
+    "build": "PASS",
+    "postgres_tests": 30,
+    "provider_fixture_tests": 14,
+    "total_pass": 44,
+    "fail": 0,
+    "skip": 0,
+    "mutations": {
+      "shared_budget_admission": "killed by assertion",
+      "provider_merchant_binding": "killed by assertion",
+      "settlement_deduplication": "killed by assertion"
+    },
+    "packed_isolated_consumer": "PASS: two products and different prices, installed only packed package/dependencies, actual PostgreSQL",
+    "source_boundaries": "PASS: no host/framework/absolute imports"
+  },
+  "limitations": [
+    "No actual YooKassa TEST saved-method acceptance performed",
+    "No deployment or live charge",
+    "Host identity/pairing, MCP/A2A gateway and legacy cutover owned by coordinator/host work units",
+    "Unknown fenced attempt without provider ID requires verified notification or operational lookup; never recreate",
+    "Deferred fulfillment requires host-owned durable worker; no separate remote receipt command in this version"
+  ],
+  "source_manifest": "source-sha256.txt",
+  "test_log": "tests.tap"
+}
