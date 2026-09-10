@@ -22,6 +22,7 @@ services:
       PGPASSWORD_FILE: /bridge-private/password
       NODE_OPTIONS: --import=/bridge/preload.mjs
       BRIDGE_ROLE: n3
+      BRIDGE_N3_VARIANT: ${BRIDGE_N3_VARIANT:-a}
       BRIDGE_CA: /bridge-ca.pem
       BRIDGE_TLS_KEY: /bridge-private/key.pem
       BRIDGE_TLS_CERT: /bridge-private/cert.pem

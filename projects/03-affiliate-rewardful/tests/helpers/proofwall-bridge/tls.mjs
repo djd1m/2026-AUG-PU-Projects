@@ -5,7 +5,9 @@ import { readFile, mkdir, chmod } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 export const P1 = 'https://proofwall.aicoding.space';
-export const N3 = 'https://n3-a.212.192.0.33.sslip.io';
+export const VARIANT = process.env.BRIDGE_N3_VARIANT || 'a';
+if (!['a', 'b', 'c', 'd'].includes(VARIANT)) throw new Error('Invalid bridge variant');
+export const N3 = `https://n3-${VARIANT}.212.192.0.33.sslip.io`;
 export const PROVIDER = 'https://api.yookassa.ru';
 export const MAIL = 'https://api.resend.com';
 export const PAY = 'https://yoomoney.ru';

@@ -3,7 +3,7 @@ import { request } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile, cp } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
-import { P1, N3, required, socket, tlsConfig, listenSocket, json, closeServer } from './tls.mjs';
+import { P1, N3, VARIANT, required, socket, tlsConfig, listenSocket, json, closeServer } from './tls.mjs';
 
 const source = process.env.BRIDGE_N3_SOURCE || '/app';
 const moduleAt = path => import(pathToFileURL(`${source}/${path}`));
@@ -31,13 +31,14 @@ await app.executeReal(partner.token, joined.membershipId, 'enrollment.join', { c
 await app.referrals.configure(owner.token, owner.membershipId, { landingUrl: `${P1}/n3/start`, returnUrl: `${P1}/dashboard` });
 const connectorKey = (await app.referrals.rotate(owner.token, owner.membershipId)).token;
 const context = { tenantId: config.tenantId, ownerEmail, partnerEmail, password, partnerId: joined.actorId,
-  partnerMembershipId: joined.membershipId, referralUrl: `${N3}/r/${joined.actorId}`, p1Origin: P1, n3Origin: N3 };
+  partnerMembershipId: joined.membershipId, referralUrl: `${N3}/r/${joined.actorId}`, p1Origin: P1, n3Origin: N3, variant: VARIANT };
 await writeFile(`${output}/bootstrap.json`, JSON.stringify({ ...context, connectorKey }), { mode: 0o600 });
 
 const api = createHttpServer(app, { mode: 'real' });
 await new Promise(resolve => api.listen(13030, '127.0.0.1', resolve));
-const staticRoot = `${output}/frontend`;
-await cp(`${source}/variants/a-merchant/app`, staticRoot, { recursive: true });
+const staticRoot = `${output}/frontend-${VARIANT}`;
+const variantFolder = { a: 'a-merchant', b: 'b-customer', c: 'c-partner', d: 'd-agent' }[VARIANT];
+await cp(`${source}/variants/${variantFolder}/app`, staticRoot, { recursive: true });
 for (const name of ['client', 'ui', 'contracts']) await cp(`${source}/shared/${name}`, `${staticRoot}/shared/${name}`, { recursive: true });
 const front = createFrontendServer({ staticRoot, apiOrigin: 'http://127.0.0.1:13030' });
 await new Promise(resolve => front.listen(13031, '127.0.0.1', resolve));

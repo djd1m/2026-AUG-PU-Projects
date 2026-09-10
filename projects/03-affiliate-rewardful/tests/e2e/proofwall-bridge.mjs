@@ -144,7 +144,7 @@ test('actual Proofwall browser signup, email proof, native checkout, durable N3 
   assert.equal(await js('return [...document.querySelectorAll("p")].find(p=>p.textContent.includes("Оплачено до"))?.querySelector("b")?.textContent'), paidUntil);
   await wd('/window/rect', { width: 390, height: 844 }); await noOverflow(); await screenshot(evidence, 'p1-refund-review-mobile');
   await writeFile(`${evidence}/summary.json`, JSON.stringify({ at: new Date().toISOString(),
-    actualProducts: ['P1 Next', 'P1 worker', 'N3 API', 'N3 A account UI'], mockedExternal: ['Resend', 'YooKassa'],
+    actualProducts: ['P1 Next', 'P1 worker', 'N3 API', `N3 ${context.variant.toUpperCase()} account UI`], mockedExternal: ['Resend', 'YooKassa'],
     transport: 'HTTPS over isolated Unix sockets', browserAndServerCertificateVerification: true,
     productionDeploymentVerified: false, paymentId: payment.id, orderId: payment.metadata.order_id,
     checksPassed: ['browser-referral', 'HttpOnly-first-touch', 'real-signup', 'forged-webhook-origin-refused', 'proof-required', 'real-mail-fragment', 'GET-no-proof-consumption',
