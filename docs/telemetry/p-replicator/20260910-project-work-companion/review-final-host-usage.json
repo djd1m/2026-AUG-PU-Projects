@@ -1,0 +1,20 @@
+{
+  "source": "Codex CLI JSON turn.completed",
+  "requested_model": "gpt-6-astra",
+  "actual_model": null,
+  "scope": "review-recheck-1 CLI invocation only",
+  "events": [
+    {
+      "type": "turn.completed",
+      "usage": {
+        "input_tokens": 408958,
+        "cached_input_tokens": 362112,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 5240,
+        "reasoning_output_tokens": 332
+      }
+    }
+  ],
+  "raw_log_sha256": "93164b78bbe21d48f47cb10b1792e16de33c1583eed0f5dc9d668e7084dcfb60",
+  "cost": null
+}

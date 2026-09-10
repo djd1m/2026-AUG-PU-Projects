@@ -1,0 +1,60 @@
+{
+  "evaluator": "independent requested Astra high; coordinator graded decisions against frozen oracle",
+  "source": "semantic-result.md",
+  "cases_passed": 10,
+  "cases_total": 10,
+  "results": [
+    {
+      "id": "start",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "approval",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "donor",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "unknown",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "ready",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "blocked",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "resume",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "drift",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "delivery",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    },
+    {
+      "id": "portable",
+      "passed": true,
+      "basis": "Decision and next-action evidence match frozen expectation; evaluated substantively, not by keyword count"
+    }
+  ],
+  "limits": "Single candidate acceptance set; no baseline A/B or accuracy generalization; no product actions executed",
+  "oracle_unchanged": true
+}

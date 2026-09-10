@@ -1,0 +1,20 @@
+{
+  "source": "Codex CLI JSON turn.completed",
+  "requested_model": "gpt-5.6-sol",
+  "actual_model": null,
+  "scope": "review-fix-1 CLI invocation only",
+  "events": [
+    {
+      "type": "turn.completed",
+      "usage": {
+        "input_tokens": 2290742,
+        "cached_input_tokens": 2150400,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 17799,
+        "reasoning_output_tokens": 7264
+      }
+    }
+  ],
+  "raw_log_sha256": "682cb87962bf7184b189a3f4e68fbf9d0490d10e24b98c233d6e73d2d930fbf4",
+  "cost": null
+}

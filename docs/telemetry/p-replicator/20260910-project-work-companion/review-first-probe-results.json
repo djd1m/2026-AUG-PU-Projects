@@ -1,0 +1,101 @@
+[
+  {
+    "name": "baseline",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "record structure verified; this is not product acceptance",
+    "stderr": ""
+  },
+  {
+    "name": "stale_source_build_preflight_with_current_delivery",
+    "expected_exit": 1,
+    "actual_exit": 0,
+    "matches_expected": false,
+    "files_unchanged": true,
+    "stdout": "record structure verified; this is not product acceptance",
+    "stderr": ""
+  },
+  {
+    "name": "plan_waiting_for_required_approval",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "record structure verified; this is not product acceptance",
+    "stderr": ""
+  },
+  {
+    "name": "paused_plan_waiting_for_required_approval",
+    "expected_exit": 0,
+    "actual_exit": 1,
+    "matches_expected": false,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "violation: pause.approval_ids: applicable approval must be preserved"
+  },
+  {
+    "name": "receipt_missing",
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "unavailable: receipts[0].path: file unavailable: [Errno 2] No such file or directory: '/tmp/tmpnlleas6e/project/evidence/receipt.md'"
+  },
+  {
+    "name": "receipt_empty",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "violation: receipts[0]: Run-ID does not match launch\nviolation: receipts[0]: Work-Unit-ID does not match launch\nviolation: receipts[0]: Attempt-ID does not match launch\nviolation: receipts[0]: Source-Revision does not match launch\nviolation: receipts[0]: Build-Revision does not match launch\nviolation: receipts[0]: launch digest provenance mismatch\nviolation: receipts[0]: receipt has no substantive narrative\nviolation: receipts[0]: pass verdict and terminal completion are both required\nviolation: receipts[0]: invalid launch/finish freshness"
+  },
+  {
+    "name": "receipt_failed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "violation: receipts[0]: pass verdict and terminal completion are both required"
+  },
+  {
+    "name": "receipt_duplicate",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "violation: receipts[1]: duplicate receipt id or work ID\nviolation: receipts[1]: duplicate evidence path\nviolation: receipts[1]: duplicate evidence path"
+  },
+  {
+    "name": "receipt_dead_pid_no_receipt",
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "unavailable: receipts[0].path: file unavailable: [Errno 2] No such file or directory: '/tmp/tmpp3t88zjt/project/evidence/receipt.md'"
+  },
+  {
+    "name": "missing_implementation_route",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "",
+    "stderr": "violation: routes: missing implementation route for stage"
+  },
+  {
+    "name": "stored_commands_remain_inert",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "matches_expected": true,
+    "files_unchanged": true,
+    "stdout": "record structure verified; this is not product acceptance",
+    "stderr": ""
+  }
+]

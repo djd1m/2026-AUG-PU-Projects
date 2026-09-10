@@ -1,0 +1,148 @@
+{
+  "schema_version": "project-telemetry-analysis-v2",
+  "read_at": "2026-09-10T18:25:20.709341+00:00",
+  "root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/docs/telemetry/p-replicator",
+  "run_count": 1,
+  "issues": [],
+  "runs": [
+    {
+      "path": "20260910-project-work-companion/run.json",
+      "issues": [
+        "attempt implement-launch-1: incomplete or ambiguous interval"
+      ],
+      "sha256": "9d3318db1a05d13a51dfb7ac96e4a994232717c83b56eac94c44656644798c63",
+      "run_id": "20260910-project-work-companion",
+      "status_claimed": "accepted",
+      "status_sources": [
+        {
+          "field": "status",
+          "value": "accepted"
+        }
+      ],
+      "profile_claimed": "compact-quality-first-v2",
+      "started_at": "2026-09-10T14:54:17.412209+00:00",
+      "elapsed": {
+        "seconds": 12579.059000000001,
+        "sources": [
+          {
+            "field": "metrics.elapsed_wall_ms",
+            "seconds": 12579.059000000001
+          }
+        ]
+      },
+      "elapsed_from_timestamps_seconds": 12579.059036970139,
+      "active": {
+        "seconds": null,
+        "sources": []
+      },
+      "stage_status_claims": [],
+      "end_sources": [
+        {
+          "field": "ended_at",
+          "value": "2026-09-10T18:23:56.471246+00:00"
+        }
+      ],
+      "usage_locations": [],
+      "model_claims": [],
+      "model_claims_consistent": null,
+      "actual_model_locations_unverified": [],
+      "events": {
+        "sha256": "508a3f3aab013c96190acfe143265b008e723c6a1348adb8d562b812b8451bbb",
+        "parsed_lines": 16,
+        "event_counts_observed": {
+          "attempt_started": 7,
+          "attempt_finished": 8,
+          "run_finished": 1
+        },
+        "coverage": {
+          "line_count": 16,
+          "retained_events": 16,
+          "counted_events": 16,
+          "interval_event_count": 15,
+          "paired_interval_count": 7,
+          "unsupported_event_types": {},
+          "completeness": "not_established"
+        },
+        "attempt_intervals_observed": [
+          {
+            "attempt_id": "route-impl",
+            "stage_claimed": "ROUTE",
+            "seconds": 763.7124769687653,
+            "lines": [
+              1,
+              2
+            ],
+            "status_claimed": "completed"
+          },
+          {
+            "attempt_id": "implement-1",
+            "stage_claimed": "IMPLEMENT",
+            "seconds": 2224.4787459373474,
+            "lines": [
+              4,
+              5
+            ],
+            "status_claimed": "completed"
+          },
+          {
+            "attempt_id": "implement-corrections-1",
+            "stage_claimed": "IMPLEMENT",
+            "seconds": 840.379613161087,
+            "lines": [
+              6,
+              7
+            ],
+            "status_claimed": "completed"
+          },
+          {
+            "attempt_id": "semantic-1",
+            "stage_claimed": "REVIEW",
+            "seconds": 5163.105889081955,
+            "lines": [
+              8,
+              9
+            ],
+            "status_claimed": "completed"
+          },
+          {
+            "attempt_id": "code-review-1",
+            "stage_claimed": "REVIEW",
+            "seconds": 2152.9767191410065,
+            "lines": [
+              10,
+              12
+            ],
+            "status_claimed": "completed"
+          },
+          {
+            "attempt_id": "review-fix-1",
+            "stage_claimed": "IMPLEMENT",
+            "seconds": 429.2726938724518,
+            "lines": [
+              11,
+              13
+            ],
+            "status_claimed": "completed"
+          },
+          {
+            "attempt_id": "review-recheck-1",
+            "stage_claimed": "REVIEW",
+            "seconds": 1048.6475179195404,
+            "lines": [
+              14,
+              15
+            ],
+            "status_claimed": "completed"
+          }
+        ],
+        "paired_wait_union_seconds": null,
+        "interpretation": "Observed intervals only; no completeness, causality or critical-path claim"
+      }
+    }
+  ],
+  "limits": [
+    "No automatic usage aggregation, cost, forecast or verified acceptance",
+    "Source hashes identify bytes; repository revision must be recorded by caller",
+    "Snapshots are per-file, not an atomic snapshot of an active run"
+  ]
+}

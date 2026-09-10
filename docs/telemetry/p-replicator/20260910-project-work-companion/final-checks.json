@@ -1,0 +1,32 @@
+{
+  "source_revision": "ce17283",
+  "checks": [
+    {
+      "name": "review-probes",
+      "exit_code": 0
+    },
+    {
+      "name": "companion",
+      "exit_code": 0
+    },
+    {
+      "name": "telemetry",
+      "exit_code": 0
+    },
+    {
+      "name": "scope",
+      "exit_code": 0
+    }
+  ],
+  "independent_probes_matched": 11,
+  "forge_identical": true,
+  "source_sha256": {
+    "SKILL.md": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+    "scripts/validate_record.py": "839f18bf7c31699c20f2902b6b0bbadbb485edd5df8579960e5ee9745210d5b7",
+    "scripts/record_support.py": "4945a82074a20421873ee2f1387361a199cfd9c83a016b026a8927d101a89142",
+    "assets/work-record.json": "973c9fcfafab5bce5b22560643c792f80983a9977b30b7b9d1298ad7c6d1b33a",
+    "references/verification.md": "42f1fc283deb6aec6cba6c9f2948487146a8594ea2f9ab08cd98aa483988776c",
+    "references/contract.md": "90c93e0b0d2bad96c7c67ffb6e09ef520278524303e7e7f0ff4c189a5e0188e9",
+    "tests/test_validate_record.py": "326432d3a5ef8ceeda579e694231869abdc841888b1991e5bae6200e0befd3cb"
+  }
+}

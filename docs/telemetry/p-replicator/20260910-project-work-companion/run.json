@@ -6,7 +6,7 @@
   "profile": "compact-quality-first-v2",
   "pipeline": "M bounded implementation and independent review",
   "tier": "M",
-  "status": "running",
+  "status": "accepted",
   "started_at": "2026-09-10T14:54:17.412209+00:00",
   "baseline_revision": "50bf296799e98c67a0ba96b26634dff364453531",
   "approval": {
@@ -17,10 +17,61 @@
   "actual_model": null,
   "metrics": {
     "active_wall_ms": null,
-    "usage": null
+    "usage": null,
+    "elapsed_wall_ms": 12579059,
+    "usage_samples": [
+      "semantic-host-usage.json",
+      "review-first-host-usage.json",
+      "review-fix-host-usage.json",
+      "review-final-host-usage.json"
+    ]
   },
   "missing_data": [
-    "Host actual model and usage unavailable; initial context reads preceded implementation passport"
+    "Host actual model and usage unavailable; initial context reads preceded implementation passport",
+    "Full coordinator/author/routing usage unavailable; semantic CLI JSON usage only available so far",
+    "Active wall unknown; no complete interval coverage",
+    "No new companion work-record dogfooding on this run; structural tests use temporary synthetic fixtures, behavioral cases explicitly simulated",
+    "Review-fix author self-classified S; coordinator retains approved M, all M checks remain required",
+    "No complete run usage or verified rate card; CLI usage samples cover only selected invocations",
+    "Independent forward-test measures decisions on simulations, not live project behavior",
+    "Extra worker telemetry excluded; official coordinator record is this directory",
+    "Failed CLI initialization has no recorded attempt start; analyzer correctly reports an incomplete interval",
+    "Stage timestamps are coordinator observations and can lag execution; they do not establish model latency"
   ],
-  "telemetry_status": "partial"
+  "telemetry_status": "partial",
+  "policy_version": "compact-quality-first-v2",
+  "batch_id": null,
+  "comparison_id": null,
+  "host": "Codex CLI plus coordinator",
+  "host_version": "0.154.0 for CLI",
+  "billing_mode": "unknown",
+  "risk_flags": [
+    "local workflow readiness/resume/delivery contract"
+  ],
+  "profile_overrides": [
+    "Astra high planning and review for cross-workflow boundaries; Sol high implementation"
+  ],
+  "spec_sha256": "06a9a019ed8b1f1b35f37a643383444a5a436d955a2ca23db3cf194f64f96825",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 11,
+    "ac_total": 11,
+    "followup_status": "pending",
+    "known_defects_missed": null,
+    "regressions": null,
+    "confirmed_findings_by_severity": {
+      "P1": 1,
+      "P2": 1
+    },
+    "findings_closed": 2
+  },
+  "acceptance_evidence": [
+    "final-checks.json",
+    "review-final.md",
+    "semantic-grade.json"
+  ],
+  "final_revision": "916bc1867ffbbeb60de85677924d272c3dd1a8f8",
+  "ended_at": "2026-09-10T18:23:56.471246+00:00",
+  "diagnose_exit_code": 2
 }
