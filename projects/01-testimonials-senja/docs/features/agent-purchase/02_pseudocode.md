@@ -66,7 +66,7 @@ REQUIREMENT: `AC-agent-purchase-7`
 REALISES: SC-US-001-7
 INPUT: authenticated context and validated command.
 OUTPUT: domain result or typed refusal.
-STEPS: Lock merchant/buyer budget and resource period; unique business key supplements request idempotency hash. Reserve under transaction, recheck revoked/expiry at dispatch fence. One dispatch owner; unknown network result never permits fresh attempt. Shared UI admission blocks double same-period autonomous purchase without requiring UI grant.
+STEPS: Lock merchant/buyer budget and resource period; unique business key supplements request idempotency hash. Reserve under transaction, recheck revoked/expiry at dispatch fence. One dispatch owner; unknown network result never permits fresh attempt. Shared admission prevents replay of the same logical renewal; an explicitly confirmed extra manual period remains allowed without agent mandate. Such manual spend consumes remaining autonomous headroom but agent caps do not deny human purchases.
 COMPLEXITY: bounded database operations per command; outbox processed in bounded batches.
 
 ### Algorithm: Расчёт
@@ -102,7 +102,7 @@ REQUIREMENT: `AC-agent-purchase-11`
 REALISES: SC-US-001-11
 INPUT: authenticated context and validated command.
 OUTPUT: domain result or typed refusal.
-STEPS: Agent endpoints additive and feature-gated; old human endpoints retain response/consent requirements. Route new financial effects into one existing tariff/commission handler. Run unchanged human regression suites and browser referral checkout on A-D before deployment.
+STEPS: Agent endpoints additive and feature-gated; old human endpoints retain response/consent requirements. Route new financial effects into one existing tariff/commission handler. Run unchanged human regression suites and browser referral checkout on A-D before deployment; inventory other existing projects, preserve their source/deployment and smoke deployed course UIs.
 COMPLEXITY: bounded database operations per command; outbox processed in bounded batches.
 
 ### Algorithm: Изоляция и выпуск

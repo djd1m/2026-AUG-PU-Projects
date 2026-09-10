@@ -33,7 +33,7 @@ SC-US-001-6: Given saved method plus valid mandate and grant, when renewal falls
 
 ### AC-agent-purchase-7 — Конкуренция
 
-SC-US-001-7: Given concurrent agents or UI attempting same resource billing period using distinct keys, when dispatched, then no duplicate renewal occurs; all grants/mandates share persisted budget. Same key/different payload conflicts, revoke before fence prevents dispatch, restart or lost response holds reservation for reconciliation.
+SC-US-001-7: Given concurrent agents or UI attempting same resource billing period using distinct keys, when dispatched, then one logical renewal is not charged twice; explicitly confirmed manual purchase of an additional period remains allowed without agent mandate. Manual spending is visible to autonomous budget admission but the agent cap never denies an explicitly confirmed human purchase; all agent grants/mandates share persisted budget. Same key/different payload conflicts, revoke before fence prevents dispatch, restart or lost response holds reservation for reconciliation.
 
 ### AC-agent-purchase-8 — Расчёт
 
@@ -49,7 +49,7 @@ SC-US-001-10: Given target configured MCP SDK client and A2A client, when offer/
 
 ### AC-agent-purchase-11 — Человеческий CJM
 
-SC-US-001-11: Given existing human users with agent feature disabled or enabled, when signup/login/email proof/manual checkout/refund/partner dashboard run, then no agent linking or mandate is required and existing outputs remain compatible. Browser E2E covers P1→N3 A–D; P2 sources/deployment unchanged and smoke remains available.
+SC-US-001-11: Given existing human users with agent feature disabled or enabled, when signup/login/email proof/manual checkout/refund/partner dashboard run, then no agent linking or mandate is required and existing outputs remain compatible. Browser E2E covers P1→N3 A–D; P2 sources/deployment unchanged and smoke remains available; every other existing project has unchanged-source/deployment evidence, with browser smoke for deployed course UIs discovered in the runtime inventory.
 
 ### AC-agent-purchase-12 — Изоляция и выпуск
 

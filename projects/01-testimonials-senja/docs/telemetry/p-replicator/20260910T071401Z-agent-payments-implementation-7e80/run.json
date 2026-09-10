@@ -4,7 +4,7 @@
   "run_id": "20260910T071401Z-agent-payments-implementation-7e80",
   "profile": "compact-quality-first-v2",
   "tier": "XL",
-  "stage": "PLAN",
+  "stage": "VALIDATE",
   "status": "running",
   "started_at": "2026-09-10T07:14:01.649004+00:00",
   "baseline_revision": "4c3bef4c01f5a987c7537674ae6766ce7d5f25f5",
@@ -34,5 +34,22 @@
   "gate_notes": [
     "Pinned p-replicator 1.13.2 restored in ignored node_modules; pre-shipped verify PASS",
     "Whole legacy P1 traceability FAIL (28 gaps, 2 inconclusive). Existing source-hashed check-feature-catalog.mjs supports scoped feature validation; full-project success will not be claimed."
-  ]
+  ],
+  "baseline_tests": {
+    "web": 813,
+    "widget": 35,
+    "transcribe": 9,
+    "worker": 39,
+    "db": 18,
+    "status": "PASS",
+    "total": 914,
+    "environment": "isolated proofwall-agent-payments-test, actual PostgreSQL; no public ports"
+  },
+  "validation": {
+    "status": "CAVEATS",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "high",
+    "actual_model": null,
+    "spec_sha256": "937b23634f89f589a7cd8e6e5c0afd6f3b1ad0bfc8c3e102363d9ca4e9a9fbc4"
+  }
 }
