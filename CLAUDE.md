@@ -40,6 +40,12 @@
 не означает, что она была переключена. Не меняй глобальные настройки автоматически.
 В итогах указывай профиль, модели, проверки, доступные измерения и путь к записи.
 
+Для подготовки, возобновления, E2E-проверок и передачи результата применяй
+[локальное подключение project-work-companion](.claude/rules/project-work-companion-local.md).
+Загружай только нужную стадию [навыка](.claude/skills/project-work-companion/SKILL.md);
+он сохраняет действующие разрешения и контракты p-replicator. Это инструкции,
+не автоматический hook или замена команд.
+
 ## Ruflo Capability Brain & Implementation Loop
 
 Ruflo is the coordination ledger and policy decision point. Claude Code is the

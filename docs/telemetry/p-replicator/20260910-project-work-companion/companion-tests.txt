@@ -1,0 +1,38 @@
+test_guard_rejects_mutation_fixture (test_validate_record.GuardProbeTests) ... skipped 'mutation probe only'
+test_four_real_guard_mutations_are_killed (test_validate_record.MutationKillTests) ... ok
+test_blocked_preflight_may_precede_a_build (test_validate_record.ValidatorTests) ... ok
+test_delivery_uri_requires_supported_full_form (test_validate_record.ValidatorTests) ... ok
+test_delivery_without_authoritative_expectations_is_unavailable (test_validate_record.ValidatorTests) ... ok
+test_duplicate_json_keys_are_rejected (test_validate_record.ValidatorTests) ... ok
+test_duplicate_work_ids_and_owned_paths_are_rejected (test_validate_record.ValidatorTests) ... ok
+test_e2e_claim_without_ready_preflight_is_rejected (test_validate_record.ValidatorTests) ... ok
+test_external_launch_digest_mismatch_is_a_violation (test_validate_record.ValidatorTests) ... ok
+test_external_source_expectation_cannot_be_self_reported_away (test_validate_record.ValidatorTests) ... ok
+test_fresh_path_adapter_rejects_preexisting_trace (test_validate_record.ValidatorTests) ... ok
+test_handoff_checkpoint_is_optional_and_history_preserved (test_validate_record.ValidatorTests) ... ok
+test_header_only_receipt_is_not_substantive (test_validate_record.ValidatorTests) ... ok
+test_implementation_before_build_allows_reasoned_non_e2e (test_validate_record.ValidatorTests) ... ok
+test_incompatible_donor_cannot_be_adapted (test_validate_record.ValidatorTests) ... ok
+test_insufficient_forecast_cannot_invent_a_range_or_zero_cost (test_validate_record.ValidatorTests) ... ok
+test_malformed_types_fail_without_traceback (test_validate_record.ValidatorTests) ... ok
+test_non_e2e_preflight_requires_a_reason (test_validate_record.ValidatorTests) ... ok
+test_not_required_approval_does_not_block_delivery (test_validate_record.ValidatorTests) ... ok
+test_partial_receipt_without_exact_terminal_marker_is_rejected (test_validate_record.ValidatorTests) ... ok
+test_path_escape_and_symlink_are_rejected (test_validate_record.ValidatorTests) ... ok
+test_pause_does_not_require_reapproval (test_validate_record.ValidatorTests) ... ok
+test_pending_accepted_scope_still_blocks_delivery (test_validate_record.ValidatorTests) ... ok
+test_pending_explicitly_out_of_scope_is_disclosed_without_blocking (test_validate_record.ValidatorTests) ... ok
+test_portable_copy_with_spaces_and_different_cwd (test_validate_record.ValidatorTests) ... ok
+test_portable_dependency_and_alpha_contract_are_explicit (test_validate_record.ValidatorTests) ... ok
+test_reconciled_source_drift_can_deliver_after_affected_rerun (test_validate_record.ValidatorTests) ... ok
+test_required_approval_must_cover_current_plan (test_validate_record.ValidatorTests) ... ok
+test_required_approval_reference_survives_pause (test_validate_record.ValidatorTests) ... ok
+test_source_drift_requires_reconciliation_not_repair (test_validate_record.ValidatorTests) ... ok
+test_stale_receipt_is_rejected (test_validate_record.ValidatorTests) ... ok
+test_template_is_clearly_nonpassing (test_validate_record.ValidatorTests) ... ok
+test_valid_source_bound_delivery_passes (test_validate_record.ValidatorTests) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 3.287s
+
+OK (skipped=1)

@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 
 BASE = '50bf296'
-EVIDENCE = Path(__file__).parent
+EVIDENCE = Path(__file__).resolve().parent.relative_to(Path.cwd().resolve())
 EXACT = {'AGENTS.md', 'CLAUDE.md', 'harness-forge/implementations/README.md',
          '.claude/rules/project-work-companion-local.md',
          'docs/development/telemetry/project-work-companion-plan/run.json',
@@ -29,6 +29,7 @@ def main():
     controls = forbidden(['projects/01-testimonials-senja/unexpected.py']) == ['projects/01-testimonials-senja/unexpected.py']
     controls = controls and forbidden(['.claude/commands/go.md']) == ['.claude/commands/go.md']
     controls = controls and not forbidden(['.claude/skills/project-work-companion/SKILL.md'])
+    controls = controls and not forbidden([str(EVIDENCE / 'run.json')])
     result = {'scope_passed': not forbidden(paths), 'forbidden_paths': forbidden(paths),
               'protected_files': len(baseline), 'protected_unchanged': not damaged,
               'damaged_paths': damaged, 'negative_controls_passed': controls, 'changed_paths': paths}

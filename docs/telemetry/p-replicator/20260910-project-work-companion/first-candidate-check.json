@@ -1,0 +1,12 @@
+{
+  "revision": "e847106",
+  "command": "python3 -B -m unittest discover -s .claude/skills/project-work-companion/tests -p 'test_*.py' -q",
+  "executor": "coordinator",
+  "exit_code": 0,
+  "tests_discovered": 24,
+  "tests_skipped": 1,
+  "tests_executed": 23,
+  "observed_duration_seconds": 2.469,
+  "receipt_status": "invalid terminal output, not accepted",
+  "next": "bounded corrections"
+}

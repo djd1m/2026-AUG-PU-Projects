@@ -8,6 +8,13 @@
 
 ## Анализатор телеметрии: кандидат на включение в harness CLI
 
+Связанный [project-work-companion](skills/project-work-companion/SKILL.md)
+дополняет проектную работу подготовкой, preflight, pause/resume и проверкой
+доказательств перед передачей результата. Он подключается локальными инструкциями,
+без изменения вендорных команд; diagnose использует существующий project-telemetry.
+[План и критерии приёмки](../../docs/development/telemetry/project-work-companion-plan/plan.md).
+Копия сверяется с `.claude/skills/project-work-companion/`; пакет поставки не выбран.
+
 [skills/project-telemetry/SKILL.md](skills/project-telemetry/SKILL.md) — копия готового
 skill для Codex/Claude Code: диагностика узких мест, прогноз по аналогам и оценка
 изменений пайплайна. В комплекте методика, Python-анализатор и 12 тестов.

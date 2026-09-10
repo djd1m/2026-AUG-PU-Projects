@@ -1,0 +1,74 @@
+{
+  "checks": [
+    {
+      "name": "skill-validation",
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "/root/.codex/skills/.system/skill-creator/scripts/quick_validate.py",
+        ".claude/skills/project-work-companion"
+      ]
+    },
+    {
+      "name": "forge-validation",
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "/root/.codex/skills/.system/skill-creator/scripts/quick_validate.py",
+        "harness-forge/implementations/skills/project-work-companion"
+      ]
+    },
+    {
+      "name": "companion-tests",
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        ".claude/skills/project-work-companion/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ]
+    },
+    {
+      "name": "telemetry-tests",
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        ".claude/skills/project-telemetry/scripts",
+        "-p",
+        "test_*.py",
+        "-v"
+      ]
+    },
+    {
+      "name": "scope",
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "-B",
+        "docs/telemetry/p-replicator/20260910-project-work-companion/check_scope.py"
+      ]
+    }
+  ],
+  "forge_byte_identical": true,
+  "source_sha256": {
+    "SKILL.md": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+    "scripts/validate_record.py": "d8abb24f8168dbfb5767a9e38b1c4303d096d51002a4f77f239205d976de922c",
+    "scripts/record_support.py": "4945a82074a20421873ee2f1387361a199cfd9c83a016b026a8927d101a89142",
+    "assets/work-record.json": "973c9fcfafab5bce5b22560643c792f80983a9977b30b7b9d1298ad7c6d1b33a",
+    "references/verification.md": "42f1fc283deb6aec6cba6c9f2948487146a8594ea2f9ab08cd98aa483988776c",
+    "references/contract.md": "90c93e0b0d2bad96c7c67ffb6e09ef520278524303e7e7f0ff4c189a5e0188e9",
+    "tests/test_validate_record.py": "a8bf21b7e260a0a2d102d7f698349a1d54dda02f6900b877c9592bd52bf69de5"
+  },
+  "files_under_500_lines": true
+}
