@@ -1,0 +1,11 @@
+# Completion — agent-purchase
+
+Status: NOT IMPLEMENTED.
+
+Required gates: scoped packaged traceability and independent specification validation, module build/typecheck/conformance, PostgreSQL concurrency and mutation tests, all P1 regressions, human browser E2E P1→N3 A–D, real MCP/A2A protocol tests, isolated UI pairing/payment demo, separate actual TEST provider acceptance. No live charges.
+
+## Criterion coverage
+
+Pending implementation: no test coverage or completed criteria claimed.
+
+Deployment only from source-bound tested candidate; module disabled until activation. Human CJM must remain available with module disabled and enabled; P2 untouched. Existing public payment behavior cannot be used to claim new agent checkout works.
