@@ -1,0 +1,48 @@
+RUN_ID: 20260910T070614Z-agent-payments-module-3116
+WORK_UNIT_ID: module_review
+Date: 2026-09-10
+Scope: bounded architecture review; proposed contracts, not implemented or tested code.
+
+Local source evidence
+- projects/01-testimonials-senja/docs/features/agent-purchase/plan.md, sections Data and load-bearing invariants, Attribution without browser, proposed assisted/autonomous scenarios.
+- projects/03-affiliate-rewardful/docs/integrations/agent-scenario.md, existing grants, deterministic MCP/A2A handlers and task replay; checkout absent today.
+Re-read P1 lines 175-220 during review. No web research required or performed. No repository changes.
+
+Recommendation
+Embed a TypeScript domain/application module in each merchant backend for v1. Module owns dedicated payment-agent tables and migrations; host project owns its account/product/entitlement tables. Share code and contracts, not runtime credentials, grants or database state. Thin MCP/A2A gateway only validates transport envelopes and forwards authenticated commands to backend; no database connection. Provider and project integrations are ports. Introduce a durable outbox now so later service extraction has a real delivery boundary; do not build a central cross-project payment service now.
+
+Minimum portable contracts (design proposals)
+1. TrustedExecutionContext: merchantId, providerAccountRef, accountId, agentId, grantId, authenticated principal, request/correlation IDs. Backend constructs merchant/account/authority from authenticated configuration; tool arguments cannot choose or overwrite them. Validate token audience and tenant scope for every command and read. Gateway identity is not buyer authority.
+2. Money: integer minor-unit amount plus explicit currency; no floating point. Quote: opaque quoteId plus immutable offer/product/resource reference, period, price/terms versions, expiration, merchant binding. Host OfferPort resolves authoritative data; module must not accept arbitrary tool totals.
+3. AgentGrant: permissions, actor/account/merchant scope, expiration/revocation. SpendMandate: separate user-approved merchant/product/resource constraints, currency, transaction/period budget, calendar/time zone, validity, method reference and consent evidence/version. Valid grant AND valid mandate AND eligible saved method are required for autonomous execute. Authentication alone never implies permission to spend. Saved method never implies renewal consent.
+4. Commands: getOffer, start/getBuyerLink, prepareOrder, executePayment, getOrder; referral attachment optional host capability. Every mutation carries caller idempotency key bound to canonical request hash; module derives provider operation key. Command result separates payment, fulfillment and attribution status and trusted nextAction. Generic state names must not erase provider-specific pending reasons.
+5. ProviderPort: advertised capabilities; createHostedPayment, chargeSavedMethod, getPayment, verify/normalizeNotification and optional refund. Provider account/credentials resolve inside adapter; saved-method IDs never become public arguments. Results distinguish succeeded, pending, canceled and unknown outcome, with providerPaymentId, environment and raw provider reason retained. Unsupported recurring/refund behavior is explicit capability failure, never emulation. Adapter uses provider-specific callback authenticity and/or server-side retrieval guarantees; a universal signature assumption is invalid.
+6. Persistence/UnitOfWork: dedicated stores for links/grants/mandates/quotes/orders/attempts/reservations/audit/inbox/outbox. Narrow transaction handle belongs to module implementation; host cannot inspect module tables ad hoc. Optimistic version or locks and uniqueness implement domain exclusion, not caller-provided keys alone.
+7. FulfillmentPort: apply verified paid event idempotently using eventId/orderId; return durable fulfillment receipt. Host alone defines what buying a product means. AttributionPort: validate/bind referral before checkout when required, then receive committed purchase/refund events idempotently. Absence of attribution support is valid in other projects; N3-specific eligibility/promo/commission logic remains in P1 adapter/N3. Fulfillment and attribution results must not rewrite payment success.
+8. Durable events: eventId, schemaVersion, merchantId, orderId, attemptId, aggregateVersion/sequence, event type, money, product/resource reference, occurredAt and correlationId. Minimize PII; no provider secrets/tokens. Consumers deduplicate by stable eventId and enforce local business uniqueness. Retries use the same identity; dead-letter/reconciliation available. Persist provider IDs needed for audit without making them portable payment authority.
+
+Top failure risks and required handling
+A. Authority leakage across eight projects: global saved-method registry or merchant ID supplied by agent would permit cross-shop charges. Keep tokens, encryption/configuration, provider accounts and tables isolated per deployment. Share package versions only. Check composite merchant ownership even if deployment currently has one merchant.
+B. Grant/consent confusion: grant scope order.execute does not establish user-approved spend. Consent remains separate, explicit, bounded and revocable; trusted human UI owns evidence. Revoking agent transport token and revoking spend mandate are distinct operations.
+C. Double charge despite idempotency: different keys, concurrent UI/agents and restarts can bypass HTTP replay defenses. Unique business operation (merchant/account/resource/billing period), shared mandate budget locks and one durable payment attempt prevent this. Do not maintain independent UI and agent pipelines or budget ledgers.
+D. External call inside transaction: reserve funds and persist attempt/dispatch intent in short transaction, then call provider outside lock. Recheck expiry/revocation and establish dispatch fence before network I/O. Once dispatch becomes irrevocable, revocation cannot promise cancellation of in-flight provider requests. Store and show that race boundary; unknown result holds reservation and requires reconciliation, not fresh blind charge.
+E. False atomicity during future extraction: embedded v1 may update module payment state, host entitlement and local outbox in ONE database transaction only through an explicit transaction-capable local fulfillment adapter sharing the same physical connection. Normal remote FulfillmentPort cannot participate. If local adapter cannot accept the transaction safely, use outbox from the beginning and expose fulfillment pending. Never call external N3 within the local transaction.
+F. Duplicate entitlement at migration: do not run both synchronous entitlement writes and event consumer for the same effect without common idempotent handler/unique effect key. Define fulfillment delivery mode and migration cutover; replay historic payment events must not extend subscription twice.
+G. Out-of-order/refund events: paid/refunded events can arrive repeatedly or out of order. Consumer reconciles aggregate sequence/state and product policy; refund does not automatically refill mandate budget in P1 v1. Partial refunds/provider differences require explicit handling before feature support claim.
+H. Leaky abstraction: generic commerce core must not hard-code Proofwall 990 RUB, 30 days, email confirmation, N3 commission or Moscow timezone. Put offer/eligibility/consent constraints in host policy and serialized mandate; policy version changes cannot broaden existing permission silently.
+
+Atomicity seam and extraction acceptance
+V1 dedicated module tables may share host PostgreSQL, but all writes occur through module API. Verified provider outcome plus financial ledger/reservation finalization and outbox insertion commit atomically. Optional host entitlement write is atomic only in explicitly supported local shared transaction. N3 remains HTTPS plus outbox.
+Future standalone service owns its own PostgreSQL and financial transaction. Host owns fulfillment inbox, entitlement transaction and acknowledgement outbox. Delivery becomes at-least-once with idempotent effects and visible payment=succeeded/fulfillment=pending until host acknowledgement; no distributed atomic commit claim. Host queries service API rather than its tables. Extraction requires versioned event/command compatibility, migration/reconciliation tooling and cutover validation. Projects never share central DB or Docker networks; cross-project interaction remains authenticated HTTPS.
+
+Minimum validation scenarios for implementation
+- Two tenants/merchants cannot read or execute each other's order, quote, grant or saved method.
+- Valid grant without mandate, revoked mandate, stale quote, changed terms/price all block autonomous charge.
+- Concurrent UI and two agents yield one business renewal and one reserved/spent amount, including different HTTP keys.
+- Crash before dispatch, lost provider response, duplicate webhook and worker restart converge without extra charge or fulfillment.
+- Successful payment plus unavailable host/N3 remains paid with pending downstream statuses; retry creates one entitlement and one attribution effect.
+- Local synchronous fulfillment to remote consumer cutover does not duplicate effects; stale/refund events reconcile deterministically.
+- Test adapter contract verifies required capabilities and TEST/live merchant binding; stub-only proof does not validate actual shop recurring capability.
+
+No execution tests or quantitative estimates produced: this is a design review grounded in existing project invariants.
+Status: completed

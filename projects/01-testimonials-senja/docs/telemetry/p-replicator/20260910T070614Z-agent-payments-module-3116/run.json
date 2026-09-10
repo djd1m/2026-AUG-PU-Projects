@@ -1,0 +1,38 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20260910T070614Z-agent-payments-module-3116",
+  "started_at": "2026-09-10T07:06:14.002577+00:00",
+  "stage": "PLAN_COMPLETE",
+  "status": "accepted",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "scope": "Architecture documentation only; no payment implementation",
+  "baseline_revision": "d055e86",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Coordinator runtime model, usage and active time unavailable",
+    "Review requested model is not independent runtime metadata",
+    "Detailed per-stage and delegate timing not captured; no usage or savings measurement",
+    "Receipt path first assigned before review; no filesystem prelaunch existence check was recorded"
+  ],
+  "artifact": "docs/features/agent-purchase/modular-architecture.md",
+  "ended_at": "2026-09-10T07:09:58.311912+00:00",
+  "elapsed_wall_ms": 224309,
+  "active_wall_ms": null,
+  "telemetry_status": "partial",
+  "checks": {
+    "relative_links": "PASS",
+    "mermaid_parse": "1/1 PASS",
+    "diff_check": "PASS",
+    "review_receipts": "1/1 PASS",
+    "runtime_tests": "Not applicable: architecture only"
+  },
+  "review": {
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "receipt": "module-review.md"
+  },
+  "artifact_sha256": "f1dd59c138dd060cecdf619fafc1174b94f652d14c78bccadd287b0be09b6837"
+}
