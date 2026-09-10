@@ -10,6 +10,8 @@ import { baseUrl } from '@/lib/urls';
 import { beginN3Checkout } from '@/lib/n3-checkout';
 import { N3Error } from '@/lib/n3-runtime';
 import { n3Failure } from '@/lib/n3-http';
+import { reserveHumanCheckout, attachHumanPayment, releaseUndispatchedHuman } from '@/lib/agent-payments/legacy';
+import { AgentHostError, failure } from '@/lib/agent-payments/security';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,24 +45,35 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!projectId) return NextResponse.json({ error: 'не найдено' }, { status: 404 });
 
   try {
+    const human = await reserveHumanCheckout(accountId,projectId);
+    if (human?.redirectUrl) return NextResponse.json({redirect_url:human.redirectUrl,stub:false});
     const bridge = await beginN3Checkout(accountId, projectId, `${baseUrl()}/dashboard/${slug}`,
       (body as { request_key?: unknown }).request_key);
-    if (bridge) return NextResponse.json({ redirect_url: bridge.redirectUrl, stub: false }, { status: 200 });
+    if (bridge) {
+      await attachHumanPayment(projectId,bridge.providerSessionId);
+      return NextResponse.json({ redirect_url: bridge.redirectUrl, stub: false }, { status: 200 });
+    }
     // Обращение к ЮKassa — ВНЕ транзакции: держать соединение пула всё время ответа
     // стороннего сервиса нельзя.
     // Ключ идемпотентности — на КАЖДУЮ попытку свой. Он защищает от повтора ОДНОГО
     // сетевого запроса (таймаут, ретрай клиента HTTP), а не от второго осознанного
     // нажатия: второе нажатие — это законная новая оплата, и общий ключ вернул бы вместо
     // неё прежний платёж, сделав продление невозможным.
-    const idempotenceKey = randomUUID();
+    const idempotenceKey = human?.requestKey ?? randomUUID();
     const session = await createRemotePayment(
       projectId, PRICE_RUB, `${baseUrl()}/dashboard/${slug}`, idempotenceKey);
     await withAccount(accountId, (client) =>
       recordCheckoutSession(client, projectId, session, idempotenceKey));
+    await attachHumanPayment(projectId,session.providerSessionId);
     return NextResponse.json({ redirect_url: session.redirectUrl, stub: isStub() }, { status: 200 });
   } catch (err) {
-    if (err instanceof N3Error) return n3Failure(err);
+    if (err instanceof AgentHostError) return failure(err);
+    if (err instanceof N3Error) {
+      if (['N3_PROOF_REQUIRED','N3_BIND_PENDING','N3_CONFIGURATION','N3_REQUEST_KEY'].includes(err.code)) await releaseUndispatchedHuman(projectId);
+      return n3Failure(err);
+    }
     if (err instanceof PaymentProviderError && err.message === 'PAYMENT_PROVIDER_NOT_CONFIGURED') {
+      await releaseUndispatchedHuman(projectId);
       // 501, а не фиктивная ссылка: зелёный checkout при отсутствующей интеграции —
       // ровно тот класс лжи, против которого «сценарий добавлен ≠ требование закрыто».
       return NextResponse.json(

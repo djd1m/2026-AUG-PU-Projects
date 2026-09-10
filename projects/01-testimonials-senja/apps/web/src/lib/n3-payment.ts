@@ -4,6 +4,8 @@ import { fetchRemotePayment, applyTariffUpgrade, claimWebhookEvent, isStub, type
 import { saveNativeSession, type N3Intent } from './n3-checkout';
 import { enqueueN3 } from '../../../../services/worker/src/n3-outbox';
 import { N3Error, N3_UUID, record } from './n3-runtime';
+import { observeLegacyPayment } from './agent-payments/legacy';
+import { agentPaymentNotification } from './agent-payments/notification';
 
 export interface VerifiedRefund { id: string; paymentId: string; amountMinor: number }
 async function remoteRefund(id: string): Promise<VerifiedRefund> {
@@ -56,6 +58,7 @@ export async function applyBridgePayment(client: PoolClient, payment: RemotePaym
   if (await claimWebhookEvent(client, `payment.succeeded:${payment.id}`, { source: 'verified_bridge', paymentId: payment.id })) {
     await saveNativeSession(client, intent, { providerSessionId: payment.id, redirectUrl: '' });
     await applyTariffUpgrade(client, payment.id);
+    await observeLegacyPayment(client,intent.project_id,payment.id,'99000');
     await client.query("update n3_checkout_intents set state='completed',completed_at=now() where id=$1", [intent.id]);
   }
   if (refund) {
@@ -80,6 +83,8 @@ export async function bridgeNotification(event: string, objectId: string): Promi
   const paymentId = refund?.paymentId ?? objectId;
   const payment = await fetchRemotePayment(paymentId);
   if (!payment) throw new N3Error('N3_PROVIDER_PENDING');
+  const agent = await agentPaymentNotification(event,objectId,payment.metadata);
+  if (agent !== null) return agent;
   if (!payment.metadata?.proofwall_invoice_id && !payment.metadata?.order_id) return null;
   validateBridgePayment(payment, paymentId);
   return withService(client => applyBridgePayment(client, payment, event, refund));

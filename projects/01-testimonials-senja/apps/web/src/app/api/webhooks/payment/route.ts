@@ -25,6 +25,8 @@ import { convertAttributionOnPayment } from '@/lib/referral';
 import { extractClientIP } from '@/lib/client-ip';
 import { bridgeNotification } from '@/lib/n3-payment';
 import { N3Error } from '@/lib/n3-runtime';
+import { agentPaymentNotification } from '@/lib/agent-payments/notification';
+import { observeLegacyPayment } from '@/lib/agent-payments/legacy';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,6 +83,8 @@ export async function POST(request: Request): Promise<NextResponse> {
   // Пара из них устойчива и различает payment.succeeded и payment.canceled по одному платежу.
   const eventId = `${event}:${paymentId}`;
   try {
+    const agent = await agentPaymentNotification(event,paymentId,body.object?.metadata);
+    if (agent !== null) return NextResponse.json({status:agent});
     const bridge = await bridgeNotification(event, paymentId);
     if (bridge !== null) return NextResponse.json({ status: bridge });
   } catch (error) {
@@ -120,6 +124,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         await convertAttributionOnPayment(client, accountId, eventId, remote.amount);
       }
 
+      if (upgrade.applied) await observeLegacyPayment(client,upgrade.projectId,paymentId,String(Math.round(remote.amount*100)));
       return upgrade.applied ? ('upgraded' as const) : ('unknown_session' as const);
     });
   } catch (err) {
