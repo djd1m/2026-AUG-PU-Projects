@@ -2,8 +2,9 @@
 name: project-work-companion
 description: Prepare, preflight, pause, resume, deliver, or diagnose project work while preserving the caller's approvals, source identity, and evidence. Use for project execution handoffs and readiness checks; it complements rather than replaces the calling workflow or project telemetry.
 metadata:
-  maturity: beta
-  version: "1.0.0"
+  maturity: experimental
+  stability: alpha
+  version: "0.1.1"
 ---
 
 # Project Work Companion
@@ -20,10 +21,10 @@ handoff and evidence index, not a second workflow state machine.
 2. Before planning, record a substantive ROUTE and its mechanical result. Capture
    scope, exclusions, measurable AC, action limits, source revision, requirements,
    architecture, and donor decisions. Reject incompatible donors with a reason.
-3. For a forecast, invoke the existing `project-telemetry` skill and retain its
-   scope revision, comparable RUN_IDs, exclusions, method, range, and external
-   expectations. If support is absent, record `insufficient_data`; keep unknown
-   usage and cost as `null`, never as zero.
+3. For a forecast, load the existing `project-telemetry` skill when available and
+   retain its scope revision, comparable RUN_IDs, exclusions, method, range, and
+   external expectations. If it is absent, disclose the dependency warning and
+   record `insufficient_data`; keep unknown usage and cost as `null`, never zero.
 4. Preserve the caller's approval rule. Require explicit evidence only when the
    user or an applicable rule requires it. An approval must cover the applicable
    plan version, team, roles, requested models, and skills. A pause does not revoke
@@ -32,14 +33,17 @@ handoff and evidence index, not a second workflow state machine.
 Read [the work-record contract](references/contract.md) before creating or
 validating a record.
 
-## Before implementation
+## Before implementation and E2E
 
 Repeat substantive ROUTE against the approved scope, file list, and new risks;
 the mechanical tier is only a lower bound. Material scope or team changes return
-to the owner. Then perform a read-only E2E preflight: exact source/build/environment,
-inputs, test command, allowed environment availability, expected effects, and
-evidence destination. Report `ready`, `blocked`, or `inconclusive`; readiness is
-not an E2E pass and preflight must not execute stored commands or external actions.
+to the owner. Implementation does not require an E2E preflight or a build that does
+not yet exist. Immediately before an actual E2E run, perform a read-only preflight:
+exact source/build/environment, inputs, test command, allowed environment
+availability, expected effects, and evidence destination. Report `ready`, `blocked`,
+or `inconclusive`. A docs-only or not-yet-E2E stage may instead record
+`not_applicable` with a reason. Readiness is not an E2E pass; a missing or non-ready
+preflight blocks an E2E claim, and preflight executes no stored command or action.
 
 ## Pause and resume
 
@@ -57,7 +61,15 @@ Map every required AC to a result, command-as-data, exit code, revision, and fre
 receipt. Accept only unique, regular, non-symlink receipts bound to the expected
 run/work/source/build and caller-known launch digest. Treat completion and verdict
 as separate claims. Include a full delivery URI plus scope, build, evidence, and
-pending work. See [verification](references/verification.md) for gates and limits.
+pending work. Unmet mandatory AC and pending accepted-scope work block delivery;
+pending work explicitly classified `out_of_scope` with a reason remains disclosed
+without blocking accepted mandatory AC. See [verification](references/verification.md).
+
+This validator intentionally uses a fresh-path adapter for receipts: before every
+launch the caller allocates a new, unique trace path whose prelaunch state is absent.
+Resume never truncates or reuses a trace; old receipt files remain preserved and a
+new attempt receives a new path. Callers that natively support changed pre-existing
+traces must adapt by allocating a fresh path before using this validator.
 
 For diagnosis, invoke the existing `project-telemetry` analyzer on the selected
 project and RUN_ID. Preserve completeness gaps and distinguish observations from
@@ -67,15 +79,27 @@ hypotheses. Do not rewrite history or start proposed experiments.
 
 | Action | Skill | Path | Required | Purpose |
 |---|---|---|---|---|
-| forecast, diagnose | project-telemetry | `.claude/skills/project-telemetry/SKILL.md` | REQUIRED for these actions | Reuse the existing analyzer and methodology. |
+| forecast | project-telemetry | sibling `project-telemetry/SKILL.md` | OPTIONAL | Reuse comparable-run methodology when installed. |
+| diagnose | project-telemetry | sibling `project-telemetry/SKILL.md` | REQUIRED | Reuse the authoritative local analyzer. |
 
-Check the dependency before forecast or diagnose. If absent, block only that
-action with the missing path; do not install or recreate its schema/parser.
+Set `SKILL_DIR` to the directory containing this loaded `SKILL.md`, then resolve
+the dependency as `SKILL_DIR/../project-telemetry/SKILL.md`; the table's sibling
+path is runtime-relative, while `.claude/skills/project-telemetry/SKILL.md` is only
+an installation-layout example. Check existence before `view()`.
+
+**Fallbacks:**
+
+- Forecast dependency absent → warn with the resolved path and record
+  `insufficient_data` with unknown numbers `null`.
+- Diagnose dependency absent → block diagnosis and name `project-telemetry` plus
+  its resolved path. Independent authorized work may continue. Never auto-install,
+  recreate, or silently replace the dependency.
 
 Validate structure read-only:
 
 ```sh
-python3 .claude/skills/project-work-companion/scripts/validate_record.py \
+SKILL_DIR=/absolute/path/to/loaded/project-work-companion
+python3 "$SKILL_DIR/scripts/validate_record.py" \
   --root "$PROJECT_ROOT" --record "$WORK_RECORD" \
   --expect-run-id "$RUN_ID" --expect-work-unit-id "$WORK_UNIT_ID" \
   --expect-source-revision "$SOURCE_REV" --expect-build-revision "$BUILD_REV" \

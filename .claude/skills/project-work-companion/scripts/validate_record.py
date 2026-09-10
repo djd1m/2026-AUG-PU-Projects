@@ -5,14 +5,15 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from urllib.parse import urlparse
 
 from record_support import (
-    Context, DuplicateKey, expect_launch as _expect_launch, list_value as _list,
+    Context, DuplicateKey, expect_launch as _expect_launch,
+    guard_preflight as _guard_preflight, list_value as _list,
     nonempty as _nonempty, object_value as _dict, read_headers as _headers,
     read_json as _json,
     safe_root as _safe_root, sha256 as _sha256, strings as _strings,
-    timestamp as _timestamp,
+    substantive_receipt_payload as _receipt_payload,
+    supported_delivery_uri as _supported_uri, timestamp as _timestamp,
 )
 
 
@@ -59,44 +60,6 @@ def _guard_route(record, ctx):
         needed.add("implementation")
     for phase in needed - set(by_phase):
         ctx.error(f"routes: missing {phase} route for stage")
-    return True
-
-
-def _guard_preflight(record, ctx):
-    effective = _effective_stage(record, ctx)
-    applicable = STAGES.index(effective) >= STAGES.index("preflight")
-    value = record.get("preflight")
-    if not applicable:
-        if value is not None:
-            ctx.error("preflight: must be null before preflight stage")
-        return True
-    preflight = _dict(value, "preflight", ctx)
-    if preflight.get("status") not in ("ready", "blocked", "inconclusive"):
-        ctx.error("preflight.status: unsupported value")
-    for key in ("source_revision", "build_revision", "environment", "test_command"):
-        _nonempty(preflight.get(key), f"preflight.{key}", ctx)
-    source = record.get("source") if isinstance(record.get("source"), dict) else {}
-    if preflight.get("source_revision") != source.get("current_revision"):
-        ctx.error("preflight.source_revision: differs from current source")
-    if preflight.get("build_revision") != source.get("build_revision"):
-        ctx.error("preflight.build_revision: differs from selected build")
-    ctx.pathref(preflight.get("evidence_root"), "preflight.evidence_root", must_exist=False)
-    inputs = _list(preflight.get("inputs"), "preflight.inputs", ctx)
-    if not inputs:
-        ctx.error("preflight.inputs: at least one input required")
-    for index, item_value in enumerate(inputs):
-        item = _dict(item_value, f"preflight.inputs[{index}]", ctx)
-        _nonempty(item.get("name"), f"preflight.inputs[{index}].name", ctx)
-        if type(item.get("available")) is not bool:
-            ctx.error(f"preflight.inputs[{index}].available: expected boolean")
-    _strings(preflight.get("expected_effects"), "preflight.expected_effects", ctx)
-    if type(preflight.get("environment_available")) is not bool:
-        ctx.error("preflight.environment_available: expected boolean")
-    if preflight.get("external_actions_executed") is not False or preflight.get("e2e_claim") is not None:
-        ctx.error("preflight: must execute no external action and make no E2E claim")
-    if preflight.get("status") == "ready":
-        if preflight.get("environment_available") is not True or any(i.get("available") is not True for i in inputs if isinstance(i, dict)):
-            ctx.error("preflight: ready requires all inputs and environment available")
     return True
 
 
@@ -197,8 +160,7 @@ def _guard_receipts(record, ctx):
         if launch_data.get("trace") != item.get("path"):
             ctx.error(f"receipts[{index}]: launch trace path differs from indexed receipt")
         terminal = body.rstrip().splitlines()[-1] if body.strip() else ""
-        narrative = [line for line in body.splitlines() if line.strip() and ": " not in line]
-        if sum(len(line.strip()) for line in narrative) < 20:
+        if len(_receipt_payload(body)) < 20:
             ctx.error(f"receipts[{index}]: receipt has no substantive narrative")
         if fields.get("Verdict") != "pass" or terminal != "Status: completed":
             ctx.error(f"receipts[{index}]: pass verdict and terminal completion are both required")
@@ -232,8 +194,8 @@ GUARDS = {
 def _validate_delivery(record, ctx, receipt_ids):
     delivery = _dict(record.get("delivery"), "delivery", ctx)
     uri = _nonempty(delivery.get("uri"), "delivery.uri", ctx)
-    if uri and not urlparse(uri).scheme:
-        ctx.error("delivery.uri: absolute URI required")
+    if uri and not _supported_uri(uri):
+        ctx.error("delivery.uri: supported absolute HTTP(S) URL or URN required")
     scope = _dict(delivery.get("scope"), "delivery.scope", ctx)
     _strings(scope.get("included"), "delivery.scope.included", ctx)
     _strings(scope.get("excluded"), "delivery.scope.excluded", ctx, allow_empty=True)
@@ -245,8 +207,19 @@ def _validate_delivery(record, ctx, receipt_ids):
     evidence = _strings(delivery.get("evidence"), "delivery.evidence", ctx)
     if set(evidence) != receipt_ids:
         ctx.error("delivery.evidence: must name every and only indexed receipt")
-    if _list(delivery.get("pending"), "delivery.pending", ctx):
-        ctx.error("delivery.pending: must be empty for delivered stage")
+    for index, value in enumerate(_list(delivery.get("pending"), "delivery.pending", ctx)):
+        item = _dict(value, f"delivery.pending[{index}]", ctx)
+        _nonempty(item.get("item"), f"delivery.pending[{index}].item", ctx)
+        _nonempty(item.get("reason"), f"delivery.pending[{index}].reason", ctx)
+        if item.get("scope") != "out_of_scope":
+            ctx.error(f"delivery.pending[{index}]: pending accepted-scope work blocks delivery")
+    e2e_claim = delivery.get("e2e_claim")
+    if e2e_claim is not None:
+        if e2e_claim != "pass":
+            ctx.error("delivery.e2e_claim: only an explicit pass claim is supported")
+        preflight = record.get("preflight")
+        if not isinstance(preflight, dict) or preflight.get("status") != "ready":
+            ctx.error("delivery.e2e_claim: ready preflight is required before an E2E claim")
 
 
 def validate(record, ctx):
@@ -263,8 +236,10 @@ def validate(record, ctx):
     ctx.pathref(telemetry.get("run"), "telemetry.run")
     ctx.pathref(telemetry.get("events"), "telemetry.events")
     source = _dict(record.get("source"), "source", ctx)
-    for key in ("baseline_revision", "current_revision", "build_revision"):
+    for key in ("baseline_revision", "current_revision"):
         _nonempty(source.get(key), f"source.{key}", ctx)
+    if source.get("build_revision") is not None:
+        _nonempty(source.get("build_revision"), "source.build_revision", ctx)
     for key in ("requirements", "architecture"):
         refs = _list(source.get(key), f"source.{key}", ctx)
         if not refs:

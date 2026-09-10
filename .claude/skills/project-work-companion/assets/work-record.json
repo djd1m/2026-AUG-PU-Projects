@@ -60,6 +60,7 @@
   },
   "preflight": {
     "status": "inconclusive",
+    "reason": "POPULATE missing readiness inputs or use not_applicable with a reason",
     "source_revision": "POPULATE_SOURCE_REVISION",
     "build_revision": "POPULATE_BUILD_REVISION",
     "environment": "POPULATE_ENVIRONMENT",
@@ -94,6 +95,11 @@
       "build_revision": "POPULATE_BUILD_REVISION"
     },
     "evidence": [],
-    "pending": ["Populate actual receipts and satisfy every required AC before delivery"]
+    "pending": [{
+      "item": "Populate actual receipts and satisfy every required AC before delivery",
+      "scope": "accepted_scope",
+      "reason": "Template evidence is intentionally incomplete"
+    }],
+    "e2e_claim": null
   }
 }

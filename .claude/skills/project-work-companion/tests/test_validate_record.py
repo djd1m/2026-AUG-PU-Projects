@@ -216,6 +216,26 @@ class ValidatorTests(unittest.TestCase):
         self.fixture.record["receipts"][0]["sha256"] = digest(receipt)
         self.assertCode(1, self.fixture.run())
 
+    def test_header_only_receipt_is_not_substantive(self):
+        receipt = self.fixture.root / "evidence" / "receipt.md"
+        receipt.write_text(receipt.read_text().replace(
+            "All scoped checks finished and evidence is indexed.\n", ""))
+        self.fixture.record["receipts"][0]["sha256"] = digest(receipt)
+        self.assertCode(1, self.fixture.run())
+
+    def test_fresh_path_adapter_rejects_preexisting_trace(self):
+        launch_path = self.fixture.root / "evidence" / "launch.json"
+        launch = json.loads(launch_path.read_text())
+        launch["trace_prelaunch"] = {"exists": True, "sha256": "0" * 64}
+        launch_path.write_text(json.dumps(launch, indent=2) + "\n")
+        launch_digest = digest(launch_path)
+        receipt = self.fixture.root / "evidence" / "receipt.md"
+        old_digest = self.fixture.record["receipts"][0]["launch_sha256"]
+        receipt.write_text(receipt.read_text().replace(old_digest, launch_digest))
+        self.fixture.record["receipts"][0]["launch_sha256"] = launch_digest
+        self.fixture.record["receipts"][0]["sha256"] = digest(receipt)
+        self.assertCode(1, self.fixture.run())
+
     def test_malformed_types_fail_without_traceback(self):
         self.fixture.record["identity"] = []
         result = self.fixture.run()
@@ -276,14 +296,70 @@ class ValidatorTests(unittest.TestCase):
         self.fixture.record["approval"]["evidence"]["plan_revision"] = "stale-plan"
         self.assertCode(1, self.fixture.run())
 
-    def test_preflight_is_stage_scoped(self):
-        self.fixture.record["stage"] = "plan"
-        self.fixture.record["routes"] = self.fixture.record["routes"][:1]
-        self.fixture.record["approval"]["evidence"] = None
+    def test_implementation_before_build_allows_reasoned_non_e2e(self):
+        self.fixture.record["stage"] = "implement"
+        self.fixture.record["source"]["build_revision"] = None
+        self.fixture.record["preflight"] = {
+            "status": "not_applicable", "reason": "build does not exist; E2E is not planned in this stage",
+            "external_actions_executed": False, "e2e_claim": None,
+        }
+        self.fixture.record["receipts"] = []
+        self.fixture.record["delivery"] = None
+        self.fixture.record["checks"] = []
+        self.assertCode(0, self.fixture.run(expectations=False))
+
+    def test_non_e2e_preflight_requires_a_reason(self):
+        self.fixture.record["stage"] = "implement"
+        self.fixture.record["preflight"] = {
+            "status": "not_applicable", "external_actions_executed": False, "e2e_claim": None,
+        }
         self.fixture.record["receipts"] = []
         self.fixture.record["delivery"] = None
         self.fixture.record["checks"] = []
         self.assertCode(1, self.fixture.run(expectations=False))
+
+    def test_e2e_claim_without_ready_preflight_is_rejected(self):
+        self.fixture.record["preflight"] = {
+            "status": "not_applicable", "reason": "docs-only delivery",
+            "external_actions_executed": False, "e2e_claim": None,
+        }
+        self.fixture.record["delivery"]["e2e_claim"] = "pass"
+        self.assertCode(1, self.fixture.run())
+
+    def test_blocked_preflight_may_precede_a_build(self):
+        self.fixture.record["stage"] = "implement"
+        self.fixture.record["source"]["build_revision"] = None
+        self.fixture.record["preflight"] = {
+            "status": "blocked", "reason": "build has not been created",
+            "source_revision": "source-r1", "build_revision": None,
+            "environment": None, "environment_available": False, "test_command": None,
+            "inputs": [], "expected_effects": [], "evidence_root": None,
+            "external_actions_executed": False, "e2e_claim": None,
+        }
+        self.fixture.record["receipts"] = []
+        self.fixture.record["delivery"] = None
+        self.fixture.record["checks"] = []
+        self.assertCode(0, self.fixture.run(expectations=False))
+
+    def test_pending_explicitly_out_of_scope_is_disclosed_without_blocking(self):
+        self.fixture.record["delivery"]["pending"] = [{
+            "item": "commercial rollout", "scope": "out_of_scope", "reason": "excluded by approved scope",
+        }]
+        self.assertCode(0, self.fixture.run())
+
+    def test_pending_accepted_scope_still_blocks_delivery(self):
+        self.fixture.record["delivery"]["pending"] = [{
+            "item": "mandatory AC follow-up", "scope": "accepted_scope", "reason": "not finished",
+        }]
+        self.assertCode(1, self.fixture.run())
+
+    def test_delivery_uri_requires_supported_full_form(self):
+        for invalid in ("https:broken", "custom:opaque", "file:///tmp/result"):
+            with self.subTest(uri=invalid):
+                self.fixture.record["delivery"]["uri"] = invalid
+                self.assertCode(1, self.fixture.run())
+        self.fixture.record["delivery"]["uri"] = "https://example.test/delivery/run-1"
+        self.assertCode(0, self.fixture.run())
 
     def test_source_drift_requires_reconciliation_not_repair(self):
         self.fixture.record["source"]["continuity"]["observed_revision"] = "source-r2"
@@ -317,6 +393,15 @@ class ValidatorTests(unittest.TestCase):
         shutil.copytree(SKILL, copied)
         result = self.fixture.run(copied / "scripts" / "validate_record.py", cwd=Path(self.fixture.temp.name))
         self.assertCode(0, result)
+
+    def test_portable_dependency_and_alpha_contract_are_explicit(self):
+        skill = (SKILL / "SKILL.md").read_text()
+        self.assertIn("maturity: experimental", skill)
+        self.assertIn("stability: alpha", skill)
+        self.assertIn("SKILL_DIR/../project-telemetry/SKILL.md", skill)
+        self.assertIn("block diagnosis", skill)
+        self.assertIn("Independent authorized work may continue", skill)
+        self.assertIn("Never auto-install", skill)
 
 
 class GuardProbeTests(unittest.TestCase):

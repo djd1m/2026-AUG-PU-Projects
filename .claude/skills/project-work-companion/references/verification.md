@@ -9,14 +9,17 @@ Apply these gates to the exact source/build under review.
 3. If approval is explicitly required, prove it covers the applicable plan, team,
    roles, requested models, and skills. Do not manufacture an approval requirement
    or request approval again merely because work paused.
-4. Confirm preflight is read-only and complete. Missing source, build, input, or
-   allowed environment makes it blocked/inconclusive, never an E2E pass.
+4. Apply preflight immediately before actual E2E, not universally before code.
+   Accept a reasoned `not_applicable` for docs-only/not-yet-E2E stages. Missing
+   source, build, input, or allowed environment prevents `ready` and blocks an E2E
+   claim, but a blocked/inconclusive preflight may honestly leave a future build null.
 5. Confirm RUN_ID and attempt history survive pause/resume. A required native
    checkpoint must be fresh and valid; a caller without one uses a reasoned handoff.
    Reconcile changed source and rerun affected checks.
 6. Require all mandatory AC to pass with fresh, unique, source-bound terminal
    receipts. Missing, empty, stale, partial, failed, symlinked, duplicate, or
-   unreadable evidence cannot pass.
+   unreadable evidence cannot pass. Accepted-scope pending work blocks delivery;
+   explicit out-of-scope pending work remains disclosed without blocking it.
 7. Run fixed tests against four temporary validator mutations that independently
    disable ROUTE, preflight, checkpoint, and receipt guards. Verify each mutation
    changes bytes and makes the fixed guard test fail.
