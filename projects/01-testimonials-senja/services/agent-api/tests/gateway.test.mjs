@@ -5,7 +5,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { createGateway } from '../src/server.mjs';
 
-const token = 'buyer-token-'.padEnd(43, 'x'), secret = 'test-gateway-'.padEnd(43, 's');
+const token = 'buyer_token-'.padEnd(43, 'x'), secret = 'test-gateway-'.padEnd(43, 's');
 async function listen(server) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   return `http://127.0.0.1:${server.address().port}`;

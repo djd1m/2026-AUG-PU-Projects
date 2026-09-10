@@ -29,4 +29,9 @@
 | package-lock.json | координатор |
 | compose.agent-payments.yml | координатор |
 
-Core isolated worktree /tmp/agent-payments-core-7e80; coordinator main worktree. Public TypeScript contracts published first before host code depends on them. No other writer.
+Core isolated worktree /tmp/agent-payments-core-7e80; host isolated worktree /tmp/agent-payments-host-7e80; coordinator main worktree.
+Coordinator alone integrates shared manifests, including apps/web/package.json and Dockerfiles;
+host does not edit those files despite its broad apps/web source ownership above.
+Coordinator also owns scripts/migrate-agent-payments.mjs and services/transcribe/Dockerfile packaging.
+Public TypeScript contracts published first before host code depends on them. Read-only reviewers
+write receipts under /tmp only. Followup core/host fixes stay in the same isolated owned scopes.

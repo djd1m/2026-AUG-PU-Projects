@@ -15,6 +15,8 @@ COPY apps/widget/package.json     apps/widget/package.json
 COPY packages/db/package.json     packages/db/package.json
 COPY services/worker/package.json services/worker/package.json
 COPY services/transcribe/package.json services/transcribe/package.json
+COPY packages/agent-payments/package.json ./packages/agent-payments/
+COPY services/agent-api/package.json ./services/agent-api/
 RUN npm ci --omit=dev
 
 FROM node:22-alpine AS build
@@ -25,6 +27,8 @@ COPY apps/widget/package.json     apps/widget/package.json
 COPY packages/db/package.json     packages/db/package.json
 COPY services/worker/package.json services/worker/package.json
 COPY services/transcribe/package.json services/transcribe/package.json
+COPY packages/agent-payments/package.json ./packages/agent-payments/
+COPY services/agent-api/package.json ./services/agent-api/
 RUN npm ci
 COPY . .
 # Бандл виджета собирается здесь и кладётся в public/ с content-hash в имени (ADR-007).
@@ -45,6 +49,9 @@ COPY --from=build /app/apps/web/next.config.mjs ./apps/web/next.config.mjs
 # packages/db отдаётся как TS-исходники (exports: ./src/index.ts) и резолвится симлинком
 # из node_modules — без него рантайм не найдёт слой доступа к данным.
 COPY --from=build /app/packages/db           ./packages/db
+COPY --from=build /app/packages/agent-payments/dist ./packages/agent-payments/dist
+COPY --from=build /app/packages/agent-payments/package.json ./packages/agent-payments/package.json
+COPY --from=build /app/scripts/migrate-agent-payments.mjs ./scripts/migrate-agent-payments.mjs
 COPY --from=build /app/package.json          ./package.json
 USER app
 EXPOSE 3000

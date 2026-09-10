@@ -1,0 +1,42 @@
+# Additive opt-in overlay. Use only with the matching reviewed backend/worker images.
+# Gateway has neither a database network nor PSP credentials. New issuance defaults off.
+services:
+  web:
+    environment:
+      - AGENT_PAYMENTS_ENABLED=${AGENT_PAYMENTS_ENABLED:-false}
+      - AGENT_GATEWAY_SECRET
+      - AGENT_PAYMENTS_AUDIENCE=${AGENT_PAYMENTS_AUDIENCE:-proofwall-agent-api}
+      - AGENT_YOOKASSA_TEST_SHOP_ID
+      - AGENT_YOOKASSA_TEST_SECRET_KEY
+    networks:
+      agent_gateway: {}
+  worker:
+    environment:
+      - AGENT_RECONCILE_URL=${AGENT_RECONCILE_URL:-}
+      - AGENT_GATEWAY_SECRET
+  agent-api:
+    profiles: [agent-payments]
+    build:
+      context: ./services/agent-api
+    restart: unless-stopped
+    environment:
+      - AGENT_BACKEND_URL=http://web:3000/api/agent-payments/commands
+      - AGENT_GATEWAY_SECRET
+      - AGENT_PUBLIC_ORIGIN
+      - PORT=3000
+    networks: [agent_gateway]
+    ports: ["127.0.0.1:${AGENT_GATEWAY_PORT:-13041}:3000"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      web:
+        condition: service_started
+networks:
+  agent_gateway:
+    internal: true

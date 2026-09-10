@@ -22,6 +22,9 @@ COPY apps/widget/package.json       ./apps/widget/
 COPY packages/db/package.json       ./packages/db/
 COPY services/worker/package.json   ./services/worker/
 COPY services/transcribe/package.json ./services/transcribe/
+COPY apps/web/package.json ./apps/web/
+COPY packages/agent-payments/package.json ./packages/agent-payments/
+COPY services/agent-api/package.json ./services/agent-api/
 RUN npm ci --workspace @proofwall/worker --include-workspace-root
 COPY services/worker ./services/worker
 RUN npm run build --workspace @proofwall/worker
@@ -34,6 +37,9 @@ COPY apps/widget/package.json       ./apps/widget/
 COPY packages/db/package.json       ./packages/db/
 COPY services/worker/package.json   ./services/worker/
 COPY services/transcribe/package.json ./services/transcribe/
+COPY apps/web/package.json ./apps/web/
+COPY packages/agent-payments/package.json ./packages/agent-payments/
+COPY services/agent-api/package.json ./services/agent-api/
 RUN npm ci --omit=dev --workspace @proofwall/worker --include-workspace-root
 
 FROM node:22-alpine AS runtime

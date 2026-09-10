@@ -4,7 +4,7 @@
   "run_id": "20260910T071401Z-agent-payments-implementation-7e80",
   "profile": "compact-quality-first-v2",
   "tier": "XL",
-  "stage": "IMPLEMENT",
+  "stage": "REVIEW",
   "status": "running",
   "started_at": "2026-09-10T07:14:01.649004+00:00",
   "baseline_revision": "4c3bef4c01f5a987c7537674ae6766ce7d5f25f5",
@@ -83,7 +83,7 @@
     "actual_model": null,
     "spec_sha256": "937b23634f89f589a7cd8e6e5c0afd6f3b1ad0bfc8c3e102363d9ca4e9a9fbc4"
   },
-  "updated_at": "2026-09-10T08:37:42.123323+00:00",
+  "updated_at": "2026-09-10T08:46:38.650579+00:00",
   "implementation_checks": {
     "core_commit": "d96ce31",
     "core_tests": {
@@ -102,11 +102,41 @@
     "worker_poll_tests": {
       "passed": 3,
       "build": "PASS"
-    }
+    },
+    "core_followup": {
+      "passed": 58,
+      "postgres": 44,
+      "provider_fixtures": 14,
+      "mutations_killed": 3,
+      "extraction": "PASS",
+      "source_hashes": "23/23 verified"
+    },
+    "gateway_container": {
+      "status": "BUILD_PASS",
+      "image_id": "sha256:b5d7e7edb76bd3e09cf3e3ad5d60ffdf7d652094f0fdd2f4fa28b4d50994c281"
+    },
+    "initial_integrated_next_build": "PASS before followup host/core revisions; repeat required"
   },
   "concurrency_exception": "Temporarily 3 children: independent review, host integration, core review fixes required by host human-CJM blocker. Separate writing worktrees.",
   "usage_limit_monitoring": {
     "weekly_remaining": null,
     "reason": "No runtime counter available; user requests notification at 2% remaining"
-  }
+  },
+  "review": {
+    "status": "CHANGES_REQUIRED_INITIAL_SNAPSHOT",
+    "receipt": "review.md",
+    "core_fixes": "e360ecf",
+    "host_fixes": "pending",
+    "gateway_fixes": "5/5 tests PASS",
+    "independent_review_wall_ms": 429000
+  },
+  "routing_fallbacks": [
+    {
+      "work_unit": "human_cjm",
+      "planned_model": "gpt-5.6-sol",
+      "fallback_requested_model": "gpt-6-astra",
+      "reason": "New agent and old Sol followup rejected agent thread limit; reused independent Astra reviewer",
+      "actual_model": null
+    }
+  ]
 }

@@ -23,7 +23,7 @@ export function startAgentPaymentsPoll(
   let controller: AbortController | undefined;
   async function tick(): Promise<void> {
     controller = new AbortController();
-    const timeout = setTimeout(() => controller?.abort(), 15000);
+    const timeout = setTimeout(() => controller?.abort(), 60000);
     try {
       const response = await request(endpoint, {
         method: 'POST', redirect: 'error', signal: controller.signal,
