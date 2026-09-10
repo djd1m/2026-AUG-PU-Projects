@@ -1,0 +1,358 @@
+TAP version 13
+# Subtest: definitive provider cancellation releases own claim and permits fresh same-period authorization
+ok 1 - definitive provider cancellation releases own claim and permits fresh same-period authorization
+  ---
+  duration_ms: 164.604549
+  type: 'test'
+  ...
+# Subtest: pre-fence revoked grant releases claim and newly authorized agent can retry period
+ok 2 - pre-fence revoked grant releases claim and newly authorized agent can retry period
+  ---
+  duration_ms: 89.542072
+  type: 'test'
+  ...
+# Subtest: abandonment between snapshot and reservation never resurrects or dispatches prepared order
+ok 3 - abandonment between snapshot and reservation never resurrects or dispatches prepared order
+  ---
+  duration_ms: 32.376422
+  type: 'test'
+  ...
+# Subtest: abandonment between reservation and fence releases hold and never fences canceled order
+ok 4 - abandonment between reservation and fence releases hold and never fences canceled order
+  ---
+  duration_ms: 71.756846
+  type: 'test'
+  ...
+# Subtest: racing explicit abandonment and execute has only canceled-unsent or fenced-paid outcomes
+ok 5 - racing explicit abandonment and execute has only canceled-unsent or fenced-paid outcomes
+  ---
+  duration_ms: 167.342639
+  type: 'test'
+  ...
+# Subtest: abandonment never releases unknown fenced outcome or authorizes another same-period charge
+ok 6 - abandonment never releases unknown fenced outcome or authorizes another same-period charge
+  ---
+  duration_ms: 42.762576
+  type: 'test'
+  ...
+# Subtest: abandonment preserves an accepted dispatch still waiting on network
+ok 7 - abandonment preserves an accepted dispatch still waiting on network
+  ---
+  duration_ms: 28.21019
+  type: 'test'
+  ...
+# Subtest: abandonment is scoped and deletes only claims owned by abandoned order
+ok 8 - abandonment is scoped and deletes only claims owned by abandoned order
+  ---
+  duration_ms: 30.906981
+  type: 'test'
+  ...
+# Subtest: abandonment and claim release roll back with enclosing human transaction
+ok 9 - abandonment and claim release roll back with enclosing human transaction
+  ---
+  duration_ms: 19.992697
+  type: 'test'
+  ...
+# Subtest: deferred fulfillment retries original event exactly once across restart and concurrent reconciliation
+ok 10 - deferred fulfillment retries original event exactly once across restart and concurrent reconciliation
+  ---
+  duration_ms: 66.778624
+  type: 'test'
+  ...
+# Subtest: deferred fulfillment failure remains paid-pending and can recover on later reconciliation
+ok 11 - deferred fulfillment failure remains paid-pending and can recover on later reconciliation
+  ---
+  duration_ms: 53.146809
+  type: 'test'
+  ...
+# Subtest: refund after deferred payment prevents replay of earlier entitlement grant
+ok 12 - refund after deferred payment prevents replay of earlier entitlement grant
+  ---
+  duration_ms: 31.129881
+  type: 'test'
+  ...
+# Subtest: settled refund rejects switched provider or account before querying refund
+ok 13 - settled refund rejects switched provider or account before querying refund
+  ---
+  duration_ms: 55.47184
+  type: 'test'
+  ...
+# Subtest: direct verified settlement replay cannot duplicate paid event or entitlement
+ok 14 - direct verified settlement replay cannot duplicate paid event or entitlement
+  ---
+  duration_ms: 52.023089
+  type: 'test'
+  ...
+# Subtest: two independent hosts own different product prices without attribution
+ok 15 - two independent hosts own different product prices without attribution
+  ---
+  duration_ms: 133.555677
+  type: 'test'
+  ...
+# Subtest: hash-only grants reject foreign audience, merchant, bearer and resource
+ok 16 - hash-only grants reject foreign audience, merchant, bearer and resource
+  ---
+  duration_ms: 29.460031
+  type: 'test'
+  ...
+# Subtest: grant alone and saved method alone require human approval; no create call
+ok 17 - grant alone and saved method alone require human approval; no create call
+  ---
+  duration_ms: 33.862342
+  type: 'test'
+  ...
+# Subtest: mandate without saved method requires hosted human approval
+ok 18 - mandate without saved method requires hosted human approval
+  ---
+  duration_ms: 22.398058
+  type: 'test'
+  ...
+# Subtest: explicit human payment saves method, separate consent, public DTO never reveals reference
+ok 19 - explicit human payment saves method, separate consent, public DTO never reveals reference
+  ---
+  duration_ms: 39.443954
+  type: 'test'
+  ...
+# Subtest: distinct keys race same billing period: one dispatch and one fulfillment
+ok 20 - distinct keys race same billing period: one dispatch and one fulfillment
+  ---
+  duration_ms: 174.491763
+  type: 'test'
+  ...
+# Subtest: same order concurrent execution and repeated settlement never duplicate
+ok 21 - same order concurrent execution and repeated settlement never duplicate
+  ---
+  duration_ms: 151.614564
+  type: 'test'
+  ...
+# Subtest: same idempotency key has stable order and conflicts with different quote
+ok 22 - same idempotency key has stable order and conflicts with different quote
+  ---
+  duration_ms: 33.987532
+  type: 'test'
+  ...
+# Subtest: new mandate and grant do not reset shared budget
+ok 23 - new mandate and grant do not reset shared budget
+  ---
+  duration_ms: 78.608758
+  type: 'test'
+  ...
+# Subtest: manual spending reduces agent budget but explicit extra human payments bypass caps
+ok 24 - manual spending reduces agent budget but explicit extra human payments bypass caps
+  ---
+  duration_ms: 50.814428
+  type: 'test'
+  ...
+# Subtest: human observed duplicate is idempotent and payload conflicts
+ok 25 - human observed duplicate is idempotent and payload conflicts
+  ---
+  duration_ms: 6.766073
+  type: 'test'
+  ...
+# Subtest: price, terms, eligibility and expiry changes prevent autonomous dispatch
+ok 26 - price, terms, eligibility and expiry changes prevent autonomous dispatch
+  ---
+  duration_ms: 52.375118
+  type: 'test'
+  ...
+# Subtest: mandate revocation and expiry prevent autonomous dispatch
+ok 27 - mandate revocation and expiry prevent autonomous dispatch
+  ---
+  duration_ms: 44.342916
+  type: 'test'
+  ...
+# Subtest: revoke committed between reservation and dispatch fence prevents provider call
+ok 28 - revoke committed between reservation and dispatch fence prevents provider call
+  ---
+  duration_ms: 28.975591
+  type: 'test'
+  ...
+# Subtest: lost response persists hold across engine restart; provider ID hint recovers without create
+ok 29 - lost response persists hold across engine restart; provider ID hint recovers without create
+  ---
+  duration_ms: 82.670359
+  type: 'test'
+  ...
+# Subtest: untrusted wrong provider evidence cannot settle or release budget
+ok 30 - untrusted wrong provider evidence cannot settle or release budget
+  ---
+  duration_ms: 35.257563
+  type: 'test'
+  ...
+# Subtest: fulfillment rollback rolls back entitlement, spend, events; query recovery commits once
+ok 31 - fulfillment rollback rolls back entitlement, spend, events; query recovery commits once
+  ---
+  duration_ms: 37.112443
+  type: 'test'
+  ...
+# Subtest: partial refund replay and late paid preserve gross spend and cumulative correction
+ok 32 - partial refund replay and late paid preserve gross spend and cumulative correction
+  ---
+  duration_ms: 54.69676
+  type: 'test'
+  ...
+# Subtest: required attribution refuses dispatch until acknowledged
+ok 33 - required attribution refuses dispatch until acknowledged
+  ---
+  duration_ms: 13.732385
+  type: 'test'
+  ...
+# Subtest: durable event acknowledgement is scoped and persisted across restart
+ok 34 - durable event acknowledgement is scoped and persisted across restart
+  ---
+  duration_ms: 45.407016
+  type: 'test'
+  ...
+# Subtest: transport delegates same authority and refuses human consent command
+ok 35 - transport delegates same authority and refuses human consent command
+  ---
+  duration_ms: 5.863702
+  type: 'test'
+  ...
+# Subtest: provider account switch after reserve is refused before any network
+ok 36 - provider account switch after reserve is refused before any network
+  ---
+  duration_ms: 28.96264
+  type: 'test'
+  ...
+# Subtest: forged provider merchant account cannot settle
+ok 37 - forged provider merchant account cannot settle
+  ---
+  duration_ms: 27.14698
+  type: 'test'
+  ...
+# Subtest: refund arriving before lost paid response reconciles verified payment first
+ok 38 - refund arriving before lost paid response reconciles verified payment first
+  ---
+  duration_ms: 67.917314
+  type: 'test'
+  ...
+# Subtest: payment evidence survives fulfillment rollback for polling without webhook hint
+ok 39 - payment evidence survives fulfillment rollback for polling without webhook hint
+  ---
+  duration_ms: 30.445881
+  type: 'test'
+  ...
+# Subtest: human can approve existing prepared order after original agent grant revocation
+ok 40 - human can approve existing prepared order after original agent grant revocation
+  ---
+  duration_ms: 23.891879
+  type: 'test'
+  ...
+# Subtest: revocation after accepted dispatch fence reconciles already sent payment
+ok 41 - revocation after accepted dispatch fence reconciles already sent payment
+  ---
+  duration_ms: 29.33166
+  type: 'test'
+  ...
+# Subtest: unknown past provider idempotency window never creates a fresh charge
+ok 42 - unknown past provider idempotency window never creates a fresh charge
+  ---
+  duration_ms: 21.898628
+  type: 'test'
+  ...
+# Subtest: refund amount cannot exceed paid gross
+ok 43 - refund amount cannot exceed paid gross
+  ---
+  duration_ms: 23.075128
+  type: 'test'
+  ...
+# Subtest: boundary money rejects float, zero, negative and noncanonical minor values
+ok 44 - boundary money rejects float, zero, negative and noncanonical minor values
+  ---
+  duration_ms: 24.326539
+  type: 'test'
+  ...
+# Subtest: reject live configuration before network
+ok 45 - reject live configuration before network
+  ---
+  duration_ms: 2.808451
+  type: 'test'
+  ...
+# Subtest: TEST create sends stable key, exact minor amount and scoped metadata
+ok 46 - TEST create sends stable key, exact minor amount and scoped metadata
+  ---
+  duration_ms: 32.024911
+  type: 'test'
+  ...
+# Subtest: query without provider ID never calls create
+ok 47 - query without provider ID never calls create
+  ---
+  duration_ms: 0.29459
+  type: 'test'
+  ...
+# Subtest: reject provider live mismatch
+ok 48 - reject provider live mismatch
+  ---
+  duration_ms: 1.203641
+  type: 'test'
+  ...
+# Subtest: reject provider account mismatch
+ok 49 - reject provider account mismatch
+  ---
+  duration_ms: 1.11894
+  type: 'test'
+  ...
+# Subtest: reject provider amount mismatch
+ok 50 - reject provider amount mismatch
+  ---
+  duration_ms: 1.011191
+  type: 'test'
+  ...
+# Subtest: reject provider currency mismatch
+ok 51 - reject provider currency mismatch
+  ---
+  duration_ms: 0.85801
+  type: 'test'
+  ...
+# Subtest: reject provider metadata mismatch
+ok 52 - reject provider metadata mismatch
+  ---
+  duration_ms: 0.73091
+  type: 'test'
+  ...
+# Subtest: reject provider paid mismatch
+ok 53 - reject provider paid mismatch
+  ---
+  duration_ms: 1.141421
+  type: 'test'
+  ...
+# Subtest: reject provider status mismatch
+ok 54 - reject provider status mismatch
+  ---
+  duration_ms: 1.39832
+  type: 'test'
+  ...
+# Subtest: reject provider url mismatch
+ok 55 - reject provider url mismatch
+  ---
+  duration_ms: 2.448561
+  type: 'test'
+  ...
+# Subtest: saved method flow omits hosted confirmation and uses backend-only method
+ok 56 - saved method flow omits hosted confirmation and uses backend-only method
+  ---
+  duration_ms: 1.091861
+  type: 'test'
+  ...
+# Subtest: host metadata cannot override reserved module binding
+ok 57 - host metadata cannot override reserved module binding
+  ---
+  duration_ms: 0.37015
+  type: 'test'
+  ...
+# Subtest: refund verifies parent TEST account server side
+ok 58 - refund verifies parent TEST account server side
+  ---
+  duration_ms: 1.07505
+  type: 'test'
+  ...
+1..58
+# tests 58
+# suites 0
+# pass 58
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1589.255868

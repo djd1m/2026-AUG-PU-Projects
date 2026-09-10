@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc",
     "test": "npm run build && node --test test/*.test.mjs",
-    "test:postgres": "npm run build && node --test test/postgres.test.mjs"
+    "test:postgres": "npm run build && node --test test/postgres.test.mjs test/followup.test.mjs"
   },
   "dependencies": {
     "pg": "8.23.0"

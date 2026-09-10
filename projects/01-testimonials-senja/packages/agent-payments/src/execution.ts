@@ -13,6 +13,7 @@ import {
   text,
 } from './internal.js';
 import { reserve } from './budget.js';
+import { releaseCanceledOrder } from './cancellation.js';
 import { matchingOffer, validateOffer } from './orders.js';
 import { settle } from './settlement.js';
 function checkMandate(m: MandateView, order: StoredOrder) {
@@ -55,6 +56,7 @@ export function execution(ctx: Context) {
     const reserved = await ctx.tx(scope, async (c) => {
       const grant = agent ? await ctx.auth(c, agent) : undefined;
       const order = await ctx.order(c, scope, orderId);
+      if (['succeeded', 'failed', 'canceled'].includes(order.paymentStatus)) return order;
       if (order.attemptId) return order;
       future(order.quote.expiresAt, ctx.now());
       requireValue(matchingOffer(order.quote, current), 'offer_changed');
@@ -134,7 +136,8 @@ export function execution(ctx: Context) {
       await ctx.save(c, order);
       return order;
     });
-    if (!reserved.attemptId) return ctx.view(reserved);
+    if (!reserved.attemptId || ['succeeded', 'failed', 'canceled'].includes(reserved.paymentStatus))
+      return ctx.view(reserved);
     const dispatchOffer = await ctx.options.host.getOffer(scope, reserved.quote.productId);
     validateOffer(dispatchOffer, ctx.now());
     // A durable fence is never reset. All later execution calls become query-only recovery.
@@ -169,9 +172,7 @@ export function execution(ctx: Context) {
       if (!authorized) {
         order.paymentStatus = 'canceled';
         order.nextAction = { kind: 'none' };
-        await c.query("UPDATE agent_payments.reservations SET state='released' WHERE order_id=$1", [
-          orderId,
-        ]);
+        await releaseCanceledOrder(c, order);
         await ctx.save(c, order);
         await audit(c, scope, 'dispatch.denied', orderId);
         return undefined;

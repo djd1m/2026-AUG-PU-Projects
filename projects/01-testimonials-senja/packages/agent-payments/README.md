@@ -63,8 +63,10 @@ request. One attempt has one permanent fence and one stable provider idempotency
 The engine never repeats provider create after a fenced attempt, including crash, unknown
 outcome or expired PSP idempotency window. A fenced process crash before network delivery
 can therefore require manual investigation. Budget remains reserved until verified resolution.
-There is no automatic fresh attempt after final cancellation/failure in v1; period claims
-are retained conservatively.
+A definitive provider cancellation or pre-fence denial atomically releases only that order's
+held budget and owned period claim. A new quote and explicit authorization may then retry
+the same period; a canceled order is never resurrected. Ambiguous/fenced unknown outcomes
+retain their claims and cannot be replaced.
 
 A provider notification is an untrusted hint. `reconcile(scope, orderId, providerIdHint)`
 performs server-side provider retrieval and checks scoped module metadata, account, TEST,
@@ -75,6 +77,11 @@ YooKassa adapter does not invent lookup-by-idempotency or blindly repeat create.
 Refunds are retrieved from the provider, their parent TEST account is verified, and cumulative
 refunds are bounded by paid gross. Refund-before-paid triggers verified payment reconciliation.
 Late paid notifications never undo refunds. Refunds do not replenish autonomous headroom.
+
+The trusted host may call `abandonUndispatched(client, scope)` inside its existing project-first
+transaction. It takes the buyer lock, cancels unfinished orders only when no attempt has a
+dispatch fence, releases their own claims/holds, and returns the canceled order IDs for atomic
+host bookkeeping. It never cancels unknown or already fenced payments.
 
 Legacy checkout integration must claim or exclude a pending human operation **before** its
 PSP call under project-first/buyer lock order. `observeHumanSpend(client, scope, input)`
@@ -87,8 +94,12 @@ module-owned payments again through this legacy observation API.
 `pendingEvents` and `acknowledgeEvent` provide a scoped durable outbox. Consumers should retry
 without changing event IDs, deduplicate business effects, handle aggregate versions and
 acknowledge only after their own durable acceptance. Public payment, fulfillment and
-attribution statuses are independent. A deferred host fulfillment must have its own durable
-worker; this version provides no separate remote-fulfillment receipt command.
+attribution statuses are independent. A host worker must select paid orders whose fulfillment is pending and call `reconcile`.
+The engine retries the original durable paid event on the same transaction client, preserving
+its event ID, spend, and version even after outbox acknowledgement. Already-paid reconciliation
+does not depend on PSP availability. Callback failure leaves paid/pending durable for another
+retry; refunds prevent replay of the earlier entitlement grant. There is no separate
+remote-fulfillment receipt command.
 
 Validation:
 

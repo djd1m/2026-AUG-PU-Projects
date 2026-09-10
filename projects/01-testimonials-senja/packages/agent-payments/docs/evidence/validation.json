@@ -1,14 +1,14 @@
 {
   "run_id": "20260910T071401Z-agent-payments-implementation-7e80",
   "work_unit_id": "core",
-  "profile": "compact-balanced-v1",
+  "profile": "compact-quality-first-v2",
   "risk": "XL: payments, authority, concurrency",
   "requested_model": "gpt-6-astra",
   "requested_effort": "high",
   "actual_model": null,
   "actual_effort": null,
   "started_at": null,
-  "checked_at": "2026-09-10T08:30:22.789165+00:00",
+  "checked_at": "2026-09-10T08:44:14.028572+00:00",
   "elapsed_wall_ms": null,
   "usage": null,
   "cost": null,
@@ -18,9 +18,9 @@
   ],
   "checks": {
     "build": "PASS",
-    "postgres_tests": 30,
+    "postgres_tests": 44,
     "provider_fixture_tests": 14,
-    "total_pass": 44,
+    "total_pass": 58,
     "fail": 0,
     "skip": 0,
     "mutations": {
@@ -29,15 +29,20 @@
       "settlement_deduplication": "killed by assertion"
     },
     "packed_isolated_consumer": "PASS: two products and different prices, installed only packed package/dependencies, actual PostgreSQL",
-    "source_boundaries": "PASS: no host/framework/absolute imports"
+    "source_boundaries": "PASS: no host/framework/absolute imports",
+    "followup_tests": 14,
+    "followup_build": "PASS",
+    "followup_mutations": "PASS 3/3 killed; dedup mutation exercises direct verified settlement replay"
   },
   "limitations": [
     "No actual YooKassa TEST saved-method acceptance performed",
     "No deployment or live charge",
     "Host identity/pairing, MCP/A2A gateway and legacy cutover owned by coordinator/host work units",
     "Unknown fenced attempt without provider ID requires verified notification or operational lookup; never recreate",
-    "Deferred fulfillment requires host-owned durable worker; no separate remote receipt command in this version"
+    "Host worker must schedule paid/pending orders via reconcile; stable durable-event local retry is implemented, no separate remote receipt command"
   ],
   "source_manifest": "source-sha256.txt",
-  "test_log": "tests.tap"
+  "test_log": "followup-tests.tap",
+  "profile_correction": "The initial core receipt incorrectly named compact-balanced-v1; coordinator confirmed compact-quality-first-v2 for this run.",
+  "baseline_test_log": "tests.tap"
 }

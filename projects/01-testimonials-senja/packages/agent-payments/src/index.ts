@@ -1,6 +1,7 @@
 export type * from './contracts.js';
 export { PostgresStore, migrate, lockBuyer } from './store.js';
 export { PaymentError } from './internal.js';
+export { abandonUndispatched } from './cancellation.js';
 import type { EngineOptions, PaymentsEngine } from './contracts.js';
 import { Context } from './internal.js';
 import { authority } from './authority.js';

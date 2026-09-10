@@ -1,4 +1,6 @@
 import type { PoolClient } from 'pg';
+import { releaseCanceledOrder } from './cancellation.js';
+import { fulfillPending, retryFulfillment } from './fulfillment.js';
 import type { DomainEvent, ProviderResult, Scope } from './contracts.js';
 import {
   Context,
@@ -103,7 +105,10 @@ export async function settle(ctx: Context, scope: Scope, orderId: string, result
       result.providerId,
       attempt,
     ]);
-    if (order.paymentStatus === 'succeeded') return ctx.view(order);
+    if (order.paymentStatus === 'succeeded') {
+      await fulfillPending(c, ctx, order);
+      return ctx.view(order);
+    }
     if (order.paymentStatus === 'canceled' || order.paymentStatus === 'failed') {
       requireValue(result.status !== 'succeeded', 'terminal_status_conflict');
       return ctx.view(order);
@@ -135,9 +140,7 @@ export async function settle(ctx: Context, scope: Scope, orderId: string, result
     } else if (result.status === 'canceled') {
       order.paymentStatus = 'canceled';
       order.nextAction = { kind: 'none' };
-      await c.query("UPDATE agent_payments.reservations SET state='released' WHERE order_id=$1", [
-        orderId,
-      ]);
+      await releaseCanceledOrder(c, order);
     } else {
       order.paymentStatus = result.confirmationUrl ? 'action_required' : 'pending';
       order.nextAction = result.confirmationUrl
@@ -159,6 +162,8 @@ export function reconciliation(ctx: Context) {
         ]);
         return { order, attempt: r.rows[0]?.data as Attempt | undefined };
       });
+      if (loaded.order.paymentStatus === 'succeeded')
+        return retryFulfillment(ctx, scope, orderId);
       if (!loaded.attempt?.dispatchedAt) return ctx.view(loaded.order);
       requireValue(
         loaded.attempt.provider === ctx.options.provider.provider &&
@@ -181,7 +186,14 @@ export function reconciliation(ctx: Context) {
     async reconcileRefund(scope: Scope, orderId: string, refundId: string) {
       text(refundId);
       requireValue(ctx.options.provider.queryRefund, 'refund_query_unsupported');
-      const before = await ctx.tx(scope, async (c) => ctx.order(c, scope, orderId));
+      const before = await ctx.tx(scope, async (c) => {
+        const order = await ctx.order(c, scope, orderId);
+        const { rows } = await c.query('SELECT data FROM agent_payments.attempts WHERE id=$1 AND order_id=$2', [order.attemptId, orderId]);
+        requireValue(rows[0], 'attempt_missing');
+        const attempt: Attempt = rows[0].data;
+        requireValue(attempt.provider === ctx.options.provider.provider && attempt.accountId === ctx.options.provider.accountId, 'attempt_provider_mismatch');
+        return order;
+      });
       const refund = await ctx.options.provider.queryRefund(refundId);
       money(refund.amount);
       requireValue(
@@ -199,6 +211,7 @@ export function reconciliation(ctx: Context) {
           order.attemptId,
         ]);
         const attempt: Attempt = r.rows[0].data;
+        requireValue(attempt.provider === ctx.options.provider.provider && attempt.accountId === ctx.options.provider.accountId, 'attempt_provider_mismatch');
         requireValue(
           refund.providerId === attempt.providerId &&
             refund.amount.currency === order.quote.amount.currency,
