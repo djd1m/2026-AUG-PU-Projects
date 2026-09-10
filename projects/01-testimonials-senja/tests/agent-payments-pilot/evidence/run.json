@@ -1,0 +1,39 @@
+{
+  "run_id": "20260910-agent-payments-public-pilot",
+  "work_unit_id": "public-ui",
+  "started_at": "2026-09-10T10:08:31Z",
+  "status": "waiting_for_scoped_renewal_fixture",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "active_wall_ms": null,
+  "missing_data": [
+    "Actual serving model, effort, usage and active compute time unavailable"
+  ],
+  "safety_envelope": "Only dedicated pilot origins, one synthetic Resend delivered+ recipient, official YooKassa TEST card, no live funds or production P1/P2/N3 writes",
+  "prepared_at": "2026-09-10T10:14:29.264933+00:00",
+  "preparation_checks": [
+    "Five JavaScript module syntax checks PASS",
+    "Private resumable buyer/session checkpoint",
+    "Official TEST PSP and Resend labeling guidance verified",
+    "Pilot compose no published host ports; deployment owned by coordinator"
+  ],
+  "ready_at": "2026-09-10T10:23:19.985854+00:00",
+  "runtime_revision": "186f8b3",
+  "next_build_id": "9IB9BvmtgGJceHgW07HGX",
+  "web_image": "proofwall-web:agent-pilot-186f8b3",
+  "worker_image": "proofwall-worker:agent-pilot-186f8b3",
+  "coordinator_provider_check": {
+    "test": true,
+    "status": "enabled",
+    "available_payment_methods": [
+      "bank_card",
+      "yoo_money"
+    ]
+  },
+  "public_first_payment": "PASS: actual TEST provider, saved method, succeeded/active, replay same order",
+  "independent_mandate": "PASS: explicit browser consent; autonomousEligible false before fixture"
+}

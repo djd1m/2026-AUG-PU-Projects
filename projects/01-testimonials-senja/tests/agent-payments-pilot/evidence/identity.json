@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "phase": "identity",
+  "at": "2026-09-10T10:23:13.143Z",
+  "webOrigin": "https://proofwall-agent.212.192.0.33.sslip.io",
+  "gatewayOrigin": "https://proofwall-mcp.212.192.0.33.sslip.io",
+  "records": [
+    {
+      "name": "public real MCP SDK discovery and pairing",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:09.634Z"
+    },
+    {
+      "name": "public browser signup and ordinary secure login",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:10.948Z"
+    },
+    {
+      "name": "real Resend test delivery and explicit public email proof",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:12.595Z",
+      "id": "115bdb70-10de-48cc-818b-a775d3450c76",
+      "lastEvent": "queued"
+    },
+    {
+      "name": "explicit human grant through public browser; polling hides bearer",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:13.142Z"
+    }
+  ],
+  "slug": "agent-pilot-4a85487a",
+  "flags": {
+    "registered": true,
+    "emailVerified": true,
+    "grantIssued": true,
+    "hostedStarted": false,
+    "settled": false,
+    "renewed": false,
+    "revoked": false
+  }
+}

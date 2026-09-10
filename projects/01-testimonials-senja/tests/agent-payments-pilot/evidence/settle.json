@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "phase": "settle",
+  "at": "2026-09-10T10:29:49.366Z",
+  "webOrigin": "https://proofwall-agent.212.192.0.33.sslip.io",
+  "gatewayOrigin": "https://proofwall-mcp.212.192.0.33.sslip.io",
+  "records": [
+    {
+      "name": "public real MCP SDK discovery and pairing",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:09.634Z"
+    },
+    {
+      "name": "public browser signup and ordinary secure login",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:10.948Z"
+    },
+    {
+      "name": "real Resend test delivery and explicit public email proof",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:12.595Z",
+      "id": "115bdb70-10de-48cc-818b-a775d3450c76",
+      "lastEvent": "queued"
+    },
+    {
+      "name": "explicit human grant through public browser; polling hides bearer",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:13.142Z"
+    },
+    {
+      "name": "public MCP and A2A share order; grant alone requires human approval",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:56.341Z"
+    },
+    {
+      "name": "actual provider hosted payment reached after explicit human purchase/save consent",
+      "status": "PASS",
+      "at": "2026-09-10T10:23:57.884Z"
+    },
+    {
+      "name": "official no-3DS TEST card submitted once on actual hosted PSP",
+      "status": "PASS",
+      "at": "2026-09-10T10:26:02.126Z"
+    },
+    {
+      "name": "actual TEST PSP payment verified and native tariff active",
+      "status": "PASS",
+      "at": "2026-09-10T10:29:48.898Z"
+    },
+    {
+      "name": "public execute replay and A2A completed status preserve first order",
+      "status": "PASS",
+      "at": "2026-09-10T10:29:48.969Z"
+    }
+  ],
+  "orderId": "d97d9db3-8ac2-4333-b6a8-cecbc613673a",
+  "slug": "agent-pilot-4a85487a",
+  "flags": {
+    "registered": true,
+    "emailVerified": true,
+    "grantIssued": true,
+    "hostedStarted": true,
+    "settled": true,
+    "renewed": false,
+    "revoked": false
+  }
+}
