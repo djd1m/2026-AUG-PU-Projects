@@ -28,9 +28,17 @@
       "actual_model": null,
       "work_unit": "public-ui",
       "receipt_pending": "/tmp/agent-payments-public-pilot-ui.md"
+    },
+    {
+      "id": "payments_review",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "work_unit": "human-smoke",
+      "receipt_pending": "/tmp/agent-payments-pilot-human-smoke.md"
     }
   ],
-  "updated_at": "2026-09-10T10:23:03.165480+00:00",
+  "updated_at": "2026-09-10T10:30:33.049650+00:00",
   "runtime_source": "186f8b3",
   "build_id": "9IB9BvmtgGJceHgW07HGX",
   "provider_read_only": {
@@ -46,5 +54,15 @@
     "Native isolated pilot; N3 disabled to preserve existing program origin.",
     "Existing shop webhook unchanged; known-ID payments polled. Refund/lost-ID recovery separate.",
     "Initial Caddy reload encountered old bind-mounted inode; exact current host config reloaded via stdin restoring N3 and adding pilot. Existing routes checked200 afterwards."
-  ]
+  ],
+  "checks": {
+    "full_web_image": "PASS",
+    "full_worker_image": "PASS",
+    "compose_validation": "PASS",
+    "private_networks_no_published_ports": "PASS",
+    "public_https": "PASS",
+    "existing_public_browser_smoke": "8/8 PASS",
+    "first_real_test_payment": "PASS saved method and tariff verified via provider + DB",
+    "public_agent_final": "pending"
+  }
 }
