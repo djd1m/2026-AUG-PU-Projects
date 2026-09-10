@@ -45,7 +45,7 @@ export async function applyBridgePayment(client: PoolClient, payment: RemotePaym
   if (event === 'payment.canceled') {
     if (payment.status !== 'canceled') throw new N3Error('N3_PROVIDER_PENDING');
     if (intent.state !== 'completed') await client.query("update n3_checkout_intents set state='canceled',provider_id=$2 where id=$1", [intent.id, payment.id]);
-    await releaseCanceledHuman(client,intent.project_id,payment.id);
+    await releaseCanceledHuman(client,intent.project_id,payment.id,intent.id);
     return 'canceled';
   }
   if (!payment.paid || payment.status !== 'succeeded') throw new N3Error('N3_PROVIDER_PENDING');

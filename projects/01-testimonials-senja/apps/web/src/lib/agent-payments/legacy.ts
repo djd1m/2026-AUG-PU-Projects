@@ -67,13 +67,19 @@ export async function reserveHumanCheckout(
     return { requestKey };
   });
 }
-export async function attachHumanPayment(projectId: string, providerId: string) {
-  if (!enabled()) return;
+export async function attachHumanPayment(
+  projectId: string,
+  providerId: string,
+  requestKey?: string,
+) {
+  if (!requestKey) return;
   await withService((c) =>
-    c.query('update agent_payment_human_checkouts set provider_id=$2 where project_id=$1', [
-      projectId,
-      providerId,
-    ]),
+    c.query(
+      `update agent_payment_human_checkouts set provider_id=$2
+    where project_id=$1 and provider_id is null and (request_key=$3 or request_key=(
+      select idempotence_key from checkout_sessions where project_id=$1 and provider_session_id=$2))`,
+      [projectId, providerId, requestKey],
+    ),
   );
 }
 /** Called only after verified legacy settlement and under project→intent→checkout locks. */
@@ -115,12 +121,12 @@ export async function observeLegacyPayment(
   await client.query('delete from agent_payment_human_checkouts where project_id=$1', [projectId]);
 }
 
-export async function releaseUndispatchedHuman(projectId: string) {
-  if (enabled())
+export async function releaseUndispatchedHuman(projectId: string, requestKey?: string) {
+  if (requestKey)
     await withService((c) =>
       c.query(
-        'delete from agent_payment_human_checkouts where project_id=$1 and provider_id is null',
-        [projectId],
+        'delete from agent_payment_human_checkouts where project_id=$1 and provider_id is null and request_key=$2',
+        [projectId, requestKey],
       ),
     );
 }
@@ -130,6 +136,7 @@ export async function releaseCanceledHuman(
   client: PoolClient,
   projectId: string,
   providerId: string,
+  verifiedInvoiceId?: string,
 ) {
   const owner = (
     await client.query('select account_id from projects where id=$1 for update', [projectId])
@@ -144,12 +151,12 @@ export async function releaseCanceledHuman(
   const deleted = await client.query(
     `delete from agent_payment_human_checkouts where project_id=$1
     and (provider_id=$2 or (provider_id is null and request_key=$3)) returning project_id`,
-    [projectId, providerId, checkout?.idempotence_key ?? null],
+    [projectId, providerId, checkout?.idempotence_key ?? verifiedInvoiceId ?? null],
   );
-  if (deleted.rowCount && checkout)
+  if (checkout)
     await client.query(
       "update checkout_sessions set status='expired' where id=$1 and status='pending'",
       [checkout.id],
     );
-  return Boolean(deleted.rowCount);
+  return Boolean(deleted.rowCount || checkout);
 }

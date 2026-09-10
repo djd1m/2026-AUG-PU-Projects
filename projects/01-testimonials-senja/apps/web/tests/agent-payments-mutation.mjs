@@ -2,6 +2,7 @@
 import { readFile,writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 const mutants=[
+  {file:'src/lib/agent-payments/legacy.ts',from:'if (checkout)',to:'if (deleted.rowCount && checkout)',test:'tests/agent-payments-cancellation.test.ts'},
   {file:'src/lib/agent-payments/security.ts',from:"throw new AgentHostError('GATEWAY_UNAUTHORIZED', 401);",to:'return;',test:'tests/agent-payments-security.test.ts'},
   {file:'src/lib/agent-payments/host.ts',from:'if (!row.invoice_id)',to:'if (true)',test:'tests/agent-payments-host.test.ts'},
 ];

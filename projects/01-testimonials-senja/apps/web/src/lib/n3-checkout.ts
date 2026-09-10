@@ -36,12 +36,13 @@ export async function saveNativeSession(client: PoolClient, intent: N3Intent, se
   await client.query("select set_config('app.current_account_id',$1,true)", [intent.account_id]);
   await recordCheckoutSession(client, intent.project_id, session, intent.id);
   await client.query('set local role app_service');
+  if (intent.state === 'canceled') await client.query("update checkout_sessions set status='expired' where provider_session_id=$1 and status='pending'", [session.providerSessionId]);
   await client.query(`update n3_checkout_intents set provider_id=$2,redirect_url=coalesce(redirect_url,$3),
     state=case when state='reserved' then 'pending' else state end where id=$1`,
   [intent.id, session.providerSessionId, session.redirectUrl || null]);
 }
 export async function beginN3Checkout(accountId: string, projectId: string, returnUrl: string, requestKey?: unknown,
-  dependencies?: { call: N3Call; create: typeof createRemotePayment }): Promise<CheckoutSession | null> {
+  dependencies?: { call: N3Call; create: typeof createRemotePayment }, humanRequestKey?: string): Promise<CheckoutSession | null> {
   const config = n3Config(); if (!config) return null;
   const context = await withService(client => client.query('select tenant_id from n3_signup_contexts where account_id=$1', [accountId]));
   if (!context.rows[0]) return null;
@@ -49,6 +50,16 @@ export async function beginN3Checkout(accountId: string, projectId: string, retu
   if (typeof requestKey !== 'string' || !N3_UUID.test(requestKey)) throw new N3Error('N3_REQUEST_KEY', 400);
   let intent = await withService(client => reserveNativeIntent(client, accountId, projectId, requestKey));
   if (intent.state === 'canceled') throw new N3Error('N3_PAYMENT_CANCELED', 409);
+  // Bind the host admission key to the trusted invoice before any provider I/O.
+  // A verified early cancellation can then release exactly this still-unbound hold.
+  if (humanRequestKey) await withService(async client => {
+    await client.query('select id from projects where id=$1 for update',[projectId]);
+    await client.query('select id from n3_checkout_intents where id=$1 for update',[intent.id]);
+    await client.query(`update agent_payment_human_checkouts set request_key=$3
+      where project_id=$1 and request_key=$2 and provider_id is null`,[projectId,humanRequestKey,intent.id]);
+    if (intent.state === 'completed') await client.query(`delete from agent_payment_human_checkouts
+      where project_id=$1 and request_key=$2 and provider_id is null`,[projectId,intent.id]);
+  });
   if (intent.state === 'completed' && intent.provider_id) return { providerSessionId: intent.provider_id, redirectUrl: returnUrl };
   if (intent.provider_id && intent.redirect_url) return { providerSessionId: intent.provider_id, redirectUrl: intent.redirect_url };
   if (Date.now() - new Date(intent.created_at).getTime() >= 23 * 3600_000) throw new N3Error('N3_RECONCILIATION', 409);

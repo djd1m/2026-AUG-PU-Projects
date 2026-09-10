@@ -134,7 +134,7 @@ describe('agent host preserves manual journeys and recovers accepted orders', ()
         manual!.requestKey,
       ),
     );
-    await attachHumanPayment(f.a.projectId, id);
+    await attachHumanPayment(f.a.projectId, id, manual!.requestKey);
     vi.stubGlobal(
       'fetch',
       async () =>

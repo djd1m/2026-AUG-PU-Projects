@@ -115,7 +115,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       if(event==='payment.canceled'){
         if(remote.status!=='canceled'||remote.paid)throw new ProviderUnavailable();
         const session=(await client.query('select project_id from checkout_sessions where provider_session_id=$1',[paymentId])).rows[0];
-        const released=session?await releaseCanceledHuman(client,session.project_id,paymentId):false;
+        if(!session)throw new ProviderUnavailable(); // Early cancellation must retry after session persistence.
+        const released=await releaseCanceledHuman(client,session.project_id,paymentId);
         return released?'canceled' as const:'ignored' as const;
       }
       if (!remote.paid || remote.status !== 'succeeded') return 'not_paid' as const;

@@ -45,13 +45,14 @@ export async function POST(request: Request): Promise<NextResponse> {
   });
   if (!projectId) return NextResponse.json({ error: 'не найдено' }, { status: 404 });
 
+  let human: Awaited<ReturnType<typeof reserveHumanCheckout>> = null;
   try {
-    const human = await reserveHumanCheckout(accountId,projectId);
+    human = await reserveHumanCheckout(accountId,projectId);
     if (human?.redirectUrl) return NextResponse.json({redirect_url:human.redirectUrl,stub:false});
     const bridge = await beginN3Checkout(accountId, projectId, `${baseUrl()}/dashboard/${slug}`,
-      (body as { request_key?: unknown }).request_key);
+      (body as { request_key?: unknown }).request_key, undefined, human?.requestKey);
     if (bridge) {
-      await attachHumanPayment(projectId,bridge.providerSessionId);
+      await attachHumanPayment(projectId,bridge.providerSessionId,human?.requestKey);
       return NextResponse.json({ redirect_url: bridge.redirectUrl, stub: false }, { status: 200 });
     }
     // Обращение к ЮKassa — ВНЕ транзакции: держать соединение пула всё время ответа
@@ -65,16 +66,16 @@ export async function POST(request: Request): Promise<NextResponse> {
       projectId, PRICE_RUB, `${baseUrl()}/dashboard/${slug}`, idempotenceKey);
     await withAccount(accountId, (client) =>
       recordCheckoutSession(client, projectId, session, idempotenceKey));
-    await attachHumanPayment(projectId,session.providerSessionId);
+    await attachHumanPayment(projectId,session.providerSessionId,human?.requestKey);
     return NextResponse.json({ redirect_url: session.redirectUrl, stub: isStub() }, { status: 200 });
   } catch (err) {
     if (err instanceof AgentHostError) return failure(err);
     if (err instanceof N3Error) {
-      if (['N3_PROOF_REQUIRED','N3_BIND_PENDING','N3_CONFIGURATION','N3_REQUEST_KEY'].includes(err.code)) await releaseUndispatchedHuman(projectId);
+      if (['N3_PROOF_REQUIRED','N3_BIND_PENDING','N3_CONFIGURATION','N3_REQUEST_KEY','N3_PAYMENT_CANCELED'].includes(err.code)) await releaseUndispatchedHuman(projectId,human?.requestKey);
       return n3Failure(err);
     }
     if (err instanceof PaymentProviderError && err.message === 'PAYMENT_PROVIDER_NOT_CONFIGURED') {
-      await releaseUndispatchedHuman(projectId);
+      await releaseUndispatchedHuman(projectId,human?.requestKey);
       // 501, а не фиктивная ссылка: зелёный checkout при отсутствующей интеграции —
       // ровно тот класс лжи, против которого «сценарий добавлен ≠ требование закрыто».
       return NextResponse.json(
