@@ -198,6 +198,30 @@ class ValidatorTests(unittest.TestCase):
         result = subprocess.run(command, text=True, capture_output=True)
         self.assertCode(1, result)
 
+    def test_frozen_cli_rejects_stale_record_source_and_build(self):
+        command = self.fixture.command()
+        self.fixture.record["source"].update(current_revision="source-old", build_revision="build-old")
+        self.fixture.record["source"]["continuity"].update(expected_revision="source-old", observed_revision="source-old")
+        self.fixture.record["preflight"].update(source_revision="source-old", build_revision="build-old")
+        self.fixture.record["delivery"]["e2e_claim"] = "pass"
+        self.fixture.save()
+        self.assertCode(1, subprocess.run(command, text=True, capture_output=True))
+
+    def test_frozen_cli_rejects_stale_record_source_only(self):
+        command = self.fixture.command()
+        self.fixture.record["source"].update(current_revision="source-old")
+        self.fixture.record["source"]["continuity"].update(expected_revision="source-old", observed_revision="source-old")
+        self.fixture.record["preflight"].update(source_revision="source-old")
+        self.fixture.save()
+        self.assertCode(1, subprocess.run(command, text=True, capture_output=True))
+
+    def test_frozen_cli_rejects_stale_record_build_only(self):
+        command = self.fixture.command()
+        self.fixture.record["source"].update(build_revision="build-old")
+        self.fixture.record["preflight"].update(build_revision="build-old")
+        self.fixture.save()
+        self.assertCode(1, subprocess.run(command, text=True, capture_output=True))
+
     def test_external_launch_digest_mismatch_is_a_violation(self):
         command = self.fixture.command()
         command[-1] = "unit-1=" + ("0" * 64)
@@ -282,6 +306,21 @@ class ValidatorTests(unittest.TestCase):
         self.fixture.record["approval"] = {"requirement": "not_required", "reason": "caller contract does not require it", "evidence": None}
         self.fixture.record["pause"]["approval_ids"] = []
         self.assertCode(0, self.fixture.run(expectations=False))
+
+    def test_paused_plan_may_wait_for_required_approval(self):
+        self.fixture.pause()
+        self.fixture.record["pause"].update(from_stage="plan", approval_ids=[], blockers=["waiting for owner approval"],
+                                            next_allowed_step="obtain plan approval")
+        self.fixture.record["approval"]["evidence"] = None
+        self.fixture.record["preflight"] = None
+        self.fixture.record["routes"] = self.fixture.record["routes"][:1]
+        self.assertCode(0, self.fixture.run(expectations=False))
+
+    def test_paused_implementation_still_requires_approval(self):
+        self.fixture.pause()
+        self.fixture.record["approval"]["evidence"] = None
+        self.fixture.record["pause"]["approval_ids"] = []
+        self.assertCode(1, self.fixture.run(expectations=False))
 
     def test_not_required_approval_does_not_block_delivery(self):
         self.fixture.record["approval"] = {"requirement": "not_required", "reason": "no caller or rule requirement", "evidence": None}
