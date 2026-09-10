@@ -1,0 +1,99 @@
+{
+  "_notice": "Illustrative, intentionally non-passing until every placeholder and evidence link is populated from actual inputs.",
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "delivered",
+  "roots": {"project": "."},
+  "identity": {
+    "run_id": "POPULATE_RUN_ID",
+    "work_unit_id": "POPULATE_WORK_UNIT_ID",
+    "current_attempt_id": "POPULATE_ATTEMPT_ID"
+  },
+  "telemetry": {
+    "run": {"root": "project", "path": "POPULATE/run.json"},
+    "events": {"root": "project", "path": "POPULATE/events.jsonl"}
+  },
+  "source": {
+    "baseline_revision": "POPULATE_BASE_REVISION",
+    "current_revision": "POPULATE_SOURCE_REVISION",
+    "build_revision": "POPULATE_BUILD_REVISION",
+    "requirements": [{"root": "project", "path": "POPULATE/requirements.md"}],
+    "architecture": [{"root": "project", "path": "POPULATE/architecture.md"}],
+    "continuity": {
+      "expected_revision": "POPULATE_SOURCE_REVISION",
+      "observed_revision": "POPULATE_SOURCE_REVISION",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "POPULATE_PLAN_REVISION",
+    "scope": ["POPULATE measurable scope"],
+    "exclusions": ["POPULATE exclusions"],
+    "action_limits": ["POPULATE authority boundaries"],
+    "acceptance_criteria": [{"id": "AC-01", "required": true}],
+    "donors": [{
+      "source": {"kind": "local", "path": {"root": "project", "path": "POPULATE/donor"}},
+      "provenance": "POPULATE revision or digest",
+      "useful_fragment": "POPULATE fragment or none",
+      "compatibility": "incompatible",
+      "decision": "reject",
+      "reason": "POPULATE reason"
+    }],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "project-telemetry forecast; POPULATE basis",
+      "scope_revision": "POPULATE_PLAN_REVISION",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [],
+  "approval": {
+    "requirement": "required",
+    "reason": "POPULATE applicable user or rule requirement",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "inconclusive",
+    "source_revision": "POPULATE_SOURCE_REVISION",
+    "build_revision": "POPULATE_BUILD_REVISION",
+    "environment": "POPULATE_ENVIRONMENT",
+    "environment_available": false,
+    "test_command": "POPULATE inert command text",
+    "inputs": [{"name": "POPULATE_INPUT", "available": false}],
+    "expected_effects": ["POPULATE expected effect"],
+    "evidence_root": {"root": "project", "path": "POPULATE/evidence"},
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [{"id": "POPULATE_ATTEMPT_ID", "status": "completed"}],
+  "work_units": [{
+    "id": "POPULATE_WORK_UNIT_ID",
+    "paths": [{"root": "project", "path": "POPULATE/output"}]
+  }],
+  "pause": null,
+  "checks": [{
+    "ac_id": "AC-01",
+    "outcome": "unknown",
+    "command": null,
+    "exit_code": null,
+    "source_revision": "POPULATE_SOURCE_REVISION",
+    "receipt_id": null
+  }],
+  "receipts": [],
+  "delivery": {
+    "uri": "urn:project-work-companion:POPULATE_RUN_ID:POPULATE_WORK_UNIT_ID",
+    "scope": {"included": ["POPULATE delivered scope"], "excluded": []},
+    "build": {
+      "source_revision": "POPULATE_SOURCE_REVISION",
+      "build_revision": "POPULATE_BUILD_REVISION"
+    },
+    "evidence": [],
+    "pending": ["Populate actual receipts and satisfy every required AC before delivery"]
+  }
+}
