@@ -8,6 +8,11 @@
 Часть дефектов найдена не пайплайном, а владельцем продукта на развёрнутом стенде — это отмечено в заявках отдельно.
 Полная история — [`/projects/01-testimonials-senja/docs/validation-report.md`](../projects/01-testimonials-senja/docs/validation-report.md).
 
+Новый кандидат для исследования пакета поставки harness CLI:
+[анализатор телеметрии project-telemetry](implementations/skills/project-telemetry/SKILL.md).
+Копия skill, скрипт и тесты размещены в кузнице; происхождение и порядок запуска
+описаны в [каталоге реализаций](implementations/README.md#анализатор-телеметрии-кандидат-на-включение-в-harness-cli).
+
 | # | Заявка | Класс дефекта | Приоритет |
 |---|---|---|---|
 | PR-001 | [growth-engine не доходит до требований](05-growth-engine-improvements.md) | тупик слоя 4/5 | P0 |
