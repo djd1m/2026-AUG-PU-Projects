@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-10T06:37:25.011Z",
+  "origin": "https://n3-d.212.192.0.33.sslip.io",
+  "publicHttps": true,
+  "actualPostgres": true,
+  "mcpOfficialSdk": true,
+  "a2aJsonRpc": true,
+  "tools": [
+    "program_read",
+    "partner_read",
+    "share_read",
+    "task_create",
+    "task_run",
+    "task_read",
+    "task_cancel"
+  ],
+  "ownRewardsRead": true,
+  "foreignPartnerDenied": true,
+  "mcpA2aResultEqual": true,
+  "sameMessageSameTask": true,
+  "newClientReadsPersistedTask": true,
+  "accountSeesTask": true,
+  "registryScopeDenied": true,
+  "bothTransportsDeniedAfterRevocation": true,
+  "testAccountRewardsInitiallyZero": true,
+  "externalLlm": false,
+  "chargedProvider": false
+}
