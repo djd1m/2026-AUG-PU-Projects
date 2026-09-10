@@ -5,10 +5,18 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 
 MAX_BYTES = 16 * 1024 * 1024
+STATUS_VALUES = {'running', 'accepted', 'complete', 'completed', 'failed', 'blocked',
+                 'interrupted', 'unknown', 'plan_ready_awaiting_approval',
+                 'completed_with_caveats', 'completed_with_scope_limits',
+                 'awaiting_external_acceptance'}
+INTERVAL_TYPES = {'attempt_started', 'attempt_finished', 'wait_started', 'wait_finished'}
+KNOWN_TYPES = INTERVAL_TYPES | {'model_changed', 'gate_result', 'usage_sample',
+                              'finding', 'correction', 'run_finished'}
 
 
 def strict_object(pairs):
@@ -77,7 +85,8 @@ def metric(data, aliases, issues):
             except (OverflowError, ValueError):
                 issues.append(f'invalid scaled metric: {key}')
                 invalid = True
-    if len({v['seconds'] for v in values}) > 1:
+    if values and any(not math.isclose(v['seconds'], values[0]['seconds'], rel_tol=0, abs_tol=1e-9)
+                      for v in values[1:]):
         issues.append('conflicting metric aliases: ' + ', '.join(v['field'] for v in values))
         invalid = True
     return {'seconds': values[0]['seconds'] if values and not invalid else None,
@@ -92,6 +101,44 @@ def union_seconds(intervals):
     return total
 
 
+def status_claim(data, issues):
+    sources = []
+    for key in ('status', 'stage'):
+        value = data.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, str) or not value.strip():
+            if key == 'status':
+                issues.append('invalid passport field: status')
+            continue
+        if key == 'status' or value in STATUS_VALUES:
+            sources.append({'field': key, 'value': value})
+    if len({s['value'] for s in sources}) > 1:
+        issues.append('conflicting status aliases')
+        return None, sources
+    if not sources:
+        issues.append('missing or invalid passport field: status')
+    return sources[0]['value'] if sources else None, sources
+
+
+def model_claims(data, issues):
+    claims, invalid = [], False
+    for key in ('actual_model', 'actual_models'):
+        value = data.get(key)
+        if value is None:
+            continue
+        values = [value] if isinstance(value, str) else value
+        if not isinstance(values, list) or not values or not all(isinstance(v, str) and v.strip() for v in values):
+            issues.append('invalid model claim: ' + key)
+            invalid = True
+            continue
+        claims.append({'field': key, 'values': values, 'verification': 'unverified_claim'})
+    if len({tuple(sorted(set(c['values']))) for c in claims}) > 1:
+        issues.append('conflicting model aliases')
+        invalid = True
+    return claims, (not invalid if claims or invalid else None)
+
+
 def events_summary(path, root, issues, expected_run=None):
     if not path.exists():
         issues.append('events.jsonl missing; chronology unknown')
@@ -100,7 +147,8 @@ def events_summary(path, root, issues, expected_run=None):
     if not raw.strip():
         issues.append('events.jsonl empty; chronology unknown')
     events, seen, duplicates = [], set(), set()
-    for line, text in enumerate(raw.decode('utf-8').splitlines(), 1):
+    lines = raw.decode('utf-8').splitlines()
+    for line, text in enumerate(lines, 1):
         try:
             event = decode(text)
             eid = event.get('event_id')
@@ -116,7 +164,8 @@ def events_summary(path, root, issues, expected_run=None):
             issues.append(f'events.jsonl:{line}: {exc}')
     events = [(line, event) for line, event in events if event.get('event_id') not in duplicates]
     pairs = defaultdict(lambda: {'start': [], 'finish': []})
-    types = Counter()
+    types, unsupported = Counter(), Counter()
+    interval_event_count = 0
     for line, event in events:
         conflicts = []
         if event.get('type') is not None and event.get('event') is not None and event['type'] != event['event']:
@@ -135,8 +184,11 @@ def events_summary(path, root, issues, expected_run=None):
             issues.append(f'events.jsonl:{line}: missing event type')
             continue
         types[kind] += 1
-        if kind not in ('attempt_started', 'attempt_finished', 'wait_started', 'wait_finished'):
+        if kind not in KNOWN_TYPES:
+            unsupported[kind] += 1
+        if kind not in INTERVAL_TYPES:
             continue
+        interval_event_count += 1
         category = kind.split('_')[0]
         identity = event.get(category + '_id')
         time = timestamp(event.get('timestamp', event.get('at')))
@@ -163,7 +215,14 @@ def events_summary(path, root, issues, expected_run=None):
             durations.append({'attempt_id': identity, 'stage_claimed': start[2].get('stage'),
                               'seconds': stop[0] - start[0], 'lines': [start[1], stop[1]],
                               'status_claimed': stop[2].get('status')})
+    if unsupported:
+        issues.append('unsupported event types; inventory only: ' + ', '.join(sorted(unsupported)))
     return {'sha256': digest, 'parsed_lines': len(events), 'event_counts_observed': dict(types),
+            'coverage': {'line_count': len(lines), 'retained_events': len(events),
+                         'counted_events': sum(types.values()), 'interval_event_count': interval_event_count,
+                         'paired_interval_count': len(durations) + len(waits),
+                         'unsupported_event_types': dict(unsupported),
+                         'completeness': 'not_established'},
             'attempt_intervals_observed': durations,
             'paired_wait_union_seconds': union_seconds(waits) if waits else None,
             'interpretation': 'Observed intervals only; no completeness, causality or critical-path claim'}
@@ -175,33 +234,57 @@ def analyze_run(path, root):
     try:
         raw, record['sha256'] = read_source(path, root)
         data = decode(raw)
-        for required in ('run_id', 'status', 'started_at'):
+        for required in ('run_id', 'started_at'):
             if not isinstance(data.get(required), str) or not data[required].strip():
                 issues.append(f'missing or invalid passport field: {required}')
-        record.update(run_id=data.get('run_id'), status_claimed=data.get('status'),
+        status, status_sources = status_claim(data, issues)
+        record.update(run_id=data.get('run_id'), status_claimed=status, status_sources=status_sources,
                       profile_claimed=data.get('profile'), started_at=data.get('started_at'))
-        record['elapsed'] = metric(data, [('elapsed_wall_ms', .001), ('metrics.elapsed_wall_ms', .001),
-                                          ('metrics.wall_elapsed_seconds', 1)], issues)
+        elapsed_aliases = [('elapsed_wall_ms', .001), ('metrics.elapsed_wall_ms', .001),
+                           ('metrics.wall_elapsed_seconds', 1), ('metrics.wall_clock_seconds', 1),
+                           ('metrics.elapsed_seconds', 1)]
+        record['elapsed'] = metric(data, elapsed_aliases, issues)
+        record['elapsed_from_timestamps_seconds'] = None
         record['active'] = metric(data, [('active_wall_ms', .001), ('metrics.active_wall_ms', .001),
                                          ('metrics.active_elapsed_seconds', 1)], issues)
+        for key in ('active_compute_ms', 'active_compute_seconds', 'metrics.active_compute_ms', 'metrics.active_compute_seconds'):
+            if field(data, key) is not None:
+                issues.append(key + ': compute duration is not active wall; inspect separately')
+        record['stage_status_claims'] = []
+        if isinstance(data.get('stages'), list):
+            for index, stage in enumerate(data['stages']):
+                if isinstance(stage, dict) and isinstance(stage.get('status'), str):
+                    locator = f'stages.{index}.status'
+                    record['stage_status_claims'].append({'field': locator, 'value': stage['status']})
+                    issues.append(locator + ': stage status does not determine run status')
         start = timestamp(data.get('started_at'))
-        ends = [(key, timestamp(data[key])) for key in ('ended_at', 'finished_at') if data.get(key) is not None]
+        ends = [(key, timestamp(data[key])) for key in ('ended_at', 'finished_at', 'completed_at') if data.get(key) is not None]
+        record['end_sources'] = [{'field': key, 'value': data[key]} for key, _ in ends]
         if data.get('started_at') is not None and start is None:
             issues.append('invalid started_at timestamp')
         if any(end is None for _, end in ends) or len({end for _, end in ends}) > 1:
             issues.append('invalid or conflicting end timestamps')
+            record['elapsed']['seconds'] = None
         elif start is not None and ends:
             elapsed = ends[0][1] - start
             if elapsed < 0:
                 issues.append('negative timestamp duration')
+                record['elapsed']['seconds'] = None
             else:
                 record['elapsed_from_timestamps_seconds'] = elapsed
                 claimed = record['elapsed']['seconds']
                 if claimed is not None and abs(claimed - elapsed) > 1:
                     issues.append('timestamp duration conflicts with elapsed metric (>1s)')
+                    record['elapsed']['seconds'] = None
+                elif not any(field(data, key) is not None for key, _ in elapsed_aliases):
+                    record['elapsed']['seconds'] = elapsed
+                    record['elapsed']['sources'].append({'field': 'started_at+' + ends[0][0],
+                                                         'seconds': elapsed, 'basis': 'calculated_from_timestamps'})
         # Locators only: arbitrary raw usage may include private host exports.
-        record['usage_locations'] = [key for key in ('usage', 'metrics.usage', 'metrics.tokens')
+        record['usage_locations'] = [key for key in ('usage', 'metrics.usage', 'metrics.tokens',
+                                                     'metrics.measured_usage_snapshot', 'metrics.worker_usage')
                                      if field(data, key) is not None]
+        record['model_claims'], record['model_claims_consistent'] = model_claims(data, issues)
         record['actual_model_locations_unverified'] = [key for key in ('actual_model', 'actual_models', 'agents')
                                                         if field(data, key) is not None]
         record['events'] = events_summary(path.with_name('events.jsonl'), root, issues, data.get('run_id'))
@@ -228,7 +311,7 @@ def analyze(root, selected=()):
             issues.append(f'requested run not found: {selection}')
     if not records:
         issues.append('no run.json records found in scope')
-    return {'schema_version': 'project-telemetry-analysis-v1',
+    return {'schema_version': 'project-telemetry-analysis-v2',
             'read_at': datetime.now(timezone.utc).isoformat(), 'root': str(root),
             'run_count': len(records), 'issues': issues, 'runs': records,
             'limits': ['No automatic usage aggregation, cost, forecast or verified acceptance',

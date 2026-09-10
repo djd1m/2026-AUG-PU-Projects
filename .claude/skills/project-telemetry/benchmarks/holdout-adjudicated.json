@@ -1,0 +1,474 @@
+[
+  {
+    "id": "wall-clock-alias-keeps-compute-separate",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T00:00:00Z",
+      "ended_at": "2026-09-10T00:00:45Z",
+      "metrics": {
+        "wall_clock_seconds": 45
+      },
+      "active_compute_ms": 12000
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 45
+      },
+      {
+        "path": "runs.0.active.seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.elapsed_from_timestamps_seconds",
+        "equals": 45
+      },
+      {
+        "path": "runs.0.status_claimed",
+        "equals": "completed"
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "active_compute_ms"
+      }
+    ]
+  },
+  {
+    "id": "elapsed-seconds-alias-preserves-zero",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T01:00:00Z",
+      "ended_at": "2026-09-10T01:00:00Z",
+      "metrics": {
+        "elapsed_seconds": 0,
+        "active_elapsed_seconds": 0
+      }
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 0
+      },
+      {
+        "path": "runs.0.active.seconds",
+        "equals": 0
+      },
+      {
+        "path": "runs.0.elapsed_from_timestamps_seconds",
+        "equals": 0
+      }
+    ]
+  },
+  {
+    "id": "completed-at-is-valid-endpoint",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T02:00:00+00:00",
+      "completed_at": "2026-09-10T02:01:15+00:00"
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 75
+      },
+      {
+        "path": "runs.0.elapsed_from_timestamps_seconds",
+        "equals": 75
+      },
+      {
+        "path": "runs.0.status_claimed",
+        "equals": "completed"
+      }
+    ]
+  },
+  {
+    "id": "explicit-null-remains-unknown",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T03:00:00Z",
+      "metrics": {
+        "wall_clock_seconds": null,
+        "active_wall_ms": null
+      },
+      "missing_data": [
+        "No terminal timestamp or wall-clock measurement was captured"
+      ]
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.active.seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.elapsed_from_timestamps_seconds",
+        "equals": null
+      }
+    ]
+  },
+  {
+    "id": "terminal-stage-status-fallback-with-source",
+    "run": {
+      "run_id": "case",
+      "started_at": "2026-09-10T04:00:00Z",
+      "metrics": {
+        "elapsed_seconds": 20
+      },
+      "stages": [
+        {
+          "stage": "IMPLEMENT",
+          "status": "running"
+        },
+        {
+          "stage": "REVIEW",
+          "status": "completed",
+          "terminal": true
+        }
+      ]
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.status_claimed",
+        "equals": null
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "stages.1.status"
+      }
+    ]
+  },
+  {
+    "id": "conflicting-top-and-terminal-stage-status",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T05:00:00Z",
+      "ended_at": "2026-09-10T05:00:30Z",
+      "stages": [
+        {
+          "stage": "REVIEW",
+          "status": "failed",
+          "terminal": true
+        }
+      ]
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.status_claimed",
+        "equals": "completed"
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "status"
+      }
+    ]
+  },
+  {
+    "id": "elapsed-measurement-conflicts-with-timestamps",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T06:00:00Z",
+      "ended_at": "2026-09-10T06:01:00Z",
+      "metrics": {
+        "elapsed_seconds": 50
+      }
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.elapsed_from_timestamps_seconds",
+        "equals": 60
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "elapsed"
+      }
+    ]
+  },
+  {
+    "id": "event-aliases-and-overlapping-wait-union",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T07:00:00Z",
+      "ended_at": "2026-09-10T07:02:00Z",
+      "metrics": {
+        "wall_clock_seconds": 120
+      }
+    },
+    "events": [
+      {
+        "event_id": "e1",
+        "run_id": "case",
+        "at": "2026-09-10T07:00:00Z",
+        "event": "attempt_started",
+        "attempt_id": "a-main",
+        "stage": "IMPLEMENT",
+        "agent_id": "worker",
+        "parent_attempt_id": null,
+        "requested_model": "model-requested",
+        "requested_effort": "medium",
+        "reason": "holdout",
+        "input_revision": "r1"
+      },
+      {
+        "event_id": "e2",
+        "run_id": "case",
+        "timestamp": "2026-09-10T07:00:10Z",
+        "type": "wait_started",
+        "wait_id": "w1",
+        "attempt_id": "a-main",
+        "wait_kind": "infra"
+      },
+      {
+        "event_id": "e3",
+        "run_id": "case",
+        "at": "2026-09-10T07:00:30Z",
+        "event": "wait_started",
+        "wait_id": "w2",
+        "attempt_id": "a-main",
+        "wait_kind": "approval"
+      },
+      {
+        "event_id": "e4",
+        "run_id": "case",
+        "timestamp": "2026-09-10T07:00:40Z",
+        "type": "wait_finished",
+        "wait_id": "w1",
+        "attempt_id": "a-main",
+        "wait_kind": "infra"
+      },
+      {
+        "event_id": "e5",
+        "run_id": "case",
+        "at": "2026-09-10T07:01:00Z",
+        "event": "wait_finished",
+        "wait_id": "w2",
+        "attempt_id": "a-main",
+        "wait_kind": "approval"
+      },
+      {
+        "event_id": "e6",
+        "run_id": "case",
+        "timestamp": "2026-09-10T07:02:00Z",
+        "type": "attempt_finished",
+        "attempt_id": "a-main",
+        "stage": "IMPLEMENT",
+        "agent_id": "worker",
+        "parent_attempt_id": null,
+        "requested_model": "model-requested",
+        "requested_effort": "medium",
+        "reason": "holdout",
+        "input_revision": "r1",
+        "status": "completed"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.events.attempt_intervals_observed",
+        "contains": "a-main"
+      },
+      {
+        "path": "runs.0.events.paired_wait_union_seconds",
+        "equals": 50
+      },
+      {
+        "path": "runs.0.active.seconds",
+        "equals": null
+      }
+    ]
+  },
+  {
+    "id": "reverse-time-pairs-are-rejected",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T08:00:00Z",
+      "ended_at": "2026-09-10T08:01:00Z"
+    },
+    "events": [
+      {
+        "event_id": "e1",
+        "run_id": "case",
+        "timestamp": "2026-09-10T08:00:50Z",
+        "type": "attempt_started",
+        "attempt_id": "a-reverse",
+        "stage": "VALIDATE",
+        "agent_id": "worker",
+        "parent_attempt_id": null,
+        "requested_model": "model-requested",
+        "requested_effort": "medium",
+        "reason": "holdout",
+        "input_revision": "r1"
+      },
+      {
+        "event_id": "e2",
+        "run_id": "case",
+        "timestamp": "2026-09-10T08:00:10Z",
+        "type": "attempt_finished",
+        "attempt_id": "a-reverse",
+        "stage": "VALIDATE",
+        "agent_id": "worker",
+        "parent_attempt_id": null,
+        "requested_model": "model-requested",
+        "requested_effort": "medium",
+        "reason": "holdout",
+        "input_revision": "r1",
+        "status": "completed"
+      },
+      {
+        "event_id": "e3",
+        "run_id": "case",
+        "timestamp": "2026-09-10T08:00:40Z",
+        "type": "wait_started",
+        "wait_id": "w-reverse",
+        "attempt_id": "a-reverse",
+        "wait_kind": "infra"
+      },
+      {
+        "event_id": "e4",
+        "run_id": "case",
+        "timestamp": "2026-09-10T08:00:20Z",
+        "type": "wait_finished",
+        "wait_id": "w-reverse",
+        "attempt_id": "a-reverse",
+        "wait_kind": "infra"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.events.attempt_intervals_observed",
+        "equals": []
+      },
+      {
+        "path": "runs.0.events.paired_wait_union_seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "a-reverse"
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "w-reverse"
+      }
+    ]
+  },
+  {
+    "id": "usage-and-claimed-model-locations-remain-provenance",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T09:00:00Z",
+      "ended_at": "2026-09-10T09:00:05Z",
+      "usage": null,
+      "actual_model": "self-reported-top-model",
+      "metrics": {
+        "usage": {
+          "input_tokens_total": 10,
+          "output_tokens_total": 2
+        },
+        "tokens": {
+          "input": 10,
+          "output": 2
+        }
+      },
+      "agents": [
+        {
+          "agent_id": "worker",
+          "actual_model": "self-reported-agent-model"
+        }
+      ]
+    },
+    "events": [],
+    "checks": [
+      {
+        "path": "runs.0.usage_locations",
+        "contains": "metrics.usage"
+      },
+      {
+        "path": "runs.0.usage_locations",
+        "contains": "metrics.tokens"
+      },
+      {
+        "path": "runs.0.actual_model_locations_unverified",
+        "contains": "actual_model"
+      },
+      {
+        "path": "runs.0.actual_model_locations_unverified",
+        "contains": "agents"
+      }
+    ]
+  },
+  {
+    "id": "orphan-event-identifiers-stay-unpaired",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "ended_at": "2026-09-10T10:00:30Z"
+    },
+    "events": [
+      {
+        "event_id": "e1",
+        "run_id": "case",
+        "timestamp": "2026-09-10T10:00:20Z",
+        "type": "attempt_finished",
+        "attempt_id": "a-not-found",
+        "stage": "REVIEW",
+        "agent_id": "worker",
+        "parent_attempt_id": null,
+        "requested_model": "model-requested",
+        "requested_effort": "medium",
+        "reason": "holdout",
+        "input_revision": "r1",
+        "status": "completed"
+      },
+      {
+        "event_id": "e2",
+        "run_id": "case",
+        "timestamp": "2026-09-10T10:00:25Z",
+        "type": "wait_finished",
+        "wait_id": "w-not-found",
+        "attempt_id": "a-not-found",
+        "wait_kind": "infra"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.events.attempt_intervals_observed",
+        "equals": []
+      },
+      {
+        "path": "runs.0.events.paired_wait_union_seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "a-not-found"
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "w-not-found"
+      }
+    ]
+  }
+]

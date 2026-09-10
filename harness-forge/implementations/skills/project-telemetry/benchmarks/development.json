@@ -1,0 +1,405 @@
+[
+  {
+    "id": "real-20260908T194524Z-discovery-cjm",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "metrics": {
+        "wall_clock_seconds": 1525.95144
+      }
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 1525.95144
+      }
+    ],
+    "provenance": {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T194524Z-discovery-cjm/run.json",
+      "sha256": "3b3217beddd608b0a449b07eb8f36f4449282d029be83379d22328065fc6cb6d",
+      "fields": [
+        "metrics.wall_clock_seconds"
+      ],
+      "transformation": "Only stated metric retained; synthetic identity/time/events"
+    }
+  },
+  {
+    "id": "real-20260908T201412Z-agent-cjm-e004",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "metrics": {
+        "wall_clock_seconds": 372.956169
+      }
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 372.956169
+      }
+    ],
+    "provenance": {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T201412Z-agent-cjm-e004/run.json",
+      "sha256": "feefb7ded2231d46447bc36aeac68f8313e76dbed06b1b2e52d8820ecbb2b266",
+      "fields": [
+        "metrics.wall_clock_seconds"
+      ],
+      "transformation": "Only stated metric retained; synthetic identity/time/events"
+    }
+  },
+  {
+    "id": "real-20260908T203242Z-four-prds",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "metrics": {
+        "wall_clock_seconds": 709.931754
+      }
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 709.931754
+      }
+    ],
+    "provenance": {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260908T203242Z-four-prds/run.json",
+      "sha256": "edcc4d98ae01514cdd161262e66de13ff4fcf824b548949767df5ecb2fcc63ba",
+      "fields": [
+        "metrics.wall_clock_seconds"
+      ],
+      "transformation": "Only stated metric retained; synthetic identity/time/events"
+    }
+  },
+  {
+    "id": "real-20260909T135340Z-f3-access-8b71",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "metrics": {
+        "elapsed_seconds": 6834.541672
+      }
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 6834.541672
+      }
+    ],
+    "provenance": {
+      "path": "projects/03-affiliate-rewardful/docs/telemetry/p-replicator/20260909T135340Z-f3-access-8b71/run.json",
+      "sha256": "d6ff08e5acdec692d33cff4041b51b7b8b59ce9570139e43b505c4abaee8ad44",
+      "fields": [
+        "metrics.elapsed_seconds"
+      ],
+      "transformation": "Only stated metric retained; synthetic identity/time/events"
+    }
+  },
+  {
+    "id": "terminal-stage",
+    "run": {
+      "run_id": "case",
+      "status": null,
+      "started_at": "2026-09-10T10:00:00Z",
+      "stage": "completed"
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.status_claimed",
+        "equals": "completed"
+      }
+    ]
+  },
+  {
+    "id": "phase-not-status",
+    "run": {
+      "run_id": "case",
+      "status": null,
+      "started_at": "2026-09-10T10:00:00Z",
+      "stage": "IMPLEMENT"
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.status_claimed",
+        "equals": null
+      }
+    ]
+  },
+  {
+    "id": "status-conflict",
+    "run": {
+      "run_id": "case",
+      "status": "running",
+      "started_at": "2026-09-10T10:00:00Z",
+      "stage": "completed"
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.status_claimed",
+        "equals": null
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "conflicting status"
+      }
+    ]
+  },
+  {
+    "id": "completed-endpoint",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "completed_at": "2026-09-10T10:02:00Z"
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.elapsed_from_timestamps_seconds",
+        "equals": 120
+      }
+    ]
+  },
+  {
+    "id": "usage-locators",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "metrics": {
+        "measured_usage_snapshot": {
+          "input_tokens": 20
+        },
+        "worker_usage": {
+          "input_tokens": 10
+        }
+      }
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.usage_locations",
+        "contains": "metrics.measured_usage_snapshot"
+      },
+      {
+        "path": "runs.0.usage_locations",
+        "contains": "metrics.worker_usage"
+      }
+    ]
+  },
+  {
+    "id": "duration-conflict",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "elapsed_wall_ms": 1000,
+      "metrics": {
+        "elapsed_seconds": 9
+      }
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": null
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "conflicting metric"
+      }
+    ]
+  },
+  {
+    "id": "compute-not-wall",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "active_compute_ms": 1234
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.active.seconds",
+        "equals": null
+      }
+    ]
+  },
+  {
+    "id": "zero",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "active_wall_ms": 0,
+      "elapsed_wall_ms": 0
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.active.seconds",
+        "equals": 0
+      },
+      {
+        "path": "runs.0.elapsed.seconds",
+        "equals": 0
+      }
+    ]
+  },
+  {
+    "id": "legacy-coverage",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z"
+    },
+    "events": [
+      {
+        "event": "delegation_start",
+        "timestamp": "2026-09-10T10:00:00Z",
+        "work_unit_id": "writer"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.events.coverage.interval_event_count",
+        "equals": 0
+      },
+      {
+        "path": "runs.0.events.coverage.unsupported_event_types",
+        "contains": "delegation_start"
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "unsupported event"
+      }
+    ]
+  },
+  {
+    "id": "model-single",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "actual_model": "model-a"
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.model_claims.0.values",
+        "equals": [
+          "model-a"
+        ]
+      },
+      {
+        "path": "runs.0.model_claims.0.field",
+        "equals": "actual_model"
+      }
+    ]
+  },
+  {
+    "id": "model-conflict",
+    "run": {
+      "run_id": "case",
+      "status": "completed",
+      "started_at": "2026-09-10T10:00:00Z",
+      "actual_model": "model-a",
+      "actual_models": [
+        "model-b"
+      ]
+    },
+    "events": [
+      {
+        "type": "run_finished",
+        "timestamp": "2026-09-10T10:01:00Z"
+      }
+    ],
+    "checks": [
+      {
+        "path": "runs.0.model_claims_consistent",
+        "equals": false
+      },
+      {
+        "path": "runs.0.issues",
+        "contains": "conflicting model"
+      }
+    ]
+  }
+]

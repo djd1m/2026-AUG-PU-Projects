@@ -1,0 +1,84 @@
+{
+  "instructions": "Return JSON answers array. For every id give result (requested type), evidence_fields (list), and a short explanation. Do not infer unavailable facts. These are synthetic telemetry excerpts, no runtime access needed.",
+  "questions": [
+    {
+      "id": "model-alias",
+      "data": {
+        "actual_model": "model-sol",
+        "actual_models": null,
+        "source": "host-export.json",
+        "source_sha256": "known-hash",
+        "raw_host_log_available": false
+      },
+      "question": "Which model is claimed by this export? Return result as model string or null; distinguish claimed from independently verified in explanation."
+    },
+    {
+      "id": "partial-acceptance",
+      "data": {
+        "status": "completed",
+        "scope": "isolated checkout test",
+        "provider": "mock",
+        "native_test_pilot": {
+          "tests_passed": 14,
+          "provider": "real TEST",
+          "n3_enabled": false
+        }
+      },
+      "question": "Does this establish a completed real-provider agent→N3 purchase chain? result boolean."
+    },
+    {
+      "id": "inclusive-usage",
+      "data": {
+        "parent": {
+          "scope": "includes child",
+          "total_tokens": 100
+        },
+        "child": {
+          "total_tokens": 40
+        }
+      },
+      "question": "Total unique tokens across these two exports? result integer or null."
+    },
+    {
+      "id": "cost-share",
+      "data": {
+        "coordinator_tokens_share": 0.55,
+        "input_cache_share": 0.96,
+        "tariffs": null,
+        "scope": "coordinator also implements product"
+      },
+      "question": "What fraction of billed cost is unnecessary orchestration? result numeric or null."
+    },
+    {
+      "id": "pause-cause",
+      "data": {
+        "last_event": "approval_requested",
+        "resumed_hours_later": 8,
+        "reason": "approval wait versus session interruption unconfirmed"
+      },
+      "question": "Is approval waiting conclusively established as the cause of the whole 8-hour gap? result boolean."
+    },
+    {
+      "id": "forecast",
+      "data": {
+        "runs": [
+          {
+            "scope": "UI on completed core",
+            "elapsed_minutes": 20
+          },
+          {
+            "scope": "whole batch including pause",
+            "elapsed_minutes": 600
+          },
+          {
+            "scope": "provider pilot, native only",
+            "elapsed_minutes": 100
+          }
+        ],
+        "new_task": "complete new commercial product",
+        "wait_intervals": null
+      },
+      "question": "Give calibrated P80 minutes for the new task, or null if unsupported. result numeric or null."
+    }
+  ]
+}
