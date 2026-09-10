@@ -1,0 +1,78 @@
+{
+  "run_id": "project-work-companion-plan",
+  "started_at": "2026-09-10T14:16:13.581910+00:00",
+  "status": "blocked",
+  "scope": "Planning only; implementation requires user approval",
+  "profile": "compact-quality-first-v2",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Host model and usage unavailable",
+    "Initial policy reads preceded passport",
+    "ROUTE start was not timestamped before dispatch; not reconstructed",
+    "Planner first delegated attempt rejected by thread limit; fallback CLI launch declaration retained separately",
+    "Host version/billing/actual execution metadata unavailable",
+    "CLI emitted an unlabeled trailing 52,690; not interpreted as total billable usage"
+  ],
+  "tier": "M",
+  "risk_flags": [
+    "workflow acceptance and resume behavior"
+  ],
+  "profile_overrides": [
+    "Astra high PLAN for cross-pipeline boundary risks and requested different planning/implementation generation"
+  ],
+  "delegations": [
+    {
+      "work_unit_id": "route-plan",
+      "requested_model": "gpt-5.6-terra",
+      "requested_effort": "medium",
+      "actual_model": null,
+      "receipt": "route.md"
+    },
+    {
+      "work_unit_id": "plan",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null,
+      "receipt": "plan.md"
+    }
+  ],
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "batch_id": null,
+  "project": ".",
+  "feature": "project-work-companion",
+  "pipeline": "manual M PLAN then approval",
+  "baseline_revision": "257d37e2da6f05be71accff64e6f581cf8f44c43",
+  "final_revision": null,
+  "spec_sha256": "06a9a019ed8b1f1b35f37a643383444a5a436d955a2ca23db3cf194f64f96825",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "comparison_id": null,
+  "ended_at": null,
+  "acceptance_evidence": [
+    "plan.md",
+    "plan-review.md",
+    "route.md",
+    "planner-receipt.md"
+  ],
+  "quality": {
+    "required_gates_passed": null,
+    "ac_met": null,
+    "ac_total": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 409850,
+    "active_wall_ms": null,
+    "usage": null
+  },
+  "telemetry_status": "partial",
+  "block_reason": "Awaiting explicit user approval of plan/team/models/skills; planning complete, implementation not started",
+  "plan_completed_at": "2026-09-10T14:23:03.432347+00:00",
+  "implementation_started": false
+}
