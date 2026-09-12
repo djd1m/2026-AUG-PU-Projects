@@ -172,7 +172,7 @@ COMPLEXITY: O(1) на захват благодаря частичному ин�
 
 ### Algorithm: SweepStuckJobs
 
-REQUIREMENT: `FR-foundation-6`
+REQUIREMENT: `FR-foundation-11`
 REQUIREMENT: `AC-foundation-19`
 REALISES: AC-foundation-19
 INPUT: тот же цикл опроса `recognizer` (интервал 1 с), что и захват задания — ОТДЕЛЬНОГО сервиса не заводится.
