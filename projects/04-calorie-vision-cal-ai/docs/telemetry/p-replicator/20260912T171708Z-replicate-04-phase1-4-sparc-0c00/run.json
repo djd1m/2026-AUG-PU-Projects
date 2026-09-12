@@ -36,7 +36,25 @@
     "docs/discovery/business-model-and-cjm-analysis.md",
     "docs/discovery/research/*.md"
   ],
-  "acceptance_evidence": [],
+  "acceptance_evidence": [
+    "docs/Specification.md",
+    "docs/PRD.md",
+    "docs/Pseudocode.md",
+    "docs/Architecture.md",
+    "docs/ADR.md",
+    "docs/C4_Diagrams.md",
+    "docs/Refinement.md",
+    "docs/Completion.md",
+    "docs/Research_Findings.md",
+    "docs/Solution_Strategy.md",
+    "docs/Final_Summary.md",
+    "CLAUDE.md",
+    "docs/model-cost-contract.md",
+    "docs/long-job-contract.md",
+    "docs/webhook-contract.md",
+    "docs/embed-contract.md",
+    "docs/telemetry/p-replicator/20260912T171708Z-replicate-04-phase1-4-sparc-0c00/receipts/*.md"
+  ],
   "quality": {
     "required_gates_passed": null,
     "ac_met": null,
@@ -52,24 +70,29 @@
     "active_wall_ms": null,
     "usage": {
       "source": "scripts/telemetry/collect-usage.cjs (transcript aggregation, dedupe by message.id)",
-      "scope": "coordinator session 0c3fce04 + its subagents, window from 2026-09-12T17:17Z, partial until run end",
-      "evidence": "evidence/usage-phase1-partial.json",
-      "input_tokens_total": 42051882,
-      "cached_input_tokens": 40594061,
-      "cache_creation_input_tokens": 1456897,
-      "output_tokens_total": 258730,
-      "reasoning_tokens": 62185,
-      "requests": 155,
-      "quality": "partial"
+      "scope": "coordinator session + subagents, window 17:17Z→2026-09-12T18:03:45Z",
+      "evidence": "evidence/usage-phase1.json",
+      "input_tokens_total": 57285596,
+      "cached_input_tokens": 55275651,
+      "cache_creation_input_tokens": 2008665,
+      "output_tokens_total": 326760,
+      "reasoning_tokens": 76239,
+      "requests": 195,
+      "quality": "partial",
+      "by_model": {
+        "claude-fable-5-1": 43,
+        "claude-opus-5": 114,
+        "claude-sonnet-5": 38
+      }
     },
     "cost": {
       "basis": "list-price equivalent, rates docs/development/telemetry/rates/2026-09-12-anthropic-codex.json",
-      "evidence": "evidence/cost-phase1-partial.json",
-      "usd": 35.62,
+      "evidence": "evidence/cost-phase1.json",
+      "usd": 47.53,
       "by_model_usd": {
-        "claude-fable-5-1": 10.88,
-        "claude-opus-5": 21.3,
-        "claude-sonnet-5": 3.44
+        "claude-fable-5-1": 13.5132,
+        "claude-opus-5": 30.5839,
+        "claude-sonnet-5": 3.4356
       },
       "caveat": "subscription session — not an invoice; coordinator cost shared across all units"
     }
@@ -78,5 +101,19 @@
   "missing_data": {
     "usage": "Host exposes no usage to tools at runtime; counters recovered from host-written transcripts (host attestation of model per response), Codex from session token_count snapshots. actual_model = transcript message.model."
   },
-  "rates": "docs/development/telemetry/rates/2026-09-12-anthropic-codex.json"
+  "rates": "docs/development/telemetry/rates/2026-09-12-anthropic-codex.json",
+  "phases": {
+    "phase1": {
+      "status": "completed",
+      "ended_at": "2026-09-12T18:03:45Z",
+      "documents": 11,
+      "gates": "docs-complete 0, growth 0, look 0, handoff 0, metric 0, external-deps 0, model-cost 0, canon 0, ownership 0; webhook/embed 2 (нет), job 2 (not-deployed)",
+      "attempts": {
+        "spec-writer": 1,
+        "arch-writer": 3,
+        "algo-writer": 2,
+        "ops-writer": 1
+      }
+    }
+  }
 }

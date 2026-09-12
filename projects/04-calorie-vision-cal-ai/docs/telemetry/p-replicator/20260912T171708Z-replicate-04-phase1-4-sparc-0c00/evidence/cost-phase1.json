@@ -1,0 +1,31 @@
+{
+  "rates_snapshot": "2026-09-12",
+  "unit": {
+    "USD": 47.53278255
+  },
+  "by_model": {
+    "claude-fable-5-1": {
+      "cost": 13.5132,
+      "unit": "USD",
+      "requests": 43,
+      "cache_write_rate_used": "cache_write_1h"
+    },
+    "claude-opus-5": {
+      "cost": 30.5839,
+      "unit": "USD",
+      "requests": 114,
+      "cache_write_rate_used": "cache_write_1h"
+    },
+    "claude-sonnet-5": {
+      "cost": 3.4356,
+      "unit": "USD",
+      "requests": 38,
+      "cache_write_rate_used": "cache_write_1h"
+    }
+  },
+  "total": {
+    "USD": 47.53
+  },
+  "missing": [],
+  "quality": "list-price equivalent from host-written usage; all models rated"
+}
