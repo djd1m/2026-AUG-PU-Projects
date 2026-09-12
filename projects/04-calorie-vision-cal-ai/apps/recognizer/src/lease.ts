@@ -136,7 +136,21 @@ export async function recordResult(pool: DbPool, job: { id: string; fence: numbe
   ]);
   if ((result.rowCount ?? 0) > 0) return 'written';
 
-  const reread = await pool.query<{ status: string }>('SELECT status FROM recognition WHERE id = $1', [job.id]);
-  const currentStatus = reread.rows[0]?.status;
-  return currentStatus === 'failed' ? 'swept_as_timeout' : 'stale_lease_result';
+  // Различение ПОСЛЕ факта (AC-scan-pipeline-17/22): сравнение ТОЛЬКО `status` ненадёжно в
+  // этой фиче — `done` недостижим (ADR-001, NullMatchIngredientPort), и настоящий результат
+  // ДРУГОГО воркера, и результат SweepStuckScans одинаково способны дать `status='failed'`
+  // (воркер САМ тоже пишет `failed(timeout)` на шагах 1а/9). Два сигнала вместе:
+  //   1) `status` ВСЁ ЕЩЁ 'queued' → другой воркер лишь ЗАХВАТИЛ задание (fence вырос), но
+  //      ЕЩЁ не записал результат — наш проигрыш чисто по fence, это `stale_lease_result`.
+  //   2) `status` уже ТЕРМИНАЛЕН → смотрим `leased_until`: `WRITE_RESULT` победившего
+  //      воркера ВСЕГДА обнуляет его (`SET leased_until = NULL`), а `SweepStuckScans` ЕГО
+  //      НЕ ТРОГАЕТ (обновляет только `status`/`failure_reason`/`finished_at`) — после его
+  //      прохода `leased_until` остаётся тем же истёкшим значением, что и было.
+  const reread = await pool.query<{ status: string; leased_until: Date | null }>(
+    'SELECT status::text AS status, leased_until FROM recognition WHERE id = $1',
+    [job.id],
+  );
+  const row = reread.rows[0];
+  if (row === undefined || row.status === 'queued') return 'stale_lease_result';
+  return row.leased_until !== null ? 'swept_as_timeout' : 'stale_lease_result';
 }
