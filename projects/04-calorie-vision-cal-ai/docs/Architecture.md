@@ -1,7 +1,7 @@
 # Architecture — N4 «Тарелка», CJM E
 
-Дата: 2026-09-12. Источник имён — [`canon.md`](canon.md) (заморожен 2026-09-12): 12 сущностей, 10 маршрутов,
-6 сервисов, числа потолков. Документ отвечает на выходы discovery **PD-DATA-001…003**, **PD-COST-001**,
+Дата: 2026-09-12. Источник имён — [`canon.md`](canon.md) (заморожен 2026-09-12, расширен по решениям
+DEC-A-004 и DEC-A-008): 14 сущностей, 13 маршрутов, 6 сервисов, числа потолков. Документ отвечает на выходы discovery **PD-DATA-001…003**, **PD-COST-001**,
 **PD-ARCH-001** ([`product-discovery-brief.md`](product-discovery-brief.md) §M4).
 
 Статус: технический план. Ни один сервис не развёрнут, ни одно измерение не снято на живом стенде —
@@ -245,8 +245,10 @@ hour per IP address», та же страница), и зависимость р
 
 ## Reconciliation with Pseudocode
 
-Выполнена 2026-09-12 по `Pseudocode.md` (423 строки). Прочитаны две секции целиком: `## Data
-Structures` и `## Core Algorithms`. Сверены **12 сущностей** — `account`, `device_session`, `photo`,
+Первый проход выполнен 2026-09-12 по `Pseudocode.md` (423 строки), когда канон объявлял 12 сущностей;
+второй проход того же дня сверил все **14** — две добавленные названы в абзаце «Повторная сверка»
+ниже. Прочитаны две секции целиком: `## Data Structures` и `## Core Algorithms`. В первом проходе
+сверены **12 сущностей** — `account`, `device_session`, `photo`,
 `recognition`, `food_item`, `food_synonym`, `diary_entry`, `share_card`, `partner`, `partner_code`,
 `attribution`, `scan_quota_counter` — и **17 алгоритмов**: `CreateDeviceSession`,
 `CheckAndConsumeQuota`, `EnqueueScan`, `RecognizeScan`, `AdjustPortion`, `ReplaceIngredient`,

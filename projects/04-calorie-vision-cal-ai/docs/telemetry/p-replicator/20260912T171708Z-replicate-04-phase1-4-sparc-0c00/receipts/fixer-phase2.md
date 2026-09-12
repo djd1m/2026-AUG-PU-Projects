@@ -149,3 +149,21 @@ Structures `Pseudocode.md`, и в Data Architecture `Architecture.md`; 13 мар
 обратно.
 
 Status: completed
+
+---
+
+# Попытка 3 — остаточные счётчики канона
+
+`docs/C4_Diagrams.md:47` «10 маршрутов /api/v1» → «13 маршрутов канона; … нормализация фото …»;
+`docs/Architecture.md:3` шапка «12 сущностей, 10 маршрутов» → «14 сущностей, 13 маршрутов» со ссылкой
+на DEC-A-004 и DEC-A-008; `docs/Architecture.md:248` вступление к сверке разделено на первый проход
+(12 сущностей, как объявлял канон на тот момент) и второй (все 14) — это историческая запись о
+выполненной работе, а не устаревший счётчик, и стирать её значило бы переписать, что было сделано.
+Grep по `docs/*.md` и `CLAUDE.md`: строк «10 маршрут» и «12 сущност» вне этой исторической записи и
+вне квитанций не осталось. Ворота: docs-complete/growth-trace/look-trace/metric-source/external-deps/
+model-cost/handoff-manifest = 0, job-contract = 2 (законная, not-deployed); оба стража самопроверки
+зелёные.
+
+requested: claude-opus-5; actual: unknown to worker
+
+Status: completed
