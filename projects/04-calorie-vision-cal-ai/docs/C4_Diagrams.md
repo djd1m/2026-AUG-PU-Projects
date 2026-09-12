@@ -44,7 +44,7 @@ C4Container
     Container_Boundary(c1, "Тарелка") {
         Container(proxy, "proxy", "Caddy", "Единственная публичная дверь: TLS, ограничение частоты, CSP")
         Container(web, "web", "Next.js 15, SSR", "PWA и Telegram Mini App на одном фронте; публичная карточка /c/{card_id}")
-        Container(api, "api", "Node 22, Fastify", "10 маршрутов /api/v1; квоты, сессии, задания, presigned-URL")
+        Container(api, "api", "Node 22, Fastify", "13 маршрутов канона; квоты, сессии, задания, нормализация фото, presigned-URL")
         Container(recognizer, "recognizer", "Node worker", "Распознавание и RAG; единственный, кто зовёт модель")
         ContainerDb(db, "db", "PostgreSQL 16 + pg_trgm", "Данные, поиск по названию, очередь заданий, счётчики квот")
         ContainerDb(storage, "storage", "MinIO", "Приватный бакет фото, TTL 30 дней")

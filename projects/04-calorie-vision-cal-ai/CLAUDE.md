@@ -17,7 +17,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 1. **Specification** ([`docs/Specification.md`](docs/Specification.md)) — ЧТО строить: FR, NFR,
    growth- и look-требования, пользовательские истории и приёмочные сценарии.
 2. **Architecture** ([`docs/Architecture.md`](docs/Architecture.md)) — устройство системы: 6 сервисов
-   compose, 12 сущностей, внешние зависимости, безопасность, масштабирование.
+   compose, 14 сущностей, внешние зависимости, безопасность, масштабирование.
 3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — десять архитектурных решений (ADR-001…010), у каждого
    есть Confirmation — проверка, обязанная упасть при нарушении решения.
 4. **Refinement** ([`docs/Refinement.md`](docs/Refinement.md)) — edge cases, стратегия тестирования,
@@ -32,7 +32,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 | Сервис | Технология | Роль |
 |---|---|---|
 | `web` | Next.js 15, SSR, PWA-манифест, Telegram Mini Apps SDK | Один фронт на оба клиента |
-| `api` | Node 22/TypeScript, Fastify | 10 маршрутов `/api/v1`, приём фото, квоты, `initData` |
+| `api` | Node 22/TypeScript, Fastify | 13 маршрутов канона, приём и нормализация фото, квоты, `initData` |
 | `recognizer` | Node worker | Забирает задание `FOR UPDATE SKIP LOCKED`, зовёт модель, считает числа из базы |
 | `db` | PostgreSQL 16 + `pg_trgm` | Данные + очередь заданий + нечёткий поиск; без публикации порта |
 | `storage` | MinIO | Приватный бакет фото, TTL 30 дней; только presigned-URL |

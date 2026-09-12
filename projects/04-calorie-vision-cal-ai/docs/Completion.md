@@ -77,14 +77,21 @@
 
 ## Monitoring
 
+Канал оповещения ОДИН и он есть в инвентаре зависимостей: запись в журнал плюс сообщение владельцу
+в Telegram через Bot API `sendMessage` (`Architecture.md`, External Dependencies, строка «отправляет
+сообщение владельцу»). PagerDuty, Slack и почтовая рассылка НЕ используются: их нет в инвентаре, о
+них нет договорённости и ни одна из них не проверялась — чек-лист, опирающийся на них, описывал бы
+контур эксплуатации, которого не существует (DEC-A-007).
+
 | Метрика | Порог | Источник | Реакция |
 |---|---|---|---|
-| Response time p99 | > 500ms | наш журнал | PagerDuty |
-| Error rate | > 1% | наш журнал | Slack |
-| CPU usage | > 80% | ручное измерение: метрики контейнера | Email |
-| Расход на вызовы модели за сутки | > 1560 ₽/сутки (Success Metrics, Specification.md) | наш журнал `/var/log/tarelka/model-spend.jsonl` (`model-cost-contract.md`) | Email оператору + служебная страница расхода (NFR-OPS-001) |
-| Доля попыток, отклонённых по потолку | > 5% (Success Metrics, Specification.md) | наш журнал | Slack |
-| Возраст старейшего задания `queued` | > 60 с (окно посредника, `long-job-contract.md`) | наша БД | PagerDuty |
+| Response time p99 | > 500ms | наш журнал | журнал + Telegram владельцу (Bot API `sendMessage`) |
+| Error rate | > 1% | наш журнал | журнал + Telegram владельцу (Bot API `sendMessage`) |
+| CPU usage | > 80% | ручное измерение: метрики контейнера | журнал + Telegram владельцу (Bot API `sendMessage`) |
+| Расход на вызовы модели за сутки | > 1560 ₽/сутки (Success Metrics, Specification.md) | наш журнал `/var/log/tarelka/model-spend.jsonl` (`model-cost-contract.md`) | журнал + Telegram владельцу (Bot API `sendMessage`) + служебная страница расхода (NFR-OPS-001) |
+| Доля попыток, отклонённых по потолку, с разбивкой по `scope` | > 5% суммарно (Success Metrics, Specification.md) | наш журнал | журнал + Telegram владельцу (Bot API `sendMessage`) |
+| Возраст старейшего задания `queued` | > 60 с (окно посредника, `long-job-contract.md`) | наша БД | журнал + Telegram владельцу (Bot API `sendMessage`) |
+| Результаты, отброшенные по устаревшей аренде (`stale_lease_result`) | > 0 за сутки | аудит (ADR-003 Confirmation) | журнал + Telegram владельцу (Bot API `sendMessage`) |
 
 Пороги — проектные предложения, не измеренный SLA: ни один процесс ещё не работал под нагрузкой.
 Счёт расхода и доли отказов ведётся по попыткам, а не по успехам (FR-LIMIT-001, NFR-OPS-001) —

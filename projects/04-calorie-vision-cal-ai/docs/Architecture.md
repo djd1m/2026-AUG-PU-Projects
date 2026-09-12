@@ -26,7 +26,7 @@ flowchart TB
     end
     subgraph App["API"]
         WEB["web — Next.js SSR<br/>PWA + TMA на одном фронте"]
-        API["api — Fastify<br/>10 маршрутов /api/v1"]
+        API["api — Fastify<br/>13 маршрутов канона"]
         REC["recognizer — Node worker<br/>модель + RAG"]
     end
     subgraph Data["Data"]
@@ -60,7 +60,7 @@ flowchart TB
 | Сервис | Ответственность | Чего НЕ делает |
 |---|---|---|
 | **`web`** (Next.js, SSR + PWA-манифест + Telegram Mini App SDK) | экраны камеры, результата, расхождения, дневника, карточки, кабинета партнёра; публичная страница карточки `/c/{card_id}`; один фронт на оба клиента — TMA отличается только источником сессии | не ходит в БД и в MinIO напрямую; не знает секретов моделей |
-| **`api`** (Node/TypeScript, Fastify) | 10 маршрутов канона; приём фото в MinIO; создание задания `recognition`; атомарная проверка потолков (ADR-007); проверка Telegram `initData`; применение кода партнёра; выдача presigned-URL | не вызывает модель сам — иначе долгий вызов занял бы HTTP-воркер |
+| **`api`** (Node/TypeScript, Fastify) | 13 маршрутов канона; приём фото в MinIO и его НОРМАЛИЗАЦИЯ под требования поставщика модели (HEIC/HEIF → JPEG, длинная сторона ≤ 1568 px, ≤ 5 МБ — библиотека `sharp` со сборкой libheif; конкретная версия фиксируется в манифесте, не здесь); создание задания `recognition`; атомарная проверка потолков (ADR-007); проверка Telegram `initData`; применение кода партнёра; выдача presigned-URL | не вызывает модель сам — иначе долгий вызов занял бы HTTP-воркер |
 | **`recognizer`** (Node worker) | забирает задание `SELECT … FOR UPDATE SKIP LOCKED` (ADR-003); вызывает Haiku 4.5 со структурированной JSON-схемой; ищет ингредиент в `food_item`/`food_synonym` (pg_trgm); считает числа по порции (ADR-001: число берётся из базы, модель его не называет); при уверенности < 0,6 эскалирует к Sonnet 5; пишет результат и источник | не принимает HTTP-запросов извне вовсе |
 | **`db`** (PostgreSQL 16 + `pg_trgm`) | данные, поиск по названию, очередь заданий, счётчики квот | не публикует порт на хост (`.claude/rules/docker-ports.md`, Правило №0) |
 | **`storage`** (MinIO) | приватный бакет фото, TTL 30 дней политикой жизненного цикла | не отдаёт объекты публично — только presigned-URL с коротким сроком |
@@ -93,6 +93,8 @@ flowchart TB
 | Capability needed | Provider / API | Evidence | Verdict | Requirements relying on it |
 |---|---|---|---|---|
 | принимает изображение в теле запроса и анализирует его | Anthropic Messages API (vision) | [platform.claude.com/docs/en/build-with-claude/vision](https://platform.claude.com/docs/en/build-with-claude/vision) · проверено 2026-09-12 · «On the API, provide images to Claude as `image` content blocks using one of three source types» | CONFIRMED | FR-CAPTURE-002, FR-RECOGNIZE-001 |
+| принимает изображения ТОЛЬКО в четырёх форматах и не больше 10 МБ | Anthropic Messages API (vision), разделы Supported formats и Request limits | [platform.claude.com/docs/en/build-with-claude/vision](https://platform.claude.com/docs/en/build-with-claude/vision) · проверено 2026-09-12 · «Claude supports JPEG, PNG, GIF, and WebP images (`image/jpeg`, `image/png`, `image/gif`, `image/webp`). Animations are unsupported, and only the first frame is used.» и «The maximum size per image is: 10 MB (base64-encoded) when using the Claude API directly.»; там же предел разрешения стандартного уровня — «Max long edge 1568 px» | CONFIRMED | FR-CAPTURE-002, FR-RECOGNIZE-001 |
+| отправляет сообщение владельцу продукта | Telegram Bot API, метод `sendMessage` | [core.telegram.org/bots/api#sendmessage](https://core.telegram.org/bots/api#sendmessage) · проверено 2026-09-12 · «Use this method to send text messages. On success, the sent Message is returned.» | CONFIRMED | NFR-OPS-001 |
 | возвращает ответ, обязанный соответствовать заданной JSON-схеме | Anthropic Messages API (structured outputs) | [platform.claude.com/docs/en/build-with-claude/structured-outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) · проверено 2026-09-12 · «Structured outputs guarantee schema-compliant responses through constrained decoding» | CONFIRMED | FR-RECOGNIZE-001, FR-RECOGNIZE-002 |
 | отдаёт расход и токены по организации за период | Anthropic Usage & Cost Admin API | [platform.claude.com/docs/en/manage-claude/usage-cost-api](https://platform.claude.com/docs/en/manage-claude/usage-cost-api) · проверено 2026-09-12 · «The Usage & Cost Admin API provides programmatic and granular access to historical API usage and cost data for your organization» | CONFIRMED | NFR-OPS-001, FR-LIMIT-002 |
 | ищет продукт по ключевым словам | USDA FoodData Central API, `GET /v1/foods/search` | [fdc.nal.usda.gov/api-guide/](http://fdc.nal.usda.gov/api-guide/) · проверено 2026-09-12 · «Returns a list of foods that matched search (query) keywords» | CONFIRMED | FR-SOURCE-001, FR-SOURCE-003 |
@@ -100,6 +102,23 @@ flowchart TB
 | право использовать данные FDC в закрытом коммерческом продукте (CC0) | USDA FoodData Central, раздел Licensing | [fdc.nal.usda.gov/api-guide/](http://fdc.nal.usda.gov/api-guide/) · проверено 2026-09-12 · «USDA FoodData Central data are in the public domain and they are not copyrighted» и далее «No permission is needed for their use, but we request that users list FoodData Central as the source of the data» | CONFIRMED | FR-SOURCE-001, FR-SOURCE-002, FR-SOURCE-003 |
 | проверка подлинности данных, полученных от Mini App | Telegram Mini Apps (`initData`) | [core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps) · проверено 2026-09-12 · «You can verify the integrity of the data received by comparing the received hash parameter with the hexadecimal representation of the HMAC-SHA-256 signature» | CONFIRMED | FR-AUTH-002 |
 | открытие Mini App по прямой ссылке с параметром | Telegram Mini Apps (direct link) | [core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps) · проверено 2026-09-12 · «You can use direct links to open a Mini App directly in the current chat» | CONFIRMED | FR-AUTH-002, FR-PARTNER-001 |
+
+**Схема гарантирует ТИП, но не ДИАПАЗОН — и это не снимает вердикт, а сужает его.** Строка про
+structured outputs остаётся `CONFIRMED`: способность «ответ соответствует заданной схеме»
+подтверждена дословной цитатой и нужна нам именно в этом объёме. Но подтверждённое — это
+соответствие ФОРМЕ и ТИПАМ; ключевые слова `minimum`, `maximum` и `maxItems` в поддерживаемое
+подмножество не входят, поэтому «уверенность лежит в 0…1» и «позиций не больше двенадцати» схемой
+не выражаются. Эти условия проверяет НАШ код сразу после разбора ответа (`RecognizeScan` шаг 3а),
+fail-closed: значение вне диапазона даёт `failed(schema_violation)`, а не подрезается до границы.
+Зависимость, у которой не названа граница подтверждённого, читается как более сильная, чем она есть,
+и ровно этим опасна.
+
+**Каналы оповещения названы теми, что у нас есть (DEC-A-007).** Список выше объявлен исчерпывающим,
+поэтому `Completion.md` не имеет права опираться на PagerDuty, Slack или почтовую рассылку: их в
+инвентаре нет, договора нет, проверки нет. Оповещение владельца идёт в журнал и сообщением в
+Telegram через `sendMessage` — строка выше, подтверждённая цитатой. Шаблонные имена чужих сервисов
+в чек-листе выглядели бы как готовый контур эксплуатации и были бы обещанием, которого никто не
+давал.
 
 **Лицензия подтверждена, и у неё есть последствие в требованиях.** Раздел Licensing страницы
 `api-guide` прямо помещает данные FDC в общественное достояние под CC0 1.0, поэтому использование в
@@ -132,8 +151,8 @@ hour per IP address», та же страница), и зависимость р
 |---|---|---|
 | `account` | `account` | появляется только после входа через Telegram; до него пользователь живёт в `device_session`. Колонка `status` — enum из 3 значений `active / erasing / erased`: удаление по запросу длится до 72 часов, и всё это время строка обязана существовать в состоянии «удаляется», иначе повторный запрос не отличить от выполненного |
 | `device_session` | `device_session` | анонимная сессия устройства; связывается с `account` при входе, не заменяется. Хранится **хэш** токена cookie (`cookie_token_hash`), а не сам токен: утечка дампа базы не должна выдавать действующие сессии. Адрес хранится **усечённым префиксом** (`ip_prefix`), не полным адресом — квоте и anti-fraud префикса достаточно, а полный адрес создал бы обязательство без нужды. Индекс по `anonymous_diary_expires_at` для еженедельной уборки анонимных дневников |
-| `photo` | `photo` | в БД только ключ объекта MinIO и метаданные; байты — в приватном бакете, TTL 30 дней (ADR-010). Колонки `expires_on date` и `file_state` (enum `present / purged`) плюс частичный индекс `(expires_on) WHERE file_state = 'present'` — без него суточная уборка просматривает всю таблицу целиком. Строка после уборки **сохраняется** в состоянии `purged`: удаление строки оставило бы дневник со ссылкой на пустоту |
-| `recognition` | `recognition` | **и запись результата, и строка очереди**; `status` — enum из 4 значений `queued / done / failed / refused`; `failure_reason` — enum из 6 значений, nullable. Колонка `leased_until` и частичный индекс `(status, leased_until) WHERE status = 'queued'`; выборка задания — `WHERE status = 'queued' AND (leased_until IS NULL OR leased_until < now()) … FOR UPDATE SKIP LOCKED`. Предикат именно такой, см. разбор под таблицей |
+| `photo` | `photo` | в БД только ключ объекта MinIO и метаданные; байты — в приватном бакете, TTL 30 дней (ADR-010). Колонки `expires_on date` и `file_state` (enum `present / purged`) плюс частичный индекс `(expires_on) WHERE file_state = 'present'` — без него суточная уборка просматривает всю таблицу целиком. Строка после уборки **сохраняется** в состоянии `purged`: удаление строки оставило бы дневник со ссылкой на пустоту. Колонки `normalized_object_key` и `normalized_bytes` — копия ПОД ВЫЗОВ МОДЕЛИ (JPEG, длинная сторона ≤ 1568 px, ≤ 5 МБ): поставщик не принимает HEIC и ограничивает изображение 10 МБ, а мы принимаем от пользователя 12 МБ и HEIC, поэтому копия обязана существовать отдельно от оригинала. Обе копии удаляются одной уборкой и одним запросом на удаление данных |
+| `recognition` | `recognition` | **и запись результата, и строка очереди**; `status` — enum из 4 значений `queued / done / failed / refused`; `failure_reason` — enum из 6 значений, nullable. Колонки `leased_until`, `lease_owner uuid` и `lease_fence integer NOT NULL DEFAULT 0`; частичный индекс `(status, leased_until) WHERE status = 'queued'`; выборка задания — `WHERE status = 'queued' AND (leased_until IS NULL OR leased_until < now()) … FOR UPDATE SKIP LOCKED`, захват увеличивает `lease_fence`, запись результата идёт условным `UPDATE … WHERE id = ? AND lease_fence = ?` (ADR-003, DEC-A-008). Плюс `idempotency_key text` и `UNIQUE (device_session_id, idempotency_key)` — повтор `POST /scans` после разрыва попадает в ТУ ЖЕ строку, а не создаёт второй оплаченный скан. Предикат аренды именно такой, см. разбор под таблицей |
 | `food_item` | `food_item` | импорт FDC; `GIN (name_en gin_trgm_ops)` для нечёткого поиска; `UNIQUE (source, source_id)` — повторный импорт не двоит записи; `import_snapshot_date` хранит дату снимка базы и попадает в каждый `Snapshot` |
 | `food_synonym` | `food_synonym` | ручная RU-курация 100–300 блюд. Две взаимоисключающие формы: прямая ссылка `food_item_id` либо разложение на компоненты `recipe_parts` с долями (борщ не становится безымянным числом). `CHECK` на строгое ИЛИ: заполнено ровно одно из двух, иначе запись молча читалась бы как пустая. Индекс `GIN (name_ru_normalized gin_trgm_ops)` — **по нормализованной форме**, потому что поиск идёт по ней |
 | `diary_entry` | `diary_entry` | частичный индекс `(owner_key, eaten_on) WHERE deleted_at IS NULL` — дневник всегда читается за один день, а удаление мягкое, и итог дня обязан считаться без удалённых; дата хранится как `date` в Europe/Moscow, не как момент времени. Тот же индекс обслуживает перенос анонимного дневника на аккаунт одной транзакцией при входе |
@@ -141,6 +160,8 @@ hour per IP address», та же страница), и зависимость р
 | `partner` | `partner` | партнёров десятки, индексов сверх ключа не нужно |
 | `partner_code` | `partner_code` | `UNIQUE (code)` в верхнем регистре — иначе два партнёра получают один код |
 | `attribution` | `attribution` | `UNIQUE (device_session_id)` — **ровно одна** атрибуция на устройство; `status` — enum из 3 значений `pending / activated / rejected`, `source` — enum из 3 значений `explicit / deeplink / cookie`; `replaced_source` — **nullable** enum из тех же трёх значений (`NULL`, если замены не было). Уникальность гарантирует единственность строки, но НЕ её неизменность: правило приоритета `explicit > deeplink > cookie` живёт в коде и потому обязано иметь физическую опору — колонку `source`, без которой сравнивать нечего, и колонку `replaced_source`, без которой замена слабого источника явным кодом не оставляет следа ни в базе, ни в ответе маршрута 7 |
+| `pro_interest` | `pro_interest` | лист ожидания Pro: `contact_kind` — enum `email / telegram`, `source_screen` — enum `user_limit / global_limit`, индекс `(created_at)` для суточного отчёта. Отдельная таблица, а не колонка в `account`: интерес оставляет и аноним, у которого аккаунта нет |
+| `growth_event` | `growth_event` | события воронки: `type` — enum из 5 значений `install / activation / share_click / card_view / code_applied`, индекс `(partner_code_id, type, created_at)` — кабинет партнёра читает ровно этот срез. Единственный источник истины для четырёх счётчиков кабинета и для метрики недели; `share_card` доказывает сборку карточки, а не шеринг, поэтому считать шеринги по нему нельзя |
 | `scan_quota_counter` | `scan_quota_counter` | `UNIQUE (scope, scope_key, day)`, где `scope` — enum из 3 значений `user / global / escalation` (`user` — личный потолок 10, `global` — суточный потолок всех попыток 3000, `escalation` — суточный потолок эскалаций к Sonnet 5, 600). Третье значение — не украшение перечисления: без собственной строки счётчика потолок 600 не с чем сравнить, и эскалация была бы ограничена только вдесятеро более слабым потолком 3000 (ADR-007). Первичная попытка списывает три ключа, эскалация — четыре, все в ОДНОЙ транзакции; увеличение только через `INSERT … ON CONFLICT DO UPDATE SET used = counter.used + 1 WHERE counter.used < :limit RETURNING used` |
 
 **Аренда задания: `SKIP LOCKED` перестаёт защищать ровно там, где закрывается транзакция.** Оба
@@ -257,6 +278,16 @@ Structures` и `## Core Algorithms`. Сверены **12 сущностей** �
 | `device_session.ip_prefix` | смена типа | Усечённый префикс вместо полного адреса — и в сессии, и в аудите anti-fraud. Записано также в Security Architecture |
 | `attribution.replaced_source` | отсутствующая колонка | Добавлена nullable-колонка с тем же перечислением из трёх значений, что и `source`. `ApplyPartnerCode` шаг 7 пишет в неё прежний источник при замене слабой атрибуции явным кодом, а маршрут 7 возвращает её значение в ответе. Без физической колонки прямой перевод этой схемы в DDL молча потерял бы поле, и «явный код сильнее cookie» не оставляло бы следа |
 | `attribution` — 409 против замены | **закрыто: `Pseudocode.md` приведён к трём исходам** | Расхождение было логическим, и логика принадлежит `Pseudocode.md`; его владелец свёл `ApplyPartnerCode` и контракт маршрута 7 к трём исходам: существующая `explicit` + любой новый код → `409` без изменений; существующая слабая (`cookie`/`deeplink`) + новый `explicit` → `200 applied` с непустым `replaced_source`; слабая + слабая → `409` без изменений. Уникальность `(device_session_id)` гарантирует ЕДИНСТВЕННОСТЬ строки, а не её неизменность, поэтому замена выполняется `UPDATE`, а не отбивается ограничением |
+
+**Повторная сверка 2026-09-12, второй раунд (по отчёту независимого валидатора).** Схема приведена к
+обновлённому канону: добавлены таблицы `pro_interest` и `growth_event` (сущностей стало 14),
+колонки `recognition.lease_owner`, `recognition.lease_fence`, `recognition.idempotency_key` с
+`UNIQUE (device_session_id, idempotency_key)`, `photo.normalized_object_key` и
+`photo.normalized_bytes`; перечисление `recognition.failure_reason` расширено значениями
+`no_food_matched` и `quota_exhausted_escalation`. Каждая из этих колонок закрывает разрыв, который
+был виден только из алгоритма: без `lease_fence` два живых воркера пишут результат в одну строку,
+без `idempotency_key` повтор после разрыва создаёт второй оплаченный скан, без `growth_event`
+счётчики кабинета партнёра не имеют источника истины.
 
 Физическая часть дополнительно уточнена без расхождения: индекс `diary_entry` сделан частичным
 (`WHERE deleted_at IS NULL`), потому что удаление мягкое, а итоги дня считаются без удалённых;
