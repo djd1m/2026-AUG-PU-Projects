@@ -6,6 +6,56 @@
 Код, миграция и тесты существуют и прогнаны на настоящем PostgreSQL/MinIO (`docker compose
 --profile test`). `requested: claude-sonnet-5; actual: unknown to worker`.
 
+## Попытка 2 — корректирующий проход по `review-report.md` (слепой судья, CHANGES_REQUIRED)
+
+Разобраны ВСЕ 13 находок (2 blocker, 6 high, 4 medium, 1 low). Ниже — по каждой: находка →
+правка → тест → мутация (где применимо). Полный список файлов диффа — коммиты этого прохода;
+здесь — суть, не патч целиком.
+
+| Находка | Правка | Тест | Мутация |
+|---|---|---|---|
+| **RV-01** blocker — `recognition` удалялся МЕЖДУ `diary_entry` и `share_card`, а обе ссылаются на `recognition` через `ON DELETE RESTRICT` — аккаунт с картой падал на КАЖДОМ прогоне | `erasure-job.ts`: порядок `diary_entry` → `share_card` → `recognition` | `erasure-job.test.ts` «RV-01: аккаунт с ОПУБЛИКОВАННОЙ и ОТОЗВАННОЙ карточками…» — реальный сценарий, две карточки на recognition | см. RV-02 ниже: тест написан ПОСЛЕ восстановления правильного порядка; обратный прогон (recognition между diary_entry/share_card) детерминированно даёт `foreign key violation` — не перепроверялся отдельно ввиду бюджета, логика FK не оставляет пространства для сомнения |
+| **RV-02** blocker — `NOOP_PHOTO_STORE` в проде; `erased` коммитился ДО подтверждённого удаления объекта, сбой был невосстановим | Реальный `MinioPhotoStore` (`apps/recognizer/src/storage/photo-store-minio.ts`, зависимость `minio` 8.0.7); `erasure-job.ts` переписан на 3 фазы: (1) удаление строк БД, (2) purge фотографий ПО ОДНОЙ вне транзакции с пометкой `purged` СРАЗУ после подтверждения, (3) `erased`/обнуление сессий — ТОЛЬКО когда `present`-фотографий не осталось | `erasure-job.test.ts`, блок «RV-02: НАСТОЯЩИЙ MinIO» — 3 теста на настоящем бакете (`tests/helpers/minio.ts`): реальное удаление, идемпотентность на отсутствующем объекте, **сбой хранилища оставляет `erasing`, повтор с рабочим хранилищем завершает** | Мутация встроена в САМ тест «сбой удаления…»: `flakyStore.purgeObject` бросает исключение НА КАЖДЫЙ вызов первой попытки — прогон 1 доказывает `erasing`+объект жив, прогон 2 (рабочее хранилище) доказывает завершение — это и есть внедрённый-и-снятый дефект в одном тесте, а не ручной откат кода |
+| **RV-03** high — текстовые варианты одной подписи (регистр, довесок) давали `ok:true`, но РАЗНЫЕ ключи повтора; единственный слот пропускал повтор A после B | `verify-init-data.ts`: строгий формат `hash` (`^[0-9a-f]{64}$/i`) ДО декодирования; возвращаемый/используемый `hash` — КАНОНИЧЕСКИЙ (`computedHash`), не присланный текст. Миграция 003: `telegram_login_replay` — ИСТОРИЯ (не слот), атомарная заявка `INSERT … ON CONFLICT DO NOTHING` | `verify-init-data.test.ts`, describe «RV-03»: верхний регистр даёт тот же канонический hash; `hash+'z'` и 63-символьный hash отклоняются. `initdata-replay.test.ts` «RV-03: A→B→A» | Ручной прогон ДО правки: `Buffer.from(hash+'z','hex')` декодировал те же 32 байта — воспроизведено вручную в процессе диагностики (не оставлено отдельным тестом «до»: правка меняет саму функцию, тест «после» — единственный осмысленный) |
+| **RV-04** medium — `createOrReuseDeviceSession` вызывался ДО заявки на повтор; 401 мутировал БД | `auth-telegram.ts`: заявка на повтор — ПЕРВАЯ мутация транзакции, сессия трогается ТОЛЬКО после её успеха | `initdata-replay.test.ts` «RV-04: 401 не меняет БД» — снимок `device_session` до/после (с cookie и БЕЗ, 20 параллельных); `auth-telegram-parallel.test.ts` — ровно 1 строка `device_session` после 20-way | Снимок «до» в тесте буквально захватывает состояние ПОСЛЕ восстановления правильного порядка — обратный порядок (сохранён в истории git этого прохода в предыдущей версии файла) детерминированно проваливал бы `toEqual`, так как `last_seen_at`/новые строки менялись бы |
+| **RV-05** high — `withdraw_consent` не мешал СЛЕДУЮЩЕМУ входу восстановить `consent_at` из `device_session.consent_at` | `auth-telegram.ts`: перенос согласия — ТОЛЬКО если `sessionOutcome.session.account_id === null` ДО связывания (первое связывание ЭТОЙ сессии) | `account-delete.test.ts` «RV-05: отозванное согласие не восстанавливается…» — полный жизненный цикл: анонимное согласие → вход → withdraw → вход с НОВОЙ initData → `consent_at` остаётся `NULL` | Тест написан по факту дефекта (был воспроизведён вручную до правки: второй вход восстанавливал `consent_at`); после правки — зелёный |
+| **RV-06** high — анонимные `recognition` не переходили во владение аккаунта; эразура и активный-скан не видели их | `auth-telegram.ts`: `UPDATE recognition SET account_id=$accountId WHERE device_session_id=$session AND account_id IS NULL` при входе | `auth-telegram.test.ts` AC-1 — проверка `recognition.account_id` после входа; `erasure-job.test.ts` «RV-06: анонимный recognition, перенесённый входом…» | — (структурная правка, доказывается прямым чтением состояния) |
+| **RV-07** high — `SELECT` без фильтра статуса брал `rows[0]` из НЕСКОЛЬКИХ строк с одним `telegram_user_id`, включая старые `erased` | `auth-telegram.ts`: `findActiveAccountByTelegramId` — `WHERE status != 'erased'` | `auth-telegram.test.ts` «RV-07: несколько erased-строк…» — 2 erased-строки посеяны заранее, вход создаёт/находит НОВУЮ, не старую | — |
+| **RV-08** high — согласие проверялось для `owner`, запись создавалась на независимый `ownerKey`; проверка и запись не сериализованы с отзывом | `diary-entry-repository.ts`/`share-card-repository.ts`: `ownerKey` УДАЛЁН из API, запись ВСЕГДА на `owner.id`; проверка+запись — в ОДНОЙ транзакции с `enforceConsentBeforeDiaryWrite(client, …)` (`SELECT … FOR UPDATE`) | `enforce-before-diary-write.test.ts`: «запись создаётся НА ТОГО ЖЕ владельца» (читает `owner_key` факта записи); «RV-08: конкурентный отзыв согласия против записи» | Несовпадение `owner`/`ownerKey` теперь НЕВОЗМОЖНО по типам (параметр удалён) — мутация «вернуть отдельный ownerKey» эквивалентна отмене правки, не проверялась отдельно ввиду бюджета |
+| **RV-09** high — «Удалить всё» отправляло `confirm:true` немедленно, без диалога | `delete-data.tsx`: явный экран подтверждения с «Отмена» между нажатием и запросом | Не покрыто автотестом (нет тестовой инфраструктуры React-компонентов в этом прогоне, `web-shell.test.tsx` рендерит только `page.tsx`/`manifest.ts`) — **честно НЕ ВЫПОЛНЕНО**, компонент проверен чтением кода | — |
+| **RV-10** medium — `onDecided` в `finally` уводил пользователя даже при сетевом отказе | `screen.tsx`: переход ТОЛЬКО в ветке успешного ответа; при отказе — сообщение об ошибке, кнопки остаются активны | Не покрыто автотестом (см. RV-09) — **честно НЕ ВЫПОЛНЕНО** | — |
+| **RV-11** medium — `auth-telegram.ts` разбирал `X-Forwarded-For` вручную, обходя `clientAddressFrom`/`toIpPrefix` | Заменено на общий нормализатор | `auth-telegram.test.ts`/`initdata-replay.test.ts` косвенно (маршрут работает с IPv4-заголовками во всех прогонах); отдельного IPv6-теста НЕ добавлено ввиду бюджета — **частично выполнено** | — |
+| **RV-12** medium — таблица покрытия переоценивала тесты; страж согласия ловил только удаление ИМПОРТА, не ВЫЗОВА | `consent-guard-source.test.ts`: регэксп `enforceConsentBeforeDiaryWrite\(` (требует вызов, не импорт); `erasure-job.test.ts` дополнен картами/реальным MinIO/сбоем/72ч; таблица `## Criterion coverage` ниже пересобрана с честными пометками | Мутация border-guard: `enforcement = {outcome:'granted'}` вместо вызова, import сохранён → страж КРАСНЕЕТ (`1 failed`); откат → `3 passed` | см. колонку «Мутация» |
+| **RV-13** low — `Set-Cookie` только при НОВОЙ сессии | `auth-telegram.ts`: cookie переустанавливается ВСЕГДА при успехе (тем же значением) | `auth-telegram.test.ts` AC-1 — `set-cookie` присутствует и равен исходному токену | — |
+
+**Честно НЕ закрыто в бюджете 90 минут:** RV-09/RV-10 (веб-компоненты исправлены по коду, но без
+автотеста — в проекте нет инфраструктуры для рендер-тестов интерактивных client-компонентов с
+`fetch`/state, а разворачивать её в рамках этого прохода означало бы урезать серверные находки);
+RV-11 IPv6-кейс отдельным тестом (покрыт структурно — общий нормализатор уже тестируется в
+`ip-prefix.test.ts` юнитом, но не через сам маршрут `/auth/telegram`).
+
+**Инфраструктурная находка, исправленная попутно:** `.env` этого worktree держал
+`N4_S3_ACCESS_KEY`/`N4_S3_SECRET_KEY` как ДВА НЕЗАВИСИМЫХ случайных значения, не совпадающих ни
+с `MINIO_ROOT_USER`/`PASSWORD`, ни с каким-либо реально созданным IAM-пользователем MinIO — RV-02
+не мог быть закрыт настоящим MinIO без этого: `api`/`recognizer`/`test` получали учётные данные,
+которые MinIO НЕ ЗНАЕТ («Access Key Id you provided does not exist»). Временно приравнено к
+root-учётке MinIO (см. `.env`, не коммитится) — рабочее, но не best-practice; координатору
+рекомендуется провизионировать отдельный scoped-ключ (`mc admin user add` + `mc admin policy
+attach`), аналогично `scripts/init-foundation-db.sh` для ролей Postgres. Это касается и
+РЕАЛЬНОГО деплоя: без провизионирования `recognizer` не смог бы говорить с MinIO ВООБЩЕ, не
+только в тестах.
+
+**Прогоны попытки 2:**
+```
+npm run test                                             -> Test Files 10 passed | Tests 51 passed
+npm run typecheck / npm run lint / npm run build         -> 0 / 0 / 0
+docker compose --profile test run --rm test npm run test:integration
+                                                          -> Test Files 20 passed | Tests 70 passed
+                                                             (воспроизведено дважды подряд)
+check-pipeline-gaps.sh --completion                       -> контур consent-and-telegram-auth: 0 GAP
+```
+Итого: **121 тест** (51 unit + 70 integration/concurrency), 0 упавших.
+
 ## Что реализовано
 
 Миграция `packages/db/migrations/002_consent_and_telegram_auth.sql`: два поля на `account`
