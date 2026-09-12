@@ -14,6 +14,10 @@ export const RECOGNITION_FAILURE_REASONS = [
   'quota_exhausted_user',
   'quota_exhausted_global',
   'quota_exhausted_escalation',
+  // DEC-A-018: `timeout` пишет уборщик застрявших заданий и дедлайн вызова модели,
+  // `normalize` — неудачная нормализация кадра (фича scan-pipeline). Десять значений.
+  'timeout',
+  'normalize',
 ] as const;
 export type RecognitionFailureReason = (typeof RECOGNITION_FAILURE_REASONS)[number];
 

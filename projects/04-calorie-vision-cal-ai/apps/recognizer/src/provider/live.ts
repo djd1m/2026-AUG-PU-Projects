@@ -3,7 +3,13 @@
 // обещанием. Заглушка бросает исключение с названной причиной — тихо вернуть пустой
 // ответ нельзя: он был бы неотличим от успешного разбора пустой тарелки.
 
-import type { ModelProvider, ModelRequest, ModelResponse } from './types.js';
+import type {
+  ModelCallOptions,
+  ModelImage,
+  ModelProvider,
+  ModelResponse,
+  ModelResponseSchema,
+} from './types.js';
 
 export class LiveProviderNotImplemented extends Error {
   constructor() {
@@ -15,7 +21,7 @@ export class LiveProviderNotImplemented extends Error {
 export function createLiveModelProvider(_apiKey: string): ModelProvider {
   return {
     kind: 'live',
-    async recognize(_request: ModelRequest): Promise<ModelResponse> {
+    async recognize(_image: ModelImage, _schema: ModelResponseSchema, _opts: ModelCallOptions): Promise<ModelResponse> {
       throw new LiveProviderNotImplemented();
     },
   };
