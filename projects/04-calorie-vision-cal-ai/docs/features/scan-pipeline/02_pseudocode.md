@@ -3,8 +3,9 @@
 Алгоритмический контракт. Имена сущностей, статусов, полей и чисел — из
 [`docs/canon.md`](../../canon.md) и [`docs/Pseudocode.md`](../../Pseudocode.md) (Data Structures);
 здесь они не переизобретаются. Требования и решения фичи — [`01_specification.md`](01_specification.md).
-Ревизия 2 (Попытка 3): закрывает PC-01…PC-09 из [`plan-challenge.md`](plan-challenge.md) по решениям
-координатора DEC-A-014 (`failed`, не `refused`, для отсутствия совпадения) и DEC-A-015 (эта ревизия).
+Ревизия 3 (Попытка 4): закрывает PC-06 (open) и PC2-01/PC2-02 (новые находки) из
+[`plan-challenge-2.md`](plan-challenge-2.md) по DEC-A-017; продолжает Ревизию 2 (Попытка 3,
+[`plan-challenge.md`](plan-challenge.md), DEC-A-014/DEC-A-015).
 
 ## Data Structures
 
@@ -32,7 +33,7 @@ MatchIngredientPort = {
     food_item_id: UUID | null,
     portion_g: Grams,
     source_snapshot: Snapshot | null,
-    parts?: Array<{ food_item_id: UUID, share: Confidence }>   // составное блюдо, food_synonym.recipe_parts
+    parts?: Array<{ food_item_id: UUID, share: Confidence, source_snapshot: Snapshot }>   // составное блюдо; У КАЖДОЙ части — СВОЙ Snapshot (PC-08, Попытка 4: контракт симметричен верхнему уровню)
   }>>
 }
 ```
@@ -43,8 +44,9 @@ MatchIngredientPort = {
 рассчитан на реальную реализацию `source-and-correct` без переделки вызывающего кода.
 
 Реализация ЭТОЙ фичи — `NullMatchIngredientPort`: для входа длины N возвращает МАССИВ длины N, где
-КАЖДЫЙ элемент — `{ food_item_id: null, portion_g: item.mass_g, source_snapshot: null }` (в
-`food_item` нет строк до `source-and-correct`). Тестовых двойников ДВА, и они проверяют РАЗНОЕ
+КАЖДЫЙ элемент — `{ food_item_id: null, portion_g: item.mass_g, source_snapshot: null, parts:
+undefined }` (в `food_item` нет строк до `source-and-correct`; `parts` ВСЕГДА отсутствует в этой
+реализации — раскрытие композиции появляется только вместе с реальным поиском). Тестовых двойников ДВА, и они проверяют РАЗНОЕ
 (PC-08 требует разделения):
 
 - **Контрактный тест порта** — прогоняется ПРОТИВ ЛЮБОЙ реализации (в Phase 1 — только против
@@ -81,6 +83,8 @@ REQUIREMENT: `AC-scan-pipeline-8`
 REQUIREMENT: `AC-scan-pipeline-19`
 REQUIREMENT: `AC-scan-pipeline-20`
 REQUIREMENT: `AC-scan-pipeline-24`
+REQUIREMENT: `AC-scan-pipeline-30`
+REQUIREMENT: `AC-scan-pipeline-31`
 REALISES: SC-US-001-1, SC-US-009-1
 INPUT: сессия устройства (`foundation` `CreateDeviceSession`), байты изображения, заявленный
 `Content-Type` (НЕ доверенный), заголовок `Idempotency-Key`.
@@ -108,27 +112,32 @@ limitInputPixels: 50_000_000 }).metadata()` И декодировать РОВН
 — только доказывает декодируемость дешёвым способом до необратимых шагов.
 6. `IF` заголовок `Idempotency-Key` отсутствует ИЛИ не UUID `THEN RETURN 422
 (idempotency_key_required)` — формат проверяется ДО любого обращения к хранилищу или базе.
-7. **Вычислить детерминированный ключ объекта:** `object_key = sha256(байты файла) + '/' +
-device_session_id`. Один и тот же файл от одной сессии ВСЕГДА попадает в один и тот же объект: повтор
-после разрыва соединения перезаписывает ТОТ ЖЕ ключ, а не создаёт второй объект — orphan-объект в
-этом случае физически не может появиться (PC-02).
+7. **Сгенерировать `recognition_id` (UUID) ДО загрузки и вычислить ключ объекта по НЕМУ, не по
+содержимому (PC2-01, отменяет решение Попытки 3):** `object_key = device_session_id + '/' +
+recognition_id + '.' + ext`. Хеш содержимого как ключ ОТВЕРГНУТ: два РАЗНЫХ запроса одной сессии с
+ОДИНАКОВЫМ фото, но РАЗНЫМИ `Idempotency-Key`, делили бы один объект, и удаление одного скана
+(например, при отказе квоты второго) стирало бы фото ПЕРВОГО, уже принятого скана — PC2-01.
+Дедупликация одинаковых фото НЕ выполняется: у КАЖДОЙ загрузки — СВОЙ объект, независимо от
+содержимого. `recognition_id`, сгенерированный здесь, — тот же, что станет `id` строки `recognition`
+на шаге 9.1.
 8. **Загрузить оригинал в приватный бакет ДО любой транзакции БД** (`storage`, `PUT` по
 `object_key` с шага 7). `IF` `storage` недоступен `THEN RETURN 503 (dependency_unavailable)` — НИ
 ОДНОЙ строки БД ещё не существует, откатывать нечего. Соединение с базой на этом шаге не открыто
 вовсе — сохранение объекта строго ВНЕ транзакции (`shared-resource-verification.md`).
 9. **Одна короткая транзакция БД** (PC-02, заменяет прежние раздельные шаги «заявить ключ» → «списать
 квоту» → «сохранить фото»):
-   1. `INSERT INTO recognition (device_session_id, idempotency_key, status, photo_id, attempt_no,
-      escalated, lease_fence) SELECT …, 'queued', :photo_id_placeholder, 1, false, 0 ON CONFLICT
-      (device_session_id, idempotency_key) DO NOTHING RETURNING id` — фото ещё не вставлено, поэтому
-      сначала вставляется `photo` (см. далее), а `photo_id` подставляется тем же INSERT'ом в ОДНОЙ
-      транзакции (порядок вставки `photo` → `recognition` внутри транзакции, а не наоборот — строка
-      `recognition` со статусом `queued` не существует НИ МОМЕНТА без `photo_id`). `IF` результат
-      `INSERT` пуст (конфликт) `THEN` это ПОВТОР существующего скана: прочитать существующую строку,
-      ROLLBACK эту транзакцию (ничего не менять), удалить best-effort только что загруженный объект
-      ТОЛЬКО если он отличается от объекта существующей строки (при совпадающем `object_key`, что
-      является нормой при повторе того же файла, удалять нечего — `PUT` просто перезаписал тот же
-      объект тем же содержимым); `RETURN` существующий `scan_id`, `202`, её ТЕКУЩИЙ статус.
+   1. `INSERT INTO recognition (id, device_session_id, idempotency_key, status, photo_id, attempt_no,
+      escalated, lease_fence) VALUES (:recognition_id_с_шага_7, …, 'queued', :photo_id, 1, false, 0)
+      ON CONFLICT (device_session_id, idempotency_key) DO NOTHING RETURNING id` — `id` ЗАДАН заранее
+      (шаг 7), а не сгенерирован базой, потому что `object_key` уже ссылается на него. Вставка
+      `photo` (см. далее) предшествует вставке `recognition` внутри ЭТОЙ ЖЕ транзакции. `IF` результат
+      `INSERT` пуст (конфликт по `(device_session_id, idempotency_key)`, а не по `id` — `id` каждой
+      попытки СВОЙ, коллизия по нему исключена генератором UUID) `THEN` это ПОВТОР существующего
+      скана: прочитать существующую строку, ROLLBACK эту транзакцию целиком (ни `photo`, ни
+      `recognition` этой попытки не сохраняются). Удалить СВОЙ, ТОЛЬКО ЧТО загруженный объект по
+      `object_key` шага 7 (PC2-01: он адресован `recognition_id` ЭТОЙ конкретной, отклонённой попытки
+      и НИКЕМ, включая существующую строку, не используется — удаление СВОЕГО объекта никогда не
+      затрагивает чужой). `RETURN` существующий `scan_id`, `202`, её ТЕКУЩИЙ статус.
    2. `INSERT INTO photo (device_session_id, object_key, mime, bytes, width, height, expires_on,
       file_state) VALUES (…, today + 30 дней, 'present') RETURNING id` — MIME из шага 2 (сигнатура),
       не заявленный клиентом.
@@ -136,11 +145,12 @@ device_session_id`. Один и тот же файл от одной сесси�
       reason = 'primary')` (`foundation`, три ключа) ВНУТРИ этой же транзакции. `day` вычисляется
       РОВНО в момент этого шага, а не переносится из более раннего вызова (FR-scan-pipeline-18,
       PC-06). `IF refused(scope) THEN` **откатить ВСЮ транзакцию** (и `recognition`, и `photo` не
-      сохраняются вовсе — не переводятся в `refused`, потому что строки не существует) и после
-      отката удалить best-effort только что загруженный объект; при неудаче best-effort-удаления
-      объект физически бесхозен, НО ограничен по времени политикой жизненного цикла бакета (ADR-010,
-      второй рубеж, действующий НЕЗАВИСИМО от таблицы `photo` — срабатывает по возрасту объекта, а
-      не по наличию ссылающейся строки). `RETURN 429` с `{ limit, reset_at (следующая полночь
+      сохраняются вовсе — не переводятся в `refused`, потому что строки не существует) и после отката
+      удалить best-effort СВОЙ (адресованный СВОИМ `recognition_id`, PC2-01) только что загруженный
+      объект — удаление ЧУЖОГО объекта здесь структурно невозможно, ключ каждой загрузки уникален по
+      построению шага 7; при неудаче best-effort-удаления объект физически бесхозен, но ОГРАНИЧЕН по
+      времени: см. шаг 12 (уборка орфанов по возрасту, PC-02) и политику жизненного цикла бакета
+      (ADR-010, ЕЩЁ один, независимый рубеж). `RETURN 429` с `{ limit, reset_at (следующая полночь
       Europe/Moscow ОТ ЭТОГО момента), scope }`.
    4. `IF granted THEN` `COMMIT`. Строка `recognition` появляется воркеру ЦЕЛИКОМ и АТОМАРНО: `status
       = 'queued'`, `photo_id` уже установлен, `attempt_no = 1`, `escalated = false`, `lease_fence =
@@ -152,7 +162,16 @@ device_session_id`. Один и тот же файл от одной сесси�
 10. `IF` это ПЕРВЫЙ скан сессии `THEN` записать `growth_event(type = 'install', …)` (вне транзакции
 шага 9, не влияет на её атомарность — потеря этого события не теряет деньги и не создаёт гонку).
 11. `RETURN 202` с `{ scan_id, status: 'queued' }` немедленно.
-COMPLEXITY: O(1) плюс одна загрузка объекта ДО транзакции и одна короткая транзакция.
+12. **Уборка неудалённых best-effort орфанов (PC-02, дополнение к шагам 9.1/9.3).** Раз в сутки, тем
+же прогоном, что и `PurgeExpiredPhotos` (не отдельный сервис): перечислить объекты в бакете по
+префиксу `<device_session_id>/` без соответствующей строки `photo.object_key` — по ключу объекта
+однозначно виден `recognition_id`, из которого выводится ожидаемый `object_key`; объект, чей
+`recognition_id` НЕ найден ни в одной строке `recognition`, старше 1 часа, удаляется. Порог 1 час
+(не 30 дней) — best-effort-удаление шагов 9.1/9.3 покрывает подавляющее большинство случаев
+синхронно, и этот шаг — сеть безопасности ИМЕННО для редкого краха процесса МЕЖДУ `PUT` и `COMMIT`
+(тест: `AC-scan-pipeline-19`), а не основной путь уборки.
+COMPLEXITY: O(1) плюс одна загрузка объекта ДО транзакции и одна короткая транзакция; шаг 12 — O(n)
+по числу объектов префикса за прогон.
 
 ### Algorithm: GetScanStatus
 
@@ -233,6 +252,9 @@ REQUIREMENT: `AC-scan-pipeline-26`
 REQUIREMENT: `AC-scan-pipeline-27`
 REQUIREMENT: `AC-scan-pipeline-28`
 REQUIREMENT: `AC-scan-pipeline-29`
+REQUIREMENT: `AC-scan-pipeline-32`
+REQUIREMENT: `AC-scan-pipeline-33`
+REQUIREMENT: `AC-scan-pipeline-35`
 REALISES: SC-US-001-2, SC-US-002-2
 INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (несёт `lease_fence`, `photo_id`,
 ГАРАНТИРОВАННО непустой — см. «Зависимости от `foundation`»).
@@ -240,37 +262,56 @@ OUTPUT: `recognition` в терминальном статусе `failed` или
 фиче реальным `NullMatchIngredientPort` — путь к `done` проверяется отдельно, unit-тестом с
 `FixedMatchIngredientPort`).
 STEPS:
-1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, возвращённый
-захватом.
-2. **Повторная попытка после истечения аренды списывает СВОЮ квоту (PC-01).** `IF fence = 1` (это
-ПЕРВЫЙ захват этого задания) `THEN` попытка №1 уже оплачена и списана шагом 9.3
-`EnqueueScanForFeature` — переходить к шагу 3 без нового списания. `IF fence ∈ {2, 3}` (это
-ПОВТОРНЫЙ захват — предыдущий воркер не уложился в 60 с аренды) `THEN` ДО загрузки фото и ДО вызова
-модели вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС,
-reason = 'primary')` — ЕЩЁ ОДНО списание трёх ключей, `day` вычисляется В МОМЕНТ ЭТОГО захвата и
-может отличаться от `day` шага 9.3, если задание пересекло полночь (PC-06). `IF refused(scope) THEN`
-записать `refused(quota_exhausted_${scope})` условно по `fence` (механизм шага 9 ниже) и `RETURN` —
-модель на этой попытке не вызывается вовсе; это ОТКАЗ ДО вызова, соответствует `refused` по критерию
-координатора (DEC-A-014). `fence = 4` невозможен по построению — предикат захвата `foundation`
-ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»); при обнаружении `fence > 3`
-(защита от регресса) `THEN` немедленно `failed(timeout)` без вызова модели.
-3. Вызвать `NormalizePhotoForModel`. `IF failed THEN` записать `failed(schema_violation)` условно по
-`fence` (шаг 9) и `RETURN`.
+1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, `attempt_id
+= recognition_id + ':' + fence + ':' + (escalated ? 'escalation' : 'primary')` (PC-07, ключ
+корреляции `START`/`OUTCOME`).
+1а. **Общий бюджет задачи = `created_at + 30 с` (PC-03 + PC2-02, замена приближения Попытки 3).**
+`remaining = 30_000мс − (now() − created_at)`. `IF remaining ≤ 0 THEN` немедленно, БЕЗ вызова модели
+и БЕЗ нового списания квоты, записать `failed(timeout)` условно по `fence` (механизм шага 9) и
+`RETURN` — задание простояло в очереди (все воркеры были заняты дольше 30 с) или уже исчерпало бюджет
+на предыдущих попытках; попытка НЕ производилась, платить не за что. Это закрывает ту часть PC2-02,
+где «интервал опроса 1 с не ограничивает очередь при занятых воркерами»: воркер, взявший просроченное
+задание, обязан отказаться от него САМ, не полагаясь только на `SweepStuckScans`.
+2. **Повторная попытка после истечения аренды ИЛИ смены суток списывает СВОЮ квоту (PC-01 + PC-06,
+закрывает найденную дыру).** Вычислить `day = day(now(), Europe/Moscow)`. `IF fence = 1 AND day =
+day(created_at, Europe/Moscow) THEN` попытка №1 уже оплачена шагом 9.3 `EnqueueScanForFeature` в ТОТ
+ЖЕ день — переходить к шагу 3 без нового списания. `IF fence ≥ 2 OR day ≠ day(created_at,
+Europe/Moscow)` (повторный захват — предыдущий воркер не уложился в 60 с аренды; ЛИБО первый захват
+произошёл уже в СЛЕДУЮЩИЕ сутки после полуночи Europe/Moscow относительно `created_at` — приём и
+первый захват разделены `≤ 1 с` в норме, но при перегруженном пуле воркеров задержка первого захвата
+способна пересечь полночь) `THEN` ДО загрузки фото и ДО вызова модели вызвать
+`CheckAndConsumeQuota(session, ip_prefix, day, reason = 'primary')` — ЕЩЁ ОДНО списание трёх ключей
+по ТЕКУЩЕМУ `day`. Это СОЗНАТЕЛЬНЫЙ перерасход в сторону строгости при пограничном первом захвате
+(редкий случай: перегрузка воркеров ровно на границе суток), а не молчаливый пробел — координатор
+(DEC-A-017) предпочитает лишнее списание пропущенному. `IF refused(scope) THEN` записать
+`refused(quota_exhausted_${scope})` условно по `fence` (шаг 9) и `RETURN` — модель на этой попытке не
+вызывается; это ОТКАЗ ДО вызова (DEC-A-014). `fence = 4` невозможен по построению — предикат захвата
+`foundation` ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»); при обнаружении
+`fence > 3` (защита от регресса) `THEN` немедленно `failed(timeout)` без вызова модели.
+3. Вычислить `callDeadlineMs = min(25_000, remaining)` (шаг 1а, ПЕРЕСЧИТАННЫЙ после возможного
+списания квоты шага 2 — время не останавливается). Вызвать `NormalizePhotoForModel` под ТЕМ ЖЕ
+`AbortController`, что и модель на шаге 4 (единый бюджет операции, не два независимых таймаута). `IF
+failed THEN` записать `failed(schema_violation)` условно по `fence` (шаг 9) и `RETURN`. `IF`
+`AbortController` сработал по общему дедлайну ДО завершения нормализации `THEN failed(timeout)` —
+нормализация не оплачивается отдельно, вызова модели не было.
 4. Определить модель ЯВНО: `model = escalated ? N4_MODEL_ESCALATION : N4_MODEL_PRIMARY` (значения
 окружения канона, ADR-004; `foundation` не выбирает модель сама — см. «Зависимости от `foundation`»,
-PC-09). Вызвать `ModelProvider.recognize(normalizedImage, schema, { model, deadlineMs: 25_000 })`.
-**Скрытые повторы SDK провайдера отключены явно** (`maxRetries: 0` при создании клиента,
-`03_architecture.md`) — единственный источник повторного вызова модели на одну попытку `fence` —
-явная логика этого алгоритма (шаг 6, эскалация), не библиотека. Записать `model_call` (событие,
-FR-scan-pipeline-12): `START` немедленно ПЕРЕД вызовом (`{ request_id, scan_id, fence, reason:
-escalated ? 'escalation' : 'primary', model, mode: N4_MODEL_PROVIDER, day, ts }`), `OUTCOME` сразу
-после ответа/ошибки/таймаута (`{ request_id (тот же), outcome: 'ok'|'failed'|'timeout', ms,
-input_tokens?, output_tokens? }`). Если процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже записан
-в структурированный вывод (не буферизуется) — агрегатор (`scripts/telemetry/model-calls.sh`, план,
-PC-07) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как `outcome:
-'unknown'`; счёт в потолках это НЕ меняет — квота уже списана шагом 2/9.3 ДО вызова, независимо от
-исхода. `IF` ответ не соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер недоступен
-ИЛИ истёк дедлайн 25 с `THEN failed(provider_unavailable | provider_timeout)`.
+подтверждено координатором 2026-09-12 20:33, см. `03_architecture.md`). Вызвать
+`ModelProvider.recognize(normalizedImage, schema, { model, deadlineMs: callDeadlineMs })` на ТОМ ЖЕ
+`AbortController`, что и `NormalizePhotoForModel` — по истечении ОБЩЕГО бюджета `AbortController`
+обрывает HTTP-вызов НЕМЕДЛЕННО, платная работа не продолжается ни на секунду сверх бюджета (PC2-02:
+«живой воркер сам прекращает работу по своему дедлайну»). **Скрытые повторы SDK провайдера отключены
+явно** (`maxRetries: 0` при создании клиента). Записать `model_call` (FR-scan-pipeline-12): `START`
+немедленно ПЕРЕД вызовом (`{ request_id, attempt_id, scan_id, fence, reason: escalated ? 'escalation'
+: 'primary', model, mode: N4_MODEL_PROVIDER, day, ts }`), `OUTCOME` сразу после ответа/ошибки/обрыва
+(`{ attempt_id (тот же, ключ корреляции), outcome: 'ok'|'failed'|'timeout'|'late', ms, input_tokens?,
+output_tokens? }`). Если процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже записан в
+структурированный вывод (не буферизуется) — агрегатор `scripts/telemetry/model-calls.sh`
+(FR-scan-pipeline-21, ЭТА фича его РЕАЛИЗУЕТ, не только планирует) сопоставляет `attempt_id` и метит
+непарные `START` старше грейс-периода как `outcome: 'unknown'`; счёт в потолках это НЕ меняет — квота
+списана ДО вызова. `IF` ответ не соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер
+недоступен `THEN failed(provider_unavailable)`. `IF` `AbortController` оборвал вызов по бюджету `THEN
+failed(timeout)`, `outcome: 'timeout'`.
 5. Проверить ДИАПАЗОНЫ в коде: `confidence` в 0…1; `mass_g` каждой позиции в 1…5000; позиций ≤ 12;
 кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` нарушено `THEN failed(schema_violation)`
 с названным полем — без подрезания.
@@ -302,14 +343,21 @@ source_snapshot`; иначе `unmatched = true`, `food_item_id = null`. `IF` (с
    исчезнет вместе с `NullMatchIngredientPort`. До тех пор оба документа (root `ADR.md` и эта фича)
    намеренно расходятся, и расхождение НАЗВАНО, а не тихо перекрыто. Координатор подтверждает эту
    трактовку явно на чекпойнте — она не выводится автоматически ни из ADR-001, ни из DEC-A-014.
-9. Записать результат УСЛОВНО: `UPDATE recognition SET status = …, finished_at = now(), leased_until
-= NULL, lease_owner = NULL, … WHERE id = :scan_id AND lease_fence = :fence AND status = 'queued'` —
-условие `status = 'queued'` ДОБАВЛЕНО к условию по `fence` (PC-03): это делает запись воркера
-взаимоисключающей со `SweepStuckScans`, который пишет терминальный статус БЕЗ владения арендой (у
-sweeper'а нет `fence` — только право переводить `queued` в `failed(timeout)` по возрасту). `IF`
-затронуто НОЛЬ строк `THEN` результат ОТБРОСИТЬ: если проиграл гонку ДРУГОМУ воркеру — записать
-`stale_lease_result`; если проиграл гонку `SweepStuckScans` (статус уже не `queued`) — записать
-`swept_as_timeout`. Различить эти два случая ПОСЛЕ факта: перечитать строку, сравнить `status`.
+9. **ПЕРЕД записью — последняя проверка бюджета.** `IF now() > created_at + 30 с` (бюджет истёк, ПОКА
+шёл вызов модели — ответ пришёл, но ПОЗДНО) `THEN` результат НЕ применяется: записать `model_call
+OUTCOME { attempt_id, outcome: 'late', ms }` — попытка ОПЛАЧЕНА (модель ответила, счёт уже списан) и
+УЧТЕНА (событие есть), но её содержимое отбрасывается; условная запись ниже в этом случае пишет
+`failed(timeout)` вместо содержательного статуса — деньги потрачены, результата пользователь не
+увидит, это НАЗВАННАЯ, а не скрытая цена. `ELSE` записать результат УСЛОВНО: `UPDATE recognition SET
+status = …, finished_at = now(), leased_until = NULL, lease_owner = NULL, … WHERE id = :scan_id AND
+lease_fence = :fence AND status = 'queued'` — условие `status = 'queued'` ДОБАВЛЕНО к условию по
+`fence` (PC-03): взаимоисключает запись воркера с `SweepStuckScans` (у sweeper'а нет `fence` — только
+право переводить `queued` в `failed(timeout)`, и ТОЛЬКО для строк с ИСТЁКШЕЙ арендой, см.
+`SweepStuckScans` правило В — живой воркер в пределах СВОЕЙ аренды sweeper'ом не трогается, он сам
+следит за своим бюджетом шагами 1а/3/4). `IF` затронуто НОЛЬ строк `THEN` результат ОТБРОСИТЬ: если
+проиграл гонку ДРУГОМУ воркеру — записать `stale_lease_result`; если проиграл гонку `SweepStuckScans`
+(статус уже не `queued`) — записать `swept_as_timeout`. Различить эти два случая ПОСЛЕ факта:
+перечитать строку, сравнить `status`.
 COMPLEXITY: O(k) на позицию (k ≤ 12) плюс O(1) на решение по каждому шагу.
 
 ### Algorithm: SweepStuckScans
@@ -317,6 +365,7 @@ COMPLEXITY: O(k) на позицию (k ≤ 12) плюс O(1) на решени�
 REQUIREMENT: `FR-scan-pipeline-16`
 REQUIREMENT: `AC-scan-pipeline-22`
 REQUIREMENT: `AC-scan-pipeline-23`
+REQUIREMENT: `AC-scan-pipeline-36`
 REALISES: — (сценария `SC-US-nnn-k` нет; PC-03 — инженерный дедлайн, не пользовательский путь)
 INPUT: текущее время, тот же цикл опроса `recognizer` (интервал 1 с, `foundation`), что и захват
 задания — ОТДЕЛЬНОГО сервиса не заводится.
@@ -334,19 +383,30 @@ now() - interval '5 minutes' AND status = 'queued'` — задание прос�
 предложится НИ ОДНОМУ воркеру и провисит в `queued` вечно без sweeper'а. `UPDATE recognition SET
 status = 'failed', failure_reason = 'timeout', finished_at = now() WHERE status = 'queued' AND
 lease_fence >= 3 AND leased_until < now()`.
-3. **Правило В — общий дедлайн задачи 30 с (приближение, названное явно).** Колонки
-`first_leased_at` в каноне НЕТ, и эта фича её не добавляет (координатор запретил новые сущности).
-Прокси — `created_at`: первый захват происходит в пределах интервала опроса (≤ 1 с) после создания
-строки, поэтому `now() - created_at` практически совпадает с «время с первого захвата» с точностью
-до секунды. `UPDATE recognition SET status = 'failed', failure_reason = 'timeout', finished_at =
-now() WHERE status = 'queued' AND lease_fence >= 1 AND created_at < now() - interval '30 seconds'`.
-**Названный риск, а не скрытый:** это приближение, а не точное измерение с момента первого захвата;
-задание, легитимно завершающееся между 30 и ~31 с (интервал опроса), теоретически может быть
-затронуто ОБОИМИ — и настоящим воркером, и sweeper'ом. Гонка разрешена условием `status = 'queued'`
-в обоих операторах (шаг 9 `RecognizeScanWithinScanPipeline` и здесь): кто раньше СОVERSHOOTS, тот и
-записывает, второй получает 0 строк. Точное решение (журнал `first_leased_at`) — кандидат в
-`source-and-correct`/следующую ревизию `foundation`, не эта фича.
-4. Каждое правило — отдельный, идемпотентный `UPDATE` со СВОИМ `WHERE`; повторный прогон не находит
+3. **Правило В — общий дедлайн задачи 30 с, ТОЛЬКО для заданий БЕЗ живого воркера (PC-03, переписано
+по PC2-02).** Колонки `first_leased_at` в каноне нет, эта фича её не добавляет; прокси — `created_at`
+(первый захват — в пределах ≤ 1 с интервала опроса при свободном пуле воркеров). Критическая правка
+относительно Попытки 3: условие ОБЯЗАНО включать `leased_until < now()` — то есть sweeper НИКОГДА не
+трогает задание, чья аренда ЕЩЁ ДЕЙСТВУЕТ, потому что живой воркер отслеживает СВОЙ бюджет сам (шаги
+1а/3/4 `RecognizeScanWithinScanPipeline`, `AbortController`) и либо успевает записать терминальный
+статус САМ, либо его аренда естественно истекает после 60 с, и ТОЛЬКО ТОГДА sweeper вправе действовать.
+Без этого условия (как было в Попытке 3) sweeper мог перевести в `failed(timeout)` задание, которое в
+этот момент ЕЩЁ обрабатывает живой воркер внутри своей аренды — PC2-02: «sweeper завершает задание, но
+не прекращает платную работу». `UPDATE recognition SET status = 'failed', failure_reason = 'timeout',
+finished_at = now() WHERE status = 'queued' AND lease_fence >= 1 AND created_at < now() - interval '30
+seconds' AND (leased_until IS NULL OR leased_until < now())`. Задание, чей воркер уложился в СВОЙ
+бюджет (шаг 1а обнаружил `remaining ≤ 0` и сам записал `failed(timeout)` ДО того, как аренда истекла),
+sweeper этим правилом уже не находит — строка не в `queued`.
+4. **Правило Г — исключить захват уже просроченных заданий (PC2-02, «интервал опроса не ограничивает
+очередь при занятых воркерами»).** Предпочтительный рубеж — предикат ВЫБОРКИ `foundation`
+(`WHERE … AND created_at > now() - interval '30 seconds'`, зависимость, см. `03_architecture.md`);
+ОБЯЗАТЕЛЬНЫЙ рубеж этой фичи, действующий НЕЗАВИСИМО от того, обновлён ли предикат `foundation`, —
+шаг 1а `RecognizeScanWithinScanPipeline`: воркер, УЖЕ захвативший просроченное задание (потому что
+предикат `foundation` его не отфильтровал), обязан САМ отказаться от платной работы немедленно.
+Отсюда два независимых рубежа для одного свойства — ЭТО НЕ ИЗБЫТОЧНОСТЬ ПРОСТО ТАК: предикат экономит
+захват впустую (эффективность), шаг 1а гарантирует корректность ДАЖЕ если предикат не обновлён
+(defense-in-depth, тот же принцип, что `photo_id IS NOT NULL`).
+5. Каждое правило — отдельный, идемпотентный `UPDATE` со СВОИМ `WHERE`; повторный прогон не находит
 уже переведённых строк.
 COMPLEXITY: O(n) по числу застрявших строк на прогон; индексы `(status, leased_until)` и
 `(status, created_at)` держат стоимость малой относительно общего объёма `queued`.
@@ -380,6 +440,28 @@ STEPS:
 `EnqueueScanForFeature`: она же ловит объекты без ЛЮБОЙ ссылающейся строки).
 5. Повторный прогон в тот же день — ноль действий.
 COMPLEXITY: O(b) на прогон, b — размер батча.
+
+### Algorithm: AggregateModelCallLog
+
+REQUIREMENT: `FR-scan-pipeline-21`
+REQUIREMENT: `AC-scan-pipeline-34`
+REALISES: — (инструмент наблюдаемости, не пользовательский сценарий)
+INPUT: JSON-журнал `api`+`recognizer` за сутки (стандартный вывод процессов, собранный платформой),
+дата.
+OUTPUT: счётчики попыток по `reason`/`outcome`/`model` и суммарное `ms`, напечатанные в stdout.
+STEPS:
+1. Прочитать строки журнала за сутки (файл или поток, путь — аргумент скрипта); каждая строка —
+JSON-объект `model_call` (`START` или `OUTCOME`, различаются наличием поля `outcome`).
+2. Сгруппировать `OUTCOME`-строки по `attempt_id` = `<recognition_id>:<fence>:<reason>` — ключ
+корреляции с соответствующим `START` (FR-scan-pipeline-12).
+3. `IF` `START` без парного `OUTCOME` старше грейс-периода (2 минуты — с запасом над дедлайном 25 с
+одного вызова) `THEN` учесть как `outcome: 'unknown'` в агрегате, не отбрасывать.
+4. Посчитать: число попыток на `(reason, outcome, model)`; сумму и среднее `ms` на ту же группировку;
+долю эскалаций от первичных попыток за сутки.
+5. Напечатать таблицу в stdout (человекочитаемо и `--json` для скриптов). Служебная СТРАНИЦА
+(веб-интерфейс с ролью-владельцем и обновлением ≤ 5 минут) — ПЛАН, явно ВНЕ недели MVP; этот скрипт —
+только источник ЧИСЕЛ по требованию, не постоянно работающий сервис.
+COMPLEXITY: O(L) по числу строк журнала за сутки.
 
 ## API Contracts
 
