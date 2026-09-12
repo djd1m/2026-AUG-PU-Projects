@@ -83,4 +83,13 @@ share-CTA, пересчёт ккал степпером (540 → 1080), раск
 - requested: claude-opus-5
 - actual: unknown to worker
 
+## Переделка 2026-09-12 (координатор, Claude Fable 5.1)
+
+Причина: владелец отверг облик первой сборки («позорище»): эмодзи вместо еды, системный Inter,
+типовые карточки. Переписаны `index.html`, `assets/styles.css`, новый `assets/phone.css`,
+`assets/food.js` (SVG-блюда), `assets/screens.js`; в `app.js`/`data.js` точечные правки.
+Шрифты Unbounded 180 КБ и Onest 79 КБ (сабсет pyftsubset, OFL-тексты рядом).
+Смоук после переделки: 148/148, console errors 0; скриншоты в `tests/shots/` перегенерированы.
+Один визуальный просмотр координатором: чипы ингредиентов сдвинуты внутрь кадра.
+
 Status: completed

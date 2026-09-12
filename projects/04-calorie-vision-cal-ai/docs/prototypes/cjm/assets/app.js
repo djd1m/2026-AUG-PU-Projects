@@ -42,7 +42,8 @@
     });
     $('stage').setAttribute('aria-labelledby', 'tab-' + st.v);
 
-    $('variant-name').textContent = flow.id + ' — ' + flow.name;
+    $('hero-k').textContent = 'Вариант ' + flow.id + ' из четырёх';
+    $('variant-name').textContent = flow.name;
     $('variant-loop').textContent = flow.loop;
     $('variant-aha').textContent = flow.aha;
 
@@ -58,9 +59,12 @@
       const cur = m.step === st.s;
       return '<button type="button" data-step="' + m.step + '"' +
         (cur ? ' aria-current="step"' : '') + '>' +
-        '<span class="rail-n">Шаг ' + m.step + ' · ' + m.stage + '</span>' +
-        '<span class="rail-t">' + esc(m.title) + '</span></button>';
-    }).join('');
+        '<span class="rail-num" aria-hidden="true">' + m.step + '</span>' +
+        '<span><span class="rail-t">' + esc(m.title) + '</span>' +
+        '<span class="rail-s">' + m.stage + ' · ' + esc(m.hint) + '</span></span></button>';
+    }).join('') + (st.s < 6
+      ? '<button type="button" class="pill pill-ghost rail-next" data-action="step-next">Следующий шаг →</button>'
+      : '');
   }
 
   function renderMap(flow) {
@@ -106,7 +110,7 @@
       }).join('') + '</tr>';
     }).join('');
     const choose = '<tr class="choose-row"><th scope="row">Решение</th>' + VARIANTS.map(function (v) {
-      return '<td><button type="button" class="pill pill-dark" data-action="choose" data-variant="' + v + '">Выбираю ' + v + '</button></td>';
+      return '<td><button type="button" class="pill pill-yolk" data-action="choose" data-variant="' + v + '">Выбираю ' + v + '</button></td>';
     }).join('') + '</tr>';
     $('cmp-table').innerHTML = head + '<tbody>' + body + choose + '</tbody>';
   }
@@ -207,7 +211,7 @@
       const off = map.classList.toggle('hidden-body');
       $('stage').classList.toggle('map-off', off);
       el.setAttribute('aria-expanded', off ? 'false' : 'true');
-      el.innerHTML = '<span aria-hidden="true">📊</span> ' + (off ? 'Показать карту' : 'Скрыть карту');
+      el.textContent = off ? 'Показать карту' : 'Скрыть карту';
       return;
     }
     if (a === 'open-compare') { openSheet('compare'); return; }

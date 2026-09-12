@@ -16,13 +16,13 @@ const CJM_META = [
 const DEMO = {
   dish: 'Сырники со сметаной и черникой',
   meal: 'Завтрак · 09:40',
-  emoji: '🥞',
+  food: 'syrniki',
   portionG: 250,
   per100: { kcal: 216, prot: 12.8, fat: 9.4, carb: 21.6 },
   chips: [
-    { label: 'Творог 9%', g: 150, x: 24, y: 22 },
-    { label: 'Сметана', g: 40, x: 76, y: 40 },
-    { label: 'Черника', g: 60, x: 30, y: 80 }
+    { label: 'Творог 9%', g: 150, x: 12, y: 18 },
+    { label: 'Сметана', g: 40, x: 58, y: 42 },
+    { label: 'Черника', g: 60, x: 22, y: 80 }
   ],
   source: {
     chip: 'USDA FDC 173410 · 250 г',
@@ -39,9 +39,9 @@ const DEMO = {
     protGoal: 120,
     streak: 4,
     rows: [
-      { emoji: '🥞', name: 'Сырники со сметаной', when: '09:40', kcal: 540 },
-      { emoji: '🥗', name: 'Салат с тунцом', when: '14:10', kcal: 430 },
-      { emoji: '🍝', name: 'Паста болоньезе', when: '19:25', kcal: 870 }
+      { food: 'syrniki', name: 'Сырники со сметаной', when: '09:40', kcal: 540 },
+      { food: 'salad', name: 'Салат с тунцом', when: '14:10', kcal: 430 },
+      { food: 'pasta', name: 'Паста болоньезе', when: '19:25', kcal: 870 }
     ]
   }
 };

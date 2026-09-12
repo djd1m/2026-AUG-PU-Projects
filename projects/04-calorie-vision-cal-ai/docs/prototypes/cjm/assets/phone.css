@@ -1,0 +1,137 @@
+/* Экраны телефона «Тарелка» — светлая бумага, чёрный текст, один тёмный блок, пилюли.
+   Закономерности FR-LOOK-006..011 из source-product-profile.md; палитра своя. */
+
+.scr { display: grid; gap: 12px; padding: 64px 16px 24px; min-height: 100%; font-size: 14px; line-height: 20px; }
+.scr-sub { color: var(--ink-2); font-size: 13px; line-height: 18px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-m); padding: 14px; }
+.card-dark { background: var(--app-dark); color: var(--paper); border-color: transparent; }
+.card-dark .scr-sub { color: rgba(251, 248, 242, .66); }
+.card h3 { font-size: 17px; line-height: 22px; }
+.fr-tag { display: inline-block; margin-top: 8px; font-family: var(--display); font-size: 10px; letter-spacing: .06em; color: var(--yolk-deep); }
+.consent { font-size: 12px; line-height: 16px; color: var(--ink-2); }
+
+.p-pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: 999px; padding: 11px 16px;
+  font-weight: 600; font-size: 14px; line-height: 18px; border: 1px solid var(--ink); background: #fff; color: var(--ink); transition: transform .12s; }
+.p-pill:active { transform: scale(.97); }
+.p-pill-dark { background: var(--ink); color: var(--paper); }
+.p-pill-yolk { background: var(--yolk); border-color: var(--yolk); color: var(--ink); }
+.p-pill-tiny { padding: 6px 12px; font-size: 12px; line-height: 16px; border-color: var(--line); color: var(--ink-2); font-weight: 500; }
+.p-pill-wide { width: 100%; }
+
+/* 1 — вход */
+.entry-media { position: relative; height: 300px; border-radius: var(--r-l); overflow: hidden; background: var(--app-dark); color: var(--paper); display: grid; place-items: center; }
+.entry-media svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.entry-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 248, 242, .14); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; backdrop-filter: blur(4px); }
+.entry-title { position: absolute; left: 14px; right: 14px; bottom: 16px; font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1.1; text-shadow: 0 2px 12px rgba(0, 0, 0, .5); }
+.entry-code { font-family: var(--display); font-weight: 800; font-size: 34px; letter-spacing: .06em; color: var(--yolk); }
+.entry-play { width: 58px; height: 58px; border-radius: 50%; background: rgba(251, 248, 242, .92); display: grid; place-items: center; color: var(--ink); font-size: 20px; }
+.entry-chat { display: grid; gap: 8px; padding: 16px; width: 100%; align-self: end; }
+.bubble { background: #fff; color: var(--ink); border-radius: 14px 14px 14px 4px; padding: 8px 12px; font-size: 13px; max-width: 86%; }
+.bubble-me { background: var(--yolk); border-radius: 14px 14px 4px 14px; justify-self: end; }
+
+/* 2 — камера (FR-LOOK-006) */
+.scr-camera { padding: 0; background: #0A0710; color: var(--paper); gap: 0; grid-template-rows: 1fr auto; }
+.cam-view { position: relative; overflow: hidden; background: #0A0710; }
+.cam-view svg.food { position: absolute; left: 50%; top: 52%; width: 300px; height: 300px; transform: translate(-50%, -50%); filter: saturate(.85) brightness(.9); }
+.cam-vignette { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(10, 7, 16, .78) 78%); }
+.cam-top { position: absolute; top: 56px; left: 16px; right: 16px; display: flex; justify-content: space-between; font-size: 13px; color: rgba(251, 248, 242, .85); }
+.cam-frame { position: absolute; left: 50%; top: 52%; width: 232px; height: 232px; transform: translate(-50%, -50%); }
+.cam-frame i { position: absolute; width: 30px; height: 30px; border: 3px solid var(--paper); }
+.cam-frame i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-radius: 10px 0 0 0; }
+.cam-frame i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-radius: 0 10px 0 0; }
+.cam-frame i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 10px; }
+.cam-frame i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-radius: 0 0 10px 0; }
+.cam-scan { position: absolute; left: 4px; right: 4px; top: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--yolk), transparent); animation: scan 2.2s ease-in-out infinite; }
+@keyframes scan { 0%, 100% { top: 4%; opacity: .2; } 50% { top: 96%; opacity: 1; } }
+.cam-hint { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-size: 12px; color: rgba(251, 248, 242, .7); }
+.cam-bottom { padding: 12px 16px 26px; background: #0A0710; display: grid; gap: 14px; justify-items: center; }
+.cam-modes { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+.cam-modes button { flex: 0 0 auto; padding: 7px 12px; border-radius: 999px; font-size: 12px; color: rgba(251, 248, 242, .7); border: 1px solid rgba(251, 248, 242, .18); }
+.cam-modes button[aria-pressed="true"] { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.shutter { width: 72px; height: 72px; border-radius: 50%; background: var(--paper); box-shadow: 0 0 0 4px #0A0710, 0 0 0 6px rgba(251, 248, 242, .6); transition: transform .12s; }
+.shutter:active { transform: scale(.92); }
+
+/* 3 — результат (FR-LOOK-007) */
+.res-photo { position: relative; height: 250px; border-radius: var(--r-l); overflow: hidden; background: linear-gradient(160deg, #E9DDC6, #CDBBA0); }
+.res-photo svg.food { position: absolute; left: 50%; top: 50%; width: 250px; height: 250px; transform: translate(-50%, -50%); }
+.ing-chip { position: absolute; padding: 5px 10px; border-radius: 999px; background: rgba(23, 18, 28, .86); color: var(--paper); font-size: 11px; line-height: 14px; white-space: nowrap; backdrop-filter: blur(4px); }
+.ing-chip::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--yolk); margin-right: 6px; vertical-align: 1px; }
+.res-name { font-size: 20px; line-height: 24px; }
+.stepper { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+.stepper button { width: 32px; height: 32px; border-radius: 50%; background: var(--paper-2); font-size: 18px; line-height: 1; }
+.stepper-val { min-width: 92px; text-align: center; font-weight: 700; font-family: var(--display); font-size: 14px; }
+.stepper-g { color: var(--ink-2); font-family: var(--text); font-weight: 500; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tile { background: var(--paper-2); border-radius: var(--r-s); padding: 10px 10px 8px; }
+.tile-kcal { grid-column: 1 / -1; background: var(--app-dark); color: var(--paper); display: flex; align-items: baseline; gap: 10px; padding: 12px 14px; }
+.tile-v { font-size: 18px; font-weight: 700; line-height: 1.1; }
+.tile-kcal .tile-v { font-size: 40px; }
+.tile-l { font-size: 11px; color: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
+.tile-kcal .tile-l { color: rgba(251, 248, 242, .6); }
+.tile-kcal .tile-src { margin-left: auto; font-size: 11px; color: var(--yolk); }
+.src-chip { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 10px 12px; border-radius: var(--r-s); border: 1px dashed var(--yolk-deep); color: var(--ink); font-size: 12px; background: #FFF8E0; }
+.src-chip b { font-family: var(--display); font-size: 11px; color: var(--yolk-deep); }
+.src-row { background: var(--paper-2); border-radius: var(--r-s); padding: 10px 12px; font-size: 12px; line-height: 17px; }
+.conflict { background: #FFF1EC; border: 1px solid #F7C9BE; border-radius: var(--r-s); padding: 12px; }
+.conflict-q { font-weight: 600; font-size: 13px; line-height: 18px; }
+.conflict-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.conflict-note { margin-top: 8px; font-size: 11px; color: #B4432C; }
+.res-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* share card — FR-GROWTH-001 */
+.share { display: grid; gap: 10px; }
+.share-row { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: center; }
+.share-card { position: relative; width: 96px; height: 170px; border-radius: 14px; overflow: hidden; background: var(--app-dark); color: var(--paper); padding: 10px 9px; display: grid; grid-template-rows: auto 1fr auto; box-shadow: 0 14px 30px rgba(23, 18, 28, .25); transform: rotate(-4deg); transition: transform .3s; }
+.share-card:hover { transform: rotate(0) scale(1.04); }
+.share-card svg.food { width: 74px; height: 74px; justify-self: center; align-self: center; }
+.share-card b { font-family: var(--display); font-size: 22px; line-height: 1; color: var(--yolk); }
+.share-card small { font-size: 9px; color: rgba(251, 248, 242, .6); }
+.share-badge { font-size: 8px; letter-spacing: .04em; color: rgba(251, 248, 242, .75); border-top: 1px solid rgba(251, 248, 242, .15); padding-top: 6px; }
+.share-t { font-weight: 600; font-size: 14px; line-height: 20px; }
+
+/* 4 — дневник */
+.day-total { display: flex; align-items: baseline; gap: 8px; }
+.day-total b { font-family: var(--display); font-size: 32px; line-height: 1; }
+.bar { display: block; height: 8px; border-radius: 999px; background: var(--paper-2); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--ink); border-radius: 999px; }
+.bar-ok i { background: var(--mint); }
+.bar-yolk i { background: var(--yolk); }
+.macros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.macro-v { font-family: var(--display); font-weight: 700; font-size: 15px; }
+.macro-l { font-size: 11px; color: var(--ink-2); text-transform: uppercase; letter-spacing: .04em; }
+.day-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+.day-row:first-child { border-top: 0; padding-top: 0; }
+.day-thumb { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: var(--paper-2); }
+.day-thumb svg { width: 100%; height: 100%; }
+.day-name { font-weight: 600; }
+.day-when { font-size: 12px; color: var(--ink-2); font-weight: 400; }
+.day-kcal { font-weight: 700; }
+.seg { display: grid; grid-auto-flow: column; gap: 4px; padding: 4px; background: var(--paper-2); border-radius: 999px; }
+.seg button { padding: 8px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.coach-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-ok { background: var(--mint); } .dot-no { background: var(--tomato); }
+.streak { display: flex; gap: 6px; margin-top: 10px; }
+.streak i { flex: 1; height: 28px; border-radius: 8px; background: rgba(251, 248, 242, .12); }
+.streak i.on { background: var(--yolk); }
+
+/* 5 — paywall */
+.pay-big { font-size: 24px; line-height: 1.15; font-weight: 700; }
+.pay-field { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.pay-field input { border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; background: #fff; min-width: 0; }
+.pay-note { text-align: center; font-size: 12px; color: #B4432C; }
+
+/* 6 — рост */
+.code-box { text-align: center; font-size: 28px; font-weight: 800; letter-spacing: .08em; padding: 12px; border-radius: var(--r-s); background: var(--paper-2); }
+.funnel { display: grid; gap: 8px; }
+.funnel-row { display: grid; grid-template-columns: 104px 1fr auto; gap: 10px; align-items: center; }
+.funnel-v { font-family: var(--display); font-weight: 700; font-size: 14px; min-width: 36px; text-align: right; }
+.kv { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.kv:first-child { border-top: 0; padding-top: 0; }
+.kv span:last-child { font-weight: 700; font-family: var(--display); font-size: 13px; text-align: right; }
+.qr { width: 132px; height: 132px; margin: 0 auto; border-radius: var(--r-s); background:
+  repeating-linear-gradient(0deg, var(--ink) 0 9px, transparent 9px 18px), repeating-linear-gradient(90deg, var(--ink) 0 9px, transparent 9px 18px);
+  background-blend-mode: multiply; opacity: .85; }
+.stat { display: grid; gap: 2px; }
+.stat-v { font-size: 26px; font-weight: 700; }

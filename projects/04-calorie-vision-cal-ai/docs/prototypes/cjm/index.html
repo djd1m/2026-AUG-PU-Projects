@@ -6,94 +6,94 @@
 <meta name="color-scheme" content="light">
 <title>Тарелка — четыре пути CJM</title>
 <link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/phone.css">
 </head>
 <body>
 
-<div class="lab">
-  <p class="lab-text"><strong>Прототип CJM</strong> · N4 Тарелка · <span class="lab-dim">выбор делает владелец</span></p>
-  <div class="lab-actions">
-    <button type="button" class="pill pill-ghost" data-action="open-compare"><span aria-hidden="true">⚖️</span> Сравнить варианты</button>
-    <button type="button" class="pill pill-ghost" data-action="open-builder"><span aria-hidden="true">🔧</span> Собрать свой</button>
-  </div>
-</div>
-
-<header class="head">
+<header class="top">
   <div class="brand">
-    <span class="brand-mark" aria-hidden="true">◒</span>
+    <span class="brand-mark" aria-hidden="true"></span>
     <span class="brand-name">Тарелка</span>
-    <span class="brand-note">рабочее имя · клон по закономерностям</span>
+    <span class="brand-note">прототип CJM · N4 · выбор делает владелец</span>
   </div>
   <div class="tabs" role="tablist" aria-label="Варианты CJM">
-    <button type="button" role="tab" id="tab-A" data-variant="A" aria-selected="false" aria-controls="stage">A · Карточка</button>
-    <button type="button" role="tab" id="tab-B" data-variant="B" aria-selected="false" aria-controls="stage">B · Открытый дневник</button>
-    <button type="button" role="tab" id="tab-C" data-variant="C" aria-selected="false" aria-controls="stage">C · Тренер видит</button>
-    <button type="button" role="tab" id="tab-D" data-variant="D" aria-selected="false" aria-controls="stage">D · Код блогера</button>
+    <button type="button" role="tab" id="tab-A" data-variant="A" aria-selected="false" aria-controls="stage"><span class="tab-k">A</span>Карточка</button>
+    <button type="button" role="tab" id="tab-B" data-variant="B" aria-selected="false" aria-controls="stage"><span class="tab-k">B</span>Открытый дневник</button>
+    <button type="button" role="tab" id="tab-C" data-variant="C" aria-selected="false" aria-controls="stage"><span class="tab-k">C</span>Тренер видит</button>
+    <button type="button" role="tab" id="tab-D" data-variant="D" aria-selected="false" aria-controls="stage"><span class="tab-k">D</span>Код блогера</button>
+  </div>
+  <div class="top-actions">
+    <button type="button" class="pill pill-ghost" data-action="open-compare">Сравнить</button>
+    <button type="button" class="pill pill-yolk" data-action="open-builder">Собрать свой</button>
   </div>
 </header>
 
-<section class="variant-head" aria-live="polite">
-  <h1 id="variant-name">—</h1>
-  <dl class="variant-meta">
-    <div><dt>Growth loop</dt><dd id="variant-loop">—</dd></div>
-    <div><dt>Aha Moment</dt><dd id="variant-aha">—</dd></div>
+<section class="hero" aria-live="polite">
+  <div>
+    <p class="hero-k" id="hero-k">Вариант</p>
+    <h1 id="variant-name">—</h1>
+  </div>
+  <dl class="hero-meta">
+    <div><dt>Growth loop</dt><dd><span class="loop-pill"><i aria-hidden="true"></i><span id="variant-loop">—</span></span></dd></div>
+    <div><dt>Aha moment</dt><dd id="variant-aha">—</dd></div>
   </dl>
 </section>
 
-<nav class="rail" id="rail" aria-label="Шаги пути"></nav>
-
 <main class="stage" id="stage" role="tabpanel" tabindex="-1" aria-labelledby="tab-A">
+  <nav class="rail" id="rail" aria-label="Шаги пути"></nav>
+
   <div class="stage-phone">
     <div class="phone" id="phone">
-      <div class="phone-notch" aria-hidden="true"></div>
+      <div class="phone-island" aria-hidden="true"></div>
       <div class="phone-screen" id="screen"></div>
     </div>
-    <p class="demo-note">Демо-экран. Числа и записи иллюстративны.</p>
+    <p class="demo-note">Демо-экран: числа, записи базы и люди иллюстративны.</p>
   </div>
 
   <aside class="map" id="map" aria-label="Карта пути">
     <div class="map-top">
       <span class="stage-chip" id="map-stage">—</span>
-      <button type="button" class="pill pill-tiny" data-action="toggle-map" aria-expanded="true"><span aria-hidden="true">📊</span> Скрыть карту</button>
+      <button type="button" class="pill pill-ghost pill-tiny" data-action="toggle-map" aria-expanded="true">Скрыть карту</button>
     </div>
     <div class="map-body" id="map-body"></div>
   </aside>
 </main>
 
 <footer class="foot">
-  <p>Демо-данные. Числа калорийности иллюстративны. Источник облика: closed-source Cal AI — воспроизведены закономерности, не бренд. Открытая база в примерах — USDA FoodData Central (CC0).</p>
+  <p>Демо-данные. Числа калорийности иллюстративны. Источник облика — закрытый продукт-референс: воспроизведены закономерности (камера первым экраном, один экран результата, монохром с одним тёмным блоком), не бренд. Открытая база в примерах — USDA FoodData Central (CC0). Шрифты Unbounded и Onest — SIL OFL.</p>
 </footer>
 
 <div class="overlay" id="overlay" hidden>
   <section class="sheet" id="sheet-compare" role="dialog" aria-modal="true" aria-labelledby="compare-title" hidden>
     <div class="sheet-top">
-      <h2 id="compare-title">Сравнить четыре варианта</h2>
-      <button type="button" class="pill pill-ghost" data-action="close">Закрыть ✕</button>
+      <h2 id="compare-title">Сравнить четыре пути</h2>
+      <button type="button" class="pill pill-ghost" data-action="close">Закрыть</button>
     </div>
     <div class="table-scroll"><table class="cmp" id="cmp-table"></table></div>
     <div class="decision">
-      <label class="decision-label" for="decision-text">Текст решения (копируется вручную)</label>
+      <label class="decision-label" for="decision-text">Текст решения — копируется вручную</label>
       <textarea id="decision-text" rows="4" spellcheck="false"></textarea>
       <div class="decision-actions">
-        <button type="button" class="pill pill-dark" data-action="copy">Скопировать</button>
+        <button type="button" class="pill pill-yolk" data-action="copy">Скопировать</button>
         <span class="copy-note" id="copy-note" role="status" aria-live="polite"></span>
       </div>
-      <p class="fineprint">Ничего не отправляется и не сохраняется. Решение фиксируется владельцем в чате, не здесь.</p>
+      <p class="fineprint">Ничего не отправляется и не сохраняется. Решение фиксирует владелец в чате, не здесь.</p>
     </div>
   </section>
 
   <section class="sheet" id="sheet-builder" role="dialog" aria-modal="true" aria-labelledby="builder-title" hidden>
     <div class="sheet-top">
       <h2 id="builder-title">Собрать свой путь</h2>
-      <button type="button" class="pill pill-ghost" data-action="close">Закрыть ✕</button>
+      <button type="button" class="pill pill-ghost" data-action="close">Закрыть</button>
     </div>
     <p class="sheet-lead">Для каждого из шести шагов выберите, из какого варианта берём решение.</p>
     <div class="mix-grid" id="mix-grid"></div>
     <div class="mix-summary" id="mix-summary"></div>
     <div class="decision">
-      <label class="decision-label" for="mix-text">Текст решения (копируется вручную)</label>
+      <label class="decision-label" for="mix-text">Текст решения — копируется вручную</label>
       <textarea id="mix-text" rows="5" spellcheck="false"></textarea>
       <div class="decision-actions">
-        <button type="button" class="pill pill-dark" data-action="copy-mix">Скопировать</button>
+        <button type="button" class="pill pill-yolk" data-action="copy-mix">Скопировать</button>
         <span class="copy-note" id="copy-note-mix" role="status" aria-live="polite"></span>
       </div>
       <p class="fineprint">Гибрид — заявка на согласование, а не принятый выбор.</p>
@@ -102,6 +102,7 @@
 </div>
 
 <script src="assets/data.js"></script>
+<script src="assets/food.js"></script>
 <script src="assets/screens.js"></script>
 <script src="assets/app.js"></script>
 </body>
