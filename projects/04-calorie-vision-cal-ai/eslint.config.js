@@ -41,4 +41,19 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
+  {
+    // Первый CommonJS-скрипт вне `.claude/` (игнорируется целиком) — `scripts/telemetry/
+    // model-calls.cjs` (FR-scan-pipeline-21). Без Node-глобалов `js.configs.recommended`
+    // трактует `require`/`module`/`process` как неопределённые идентификаторы.
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: { require: 'readonly', module: 'writable', process: 'readonly', __dirname: 'readonly', console: 'readonly' },
+    },
+    rules: {
+      // Файл ЕСТЬ CommonJS по построению (`.cjs`, вызывается напрямую `node`, без сборки) —
+      // правило типизированного репозитория здесь неприменимо, а не нарушено по недосмотру.
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
 );

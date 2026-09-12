@@ -56,6 +56,37 @@ services:
       timeout: 3s
       retries: 20
 
+  # ─── Провижининг бакета и IAM-пользователя приложения (фича `scan-pipeline`) ───
+  # ОТКЛОНЕНИЕ/дополнение, названное явно (`receipts/impl-scan-pipeline.md`): `foundation`
+  # объявила `N4_S3_ACCESS_KEY`/`N4_S3_SECRET_KEY` переменными `api`/`recognizer`, но НИГДЕ
+  # не создавала соответствующего пользователя MinIO — работали бы только ROOT-креды.
+  # `api`/`recognizer` не должны держать root-пароль хранилища: он даёт больше прав, чем
+  # нужно операции с одним бакетом. Одноразовый контейнер создаёт бакет и пользователя с
+  # правами ТОЛЬКО на него, затем завершается — это НЕ сервис продукта.
+  storage-init:
+    # `minio/mc` не доступен для вытягивания в этой сети (проверено 2026-09-12: pull access
+    # denied); образ `minio/minio` уже используется сервисом `storage` и несёт СВОЙ `mc`
+    # (используется его же healthcheck'ом, `test: mc ready local`) — переиспользуем ЕГО, а
+    # не заводим вторую зависимость от недоступного реестра.
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e
+    profiles: [app, dev, edge, test]
+    restart: "no"
+    environment:
+      MC_HOST_local: http://${N4_STORAGE_ROOT_USER:?}:${N4_STORAGE_ROOT_PASSWORD:?}@storage:9000
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -e
+        mc mb --ignore-existing "local/${N4_S3_BUCKET:-n4-photos}"
+        mc admin user add local "${N4_S3_ACCESS_KEY:?}" "${N4_S3_SECRET_KEY:?}" || true
+        printf '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["s3:*"],"Resource":["arn:aws:s3:::%s","arn:aws:s3:::%s/*"]}]}' \
+          "${N4_S3_BUCKET:-n4-photos}" "${N4_S3_BUCKET:-n4-photos}" > /tmp/policy.json
+        mc admin policy create local n4-photos-rw /tmp/policy.json || true
+        mc admin policy attach local n4-photos-rw --user "${N4_S3_ACCESS_KEY:?}" || true
+    networks: [private]
+    depends_on:
+      storage: { condition: service_healthy }
+
   # ─── API: 13 маршрутов канона, приём и нормализация фото, квоты, initData ───
   api:
     build:
@@ -95,6 +126,7 @@ services:
     depends_on:
       db: { condition: service_healthy }
       storage: { condition: service_healthy }
+      storage-init: { condition: service_completed_successfully }
     healthcheck:
       # Проба переведена с TCP на HTTP в фиче `foundation`: служебный `GET /health` введён
       # решением по канону (он ВНЕ префикса /api/v1, продуктовых маршрутов по-прежнему 14).
@@ -134,6 +166,7 @@ services:
     depends_on:
       db: { condition: service_healthy }
       storage: { condition: service_healthy }
+      storage-init: { condition: service_completed_successfully }
     # healthcheck не объявлен осознанно: от recognizer не зависит ни один сервис, а проверка
     # «процесс жив» повторила бы restart: unless-stopped. Молчащий воркер ловится метрикой
     # «возраст старейшего задания queued > 60 с» (Completion.md, Monitoring), а не healthcheck'ом.
@@ -231,11 +264,22 @@ services:
     depends_on:
       db: { condition: service_healthy }
       storage: { condition: service_healthy }
+      storage-init: { condition: service_completed_successfully }
 
 networks:
   # Хранилища живут только здесь: ни публикации на хост, ни выхода в интернет.
+  #
+  # ПОДСЕТЬ ЗАДАНА ЯВНО (ОТКЛОНЕНИЕ этого worktree, `receipts/impl-scan-pipeline.md`):
+  # у ДРУГОГО параллельного плеча (`n4-tarelka-consent-b`) уже занята подсеть по умолчанию
+  # докеровского пула; на машине параллельно работают несколько изолированных проектов
+  # `N4_COMPOSE_PROJECT`, и общий пул адресов «all predefined address pools have been
+  # fully subnetted» — тот же класс дефекта, что явная подсеть `egress` ниже. Значение
+  # правится под машину переменной, не редактированием этого файла.
   private:
     internal: true
+    ipam:
+      config:
+        - subnet: ${N4_PRIVATE_SUBNET:-10.85.0.0/24}
   # Опубликованные порты proxy/web и исходящий доступ api/recognizer к Anthropic и Telegram.
   egress:
     driver: bridge
