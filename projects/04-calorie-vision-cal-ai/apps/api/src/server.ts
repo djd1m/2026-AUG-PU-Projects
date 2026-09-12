@@ -55,25 +55,41 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerHealthRoute(app, deps.pool);
   registerAuthDeviceRoute(app, deps.pool, deps.logger);
 
-  app.setNotFoundHandler(async (_request, reply) => reply.code(404).send(fail('not_found', 'маршрут не найден')));
+  app.setNotFoundHandler(async (request, reply) => {
+    // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая
+    // ссылка, чужая интеграция), и молчать о нём значит остаться без сигнала. В событии —
+    // ровно то, что написали МЫ: постоянная метка `unmatched`, метод и статус. Ни пути, ни
+    // его сегментов: их пишет клиент, и там приезжают токены и адреса (RV-foundation-01).
+    const context = request as FastifyRequest & { n4RequestId?: string; n4StartedAt?: number };
+    deps.logger.warn('request_not_found', {
+      request_id: context.n4RequestId ?? 'unknown',
+      route: 'unmatched',
+      method: request.method,
+      status: 404,
+      duration_ms: context.n4StartedAt === undefined ? null : Date.now() - context.n4StartedAt,
+    });
+    return reply.code(404).send(fail('not_found', 'маршрут не найден'));
+  });
 
   app.setErrorHandler(async (error: FastifyError, request, reply) => {
     const status = typeof error.statusCode === 'number' && error.statusCode >= 400 ? error.statusCode : 500;
     // Текст ошибки наружу не уходит: он содержит внутренние подробности. В журнал —
-    // класс отказа и маршрут, но не тело запроса и не cookie.
+    // класс отказа и ШАБЛОН маршрута, но не тело запроса, не cookie и НЕ САМ ПУТЬ.
     //
-    // ЗАПРОСНАЯ СТРОКА ОТРЕЗАЕТСЯ ЗДЕСЬ, а не «аккуратно печатается» в вызове журнала:
-    // слепое ревью предъявило прогон `POST /unknown?token=…&ip=…`, где токен и полный адрес
-    // уехали в журнал целиком (RV-foundation-01). Уходит ПУТЬ БЕЗ QUERY — его достаточно,
-    // чтобы понять, куда стучались, и в нём нет пользовательских значений. Страж по
-    // исходнику запрещает `request.url` ВНУТРИ вызовов журналирования, поэтому усечение
-    // живёт отдельной строкой и видно глазами.
+    // ПУТЬ НЕ ЛОГИРУЕТСЯ ВООБЩЕ, и это третья редакция места — каждая предыдущая была
+    // слабее ровно на один шаг:
+    //   1) писали `request.url` целиком — в журнал уехали токен и адрес из query;
+    //   2) отрезали query и писали путь — судья предъявил
+    //      `/unknown/review-cookie-token-…/203.0.113.77`: СЕГМЕНТЫ пути пишет тот же клиент,
+    //      что и query, и «очистить» их нечем.
+    // Отсюда вывод, который и закреплён: в журнал попадает только то, что написали МЫ, —
+    // шаблон зарегистрированного маршрута (`/api/v1/auth/device`), а у неизвестного пути
+    // постоянная метка `unmatched`. Метод, статус и факт «шаблон не нашёлся» отвечают на
+    // вопрос «куда стучались», не пересказывая пользовательский ввод.
     const context = request as FastifyRequest & { n4RequestId?: string; n4StartedAt?: number };
-    const path = request.url.split('?')[0] ?? '/';
     deps.logger.error('request_failed', {
       request_id: context.n4RequestId ?? 'unknown',
       route: request.routeOptions?.url ?? 'unmatched',
-      path,
       method: request.method,
       status,
       code: error.code,

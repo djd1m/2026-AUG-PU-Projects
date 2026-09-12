@@ -26,7 +26,9 @@ export interface Logger {
  * новое поле события добавляется сюда осознанно, а не приезжает вместе с ошибкой.
  */
 export const SERVICE_LOG_FIELDS: readonly string[] = [
-  'request_id', 'event', 'route', 'path', 'method', 'status', 'code', 'signal', 'port',
+  // `path` в списке НЕТ намеренно: сырой путь пишет клиент, и его сегменты ничем не лучше
+  // query. В журнал попадает только ШАБЛОН маршрута (`route`), сочинённый нами.
+  'request_id', 'event', 'route', 'method', 'status', 'code', 'signal', 'port',
   'variables', 'scan_limit_user', 'scan_limit_day', 'escalation_limit_day',
   'rate_limit_mutate_per_min', 'rate_limit_read_per_min', 'model_provider', 'model',
   'ip_prefix', 'scan_id', 'fence', 'lease_owner', 'provider', 'write',
