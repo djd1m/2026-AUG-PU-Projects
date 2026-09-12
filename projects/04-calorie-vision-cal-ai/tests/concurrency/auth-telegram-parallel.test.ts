@@ -56,6 +56,11 @@ describe('20 одновременных POST /auth/telegram с ОДНОЙ initDa
 
     const accounts = await pool.query('SELECT count(*)::int AS n FROM account WHERE telegram_user_id = $1', ['900001']);
     expect(accounts.rows[0]?.n).toBe(1);
+
+    // RV-04: заявка на повтор — ПЕРВАЯ мутация, до касания device_session — 19 отклонённых
+    // без cookie попыток не создают 19 лишних сессий; ровно ОДНА (победителя).
+    const sessions = await pool.query('SELECT count(*)::int AS n FROM device_session');
+    expect(sessions.rows[0]?.n).toBe(1);
   }, 30_000);
 });
 

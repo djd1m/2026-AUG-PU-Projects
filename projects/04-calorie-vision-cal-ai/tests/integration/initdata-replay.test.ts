@@ -85,4 +85,78 @@ describe('повтор initData', () => {
 
     expect(second.statusCode).toBe(200);
   });
+
+  it('RV-03: A→B→A — повтор A ПОСЛЕ легитимного B тоже отклоняется (единственный слот раньше пропускал это)', async () => {
+    const device = await app.inject({ method: 'POST', url: '/api/v1/auth/device', headers: { 'x-forwarded-for': '203.0.113.22' } });
+    const token = cookieValue(device.headers['set-cookie']);
+    const initDataA = buildInitData('800003', { authDateSecondsAgo: 20, queryId: 'A' });
+    const initDataB = buildInitData('800003', { authDateSecondsAgo: 10, queryId: 'B' });
+
+    const loginA = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: initDataA },
+    });
+    expect(loginA.statusCode).toBe(200);
+
+    const loginB = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: initDataB },
+    });
+    expect(loginB.statusCode).toBe(200);
+
+    // Повтор A ПОСЛЕ B — раньше единственный слот last_telegram_auth_hash хранил только B, и
+    // этот повтор A проходил бы как «новый» вход.
+    const replayA = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: initDataA },
+    });
+    expect(replayA.statusCode).toBe(401);
+    expect((replayA.json() as { error: { code: string } }).error.code).toBe('initdata_replayed');
+  });
+
+  it('RV-04: 401 (повтор) НЕ меняет БД — снимок device_session до и после совпадает', async () => {
+    const device = await app.inject({ method: 'POST', url: '/api/v1/auth/device', headers: { 'x-forwarded-for': '203.0.113.23' } });
+    const token = cookieValue(device.headers['set-cookie']);
+    const initData = buildInitData('800004');
+    await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: initData },
+    });
+
+    const before = await pool.query('SELECT id, last_seen_at, account_id FROM device_session ORDER BY id');
+
+    // Повтор С cookie — не должен обновлять last_seen_at существующей сессии.
+    const replayWithCookie = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: initData },
+    });
+    expect(replayWithCookie.statusCode).toBe(401);
+
+    // Повтор БЕЗ cookie (двадцать раз, имитация массового обстрела) — не должен создавать НИ
+    // ОДНОЙ дополнительной строки device_session: заявка на повтор — ПЕРВАЯ мутация, раньше
+    // создания/поиска сессии.
+    await Promise.all(
+      Array.from({ length: 20 }, () =>
+        app.inject({
+          method: 'POST',
+          url: '/api/v1/auth/telegram',
+          headers: { 'content-type': 'application/json' },
+          payload: { init_data: initData },
+        }),
+      ),
+    );
+
+    const after = await pool.query('SELECT id, last_seen_at, account_id FROM device_session ORDER BY id');
+    expect(after.rows).toEqual(before.rows);
+  }, 30_000);
 });

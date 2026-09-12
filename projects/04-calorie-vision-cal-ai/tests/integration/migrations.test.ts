@@ -59,8 +59,10 @@ describe('миграции', () => {
       );
       const names = tables.rows.map((row) => row.table_name);
       for (const table of CANON_TABLES) expect(names, table).toContain(table);
-      // Ровно 14 сущностей канона плюс журнал самих миграций — и ничего сверх.
-      expect(names.sort()).toEqual([...CANON_TABLES, 'schema_migration'].sort());
+      // 14 сущностей канона плюс журнал самих миграций плюс `telegram_login_replay`
+      // (миграция 003, consent-and-telegram-auth, RV-consent-and-telegram-auth-03 — история
+      // использованных подписей initData, не сущность канона) — и ничего сверх.
+      expect(names.sort()).toEqual([...CANON_TABLES, 'schema_migration', 'telegram_login_replay'].sort());
 
       const extension = await client.query("SELECT 1 FROM pg_extension WHERE extname = 'pg_trgm'");
       expect(extension.rowCount).toBe(1);

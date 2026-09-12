@@ -101,4 +101,46 @@ describe('VerifyTelegramInitData', () => {
       expect(resultA.telegramUserId).toBe(resultB.telegramUserId);
     }
   });
+
+  describe('RV-consent-and-telegram-auth-03: канонический hash, строгий формат', () => {
+    it('верхний регистр присланного hash — валидная подпись, канонический возвращаемый hash тот же, что и для нижнего регистра', () => {
+      const fields = { auth_date: String(Math.floor(Date.now() / 1000) - 10), user: JSON.stringify({ id: 77 }) };
+      const initData = buildInitData(fields, BOT_TOKEN);
+      const uppercased = initData.replace(/hash=([0-9a-f]+)/, (_m, hex: string) => `hash=${hex.toUpperCase()}`);
+
+      const lower = verifyTelegramInitData(initData, BOT_TOKEN);
+      const upper = verifyTelegramInitData(uppercased, BOT_TOKEN);
+
+      expect(lower.ok).toBe(true);
+      expect(upper.ok).toBe(true);
+      if (lower.ok && upper.ok) {
+        // РАНЬШЕ это было НЕ так: `verified.hash` возвращал ПРИСЛАННЫЙ текст, и ключ повтора,
+        // вычисленный из него, различался бы для двух текстовых представлений ОДНОЙ подписи —
+        // ровно дефект, воспроизведённый и исправленный по review-report.md.
+        expect(upper.hash).toBe(lower.hash);
+      }
+    });
+
+    it('hash с довеском (`hash + "z"`) отклоняется как НЕВАЛИДНАЯ подпись, а не декодируется усечением', () => {
+      const fields = { auth_date: String(Math.floor(Date.now() / 1000) - 10), user: JSON.stringify({ id: 78 }) };
+      const initData = buildInitData(fields, BOT_TOKEN);
+      const withTrailer = initData.replace(/hash=([0-9a-f]+)/, (_m, hex: string) => `hash=${hex}z`);
+
+      const result = verifyTelegramInitData(withTrailer, BOT_TOKEN);
+
+      // ДО правки: `Buffer.from(hash + 'z', 'hex')` декодировал ТЕ ЖЕ 32 байта, что и без
+      // довеска, и подпись проходила как подлинная. Формат теперь проверяется ДО декодирования.
+      expect(result).toEqual({ ok: false, reason: 'signature' });
+    });
+
+    it('hash неверной длины (63 символа) отклоняется как невалидная подпись', () => {
+      const fields = { auth_date: String(Math.floor(Date.now() / 1000) - 10), user: JSON.stringify({ id: 79 }) };
+      const initData = buildInitData(fields, BOT_TOKEN);
+      const shortened = initData.replace(/hash=([0-9a-f]+)/, (_m, hex: string) => `hash=${hex.slice(0, 63)}`);
+
+      const result = verifyTelegramInitData(shortened, BOT_TOKEN);
+
+      expect(result).toEqual({ ok: false, reason: 'signature' });
+    });
+  });
 });

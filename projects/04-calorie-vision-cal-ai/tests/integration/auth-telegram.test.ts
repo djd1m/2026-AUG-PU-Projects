@@ -73,11 +73,20 @@ describe('POST /api/v1/auth/telegram', () => {
     expect(response.statusCode).toBe(200);
     const body = response.json() as { data: { account_id: string; migrated_entries: number } };
     expect(body.data.migrated_entries).toBe(3);
+    // RV-13/AC-1: «с установкой cookie» относится и к УЖЕ существующей анонимной сессии, не
+    // только к вновь выпущенной.
+    expect(response.headers['set-cookie']).toBeDefined();
+    expect(cookieValue(response.headers['set-cookie'])).toBe(token);
 
     const remaining = await pool.query('SELECT count(*)::int AS n FROM diary_entry WHERE owner_key = $1', [sessionId]);
     expect(remaining.rows[0]?.n).toBe(0);
     const migrated = await pool.query('SELECT count(*)::int AS n FROM diary_entry WHERE owner_key = $1', [body.data.account_id]);
     expect(migrated.rows[0]?.n).toBe(3);
+
+    // RV-06: анонимное recognition, созданное seedDiaryEntries, обязано перейти во владение
+    // аккаунта при входе — иначе эразура искала бы активные/удаляемые сканы мимо него.
+    const recognition = await pool.query<{ account_id: string | null }>('SELECT account_id FROM recognition WHERE device_session_id = $1', [sessionId]);
+    expect(recognition.rows[0]?.account_id).toBe(body.data.account_id);
   });
 
   it('AC-6: вход с другого устройства не теряет и не дублирует дневник', async () => {
@@ -139,6 +148,41 @@ describe('POST /api/v1/auth/telegram', () => {
 
     const accounts = await pool.query('SELECT count(*)::int AS n FROM account WHERE telegram_user_id = $1', ['700003']);
     expect(accounts.rows[0]?.n).toBe(2);
+  });
+
+  it('RV-07: несколько erased-строк с одним telegram_user_id — вход находит/создаёт АКТУАЛЬНУЮ, никогда старую erased', async () => {
+    // Две УЖЕ erased строки посеяны напрямую (имитация истории удалений до этого теста).
+    await pool.query(
+      `INSERT INTO account (telegram_user_id, tier, status) VALUES ($1, 'free', 'erased'), ($1, 'free', 'erased')`,
+      ['700006'],
+    );
+
+    const session = await createAnonymousSession();
+    const login = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session.token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('700006') },
+    });
+
+    expect(login.statusCode).toBe(200);
+    const newAccountId = (login.json() as { data: { account_id: string } }).data.account_id;
+    const erasedIds = await pool.query<{ id: string }>(`SELECT id FROM account WHERE telegram_user_id = $1 AND status = 'erased'`, ['700006']);
+    expect(erasedIds.rows.map((r) => r.id)).not.toContain(newAccountId);
+
+    // Второй вход (НОВАЯ initData) обязан найти ТУ ЖЕ новую активную строку, а не одну из старых.
+    const secondSession = await createAnonymousSession();
+    const secondLogin = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${secondSession.token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('700006', { authDateSecondsAgo: 5, queryId: 'second-active-login' }) },
+    });
+    expect(secondLogin.statusCode).toBe(200);
+    expect((secondLogin.json() as { data: { account_id: string } }).data.account_id).toBe(newAccountId);
+
+    const total = await pool.query('SELECT count(*)::int AS n FROM account WHERE telegram_user_id = $1', ['700006']);
+    expect(total.rows[0]?.n).toBe(3);
   });
 
   it('DEC-A-019: согласие анонимной сессии переносится на аккаунт при входе', async () => {

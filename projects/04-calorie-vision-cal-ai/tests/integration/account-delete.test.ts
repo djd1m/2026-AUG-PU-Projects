@@ -180,4 +180,53 @@ describe('DELETE /api/v1/account', () => {
     const account = await pool.query<{ consent_at: Date | null }>('SELECT consent_at FROM account WHERE id = $1', [accountId]);
     expect(account.rows[0]?.consent_at).toBeNull();
   });
+
+  it('RV-05: отозванное согласие НЕ восстанавливается повторным входом (анонимное согласие → вход → withdraw → вход с новой initData)', async () => {
+    const device = await app.inject({ method: 'POST', url: '/api/v1/auth/device', headers: { 'x-forwarded-for': '203.0.113.42' } });
+    const token = cookieValue(device.headers['set-cookie']);
+    const { computeConsentTextHash } = await import('../../apps/api/src/consent/known-versions.js');
+
+    // 1. Согласие даётся АНОНИМНО, до первого входа через Telegram.
+    await app.inject({
+      method: 'POST',
+      url: '/api/v1/consent',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { decision: 'grant', consent_version: '2026-09-v1', consent_text_hash: computeConsentTextHash('2026-09-v1') },
+    });
+
+    // 2. Первый вход — согласие переносится на аккаунт (сессия ещё НЕ была связана).
+    const firstLogin = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('930006', { authDateSecondsAgo: 30, queryId: 'first' }) },
+    });
+    expect(firstLogin.statusCode).toBe(200);
+    const accountId = (firstLogin.json() as { data: { account_id: string } }).data.account_id;
+    const afterFirstLogin = await pool.query<{ consent_at: Date | null }>('SELECT consent_at FROM account WHERE id = $1', [accountId]);
+    expect(afterFirstLogin.rows[0]?.consent_at).not.toBeNull();
+
+    // 3. Пользователь ОТЗЫВАЕТ согласие.
+    const withdraw = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/account',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { confirm: true, scope: 'withdraw_consent' },
+    });
+    expect(withdraw.statusCode).toBe(200);
+    const afterWithdraw = await pool.query<{ consent_at: Date | null }>('SELECT consent_at FROM account WHERE id = $1', [accountId]);
+    expect(afterWithdraw.rows[0]?.consent_at).toBeNull();
+
+    // 4. ПОВТОРНЫЙ вход, НОВАЯ initData, ТА ЖЕ (уже связанная) сессия — раньше это восстанавливало
+    // consent_at из device_session.consent_at, которое отзыв не трогал.
+    const secondLogin = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('930006', { authDateSecondsAgo: 5, queryId: 'second' }) },
+    });
+    expect(secondLogin.statusCode).toBe(200);
+    const afterSecondLogin = await pool.query<{ consent_at: Date | null }>('SELECT consent_at FROM account WHERE id = $1', [accountId]);
+    expect(afterSecondLogin.rows[0]?.consent_at).toBeNull();
+  });
 });
