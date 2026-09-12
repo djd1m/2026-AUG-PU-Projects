@@ -3,7 +3,8 @@
 # Validation Report — «Тарелка» (N4), Phase 2
 
 Дата: 2026-09-12 · RUN_ID: `20260912T171708Z-replicate-04-phase1-4-sparc-0c00`
-Spec revision после исправлений: sha256:9b487baf90ed
+Spec revision: sha256:9b487baf90edf596db8b64ce4388c7e80a5207032bbd816223e7ef68cede6d66
+Spec revision после исправлений (Phase 2, полная): sha256:9b487baf90edf596db8b64ce4388c7e80a5207032bbd816223e7ef68cede6d66
 Режим: автономный (владелец отсутствует, DEC-A-001); все решения раунда — в [`decisions-autonomous.md`](decisions-autonomous.md).
 
 ## Как проверяли
