@@ -71,8 +71,15 @@ describe('гигиена журнала на живом сервере', () => {
     const failure = lines.map((line) => JSON.parse(line)).find((entry) => entry.event === 'request_failed');
     expect(failure).toBeDefined();
     expect(failure.route).toBe('unmatched');
+    // Путь БЕЗ query: понятно, куда стучались, и ни одного пользовательского значения.
+    expect(failure.path).toBe('/unknown');
     expect(failure.method).toBe('POST');
     expect(typeof failure.status).toBe('number');
+    // Идентификатор запроса и длительность — чтобы жалобу «меня отсекли» можно было найти
+    // в журнале по ручке, а не по времени и догадкам.
+    expect(typeof failure.request_id).toBe('string');
+    expect(failure.request_id.length).toBeGreaterThan(8);
+    expect(typeof failure.duration_ms).toBe('number');
   });
 
   it('поле вне закрытого списка затирается, а не печатается как есть', async () => {
