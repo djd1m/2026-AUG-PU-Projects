@@ -50,20 +50,25 @@ NFR (ровно 6): NFR-PERF-001 результат ≤ 6 с p95 · NFR-PERF-002
 хранятся ≤ 30 дней, приватно · NFR-SEC-002 ПДн о питании — специальная категория, согласие ·
 NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OPS-001 наблюдаемость расхода вызовов.
 
-## 4. Сущности (ровно 12) — логическая модель, физика в Architecture
+## 4. Сущности (ровно 14) — логическая модель, физика в Architecture
 
 `account` · `device_session` · `photo` · `recognition` · `food_item` (запись базы) ·
 `food_synonym` (RU-курация) · `diary_entry` · `share_card` · `partner` · `partner_code` ·
-`attribution` · `scan_quota_counter`. Каждая: `id: UUID`, `created_at: Timestamp`.
+`attribution` · `scan_quota_counter` · `pro_interest` (лист ожидания Pro) · `growth_event`
+(события воронки: install, activation, share_click, card_view, code_applied — источник метрик недели).
+`recognition.lease_owner` (UUID воркера) и `lease_fence` (монотонный счётчик) — защита от двух живых
+воркеров после истечения аренды: запись результата принимается только с актуальным fence. Каждая: `id: UUID`, `created_at: Timestamp`.
 Статус `recognition.status` — ровно 4 значения: `queued | done | failed | refused`.
 Статус `attribution.status` — ровно 3: `pending | activated | rejected`. `attribution.source` — ровно 3: `explicit | deeplink | cookie`; `replaced_source` — то же множество или null.
 `scan_quota_counter.scope` — ровно 3: `user | global | escalation`.
 
-## 5. Маршруты API (префикс `/api/v1`, ровно 10)
+## 5. Маршруты API (префикс `/api/v1`, ровно 13)
 
-`POST /scans` · `GET /scans/{id}` · `POST /scans/{id}/correct` · `GET /diary?date=` ·
-`POST /share-cards` · `GET /c/{card_id}` (публичная карточка) · `POST /codes/apply` ·
-`GET /partner/dashboard` · `POST /auth/telegram` · `POST /interest` (лист ожидания Pro).
+`POST /scans` (заголовок `Idempotency-Key`, ответ 202 с `scan_id`) · `GET /scans/{id}` · `POST /scans/{id}/correct` ·
+`GET /diary?date=` · `PATCH /diary/{entry_id}` (подтвердить/изменить/удалить запись) · `POST /share-cards` ·
+`GET /c/{card_id}` (публичная карточка) · `POST /codes/apply` · `GET /partner/dashboard` ·
+`POST /auth/telegram` · `POST /interest` (лист ожидания Pro) · `POST /consent` (выдать согласие на
+дневник как данные о здоровье) · `DELETE /account` (отзыв согласия и удаление данных).
 
 ## 6. Сервисы compose (ровно 6) и стек
 
@@ -86,6 +91,8 @@ NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OP
 | Метрика недели | доля активированных, расшеривших ≥1 карточку: 20% при n ≥ 30 |
 | Дополнительная метрика | установок по коду до 1-го распознавания: 60% |
 | Хранение фото | 30 дней, затем удаление |
+| Фото на вход модели | HEIC/HEIF конвертируется сервером в JPEG; длинная сторона ≤ 1568 px, ≤ 5 МБ после сжатия (лимит провайдера 10 МБ); пользовательский лимит загрузки 12 МБ сохраняется |
+| Ответ модели | JSON по схеме (structured outputs): типы гарантирует провайдер, диапазоны (0…N, ≤ 12 ингредиентов) проверяет наш код после разбора; калорийность в схеме ответа — только поле `model_estimate_kcal` для экрана расхождения, никогда не источник числа |
 | Стрик | мягкий: не сгорает от одного пропуска |
 | Таймзона | Europe/Moscow |
 

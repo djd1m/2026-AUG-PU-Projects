@@ -4,12 +4,12 @@
 **Координатор пишет:** да
 **Разрезы файлов:** нет
 **Канон:** docs/canon.md
-**Хеш канона:** fbf49f4279f7c738381eab30077f6f2bfd0b9f0178da19cbaf2a2495e651c71e
+**Хеш канона:** 832b0ad36eafb5d28c8b15a51bb838be566c30342616f8df88b2184853790b06
 **Проверка канона:** ВЫПОЛНЕНА
 **Проверка владения:** ВЫПОЛНЕНА
 **Причина:** —
 
-RUN_ID: 20260912T171708Z-replicate-04-phase1-4-sparc-0c00. Стадия 1 — спецификация (последовательно),
+Единицы Phase 1 (spec-writer, algo-writer, arch-writer, ops-writer) завершены и сняты с владения 2026-09-12 18:40; их файлы перешли к fixer-phase2 на раунд исправлений Phase 2. RUN_ID: 20260912T171708Z-replicate-04-phase1-4-sparc-0c00. Стадия 1 — спецификация (последовательно),
 стадия 2 — три параллельных единицы, стадия 3 — завершение. Каждая единица пишет только свои файлы и
 квитанцию в docs/telemetry/.../receipts/.
 
@@ -18,10 +18,6 @@ RUN_ID: 20260912T171708Z-replicate-04-phase1-4-sparc-0c00. Стадия 1 — с
 | Единица | Что пишет |
 |---|---|
 | fixer-phase2 | docs/Architecture.md, docs/ADR.md, docs/Pseudocode.md, docs/Refinement.md, docs/Completion.md, CLAUDE.md, docs/Specification.md, docs/PRD.md, docs/Final_Summary.md (раунд исправлений Phase 2, последовательно; прежние единицы завершены) |
-| spec-writer | docs/Specification.md, docs/PRD.md |
-| algo-writer | docs/Pseudocode.md, docs/Research_Findings.md, docs/Solution_Strategy.md |
-| arch-writer | docs/Architecture.md, docs/C4_Diagrams.md, docs/ADR.md, docs/model-cost-contract.md, docs/webhook-contract.md, docs/embed-contract.md, docs/long-job-contract.md |
-| ops-writer | docs/Refinement.md, docs/Completion.md, docs/Final_Summary.md, CLAUDE.md |
 
 ## Владение
 
@@ -30,15 +26,15 @@ RUN_ID: 20260912T171708Z-replicate-04-phase1-4-sparc-0c00. Стадия 1 — с
 | docs/Specification.md | fixer-phase2 |
 | docs/PRD.md | fixer-phase2 |
 | docs/Pseudocode.md | fixer-phase2 |
-| docs/Research_Findings.md | algo-writer |
-| docs/Solution_Strategy.md | algo-writer |
+| docs/Research_Findings.md | fixer-phase2 |
+| docs/Solution_Strategy.md | fixer-phase2 |
 | docs/Architecture.md | fixer-phase2 |
-| docs/C4_Diagrams.md | arch-writer |
+| docs/C4_Diagrams.md | fixer-phase2 |
 | docs/ADR.md | fixer-phase2 |
-| docs/model-cost-contract.md | arch-writer |
-| docs/webhook-contract.md | arch-writer |
-| docs/embed-contract.md | arch-writer |
-| docs/long-job-contract.md | arch-writer |
+| docs/model-cost-contract.md | fixer-phase2 |
+| docs/webhook-contract.md | fixer-phase2 |
+| docs/embed-contract.md | fixer-phase2 |
+| docs/long-job-contract.md | fixer-phase2 |
 | docs/Refinement.md | fixer-phase2 |
 | docs/Completion.md | fixer-phase2 |
 | docs/Final_Summary.md | fixer-phase2 |
