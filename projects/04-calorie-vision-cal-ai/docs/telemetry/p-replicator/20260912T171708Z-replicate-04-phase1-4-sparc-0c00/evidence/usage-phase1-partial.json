@@ -1,0 +1,115 @@
+{
+  "source": "transcript-aggregation (Claude Code host-written usage per response; Codex token_count snapshots)",
+  "quality": "partial: реальные счётчики хоста, но не биллинг; попытки/повторы см. events.jsonl",
+  "session": "0c3fce04-3ca0-42bc-b5a7-fcb38e1228ce",
+  "window": {
+    "from": "2026-09-12T17:17:00.000Z",
+    "to": null
+  },
+  "observed": {
+    "first_at": "2026-09-12T17:17:05.840Z",
+    "last_at": "2026-09-12T17:51:42.487Z"
+  },
+  "dedupe": {
+    "raw_assistant_entries": 362,
+    "unique_requests": 158,
+    "bad_lines": 0
+  },
+  "by_model": {
+    "claude-fable-5-1": {
+      "requests": 33,
+      "input_tokens": 740,
+      "cache_creation_input_tokens": 147044,
+      "cache_read_input_tokens": 19860872,
+      "output_tokens": 59400,
+      "thinking_tokens": 11751
+    },
+    "claude-opus-5": {
+      "requests": 87,
+      "input_tokens": 174,
+      "cache_creation_input_tokens": 959515,
+      "cache_read_input_tokens": 15196087,
+      "output_tokens": 164316,
+      "thinking_tokens": 31929
+    },
+    "claude-sonnet-5": {
+      "requests": 38,
+      "input_tokens": 76,
+      "cache_creation_input_tokens": 378299,
+      "cache_read_input_tokens": 7039314,
+      "output_tokens": 51438,
+      "thinking_tokens": 20724
+    }
+  },
+  "by_agent": {
+    "coordinator": {
+      "requests": 33,
+      "input_tokens": 740,
+      "cache_creation_input_tokens": 147044,
+      "cache_read_input_tokens": 19860872,
+      "output_tokens": 59400,
+      "thinking_tokens": 11751
+    },
+    "algo-writer": {
+      "requests": 16,
+      "input_tokens": 32,
+      "cache_creation_input_tokens": 359521,
+      "cache_read_input_tokens": 2229784,
+      "output_tokens": 45925,
+      "thinking_tokens": 5472
+    },
+    "arch-writer": {
+      "requests": 44,
+      "input_tokens": 88,
+      "cache_creation_input_tokens": 227417,
+      "cache_read_input_tokens": 8655189,
+      "output_tokens": 46676,
+      "thinking_tokens": 10634
+    },
+    "agent-afe3a4c27d9d3885a.jsonl": {
+      "requests": 2,
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 154693,
+      "cache_read_input_tokens": 106627,
+      "output_tokens": 22722,
+      "thinking_tokens": 58
+    },
+    "ops-writer": {
+      "requests": 29,
+      "input_tokens": 58,
+      "cache_creation_input_tokens": 254489,
+      "cache_read_input_tokens": 5918190,
+      "output_tokens": 43895,
+      "thinking_tokens": 18564
+    },
+    "spec-writer": {
+      "requests": 25,
+      "input_tokens": 50,
+      "cache_creation_input_tokens": 217884,
+      "cache_read_input_tokens": 4204487,
+      "output_tokens": 48993,
+      "thinking_tokens": 15765
+    },
+    "telemetry-archaeology": {
+      "requests": 9,
+      "input_tokens": 18,
+      "cache_creation_input_tokens": 123810,
+      "cache_read_input_tokens": 1121124,
+      "output_tokens": 7543,
+      "thinking_tokens": 2160
+    }
+  },
+  "totals": {
+    "input_tokens_total": 43582121,
+    "cached_input_tokens": 42096273,
+    "cache_creation_input_tokens": 1484858,
+    "output_tokens_total": 275154,
+    "reasoning_tokens": 64404,
+    "requests": 158
+  },
+  "codex": {
+    "sessions": [],
+    "note": "последний кумулятивный снимок total_token_usage на сессию; фильтр по времени старта"
+  },
+  "generated_at": "2026-09-12T17:52:23.646Z"
+}

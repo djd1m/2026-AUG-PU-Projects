@@ -7,9 +7,17 @@
   "feature": "replicate-phase1-4-sparc-validation-toolkit-finalize",
   "pipeline": "/replicate Phase 1 (sparc-prd-mini AUTO, pre-filled from Phase 0/0.5 + CJM E) → Phase 2 (requirements-validator; independent pass on Codex Sol high) → Phase 3 (toolkit) → Phase 4 (finalize)",
   "tier": "L",
-  "risk_flags": ["new external model calls (vision + RAG)", "health-related personal data (152-ФЗ ст.10)", "public unauthenticated endpoints with spend ceilings", "cross-container product"],
+  "risk_flags": [
+    "new external model calls (vision + RAG)",
+    "health-related personal data (152-ФЗ ст.10)",
+    "public unauthenticated endpoints with spend ceilings",
+    "cross-container product"
+  ],
   "profile": "compact-quality-first-v2, Anthropic mapping: Astra→Fable 5.1 coordinator / Opus 5, Sol→Opus 5, Terra→Sonnet 5, Luna→Haiku 4.5; Codex for verification: Sol high (Phase 2), Astra medium (code QE) — owner 2026-09-12",
-  "profile_overrides": ["Owner: Codex Astra only at effort medium in this project", "Owner: planning + implementation on Claude Code, verification on Codex"],
+  "profile_overrides": [
+    "Owner: Codex Astra only at effort medium in this project",
+    "Owner: planning + implementation on Claude Code, verification on Codex"
+  ],
   "comparison_id": null,
   "baseline_revision": "8b9df335bb49fdde01f7092ee0d47e2c6a7bfa1b",
   "final_revision": null,
@@ -21,10 +29,54 @@
   "started_at": "2026-09-12T17:17:08Z",
   "ended_at": null,
   "status": "running",
-  "inputs": ["docs/product-discovery-brief.md", "docs/source-product-profile.md", "docs/CJM_Variants.md (E)", "docs/discovery/business-model-and-cjm-analysis.md", "docs/discovery/research/*.md"],
+  "inputs": [
+    "docs/product-discovery-brief.md",
+    "docs/source-product-profile.md",
+    "docs/CJM_Variants.md (E)",
+    "docs/discovery/business-model-and-cjm-analysis.md",
+    "docs/discovery/research/*.md"
+  ],
   "acceptance_evidence": [],
-  "quality": {"required_gates_passed": null, "ac_met": null, "ac_total": null, "confirmed_findings_by_severity": null, "false_positive_findings": null, "known_defects_missed": null, "regressions": null, "followup_status": "pending"},
-  "metrics": {"elapsed_wall_ms": null, "active_wall_ms": null, "usage": null, "cost": null},
+  "quality": {
+    "required_gates_passed": null,
+    "ac_met": null,
+    "ac_total": null,
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "active_wall_ms": null,
+    "usage": {
+      "source": "scripts/telemetry/collect-usage.cjs (transcript aggregation, dedupe by message.id)",
+      "scope": "coordinator session 0c3fce04 + its subagents, window from 2026-09-12T17:17Z, partial until run end",
+      "evidence": "evidence/usage-phase1-partial.json",
+      "input_tokens_total": 42051882,
+      "cached_input_tokens": 40594061,
+      "cache_creation_input_tokens": 1456897,
+      "output_tokens_total": 258730,
+      "reasoning_tokens": 62185,
+      "requests": 155,
+      "quality": "partial"
+    },
+    "cost": {
+      "basis": "list-price equivalent, rates docs/development/telemetry/rates/2026-09-12-anthropic-codex.json",
+      "evidence": "evidence/cost-phase1-partial.json",
+      "usd": 35.62,
+      "by_model_usd": {
+        "claude-fable-5-1": 10.88,
+        "claude-opus-5": 21.3,
+        "claude-sonnet-5": 3.44
+      },
+      "caveat": "subscription session — not an invoice; coordinator cost shared across all units"
+    }
+  },
   "telemetry_status": "partial",
-  "missing_data": {"usage": "Host exposes no usage counters; requested models only, actual attestation absent for subagents."}
+  "missing_data": {
+    "usage": "Host exposes no usage to tools at runtime; counters recovered from host-written transcripts (host attestation of model per response), Codex from session token_count snapshots. actual_model = transcript message.model."
+  },
+  "rates": "docs/development/telemetry/rates/2026-09-12-anthropic-codex.json"
 }
