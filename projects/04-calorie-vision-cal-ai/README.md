@@ -44,16 +44,23 @@
 04-calorie-vision-cal-ai/
 ├── README.md          # этот файл
 └── docs/
-    ├── discovery/     # Phase 0 — reverse-engineering референса
-    └── ...            # SPARC-документация из /replicate
+    ├── product-discovery-brief.md   # Phase 0 — бриф с Growth Requirements Seed и манифестом
+    ├── source-product-profile.md    # Phase 0.5 — облик источника (FR-LOOK-*)
+    ├── CJM_Variants.md              # четыре варианта CJM, выбор делает владелец
+    ├── prototypes/cjm/              # кликабельный HTML-прототип (index.html, variant-a..d.html)
+    ├── discovery/research/          # квитанции исследования (факты, рынок/данные, тренды/рост)
+    ├── discovery/screenshots/       # доказательства съёмки источника
+    ├── telemetry/p-replicator/      # паспорт и журнал прогона
+    └── ...                          # SPARC-документация из /replicate (после выбора CJM)
 ```
 
 ## Статус
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | ⬜ |
-| Phase 1 — SPARC (`/replicate`) | ⬜ |
+| Phase 0 — Product Discovery | ✅ 2026-09-12 — [бриф](docs/product-discovery-brief.md), [4 CJM](docs/CJM_Variants.md), [прототип](docs/prototypes/cjm/index.html); **ожидание выбора CJM владельцем** |
+| Phase 0.5 — Source Product Profile | ✅ 2026-09-12 — [профиль облика](docs/source-product-profile.md), обе оси СНЯТ (публичный веб) |
+| Phase 1 — SPARC (`/replicate`) | ⬜ после выбора CJM |
 | Phase 2 — Validation | ⬜ |
 | Phase 3 — Toolkit | ⬜ |
 | Phase 4 — Finalize | ⬜ |
