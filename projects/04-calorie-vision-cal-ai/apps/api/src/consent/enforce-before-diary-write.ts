@@ -24,9 +24,18 @@ export type ConsentEnforcement =
   | { readonly outcome: 'granted' }
   | { readonly outcome: 'refused'; readonly reason: 'consent_required' };
 
+// `FOR UPDATE` (RV-consent-and-telegram-auth-08): вызывающий (`createDiaryEntryGuarded`,
+// `createShareCardGuarded`) обязан открыть транзакцию и передать сюда её `client` — тогда эта
+// блокировка строки СЕРИАЛИЗУЕТ проверку с конкурентным `withdraw_consent` (тот тоже пишет
+// `UPDATE account SET consent_at = NULL WHERE id = $1`, что берёт ТОТ ЖЕ лок строки): либо
+// отзыв целиком опережает проверку (тогда она честно видит `NULL`), либо проверка целиком
+// опережает отзыв (тогда отзыв ждёт коммита записи) — гонки «проверил → отозвали → записал»
+// не остаётся. Вызов с `DbPool` (вне транзакции) блокировку не удерживает дольше одного
+// `SELECT` и остаётся корректным для автономных вызовов вне записи (например, будущих
+// проверок только для чтения).
 const SELECT_SQL: Readonly<Record<ConsentOwnerTable, string>> = {
-  account: 'SELECT consent_at FROM account WHERE id = $1',
-  device_session: 'SELECT consent_at FROM device_session WHERE id = $1',
+  account: 'SELECT consent_at FROM account WHERE id = $1 FOR UPDATE',
+  device_session: 'SELECT consent_at FROM device_session WHERE id = $1 FOR UPDATE',
 };
 
 export async function enforceConsentBeforeDiaryWrite(
