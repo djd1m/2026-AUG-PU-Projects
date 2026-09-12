@@ -95,4 +95,82 @@ VERDICT criterion-scenarios=PASS features=2 gaps=0 inconclusive=0
 Обе/все три — completeness-замечания, не блокеры; подробности и предлагаемые исправления — в самом
 отчёте.
 
+## Попытка 2 — ревалидация после challenge Codex Astra (PC-01…PC-09, DEC-A-015)
+
+План фичи переписан (Ревизия 2 документов, `plan-challenge.md`): 18 FR (было 13, добавлены
+FR-14…18), 29 AC (было 18, добавлены AC-19…29), 50 тегов `REQUIREMENT:` в `02_pseudocode.md`
+(18+3+29 — сходится). Прочитано заново: все пять документов фичи целиком, `plan-challenge.md`,
+`docs/decisions-autonomous.md` (добавлено DEC-A-015).
+
+`docs/features/scan-pipeline/validation-report.md` переписан целиком под новую ревизию: Spec revision
+пересчитан (`sha256sum docs/features/scan-pipeline/01_specification.md` →
+`9c33776afe68cdf98b9f05e31731260b5336d760a27d8056397cf108481c2891`), 21 требование (18 FR + 3 NFR)
+оценены заново, `## Criterion scenarios` расширена до 29 строк. Построчно проверено закрытие
+PC-01…PC-09 — все девять закрыты в тексте плана (таблица в самом отчёте); PC-03 закрыт по букве
+формулировки, но реализация правила В `SweepStuckScans` несёт СОБСТВЕННЫЙ, новый дефект (см. ниже).
+
+**Вердикт не изменился: 🟢 READY.** Средний балл 93/100 (было 93/100 при 16 требованиях — устойчиво
+при почти в полтора раза большем объёме). Находок 5: VS-01/02 (low, перенесены без изменений), VS-03
+(было low, **повышена до medium** — эта ревизия ввела `failure_reason = 'timeout'`
+(`02_pseudocode.md:335,341`) как девятое значение, отсутствующее и в восьмизначном списке
+`Pseudocode.md:32`, и тем более в шестизначном счёте `Architecture.md:155`, без сопровождающей записи
+в `docs/canon.md`/`docs/decisions-autonomous.md` — в отличие от прежних расширений канона проекта
+(DEC-A-002, DEC-A-012)), VS-04 (medium, новая: судьба `outcome: 'unknown'` в `model_call` без
+агрегатора не названа явно в `05_completion.md` «Что эта фича НЕ доказывает»).
+
+**VS-05 (high, новая, ключевая находка этой попытки — обнаружена самостоятельным чтением, не из
+`plan-challenge.md`).** `SweepStuckScans` Правило В (`02_pseudocode.md:337–342`) сметает по одному
+лишь возрасту `created_at >= 30 с` и `lease_fence >= 1`, БЕЗ проверки `leased_until` — в отличие от
+Правил А и Б, которые именно на нём и держатся. Поскольку `FR-scan-pipeline-6` объявляет дедлайн ОДНОГО
+вызова модели 25 с, а штатная эскалация (`FR-scan-pipeline-7`) делает ВТОРОЙ полный вызов той же
+длины, легитимная эскалированная попытка (до 25+25=50 с) при ЖИВОЙ, не истёкшей аренде будет
+ошибочно сметена уже на 31-й секунде, а честный результат живого воркера при попытке записи получит
+`swept_as_timeout` вместо своего статуса. Названный в документе риск («между 30 и ~31 с») описывает
+только пограничное совпадение по времени и не покрывает этот структурный разрыв между двумя другими
+числами того же плана (25×2 против 30). Не блокер (floor не сработал, требование тестируемо и
+трассировано), но единственная находка, рекомендованная к точечному исправлению (правка одного
+`WHERE` либо порога) ДО либо во время Phase 3 — подробности, цитаты и три варианта исправления в
+самом отчёте, раздел Detailed Analysis и Findings.
+
+### Ворота (Попытка 2)
+
+```
+bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . \
+  --report-revision --criterion-scenarios \
+  --role-map-source ../../.claude/commands/feature.md \
+  --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+
+Перед прогоном все 29 строк новой таблицы `## Criterion scenarios` сверены на отсутствие лишних `|`
+(урок Попытки 1) — чисто.
+
+Вывод:
+```
+NOT-ESTABLISHED contour=consent-and-telegram-auth role=validation-report path=./docs/features/consent-and-telegram-auth/validation-report.md missing or unreadable
+NOT-ESTABLISHED contour=consent-and-telegram-auth role=validation-report path=./docs/features/consent-and-telegram-auth/validation-report.md missing or unreadable
+VERDICT report-revision=NOT-ESTABLISHED features=3 gaps=0 inconclusive=1
+VERDICT criterion-scenarios=NOT-ESTABLISHED features=3 gaps=0 inconclusive=1
+```
+Код возврата: **2**.
+
+**Разбор — это НЕ дефект `scan-pipeline`.** `grep -c "scan-pipeline"` по полному выводу → `0`: ни
+одна строка не называет `scan-pipeline`. `features=3` — за время между Попыткой 1 и Попыткой 2 в
+`docs/features/` появился третий контур, `consent-and-telegram-auth` (Phase 1 другой фичи, другим
+исполнителем, параллельно), у которого `validation-report.md` ещё не существует — законное состояние
+для фичи, не дошедшей до Phase 2. `gaps=0` по обоим режимам означает: там, где сравнение вообще
+установлено (`foundation`, `scan-pipeline`), несоответствий нет; итоговый код `2` — проекция
+NOT-ESTABLISHED третьего, чужого контура на общий вердикт, как и в квитанции Попытки 1 (`project`
+контур тогда). Правка `consent-and-telegram-auth` не входит в объём этой задачи (другая фича, другой
+исполнитель, инструкция ограничивает объём документами `scan-pipeline`); правка внесена не была.
+
+### Находки (сводно, полный текст и рекомендации — в отчёте)
+
+- **VS-01** (low, без изменений).
+- **VS-02** (low, без изменений).
+- **VS-03** (medium, повышена): `failure_reason = 'timeout'` — девятое значение без записи в канон/DEC-A.
+- **VS-04** (medium, новая): судьба `outcome: 'unknown'` без агрегатора не названа в «НЕ доказывает».
+- **VS-05** (high, новая): `SweepStuckScans` Правило В может смести легитимную эскалацию (25×2=50с
+  против порога 30с, без проверки `leased_until`) — единственная находка, требующая правки перед
+  Phase 3.
+
 Status: completed
