@@ -8,7 +8,8 @@ import { createPool } from '@n4/db';
 import { loadRecognizerConfig, RECOGNIZER_REQUIRED_VARIABLES } from './env.js';
 import { selectModelProvider } from './provider/select.js';
 import { createWorker } from './worker.js';
-import { NOOP_PHOTO_STORE, runErasureJob } from './consent/erasure-job.js';
+import { runErasureJob } from './consent/erasure-job.js';
+import { createMinioPhotoStore } from './storage/photo-store-minio.js';
 
 const ERASURE_INTERVAL_MS = 60 * 60 * 1000;
 
@@ -53,8 +54,12 @@ async function main(): Promise<void> {
   // RunErasureJob (FR-consent-and-telegram-auth-10) — почасовой планировщик, как
   // `PurgeExpiredPhotos`. Отказ одного прогона не валит процесс: недоступность базы уже
   // диагностируется обработчиком события `error` пула выше.
+  //
+  // Настоящий клиент бакета (RV-consent-and-telegram-auth-02): `NOOP_PHOTO_STORE` в рабочем
+  // процессе НЕДОПУСТИМ — объекты остались бы в бакете физически, хотя БД считает их `purged`.
+  const photoStore = createMinioPhotoStore({ storage: config.storage });
   const erasureTimer = setInterval(() => {
-    void runErasureJob({ pool, photoStore: NOOP_PHOTO_STORE, logger }).catch((error: unknown) => {
+    void runErasureJob({ pool, photoStore, logger }).catch((error: unknown) => {
       logger.error('erasure_job_failed', { message: (error as Error).message });
     });
   }, ERASURE_INTERVAL_MS);

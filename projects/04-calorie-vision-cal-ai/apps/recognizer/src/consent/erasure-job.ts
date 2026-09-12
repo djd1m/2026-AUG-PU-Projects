@@ -2,19 +2,29 @@
 //
 // Почасовой планировщик — как `PurgeExpiredPhotos` (`scan-pipeline`, ещё не реализована), но
 // раз в час: дедлайн 72 ч допускает часовое разрешение без риска просрочки. КАЖДЫЙ аккаунт —
-// СВОЯ транзакция: сбой при удалении объекта фото одного владельца не блокирует остальных
+// своя единица работы: сбой при удалении объекта фото одного владельца не блокирует остальных
 // аккаунтов батча (04_refinement.md, Edge Cases Matrix).
 //
-// Сетевой вызов (удаление объекта из бакета) — ВНЕ транзакции (`security-operation-order.md`):
-// строки удаляются и `file_state` переводится в `purged` ОДНОЙ транзакцией, ключи собираются
-// через `RETURNING`, и только ПОСЛЕ коммита вызывается `photoStore.purgeObject` — соединение
-// пула не удерживается на время сетевого вызова к MinIO.
+// Правка по review-report.md:
+//   RV-consent-and-telegram-auth-01 (blocker) — `diary_entry` и `share_card` ссылаются на
+//   `recognition` через `ON DELETE RESTRICT` (миграция 001). Прежний порядок удалял
+//   `recognition` МЕЖДУ `diary_entry` и `share_card` — аккаунт хотя бы с одной ещё не удалённой
+//   карточкой получал ошибку внешнего ключа на КАЖДОМ прогоне и оставался `erasing` навсегда.
+//   Порядок теперь: `diary_entry`, ЗАТЕМ `share_card` (обе ссылки на `recognition` сняты),
+//   ЗАТЕМ `recognition`.
 //
-// `PhotoStorePort` — ПОРТ (тот же паттерн, что `MatchIngredientPort`/`NullMatchIngredientPort`,
-// DEC-A-014): архитектура фичи (`03_architecture.md`, «Зависимости npm») сознательно не вводит
-// новой npm-зависимости, а реального S3-клиента в кодовой базе ещё нет (`scan-pipeline` его не
-// поставляет). Продакшн-реализация подключается позже, когда появится клиент бакета; здесь —
-// порт и заглушка с проверкой вызовов для тестов (см. `05_completion.md`, раздел «Отклонения»).
+//   RV-consent-and-telegram-auth-02 (blocker) — `NOOP_PHOTO_STORE` в проде недопустим: строки
+//   удалялись и `account.status = 'erased'` фиксировался в ОДНОЙ транзакции с пометкой фото
+//   `purged`, ДО того как объект физически удалён из бакета; сбой `purgeObject` был
+//   невосстановим штатным повтором, потому что следующий батч аккаунт `erased` больше не
+//   выбирает. Теперь: (1) строки БД удаляются одной транзакцией (не трогая `photo`/`account`/
+//   `device_session`); (2) фотографии purge'атся ПО ОДНОЙ, вне транзакции, и `file_state`
+//   переводится в `purged` СРАЗУ после подтверждённого `purgeObject` — если удаление конкретного
+//   объекта не удалось, эта строка `photo` остаётся `present` и будет выбрана СЛЕДУЮЩИМ
+//   прогоном (переспрос идёт заново по `file_state = 'present'`, а не по заранее собранному
+//   списку); (3) `account.status = 'erased'` и обнуление `device_session.account_id`
+//   фиксируются ТОЛЬКО когда для аккаунта не осталось ни одной `present`-фотографии — коммит
+//   `erased` строго ПОСЛЕ подтверждённого удаления объектов, не раньше.
 
 import { withTransaction, type DbPool } from '@n4/db';
 import type { Logger } from '@n4/shared';
@@ -24,10 +34,14 @@ export interface PhotoStorePort {
   purgeObject(objectKey: string): Promise<void>;
 }
 
-/** Заглушка по умолчанию: пока нет реального S3-клиента, объекты бакета не трогаются. */
+/**
+ * Заглушка ТОЛЬКО для тестов, которым настоящий бакет не нужен (например, юнит-проверки самого
+ * `runErasureJob`, не завязанные на RV-02). В РАБОЧЕМ процессе используется `MinioPhotoStore`
+ * (`../storage/photo-store-minio.ts`) — см. `bootstrap.ts`.
+ */
 export const NOOP_PHOTO_STORE: PhotoStorePort = {
   async purgeObject(): Promise<void> {
-    // Намеренно пусто — см. комментарий в шапке файла.
+    // Намеренно пусто — только для тестов, не для прода (RV-02).
   },
 };
 
@@ -43,6 +57,13 @@ export interface RunErasureJobOptions {
 export interface ErasureJobResult {
   readonly erased: number;
   readonly skippedActiveScan: number;
+  /** Строки БД удалены и часть/все фотографии purge'ены, но НЕ ВСЕ — account остаётся `erasing`. */
+  readonly incomplete: number;
+}
+
+interface PhotoRow {
+  readonly id: string;
+  readonly object_key: string;
 }
 
 export async function runErasureJob(options: RunErasureJobOptions): Promise<ErasureJobResult> {
@@ -56,12 +77,15 @@ export async function runErasureJob(options: RunErasureJobOptions): Promise<Eras
 
   let erased = 0;
   let skippedActiveScan = 0;
+  let incomplete = 0;
 
   for (const row of batch.rows) {
     const accountId = row.id;
     try {
       // Попытка уже оплачена (счёт по попыткам, FR-consent-and-telegram-auth-11): аккаунт с
       // активным сканом ПРОПУСКАЕТСЯ в этом прогоне, не является ошибкой, не блокирует батч.
+      // RV-06: после входа через Telegram анонимные `recognition` переносятся на аккаунт
+      // (`account_id` заполняется в `TelegramLogin`), поэтому этот предикат теперь видит и их.
       const active = await pool.query<{ id: string }>(`SELECT id FROM recognition WHERE account_id = $1 AND status = 'queued'`, [
         accountId,
       ]);
@@ -70,48 +94,68 @@ export async function runErasureJob(options: RunErasureJobOptions): Promise<Eras
         continue;
       }
 
-      const purgedKeys = await withTransaction(pool, async (client) => {
-        const diary = await client.query(`DELETE FROM diary_entry WHERE owner_key = $1`, [accountId]);
-        const recognitions = await client.query(`DELETE FROM recognition WHERE account_id = $1`, [accountId]);
-        const cards = await client.query(`DELETE FROM share_card WHERE owner_key = $1`, [accountId]);
-        // `attribution` и `growth_event` НЕ трогаются (DEC-A-016/10): они привязаны к
-        // `device_session_id`, не хранят данных о питании и остаются измеримыми.
-        const purged = await client.query<{ object_key: string }>(
-          `UPDATE photo SET file_state = 'purged'
-           WHERE file_state = 'present'
-             AND device_session_id IN (SELECT id FROM device_session WHERE account_id = $1)
-           RETURNING object_key`,
-          [accountId],
-        );
-        await client.query(`UPDATE device_session SET account_id = NULL WHERE account_id = $1`, [accountId]);
-        await client.query(`UPDATE account SET status = 'erased' WHERE id = $1`, [accountId]);
-        return {
-          keys: purged.rows.map((r) => r.object_key),
-          deletedDiaryEntries: diary.rowCount ?? 0,
-          deletedRecognitions: recognitions.rowCount ?? 0,
-          deletedCards: cards.rowCount ?? 0,
-        };
+      // Шаг 1 — удаление строк, идемпотентно (повторный прогон находит уже пустые таблицы,
+      // 0 затронутых строк — не ошибка). Порядок: diary_entry, share_card, recognition (RV-01).
+      await withTransaction(pool, async (client) => {
+        await client.query(`DELETE FROM diary_entry WHERE owner_key = $1`, [accountId]);
+        await client.query(`DELETE FROM share_card WHERE owner_key = $1`, [accountId]);
+        await client.query(`DELETE FROM recognition WHERE account_id = $1`, [accountId]);
       });
 
-      // Сетевой вызов ВНЕ транзакции, ПОСЛЕ коммита.
-      for (const objectKey of purgedKeys.keys) {
-        await photoStore.purgeObject(objectKey);
+      // Шаг 2 — фотографии, ПО ОДНОЙ, вне транзакции (сетевой вызов не держит соединение пула).
+      // Переспрашивается ЗАНОВО на каждом прогоне: уже помеченные `purged` не попадут в выборку,
+      // что и делает шаг РЕЗЮМИРУЕМЫМ после частичного сбоя (RV-02).
+      const pending = await pool.query<PhotoRow>(
+        `SELECT p.id, p.object_key FROM photo p
+         JOIN device_session ds ON ds.id = p.device_session_id
+         WHERE ds.account_id = $1 AND p.file_state = 'present'`,
+        [accountId],
+      );
+
+      let allPurged = true;
+      for (const photo of pending.rows) {
+        try {
+          await photoStore.purgeObject(photo.object_key);
+          await pool.query(`UPDATE photo SET file_state = 'purged' WHERE id = $1`, [photo.id]);
+        } catch (error) {
+          allPurged = false;
+          logger.error('photo_purge_failed', {
+            account_id: accountId,
+            object_key: photo.object_key,
+            message: (error as Error).message,
+          });
+          // Продолжаем с ОСТАЛЬНЫМИ фотографиями этого аккаунта — один упавший объект не
+          // должен помешать удалить остальные; аккаунт всё равно останется `erasing`.
+        }
       }
+
+      if (!allPurged) {
+        // Коммит `erased` ЗАПРЕЩЁН, пока остаётся хоть одна `present`-фотография (RV-02):
+        // следующий часовой прогон повторит попытку ИМЕННО для оставшихся объектов.
+        incomplete += 1;
+        logger.warn('erasure_job_account_incomplete', { account_id: accountId, reason: 'photo_purge_pending' });
+        continue;
+      }
+
+      // Шаг 3 — ТОЛЬКО теперь, когда фотографий `present` для аккаунта не осталось: обнулить
+      // сессии и зафиксировать `erased`.
+      await withTransaction(pool, async (client) => {
+        await client.query(`UPDATE device_session SET account_id = NULL WHERE account_id = $1`, [accountId]);
+        await client.query(`UPDATE account SET status = 'erased' WHERE id = $1`, [accountId]);
+      });
 
       // Аудит БЕЗ персональных данных: числа и идентификатор, не содержимое записей.
       logger.info('account_erased', {
         account_id: accountId,
-        deleted_diary_entries: purgedKeys.deletedDiaryEntries,
-        deleted_recognitions: purgedKeys.deletedRecognitions,
-        deleted_cards: purgedKeys.deletedCards,
+        purged_photos: pending.rows.length,
         completed_at: now().toISOString(),
       });
       erased += 1;
     } catch (error) {
-      // Сбой на ОДНОМ аккаунте не должен блокировать остальные — своя транзакция на аккаунт.
+      // Сбой на ОДНОМ аккаунте не должен блокировать остальные.
       logger.error('erasure_job_account_failed', { account_id: accountId, message: (error as Error).message });
     }
   }
 
-  return { erased, skippedActiveScan };
+  return { erased, skippedActiveScan, incomplete };
 }
