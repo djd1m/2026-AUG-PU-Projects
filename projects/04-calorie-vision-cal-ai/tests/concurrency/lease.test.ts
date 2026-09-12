@@ -14,6 +14,19 @@ import { randomUUID } from 'node:crypto';
 import type { DbPool } from '@n4/db';
 import { createLogger } from '@n4/shared';
 import { acquireLease, MAX_LEASE_ATTEMPTS, recordResult, sweepStuckScans } from '../../apps/recognizer/src/lease.js';
+
+/**
+ * Предел захватов ИЗ СПЕЦИФИКАЦИИ (`FR-foundation-6`, DEC-A-015), ЛИТЕРАЛОМ.
+ *
+ * Брать здесь рабочую константу нельзя: смена `MAX_LEASE_ATTEMPTS` с 3 на 4 сдвинула бы
+ * тест ВМЕСТЕ с кодом — он остался бы зелёным и проверял бы уже другое утверждение,
+ * «предел равен самому себе». Тест обязан проверять ЧИСЛО, о котором договорились, а не
+ * значение, прочитанное из проверяемого кода.
+ *
+ * `MAX_LEASE_ATTEMPTS` при этом импортируется намеренно: отдельное утверждение ниже сверяет
+ * рабочую константу с этим литералом и краснеет, если код разошёлся со спецификацией.
+ */
+const SPEC_MAX_LEASE_ATTEMPTS = 3;
 import { createWorker } from '../../apps/recognizer/src/worker.js';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
 import { migratedPool, seedPhoto, seedSession, truncateAll } from '../helpers/db.js';
@@ -58,6 +71,15 @@ async function queueUnpublishedJob(marker: string): Promise<string> {
   if (id === undefined) throw new Error('задание не создано');
   return id;
 }
+
+describe('предел захватов соответствует спецификации', () => {
+  it('рабочая константа равна трём — числу из FR-foundation-6', () => {
+    // ЕДИНСТВЕННОЕ место, где эти два числа сравниваются. Поменяли предел в коде — красным
+    // станет именно это утверждение, а не десяток сценариев ниже, и будет видно: поменяли
+    // решение, а спецификацию — нет.
+    expect(MAX_LEASE_ATTEMPTS).toBe(SPEC_MAX_LEASE_ATTEMPTS);
+  });
+});
 
 describe('аренда задания', () => {
   it('два воркера на одно задание дают ровно один захват', async () => {
@@ -112,21 +134,23 @@ describe('аренда задания', () => {
   it('четвёртого захвата не бывает: при трёх исчерпанных задание больше не предлагается', async () => {
     const jobId = await queueJob('lease-cap');
 
-    for (let attempt = 1; attempt <= MAX_LEASE_ATTEMPTS; attempt += 1) {
+    // ТРИ захвата — число из спецификации, а не из кода.
+    for (const expectedFence of [1, 2, 3]) {
       const taken = await acquireLease(pool, randomUUID());
-      expect(taken?.fence, `захват ${attempt}`).toBe(attempt);
+      expect(taken?.fence, `захват ${expectedFence}`).toBe(expectedFence);
       // Аренда истекает — задание снова свободно, и следующий воркер его законно берёт.
       await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
     }
 
-    // Четвёртый захват НЕ происходит: каждый захват оплачен, и у потолка обязана быть
-    // верхняя граница, а не надежда.
+    // ЧЕТВЁРТЫЙ захват — ОТДЕЛЬНОЕ утверждение: каждый захват оплачен, и у числа попыток
+    // обязана быть верхняя граница, а не надежда.
     expect(await acquireLease(pool, randomUUID())).toBeUndefined();
     const row = await pool.query<{ lease_fence: number; status: string }>(
       'SELECT lease_fence, status::text AS status FROM recognition WHERE id = $1',
       [jobId],
     );
-    expect(row.rows[0]?.lease_fence).toBe(MAX_LEASE_ATTEMPTS);
+    // Ожидаемый номер — ЛИТЕРАЛ 3: при пределе 4 здесь стало бы 4, и тест обязан покраснеть.
+    expect(row.rows[0]?.lease_fence).toBe(3);
     expect(row.rows[0]?.status).toBe('queued');
   }, 60_000);
 
@@ -239,8 +263,11 @@ describe('уборщик застрявших заданий', () => {
 
   it('задание с исчерпанными захватами и истёкшей арендой закрывается failed timeout', async () => {
     const jobId = await queueJob('sweep-exhausted');
-    for (let attempt = 1; attempt <= MAX_LEASE_ATTEMPTS; attempt += 1) {
-      await acquireLease(pool, randomUUID());
+    // Те же ТРИ захвата литералом: сценарий уборщика проверяет поведение при пределе из
+    // спецификации, а не при том, что сейчас стоит в коде.
+    for (const expectedFence of [1, 2, 3]) {
+      const taken = await acquireLease(pool, randomUUID());
+      expect(taken?.fence).toBe(expectedFence);
       await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
     }
     // Без уборщика такое задание не предложится НИ ОДНОМУ воркеру и провисит вечно.
@@ -275,8 +302,8 @@ describe('уборщик застрявших заданий', () => {
 
   it('воркер не затирает статус, уже закрытый уборщиком', async () => {
     const jobId = await queueJob('sweep-vs-worker');
-    // Два захвата уже израсходованы: следующий — последний разрешённый, третий.
-    for (let attempt = 1; attempt < MAX_LEASE_ATTEMPTS; attempt += 1) {
+    // Два захвата уже израсходованы: следующий — последний разрешённый, ТРЕТИЙ (литерал).
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
       await acquireLease(pool, randomUUID());
       await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
     }

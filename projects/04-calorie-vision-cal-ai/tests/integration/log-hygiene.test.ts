@@ -71,8 +71,8 @@ describe('гигиена журнала на живом сервере', () => {
     const failure = lines.map((line) => JSON.parse(line)).find((entry) => entry.event === 'request_failed');
     expect(failure).toBeDefined();
     expect(failure.route).toBe('unmatched');
-    // Путь БЕЗ query: понятно, куда стучались, и ни одного пользовательского значения.
-    expect(failure.path).toBe('/unknown');
+    // Пути в событии НЕТ ВООБЩЕ: сегменты пишет тот же клиент, что и query.
+    expect(failure.path).toBeUndefined();
     expect(failure.method).toBe('POST');
     expect(typeof failure.status).toBe('number');
     // Идентификатор запроса и длительность — чтобы жалобу «меня отсекли» можно было найти
@@ -80,6 +80,40 @@ describe('гигиена журнала на живом сервере', () => {
     expect(typeof failure.request_id).toBe('string');
     expect(failure.request_id.length).toBeGreaterThan(8);
     expect(typeof failure.duration_ms).toBe('number');
+  });
+
+
+  it('чувствительные значения в СЕГМЕНТАХ пути не попадают в журнал', async () => {
+    // Вторая редакция места писала путь без query и казалась безопасной. Судья предъявил
+    // этот прогон: сегменты пути пишет ТОТ ЖЕ клиент, и «очистить» их нечем — поэтому
+    // в журнал уходит только шаблон маршрута, сочинённый нами.
+    const response = await app.inject({
+      method: 'GET',
+      url: `/unknown/${LEAKED_TOKEN}/${LEAKED_IP}`,
+      headers: { 'x-forwarded-for': LEAKED_IP },
+    });
+    expect(response.statusCode).toBe(404);
+
+    const journal = lines.join('\n');
+    expect(journal).not.toContain(LEAKED_TOKEN);
+    expect(journal).not.toContain(LEAKED_IP);
+    expect(journal).not.toContain('/unknown/');
+
+    // Неизвестный маршрут пишется событием `request_not_found`: всплеск `404` — сигнал, и
+    // молчать о нём значит остаться без него. В событии — только наша метка.
+    const notFound = lines.map((line) => JSON.parse(line)).find((entry) => entry.event === 'request_not_found');
+    expect(notFound).toBeDefined();
+    expect(notFound.route).toBe('unmatched');
+    expect(notFound.path).toBeUndefined();
+    expect(notFound.method).toBe('GET');
+  });
+
+  it('известный маршрут пишется ШАБЛОНОМ, а не строкой запроса', async () => {
+    // Шаблон — это то, что написали МЫ при регистрации маршрута; строка запроса — то, что
+    // написал клиент. Разница между ними и есть всё содержание этой находки.
+    await app.inject({ method: 'POST', url: '/api/v1/auth/device', headers: { 'content-type': 'application/json' }, payload: '{bad' });
+    const failure = lines.map((line) => JSON.parse(line)).find((entry) => entry.event === 'request_failed');
+    expect(failure?.route).toBe('/api/v1/auth/device');
   });
 
   it('поле вне закрытого списка затирается, а не печатается как есть', async () => {

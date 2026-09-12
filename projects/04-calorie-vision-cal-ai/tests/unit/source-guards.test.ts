@@ -55,6 +55,30 @@ function loggerCalls(source: string): string[] {
   return calls;
 }
 
+/**
+ * Имена переменных, ПРОИЗВЕДЁННЫХ от строки запроса: `const path = request.url…`,
+ * `let p; p = req.url…`, а также присваивания из уже произведённой переменной.
+ * Нужны потому, что прямой запрет `request.url` в вызове журналирования обходится
+ * переносом выражения на строку выше — и именно так дефект и вернулся.
+ */
+function derivedFromUrl(source: string): string[] {
+  const lines = codeLines(source);
+  const names = new Set<string>();
+  // Два прохода: второй ловит цепочку `const a = request.url; const b = a.slice(1)`.
+  for (let pass = 0; pass < 2; pass += 1) {
+    for (const line of lines) {
+      const assignment = /(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(.+)$/.exec(line) ?? /^\s*([A-Za-z_$][\w$]*)\s*=\s*(.+)$/.exec(line);
+      if (assignment === null) continue;
+      const [, name, expression] = assignment;
+      if (name === undefined || expression === undefined) continue;
+      const fromUrl = /\b(request|req)\.url\b/.test(expression);
+      const fromDerived = [...names].some((known) => new RegExp(`\\b${known}\\b`).test(expression));
+      if (fromUrl || fromDerived) names.add(name);
+    }
+  }
+  return [...names];
+}
+
 /** Строки кода без комментариев: комментарий — не вызов и не чтение. */
 function codeLines(source: string): string[] {
   return source
@@ -78,9 +102,18 @@ describe('страж гигиены журнала', () => {
         if (forbidden.test(call)) offenders.push(`${file}: ${call.replace(/\s+/g, ' ').trim()}`);
         // Полный адрес: в журнал уходит только усечённый префикс.
         if (/\b(request\.ip|clientAddressFrom\()/.test(call)) offenders.push(`${file}: полный адрес в журнале — ${call.replace(/\s+/g, ' ').trim()}`);
-        // Строка запроса ЦЕЛИКОМ: `request.url` несёт query, а в ней приезжают токены и
-        // адреса. Поле называлось разрешённым словом `route`, а содержало произвольный ввод.
+        // Строка запроса ЦЕЛИКОМ: `request.url` несёт и query, и СЕГМЕНТЫ ПУТИ, а их пишет
+        // тот же клиент. Поле называлось разрешённым словом `route`, а содержало ввод.
         if (/\b(request|req)\.url\b/.test(call)) offenders.push(`${file}: строка запроса в журнале — ${call.replace(/\s+/g, ' ').trim()}`);
+        // И ЧЕРЕЗ ПРОМЕЖУТОЧНУЮ ПЕРЕМЕННУЮ ТОЖЕ. Прямой запрет обходится одной строкой выше
+        // вызова (`const path = request.url.split('?')[0]`), и ровно этим обходом дефект
+        // вернулся во второй раз. Страж, который ловит только прямую форму, учит писать
+        // непрямую.
+        for (const name of derivedFromUrl(code)) {
+          if (new RegExp(`\\b${name}\\b`).test(call)) {
+            offenders.push(`${file}: путь через переменную ${name} в журнале — ${call.replace(/\s+/g, ' ').trim()}`);
+          }
+        }
       }
     }
 
