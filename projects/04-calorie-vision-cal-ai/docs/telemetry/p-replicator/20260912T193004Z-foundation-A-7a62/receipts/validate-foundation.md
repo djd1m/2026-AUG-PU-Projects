@@ -221,4 +221,66 @@ PASS review-contract feature=foundation AC-ids=21 rows=21
 
 requested: claude-sonnet-5; actual: unknown to worker.
 
+## Попытка 4 (RV-03 повторно)
+
+Третье слепое ревью снова вернуло **RV-foundation-03 (medium)**: отчёт был привязан к
+`02cfa7f6…7e3670`, спецификация тем временем стала `431b004e…0e5059` — коммит `ae8f072` («проза
+приведена к тому, что реально сделано (VF-01, 02, 04)») переписал `FR-foundation-2` (четыре
+переменные S3, обе формы, оба сервиса), `FR-foundation-8` (числа порога, источник, вторая дверная
+защита) и закрыл `VF-04` (уборщик — в разделе «Объём» и в таблице трассировки).
+
+**Прочитано:** дифф `git show ae8f072 -- .../01_specification.md` целиком; текущие
+`FR-foundation-2`, `-8`, `-11`, `AC-foundation-3`, `-13`, `-19`, раздел «Объём» и таблица
+трассировки; `Caddyfile:35–56` и `03_architecture.md:131` (вторая, дверная защита частоты);
+`tests/unit/config.test.ts` — **дважды**, потому что координатор предупредил о конкурентной правке
+этого файла `impl-foundation`, и файл ДЕЙСТВИТЕЛЬНО изменился между первым и вторым чтением.
+
+**Находки:**
+- `VF-01`, `VF-02` — остаются ОТКРЫТЫМИ, severity `low` без изменений: FR-проза теперь полна,
+  `AC-foundation-3`/`-13` (Gherkin) тем же коммитом не тронуты — чистый текстовый разрыв FR↔AC.
+  Баллы `FR-foundation-2`/`FR-foundation-8` (92/100 каждый) НЕ менял: SMART оценивает текст AC,
+  а он не изменился с Попытки 1.
+- `VF-03` — без изменений, ЗАКРЫТА (сверено в Попытке 3).
+- `VF-04` — **ЗАКРЫТА**, проверено дословно: `FR-foundation-11` теперь в п. 5 раздела «Объём» и в
+  таблице трассировки.
+- `VF-05` (новая) — при ПЕРВОМ чтении `tests/unit/config.test.ts` обнаружил ровно то расхождение,
+  которое координатор назвал RV-foundation-02: тест `recognizer` для четырёх S3-переменных проверял
+  только `undefined`, без `''` (4/8 вместо 8/8, при 8/8 у `api`). Начал писать находку как ОТКРЫТУЮ.
+  При ВТОРОМ чтении, непосредственно перед фиксацией вердикта, увидел новый тест
+  `tests/unit/config.test.ts:165–180` с явной ссылкой на `RV-foundation-02` в комментарии — файл
+  изменился конкурентно, как и предупреждал координатор. **Не принял присутствие теста на веру:**
+  прогнал `npx vitest run tests/unit/config.test.ts` → `17 passed (17)`, включая новый. Записал
+  `VF-05` как «обнаружена и закрыта в этом же прогоне», с обеими стадиями и точной командой/выводом
+  проверки — быстрее обещанной Попытки 6 реализации.
+
+**Вердикт не изменился: 🟢 READY**, средний балл 95/100 (13 требований, без изменений — новых
+FR/NFR в этой попытке не добавлено, `FR-foundation-11` уже учтён в Попытке 3).
+
+**Spec revision** обновлён на `sha256:431b004e3612e86cfeeac592231f013771d908143cfe6d1610ac59d3e40e5059`
+(проверено дважды за время работы — не сдвинулся, как и обещал координатор).
+
+**Ворота:**
+```
+bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . \
+  --criterion-scenarios --role-map-source ../../.claude/commands/feature.md \
+  --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+```
+VERDICT criterion-scenarios=PASS features=4 gaps=0 inconclusive=0
+```
+Код возврата: **0**.
+
+```
+node ../../.claude/hooks/check-review-contract.cjs . foundation
+```
+```
+PASS review-contract feature=foundation AC-ids=21 rows=21
+```
+Код возврата: **0**.
+
+Файлы НЕ трогал за пределами `docs/features/foundation/validation-report.md` и этой квитанции;
+`01_specification.md`, `tests/unit/config.test.ts` и прочий код читал, не правил.
+
+requested: claude-sonnet-5; actual: unknown to worker.
+
 Status: completed
