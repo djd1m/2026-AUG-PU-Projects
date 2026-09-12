@@ -689,3 +689,2142 @@ exec
    132	сверяют по одному заголовку на критерий; полноту утверждений внутри теста предъявляет квитанция
    133	Phase 3 явно, а не подразумевает.
 
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'nl -ba docs/features/scan-pipeline/02_pseudocode.md' in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 0ms:
+     1	# Фича `scan-pipeline` — псевдокод
+     2	
+     3	Алгоритмический контракт. Имена сущностей, статусов, полей и чисел — из
+     4	[`docs/canon.md`](../../canon.md) и [`docs/Pseudocode.md`](../../Pseudocode.md) (Data Structures);
+     5	здесь они не переизобретаются. Требования и решения фичи — [`01_specification.md`](01_specification.md).
+     6	Ревизия 2 (Попытка 3): закрывает PC-01…PC-09 из [`plan-challenge.md`](plan-challenge.md) по решениям
+     7	координатора DEC-A-014 (`failed`, не `refused`, для отсутствия совпадения) и DEC-A-015 (эта ревизия).
+     8	
+     9	## Data Structures
+    10	
+    11	Фича НЕ добавляет и не меняет ни одной колонки канона: `recognition`, `photo`, `scan_quota_counter`
+    12	уже несут все нужные поля — их создала миграция `foundation`. **Две зависимости от foundation,
+    13	названные явно и требующие координации, а не тихого предположения** (PC-02, PC-09):
+    14	
+    15	1. Предикат выборки воркера (`foundation` `LeaseRecognitionJob`) обязан требовать `photo_id IS NOT
+    16	   NULL` в дополнение к `status = 'queued' AND (leased_until IS NULL OR leased_until < now())`, а
+    17	   также верхнюю границу `lease_fence < 3` (PC-03). Обе правки принадлежат ЧУЖОМУ файлу
+    18	   (`docs/features/foundation/02_pseudocode.md`) и НЕ вносятся этой квитанцией — координатор
+    19	   маршрутизирует их в план `foundation` отдельно; эта фича проектируется В ПРЕДПОЛОЖЕНИИ, что они
+    20	   там появятся, и явно называет последствие их отсутствия (см. `03_architecture.md`, раздел
+    21	   «Зависимости от `foundation`, требующие правки»).
+    22	2. `ModelProvider.recognize(image, schema)` (`foundation`, `apps/recognizer/src/provider/types.ts`)
+    23	   расширяется до `ModelProvider.recognize(image, schema, { model, deadlineMs })` — вызывающий код
+    24	   (эта фича) передаёт МОДЕЛЬ явно, интерфейс сам её не выбирает (PC-09). Та же оговорка: правка
+    25	   интерфейса — файл `foundation`, не вносится здесь.
+    26	
+    27	Интерфейсы уровня кода этой фичи (не таблицы):
+    28	
+    29	```
+    30	MatchIngredientPort = {
+    31	  match(items: RecognizedItem[]): Promise<Array<{
+    32	    food_item_id: UUID | null,
+    33	    portion_g: Grams,
+    34	    source_snapshot: Snapshot | null,
+    35	    parts?: Array<{ food_item_id: UUID, share: Confidence }>   // составное блюдо, food_synonym.recipe_parts
+    36	  }>>
+    37	}
+    38	```
+    39	
+    40	Изменение относительно Попытки 1 (PC-08): порт принимает ВЕСЬ список позиций ОДНИМ вызовом и
+    41	возвращает МАССИВ той же длины и порядка — не один `food_item_id`/`Snapshot` на позицию, а запись,
+    42	допускающая композицию (`parts[]`) для блюд, раскрываемых `food_synonym.recipe_parts`. Контракт
+    43	рассчитан на реальную реализацию `source-and-correct` без переделки вызывающего кода.
+    44	
+    45	Реализация ЭТОЙ фичи — `NullMatchIngredientPort`: для входа длины N возвращает МАССИВ длины N, где
+    46	КАЖДЫЙ элемент — `{ food_item_id: null, portion_g: item.mass_g, source_snapshot: null }` (в
+    47	`food_item` нет строк до `source-and-correct`). Тестовых двойников ДВА, и они проверяют РАЗНОЕ
+    48	(PC-08 требует разделения):
+    49	
+    50	- **Контрактный тест порта** — прогоняется ПРОТИВ ЛЮБОЙ реализации (в Phase 1 — только против
+    51	  `NullMatchIngredientPort`, готов принять реализацию `source-and-correct` без изменений): длина
+    52	  ответа равна длине входа, порядок сохранён, `portion_g` всегда положителен, `parts[].share`
+    53	  суммируется в 1, если `parts` присутствует.
+    54	- **Поведенческий тест `NullMatchIngredientPort`** — конкретно для ЭТОЙ фичи: КАЖДЫЙ элемент несёт
+    55	  `food_item_id: null`, ни сети, ни обращения к `food_item` не происходит.
+    56	
+    57	`FixedMatchIngredientPort` (тестовый двойник, используется ТОЛЬКО в unit-тесте инварианта ADR-001,
+    58	см. страж в `04_refinement.md`) возвращает МАССИВ с ХОТЯ БЫ одним `food_item_id`, отличным от `null`.
+    59	
+    60	`ModelProvider` (интерфейс и фейк) и `LeaseRecognitionJob` (аренда с fencing) — из `foundation`,
+    61	здесь ВЫЗЫВАЮТСЯ, не переопределяются, за вычетом двух названных выше расширений.
+    62	
+    63	## Core Algorithms
+    64	
+    65	### Algorithm: EnqueueScanForFeature
+    66	
+    67	REQUIREMENT: `FR-scan-pipeline-1`
+    68	REQUIREMENT: `FR-scan-pipeline-2`
+    69	REQUIREMENT: `FR-scan-pipeline-3`
+    70	REQUIREMENT: `FR-scan-pipeline-4`
+    71	REQUIREMENT: `FR-scan-pipeline-14`
+    72	REQUIREMENT: `FR-scan-pipeline-17`
+    73	REQUIREMENT: `AC-scan-pipeline-1`
+    74	REQUIREMENT: `AC-scan-pipeline-2`
+    75	REQUIREMENT: `AC-scan-pipeline-3`
+    76	REQUIREMENT: `AC-scan-pipeline-4`
+    77	REQUIREMENT: `AC-scan-pipeline-5`
+    78	REQUIREMENT: `AC-scan-pipeline-6`
+    79	REQUIREMENT: `AC-scan-pipeline-7`
+    80	REQUIREMENT: `AC-scan-pipeline-8`
+    81	REQUIREMENT: `AC-scan-pipeline-19`
+    82	REQUIREMENT: `AC-scan-pipeline-20`
+    83	REQUIREMENT: `AC-scan-pipeline-24`
+    84	REALISES: SC-US-001-1, SC-US-009-1
+    85	INPUT: сессия устройства (`foundation` `CreateDeviceSession`), байты изображения, заявленный
+    86	`Content-Type` (НЕ доверенный), заголовок `Idempotency-Key`.
+    87	OUTPUT: `202` с `scan_id` и статусом `queued`, ЛИБО отказ валидации, ЛИБО отказ по потолку — и в ОБОИХ
+    88	отказных случаях НИ ОДНОЙ видимой воркеру строки `recognition` не остаётся (PC-02).
+    89	STEPS:
+    90	1. Хук частоты (30/мин `POST`, FR-scan-pipeline-10) — ДО разбора тела.
+    91	2. Определить тип по БАЙТАМ (сигнатура, не `Content-Type`, не расширение). `IF` сигнатура не одна из
+    92	`{JPEG, PNG, WebP, HEIC}` `THEN RETURN 422 (invalid_image)`. Полиглот — файл, чьи байты ПОСЛЕ конца
+    93	структуры основного формата (не только JPEG EOI — тот же принцип для PNG IEND, RIFF-длины WebP,
+    94	box-структуры HEIC/ISOBMFF) содержат постороннюю структуру (ZIP local-file-header, `<html`,
+    95	второй валидный заголовок изображения) — отвергается тем же путём (PC-05).
+    96	3. `IF` заявленные ширина×высота дают распаковку свыше 100 Мпикс `THEN RETURN 422
+    97	(decompression_bomb)` — БЕЗ декодирования.
+    98	4. `IF` фактический размер файла вне `(0, 12 МБ]` ИЛИ разрешение `< 320×320 px` `THEN RETURN 413|422`
+    99	с названной причиной.
+   100	5. **Ограниченная проверка декодируемости (PC-04, новый шаг).** Выполнить `sharp(buffer, {
+   101	limitInputPixels: 50_000_000 }).metadata()` И декодировать РОВНО одну страницу/кадр (`{ pages: 1 }`)
+   102	в память ЦЕЛИКОМ (не только заголовок) — дешёвая, но настоящая проверка, что файл декодируется этим
+   103	же кодеком, которым будет пользоваться нормализация. `IF` бросает исключение (испорченный кодек,
+   104	усечённый файл, неподдерживаемый вариант контейнера) `THEN RETURN 422 (invalid_image)` — БЕЗ
+   105	сохранения оригинала, БЕЗ заявки идемпотентности, БЕЗ обращения к квоте: правдоподобный заголовок с
+   106	неразбираемым телом не должен занимать ни один из трёх ресурсов. Это ОТДЕЛЬНАЯ проверка от полной
+   107	нормализации (`NormalizePhotoForModel`): она не конвертирует HEIC, не режет до 1568 px и не сжимает
+   108	— только доказывает декодируемость дешёвым способом до необратимых шагов.
+   109	6. `IF` заголовок `Idempotency-Key` отсутствует ИЛИ не UUID `THEN RETURN 422
+   110	(idempotency_key_required)` — формат проверяется ДО любого обращения к хранилищу или базе.
+   111	7. **Вычислить детерминированный ключ объекта:** `object_key = sha256(байты файла) + '/' +
+   112	device_session_id`. Один и тот же файл от одной сессии ВСЕГДА попадает в один и тот же объект: повтор
+   113	после разрыва соединения перезаписывает ТОТ ЖЕ ключ, а не создаёт второй объект — orphan-объект в
+   114	этом случае физически не может появиться (PC-02).
+   115	8. **Загрузить оригинал в приватный бакет ДО любой транзакции БД** (`storage`, `PUT` по
+   116	`object_key` с шага 7). `IF` `storage` недоступен `THEN RETURN 503 (dependency_unavailable)` — НИ
+   117	ОДНОЙ строки БД ещё не существует, откатывать нечего. Соединение с базой на этом шаге не открыто
+   118	вовсе — сохранение объекта строго ВНЕ транзакции (`shared-resource-verification.md`).
+   119	9. **Одна короткая транзакция БД** (PC-02, заменяет прежние раздельные шаги «заявить ключ» → «списать
+   120	квоту» → «сохранить фото»):
+   121	   1. `INSERT INTO recognition (device_session_id, idempotency_key, status, photo_id, attempt_no,
+   122	      escalated, lease_fence) SELECT …, 'queued', :photo_id_placeholder, 1, false, 0 ON CONFLICT
+   123	      (device_session_id, idempotency_key) DO NOTHING RETURNING id` — фото ещё не вставлено, поэтому
+   124	      сначала вставляется `photo` (см. далее), а `photo_id` подставляется тем же INSERT'ом в ОДНОЙ
+   125	      транзакции (порядок вставки `photo` → `recognition` внутри транзакции, а не наоборот — строка
+   126	      `recognition` со статусом `queued` не существует НИ МОМЕНТА без `photo_id`). `IF` результат
+   127	      `INSERT` пуст (конфликт) `THEN` это ПОВТОР существующего скана: прочитать существующую строку,
+   128	      ROLLBACK эту транзакцию (ничего не менять), удалить best-effort только что загруженный объект
+   129	      ТОЛЬКО если он отличается от объекта существующей строки (при совпадающем `object_key`, что
+   130	      является нормой при повторе того же файла, удалять нечего — `PUT` просто перезаписал тот же
+   131	      объект тем же содержимым); `RETURN` существующий `scan_id`, `202`, её ТЕКУЩИЙ статус.
+   132	   2. `INSERT INTO photo (device_session_id, object_key, mime, bytes, width, height, expires_on,
+   133	      file_state) VALUES (…, today + 30 дней, 'present') RETURNING id` — MIME из шага 2 (сигнатура),
+   134	      не заявленный клиентом.
+   135	   3. Вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_at_this_moment,
+   136	      reason = 'primary')` (`foundation`, три ключа) ВНУТРИ этой же транзакции. `day` вычисляется
+   137	      РОВНО в момент этого шага, а не переносится из более раннего вызова (FR-scan-pipeline-18,
+   138	      PC-06). `IF refused(scope) THEN` **откатить ВСЮ транзакцию** (и `recognition`, и `photo` не
+   139	      сохраняются вовсе — не переводятся в `refused`, потому что строки не существует) и после
+   140	      отката удалить best-effort только что загруженный объект; при неудаче best-effort-удаления
+   141	      объект физически бесхозен, НО ограничен по времени политикой жизненного цикла бакета (ADR-010,
+   142	      второй рубеж, действующий НЕЗАВИСИМО от таблицы `photo` — срабатывает по возрасту объекта, а
+   143	      не по наличию ссылающейся строки). `RETURN 429` с `{ limit, reset_at (следующая полночь
+   144	      Europe/Moscow ОТ ЭТОГО момента), scope }`.
+   145	   4. `IF granted THEN` `COMMIT`. Строка `recognition` появляется воркеру ЦЕЛИКОМ и АТОМАРНО: `status
+   146	      = 'queued'`, `photo_id` уже установлен, `attempt_no = 1`, `escalated = false`, `lease_fence =
+   147	      0` — промежуточного состояния «строка есть, `photo_id` ещё пуст» НЕ существует ни для одного
+   148	      внешнего наблюдателя, включая воркер (устраняет гонку PC-02: «между шагами 5–8 воркер может
+   149	      захватить незавершённое задание»). Предикат выборки воркера дополнительно требует `photo_id IS
+   150	      NOT NULL` (см. «Зависимости от `foundation`» выше) как ВТОРОЙ, defense-in-depth рубеж —
+   151	      основной рубеж здесь — атомарность самой транзакции.
+   152	10. `IF` это ПЕРВЫЙ скан сессии `THEN` записать `growth_event(type = 'install', …)` (вне транзакции
+   153	шага 9, не влияет на её атомарность — потеря этого события не теряет деньги и не создаёт гонку).
+   154	11. `RETURN 202` с `{ scan_id, status: 'queued' }` немедленно.
+   155	COMPLEXITY: O(1) плюс одна загрузка объекта ДО транзакции и одна короткая транзакция.
+   156	
+   157	### Algorithm: GetScanStatus
+   158	
+   159	REQUIREMENT: `FR-scan-pipeline-9`
+   160	REQUIREMENT: `AC-scan-pipeline-18`
+   161	REALISES: SC-US-001-2
+   162	INPUT: `scan_id`, вызывающий (сессия либо аккаунт).
+   163	OUTPUT: тело статуса скана либо `404`.
+   164	STEPS:
+   165	1. Хук частоты (120/мин `GET`, FR-scan-pipeline-10) — ДО разбора запроса.
+   166	2. Найти `recognition` по `id`. `IF` не найдена `OR` `owner_key` не совпадает `THEN RETURN 404`.
+   167	3. Собрать тело: `{ status, items[] (label_ru, mass_g, unmatched, food_item_id), confidence,
+   168	low_confidence, escalated, model_estimate_kcal, failure_reason? }`.
+   169	4. `food_item_id` каждой позиции — `null` в этой фиче (`NullMatchIngredientPort`); поля полного
+   170	контракта проекта (`kcal_total`, `macros`, `sources[]`, `conflict_flag`, `share_card_id`) отсутствуют
+   171	либо `null`/`[]` — явное ограничение (см. `01_specification.md` «Стык»).
+   172	5. `RETURN 200` с телом и `meta.updated_at = recognition.finished_at ?? recognition.created_at`.
+   173	COMPLEXITY: O(1) чтение по первичному ключу.
+   174	
+   175	### Algorithm: NormalizePhotoForModel
+   176	
+   177	REQUIREMENT: `FR-scan-pipeline-5`
+   178	REQUIREMENT: `AC-scan-pipeline-9`
+   179	REQUIREMENT: `AC-scan-pipeline-10`
+   180	REQUIREMENT: `AC-scan-pipeline-25`
+   181	REALISES: —
+   182	INPUT: `photo.object_key` (оригинал), `photo.mime` (ПОДТВЕРЖДЁННЫЙ по байтам на приёме, шаг 2
+   183	`EnqueueScanForFeature` — НЕ «заявленный MIME»: вход уже один раз прошёл проверку сигнатуры, и
+   184	нормализатор обязан пользоваться ЕЁ результатом, а не спрашивать заново, PC-05).
+   185	OUTPUT: `photo.normalized_object_key`, `photo.normalized_bytes`, ЛИБО `failed(schema_violation)`.
+   186	STEPS:
+   187	1. Загрузить оригинал по подписанной ссылке (≤ 15 минут). Соединение с базой на этом шаге не
+   188	удерживается — транзакция аренды закрыта.
+   189	2. Декодировать с ОБЩИМ бюджетом распаковки ≤ 50 Мпикс И входным файлом ≤ 12 МБ (тот же бюджет, что
+   190	на приёме, шаг 5 `EnqueueScanForFeature` — не второй, отдельно придуманный лимит). `IF photo.mime =
+   191	'image/heic' THEN` декодировать через `libheif`/`sharp` с явным `{ pages: 1 }` — берётся ПЕРВЫЙ
+   192	кадр контейнера (HEIC-последовательности/Live Photo несут несколько кадров; политика — всегда
+   193	первый, а не «любой удобный»); иначе декодер формата, тоже с `{ pages: 1 }`, если формат допускает
+   194	многостраничность (анимированный WebP).
+   195	3. **Применить ориентацию EXIF (`rotate()`, автоориентация по тегу `Orientation`) ДО удаления
+   196	метаданных** — иначе метаданные стёрты раньше, чем прочитан угол поворота, и повёрнутое на телефоне
+   197	фото остаётся повёрнутым в сохранённой копии (PC-05). ЗАТЕМ снять ВСЕ метаданные (`withMetadata:
+   198	false`, дефолт `sharp` без явного `withMetadata()`), включая EXIF/GPS.
+   199	4. Привести длинную сторону к ≤ 1568 px (не увеличивать, если уже меньше).
+   200	5. Сжимать итеративно, пока размер файла не станет ≤ 5 МБ, с явным пределом числа итераций (например
+   201	6) — `IF` предел итераций исчерпан и файл всё ещё `> 5 МБ` `THEN` это тоже `failed(schema_violation)`
+   202	шага 6, а не бесконечный цикл.
+   203	6. `IF` любой шаг 2–5 бросил ошибку ИЛИ исчерпал предел итераций `THEN RETURN
+   204	failed(schema_violation)` с названным шагом — вызова модели НЕ делать. Это РЕДКИЙ путь: подавляющее
+   205	большинство недекодируемых файлов уже отсеяно шагом 5 `EnqueueScanForFeature`; сюда попадают только
+   206	файлы, декодируемые в общем виде, но падающие на конкретной трансформации (ротация неподдерживаемого
+   207	типа контейнера, исчерпание памяти на полном разрешении при пройденной облегчённой проверке).
+   208	7. Сохранить результат как `photo.normalized_object_key`, `photo.normalized_bytes`. Оригинал не
+   209	изменяется.
+   210	8. `RETURN` успех.
+   211	COMPLEXITY: O(1) операций преобразования на фото; стоимость доминирует декодирование/кодирование.
+   212	
+   213	### Algorithm: RecognizeScanWithinScanPipeline
+   214	
+   215	REQUIREMENT: `FR-scan-pipeline-6`
+   216	REQUIREMENT: `FR-scan-pipeline-7`
+   217	REQUIREMENT: `FR-scan-pipeline-8`
+   218	REQUIREMENT: `FR-scan-pipeline-12`
+   219	REQUIREMENT: `FR-scan-pipeline-13`
+   220	REQUIREMENT: `FR-scan-pipeline-15`
+   221	REQUIREMENT: `FR-scan-pipeline-18`
+   222	REQUIREMENT: `NFR-scan-pipeline-1`
+   223	REQUIREMENT: `NFR-scan-pipeline-3`
+   224	REQUIREMENT: `AC-scan-pipeline-11`
+   225	REQUIREMENT: `AC-scan-pipeline-12`
+   226	REQUIREMENT: `AC-scan-pipeline-13`
+   227	REQUIREMENT: `AC-scan-pipeline-14`
+   228	REQUIREMENT: `AC-scan-pipeline-15`
+   229	REQUIREMENT: `AC-scan-pipeline-16`
+   230	REQUIREMENT: `AC-scan-pipeline-17`
+   231	REQUIREMENT: `AC-scan-pipeline-21`
+   232	REQUIREMENT: `AC-scan-pipeline-26`
+   233	REQUIREMENT: `AC-scan-pipeline-27`
+   234	REQUIREMENT: `AC-scan-pipeline-28`
+   235	REQUIREMENT: `AC-scan-pipeline-29`
+   236	REALISES: SC-US-001-2, SC-US-002-2
+   237	INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (несёт `lease_fence`, `photo_id`,
+   238	ГАРАНТИРОВАННО непустой — см. «Зависимости от `foundation`»).
+   239	OUTPUT: `recognition` в терминальном статусе `failed` или `refused` (`done` НЕ достигается в этой
+   240	фиче реальным `NullMatchIngredientPort` — путь к `done` проверяется отдельно, unit-тестом с
+   241	`FixedMatchIngredientPort`).
+   242	STEPS:
+   243	1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, возвращённый
+   244	захватом.
+   245	2. **Повторная попытка после истечения аренды списывает СВОЮ квоту (PC-01).** `IF fence = 1` (это
+   246	ПЕРВЫЙ захват этого задания) `THEN` попытка №1 уже оплачена и списана шагом 9.3
+   247	`EnqueueScanForFeature` — переходить к шагу 3 без нового списания. `IF fence ∈ {2, 3}` (это
+   248	ПОВТОРНЫЙ захват — предыдущий воркер не уложился в 60 с аренды) `THEN` ДО загрузки фото и ДО вызова
+   249	модели вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС,
+   250	reason = 'primary')` — ЕЩЁ ОДНО списание трёх ключей, `day` вычисляется В МОМЕНТ ЭТОГО захвата и
+   251	может отличаться от `day` шага 9.3, если задание пересекло полночь (PC-06). `IF refused(scope) THEN`
+   252	записать `refused(quota_exhausted_${scope})` условно по `fence` (механизм шага 9 ниже) и `RETURN` —
+   253	модель на этой попытке не вызывается вовсе; это ОТКАЗ ДО вызова, соответствует `refused` по критерию
+   254	координатора (DEC-A-014). `fence = 4` невозможен по построению — предикат захвата `foundation`
+   255	ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»); при обнаружении `fence > 3`
+   256	(защита от регресса) `THEN` немедленно `failed(timeout)` без вызова модели.
+   257	3. Вызвать `NormalizePhotoForModel`. `IF failed THEN` записать `failed(schema_violation)` условно по
+   258	`fence` (шаг 9) и `RETURN`.
+   259	4. Определить модель ЯВНО: `model = escalated ? N4_MODEL_ESCALATION : N4_MODEL_PRIMARY` (значения
+   260	окружения канона, ADR-004; `foundation` не выбирает модель сама — см. «Зависимости от `foundation`»,
+   261	PC-09). Вызвать `ModelProvider.recognize(normalizedImage, schema, { model, deadlineMs: 25_000 })`.
+   262	**Скрытые повторы SDK провайдера отключены явно** (`maxRetries: 0` при создании клиента,
+   263	`03_architecture.md`) — единственный источник повторного вызова модели на одну попытку `fence` —
+   264	явная логика этого алгоритма (шаг 6, эскалация), не библиотека. Записать `model_call` (событие,
+   265	FR-scan-pipeline-12): `START` немедленно ПЕРЕД вызовом (`{ request_id, scan_id, fence, reason:
+   266	escalated ? 'escalation' : 'primary', model, mode: N4_MODEL_PROVIDER, day, ts }`), `OUTCOME` сразу
+   267	после ответа/ошибки/таймаута (`{ request_id (тот же), outcome: 'ok'|'failed'|'timeout', ms,
+   268	input_tokens?, output_tokens? }`). Если процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже записан
+   269	в структурированный вывод (не буферизуется) — агрегатор (`scripts/telemetry/model-calls.sh`, план,
+   270	PC-07) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как `outcome:
+   271	'unknown'`; счёт в потолках это НЕ меняет — квота уже списана шагом 2/9.3 ДО вызова, независимо от
+   272	исхода. `IF` ответ не соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер недоступен
+   273	ИЛИ истёк дедлайн 25 с `THEN failed(provider_unavailable | provider_timeout)`.
+   274	5. Проверить ДИАПАЗОНЫ в коде: `confidence` в 0…1; `mass_g` каждой позиции в 1…5000; позиций ≤ 12;
+   275	кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` нарушено `THEN failed(schema_violation)`
+   276	с названным полем — без подрезания.
+   277	6. `IF` модель не нашла еды `THEN refused(no_food_detected)`, дневник не создаётся, `RETURN`.
+   278	7. `IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(session, ip_prefix,
+   279	day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС, reason = 'escalation')` — четвёртый ключ, `day` СВОЙ,
+   280	вычисленный в момент этого решения (PC-06). `IF granted THEN` вернуться к шагу 4 с `model =
+   281	N4_MODEL_ESCALATION`, `escalated = true`, `attempt_no = 2`. `ELSE` эскалации нет: запомнить
+   282	`failure_reason_candidate = quota_exhausted_escalation` для шага 8, если статус окажется `done`
+   283	(сегодня — не происходит, шаг 8).
+   284	8. Вызвать `MatchIngredientPort.match(items)` — ОДИН вызов на ВЕСЬ список позиций (PC-08). Для
+   285	каждого элемента ответа: `IF food_item_id != null THEN` позиция сопоставлена, `Snapshot =
+   286	source_snapshot`; иначе `unmatched = true`, `food_item_id = null`. `IF` (составное блюдо) `parts`
+   287	присутствует `THEN` раскрыть в компоненты — логика вне объёма этой фичи (`NullMatchIngredientPort`
+   288	никогда не возвращает `parts`). `IF` ни одна позиция не сопоставлена (в этой фиче — ВСЕГДА при
+   289	`NullMatchIngredientPort`) `THEN` статус `failed(no_food_matched)` (DEC-A-014: попытка ОПЛАЧЕНА и
+   290	ОБРАБОТАНА моделью — это не отказ ДО вызова, а необработанный результат). `failure_reason_candidate`
+   291	шага 7 в ЭТОМ прогоне НЕ записывается — доказывается отдельным unit-тестом с `FixedMatchIngredientPort`
+   292	(AC-scan-pipeline-14), где `done`/`low_confidence`/`quota_exhausted_escalation` записываются
+   293	по-настоящему.
+   294	
+   295	   **Согласование с ADR-001 Confirmation (2) — явно, не подразумеваемо (PC-08).** Root-уровневый
+   296	   `ADR.md` называет терминалом ИМЕННО `refused(no_food_matched)` для нулевого совпадения — это
+   297	   решение написано для МИРА, где матчинг РЕАЛЬНО ИСКАЛ и не нашёл (`source-and-correct`). В этой
+   298	   фиче матчинг не ищет вовсе (`NullMatchIngredientPort` — заглушка, а не поиск с нулевым
+   299	   результатом), и DEC-A-014 называет это ДРУГИМ по природе событием: `failed`, а не `refused`.
+   300	   Ожидание: когда `source-and-correct` подставит РЕАЛЬНЫЙ порт, генуинный «искали и не нашли»
+   301	   вернётся к `refused(no_food_matched)` из root ADR-001, и `failed(no_food_matched)` из этой фичи
+   302	   исчезнет вместе с `NullMatchIngredientPort`. До тех пор оба документа (root `ADR.md` и эта фича)
+   303	   намеренно расходятся, и расхождение НАЗВАНО, а не тихо перекрыто. Координатор подтверждает эту
+   304	   трактовку явно на чекпойнте — она не выводится автоматически ни из ADR-001, ни из DEC-A-014.
+   305	9. Записать результат УСЛОВНО: `UPDATE recognition SET status = …, finished_at = now(), leased_until
+   306	= NULL, lease_owner = NULL, … WHERE id = :scan_id AND lease_fence = :fence AND status = 'queued'` —
+   307	условие `status = 'queued'` ДОБАВЛЕНО к условию по `fence` (PC-03): это делает запись воркера
+   308	взаимоисключающей со `SweepStuckScans`, который пишет терминальный статус БЕЗ владения арендой (у
+   309	sweeper'а нет `fence` — только право переводить `queued` в `failed(timeout)` по возрасту). `IF`
+   310	затронуто НОЛЬ строк `THEN` результат ОТБРОСИТЬ: если проиграл гонку ДРУГОМУ воркеру — записать
+   311	`stale_lease_result`; если проиграл гонку `SweepStuckScans` (статус уже не `queued`) — записать
+   312	`swept_as_timeout`. Различить эти два случая ПОСЛЕ факта: перечитать строку, сравнить `status`.
+   313	COMPLEXITY: O(k) на позицию (k ≤ 12) плюс O(1) на решение по каждому шагу.
+   314	
+   315	### Algorithm: SweepStuckScans
+   316	
+   317	REQUIREMENT: `FR-scan-pipeline-16`
+   318	REQUIREMENT: `AC-scan-pipeline-22`
+   319	REQUIREMENT: `AC-scan-pipeline-23`
+   320	REALISES: — (сценария `SC-US-nnn-k` нет; PC-03 — инженерный дедлайн, не пользовательский путь)
+   321	INPUT: текущее время, тот же цикл опроса `recognizer` (интервал 1 с, `foundation`), что и захват
+   322	задания — ОТДЕЛЬНОГО сервиса не заводится.
+   323	OUTPUT: терминальный статус `failed(timeout)` на застрявших заданиях.
+   324	STEPS:
+   325	1. **Правило А — никогда не захвачено.** `UPDATE recognition SET status = 'failed', failure_reason =
+   326	'timeout', finished_at = now() WHERE status = 'queued' AND leased_until IS NULL AND created_at <
+   327	now() - interval '5 minutes' AND status = 'queued'` — задание простояло в очереди 5 минут, ни один
+   328	воркер его не взял (пул воркеров исчерпан либо остановлен). Условие `status = 'queued'` в `WHERE`
+   329	сразу и есть защита от гонки: если воркер В ЭТОТ МОМЕНТ захватывает задание, `UPDATE` затрагивает 0
+   330	строк, и это НЕ ошибка (следующий тик sweeper'а его уже не увидит, `leased_until` станет не-`NULL`).
+   331	2. **Правило Б — предел захватов исчерпан.** Задание с `lease_fence = 3`, чья аренда истекла
+   332	(`leased_until < now()`), НЕИЗБЕЖНО становится незахватываемым: предикат выборки `foundation`
+   333	ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»), значит такое задание не
+   334	предложится НИ ОДНОМУ воркеру и провисит в `queued` вечно без sweeper'а. `UPDATE recognition SET
+   335	status = 'failed', failure_reason = 'timeout', finished_at = now() WHERE status = 'queued' AND
+   336	lease_fence >= 3 AND leased_until < now()`.
+   337	3. **Правило В — общий дедлайн задачи 30 с (приближение, названное явно).** Колонки
+   338	`first_leased_at` в каноне НЕТ, и эта фича её не добавляет (координатор запретил новые сущности).
+   339	Прокси — `created_at`: первый захват происходит в пределах интервала опроса (≤ 1 с) после создания
+   340	строки, поэтому `now() - created_at` практически совпадает с «время с первого захвата» с точностью
+   341	до секунды. `UPDATE recognition SET status = 'failed', failure_reason = 'timeout', finished_at =
+   342	now() WHERE status = 'queued' AND lease_fence >= 1 AND created_at < now() - interval '30 seconds'`.
+   343	**Названный риск, а не скрытый:** это приближение, а не точное измерение с момента первого захвата;
+   344	задание, легитимно завершающееся между 30 и ~31 с (интервал опроса), теоретически может быть
+   345	затронуто ОБОИМИ — и настоящим воркером, и sweeper'ом. Гонка разрешена условием `status = 'queued'`
+   346	в обоих операторах (шаг 9 `RecognizeScanWithinScanPipeline` и здесь): кто раньше СОVERSHOOTS, тот и
+   347	записывает, второй получает 0 строк. Точное решение (журнал `first_leased_at`) — кандидат в
+   348	`source-and-correct`/следующую ревизию `foundation`, не эта фича.
+   349	4. Каждое правило — отдельный, идемпотентный `UPDATE` со СВОИМ `WHERE`; повторный прогон не находит
+   350	уже переведённых строк.
+   351	COMPLEXITY: O(n) по числу застрявших строк на прогон; индексы `(status, leased_until)` и
+   352	`(status, created_at)` держат стоимость малой относительно общего объёма `queued`.
+   353	
+   354	### Algorithm: RateLimitScanRoutes
+   355	
+   356	REQUIREMENT: `FR-scan-pipeline-10`
+   357	REALISES: —
+   358	INPUT: входящий запрос к `/api/v1/scans` (POST) либо `/api/v1/scans/{id}` (GET).
+   359	OUTPUT: продолжение обработки либо `429` без разбора тела.
+   360	STEPS:
+   361	1. Хук `onRequest` (ДО разбора тела) выбирает порог по МЕТОДУ: `POST` → 30/мин на `ip_prefix`; `GET`
+   362	→ 120/мин на `ip_prefix`. Расширение общего ограничителя `foundation`, не второй счётчик.
+   363	2. `IF` порог превышен `THEN RETURN 429` без разбора тела, тело не пишется в журнал (DEC-A-013).
+   364	3. `ELSE` передать дальше: валидация → декодируемость → идемпотентность → квота → вызов модели.
+   365	COMPLEXITY: O(1) на запрос.
+   366	
+   367	### Algorithm: PurgeExpiredPhotos
+   368	
+   369	REQUIREMENT: `FR-scan-pipeline-11`
+   370	REQUIREMENT: `NFR-scan-pipeline-2`
+   371	REALISES: —
+   372	INPUT: текущая дата, размер батча.
+   373	OUTPUT: удалённые объекты и обновлённые строки `photo`.
+   374	STEPS:
+   375	1. Раз в сутки батч `photo` с `expires_on < today AND file_state = 'present'`.
+   376	2. Удалить объект из бакета (оригинал и `normalized_object_key`, если есть); отсутствие объекта —
+   377	тоже успех.
+   378	3. `file_state → purged`, строка `photo` СОХРАНЯЕТСЯ.
+   379	4. Политика жизненного цикла бакета — второй, независимый от строки `photo` рубеж (см. PC-02, шаг 9.3
+   380	`EnqueueScanForFeature`: она же ловит объекты без ЛЮБОЙ ссылающейся строки).
+   381	5. Повторный прогон в тот же день — ноль действий.
+   382	COMPLEXITY: O(b) на прогон, b — размер батча.
+   383	
+   384	## API Contracts
+   385	
+   386	```
+   387	POST /api/v1/scans
+   388	  Cookie: n4_session=<токен> — обязательна
+   389	  Content-Type: multipart/form-data
+   390	  Idempotency-Key: <UUID> — ОБЯЗАТЕЛЕН
+   391	  Body: файл изображения (JPEG/PNG/WebP/HEIC ≤ 12 МБ, ≥ 320×320 px, декодируемый ≤ 50 Мпикс)
+   392	  Response 202: { "data": { "scan_id": "<uuid>", "status": "queued" }, "meta": { "request_id": "<uuid>" } }
+   393	  Response 401: нет сессии
+   394	  Response 413 | 422: { "error": { "code": "invalid_image" | "decompression_bomb", "message": "<причина>" } }
+   395	  Response 422: { "error": { "code": "idempotency_key_required" } }
+   396	  Response 429: { "error": { "code": "rate_limited" } } ИЛИ { "error": { "code": "quota_exhausted" }, "data": { "limit": n, "reset_at": "<ts>", "scope": "user" | "global" } }
+   397	  Response 503: { "error": { "code": "dependency_unavailable" } }
+   398	
+   399	GET /api/v1/scans/{id}
+   400	  Cookie: n4_session=<токен>
+   401	  Response 200: { "data": { "status": "queued" | "failed" | "refused" | "done",
+   402	                             "items": [ { "label_ru": string, "mass_g": number, "unmatched": boolean, "food_item_id": null } ],
+   403	                             "confidence": number | null, "low_confidence": boolean, "escalated": boolean,
+   404	                             "model_estimate_kcal": number | null, "failure_reason": string | null },
+   405	                  "meta": { "request_id": "<uuid>", "updated_at": "<ts>" } }
+   406	  Response 401: нет сессии
+   407	  Response 404: чужой ИЛИ несуществующий id — ОДИН и тот же ответ
+   408	```
+   409	
+   410	## State Transitions
+   411	
+   412	```mermaid
+   413	stateDiagram-v2
+   414	    [*] --> validating_input: POST /scans
+   415	    validating_input --> rejected_input: формат/размер/bomb/недекодируемо
+   416	    validating_input --> uploading: валиден, ключ повторности сформирован
+   417	    uploading --> tx_short: объект загружен (ВНЕ транзакции)
+   418	    uploading --> upload_failed: storage недоступен, БД не тронута
+   419	    tx_short --> existing_scan: конфликт ключа — вернуть прежний scan_id
+   420	    tx_short --> refused_quota: квота отказала — ROLLBACK, объект best-effort удалён
+   421	    tx_short --> queued: COMMIT — recognition+photo+quota атомарно
+   422	    rejected_input --> [*]
+   423	    upload_failed --> [*]
+   424	    existing_scan --> [*]
+   425	    refused_quota --> [*]
+   426	
+   427	    queued --> leased: захват (fence++), foundation
+   428	    queued --> failed_timeout: SweepStuckScans (5 мин без захвата, fence>=3 неуловимо, либо 30 с приближение)
+   429	    leased --> retry_charge: fence >= 2, ДО вызова модели
+   430	    retry_charge --> refused_retry_quota: refused(scope) — модель не вызвана
+   431	    retry_charge --> normalizing: granted
+   432	    leased --> normalizing: fence = 1
+   433	    normalizing --> failed_schema: нормализация не удалась
+   434	    normalizing --> calling_model
+   435	    calling_model --> failed_provider: недоступен / таймаут 25с
+   436	    calling_model --> failed_schema: диапазоны нарушены
+   437	    calling_model --> refused_no_food: еда не найдена
+   438	    calling_model --> escalation_decision: confidence < 0.6
+   439	    calling_model --> matching: confidence >= 0.6
+   440	    escalation_decision --> calling_model: granted, model=N4_MODEL_ESCALATION
+   441	    escalation_decision --> matching: refused(escalation), уверенность сохраняется
+   442	    matching --> failed_no_match: NullMatchIngredientPort — ВСЕГДА в этой фиче
+   443	    matching --> done: FixedMatchIngredientPort (только unit-тест PC-08/AC-14)
+   444	    failed_timeout --> [*]
+   445	    refused_retry_quota --> [*]
+   446	    failed_schema --> [*]
+   447	    failed_provider --> [*]
+   448	    refused_no_food --> [*]
+   449	    failed_no_match --> [*]
+   450	    done --> [*]
+   451	```
+   452	
+   453	## Error Handling Strategy
+   454	
+   455	| Категория | Пример | Ответ и действие |
+   456	|---|---|---|
+   457	| вход не по содержимому / полиглот | `.jpg` с байтами не-JPEG, посторонняя структура после конца формата | `422 invalid_image` до квоты и до записи |
+   458	| decompression bomb | заявленные размеры > 100 Мпикс | `422 decompression_bomb` до декодирования |
+   459	| недекодируемо | правдоподобный заголовок, кодек не разбирает тело | `422 invalid_image` до загрузки объекта, до идемпотентности, до квоты |
+   460	| нет ключа повторности | `Idempotency-Key` отсутствует/не UUID | `422 idempotency_key_required` до загрузки и квоты |
+   461	| storage недоступен при загрузке | `PUT` оригинала падает | `503 dependency_unavailable`, БД не тронута |
+   462	| повтор ключа | тот же ключ, та же сессия | `202` с прежним `scan_id`, транзакция не открывалась заново |
+   463	| квота исчерпана (приём) | `used = limit` на любом из трёх ключей `primary` | `429` со `scope`; ROLLBACK всей транзакции — ни `recognition`, ни `photo` не сохраняются |
+   464	| квота исчерпана (повторный захват) | `fence ∈ {2,3}`, потолок исчерпан | `refused(quota_exhausted_${scope})`, модель не вызвана |
+   465	| нормализация не удалась | нечитаемый на конкретной трансформации файл | `failed(schema_violation)`, вызова модели нет |
+   466	| провайдер недоступен/таймаут | сеть, 5xx, 25 с дедлайн | `failed(provider_unavailable\|provider_timeout)`, попытка списана |
+   467	| диапазон нарушен | `confidence = 7` | `failed(schema_violation)` с названным полем, без подрезания |
+   468	| еда не найдена | пустой список ингредиентов | `refused(no_food_detected)`, дневник не создаётся |
+   469	| эскалация отказана | `scope = escalation` исчерпан | второй вызов не делается; в этой фиче ведёт к `failed(no_food_matched)` |
+   470	| нет совпадения в базе | `NullMatchIngredientPort` — всегда | `failed(no_food_matched)` (DEC-A-014) |
+   471	| устаревший захват | `UPDATE` результата затронул 0 строк, статус ещё `queued` | `stale_lease_result` в аудит |
+   472	| задание сметено sweeper'ом | `UPDATE` результата затронул 0 строк, статус уже `failed(timeout)` | `swept_as_timeout` в аудит |
+   473	| никогда не захвачено / предел захватов | `queued` дольше 5 мин, либо `fence=3` с истёкшей арендой | `SweepStuckScans` → `failed(timeout)` |
+   474	| чужой/несуществующий ресурс | `GET /scans/{id}` | ОДИН `404` для обоих случаев |
+   475	| частота превышена | сверх 30/мин (POST) или 120/мин (GET) | `429` до разбора тела |
+   476	
+   477	## Scenario Coverage
+   478	
+   479	Scenarios in 01_specification.md: 5  ·  claimed by an algorithm: 4
+   480	
+   481	Not claimed by any algorithm:
+   482	| Scenario | Reason |
+   483	|---|---|
+   484	| SC-US-002-1 | out-of-mvp-scope |
+   485	
+   486	Claimed by an algorithm but absent from 01_specification.md:
+   487	| Algorithm | Claimed ID |
+   488	|---|---|
+   489	| none | none |
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '189,284p' docs/features/scan-pipeline/02_pseudocode.md | nl -ba -v189; nl -ba docs/features/scan-pipeline/01_specification.md" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 10ms:
+   189	2. Декодировать с ОБЩИМ бюджетом распаковки ≤ 50 Мпикс И входным файлом ≤ 12 МБ (тот же бюджет, что
+   190	на приёме, шаг 5 `EnqueueScanForFeature` — не второй, отдельно придуманный лимит). `IF photo.mime =
+   191	'image/heic' THEN` декодировать через `libheif`/`sharp` с явным `{ pages: 1 }` — берётся ПЕРВЫЙ
+   192	кадр контейнера (HEIC-последовательности/Live Photo несут несколько кадров; политика — всегда
+   193	первый, а не «любой удобный»); иначе декодер формата, тоже с `{ pages: 1 }`, если формат допускает
+   194	многостраничность (анимированный WebP).
+   195	3. **Применить ориентацию EXIF (`rotate()`, автоориентация по тегу `Orientation`) ДО удаления
+   196	метаданных** — иначе метаданные стёрты раньше, чем прочитан угол поворота, и повёрнутое на телефоне
+   197	фото остаётся повёрнутым в сохранённой копии (PC-05). ЗАТЕМ снять ВСЕ метаданные (`withMetadata:
+   198	false`, дефолт `sharp` без явного `withMetadata()`), включая EXIF/GPS.
+   199	4. Привести длинную сторону к ≤ 1568 px (не увеличивать, если уже меньше).
+   200	5. Сжимать итеративно, пока размер файла не станет ≤ 5 МБ, с явным пределом числа итераций (например
+   201	6) — `IF` предел итераций исчерпан и файл всё ещё `> 5 МБ` `THEN` это тоже `failed(schema_violation)`
+   202	шага 6, а не бесконечный цикл.
+   203	6. `IF` любой шаг 2–5 бросил ошибку ИЛИ исчерпал предел итераций `THEN RETURN
+   204	failed(schema_violation)` с названным шагом — вызова модели НЕ делать. Это РЕДКИЙ путь: подавляющее
+   205	большинство недекодируемых файлов уже отсеяно шагом 5 `EnqueueScanForFeature`; сюда попадают только
+   206	файлы, декодируемые в общем виде, но падающие на конкретной трансформации (ротация неподдерживаемого
+   207	типа контейнера, исчерпание памяти на полном разрешении при пройденной облегчённой проверке).
+   208	7. Сохранить результат как `photo.normalized_object_key`, `photo.normalized_bytes`. Оригинал не
+   209	изменяется.
+   210	8. `RETURN` успех.
+   211	COMPLEXITY: O(1) операций преобразования на фото; стоимость доминирует декодирование/кодирование.
+   212	
+   213	### Algorithm: RecognizeScanWithinScanPipeline
+   214	
+   215	REQUIREMENT: `FR-scan-pipeline-6`
+   216	REQUIREMENT: `FR-scan-pipeline-7`
+   217	REQUIREMENT: `FR-scan-pipeline-8`
+   218	REQUIREMENT: `FR-scan-pipeline-12`
+   219	REQUIREMENT: `FR-scan-pipeline-13`
+   220	REQUIREMENT: `FR-scan-pipeline-15`
+   221	REQUIREMENT: `FR-scan-pipeline-18`
+   222	REQUIREMENT: `NFR-scan-pipeline-1`
+   223	REQUIREMENT: `NFR-scan-pipeline-3`
+   224	REQUIREMENT: `AC-scan-pipeline-11`
+   225	REQUIREMENT: `AC-scan-pipeline-12`
+   226	REQUIREMENT: `AC-scan-pipeline-13`
+   227	REQUIREMENT: `AC-scan-pipeline-14`
+   228	REQUIREMENT: `AC-scan-pipeline-15`
+   229	REQUIREMENT: `AC-scan-pipeline-16`
+   230	REQUIREMENT: `AC-scan-pipeline-17`
+   231	REQUIREMENT: `AC-scan-pipeline-21`
+   232	REQUIREMENT: `AC-scan-pipeline-26`
+   233	REQUIREMENT: `AC-scan-pipeline-27`
+   234	REQUIREMENT: `AC-scan-pipeline-28`
+   235	REQUIREMENT: `AC-scan-pipeline-29`
+   236	REALISES: SC-US-001-2, SC-US-002-2
+   237	INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (несёт `lease_fence`, `photo_id`,
+   238	ГАРАНТИРОВАННО непустой — см. «Зависимости от `foundation`»).
+   239	OUTPUT: `recognition` в терминальном статусе `failed` или `refused` (`done` НЕ достигается в этой
+   240	фиче реальным `NullMatchIngredientPort` — путь к `done` проверяется отдельно, unit-тестом с
+   241	`FixedMatchIngredientPort`).
+   242	STEPS:
+   243	1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, возвращённый
+   244	захватом.
+   245	2. **Повторная попытка после истечения аренды списывает СВОЮ квоту (PC-01).** `IF fence = 1` (это
+   246	ПЕРВЫЙ захват этого задания) `THEN` попытка №1 уже оплачена и списана шагом 9.3
+   247	`EnqueueScanForFeature` — переходить к шагу 3 без нового списания. `IF fence ∈ {2, 3}` (это
+   248	ПОВТОРНЫЙ захват — предыдущий воркер не уложился в 60 с аренды) `THEN` ДО загрузки фото и ДО вызова
+   249	модели вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС,
+   250	reason = 'primary')` — ЕЩЁ ОДНО списание трёх ключей, `day` вычисляется В МОМЕНТ ЭТОГО захвата и
+   251	может отличаться от `day` шага 9.3, если задание пересекло полночь (PC-06). `IF refused(scope) THEN`
+   252	записать `refused(quota_exhausted_${scope})` условно по `fence` (механизм шага 9 ниже) и `RETURN` —
+   253	модель на этой попытке не вызывается вовсе; это ОТКАЗ ДО вызова, соответствует `refused` по критерию
+   254	координатора (DEC-A-014). `fence = 4` невозможен по построению — предикат захвата `foundation`
+   255	ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»); при обнаружении `fence > 3`
+   256	(защита от регресса) `THEN` немедленно `failed(timeout)` без вызова модели.
+   257	3. Вызвать `NormalizePhotoForModel`. `IF failed THEN` записать `failed(schema_violation)` условно по
+   258	`fence` (шаг 9) и `RETURN`.
+   259	4. Определить модель ЯВНО: `model = escalated ? N4_MODEL_ESCALATION : N4_MODEL_PRIMARY` (значения
+   260	окружения канона, ADR-004; `foundation` не выбирает модель сама — см. «Зависимости от `foundation`»,
+   261	PC-09). Вызвать `ModelProvider.recognize(normalizedImage, schema, { model, deadlineMs: 25_000 })`.
+   262	**Скрытые повторы SDK провайдера отключены явно** (`maxRetries: 0` при создании клиента,
+   263	`03_architecture.md`) — единственный источник повторного вызова модели на одну попытку `fence` —
+   264	явная логика этого алгоритма (шаг 6, эскалация), не библиотека. Записать `model_call` (событие,
+   265	FR-scan-pipeline-12): `START` немедленно ПЕРЕД вызовом (`{ request_id, scan_id, fence, reason:
+   266	escalated ? 'escalation' : 'primary', model, mode: N4_MODEL_PROVIDER, day, ts }`), `OUTCOME` сразу
+   267	после ответа/ошибки/таймаута (`{ request_id (тот же), outcome: 'ok'|'failed'|'timeout', ms,
+   268	input_tokens?, output_tokens? }`). Если процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже записан
+   269	в структурированный вывод (не буферизуется) — агрегатор (`scripts/telemetry/model-calls.sh`, план,
+   270	PC-07) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как `outcome:
+   271	'unknown'`; счёт в потолках это НЕ меняет — квота уже списана шагом 2/9.3 ДО вызова, независимо от
+   272	исхода. `IF` ответ не соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер недоступен
+   273	ИЛИ истёк дедлайн 25 с `THEN failed(provider_unavailable | provider_timeout)`.
+   274	5. Проверить ДИАПАЗОНЫ в коде: `confidence` в 0…1; `mass_g` каждой позиции в 1…5000; позиций ≤ 12;
+   275	кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` нарушено `THEN failed(schema_violation)`
+   276	с названным полем — без подрезания.
+   277	6. `IF` модель не нашла еды `THEN refused(no_food_detected)`, дневник не создаётся, `RETURN`.
+   278	7. `IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(session, ip_prefix,
+   279	day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС, reason = 'escalation')` — четвёртый ключ, `day` СВОЙ,
+   280	вычисленный в момент этого решения (PC-06). `IF granted THEN` вернуться к шагу 4 с `model =
+   281	N4_MODEL_ESCALATION`, `escalated = true`, `attempt_no = 2`. `ELSE` эскалации нет: запомнить
+   282	`failure_reason_candidate = quota_exhausted_escalation` для шага 8, если статус окажется `done`
+   283	(сегодня — не происходит, шаг 8).
+   284	8. Вызвать `MatchIngredientPort.match(items)` — ОДИН вызов на ВЕСЬ список позиций (PC-08). Для
+     1	# Фича `scan-pipeline` — спецификация
+     2	
+     3	Проект: N4 «Тарелка». Фаза: Phase 1 PLAN. Дата: 2026-09-12. Плечо B (Sonnet 5).
+     4	Источники имён и чисел: [`docs/canon.md`](../../canon.md) (заморожен 2026-09-12),
+     5	[`docs/Specification.md`](../../Specification.md) (FR-CAPTURE-002, FR-RECOGNIZE-001, FR-RECOGNIZE-002,
+     6	FR-LIMIT-001, FR-LIMIT-002, FR-SOURCE-001 в части «число только из базы», NFR-PERF-001, NFR-SEC-001,
+     7	SC-US-001-1, SC-US-001-2, SC-US-009-1), [`docs/Architecture.md`](../../Architecture.md) (Component
+     8	Breakdown, External Dependencies, Data Architecture), [`docs/ADR.md`](../../ADR.md) (ADR-001, ADR-003,
+     9	ADR-004, ADR-007, ADR-010), [`docs/Pseudocode.md`](../../Pseudocode.md) (`EnqueueScan`, `RecognizeScan`,
+    10	`CheckAndConsumeQuota`, `PurgeExpiredPhotos`, API Contracts маршрутов 1–2),
+    11	[`docs/model-cost-contract.md`](../../model-cost-contract.md), [`docs/long-job-contract.md`](../../long-job-contract.md),
+    12	[`docs/Refinement.md`](../../Refinement.md), [`docs/test-scenarios.md`](../../test-scenarios.md),
+    13	фича `foundation` ([`03_architecture.md`](../foundation/03_architecture.md),
+    14	[`02_pseudocode.md`](../foundation/02_pseudocode.md)).
+    15	
+    16	## Цель
+    17	
+    18	Дать пользователю ПЕРВЫЙ платный вызов продукта: снять кадр, дождаться распознавания ингредиентов и
+    19	порции моделью, честно отказать при исчерпанном потолке, и не потерять ни рубль на дублях, разрывах
+    20	соединения или гонке воркеров. Фича встраивается ПОВЕРХ каркаса `foundation`, а не строит его заново:
+    21	атомарный модуль потолков (`apps/api/src/quota/check-and-consume.ts`), аренда задания с fencing
+    22	(`apps/recognizer/src/lease.ts`) и интерфейс `ModelProvider` с фейком уже существуют и здесь только
+    23	ВЫЗЫВАЮТСЯ, а не переписываются.
+    24	
+    25	Фича НЕ показывает пользователю калорийность и БЖУ и не вычисляет их: это ЯВНО объявленный стык со
+    26	следующей фичей `source-and-correct`, см. раздел «Стык с `source-and-correct`» ниже.
+    27	
+    28	## Объём
+    29	
+    30	Входит:
+    31	
+    32	1. `POST /api/v1/scans` — приём фото (multipart, ≤ 12 МБ, JPEG/PNG/WebP/HEIC, ≥ 320×320 px),
+    33	   валидация по СОДЕРЖИМОМУ байтов, decompression-bomb защита, EXIF-strip, заявка
+    34	   `Idempotency-Key` (обязателен, UUID), квота `reason = primary` (переиспользование
+    35	   `CheckAndConsumeQuota` из `foundation`), сохранение оригинала в приватный бакет с
+    36	   `expires_on = +30 дней`, ответ `202` с `scan_id`.
+    37	2. `GET /api/v1/scans/{id}` — чтение статуса; чужой и несуществующий `id` дают ОДИН `404`.
+    38	3. `apps/recognizer`: нормализация фото ДО вызова модели (HEIC→JPEG, длинная сторона ≤ 1568 px,
+    39	   ≤ 5 МБ), вызов `ModelProvider.recognize` (Haiku 4.5) со строгой JSON-схемой, проверка диапазонов
+    40	   ответа В КОДЕ после разбора, эскалация к Sonnet 5 при `confidence < 0,6` через
+    41	   `CheckAndConsumeQuota(reason = escalation)` — четвёртый ключ, `LiveModelProvider` (Anthropic
+    42	   Messages API, vision + structured outputs) как вторая реализация интерфейса `ModelProvider`
+    43	   рядом с фейком `foundation`.
+    44	4. Двухуровневый лимит частоты канона §7 (30/мин мутирующие, 120/мин читающие) поверх общего хука
+    45	   `foundation` (FR-foundation-8), применённый к маршрутам 1 и 2.
+    46	5. `PurgeExpiredPhotos` — батч-уборка фото старше 30 дней (NFR-SEC-001, ADR-010).
+    47	6. Журнал `model_call {reason, model, ok, ms}` на КАЖДУЮ попытку — источник NFR-OPS-001; расход
+    48	   виден по счётчикам `scan_quota_counter`, а не только по журналу.
+    49	7. Тесты: unit (диапазоны, граница эскалации 0,59/0,60, валидация формата), integration (маршруты,
+    50	   нормализация, провайдер), конкурентные (идемпотентность, квота под нагрузкой ЭТОЙ фичи —
+    51	   эскалационный ключ, аренда с реальным вызовом провайдера), стражи по исходнику (ADR-001: схема
+    52	   без `calories/kcal/protein/fat/carbs`; единственное чтение `model_estimate_kcal`).
+    53	
+    54	Вне объёма (делают другие фичи роадмапа): расчёт ккал/БЖУ из базы USDA, нечёткий поиск, курация
+    55	`food_synonym`, импорт FDC, `Snapshot`, `discrepancy_ratio`, экран расхождения — всё это FR-SOURCE-001
+    56	(остальная часть)/002/003, FR-CORRECT-003, реализует `source-and-correct` (см. ниже); карточка 9:16,
+    57	дневник, коды партнёра, вход через Telegram, экран лимита как UI — реализуют более поздние фичи.
+    58	Каркас квоты, аренды и адаптера — `foundation`, здесь не переписывается.
+    59	
+    60	## Стык с `source-and-correct` — явное решение, требует подтверждения координатора
+    61	
+    62	Бриф фичи предлагал: «результат `done` содержит `items` с `food_item_id: null` до появления RAG».
+    63	Это противоречит ADR-001 Confirmation (2): «`recognition` без единой ссылки на `food_item` не может
+    64	получить статус `done`» — инвариант, гарантированный тестом на внедрённом дефекте. Нарушать принятый
+    65	и защищённый ADR ради удобства стыка неверно, поэтому решение здесь ДРУГОЕ и явно расходится с
+    66	формулировкой брифа — расхождение зафиксировано, а не скрыто:
+    67	
+    68	- В эту фичу вводится порт `MatchIngredientPort` (`match(item): Promise<{food_item_id, snapshot} |
+    69	  null>`) — точка расширения для сопоставления с базой. Реализация ЭТОЙ фичи —
+    70	  `NullMatchIngredientPort`, которая ВСЕГДА возвращает `null` (в `food_item` ещё нет ни одной строки:
+    71	  импорт делает `source-and-correct`).
+    72	- Следствие, СОГЛАСОВАННОЕ с ADR-001: пока используется `NullMatchIngredientPort`, ни один `recognition`
+    73	  не может сопоставить ни одной позиции → шаг «ни одна позиция не сопоставлена» истинен ВСЕГДА →
+    74	  терминальный статус для любого кадра с распознанной едой — `failed(no_food_matched)`, а НЕ `done`.
+    75	  `done` в этой фиче НЕДОСТИЖИМ, и это ожидаемое, объявленное ограничение, а не дефект.
+    76	- Логика эскалации, диапазонов, `low_confidence` и `failure_reason = quota_exhausted_escalation`
+    77	  проверяется UNIT-тестом с ПОДМЕНЁННЫМ портом (тестовый `MatchIngredientPort`, возвращающий
+    78	  совпадение) — это доказывает, что код правильный и готов принять реальный порт, не дожидаясь
+    79	  `source-and-correct`. Интеграционный прогон на РЕАЛЬНОМ `NullMatchIngredientPort` отдельно
+    80	  доказывает сегодняшнее поведение (`failed(no_food_matched)`).
+    81	- `source-and-correct` заменяет `NullMatchIngredientPort` на реализацию с триграммным поиском —
+    82	  контракт интерфейса не меняется, меняется только реализация за портом.
+    83	
+    84	Координатор (владелец канона) подтверждает эту трактовку на чекпойнте Phase 1 ЛИБО явно требует
+    85	буквального прочтения брифа (что означало бы отмену ADR-001 Confirmation (2) — решение вне
+    86	компетенции исполнителя плеча).
+    87	
+    88	## Функциональные требования
+    89	
+    90	### FR-scan-pipeline-1 — приём фото: валидация по содержимому, не по имени
+    91	`POST /api/v1/scans` принимает `multipart/form-data` с полем файла. Тип файла определяется по БАЙТАМ
+    92	(`file-type` либо аналог, не `Content-Type` заголовка и не расширение). Полиглот (пригоден как
+    93	изображение И как HTML/архив) отвергается. Объявленные размеры изображения, дающие распаковку свыше
+    94	100 Мпикс, отвергаются ДО декодирования. EXIF, включая GPS, снимается при нормализации (шаг
+    95	recognizer, FR-scan-pipeline-5), а не на приёме — приём сохраняет оригинал НЕТРОНУТЫМ (ADR-010:
+    96	удаление по запросу удаляет обе копии). Непригодный формат/размер/содержимое даёт `422`/`413` с
+    97	названной причиной ДО обращения к квоте и ДО создания `photo`; попытка НЕ списывается
+    98	(FR-CAPTURE-002, `EnqueueScan` шаг 2).
+    99	
+   100	### FR-scan-pipeline-2 — заявка ключа повторности форматом, ДО загрузки и ДО транзакции
+   101	Заголовок `Idempotency-Key` обязателен и обязан быть UUID; отсутствие или непригодная форма — `422`
+   102	ДО загрузки объекта, ДО транзакции БД и ДО обращения к квоте. Это ТОЛЬКО проверка ФОРМЫ; фактическая
+   103	атомарная ЗАЯВКА ключа (вставка строки) объединена с сохранением фото и списанием квоты в ОДНУ
+   104	короткую транзакцию — см. FR-scan-pipeline-14 (Попытка 3, PC-02). Прежняя формулировка (Попытка 1)
+   105	заявляла ключ РАНЬШЕ квоты и `photo_id` отдельным шагом — это оставляло воркеру шанс захватить
+   106	незавершённую строку; заменено целиком.
+   107	
+   108	### FR-scan-pipeline-3 — квота ДО вызова модели, атомарно, переиспользованием `foundation`
+   109	Каждая ВНЕШНЯЯ попытка распознавания (маршрут `POST /scans`, и — начиная с Попытки 3 — повторный
+   110	захват воркером после истечения аренды, FR-scan-pipeline-15) списывает СВОЁ разрешение через
+   111	`CheckAndConsumeQuota(session, ip_prefix, day, reason = 'primary')` из `apps/api/src/quota/
+   112	check-and-consume.ts` (`foundation`, не переписывается) ДО вызова модели, атомарно, тремя ключами.
+   113	`day` вычисляется В МОМЕНТ КАЖДОЙ конкретной попытки, а не наследуется от более раннего вызова
+   114	(FR-scan-pipeline-18, PC-06). `IF refused THEN` отказ называет `scope`; НИКАКОГО вызова модели не
+   115	делается (ADR-007, FR-LIMIT-001/002).
+   116	
+   117	### FR-scan-pipeline-4 — немедленный `202` после атомарной публикации
+   118	Ответ `202` с `{ scan_id, status: 'queued' }` возвращается ТОЛЬКО после успешного `COMMIT`
+   119	транзакции FR-scan-pipeline-14 (оригинал сохранён, `recognition` и `photo` вставлены, квота
+   120	списана, ВСЁ вместе). При ПЕРВОМ скане сессии пишется `growth_event(type = install, …)` (вне
+   121	транзакции — потеря этого события не создаёт денежной или структурной гонки). Идентификатор выдаётся
+   122	ДО начала долгой работы, не дожидаясь распознавания (`long-job-contract.md`).
+   123	
+   124	### FR-scan-pipeline-5 — нормализация фото на сервере ДО вызова модели: ориентация, кадр, бюджет
+   125	`recognizer` преобразует HEIC/HEIF → JPEG (декодируя ПОДТВЕРЖДЁННЫЙ по байтам на приёме
+   126	`photo.mime`, а не заново «заявленный»), берёт РОВНО первый кадр/страницу многокадрового контейнера
+   127	(`{ pages: 1 }` — HEIC-последовательности, анимированный WebP), ПРИМЕНЯЕТ ориентацию EXIF (`rotate()`)
+   128	ДО удаления метаданных, ЗАТЕМ снимает ВСЕ метаданные целиком, приводит длинную сторону к ≤ 1568 px,
+   129	сжимает до ≤ 5 МБ с ограниченным числом итераций, в рамках ОБЩЕГО бюджета декодирования ≤ 50 Мпикс и
+   130	≤ 12 МБ на вход — того же бюджета, что и на приёме (FR-scan-pipeline-17), не второго произвольного
+   131	числа (PC-05). Оригинал не изменяется. Соединение с базой на время загрузки и нормализации НЕ
+   132	удерживается. `IF` любая трансформация не удалась ИЛИ исчерпан предел итераций сжатия `THEN
+   133	failed(schema_violation)` с названным шагом, вызова модели НЕ делать — это РЕДКИЙ путь: основная
+   134	масса недекодируемых файлов уже отсеяна FR-scan-pipeline-17 на приёме.
+   135	
+   136	### FR-scan-pipeline-6 — вызов модели по строгой схеме с явно переданной моделью, диапазоны — наш код
+   137	`recognizer` вызывает `ModelProvider.recognize(image, schema, { model, deadlineMs: 25_000 })` —
+   138	МОДЕЛЬ (`N4_MODEL_PRIMARY` либо, при эскалации, `N4_MODEL_ESCALATION`) передаётся ВЫЗЫВАЮЩИМ кодом
+   139	явным параметром, а не выбирается интерфейсом (расширение `ModelProvider` из `foundation`, см.
+   140	`02_pseudocode.md` «Data Structures», PC-09). Дедлайн запроса — 25 с; скрытые повторы SDK-клиента
+   141	отключены явно (`maxRetries: 0`) — единственный законный источник второго вызова на одну попытку
+   142	`lease_fence` — эскалация (FR-scan-pipeline-7), не библиотека. Схема ответа: `items[]` (`label_ru`,
+   143	`mass_g`, `candidates[]` ≤ 3), `confidence`, `model_estimate_kcal`; полей `calories`, `kcal`,
+   144	`protein`, `fat`, `carbs` в схеме НЕТ (ADR-001). После разбора код проверяет: `confidence` в 0…1;
+   145	`mass_g` каждой позиции в 1…5000; позиций ≤ 12; кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`.
+   146	`IF` любое условие нарушено `THEN failed(schema_violation)` с названным полем — значение вне
+   147	диапазона трактуется как отсутствующее, а НЕ подрезается до границы. `IF` провайдер недоступен или
+   148	истёк дедлайн `THEN failed(provider_unavailable | provider_timeout)` — попытка уже списана и не
+   149	возвращается. `IF` модель не нашла еды `THEN refused(no_food_detected)`, запись дневника не
+   150	создаётся (FR-RECOGNIZE-001, SC-US-001-2).
+   151	
+   152	### FR-scan-pipeline-7 — эскалация к Sonnet 5, четвёртый ключ ДО вызова
+   153	`IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(reason =
+   154	'escalation')` — ДО обращения к Sonnet 5. `IF granted THEN` повторить вызов модели `Sonnet 5` ровно
+   155	ОДИН раз, `escalated = true`, `attempt_no = 2`. `ELSE` второго вызова НЕ делать: результат первичной
+   156	модели сохраняется, попытка эскалации отклонена по `scope = escalation`, событие расхода несёт
+   157	`quota_exhausted_escalation`. Логика проверяется unit-тестом с подменённым `MatchIngredientPort`
+   158	(см. «Стык»), поскольку в реальном окружении этой фичи `done` недостижим (ADR-004, ADR-007,
+   159	`model-cost-contract.md`).
+   160	
+   161	### FR-scan-pipeline-8 — итог сопоставления через порт (пакетный вызов), терминальный статус без базы
+   162	`MatchIngredientPort.match(items[])` вызывается ОДИН раз на ВЕСЬ список позиций и возвращает МАССИВ
+   163	той же длины и порядка — не один `food_item_id`/`Snapshot` на позицию поодиночке (Попытка 1), а
+   164	запись `{ food_item_id, portion_g, source_snapshot, parts? }`, где `parts[]` допускает составное
+   165	блюдо (`food_synonym.recipe_parts`) — контракт, готовый принять реализацию `source-and-correct` без
+   166	переделки вызывающего кода (PC-08). Реализация этой фичи (`NullMatchIngredientPort`) возвращает
+   167	МАССИВ, где КАЖДЫЙ элемент несёт `food_item_id: null` → каждая позиция помечается `unmatched = true`.
+   168	`IF` НИ ОДНА позиция не сопоставлена `THEN recognition = failed(no_food_matched)` — по решению
+   169	координатора DEC-A-014, попытка ОПЛАЧЕНА и ОБРАБОТАНА моделью, это не отказ ДО вызова.
+   170	
+   171	**Согласование с ADR-001 Confirmation (2), названное явно (PC-08).** Root `ADR.md` требует
+   172	`refused(no_food_matched)` для генуинного «искали и не нашли» — мира, где матчинг реально СПРАШИВАЕТ
+   173	базу. В этой фиче матчинг НЕ спрашивает вовсе (`NullMatchIngredientPort` — заглушка, а не поиск с
+   174	нулевым результатом), и `failed(no_food_matched)` — статус ДРУГОГО по природе события. Когда
+   175	`source-and-correct` подставит реальный порт, генуинный ноль совпадений вернётся к
+   176	`refused(no_food_matched)` root-уровня, и `failed(no_food_matched)` этой фичи исчезнет вместе с
+   177	заглушкой. Расхождение между документами до тех пор — ОСОЗНАННОЕ и названное, не тихо перекрытое;
+   178	координатор подтверждает трактовку явно, она не выводится автоматически ни из одного документа.
+   179	
+   180	Результат записывается УСЛОВНО по своему `lease_fence` И статусу `queued` (см. FR-scan-pipeline-16):
+   181	`UPDATE`, затронувший ноль строк, отбрасывается либо как `stale_lease_result` (проиграл гонку
+   182	другому воркеру), либо как `swept_as_timeout` (проиграл гонку `SweepStuckScans`) — различаются
+   183	перечитыванием строки (ADR-003, DEC-A-008).
+   184	
+   185	### FR-scan-pipeline-9 — `GET /api/v1/scans/{id}`: владение и честные поля
+   186	Чужой и несуществующий `id` дают ОДИН `404` (владение — по `owner_key` на сервере). Тело ответа несёт
+   187	`status`, `items[]` (`label_ru`, `mass_g`, `unmatched`, `food_item_id: null` — до `source-and-correct`),
+   188	`confidence`, `low_confidence`, `escalated`, `model_estimate_kcal`, `failure_reason?`. Поля
+   189	`kcal_total`, `macros`, `sources[]`, `conflict_flag`, `share_card_id` из полного контракта проекта
+   190	(`Pseudocode.md`, маршрут 2) в ЭТОЙ фиче отсутствуют либо равны `null`/`[]` — они появляются с
+   191	`source-and-correct`, и это названо здесь явно, а не подразумевается.
+   192	
+   193	### FR-scan-pipeline-10 — двухуровневый лимит частоты
+   194	Хук частоты `foundation` (FR-foundation-8) расширяется порогами канона §7: 30 запросов/мин на
+   195	`ip_prefix` для МУТИРУЮЩИХ маршрутов (`POST /scans`), 120/мин для ЧТЕНИЯ (`GET /scans/{id}`); `429`
+   196	без тела запроса в журнале (DEC-A-013). Применяется ДО разбора тела (`security-operation-order.md`).
+   197	
+   198	### FR-scan-pipeline-11 — `PurgeExpiredPhotos`
+   199	Раз в сутки батч `photo` с `expires_on < today AND file_state = 'present'`, ограниченным размером;
+   200	удаление объекта из бакета (отсутствие объекта — тоже успех); `file_state → purged`, строка `photo`
+   201	СОХРАНЯЕТСЯ. Идемпотентна: повторный прогон в тот же день не делает ничего (NFR-SEC-001, ADR-010).
+   202	
+   203	### FR-scan-pipeline-12 — наблюдаемость расхода: событие на попытку, переживающее падение процесса
+   204	Каждый вызов `ModelProvider.recognize` пишет ДВЕ строки структурированного журнала: `START`
+   205	НЕМЕДЛЕННО перед вызовом — `{ request_id, scan_id, fence, reason: 'primary'|'escalation', model,
+   206	mode: 'fake'|'live', day }`; `OUTCOME` сразу после ответа — `{ request_id (тот же), outcome:
+   207	'ok'|'failed'|'timeout', ms, input_tokens?, output_tokens? }` (PC-07). `START` пишется В
+   208	СТРУКТУРИРОВАННЫЙ ВЫВОД (не буферизуется в памяти) — падение процесса МЕЖДУ `START` и `OUTCOME`
+   209	оставляет `START` в журнале; плановый агрегатор `scripts/telemetry/model-calls.sh` (план, эта фича
+   210	его НЕ реализует) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как
+   211	`outcome: 'unknown'` — счётчики попыток это НЕ меняет, квота уже списана ДО вызова независимо от
+   212	исхода журнала. Служебная страница расхода (агрегация по дню, стоимости, доле эскалаций) — ПЛАН,
+   213	явно ВНЕ недели MVP; NFR-OPS-001 в части «сырое структурированное событие на попытку» закрывается
+   214	этой фичей, в части «служебная страница» — нет.
+   215	
+   216	### FR-scan-pipeline-13 — `LiveModelProvider` как вторая реализация порта, включается ключом
+   217	`apps/recognizer/src/provider/anthropic.ts` реализует расширенный интерфейс `ModelProvider(image,
+   218	schema, { model, deadlineMs })` из `foundation` (см. FR-scan-pipeline-6, PC-09) поверх Anthropic
+   219	Messages API (vision + structured outputs), пробрасывая `model` и `deadlineMs` в реальный запрос.
+   220	Фейк `foundation` также возвращает `model` в ответе, чтобы транспортный контрактный тест мог
+   221	проверить, что вызов эскалации ушёл именно с `N4_MODEL_ESCALATION`, а не повторно с `N4_MODEL_PRIMARY`
+   222	(AC-scan-pipeline-29) — без этого поля фейк способен молча скрыть дефект выбора модели. Выбирается
+   223	`SelectModelProvider` (`foundation`) при `N4_MODEL_PROVIDER=live` и непустом `ANTHROPIC_API_KEY`; по
+   224	умолчанию и во всех тестах — фейк (DEC-A-009). Живой режим не является предметом тестов этой фичи и
+   225	отдельно помечается «живое распознавание не выполнено: нет ключа».
+   226	
+   227	### FR-scan-pipeline-14 — атомарная публикация задания: объект ДО транзакции, одна короткая транзакция
+   228	Объект загружается в приватный бакет ДО любой транзакции БД, по ДЕТЕРМИНИРОВАННОМУ ключу
+   229	`sha256(содержимое) + device_session_id` — повтор того же файла той же сессией перезаписывает ТОТ ЖЕ
+   230	объект, орфан физически не создаётся (PC-02). Затем ОДНА короткая транзакция: вставка `photo`,
+   231	вставка `recognition` (`status='queued'`, `photo_id` уже установлен ЭТИМ ЖЕ INSERT'ом — не вторым
+   232	шагом), списание квоты `primary` (FR-scan-pipeline-3). `IF` квота отказала `THEN` вся транзакция
+   233	откатывается ЦЕЛИКОМ — ни `recognition`, ни `photo` не сохраняются вовсе (не переводятся в `refused`:
+   234	строки не существует), объект удаляется best-effort и в любом случае ограничен по времени политикой
+   235	жизненного цикла бакета (ADR-010, второй, независимый от таблицы `photo` рубеж). `IF` квота разрешила
+   236	`THEN COMMIT` — строка `recognition` появляется воркеру ЦЕЛИКОМ и атомарно, промежуточного состояния
+   237	«есть строка без `photo_id`» не существует ни для одного наблюдателя. Предикат выборки воркера
+   238	(`foundation`) дополнительно требует `photo_id IS NOT NULL` как ВТОРОЙ, defense-in-depth рубеж —
+   239	правка ЧУЖОГО файла, не вносится этой квитанцией, а маршрутизируется координатором в план
+   240	`foundation` (см. `03_architecture.md`).
+   241	
+   242	### FR-scan-pipeline-15 — повторная попытка после истечения аренды списывает СВОЮ квоту
+   243	Каждый ЗАХВАТ задания воркером с `lease_fence ≥ 2` (то есть НЕ первый захват — предыдущий воркер не
+   244	уложился в 60 с аренды) списывает ЕЩЁ ОДНУ попытку `primary` (`CheckAndConsumeQuota(reason=primary)`,
+   245	три ключа) ДО загрузки фото и ДО вызова модели (PC-01, DEC-A-008: обе попытки оплачены и учтены).
+   246	`IF refused THEN recognition = refused(quota_exhausted_${scope})`, модель НЕ вызывается — это отказ
+   247	ДО вызова. Первый захват (`lease_fence = 1`) НЕ списывает повторно: попытка №1 уже оплачена
+   248	`POST`'ом (FR-scan-pipeline-3). Скрытых повторов внутри одной попытки НЕТ: SDK-клиент создаётся с
+   249	`maxRetries: 0` (FR-scan-pipeline-6).
+   250	
+   251	### FR-scan-pipeline-16 — дедлайны задачи и сметание застрявших заданий
+   252	`lease_fence ≤ 3` — четвёртый захват НЕВОЗМОЖЕН по построению предиката выборки `foundation`
+   253	(зависимость, см. `03_architecture.md`); задание с исчерпанным пределом захватов и истёкшей арендой
+   254	становится незахватываемым и было бы вечно `queued` без стороннего вмешательства. `SweepStuckScans`
+   255	(отдельный шаг цикла опроса `recognizer`, не отдельный сервис) переводит в `failed(timeout)`: (а)
+   256	`queued` без единого захвата дольше 5 минут; (б) `queued` с `lease_fence = 3` и истёкшей арендой; (в)
+   257	`queued`, захваченный хотя бы раз, для которого `now() - created_at > 30 с` — ПРИБЛИЖЕНИЕ к «30 с от
+   258	первого захвата» (в каноне нет колонки `first_leased_at`, и эта фича её не вводит; риск гонки с
+   259	легитимным воркером назван и закрыт условием `status = 'queued'` в обоих операторах записи, PC-03).
+   260	
+   261	### FR-scan-pipeline-17 — ограниченная проверка декодируемости ДО квоты и ДО сохранения
+   262	`POST /api/v1/scans` выполняет ДЕШЁВУЮ, но настоящую проверку декодируемости (`sharp(buffer, {
+   263	limitInputPixels: 50_000_000 }).metadata()` плюс декодирование одной страницы/кадра целиком) ПОСЛЕ
+   264	проверки сигнатуры/размера/decompression-bomb, но ДО загрузки объекта, ДО заявки идемпотентности и
+   265	ДО квоты. `IF` файл с правдоподобной сигнатурой не декодируется `THEN RETURN 422 (invalid_image)` —
+   266	БЕЗ занятия любого из трёх ресурсов (PC-04). Это ОТДЕЛЬНАЯ, более дешёвая проверка от полной
+   267	нормализации (FR-scan-pipeline-5): она не конвертирует и не сжимает, только доказывает
+   268	декодируемость. Общий бюджет распаковки (≤ 50 Мпикс, ≤ 12 МБ) — ОДИН и тот же на приёме и при полной
+   269	нормализации, не два разных числа.
+   270	
+   271	### FR-scan-pipeline-18 — сутки квоты вычисляются в момент КАЖДОЙ попытки
+   272	`day` для `CheckAndConsumeQuota` — календарная дата `Europe/Moscow` В МОМЕНТ КОНКРЕТНОГО вызова:
+   273	`POST` считает СВОЙ `day`, повторный захват воркера (FR-scan-pipeline-15) и решение об эскалации
+   274	(FR-scan-pipeline-7) считают СВОЙ, независимо от того, каким был `day` у более раннего вызова того
+   275	же скана. `reset_at` в ответе `429` — следующая полночь `Europe/Moscow` ОТ МОМЕНТА этого конкретного
+   276	отказа. Резервирование квоты между сутками не производится и не нужно: ключ счётчика включает `day`,
+   277	поэтому смена суток естественно означает НОВУЮ строку `scan_quota_counter`, начинающую с нуля
+   278	(PC-06).
+   279	
+   280	## Нефункциональные требования
+   281	
+   282	### NFR-scan-pipeline-1 — результат ≤ 6 с p95, включая эскалацию (NFR-PERF-001)
+   283	Соединение с базой не удерживается во время вызова модели (аренда закрывается ДО обращения к
+   284	провайдеру, `foundation` `LeaseRecognitionJob`); подписанная ссылка на объект живёт ≤ 15 минут.
+   285	Измеряется на РАЗВЁРНУТОМ стенде по журналу, не на этой машине — в этой фиче НЕ ИЗМЕРЕНО (стенда нет).
+   286	
+   287	### NFR-scan-pipeline-2 — фото приватны, 30 дней, presigned (NFR-SEC-001)
+   288	Публичной ссылки на фото не существует ни на одном шаге. Объект отдаётся только подписанным URL
+   289	владельцу сессии, срок ≤ 15 минут. `expires_on = created_at + 30 дней`; удаление — `PurgeExpiredPhotos`
+   290	плюс политика жизненного цикла бакета как второй рубеж (ADR-010).
+   291	
+   292	### NFR-scan-pipeline-3 — 3000 сканов/сутки без деградации времени ответа (NFR-SCALE-001)
+   293	Очередь распознавания не удерживает соединение с базой во время вызова внешней модели (см.
+   294	NFR-scan-pipeline-1); горизонтальное масштабирование `recognizer` копиями без изменения кода — цену
+   295	несёт единственное настоящее узкое место, внешний вызов модели (латентность 2–5 с).
+   296	
+   297	## Критерии приёмки
+   298	
+   299	### AC-scan-pipeline-1 — вход проверяется по содержимому, не по имени
+   300	Given файл `plate.jpg`, чьи первые байты НЕ являются сигнатурой JPEG/PNG/WebP/HEIC
+   301	When выполняется `POST /api/v1/scans` с этим файлом и валидным `Idempotency-Key`
+   302	Then ответ `422` с названной причиной; строка `recognition` не создана, `scan_quota_counter` не
+   303	изменён.
+   304	
+   305	### AC-scan-pipeline-2 — decompression bomb отвергается до декодирования
+   306	Given изображение, чьи заявленные размеры дают распаковку свыше 100 Мпикс при валидных байтах формата
+   307	When выполняется `POST /api/v1/scans`
+   308	Then ответ `422`/`413` до попытки декодирования; сервис не падает и не зависает.
+   309	
+   310	### AC-scan-pipeline-3 — превышение размера и формата не списывает квоту
+   311	Given фото 13 МБ (сверх 12 МБ) и фото 250×250 px (меньше 320×320)
+   312	When выполняется `POST /api/v1/scans` для каждого
+   313	Then оба получают отказ с названной причиной; `scan_quota_counter.used` не изменился ни для одного
+   314	ключа.
+   315	
+   316	### AC-scan-pipeline-4 — `Idempotency-Key` обязателен
+   317	Given запрос `POST /api/v1/scans` без заголовка `Idempotency-Key` либо со значением `not-a-uuid`
+   318	When запрос обрабатывается
+   319	Then ответ `422`; квота не проверяется и не списывается.
+   320	
+   321	### AC-scan-pipeline-5 — повтор с тем же ключом не создаёт второй оплаченный скан
+   322	Given успешный `POST /api/v1/scans` с ключом `K` вернул `scan_id = S`
+   323	When тот же запрос повторяется с тем же `Idempotency-Key = K` и той же сессией
+   324	Then ответ `202` с ТЕМ ЖЕ `scan_id = S`; `scan_quota_counter.used` не увеличился повторно; вызов
+   325	модели не сделан дважды.
+   326	
+   327	### AC-scan-pipeline-6 — конкурентная идемпотентность
+   328	Given два одновременных `POST /api/v1/scans` с одним `Idempotency-Key` и одной сессией
+   329	When оба запроса стартуют без ожидания друг друга
+   330	Then оба получают ОДИН и тот же `scan_id`; в базе ровно одна строка `recognition` с этим ключом;
+   331	ровно ОДИН оплаченный вызов модели.
+   332	
+   333	### AC-scan-pipeline-7 — отказ квоты не создаёт задание и называет `scope`
+   334	Given `scan_quota_counter` пользователя уже на пределе (`used = limit`)
+   335	When выполняется валидный `POST /api/v1/scans`
+   336	Then ответ `429` с телом `{ limit, reset_at, scope: 'user' }`; фото НЕ сохранено в бакет; строка
+   337	`recognition` переведена в `refused(quota_exhausted_user)`; вызов модели не выполнен.
+   338	
+   339	### AC-scan-pipeline-8 — конкурентный потолок пользователя (20 при пределе 10)
+   340	Given предел `N4_SCAN_LIMIT_USER = 10`, одно устройство, ноль попыток за сегодня
+   341	When 20 `POST /api/v1/scans` стартуют одновременно с одним общим барьером
+   342	Then ровно 10 получают `202`, ровно 10 получают `429(scope=user)`; `scan_quota_counter.used` для
+   343	ключа пользователя равен ровно 10; ни одна попытка не потеряна и не посчитана дважды.
+   344	
+   345	### AC-scan-pipeline-9 — нормализация HEIC до вызова модели
+   346	Given фото формата HEIC размером 11 МБ, длинной стороной 4032 px
+   347	When `recognizer` обрабатывает задание
+   348	Then перед вызовом модели создаётся `photo.normalized_object_key` формата JPEG с длинной стороной
+   349	≤ 1568 px и размером ≤ 5 МБ; вызов модели выполняется НАД нормализованной копией, оригинал не
+   350	изменён.
+   351	
+   352	### AC-scan-pipeline-10 — неудачная нормализация не вызывает модель
+   353	Given повреждённый файл, прошедший приёмную валидацию по сигнатуре, но не декодируемый нормализатором
+   354	When `recognizer` обрабатывает задание
+   355	Then результат `failed(schema_violation)` с названной причиной; ни одного вызова `ModelProvider` не
+   356	зафиксировано счётчиком обращений.
+   357	
+   358	### AC-scan-pipeline-11 — диапазоны проверяет код, а не подрезает
+   359	Given ответ модели с `confidence = 1,5`, ЛИБО с позицией `mass_g = 6000`, ЛИБО с 13 позициями
+   360	(три отдельных прогона)
+   361	When `recognizer` разбирает ответ
+   362	Then каждый прогон даёт `failed(schema_violation)` с названным полем; значение НЕ подрезается до
+   363	границы (`confidence` не становится `1`, `mass_g` не становится `5000`).
+   364	
+   365	### AC-scan-pipeline-12 — граница эскалации 0,59/0,60
+   366	Given ответ первичной модели с `confidence = 0,59`, ЗАТЕМ отдельно `confidence = 0,60`
+   367	When `recognizer` принимает решение об эскалации
+   368	Then при `0,59` выполняется второй вызов модели (эскалация); при `0,60` второй вызов НЕ выполняется;
+   369	оба исхода проверяются счётчиком обращений к адаптеру провайдера.
+   370	
+   371	### AC-scan-pipeline-13 — конкурентная эскалация: 20 при остатке 1
+   372	Given предел `N4_ESCALATION_LIMIT_DAY` исчерпан до остатка 1, 20 распознаваний одновременно
+   373	возвращают `confidence < 0,6`
+   374	When все 20 одновременно вызывают `CheckAndConsumeQuota(reason = escalation)`
+   375	Then РОВНО один вызов `Sonnet 5` зафиксирован счётчиком обращений к адаптеру провайдера (не текстом
+   376	журнала); остальные 19 получают `refused(escalation)` и НЕ вызывают Sonnet 5.
+   377	
+   378	### AC-scan-pipeline-14 — 601-я эскалация не выбрасывает первичный результат (unit, подменённый порт)
+   379	Given `MatchIngredientPort`, подменённый тестовым двойником, возвращающим совпадение для каждой
+   380	позиции; счётчик эскалации уже на пределе (601-я попытка)
+   381	When `recognizer` обрабатывает задание с `confidence < 0,6`
+   382	Then второй вызов модели НЕ выполняется; итоговый статус — `done` с `low_confidence = true` и
+   383	`failure_reason = quota_exhausted_escalation`, а НЕ `failed` и НЕ `refused`. Тест явно помечен как
+   384	доказательство ГОТОВНОСТИ кода к реальному порту, а не сегодняшнего интеграционного поведения
+   385	(см. «Стык с `source-and-correct`»).
+   386	
+   387	### AC-scan-pipeline-15 — реальное окружение этой фичи: `done` недостижим, а инвариант ADR-001 держится
+   388	Given реальный `NullMatchIngredientPort` (эта фича, `food_item` пуст), модель нашла еду с ЛЮБЫМ
+   389	`confidence`
+   390	When `recognizer` завершает обработку
+   391	Then итоговый статус — `failed(no_food_matched)`; статус `done` НИ РАЗУ не зафиксирован ни на одном
+   392	прогоне интеграционного набора этой фичи; страж по исходнику (ADR-001, Confirmation 2) остаётся
+   393	зелёным без единого исключения.
+   394	
+   395	### AC-scan-pipeline-16 — провайдер недоступен или таймаут — попытка засчитана, ошибка не проглочена
+   396	Given фейковый провайдер настроен на исход `provider_unavailable` (отдельно — `provider_timeout`)
+   397	When `recognizer` вызывает `ModelProvider.recognize`
+   398	Then результат `failed(provider_unavailable)` / `failed(provider_timeout)`; квота НЕ откатывается —
+   399	попытка уже списана на шаге приёма; исключение из вызова не проглатывается функцией-колбэком
+   400	транзакции (`security-operation-order.md`).
+   401	
+   402	### AC-scan-pipeline-17 — устаревшая аренда с реальным вызовом провайдера
+   403	Given воркер A взял задание, аренда искусственно истекла ПОКА A ожидает ответ фейкового провайдера с
+   404	управляемой задержкой; воркер B захватывает то же задание и завершает его первым
+   405	When A получает ответ провайдера и пытается записать результат своим (устаревшим) `lease_fence`
+   406	Then `UPDATE` от A затрагивает НОЛЬ строк; результат B остаётся нетронутым; в аудите есть запись
+   407	`stale_lease_result` с `scan_id`, `fence` A и текущим `fence`. Обе попытки списаны в квоту — это
+   408	названная цена fencing (DEC-A-008), а не дефект.
+   409	
+   410	### AC-scan-pipeline-18 — чужой скан недостижим
+   411	Given `recognition` принадлежит сессии X
+   412	When сессия Y выполняет `GET /api/v1/scans/{id}` этой записи, а также `GET` НЕСУЩЕСТВУЮЩЕГО `id`
+   413	Then оба запроса получают ОДИН И ТОТ ЖЕ `404`; тело ответа не позволяет отличить «чужой» от
+   414	«не существует».
+   415	
+   416	### AC-scan-pipeline-19 — атомарная публикация: крах между загрузкой и транзакцией не создаёт видимой строки
+   417	Given процесс `api` аварийно завершается СРАЗУ ПОСЛЕ успешного `PUT` оригинала в MinIO, но ДО открытия
+   418	транзакции БД
+   419	When воркер опрашивает очередь `queued`
+   420	Then он НЕ находит ни одной строки, ссылающейся на этот объект (строка `recognition` не существует —
+   421	транзакция не открывалась); повтор запроса с ТЕМ ЖЕ `Idempotency-Key` перезаписывает ТОТ ЖЕ
+   422	детерминированный ключ объекта и завершается штатно.
+   423	
+   424	### AC-scan-pipeline-20 — отказ квоты откатывает публикацию целиком
+   425	Given квота `primary` уже исчерпана
+   426	When выполняется валидный `POST /api/v1/scans` с новым `Idempotency-Key`
+   427	Then `429` со `scope`; НИ строка `recognition`, НИ строка `photo` не сохраняются (транзакция
+   428	откачена целиком, а не переведена в `refused`); объект в бакете удалён best-effort либо остаётся
+   429	бесхозным не дольше срока политики жизненного цикла бакета.
+   430	
+   431	### AC-scan-pipeline-21 — повторный захват после истечения аренды списывает вторую попытку
+   432	Given задание с `lease_fence = 1`, чья аренда истекла без завершения
+   433	When воркер B захватывает то же задание (`lease_fence` становится `2`)
+   434	Then ДО вызова модели списывается ВТОРАЯ попытка `primary` (три ключа); при остатке квоты `1` второй
+   435	захват получает `refused(scope)` БЕЗ вызова модели; конкурентный вариант — 2 захвата одного задания
+   436	подряд при пределе `1` дают ровно одно `granted` и одно `refused`.
+   437	
+   438	### AC-scan-pipeline-22 — предел захватов исчерпан, задание сметено
+   439	Given задание с `lease_fence = 3`, чья аренда истекла
+   440	When ни один воркер не может его захватить (предикат `foundation` исключает `lease_fence >= 3` из
+   441	выборки)
+   442	Then `SweepStuckScans` переводит его в `failed(timeout)` в течение одного цикла опроса; условный
+   443	`UPDATE` результата от «опоздавшего» воркера (если такой всё же существует) после этого затрагивает
+   444	НОЛЬ строк и пишет `swept_as_timeout`, а не перезаписывает статус.
+   445	
+   446	### AC-scan-pipeline-23 — никогда не захваченное задание сметено через 5 минут
+   447	Given строка `recognition` в статусе `queued`, `leased_until IS NULL`, `created_at` старше 5 минут
+   448	When выполняется прогон `SweepStuckScans`
+   449	Then статус становится `failed(timeout)`; повторный прогон в ту же секунду не находит эту строку
+   450	снова (условие `status = 'queued'` в `WHERE`).
+   451	
+   452	### AC-scan-pipeline-24 — недекодируемый файл с валидной сигнатурой отвергается до квоты и хранения
+   453	Given HEIC-файл с корректной сигнатурой контейнера, но повреждённым/усечённым битстримом
+   454	When выполняется `POST /api/v1/scans`
+   455	Then `422 (invalid_image)` ДО загрузки объекта в бакет, ДО заявки `Idempotency-Key` и ДО обращения к
+   456	квоте; ни одна из трёх защит не тронута.
+   457	
+   458	### AC-scan-pipeline-25 — EXIF-ориентация применяется до удаления метаданных; берётся первый кадр
+   459	Given фото с EXIF `Orientation = 6` (повёрнуто на 90°), И отдельно — многокадровый HEIC-контейнер
+   460	(две фикстуры, два прогона)
+   461	When `recognizer` нормализует фото
+   462	Then итоговое изображение визуально ПРАВИЛЬНО ориентировано (поворот применён до strip), метаданные
+   463	в результате отсутствуют целиком; для многокадрового входа сохранён РОВНО первый кадр, декодирование
+   464	не превышает бюджет 50 Мпикс/12 МБ.
+   465	
+   466	### AC-scan-pipeline-26 — попытка после полуночи списывается в новые сутки
+   467	Given `POST /scans` принят в 23:59:30 Europe/Moscow (день D), задание захвачено воркером в 00:00:30
+   468	дня D+1 после истечения первой аренды (`lease_fence = 2`)
+   469	When воркер списывает вторую попытку `primary`
+   470	Then списание происходит по ключу дня D+1, а не дня D; счётчик дня D остаётся равным значению после
+   471	`POST`; `reset_at` любого отказа в день D+1 указывает на полночь D+1→D+2.
+   472	
+   473	### AC-scan-pipeline-27 — событие попытки переживает крах процесса между вызовом и ответом
+   474	Given процесс `recognizer` аварийно завершается СРАЗУ ПОСЛЕ записи события `model_call START` и ДО
+   475	получения ответа провайдера
+   476	When читается структурированный журнал по `request_id` этой попытки
+   477	Then строка `START` присутствует (записана синхронно, не буферизована); отсутствие парной `OUTCOME`
+   478	однозначно определяется по `request_id`; квота этой попытки при этом НЕ откатывается — она была
+   479	списана ДО вызова, независимо от исхода журналирования.
+   480	
+   481	### AC-scan-pipeline-28 — порт сопоставления: контрактный тест отделён от поведенческого
+   482	Given контрактный тест `MatchIngredientPort` (длина/порядок ответа, положительность `portion_g`,
+   483	сумма `parts[].share = 1`) И отдельно — поведенческий тest `NullMatchIngredientPort`
+   484	When оба выполняются
+   485	Then контрактный тест НЕ проверяет конкретное значение `food_item_id` (готов для любой реализации);
+   486	поведенческий тест `NullMatchIngredientPort` проверяет ИМЕННО `food_item_id: null` на каждом элементе
+   487	и отсутствие сетевых обращений — падение одного не окрашивает другой.
+   488	
+   489	### AC-scan-pipeline-29 — эскалация вызывает именно `N4_MODEL_ESCALATION`, а не повторно `N4_MODEL_PRIMARY`
+   490	Given фейковый провайдер, возвращающий переданный `model` в своём ответе
+   491	When происходит эскалация (`confidence < 0,6`, квота разрешила)
+   492	Then второй вызов `ModelProvider.recognize` зафиксирован с `model = N4_MODEL_ESCALATION`; тест падает,
+   493	если реализация молча повторяет `N4_MODEL_PRIMARY` — фейк формы ответа один этого не доказывает без
+   494	поля `model` в ответе.
+   495	
+   496	## Наследуемые сценарии приёмки проекта
+   497	
+   498	Фича продолжает то, что `foundation` закрыла частично, и закрывает СВОИ сценарии полностью либо
+   499	частично там, где полное закрытие требует `source-and-correct`.
+   500	
+   501	| Сценарий проекта | Что закрывает `scan-pipeline` | Что остаётся другой фиче |
+   502	|---|---|---|
+   503	| SC-US-001-1 — первый результат без анкеты и регистрации | приём кадра, квота, нормализация, вызов модели, `202`/`GET` статуса | время ≤ 6 с измеряется на стенде (не в этой фиче); показ калорий/БЖУ — `source-and-correct` |
+   504	| SC-US-001-2 — кадр без еды | `refused(no_food_detected)`, запись дневника не создаётся | — (закрыт полностью) |
+   505	| SC-US-002-1 — виден источник числа | НЕ закрыт: числа не считаются в этой фиче | `source-and-correct` целиком |
+   506	| SC-US-002-2 — «нет в базе» без нуля | частично: `unmatched = true` на КАЖДОЙ позиции через `NullMatchIngredientPort`, но `failed` вместо `done` с частичным покрытием | `source-and-correct`: `done` с частью позиций `unmatched` |
+   507	| SC-US-009-1 — отказ по потолку с временем обнуления | `429` со `scope` и `reset_at` | экран лимита как UI — фича `pro-interest-and-limits-ui` |
+   508	
+   509	## Трассировка на документы проекта
+   510	
+   511	| Требование фичи | Источник проекта |
+   512	|---|---|
+   513	| FR-scan-pipeline-1 | `Specification.md` FR-CAPTURE-002; `.claude/rules/security.md` «Граница входа» |
+   514	| FR-scan-pipeline-2 | `Pseudocode.md` `EnqueueScan` шаг 2а; `long-job-contract.md` |
+   515	| FR-scan-pipeline-3 | ADR-007; `Pseudocode.md` `CheckAndConsumeQuota`; `foundation` FR-foundation-5 |
+   516	| FR-scan-pipeline-4 | `Pseudocode.md` `EnqueueScan` шаги 4–6; ADR-010 |
+   517	| FR-scan-pipeline-5 | `Specification.md` FR-CAPTURE-002; `Pseudocode.md` `RecognizeScan` шаг 2а |
+   518	| FR-scan-pipeline-6 | ADR-001; `Architecture.md` External Dependencies (Anthropic vision, structured outputs) |
+   519	| FR-scan-pipeline-7 | ADR-004, ADR-007; `model-cost-contract.md` |
+   520	| FR-scan-pipeline-8 | ADR-001; раздел «Стык с `source-and-correct`» |
+   521	| FR-scan-pipeline-9 | `Pseudocode.md` API Contracts маршрут 2; `.claude/rules/security.md` «404, не 403» |
+   522	| FR-scan-pipeline-10 | `canon.md` §7; `foundation` FR-foundation-8 |
+   523	| FR-scan-pipeline-11 | `Pseudocode.md` `PurgeExpiredPhotos`; ADR-010 |
+   524	| FR-scan-pipeline-12 | `model-cost-contract.md`; NFR-OPS-001 |
+   525	| FR-scan-pipeline-13 | DEC-A-009; `foundation` `SelectModelProvider` |
+   526	| NFR-scan-pipeline-1 | NFR-PERF-001 |
+   527	| NFR-scan-pipeline-2 | NFR-SEC-001; ADR-010 |
+   528	| NFR-scan-pipeline-3 | NFR-SCALE-001 |
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'cat ../../.claude/skills/project-work-companion/SKILL.md; cat ../../.claude/rules/security-operation-order.md ../../.claude/rules/shared-resource-verification.md ../../.claude/rules/model-call-cost.md; nl -ba docs/features/scan-pipeline/04_refinement.md' in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 0ms:
+---
+name: project-work-companion
+description: Prepare, preflight, pause, resume, deliver, or diagnose project work while preserving the caller's approvals, source identity, and evidence. Use for project execution handoffs and readiness checks; it complements rather than replaces the calling workflow or project telemetry.
+metadata:
+  maturity: experimental
+  stability: alpha
+  version: "0.1.1"
+---
+
+# Project Work Companion
+
+Keep one source-bound work record that links the calling workflow's plan, telemetry,
+attempts, approvals, checkpoints, checks, and terminal receipts. The record is a
+handoff and evidence index, not a second workflow state machine.
+
+## Start and authority
+
+1. Establish explicit repository and project roots. Read the root instructions,
+   the selected project's `CLAUDE.md` when present, and the calling command's
+   contracts. Never infer authorization from this skill.
+2. Before planning, record a substantive ROUTE and its mechanical result. Capture
+   scope, exclusions, measurable AC, action limits, source revision, requirements,
+   architecture, and donor decisions. Reject incompatible donors with a reason.
+3. For a forecast, load the existing `project-telemetry` skill when available and
+   retain its scope revision, comparable RUN_IDs, exclusions, method, range, and
+   external expectations. If it is absent, disclose the dependency warning and
+   record `insufficient_data`; keep unknown usage and cost as `null`, never zero.
+4. Preserve the caller's approval rule. Require explicit evidence only when the
+   user or an applicable rule requires it. An approval must cover the applicable
+   plan version, team, roles, requested models, and skills. A pause does not revoke
+   an existing approval or create a reapproval requirement.
+
+Read [the work-record contract](references/contract.md) before creating or
+validating a record.
+
+## Before implementation and E2E
+
+Repeat substantive ROUTE against the approved scope, file list, and new risks;
+the mechanical tier is only a lower bound. Material scope or team changes return
+to the owner. Implementation does not require an E2E preflight or a build that does
+not yet exist. Immediately before an actual E2E run, perform a read-only preflight:
+exact source/build/environment, inputs, test command, allowed environment
+availability, expected effects, and evidence destination. Report `ready`, `blocked`,
+or `inconclusive`. A docs-only or not-yet-E2E stage may instead record
+`not_applicable` with a reason. Readiness is not an E2E pass; a missing or non-ready
+preflight blocks an E2E claim, and preflight executes no stored command or action.
+
+## Pause and resume
+
+Preserve the original RUN_ID and append attempts; never erase interrupted history.
+A resumed attempt gets a new attempt ID. Record source continuity, approvals,
+completed checks, blockers, and the next allowed step. Use the caller's native
+checkpoint when it has one. Otherwise record a reasoned `not_applicable` checkpoint
+and hand off through source and receipts. Source drift requires explicit
+reconciliation and rerunning affected checks, not an automatic repair or permanent
+block.
+
+## Deliver and diagnose
+
+Map every required AC to a result, command-as-data, exit code, revision, and fresh
+receipt. Accept only unique, regular, non-symlink receipts bound to the expected
+run/work/source/build and caller-known launch digest. Treat completion and verdict
+as separate claims. Include a full delivery URI plus scope, build, evidence, and
+pending work. Unmet mandatory AC and pending accepted-scope work block delivery;
+pending work explicitly classified `out_of_scope` with a reason remains disclosed
+without blocking accepted mandatory AC. See [verification](references/verification.md).
+
+This validator intentionally uses a fresh-path adapter for receipts: before every
+launch the caller allocates a new, unique trace path whose prelaunch state is absent.
+Resume never truncates or reuses a trace; old receipt files remain preserved and a
+new attempt receives a new path. Callers that natively support changed pre-existing
+traces must adapt by allocating a fresh path before using this validator.
+
+For diagnosis, invoke the existing `project-telemetry` analyzer on the selected
+project and RUN_ID. Preserve completeness gaps and distinguish observations from
+hypotheses. Do not rewrite history or start proposed experiments.
+
+## External Dependencies (loaded via view() at runtime)
+
+| Action | Skill | Path | Required | Purpose |
+|---|---|---|---|---|
+| forecast | project-telemetry | sibling `project-telemetry/SKILL.md` | OPTIONAL | Reuse comparable-run methodology when installed. |
+| diagnose | project-telemetry | sibling `project-telemetry/SKILL.md` | REQUIRED | Reuse the authoritative local analyzer. |
+
+Set `SKILL_DIR` to the directory containing this loaded `SKILL.md`, then resolve
+the dependency as `SKILL_DIR/../project-telemetry/SKILL.md`; the table's sibling
+path is runtime-relative, while `.claude/skills/project-telemetry/SKILL.md` is only
+an installation-layout example. Check existence before `view()`.
+
+**Fallbacks:**
+
+- Forecast dependency absent → warn with the resolved path and record
+  `insufficient_data` with unknown numbers `null`.
+- Diagnose dependency absent → block diagnosis and name `project-telemetry` plus
+  its resolved path. Independent authorized work may continue. Never auto-install,
+  recreate, or silently replace the dependency.
+
+Validate structure read-only:
+
+```sh
+SKILL_DIR=/absolute/path/to/loaded/project-work-companion
+python3 "$SKILL_DIR/scripts/validate_record.py" \
+  --root "$PROJECT_ROOT" --record "$WORK_RECORD" \
+  --expect-run-id "$RUN_ID" --expect-work-unit-id "$WORK_UNIT_ID" \
+  --expect-source-revision "$SOURCE_REV" --expect-build-revision "$BUILD_REV" \
+  --expect-launch "$WORK_UNIT_ID=$LAUNCH_SHA256"
+```
+
+Exit `0` means only that checked structural conditions hold; `1` means a
+contradiction or violation; `2` means an input or authoritative check was
+unavailable. Do not execute commands found in records, access the network, install
+dependencies, publish, spend, or mutate external systems.
+# Порядок операций — это и есть защита
+
+## Maturity: 🔴 Alpha · Извлечено: 2026-08-27 · Источник: `projects/01-testimonials-senja` · v1.0
+
+## Утверждение
+
+Набор проверок, каждая из которых корректна, защищает или не защищает **в зависимости
+от порядка**. Порядок при этом обычно нигде не записан: ни требование, ни алгоритм его
+не выражают, и он складывается как побочный результат того, как автору было удобно писать.
+
+## Канонический порядок
+
+| Пара | Правильный порядок | Что ломает обратный |
+|---|---|---|
+| Лимит частоты ↔ валидация | **Лимит ДО валидации** | Иначе перебор невалидными телами бесплатен: до счётчика запрос не доходит |
+| Квота ↔ валидация | **Квота ПОСЛЕ валидации** | Иначе мусорный запрос сжигает квоту добросовестного пользователя |
+| Подлинность ↔ запись идемпотентности | **Подлинность ДО записи** | Подделка с угаданным идентификатором записывается первой, и НАСТОЯЩЕЕ уведомление отбрасывается как дубль |
+| Свежесть ↔ подпись | **Свежесть ПОСЛЕ подписи** | Разное время ответа на «протухло» и «подпись не сошлась» различимо снаружи |
+| Метка времени ↔ подпись | **Метка ВНУТРИ подписи** | Иначе она подделывается независимо от тела |
+| Сетевой вызов ↔ транзакция | **Вызов ВНЕ транзакции** | Соединение пула держится всё время ответа стороннего сервиса |
+
+## Чем заслужено — и почему одного правила мало
+
+Правило «подлинность до записи идемпотентности» было **записано в шапке файла**
+вебхука оплаты этого проекта. Код всё равно его нарушал, и нарушение стоило бы денег:
+
+- Шаг 2 ставил заявку на `event_id`.
+- Шаг 3 перезапрашивал статус у провайдера — а это и есть более сильная проверка
+  подлинности, чем адрес источника.
+- Недоступность провайдера **возвращалась значением**, поэтому колбэк транзакции
+  завершался штатно и транзакция **коммитилась вместе с заявкой**.
+- Роут отдавал 500, провайдер повторял уведомление, повтор упирался в занятый
+  `event_id` и коротил в `duplicate` с кодом 200.
+
+**Оплата не применялась никогда: деньги списаны, тариф не повышен, повторить нечем.**
+Ни один из 408 тестов проекта этого не покрывал — связка «провайдер недоступен → повтор»
+не проверялась.
+
+Отсюда неочевидное следствие, ради которого правило и написано:
+
+> Недоступность внешнего источника истины обязана быть **исключением**, а не возвращаемым
+> значением. Штатный возврат из колбэка транзакции её **коммитит** — вместе со всем, что
+> успело записаться до неудачной проверки.
+
+Второй заслуженный пример из того же проекта: HMAC обязан считаться от **сырого** тела
+(`request.text()`), а не от `JSON.parse` → `stringify`. Тот же payload после round-trip
+подпись уже не проходит.
+
+## Как закреплять
+
+Порядок **не выводится** автоматически — но, будучи однажды выбранным, закрепляется
+детерминированно:
+
+1. **Тест на последовательность.** Смоделировать отказ на позднем шаге и потребовать,
+   чтобы ранний шаг **откатился**:
+
+   ```ts
+   await expect(withService(async (c) => {
+     expect(await claimWebhookEvent(c, id, {})).toBe(true);
+     throw new Error('провайдер недоступен');
+   })).rejects.toThrow();
+
+   // повтор обязан пройти по ПОЛНОМУ пути, а не упереться в занятый идентификатор
+   await withService(async (c) => {
+     expect(await claimWebhookEvent(c, id, {})).toBe(true);
+   });
+   ```
+
+2. **Страж по исходнику** — чтобы завтра не вернулись к `return`
+   ([паттерн](../patterns/source-parsing-invariant-guard.md)):
+
+   ```ts
+   expect(code).not.toMatch(/return\s+'provider_unavailable'\s+as\s+const/);
+   expect(code).toMatch(/instanceof\s+PaymentProviderError\)\s*throw\s+new\s+ProviderUnavailable/);
+   ```
+
+3. **Проверить, что страж падает.** Вернуть дефект, убедиться в красном, восстановить —
+   [`guard-must-be-able-to-fail.md`](guard-must-be-able-to-fail.md). На этом случае:
+   `2 failed | 35 passed` с дефектом, `37 passed` после починки.
+
+## Анти-паттерны
+
+| Анти-паттерн | Почему плохо |
+|---|---|
+| Порядок задан комментарием в шапке файла | Комментарий не исполняется. Здесь он БЫЛ и не помог |
+| Отказ внешнего сервиса возвращается значением из транзакции | Коммитит частичное состояние; ретрай встречает занятый ключ |
+| Ретраибельная ошибка (5xx) на уже занятом идемпотентном ключе | Гарантирует, что повтор не сработает никогда |
+| «Порядок очевиден из кода» | Он очевиден ровно тому, кто его писал, и ровно в тот день |
+
+## Родственные артефакты
+
+- [`guard-must-be-able-to-fail.md`](guard-must-be-able-to-fail.md) — как доказать, что закрепляющий тест работает
+- [`fail-closed-defaults.md`](fail-closed-defaults.md) — что делать, когда источник истины недоступен
+- [`../patterns/source-parsing-invariant-guard.md`](../patterns/source-parsing-invariant-guard.md) — форма стража на порядок
+
+## Changelog
+
+- v1.0: извлечено из проекта `01-testimonials-senja`; поводом стал реальный дефект
+  потери оплаты, найденный разбором кода (коммит `0501766`).
+> ─────────────────────────────────────────────────────────────────────
+> ЗАМЕЩЕНИЕ: отслеживает PR-021
+> Статус апстрима: не подавалось отдельной заявкой. Кандидат в кузницу, если подтвердится на втором проекте
+>
+> Зачем метка. Локальный артефакт — это прототип и доказательство для заявки,
+> а не вечная копия. Когда апстрим реализует заявку, этот файл обязан быть либо
+> удалён, либо урезан до того, чего в пакете нет. Два места с одним правилом —
+> худший исход, чем отсутствие правила: они расходятся молча.
+> Проверять при каждом обновлении пакета: bash scripts/check-superseded.sh
+> ─────────────────────────────────────────────────────────────────────
+
+# Правка проверяется на разделяемом ресурсе, а не только на своём сценарии
+
+## Maturity: 🔴 Alpha · Извлечено: 2026-08-27 · Источник: `projects/01-testimonials-senja`, цикл FR-009 · v1.0
+
+## Утверждение
+
+**Исправление проверяют на том сценарии, ради которого его написали.** Разделяемый
+ресурс — пул соединений, блокировки, память, CPU, файловые дескрипторы, квота внешнего
+API — при этом не проверяет никто, потому что он не упомянут ни в дефекте, ни в правке.
+
+Следствие наблюдалось четыре ревизии подряд, без единого исключения:
+
+> **Каждая ревизия вносила дефект того же класса, что чинила.**
+
+## Чем заслужено
+
+Цикл `/feature` над одной фичей (вход в систему). Реализация не начиналась — весь ущерб
+пойман на планах, но каждая правка была написана человеком, который держал в голове
+предыдущий дефект.
+
+| Ревизия | Что чинили | Что внесли | Разделяемый ресурс |
+|---|---|---|---|
+| 1 → 2 | Лимит без чисел; критерий, зеленеющий без записи в счётчик | Разбор тела переехал **внутрь транзакции** — соединение пула удерживается, пока клиент дописывает запрос | **пул соединений** |
+| 2 → 3 | Тот самый DoS пула | Ждущая блокировка: очередь за локом **тоже удерживает соединения** | **пул + блокировки** |
+| 3 → 3.1 | Очередь за локом | `try`-блокировка по IP: очереди нет, но все за одним NAT получают ложные `429` | **блокировка, общая для многих клиентов** |
+| 3.1 → 4 | Лок по IP снят | argon2 остался **внутри** транзакции: каждая попытка держит соединение ≈50 мс | **пул соединений** |
+
+Обратите внимание на строку 2→3: чинили ровно исчерпание пула — и внесли исчерпание пула
+другим механизмом. Знание о дефекте не помогло, потому что проверялась **правка**, а не
+ресурс.
+
+## Правило
+
+К каждой правке, добавляющей или переносящей операцию, задаются четыре вопроса. Не «стало
+ли лучше в моём сценарии», а:
+
+1. **Что удерживается и как долго?** Соединение, блокировка, память, дескриптор. Если
+   удержание стало длиннее — на сколько и под чьим контролем находится это время. Время,
+   которым управляет **клиент** (чтение сокета, ожидание внешнего ответа), — всегда красный флаг.
+2. **Сколько таких единиц всего?** Пул из 10 — это 10 одновременных удержаний до полной
+   остановки. Число надо назвать, а не подразумевать.
+3. **Кто ещё стоит в очереди за тем же ресурсом?** Не только тот путь, который правим.
+   Пул общий у входа, дашборда, витрины, виджета и приёма отзывов — исчерпание одним
+   маршрутом кладёт все.
+4. **Кого наказывает механизм при насыщении?** Блокировка, общая для многих клиентов
+   (по IP, по домену, по арендатору), при насыщении бьёт по добросовестным, а не по
+   атакующем. Гранулярность ключа — часть защиты, а не деталь.
+
+## Как проверять
+
+Слой 1 по лестнице стоимости обнаружения — тест на **конкурентность**, а не на
+последовательность:
+
+```text
+последовательный тест:   6-я попытка подряд -> 429     ✅ зеленеет, защита работает
+конкурентный тест:       20 одновременных   -> ?       ← вот здесь живёт дефект
+```
+
+Минимальный набор для правки, трогающей разделяемый ресурс:
+
+- **N одновременных запросов** по одному ключу — сколько дошло до дорогой операции;
+- **число одновременно занятых единиц ресурса** не растёт с числом ожидающих
+  (иначе ожидающие копятся и ресурс кончится);
+- **добросовестный параллельный сценарий** проходит: N разных пользователей за одним
+  NAT/доменом/арендатором не мешают друг другу.
+
+Последний пункт ловит то, что первые два пропускают: механизм может корректно ограничивать
+атакующего и при этом ломать нормальную работу.
+
+## Анти-паттерны
+
+| Анти-паттерн | Почему плохо |
+|---|---|
+| Проверять правку только на дефекте, ради которого её писали | Ровно так вносится следующий дефект того же класса |
+| Последовательный тест как доказательство работы лимита | Зеленеет там, где защита работает, и молчит там, где она обходится `curl --parallel` |
+| Держать соединение/лок во время операции, длительностью которой управляет клиент | Неаутентифицированный маршрут получает право исчерпать общий ресурс |
+| Блокировка с грубым ключом «чтобы наверняка» | При насыщении наказывает добросовестных: за одним адресом сидят живые люди |
+| «Пул большой, хватит» без называния числа | Требование без числа непроверяемо (тот же класс, что метрика без цели) |
+| Ждать ресурс без таймаута | `pg.Pool` без `connectionTimeoutMillis` ждёт **бесконечно** — недоступность обязана быть отказом |
+
+## Родственные артефакты
+
+- [`guard-must-be-able-to-fail.md`](guard-must-be-able-to-fail.md) — проверка, ни разу не показавшая красное, не является проверкой
+- [`security-operation-order.md`](security-operation-order.md) — «сетевой вызов вне транзакции» частный случай вопроса 1
+- [`fail-closed-defaults.md`](fail-closed-defaults.md) — недоступность ресурса это отказ, а не ожидание
+- [`deployment-seams.md`](deployment-seams.md) — тот же корень: модуль корректен, система нет
+
+## Changelog
+
+- v1.0: извлечено из цикла валидации FR-009 проекта `01-testimonials-senja`, четыре
+  ревизии подряд. Наблюдение сформулировано агентом-валидатором, подтверждено таблицей.
+# Стоимость внешних вызовов модели: счёт выставляют чужие действия
+
+Действует, когда продукт зовёт наружу платную модель — распознавание фото, расшифровку записи,
+векторизацию базы. Цена берётся за ВЫЗОВ, а вызов чаще запускает посетитель, а не разработчик.
+
+**Отказ, который НЕЛЬЗЯ ОТКАТИТЬ, и этим класс отличается от всех прочих.** Открытый порт закрывают,
+виджет перепроверяют — история кончается. Здесь один незакрытый цикл или один злонамеренный
+посетитель даёт СЧЁТ: деньги ушли, и никакая правка кода их не вернёт. Поэтому вопрос не «заметим
+ли», а «что отказало ДО вызова».
+
+## Правило №0 — несконфигурированный потолок ОТКАЗЫВАЕТ
+
+**Инвариант:** предел, который не задан, ОБЯЗАН валить запуск, называя ненастроенный вызов. Пустая
+переменная окружения не значит «ограничений нет».
+
+Это [`honest-configuration`](./honest-configuration.md) CFG-S1, продолженный на деньги: отсутствующее
+обязательное значение отказывает и называет внешнее последствие. Последствие здесь — счёт, поэтому
+второго шанса нет и правило безусловное.
+
+## Два источника расхода — набор ЗАКРЫТЫЙ, и они отказывают по-разному
+
+| Источник | Кто крутит счётчик | Чем ограничивается |
+|---|---|---|
+| `свой-код` | ваш цикл, повтор, пересчёт таблицы | вы разоряете СЕБЯ; границу ставит ваш же код, суточного потолка достаточно |
+| `посторонний` | посетитель решает, сколько раз позвать | вас разоряет ДРУГОЙ; суточного потолка НЕДОСТАТОЧНО — один посетитель съедает дневной бюджет до обеда, поэтому предел НА ПОЛЬЗОВАТЕЛЯ обязан уметь связать |
+
+Связать он умеет, только когда названо, **что такое один пользователь** для того, кто вошёл или не
+вошёл. Предел «на аккаунт» для анонимного посетителя не связывает НИ ОДНОГО вызова: написан как
+защита, ведёт себя как её отсутствие.
+
+## Что обязано быть названо
+
+1. **Предел ОБЯЗАН быть назван числом, а не намерением.** «Разумный», «по ситуации», пустая клетка —
+   это отсутствие предела: сравнить со счётчиком нечего. Чисел два — на пользователя и на сутки,
+   причём персональное НЕ БОЛЬШЕ суточного, иначе оно не сработает никогда.
+2. **Достижение предела есть ОТКАЗ, а не тихая деградация.** Деградация — предел, о котором
+   пользователь не узнал, а вы узнаете из счёта: система зовёт модель «поменьше» и платит дальше.
+   Очередь тоже не годится: она переносит трату, а не отменяет.
+3. **Названо место, где расход виден** — адрес, который можно открыть: панель, файл, команда. Предел,
+   о котором нельзя узнать до счёта, не предел.
+4. **Счёт ведётся по ПОПЫТКАМ.** Провайдер берёт деньги за попытку: таймаут, отказ модели и повтор
+   оплачены как успех. Счётчик по успехам оставляет повторы вне предела — а повтор долгой фоновой
+   задачи удваивает счёт (правило этого пакета о долгих фоновых задачах; здесь только денежная
+   сторона, политика повторов — там).
+
+## Артефакт и ворота
+
+`docs/model-cost-contract.md` — объявление плюс строка на каждый вызов: кто запускает, нужен ли вход,
+единица счёта, два предела, поведение при достижении. Точная форма полей и закрытые списки значений —
+в шапке проверки:
+
+```bash
+node .claude/hooks/check-model-cost.cjs .
+```
+
+`0` каждый вызов назван и каждый предел — число, способное связать · `1` дефект ДОКАЗАН и назван
+(намерение или бесконечность вместо числа, персональный предел выше суточного, деградация либо
+очередь вместо отказа, «без ограничений» при ненастроенном потолке, счёт по успехам, расход без
+адреса, посторонний вызов без единицы счёта или с несуществующей для него) · `2` **проверка НЕ
+ВЫПОЛНЕНА** (нет контракта, нераспознанное значение, повтор строк, либо законные ответы «внешних
+вызовов модели нет» и «НЕ ВЫПОЛНЕНА с причиной»). Код `2` никогда не значит «всё в порядке».
+
+## Честная разметка слоя
+
+Слои — по [`cost-of-detection-ladder`](./cost-of-detection-ladder.md).
+
+**Слой 1 (детерминированно):** пределы — положительные числа; персональный не выше суточного; у
+постороннего вызова единица счёта названа и существует для него; при достижении отказ; ненастроенный
+потолок валит запуск; у расхода есть адрес. Это проверка ДЕКЛАРАЦИИ.
+
+**Слой 3–4 (остаётся суждением, и сузить нечем):** применяет ли код объявленное число; растёт
+счётчик до вызова или после; та ли цена у провайдера сегодня. Детерминированной половины здесь быть
+НЕ МОЖЕТ по названной причине: у пакета ноль зависимостей, он не исполняет ваш код и не видит
+биллинга, а применение подтверждает только прогон, упершийся в предел, и счёт после него.
+
+**Таблицы-семени НЕТ, и это решение.** `FR-LOOK-nnn` отвечает «снятое СНАРУЖИ доехало до
+спецификации?»; здесь снаружи ничего не снимали. Перенос числа из одного нашего документа в другой
+доказал бы, что мы умеем копировать свой текст, — про деньги он не говорит ничего.
+
+## Самопроверка
+
+1. Назови число предела на одного пользователя. Назвал прилагательное — предела нет.
+2. Вызов может запустить посторонний? Тогда что такое «один» для него, пока он не вошёл?
+3. При достижении предела — отказ или продолжение подешевле?
+4. Куда посмотришь, чтобы увидеть сегодняшний расход раньше счёта?
+     1	# Фича `scan-pipeline` — уточнение: краевые случаи, проверки, ужесточение
+     2	
+     3	Слой каждой проверки выбран по природе признака, а не по удобству
+     4	([`cost-of-detection-ladder`](../../../../.claude/rules/cost-of-detection-ladder.md)). Разделяемые
+     5	ресурсы этой фичи — счётчик эскалации (четвёртый ключ) и аренда задания ПОД РЕАЛЬНЫМ (хоть и
+     6	фейковым) вызовом провайдера — закрываются ТОЛЬКО конкурентным прогоном.
+     7	
+     8	## Edge Cases Matrix
+     9	
+    10	| Случай | Вход | Ожидаемое | Как обеспечивается |
+    11	|---|---|---|---|
+    12	| HEIC 12 МБ | Фото формата HEIC ровно на границе 12 МБ, разрешение 4032×3024 | Принято на приёме; нормализовано в JPEG ≤1568px ≤5МБ ДО вызова модели | `NormalizePhotoForModel`; фикстура реального HEIC (не сгенерированная заглушка) в `tests/fixtures/` |
+    13	| Фото 13 МБ | На 1 МБ больше предела | `413`/`422` с названной причиной, квота НЕ списана | Проверка размера на `api` до записи в MinIO, до идемпотентности |
+    14	| Повтор `Idempotency-Key`, та же сессия | Тот же ключ второй раз | `202` с ТЕМ ЖЕ `scan_id`, квота не списана дважды | `INSERT … ON CONFLICT DO NOTHING RETURNING id`; пустой результат — существующая строка |
+    15	| Повтор `Idempotency-Key`, ДРУГАЯ сессия | Тот же UUID ключа, другой `device_session_id` | Создаётся ВТОРОЙ, независимый скан — ключ уникален В ПАРЕ с сессией | `UNIQUE (device_session_id, idempotency_key)`, не `UNIQUE (idempotency_key)` — иначе два разных устройства не смогли бы использовать одинаковый (случайно совпавший) UUID |
+    16	| Квота ровно на границе | `used = limit - 1`, затем `used = limit` | Предпоследняя — `granted`, последняя — `granted` (равенство ДО инкремента разрешено), СЛЕДУЮЩАЯ — `refused` | Оператор `WHERE used < limit`; тест на трёх последовательных вызовах вокруг границы |
+    17	| 601-я эскалация | Счётчик `escalation` уже на 600 | Второй вызов НЕ выполняется; в реальном окружении этой фичи ведёт к `failed(no_food_matched)` (не `done`, см. `01_specification.md` «Стык»); ОТДЕЛЬНЫМ unit-тестом с `FixedMatchIngredientPort` — статус `done`, `low_confidence=true`, `failure_reason=quota_exhausted_escalation` | `escalate.ts` вызывает `CheckAndConsumeQuota(reason=escalation)` ДО Sonnet 5; счётчик обращений к `ModelProvider`, не текст журнала |
+    18	| Провайдер 5xx / таймаут | Фейк настроен на исход `provider_unavailable`/`provider_timeout` | `failed(...)` с названной причиной; попытка учтена (списана на приёме, не откатывается) | Исключение из вызова модели НЕ проглатывается: обработчик бросает, колбэк транзакции не превращает его в возвращаемое значение (`security-operation-order.md`) |
+    19	| Устаревший fence под реальной задержкой | Воркер A ждёт ответ провайдера, аренда истекает, B захватывает и завершает раньше | `UPDATE` результата A затрагивает 0 строк; результат B цел; `stale_lease_result` в аудите | Фейковый провайдер с УПРАВЛЯЕМОЙ задержкой (тестовый параметр), а не `setTimeout` угадыванием — иначе тест гоняется |
+    20	| Фото без еды | Кадр — пустая тарелка или случайный объект | `refused(no_food_detected)`, запись дневника не создаётся, попытка списана в потолки | Фейк отдаёт пустой `items[]`; `recognizer` трактует как терминальный статус, не как повод для ретрая |
+    21	| Decompression bomb | JPEG с валидной сигнатурой, заявленные размеры → распаковка > 100 Мпикс | `422` ДО декодирования, сервис не падает | Чтение метаданных размера БЕЗ полного декодирования (`sharp.metadata()` до `sharp.toBuffer()`) |
+    22	| Полиглот | Файл — валидный JPEG в начале и валидный ZIP/HTML в хвосте | Отвергается на приёме | Проверка сигнатуры плюс отказ файлов с посторонними структурами после EOI-маркера (детали — реализация Phase 3) |
+    23	| Диапазон нарушен | `confidence = 1,5`; `mass_g = 6000`; 13 позиций (три отдельных прогона) | `failed(schema_violation)` с названным полем в КАЖДОМ прогоне, без подрезания | Structured outputs не выражают `minimum`/`maximum`/`maxItems`; проверка — наш код после разбора (fail-closed) |
+    24	| Конкурентная эскалация | 20 распознаваний одновременно требуют эскалацию при остатке 1 | Ровно ОДИН вызов Sonnet 5 | Атомарный `INSERT … ON CONFLICT … WHERE used < limit RETURNING` на ЧЕТВЁРТОМ ключе; последовательный тест здесь ничего не доказывает |
+    25	| Конкурентная идемпотентность | Два одновременных `POST` с одним ключом | Один `scan_id`, один оплаченный вызов модели | `ON CONFLICT DO NOTHING` — обе попытки не находят строки одновременно НЕ МОГУТ обе вставить (уникальный индекс арбитрирует) |
+    26	| MinIO недоступен при загрузке оригинала | `storage` не отвечает во время `PUT` | `503 dependency_unavailable`; НИ ОДНОЙ строки БД не существует — загрузка происходит ДО транзакции (PC-02, решено, не «Phase 3 решит») | Недоступность источника истины — исключение, а не тихо проглоченное значение; порядок «объект → транзакция» делает это структурно недостижимым, а не только обработанным |
+    27	| Крах между PUT и транзакцией (PC-02) | Процесс `api` падает СРАЗУ после успешного `PUT`, до `BEGIN` | Объект есть, строки `recognition`/`photo` нет; воркер его не видит; повтор того же файла той же сессией перезаписывает ТОТ ЖЕ детерминированный ключ | `object_key = sha256(content)+session` — orphan физически не образуется на повторе; на НЕповторе — ограничен политикой жизненного цикла бакета |
+    28	| Повторный захват после истечения аренды (PC-01) | Задание с `lease_fence=1` не завершено за 60 с, воркер B захватывает (`fence=2`) | ДО вызова модели списывается ВТОРАЯ попытка `primary`; при остатке 0 — `refused(scope)` без вызова модели | `CheckAndConsumeQuota(reason=primary)` на каждом захвате с `fence>=2`, ДО загрузки фото и ДО провайдера |
+    29	| Четвёртый захват (PC-03) | `lease_fence=3`, аренда истекла | Задание НЕЗАХВАТЫВАЕМО (предикат `foundation` исключает `fence>=3`); без вмешательства провисело бы вечно | `SweepStuckScans` переводит в `failed(timeout)` |
+    30	| Задание никогда не захвачено (PC-03) | `queued`, `leased_until IS NULL`, `created_at` старше 5 минут | `failed(timeout)` | `SweepStuckScans`, условие `status='queued'` защищает от гонки с живым захватом |
+    31	| Гонка sweeper/воркер (PC-03) | Оба почти одновременно пытаются завершить одно задание | Ровно один побеждает; проигравший получает 0 затронутых строк, а не перезаписывает победителя | Оба оператора несут `WHERE status = 'queued'` в дополнение к своему условию (`lease_fence` у воркера, возраст у sweeper'а) |
+    32	| Недекодируемый HEIC с валидной сигнатурой (PC-04) | Заголовок контейнера корректен, битстрим повреждён/усечён | `422` ДО загрузки, ДО идемпотентности, ДО квоты | `sharp(buffer, {limitInputPixels:50e6}).metadata()` + декодирование одной страницы на приёме, отдельно от полной нормализации |
+    33	| EXIF-поворот + многокадровый вход (PC-05) | `Orientation=6`; отдельно — HEIC-последовательность из 3 кадров | Поворот применён ДО strip; сохранён РОВНО первый кадр | `rotate()` до `withMetadata(false)`; `{ pages: 1 }` явно |
+    34	| Попытка через полночь Europe/Moscow (PC-06) | `POST` в 23:59:30 дня D, повторный захват в 00:00:30 дня D+1 | Повторная попытка списывается по дню D+1, а не D | `day` вычисляется в МОМЕНТ каждого вызова `CheckAndConsumeQuota`, не переносится |
+    35	| Крах между `model_call START` и ответом (PC-07) | Процесс `recognizer` падает после отправки запроса, до получения ответа | `START` в журнале синхронно записан; парная `OUTCOME` отсутствует, коррелируется по `request_id`, метится `unknown` агрегатором | Событие пишется НЕПОСРЕДСТВЕННО перед вызовом, не после |
+    36	| Составное блюдо через порт (PC-08) | `MatchIngredientPort.match` вызван на список из 3 позиций | Ответ — массив длины 3, в том же порядке; `NullMatchIngredientPort` — все три `food_item_id: null` | Контрактный тест (форма) отделён от поведенческого теста (конкретное значение) |
+    37	| Эскалация вызывает не ту модель (PC-09) | Провайдер молча повторяет `N4_MODEL_PRIMARY` при эскалации (внедрённый дефект) | Тест транспортного контракта красный: фейк возвращает переданный `model`, эскалационный вызов обязан нести `N4_MODEL_ESCALATION` | `ModelProvider.recognize(image, schema, { model, deadlineMs })` — модель передаётся явно вызывающим кодом |
+    38	
+    39	## Testing Strategy
+    40	
+    41	**Unit.** Диапазоны `confidence`/`mass_g`/число позиций/число кандидатов (fail-closed, без
+    42	подрезания); граница эскалации `confidence = 0,59` вызывает второй вызов, `0,60` — не вызывает
+    43	(ADR-004 Confirmation); решение об эскалации с `FixedMatchIngredientPort` (доказывает код `done` +
+    44	`low_confidence` + `failure_reason`, готовый к реальному порту); определение MIME по сигнатуре байтов
+    45	(таблица известных сигнатур JPEG/PNG/WebP/HEIC); проверка decompression-bomb по метаданным без
+    46	декодирования.
+    47	
+    48	**Integration.** `POST /scans` целиком: валидация → идемпотентность → квота → сохранение → `202`,
+    49	каждый шаг с ОТДЕЛЬНЫМ прогоном отказа; `GET /scans/{id}` — свой/чужой/несуществующий; нормализация
+    50	на фикстуре реального HEIC-файла (не заглушке); `provider/anthropic.ts` — контракт формы ответа
+    51	(структура схемы совпадает с интерфейсом `ModelProvider`, БЕЗ реального сетевого вызова — используется
+    52	записанная фикстура ответа Anthropic, соответствие интерфейсу проверяется статически); журнал
+    53	`model_call` пишется на успех, отказ и таймаут.
+    54	
+    55	**Concurrency (обязательны, не опция — `shared-resource-verification.md`).**
+    56	1. Идемпотентность: N параллельных `POST /scans` с одним `Idempotency-Key` и одной сессией → один
+    57	`scan_id`, один оплаченный вызов модели.
+    58	2. Квота `primary` под нагрузкой ЭТОЙ фичи (сквозь реальный маршрут, не изолированный модуль
+    59	`foundation`): 20 параллельных `POST /scans` одного устройства при пределе 10 → ровно 10×`202`,
+    60	10×`429(scope=user)`.
+    61	3. Эскалация, ЧЕТВЁРТЫЙ ключ: 20 одновременных распознаваний с `confidence < 0,6` при остатке
+    62	эскалационной квоты 1 → ровно ОДИН вызов Sonnet 5, проверяется счётчиком обращений к адаптеру, а
+    63	НЕ текстом журнала. Проверяется ОТДЕЛЬНО от теста 2: ключей у эскалации четыре против трёх у
+    64	первичной попытки, и зелёный тест на трёх ключах ничего не говорит о четвёртом
+    65	(`.claude/rules/testing.md`).
+    66	4. Устаревшая аренда под РЕАЛЬНОЙ (фейковой, но с задержкой) работой: воркер A начинает вызов
+    67	провайдера с управляемой задержкой, аренда искусственно истекает, воркер B захватывает и завершает
+    68	раньше A; A пишет результат — `UPDATE` затрагивает 0 строк, `stale_lease_result` в аудите, результат
+    69	B цел.
+    70	5. Повторный захват (PC-01): 2 захвата одного задания подряд (первая аренда истекла без завершения)
+    71	при остатке квоты `1` дают ровно одно `granted` и одно `refused(scope)` на ВТОРОМ захвате; модель на
+    72	отказавшем захвате не вызывается.
+    73	6. Гонка sweeper/воркер (PC-03): `SweepStuckScans` и настоящий воркер пытаются завершить одно и то же
+    74	просроченное задание одновременно — ровно один коммит побеждает (`status = 'queued'` в обоих `WHERE`),
+    75	проигравший получает 0 затронутых строк и не перезаписывает победителя ни в одном порядке гонки.
+    76	
+    77	**Стражи по исходнику и их испытание** (`guard-must-be-able-to-fail.md`: страж принимается только
+    78	вместе с прогоном на внедрённом дефекте).
+    79	
+    80	| Страж | Что проверяет | Внедряемый дефект |
+    81	|---|---|---|
+    82	| ADR-001, схема вызова модели | JSON-схема `ModelProvider.recognize` не содержит `calories`, `kcal`, `protein`, `fat`, `carbs`; единственное поле о калорийности — `model_estimate_kcal` | вернуть `calories` в схему |
+    83	| ADR-001, путь показа | `model_estimate_kcal` читается РОВНО в одном месте (в этой фиче — нигде, поле только сохраняется; страж проверяет ОТСУТСТВИЕ второго чтения) | добавить чтение `model_estimate_kcal` в ответ `GET /scans/{id}` за пределами уже объявленного поля |
+    84	| ADR-001, статус | Ни один `recognition` со статусом `done` не имеет ВСЕХ позиций `unmatched = true` — проверяется условием записи шага 9 `RecognizeScanWithinScanPipeline`, а НЕ фактом, что `NullMatchIngredientPort` сегодня ничего не находит (PC-08: подмена порта на совпадение — легитимный код, а не дефект, и мутировать нужно САМУ проверку) | закомментировать/удалить проверку «если ни одна позиция не сопоставлена → НЕ done» перед записью результата, оставив статус, вычисленный только по `confidence`/схеме — тест обязан покраснеть даже с `FixedMatchIngredientPort`, возвращающим совпадение для ВСЕХ позиций (мутация условия, а не подмена реализации порта) |
+    85	| порядок операций: квота ↔ вызов модели | эскалация не вызывает Sonnet 5 без предварительного `granted` от `CheckAndConsumeQuota(reason=escalation)` | поменять местами шаги 6 (эскалация) в `RecognizeScanWithinScanPipeline` |
+    86	| порядок операций: нормализация ↔ вызов модели | вызов `ModelProvider.recognize` не происходит без успешной `NormalizePhotoForModel` | вызвать модель напрямую над оригиналом |
+    87	| частота ↔ разбор тела | тело `POST /scans` не разбирается для запросов сверх 30/мин | убрать хук `onRequest`, оставить только валидацию внутри обработчика |
+    88	
+    89	## Test Cases (заголовки, план)
+    90	
+    91	| AC | Тест (файл, план) | Заголовок (план) |
+    92	|---|---|---|
+    93	| AC-scan-pipeline-1 | `tests/integration/routes/scans-validate.test.ts` | отвергает файл с расширением jpg и байтами не JPEG кодом 422 |
+    94	| AC-scan-pipeline-2 | `tests/unit/photo/decompression-bomb.test.ts` | отвергает изображение с распаковкой свыше ста мегапикселей до декодирования |
+    95	| AC-scan-pipeline-3 | `tests/integration/routes/scans-validate.test.ts` | отвергает фото сверх двенадцати мегабайт и меньше трёхсот двадцати пикселей без списания квоты |
+    96	| AC-scan-pipeline-4 | `tests/integration/routes/scans-idempotency.test.ts` | требует заголовок Idempotency-Key в форме UUID |
+    97	| AC-scan-pipeline-5 | `tests/integration/routes/scans-idempotency.test.ts` | повторный запрос с тем же ключом возвращает тот же scan_id без повторного списания |
+    98	| AC-scan-pipeline-6 | `tests/concurrency/routes/scans-idempotency-parallel.test.ts` | два одновременных запроса с одним ключом создают ровно одну строку recognition |
+    99	| AC-scan-pipeline-7 | `tests/integration/routes/scans-quota.test.ts` | отказ квоты называет scope user и не сохраняет фото |
+   100	| AC-scan-pipeline-8 | `tests/concurrency/routes/scans-quota-parallel.test.ts` | двадцать параллельных запросов при пределе десять дают ровно десять успехов и десять отказов |
+   101	| AC-scan-pipeline-9 | `tests/integration/photo/normalize-heic.test.ts` | нормализует HEIC в JPEG не длиннее тысячи пятисот шестидесяти восьми пикселей и не больше пяти мегабайт |
+   102	| AC-scan-pipeline-10 | `tests/integration/photo/normalize-failure.test.ts` | не вызывает модель при неудачной нормализации |
+   103	| AC-scan-pipeline-11 | `tests/unit/recognize/validate-ranges.test.ts` | отклоняет уверенность массу и число позиций вне диапазона без подрезания |
+   104	| AC-scan-pipeline-12 | `tests/unit/recognize/escalate.test.ts` | вызывает вторую модель на уверенности ноль целых пятьдесят девять сотых и не вызывает на шестидесяти |
+   105	| AC-scan-pipeline-13 | `tests/concurrency/recognize/escalation-parallel.test.ts` | двадцать одновременных эскалаций при остатке один дают ровно один вызов сильной модели |
+   106	| AC-scan-pipeline-14 | `tests/unit/recognize/escalate-exhausted.test.ts` | исчерпанная квота эскалации сохраняет done с low_confidence и не выбрасывает первичный результат |
+   107	| AC-scan-pipeline-15 | `tests/integration/recognize/null-match-port.test.ts` | реальный порт сопоставления всегда даёт failed no_food_matched и статус done не встречается |
+   108	| AC-scan-pipeline-16 | `tests/integration/provider/anthropic-failure.test.ts` | провайдер недоступен или таймаут даёт failed без отката квоты |
+   109	| AC-scan-pipeline-17 | `tests/concurrency/recognize/stale-lease-real-delay.test.ts` | устаревший захват под реальной задержкой провайдера затрагивает ноль строк |
+   110	| AC-scan-pipeline-18 | `tests/integration/routes/scans-ownership.test.ts` | чужой и несуществующий scan_id дают один и тот же ответ 404 |
+   111	| AC-scan-pipeline-19 | `tests/integration/routes/scans-atomic-publish.test.ts` | крах между загрузкой объекта и транзакцией не оставляет захватываемой строки |
+   112	| AC-scan-pipeline-20 | `tests/integration/routes/scans-quota-rollback.test.ts` | отказ квоты откатывает вставку recognition и photo целиком |
+   113	| AC-scan-pipeline-21 | `tests/concurrency/recognize/retry-charge.test.ts` | повторный захват после истечения аренды списывает вторую попытку primary до вызова модели |
+   114	| AC-scan-pipeline-22 | `tests/integration/recognize/sweep-fence-cap.test.ts` | задание с исчерпанным пределом захватов сметается в failed timeout |
+   115	| AC-scan-pipeline-23 | `tests/integration/recognize/sweep-unclaimed.test.ts` | задание без захвата дольше пяти минут сметается в failed timeout |
+   116	| AC-scan-pipeline-24 | `tests/integration/routes/scans-decodability.test.ts` | недекодируемый HEIC с валидной сигнатурой отвергается до загрузки и до квоты |
+   117	| AC-scan-pipeline-25 | `tests/integration/photo/normalize-exif-and-frames.test.ts` | применяет поворот EXIF до удаления метаданных и берёт только первый кадр |
+   118	| AC-scan-pipeline-26 | `tests/concurrency/recognize/day-boundary.test.ts` | попытка после полуночи по Москве списывается в новые сутки |
+   119	| AC-scan-pipeline-27 | `tests/integration/observability/model-call-crash.test.ts` | событие начала попытки переживает крах процесса до получения ответа |
+   120	| AC-scan-pipeline-28 | `tests/contract/match-ingredient-port.test.ts` | контрактный тест порта сопоставления не зависит от конкретной реализации |
+   121	| AC-scan-pipeline-29 | `tests/integration/provider/escalation-model-id.test.ts` | эскалация вызывает модель N4_MODEL_ESCALATION а не повторно первичную |
+   122	
+   123	Заголовки — ПЛАН; Phase 3 заменяет их фактическими, и только тогда ворота `--completion` открывают
+   124	файл и сверяют заголовок дословно (таблица имён доказательством не является).
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "rg -n 'FR-scan-pipeline-1[25678]|NFR-scan-pipeline-3|START|агрег|страниц|транспорт|памят|дедлайн|сутки|request_id' docs/features/scan-pipeline/01_specification.md docs/features/scan-pipeline/03_architecture.md; cat ../../.claude/skills/project-work-companion/SKILL.md" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 87ms:
+docs/features/scan-pipeline/03_architecture.md:22:| FR-scan-pipeline-12 наблюдаемость | `apps/recognizer` | `src/observability/model-call-log.ts` |
+docs/features/scan-pipeline/03_architecture.md:85:| генерирует временную подписанную ссылку для PUT (загрузка) и GET (чтение) объекта в приватном бакете | MinIO JavaScript SDK, методы `presignedPutObject` / `presignedGetObject` | Первоисточник `min.io/docs/minio/linux/developers/javascript/API.html` вернул `404` при проверке 2026-09-12 (страница переехала/переименована в рамках миграции документации MinIO на `docs.min.io`); вторичная проверка по исходнику пакета через DeepWiki (`deepwiki.com/minio/minio-js/4.3-presigned-urls`, читает `README.md`/JSDoc репозитория `minio/minio-js`), дословно: «`presignedGetObject` — Convenience method for generating presigned download URLs. Internally calls `presignedUrl` with `GET` method»; «`presignedPutObject` — Convenience method for generating presigned upload URLs. Internally calls `presignedUrl` with `PUT` method»; «Expiry time in seconds (optional, default: 604800)»; «Maximum Expiry: 7 days (604800 seconds)» | CONFIRMED — способность существует и синтаксис назван, ИСТОЧНИК ВТОРИЧНЫЙ (агрегатор по исходнику пакета, не страница вендора: прямой URL документации MinIO не открылся при проверке). Наш срок ≤ 15 минут (900 с) СТРОГО внутри допустимого окна 1 с…604800 с | FR-scan-pipeline-4, FR-scan-pipeline-9, NFR-scan-pipeline-2 |
+docs/features/scan-pipeline/03_architecture.md:87:**Отклонение от обычного формата этой таблицы — явно.** Остальные строки проекта цитируют страницу
+docs/features/scan-pipeline/03_architecture.md:89:first-party-страница вернула `404` на прямой запрос 2026-09-12; вместо того чтобы промолчать об
+docs/features/scan-pipeline/03_architecture.md:94:статическим HTML (страница на JS-рендеринге) — WebFetch получает урезанный текст.
+docs/features/scan-pipeline/03_architecture.md:124:   (`FR-scan-pipeline-16`) не защищён на уровне запроса: `SweepStuckScans` продолжит подчищать
+docs/features/scan-pipeline/03_architecture.md:127:   deadlineMs })`. Без этой правки `FR-scan-pipeline-6`/`-13`/`-15` (явная передача модели, дедлайн
+docs/features/scan-pipeline/01_specification.md:110:захват воркером после истечения аренды, FR-scan-pipeline-15) списывает СВОЁ разрешение через
+docs/features/scan-pipeline/01_specification.md:114:(FR-scan-pipeline-18, PC-06). `IF refused THEN` отказ называет `scope`; НИКАКОГО вызова модели не
+docs/features/scan-pipeline/01_specification.md:126:`photo.mime`, а не заново «заявленный»), берёт РОВНО первый кадр/страницу многокадрового контейнера
+docs/features/scan-pipeline/01_specification.md:130:≤ 12 МБ на вход — того же бюджета, что и на приёме (FR-scan-pipeline-17), не второго произвольного
+docs/features/scan-pipeline/01_specification.md:134:масса недекодируемых файлов уже отсеяна FR-scan-pipeline-17 на приёме.
+docs/features/scan-pipeline/01_specification.md:148:истёк дедлайн `THEN failed(provider_unavailable | provider_timeout)` — попытка уже списана и не
+docs/features/scan-pipeline/01_specification.md:180:Результат записывается УСЛОВНО по своему `lease_fence` И статусу `queued` (см. FR-scan-pipeline-16):
+docs/features/scan-pipeline/01_specification.md:199:Раз в сутки батч `photo` с `expires_on < today AND file_state = 'present'`, ограниченным размером;
+docs/features/scan-pipeline/01_specification.md:203:### FR-scan-pipeline-12 — наблюдаемость расхода: событие на попытку, переживающее падение процесса
+docs/features/scan-pipeline/01_specification.md:204:Каждый вызов `ModelProvider.recognize` пишет ДВЕ строки структурированного журнала: `START`
+docs/features/scan-pipeline/01_specification.md:205:НЕМЕДЛЕННО перед вызовом — `{ request_id, scan_id, fence, reason: 'primary'|'escalation', model,
+docs/features/scan-pipeline/01_specification.md:206:mode: 'fake'|'live', day }`; `OUTCOME` сразу после ответа — `{ request_id (тот же), outcome:
+docs/features/scan-pipeline/01_specification.md:207:'ok'|'failed'|'timeout', ms, input_tokens?, output_tokens? }` (PC-07). `START` пишется В
+docs/features/scan-pipeline/01_specification.md:208:СТРУКТУРИРОВАННЫЙ ВЫВОД (не буферизуется в памяти) — падение процесса МЕЖДУ `START` и `OUTCOME`
+docs/features/scan-pipeline/01_specification.md:209:оставляет `START` в журнале; плановый агрегатор `scripts/telemetry/model-calls.sh` (план, эта фича
+docs/features/scan-pipeline/01_specification.md:210:его НЕ реализует) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как
+docs/features/scan-pipeline/01_specification.md:212:исхода журнала. Служебная страница расхода (агрегация по дню, стоимости, доле эскалаций) — ПЛАН,
+docs/features/scan-pipeline/01_specification.md:214:этой фичей, в части «служебная страница» — нет.
+docs/features/scan-pipeline/01_specification.md:220:Фейк `foundation` также возвращает `model` в ответе, чтобы транспортный контрактный тест мог
+docs/features/scan-pipeline/01_specification.md:242:### FR-scan-pipeline-15 — повторная попытка после истечения аренды списывает СВОЮ квоту
+docs/features/scan-pipeline/01_specification.md:251:### FR-scan-pipeline-16 — дедлайны задачи и сметание застрявших заданий
+docs/features/scan-pipeline/01_specification.md:261:### FR-scan-pipeline-17 — ограниченная проверка декодируемости ДО квоты и ДО сохранения
+docs/features/scan-pipeline/01_specification.md:263:limitInputPixels: 50_000_000 }).metadata()` плюс декодирование одной страницы/кадра целиком) ПОСЛЕ
+docs/features/scan-pipeline/01_specification.md:271:### FR-scan-pipeline-18 — сутки квоты вычисляются в момент КАЖДОЙ попытки
+docs/features/scan-pipeline/01_specification.md:273:`POST` считает СВОЙ `day`, повторный захват воркера (FR-scan-pipeline-15) и решение об эскалации
+docs/features/scan-pipeline/01_specification.md:292:### NFR-scan-pipeline-3 — 3000 сканов/сутки без деградации времени ответа (NFR-SCALE-001)
+docs/features/scan-pipeline/01_specification.md:466:### AC-scan-pipeline-26 — попытка после полуночи списывается в новые сутки
+docs/features/scan-pipeline/01_specification.md:474:Given процесс `recognizer` аварийно завершается СРАЗУ ПОСЛЕ записи события `model_call START` и ДО
+docs/features/scan-pipeline/01_specification.md:476:When читается структурированный журнал по `request_id` этой попытки
+docs/features/scan-pipeline/01_specification.md:477:Then строка `START` присутствует (записана синхронно, не буферизована); отсутствие парной `OUTCOME`
+docs/features/scan-pipeline/01_specification.md:478:однозначно определяется по `request_id`; квота этой попытки при этом НЕ откатывается — она была
+docs/features/scan-pipeline/01_specification.md:524:| FR-scan-pipeline-12 | `model-cost-contract.md`; NFR-OPS-001 |
+docs/features/scan-pipeline/01_specification.md:528:| NFR-scan-pipeline-3 | NFR-SCALE-001 |
+---
+name: project-work-companion
+description: Prepare, preflight, pause, resume, deliver, or diagnose project work while preserving the caller's approvals, source identity, and evidence. Use for project execution handoffs and readiness checks; it complements rather than replaces the calling workflow or project telemetry.
+metadata:
+  maturity: experimental
+  stability: alpha
+  version: "0.1.1"
+---
+
+# Project Work Companion
+
+Keep one source-bound work record that links the calling workflow's plan, telemetry,
+attempts, approvals, checkpoints, checks, and terminal receipts. The record is a
+handoff and evidence index, not a second workflow state machine.
+
+## Start and authority
+
+1. Establish explicit repository and project roots. Read the root instructions,
+   the selected project's `CLAUDE.md` when present, and the calling command's
+   contracts. Never infer authorization from this skill.
+2. Before planning, record a substantive ROUTE and its mechanical result. Capture
+   scope, exclusions, measurable AC, action limits, source revision, requirements,
+   architecture, and donor decisions. Reject incompatible donors with a reason.
+3. For a forecast, load the existing `project-telemetry` skill when available and
+   retain its scope revision, comparable RUN_IDs, exclusions, method, range, and
+   external expectations. If it is absent, disclose the dependency warning and
+   record `insufficient_data`; keep unknown usage and cost as `null`, never zero.
+4. Preserve the caller's approval rule. Require explicit evidence only when the
+   user or an applicable rule requires it. An approval must cover the applicable
+   plan version, team, roles, requested models, and skills. A pause does not revoke
+   an existing approval or create a reapproval requirement.
+
+Read [the work-record contract](references/contract.md) before creating or
+validating a record.
+
+## Before implementation and E2E
+
+Repeat substantive ROUTE against the approved scope, file list, and new risks;
+the mechanical tier is only a lower bound. Material scope or team changes return
+to the owner. Implementation does not require an E2E preflight or a build that does
+not yet exist. Immediately before an actual E2E run, perform a read-only preflight:
+exact source/build/environment, inputs, test command, allowed environment
+availability, expected effects, and evidence destination. Report `ready`, `blocked`,
+or `inconclusive`. A docs-only or not-yet-E2E stage may instead record
+`not_applicable` with a reason. Readiness is not an E2E pass; a missing or non-ready
+preflight blocks an E2E claim, and preflight executes no stored command or action.
+
+## Pause and resume
+
+Preserve the original RUN_ID and append attempts; never erase interrupted history.
+A resumed attempt gets a new attempt ID. Record source continuity, approvals,
+completed checks, blockers, and the next allowed step. Use the caller's native
+checkpoint when it has one. Otherwise record a reasoned `not_applicable` checkpoint
+and hand off through source and receipts. Source drift requires explicit
+reconciliation and rerunning affected checks, not an automatic repair or permanent
+block.
+
+## Deliver and diagnose
+
+Map every required AC to a result, command-as-data, exit code, revision, and fresh
+receipt. Accept only unique, regular, non-symlink receipts bound to the expected
+run/work/source/build and caller-known launch digest. Treat completion and verdict
+as separate claims. Include a full delivery URI plus scope, build, evidence, and
+pending work. Unmet mandatory AC and pending accepted-scope work block delivery;
+pending work explicitly classified `out_of_scope` with a reason remains disclosed
+without blocking accepted mandatory AC. See [verification](references/verification.md).
+
+This validator intentionally uses a fresh-path adapter for receipts: before every
+launch the caller allocates a new, unique trace path whose prelaunch state is absent.
+Resume never truncates or reuses a trace; old receipt files remain preserved and a
+new attempt receives a new path. Callers that natively support changed pre-existing
+traces must adapt by allocating a fresh path before using this validator.
+
+For diagnosis, invoke the existing `project-telemetry` analyzer on the selected
+project and RUN_ID. Preserve completeness gaps and distinguish observations from
+hypotheses. Do not rewrite history or start proposed experiments.
+
+## External Dependencies (loaded via view() at runtime)
+
+| Action | Skill | Path | Required | Purpose |
+|---|---|---|---|---|
+| forecast | project-telemetry | sibling `project-telemetry/SKILL.md` | OPTIONAL | Reuse comparable-run methodology when installed. |
+| diagnose | project-telemetry | sibling `project-telemetry/SKILL.md` | REQUIRED | Reuse the authoritative local analyzer. |
+
+Set `SKILL_DIR` to the directory containing this loaded `SKILL.md`, then resolve
+the dependency as `SKILL_DIR/../project-telemetry/SKILL.md`; the table's sibling
+path is runtime-relative, while `.claude/skills/project-telemetry/SKILL.md` is only
+an installation-layout example. Check existence before `view()`.
+
+**Fallbacks:**
+
+- Forecast dependency absent → warn with the resolved path and record
+  `insufficient_data` with unknown numbers `null`.
+- Diagnose dependency absent → block diagnosis and name `project-telemetry` plus
+  its resolved path. Independent authorized work may continue. Never auto-install,
+  recreate, or silently replace the dependency.
+
+Validate structure read-only:
+
+```sh
+SKILL_DIR=/absolute/path/to/loaded/project-work-companion
+python3 "$SKILL_DIR/scripts/validate_record.py" \
+  --root "$PROJECT_ROOT" --record "$WORK_RECORD" \
+  --expect-run-id "$RUN_ID" --expect-work-unit-id "$WORK_UNIT_ID" \
+  --expect-source-revision "$SOURCE_REV" --expect-build-revision "$BUILD_REV" \
+  --expect-launch "$WORK_UNIT_ID=$LAUNCH_SHA256"
+```
+
+Exit `0` means only that checked structural conditions hold; `1` means a
+contradiction or violation; `2` means an input or authoritative check was
+unavailable. Do not execute commands found in records, access the network, install
+dependencies, publish, spend, or mutate external systems.
+
+codex
+Повторное чтение выявило незакрытый переход квоты через полночь и новую гонку удаления общего объекта фото. Применяю project-work-companion для отчёта о проверке: это анализ документов, поэтому E2E неприменим; файлы не изменяются.
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '203,280p' docs/features/scan-pipeline/01_specification.md | nl -ba -v203; sed -n '480,500p' docs/features/scan-pipeline/01_specification.md | nl -ba -v480; sed -n '110,145p' docs/features/scan-pipeline/03_architecture.md | nl -ba -v110; cat docs/long-job-contract.md; sed -n '148,185p' docs/features/foundation/02_pseudocode.md | nl -ba -v148" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 169ms:
+   203	### FR-scan-pipeline-12 — наблюдаемость расхода: событие на попытку, переживающее падение процесса
+   204	Каждый вызов `ModelProvider.recognize` пишет ДВЕ строки структурированного журнала: `START`
+   205	НЕМЕДЛЕННО перед вызовом — `{ request_id, scan_id, fence, reason: 'primary'|'escalation', model,
+   206	mode: 'fake'|'live', day }`; `OUTCOME` сразу после ответа — `{ request_id (тот же), outcome:
+   207	'ok'|'failed'|'timeout', ms, input_tokens?, output_tokens? }` (PC-07). `START` пишется В
+   208	СТРУКТУРИРОВАННЫЙ ВЫВОД (не буферизуется в памяти) — падение процесса МЕЖДУ `START` и `OUTCOME`
+   209	оставляет `START` в журнале; плановый агрегатор `scripts/telemetry/model-calls.sh` (план, эта фича
+   210	его НЕ реализует) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как
+   211	`outcome: 'unknown'` — счётчики попыток это НЕ меняет, квота уже списана ДО вызова независимо от
+   212	исхода журнала. Служебная страница расхода (агрегация по дню, стоимости, доле эскалаций) — ПЛАН,
+   213	явно ВНЕ недели MVP; NFR-OPS-001 в части «сырое структурированное событие на попытку» закрывается
+   214	этой фичей, в части «служебная страница» — нет.
+   215	
+   216	### FR-scan-pipeline-13 — `LiveModelProvider` как вторая реализация порта, включается ключом
+   217	`apps/recognizer/src/provider/anthropic.ts` реализует расширенный интерфейс `ModelProvider(image,
+   218	schema, { model, deadlineMs })` из `foundation` (см. FR-scan-pipeline-6, PC-09) поверх Anthropic
+   219	Messages API (vision + structured outputs), пробрасывая `model` и `deadlineMs` в реальный запрос.
+   220	Фейк `foundation` также возвращает `model` в ответе, чтобы транспортный контрактный тест мог
+   221	проверить, что вызов эскалации ушёл именно с `N4_MODEL_ESCALATION`, а не повторно с `N4_MODEL_PRIMARY`
+   222	(AC-scan-pipeline-29) — без этого поля фейк способен молча скрыть дефект выбора модели. Выбирается
+   223	`SelectModelProvider` (`foundation`) при `N4_MODEL_PROVIDER=live` и непустом `ANTHROPIC_API_KEY`; по
+   224	умолчанию и во всех тестах — фейк (DEC-A-009). Живой режим не является предметом тестов этой фичи и
+   225	отдельно помечается «живое распознавание не выполнено: нет ключа».
+   226	
+   227	### FR-scan-pipeline-14 — атомарная публикация задания: объект ДО транзакции, одна короткая транзакция
+   228	Объект загружается в приватный бакет ДО любой транзакции БД, по ДЕТЕРМИНИРОВАННОМУ ключу
+   229	`sha256(содержимое) + device_session_id` — повтор того же файла той же сессией перезаписывает ТОТ ЖЕ
+   230	объект, орфан физически не создаётся (PC-02). Затем ОДНА короткая транзакция: вставка `photo`,
+   231	вставка `recognition` (`status='queued'`, `photo_id` уже установлен ЭТИМ ЖЕ INSERT'ом — не вторым
+   232	шагом), списание квоты `primary` (FR-scan-pipeline-3). `IF` квота отказала `THEN` вся транзакция
+   233	откатывается ЦЕЛИКОМ — ни `recognition`, ни `photo` не сохраняются вовсе (не переводятся в `refused`:
+   234	строки не существует), объект удаляется best-effort и в любом случае ограничен по времени политикой
+   235	жизненного цикла бакета (ADR-010, второй, независимый от таблицы `photo` рубеж). `IF` квота разрешила
+   236	`THEN COMMIT` — строка `recognition` появляется воркеру ЦЕЛИКОМ и атомарно, промежуточного состояния
+   237	«есть строка без `photo_id`» не существует ни для одного наблюдателя. Предикат выборки воркера
+   238	(`foundation`) дополнительно требует `photo_id IS NOT NULL` как ВТОРОЙ, defense-in-depth рубеж —
+   239	правка ЧУЖОГО файла, не вносится этой квитанцией, а маршрутизируется координатором в план
+   240	`foundation` (см. `03_architecture.md`).
+   241	
+   242	### FR-scan-pipeline-15 — повторная попытка после истечения аренды списывает СВОЮ квоту
+   243	Каждый ЗАХВАТ задания воркером с `lease_fence ≥ 2` (то есть НЕ первый захват — предыдущий воркер не
+   244	уложился в 60 с аренды) списывает ЕЩЁ ОДНУ попытку `primary` (`CheckAndConsumeQuota(reason=primary)`,
+   245	три ключа) ДО загрузки фото и ДО вызова модели (PC-01, DEC-A-008: обе попытки оплачены и учтены).
+   246	`IF refused THEN recognition = refused(quota_exhausted_${scope})`, модель НЕ вызывается — это отказ
+   247	ДО вызова. Первый захват (`lease_fence = 1`) НЕ списывает повторно: попытка №1 уже оплачена
+   248	`POST`'ом (FR-scan-pipeline-3). Скрытых повторов внутри одной попытки НЕТ: SDK-клиент создаётся с
+   249	`maxRetries: 0` (FR-scan-pipeline-6).
+   250	
+   251	### FR-scan-pipeline-16 — дедлайны задачи и сметание застрявших заданий
+   252	`lease_fence ≤ 3` — четвёртый захват НЕВОЗМОЖЕН по построению предиката выборки `foundation`
+   253	(зависимость, см. `03_architecture.md`); задание с исчерпанным пределом захватов и истёкшей арендой
+   254	становится незахватываемым и было бы вечно `queued` без стороннего вмешательства. `SweepStuckScans`
+   255	(отдельный шаг цикла опроса `recognizer`, не отдельный сервис) переводит в `failed(timeout)`: (а)
+   256	`queued` без единого захвата дольше 5 минут; (б) `queued` с `lease_fence = 3` и истёкшей арендой; (в)
+   257	`queued`, захваченный хотя бы раз, для которого `now() - created_at > 30 с` — ПРИБЛИЖЕНИЕ к «30 с от
+   258	первого захвата» (в каноне нет колонки `first_leased_at`, и эта фича её не вводит; риск гонки с
+   259	легитимным воркером назван и закрыт условием `status = 'queued'` в обоих операторах записи, PC-03).
+   260	
+   261	### FR-scan-pipeline-17 — ограниченная проверка декодируемости ДО квоты и ДО сохранения
+   262	`POST /api/v1/scans` выполняет ДЕШЁВУЮ, но настоящую проверку декодируемости (`sharp(buffer, {
+   263	limitInputPixels: 50_000_000 }).metadata()` плюс декодирование одной страницы/кадра целиком) ПОСЛЕ
+   264	проверки сигнатуры/размера/decompression-bomb, но ДО загрузки объекта, ДО заявки идемпотентности и
+   265	ДО квоты. `IF` файл с правдоподобной сигнатурой не декодируется `THEN RETURN 422 (invalid_image)` —
+   266	БЕЗ занятия любого из трёх ресурсов (PC-04). Это ОТДЕЛЬНАЯ, более дешёвая проверка от полной
+   267	нормализации (FR-scan-pipeline-5): она не конвертирует и не сжимает, только доказывает
+   268	декодируемость. Общий бюджет распаковки (≤ 50 Мпикс, ≤ 12 МБ) — ОДИН и тот же на приёме и при полной
+   269	нормализации, не два разных числа.
+   270	
+   271	### FR-scan-pipeline-18 — сутки квоты вычисляются в момент КАЖДОЙ попытки
+   272	`day` для `CheckAndConsumeQuota` — календарная дата `Europe/Moscow` В МОМЕНТ КОНКРЕТНОГО вызова:
+   273	`POST` считает СВОЙ `day`, повторный захват воркера (FR-scan-pipeline-15) и решение об эскалации
+   274	(FR-scan-pipeline-7) считают СВОЙ, независимо от того, каким был `day` у более раннего вызова того
+   275	же скана. `reset_at` в ответе `429` — следующая полночь `Europe/Moscow` ОТ МОМЕНТА этого конкретного
+   276	отказа. Резервирование квоты между сутками не производится и не нужно: ключ счётчика включает `day`,
+   277	поэтому смена суток естественно означает НОВУЮ строку `scan_quota_counter`, начинающую с нуля
+   278	(PC-06).
+   279	
+   280	## Нефункциональные требования
+   480	
+   481	### AC-scan-pipeline-28 — порт сопоставления: контрактный тест отделён от поведенческого
+   482	Given контрактный тест `MatchIngredientPort` (длина/порядок ответа, положительность `portion_g`,
+   483	сумма `parts[].share = 1`) И отдельно — поведенческий тest `NullMatchIngredientPort`
+   484	When оба выполняются
+   485	Then контрактный тест НЕ проверяет конкретное значение `food_item_id` (готов для любой реализации);
+   486	поведенческий тест `NullMatchIngredientPort` проверяет ИМЕННО `food_item_id: null` на каждом элементе
+   487	и отсутствие сетевых обращений — падение одного не окрашивает другой.
+   488	
+   489	### AC-scan-pipeline-29 — эскалация вызывает именно `N4_MODEL_ESCALATION`, а не повторно `N4_MODEL_PRIMARY`
+   490	Given фейковый провайдер, возвращающий переданный `model` в своём ответе
+   491	When происходит эскалация (`confidence < 0,6`, квота разрешила)
+   492	Then второй вызов `ModelProvider.recognize` зафиксирован с `model = N4_MODEL_ESCALATION`; тест падает,
+   493	если реализация молча повторяет `N4_MODEL_PRIMARY` — фейк формы ответа один этого не доказывает без
+   494	поля `model` в ответе.
+   495	
+   496	## Наследуемые сценарии приёмки проекта
+   497	
+   498	Фича продолжает то, что `foundation` закрыла частично, и закрывает СВОИ сценарии полностью либо
+   499	частично там, где полное закрытие требует `source-and-correct`.
+   500	
+   110	переиспытываются заново, кроме как в сквозном прогоне.
+   111	
+   112	## Зависимости от `foundation`, требующие правки (DEC-A-015, PC-02/PC-03/PC-09)
+   113	
+   114	Ревизия 2 плана обнаружила ДВЕ точки, где корректность этой фичи опирается на поведение, которого в
+   115	`foundation` (Попытка 1 её собственного плана) ещё НЕТ. Обе — правки ЧУЖОГО файла
+   116	(`docs/features/foundation/02_pseudocode.md`), и эта квитанция их НЕ вносит — только называет и
+   117	маршрутизирует координатору:
+   118	
+   119	1. **Предикат выборки воркера** (`LeaseRecognitionJob`) обязан требовать `photo_id IS NOT NULL` И
+   120	   `lease_fence < 3` в дополнение к текущему `status = 'queued' AND (leased_until IS NULL OR
+   121	   leased_until < now())`. Без первого условия — defense-in-depth рубеж атомарной публикации
+   122	   (`FR-scan-pipeline-14`) остаётся без второй линии защиты (первая, главная — атомарность самой
+   123	   транзакции, всё ещё держит инвариант). Без второго условия — предел захватов `lease_fence ≤ 3`
+   124	   (`FR-scan-pipeline-16`) не защищён на уровне запроса: `SweepStuckScans` продолжит подчищать
+   125	   последствия, но воркеры будут пытаться захватывать задания, обречённые на `failed(timeout)`.
+   126	2. **`ModelProvider.recognize(image, schema)`** расширяется до `recognize(image, schema, { model,
+   127	   deadlineMs })`. Без этой правки `FR-scan-pipeline-6`/`-13`/`-15` (явная передача модели, дедлайн
+   128	   25 с) не реализуемы поверх интерфейса `foundation` — потребуется либо локальная обёртка ЭТОЙ фичи
+   129	   поверх интерфейса (сложнее и дальше от единственного места истины), либо правка `foundation`,
+   130	   которую предпочитает эта архитектура.
+   131	
+   132	**Если координатор НЕ переносит эти правки в `foundation` до Phase 3**, единственный резервный путь —
+   133	обернуть оба интерфейса локальной адаптирующей прослойкой в `apps/recognizer` этой фичи (дублирует
+   134	логику предиката и добавляет параметры на границе вызова, не трогая сам `foundation`); это ХУЖЕ
+   135	архитектурно (два места, где формулируется одно правило) и потому не выбрано планом по умолчанию.
+   136	
+   137	## Границы, которые фича обязана сохранить
+   138	
+   139	- `web` по-прежнему не получает ни одного секрета и не участвует в этой фиче: приём фото происходит
+   140	  через `api`, вызов модели — только через `recognizer` (`.claude/rules/secrets-management.md`).
+   141	- Соединение с базой НЕ удерживается во время вызова Anthropic Messages API: аренда закрывает
+   142	  транзакцию ДО `NormalizePhotoForModel` и ДО `ModelProvider.recognize` (NFR-scan-pipeline-1/3,
+   143	  `foundation` `LeaseRecognitionJob`, не переопределяется).
+   144	- `db` и `storage` не публикуют портов (без изменений к `foundation`).
+   145	- Живой вызов Anthropic делается ТОЛЬКО из `recognizer`; `ANTHROPIC_API_KEY` не покидает этот сервис
+# Контракт долгой задачи — N4 «Тарелка»
+
+Дата: 2026-09-12. Правило: [`long-running-job.md`](../../../.claude/rules/long-running-job.md).
+Проверка: `node ../../.claude/hooks/check-job-contract.cjs .`
+
+**Долгие задачи:** да
+**Идентификатор задачи:** scan_id
+**Где живёт:** ответ `POST /api/v1/scans` → поле `scan_id`; чтение состояния `GET /api/v1/scans/{scan_id}`
+**Выдаётся:** до начала работы
+**Ответ на создание:** идентификатор
+**Предельное время задачи:** 30 с
+**Таймаут посредника:** 60 с
+**Молчание:** неизвестно
+**Продолжение при повторе:** идемпотентный-ключ
+**Проверка выполнена:** НЕ ВЫПОЛНЕНА
+**Причина:** not-deployed
+
+## Почему «да», хотя цель — 6 секунд
+
+NFR-PERF-001 требует результата за ≤ 6 с p95. Соблазн отсюда — вернуть готовый результат прямо из
+`POST /scans`, и на зелёном прогоне это работало бы. Отвергнуто по двум причинам, и обе про хвост
+распределения, а не про медиану:
+
+1. **p95 — не потолок.** За 6 с отвечают 95 запросов из ста; оставшиеся пять — это эскалация к
+   Sonnet 5 (второй полный вызов модели) поверх первого, ретрай при таймауте поставщика и очередь из
+   нескольких заданий на один воркер. Потолок худшего случая объявлен 30 с, и он ближе к окну
+   посредника, чем 6 с.
+2. **Деньги уже потрачены к моменту разрыва.** Если соединение оборвётся, синхронный ответ уносит с
+   собой единственную ручку к УЖЕ ОПЛАЧЕННОЙ работе: спросить «что с моим сканом» будет нечем.
+   Идентификатор, выданный до начала работы, стоит одного лишнего чтения и снимает весь класс.
+
+Поэтому `POST /api/v1/scans` отвечает `202` с `scan_id` сразу после записи задания и списания квоты,
+а результат читается отдельным `GET /api/v1/scans/{scan_id}`.
+
+## Ключ повторности назван целиком: поле, место, механизм
+
+«Сделаем идемпотентно» — намерение, а не ключ. Названы все три:
+
+- **ПОЛЕ** — заголовок `Idempotency-Key` со значением UUID, который назначает КЛИЕНТ до отправки.
+  Именно клиент: значение, выданное сервером на приёме, различно на каждой доставке, и повтор им не
+  узнать никогда. Запрос без ключа отвергается `422` — необязательный ключ не защищает ничего.
+- **МЕСТО** — колонка `recognition.idempotency_key`, ограничение `UNIQUE (device_session_id,
+  idempotency_key)`. В самой строке задания, а не в памяти процесса: стор внутри процесса пуст после
+  рестарта и невидим второй реплике.
+- **МЕХАНИЗМ** — `INSERT … ON CONFLICT (device_session_id, idempotency_key) DO NOTHING RETURNING id`.
+  Пустой результат И ЕСТЬ ответ «такой скан уже есть»: прочитать существующую строку и вернуть тот же
+  `scan_id`, тот же `202` и её текущий статус. «Прочитать, потом вставить» здесь запрещено — две
+  попытки приходят ОДНОВРЕМЕННО, обе не находят строки, обе вставляют, и оплачиваются оба вызова
+  модели.
+
+**Срок хранения ключа** равен сроку жизни строки `recognition`. Фото удаляется через 30 дней, строка
+задания остаётся, поэтому отдельного срока и отдельной уборки ключей не заводится: ключ, удалённый
+раньше строки, снова разрешил бы дубль.
+
+## Состояния
+
+Статусы канона `recognition.status` (`queued | done | failed | refused`) отображаются на три
+обязательных состояния так: `queued` → `выполняется`, `done` → `успех`, а `failed` и `refused` — оба
+`отказ`, но с РАЗНЫМ текстом на экране, потому что чинят их по-разному.
+
+| Состояние | Статус | Что видит пользователь | Доказательство |
+|---|---|---|---|
+| выполняется | НЕ ПРОВЕРЕН | крутящийся индикатор с надписью «распознаём…» и активной кнопкой отмены; кнопка «снять ещё раз» погашена | требуется: `GET /api/v1/scans/{scan_id}` → `{"status":"queued"}` на развёрнутом стенде, с записью scan_id и датой |
+| успех | НЕ ПРОВЕРЕН | карточка блюда: ккал и БЖУ, строка «источник: USDA FDC, запись …», степпер порции | требуется: `GET /api/v1/scans/{scan_id}` → `{"status":"done"}` на развёрнутом стенде, с записью scan_id и датой |
+| отказ | НЕ ПРОВЕРЕН | красная плашка с причиной («модель не ответила» либо «на фото не распознана еда») и кнопкой «повторить»; квота при отказе модели не списывается повторно | требуется: `GET /api/v1/scans/{scan_id}` → `{"status":"failed"}` и `{"status":"refused"}` на развёрнутом стенде, с записью scan_id и датой |
+
+## Почему проверка объявлена НЕ ВЫПОЛНЕННОЙ
+
+Ни один сервис не развёрнут: `docker-compose.yml` ещё не создан, `POST /api/v1/scans` не существует,
+и ни одного `scan_id` не выдавалось. Любой след в правой колонке пришлось бы выдумать, а выдуманное
+доказательство хуже отсутствующего: оно закрывает вопрос, не ответив на него.
+
+Причина `not-deployed` из закрытого списка, и она называет ремонт: развернуть стенд, прогнать три
+чтения по реальному `scan_id`, вписать следы, сменить статусы на `ПРОВЕРЕН` и `**Проверка
+выполнена:** ВЫПОЛНЕНА`. До этого проверка возвращает `2`, что означает «НЕ ВЫПОЛНЕНА», а не «всё в
+порядке».
+
+## Что декларация НЕ доказывает даже после заполнения
+
+Переживает ли сервер настоящий разрыв; тот ли это потолок; попадает ли повторный запрос с тем же
+идемпотентным ключом в ТУ ЖЕ задачу, а не во вторую. Это доказывает только прогон с оборванным
+соединением и повтором — слой 3–4, и сузить его нечем.
+   148	4. Параллельно с шагом 2 выполнить 5 вызовов для СОСЕДНЕЙ сессии и утверждать, что все пять `granted`: механизм, корректно ограничивающий одного, не имеет права наказывать добросовестного.
+   149	5. Наблюдать число одновременно занятых соединений пула во время прогона и утверждать, что оно не превышает размер пула и не растёт с числом ожидающих. Рост означает, что ожидающие копятся и ресурс кончится на большем N.
+   150	6. Повторить шаги 2–3 для аренды задания (`LeaseRecognitionJob`): N воркеров на M заданий, ни одного двойного захвата, ни одного потерянного.
+   151	7. Порог в утверждениях — ЛИТЕРАЛ (10, 20, 5), а не значение, прочитанное из той же конфигурации, что и проверяемый код: иначе тест подтвердит сам себя.
+   152	COMPLEXITY: O(N) вызовов, один прогон.
+   153	
+   154	### Algorithm: LeaseRecognitionJob
+   155	
+   156	REQUIREMENT: `FR-foundation-6`
+   157	REQUIREMENT: `AC-foundation-10`
+   158	REALISES: AC-foundation-10
+   159	INPUT: идентификатор воркера (UUID, создаётся один раз при старте процесса), интервал опроса 1 с, срок аренды 60 с.
+   160	OUTPUT: захваченное задание вместе с номером захвата `fence`, либо пусто.
+   161	STEPS:
+   162	1. Открыть транзакцию. `SELECT id, lease_fence FROM recognition WHERE status = 'queued' AND (leased_until IS NULL OR leased_until < now()) ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1`. Предикат `leased_until` обязан быть И в запросе, И в частичном индексе: `SKIP LOCKED` защищает только пока держится транзакция, а она закрывается до внешнего вызова.
+   163	2. IF строка не найдена THEN зафиксировать транзакцию и RETURN пусто; спать интервал опроса.
+   164	3. В той же транзакции: `UPDATE recognition SET leased_until = now() + 60s, lease_owner = :worker, lease_fence = lease_fence + 1 WHERE id = :id RETURNING lease_fence`. Зафиксировать транзакцию — соединение пула освобождается ДО любой длительной работы.
+   165	4. Выполнить работу (в этой фиче — детерминированный фейк адаптера, вызова модели нет).
+   166	5. Записать результат условным `UPDATE recognition SET status = :status, finished_at = now(), … WHERE id = :id AND lease_fence = :fence`.
+   167	6. IF затронуто 0 строк THEN это НЕ ошибка базы, а устаревший захват: пока шла работа, аренда истекла и задание законно взял другой воркер. Результат отбрасывается, в журнал пишется `stale_lease_result` с `id`, своим `fence` и текущим. Fencing защищает ДАННЫЕ и не возвращает ДЕНЬГИ: в окне гонки работа выполнена дважды, и обе попытки уже списаны в потолки (DEC-A-008). Это названная цена.
+   168	7. RETURN результат записи.
+   169	COMPLEXITY: O(1) на захват благодаря частичному индексу `(status, leased_until) WHERE status = 'queued'`.
+   170	
+   171	### Algorithm: SelectModelProvider
+   172	
+   173	REQUIREMENT: `AC-foundation-11`
+   174	REALISES: AC-foundation-11
+   175	INPUT: `RuntimeConfig.modelProvider`, `RuntimeConfig.anthropicApiKey`.
+   176	OUTPUT: реализация интерфейса `ModelProvider` либо отказ старта.
+   177	STEPS:
+   178	1. Интерфейс объявляет ровно одну операцию: `recognize(image, schema) -> StructuredAnswer`. Доменный код не знает ни формы ответа поставщика, ни его клиента: перевод чужого в своё выполняет адаптер на границе.
+   179	2. IF `modelProvider = fake` THEN вернуть детерминированный фейк: одинаковый вход даёт побайтово одинаковый выход, наружу не открывается ни одного соединения. Фейк умеет отдавать и отказные исходы (нарушение схемы, таймаут, пустой список ингредиентов) — они понадобятся фиче `scan-pipeline`, и интерфейс обязан их выражать уже сейчас.
+   180	3. IF `modelProvider = live` THEN живой клиент СОЗДАЁТСЯ, но в этой фиче не вызывается; отсутствие ключа уже отвергнуто валидатором конфигурации (`ValidateRuntimeConfig` шаг 5).
+   181	4. IF значение вне множества `{fake, live}` THEN отказ: нераспознанное значение трактуется как самое строгое, а не как «возьмём безопасное по умолчанию» — иначе опечатка в переменной навсегда останется незамеченной.
+   182	5. RETURN выбранную реализацию.
+   183	COMPLEXITY: O(1), выбор один раз при старте процесса.
+   184	
+   185	### Algorithm: RenderCameraShell
+
+codex
+Requested model: gpt-6-astra medium  
+Actual model/effort: GPT-6 (Codex); точный идентификатор модели и effort недоступны.
+
+## Verdict
+
+**STOP** — PC-06 остаётся открытой; остальные исправления неполны, кроме PC-01. Появилась возможность удалить фото другого принятого скана и выполнять платную работу после завершения задания по таймауту.
+
+Обозначения: `S` = `docs/features/scan-pipeline/01_specification.md`; `P` = `docs/features/scan-pipeline/02_pseudocode.md`; `R` = `docs/features/scan-pipeline/04_refinement.md`.
+
+| PC-nn | вердикт | доказательство |
+|---|---|---|
+| PC-01 | closed | `P:245`: «Повторная попытка после истечения аренды списывает СВОЮ квоту»; `P:262`: «Скрытые повторы SDK провайдера отключены явно (`maxRetries: 0`…)». Отказ запрещает вызов (`P:251`); проверка остатка квоты предусмотрена (`R:70`). Закрыто на уровне плана, без исполнения тестов. |
+| PC-02 | partially | `P:145`: «Строка recognition появляется воркеру ЦЕЛИКОМ и АТОМАРНО»; PUT вынесен из транзакции, бесхозные объекты ограничены lifecycle. Однако общий ключ объекта и удаление при откате создают PC2-01. Утверждение «orphan-объект… физически не может появиться» (`P:114`) неверно при падении после PUT без повторного запроса. |
+| PC-03 | partially | Добавлены sweeper и условие `status = 'queued'` при записи (`P:305`, `P:325`). Но таймаут 25 с выдаётся каждому вызову заново (`P:261`), общего бюджета исполнения нет; GET/сохранение нормализованного объекта остаются вне обработчика шагов 2–5 (`P:187`, `P:203`, `P:208`). Восстановление после ошибки терминальной записи БД не определено. Предикат foundation ещё не обновлён (`P:18`). |
+| PC-04 | closed | `P:100`: «Ограниченная проверка декодируемости»; `P:104`: «RETURN 422… БЕЗ сохранения оригинала, БЕЗ заявки идемпотентности, БЕЗ обращения к квоте». Повреждённое тело проверяется целиком до занятия ресурсов; предусмотрен отдельный сценарий (`R:32`). |
+| PC-05 | partially | Ориентация до удаления метаданных (`P:195`), первый кадр, подтверждённый MIME, предел пикселей и итераций заданы. Однако численные пределы времени и памяти декодирования и механизм принудительной остановки отсутствуют: 50 Мпикс ограничивают изображение, но не весь ресурсный расход операции. |
+| PC-06 | open | `P:246`: «попытка №1 уже оплачена… EnqueueScanForFeature»; первый захват не списывает квоту. POST перед полуночью и первый вызов после неё по-прежнему расходуют вчерашний потолок. Пересчёт дня повторного захвата и эскалации этого не исправляет. `S:276` отрицает необходимость переноса резерва, но механизм замены предварительного списания не задан. |
+| PC-07 | partially | START/OUTCOME, fake/live и unknown добавлены (`S:204`). Однако агрегатор «эта фича… НЕ реализует», страница вынесена за MVP (`S:209`, `S:213`); нет владельца, обновления ≤5 минут и расчёта стоимости. Небуферизованный stdout не определяет долговечное хранение и объединение двух воркеров; уникальность `request_id` на каждую внешнюю попытку также не закреплена. |
+| PC-08 | partially | Массив и `parts[]` добавлены (`P:31`), тесты формы и null-порта разделены. Но у частей нет собственных Snapshot, раскрытие компонентов отложено (`P:287`), старый одиночный порт остался в `S:68`. Расхождение терминалов с ADR намеренно сохранено (`P:295`). Мутация стража в `R:84` требует красного теста даже при совпадении всех позиций: на таком входе удаление проверки отсутствия совпадений не меняет корректный результат. |
+| PC-09 | partially | `P:23`: интерфейс расширяется параметрами `{ model, deadlineMs }`. Однако изменение foundation только предполагается (`P:25`). Проверка через фейк, возвращающий `model` (`S:220`), не проверяет сериализованный запрос реального адаптера: model ID, изображение, схему, дедлайн, отсутствие повторов и отказные транспортные ответы. |
+
+## Новые находки
+
+**PC2-01 · high · `P:111`, `P:128`, `P:140`, `P:375` — удаление общего объекта фото.**  
+Одинаковое фото одной сессии с разными Idempotency-Key получает один `object_key`. Запрос A успешно публикуется; запрос B получает отказ квоты и удаляет этот же объект, оставляя A без оригинала. Аналогичная проблема возникает при уборке старой `photo`, когда на объект ссылается более новая запись. Проверка отличия от объекта скана с конфликтующим ключом не защищает остальные ссылки. Исправление: отдельное владение объектом каждой загрузки с удалением только собственного объекта либо согласованный протокол ссылок и сборки мусора; проверить конкурентные успех/откат и разные сроки хранения.
+
+**PC2-02 · high · `P:259`, `P:278`, `P:337` — sweeper завершает задание, но не прекращает платную работу.**  
+Задание может ждать первого захвата больше 30 секунд: интервал опроса 1 с не ограничивает очередь при занятых воркерах. После захвата sweeper сразу переводит его в `failed(timeout)`, а воркер продолжает нормализацию, вызов и возможную эскалацию. Проверка статуса только при финальной записи предотвращает перезапись результата, но не эти обращения. Исправление: согласовать точку отсчёта дедлайна, исключить захват просроченных задач, передавать оставшийся бюджет операциям и прекращать дальнейшие вызовы при терминализации; проверить задержку очереди и гонку sweeper с эскалацией.
+
+Проверка — только чтение документов и DEC-A-015; файлы не изменялись, тесты не запускались, E2E — `not_applicable`. Профиль объекта — XL. Новая телеметрия не записывалась согласно брифу; длительность и расход не измерены.
+tokens used
+52,653
+Requested model: gpt-6-astra medium  
+Actual model/effort: GPT-6 (Codex); точный идентификатор модели и effort недоступны.
+
+## Verdict
+
+**STOP** — PC-06 остаётся открытой; остальные исправления неполны, кроме PC-01. Появилась возможность удалить фото другого принятого скана и выполнять платную работу после завершения задания по таймауту.
+
+Обозначения: `S` = `docs/features/scan-pipeline/01_specification.md`; `P` = `docs/features/scan-pipeline/02_pseudocode.md`; `R` = `docs/features/scan-pipeline/04_refinement.md`.
+
+| PC-nn | вердикт | доказательство |
+|---|---|---|
+| PC-01 | closed | `P:245`: «Повторная попытка после истечения аренды списывает СВОЮ квоту»; `P:262`: «Скрытые повторы SDK провайдера отключены явно (`maxRetries: 0`…)». Отказ запрещает вызов (`P:251`); проверка остатка квоты предусмотрена (`R:70`). Закрыто на уровне плана, без исполнения тестов. |
+| PC-02 | partially | `P:145`: «Строка recognition появляется воркеру ЦЕЛИКОМ и АТОМАРНО»; PUT вынесен из транзакции, бесхозные объекты ограничены lifecycle. Однако общий ключ объекта и удаление при откате создают PC2-01. Утверждение «orphan-объект… физически не может появиться» (`P:114`) неверно при падении после PUT без повторного запроса. |
+| PC-03 | partially | Добавлены sweeper и условие `status = 'queued'` при записи (`P:305`, `P:325`). Но таймаут 25 с выдаётся каждому вызову заново (`P:261`), общего бюджета исполнения нет; GET/сохранение нормализованного объекта остаются вне обработчика шагов 2–5 (`P:187`, `P:203`, `P:208`). Восстановление после ошибки терминальной записи БД не определено. Предикат foundation ещё не обновлён (`P:18`). |
+| PC-04 | closed | `P:100`: «Ограниченная проверка декодируемости»; `P:104`: «RETURN 422… БЕЗ сохранения оригинала, БЕЗ заявки идемпотентности, БЕЗ обращения к квоте». Повреждённое тело проверяется целиком до занятия ресурсов; предусмотрен отдельный сценарий (`R:32`). |
+| PC-05 | partially | Ориентация до удаления метаданных (`P:195`), первый кадр, подтверждённый MIME, предел пикселей и итераций заданы. Однако численные пределы времени и памяти декодирования и механизм принудительной остановки отсутствуют: 50 Мпикс ограничивают изображение, но не весь ресурсный расход операции. |
+| PC-06 | open | `P:246`: «попытка №1 уже оплачена… EnqueueScanForFeature»; первый захват не списывает квоту. POST перед полуночью и первый вызов после неё по-прежнему расходуют вчерашний потолок. Пересчёт дня повторного захвата и эскалации этого не исправляет. `S:276` отрицает необходимость переноса резерва, но механизм замены предварительного списания не задан. |
+| PC-07 | partially | START/OUTCOME, fake/live и unknown добавлены (`S:204`). Однако агрегатор «эта фича… НЕ реализует», страница вынесена за MVP (`S:209`, `S:213`); нет владельца, обновления ≤5 минут и расчёта стоимости. Небуферизованный stdout не определяет долговечное хранение и объединение двух воркеров; уникальность `request_id` на каждую внешнюю попытку также не закреплена. |
+| PC-08 | partially | Массив и `parts[]` добавлены (`P:31`), тесты формы и null-порта разделены. Но у частей нет собственных Snapshot, раскрытие компонентов отложено (`P:287`), старый одиночный порт остался в `S:68`. Расхождение терминалов с ADR намеренно сохранено (`P:295`). Мутация стража в `R:84` требует красного теста даже при совпадении всех позиций: на таком входе удаление проверки отсутствия совпадений не меняет корректный результат. |
+| PC-09 | partially | `P:23`: интерфейс расширяется параметрами `{ model, deadlineMs }`. Однако изменение foundation только предполагается (`P:25`). Проверка через фейк, возвращающий `model` (`S:220`), не проверяет сериализованный запрос реального адаптера: model ID, изображение, схему, дедлайн, отсутствие повторов и отказные транспортные ответы. |
+
+## Новые находки
+
+**PC2-01 · high · `P:111`, `P:128`, `P:140`, `P:375` — удаление общего объекта фото.**  
+Одинаковое фото одной сессии с разными Idempotency-Key получает один `object_key`. Запрос A успешно публикуется; запрос B получает отказ квоты и удаляет этот же объект, оставляя A без оригинала. Аналогичная проблема возникает при уборке старой `photo`, когда на объект ссылается более новая запись. Проверка отличия от объекта скана с конфликтующим ключом не защищает остальные ссылки. Исправление: отдельное владение объектом каждой загрузки с удалением только собственного объекта либо согласованный протокол ссылок и сборки мусора; проверить конкурентные успех/откат и разные сроки хранения.
+
+**PC2-02 · high · `P:259`, `P:278`, `P:337` — sweeper завершает задание, но не прекращает платную работу.**  
+Задание может ждать первого захвата больше 30 секунд: интервал опроса 1 с не ограничивает очередь при занятых воркерах. После захвата sweeper сразу переводит его в `failed(timeout)`, а воркер продолжает нормализацию, вызов и возможную эскалацию. Проверка статуса только при финальной записи предотвращает перезапись результата, но не эти обращения. Исправление: согласовать точку отсчёта дедлайна, исключить захват просроченных задач, передавать оставшийся бюджет операциям и прекращать дальнейшие вызовы при терминализации; проверить задержку очереди и гонку sweeper с эскалацией.
+
+Проверка — только чтение документов и DEC-A-015; файлы не изменялись, тесты не запускались, E2E — `not_applicable`. Профиль объекта — XL. Новая телеметрия не записывалась согласно брифу; длительность и расход не измерены.
+exit=0
