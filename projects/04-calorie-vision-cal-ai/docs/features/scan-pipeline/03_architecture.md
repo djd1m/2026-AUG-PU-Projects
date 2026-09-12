@@ -1,0 +1,121 @@
+# Фича `scan-pipeline` — архитектура
+
+Системная архитектура принадлежит [`docs/Architecture.md`](../../Architecture.md) и здесь не
+переписывается: ниже только то, что создаёт ЭТА фича, поверх каркаса `foundation`
+([`../foundation/03_architecture.md`](../foundation/03_architecture.md)).
+
+## Размещение по пакетам и сервисам
+
+| Требование фичи | Пакет / сервис | Файлы (целевые) |
+|---|---|---|
+| FR-scan-pipeline-1 приём и валидация | `apps/api` | `src/routes/scans.ts`, `src/photo/validate-content.ts` (сигнатура по байтам, decompression-bomb), `src/photo/store-original.ts` (загрузка в MinIO) |
+| FR-scan-pipeline-2 идемпотентность | `apps/api` | `src/routes/scans.ts` (заявка `INSERT … ON CONFLICT DO NOTHING`) |
+| FR-scan-pipeline-3 квота | `apps/api` | вызывает `src/quota/check-and-consume.ts` (`foundation`, не создаётся заново) |
+| FR-scan-pipeline-4 сохранение и ответ | `apps/api` | `src/routes/scans.ts`, `src/photo/store-original.ts` |
+| FR-scan-pipeline-5 нормализация | `apps/recognizer` | `src/photo/normalize.ts` (`sharp` + `libheif`) |
+| FR-scan-pipeline-6 вызов модели | `apps/recognizer` | `src/provider/anthropic.ts` (реализация `ModelProvider` из `foundation`), `src/recognize/validate-ranges.ts` |
+| FR-scan-pipeline-7 эскалация | `apps/recognizer` | `src/recognize/escalate.ts` |
+| FR-scan-pipeline-8 порт сопоставления | `apps/recognizer` | `src/match/port.ts` (интерфейс `MatchIngredientPort`), `src/match/null-port.ts` (`NullMatchIngredientPort`) |
+| FR-scan-pipeline-9 чтение статуса | `apps/api` | `src/routes/scans.ts` (`GET /scans/{id}`) |
+| FR-scan-pipeline-10 частота | `apps/api` | `src/http/rate-limit-scans.ts` (расширяет `foundation` `src/http/rate-limit.ts`) |
+| FR-scan-pipeline-11 уборка фото | `apps/recognizer` (cron-подобная задача, не HTTP) | `src/photo/purge-expired.ts` |
+| FR-scan-pipeline-12 наблюдаемость | `apps/recognizer` | `src/observability/model-call-log.ts` |
+| FR-scan-pipeline-13 живой провайдер | `apps/recognizer` | `src/provider/anthropic.ts` |
+
+Доменная логика (`recognize/`, `match/`, `photo/normalize.ts`) не знает ни `FastifyRequest`, ни
+клиента `pg`, ни формы ответа Anthropic SDK: `src/provider/anthropic.ts` — единственный адаптер,
+переводящий чужой ответ в `StructuredAnswer` интерфейса `ModelProvider` (`foundation`,
+`apps/recognizer/src/provider/types.ts`). `apps/recognizer` не принимает HTTP-запросов извне
+(`foundation`, границы, не меняется).
+
+## Структура каталогов (добавления к `foundation`)
+
+```
+apps/
+├── api/src/
+│   ├── routes/scans.ts               # POST /scans, GET /scans/{id}
+│   ├── photo/
+│   │   ├── validate-content.ts       # сигнатура по байтам, decompression-bomb, размер/разрешение
+│   │   └── store-original.ts         # загрузка оригинала в приватный бакет, expires_on
+│   └── http/rate-limit-scans.ts      # расширение foundation-хука: 30/мин POST, 120/мин GET
+└── recognizer/src/
+    ├── photo/
+    │   ├── normalize.ts              # HEIC→JPEG, ≤1568px, ≤5МБ, EXIF-strip
+    │   └── purge-expired.ts          # PurgeExpiredPhotos
+    ├── provider/anthropic.ts         # LiveModelProvider (Anthropic Messages API)
+    ├── recognize/
+    │   ├── validate-ranges.ts        # диапазоны confidence/mass_g/items после разбора
+    │   └── escalate.ts               # решение об эскалации, CheckAndConsumeQuota(reason=escalation)
+    ├── match/
+    │   ├── port.ts                   # интерфейс MatchIngredientPort
+    │   └── null-port.ts              # NullMatchIngredientPort (эта фича)
+    └── observability/model-call-log.ts
+
+tests/
+├── unit/          photo/validate-content, recognize/validate-ranges, recognize/escalate (граница 0,59/0,60, unit с FixedMatchIngredientPort)
+├── integration/   routes/scans (multipart, идемпотентность, квота, 404), photo/normalize (HEIC фикстура), provider/anthropic (контракт схемы, фейк как эталон формы)
+└── concurrency/   routes/scans (идемпотентность под гонкой, квота primary под нагрузкой), recognize (эскалация 20×/остаток 1, устаревшая аренда с управляемой задержкой фейка)
+```
+
+## Зависимости npm (добавления к `foundation`)
+
+| Пакет | Мажор | Где | Зачем |
+|---|---|---|---|
+| `sharp` | 0.33 | `apps/recognizer` | декодирование/перекодирование/ресайз/сжатие; поддержка HEIF — НЕ данность стандартной сборки libvips (см. ниже) |
+| `@anthropic-ai/sdk` | 0.75 | `apps/recognizer` | клиент Anthropic Messages API (vision + structured outputs) для `LiveModelProvider` |
+| `file-type` | 19 | `apps/api` | определение MIME по сигнатуре байтов, а не по заголовку/расширению |
+| `minio` | 8 | `apps/api`, `apps/recognizer` | клиент MinIO: загрузка оригинала (`api`), чтение/запись нормализованной копии (`recognizer`), presigned URL |
+
+**`sharp` с поддержкой HEIF — риск, названный явно (`.claude/rules/coding-style.md`).** Стандартная
+сборка `libvips`, на которой основан `sharp`, HEIF НЕ включает по умолчанию (лицензионные
+ограничения кодека HEVC). Требуется либо `sharp` с флагом сборки `--with-heif` на базе `libheif`,
+либо отдельная библиотека декодирования HEIC (`heic-convert` / `libheif-js`) ПЕРЕД передачей в
+`sharp`. Проверяется ПЕРВОЙ сборкой образа `recognizer` тестом на фикстуре реального HEIC-файла
+iPhone, а не предположением; если флаг недоступен в базовом Alpine/Debian образе, `Dockerfile`
+получает отдельный `apt-get install libheif-dev` (Debian slim) — Alpine-вариант помечается риском
+из-за более раннего мусклового набора кодеков и требует отдельной проверки при первой сборке.
+
+## External Dependencies
+
+| Capability needed | Provider / API | Evidence | Verdict | Requirements relying on it |
+|---|---|---|---|---|
+| принимает изображение в теле запроса и анализирует его | Anthropic Messages API (vision) | цитата уже подтверждена и приведена в `docs/Architecture.md`, External Dependencies, строка 1 — не повторяется здесь дословно, ссылка обязательна | CONFIRMED (унаследовано) | FR-scan-pipeline-5, FR-scan-pipeline-6 |
+| принимает изображения ТОЛЬКО в четырёх форматах и не больше 10 МБ | Anthropic Messages API (vision) | `docs/Architecture.md`, External Dependencies, строка 2 | CONFIRMED (унаследовано) | FR-scan-pipeline-5, FR-scan-pipeline-6 |
+| возвращает ответ, обязанный соответствовать заданной JSON-схеме | Anthropic Messages API (structured outputs) | `docs/Architecture.md`, External Dependencies, строка 4; граница подтверждённого — ТИП и ФОРМА, не `minimum`/`maximum`/`maxItems` (см. FR-scan-pipeline-6) | CONFIRMED (унаследовано) | FR-scan-pipeline-6, FR-scan-pipeline-7 |
+| генерирует временную подписанную ссылку для PUT (загрузка) и GET (чтение) объекта в приватном бакете | MinIO JavaScript SDK, методы `presignedPutObject` / `presignedGetObject` | Первоисточник `min.io/docs/minio/linux/developers/javascript/API.html` вернул `404` при проверке 2026-09-12 (страница переехала/переименована в рамках миграции документации MinIO на `docs.min.io`); вторичная проверка по исходнику пакета через DeepWiki (`deepwiki.com/minio/minio-js/4.3-presigned-urls`, читает `README.md`/JSDoc репозитория `minio/minio-js`), дословно: «`presignedGetObject` — Convenience method for generating presigned download URLs. Internally calls `presignedUrl` with `GET` method»; «`presignedPutObject` — Convenience method for generating presigned upload URLs. Internally calls `presignedUrl` with `PUT` method»; «Expiry time in seconds (optional, default: 604800)»; «Maximum Expiry: 7 days (604800 seconds)» | CONFIRMED — способность существует и синтаксис назван, ИСТОЧНИК ВТОРИЧНЫЙ (агрегатор по исходнику пакета, не страница вендора: прямой URL документации MinIO не открылся при проверке). Наш срок ≤ 15 минут (900 с) СТРОГО внутри допустимого окна 1 с…604800 с | FR-scan-pipeline-4, FR-scan-pipeline-9, NFR-scan-pipeline-2 |
+
+**Отклонение от обычного формата этой таблицы — явно.** Остальные строки проекта цитируют страницу
+вендора напрямую (`Architecture.md` — 8 строк, все CONFIRMED первоисточником). Для MinIO
+first-party-страница вернула `404` на прямой запрос 2026-09-12; вместо того чтобы промолчать об
+этом или подставить непроверенную догадку (`honest-configuration.md` CFG-I4: недоступность источника
+истины — отказ, а не «наверное, всё хорошо»), несоответствие названо, и вердикт снижен до
+вторичного источника с указанием, ПОЧЕМУ. Перепроверить первоисточник — задача, не заслуга плана:
+`https://docs.min.io/aistor/developers/sdk/javascript/api/` отвечает, но не отдаёт нужный раздел
+статическим HTML (страница на JS-рендеринге) — WebFetch получает урезанный текст.
+
+**Чего в этом списке нет и почему.** USDA FoodData Central не вызывается в этой фиче вовсе:
+матчинг стоит за `NullMatchIngredientPort`, обращения к внешнему API нет (см.
+`01_specification.md` «Стык с `source-and-correct`»). Telegram Bot API и Usage & Cost Admin API —
+не предмет этой фичи, они уже в инвентаре `docs/Architecture.md`.
+
+## Переменные окружения
+
+Фича НЕ добавляет ни одной новой переменной — все нужные уже объявлены и провалидированы
+`ValidateRuntimeConfig` (`foundation`, `FR-foundation-2`): `S3_ENDPOINT/BUCKET/ACCESS_KEY/SECRET_KEY`
+(потребитель — `store-original.ts`, `normalize.ts`, `purge-expired.ts`), `N4_MODEL_PROVIDER` и
+`ANTHROPIC_API_KEY` (потребитель — `provider/anthropic.ts`, впервые РЕАЛЬНО используется в этой
+фиче при `live`), `N4_SCAN_LIMIT_USER/DAY`, `N4_ESCALATION_LIMIT_DAY` (потребитель —
+`escalate.ts`, впервые РЕАЛЬНО списывает четвёртый ключ). Фича — первый ПОТРЕБИТЕЛЬ этих значений;
+их ВАЛИДАЦИЯ и стражи (`AC-foundation-2/3/11`) остаются заслугой `foundation` и здесь не
+переиспытываются заново, кроме как в сквозном прогоне.
+
+## Границы, которые фича обязана сохранить
+
+- `web` по-прежнему не получает ни одного секрета и не участвует в этой фиче: приём фото происходит
+  через `api`, вызов модели — только через `recognizer` (`.claude/rules/secrets-management.md`).
+- Соединение с базой НЕ удерживается во время вызова Anthropic Messages API: аренда закрывает
+  транзакцию ДО `NormalizePhotoForModel` и ДО `ModelProvider.recognize` (NFR-scan-pipeline-1/3,
+  `foundation` `LeaseRecognitionJob`, не переопределяется).
+- `db` и `storage` не публикуют портов (без изменений к `foundation`).
+- Живой вызов Anthropic делается ТОЛЬКО из `recognizer`; `ANTHROPIC_API_KEY` не покидает этот сервис
+  ни в журнале (редактор запрещённых значений `foundation`), ни в ответе API.
