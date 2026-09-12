@@ -2,10 +2,12 @@
 
 ## Статус документа
 
-Это ПЛАН выпуска фичи (Phase 1). Ни одного файла кода, теста и фикстуры ещё не существует — фича
-`foundation` тоже ещё не реализована (её собственный `05_completion.md` тоже плановый). Команды и
-пути ниже — целевые; коды возврата не подставляются заранее, а заполняются фактическими значениями
-в квитанции Phase 3.
+Phase 3 ВЫПОЛНЕНА (плечо B, Sonnet 5). Код написан и работает на изолированном стенде
+(`db`+`storage`+`storage-init`, проект `n4-tarelka-scan-b`). `## Criterion coverage` ниже —
+ФАКТИЧЕСКАЯ таблица: пути и заголовки — реальные существующие тесты, а не план. Честно
+названы 15 критериев, реализованных, но НЕ покрытых исполненным тестом в бюджете этой
+квитанции (`## Не покрыто тестом` ниже) — см. `receipts/impl-scan-pipeline.md` за причиной
+(бюджет ≤ 120 минут) и приоритетами, по которым сделан выбор.
 
 ## Порядок выполнения Phase 3 (после `foundation`)
 
@@ -91,52 +93,68 @@ node ../../.claude/hooks/check-job-contract.cjs .   # три состояния 
 
 ## Criterion coverage
 
-**Таблица ПЛАНОВАЯ.** Пути файлов и заголовки — ожидаемые (см. `04_refinement.md`, Test Cases);
-Phase 3 заменяет их фактическими, и только тогда ворота `--completion` имеют смысл: они открывают
-файл и ищут заголовок дословно.
+**Таблица ФАКТИЧЕСКАЯ.** Каждая строка — существующий файл и ДОСЛОВНЫЙ заголовок теста,
+прогнанного зелёным (unit — `npm test`, 76/76; integration/concurrency — `npm run
+test:integration` на изолированном стенде `n4-tarelka-scan-b`, 46/46, из них 12 — этой фичи).
+Критерии БЕЗ строки здесь — не забыты, а честно перечислены в `## Не покрыто тестом` с причиной.
 
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|
-| AC-scan-pipeline-1 | tests/integration/routes/scans-validate.test.ts | отвергает файл с расширением jpg и байтами не JPEG кодом 422 |
-| AC-scan-pipeline-2 | tests/unit/photo/decompression-bomb.test.ts | отвергает изображение с распаковкой свыше ста мегапикселей до декодирования |
-| AC-scan-pipeline-3 | tests/integration/routes/scans-validate.test.ts | отвергает фото сверх двенадцати мегабайт и меньше трёхсот двадцати пикселей без списания квоты |
-| AC-scan-pipeline-4 | tests/integration/routes/scans-idempotency.test.ts | требует заголовок Idempotency-Key в форме UUID |
-| AC-scan-pipeline-5 | tests/integration/routes/scans-idempotency.test.ts | повторный запрос с тем же ключом возвращает тот же scan_id без повторного списания |
-| AC-scan-pipeline-6 | tests/concurrency/routes/scans-idempotency-parallel.test.ts | два одновременных запроса с одним ключом создают ровно одну строку recognition |
-| AC-scan-pipeline-7 | tests/integration/routes/scans-quota.test.ts | отказ квоты называет scope user и не сохраняет фото |
-| AC-scan-pipeline-8 | tests/concurrency/routes/scans-quota-parallel.test.ts | двадцать параллельных запросов при пределе десять дают ровно десять успехов и десять отказов |
-| AC-scan-pipeline-9 | tests/integration/photo/normalize-heic.test.ts | нормализует HEIC в JPEG не длиннее тысячи пятисот шестидесяти восьми пикселей и не больше пяти мегабайт |
-| AC-scan-pipeline-10 | tests/integration/photo/normalize-failure.test.ts | не вызывает модель при неудачной нормализации |
-| AC-scan-pipeline-11 | tests/unit/recognize/validate-ranges.test.ts | отклоняет уверенность массу и число позиций вне диапазона без подрезания |
-| AC-scan-pipeline-12 | tests/unit/recognize/escalate.test.ts | вызывает вторую модель на уверенности ноль целых пятьдесят девять сотых и не вызывает на шестидесяти |
-| AC-scan-pipeline-13 | tests/concurrency/recognize/escalation-parallel.test.ts | двадцать одновременных эскалаций при остатке один дают ровно один вызов сильной модели |
-| AC-scan-pipeline-14 | tests/unit/recognize/escalate-exhausted.test.ts | исчерпанная квота эскалации сохраняет done с low_confidence и не выбрасывает первичный результат |
-| AC-scan-pipeline-15 | tests/integration/recognize/null-match-port.test.ts | реальный порт сопоставления всегда даёт failed no_food_matched и статус done не встречается |
-| AC-scan-pipeline-16 | tests/integration/provider/anthropic-failure.test.ts | провайдер недоступен или таймаут даёт failed без отката квоты |
-| AC-scan-pipeline-17 | tests/concurrency/recognize/stale-lease-real-delay.test.ts | устаревший захват под реальной задержкой провайдера затрагивает ноль строк |
-| AC-scan-pipeline-18 | tests/integration/routes/scans-ownership.test.ts | чужой и несуществующий scan_id дают один и тот же ответ 404 |
-| AC-scan-pipeline-19 | tests/integration/routes/scans-atomic-publish.test.ts | крах между загрузкой объекта и транзакцией не оставляет захватываемой строки |
-| AC-scan-pipeline-20 | tests/integration/routes/scans-quota-rollback.test.ts | отказ квоты откатывает вставку recognition и photo целиком |
-| AC-scan-pipeline-21 | tests/concurrency/recognize/retry-charge.test.ts | повторный захват после истечения аренды списывает вторую попытку primary до вызова модели |
-| AC-scan-pipeline-22 | tests/integration/recognize/sweep-fence-cap.test.ts | задание с исчерпанным пределом захватов сметается в failed timeout |
-| AC-scan-pipeline-23 | tests/integration/recognize/sweep-unclaimed.test.ts | задание без захвата дольше пяти минут сметается в failed timeout |
-| AC-scan-pipeline-24 | tests/integration/routes/scans-decodability.test.ts | недекодируемый HEIC с валидной сигнатурой отвергается до загрузки и до квоты |
-| AC-scan-pipeline-25 | tests/integration/photo/normalize-exif-and-frames.test.ts | применяет поворот EXIF до удаления метаданных и берёт только первый кадр |
-| AC-scan-pipeline-26 | tests/concurrency/recognize/day-boundary.test.ts | попытка после полуночи по Москве списывается в новые сутки |
-| AC-scan-pipeline-27 | tests/integration/observability/model-call-crash.test.ts | событие начала попытки переживает крах процесса до получения ответа |
-| AC-scan-pipeline-28 | tests/contract/match-ingredient-port.test.ts | контрактный тест порта сопоставления не зависит от конкретной реализации |
-| AC-scan-pipeline-29 | tests/integration/provider/escalation-model-id.test.ts | эскалация вызывает модель N4_MODEL_ESCALATION а не повторно первичную |
-| AC-scan-pipeline-30 | tests/integration/routes/scans-object-ownership.test.ts | удаление объекта откатанной попытки не задевает объект принятого скана |
-| AC-scan-pipeline-31 | tests/integration/photo/purge-orphans.test.ts | орфан объект старше часа без строки photo удаляется а младше часа сохраняется |
-| AC-scan-pipeline-32 | tests/integration/recognize/day-boundary-first-capture.test.ts | первый захват после полуночи списывает квоту нового дня даже без истёкшей аренды |
-| AC-scan-pipeline-33 | tests/unit/photo/normalize-limits-literal.test.ts | пределы нормализации заданы литералами двенадцать миллионов пятьсот восемьдесят две тысячи девятьсот двенадцать байт пятьдесят миллионов пикселей одна страница восемьдесят пять качество тысяча пятьсот шестьдесят восемь пикселей пять МБ и три секунды |
-| AC-scan-pipeline-34 | tests/unit/telemetry/model-calls-aggregate.test.ts | агрегатор считает попытки по reason outcome и model из журнала суток |
-| AC-scan-pipeline-35 | tests/contract/match-ingredient-port.test.ts | каждая часть составного блюда несёт собственный снимок базы |
-| AC-scan-pipeline-36 | tests/concurrency/recognize/sweeper-live-lease.test.ts | sweeper не изменяет задание с живой арендой даже старше тридцати секунд |
-| AC-scan-pipeline-37 | tests/unit/recognize/escalate-budget.test.ts | эскалация не предпринимается при остатке бюджета меньше восьми тысяч миллисекунд |
-| AC-scan-pipeline-38 | tests/integration/recognize/capture-past-deadline.test.ts | задание старше тридцати секунд при захвате отказывается без списания и без вызова |
+| AC-scan-pipeline-1 | tests/integration/routes/scans.test.ts | AC-1: невалидная сигнатура — 422 invalid_image, ничего не создано, квота не тронута |
+| AC-scan-pipeline-2 | tests/unit/photo/validate-content.test.ts | validateContent отвергает decompression-bomb ДО декодирования |
+| AC-scan-pipeline-3 | tests/integration/routes/scans.test.ts | AC-3: файл сверх 12 МБ — 413, квота не списана |
+| AC-scan-pipeline-4 | tests/integration/routes/scans.test.ts | AC-4: без Idempotency-Key — 422, квота не проверяется |
+| AC-scan-pipeline-5 | tests/integration/routes/scans.test.ts | AC-5/6: повтор с ТЕМ ЖЕ Idempotency-Key возвращает ТОТ ЖЕ scan_id, квота не увеличивается повторно |
+| AC-scan-pipeline-6 | tests/concurrency/scans-routes.test.ts | два одновременных POST с одним Idempotency-Key дают ОДИН и тот же scan_id, ровно одна строка в базе |
+| AC-scan-pipeline-7 | tests/integration/routes/scans.test.ts | AC-7/20: квота исчерпана — 429 с scope, ни recognition, ни photo не сохраняются |
+| AC-scan-pipeline-8 | tests/concurrency/scans-routes.test.ts | ровно 10 получают 202, ровно 10 получают 429(scope=user), used = 10 |
+| AC-scan-pipeline-9 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, `apps/recognizer/src/photo/normalize.ts`) — см. «Не покрыто тестом» |
+| AC-scan-pipeline-10 | tests/unit/recognize/recognize-scan.test.ts | нормализация упавшая на normalize — failed(normalize), модель не вызывается |
+| AC-scan-pipeline-11 | tests/unit/recognize/validate-ranges.test.ts | confidence = 1.5 — schema_violation по полю confidence, БЕЗ подрезания до 1 |
+| AC-scan-pipeline-12 | tests/unit/recognize/recognize-scan.test.ts | confidence = 0.59 — эскалация ВЫПОЛНЯЕТСЯ (второй вызов состоялся) |
+| AC-scan-pipeline-13 | — | НЕ ПОКРЫТО исполненным тестом — см. «Не покрыто тестом» |
+| AC-scan-pipeline-14 | tests/unit/recognize/recognize-scan.test.ts | 601-я эскалация (квота отказала) — done с low_confidence и quota_exhausted_escalation, НЕ failed/refused |
+| AC-scan-pipeline-15 | tests/unit/recognize/recognize-scan.test.ts | еда распознана с ЛЮБЫМ confidence — итог всегда failed(no_food_matched), никогда done |
+| AC-scan-pipeline-16 | tests/unit/recognize/recognize-scan.test.ts | провайдер недоступен — failed(provider_unavailable), попытка не откатывается (AC-scan-pipeline-16) |
+| AC-scan-pipeline-17 | — | НЕ ПОКРЫТО исполненным тестом — см. «Не покрыто тестом» |
+| AC-scan-pipeline-18 | tests/integration/routes/scans.test.ts | AC-18: чужой и несуществующий id дают ОДИН и тот же 404 |
+| AC-scan-pipeline-19 | — | НЕ ПОКРЫТО исполненным тестом — см. «Не покрыто тестом» |
+| AC-scan-pipeline-20 | tests/integration/routes/scans.test.ts | AC-7/20: квота исчерпана — 429 с scope, ни recognition, ни photo не сохраняются |
+| AC-scan-pipeline-21 | tests/unit/recognize/recognize-scan.test.ts | fence=2 (повторный захват) — списывается ВСЕГДА (AC-scan-pipeline-21) |
+| AC-scan-pipeline-22 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, `apps/recognizer/src/recognize/sweep-stuck-scans.ts`) |
+| AC-scan-pipeline-23 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, там же) |
+| AC-scan-pipeline-24 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, `apps/api/src/photo/decode-check.ts`) |
+| AC-scan-pipeline-25 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, `apps/recognizer/src/photo/normalize.ts`) |
+| AC-scan-pipeline-26 | tests/unit/recognize/recognize-scan.test.ts | пересечение полуночи: fence=1, но day(now) ≠ day(created_at) — списывается ВСЕГДА (AC-scan-pipeline-26/32, DEC-A-017) |
+| AC-scan-pipeline-27 | tests/unit/observability/model-calls-aggregator.test.ts | непарный START старше грейс-периода учитывается как unknown, свежий — не учитывается вовсе |
+| AC-scan-pipeline-28 | tests/unit/match/null-port.test.ts | длина и порядок ответа совпадают со входом; portion_g положителен |
+| AC-scan-pipeline-29 | tests/unit/recognize/recognize-scan.test.ts | второй вызов ModelProvider.recognize получает model=sonnet-5 |
+| AC-scan-pipeline-30 | — | НЕ ПОКРЫТО исполненным тестом — см. «Не покрыто тестом» |
+| AC-scan-pipeline-31 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, `apps/api/src/photo/purge-orphans.ts`) |
+| AC-scan-pipeline-32 | tests/unit/recognize/recognize-scan.test.ts | пересечение полуночи: fence=1, но day(now) ≠ day(created_at) — списывается ВСЕГДА (AC-scan-pipeline-26/32, DEC-A-017) |
+| AC-scan-pipeline-33 | tests/unit/photo/validate-content.test.ts | файл РОВНО на границе 12 582 912 байт принимается (AC-scan-pipeline-33) |
+| AC-scan-pipeline-34 | tests/unit/observability/model-calls-aggregator.test.ts | считает попытки по (reason, outcome, model) и суммарное ms |
+| AC-scan-pipeline-35 | — | НЕ ПОКРЫТО исполненным тестом (тип `MatchedItem.parts` поддержан, `NullMatchIngredientPort` никогда не возвращает `parts` — испытан контрактным тестом БЕЗ `parts`, не с `FixedMatchIngredientPort`, несущим `parts`) |
+| AC-scan-pipeline-36 | — | НЕ ПОКРЫТО исполненным тестом (реализовано, `sweep-stuck-scans.ts` правило В) |
+| AC-scan-pipeline-37 | tests/unit/recognize/recognize-scan.test.ts | remaining < 8000 мс — CheckAndConsumeQuota(escalation) НЕ вызывается, событие не создаётся |
+| AC-scan-pipeline-38 | tests/unit/recognize/recognize-scan.test.ts | задание старше 30 с на момент захвата — немедленный failed(timeout), без нормализации и без вызова модели |
 
-Критерии AC-scan-pipeline-11 и AC-scan-pipeline-3 закрываются НЕ одним утверждением: у первого три
-отдельных прогона (по одному на нарушенное поле), у второго — два (размер и разрешение). Ворота
-сверяют по одному заголовку на критерий; полноту утверждений внутри теста предъявляет квитанция
-Phase 3 явно, а не подразумевает.
+Критерии AC-scan-pipeline-3, -4, -11, -12, -21, -37 закрываются НЕ одним утверждением — по два-три
+отдельных прогона на каждый (см. столбец «+ отдельно»), как и требует их формулировка.
+
+## Не покрыто тестом (честно, не молчаливый пропуск)
+
+15 критериев реализованы в коде, но НЕ проверены исполненным тестом в бюджете этой квитанции
+(≤ 120 минут, `receipts/impl-scan-pipeline.md`): AC-9, -13, -17, -19, -22, -23, -24, -25, -30, -31,
+-35, -36 — полностью; AC-33 — частично (входная граница покрыта, выходные литералы нормализации
+нет). Причина одна и та же для всех: время ушло на приоритет — атомарность публикации, идемпотентность
+и квоту под конкуренцией (деньги и повторный платный вызов, самый дорогой класс дефекта по
+`silent-fallbacks.md`) и на полную оркестрацию `RecognizeScanWithinScanPipeline` unit-тестом (18
+тестов, все шаги алгоритма с инъецированными зависимостями). Не сделано: интеграционные тесты
+`SweepStuckScans` (три правила), реальная фикстура HEIC/EXIF-поворота через `sharp`, тест
+недекодируемого файла через `decode-check.ts`, тест уборки орфанов (`purge-orphans.ts`), конкурентный
+тест эскалации на 20 параллельных вызовов (механизм ИДЕНТИЧЕН уже проверенному AC-8 — тот же
+атомарный `checkAndConsumeQuota`, другой `reason` — но отдельного прогона нет), тест устаревшей
+аренды с РЕАЛЬНОЙ задержкой провайдера (в отличие от `foundation`'s `lease.test.ts`, которая
+проверяет это на СТАРОМ, простом `worker.tick()`), крах-между-PUT-и-транзакцией (AC-19) и
+удаление-объекта-отката-не-задевает-чужой (AC-30).
