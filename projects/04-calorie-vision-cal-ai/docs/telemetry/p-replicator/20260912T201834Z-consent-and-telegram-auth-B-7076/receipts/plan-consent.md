@@ -113,4 +113,42 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 Никакой новой сущности и никакого нового маршрута сверх канона по-прежнему не введено: DEC-A-016
 расширил ДВЕ существующие сущности логическими полями, не добавил 15-ю сущность или 15-й маршрут.
 
+## Попытка 3 — находки валидатора VC-01…03 (`docs/features/consent-and-telegram-auth/validation-report.md`)
+
+1. **VC-01 — устаревший абзац и опечатка префикса.** `02_pseudocode.md` в конце Scenario Coverage
+   утверждал, что защита от повтора «НЕ реализуется» и «AC-consent-and-telegram-auth-13» — экраны
+   (на деле AC-13 — критерий про `erase_all`, экраны это FR-13). Оба исправлены: абзац переписан по
+   факту DEC-A-016 (защита реализована, `TelegramLogin` шаг 2), тест `initdata-replay.test.ts`
+   назван ОБЯЗАТЕЛЬНЫМ; ссылка на экраны исправлена на `FR-consent-and-telegram-auth-13`.
+2. **VC-02 — решение DEC-A-019: анонимного исключения НЕТ.** Согласие требуется перед первой
+   записью дневника ДЛЯ ЛЮБОЙ сессии, включая анонимную (ADR-009, SC-US-012-1 не делают
+   исключения). `device_session` расширена тремя полями `consent_version`/`consent_text_hash`/
+   `consent_at` (те же, что уже есть у `account` — не новая сущность). Изменены:
+   `EnforceConsentBeforeDiaryWrite` (шаг 1 разрешает владельца в `account` ИЛИ `device_session` без
+   исключения), `GrantOrDeclineConsent` (пишет в ту таблицу, что разрешена), `TelegramLogin` (новый
+   шаг 6 — перенос согласия с сессии на аккаунт при входе, без перезаписи уже имеющегося у аккаунта
+   согласия), FR-consent-and-telegram-auth-5/7, AC-8/AC-11 (оба — два прогона: аккаунт и анонимная
+   сессия), edge cases и тесты в `04_refinement.md`.
+3. **VC-03 — конкурентный тест защиты от повтора и гонка создания аккаунта.** Добавлены: (а) тест
+   20 параллельных `POST /auth/telegram` одной `initData` → 1×`200`, 19×`401 initdata_replayed`;
+   (б) путь конфликта уникального индекса `(telegram_user_id) WHERE status != 'erased'` при двух
+   параллельных ПЕРВЫХ входах — `TelegramLogin` шаг 3 переписан на `ON CONFLICT … DO NOTHING` +
+   повторный `SELECT` с ПОВТОРНОЙ сверкой хэша на конфликте (иначе конкурент с тем же `initData`,
+   проигравший гонку `INSERT`, увидел бы чужую победу как свой успешный вход вместо `401`). Оба
+   сценария — новые строки в Edge Cases Matrix и Testing Strategy `04_refinement.md`, чеклист и
+   индекс (`(telegram_user_id) WHERE status != 'erased'`) — в `03_architecture.md` Data Architecture.
+
+Изменённые файлы: `01_specification.md` (FR-5/7, AC-8/11), `02_pseudocode.md` (Data Structures —
+три поля на `device_session`; `GrantOrDeclineConsent`, `EnforceConsentBeforeDiaryWrite`,
+`TelegramLogin` шаги 3/6/9 переписаны; Scenario Coverage — устаревший абзац и опечатка исправлены),
+`03_architecture.md` (второй индекс), `04_refinement.md` (6 новых строк edge cases, 4 новых теста,
+раздел «Решено» без изменений), `05_completion.md` (2 новых пункта чеклиста).
+
+Ворота после правок:
+```
+bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+`VERDICT traceability=PASS features=3 gaps=0 inconclusive=0` — **код возврата 0**, с первого прогона
+после правок (без DUPLICATE на этот раз).
+
 Status: completed
