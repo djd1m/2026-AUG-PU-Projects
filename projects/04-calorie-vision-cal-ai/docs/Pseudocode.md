@@ -270,6 +270,7 @@ COMPLEXITY: O(1) при индексе по `(partner_code_id, ip_prefix, create
 REQUIREMENT: `FR-PARTNER-002`
 REQUIREMENT: `FR-GROWTH-004`
 REQUIREMENT: `FR-GROWTH-007`
+REQUIREMENT: `FR-GROWTH-005`
 REALISES: SC-US-011-1, SC-US-011-2
 INPUT: аутентифицированный партнёр, окно (`day` / `week` / `all`).
 OUTPUT: четыре счётчика по СВОЕМУ коду и время последнего обновления.
