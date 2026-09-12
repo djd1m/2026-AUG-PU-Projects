@@ -258,4 +258,33 @@ VERDICT traceability=PASS features=3 gaps=0 inconclusive=0
 Код возврата скрипта в целом: `0` (RC=0) — контур `consent-and-telegram-auth`, ранее показывавший
 дубли не моего авторства, к этому прогону тоже PASS (правку внёс другой агент, не эта квитанция).
 
+## Дополнение к Попытке 4 — VS-05 (ре-валидатор): эскалация против общего бюджета
+
+Находка: эскалация (второй полный вызов модели) могла запрашивать собственные `min(25с, remaining)`
+без нижней границы — при `remaining`, близком к нулю, вызов заведомо не успевал получить ответ до
+общего дедлайна 30 с и был обречён на `outcome='late'`, оплаченный впустую.
+
+Правка (`RecognizeScanWithinScanPipeline` шаг 7, `02_pseudocode.md`): ПЕРЕД решением об эскалации
+пересчитывается `remaining`. `IF remaining < 8 000 мс THEN` эскалация НЕ ПРЕДПРИНИМАЕТСЯ:
+`low_confidence = true` напрямую, БЕЗ вызова `CheckAndConsumeQuota(reason='escalation')` и БЕЗ
+события `model_call` — это отличается от отказа квоты (`quota_exhausted_escalation`): попытка не
+была отказана, она вообще не была предпринята, поэтому не списывается и не логируется. `ELSE`
+эскалация идёт штатно, но `callDeadlineMs` для ВТОРОГО вызова пересчитывается заново как `min(25с,
+remaining)`, а не берёт полные 25 с — второй вызов делит ОДИН бюджет 30 с с первым.
+
+Sweeper (`leased_until < now()` в правиле В) и правило «результат после дедлайна отбрасывается по
+fence/status с `outcome='late'`» (шаг 9) уже были в Попытке 4 в требуемом виде — VS-05 их не менял,
+только явно подтвердил.
+
+Новый `AC-scan-pipeline-37`; правка `FR-scan-pipeline-7` (текст «делит бюджет с первичным»).
+Уникальность: 21 FR, 3 NFR, 37 AC — все заголовки уникальны.
+
+Ворота:
+```
+TRACE contour=scan-pipeline … COUNT requirements=61 algorithms=61 missing-algorithm=0 orphan-algorithm=0
+PASS contour=scan-pipeline bidirectional traceability complete
+VERDICT traceability=PASS features=3 gaps=0 inconclusive=0
+```
+RC=0.
+
 Status: completed

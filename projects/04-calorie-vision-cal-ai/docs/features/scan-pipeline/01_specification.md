@@ -149,12 +149,17 @@ failed(schema_violation)` с названным шагом, вызова мод�
 возвращается. `IF` модель не нашла еды `THEN refused(no_food_detected)`, запись дневника не
 создаётся (FR-RECOGNIZE-001, SC-US-001-2).
 
-### FR-scan-pipeline-7 — эскалация к Sonnet 5, четвёртый ключ ДО вызова
-`IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(reason =
-'escalation')` — ДО обращения к Sonnet 5. `IF granted THEN` повторить вызов модели `Sonnet 5` ровно
-ОДИН раз, `escalated = true`, `attempt_no = 2`. `ELSE` второго вызова НЕ делать: результат первичной
-модели сохраняется, попытка эскалации отклонена по `scope = escalation`, событие расхода несёт
-`quota_exhausted_escalation`. Логика проверяется unit-тестом с подменённым `MatchIngredientPort`
+### FR-scan-pipeline-7 — эскалация к Sonnet 5, четвёртый ключ ДО вызова, ДЕЛИТ бюджет с первичным
+`IF confidence < 0,6 AND escalated = false THEN` СНАЧАЛА проверить остаток общего бюджета задачи
+(FR-scan-pipeline-20): `IF remaining < 8 с THEN` эскалация НЕ ПРЕДПРИНИМАЕТСЯ вовсе — `low_confidence
+= true` устанавливается напрямую, БЕЗ вызова `CheckAndConsumeQuota` и БЕЗ события `model_call` для
+несостоявшейся попытки (ре-валидатор VS-05: второй полный вызов делит ОДИН бюджет 30 с с первым, а не
+получает собственные 25 с сверху — иначе оплаченный ответ гарантированно пришёл бы `late`). `ELSE`
+вызвать `CheckAndConsumeQuota(reason = 'escalation')` — ДО обращения к Sonnet 5. `IF granted THEN`
+повторить вызов модели `Sonnet 5` ровно ОДИН раз с ПЕРЕСЧИТАННЫМ `callDeadlineMs = min(25с,
+remaining)`, `escalated = true`, `attempt_no = 2`. `ELSE` второго вызова НЕ делать: результат
+первичной модели сохраняется, попытка эскалации отклонена по `scope = escalation`, событие расхода
+несёт `quota_exhausted_escalation`. Логика проверяется unit-тестом с подменённым `MatchIngredientPort`
 (см. «Стык»), поскольку в реальном окружении этой фичи `done` недостижим (ADR-004, ADR-007,
 `model-cost-contract.md`).
 
@@ -584,6 +589,16 @@ Given задание захвачено воркером `lease_fence = 1`, `cre
 When выполняется прогон `SweepStuckScans`
 Then НИ ОДНА строка не изменена (правило В не совпадает — аренда не истекла); воркер сам решает судьбу
 задания по своему бюджету, не sweeper.
+
+### AC-scan-pipeline-37 — эскалация не предпринимается при недостатке бюджета (ре-валидатор VS-05)
+Given `confidence < 0,6`, первичный вызов завершился, оставшийся бюджет `remaining < 8 000 мс`
+(отдельно — `remaining ≥ 8 000 мс`, два прогона)
+When принимается решение об эскалации
+Then при `remaining < 8 000 мс`: `CheckAndConsumeQuota(reason='escalation')` НЕ вызывается, счётчик
+обращений к адаптеру провайдера для эскалации остаётся нулевым, событие `model_call` для эскалации не
+создаётся, `low_confidence = true` устанавливается напрямую; при `remaining ≥ 8 000 мс`: эскалация
+идёт штатным путём с `callDeadlineMs = min(25 000, remaining)`, пересчитанным ЗАНОВО (не «те же»
+25 с, что у первичного вызова).
 
 ## Наследуемые сценарии приёмки проекта
 

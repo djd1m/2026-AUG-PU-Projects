@@ -257,6 +257,7 @@ REQUIREMENT: `AC-scan-pipeline-29`
 REQUIREMENT: `AC-scan-pipeline-32`
 REQUIREMENT: `AC-scan-pipeline-33`
 REQUIREMENT: `AC-scan-pipeline-35`
+REQUIREMENT: `AC-scan-pipeline-37`
 REALISES: SC-US-001-2, SC-US-002-2
 INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (несёт `lease_fence`, `photo_id`,
 ГАРАНТИРОВАННО непустой — см. «Зависимости от `foundation`»).
@@ -318,10 +319,21 @@ failed(timeout)`, `outcome: 'timeout'`.
 кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` нарушено `THEN failed(schema_violation)`
 с названным полем — без подрезания.
 6. `IF` модель не нашла еды `THEN refused(no_food_detected)`, дневник не создаётся, `RETURN`.
-7. `IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(session, ip_prefix,
-day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС, reason = 'escalation')` — четвёртый ключ, `day` СВОЙ,
-вычисленный в момент этого решения (PC-06). `IF granted THEN` вернуться к шагу 4 с `model =
-N4_MODEL_ESCALATION`, `escalated = true`, `attempt_no = 2`. `ELSE` эскалации нет: запомнить
+7. `IF confidence < 0,6 AND escalated = false THEN` ПЕРЕД любым решением об эскалации пересчитать
+`remaining = 30_000мс − (now() − created_at)` (VS-05, ре-валидатор: эскалация — ВТОРОЙ полный вызов
+и обязана делить ОДИН бюджет 30 с с первым, а не получать собственные 25 с сверху). `IF remaining <
+8_000мс THEN` эскалация НЕ ВЫПОЛНЯЕТСЯ вовсе: `low_confidence = true` устанавливается НАПРЯМУЮ, БЕЗ
+вызова `CheckAndConsumeQuota(reason='escalation')` и БЕЗ события `model_call` для этой несостоявшейся
+попытки — оставшегося времени недостаточно даже для одной попытки получить ответ с разумным запасом до
+общего дедлайна, и тратить деньги на вызов, обречённый быть отброшенным как `late` (шаг 9), не имеет
+смысла: это НЕ то же самое, что отказ по квоте (`quota_exhausted_escalation`) — попытка не была
+ОТКАЗАНА, она вообще не была ПРЕДПРИНЯТА. Порог `8 с` — запас: дедлайн одного вызова модели не может
+быть короче нескольких секунд и иметь шанс на осмысленный ответ. `ELSE` (`remaining ≥ 8_000мс`)
+вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС, reason =
+'escalation')` — четвёртый ключ, `day` СВОЙ, вычисленный в момент этого решения (PC-06). `IF granted
+THEN` пересчитать `callDeadlineMs = min(25_000, remaining)` (дедлайн ВТОРОГО вызова делит ОСТАТОК
+общего бюджета, не получает полные 25 с заново) и вернуться к шагу 4 с `model = N4_MODEL_ESCALATION`,
+`escalated = true`, `attempt_no = 2`. `ELSE` (квота отказала) эскалации нет: запомнить
 `failure_reason_candidate = quota_exhausted_escalation` для шага 8, если статус окажется `done`
 (сегодня — не происходит, шаг 8).
 8. Вызвать `MatchIngredientPort.match(items)` — ОДИН вызов на ВЕСЬ список позиций (PC-08). Для
