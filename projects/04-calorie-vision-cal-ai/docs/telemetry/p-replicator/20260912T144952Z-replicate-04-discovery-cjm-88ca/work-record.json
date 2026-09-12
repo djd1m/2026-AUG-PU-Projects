@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "prepare",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260912T144952Z-replicate-04-discovery-cjm-88ca",
+    "work_unit_id": "replicate-04-phase0-discovery-cjm",
+    "current_attempt_id": "coordinate-attempt-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "projects/04-calorie-vision-cal-ai/docs/telemetry/p-replicator/20260912T144952Z-replicate-04-discovery-cjm-88ca/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "projects/04-calorie-vision-cal-ai/docs/telemetry/p-replicator/20260912T144952Z-replicate-04-discovery-cjm-88ca/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+    "current_revision": "1c72c477daef34b024b73d10f014058e95cda014",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "projects/04-calorie-vision-cal-ai/README.md"
+      },
+      {
+        "root": "project",
+        "path": "start/REPLICATE-PROMPTS-PROJECTS.md"
+      },
+      {
+        "root": "project",
+        "path": "start/REPLICATE-PROMPTS.md"
+      },
+      {
+        "root": "project",
+        "path": "research/GROWTH-MECHANICS-REQUIREMENTS.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": ".claude/commands/replicate.md"
+      },
+      {
+        "root": "project",
+        "path": ".claude/rules/replicate-pipeline.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "1c72c477daef34b024b73d10f014058e95cda014",
+      "observed_revision": "1c72c477daef34b024b73d10f014058e95cda014",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "1c72c477daef34b024b73d10f014058e95cda014",
+    "scope": [
+      "Phase 0 Product Discovery (QUICK) for the Cal AI clone: M1 facts, M2 JTBD/segments/VoC, M3 competitors and open nutrition data, M4 preliminary economics, M5 growth engine with Growth Requirements Seed; written to projects/04-calorie-vision-cal-ai/docs/product-discovery-brief.md with a Манифест передачи",
+      "Phase 0.5 Source Product Profile for calai.app with path capture and computed-style measurement; written to docs/source-product-profile.md",
+      "Module 2.5: four CJM variants (A content-driven, B badge, C sales/B2B2C, D incentivized referral built from N1/N2/N3a solutions) documented in docs/CJM_Variants.md with growth-loop binding and 2-4 sourced micro-trends each",
+      "Clickable HTML CJM prototype docs/prototypes/cjm/index.html plus per-variant entry files, openable from file:// and GitHub raw, with keyboard access and mobile layout",
+      "Cross-model QE of the CJM artifacts on Codex, findings recorded in docs/discovery/cjm-review.md",
+      "Frequent commits and pushes to origin claude/install-npm-packages-n7l3m5; STOP at the CJM checkpoint and wait for the owner's choice"
+    ],
+    "exclusions": [
+      "No Phase 1 SPARC documents (PRD, Specification, ...) — owner stops after CJM",
+      "No product code, no docker-compose, no toolkit generation",
+      "No choice of a CJM variant by the pipeline — the owner chooses",
+      "No account creation, login, or purchase on calai.app; capture limited to public pages allowed by robots.txt",
+      "No copying of Cal AI DOM/CSS/logo/brand colours into the prototype; only measured regularities",
+      "No global model or hook settings changes"
+    ],
+    "action_limits": [
+      "External actions limited to read-only web research, polite crawl of calai.app (1 thread, >=1500 ms delay, <=5 pages), git push to the existing branch, and Codex exec for review",
+      "Subagents: <=3 concurrent research agents (Sonnet 5), <=1 prototype builder (Opus 5), <=1 Codex reviewer; each writes only its assigned TRACE_PATH",
+      "Budget per research attempt: <=30 searches/fetches, <=45 min; one corrective attempt after a concrete finding, then escalate to the coordinator"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-01",
+        "required": true,
+        "text": "docs/product-discovery-brief.md exists with M2-M5 outputs, Growth Requirements Seed (FR-GROWTH-001..004 at least) and a Манифест передачи with PD-*-nnn ids; check-handoff-manifest.cjs exits 2 with reason фаза-1-не-завершена (Phase 1 not run)"
+      },
+      {
+        "id": "AC-02",
+        "required": true,
+        "text": "docs/source-product-profile.md exists with both axes answered, origin, FR-LOOK rows continuing the hook numbering; check-look-trace.cjs exits 2 (no Specification yet), never 1"
+      },
+      {
+        "id": "AC-03",
+        "required": true,
+        "text": "docs/CJM_Variants.md contains >=4 variants with distinct growth loops, each with Aha, Entry Hook, Onboarding->Core Loop->Paywall, FR-GROWTH-001..004 placement, 2-4 sourced micro-trends, main risk; comparison table; no variant marked as chosen"
+      },
+      {
+        "id": "AC-04",
+        "required": true,
+        "text": "docs/prototypes/cjm/index.html renders four variants with a switcher and comparison view; opens from file:// without network; passes a headless Playwright smoke (tabs switch, every step renders, no console errors) recorded under docs/prototypes/cjm/tests/"
+      },
+      {
+        "id": "AC-05",
+        "required": true,
+        "text": "Codex review of CJM artifacts recorded in docs/discovery/cjm-review.md with requested/actual model stated; blockers fixed or explicitly deferred"
+      },
+      {
+        "id": "AC-06",
+        "required": true,
+        "text": "Every phase artifact committed and pushed; run.json updated at stage boundaries; final message shows profile, models, checks, and telemetry path"
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/03-affiliate-rewardful/docs/prototypes/cjm/index.html"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "single-file interactive CJM structure: variant tabs, step rail, journey map with goals/friction/patterns, compare panel, copy-decision action",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Structure and interaction model reusable; content, palette (Rewardful blue/Rubik) and embedded font are source-specific and must not carry over"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/03a-affiliate-rewardful/docs/CJM_Variants.md"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "variant table skeleton and the shared FR-GROWTH-001..004 mapping section",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "Document shape matches the methodology; content differs"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/01-testimonials-senja/apps/web/src/lib/referral.ts"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "promo-code-over-cookie attribution precedence and pending attribution at registration",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "CJM variant D reuses the rule as product behaviour for influencer promo codes; the module itself is bound to N1 schema"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/01-testimonials-senja/apps/web/src/lib/badge.ts"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "server-built badge URL with UTM, badge required on free tier (tariff.ts badgeRequiredFor)",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Variant B/D: attribution badge on the share card and public day page; N1 module depends on N1 tariff model"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/01-testimonials-senja/apps/web/src/lib/wall.ts"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "public page by slug with server-side visibility filter (only approved is public)",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Variant B/D public 'day page' follows the same invariant; food diary data is health-sensitive so publication must be opt-in per entry"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/01-testimonials-senja/apps/web/src/lib/partner.ts"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "human-readable partner code generation and signup-via-code fraud window/threshold",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Variant D influencer codes (FR-GROWTH-004) and the @security anti-fraud scenario"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/02-review-qr-reputation/services/notifier/src/deliver.ts"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "Telegram delivery worker with expiry and formatting",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Variant D RU-contour: Telegram as share/entry channel; worker pattern reusable, domain payload differs"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/03a-affiliate-rewardful/README.md"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "partner program model: link + promo code, commission only on confirmed payment, manual monthly payout, partner dashboard",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Variant D uses N3a as the affiliate ledger for influencer cohorts; N3a is paused and has no live payment for N4, so it is a design donor, not a runtime dependency"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "projects/02-review-qr-reputation/apps/guest/src/render.ts"
+          }
+        },
+        "provenance": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+        "useful_fragment": "guest surface reached by QR/link without auth, rendered server-side",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Variant D offline entry (QR in gyms/nutritionist offices) reuses the guest-surface pattern; review-gating logic is irrelevant here"
+      }
+    ],
+    "forecast": {
+      "status": "estimated",
+      "method": "project-telemetry comparable: N3 discovery-cjm run wall clock 1526 s (Codex host, 4 HTML variants, no separate research agents). N4 adds 3 research agents, Playwright capture and a Codex review, so expected wall time is 2-4x that comparable. Usage and cost unavailable on this host.",
+      "scope_revision": "1c72c477daef34b024b73d10f014058e95cda014",
+      "calibration": "uncalibrated_expert",
+      "comparable_run_ids": [
+        "20260908T194524Z-discovery-cjm"
+      ],
+      "exclusions": [
+        "projects/03a runs (feature implementation, not discovery)"
+      ],
+      "external_expectations": [
+        "Owner expects frequent pushes and a stop at the CJM checkpoint"
+      ],
+      "range": {
+        "unit": "seconds_wall",
+        "lower": 3000,
+        "upper": 7200
+      },
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "kind": "plan",
+      "scope_revision": "1c72c477daef34b024b73d10f014058e95cda014",
+      "rationale": "Substantive ROUTE by the coordinator: the deliverable is documentation plus a static HTML prototype (no money, no schema, no external calls in product code), which alone would be S/M; but the discovery decides the growth loop, the RAG data source licensing and health-data handling for the whole project, and the run spans research agents, a browser crawl and cross-model review. Recorded tier L for the run (consequential design decisions), while the mechanical router on the current tree reports S because it only sees changed files.",
+      "phase": "plan",
+      "tier": "L",
+      "script": {
+        "input": "bash scripts/complexity-router.sh on the working tree at a478ae4fa1bdc68ef0fea45ca40a3254ef49030d (1 changed file: telemetry/evidence only)",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner instruction 2026-09-12 in chat explicitly authorizes running /replicate for project 04 up to the CJM checkpoint, with >=3 HTML CJM variants plus a 4th reuse-based variant, frequent commits/pushes, Anthropic models for research/planning/coding and Codex for QE. The CJM checkpoint itself is the caller's native stop; the pipeline may not choose a variant.",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Docs-and-prototype-only stage; no build, environment or E2E of a product exists. The HTML prototype smoke (Playwright headless) is a static check, not an E2E of the product.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "coordinate-attempt-1",
+      "status": "active"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "replicate-04-phase0-discovery-cjm",
+      "paths": [
+        {
+          "root": "project",
+          "path": "projects/04-calorie-vision-cal-ai/docs"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "delivery": null,
+  "checks": []
+}
