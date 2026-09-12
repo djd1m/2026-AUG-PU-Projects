@@ -190,4 +190,72 @@ bash …/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude
 и `FR-consent-and-telegram-auth-3`), который пишет другой агент параллельно — не тронут этой
 квитанцией (владение файлами, `swarm-file-evidence.md`). Мой контур — `PASS`, `gaps=0`.
 
+## Попытка 4 — второй challenge Codex Astra, DEC-A-017
+
+Прочитан `docs/features/scan-pipeline/plan-challenge-2.md` целиком (verdict STOP: PC-06 open, PC-02/
+03/05/07/08/09 partially, две новые находки PC2-01/PC2-02 high). Все закрыты:
+
+- **PC-06 (open → closed).** Дыра: ПЕРВЫЙ захват (`lease_fence=1`) не пересчитывал `day`, только
+  повторные (`fence≥2`). Теперь `RecognizeScanWithinScanPipeline` шаг 2 списывает `primary` заново
+  при `fence≥2` **ИЛИ** `day(now)≠day(created_at)` — приём перед полуночью и первый захват после нею
+  расходуют день ЗАХВАТА, не приёма. Сознательный перерасход на границе, назван явно. Новый
+  AC-scan-pipeline-32.
+- **PC2-01 (high, новая).** `object_key` был `sha256(содержимое)+session` — общий для двух РАЗНЫХ
+  запросов с одинаковым фото; удаление объекта отклонённого B стирало фото принятого A. Заменено на
+  `object_key = device_session_id/recognition_id.ext`, `recognition_id` генерируется ДО загрузки;
+  дедупликация не выполняется. Новый `FR-scan-pipeline-19`, новый AC-30.
+- **PC-02 (partially → closed часть про орфанов).** Добавлен явный шаг 12 `EnqueueScanForFeature`:
+  суточная уборка объектов без строки `photo` (по префиксу `device_session_id/`), старше 1 часа. Новый
+  AC-31.
+- **PC-03 + PC2-02 (partially/high → closed).** Общий бюджет задачи `created_at+30с` теперь ЕДИНЫЙ на
+  все попытки (не 25с на каждый вызов заново): шаг 1а вычисляет остаток ПРИ КАЖДОМ захвате и
+  немедленно отказывает без вызова, если бюджет исчерпан ДО начала; вызов модели и нормализация — под
+  ОДНИМ `AbortController` на остаток бюджета — платная работа физически обрывается по истечении, а не
+  продолжается после того, как sweeper уже пометил задание просроченным (это и была находка PC2-02).
+  `SweepStuckScans` правило В ОБЯЗАТЕЛЬНО требует `leased_until < now()` — sweeper больше НИКОГДА не
+  трогает задание с живой арендой; новое правило Г называет предпочтительный (предикат `foundation`)
+  и обязательный (шаг 1а воркера) рубежи против «захвата уже просроченного задания». Ответ провайдера,
+  пришедший ПОЗЖЕ бюджета, — новый исход `model_call outcome='late'` (оплачен, но не применён).
+  Новые `FR-scan-pipeline-20`, AC-36; правка `FR-scan-pipeline-16`.
+- **PC-05 (partially → closed числа).** Все пределы названы литералами: вход `≤ 12 582 912` байт,
+  декодирование `≤ 50 000 000` px, `1` кадр, выход JPEG качеством `85`, `≤ 1568` px, `≤ 5 242 880`
+  байт, время нормализации `≤ 3000` мс → `failed(normalize)`. **Названо явно координатору:**
+  `failure_reason='normalize'` — ЕЩЁ ОДНО значение сверх исходных 8 канона (как и `timeout` в Попытке
+  3) — требует ратификации координатором в root `Pseudocode.md`/`canon.md`, эта квитанция её НЕ
+  вносит. Новый AC-33.
+- **PC-07 (partially → closed).** `scripts/telemetry/model-calls.sh` теперь РЕАЛИЗУЕТСЯ этой фичей
+  (новый алгоритм `AggregateModelCallLog`), не только планируется; событие корреляции — `attempt_id =
+  recognition_id:fence:reason`; служебная страница остаётся ПЛАНОМ, названо явно. Новые
+  `FR-scan-pipeline-21`, AC-34.
+- **PC-08 (partially → closed часть про Snapshot).** Каждый элемент `parts[]` несёт СВОЙ
+  `source_snapshot`, контракт симметричен верхнему уровню. Новый AC-35. Найденная в challenge-2
+  формальная слабость мутации стража («страж требует красного теста даже при совпадении ВСЕХ позиций,
+  а такой вход не меняет корректный результат») — принята как корректное замечание; страж в
+  `04_refinement.md` уже (с Попытки 3) мутирует УСЛОВИЕ записи `done`, а не подменяет порт — этот
+  конкретный ложный случай (все позиции совпали) как раз и должен оставаться зелёным ОБОИМИ, красным
+  — именно на входе с ЧАСТИЧНЫМ или НУЛЕВЫМ совпадением; формулировка стража это уже требует, отдельной
+  правки не потребовалось.
+- **PC-09 (partially → closed).** `03_architecture.md`: «предполагается» заменено на «внесено в план
+  `foundation`, сообщение координатора 2026-09-12 20:33»; эта фича ДОПОЛНИТЕЛЬНО держит свой тест
+  транспортного адаптера (`AC-scan-pipeline-29`) и не полагается на одно сообщение.
+- **PC-01** оставлен `closed` (challenge-2 подтвердил).
+
+**Уникальность:** 21 FR (было 18, добавлены `-19/-20/-21`), 3 NFR, 36 AC (было 29, добавлены
+`-30…-36`) — все заголовки уникальны (`grep` + `uniq -c`, ноль дублей).
+
+Ворота:
+```
+bash …/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+Первый прогон после правок: `GAP FR-scan-pipeline-19`, `GAP FR-scan-pipeline-20` (забыл добавить
+`REQUIREMENT:` в алгоритмы). Исправлено: `FR-scan-pipeline-19` → `EnqueueScanForFeature`,
+`FR-scan-pipeline-20` → `RecognizeScanWithinScanPipeline`. Второй прогон:
+```
+TRACE contour=scan-pipeline … COUNT requirements=60 algorithms=60 missing-algorithm=0 orphan-algorithm=0
+PASS contour=scan-pipeline bidirectional traceability complete
+VERDICT traceability=PASS features=3 gaps=0 inconclusive=0
+```
+Код возврата скрипта в целом: `0` (RC=0) — контур `consent-and-telegram-auth`, ранее показывавший
+дубли не моего авторства, к этому прогону тоже PASS (правку внёс другой агент, не эта квитанция).
+
 Status: completed

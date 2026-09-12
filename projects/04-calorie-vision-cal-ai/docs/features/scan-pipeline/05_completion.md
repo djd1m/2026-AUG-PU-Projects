@@ -126,6 +126,13 @@ Phase 3 заменяет их фактическими, и только тогд
 | AC-scan-pipeline-27 | tests/integration/observability/model-call-crash.test.ts | событие начала попытки переживает крах процесса до получения ответа |
 | AC-scan-pipeline-28 | tests/contract/match-ingredient-port.test.ts | контрактный тест порта сопоставления не зависит от конкретной реализации |
 | AC-scan-pipeline-29 | tests/integration/provider/escalation-model-id.test.ts | эскалация вызывает модель N4_MODEL_ESCALATION а не повторно первичную |
+| AC-scan-pipeline-30 | tests/integration/routes/scans-object-ownership.test.ts | удаление объекта откатанной попытки не задевает объект принятого скана |
+| AC-scan-pipeline-31 | tests/integration/photo/purge-orphans.test.ts | орфан объект старше часа без строки photo удаляется а младше часа сохраняется |
+| AC-scan-pipeline-32 | tests/integration/recognize/day-boundary-first-capture.test.ts | первый захват после полуночи списывает квоту нового дня даже без истёкшей аренды |
+| AC-scan-pipeline-33 | tests/unit/photo/normalize-limits-literal.test.ts | пределы нормализации заданы литералами двенадцать миллионов пятьсот восемьдесят две тысячи девятьсот двенадцать байт пятьдесят миллионов пикселей одна страница восемьдесят пять качество тысяча пятьсот шестьдесят восемь пикселей пять МБ и три секунды |
+| AC-scan-pipeline-34 | tests/unit/telemetry/model-calls-aggregate.test.ts | агрегатор считает попытки по reason outcome и model из журнала суток |
+| AC-scan-pipeline-35 | tests/contract/match-ingredient-port.test.ts | каждая часть составного блюда несёт собственный снимок базы |
+| AC-scan-pipeline-36 | tests/concurrency/recognize/sweeper-live-lease.test.ts | sweeper не изменяет задание с живой арендой даже старше тридцати секунд |
 
 Критерии AC-scan-pipeline-11 и AC-scan-pipeline-3 закрываются НЕ одним утверждением: у первого три
 отдельных прогона (по одному на нарушенное поле), у второго — два (размер и разрешение). Ворота

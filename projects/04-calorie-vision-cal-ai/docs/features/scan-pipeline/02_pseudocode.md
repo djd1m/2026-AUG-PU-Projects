@@ -72,6 +72,7 @@ REQUIREMENT: `FR-scan-pipeline-3`
 REQUIREMENT: `FR-scan-pipeline-4`
 REQUIREMENT: `FR-scan-pipeline-14`
 REQUIREMENT: `FR-scan-pipeline-17`
+REQUIREMENT: `FR-scan-pipeline-19`
 REQUIREMENT: `AC-scan-pipeline-1`
 REQUIREMENT: `AC-scan-pipeline-2`
 REQUIREMENT: `AC-scan-pipeline-3`
@@ -238,6 +239,7 @@ REQUIREMENT: `FR-scan-pipeline-12`
 REQUIREMENT: `FR-scan-pipeline-13`
 REQUIREMENT: `FR-scan-pipeline-15`
 REQUIREMENT: `FR-scan-pipeline-18`
+REQUIREMENT: `FR-scan-pipeline-20`
 REQUIREMENT: `NFR-scan-pipeline-1`
 REQUIREMENT: `NFR-scan-pipeline-3`
 REQUIREMENT: `AC-scan-pipeline-11`

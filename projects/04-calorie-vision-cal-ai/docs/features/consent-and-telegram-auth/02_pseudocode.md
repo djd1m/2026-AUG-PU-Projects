@@ -23,6 +23,15 @@ DEC-A-016 (2026-09-12), РАСШИРЯЕТ ДВЕ существующие су�
 истины «действует ли согласие сейчас» — второе поле удвоило бы этот факт (см.
 `Algorithm: RevokeConsentOrErase` ниже, `01_specification.md` FR-consent-and-telegram-auth-7/8).
 
+Решением координатора DEC-A-019 (2026-09-12, отменяет анонимное исключение попытки 2)
+`device_session` РАСШИРЯЕТСЯ ЕЩЁ ТРЕМЯ полями — теми же тремя, что уже есть у `account`:
+`consent_version: string?`, `consent_text_hash: string?`, `consent_at: Timestamp?`. Причина:
+согласие на обработку данных о питании требуется ПЕРЕД ПЕРВОЙ записью дневника ДЛЯ ЛЮБОЙ сессии,
+включая анонимную (ADR-009, SC-US-012-1 не делают исключения по типу сессии) — анонимный дневник до
+входа существует, и NFR-SEC-002 «по умолчанию всё закрыто» относится к самому дневнику, а не к его
+владельцу. При входе через Telegram эти три поля ПЕРЕНОСЯТСЯ с `device_session` на `account`
+(`TelegramLogin`, новый шаг), а не запрашиваются заново.
+
 Список известных версий текста согласия (для `422` в `POST /consent`) — КОД-ВЛАДЕЕМЫЙ закрытый
 список версий (`honest-configuration.md` CFG-I8: множество версий не приходит из окружения), физически
 — массив констант в `packages/shared/src/consent/known-versions.ts`; первая версия при запуске
@@ -80,12 +89,13 @@ OUTPUT: `{ account_id, migrated_entries }` с установкой cookie, ли�
 STEPS:
 1. Вызвать `VerifyTelegramInitData`. IF `{ ok: false, reason: 'missing' }` THEN RETURN `422`. IF `{ ok: false, reason: 'signature' | 'stale' }` THEN RETURN `401` — единая ветка (`Pseudocode.md` `TelegramLogin` шаги 1-5, `NFR-consent-and-telegram-auth-1`).
 2. **Защита от повтора (DEC-A-016).** Вычислить `replay_hash = sha256(hash)` от подтверждённого `hash` шага 1. Открыть ОДНУ транзакцию. `SELECT id, status, last_telegram_auth_hash, last_telegram_auth_at FROM account WHERE telegram_user_id = :id FOR UPDATE`. IF строка найдена (аккаунт уже существует) THEN сверить `last_telegram_auth_hash = replay_hash AND now() - last_telegram_auth_at < 24 часа`. IF не найдена (первый вход этого `telegram_user_id`) THEN сверить ТЕ ЖЕ два поля на ТЕКУЩЕЙ `device_session`. IF совпадение найдено THEN откатить транзакцию и RETURN `401 initdata_replayed` — ни аккаунт, ни сессия, ни дневник не меняются.
-3. IF аккаунт найден (шаг 2) И `status != 'erased'` THEN использовать его. IF не найден ИЛИ `status = 'erased'` THEN `INSERT INTO account (telegram_user_id, tier, status) VALUES (:id, 'free', 'active') RETURNING id` — удалённый аккаунт НЕ переиспользуется, создаётся НОВАЯ строка с НОВЫМ `id` (AC-consent-and-telegram-auth-20): прежние данные физически удалены `PurgeAccount`, и связывать новый вход со старым `id` означало бы читать данные, которых больше нет.
+3. IF аккаунт найден (шаг 2) И `status != 'erased'` THEN использовать его. IF не найден ИЛИ `status = 'erased'` THEN `INSERT INTO account (telegram_user_id, tier, status) VALUES (:id, 'free', 'active') ON CONFLICT (telegram_user_id) WHERE status != 'erased' DO NOTHING RETURNING id` — удалённый аккаунт НЕ переиспользуется, создаётся НОВАЯ строка с НОВЫМ `id` (AC-consent-and-telegram-auth-20). **Гонка двух параллельных первых входов (VC-03):** `ON CONFLICT` — обязательная форма, не `INSERT` без него: два потока с одним `telegram_user_id`, оба не нашедшие строку на шаге 2 (частичный уникальный индекс `03_architecture.md`), обязаны сойтись на ОДНОЙ строке. IF `INSERT` вернул пустой результат (конфликт — строку уже вставил параллельный поток) THEN повторить `SELECT … FOR UPDATE` шага 2 и использовать НАЙДЕННУЮ строку — «прочитать после конфликта», а не второй `INSERT` и не ошибка наружу.
 4. `UPDATE device_session SET account_id = :account_id WHERE id = :session_id` — сессия СВЯЗЫВАЕТСЯ, не заменяется; cookie остаётся тем же значением.
 5. `UPDATE diary_entry SET owner_key = :account_id WHERE owner_key = :session_id` в ТОЙ ЖЕ транзакции; количество затронутых строк — это `migrated_entries`. Перенос ДОБАВЛЯЕТ к записям, уже перенесённым с других сессий того же аккаунта на прошлых входах (AC-consent-and-telegram-auth-6) — оператор `UPDATE` по предикату `owner_key = :session_id` не трогает строки, уже принадлежащие аккаунту, поэтому повторный вход того же устройства даёт `migrated_entries = 0` без явной проверки «уже перенесено».
-6. `UPDATE account SET last_telegram_auth_hash = :replay_hash, last_telegram_auth_at = now() WHERE id = :account_id` — записывается на АККАУНТ во ВСЕХ случаях, достигших этого шага (аккаунт к этому моменту всегда существует, найден на шаге 3 или создан там же); поля `device_session`, использованные для сверки на шаге 2 ДО существования аккаунта, для записи повторно не используются — после первого успешного входа сверка идёт только по `account`.
-7. Зафиксировать транзакцию. RETURN `200 { account_id, migrated_entries }` с `Set-Cookie` (то же значение cookie сессии — новый токен не выпускается, входа без существующей device_session в этом продукте нет: `CreateDeviceSession` вызывается раньше `TelegramLogin` на любом первом запросе).
-8. Сбой на любом шаге 2-6 откатывает транзакцию ЦЕЛИКОМ: ни аккаунт, ни связывание, ни перенос, ни отметка последнего использования не сохраняются частично (FR-consent-and-telegram-auth-2 «частичный перенос запрещён»).
+6. **Перенос согласия (DEC-A-019).** IF `account.consent_at IS NULL` (у аккаунта своего согласия ещё нет) AND `device_session.consent_at IS NOT NULL` (анонимная сессия уже согласилась ДО входа) THEN `UPDATE account SET consent_version = device_session.consent_version, consent_text_hash = device_session.consent_text_hash, consent_at = device_session.consent_at WHERE id = :account_id` — согласие переносится, а не запрашивается заново; поля `device_session` НЕ обнуляются (исторический факт остаётся читаемым на сессии). IF у аккаунта УЖЕ есть своё `consent_at` (согласие давалось раньше, с другого устройства) THEN оставить его без изменений — согласие аккаунта не понижается анонимным состоянием текущей сессии.
+7. `UPDATE account SET last_telegram_auth_hash = :replay_hash, last_telegram_auth_at = now() WHERE id = :account_id` — записывается на АККАУНТ во ВСЕХ случаях, достигших этого шага (аккаунт к этому моменту всегда существует, найден на шаге 3 или создан там же); поля `device_session`, использованные для сверки на шаге 2 ДО существования аккаунта, для записи повторно не используются — после первого успешного входа сверка идёт только по `account`.
+8. Зафиксировать транзакцию. RETURN `200 { account_id, migrated_entries }` с `Set-Cookie` (то же значение cookie сессии — новый токен не выпускается, входа без существующей device_session в этом продукте нет: `CreateDeviceSession` вызывается раньше `TelegramLogin` на любом первом запросе).
+9. Сбой на любом шаге 2-7 откатывает транзакцию ЦЕЛИКОМ: ни аккаунт, ни связывание, ни перенос дневника, ни перенос согласия, ни отметка последнего использования не сохраняются частично (FR-consent-and-telegram-auth-2 «частичный перенос запрещён»).
 COMPLEXITY: O(1) на аккаунт/сессию плюс O(m) на перенос m записей дневника — то же, что и в проектном алгоритме.
 
 ### Algorithm: GrantOrDeclineConsent
@@ -96,16 +106,17 @@ REQUIREMENT: `AC-consent-and-telegram-auth-8`
 REQUIREMENT: `AC-consent-and-telegram-auth-9`
 REQUIREMENT: `AC-consent-and-telegram-auth-10`
 REALISES: SC-US-012-1, AC-consent-and-telegram-auth-8, AC-consent-and-telegram-auth-9, AC-consent-and-telegram-auth-10
-INPUT: `{ decision: 'grant' | 'decline', consent_version, consent_text_hash }`, владелец (`account`,
-маршрут требует cookie сессии, связанной с аккаунтом — анонимная сессия без аккаунта согласия не
-даёт, потому что дневник анонима существует независимо от согласия НЕ дольше 7 суток и удаляется по
-`FR-AUTH-001`, а не по этой фиче).
+INPUT: `{ decision: 'grant' | 'decline', consent_version, consent_text_hash }`, владелец — `account`,
+ЕСЛИ сессия связана, ИНАЧЕ `device_session` (DEC-A-019: анонимного исключения нет, маршрут работает
+на cookie сессии независимо от того, есть ли у неё аккаунт).
 OUTPUT: `{ decision, consent_version, recorded_at }` либо `422`.
 STEPS:
-1. IF `decision = 'grant'` THEN: IF `consent_version` НЕ входит в код-владеемый список известных версий THEN RETURN `422`. IF вычисленный сервером `sha256(текст версии)` НЕ равен присланному `consent_text_hash` THEN RETURN `422` — тот же код, что и неизвестная версия: согласие на чужой текст не является согласием.
-2. `UPDATE account SET consent_version = :v, consent_text_hash = :h, consent_at = now() WHERE id = :account_id`. RETURN `200 { decision: 'grant', consent_version, recorded_at: consent_at }`.
-3. IF `decision = 'decline'` THEN записать событие отказа в аудит (владелец, версия текста, время) БЕЗ изменения `account.consent_at` — отказ не требует своего поля: отсутствие `consent_at` уже И ЕСТЬ состояние «согласия нет», а запись в аудит нужна только для доказательства, что экран был показан и отказ осознан (`ConsentAndErasure` шаг 2). RETURN `200 { decision: 'decline', consent_version, recorded_at: now() }`.
-4. Ни в одной ветке шаг 1-3 не создаёт и не удаляет `diary_entry`: съёмка и результат остаются доступны независимо от решения (FR-consent-and-telegram-auth-6).
+1. Разрешить владельца: `account`, если `device_session.account_id IS NOT NULL`, иначе сама
+   `device_session`. Целевая таблица для записи (шаги 2-3) — ТА, что разрешена здесь.
+2. IF `decision = 'grant'` THEN: IF `consent_version` НЕ входит в код-владеемый список известных версий THEN RETURN `422`. IF вычисленный сервером `sha256(текст версии)` НЕ равен присланному `consent_text_hash` THEN RETURN `422` — тот же код, что и неизвестная версия: согласие на чужой текст не является согласием.
+3. `UPDATE {account | device_session} SET consent_version = :v, consent_text_hash = :h, consent_at = now() WHERE id = :owner_id`. RETURN `200 { decision: 'grant', consent_version, recorded_at: consent_at }`.
+4. IF `decision = 'decline'` THEN записать событие отказа в аудит (владелец, версия текста, время) БЕЗ изменения `consent_at` — отказ не требует своего поля: отсутствие `consent_at` уже И ЕСТЬ состояние «согласия нет», а запись в аудит нужна только для доказательства, что экран был показан и отказ осознан (`ConsentAndErasure` шаг 2). RETURN `200 { decision: 'decline', consent_version, recorded_at: now() }`.
+5. Ни в одной ветке шаг 2-4 не создаёт и не удаляет `diary_entry`: съёмка и результат остаются доступны независимо от решения (FR-consent-and-telegram-auth-6).
 COMPLEXITY: O(1).
 
 ### Algorithm: EnforceConsentBeforeDiaryWrite
@@ -118,11 +129,24 @@ INPUT: владелец (`owner_key`), попытка создать/подтв�
 где канон уже резервирует `403 consent_required`).
 OUTPUT: `granted` либо `refused('consent_required')` (HTTP `403`).
 STEPS:
-1. Разрешить `owner_key`, являющийся `device_session_id`, в `account_id`, если сессия связана (см. `TelegramLogin`); анонимная запись дневника до входа сверяется с фактом «согласие ещё не спрашивалось» — она РАЗРЕШЕНА на 7 суток анонимного дневника (`FR-AUTH-001`) и НЕ проходит через эту проверку: согласие спрашивается один раз, ПЕРЕД первой попыткой, а не на каждую последующую — если `diary_entry` для этого `owner_key` уже существует хотя бы одна, дальнейшие записи не переспрашивают согласие повторно.
-2. Найти `account` по `owner_key`, если он аккаунт. IF владелец — аккаунт AND `account.consent_at IS NULL` THEN RETURN `refused('consent_required')` — недоступность строки `account` (сбой чтения) трактуется ТАК ЖЕ, как отсутствие согласия: недоступность источника истины — отказ, а не пропуск (`fail-closed-defaults.md`).
-3. Решением DEC-A-016 шаг 2 ОДИНАКОВО покрывает ОБА случая: согласие никогда не давалось (`consent_at` изначально `NULL`) И согласие было отозвано (`RevokeConsentOrErase` со `scope: 'withdraw_consent'` обнуляет `consent_at` — см. этот алгоритм ниже). Второй проверки не требуется: `consent_at IS NULL` — единственный и достаточный признак «действующего согласия сейчас нет», независимо от истории.
+1. **Исключения для анонимной сессии НЕТ (DEC-A-019, отменяет анонимное исключение попытки 2).**
+   Разрешить владельца: `account`, если `owner_key`/`device_session.account_id` указывает на
+   связанный аккаунт, ИНАЧЕ сама `device_session` — та же таблица, что читает и пишет
+   `GrantOrDeclineConsent`. Согласие проверяется ДЛЯ ЛЮБОГО владельца, анонимного или нет: ADR-009 и
+   SC-US-012-1 требуют согласия перед первой записью дневника без исключения по типу сессии, а
+   7-суточный срок анонимного дневника (`FR-AUTH-001`) — это срок ХРАНЕНИЯ уже согласованных данных,
+   не замена самого согласия.
+2. IF `consent_at IS NULL` У РАЗРЕШЁННОГО владельца THEN RETURN `refused('consent_required')` —
+   недоступность строки (сбой чтения `account` ИЛИ `device_session`) трактуется ТАК ЖЕ, как
+   отсутствие согласия: недоступность источника истины — отказ, а не пропуск
+   (`fail-closed-defaults.md`).
+3. Решением DEC-A-016 шаг 2 ОДИНАКОВО покрывает ОБА случая для аккаунта: согласие никогда не
+   давалось И согласие было отозвано (`RevokeConsentOrErase` со `scope: 'withdraw_consent'` обнуляет
+   `account.consent_at`). Для анонимной `device_session` отзыва не существует (маршрут 13 требует
+   `Authorization: Bearer <token>`, то есть только вошедших) — там `consent_at IS NULL` означает
+   ровно «согласие ещё не давалось».
 4. ELSE RETURN `granted`.
-COMPLEXITY: O(1), один индексный поиск по `account.id`.
+COMPLEXITY: O(1), один индексный поиск по `account.id` либо `device_session.id`.
 
 ### Algorithm: RevokeConsentOrErase
 
@@ -290,9 +314,14 @@ Claimed by an algorithm but absent from 01_specification.md:
 |---|---|
 | none | none |
 
-AC-consent-and-telegram-auth-5 (повтор `initData`) НЕ реализуется — заявлен в `01_specification.md`
-как открытый вопрос и закрыт алгоритмом `VerifyTelegramInitData` только В ТОМ СМЫСЛЕ, что тест
-фиксирует ТЕКУЩЕЕ (не защищённое) поведение; это не пропуск покрытия, а названное ограничение.
-AC-consent-and-telegram-auth-13 экрана (кнопка входа, экран согласия, экран удаления) реализуются
+AC-consent-and-telegram-auth-5 (повтор `initData`) РЕАЛИЗУЕТСЯ решением DEC-A-016: `TelegramLogin`
+шаг 2 отклоняет повтор ТОГО ЖЕ `hash` в пределах 24 ч `401 initdata_replayed`, сверяясь с
+`last_telegram_auth_hash`/`last_telegram_auth_at` на `account` (аккаунт уже существует) или на
+`device_session` (первый вход). `tests/integration/initdata-replay.test.ts` и
+`tests/concurrency/initdata-replay-parallel.test.ts` — ОБЯЗАТЕЛЬНЫЕ тесты Phase 3, не опциональные:
+без них критерий не закрыт.
+FR-consent-and-telegram-auth-13 (экраны: кнопка входа, экран согласия, экран удаления) реализуются
 `apps/web` без отдельного серверного алгоритма — `reason: ui-only` в терминах
-`sparc-prd-mini` (см. `03_architecture.md`).
+`sparc-prd-mini` (см. `03_architecture.md`); это FR, а не AC — у фичи нет AC с этим номером,
+относящегося к экранам (`AC-consent-and-telegram-auth-13` — отдельный критерий про `erase_all`, см.
+`01_specification.md`).
