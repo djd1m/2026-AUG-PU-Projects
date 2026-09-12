@@ -2,6 +2,7 @@
 // после проверки конфигурации. Разделение нужно тестам: они собирают тот же самый сервер
 // и обращаются к нему через `inject`, не занимая порт.
 
+import { randomUUID } from 'node:crypto';
 import Fastify, { type FastifyError, type FastifyInstance, type FastifyRequest } from 'fastify';
 import cookie from '@fastify/cookie';
 import type { DbPool } from '@n4/db';
@@ -36,6 +37,17 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   const keyOf = (request: FastifyRequest): string =>
     toIpPrefix(clientAddressFrom(request.headers['x-forwarded-for'], request.ip));
 
+  // Идентификатор запроса и отметка начала — ПЕРВЫМ хуком, раньше ограничителя частоты:
+  // отказ `429` тоже обязан находиться в журнале по идентификатору, иначе разбор жалобы
+  // «меня отсекли» упирается во время и догадки.
+  app.decorateRequest('n4RequestId', '');
+  app.decorateRequest('n4StartedAt', 0);
+  app.addHook('onRequest', async (request: FastifyRequest) => {
+    const context = request as FastifyRequest & { n4RequestId: string; n4StartedAt: number };
+    context.n4RequestId = randomUUID();
+    context.n4StartedAt = Date.now();
+  });
+
   // Порядок регистрации — часть защиты: ограничитель частоты вешается на `onRequest`
   // ПЕРЕД любым маршрутом, поэтому он выполняется раньше разбора тела для ВСЕХ путей.
   registerRateLimit(app, limiter, keyOf);
@@ -49,16 +61,23 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     const status = typeof error.statusCode === 'number' && error.statusCode >= 400 ? error.statusCode : 500;
     // Текст ошибки наружу не уходит: он содержит внутренние подробности. В журнал —
     // класс отказа и маршрут, но не тело запроса и не cookie.
-    // НИКОГДА `request.url`: это строка пользователя целиком, вместе с query. Слепое ревью
-    // предъявило прогон `POST /unknown?token=…&ip=…` — оба значения уехали в журнал
-    // (RV-foundation-01). У неизвестного маршрута шаблона нет, и вместо него пишется
-    // ПОСТОЯННЫЙ идентификатор: для разбора инцидента хватает метода, статуса и того факта,
-    // что шаблон не нашёлся.
+    //
+    // ЗАПРОСНАЯ СТРОКА ОТРЕЗАЕТСЯ ЗДЕСЬ, а не «аккуратно печатается» в вызове журнала:
+    // слепое ревью предъявило прогон `POST /unknown?token=…&ip=…`, где токен и полный адрес
+    // уехали в журнал целиком (RV-foundation-01). Уходит ПУТЬ БЕЗ QUERY — его достаточно,
+    // чтобы понять, куда стучались, и в нём нет пользовательских значений. Страж по
+    // исходнику запрещает `request.url` ВНУТРИ вызовов журналирования, поэтому усечение
+    // живёт отдельной строкой и видно глазами.
+    const context = request as FastifyRequest & { n4RequestId?: string; n4StartedAt?: number };
+    const path = request.url.split('?')[0] ?? '/';
     deps.logger.error('request_failed', {
+      request_id: context.n4RequestId ?? 'unknown',
       route: request.routeOptions?.url ?? 'unmatched',
+      path,
       method: request.method,
       status,
       code: error.code,
+      duration_ms: context.n4StartedAt === undefined ? null : Date.now() - context.n4StartedAt,
     });
     return reply.code(status).send(fail(status === 500 ? 'internal_error' : 'bad_request', status === 500 ? 'внутренняя ошибка' : 'запрос не принят'));
   });
