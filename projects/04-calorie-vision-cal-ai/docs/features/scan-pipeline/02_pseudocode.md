@@ -3,28 +3,62 @@
 Алгоритмический контракт. Имена сущностей, статусов, полей и чисел — из
 [`docs/canon.md`](../../canon.md) и [`docs/Pseudocode.md`](../../Pseudocode.md) (Data Structures);
 здесь они не переизобретаются. Требования и решения фичи — [`01_specification.md`](01_specification.md).
+Ревизия 2 (Попытка 3): закрывает PC-01…PC-09 из [`plan-challenge.md`](plan-challenge.md) по решениям
+координатора DEC-A-014 (`failed`, не `refused`, для отсутствия совпадения) и DEC-A-015 (эта ревизия).
 
 ## Data Structures
 
-Фича НЕ добавляет и не меняет ни одной колонки: `recognition`, `photo`, `scan_quota_counter` уже
-несут все нужные поля (`idempotency_key`, `lease_owner`, `lease_fence`, `failure_reason`,
-`normalized_object_key`, `escalated`, `confidence`) — их создала миграция `foundation`
-(`packages/db/migrations/001_init.sql`). Единственное новое — интерфейс уровня кода, не таблица:
+Фича НЕ добавляет и не меняет ни одной колонки канона: `recognition`, `photo`, `scan_quota_counter`
+уже несут все нужные поля — их создала миграция `foundation`. **Две зависимости от foundation,
+названные явно и требующие координации, а не тихого предположения** (PC-02, PC-09):
+
+1. Предикат выборки воркера (`foundation` `LeaseRecognitionJob`) обязан требовать `photo_id IS NOT
+   NULL` в дополнение к `status = 'queued' AND (leased_until IS NULL OR leased_until < now())`, а
+   также верхнюю границу `lease_fence < 3` (PC-03). Обе правки принадлежат ЧУЖОМУ файлу
+   (`docs/features/foundation/02_pseudocode.md`) и НЕ вносятся этой квитанцией — координатор
+   маршрутизирует их в план `foundation` отдельно; эта фича проектируется В ПРЕДПОЛОЖЕНИИ, что они
+   там появятся, и явно называет последствие их отсутствия (см. `03_architecture.md`, раздел
+   «Зависимости от `foundation`, требующие правки»).
+2. `ModelProvider.recognize(image, schema)` (`foundation`, `apps/recognizer/src/provider/types.ts`)
+   расширяется до `ModelProvider.recognize(image, schema, { model, deadlineMs })` — вызывающий код
+   (эта фича) передаёт МОДЕЛЬ явно, интерфейс сам её не выбирает (PC-09). Та же оговорка: правка
+   интерфейса — файл `foundation`, не вносится здесь.
+
+Интерфейсы уровня кода этой фичи (не таблицы):
 
 ```
 MatchIngredientPort = {
-  match(item: RecognizedItem): Promise<{ food_item_id: UUID, snapshot: Snapshot } | null>
+  match(items: RecognizedItem[]): Promise<Array<{
+    food_item_id: UUID | null,
+    portion_g: Grams,
+    source_snapshot: Snapshot | null,
+    parts?: Array<{ food_item_id: UUID, share: Confidence }>   // составное блюдо, food_synonym.recipe_parts
+  }>>
 }
 ```
 
-Реализация ЭТОЙ фичи — `NullMatchIngredientPort`, которая для любого `item` возвращает `null` без
-обращения к базе (в `food_item` нет строк до `source-and-correct`). Тестовый двойник
-`FixedMatchIngredientPort` (используется ТОЛЬКО в unit-тестах эскалации, `01_specification.md`
-раздел «Стык») возвращает фиксированное совпадение. Контракт интерфейса не меняется, когда
-`source-and-correct` подставит реальную реализацию с триграммным поиском.
+Изменение относительно Попытки 1 (PC-08): порт принимает ВЕСЬ список позиций ОДНИМ вызовом и
+возвращает МАССИВ той же длины и порядка — не один `food_item_id`/`Snapshot` на позицию, а запись,
+допускающая композицию (`parts[]`) для блюд, раскрываемых `food_synonym.recipe_parts`. Контракт
+рассчитан на реальную реализацию `source-and-correct` без переделки вызывающего кода.
+
+Реализация ЭТОЙ фичи — `NullMatchIngredientPort`: для входа длины N возвращает МАССИВ длины N, где
+КАЖДЫЙ элемент — `{ food_item_id: null, portion_g: item.mass_g, source_snapshot: null }` (в
+`food_item` нет строк до `source-and-correct`). Тестовых двойников ДВА, и они проверяют РАЗНОЕ
+(PC-08 требует разделения):
+
+- **Контрактный тест порта** — прогоняется ПРОТИВ ЛЮБОЙ реализации (в Phase 1 — только против
+  `NullMatchIngredientPort`, готов принять реализацию `source-and-correct` без изменений): длина
+  ответа равна длине входа, порядок сохранён, `portion_g` всегда положителен, `parts[].share`
+  суммируется в 1, если `parts` присутствует.
+- **Поведенческий тест `NullMatchIngredientPort`** — конкретно для ЭТОЙ фичи: КАЖДЫЙ элемент несёт
+  `food_item_id: null`, ни сети, ни обращения к `food_item` не происходит.
+
+`FixedMatchIngredientPort` (тестовый двойник, используется ТОЛЬКО в unit-тесте инварианта ADR-001,
+см. страж в `04_refinement.md`) возвращает МАССИВ с ХОТЯ БЫ одним `food_item_id`, отличным от `null`.
 
 `ModelProvider` (интерфейс и фейк) и `LeaseRecognitionJob` (аренда с fencing) — из `foundation`,
-здесь ВЫЗЫВАЮТСЯ, не переопределяются.
+здесь ВЫЗЫВАЮТСЯ, не переопределяются, за вычетом двух названных выше расширений.
 
 ## Core Algorithms
 
@@ -34,6 +68,8 @@ REQUIREMENT: `FR-scan-pipeline-1`
 REQUIREMENT: `FR-scan-pipeline-2`
 REQUIREMENT: `FR-scan-pipeline-3`
 REQUIREMENT: `FR-scan-pipeline-4`
+REQUIREMENT: `FR-scan-pipeline-14`
+REQUIREMENT: `FR-scan-pipeline-17`
 REQUIREMENT: `AC-scan-pipeline-1`
 REQUIREMENT: `AC-scan-pipeline-2`
 REQUIREMENT: `AC-scan-pipeline-3`
@@ -42,41 +78,81 @@ REQUIREMENT: `AC-scan-pipeline-5`
 REQUIREMENT: `AC-scan-pipeline-6`
 REQUIREMENT: `AC-scan-pipeline-7`
 REQUIREMENT: `AC-scan-pipeline-8`
+REQUIREMENT: `AC-scan-pipeline-19`
+REQUIREMENT: `AC-scan-pipeline-20`
+REQUIREMENT: `AC-scan-pipeline-24`
 REALISES: SC-US-001-1, SC-US-009-1
-INPUT: сессия устройства (`device_session`, уже созданная `foundation` `CreateDeviceSession`), байты
-изображения, заявленный MIME, заголовок `Idempotency-Key`.
-OUTPUT: `202` с `scan_id` и статусом `queued`, ЛИБО отказ валидации, ЛИБО отказ по потолку.
+INPUT: сессия устройства (`foundation` `CreateDeviceSession`), байты изображения, заявленный
+`Content-Type` (НЕ доверенный), заголовок `Idempotency-Key`.
+OUTPUT: `202` с `scan_id` и статусом `queued`, ЛИБО отказ валидации, ЛИБО отказ по потолку — и в ОБОИХ
+отказных случаях НИ ОДНОЙ видимой воркеру строки `recognition` не остаётся (PC-02).
 STEPS:
-1. Хук частоты `foundation` (FR-foundation-8) применяется ДО этого алгоритма и ДО разбора тела; порог
-для `POST /scans` — 30/мин на `ip_prefix` (FR-scan-pipeline-10, канон §7). Превышение даёт `429` без
-тела в журнале (DEC-A-013) и НЕ доходит до шага 2.
-2. Определить тип файла по БАЙТАМ (сигнатура, не заголовок `Content-Type` и не расширение). `IF`
-сигнатура не одна из `{JPEG, PNG, WebP, HEIC}` `THEN RETURN 422` с причиной `invalid_image`, БЕЗ
-обращения к квоте и БЕЗ создания строки. Полиглот (пригоден и как изображение, и как HTML/архив)
-отвергается тем же путём.
-3. Проверить объявленные размеры изображения ДО декодирования: `IF` ширина × высота дают распаковку
-свыше 100 Мпикс `THEN RETURN 422 (decompression_bomb)` — декодирование не запускается.
-4. Проверить фактический размер файла (≤ 12 МБ) и разрешение после декодирования метаданных (≥
-320×320 px). `IF` нарушено `THEN RETURN 413 | 422` с названной причиной, квота не тронута.
-5. **Заявить ключ повторности.** `IF` заголовок `Idempotency-Key` отсутствует или не UUID `THEN
-RETURN 422`. Иначе один атомарный оператор: `INSERT INTO recognition (device_session_id,
-idempotency_key, status) VALUES (…, 'queued') ON CONFLICT (device_session_id, idempotency_key) DO
-NOTHING RETURNING id`. `IF` результат пуст `THEN` прочитать существующую строку и `RETURN` её
-`scan_id`, код `202`, её ТЕКУЩИЙ статус — без повторного шага 6 и без второго вызова модели.
-«Прочитать, потом вставить» запрещено: две одновременные попытки не находят строки и обе вставляют.
-6. Вызвать `CheckAndConsumeQuota(session, ip_prefix, day, reason = 'primary')` — реализация
-`foundation`, `apps/api/src/quota/check-and-consume.ts`, НЕ переопределяется здесь. `IF refused(scope)
-THEN` перевести заявленную на шаге 5 строку в `refused` с `failure_reason =
-quota_exhausted_${scope}`, `RETURN 429` с телом `{ limit, reset_at, scope }` — поле `scope` называет
-отказавший потолок. Фото на этом шаге ещё НЕ сохранено.
-7. Положить оригинал в приватный бакет (`storage`), создать `photo` с `expires_on = today + 30 дней`,
-`file_state = 'present'`. Публичной ссылки не существует.
-8. Дописать в заявленную строку `recognition`: `photo_id`, `attempt_no = 1`, `escalated = false`,
-`lease_fence = 0`; статус остаётся `queued`.
-9. `IF` это ПЕРВЫЙ скан данной сессии `THEN` записать `growth_event(type = 'install', …)`.
-10. `RETURN 202` с `{ scan_id, status: 'queued' }` немедленно, не дожидаясь распознавания —
-идентификатор выдан ДО начала долгой работы (`long-job-contract.md`).
-COMPLEXITY: O(1) плюс одна загрузка объекта.
+1. Хук частоты (30/мин `POST`, FR-scan-pipeline-10) — ДО разбора тела.
+2. Определить тип по БАЙТАМ (сигнатура, не `Content-Type`, не расширение). `IF` сигнатура не одна из
+`{JPEG, PNG, WebP, HEIC}` `THEN RETURN 422 (invalid_image)`. Полиглот — файл, чьи байты ПОСЛЕ конца
+структуры основного формата (не только JPEG EOI — тот же принцип для PNG IEND, RIFF-длины WebP,
+box-структуры HEIC/ISOBMFF) содержат постороннюю структуру (ZIP local-file-header, `<html`,
+второй валидный заголовок изображения) — отвергается тем же путём (PC-05).
+3. `IF` заявленные ширина×высота дают распаковку свыше 100 Мпикс `THEN RETURN 422
+(decompression_bomb)` — БЕЗ декодирования.
+4. `IF` фактический размер файла вне `(0, 12 МБ]` ИЛИ разрешение `< 320×320 px` `THEN RETURN 413|422`
+с названной причиной.
+5. **Ограниченная проверка декодируемости (PC-04, новый шаг).** Выполнить `sharp(buffer, {
+limitInputPixels: 50_000_000 }).metadata()` И декодировать РОВНО одну страницу/кадр (`{ pages: 1 }`)
+в память ЦЕЛИКОМ (не только заголовок) — дешёвая, но настоящая проверка, что файл декодируется этим
+же кодеком, которым будет пользоваться нормализация. `IF` бросает исключение (испорченный кодек,
+усечённый файл, неподдерживаемый вариант контейнера) `THEN RETURN 422 (invalid_image)` — БЕЗ
+сохранения оригинала, БЕЗ заявки идемпотентности, БЕЗ обращения к квоте: правдоподобный заголовок с
+неразбираемым телом не должен занимать ни один из трёх ресурсов. Это ОТДЕЛЬНАЯ проверка от полной
+нормализации (`NormalizePhotoForModel`): она не конвертирует HEIC, не режет до 1568 px и не сжимает
+— только доказывает декодируемость дешёвым способом до необратимых шагов.
+6. `IF` заголовок `Idempotency-Key` отсутствует ИЛИ не UUID `THEN RETURN 422
+(idempotency_key_required)` — формат проверяется ДО любого обращения к хранилищу или базе.
+7. **Вычислить детерминированный ключ объекта:** `object_key = sha256(байты файла) + '/' +
+device_session_id`. Один и тот же файл от одной сессии ВСЕГДА попадает в один и тот же объект: повтор
+после разрыва соединения перезаписывает ТОТ ЖЕ ключ, а не создаёт второй объект — orphan-объект в
+этом случае физически не может появиться (PC-02).
+8. **Загрузить оригинал в приватный бакет ДО любой транзакции БД** (`storage`, `PUT` по
+`object_key` с шага 7). `IF` `storage` недоступен `THEN RETURN 503 (dependency_unavailable)` — НИ
+ОДНОЙ строки БД ещё не существует, откатывать нечего. Соединение с базой на этом шаге не открыто
+вовсе — сохранение объекта строго ВНЕ транзакции (`shared-resource-verification.md`).
+9. **Одна короткая транзакция БД** (PC-02, заменяет прежние раздельные шаги «заявить ключ» → «списать
+квоту» → «сохранить фото»):
+   1. `INSERT INTO recognition (device_session_id, idempotency_key, status, photo_id, attempt_no,
+      escalated, lease_fence) SELECT …, 'queued', :photo_id_placeholder, 1, false, 0 ON CONFLICT
+      (device_session_id, idempotency_key) DO NOTHING RETURNING id` — фото ещё не вставлено, поэтому
+      сначала вставляется `photo` (см. далее), а `photo_id` подставляется тем же INSERT'ом в ОДНОЙ
+      транзакции (порядок вставки `photo` → `recognition` внутри транзакции, а не наоборот — строка
+      `recognition` со статусом `queued` не существует НИ МОМЕНТА без `photo_id`). `IF` результат
+      `INSERT` пуст (конфликт) `THEN` это ПОВТОР существующего скана: прочитать существующую строку,
+      ROLLBACK эту транзакцию (ничего не менять), удалить best-effort только что загруженный объект
+      ТОЛЬКО если он отличается от объекта существующей строки (при совпадающем `object_key`, что
+      является нормой при повторе того же файла, удалять нечего — `PUT` просто перезаписал тот же
+      объект тем же содержимым); `RETURN` существующий `scan_id`, `202`, её ТЕКУЩИЙ статус.
+   2. `INSERT INTO photo (device_session_id, object_key, mime, bytes, width, height, expires_on,
+      file_state) VALUES (…, today + 30 дней, 'present') RETURNING id` — MIME из шага 2 (сигнатура),
+      не заявленный клиентом.
+   3. Вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_at_this_moment,
+      reason = 'primary')` (`foundation`, три ключа) ВНУТРИ этой же транзакции. `day` вычисляется
+      РОВНО в момент этого шага, а не переносится из более раннего вызова (FR-scan-pipeline-18,
+      PC-06). `IF refused(scope) THEN` **откатить ВСЮ транзакцию** (и `recognition`, и `photo` не
+      сохраняются вовсе — не переводятся в `refused`, потому что строки не существует) и после
+      отката удалить best-effort только что загруженный объект; при неудаче best-effort-удаления
+      объект физически бесхозен, НО ограничен по времени политикой жизненного цикла бакета (ADR-010,
+      второй рубеж, действующий НЕЗАВИСИМО от таблицы `photo` — срабатывает по возрасту объекта, а
+      не по наличию ссылающейся строки). `RETURN 429` с `{ limit, reset_at (следующая полночь
+      Europe/Moscow ОТ ЭТОГО момента), scope }`.
+   4. `IF granted THEN` `COMMIT`. Строка `recognition` появляется воркеру ЦЕЛИКОМ и АТОМАРНО: `status
+      = 'queued'`, `photo_id` уже установлен, `attempt_no = 1`, `escalated = false`, `lease_fence =
+      0` — промежуточного состояния «строка есть, `photo_id` ещё пуст» НЕ существует ни для одного
+      внешнего наблюдателя, включая воркер (устраняет гонку PC-02: «между шагами 5–8 воркер может
+      захватить незавершённое задание»). Предикат выборки воркера дополнительно требует `photo_id IS
+      NOT NULL` (см. «Зависимости от `foundation`» выше) как ВТОРОЙ, defense-in-depth рубеж —
+      основной рубеж здесь — атомарность самой транзакции.
+10. `IF` это ПЕРВЫЙ скан сессии `THEN` записать `growth_event(type = 'install', …)` (вне транзакции
+шага 9, не влияет на её атомарность — потеря этого события не теряет деньги и не создаёт гонку).
+11. `RETURN 202` с `{ scan_id, status: 'queued' }` немедленно.
+COMPLEXITY: O(1) плюс одна загрузка объекта ДО транзакции и одна короткая транзакция.
 
 ### Algorithm: GetScanStatus
 
@@ -86,17 +162,13 @@ REALISES: SC-US-001-2
 INPUT: `scan_id`, вызывающий (сессия либо аккаунт).
 OUTPUT: тело статуса скана либо `404`.
 STEPS:
-1. Хук частоты (порог 120/мин для чтения, FR-scan-pipeline-10) применяется ДО разбора запроса.
-2. Найти `recognition` по `id`. `IF` не найдена `OR` `owner_key` записи не совпадает с вызывающим
-`THEN RETURN 404` — ТОТ ЖЕ ответ, что и для несуществующего `id`; владение проверяется по серверному
-`owner_key`, идентификатор в пути не решает ничего.
+1. Хук частоты (120/мин `GET`, FR-scan-pipeline-10) — ДО разбора запроса.
+2. Найти `recognition` по `id`. `IF` не найдена `OR` `owner_key` не совпадает `THEN RETURN 404`.
 3. Собрать тело: `{ status, items[] (label_ru, mass_g, unmatched, food_item_id), confidence,
-low_confidence (вычисляемое: status = 'done' AND confidence < 0,6), escalated, model_estimate_kcal,
-failure_reason? }`.
-4. `food_item_id` КАЖДОЙ позиции — `null` в этой фиче (`NullMatchIngredientPort`, см.
-`01_specification.md` «Стык с `source-and-correct`»); поля `kcal_total`, `macros`, `sources[]`,
-`conflict_flag`, `share_card_id` полного контракта проекта здесь отсутствуют либо `null`/`[]` — это
-явное, а не подразумеваемое ограничение.
+low_confidence, escalated, model_estimate_kcal, failure_reason? }`.
+4. `food_item_id` каждой позиции — `null` в этой фиче (`NullMatchIngredientPort`); поля полного
+контракта проекта (`kcal_total`, `macros`, `sources[]`, `conflict_flag`, `share_card_id`) отсутствуют
+либо `null`/`[]` — явное ограничение (см. `01_specification.md` «Стык»).
 5. `RETURN 200` с телом и `meta.updated_at = recognition.finished_at ?? recognition.created_at`.
 COMPLEXITY: O(1) чтение по первичному ключу.
 
@@ -105,19 +177,34 @@ COMPLEXITY: O(1) чтение по первичному ключу.
 REQUIREMENT: `FR-scan-pipeline-5`
 REQUIREMENT: `AC-scan-pipeline-9`
 REQUIREMENT: `AC-scan-pipeline-10`
+REQUIREMENT: `AC-scan-pipeline-25`
 REALISES: —
-INPUT: `photo.object_key` (оригинал), заявленный MIME.
+INPUT: `photo.object_key` (оригинал), `photo.mime` (ПОДТВЕРЖДЁННЫЙ по байтам на приёме, шаг 2
+`EnqueueScanForFeature` — НЕ «заявленный MIME»: вход уже один раз прошёл проверку сигнатуры, и
+нормализатор обязан пользоваться ЕЁ результатом, а не спрашивать заново, PC-05).
 OUTPUT: `photo.normalized_object_key`, `photo.normalized_bytes`, ЛИБО `failed(schema_violation)`.
 STEPS:
 1. Загрузить оригинал по подписанной ссылке (≤ 15 минут). Соединение с базой на этом шаге не
-удерживается — транзакция аренды (`foundation` `LeaseRecognitionJob`) уже закрыта.
-2. `IF` MIME `HEIC`/`HEIF` `THEN` декодировать через `libheif` и перекодировать в JPEG; иначе декодер
-исходного формата.
-3. Снять EXIF целиком, включая GPS — сохранённая копия его не несёт.
+удерживается — транзакция аренды закрыта.
+2. Декодировать с ОБЩИМ бюджетом распаковки ≤ 50 Мпикс И входным файлом ≤ 12 МБ (тот же бюджет, что
+на приёме, шаг 5 `EnqueueScanForFeature` — не второй, отдельно придуманный лимит). `IF photo.mime =
+'image/heic' THEN` декодировать через `libheif`/`sharp` с явным `{ pages: 1 }` — берётся ПЕРВЫЙ
+кадр контейнера (HEIC-последовательности/Live Photo несут несколько кадров; политика — всегда
+первый, а не «любой удобный»); иначе декодер формата, тоже с `{ pages: 1 }`, если формат допускает
+многостраничность (анимированный WebP).
+3. **Применить ориентацию EXIF (`rotate()`, автоориентация по тегу `Orientation`) ДО удаления
+метаданных** — иначе метаданные стёрты раньше, чем прочитан угол поворота, и повёрнутое на телефоне
+фото остаётся повёрнутым в сохранённой копии (PC-05). ЗАТЕМ снять ВСЕ метаданные (`withMetadata:
+false`, дефолт `sharp` без явного `withMetadata()`), включая EXIF/GPS.
 4. Привести длинную сторону к ≤ 1568 px (не увеличивать, если уже меньше).
-5. Сжимать итеративно, пока размер файла не станет ≤ 5 МБ (запас на рост base64 ≈ треть).
-6. `IF` любой шаг 2–5 бросил ошибку (нечитаемый файл, неподдерживаемый кодек, декодер исчерпал
-память) `THEN RETURN failed(schema_violation)` с названным шагом — вызова модели НЕ делать.
+5. Сжимать итеративно, пока размер файла не станет ≤ 5 МБ, с явным пределом числа итераций (например
+6) — `IF` предел итераций исчерпан и файл всё ещё `> 5 МБ` `THEN` это тоже `failed(schema_violation)`
+шага 6, а не бесконечный цикл.
+6. `IF` любой шаг 2–5 бросил ошибку ИЛИ исчерпал предел итераций `THEN RETURN
+failed(schema_violation)` с названным шагом — вызова модели НЕ делать. Это РЕДКИЙ путь: подавляющее
+большинство недекодируемых файлов уже отсеяно шагом 5 `EnqueueScanForFeature`; сюда попадают только
+файлы, декодируемые в общем виде, но падающие на конкретной трансформации (ротация неподдерживаемого
+типа контейнера, исчерпание памяти на полном разрешении при пройденной облегчённой проверке).
 7. Сохранить результат как `photo.normalized_object_key`, `photo.normalized_bytes`. Оригинал не
 изменяется.
 8. `RETURN` успех.
@@ -130,6 +217,8 @@ REQUIREMENT: `FR-scan-pipeline-7`
 REQUIREMENT: `FR-scan-pipeline-8`
 REQUIREMENT: `FR-scan-pipeline-12`
 REQUIREMENT: `FR-scan-pipeline-13`
+REQUIREMENT: `FR-scan-pipeline-15`
+REQUIREMENT: `FR-scan-pipeline-18`
 REQUIREMENT: `NFR-scan-pipeline-1`
 REQUIREMENT: `NFR-scan-pipeline-3`
 REQUIREMENT: `AC-scan-pipeline-11`
@@ -139,108 +228,178 @@ REQUIREMENT: `AC-scan-pipeline-14`
 REQUIREMENT: `AC-scan-pipeline-15`
 REQUIREMENT: `AC-scan-pipeline-16`
 REQUIREMENT: `AC-scan-pipeline-17`
+REQUIREMENT: `AC-scan-pipeline-21`
+REQUIREMENT: `AC-scan-pipeline-26`
+REQUIREMENT: `AC-scan-pipeline-27`
+REQUIREMENT: `AC-scan-pipeline-28`
+REQUIREMENT: `AC-scan-pipeline-29`
 REALISES: SC-US-001-2, SC-US-002-2
-INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (уже несёт `lease_fence`, `photo_id`).
+INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (несёт `lease_fence`, `photo_id`,
+ГАРАНТИРОВАННО непустой — см. «Зависимости от `foundation`»).
 OUTPUT: `recognition` в терминальном статусе `failed` или `refused` (`done` НЕ достигается в этой
-фиче реальным `NullMatchIngredientPort` — см. `01_specification.md` «Стык»; путь к `done` проверяется
-отдельно, unit-тестом с подменённым портом).
+фиче реальным `NullMatchIngredientPort` — путь к `done` проверяется отдельно, unit-тестом с
+`FixedMatchIngredientPort`).
 STEPS:
-1. Аренда уже взята и транзакция закрыта (`foundation`, не повторяется здесь).
-2. Вызвать `NormalizePhotoForModel`. `IF failed THEN` записать `failed(schema_violation)` УСЛОВНО по
-своему `lease_fence` (шаг 8 ниже несёт общий механизм записи) и `RETURN` — вызова модели не было.
-3. Вызвать `ModelProvider.recognize(normalizedImage, schema)` (`Haiku 4.5`, живой провайдер —
-`apps/recognizer/src/provider/anthropic.ts`, эта фича; фейк — `foundation`, применяется в тестах и
-на стенде без ключа, DEC-A-009). Записать `model_call { reason: 'primary', model: 'haiku-4.5', ok,
-ms }` НЕЗАВИСИМО от исхода (FR-scan-pipeline-12: счёт по попыткам). `IF` ответ не соответствует
-схеме `THEN failed(schema_violation)`. `IF` провайдер недоступен/таймаут `THEN
-failed(provider_unavailable | provider_timeout)` — попытка уже списана на приёме и не возвращается.
-4. Проверить ДИАПАЗОНЫ в коде, после разбора: `confidence` в 0…1; `mass_g` каждой позиции в 1…5000;
-позиций ≤ 12; кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` любое условие нарушено
-`THEN failed(schema_violation)` с названным полем — fail-closed, значение НЕ подрезается до границы.
-5. `IF` модель не нашла еды на кадре `THEN refused(no_food_detected)` с подсказкой «еда не
-распознана, снимите тарелку целиком», запись дневника не создаётся, `RETURN` (SC-US-001-2).
-6. `IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(session, ip_prefix,
-day, reason = 'escalation')` — ДО обращения к Sonnet 5 (переиспользование `foundation`, четвёртый
-ключ `(escalation, 'all', day)`). `IF granted THEN` повторить шаг 3 моделью `Sonnet 5`
-(`model_call { reason: 'escalation', … }`), `escalated = true`, `attempt_no = 2`, вернуться к шагу 4
-для НОВОГО ответа. `ELSE` эскалации НЕ происходит: запомнить `failure_reason_candidate =
-quota_exhausted_escalation` для использования на шаге 8, если статус окажется `done` (сегодня — не
-происходит, см. шаг 7).
-7. Для каждой позиции вызвать `MatchIngredientPort.match(item)`. Реализация этой фичи
-(`NullMatchIngredientPort`) возвращает `null` для ЛЮБОГО `item` → каждая позиция помечается
-`unmatched = true`, `food_item_id = null` (SC-US-002-2, частично: маркировка есть, число из базы —
-нет). `IF` ни одна позиция не сопоставлена (в этой фиче — ВСЕГДА, когда шаг 5 не сработал) `THEN`
-статус `failed(no_food_matched)` с подсказкой «блюда нет в базе, уточните ингредиент вручную».
-`failure_reason_candidate` с шага 6, если был, в ЭТОМ прогоне НЕ записывается — поле `failure_reason`
-несёт `no_food_matched`, единственную причину, применимую к фактическому терминальному статусу; шаг
-6 доказывается отдельным unit-тестом с `FixedMatchIngredientPort` (AC-scan-pipeline-14), где статус
-действительно становится `done` и `failure_reason = quota_exhausted_escalation` записывается.
-8. Записать результат УСЛОВНО по своему `lease_fence`: `UPDATE recognition SET status = …,
-finished_at = now(), leased_until = NULL, lease_owner = NULL, … WHERE id = :scan_id AND lease_fence =
-:мой_fence`. `IF` затронуто НОЛЬ строк `THEN` результат ОТБРОСИТЬ, записать `stale_lease_result` в
-аудит, ничего не перезаписывать, `RETURN` (`foundation` `LeaseRecognitionJob`, механизм
-переиспользуется, не переопределяется).
-COMPLEXITY: O(k) на позицию (k ≤ 12), без обращения к индексу `food_item` в этой фиче.
+1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, возвращённый
+захватом.
+2. **Повторная попытка после истечения аренды списывает СВОЮ квоту (PC-01).** `IF fence = 1` (это
+ПЕРВЫЙ захват этого задания) `THEN` попытка №1 уже оплачена и списана шагом 9.3
+`EnqueueScanForFeature` — переходить к шагу 3 без нового списания. `IF fence ∈ {2, 3}` (это
+ПОВТОРНЫЙ захват — предыдущий воркер не уложился в 60 с аренды) `THEN` ДО загрузки фото и ДО вызова
+модели вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС,
+reason = 'primary')` — ЕЩЁ ОДНО списание трёх ключей, `day` вычисляется В МОМЕНТ ЭТОГО захвата и
+может отличаться от `day` шага 9.3, если задание пересекло полночь (PC-06). `IF refused(scope) THEN`
+записать `refused(quota_exhausted_${scope})` условно по `fence` (механизм шага 9 ниже) и `RETURN` —
+модель на этой попытке не вызывается вовсе; это ОТКАЗ ДО вызова, соответствует `refused` по критерию
+координатора (DEC-A-014). `fence = 4` невозможен по построению — предикат захвата `foundation`
+ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»); при обнаружении `fence > 3`
+(защита от регресса) `THEN` немедленно `failed(timeout)` без вызова модели.
+3. Вызвать `NormalizePhotoForModel`. `IF failed THEN` записать `failed(schema_violation)` условно по
+`fence` (шаг 9) и `RETURN`.
+4. Определить модель ЯВНО: `model = escalated ? N4_MODEL_ESCALATION : N4_MODEL_PRIMARY` (значения
+окружения канона, ADR-004; `foundation` не выбирает модель сама — см. «Зависимости от `foundation`»,
+PC-09). Вызвать `ModelProvider.recognize(normalizedImage, schema, { model, deadlineMs: 25_000 })`.
+**Скрытые повторы SDK провайдера отключены явно** (`maxRetries: 0` при создании клиента,
+`03_architecture.md`) — единственный источник повторного вызова модели на одну попытку `fence` —
+явная логика этого алгоритма (шаг 6, эскалация), не библиотека. Записать `model_call` (событие,
+FR-scan-pipeline-12): `START` немедленно ПЕРЕД вызовом (`{ request_id, scan_id, fence, reason:
+escalated ? 'escalation' : 'primary', model, mode: N4_MODEL_PROVIDER, day, ts }`), `OUTCOME` сразу
+после ответа/ошибки/таймаута (`{ request_id (тот же), outcome: 'ok'|'failed'|'timeout', ms,
+input_tokens?, output_tokens? }`). Если процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже записан
+в структурированный вывод (не буферизуется) — агрегатор (`scripts/telemetry/model-calls.sh`, план,
+PC-07) сопоставляет `request_id` и метит непарные `START` старше грейс-периода как `outcome:
+'unknown'`; счёт в потолках это НЕ меняет — квота уже списана шагом 2/9.3 ДО вызова, независимо от
+исхода. `IF` ответ не соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер недоступен
+ИЛИ истёк дедлайн 25 с `THEN failed(provider_unavailable | provider_timeout)`.
+5. Проверить ДИАПАЗОНЫ в коде: `confidence` в 0…1; `mass_g` каждой позиции в 1…5000; позиций ≤ 12;
+кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` нарушено `THEN failed(schema_violation)`
+с названным полем — без подрезания.
+6. `IF` модель не нашла еды `THEN refused(no_food_detected)`, дневник не создаётся, `RETURN`.
+7. `IF confidence < 0,6 AND escalated = false THEN` вызвать `CheckAndConsumeQuota(session, ip_prefix,
+day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС, reason = 'escalation')` — четвёртый ключ, `day` СВОЙ,
+вычисленный в момент этого решения (PC-06). `IF granted THEN` вернуться к шагу 4 с `model =
+N4_MODEL_ESCALATION`, `escalated = true`, `attempt_no = 2`. `ELSE` эскалации нет: запомнить
+`failure_reason_candidate = quota_exhausted_escalation` для шага 8, если статус окажется `done`
+(сегодня — не происходит, шаг 8).
+8. Вызвать `MatchIngredientPort.match(items)` — ОДИН вызов на ВЕСЬ список позиций (PC-08). Для
+каждого элемента ответа: `IF food_item_id != null THEN` позиция сопоставлена, `Snapshot =
+source_snapshot`; иначе `unmatched = true`, `food_item_id = null`. `IF` (составное блюдо) `parts`
+присутствует `THEN` раскрыть в компоненты — логика вне объёма этой фичи (`NullMatchIngredientPort`
+никогда не возвращает `parts`). `IF` ни одна позиция не сопоставлена (в этой фиче — ВСЕГДА при
+`NullMatchIngredientPort`) `THEN` статус `failed(no_food_matched)` (DEC-A-014: попытка ОПЛАЧЕНА и
+ОБРАБОТАНА моделью — это не отказ ДО вызова, а необработанный результат). `failure_reason_candidate`
+шага 7 в ЭТОМ прогоне НЕ записывается — доказывается отдельным unit-тестом с `FixedMatchIngredientPort`
+(AC-scan-pipeline-14), где `done`/`low_confidence`/`quota_exhausted_escalation` записываются
+по-настоящему.
+
+   **Согласование с ADR-001 Confirmation (2) — явно, не подразумеваемо (PC-08).** Root-уровневый
+   `ADR.md` называет терминалом ИМЕННО `refused(no_food_matched)` для нулевого совпадения — это
+   решение написано для МИРА, где матчинг РЕАЛЬНО ИСКАЛ и не нашёл (`source-and-correct`). В этой
+   фиче матчинг не ищет вовсе (`NullMatchIngredientPort` — заглушка, а не поиск с нулевым
+   результатом), и DEC-A-014 называет это ДРУГИМ по природе событием: `failed`, а не `refused`.
+   Ожидание: когда `source-and-correct` подставит РЕАЛЬНЫЙ порт, генуинный «искали и не нашли»
+   вернётся к `refused(no_food_matched)` из root ADR-001, и `failed(no_food_matched)` из этой фичи
+   исчезнет вместе с `NullMatchIngredientPort`. До тех пор оба документа (root `ADR.md` и эта фича)
+   намеренно расходятся, и расхождение НАЗВАНО, а не тихо перекрыто. Координатор подтверждает эту
+   трактовку явно на чекпойнте — она не выводится автоматически ни из ADR-001, ни из DEC-A-014.
+9. Записать результат УСЛОВНО: `UPDATE recognition SET status = …, finished_at = now(), leased_until
+= NULL, lease_owner = NULL, … WHERE id = :scan_id AND lease_fence = :fence AND status = 'queued'` —
+условие `status = 'queued'` ДОБАВЛЕНО к условию по `fence` (PC-03): это делает запись воркера
+взаимоисключающей со `SweepStuckScans`, который пишет терминальный статус БЕЗ владения арендой (у
+sweeper'а нет `fence` — только право переводить `queued` в `failed(timeout)` по возрасту). `IF`
+затронуто НОЛЬ строк `THEN` результат ОТБРОСИТЬ: если проиграл гонку ДРУГОМУ воркеру — записать
+`stale_lease_result`; если проиграл гонку `SweepStuckScans` (статус уже не `queued`) — записать
+`swept_as_timeout`. Различить эти два случая ПОСЛЕ факта: перечитать строку, сравнить `status`.
+COMPLEXITY: O(k) на позицию (k ≤ 12) плюс O(1) на решение по каждому шагу.
+
+### Algorithm: SweepStuckScans
+
+REQUIREMENT: `FR-scan-pipeline-16`
+REQUIREMENT: `AC-scan-pipeline-22`
+REQUIREMENT: `AC-scan-pipeline-23`
+REALISES: — (сценария `SC-US-nnn-k` нет; PC-03 — инженерный дедлайн, не пользовательский путь)
+INPUT: текущее время, тот же цикл опроса `recognizer` (интервал 1 с, `foundation`), что и захват
+задания — ОТДЕЛЬНОГО сервиса не заводится.
+OUTPUT: терминальный статус `failed(timeout)` на застрявших заданиях.
+STEPS:
+1. **Правило А — никогда не захвачено.** `UPDATE recognition SET status = 'failed', failure_reason =
+'timeout', finished_at = now() WHERE status = 'queued' AND leased_until IS NULL AND created_at <
+now() - interval '5 minutes' AND status = 'queued'` — задание простояло в очереди 5 минут, ни один
+воркер его не взял (пул воркеров исчерпан либо остановлен). Условие `status = 'queued'` в `WHERE`
+сразу и есть защита от гонки: если воркер В ЭТОТ МОМЕНТ захватывает задание, `UPDATE` затрагивает 0
+строк, и это НЕ ошибка (следующий тик sweeper'а его уже не увидит, `leased_until` станет не-`NULL`).
+2. **Правило Б — предел захватов исчерпан.** Задание с `lease_fence = 3`, чья аренда истекла
+(`leased_until < now()`), НЕИЗБЕЖНО становится незахватываемым: предикат выборки `foundation`
+ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»), значит такое задание не
+предложится НИ ОДНОМУ воркеру и провисит в `queued` вечно без sweeper'а. `UPDATE recognition SET
+status = 'failed', failure_reason = 'timeout', finished_at = now() WHERE status = 'queued' AND
+lease_fence >= 3 AND leased_until < now()`.
+3. **Правило В — общий дедлайн задачи 30 с (приближение, названное явно).** Колонки
+`first_leased_at` в каноне НЕТ, и эта фича её не добавляет (координатор запретил новые сущности).
+Прокси — `created_at`: первый захват происходит в пределах интервала опроса (≤ 1 с) после создания
+строки, поэтому `now() - created_at` практически совпадает с «время с первого захвата» с точностью
+до секунды. `UPDATE recognition SET status = 'failed', failure_reason = 'timeout', finished_at =
+now() WHERE status = 'queued' AND lease_fence >= 1 AND created_at < now() - interval '30 seconds'`.
+**Названный риск, а не скрытый:** это приближение, а не точное измерение с момента первого захвата;
+задание, легитимно завершающееся между 30 и ~31 с (интервал опроса), теоретически может быть
+затронуто ОБОИМИ — и настоящим воркером, и sweeper'ом. Гонка разрешена условием `status = 'queued'`
+в обоих операторах (шаг 9 `RecognizeScanWithinScanPipeline` и здесь): кто раньше СОVERSHOOTS, тот и
+записывает, второй получает 0 строк. Точное решение (журнал `first_leased_at`) — кандидат в
+`source-and-correct`/следующую ревизию `foundation`, не эта фича.
+4. Каждое правило — отдельный, идемпотентный `UPDATE` со СВОИМ `WHERE`; повторный прогон не находит
+уже переведённых строк.
+COMPLEXITY: O(n) по числу застрявших строк на прогон; индексы `(status, leased_until)` и
+`(status, created_at)` держат стоимость малой относительно общего объёма `queued`.
 
 ### Algorithm: RateLimitScanRoutes
 
 REQUIREMENT: `FR-scan-pipeline-10`
 REALISES: —
-INPUT: входящий запрос к `/api/v1/scans` (POST) либо `/api/v1/scans/{id}` (GET), общий ограничитель
-частоты `foundation` (FR-foundation-8).
+INPUT: входящий запрос к `/api/v1/scans` (POST) либо `/api/v1/scans/{id}` (GET).
 OUTPUT: продолжение обработки либо `429` без разбора тела.
 STEPS:
-1. Хук `onRequest` (та же фаза, что у `foundation`, ДО разбора тела) выбирает порог по МЕТОДУ
-запроса: `POST` → 30/мин на `ip_prefix`; `GET` → 120/мин на `ip_prefix` (канон §7). Это РАСШИРЕНИЕ
-общего ограничителя `foundation`, а не второй независимый счётчик: ключ и место хранения те же,
-порог параметризован по маршруту.
-2. `IF` порог превышен `THEN RETURN 429` с телом `{ error: { code: 'rate_limited', message } }`, БЕЗ
-записи тела запроса в журнал (DEC-A-013), тело запроса НЕ разбирается.
-3. `ELSE` передать дальше: валидация → идемпотентность → квота → вызов модели (порядок
-`security-operation-order.md`).
+1. Хук `onRequest` (ДО разбора тела) выбирает порог по МЕТОДУ: `POST` → 30/мин на `ip_prefix`; `GET`
+→ 120/мин на `ip_prefix`. Расширение общего ограничителя `foundation`, не второй счётчик.
+2. `IF` порог превышен `THEN RETURN 429` без разбора тела, тело не пишется в журнал (DEC-A-013).
+3. `ELSE` передать дальше: валидация → декодируемость → идемпотентность → квота → вызов модели.
 COMPLEXITY: O(1) на запрос.
 
 ### Algorithm: PurgeExpiredPhotos
 
 REQUIREMENT: `FR-scan-pipeline-11`
 REQUIREMENT: `NFR-scan-pipeline-2`
-REALISES: — (сценария `SC-US-nnn-k` нет; требование проверяется по сроку хранения)
+REALISES: —
 INPUT: текущая дата, размер батча.
 OUTPUT: удалённые объекты и обновлённые строки `photo`.
 STEPS:
-1. Раз в сутки выбрать батч `photo` с `expires_on < today AND file_state = 'present'`, ограничив
-размер батча — расход управляется нашим кодом.
-2. Удалить объект из бакета (и оригинал, и `normalized_object_key`, если присутствует). `IF` объект
-уже отсутствует `THEN` считать шаг успешным.
-3. Перевести `file_state → purged`, строку `photo` СОХРАНИТЬ — дневник продолжает отдавать числа
-после удаления фото (когда числа появятся, `source-and-correct`).
-4. Политика жизненного цикла бакета — второй, параллельный рубеж, не замена: если батч не отработал,
-срок всё равно наступит.
-5. Повторять, пока батч не пуст. Повторный прогон в тот же день не делает ничего.
+1. Раз в сутки батч `photo` с `expires_on < today AND file_state = 'present'`.
+2. Удалить объект из бакета (оригинал и `normalized_object_key`, если есть); отсутствие объекта —
+тоже успех.
+3. `file_state → purged`, строка `photo` СОХРАНЯЕТСЯ.
+4. Политика жизненного цикла бакета — второй, независимый от строки `photo` рубеж (см. PC-02, шаг 9.3
+`EnqueueScanForFeature`: она же ловит объекты без ЛЮБОЙ ссылающейся строки).
+5. Повторный прогон в тот же день — ноль действий.
 COMPLEXITY: O(b) на прогон, b — размер батча.
 
 ## API Contracts
 
 ```
 POST /api/v1/scans
-  Cookie: n4_session=<токен> — обязательна (устройство должно иметь сессию, см. foundation)
+  Cookie: n4_session=<токен> — обязательна
   Content-Type: multipart/form-data
   Idempotency-Key: <UUID> — ОБЯЗАТЕЛЕН
-  Body: файл изображения (JPEG/PNG/WebP/HEIC ≤ 12 МБ, ≥ 320×320 px)
+  Body: файл изображения (JPEG/PNG/WebP/HEIC ≤ 12 МБ, ≥ 320×320 px, декодируемый ≤ 50 Мпикс)
   Response 202: { "data": { "scan_id": "<uuid>", "status": "queued" }, "meta": { "request_id": "<uuid>" } }
-             Повтор с ТЕМ ЖЕ Idempotency-Key и той же сессией даёт ТОТ ЖЕ scan_id и тот же 202.
   Response 401: нет сессии
   Response 413 | 422: { "error": { "code": "invalid_image" | "decompression_bomb", "message": "<причина>" } }
-  Response 422: { "error": { "code": "idempotency_key_required" } } — заголовок отсутствует/не UUID
-  Response 429: { "error": { "code": "rate_limited" } }  — до разбора тела
-             ИЛИ { "error": { "code": "quota_exhausted" }, "data": { "limit": n, "reset_at": "<ts>", "scope": "user" | "global" } }
+  Response 422: { "error": { "code": "idempotency_key_required" } }
+  Response 429: { "error": { "code": "rate_limited" } } ИЛИ { "error": { "code": "quota_exhausted" }, "data": { "limit": n, "reset_at": "<ts>", "scope": "user" | "global" } }
   Response 503: { "error": { "code": "dependency_unavailable" } }
 
 GET /api/v1/scans/{id}
   Cookie: n4_session=<токен>
   Response 200: { "data": { "status": "queued" | "failed" | "refused" | "done",
-                             "items": [ { "label_ru": string, "mass_g": number, "unmatched": boolean,
-                                          "food_item_id": null } ],
+                             "items": [ { "label_ru": string, "mass_g": number, "unmatched": boolean, "food_item_id": null } ],
                              "confidence": number | null, "low_confidence": boolean, "escalated": boolean,
                              "model_estimate_kcal": number | null, "failure_reason": string | null },
                   "meta": { "request_id": "<uuid>", "updated_at": "<ts>" } }
@@ -253,29 +412,37 @@ GET /api/v1/scans/{id}
 ```mermaid
 stateDiagram-v2
     [*] --> validating_input: POST /scans
-    validating_input --> rejected_input: формат/размер/decompression bomb
-    validating_input --> claiming_idempotency: валиден
-    claiming_idempotency --> quota_check: новый ключ
-    claiming_idempotency --> existing_scan: ключ уже занят, вернуть прежний scan_id
-    quota_check --> refused_quota: refused(scope), фото НЕ сохранено
-    quota_check --> queued: granted, фото сохранено, 202
+    validating_input --> rejected_input: формат/размер/bomb/недекодируемо
+    validating_input --> uploading: валиден, ключ повторности сформирован
+    uploading --> tx_short: объект загружен (ВНЕ транзакции)
+    uploading --> upload_failed: storage недоступен, БД не тронута
+    tx_short --> existing_scan: конфликт ключа — вернуть прежний scan_id
+    tx_short --> refused_quota: квота отказала — ROLLBACK, объект best-effort удалён
+    tx_short --> queued: COMMIT — recognition+photo+quota атомарно
     rejected_input --> [*]
+    upload_failed --> [*]
     existing_scan --> [*]
     refused_quota --> [*]
 
-    queued --> leased: аренда foundation (lease_fence++)
-    leased --> normalizing
+    queued --> leased: захват (fence++), foundation
+    queued --> failed_timeout: SweepStuckScans (5 мин без захвата, fence>=3 неуловимо, либо 30 с приближение)
+    leased --> retry_charge: fence >= 2, ДО вызова модели
+    retry_charge --> refused_retry_quota: refused(scope) — модель не вызвана
+    retry_charge --> normalizing: granted
+    leased --> normalizing: fence = 1
     normalizing --> failed_schema: нормализация не удалась
     normalizing --> calling_model
-    calling_model --> failed_provider: недоступен / таймаут
+    calling_model --> failed_provider: недоступен / таймаут 25с
     calling_model --> failed_schema: диапазоны нарушены
     calling_model --> refused_no_food: еда не найдена
     calling_model --> escalation_decision: confidence < 0.6
     calling_model --> matching: confidence >= 0.6
-    escalation_decision --> calling_model: granted, Sonnet 5, escalated=true
-    escalation_decision --> matching: refused(escalation), низкая уверенность сохраняется
+    escalation_decision --> calling_model: granted, model=N4_MODEL_ESCALATION
+    escalation_decision --> matching: refused(escalation), уверенность сохраняется
     matching --> failed_no_match: NullMatchIngredientPort — ВСЕГДА в этой фиче
-    matching --> done: FixedMatchIngredientPort (только unit-тест эскалации)
+    matching --> done: FixedMatchIngredientPort (только unit-тест PC-08/AC-14)
+    failed_timeout --> [*]
+    refused_retry_quota --> [*]
     failed_schema --> [*]
     failed_provider --> [*]
     refused_no_food --> [*]
@@ -287,18 +454,23 @@ stateDiagram-v2
 
 | Категория | Пример | Ответ и действие |
 |---|---|---|
-| вход не по содержимому | `.jpg` с байтами не-JPEG | `422 invalid_image` до квоты и до записи |
+| вход не по содержимому / полиглот | `.jpg` с байтами не-JPEG, посторонняя структура после конца формата | `422 invalid_image` до квоты и до записи |
 | decompression bomb | заявленные размеры > 100 Мпикс | `422 decompression_bomb` до декодирования |
-| нет ключа повторности | `Idempotency-Key` отсутствует/не UUID | `422 idempotency_key_required` до квоты |
-| повтор ключа | тот же ключ, та же сессия | `202` с прежним `scan_id`, без повторного списания |
-| квота исчерпана | `used = limit` на любом из ключей `primary` | `429` с `scope`, `refused(quota_exhausted_*)`, фото не сохранено |
-| нормализация не удалась | нечитаемый HEIC | `failed(schema_violation)`, вызова модели нет |
-| провайдер недоступен/таймаут | сеть, 5xx, дедлайн | `failed(provider_unavailable\|provider_timeout)`, попытка списана |
+| недекодируемо | правдоподобный заголовок, кодек не разбирает тело | `422 invalid_image` до загрузки объекта, до идемпотентности, до квоты |
+| нет ключа повторности | `Idempotency-Key` отсутствует/не UUID | `422 idempotency_key_required` до загрузки и квоты |
+| storage недоступен при загрузке | `PUT` оригинала падает | `503 dependency_unavailable`, БД не тронута |
+| повтор ключа | тот же ключ, та же сессия | `202` с прежним `scan_id`, транзакция не открывалась заново |
+| квота исчерпана (приём) | `used = limit` на любом из трёх ключей `primary` | `429` со `scope`; ROLLBACK всей транзакции — ни `recognition`, ни `photo` не сохраняются |
+| квота исчерпана (повторный захват) | `fence ∈ {2,3}`, потолок исчерпан | `refused(quota_exhausted_${scope})`, модель не вызвана |
+| нормализация не удалась | нечитаемый на конкретной трансформации файл | `failed(schema_violation)`, вызова модели нет |
+| провайдер недоступен/таймаут | сеть, 5xx, 25 с дедлайн | `failed(provider_unavailable\|provider_timeout)`, попытка списана |
 | диапазон нарушен | `confidence = 7` | `failed(schema_violation)` с названным полем, без подрезания |
 | еда не найдена | пустой список ингредиентов | `refused(no_food_detected)`, дневник не создаётся |
-| эскалация отказана | `scope = escalation` исчерпан | второй вызов не делается; в этой фиче ведёт к `failed(no_food_matched)` (см. «Стык») |
-| нет совпадения в базе | `NullMatchIngredientPort` — всегда | `failed(no_food_matched)` |
-| устаревший захват | `UPDATE` результата затронул 0 строк | результат отброшен, `stale_lease_result` в аудит |
+| эскалация отказана | `scope = escalation` исчерпан | второй вызов не делается; в этой фиче ведёт к `failed(no_food_matched)` |
+| нет совпадения в базе | `NullMatchIngredientPort` — всегда | `failed(no_food_matched)` (DEC-A-014) |
+| устаревший захват | `UPDATE` результата затронул 0 строк, статус ещё `queued` | `stale_lease_result` в аудит |
+| задание сметено sweeper'ом | `UPDATE` результата затронул 0 строк, статус уже `failed(timeout)` | `swept_as_timeout` в аудит |
+| никогда не захвачено / предел захватов | `queued` дольше 5 мин, либо `fence=3` с истёкшей арендой | `SweepStuckScans` → `failed(timeout)` |
 | чужой/несуществующий ресурс | `GET /scans/{id}` | ОДИН `404` для обоих случаев |
 | частота превышена | сверх 30/мин (POST) или 120/мин (GET) | `429` до разбора тела |
 

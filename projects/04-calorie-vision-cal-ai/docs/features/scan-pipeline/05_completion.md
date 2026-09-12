@@ -115,6 +115,17 @@ Phase 3 заменяет их фактическими, и только тогд
 | AC-scan-pipeline-16 | tests/integration/provider/anthropic-failure.test.ts | провайдер недоступен или таймаут даёт failed без отката квоты |
 | AC-scan-pipeline-17 | tests/concurrency/recognize/stale-lease-real-delay.test.ts | устаревший захват под реальной задержкой провайдера затрагивает ноль строк |
 | AC-scan-pipeline-18 | tests/integration/routes/scans-ownership.test.ts | чужой и несуществующий scan_id дают один и тот же ответ 404 |
+| AC-scan-pipeline-19 | tests/integration/routes/scans-atomic-publish.test.ts | крах между загрузкой объекта и транзакцией не оставляет захватываемой строки |
+| AC-scan-pipeline-20 | tests/integration/routes/scans-quota-rollback.test.ts | отказ квоты откатывает вставку recognition и photo целиком |
+| AC-scan-pipeline-21 | tests/concurrency/recognize/retry-charge.test.ts | повторный захват после истечения аренды списывает вторую попытку primary до вызова модели |
+| AC-scan-pipeline-22 | tests/integration/recognize/sweep-fence-cap.test.ts | задание с исчерпанным пределом захватов сметается в failed timeout |
+| AC-scan-pipeline-23 | tests/integration/recognize/sweep-unclaimed.test.ts | задание без захвата дольше пяти минут сметается в failed timeout |
+| AC-scan-pipeline-24 | tests/integration/routes/scans-decodability.test.ts | недекодируемый HEIC с валидной сигнатурой отвергается до загрузки и до квоты |
+| AC-scan-pipeline-25 | tests/integration/photo/normalize-exif-and-frames.test.ts | применяет поворот EXIF до удаления метаданных и берёт только первый кадр |
+| AC-scan-pipeline-26 | tests/concurrency/recognize/day-boundary.test.ts | попытка после полуночи по Москве списывается в новые сутки |
+| AC-scan-pipeline-27 | tests/integration/observability/model-call-crash.test.ts | событие начала попытки переживает крах процесса до получения ответа |
+| AC-scan-pipeline-28 | tests/contract/match-ingredient-port.test.ts | контрактный тест порта сопоставления не зависит от конкретной реализации |
+| AC-scan-pipeline-29 | tests/integration/provider/escalation-model-id.test.ts | эскалация вызывает модель N4_MODEL_ESCALATION а не повторно первичную |
 
 Критерии AC-scan-pipeline-11 и AC-scan-pipeline-3 закрываются НЕ одним утверждением: у первого три
 отдельных прогона (по одному на нарушенное поле), у второго — два (размер и разрешение). Ворота

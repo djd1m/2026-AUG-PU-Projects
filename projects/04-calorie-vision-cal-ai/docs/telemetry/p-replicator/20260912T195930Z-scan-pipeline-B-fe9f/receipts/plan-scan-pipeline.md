@@ -122,4 +122,72 @@ VERDICT traceability=PASS features=2 gaps=0 inconclusive=0
 Заголовки тестов AC-scan-pipeline-15 сверены на дословное совпадение между `04_refinement.md` и
 `05_completion.md` (обе несут «даёт failed no_food_matched и статус done не встречается»).
 
+## Попытка 3 — закрытие PC-01…PC-09 (challenge Codex Astra, DEC-A-015)
+
+Прочитан `docs/features/scan-pipeline/plan-challenge.md` целиком (verdict STOP, 9 находок:
+PC-01/PC-02 blocker, PC-03…PC-08 high, PC-09 medium). Все девять закрыты в 01/02/04/05 по решениям
+координатора DEC-A-015, перечисленным в задании. Изменения по каждой находке:
+
+- **PC-02 (blocker, атомарная публикация).** Объект теперь загружается в MinIO ДО любой транзакции
+  БД, по детерминированному ключу `sha256(содержимое)+session` (повтор не создаёт орфанов); ОДНА
+  короткая транзакция вставляет `photo`+`recognition` (с уже установленным `photo_id`) и списывает
+  квоту `primary`; отказ квоты откатывает ВСЮ транзакцию (не переводит в `refused` — строки не
+  существовало). Новый `FR-scan-pipeline-14`, переписан `EnqueueScanForFeature` целиком, новые
+  AC-19/20.
+- **PC-01 (blocker, повтор после истечения аренды).** Каждый захват с `lease_fence ≥ 2` списывает
+  ЕЩЁ ОДНУ попытку `primary` ДО вызова модели; `maxRetries: 0` у SDK, дедлайн запроса 25 с. Новый
+  `FR-scan-pipeline-15`, шаг 2 `RecognizeScanWithinScanPipeline`, новый AC-21.
+- **PC-03 (дедлайны).** `lease_fence ≤ 3` (зависимость от `foundation`, названа явно, не внесена
+  сюда); новый алгоритм `SweepStuckScans` — три правила (5 мин без захвата, `fence=3` неуловимо, 30 с
+  приближение по `created_at` — колонки `first_leased_at` в каноне нет и она не добавлена). Гонка
+  sweeper/воркер закрыта общим условием `status = 'queued'` в ОБОИХ операторах записи. Новый
+  `FR-scan-pipeline-16`, новые AC-22/23.
+- **PC-04 (декодируемость).** Новый шаг в `EnqueueScanForFeature`: `sharp(buffer, {
+  limitInputPixels: 50e6 }).metadata()` + декодирование одной страницы, ДО загрузки объекта, ДО
+  идемпотентности, ДО квоты. Новый `FR-scan-pipeline-17`, новый AC-24.
+- **PC-05 (EXIF/кадры).** `rotate()` ДО `withMetadata(false)`; `{ pages: 1 }` явно; нормализатор
+  принимает ПОДТВЕРЖДЁННЫЙ `photo.mime`, не «заявленный»; полиглот-проверка обобщена на все четыре
+  формата (не только JPEG EOI). Правка `FR-scan-pipeline-5` и `NormalizePhotoForModel`, новый AC-25.
+- **PC-06 (сутки).** `day` вычисляется в МОМЕНТ каждой попытки (`POST`, повторный захват, эскалация)
+  — не наследуется. Новый `FR-scan-pipeline-18`, новый AC-26.
+- **PC-07 (наблюдаемость).** `model_call` — теперь ДВА события (`START` синхронно перед вызовом,
+  `OUTCOME` после) с полным набором полей координатора (`request_id, scan_id, fence, reason, model,
+  mode, outcome, ms, day, tokens?`); агрегатор `scripts/telemetry/model-calls.sh` и служебная
+  страница — план, явно вне недели. Правка `FR-scan-pipeline-12`, новый AC-27.
+- **PC-08 (стык).** `MatchIngredientPort.match(items[]) → matches[]` — пакетный вызов, запись с
+  `parts[]` для составных блюд; контрактный тест отделён от поведенческого теста
+  `NullMatchIngredientPort`; страж ADR-001-статус в `04_refinement.md` переписан — мутирует УСЛОВИЕ
+  записи (запрет `done` при нуле совпадений), а не подменяет реализацию порта, как было в Попытке 1
+  (это и была находка PC-08 — подмена порта сама по себе не мутирует инвариант). Явно названо и НЕ
+  скрыто: `failed(no_food_matched)` этой фичи (DEC-A-014) и `refused(no_food_matched)` root ADR-001
+  Confirmation (2) — про РАЗНЫЕ по природе события (заглушка вместо поиска против генуинного нуля
+  совпадений), сойдутся, когда `source-and-correct` подставит реальный порт. Правка `FR-scan-pipeline-8`,
+  новый AC-28.
+- **PC-09 (эскалация).** `ModelProvider.recognize(image, schema, { model, deadlineMs })` — модель
+  передаётся вызывающим явно; фейк возвращает `model` в ответе для транспортного контрактного теста.
+  Правка `FR-scan-pipeline-6`/`-13`, новый AC-29.
+
+**Две зависимости от `foundation`, названные явно и НЕ внесённые этой квитанцией** (правка чужого
+файла — не мой WORK_UNIT): предикат выборки `photo_id IS NOT NULL AND lease_fence < 3`, и расширение
+сигнатуры `ModelProvider.recognize` третьим параметром. Обе описаны в `03_architecture.md`, раздел
+«Зависимости от `foundation`, требующие правки», с названным резервным путём (локальная обёртка в
+этой фиче), если координатор их в `foundation` не перенесёт.
+
+**Уникальность FR/AC проверена:** 18 FR (`-1`…`-18`, было 13, добавлены `-14`…`-18`), 3 NFR
+(без изменений), 29 AC (`-1`…`-29`, было 18, добавлены `-19`…`-29`) — все заголовки уникальны
+(`grep` по `### (FR|NFR|AC)-scan-pipeline-N`, ноль дублей). Один REQUIREMENT-дубль
+(`FR-scan-pipeline-18`, claimed изначально в двух алгоритмах) обнаружен и убран из
+`EnqueueScanForFeature` (оставлен в `RecognizeScanWithinScanPipeline`, где живёт AC-26).
+
+Ворота:
+```
+bash …/check-pipeline-gaps.sh . --traceability --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+Контур `scan-pipeline`: `COUNT requirements=50 algorithms=50 missing-algorithm=0 orphan-algorithm=0` →
+`PASS contour=scan-pipeline bidirectional traceability complete`. **Общий код возврата скрипта — `1`,
+а общий `VERDICT traceability=FAIL`** — ИСКЛЮЧИТЕЛЬНО из-за находки в ЧУЖОМ контуре
+`consent-and-telegram-auth` (`DUPLICATE consent-and-telegram-auth pseudocode AC-consent-and-telegram-auth-5`
+и `FR-consent-and-telegram-auth-3`), который пишет другой агент параллельно — не тронут этой
+квитанцией (владение файлами, `swarm-file-evidence.md`). Мой контур — `PASS`, `gaps=0`.
+
 Status: completed
