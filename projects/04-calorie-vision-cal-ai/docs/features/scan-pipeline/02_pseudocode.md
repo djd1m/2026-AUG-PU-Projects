@@ -21,9 +21,11 @@
    там появятся, и явно называет последствие их отсутствия (см. `03_architecture.md`, раздел
    «Зависимости от `foundation`, требующие правки»).
 2. `ModelProvider.recognize(image, schema)` (`foundation`, `apps/recognizer/src/provider/types.ts`)
-   расширяется до `ModelProvider.recognize(image, schema, { model, deadlineMs })` — вызывающий код
-   (эта фича) передаёт МОДЕЛЬ явно, интерфейс сам её не выбирает (PC-09). Та же оговорка: правка
-   интерфейса — файл `foundation`, не вносится здесь.
+   расширяется до `ModelProvider.recognize(image, schema, { model, deadlineMs, signal: AbortSignal
+   })` — вызывающий код (эта фича) передаёт МОДЕЛЬ и СИГНАЛ ОТМЕНЫ явно, интерфейс сам их не выбирает
+   (PC-09, PC2-02: третий параметр `signal` — единственный способ гарантировать, что платная работа
+   физически обрывается по истечении бюджета). Внесено в план `foundation` (сообщение координатора
+   2026-09-12 20:33) — правка интерфейса ЧУЖОГО файла, не вносится этой квитанцией.
 
 Интерфейсы уровня кода этой фичи (не таблицы):
 
@@ -258,63 +260,69 @@ REQUIREMENT: `AC-scan-pipeline-32`
 REQUIREMENT: `AC-scan-pipeline-33`
 REQUIREMENT: `AC-scan-pipeline-35`
 REQUIREMENT: `AC-scan-pipeline-37`
+REQUIREMENT: `AC-scan-pipeline-38`
 REALISES: SC-US-001-2, SC-US-002-2
 INPUT: задание, арендованное `foundation` `LeaseRecognitionJob` (несёт `lease_fence`, `photo_id`,
 ГАРАНТИРОВАННО непустой — см. «Зависимости от `foundation`»).
 OUTPUT: `recognition` в терминальном статусе `failed` или `refused` (`done` НЕ достигается в этой
 фиче реальным `NullMatchIngredientPort` — путь к `done` проверяется отдельно, unit-тестом с
 `FixedMatchIngredientPort`).
-STEPS:
-1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, `attempt_id
-= recognition_id + ':' + fence + ':' + (escalated ? 'escalation' : 'primary')` (PC-07, ключ
-корреляции `START`/`OUTCOME`).
-1а. **Общий бюджет задачи = `created_at + 30 с` (PC-03 + PC2-02, замена приближения Попытки 3).**
-`remaining = 30_000мс − (now() − created_at)`. `IF remaining ≤ 0 THEN` немедленно, БЕЗ вызова модели
-и БЕЗ нового списания квоты, записать `failed(timeout)` условно по `fence` (механизм шага 9) и
-`RETURN` — задание простояло в очереди (все воркеры были заняты дольше 30 с) или уже исчерпало бюджет
-на предыдущих попытках; попытка НЕ производилась, платить не за что. Это закрывает ту часть PC2-02,
-где «интервал опроса 1 с не ограничивает очередь при занятых воркерами»: воркер, взявший просроченное
-задание, обязан отказаться от него САМ, не полагаясь только на `SweepStuckScans`.
-2. **Повторная попытка после истечения аренды ИЛИ смены суток списывает СВОЮ квоту (PC-01 + PC-06,
-закрывает найденную дыру).** Вычислить `day = day(now(), Europe/Moscow)`. `IF fence = 1 AND day =
-day(created_at, Europe/Moscow) THEN` попытка №1 уже оплачена шагом 9.3 `EnqueueScanForFeature` в ТОТ
-ЖЕ день — переходить к шагу 3 без нового списания. `IF fence ≥ 2 OR day ≠ day(created_at,
-Europe/Moscow)` (повторный захват — предыдущий воркер не уложился в 60 с аренды; ЛИБО первый захват
-произошёл уже в СЛЕДУЮЩИЕ сутки после полуночи Europe/Moscow относительно `created_at` — приём и
-первый захват разделены `≤ 1 с` в норме, но при перегруженном пуле воркеров задержка первого захвата
-способна пересечь полночь) `THEN` ДО загрузки фото и ДО вызова модели вызвать
-`CheckAndConsumeQuota(session, ip_prefix, day, reason = 'primary')` — ЕЩЁ ОДНО списание трёх ключей
-по ТЕКУЩЕМУ `day`. Это СОЗНАТЕЛЬНЫЙ перерасход в сторону строгости при пограничном первом захвате
-(редкий случай: перегрузка воркеров ровно на границе суток), а не молчаливый пробел — координатор
-(DEC-A-017) предпочитает лишнее списание пропущенному. `IF refused(scope) THEN` записать
-`refused(quota_exhausted_${scope})` условно по `fence` (шаг 9) и `RETURN` — модель на этой попытке не
-вызывается; это ОТКАЗ ДО вызова (DEC-A-014). `fence = 4` невозможен по построению — предикат захвата
-`foundation` ограничивает `lease_fence < 3` (см. «Зависимости от `foundation`»); при обнаружении
-`fence > 3` (защита от регресса) `THEN` немедленно `failed(timeout)` без вызова модели.
-3. Вычислить `callDeadlineMs = min(25_000, remaining)` (шаг 1а, ПЕРЕСЧИТАННЫЙ после возможного
-списания квоты шага 2 — время не останавливается). Вызвать `NormalizePhotoForModel` под ТЕМ ЖЕ
-`AbortController`, что и модель на шаге 4 (единый бюджет операции, не два независимых таймаута). `IF
-failed THEN` записать `failed(schema_violation)` условно по `fence` (шаг 9) и `RETURN`. `IF`
-`AbortController` сработал по общему дедлайну ДО завершения нормализации `THEN failed(timeout)` —
-нормализация не оплачивается отдельно, вызова модели не было.
-4. Определить модель ЯВНО: `model = escalated ? N4_MODEL_ESCALATION : N4_MODEL_PRIMARY` (значения
-окружения канона, ADR-004; `foundation` не выбирает модель сама — см. «Зависимости от `foundation`»,
-подтверждено координатором 2026-09-12 20:33, см. `03_architecture.md`). Вызвать
-`ModelProvider.recognize(normalizedImage, schema, { model, deadlineMs: callDeadlineMs })` на ТОМ ЖЕ
-`AbortController`, что и `NormalizePhotoForModel` — по истечении ОБЩЕГО бюджета `AbortController`
-обрывает HTTP-вызов НЕМЕДЛЕННО, платная работа не продолжается ни на секунду сверх бюджета (PC2-02:
-«живой воркер сам прекращает работу по своему дедлайну»). **Скрытые повторы SDK провайдера отключены
-явно** (`maxRetries: 0` при создании клиента). Записать `model_call` (FR-scan-pipeline-12): `START`
-немедленно ПЕРЕД вызовом (`{ request_id, attempt_id, scan_id, fence, reason: escalated ? 'escalation'
-: 'primary', model, mode: N4_MODEL_PROVIDER, day, ts }`), `OUTCOME` сразу после ответа/ошибки/обрыва
-(`{ attempt_id (тот же, ключ корреляции), outcome: 'ok'|'failed'|'timeout'|'late', ms, input_tokens?,
-output_tokens? }`). Если процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже записан в
-структурированный вывод (не буферизуется) — агрегатор `scripts/telemetry/model-calls.sh`
-(FR-scan-pipeline-21, ЭТА фича его РЕАЛИЗУЕТ, не только планирует) сопоставляет `attempt_id` и метит
-непарные `START` старше грейс-периода как `outcome: 'unknown'`; счёт в потолках это НЕ меняет — квота
-списана ДО вызова. `IF` ответ не соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер
-недоступен `THEN failed(provider_unavailable)`. `IF` `AbortController` оборвал вызов по бюджету `THEN
-failed(timeout)`, `outcome: 'timeout'`.
+STEPS (порядок — Попытка 6, DEC-A-020, ФИНАЛЬНЫЙ; закрывает PC-06/PC-03/PC-05 разом одной
+перестановкой, PC3-01 отдельным `call_no`):
+1. Аренда уже взята, транзакция закрыта (`foundation`). Запомнить `fence = lease_fence`, `call_no =
+1` (первичный вызов; эскалация на шаге 7 переустановит `call_no = 2` для СВОЕГО, ОТДЕЛЬНОГО внешнего
+вызова — PC3-01: `attempt_id` больше НЕ вычисляется один раз на всё задание).
+1а. **Проверка общего бюджета — ПЕРВЫМ действием после захвата.** `remaining = 30_000мс − (now() −
+created_at)`. `IF remaining ≤ 0 THEN` НЕМЕДЛЕННО, БЕЗ нормализации, БЕЗ списания и БЕЗ вызова модели,
+записать `failed(timeout)` условно по `fence`+`status='queued'` (механизм шага 9) и `RETURN` —
+задание простояло в очереди дольше бюджета (все воркеры были заняты) или бюджет исчерпан на
+предыдущих попытках (PC2-02, PC3-02: закрывает «интервал опроса не ограничивает очередь»).
+2. **Нормализация — ПОД СВОИМ, ФИКСИРОВАННЫМ дедлайном 3000 мс, ОТДЕЛЬНЫМ от бюджета вызова модели
+(PC-05, принудительное исполнение).** Вызвать `NormalizePhotoForModel` с `AbortSignal`,
+срабатывающим через РОВНО 3000 мс от начала ЭТОГО шага (не от `created_at` — фиксированный потолок
+самой операции декодирования/сжатия, независимый от того, сколько бюджета уже потрачено на ожидание в
+очереди). `IF` сигнал сработал ДО завершения `THEN failed(normalize)` — внешнего вызова НЕ было,
+квота НЕ списывается (ни на этом, ни на любом другом шаге для этой попытки). `IF` нормализация упала
+по иной причине (нечитаемый файл на конкретной трансформации) `THEN failed(schema_violation)`, тоже
+без списания. Оба исхода записываются условно по `fence`+`status='queued'` (шаг 9), `RETURN`.
+3. **Списание квоты `primary` — НЕПОСРЕДСТВЕННО ПЕРЕД вызовом модели, ПОСЛЕ успешной нормализации
+(PC-06, закрывает найденную дыру: приём и нормализация могли пересечь полночь Europe/Moscow, и
+проверка ДО нормализации этого не ловила).** Вычислить `day = day(now(), Europe/Moscow)` В ЭТОТ
+МОМЕНТ. `IF fence = 1 AND day = day(created_at, Europe/Moscow) THEN` попытка №1 уже оплачена шагом
+9.3 `EnqueueScanForFeature` в ТОТ ЖЕ день — квота НЕ списывается повторно. `IF fence ≥ 2 THEN`
+списывается ВСЕГДА (повторный захват — предыдущий воркер не уложился в 60 с аренды). `IF day ≠
+day(created_at, Europe/Moscow) THEN` списывается ВСЕГДА, НЕЗАВИСИМО от `fence` (граница суток
+наступила МЕЖДУ приёмом/предыдущей попыткой и ЭТИМ конкретным вызовом — единственное место, где день
+проверяется, это здесь, а не на захвате, потому что нормализация впереди могла сама пересечь
+полночь). Когда списание требуется: `CheckAndConsumeQuota(session, ip_prefix, day, reason =
+'primary')` — три ключа по ТЕКУЩЕМУ `day`. Сознательный перерасход в сторону строгости на границе
+суток — назван, не скрыт (DEC-A-017/DEC-A-020). `IF refused(scope) THEN` записать
+`refused(quota_exhausted_${scope})` условно (шаг 9), `RETURN` — модель НЕ вызывается (ОТКАЗ ДО
+вызова, DEC-A-014). `fence > 3` (защита от регресса, `foundation` ограничивает `< 3`) `THEN`
+немедленно `failed(timeout)` без списания и без вызова.
+4. Определить модель ЯВНО: `model = (call_no = 2) ? N4_MODEL_ESCALATION : N4_MODEL_PRIMARY`
+(ADR-004; `foundation` не выбирает модель сама — внесено в план `foundation`, координатор,
+`03_architecture.md`). Пересчитать `callDeadlineMs = min(25_000, remaining)` (остаток ОБЩЕГО бюджета
+на момент ЭТОГО вызова — нормализация и списание квоты уже потратили время). Сгенерировать `signal =
+новый AbortSignal с таймером callDeadlineMs` и `attempt_id = recognition_id + ':' + fence + ':' +
+call_no` (PC3-01: ОДИН `attempt_id` на КАЖДЫЙ внешний вызов — примарный и эскалационный получают
+РАЗНЫЕ `attempt_id`, даже в пределах одного `fence`). Вызвать `ModelProvider.recognize(normalizedImage,
+schema, { model, deadlineMs: callDeadlineMs, signal })` — расширенная сигнатура порта (PC2-02: третий
+параметр `signal: AbortSignal`, правка `foundation`, см. `03_architecture.md`). По истечении
+`callDeadlineMs` `signal` обрывает HTTP-вызов НЕМЕДЛЕННО — платная работа не продолжается сверх
+бюджета. **Скрытые повторы SDK провайдера отключены явно** (`maxRetries: 0`). Записать `model_call`:
+`START` немедленно ПЕРЕД вызовом (`{ request_id, attempt_id, scan_id, fence, call_no, model, mode:
+N4_MODEL_PROVIDER, day, ts }`), РОВНО ОДИН `OUTCOME` на этот `attempt_id` сразу после
+ответа/ошибки/обрыва (`{ attempt_id, outcome: 'ok'|'failed'|'timeout'|'late', ms, input_tokens?,
+output_tokens? }`) — поздний ответ (шаг 9) ОБНОВЛЯЕТ исход ЭТОГО ЖЕ `attempt_id` на `'late'`, а не
+создаёт второе событие (PC3-01: «правило выбора итогового исхода» — `late` ВСЕГДА перезаписывает
+`ok`/`failed`/`timeout` того же `attempt_id`, будучи записанным последним по построению шага 9). Если
+процесс упал МЕЖДУ `START` и `OUTCOME`, `START` уже в структурированном выводе — агрегатор
+`scripts/telemetry/model-calls.sh` (FR-scan-pipeline-21, РЕАЛИЗУЕТСЯ этой фичей) сопоставляет по
+`attempt_id` и метит непарные `START` старше грейс-периода `outcome: 'unknown'`. `IF` ответ не
+соответствует схеме `THEN failed(schema_violation)`. `IF` провайдер недоступен `THEN
+failed(provider_unavailable)`. `IF signal` оборвал вызов `THEN failed(timeout)`, `outcome:
+'timeout'`.
 5. Проверить ДИАПАЗОНЫ в коде: `confidence` в 0…1; `mass_g` каждой позиции в 1…5000; позиций ≤ 12;
 кандидатов на позицию ≤ 3; `model_estimate_kcal ≥ 0`. `IF` нарушено `THEN failed(schema_violation)`
 с названным полем — без подрезания.
@@ -331,9 +339,10 @@ failed(timeout)`, `outcome: 'timeout'`.
 быть короче нескольких секунд и иметь шанс на осмысленный ответ. `ELSE` (`remaining ≥ 8_000мс`)
 вызвать `CheckAndConsumeQuota(session, ip_prefix, day = today_in_Europe_Moscow_ПРЯМО_СЕЙЧАС, reason =
 'escalation')` — четвёртый ключ, `day` СВОЙ, вычисленный в момент этого решения (PC-06). `IF granted
-THEN` пересчитать `callDeadlineMs = min(25_000, remaining)` (дедлайн ВТОРОГО вызова делит ОСТАТОК
-общего бюджета, не получает полные 25 с заново) и вернуться к шагу 4 с `model = N4_MODEL_ESCALATION`,
-`escalated = true`, `attempt_no = 2`. `ELSE` (квота отказала) эскалации нет: запомнить
+THEN` установить `call_no = 2` и вернуться к шагу 4 — шаг 4 сам пересчитает `callDeadlineMs`,
+`signal` и НОВЫЙ `attempt_id` (`recognition_id:fence:2`, отличный от примарного `recognition_id:fence:1`,
+PC3-01) для этого, ВТОРОГО, отдельного внешнего вызова; `escalated = true`, `attempt_no = 2`. `ELSE`
+(квота отказала) эскалации нет: запомнить
 `failure_reason_candidate = quota_exhausted_escalation` для шага 8, если статус окажется `done`
 (сегодня — не происходит, шаг 8).
 8. Вызвать `MatchIngredientPort.match(items)` — ОДИН вызов на ВЕСЬ список позиций (PC-08). Для

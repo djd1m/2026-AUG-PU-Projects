@@ -127,6 +127,7 @@ B цел.
 | AC-scan-pipeline-35 | `tests/contract/match-ingredient-port.test.ts` | каждая часть составного блюда несёт собственный снимок базы |
 | AC-scan-pipeline-36 | `tests/concurrency/recognize/sweeper-live-lease.test.ts` | sweeper не изменяет задание с живой арендой даже старше тридцати секунд |
 | AC-scan-pipeline-37 | `tests/unit/recognize/escalate-budget.test.ts` | эскалация не предпринимается при остатке бюджета меньше восьми тысяч миллисекунд |
+| AC-scan-pipeline-38 | `tests/integration/recognize/capture-past-deadline.test.ts` | задание старше тридцати секунд при захвате отказывается без списания и без вызова |
 
 Заголовки — ПЛАН; Phase 3 заменяет их фактическими, и только тогда ворота `--completion` открывают
 файл и сверяют заголовок дословно (таблица имён доказательством не является).

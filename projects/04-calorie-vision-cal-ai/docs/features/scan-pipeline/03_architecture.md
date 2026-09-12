@@ -21,6 +21,14 @@
 | FR-scan-pipeline-11 уборка фото | `apps/recognizer` (cron-подобная задача, не HTTP) | `src/photo/purge-expired.ts` |
 | FR-scan-pipeline-12 наблюдаемость | `apps/recognizer` | `src/observability/model-call-log.ts` |
 | FR-scan-pipeline-13 живой провайдер | `apps/recognizer` | `src/provider/anthropic.ts` |
+| FR-scan-pipeline-14 атомарная публикация | `apps/api` | `src/routes/scans.ts` (генерация `recognition_id`/`object_key` ДО `PUT`, короткая транзакция `photo`+`recognition`+квота), `src/photo/purge-orphans.ts` (шаг 12, уборка объектов без строки `photo`) |
+| FR-scan-pipeline-15 повторный захват списывает квоту | `apps/recognizer` | `src/recognize/recognize-scan.ts` (шаги 1а/3 — решение о повторном списании по `fence`/`day`) |
+| FR-scan-pipeline-16 дедлайны и sweeper | `apps/recognizer` | `src/recognize/sweep-stuck-scans.ts` (`SweepStuckScans`, отдельный шаг цикла опроса, не отдельный процесс) |
+| FR-scan-pipeline-17 ограниченная декодируемость | `apps/api` | `src/photo/validate-content.ts` (`sharp(buffer, {limitInputPixels}).metadata()` + декодирование одной страницы) |
+| FR-scan-pipeline-18 сутки по моменту попытки | `apps/api`, `apps/recognizer` | `src/routes/scans.ts` (день `POST`), `src/recognize/recognize-scan.ts` (день ПЕРЕД вызовом, шаг 3) — общая функция `day(now, 'Europe/Moscow')` в `packages/shared/src/domain/time.ts` |
+| FR-scan-pipeline-19 владение объектом | `apps/api` | `src/photo/store-original.ts` (`object_key = device_session_id/recognition_id.ext`, удаление СВОЕГО объекта при откате) |
+| FR-scan-pipeline-20 общий бюджет задачи | `apps/recognizer` | `src/recognize/recognize-scan.ts` (шаги 1а/2/4 — `AbortSignal` на нормализацию и на вызов модели, каждый со своим таймером) |
+| FR-scan-pipeline-21 агрегатор журнала | `scripts/telemetry/` | `scripts/telemetry/model-calls.sh` (или `.cjs`) — читает JSON-журнал `api`/`recognizer` за сутки, группирует по `attempt_id`, печатает счётчики `reason`/`outcome`/`model` и суммарное `ms`; НЕ сервис compose, вызывается по требованию |
 
 Доменная логика (`recognize/`, `match/`, `photo/normalize.ts`) не знает ни `FastifyRequest`, ни
 клиента `pg`, ни формы ответа Anthropic SDK: `src/provider/anthropic.ts` — единственный адаптер,
@@ -124,11 +132,13 @@ first-party-страница вернула `404` на прямой запрос
    (`FR-scan-pipeline-16`) не защищён на уровне запроса: `SweepStuckScans` продолжит подчищать
    последствия, но воркеры будут пытаться захватывать задания, обречённые на `failed(timeout)`.
 2. **`ModelProvider.recognize(image, schema)`** расширяется до `recognize(image, schema, { model,
-   deadlineMs })`. **Статус (Попытка 4, PC-09): ВНЕСЕНО в план `foundation` — сообщение координатора
-   от 2026-09-12 20:33, исполнитель `foundation` реализует правку в своём коде.** Это фича проверяет
-   расширенный контракт СВОИМ тестом транспортного адаптера (`AC-scan-pipeline-29`: фейк возвращает
-   переданный `model`, эскалация обязана нести `N4_MODEL_ESCALATION`) — не полагается на одно
-   сообщение как на доказательство, а держит проверку на своей стороне границы.
+   deadlineMs, signal: AbortSignal })` — третий параметр добавлен в Попытке 6 (PC2-02): без него
+   `AbortController` этой фичи не способен физически прервать HTTP-вызов внутри адаптера. **Статус
+   (PC-09): ВНЕСЕНО в план `foundation` — сообщение координатора от 2026-09-12 20:33, исполнитель
+   `foundation` реализует правку параллельно.** Эта фича проверяет расширенный контракт СВОИМ тестом
+   транспортного адаптера (`AC-scan-pipeline-29`: фейк возвращает переданный `model`, эскалация
+   обязана нести `N4_MODEL_ESCALATION`) — не полагается на одно сообщение как на доказательство, а
+   держит проверку на своей стороне границы.
 
 **Если координатор НЕ переносит эти правки в `foundation` до Phase 3**, единственный резервный путь —
 обернуть оба интерфейса локальной адаптирующей прослойкой в `apps/recognizer` этой фичи (дублирует
