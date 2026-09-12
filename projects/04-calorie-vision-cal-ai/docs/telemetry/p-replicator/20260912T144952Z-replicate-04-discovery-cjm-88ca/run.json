@@ -19,15 +19,15 @@
   ],
   "comparison_id": null,
   "baseline_revision": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
-  "final_revision": "b54a992e31e6f98b0c1d88365d66ebedb74ca972",
+  "final_revision": "8b9df335bb49fdde01f7092ee0d47e2c6a7bfa1b",
   "spec_sha256": null,
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Claude Code",
   "host_version": "2.1.261",
   "billing_mode": "unknown",
   "started_at": "2026-09-12T14:51:50Z",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-12T17:17:08Z",
+  "status": "accepted",
   "coordinator": {
     "requested_model": "claude-fable-5-1",
     "actual_model": "claude-fable-5-1",
@@ -73,6 +73,8 @@
   "checkpoint": {
     "name": "cjm-choice",
     "reached_at": "2026-09-12T16:10:59Z",
-    "waiting_for": "owner"
+    "waiting_for": "owner",
+    "resolved_at": "2026-09-12T17:17:08Z",
+    "decision": "hybrid E = A + block D"
   }
 }
