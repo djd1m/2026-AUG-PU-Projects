@@ -58,7 +58,7 @@
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | ✅ 2026-09-12 — [бриф](docs/product-discovery-brief.md), [4 CJM](docs/CJM_Variants.md), [прототип](docs/prototypes/cjm/index.html); **ожидание выбора CJM владельцем** |
+| Phase 0 — Product Discovery | ✅ 2026-09-12 — [бриф](docs/product-discovery-brief.md), [4 CJM](docs/CJM_Variants.md), [прототип](docs/prototypes/cjm/index.html); **выбран гибрид E = A + блок D** ([разбор](docs/discovery/business-model-and-cjm-analysis.md)) |
 | Phase 0.5 — Source Product Profile | ✅ 2026-09-12 — [профиль облика](docs/source-product-profile.md), обе оси СНЯТ (публичный веб) |
 | Phase 1 — SPARC (`/replicate`) | ⬜ после выбора CJM |
 | Phase 2 — Validation | ⬜ |
