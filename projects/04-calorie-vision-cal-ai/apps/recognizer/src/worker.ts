@@ -15,7 +15,7 @@
 import { randomUUID } from 'node:crypto';
 import type { DbPool } from '@n4/db';
 import type { Logger } from '@n4/shared';
-import { acquireLease, recordResult, sweepStuckScans } from './lease.js';
+import { acquireLease, recordResult, sweepStuckScans, type ResultRecord } from './lease.js';
 import { MODEL_RESPONSE_SCHEMA, ModelDeadlineExceeded, type ModelId, type ModelProvider } from './provider/types.js';
 
 /**
@@ -70,46 +70,54 @@ export function createWorker(options: WorkerOptions): Worker {
     const job = await acquireLease(options.pool, ownerId);
     if (job === undefined) return false;
 
-    let response;
     // ОДИН сигнал на операцию: по его срабатыванию платная работа прекращается немедленно,
     // а не досиживает собственный таймаут. В `scan-pipeline` этот же сигнал накроет и
     // нормализацию кадра — бюджет принадлежит операции целиком, а не каждому шагу отдельно.
     const controller = new AbortController();
     const deadlineTimer = setTimeout(() => controller.abort(), DEFAULT_CALL_DEADLINE_MS);
+
+    let record: ResultRecord;
+    let timedOut = false;
     try {
-      response = await options.provider.recognize(
+      const response = await options.provider.recognize(
         { scanId: job.id, objectKey: job.photoId },
         MODEL_RESPONSE_SCHEMA,
         // Модель, дедлайн и сигнал задаёт ВЫЗЫВАЮЩИЙ — порт их не выбирает.
         { model: PRIMARY_MODEL, deadlineMs: DEFAULT_CALL_DEADLINE_MS, signal: controller.signal },
       );
+      record = {
+        status: 'refused',
+        confidence: response.confidence,
+        items: response.items,
+        modelEstimateKcal: response.modelEstimateKcal,
+        modelUsed: response.model,
+        failureReason: 'no_food_matched',
+      };
     } catch (error) {
-      if (error instanceof ModelDeadlineExceeded || (error as Error)?.name === 'AbortError') {
-        // Попытка оплачена, результата нет. Это НАЗВАННАЯ цена, а не скрытая.
-        const outcome = await recordResult(options.pool, job, {
-          status: 'failed',
-          confidence: null,
-          items: [],
-          modelEstimateKcal: null,
-          modelUsed: PRIMARY_MODEL,
-          failureReason: 'timeout',
-        });
-        options.logger.warn('model_call_deadline_exceeded', { scan_id: job.id, fence: job.fence, write: outcome });
-        return true;
-      }
-      throw error;
+      if (!(error instanceof ModelDeadlineExceeded) && (error as Error)?.name !== 'AbortError') throw error;
+      timedOut = true;
+      record = {
+        status: 'failed',
+        confidence: null,
+        items: [],
+        modelEstimateKcal: null,
+        modelUsed: PRIMARY_MODEL,
+        failureReason: 'timeout',
+      };
     } finally {
       clearTimeout(deadlineTimer);
     }
 
-    const outcome = await recordResult(options.pool, job, {
-      status: 'refused',
-      confidence: response.confidence,
-      items: response.items,
-      modelEstimateKcal: response.modelEstimateKcal,
-      modelUsed: response.model,
-      failureReason: 'no_food_matched',
-    });
+    // Событие О ВЫЗОВЕ пишется ДО записи и НЕЗАВИСИМО от её исхода: попытка оплачена в
+    // любом случае, и её пропажа из журнала означала бы потерянные деньги без следа.
+    if (timedOut) options.logger.warn('model_call_deadline_exceeded', { scan_id: job.id, fence: job.fence });
+
+    // ПУТЬ ЗАПИСИ ОДИН — и для успешного ответа, и для таймаута. Отдельная ветка таймаута
+    // возвращалась сразу, поэтому `stale_lease_result` и `swept_as_timeout` на ней не
+    // появлялись НИКОГДА: строка уже терминальная, `UPDATE` трогает ноль строк, а событие,
+    // которое обязано это объяснить, пропадало (слепое ревью, RV-foundation-01). Поле
+    // `write` имя события не заменяет: по журналу ищут по имени, а не по значению поля.
+    const outcome = await recordResult(options.pool, job, record);
 
     if (outcome === 'stale_lease') {
       // Ноль затронутых строк по fence — устаревший захват, а не ошибка базы.
@@ -121,7 +129,14 @@ export function createWorker(options: WorkerOptions): Worker {
       options.logger.warn('swept_as_timeout', { scan_id: job.id, fence: job.fence, lease_owner: ownerId });
       return true;
     }
-    options.logger.info('scan_finished', { scan_id: job.id, fence: job.fence, provider: options.provider.kind, model: response.model });
+    if (!timedOut) {
+      options.logger.info('scan_finished', {
+        scan_id: job.id,
+        fence: job.fence,
+        provider: options.provider.kind,
+        model: record.modelUsed,
+      });
+    }
     return true;
   };
 
