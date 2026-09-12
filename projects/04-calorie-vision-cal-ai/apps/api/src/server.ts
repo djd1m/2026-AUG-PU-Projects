@@ -49,7 +49,17 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     const status = typeof error.statusCode === 'number' && error.statusCode >= 400 ? error.statusCode : 500;
     // Текст ошибки наружу не уходит: он содержит внутренние подробности. В журнал —
     // класс отказа и маршрут, но не тело запроса и не cookie.
-    deps.logger.error('request_failed', { route: request.routeOptions?.url ?? request.url, status, code: error.code });
+    // НИКОГДА `request.url`: это строка пользователя целиком, вместе с query. Слепое ревью
+    // предъявило прогон `POST /unknown?token=…&ip=…` — оба значения уехали в журнал
+    // (RV-foundation-01). У неизвестного маршрута шаблона нет, и вместо него пишется
+    // ПОСТОЯННЫЙ идентификатор: для разбора инцидента хватает метода, статуса и того факта,
+    // что шаблон не нашёлся.
+    deps.logger.error('request_failed', {
+      route: request.routeOptions?.url ?? 'unmatched',
+      method: request.method,
+      status,
+      code: error.code,
+    });
     return reply.code(status).send(fail(status === 500 ? 'internal_error' : 'bad_request', status === 500 ? 'внутренняя ошибка' : 'запрос не принят'));
   });
 

@@ -7,7 +7,7 @@
 // Процесс, открывший сокет и упавший на первом запросе, выглядит здоровым для compose
 // ровно столько, сколько нужно, чтобы дефект уехал дальше.
 
-import { createLogger, ConfigValidationError } from '@n4/shared';
+import { ConfigValidationError, createLogger, SERVICE_LOG_FIELDS } from '@n4/shared';
 import { createPool } from '@n4/db';
 import { API_REQUIRED_VARIABLES, loadApiConfig } from './env.js';
 import { buildServer } from './server.js';
@@ -30,6 +30,10 @@ async function main(): Promise<void> {
 
   const logger = createLogger({
     service: 'api',
+    // Разрешённые поля перечислены ЗАКРЫТЫМ списком: всё, чего в нём нет, уезжает в
+    // журнал меткой `[redacted]`. Чёрный список не поймал бы произвольную строку в
+    // разрешённом поле — этим и был дефект RV-foundation-01.
+    allowedFields: SERVICE_LOG_FIELDS,
     // Секреты затираются по значению, даже если попадут в чужое поле.
     secrets: [config.storage.secretKey, config.storage.accessKey],
   });

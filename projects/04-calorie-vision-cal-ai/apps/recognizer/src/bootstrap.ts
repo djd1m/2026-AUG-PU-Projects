@@ -3,7 +3,7 @@
 // `N4_MODEL_PROVIDER=live` без ключа валит старт ЗДЕСЬ, а не на первом задании
 // (DEC-A-009): отказ на старте виден сразу, отказ на первом задании — через сутки.
 
-import { ConfigValidationError, createLogger } from '@n4/shared';
+import { ConfigValidationError, createLogger, SERVICE_LOG_FIELDS } from '@n4/shared';
 import { createPool } from '@n4/db';
 import { loadRecognizerConfig, RECOGNIZER_REQUIRED_VARIABLES } from './env.js';
 import { selectModelProvider } from './provider/select.js';
@@ -23,6 +23,10 @@ async function main(): Promise<void> {
 
   const logger = createLogger({
     service: 'recognizer',
+    // Разрешённые поля перечислены ЗАКРЫТЫМ списком: всё, чего в нём нет, уезжает в
+    // журнал меткой `[redacted]`. Чёрный список не поймал бы произвольную строку в
+    // разрешённом поле — этим и был дефект RV-foundation-01.
+    allowedFields: SERVICE_LOG_FIELDS,
     secrets: [config.anthropicApiKey, config.storage.secretKey, config.storage.accessKey],
   });
 

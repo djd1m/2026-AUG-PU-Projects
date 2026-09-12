@@ -38,11 +38,24 @@ export interface RedactorOptions {
   /** Точные значения-секреты. Пустые и слишком короткие игнорируются: они совпали бы со всем. */
   readonly secrets?: readonly (string | undefined)[];
   readonly forbiddenFields?: readonly string[];
+  /**
+   * ЗАКРЫТЫЙ список полей, которым разрешено попасть в журнал. Когда он задан, всё
+   * ОСТАЛЬНОЕ затирается — это разворот правила с «запрещено перечисленное» на
+   * «разрешено перечисленное».
+   *
+   * Заслужено слепым ревью (RV-foundation-01): обработчик ошибки писал в поле `route`
+   * пользовательскую строку целиком, вместе с query, и туда уехали токен и полный адрес.
+   * Чёрный список этого поймать не мог по построению: имя поля было разрешённым, а
+   * опасным оказалось ЗНАЧЕНИЕ произвольной формы. Список запрещённых значений всегда
+   * неполон — список разрешённых полей конечен и виден целиком.
+   */
+  readonly allowedFields?: readonly string[];
 }
 
 export function createRedactor(options: RedactorOptions = {}): (value: unknown) => unknown {
   const secrets = (options.secrets ?? []).filter((s): s is string => typeof s === 'string' && s.trim().length >= 8);
   const forbidden = new Set((options.forbiddenFields ?? FORBIDDEN_FIELD_NAMES).map((n) => n.toLowerCase()));
+  const allowed = options.allowedFields === undefined ? undefined : new Set(options.allowedFields.map((n) => n.toLowerCase()));
 
   const redactString = (text: string): string => {
     let result = text;
@@ -60,7 +73,13 @@ export function createRedactor(options: RedactorOptions = {}): (value: unknown) 
     if (value instanceof Error) return { name: value.name, message: redactString(value.message) };
     const output: Record<string, unknown> = {};
     for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-      output[key] = forbidden.has(key.toLowerCase()) ? REDACTED : walk(item, depth + 1);
+      const name = key.toLowerCase();
+      // Порядок проверок: сначала запрет (он безусловен), затем разрешение. Поле, которого
+      // нет в списке разрешённых, затирается, НО СОХРАНЯЕТСЯ: исчезнувшее поле выглядит
+      // как «его и не было», и по журналу не отличить «не печатали» от «не попало».
+      if (forbidden.has(name)) output[key] = REDACTED;
+      else if (allowed !== undefined && !allowed.has(name)) output[key] = REDACTED;
+      else output[key] = walk(item, depth + 1);
     }
     return output;
   };

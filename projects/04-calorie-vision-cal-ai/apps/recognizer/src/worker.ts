@@ -71,15 +71,20 @@ export function createWorker(options: WorkerOptions): Worker {
     if (job === undefined) return false;
 
     let response;
+    // ОДИН сигнал на операцию: по его срабатыванию платная работа прекращается немедленно,
+    // а не досиживает собственный таймаут. В `scan-pipeline` этот же сигнал накроет и
+    // нормализацию кадра — бюджет принадлежит операции целиком, а не каждому шагу отдельно.
+    const controller = new AbortController();
+    const deadlineTimer = setTimeout(() => controller.abort(), DEFAULT_CALL_DEADLINE_MS);
     try {
       response = await options.provider.recognize(
         { scanId: job.id, objectKey: job.photoId },
         MODEL_RESPONSE_SCHEMA,
-        // Модель и дедлайн задаёт ВЫЗЫВАЮЩИЙ — порт их не выбирает.
-        { model: PRIMARY_MODEL, deadlineMs: DEFAULT_CALL_DEADLINE_MS },
+        // Модель, дедлайн и сигнал задаёт ВЫЗЫВАЮЩИЙ — порт их не выбирает.
+        { model: PRIMARY_MODEL, deadlineMs: DEFAULT_CALL_DEADLINE_MS, signal: controller.signal },
       );
     } catch (error) {
-      if (error instanceof ModelDeadlineExceeded) {
+      if (error instanceof ModelDeadlineExceeded || (error as Error)?.name === 'AbortError') {
         // Попытка оплачена, результата нет. Это НАЗВАННАЯ цена, а не скрытая.
         const outcome = await recordResult(options.pool, job, {
           status: 'failed',
@@ -93,6 +98,8 @@ export function createWorker(options: WorkerOptions): Worker {
         return true;
       }
       throw error;
+    } finally {
+      clearTimeout(deadlineTimer);
     }
 
     const outcome = await recordResult(options.pool, job, {

@@ -50,8 +50,13 @@ export interface ModelCallOptions {
   readonly model: ModelId;
   /** Сколько миллисекунд у вызова осталось. Ноль и отрицательное — уже поздно. */
   readonly deadlineMs: number;
-  /** Общий сигнал отмены операции, когда вызывающий им управляет. */
-  readonly signal?: AbortSignal;
+  /**
+   * ОБЩИЙ сигнал отмены операции. Обязателен: бюджет принадлежит операции целиком
+   * (нормализация плюс вызов), и обрывать её надо ОДНИМ сигналом. Необязательное поле
+   * означало бы, что половина вызывающих его не передаёт, и платная работа продолжается
+   * после того, как ответ уже никому не нужен.
+   */
+  readonly signal: AbortSignal;
 }
 
 export interface RecognizedItemDraft {
@@ -74,6 +79,15 @@ export interface ModelResponse {
  * неотличим от разбора пустой тарелки, а деградация — это предел, о котором никто не
  * узнал.
  */
+export class ModelCallAborted extends Error {
+  constructor() {
+    super('вызов модели прерван сигналом отмены');
+    // Имя стандартное: вызывающий отличает отмену от прочих отказов по `name`, как у
+    // `AbortController` в платформе.
+    this.name = 'AbortError';
+  }
+}
+
 export class ModelDeadlineExceeded extends Error {
   readonly deadlineMs: number;
   constructor(deadlineMs: number) {

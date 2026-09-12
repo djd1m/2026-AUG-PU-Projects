@@ -11,6 +11,7 @@
 
 import { createHash } from 'node:crypto';
 import {
+  ModelCallAborted,
   ModelDeadlineExceeded,
   type ModelCallOptions,
   type ModelImage,
@@ -38,12 +39,25 @@ export function createFakeModelProvider(options: FakeProviderOptions = {}): Mode
     async recognize(image: ModelImage, schema: ModelResponseSchema, opts: ModelCallOptions): Promise<ModelResponse> {
       // Дедлайн проверяется ДО работы: истёкший бюджет — это отказ, а не «попробуем
       // быстренько». Ноль и отрицательное значение означают «уже поздно».
+      // Отмена проверяется ПЕРВОЙ: у уже прерванной операции нет причины начинаться.
+      if (opts.signal.aborted) throw new ModelCallAborted();
       if (!Number.isFinite(opts.deadlineMs) || opts.deadlineMs <= 0) throw new ModelDeadlineExceeded(opts.deadlineMs);
-      if (opts.signal?.aborted === true) throw new ModelDeadlineExceeded(opts.deadlineMs);
 
       if (latencyMs > 0) {
         const waited = Math.min(latencyMs, opts.deadlineMs);
-        await new Promise<void>((resolve) => setTimeout(resolve, waited));
+        // Ожидание прерывается сигналом НЕМЕДЛЕННО, а не досиживает свой таймер: смысл
+        // общего сигнала в том, чтобы платная работа прекращалась в момент отмены.
+        await new Promise<void>((resolve, reject) => {
+          const timer = setTimeout(() => {
+            opts.signal.removeEventListener('abort', onAbort);
+            resolve();
+          }, waited);
+          const onAbort = (): void => {
+            clearTimeout(timer);
+            reject(new ModelCallAborted());
+          };
+          opts.signal.addEventListener('abort', onAbort, { once: true });
+        });
         // Работа не укладывается в бюджет — отказ по дедлайну, а не поздний ответ:
         // поздний ответ оплачен и всё равно выбрасывается, и честнее сказать об этом сразу.
         if (latencyMs > opts.deadlineMs) throw new ModelDeadlineExceeded(opts.deadlineMs);

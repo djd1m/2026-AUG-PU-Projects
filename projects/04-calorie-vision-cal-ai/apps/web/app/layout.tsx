@@ -4,8 +4,10 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Тарелка',
   description: 'Сфотографируйте тарелку — получите калории и БЖУ из открытой базы с видимым источником.',
-  // Манифест отдаётся маршрутом `app/manifest.ts` с типом application/manifest+json.
-  manifest: '/manifest.webmanifest',
+  // Адрес из критерия приёмки — `/manifest.json`; он переписывается на маршрут метаданных
+  // `app/manifest.ts` (next.config.mjs). Ссылка в разметке обязана вести на ОБЪЯВЛЕННЫЙ
+  // адрес, иначе проверка «манифест доступен» и реальность расходятся.
+  manifest: '/manifest.json',
 };
 
 export const viewport: Viewport = {

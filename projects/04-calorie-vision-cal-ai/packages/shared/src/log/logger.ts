@@ -21,6 +21,18 @@ export interface Logger {
   child(bound: LogFields): Logger;
 }
 
+/**
+ * Поля, которым разрешено попасть в журнал сервиса. Список ЗАКРЫТЫЙ и живёт в коде:
+ * новое поле события добавляется сюда осознанно, а не приезжает вместе с ошибкой.
+ */
+export const SERVICE_LOG_FIELDS: readonly string[] = [
+  'request_id', 'event', 'route', 'method', 'status', 'code', 'signal', 'port',
+  'variables', 'scan_limit_user', 'scan_limit_day', 'escalation_limit_day',
+  'rate_limit_mutate_per_min', 'rate_limit_read_per_min', 'model_provider', 'model',
+  'ip_prefix', 'scan_id', 'fence', 'lease_owner', 'provider', 'write',
+  'never_leased', 'attempts_exhausted', 'message', 'duration_ms',
+];
+
 export interface LoggerOptions extends RedactorOptions {
   readonly service: string;
   /** Куда писать строку. Подменяется в тестах гигиены журнала. */
