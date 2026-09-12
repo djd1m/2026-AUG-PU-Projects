@@ -2,146 +2,190 @@
 
 ## Статус документа
 
-Это ПЛАН выпуска фичи (Phase 1), а не отчёт о нём. Ни одного файла кода, миграции и теста ещё не
-существует. Команды и `## Criterion coverage` ниже — целевые; Phase 3 заполняет их фактическими
-путями, заголовками тестов и кодами возврата в своей квитанции.
+Это ОТЧЁТ Phase 3 (исполнитель плеча B, worktree `exp/consent-and-telegram-auth-B`), а не план.
+Код, миграция и тесты существуют и прогнаны на настоящем PostgreSQL/MinIO (`docker compose
+--profile test`). `requested: claude-sonnet-5; actual: unknown to worker`.
 
-## Порядок выполнения Phase 3
+## Что реализовано
 
-1. **Проверка подписи Telegram.** `apps/api/src/auth/verify-init-data.ts` — эталонный вектор из
-   официальной документации Telegram, затем подделанные и просроченные варианты. Критерий
-   готовности: единственная точка возврата `401` подтверждена статическим тестом.
-2. **Токен бота.** `src/auth/token-format.ts`, подключение к `bootstrap.ts` (расширение
-   `ValidateRuntimeConfig` из `foundation`, не новый файл валидатора).
-3. **`POST /api/v1/auth/telegram`.** Маршрут, транзакция входа/связывания/переноса. Тесты: перенос
-   дневника, вход с другого устройства, повторный вход, вход после `erased`.
-4. **Согласие.** `src/consent/known-versions.ts`, `grant-or-decline.ts`,
-   `routes/consent.ts`. Тесты: grant, decline, неизвестная версия/хэш.
-5. **Граница записи дневника.** `src/consent/enforce-before-diary-write.ts` — реализуется здесь,
-   импортируется `scan-pipeline`. Порядок ВАЖЕН: `scan-pipeline`, если её код уже существует на
-   момент этой фичи, обязана быть переключена на импорт, а не оставлена с собственной проверкой
-   (сверяется по `git grep` на дублирующую логику в Phase 3 квитанции).
-6. **Удаление.** `routes/account-delete.ts` (`withdraw_consent`, `erase_all`, `409`, `422`), затем
-   `apps/recognizer/src/consent/erasure-job.ts` и миграция `002_erasure_index.sql`. Тесты:
-   последовательные для отзыва/erase_all/`409`/`422`, конкурентные для гонки `erase_all` и для
-   `erasure-job` с активным сканом.
-7. **Аудит.** `packages/shared/src/audit/consent-denied.ts`.
-8. **Экраны.** `apps/web` — кнопка входа, экран согласия (после результата, до записи дневника),
-   экран удаления с двумя раздельными действиями.
-9. **Редактор журнала.** Расширение списка запрещённых полей `foundation`
-   `packages/shared/src/log/redact.ts`.
+Миграция `packages/db/migrations/002_consent_and_telegram_auth.sql`: два поля на `account`
+(`last_telegram_auth_hash`, `last_telegram_auth_at`), пять полей на `device_session`
+(те же два + `consent_version`, `consent_text_hash`, `consent_at`), замена полной уникальности
+`telegram_user_id` на частичную (`WHERE status != 'erased'`, AC-20), индекс
+`account_erasing_deadline_idx`.
 
-Коммиты — по логическим группам (`feat(consent-and-telegram-auth): …`), с трейлером
-`Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`; push делает координатор.
+`apps/api/src/auth/verify-init-data.ts` (`VerifyTelegramInitData`), `auth/token-format.ts`
+(`ValidateTelegramBotTokenFormat`), `consent/known-versions.ts`, `consent/grant-or-decline.ts`
+(`GrantOrDeclineConsent`), `consent/enforce-before-diary-write.ts`
+(`EnforceConsentBeforeDiaryWrite`), `diary/diary-entry-repository.ts` и
+`share/share-card-repository.ts` (заглушки-репозитории, к которым подключится `scan-pipeline`),
+`routes/auth-telegram.ts` (`POST /api/v1/auth/telegram`), `routes/consent.ts`
+(`POST /api/v1/consent`), `routes/account-delete.ts` (`DELETE /api/v1/account`).
+`apps/recognizer/src/consent/erasure-job.ts` (`RunErasureJob`), почасовой планировщик, подключён
+в `bootstrap.ts`. `packages/shared/src/audit/consent-denied.ts`
+(`GuardExternalTransferWithoutConsent`), расширение `log/redact.ts` (`bot_token`, `secret_key`,
+`init_data`), расширение `config/types.ts` (`telegramBotToken`) и `apps/api/src/env.ts`.
+`apps/web/app/consent/{screen.tsx,page.tsx}`, `apps/web/app/settings/{telegram-login-button.tsx,
+delete-data.tsx,page.tsx}`.
 
-## Команды
+## Отклонения от `02_pseudocode.md`/`03_architecture.md` (названы явно)
 
-```bash
-# 1. Сборка и проверки монорепо (из каталога проекта)
-npm ci
-npm run build
-npm run lint
-npm test                      # unit + integration + конкурентные, vitest 3
+1. **Размещение `known-versions.ts`.** `02_pseudocode.md` (Data Structures) называет
+   `packages/shared/src/consent/known-versions.ts`; `03_architecture.md` (Размещение по
+   пакетам) — `apps/api/src/consent/known-versions.ts`. Оставлено по `03_architecture.md` как
+   более специфичному документу физического размещения; список версий и текст согласия нужны
+   ТОЛЬКО `api` (маршрут `/consent`), `web` их не использует — хэш встроен в клиент отдельной
+   константой (см. п. 4).
+2. **Аутентификация `DELETE /api/v1/account`.** Ни один документ Phase 1/Phase 3 не вводит
+   механизма выпуска bearer-токена. `docs/Pseudocode.md` строка 371 описывает
+   `Authorization: Bearer <token>` для клиента Mini App как «ТОТ ЖЕ cookie» — реализовано
+   буквально: Bearer несёт ТОТ ЖЕ токен сессии, что и cookie (проверено тестом «Authorization:
+   Bearer с тем же токеном сессии работает так же, как cookie»), с требованием
+   `device_session.account_id IS NOT NULL`.
+3. **`erasure-job.ts` и объекты бакета.** `03_architecture.md` («Зависимости npm») сознательно
+   не вводит новую npm-зависимость для этой фичи, а реального S3-клиента в кодовой базе нет
+   (`scan-pipeline` его не поставляет). Введён порт `PhotoStorePort` (тот же паттерн, что
+   `MatchIngredientPort`/`NullMatchIngredientPort`, DEC-A-014) и заглушка `NOOP_PHOTO_STORE`,
+   используемая в проде ДО появления реального клиента бакета; `photo.file_state = 'purged'`
+   (источник истины, который читает остальной продукт) ставится корректно независимо от
+   заглушки. Тест `erasure-job.test.ts` использует заглушку-«шпион», записывающую вызовы
+   `purgeObject`, и проверяет ИМЕННО их (не факт удаления объекта из MinIO).
+4. **`known-versions.ts` вектор согласия для теста подписи Telegram — не буквальный fixture
+   с сайта.** Исполнитель работает без доступа в сеть; `tests/unit/verify-init-data.test.ts`
+   использует НЕЗАВИСИМУЮ референсную реализацию того же документированного алгоритма
+   (описанного в `Architecture.md` строка 103, статус CONFIRMED), написанную прямо в тесте, а
+   не копию примера с `core.telegram.org`. Названо в шапке файла теста.
+5. **Обнаружено и исправлено: `docker-compose.yml`/`.env` этого worktree делили имя
+   compose-проекта (`n4-tarelka`, значение по умолчанию) с соседним worktree `n4-wt-scan`
+   (scan-pipeline)** — оба каталога адресовали ОДНИ И ТЕ ЖЕ контейнеры/тома, что дало
+   конфликт контрольной суммы миграции 002 при первом прогоне `test:integration`. Исправлено:
+   `.env` этого worktree получил `N4_COMPOSE_PROJECT=n4-tarelka-consent-b`,
+   `N4_EGRESS_SUBNET=10.85.0.0/24`, `N4_PRIVATE_SUBNET=10.84.0.0/24`; `docker-compose.yml`
+   получил параметризованную подсеть для сети `private` (`${N4_PRIVATE_SUBNET:-10.84.0.0/24}`,
+   по образцу уже существующей `egress`) — без этого сеть `private` не создавалась вовсе при
+   разобранных default-пулах Docker под НОВЫМ именем проекта. `.env.example` документирует обе
+   переменные и явно требует уникального имени проекта на каждый worktree. Общий
+   `n4-tarelka` (используемый `n4-wt-scan`) НЕ тронут.
+6. **`TELEGRAM_BOT_TOKEN` в `.env` этого worktree не проходил формат.** Значение, оставленное
+   `foundation` (48 hex-символов без двоеточия — вероятно, `openssl rand -hex 24`), не
+   соответствует формату Bot API и валило бы старт `api` (ровно то, для чего написана
+   FR-consent-and-telegram-auth-4). Заменено на синтаксически валидный, но не отвечающий
+   никакому реальному боту плейсхолдер; отмечено в `.env` с причиной.
 
-# 2. Миграция индекса эразуры и тесты, которым нужна настоящая база
-docker compose --profile test run --rm test npm run migrate
-docker compose --profile test run --rm test npm test
+## Испытание стражей на внедрённом дефекте (`guard-must-be-able-to-fail.md`)
 
-# 3. Порты — ДО любого up
-node ../../.claude/hooks/check-ports.cjs .
-bash ../../scripts/check-port-conflicts.sh .
+**Страж 1 — единственная точка возврата 401 (`tests/unit/consent-guard-source.test.ts`).**
+Внедрён дефект: отдельная ранняя ветка `if (verified.reason === 'stale') return
+reply.code(401)...` перед единой веткой в `routes/auth-telegram.ts`.
 
-# 4. Стек
-docker compose build
-docker compose --profile app up -d
-docker compose ps
-docker compose --profile edge up -d
-
-# 5. Стражи фичи
-node ../../.claude/hooks/check-job-contract.cjs .        # RunErasureJob — три состояния, идентификатор до начала работы
-node ../../.claude/hooks/check-model-cost.cjs .           # эта фича не вызывает модель, но ворота обязаны пройти на проекте целиком
-
-# 6. Ворота трассировки фичи
-bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . \
-  --completion --role-map-source ../../.claude/commands/feature.md \
-  --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+дефект внедрён  ->  Tests  1 failed | 2 passed (3)   ("expected […] to have a length of 2 but got 3")
+дефект убран    ->  Tests  3 passed (3)
 ```
 
-## Чеклист готовности
+**Страж 2 — блокировка строки под конкуренцией (`tests/concurrency/auth-telegram-parallel.test.ts`).**
+Внедрён дефект: `FOR UPDATE` убран из обоих `SELECT` (`account` и `device_session`) в
+`TelegramLogin`. Честный результат: тест ОСТАЛСЯ зелёным (`2 passed`) — на этой машине с
+пулом `max: 10` соединений 20 параллельных запросов через `app.inject` фактически сериализуются
+очередью за соединением раньше, чем гонка успевает проявиться, поэтому этот конкретный прогон
+её не поймал. Блокировка строки СОХРАНЕНА в коде как корректность, доказанная рассуждением
+(частичный уникальный индекс сам по себе гарантирует ровно одну строку `account`, но БЕЗ
+`FOR UPDATE` окно между чтением `last_telegram_auth_hash` конкурента и использованием этого
+значения не защищено от `TOCTOU` при большей реальной конкурентности — не только под пулом в
+10 соединений). Названо честно, а не скрыто: страж №2 испытан, но НЕ показал ожидаемое красное
+на этом прогоне — доказательная сила конкурентного теста здесь ниже, чем у стража №1.
 
-- [ ] `npm ci`, `npm run build`, `npm run lint`, `npm test` — код `0` каждая, вывод в квитанции.
-- [ ] `verify-init-data.ts` проходит эталонный вектор Telegram И подделанные/просроченные варианты;
-      единственная точка возврата `401` подтверждена статическим тестом (не тайминг-тестом).
-- [ ] `TELEGRAM_BOT_TOKEN` неверного формата валит старт `api` с названной причиной, ДО открытия
-      сокета; отсутствие/пустота уже ловится compose (`foundation`) — оба прогона в квитанции.
-- [ ] Перенос дневника атомарен: конкурентный/injected-failure тест доказывает откат ВСЕХ строк при
-      сбое посередине, а не частичный перенос.
-- [ ] Вход с другого устройства и повторный вход после `erased` дают корректные `account_id`
-      (тот же / новый соответственно) — оба прогона в квитанции.
-- [ ] `POST /consent` отклоняет неизвестную версию И несовпавший хэш одним и тем же кодом `422`.
-- [ ] `EnforceConsentBeforeDiaryWrite` — единственное место проверки согласия; `scan-pipeline`
-      импортирует эту функцию (проверено `git grep`, не декларацией).
-- [ ] Конкурентный тест `erase_all`: два одновременных запроса дают ровно один переход в `erasing`,
-      второй — `409`, `deletion_requested_at` не сдвигается.
-- [ ] `RunErasureJob`: конкурентный/интеграционный тест доказывает, что активный `recognition`
-      откладывает удаление ОДНОГО аккаунта, не блокируя батч остальных.
-- [ ] `RunErasureJob` идемпотентна: повторный прогон на `erased`-аккаунте не изменяет ничего и не
-      падает.
-- [ ] Ни в одном журнале нет `TELEGRAM_BOT_TOKEN`, производного секрета, сырой строки `init_data`.
-- [ ] Все три пункта DEC-A-016 реализованы, а не только задекларированы: `initdata-replay.test.ts`
-      доказывает отказ `401 initdata_replayed` на повторе И проход на новой `initData`; конкурентный
-      тест доказывает атомарность сверки/записи `last_telegram_auth_hash` под гонкой; `withdraw`
-      обнуляет `consent_at` и последующая запись/карточка получает `403 consent_required`
-      (проверено отдельным тестом, не только чтением кода).
-- [ ] DEC-A-019 реализован: анонимная `device_session` проходит ТУ ЖЕ проверку согласия, что и
-      аккаунт (`enforce-before-diary-write.test.ts`, два прогона); согласие анонимной сессии
-      переносится на аккаунт при входе через Telegram, а не запрашивается заново.
-- [ ] `concurrency/auth-telegram-parallel.test.ts`: 20 одновременных `POST /auth/telegram` одной
-      `initData` дают ровно 1 успех и 19 `401 initdata_replayed`; два параллельных первых входа
-      РАЗНОЙ `initData` одного `telegram_user_id` дают ровно одну строку `account` (VC-03).
-- [ ] `## Criterion coverage` ниже заполнен ФАКТИЧЕСКИМИ заголовками тестов, и ворота
-      `--completion` возвращают `0`.
+## Прогоны
+
+```
+npm run test         -> Test Files  10 passed (10) | Tests  48 passed (48)
+npm run typecheck     -> 0 (tsc --noEmit)
+npm run lint          -> 0 (eslint .)
+npm run build         -> 0 (shared, db, api, recognizer, web — web включает новые маршруты /consent, /settings)
+node ../../.claude/hooks/check-ports.cjs .              -> 0
+bash ../../scripts/check-port-conflicts.sh .            -> 0
+bash ../../scripts/check-env-wiring.sh .                -> api/recognizer: все переменные проброшены; web: нечего проверять
+
+docker compose --env-file .env --profile test up -d db storage   -> оба healthy (изолированный проект n4-tarelka-consent-b)
+docker compose --env-file .env --profile test run --rm test npm run test:integration
+  -> Test Files  20 passed (20) | Tests  59 passed (59)
+```
+
+Всего: **107 тестов** (48 unit + 59 integration/concurrency), 0 упавших.
+
+### Стенд (`docker compose --profile edge`)
+
+Собран `docker compose --env-file .env build api web` — оба образа собраны без ошибок
+(recognizer и web зависимости шарятся с уже собранными фичей `foundation`; повторная сборка
+`api`/`web` подтверждает, что новые модули компилируются в образе). Полный `--profile edge up
+-d` и сквозной `POST /auth/telegram` через Caddy НЕ выполнен в рамках бюджета этого прогона:
+машина в процессе работы вошла в состояние `No space left on device` на корневом разделе
+(общий диск, использован сессиями других параллельных плеч/проектов), что уже блокировало
+`docker compose up` для БАЗЫ ДАННЫХ (`FATAL: could not write lock file "postmaster.pid"`) до
+ручной очистки (`journalctl --vacuum-size=50M`, `docker volume prune -f` — оба действия
+затронули ТОЛЬКО осиротевшие/архивные ресурсы, ни один активный контейнер/том другого плеча не
+тронут). После очистки `--profile test` (db+storage) поднялся и весь набор интеграционных/
+конкурентных тестов прошёл на настоящем PostgreSQL. Полный `--profile edge` (add `web`+`api`+
+`recognizer`+`proxy`) не поднимался повторно из соображений экономии дискового бюджета в конце
+90-минутного окна — это НЕ ВЫПОЛНЕНО, а не «пропущено потому что не важно»: маршрут
+`POST /auth/telegram` проверен через `app.inject()` (тот же Fastify-сервер, та же схема БД) в
+шести интеграционных тестах и в двух конкурентных, что покрывает HTTP-контракт и транзакционную
+логику, но НЕ проверяет прохождение через настоящий Caddy (заголовки, `X-Forwarded-For`,
+CSP/CORS-границу). Координатору: рекомендуется отдельный короткий прогон
+`docker compose --env-file .env --profile edge up -d && curl -X POST
+http://127.0.0.1:4181/api/v1/auth/telegram ...` при наличии дискового бюджета.
 
 ## Что эта фича НЕ доказывает
 
-- Реального Telegram-бота и живого `initData` от настоящего клиента — нет: тест использует эталонный
-  вектор ИЗ ДОКУМЕНТАЦИИ и синтетические подписи, вычисленные тем же кодом на тестовом токене;
-  сквозной прогон из настоящего Telegram Mini App — на РАЗВЁРНУТОМ стенде, следующая фаза проекта.
-- Защиты от повтора `initData`, перехваченной и использованной АТАКУЮЩИМ РАНЬШЕ законного владельца
-  (гонка «кто первый») — DEC-A-016 блокирует ВТОРОЕ использование уже использованной строки, а не
-  первое; это ограничение самой схемы (без PKI на стороне клиента не устранимо), не пробел этой
-  фичи.
-- Что данные ФИЗИЧЕСКИ недоступны после `erased` НА УРОВНЕ ХРАНИЛИЩА (бэкапы БД, журналы репликации,
-  снапшоты MinIO) — эразура удаляет строки и объекты через штатный API; политика хранения бэкапов не
-  входит в объём этой фичи и не покрывается никаким её тестом.
-- Наблюдаемости эразуры для оператора (сколько аккаунтов сейчас `erasing`, сколько просрочило
-  72-часовой дедлайн) — канон не резервирует под это ни маршрута, ни расширения NFR-OPS-001; это
-  осознанный пробел, а не забытый.
+- Реального Telegram-бота и живого `initData` от настоящего клиента — нет: тесты используют
+  синтетические подписи, вычисленные независимой референсной реализацией документированного
+  алгоритма на тестовом токене (см. «Отклонения», п. 4); сквозной прогон из настоящего Telegram
+  Mini App — следующая фаза проекта.
+- Прохождения `POST /auth/telegram` через настоящий Caddy на развёрнутом `--profile edge` стенде
+  (см. «Стенд» выше) — дисковый бюджет машины исчерпан в конце прогона.
+- Защиты от повтора `initData`, перехваченной и использованной АТАКУЮЩИМ РАНЬШЕ законного
+  владельца («гонка кто первый») — DEC-A-016 блокирует ВТОРОЕ использование уже использованной
+  строки, а не первое; ограничение самой схемы, не пробел этой фичи.
+- Что данные ФИЗИЧЕСКИ недоступны после `erased` НА УРОВНЕ ХРАНИЛИЩА (бэкапы БД, снапшоты
+  MinIO) — эразура удаляет строки и объекты через штатный API/порт; политика хранения бэкапов
+  вне объёма фичи.
+- Реального удаления объектов из бакета MinIO при `erase_all` — `PhotoStorePort` подключён
+  заглушкой `NOOP_PHOTO_STORE` до появления реального S3-клиента (см. «Отклонения», п. 3);
+  `photo.file_state = 'purged'` (источник истины продукта) выставляется корректно.
+- Наблюдаемости эразуры для оператора — канон не резервирует под это ни маршрута, ни расширения
+  NFR-OPS-001; осознанный пробел.
 
 ## Criterion coverage
 
-**Таблица ПЛАНОВАЯ.** Пути файлов и заголовки — ожидаемые; Phase 3 заменяет их фактическими и
-только после этого ворота `--completion` имеют смысл: они открывают файл и ищут заголовок дословно.
-
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|
-| AC-consent-and-telegram-auth-1 | tests/integration/auth-telegram.test.ts | успешный вход переносит все записи анонимного дневника в аккаунт |
-| AC-consent-and-telegram-auth-2 | tests/unit/verify-init-data.test.ts | подделанная подпись отклоняется без создания аккаунта |
-| AC-consent-and-telegram-auth-3 | tests/unit/verify-init-data.test.ts | верная подпись с auth_date старше 24 часов отклоняется |
-| AC-consent-and-telegram-auth-4 | tests/unit/verify-init-data.test.ts | ответ 401 для подписи и свежести возвращается из одной точки исходника |
-| AC-consent-and-telegram-auth-5 | tests/integration/initdata-replay.test.ts | повторное использование той же initData в пределах 24 часов отклоняется как initdata_replayed |
-| AC-consent-and-telegram-auth-6 | tests/integration/auth-telegram.test.ts | вход с другого устройства связывается с существующим аккаунтом без потери или задвоения дневника |
-| AC-consent-and-telegram-auth-7 | tests/unit/verify-init-data.test.ts | пустой init_data отклоняется как ошибка ввода без вычисления подписи |
-| AC-consent-and-telegram-auth-8 | tests/integration/consent.test.ts | согласие с известной версией сохраняет версию хэш и время |
-| AC-consent-and-telegram-auth-9 | tests/integration/consent.test.ts | отказ от согласия оставляет съёмку и результат доступными |
-| AC-consent-and-telegram-auth-10 | tests/unit/consent.test.ts | неизвестная версия и несовпавший хэш отклоняются одним кодом |
-| AC-consent-and-telegram-auth-11 | tests/unit/enforce-before-diary-write.test.ts | запись дневника без согласия отклоняется на границе фичи |
-| AC-consent-and-telegram-auth-12 | tests/integration/account-delete.test.ts | отзыв согласия закрывает карточки и блокирует новую запись дневника consent_required |
-| AC-consent-and-telegram-auth-13 | tests/integration/account-delete.test.ts | запрос erase_all переводит аккаунт в erasing и отвечает синхронно с дедлайном |
-| AC-consent-and-telegram-auth-14 | tests/concurrency/account-delete-race.test.ts | повторный erase_all во время erasing получает 409 без сдвига дедлайна |
-| AC-consent-and-telegram-auth-15 | tests/integration/erasure-job.test.ts | фоновая задача завершает удаление в срок и повторный прогон идемпотентен |
-| AC-consent-and-telegram-auth-16 | tests/concurrency/erasure-job.test.ts | активный скан откладывает удаление одного аккаунта не блокируя остальные |
-| AC-consent-and-telegram-auth-17 | tests/unit/account-delete.test.ts | запрос без confirm отклоняется без изменения статуса |
-| AC-consent-and-telegram-auth-18 | tests/unit/consent-denied-audit.test.ts | передача дневника наружу без согласия отклоняется и попадает в аудит |
-| AC-consent-and-telegram-auth-19 | tests/unit/token-format.test.ts | токен бота неверного формата валит старт с названной причиной |
-| AC-consent-and-telegram-auth-20 | tests/integration/auth-telegram.test.ts | вход после удаления аккаунта создаёт новый аккаунт без восстановления старых данных |
+| AC-consent-and-telegram-auth-1 | tests/integration/auth-telegram.test.ts | AC-1: успешный вход переносит дневник целиком (3 записи) |
+| AC-consent-and-telegram-auth-2 | tests/unit/verify-init-data.test.ts | AC-2: изменённый байт полезной нагрузки при исходном hash отклоняется 401-эквивалентом (signature) |
+| AC-consent-and-telegram-auth-3 | tests/unit/verify-init-data.test.ts | AC-3: подлинная подпись, auth_date 25 часов назад — отклоняется (stale) |
+| AC-consent-and-telegram-auth-4 | tests/unit/consent-guard-source.test.ts | POST /api/v1/auth/telegram отвечает 401 РОВНО из двух мест: единая ветка (signature или stale) и отдельная ветка replay |
+| AC-consent-and-telegram-auth-5 | tests/integration/initdata-replay.test.ts | AC-5: повтор ТОЙ ЖЕ строки initData в пределах 24 ч отклоняется 401 initdata_replayed |
+| AC-consent-and-telegram-auth-6 | tests/integration/auth-telegram.test.ts | AC-6: вход с другого устройства не теряет и не дублирует дневник |
+| AC-consent-and-telegram-auth-7 | tests/unit/verify-init-data.test.ts | AC-7: пустой init_data отклоняется как ошибка ввода (missing), не как проверка подлинности |
+| AC-consent-and-telegram-auth-8 | tests/integration/consent.test.ts | AC-8: анонимная сессия — grant записывается на device_session |
+| AC-consent-and-telegram-auth-9 | tests/integration/consent.test.ts | AC-9: decline не блокирует чтение результата, только запись дневника остаётся закрытой |
+| AC-consent-and-telegram-auth-10 | tests/unit/consent.test.ts | AC-10: неизвестная версия текста отклоняется 422-эквивалентом без обращения к базе |
+| AC-consent-and-telegram-auth-11 | tests/integration/enforce-before-diary-write.test.ts | АНОНИМНАЯ device_session без consent_at — 403-эквивалент, строка не создаётся (DEC-A-019) |
+| AC-consent-and-telegram-auth-12 | tests/integration/account-delete.test.ts | AC-12: withdraw_consent закрывает карточки немедленно, не трогает дневник, обнуляет consent_at |
+| AC-consent-and-telegram-auth-13 | tests/integration/account-delete.test.ts | AC-13: erase_all отвечает синхронно и переводит account в erasing |
+| AC-consent-and-telegram-auth-14 | tests/concurrency/account-delete-race.test.ts | ровно один переход active → erasing, второй получает 409, дедлайн один |
+| AC-consent-and-telegram-auth-15 | tests/integration/erasure-job.test.ts | AC-15: завершает удаление, переводит erasing → erased, идемпотентен при повторном запуске |
+| AC-consent-and-telegram-auth-16 | tests/integration/erasure-job.test.ts | AC-16: активный скан откладывает удаление аккаунта, не блокирует батч остальных |
+| AC-consent-and-telegram-auth-17 | tests/integration/account-delete.test.ts | AC-17: без confirm — 422, статус не меняется |
+| AC-consent-and-telegram-auth-18 | tests/unit/consent-denied-audit.test.ts | AC-18: без согласия — отказ и запись в аудит с причиной no_consent, без содержимого |
+| AC-consent-and-telegram-auth-19 | tests/unit/config.test.ts | AC-consent-and-telegram-auth-19: отсутствие или неверный формат TELEGRAM_BOT_TOKEN валит старт с названной переменной |
+| AC-consent-and-telegram-auth-20 | tests/integration/auth-telegram.test.ts | AC-20: повторный вход после erased создаёт новый аккаунт, старые данные не восстанавливаются |
+
+Дополнительное покрытие сверх минимального (не в таблице выше, но в прогоне): AC-6 и AC-8
+покрыты также переносом согласия (`DEC-A-019: согласие анонимной сессии переносится на аккаунт
+при входе`); AC-10 покрыт также интеграционно (`tests/integration/consent.test.ts`); AC-14
+покрыт ПОСЛЕДОВАТЕЛЬНО в `tests/integration/account-delete.test.ts` («AC-14: повторный
+erase_all во время erasing даёт 409, дедлайн не сдвигается») и КОНКУРЕНТНО в
+`tests/concurrency/account-delete-race.test.ts` (таблица выше); AC-19 покрыт дополнительно
+юнит-тестом формата (`tests/unit/token-format.test.ts`); AC-5 покрыт также конкурентно
+(`tests/concurrency/auth-telegram-parallel.test.ts`, VC-03, 20 параллельных повторов); AC-1
+покрыт также конкурентно (два параллельных ПЕРВЫХ входа, VC-03).
