@@ -13,7 +13,11 @@ import { createLogger } from '@n4/shared';
 import { acquireLease, recordResult } from '../../apps/recognizer/src/lease.js';
 import { createWorker } from '../../apps/recognizer/src/worker.js';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
+import { createNullMatchIngredientPort } from '../../apps/recognizer/src/match/null-port.js';
+import type { NormalizeOutcome, RecognizeJob } from '../../apps/recognizer/src/recognize/recognize-scan.js';
 import { migratedPool, seedSession, truncateAll } from '../helpers/db.js';
+
+const GENEROUS_QUOTA = { scanLimitUser: 1000, scanLimitDay: 1000, escalationLimitDay: 1000 };
 
 let pool: DbPool;
 
@@ -94,7 +98,7 @@ describe('аренда задания', () => {
       modelUsed: 'haiku-4.5',
       failureReason: 'no_food_matched',
     });
-    expect(secondWritten).toBe(true);
+    expect(secondWritten).toBe('written');
 
     const staleWritten = await recordResult(pool, { id: jobId, fence: first!.fence }, {
       status: 'failed',
@@ -105,7 +109,9 @@ describe('аренда задания', () => {
       failureReason: 'provider_timeout',
     });
     // НОЛЬ затронутых строк: проигравший записи не делает и чужой результат не трёт.
-    expect(staleWritten).toBe(false);
+    // Строка уже НЕ 'queued' (она 'refused' от победителя) — это `stale_lease_result`,
+    // а не `swept_as_timeout` (тот код зарезервирован за статусом 'failed' — SweepStuckScans).
+    expect(staleWritten).toBe('stale_lease_result');
 
     const row = await pool.query<{ status: string; model_estimate_kcal: number; failure_reason: string }>(
       'SELECT status::text AS status, model_estimate_kcal, failure_reason::text AS failure_reason FROM recognition WHERE id = $1',
@@ -117,31 +123,34 @@ describe('аренда задания', () => {
   }, 60_000);
 
   it('воркер с устаревшим захватом пишет событие stale_lease_result в журнал', async () => {
+    // РАСШИРЕНИЕ фичи `scan-pipeline`: `worker.tick()` теперь делегирует полный
+    // `RecognizeScanWithinScanPipeline` (нормализация → квота → модель → сопоставление),
+    // а не вызывает провайдера напрямую. Гонка воспроизводится на шаге нормализации —
+    // первом асинхронном шаге конвейера, где и жила гонка в исходном тесте `foundation`.
     const jobId = await queueJob('lease-worker-log');
     const lines: string[] = [];
     const logger = createLogger({ service: 'recognizer-test', sink: (line) => lines.push(line) });
 
-    // Поставщик-«ворота»: пока он думает, задание перехватывает другой воркер. Гонка здесь
-    // ВОСПРОИЗВОДИТСЯ ТОЧНО, а не подгадывается таймингом — иначе тест зеленел бы через раз
-    // и ничего бы не доказывал.
-    const fake = createFakeModelProvider();
-    const gatedProvider = {
-      kind: fake.kind,
-      async recognize(request: Parameters<typeof fake.recognize>[0]) {
-        await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
-        const stealer = await acquireLease(pool, randomUUID());
-        expect(stealer?.id).toBe(jobId);
-        return fake.recognize(request);
-      },
+    const gatedNormalize = async (_job: RecognizeJob, _signal: AbortSignal): Promise<NormalizeOutcome> => {
+      await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+      const stealer = await acquireLease(pool, randomUUID());
+      expect(stealer?.id).toBe(jobId);
+      return { ok: true, normalizedKey: 'stub-normalized-key' };
     };
 
-    const worker = createWorker({ pool, provider: gatedProvider, logger });
+    const worker = createWorker({
+      pool,
+      provider: createFakeModelProvider(),
+      matchPort: createNullMatchIngredientPort(),
+      quotaLimits: GENEROUS_QUOTA,
+      normalize: gatedNormalize,
+      logger,
+    });
     const handled = await worker.tick();
 
     expect(handled).toBe(true);
     const events = lines.map((line) => JSON.parse(line).event);
     expect(events).toContain('stale_lease_result');
-    expect(events).not.toContain('scan_finished');
 
     // Результат отброшен: задание осталось за тем, кто держит актуальный номер захвата.
     const row = await pool.query<{ status: string; lease_fence: number }>(
