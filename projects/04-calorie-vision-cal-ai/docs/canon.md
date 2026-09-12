@@ -91,6 +91,6 @@ NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OP
 
 PD-CORE-001/002, PD-SEG-001…003, PD-INSIGHT-001…003, PD-DATA-001…003, PD-COST-001, PD-ARCH-001,
 PD-PRICE-001, PD-GEO-001, PD-GROWTH-001, PD-GROWTH-005, PD-METRIC-001, PD-LEGAL-001, PD-CJM-001,
-PD-REUSE-001, PD-RISK-001 — все 20 цитируются по идентификатору в PRD.md §1.2/§11 (таблица
+PD-REUSE-001, PD-RISK-001 — все 22 цитируются по идентификатору в PRD.md §1.2/§11 (таблица
 «Ответы на манифест»); DATA/COST/ARCH дополнительно в Architecture.md; GROWTH/METRIC/LEGAL — в
 Specification.md.
