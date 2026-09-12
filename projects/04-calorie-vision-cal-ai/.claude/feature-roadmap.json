@@ -1,0 +1,269 @@
+{
+  "version": "1.0",
+  "project": "N4 «Тарелка» — фото-трекер калорий с видимым источником числа",
+  "generated_from": [
+    "docs/PRD.md",
+    "docs/Specification.md",
+    "docs/Architecture.md",
+    "docs/Pseudocode.md",
+    "docs/ADR.md",
+    "docs/canon.md",
+    "docs/Refinement.md"
+  ],
+  "notes": {
+    "complexity_field": "Закрытый набор пакетной схемы simple|medium|complex (тиры S|M|L). Тира XL в схеме нет: scan-pipeline записан complex, но по .claude/rules/complexity-router.md он XL (трогает деньги) и требует остановки на плане у владельца. Фактический тир изменения решает bash ../../scripts/complexity-router.sh по реальному диффу.",
+    "experiment": "EXP-N4-001 (docs/development/telemetry/experiments/2026-09-12-n4-profile-ab.md): контролируемые пары — diary-and-streak и share-card-and-growth-events (обе medium). Остальные MVP-фичи чередуются по порядковому номеру: нечётный → плечо A (claude-opus-5), чётный → плечо B (claude-sonnet-5).",
+    "state": "Реализация не начиналась: кода, миграций, package.json монорепо не существует. Ни одна фича не done."
+  },
+  "features": [
+    {
+      "id": "foundation",
+      "number": 1,
+      "name": "Монорепо, контейнеры, схема БД и анонимная сессия устройства",
+      "description": "npm workspaces (apps/web, apps/api, apps/recognizer, packages/db, packages/shared); сборка образов из корня проекта; миграции SQL на 14 таблиц канона с pg_trgm, частичными индексами и уникальными ограничениями; анонимная сессия устройства с хэшем токена cookie и усечённым ip_prefix; отказ старта api и recognizer при любом из трёх ненастроенных потолков; scripts/check-env-wiring.sh, которого в репозитории нет.",
+      "priority": "mvp",
+      "status": "next",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [],
+      "source_ids": [
+        "FR-AUTH-001",
+        "FR-CAPTURE-001",
+        "NFR-SCALE-001",
+        "NFR-OPS-001",
+        "ADR-003",
+        "ADR-007",
+        "SC-US-001-1"
+      ],
+      "expected_files": [
+        "package.json",
+        "packages/db/migrations/001_init.sql",
+        "apps/api/src/server.ts",
+        "apps/api/src/config/limits.ts",
+        "apps/api/src/session/create-device-session.ts",
+        "scripts/check-env-wiring.sh"
+      ]
+    },
+    {
+      "id": "scan-pipeline",
+      "number": 2,
+      "name": "Приём скана, потолки, очередь и вызов модели",
+      "description": "POST /scans (202 + обязательный Idempotency-Key), GET /scans/{id}; атомарные потолки user/global/escalation одним оператором в одной транзакции; серверная нормализация HEIC→JPEG, ≤ 1568 px, ≤ 5 МБ; очередь recognition с предикатом leased_until, lease_owner и монотонным lease_fence; адаптер поставщика модели с живым клиентом и детерминированным фейком; эскалация к Sonnet 5 при confidence < 0,6 с четвёртым ключом квоты; проверка диапазонов ответа в коде после разбора. Тир XL по локальному роутеру: трогает деньги, остановка на плане у владельца обязательна.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "foundation"
+      ],
+      "source_ids": [
+        "FR-CAPTURE-002",
+        "FR-RECOGNIZE-001",
+        "FR-RECOGNIZE-002",
+        "FR-LIMIT-001",
+        "FR-LIMIT-002",
+        "NFR-PERF-001",
+        "ADR-001",
+        "ADR-003",
+        "ADR-004",
+        "ADR-007",
+        "SC-US-001-2",
+        "SC-US-009-1"
+      ],
+      "expected_files": [
+        "apps/api/src/routes/scans.ts",
+        "apps/api/src/quota/check-and-consume.ts",
+        "apps/api/src/photo/normalize.ts",
+        "apps/recognizer/src/lease.ts",
+        "apps/recognizer/src/provider/anthropic.ts",
+        "apps/recognizer/src/provider/fake.ts"
+      ]
+    },
+    {
+      "id": "source-and-correct",
+      "number": 3,
+      "name": "База USDA, синонимы, расчёт из базы и корректировка",
+      "description": "Разовый импорт USDA FoodData Central (Foundation + SR Legacy + FNDDS-порции) командой npm run import:fdc; ручная курация 100–300 русских блюд в food_synonym с рецептурным разложением; нечёткий поиск по триграммам нормализованной формы; расчёт четырёх чисел из food_item, Snapshot на каждую позицию, пометка unmatched и refused(no_food_matched) при нуле сопоставлений; степпер порции 5–2000 г, замена и удаление ингредиента без вызова модели; экран расхождения при разнице более 15% с сохранением обоих чисел.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "scan-pipeline"
+      ],
+      "source_ids": [
+        "FR-SOURCE-001",
+        "FR-SOURCE-002",
+        "FR-SOURCE-003",
+        "FR-CORRECT-001",
+        "FR-CORRECT-002",
+        "FR-CORRECT-003",
+        "FR-LOOK-012",
+        "ADR-001",
+        "ADR-005",
+        "ADR-006",
+        "SC-US-002-1",
+        "SC-US-002-2",
+        "SC-US-003-1",
+        "SC-US-003-2",
+        "SC-US-004-1",
+        "SC-US-004-2",
+        "SC-US-008-1",
+        "SC-US-008-2"
+      ],
+      "expected_files": [
+        "scripts/import-fdc.ts",
+        "packages/db/seed/food-synonym.ru.json",
+        "apps/recognizer/src/match/find-food-item.ts",
+        "apps/recognizer/src/compute/from-snapshot.ts",
+        "apps/api/src/routes/scans-correct.ts"
+      ]
+    },
+    {
+      "id": "consent-and-telegram-auth",
+      "number": 4,
+      "name": "Согласие, удаление данных и вход через Telegram Mini App",
+      "description": "POST /consent с версионированным текстом и его хэшем; DELETE /account с немедленным revoked_at карточкам и удалением за 72 часа при account.status = erasing; POST /auth/telegram с проверкой подписи initData по сырым байтам, сравнением постоянного времени и свежестью auth_date после подписи; связывание аккаунта с сессией устройства и целиковый перенос анонимного дневника. Перенос дневника проверяется сквозным сценарием вместе со следующей фичей — это названная зависимость ПРОВЕРКИ, а не реализации.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "foundation"
+      ],
+      "source_ids": [
+        "FR-AUTH-002",
+        "FR-AUTH-003",
+        "FR-GROWTH-006",
+        "NFR-SEC-002",
+        "ADR-009",
+        "SC-US-012-1",
+        "SC-US-012-2",
+        "SC-US-013-1",
+        "SC-US-013-2"
+      ],
+      "expected_files": [
+        "apps/api/src/auth/verify-init-data.ts",
+        "apps/api/src/routes/auth-telegram.ts",
+        "apps/api/src/routes/consent.ts",
+        "apps/api/src/routes/account-delete.ts",
+        "apps/api/src/consent/erasure-job.ts"
+      ]
+    },
+    {
+      "id": "diary-and-streak",
+      "number": 5,
+      "name": "Дневник дня, итоги и мягкий стрик",
+      "description": "GET /diary?date= только по owner_key вызывающего, без параметра «чей дневник»; PATCH /diary/{entry_id} с операциями confirm, set_portion и delete; мягкое удаление с пересчётом итога дня В ТОЙ ЖЕ транзакции; разбивка по приёмам пищи с исправлением одним тапом; мягкий стрик по Europe/Moscow — один пропуск помечается заморожённым, два подряд обнуляют, без обратного отсчёта и предупреждений о потере. Кандидат контролируемой пары EXP-N4-001.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "blockers": [],
+      "depends_on": [
+        "source-and-correct",
+        "consent-and-telegram-auth"
+      ],
+      "source_ids": [
+        "FR-DIARY-001",
+        "FR-DIARY-002",
+        "SC-US-005-1",
+        "SC-US-005-2",
+        "SC-US-006-1",
+        "SC-US-006-2"
+      ],
+      "expected_files": [
+        "apps/api/src/routes/diary.ts",
+        "apps/api/src/diary/commit-entry.ts",
+        "apps/api/src/diary/day-totals.ts",
+        "apps/api/src/diary/soft-streak.ts",
+        "apps/web/src/app/day/page.tsx"
+      ]
+    },
+    {
+      "id": "share-card-and-growth-events",
+      "number": 6,
+      "name": "Карточка 9:16, бейдж и события воронки",
+      "description": "Серверная сборка share_card 1080×1920 автоматически после done: фото, название, четыре числа, строка источника, бейдж; данные о здоровье кроме состава блюда на карточку не попадают; тариф читается только из базы и fail-closed — всё, что не ровно paid, требует бейдж; публичная страница /c/{card_id} с Cache-Control: no-store и одним 404 на удалённую, отозванную и неизвестную карточку; запись growth_event пяти типов, share_click при нажатии и card_view при каждом открытии посторонним. Кандидат контролируемой пары EXP-N4-001.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "blockers": [],
+      "depends_on": [
+        "source-and-correct"
+      ],
+      "source_ids": [
+        "FR-SHARE-001",
+        "FR-GROWTH-001",
+        "FR-GROWTH-003",
+        "FR-LOOK-007",
+        "ADR-010",
+        "SC-US-007-1",
+        "SC-US-007-2"
+      ],
+      "expected_files": [
+        "apps/api/src/share/build-card.ts",
+        "apps/api/src/routes/share-cards.ts",
+        "apps/api/src/growth/record-event.ts",
+        "apps/web/src/app/c/[cardId]/page.tsx"
+      ]
+    },
+    {
+      "id": "partner-codes-and-cabinet",
+      "number": 7,
+      "name": "Коды блогеров, атрибуция, anti-fraud и кабинет партнёра",
+      "description": "POST /codes/apply с тремя исходами по полю source: explicit + любой → 409, слабый + explicit → 200 с replaced_source и аудитом replaced_weaker_source, слабый + слабый → 409; недействительный код — ошибка ввода без отката к cookie; самореферал и заблокированный код дают rejected; anti-fraud 50 применений с одного ip_prefix за 10 минут блокирует код, снятие только оператором; переход pending → activated первым успешным распознаванием одной транзакцией с growth_event(activation); GET /partner/dashboard по коду, разрешённому на сервере, четыре счётчика из growth_event, раздельные i и conv%, «недостаточно данных (n из 30)» ниже порога.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "share-card-and-growth-events"
+      ],
+      "source_ids": [
+        "FR-PARTNER-001",
+        "FR-PARTNER-002",
+        "FR-PARTNER-003",
+        "FR-GROWTH-002",
+        "FR-GROWTH-004",
+        "FR-GROWTH-007",
+        "ADR-008",
+        "SC-US-010-1",
+        "SC-US-010-2",
+        "SC-US-011-1",
+        "SC-US-011-2"
+      ],
+      "expected_files": [
+        "apps/api/src/attribution/apply-partner-code.ts",
+        "apps/api/src/attribution/anti-fraud.ts",
+        "apps/api/src/routes/codes-apply.ts",
+        "apps/api/src/routes/partner-dashboard.ts",
+        "apps/web/src/app/partner/page.tsx"
+      ]
+    },
+    {
+      "id": "pro-interest-and-limits-ui",
+      "number": 8,
+      "name": "Экран лимита и лист ожидания Pro",
+      "description": "Экран лимита называет scope отказавшего потолка и время обнуления по московскому времени, показывается не чаще раза в сутки на пользователя; POST /interest сохраняет контакт с видом email или telegram по форме значения, экраном-источником user_limit или global_limit и кодом партнёра при наличии атрибуции; ни цены, ни тарифа, ни платёжной формы на экране нет — практики продукта-источника, наказанные магазином приложений, не воспроизводятся.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "simple",
+      "blockers": [],
+      "depends_on": [
+        "scan-pipeline",
+        "partner-codes-and-cabinet"
+      ],
+      "source_ids": [
+        "FR-LIMIT-003",
+        "PD-INSIGHT-002",
+        "PD-PRICE-001",
+        "SC-US-009-2"
+      ],
+      "expected_files": [
+        "apps/api/src/routes/interest.ts",
+        "apps/api/src/interest/record.ts",
+        "apps/web/src/app/limit/page.tsx"
+      ]
+    }
+  ]
+}

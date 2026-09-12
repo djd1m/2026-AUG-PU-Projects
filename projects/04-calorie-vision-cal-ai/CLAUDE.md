@@ -9,8 +9,9 @@ p-replicator, прежде чем реализовывать что-либо з�
 Фото-трекер калорий: пользователь снимает тарелку, через секунды видит блюдо, калории и три
 макронутриента — и видит, откуда взято каждое число (запись открытой базы USDA FoodData Central, её
 идентификатор, порция в граммах). Клиент — один Next.js-фронт на PWA и Telegram Mini App. Контур
-запуска — Россия и СНГ, Telegram-first. Статус: технический план (Phase 1–4 SPARC завершены);
-реализация не начиналась, `docker-compose.yml` и `package.json` монорепо ещё не созданы.
+запуска — Россия и СНГ, Telegram-first. Статус: технический план плюс скелет контейнеров — Phase 1–4 завершены 2026-09-12.
+Реализация не начиналась: `package.json` монорепо, исходники, миграции и тесты не созданы.
+`docker-compose.yml` и `Dockerfile` существуют как скаффолды и сборкой не проверены.
 
 ## Документация — читать в этом порядке
 
@@ -84,7 +85,7 @@ npm run import:fdc # разовый импорт USDA FoodData Central, не с�
 ```bash
 bash scripts/check-port-conflicts.sh projects/04-calorie-vision-cal-ai
 node .claude/hooks/check-ports.cjs projects/04-calorie-vision-cal-ai
-bash scripts/check-env-wiring.sh
+# bash scripts/check-env-wiring.sh — СКРИПТА НЕТ в репозитории; см. раздел «Скаффолды Phase 4»
 ```
 
 ## Правила репозитория, применимые к этому проекту
@@ -108,12 +109,65 @@ bash scripts/check-env-wiring.sh
 - [`guard-must-be-able-to-fail.md`](../../.claude/rules/guard-must-be-able-to-fail.md) — каждый
   страж (особенно ADR-001 и ADR-007) обязан быть испытан на внедрённом дефекте.
 
-## Feature lifecycle
+## Проектный toolkit (Phase 3, сгенерирован 2026-09-12)
+
+Общие команды и хуки остаются в корневой `.claude/` и здесь не дублируются. Полная карта с
+обоснованием каждого отсутствия — [`docs/toolkit-map.md`](docs/toolkit-map.md).
+
+| Агент | Когда звать |
+|---|---|
+| [`planner`](.claude/agents/planner.md) | разложить фичу на единицы, назвать связывающие FR/SC/ADR и порядок операций |
+| [`architect`](.claude/agents/architect.md) | схема, маршруты, границы сервисов, внешние зависимости, новый ADR |
+| [`code-reviewer`](.claude/agents/code-reviewer.md) | после каждой единицы реализации: источник числа, квота, аренда, владение, согласие |
+
+| Навык | Когда грузить |
+|---|---|
+| [`project-context`](.claude/skills/project-context/SKILL.md) | вопросы о продукте, границах недели, словаре, числах канона |
+| [`coding-standards`](.claude/skills/coding-standards/SKILL.md) | пока пишется или правится код |
+| [`security-patterns`](.claude/skills/security-patterns/SKILL.md) | любая граница доверия и любой платный вызов |
+| [`feature-navigator`](.claude/skills/feature-navigator/SKILL.md) | «что дальше», статус фичи, плечи эксперимента EXP-N4-001 |
+
+| Правило | О чём |
+|---|---|
+| [`security.md`](.claude/rules/security.md) | порядок операций, особая категория ПДн, граница входа, `404` вместо `403`, anti-fraud |
+| [`coding-style.md`](.claude/rules/coding-style.md) | структура монорепо, единицы и время, PostgreSQL без ORM-магии, грабли стека |
+| [`testing.md`](.claude/rules/testing.md) | слой по природе признака, обязательные конкурентные прогоны, испытание стражей |
+| [`secrets-management.md`](.claude/rules/secrets-management.md) | какой секрет какому сервису, отказ вместо дефолта, ротация |
+
+## Feature lifecycle и roadmap
 
 Реализация ведётся через `/feature` (4+ файлов или новая архитектура) или `/plan` (≤3 файлов), с
 маршрутизацией `/go`. Порядок фаз — PLAN → VALIDATE → IMPLEMENT → REVIEW
-(`../../.claude/rules/feature-lifecycle.md`); Phase 2 (валидация) не пропускается. Roadmap фич
-появится в `.claude/feature-roadmap.json` после Phase 3 (генерация project-specific toolkit).
+(`../../.claude/rules/feature-lifecycle.md`); Phase 2 (валидация) не пропускается. Перед `/go` и
+`/feature` прогонять `bash ../../scripts/complexity-router.sh`: код `1` означает L/XL и остановку на
+плане у владельца, код `2` — «проверка не выполнена», а не тир T.
+
+[`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — восемь MVP-фич в линейном порядке
+зависимостей: `foundation` → `scan-pipeline` → `source-and-correct` → `consent-and-telegram-auth` →
+`diary-and-streak` → `share-card-and-growth-events` → `partner-codes-and-cabinet` →
+`pro-interest-and-limits-ui`. Статус `next` только у первой, остальные `planned`; ни одна не `done`.
+Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
+`scan-pipeline` записан `complex`, хотя по локальной таблице он XL — трогает деньги.
+
+`diary-and-streak` и `share-card-and-growth-events` помечены `medium` и назначены кандидатами
+контролируемых пар эксперимента EXP-N4-001 (плечи Opus 5 / Sonnet 5, судья Codex Astra medium);
+подробности и §8 предрегистрации — в [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md).
+
+## Скаффолды Phase 4
+
+`docker-compose.yml` (6 сервисов канона плюс служебный `test`), `Dockerfile` (multi-stage, цели
+`api`/`recognizer`/`web`), `.dockerignore`, `.env.example`, `.gitignore`. Проверено: `docker compose
+config` → 0, `check-ports.cjs` → 0, `check-port-conflicts.sh` → 0, образов без тега нет. **Сборкой
+не проверено** — исходников не существует, и первым делом фичи `foundation` должен быть
+`docker compose build`.
+
+Единственный публикуемый порт — `127.0.0.1:${N4_EDGE_PORT:-4180}` у Caddy в профиле `edge`. У `web`
+хостового порта НЕТ: черновик его публиковал, и `check-port-conflicts.sh` вернул `1` — публикация
+рядом с прокси позволяет обойти прокси вместе с ограничением частоты, которое тот держит.
+
+`scripts/check-env-wiring.sh`, на который ссылаются `docs/Completion.md` и раздел «Команды
+разработки» выше, в репозитории ОТСУТСТВУЕТ. Пока его нет, полнота проброса переменных остаётся
+суждением и так помечается; написать его — работа фичи `foundation`.
 
 ## Development insights
 
