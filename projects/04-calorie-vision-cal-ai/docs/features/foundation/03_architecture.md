@@ -11,10 +11,10 @@
 | FR-foundation-1 сборка | корень монорепо | `package.json`, `package-lock.json`, `tsconfig.base.json`, `vitest.config.ts`, `eslint.config.js`, `.npmrc` |
 | FR-foundation-2 конфигурация | `packages/shared` | `src/config/env.ts` (валидатор), `src/config/types.ts` (`RuntimeConfig`) |
 | FR-foundation-2 применение | `apps/api`, `apps/recognizer` | `src/bootstrap.ts` в каждом — валидация ДО открытия сокета и ДО первого запроса к базе |
-| FR-foundation-3 схема | `packages/db` | `migrations/001_init.sql`, `src/migrate.ts` (раннер), `src/pool.ts` (единственный пул) |
+| FR-foundation-3 схема | `packages/db` | `migrations/001_init.sql`, `migrations/002_failure_reason_timeout.sql` (DEC-A-018: `failure_reason` до десяти значений — `001` уже применён, и изменять применённый файл раннер обязан отвергать), `src/migrate.ts` (раннер), `src/pool.ts` (единственный пул) |
 | FR-foundation-4 сессия | `apps/api` | `src/session/create-device-session.ts`, `src/routes/auth-device.ts`, `src/session/ip-prefix.ts` |
 | FR-foundation-5 квота | `apps/api` | `src/quota/check-and-consume.ts`, `src/quota/keys.ts` |
-| FR-foundation-6 аренда и адаптер | `apps/recognizer` | `src/lease.ts`, `src/worker.ts`, `src/provider/types.ts`, `src/provider/fake.ts`, `src/provider/select.ts` |
+| FR-foundation-6 аренда, уборка и адаптер | `apps/recognizer` | `src/lease.ts` (захват, условная запись, `sweepStuckScans`), `src/worker.ts` (цикл: захват + уборка в одном тике), `src/provider/types.ts` (порт `recognize(image, schema, opts)`), `src/provider/fake.ts`, `src/provider/live.ts`, `src/provider/select.ts` |
 | FR-foundation-7 фронт | `apps/web` | `app/page.tsx`, `app/layout.tsx`, `public/manifest.json`, `public/icons/*` |
 | FR-foundation-8 частота | `apps/api` | `src/http/rate-limit.ts` (хук `onRequest`) |
 | FR-foundation-9 стек | корень проекта | `Caddyfile`, правки `docker-compose.yml` только при переводе пробы здоровья на HTTP |
@@ -59,7 +59,7 @@
 ├── packages/
 │   ├── db/
 │   │   ├── package.json
-│   │   ├── migrations/001_init.sql
+│   │   ├── migrations/{001_init.sql,002_failure_reason_timeout.sql}
 │   │   └── src/{migrate.ts,pool.ts,index.ts}
 │   └── shared/
 │       ├── package.json
@@ -129,6 +129,22 @@ No external dependencies — this feature calls no third-party service.
 
 Переменной для порога эскалации `0,6`, имён моделей и таймзоны НЕТ намеренно: это числа канона §7
 (ADR-004), а не настройки окружения.
+
+## Правка контракта 2026-09-12 (DEC-A-015): порт модели и предикат выборки
+
+Обе правки пришли из challenge плана фичи `scan-pipeline` и принадлежат КАРКАСУ, поэтому внесены
+здесь, а не там.
+
+| Что | Было | Стало | Почему здесь |
+|---|---|---|---|
+| Порт поставщика | `recognize(image, schema)` | `recognize(image, schema, opts: { model, deadlineMs, signal? })`, ответ несёт `model` | модель выбирает ВЫЗЫВАЮЩИЙ: порт, решающий сам, прячет эскалацию внутри адаптера, и дорогой вызов нечем сопоставить с потолком эскалаций |
+| Предикат выборки | `status = 'queued' AND (leased_until IS NULL OR leased_until < now())` | плюс `photo_id IS NOT NULL` и `lease_fence < 3` | незавершённая публикация не должна попадать воркеру (кадра ещё нет), а число оплаченных захватов обязано иметь верхнюю границу |
+| Условная запись | `WHERE id = ? AND lease_fence = ?` | плюс `AND status = 'queued'` | появился второй писатель — уборщик; без условия воркер затирает его терминальный статус |
+| Уборщик | отсутствовал | `sweepStuckScans` в ТОМ ЖЕ цикле опроса | предел `lease_fence < 3` без уборщика превращает задание в вечное `queued` — тихую потерю |
+
+Отдельного сервиса для уборщика НЕ заводится: два идемпотентных оператора раз в секунду не стоят
+шестого процесса в compose. Правила 30-секундного общего бюджета и отказа от захвата просроченного
+задания в эту фичу НЕ входят — они принадлежат `scan-pipeline` (её `SweepStuckScans` правила В и Г).
 
 ## Границы, которые фича обязана сохранить
 
