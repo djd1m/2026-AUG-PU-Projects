@@ -8,6 +8,9 @@ import { createPool } from '@n4/db';
 import { loadRecognizerConfig, RECOGNIZER_REQUIRED_VARIABLES } from './env.js';
 import { selectModelProvider } from './provider/select.js';
 import { createWorker } from './worker.js';
+import { NOOP_PHOTO_STORE, runErasureJob } from './consent/erasure-job.js';
+
+const ERASURE_INTERVAL_MS = 60 * 60 * 1000;
 
 async function main(): Promise<void> {
   let config;
@@ -47,8 +50,18 @@ async function main(): Promise<void> {
   const provider = selectModelProvider(config);
   const worker = createWorker({ pool, provider, logger });
 
+  // RunErasureJob (FR-consent-and-telegram-auth-10) — почасовой планировщик, как
+  // `PurgeExpiredPhotos`. Отказ одного прогона не валит процесс: недоступность базы уже
+  // диагностируется обработчиком события `error` пула выше.
+  const erasureTimer = setInterval(() => {
+    void runErasureJob({ pool, photoStore: NOOP_PHOTO_STORE, logger }).catch((error: unknown) => {
+      logger.error('erasure_job_failed', { message: (error as Error).message });
+    });
+  }, ERASURE_INTERVAL_MS);
+
   const shutdown = (signal: string): void => {
     logger.info('shutdown_started', { signal });
+    clearInterval(erasureTimer);
     void worker
       .stop()
       .then(() => pool.end())
