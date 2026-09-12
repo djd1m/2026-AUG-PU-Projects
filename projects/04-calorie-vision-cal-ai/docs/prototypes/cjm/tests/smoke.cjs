@@ -145,10 +145,11 @@ async function mobile(browser) {
     const file = 'file://' + path.join(ROOT, 'variant-' + v.toLowerCase() + '.html');
     await page.goto(file, { waitUntil: 'load' });
     await page.waitForFunction(function (x) { return location.hash === '#' + x + '/1'; }, v, { timeout: 5000 });
-    const ok = (await page.evaluate(function () { return location.pathname; })).endsWith('index.html');
+    const ok = (await page.innerHTML('#screen')).length > 200 &&
+      (await page.evaluate(function () { return document.querySelector('#rail button[aria-current="step"]') !== null; }));
     results.push({
       url: file, variant: v, step: 1, at: nowISO(), consoleErrors: errs.slice(),
-      checks: [{ name: 'точка входа variant-' + v.toLowerCase() + '.html ведёт в прототип', ok: ok }]
+      checks: [{ name: 'точка входа variant-' + v.toLowerCase() + '.html открывает прототип сама (самодостаточный файл)', ok: ok }]
     });
   }
 
