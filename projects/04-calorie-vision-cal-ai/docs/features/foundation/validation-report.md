@@ -1,7 +1,7 @@
 **Verdict:** 🟢 READY
 
 # Requirements Testability Analysis
-Spec revision: sha256:649088b95d242a07e56aff52a01ac0caeefe490d66c9e9bad0c6ea9778894b7a
+Spec revision: sha256:3be77fbcc5d393f5b8eabaf396ec7c09b00b132223c3b8ff277ab6eb05cb3234
 
 Проект: N4 «Тарелка». Фича: `foundation`. Валидатор: Phase 2 (Sonnet 5, константа ранбука).
 Единица анализа — `FR-foundation-n` / `NFR-foundation-n` (документ не использует форму «As a user»;
@@ -11,14 +11,17 @@ user-story). INVEST применён к каждому требованию ка
 
 ## Summary
 
-- Требований проанализировано: 12 (10 FR + 2 NFR).
-- Критериев приёмки: 16 (`AC-foundation-1` … `AC-foundation-16`), все имеют строку в `## Criterion
-  scenarios`.
-- Средний балл: **95/100**.
+- Требований проанализировано: 12 (10 FR + 2 NFR); `AC-foundation-17…21` расширяют существующий
+  `FR-foundation-6` (контракт DEC-A-015/DEC-A-018), новой FR/NFR-строки не заводили.
+- Критериев приёмки: 21 (`AC-foundation-1` … `AC-foundation-21`), все имеют строку в `## Criterion
+  scenarios` (17–21 добавлены в Попытке 2, см. `## Дополнение: AC-foundation-17…21`).
+- Средний балл: **95/100** (пересчёт по 12 требованиям не меняется: пять новых критериев уточняют
+  контракт `FR-foundation-6`, который уже был оценён 100/100 — см. «Дополнение» ниже).
 - Заблокировано (score < 50 или floor): 0.
 - Blocking floor (`Testable`/`Completeness`/`Traceability` = 0): не сработал ни для одного
   требования — квоты ниже.
-- Находок: 2, обе `medium`, не блокирующие.
+- Находок: 3 (`VF-01`, `VF-02` — `medium`; `VF-03` — `low`, добавлена в Попытке 2), ни одна не
+  блокирующая.
 - Security acceptance criteria: применимо и присутствует специфично (бонус +5, не понижает счёт).
 - Growth traceability: не применимо (фича не касается ни одного `FR-GROWTH-nnn`; growth-события,
   карточки и коды партнёра явно вне объёма — раздел «Объём», «Вне объёма»).
@@ -72,11 +75,22 @@ SMART < 30 в семи случаях исключительно из-за `Time
 | AC-foundation-14 | `health` отвечает 200 при живой базе и 503 при недоступной (`tests/integration/health.test.ts`) |
 | AC-foundation-15 | Страж проброса переменных возвращает 0, 1 и 2 на трёх входах (`tests/integration/check-env-wiring.test.ts`) |
 | AC-foundation-16 | Секреты и полный адрес заменяются меткой `redacted` с сохранением поля; в вызовы журналирования не передаются секреты и полный адрес (`tests/unit/log-redaction.test.ts`, `tests/unit/source-guards.test.ts`) |
+| AC-foundation-17 | Слой конкурентный. Задание без опубликованного кадра невидимо воркеру (`tests/concurrency/lease.test.ts`). Мутация: убран `photo_id IS NOT NULL` из предиката выборки — 1 failed из 9; код восстановлен — 10 passed |
+| AC-foundation-18 | Слой конкурентный. Четвёртого захвата не бывает: при трёх исчерпанных задание больше не предлагается (`tests/concurrency/lease.test.ts`). Мутация: убран `lease_fence < 3` — 2 failed из 8; код восстановлен — 10 passed |
+| AC-foundation-19 | Слой конкурентный, четыре сценария в одном файле — задание, не взятое никем за пять минут, закрывается `failed(timeout)`; задание с исчерпанными захватами и истёкшей арендой закрывается `failed(timeout)`; уборщик НЕ трогает задание с действующей арендой; воркер не затирает статус, уже закрытый уборщиком (все в `tests/concurrency/lease.test.ts`). Мутация: убрано условие `AND status = 'queued'` из условной записи результата — 1 failed из 9 (`swept_as_timeout` не появлялся); правило Б уборщика вырезано — 2 failed из 8; код восстановлен в обоих случаях — 10 passed |
+| AC-foundation-20 | Слой интеграционный. Модель выбирает вызывающий, и ответ сам называет, чей он (`tests/integration/provider-adapter.test.ts`). Мутация: фейк зашивает свою модель вместо `opts.model` — 1 failed из 5; код восстановлен — 6 passed |
+| AC-foundation-21 | Слой интеграционный. Фейковый адаптер уважает дедлайн и отказывает, а не отвечает поздно (`tests/integration/provider-adapter.test.ts`). Мутация: фейк игнорирует `deadlineMs` — 1 failed из 5; код восстановлен — 6 passed |
 
 Источник имён сценариев — дословные заголовки тестов из `04_refinement.md` §«Тесты, которые Phase 3
 обязан создать» (строки 64–126) и таблицы `## Criterion coverage` в `05_completion.md`; AC-foundation-14
 взят из `05_completion.md` (`tests/integration/health.test.ts`), а не придуман, потому что литеральный
 заголовок для сборки/подъёма стека в `04_refinement.md` отсутствует, но health-тест есть.
+Строки `AC-foundation-17…21` (Попытка 2) взяты дословно из `05_completion.md` (строки 259–263,
+таблица `## Criterion coverage`, обновлённая коммитом `3e6e52b`) и перепроверены чтением исходников
+тестов: `grep -n "^\s*it("` в `tests/concurrency/lease.test.ts` и
+`tests/integration/provider-adapter.test.ts` подтвердил точное текстовое совпадение заголовков.
+Данные об испытании стражей мутацией — из `docs/telemetry/p-replicator/20260912T193004Z-foundation-A-7a62/receipts/impl-foundation.md`
+§«Шесть новых испытаний стражей мутацией».
 
 ## Detailed Analysis: FR-foundation-2 (fail-closed конфигурация) — 92/100
 
@@ -145,6 +159,19 @@ SMART < 30 в семи случаях исключительно из-за `Time
 соблюдён), недостаёт только источника числа. Ни один AC не теряет `Testable`/`Completeness`/
 `Traceability` до нуля — отсюда floor не срабатывает.
 
+**VF-03 (low, добавлена в Попытке 2).** `01_specification.md:136–147` (проза `FR-foundation-6`) не
+обновлена вслед за расширением контракта DEC-A-015/DEC-A-018: текст всё ещё описывает предикат
+выборки как `WHERE status = 'queued' AND (leased_until IS NULL OR leased_until < now())` и ни словом
+не упоминает `photo_id IS NOT NULL`, `lease_fence < 3`, алгоритм `SweepStuckJobs` или новую сигнатуру
+порта `recognize(image, schema, opts: { model, deadlineMs })` — при том что `AC-foundation-17…21`
+(в том же документе, ниже) и `02_pseudocode.md:164,168,173–183,197–198` (алгоритмы `LeaseRecognitionJob`,
+`SweepStuckJobs`, `SelectModelProvider`) полностью и точно несут актуальный контракт. Дефекта в
+самой приёмке нет — критерии и тесты корректны и опираются на верную версию контракта, читаемую из
+`02_pseudocode.md`; пробел ЧИСТО документационный: тот, кто прочитает только прозу `FR-foundation-6`,
+не узнает о существовании уборщика и предела захватов, пока не дойдёт до AC ниже.
+**Исправление:** дописать в `FR-foundation-6` абзац с расширенным предикатом, ссылкой на
+`SweepStuckJobs` и портом `opts: { model, deadlineMs }`, как это уже сделано в `02_pseudocode.md`.
+
 ## Security acceptance criteria
 
 Фича вводит сессии, секреты трёх сервисов и роли БД — применимо целиком.
@@ -171,10 +198,38 @@ SMART < 30 в семи случаях исключительно из-за `Time
 (`01_specification.md:51–54`). Отсутствие growth-требований в этом документе — ожидаемое поведение
 фичи-каркаса, а не пропуск.
 
+## Дополнение: AC-foundation-17…21 (Попытка 2, 2026-09-12)
+
+После основной поставки координатор расширил контракт `FR-foundation-6` решениями DEC-A-015
+(модель/дедлайн задаёт вызывающий; незавершённая публикация невидима; предел захватов) и DEC-A-018
+(уборщик застрявших заданий; десятое значение `failure_reason`). В `01_specification.md` добавлены
+`AC-foundation-17…21`; в `02_pseudocode.md` — переписанный предикат `LeaseRecognitionJob`, новый
+алгоритм `SweepStuckJobs`, новый контракт порта `SelectModelProvider`; в `04_refinement.md` и
+`05_completion.md` — восемь новых тестов и строки покрытия. Пять критериев валидированы этой
+Попыткой 2 (строки внесены в `## Criterion scenarios` выше, `VF-03` — новая находка). Ворота
+`check-pipeline-gaps.sh --criterion-scenarios` на момент Попытки 1 отвечали `GAP` по этим пяти id;
+после этой правки контур `foundation` проверен на ноль расхождений (см. раздел «Ворота» ниже).
+Вердикт **не изменился: 🟢 READY** — все пять новых критериев имеют испытанные мутацией тесты
+(девять прогонов «дефект возвращён → красный, код восстановлен → зелёный» из
+`impl-foundation.md`), ни один не теряет `Testable`/`Completeness`/`Traceability` до нуля;
+единственная новая находка (`VF-03`) — документационный пробел без ущерба тестируемости.
+
+## Ворота (Попытка 2)
+
+```
+bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . \
+  --criterion-scenarios \
+  --role-map-source ../../.claude/commands/feature.md \
+  --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+```
+Код возврата и разбор — см. квитанцию `receipts/validate-foundation.md` §«Попытка 2 (AC-17…21)»:
+контур `foundation` — 0 GAP; остаточный код (если не 0) относится, как и в Попытке 1, к
+контуру `project` или к соседним фичам без кода, а не к `foundation`.
+
 ## Проверено без замечаний
 
-- Все 16 `AC-foundation-n` имеют строку в `## Criterion scenarios` (Traceability floor не сработал
-  ни разу).
+- Все 21 `AC-foundation-n` (1–16 в Попытке 1, 17–21 в Попытке 2) имеют строку в
+  `## Criterion scenarios` (Traceability floor не сработал ни разу).
 - Порядок операций безопасности (`security-operation-order.md`): частота ДО разбора тела
   (`FR-foundation-8`), квота списывается атомарно без «прочитать-потом-записать» (`FR-foundation-5`,
   `02_pseudocode.md:131`), аренда закрывает транзакцию ДО внешнего вызова (`FR-foundation-6`) — все
@@ -197,9 +252,15 @@ SMART < 30 в семи случаях исключительно из-за `Time
   (`03_architecture.md` таблица переменных совпадает с `secrets-management.md` проекта), порты не
   публикуются кроме петли Caddy, ADR-002/003/007/009 процитированы по существу их решений (проверено
   чтением `docs/ADR.md`).
-- Трассировка FR→AC→алгоритм: каждый из 16 `AC-foundation-n` реализован РОВНО одним алгоритмом с
-  меткой `REALISES` в `02_pseudocode.md` («Scenario Coverage»: `Not claimed` и `Claimed but absent`
-  — оба списка пусты).
+- Трассировка FR→AC→алгоритм: каждый из 16 исходных `AC-foundation-n` реализован РОВНО одним
+  алгоритмом с меткой `REALISES` в `02_pseudocode.md` («Scenario Coverage»: `Not claimed` и
+  `Claimed but absent` — оба списка пусты, проверено в Попытке 1). `AC-foundation-17…21` несут ТЕ ЖЕ
+  формальные метки: `LeaseRecognitionJob` (`02_pseudocode.md:156–160`) объявляет
+  `REQUIREMENT: AC-foundation-17`, `REQUIREMENT: AC-foundation-18` и `REALISES: …, AC-foundation-17,
+  AC-foundation-18`; отдельный блок алгоритма (строки 175–177) — `REQUIREMENT`/`REALISES:
+  AC-foundation-19` для уборщика; `SelectModelProvider` (строки 190–193) — `REQUIREMENT`/`REALISES`
+  для `AC-foundation-20` и `AC-foundation-21`. Прозаический пробел — только в `01_specification.md`
+  тексте `FR-foundation-6` (`VF-03`), не в трассировке алгоритмов.
 
 ---
 
