@@ -23,6 +23,11 @@
 | неизвестная версия текста согласия | `consent_version = 'v99'` | `422 unknown_consent_version` | код-владеемый закрытый список (`honest-configuration` CFG-I8), не окружение |
 | присланный хэш не совпадает с версией | верная версия, чужой `consent_text_hash` | `422`, ТОТ ЖЕ код, что неизвестная версия | сервер вычисляет `sha256` сам, не доверяет присланному значению как факту |
 | запись дневника без согласия, включая обход маршрута | прямой вызов репозитория дневника, `consent_at IS NULL` | отказ на границе `EnforceConsentBeforeDiaryWrite`, а не на уровне HTTP-маршрута | единственная функция, которую обязан вызвать любой писатель `diary_entry` (`03_architecture.md`, «Границы») |
+| анонимная сессия пишет дневник БЕЗ согласия (DEC-A-019, нет исключения) | `device_session.consent_at IS NULL`, `account_id IS NULL` | `403 consent_required` — ТАК ЖЕ, как для аккаунта | `EnforceConsentBeforeDiaryWrite` шаг 1 разрешает владельца в `account` ИЛИ `device_session` и не делает исключения по типу |
+| анонимная сессия даёт согласие, потом входит через Telegram | `device_session.consent_at` заполнен, `account.consent_at IS NULL` | согласие ПЕРЕНОСИТСЯ на аккаунт, повторно не запрашивается | `TelegramLogin` шаг 6 — копирует `consent_version`/`consent_text_hash`/`consent_at`, если у аккаунта своего согласия ещё нет |
+| вход через Telegram, у аккаунта УЖЕ есть своё согласие (другое устройство) | `account.consent_at` заполнен, текущая анонимная сессия тоже согласилась | согласие аккаунта СОХРАНЯЕТСЯ, сессионное не перезаписывает его | `TelegramLogin` шаг 6, ветка «ELSE оставить без изменений» |
+| два параллельных первых входа одним `telegram_user_id` (VC-03) | конкурентный `POST /auth/telegram` дважды с валидными, РАЗНЫМИ `initData` того же пользователя | ровно ОДНА строка `account`, оба запроса успешны и указывают на неё | частичный уникальный индекс `(telegram_user_id) WHERE status != 'erased'` + `ON CONFLICT … DO NOTHING` + повторный `SELECT` на конфликте (`TelegramLogin` шаг 3) |
+| 20 параллельных повторов ОДНОЙ И ТОЙ ЖЕ `initData` (VC-03) | одна валидная строка, 20 одновременных запросов | РОВНО 1 успех (`200`), 19 × `401 initdata_replayed` | блокировка строки (`FOR UPDATE`) на сверке `last_telegram_auth_hash` сериализует конкурентов; только первый, зафиксировавший транзакцию, проходит |
 | отзыв согласия (`withdraw_consent`) при существующем дневнике | 5 записей дневника, 3 карточки | карточки закрыты немедленно; ДНЕВНИК НЕ УДАЛЯЕТСЯ | `withdraw_consent` — не `erase_all`; канон разводит их явно (`Pseudocode.md` `ConsentAndErasure` шаги 3 и 4 — разные глаголы) |
 | `withdraw_consent` и новая запись дневника/карточки | withdraw обнуляет `account.consent_at` (DEC-A-016) | `403 consent_required` на новую `diary_entry`/`share_card`; уже существующие записи и закрытые карточки НЕ удаляются | `consent_at` — единственный источник истины; отдельного поля «отозвано» нет, см. `EnforceConsentBeforeDiaryWrite` шаг 3 |
 | повторный `erase_all` во время `erasing` | второй запрос до завершения фоновой задачи | `409`, `deletion_requested_at`/`erase_deadline` не сдвигаются | `SELECT … FOR UPDATE` на `account.status` внутри той же транзакции, что и переход (AC-consent-and-telegram-auth-14) |
@@ -76,10 +81,13 @@ HMAC). Интеграционные тесты — на настоящем Postg
 | `auth-telegram.test.ts` — перенос 3 записей дневника | integration | AC-consent-and-telegram-auth-1 |
 | `auth-telegram.test.ts` — вход с другого устройства, тот же аккаунт | integration | AC-consent-and-telegram-auth-6 |
 | `auth-telegram.test.ts` — повторный вход после `erased` создаёт новый аккаунт | integration | AC-consent-and-telegram-auth-20 |
-| `consent.test.ts` — grant с известной версией | integration | AC-consent-and-telegram-auth-8 |
+| `consent.test.ts` — grant с известной версией (аккаунт И анонимная сессия — два прогона) | integration | AC-consent-and-telegram-auth-8 |
 | `consent.test.ts` — decline не блокирует съёмку | integration | AC-consent-and-telegram-auth-9 |
 | `consent.test.ts` — неизвестная версия и несовпавший хэш | unit | AC-consent-and-telegram-auth-10 |
-| `enforce-before-diary-write.test.ts` — запись без согласия отклонена | unit | AC-consent-and-telegram-auth-11 |
+| `auth-telegram.test.ts` — согласие анонимной сессии переносится на аккаунт при входе | integration | AC-consent-and-telegram-auth-8, DEC-A-019 |
+| `enforce-before-diary-write.test.ts` — запись без согласия отклонена (аккаунт И анонимная сессия — два прогона, DEC-A-019) | unit | AC-consent-and-telegram-auth-11 |
+| `concurrency/auth-telegram-parallel.test.ts` — 20 одновременных `POST /auth/telegram` с ОДНОЙ `initData` → 1×`200`, 19×`401 initdata_replayed` (VC-03) | concurrency | AC-consent-and-telegram-auth-5 |
+| `concurrency/auth-telegram-parallel.test.ts` — два параллельных ПЕРВЫХ входа одним `telegram_user_id`, РАЗНОЙ `initData` → ровно одна строка `account` (VC-03) | concurrency | AC-consent-and-telegram-auth-1, FR-consent-and-telegram-auth-2 |
 | `account-delete.test.ts` — `withdraw_consent` закрывает карточки, не трогает дневник | integration | AC-consent-and-telegram-auth-12 |
 | `account-delete.test.ts` — `erase_all` синхронный ответ и переход в `erasing` | integration | AC-consent-and-telegram-auth-13 |
 | `account-delete.test.ts` — повторный `erase_all` во время `erasing` | integration | AC-consent-and-telegram-auth-14, конкурентная версия — `concurrency/account-delete-race.test.ts` |

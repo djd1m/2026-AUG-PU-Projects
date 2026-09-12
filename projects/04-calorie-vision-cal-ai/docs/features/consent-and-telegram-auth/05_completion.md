@@ -93,6 +93,12 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
       тест доказывает атомарность сверки/записи `last_telegram_auth_hash` под гонкой; `withdraw`
       обнуляет `consent_at` и последующая запись/карточка получает `403 consent_required`
       (проверено отдельным тестом, не только чтением кода).
+- [ ] DEC-A-019 реализован: анонимная `device_session` проходит ТУ ЖЕ проверку согласия, что и
+      аккаунт (`enforce-before-diary-write.test.ts`, два прогона); согласие анонимной сессии
+      переносится на аккаунт при входе через Telegram, а не запрашивается заново.
+- [ ] `concurrency/auth-telegram-parallel.test.ts`: 20 одновременных `POST /auth/telegram` одной
+      `initData` дают ровно 1 успех и 19 `401 initdata_replayed`; два параллельных первых входа
+      РАЗНОЙ `initData` одного `telegram_user_id` дают ровно одну строку `account` (VC-03).
 - [ ] `## Criterion coverage` ниже заполнен ФАКТИЧЕСКИМИ заголовками тестов, и ворота
       `--completion` возвращают `0`.
 
