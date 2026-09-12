@@ -7,11 +7,21 @@
 // числом на экране расхождения. Оно не показывается как результат и не участвует в
 // арифметике итога. Свойство стережёт `tests/unit/source-guards.test.ts`.
 
+// РАСШИРЕНИЕ фичи `scan-pipeline` (FR-scan-pipeline-6, PC-09/PC2-02): `model` и
+// `deadlineMs`/`signal` переданы ВЫЗЫВАЮЩИМ кодом явно, а не выбираются интерфейсом.
+// Статус: внесено в план `foundation` координатором 2026-09-12 20:33 (см.
+// `03_architecture.md` «Зависимости от foundation»); в ЭТОМ worktree реализовано ЗДЕСЬ,
+// т.к. `lease.ts`/`fake.ts` foundation ещё не несли расширенную сигнатуру на момент
+// исполнения этой квитанции — координатор сверяет при слиянии (см. `receipts/impl-scan-pipeline.md`).
 export interface ModelRequest {
   readonly scanId: string;
   /** Ключ НОРМАЛИЗОВАННОЙ копии кадра в приватном бакете. Не URL и не байты. */
   readonly imageKey: string;
   readonly model: 'haiku-4.5' | 'sonnet-5';
+  /** Дедлайн ЭТОГО вызова, мс — `min(25_000, remaining)` (FR-scan-pipeline-20). */
+  readonly deadlineMs: number;
+  /** Обрывает HTTP-вызов немедленно по истечении бюджета (PC2-02). */
+  readonly signal: AbortSignal;
 }
 
 export interface RecognizedItemDraft {
@@ -25,6 +35,12 @@ export interface ModelResponse {
   readonly items: readonly RecognizedItemDraft[];
   readonly confidence: number;
   readonly modelEstimateKcal: number;
+  /**
+   * МОДЕЛЬ, с которой БЫЛ сделан этот вызов — эхо запроса, не выбор ответа
+   * (AC-scan-pipeline-29). Без этого поля фейк формы ответа не способен доказать, что
+   * эскалация ушла именно с `N4_MODEL_ESCALATION`, а не повторно с `N4_MODEL_PRIMARY`.
+   */
+  readonly model: 'haiku-4.5' | 'sonnet-5';
 }
 
 export interface ModelProvider {
