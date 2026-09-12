@@ -9,11 +9,11 @@ requested: claude-opus-5; actual: unknown to worker (фактическую мо
 
 | Файл | Строк |
 |---|---|
-| `docs/features/source-and-correct/01_specification.md` | 492 |
-| `docs/features/source-and-correct/02_pseudocode.md` | 438 |
-| `docs/features/source-and-correct/03_architecture.md` | 167 |
-| `docs/features/source-and-correct/04_refinement.md` | 125 |
-| `docs/features/source-and-correct/05_completion.md` | 129 |
+| `docs/features/source-and-correct/01_specification.md` | 492 → 499 (ревизия 2) |
+| `docs/features/source-and-correct/02_pseudocode.md` | 438 → 446 (ревизия 2) |
+| `docs/features/source-and-correct/03_architecture.md` | 167 → 172 (ревизия 2) |
+| `docs/features/source-and-correct/04_refinement.md` | 125 → 128 (ревизия 2) |
+| `docs/features/source-and-correct/05_completion.md` | 129 → 134 (ревизия 2) |
 
 Файлов вне каталога фичи и вне этой квитанции НЕ создавалось и НЕ правилось. Кода не написано.
 
@@ -114,5 +114,72 @@ ADR-004); история поправок сделана КОЛОНКОЙ `recog
 - Плановые пути и заголовки тестов в `## Criterion coverage` — предсказание, а не измерение; ворота
   `--completion` имеют смысл только после Phase 3.
 - Время работы: ~40 минут, в пределах бюджета 45.
+
+## Попытка 2 — правки по решениям координатора (DEC-A-023)
+
+Внесены в ПЯТЬ документов фичи; файлов вне каталога фичи и вне этой квитанции не создавалось и не
+правилось. Новые размеры: 499 / 446 / 172 / 128 / 134 строки.
+
+**1. Терминальный статус при нуле сопоставлений — `failed(no_food_matched)`, не `refused`.**
+Проверено по первоисточникам перед правкой: `docs/ADR.md` строка 50 (Confirmation (2)) и
+`docs/Pseudocode.md` шаг 8а (строка 132) называют именно `failed`. Расхождение внутри root
+подтвердилось: прозаическая формулировка `docs/Specification.md` (FR-SOURCE-001) говорит `refused`.
+Два документа из трёх против одного; решение координатора совпадает с ADR и алгоритмом. Остаточная
+неточность в `Specification.md` НАЗВАНА в разделе «Стыки» (S-1) и НЕ исправлена: правка чужого
+документа — работа владельца канона, а не плана фичи.
+
+Затронуто: `01` — объём (п. 5), стык S-1, `FR-source-and-correct-7`, `FR-source-and-correct-10`
+(удаление последней позиции), `AC-source-and-correct-13`, пояснение к нулевому знаменателю; `02` —
+`ComputeFromSnapshot` шаг 3, `CorrectScan` 6.4, диаграмма состояний, таблица обработки ошибок; `03` —
+таблица размещения и строка зависимости от `scan-pipeline`; `04` — четыре строки Edge Cases и
+заголовок теста; `05` — шаг 7 порядка работ, чеклист, `Criterion coverage`.
+
+Следствие, которое СНЯТО: `AC-scan-pipeline-15` остаётся ЗЕЛЁНЫМ — статус после подмены порта тот
+же, что писала заглушка. Чужой тест не трогается, вопрос «кто его правит» закрыт. В чеклист `05`
+добавлен пункт: прогнать `AC-scan-pipeline-15` ПОСЛЕ подмены порта и убедиться, что он зелёный —
+утверждение «не сломается» без прогона было бы предсказанием.
+
+**2. `resolve_conflict` принимает единственное значение `take_db`; значения `model` нет.**
+`FR-source-and-correct-11` переписано целиком: закрытое множество из одного элемента, имя root без
+переименования в `base`; любое другое значение — `422 unknown_choice`; шаг не трогает ни массы, ни
+снимки, а только фиксирует согласие с числом базы. Вторая кнопка экрана расхождения («уточнить
+состав») на маршрут не отправляется — это возврат в `set_portion`/`replace_item` по root
+`ResolveDiscrepancy` шаг 5, после которого расхождение вычисляется заново.
+
+Отвергнутый вариант ОСТАВЛЕН в документе как названное решение с причиной, а не удалён молча:
+масштабирование масс коэффициентом `model_estimate_kcal / db_kcal_total` формально считало бы число
+из снимка, но ВЫБИРАЛА бы его оценка модели — ADR-001 через чёрный ход.
+
+Затронуто: `01` — стык S-4, `FR-source-and-correct-11`, `AC-source-and-correct-22` (теперь пять
+прогонов `choice` плюс прогон без `conflict_flag`); `02` — `CHECK` в таблице изменений полей,
+`CorrectScan` 6.5, тело маршрута в `## API Contracts`, диаграмма, новая строка в обработке ошибок;
+`03` — `CHECK` миграции и пояснение к нему; `04` — строка Edge Cases про значения вне множества,
+новая строка про «уточнить состав», Testing Strategy (убрано масштабирование с `clamp`), заголовок
+теста; `05` — `Criterion coverage`.
+
+**3 и 4.** Путь seed `packages/db/seed/food-synonym.ru.json` и два предела кандидатов (авто ≤ 5,
+ручной ≤ 20) приняты координатором без изменений — правок не потребовалось.
+
+Состав контура не изменился: 13 FR, 3 NFR, 26 AC, 11 алгоритмов, 8 наследуемых сценариев проекта,
+обе таблицы `## Scenario Coverage` — `none`. Стражи не изменились: шесть, каждый с внедряемым
+дефектом и парой прогонов.
+
+### Ворота после правок
+
+```
+TRACE contour=source-and-correct specification=./docs/features/source-and-correct/01_specification.md pseudocode=./docs/features/source-and-correct/02_pseudocode.md
+COUNT requirements=42 algorithms=42 missing-algorithm=0 orphan-algorithm=0
+PASS contour=source-and-correct bidirectional traceability complete
+VERDICT traceability=FAIL features=4 gaps=1 inconclusive=0
+```
+
+Код возврата **1**, причина прежняя и чужая: `DUPLICATE foundation pseudocode FR-foundation-6`.
+Свой контур — PASS.
+
+### Открытых вопросов к координатору НЕТ
+
+Единственное, что записано как остаточное и требует НЕ решения, а правки чужого документа:
+прозаическое «`refused`» в `docs/Specification.md` (FR-SOURCE-001) расходится с `ADR.md` и
+`Pseudocode.md`. Пока оно там, любой следующий читатель повторит ту же находку.
 
 Status: completed

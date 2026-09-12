@@ -1,5 +1,8 @@
 # Фича `source-and-correct` — завершение: порядок работ, команды, покрытие критериев
 
+**Ревизия 2** (DEC-A-023): `failed(no_food_matched)` при нуле сопоставлений; `resolve_conflict`
+принимает единственное значение `take_db`.
+
 ## Статус документа
 
 Написан в Phase 1 (PLAN). Таблица `## Criterion coverage` — ПЛАНОВАЯ: пути файлов и заголовки тестов
@@ -30,8 +33,9 @@
 5. **Поиск** (`packages/db/src/queries/food-search.ts`) и тест покрытия 50 русских запросов.
 6. **Порт** (`apps/recognizer/src/match/`) и замена `NullMatchIngredientPort` в точке сборки.
    Контрактный тест `scan-pipeline` прогоняется БЕЗ правок его текста.
-7. **Расчёт и терминальный статус** (`apps/recognizer/src/compute/`), включая
-   `refused(no_food_matched)` вместо временного `failed`.
+7. **Расчёт и терминальный статус** (`apps/recognizer/src/compute/`): `done` при одном совпадении,
+   `failed(no_food_matched)` при нуле — тот же статус, что писала заглушка `scan-pipeline`, поэтому
+   её критерий `AC-scan-pipeline-15` остаётся зелёным и не правится.
 8. **Маршрут правок** (`apps/api/src/routes/scans-correct.ts`) со всеми четырьмя операциями.
 9. **Экран результата** (`apps/web`).
 10. **Стражи** и их ИСПЫТАНИЕ МУТАЦИЕЙ — шесть пар прогонов из `04_refinement.md`, обе строки каждой
@@ -66,7 +70,8 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
       несуществующий `fdc_id`) дают отказ с названной строкой.
 - [ ] Покрытие 50 русских запросов зелёное; удаление 10 строк seed делает его красным (испытание).
 - [ ] Контрактный тест порта из `scan-pipeline` зелёный БЕЗ изменений его текста.
-- [ ] `done` достигается впервые в жизни проекта; `refused(no_food_matched)` при нуле совпадений.
+- [ ] `done` достигается впервые в жизни проекта; `failed(no_food_matched)` при нуле совпадений;
+      `AC-scan-pipeline-15` прогнан ПОСЛЕ подмены порта и остался зелёным.
 - [ ] Все шесть стражей испытаны мутацией; в квитанции по ДВЕ строки на каждый (красный и зелёный).
 - [ ] Ни одна операция фичи не изменила `scan_quota_counter.used` и не обратилась к `ModelProvider`
       (проверено счётчиками, а не журналом).
@@ -75,8 +80,8 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 - [ ] `npm test`, `npm run lint`, `npm run build` зелёные; `docker compose build` для `api`,
       `recognizer`, `web` проходит.
 - [ ] Ворота `--completion` возвращают `0` на ФАКТИЧЕСКИХ заголовках тестов.
-- [ ] Стыки S-1…S-4 либо подтверждены координатором, либо переписаны по его решению ДО начала
-      Phase 3.
+- [ ] Стыки S-1…S-4 решены координатором (DEC-A-023) и внесены в документы ревизией 2; новых
+      открытых вопросов к владельцу канона нет.
 
 ## Что эта фича НЕ доказывает
 
@@ -113,7 +118,7 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 | AC-source-and-correct-10 | tests/integration/match-port.test.ts | составное блюдо даёт часть со своим снимком и отвергается при сумме долей меньше единицы |
 | AC-source-and-correct-11 | tests/integration/compute-snapshot-reimport.test.ts | переимпорт записи базы не меняет уже показанное число |
 | AC-source-and-correct-12 | tests/integration/match-port.test.ts | одна сопоставленная позиция из трёх даёт done с двумя пометками нет в базе без нуля |
-| AC-source-and-correct-13 | tests/integration/match-port.test.ts | ноль сопоставлений даёт refused no_food_matched а не done с нулевым итогом |
+| AC-source-and-correct-13 | tests/integration/match-port.test.ts | ноль сопоставлений даёт failed no_food_matched а не done с нулевым итогом |
 | AC-source-and-correct-14 | tests/unit/discrepancy.test.ts | расхождение двадцать два процента поднимает флаг и сохраняет оба числа |
 | AC-source-and-correct-15 | tests/unit/discrepancy.test.ts | ровно пятнадцать процентов экрана не вызывают а пятнадцать и одна десятая вызывают |
 | AC-source-and-correct-16 | tests/unit/discrepancy.test.ts | нулевой знаменатель даёт не измерено вместо нуля процентов |
@@ -122,7 +127,7 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 | AC-source-and-correct-19 | tests/integration/scans-correct-search.test.ts | поиск кандидатов идёт через маршрут правки и отдельного маршрута поиска не существует |
 | AC-source-and-correct-20 | tests/integration/scans-correct.test.ts | замена на несуществующую запись даёт четыреста двадцать два а числа от клиента игнорируются |
 | AC-source-and-correct-21 | tests/integration/scans-correct.test.ts | удаление позиции пересчитывает итог и записывает поправку в историю |
-| AC-source-and-correct-22 | tests/integration/scans-correct-conflict.test.ts | выбор базы и выбор модели сохраняют оба числа и не делают оценку модели источником |
+| AC-source-and-correct-22 | tests/integration/scans-correct-conflict.test.ts | маршрут принимает только take_db сохраняет оба числа и отвергает четыре других значения |
 | AC-source-and-correct-23 | tests/integration/scans-correct-ownership.test.ts | чужой и несуществующий скан дают один и тот же ответ четыреста четыре без изменения полей |
 | AC-source-and-correct-24 | tests/guard/single-model-estimate-read.test.ts | оценка модели читается ровно в одном месте кодовой базы |
 | AC-source-and-correct-25 | tests/performance/food-search-300k.test.ts | поиск по тремстам тысячам записей укладывается в двести миллисекунд на девяносто пятом перцентиле |

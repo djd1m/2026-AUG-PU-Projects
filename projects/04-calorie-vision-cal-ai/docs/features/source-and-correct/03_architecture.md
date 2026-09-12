@@ -1,5 +1,8 @@
 # Фича `source-and-correct` — архитектура
 
+**Ревизия 2** (DEC-A-023): `conflict_choice` — закрытое множество из одного значения `take_db`;
+терминальный статус при нуле сопоставлений — `failed(no_food_matched)`.
+
 Размещение кода по сервисам канона §6, изменения схемы, внешние зависимости фичи. Системная
 архитектура принадлежит [`docs/Architecture.md`](../../Architecture.md) и здесь не переписывается:
 ниже только то, что создаёт ЭТА фича поверх `foundation` и `scan-pipeline`.
@@ -12,7 +15,7 @@
 | FR-2 курация | `packages/db` | `seed/food-synonym.ru.json` (100 позиций), `src/seed/load-food-synonyms.ts` |
 | FR-3 нормализация и поиск | `packages/shared`, `packages/db` | `packages/shared/src/domain/normalize-ru.ts` (одна функция на импорт seed и поиск), `packages/db/src/queries/food-search.ts` |
 | FR-4, FR-5 порт | `apps/recognizer` | `src/match/usda-match-port.ts`, `src/match/expand-recipe-parts.ts`, правка точки сборки `src/worker.ts` (замена `NullMatchIngredientPort`) |
-| FR-6, FR-7 расчёт и статус | `apps/recognizer` | `src/compute/from-snapshot.ts`, `src/compute/terminal-status.ts` |
+| FR-6, FR-7 расчёт и статус | `apps/recognizer` | `src/compute/from-snapshot.ts`, `src/compute/terminal-status.ts` (`failed(no_food_matched)` при нуле сопоставлений) |
 | FR-8 расхождение | `apps/recognizer` | `src/compute/discrepancy.ts` — ЕДИНСТВЕННОЕ место чтения `model_estimate_kcal` |
 | FR-9…FR-11 маршрут правок | `apps/api` | `src/routes/scans-correct.ts`, `src/correct/apply-op.ts`, `src/correct/validate-input.ts` |
 | FR-12 экран результата | `apps/web` | `app/scan/[id]/page.tsx`, `components/source-chip.tsx`, `components/portion-stepper.tsx`, `components/discrepancy-screen.tsx`, `components/replace-item-sheet.tsx` |
@@ -37,7 +40,7 @@ ALTER TABLE recognition
   ADD COLUMN conflict_choice_at timestamptz,
   ADD COLUMN user_corrected     boolean      NOT NULL DEFAULT false,
   ADD CONSTRAINT recognition_conflict_choice_check
-    CHECK (conflict_choice IS NULL OR conflict_choice IN ('base', 'model')),
+    CHECK (conflict_choice IS NULL OR conflict_choice = 'take_db'),
   ADD CONSTRAINT recognition_conflict_choice_pair
     CHECK ((conflict_choice IS NULL) = (conflict_choice_at IS NULL));
 ```
@@ -45,7 +48,9 @@ ALTER TABLE recognition
 Три решения, каждое с причиной:
 
 - **Закрытое множество `conflict_choice` объявлено в СХЕМЕ**, а не только в коде: значение вне
-  множества иначе доедет до экрана и будет показано как выбор пользователя.
+  множества иначе доедет до экрана и будет показано как выбор пользователя. Множество состоит из
+  ОДНОГО значения `take_db` (DEC-A-023): отвергнутый вариант `model` сделал бы оценку модели
+  источником числа через маршрут правки.
 - **Парный `CHECK`**: выбор без времени и время без выбора — разные виды полуправды, и оба
   выглядят правдоподобно.
 - **Новых таблиц НЕТ.** История поправок — колонка, а не пятнадцатая сущность: канон §4 объявляет
@@ -148,7 +153,7 @@ Open Food Facts не подключается ни по API, ни дампом (
 | интерфейс `MatchIngredientPort`, контрактный тест порта, вызывающий код `RecognizeScanWithinScanPipeline` | `scan-pipeline` | ЗАПЛАНИРОВАНО, не реализовано: `grep MatchIngredientPort` по `apps/`, `packages/` не даёт совпадений. Эта фича НЕ МОЖЕТ начать Phase 3 раньше, чем `scan-pipeline` завершит свою |
 | таблицы `food_item`, `food_synonym`, `pg_trgm`, индексы триграмм | `foundation` | РЕАЛИЗОВАНО, проверено чтением `packages/db/migrations/001_init.sql` |
 | пул соединений, раннер миграций, формат ответа `{data, meta}`, ограничение частоты, проверка владения по `owner_key` | `foundation` | РЕАЛИЗОВАНО (`packages/db/src/pool.ts`, `apps/api/src/http/rate-limit.ts` и соседи) |
-| `AC-scan-pipeline-15` утверждает `failed(no_food_matched)` на реальном порте | `scan-pipeline` | СТАНЕТ КРАСНЫМ при подмене порта. Правка теста соседней фичи — не работа этой квитанции; стык S-1 маршрутизирован координатору |
+| `AC-scan-pipeline-15` утверждает `failed(no_food_matched)` на реальном порте | `scan-pipeline` | ОСТАЁТСЯ ЗЕЛЁНЫМ: статус тот же и после подмены порта (DEC-A-023). Чужой тест не правится |
 
 ## Границы, которые фича обязана сохранить
 

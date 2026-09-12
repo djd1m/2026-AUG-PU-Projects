@@ -1,5 +1,8 @@
 # Фича `source-and-correct` — псевдокод
 
+**Ревизия 2** (DEC-A-023): терминальный статус при нуле сопоставлений — `failed(no_food_matched)`;
+`resolve_conflict` принимает единственное значение `take_db`.
+
 Алгоритмы и контракт маршрута. Логическая модель проекта принадлежит
 [`docs/Pseudocode.md`](../../Pseudocode.md) и здесь не переписывается: ниже только ИЗМЕНЕНИЯ полей и
 алгоритмы, которые создаёт эта фича. Порт `MatchIngredientPort` объявлен фичей `scan-pipeline`
@@ -16,9 +19,9 @@
 | Сущность | Поле | Тип | Зачем |
 |---|---|---|---|
 | `recognition` | `corrections` | `jsonb`, `NOT NULL DEFAULT '[]'` | история поправок: список записей `{ at: Timestamp, op, index, from: {label_ru, food_item_id?, mass_g}, to: {food_item_id?, mass_g?} }`. Материал курации синонимов (FR-SOURCE-003), а не журнал ради журнала |
-| `recognition` | `conflict_choice` | `text?`, `CHECK (conflict_choice IS NULL OR conflict_choice IN ('base','model'))` | выбор пользователя на экране расхождения; закрытое множество в СХЕМЕ, а не только в коде |
+| `recognition` | `conflict_choice` | `text?`, `CHECK (conflict_choice IS NULL OR conflict_choice = 'take_db')` | выбор пользователя на экране расхождения; закрытое множество из ОДНОГО значения объявлено в СХЕМЕ, а не только в коде — иначе значение, отвергнутое решением DEC-A-023, доедет до экрана как чей-то выбор |
 | `recognition` | `conflict_choice_at` | `Timestamp?` | когда выбор сделан; отсутствие отличается от «выбрал по умолчанию» |
-| `recognition` | `user_corrected` | `boolean NOT NULL DEFAULT false` | блюдо правил человек: порция, состав либо масштабирование по выбору `model` |
+| `recognition` | `user_corrected` | `boolean NOT NULL DEFAULT false` | блюдо правил человек: порция либо состав |
 | `food_item` | — | — | без изменений; строки СОЗДАЁТ импорт этой фичи |
 | `food_synonym` | — | — | без изменений; строки СОЗДАЁТ seed этой фичи |
 
@@ -234,11 +237,12 @@ STEPS:
         макронутриента с одним знаком после запятой. Значения берутся ИЗ СНИМКА, а не из живой
         строки `food_item`: переимпорт базы не имеет права задним числом изменить показанное число.
 2. `db_kcal_total` = сумма `kcal` позиций, где `unmatched = false`.
-3. IF ни одна позиция не сопоставлена THEN статус `refused`, `failure_reason = no_food_matched`,
+3. IF ни одна позиция не сопоставлена THEN статус `failed`, `failure_reason = no_food_matched`,
    подсказка «блюда нет в базе, уточните ингредиент вручную», RETURN. `done` при нуле ссылок на
-   `food_item` НЕВОЗМОЖЕН (ADR-001): `done` обещает число из базы, а `db_kcal_total = 0` прочиталось
-   бы как «в тарелке ноль калорий». Временный `failed(no_food_matched)` заглушки `scan-pipeline`
-   этим шагом СНИМАЕТСЯ (стык S-1).
+   `food_item` НЕВОЗМОЖЕН (ADR-001 Confirmation (2)): `done` обещает число из базы, а
+   `db_kcal_total = 0` прочиталось бы как «в тарелке ноль калорий». Статус `failed`, а НЕ `refused`:
+   попытка оплачена и обработана моделью, это не отказ ДО вызова (DEC-A-023). `scan-pipeline` под
+   заглушкой писал тот же статус, поэтому подмена порта его не меняет.
 4. ELSE статус `done` — включая случай, когда сопоставлена одна позиция из трёх.
 COMPLEXITY: O(k + p) по числу позиций и частей.
 
@@ -304,16 +308,17 @@ STEPS:
         `Snapshot`, пересчитать позицию по массе, УЖЕ указанной пользователем, `unmatched = false`.
         Любые присланные клиентом название, калорийность и значения на 100 г ИГНОРИРУЮТСЯ: иначе
         ADR-001 обходится через маршрут правки.
-   6.4. `delete_item`: удалить позицию из состава. Статус скана НЕ переписывается в `refused`, даже
-        если удалена последняя сопоставленная позиция: `refused` описывает результат РАСПОЗНАВАНИЯ,
-        а не последствие правки человека.
-   6.5. `resolve_conflict`: IF `conflict_flag = false` THEN `409`. IF `choice` вне `{base, model}`
-        THEN `422`. IF `choice = 'base'` THEN число блюда остаётся `db_kcal_total`. IF
-        `choice = 'model'` THEN `k = model_estimate_kcal / db_kcal_total`; масса КАЖДОЙ
-        сопоставленной позиции = `clamp(round(mass_g × k), 5, 2000)`; числа пересчитываются ИЗ
-        СНИМКОВ по новым массам; `user_corrected = true`. Значение `model_estimate_kcal` НЕ
-        записывается как показанное число и источником не становится — иначе ADR-001 отменяется
-        через маршрут правки. Записать `conflict_choice`, `conflict_choice_at`.
+   6.4. `delete_item`: удалить позицию из состава. Статус скана НЕ переписывается в `failed`, даже
+        если удалена последняя сопоставленная позиция: терминальный статус описывает результат
+        РАСПОЗНАВАНИЯ, а не последствие правки человека.
+   6.5. `resolve_conflict`: IF `conflict_flag = false` THEN `409`. IF `choice` ≠ `'take_db'` THEN
+        `422 unknown_choice` — множество закрытое и состоит из ОДНОГО значения (DEC-A-023); ни
+        `model`, ни `base` не принимаются. ELSE число блюда остаётся `db_kcal_total`; записать
+        `conflict_choice = 'take_db'` и `conflict_choice_at`. Пересчёта чисел этот шаг НЕ делает:
+        выбор фиксирует, ЧТО пользователь согласился с базой, и не трогает ни массы, ни снимки.
+        Вторая кнопка экрана («уточнить состав») на маршрут не отправляется — по root
+        `ResolveDiscrepancy` шаг 5 это возврат в `set_portion`/`replace_item`, после которого
+        расхождение вычисляется заново (шаг 7).
 7. Пересуммировать блюдо, исключая `unmatched`; пересчитать `EvaluateDiscrepancy` заново (правка
    могла изменить обе стороны сравнения).
 8. FOR `replace_item` и `delete_item`: добавить запись в `recognition.corrections` —
@@ -379,7 +384,7 @@ COMPLEXITY: O(f) по объёму исходников.
 
 | № | Маршрут | Заголовки | Тело запроса | Ответ 200 | Ответы 4xx |
 |---|---|---|---|---|---|
-| 3 | `POST /api/v1/scans/{id}/correct` | `Cookie: session` · `Content-Type: application/json` | `{ op: 'set_portion' \| 'replace_item' \| 'delete_item' \| 'resolve_conflict', index?: int, mass_g?: int, food_item_id?: UUID, query?: string, choice?: 'base' \| 'model' }` | `{ data: { scan_id, status, items[] с полями kcal, source_snapshot, unmatched, parts?, kcal_total, macros, db_kcal_total, model_estimate_kcal, discrepancy_ratio, conflict_flag, conflict_choice?, user_corrected, candidates?[] }, meta: { request_id, response_time_ms } }` | `401` нет сессии · `404` чужой и несуществующий `id` неразличимы · `409` скан не в статусе `done`, либо `resolve_conflict` без `conflict_flag` · `422` `portion_out_of_range` (с диапазоном 5–2000), `index_out_of_range`, `unknown_op`, `unknown_food_item`, `unknown_choice` · `429` превышен лимит частоты |
+| 3 | `POST /api/v1/scans/{id}/correct` | `Cookie: session` · `Content-Type: application/json` | `{ op: 'set_portion' \| 'replace_item' \| 'delete_item' \| 'resolve_conflict', index?: int, mass_g?: int, food_item_id?: UUID, query?: string, choice?: 'take_db' }` | `{ data: { scan_id, status, items[] с полями kcal, source_snapshot, unmatched, parts?, kcal_total, macros, db_kcal_total, model_estimate_kcal, discrepancy_ratio, conflict_flag, conflict_choice?, user_corrected, candidates?[] }, meta: { request_id, response_time_ms } }` | `401` нет сессии · `404` чужой и несуществующий `id` неразличимы · `409` скан не в статусе `done`, либо `resolve_conflict` без `conflict_flag` · `422` `portion_out_of_range` (с диапазоном 5–2000), `index_out_of_range`, `unknown_op`, `unknown_food_item`, `unknown_choice` · `429` превышен лимит частоты |
 | 2 | `GET /api/v1/scans/{id}` | `Cookie: session` | — | та же форма без `candidates[]`; поля `kcal_total`, `macros`, `source_snapshot`, `conflict_flag`, ранее пустые в `scan-pipeline`, здесь ЗАПОЛНЯЮТСЯ | `401` · `404` | 
 
 Поля `query?` (запрос) и `candidates[]` (ответ) — РАСШИРЕНИЕ контракта маршрута 3 относительно root
@@ -392,18 +397,20 @@ COMPLEXITY: O(f) по объёму исходников.
 stateDiagram-v2
     [*] --> queued : POST /scans (scan-pipeline)
     queued --> matching : воркер получил ответ модели
-    matching --> refused : ни одна позиция не сопоставлена\n(no_food_matched, ADR-001)
+    matching --> failed : ни одна позиция не сопоставлена\n(no_food_matched, ADR-001)
     matching --> done : сопоставлена >= 1 позиция
     done --> done : correct(set_portion | replace_item | delete_item)\nбез вызова модели и без квоты
-    done --> done : correct(resolve_conflict)\nconflict_choice записан
-    refused --> [*]
+    done --> done : correct(resolve_conflict, take_db)\nconflict_choice записан
+    failed --> [*]
     done --> [*] : подтверждение в дневник (diary-and-streak)
 ```
 
 `matching` — внутренняя фаза алгоритма, а не пятое значение `recognition.status`: канон §4 объявляет
 ровно четыре (`queued | done | failed | refused`), и добавление пятого было бы изменением канона.
-`failed` остаётся достижимым по причинам `scan-pipeline` (провайдер, схема, таймаут); причина
-`no_food_matched` после этой фичи ведёт в `refused`, а не в `failed`.
+Причина `no_food_matched` ведёт в `failed` — и до, и после подмены порта (DEC-A-023): меняется
+ПРИЧИНА, по которой совпадений нет (заглушка не спрашивала базу, реализация спрашивает), а не
+статус. `refused` остаётся за отказом по квоте и за кадром без распознанной еды; прочие причины
+`failed` (провайдер, схема, таймаут) принадлежат `scan-pipeline`.
 
 ## Error Handling Strategy
 
@@ -415,12 +422,13 @@ stateDiagram-v2
 | Seed: сумма долей ≠ 1 | отклонение > 0,001 | отказ строки; нормализация долей запрещена |
 | Синоним указывает в несуществующий `fdc_id` | запись не разрешилась | отказ строки seed; на чтении — промах всей позиции, а не счёт по остатку |
 | Поиск не нашёл ничего | пустой список кандидатов | позиция `unmatched`, число `NULL`; «взять первое попавшееся» запрещено |
-| Ни одна позиция не сопоставлена | нулевое покрытие | `refused(no_food_matched)`, не `done` с итогом 0 |
+| Ни одна позиция не сопоставлена | нулевое покрытие | `failed(no_food_matched)`, не `done` с итогом 0 и не `refused`: попытка оплачена |
 | `db_kcal_total = 0` | нулевой знаменатель | `discrepancy_ratio = NULL`, признак «не измерено», не `0%` |
 | Порция вне диапазона / мусорный тип | `422` | прежняя порция сохранена целиком; частичного применения нет |
 | Индекс позиции вне списка | `422` | записи мимо массива не происходит |
 | Чужой или несуществующий скан | `404` | ни одно поле не изменено; `403` не используется |
 | `resolve_conflict` без конфликта | `409` | состояние не меняется |
+| `choice` вне закрытого множества | `model`, `base`, пустая строка, отсутствует | `422 unknown_choice`; единственное допустимое значение — `take_db` |
 | Недоступность базы во время правки | исключение | транзакция откатывается целиком; отказ, а не частично применённая правка (недоступность источника истины — исключение, а не возвращаемое значение) |
 
 ## Scenario Coverage
