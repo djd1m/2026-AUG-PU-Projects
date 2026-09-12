@@ -1,0 +1,18 @@
+# Обязателен при COPY . . — без него в образ едут node_modules, тесты и, что хуже, .env.
+node_modules
+**/node_modules
+**/.next
+**/dist
+**/*.tsbuildinfo
+.git
+.github
+.env
+.env.*
+!.env.example
+.runtime
+coverage
+docs
+.claude
+tests
+**/__pycache__
+*.pyc

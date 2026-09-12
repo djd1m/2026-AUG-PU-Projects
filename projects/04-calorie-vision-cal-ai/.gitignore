@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+coverage/
+.runtime/
+.p-replicator/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
