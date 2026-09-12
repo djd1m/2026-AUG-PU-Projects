@@ -1,0 +1,30 @@
+{
+  // Конфигурация ПРОВЕРКИ типов всего репозитория одним проходом (`npm run typecheck`).
+  // Она НЕ собирает: пути указывают на исходники пакетов, чтобы проверка не зависела от
+  // порядка сборки. Эмиссию делают отдельные tsconfig.build.json каждого пакета, и там
+  // путей нет — иначе в собранном dist остались бы ссылки на src.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "@n4/shared": ["packages/shared/src/index.ts"],
+      "@n4/db": ["packages/db/src/index.ts"]
+    }
+  },
+  "include": [
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "packages/**/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "vitest.config.ts",
+    "vitest.integration.config.ts"
+  ],
+  "exclude": ["node_modules", "**/node_modules", "**/dist", "**/.next", "docs"]
+}

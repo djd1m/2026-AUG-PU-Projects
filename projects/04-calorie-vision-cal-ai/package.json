@@ -1,0 +1,36 @@
+{
+  "name": "n4-tarelka",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "N4 «Тарелка» — монорепо npm workspaces. Контекст сборки образов — этот каталог: package-lock.json лежит только здесь.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @n4/shared && npm run build --workspace @n4/db && npm run build --workspace @n4/api --workspace @n4/recognizer --workspace @n4/web",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "migrate": "tsx packages/db/src/migrate.ts",
+    "check:env-wiring": "bash scripts/check-env-wiring.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@types/node": "22.20.2",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "eslint": "9.39.5",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "3.2.7"
+  }
+}
