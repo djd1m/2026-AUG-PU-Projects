@@ -112,6 +112,18 @@ describe('страж ADR-001: число берётся из базы, а не �
     expect(offenders).toEqual([]);
   });
 
+  it('в объявленной схеме ответа модели нет ни одного поля о калорийности кроме разрешённого', async () => {
+    // Схема ПЕРЕДАЁТСЯ параметром и объявлена одним значением — поэтому страж читает одно
+    // место, а не ищет схему по всем реализациям порта. Проверяется именно МНОЖЕСТВО имён,
+    // а не «нет слова kcal»: иначе страж запретил бы и разрешённое model_estimate_kcal.
+    const { MODEL_RESPONSE_SCHEMA } = await import('../../apps/recognizer/src/provider/types.js');
+    const forbidden = ['calories', 'kcal', 'protein', 'fat', 'carbs'];
+    for (const field of MODEL_RESPONSE_SCHEMA.fields) {
+      expect(forbidden, field).not.toContain(field);
+    }
+    expect(MODEL_RESPONSE_SCHEMA.fields.filter((f) => /kcal|calor|protein|fat|carb/i.test(f))).toEqual(['model_estimate_kcal']);
+  });
+
   it('единственное поле о калорийности в ответе модели — model_estimate_kcal', async () => {
     const provider = await readAll('apps/recognizer/src/provider');
     const responseShape = provider.find(({ file }) => file.endsWith('types.ts'));

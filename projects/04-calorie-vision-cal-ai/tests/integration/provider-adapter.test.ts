@@ -1,10 +1,19 @@
-// Адаптер поставщика модели (AC-foundation-11).
+// Адаптер поставщика модели (AC-foundation-11, AC-foundation-19).
+//
+// Три свойства порта проверяются отдельно, потому что каждое стоит своих денег:
+// детерминизм фейка, ВЫБОР МОДЕЛИ вызывающим и ЧЕСТНЫЙ ОТКАЗ по дедлайну.
 
 import { describe, expect, it, vi } from 'vitest';
 import { ConfigValidationError } from '@n4/shared';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
 import { selectModelProvider } from '../../apps/recognizer/src/provider/select.js';
 import { LiveProviderNotImplemented } from '../../apps/recognizer/src/provider/live.js';
+import {
+  MODEL_RESPONSE_SCHEMA,
+  ModelDeadlineExceeded,
+  type ModelCallOptions,
+  type ModelImage,
+} from '../../apps/recognizer/src/provider/types.js';
 import { loadRecognizerConfig } from '../../apps/recognizer/src/env.js';
 
 const BASE_ENV: Record<string, string | undefined> = {
@@ -20,15 +29,24 @@ const BASE_ENV: Record<string, string | undefined> = {
   ANTHROPIC_API_KEY: '',
 };
 
+const IMAGE: ModelImage = { scanId: '11111111-2222-3333-4444-555555555555', objectKey: 'photos/a.jpg' };
+const CALL: ModelCallOptions = { model: 'haiku-4.5', deadlineMs: 30_000 };
+
+const LIVE_CONFIG = {
+  databaseUrl: 'x',
+  storage: { endpoint: 'x', bucket: 'x', accessKey: 'x', secretKey: 'x' },
+  quota: { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
+  modelProvider: 'live' as const,
+};
+
 describe('поставщик модели', () => {
   it('фейковый адаптер детерминирован и не ходит в сеть', async () => {
     const provider = createFakeModelProvider();
-    const request = { scanId: '11111111-2222-3333-4444-555555555555', imageKey: 'photos/a.jpg', model: 'haiku-4.5' } as const;
 
     // Сеть перехвачена: любое обращение наружу провалит тест, а не останется незамеченным.
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
-    const first = await provider.recognize(request);
-    const second = await provider.recognize(request);
+    const first = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, CALL);
+    const second = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, CALL);
     expect(fetchSpy).not.toHaveBeenCalled();
     fetchSpy.mockRestore();
 
@@ -38,8 +56,50 @@ describe('поставщик модели', () => {
     expect(first.items.length).toBeGreaterThan(0);
 
     // Разный вход — разный ответ: детерминизм не означает «всегда одно и то же».
-    const other = await provider.recognize({ ...request, imageKey: 'photos/b.jpg' });
+    const other = await provider.recognize({ ...IMAGE, objectKey: 'photos/b.jpg' }, MODEL_RESPONSE_SCHEMA, CALL);
     expect(other).not.toEqual(first);
+  });
+
+  it('модель выбирает вызывающий, и ответ сам называет, чей он', async () => {
+    const provider = createFakeModelProvider();
+
+    const primary = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000 });
+    const escalated = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'sonnet-5', deadlineMs: 30_000 });
+
+    // Эхо модели обязательно: иначе «о какой модели этот ответ» восстанавливается по
+    // памяти вызывающего, и потолок эскалаций не с чем сопоставить.
+    expect(primary.model).toBe('haiku-4.5');
+    expect(escalated.model).toBe('sonnet-5');
+    // Ответ РАЗНЫХ моделей на один кадр обязан различаться, иначе тест эскалации слеп.
+    expect(escalated).not.toEqual(primary);
+  });
+
+  it('фейковый адаптер уважает дедлайн и отказывает, а не отвечает поздно', async () => {
+    // Истёкший бюджет — отказ ДО работы. Ноль и отрицательное значение означают «поздно».
+    const instant = createFakeModelProvider();
+    for (const deadlineMs of [0, -1, Number.NaN]) {
+      await expect(instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs })).rejects.toBeInstanceOf(
+        ModelDeadlineExceeded,
+      );
+    }
+
+    // Работа дольше бюджета — тоже отказ, а не поздний ответ: поздний ответ всё равно
+    // оплачен и всё равно выбрасывается, и честнее сказать об этом сразу.
+    const slow = createFakeModelProvider({ latencyMs: 60 });
+    await expect(slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 20 })).rejects.toBeInstanceOf(
+      ModelDeadlineExceeded,
+    );
+
+    // Работа в пределах бюджета — обычный ответ.
+    const fits = await slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5_000 });
+    expect(fits.model).toBe('haiku-4.5');
+
+    // Уже отменённая операция не начинается вовсе.
+    const controller = new AbortController();
+    controller.abort();
+    await expect(
+      instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: controller.signal }),
+    ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
   });
 
   it('режим live без ключа валит старт воркера', () => {
@@ -53,28 +113,14 @@ describe('поставщик модели', () => {
     expect(refusal?.variables).toContain('ANTHROPIC_API_KEY');
 
     // А если валидатор кто-то обойдёт — отказывает и выбор реализации.
-    expect(() =>
-      selectModelProvider({
-        databaseUrl: 'x',
-        storage: { endpoint: 'x', bucket: 'x', accessKey: 'x', secretKey: 'x' },
-        quota: { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
-        modelProvider: 'live',
-        anthropicApiKey: undefined,
-      }),
-    ).toThrow(/ANTHROPIC_API_KEY/);
+    expect(() => selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: undefined })).toThrow(/ANTHROPIC_API_KEY/);
   });
 
   it('живой поставщик в этой фиче не реализован и говорит об этом явно', async () => {
-    const provider = selectModelProvider({
-      databaseUrl: 'x',
-      storage: { endpoint: 'x', bucket: 'x', accessKey: 'x', secretKey: 'x' },
-      quota: { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
-      modelProvider: 'live',
-      anthropicApiKey: 'sk-test-value',
-    });
+    const provider = selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: 'sk-test-value' });
     expect(provider.kind).toBe('live');
     // Тихо вернуть пустой ответ нельзя: он неотличим от разбора пустой тарелки.
-    await expect(provider.recognize({ scanId: 'a', imageKey: 'b', model: 'haiku-4.5' })).rejects.toBeInstanceOf(LiveProviderNotImplemented);
+    await expect(provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, CALL)).rejects.toBeInstanceOf(LiveProviderNotImplemented);
   });
 
   it('режим fake выбирается только явным значением конфигурации', () => {

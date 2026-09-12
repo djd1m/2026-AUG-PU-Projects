@@ -47,6 +47,21 @@ export interface SeededSession {
   readonly id: string;
 }
 
+/**
+ * Кадр в бакете. Нужен тестам аренды: предикат выборки требует `photo_id IS NOT NULL`,
+ * потому что незавершённая публикация обязана быть НЕВИДИМА воркеру.
+ */
+export async function seedPhoto(pool: DbPool, sessionId: string, marker: string): Promise<string> {
+  const result = await pool.query<{ id: string }>(
+    `INSERT INTO photo (device_session_id, object_key, mime, bytes, width, height, expires_on)
+     VALUES ($1, $2, 'image/jpeg', 1024, 800, 600, current_date + 30) RETURNING id`,
+    [sessionId, `photos/${marker}.jpg`],
+  );
+  const row = result.rows[0];
+  if (row === undefined) throw new Error('кадр не создан');
+  return row.id;
+}
+
 /** Сессия устройства для тестов квоты и аренды. Токен здесь не нужен — только строка. */
 export async function seedSession(pool: DbPool, marker: string): Promise<SeededSession> {
   const result = await pool.query<{ id: string }>(

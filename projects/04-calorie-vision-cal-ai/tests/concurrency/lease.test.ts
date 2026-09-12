@@ -1,19 +1,22 @@
-// КОНКУРЕНТНЫЙ прогон аренды и fencing (AC-foundation-10).
+// КОНКУРЕНТНЫЙ прогон аренды, fencing и уборки (AC-foundation-10, AC-foundation-17,
+// AC-foundation-18).
 //
-// Два разных отказа проверяются отдельно, потому что закрываются РАЗНЫМИ механизмами:
-//   * двойной захват ОДНОВРЕМЕННО — закрывает `FOR UPDATE SKIP LOCKED`;
-//   * двойной захват ПОСЛЕ закрытия транзакции аренды — закрывает предикат `leased_until`,
-//     и только он: блокировки строки после COMMIT уже нет.
-// Устаревший владелец обязан написать НОЛЬ строк — это `lease_fence`, а не время.
+// Разные отказы закрываются РАЗНЫМИ механизмами, поэтому проверяются порознь:
+//   * двойной захват ОДНОВРЕМЕННО — `FOR UPDATE SKIP LOCKED`;
+//   * двойной захват ПОСЛЕ закрытия транзакции аренды — предикат `leased_until`, и только
+//     он: блокировки строки после COMMIT уже нет;
+//   * запись устаревшего владельца — `lease_fence`, а не время;
+//   * незавершённая публикация — `photo_id IS NOT NULL`;
+//   * бесконечный перезахват — `lease_fence < 3` вместе с уборщиком.
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import type { DbPool } from '@n4/db';
 import { createLogger } from '@n4/shared';
-import { acquireLease, recordResult } from '../../apps/recognizer/src/lease.js';
+import { acquireLease, MAX_LEASE_ATTEMPTS, recordResult, sweepStuckScans } from '../../apps/recognizer/src/lease.js';
 import { createWorker } from '../../apps/recognizer/src/worker.js';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
-import { migratedPool, seedSession, truncateAll } from '../helpers/db.js';
+import { migratedPool, seedPhoto, seedSession, truncateAll } from '../helpers/db.js';
 
 let pool: DbPool;
 
@@ -29,7 +32,22 @@ beforeEach(async () => {
   await truncateAll(pool);
 });
 
+/** Задание, готовое к работе: кадр уже опубликован, поэтому оно ВИДИМО воркеру. */
 async function queueJob(marker: string): Promise<string> {
+  const session = await seedSession(pool, marker);
+  const photoId = await seedPhoto(pool, session.id, marker);
+  const created = await pool.query<{ id: string }>(
+    `INSERT INTO recognition (device_session_id, photo_id, status, idempotency_key)
+     VALUES ($1, $2, 'queued', $3) RETURNING id`,
+    [session.id, photoId, randomUUID()],
+  );
+  const id = created.rows[0]?.id;
+  if (id === undefined) throw new Error('задание не создано');
+  return id;
+}
+
+/** Заявленная строка БЕЗ кадра: публикация ещё не завершена. */
+async function queueUnpublishedJob(marker: string): Promise<string> {
   const session = await seedSession(pool, marker);
   const created = await pool.query<{ id: string }>(
     `INSERT INTO recognition (device_session_id, status, idempotency_key)
@@ -71,6 +89,47 @@ describe('аренда задания', () => {
     expect(new Set(taken).size).toBe(3);
   }, 60_000);
 
+  it('задание без опубликованного кадра невидимо воркеру', async () => {
+    const unpublished = await queueUnpublishedJob('lease-unpublished');
+
+    // Строка заявляется ключом повторности РАНЬШЕ, чем кадр лёг в бакет. Воркер, взявший
+    // её в этом окне, позвал бы модель на кадр, которого ещё нет: платная работа впустую.
+    expect(await acquireLease(pool, randomUUID())).toBeUndefined();
+
+    const row = await pool.query<{ lease_fence: number }>('SELECT lease_fence FROM recognition WHERE id = $1', [unpublished]);
+    expect(row.rows[0]?.lease_fence).toBe(0);
+
+    // Как только кадр опубликован, задание становится видимым — предикат не «теряет» его
+    // навсегда, а ждёт завершения публикации.
+    const session = await pool.query<{ device_session_id: string }>('SELECT device_session_id FROM recognition WHERE id = $1', [unpublished]);
+    const photoId = await seedPhoto(pool, session.rows[0]!.device_session_id, 'lease-unpublished-late');
+    await pool.query('UPDATE recognition SET photo_id = $2 WHERE id = $1', [unpublished, photoId]);
+
+    const taken = await acquireLease(pool, randomUUID());
+    expect(taken?.id).toBe(unpublished);
+  }, 60_000);
+
+  it('четвёртого захвата не бывает: при трёх исчерпанных задание больше не предлагается', async () => {
+    const jobId = await queueJob('lease-cap');
+
+    for (let attempt = 1; attempt <= MAX_LEASE_ATTEMPTS; attempt += 1) {
+      const taken = await acquireLease(pool, randomUUID());
+      expect(taken?.fence, `захват ${attempt}`).toBe(attempt);
+      // Аренда истекает — задание снова свободно, и следующий воркер его законно берёт.
+      await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+    }
+
+    // Четвёртый захват НЕ происходит: каждый захват оплачен, и у потолка обязана быть
+    // верхняя граница, а не надежда.
+    expect(await acquireLease(pool, randomUUID())).toBeUndefined();
+    const row = await pool.query<{ lease_fence: number; status: string }>(
+      'SELECT lease_fence, status::text AS status FROM recognition WHERE id = $1',
+      [jobId],
+    );
+    expect(row.rows[0]?.lease_fence).toBe(MAX_LEASE_ATTEMPTS);
+    expect(row.rows[0]?.status).toBe('queued');
+  }, 60_000);
+
   it('результат с устаревшим fence затрагивает ноль строк и пишет stale_lease_result', async () => {
     const jobId = await queueJob('lease-stale');
 
@@ -94,7 +153,7 @@ describe('аренда задания', () => {
       modelUsed: 'haiku-4.5',
       failureReason: 'no_food_matched',
     });
-    expect(secondWritten).toBe(true);
+    expect(secondWritten).toBe('written');
 
     const staleWritten = await recordResult(pool, { id: jobId, fence: first!.fence }, {
       status: 'failed',
@@ -105,7 +164,9 @@ describe('аренда задания', () => {
       failureReason: 'provider_timeout',
     });
     // НОЛЬ затронутых строк: проигравший записи не делает и чужой результат не трёт.
-    expect(staleWritten).toBe(false);
+    // И случай назван ЧЕСТНО: номер захвата вырос, значит задание перезахватили — это
+    // устаревшая аренда, а не работа уборщика.
+    expect(staleWritten).toBe('stale_lease');
 
     const row = await pool.query<{ status: string; model_estimate_kcal: number; failure_reason: string }>(
       'SELECT status::text AS status, model_estimate_kcal, failure_reason::text AS failure_reason FROM recognition WHERE id = $1',
@@ -127,11 +188,11 @@ describe('аренда задания', () => {
     const fake = createFakeModelProvider();
     const gatedProvider = {
       kind: fake.kind,
-      async recognize(request: Parameters<typeof fake.recognize>[0]) {
+      async recognize(...args: Parameters<typeof fake.recognize>) {
         await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
         const stealer = await acquireLease(pool, randomUUID());
         expect(stealer?.id).toBe(jobId);
-        return fake.recognize(request);
+        return fake.recognize(...args);
       },
     };
 
@@ -150,5 +211,104 @@ describe('аренда задания', () => {
     );
     expect(row.rows[0]?.lease_fence).toBe(2);
     expect(row.rows[0]?.status).toBe('queued');
+  }, 60_000);
+});
+
+describe('уборщик застрявших заданий', () => {
+  it('задание, не взятое ни одним воркером за пять минут, закрывается failed timeout', async () => {
+    const stuck = await queueJob('sweep-never-leased');
+    const fresh = await queueJob('sweep-fresh');
+    await pool.query("UPDATE recognition SET created_at = now() - interval '6 minutes' WHERE id = $1", [stuck]);
+
+    const swept = await sweepStuckScans(pool);
+    expect(swept.neverLeased).toBe(1);
+
+    const rows = await pool.query<{ id: string; status: string; failure_reason: string | null }>(
+      'SELECT id, status::text AS status, failure_reason::text AS failure_reason FROM recognition',
+    );
+    const closed = rows.rows.find((row) => row.id === stuck);
+    const untouched = rows.rows.find((row) => row.id === fresh);
+    expect(closed?.status).toBe('failed');
+    expect(closed?.failure_reason).toBe('timeout');
+    // Свежее задание уборщик не трогает: пять минут — это срок, а не повод закрыть всё.
+    expect(untouched?.status).toBe('queued');
+
+    // Повторный прогон идемпотентен: уже переведённых строк он не находит.
+    expect((await sweepStuckScans(pool)).neverLeased).toBe(0);
+  }, 60_000);
+
+  it('задание с исчерпанными захватами и истёкшей арендой закрывается failed timeout', async () => {
+    const jobId = await queueJob('sweep-exhausted');
+    for (let attempt = 1; attempt <= MAX_LEASE_ATTEMPTS; attempt += 1) {
+      await acquireLease(pool, randomUUID());
+      await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+    }
+    // Без уборщика такое задание не предложится НИ ОДНОМУ воркеру и провисит вечно.
+    expect(await acquireLease(pool, randomUUID())).toBeUndefined();
+
+    const swept = await sweepStuckScans(pool);
+    expect(swept.attemptsExhausted).toBe(1);
+
+    const row = await pool.query<{ status: string; failure_reason: string | null; finished_at: Date | null }>(
+      'SELECT status::text AS status, failure_reason::text AS failure_reason, finished_at FROM recognition WHERE id = $1',
+      [jobId],
+    );
+    expect(row.rows[0]?.status).toBe('failed');
+    expect(row.rows[0]?.failure_reason).toBe('timeout');
+    expect(row.rows[0]?.finished_at).not.toBeNull();
+  }, 60_000);
+
+  it('уборщик НЕ трогает задание с действующей арендой', async () => {
+    const jobId = await queueJob('sweep-live-lease');
+    await pool.query("UPDATE recognition SET created_at = now() - interval '6 minutes' WHERE id = $1", [jobId]);
+    const taken = await acquireLease(pool, randomUUID());
+    expect(taken?.fence).toBe(1);
+
+    // Живой воркер внутри СВОЕЙ аренды следит за своим бюджетом сам. «Завершить задание,
+    // не прекратив платную работу» — худший исход, чем задержка.
+    const swept = await sweepStuckScans(pool);
+    expect(swept).toEqual({ neverLeased: 0, attemptsExhausted: 0 });
+
+    const row = await pool.query<{ status: string }>('SELECT status::text AS status FROM recognition WHERE id = $1', [jobId]);
+    expect(row.rows[0]?.status).toBe('queued');
+  }, 60_000);
+
+  it('воркер не затирает статус, уже закрытый уборщиком', async () => {
+    const jobId = await queueJob('sweep-vs-worker');
+    // Два захвата уже израсходованы: следующий — последний разрешённый, третий.
+    for (let attempt = 1; attempt < MAX_LEASE_ATTEMPTS; attempt += 1) {
+      await acquireLease(pool, randomUUID());
+      await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+    }
+    const lines: string[] = [];
+    const logger = createLogger({ service: 'recognizer-test', sink: (line) => lines.push(line) });
+
+    const fake = createFakeModelProvider();
+    const gatedProvider = {
+      kind: fake.kind,
+      async recognize(...args: Parameters<typeof fake.recognize>) {
+        // Пока воркер «думает», его СОБСТВЕННАЯ аренда истекает. Захват у него последний,
+        // третий, поэтому задание попадает под правило Б уборщика. Номер захвата при этом
+        // НЕ меняется — значит различить уборщика и чужой перезахват можно только так.
+        await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+        expect((await sweepStuckScans(pool)).attemptsExhausted).toBe(1);
+        return fake.recognize(...args);
+      },
+    };
+
+    const worker = createWorker({ pool, provider: gatedProvider, logger });
+    await worker.tick();
+
+    const events = lines.map((line) => JSON.parse(line).event);
+    expect(events).toContain('swept_as_timeout');
+    expect(events).not.toContain('scan_finished');
+
+    // Терминальный статус уборщика остался: воркер не вернул задание к жизни задним числом.
+    const row = await pool.query<{ status: string; failure_reason: string | null }>(
+      'SELECT status::text AS status, failure_reason::text AS failure_reason FROM recognition WHERE id = $1',
+      [jobId],
+    );
+    expect(row.rows[0]?.status).toBe('failed');
+    expect(row.rows[0]?.failure_reason).toBe('timeout');
   }, 60_000);
 });
