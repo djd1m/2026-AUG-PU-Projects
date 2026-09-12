@@ -29,6 +29,7 @@ import { acquireLease, MAX_LEASE_ATTEMPTS, recordResult, sweepStuckScans } from 
 const SPEC_MAX_LEASE_ATTEMPTS = 3;
 import { createWorker } from '../../apps/recognizer/src/worker.js';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
+import { ModelDeadlineExceeded } from '../../apps/recognizer/src/provider/types.js';
 import { migratedPool, seedPhoto, seedSession, truncateAll } from '../helpers/db.js';
 
 let pool: DbPool;
@@ -298,6 +299,81 @@ describe('уборщик застрявших заданий', () => {
 
     const row = await pool.query<{ status: string }>('SELECT status::text AS status FROM recognition WHERE id = $1', [jobId]);
     expect(row.rows[0]?.status).toBe('queued');
+  }, 60_000);
+
+  it('отказ по дедлайну ПОСЛЕ уборки пишет swept_as_timeout, а не только событие вызова', async () => {
+    // Ветка таймаута возвращалась сразу после записи, поэтому события о нулевой записи на
+    // ней не появлялись НИКОГДА (RV-foundation-01). Здесь адаптер отказывает по дедлайну в
+    // тот момент, когда строку уже закрыл уборщик: в журнале обязаны быть ОБА события —
+    // о вызове (попытка оплачена) и о судьбе записи (её отбросили).
+    const jobId = await queueJob('timeout-after-sweep');
+    // Два захвата израсходованы: следующий — последний разрешённый, ТРЕТИЙ.
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      await acquireLease(pool, randomUUID());
+      await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+    }
+
+    const lines: string[] = [];
+    const logger = createLogger({ service: 'recognizer-test', sink: (line) => lines.push(line) });
+    const timingOutAfterSweep = {
+      kind: 'fake' as const,
+      async recognize(): Promise<never> {
+        await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+        expect((await sweepStuckScans(pool)).attemptsExhausted).toBe(1);
+        throw new ModelDeadlineExceeded(30_000);
+      },
+    };
+
+    const worker = createWorker({ pool, provider: timingOutAfterSweep, logger });
+    expect(await worker.tick()).toBe(true);
+
+    const events = lines.map((line) => JSON.parse(line).event);
+    expect(events).toContain('model_call_deadline_exceeded');
+    expect(events).toContain('swept_as_timeout');
+    expect(events).not.toContain('scan_finished');
+
+    // Терминальный статус уборщика не тронут: воркер не воскресил задание.
+    const row = await pool.query<{ status: string; failure_reason: string | null; lease_fence: number }>(
+      'SELECT status::text AS status, failure_reason::text AS failure_reason, lease_fence FROM recognition WHERE id = $1',
+      [jobId],
+    );
+    expect(row.rows[0]?.status).toBe('failed');
+    expect(row.rows[0]?.failure_reason).toBe('timeout');
+    expect(row.rows[0]?.lease_fence).toBe(3);
+  }, 60_000);
+
+  it('отказ по дедлайну ПОСЛЕ перезахвата пишет stale_lease_result', async () => {
+    // Второй потерянный случай той же ветки: пока воркер ждал модель, аренда истекла и
+    // задание забрал другой. Его запись обязана быть отброшена, и это обязано быть НАЗВАНО.
+    const jobId = await queueJob('timeout-after-steal');
+
+    const lines: string[] = [];
+    const logger = createLogger({ service: 'recognizer-test', sink: (line) => lines.push(line) });
+    const timingOutAfterSteal = {
+      kind: 'fake' as const,
+      async recognize(): Promise<never> {
+        await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+        const stealer = await acquireLease(pool, randomUUID());
+        expect(stealer?.fence).toBe(2);
+        throw new ModelDeadlineExceeded(30_000);
+      },
+    };
+
+    const worker = createWorker({ pool, provider: timingOutAfterSteal, logger });
+    expect(await worker.tick()).toBe(true);
+
+    const events = lines.map((line) => JSON.parse(line).event);
+    expect(events).toContain('model_call_deadline_exceeded');
+    expect(events).toContain('stale_lease_result');
+    expect(events).not.toContain('scan_finished');
+
+    // Задание осталось за тем, кто держит актуальный номер захвата.
+    const row = await pool.query<{ status: string; lease_fence: number }>(
+      'SELECT status::text AS status, lease_fence FROM recognition WHERE id = $1',
+      [jobId],
+    );
+    expect(row.rows[0]?.status).toBe('queued');
+    expect(row.rows[0]?.lease_fence).toBe(2);
   }, 60_000);
 
   it('воркер не затирает статус, уже закрытый уборщиком', async () => {

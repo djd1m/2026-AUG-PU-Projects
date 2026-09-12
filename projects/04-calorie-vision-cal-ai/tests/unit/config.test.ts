@@ -161,6 +161,23 @@ describe('валидатор конфигурации recognizer', () => {
       expect(refusalFor(() => loadRecognizerConfig(withoutVariable(FULL_RECOGNIZER_ENV, name))).variables, name).toEqual([name]);
     }
   });
+
+  it('пустая строка в любой из четырёх переменных S3 валит старт воркера наравне с отсутствием', () => {
+    // `undefined` и `''` — РАЗНЫЕ случаи, и второй почти всегда опечатка в `.env`. Слитые в
+    // один, они теряют диагностику; проверенные только у `api`, они оставляют воркер
+    // непроверенным, хотя требование говорит про ОБА сервиса (RV-foundation-02).
+    for (const name of ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY']) {
+      const empty = refusalFor(() => loadRecognizerConfig({ ...FULL_RECOGNIZER_ENV, [name]: '' }));
+      expect(empty.variables, `${name}=''`).toEqual([name]);
+      // Отказ НАЗЫВАЕТ переменную и последствие, а не только факт: сообщение без цены
+      // читается как придирка, и защиту снимают.
+      expect(empty.message, `${name}=''`).toContain(name);
+      expect(empty.message, `${name}=''`).toContain('задана пустой строкой');
+      expect(empty.message, `${name}=''`).toContain('бакет');
+    }
+    // Пробелы — тот же случай: значение есть, смысла в нём нет.
+    expect(refusalFor(() => loadRecognizerConfig({ ...FULL_RECOGNIZER_ENV, S3_SECRET_KEY: '   ' })).variables).toEqual(['S3_SECRET_KEY']);
+  });
 });
 
 describe('пороги ограничения частоты соответствуют канону', () => {
