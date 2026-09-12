@@ -1,0 +1,16 @@
+{
+  "name": "@n4/recognizer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/bootstrap.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/bootstrap.js"
+  },
+  "dependencies": {
+    "@n4/db": "0.1.0",
+    "@n4/shared": "0.1.0",
+    "pg": "8.23.0"
+  }
+}
