@@ -9,6 +9,9 @@ import { fail, type ApiConfig, type Logger } from '@n4/shared';
 import { createRateLimiter, registerRateLimit, type RateLimiter } from './http/rate-limit.js';
 import { registerHealthRoute } from './routes/health.js';
 import { registerAuthDeviceRoute } from './routes/auth-device.js';
+import { registerAuthTelegramRoute } from './routes/auth-telegram.js';
+import { registerConsentRoute } from './routes/consent.js';
+import { registerAccountDeleteRoute } from './routes/account-delete.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 
 export interface ServerDeps {
@@ -42,6 +45,9 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
 
   registerHealthRoute(app, deps.pool);
   registerAuthDeviceRoute(app, deps.pool, deps.logger);
+  registerAuthTelegramRoute(app, deps.pool, deps.config, deps.logger);
+  registerConsentRoute(app, deps.pool, deps.logger);
+  registerAccountDeleteRoute(app, deps.pool, deps.logger);
 
   app.setNotFoundHandler(async (_request, reply) => reply.code(404).send(fail('not_found', 'маршрут не найден')));
 
