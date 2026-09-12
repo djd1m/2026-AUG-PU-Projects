@@ -23,7 +23,7 @@
 | Пользовательские истории | `US-nnn` | Specification.md | истории, три цифры, не переиспользуются |
 | Сценарии приёмки | `SC-US-nnn-k` | Specification.md | Gherkin под историей, k от 1 |
 | Функциональные требования | `FR-<ОБЛАСТЬ>-nnn` | Specification.md `###` | области ниже |
-| Нефункциональные | `NFR-<ОБЛАСТЬ>-nnn` | Specification.md `###` | производительность, безопасность, масштаб |
+| Нефункциональные | `NFR-<ОБЛАСТЬ>-nnn` | Specification.md `###` | производительность (PERF), безопасность (SEC), масштаб (SCALE), эксплуатация (OPS) |
 | Growth-требования | `FR-GROWTH-001…007` | Specification.md (промоушен из брифа) | токены точные, не переименовывать |
 | Look-требования | `FR-LOOK-001…012` | Specification.md (промоушен из профиля) | принять или отклонить с причиной |
 | Выходы discovery | `PD-<WORD>-nnn` | product-discovery-brief.md | ответить в документах Phase 1 |
@@ -56,7 +56,8 @@ NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OP
 `food_synonym` (RU-курация) · `diary_entry` · `share_card` · `partner` · `partner_code` ·
 `attribution` · `scan_quota_counter`. Каждая: `id: UUID`, `created_at: Timestamp`.
 Статус `recognition.status` — ровно 4 значения: `queued | done | failed | refused`.
-Статус `attribution.status` — ровно 3: `pending | activated | rejected`.
+Статус `attribution.status` — ровно 3: `pending | activated | rejected`. `attribution.source` — ровно 3: `explicit | deeplink | cookie`; `replaced_source` — то же множество или null.
+`scan_quota_counter.scope` — ровно 3: `user | global | escalation`.
 
 ## 5. Маршруты API (префикс `/api/v1`, ровно 10)
 
@@ -78,7 +79,8 @@ NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OP
 | Параметр | Значение |
 |---|---|
 | Потолок сканов на пользователя | 10/сутки (аноним = device_session + IP) |
-| Суточный потолок | 3000 сканов |
+| Суточный потолок | 3000 сканов (все попытки: первичные и эскалации) |
+| Суточный потолок эскалаций к Sonnet 5 | 600 попыток (третий счётчик, scope `escalation`; решение DEC-A-002) |
 | При достижении потолка | ОТКАЗ с экраном лимита (не деградация, не очередь) |
 | Порог эскалации к Sonnet 5 | уверенность < 0,6 |
 | Метрика недели | доля активированных, расшеривших ≥1 карточку: 20% при n ≥ 30 |
