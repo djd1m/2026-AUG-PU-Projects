@@ -1,0 +1,466 @@
+{
+  "tool": "capture-source-path.cjs",
+  "start": "https://www.calai.app/",
+  "at": "2026-09-12T14:54:54.739Z",
+  "robots": "robots.txt прочитан, стартовый путь разрешён",
+  "politeness": {
+    "maxPages": 4,
+    "delayMs": 1500,
+    "threads": 1
+  },
+  "steps": [
+    {
+      "index": 1,
+      "url": "https://www.calai.app/",
+      "path": "/",
+      "status": 200,
+      "title": "Cal AI | Download Today",
+      "arrivedBy": null,
+      "authWall": false,
+      "at": "2026-09-12T14:54:46Z",
+      "evidence": {
+        "screenshot": "step-01.png",
+        "aria": "step-01.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 4,
+          "share": 0.91
+        },
+        "spacingTop": [
+          {
+            "value": "16",
+            "count": 117
+          },
+          {
+            "value": "24",
+            "count": 88
+          },
+          {
+            "value": "12",
+            "count": 49
+          },
+          {
+            "value": "32",
+            "count": 40
+          },
+          {
+            "value": "8",
+            "count": 37
+          },
+          {
+            "value": "4",
+            "count": 12
+          }
+        ],
+        "typeScale": [
+          12,
+          14,
+          16,
+          18,
+          20,
+          24,
+          36,
+          48,
+          52
+        ],
+        "typeLevels": 9,
+        "weights": [
+          300,
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          6,
+          12,
+          16,
+          24,
+          30,
+          33554400
+        ],
+        "distinctColors": 11,
+        "rootVars": 115,
+        "breakpoints": [
+          1,
+          768
+        ],
+        "stylesheets": {
+          "total": 3,
+          "unreadable": 0
+        },
+        "headingLevels": 3,
+        "ctaCount": 28,
+        "prominentCtas": 0,
+        "fieldCount": 1
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meet Cal AI Track your calorieswith just a picture"
+        },
+        {
+          "level": 2,
+          "text": "Used by your favorite fitness influencers 👀"
+        },
+        {
+          "level": 3,
+          "text": "Jeremiah Jones"
+        },
+        {
+          "level": 3,
+          "text": "Kadin Kerns"
+        },
+        {
+          "level": 3,
+          "text": "Dawson Gibbs"
+        },
+        {
+          "level": 3,
+          "text": "Brian Wallack"
+        },
+        {
+          "level": 3,
+          "text": "Hussein Farhat"
+        },
+        {
+          "level": 3,
+          "text": "Alex Eubank"
+        }
+      ],
+      "fields": [
+        {
+          "type": "email",
+          "label": "Enter Your Email"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "url": "https://www.calai.app/faq",
+      "path": "/faq",
+      "status": 200,
+      "title": "FAQ | Cal AI",
+      "arrivedBy": "See all FAQs",
+      "authWall": false,
+      "at": "2026-09-12T14:54:49Z",
+      "evidence": {
+        "screenshot": "step-02.png",
+        "aria": "step-02.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 2,
+          "share": 1
+        },
+        "spacingTop": [
+          {
+            "value": "24",
+            "count": 129
+          },
+          {
+            "value": "16",
+            "count": 108
+          },
+          {
+            "value": "12",
+            "count": 70
+          },
+          {
+            "value": "8",
+            "count": 58
+          },
+          {
+            "value": "2",
+            "count": 22
+          },
+          {
+            "value": "10",
+            "count": 17
+          }
+        ],
+        "typeScale": [
+          14,
+          16,
+          18,
+          24,
+          48
+        ],
+        "typeLevels": 5,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          16,
+          24,
+          33554400
+        ],
+        "distinctColors": 7,
+        "rootVars": 115,
+        "breakpoints": [
+          1
+        ],
+        "stylesheets": {
+          "total": 2,
+          "unreadable": 0
+        },
+        "headingLevels": 3,
+        "ctaCount": 27,
+        "prominentCtas": 7,
+        "fieldCount": 0
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Frequently asked questions"
+        },
+        {
+          "level": 2,
+          "text": "Subscriptions & Billing"
+        },
+        {
+          "level": 3,
+          "text": "I paid but the app still shows a paywall. What gives?"
+        },
+        {
+          "level": 3,
+          "text": "Can I switch my subscription from iPhone to Android (or vice versa)?"
+        },
+        {
+          "level": 3,
+          "text": "How do I cancel my subscription or free trial?"
+        },
+        {
+          "level": 3,
+          "text": "I want a refund. How do I get one?"
+        },
+        {
+          "level": 2,
+          "text": "Family Plan"
+        },
+        {
+          "level": 3,
+          "text": "I bought the family plan but my invites just see a free trial page"
+        }
+      ],
+      "fields": []
+    },
+    {
+      "index": 3,
+      "url": "https://www.calai.app/blog",
+      "path": "/blog",
+      "status": 200,
+      "title": "Blog | Cal AI",
+      "arrivedBy": "Blog",
+      "authWall": false,
+      "at": "2026-09-12T14:54:52Z",
+      "evidence": {
+        "screenshot": "step-03.png",
+        "aria": "step-03.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 4,
+          "share": 0.95
+        },
+        "spacingTop": [
+          {
+            "value": "8",
+            "count": 16
+          },
+          {
+            "value": "16",
+            "count": 13
+          },
+          {
+            "value": "32",
+            "count": 4
+          },
+          {
+            "value": "20",
+            "count": 2
+          },
+          {
+            "value": "30",
+            "count": 2
+          },
+          {
+            "value": "64",
+            "count": 2
+          }
+        ],
+        "typeScale": [
+          14,
+          16,
+          18,
+          20,
+          48
+        ],
+        "typeLevels": 5,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [],
+        "distinctColors": 1,
+        "rootVars": 115,
+        "breakpoints": [
+          1
+        ],
+        "stylesheets": {
+          "total": 2,
+          "unreadable": 0
+        },
+        "headingLevels": 2,
+        "ctaCount": 60,
+        "prominentCtas": 0,
+        "fieldCount": 0
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Our Blog"
+        },
+        {
+          "level": 2,
+          "text": "Is the Zone Diet Healthy? Pros & Cons Explained"
+        },
+        {
+          "level": 2,
+          "text": "Can You Drink Protein Shakes While Intermittent Fasting"
+        },
+        {
+          "level": 2,
+          "text": "Why Am I Gaining Weight in a Calorie Deficit?"
+        },
+        {
+          "level": 2,
+          "text": "How Long Does Reverse Dieting Take to Work Well?"
+        },
+        {
+          "level": 2,
+          "text": "In-Depth MyNetDiary vs Lose It Comparison"
+        },
+        {
+          "level": 2,
+          "text": "A Head-to-Head MyPlate vs MyFitnessPal Comparison"
+        },
+        {
+          "level": 2,
+          "text": "In-Depth Nutrisystem vs WeightWatchers Comparison"
+        }
+      ],
+      "fields": []
+    },
+    {
+      "index": 4,
+      "url": "https://www.calai.app/press",
+      "path": "/press",
+      "status": 200,
+      "title": "Press | Cal AI",
+      "arrivedBy": "Press",
+      "authWall": false,
+      "at": "2026-09-12T14:54:54Z",
+      "evidence": {
+        "screenshot": "step-04.png",
+        "aria": "step-04.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 4,
+          "share": 0.97
+        },
+        "spacingTop": [
+          {
+            "value": "8",
+            "count": 19
+          },
+          {
+            "value": "16",
+            "count": 19
+          },
+          {
+            "value": "12",
+            "count": 8
+          },
+          {
+            "value": "24",
+            "count": 6
+          },
+          {
+            "value": "32",
+            "count": 6
+          },
+          {
+            "value": "20",
+            "count": 2
+          }
+        ],
+        "typeScale": [
+          14,
+          16,
+          18,
+          48
+        ],
+        "typeLevels": 4,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          8,
+          16
+        ],
+        "distinctColors": 3,
+        "rootVars": 115,
+        "breakpoints": [
+          1
+        ],
+        "stylesheets": {
+          "total": 2,
+          "unreadable": 0
+        },
+        "headingLevels": 2,
+        "ctaCount": 16,
+        "prominentCtas": 1,
+        "fieldCount": 3
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Press"
+        },
+        {
+          "level": 3,
+          "text": "Legal"
+        },
+        {
+          "level": 3,
+          "text": "Company"
+        }
+      ],
+      "fields": [
+        {
+          "type": "email",
+          "label": "Email Address *"
+        },
+        {
+          "type": "text",
+          "label": "Subject *"
+        },
+        {
+          "type": "textarea",
+          "label": "Message *"
+        }
+      ]
+    }
+  ]
+}

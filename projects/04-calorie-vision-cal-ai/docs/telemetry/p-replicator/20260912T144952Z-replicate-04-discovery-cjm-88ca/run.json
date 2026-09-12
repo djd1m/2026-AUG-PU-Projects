@@ -1,0 +1,41 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260912T144952Z-replicate-04-discovery-cjm-88ca",
+  "batch_id": null,
+  "project": "projects/04-calorie-vision-cal-ai",
+  "feature": "replicate-phase0-discovery-and-cjm",
+  "pipeline": "replicate",
+  "tier": "L",
+  "risk_flags": ["health-data", "third-party-content-legality", "paid-model-calls", "influencer-disclosure"],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Owner 2026-09-12: research/planning/coding on Anthropic models, QE on Codex. Mapping of the owner matrix roles to Anthropic: Astra->Fable 5.1 (coordinator, consequential synthesis) / Opus 5 for consequential subagents; Sol->Opus 5; Terra->Sonnet 5; Luna->Haiku 4.5. QE/consequential review -> Codex (gpt-5.x via codex exec)."
+  ],
+  "comparison_id": null,
+  "baseline_revision": "dc5e25a8fe04c9b28068f4dd85726246f3507da6",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Claude Code",
+  "host_version": "2.1.261",
+  "billing_mode": "unknown",
+  "started_at": "2026-09-12T14:51:50Z",
+  "ended_at": null,
+  "status": "running",
+  "coordinator": {"requested_model": "claude-fable-5-1", "actual_model": "claude-fable-5-1", "model_evidence": "session system prompt states model id; no host billing attestation"},
+  "requested_models": ["claude-fable-5-1", "claude-opus-5", "claude-sonnet-5", "codex (gpt-5.x)"],
+  "actual_models": null,
+  "acceptance_evidence": [],
+  "quality": null,
+  "metrics": {"elapsed_wall_ms": null, "active_wall_ms": null, "tokens": null, "cost": null, "retry_count": 0, "escalation_count": 0, "cost_basis": "unavailable"},
+  "telemetry_status": "partial",
+  "missing_data": {
+    "spec_sha256": "Phase 0 run: no Specification.md exists yet",
+    "tokens": "Claude Code host exposes no per-agent usage counters to the coordinator",
+    "cost": "No billing export available in-session",
+    "active_wall_ms": "No activity/wait meter; only stage timestamps in events.jsonl",
+    "actual_models": "Subagent model is requested via Agent.model; host returns no attestation of the executed model"
+  },
+  "authorization": "Owner 2026-09-12: run /replicate for project 04 up to CJM; >=3 CJM variants in HTML plus a 4th variant reusing prior projects' solutions; frequent commits and pushes; STOP after CJM for owner's choice."
+}
