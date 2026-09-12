@@ -62,13 +62,14 @@ NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OP
 Статус `attribution.status` — ровно 3: `pending | activated | rejected`. `attribution.source` — ровно 3: `explicit | deeplink | cookie`; `replaced_source` — то же множество или null.
 `scan_quota_counter.scope` — ровно 3: `user | global | escalation`.
 
-## 5. Маршруты API (префикс `/api/v1`, ровно 13)
+## 5. Маршруты API (префикс `/api/v1`, ровно 14) + служебный `GET /health` вне префикса
 
 `POST /scans` (заголовок `Idempotency-Key`, ответ 202 с `scan_id`) · `GET /scans/{id}` · `POST /scans/{id}/correct` ·
 `GET /diary?date=` · `PATCH /diary/{entry_id}` (подтвердить/изменить/удалить запись) · `POST /share-cards` ·
 `GET /c/{card_id}` (публичная карточка) · `POST /codes/apply` · `GET /partner/dashboard` ·
 `POST /auth/telegram` · `POST /interest` (лист ожидания Pro) · `POST /consent` (выдать согласие на
-дневник как данные о здоровье) · `DELETE /account` (отзыв согласия и удаление данных).
+дневник как данные о здоровье) · `DELETE /account` (отзыв согласия и удаление данных) ·
+`POST /auth/device` (анонимная сессия устройства, HttpOnly cookie; DEC-A-012). Служебный `GET /health` — вне `/api/v1`, для healthcheck compose.
 
 ## 6. Сервисы compose (ровно 6) и стек
 

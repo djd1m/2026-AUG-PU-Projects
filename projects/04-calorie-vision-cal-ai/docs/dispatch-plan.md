@@ -1,10 +1,10 @@
 # План диспетчеризации Phase 1 — «Тарелка»
 
-**Пишущий фан-аут:** да
+**Пишущий фан-аут:** нет
 **Координатор пишет:** да
 **Разрезы файлов:** нет
 **Канон:** docs/canon.md
-**Хеш канона:** 832b0ad36eafb5d28c8b15a51bb838be566c30342616f8df88b2184853790b06
+**Хеш канона:** a5c87bc1b1c2db8b70009658042246496fb1cb48d924040f9aae45267698e45b
 **Проверка канона:** ВЫПОЛНЕНА
 **Проверка владения:** ВЫПОЛНЕНА
 **Причина:** —
@@ -17,28 +17,27 @@
 
 | Единица | Что пишет |
 |---|---|
-| fixer-phase2 | docs/Architecture.md, docs/ADR.md, docs/Pseudocode.md, docs/Refinement.md, docs/Completion.md, CLAUDE.md, docs/Specification.md, docs/PRD.md, docs/Final_Summary.md (раунд исправлений Phase 2, последовательно; прежние единицы завершены) |
 
 ## Владение
 
 | Файл | Владелец |
 |---|---|
-| docs/Specification.md | fixer-phase2 |
-| docs/PRD.md | fixer-phase2 |
-| docs/Pseudocode.md | fixer-phase2 |
-| docs/Research_Findings.md | fixer-phase2 |
-| docs/Solution_Strategy.md | fixer-phase2 |
-| docs/Architecture.md | fixer-phase2 |
-| docs/C4_Diagrams.md | fixer-phase2 |
-| docs/ADR.md | fixer-phase2 |
-| docs/model-cost-contract.md | fixer-phase2 |
-| docs/webhook-contract.md | fixer-phase2 |
-| docs/embed-contract.md | fixer-phase2 |
-| docs/long-job-contract.md | fixer-phase2 |
-| docs/Refinement.md | fixer-phase2 |
-| docs/Completion.md | fixer-phase2 |
-| docs/Final_Summary.md | fixer-phase2 |
-| CLAUDE.md | fixer-phase2 |
+| docs/Specification.md | координатор |
+| docs/PRD.md | координатор |
+| docs/Pseudocode.md | координатор |
+| docs/Research_Findings.md | координатор |
+| docs/Solution_Strategy.md | координатор |
+| docs/Architecture.md | координатор |
+| docs/C4_Diagrams.md | координатор |
+| docs/ADR.md | координатор |
+| docs/model-cost-contract.md | координатор |
+| docs/webhook-contract.md | координатор |
+| docs/embed-contract.md | координатор |
+| docs/long-job-contract.md | координатор |
+| docs/Refinement.md | координатор |
+| docs/Completion.md | координатор |
+| docs/Final_Summary.md | координатор |
+| CLAUDE.md | координатор |
 | docs/canon.md | координатор |
 | docs/dispatch-plan.md | координатор |
 | docs/product-discovery-brief.md | координатор |

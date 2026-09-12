@@ -1,0 +1,358 @@
+# Фича `foundation` — спецификация
+
+Проект: N4 «Тарелка». Фаза: Phase 1 PLAN. Дата: 2026-09-12.
+Источники имён и чисел: [`docs/canon.md`](../../canon.md) (заморожен 2026-09-12),
+[`docs/Specification.md`](../../Specification.md) (FR-AUTH-001, FR-CAPTURE-001, FR-LIMIT-001,
+FR-LIMIT-002, NFR-SCALE-001, NFR-OPS-001, SC-US-001-1, SC-US-009-1),
+[`docs/Architecture.md`](../../Architecture.md) (Component Breakdown, Data Architecture, Security
+Architecture), [`docs/ADR.md`](../../ADR.md) (ADR-002, ADR-003, ADR-007, ADR-009, ADR-010),
+[`docs/Pseudocode.md`](../../Pseudocode.md) (Data Structures; `CreateDeviceSession`,
+`CheckAndConsumeQuota`), [`docs/Refinement.md`](../../Refinement.md) (Testing Strategy, критические
+пути).
+
+## Цель
+
+Сделать проект ЗАПУСКАЕМЫМ: монорепо собирается, образы строятся, стек поднимается за Caddy, схема
+базы создана целиком, анонимная сессия выдаётся, а два разделяемых ресурса — счётчик квоты и аренда
+задания — реализованы атомарно и проверены конкурентным прогоном. Всё остальное строится поверх:
+семь оставшихся фич роадмапа опираются на эти три вещи и не имеют смысла без них.
+
+Фича не показывает пользователю ни одного числа о еде и не делает ни одного вызова модели. Её
+результат — каркас, у которого проверяемы: конфигурация, схема, сессия, потолки, аренда и сборка.
+
+## Объём
+
+Входит:
+
+1. Монорепо npm workspaces: `apps/web`, `apps/api`, `apps/recognizer`, `packages/db`,
+   `packages/shared`; общий `tsconfig.base.json`, конфигурация `vitest`, ESLint; команды
+   `npm test`, `npm run lint`, `npm run build`, `npm run migrate`.
+2. `packages/shared`: типы ответов `{ data, meta }` и `{ error: { code, message } }`, закрытые
+   перечисления канона как union-типы, единицы (`Grams`, `Kcal`, `Macro`), валидация окружения
+   fail-closed.
+3. `packages/db`: SQL-миграции на ВСЕ 14 сущностей канона с типами, перечислениями, индексами и
+   уникальностями из `Architecture.md` (Data Architecture); раннер миграций с журналом применённых;
+   три роли БД (`n4_admin` — владелец кластера, `n4_migrate` — владелец схемы и DDL, `n4_app` — DML
+   без права менять схему).
+4. `apps/api` (Fastify): служебная проверка здоровья, создание анонимной сессии устройства,
+   ограничение частоты ДО разбора тела, структурированный журнал, модуль `CheckAndConsumeQuota`
+   (три `scope`, атомарный оператор, отказ с названным `scope`).
+5. `apps/recognizer`: каркас воркера — цикл выборки `queued` с `FOR UPDATE SKIP LOCKED`, предикатом
+   `leased_until`, `lease_owner` и монотонным `lease_fence`; адаптер поставщика модели с
+   интерфейсом и детерминированным фейком.
+6. `apps/web` (Next.js 15): страница-каркас камеры первым экраном и `manifest.json` PWA.
+7. `Caddyfile` (единственная дверь, профиль `edge`), сборка всех образов, поднятие профиля `app`,
+   здоровье сервисов.
+8. `scripts/check-env-wiring.sh` — страж №1 из [`deployment-seams`](../../../../.claude/rules/deployment-seams.md),
+   которого в репозитории нет.
+9. Тесты: конфигурация, миграции, сессия, квота (последовательно И конкурентно), аренда
+   (конкурентно и на устаревшем захвате), ограничение частоты, здоровье, гигиена журнала.
+
+Вне объёма (делают следующие фичи роадмапа): любой вызов модели, включая живой режим адаптера;
+нормализация фото и `POST /api/v1/scans`; импорт USDA и поиск по базе; карточки, дневник, согласия,
+вход через Telegram, коды партнёра, экран интереса Pro. Каркас `apps/web` бизнес-логики не содержит:
+кадр никуда не отправляется.
+
+## Два расширения канона, введённые ОСОЗНАННО
+
+Канон §5 объявляет ровно 13 маршрутов `/api/v1`. Фича добавляет две двери, и обе записаны здесь, а
+не введены молча (`.claude/rules/coding-style.md`: «Осознанное переименование записывается в план
+фичи»). Обе подлежат подтверждению владельцем канона на чекпойнте Phase 1.
+
+| Дверь | Почему нужна | Почему не ломает счёт 13 |
+|---|---|---|
+| `POST /api/v1/auth/device` | FR-AUTH-001 требует сессию ДО первой съёмки, а `POST /api/v1/scans` (маршрут 1) уже обязан её иметь. Создавать сессию хуком на любом запросе нельзя: строка появлялась бы на каждую пробу здоровья и на каждого обходчика | это 14-й маршрут продукта. Альтернатива — считать создание сессии частью маршрута 1 — переносит FR-AUTH-001 в фичу `scan-pipeline` и оставляет `foundation` без проверяемой сессии |
+| `GET /health` | `docker-compose.yml` (строки 85–88) прямо говорит: служебная ручка здоровья «вводится решением по канону, а не добавляется молча». Это решение | путь ВНЕ префикса `/api/v1`: продуктовых маршрутов по-прежнему 14, служебный не входит в их число и не отдаёт данных пользователя |
+
+Текущая проверка здоровья в compose — проба TCP-соединения; она остаётся действительной. Замена её
+на HTTP-пробу — правка `docker-compose.yml` в Phase 3, а не обязательство этой спецификации.
+
+## Функциональные требования
+
+### FR-foundation-1 — монорепо собирается одной командой
+`npm ci` на чистом клоне и затем `npm run build`, `npm test`, `npm run lint` завершаются нулевым
+кодом. Workspaces ровно пять: `apps/web`, `apps/api`, `apps/recognizer`, `packages/db`,
+`packages/shared` (`Architecture.md`, Component Breakdown; `.claude/rules/coding-style.md`).
+Контекст сборки образов — корень проекта: `package-lock.json` лежит только там, и `npm ci` из
+подкаталога невозможен. Версии-мажоры фиксируются в `03_architecture.md` и в манифестах, а не
+в прозе.
+
+### FR-foundation-2 — конфигурация fail-closed: отсутствие значения валит старт
+`api` и `recognizer` при старте валидируют окружение ДО открытия сокета и ДО первого запроса к базе.
+Обязательны: `N4_SCAN_LIMIT_USER`, `N4_SCAN_LIMIT_DAY`, `N4_ESCALATION_LIMIT_DAY` (ADR-007),
+`DATABASE_URL`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, а у `api` ещё
+`APP_ORIGIN`. Отсутствующее, пустое (`''`), нечисловое или неположительное значение потолка — ОТКАЗ
+с ненулевым кодом выхода и сообщением, называющим переменную и её внешнее последствие; подстановки
+значения по умолчанию нет ни у одной из перечисленных (`honest-configuration` CFG-S1, CFG-I2,
+`silent-fallbacks`). `ANTHROPIC_API_KEY` обязателен только при `N4_MODEL_PROVIDER=live`; при
+`fake` пустое значение законно (DEC-A-009). Нераспознанное значение `N4_MODEL_PROVIDER` — отказ, а
+не «возьмём fake».
+
+### FR-foundation-3 — схема базы на 14 сущностей и три роли
+`packages/db/migrations/*.sql` создают расширение `pg_trgm`, все 14 таблиц канона §4 с колонками и
+физическими решениями из `Architecture.md` (Data Architecture), включая:
+`scan_quota_counter` со `scope` из ТРЁХ значений и `UNIQUE (scope, scope_key, day)`;
+`recognition` со `status` из ЧЕТЫРЁХ значений, `lease_owner`, `lease_fence NOT NULL DEFAULT 0`,
+частичным индексом `(status, leased_until) WHERE status = 'queued'` и
+`UNIQUE (device_session_id, idempotency_key)`;
+`attribution` с `UNIQUE (device_session_id)`, `source` и `replaced_source` из трёх значений;
+`growth_event` с `type` из пяти значений; `pro_interest` с `contact_kind` и `source_screen`;
+`photo` с `file_state` и частичным индексом `(expires_on) WHERE file_state = 'present'`;
+`food_item` с `UNIQUE (source, source_id)` и GIN-индексом по `name_en`;
+`food_synonym` с `CHECK` на строгое ИЛИ и GIN-индексом по нормализованной форме;
+`diary_entry` с частичным индексом `(owner_key, eaten_on) WHERE deleted_at IS NULL`.
+Раннер применяет файлы по возрастанию номера в одной транзакции на файл, ведёт журнал
+`schema_migration(version, applied_at, checksum)` и на повторном прогоне не применяет ничего.
+Роли: DDL выполняет `n4_migrate` (владелец схемы), приложение работает под `n4_app` с правами
+`SELECT/INSERT/UPDATE/DELETE` и БЕЗ права менять схему; `n4_admin` остаётся владельцем кластера и
+единственной существующей в `docker-compose.yml` учётной записью, из-под которой раннер выполняет
+`SET ROLE n4_migrate`. Отдельной переменной окружения для миграций не заводится: её в compose нет,
+а изобретать четвёртую учётную запись ради названия роли — лишний секрет.
+
+### FR-foundation-4 — анонимная сессия устройства
+`POST /api/v1/auth/device` создаёт `device_session` и возвращает cookie
+`HttpOnly; Secure; SameSite=Lax` со значением ≥ 128 бит энтропии (FR-AUTH-001, `CreateDeviceSession`).
+В базе хранится ТОЛЬКО `cookie_token_hash`; сырой токен не записывается нигде. Адрес клиента
+усекается до `ip_prefix` (IPv4 — /24, IPv6 — /48) и используется только квотой и anti-fraud.
+`anonymous_diary_expires_at = created_at + 7 суток`, `account_id = NULL`. Запрос с действующей cookie
+НЕ создаёт вторую строку: обновляется `last_seen_at` и возвращается существующая сессия. Ни анкеты,
+ни регистрации, ни экрана согласия на этом пути нет (ADR-009: согласие спрашивается перед первой
+записью дневника, а не здесь). Неизвестный или подделанный токен трактуется как отсутствие сессии:
+выдаётся новая, прежняя не воскрешается.
+
+### FR-foundation-5 — атомарный модуль потолков
+`CheckAndConsumeQuota(session, ip_prefix, day, reason)` реализуется в `apps/api` как ядро, на которое
+опираются все следующие фичи. `reason = primary` списывает ТРИ ключа
+(`(user, session_id, day)`, `(user, ip_prefix, day)`, `(global, 'all', day)`),
+`reason = escalation` — ЧЕТЫРЕ (те же плюс `(escalation, 'all', day)`); все ключи попытки — в ОДНОЙ
+транзакции, каждый ОДНИМ оператором
+`INSERT … ON CONFLICT (scope, scope_key, day) DO UPDATE SET used = scan_quota_counter.used + 1
+WHERE scan_quota_counter.used < :limit RETURNING used`. Пустой результат любого оператора означает
+достижение предела: транзакция откатывается целиком и возвращается `refused(scope)` с названным
+отказавшим счётчиком. «Прочитать, потом записать» запрещено. Пределы берутся из проверенной
+конфигурации (FR-foundation-2), а не из литералов в коде. Модуль вызовов модели не делает — их в
+этой фиче нет вовсе.
+
+### FR-foundation-6 — каркас воркера: аренда, fencing, адаптер поставщика
+`apps/recognizer` в цикле (интервал 1 с) выбирает задание
+`SELECT … WHERE status = 'queued' AND (leased_until IS NULL OR leased_until < now())
+ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1`, в той же транзакции ставит
+`leased_until = now() + 60 с`, `lease_owner = <uuid воркера>`, `lease_fence = lease_fence + 1` и
+ЗАКРЫВАЕТ транзакцию до любой длительной работы: соединение пула не удерживается во время внешнего
+вызова (NFR-SCALE-001, `shared-resource-verification`). Запись результата — условный
+`UPDATE … WHERE id = :id AND lease_fence = :fence`; `UPDATE`, затронувший ноль строк, — не ошибка
+базы, а устаревший захват: результат отбрасывается с записью `stale_lease_result` в журнал
+(ADR-003, DEC-A-008). Поставщик модели скрыт за интерфейсом с двумя реализациями; в этой фиче
+работает только детерминированный фейк, живого вызова нет. `N4_MODEL_PROVIDER=live` без
+`ANTHROPIC_API_KEY` валит старт воркера (DEC-A-009).
+
+### FR-foundation-7 — каркас фронта: камера первым экраном
+`apps/web` отдаёт корневой маршрут как экран видоискателя с одной строкой режимов («съёмка» и
+«галерея») и без анкеты до съёмки (FR-CAPTURE-001, FR-LOOK-006). Отдаётся валидный `manifest.json`
+PWA (имя, иконки, `display: standalone`, `start_url`). Кадр никуда не отправляется: приём фото —
+фича `scan-pipeline`. Секретов вызова наружу у `web` нет ни одного, и это проверяется списком
+`environment:` сервиса в `docker-compose.yml`.
+
+### FR-foundation-8 — ограничение частоты ДО разбора тела
+`api` применяет ограничение частоты в хуке, выполняющемся РАНЬШЕ разбора тела запроса
+(`security-operation-order`: обратный порядок делает перебор мусорными телами бесплатным). Ключ —
+`ip_prefix`. Экземпляр ограничителя создаётся ОДИН раз при старте процесса: экземпляр на запрос
+обнуляет собственную защиту. Превышение даёт `429` с телом `{ error: { code, message } }`. Это
+ограничение приложения; ограничение на Caddy (единственная дверь) настраивается тем же `Caddyfile`
+и не отменяет приложенческое: прямой доступ внутри сети compose прокси не проходит.
+
+### FR-foundation-9 — стек собирается, поднимается и здоров
+`docker compose build` собирает образы `api`, `recognizer`, `web` из корня проекта;
+`docker compose --profile app up -d` доводит `db`, `storage`, `api`, `web` до состояния `healthy`;
+профиль `edge` с `Caddyfile` отдаёт стек на `127.0.0.1:${N4_EDGE_PORT:-4180}` как ЕДИНСТВЕННУЮ
+дверь. `GET /health` отвечает `200` с телом `{ data: { status: 'ok' } }`, когда процесс жив и база
+отвечает на `SELECT 1`, и `503` с названной причиной, когда база недоступна: недоступность
+источника истины — отказ, а не «наверное, всё хорошо» (`fail-closed-defaults`). Версии, имена
+переменных, строки подключения и любые данные пользователя в ответе не появляются. Перед ЛЮБЫМ
+`up` прогоняются `node ../../.claude/hooks/check-ports.cjs .` и
+`bash ../../scripts/check-port-conflicts.sh .`.
+
+### FR-foundation-10 — страж полноты проброса переменных
+`scripts/check-env-wiring.sh` сверяет `process.env.X` в исходниках каждого сервиса с блоком
+`environment:` этого сервиса в `docker compose config`. Регулярное выражение имени — `[A-Z][A-Z0-9_]*`
+(без цифр `S3_ENDPOINT` режется до `S`); список исключений ЯВНЫЙ и лежит в самом скрипте. Коды
+возврата три: `0` — потерь нет, `1` — доказана потеря с названными переменной и сервисом,
+`2` — проверка НЕ ВЫПОЛНЕНА (нечитаемый или пустой `docker compose config`, отсутствие `docker`).
+Пустой вывод конфигурации НИКОГДА не читается как «нарушений не найдено»
+(`guard-must-be-able-to-fail`).
+
+## Нефункциональные требования
+
+### NFR-foundation-1 — разделяемые ресурсы корректны под конкуренцией
+Счётчик квоты и аренда задания проверяются ПАРАЛЛЕЛЬНЫМ прогоном на настоящем PostgreSQL из профиля
+`test`, а не последовательным: последовательный тест зеленеет и при атомарном операторе, и при
+«прочитать, потом записать» (`shared-resource-verification`, `Refinement.md` §критические пути).
+Число одновременно занятых соединений пула не растёт с числом ожидающих; добросовестный пользователь
+на соседней сессии чужой квотой не блокируется. Пул, ограничитель частоты и любые счётчики с
+состоянием создаются один раз при старте процесса и имеют `connectionTimeoutMillis`: ожидание
+ресурса без таймаута — это отказ без сигнала.
+
+### NFR-foundation-2 — журнал наблюдаем и безопасен
+Каждый процесс пишет структурированный журнал (одна строка — один JSON) с `request_id`, временем,
+уровнем и событием; старт процесса печатает событие с перечнем ПРОВЕРЕННЫХ имён переменных БЕЗ
+значений и с тремя потолками (NFR-OPS-001 в части «расход наблюдаем» закрывается фичей
+`scan-pipeline`; здесь — только каркас журнала). НИКОГДА не логируются: значение
+`ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, сырой токен cookie, полный IP-адрес, байты фото,
+содержимое `initData`. Запрет проверяется стражем по исходнику, а не ревью.
+
+## Критерии приёмки
+
+### AC-foundation-1 — чистый клон собирается и проходит проверки
+Given чистый клон репозитория без `node_modules`
+When выполняются `npm ci`, `npm run build`, `npm test`, `npm run lint`
+Then каждая команда возвращает код `0`, и `npm ls --workspaces --depth 0` перечисляет ровно пять
+workspace: `apps/web`, `apps/api`, `apps/recognizer`, `packages/db`, `packages/shared`.
+
+### AC-foundation-2 — отсутствие ЛЮБОГО из трёх потолков валит старт
+Given окружение `api`, в котором задано всё, кроме ОДНОГО из `N4_SCAN_LIMIT_USER`,
+`N4_SCAN_LIMIT_DAY`, `N4_ESCALATION_LIMIT_DAY`
+When процесс запускается
+Then он завершается кодом, отличным от `0`, не открыв сокет, и в `stderr` присутствуют имя
+недостающей переменной и названное последствие; прогонов ТРИ — по одному на переменную, потому что
+проверка одной зеленеет при отсутствующей второй. Тот же результат даёт значение `''`, `0`, `-1` и
+`abc`.
+
+### AC-foundation-3 — отсутствие адреса или строки подключения валит старт
+Given окружение `api` без `APP_ORIGIN` (прогон 1) и без `DATABASE_URL` (прогон 2)
+When процесс запускается
+Then он завершается ненулевым кодом с названной переменной; подстановки `http://localhost:3000` не
+происходит ни в одном прогоне, и ни одна выданная ссылка не строится на умолчании.
+
+### AC-foundation-4 — миграции создают схему целиком и повторяются вхолостую
+Given пустая база `n4` из профиля `test`
+When выполняется `npm run migrate`
+Then созданы все 14 таблиц канона и расширение `pg_trgm`; существуют ограничения
+`UNIQUE (scope, scope_key, day)` на `scan_quota_counter`,
+`UNIQUE (device_session_id, idempotency_key)` на `recognition`,
+`UNIQUE (device_session_id)` на `attribution`, `UNIQUE (code)` на `partner_code`,
+`UNIQUE (source, source_id)` на `food_item`; частичный индекс `(status, leased_until)
+WHERE status = 'queued'` существует; повторный `npm run migrate` применяет ноль файлов и завершается
+кодом `0`; попытка вставить вторую строку `scan_quota_counter` с тем же `(scope, scope_key, day)`
+отбивается БАЗОЙ, а не кодом.
+
+### AC-foundation-5 — приложение не владеет схемой
+Given подключение под ролью `n4_app`
+When выполняются `DROP TABLE recognition`, `ALTER TABLE recognition ADD COLUMN x int` и
+`CREATE TABLE t (id int)`
+Then каждая команда отвергается ошибкой прав, а `INSERT`/`SELECT`/`UPDATE`/`DELETE` по таблицам
+канона выполняются успешно; те же DDL-команды под `n4_migrate` выполняются успешно.
+
+### AC-foundation-6 — первая сессия выдаётся и хранится безопасно
+Given запрос `POST /api/v1/auth/device` без cookie, пришедший с адреса `203.0.113.77`
+When запрос обработан
+Then ответ `201` с заголовком `Set-Cookie`, содержащим `HttpOnly`, `Secure`, `SameSite=Lax`;
+в `device_session` ровно одна новая строка, её `cookie_token_hash` НЕ равен значению из cookie,
+`ip_prefix` равен `203.0.113.0/24`, `account_id` равен `NULL`, а
+`anonymous_diary_expires_at - created_at` равно 7 суткам.
+
+### AC-foundation-7 — повторный вызов с действующей cookie не плодит сессии
+Given сессия, созданная в AC-foundation-6, и её cookie
+When `POST /api/v1/auth/device` выполняется второй раз с этой cookie
+Then возвращается та же сессия, число строк `device_session` осталось `1`, `last_seen_at` обновлён;
+а запрос с неизвестным значением cookie создаёт НОВУЮ сессию и не воскрешает и не изменяет прежнюю.
+
+### AC-foundation-8 — последовательный потолок пользователя отказывает с названным scope
+Given предел `N4_SCAN_LIMIT_USER = 10` и сессия без попыток за сегодня
+When `CheckAndConsumeQuota(reason = primary)` вызывается 11 раз подряд
+Then первые 10 возвращают `granted`, одиннадцатый возвращает `refused` со `scope = user`;
+`scan_quota_counter.used` для ключа `(user, session_id, day)` равен ровно `10`, и одиннадцатая
+попытка счётчик `global` НЕ увеличила — транзакция откатилась целиком.
+
+### AC-foundation-9 — конкурентный прогон различает атомарный оператор и «прочитать-записать»
+Given предел `N4_SCAN_LIMIT_USER = 10`, настоящий PostgreSQL профиля `test` и вторая, соседняя
+сессия
+When 20 вызовов `CheckAndConsumeQuota(reason = primary)` для ОДНОЙ сессии стартуют одновременно
+Then ровно 10 возвращают `granted` и ровно 10 — `refused(user)`; `used` равен ровно `10`, ни одна
+попытка не потеряна и не посчитана дважды; параллельные 5 вызовов соседней сессии все возвращают
+`granted`; число одновременно занятых соединений пула не превышает его размер и не растёт с числом
+ожидающих.
+
+### AC-foundation-10 — аренда: один захват на задание, устаревший владелец пишет ноль строк
+Given одно задание `recognition` в статусе `queued` и два воркера с разными `lease_owner`
+When оба одновременно выполняют выборку задания
+Then ровно один получает задание, `lease_fence` увеличен ровно на `1`, второй получает пусто;
+и далее: при искусственно истёкшем `leased_until` второй воркер захватывает то же задание
+(`lease_fence` увеличен ещё на `1`), после чего условный `UPDATE` результата от ПЕРВОГО владельца
+затрагивает `0` строк, результат второго не изменён, а в журнале есть событие
+`stale_lease_result`.
+
+### AC-foundation-11 — адаптер поставщика: фейк детерминирован, `live` без ключа валит старт
+Given `N4_MODEL_PROVIDER = fake`
+When адаптер вызывается дважды с одним и тем же входом
+Then оба раза возвращается идентичный ответ по схеме, и ни одного сетевого соединения наружу не
+открыто; а при `N4_MODEL_PROVIDER = live` и пустом `ANTHROPIC_API_KEY` процесс `recognizer`
+завершается ненулевым кодом с названной переменной; при `N4_MODEL_PROVIDER = дичь` — тоже отказ, а
+не молчаливый откат к `fake`.
+
+### AC-foundation-12 — камера первым экраном и валидный манифест
+Given собранный `apps/web`
+When запрашивается корневой маршрут
+Then HTML содержит элемент видоискателя и ровно две подписи режимов («съёмка», «галерея»), и не
+содержит ни одной формы регистрации или анкеты; `GET /manifest.json` отдаёт `200` с
+`application/manifest+json`, полями `name`, `icons` (не пусто), `display: "standalone"` и
+`start_url`; в клиентском бандле отсутствуют строки `ANTHROPIC_API_KEY` и `TELEGRAM_BOT_TOKEN`.
+
+### AC-foundation-13 — ограничение частоты срабатывает до разбора тела
+Given ограничитель частоты `api` с порогом N запросов в окно для одного `ip_prefix`
+When с одного адреса приходит N + 5 запросов, у которых тело — синтаксически НЕВЕРНЫЙ JSON
+Then первые N обрабатываются штатным путём, последние 5 получают `429`, а разбор тела для них не
+выполняется: ошибка `400 invalid json` в ответе не появляется ни разу; после исчерпания окна
+счётчик восстанавливается, и следующий запрос обрабатывается.
+
+### AC-foundation-14 — стек собирается, поднимается и отвечает о здоровье честно
+Given чистое рабочее дерево и заполненный `.env`
+When выполняются `node ../../.claude/hooks/check-ports.cjs .`,
+`bash ../../scripts/check-port-conflicts.sh .`, `docker compose build`,
+`docker compose --profile app up -d`
+Then первые две проверки возвращают `0`, сборка всех трёх образов завершается успешно, `db`,
+`storage`, `api` и `web` достигают состояния `healthy`, `GET /health` отвечает `200`;
+а при остановленном `db` тот же `GET /health` отвечает `503` с названной причиной и НЕ отвечает
+`200`.
+
+### AC-foundation-15 — страж проброса переменных умеет падать
+Given `docker compose config`, отдающий полную конфигурацию
+When выполняется `bash scripts/check-env-wiring.sh`
+Then код возврата `0`; при внедрённом дефекте (переменная, читаемая исходником сервиса, убрана из
+его блока `environment:`) код возврата `1` и в выводе названы переменная и сервис; при пустом или
+нечитаемом выводе `docker compose config` код возврата `2` и сообщение «проверка НЕ ВЫПОЛНЕНА», а
+не «нарушений не найдено». Все три прогона предъявляются в квитанции Phase 3.
+
+### AC-foundation-16 — в журнале нет секретов и персональных данных
+Given работающий `api` и сессия, созданная реальным запросом
+When прогоняется тест гигиены журнала и страж по исходнику
+Then ни одна строка журнала не содержит значения `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, сырого
+токена cookie и полного IP-адреса (присутствует только `ip_prefix`); страж по исходнику
+подтверждает, что перечисленные значения не передаются в вызовы журналирования; страж прогнан на
+внедрённом дефекте и показал красный результат.
+
+## Наследуемые сценарии приёмки проекта
+
+Фича участвует в двух приёмочных сценариях `docs/Specification.md` и закрывает их ЧАСТИЧНО; полное
+закрытие — за `scan-pipeline`.
+
+| Сценарий проекта | Что закрывает `foundation` | Что остаётся другой фиче |
+|---|---|---|
+| SC-US-001-1 — первый результат без анкеты и регистрации | анонимная сессия без анкеты (FR-foundation-4), камера первым экраном (FR-foundation-7) | приём кадра, вызов модели, показ результата и время ≤ 6 с |
+| SC-US-009-1 — отказ по достигнутому потолку с названной причиной | атомарный `CheckAndConsumeQuota` и `refused(scope)` (FR-foundation-5) | экран лимита и запись интереса Pro |
+
+## Трассировка на документы проекта
+
+| Требование фичи | Источник проекта |
+|---|---|
+| FR-foundation-1 | `Architecture.md` Technology Stack и Component Breakdown; `.claude/rules/coding-style.md` |
+| FR-foundation-2 | ADR-007; `Specification.md` FR-LIMIT-002; `honest-configuration`, `silent-fallbacks` |
+| FR-foundation-3 | `Architecture.md` Data Architecture; `canon.md` §4; `Pseudocode.md` Data Structures |
+| FR-foundation-4 | `Specification.md` FR-AUTH-001; `Pseudocode.md` `CreateDeviceSession`; `Architecture.md` Security Architecture |
+| FR-foundation-5 | `Specification.md` FR-LIMIT-001, FR-LIMIT-002; ADR-007; `Pseudocode.md` `CheckAndConsumeQuota` |
+| FR-foundation-6 | ADR-003 и DEC-A-008; `Architecture.md` «Аренда задания»; DEC-A-009 |
+| FR-foundation-7 | `Specification.md` FR-CAPTURE-001, FR-LOOK-006; ADR-002 |
+| FR-foundation-8 | `Architecture.md` Security Architecture; `security-operation-order` |
+| FR-foundation-9 | `docker-compose.yml`; `docker-ports.md`; `port-conflicts-local.md`; `fail-closed-defaults` |
+| FR-foundation-10 | `deployment-seams` страж №1; `guard-must-be-able-to-fail` |
+| NFR-foundation-1 | `Specification.md` NFR-SCALE-001; `Refinement.md` критические пути; `shared-resource-verification` |
+| NFR-foundation-2 | `Specification.md` NFR-OPS-001; `.claude/rules/secrets-management.md` |
