@@ -19,11 +19,17 @@ services:
       POSTGRES_USER: n4_admin
       POSTGRES_DB: n4
       POSTGRES_PASSWORD: ${N4_DB_ADMIN_PASSWORD:?задайте пароль администратора БД — пустое значение не означает «без пароля»}
+      # Пароль роли приложения нужен БУТСТРАПУ кластера: роль — объект кластера, и её
+      # пароль не имеет права лежать в SQL-файле, который коммитится (фича foundation).
+      N4_DB_APP_PASSWORD: ${N4_DB_APP_PASSWORD:?задайте пароль роли приложения}
       TZ: Europe/Moscow
     # expose — документирующая запись; доступ внутри сети есть и без неё. Публикации нет.
     expose: ["5432"]
     volumes:
       - db-data:/var/lib/postgresql/data
+      # Роли n4_migrate и n4_app создаются ОДИН раз при первой инициализации тома.
+      # Таблицы создаёт миграция 001 из-под n4_migrate — это уже объекты схемы.
+      - ./scripts/init-foundation-db.sh:/docker-entrypoint-initdb.d/10-init-foundation-db.sh:ro
     networks: [private]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U n4_admin -d n4"]
@@ -55,7 +61,10 @@ services:
     build:
       context: .
       target: api
-    profiles: [app, dev]
+    # `edge` в списке — не украшение: proxy зависит от api и web, и профиль `edge`
+    # БЕЗ них не поднимается вовсе («depends on undefined service»). Найдено первым
+    # настоящим запуском профиля edge.
+    profiles: [app, dev, edge]
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -76,16 +85,23 @@ services:
       N4_SCAN_LIMIT_USER: ${N4_SCAN_LIMIT_USER:?потолок на пользователя не задан — пустое значение не означает «без ограничений»}
       N4_SCAN_LIMIT_DAY: ${N4_SCAN_LIMIT_DAY:?суточный потолок попыток не задан}
       N4_ESCALATION_LIMIT_DAY: ${N4_ESCALATION_LIMIT_DAY:?суточный потолок эскалаций не задан}
+      # Пороги ограничения частоты — числа канона §7 (DEC-A-013): 30 мутаций и 120 чтений
+      # в минуту на один ip_prefix. Отсутствие валит старт наравне с потолками: предел,
+      # которого нет, — это отсутствие предела, а не «по умолчанию разумно».
+      N4_RATE_LIMIT_MUTATE_PER_MIN: ${N4_RATE_LIMIT_MUTATE_PER_MIN:?порог частоты для мутирующих маршрутов не задан}
+      N4_RATE_LIMIT_READ_PER_MIN: ${N4_RATE_LIMIT_READ_PER_MIN:?порог частоты для чтения не задан}
     expose: ["3000"]
     networks: [private, egress]
     depends_on:
       db: { condition: service_healthy }
       storage: { condition: service_healthy }
     healthcheck:
-      # Проверяется, что процесс СЛУШАЕТ. Это не готовность: канон объявляет ровно 13 маршрутов,
-      # и служебная ручка здоровья была бы четырнадцатым — она вводится решением по канону,
-      # а не добавляется молча ради healthcheck.
-      test: ["CMD", "node", "-e", "require('net').connect(3000,'127.0.0.1').on('connect',function(){process.exit(0)}).on('error',function(){process.exit(1)})"]
+      # Проба переведена с TCP на HTTP в фиче `foundation`: служебный `GET /health` введён
+      # решением по канону (он ВНЕ префикса /api/v1, продуктовых маршрутов по-прежнему 14).
+      # Разница содержательна: TCP-проба говорит «процесс слушает», а этот ответ означает,
+      # что база отвечает на SELECT 1. При недоступной базе он даёт 503, и сервис перестаёт
+      # быть healthy — недоступность источника истины обязана быть видна, а не подразумеваться.
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3000/health',function(r){process.exit(r.statusCode===200?0:1)}).on('error',function(){process.exit(1)})"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -95,7 +111,7 @@ services:
     build:
       context: .
       target: recognizer
-    profiles: [app, dev]
+    profiles: [app, dev, edge]
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -127,7 +143,7 @@ services:
     build:
       context: .
       target: web
-    profiles: [app, dev]
+    profiles: [app, dev, edge]
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -167,6 +183,9 @@ services:
     # наружу стенд выводит вышестоящий reverse-proxy, а не этот стек.
     ports: ["127.0.0.1:${N4_EDGE_PORT:-4180}:80"]
     volumes:
+      # Конфигурация двери создана фичей `foundation`. Без монтирования Caddy поднял бы
+      # страницу-заглушку и стек выглядел бы рабочим, не отдавая ни одного маршрута.
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
     networks: [private, egress]
@@ -190,7 +209,15 @@ services:
       NODE_ENV: test
       TZ: Europe/Moscow
       NEXT_TELEMETRY_DISABLED: "1"
+      # Миграции применяются под n4_admin с SET ROLE n4_migrate — четвёртой учётной записи
+      # ради названия роли не заводится.
       DATABASE_URL: postgresql://n4_admin:${N4_DB_ADMIN_PASSWORD:?задайте пароль администратора БД}@db:5432/n4
+      # Отдельное подключение ПОД РОЛЬЮ ПРИЛОЖЕНИЯ: тест прав проверяет, что n4_app не может
+      # менять схему. Проверять это из-под администратора невозможно по построению.
+      DATABASE_URL_APP: postgresql://n4_app:${N4_DB_APP_PASSWORD:?задайте пароль роли приложения}@db:5432/n4
+      N4_RATE_LIMIT_MUTATE_PER_MIN: ${N4_RATE_LIMIT_MUTATE_PER_MIN:?порог частоты для мутирующих маршрутов не задан}
+      N4_RATE_LIMIT_READ_PER_MIN: ${N4_RATE_LIMIT_READ_PER_MIN:?порог частоты для чтения не задан}
+      APP_ORIGIN: ${APP_ORIGIN:?внешний адрес обязателен}
       S3_ENDPOINT: http://storage:9000
       S3_BUCKET: ${N4_S3_BUCKET:-n4-photos}
       S3_ACCESS_KEY: ${N4_S3_ACCESS_KEY:?задайте ключ доступа приложения к бакету}
@@ -212,6 +239,15 @@ networks:
   # Опубликованные порты proxy/web и исходящий доступ api/recognizer к Anthropic и Telegram.
   egress:
     driver: bridge
+    # ПОДСЕТЬ ЗАДАНА ЯВНО, и это третий дефект, найденный первым настоящим запуском:
+    # `docker compose up` упал с «all predefined address pools have been fully subnetted».
+    # На этой машине 31 чужая сеть, и обе пулы Docker по умолчанию (172.17–172.31 и
+    # 192.168.0–240/20) разобраны целиком. Это тот же класс, что занятые хостовые порты:
+    # машина не пустая, и адресное пространство — такой же разделяемый ресурс, как порт.
+    # Значение правится под машину переменной, а не редактированием этого файла.
+    ipam:
+      config:
+        - subnet: ${N4_EGRESS_SUBNET:-10.83.0.0/24}
 
 volumes:
   db-data:
