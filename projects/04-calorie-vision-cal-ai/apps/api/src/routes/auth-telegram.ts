@@ -2,18 +2,17 @@
 // маршрут 9 канона).
 //
 // Порядок ОБЯЗАТЕЛЕН (`security-operation-order.md`): подпись и свежесть проверяются ВНЕ
-// транзакции (чистая функция `verifyTelegramInitData`); повтор `initData` (DEC-A-016)
-// проверяется ВНУТРИ ОДНОЙ транзакции, ПОСЛЕ подтверждённой подписи и ДО поиска/создания
-// аккаунта — сверять повтор нечего без подтверждённой подписи. Сбой на любом шаге транзакции
-// откатывает ВСЁ: ни аккаунт, ни связывание, ни перенос дневника не сохраняются частично
-// (FR-consent-and-telegram-auth-2).
+// транзакции (чистая функция `verifyTelegramInitData`); заявка на повтор initData (DEC-A-016,
+// RV-consent-and-telegram-auth-03/04) — ПЕРВАЯ мутация внутри транзакции, ДО того, как
+// затрагивается `device_session`: отказ `401` не создаёт и не обновляет ни одной сессии
+// (RV-04). Сбой на любом шаге транзакции откатывает ВСЁ (FR-consent-and-telegram-auth-2).
 
-import { createHash } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { withTransaction, type DbClient, type DbPool } from '@n4/db';
 import { CANON, fail, ok, type ApiConfig, type Logger } from '@n4/shared';
 import { verifyTelegramInitData } from '../auth/verify-init-data.js';
 import { createOrReuseDeviceSession, SESSION_COOKIE_NAME } from '../session/create-device-session.js';
+import { clientAddressFrom, toIpPrefix } from '../session/ip-prefix.js';
 
 interface AuthTelegramBody {
   readonly init_data?: string;
@@ -22,31 +21,42 @@ interface AuthTelegramBody {
 interface AccountLookupRow {
   readonly id: string;
   readonly status: 'active' | 'erasing' | 'erased';
-  readonly last_telegram_auth_hash: string | null;
-  readonly last_telegram_auth_at: Date | null;
-}
-
-interface SessionReplayRow {
-  readonly last_telegram_auth_hash: string | null;
-  readonly last_telegram_auth_at: Date | null;
 }
 
 type LoginOutcome =
   | { readonly kind: 'replayed' }
-  | { readonly kind: 'success'; readonly accountId: string; readonly migratedEntries: number; readonly issuedToken?: string };
+  | { readonly kind: 'success'; readonly accountId: string; readonly migratedEntries: number; readonly cookieToken: string };
 
-function withinReplayWindow(hash: string, storedHash: string | null, storedAt: Date | null, now: Date): boolean {
-  if (storedHash === null || storedAt === null) return false;
-  if (storedHash !== hash) return false;
-  return now.getTime() - storedAt.getTime() < 24 * 60 * 60 * 1000;
-}
-
-async function findAccountByTelegramId(client: DbClient, telegramUserId: string): Promise<AccountLookupRow | undefined> {
+/**
+ * Находит АКТУАЛЬНЫЙ (не `erased`) аккаунт по `telegram_user_id` (RV-consent-and-telegram-auth-07):
+ * после эразуры допустимы НЕСКОЛЬКО строк с одним `telegram_user_id` (частичный уникальный
+ * индекс исключает только `erased`-строки из уникальности, но не удаляет их физически), и
+ * `SELECT … LIMIT 1` без фильтра статуса мог выбрать ЛЮБУЮ из них, включая старую `erased`.
+ */
+async function findActiveAccountByTelegramId(client: DbClient, telegramUserId: string): Promise<AccountLookupRow | undefined> {
   const result = await client.query<AccountLookupRow>(
-    `SELECT id, status, last_telegram_auth_hash, last_telegram_auth_at FROM account WHERE telegram_user_id = $1 FOR UPDATE`,
+    `SELECT id, status FROM account WHERE telegram_user_id = $1 AND status != 'erased' FOR UPDATE`,
     [telegramUserId],
   );
   return result.rows[0];
+}
+
+/**
+ * Атомарная заявка на повтор (RV-03): ОДИН `INSERT … ON CONFLICT DO NOTHING`. Ноль затронутых
+ * строк — эта подпись УЖЕ использована этим владельцем (когда угодно ранее, без окна: свежесть
+ * `initData` уже ограничена 24 часами `verifyTelegramInitData`, так что точный повтор одной и
+ * той же подписи физически не может пройти позже этого срока). Хранится ИСТОРИЯ, а не
+ * единственный слот — иначе последовательность «вход A → вход B → повтор A» перезаписывала
+ * слот входом B и пропускала повтор A (заслуженный дефект, воспроизведён review-report.md).
+ */
+async function claimReplay(client: DbClient, accountId: string, hash: string): Promise<boolean> {
+  const claimed = await client.query(
+    `INSERT INTO telegram_login_replay (account_id, hash) VALUES ($1, $2)
+     ON CONFLICT (account_id, hash) WHERE account_id IS NOT NULL DO NOTHING
+     RETURNING id`,
+    [accountId, hash],
+  );
+  return claimed.rows.length > 0;
 }
 
 export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, config: ApiConfig, logger: Logger): void {
@@ -66,37 +76,19 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
         );
     }
 
-    const replayHash = createHash('sha256').update(verified.hash, 'utf8').digest('hex');
+    const canonicalHash = verified.hash;
     const presentedToken = request.cookies[SESSION_COOKIE_NAME];
-    const forwardedFor = request.headers['x-forwarded-for'];
-    const lastForwarded = Array.isArray(forwardedFor) ? forwardedFor[forwardedFor.length - 1] : forwardedFor?.split(',').pop()?.trim();
+    // RV-consent-and-telegram-auth-11: тот же нормализатор, что `auth-device.ts`/`consent.ts` —
+    // маршрут не изобретает свой разбор `X-Forwarded-For` и своё усечение адреса (IPv4 → /24,
+    // IPv6 → /48). Полный адрес нигде не хранится ни в этом маршруте, ни в остальном продукте.
+    const ipPrefix = toIpPrefix(clientAddressFrom(request.headers['x-forwarded-for'], request.ip));
 
     const outcome = await withTransaction<LoginOutcome>(pool, async (client) => {
-      const sessionOutcome = await createOrReuseDeviceSession(client, {
-        presentedToken,
-        ipPrefix: lastForwarded ?? 'unknown',
-      });
-      const sessionId = sessionOutcome.session.id;
-
-      const existingAccount = await findAccountByTelegramId(client, verified.telegramUserId);
-
-      if (existingAccount !== undefined) {
-        if (withinReplayWindow(replayHash, existingAccount.last_telegram_auth_hash, existingAccount.last_telegram_auth_at, new Date())) {
-          return { kind: 'replayed' };
-        }
-      } else {
-        const sessionRow = await client.query<SessionReplayRow>(
-          `SELECT last_telegram_auth_hash, last_telegram_auth_at FROM device_session WHERE id = $1 FOR UPDATE`,
-          [sessionId],
-        );
-        const session = sessionRow.rows[0];
-        if (session !== undefined && withinReplayWindow(replayHash, session.last_telegram_auth_hash, session.last_telegram_auth_at, new Date())) {
-          return { kind: 'replayed' };
-        }
-      }
+      // 1. Найти или создать аккаунт — ЕЩЁ НИ ОДНА сессия не тронута.
+      const existingAccount = await findActiveAccountByTelegramId(client, verified.telegramUserId);
 
       let accountId: string;
-      if (existingAccount !== undefined && existingAccount.status !== 'erased') {
+      if (existingAccount !== undefined) {
         accountId = existingAccount.id;
       } else {
         // Частичный уникальный индекс `(telegram_user_id) WHERE status != 'erased'`
@@ -113,15 +105,30 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
           accountId = insertedRow.id;
         } else {
           // Гонка двух параллельных первых входов (VC-03): конкурент уже вставил строку.
-          const retryRow = await findAccountByTelegramId(client, verified.telegramUserId);
+          const retryRow = await findActiveAccountByTelegramId(client, verified.telegramUserId);
           if (retryRow === undefined) throw new Error('гонка вставки account не разрешена повторным чтением');
-          if (withinReplayWindow(replayHash, retryRow.last_telegram_auth_hash, retryRow.last_telegram_auth_at, new Date())) {
-            // Это тот же initData, которым конкурент только что выиграл гонку — не чужая победа.
-            return { kind: 'replayed' };
-          }
           accountId = retryRow.id;
         }
       }
+
+      // 2. Заявка на повтор — ПЕРВАЯ и ЕДИНСТВЕННАЯ мутация до этой точки (RV-04): отказ
+      // откатывает транзакцию БЕЗ создания или изменения account (кроме уже неизбежной вставки
+      // на легитимном первом входе — см. комментарий алгоритма) и БЕЗ касания device_session.
+      if (!(await claimReplay(client, accountId, canonicalHash))) {
+        return { kind: 'replayed' };
+      }
+
+      // 3. ТОЛЬКО теперь — сессия устройства. Захватываем СОСТОЯНИЕ ДО связывания (RV-05):
+      // перенос согласия ниже разрешён ТОЛЬКО если эта КОНКРЕТНАЯ сессия ранее не была связана
+      // ни с одним аккаунтом — иначе withdraw_consent, обнуливший account.consent_at, был бы
+      // молча отменён историческим согласием уже связанной сессии на следующем входе.
+      const sessionOutcome = await createOrReuseDeviceSession(client, {
+        presentedToken,
+        ipPrefix,
+      });
+      const sessionId = sessionOutcome.session.id;
+      const sessionWasUnlinked = sessionOutcome.session.account_id === null;
+      const cookieToken = sessionOutcome.issuedToken ?? presentedToken ?? '';
 
       // Сессия СВЯЗЫВАЕТСЯ, не заменяется; cookie остаётся тем же значением.
       await client.query(`UPDATE device_session SET account_id = $2 WHERE id = $1`, [sessionId, accountId]);
@@ -129,21 +136,28 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       // Перенос дневника ЦЕЛИКОМ, добавлением к уже перенесённому (AC-consent-and-telegram-auth-6).
       const migrated = await client.query(`UPDATE diary_entry SET owner_key = $2 WHERE owner_key = $1`, [sessionId, accountId]);
 
-      // Перенос согласия анонимной сессии на аккаунт (DEC-A-019) — только если у аккаунта
-      // своего согласия ещё нет; поля device_session не обнуляются.
-      await client.query(
-        `UPDATE account SET consent_version = ds.consent_version, consent_text_hash = ds.consent_text_hash, consent_at = ds.consent_at
-         FROM device_session ds
-         WHERE account.id = $1 AND ds.id = $2 AND account.consent_at IS NULL AND ds.consent_at IS NOT NULL`,
-        [accountId, sessionId],
-      );
-
-      await client.query(`UPDATE account SET last_telegram_auth_hash = $2, last_telegram_auth_at = now() WHERE id = $1`, [
+      // Перенос ВЛАДЕНИЯ анонимными распознаваниями (RV-06): без этого шага эразура искала
+      // активные/удаляемые сканы ТОЛЬКО по `recognition.account_id` и пропускала распознавания,
+      // созданные анонимно ДО входа, — они переживали `erase_all`, а их `queued`-статус не
+      // откладывал удаление фотографий.
+      await client.query(`UPDATE recognition SET account_id = $2 WHERE device_session_id = $1 AND account_id IS NULL`, [
+        sessionId,
         accountId,
-        replayHash,
       ]);
 
-      return { kind: 'success', accountId, migratedEntries: migrated.rowCount ?? 0, issuedToken: sessionOutcome.issuedToken };
+      // Перенос согласия анонимной сессии на аккаунт (DEC-A-019) — ТОЛЬКО при ПЕРВОМ связывании
+      // ЭТОЙ сессии (RV-05) и только если у аккаунта своего согласия ещё нет; поля device_session
+      // не обнуляются.
+      if (sessionWasUnlinked) {
+        await client.query(
+          `UPDATE account SET consent_version = ds.consent_version, consent_text_hash = ds.consent_text_hash, consent_at = ds.consent_at
+           FROM device_session ds
+           WHERE account.id = $1 AND ds.id = $2 AND account.consent_at IS NULL AND ds.consent_at IS NOT NULL`,
+          [accountId, sessionId],
+        );
+      }
+
+      return { kind: 'success', accountId, migratedEntries: migrated.rowCount ?? 0, cookieToken };
     });
 
     if (outcome.kind === 'replayed') {
@@ -151,8 +165,12 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       return reply.code(401).send(fail('initdata_replayed', 'эта строка initData уже была использована'));
     }
 
-    if (outcome.issuedToken !== undefined) {
-      reply.setCookie(SESSION_COOKIE_NAME, outcome.issuedToken, {
+    // Cookie переустанавливается ВСЕГДА при успехе (RV-13, AC-consent-and-telegram-auth-1
+    // «с установкой cookie»), а не только при выпуске новой сессии: клиент, пришедший с уже
+    // существующей анонимной сессией, обязан получить тот же `Set-Cookie` заново (значение то
+    // же самое — токен не меняется, `TelegramLogin` шаг 8 проектного алгоритма).
+    if (outcome.cookieToken !== '') {
+      reply.setCookie(SESSION_COOKIE_NAME, outcome.cookieToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
