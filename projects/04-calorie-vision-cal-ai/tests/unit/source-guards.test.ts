@@ -31,6 +31,30 @@ async function readAll(relative: string): Promise<{ file: string; code: string }
   return Promise.all(files.map(async (file) => ({ file: path.relative(ROOT, file), code: await readFile(file, 'utf8') })));
 }
 
+/**
+ * Вызовы журналирования ЦЕЛИКОМ, от `logger.info(` до закрывающей скобки. Аргументы
+ * занимают несколько строк, и однострочная проверка пропускает почти всё интересное.
+ */
+function loggerCalls(source: string): string[] {
+  const lines = codeLines(source);
+  const calls: string[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index] ?? '';
+    if (!/\b(logger|log)\.(debug|info|warn|error)\(/.test(line)) continue;
+    let call = line;
+    let depth = (line.match(/\(/g) ?? []).length - (line.match(/\)/g) ?? []).length;
+    let cursor = index;
+    while (depth > 0 && cursor + 1 < lines.length) {
+      cursor += 1;
+      const next = lines[cursor] ?? '';
+      call += `\n${next}`;
+      depth += (next.match(/\(/g) ?? []).length - (next.match(/\)/g) ?? []).length;
+    }
+    calls.push(call);
+  }
+  return calls;
+}
+
 /** Строки кода без комментариев: комментарий — не вызов и не чтение. */
 function codeLines(source: string): string[] {
   return source
@@ -46,11 +70,17 @@ describe('страж гигиены журнала', () => {
     const offenders: string[] = [];
 
     for (const { file, code } of [...(await readAll('apps/api/src')), ...(await readAll('apps/recognizer/src'))]) {
-      for (const line of codeLines(code)) {
-        if (!/\blogger\.(debug|info|warn|error)\(/.test(line) && !/\blog\.(debug|info|warn|error)\(/.test(line)) continue;
-        if (forbidden.test(line)) offenders.push(`${file}: ${line.trim()}`);
+      // Вызов журналирования читается ЦЕЛИКОМ, а не построчно: аргументы почти всегда
+      // занимают несколько строк, и однострочный страж пропустил бы ровно тот случай,
+      // которым дефект и был предъявлен (RV-foundation-01) — `request.url` стоял строкой
+      // ниже имени `logger.error`.
+      for (const call of loggerCalls(code)) {
+        if (forbidden.test(call)) offenders.push(`${file}: ${call.replace(/\s+/g, ' ').trim()}`);
         // Полный адрес: в журнал уходит только усечённый префикс.
-        if (/\b(request\.ip|clientAddressFrom\()/.test(line)) offenders.push(`${file}: полный адрес в журнале — ${line.trim()}`);
+        if (/\b(request\.ip|clientAddressFrom\()/.test(call)) offenders.push(`${file}: полный адрес в журнале — ${call.replace(/\s+/g, ' ').trim()}`);
+        // Строка запроса ЦЕЛИКОМ: `request.url` несёт query, а в ней приезжают токены и
+        // адреса. Поле называлось разрешённым словом `route`, а содержало произвольный ввод.
+        if (/\b(request|req)\.url\b/.test(call)) offenders.push(`${file}: строка запроса в журнале — ${call.replace(/\s+/g, ' ').trim()}`);
       }
     }
 

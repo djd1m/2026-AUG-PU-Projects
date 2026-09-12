@@ -3,7 +3,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import type { DbPool } from '@n4/db';
-import { createLogger } from '@n4/shared';
+import { createLogger, SERVICE_LOG_FIELDS } from '@n4/shared';
 import { buildServer } from '../../apps/api/src/server.js';
 import { hashSessionToken, SESSION_COOKIE_NAME } from '../../apps/api/src/session/create-device-session.js';
 import { migratedPool, truncateAll } from '../helpers/db.js';
@@ -11,10 +11,17 @@ import { testApiConfig } from '../helpers/config.js';
 
 let pool: DbPool;
 let app: FastifyInstance;
+// Журнал ЗАХВАТЫВАЕТСЯ, а не отключается: тест с `sink: () => {}` проверяет, что код не
+// падает, и ничего не проверяет о содержимом — этим и был пропущен дефект RV-foundation-01.
+const journal: string[] = [];
 
 beforeAll(async () => {
   pool = await migratedPool('n4-tests-session');
-  app = buildServer({ config: testApiConfig(), pool, logger: createLogger({ service: 'api-test', sink: () => {} }) });
+  app = buildServer({
+    config: testApiConfig(),
+    pool,
+    logger: createLogger({ service: 'api', allowedFields: SERVICE_LOG_FIELDS, sink: (line) => journal.push(line) }),
+  });
   await app.ready();
 }, 60_000);
 
@@ -25,6 +32,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await truncateAll(pool);
+  journal.length = 0;
 });
 
 function cookieValue(setCookie: string | string[] | undefined): string {
@@ -52,6 +60,10 @@ describe('POST /api/v1/auth/device', () => {
     const token = cookieValue(setCookie);
     // ≥ 128 бит энтропии: 32 байта в base64url — 43 символа.
     expect(token.length).toBeGreaterThanOrEqual(43);
+
+    // Сырой токен не хранится НИГДЕ — ни в базе (ниже), ни в журнале.
+    expect(journal.join('\n')).not.toContain(token);
+    expect(journal.join('\n')).not.toContain('203.0.113.77');
 
     const rows = await pool.query<{
       cookie_token_hash: string; ip_prefix: string; account_id: string | null; days: string;

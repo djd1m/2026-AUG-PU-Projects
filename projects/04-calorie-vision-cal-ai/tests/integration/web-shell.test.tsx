@@ -8,7 +8,6 @@ import { fileURLToPath } from 'node:url';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import CameraFirstScreen from '../../apps/web/app/page.js';
-import manifest from '../../apps/web/app/manifest.js';
 
 const ROOT = new URL('../../', import.meta.url);
 
@@ -32,22 +31,11 @@ describe('экран камеры', () => {
   });
 });
 
-describe('манифест PWA', () => {
-  it('манифест PWA валиден и не содержит секретов', async () => {
-    const value = manifest();
-    expect(value.name).toBeTruthy();
-    expect(value.display).toBe('standalone');
-    expect(value.start_url).toBe('/');
-    expect(value.icons?.length ?? 0).toBeGreaterThan(0);
-    for (const icon of value.icons ?? []) {
-      expect(icon.src).toMatch(/^\/icons\//);
-      expect(icon.sizes).toMatch(/^\d+x\d+$/);
-    }
-
-    const serialized = JSON.stringify(value);
-    expect(serialized).not.toContain('ANTHROPIC');
-    expect(serialized).not.toContain('TELEGRAM');
-  });
+describe('исходники фронта', () => {
+  // Проверка манифеста ПЕРЕЕХАЛА в tests/integration/web-manifest.test.ts и выполняется
+  // теперь HTTP-запросом к собранному приложению: вызов функции `manifest()` оставался
+  // зелёным при неверном HTTP-пути (RV-foundation-03), то есть проверял наш код, а не то,
+  // что увидит браузер.
 
   it('в исходниках web нет ни одного секрета вызова наружу', async () => {
     // Сервис, которому нечем позвать модель, её не позовёт — и это проверяемо чтением.

@@ -40,15 +40,17 @@ function composeConfig(apiVariables: string[]): string {
   ].join('\n');
 }
 
-async function guard(config: string): Promise<{ code: number; stdout: string; stderr: string }> {
+async function guardIn(projectDir: string, config: string): Promise<{ code: number; stdout: string; stderr: string }> {
   try {
-    const result = await run('bash', [SCRIPT, PROJECT], { env: { ...process.env, ENV_WIRING_CONFIG: config } });
+    const result = await run('bash', [SCRIPT, projectDir], { env: { ...process.env, ENV_WIRING_CONFIG: config } });
     return { code: 0, stdout: result.stdout, stderr: result.stderr };
   } catch (error) {
     const failure = error as { code?: number; stdout?: string; stderr?: string };
     return { code: failure.code ?? -1, stdout: failure.stdout ?? '', stderr: failure.stderr ?? '' };
   }
 }
+
+const guard = (config: string) => guardIn(PROJECT, config);
 
 describe('страж проброса переменных', () => {
   it('страж проброса переменных возвращает 0 1 и 2 на трёх входах', async () => {
@@ -78,5 +80,52 @@ describe('страж проброса переменных', () => {
     const result = await guard(withoutApi);
     expect(result.code).toBe(2);
     expect(result.stderr).toContain('НЕ выполнена');
+  }, 60_000);
+
+  it('прямое чтение process.env распознаётся наравне с env.X', async () => {
+    // RV-foundation-02: прежний класс символов запрещал точку перед `env` и потому НЕ ВИДЕЛ
+    // `process.env.X` — самую обычную форму чтения. Страж зеленел ровно там, где переменная
+    // потеряна. Тест строит НАСТОЯЩИЙ каталог сервиса с прямым чтением и требует код 1.
+    const { mkdtemp, mkdir, writeFile } = await import('node:fs/promises');
+    const { tmpdir } = await import('node:os');
+    const path = await import('node:path');
+
+    const root = await mkdtemp(path.join(tmpdir(), 'n4-env-wiring-'));
+    await mkdir(path.join(root, 'apps/api/src'), { recursive: true });
+    await mkdir(path.join(root, 'apps/recognizer/src'), { recursive: true });
+    await mkdir(path.join(root, 'apps/web'), { recursive: true });
+    await writeFile(
+      path.join(root, 'apps/api/src/env.ts'),
+      'export const endpoint = process.env.S3_ENDPOINT;\nexport const bucket = process.env.S3_BUCKET;\n',
+      'utf8',
+    );
+    await writeFile(path.join(root, 'apps/recognizer/src/env.ts'), 'export const url = process.env.DATABASE_URL;\n', 'utf8');
+
+    const config = (apiVariables: string[]): string =>
+      [
+        'name: n4-probe',
+        'services:',
+        '  api:',
+        '    environment:',
+        ...apiVariables.map((name) => `      ${name}: значение`),
+        '    image: n4/local',
+        '  recognizer:',
+        '    environment:',
+        '      DATABASE_URL: значение',
+        '    image: n4/local',
+        '  web:',
+        '    environment:',
+        '      APP_ORIGIN: значение',
+        '    image: n4/local',
+        '',
+      ].join('\n');
+
+    const missing = await guardIn(root, config(['S3_BUCKET']));
+    expect(missing.code, missing.stdout + missing.stderr).toBe(1);
+    expect(missing.stdout).toContain('S3_ENDPOINT');
+    expect(missing.stdout).toContain('api');
+
+    const complete = await guardIn(root, config(['S3_ENDPOINT', 'S3_BUCKET']));
+    expect(complete.code, complete.stdout + complete.stderr).toBe(0);
   }, 60_000);
 });

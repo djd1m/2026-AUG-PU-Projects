@@ -30,7 +30,7 @@ const BASE_ENV: Record<string, string | undefined> = {
 };
 
 const IMAGE: ModelImage = { scanId: '11111111-2222-3333-4444-555555555555', objectKey: 'photos/a.jpg' };
-const CALL: ModelCallOptions = { model: 'haiku-4.5', deadlineMs: 30_000 };
+const CALL: ModelCallOptions = { model: 'haiku-4.5', deadlineMs: 30_000, signal: new AbortController().signal };
 
 const LIVE_CONFIG = {
   databaseUrl: 'x',
@@ -63,8 +63,8 @@ describe('поставщик модели', () => {
   it('модель выбирает вызывающий, и ответ сам называет, чей он', async () => {
     const provider = createFakeModelProvider();
 
-    const primary = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000 });
-    const escalated = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'sonnet-5', deadlineMs: 30_000 });
+    const primary = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: new AbortController().signal });
+    const escalated = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'sonnet-5', deadlineMs: 30_000, signal: new AbortController().signal });
 
     // Эхо модели обязательно: иначе «о какой модели этот ответ» восстанавливается по
     // памяти вызывающего, и потолок эскалаций не с чем сопоставить.
@@ -78,7 +78,7 @@ describe('поставщик модели', () => {
     // Истёкший бюджет — отказ ДО работы. Ноль и отрицательное значение означают «поздно».
     const instant = createFakeModelProvider();
     for (const deadlineMs of [0, -1, Number.NaN]) {
-      await expect(instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs })).rejects.toBeInstanceOf(
+      await expect(instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs, signal: new AbortController().signal })).rejects.toBeInstanceOf(
         ModelDeadlineExceeded,
       );
     }
@@ -86,20 +86,34 @@ describe('поставщик модели', () => {
     // Работа дольше бюджета — тоже отказ, а не поздний ответ: поздний ответ всё равно
     // оплачен и всё равно выбрасывается, и честнее сказать об этом сразу.
     const slow = createFakeModelProvider({ latencyMs: 60 });
-    await expect(slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 20 })).rejects.toBeInstanceOf(
+    await expect(slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 20, signal: new AbortController().signal })).rejects.toBeInstanceOf(
       ModelDeadlineExceeded,
     );
 
     // Работа в пределах бюджета — обычный ответ.
-    const fits = await slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5_000 });
+    const fits = await slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5_000, signal: new AbortController().signal });
     expect(fits.model).toBe('haiku-4.5');
 
+  });
+
+  it('вызов прерывается общим сигналом отмены и не возвращает результата', async () => {
     // Уже отменённая операция не начинается вовсе.
-    const controller = new AbortController();
-    controller.abort();
+    const instant = createFakeModelProvider();
+    const aborted = new AbortController();
+    aborted.abort();
     await expect(
-      instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: controller.signal }),
-    ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
+      instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: aborted.signal }),
+    ).rejects.toMatchObject({ name: 'AbortError' });
+
+    // Отмена ВО ВРЕМЯ работы обрывает её НЕМЕДЛЕННО, а не досиживает свой таймер: в этом и
+    // смысл общего сигнала — платная работа прекращается в момент отмены.
+    const slow = createFakeModelProvider({ latencyMs: 5_000 });
+    const controller = new AbortController();
+    const started = Date.now();
+    const call = slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: controller.signal });
+    setTimeout(() => controller.abort(), 20);
+    await expect(call).rejects.toMatchObject({ name: 'AbortError' });
+    expect(Date.now() - started).toBeLessThan(2_000);
   });
 
   it('режим live без ключа валит старт воркера', () => {
