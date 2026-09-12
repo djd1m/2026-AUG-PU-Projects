@@ -139,4 +139,52 @@ Caddy НЕ ВЫПОЛНЕНЫ. HTTP-контракт и транзакционн
 Полный список — `docs/features/consent-and-telegram-auth/05_completion.md`, раздел
 «Отклонения от `02_pseudocode.md`/`03_architecture.md`» (6 пунктов).
 
+## Попытка 2 — корректирующий проход по review-report.md (слепой судья, CHANGES_REQUIRED)
+
+Разобраны ВСЕ 13 находок (2 blocker, 6 high, 4 medium, 1 low). Полная таблица «находка → правка →
+тест → мутация» — `docs/features/consent-and-telegram-auth/05_completion.md`, раздел «Попытка 2».
+Кратко:
+
+- **Миграция 003** (`packages/db/migrations/003_telegram_login_replay.sql`): история
+  использованных подписей `initData` (таблица `telegram_login_replay`) вместо единственного
+  слота — закрывает RV-03 («A → B → A»).
+- **RV-01/RV-02 (blocker)**: `erasure-job.ts` переписан — порядок удаления `diary_entry` →
+  `share_card` → `recognition` (FK RESTRICT), реальный `MinioPhotoStore`
+  (`apps/recognizer/src/storage/photo-store-minio.ts`, зависимость `minio` 8.0.7), коммит
+  `account.status = 'erased'` только после подтверждённого удаления ВСЕХ фотографий.
+- **RV-03/04/05/06/07/11/13**: `auth-telegram.ts` и `verify-init-data.ts` переписаны — канонический
+  `hash`, атомарная заявка на повтор до касания сессии, перенос согласия только при первом
+  связывании сессии, перенос владения `recognition`, поиск аккаунта исключает `erased`, общий
+  нормализатор IP, `Set-Cookie` всегда при успехе.
+- **RV-08**: `diary-entry-repository.ts`/`share-card-repository.ts` — `ownerKey` удалён из API
+  (запись всегда на `owner.id`), проверка согласия и `INSERT` в одной транзакции с блокировкой.
+- **RV-09/10**: диалог подтверждения удаления с отменой; переход по согласию только при успехе
+  (веб-компоненты, без автотеста — честно названо в `05_completion.md`).
+- **RV-12**: страж согласия теперь требует ВЫЗОВ `enforceConsentBeforeDiaryWrite(`, не только
+  импорт — мутационно испытано (сохранённый импорт + удалённый вызов → страж краснеет,
+  `1 failed | 2 passed` → `3 passed` после восстановления).
+
+**Инфраструктурная находка, исправленная попутно**: `.env` этого worktree держал
+`N4_S3_ACCESS_KEY`/`N4_S3_SECRET_KEY` НЕ провизионированными как реальный MinIO-пользователь
+(«Access Key Id you provided does not exist») — блокировало RV-02 и реальный деплой `recognizer`
+одинаково. Временно приравнено к root-учётке MinIO (`.env`, не коммитится); координатору
+рекомендовано провизионировать scoped-ключ.
+
+### Прогоны попытки 2
+
+```
+npm run test                                              -> Test Files 10 passed | Tests 51 passed
+npm run typecheck / npm run lint / npm run build          -> 0 / 0 / 0
+docker compose --env-file .env --profile test run --rm test npm run test:integration
+                                                           -> Test Files 20 passed | Tests 70 passed
+                                                              (воспроизведено дважды подряд)
+check-pipeline-gaps.sh --completion                        -> контур consent-and-telegram-auth: 0 GAP
+docker compose -p n4-tarelka-consent-b down -v             -> тома/сеть/контейнеры этого прохода удалены;
+                                                              docker images | grep n4-tarelka: ни одного
+                                                              образа под тегом n4-tarelka-consent-b
+```
+
+Итого: **121 тест** (51 unit + 70 integration/concurrency), 0 упавших. `--profile edge` по-прежнему
+не поднимался (диск, по указанию координатора).
+
 Status: completed
