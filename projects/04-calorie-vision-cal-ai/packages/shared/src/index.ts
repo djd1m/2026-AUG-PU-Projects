@@ -5,3 +5,4 @@ export * from './domain/units.js';
 export * from './http/envelope.js';
 export * from './log/logger.js';
 export * from './log/redact.js';
+export * from './audit/consent-denied.js';

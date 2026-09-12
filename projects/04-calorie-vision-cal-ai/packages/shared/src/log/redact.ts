@@ -30,6 +30,12 @@ export const FORBIDDEN_FIELD_NAMES: readonly string[] = [
   'secret',
   's3_secret_key',
   's3_access_key',
+  // Расширение фичи consent-and-telegram-auth (Security Architecture, 03_architecture.md):
+  // секрет HMAC и сырая initData (несёт user.first_name/username — персональные данные
+  // Telegram-профиля) не подлежат журналированию ни под каким именем поля.
+  'bot_token',
+  'secret_key',
+  'init_data',
 ];
 
 const MAX_DEPTH = 6;

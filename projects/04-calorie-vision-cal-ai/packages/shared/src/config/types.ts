@@ -37,6 +37,8 @@ export interface ApiConfig {
   readonly storage: StorageConfig;
   readonly quota: QuotaLimits;
   readonly rateLimits: RateLimits;
+  /** Из него производится секрет HMAC для проверки initData (consent-and-telegram-auth). */
+  readonly telegramBotToken: string;
 }
 
 export interface RecognizerConfig {
