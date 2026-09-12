@@ -3,6 +3,7 @@
 // согласие файла с самим собой.
 
 import type { ApiConfig, RateLimits } from '@n4/shared';
+import { TEST_BOT_TOKEN } from './telegram.js';
 
 export function testApiConfig(overrides: { rateLimits?: RateLimits } = {}): ApiConfig {
   return {
@@ -11,5 +12,8 @@ export function testApiConfig(overrides: { rateLimits?: RateLimits } = {}): ApiC
     storage: { endpoint: 'http://storage:9000', bucket: 'n4-photos', accessKey: 'test-access', secretKey: 'test-secret' },
     quota: { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
     rateLimits: overrides.rateLimits ?? { mutatePerMinute: 30, readPerMinute: 120 },
+    // ТОТ ЖЕ токен, которым `tests/helpers/telegram.ts` подписывает `initData` — иначе
+    // проверялось бы несовпадение фикстур, а не входная граница.
+    telegramBotToken: TEST_BOT_TOKEN,
   };
 }
