@@ -4,12 +4,15 @@
 
 import Fastify, { type FastifyError, type FastifyInstance, type FastifyRequest } from 'fastify';
 import cookie from '@fastify/cookie';
+import multipart from '@fastify/multipart';
 import type { DbPool } from '@n4/db';
-import { fail, type ApiConfig, type Logger } from '@n4/shared';
+import { CANON, fail, type ApiConfig, type Logger } from '@n4/shared';
 import { createRateLimiter, registerRateLimit, type RateLimiter } from './http/rate-limit.js';
 import { registerHealthRoute } from './routes/health.js';
 import { registerAuthDeviceRoute } from './routes/auth-device.js';
+import { registerScansRoutes } from './routes/scans.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
+import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
 export interface ServerDeps {
   readonly config: ApiConfig;
@@ -17,6 +20,8 @@ export interface ServerDeps {
   readonly logger: Logger;
   /** Готовый ограничитель. По умолчанию создаётся ОДИН на сервер, а не на запрос. */
   readonly rateLimiter?: RateLimiter;
+  /** Клиент приватного бакета фото (`scan-pipeline`, FR-scan-pipeline-1/14). Подменяется тестом. */
+  readonly storage?: PhotoStorage;
 }
 
 export function buildServer(deps: ServerDeps): FastifyInstance {
@@ -31,6 +36,13 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   });
 
   app.register(cookie);
+  // Лимит multipart-плагина — ГРУБАЯ верхняя граница транспорта (запас 2× над бюджетом
+  // фичи), а не содержательная проверка: точный литерал 12 582 912 байт (AC-scan-pipeline-3/33)
+  // проверяет КОД маршрута (`validate-content.ts`) на уже полученном буфере и отвечает `413`.
+  // Если бы лимит плагина стоял ВПЛОТНУЮ к 12 МБ, любой файл, реально ПРЕВЫШАЮЩИЙ его
+  // (а не только пограничный), отклонялся бы плагином ДО домена и превращался в `422`
+  // (ошибка разбора multipart), а не в правильный `413` — найдено интеграционным тестом.
+  app.register(multipart, { limits: { fileSize: CANON.maxInputBytes * 2 } });
 
   const limiter = deps.rateLimiter ?? createRateLimiter(deps.config.rateLimits);
   const keyOf = (request: FastifyRequest): string =>
@@ -42,6 +54,8 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
 
   registerHealthRoute(app, deps.pool);
   registerAuthDeviceRoute(app, deps.pool, deps.logger);
+  const storage = deps.storage ?? createPhotoStorage(deps.config.storage);
+  registerScansRoutes(app, { pool: deps.pool, config: deps.config, storage, logger: deps.logger });
 
   app.setNotFoundHandler(async (_request, reply) => reply.code(404).send(fail('not_found', 'маршрут не найден')));
 
