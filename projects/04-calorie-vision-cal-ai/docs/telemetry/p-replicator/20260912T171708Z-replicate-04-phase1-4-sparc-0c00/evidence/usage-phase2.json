@@ -1,0 +1,162 @@
+{
+  "source": "transcript-aggregation (Claude Code host-written usage per response; Codex token_count snapshots)",
+  "quality": "partial: реальные счётчики хоста, но не биллинг; попытки/повторы см. events.jsonl",
+  "session": "0c3fce04-3ca0-42bc-b5a7-fcb38e1228ce",
+  "window": {
+    "from": "2026-09-12T17:17:00.000Z",
+    "to": null
+  },
+  "observed": {
+    "first_at": "2026-09-12T17:17:05.840Z",
+    "last_at": "2026-09-12T18:59:27.632Z"
+  },
+  "dedupe": {
+    "raw_assistant_entries": 832,
+    "unique_requests": 395,
+    "bad_lines": 0
+  },
+  "by_model": {
+    "claude-fable-5-1": {
+      "requests": 76,
+      "input_tokens": 1606,
+      "cache_creation_input_tokens": 898603,
+      "cache_read_input_tokens": 49736071,
+      "output_tokens": 123115,
+      "thinking_tokens": 21805
+    },
+    "claude-opus-5": {
+      "requests": 219,
+      "input_tokens": 438,
+      "cache_creation_input_tokens": 1803061,
+      "cache_read_input_tokens": 47334541,
+      "output_tokens": 313100,
+      "thinking_tokens": 62484
+    },
+    "claude-sonnet-5": {
+      "requests": 100,
+      "input_tokens": 200,
+      "cache_creation_input_tokens": 1050391,
+      "cache_read_input_tokens": 18079767,
+      "output_tokens": 171032,
+      "thinking_tokens": 87006
+    }
+  },
+  "by_agent": {
+    "coordinator": {
+      "requests": 76,
+      "input_tokens": 1606,
+      "cache_creation_input_tokens": 898603,
+      "cache_read_input_tokens": 49736071,
+      "output_tokens": 123115,
+      "thinking_tokens": 21805
+    },
+    "algo-writer": {
+      "requests": 30,
+      "input_tokens": 60,
+      "cache_creation_input_tokens": 600903,
+      "cache_read_input_tokens": 5377611,
+      "output_tokens": 67711,
+      "thinking_tokens": 8958
+    },
+    "arch-writer": {
+      "requests": 57,
+      "input_tokens": 114,
+      "cache_creation_input_tokens": 491181,
+      "cache_read_input_tokens": 11960065,
+      "output_tokens": 65046,
+      "thinking_tokens": 17631
+    },
+    "agent-afe3a4c27d9d3885a.jsonl": {
+      "requests": 2,
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 154693,
+      "cache_read_input_tokens": 106627,
+      "output_tokens": 22722,
+      "thinking_tokens": 58
+    },
+    "fixer-phase2": {
+      "requests": 105,
+      "input_tokens": 210,
+      "cache_creation_input_tokens": 338400,
+      "cache_read_input_tokens": 25685751,
+      "output_tokens": 108628,
+      "thinking_tokens": 20072
+    },
+    "ops-writer": {
+      "requests": 29,
+      "input_tokens": 58,
+      "cache_creation_input_tokens": 254489,
+      "cache_read_input_tokens": 5918190,
+      "output_tokens": 43895,
+      "thinking_tokens": 18564
+    },
+    "revalidator": {
+      "requests": 31,
+      "input_tokens": 62,
+      "cache_creation_input_tokens": 214254,
+      "cache_read_input_tokens": 5371517,
+      "output_tokens": 23158,
+      "thinking_tokens": 8034
+    },
+    "spec-writer": {
+      "requests": 25,
+      "input_tokens": 50,
+      "cache_creation_input_tokens": 217884,
+      "cache_read_input_tokens": 4204487,
+      "output_tokens": 48993,
+      "thinking_tokens": 15765
+    },
+    "telemetry-archaeology": {
+      "requests": 9,
+      "input_tokens": 18,
+      "cache_creation_input_tokens": 123810,
+      "cache_read_input_tokens": 1121124,
+      "output_tokens": 7543,
+      "thinking_tokens": 2160
+    },
+    "validator-docs-coherence": {
+      "requests": 20,
+      "input_tokens": 40,
+      "cache_creation_input_tokens": 226198,
+      "cache_read_input_tokens": 3890699,
+      "output_tokens": 38232,
+      "thinking_tokens": 22640
+    },
+    "validator-stories-ac": {
+      "requests": 11,
+      "input_tokens": 22,
+      "cache_creation_input_tokens": 231640,
+      "cache_read_input_tokens": 1778237,
+      "output_tokens": 58204,
+      "thinking_tokens": 35608
+    }
+  },
+  "totals": {
+    "input_tokens_total": 118904678,
+    "cached_input_tokens": 115150379,
+    "cache_creation_input_tokens": 3752055,
+    "output_tokens_total": 607247,
+    "reasoning_tokens": 171295,
+    "requests": 395
+  },
+  "codex": {
+    "sessions": [
+      {
+        "file": "2026/09/12/rollout-2026-09-12T18-15-17-01a096d4-b391-74e1-a549-513989292261.jsonl",
+        "started_at": "2026-09-12T18:15:17.205Z",
+        "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai",
+        "model": "gpt-5.6-sol",
+        "usage": {
+          "input_tokens": 2818206,
+          "cached_input_tokens": 2618368,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 23715,
+          "reasoning_output_tokens": 16024,
+          "total_tokens": 2841921
+        }
+      }
+    ],
+    "note": "последний кумулятивный снимок total_token_usage на сессию; фильтр по времени старта"
+  },
+  "generated_at": "2026-09-12T19:00:10.668Z"
+}

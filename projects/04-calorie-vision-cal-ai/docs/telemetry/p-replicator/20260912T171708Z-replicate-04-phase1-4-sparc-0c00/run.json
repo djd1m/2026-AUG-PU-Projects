@@ -53,7 +53,9 @@
     "docs/long-job-contract.md",
     "docs/webhook-contract.md",
     "docs/embed-contract.md",
-    "docs/telemetry/p-replicator/20260912T171708Z-replicate-04-phase1-4-sparc-0c00/receipts/*.md"
+    "docs/telemetry/p-replicator/20260912T171708Z-replicate-04-phase1-4-sparc-0c00/receipts/*.md",
+    "docs/validation-report.md",
+    "docs/test-scenarios.md"
   ],
   "quality": {
     "required_gates_passed": null,
@@ -70,31 +72,38 @@
     "active_wall_ms": null,
     "usage": {
       "source": "scripts/telemetry/collect-usage.cjs (transcript aggregation, dedupe by message.id)",
-      "scope": "coordinator session + subagents, window 17:17Z→2026-09-12T18:03:45Z",
-      "evidence": "evidence/usage-phase1.json",
-      "input_tokens_total": 57285596,
-      "cached_input_tokens": 55275651,
-      "cache_creation_input_tokens": 2008665,
-      "output_tokens_total": 326760,
-      "reasoning_tokens": 76239,
-      "requests": 195,
+      "scope": "coordinator session + subagents, window 17:17Z→2026-09-12T19:00:10Z (Phase 1+2)",
+      "evidence": "evidence/usage-phase2.json",
+      "input_tokens_total": 118904678,
+      "cached_input_tokens": 115150379,
+      "cache_creation_input_tokens": 3752055,
+      "output_tokens_total": 607247,
+      "reasoning_tokens": 171295,
+      "requests": 395,
       "quality": "partial",
       "by_model": {
-        "claude-fable-5-1": 43,
-        "claude-opus-5": 114,
-        "claude-sonnet-5": 38
-      }
+        "claude-fable-5-1": 76,
+        "claude-opus-5": 219,
+        "claude-sonnet-5": 100
+      },
+      "codex_sessions": 1
     },
     "cost": {
       "basis": "list-price equivalent, rates docs/development/telemetry/rates/2026-09-12-anthropic-codex.json",
-      "evidence": "evidence/cost-phase1.json",
-      "usd": 47.53,
+      "evidence": "evidence/cost-phase2.json",
+      "usd": 95.63,
       "by_model_usd": {
         "claude-fable-5-1": 13.5132,
         "claude-opus-5": 30.5839,
         "claude-sonnet-5": 3.4356
       },
-      "caveat": "subscription session — not an invoice; coordinator cost shared across all units"
+      "caveat": "subscription session — not an invoice; coordinator cost shared across all units",
+      "credits": null,
+      "by_model": {
+        "claude-fable-5-1": 36.5779,
+        "claude-opus-5": 49.5276,
+        "claude-sonnet-5": 9.5282
+      }
     }
   },
   "telemetry_status": "partial",
@@ -113,6 +122,25 @@
         "arch-writer": 3,
         "algo-writer": 2,
         "ops-writer": 1
+      }
+    },
+    "phase2": {
+      "status": "completed",
+      "ended_at": "2026-09-12T19:00:10Z",
+      "verdict": "🟡 CAVEATS",
+      "findings": {
+        "total": 22,
+        "closed": 22,
+        "open": 0
+      },
+      "iterations": "2 fix rounds + 2 one-line rounds",
+      "gates": "check-docs-complete=0 check-growth-trace=0 check-look-trace=0 check-handoff-manifest=0 check-metric-source=0 check-external-deps=0 check-model-cost=0 check-canon=0 check-file-ownership=0 check-job-contract=2",
+      "attempts": {
+        "validator-stories-ac": 1,
+        "validator-docs-coherence": 1,
+        "codex-validator (gpt-5.6-sol high)": 1,
+        "fixer-phase2": 4,
+        "revalidator": 1
       }
     }
   }
