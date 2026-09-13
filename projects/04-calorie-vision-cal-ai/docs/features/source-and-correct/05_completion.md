@@ -170,10 +170,10 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 | AC-source-and-correct-5 | tests/integration/source/seed-synonyms.test.ts | AC-5 / ADR-006: 50 частых русских запросов находят совпадение |
 | AC-source-and-correct-6 | tests/integration/source/food-search.test.ts | AC-6: точное совпадение выигрывает у триграммного — вторая стратегия НЕ выполняется (счётчик обращений) |
 | AC-source-and-correct-7 | tests/integration/source/food-search.test.ts | AC-7: порог 0,45 — опечатка находит совпадение, случайная строка — нет; не более 5 кандидатов |
-| AC-source-and-correct-8 | tests/integration/source/usda-match-port.test.ts | длина и порядок ответа совпадают со входом; portion_g положителен; parts[] суммируются в 1 |
+| AC-source-and-correct-8 | tests/contract/match-ingredient-port.contract.ts | длина и порядок ответа совпадают со входом; portion_g положителен |
 | AC-source-and-correct-9 | tests/integration/source/usda-match-port.test.ts | source_snapshot содержит source, source_id, name_en, четыре значения на 100 г, portion_g, import_snapshot_date |
 | AC-source-and-correct-10 | tests/integration/source/usda-match-port.test.ts | «борщ» раскрывается в parts[] с РАЗНЫМИ снимками, суммой долей 1 и массой round(mass_g × share) |
-| AC-source-and-correct-11 | tests/integration/source/usda-match-port.test.ts | переимпорт НЕ меняет уже построенный снимок (AC-source-and-correct-11) |
+| AC-source-and-correct-11 | tests/integration/source/usda-match-port.test.ts | переимпорт НЕ меняет уже показанное число: запись → изменение базы → повторное чтение скана (AC-source-and-correct-11) |
 | AC-source-and-correct-12 | tests/unit/source/compute-from-snapshot.test.ts | unmatched=true, все четыре числа — null, а НЕ ноль |
 | AC-source-and-correct-13 | tests/unit/recognize/recognize-scan.test.ts | еда распознана с ЛЮБЫМ confidence — итог всегда failed(no_food_matched), никогда done |
 | AC-source-and-correct-14 | tests/unit/source/discrepancy.test.ts | AC-14: расхождение 22% показывает оба числа, conflict_flag=true |
@@ -186,7 +186,7 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 | AC-source-and-correct-21 | tests/integration/routes/scans-correct.test.ts | удаление одной из трёх позиций пересчитывает db_kcal_total и добавляет запись в corrections |
 | AC-source-and-correct-22 | tests/integration/routes/scans-correct.test.ts | take_db → 200 с числом базы; model/base/пустая/отсутствует → 422; без conflict_flag → 409 |
 | AC-source-and-correct-23 | tests/integration/routes/scans-correct.test.ts | чужая сессия и несуществующий scan_id дают ОДИН и тот же 404, строка не изменена |
-| AC-source-and-correct-24 | tests/guard/single-model-estimate-read.test.ts | на РЕАЛЬНОМ коде — РОВНО одно арифметическое чтение, и оно в food-compute.ts (evaluateDiscrepancy) |
+| AC-source-and-correct-24 | tests/guard/single-model-estimate-read.test.ts | на РЕАЛЬНОМ коде — РОВНО одно ЗАПРЕЩЁННОЕ использование (арифметика ИЛИ переименовывающее присваивание), и оно в food-compute.ts (evaluateDiscrepancy) |
 | AC-source-and-correct-25 | tests/performance/food-search-300k.test.ts | p95 одного автоматического поиска ≤ 200 мс на синтетическом наполнении |
 | AC-source-and-correct-26 | tests/integration/web-result-screen.test.tsx | показывает имя базы, source_id, порцию, дату снимка и цитату USDA; чужая разметка выводится текстом |
 
@@ -200,6 +200,41 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 обе половины нужны, единственная строка таблицы (ворота допускают ровно одну на ID) указывает на
 проверку РЕНДЕРА, так как формулировка AC говорит именно об экране.
 
-Конкурентность (без отдельного AC, требование `04_refinement.md`, раздел Concurrency):
-`tests/concurrency/source/concurrent-correct.test.ts` — «одновременные set_portion на одном скане —
-итог детерминирован» (20 параллельных запросов, ни одна правка не теряется и не применяется дважды).
+Конкурентность (`04_refinement.md`, раздел Concurrency) — ТРИ сценария в
+`tests/concurrency/source/concurrent-correct.test.ts`: «одновременные set_portion на одном скане —
+итог детерминирован» (исходный, слабо различающий защиту от гонки — оставлен как регресс-тест
+формата ответа); «set_portion (индекс 0) ОДНОВРЕМЕННО с delete_item (индекс 2)» и «правка приходит В
+МОМЕНТ, когда воркер дописывает терминальный результат» (RV-source-and-correct-05, оба с управляемым
+пересечением через ручную блокировку строки).
+
+## Правка после слепого ревью (Phase 4, 2026-09-13)
+
+Слепой ревьюер (`docs/features/source-and-correct/review-report.md`, DEC-A-032 — второго раунда не
+будет) нашёл пять `high` и минимум два `medium`. Все пять `high` исправлены и подтверждены прогоном
+на настоящем PostgreSQL; `medium` — в «Follow-up» ниже, по требованию координатора не чинились в
+этом раунде.
+
+| Находка | Правка | Тест |
+|---|---|---|
+| RV-02 (high) — `nutrient-map.ts` выбирал Energy по имени, игнорируя единицу; при `1062/kJ` перед `1008/kcal` импорт молча писал кДж как ккал | Критерий выбора — имя И единица (`energy→kcal`, остальные→`g`); неоднозначность (два разных id под один критерий) — отказ, а не первая строка файла | `tests/unit/source/nutrient-map.test.ts` (7 тестов): обе перестановки строк, регистр, energy-без-kcal, неоднозначность, отсутствие |
+| RV-03 (high) — страж ADR-001 пропускал `const dbKcalTotal = finalResponse.modelEstimateKcal;` и `const kcal = modelEstimateKcal * 1;` | Детектор расширен: +,-,*,/ рядом с идентификатором, и переприсваивание ЧИСТОГО пути к идентификатору под ДРУГИМ именем (отличено от передачи АРГУМЕНТОМ в `evaluateDiscrepancy` и от самоимённой пересылки) | `tests/guard/single-model-estimate-read.test.ts`: обе строки ревьюера — отдельные испытания (красный/зелёный), плюс тест «легитимная пересылка нигде не считается использованием» |
+| RV-01 (high) — `result-screen.tsx` нигде не использовался: маршрута не было, у степпера/замены/удаления/разрешения расхождения не было обработчиков | `apps/web/app/result/[id]/page.tsx` — реальный маршрут, загрузка/поллинг `GET /scans/{id}`, все пять действий подключены к `POST …/correct` через чистую `buildCorrectRequest` | `tests/unit/source/correct-request.test.ts` (5 операций → верное тело/адрес); `tests/integration/web-result-route.test.ts` (собранное приложение, `/result/<id>` отдаёт 200, а не 404) |
+| RV-05 (high) — 20 одинаковых `set_portion` на одном индексе не могут наблюдаемо терять обновления (нет чтения предыдущего значения) — тест не различал защиту и её отсутствие | Два сценария с УПРАВЛЯЕМЫМ пересечением: разные операции на разных индексах одного jsonb-массива; ручная блокировка строки, имитирующая воркера в процессе записи | `tests/concurrency/source/concurrent-correct.test.ts` (оба сценария зелёные на настоящем PostgreSQL); статическая половина «падение при снятой защите» — `tests/unit/source-guards.test.ts` (мутация снимает `FOR UPDATE`) |
+| RV-04 (high) — AC-8 копировал контракт с другими входами/заголовком; AC-11 (переимпорт) проверял локальную переменную, прочитанную ДО UPDATE; AC-10 не проверял точную длину/массы частей | Контракт вынесен в `tests/contract/match-ingredient-port.contract.ts`, вызывается ОДНИМ вызовом из обоих тестов; AC-11 — реальная последовательность запись→UPDATE→GET с независимо вычисленным ожидаемым числом; AC-10 — точная длина (5) и точная масса каждой части | `tests/contract/match-ingredient-port.contract.ts` + `tests/unit/match/null-port.test.ts` + `tests/integration/source/usda-match-port.test.ts` (4/4 на настоящем PostgreSQL) |
+
+### Follow-up, не блокирующий закрытие
+
+- **RV-06 (medium)** — `apps/api/src/correct/response.ts:88`: ответ не называет предлагаемый выбор
+  `base` до того, как пользователь его подтвердит (`conflict_choice` остаётся `null`); нужно отдельное
+  поле-обозначение выбора по умолчанию, не путающее его с уже СОХРАНЁННЫМ `conflict_choice`.
+- **RV-07 (medium)** — `packages/db/src/queries/food-search.ts:198`: `searchFoodCandidatesForReplace`
+  (ручная замена) останавливается на найденном РЕЦЕПТЕ и отбрасывает результат целиком вместо
+  перехода к следующей стратегии или явной поддержки выбора рецепта при ручной замене.
+- **AC-1, фикстура** — спецификация называет «фикстуру из 50 записей», фактическая
+  `tests/fixtures/fdc/food.csv` несёт 43; сам тест числа не проверяет и не ломается от расхождения,
+  но текст AC и фикстура разошлись и стоит поправить одно из двух.
+- **Спец-конформанс, широкий список «unverifiable»** — большая часть узких замечаний ревьюера по
+  AC-17/18/19/20/21/22/23/25 объясняется тем, что read-only ревью без стенда не могло запустить
+  интеграционные/производительные тесты; в этой сессии они прогнаны на настоящем PostgreSQL и
+  зелёные (см. «Финальные прогоны» в квитанции Phase 3), но НЕ подверглись построчному аудиту
+  ревьюера заново — если координатор хочет вторую пару глаз именно на них, это отдельная задача.
