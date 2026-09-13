@@ -85,7 +85,7 @@
       "name": "База USDA, синонимы, расчёт из базы и корректировка",
       "description": "Разовый импорт USDA FoodData Central (Foundation + SR Legacy + FNDDS-порции) командой npm run import:fdc; ручная курация 100–300 русских блюд в food_synonym с рецептурным разложением; нечёткий поиск по триграммам нормализованной формы; расчёт четырёх чисел из food_item, Snapshot на каждую позицию, пометка unmatched и refused(no_food_matched) при нуле сопоставлений; степпер порции 5–2000 г, замена и удаление ингредиента без вызова модели; экран расхождения при разнице более 15% с сохранением обоих чисел.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [
