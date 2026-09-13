@@ -16,6 +16,8 @@
 // (`middleware.ts`, `img-src 'self'`) и того же требует `docker-ports.md` (MinIO не опубликован
 // НИКУДА за пределы сети compose, presigned-URL на `minio:9000` браузеру попросту недостижим).
 
+import { loadWebConfig } from '../../../env';
+
 export const dynamic = 'force-dynamic';
 
 // НЕ импортируется из `@n4/shared` (`sanitizeForCardText`/`escapeHtml` уже там) — `apps/web`
@@ -50,14 +52,11 @@ const NOT_FOUND_HTML = '<!doctype html><html lang="ru"><head><meta charset="utf-
 
 export async function GET(_request: Request, context: { params: Promise<{ cardId: string }> }): Promise<Response> {
   const { cardId } = await context.params;
-  const apiBase = process.env.API_INTERNAL_URL;
-  if (apiBase === undefined || apiBase.trim() === '') {
-    // `honest-configuration.md` CFG-S1 — отсутствующий обязательный адрес отказывает, а не
-    // тихо падает на localhost.
-    throw new Error('API_INTERNAL_URL не задан — публичная страница карточки не может работать');
-  }
+  // `honest-configuration.md` CFG-S1 — отсутствующий обязательный адрес отказывает
+  // (`loadWebConfig` бросает), а не тихо падает на localhost.
+  const { apiInternalUrl } = loadWebConfig();
 
-  const upstream = await fetch(`${apiBase}/internal/share-cards/${encodeURIComponent(cardId)}`, { cache: 'no-store' });
+  const upstream = await fetch(`${apiInternalUrl}/internal/share-cards/${encodeURIComponent(cardId)}`, { cache: 'no-store' });
   if (!upstream.ok) return htmlResponse(404, NOT_FOUND_HTML);
 
   const payload = (await upstream.json()) as CardPayload;
