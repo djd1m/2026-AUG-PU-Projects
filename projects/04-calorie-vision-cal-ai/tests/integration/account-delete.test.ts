@@ -50,19 +50,26 @@ async function loggedInAccount(telegramUserId: string): Promise<{ token: string;
 async function seedCardsAndDiary(accountId: string, cards: number, entries: number): Promise<void> {
   const session = await pool.query<{ id: string }>('SELECT id FROM device_session WHERE account_id = $1 LIMIT 1', [accountId]);
   const sessionId = session.rows[0]!.id;
-  const recognition = await pool.query<{ id: string }>(
-    `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
-    [sessionId, accountId],
-  );
-  const recognitionId = recognition.rows[0]!.id;
+  // ОДНА строка `recognition` НА карточку (`share-card-and-growth-events`, миграция 007:
+  // `UNIQUE (recognition_id)` на `share_card` — до неё эта фикстура заводила несколько
+  // карточек на ОДИН `recognition_id`, что база теперь честно отвергает; продовый код уже
+  // предполагал ровно это ограничение, фикстура просто пользовалась его отсутствием).
   for (let i = 0; i < cards; i += 1) {
-    await pool.query(`INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, $3)`, [accountId, recognitionId, `card-${i}-${accountId}`]);
+    const recognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+      [sessionId, accountId],
+    );
+    await pool.query(`INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, $3)`, [accountId, recognition.rows[0]!.id, `card-${i}-${accountId}`]);
   }
   for (let i = 0; i < entries; i += 1) {
+    const recognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+      [sessionId, accountId],
+    );
     await pool.query(
       `INSERT INTO diary_entry (owner_key, recognition_id, eaten_on, meal_slot, items, kcal_total, protein_total, fat_total, carb_total, source_snapshot)
        VALUES ($1, $2, CURRENT_DATE, 'lunch', '[]'::jsonb, 100, 1, 1, 1, '{}'::jsonb)`,
-      [accountId, recognitionId],
+      [accountId, recognition.rows[0]!.id],
     );
   }
 }

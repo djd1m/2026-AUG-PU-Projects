@@ -133,15 +133,22 @@ describe('RunErasureJob', () => {
     // Прежний порядок удалял recognition МЕЖДУ diary_entry и share_card — эта карточка вызывала
     // бы ошибку внешнего ключа на КАЖДОМ прогоне.
     const { accountId, sessionId } = await seedErasingAccount('950005');
-    const recognition = await pool.query<{ id: string }>(
+    // ДВЕ отдельные строки `recognition` — одна на карточку (`share-card-and-growth-events`,
+    // миграция 007: `UNIQUE (recognition_id)` на `share_card` теперь честно отбивает вторую
+    // карточку на тот же скан; продовый код уже это предполагал, эта фикстура пользовалась
+    // отсутствием ограничения).
+    const publishedRecognition = await pool.query<{ id: string }>(
       `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
       [sessionId, accountId],
     );
-    const recognitionId = recognition.rows[0]!.id;
-    await pool.query(`INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, 'card-published')`, [accountId, recognitionId]);
+    const revokedRecognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+      [sessionId, accountId],
+    );
+    await pool.query(`INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, 'card-published')`, [accountId, publishedRecognition.rows[0]!.id]);
     await pool.query(
       `INSERT INTO share_card (owner_key, recognition_id, object_key, revoked_at) VALUES ($1, $2, 'card-revoked', now())`,
-      [accountId, recognitionId],
+      [accountId, revokedRecognition.rows[0]!.id],
     );
 
     const photoStore = spyPhotoStore();
@@ -153,7 +160,7 @@ describe('RunErasureJob', () => {
     expect(account.rows[0]?.status).toBe('erased');
     const cards = await pool.query('SELECT count(*)::int AS n FROM share_card WHERE owner_key = $1', [accountId]);
     expect(cards.rows[0]?.n).toBe(0);
-    const recognitions = await pool.query('SELECT count(*)::int AS n FROM recognition WHERE id = $1', [recognitionId]);
+    const recognitions = await pool.query('SELECT count(*)::int AS n FROM recognition WHERE id = ANY($1)', [[publishedRecognition.rows[0]!.id, revokedRecognition.rows[0]!.id]]);
     expect(recognitions.rows[0]?.n).toBe(0);
   });
 
