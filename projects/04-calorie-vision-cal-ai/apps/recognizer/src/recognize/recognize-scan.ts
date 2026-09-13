@@ -11,12 +11,15 @@
 import { randomUUID } from 'node:crypto';
 import type { DbPool } from '@n4/db';
 import { checkAndConsumeQuota as realCheckAndConsumeQuota, moscowDay } from '@n4/db';
-import { CANON, type Logger, type QuotaLimits, type QuotaScope } from '@n4/shared';
+import { CANON, type Logger, type QuotaLimits, type QuotaScope, type Snapshot } from '@n4/shared';
 import { MODEL_RESPONSE_SCHEMA, ModelSchemaViolationError, type ModelProvider, type ModelResponse } from '../provider/types.js';
 import type { MatchedItem, MatchIngredientPort } from '../match/port.js';
 import { validateModelResponseRanges } from './validate-ranges.js';
 import { attemptId, logModelCallOutcome, logModelCallStart } from '../observability/model-call-log.js';
 import type { WriteOutcome, ResultRecord } from '../lease.js';
+import { computeItemFromSnapshot, sumMatchedKcal, type ComputedItemNumbers } from '../compute/from-snapshot.js';
+import { evaluateDiscrepancy } from '../compute/discrepancy.js';
+import { terminalStatusForMatch } from '../compute/terminal-status.js';
 
 export interface RecognizeJob {
   readonly id: string;
@@ -104,11 +107,11 @@ async function writeTerminal(deps: RecognizeScanDeps, job: RecognizeJob, record:
 }
 
 function failedRecord(reason: string): ResultRecord {
-  return { status: 'failed', confidence: null, items: [], modelEstimateKcal: null, modelUsed: null, failureReason: reason, escalated: false, attemptNo: 1 };
+  return { status: 'failed', confidence: null, items: [], modelEstimateKcal: null, modelUsed: null, failureReason: reason, escalated: false, attemptNo: 1, dbKcalTotal: null, discrepancyRatio: null, conflictFlag: false };
 }
 
 function refusedRecord(reason: string): ResultRecord {
-  return { status: 'refused', confidence: null, items: [], modelEstimateKcal: null, modelUsed: null, failureReason: reason, escalated: false, attemptNo: 1 };
+  return { status: 'refused', confidence: null, items: [], modelEstimateKcal: null, modelUsed: null, failureReason: reason, escalated: false, attemptNo: 1, dbKcalTotal: null, discrepancyRatio: null, conflictFlag: false };
 }
 
 interface InvokeResult {
@@ -167,15 +170,32 @@ async function invokeModel(
   }
 }
 
-/** Формирует персистентную форму позиции — сохраняет `parts`/`source_snapshot` целиком (RV-13). */
-function persistedItem(item: { labelRu: string; massG: number }, matched: MatchedItem | undefined) {
+/**
+ * Формирует персистентную форму позиции — сохраняет `parts`/`source_snapshot` целиком
+ * (RV-13) И вычисляет четыре числа из снимка (`ComputeFromSnapshot`,
+ * FR-source-and-correct-6). `original_mass_g` хранится рядом с `mass_g` и НЕ затирается
+ * будущими правками (`set_portion`) — исходная оценка модели остаётся видна.
+ */
+function persistedItem(item: { labelRu: string; massG: number; candidates?: readonly string[] }, matched: MatchedItem | undefined) {
+  const numbers: ComputedItemNumbers = computeItemFromSnapshot({
+    foodItemId: matched?.foodItemId ?? null,
+    portionG: item.massG,
+    sourceSnapshot: (matched?.sourceSnapshot ?? null) as unknown as Snapshot | null,
+    parts: matched?.parts?.map((part) => ({ share: Number(part.share), sourceSnapshot: part.sourceSnapshot as unknown as Snapshot | null })),
+  });
   return {
     label_ru: item.labelRu,
     mass_g: item.massG,
-    unmatched: matched?.foodItemId === null || matched === undefined,
+    original_mass_g: item.massG,
+    candidates: item.candidates ?? [],
+    unmatched: numbers.unmatched,
     food_item_id: matched?.foodItemId ?? null,
     source_snapshot: matched?.sourceSnapshot ?? null,
     parts: matched?.parts ?? undefined,
+    kcal: numbers.kcal,
+    protein: numbers.protein,
+    fat: numbers.fat,
+    carb: numbers.carb,
   };
 }
 
@@ -280,25 +300,37 @@ export async function recognizeScan(job: RecognizeJob, deps: RecognizeScanDeps):
   }
 
   // Шаг 8: сопоставление — ОДИН пакетный вызов на весь список (PC-08).
-  const matchInput = finalResponse.items.map((item) => ({ labelRu: item.labelRu, massG: item.massG }));
+  const matchInput = finalResponse.items.map((item) => ({ labelRu: item.labelRu, massG: item.massG, candidates: item.candidates }));
   const matched = await deps.matchPort.match(matchInput);
   const anyMatched = matched.some((item) => item.foodItemId !== null);
+  const terminal = terminalStatusForMatch(anyMatched);
 
   const lowConfidence = finalResponse.confidence < CANON.escalationConfidenceThreshold;
   const failureReasonCandidate = escalationRefusedScope !== null ? 'quota_exhausted_escalation' : null;
 
-  const record: ResultRecord = anyMatched
-    ? {
-        status: 'done',
-        confidence: finalResponse.confidence,
-        items: finalResponse.items.map((item, index) => persistedItem(item, matched[index])),
-        modelEstimateKcal: finalResponse.modelEstimateKcal,
-        modelUsed: escalated ? CANON.modelEscalation : CANON.modelPrimary,
-        failureReason: lowConfidence ? failureReasonCandidate : null,
-        escalated,
-        attemptNo: escalated ? 2 : 1,
-      }
-    : { ...failedRecord('no_food_matched'), escalated, attemptNo: escalated ? 2 : 1 }; // DEC-A-014: NullMatchIngredientPort — ВСЕГДА в этой фиче.
+  const record: ResultRecord = terminal.status === 'done'
+    ? (() => {
+        // FR-source-and-correct-6/8: числа позиций из снимка, итог, расхождение с оценкой
+        // модели. `evaluateDiscrepancy` — ЕДИНСТВЕННОЕ место, читающее `modelEstimateKcal`
+        // для арифметики (страж `single-model-estimate-read.test.ts`).
+        const persisted = finalResponse.items.map((item, index) => persistedItem(item, matched[index]));
+        const dbKcalTotal = sumMatchedKcal(persisted.map((item): ComputedItemNumbers => ({ unmatched: item.unmatched, kcal: item.kcal, protein: item.protein, fat: item.fat, carb: item.carb })));
+        const discrepancy = evaluateDiscrepancy(finalResponse.modelEstimateKcal, dbKcalTotal);
+        return {
+          status: 'done',
+          confidence: finalResponse.confidence,
+          items: persisted,
+          modelEstimateKcal: finalResponse.modelEstimateKcal,
+          modelUsed: escalated ? CANON.modelEscalation : CANON.modelPrimary,
+          failureReason: lowConfidence ? failureReasonCandidate : null,
+          escalated,
+          attemptNo: escalated ? 2 : 1,
+          dbKcalTotal,
+          discrepancyRatio: discrepancy.discrepancyRatio,
+          conflictFlag: discrepancy.conflictFlag,
+        };
+      })()
+    : { ...failedRecord(terminal.failureReason), escalated, attemptNo: escalated ? 2 : 1 }; // DEC-A-014/ADR-001 Confirmation (2): `done` при нуле ссылок НЕВОЗМОЖЕН.
 
   return finishLate(deps, job, now, lastAttemptId, record);
 }

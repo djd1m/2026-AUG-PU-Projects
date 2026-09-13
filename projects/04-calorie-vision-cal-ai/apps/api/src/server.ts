@@ -12,6 +12,7 @@ import { createRateLimiter, registerRateLimit, type RateLimiter } from './http/r
 import { registerHealthRoute } from './routes/health.js';
 import { registerAuthDeviceRoute } from './routes/auth-device.js';
 import { registerScansRoutes } from './routes/scans.js';
+import { registerScansCorrectRoute } from './routes/scans-correct.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
@@ -68,6 +69,7 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerAuthDeviceRoute(app, deps.pool, deps.logger);
   const storage = deps.storage ?? createPhotoStorage(deps.config.storage);
   registerScansRoutes(app, { pool: deps.pool, config: deps.config, storage, logger: deps.logger });
+  registerScansCorrectRoute(app, { pool: deps.pool, logger: deps.logger });
 
   app.setNotFoundHandler(async (request, reply) => {
     // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая

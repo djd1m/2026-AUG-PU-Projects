@@ -14,6 +14,13 @@ import { clientAddressFrom, toIpPrefix } from '../session/ip-prefix.js';
 import { validateContent, isValidIdempotencyKey } from '../photo/validate-content.js';
 import { isDecodable } from '../photo/decode-check.js';
 import { objectKeyFor, mimeFor, type PhotoStorage } from '../photo/store-original.js';
+import { buildScanResponse, type ScanRow } from '../correct/response.js';
+
+export const SELECT_SCAN_ROW = `
+  SELECT id, status::text AS status, items, confidence, escalated, model_estimate_kcal, failure_reason::text AS failure_reason,
+         db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at
+  FROM recognition WHERE id = $1 AND device_session_id = $2
+`;
 
 export interface ScansRouteDeps {
   readonly pool: DbPool;
@@ -22,12 +29,13 @@ export interface ScansRouteDeps {
   readonly logger: Logger;
 }
 
-interface OwnedSession {
+export interface OwnedSession {
   readonly deviceSessionId: string;
   readonly ipPrefix: string;
 }
 
-async function requireSession(request: FastifyRequest, pool: DbPool): Promise<OwnedSession | null> {
+/** Разделяется с `scans-correct.ts` — владение проверяется ОДНИМ кодом, а не двумя копиями. */
+export async function requireSession(request: FastifyRequest, pool: DbPool): Promise<OwnedSession | null> {
   const token = request.cookies[SESSION_COOKIE_NAME];
   if (token === undefined || token.trim() === '') return null;
   const { createHash } = await import('node:crypto');
@@ -214,49 +222,12 @@ export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps):
     const session = await requireSession(request, deps.pool);
     if (session === null) return reply.code(401).send(fail('unauthenticated', 'сессия отсутствует'));
 
-    const result = await deps.pool.query(
-      `SELECT status, items, confidence, escalated, model_estimate_kcal, failure_reason, finished_at, created_at
-       FROM recognition WHERE id = $1 AND device_session_id = $2`,
-      [request.params.id, session.deviceSessionId],
-    );
-    const row = result.rows[0] as
-      | {
-          status: string;
-          items: unknown;
-          confidence: number | null;
-          escalated: boolean;
-          model_estimate_kcal: number | null;
-          failure_reason: string | null;
-          finished_at: Date | null;
-          created_at: Date;
-        }
-      | undefined;
-    // Чужой И несуществующий id — ОДИН и тот же 404 (AC-scan-pipeline-18).
+    const result = await deps.pool.query<ScanRow>(SELECT_SCAN_ROW, [request.params.id, session.deviceSessionId]);
+    const row = result.rows[0];
+    // Чужой И несуществующий id — ОДИН и тот же 404 (AC-scan-pipeline-18, AC-source-and-correct-23).
     if (row === undefined) return reply.code(404).send(fail('not_found', 'скан не найден'));
 
-    const items = Array.isArray(row.items)
-      ? (row.items as Array<Record<string, unknown>>).map((item) => ({
-          label_ru: item.labelRu ?? item.label_ru,
-          mass_g: item.massG ?? item.mass_g,
-          unmatched: item.unmatched ?? true,
-          food_item_id: item.foodItemId ?? item.food_item_id ?? null,
-        }))
-      : [];
-
-    return reply.code(200).send(
-      ok(
-        {
-          status: row.status,
-          items,
-          confidence: row.confidence,
-          low_confidence: row.confidence !== null && row.confidence < 0.6,
-          escalated: row.escalated,
-          model_estimate_kcal: row.model_estimate_kcal,
-          failure_reason: row.failure_reason,
-        },
-        { updated_at: (row.finished_at ?? row.created_at).toISOString() },
-      ),
-    );
+    return reply.code(200).send(ok(buildScanResponse(row), { updated_at: (row.finished_at ?? row.created_at).toISOString() }));
   });
 }
 

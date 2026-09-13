@@ -160,10 +160,23 @@ describe('страж живучести при недоступной базе',
 });
 
 describe('страж ADR-001: число берётся из базы, а не из ответа модели', () => {
-  it('в apps/recognizer нет чтения калорийности и БЖУ из ответа модели', async () => {
-    // Проверяется именно ЭТО МНОЖЕСТВО имён, а не «нет слова kcal»: иначе страж
-    // запретил бы и разрешённое поле model_estimate_kcal.
-    const forbidden = /\b(calories|kcalPer100g|kcal_per_100g|proteinPer100g|protein_per_100g|fatPer100g|fat_per_100g|carbPer100g|carb_per_100g|dbKcalTotal|db_kcal_total)\b/;
+  it('в apps/recognizer нет чтения калорийности и БЖУ из ОТВЕТА МОДЕЛИ', async () => {
+    // ПЕРЕСМОТРЕНО фичей `source-and-correct`: до неё `apps/recognizer` не содержал ни
+    // одного упоминания `kcal_per_100g`/`protein_per_100g`/`fat_per_100g`/`carb_per_100g`
+    // вовсе (сопоставление стояло за заглушкой), и блок-запрет на эти ИМЕНА был грубым, но
+    // случайно верным приближением «нет чтения из модели». Теперь эти же имена — ЗАКОННЫЙ
+    // источник числа (`food_item`/`Snapshot`, ИМЕННО то, что требует ADR-001) и читаются в
+    // `match/usda-match-port.ts`, `match/expand-recipe-parts.ts`, `compute/from-snapshot.ts`,
+    // `lease.ts` (`db_kcal_total` — колонка `recognition`, не поле ответа модели).
+    // Запрет сужен до `calories` — имени, которое НИКОГДА не легитимно ни в одной форме
+    // (ни в снимке базы: там `kcal_per_100g`, ни в модели: там `model_estimate_kcal`).
+    // Точная граница «модель vs снимок» проверяется тремя другими тестами этого же
+    // describe (объявленная схема, форма `ModelResponse`, JSON-схема `live.ts`) — они не
+    // сузились и по-прежнему запрещают `kcal`/`protein`/`fat`/`carbs` КАК ПОЛЕ МОДЕЛИ.
+    // Отдельно: страж `tests/guard/single-model-estimate-read.test.ts`
+    // (AC-source-and-correct-13/24) утверждает единственное АРИФМЕТИЧЕСКОЕ чтение
+    // `model_estimate_kcal` и что источником kcal/protein/fat/carb ЯВЛЯЕТСЯ `source_snapshot`.
+    const forbidden = /\bcalories\b/;
     const offenders: string[] = [];
 
     for (const { file, code } of await readAll('apps/recognizer/src')) {
@@ -234,31 +247,50 @@ describe('страж ADR-001: число берётся из базы, а не �
   });
 
   /**
-   * RV-scan-pipeline-10: «условие запрета done» — статус `done` пишется В recognize-scan.ts
-   * ТОЛЬКО внутри ветки, охраняемой `anyMatched`. Проверяется ТЕКСТОВОЙ близостью (страж
-   * слоя 1 — деревья разбирать не требуется, инвариант простой и локальный), с мутацией.
+   * RV-scan-pipeline-10, ПЕРЕСМОТРЕНО `source-and-correct` (ADR-001 Confirmation (2),
+   * `terminalStatusForMatch`): статус `done` пишется В recognize-scan.ts ТОЛЬКО внутри
+   * ветки, охраняемой `anyMatched` — НАПРЯМУЮ (прежняя форма) либо ЧЕРЕЗ
+   * `terminal.status === 'done'`, где `terminal = terminalStatusForMatch(anyMatched)`.
+   * Косвенная форма принимается ТОЛЬКО если сама `terminalStatusForMatch` фактически
+   * фейл-клоузед по своему аргументу (иначе охрана через `terminal` — обещание без
+   * содержания). Обе половины испытаны мутацией НИЖЕ.
    */
-  function doneGuardedByMatch(code: string): boolean {
+  function doneGuardedByMatch(recognizeCode: string, terminalStatusCode: string): boolean {
     // Запятая после закрывающей кавычки отличает ПРИСВОЕНИЕ объекта (`status: 'done',`)
     // от объявления ТИПА union (`status: 'done' | 'failed' | 'refused';`, без запятой
     // сразу после — там точка с запятой И вертикальная черта).
-    const index = code.indexOf("status: 'done',");
+    const index = recognizeCode.indexOf("status: 'done',");
     if (index === -1) return true; // done нигде не пишется присвоением — условие выполнено вакуумно
-    const before = code.slice(Math.max(0, index - 120), index);
-    return /anyMatched\s*\?/.test(before);
+    const nearBefore = recognizeCode.slice(Math.max(0, index - 120), index);
+    if (/anyMatched\s*\?/.test(nearBefore)) return true;
+
+    const before = recognizeCode.slice(0, index);
+    const viaTerminal = before.includes("terminal.status === 'done'") && before.includes('terminalStatusForMatch(anyMatched)');
+    if (!viaTerminal) return false;
+
+    const flat = terminalStatusCode.replace(/\s+/g, ' ');
+    return /if\s*\(\s*!anyMatched\s*\)/.test(flat) || /if\s*\(\s*anyMatched\s*\)/.test(flat);
   }
 
-  it('recognize-scan.ts: статус done охраняется условием anyMatched (испытано мутацией)', async () => {
+  it('recognize-scan.ts: статус done охраняется условием anyMatched — напрямую либо через terminalStatusForMatch (испытано мутацией)', async () => {
     const recognize = await readAll('apps/recognizer/src/recognize');
     const scanFile = recognize.find(({ file }) => file.endsWith('recognize-scan.ts'));
     expect(scanFile).toBeDefined();
+    const compute = await readAll('apps/recognizer/src/compute');
+    const terminalFile = compute.find(({ file }) => file.endsWith('terminal-status.ts'));
+    expect(terminalFile).toBeDefined();
 
-    expect(doneGuardedByMatch(scanFile?.code ?? '')).toBe(true);
+    expect(doneGuardedByMatch(scanFile?.code ?? '', terminalFile?.code ?? '')).toBe(true);
 
-    // Мутация: убрать охрану — заменить тернарник на безусловное присвоение status:'done'.
-    const mutatedRemovingGuard = (scanFile?.code ?? '').replace('anyMatched\n    ? {', 'true\n    ? {');
-    expect(mutatedRemovingGuard).not.toBe(scanFile?.code);
-    expect(doneGuardedByMatch(mutatedRemovingGuard)).toBe(false);
+    // Мутация 1: подменить условие в recognize-scan.ts на всегда-истинное.
+    const mutatedCondition = (scanFile?.code ?? '').replace("terminal.status === 'done'", "'done' === 'done'");
+    expect(mutatedCondition).not.toBe(scanFile?.code);
+    expect(doneGuardedByMatch(mutatedCondition, terminalFile?.code ?? '')).toBe(false);
+
+    // Мутация 2: сама terminalStatusForMatch перестаёт быть фейл-клоузед (всегда 'done').
+    const mutatedTerminal = (terminalFile?.code ?? '').replace('if (!anyMatched)', 'if (false)');
+    expect(mutatedTerminal).not.toBe(terminalFile?.code);
+    expect(doneGuardedByMatch(scanFile?.code ?? '', mutatedTerminal)).toBe(false);
   });
 
   /**
