@@ -50,7 +50,7 @@
       "name": "Приём скана, потолки, очередь и вызов модели",
       "description": "POST /scans (202 + обязательный Idempotency-Key), GET /scans/{id}; атомарные потолки user/global/escalation одним оператором в одной транзакции; серверная нормализация HEIC→JPEG, ≤ 1568 px, ≤ 5 МБ; очередь recognition с предикатом leased_until, lease_owner и монотонным lease_fence; адаптер поставщика модели с живым клиентом и детерминированным фейком; эскалация к Sonnet 5 при confidence < 0,6 с четвёртым ключом квоты; проверка диапазонов ответа в коде после разбора. Тир XL по локальному роутеру: трогает деньги, остановка на плане у владельца обязательна.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [
@@ -85,7 +85,7 @@
       "name": "База USDA, синонимы, расчёт из базы и корректировка",
       "description": "Разовый импорт USDA FoodData Central (Foundation + SR Legacy + FNDDS-порции) командой npm run import:fdc; ручная курация 100–300 русских блюд в food_synonym с рецептурным разложением; нечёткий поиск по триграммам нормализованной формы; расчёт четырёх чисел из food_item, Snapshot на каждую позицию, пометка unmatched и refused(no_food_matched) при нуле сопоставлений; степпер порции 5–2000 г, замена и удаление ингредиента без вызова модели; экран расхождения при разнице более 15% с сохранением обоих чисел.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "next",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [
@@ -125,7 +125,7 @@
       "name": "Согласие, удаление данных и вход через Telegram Mini App",
       "description": "POST /consent с версионированным текстом и его хэшем; DELETE /account с немедленным revoked_at карточкам и удалением за 72 часа при account.status = erasing; POST /auth/telegram с проверкой подписи initData по сырым байтам, сравнением постоянного времени и свежестью auth_date после подписи; связывание аккаунта с сессией устройства и целиковый перенос анонимного дневника. Перенос дневника проверяется сквозным сценарием вместе со следующей фичей — это названная зависимость ПРОВЕРКИ, а не реализации.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [
