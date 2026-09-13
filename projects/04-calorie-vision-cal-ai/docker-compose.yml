@@ -236,7 +236,11 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
-    networks: [private, egress]
+    # Дверь — ЕДИНСТВЕННЫЙ сервис в сети общего TLS-прокси машины (`public-edge`): снаружи
+    # трафик приходит в неё и только в неё, а `web`, `api`, `db`, `storage` остаются внутри
+    # `private`. Публикация рядом с прокси позволила бы обойти и прокси, и ограничение
+    # частоты (`docker-ports.md`).
+    networks: [private, egress, public-edge]
     depends_on:
       web: { condition: service_healthy }
       api: { condition: service_healthy }
@@ -282,6 +286,12 @@ services:
       storage-init: { condition: service_completed_successfully }
 
 networks:
+  # Сеть ОБЩЕГО TLS-прокси машины (`ai-hub-tls-proxy`). Объявлена внешней: её создаёт и
+  # держит чужой стек, наш её не создаёт и не удаляет. По ней приходит публичный трафик
+  # на домен `tarelka.aicoding.space` — так же, как у проектов 01 и 02.
+  public-edge:
+    external: true
+    name: talk-ai-public
   # Хранилища живут только здесь: ни публикации на хост, ни выхода в интернет.
   #
   # ПОДСЕТЬ ЗАДАНА ЯВНО (ОТКЛОНЕНИЕ этого worktree, `receipts/impl-scan-pipeline.md`):
