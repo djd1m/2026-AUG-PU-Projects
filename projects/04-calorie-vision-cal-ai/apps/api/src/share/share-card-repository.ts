@@ -6,6 +6,10 @@
 // Правка по review-report.md RV-consent-and-telegram-auth-08 — та же, что в
 // `diary-entry-repository.ts`: `ownerKey` больше не принимается отдельно (всегда `owner.id`),
 // проверка согласия и `INSERT` — в одной транзакции с блокировкой строки владельца.
+//
+// Правка RV-consent-and-telegram-auth-01 (четвёртый обзор): `INSERT` пишет
+// `enforcement.ownerKey` (канонический владелец, за которым `enforceConsentBeforeDiaryWrite`
+// реально снял блокировку), а не `input.owner.id` — для связанной сессии это разные значения.
 
 import { withTransaction, type DbPool } from '@n4/db';
 import { enforceConsentBeforeDiaryWrite, type ConsentOwnerRef } from '../consent/enforce-before-diary-write.js';
@@ -31,7 +35,11 @@ export async function createShareCardGuarded(pool: DbPool, input: CreateShareCar
     const enforcement = await enforceConsentBeforeDiaryWrite(client, input.owner);
     if (enforcement.outcome === 'refused') return { outcome: 'refused', reason: 'consent_required' };
 
-    const result = await client.query<{ id: string }>(INSERT_SHARE_CARD_SQL, [input.owner.id, input.recognitionId, input.objectKey]);
+    const result = await client.query<{ id: string }>(INSERT_SHARE_CARD_SQL, [
+      enforcement.ownerKey,
+      input.recognitionId,
+      input.objectKey,
+    ]);
     const row = result.rows[0];
     if (row === undefined) throw new Error('карточка не создана');
     return { outcome: 'created', id: row.id };

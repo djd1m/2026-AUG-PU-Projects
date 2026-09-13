@@ -6,6 +6,19 @@
 // RV-consent-and-telegram-auth-03/04) — ПЕРВАЯ мутация внутри транзакции, ДО того, как
 // затрагивается `device_session`: отказ `401` не создаёт и не обновляет ни одной сессии
 // (RV-04). Сбой на любом шаге транзакции откатывает ВСЁ (FR-consent-and-telegram-auth-2).
+//
+// Правка RV-consent-and-telegram-auth-02 (четвёртый обзор): отказ `replayed`/`erasing` ОБЯЗАН
+// быть исключением, а не штатным возвратом (`packages/db/src/pool.ts`,
+// `withTransaction`: «штатный возврат из колбэка КОММИТИТ транзакцию вместе со всем, что успело
+// записаться до неудачной проверки»). Раньше это было нарушено ИМЕННО в сценарии «вход → эразура
+// → повтор той же initData»: после эразуры `findActiveAccountByTelegramId` не находит старый
+// аккаунт, шаг 1 ВСТАВЛЯЕТ новый (легитимно, до проверки повтора), шаг 2 `claimReplay`
+// обнаруживает повтор (история ключуется `telegram_user_id`, переживающим эразуру) и колбэк
+// ВОЗВРАЩАЛ `{kind:'replayed'}` — обычное значение, которое `withTransaction` коммитил. Ответ
+// клиенту был честным `401`, но в БД оставалась НОВАЯ строка `account`, созданная отказавшим
+// входом. Теперь оба отказа выбрасываются как исключения (`LoginReplayedError`,
+// `AccountErasingError`) — транзакция откатывается ЦЕЛИКОМ, включая уже вставленный `account`,
+// и разбирается ПОСЛЕ `withTransaction` вне транзакции.
 
 import type { FastifyInstance } from 'fastify';
 import { withTransaction, type DbClient, type DbPool } from '@n4/db';
@@ -23,8 +36,21 @@ interface AccountLookupRow {
   readonly status: 'active' | 'erasing' | 'erased';
 }
 
+/**
+ * RV-02 (четвёртый обзор): отказ «эта initData уже использована». Выбрасывается ВНУТРИ
+ * транзакции — НИКОГДА не возвращается штатным значением колбэка `withTransaction` (см. правку
+ * в шапке файла) — иначе аккаунт, вставленный шагом 1 ДО обнаружения повтора, коммитился бы
+ * вместе с отказом.
+ */
+class LoginReplayedError extends Error {}
+
+/**
+ * Отказ «аккаунт уже удаляется». Тот же принцип: исключение, не значение — на пути гонки
+ * (строка 141 ниже) отказ обнаруживается ПОСЛЕ попытки вставки текущей транзакции.
+ */
+class AccountErasingError extends Error {}
+
 type LoginOutcome =
-  | { readonly kind: 'replayed' }
   // RV-consent-and-telegram-auth-05 (третий обзор): вход в аккаунт со статусом `erasing`
   // ОТКАЗЫВАЕТСЯ, транзакция откатывается — ни сессия, ни дневник, ни распознавания НЕ
   // присоединяются к аккаунту, который уже удаляется. Без этого отказа `RunErasureJob` мог
@@ -38,8 +64,7 @@ type LoginOutcome =
   // зафиксировала `erased` и вход находит `status != 'erased'` пустым — создаёт НОВЫЙ
   // аккаунт (AC-consent-and-telegram-auth-20), а не старый. Окна «второе присоединяется
   // между удалением строк и коммитом erased» больше нет: присоединяться было НЕЧЕМ.
-  | { readonly kind: 'erasing' }
-  | { readonly kind: 'success'; readonly accountId: string; readonly migratedEntries: number; readonly cookieToken: string };
+  { readonly kind: 'success'; readonly accountId: string; readonly migratedEntries: number; readonly cookieToken: string };
 
 /**
  * Находит АКТУАЛЬНЫЙ (не `erased`) аккаунт по `telegram_user_id` (RV-consent-and-telegram-auth-07):
@@ -108,7 +133,9 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
     // IPv6 → /48). Полный адрес нигде не хранится ни в этом маршруте, ни в остальном продукте.
     const ipPrefix = toIpPrefix(clientAddressFrom(request.headers['x-forwarded-for'], request.ip));
 
-    const outcome = await withTransaction<LoginOutcome>(pool, async (client) => {
+    let outcome: LoginOutcome;
+    try {
+      outcome = await withTransaction<LoginOutcome>(pool, async (client) => {
       // 1. Найти или создать аккаунт — ЕЩЁ НИ ОДНА сессия не тронута.
       const existingAccount = await findActiveAccountByTelegramId(client, verified.telegramUserId);
 
@@ -117,7 +144,7 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       // (`FOR UPDATE` внутри `findActiveAccountByTelegramId`) тем же локом, который держит
       // `RunErasureJob` на финальном переходе в `erased`.
       if (existingAccount !== undefined && existingAccount.status === 'erasing') {
-        return { kind: 'erasing' };
+        throw new AccountErasingError();
       }
 
       let accountId: string;
@@ -140,7 +167,7 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
           // Гонка двух параллельных первых входов (VC-03): конкурент уже вставил строку.
           const retryRow = await findActiveAccountByTelegramId(client, verified.telegramUserId);
           if (retryRow === undefined) throw new Error('гонка вставки account не разрешена повторным чтением');
-          if (retryRow.status === 'erasing') return { kind: 'erasing' };
+          if (retryRow.status === 'erasing') throw new AccountErasingError();
           accountId = retryRow.id;
         }
       }
@@ -151,7 +178,11 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       // касания device_session. Ключ — `telegram_user_id` (RV-04 третьего обзора), не
       // `accountId`, который заменяется новым после эразуры.
       if (!(await claimReplay(client, accountId, verified.telegramUserId, canonicalHash))) {
-        return { kind: 'replayed' };
+        // RV-02 (четвёртый обзор): ИСКЛЮЧЕНИЕ, не `return` — на пути «после эразуры» строка
+        // `account` уже могла быть ВСТАВЛЕНА шагом 1 выше (легитимно, до этой проверки); только
+        // исключение откатывает её вместе с отказом (см. `withTransaction`, `security-operation-
+        // order.md`).
+        throw new LoginReplayedError();
       }
 
       // 3. ТОЛЬКО теперь — сессия устройства. Захватываем СОСТОЯНИЕ ДО связывания (RV-05):
@@ -205,16 +236,20 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       }
 
       return { kind: 'success', accountId, migratedEntries: migrated.rowCount ?? 0, cookieToken };
-    });
-
-    if (outcome.kind === 'replayed') {
-      // Именованная причина отказа — не путается с проверкой подписи/свежести выше.
-      return reply.code(401).send(fail('initdata_replayed', 'эта строка initData уже была использована'));
-    }
-    if (outcome.kind === 'erasing') {
-      // RV-05 (третий обзор): именованная причина, отдельная от replay — аккаунт существует,
-      // подпись подлинна, но данные уже удаляются и присоединение новых запрещено.
-      return reply.code(409).send(fail('account_erasing', 'аккаунт удаляется, вход временно недоступен'));
+      });
+    } catch (error) {
+      if (error instanceof LoginReplayedError) {
+        // Именованная причина отказа — не путается с проверкой подписи/свежести выше. Транзакция
+        // уже откачена целиком `withTransaction` (RV-02, четвёртый обзор) — ни один `account`,
+        // вставленный до этой точки, не остался в БД.
+        return reply.code(401).send(fail('initdata_replayed', 'эта строка initData уже была использована'));
+      }
+      if (error instanceof AccountErasingError) {
+        // RV-05 (третий обзор): именованная причина, отдельная от replay — аккаунт существует,
+        // подпись подлинна, но данные уже удаляются и присоединение новых запрещено.
+        return reply.code(409).send(fail('account_erasing', 'аккаунт удаляется, вход временно недоступен'));
+      }
+      throw error;
     }
 
     // Cookie переустанавливается ВСЕГДА при успехе (RV-13, AC-consent-and-telegram-auth-1

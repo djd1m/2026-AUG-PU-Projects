@@ -423,6 +423,14 @@ describe('POST /api/v1/auth/telegram', () => {
     // Повтор ТОЙ ЖЕ строки initData (ещё свежа — не старше 24 ч) ДРУГОЙ анонимной сессией.
     // РАНЬШЕ (ключ по account_id): пара (новый account_id, hash) не существовала в истории —
     // повтор проходил как успешный вход, создавая рабочую сессию на удалённых данных.
+    //
+    // RV-02 (четвёртый обзор): ПОЛНЫЙ снимок `account` ДО попытки — в этом сценарии
+    // `findActiveAccountByTelegramId` не находит `accountId1` (он уже `erased`), поэтому шаг 1
+    // маршрута ВСТАВЛЯЕТ новую строку `account` ДО того, как `claimReplay` обнаружит повтор.
+    // Раньше колбэк `withTransaction` ВОЗВРАЩАЛ `{kind:'replayed'}` штатным значением — транзакция
+    // коммитилась, и эта новая строка оставалась в БД несмотря на честный `401` клиенту.
+    const accountsBefore = await pool.query<{ id: string; status: string }>('SELECT id, status FROM account ORDER BY id');
+
     const session2 = await createAnonymousSession();
     const replay = await app.inject({
       method: 'POST',
@@ -439,5 +447,11 @@ describe('POST /api/v1/auth/telegram', () => {
       [(await import('../../apps/api/src/session/create-device-session.js')).hashSessionToken(session2.token)],
     );
     expect(session2Row.rows[0]?.account_id).toBeNull();
+
+    // РЕГРЕССИЯ RV-02: снимок `account` ПОСЛЕ отказа совпадает с снимком ДО — ни одна строка
+    // `account`, вставленная шагом 1 этой (отказавшей) попытки, не пережила откат транзакции.
+    const accountsAfter = await pool.query<{ id: string; status: string }>('SELECT id, status FROM account ORDER BY id');
+    expect(accountsAfter.rows).toEqual(accountsBefore.rows);
+    expect(accountsAfter.rows).toHaveLength(1);
   });
 });

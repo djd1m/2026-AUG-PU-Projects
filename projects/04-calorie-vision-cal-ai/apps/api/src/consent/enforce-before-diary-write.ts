@@ -19,6 +19,17 @@
 // DEC-A-019) остаётся заполненным. Прямой вызов защищённого репозитория с ЭТОЙ сессией проходил,
 // хотя аккаунт уже отозвал согласие. Теперь: если сессия СВЯЗАНА, актуальное согласие определяет
 // СВЯЗАННЫЙ АККАУНТ, а не историческое поле сессии; если не связана — прежнее поведение.
+//
+// Правка RV-consent-and-telegram-auth-01 (четвёртый обзор): «granted» раньше не сообщал, ЧЕЙ
+// именно владелец был проверен под блокировкой — вызывающий (`createDiaryEntryGuarded`,
+// `createShareCardGuarded`) записывал `owner_key = input.owner.id`, то есть НЕПРОВЕРЕННЫЙ
+// исходный идентификатор (`session_id` S), даже когда проверка де-факто прошла по СВЯЗАННОМУ
+// аккаунту A. Последствие: карточка/запись физически принадлежала S, отзыв согласия по
+// `owner_key = A` (`account-delete.ts`) её не находил, а `RunErasureJob` падал на
+// `ON DELETE RESTRICT`, потому что ссылка на `recognition` оставалась у аккаунта A. Теперь
+// «granted» возвращает `ownerKey` — КАНОНИЧЕСКИЙ идентификатор, для которого проверка реально
+// выполнялась (`accountId`, если сессия связана; иначе сам `owner.id`) — и вызывающий обязан
+// использовать ИМЕННО его для `INSERT`, а не исходный `owner.id`.
 
 import type { DbClient, DbPool } from '@n4/db';
 
@@ -30,11 +41,10 @@ export interface ConsentOwnerRef {
 }
 
 export type ConsentEnforcement =
-  | { readonly outcome: 'granted' }
+  | { readonly outcome: 'granted'; readonly ownerKey: string }
   | { readonly outcome: 'refused'; readonly reason: 'consent_required' };
 
 const REFUSED: ConsentEnforcement = { outcome: 'refused', reason: 'consent_required' };
-const GRANTED: ConsentEnforcement = { outcome: 'granted' };
 
 /**
  * `FOR UPDATE` (RV-08 второго обзора): вызывающий (`createDiaryEntryGuarded`,
@@ -79,7 +89,9 @@ async function enforceForAccount(executor: DbPool | DbClient, accountId: string)
   // задеты: их завершение — обновление СТРОКИ `recognition`, отдельный путь, не проходящий
   // через эту границу; `RunErasureJob` откладывает их отдельно (`skippedActiveScan`).
   if (row.status !== 'active') return REFUSED;
-  return GRANTED;
+  // RV-01 (четвёртый обзор): `ownerKey` — КАНОНИЧЕСКИЙ владелец, для которого только что снята
+  // блокировка и проверено согласие. Вызывающий обязан писать `INSERT` именно с этим значением.
+  return { outcome: 'granted', ownerKey: accountId };
 }
 
 export async function enforceConsentBeforeDiaryWrite(
@@ -106,7 +118,8 @@ export async function enforceConsentBeforeDiaryWrite(
     }
 
     if (session.consent_at === null) return REFUSED;
-    return GRANTED;
+    // Сессия НЕ связана — она сама и есть канонический владелец (RV-01).
+    return { outcome: 'granted', ownerKey: owner.id };
   } catch {
     return REFUSED;
   }

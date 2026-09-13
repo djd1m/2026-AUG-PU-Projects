@@ -10,9 +10,15 @@
 //
 // В PWA (`window.Telegram` отсутствует) — видимая кнопка со ссылкой на `t.me`-бота; сам вход
 // в PWA происходит после перехода в Mini App и возврата (там же сработает `TelegramAutoLogin`).
+//
+// Правка RV-consent-and-telegram-auth-03 (четвёртый обзор): `TELEGRAM_LINKED_KEY` удалён из
+// `../telegram-auto-login` целиком — это был ИМЕННО постоянный флаг, который находка запретила
+// (см. комментарий файла источника: он не связан с текущей серверной сессией и не сбрасывается
+// экраном удаления). Статус «входим…» этот компонент отображать честно не может без нового
+// маршрута статуса (канон закрыт), поэтому в Mini App он больше не читает состояние входа и
+// ничего не отображает — сам вход и его исход полностью на стороне `TelegramAutoLogin`.
 
 import { useEffect, useState } from 'react';
-import { TELEGRAM_LINKED_KEY } from '../telegram-auto-login';
 
 // `Window.Telegram` уже объявлен в `../telegram-auto-login.tsx` (модульная аугментация
 // глобального типа — второе несовпадающее объявление в той же программе TS не компилируется).
@@ -20,20 +26,14 @@ import { TELEGRAM_LINKED_KEY } from '../telegram-auto-login';
 /** Бот-ссылка задаётся владельцем продукта отдельно от кода (не секрет, но и не константа кода). */
 export function TelegramLoginButton({ botDeepLink }: { readonly botDeepLink: string }) {
   const [isMiniApp, setIsMiniApp] = useState(false);
-  const [linked, setLinked] = useState(false);
 
   useEffect(() => {
     setIsMiniApp(typeof window !== 'undefined' && window.Telegram?.WebApp !== undefined);
-    try {
-      setLinked(window.localStorage.getItem(TELEGRAM_LINKED_KEY) === 'true');
-    } catch {
-      setLinked(false);
-    }
   }, []);
 
   if (isMiniApp) {
-    // Вход уже выполнен (или выполняется) корневым `TelegramAutoLogin` — здесь только статус.
-    return linked ? null : <p>Входим через Telegram…</p>;
+    // Вход уже выполнен (или выполняется) корневым `TelegramAutoLogin` — здесь ничего не рендерим.
+    return null;
   }
 
   return (

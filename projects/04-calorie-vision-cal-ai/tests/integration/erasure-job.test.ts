@@ -9,6 +9,7 @@ import type { DbPool } from '@n4/db';
 import { createLogger } from '@n4/shared';
 import { runErasureJob, type PhotoStorePort } from '../../apps/recognizer/src/consent/erasure-job.js';
 import { createMinioPhotoStore } from '../../apps/recognizer/src/storage/photo-store-minio.js';
+import { createShareCardGuarded } from '../../apps/api/src/share/share-card-repository.js';
 import { migratedPool, truncateAll } from '../helpers/db.js';
 import { ensureTestBucket, objectExists, testStorageConfig, uploadTestObject } from '../helpers/minio.js';
 
@@ -154,6 +155,71 @@ describe('RunErasureJob', () => {
     expect(cards.rows[0]?.n).toBe(0);
     const recognitions = await pool.query('SELECT count(*)::int AS n FROM recognition WHERE id = $1', [recognitionId]);
     expect(recognitions.rows[0]?.n).toBe(0);
+  });
+
+  it('review4 RV-01: карточка, созданная ЧЕРЕЗ связанную сессию, физически принадлежит аккаунту и не блокирует эразуру', async () => {
+    // Четвёртый обзор: enforceConsentBeforeDiaryWrite проверял согласие СВЯЗАННОГО аккаунта
+    // (RV-02 третьего обзора), но createShareCardGuarded/createDiaryEntryGuarded всё ещё писали
+    // owner_key = input.owner.id — исходный session_id, а не проверенный account_id. Карточка,
+    // созданная через уже связанную сессию, физически принадлежала session_id: withdraw/erase_all
+    // (owner_key = accountId) её не находили, а RunErasureJob падал на ON DELETE RESTRICT —
+    // share_card продолжал ссылаться на recognition, который `DELETE FROM recognition` пытался
+    // удалить. Воспроизводит ТОЧНУЮ последовательность из находки: связать сессию с аккаунтом →
+    // дать согласие → создать карточку ЧЕРЕЗ СЕССИЮ (не через account) → отозвать → эразура.
+    const account = await pool.query<{ id: string }>(
+      `INSERT INTO account (telegram_user_id, tier, status, consent_at) VALUES ($1, 'free', 'active', now()) RETURNING id`,
+      ['950010'],
+    );
+    const accountId = account.rows[0]!.id;
+    const session = await pool.query<{ id: string }>(
+      `INSERT INTO device_session (account_id, cookie_token_hash, ip_prefix, anonymous_diary_expires_at)
+       VALUES ($1, $2, $3, now() + interval '7 days') RETURNING id`,
+      [accountId, `hash-950010-${Math.random()}`, '203.0.113.0/24'],
+    );
+    const sessionId = session.rows[0]!.id;
+    const recognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+      [sessionId, accountId],
+    );
+    const recognitionId = recognition.rows[0]!.id;
+
+    const created = await createShareCardGuarded(pool, {
+      owner: { table: 'device_session', id: sessionId },
+      recognitionId,
+      objectKey: 'card-via-linked-session',
+    });
+    expect(created.outcome).toBe('created');
+
+    // РЕГРЕССИЯ RV-01: owner_key физической строки — accountId (проверенный канонический
+    // владелец), а НЕ sessionId (исходный owner.id, переданный в запрос).
+    const cardRow = await pool.query<{ owner_key: string }>('SELECT owner_key FROM share_card WHERE recognition_id = $1', [recognitionId]);
+    expect(cardRow.rows[0]?.owner_key).toBe(accountId);
+    expect(cardRow.rows[0]?.owner_key).not.toBe(sessionId);
+
+    // Отзыв согласия закрывает карточку — находит её по owner_key = accountId; до фикса
+    // owner_key = sessionId эту строку не находил.
+    await pool.query(`UPDATE account SET consent_at = NULL WHERE id = $1`, [accountId]);
+    await pool.query(`UPDATE share_card SET revoked_at = now() WHERE owner_key = $1 AND revoked_at IS NULL`, [accountId]);
+    const revoked = await pool.query('SELECT count(*)::int AS n FROM share_card WHERE owner_key = $1 AND revoked_at IS NOT NULL', [
+      accountId,
+    ]);
+    expect(revoked.rows[0]?.n).toBe(1);
+
+    // Эразура: без фикса оставшаяся ссылка share_card→recognition (owner_key=sessionId, вне
+    // предиката `DELETE FROM share_card WHERE owner_key = accountId`) заблокировала бы
+    // `DELETE FROM recognition` ошибкой внешнего ключа (ON DELETE RESTRICT, миграция 001), и
+    // аккаунт остался бы `erasing` навсегда (`guard-must-be-able-to-fail`: это тест на реальном
+    // Postgres, ошибка внешнего ключа не подменяется заглушкой).
+    await pool.query(`UPDATE account SET status = 'erasing', deletion_requested_at = now() WHERE id = $1`, [accountId]);
+    const result = await runErasureJob({ pool, photoStore: spyPhotoStore(), logger: createLogger({ service: 'test', sink: () => {} }) });
+
+    expect(result.erased).toBe(1);
+    const erasedAccount = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [accountId]);
+    expect(erasedAccount.rows[0]?.status).toBe('erased');
+    const remainingCards = await pool.query('SELECT count(*)::int AS n FROM share_card WHERE owner_key = $1', [accountId]);
+    expect(remainingCards.rows[0]?.n).toBe(0);
+    const remainingRecognition = await pool.query('SELECT count(*)::int AS n FROM recognition WHERE id = $1', [recognitionId]);
+    expect(remainingRecognition.rows[0]?.n).toBe(0);
   });
 
   it('старый deletion_requested_at (73 часа назад) обрабатывается штатно — НЕ доказательство дедлайна 72 ч', async () => {

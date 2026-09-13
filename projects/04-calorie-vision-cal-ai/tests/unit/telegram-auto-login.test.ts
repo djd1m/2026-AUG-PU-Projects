@@ -4,33 +4,38 @@
 // DOM). Поведение самого React-компонента (монтирование, localStorage, useEffect) автотестом не
 // покрыто — честно названо в квитанции, тот же класс ограничения, что у RV-09/RV-10 второго
 // обзора (`05_completion.md`).
+//
+// Правка RV-consent-and-telegram-auth-03 (четвёртый обзор): тест «браузер УЖЕ связывал аккаунт
+// раньше — не пробовать» закреплял ИМЕННО дефект находки — постоянный флаг, запрещающий вход
+// даже со свежей initData. Параметр `alreadyLinked` удалён из функции целиком (см. комментарий
+// файла источника); тест ниже заменён на противоположное утверждение — прошлый успех НЕ мешает
+// новой строке, потому что такого понятия у функции больше нет.
 
 import { describe, expect, it, vi } from 'vitest';
 import { shouldAttemptTelegramLogin, submitTelegramLogin } from '../../apps/web/app/telegram-auto-login.js';
 
 describe('shouldAttemptTelegramLogin', () => {
   it('initData отсутствует — не пробовать (не Mini App или SDK ещё не готов)', () => {
-    expect(shouldAttemptTelegramLogin({ initData: undefined, alreadyLinked: false, lastAttemptedInitData: '' })).toBe(false);
+    expect(shouldAttemptTelegramLogin({ initData: undefined, lastAttemptedInitData: '' })).toBe(false);
   });
 
   it('initData пустая строка — не пробовать', () => {
-    expect(shouldAttemptTelegramLogin({ initData: '', alreadyLinked: false, lastAttemptedInitData: '' })).toBe(false);
-  });
-
-  it('RV-06 п. 2: браузер УЖЕ связывал аккаунт раньше — не пробовать, даже со свежей initData', () => {
-    expect(shouldAttemptTelegramLogin({ initData: 'auth_date=1&hash=abc', alreadyLinked: true, lastAttemptedInitData: '' })).toBe(false);
+    expect(shouldAttemptTelegramLogin({ initData: '', lastAttemptedInitData: '' })).toBe(false);
   });
 
   it('ТА ЖЕ строка уже отправлялась — не пробовать заново (раньше это дублировало попытку на каждом монтировании /settings)', () => {
-    expect(
-      shouldAttemptTelegramLogin({ initData: 'auth_date=1&hash=abc', alreadyLinked: false, lastAttemptedInitData: 'auth_date=1&hash=abc' }),
-    ).toBe(false);
+    expect(shouldAttemptTelegramLogin({ initData: 'auth_date=1&hash=abc', lastAttemptedInitData: 'auth_date=1&hash=abc' })).toBe(false);
   });
 
-  it('свежая initData, ещё не связано, строка НЕ совпадает с прошлой попыткой — пробовать', () => {
-    expect(
-      shouldAttemptTelegramLogin({ initData: 'auth_date=2&hash=def', alreadyLinked: false, lastAttemptedInitData: 'auth_date=1&hash=abc' }),
-    ).toBe(true);
+  it('свежая initData, строка НЕ совпадает с прошлой попыткой — пробовать', () => {
+    expect(shouldAttemptTelegramLogin({ initData: 'auth_date=2&hash=def', lastAttemptedInitData: 'auth_date=1&hash=abc' })).toBe(true);
+  });
+
+  it('RV-03 (четвёртый обзор): свежая initData пробуется ЗАНОВО независимо от того, что ЛЮБАЯ прошлая попытка (в т.ч. успешная) когда-либо была отправлена — функция не принимает и не может принять признак «уже входили»: сигнатура не содержит такого параметра', () => {
+    // Раньше `alreadyLinked: true` перекрывал этот же вызов — постоянный запрет пережил бы даже
+    // истечение cookie/удаление аккаунта. Теперь единственный учитываемый сигнал — ТЕКУЩАЯ пара
+    // (initData, lastAttemptedInitData); прошлые исходы (успех, replay, отказ) на неё не влияют.
+    expect(shouldAttemptTelegramLogin({ initData: 'auth_date=99&hash=zzz', lastAttemptedInitData: 'auth_date=1&hash=abc' })).toBe(true);
   });
 });
 

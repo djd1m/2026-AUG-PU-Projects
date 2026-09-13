@@ -15,12 +15,23 @@
 //      `fetch`) оставлял компонент в `pending` НАВСЕГДА.
 //
 // Правка монтирует попытку входа ЗДЕСЬ, на корне (`layout.tsx`), один раз для любого экрана.
-// «Фактическая сессия» без нового маршрута статуса (канон закрыт на 14 маршрутах, `docs/
-// canon.md`) — единственный честный клиентский сигнал: успешный ответ ЭТОГО ЖЕ браузера в
-// прошлом, `localStorage` (конвенция per-viewer-удобства, не источник истины для сервера).
-// `401 initdata_replayed` ТРАКТУЕТСЯ как «уже вошли этой строкой», не как ошибка: сервер этим
-// ответом буквально говорит «эта initData уже привела к входу» — при повторном монтировании
-// (переход между экранами Mini App) это штатный, а не ошибочный случай.
+//
+// Правка RV-consent-and-telegram-auth-03 (четвёртый обзор): раньше был ЕЩЁ один постоянный ключ
+// `localStorage` (`TELEGRAM_LINKED_KEY`) — «этот браузер когда-либо довёл вход до успеха» — и он
+// НАВСЕГДА запрещал новую попытку, даже со свежей initData, даже после истечения серверной
+// cookie или полного удаления аккаунта (экран удаления его не сбрасывал). Это НЕ дедупликация
+// одной попытки, а самозваное объявление о состоянии сервера, которое клиент не наблюдает.
+// Дополнительно `401 initdata_replayed` записывался в тот же флаг как ДОКАЗАТЕЛЬСТВО входа —
+// хотя сервер этим ответом именно ОТКАЗЫВАЕТ в связывании (строка могла быть использована ДРУГИМ
+// браузером/устройством ранее).
+//
+// Единственный честный клиентский сигнал без нового маршрута статуса (канон закрыт на 14
+// маршрутах, `docs/canon.md`) — это ТЕКУЩАЯ строка `initData`, а не история браузера: Telegram
+// перевыпускает `initData` (новый `auth_date`) при каждом открытии Mini App, поэтому дедупликация
+// ограничена РОВНО последней ОТПРАВЛЕННОЙ строкой (`TELEGRAM_ATTEMPTED_KEY`) — не «навсегда», а
+// «эту же байт-в-байт строку второй раз не слать». Любая ДРУГАЯ (в том числе более новая) строка
+// initData пробуется заново независимо от прошлых исходов — сервер, а не клиент, окончательно
+// решает про повтор (`claimReplay`, `auth-telegram.ts`) и про истечение сессии.
 
 import { useEffect, useState } from 'react';
 
@@ -35,26 +46,24 @@ declare global {
   }
 }
 
-/** Ключ localStorage: последняя ОТПРАВЛЕННАЯ строка initData — не повторяем её же. */
+/** Ключ localStorage: последняя ОТПРАВЛЕННАЯ строка initData — не повторяем её же (RV-03). */
 export const TELEGRAM_ATTEMPTED_KEY = 'n4_telegram_initdata_attempted';
-/** Ключ localStorage: этот браузер УЖЕ довёл вход до успеха (200 ИЛИ replayed). */
-export const TELEGRAM_LINKED_KEY = 'n4_telegram_account_linked';
 
 export type TelegramLoginOutcome = 'ok' | 'replayed' | 'failed';
 
 /**
  * Решение «пробовать ли вход» — ЧИСТАЯ функция без DOM, тестируемая без jsdom
- * (`tests/unit/telegram-auto-login.test.ts`). Три причины НЕ пробовать: `initData` пусто/нет
- * (не в Mini App или SDK ещё не готов), браузер уже связывал аккаунт раньше (RV-06 п. 2 —
- * не насылать одну и ту же строку заново), строка совпадает с уже отправленной.
+ * (`tests/unit/telegram-auto-login.test.ts`). RV-03 (четвёртый обзор): УБРАН параметр
+ * `alreadyLinked` — постоянного «браузер когда-то входил» больше не существует (см. комментарий
+ * файла). Единственная причина не пробовать, помимо пустой `initData`, — ТА ЖЕ САМАЯ строка уже
+ * была отправлена; более новая строка (или та же строка после сброса `localStorage`) пробуется
+ * ВСЕГДА, а решение «пропустить/отклонить» окончательно принимает сервер.
  */
 export function shouldAttemptTelegramLogin(params: {
   readonly initData: string | undefined;
-  readonly alreadyLinked: boolean;
   readonly lastAttemptedInitData: string;
 }): boolean {
   if (params.initData === undefined || params.initData === '') return false;
-  if (params.alreadyLinked) return false;
   if (params.lastAttemptedInitData === params.initData) return false;
   return true;
 }
@@ -107,15 +116,16 @@ export function TelegramAutoLogin(): null {
     window.Telegram?.WebApp?.ready?.();
     const initData = window.Telegram?.WebApp?.initData;
 
-    const alreadyLinked = readLocalStorage(TELEGRAM_LINKED_KEY) === 'true';
     const lastAttempted = readLocalStorage(TELEGRAM_ATTEMPTED_KEY) ?? '';
-    if (!shouldAttemptTelegramLogin({ initData, alreadyLinked, lastAttemptedInitData: lastAttempted })) return;
+    if (!shouldAttemptTelegramLogin({ initData, lastAttemptedInitData: lastAttempted })) return;
 
     setState('pending');
     submitTelegramLogin(initData as string)
       .then((outcome) => {
+        // RV-03 (четвёртый обзор): помечается только ЭТА строка как отправленная — никакого
+        // постоянного «привязано». `replayed` — НЕ подтверждение входа (см. комментарий файла),
+        // поэтому состояние для него НЕ считается успешным исходом отдельно от `ok`/`failed`.
         writeLocalStorage(TELEGRAM_ATTEMPTED_KEY, initData as string);
-        if (outcome === 'ok' || outcome === 'replayed') writeLocalStorage(TELEGRAM_LINKED_KEY, 'true');
         setState(outcome === 'failed' ? 'error' : 'done');
       })
       .catch(() => {

@@ -13,6 +13,11 @@
 //   2. Проверка согласия и `INSERT` выполняются в ОДНОЙ транзакции с блокировкой строки
 //      владельца (`enforceConsentBeforeDiaryWrite` с `client`, не с `pool`) — иначе конкурентный
 //      `withdraw_consent` мог отозвать согласие МЕЖДУ проверкой и записью.
+//
+// Правка RV-consent-and-telegram-auth-01 (четвёртый обзор): пункт 1 был неполон — `input.owner.id`
+// это ИСХОДНЫЙ идентификатор (может быть `session_id` уже связанной сессии), а не обязательно тот
+// же, для которого guard РЕАЛЬНО проверил согласие (для связанной сессии это `account_id`).
+// `INSERT` теперь пишет `enforcement.ownerKey` — канонический владелец из результата проверки.
 
 import { withTransaction, type DbPool } from '@n4/db';
 import { enforceConsentBeforeDiaryWrite, type ConsentOwnerRef } from '../consent/enforce-before-diary-write.js';
@@ -54,9 +59,10 @@ export async function createDiaryEntryGuarded(pool: DbPool, input: CreateDiaryEn
     if (enforcement.outcome === 'refused') return { outcome: 'refused', reason: 'consent_required' };
 
     const result = await client.query<{ id: string }>(INSERT_DIARY_ENTRY_SQL, [
-      // `owner.id` — ЕДИНСТВЕННЫЙ источник владельца записи, тот же, для которого только что
-      // проверено согласие (RV-08): нет отдельного параметра, который мог бы разойтись с ним.
-      input.owner.id,
+      // `enforcement.ownerKey` — КАНОНИЧЕСКИЙ владелец, за которого guard реально проверил
+      // согласие (RV-01, четвёртый обзор); НЕ `input.owner.id` — для связанной сессии это разные
+      // значения, и запись обязана принадлежать тому, чьё согласие проверено.
+      enforcement.ownerKey,
       input.recognitionId,
       input.eatenOn,
       input.mealSlot,

@@ -109,6 +109,100 @@ docker compose -p n4-tarelka-consent-b down -v             -> тома/сеть/
 RV-02, RV-03, RV-04, RV-05×2, RV-07 — 7 мутационных испытаний) все прошли цикл «дефект внедрён →
 красный → снят → зелёный» — см. таблицу выше.
 
+## Попытка 4 — корректирующий проход по `review-report.md` (четвёртое слепое ревью, CHANGES_REQUIRED)
+
+Владелец перевёл проект в режим скорости (DEC-A-032): это ПОСЛЕДНЯЯ корректирующая попытка,
+дальше — слияние без нового ревью. По прямому указанию закрыты ТОЛЬКО три `high`-находки; две
+`medium` (RV-04, RV-05) сознательно НЕ трогались — см. «Follow-up» ниже.
+
+- **RV-01 (high)**: `enforceConsentBeforeDiaryWrite` проверял согласие СВЯЗАННОГО аккаунта (правка
+  RV-02 третьего обзора), но `createShareCardGuarded`/`createDiaryEntryGuarded` продолжали писать
+  `owner_key = input.owner.id` — исходный, НЕ канонический идентификатор (`session_id` уже
+  связанной сессии). Карточка/запись, созданная через связанную сессию, физически принадлежала
+  сессии: `withdraw_consent`/`erase_all` (`owner_key = accountId`) её не находили, а
+  `RunErasureJob` падал на `ON DELETE RESTRICT` (ссылка на `recognition` не снята). Исправлено:
+  `ConsentEnforcement` при `outcome:'granted'` теперь возвращает `ownerKey` — КАНОНИЧЕСКИЙ
+  идентификатор, за которого реально снята блокировка (`accountId` для связанной сессии, иначе
+  сам `owner.id`); оба репозитория пишут `enforcement.ownerKey`, а не `input.owner.id`.
+  Тест: `tests/integration/erasure-job.test.ts`, «review4 RV-01: карточка, созданная ЧЕРЕЗ
+  связанную сессию…» — воспроизводит ТОЧНУЮ последовательность из находки (связать → согласие →
+  создать через сессию → отозвать → эразура) и проверяет `owner_key = accountId` НАПРЯМУЮ.
+- **RV-02 (high)**: в сценарии «вход → эразура → повтор той же initData» шаг 1 маршрута ВСТАВЛЯЛ
+  новый `account` (старый уже `erased`, не находится), шаг 2 `claimReplay` обнаруживал повтор
+  (история ключуется `telegram_user_id`, переживающим эразуру) и колбэк `withTransaction`
+  ВОЗВРАЩАЛ `{kind:'replayed'}` штатным значением — транзакция коммитилась вместе с новой
+  строкой `account`, хотя клиент честно получал `401`. Исправлено: отказы `replayed`/`erasing`
+  теперь ВСЕГДА исключения (`LoginReplayedError`, `AccountErasingError`), выбрасываемые ВНУТРИ
+  транзакции и разбираемые `catch` СНАРУЖИ `withTransaction` — откат затрагивает и уже вставленный
+  `account` (`security-operation-order.md`: недоступность/отказ обязаны быть исключением, не
+  значением). Тест: `tests/integration/auth-telegram.test.ts`, «review3 RV-04…» дополнен полным
+  снимком `account` ДО и ПОСЛЕ отказавшего повтора (`toEqual` + `toHaveLength(1)`), как и просила
+  находка.
+- **RV-03 (high)**: постоянный ключ `localStorage` (`TELEGRAM_LINKED_KEY`) навсегда запрещал
+  автологин, даже со свежей initData, после истечения cookie или удаления аккаунта — экран
+  удаления его не сбрасывал, а флаг не отражал никакое серверное состояние. Отдельно `401
+  initdata_replayed` записывался в тот же флаг как ДОКАЗАТЕЛЬСТВО входа, хотя это ответ отказа.
+  Исправлено: `TELEGRAM_LINKED_KEY` удалён целиком (из `telegram-auto-login.tsx` и
+  `settings/telegram-login-button.tsx`, который его тоже читал); `shouldAttemptTelegramLogin`
+  лишился параметра `alreadyLinked` — единственный сигнал дедупликации теперь «эта ЖЕ строка
+  initData уже отправлена» (`TELEGRAM_ATTEMPTED_KEY`), не «когда-либо входили». Существующие
+  unit-тесты, закреплявшие `alreadyLinked`, переписаны (`tests/unit/telegram-auto-login.test.ts`).
+
+**Испытание стражей мутацией (`guard-must-be-able-to-fail.md`)** — 2 прогона «дефект внедрён →
+красный → снят → зелёный» на настоящем PostgreSQL профиля `test` (RV-03 — клиентская React-логика,
+без jsdom; проверена переписанным набором unit-тестов, не мутацией на стенде):
+
+```
+RV-01 (owner_key = input.owner.id, старое поведение)  -> 1 failed | 9 skipped -> 10 passed
+RV-02 (return {kind:'replayed'} вместо throw)         -> 1 failed | 9 skipped -> 10 passed
+```
+
+### Прогоны попытки 4
+
+```
+npm run test                                              -> Test Files 11 passed | Tests 62 passed
+npm run typecheck / npm run lint / npm run build          -> 0 / 0 / 0
+docker compose --env-file .env --profile test run --rm -T test npm run test:integration
+                                                           -> Test Files 20 passed | Tests 79 passed
+                                                              (воспроизведено дважды подряд)
+bash ../../scripts/check-pipeline-gaps.sh .                -> контур consent-and-telegram-auth:
+                                                              grep '[GAP]' docs/features/consent-and-
+                                                              telegram-auth/*.md — 0 совпадений во
+                                                              всех 7 файлах контура; ⚠️/❌ общего
+                                                              прогона — PR-002/003/007 других
+                                                              контуров (foundation/scan-pipeline),
+                                                              не этот worktree
+node ../../.claude/hooks/check-review-contract.cjs . consent-and-telegram-auth
+                                                           -> PASS AC-ids=20 rows=20
+bash ../../scripts/check-port-conflicts.sh .               -> 0 (порт 4181 свободен)
+docker compose -p n4-tarelka-consent-b down -v             -> тома/сеть/контейнеры удалены;
+                                                              docker images | grep n4-tarelka-consent-b:
+                                                              0 образов (профиль edge НЕ поднимался,
+                                                              images НЕ собирались — диск машины 99%)
+```
+
+Итого попытки 4: **141 тестов** (62 unit + 79 integration/concurrency), 0 упавших. Новых в этом
+проходе — 1 unit (регрессия RV-03) + 2 integration (регрессия RV-01, дополненная проверка RV-02) =
+3 теста; один unit-тест закрепивший старое поведение (`alreadyLinked`) заменён, не просто удалён.
+
+### Follow-up, не блокирующий закрытие
+
+По прямому указанию координатора НЕ делалось в этой попытке — переносится следующей фиче/раунду:
+
+1. **RV-04 (medium)**, `apps/api/src/consent/grant-or-decline.ts:38` — ветка `decline`
+   возвращается раньше проверки известности `consent_version`; запрос `decision:'decline'` с
+   несуществующей версией получает 200 вместо 422.
+2. **RV-05 (medium)**, `tests/integration/consent.test.ts:95` и аналогичные пробелы
+   (`account-delete.test.ts:71`, 73-часовой тест в `erasure-job.test.ts`, AC-20) — заголовки
+   тестов обещают больше, чем проверяет тело; нужны сквозные проверки на интегрированном стенде
+   или честная маркировка `unverifiable`.
+3. Монтирование React-компонента `TelegramAutoLogin` (`useEffect`, `localStorage`) не покрыто
+   автотестом — `vitest.config.ts` объявляет unit-слой на `environment: 'node'`, без jsdom;
+   логика решения вынесена в чистые функции и покрыта полностью, сам компонент проверен только
+   чтением кода (тот же класс ограничения, что RV-09/RV-10 второго обзора).
+4. Маршрут просмотра карточки `/c/{id}` (канон, `scan-pipeline`) в этом worktree отсутствует по
+   построению — тот же класс пробела, что AC-9 исходного `review-report.md`.
+
 ## Что реализовано
 
 Миграция `packages/db/migrations/002_consent_and_telegram_auth.sql`: два поля на `account`
