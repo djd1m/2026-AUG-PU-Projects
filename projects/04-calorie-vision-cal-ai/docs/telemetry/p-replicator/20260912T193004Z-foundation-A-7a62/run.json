@@ -18,7 +18,7 @@
  ],
  "profile": "compact-quality-first-v2 + EXP-N4-001 arm A",
  "baseline_revision": "0c673e78b9b5f9341b758d01f8245766a91de05b",
- "final_revision": "e68eafd978f0ef06085789722032875cfb31a68e",
+ "final_revision": "7346798",
  "spec_sha256": "431b004e3612e86cfeeac592231f013771d908143cfe6d1610ac59d3e40e5059",
  "host": "Claude Code CLI 2.1.261",
  "billing_mode": "unknown",
@@ -76,5 +76,6 @@
  "missing_data": {
   "active_wall_ms": "активное время агентов хостом не пишется; настенное посчитано от первого до последнего события",
   "coordinator_usage": "учитывается общим для обоих плеч, не относится к плечу A"
- }
+ },
+ "final_revision_note": "коммит закрытия; паспорт заполнялся до него, поэтому значение проставлено вручную"
 }
