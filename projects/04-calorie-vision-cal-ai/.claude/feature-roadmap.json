@@ -22,7 +22,7 @@
       "name": "Монорепо, контейнеры, схема БД и анонимная сессия устройства",
       "description": "npm workspaces (apps/web, apps/api, apps/recognizer, packages/db, packages/shared); сборка образов из корня проекта; миграции SQL на 14 таблиц канона с pg_trgm, частичными индексами и уникальными ограничениями; анонимная сессия устройства с хэшем токена cookie и усечённым ip_prefix; отказ старта api и recognizer при любом из трёх ненастроенных потолков; scripts/check-env-wiring.sh, которого в репозитории нет.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [],
@@ -50,7 +50,7 @@
       "name": "Приём скана, потолки, очередь и вызов модели",
       "description": "POST /scans (202 + обязательный Idempotency-Key), GET /scans/{id}; атомарные потолки user/global/escalation одним оператором в одной транзакции; серверная нормализация HEIC→JPEG, ≤ 1568 px, ≤ 5 МБ; очередь recognition с предикатом leased_until, lease_owner и монотонным lease_fence; адаптер поставщика модели с живым клиентом и детерминированным фейком; эскалация к Sonnet 5 при confidence < 0,6 с четвёртым ключом квоты; проверка диапазонов ответа в коде после разбора. Тир XL по локальному роутеру: трогает деньги, остановка на плане у владельца обязательна.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "next",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [

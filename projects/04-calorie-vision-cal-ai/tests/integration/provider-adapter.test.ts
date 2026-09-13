@@ -108,15 +108,36 @@ describe('поставщик модели', () => {
       ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
     }
 
-    // Бюджет, истекающий ВО ВРЕМЯ ФОРМИРОВАНИЯ ответа, — седьмое слепое ревью
-    // (RV-foundation-01). Задержки нет вовсе, но SHA-256 и сборка объекта сами занимают
-    // время: при бюджете 0,01 мс судья намерил 16 успехов из 20 ПОСЛЕ дедлайна. Ловится
-    // только проверкой, стоящей непосредственно перед `return`.
-    const instantProvider = createFakeModelProvider();
-    for (let i = 0; i < 20; i += 1) {
+  });
+
+  it('бюджет, истёкший во время формирования ответа, даёт отказ, а не поздний успех', async () => {
+    // Седьмое слепое ревью (RV-foundation-01): задержки нет вовсе, но SHA-256 и сборка
+    // объекта сами тратят бюджет, и успех возвращался ПОСЛЕ дедлайна.
+    //
+    // Часы здесь ПОДМЕНЕНЫ, и это не украшение. Первая редакция этого теста ставила бюджет
+    // 0,01 мс и требовала отказа двадцать раз подряд — то есть измеряла СКОРОСТЬ МАШИНЫ,
+    // а не поведение кода: восьмое ревью прогнало тот же исходник пятью сериями и получило
+    // 5, 17, 19, 19 и 17 УСПЕХОВ, каждый из которых уронил бы обязательный набор на
+    // корректной реализации. Тест, способный покраснеть на верном коде, хуже отсутствующего:
+    // он учит отключать себя. Поднятие порога лишь отодвинуло бы неустойчивость.
+    //
+    // `performance.now()` внутри фейка зовётся ровно трижды: на входе (абсолютный дедлайн),
+    // после ожидания и перед возвратом. Значения заданы так, что бюджет ЦЕЛ на второй
+    // проверке и ИСТЁК на третьей — ровно тот случай, который описало ревью.
+    const clock = vi.spyOn(performance, 'now');
+    try {
+      clock.mockReturnValueOnce(0).mockReturnValueOnce(0.005).mockReturnValueOnce(1);
       await expect(
-        instantProvider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal }),
+        createFakeModelProvider().recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal }),
       ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
+
+      // Обратный сценарий той же тройкой: бюджет цел на обеих проверках — обычный ответ.
+      // Без него тест доказывал бы только умение отказывать.
+      clock.mockReturnValueOnce(0).mockReturnValueOnce(0.001).mockReturnValueOnce(0.002);
+      const ok = await createFakeModelProvider().recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal });
+      expect(ok.model).toBe('haiku-4.5');
+    } finally {
+      clock.mockRestore();
     }
   });
 
