@@ -15,6 +15,8 @@ import { registerScansRoutes } from './routes/scans.js';
 import { registerAuthTelegramRoute } from './routes/auth-telegram.js';
 import { registerConsentRoute } from './routes/consent.js';
 import { registerAccountDeleteRoute } from './routes/account-delete.js';
+import { registerShareCardsRoute } from './routes/share-cards.js';
+import { registerShareCardInternalRoute } from './routes/share-card-internal.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
@@ -74,6 +76,10 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerAuthTelegramRoute(app, deps.pool, deps.config, deps.logger);
   registerConsentRoute(app, deps.pool, deps.logger);
   registerAccountDeleteRoute(app, deps.pool, deps.logger);
+  registerShareCardsRoute(app, { pool: deps.pool, storage, logger: deps.logger });
+  // `/internal/*` — НЕ входит в канон `/api/v1` (ровно 14) и не проксируется `Caddyfile`
+  // наружу; вызывается только `apps/web` изнутри сети compose (`routes/share-card-internal.ts`).
+  registerShareCardInternalRoute(app, { pool: deps.pool, storage });
 
   app.setNotFoundHandler(async (request, reply) => {
     // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая

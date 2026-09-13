@@ -187,6 +187,7 @@ describe('RunErasureJob', () => {
       owner: { table: 'device_session', id: sessionId },
       recognitionId,
       objectKey: 'card-via-linked-session',
+      badgeRendered: true,
     });
     expect(created.outcome).toBe('created');
 

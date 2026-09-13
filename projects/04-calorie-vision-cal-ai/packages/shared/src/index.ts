@@ -6,3 +6,5 @@ export * from './http/envelope.js';
 export * from './log/logger.js';
 export * from './log/redact.js';
 export * from './audit/consent-denied.js';
+export * from './domain/share-card.js';
+export * from './text/sanitize-for-card-text.js';

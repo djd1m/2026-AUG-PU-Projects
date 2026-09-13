@@ -287,6 +287,7 @@ describe('POST /api/v1/auth/telegram', () => {
       owner: { table: 'device_session', id: sessionId },
       recognitionId,
       objectKey: 'review3-card-anon',
+      badgeRendered: true,
     });
     expect(cardResult.outcome).toBe('created');
     const cardBeforeLogin = await pool.query<{ owner_key: string }>('SELECT owner_key FROM share_card WHERE recognition_id = $1', [
