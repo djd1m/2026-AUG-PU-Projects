@@ -2,13 +2,24 @@
 
 ## Статус документа
 
-Phase 3 ВЫПОЛНЕНА (плечо B, Sonnet 5), Попытка 2 ЗАКРЫВАЕТ все 38 AC исполненным тестом.
-Код написан и работает на изолированном стенде (`db`+`storage`+`storage-init`, проект
-`n4-tarelka-scan-b`, `--profile edge` НЕ поднимался — диск хоста был на 1,6 ГБ). `##
-Criterion coverage` ниже — ФАКТИЧЕСКАЯ таблица: пути и заголовки — реальные существующие
-тесты. Раздел «Попытка 2» в `receipts/impl-scan-pipeline.md` называет 12 тестов, добавленных
-во второй попытке, и честно — где ACs проверены на ПОДМЕНЁННОМ порте/фейке (эскалация,
-устаревшая аренда) либо на CТАНД-ИНЕ ВМЕСТО настоящего HEIC (см. AC-9 ниже), а не на
+Phase 3 ВЫПОЛНЕНА (плечо B, Sonnet 5). **Попытка 2 заявляла «все 38 AC закрыты исполненным
+тестом» — слепое ревью (`review-report.md`, RV-scan-pipeline-11) СПРАВЕДЛИВО отверг это
+утверждение как неверное**: конкурентная эскалация не звала провайдера (только счётчик),
+таймаут провайдера и сохранение РЕАЛЬНОГО счётчика квоты не проверялись вовсе, а пороги
+нормализации сверялись с ТОЙ ЖЕ константой `CANON`, которую читает проверяемый код. Попытка
+3 закрыла ПЕРВЫЕ ДВА реальными тестами на настоящей БД
+(`tests/integration/recognize/escalation-provider-concurrency.test.ts`,
+`tests/integration/recognize/provider-timeout-quota.test.ts`) и заменила пороги нормализации
+на независимые литералы (`tests/unit/photo/normalize.test.ts`). **Один пункт остаётся
+НЕ ЗАКРЫТЫМ и назван явно ниже (AC-scan-pipeline-25, многокадровая половина): скачивание
+фикстуры из сети запрещено, а эта сборка `sharp`/`libheif` не умеет закодировать
+многокадровый HEIF/AVIF с нуля — то же ограничение окружения, что у AC-9.** Код написан и
+работает на изолированном стенде (`db`+`storage`+`storage-init`, проект `n4-tarelka-scan-b`,
+`--profile edge` НЕ поднимался — диск хоста был на 1,6–1,8 ГБ). `## Criterion coverage` ниже
+— ФАКТИЧЕСКАЯ таблица: пути и заголовки — реальные существующие тесты. Раздел «Попытка 2» в
+`receipts/impl-scan-pipeline.md` называет 12 тестов второй попытки, раздел «Попытка 3» —
+правки блокирующей и всех high/medium находок ревью; оба честно называют, где ACs проверены
+на ПОДМЕНЁННОМ порте/фейке либо на СТАНД-ИНЕ ВМЕСТО настоящего HEIC (см. AC-9 ниже), а не на
 буквальном сценарии из спецификации.
 
 ## Порядок выполнения Phase 3 (после `foundation`)
@@ -95,10 +106,15 @@ node ../../.claude/hooks/check-job-contract.cjs .   # три состояния 
 
 ## Criterion coverage
 
-**Таблица ФАКТИЧЕСКАЯ.** Каждая строка — существующий файл и ДОСЛОВНЫЙ заголовок теста,
-прогнанного зелёным (unit — `npm test`, 85/85; integration/concurrency — `npm run
-test:integration` на изолированном стенде `n4-tarelka-scan-b`, 59/59, из них 24 — этой
-фичи). Все 38 AC закрыты.
+**Таблица ФАКТИЧЕСКАЯ (после Попытки 3 — правки блокирующего и всех high/medium находок
+слепого ревью, `review-report.md`).** Каждая строка — существующий файл и ДОСЛОВНЫЙ
+заголовок теста, прогнанного зелёным (unit — `npm test`, 100/100; integration/concurrency —
+`npm run test:integration` на изолированном стенде `n4-tarelka-scan-b`, ожидается 65/65 —
++3 к 62 Попытки 2: `escalation-provider-concurrency`, `provider-timeout-quota`,
+`RV-scan-pipeline-15` в `scans.test.ts`, `day-boundary`, `ip-prefix-quota` минус пересчёт,
+см. квитанцию «Попытка 3» за точным числом прогона). **37 из 38 AC закрыты исполненным
+тестом; AC-scan-pipeline-25 закрыт ЧАСТИЧНО** — EXIF-ротация доказана, многокадровая
+половина сценария НЕ ЗАКРЫТА (см. «Отклонения» и раздел «Не покрыто тестом» ниже).
 
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|
@@ -114,7 +130,7 @@ test:integration` на изолированном стенде `n4-tarelka-scan-
 | AC-scan-pipeline-10 | tests/unit/recognize/recognize-scan.test.ts | нормализация упавшая на normalize — failed(normalize), модель не вызывается |
 | AC-scan-pipeline-11 | tests/unit/recognize/validate-ranges.test.ts | confidence = 1.5 — schema_violation по полю confidence, БЕЗ подрезания до 1 |
 | AC-scan-pipeline-12 | tests/unit/recognize/recognize-scan.test.ts | confidence = 0.59 — эскалация ВЫПОЛНЯЕТСЯ (второй вызов состоялся) |
-| AC-scan-pipeline-13 | tests/concurrency/recognize/escalation-parallel.test.ts | РОВНО один вызов получает granted, used(scope=escalation) = 1, ни одна попытка не потеряна |
+| AC-scan-pipeline-13 | tests/integration/recognize/escalation-provider-concurrency.test.ts | 20 параллельных recognizeScan с confidence < порога — РОВНО 1 реальный вызов эскалационной модели |
 | AC-scan-pipeline-14 | tests/unit/recognize/recognize-scan.test.ts | 601-я эскалация (квота отказала) — done с low_confidence и quota_exhausted_escalation, НЕ failed/refused |
 | AC-scan-pipeline-15 | tests/unit/recognize/recognize-scan.test.ts | еда распознана с ЛЮБЫМ confidence — итог всегда failed(no_food_matched), никогда done |
 | AC-scan-pipeline-16 | tests/unit/recognize/recognize-scan.test.ts | провайдер недоступен — failed(provider_unavailable), попытка не откатывается (AC-scan-pipeline-16) |
@@ -158,16 +174,28 @@ test:integration` на изолированном стенде `n4-tarelka-scan-
   контейнер ISOBMFF/HEIF, другой кодек) и проверяет ИМЕННО заявление AC-9: результат —
   JPEG, длинная сторона ≤ 1568 px, размер ≤ 5 МБ. Байтовая СИГНАТУРА, которая отличает
   `heic` от `avif` на приёме (что вообще принимается как `image/heic`), — ОТДЕЛЬНАЯ, уже
-  проверенная забота `validate-content.test.ts`; она НЕ подменена этим тестом.
-- **AC-scan-pipeline-13** (конкурентная эскалация 20×). Тест
-  (`tests/concurrency/recognize/escalation-parallel.test.ts`) вызывает НЕ полный
-  `recognizeScan` (это дало бы 20 живых фейковых вызовов модели ради проверки счётчика, а
-  не самого счётчика), а НАПРЯМУЮ `checkAndConsumeQuota(reason='escalation')` — ТОТ ЖЕ код,
-  который `recognize-scan.ts` вызывает на шаге 7. Логика РЕШЕНИЯ об эскалации (порог
-  0,59/0,60, деление бюджета, VS-05) уже отдельно доказана `recognize-scan.test.ts`
-  (юнит, инъецированный `consumeQuota`); этот тест доказывает АТОМАРНОСТЬ самого
-  счётчика под конкуренцией — то, что юнит-тест с моком доказать не может
-  (`shared-resource-verification.md`).
+  проверенная забота `validate-content.test.ts`; она НЕ подменена этим тестом. Пороги
+  ≤5 МБ/≤1568 px в этом тесте — НЕЗАВИСИМЫЕ ЛИТЕРАЛЫ (`5_242_880`, `1568`), не
+  `CANON.normalizedMaxBytes`/`normalizedMaxDimensionPx` (RV-scan-pipeline-11, правка
+  Попытки 3): тест, сверяющий вывод с ТОЙ ЖЕ константой, которую читает код, «проходит»
+  и при испорченном значении константы.
+- **AC-scan-pipeline-13** (конкурентная эскалация 20×) — ПЕРЕСМОТРЕНО Попыткой 3. Ревью
+  справедливо отверг прежний тест (`escalation-parallel.test.ts`, оставлен рядом —
+  проверяет атомарность счётчика напрямую) как недостаточный: он не отличает «квота решила
+  верно» от «код всё равно позвонил провайдеру 20 раз». Новый
+  `tests/integration/recognize/escalation-provider-concurrency.test.ts` прогоняет ПОЛНЫЙ
+  `recognizeScan` 20 раз конкурентно на настоящей БД со СЧИТАЮЩИМ фейковым провайдером и
+  проверяет РЕАЛЬНОЕ число вызовов эскалационной модели (= 1), а не только счётчик квоты.
+  Это закрывает критику ревью буквально: «требуемого счётчика обращений к адаптеру нет»
+  (`review-report.md`, AC-13 row) — теперь есть.
+- **AC-scan-pipeline-16** (провайдер недоступен/таймаут) — ДОПОЛНЕНО Попыткой 3. Прежний
+  тест проверял только `provider_unavailable` (сетевая ошибка); отдельного сценария
+  РЕАЛЬНОГО `provider_timeout` (настоящий `AbortController`, не инъецированный отказ) и
+  сохранения РЕАЛЬНОГО счётчика квоты через таймаут не было. Новый
+  `tests/integration/recognize/provider-timeout-quota.test.ts` использует провайдер,
+  который никогда не резолвится сам, дожидается настоящего срабатывания дедлайна
+  `recognize-scan.ts` и проверяет на настоящем Postgres, что списание квоты (шаг 3,
+  ДО вызова модели) остаётся на месте (used=1), а не откатывается и не задваивается.
 - **AC-scan-pipeline-17** (устаревшая аренда с реальной задержкой). Тест
   (`tests/concurrency/recognize/stale-lease-real-delay.test.ts`) использует `Deferred`
   вместо `setTimeout`: гонка ВОСПРОИЗВОДИТСЯ ТОЧНО (провайдер воркера A ждёт, пока тест не
@@ -184,3 +212,23 @@ test:integration` на изолированном стенде `n4-tarelka-scan-
 `WRITE_RESULT` всегда обнуляет). Обе ветки испытаны: `foundation`'s `lease.test.ts` (для
 случая «соперник уже завершил») и новый `stale-lease-real-delay.test.ts` (для случая
 «соперник только захватил, ещё не завершил»).
+
+## Не покрыто тестом (честно, после Попытки 3)
+
+- **AC-scan-pipeline-25, многокадровая половина.** «Для многокадрового входа сохранён
+  РОВНО первый кадр» проверяется `normalize.ts`'s `pages: 1` (тот же параметр `sharp`,
+  что уже используется и виден в коде), но НЕ доказано тестом: генерация настоящего
+  многокадрового HEIC/HEIF-контейнера С НУЛЯ этой сборкой `sharp`/`libheif` недоступна
+  (то же ограничение окружения, что у AC-9 — см. «Отклонения» выше), а скачивание готовой
+  фикстуры из сети запрещено `replicate-pipeline.md`. EXIF-половина того же критерия
+  (поворот применён до strip метаданных) ЗАКРЫТА (`normalize.test.ts`, AC-scan-pipeline-25
+  row). Реализовано (`pages: 1` в коде), НЕ ПРОВЕРЕНО тестом — это состояние, а не пропуск
+  в таблице.
+
+## RV-scan-pipeline-15 (не связано с блокирующим/high, но исправлено в Попытке 3)
+
+`apps/api/src/routes/scans.ts` писал `growth_event(install)` на КАЖДЫЙ скан сессии, а не
+только на первый: проверка «есть ли уже сканы у этой сессии» находила СВОЮ ЖЕ только что
+закоммиченную строку. Исправлено (`AND id != $2`) и покрыто
+`tests/integration/routes/scans.test.ts`, тест «growth_event(install) пишется РОВНО один
+раз на сессию, а не на каждый скан» — три скана одной сессии, одна строка `install`.

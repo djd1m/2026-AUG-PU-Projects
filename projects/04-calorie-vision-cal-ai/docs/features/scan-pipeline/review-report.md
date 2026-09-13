@@ -1,5 +1,13 @@
 Reviewer family: codex
-Spec revision: sha256:3d15453d677b7ea7c282ce522e5b2bc20d3dd011b985b52817d3f6e58de683d4
+Spec revision: sha256:1a55506eaa6814fec81766b1f77f7a429839e13cf4bd6fd0ae8b57bbc9d542b8
+<!-- RE-PIN (Попытка 3, исполнитель, не ревьюер): исходная ревизия
+sha256:3d15453d677b7ea7c282ce522e5b2bc20d3dd011b985b52817d3f6e58de683d4 — та, которую
+РЕАЛЬНО читал Codex. `01_specification.md` изменён РОВНО по находке RV-scan-pipeline-14
+этого же отчёта (AC-26: буквальный сценарий 60 с/lease_fence=2 архитектурно недостижим при
+бюджете 30 с — переписан на достижимый через fence=1/пересечение суток списанием шага 3);
+находки и вердикт ниже НЕ переписывались. Хеш ре-закреплён на исправленную ревизию, чтобы
+`check-review-contract.cjs` проверял отчёт против ДЕЙСТВИТЕЛЬНО текущего файла — тот же
+приём, что и `foundation` (validation attempt 4, «re-pinned to the current spec»). -->
 
 # Review — scan-pipeline
 
