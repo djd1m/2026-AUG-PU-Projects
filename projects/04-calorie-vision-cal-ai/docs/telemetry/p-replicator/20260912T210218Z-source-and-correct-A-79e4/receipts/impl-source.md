@@ -103,7 +103,38 @@ RUN_ID: 20260912T210218Z-source-and-correct-A-79e4
 2. Конкурентный сценарий «правка приходит в момент, когда воркер дописывает терминальный результат» —
    структурно безопасен (та же строка `recognition`, `SELECT FOR UPDATE` против условного `UPDATE …
    WHERE lease_fence`), но НЕ подтверждён отдельным тестом с управляемой гонкой.
+   **СНЯТО в Phase 4 (см. ниже, RV-05)**: сценарий теперь покрыт управляемым тестом.
 3. Полный дамп FDC не импортирован (тесты — на фикстуре 50 записей и синтетике 300 000); импорт
    реальных дампов — операция оператора, вне этой сессии (DEC-A-009 контекст).
+
+## Правка после слепого ревью (Phase 4, 2026-09-13)
+
+Слепой ревьюер (codex, `docs/features/source-and-correct/review-report.md`) нашёл 5 `high`, 0
+блокеров, 2+ `medium`. По DEC-A-032 второго раунда не будет — правка последняя. Все пять `high`
+исправлены в порядке, заданном координатором, и подтверждены прогоном на настоящем PostgreSQL.
+`Medium` (RV-06, RV-07) НЕ чинились — выписаны в `05_completion.md`, раздел «Follow-up, не
+блокирующий закрытие».
+
+| Находка | Правка | Тест |
+|---|---|---|
+| RV-02 (high, `scripts/fdc/nutrient-map.ts:31`) — энергия выбиралась по имени «Energy» без учёта единицы; `1062/Energy/kJ` перед `1008/Energy/kcal` записал бы кДж как ккал | Критерий — имя И единица; неоднозначность (два id под один критерий) — отказ импорта | `tests/unit/source/nutrient-map.test.ts`, 7 тестов: обе перестановки строк, регистр единицы, energy-без-kcal-формы, неоднозначность, отсутствие |
+| RV-03 (high, `tests/guard/single-model-estimate-read.test.ts:64`) — страж пропускал `const dbKcalTotal = finalResponse.modelEstimateKcal;` и `const kcal = modelEstimateKcal * 1;` | Детектор: +,-,*,/ рядом с идентификатором, плюс переприсваивание ЧИСТОГО пути к идентификатору под другим именем (отличено от аргумента `evaluateDiscrepancy` и самоимённой пересылки) | Обе строки ревьюера — отдельные испытания стража (красный/зелёный) + тест «легитимная пересылка нигде не считается использованием» |
+| RV-01 (high, `apps/web/app/result/result-screen.tsx:156`) — компонент нигде не использовался, маршрута не было, кнопки без обработчиков | `apps/web/app/result/[id]/page.tsx` — реальный маршрут с загрузкой/поллингом и пятью действиями, подключёнными к `POST …/correct` через `buildCorrectRequest` | `tests/unit/source/correct-request.test.ts` (5 операций); `tests/integration/web-result-route.test.ts` (собранное приложение, `/result/<id>` → 200) |
+| RV-05 (high, `tests/concurrency/source/concurrent-correct.test.ts:89`) — 20 одинаковых `set_portion` на одном индексе не могут наблюдаемо терять обновления | Два сценария с управляемым пересечением: разные операции на разных индексах; ручная блокировка строки имитирует воркера в процессе записи | Оба сценария зелёные на настоящем PostgreSQL; статическая половина «падение при снятой защите» в `tests/unit/source-guards.test.ts` |
+| RV-04 (high, `tests/integration/source/usda-match-port.test.ts:82`) — AC-8 копировал контракт с другими входами/заголовком; AC-11 проверял локальную переменную ДО UPDATE; AC-10 не проверял точную длину/массы | Контракт вынесен в `tests/contract/match-ingredient-port.contract.ts`, ОДИН вызов из обоих тестов; AC-11 — реальная запись→UPDATE→GET с независимым ожидаемым числом; AC-10 — точная длина (5) и масса каждой части | 4/4 в `usda-match-port.test.ts`, 3/3 в `null-port.test.ts`, оба на настоящем PostgreSQL |
+
+### Финальные прогоны после правок (все зелёные)
+
+- `npm run typecheck`, `npm run lint`, `npm run build` — 0
+- `npm test` — 163/163 (18→20 файлов, +18 тестов с начала Phase 3)
+- `docker compose --profile test run --rm -T test npm run test:integration` — 34 файла / 127 тестов,
+  ВСЕ зелёные (включая ранее нестабильный `web-manifest.test.ts` и новые
+  `web-result-route.test.ts`, `concurrent-correct.test.ts` с двумя новыми сценариями)
+- `npm run test:performance` (в контейнере) — p95 23,7 с прогона, требование ≤200 мс выполнено
+- `node ../../.claude/hooks/check-ports.cjs .` — 0; `bash scripts/check-env-wiring.sh .` — 0
+- `bash .../check-pipeline-gaps.sh . --completion --role-map-source … --project-role-map-source …`
+  — контур `source-and-correct` — 0 GAP (остальные GAP/NOT-ESTABLISHED в общем выводе — другие,
+  ещё не реализованные фичи роадмапа, вне области этой фичи)
+- `docker compose down -v` выполнен после каждого прогона в контейнере
 
 Status: completed
