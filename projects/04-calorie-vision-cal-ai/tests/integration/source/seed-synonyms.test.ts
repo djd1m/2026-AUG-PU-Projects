@@ -79,6 +79,30 @@ describe('loadFoodSynonyms + coverage (AC-source-and-correct-4/5)', () => {
     expect(FREQUENT_QUERIES.length).toBeGreaterThanOrEqual(50);
   }, 30_000);
 
+  it('ИСПЫТАНИЕ СТРАЖА (AC-5/ADR-006): удаление строк seed, покрывающих слово, красит покрытие (guard-must-be-able-to-fail.md)', async () => {
+    // Все строки, содержащие «рис», «лук», «яйцо», «лосось» или «сельдь» (10 строк — тот
+    // же масштаб мутации, что называет 04_refinement.md «удалить 10 строк seed»), удалены
+    // ЦЕЛИКОМ, а не одна из нескольких: иначе триграммный поиск нашёл бы соседнюю форму
+    // того же слова и мутация осталась бы незаметной.
+    const REMOVE_WORDS = ['рис', 'лук', 'яйцо', 'лосось', 'сельдь'];
+    const mutatedSeed = SEED_ROWS.filter((row) => !REMOVE_WORDS.some((word) => row.name_ru.toLowerCase().includes(word)));
+    const removedCount = SEED_ROWS.length - mutatedSeed.length;
+    expect(removedCount).toBe(10); // подтверждает заявленный масштаб мутации
+
+    const pool = await migratedPool('n4-tests-seed-synonyms-5');
+    await truncateAll(pool);
+    await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
+    await loadFoodSynonyms(pool, mutatedSeed);
+
+    const misses: string[] = [];
+    for (const query of FREQUENT_QUERIES) {
+      const found = await searchFoodCandidates(pool, { query, mode: 'auto' });
+      if (found.length === 0) misses.push(query);
+    }
+    // КРАСНЫЙ на мутированном seed'е: слова, чьи строки удалены целиком, больше не находятся.
+    expect(misses.sort()).toEqual([...REMOVE_WORDS].sort());
+  }, 30_000);
+
   it('составное блюдо: сумма долей 0,9 отвергается при загрузке с названной причиной', async () => {
     const pool = await migratedPool('n4-tests-seed-synonyms-4');
     await truncateAll(pool);

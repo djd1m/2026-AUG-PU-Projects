@@ -119,6 +119,40 @@ describe('миграции', () => {
     }
   });
 
+  it('recognition_conflict_choice_check и парный CHECK отбиваются базой (source-and-correct, DEC-A-023)', async () => {
+    const client = await connectScratch();
+    try {
+      const session = await client.query<{ id: string }>(
+        `INSERT INTO device_session (cookie_token_hash, ip_prefix, anonymous_diary_expires_at)
+         VALUES ('test-hash-conflict-choice', '203.0.113.0', now() + interval '1 day')
+         RETURNING id`,
+      );
+      const deviceSessionId = session.rows[0]?.id;
+      expect(deviceSessionId).toBeDefined();
+
+      // Единственное допустимое значение — 'take_db' (DEC-A-023): БАЗА, а не только код,
+      // отвергает 'model' — значение, отвергнутое координатором именно затем, чтобы оценка
+      // модели не стала источником числа через маршрут правки.
+      await expect(
+        client.query(`INSERT INTO recognition (device_session_id, conflict_choice) VALUES ($1, 'model')`, [deviceSessionId]),
+      ).rejects.toMatchObject({ constraint: 'recognition_conflict_choice_check' });
+
+      // Парный CHECK: выбор без времени — тоже полуправда, которую база не пропускает.
+      await expect(
+        client.query(`INSERT INTO recognition (device_session_id, conflict_choice) VALUES ($1, 'take_db')`, [deviceSessionId]),
+      ).rejects.toMatchObject({ constraint: 'recognition_conflict_choice_pair' });
+
+      // Валидная пара — принимается без ошибок.
+      const inserted = await client.query<{ id: string }>(
+        `INSERT INTO recognition (device_session_id, conflict_choice, conflict_choice_at) VALUES ($1, 'take_db', now()) RETURNING id`,
+        [deviceSessionId],
+      );
+      expect(inserted.rows[0]?.id).toBeDefined();
+    } finally {
+      await client.end();
+    }
+  });
+
   it('изменённый после применения файл миграции валит раннер', async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'n4-migrations-'));
     await cp(MIGRATIONS_DIRECTORY, directory, { recursive: true });

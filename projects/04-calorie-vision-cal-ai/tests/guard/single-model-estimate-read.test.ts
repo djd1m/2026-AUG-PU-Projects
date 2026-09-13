@@ -99,6 +99,21 @@ describe('GuardSingleModelEstimateRead (AC-source-and-correct-24)', () => {
     expect(computeFile?.code).toMatch(/sourceSnapshot/);
   });
 
+  it('ИСПЫТАНИЕ СТРАЖА («источник числа»): внедрённая ссылка на ModelResponse красит проверку (guard-must-be-able-to-fail.md)', async () => {
+    const files = await readScope();
+    const computeFile = files.find(({ file }) => file.endsWith('domain/food-compute.ts'));
+    expect(computeFile).toBeDefined();
+
+    // Мутация — В ПАМЯТИ: симулирует регресс, где кто-то читает kcal/protein/fat/carb
+    // из формы ответа модели вместо параметра sourceSnapshot.
+    const mutatedCode = `${computeFile?.code}\nfunction debugFromModel(r: ModelResponse) { return r; }\n`;
+    expect(mutatedCode).not.toBe(computeFile?.code);
+    expect(mutatedCode).toMatch(/ModelResponse|RecognizedItemDraft/); // КРАСНЫЙ на мутированном коде
+
+    // Восстановление (немутированный код) — снова ЗЕЛЁНЫЙ.
+    expect(computeFile?.code).not.toMatch(/ModelResponse|RecognizedItemDraft/);
+  });
+
   it('ИСПЫТАНИЕ СТРАЖА (guard-must-be-able-to-fail.md): внедрённое ВТОРОЕ арифметическое чтение красит тест', async () => {
     const files = await readScope();
     const withoutMutation = findArithmeticReads(files);
