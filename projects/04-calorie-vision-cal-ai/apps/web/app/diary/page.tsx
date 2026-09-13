@@ -153,16 +153,25 @@ export default function DiaryPage(): React.JSX.Element {
           ) : (
             <ul className="diary__entries">
               {state.day.entries.map((entry) => (
-                <li key={entry.entry_id} className="item diary__entry">
-                  <span className="diary__entry-meal">{mealSlotLabel(entry.meal_slot)}</span>
-                  <span className="item__kcal">{entry.kcal_total} ккал</span>
-                  <ul className="diary__entry-items muted">
-                    {entry.items.map((item, index) => (
-                      <li key={index}>
-                        {item.unmatched === true ? `${item.label_ru ?? '—'} (нет в базе)` : `${item.label_ru ?? '—'}, ${item.mass_g ?? 0} г`}
-                      </li>
-                    ))}
-                  </ul>
+                // Задача N4 (дефект «нельзя вернуться к блюду и поделиться»): запись дня ведёт
+                // на экран результата ТОГО ЖЕ скана (`recognition_id` уже есть в ответе маршрута
+                // 4, `routes/diary.ts::entryPayload`) — там уже есть кнопка «поделиться».
+                // Обычная ссылка, не JS-обработчик — тот же приём навигации, что у «к камере».
+                <li key={entry.entry_id} className="diary__entry">
+                  <a href={`/result/${entry.recognition_id}`} className="item diary__entry-link" aria-label={`открыть запись: ${mealSlotLabel(entry.meal_slot)}, ${entry.kcal_total} ккал`}>
+                    <span className="diary__entry-meal">{mealSlotLabel(entry.meal_slot)}</span>
+                    <span className="item__kcal">{entry.kcal_total} ккал</span>
+                    <ul className="diary__entry-items muted">
+                      {entry.items.map((item, index) => (
+                        <li key={index}>
+                          {item.unmatched === true ? `${item.label_ru ?? '—'} (нет в базе)` : `${item.label_ru ?? '—'}, ${item.mass_g ?? 0} г`}
+                        </li>
+                      ))}
+                    </ul>
+                    <span className="diary__entry-open" aria-hidden="true">
+                      открыть и поделиться →
+                    </span>
+                  </a>
                 </li>
               ))}
             </ul>

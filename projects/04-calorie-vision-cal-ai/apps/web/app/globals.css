@@ -840,6 +840,25 @@ input:focus-visible {
   display: grid;
   gap: var(--sp-1);
 }
+/* Запись дня — ссылка на экран результата (задача N4: «нельзя вернуться к блюду и
+   расшарить»). `.item` уже задаёт карточку — здесь только сброс стилей ссылки поверх
+   неё, форма карточки не меняется. */
+.diary__entry-link {
+  display: grid;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.diary__entry-link:hover,
+.diary__entry-link:focus-visible {
+  border-color: var(--accent-deep);
+}
+.diary__entry-open {
+  justify-self: start;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-deep);
+}
 .diary__entry-meal {
   font-size: 11px;
   letter-spacing: 0.04em;
