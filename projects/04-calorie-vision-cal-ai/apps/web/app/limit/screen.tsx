@@ -124,28 +124,36 @@ export function LimitScreen({ scope, resetAt }: LimitScreenProps) {
   const hint = contactHint(contact);
 
   return (
-    <main aria-label="экран лимита">
-      <p>{reasonText(scope)}</p>
-      <p>{formatResetAt(resetAt)}</p>
-      <p>Оплаты сейчас нет — мы измеряем интерес к Pro, а не продаём его.</p>
+    <main className="page" aria-label="экран лимита">
+      <div className="card">
+        <p className="limit__reason">{reasonText(scope)}</p>
+        <p className="limit__reset">{formatResetAt(resetAt)}</p>
+        <p className="limit__note">Оплаты сейчас нет — мы измеряем интерес к Pro, а не продаём его.</p>
+      </div>
       {submitted ? (
-        <p>Уже записали, спасибо.</p>
+        <p className="limit__submitted">Уже записали, спасибо.</p>
       ) : (
-        <form onSubmit={onSubmit}>
-          <label htmlFor="pro-interest-contact">Почта или Telegram</label>
-          <input
-            id="pro-interest-contact"
-            name="contact"
-            type="text"
-            value={contact}
-            onChange={(event) => setContact(event.target.value)}
-            placeholder="you@example.com или @username"
-          />
-          {hint !== null ? <span>{hint === 'email' ? 'похоже на почту' : 'похоже на Telegram'}</span> : null}
-          <button type="submit" disabled={pending}>
+        <form className="limit__form" onSubmit={onSubmit}>
+          <div className="limit__field">
+            <label htmlFor="pro-interest-contact">Почта или Telegram</label>
+            <input
+              id="pro-interest-contact"
+              name="contact"
+              type="text"
+              value={contact}
+              onChange={(event) => setContact(event.target.value)}
+              placeholder="you@example.com или @username"
+            />
+            {hint !== null ? <span className="limit__hint">{hint === 'email' ? 'похоже на почту' : 'похоже на Telegram'}</span> : null}
+          </div>
+          <button type="submit" className="btn btn--primary btn--wide" disabled={pending}>
             Записать интерес
           </button>
-          {error !== null ? <p role="alert">{error}</p> : null}
+          {error !== null ? (
+            <p className="limit__error" role="alert">
+              {error}
+            </p>
+          ) : null}
         </form>
       )}
     </main>

@@ -37,7 +37,7 @@ export function TelegramLoginButton({ botDeepLink }: { readonly botDeepLink: str
   }
 
   return (
-    <a href={botDeepLink} rel="noreferrer">
+    <a className="btn btn--accent btn--wide" href={botDeepLink} rel="noreferrer">
       Войти через Telegram
     </a>
   );

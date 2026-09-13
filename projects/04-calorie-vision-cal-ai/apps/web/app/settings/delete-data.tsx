@@ -62,33 +62,41 @@ export function DeleteDataScreen() {
   if (confirming !== null) {
     const copy = CONFIRM_COPY[confirming];
     return (
-      <main>
-        <p role="alertdialog">{copy.question}</p>
-        <button type="button" onClick={() => confirmed(confirming)}>
-          {copy.confirmLabel}
-        </button>
-        <button type="button" onClick={() => setConfirming(null)}>
-          Отмена
-        </button>
+      <main className="page delete__confirm">
+        <div className="card">
+          <p role="alertdialog">{copy.question}</p>
+        </div>
+        <div className="delete__confirm-actions">
+          <button type="button" className="btn btn--danger btn--wide" onClick={() => confirmed(confirming)}>
+            {copy.confirmLabel}
+          </button>
+          <button type="button" className="btn btn--ghost btn--wide" onClick={() => setConfirming(null)}>
+            Отмена
+          </button>
+        </div>
       </main>
     );
   }
 
   return (
-    <main>
-      <section>
+    <main className="settings__section">
+      <section className="card delete__section">
         <p>Отозвать согласие: закроет ваши карточки сейчас, дневник останется.</p>
-        <button type="button" disabled={pending !== null} onClick={() => setConfirming('withdraw_consent')}>
+        <button type="button" className="btn btn--ghost" disabled={pending !== null} onClick={() => setConfirming('withdraw_consent')}>
           Отозвать согласие
         </button>
       </section>
-      <section>
+      <section className="card delete__section">
         <p>Удалить всё: удалит аккаунт и все данные в течение 72 часов, действие необратимо.</p>
-        <button type="button" disabled={pending !== null} onClick={() => setConfirming('erase_all')}>
+        <button type="button" className="btn btn--danger" disabled={pending !== null} onClick={() => setConfirming('erase_all')}>
           Удалить всё
         </button>
       </section>
-      {result !== null ? <p role="status">{result}</p> : null}
+      {result !== null ? (
+        <p className="delete__result" role="status">
+          {result}
+        </p>
+      ) : null}
     </main>
   );
 }

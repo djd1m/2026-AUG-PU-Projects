@@ -51,15 +51,24 @@ export function ConsentScreen({ consentTextHash, onDecided }: { readonly consent
   };
 
   return (
-    <main>
-      <p>{CONSENT_TEXT}</p>
-      <button type="button" disabled={pending} onClick={() => decide('grant')}>
-        Согласен(а)
-      </button>
-      <button type="button" disabled={pending} onClick={() => decide('decline')}>
-        Отказаться
-      </button>
-      {error !== null ? <p role="alert">{error}</p> : null}
+    <main className="page">
+      <h1>Согласие на обработку данных о питании</h1>
+      <div className="card">
+        <p className="consent__text">{CONSENT_TEXT}</p>
+      </div>
+      <div className="consent__actions">
+        <button type="button" className="btn btn--primary" disabled={pending} onClick={() => decide('grant')}>
+          Согласен(а)
+        </button>
+        <button type="button" className="btn btn--ghost" disabled={pending} onClick={() => decide('decline')}>
+          Отказаться
+        </button>
+      </div>
+      {error !== null ? (
+        <p className="consent__error" role="alert">
+          {error}
+        </p>
+      ) : null}
     </main>
   );
 }

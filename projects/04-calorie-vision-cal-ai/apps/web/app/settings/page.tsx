@@ -10,9 +10,11 @@ export default function SettingsPage() {
   // Сам вход выполняется корневым `TelegramAutoLogin` (`layout.tsx`), не здесь
   // (RV-consent-and-telegram-auth-06, третий обзор) — эта кнопка только отображает статус.
   return (
-    <main>
+    <main className="page">
       <h1>Настройки</h1>
-      <TelegramLoginButton botDeepLink="https://t.me/tarelka_bot" />
+      <div className="settings__section">
+        <TelegramLoginButton botDeepLink="https://t.me/tarelka_bot" />
+      </div>
       <DeleteDataScreen />
     </main>
   );
