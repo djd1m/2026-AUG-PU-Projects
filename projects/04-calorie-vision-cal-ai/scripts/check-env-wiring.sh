@@ -99,11 +99,22 @@ for svc in api recognizer web; do
     continue
   fi
 
+  # ПЕРЕМЕННАЯ СЧИТАЕТСЯ ПРОБРОШЕННОЙ ТОЛЬКО ИЗ `services.<svc>.environment`.
+  # Прежняя версия собирала имена из ВСЕГО блока сервиса, и `labels`, `x-*`, `build.args`
+  # или `healthcheck` засчитывались наравне с окружением: перенос `S3_BUCKET` из
+  # `environment` в `labels` оставлял код 0 и зелёное сообщение, хотя приложение такой
+  # переменной не получит (слепое ревью, RV-foundation-01). Страж, зеленеющий на
+  # потерянной переменной, — худший вид отказа (`guard-must-be-able-to-fail.md`).
+  #
+  # Разбор с состоянием, а не построчное окно: секции сервиса идут на четырёх пробелах,
+  # записи окружения — на шести. Любая секция, кроме `environment:`, сбор ВЫКЛЮЧАЕТ.
   passed=$(printf '%s\n' "$CONFIG" \
            | awk -v svc="  $svc:" '
-               $0 == svc { inside = 1; next }
-               /^  [a-zA-Z0-9_-]+:$/ { inside = 0 }
-               inside { print }
+               $0 == svc { inside = 1; inenv = 0; next }
+               /^  [a-zA-Z0-9_-]+:$/ { inside = 0; inenv = 0; next }
+               !inside { next }
+               /^    [a-zA-Z0-9_.-]+:/ { inenv = ($0 ~ /^    environment:[[:space:]]*$/) ? 1 : 0; next }
+               inenv { print }
              ' \
            | grep -oE '^[[:space:]]+[A-Z][A-Z0-9_]*:' | tr -d ' :' | sort -u)
 

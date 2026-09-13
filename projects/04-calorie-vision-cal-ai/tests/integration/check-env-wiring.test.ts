@@ -73,6 +73,48 @@ describe('страж проброса переменных', () => {
     expect(empty.stdout).not.toContain('✅');
   }, 60_000);
 
+  it('переменная в labels не засчитывается за переданную в environment', async () => {
+    // Воспроизведение слепого ревью (RV-foundation-01) БУКВАЛЬНО: у `api` единственная
+    // переменная `S3_BUCKET` перенесена из `environment` в `labels`. Прежний страж собирал
+    // имена из ВСЕГО блока сервиса и отвечал `0` с зелёным сообщением — приложение при этом
+    // переменной не получает. Соседний тест (удаление имени ЦЕЛИКОМ) этого не ловит: он не
+    // проверяет, из какой секции взято имя.
+    //
+    // Обе очерёдности секций обязаны давать `1`: разбор, у которого «последняя секция
+    // побеждает», зеленел бы ровно на одной из них.
+    const movedToLabels = (placement: 'before' | 'after'): string => {
+      const environment = [
+        '    environment:',
+        ...API_VARIABLES.filter((name) => name !== 'S3_BUCKET').map((name) => `      ${name}: значение`),
+      ];
+      const labels = ['    labels:', '      S3_BUCKET: значение'];
+      const api = ['  api:', ...(placement === 'before' ? [...labels, ...environment] : [...environment, ...labels]), '    image: n4/local'];
+      const other = (service: string, variables: string[]): string[] => [
+        `  ${service}:`,
+        '    environment:',
+        ...variables.map((name) => `      ${name}: значение`),
+        '    image: n4/local',
+      ];
+      return [
+        'name: n4-tarelka',
+        'services:',
+        ...api,
+        ...other('recognizer', RECOGNIZER_VARIABLES),
+        ...other('web', ['APP_ORIGIN', 'API_INTERNAL_URL']),
+        '',
+      ].join('\n');
+    };
+
+    for (const placement of ['before', 'after'] as const) {
+      const result = await guard(movedToLabels(placement));
+      expect(result.code, `${placement}: ${result.stdout}${result.stderr}`).toBe(1);
+      // Названы И сервис, И переменная: «что-то не так» чинить нельзя.
+      expect(result.stdout).toContain('api');
+      expect(result.stdout).toContain('S3_BUCKET');
+      expect(result.stdout).not.toContain('✅ api');
+    }
+  }, 60_000);
+
   it('отсутствие сервиса в конфигурации даёт код 2, а не список потерь', async () => {
     // Профиль забыли — сервиса в конфигурации нет. Считать все его переменные
     // потерянными значило бы утопить настоящую потерю в ложных.
