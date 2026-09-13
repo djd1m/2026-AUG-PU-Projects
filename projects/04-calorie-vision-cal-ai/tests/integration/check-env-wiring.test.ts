@@ -25,8 +25,11 @@ const API_VARIABLES = [
   'TELEGRAM_BOT_TOKEN',
 ];
 const RECOGNIZER_VARIABLES = [
+  // OPENROUTER_API_KEY добавлена ТРЕТЬЕЙ реализацией поставщика (DEC-A-045/046):
+  // `apps/recognizer/src/env.ts` теперь читает её той же формой, что ANTHROPIC_API_KEY.
   'ANTHROPIC_API_KEY', 'DATABASE_URL', 'N4_ESCALATION_LIMIT_DAY', 'N4_MODEL_PROVIDER',
-  'N4_SCAN_LIMIT_DAY', 'N4_SCAN_LIMIT_USER', 'S3_ACCESS_KEY', 'S3_BUCKET', 'S3_ENDPOINT', 'S3_SECRET_KEY',
+  'N4_SCAN_LIMIT_DAY', 'N4_SCAN_LIMIT_USER', 'OPENROUTER_API_KEY',
+  'S3_ACCESS_KEY', 'S3_BUCKET', 'S3_ENDPOINT', 'S3_SECRET_KEY',
 ];
 
 function composeConfig(apiVariables: string[]): string {

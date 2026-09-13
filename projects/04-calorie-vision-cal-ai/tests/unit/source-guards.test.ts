@@ -248,6 +248,30 @@ describe('страж ADR-001: число берётся из базы, а не �
   });
 
   /**
+   * ТРЕТЬЯ реализация порта (DEC-A-045/046): та же граница, что у `live.ts` выше —
+   * `provider/openrouter.ts` — второе место, где схема реально уходит НАРУЖУ (тело запроса
+   * OpenRouter, `response_format.json_schema.schema`).
+   */
+  it('производственная JSON-схема openrouter.ts не содержит kcal/calories/protein/fat/carbs КАК КЛЮЧ (испытано мутацией)', async () => {
+    const provider = await readAll('apps/recognizer/src/provider');
+    const openrouter = provider.find(({ file }) => file.endsWith('provider/openrouter.ts'));
+    expect(openrouter).toBeDefined();
+
+    // Зелёный на РЕАЛЬНОМ файле: разрешённое `model_estimate_kcal` не флагуется.
+    expect(findForbiddenSchemaKeys(openrouter?.code ?? '')).toEqual([]);
+
+    // ИСПЫТАНИЕ СТРАЖА НА ВНЕДРЁННОМ ДЕФЕКТЕ: дефект возвращён → страж покраснел, дефект
+    // снят (текст ниже) → страж зазеленел. Мутация — В ПАМЯТИ, файл на диске не трогается.
+    const mutatedAddingForbiddenField = (openrouter?.code ?? '').replace(
+      "model_estimate_kcal: { type: 'number' },",
+      "model_estimate_kcal: { type: 'number' },\n    protein: { type: 'number' },",
+    );
+    expect(mutatedAddingForbiddenField).not.toBe(openrouter?.code); // замена реально произошла
+    expect(findForbiddenSchemaKeys(mutatedAddingForbiddenField)).toEqual(['protein']); // красный на дефекте
+    expect(findForbiddenSchemaKeys(openrouter?.code ?? '')).toEqual([]); // зелёный после восстановления (реальный файл)
+  });
+
+  /**
    * RV-scan-pipeline-10, ПЕРЕСМОТРЕНО `source-and-correct` (ADR-001 Confirmation (2),
    * `terminalStatusForMatch`): статус `done` пишется В recognize-scan.ts ТОЛЬКО внутри
    * ветки, охраняемой `anyMatched` — НАПРЯМУЮ (прежняя форма) либо ЧЕРЕЗ

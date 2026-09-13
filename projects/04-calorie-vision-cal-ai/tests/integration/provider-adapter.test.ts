@@ -50,10 +50,20 @@ const LIVE_CONFIG = {
   storage: { endpoint: 'x', bucket: 'x', accessKey: 'x', secretKey: 'x' },
   quota: { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
   modelProvider: 'live' as const,
+  // Поле обязательно с ТРЕТЬЕЙ реализацией (DEC-A-045/046); пусто законно при `live`.
+  openrouterApiKey: undefined,
 };
 
 /** Живой поставщик СОБИРАЕТСЯ, но в сеть не ходит: ключа на машине нет (DEC-A-009). */
 const STUB_IMAGES: ImageFetcher = { fetchBase64: () => Promise.reject(new Error('живой вызов не выполняется в этой квитанции')) };
+
+const OPENROUTER_CONFIG = {
+  databaseUrl: 'x',
+  storage: { endpoint: 'x', bucket: 'x', accessKey: 'x', secretKey: 'x' },
+  quota: { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
+  modelProvider: 'openrouter' as const,
+  anthropicApiKey: undefined,
+};
 
 describe('поставщик модели', () => {
   it('фейковый адаптер детерминирован и не ходит в сеть', async () => {
@@ -225,6 +235,30 @@ describe('поставщик модели', () => {
   it('живой поставщик РЕАЛИЗОВАН этой фичей — конструируется, но не вызывается без сети (нет ключа на машине, DEC-A-009)', () => {
     const provider = selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: 'sk-test-value' }, STUB_IMAGES);
     expect(provider.kind).toBe('live');
+  });
+
+  // ТРЕТЬЯ реализация (DEC-A-045/046): та же форма отказов/сборки, что у `live` выше.
+  it('режим openrouter без ключа валит старт воркера', () => {
+    let refusal: ConfigValidationError | undefined;
+    try {
+      loadRecognizerConfig({ ...BASE_ENV, N4_MODEL_PROVIDER: 'openrouter' });
+    } catch (error) {
+      refusal = error as ConfigValidationError;
+    }
+    expect(refusal).toBeInstanceOf(ConfigValidationError);
+    expect(refusal?.variables).toContain('OPENROUTER_API_KEY');
+
+    // А если валидатор кто-то обойдёт — отказывает и выбор реализации.
+    expect(() => selectModelProvider({ ...OPENROUTER_CONFIG, openrouterApiKey: undefined })).toThrow(/OPENROUTER_API_KEY/);
+  });
+
+  it('поставщик openrouter конструируется с ключом, но не вызывается без сети в этой квитанции', () => {
+    const provider = selectModelProvider({ ...OPENROUTER_CONFIG, openrouterApiKey: 'sk-or-test-value' }, STUB_IMAGES);
+    expect(provider.kind).toBe('openrouter');
+  });
+
+  it('выбор openrouter БЕЗ ImageFetcher отказывает явно, а не откладывает отказ до первого задания', () => {
+    expect(() => selectModelProvider({ ...OPENROUTER_CONFIG, openrouterApiKey: 'sk-or-test-value' })).toThrow(/ImageFetcher/);
   });
 
   it('выбор live БЕЗ ImageFetcher отказывает явно, а не откладывает отказ до первого задания', () => {

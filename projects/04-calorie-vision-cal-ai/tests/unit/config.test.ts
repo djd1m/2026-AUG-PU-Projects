@@ -166,6 +166,24 @@ describe('валидатор конфигурации recognizer', () => {
     expect(config.anthropicApiKey).toBe('sk-test-value');
   });
 
+  // ТРЕТЬЯ реализация (DEC-A-045/046): та же форма отказа, что у `live`/ANTHROPIC_API_KEY,
+  // другая переменная — OPENROUTER_API_KEY.
+  it('режим openrouter без ключа валит старт с названной переменной', () => {
+    const error = refusalFor(() => loadRecognizerConfig({ ...FULL_RECOGNIZER_ENV, N4_MODEL_PROVIDER: 'openrouter' }));
+    expect(error.variables).toContain('OPENROUTER_API_KEY');
+    const missingKey = refusalFor(() =>
+      loadRecognizerConfig({ ...FULL_RECOGNIZER_ENV, N4_MODEL_PROVIDER: 'openrouter', OPENROUTER_API_KEY: '' }),
+    );
+    expect(missingKey.variables).toContain('OPENROUTER_API_KEY');
+  });
+
+  it('режим openrouter с ключом принимается; ключ Anthropic ему не нужен', () => {
+    const config = loadRecognizerConfig({ ...FULL_RECOGNIZER_ENV, N4_MODEL_PROVIDER: 'openrouter', OPENROUTER_API_KEY: 'sk-or-test-value' });
+    expect(config.modelProvider).toBe('openrouter');
+    expect(config.openrouterApiKey).toBe('sk-or-test-value');
+    expect(config.anthropicApiKey).toBeUndefined();
+  });
+
   it('отсутствие любой из четырёх переменных S3 валит старт воркера', () => {
     for (const name of ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY']) {
       expect(refusalFor(() => loadRecognizerConfig(withoutVariable(FULL_RECOGNIZER_ENV, name))).variables, name).toEqual([name]);
