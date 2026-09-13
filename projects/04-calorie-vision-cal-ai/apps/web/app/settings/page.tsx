@@ -7,13 +7,12 @@ import { TelegramLoginButton } from './telegram-login-button';
 import { DeleteDataScreen } from './delete-data';
 
 export default function SettingsPage() {
-  // Нет отдельного маршрута «статус сессии» (канон закрыт на 14 маршрутах): автоматический
-  // вход в TMA безопасно повторить и для уже связанной сессии — TelegramLogin идемпотентен
-  // (повторный вход того же аккаунта даёт `migrated_entries: 0`, ничего не портит).
+  // Сам вход выполняется корневым `TelegramAutoLogin` (`layout.tsx`), не здесь
+  // (RV-consent-and-telegram-auth-06, третий обзор) — эта кнопка только отображает статус.
   return (
     <main>
       <h1>Настройки</h1>
-      <TelegramLoginButton botDeepLink="https://t.me/tarelka_bot" isAnonymous={true} />
+      <TelegramLoginButton botDeepLink="https://t.me/tarelka_bot" />
       <DeleteDataScreen />
     </main>
   );
