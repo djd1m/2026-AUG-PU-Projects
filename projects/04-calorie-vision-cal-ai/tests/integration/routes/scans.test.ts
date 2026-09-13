@@ -8,6 +8,8 @@ import type { DbPool } from '@n4/db';
 import { createLogger } from '@n4/shared';
 import { buildServer } from '../../../apps/api/src/server.js';
 import { generateSessionToken, hashSessionToken, SESSION_COOKIE_NAME } from '../../../apps/api/src/session/create-device-session.js';
+import { createPhotoStorage } from '../../../apps/api/src/photo/store-original.js';
+import { normalizedObjectKeyFor } from '../../../apps/recognizer/src/photo/storage.js';
 import { migratedPool, truncateAll } from '../../helpers/db.js';
 import { testScanApiConfig } from '../../helpers/scan-config.js';
 import { buildMultipartBody } from '../../helpers/multipart.js';
@@ -65,6 +67,26 @@ async function postScan(cookie: string, file: Buffer, options: { contentType?: s
   const headers: Record<string, string> = { cookie: `${SESSION_COOKIE_NAME}=${cookie}`, 'content-type': contentType };
   if (options.idempotencyKey !== undefined) headers['idempotency-key'] = options.idempotencyKey;
   return app.inject({ method: 'POST', url: '/api/v1/scans', headers, payload: body });
+}
+
+/**
+ * Имитирует то, что `recognizer` делает в `normalize.ts` без реального воркера: кладёт
+ * нормализованную копию под РЕАЛЬНЫЙ ключ (`normalizedObjectKeyFor`, та же функция, что и
+ * production-код) и проставляет `photo.normalized_object_key` (FR-LOOK-007/DEC-A-050).
+ * Возвращает ключ — тесты сверяют его в присланном `photo_url`.
+ */
+async function seedNormalizedPhoto(scanId: string): Promise<string> {
+  const storage = createPhotoStorage(testScanApiConfig().storage);
+  const recognitionRow = await pool.query<{ photo_id: string }>('SELECT photo_id FROM recognition WHERE id = $1', [scanId]);
+  const photoId = recognitionRow.rows[0]?.photo_id;
+  if (photoId === undefined) throw new Error(`recognition ${scanId} без photo_id`);
+  const photoRow = await pool.query<{ object_key: string }>('SELECT object_key FROM photo WHERE id = $1', [photoId]);
+  const objectKey = photoRow.rows[0]?.object_key;
+  if (objectKey === undefined) throw new Error(`photo ${photoId} без object_key`);
+  const normalizedKey = normalizedObjectKeyFor(objectKey);
+  await storage.putOriginal(normalizedKey, await makeJpegFixture(), 'image/jpeg');
+  await pool.query('UPDATE photo SET normalized_object_key = $1, normalized_bytes = 2048 WHERE id = $2', [normalizedKey, photoId]);
+  return normalizedKey;
 }
 
 describe('POST /api/v1/scans', () => {
@@ -279,5 +301,90 @@ describe('GET /api/v1/scans/{id}', () => {
     const body = JSON.parse(response.body);
     expect(body.data.status).toBe('queued');
     expect(body.data.items).toEqual([]);
+  }, 20_000);
+
+  it('FR-LOOK-007/DEC-A-050: скан БЕЗ нормализованной копии (queued, нормализация ещё не прошла) отдаёт photo_url = null', async () => {
+    const cookie = await seedCookieSession();
+    const jpeg = await makeJpegFixture();
+    const created = await postScan(cookie, jpeg, { idempotencyKey: randomUUID() });
+    const scanId = JSON.parse(created.body).data.scan_id;
+
+    const response = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}`, headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}` } });
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body).data;
+    // `null`, а не пустая строка и не выдуманный адрес (`honest-configuration.md` CFG-I1).
+    expect(body.photo_url).toBeNull();
+    expect(body.photo_url_expires_at).toBeNull();
+  }, 20_000);
+
+  it('FR-LOOK-007/DEC-A-050: владелец получает СВОЕГО-ORIGIN ссылку на кадр (не адрес хранилища напрямую); чужая сессия — 404', async () => {
+    // НЕ адрес MinIO: `S3_ENDPOINT` (`http://storage:9000`) — имя сервиса compose, браузер
+    // посетителя его не резолвит (ПРОВЕРЕНО живым запросом на развёрнутом стенде во время
+    // разработки этой фичи — см. комментарий `apps/api/src/photo/photo-url.ts`). `photo_url`
+    // обязан указывать на СВОЙ origin (`GET /api/v1/scans/{id}/photo`, `scans-photo.ts`),
+    // проксирующий байты сам.
+    const ownerCookie = await seedCookieSession();
+    const strangerCookie = await seedCookieSession();
+    const jpeg = await makeJpegFixture();
+    const created = await postScan(ownerCookie, jpeg, { idempotencyKey: randomUUID() });
+    const scanId = JSON.parse(created.body).data.scan_id;
+    await seedNormalizedPhoto(scanId);
+
+    const ownerResponse = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}`, headers: { cookie: `${SESSION_COOKIE_NAME}=${ownerCookie}` } });
+    const after = Date.now();
+    expect(ownerResponse.statusCode).toBe(200);
+    const body = JSON.parse(ownerResponse.body).data;
+    // Ровно этот путь — не абсолютный адрес, не адрес хранилища, ни один посторонний хост.
+    expect(body.photo_url).toBe(`/api/v1/scans/${scanId}/photo`);
+    expect(typeof body.photo_url_expires_at).toBe('string');
+    expect(new Date(body.photo_url_expires_at).getTime() - after).toBeLessThanOrEqual(15 * 60 * 1000);
+
+    // Чужая сессия — ТОТ ЖЕ 404, что и на несуществующий скан (AC-18).
+    const strangerResponse = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}`, headers: { cookie: `${SESSION_COOKIE_NAME}=${strangerCookie}` } });
+    expect(strangerResponse.statusCode).toBe(404);
+  }, 20_000);
+
+  it('FR-LOOK-007/DEC-A-050: GET .../photo отдаёт РЕАЛЬНЫЕ байты нормализованной копии владельцу; чужая сессия и несуществующий скан — ОДИН и тот же 404', async () => {
+    const ownerCookie = await seedCookieSession();
+    const strangerCookie = await seedCookieSession();
+    const jpeg = await makeJpegFixture();
+    const created = await postScan(ownerCookie, jpeg, { idempotencyKey: randomUUID() });
+    const scanId = JSON.parse(created.body).data.scan_id;
+    await seedNormalizedPhoto(scanId);
+
+    const ownerPhoto = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}/photo`, headers: { cookie: `${SESSION_COOKIE_NAME}=${ownerCookie}` } });
+    expect(ownerPhoto.statusCode).toBe(200);
+    expect(ownerPhoto.headers['content-type']).toBe('image/jpeg');
+    expect(ownerPhoto.headers['cache-control']).toBe('private, no-store');
+    expect(ownerPhoto.rawPayload.byteLength).toBeGreaterThan(0);
+
+    const strangerPhoto = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}/photo`, headers: { cookie: `${SESSION_COOKIE_NAME}=${strangerCookie}` } });
+    const missingPhoto = await app.inject({ method: 'GET', url: `/api/v1/scans/${randomUUID()}/photo`, headers: { cookie: `${SESSION_COOKIE_NAME}=${strangerCookie}` } });
+    expect(strangerPhoto.statusCode).toBe(404);
+    expect(missingPhoto.statusCode).toBe(404);
+    expect(strangerPhoto.body).toBe(missingPhoto.body);
+
+    // Скан БЕЗ доступного кадра (свой, но не нормализован) — ТОТ ЖЕ 404, не отличимый
+    // от «скана нет» (`security.md`, «404, а не 403»).
+    const withoutPhoto = await postScan(ownerCookie, jpeg, { idempotencyKey: randomUUID() });
+    const withoutPhotoId = JSON.parse(withoutPhoto.body).data.scan_id;
+    const noPhotoResponse = await app.inject({ method: 'GET', url: `/api/v1/scans/${withoutPhotoId}/photo`, headers: { cookie: `${SESSION_COOKIE_NAME}=${ownerCookie}` } });
+    expect(noPhotoResponse.statusCode).toBe(404);
+  }, 20_000);
+
+  it('FR-LOOK-007/DEC-A-050: фото удалено по сроку 30 дней (file_state=purged) — photo_url = null, а не ссылка на пустоту', async () => {
+    const cookie = await seedCookieSession();
+    const jpeg = await makeJpegFixture();
+    const created = await postScan(cookie, jpeg, { idempotencyKey: randomUUID() });
+    const scanId = JSON.parse(created.body).data.scan_id;
+    await seedNormalizedPhoto(scanId);
+
+    const photoId = (await pool.query<{ photo_id: string }>('SELECT photo_id FROM recognition WHERE id = $1', [scanId])).rows[0]!.photo_id;
+    await pool.query(`UPDATE photo SET file_state = 'purged' WHERE id = $1`, [photoId]);
+
+    const response = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}`, headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}` } });
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body).data;
+    expect(body.photo_url).toBeNull();
   }, 20_000);
 });

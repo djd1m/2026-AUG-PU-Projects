@@ -155,4 +155,27 @@ describe('гигиена журнала на живом сервере', () => {
     // Усечённый префикс — это НЕ полный адрес, он остаётся читаемым.
     expect(journal).toContain('203.0.113.0/24');
   });
+
+  it('FR-LOOK-007/DEC-A-050: адрес presigned-URL кадра не входит в закрытый список разрешённых полей', () => {
+    // Слой 1 — проверка ДЕКЛАРАЦИИ (`security.md`, «Фото отдаются только presigned-URL…»):
+    // маршруты `scans.ts`/`scans-correct.ts` НЕ логируют `photo_url` нигде (проверено
+    // чтением исходника), но реальная защита — не отсутствие вызова журнала сегодня, а то,
+    // что список разрешённых полей ЗАКРЫТ и `photo_url` в нём нет: даже случайное `logger.
+    // error('x', row)` со всей строкой БД не пропустило бы адрес наружу.
+    expect(SERVICE_LOG_FIELDS).not.toContain('photo_url');
+    expect(SERVICE_LOG_FIELDS).not.toContain('photo_url_expires_at');
+  });
+
+  it('FR-LOOK-007/DEC-A-050: даже гипотетическая попытка залогировать photo_url затирается редактором (мутация: временно добавить поле в SERVICE_LOG_FIELDS даёт красный)', () => {
+    const leakedPhotoUrl = 'https://storage.internal.example/n4-photos/device-session/scan-id.normalized.jpg?X-Amz-Signature=deadbeef0123&X-Amz-Expires=900';
+    const probe = createLogger({ service: 'api', allowedFields: SERVICE_LOG_FIELDS, sink: (line) => lines.push(line) });
+    probe.error('hypothetical_photo_leak', { route: '/api/v1/scans/:id', photo_url: leakedPhotoUrl });
+
+    const entry = JSON.parse(lines[lines.length - 1] ?? '{}');
+    // Поле СОХРАНЕНО (как и весь редактор делает с запрещённым/незаявленным полем) и ЗАТЁРТО.
+    expect(Object.keys(entry)).toContain('photo_url');
+    expect(entry.photo_url).toBe(REDACTED);
+    expect(JSON.stringify(entry)).not.toContain(leakedPhotoUrl);
+    expect(JSON.stringify(entry)).not.toContain('X-Amz-Signature');
+  });
 });

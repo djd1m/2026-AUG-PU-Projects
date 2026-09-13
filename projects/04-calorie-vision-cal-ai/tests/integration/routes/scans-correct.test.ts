@@ -11,6 +11,9 @@ import { generateSessionToken, hashSessionToken, SESSION_COOKIE_NAME } from '../
 import { migratedPool, truncateAll } from '../../helpers/db.js';
 import { testScanApiConfig } from '../../helpers/scan-config.js';
 import { importFdcDump } from '../../../scripts/import-fdc.js';
+import { createPhotoStorage } from '../../../apps/api/src/photo/store-original.js';
+import { normalizedObjectKeyFor } from '../../../apps/recognizer/src/photo/storage.js';
+import { makeJpegFixture } from '../../helpers/image-fixtures.js';
 
 const FIXTURE_DIR = fileURLToPath(new URL('../../fixtures/fdc', import.meta.url));
 
@@ -80,6 +83,28 @@ async function seedDoneScan(
     ],
   );
   return id;
+}
+
+/**
+ * Прикрепляет нормализованную копию к уже засеянному скану (FR-LOOK-007/DEC-A-050) — тем
+ * же способом, каким это делает `recognizer` (`normalizedObjectKeyFor`), но без реального
+ * воркера. Возвращает `normalized_object_key` для сверки в присланном `photo_url`.
+ */
+async function attachNormalizedPhoto(scanId: string): Promise<string> {
+  const recognitionRow = await pool.query<{ device_session_id: string }>('SELECT device_session_id FROM recognition WHERE id = $1', [scanId]);
+  const sessionId = recognitionRow.rows[0]?.device_session_id;
+  if (sessionId === undefined) throw new Error(`recognition ${scanId} не найден`);
+  const storage = createPhotoStorage(testScanApiConfig().storage);
+  const objectKey = `${sessionId}/${scanId}.jpg`;
+  const normalizedKey = normalizedObjectKeyFor(objectKey);
+  await storage.putOriginal(normalizedKey, await makeJpegFixture(), 'image/jpeg');
+  const photo = await pool.query<{ id: string }>(
+    `INSERT INTO photo (device_session_id, object_key, mime, bytes, width, height, expires_on, normalized_object_key, normalized_bytes)
+     VALUES ($1, $2, 'image/jpeg', 1024, 800, 600, current_date + 30, $3, 2048) RETURNING id`,
+    [sessionId, objectKey, normalizedKey],
+  );
+  await pool.query('UPDATE recognition SET photo_id = $1 WHERE id = $2', [photo.rows[0]!.id, scanId]);
+  return normalizedKey;
 }
 
 async function findFoodItem(sourceId: string): Promise<{ id: string; kcal_per_100g: number }> {
@@ -272,5 +297,65 @@ describe('AC-source-and-correct-26: чужой текст не исполняе�
     // измерено: у этой фичи нет браузерного прогона (см. `05_completion.md`, «Недостижимое»).
     expect(body.data.items[0].label_ru).toBe(malicious);
     expect(response.headers['content-type']).toMatch(/application\/json/);
+  }, 30_000);
+});
+
+describe('FR-LOOK-007/DEC-A-050: кадр экрана результата не пропадает после правки', () => {
+  it('photo_url остаётся тем же после set_portion — ответ правки несёт то же тело, что GET', async () => {
+    const cookie = await seedSession();
+    const rice = await findFoodItem('168878');
+    const scanId = await seedDoneScan(cookie, [
+      { label_ru: 'рис', mass_g: 250, food_item_id: rice.id, source_snapshot: { source: 'USDA-FDC', source_id: '168878', name_en: 'Rice', kcal_per_100g: rice.kcal_per_100g, protein_per_100g: 2.7, fat_per_100g: 0.3, carb_per_100g: 28.2, portion_g: 250, import_snapshot_date: '2026-04-01' }, kcal: 325, protein: 6.8, fat: 0.8, carb: 70.5, unmatched: false },
+    ]);
+    await attachNormalizedPhoto(scanId);
+
+    const response = await app.inject({
+      method: 'POST',
+      url: `/api/v1/scans/${scanId}/correct`,
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}`, 'content-type': 'application/json' },
+      payload: JSON.stringify({ op: 'set_portion', index: 0, mass_g: 220 }),
+    });
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body).data;
+    // Ровно СВОЙ-origin путь (не адрес хранилища напрямую — `photo/photo-url.ts`).
+    expect(body.photo_url).toBe(`/api/v1/scans/${scanId}/photo`);
+
+    // Ветка ЧИСТОГО поиска (`replace_item` + `query`) не меняет состав — тот же кадр обязан
+    // прийти и здесь, это ОТДЕЛЬНАЯ ветка кода (`scans-correct.ts`), не переиспользующая путь выше.
+    const searchResponse = await app.inject({
+      method: 'POST',
+      url: `/api/v1/scans/${scanId}/correct`,
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}`, 'content-type': 'application/json' },
+      payload: JSON.stringify({ op: 'replace_item', query: 'рис' }),
+    });
+    expect(searchResponse.statusCode).toBe(200);
+    const searchBody = JSON.parse(searchResponse.body).data;
+    expect(searchBody.photo_url).toBe(`/api/v1/scans/${scanId}/photo`);
+
+    // Тот же путь и правда отдаёт байты (не только строку в JSON).
+    const photoResponse = await app.inject({ method: 'GET', url: searchBody.photo_url, headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}` } });
+    expect(photoResponse.statusCode).toBe(200);
+    expect(photoResponse.headers['content-type']).toBe('image/jpeg');
+  }, 30_000);
+
+  it('скан без photo_id (photo_id = NULL) отдаёт photo_url = null и на GET, и на correct', async () => {
+    const cookie = await seedSession();
+    const rice = await findFoodItem('168878');
+    const scanId = await seedDoneScan(cookie, [
+      { label_ru: 'рис', mass_g: 250, food_item_id: rice.id, source_snapshot: { source: 'USDA-FDC', source_id: '168878', name_en: 'Rice', kcal_per_100g: rice.kcal_per_100g, protein_per_100g: 2.7, fat_per_100g: 0.3, carb_per_100g: 28.2, portion_g: 250, import_snapshot_date: '2026-04-01' }, kcal: 325, protein: 6.8, fat: 0.8, carb: 70.5, unmatched: false },
+    ]);
+
+    const getResponse = await app.inject({ method: 'GET', url: `/api/v1/scans/${scanId}`, headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}` } });
+    expect(getResponse.statusCode).toBe(200);
+    expect(JSON.parse(getResponse.body).data.photo_url).toBeNull();
+
+    const correctResponse = await app.inject({
+      method: 'POST',
+      url: `/api/v1/scans/${scanId}/correct`,
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${cookie}`, 'content-type': 'application/json' },
+      payload: JSON.stringify({ op: 'set_portion', index: 0, mass_g: 220 }),
+    });
+    expect(correctResponse.statusCode).toBe(200);
+    expect(JSON.parse(correctResponse.body).data.photo_url).toBeNull();
   }, 30_000);
 });

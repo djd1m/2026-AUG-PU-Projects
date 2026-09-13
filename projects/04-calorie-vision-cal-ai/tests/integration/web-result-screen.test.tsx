@@ -19,6 +19,9 @@ function baseScan(overrides: Partial<ScanResultResponse> = {}): ScanResultRespon
     discrepancy_ratio: 0.04,
     conflict_flag: false,
     conflict_choice: null,
+    // FR-LOOK-007/DEC-A-050: дефолт — «кадра нет», ЗАКОННЫЙ исход (нормализации ещё не
+    // было / файл удалён по сроку), а не выдуманный адрес.
+    photo_url: null,
     ...overrides,
   };
 }
@@ -120,5 +123,20 @@ describe('ScanResultScreen (AC-source-and-correct-26)', () => {
     expect(html).toContain('640');
     expect(html).toContain('взять из базы');
     expect(html).toContain('уточнить состав');
+  });
+
+  it('FR-LOOK-007/DEC-A-050: кадр показывается, когда photo_url задан', () => {
+    const scan = baseScan({ photo_url: 'https://storage.example.internal/n4-photos/session/scan.normalized.jpg?X-Amz-Signature=abc' });
+    const html = renderToStaticMarkup(<ScanResultScreen scan={scan} />);
+    expect(html).toContain('result__photo');
+    expect(html).toContain('<img');
+    expect(html).toContain('storage.example.internal');
+  });
+
+  it('FR-LOOK-007/DEC-A-050: блок кадра отсутствует ВОВСЕ, когда photo_url = null — не пустая рамка', () => {
+    const scan = baseScan({ photo_url: null });
+    const html = renderToStaticMarkup(<ScanResultScreen scan={scan} />);
+    expect(html).not.toContain('result__photo');
+    expect(html).not.toContain('<img');
   });
 });
