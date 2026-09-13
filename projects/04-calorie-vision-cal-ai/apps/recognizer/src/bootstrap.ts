@@ -10,7 +10,7 @@ import { selectModelProvider } from './provider/select.js';
 import { createWorker } from './worker.js';
 import { runErasureJob } from './consent/erasure-job.js';
 import { createMinioPhotoStore } from './storage/photo-store-minio.js';
-import { createNullMatchIngredientPort } from './match/null-port.js';
+import { createUsdaMatchIngredientPort } from './match/usda-match-port.js';
 import { createRecognizerStorage } from './photo/storage.js';
 import { createNormalizePhotoForModel, type PhotoLookup } from './photo/normalize.js';
 import { purgeExpiredPhotos } from './photo/purge-expired.js';
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
   const provider = selectModelProvider(config, createStorageImageFetcher(storage));
   const photos = createPhotoLookup(pool);
   const normalize = createNormalizePhotoForModel(storage, photos);
-  const matchPort = createNullMatchIngredientPort(); // `source-and-correct` заменит реализацию за портом.
+  const matchPort = createUsdaMatchIngredientPort(pool); // `source-and-correct`: реальная реализация за портом.
 
   const worker = createWorker({ pool, provider, matchPort, quotaLimits: config.quota, normalize, logger });
 

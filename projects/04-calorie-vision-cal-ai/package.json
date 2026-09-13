@@ -17,8 +17,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:performance": "vitest run --config vitest.performance.config.ts",
     "migrate": "tsx packages/db/src/migrate.ts",
-    "check:env-wiring": "bash scripts/check-env-wiring.sh"
+    "check:env-wiring": "bash scripts/check-env-wiring.sh",
+    "import:fdc": "tsx scripts/import-fdc.ts",
+    "seed:food-synonyms": "tsx scripts/seed-food-synonyms.ts"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
@@ -27,6 +30,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "5.2.0",
+    "csv-parse": "^7.0.2",
     "eslint": "9.39.5",
     "tsx": "4.23.13",
     "typescript": "5.9.3",

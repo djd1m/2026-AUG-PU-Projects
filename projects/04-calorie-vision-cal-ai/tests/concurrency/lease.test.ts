@@ -232,6 +232,9 @@ describe('аренда задания', () => {
       failureReason: 'no_food_matched',
       escalated: false,
       attemptNo: 1,
+      dbKcalTotal: null,
+      discrepancyRatio: null,
+      conflictFlag: false,
     });
     expect(secondWritten).toBe('written');
 
@@ -244,6 +247,9 @@ describe('аренда задания', () => {
       failureReason: 'provider_timeout',
       escalated: false,
       attemptNo: 1,
+      dbKcalTotal: null,
+      discrepancyRatio: null,
+      conflictFlag: false,
     });
     // НОЛЬ затронутых строк: проигравший записи не делает и чужой результат не трёт.
     // И случай назван ЧЕСТНО: номер захвата вырос, значит задание перезахватили — это

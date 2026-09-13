@@ -14,7 +14,7 @@ export default defineConfig({
   },
   esbuild: { jsx: 'automatic' },
   test: {
-    include: ['tests/unit/**/*.test.ts', 'tests/unit/**/*.test.tsx'],
+    include: ['tests/unit/**/*.test.ts', 'tests/unit/**/*.test.tsx', 'tests/guard/**/*.test.ts'],
     environment: 'node',
     testTimeout: 15_000,
   },

@@ -8,6 +8,15 @@ import type { Confidence } from '@n4/shared';
 export interface RecognizedItemForMatch {
   readonly labelRu: string;
   readonly massG: number;
+  /**
+   * До трёх идентификаторов записей базы, ПРЕДЛОЖЕННЫХ моделью (`RecognizedItemDraft.
+   * candidates`, `scan-pipeline`) — РАСШИРЕНИЕ, добавленное фичей `source-and-correct`
+   * (FR-source-and-correct-3, шаг 4 `SearchFoodCandidates`: триграммы по `food_item.
+   * name_en` ТОЛЬКО среди этих кандидатов, а не по всей базе). Опциональное поле —
+   * `NullMatchIngredientPort` и контрактный тест (`AC-scan-pipeline-28`) его не читают и
+   * не ломаются от его присутствия; сигнатура порта НЕ меняется.
+   */
+  readonly candidates?: readonly string[];
 }
 
 export interface MatchedPart {

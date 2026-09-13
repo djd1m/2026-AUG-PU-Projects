@@ -1,26 +1,16 @@
 // AC-scan-pipeline-28 (контрактный тест ОТДЕЛЁН от поведенческого), AC-scan-pipeline-35.
+//
+// Контракт вынесен в `tests/contract/match-ingredient-port.contract.ts` (RV-source-and-
+// correct-04, слепое ревью 2026-09-13): ОДИН И ТОТ ЖЕ вход и заголовок для заглушки И для
+// `UsdaMatchIngredientPort` — раньше копия расходилась молча (другие входы, другой текст).
 
 import { describe, expect, it, vi } from 'vitest';
 import { createNullMatchIngredientPort } from '../../../apps/recognizer/src/match/null-port.js';
+import { assertMatchIngredientPortContract, CONTRACT_TITLE } from '../../contract/match-ingredient-port.contract.js';
 
 describe('контрактный тест MatchIngredientPort (готов принять ЛЮБУЮ реализацию)', () => {
-  it('длина и порядок ответа совпадают со входом; portion_g положителен', async () => {
-    const port = createNullMatchIngredientPort();
-    const input = [
-      { labelRu: 'борщ', massG: 250 },
-      { labelRu: 'омлет', massG: 120 },
-      { labelRu: 'салат', massG: 80 },
-    ];
-    const result = await port.match(input);
-    expect(result).toHaveLength(input.length);
-    result.forEach((item, index) => {
-      expect(item.portionG).toBe(input[index]?.massG);
-      expect(item.portionG).toBeGreaterThan(0);
-      if (item.parts !== undefined) {
-        const total = item.parts.reduce((sum, part) => sum + Number(part.share), 0);
-        expect(total).toBeCloseTo(1, 5);
-      }
-    });
+  it(CONTRACT_TITLE, async () => {
+    await assertMatchIngredientPortContract(createNullMatchIngredientPort());
   });
 });
 

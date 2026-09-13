@@ -109,6 +109,14 @@ export interface ResultRecord {
   /** RV-scan-pipeline-16: без явной записи оставались бы дефолтом вставки (false/1) НАВСЕГДА. */
   readonly escalated: boolean;
   readonly attemptNo: number;
+  /**
+   * `source-and-correct` (FR-source-and-correct-6/8): сумма `kcal` сопоставленных позиций
+   * и расхождение с оценкой модели. `null`, если распознавание не дало НИ ОДНОГО
+   * сопоставления (`failed(no_food_matched)`) — ноль здесь означал бы измеренный итог.
+   */
+  readonly dbKcalTotal: number | null;
+  readonly discrepancyRatio: number | null;
+  readonly conflictFlag: boolean;
 }
 
 const WRITE_RESULT = `
@@ -121,6 +129,9 @@ const WRITE_RESULT = `
       failure_reason = $8::recognition_failure_reason,
       escalated = $9,
       attempt_no = $10,
+      db_kcal_total = $11,
+      discrepancy_ratio = $12,
+      conflict_flag = $13,
       finished_at = now(),
       leased_until = NULL,
       lease_owner = NULL
@@ -166,6 +177,11 @@ export async function recordResult(
   job: { id: string; fence: number },
   record: ResultRecord,
 ): Promise<WriteOutcome> {
+  // Объединение двух фич: транзакция и активация партнёрской атрибуции приехали из
+  // `partner-codes-and-cabinet` (блокер RV-01 того ревью — активация обязана идти в ТОЙ ЖЕ
+  // транзакции, что и защищённая fence запись), а три числа источника — из
+  // `source-and-correct`. Ни одно из двух не отменяет другое: первое про то, КОГДА писать,
+  // второе про то, ЧТО писать.
   const written = await withTransaction(pool, async (client) => {
     const result = await client.query<{ device_session_id: string }>(WRITE_RESULT, [
       job.id,
@@ -178,6 +194,9 @@ export async function recordResult(
       record.failureReason,
       record.escalated,
       record.attemptNo,
+      record.dbKcalTotal,
+      record.discrepancyRatio,
+      record.conflictFlag,
     ]);
     const row = result.rows[0];
     if (row === undefined) return false;

@@ -19,6 +19,7 @@ import { registerInterestRoute } from './routes/interest.js';
 import { registerDiaryRoutes } from './routes/diary.js';
 import { registerCodesRoutes } from './routes/codes.js';
 import { registerPartnerRoutes } from './routes/partner.js';
+import { registerScansCorrectRoute } from './routes/scans-correct.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
@@ -82,6 +83,7 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerDiaryRoutes(app, { pool: deps.pool, logger: deps.logger });
   registerCodesRoutes(app, { pool: deps.pool, logger: deps.logger });
   registerPartnerRoutes(app, deps.pool);
+  registerScansCorrectRoute(app, { pool: deps.pool, logger: deps.logger });
 
   app.setNotFoundHandler(async (request, reply) => {
     // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая
