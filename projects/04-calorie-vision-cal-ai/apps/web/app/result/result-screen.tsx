@@ -71,6 +71,18 @@ export interface ScanResultResponse {
   readonly discrepancy_ratio: number | null;
   readonly conflict_flag: boolean;
   readonly conflict_choice: string | null;
+  /** Кадр экрана результата (FR-LOOK-007, DEC-A-050) — путь СВОЕГО origin
+   * (`/api/v1/scans/{id}/photo`), не адрес хранилища напрямую: MinIO не публикует порт
+   * наружу (`.claude/rules/docker-ports.md`), presigned-URL остаётся ВНУТРЕННИМ и байты
+   * стримит сам `api` (`apps/api/src/routes/scans-photo.ts`, `apps/api/src/photo/photo-url.ts`
+   * — там же история дефекта, найденного живой проверкой на развёрнутом стенде). `null` — ДВА
+   * законных исхода: нормализации ещё не было, либо файл удалён по сроку 30 дней; в ОБОИХ
+   * случаях блок фото не рисуется вовсе, а не пустой рамкой. `photo_url_expires_at` здесь не
+   * читается (страница не перезапрашивает скан ради одного лишь истечения — следующий
+   * поллинг/действие и так переиздаёт путь), но объявлен в типе, потому что ответ сервера
+   * несёт оба поля вместе. */
+  readonly photo_url: string | null;
+  readonly photo_url_expires_at?: string | null;
 }
 
 export interface ReplaceCandidate {
@@ -390,6 +402,17 @@ export function ScanResultScreen({
 }) {
   return (
     <main className="result">
+      {/* Кадр (FR-LOOK-007, DEC-A-050) — над плитками чисел, `null` вообще не рисуется
+          (см. `ScanResultResponse.photo_url`). Подписи ингредиентов ПОВЕРХ фото НЕ
+          рисуются намеренно (осознанный пропуск части FR-LOOK-007, см. квитанцию): у нас
+          нет координат позиций на кадре, рисовать их наугад значило бы показать выдуманное
+          (`.claude/rules/fail-closed-defaults.md`). */}
+      {scan.photo_url !== null ? (
+        <div className="result__photo">
+          <img src={scan.photo_url} alt="фото блюда со скана" />
+        </div>
+      ) : null}
+
       <section className="result__tiles" aria-label="итог">
         <div className="tile tile--kcal">
           <span className="tile__value">{scan.kcal_total ?? '—'}</span>

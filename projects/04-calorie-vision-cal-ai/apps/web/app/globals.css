@@ -395,6 +395,25 @@ input:focus-visible {
   color: var(--danger);
 }
 
+/* Кадр экрана результата (FR-LOOK-007, DEC-A-050) — НАД плитками чисел. `aspect-ratio`
+   4 / 3, а не квадрат: нормализация (`apps/recognizer/src/photo/normalize.ts`) ограничивает
+   только ДЛИННУЮ сторону, кадр остаётся прямоугольным — `object-fit: cover` обрезает
+   излишек, не искажая пропорцию. Блок целиком отсутствует в разметке, когда `photo_url`
+   — `null` (`ScanResultScreen`), а не рисуется пустой рамкой (см. её комментарий). */
+.result__photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  background: var(--paper-2);
+}
+.result__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .result__tiles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
