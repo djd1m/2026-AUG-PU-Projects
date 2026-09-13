@@ -225,10 +225,24 @@ node ../../.claude/hooks/check-job-contract.cjs .   # три состояния 
   row). Реализовано (`pages: 1` в коде), НЕ ПРОВЕРЕНО тестом — это состояние, а не пропуск
   в таблице.
 
-## RV-scan-pipeline-15 (не связано с блокирующим/high, но исправлено в Попытке 3)
+## Follow-up, не блокирующий закрытие (medium-находки ревью)
 
-`apps/api/src/routes/scans.ts` писал `growth_event(install)` на КАЖДЫЙ скан сессии, а не
-только на первый: проверка «есть ли уже сканы у этой сессии» находила СВОЮ ЖЕ только что
-закоммиченную строку. Исправлено (`AND id != $2`) и покрыто
-`tests/integration/routes/scans.test.ts`, тест «growth_event(install) пишется РОВНО один
-раз на сессию, а не на каждый скан» — три скана одной сессии, одна строка `install`.
+Владелец сменил приоритет на скорость: закрытие фичи требует только blocker (RV-01),
+high (RV-02..07, RV-09, RV-10) и RV-11 (честность этой таблицы — дёшево, а доверие к
+таблице стоит дороже одной строки). Семь medium-находок ниже НЕ были обязательны для
+этой попытки — но к моменту смены приоритета все семь УЖЕ были исправлены и испытаны
+(Попытка 3, до получения указания), поэтому они оставлены как сделанные, а не отменены:
+
+| RV | Файл | Что было не так | Статус |
+|---|---|---|---|
+| RV-scan-pipeline-08 | `apps/recognizer/src/recognize/recognize-scan.ts`, `provider/live.ts` | Валидатор возвращал имя нарушенного поля, но обработчик его терял; ответ провайдера приводился ТИПОМ (`as`), а не проверялся из `unknown` | **СДЕЛАНО** — `schema_violation_field` в логе, `ModelSchemaViolationError.field`, `parseToolInput` из `unknown` |
+| RV-scan-pipeline-12 | `apps/recognizer/src/recognize/recognize-scan.ts` | Аудит устаревшей аренды нёс только СТАРЫЙ fence, не перечитывал текущий | **СДЕЛАНО** — `logNonWrittenOutcome` перечитывает `lease_fence` |
+| RV-scan-pipeline-13 | `apps/recognizer/src/recognize/recognize-scan.ts` | `parts`/`source_snapshot` терялись при записи результата составного блюда | **СДЕЛАНО** — `persistedItem`, тест через РЕАЛЬНЫЙ `recognizeScan` |
+| RV-scan-pipeline-14 | `docs/features/scan-pipeline/01_specification.md` | Сценарий AC-26 (60 с при бюджете 30 с) архитектурно недостижим | **СДЕЛАНО** — сценарий переписан на достижимый (fence=1, списание шага 3 пересекает полночь), `tests/integration/recognize/day-boundary.test.ts` на настоящем Postgres |
+| RV-scan-pipeline-15 | `apps/api/src/routes/scans.ts` | `growth_event(install)` писался на КАЖДЫЙ скан сессии, а не только на первый (проверка находила свою же закоммиченную строку) | **СДЕЛАНО** — `AND id != $2`, тест в `tests/integration/routes/scans.test.ts` |
+| RV-scan-pipeline-16 | `apps/recognizer/src/lease.ts` | `WRITE_RESULT` не обновлял `escalated`/`attempt_no` — оставались дефолтом вставки навсегда | **СДЕЛАНО** — переданы в результат, `tests/concurrency/lease.test.ts` |
+| RV-scan-pipeline-17 | `scripts/telemetry/model-calls.cjs` | Команда `<файл> <дата>` не реализована; поле `day` не фильтровало агрегацию по суткам | **СДЕЛАНО** — `<дата>` вторым позиционным аргументом, тест на смешанном журнале двух суток |
+
+Ни одна из семи не требует дальнейшего действия координатора — при желании можно
+перепроверить прогоном `docker compose --profile test run --rm -T test sh -lc 'npm run
+test:integration'` (все семь тестов входят в те же 65 зелёных, что и обязательные).
