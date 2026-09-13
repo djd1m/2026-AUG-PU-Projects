@@ -84,12 +84,51 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 Все 18 критериев приёмки и 1 NFR имеют тест по фактическому пути с фактическим заголовком;
 таблица проверена воротами `--completion` (`grep -F` заголовка в указанном файле) — 0 GAP.
 
-## Коммиты этой сессии (feat/diary-and-streak)
+## Коммиты этой сессии (feat/diary-and-streak) — до ревью
 
 - `31c7d5c` — реализация подтверждения/правки/удаления/стрика [phase 3] + unit-тесты
 - `2e9653c` — интеграционные и конкурентные тесты confirm/set_portion/delete/get-diary
 - `aa5833a` — фикс `pg` date-парсера (TZ=Europe/Moscow) + фикстуры двух старых тестов
-- (этот файл) — квитанция и обновление `05_completion.md`
+- `60e3a47` — квитанция Phase 3 и обновление `05_completion.md`
+- `db82629` — (координатор) слепое ревью [phase 4] — `docs/features/diary-and-streak/review-report.md`, 3 high / 4 medium / 1 low
+
+## Правка после ревью (2026-09-13)
+
+Исправлены три `high` из `review-report.md`. Четыре `medium` и один `low` НЕ чинились по
+прямому указанию координатора (DEC-A-032, один раунд ревью) — выписаны в
+`docs/features/diary-and-streak/05_completion.md`, раздел «Follow-up, не блокирующий закрытие».
+
+| Находка | Файл | Правка | Тест |
+|---|---|---|---|
+| RV-diary-and-streak-01 (high) — составное блюдо давало 0 ккал: пересчёт читал только верхний `source_snapshot` (часто placeholder без питательных полей) и игнорировал `items[i].parts[].sourceSnapshot`; вдобавок `readNumber` подменяла ЛЮБОЙ отсутствующий нутриент нулём | `apps/api/src/diary/recompute-entry-from-snapshot.ts` | Новая функция `numbersForItem`: если у позиции есть `parts[]` — сумма по частям (масса части = масса позиции × `share`, свой снимок на каждую часть), верхний снимок НЕ используется вовсе; `numbersFromSnapshot` возвращает `null` («не измерено»), если снимку не хватает хотя бы одного из четырёх полей, — позиция ИСКЛЮЧАЕТСЯ из итога (тот же принцип, что и `unmatched`), а не считается с подставленным нулём | unit: `tests/unit/recompute-entry-from-snapshot.test.ts` — «считает по частям (parts[]), а не по верхнему снимку — воспроизведение находки ревью» (432 ккал вместо 0), «неполный снимок ЛЮБОЙ части исключает ВСЁ составное блюдо», «снимок с отсутствующим хотя бы одним нутриентом отклоняется явно, а не считается нулём»; integration: `tests/integration/confirm-diary-entry.test.ts` — «подтверждение составного блюда считает по частям (parts[]), а не по верхнему снимку» (432 ккал через реальный HTTP `confirm`) |
+| RV-diary-and-streak-02 (high) — `GET /diary` мог вернуть список и итог из РАЗНЫХ состояний базы: три отдельных `pool.query` (список, итог, стрик), конкурентное удаление могло зафиксироваться между ними | `apps/api/src/diary/get-diary-day.ts` | Все три чтения теперь выполняются в ОДНОЙ транзакции `BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY` на одном клиенте (`pool.connect()` → `client.query(...)` трижды → `COMMIT`); снимок фиксируется на первом запросе и не меняется до конца транзакции | concurrency: `tests/concurrency/get-diary-day-consistency.test.ts` — «удаление, зафиксированное МЕЖДУ чтением списка и чтением итога, не создаёт расхождение в одном ответе» (барьер через пул-обёртку, перехватывающую `client.query` и приостанавливающую выполнение ровно между 1-м и 2-м запросом транзакции; конкурентный `deleteDiaryEntry` коммитится ПОЛНОСТЬЮ в этом окне, ответ `getDiaryDay` тем не менее показывает согласованные `entries`/`totals`, а свежий вызов вне транзакции подтверждает, что удаление реально применилось) |
+| RV-diary-and-streak-03 (high) — две конкурентные правки РАЗНЫХ индексов одной записи теряли одну: обе читали старый `items` без блокировки и каждая писала свою копию целиком | `apps/api/src/diary/set-diary-entry-portion.ts` | Чтение и запись — в ОДНОЙ транзакции (`withTransaction`), чтение — `SELECT … FOR UPDATE`: вторая конкурентная правка ждёт коммита первой и потому применяет свою правку поверх УЖЕ обновлённого массива, а не поверх устаревшего снимка | concurrency: `tests/concurrency/set-portion-parallel-indices.test.ts` — «обе правки применяются — ни одна не теряется и не откатывает соседнюю позицию» (барьер `FOR UPDATE` на третьем клиенте, тот же приём, что `portion-vs-delete-race.test.ts`; проверены ОБЕ итоговые массы и пересчитанный `kcal_total`) |
+
+Существующие тесты (AC-5, AC-17) перепрогнаны без изменений — оба сценария по-прежнему проходят
+после перехода `set_portion` на `withTransaction`/`FOR UPDATE`.
+
+### Прогоны после правки
+
+| Проверка | Результат |
+|---|---|
+| `npm test` (unit) | `158 passed`, 24 файла — все зелёные, включая три новых теста составного блюда в `recompute-entry-from-snapshot.test.ts` |
+| `npm run typecheck` | `0` |
+| `npm run lint` | `0` |
+| `npm run build` | `0`, все пять пакетов и `next build` |
+| `docker compose --profile test run --rm -T test sh -lc 'npm run migrate && npm run test:integration'` | **43 файла, 162 теста — ВСЕ зелёные**, включая три новых теста этой правки (`confirm-diary-entry.test.ts` +1, `get-diary-day-consistency.test.ts`, `set-portion-parallel-indices.test.ts`) и без единой регрессии в остальных 39 файлах |
+| `docker compose --profile test down -v` | выполнено |
+| `check-ports.cjs .`, `check-env-wiring.sh`, `check-port-conflicts.sh .` | `0` каждая |
+| `check-pipeline-gaps.sh --completion` | контур `diary-and-streak`: **0 GAP** (проверено `grep -i diary` по полному выводу — пусто) |
+
+## Коммиты правки после ревью
+
+- `apps/api/src/diary/recompute-entry-from-snapshot.ts`, `set-diary-entry-portion.ts`,
+  `get-diary-day.ts` — три `high`-фикса
+- `tests/unit/recompute-entry-from-snapshot.test.ts`, `tests/integration/confirm-diary-entry.test.ts`,
+  `tests/concurrency/get-diary-day-consistency.test.ts`, `tests/concurrency/set-portion-parallel-indices.test.ts`,
+  `tests/helpers/diary.ts` (`compositeItem`) — тесты на каждый фикс
+- `docs/features/diary-and-streak/05_completion.md` — Follow-up (medium/low) + раздел правки
+- этот файл — квитанция
 
 Push НЕ выполнялся (запрещено инструкцией координатора).
 

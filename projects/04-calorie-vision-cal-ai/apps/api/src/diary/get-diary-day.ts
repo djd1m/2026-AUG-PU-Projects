@@ -4,8 +4,21 @@
 // попросить чужой дневник нечем (`.claude/rules/security.md`, «Ответ на чужой ресурс»).
 // Непригодная/будущая/вне-диапазона дата — `422` БЕЗ подстановки «сегодня»
 // (`.claude/rules/fail-closed-defaults.md`).
+//
+// Правка RV-diary-and-streak-02 (review-report.md): список записей, итог дня и стрик раньше
+// читались ТРЕМЯ отдельными вызовами `pool.query` — каждый в своей implicit-транзакции
+// PostgreSQL. Конкурентное удаление могло зафиксироваться МЕЖДУ ними: `entries` увидел бы ещё
+// не удалённую строку, а `totals` (запрошенный мгновением позже) — уже без неё. Ответ маршрута
+// нёс бы удалённую запись В СПИСКЕ и сумму БЕЗ неё — расхождение внутри ОДНОГО ответа. Теперь
+// все три чтения выполняются в ОДНОЙ транзакции `REPEATABLE READ READ ONLY` на одном
+// соединении: снимок фиксируется на первом запросе транзакции и не меняется до её конца,
+// поэтому `entries`, `totals` и `streak` в одном ответе гарантированно согласованы —
+// возможно, слегка устаревшие относительно параллельного писателя, но никогда противоречивые
+// друг другу (`.claude/rules/deployment-seams.md`: стык между «списком» и «суммой» — тот же
+// класс дефекта, что и в самом `delete-diary-entry.ts`, только между МОДУЛЯМИ чтения, а не
+// чтением и записью).
 
-import type { DbPool } from '@n4/db';
+import type { DbClient, DbPool } from '@n4/db';
 import { moscowDay } from '../quota/keys.js';
 import { recomputeDayTotals, type DayTotalsResult } from './day-totals.js';
 import { computeSoftStreak, type StreakResult } from './compute-soft-streak.js';
@@ -49,9 +62,22 @@ export async function getDiaryDay(pool: DbPool, ownerKey: string, rawDate: unkno
   // Сравнение строк `YYYY-MM-DD` лексикографически совпадает с хронологическим порядком.
   if (rawDate > today || rawDate < EARLIEST_DATE) return { outcome: 'invalid_date' };
 
-  const entriesResult = await pool.query<DiaryEntryRow>(SELECT_DAY_ENTRIES, [ownerKey, rawDate]);
-  const totals = await recomputeDayTotals(pool, ownerKey, rawDate);
-  const streak = await computeSoftStreak(pool, ownerKey, today);
-
-  return { outcome: 'ok', date: rawDate, entries: entriesResult.rows, totals, streak };
+  // ОДНА транзакция, ОДИН снимок (RV-diary-and-streak-02, шапка файла): `REPEATABLE READ`
+  // фиксирует состояние базы на первом запросе транзакции — все три чтения ниже видят РОВНО
+  // ту же версию `diary_entry`, независимо от того, что коммитит конкурентный писатель между
+  // ними. `READ ONLY` — этот маршрут ничего не пишет, отказ выполнить запись здесь честен.
+  const client: DbClient = await pool.connect();
+  try {
+    await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+    const entriesResult = await client.query<DiaryEntryRow>(SELECT_DAY_ENTRIES, [ownerKey, rawDate]);
+    const totals = await recomputeDayTotals(client, ownerKey, rawDate);
+    const streak = await computeSoftStreak(client, ownerKey, today);
+    await client.query('COMMIT');
+    return { outcome: 'ok', date: rawDate, entries: entriesResult.rows, totals, streak };
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw error;
+  } finally {
+    client.release();
+  }
 }

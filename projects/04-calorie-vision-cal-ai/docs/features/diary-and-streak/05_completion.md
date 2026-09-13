@@ -45,11 +45,11 @@ Phase 3 ЗАВЕРШЕНА (2026-09-13). Код, миграция `006_diary_ent
 npm ci
 npm run build
 npm run lint
-npm test                      # unit + integration + конкурентные, vitest 3
+npm test                      # ТОЛЬКО unit (vitest.config.ts, без базы) — RV-diary-and-streak-08
 
-# 2. Миграция и тесты, которым нужна настоящая база
+# 2. Миграция и тесты, которым нужна настоящая база (integration + concurrency)
 docker compose --profile test run --rm test npm run migrate
-docker compose --profile test run --rm test npm test
+docker compose --profile test run --rm -T test sh -lc 'npm run test:integration'
 
 # 3. Порты — ДО любого up
 node ../../.claude/hooks/check-ports.cjs .
@@ -100,11 +100,39 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 - Экраны `apps/web` для дневника и стрика — вне объёма Phase 3 этой фичи (только API); визуальная
   часть либо отдельный follow-up, либо совместный шаг с фронтовой фичей роадмапа.
 
+## Follow-up, не блокирующий закрытие
+
+Слепое ревью (`review-report.md`, Codex, 2026-09-13) нашло 3 `high` (исправлены этой правкой,
+см. ниже) и 4 `medium` + 1 `low`. Последние по решению DEC-A-032 (один раунд ревью) НЕ чинятся
+в этой правке — каждая строка ниже отдельная будущая задача:
+
+| # | Файл | Суть |
+|---|---|---|
+| RV-diary-and-streak-04 | `apps/api/src/diary/diary-entry-repository.ts:109` | Повторный `confirm` на МЯГКО удалённую запись (`confirm → delete → confirm`) возвращает её как успех `created`, не проверяя `deleted_at` при конфликте `ON CONFLICT`. |
+| RV-diary-and-streak-05 | `tests/integration/set-diary-entry-portion.test.ts`, `tests/integration/delete-diary-entry.test.ts` | Порог 100 мс p95 заменён на грубые 500 мс на ОДНОМ замере; протеин/жир/углевод правки порции не проверены литералами (только kcal). |
+| RV-diary-and-streak-06 | `tests/unit/portion-bounds.test.ts:24` | Граничный тест берёт входы из `PORTION_MIN_GRAMS`/`PORTION_MAX_GRAMS` — движется вместе с реализацией; независимых литералов 5/2000/4/2001 нет. |
+| RV-diary-and-streak-07 | `docs/features/diary-and-streak/01_specification.md:224` | Формулировка AC-14 называет 23:50 по Москве — это тот же UTC-день; различающий момент (00:30 МСК) верный в тесте, но не согласован с текстом требования. |
+| RV-diary-and-streak-08 | `docs/features/diary-and-streak/05_completion.md` (эта правка исправила саму команду) | `npm test` был описан как «unit + integration + конкурентные», хотя фактически запускает ТОЛЬКО unit (`vitest.config.ts`); команда для интеграционных исправлена выше. |
+
+## Правка после ревью (2026-09-13)
+
+Три `high` устранены. Таблица «находка → правка → тест» и полная квитанция прогонов —
+`docs/telemetry/p-replicator/20260913T070000Z-diary-and-streak-A-d1ar/receipts/impl-diary.md`,
+раздел «Правка после ревью». Кратко: композитное блюдо теперь считается по `parts[]`, а не по
+верхнему снимку (`recompute-entry-from-snapshot.ts`); `GetDiaryDay` читает список/итог/стрик в
+одной транзакции `REPEATABLE READ READ ONLY` (`get-diary-day.ts`); `SetDiaryEntryPortion` блокирует
+строку `SELECT … FOR UPDATE` на время чтения-правки-записи (`set-diary-entry-portion.ts`). После
+правки: unit 158/158, integration+concurrency 162/162 (43 файла), typecheck/lint/build — 0, ворота
+контура `check-pipeline-gaps.sh --completion` — без GAP.
+
 ## Criterion coverage
 
 **Таблица ФАКТИЧЕСКАЯ.** Пути файлов и заголовки — реальные, ворота `check-pipeline-gaps.sh
 --completion` подтверждают контур `diary-and-streak` без единого GAP (открывают каждый файл и ищут
-заголовок дословно).
+заголовок дословно; ворота считают повторную строку с ТЕМ ЖЕ ID дефектом таблицы, поэтому у
+`AC-diary-and-streak-1` остаётся ОДНА каноническая строка). Тест составного блюда — ДОПОЛНИТЕЛЬНОЕ
+покрытие того же AC-1 (правка после ревью, RV-01): `tests/integration/confirm-diary-entry.test.ts`,
+«подтверждение составного блюда считает по частям (parts[]), а не по верхнему снимку».
 
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|

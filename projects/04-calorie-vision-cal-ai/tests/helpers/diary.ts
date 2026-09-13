@@ -71,6 +71,27 @@ export function riceItem(massG = 250): RawDiaryItem {
   return { label_ru: 'рис', mass_g: massG, unmatched: false, food_item_id: 'rice-fixture', source_snapshot: RICE_SNAPSHOT };
 }
 
+/**
+ * Составное блюдо (RV-diary-and-streak-01, review-report.md): верхний `source_snapshot` —
+ * placeholder БЕЗ единого питательного поля (ровно та форма, которую записывает
+ * `recognize-scan.ts::persistedItem` для составных позиций — `composite-parts.test.ts`); числа
+ * несут ТОЛЬКО части `parts[]`, у каждой свой снимок. 300 г, доля 0,6 риса (130 ккал/100г) и
+ * 0,4 курицы (165 ккал/100г) → 432 ккал (1,8×130 + 1,2×165).
+ */
+export function compositeItem(massG = 300): RawDiaryItem & { readonly parts: readonly Record<string, unknown>[] } {
+  return {
+    label_ru: 'плов с курицей',
+    mass_g: massG,
+    unmatched: false,
+    food_item_id: 'composite-dish',
+    source_snapshot: { id: 'composite-dish', note: 'верхний уровень — снимок НЕ используется, если есть parts' },
+    parts: [
+      { foodItemId: 'rice', share: 0.6, sourceSnapshot: { kcal_per_100g: 130, protein_per_100g: 2.7, fat_per_100g: 0.3, carb_per_100g: 28 } },
+      { foodItemId: 'chicken', share: 0.4, sourceSnapshot: { kcal_per_100g: 165, protein_per_100g: 31, fat_per_100g: 3.6, carb_per_100g: 0 } },
+    ],
+  };
+}
+
 export interface SeedRecognitionInput {
   readonly deviceSessionId: string;
   readonly accountId?: string | null;

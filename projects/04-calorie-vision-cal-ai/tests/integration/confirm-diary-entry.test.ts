@@ -10,7 +10,7 @@ import { SESSION_COOKIE_NAME } from '../../apps/api/src/session/create-device-se
 import { migratedPool, truncateAll } from '../helpers/db.js';
 import { testApiConfig } from '../helpers/config.js';
 import { buildInitData } from '../helpers/telegram.js';
-import { deviceSession, grantConsent, patchDiary, RICE_SNAPSHOT, riceItem, seedRecognition } from '../helpers/diary.js';
+import { compositeItem, deviceSession, grantConsent, patchDiary, RICE_SNAPSHOT, riceItem, seedRecognition } from '../helpers/diary.js';
 
 let pool: DbPool;
 let app: FastifyInstance;
@@ -130,5 +130,25 @@ describe('PATCH /api/v1/diary/{recognition_id} { op: confirm }', () => {
 
     const rows = await pool.query('SELECT count(*)::int AS n FROM diary_entry');
     expect(rows.rows[0]?.n).toBe(0);
+  });
+
+  // RV-diary-and-streak-01 (review-report.md): подтверждение составного блюда раньше давало
+  // 0 ккал — верхний снимок позиции игнорировался бы полностью (нет ни одного питательного
+  // поля), а `parts[]` не читались вовсе.
+  it('подтверждение составного блюда считает по частям (parts[]), а не по верхнему снимку', async () => {
+    const { token, sessionId } = await deviceSession(app, pool, '203.0.113.66');
+    await grantConsent(app, token);
+    const recognitionId = await seedRecognition(pool, { deviceSessionId: sessionId, items: [compositeItem(300)] });
+
+    const response = await confirm(token, recognitionId);
+
+    expect(response.statusCode).toBe(200);
+    const body = response.json() as { data: { entry: Record<string, unknown>; totals: Record<string, number> } };
+    // 300 г, доли 0,6 риса (130 ккал/100г) и 0,4 курицы (165 ккал/100г): 1,8×130 + 1,2×165 = 432.
+    expect(body.data.entry.kcal_total).toBe(432);
+    expect(body.data.entry.kcal_total).not.toBe(0); // именно этот ноль воспроизводил RV-01
+    expect(body.data.totals.kcal).toBe(432);
+    // protein: 1,8×2.7 + 1,2×31 = 4.86+37.2 = 42.06 → округление до 0.1 = 42.1
+    expect(body.data.entry.protein_total).toBeCloseTo(42.1, 1);
   });
 });
