@@ -165,7 +165,7 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 |-----------|-----------|------------|
 | AC-source-and-correct-1 | tests/integration/source/import-fdc.test.ts | идемпотентен: два прогона подряд дают то же число строк, id не меняется, snapshot_date из аргумента |
 | AC-source-and-correct-2 | tests/integration/source/import-fdc.test.ts | запись без белка отвергается с причиной; запись без порции FNDDS переносится честно (default_portion_g IS NULL) |
-| AC-source-and-correct-3 | tests/unit/source/normalize-ru.test.ts | строка из ОДНИХ кириллических букв не становится пустой (граблю \w не ловит кириллицу) |
+| AC-source-and-correct-3 | tests/unit/source/normalize-ru.test.ts | строка из ОДНИХ кириллических букв не становится пустой (граблю \\w не ловит кириллицу) |
 | AC-source-and-correct-4 | tests/integration/source/seed-synonyms.test.ts | AC-4: создаёт ровно 100 строк food_synonym против импортированной фикстуры |
 | AC-source-and-correct-5 | tests/integration/source/seed-synonyms.test.ts | AC-5 / ADR-006: 50 частых русских запросов находят совпадение |
 | AC-source-and-correct-6 | tests/integration/source/food-search.test.ts | AC-6: точное совпадение выигрывает у триграммного — вторая стратегия НЕ выполняется (счётчик обращений) |
