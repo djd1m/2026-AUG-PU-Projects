@@ -383,6 +383,7 @@ input:focus-visible {
 
 .result__status {
   display: grid;
+  gap: var(--sp-3);
   place-items: center;
   min-height: 60dvh;
   padding: var(--sp-6);
@@ -673,6 +674,41 @@ input:focus-visible {
   border-color: var(--accent-deep);
 }
 
+/* ── путь дальше (задача N4): «в дневник» / «поделиться», заметка отказа, возврат ────── */
+.result__journey {
+  display: grid;
+  gap: var(--sp-2);
+}
+.result__cta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+}
+.result__notice {
+  color: var(--danger);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.result__back {
+  justify-self: center;
+  margin-top: var(--sp-2);
+}
+
+.share-panel {
+  max-width: 480px;
+  margin: calc(var(--sp-2) * -1) auto var(--sp-6);
+  padding: 0 var(--sp-4);
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+  text-align: center;
+}
+.share-panel__url {
+  font-size: 13px;
+  color: var(--ink-2);
+  word-break: break-all;
+}
+
 /* ══ 3. Согласие ══ */
 .consent__text {
   font-size: 13px;
@@ -745,6 +781,56 @@ input:focus-visible {
 .delete__result {
   font-size: 13px;
   color: var(--ok);
+}
+
+/* ══ 6. Дневник (экран дня, задача N4) ══ */
+.diary__nav {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.diary__date {
+  justify-self: center;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 14px;
+}
+.diary__consent-banner {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+  font-size: 13px;
+}
+.diary__streak p {
+  font-size: 14px;
+}
+.diary__streak strong {
+  font-family: var(--font-display);
+}
+.diary__empty {
+  text-align: center;
+  padding: var(--sp-6) 0;
+}
+.diary__entries {
+  display: grid;
+  gap: var(--sp-3);
+}
+.diary__entry {
+  display: grid;
+  gap: var(--sp-1);
+}
+.diary__entry-meal {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.diary__entry-items {
+  display: grid;
+  gap: 2px;
+  font-size: 12px;
 }
 
 /* ── адаптив: один брейкпоинт ≈768 (FR-LOOK-011) ─────────────────────── */

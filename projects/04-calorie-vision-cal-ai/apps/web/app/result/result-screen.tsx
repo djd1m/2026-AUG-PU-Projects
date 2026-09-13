@@ -15,6 +15,14 @@
 // Замер 100 мс степпера В БРАУЗЕРЕ остаётся E2E-после-MVP (спецификация, «Наследуемые
 // сценарии»); ЗДЕСЬ проверяется, что действие ДОХОДИТ до маршрута правки, а не время.
 //
+// Задача N4 (замкнуть путь пользователя, дефект «после результата переходов нет вовсе»):
+// добавлены ДВЕ главные кнопки — «в дневник» (`onGoToDiary`) и «поделиться» (`onShare`) — тем
+// же приёмом: действия необязательны, компонент остаётся презентационным без них. `journeyNotice`
+// — сообщение об отказе ЭТИХ двух действий (консент увёл бы страницу целиком, а не оставил
+// заметку — заметка нужна для отказов, которые НЕ уводят: 404/409/сеть). Кнопка «к камере» —
+// обычная ссылка, ВСЕГДА в разметке (пункт 5 задачи: возврат к камере с экрана результата),
+// без действия и без сети — навигация браузера, не JS.
+//
 // Названия полей — snake_case НАМЕРЕННО: это ровно wire-форма ответа API
 // (`packages/shared/src/domain/food.ts`, комментарий у `Snapshot`), а не внутреннее
 // состояние компонента — дублировать её camelCase-версией значило бы завести ВТОРУЮ форму
@@ -87,6 +95,12 @@ export interface ScanResultActions {
   readonly onSearchReplace?: (query: string) => Promise<readonly ReplaceCandidate[]>;
   readonly onReplace?: (index: number, foodItemId: string) => void | Promise<void>;
   readonly onResolveConflict?: () => void | Promise<void>;
+  /** «В дневник» — CJM E (задача N4): при успехе страница сама уводит на экран дня, при
+   * `403 consent_required` — на экран согласия. Компонент лишь вызывает и ждёт. */
+  readonly onGoToDiary?: () => void | Promise<void>;
+  /** «Поделиться» — CJM E, параллельная ветка (FR-GROWTH-001). Тоже может потребовать
+   * согласия (карточка несёт состав блюда) — та же обработка, что у `onGoToDiary`. */
+  readonly onShare?: () => void | Promise<void>;
 }
 
 // Условие использования CC0-данных USDA (ADR-005) и обещание продукта FR-SOURCE-002 —
@@ -318,7 +332,62 @@ function DiscrepancyBanner({ scan, actions }: { readonly scan: ScanResultRespons
   );
 }
 
-export function ScanResultScreen({ scan, actions = {} }: { readonly scan: ScanResultResponse; readonly actions?: ScanResultActions }) {
+/** Кнопки главного пути (задача N4, пункт 1): «в дневник» и «поделиться», РАЗЛИЧИМЫ формой —
+ * первая заливкой (главное действие пути), вторая акцентной обводкой. Каждая — своя ожидающая
+ * кнопка: `pending` не общий на обе, иначе клик по одной блокировал бы вторую без причины. */
+function JourneyActions({ actions, notice }: { readonly actions: ScanResultActions; readonly notice: string | null }) {
+  const [pending, setPending] = useState<'diary' | 'share' | null>(null);
+  if (actions.onGoToDiary === undefined && actions.onShare === undefined) return null;
+
+  const run = (kind: 'diary' | 'share', handler: () => void | Promise<void>): void => {
+    setPending(kind);
+    Promise.resolve(handler()).finally(() => setPending(null));
+  };
+
+  return (
+    <section className="result__journey" aria-label="дальнейшие действия">
+      <div className="result__cta">
+        {actions.onGoToDiary !== undefined ? (
+          <button
+            type="button"
+            className="btn btn--primary btn--wide"
+            disabled={pending !== null}
+            onClick={() => run('diary', actions.onGoToDiary as () => void | Promise<void>)}
+          >
+            {pending === 'diary' ? 'сохраняем…' : 'в дневник'}
+          </button>
+        ) : null}
+        {actions.onShare !== undefined ? (
+          <button
+            type="button"
+            className="btn btn--accent btn--wide"
+            disabled={pending !== null}
+            onClick={() => run('share', actions.onShare as () => void | Promise<void>)}
+          >
+            {pending === 'share' ? 'готовим…' : 'поделиться'}
+          </button>
+        ) : null}
+      </div>
+      {notice !== null ? (
+        <p className="result__notice" role="alert">
+          {notice}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
+export function ScanResultScreen({
+  scan,
+  actions = {},
+  journeyNotice = null,
+}: {
+  readonly scan: ScanResultResponse;
+  readonly actions?: ScanResultActions;
+  /** Отказ «в дневник»/«поделиться», который НЕ увёл со страницы (404/409/сеть) — консент
+   * уводит целиком (см. страницу маршрута), заметки не требует. */
+  readonly journeyNotice?: string | null;
+}) {
   return (
     <main className="result">
       <section className="result__tiles" aria-label="итог">
@@ -342,11 +411,20 @@ export function ScanResultScreen({ scan, actions = {} }: { readonly scan: ScanRe
 
       <DiscrepancyBanner scan={scan} actions={actions} />
 
+      <JourneyActions actions={actions} notice={journeyNotice} />
+
       <ul className="result__items">
         {scan.items.map((item, index) => (
           <ItemRow key={`${item.label_ru}-${index}`} item={item} index={index} actions={actions} />
         ))}
       </ul>
+
+      {/* Возврат к камере (задача N4, пункт 5) — обычная ссылка, не действие: работает без
+          JS и без сетевого вызова, тот же приём навигации, что и остальная фича (переходы —
+          не через роутер-библиотеку). */}
+      <a href="/" className="btn btn--ghost btn--wide result__back">
+        к камере
+      </a>
     </main>
   );
 }
