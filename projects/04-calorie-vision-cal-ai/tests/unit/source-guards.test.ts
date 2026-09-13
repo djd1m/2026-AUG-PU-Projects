@@ -369,3 +369,37 @@ describe('страж ADR-005: строка openfoodfacts не встречает
     expect(files.filter(({ code }) => /openfoodfacts/i.test(code))).toEqual([]);
   });
 });
+
+describe('страж RV-source-and-correct-05: SELECT_FOR_CORRECT держит блокировку строки', () => {
+  // Дополняет ЖИВЫЕ конкурентные тесты (`tests/concurrency/source/concurrent-correct.test.ts`)
+  // ДЕШЁВОЙ статической половиной: «показать падение при снятой защите»
+  // (`guard-must-be-able-to-fail.md`) для целого прогона стенда стоило бы времени; здесь —
+  // мгновенная проверка, что защитное `FOR UPDATE` физически присутствует в запросе, от
+  // которого зависит сериализация `correct` против конкурентной записи воркера.
+  it('запрос SELECT_FOR_CORRECT в scans-correct.ts несёт FOR UPDATE', async () => {
+    const files = await readAll('apps/api/src/routes');
+    const routeFile = files.find(({ file }) => file.endsWith('scans-correct.ts'));
+    expect(routeFile).toBeDefined();
+    const selectBlock = routeFile?.code.match(/SELECT_FOR_CORRECT\s*=\s*`([^`]*)`/)?.[1];
+    expect(selectBlock).toBeDefined();
+    expect(selectBlock).toMatch(/FOR UPDATE/);
+  });
+
+  it('ИСПЫТАНИЕ СТРАЖА: снятие FOR UPDATE (удалённая защита) красит проверку', async () => {
+    const files = await readAll('apps/api/src/routes');
+    const routeFile = files.find(({ file }) => file.endsWith('scans-correct.ts'));
+    expect(routeFile).toBeDefined();
+
+    // Мутация — В ПАМЯТИ: снимает РОВНО защитное слово, симулируя регресс, где кто-то
+    // убрал блокировку строки (именно тот дефект, что сделал бы сценарий 2
+    // конкурентного теста недетерминированным/ломающимся).
+    const mutatedCode = routeFile?.code.replace('FOR UPDATE', '');
+    expect(mutatedCode).not.toBe(routeFile?.code);
+    const mutatedBlock = mutatedCode?.match(/SELECT_FOR_CORRECT\s*=\s*`([^`]*)`/)?.[1];
+    expect(mutatedBlock).not.toMatch(/FOR UPDATE/); // КРАСНЫЙ на мутированном коде
+
+    // Восстановление (немутированный код) — снова ЗЕЛЁНЫЙ.
+    const restoredBlock = routeFile?.code.match(/SELECT_FOR_CORRECT\s*=\s*`([^`]*)`/)?.[1];
+    expect(restoredBlock).toMatch(/FOR UPDATE/);
+  });
+});
