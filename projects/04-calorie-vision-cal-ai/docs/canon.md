@@ -76,7 +76,11 @@ NFR-SCALE-001 3000 сканов/сутки без деградации · NFR-OP
 `web` (Next.js: PWA + TMA, SSR) · `api` (Node/TypeScript, Fastify) · `recognizer` (Node worker:
 модель + RAG) · `db` (PostgreSQL 16, pg_trgm) · `storage` (MinIO, бакет фото приватный) · `proxy`
 (Caddy, единственная дверь). Хранилища без публикации портов. Хостовые порты только `${VAR:-default}`.
-Модель: Claude Haiku 4.5 (основной вызов), Claude Sonnet 5 (эскалация при уверенности < 0,6).
+Модель: Claude Haiku 4.5 (основной вызов), Claude Sonnet 5 (эскалация при уверенности < 0,6). Эти
+ДВЕ РОЛИ канона неизменны; НОСИТЕЛЬ, на котором роль исполняется, выбирается поставщиком
+(`N4_MODEL_PROVIDER`, закрытый набор `fake | live | openrouter`, DEC-A-045/046) — у `openrouter`
+носители те же роли называют `openai/gpt-5-nano` (основной вызов) и `openai/gpt-5-mini`
+(эскалация), отображение задано кодом (`apps/recognizer/src/provider/openrouter.ts`), не окружением.
 База: USDA FoodData Central (CC0) — импорт Foundation + SR Legacy + FNDDS-порции; таблица RU-синонимов
 (100–300 блюд, курируется вручную).
 
