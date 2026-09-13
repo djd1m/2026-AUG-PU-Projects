@@ -43,16 +43,19 @@ async function createAnonymousSession(): Promise<{ token: string }> {
 }
 
 async function seedDiaryEntries(sessionId: string, count: number): Promise<void> {
-  const recognition = await pool.query<{ id: string }>(
-    `INSERT INTO recognition (device_session_id, status) VALUES ($1, 'done') RETURNING id`,
-    [sessionId],
-  );
-  const recognitionId = recognition.rows[0]!.id;
+  // `diary-and-streak` добавила `UNIQUE (recognition_id)` на `diary_entry`
+  // (`006_diary_entry_recognition_unique.sql`) — ОДНА запись дневника на ОДИН скан, как и в
+  // продукте (`ConfirmDiaryEntry` создаёт ровно одну строку за подтверждение). Каждой записи
+  // нужен СВОЙ `recognition`, а не общий на все `count`.
   for (let i = 0; i < count; i += 1) {
+    const recognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, status) VALUES ($1, 'done') RETURNING id`,
+      [sessionId],
+    );
     await pool.query(
       `INSERT INTO diary_entry (owner_key, recognition_id, eaten_on, meal_slot, items, kcal_total, protein_total, fat_total, carb_total, source_snapshot)
        VALUES ($1, $2, CURRENT_DATE, 'lunch', '[]'::jsonb, 100, 1, 1, 1, '{}'::jsonb)`,
-      [sessionId, recognitionId],
+      [sessionId, recognition.rows[0]!.id],
     );
   }
 }
