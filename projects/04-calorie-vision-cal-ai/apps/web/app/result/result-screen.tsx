@@ -322,7 +322,7 @@ export function ScanResultScreen({ scan, actions = {} }: { readonly scan: ScanRe
   return (
     <main className="result">
       <section className="result__tiles" aria-label="итог">
-        <div className="tile">
+        <div className="tile tile--kcal">
           <span className="tile__value">{scan.kcal_total ?? '—'}</span>
           <span className="tile__label">ккал</span>
         </div>
