@@ -25,6 +25,20 @@ interface AccountLookupRow {
 
 type LoginOutcome =
   | { readonly kind: 'replayed' }
+  // RV-consent-and-telegram-auth-05 (третий обзор): вход в аккаунт со статусом `erasing`
+  // ОТКАЗЫВАЕТСЯ, транзакция откатывается — ни сессия, ни дневник, ни распознавания НЕ
+  // присоединяются к аккаунту, который уже удаляется. Без этого отказа `RunErasureJob` мог
+  // удалить строки БД (шаг 1), затем анонимная сессия входила в ЭТОТ ЖЕ `erasing`-аккаунт и
+  // переносила НОВЫЙ дневник/распознавания, а задача коммитила `erased`, не перепроверяя
+  // таблицы, — перенесённые данные оставались у терминального аккаунта, который больше не
+  // выбирается ни одним прогоном. Блокировка строки `account` (`findAccountByTelegramId`,
+  // `FOR UPDATE`) на ОБЕИХ сторонах — здесь и в `RunErasureJob`'s финальном `UPDATE … SET
+  // status = 'erased'` — упорядочивает исход однозначно: либо вход видит ещё `erasing` и
+  // отказывает (эразура завершится позже, ничего нового не присоединено), либо эразура уже
+  // зафиксировала `erased` и вход находит `status != 'erased'` пустым — создаёт НОВЫЙ
+  // аккаунт (AC-consent-and-telegram-auth-20), а не старый. Окна «второе присоединяется
+  // между удалением строк и коммитом erased» больше нет: присоединяться было НЕЧЕМ.
+  | { readonly kind: 'erasing' }
   | { readonly kind: 'success'; readonly accountId: string; readonly migratedEntries: number; readonly cookieToken: string };
 
 /**
@@ -42,19 +56,30 @@ async function findActiveAccountByTelegramId(client: DbClient, telegramUserId: s
 }
 
 /**
- * Атомарная заявка на повтор (RV-03): ОДИН `INSERT … ON CONFLICT DO NOTHING`. Ноль затронутых
- * строк — эта подпись УЖЕ использована этим владельцем (когда угодно ранее, без окна: свежесть
- * `initData` уже ограничена 24 часами `verifyTelegramInitData`, так что точный повтор одной и
- * той же подписи физически не может пройти позже этого срока). Хранится ИСТОРИЯ, а не
- * единственный слот — иначе последовательность «вход A → вход B → повтор A» перезаписывала
- * слот входом B и пропускала повтор A (заслуженный дефект, воспроизведён review-report.md).
+ * Атомарная заявка на повтор (RV-03 второго обзора): ОДИН `INSERT … ON CONFLICT DO NOTHING`.
+ * Ноль затронутых строк — эта подпись УЖЕ использована этим владельцем (когда угодно ранее,
+ * без окна: свежесть `initData` уже ограничена 24 часами `verifyTelegramInitData`, так что
+ * точный повтор одной и той же подписи физически не может пройти позже этого срока). Хранится
+ * ИСТОРИЯ, а не единственный слот — иначе последовательность «вход A → вход B → повтор A»
+ * перезаписывала слот входом B и пропускала повтор A (заслуженный дефект).
+ *
+ * RV-consent-and-telegram-auth-04 (третий обзор): ключ повтора — `telegram_user_id`, НЕ
+ * `account_id`. Частичный уникальный индекс `account_telegram_user_id_active_unique`
+ * (миграция 002) исключает ТОЛЬКО `erased`-строки из уникальности `telegram_user_id` — после
+ * реальной эразуры повторный вход тем же `telegram_user_id` создаёт НОВЫЙ `account_id`
+ * (AC-consent-and-telegram-auth-20). Ключуясь по СТАРОМУ `account_id`, заявка на повтор не
+ * мешала БАЙТ-В-БАЙТ той же строке `initData` (ещё не просроченной 24-часовым окном свежести)
+ * авторизовать заново уже под НОВЫМ аккаунтом: пара `(новый account_id, hash)` в таблице
+ * попросту не существовала. `telegram_user_id` НЕ меняется НИ эразурой, НИ созданием новой
+ * строки `account` — история повторов ключуется им, независимо от того, какой `account_id`
+ * действует сейчас (миграция 004).
  */
-async function claimReplay(client: DbClient, accountId: string, hash: string): Promise<boolean> {
+async function claimReplay(client: DbClient, accountId: string, telegramUserId: string, hash: string): Promise<boolean> {
   const claimed = await client.query(
-    `INSERT INTO telegram_login_replay (account_id, hash) VALUES ($1, $2)
-     ON CONFLICT (account_id, hash) WHERE account_id IS NOT NULL DO NOTHING
+    `INSERT INTO telegram_login_replay (account_id, telegram_user_id, hash) VALUES ($1, $2, $3)
+     ON CONFLICT (telegram_user_id, hash) WHERE telegram_user_id IS NOT NULL DO NOTHING
      RETURNING id`,
-    [accountId, hash],
+    [accountId, telegramUserId, hash],
   );
   return claimed.rows.length > 0;
 }
@@ -87,6 +112,14 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       // 1. Найти или создать аккаунт — ЕЩЁ НИ ОДНА сессия не тронута.
       const existingAccount = await findActiveAccountByTelegramId(client, verified.telegramUserId);
 
+      // RV-05 (третий обзор): аккаунт, уже отправленный на удаление, НЕ принимает новые
+      // присоединения — отказ ДО любой мутации, строка `account` уже заблокирована
+      // (`FOR UPDATE` внутри `findActiveAccountByTelegramId`) тем же локом, который держит
+      // `RunErasureJob` на финальном переходе в `erased`.
+      if (existingAccount !== undefined && existingAccount.status === 'erasing') {
+        return { kind: 'erasing' };
+      }
+
       let accountId: string;
       if (existingAccount !== undefined) {
         accountId = existingAccount.id;
@@ -107,14 +140,17 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
           // Гонка двух параллельных первых входов (VC-03): конкурент уже вставил строку.
           const retryRow = await findActiveAccountByTelegramId(client, verified.telegramUserId);
           if (retryRow === undefined) throw new Error('гонка вставки account не разрешена повторным чтением');
+          if (retryRow.status === 'erasing') return { kind: 'erasing' };
           accountId = retryRow.id;
         }
       }
 
-      // 2. Заявка на повтор — ПЕРВАЯ и ЕДИНСТВЕННАЯ мутация до этой точки (RV-04): отказ
-      // откатывает транзакцию БЕЗ создания или изменения account (кроме уже неизбежной вставки
-      // на легитимном первом входе — см. комментарий алгоритма) и БЕЗ касания device_session.
-      if (!(await claimReplay(client, accountId, canonicalHash))) {
+      // 2. Заявка на повтор — ПЕРВАЯ и ЕДИНСТВЕННАЯ мутация до этой точки (RV-04 второго
+      // обзора): отказ откатывает транзакцию БЕЗ создания или изменения account (кроме уже
+      // неизбежной вставки на легитимном первом входе — см. комментарий алгоритма) и БЕЗ
+      // касания device_session. Ключ — `telegram_user_id` (RV-04 третьего обзора), не
+      // `accountId`, который заменяется новым после эразуры.
+      if (!(await claimReplay(client, accountId, verified.telegramUserId, canonicalHash))) {
         return { kind: 'replayed' };
       }
 
@@ -136,7 +172,18 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       // Перенос дневника ЦЕЛИКОМ, добавлением к уже перенесённому (AC-consent-and-telegram-auth-6).
       const migrated = await client.query(`UPDATE diary_entry SET owner_key = $2 WHERE owner_key = $1`, [sessionId, accountId]);
 
-      // Перенос ВЛАДЕНИЯ анонимными распознаваниями (RV-06): без этого шага эразура искала
+      // Перенос ВЛАДЕНИЯ анонимными карточками (RV-consent-and-telegram-auth-01, третий обзор):
+      // без этого шага анонимная карточка (`share_card.owner_key = session_id`, репозиторий
+      // разрешает создание анонимному владельцу с согласием) переживала вход НЕ ПЕРЕНЕСЁННОЙ.
+      // Два наблюдаемых следствия: (1) `withdraw_consent`/`erase_all` отзывают карточки по
+      // `owner_key = account_id` (`account-delete.ts`) и эту карточку молча пропускали;
+      // (2) `RunErasureJob` удаляет `share_card` по `owner_key = account_id` ДО `recognition`
+      // именно затем, чтобы снять ссылку `ON DELETE RESTRICT` (миграция 001) — неперенесённая
+      // карточка эту ссылку не снимала, и `DELETE FROM recognition` падал на КАЖДОМ прогоне,
+      // оставляя аккаунт `erasing` навсегда. Перенос — в ТОЙ ЖЕ транзакции входа, что и дневник.
+      await client.query(`UPDATE share_card SET owner_key = $2 WHERE owner_key = $1`, [sessionId, accountId]);
+
+      // Перенос ВЛАДЕНИЯ анонимными распознаваниями (RV-06 второго обзора): без этого шага эразура искала
       // активные/удаляемые сканы ТОЛЬКО по `recognition.account_id` и пропускала распознавания,
       // созданные анонимно ДО входа, — они переживали `erase_all`, а их `queued`-статус не
       // откладывал удаление фотографий.
@@ -163,6 +210,11 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
     if (outcome.kind === 'replayed') {
       // Именованная причина отказа — не путается с проверкой подписи/свежести выше.
       return reply.code(401).send(fail('initdata_replayed', 'эта строка initData уже была использована'));
+    }
+    if (outcome.kind === 'erasing') {
+      // RV-05 (третий обзор): именованная причина, отдельная от replay — аккаунт существует,
+      // подпись подлинна, но данные уже удаляются и присоединение новых запрещено.
+      return reply.code(409).send(fail('account_erasing', 'аккаунт удаляется, вход временно недоступен'));
     }
 
     // Cookie переустанавливается ВСЕГДА при успехе (RV-13, AC-consent-and-telegram-auth-1
