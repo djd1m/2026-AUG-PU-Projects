@@ -48,7 +48,25 @@ function htmlResponse(status: number, body: string): Response {
   });
 }
 
-const NOT_FOUND_HTML = '<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Карточка не найдена</title></head><body><p>Карточка не найдена.</p></body></html>';
+// Route Handler отдаёт СЫРУЮ HTML-строку, а не проходит через `app/globals.css` (тот
+// компилируется бандлером Next в хэшированный файл, недоступный по стабильному пути) —
+// поэтому у публичной карточки СВОЙ инлайновый `<style>`, тот же шрифт и та же палитра,
+// что и у остального продукта (`../../globals.css`, тема — светлая бумага + один тёмный
+// блок). `style-src 'self' 'unsafe-inline'` разрешает инлайновый тег (`middleware.ts`).
+const CARD_STYLE = `
+@font-face{font-family:'Unbounded';src:url('/fonts/Unbounded-wght.ttf') format('truetype');font-weight:200 900;font-display:swap}
+@font-face{font-family:'Onest';src:url('/fonts/Onest-wght.ttf') format('truetype');font-weight:100 900;font-display:swap}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;background:#1b1523;color:#fbf8f2;font:400 15px/1.5 'Onest',-apple-system,'Segoe UI',sans-serif}
+.card{max-width:420px;margin:0 auto;padding:32px 20px 40px;display:grid;gap:16px}
+.card__photo{border-radius:24px;overflow:hidden;background:#0a0710;aspect-ratio:9/16;display:grid}
+.card__photo img{width:100%;height:100%;object-fit:cover;display:block}
+.card__name{font-family:'Unbounded',sans-serif;font-weight:700;font-size:22px;line-height:1.2;margin:0}
+.card__source{font-size:12px;letter-spacing:.04em;color:rgba(251,248,242,.66);margin:0}
+.card__brand{font-family:'Unbounded',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#ffc531;margin:8px 0 0}
+`;
+
+const NOT_FOUND_HTML = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Карточка не найдена</title><style>${CARD_STYLE}</style></head><body><main class="card"><p class="card__name">Карточка не найдена</p><p class="card__source">Возможно, автор закрыл доступ или ссылка устарела.</p></main></body></html>`;
 
 export async function GET(_request: Request, context: { params: Promise<{ cardId: string }> }): Promise<Response> {
   const { cardId } = await context.params;
@@ -68,15 +86,22 @@ export async function GET(_request: Request, context: { params: Promise<{ cardId
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${dishName} — Тарелка</title>
   <meta property="og:title" content="${dishName}">
   <meta property="og:image" content="${imagePath}">
   <meta property="og:type" content="article">
+  <style>${CARD_STYLE}</style>
 </head>
 <body>
-  <img src="${imagePath}" alt="${dishName}" width="1080" height="1920">
-  <p>${dishName}</p>
-  <p>${sourceLabel}</p>
+  <main class="card">
+    <div class="card__photo">
+      <img src="${imagePath}" alt="${dishName}" width="1080" height="1920">
+    </div>
+    <p class="card__name">${dishName}</p>
+    <p class="card__source">${sourceLabel}</p>
+    <p class="card__brand">Тарелка</p>
+  </main>
 </body>
 </html>`;
 
