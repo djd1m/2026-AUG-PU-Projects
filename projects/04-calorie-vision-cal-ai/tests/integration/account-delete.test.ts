@@ -58,11 +58,19 @@ async function seedCardsAndDiary(accountId: string, cards: number, entries: numb
   for (let i = 0; i < cards; i += 1) {
     await pool.query(`INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, $3)`, [accountId, recognitionId, `card-${i}-${accountId}`]);
   }
+  // `diary-and-streak` добавила `UNIQUE (recognition_id)` на `diary_entry`
+  // (`006_diary_entry_recognition_unique.sql`) — ОДНА запись дневника на ОДИН скан. Каждой
+  // записи нужен СВОЙ `recognition`; `share_card` выше такого ограничения не несёт, там общий
+  // `recognitionId` остаётся законным.
   for (let i = 0; i < entries; i += 1) {
+    const entryRecognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+      [sessionId, accountId],
+    );
     await pool.query(
       `INSERT INTO diary_entry (owner_key, recognition_id, eaten_on, meal_slot, items, kcal_total, protein_total, fat_total, carb_total, source_snapshot)
        VALUES ($1, $2, CURRENT_DATE, 'lunch', '[]'::jsonb, 100, 1, 1, 1, '{}'::jsonb)`,
-      [accountId, recognitionId],
+      [accountId, entryRecognition.rows[0]!.id],
     );
   }
 }

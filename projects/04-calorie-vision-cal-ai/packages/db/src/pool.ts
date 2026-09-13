@@ -7,6 +7,19 @@
 
 import pg from 'pg';
 
+// Колонки `date` (oid 1082, `diary_entry.eaten_on`) БЕЗ этого приходят JS-объектом `Date`,
+// сконструированным `pg-types` В ЛОКАЛЬНОЙ таймзоне процесса (`new Date(year, month, day)`).
+// Все сервисы этого проекта запускаются с `TZ=Europe/Moscow` (`docker-compose.yml`: `api`,
+// `recognizer`, `test`) — то есть такой `Date` представляет МОСКОВСКУЮ полночь. Любое
+// последующее `.toISOString()` (а JSON-сериализация ответа маршрута ТОЖЕ вызывает его через
+// `Date.prototype.toJSON`) переводит эту полночь в UTC и получает МОСКВА−3ЧАСА = ПРЕДЫДУЩИЕ
+// сутки — заслуженный дефект `diary-and-streak`: без этой строки `GET /diary?date=` отдавал бы
+// клиенту `eaten_on` на день раньше сохранённого, а `ComputeSoftStreak` сравнивал бы даты,
+// молча сдвинутые на сутки назад. Отключаем разбор ЦЕЛИКОМ — весь код проекта уже трактует
+// `eaten_on` как строку `YYYY-MM-DD` (`DiaryEntryRow.eaten_on: string`), и получает её отсюда
+// без искажения.
+pg.types.setTypeParser(pg.types.builtins.DATE, (value: string) => value);
+
 export type DbPool = pg.Pool;
 export type DbClient = pg.PoolClient;
 

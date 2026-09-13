@@ -48,6 +48,13 @@ describe('PATCH /api/v1/diary/{recognition_id} { op: confirm }', () => {
     // (250/100) × 130 = 325 ккал — из СНИМКА recognition, не из живой food_item.
     expect(body.data.entry.kcal_total).toBe(325);
     expect(body.data.totals.kcal).toBe(325);
+    // Регресс на `packages/db/src/pool.ts` (тип-парсер колонки `date`): БЕЗ него `eaten_on`
+    // приходит из pg объектом `Date`, а JSON-сериализация ответа маршрута сдвигает московскую
+    // полночь в UTC на сутки назад (TZ=Europe/Moscow всех сервисов). Здесь — строка вида
+    // YYYY-MM-DD, равная сегодняшней московской дате, а не `Date`/её ISO-представление со
+    // временем.
+    expect(typeof body.data.entry.eaten_on).toBe('string');
+    expect(body.data.entry.eaten_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 
     const rows = await pool.query<{ recognition_id: string; source_snapshot: unknown }>(
       'SELECT recognition_id, source_snapshot FROM diary_entry WHERE recognition_id = $1',
