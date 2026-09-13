@@ -25,6 +25,13 @@ export interface ScansRouteDeps {
 interface OwnedSession {
   readonly deviceSessionId: string;
   readonly ipPrefix: string;
+  // Находка слияния consent-and-telegram-auth (merge-consent.md, DEC-A-036 №2): `account_id`
+  // связанного аккаунта и его СВЕЖИЙ статус — нужны только для отказа в создании нового скана,
+  // когда аккаунт в процессе удаления (см. проверку после `requireSession` в POST-обработчике).
+  // `null`/`null` означает «сессия не связана ни с каким аккаунтом» — анонимный владелец
+  // `erasing` не бывает по построению (маршрут удаления требует связанной сессии).
+  readonly accountId: string | null;
+  readonly accountStatus: string | null;
 }
 
 async function requireSession(request: FastifyRequest, pool: DbPool): Promise<OwnedSession | null> {
@@ -32,11 +39,19 @@ async function requireSession(request: FastifyRequest, pool: DbPool): Promise<Ow
   if (token === undefined || token.trim() === '') return null;
   const { createHash } = await import('node:crypto');
   const hash = createHash('sha256').update(token, 'utf8').digest('hex');
-  const result = await pool.query<{ id: string }>('SELECT id FROM device_session WHERE cookie_token_hash = $1', [hash]);
+  // LEFT JOIN — `device_session.account_id` (`ON DELETE SET NULL`) гарантирует, что строка
+  // `account` существует ВСЕГДА, когда `account_id` не NULL: `account_status = NULL`
+  // однозначно значит «сессия не связана», а не «строка владельца потерялась».
+  const result = await pool.query<{ id: string; account_id: string | null; account_status: string | null }>(
+    `SELECT ds.id, ds.account_id, a.status AS account_status
+     FROM device_session ds LEFT JOIN account a ON a.id = ds.account_id
+     WHERE ds.cookie_token_hash = $1`,
+    [hash],
+  );
   const row = result.rows[0];
   if (row === undefined) return null;
   const address = clientAddressFrom(request.headers['x-forwarded-for'], request.ip);
-  return { deviceSessionId: row.id, ipPrefix: toIpPrefix(address) };
+  return { deviceSessionId: row.id, ipPrefix: toIpPrefix(address), accountId: row.account_id, accountStatus: row.account_status };
 }
 
 interface UploadedFile {
@@ -81,6 +96,20 @@ export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps):
   app.post('/api/v1/scans', async (request: FastifyRequest, reply: FastifyReply) => {
     const session = await requireSession(request, deps.pool);
     if (session === null) return reply.code(401).send(fail('unauthenticated', 'сессия отсутствует'));
+
+    // Находка слияния consent-and-telegram-auth (merge-consent.md, DEC-A-036 №2): пока аккаунт
+    // связанной сессии в статусе, ОТЛИЧНОМ от `active` (обычно `erasing` — запрошено удаление),
+    // маршрут продолжал принимать новые сканы. `RunErasureJob` откладывает аккаунт, у которого
+    // есть `recognition` в статусе `queued` (`erasure-job.ts`), поэтому непрерывный поток новых
+    // сканов откладывал удаление НЕОГРАНИЧЕННО — при объявленном сроке 72 часа (`security.md`).
+    // Fail-closed (`fail-closed-defaults.md`): проверяется РАВЕНСТВО `'active'`, а не НЕРАВЕНСТВО
+    // известным плохим значениям — статус, не входящий в закрытое перечисление `account_status`
+    // (сейчас такого нет, но НЕ полагаемся на это), тоже отказывает. Анонимная сессия
+    // (`accountId === null`) под эту проверку не подпадает: анонимный владелец не может быть
+    // `erasing` — маршрут удаления (`account-delete.ts`) требует СВЯЗАННУЮ сессию.
+    if (session.accountId !== null && session.accountStatus !== 'active') {
+      return reply.code(409).send(fail('account_erasing', 'аккаунт удаляется, создание новых сканов недоступно'));
+    }
 
     // Шаг 6: формат ключа повторности — ДО загрузки объекта и ДО любого обращения к БД/квоте.
     const idempotencyKeyHeader = request.headers['idempotency-key'];

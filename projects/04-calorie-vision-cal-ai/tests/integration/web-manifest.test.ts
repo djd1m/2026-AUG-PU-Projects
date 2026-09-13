@@ -88,4 +88,37 @@ describe('манифест PWA по HTTP', () => {
     expect(html).toContain('съёмка');
     expect(html).toContain('галерея');
   }, 60_000);
+
+  it('пост-мерж дефект №1 (merge-consent.md, DEC-A-036): SDK Telegram несёт nonce, совпадающий с заголовком', async () => {
+    // Прежняя проверка (тест выше) утверждала только форму строки политики — `strict-dynamic`
+    // делает подстроку `nonce-` в заголовке необходимым, но НЕДОСТАТОЧНЫМ условием: реальный
+    // `<script>`, доставляющий SDK, мог не нести атрибут `nonce` вовсе (найдено на слиянии по
+    // СОБРАННОМУ HTML, а не по тексту политики). Эта проверка читает НАСТОЯЩИЙ ответ.
+    //
+    // `next/script` со `strategy="beforeInteractive"` не печатает статический тег
+    // `<script src="…">` в разметке — он передаёт адрес и nonce во встроенный bootstrap-скрипт
+    // Next (`(self.__next_s=…).push(["URL",{"nonce":"…"}])`), который САМ создаёт элемент
+    // `<script>` в рантайме и переносит nonce на него. Проверять надо то, что реально управляет
+    // допуском браузера: (1) САМ этот bootstrap-тег обязан нести `nonce`, равный заголовку
+    // `Content-Security-Policy` ЭТОГО ЖЕ ответа — иначе CSP отклонит его как обычный инлайн-скрипт
+    // без nonce/hash, и цепочка обрывается на первом звене; (2) nonce, который bootstrap
+    // ПЕРЕДАСТ созданному элементу SDK, обязан быть ТЕМ ЖЕ значением, а не пустым/чужим.
+    const response = await fetch(`${BASE}/`);
+    expect(response.status).toBe(200);
+
+    const policy = response.headers.get('content-security-policy') ?? '';
+    const nonceMatch = /'nonce-([^']+)'/.exec(policy);
+    expect(nonceMatch, policy).not.toBeNull();
+    const nonce = nonceMatch![1];
+
+    const html = await response.text();
+    const bootstrapMatch =
+      /<script([^>]*)>\(self\.__next_s=self\.__next_s\|\|\[\]\)\.push\(\["https:\/\/telegram\.org\/js\/telegram-web-app\.js",\{"nonce":"([^"]*)"\}\]\)<\/script>/.exec(
+        html,
+      );
+    expect(bootstrapMatch, html.slice(0, 4000)).not.toBeNull();
+    const [, bootstrapAttrs, forwardedNonce] = bootstrapMatch!;
+    expect(bootstrapAttrs).toContain(`nonce="${nonce}"`);
+    expect(forwardedNonce).toBe(nonce);
+  }, 60_000);
 });

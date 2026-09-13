@@ -40,6 +40,24 @@ async function seedCookieSession(): Promise<string> {
   return token;
 }
 
+/** Сессия, связанная с аккаунтом заданного статуса (по умолчанию `active`) — для проверки
+ * пост-мерж дефекта №2 (`merge-consent.md`, DEC-A-036): удаление аккаунта обязано закрывать
+ * создание новых сканов. */
+async function seedLinkedSession(status: 'active' | 'erasing' | 'erased' = 'active'): Promise<{ token: string; accountId: string }> {
+  const token = generateSessionToken();
+  const account = await pool.query<{ id: string }>(
+    `INSERT INTO account (telegram_user_id, status, consent_at) VALUES ($1, $2, now()) RETURNING id`,
+    [randomUUID(), status],
+  );
+  const accountId = account.rows[0]!.id;
+  await pool.query(
+    `INSERT INTO device_session (account_id, cookie_token_hash, ip_prefix, anonymous_diary_expires_at)
+     VALUES ($1, $2, $3, now() + interval '7 days')`,
+    [accountId, hashSessionToken(token), '203.0.113.0/24'],
+  );
+  return { token, accountId };
+}
+
 async function postScan(cookie: string, file: Buffer, options: { contentType?: string; idempotencyKey?: string; filename?: string } = {}) {
   const { body, contentType } = buildMultipartBody([
     { fieldName: 'file', filename: options.filename ?? 'plate.jpg', contentType: options.contentType ?? 'image/jpeg', data: file },
@@ -194,6 +212,44 @@ describe('POST /api/v1/scans', () => {
       await smallLimitApp.close();
     }
   }, 30_000);
+
+  it('пост-мерж дефект №2 (merge-consent.md, DEC-A-036): запрос на удаление закрывает создание новых сканов', async () => {
+    // Воспроизводится РЕАЛЬНОЙ последовательностью запросов, не прямой правкой БД: запрос на
+    // удаление → попытка создать скан ТОЙ ЖЕ сессией → отказ. `DELETE /api/v1/account` со
+    // scope=erase_all переводит аккаунт в `status = 'erasing'` (`account-delete.ts`); без
+    // починки `POST /scans` продолжал бы принимать сканы всё время фоновой эразуры (до 72 ч).
+    const { token } = await seedLinkedSession('active');
+
+    const deleteResponse = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/account',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { confirm: true, scope: 'erase_all' },
+    });
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(JSON.parse(deleteResponse.body).data.erase_deadline).not.toBeNull();
+
+    const jpeg = await makeJpegFixture();
+    const response = await postScan(token, jpeg, { idempotencyKey: randomUUID() });
+    expect(response.statusCode).toBe(409);
+    expect(JSON.parse(response.body).error.code).toBe('account_erasing');
+
+    const count = await pool.query('SELECT count(*)::int AS n FROM recognition');
+    expect(count.rows[0]?.n).toBe(0); // ни один скан не создан после запроса на удаление
+  });
+
+  it('дефект №2, fail-closed: аккаунт erased (не только erasing) тоже отказывает в создании скана', async () => {
+    const { token } = await seedLinkedSession('erased');
+    const response = await postScan(token, await makeJpegFixture(), { idempotencyKey: randomUUID() });
+    expect(response.statusCode).toBe(409);
+    expect(JSON.parse(response.body).error.code).toBe('account_erasing');
+  });
+
+  it('дефект №2, контроль: активный связанный аккаунт продолжает создавать сканы как обычно', async () => {
+    const { token } = await seedLinkedSession('active');
+    const response = await postScan(token, await makeJpegFixture(), { idempotencyKey: randomUUID() });
+    expect(response.statusCode).toBe(202);
+  });
 });
 
 describe('GET /api/v1/scans/{id}', () => {
