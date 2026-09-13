@@ -118,25 +118,56 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 
 ## Criterion coverage
 
-**Таблица ПЛАНОВАЯ.** Phase 3 заменяет пути и заголовки фактическими.
+**Таблица ФАКТИЧЕСКАЯ** — заменена после ревью судьи (`review-report.md`,
+RV-share-card-and-growth-events-06): плановые пути (`tests/integration/share-cards-consent-gate.test.ts`,
+`tests/integration/growth-events.test.ts`, `tests/guard/share-card-field-set.test.ts`,
+`tests/integration/share-cards-quota-untouched.test.ts`) НЕ БЫЛИ созданы отдельными файлами —
+покрытие легло в файлы ниже, и гейт `--completion` открывает ИМЕННО их, ища заголовки дословно.
 
-| Criterion | Test file | Test title |
-|-----------|-----------|------------|
-| AC-share-card-and-growth-events-1 | tests/integration/share-cards-route.test.ts | завершённый скан даёт карточку с ровно четырьмя числами и без данных здоровья |
-| AC-share-card-and-growth-events-2 | tests/integration/share-cards-consent-gate.test.ts | отсутствие согласия отклоняет создание и не оставляет карточку после отказа |
-| AC-share-card-and-growth-events-3 | tests/integration/share-cards-route.test.ts | незавершённый и отказанный скан дают четыреста девять без создания карточки |
-| AC-share-card-and-growth-events-4 | tests/unit/build-card-payload.test.ts | пять неопознанных значений тарифа дают бейдж независимо от поля тела запроса |
-| AC-share-card-and-growth-events-5 | tests/unit/build-card-payload.test.ts | ровно paid снимает бейдж и доказывает что страж умеет не срабатывать |
-| AC-share-card-and-growth-events-6 | tests/integration/share-cards-route.test.ts | повторный вызов возвращает ту же карточку а чужой скан даёт четыреста четыре |
-| AC-share-card-and-growth-events-7 | tests/integration/public-card-page.test.ts | удалённая отозванная и неизвестная карточка дают один и тот же ответ без содержимого |
-| AC-share-card-and-growth-events-8 | tests/integration/public-card-page.test.ts | заголовок no-store присутствует на успехе и на отказе |
-| AC-share-card-and-growth-events-9 | tests/integration/public-card-page.test.ts | отзыв согласия между двумя запросами меняет ответ со второго обращения |
-| AC-share-card-and-growth-events-10 | tests/integration/growth-events.test.ts | просмотр карточки анонимным зрителем не сохраняет его личность |
-| AC-share-card-and-growth-events-11 | tests/integration/growth-events.test.ts | клик по поделиться считает попытки а не карточки |
-| AC-share-card-and-growth-events-12 | tests/concurrency/share-card-consent-race.test.ts | ни в одной раскладке гонки карточка не остаётся открытой после отзыва |
-| AC-share-card-and-growth-events-13 | tests/unit/sanitize-for-card-text.test.ts | инъекция и символ направления письма не проходят ни на одну поверхность |
-| AC-share-card-and-growth-events-14 | tests/guard/share-card-field-set.test.ts | множество полей типа равно восьми разрешённым именам |
-| AC-share-card-and-growth-events-15 | tests/unit/build-card-payload.test.ts | лишнее поле входа не попадает в результат сборки |
-| AC-share-card-and-growth-events-16 | tests/integration/migrations.test.ts | повторный прогон миграции идемпотентен и уникальность recognition id существует в базе |
-| AC-share-card-and-growth-events-17 | tests/concurrency/share-card-idempotency.test.ts | двадцать одновременных создателей получают одну карточку и один идентификатор |
-| AC-share-card-and-growth-events-18 | tests/integration/share-cards-quota-untouched.test.ts | создание карточки не вызывает поставщика модели и не меняет счётчики потолков |
+| Criterion | Покрытие | Test file | Test title (дословно) |
+|---|---|---|---|
+| AC-1 | Полное | `tests/integration/share-cards-route.test.ts` | `AC-1: завершённый скан со Snapshot даёт 201, share_card с ровно четырьмя числами и без данных здоровья` |
+| | + контракт чисел | `tests/unit/share-card-snapshot-contract.test.ts` | `простая сопоставленная позиция (food_item_id есть, source_snapshot заполнен) даёт непустой Snapshot с верными числами` |
+| AC-2 | Полное (реальный `POST /api/v1/consent`) | `tests/integration/share-cards-route.test.ts` | `AC-2 / DEC-A-034: анонимная сессия БЕЗ согласия получает 403, карточка НЕ создаётся; после grant тот же вызов создаёт карточку` |
+| AC-3 | Полное | `tests/integration/share-cards-route.test.ts` | `AC-3: recognition.status ∈ {queued, failed, refused} дают 409, карточка не создана ни для одного` |
+| AC-4 | Полное | `tests/unit/build-card-payload.test.ts` | `AC-4: клиентское tariff: "paid" в теле проигнорировано, если сервер прочитал не paid` (плюс `it.each` пяти значений в блоке `isBadgeRequired`) |
+| AC-5 | Полное | `tests/unit/build-card-payload.test.ts` | `AC-5: РОВНО paid снимает бейдж — страж умеет и не срабатывать`; `AC-5: badgeRendered = false только когда серверный tier строго paid` |
+| AC-6 | Полное | `tests/integration/share-cards-route.test.ts` | `AC-6: повторный вызов возвращает ТУ ЖЕ карточку; чужой recognition_id даёт 404 и не создаёт/не читает ничего` |
+| AC-7 | Полное | `tests/integration/public-card-page.test.ts` | `AC-7: удалённая (revoked_at), никогда не существовавшая и синтаксически невалидная карточки дают ОДИН и тот же 404` |
+| AC-8 | Полное | `tests/integration/public-card-page.test.ts` | `AC-8: Cache-Control: no-store присутствует на успехе И на всех вариантах 404` |
+| AC-9 | Полное (HTML и картинка) | `tests/integration/public-card-page.test.ts` | `AC-9: отзыв согласия МЕЖДУ двумя запросами к ОДНОМУ адресу — второй запрос 404, живая проверка, не кэш` |
+| AC-10 | Полное (с партнёрской атрибуцией) | `tests/integration/public-card-page.test.ts` | `AC-10: успешный просмотр анонимным зрителем пишет card_view от имени ВЛАДЕЛЬЦА с ЕГО partner_code_id, без cookie и IP зрителя` |
+| AC-11 | Полное | `tests/integration/share-cards-route.test.ts` | `AC-11: share_click считает КЛИКИ, а не карточки — три вызова на одну карточку дают три события, share_card остаётся одна; чужой 404-вызов события не создаёт` |
+| AC-12 | Полное, барьером, ОБЕ раскладки, плюс прогон с обеими реальными сторонами | E8 — `tests/concurrency/share-card-consent-race.test.ts`; E7 — `tests/integration/account-delete.test.ts` | `createShareCardGuarded возвращает refused, share_card НЕ создаётся, строки-сироты нет`; `НЕТ ни одного прогона, где после коммита отзыва найдена ОТКРЫТАЯ карточка (revoked_at IS NULL) — 10 повторов барьера`; `после обеих транзакций НЕТ карточки, открытой дольше момента коммита отзыва — 10 повторов реальных HTTP-вызовов`; E7 в соседней фиче — `review3 RV-03 (high): УПРАВЛЯЕМЫЙ барьер — карточка, создающаяся параллельно (уже держит блокировку account), коммитится ДО withdraw_consent — ОБЯЗАНА быть закрыта, не пережить отзыв` |
+| AC-13 | Полное (unit-помощники + геометрия рендера) | `tests/unit/sanitize-for-card-text.test.ts`, `tests/unit/render-card-image.test.ts` | `E11: HTML-инъекция + bidi-override из AC-13 — символ направления снят, тег остаётся текстом до экранирования на поверхности`; `название 60 символов (воспроизведение судьи: 59 «Ш» + многоточие) укладывается в 1000px` |
+| AC-14 | Полное (AST, испытано ТРЕМЯ мутациями РЕАЛЬНОГО файла) | `tests/unit/share-card-field-set-guard.test.ts` | `на РЕАЛЬНОМ файле: множество полей РОВНО восемь разрешённых имён`; «ИСПЫТАНИЕ 2 (RV-share-card-and-growth-events-03 — обход, который прежний страж пропускал): лишнее поле БЕЗ readonly, обычная форма `name: type;`, тоже красит страж» |
+| AC-15 | Частичное — см. `## Follow-up` (RV-04) | `tests/unit/build-card-payload.test.ts` | `AC-15 (E12): лишнее поле входа (streakDays) через границу сервисов НЕ попадает в результат — явная деструктуризация, не спред` (испытание мутацией — на ОТДЕЛЬНОЙ функции-дублёре, не на самом `buildCardPayload`) |
+| AC-16 | Полное | `tests/integration/migrations.test.ts` | `AC-16: share_card_recognition_id_unique существует и отбивает вторую строку с тем же recognition_id НА УРОВНЕ БАЗЫ` |
+| AC-17 | Полное (HTTP-путь с реальным рендером, плюс отдельно слой базы) | `tests/concurrency/share-card-idempotency.test.ts` | `ровно одна строка share_card, все 20 ответов несут ОДИН card_id, ни один не завершается 5xx/необработанной ошибкой` (HTTP); `ровно одна строка share_card, все 20 результатов несут ОДИН card_id, ни один не бросает исключение` (репозиторий/NFR-1) |
+| AC-18 | Полное (три заполненных scope, три исхода, плюс страж на невозможность вызова провайдера) | `tests/integration/share-cards-route.test.ts` | `AC-18: создание карточки не вызывает ModelProvider и не меняет scan_quota_counter — все ТРИ scope, все ТРИ исхода сборки`; `AC-18: сборка карточки архитектурно не может вызвать ModelProvider — путь создания не импортирует и не принимает адаптер провайдера` |
+
+### Отсутствие `validation-report.md`
+
+DEC-A-032 (режим скорости, зафиксирован координатором для этой фичи) убирает второй раунд
+валидации `requirements-validator` — `validation-report.md` не создан не по недосмотру, а по
+этому явному решению. Ссылка на отчёт не подменяется задним числом сгенерированной квитанцией:
+отчёта нет, и причина названа здесь, а не скрыта.
+
+## Follow-up, не блокирующий закрытие
+
+Обе строки — MEDIUM по `review-report.md`; исправление сознательно ОТЛОЖЕНО (не входит в
+исправления этого ревью), но названо, чтобы не потеряться.
+
+- **RV-share-card-and-growth-events-04.** «Испытание мутацией» в
+  `tests/unit/build-card-payload.test.ts` (`AC-15, испытание стража на внедрённом дефекте…`)
+  доказывает поведение ОТДЕЛЬНОЙ функции-дублёра со спредом (`buildWithSpreadMutant`), а не
+  мутацию РЕАЛЬНОГО `buildCardPayload` — assertion зелёный независимо от того, ловит ли настоящая
+  защита внедрённый дефект. Починка: применить мутацию (спред вместо деструктуризации) к тексту
+  РЕАЛЬНОГО файла `apps/api/src/share/build-card-payload.ts` в памяти (тот же приём, что теперь
+  использует `tests/unit/share-card-field-set-guard.test.ts` для интерфейса), выполнить исходную
+  проверку отсутствия `streakDays` и подтвердить её падение, затем — восстановление.
+- **RV-share-card-and-growth-events-06 (вторая половина, не сделана в этой правке).** Сам факт,
+  что четыре плановых файла не были созданы отдельно, а покрытие консолидировано в существующие —
+  не исправлен КАК ПРОБЛЕМА (то есть файлы НЕ переименованы/не разделены под плановые имена);
+  исправлена только ЧЕСТНОСТЬ таблицы. Если координатор хочет физического разделения по плановым
+  именам файлов — отдельная, чисто механическая задача, не меняющая сами проверки.

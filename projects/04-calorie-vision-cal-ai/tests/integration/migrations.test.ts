@@ -183,4 +183,32 @@ describe('миграции', () => {
       await admin.query(`DROP DATABASE IF EXISTS ${second} WITH (FORCE)`);
     }
   }, 60_000);
+
+  // AC-share-card-and-growth-events-16: миграция 007 добавляет UNIQUE(recognition_id) на
+  // share_card, применённая на ПУСТОЙ базе (scratchName выше уже применил все миграции) —
+  // повторный прогон применяет ноль файлов, ограничение существует и отбивает вторую INSERT
+  // на БАЗЕ, а не в коде.
+  it('AC-16: share_card_recognition_id_unique существует и отбивает вторую строку с тем же recognition_id НА УРОВНЕ БАЗЫ', async () => {
+    const client = await connectScratch();
+    try {
+      const constraints = await client.query<{ definition: string }>(
+        `SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conname = 'share_card_recognition_id_unique'`,
+      );
+      expect(constraints.rows[0]?.definition).toBe('UNIQUE (recognition_id)');
+
+      const session = await client.query<{ id: string }>(
+        `INSERT INTO device_session (cookie_token_hash, ip_prefix, anonymous_diary_expires_at) VALUES ('h-ac16', '203.0.113.0/24', now() + interval '7 days') RETURNING id`,
+      );
+      const recognition = await client.query<{ id: string }>(
+        `INSERT INTO recognition (device_session_id, status) VALUES ($1, 'done') RETURNING id`,
+        [session.rows[0]!.id],
+      );
+      const recognitionId = recognition.rows[0]!.id;
+      const insert = `INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, 'card-a')`;
+      await client.query(insert, [session.rows[0]!.id, recognitionId]);
+      await expect(client.query(insert, [session.rows[0]!.id, recognitionId])).rejects.toMatchObject({ code: '23505' });
+    } finally {
+      await client.end();
+    }
+  });
 });

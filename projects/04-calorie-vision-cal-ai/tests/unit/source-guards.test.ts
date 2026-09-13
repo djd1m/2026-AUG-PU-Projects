@@ -388,7 +388,13 @@ describe('страж чтения окружения', () => {
     // `packages/db/src/migrate.ts` — НАЗВАННОЕ исключение: у раннера есть собственная точка
     // входа из командной строки, и она обязана прочитать DATABASE_URL. Это не сервис
     // compose, и страж проброса переменных его каталог не смотрит.
-    expect(readers.sort()).toEqual(['apps/api/src/env.ts', 'apps/recognizer/src/env.ts', 'packages/db/src/migrate.ts']);
+    //
+    // `apps/web/env.ts` — ДОБАВЛЕНО фичей `share-card-and-growth-events`: маршрут 6
+    // (`GET /c/{card_id}`) первым потребовал внутренний адрес `api` (`API_INTERNAL_URL`,
+    // уже объявлен для сервиса `web` в `docker-compose.yml`, `foundation`). `apps/web` не
+    // имеет `src/`, поэтому единственный файл лежит прямо в `apps/web/env.ts` — тот же
+    // принцип «один файл на сервис», другой путь.
+    expect(readers.sort()).toEqual(['apps/api/src/env.ts', 'apps/recognizer/src/env.ts', 'apps/web/env.ts', 'packages/db/src/migrate.ts']);
   });
 });
 

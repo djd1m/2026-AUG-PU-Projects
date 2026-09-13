@@ -31,6 +31,15 @@ export interface PhotoStorage {
   removeObject(objectKey: string): Promise<void>;
   /** Существование объекта — используется уборкой орфанов (шаг 12) и тестами. */
   exists(objectKey: string): Promise<boolean>;
+  /**
+   * Presigned GET-URL (ADR-010) — ДОБАВЛЕНО фичей `share-card-and-growth-events`: до неё
+   * ни один маршрут не минтил presigned-ссылку (фото читал только владелец через отдельный
+   * приватный путь). `RenderCardImage` (шаг 4, чтение оригинала фото владельца) и
+   * `RenderPublicCardPage` (минтинг ссылки на саму карточку) — оба потребителя.
+   * `ttlSeconds` — литерал ВЫЗЫВАЮЩЕГО (15 минут и там, и там, ADR-010), не настройка этого
+   * модуля.
+   */
+  presignedGetUrl(objectKey: string, ttlSeconds: number): Promise<string>;
 }
 
 function parseEndpoint(endpoint: string): { host: string; port: number; useSSL: boolean } {
@@ -70,6 +79,9 @@ export function createPhotoStorage(config: StorageConfig): PhotoStorage {
       } catch {
         return false;
       }
+    },
+    async presignedGetUrl(objectKey, ttlSeconds) {
+      return client.presignedGetObject(bucket, objectKey, ttlSeconds);
     },
   };
 }

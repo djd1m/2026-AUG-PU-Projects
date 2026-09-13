@@ -175,8 +175,13 @@ async function invokeModel(
  * (RV-13) И вычисляет четыре числа из снимка (`ComputeFromSnapshot`,
  * FR-source-and-correct-6). `original_mass_g` хранится рядом с `mass_g` и НЕ затирается
  * будущими правками (`set_portion`) — исходная оценка модели остаётся видна.
+ *
+ * `export` добавлен фичей `share-card-and-growth-events` (её RV-01) — ТОЛЬКО видимость для
+ * контрактного теста: сборщик карточки читал числовые поля позиции напрямую, а эта функция —
+ * их ЕДИНСТВЕННЫЙ производитель. Тест обязан звать ИМЕННО ЕЁ, иначе он доказывает совпадение
+ * с придуманной формой, а не с реальной.
  */
-function persistedItem(item: { labelRu: string; massG: number; candidates?: readonly string[] }, matched: MatchedItem | undefined) {
+export function persistedItem(item: { labelRu: string; massG: number; candidates?: readonly string[] }, matched: MatchedItem | undefined) {
   const numbers: ComputedItemNumbers = computeItemFromSnapshot({
     foodItemId: matched?.foodItemId ?? null,
     portionG: item.massG,
