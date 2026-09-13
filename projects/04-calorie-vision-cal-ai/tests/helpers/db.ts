@@ -39,6 +39,7 @@ export async function truncateAll(pool: DbPool): Promise<void> {
   await pool.query(`TRUNCATE
     growth_event, pro_interest, attribution, partner_code, partner,
     share_card, diary_entry, scan_quota_counter, recognition, photo,
+    telegram_login_replay,
     food_synonym, food_item, device_session, account
     RESTART IDENTITY CASCADE`);
 }

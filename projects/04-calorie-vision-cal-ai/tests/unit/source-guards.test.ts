@@ -8,6 +8,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { SERVICE_LOG_FIELDS } from '@n4/shared';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -275,6 +276,72 @@ describe('страж ADR-001: число берётся из базы, а не �
       }
     }
     expect(offenders).toEqual([]);
+  });
+});
+
+/**
+ * Имена полей ВЕРХНЕГО уровня объекта-аргумента вызова журналирования. Разбор
+ * с учётом вложенности: значение вида `a === undefined ? null : b` содержит двоеточие,
+ * и наивный поиск `слово:` принял бы `null` за имя поля.
+ */
+function loggedFieldNames(call: string): string[] {
+  const start = call.indexOf('{');
+  if (start === -1) return [];
+  let depth = 0;
+  let end = -1;
+  for (let i = start; i < call.length; i += 1) {
+    const ch = call[i];
+    if (ch === '{' || ch === '[' || ch === '(') depth += 1;
+    else if (ch === '}' || ch === ']' || ch === ')') {
+      depth -= 1;
+      if (depth === 0) {
+        end = i;
+        break;
+      }
+    }
+  }
+  if (end === -1) return [];
+  const body = call.slice(start + 1, end);
+  const parts: string[] = [];
+  let level = 0;
+  let current = '';
+  for (const ch of body) {
+    if (ch === '{' || ch === '[' || ch === '(') level += 1;
+    if (ch === '}' || ch === ']' || ch === ')') level -= 1;
+    if (ch === ',' && level === 0) {
+      parts.push(current);
+      current = '';
+    } else current += ch;
+  }
+  parts.push(current);
+  const names: string[] = [];
+  for (const part of parts) {
+    const match = /^\s*([a-z_][a-z0-9_]*)\s*:/.exec(part);
+    if (match?.[1] !== undefined) names.push(match[1]);
+  }
+  return names;
+}
+
+describe('страж закрытого списка полей журнала', () => {
+  it('каждое поле, передаваемое в журнал, объявлено в SERVICE_LOG_FIELDS', async () => {
+    // Заслужено СЛИЯНИЕМ `consent-and-telegram-auth` в основную ветку. Закрытый список
+    // появился в `foundation` ПОСЛЕ того, как ветка ответвилась, поэтому ни одно поле её
+    // событий в нём не значилось — и после слияния каждое событие входа, согласия и эразуры
+    // печаталось как `account_id: "[redacted]"`. Ни один тест обеих фич этого не показывал:
+    // список и код никто не сверял, потому что сверять их было нечем.
+    //
+    // Отказ здесь — НЕ «не логируй это»: это требование внести поле в список ОСОЗНАННО,
+    // то есть ровно то, ради чего список закрытый.
+    const allowed = new Set(SERVICE_LOG_FIELDS);
+    const offenders: string[] = [];
+    for (const { file, code } of [...(await readAll('apps/api/src')), ...(await readAll('apps/recognizer/src'))]) {
+      for (const call of loggerCalls(code)) {
+        for (const name of loggedFieldNames(call)) {
+          if (!allowed.has(name)) offenders.push(`${file}: поле '${name}' не объявлено в SERVICE_LOG_FIELDS`);
+        }
+      }
+    }
+    expect([...new Set(offenders)].sort()).toEqual([]);
   });
 });
 

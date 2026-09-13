@@ -33,6 +33,17 @@ export const SERVICE_LOG_FIELDS: readonly string[] = [
   'rate_limit_mutate_per_min', 'rate_limit_read_per_min', 'model_provider', 'model',
   'ip_prefix', 'scan_id', 'fence', 'lease_owner', 'provider', 'write',
   'never_leased', 'attempts_exhausted', 'message', 'duration_ms',
+  // `scan-pipeline`: поля событий распознавания. Список отстал от кода СВОЕЙ ЖЕ фичи —
+  // найдено слиянием сверкой списка с фактическими вызовами журнала.
+  'attempt_id', 'current_fence', 'failure_reason', 'field', 'task_budget_expired',
+  // `consent-and-telegram-auth`: события входа, согласия, удаления и эразуры. Ветка
+  // ответвилась ДО появления этого закрытого списка, поэтому её поля в нём отсутствовали, и
+  // после слияния КАЖДОЕ событие эразуры печаталось как `account_id: "[redacted]"` — разбор
+  // незавершённого удаления становился невозможен при полностью зелёных тестах обеих фич.
+  // Ни одно из имён не несёт секрета: это внутренние идентификаторы (как `scan_id`),
+  // закрытые перечисления нашего кода и счётчики.
+  'account_id', 'object_key', 'reason', 'owner_table', 'consent_version', 'scope',
+  'outcome', 'cards_revoked', 'migrated_entries', 'purged_photos', 'completed_at',
 ];
 
 export interface LoggerOptions extends RedactorOptions {

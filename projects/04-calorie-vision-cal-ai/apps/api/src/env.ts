@@ -12,11 +12,13 @@
 import {
   attempt,
   collectConfig,
+  ConfigError,
   requireOrigin,
   requirePositiveInt,
   requireText,
   type ApiConfig,
 } from '@n4/shared';
+import { isValidTelegramBotTokenFormat } from './auth/token-format.js';
 
 /** Источник значений. По умолчанию — окружение процесса; тест подставляет своё. */
 export type EnvSource = Readonly<Record<string, string | undefined>>;
@@ -74,6 +76,30 @@ export function loadApiConfig(env: EnvSource = process.env): ApiConfig {
         0,
       ),
     },
+    // ValidateTelegramBotTokenFormat (FR-consent-and-telegram-auth-4): compose уже валит старт
+    // на ОТСУТСТВИИ/ПУСТОТЕ (`${TELEGRAM_BOT_TOKEN:?…}`, foundation); здесь — ДОПОЛНИТЕЛЬНАЯ
+    // проверка ФОРМАТА, чтобы синтаксически невалидный токен не долетал необработанным
+    // исключением до первого вычисления HMAC внутри verify-init-data.ts.
+    telegramBotToken: attempt(
+      fail,
+      () => {
+        const value = requireText(
+          'TELEGRAM_BOT_TOKEN',
+          env.TELEGRAM_BOT_TOKEN,
+          'без токена бота вход через Telegram Mini App неисполним',
+        );
+        if (!isValidTelegramBotTokenFormat(value)) {
+          throw new ConfigError(
+            'TELEGRAM_BOT_TOKEN',
+            'invalid',
+            'токен бота имеет неверный формат',
+            'ожидалось <цифры>:<35 символов A-Za-z0-9_->',
+          );
+        }
+        return value;
+      },
+      '',
+    ),
     rateLimits: {
       // Числа канона §7 (DEC-A-013): 30 мутаций и 120 чтений в минуту на один ip_prefix.
       // Переменной они сделаны намеренно — предел, который нельзя подкрутить под машину,
@@ -105,4 +131,5 @@ export const API_REQUIRED_VARIABLES: readonly string[] = [
   'N4_ESCALATION_LIMIT_DAY',
   'N4_RATE_LIMIT_MUTATE_PER_MIN',
   'N4_RATE_LIMIT_READ_PER_MIN',
+  'TELEGRAM_BOT_TOKEN',
 ];

@@ -3,11 +3,13 @@
 // `N4_MODEL_PROVIDER=live` без ключа валит старт ЗДЕСЬ, а не на первом задании
 // (DEC-A-009): отказ на старте виден сразу, отказ на первом задании — через сутки.
 
-import { ConfigValidationError, createLogger, SERVICE_LOG_FIELDS, type RecognizerConfig } from '@n4/shared';
+import { ConfigValidationError, createLogger, SERVICE_LOG_FIELDS } from '@n4/shared';
 import { createPool, type DbPool } from '@n4/db';
 import { loadRecognizerConfig, RECOGNIZER_REQUIRED_VARIABLES } from './env.js';
 import { selectModelProvider } from './provider/select.js';
 import { createWorker } from './worker.js';
+import { runErasureJob } from './consent/erasure-job.js';
+import { createMinioPhotoStore } from './storage/photo-store-minio.js';
 import { createNullMatchIngredientPort } from './match/null-port.js';
 import { createRecognizerStorage } from './photo/storage.js';
 import { createNormalizePhotoForModel, type PhotoLookup } from './photo/normalize.js';
@@ -43,6 +45,9 @@ function createPhotoLookup(pool: DbPool): PhotoLookup {
     },
   };
 }
+
+/** Почасовой планировщик эразуры (`consent-and-telegram-auth`, FR-consent-and-telegram-auth-10). */
+const ERASURE_INTERVAL_MS = 60 * 60 * 1000;
 
 async function main(): Promise<void> {
   let config;
@@ -91,6 +96,14 @@ async function main(): Promise<void> {
 
   const worker = createWorker({ pool, provider, matchPort, quotaLimits: config.quota, normalize, logger });
 
+  // ОДИН клиент удаления на оба планировщика. Слияние нашло ДВЕ независимые реализации
+  // удаления объекта из бакета: `createMinioRemover` (`scan-pipeline`, динамический импорт
+  // `minio`) и `createMinioPhotoStore` (`consent-and-telegram-auth`). Делают они РОВНО одно,
+  // и оба трактуют «объекта уже нет» успехом, поэтому оставлена одна — вторая была бы третьим
+  // соединением с хранилищем в одном процессе и вторым местом, где это решение записано.
+  const photoStore = createMinioPhotoStore({ storage: config.storage });
+  const expiredPhotoRemover = { removeObject: (objectKey: string) => photoStore.purgeObject(objectKey) };
+
   // `PurgeExpiredPhotos` (FR-scan-pipeline-11) — раз в сутки, тем же процессом, не отдельным
   // сервисом (архитектура фичи явно называет это НЕ HTTP-задачей, а шагом того же процесса).
   // RV-scan-pipeline-04: батч ограничен 500 при разрешённых 3000 сканах/сутки — прогон
@@ -100,7 +113,7 @@ async function main(): Promise<void> {
   const runPurgeExpired = async (): Promise<void> => {
     let processed: number;
     do {
-      const result = await purgeExpiredPhotos(pool, createMinioRemover(config));
+      const result = await purgeExpiredPhotos(pool, expiredPhotoRemover);
       processed = result.processed;
     } while (processed > 0);
   };
@@ -112,9 +125,22 @@ async function main(): Promise<void> {
   // (`purge-orphans.ts` живёт там, владеет тем же `PhotoStorage`, что и `POST /scans`);
   // здесь, в `recognizer`, НЕ дублируется — см. `apps/api/src/bootstrap.ts` (RV-scan-pipeline-03).
 
+  // RunErasureJob (FR-consent-and-telegram-auth-10) — почасовой планировщик, как
+  // `PurgeExpiredPhotos`. Отказ одного прогона не валит процесс: недоступность базы уже
+  // диагностируется обработчиком события `error` пула выше.
+  //
+  // Настоящий клиент бакета (RV-consent-and-telegram-auth-02): `NOOP_PHOTO_STORE` в рабочем
+  // процессе НЕДОПУСТИМ — объекты остались бы в бакете физически, хотя БД считает их `purged`.
+  const erasureTimer = setInterval(() => {
+    void runErasureJob({ pool, photoStore, logger }).catch((error: unknown) => {
+      logger.error('erasure_job_failed', { message: (error as Error).message });
+    });
+  }, ERASURE_INTERVAL_MS);
+
   const shutdown = (signal: string): void => {
     logger.info('shutdown_started', { signal });
     clearInterval(purgeTimer);
+    clearInterval(erasureTimer);
     void worker
       .stop()
       .then(() => pool.end())
@@ -130,36 +156,6 @@ async function main(): Promise<void> {
   worker.start();
   logger.info('worker_started', { lease_owner: worker.ownerId, provider: provider.kind });
 }
-
-async function createMinioClient(config: RecognizerConfig): Promise<InstanceType<Awaited<typeof import('minio')>['Client']>> {
-  const { Client } = await import('minio');
-  const url = new URL(config.storage.endpoint);
-  return new Client({
-    endPoint: url.hostname,
-    port: url.port !== '' ? Number.parseInt(url.port, 10) : url.protocol === 'https:' ? 443 : 80,
-    useSSL: url.protocol === 'https:',
-    accessKey: config.storage.accessKey,
-    secretKey: config.storage.secretKey,
-  });
-}
-
-/**
- * RV-scan-pipeline-04: НЕ проглатывает ошибки — S3-совместимое DELETE идемпотентно
- * (удаление несуществующего ключа тоже резолвится успехом у MinIO), поэтому «объект уже
- * удалён» и «сбой обращения» и так различимы БЕЗ ловли исключения здесь: настоящий сбой
- * (сеть, авторизация) обязан долететь до `purgeExpiredPhotos`, которая оставит строку
- * `present` для повторной попытки, а не проглотит его молча и не пометит `purged`.
- */
-function createMinioRemover(config: RecognizerConfig): { removeObject(objectKey: string): Promise<void> } {
-  const clientPromise = createMinioClient(config);
-  return {
-    async removeObject(objectKey: string) {
-      const client = await clientPromise;
-      await client.removeObject(config.storage.bucket, objectKey);
-    },
-  };
-}
-
 
 main().catch((error: unknown) => {
   process.stderr.write(`recognizer не запущен: ${(error as Error).message}\n`);

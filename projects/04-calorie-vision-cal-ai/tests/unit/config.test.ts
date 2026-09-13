@@ -22,6 +22,8 @@ const FULL_API_ENV: Record<string, string | undefined> = {
   N4_ESCALATION_LIMIT_DAY: '600',
   N4_RATE_LIMIT_MUTATE_PER_MIN: '30',
   N4_RATE_LIMIT_READ_PER_MIN: '120',
+  // consent-and-telegram-auth: обязательная переменная сверх набора foundation.
+  TELEGRAM_BOT_TOKEN: '111111111:AAHtest-bot-token-1234567890abcdefg',
 };
 
 const FULL_RECOGNIZER_ENV: Record<string, string | undefined> = {
@@ -114,6 +116,14 @@ describe('валидатор конфигурации api', () => {
   it('отсутствие любого из двух порогов частоты валит старт с названной переменной', () => {
     for (const name of ['N4_RATE_LIMIT_MUTATE_PER_MIN', 'N4_RATE_LIMIT_READ_PER_MIN']) {
       expect(refusalFor(() => loadApiConfig(withoutVariable(FULL_API_ENV, name))).variables, name).toEqual([name]);
+    }
+  });
+
+  it('AC-consent-and-telegram-auth-19: отсутствие или неверный формат TELEGRAM_BOT_TOKEN валит старт с названной переменной', () => {
+    expect(refusalFor(() => loadApiConfig(withoutVariable(FULL_API_ENV, 'TELEGRAM_BOT_TOKEN'))).variables).toEqual(['TELEGRAM_BOT_TOKEN']);
+    for (const bad of ['not-a-real-token', '123456789', '123456789:short', '']) {
+      const error = refusalFor(() => loadApiConfig({ ...FULL_API_ENV, TELEGRAM_BOT_TOKEN: bad }));
+      expect(error.variables, JSON.stringify(bad)).toEqual(['TELEGRAM_BOT_TOKEN']);
     }
   });
 

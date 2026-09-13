@@ -4,6 +4,7 @@
 // у которой этих кредов НЕТ ни у одного реального пользователя MinIO.
 
 import type { ApiConfig, RateLimits } from '@n4/shared';
+import { TEST_BOT_TOKEN } from './telegram.js';
 
 function required(name: string): string {
   const value = process.env[name];
@@ -25,5 +26,11 @@ export function testScanApiConfig(overrides: { rateLimits?: RateLimits; quota?: 
     },
     quota: overrides.quota ?? { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
     rateLimits: overrides.rateLimits ?? { mutatePerMinute: 1000, readPerMinute: 1000 },
+    // Найдено слиянием: `telegramBotToken` стал ОБЯЗАТЕЛЬНЫМ полем `ApiConfig`
+    // (`consent-and-telegram-auth`), а эта фикстура появилась в `scan-pipeline` и о нём не
+    // знала. Токен — ТОТ ЖЕ, которым `tests/helpers/telegram.ts` подписывает `initData`:
+    // сервер, собранный этой конфигурацией, обязан проверять вход тем же секретом, иначе
+    // проверялось бы несовпадение фикстур, а не граница.
+    telegramBotToken: TEST_BOT_TOKEN,
   };
 }

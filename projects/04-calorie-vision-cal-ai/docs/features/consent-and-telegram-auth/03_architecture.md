@@ -123,7 +123,7 @@ Telegram Mini Apps SDK на клиенте — уже зависимость `ap
    же `telegram_user_id` после удаления не смог бы вставить новую строку) — то же решение, что и
    `TelegramLogin` шаг 3 «удалённый аккаунт не переиспользуется».
 
-Миграция — `packages/db/migrations/002_consent_and_telegram_auth.sql` (первая миграция ПОСЛЕ
+Миграция — `packages/db/migrations/003_consent_and_telegram_auth.sql` (первая миграция ПОСЛЕ
 `foundation`; порядковый номер подтверждается при реализации сверкой с фактическим состоянием
 каталога `migrations/`, а не предполагается заранее).
 
