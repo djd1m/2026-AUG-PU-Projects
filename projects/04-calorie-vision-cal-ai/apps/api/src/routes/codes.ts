@@ -11,7 +11,6 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { DbPool } from '@n4/db';
 import { fail, ok, type Logger } from '@n4/shared';
 import { SESSION_COOKIE_NAME } from '../session/create-device-session.js';
-import { clientAddressFrom, toIpPrefix } from '../session/ip-prefix.js';
 import { applyPartnerCode } from '../partner/apply-partner-code.js';
 
 export interface CodesRouteDeps {
@@ -24,17 +23,30 @@ interface OwnedSession {
   readonly ipPrefix: string;
 }
 
-/** Тот же контракт, что `routes/scans.ts` `requireSession`: неизвестная/отсутствующая cookie — 401. */
+/**
+ * Тот же контракт, что `routes/scans.ts` `requireSession`: неизвестная/отсутствующая cookie
+ * — 401. `ipPrefix` — ХРАНИМОЕ значение `device_session.ip_prefix` (то же, что записано при
+ * создании сессии), а НЕ свежепосчитанное из заголовка ТЕКУЩЕГО запроса
+ * (`RV-partner-codes-and-cabinet-03`): `AntiFraudOnCode` считает историю ПО ЭТОЙ ЖЕ
+ * колонке для ВСЕХ сессий (`anti-fraud.ts`, JOIN на `device_session.ip_prefix`) — ключ
+ * проверки ОБЯЗАН совпадать с ключом хранения, иначе смена сети между созданием сессии и
+ * применением кода отвязывает текущую попытку от истории собственных прошлых применений и
+ * анти-фрод-порог обходится нулевым счётчиком «под новым префиксом». Смена сети — НАЗВАННОЕ
+ * решение: история конкретной СЕССИИ считается по её сети НА МОМЕНТ СОЗДАНИЯ навсегда,
+ * `device_session.ip_prefix` этим маршрутом никогда не обновляется задним числом (иначе
+ * прошлые события «переехали» бы вслед за колонкой — тот же класс отказа, только наоборот).
+ */
 async function requireSession(request: FastifyRequest, pool: DbPool): Promise<OwnedSession | null> {
   const token = request.cookies[SESSION_COOKIE_NAME];
   if (token === undefined || token.trim() === '') return null;
   const { createHash } = await import('node:crypto');
   const hash = createHash('sha256').update(token, 'utf8').digest('hex');
-  const result = await pool.query<{ id: string }>('SELECT id FROM device_session WHERE cookie_token_hash = $1', [hash]);
+  const result = await pool.query<{ id: string; ip_prefix: string }>('SELECT id, ip_prefix FROM device_session WHERE cookie_token_hash = $1', [
+    hash,
+  ]);
   const row = result.rows[0];
   if (row === undefined) return null;
-  const address = clientAddressFrom(request.headers['x-forwarded-for'], request.ip);
-  return { deviceSessionId: row.id, ipPrefix: toIpPrefix(address) };
+  return { deviceSessionId: row.id, ipPrefix: row.ip_prefix };
 }
 
 interface ApplyCodeBody {

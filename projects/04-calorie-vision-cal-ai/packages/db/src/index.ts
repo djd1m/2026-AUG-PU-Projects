@@ -10,3 +10,4 @@ export {
   type QuotaInput,
   type QuotaDecision,
 } from './quota.js';
+export { activateAttributionOnRecognition, type ActivateOutcome } from './partner-attribution.js';

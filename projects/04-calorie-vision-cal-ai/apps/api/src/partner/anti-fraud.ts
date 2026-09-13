@@ -43,6 +43,15 @@ export type AntiFraudDecision = { readonly outcome: 'allow' } | { readonly outco
 
 export interface AntiFraudInput {
   readonly partnerCodeId: string;
+  /**
+   * ОБЯЗАН быть значением, ХРАНИМЫМ на `device_session.ip_prefix` текущей сессии, а НЕ
+   * свежепосчитанным из заголовка ТЕКУЩЕГО HTTP-запроса (`RV-partner-codes-and-cabinet-03`).
+   * Историю (`COUNT_RECENT_APPLICATIONS` ниже) считает JOIN на ЭТУ ЖЕ колонку для всех
+   * ПРОШЛЫХ сессий — ключ проверки и ключ хранения ОБЯЗАНЫ совпадать по источнику, иначе
+   * смена сети между созданием сессии вызывающего и вызовом отвязывает текущую попытку от
+   * собственной истории и порог обходится нулевым счётчиком. См. `routes/codes.ts`,
+   * `requireSession`.
+   */
   readonly ipPrefix: string;
   readonly requestId: string;
 }
