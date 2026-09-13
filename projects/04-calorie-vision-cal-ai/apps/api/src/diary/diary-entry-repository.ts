@@ -18,12 +18,37 @@
 // это ИСХОДНЫЙ идентификатор (может быть `session_id` уже связанной сессии), а не обязательно тот
 // же, для которого guard РЕАЛЬНО проверил согласие (для связанной сессии это `account_id`).
 // `INSERT` теперь пишет `enforcement.ownerKey` — канонический владелец из результата проверки.
+//
+// Правка `diary-and-streak` (FR-diary-and-streak-1, AC-diary-and-streak-5): `INSERT` получил
+// `ON CONFLICT (recognition_id) DO NOTHING RETURNING *` — уникальность добавлена миграцией
+// `006_diary_entry_recognition_unique.sql`. «Прочитать, потом вставить» здесь ЗАПРЕЩЁН
+// (`shared-resource-verification.md`): между чтением и записью помещается конкурентный вызов, и
+// обе реализации проходят последовательный тест, различает их только конкурентный прогон. Пустой
+// результат `INSERT` (строка уже создана РАНЕЕ — двойной тап, повтор сети) читает существующую
+// строку по `recognition_id` и возвращает её КАК УСПЕХ — повторный `confirm` идемпотентен, а не
+// ошибка.
 
-import { withTransaction, type DbPool } from '@n4/db';
+import { withTransaction, type DbClient, type DbPool } from '@n4/db';
 import { enforceConsentBeforeDiaryWrite, type ConsentOwnerRef } from '../consent/enforce-before-diary-write.js';
 
+export interface DiaryEntryRow {
+  readonly id: string;
+  readonly owner_key: string;
+  readonly recognition_id: string;
+  readonly eaten_on: string;
+  readonly meal_slot: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  readonly items: unknown;
+  readonly kcal_total: number;
+  readonly protein_total: string;
+  readonly fat_total: string;
+  readonly carb_total: string;
+  readonly source_snapshot: unknown;
+  readonly user_corrected: boolean;
+  readonly deleted_at: Date | null;
+}
+
 export type CreateDiaryEntryResult =
-  | { readonly outcome: 'created'; readonly id: string }
+  | { readonly outcome: 'created'; readonly entry: DiaryEntryRow }
   | { readonly outcome: 'refused'; readonly reason: 'consent_required' };
 
 export interface CreateDiaryEntryInput {
@@ -43,8 +68,11 @@ const INSERT_DIARY_ENTRY_SQL = `
   INSERT INTO diary_entry
     (owner_key, recognition_id, eaten_on, meal_slot, items, kcal_total, protein_total, fat_total, carb_total, source_snapshot)
   VALUES ($1, $2, $3, $4, $5::jsonb, $6, $7, $8, $9, $10::jsonb)
-  RETURNING id
+  ON CONFLICT (recognition_id) DO NOTHING
+  RETURNING *
 `;
+
+const SELECT_BY_RECOGNITION_ID = `SELECT * FROM diary_entry WHERE recognition_id = $1`;
 
 /**
  * ЕДИНСТВЕННЫЙ путь записи `diary_entry` в этом каталоге: проверяет согласие ПЕРЕД `INSERT`,
@@ -54,11 +82,11 @@ const INSERT_DIARY_ENTRY_SQL = `
  * маршрут»).
  */
 export async function createDiaryEntryGuarded(pool: DbPool, input: CreateDiaryEntryInput): Promise<CreateDiaryEntryResult> {
-  return withTransaction(pool, async (client) => {
+  return withTransaction(pool, async (client: DbClient) => {
     const enforcement = await enforceConsentBeforeDiaryWrite(client, input.owner);
     if (enforcement.outcome === 'refused') return { outcome: 'refused', reason: 'consent_required' };
 
-    const result = await client.query<{ id: string }>(INSERT_DIARY_ENTRY_SQL, [
+    const result = await client.query<DiaryEntryRow>(INSERT_DIARY_ENTRY_SQL, [
       // `enforcement.ownerKey` — КАНОНИЧЕСКИЙ владелец, за которого guard реально проверил
       // согласие (RV-01, четвёртый обзор); НЕ `input.owner.id` — для связанной сессии это разные
       // значения, и запись обязана принадлежать тому, чьё согласие проверено.
@@ -73,8 +101,14 @@ export async function createDiaryEntryGuarded(pool: DbPool, input: CreateDiaryEn
       input.carbTotal,
       JSON.stringify(input.sourceSnapshot),
     ]);
-    const row = result.rows[0];
-    if (row === undefined) throw new Error('запись дневника не создана');
-    return { outcome: 'created', id: row.id };
+    const inserted = result.rows[0];
+    if (inserted !== undefined) return { outcome: 'created', entry: inserted };
+
+    // Конфликт по `recognition_id`: строка уже создана РАНЕЕ конкурентным/повторным вызовом.
+    // Повторный `confirm` идемпотентен — читаем и возвращаем ту же строку, а не поднимаем ошибку.
+    const existing = await client.query<DiaryEntryRow>(SELECT_BY_RECOGNITION_ID, [input.recognitionId]);
+    const existingRow = existing.rows[0];
+    if (existingRow === undefined) throw new Error('конфликт recognition_id без существующей строки diary_entry');
+    return { outcome: 'created', entry: existingRow };
   });
 }
