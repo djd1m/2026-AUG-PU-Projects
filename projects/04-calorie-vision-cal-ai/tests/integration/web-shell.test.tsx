@@ -24,9 +24,14 @@ describe('экран камеры', () => {
     expect(html).toContain('>съёмка<');
     expect(html).toContain('>галерея<');
 
-    // Ни анкеты, ни регистрации до съёмки: форм на этом экране нет вовсе.
+    // Ни анкеты, ни регистрации до съёмки: форм на этом экране нет вовсе. Задача N4 добавила
+    // рабочий выбор файла для режима «галерея» (единственный путь отправки помимо съёмки) —
+    // это ОДИН `<input type="file">` вне `<form>`, не анкета: проверяем это явно, а не просто
+    // «input нет вовсе», иначе тест запретил бы саму фичу, которую он должен подтверждать.
     expect(html).not.toContain('<form');
-    expect(html).not.toContain('<input');
+    const inputs = html.match(/<input[^>]*>/g) ?? [];
+    expect(inputs).toHaveLength(1);
+    expect(inputs[0]).toContain('type="file"');
     expect(html.toLowerCase()).not.toContain('регистрац');
   });
 });

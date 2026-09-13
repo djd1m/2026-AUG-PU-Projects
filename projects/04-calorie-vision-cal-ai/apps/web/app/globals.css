@@ -53,7 +53,19 @@ html, body {
 }
 
 .modes { position: relative; display: flex; gap: 24px; font-size: 15px; letter-spacing: 0.02em; }
-.modes__item { opacity: 0.6; }
+.modes__item {
+  opacity: 0.6;
+  /* «галерея» — кнопка (рабочий выбор файла), а не подпись: сброс браузерных стилей кнопки,
+     чтобы выглядела как прежний <span>. */
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.modes__item:disabled { cursor: default; }
 .modes__item--active { opacity: 1; font-weight: 600; }
 
 .shutter {

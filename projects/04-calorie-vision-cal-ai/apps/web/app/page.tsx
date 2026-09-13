@@ -4,18 +4,34 @@
 //
 // Ни анкеты, ни регистрации, ни экрана согласия до съёмки: согласие спрашивается перед
 // ПЕРВОЙ записью дневника (ADR-009), а не на входе. Форм на этом экране нет вовсе — это
-// и есть проверяемое свойство.
+// и есть проверяемое свойство (`tests/integration/web-shell.test.tsx`).
 //
-// Кадр НИКУДА НЕ ОТПРАВЛЯЕТСЯ: приём фото вводит фича `scan-pipeline`. Кнопка съёмки
-// названа заглушкой в интерфейсе, а не притворяется работающей.
+// Кнопка съёмки и выбор из галереи СОЕДИНЕНЫ с приёмом фото (задача N4, дефект стыка): три
+// фичи — `foundation` (эта кнопка), `scan-pipeline` (`POST /api/v1/scans`) и
+// `source-and-correct` (`/result/[id]`) — были каждая по отдельности рабочими и зелёными, а
+// путь целиком не собрал ни одна. Отправка вынесена в чистый модуль `capture-upload.ts`,
+// проверяемый без браузера; этот файл — только DOM: получить кадр и разобрать исход отправки.
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { uploadCapture, type UploadOutcome } from './capture-upload';
+import { LimitScreen } from './limit/screen';
 
 type CameraState = 'idle' | 'live' | 'denied' | 'unsupported';
 
+type SendState =
+  | { readonly kind: 'idle' }
+  | { readonly kind: 'sending' }
+  | { readonly kind: 'notice'; readonly message: string };
+
+type LimitState = { readonly scope: string | undefined; readonly resetAt: string | undefined };
+
 export default function CameraFirstScreen() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
   const [state, setState] = useState<CameraState>('idle');
+  const [send, setSend] = useState<SendState>({ kind: 'idle' });
+  const [limit, setLimit] = useState<LimitState | null>(null);
 
   useEffect(() => {
     let stream: MediaStream | undefined;
@@ -47,27 +63,122 @@ export default function CameraFirstScreen() {
     };
   }, []);
 
+  const handleOutcome = useCallback((outcome: UploadOutcome): void => {
+    if (outcome.kind === 'queued') {
+      setSend({ kind: 'idle' });
+      // Полная навигация, не `next/navigation`-роутер: этот экран — корневой маршрут,
+      // рендерится и напрямую (`renderToStaticMarkup` в `web-shell.test.tsx`) вне контекста
+      // приложения Next — `useRouter()` там падает с «app router не смонтирован». Маршрут
+      // результата существует и сам себя отрисовывает (`web-result-route.test.ts`).
+      window.location.assign(`/result/${outcome.scanId}`);
+      return;
+    }
+    if (outcome.kind === 'limit') {
+      setLimit({ scope: outcome.scope, resetAt: outcome.resetAt });
+      setSend({ kind: 'idle' });
+      return;
+    }
+    // 'rejected' | 'error' — оба показываются одинаково: названное сообщение вместо
+    // общего «что-то пошло не так» (задача N4, пункт 5).
+    setSend({ kind: 'notice', message: outcome.message });
+  }, []);
+
+  const sendBlob = useCallback(
+    async (blob: Blob): Promise<void> => {
+      setSend({ kind: 'sending' });
+      const outcome = await uploadCapture(blob);
+      handleOutcome(outcome);
+    },
+    [handleOutcome],
+  );
+
+  const onShutter = useCallback((): void => {
+    // Кнопка недоступна, пока поток не запущен, а не молча ничего не делает (задача N4, п.1).
+    if (state !== 'live' || send.kind === 'sending') return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (video === null || canvas === null) return;
+
+    // Размер кадра — из РЕАЛЬНЫХ videoWidth/videoHeight, а не из размеров элемента разметки.
+    const width = video.videoWidth;
+    const height = video.videoHeight;
+    if (width === 0 || height === 0) {
+      setSend({ kind: 'notice', message: 'Видео ещё не готово — подождите и попробуйте снова.' });
+      return;
+    }
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (ctx === null) {
+      setSend({ kind: 'notice', message: 'Не удалось снять кадр — попробуйте ещё раз.' });
+      return;
+    }
+    ctx.drawImage(video, 0, 0, width, height);
+    canvas.toBlob(
+      (blob) => {
+        if (blob === null) {
+          setSend({ kind: 'notice', message: 'Не удалось снять кадр — попробуйте ещё раз.' });
+          return;
+        }
+        void sendBlob(blob);
+      },
+      'image/jpeg',
+      0.9,
+    );
+  }, [state, send.kind, sendBlob]);
+
+  const onGalleryPick = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      const file = event.target.files?.[0];
+      event.target.value = ''; // тот же файл можно выбрать повторно
+      if (file === undefined) return;
+      void sendBlob(file);
+    },
+    [sendBlob],
+  );
+
+  // Экран лимита ЗАНИМАЕТ место результата (задача N4, п.5): сырые scope/reset_at идут в
+  // готовый компонент без форматирования здесь — он форматирует их сам.
+  if (limit !== null) return <LimitScreen scope={limit.scope} resetAt={limit.resetAt} />;
+
   return (
     <main className="screen">
       <section className="viewfinder" aria-label="видоискатель">
         <video ref={videoRef} className="viewfinder__video" autoPlay playsInline muted />
+        <canvas ref={canvasRef} className="viewfinder__canvas" aria-hidden="true" hidden />
         <div className="viewfinder__frame" aria-hidden="true" />
         {state === 'denied' ? <p className="viewfinder__notice">Нет доступа к камере. Разрешите доступ или выберите фото из галереи.</p> : null}
         {state === 'unsupported' ? <p className="viewfinder__notice">Камера в этом браузере недоступна. Выберите фото из галереи.</p> : null}
+        {send.kind === 'notice' ? (
+          <p className="viewfinder__notice" role="alert">
+            {send.message}
+          </p>
+        ) : null}
       </section>
 
       <nav className="modes" aria-label="режимы">
         <span className="modes__item modes__item--active">съёмка</span>
-        <span className="modes__item">галерея</span>
+        <button type="button" onClick={() => galleryInputRef.current?.click()} disabled={send.kind === 'sending'} className="modes__item">
+          галерея
+        </button>
       </nav>
+
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        hidden
+        aria-label="выбрать фото из галереи"
+        disabled={send.kind === 'sending'}
+        onChange={onGalleryPick}
+      />
 
       <button
         type="button"
         className="shutter"
         aria-label="снять кадр"
-        onClick={() => {
-          /* Заглушка: приём кадра вводит фича scan-pipeline. Здесь кадр никуда не уходит. */
-        }}
+        disabled={state !== 'live' || send.kind === 'sending'}
+        onClick={onShutter}
       >
         <span className="shutter__ring" aria-hidden="true" />
       </button>
