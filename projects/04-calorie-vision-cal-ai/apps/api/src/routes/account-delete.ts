@@ -59,6 +59,22 @@ export function registerAccountDeleteRoute(app: FastifyInstance, pool: DbPool, l
     const scope = body.scope;
 
     const outcome = await withTransaction<DeleteOutcome>(pool, async (client) => {
+      // RV-consent-and-telegram-auth-03 (третий обзор): строка `account` блокируется ПЕРВОЙ,
+      // ДО любой операции над `share_card` — тот же порядок, что использует
+      // `createShareCardGuarded` (`enforceConsentBeforeDiaryWrite` сначала блокирует
+      // account/device_session, потом создаёт карточку). Раньше карточки закрывались ДО
+      // блокировки account: конкурентный `createShareCardGuarded` мог уже держать блокировку
+      // account (заявка на согласие проверена, GRANTED) и ещё не закоммитить INSERT новой
+      // карточки — `UPDATE share_card … WHERE owner_key = $1` этот вызов не видел (он не
+      // трогал account и потому ничем не блокировался), затем ждал коммита account. Итог:
+      // новая карточка переживала успешный отзыв с `revoked_at IS NULL`. Теперь любой из двух
+      // порядков даёт корректный исход: если DELETE берёт лок первым — `createShareCardGuarded`
+      // ждёт коммита, видит УЖЕ отозванное согласие (после withdraw) или УЖЕ erasing и
+      // отказывает; если создание держит лок первым — DELETE ждёт его коммита и закрывает
+      // УЖЕ существующую карточку.
+      const statusRow = await client.query<{ status: string }>(`SELECT status FROM account WHERE id = $1 FOR UPDATE`, [accountId]);
+      const status = statusRow.rows[0]?.status;
+
       // Шаг общий для ОБОИХ scope: FR-GROWTH-006 требует закрытия карточек при отзыве
       // согласия, а `erase_all` логически включает отзыв.
       const revoked = await client.query<{ id: string }>(
@@ -74,8 +90,6 @@ export function registerAccountDeleteRoute(app: FastifyInstance, pool: DbPool, l
         return { kind: 'withdrawn', cardsRevokedAt, cardsCount };
       }
 
-      const statusRow = await client.query<{ status: string }>(`SELECT status FROM account WHERE id = $1 FOR UPDATE`, [accountId]);
-      const status = statusRow.rows[0]?.status;
       if (status === 'erasing') {
         // Карточки, закрытые ЭТИМ вызовом, остаются закрытыми (коммит выше) — закрытие
         // необратимо и не ошибка; новую строку в очередь удаления НЕ ставим.
