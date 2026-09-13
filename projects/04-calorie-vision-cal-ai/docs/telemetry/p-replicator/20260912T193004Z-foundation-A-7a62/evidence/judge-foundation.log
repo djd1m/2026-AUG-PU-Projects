@@ -9405,3 +9405,1139 @@ COMPLEXITY: O(1) на запрос.
 409:  для `AC-foundation-20` и `AC-foundation-21`. Прозаический пробел — только в `01_specification.md`
 410:  тексте `FR-foundation-6` (`VF-03`), не в трассировке алгоритмов.
 
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "node --input-type=module <<'JS'
+import fs from 'node:fs';
+import ts from 'typescript';
+const encode = s => 'data:text/javascript;base64,' + Buffer.from(s).toString('base64');
+const compile = p => ts.transpileModule(fs.readFileSync(p,'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const types = encode(compile('apps/recognizer/src/provider/types.ts'));
+const fake = encode(compile('apps/recognizer/src/provider/fake.ts').replace(\"'./types.js'\", JSON.stringify(types)));
+const {createFakeModelProvider} = await import(fake);
+const {MODEL_RESPONSE_SCHEMA} = await import(types);
+const start = performance.now();
+const result = createFakeModelProvider({latencyMs:10}).recognize({scanId:'review-probe',objectKey:'photo'},MODEL_RESPONSE_SCHEMA,{model:'haiku-4.5',deadlineMs:20,signal:new AbortController().signal});
+while(performance.now()-start<80) {}
+try { await result; console.log(JSON.stringify({outcome:'resolved',deadlineMs:20,elapsedMs:Math.round(performance.now()-start)})); } catch(e) {console.log(e.name);}
+JS
+" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 1265ms:
+{"outcome":"resolved","deadlineMs":20,"elapsedMs":81}
+
+codex
+Подтвердил дефект дедлайна без сети и записи файлов: фейк вернул успешный ответ через 81 мс при бюджете 20 мс, когда цикл событий был занят. Проверка сравнивает бюджет с заданной задержкой фейка, но не с фактически истёкшим временем.
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "ENV_WIRING_CONFIG='services:' bash scripts/check-env-wiring.sh /; sed -n '150,245p' tests/unit/source-guards.test.ts; sed -n '1,105p' tests/concurrency/lease.test.ts; cat packages/shared/src/log/{logger,redact}.ts" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 170ms:
+== Переменные, читаемые кодом, доезжают до сервиса ==
+  ⚠️  api: каталог apps/api отсутствует — пропуск
+  ⚠️  recognizer: каталог apps/recognizer отсутствует — пропуск
+  ⚠️  web: каталог apps/web отсутствует — пропуск
+    // Заслужено живым стендом: остановка `db` на 10 секунд убивала процесс `api` целиком,
+    // потому что событие 'error' простаивающего клиента пула никто не слушал. Падение
+    // вместо ответа стирает разницу между «база недоступна» и «сервиса нет».
+    for (const file of ['apps/api/src/bootstrap.ts', 'apps/recognizer/src/bootstrap.ts']) {
+      const sources = await readAll(path.dirname(file));
+      const bootstrap = sources.find((entry) => entry.file === file);
+      expect(bootstrap, file).toBeDefined();
+      expect(codeLines(bootstrap?.code ?? '').join('\n'), file).toMatch(/pool\.on\('error'/);
+    }
+  });
+});
+
+describe('страж ADR-001: число берётся из базы, а не из ответа модели', () => {
+  it('в apps/recognizer нет чтения калорийности и БЖУ из ответа модели', async () => {
+    // Проверяется именно ЭТО МНОЖЕСТВО имён, а не «нет слова kcal»: иначе страж
+    // запретил бы и разрешённое поле model_estimate_kcal.
+    const forbidden = /\b(calories|kcalPer100g|kcal_per_100g|proteinPer100g|protein_per_100g|fatPer100g|fat_per_100g|carbPer100g|carb_per_100g|dbKcalTotal|db_kcal_total)\b/;
+    const offenders: string[] = [];
+
+    for (const { file, code } of await readAll('apps/recognizer/src')) {
+      for (const line of codeLines(code)) {
+        if (forbidden.test(line)) offenders.push(`${file}: ${line.trim()}`);
+      }
+    }
+
+    expect(offenders).toEqual([]);
+  });
+
+  it('в объявленной схеме ответа модели нет ни одного поля о калорийности кроме разрешённого', async () => {
+    // Схема ПЕРЕДАЁТСЯ параметром и объявлена одним значением — поэтому страж читает одно
+    // место, а не ищет схему по всем реализациям порта. Проверяется именно МНОЖЕСТВО имён,
+    // а не «нет слова kcal»: иначе страж запретил бы и разрешённое model_estimate_kcal.
+    const { MODEL_RESPONSE_SCHEMA } = await import('../../apps/recognizer/src/provider/types.js');
+    const forbidden = ['calories', 'kcal', 'protein', 'fat', 'carbs'];
+    for (const field of MODEL_RESPONSE_SCHEMA.fields) {
+      expect(forbidden, field).not.toContain(field);
+    }
+    expect(MODEL_RESPONSE_SCHEMA.fields.filter((f) => /kcal|calor|protein|fat|carb/i.test(f))).toEqual(['model_estimate_kcal']);
+  });
+
+  it('единственное поле о калорийности в ответе модели — model_estimate_kcal', async () => {
+    const provider = await readAll('apps/recognizer/src/provider');
+    const responseShape = provider.find(({ file }) => file.endsWith('types.ts'));
+    expect(responseShape).toBeDefined();
+    const declared = codeLines(responseShape?.code ?? '')
+      .filter((line) => /^\s+readonly [a-zA-Z]+:/.test(line))
+      .map((line) => line.trim().split(':')[0]?.replace('readonly ', '') ?? '');
+    expect(declared).toContain('modelEstimateKcal');
+    expect(declared.filter((name) => /kcal|calor|protein|fat|carb/i.test(name))).toEqual(['modelEstimateKcal']);
+  });
+});
+
+describe('страж чтения окружения', () => {
+  it('переменные окружения читает только по одному файлу на сервис', async () => {
+    const readers: string[] = [];
+    for (const relative of ['apps/api/src', 'apps/recognizer/src', 'apps/web', 'packages/shared/src', 'packages/db/src']) {
+      for (const { file, code } of await readAll(relative)) {
+        if (codeLines(code).some((line) => /process\.env/.test(line))) readers.push(file);
+      }
+    }
+    // `packages/db/src/migrate.ts` — НАЗВАННОЕ исключение: у раннера есть собственная точка
+    // входа из командной строки, и она обязана прочитать DATABASE_URL. Это не сервис
+    // compose, и страж проброса переменных его каталог не смотрит.
+    expect(readers.sort()).toEqual(['apps/api/src/env.ts', 'apps/recognizer/src/env.ts', 'packages/db/src/migrate.ts']);
+  });
+});
+// КОНКУРЕНТНЫЙ прогон аренды, fencing и уборки (AC-foundation-10, AC-foundation-17,
+// AC-foundation-18).
+//
+// Разные отказы закрываются РАЗНЫМИ механизмами, поэтому проверяются порознь:
+//   * двойной захват ОДНОВРЕМЕННО — `FOR UPDATE SKIP LOCKED`;
+//   * двойной захват ПОСЛЕ закрытия транзакции аренды — предикат `leased_until`, и только
+//     он: блокировки строки после COMMIT уже нет;
+//   * запись устаревшего владельца — `lease_fence`, а не время;
+//   * незавершённая публикация — `photo_id IS NOT NULL`;
+//   * бесконечный перезахват — `lease_fence < 3` вместе с уборщиком.
+
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import type { DbPool } from '@n4/db';
+import { createLogger } from '@n4/shared';
+import { acquireLease, MAX_LEASE_ATTEMPTS, recordResult, sweepStuckScans } from '../../apps/recognizer/src/lease.js';
+
+/**
+ * Предел захватов ИЗ СПЕЦИФИКАЦИИ (`FR-foundation-6`, DEC-A-015), ЛИТЕРАЛОМ.
+ *
+ * Брать здесь рабочую константу нельзя: смена `MAX_LEASE_ATTEMPTS` с 3 на 4 сдвинула бы
+ * тест ВМЕСТЕ с кодом — он остался бы зелёным и проверял бы уже другое утверждение,
+ * «предел равен самому себе». Тест обязан проверять ЧИСЛО, о котором договорились, а не
+ * значение, прочитанное из проверяемого кода.
+ *
+ * `MAX_LEASE_ATTEMPTS` при этом импортируется намеренно: отдельное утверждение ниже сверяет
+ * рабочую константу с этим литералом и краснеет, если код разошёлся со спецификацией.
+ */
+const SPEC_MAX_LEASE_ATTEMPTS = 3;
+import { createWorker } from '../../apps/recognizer/src/worker.js';
+import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
+import { ModelDeadlineExceeded } from '../../apps/recognizer/src/provider/types.js';
+import { migratedPool, seedPhoto, seedSession, truncateAll } from '../helpers/db.js';
+
+let pool: DbPool;
+
+beforeAll(async () => {
+  pool = await migratedPool('n4-tests-lease');
+}, 60_000);
+
+afterAll(async () => {
+  await pool.end();
+});
+
+beforeEach(async () => {
+  await truncateAll(pool);
+});
+
+/** Задание, готовое к работе: кадр уже опубликован, поэтому оно ВИДИМО воркеру. */
+async function queueJob(marker: string): Promise<string> {
+  const session = await seedSession(pool, marker);
+  const photoId = await seedPhoto(pool, session.id, marker);
+  const created = await pool.query<{ id: string }>(
+    `INSERT INTO recognition (device_session_id, photo_id, status, idempotency_key)
+     VALUES ($1, $2, 'queued', $3) RETURNING id`,
+    [session.id, photoId, randomUUID()],
+  );
+  const id = created.rows[0]?.id;
+  if (id === undefined) throw new Error('задание не создано');
+  return id;
+}
+
+/** Заявленная строка БЕЗ кадра: публикация ещё не завершена. */
+async function queueUnpublishedJob(marker: string): Promise<string> {
+  const session = await seedSession(pool, marker);
+  const created = await pool.query<{ id: string }>(
+    `INSERT INTO recognition (device_session_id, status, idempotency_key)
+     VALUES ($1, 'queued', $2) RETURNING id`,
+    [session.id, randomUUID()],
+  );
+  const id = created.rows[0]?.id;
+  if (id === undefined) throw new Error('задание не создано');
+  return id;
+}
+
+describe('предел захватов соответствует спецификации', () => {
+  it('рабочая константа равна трём — числу из FR-foundation-6', () => {
+    // ЕДИНСТВЕННОЕ место, где эти два числа сравниваются. Поменяли предел в коде — красным
+    // станет именно это утверждение, а не десяток сценариев ниже, и будет видно: поменяли
+    // решение, а спецификацию — нет.
+    expect(MAX_LEASE_ATTEMPTS).toBe(SPEC_MAX_LEASE_ATTEMPTS);
+  });
+});
+
+describe('аренда задания', () => {
+  it('два воркера на одно задание дают ровно один захват', async () => {
+    const jobId = await queueJob('lease-single');
+
+    const [first, second] = await Promise.all([acquireLease(pool, randomUUID()), acquireLease(pool, randomUUID())]);
+    const taken = [first, second].filter((job) => job !== undefined);
+
+    expect(taken).toHaveLength(1);
+    expect(taken[0]?.id).toBe(jobId);
+    // Счётчик захватов увеличен РОВНО на один.
+    expect(taken[0]?.fence).toBe(1);
+
+    const row = await pool.query<{ lease_fence: number; lease_owner: string | null }>(
+      'SELECT lease_fence, lease_owner FROM recognition WHERE id = $1',
+      [jobId],
+    );
+    expect(row.rows[0]?.lease_fence).toBe(1);
+    expect(row.rows[0]?.lease_owner).not.toBeNull();
+  }, 60_000);
+
+  it('десять воркеров на три задания не берут ни одно дважды и не теряют ни одного', async () => {
+// Структурированный журнал: одна строка — один JSON (NFR-foundation-2).
+//
+// Тела запросов, cookie и байты фото сюда не попадают вовсе — не потому, что их
+// «забыли передать», а потому что вызывающий передаёт названные поля, а редактор
+// затирает запрещённые значения и имена (`redact.ts`).
+
+import { createRedactor, type RedactorOptions } from './redact.js';
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+export interface LogFields {
+  readonly request_id?: string;
+  readonly [key: string]: unknown;
+}
+
+export interface Logger {
+  debug(event: string, fields?: LogFields): void;
+  info(event: string, fields?: LogFields): void;
+  warn(event: string, fields?: LogFields): void;
+  error(event: string, fields?: LogFields): void;
+  child(bound: LogFields): Logger;
+}
+
+/**
+ * Поля, которым разрешено попасть в журнал сервиса. Список ЗАКРЫТЫЙ и живёт в коде:
+ * новое поле события добавляется сюда осознанно, а не приезжает вместе с ошибкой.
+ */
+export const SERVICE_LOG_FIELDS: readonly string[] = [
+  // `path` в списке НЕТ намеренно: сырой путь пишет клиент, и его сегменты ничем не лучше
+  // query. В журнал попадает только ШАБЛОН маршрута (`route`), сочинённый нами.
+  'request_id', 'event', 'route', 'method', 'status', 'code', 'signal', 'port',
+  'variables', 'scan_limit_user', 'scan_limit_day', 'escalation_limit_day',
+  'rate_limit_mutate_per_min', 'rate_limit_read_per_min', 'model_provider', 'model',
+  'ip_prefix', 'scan_id', 'fence', 'lease_owner', 'provider', 'write',
+  'never_leased', 'attempts_exhausted', 'message', 'duration_ms',
+];
+
+export interface LoggerOptions extends RedactorOptions {
+  readonly service: string;
+  /** Куда писать строку. Подменяется в тестах гигиены журнала. */
+  readonly sink?: (line: string) => void;
+  readonly now?: () => Date;
+}
+
+export function createLogger(options: LoggerOptions): Logger {
+  const redact = createRedactor(options);
+  const sink = options.sink ?? ((line: string) => process.stdout.write(`${line}\n`));
+  const now = options.now ?? (() => new Date());
+
+  const emit = (level: LogLevel, event: string, bound: LogFields, fields: LogFields | undefined): void => {
+    const payload = redact({ ...bound, ...(fields ?? {}) }) as Record<string, unknown>;
+    sink(JSON.stringify({ time: now().toISOString(), level, service: options.service, event, ...payload }));
+  };
+
+  const build = (bound: LogFields): Logger => ({
+    debug: (event, fields) => emit('debug', event, bound, fields),
+    info: (event, fields) => emit('info', event, bound, fields),
+    warn: (event, fields) => emit('warn', event, bound, fields),
+    error: (event, fields) => emit('error', event, bound, fields),
+    child: (extra) => build({ ...bound, ...extra }),
+  });
+
+  return build({});
+}
+// Редактор запрещённых значений в журнале (NFR-foundation-2, AC-foundation-16).
+//
+// Поле СОХРАНЯЕТСЯ и получает метку `[redacted]`. Удалять поле нельзя: исчезнувшее поле
+// выглядит как «его и не было», и по журналу невозможно отличить «секрет не печатали»
+// от «секрет не попал в объект вовсе».
+//
+// Два независимых механизма, и они нужны оба:
+//   1) по ЗНАЧЕНИЮ — секрет, попавший в произвольное поле (ключ модели, токен бота,
+//      сырой токен cookie), затирается, как бы поле ни называлось;
+//   2) по ИМЕНИ поля — то, что запрещено логировать в принципе (полный адрес, cookie,
+//      Authorization), затирается, даже если значение нам неизвестно.
+
+export const REDACTED = '[redacted]';
+
+/** Имена полей, запрещённые к печати ЦЕЛИКОМ. Список ЯВНЫЙ и живёт в коде. */
+export const FORBIDDEN_FIELD_NAMES: readonly string[] = [
+  'cookie',
+  'set-cookie',
+  'authorization',
+  'anthropic_api_key',
+  'telegram_bot_token',
+  'cookie_token',
+  'cookie_token_hash',
+  'session_token',
+  'ip',
+  'ip_address',
+  'remote_address',
+  'x-forwarded-for',
+  'password',
+  'secret',
+  's3_secret_key',
+  's3_access_key',
+];
+
+const MAX_DEPTH = 6;
+
+export interface RedactorOptions {
+  /** Точные значения-секреты. Пустые и слишком короткие игнорируются: они совпали бы со всем. */
+  readonly secrets?: readonly (string | undefined)[];
+  readonly forbiddenFields?: readonly string[];
+  /**
+   * ЗАКРЫТЫЙ список полей, которым разрешено попасть в журнал. Когда он задан, всё
+   * ОСТАЛЬНОЕ затирается — это разворот правила с «запрещено перечисленное» на
+   * «разрешено перечисленное».
+   *
+   * Заслужено слепым ревью (RV-foundation-01): обработчик ошибки писал в поле `route`
+   * пользовательскую строку целиком, вместе с query, и туда уехали токен и полный адрес.
+   * Чёрный список этого поймать не мог по построению: имя поля было разрешённым, а
+   * опасным оказалось ЗНАЧЕНИЕ произвольной формы. Список запрещённых значений всегда
+   * неполон — список разрешённых полей конечен и виден целиком.
+   */
+  readonly allowedFields?: readonly string[];
+}
+
+export function createRedactor(options: RedactorOptions = {}): (value: unknown) => unknown {
+  const secrets = (options.secrets ?? []).filter((s): s is string => typeof s === 'string' && s.trim().length >= 8);
+  const forbidden = new Set((options.forbiddenFields ?? FORBIDDEN_FIELD_NAMES).map((n) => n.toLowerCase()));
+  const allowed = options.allowedFields === undefined ? undefined : new Set(options.allowedFields.map((n) => n.toLowerCase()));
+
+  const redactString = (text: string): string => {
+    let result = text;
+    for (const secret of secrets) {
+      if (result.includes(secret)) result = result.split(secret).join(REDACTED);
+    }
+    return result;
+  };
+
+  const walk = (value: unknown, depth: number): unknown => {
+    if (depth > MAX_DEPTH) return REDACTED;
+    if (typeof value === 'string') return redactString(value);
+    if (value === null || typeof value !== 'object') return value;
+    if (Array.isArray(value)) return value.map((item) => walk(item, depth + 1));
+    if (value instanceof Error) return { name: value.name, message: redactString(value.message) };
+    const output: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+      const name = key.toLowerCase();
+      // Порядок проверок: сначала запрет (он безусловен), затем разрешение. Поле, которого
+      // нет в списке разрешённых, затирается, НО СОХРАНЯЕТСЯ: исчезнувшее поле выглядит
+      // как «его и не было», и по журналу не отличить «не печатали» от «не попало».
+      if (forbidden.has(name)) output[key] = REDACTED;
+      else if (allowed !== undefined && !allowed.has(name)) output[key] = REDACTED;
+      else output[key] = walk(item, depth + 1);
+    }
+    return output;
+  };
+
+  return (value: unknown) => walk(value, 0);
+}
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "python3 - <<'PY'
+import os,re,subprocess
+from pathlib import Path
+blocks=['services:']
+for svc in ['api','recognizer']:
+ names=sorted(set(re.findall(r'\\benv\\.([A-Z][A-Z0-9_]*)',Path(f'apps/{svc}/src/env.ts').read_text())))
+ blocks.extend([f'  {svc}:','    environment:']+[f'      {n}: probe' for n in names if not(svc=='api' and n=='S3_BUCKET')])
+ if svc=='api': blocks.extend(['    labels:','      S3_BUCKET: probe'])
+blocks.extend(['  web:','    image: probe'])
+r=subprocess.run(['bash','scripts/check-env-wiring.sh','.'],env={**os.environ,'ENV_WIRING_CONFIG':'\\n'.join(blocks)},capture_output=True,text=True)
+print('Mutation: api.S3_BUCKET moved from environment to labels')
+print('exit_code:',r.returncode)
+print(r.stdout,r.stderr)
+PY
+" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 606ms:
+Mutation: api.S3_BUCKET moved from environment to labels
+exit_code: 0
+== Переменные, читаемые кодом, доезжают до сервиса ==
+  ✅ api: все читаемые переменные проброшены
+  ✅ recognizer: все читаемые переменные проброшены
+  ⚠️  web: ни одной переменной не читается — проверять нечего
+ 
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,145p' docs/features/foundation/04_refinement.md; sed -n '1,87p' docs/features/foundation/validation-report.md; cat .claude/rules/testing.md" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 98ms:
+# Фича `foundation` — уточнение: краевые случаи, проверки, ужесточение
+
+Слой каждой проверки выбран по природе признака, а не по удобству
+([`cost-of-detection-ladder`](../../../../.claude/rules/cost-of-detection-ladder.md)). Разделяемый
+ресурс закрывается ТОЛЬКО конкурентным прогоном: последовательный тест на нём зеленеет при обеих
+реализациях.
+
+## Edge Cases Matrix — дополнение от 2026-09-12 (DEC-A-015, DEC-A-018)
+
+| Случай | Вход | Ожидаемое | Как обеспечивается |
+|---|---|---|---|
+| незавершённая публикация | `recognition` в `queued`, `photo_id IS NULL` | воркер НЕ получает задание | предикат `photo_id IS NOT NULL`: кадр кладётся в бакет ПОСЛЕ заявки ключа повторности, и в этом окне звать модель не на что |
+| задание роняет воркеров | аренда истекла трижды | четвёртый захват НЕ выдаётся, задание закрывает уборщик | `lease_fence < 3` плюс правило Б уборщика: каждый захват оплачен, у числа попыток обязана быть граница |
+| никто не взял задание | `queued` старше 5 минут, `leased_until IS NULL` | `failed(timeout)` | правило А уборщика; пул воркеров исчерпан либо остановлен — молчание не означает «выполняется» |
+| уборщик против живого воркера | аренда ДЕЙСТВУЕТ, задание старое | уборщик НЕ трогает строку | «завершить задание, не прекратив платную работу» хуже задержки |
+| запись после уборщика | воркер дописывает результат в уже закрытую строку | ноль строк, `swept_as_timeout` | условие `status = 'queued'` в условной записи; различение по НОМЕРУ ЗАХВАТА, а не по статусу |
+| дедлайн вызова истёк | `deadlineMs = 0`, `-1`, `NaN` | ОТКАЗ до работы | поздний ответ оплачен и всё равно выбрасывается — честнее отказать сразу |
+| работа дольше бюджета | задержка адаптера больше `deadlineMs` | ОТКАЗ по дедлайну | тот же довод; задержка фейка задаётся ЯВНО, иначе тест мигает |
+| эскалация на том же кадре | `model = 'sonnet-5'` вместо `haiku-4.5` | ответ ДРУГОЙ и несёт `model` | модель входит в детерминированный хеш фейка, иначе тест эскалации слеп |
+
+## Edge Cases Matrix
+
+| Случай | Вход | Ожидаемое | Как обеспечивается |
+|---|---|---|---|
+| потолок объявлен пустым | `N4_SCAN_LIMIT_USER=` | отказ старта, имя переменной в `stderr` | `''` после `trim` — ОТДЕЛЬНЫЙ случай от `undefined`, иначе опечатка теряет диагностику (`fail-closed-defaults` п. 2) |
+| потолок нечисловой или ноль | `N4_SCAN_LIMIT_DAY=abc`, `=0`, `=-1` | отказ старта | разбор в целое с проверкой `> 0`; ноль здесь не «запретить всё», а несконфигурированное значение |
+| отсутствует ровно одна из трёх переменных потолка | задано две из трёх | отказ старта, назван недостающий потолок | ТРИ независимых прогона: проверка одной переменной зеленеет при отсутствующей второй (ADR-007 Confirmation) |
+| `APP_ORIGIN` равен `/` или `не-url` | `APP_ORIGIN=/` | отказ старта | значение проверяется конструктором URL и списком схем, а не подчищается: срезание хвостового слеша однажды дало пустую строку и уронило каждый `new URL(path, base)` |
+| `N4_MODEL_PROVIDER` с опечаткой | `=Fake`, `=дичь`, `=` | отказ старта | закрытое множество `{fake, live}` живёт в КОДЕ; окружение только выбирает вариант (`honest-configuration` CFG-I8) |
+| `live` без ключа | `N4_MODEL_PROVIDER=live`, `ANTHROPIC_API_KEY=` | отказ старта `recognizer` | условие зависит от режима, поэтому проверяет код, а не compose (DEC-A-009) |
+| повторный прогон миграций | `npm run migrate` дважды | второй раз применено 0 файлов, код 0 | журнал `schema_migration` с контрольной суммой |
+| применённый файл миграции изменён | правка `001_init.sql` после применения | ошибка с названной версией | сверка контрольной суммы; молчаливое переприменение запрещено |
+| два файла с одним номером | `002_a.sql` и `002_b.sql` | ошибка до применения | порядок обязан быть однозначным |
+| `n4_app` пытается менять схему | `DROP TABLE`, `ALTER TABLE`, `CREATE TABLE` | ошибка прав | гранты выдаёт `ProvisionDatabaseRoles`; приложение не владеет схемой |
+| таблица, созданная будущей миграцией | новая таблица после 001 | `n4_app` видит её сразу | `ALTER DEFAULT PRIVILEGES`; без него дефект вскроется на первом чтении, а не при миграции |
+| cookie подделана или устарела | неизвестный `cookie_token_hash` | выдаётся НОВАЯ сессия | неизвестный токен есть отсутствие сессии; прежняя строка не изменяется и не воскрешается |
+| две одновременные первые сессии с одной cookie | гонка на вставке | ровно одна строка | `UNIQUE (cookie_token_hash)`: единственность обеспечивает БАЗА, а не код |
+| адрес IPv6 | `2001:db8::1` | `ip_prefix` = /48 | усечение на входе; полный адрес не хранится нигде |
+| адрес за прокси | `X-Forwarded-For` из нескольких элементов | берётся элемент, поставленный НАШИМ Caddy | доверять произвольному заголовку нельзя: смена заголовка обнулила бы и квоту, и ограничение частоты (`deployment-seams`) |
+| 20 одновременных попыток при пределе 10 | конкурентный прогон | ровно 10 `granted` | атомарный `INSERT … ON CONFLICT … WHERE used < limit RETURNING`; проверяется только параллельно |
+| соседняя сессия во время насыщения | 5 параллельных попыток другой сессии | все 5 `granted` | ключ квоты гранулярен по сессии и `ip_prefix`; механизм не наказывает добросовестного |
+| отказ по потолку | одиннадцатая попытка | `refused(user)` с названным `scope` | без `scope` «кончились сканы» и «кончились эскалации» неотличимы (FR-LIMIT-002) |
+| база недоступна при старте | `db` остановлена | процесс не объявляет себя здоровым | `GET /health` → `503`; недоступность источника истины — отказ, а не «наверное, всё хорошо» |
+| база падает во время работы | обрыв соединения | `503` с названной причиной, процесс жив | исключение не проглатывается и не превращается в возвращаемое значение внутри транзакции |
+| ожидание соединения пула | все соединения заняты | отказ по таймауту | `connectionTimeoutMillis` обязателен: `pg.Pool` без него ждёт БЕСКОНЕЧНО |
+| два воркера на одно задание | одновременная выборка | ровно один захват | предикат `leased_until` + `FOR UPDATE SKIP LOCKED` + инкремент `lease_fence` |
+| аренда истекла, первый воркер жив | `leased_until` в прошлом | второй захватывает, первый пишет 0 строк | условный `UPDATE … AND lease_fence = :fence`; событие `stale_lease_result` |
+| мусорное тело при превышении частоты | невалидный JSON, запрос сверх порога | `429`, тела никто не разбирал | хук `onRequest` раньше разбора тела |
+| ограничитель частоты пересоздан | экземпляр на запрос | запрещено | ограничитель и пул создаются ОДИН раз при старте процесса |
+| `docker compose config` пуст или недоступен | нет docker / ошибка | код возврата `2` и «проверка НЕ ВЫПОЛНЕНА» | пустой вход НИКОГДА не читается как «нарушений не найдено» |
+| `S3_ENDPOINT` в страже | имя с цифрой | не обрезается до `S` | регулярное выражение `[A-Z][A-Z0-9_]*` |
+| секрет попал в поле журнала | токен в объекте события | `[redacted]`, поле сохранено | редактор запрещённых значений; исчезнувшее поле выглядело бы как «его и не было» |
+
+## Testing Strategy
+
+Раннер — `vitest` 3. Интеграционные и конкурентные прогоны идут на НАСТОЯЩЕМ PostgreSQL из профиля
+`test` (`docker compose --profile test run --rm test npm test`): мок не воспроизводит ни уникального
+индекса, ни блокировок, ради которых эти тесты написаны. Наружу тесты не ходят: единственная внешняя
+способность — поставщик модели — заменена детерминированным фейком, и живого режима в этой фиче нет.
+
+| Слой | Что проверяет | Почему этот слой |
+|---|---|---|
+| unit | валидатор конфигурации, усечение адреса, редактор журнала, ключи квоты, разбор порядка файлов миграций | арифметика, закрытые перечисления и границы наблюдаются без базы |
+| integration | миграции и роли, создание и повторное использование сессии, последовательная квота, `GET /health`, ограничение частоты | согласованность двух компонентов и ответы маршрутов |
+| конкурентный | квота на одной сессии, добросовестный сосед, занятость пула, аренда двумя воркерами, устаревший захват | разделяемый ресурс; последовательный тест зеленеет при обеих реализациях |
+| страж по исходнику | отсутствие секретов в вызовах журналирования; единственный экземпляр ограничителя частоты и пула | свойство ИСХОДНИКА, а не одного прогона |
+| смоук на стенде | `docker compose build` и `up --profile app`, здоровье сервисов, ответ `GET /health` через дверь Caddy | стык модулей виден только на собранном стеке |
+
+Измерения NFR-PERF-001 и NFR-PERF-002 в этой фиче НЕ снимаются: показывать нечего, продукта на
+экране нет. Это записано как честное «не измерено», а не как пропущенный пункт.
+
+## Тесты, которые Phase 3 обязан создать
+
+Заголовки приводятся дословно: они же попадут в `## Criterion coverage` документа
+`05_completion.md` и сверяются воротами `--completion` с содержимым файлов.
+
+`tests/integration/workspace.test.ts`
+- `чистый клон собирается и перечисляет ровно пять workspace`
+
+`tests/unit/config.test.ts`
+- `отсутствие N4_SCAN_LIMIT_USER валит старт с названной переменной`
+- `отсутствие N4_SCAN_LIMIT_DAY валит старт с названной переменной`
+- `отсутствие N4_ESCALATION_LIMIT_DAY валит старт с названной переменной`
+- `пустая строка и нечисловое значение потолка отвергаются наравне с отсутствием`
+- `отсутствие APP_ORIGIN валит старт и не подставляет localhost`
+- `отсутствие DATABASE_URL валит старт с названной переменной`
+- `значение N4_MODEL_PROVIDER вне множества fake live отвергается`
+
+`tests/unit/ip-prefix.test.ts`
+- `адрес IPv4 усекается до /24 а IPv6 до /48`
+
+`tests/unit/log-redaction.test.ts`
+- `секреты и полный адрес заменяются меткой redacted с сохранением поля`
+
+`tests/integration/migrations.test.ts`
+- `миграции создают четырнадцать таблиц канона и расширение pg_trgm`
+- `повторный прогон миграций применяет ноль файлов`
+- `вторая строка scan_quota_counter с тем же ключом отбивается базой`
+- `изменённый после применения файл миграции валит раннер`
+
+`tests/integration/db-roles.test.ts`
+- `роль приложения не может менять схему но выполняет DML`
+
+`tests/integration/device-session.test.ts`
+- `первый запрос создаёт сессию с флагами HttpOnly Secure SameSite и хранит только хэш`
+- `повторный запрос с действующей cookie не создаёт вторую сессию`
+- `неизвестная cookie создаёт новую сессию и не изменяет прежнюю`
+
+`tests/integration/quota-sequential.test.ts`
+- `одиннадцатая попытка получает refused с scope user`
+
+`tests/integration/rate-limit.test.ts`
+- `превышение частоты отвечает 429 до разбора тела`
+
+`tests/integration/health.test.ts`
+- `health отвечает 200 при живой базе и 503 при недоступной`
+
+`tests/concurrency/quota-parallel.test.ts`
+- `двадцать одновременных попыток при пределе десять дают ровно десять успехов`
+- `соседняя сессия не блокируется чужой квотой и пул не переполняется`
+
+`tests/concurrency/lease.test.ts`
+- `два воркера на одно задание дают ровно один захват`
+- `результат с устаревшим fence затрагивает ноль строк и пишет stale_lease_result`
+
+`tests/integration/provider-adapter.test.ts`
+- `фейковый адаптер детерминирован и не ходит в сеть`
+- `режим live без ключа валит старт воркера`
+
+`tests/integration/web-shell.test.ts`
+- `корневой маршрут отдаёт видоискатель и две подписи режимов`
+- `манифест PWA валиден и не содержит секретов`
+
+`tests/unit/source-guards.test.ts`
+- `в вызовы журналирования не передаются секреты и полный адрес`
+- `пул и ограничитель частоты создаются один раз при старте процесса`
+
+`tests/integration/check-env-wiring.test.ts`
+- `страж проброса переменных возвращает 0 1 и 2 на трёх входах`
+
+Этот тест запускает сам скрипт на трёх подготовленных входах (полная конфигурация; конфигурация, из
+которой убрана читаемая исходником переменная; пустой вывод `docker compose config`) и утверждает
+коды `0`, `1` и `2`. Те же три прогона предъявляются руками в квитанции Phase 3: страж, который
+никто не видел красным, стражем не является.
+
+**Verdict:** 🟢 READY
+
+# Requirements Testability Analysis
+Spec revision: sha256:431b004e3612e86cfeeac592231f013771d908143cfe6d1610ac59d3e40e5059
+
+Проект: N4 «Тарелка». Фича: `foundation`. Валидатор: Phase 2 (Sonnet 5, константа ранбука).
+Единица анализа — `FR-foundation-n` / `NFR-foundation-n` (документ не использует форму «As a user»;
+это установленный формат `sparc-prd-mini` на уровне фичи — FR/NFR + `AC-<slug>-n`, а не отдельные
+user-story). INVEST применён к каждому требованию как к негоциируемой единице работы, SMART — к его
+критериям приёмки.
+
+## Summary — Попытка 3 (RV-foundation-03)
+
+**Слепой судья (Phase 4) нашёл RV-foundation-03 (medium): предыдущая ревизия этого отчёта была**
+**привязана к хешу `3be77fbc…c3234`, спецификация с тех пор получила `FR-foundation-11` (собственный**
+**ключ трассировки для уборщика, коммит `9ae9f1c`), а отчёт заявлял «новой FR/NFR-строки не заводили».**
+**Замена контрольной суммы без переоценки состава была бы косметикой, а не лечением — это и есть суть**
+**находки. Ниже — честный пересчёт по ТЕКУЩЕЙ спецификации (13 требований), не подгонка числа.**
+
+- Требований проанализировано: **13** (11 FR + 2 NFR). Было 12 (10 FR + 2 NFR) в Попытке 1; в
+  коммите `9ae9f1c` уборщик получил собственный ключ `FR-foundation-11` — до этого он был вторым
+  алгоритмом под ключом `FR-foundation-6`, и ворота трассировки отвечали `DUPLICATE`
+  (`check-pipeline-gaps.sh --traceability`, устранено тем же коммитом; текущий прогон —
+  `VERDICT traceability=PASS features=4 gaps=0 inconclusive=0`, см. `05_completion.md` §«Попытка 3»).
+  `AC-foundation-17…21` НЕ вводят новых FR/NFR сверх `FR-foundation-11` — 17/18 остаются под
+  `FR-foundation-6` (`LeaseRecognitionJob`), 19 — под новым `FR-foundation-11` (`SweepStuckJobs`),
+  20/21 — под `FR-foundation-6` через `SelectModelProvider` (проверено чтением
+  `02_pseudocode.md:154–193`, метки `REQUIREMENT:`/`REALISES:` дословно).
+- Критериев приёмки: 21 (`AC-foundation-1` … `AC-foundation-21`), все имеют строку в `## Criterion
+  scenarios`.
+- Средний балл: **95/100** (13 требований, было 95/100 на 12 — `FR-foundation-11` оценён 100/100 и
+  не сдвигает округление; расчёт ниже).
+- Заблокировано (score < 50 или floor): 0.
+- Blocking floor (`Testable`/`Completeness`/`Traceability` = 0): не сработал ни для одного
+  требования — квоты ниже.
+- Находок: 5 всего (Попытка 4 добавила `VF-05`). `VF-01`/`VF-02` — держу ОТКРЫТЫМИ, severity `low`:
+  коммит `ae8f072` переписал прозу `FR-foundation-2`/`FR-foundation-8`, называя ровно то, чего им
+  не хватало, но `AC-foundation-3`/`AC-foundation-13` (Gherkin, на них ключуется `Traceability`)
+  этим коммитом НЕ тронуты — остаётся текстовый разрыв FR↔AC, не инженерный риск. `VF-03` ЗАКРЫТА
+  (без изменений с Попытки 3). `VF-04` из Попытки 3 ЗАКРЫТА: `FR-foundation-11` теперь есть и в
+  разделе «Объём» (п. 5), и в таблице трассировки (коммит `ae8f072`), проверено чтением обеих
+  строк. **`VF-05` (НОВАЯ, обнаружена и ЗАКРЫТА в этом же прогоне)**: `FR-foundation-2` требует
+  и отсутствие, И пустую строку по каждой из четырёх S3-переменных у ОБОИХ сервисов; первое чтение
+  `tests/unit/config.test.ts` застало пробел на стороне `recognizer` (только отсутствие) — это и
+  есть RV-foundation-02 координатора; ПОКА писался этот отчёт, файл поменялся конкурентно (как и
+  предупреждал координатор), и второе чтение плюс фактический прогон `npx vitest run
+  tests/unit/config.test.ts` (17/17 зелёных) подтвердили, что пробел уже закрыт — быстрее, чем
+  обещанная Попытка 6. Ни одна находка не блокирующая.
+- Security acceptance criteria: применимо и присутствует специфично (бонус +5, не понижает счёт).
+- Growth traceability: не применимо (фича не касается ни одного `FR-GROWTH-nnn`; growth-события,
+  карточки и коды партнёра явно вне объёма — раздел «Объём», «Вне объёма»).
+
+## Results
+
+| Требование | Заголовок | Score | INVEST | SMART | Status |
+|---|---|---|---|---|---|
+| FR-foundation-1 | Монорепо собирается одной командой | 92/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-2 | Конфигурация fail-closed | 92/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-3 | Схема базы, 14 сущностей, три роли | 95/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-4 | Анонимная сессия устройства | 100/100 | 50/50 ✓ | 30/30 ✓ | READY |
+| FR-foundation-5 | Атомарный модуль потолков | 95/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-6 | Каркас воркера: аренда, fencing, адаптер (предикат + порт `model/deadlineMs/signal`, DEC-A-015) | 100/100 | 50/50 ✓ | 30/30 ✓ | READY |
+| FR-foundation-11 | Уборка застрявших заданий (новое в Попытке 3, DEC-A-018) | 100/100 | 50/50 ✓ | 30/30 ✓ | READY |
+| FR-foundation-7 | Каркас фронта: камера первым экраном | 92/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-8 | Ограничение частоты до разбора тела | 92/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-9 | Стек собирается, поднимается, здоров | 95/100 | 50/50 ✓ | 25/30 | READY |
+| FR-foundation-10 | Страж полноты проброса переменных | 95/100 | 50/50 ✓ | 25/30 | READY |
+| NFR-foundation-1 | Разделяемые ресурсы корректны под конкуренцией | 95/100 | 50/50 ✓ | 25/30 | READY |
+| NFR-foundation-2 | Журнал наблюдаем и безопасен | 95/100 | 50/50 ✓ | 25/30 | READY |
+
+**Средний балл: (92+92+95+100+95+100+**100**+92+92+95+95+95+95)/**13** = **1238/13 = 95,23 ≈ 95/100**
+(было 1138/12 = 95/100 в Попытке 1 — округление совпало, но это СЛЕДСТВИЕ пересчёта по 13 строкам, в
+порядке таблицы `Results` выше, а не перенос старого числа; жирным выделено новое слагаемое —
+`FR-foundation-11`).
+
+INVEST = 50/50 у всех тринадцати: каждое требование независимо от прочих фич роадмапа (Independent),
+не диктует реализацию (Negotiable), имеет явную ценность для фичи-каркаса (Valuable — раздел «Цель»:
+«семь оставшихся фич роадмапа опираются на эти три вещи»), оценимо и ограничено по объёму (Estimable,
+Small — каждое закрывает один узкий механизм) и имеет проверяемые `AC-foundation-n` (Testable).
+`FR-foundation-11` получает `Time-bound = 5`: критерий `AC-foundation-19` называет явную временную
+границу — «задание `queued` старше пяти минут» — и это, вместе с 7 сутками анонимного дневника
+(FR-foundation-4) и 60 с/1 с аренды и опроса (FR-foundation-6), третий случай, где `Time-bound`
+начислен по существу, а не формально. SMART < 30 в остальных случаях исключительно из-за
+`Time-bound = 0`: у большинства критериев нет числовой временнóй границы ответа (это НЕ дефект —
+фича не показывает пользователю ни одного числа и не делает вызовов модели, поэтому NFR-PERF-001/002
+сознательно «не измерено», см. `05_completion.md` §«Что эта фича НЕ доказывает»).
+
+# N4 «Тарелка» — правила проверок
+
+Источники: `docs/Refinement.md` (Edge Cases, Testing Strategy, критические пути),
+`docs/Specification.md` (26 критериев `SC-US-nnn-k`), `docs/ADR.md` (поле Confirmation у каждого
+решения), `docs/Completion.md` (Pre-Deployment). Корневые правила:
+[`guard-must-be-able-to-fail.md`](../../../../.claude/rules/guard-must-be-able-to-fail.md),
+[`shared-resource-verification.md`](../../../../.claude/rules/shared-resource-verification.md),
+[`cost-of-detection-ladder.md`](../../../../.claude/rules/cost-of-detection-ladder.md).
+
+Раннер — vitest. Ни одного тестового файла ещё не существует: план проверок не является проверкой.
+
+## Слой выбирается по природе признака, а не по удобству
+
+| Природа признака | Слой | Примеры из проекта |
+|---|---|---|
+| арифметика, закрытые перечисления, границы | unit | пересчёт `(mass_g/100)×на_100г`, диапазон 5–2000 г, порог 0,59/0,60, мягкий стрик, fail-closed тарифа |
+| согласованность двух компонентов, транзакции, ответы маршрутов | integration | `SKIP LOCKED` + fence, три исхода `ApplyPartnerCode`, `initData` по сырым байтам, итог дня в одной транзакции с удалением |
+| путь человека на РАЗВЁРНУТОМ стенде | E2E | CJM E дважды: из PWA-браузера и из Telegram Mini App |
+| разделяемый ресурс | **конкурентный прогон** | квота (три ключа), эскалация (четвёртый ключ), аренда задания |
+| свойство исходника | страж по коду | JSON-схема вызова модели, единственное чтение `model_estimate_kcal` |
+
+## Обязательные конкурентные тесты — не опция
+
+Последовательный тест на разделяемом ресурсе зеленеет при ОБЕИХ реализациях: и при атомарном
+операторе, и при «прочитать, потом записать». Различает их только параллельный прогон.
+
+1. **Квота, три ключа.** N параллельных `POST /scans` с одного `device_session_id` при пределе 10 —
+   ровно 10 создают `recognition`, ни одна попытка не потеряна и не посчитана дважды. Добросовестный
+   параллельный пользователь на соседней сессии не блокируется чужой квотой. Число одновременно
+   занятых соединений пула не растёт с числом ожидающих.
+2. **Эскалация, четвёртый ключ.** 20 одновременных эскалаций при остатке 1 дают РОВНО один вызов
+   Sonnet 5 — проверяется счётчиком обращений к адаптеру провайдера, а не текстом лога. Проверять
+   отдельно, а не «заодно»: зелёный тест на трёх ключах ничего не говорит о четвёртом.
+3. **Аренда задания.** (а) N воркеров на M заданий — ни одно не захвачено дважды, ни одно не
+   потеряно. (б) Устаревшая аренда: A берёт задание, аренда искусственно истекает, B захватывает и
+   завершает; затем A пишет результат — его `UPDATE` обязан затронуть НОЛЬ строк, результат B
+   не тронут, в аудите есть `stale_lease_result`.
+4. **Идемпотентность создания скана.** Два одновременных `POST /scans` с одним `Idempotency-Key` и
+   одной сессией дают ОДИН `scan_id` и ОДИН оплаченный вызов модели.
+
+## Стражи по исходнику и их испытание
+
+Страж, ни разу не показавший красное, стражем не является. Каждый принимается ВМЕСТЕ с прогоном на
+внедрённом дефекте: дефект возвращён → красный, код восстановлен → зелёный, обе строки в квитанции.
+
+| Страж | Что проверяет | Внедряемый дефект |
+|---|---|---|
+| ADR-001, схема | в JSON-схеме вызова модели нет `calories`, `kcal`, `protein`, `fat`, `carbs`; единственное поле о калорийности — `model_estimate_kcal`. Проверяется именно это МНОЖЕСТВО, а не «нет слова kcal»: иначе страж запретил бы и разрешённое поле | вернуть `calories` в схему |
+| ADR-001, путь показа | `model_estimate_kcal` читается ровно в одном месте — при вычислении `discrepancy_ratio` | добавить второе чтение |
+| ADR-001, статус | `recognition` без единой ссылки на `food_item` не может стать `done` → `refused(no_food_matched)` | разрешить `done` при нуле ссылок |
+| ADR-005 | строка `openfoodfacts` не встречается ни в коде, ни в окружении | добавить вызов OFF |
+| ADR-007 | запуск без ЛЮБОЙ из трёх переменных потолка даёт ненулевой код и называет незакрытый вызов — ТРИ отдельных прогона, потому что проверка одной переменной зеленеет при отсутствующей второй | подставить дефолт вместо отказа |
+| порядок операций | перестановка «квота ↔ вызов модели» и «подпись ↔ разбор `initData`» роняет тест | поменять шаги местами |
+
+## Тесты не ходят в интернет
+
+Поставщик модели вызывается ЧЕРЕЗ адаптер; в тестах и на стенде по умолчанию работает
+детерминированный фейк (DEC-A-009: ключа `ANTHROPIC_API_KEY` в окружении нет). Фейк отдаёт ответы по
+схеме, включая случаи `confidence = 0,59`, `confidence = 0,60`, пустой список ингредиентов, нарушение
+схемы, таймаут и 5xx. Живой режим включается ключом в `.env` и помечается в отчёте отдельно: прогон
+без ключа не объявляется живым смоуком.
+
+USDA FoodData Central в пользовательском пути не вызывается вовсе — база импортируется заранее,
+поэтому тесты распознавания от доступности чужого сервиса не зависят.
+
+## Трассировка: сценарий на каждый критерий
+
+У КАЖДОГО из 26 `SC-US-nnn-k` есть именованный сценарий, слой и алгоритм — таблица в
+`docs/Refinement.md` §Test Cases. Именованный сценарий для шестой части критериев выглядит как
+трассировка целиком, поэтому таблица проверяется на полноту, а не на наличие примеров.
+Строки со слоем `конкурентный` последовательным прогоном не закрываются ни при каких условиях.
+
+## Что считается зелёным
+
+- Отсутствующая, пропущенная, недоступная проверка и код возврата 2 — НЕ зелёный результат.
+  Код `2` означает «проверка не выполнена» и никогда «всё в порядке».
+- Мок вместо PostgreSQL не устанавливает поведение ограничения и блокировки: конкурентность и
+  уникальность проверяются на настоящей базе.
+- Измерения NFR-PERF-001 (≤ 6 с p95) и NFR-PERF-002 (≤ 1 с) снимаются на РАЗВЁРНУТОМ стенде по
+  адресу, который выдало развёртывание, а не на локальной машине и не по `localhost`.
+- В квитанции фичи: точная ревизия, фактически выполненные команды, коды возврата и то, что осталось
+  непроверенным с причиной. План тестов за результат не выдаётся.
+
+## Перед передачей результата
+
+```bash
+npm test                                   # unit + integration, включая конкурентные
+npm run lint && npm run build              # по каждому workspace
+node ../../.claude/hooks/check-ports.cjs .         # Правило №0: db/storage без публикации
+bash ../../scripts/check-port-conflicts.sh .       # занятость портов этой машины
+node ../../.claude/hooks/check-model-cost.cjs .    # потолки вызовов модели
+node ../../.claude/hooks/check-job-contract.cjs .  # три состояния долгой задачи
+```
+
+**`scripts/check-env-wiring.sh` в этом репозитории ОТСУТСТВУЕТ**, хотя на него ссылаются
+`docs/Completion.md`, проектный `CLAUDE.md` и корневое правило
+[`deployment-seams.md`](../../../../.claude/rules/deployment-seams.md) (страж №1). Проверено
+`ls scripts/` 2026-09-12: есть `check-pipeline-gaps.sh`, `check-port-conflicts.sh`,
+`check-superseded.sh`, `complexity-router.sh`. Пока скрипта нет, полнота проброса переменных —
+слой 4 (чтение `docker compose config` глазами), и так и помечается в квитанции. Написать его —
+работа фичи `foundation`; при написании учесть две ошибки, названные в `deployment-seams.md`:
+регэксп `[A-Z][A-Z0-9_]*` (без цифр `S3_ENDPOINT` режется до `S`) и ЯВНЫЙ список исключений.
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '146,342p' docs/features/foundation/04_refinement.md" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 52ms:
+## Что Phase 3 добавила сверх плана (2026-09-12)
+
+Плановый список выше не переписан: расхождение плана и факта обязано быть видно. Ниже — тесты,
+которых в плане не было, и причина каждого. Все заголовки — дословные.
+
+`tests/unit/config.test.ts` (закрытие находок отчёта валидации)
+- `отсутствие любой из четырёх переменных S3 валит старт с названной переменной` — VF-01: раньше
+  S3-переменные не были названы НИ ОДНИМ критерием и ни одним тестом
+- `отсутствие любого из двух порогов частоты валит старт с названной переменной` — VF-02
+- `в поставляемом окружении заданы 30 мутаций и 120 чтений в минуту` — сверка `.env.example` с
+  числами канона §7; порог, взятый из того же файла, который проверяется, не проверяет ничего
+- `отказ называет ВСЕ незакрытые переменные сразу, а не первую`
+- `полное окружение принимается и числа берутся из него, а не из литералов`
+- `режим fake без ключа законен: фейк денег не тратит и наружу не ходит`, `режим live с ключом
+  принимается`, `отсутствие любой из четырёх переменных S3 валит старт воркера`
+
+`tests/unit/ip-prefix.test.ts`
+- `неразбираемый адрес НЕ сохраняется целиком, а помечается unknown` — «не смогли усечь» не даёт
+  права записать полный адрес
+- `берётся ПОСЛЕДНИЙ элемент X-Forwarded-For — его поставил наш Caddy`, `без заголовка берётся
+  адрес сокета`
+
+`tests/unit/source-guards.test.ts`
+- `каждый пул имеет обработчик события error и процесс переживает обрыв` — ЗАСЛУЖЕНО живым стендом:
+  остановка `db` на 10 секунд убивала процесс `api` целиком
+- `единственное поле о калорийности в ответе модели — model_estimate_kcal` — ADR-001, множество имён,
+  а не «нет слова kcal»
+- `переменные окружения читает только по одному файлу на сервис` — без этого свойства страж
+  `check-env-wiring.sh` приписал бы переменные общих пакетов КАЖДОМУ сервису
+
+`tests/integration/quota-sequential.test.ts`
+- `эскалация списывает ЧЕТВЁРТЫЙ ключ, и его исчерпание не трогает остальные`
+- `ключей у анонима ДВА: исчерпание по адресу отказывает новой сессии` — смена одного ключа не
+  обнуляет защиту
+
+`tests/concurrency/quota-parallel.test.ts`
+- `двадцать одновременных эскалаций при остатке один дают ровно один успех` — правило проекта
+  требует проверять четвёртый ключ ОТДЕЛЬНО, а не «заодно»
+
+`tests/concurrency/lease.test.ts`
+- `два воркера на одно задание дают ровно один захват`, `десять воркеров на три задания не берут ни
+  одно дважды и не теряют ни одного`
+- `воркер с устаревшим захватом пишет событие stale_lease_result в журнал` — гонка воспроизводится
+  ТОЧНО (поставщик-«ворота»), а не подгадывается таймингом
+
+`tests/integration/migrations.test.ts`, `rate-limit.test.ts`, `provider-adapter.test.ts`,
+`web-shell.test.tsx`, `check-env-wiring.test.ts` — по одному-двум дополнительным утверждениям
+каждый: порядок файлов миграций, раздельные пороги чтения и мутаций, восстановление окна,
+отсутствие секретов в исходниках `web`, код `2` при отсутствии сервиса в конфигурации.
+
+**Одно изменение расширения:** тест AC-foundation-12 лежит в `tests/integration/web-shell.test.tsx`
+— файл содержит JSX.
+
+
+## Тесты, добавленные правкой контракта DEC-A-015 (2026-09-12)
+
+`tests/concurrency/lease.test.ts`
+- `задание без опубликованного кадра невидимо воркеру` (AC-foundation-17)
+- `четвёртого захвата не бывает: при трёх исчерпанных задание больше не предлагается` (AC-foundation-18)
+- `задание, не взятое ни одним воркером за пять минут, закрывается failed timeout`
+- `задание с исчерпанными захватами и истёкшей арендой закрывается failed timeout` (AC-foundation-19)
+- `уборщик НЕ трогает задание с действующей арендой`
+- `воркер не затирает статус, уже закрытый уборщиком`
+
+`tests/integration/provider-adapter.test.ts`
+- `модель выбирает вызывающий, и ответ сам называет, чей он` (AC-foundation-20)
+- `фейковый адаптер уважает дедлайн и отказывает, а не отвечает поздно` (AC-foundation-21)
+
+`tests/unit/source-guards.test.ts`
+- `в объявленной схеме ответа модели нет ни одного поля о калорийности кроме разрешённого` — схема
+  теперь ПЕРЕДАЁТСЯ параметром и объявлена одним значением, поэтому страж читает одно место
+
+## Испытание новых стражей на внедрённом дефекте (прогоны 2026-09-12)
+
+| Страж | Внедрённый дефект | Дефект возвращён | Код восстановлен |
+|---|---|---|---|
+| незавершённая публикация | убран `photo_id IS NOT NULL` | 1 failed \| 9 passed | 10 passed |
+| предел захватов | убран `lease_fence < 3` | 2 failed \| 8 passed | 10 passed |
+| гонка с уборщиком | убран `AND status = 'queued'` из условной записи | 1 failed \| 9 passed (`swept_as_timeout` не появился) | 10 passed |
+| уборщик, правило Б | правило вырезано | 2 failed \| 8 passed | 10 passed |
+| дедлайн порта | фейк игнорирует `deadlineMs` | 1 failed \| 5 passed | 6 passed |
+| выбор модели | фейк зашивает свою модель вместо переданной | 1 failed \| 5 passed | 6 passed |
+
+## Уточнения попытки 6 (2026-09-12)
+
+| Признак | Слой | Чем закрыт |
+|---|---|---|
+| отказ по дедлайну ПОСЛЕ уборки называет судьбу записи | конкурентный | `отказ по дедлайну ПОСЛЕ уборки пишет swept_as_timeout, а не только событие вызова` |
+| отказ по дедлайну ПОСЛЕ перезахвата называет судьбу записи | конкурентный | `отказ по дедлайну ПОСЛЕ перезахвата пишет stale_lease_result` |
+| пустая строка S3 у ВОРКЕРА отвергается наравне с отсутствием | unit | `пустая строка в любой из четырёх переменных S3 валит старт воркера наравне с отсутствием` — четыре переменные, сообщение с именем и последствием, плюс строка из пробелов |
+
+| Страж | Внедрённый дефект | Дефект возвращён | Код восстановлен |
+|---|---|---|---|
+| события о судьбе записи | ветка таймаута снова возвращается сразу после записи | 2 failed \| 11 passed (пропали `swept_as_timeout` и `stale_lease_result`) | 13 passed |
+| пустая строка как значение | `present()` подставляет значение вместо отказа | 2 failed \| 15 passed | 17 passed |
+
+**Почему событие о вызове и событие о записи — РАЗНЫЕ события.** Первое говорит «попытка
+оплачена», второе — «что стало с результатом». Ветка таймаута писала только первое и возвращалась,
+поэтому нулевая запись оставалась без объяснения: строка терминальная, `UPDATE` трогает ноль строк,
+а событие, которое обязано это назвать, не появлялось. Поле `write` внутри чужого события именем не
+работает: по журналу ищут по имени события, а не по значению поля.
+
+## Уточнения попытки 4 (2026-09-12)
+
+| Признак | Слой | Чем закрыт |
+|---|---|---|
+| сегменты пути не попадают в журнал | integration | `чувствительные значения в СЕГМЕНТАХ пути не попадают в журнал`: запрос `/unknown/<токен>/<адрес>` — ни токена, ни адреса, ни самого пути в событии |
+| известный маршрут пишется шаблоном | integration | `известный маршрут пишется ШАБЛОНОМ, а не строкой запроса` — `route` равен `/api/v1/auth/device` |
+| путь не уезжает ЧЕРЕЗ ПЕРЕМЕННУЮ | страж по исходнику | собираются имена, произведённые от `request.url` (включая цепочки присваиваний), и запрещаются в вызовах журналирования |
+| предел захватов проверяется ЧИСЛОМ спецификации | integration | литералы `[1, 2, 3]` и ожидаемый `lease_fence = 3`; рабочая константа сверяется со спецификацией единственным утверждением |
+
+| Страж | Внедрённый дефект | Дефект возвращён | Код восстановлен |
+|---|---|---|---|
+| путь в журнале через переменную | `const path = request.url…` плюс `path` в вызове | 1 failed \| 6 passed | 7 passed |
+| предел захватов | рабочая константа `3 → 4` | 4 failed \| 7 passed («expected 4 to be 3») | 11 passed |
+
+## Уточнения попытки 3 (2026-09-12)
+
+| Признак | Слой | Чем закрыт |
+|---|---|---|
+| событие отказа содержит `request_id`, `path` без query и `duration_ms` | integration | `tests/integration/log-hygiene.test.ts` — утверждения на состав события; `path` равен `/unknown`, идентификатор непустой, длительность числом |
+| поле вне закрытого списка затирается | integration | там же; проверено НЕЧАЯННО и по-настоящему: `path` сначала не был внесён в список и приехал как `[redacted]` — страж сработал на собственном авторе |
+| страж проброса падает на настоящем пробеле | мутация | `S3_BUCKET` убран из `environment` сервиса `api` в НАСТОЯЩЕМ `docker-compose.yml` → код `1`; восстановлено → `0`; пустой конфиг → `2` |
+| дверь различает мутации и чтение | стенд | 125 чтений → 120 × `200` и `429` с 121-го; 35 мутаций → 30 × `201` и `429` с 31-го; зоны независимы |
+
+## Тесты и стражи попытки 2 (закрытие находок судьи, 2026-09-12)
+
+`tests/integration/log-hygiene.test.ts` — журнал проверяется ПРОГОНОМ ЗАПРОСА и ЧТЕНИЕМ того, что
+сервер написал. Тест, глушащий журнал заглушкой `sink: () => {}`, проверяет, что код не падает, и
+ничего не проверяет о содержимом — этим и был пропущен дефект.
+- `журнал не содержит секретов и полного адреса даже на ошибочном запросе к неизвестному маршруту` (AC-foundation-16)
+- `поле вне закрытого списка затирается, а не печатается как есть`
+- `журнал реальной сессии не содержит сырого токена cookie`
+
+`tests/integration/web-manifest.test.ts` — HTTP-запросы к СОБРАННОМУ приложению, а не вызов функции.
+- `манифест PWA валиден и не содержит секретов` (AC-foundation-12)
+- `иконки манифеста действительно отдаются` — манифест со ссылками на несуществующие иконки валиден по схеме и бесполезен на устройстве
+- `корневой экран отдаётся с политикой безопасности и без inline-скриптов в script-src`
+
+`tests/integration/check-env-wiring.test.ts`
+- `прямое чтение process.env распознаётся наравне с env.X` — настоящий каталог сервиса, код `1` без переменной в compose и `0` с ней
+
+`tests/integration/provider-adapter.test.ts`
+- `вызов прерывается общим сигналом отмены и не возвращает результата` — отмена ВО ВРЕМЯ работы обрывает её немедленно, а не досиживает таймер
+
+| Страж | Внедрённый дефект | Дефект возвращён | Код восстановлен |
+|---|---|---|---|
+| гигиена журнала, HTTP | вернуть `request.url` в поле `route` | 1 failed \| 2 passed (токен в журнале) | 3 passed |
+| гигиена журнала, исходник | то же | 1 failed \| 6 passed | 7 passed |
+| проброс переменных | вернуть класс `[^A-Za-z0-9_.]`, запрещающий точку | 1 failed \| 2 passed | 3 passed |
+
+**Страж по исходнику стал МНОГОСТРОЧНЫМ.** Прежний читал одну строку и на мутации остался зелёным:
+`request.url` стоял строкой ниже имени `logger.error`. Аргументы вызова почти всегда занимают
+несколько строк, и однострочная проверка пропускает ровно то, ради чего написана.
+
+## Испытание стражей на внедрённом дефекте
+
+
+Проверка, ни разу не показавшая красное, проверкой не является
+([`guard-must-be-able-to-fail`](../../../../.claude/rules/guard-must-be-able-to-fail.md)). Каждый
+страж ниже принимается ВМЕСТЕ с двумя строками в квитанции: «дефект возвращён → красный», «код
+восстановлен → зелёный».
+
+| Страж | Внедряемый дефект | Ожидаемая реакция |
+|---|---|---|
+| валидатор конфигурации | подставить `?? 10` вместо отказа при отсутствии потолка | тест конфигурации краснеет на всех трёх переменных |
+| атомарность квоты | заменить один оператор на `SELECT used` + `UPDATE` | конкурентный тест краснеет; последовательный остаётся зелёным — это и есть доказательство, что различает именно конкурентный |
+| аренда задания | убрать `leased_until` из предиката выборки | тест устаревшего захвата краснеет: задание захватывается дважды |
+| fencing | выполнять запись результата без `AND lease_fence = :fence` | `UPDATE` первого владельца затрагивает строку, тест краснеет |
+| порядок «частота ↔ разбор тела» | перенести хук на `preHandler` | тест частоты краснеет: в ответе появляется `400 invalid json` |
+| гигиена журнала | передать сырой токен cookie в вызов журналирования | страж по исходнику краснеет |
+| `check-env-wiring.sh` | убрать `S3_BUCKET` из `environment:` сервиса `api` | код возврата `1` с названными сервисом и переменной |
+| `check-env-wiring.sh`, пустой вход | подменить `docker compose config` пустым выводом | код возврата `2`, а НЕ `0` |
+
+## Security Hardening
+
+- **Порядок операций.** Ограничение частоты — ДО разбора тела; валидация — ДО занятия ключа
+  повторности; квота — ПОСЛЕ валидации и ДО любого платного вызова. В этой фиче платных вызовов нет,
+  но порядок закладывается сейчас: перестановка позже читается как рефакторинг, а не как регресс
+  защиты ([`security-operation-order`](../../../../.claude/rules/security-operation-order.md)).
+- **Сессия.** Токен ≥ 128 бит энтропии из криптографического генератора; в базе только хэш; cookie
+  `HttpOnly; Secure; SameSite=Lax; Path=/`. Утечка дампа базы не должна выдавать действующие сессии.
+- **Адрес.** Усечение на входе, а не при печати: значения, которого нет, не утечёт и по ошибке.
+  Источник адреса — заголовок, поставленный НАШИМ Caddy; произвольному `X-Forwarded-For` от клиента
+  доверия нет.
+- **Секреты.** `ANTHROPIC_API_KEY` — только у `recognizer`, `TELEGRAM_BOT_TOKEN` — только у `api`,
+  у `web` нет ни одного. Инвариант проверяется поиском по собранному клиентскому бандлу и списком
+  `environment:` в `docker-compose.yml`, а не обещанием.
+- **Служебная ручка.** `GET /health` не отдаёт версий, имён переменных, строк подключения и данных
+  пользователя: служебный путь не обязан быть источником разведданных.
+- **Роли БД.** Приложение не владеет схемой: `DROP`/`ALTER`/`CREATE` под `n4_app` отвергаются
+  правами, а не кодом. Компрометация приложения не даёт права переписать схему.
+- **Порты.** Перед любым `up` — `node ../../.claude/hooks/check-ports.cjs .` и
+  `bash ../../scripts/check-port-conflicts.sh .`. Хранилища портов не публикуют; единственная дверь
+  — Caddy на петле.
+- **CSP и CORS.** CSP без `unsafe-inline`; CORS не ставится ни приложением, ни прокси — один origin,
+  а два одинаковых заголовка ломают CORS молча.
+
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+import re,subprocess
+text=Path('docs/features/foundation/05_completion.md').read_text()
+rows=re.findall(r'"'^'"\\| (AC-foundation-\\d+) \\| (["'^|]+) '"\\| (["'^|]+) '"\\|"'$'"',text,re.M)
+for ac,f,title in rows:
+ if title.strip() not in Path(f.strip()).read_text(): print('MISSING',ac,f.strip(),title.strip())
+print('Criterion coverage rows:',len(rows),'unique:',len(set(x[0] for x in rows)))
+tracked=subprocess.check_output(['git','ls-files','--','.env','.env.*','*.pem','*.key'],text=True).splitlines()
+print('Tracked secret-like paths:',tracked)
+p=Path('apps/web/.next/static')
+print('Client build exists:',p.is_dir())
+if p.is_dir():
+ files=list(p.rglob('*.js')); bad=[]
+ for f in files:
+  s=f.read_text()
+  if 'ANTHROPIC_API_KEY' in s or 'TELEGRAM_BOT_TOKEN' in s: bad.append(str(f))
+ print('Client JS files checked:',len(files),'forbidden name matches:',bad)
+PY
+nl -ba scripts/check-env-wiring.sh | sed -n '108,136p'; git diff --name-only -- apps packages scripts tests docker-compose.yml Dockerfile Caddyfile; sha256sum docs/features/foundation/01_specification.md" in /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/04-calorie-vision-cal-ai
+ succeeded in 351ms:
+Criterion coverage rows: 21 unique: 21
+Tracked secret-like paths: ['.env.example']
+Client build exists: True
+Client JS files checked: 15 forbidden name matches: []
+   108	           | grep -oE '^[[:space:]]+[A-Z][A-Z0-9_]*:' | tr -d ' :' | sort -u)
+   109	
+   110	  # Сервиса нет в конфигурации — это НЕ «переменные потеряны», а невыполненная проверка.
+   111	  if ! printf '%s\n' "$CONFIG" | grep -qxE "  $svc:"; then
+   112	    echo "❌ сервис $svc отсутствует в docker compose config — проверка НЕ выполнена" >&2
+   113	    exit 2
+   114	  fi
+   115	
+   116	  missing=$(comm -23 <(echo "$used") <(echo "$passed") | grep -vxE "$ALLOWED" || true)
+   117	
+   118	  if [ -n "$missing" ]; then
+   119	    while read -r v; do
+   120	      [ -n "$v" ] && { printf '  ❌ %s: %s читается кодом, но не передаётся сервису\n' "$svc" "$v"; FAIL=1; }
+   121	    done <<<"$missing"
+   122	  else
+   123	    printf '  ✅ %s: все читаемые переменные проброшены\n' "$svc"
+   124	  fi
+   125	done
+   126	
+   127	if [ "$FAIL" -ne 0 ]; then
+   128	  echo
+   129	  echo '     Добавить в environment соответствующего сервиса docker-compose.yml.'
+   130	  echo '     Приложение стартует и без них — ошибка видна только в поведении.'
+   131	fi
+   132	exit $FAIL
+431b004e3612e86cfeeac592231f013771d908143cfe6d1610ac59d3e40e5059  docs/features/foundation/01_specification.md
+
+codex
+Reviewer family: codex
+Spec revision: sha256:431b004e3612e86cfeeac592231f013771d908143cfe6d1610ac59d3e40e5059
+
+# Review — foundation
+
+## Verdict
+
+CHANGES_REQUIRED — воспроизведены ложный успех стража проброса переменных и успешный ответ после истечения дедлайна.
+
+Ревизия: `8629774b2840c56107aa7fb696bd8c889989b319`. Дифф `d695f08..HEAD`: три файла, включая исправление проверки паролей БД и новые тесты; дополнительно проверен существующий каркас.
+
+`npm test` завершился кодом `1` до выполнения тестов: Vite не смог создать временный файл в `node_modules/.vite-temp` (`EROFS`). Интеграционные и конкурентные тесты **не запускал: требует стенд**. Исторические зелёные результаты не считаю результатами текущего прогона.
+
+## Spec conformance
+
+`met` ниже означает соответствие по исходникам и содержанию тестов, а не свежий успешный прогон. Для требований, зависящих от сборки или запуска процесса, ограничения отмечены отдельно. Все 21 заголовок из Criterion coverage найдены в указанных файлах.
+
+| Criterion | Verdict | Evidence |
+|---|---|---|
+| AC-foundation-1 | unverifiable | `tests/integration/workspace.test.ts` — «чистый клон собирается и перечисляет ровно пять workspace»: проверяет структуру и наличие команд, но не выполняет чистую установку и сборку. |
+| AC-foundation-2 | unverifiable | `tests/unit/config.test.ts` — «отсутствие N4_SCAN_LIMIT_USER валит старт с названной переменной» и отдельные проверки двух других потолков. Проверяется функция; завершение процесса и отсутствие открытого сокета не измеряются. Невалидные значения перебираются только для USER. |
+| AC-foundation-3 | unverifiable | `tests/unit/config.test.ts` — «отсутствие APP_ORIGIN валит старт и не подставляет localhost», «отсутствие DATABASE_URL валит старт с названной переменной». Валидатор корректен по коду; запуск процесса не проверен. |
+| AC-foundation-4 | met | `tests/integration/migrations.test.ts` — «миграции создают четырнадцать таблиц канона и расширение pg_trgm», повторный прогон и отклонение дубликата БД; SQL содержит требуемые ограничения. |
+| AC-foundation-5 | met | `tests/integration/db-roles.test.ts` — «роль приложения не может менять схему но выполняет DML»; запреты DDL и гранты подтверждаются исходником bootstrap и миграции. |
+| AC-foundation-6 | met | `tests/integration/device-session.test.ts` — «первый запрос создаёт сессию с флагами HttpOnly Secure SameSite и хранит только хэш»; проверяются cookie, строка БД, префикс, NULL аккаунта и семь суток. |
+| AC-foundation-7 | met | Там же — «повторный запрос с действующей cookie не создаёт вторую сессию», «неизвестная cookie создаёт новую сессию и не изменяет прежнюю»; UPDATE выполняется по хэшу токена. |
+| AC-foundation-8 | met | `tests/integration/quota-sequential.test.ts` — «одиннадцатая попытка получает refused с scope user»; проверяются десять разрешений и неизменный global после отказа. |
+| AC-foundation-9 | met | `tests/concurrency/quota-parallel.test.ts` — «двадцать одновременных попыток при пределе десять дают ровно десять успехов» и проверка соседней сессии; вызовы запускаются через `Promise.all`, используется PostgreSQL. |
+| AC-foundation-10 | met | `tests/concurrency/lease.test.ts` — «два воркера на одно задание дают ровно один захват», «воркер с устаревшим захватом пишет событие stale_lease_result в журнал»; проверяются fencing и сохранность результата. |
+| AC-foundation-11 | unverifiable | `tests/integration/provider-adapter.test.ts` — «фейковый адаптер детерминирован и не ходит в сеть»; сетевых вызовов в фейке нет. Проверка «режим live без ключа валит старт воркера» вызывает валидатор, а не процесс. |
+| AC-foundation-12 | unverifiable | `web-shell.test.tsx` и `web-manifest.test.ts` содержат проверки экрана и HTTP-манифеста. В 15 существующих клиентских JS-файлах запрещённых имён нет; происхождение этой сборки от текущего HEAD не установлено. |
+| AC-foundation-13 | met | `tests/integration/rate-limit.test.ts` — «превышение частоты отвечает 429 до разбора тела», «после исчерпания окна счётчик восстанавливается»; хук зарегистрирован на `onRequest`. |
+| AC-foundation-14 | unverifiable | `tests/integration/health.test.ts` — «health отвечает 200 при живой базе и 503 при недоступной» проверяет обработчик. Сборка образов, запуск стека и остановка его БД в этом ревью не выполнялись. |
+| AC-foundation-15 | not met | Воспроизведение: перенос `api.S3_BUCKET` из `environment` в `labels` во входе `ENV_WIRING_CONFIG` оставляет код `0` и сообщение «все читаемые переменные проброшены». |
+| AC-foundation-16 | met | `tests/integration/log-hygiene.test.ts` — «журнал реальной сессии не содержит сырого токена cookie», проверки query и сегментов пути; `tests/unit/source-guards.test.ts` проверяет вызовы журналирования. |
+| AC-foundation-17 | met | `tests/concurrency/lease.test.ts` — «задание без опубликованного кадра невидимо воркеру»; в выборке есть `photo_id IS NOT NULL`. |
+| AC-foundation-18 | met | Там же — «четвёртого захвата не бывает: при трёх исчерпанных задание больше не предлагается»; предел дополнительно сверяется с литералом `3`. |
+| AC-foundation-19 | met | Там же — проверки старого задания, исчерпанной и действующей аренды, повторной уборки и «воркер не затирает статус, уже закрытый уборщиком»; условная запись учитывает статус и fence. |
+| AC-foundation-20 | met | `tests/integration/provider-adapter.test.ts` — «модель выбирает вызывающий, и ответ сам называет, чей он»; модель входит в детерминированный хэш и возвращается в ответе. |
+| AC-foundation-21 | not met | Воспроизведение на текущем исходнике: `latencyMs=10`, `deadlineMs=20`, занятый цикл событий на 80 мс → успешный ответ через 81 мс. |
+
+## Findings
+
+### RV-foundation-01 — medium — `scripts/check-env-wiring.sh:101`
+
+Страж собирает имена из всего блока сервиса, а не только из `environment`. Поэтому `labels.S3_BUCKET` засчитывается как переданная переменная окружения.
+
+Воспроизведено без изменения файлов: полный синтетический compose-конфиг передан через штатный `ENV_WIRING_CONFIG`; у `api` единственная переменная `S3_BUCKET` перенесена из `environment` в `labels`. Получены код `0` и зелёное сообщение для `api`. Приложение такой переменной не получит.
+
+Тест «страж проброса переменных возвращает 0 1 и 2 на трёх входах» этого не обнаруживает: удаляет имя целиком, не проверяя правильность секции.
+
+Исправление: извлекать ключи строго из `services.<service>.environment`; добавить отрицательный тест с одноимённой меткой. Ожидаемый результат — `1`, `api`, `S3_BUCKET`.
+
+### RV-foundation-02 — medium — `apps/recognizer/src/provider/fake.ts:63`
+
+После ожидания проверяется `latencyMs > deadlineMs`. Это сравнение двух входных чисел, а не проверка истёкшего бюджета. При задержке обработки таймера фейк возвращает успешный результат после дедлайна.
+
+Воспроизведение: текущие TypeScript-модули транспилированы в памяти; вызов с задержкой 10 мс и бюджетом 20 мс запущен перед синхронной занятостью цикла событий на 80 мс. Результат: `{"outcome":"resolved","deadlineMs":20,"elapsedMs":81}`. Сигнал отмены не срабатывал; порт обязан самостоятельно соблюдать переданный бюджет.
+
+Тест «фейковый адаптер уважает дедлайн и отказывает, а не отвечает поздно» проверяет только заранее заданное превышение задержки над бюджетом.
+
+Исправление: фиксировать абсолютный дедлайн монотонными часами и проверять его после ожидания и перед возвратом. Добавить сценарий задержанного исполнения таймера: после освобождения цикла событий должен возвращаться отказ, а не поздний успех.
+
+## Что проверено без замечаний
+
+- Исправление паролей сравнивает `POSTGRES_PASSWORD` с `N4_DB_APP_PASSWORD`, что соответствует именам в compose. Новые тесты проверяют отказ до `psql`, отсутствие/пустоту административного пароля и разрешение разных значений.
+- Квота использует атомарный UPSERT, три либо четыре ключа и полный откат транзакции при отказе. Реальных платных вызовов в этой фиче нет; порядок квоты перед будущим живым вызовом здесь ещё не доказан.
+- Транзакция аренды закрывается до адаптера; конкурентные тесты действительно запускают несколько операций одновременно. Пороги заданы литералами.
+- Страж схемы ADR-001 существует; исторический документ предъявляет его падение при добавлении `calories`. В текущем ревью мутация этого стража не запускалась. Каркас завершает результат без сопоставления статусом `refused`.
+- `db` и `storage` не публикуют порты; у приложений публикаций нет, дверь привязана к loopback.
+- Среди отслеживаемых `.env`/ключевых файлов найден только `.env.example`; реальные секреты в просмотренном коде не обнаружены.
+- Фейк не обращается в сеть. HTTP-тесты используют локальный адрес; конкурентные тесты рассчитаны на PostgreSQL стенда.
+- Согласие, Telegram-подпись и доступ к чужим пользовательским ресурсам явно вне объёма foundation; общий ответ неизвестного маршрута `404` не доказывает проверку владения.
+
+Профиль: read-only REVIEW, один исполнитель Codex/GPT-6. Файлы не изменялись. Длительность, токены и стоимость: `null`, измерения недоступны. Новая телеметрия не создавалась; исторические материалы: `docs/telemetry/p-replicator/20260912T193004Z-foundation-A-7a62/`.
+tokens used
+137,690
+Reviewer family: codex
+Spec revision: sha256:431b004e3612e86cfeeac592231f013771d908143cfe6d1610ac59d3e40e5059
+
+# Review — foundation
+
+## Verdict
+
+CHANGES_REQUIRED — воспроизведены ложный успех стража проброса переменных и успешный ответ после истечения дедлайна.
+
+Ревизия: `8629774b2840c56107aa7fb696bd8c889989b319`. Дифф `d695f08..HEAD`: три файла, включая исправление проверки паролей БД и новые тесты; дополнительно проверен существующий каркас.
+
+`npm test` завершился кодом `1` до выполнения тестов: Vite не смог создать временный файл в `node_modules/.vite-temp` (`EROFS`). Интеграционные и конкурентные тесты **не запускал: требует стенд**. Исторические зелёные результаты не считаю результатами текущего прогона.
+
+## Spec conformance
+
+`met` ниже означает соответствие по исходникам и содержанию тестов, а не свежий успешный прогон. Для требований, зависящих от сборки или запуска процесса, ограничения отмечены отдельно. Все 21 заголовок из Criterion coverage найдены в указанных файлах.
+
+| Criterion | Verdict | Evidence |
+|---|---|---|
+| AC-foundation-1 | unverifiable | `tests/integration/workspace.test.ts` — «чистый клон собирается и перечисляет ровно пять workspace»: проверяет структуру и наличие команд, но не выполняет чистую установку и сборку. |
+| AC-foundation-2 | unverifiable | `tests/unit/config.test.ts` — «отсутствие N4_SCAN_LIMIT_USER валит старт с названной переменной» и отдельные проверки двух других потолков. Проверяется функция; завершение процесса и отсутствие открытого сокета не измеряются. Невалидные значения перебираются только для USER. |
+| AC-foundation-3 | unverifiable | `tests/unit/config.test.ts` — «отсутствие APP_ORIGIN валит старт и не подставляет localhost», «отсутствие DATABASE_URL валит старт с названной переменной». Валидатор корректен по коду; запуск процесса не проверен. |
+| AC-foundation-4 | met | `tests/integration/migrations.test.ts` — «миграции создают четырнадцать таблиц канона и расширение pg_trgm», повторный прогон и отклонение дубликата БД; SQL содержит требуемые ограничения. |
+| AC-foundation-5 | met | `tests/integration/db-roles.test.ts` — «роль приложения не может менять схему но выполняет DML»; запреты DDL и гранты подтверждаются исходником bootstrap и миграции. |
+| AC-foundation-6 | met | `tests/integration/device-session.test.ts` — «первый запрос создаёт сессию с флагами HttpOnly Secure SameSite и хранит только хэш»; проверяются cookie, строка БД, префикс, NULL аккаунта и семь суток. |
+| AC-foundation-7 | met | Там же — «повторный запрос с действующей cookie не создаёт вторую сессию», «неизвестная cookie создаёт новую сессию и не изменяет прежнюю»; UPDATE выполняется по хэшу токена. |
+| AC-foundation-8 | met | `tests/integration/quota-sequential.test.ts` — «одиннадцатая попытка получает refused с scope user»; проверяются десять разрешений и неизменный global после отказа. |
+| AC-foundation-9 | met | `tests/concurrency/quota-parallel.test.ts` — «двадцать одновременных попыток при пределе десять дают ровно десять успехов» и проверка соседней сессии; вызовы запускаются через `Promise.all`, используется PostgreSQL. |
+| AC-foundation-10 | met | `tests/concurrency/lease.test.ts` — «два воркера на одно задание дают ровно один захват», «воркер с устаревшим захватом пишет событие stale_lease_result в журнал»; проверяются fencing и сохранность результата. |
+| AC-foundation-11 | unverifiable | `tests/integration/provider-adapter.test.ts` — «фейковый адаптер детерминирован и не ходит в сеть»; сетевых вызовов в фейке нет. Проверка «режим live без ключа валит старт воркера» вызывает валидатор, а не процесс. |
+| AC-foundation-12 | unverifiable | `web-shell.test.tsx` и `web-manifest.test.ts` содержат проверки экрана и HTTP-манифеста. В 15 существующих клиентских JS-файлах запрещённых имён нет; происхождение этой сборки от текущего HEAD не установлено. |
+| AC-foundation-13 | met | `tests/integration/rate-limit.test.ts` — «превышение частоты отвечает 429 до разбора тела», «после исчерпания окна счётчик восстанавливается»; хук зарегистрирован на `onRequest`. |
+| AC-foundation-14 | unverifiable | `tests/integration/health.test.ts` — «health отвечает 200 при живой базе и 503 при недоступной» проверяет обработчик. Сборка образов, запуск стека и остановка его БД в этом ревью не выполнялись. |
+| AC-foundation-15 | not met | Воспроизведение: перенос `api.S3_BUCKET` из `environment` в `labels` во входе `ENV_WIRING_CONFIG` оставляет код `0` и сообщение «все читаемые переменные проброшены». |
+| AC-foundation-16 | met | `tests/integration/log-hygiene.test.ts` — «журнал реальной сессии не содержит сырого токена cookie», проверки query и сегментов пути; `tests/unit/source-guards.test.ts` проверяет вызовы журналирования. |
+| AC-foundation-17 | met | `tests/concurrency/lease.test.ts` — «задание без опубликованного кадра невидимо воркеру»; в выборке есть `photo_id IS NOT NULL`. |
+| AC-foundation-18 | met | Там же — «четвёртого захвата не бывает: при трёх исчерпанных задание больше не предлагается»; предел дополнительно сверяется с литералом `3`. |
+| AC-foundation-19 | met | Там же — проверки старого задания, исчерпанной и действующей аренды, повторной уборки и «воркер не затирает статус, уже закрытый уборщиком»; условная запись учитывает статус и fence. |
+| AC-foundation-20 | met | `tests/integration/provider-adapter.test.ts` — «модель выбирает вызывающий, и ответ сам называет, чей он»; модель входит в детерминированный хэш и возвращается в ответе. |
+| AC-foundation-21 | not met | Воспроизведение на текущем исходнике: `latencyMs=10`, `deadlineMs=20`, занятый цикл событий на 80 мс → успешный ответ через 81 мс. |
+
+## Findings
+
+### RV-foundation-01 — medium — `scripts/check-env-wiring.sh:101`
+
+Страж собирает имена из всего блока сервиса, а не только из `environment`. Поэтому `labels.S3_BUCKET` засчитывается как переданная переменная окружения.
+
+Воспроизведено без изменения файлов: полный синтетический compose-конфиг передан через штатный `ENV_WIRING_CONFIG`; у `api` единственная переменная `S3_BUCKET` перенесена из `environment` в `labels`. Получены код `0` и зелёное сообщение для `api`. Приложение такой переменной не получит.
+
+Тест «страж проброса переменных возвращает 0 1 и 2 на трёх входах» этого не обнаруживает: удаляет имя целиком, не проверяя правильность секции.
+
+Исправление: извлекать ключи строго из `services.<service>.environment`; добавить отрицательный тест с одноимённой меткой. Ожидаемый результат — `1`, `api`, `S3_BUCKET`.
+
+### RV-foundation-02 — medium — `apps/recognizer/src/provider/fake.ts:63`
+
+После ожидания проверяется `latencyMs > deadlineMs`. Это сравнение двух входных чисел, а не проверка истёкшего бюджета. При задержке обработки таймера фейк возвращает успешный результат после дедлайна.
+
+Воспроизведение: текущие TypeScript-модули транспилированы в памяти; вызов с задержкой 10 мс и бюджетом 20 мс запущен перед синхронной занятостью цикла событий на 80 мс. Результат: `{"outcome":"resolved","deadlineMs":20,"elapsedMs":81}`. Сигнал отмены не срабатывал; порт обязан самостоятельно соблюдать переданный бюджет.
+
+Тест «фейковый адаптер уважает дедлайн и отказывает, а не отвечает поздно» проверяет только заранее заданное превышение задержки над бюджетом.
+
+Исправление: фиксировать абсолютный дедлайн монотонными часами и проверять его после ожидания и перед возвратом. Добавить сценарий задержанного исполнения таймера: после освобождения цикла событий должен возвращаться отказ, а не поздний успех.
+
+## Что проверено без замечаний
+
+- Исправление паролей сравнивает `POSTGRES_PASSWORD` с `N4_DB_APP_PASSWORD`, что соответствует именам в compose. Новые тесты проверяют отказ до `psql`, отсутствие/пустоту административного пароля и разрешение разных значений.
+- Квота использует атомарный UPSERT, три либо четыре ключа и полный откат транзакции при отказе. Реальных платных вызовов в этой фиче нет; порядок квоты перед будущим живым вызовом здесь ещё не доказан.
+- Транзакция аренды закрывается до адаптера; конкурентные тесты действительно запускают несколько операций одновременно. Пороги заданы литералами.
+- Страж схемы ADR-001 существует; исторический документ предъявляет его падение при добавлении `calories`. В текущем ревью мутация этого стража не запускалась. Каркас завершает результат без сопоставления статусом `refused`.
+- `db` и `storage` не публикуют порты; у приложений публикаций нет, дверь привязана к loopback.
+- Среди отслеживаемых `.env`/ключевых файлов найден только `.env.example`; реальные секреты в просмотренном коде не обнаружены.
+- Фейк не обращается в сеть. HTTP-тесты используют локальный адрес; конкурентные тесты рассчитаны на PostgreSQL стенда.
+- Согласие, Telegram-подпись и доступ к чужим пользовательским ресурсам явно вне объёма foundation; общий ответ неизвестного маршрута `404` не доказывает проверку владения.
+
+Профиль: read-only REVIEW, один исполнитель Codex/GPT-6. Файлы не изменялись. Длительность, токены и стоимость: `null`, измерения недоступны. Новая телеметрия не создавалась; исторические материалы: `docs/telemetry/p-replicator/20260912T193004Z-foundation-A-7a62/`.
+exit=0
