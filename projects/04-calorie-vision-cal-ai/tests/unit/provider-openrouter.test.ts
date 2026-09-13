@@ -76,7 +76,7 @@ describe('поставщик модели openrouter', () => {
     expect(url).toBe('https://openrouter.ai/api/v1/chat/completions');
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer sk-or-test');
     const sentBody = JSON.parse(init.body as string) as { model: string };
-    expect(sentBody.model).toBe('openai/gpt-5-nano');
+    expect(sentBody.model).toBe('google/gemini-2.5-flash-lite');
   });
 
   it('эскалация (sonnet-5) уходит на другой носитель — не тот же, что основной вызов (DEC-A-045)', async () => {
@@ -88,8 +88,8 @@ describe('поставщик модели openrouter', () => {
 
     expect(response.model).toBe('sonnet-5');
     const sentBody = JSON.parse((fetchMock.mock.calls[0]?.[1] as RequestInit).body as string) as { model: string };
-    expect(sentBody.model).toBe('openai/gpt-5-mini');
-    expect(sentBody.model).not.toBe('openai/gpt-5-nano'); // разные носители у разных ролей
+    expect(sentBody.model).toBe('google/gemini-2.5-flash');
+    expect(sentBody.model).not.toBe('google/gemini-2.5-flash-lite'); // разные носители у разных ролей
   });
 
   it('тело 200 OK с error вместо choices — НЕ успех, а недоступность провайдера', async () => {
