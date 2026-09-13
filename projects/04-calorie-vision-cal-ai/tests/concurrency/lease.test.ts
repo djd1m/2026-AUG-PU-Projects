@@ -97,6 +97,8 @@ describe('аренда задания', () => {
       modelEstimateKcal: 321,
       modelUsed: 'haiku-4.5',
       failureReason: 'no_food_matched',
+      escalated: false,
+      attemptNo: 1,
     });
     expect(secondWritten).toBe('written');
 
@@ -107,6 +109,8 @@ describe('аренда задания', () => {
       modelEstimateKcal: 999,
       modelUsed: 'haiku-4.5',
       failureReason: 'provider_timeout',
+      escalated: false,
+      attemptNo: 1,
     });
     // НОЛЬ затронутых строк: проигравший записи не делает и чужой результат не трёт.
     // Строка уже НЕ 'queued' (она 'refused' от победителя) — это `stale_lease_result`,

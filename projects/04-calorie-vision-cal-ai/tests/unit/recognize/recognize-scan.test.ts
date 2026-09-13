@@ -3,6 +3,10 @@
 // в `recognize-scan.ts`). Конкурентность самого счётчика квоты проверяется ОТДЕЛЬНО,
 // интеграционным прогоном на настоящем Postgres (`shared-resource-verification.md`).
 
+import { openSync, closeSync, readFileSync, unlinkSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 import { CANON } from '@n4/shared';
 import { recognizeScan, type QuotaConsumeFn, type RecognizeJob, type RecognizeScanDeps } from '../../../apps/recognizer/src/recognize/recognize-scan.js';
@@ -12,6 +16,9 @@ import type { ModelProvider, ModelRequest, ModelResponse } from '../../../apps/r
 import type { ResultRecord } from '../../../apps/recognizer/src/lease.js';
 
 const GENEROUS_LIMITS = { scanLimitUser: 1000, scanLimitDay: 1000, escalationLimitDay: 1000 };
+// Журнал model_call пишется через fs.writeSync (RV-scan-pipeline-09) — юнит-тесты
+// перенаправляют его в /dev/null, не в реальный stdout прогона.
+const devNullFd = openSync('/dev/null', 'w');
 
 function job(overrides: Partial<RecognizeJob> = {}): RecognizeJob {
   return { id: 'scan-1', fence: 1, photoId: 'photo-1', deviceSessionId: 'session-1', createdAt: new Date('2026-09-12T10:00:00.000Z'), ...overrides };
@@ -52,7 +59,8 @@ function baseDeps(overrides: Partial<RecognizeScanDeps> = {}): RecognizeScanDeps
     },
     logger,
     now: () => job().createdAt,
-    ipPrefix: '203.0.113.0/24',
+    lookupIpPrefix: async () => '203.0.113.0/24',
+    modelCallLogFd: devNullFd,
     ...overrides,
     // @ts-expect-error — служебное поле для чтения из тестов, не часть контракта деп.
     __recorded: recorded,
@@ -285,5 +293,32 @@ describe('шаг 9 — поздний ответ отбрасывается ка
     const outcome = await recognizeScan(job({ createdAt }), deps);
     expect(outcome.status).toBe('failed');
     expect(outcome.failureReason).toBe('timeout');
+  });
+
+  it('RV-scan-pipeline-09: журнал model_call ОБНОВЛЯЕТ исход СВОЕГО attempt_id на late (не молчит)', async () => {
+    // Прежняя версия проверяла ТОЛЬКО итоговый статус строки БД — ревью справедливо
+    // указал, что ветка `recognize-scan.ts` шага 9 не писала `outcome: 'late'` в журнал
+    // ВООБЩЕ. Читаем РЕАЛЬНЫЙ файл, куда `logModelCallOutcome` пишет через `fs.writeSync`.
+    const logPath = join(tmpdir(), `n4-model-call-late-${randomUUID()}.log`);
+    const fd = openSync(logPath, 'w');
+    const createdAt = new Date('2026-09-12T10:00:00.000Z');
+    let callCount = 0;
+    const deps = baseDeps({
+      provider: stubProvider(() => {
+        callCount += 1;
+        return fixedResponse({ confidence: 0.95 });
+      }),
+      now: () => new Date(createdAt.getTime() + (callCount === 0 ? 0 : 31_000)),
+      modelCallLogFd: fd,
+    });
+    await recognizeScan(job({ createdAt }), deps);
+    closeSync(fd);
+
+    const lines = readFileSync(logPath, 'utf8').trim().split('\n').map((line) => JSON.parse(line) as { phase: string; outcome?: string; attempt_id?: string });
+    const outcomeLines = lines.filter((line) => line.phase === 'OUTCOME');
+    const lateLine = outcomeLines.find((line) => line.outcome === 'late');
+    expect(lateLine).toBeDefined();
+    expect(lateLine?.attempt_id).toBe('scan-1:1:1');
+    unlinkSync(logPath);
   });
 });

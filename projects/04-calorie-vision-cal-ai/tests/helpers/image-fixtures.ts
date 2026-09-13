@@ -2,6 +2,7 @@
 // фикстуры из сети ЗАПРЕЩЕНО правилом проекта (`replicate-pipeline.md`).
 
 import sharp from 'sharp';
+import { randomBytes } from 'node:crypto';
 
 export async function makeJpegFixture(width = 800, height = 600): Promise<Buffer> {
   return sharp({ create: { width, height, channels: 3, background: { r: 120, g: 180, b: 90 } } })
@@ -22,14 +23,16 @@ export async function makeWebpFixture(width = 800, height = 600): Promise<Buffer
 }
 
 export async function makeOversizedJpegFixture(): Promise<Buffer> {
-  // > 12 МБ: проверка размера (шаг 4 EnqueueScanForFeature) происходит ПОСЛЕ сигнатуры и
-  // decompression-bomb, но ДО декодируемости (шаг 5) — валидный МАЛЕНЬКИЙ JPEG с довеском
-  // байт ПОСЛЕ EOI (0xFFD9) проходит сигнатуру, не считается bomb-изображением (заявленные
-  // размеры малы) и не должен декодироваться вовсе для этой проверки: она обязана
-  // отработать по одной ДЛИНЕ файла, раньше декодирования.
-  const small = await sharp({ create: { width: 100, height: 100, channels: 3, background: { r: 1, g: 2, b: 3 } } }).jpeg({ quality: 90 }).toBuffer();
-  const padding = Buffer.alloc(13_000_000, 0x00);
-  return Buffer.concat([small, padding]);
+  // > 12 МБ: проверка размера (шаг 4 EnqueueScanForFeature) происходит ПОСЛЕ сигнатуры,
+  // decompression-bomb и полиглот-проверки хвоста (RV-scan-pipeline-07), но ДО
+  // декодируемости (шаг 5). ОТКЛОНЕНИЕ от прежней версии: раньше довесок ПОСЛЕ EOI давал
+  // байтовый объём дёшево, но теперь ровно такой хвост и есть полиглот — страж
+  // `hasTrailingGarbage` отверг бы файл 422 РАНЬШЕ проверки размера, и тест доказывал бы не
+  // то, что заявлен. Вместо довеска — НАСТОЯЩИЙ большой JPEG из случайного шума (шум почти
+  // не сжимается DCT, в отличие от гладких изображений): валиден целиком, EOI на самом
+  // конце, декодируем, и превышает порог БЕЗ единого постороннего байта.
+  const noise = randomBytes(3500 * 3500 * 3);
+  return sharp(noise, { raw: { width: 3500, height: 3500, channels: 3 } }).jpeg({ quality: 100 }).toBuffer();
 }
 
 export async function makeTooSmallJpegFixture(): Promise<Buffer> {

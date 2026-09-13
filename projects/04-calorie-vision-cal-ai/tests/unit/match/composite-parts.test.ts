@@ -2,10 +2,20 @@
 // всё блюдо). `NullMatchIngredientPort` НИКОГДА не возвращает `parts` (эта фича, проверено
 // отдельно в `null-port.test.ts`); контракт `parts[]` испытывается тестовым двойником,
 // готовым принять реальную реализацию `source-and-correct` без переделки вызывающего кода
-// (PC-08). Не требует базы — чистый контракт типа `MatchedItem`.
+// (PC-08). Не требует базы.
+//
+// RV-scan-pipeline-13: ПЕРВАЯ версия проверяла ТОЛЬКО сам тестовый двойник («тест создаёт
+// снимки, затем подтверждает, что создал разные снимки» — производственный код вообще не
+// вызывался). `recognize-scan.ts` действительно ТЕРЯЛ `parts`/`source_snapshot` при записи
+// результата (сохранял только `food_item_id`/`unmatched`) — исправлено (`persistedItem`).
+// Тест ниже прогоняет РЕАЛЬНЫЙ `recognizeScan` с этим портом и проверяет ЗАПИСАННУЮ строку.
 
+import { openSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { recognizeScan, type RecognizeScanDeps } from '../../../apps/recognizer/src/recognize/recognize-scan.js';
 import type { MatchIngredientPort, MatchedItem, RecognizedItemForMatch } from '../../../apps/recognizer/src/match/port.js';
+import type { ModelProvider, ModelResponse } from '../../../apps/recognizer/src/provider/types.js';
+import type { ResultRecord } from '../../../apps/recognizer/src/lease.js';
 
 /** Тестовый двойник ТОЛЬКО для этого контракта: возвращает составное блюдо с parts[]. */
 function fixedCompositeMatchPort(): MatchIngredientPort {
@@ -50,5 +60,46 @@ describe('составное блюдо: у каждой части свой sou
     const result = await port.match([{ labelRu: 'плов с курицей', massG: 300 }]);
     const ids = result[0]!.parts!.map((part) => part.foodItemId);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe('RV-scan-pipeline-13: recognizeScan НЕ теряет parts/source_snapshot при записи результата', () => {
+  it('запись recordResult несёт items[0].parts с ДВУМЯ частями и РАЗНЫМИ снимками', async () => {
+    const recorded: Array<{ record: ResultRecord }> = [];
+    const provider: ModelProvider = {
+      kind: 'fake',
+      recognize: async (): Promise<ModelResponse> => ({
+        items: [{ labelRu: 'плов с курицей', massG: 300, candidates: [] }],
+        confidence: 0.95,
+        modelEstimateKcal: 450,
+        model: 'haiku-4.5',
+      }),
+    };
+    const deps: RecognizeScanDeps = {
+      pool: {} as never,
+      quotaLimits: { scanLimitUser: 1000, scanLimitDay: 1000, escalationLimitDay: 1000 },
+      provider,
+      matchPort: fixedCompositeMatchPort(),
+      normalize: async () => ({ ok: true, normalizedKey: 'stub-key' }),
+      recordResult: async (_target, record) => {
+        recorded.push({ record });
+        return 'written';
+      },
+      logger: { debug() {}, info() {}, warn() {}, error() {}, child() { return this as never; } },
+      lookupIpPrefix: async () => '203.0.113.0/24',
+      modelCallLogFd: openSync('/dev/null', 'w'),
+    };
+
+    const job = { id: 'scan-composite', fence: 1, photoId: 'photo-1', deviceSessionId: 'session-1', createdAt: new Date() };
+    const outcome = await recognizeScan(job, deps);
+
+    expect(outcome.status).toBe('done'); // сопоставлено (foodItemId='composite-dish' ≠ null)
+    const writtenItems = recorded[0]?.record.items as Array<{ parts?: unknown[]; source_snapshot: unknown; food_item_id: string | null }>;
+    expect(writtenItems).toHaveLength(1);
+    expect(writtenItems[0]?.food_item_id).toBe('composite-dish');
+    expect(writtenItems[0]?.parts).toHaveLength(2);
+    const writtenSnapshots = (writtenItems[0]?.parts as Array<{ sourceSnapshot: { id: string } }>).map((part) => part.sourceSnapshot.id);
+    expect(writtenSnapshots).toEqual(['rice', 'chicken']);
+    expect(writtenItems[0]?.source_snapshot).toEqual({ id: 'composite-dish', note: 'верхний уровень — снимок НЕ используется, если есть parts' });
   });
 });

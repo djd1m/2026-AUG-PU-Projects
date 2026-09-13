@@ -137,6 +137,26 @@ describe('POST /api/v1/scans', () => {
     expect(quota.rows[0]?.used).toBe(1);
   }, 20_000);
 
+  it('RV-scan-pipeline-15: growth_event(install) пишется РОВНО один раз на сессию, а не на каждый скан', async () => {
+    // ПРЕЖНИЙ SELECT_ANY_PRIOR_SCAN (`WHERE device_session_id = $1 LIMIT 1`, БЕЗ
+    // `AND id != $2`) находил СВОЮ ЖЕ только что закоммиченную строку и потому давал
+    // `rowCount === 1` на КАЖДОМ скане — `install` писался на каждый скан этой сессии, не
+    // только на первый, искажая ростовые метрики.
+    const cookie = await seedCookieSession();
+    const first = await postScan(cookie, await makeJpegFixture(), { idempotencyKey: randomUUID() });
+    expect(first.statusCode).toBe(202);
+    const second = await postScan(cookie, await makeJpegFixture(), { idempotencyKey: randomUUID() });
+    expect(second.statusCode).toBe(202);
+    const third = await postScan(cookie, await makeJpegFixture(), { idempotencyKey: randomUUID() });
+    expect(third.statusCode).toBe(202);
+
+    const scans = await pool.query('SELECT count(*)::int AS n FROM recognition');
+    expect(scans.rows[0]?.n).toBe(3); // три РАЗНЫХ скана этой сессии — не идемпотентный повтор
+
+    const installs = await pool.query("SELECT count(*)::int AS n FROM growth_event WHERE type = 'install'");
+    expect(installs.rows[0]?.n).toBe(1);
+  }, 30_000);
+
   it('AC-7/20: квота исчерпана — 429 с scope, ни recognition, ни photo не сохраняются', async () => {
     const smallLimitApp = buildServer({
       config: testScanApiConfig({ quota: { scanLimitUser: 1, scanLimitDay: 3000, escalationLimitDay: 600 } }),

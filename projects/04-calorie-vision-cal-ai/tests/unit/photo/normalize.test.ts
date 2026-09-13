@@ -4,7 +4,6 @@
 
 import { describe, expect, it } from 'vitest';
 import sharp from 'sharp';
-import { CANON } from '@n4/shared';
 import { createNormalizePhotoForModel, type PhotoLookup } from '../../../apps/recognizer/src/photo/normalize.js';
 import type { RecognizerStorage } from '../../../apps/recognizer/src/photo/storage.js';
 import type { RecognizeJob } from '../../../apps/recognizer/src/recognize/recognize-scan.js';
@@ -83,11 +82,14 @@ describe('AC-scan-pipeline-9 (доказательство пайплайна н
 
     expect(outcome.ok).toBe(true);
     expect(capturedOutput).toBeDefined();
-    expect(capturedOutput!.byteLength).toBeLessThanOrEqual(CANON.normalizedMaxBytes);
+    // RV-scan-pipeline-11: ЛИТЕРАЛЫ, а не `CANON.normalizedMaxBytes`/`normalizedMaxDimensionPx`
+    // — тест, сверяющий вывод с ТОЙ ЖЕ константой, которую читает проверяемый код, молча
+    // «проходит» и при испорченном значении константы (обе стороны изменились бы синхронно).
+    expect(capturedOutput!.byteLength).toBeLessThanOrEqual(5_242_880); // 5 МБ
 
     const resultMeta = await sharp(capturedOutput!).metadata();
     expect(resultMeta.format).toBe('jpeg');
-    expect(Math.max(resultMeta.width ?? 0, resultMeta.height ?? 0)).toBeLessThanOrEqual(CANON.normalizedMaxDimensionPx);
+    expect(Math.max(resultMeta.width ?? 0, resultMeta.height ?? 0)).toBeLessThanOrEqual(1568);
   });
 });
 
@@ -116,5 +118,41 @@ describe('нормализация: неудачная трансформаци�
     const outcome = await normalize(fakeJob(null), new AbortController().signal);
     expect(outcome.ok).toBe(false);
     expect(called).toBe(false);
+  });
+});
+
+describe('RV-scan-pipeline-05: сигнал отмены проверяется ПОСЛЕ преобразования, во время записи', () => {
+  it('дедлайн истекает ВО ВРЕМЯ putNormalized — ok:false(normalize), а НЕ ok:true с устаревшим результатом', async () => {
+    // Воспроизведение находки ревью буквально: раньше сигнал проверялся ТОЛЬКО до
+    // трансформации, и отмена, сработавшая внутри putNormalized (самой медленной
+    // операции — сетевой PUT), детерминированно давала ok:true.
+    const jpeg = await sharp({ create: { width: 800, height: 600, channels: 3, background: { r: 1, g: 2, b: 3 } } }).jpeg().toBuffer();
+    const controller = new AbortController();
+    const storage: RecognizerStorage = {
+      getObject: async () => jpeg,
+      putNormalized: async () => {
+        controller.abort(); // дедлайн истекает РОВНО во время записи объекта
+      },
+    };
+    const photos: PhotoLookup = { findByRecognitionId: async () => ({ objectKey: 'x.jpg', mime: 'image/jpeg' }), markNormalized: async () => {} };
+
+    const normalize = createNormalizePhotoForModel(storage, photos);
+    const outcome = await normalize(fakeJob(), controller.signal);
+
+    expect(outcome.ok).toBe(false);
+    if (!outcome.ok) expect(outcome.reason).toBe('normalize');
+  });
+
+  it('дедлайн УЖЕ истёк на момент проверки внутри raceWithSignal — ok:false(normalize), не зависает', async () => {
+    const controller = new AbortController();
+    controller.abort();
+    const storage: RecognizerStorage = { getObject: async () => Buffer.alloc(0), putNormalized: async () => {} };
+    const photos: PhotoLookup = { findByRecognitionId: async () => ({ objectKey: 'x.jpg', mime: 'image/jpeg' }), markNormalized: async () => {} };
+
+    const normalize = createNormalizePhotoForModel(storage, photos);
+    const outcome = await normalize(fakeJob(), controller.signal);
+
+    expect(outcome.ok).toBe(false);
+    if (!outcome.ok) expect(outcome.reason).toBe('normalize');
   });
 });
