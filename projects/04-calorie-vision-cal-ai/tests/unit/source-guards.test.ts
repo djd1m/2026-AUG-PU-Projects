@@ -324,3 +324,48 @@ describe('страж чтения окружения', () => {
     expect(readers.sort()).toEqual(['apps/api/src/env.ts', 'apps/recognizer/src/env.ts', 'packages/db/src/migrate.ts']);
   });
 });
+
+describe('страж ADR-005: строка openfoodfacts не встречается ни в коде, ни в окружении', () => {
+  // NFR-source-and-correct-3, ADR-005 Confirmation. Источник продукта — USDA FoodData
+  // Central (CC0); Open Food Facts НЕ используется этой фичей ни как зависимость, ни как
+  // упоминание — совпадение имени с конкурирующей базой было бы способом тихо перепутать
+  // источник данных с источником атрибуции.
+  async function findOpenFoodFacts(dirs: readonly string[], extraFiles: readonly string[]): Promise<string[]> {
+    const offenders: string[] = [];
+    for (const relative of dirs) {
+      for (const { file, code } of await readAll(relative)) {
+        if (/openfoodfacts/i.test(code)) offenders.push(file);
+      }
+    }
+    for (const relative of extraFiles) {
+      const full = path.join(ROOT, relative);
+      try {
+        const code = await readFile(full, 'utf8');
+        if (/openfoodfacts/i.test(code)) offenders.push(relative);
+      } catch {
+        // Файла нет — нечего проверять, а не «нарушений не найдено» молча.
+      }
+    }
+    return offenders;
+  }
+
+  const SCOPE_DIRS = ['apps/api/src', 'apps/recognizer/src', 'apps/web', 'packages/shared/src', 'packages/db/src', 'scripts'];
+  const SCOPE_FILES = ['docker-compose.yml', '.env.example'];
+
+  it('на РЕАЛЬНОМ коде и в docker-compose.yml/.env.example — ноль вхождений', async () => {
+    expect(await findOpenFoodFacts(SCOPE_DIRS, SCOPE_FILES)).toEqual([]);
+  });
+
+  it('ИСПЫТАНИЕ СТРАЖА: внедрённое вхождение в исходник красит тест', async () => {
+    // Мутация — В ПАМЯТИ: добавить упоминание запрещённой строки в код, который страж
+    // читает, и подтвердить, что offenders перестаёт быть пустым.
+    const files = await readAll('apps/recognizer/src');
+    const mutated = files.map((entry, index) => (index === 0 ? { ...entry, code: `${entry.code}\n// см. openfoodfacts.org\n` } : entry));
+    expect(mutated).not.toEqual(files);
+    const offenders = mutated.filter(({ code }) => /openfoodfacts/i.test(code)).map(({ file }) => file);
+    expect(offenders.length).toBe(1); // КРАСНЫЙ на мутированном наборе
+
+    // Восстановление (немутированный набор) — снова ЗЕЛЁНЫЙ.
+    expect(files.filter(({ code }) => /openfoodfacts/i.test(code))).toEqual([]);
+  });
+});
