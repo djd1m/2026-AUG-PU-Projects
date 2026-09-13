@@ -15,6 +15,8 @@ import { registerScansRoutes } from './routes/scans.js';
 import { registerAuthTelegramRoute } from './routes/auth-telegram.js';
 import { registerConsentRoute } from './routes/consent.js';
 import { registerAccountDeleteRoute } from './routes/account-delete.js';
+import { registerCodesRoutes } from './routes/codes.js';
+import { registerPartnerRoutes } from './routes/partner.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
@@ -74,6 +76,8 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerAuthTelegramRoute(app, deps.pool, deps.config, deps.logger);
   registerConsentRoute(app, deps.pool, deps.logger);
   registerAccountDeleteRoute(app, deps.pool, deps.logger);
+  registerCodesRoutes(app, { pool: deps.pool, logger: deps.logger });
+  registerPartnerRoutes(app, deps.pool);
 
   app.setNotFoundHandler(async (request, reply) => {
     // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая
