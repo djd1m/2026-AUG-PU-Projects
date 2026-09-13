@@ -17,6 +17,8 @@ import { registerConsentRoute } from './routes/consent.js';
 import { registerAccountDeleteRoute } from './routes/account-delete.js';
 import { registerInterestRoute } from './routes/interest.js';
 import { registerDiaryRoutes } from './routes/diary.js';
+import { registerCodesRoutes } from './routes/codes.js';
+import { registerPartnerRoutes } from './routes/partner.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
@@ -78,6 +80,8 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerAccountDeleteRoute(app, deps.pool, deps.logger);
   registerInterestRoute(app, { pool: deps.pool, logger: deps.logger });
   registerDiaryRoutes(app, { pool: deps.pool, logger: deps.logger });
+  registerCodesRoutes(app, { pool: deps.pool, logger: deps.logger });
+  registerPartnerRoutes(app, deps.pool);
 
   app.setNotFoundHandler(async (request, reply) => {
     // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая

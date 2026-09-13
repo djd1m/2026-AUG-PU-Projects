@@ -44,6 +44,10 @@ export const SERVICE_LOG_FIELDS: readonly string[] = [
   // закрытые перечисления нашего кода и счётчики.
   'account_id', 'object_key', 'reason', 'owner_table', 'consent_version', 'scope',
   'outcome', 'cards_revoked', 'migrated_entries', 'purged_photos', 'completed_at',
+  // `partner-codes-and-cabinet`: пять аудируемых событий (`01_specification.md`,
+  // «Решение: аудит»). Ни одно поле не несёт секрета — внутренние идентификаторы (как
+  // `scan_id`), усечённый префикс адреса и закрытые перечисления источника/причины.
+  'partner_code_id', 'old_partner_code_id', 'device_session_id', 'source', 'replaced_source', 'operator_id',
 ];
 
 export interface LoggerOptions extends RedactorOptions {

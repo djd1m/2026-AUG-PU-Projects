@@ -23,7 +23,7 @@
 // предложится НИ ОДНОМУ воркеру и провисит в `queued` вечно — поэтому вместе с пределом
 // вводится уборщик (`sweepStuckScans`), а не «как-нибудь заметим».
 
-import { withTransaction, type DbPool } from '@n4/db';
+import { activateAttributionOnRecognition, withTransaction, type DbPool } from '@n4/db';
 import { CANON } from '@n4/shared';
 
 // Ещё одно условие предиката пришло из фичи `scan-pipeline` (PC-02/PC-03, Правило Г):
@@ -130,6 +130,7 @@ const WRITE_RESULT = `
   -- захватил задание позже), ЛИБО что sweeper уже перевёл строку в failed(timeout) —
   -- различаются перечитыванием (см. recordResult ниже).
   WHERE id = $1 AND lease_fence = $2 AND status = 'queued'
+  RETURNING device_session_id
 `;
 
 /**
@@ -150,25 +151,42 @@ export type WriteOutcome = 'written' | 'stale_lease_result' | 'swept_as_timeout'
  * `UPDATE`, затронувший ноль строк, — не ошибка базы. Какой именно это случай, видно
  * только из ПЕРЕЧИТАННОЙ строки, поэтому она перечитывается: «ноль строк» без причины
  * читается как сбой и лечится отключением условия.
+ *
+ * RV-partner-codes-and-cabinet-01: успешная (fence-защищённая) запись `status='done'` —
+ * ЕДИНСТВЕННОЕ место продакшен-кода, где распознавание реально завершается, и поэтому
+ * единственное честное место для `ActivateAttributionOnRecognition` (партнёрская
+ * атрибуция, `@n4/db`). Вызов — В ТОЙ ЖЕ транзакции, что и сам `UPDATE`, ДО `COMMIT`, и
+ * УСЛОВЕН по той же fence-защите (`WHERE lease_fence = $2 AND status = 'queued'`, значит
+ * `RETURNING` строку получает ТОЛЬКО победивший захват — второй воркер/уборщик увидят 0
+ * строк и до активации не дойдут). Прежде запись шла ОДНИМ `pool.query` вне транзакции
+ * именно потому, что вокруг неё нечего было делать транзакционно; теперь есть.
  */
 export async function recordResult(
   pool: DbPool,
   job: { id: string; fence: number },
   record: ResultRecord,
 ): Promise<WriteOutcome> {
-  const result = await pool.query(WRITE_RESULT, [
-    job.id,
-    job.fence,
-    record.status,
-    record.confidence,
-    JSON.stringify(record.items ?? []),
-    record.modelEstimateKcal,
-    record.modelUsed,
-    record.failureReason,
-    record.escalated,
-    record.attemptNo,
-  ]);
-  if ((result.rowCount ?? 0) > 0) return 'written';
+  const written = await withTransaction(pool, async (client) => {
+    const result = await client.query<{ device_session_id: string }>(WRITE_RESULT, [
+      job.id,
+      job.fence,
+      record.status,
+      record.confidence,
+      JSON.stringify(record.items ?? []),
+      record.modelEstimateKcal,
+      record.modelUsed,
+      record.failureReason,
+      record.escalated,
+      record.attemptNo,
+    ]);
+    const row = result.rows[0];
+    if (row === undefined) return false;
+    if (record.status === 'done') {
+      await activateAttributionOnRecognition(client, row.device_session_id);
+    }
+    return true;
+  });
+  if (written) return 'written';
 
   const current = await pool.query<{ status: string; lease_fence: number }>(
     'SELECT status::text AS status, lease_fence FROM recognition WHERE id = $1',
