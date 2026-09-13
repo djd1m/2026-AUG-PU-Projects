@@ -10,6 +10,7 @@
 // выводится из входа: случайно пересекающий дедлайн тест мигает и потому ничего не значит.
 
 import { createHash } from 'node:crypto';
+import { performance } from 'node:perf_hooks';
 import {
   ModelCallAborted,
   ModelDeadlineExceeded,
@@ -43,6 +44,17 @@ export function createFakeModelProvider(options: FakeProviderOptions = {}): Mode
       if (opts.signal.aborted) throw new ModelCallAborted();
       if (!Number.isFinite(opts.deadlineMs) || opts.deadlineMs <= 0) throw new ModelDeadlineExceeded(opts.deadlineMs);
 
+      // ДЕДЛАЙН — АБСОЛЮТНАЯ ТОЧКА НА МОНОТОННЫХ ЧАСАХ, снятая на входе, а не разность
+      // двух ВХОДНЫХ чисел. `latencyMs > deadlineMs` бюджета не проверяет вовсе: это
+      // сравнение того, что нам передали, с тем, что нам передали, и об ИСТЁКШЕМ времени
+      // оно не говорит ничего. Таймер просыпается не в свой срок, а когда освободится цикл
+      // событий, — при занятом на 80 мс цикле фейк отвечал УСПЕХОМ через 81 мс с бюджетом
+      // 20 мс (слепое ревью, RV-foundation-02). Поздний успех оплачен и всё равно
+      // выбрасывается, поэтому честный ответ здесь один — отказ.
+      // `performance.now()` монотонен: перевод системных часов его не сдвигает, в отличие
+      // от `Date.now()`.
+      const expiresAt = performance.now() + opts.deadlineMs;
+
       if (latencyMs > 0) {
         const waited = Math.min(latencyMs, opts.deadlineMs);
         // Ожидание прерывается сигналом НЕМЕДЛЕННО, а не досиживает свой таймер: смысл
@@ -58,10 +70,13 @@ export function createFakeModelProvider(options: FakeProviderOptions = {}): Mode
           };
           opts.signal.addEventListener('abort', onAbort, { once: true });
         });
-        // Работа не укладывается в бюджет — отказ по дедлайну, а не поздний ответ:
-        // поздний ответ оплачен и всё равно выбрасывается, и честнее сказать об этом сразу.
-        if (latencyMs > opts.deadlineMs) throw new ModelDeadlineExceeded(opts.deadlineMs);
       }
+
+      // Проверка ПОСЛЕ ожидания и ПЕРЕД возвратом — единственное место, где известно
+      // ФАКТИЧЕСКИ истёкшее время. Стоит здесь, а не внутри ветки задержки: нулевая
+      // задержка не означает, что бюджет цел, — вызывающий мог передать его уже
+      // почти исчерпанным.
+      if (performance.now() >= expiresAt) throw new ModelDeadlineExceeded(opts.deadlineMs);
 
       // Вход целиком, а не только идентификатор: один и тот же кадр обязан давать один и
       // тот же ответ, а разные кадры — разные. Модель входит в хеш: ответ Sonnet 5 и ответ

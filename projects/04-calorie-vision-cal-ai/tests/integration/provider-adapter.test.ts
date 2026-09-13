@@ -3,6 +3,7 @@
 // Три свойства порта проверяются отдельно, потому что каждое стоит своих денег:
 // детерминизм фейка, ВЫБОР МОДЕЛИ вызывающим и ЧЕСТНЫЙ ОТКАЗ по дедлайну.
 
+import { performance } from 'node:perf_hooks';
 import { describe, expect, it, vi } from 'vitest';
 import { ConfigValidationError } from '@n4/shared';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
@@ -94,6 +95,36 @@ describe('поставщик модели', () => {
     const fits = await slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5_000, signal: new AbortController().signal });
     expect(fits.model).toBe('haiku-4.5');
 
+  });
+
+  it('задержанный таймер не превращает просроченный вызов в поздний успех', async () => {
+    // Воспроизведение слепого ревью (RV-foundation-02) БУКВАЛЬНО: задержка 10 мс, бюджет
+    // 20 мс, цикл событий занят 80 мс СИНХРОННО. Таймер просыпается не в свой срок, а когда
+    // освободится цикл, — и прежняя проверка `latencyMs > deadlineMs` (сравнение двух
+    // ВХОДНЫХ чисел) пропускала успешный ответ через 81 мс при бюджете 20.
+    //
+    // Соседний тест этого не ловит: там превышение задано заранее самими числами, а здесь
+    // числа «укладываются» и бюджет съедает ФАКТИЧЕСКОЕ время.
+    const provider = createFakeModelProvider({ latencyMs: 10 });
+    const startedAt = performance.now();
+    const call = provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, {
+      model: 'haiku-4.5',
+      deadlineMs: 20,
+      // Сигнал НЕ срабатывает: порт обязан соблюдать переданный бюджет сам, а не ждать,
+      // пока его оборвут снаружи.
+      signal: new AbortController().signal,
+    });
+
+    // Синхронная занятость — ровно то, что делает таймер поздним. `await` здесь неуместен:
+    // он вернул бы управление циклу и дефект не проявился бы.
+    const busyUntil = performance.now() + 80;
+    while (performance.now() < busyUntil) {
+      /* цикл событий занят: ни один таймер не исполняется */
+    }
+
+    await expect(call).rejects.toBeInstanceOf(ModelDeadlineExceeded);
+    // Отказ пришёл ПОСЛЕ дедлайна — значит проверено истёкшее время, а не входные числа.
+    expect(performance.now() - startedAt).toBeGreaterThan(20);
   });
 
   it('вызов прерывается общим сигналом отмены и не возвращает результата', async () => {
