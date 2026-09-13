@@ -27,9 +27,14 @@ async function seedSyntheticFoodItems(pool: Awaited<ReturnType<typeof migratedPo
       values.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7})`);
       params.push(`synthetic-${seed}`, randomName(seed), 100 + (seed % 400), 5 + (seed % 20), 2 + (seed % 10), 10 + (seed % 50), '2026-04-01');
     }
+    // Прямой многострочный `INSERT … VALUES`, а НЕ `INSERT … SELECT * FROM (VALUES …) AS v(…)`:
+    // во втором виде Postgres не может вывести тип для параметров подзапроса (нет целевой
+    // колонки на этапе разбора VALUES) и присваивает им `text` по умолчанию — вставка
+    // валится «column kcal_per_100g is of type integer but expression is of type text».
+    // Прямой `INSERT … VALUES` подставляет типы колонок таблицы для каждого параметра.
     await pool.query(
       `INSERT INTO food_item (source_id, name_en, kcal_per_100g, protein_per_100g, fat_per_100g, carb_per_100g, import_snapshot_date)
-       SELECT * FROM (VALUES ${values.join(',')}) AS v(source_id, name_en, kcal, protein, fat, carb, snapshot_date)`,
+       VALUES ${values.join(',')}`,
       params,
     );
   }

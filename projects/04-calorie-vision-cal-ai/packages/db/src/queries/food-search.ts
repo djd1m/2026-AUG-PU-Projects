@@ -1,7 +1,8 @@
 // `SearchFoodCandidates` (`02_pseudocode.md`, FR-source-and-correct-3, NFR-source-and-
 // correct-1). Три стратегии ПО ПОРЯДКУ, останавливается на первом результате:
 //   1. точное совпадение `food_synonym.name_ru_normalized`;
-//   2. нечёткое по триграммам `food_synonym.name_ru_normalized` (>= 0,45);
+//   2. нечёткое по триграммам `food_synonym.name_ru_normalized` (`word_similarity`, >= 0,45,
+//      см. примечание у `TRGM_SYNONYM_SQL` — короткий запрос против многословной курации);
 //   3. auto: нечёткое по `food_item.name_en` ТОЛЬКО среди `candidates[]` модели;
 //      manual: нечёткое по `food_item.name_en` по ВСЕЙ базе, LIMIT 20.
 //
@@ -65,13 +66,25 @@ const EXACT_SYNONYM_SQL = `
   LIMIT $2
 `;
 
+// `word_similarity($1, name)`, а НЕ симметричная `similarity(name, $1)` — измерено на
+// живом PostgreSQL (2026-09-13): курация состоит из МНОГОСЛОВНЫХ названий («рис белый
+// вареный», «плов с курицей»), а частый запрос — ОДНО слово («рис», «плов»).
+// `similarity('рис', 'рис белый вареный')` = 0,235 — ниже порога 0,45, и AC-5 (покрытие
+// 50 запросов) красный на восьми из них. `word_similarity('рис', 'рис белый вареный')` = 1:
+// функция ищет НАИЛУЧШУЮ непрерывную подпоследовательность триграмм внутри второго
+// аргумента, а не сравнивает строки целиком — ровно тот случай, когда короткий запрос
+// является частью длинного курированного названия. Опечатка по-прежнему ловится
+// (`word_similarity('гречк вареная', 'гречка вареная')` = 0,8125), случайная строка
+// по-прежнему нет (`word_similarity('автомобильное колесо', …)` = 0). Порог 0,45 остаётся
+// тем же литералом — обе функции возвращают величину 0..1, и измеренные значения выше
+// подтверждают, что порог по-прежнему разделяет совпадение и промах.
 const TRGM_SYNONYM_SQL = `
   SELECT fs.id AS synonym_id, fs.name_ru, fs.food_item_id, fs.recipe_parts,
          fi.name_en, fi.default_portion_g, fi.kcal_per_100g, fi.protein_per_100g, fi.fat_per_100g, fi.carb_per_100g,
-         fi.source_id, fi.import_snapshot_date::text AS import_snapshot_date, similarity(fs.name_ru_normalized, $1) AS similarity
+         fi.source_id, fi.import_snapshot_date::text AS import_snapshot_date, word_similarity($1, fs.name_ru_normalized) AS similarity
   FROM food_synonym fs
   LEFT JOIN food_item fi ON fi.id = fs.food_item_id
-  WHERE similarity(fs.name_ru_normalized, $1) >= $2
+  WHERE word_similarity($1, fs.name_ru_normalized) >= $2
   ORDER BY similarity DESC
   LIMIT $3
 `;
