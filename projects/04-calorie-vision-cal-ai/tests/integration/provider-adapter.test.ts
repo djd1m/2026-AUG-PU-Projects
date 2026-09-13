@@ -95,6 +95,18 @@ describe('поставщик модели', () => {
     const fits = await slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5_000, signal: new AbortController().signal });
     expect(fits.model).toBe('haiku-4.5');
 
+    // ДРОБНЫЙ бюджет — воспроизведение шестого слепого ревью (RV-foundation-01) буквально.
+    // Ожидание урезается до бюджета, а таймер с дробным сроком просыпается чуть РАНЬШЕ
+    // него, поэтому проверка по часам проходит, хотя запрошенная работа в 1000 мс не
+    // выполнена: двадцать вызовов из двадцати возвращали УСПЕХ. Прогонов двадцать, а не
+    // один, именно потому, что дефект вероятностный: округление вниз случается не всегда,
+    // и единственный прогон зеленел бы через раз.
+    const tooSlow = createFakeModelProvider({ latencyMs: 1_000 });
+    for (let i = 0; i < 20; i += 1) {
+      await expect(
+        tooSlow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5.9, signal: new AbortController().signal }),
+      ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
+    }
   });
 
   it('задержанный таймер не превращает просроченный вызов в поздний успех', async () => {

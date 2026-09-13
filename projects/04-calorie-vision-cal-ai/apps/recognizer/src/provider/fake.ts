@@ -55,6 +55,16 @@ export function createFakeModelProvider(options: FakeProviderOptions = {}): Mode
       // от `Date.now()`.
       const expiresAt = performance.now() + opts.deadlineMs;
 
+      // ВТОРАЯ, НЕЗАВИСИМАЯ проверка — по ЗАДАННОЙ работе, а не по часам. Фейку велели
+      // работать `latencyMs`, и если это больше бюджета, результат физически не успевает:
+      // отказ известен ДО ожидания. Часы одни этого не ловят — ожидание урезается до
+      // бюджета, а таймер с дробным бюджетом просыпается чуть РАНЬШЕ срока и проверка
+      // `performance.now() >= expiresAt` проходит: при бюджете 5,9 мс и задержке 1000 мс
+      // двадцать вызовов из двадцати возвращали успех (слепое ревью, шестой раунд,
+      // RV-foundation-01). Две проверки отвечают на РАЗНЫЕ вопросы: «успеет ли работа»
+      // и «цел ли бюджет сейчас», и ни одна не заменяет другую.
+      if (latencyMs > opts.deadlineMs) throw new ModelDeadlineExceeded(opts.deadlineMs);
+
       if (latencyMs > 0) {
         const waited = Math.min(latencyMs, opts.deadlineMs);
         // Ожидание прерывается сигналом НЕМЕДЛЕННО, а не досиживает свой таймер: смысл
