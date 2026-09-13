@@ -107,6 +107,17 @@ describe('поставщик модели', () => {
         tooSlow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5.9, signal: new AbortController().signal }),
       ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
     }
+
+    // Бюджет, истекающий ВО ВРЕМЯ ФОРМИРОВАНИЯ ответа, — седьмое слепое ревью
+    // (RV-foundation-01). Задержки нет вовсе, но SHA-256 и сборка объекта сами занимают
+    // время: при бюджете 0,01 мс судья намерил 16 успехов из 20 ПОСЛЕ дедлайна. Ловится
+    // только проверкой, стоящей непосредственно перед `return`.
+    const instantProvider = createFakeModelProvider();
+    for (let i = 0; i < 20; i += 1) {
+      await expect(
+        instantProvider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal }),
+      ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
+    }
   });
 
   it('задержанный таймер не превращает просроченный вызов в поздний успех', async () => {
