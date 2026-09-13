@@ -25,13 +25,17 @@ export type ModelId = (typeof MODEL_IDS)[number];
 /** Кадр, отдаваемый модели: НОРМАЛИЗОВАННАЯ копия, не оригинал пользователя. */
 export interface ModelImage {
   readonly scanId: string;
-  /** Ключ объекта в приватном бакете. Не URL и не байты: подпись выдаётся отдельно. */
-  readonly objectKey: string;
+  /**
+   * Ключ объекта в приватном бакете. Не URL и не байты: подпись выдаётся отдельно.
+   * Имя `imageKey`, а не `objectKey`: у одного скана ДВА объекта (оригинал и
+   * нормализованная копия), и порт получает ИМЕННО нормализованный — путать их нельзя.
+   */
+  readonly imageKey: string;
 }
 
 /**
  * Схема ответа (structured outputs). Перечислена ЦЕЛИКОМ, другого в ней нет.
- * Передаётся параметром, а не зашита в адаптер: страж ADR-001 обязан читать ОДНО место,
+ * Передаётся вызывающим, а не зашита в адаптер: страж ADR-001 обязан читать ОДНО место,
  * а не искать схему по всем реализациям порта.
  */
 export interface ModelResponseSchema {
@@ -48,7 +52,10 @@ export const MODEL_RESPONSE_SCHEMA: ModelResponseSchema = {
 export interface ModelCallOptions {
   /** Какую модель звать. Решает ВЫЗЫВАЮЩИЙ. */
   readonly model: ModelId;
-  /** Сколько миллисекунд у вызова осталось. Ноль и отрицательное — уже поздно. */
+  /**
+   * Сколько миллисекунд у вызова осталось. Ноль и отрицательное — уже поздно.
+   * Значение считает вызывающий: `min(25_000, остаток бюджета)` (FR-scan-pipeline-6/20).
+   */
   readonly deadlineMs: number;
   /**
    * ОБЩИЙ сигнал отмены операции. Обязателен: бюджет принадлежит операции целиком
@@ -59,6 +66,22 @@ export interface ModelCallOptions {
   readonly signal: AbortSignal;
 }
 
+/**
+ * Запрос к порту — ОДИН аргумент (форма фичи `scan-pipeline`, FR-scan-pipeline-6): его
+ * получают и адаптеры, и переопределения фейка, и заглушки тестов, поэтому разбирать его
+ * на три позиционных параметра значило бы собирать его обратно в каждой реализации.
+ *
+ * Составлен из частей `foundation` НАМЕРЕННО: `ModelImage` (что распознаём) и
+ * `ModelCallOptions` (кто, как долго, по какому сигналу) остаются отдельными типами —
+ * на них ссылаются тесты порта, и они же называют, ЧТО именно решает вызывающий.
+ * `schema` входит сюда по той же причине, по какой в `foundation` была третьим
+ * параметром: схема приходит от вызывающего из ЕДИНСТВЕННОГО объявления
+ * `MODEL_RESPONSE_SCHEMA`, а не объявляется заново внутри каждого адаптера.
+ */
+export interface ModelRequest extends ModelImage, ModelCallOptions {
+  readonly schema: ModelResponseSchema;
+}
+
 export interface RecognizedItemDraft {
   readonly labelRu: string;
   readonly massG: number;
@@ -67,7 +90,12 @@ export interface RecognizedItemDraft {
 }
 
 export interface ModelResponse {
-  /** Модель, которая ответила. Эхо `opts.model`: ответ сам говорит, чей он. */
+  /**
+   * Модель, с которой БЫЛ сделан этот вызов — ЭХО запроса, а не выбор ответа
+   * (AC-scan-pipeline-29): ответ сам говорит, чей он, и это не восстанавливается по
+   * памяти вызывающего. Без этого поля нечем доказать, что эскалация ушла именно к
+   * модели эскалации, а не повторно к первичной, — и потолок эскалаций не с чем сверить.
+   */
   readonly model: ModelId;
   readonly items: readonly RecognizedItemDraft[];
   readonly confidence: number;
@@ -99,5 +127,22 @@ export class ModelDeadlineExceeded extends Error {
 
 export interface ModelProvider {
   readonly kind: 'fake' | 'live';
-  recognize(image: ModelImage, schema: ModelResponseSchema, opts: ModelCallOptions): Promise<ModelResponse>;
+  recognize(request: ModelRequest): Promise<ModelResponse>;
+}
+
+/**
+ * Сигнал ЛЮБОЙ реализации `ModelProvider`: ответ пришёл, но не соответствует схеме
+ * (RV-scan-pipeline-08) — ОТДЕЛЬНЫЙ от `ProviderUnavailableError`/сетевого сбоя случай.
+ * Живёт здесь, а не в `provider/live.ts`, чтобы `recognize-scan.ts` (доменная логика,
+ * не знающая формы ответа конкретного провайдера) могла классифицировать его как
+ * `failed(schema_violation)`, а не как `failed(provider_unavailable)`, не завися от
+ * конкретной реализации порта.
+ */
+export class ModelSchemaViolationError extends Error {
+  readonly field: string;
+  constructor(field: string) {
+    super(`ответ провайдера не соответствует схеме: ${field}`);
+    this.name = 'ModelSchemaViolationError';
+    this.field = field;
+  }
 }

@@ -197,6 +197,85 @@ describe('страж ADR-001: число берётся из базы, а не �
     expect(declared).toContain('modelEstimateKcal');
     expect(declared.filter((name) => /kcal|calor|protein|fat|carb/i.test(name))).toEqual(['modelEstimateKcal']);
   });
+
+  /**
+   * RV-scan-pipeline-10: прежние два теста НЕ проверяли `provider/live.ts` — единственное
+   * место, где схема реально уходит НАРУЖУ, в Anthropic API (`RESPONSE_SCHEMA`, JSON-schema
+   * с обычными строковыми ключами, а не TS `readonly поле:` — второй тест выше находит
+   * ТОЛЬКО объявления интерфейса и `live.ts` не читал вовсе). Бренд-запрещённые ИМЕНА как
+   * КЛЮЧИ JSON-схемы, а не подстрокой (`model_estimate_kcal` содержит `kcal`, но это
+   * РАЗРЕШЁННОЕ поле) — граница проведена `\b`, испытана мутацией НИЖЕ.
+   */
+  function findForbiddenSchemaKeys(code: string): string[] {
+    const forbidden = /['"]?\b(kcal|calories|protein|fat|carbs|carb)\b['"]?\s*:/g;
+    const found: string[] = [];
+    let match: RegExpExecArray | null;
+    while ((match = forbidden.exec(code)) !== null) found.push(match[1] ?? '');
+    return found;
+  }
+
+  it('производственная JSON-схема live.ts не содержит kcal/calories/protein/fat/carbs КАК КЛЮЧ (испытано мутацией)', async () => {
+    const provider = await readAll('apps/recognizer/src/provider');
+    const live = provider.find(({ file }) => file.endsWith('provider/live.ts'));
+    expect(live).toBeDefined();
+
+    // Зелёный на РЕАЛЬНОМ файле: разрешённое `model_estimate_kcal` не флагуется.
+    expect(findForbiddenSchemaKeys(live?.code ?? '')).toEqual([]);
+
+    // ИСПЫТАНИЕ СТРАЖА НА ВНЕДРЁННОМ ДЕФЕКТЕ (guard-must-be-able-to-fail.md): страж, ни
+    // разу не показавший красное, стражем не является. Мутация — В ПАМЯТИ, файл на диске
+    // не трогается.
+    const mutatedAddingForbiddenField = (live?.code ?? '').replace(
+      "model_estimate_kcal: { type: 'number' },",
+      "model_estimate_kcal: { type: 'number' },\n    protein: { type: 'number' },",
+    );
+    expect(mutatedAddingForbiddenField).not.toBe(live?.code); // подтверждает, что замена реально произошла
+    expect(findForbiddenSchemaKeys(mutatedAddingForbiddenField)).toEqual(['protein']);
+  });
+
+  /**
+   * RV-scan-pipeline-10: «условие запрета done» — статус `done` пишется В recognize-scan.ts
+   * ТОЛЬКО внутри ветки, охраняемой `anyMatched`. Проверяется ТЕКСТОВОЙ близостью (страж
+   * слоя 1 — деревья разбирать не требуется, инвариант простой и локальный), с мутацией.
+   */
+  function doneGuardedByMatch(code: string): boolean {
+    // Запятая после закрывающей кавычки отличает ПРИСВОЕНИЕ объекта (`status: 'done',`)
+    // от объявления ТИПА union (`status: 'done' | 'failed' | 'refused';`, без запятой
+    // сразу после — там точка с запятой И вертикальная черта).
+    const index = code.indexOf("status: 'done',");
+    if (index === -1) return true; // done нигде не пишется присвоением — условие выполнено вакуумно
+    const before = code.slice(Math.max(0, index - 120), index);
+    return /anyMatched\s*\?/.test(before);
+  }
+
+  it('recognize-scan.ts: статус done охраняется условием anyMatched (испытано мутацией)', async () => {
+    const recognize = await readAll('apps/recognizer/src/recognize');
+    const scanFile = recognize.find(({ file }) => file.endsWith('recognize-scan.ts'));
+    expect(scanFile).toBeDefined();
+
+    expect(doneGuardedByMatch(scanFile?.code ?? '')).toBe(true);
+
+    // Мутация: убрать охрану — заменить тернарник на безусловное присвоение status:'done'.
+    const mutatedRemovingGuard = (scanFile?.code ?? '').replace('anyMatched\n    ? {', 'true\n    ? {');
+    expect(mutatedRemovingGuard).not.toBe(scanFile?.code);
+    expect(doneGuardedByMatch(mutatedRemovingGuard)).toBe(false);
+  });
+
+  /**
+   * RV-scan-pipeline-10: «единственное чтение оценки» — `modelEstimateKcal`/
+   * `model_estimate_kcal` НИКОГДА не участвует в арифметике (не складывается, не умножается,
+   * не входит в сравнение с другим числом калорий) — только читается и передаётся дальше.
+   */
+  it('modelEstimateKcal нигде не участвует в арифметике — только присваивается/передаётся', async () => {
+    const arithmeticNear = /(modelEstimateKcal|model_estimate_kcal)\s*[-+*/]|[-+*/]\s*(modelEstimateKcal|model_estimate_kcal)/;
+    const offenders: string[] = [];
+    for (const { file, code } of [...(await readAll('apps/recognizer/src')), ...(await readAll('apps/api/src'))]) {
+      for (const line of codeLines(code)) {
+        if (arithmeticNear.test(line)) offenders.push(`${file}: ${line.trim()}`);
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
 });
 
 describe('страж чтения окружения', () => {

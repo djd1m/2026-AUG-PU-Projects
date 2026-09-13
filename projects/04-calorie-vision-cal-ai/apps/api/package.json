@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@fastify/cookie": "11.1.2",
+    "@fastify/multipart": "9.2.1",
     "@n4/db": "0.1.0",
     "@n4/shared": "0.1.0",
     "fastify": "5.12.4",
-    "pg": "8.23.0"
+    "minio": "8.0.6",
+    "pg": "8.23.0",
+    "sharp": "0.33.5"
   }
 }

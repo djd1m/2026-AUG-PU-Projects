@@ -11,8 +11,11 @@
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { closeSync, openSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import type { DbPool } from '@n4/db';
-import { createLogger } from '@n4/shared';
+import { createLogger, type Logger } from '@n4/shared';
 import { acquireLease, MAX_LEASE_ATTEMPTS, recordResult, sweepStuckScans } from '../../apps/recognizer/src/lease.js';
 
 /**
@@ -27,10 +30,60 @@ import { acquireLease, MAX_LEASE_ATTEMPTS, recordResult, sweepStuckScans } from 
  * рабочую константу с этим литералом и краснеет, если код разошёлся со спецификацией.
  */
 const SPEC_MAX_LEASE_ATTEMPTS = 3;
-import { createWorker } from '../../apps/recognizer/src/worker.js';
+import { createWorker, type WorkerOptions } from '../../apps/recognizer/src/worker.js';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
-import { ModelDeadlineExceeded } from '../../apps/recognizer/src/provider/types.js';
+import { ModelDeadlineExceeded, type ModelProvider } from '../../apps/recognizer/src/provider/types.js';
+import { createNullMatchIngredientPort } from '../../apps/recognizer/src/match/null-port.js';
+import type { NormalizeOutcome, RecognizeJob } from '../../apps/recognizer/src/recognize/recognize-scan.js';
 import { migratedPool, seedPhoto, seedSession, truncateAll } from '../helpers/db.js';
+
+const GENEROUS_QUOTA = { scanLimitUser: 1000, scanLimitDay: 1000, escalationLimitDay: 1000 };
+
+/**
+ * Нормализация-заглушка: сценарии этого файла проверяют АРЕНДУ и судьбу записи, а не кадр.
+ * Настоящая нормализация проверяется своими тестами (`tests/integration/photo/*`).
+ */
+const stubNormalize = async (): Promise<NormalizeOutcome> => ({ ok: true, normalizedKey: 'stub-normalized-key' });
+
+/**
+ * Воркер с полным набором зависимостей конвейера. После слияния с `scan-pipeline`
+ * `tick()` делегирует `RecognizeScanWithinScanPipeline`, поэтому трёх опций
+ * (`pool`/`provider`/`logger`) больше не хватает — но проверяемое свойство этих
+ * сценариев прежнее: судьба ЗАПИСИ при устаревшем захвате и после уборки.
+ */
+function leaseWorker(options: { provider: ModelProvider; logger: Logger; normalize?: WorkerOptions['normalize']; modelCallLogFd?: number }) {
+  return createWorker({
+    pool,
+    provider: options.provider,
+    matchPort: createNullMatchIngredientPort(),
+    quotaLimits: GENEROUS_QUOTA,
+    normalize: options.normalize ?? stubNormalize,
+    logger: options.logger,
+    modelCallLogFd: options.modelCallLogFd,
+  });
+}
+
+/**
+ * Журнал попыток `model_call` пишется через `writeSync` НАПРЯМУЮ на файловый дескриптор
+ * (он обязан пережить крах процесса), поэтому в `sink` логгера он не попадает. Чтобы
+ * утверждение «попытка оплачена и записана» осталось проверяемым, тест подставляет
+ * дескриптор временного файла и читает его.
+ */
+async function withModelCallLog<T>(body: (fd: number) => Promise<T>): Promise<{ result: T; calls: Array<Record<string, unknown>> }> {
+  const path = join(tmpdir(), `n4-model-call-${randomUUID()}.jsonl`);
+  const fd = openSync(path, 'a+');
+  try {
+    const result = await body(fd);
+    const calls = readFileSync(path, 'utf8')
+      .split('\n')
+      .filter((line) => line.trim() !== '')
+      .map((line) => JSON.parse(line) as Record<string, unknown>);
+    return { result, calls };
+  } finally {
+    closeSync(fd);
+    rmSync(path, { force: true });
+  }
+}
 
 let pool: DbPool;
 
@@ -177,6 +230,8 @@ describe('аренда задания', () => {
       modelEstimateKcal: 321,
       modelUsed: 'haiku-4.5',
       failureReason: 'no_food_matched',
+      escalated: false,
+      attemptNo: 1,
     });
     expect(secondWritten).toBe('written');
 
@@ -187,11 +242,15 @@ describe('аренда задания', () => {
       modelEstimateKcal: 999,
       modelUsed: 'haiku-4.5',
       failureReason: 'provider_timeout',
+      escalated: false,
+      attemptNo: 1,
     });
     // НОЛЬ затронутых строк: проигравший записи не делает и чужой результат не трёт.
     // И случай назван ЧЕСТНО: номер захвата вырос, значит задание перезахватили — это
-    // устаревшая аренда, а не работа уборщика.
-    expect(staleWritten).toBe('stale_lease');
+    // устаревшая аренда, а не работа уборщика. Строка при этом уже НЕ 'queued' (она
+    // 'refused' от победителя), и код `swept_as_timeout` зарезервирован за другим случаем —
+    // за статусом, поставленным SweepStuckScans БЕЗ роста номера захвата.
+    expect(staleWritten).toBe('stale_lease_result');
 
     const row = await pool.query<{ status: string; model_estimate_kcal: number; failure_reason: string }>(
       'SELECT status::text AS status, model_estimate_kcal, failure_reason::text AS failure_reason FROM recognition WHERE id = $1',
@@ -203,31 +262,32 @@ describe('аренда задания', () => {
   }, 60_000);
 
   it('воркер с устаревшим захватом пишет событие stale_lease_result в журнал', async () => {
+    // РАСШИРЕНИЕ фичи `scan-pipeline`: `worker.tick()` теперь делегирует полный
+    // `RecognizeScanWithinScanPipeline` (нормализация → квота → модель → сопоставление),
+    // а не вызывает провайдера напрямую. Гонка воспроизводится на шаге нормализации —
+    // первом асинхронном шаге конвейера, где и жила гонка в исходном тесте `foundation`.
     const jobId = await queueJob('lease-worker-log');
     const lines: string[] = [];
     const logger = createLogger({ service: 'recognizer-test', sink: (line) => lines.push(line) });
 
-    // Поставщик-«ворота»: пока он думает, задание перехватывает другой воркер. Гонка здесь
-    // ВОСПРОИЗВОДИТСЯ ТОЧНО, а не подгадывается таймингом — иначе тест зеленел бы через раз
-    // и ничего бы не доказывал.
-    const fake = createFakeModelProvider();
-    const gatedProvider = {
-      kind: fake.kind,
-      async recognize(...args: Parameters<typeof fake.recognize>) {
-        await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
-        const stealer = await acquireLease(pool, randomUUID());
-        expect(stealer?.id).toBe(jobId);
-        return fake.recognize(...args);
-      },
+    // Поставщик-«ворота» `foundation` переехал на шаг НОРМАЛИЗАЦИИ: `worker.tick()` теперь
+    // делегирует полный `RecognizeScanWithinScanPipeline`, и первым асинхронным шагом
+    // конвейера стала нормализация — именно там, где в исходном тесте жила гонка. Гонка
+    // по-прежнему ВОСПРОИЗВОДИТСЯ ТОЧНО, а не подгадывается таймингом: иначе тест зеленел
+    // бы через раз и ничего бы не доказывал.
+    const gatedNormalize = async (_job: RecognizeJob, _signal: AbortSignal): Promise<NormalizeOutcome> => {
+      await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
+      const stealer = await acquireLease(pool, randomUUID());
+      expect(stealer?.id).toBe(jobId);
+      return { ok: true, normalizedKey: 'stub-normalized-key' };
     };
 
-    const worker = createWorker({ pool, provider: gatedProvider, logger });
+    const worker = leaseWorker({ provider: createFakeModelProvider(), logger, normalize: gatedNormalize });
     const handled = await worker.tick();
 
     expect(handled).toBe(true);
     const events = lines.map((line) => JSON.parse(line).event);
     expect(events).toContain('stale_lease_result');
-    expect(events).not.toContain('scan_finished');
 
     // Результат отброшен: задание осталось за тем, кто держит актуальный номер захвата.
     const row = await pool.query<{ status: string; lease_fence: number }>(
@@ -275,7 +335,7 @@ describe('уборщик застрявших заданий', () => {
     expect(await acquireLease(pool, randomUUID())).toBeUndefined();
 
     const swept = await sweepStuckScans(pool);
-    expect(swept.attemptsExhausted).toBe(1);
+    expect(swept.leaseLimitExhausted).toBe(1);
 
     const row = await pool.query<{ status: string; failure_reason: string | null; finished_at: Date | null }>(
       'SELECT status::text AS status, failure_reason::text AS failure_reason, finished_at FROM recognition WHERE id = $1',
@@ -288,14 +348,19 @@ describe('уборщик застрявших заданий', () => {
 
   it('уборщик НЕ трогает задание с действующей арендой', async () => {
     const jobId = await queueJob('sweep-live-lease');
-    await pool.query("UPDATE recognition SET created_at = now() - interval '6 minutes' WHERE id = $1", [jobId]);
     const taken = await acquireLease(pool, randomUUID());
     expect(taken?.fence).toBe(1);
+    // Строка старится ПОСЛЕ захвата, а не до него: после слияния с `scan-pipeline`
+    // предикат выборки не предлагает воркеру задание старше бюджета задачи (Правило Г),
+    // и состарить его заранее значило бы проверять недостижимое состояние. Проверяемое
+    // свойство то же: уборщик не трогает задание с ДЕЙСТВУЮЩЕЙ арендой, сколько бы оно
+    // ни висело — под все три правила оно подпадает по возрасту и не подпадает по аренде.
+    await pool.query("UPDATE recognition SET created_at = now() - interval '6 minutes' WHERE id = $1", [jobId]);
 
     // Живой воркер внутри СВОЕЙ аренды следит за своим бюджетом сам. «Завершить задание,
     // не прекратив платную работу» — худший исход, чем задержка.
     const swept = await sweepStuckScans(pool);
-    expect(swept).toEqual({ neverLeased: 0, attemptsExhausted: 0 });
+    expect(swept).toEqual({ neverLeased: 0, leaseLimitExhausted: 0, taskBudgetExpired: 0 });
 
     const row = await pool.query<{ status: string }>('SELECT status::text AS status FROM recognition WHERE id = $1', [jobId]);
     expect(row.rows[0]?.status).toBe('queued');
@@ -319,16 +384,24 @@ describe('уборщик застрявших заданий', () => {
       kind: 'fake' as const,
       async recognize(): Promise<never> {
         await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
-        expect((await sweepStuckScans(pool)).attemptsExhausted).toBe(1);
+        expect((await sweepStuckScans(pool)).leaseLimitExhausted).toBe(1);
         throw new ModelDeadlineExceeded(30_000);
       },
     };
 
-    const worker = createWorker({ pool, provider: timingOutAfterSweep, logger });
-    expect(await worker.tick()).toBe(true);
+    const { calls } = await withModelCallLog(async (fd) => {
+      const worker = leaseWorker({ provider: timingOutAfterSweep, logger, modelCallLogFd: fd });
+      expect(await worker.tick()).toBe(true);
+    });
 
     const events = lines.map((line) => JSON.parse(line).event);
-    expect(events).toContain('model_call_deadline_exceeded');
+    // СОБЫТИЕ О ВЫЗОВЕ: попытка оплачена, и её пропажа из журнала означала бы потерянные
+    // деньги без следа. В `foundation` это был `model_call_deadline_exceeded` логгера;
+    // после слияния попытки ведёт отдельный журнал `model_call` (FR-scan-pipeline-12) —
+    // утверждение ТО ЖЕ, источник другой, и он же переживает крах процесса.
+    expect(calls.some((call) => call.phase === 'START' && call.scan_id === jobId)).toBe(true);
+    expect(calls.some((call) => call.attempt_id === `${jobId}:3:1` && call.outcome !== undefined)).toBe(true);
+    // СОБЫТИЕ О СУДЬБЕ ЗАПИСИ: её отбросили, и это названо.
     expect(events).toContain('swept_as_timeout');
     expect(events).not.toContain('scan_finished');
 
@@ -359,11 +432,13 @@ describe('уборщик застрявших заданий', () => {
       },
     };
 
-    const worker = createWorker({ pool, provider: timingOutAfterSteal, logger });
-    expect(await worker.tick()).toBe(true);
+    const { calls } = await withModelCallLog(async (fd) => {
+      const worker = leaseWorker({ provider: timingOutAfterSteal, logger, modelCallLogFd: fd });
+      expect(await worker.tick()).toBe(true);
+    });
 
     const events = lines.map((line) => JSON.parse(line).event);
-    expect(events).toContain('model_call_deadline_exceeded');
+    expect(calls.some((call) => call.phase === 'START' && call.scan_id === jobId)).toBe(true);
     expect(events).toContain('stale_lease_result');
     expect(events).not.toContain('scan_finished');
 
@@ -394,12 +469,12 @@ describe('уборщик застрявших заданий', () => {
         // третий, поэтому задание попадает под правило Б уборщика. Номер захвата при этом
         // НЕ меняется — значит различить уборщика и чужой перезахват можно только так.
         await pool.query("UPDATE recognition SET leased_until = now() - interval '1 minute' WHERE id = $1", [jobId]);
-        expect((await sweepStuckScans(pool)).attemptsExhausted).toBe(1);
+        expect((await sweepStuckScans(pool)).leaseLimitExhausted).toBe(1);
         return fake.recognize(...args);
       },
     };
 
-    const worker = createWorker({ pool, provider: gatedProvider, logger });
+    const worker = leaseWorker({ provider: gatedProvider, logger });
     await worker.tick();
 
     const events = lines.map((line) => JSON.parse(line).event);

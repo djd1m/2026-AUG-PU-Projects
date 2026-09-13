@@ -26,16 +26,27 @@
 import { withTransaction, type DbPool } from '@n4/db';
 import { CANON } from '@n4/shared';
 
-/** Больше трёх захватов у задания не бывает (DEC-A-015). */
-export const MAX_LEASE_ATTEMPTS = 3;
-/** Задание, которого никто не взял за это время, признаётся застрявшим (DEC-A-015). */
-export const SWEEP_QUEUE_AGE = '5 minutes';
+// Ещё одно условие предиката пришло из фичи `scan-pipeline` (PC-02/PC-03, Правило Г):
+//   * `created_at > now() - 30 s` — задание СТАРШЕ общего бюджета задачи воркеру не
+//     предлагается вовсе: платный вызов по нему гарантированно оказался бы поздним.
+//     Это оптимизация, а не рубеж: шаг 1а `RecognizeScanWithinScanPipeline` проверяет
+//     бюджет ЗАНОВО после захвата и остаётся обязательным независимо от этого условия.
+//
+// ОТКЛОНЕНИЕ ветки `scan-pipeline` СНЯТО координатором при слиянии: там `photo_id IS NOT
+// NULL` не добавляли, опасаясь фикстур `foundation`, — на деле фикстуры (`queueJob` в
+// `tests/concurrency/lease.test.ts`) кадр задают, а отдельный сценарий «задание без
+// опубликованного кадра невидимо воркеру» это условие ПРОВЕРЯЕТ. Оба рубежа сохранены:
+// атомарность `EnqueueScanForFeature` и этот предикат.
+
+/** Больше трёх захватов у задания не бывает (DEC-A-015, `CANON.maxLeaseFence`). */
+export const MAX_LEASE_ATTEMPTS = CANON.maxLeaseFence;
 
 export interface LeasedJob {
   readonly id: string;
   readonly fence: number;
   readonly photoId: string;
   readonly deviceSessionId: string;
+  readonly createdAt: Date;
 }
 
 const SELECT_CANDIDATE = `
@@ -44,6 +55,7 @@ const SELECT_CANDIDATE = `
     AND photo_id IS NOT NULL
     AND (leased_until IS NULL OR leased_until < now())
     AND lease_fence < $1
+    AND created_at > now() - interval '${CANON.scanTaskBudgetMs} milliseconds'
   ORDER BY created_at
   FOR UPDATE SKIP LOCKED
   LIMIT 1
@@ -55,7 +67,7 @@ const TAKE_LEASE = `
       lease_owner  = $3,
       lease_fence  = lease_fence + 1
   WHERE id = $1
-  RETURNING id, lease_fence, photo_id, device_session_id
+  RETURNING id, lease_fence, photo_id, device_session_id, created_at
 `;
 
 /**
@@ -68,10 +80,13 @@ export async function acquireLease(pool: DbPool, ownerId: string): Promise<Lease
     const row = candidate.rows[0];
     if (row === undefined) return undefined;
 
-    const leased = await client.query<{ id: string; lease_fence: number; photo_id: string | null; device_session_id: string }>(
-      TAKE_LEASE,
-      [row.id, String(CANON.leaseSeconds), ownerId],
-    );
+    const leased = await client.query<{
+      id: string;
+      lease_fence: number;
+      photo_id: string | null;
+      device_session_id: string;
+      created_at: Date;
+    }>(TAKE_LEASE, [row.id, String(CANON.leaseSeconds), ownerId]);
     const taken = leased.rows[0];
     if (taken === undefined || taken.photo_id === null) return undefined;
     return {
@@ -79,6 +94,7 @@ export async function acquireLease(pool: DbPool, ownerId: string): Promise<Lease
       fence: taken.lease_fence,
       photoId: taken.photo_id,
       deviceSessionId: taken.device_session_id,
+      createdAt: taken.created_at,
     };
   });
 }
@@ -90,10 +106,10 @@ export interface ResultRecord {
   readonly modelEstimateKcal: number | null;
   readonly modelUsed: 'haiku-4.5' | 'sonnet-5' | null;
   readonly failureReason: string | null;
+  /** RV-scan-pipeline-16: без явной записи оставались бы дефолтом вставки (false/1) НАВСЕГДА. */
+  readonly escalated: boolean;
+  readonly attemptNo: number;
 }
-
-/** Почему запись не состоялась. Два случая РАЗНЫЕ, и путать их нельзя. */
-export type WriteOutcome = 'written' | 'stale_lease' | 'swept';
 
 const WRITE_RESULT = `
   UPDATE recognition
@@ -103,14 +119,29 @@ const WRITE_RESULT = `
       model_estimate_kcal = $6,
       model_used = $7,
       failure_reason = $8::recognition_failure_reason,
+      escalated = $9,
+      attempt_no = $10,
       finished_at = now(),
       leased_until = NULL,
       lease_owner = NULL
+  -- AND status = 'queued' (PC-03, RecognizeScanWithinScanPipeline шаг 9) взаимоисключает
+  -- запись воркера со SweepStuckScans: sweeper не несёт fence и меняет ТОЛЬКО queued
+  -- строки. Ноль затронутых строк здесь означает ЛИБО устаревший fence (другой воркер
+  -- захватил задание позже), ЛИБО что sweeper уже перевёл строку в failed(timeout) —
+  -- различаются перечитыванием (см. recordResult ниже).
   WHERE id = $1 AND lease_fence = $2 AND status = 'queued'
 `;
 
 /**
- * Запись результата УСЛОВНА по своему fence И по статусу `queued`.
+ * Почему запись не состоялась. Два случая РАЗНЫЕ, и путать их нельзя. Значения совпадают
+ * с ИМЕНАМИ событий аудита намеренно: `recognize-scan.ts` пишет исход в журнал как имя
+ * события, и по журналу ищут по имени, а не по значению поля.
+ */
+export type WriteOutcome = 'written' | 'stale_lease_result' | 'swept_as_timeout';
+
+/**
+ * Запись результата УСЛОВНА по своему fence И по статусу `queued` (ADR-003, DEC-A-008,
+ * PC-03).
  *
  * Условие по fence закрывает гонку с ДРУГИМ ВОРКЕРОМ; условие по статусу — гонку с
  * УБОРЩИКОМ, который перевёл задание в `failed(timeout)`. Без второго условия воркер
@@ -134,6 +165,8 @@ export async function recordResult(
     record.modelEstimateKcal,
     record.modelUsed,
     record.failureReason,
+    record.escalated,
+    record.attemptNo,
   ]);
   if ((result.rowCount ?? 0) > 0) return 'written';
 
@@ -142,52 +175,25 @@ export async function recordResult(
     [job.id],
   );
   const row = current.rows[0];
-  if (row === undefined) return 'swept';
+  if (row === undefined) return 'swept_as_timeout';
   // Различает именно НОМЕР ЗАХВАТА, а не только статус: терминальный статус мог поставить
   // и другой воркер, и уборщик, а вот `lease_fence` трогает ТОЛЬКО захват. Больше моего —
   // задание перезахватили; равен моему и статус уже терминальный — его закрыл уборщик,
   // потому что он единственный, кто закрывает строку, не увеличивая номер.
-  if (row.lease_fence !== job.fence) return 'stale_lease';
-  return row.status === 'queued' ? 'stale_lease' : 'swept';
+  //
+  // Сравнение ОДНОГО `status` здесь ненадёжно, и это ровно то же наблюдение, к которому
+  // независимо пришла ветка `scan-pipeline` (AC-scan-pipeline-17/22): `failed` способны
+  // поставить и другой воркер, и уборщик — воркер сам пишет `failed(timeout)` на шагах
+  // 1а/9. Ветка различала их по `leased_until` (уборщик его не обнуляет, победивший
+  // воркер обнуляет всегда); здесь тот же вопрос решает номер захвата, и он строже:
+  // отвечает и в случае, когда уборщик отработал по строке, которую никто не перезахватил.
+  if (row.lease_fence !== job.fence) return 'stale_lease_result';
+  return row.status === 'queued' ? 'stale_lease_result' : 'swept_as_timeout';
 }
 
-export interface SweepResult {
-  /** Правило А: простояло в очереди дольше срока и не было взято НИ РАЗУ. */
-  readonly neverLeased: number;
-  /** Правило Б: захваты исчерпаны, аренда истекла — задание больше никому не предложится. */
-  readonly attemptsExhausted: number;
-}
-
-const SWEEP_NEVER_LEASED = `
-  UPDATE recognition
-  SET status = 'failed', failure_reason = 'timeout', finished_at = now()
-  WHERE status = 'queued' AND leased_until IS NULL AND created_at < now() - $1::interval
-`;
-
-const SWEEP_ATTEMPTS_EXHAUSTED = `
-  UPDATE recognition
-  SET status = 'failed', failure_reason = 'timeout', finished_at = now()
-  WHERE status = 'queued' AND lease_fence >= $1 AND leased_until < now()
-`;
-
-/**
- * Уборщик застрявших заданий. Живёт в ТОМ ЖЕ цикле опроса, что и захват: отдельного
- * сервиса не заводится — он был бы ещё одним процессом ради двух операторов.
- *
- * Каждое правило — отдельный идемпотентный `UPDATE` со своим `WHERE`: повторный прогон
- * уже переведённых строк не находит. Условие `status = 'queued'` внутри `WHERE` и есть
- * защита от гонки с воркером: если тот В ЭТОТ МОМЕНТ захватывает задание, `UPDATE`
- * затрагивает ноль строк, и это НЕ ошибка.
- *
- * Уборщик НИКОГДА не трогает задание с ДЕЙСТВУЮЩЕЙ арендой: живой воркер внутри своей
- * аренды следит за своим бюджетом сам, а «завершить задание, не прекратив платную
- * работу» — это худший исход, чем вечное `queued`.
- */
-export async function sweepStuckScans(pool: DbPool, queueAge: string = SWEEP_QUEUE_AGE): Promise<SweepResult> {
-  const neverLeased = await pool.query(SWEEP_NEVER_LEASED, [queueAge]);
-  const attemptsExhausted = await pool.query(SWEEP_ATTEMPTS_EXHAUSTED, [MAX_LEASE_ATTEMPTS]);
-  return {
-    neverLeased: neverLeased.rowCount ?? 0,
-    attemptsExhausted: attemptsExhausted.rowCount ?? 0,
-  };
-}
+// Уборщик застрявших заданий живёт ОДНИМ файлом — `recognize/sweep-stuck-scans.ts` (три
+// правила фичи `scan-pipeline`, надмножество двух правил `foundation`). Здесь он
+// ре-экспортируется, потому что предел `lease_fence < 3` и уборщик — это ОДНО решение
+// (DEC-A-015): предел без уборщика — не защита, а тихая потеря, и читающий `lease.ts`
+// обязан находить второй половиной там же, где первую.
+export { sweepStuckScans, type SweepResult } from './recognize/sweep-stuck-scans.js';

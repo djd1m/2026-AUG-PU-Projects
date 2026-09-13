@@ -1,20 +1,23 @@
-// Адаптер поставщика модели (AC-foundation-11, AC-foundation-19).
+// Адаптер поставщика модели (AC-foundation-11, AC-foundation-19 → расширен фичей
+// `scan-pipeline`, FR-scan-pipeline-13).
 //
-// Три свойства порта проверяются отдельно, потому что каждое стоит своих денег:
-// детерминизм фейка, ВЫБОР МОДЕЛИ вызывающим и ЧЕСТНЫЙ ОТКАЗ по дедлайну.
+// Свойства порта проверяются ПОРОЗНЬ, потому что каждое стоит своих денег: детерминизм
+// фейка, ВЫБОР МОДЕЛИ вызывающим, ЧЕСТНЫЙ ОТКАЗ по дедлайну — и, начиная с этой фичи,
+// СОБИРАЕМОСТЬ живого поставщика: `LiveModelProvider` теперь РЕАЛИЗОВАН, то есть вводит
+// вызовы наружу, которых `foundation` сознательно не делала (DEC-A-009).
 
 import { performance } from 'node:perf_hooks';
 import { describe, expect, it, vi } from 'vitest';
 import { ConfigValidationError } from '@n4/shared';
 import { createFakeModelProvider } from '../../apps/recognizer/src/provider/fake.js';
 import { selectModelProvider } from '../../apps/recognizer/src/provider/select.js';
-import { LiveProviderNotImplemented } from '../../apps/recognizer/src/provider/live.js';
 import {
   MODEL_RESPONSE_SCHEMA,
   ModelDeadlineExceeded,
   type ModelCallOptions,
   type ModelImage,
 } from '../../apps/recognizer/src/provider/types.js';
+import type { ImageFetcher } from '../../apps/recognizer/src/provider/live.js';
 import { loadRecognizerConfig } from '../../apps/recognizer/src/env.js';
 
 const BASE_ENV: Record<string, string | undefined> = {
@@ -30,8 +33,17 @@ const BASE_ENV: Record<string, string | undefined> = {
   ANTHROPIC_API_KEY: '',
 };
 
-const IMAGE: ModelImage = { scanId: '11111111-2222-3333-4444-555555555555', objectKey: 'photos/a.jpg' };
+const IMAGE: ModelImage = { scanId: '11111111-2222-3333-4444-555555555555', imageKey: 'photos/a.jpg' };
 const CALL: ModelCallOptions = { model: 'haiku-4.5', deadlineMs: 30_000, signal: new AbortController().signal };
+
+/**
+ * Запрос порта собирается из тех же частей, что и в рабочем коде: кадр, схема из
+ * ЕДИНСТВЕННОГО объявления и решения вызывающего. Схема передаётся ЯВНО — порт не берёт
+ * её сам (ADR-001: страж читает одно место).
+ */
+function request(overrides: Partial<ModelImage & ModelCallOptions> = {}) {
+  return { ...IMAGE, schema: MODEL_RESPONSE_SCHEMA, ...CALL, ...overrides };
+}
 
 const LIVE_CONFIG = {
   databaseUrl: 'x',
@@ -40,14 +52,17 @@ const LIVE_CONFIG = {
   modelProvider: 'live' as const,
 };
 
+/** Живой поставщик СОБИРАЕТСЯ, но в сеть не ходит: ключа на машине нет (DEC-A-009). */
+const STUB_IMAGES: ImageFetcher = { fetchBase64: () => Promise.reject(new Error('живой вызов не выполняется в этой квитанции')) };
+
 describe('поставщик модели', () => {
   it('фейковый адаптер детерминирован и не ходит в сеть', async () => {
     const provider = createFakeModelProvider();
 
     // Сеть перехвачена: любое обращение наружу провалит тест, а не останется незамеченным.
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
-    const first = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, CALL);
-    const second = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, CALL);
+    const first = await provider.recognize(request());
+    const second = await provider.recognize(request());
     expect(fetchSpy).not.toHaveBeenCalled();
     fetchSpy.mockRestore();
 
@@ -55,17 +70,19 @@ describe('поставщик модели', () => {
     expect(first.confidence).toBeGreaterThanOrEqual(0);
     expect(first.confidence).toBeLessThanOrEqual(1);
     expect(first.items.length).toBeGreaterThan(0);
+    // AC-scan-pipeline-29: фейк возвращает переданную модель эхом, а не выбирает сам.
+    expect(first.model).toBe('haiku-4.5');
 
     // Разный вход — разный ответ: детерминизм не означает «всегда одно и то же».
-    const other = await provider.recognize({ ...IMAGE, objectKey: 'photos/b.jpg' }, MODEL_RESPONSE_SCHEMA, CALL);
+    const other = await provider.recognize(request({ imageKey: 'photos/b.jpg' }));
     expect(other).not.toEqual(first);
   });
 
   it('модель выбирает вызывающий, и ответ сам называет, чей он', async () => {
     const provider = createFakeModelProvider();
 
-    const primary = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: new AbortController().signal });
-    const escalated = await provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'sonnet-5', deadlineMs: 30_000, signal: new AbortController().signal });
+    const primary = await provider.recognize(request({ model: 'haiku-4.5', deadlineMs: 30_000, signal: new AbortController().signal }));
+    const escalated = await provider.recognize(request({ model: 'sonnet-5', deadlineMs: 30_000, signal: new AbortController().signal }));
 
     // Эхо модели обязательно: иначе «о какой модели этот ответ» восстанавливается по
     // памяти вызывающего, и потолок эскалаций не с чем сопоставить.
@@ -79,7 +96,7 @@ describe('поставщик модели', () => {
     // Истёкший бюджет — отказ ДО работы. Ноль и отрицательное значение означают «поздно».
     const instant = createFakeModelProvider();
     for (const deadlineMs of [0, -1, Number.NaN]) {
-      await expect(instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs, signal: new AbortController().signal })).rejects.toBeInstanceOf(
+      await expect(instant.recognize(request({ model: 'haiku-4.5', deadlineMs, signal: new AbortController().signal }))).rejects.toBeInstanceOf(
         ModelDeadlineExceeded,
       );
     }
@@ -87,12 +104,12 @@ describe('поставщик модели', () => {
     // Работа дольше бюджета — тоже отказ, а не поздний ответ: поздний ответ всё равно
     // оплачен и всё равно выбрасывается, и честнее сказать об этом сразу.
     const slow = createFakeModelProvider({ latencyMs: 60 });
-    await expect(slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 20, signal: new AbortController().signal })).rejects.toBeInstanceOf(
+    await expect(slow.recognize(request({ model: 'haiku-4.5', deadlineMs: 20, signal: new AbortController().signal }))).rejects.toBeInstanceOf(
       ModelDeadlineExceeded,
     );
 
     // Работа в пределах бюджета — обычный ответ.
-    const fits = await slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5_000, signal: new AbortController().signal });
+    const fits = await slow.recognize(request({ model: 'haiku-4.5', deadlineMs: 5_000, signal: new AbortController().signal }));
     expect(fits.model).toBe('haiku-4.5');
 
     // ДРОБНЫЙ бюджет — воспроизведение шестого слепого ревью (RV-foundation-01) буквально.
@@ -104,7 +121,7 @@ describe('поставщик модели', () => {
     const tooSlow = createFakeModelProvider({ latencyMs: 1_000 });
     for (let i = 0; i < 20; i += 1) {
       await expect(
-        tooSlow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 5.9, signal: new AbortController().signal }),
+        tooSlow.recognize(request({ model: 'haiku-4.5', deadlineMs: 5.9, signal: new AbortController().signal })),
       ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
     }
 
@@ -128,13 +145,13 @@ describe('поставщик модели', () => {
     try {
       clock.mockReturnValueOnce(0).mockReturnValueOnce(0.005).mockReturnValueOnce(1);
       await expect(
-        createFakeModelProvider().recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal }),
+        createFakeModelProvider().recognize(request({ model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal })),
       ).rejects.toBeInstanceOf(ModelDeadlineExceeded);
 
       // Обратный сценарий той же тройкой: бюджет цел на обеих проверках — обычный ответ.
       // Без него тест доказывал бы только умение отказывать.
       clock.mockReturnValueOnce(0).mockReturnValueOnce(0.001).mockReturnValueOnce(0.002);
-      const ok = await createFakeModelProvider().recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal });
+      const ok = await createFakeModelProvider().recognize(request({ model: 'haiku-4.5', deadlineMs: 0.01, signal: new AbortController().signal }));
       expect(ok.model).toBe('haiku-4.5');
     } finally {
       clock.mockRestore();
@@ -151,13 +168,13 @@ describe('поставщик модели', () => {
     // числа «укладываются» и бюджет съедает ФАКТИЧЕСКОЕ время.
     const provider = createFakeModelProvider({ latencyMs: 10 });
     const startedAt = performance.now();
-    const call = provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, {
+    const call = provider.recognize(request({
       model: 'haiku-4.5',
       deadlineMs: 20,
       // Сигнал НЕ срабатывает: порт обязан соблюдать переданный бюджет сам, а не ждать,
       // пока его оборвут снаружи.
       signal: new AbortController().signal,
-    });
+    }));
 
     // Синхронная занятость — ровно то, что делает таймер поздним. `await` здесь неуместен:
     // он вернул бы управление циклу и дефект не проявился бы.
@@ -177,7 +194,7 @@ describe('поставщик модели', () => {
     const aborted = new AbortController();
     aborted.abort();
     await expect(
-      instant.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: aborted.signal }),
+      instant.recognize(request({ model: 'haiku-4.5', deadlineMs: 30_000, signal: aborted.signal })),
     ).rejects.toMatchObject({ name: 'AbortError' });
 
     // Отмена ВО ВРЕМЯ работы обрывает её НЕМЕДЛЕННО, а не досиживает свой таймер: в этом и
@@ -185,7 +202,7 @@ describe('поставщик модели', () => {
     const slow = createFakeModelProvider({ latencyMs: 5_000 });
     const controller = new AbortController();
     const started = Date.now();
-    const call = slow.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, { model: 'haiku-4.5', deadlineMs: 30_000, signal: controller.signal });
+    const call = slow.recognize(request({ model: 'haiku-4.5', deadlineMs: 30_000, signal: controller.signal }));
     setTimeout(() => controller.abort(), 20);
     await expect(call).rejects.toMatchObject({ name: 'AbortError' });
     expect(Date.now() - started).toBeLessThan(2_000);
@@ -205,11 +222,18 @@ describe('поставщик модели', () => {
     expect(() => selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: undefined })).toThrow(/ANTHROPIC_API_KEY/);
   });
 
-  it('живой поставщик в этой фиче не реализован и говорит об этом явно', async () => {
-    const provider = selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: 'sk-test-value' });
+  it('живой поставщик РЕАЛИЗОВАН этой фичей — конструируется, но не вызывается без сети (нет ключа на машине, DEC-A-009)', () => {
+    const provider = selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: 'sk-test-value' }, STUB_IMAGES);
     expect(provider.kind).toBe('live');
-    // Тихо вернуть пустой ответ нельзя: он неотличим от разбора пустой тарелки.
-    await expect(provider.recognize(IMAGE, MODEL_RESPONSE_SCHEMA, CALL)).rejects.toBeInstanceOf(LiveProviderNotImplemented);
+  });
+
+  it('выбор live БЕЗ ImageFetcher отказывает явно, а не откладывает отказ до первого задания', () => {
+    // Прежняя редакция этого места (`foundation`) утверждала, что живой поставщик НЕ
+    // реализован и бросает `LiveProviderNotImplemented`. Утверждение снято слиянием — не
+    // ослаблением, а поставкой: фича `scan-pipeline` его реализовала, и заглушки больше
+    // нет. Проверяемое свойство осталось тем же: отказ обязан прозвучать НА СБОРКЕ, а не
+    // на первом задании.
+    expect(() => selectModelProvider({ ...LIVE_CONFIG, anthropicApiKey: 'sk-test-value' })).toThrow(/ImageFetcher/);
   });
 
   it('режим fake выбирается только явным значением конфигурации', () => {

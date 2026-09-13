@@ -9,8 +9,11 @@
     "start": "node dist/bootstrap.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.75.0",
     "@n4/db": "0.1.0",
     "@n4/shared": "0.1.0",
-    "pg": "8.23.0"
+    "minio": "8.0.6",
+    "pg": "8.23.0",
+    "sharp": "0.33.5"
   }
 }

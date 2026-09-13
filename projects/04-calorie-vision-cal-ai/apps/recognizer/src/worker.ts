@@ -1,43 +1,50 @@
-// Цикл воркера (FR-foundation-6). Опрос раз в секунду: при 3000 сканах в сутки
-// (≈ 0,03 rps) это незаметно, а брокер очередей был бы шестым сервисом и вторым местом
-// хранения истины (`Architecture.md`, Technology Stack).
+// Цикл воркера. Опрос раз в секунду: при 3000 сканах в сутки (≈ 0,03 rps) это незаметно, а
+// брокер очередей был бы шестым сервисом и вторым местом хранения истины (`Architecture.md`).
 //
 // В ТОМ ЖЕ тике работает уборщик застрявших заданий: предел `lease_fence < 3` делает
 // задание с исчерпанными захватами невидимым для выборки, и без уборщика оно провисело бы
-// в `queued` вечно. Предел без уборщика — это не защита, а тихая потеря.
+// в `queued` вечно. Предел без уборщика — это не защита, а тихая потеря
+// (`recognize/sweep-stuck-scans.ts`, FR-scan-pipeline-16 — не отдельный сервис).
 //
-// ЧЕГО ЭТОТ ЦИКЛ НЕ ДЕЛАЕТ и почему это честнее, чем выглядело бы «done»:
-// сопоставления с базой продуктов в фиче `foundation` НЕТ, а `recognition` без единой
-// ссылки на `food_item` не имеет права стать `done` — иначе на экране появилось бы число,
-// не взятое из базы (ADR-001). Поэтому каркас закрывает задание статусом `refused` с
-// причиной `no_food_matched`: сопоставление вводит фича `scan-pipeline`.
+// Каркас `foundation` закрывал ЛЮБОЕ задание `refused(no_food_matched)` без настоящего
+// распознавания — честная заглушка, пока сопоставления с базой не существовало. Фича
+// `scan-pipeline` её ЗАМЕЩАЕТ: тик делегирует `RecognizeScanWithinScanPipeline`
+// (нормализация → квота → вызов модели → диапазоны → эскалация → сопоставление → запись,
+// `recognize/recognize-scan.ts`) — это и есть содержание фичи.
 
 import { randomUUID } from 'node:crypto';
 import type { DbPool } from '@n4/db';
-import type { Logger } from '@n4/shared';
-import { acquireLease, recordResult, sweepStuckScans, type ResultRecord } from './lease.js';
-import { MODEL_RESPONSE_SCHEMA, ModelDeadlineExceeded, type ModelId, type ModelProvider } from './provider/types.js';
+import type { Logger, QuotaLimits } from '@n4/shared';
+import { acquireLease, recordResult } from './lease.js';
+import { type ModelId, type ModelProvider } from './provider/types.js';
+import type { MatchIngredientPort } from './match/port.js';
+import { recognizeScan, type NormalizeOutcome, type RecognizeJob } from './recognize/recognize-scan.js';
+import { sweepStuckScans } from './recognize/sweep-stuck-scans.js';
 
 /**
- * Первичная модель канона §6. Каркас зовёт её ЯВНО, потому что модель выбирает
- * вызывающий, а не адаптер: эскалацию к Sonnet 5 по уверенности < 0,6 вводит фича
- * `scan-pipeline`, и именно она будет передавать сюда другой идентификатор.
+ * Первичная модель канона §6. Модель выбирает ВЫЗЫВАЮЩИЙ, а не адаптер: арифметику
+ * бюджета и выбор между первичной и эскалационной ведёт `recognize-scan.ts`
+ * (`CANON.modelPrimary`/`CANON.modelEscalation`). Константа сохранена как имя решения.
  */
 export const PRIMARY_MODEL: ModelId = 'haiku-4.5';
-
-/**
- * Бюджет одного вызова в каркасе. Настоящая арифметика бюджета (общий дедлайн операции
- * минус уже потраченное на нормализацию) принадлежит фиче `scan-pipeline`; здесь важно
- * ДРУГОЕ — что дедлайн вообще ПЕРЕДАЁТСЯ, а не подразумевается бесконечным.
- */
-export const DEFAULT_CALL_DEADLINE_MS = 30_000;
 
 export interface WorkerOptions {
   readonly pool: DbPool;
   readonly provider: ModelProvider;
+  readonly matchPort: MatchIngredientPort;
+  readonly quotaLimits: QuotaLimits;
+  readonly normalize: (job: RecognizeJob, signal: AbortSignal) => Promise<NormalizeOutcome>;
   readonly logger: Logger;
   readonly ownerId?: string;
   readonly pollIntervalMs?: number;
+  /** Каждый N-й тик также прогоняет `SweepStuckScans` (по умолчанию — каждый). */
+  readonly sweepEveryNTicks?: number;
+  /**
+   * Файловый дескриптор журнала `model_call`. Тест подменяет его, чтобы ПРОЧИТАТЬ запись
+   * о попытке: она пишется через `writeSync` мимо логгера (переживание краха процесса),
+   * и без этого прохода утверждение «попытка оплачена и записана» проверить нечем.
+   */
+  readonly modelCallLogFd?: number;
 }
 
 export interface Worker {
@@ -53,88 +60,59 @@ export interface Worker {
 export function createWorker(options: WorkerOptions): Worker {
   const ownerId = options.ownerId ?? randomUUID();
   const interval = options.pollIntervalMs ?? 1_000;
+  const sweepEvery = options.sweepEveryNTicks ?? 1;
   let timer: NodeJS.Timeout | undefined;
   let running = false;
+  let tickCount = 0;
 
   const sweep = async (): Promise<void> => {
     const swept = await sweepStuckScans(options.pool);
-    if (swept.neverLeased > 0 || swept.attemptsExhausted > 0) {
+    if (swept.neverLeased > 0 || swept.leaseLimitExhausted > 0 || swept.taskBudgetExpired > 0) {
       options.logger.warn('swept_stuck_scans', {
         never_leased: swept.neverLeased,
-        attempts_exhausted: swept.attemptsExhausted,
+        attempts_exhausted: swept.leaseLimitExhausted,
+        task_budget_expired: swept.taskBudgetExpired,
       });
     }
   };
 
   const tick = async (): Promise<boolean> => {
+    tickCount += 1;
+    if (tickCount % sweepEvery === 0) {
+      try {
+        await sweepStuckScans(options.pool);
+      } catch (error) {
+        options.logger.error('sweep_failed', { message: (error as Error).message });
+      }
+    }
+
     const job = await acquireLease(options.pool, ownerId);
     if (job === undefined) return false;
 
-    // ОДИН сигнал на операцию: по его срабатыванию платная работа прекращается немедленно,
-    // а не досиживает собственный таймаут. В `scan-pipeline` этот же сигнал накроет и
-    // нормализацию кадра — бюджет принадлежит операции целиком, а не каждому шагу отдельно.
-    const controller = new AbortController();
-    const deadlineTimer = setTimeout(() => controller.abort(), DEFAULT_CALL_DEADLINE_MS);
+    const outcome = await recognizeScan(job, {
+      pool: options.pool,
+      quotaLimits: options.quotaLimits,
+      provider: options.provider,
+      matchPort: options.matchPort,
+      normalize: options.normalize,
+      recordResult: (target, record) => recordResult(options.pool, target, record),
+      logger: options.logger,
+      modelCallLogFd: options.modelCallLogFd,
+    });
 
-    let record: ResultRecord;
-    let timedOut = false;
-    try {
-      const response = await options.provider.recognize(
-        { scanId: job.id, objectKey: job.photoId },
-        MODEL_RESPONSE_SCHEMA,
-        // Модель, дедлайн и сигнал задаёт ВЫЗЫВАЮЩИЙ — порт их не выбирает.
-        { model: PRIMARY_MODEL, deadlineMs: DEFAULT_CALL_DEADLINE_MS, signal: controller.signal },
-      );
-      record = {
-        status: 'refused',
-        confidence: response.confidence,
-        items: response.items,
-        modelEstimateKcal: response.modelEstimateKcal,
-        modelUsed: response.model,
-        failureReason: 'no_food_matched',
-      };
-    } catch (error) {
-      if (!(error instanceof ModelDeadlineExceeded) && (error as Error)?.name !== 'AbortError') throw error;
-      timedOut = true;
-      record = {
-        status: 'failed',
-        confidence: null,
-        items: [],
-        modelEstimateKcal: null,
-        modelUsed: PRIMARY_MODEL,
-        failureReason: 'timeout',
-      };
-    } finally {
-      clearTimeout(deadlineTimer);
-    }
-
-    // Событие О ВЫЗОВЕ пишется ДО записи и НЕЗАВИСИМО от её исхода: попытка оплачена в
-    // любом случае, и её пропажа из журнала означала бы потерянные деньги без следа.
-    if (timedOut) options.logger.warn('model_call_deadline_exceeded', { scan_id: job.id, fence: job.fence });
-
-    // ПУТЬ ЗАПИСИ ОДИН — и для успешного ответа, и для таймаута. Отдельная ветка таймаута
-    // возвращалась сразу, поэтому `stale_lease_result` и `swept_as_timeout` на ней не
-    // появлялись НИКОГДА: строка уже терминальная, `UPDATE` трогает ноль строк, а событие,
-    // которое обязано это объяснить, пропадало (слепое ревью, RV-foundation-01). Поле
-    // `write` имя события не заменяет: по журналу ищут по имени, а не по значению поля.
-    const outcome = await recordResult(options.pool, job, record);
-
-    if (outcome === 'stale_lease') {
-      // Ноль затронутых строк по fence — устаревший захват, а не ошибка базы.
-      options.logger.warn('stale_lease_result', { scan_id: job.id, fence: job.fence, lease_owner: ownerId });
-      return true;
-    }
-    if (outcome === 'swept') {
-      // Задание уже закрыл уборщик: статус терминальный, и затирать его нельзя.
-      options.logger.warn('swept_as_timeout', { scan_id: job.id, fence: job.fence, lease_owner: ownerId });
-      return true;
-    }
-    if (!timedOut) {
+    // Событие успешной записи возвращено из каркаса `foundation`: без него у ЗАВЕРШЁННОГО
+    // задания нет ни одного события уровня воркера, и «скан закрыт» приходится выводить из
+    // ОТСУТСТВИЯ `stale_lease_result`/`swept_as_timeout` — вывод из молчания, тот самый,
+    // против которого написано различение этих двух исходов. События о НЕсостоявшейся
+    // записи пишет `recognize-scan.ts` на ОБЩЕМ пути (`writeTerminal`), поэтому здесь
+    // остаётся только положительный случай.
+    if (outcome.writeOutcome === 'written') {
       options.logger.info('scan_finished', {
         scan_id: job.id,
         fence: job.fence,
         provider: options.provider.kind,
-        model: record.modelUsed,
+        status: outcome.status,
+        failure_reason: outcome.failureReason,
       });
     }
     return true;
