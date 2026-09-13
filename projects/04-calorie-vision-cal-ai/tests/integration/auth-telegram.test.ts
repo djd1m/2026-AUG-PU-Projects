@@ -9,6 +9,9 @@ import { SESSION_COOKIE_NAME } from '../../apps/api/src/session/create-device-se
 import { migratedPool, truncateAll } from '../helpers/db.js';
 import { testApiConfig } from '../helpers/config.js';
 import { buildInitData } from '../helpers/telegram.js';
+import { createShareCardGuarded } from '../../apps/api/src/share/share-card-repository.js';
+import { runErasureJob, type PhotoStorePort } from '../../apps/recognizer/src/consent/erasure-job.js';
+import { computeConsentTextHash } from '../../apps/api/src/consent/known-versions.js';
 
 let pool: DbPool;
 let app: FastifyInstance;
@@ -89,8 +92,15 @@ describe('POST /api/v1/auth/telegram', () => {
     expect(recognition.rows[0]?.account_id).toBe(body.data.account_id);
   });
 
-  it('AC-6: вход с другого устройства не теряет и не дублирует дневник', async () => {
+  it('AC-6: вход с другого устройства не теряет и не дублирует дневник ОБОИХ устройств', async () => {
+    // RV-consent-and-telegram-auth-08 (третий обзор): раньше устройство A начинало с ПУСТОГО
+    // дневника — тест не мог отличить «дневник A сохранён» от «дневника A никогда не было».
+    // Теперь ОБА устройства несут записи ДО входа B.
     const sessionA = await createAnonymousSession();
+    const sessionsBefore = await pool.query<{ id: string }>('SELECT id FROM device_session ORDER BY created_at');
+    const sessionAId = sessionsBefore.rows[0]!.id;
+    await seedDiaryEntries(sessionAId, 4);
+
     const initData = buildInitData('700002');
     const loginA = await app.inject({
       method: 'POST',
@@ -99,7 +109,9 @@ describe('POST /api/v1/auth/telegram', () => {
       payload: { init_data: initData },
     });
     expect(loginA.statusCode).toBe(200);
-    const accountId = (loginA.json() as { data: { account_id: string } }).data.account_id;
+    const loginABody = loginA.json() as { data: { account_id: string; migrated_entries: number } };
+    expect(loginABody.data.migrated_entries).toBe(4);
+    const accountId = loginABody.data.account_id;
 
     const sessionB = await createAnonymousSession();
     const sessions = await pool.query<{ id: string }>('SELECT id FROM device_session ORDER BY created_at');
@@ -117,10 +129,14 @@ describe('POST /api/v1/auth/telegram', () => {
     expect(loginB.statusCode).toBe(200);
     const bodyB = loginB.json() as { data: { account_id: string; migrated_entries: number } };
     expect(bodyB.data.account_id).toBe(accountId);
+    // Перенос сессии B ЗАТРАГИВАЕТ только записи B (`WHERE owner_key = session_id`) — уже
+    // перенесённые записи A (`owner_key = accountId`) не совпадают с предикатом.
     expect(bodyB.data.migrated_entries).toBe(2);
 
+    // ОБЩИЙ итог — 4 (A) + 2 (B) = 6, а не только последняя миграция: доказывает, что вход B
+    // НЕ затёр и НЕ продублировал уже перенесённый дневник A.
     const total = await pool.query('SELECT count(*)::int AS n FROM diary_entry WHERE owner_key = $1', [accountId]);
-    expect(total.rows[0]?.n).toBe(2);
+    expect(total.rows[0]?.n).toBe(6);
   });
 
   it('AC-20: повторный вход после erased создаёт новый аккаунт, старые данные не восстанавливаются', async () => {
@@ -237,5 +253,191 @@ describe('POST /api/v1/auth/telegram', () => {
     });
 
     expect(response.statusCode).toBe(422);
+  });
+
+  function spyPhotoStore(): PhotoStorePort {
+    return { async purgeObject(): Promise<void> {} };
+  }
+
+  it('review3 RV-01 (blocker): анонимная карточка → вход → withdraw → erase_all → RunErasureJob БЕЗ ошибки внешнего ключа', async () => {
+    // Сценарий ДОСЛОВНО из находки: `share_card` создаётся анонимному владельцу с согласием
+    // (репозиторий это разрешает), карточка НЕ мигрирует при входе — тогда withdraw/erase_all
+    // отзывают по `owner_key = account_id` и её не находят, а RunErasureJob падает на
+    // `ON DELETE RESTRICT` (`share_card.recognition_id → recognition`), потому что карточка,
+    // всё ещё ссылающаяся на recognition, не даёт его удалить.
+    const { token } = await createAnonymousSession();
+    const consent = await app.inject({
+      method: 'POST',
+      url: '/api/v1/consent',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { decision: 'grant', consent_version: '2026-09-v1', consent_text_hash: computeConsentTextHash('2026-09-v1') },
+    });
+    expect(consent.statusCode).toBe(200);
+
+    const sessionRow = await pool.query<{ id: string }>('SELECT id FROM device_session LIMIT 1');
+    const sessionId = sessionRow.rows[0]!.id;
+    const recognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, status) VALUES ($1, 'done') RETURNING id`,
+      [sessionId],
+    );
+    const recognitionId = recognition.rows[0]!.id;
+
+    // Карточка создаётся АНОНИМНОМУ владельцу — репозиторий это разрешает согласившейся сессии.
+    const cardResult = await createShareCardGuarded(pool, {
+      owner: { table: 'device_session', id: sessionId },
+      recognitionId,
+      objectKey: 'review3-card-anon',
+    });
+    expect(cardResult.outcome).toBe('created');
+    const cardBeforeLogin = await pool.query<{ owner_key: string }>('SELECT owner_key FROM share_card WHERE recognition_id = $1', [
+      recognitionId,
+    ]);
+    expect(cardBeforeLogin.rows[0]?.owner_key).toBe(sessionId);
+
+    const login = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('991001') },
+    });
+    expect(login.statusCode).toBe(200);
+    const accountId = (login.json() as { data: { account_id: string } }).data.account_id;
+
+    // Доказывает саму правку: карточка перенесена НА АККАУНТ в транзакции входа.
+    const cardAfterLogin = await pool.query<{ owner_key: string }>('SELECT owner_key FROM share_card WHERE recognition_id = $1', [
+      recognitionId,
+    ]);
+    expect(cardAfterLogin.rows[0]?.owner_key).toBe(accountId);
+
+    // withdraw_consent теперь ВИДИТ карточку (owner_key = accountId) и закрывает её.
+    const withdraw = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/account',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { confirm: true, scope: 'withdraw_consent' },
+    });
+    expect(withdraw.statusCode).toBe(200);
+    const cardAfterWithdraw = await pool.query<{ revoked_at: Date | null }>('SELECT revoked_at FROM share_card WHERE recognition_id = $1', [
+      recognitionId,
+    ]);
+    expect(cardAfterWithdraw.rows[0]?.revoked_at).not.toBeNull();
+
+    const eraseAll = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/account',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+      payload: { confirm: true, scope: 'erase_all' },
+    });
+    expect(eraseAll.statusCode).toBe(200);
+
+    // РАНЬШЕ: DELETE FROM recognition падал здесь на ON DELETE RESTRICT — неперенесённая
+    // карточка держала ссылку. Теперь — завершается без ошибки, account переходит в erased.
+    const result = await runErasureJob({ pool, photoStore: spyPhotoStore(), logger: createLogger({ service: 'test', sink: () => {} }) });
+    expect(result.erased).toBe(1);
+    const account = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [accountId]);
+    expect(account.rows[0]?.status).toBe('erased');
+    const cardsLeft = await pool.query('SELECT count(*)::int AS n FROM share_card WHERE recognition_id = $1', [recognitionId]);
+    expect(cardsLeft.rows[0]?.n).toBe(0);
+  });
+
+  it('review3 RV-05 (high): вход в erasing-аккаунт ОТКАЗЫВАЕТСЯ 409, НЕ присоединяет новую сессию/дневник', async () => {
+    const session1 = await createAnonymousSession();
+    const login1 = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session1.token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('991002') },
+    });
+    expect(login1.statusCode).toBe(200);
+    const accountId = (login1.json() as { data: { account_id: string } }).data.account_id;
+
+    const eraseAll = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/account',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session1.token}`, 'content-type': 'application/json' },
+      payload: { confirm: true, scope: 'erase_all' },
+    });
+    expect(eraseAll.statusCode).toBe(200);
+    const statusAfterErase = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [accountId]);
+    expect(statusAfterErase.rows[0]?.status).toBe('erasing');
+
+    // Сценарий находки: ДРУГАЯ анонимная сессия с НОВЫМ дневником входит ТЕМ ЖЕ telegram_user_id
+    // ПОКА аккаунт ещё erasing (RunErasureJob мог уже удалить старые строки, но ещё не
+    // закоммитить `erased`).
+    const session2 = await createAnonymousSession();
+    const sessions = await pool.query<{ id: string }>('SELECT id FROM device_session ORDER BY created_at');
+    const session2Id = sessions.rows[1]!.id;
+    await seedDiaryEntries(session2Id, 2);
+
+    const login2 = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session2.token}`, 'content-type': 'application/json' },
+      payload: { init_data: buildInitData('991002', { authDateSecondsAgo: 5, queryId: 'during-erasing' }) },
+    });
+
+    expect(login2.statusCode).toBe(409);
+    expect((login2.json() as { error: { code: string } }).error.code).toBe('account_erasing');
+    // НИКАКОЙ Set-Cookie на отказе — клиент не получает подтверждение несостоявшегося входа.
+    expect(login2.headers['set-cookie']).toBeUndefined();
+
+    // Сессия 2 осталась НЕСВЯЗАННОЙ, её дневник НЕ мигрировал на erasing-аккаунт.
+    const session2Row = await pool.query<{ account_id: string | null }>('SELECT account_id FROM device_session WHERE id = $1', [session2Id]);
+    expect(session2Row.rows[0]?.account_id).toBeNull();
+    const migratedToErasing = await pool.query('SELECT count(*)::int AS n FROM diary_entry WHERE owner_key = $1', [accountId]);
+    expect(migratedToErasing.rows[0]?.n).toBe(0);
+    const stillOnSession2 = await pool.query('SELECT count(*)::int AS n FROM diary_entry WHERE owner_key = $1', [session2Id]);
+    expect(stillOnSession2.rows[0]?.n).toBe(2);
+
+    // Второй телеграм-аккаунт НЕ создан — тот же единственный erasing-аккаунт остаётся один.
+    const accounts = await pool.query('SELECT count(*)::int AS n FROM account WHERE telegram_user_id = $1', ['991002']);
+    expect(accounts.rows[0]?.n).toBe(1);
+  });
+
+  it('review3 RV-04 (high): повтор ТОЙ ЖЕ initData ПОСЛЕ настоящей эразуры НЕ авторизует — заявка на повтор ключуется telegram_user_id, а не заменённым account_id', async () => {
+    const session1 = await createAnonymousSession();
+    const initData = buildInitData('991003');
+    const login1 = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session1.token}`, 'content-type': 'application/json' },
+      payload: { init_data: initData },
+    });
+    expect(login1.statusCode).toBe(200);
+    const accountId1 = (login1.json() as { data: { account_id: string } }).data.account_id;
+
+    const eraseAll = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/account',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session1.token}`, 'content-type': 'application/json' },
+      payload: { confirm: true, scope: 'erase_all' },
+    });
+    expect(eraseAll.statusCode).toBe(200);
+
+    // НАСТОЯЩАЯ эразура — не имитация статуса: без фотографий завершается за один прогон.
+    const result = await runErasureJob({ pool, photoStore: spyPhotoStore(), logger: createLogger({ service: 'test', sink: () => {} }) });
+    expect(result.erased).toBe(1);
+    const accountAfterErasure = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [accountId1]);
+    expect(accountAfterErasure.rows[0]?.status).toBe('erased');
+
+    // Повтор ТОЙ ЖЕ строки initData (ещё свежа — не старше 24 ч) ДРУГОЙ анонимной сессией.
+    // РАНЬШЕ (ключ по account_id): пара (новый account_id, hash) не существовала в истории —
+    // повтор проходил как успешный вход, создавая рабочую сессию на удалённых данных.
+    const session2 = await createAnonymousSession();
+    const replay = await app.inject({
+      method: 'POST',
+      url: '/api/v1/auth/telegram',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${session2.token}`, 'content-type': 'application/json' },
+      payload: { init_data: initData },
+    });
+
+    expect(replay.statusCode).toBe(401);
+    expect((replay.json() as { error: { code: string } }).error.code).toBe('initdata_replayed');
+    // Cookie сессии 2 НЕ переустановлен по итогам повтора — вход не состоялся.
+    const session2Row = await pool.query<{ account_id: string | null }>(
+      'SELECT account_id FROM device_session WHERE cookie_token_hash = $1',
+      [(await import('../../apps/api/src/session/create-device-session.js')).hashSessionToken(session2.token)],
+    );
+    expect(session2Row.rows[0]?.account_id).toBeNull();
   });
 });

@@ -37,17 +37,17 @@ function spyPhotoStore(): PhotoStorePort & { readonly calls: string[] } {
   };
 }
 
-async function seedErasingAccount(telegramUserId: string): Promise<{ accountId: string; sessionId: string }> {
+async function seedErasingAccount(telegramUserId: string, requestedSecondsAgo = 0): Promise<{ accountId: string; sessionId: string }> {
   const account = await pool.query<{ id: string }>(
     `INSERT INTO account (telegram_user_id, tier, status, deletion_requested_at)
-     VALUES ($1, 'free', 'erasing', now()) RETURNING id`,
-    [telegramUserId],
+     VALUES ($1, 'free', 'erasing', now() - ($2 || ' seconds')::interval) RETURNING id`,
+    [telegramUserId, requestedSecondsAgo],
   );
   const accountId = account.rows[0]!.id;
   const session = await pool.query<{ id: string }>(
     `INSERT INTO device_session (account_id, cookie_token_hash, ip_prefix, anonymous_diary_expires_at)
      VALUES ($1, $2, $3, now() + interval '7 days') RETURNING id`,
-    [accountId, `hash-${telegramUserId}`, '203.0.113.0/24'],
+    [accountId, `hash-${telegramUserId}-${Math.random()}`, '203.0.113.0/24'],
   );
   return { accountId, sessionId: session.rows[0]!.id };
 }
@@ -156,9 +156,15 @@ describe('RunErasureJob', () => {
     expect(recognitions.rows[0]?.n).toBe(0);
   });
 
-  it('72-часовой дедлайн: аккаунт с deletion_requested_at 73 часа назад обрабатывается штатно', async () => {
-    const { accountId } = await seedErasingAccount('950006');
-    await pool.query(`UPDATE account SET deletion_requested_at = now() - interval '73 hours' WHERE id = $1`, [accountId]);
+  it('старый deletion_requested_at (73 часа назад) обрабатывается штатно — НЕ доказательство дедлайна 72 ч', async () => {
+    // RV-consent-and-telegram-auth-08 (третий обзор), медиана: название теста внушало проверку
+    // «дедлайна», но `RunErasureJob` НЕ ИМЕЕТ шлюза по времени вообще — предикат шага 1 это
+    // `WHERE status = 'erasing'`, БЕЗ `deletion_requested_at`. 72 часа — обещание срока
+    // владельцу данных (`erase_deadline` в ответе `DELETE /api/v1/account`, проверено
+    // `AC-13`/`AC-14` в `account-delete.test.ts`, где дедлайн реально ВЫЧИСЛЯЕТСЯ), а не
+    // условие, которое эта задача проверяет. Этот тест доказывает РОВНО ОДНО: старый
+    // `deletion_requested_at` не ломает обработку — не больше и не меньше.
+    const { accountId } = await seedErasingAccount('950006', 73 * 60 * 60);
 
     const result = await runErasureJob({ pool, photoStore: spyPhotoStore(), logger: createLogger({ service: 'test', sink: () => {} }) });
 
@@ -166,6 +172,37 @@ describe('RunErasureJob', () => {
     const account = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [accountId]);
     expect(account.rows[0]?.status).toBe('erased');
   });
+
+  it('review3 RV-07 (high): 50 заблокированных активным сканом аккаунтов НЕ мешают 51-му готовому обработаться В ЭТОМ ЖЕ прогоне', async () => {
+    // РАНЬШЕ: `SELECT … LIMIT 50` без учёта уже виденных в прогоне — если ВСЕ 50 первых по
+    // `deletion_requested_at` пропускались активным сканом, 51-й (готовый, но с БОЛЕЕ ПОЗДНИМ
+    // `deletion_requested_at`, то есть за пределами первой страницы) не обрабатывался НИКОГДА.
+    const blockedIds: string[] = [];
+    for (let i = 0; i < 50; i += 1) {
+      // Более РАННИЙ deletion_requested_at — первая страница (ORDER BY deletion_requested_at).
+      const blocked = await seedErasingAccount(`95100${i}-blocked`, 1000 - i);
+      await pool.query(`INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'queued')`, [
+        blocked.sessionId,
+        blocked.accountId,
+      ]);
+      blockedIds.push(blocked.accountId);
+    }
+    // Готовый аккаунт — БОЛЕЕ ПОЗДНИЙ deletion_requested_at, чем у всех 50 заблокированных:
+    // без пагинации по страницам он остаётся ЗА пределами первого `LIMIT 50`.
+    const ready = await seedErasingAccount('951999-ready', 10);
+
+    const result = await runErasureJob({ pool, photoStore: spyPhotoStore(), logger: createLogger({ service: 'test', sink: () => {} }) });
+
+    expect(result.skippedActiveScan).toBe(50);
+    expect(result.erased).toBe(1);
+
+    const readyAccount = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [ready.accountId]);
+    expect(readyAccount.rows[0]?.status).toBe('erased');
+    for (const blockedId of blockedIds) {
+      const blockedAccount = await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [blockedId]);
+      expect(blockedAccount.rows[0]?.status).toBe('erasing');
+    }
+  }, 30_000);
 
   describe('RV-02: НАСТОЯЩИЙ MinIO — объект физически удаляется, коммит erased только после подтверждения', () => {
     it('объект, реально загруженный в бакет, физически исчезает после runErasureJob с MinioPhotoStore', async () => {

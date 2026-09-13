@@ -181,6 +181,84 @@ describe('DELETE /api/v1/account', () => {
     expect(account.rows[0]?.consent_at).toBeNull();
   });
 
+  it('review3 RV-03 (high): УПРАВЛЯЕМЫЙ барьер — карточка, создающаяся параллельно (уже держит блокировку account), коммитится ДО withdraw_consent — ОБЯЗАНА быть закрыта, не пережить отзыв', async () => {
+    // Раньше карточки закрывались (`UPDATE share_card`) ДО блокировки строки `account` —
+    // конкурентный `createShareCardGuarded`, уже держащий блокировку account (согласие
+    // проверено GRANTED) и готовящий INSERT, был этим шагом НЕ ВИДЕН (он не трогал account и
+    // потому ничем не блокировался). Барьер ниже принудительно ставит держателя блокировки
+    // account ПЕРВЫМ и коммитит его СРЕДИ жизни промиса DELETE — воспроизводит ТОЧНОЕ
+    // чередование из находки, а не полагается на удачу планировщика ОС.
+    const { token, accountId } = await loggedInAccount('930010');
+    await pool.query(`UPDATE account SET consent_at = now() WHERE id = $1`, [accountId]);
+    const session = await pool.query<{ id: string }>('SELECT id FROM device_session WHERE account_id = $1 LIMIT 1', [accountId]);
+    const recognition = await pool.query<{ id: string }>(
+      `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+      [session.rows[0]!.id, accountId],
+    );
+    const recognitionId = recognition.rows[0]!.id;
+
+    const lockClient = await pool.connect();
+    try {
+      await lockClient.query('BEGIN');
+      // Имитирует enforceConsentBeforeDiaryWrite, УЖЕ прошедший проверку (GRANTED) и
+      // держащий блокировку account перед INSERT новой карточки.
+      await lockClient.query('SELECT consent_at FROM account WHERE id = $1 FOR UPDATE', [accountId]);
+
+      // Карточка вставляется (та же незакоммиченная транзакция, лок account ещё удерживается)
+      // ДО того, как DELETE вообще стартует — это и есть управляемый барьер: с ПРАВИЛЬНЫМ
+      // порядком (account заблокирован первым) DELETE не может добраться до `UPDATE share_card`
+      // раньше нашего COMMIT ни при каком планировщике ОС, потому что его САМАЯ ПЕРВАЯ операция
+      // упирается в удерживаемый лок account. Со СТАРЫМ порядком (карточки закрываются до
+      // блокировки account) DELETE способен выполнить `UPDATE share_card` НЕМЕДЛЕННО — карточка
+      // ещё не закоммичена и потому НЕВИДИМА для него (READ COMMITTED), и отозвать её после
+      // этой точки уже НЕЧЕМ, каким бы ни было дальнейшее чередование.
+      const card = await lockClient.query<{ id: string }>(
+        `INSERT INTO share_card (owner_key, recognition_id, object_key) VALUES ($1, $2, $3) RETURNING id`,
+        [accountId, recognitionId, 'review3-rv03-card'],
+      );
+
+      const deletePromise = app.inject({
+        method: 'DELETE',
+        url: '/api/v1/account',
+        headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+        payload: { confirm: true, scope: 'withdraw_consent' },
+      });
+
+      // Детерминированное ожидание БЕЗ фиксированной паузы: коммитим ТОЛЬКО когда DELETE
+      // РЕАЛЬНО упёрся в удерживаемый лок account (виден в `pg_stat_activity` как
+      // `wait_event_type = 'Lock'`). Это верно для ЛЮБОГО порядка операций внутри DELETE: если
+      // блокировка запрошена ПЕРВОЙ (правка) — она видна почти сразу; если ПОСЛЕ `UPDATE
+      // share_card` (старый порядок) — она видна ровно тогда, когда та `UPDATE` уже выполнена.
+      // В обоих случаях к моменту, когда мы это наблюдаем, всё, что DELETE собирался сделать
+      // ДО обращения к account, уже случилось — коммитить раньше этого момента бессмысленно,
+      // ждать дольше не нужно.
+      const deadline = Date.now() + 5_000;
+      let observedBlocked = false;
+      while (Date.now() < deadline) {
+        const waiting = await pool.query<{ n: number }>(
+          `SELECT count(*)::int AS n FROM pg_stat_activity
+           WHERE wait_event_type = 'Lock' AND pid != pg_backend_pid() AND datname = current_database()`,
+        );
+        if ((waiting.rows[0]?.n ?? 0) > 0) {
+          observedBlocked = true;
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+      expect(observedBlocked).toBe(true); // страж на сам барьер: если ложь — тест ничего не доказывает
+
+      await lockClient.query('COMMIT');
+
+      const deleteResponse = await deletePromise;
+      expect(deleteResponse.statusCode).toBe(200);
+
+      const cardRow = await pool.query<{ revoked_at: Date | null }>('SELECT revoked_at FROM share_card WHERE id = $1', [card.rows[0]!.id]);
+      expect(cardRow.rows[0]?.revoked_at).not.toBeNull();
+    } finally {
+      lockClient.release();
+    }
+  });
+
   it('RV-05: отозванное согласие НЕ восстанавливается повторным входом (анонимное согласие → вход → withdraw → вход с новой initData)', async () => {
     const device = await app.inject({ method: 'POST', url: '/api/v1/auth/device', headers: { 'x-forwarded-for': '203.0.113.42' } });
     const token = cookieValue(device.headers['set-cookie']);
