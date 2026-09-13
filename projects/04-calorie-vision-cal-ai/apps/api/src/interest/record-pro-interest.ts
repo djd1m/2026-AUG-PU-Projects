@@ -13,6 +13,22 @@
 // ON CONFLICT` недоступен; сериализация — `pg_advisory_xact_lock` по хэшу
 // `(owner_key, day)`, снятому автоматически при COMMIT/ROLLBACK транзакции. Конкурентный
 // тест — `tests/concurrency/interest-cadence.test.ts` (AC-pro-interest-and-limits-ui-8).
+//
+// RV-pro-interest-and-limits-ui-01 (правка после ревью): `day` БОЛЬШЕ НЕ параметр входа.
+// Раньше вызывающий код (`routes/interest.ts`) вычислял его часами ПРИЛОЖЕНИЯ ДО открытия
+// транзакции — то есть ДО `pool.connect()`, который может ждать свободное соединение.
+// Два запроса, вычислившие «вчера» перед московской полуночью и дождавшиеся соединения
+// уже после неё, оба видели один и тот же устаревший `day`: advisory-lock сериализовал
+// операции, но НЕ исправлял неверный день поиска — обе строки получали СЕГОДНЯШНИЙ
+// `created_at` (`DEFAULT now()` СУБД), но проверялись и блокировались по «вчера», и потому
+// не видели друг друга. Расхождение часов приложения и БД давало тот же эффект.
+//
+// Исправление: единственный источник времени — `now()` САМОЙ транзакции, прочитанный ПЕРВЫМ
+// запросом ПОСЛЕ того, как соединение уже получено и `BEGIN` уже выполнен (`now()` в
+// PostgreSQL — это момент СТАРТА транзакции, неизменный до `COMMIT`/`ROLLBACK`, а не момент
+// текущего запроса). Этот момент используется для ключа блокировки, для cadence-проверки
+// И для `created_at` вставки — три места читают одно и то же значение, а не три независимых.
+// Часы приложения (`moscowDay()`, `new Date()`) в этой функции больше не участвуют вовсе.
 
 import { withTransaction, type DbPool } from '@n4/db';
 import {
@@ -35,8 +51,6 @@ export interface RecordProInterestInput {
   readonly deviceSessionId: string;
   readonly contact: string;
   readonly source: string;
-  /** Календарные сутки `Europe/Moscow`, `YYYY-MM-DD` (`moscowDay()`). */
-  readonly day: string;
 }
 
 function isSourceScreen(value: string): value is ProInterestSourceScreen {
@@ -47,12 +61,16 @@ function isSourceScreen(value: string): value is ProInterestSourceScreen {
  * возврат из колбэка `withTransaction` её КОММИТИТ (`security-operation-order.md`). */
 class AlreadyRecordedToday extends Error {}
 
+// Единственный источник времени этой функции: момент СТАРТА транзакции (RV-01), а не часы
+// приложения и не `CURRENT_DATE` сервера (часовой пояс процесса БД не гарантирован — перевод
+// в московские сутки делается явно, тем же способом, что и `moscowDay()`, но от `now()`).
+const NOW_AND_DAY_SQL = `SELECT now() AS ts, to_char(now() AT TIME ZONE 'Europe/Moscow', 'YYYY-MM-DD') AS day`;
+
 const LOCK_SQL = `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`;
 
-// `(created_at AT TIME ZONE 'Europe/Moscow')::date` — тот же перевод в московские сутки,
-// что и `moscowDay()` на стороне приложения, но вычисленный из уже сохранённой строки:
-// день сравнивается со значением, переданным вызывающим, а не с `CURRENT_DATE` сервера
-// (часовой пояс процесса БД не гарантирован).
+// День сравнивается со значением `NOW_AND_DAY_SQL` этой же транзакции — не с параметром,
+// пришедшим от вызывающего кода (RV-01: пришедший параметр мог устареть за время ожидания
+// свободного соединения).
 const SELECT_EXISTING_TODAY_SQL = `
   SELECT id FROM pro_interest
   WHERE owner_key = $1 AND (created_at AT TIME ZONE 'Europe/Moscow')::date = $2::date
@@ -67,9 +85,12 @@ const SELECT_CURRENT_ATTRIBUTION_SQL = `
   SELECT partner_code_id FROM attribution WHERE device_session_id = $1 AND status <> 'rejected'
 `;
 
+// `created_at` передаётся ЯВНО (тем же `ts`, что дал `NOW_AND_DAY_SQL`), а не оставлен на
+// `DEFAULT now()` таблицы: до RV-01 `DEFAULT now()` брал СВОЙ независимый момент времени —
+// второй источник истины вместо одного.
 const INSERT_PRO_INTEREST_SQL = `
-  INSERT INTO pro_interest (owner_key, contact, contact_kind, source_screen, partner_code_id)
-  VALUES ($1, $2, $3, $4, $5)
+  INSERT INTO pro_interest (owner_key, contact, contact_kind, source_screen, partner_code_id, created_at)
+  VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING id
 `;
 
@@ -84,13 +105,19 @@ export async function recordProInterest(pool: DbPool, input: RecordProInterestIn
 
   try {
     return await withTransaction(pool, async (client) => {
+      // RV-01: ЕДИНЫЙ момент этой транзакции — прочитан ПЕРВЫМ, после того как соединение
+      // уже получено и `BEGIN` уже выполнен. `ts`/`day` ниже используются для лока, для
+      // cadence-проверки И для `created_at` вставки — одно значение, а не три независимых.
+      const moment = await client.query<{ ts: Date; day: string }>(NOW_AND_DAY_SQL);
+      const { ts, day } = moment.rows[0]!;
+
       // Шаг 3: advisory-lock по (owner_key, day) СЕРИАЛИЗУЕТ два одновременных первых
       // запроса; `FOR UPDATE` на уже существующую строку дня дополнительно блокирует её
       // от параллельного чтения, хотя после lock конкуренции внутри одного (owner_key, day)
       // уже нет — вторая транзакция ждёт снятия lock и видит строку первой.
-      await client.query(LOCK_SQL, [`${input.ownerKey}:${input.day}`]);
+      await client.query(LOCK_SQL, [`${input.ownerKey}:${day}`]);
 
-      const existing = await client.query(SELECT_EXISTING_TODAY_SQL, [input.ownerKey, input.day]);
+      const existing = await client.query(SELECT_EXISTING_TODAY_SQL, [input.ownerKey, day]);
       if ((existing.rowCount ?? 0) > 0) throw new AlreadyRecordedToday();
 
       const attribution = await client.query<{ partner_code_id: string }>(SELECT_CURRENT_ATTRIBUTION_SQL, [
@@ -106,6 +133,7 @@ export async function recordProInterest(pool: DbPool, input: RecordProInterestIn
         classified.kind,
         input.source,
         partnerCodeId,
+        ts,
       ]);
 
       return { outcome: 'recorded' as const, contactKind: classified.kind };

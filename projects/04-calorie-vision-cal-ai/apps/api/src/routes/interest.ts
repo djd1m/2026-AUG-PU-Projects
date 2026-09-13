@@ -11,7 +11,6 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { DbPool } from '@n4/db';
 import { fail, ok, type Logger } from '@n4/shared';
 import { SESSION_COOKIE_NAME, hashSessionToken } from '../session/create-device-session.js';
-import { moscowDay } from '../quota/keys.js';
 import { recordProInterest } from '../interest/record-pro-interest.js';
 
 export interface InterestRouteDeps {
@@ -62,7 +61,6 @@ export function registerInterestRoute(app: FastifyInstance, deps: InterestRouteD
         deviceSessionId: owner.deviceSessionId,
         contact,
         source,
-        day: moscowDay(),
       });
     } catch (error) {
       deps.logger.error('record_interest_failed', { message: (error as Error).message });

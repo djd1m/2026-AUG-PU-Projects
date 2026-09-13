@@ -14,7 +14,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { DbPool } from '@n4/db';
 import { recordProInterest } from '../../apps/api/src/interest/record-pro-interest.js';
-import { moscowDay } from '../../apps/api/src/quota/keys.js';
 import { migratedPool, seedSession, truncateAll } from '../helpers/db.js';
 
 let pool: DbPool;
@@ -34,7 +33,6 @@ beforeEach(async () => {
 describe('cadence pro_interest под конкуренцией', () => {
   it('AC-8: десять одновременных отправок одного владельца дают ровно одну запись', async () => {
     const session = await seedSession(pool, 'interest-cadence-main');
-    const day = moscowDay();
 
     const attempts = Array.from({ length: 10 }, (_, index) =>
       recordProInterest(pool, {
@@ -42,7 +40,6 @@ describe('cadence pro_interest под конкуренцией', () => {
         deviceSessionId: session.id,
         contact: `contact${index}@b.ru`,
         source: 'user_limit',
-        day,
       }),
     );
     const outcomes = await Promise.all(attempts);
@@ -60,7 +57,6 @@ describe('cadence pro_interest под конкуренцией', () => {
   it('добросовестный сосед (другой owner_key) не блокируется конкуренцией за первого', async () => {
     const saturating = await seedSession(pool, 'interest-cadence-saturating');
     const neighbour = await seedSession(pool, 'interest-cadence-neighbour');
-    const day = moscowDay();
 
     const mixed = [
       ...Array.from({ length: 10 }, (_, index) =>
@@ -69,7 +65,6 @@ describe('cadence pro_interest под конкуренцией', () => {
           deviceSessionId: saturating.id,
           contact: `sat${index}@b.ru`,
           source: 'user_limit',
-          day,
         }),
       ),
       recordProInterest(pool, {
@@ -77,7 +72,6 @@ describe('cadence pro_interest под конкуренцией', () => {
         deviceSessionId: neighbour.id,
         contact: 'neighbour@b.ru',
         source: 'user_limit',
-        day,
       }),
     ];
     const outcomes = await Promise.all(mixed);

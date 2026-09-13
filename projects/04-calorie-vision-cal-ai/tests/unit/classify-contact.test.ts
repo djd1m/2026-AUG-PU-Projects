@@ -37,9 +37,18 @@ describe('контакт классифицируется по форме зна
     expect(classifyContact('a'.repeat(33))).toEqual({ kind: 'unrecognized' }); // 33 — длиннее максимума
   });
 
-  it('числовая строка короче 5 символов не проходит ни одну форму (общая нижняя граница)', () => {
-    expect(classifyContact('1234')).toEqual({ kind: 'unrecognized' }); // 4 цифры — короче минимума
-    expect(classifyContact('12345')).toEqual({ kind: 'telegram', normalized: '12345' }); // 5 цифр — минимум формы
+  it('RV-02: telegram_id — ЛЮБОЕ положительное целое, короткие числа НЕ отклоняются (FR-6)', () => {
+    // FR-6 называет числовой telegram_id «положительным целым» без нижней границы длины;
+    // псевдокод содержал более узкий шаблон (мин. 5 цифр), но псевдокод спецификацию не
+    // отменяет — до RV-02 "1" и "1234" ошибочно давали unrecognized.
+    expect(classifyContact('1')).toEqual({ kind: 'telegram', normalized: '1' });
+    expect(classifyContact('1234')).toEqual({ kind: 'telegram', normalized: '1234' });
+    expect(classifyContact('12345')).toEqual({ kind: 'telegram', normalized: '12345' });
+  });
+
+  it('telegram_id: ноль и ведущий ноль НЕ являются положительным целым', () => {
+    expect(classifyContact('0')).toEqual({ kind: 'unrecognized' });
+    expect(classifyContact('0123')).toEqual({ kind: 'unrecognized' }); // ведущий 0 — не каноническая запись целого
   });
 
   it('верхняя граница длины входа: 254 символа проходит, 255 — нет (шаг 2)', () => {
