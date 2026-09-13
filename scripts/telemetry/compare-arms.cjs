@@ -69,8 +69,20 @@ function summarise(run) {
     attempts_plan: attempts.PLAN || 0, attempts_validate: attempts.VALIDATE || 0,
     attempts_implement: attempts.IMPLEMENT || 0, attempts_review: reviews,
     corrective_impl: correctiveImpl,
-    in_tokens: num(usage && usage.input_tokens), out_tokens: num(usage && usage.output_tokens),
-    total_tokens: num(usage && usage.total_tokens),
+    // Имена полей приходят из протокола feature-telemetry-v1 (`*_total`); более короткие
+    // формы принимаются как запасные, чтобы паспорт, заполненный вручную, не читался как
+    // «не измерено». Сумма считается только когда ОБЕ половины известны: «вход есть, выход
+    // неизвестен» это не «итог равен входу».
+    in_tokens: num(usage && (usage.input_tokens_total ?? usage.input_tokens)),
+    out_tokens: num(usage && (usage.output_tokens_total ?? usage.output_tokens)),
+    total_tokens: (() => {
+      if (!usage) return null;
+      const direct = num(usage.total_tokens);
+      if (direct !== null) return direct;
+      const i = num(usage.input_tokens_total ?? usage.input_tokens);
+      const o = num(usage.output_tokens_total ?? usage.output_tokens);
+      return i === null || o === null ? null : i + o;
+    })(),
     cost_usd: num(cost && (cost.total_usd ?? cost.usd)),
     ac_met: num(q.ac_met), ac_total: num(q.ac_total),
     gates: q.required_gates_passed === null || q.required_gates_passed === undefined ? null : q.required_gates_passed,
