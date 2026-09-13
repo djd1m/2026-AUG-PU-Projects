@@ -159,6 +159,10 @@ services:
       # Ключа на этой машине нет (DEC-A-009). Пустое значение законно при N4_MODEL_PROVIDER=fake
       # и ОБЯЗАНО валить старт при live — проверку делает код, потому что условие зависит от режима.
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # ТРЕТЬЯ реализация (DEC-A-045/046). Та же форма, что у ANTHROPIC_API_KEY: пусто законно
+      # при N4_MODEL_PROVIDER != openrouter, обязано валить старт при openrouter — проверку
+      # делает код `apps/recognizer/src/env.ts`, не compose.
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       N4_SCAN_LIMIT_USER: ${N4_SCAN_LIMIT_USER:?потолок на пользователя не задан}
       N4_SCAN_LIMIT_DAY: ${N4_SCAN_LIMIT_DAY:?суточный потолок попыток не задан}
       N4_ESCALATION_LIMIT_DAY: ${N4_ESCALATION_LIMIT_DAY:?суточный потолок эскалаций не задан}

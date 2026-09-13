@@ -42,7 +42,8 @@ export function logModelCallStart(
     readonly fence: number;
     readonly callNo: 1 | 2;
     readonly model: string;
-    readonly mode: 'fake' | 'live';
+    /** `ModelProvider['kind']` — ТРЕТЬЯ реализация `openrouter` добавлена DEC-A-045/046. */
+    readonly mode: 'fake' | 'live' | 'openrouter';
     readonly day: string;
   },
   target?: ModelCallLogFd,

@@ -44,6 +44,20 @@ export function loadRecognizerConfig(env: EnvSource = process.env): RecognizerCo
       );
     }
 
+    const openrouterApiKey = optionalText(env.OPENROUTER_API_KEY);
+    // Та же форма, что у ANTHROPIC_API_KEY выше: условие зависит от РЕЖИМА (DEC-A-045/046).
+    // При `fake`/`live` пустой ключ OpenRouter законен; при `openrouter` он валит старт —
+    // тем же сообщением про платный вызов, что у `live`, а не отдельной формулировкой.
+    if (modelProvider === 'openrouter' && openrouterApiKey === undefined) {
+      fail(
+        new ConfigError(
+          'OPENROUTER_API_KEY',
+          env.OPENROUTER_API_KEY === undefined ? 'missing' : 'empty',
+          'при N4_MODEL_PROVIDER=openrouter каждый разбор кадра — платный вызов наружу, и без ключа он невыполним',
+        ),
+      );
+    }
+
     return {
       databaseUrl: attempt(
         fail,
@@ -75,6 +89,7 @@ export function loadRecognizerConfig(env: EnvSource = process.env): RecognizerCo
       },
       modelProvider,
       anthropicApiKey,
+      openrouterApiKey,
     };
   });
 }

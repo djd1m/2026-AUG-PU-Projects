@@ -126,7 +126,7 @@ export class ModelDeadlineExceeded extends Error {
 }
 
 export interface ModelProvider {
-  readonly kind: 'fake' | 'live';
+  readonly kind: 'fake' | 'live' | 'openrouter';
   recognize(request: ModelRequest): Promise<ModelResponse>;
 }
 

@@ -67,7 +67,7 @@ async function main(): Promise<void> {
     // журнал меткой `[redacted]`. Чёрный список не поймал бы произвольную строку в
     // разрешённом поле — этим и был дефект RV-foundation-01.
     allowedFields: SERVICE_LOG_FIELDS,
-    secrets: [config.anthropicApiKey, config.storage.secretKey, config.storage.accessKey],
+    secrets: [config.anthropicApiKey, config.openrouterApiKey, config.storage.secretKey, config.storage.accessKey],
   });
 
   logger.info('config_validated', {

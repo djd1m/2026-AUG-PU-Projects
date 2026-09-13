@@ -1,8 +1,13 @@
 // Формы проверенной конфигурации. До проверки конфигурации в системе нет — есть
 // только `process.env`, и ни один модуль, кроме `apps/*/src/env.ts`, его не читает.
 
-/** Реализация поставщика модели. ЗАКРЫТОЕ множество, живёт в коде (DEC-A-009). */
-export const MODEL_PROVIDERS = ['fake', 'live'] as const;
+/**
+ * Реализация поставщика модели. ЗАКРЫТОЕ множество, живёт в коде (DEC-A-009).
+ * `openrouter` — ТРЕТЬЯ реализация (DEC-A-045/046): те же роли канона (основной вызов,
+ * эскалация), другой носитель. Добавление варианта в это множество НЕ означает включение
+ * на живых пользователях — граница согласия описана у самого адаптера.
+ */
+export const MODEL_PROVIDERS = ['fake', 'live', 'openrouter'] as const;
 export type ModelProvider = (typeof MODEL_PROVIDERS)[number];
 
 /** Три потолка вызовов модели (ADR-007). Ни один не имеет значения по умолчанию. */
@@ -48,4 +53,6 @@ export interface RecognizerConfig {
   readonly modelProvider: ModelProvider;
   /** Пусто законно ТОЛЬКО при `modelProvider === 'fake'`; при `live` старт уже отказал. */
   readonly anthropicApiKey: string | undefined;
+  /** Пусто законно ТОЛЬКО при `modelProvider !== 'openrouter'`; при `openrouter` старт уже отказал. */
+  readonly openrouterApiKey: string | undefined;
 }
