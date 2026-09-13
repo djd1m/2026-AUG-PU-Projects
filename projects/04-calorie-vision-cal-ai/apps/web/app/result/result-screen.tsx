@@ -211,6 +211,10 @@ function ReplaceControl({ index, actions }: { readonly index: number; readonly a
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [candidates, setCandidates] = useState<readonly ReplaceCandidate[]>([]);
+  // «Ещё не искали» и «искали, не нашли» — РАЗНЫЕ состояния: без этого признака пустой
+  // список выглядит одинаково в обоих случаях и читается как сломанная кнопка.
+  const [searched, setSearched] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   if (actions.onSearchReplace === undefined || actions.onReplace === undefined) return null;
@@ -230,14 +234,24 @@ function ReplaceControl({ index, actions }: { readonly index: number; readonly a
         disabled={pending || query.trim() === ''}
         onClick={() => {
           setPending(true);
+          setFailure(null);
           actions
             .onSearchReplace?.(query)
-            .then(setCandidates)
+            .then((found) => {
+              setCandidates(found);
+              setSearched(true);
+            })
+            // Отказ не остаётся молчанием: пустой список после сбоя неотличим от «не нашли».
+            .catch(() => setFailure('поиск не удался — попробуйте ещё раз'))
             .finally(() => setPending(false));
         }}
       >
         искать
       </button>
+      {failure !== null ? <p className="replace__failure" role="alert">{failure}</p> : null}
+      {failure === null && searched && candidates.length === 0 ? (
+        <p className="replace__empty">ничего не нашли — попробуйте другое слово</p>
+      ) : null}
       <ul className="replace__candidates">
         {candidates.map((candidate) => (
           <li key={candidate.food_item_id}>
@@ -245,10 +259,13 @@ function ReplaceControl({ index, actions }: { readonly index: number; readonly a
               type="button"
               onClick={() => {
                 setPending(true);
-                Promise.resolve(actions.onReplace?.(index, candidate.food_item_id)).finally(() => {
-                  setPending(false);
-                  setOpen(false);
-                });
+                setFailure(null);
+                Promise.resolve(actions.onReplace?.(index, candidate.food_item_id))
+                  .then(() => setOpen(false))
+                  // Панель НЕ закрывается при отказе: закрытая панель без изменения на
+                  // экране и есть «кнопка не работает» (дефект владельца 13.09.2026).
+                  .catch(() => setFailure('замена не применилась — попробуйте ещё раз'))
+                  .finally(() => setPending(false));
               }}
               disabled={pending}
             >

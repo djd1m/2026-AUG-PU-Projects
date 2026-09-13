@@ -222,16 +222,29 @@ describe('поставщик модели openrouter', () => {
 
     // Мутация: убрать `model_estimate_kcal` из ОБЪЯВЛЕННОЙ JSON-схемы — тем самым разойтись
     // с MODEL_RESPONSE_SCHEMA.fields по КОЛИЧЕСТВУ ключей. Мутация — в ПАМЯТИ; временный
-    // файл кладётся РЯДОМ (тот же каталог), чтобы относительные импорты `./types.js` и
-    // `./live.js` разрешились без изменений, и удаляется в finally независимо от исхода.
+    // файл кладётся В ДЕРЕВО ТЕСТОВ, а относительные импорты переписываются на исходный
+    // каталог поставщика.
+    //
+    // ПОЧЕМУ НЕ РЯДОМ С ОРИГИНАЛОМ (было так до 13.09.2026): `apps/recognizer/src` —
+    // область стражей по исходнику (`tests/guard/single-model-estimate-read.test.ts` и
+    // соседние обходчики). Файлы vitest прогоняет ПАРАЛЛЕЛЬНО, поэтому копия, живущая
+    // в области обхода доли секунды, попадала в чужой страж как ВТОРОЕ чтение
+    // `model_estimate_kcal` — и тот краснел примерно в одном прогоне из трёх по причине,
+    // не связанной с охраняемым кодом. Мигающий страж перестают читать.
     const mutated = original.replace(
       "    confidence: { type: 'number' },\n    model_estimate_kcal: { type: 'number' },\n  },",
       "    confidence: { type: 'number' },\n  },",
     );
     expect(mutated).not.toBe(original); // подтверждает, что замена реально произошла
 
-    const fixturePath = path.join(providerDir, `__guard-fixture-${randomUUID()}.ts`);
-    await writeFile(fixturePath, mutated, 'utf8');
+    const fixtureDir = fileURLToPath(new URL('./fixtures/', import.meta.url));
+    const providerImport = path.relative(fixtureDir, providerDir).split(path.sep).join('/');
+    const relocated = mutated
+      .replace("from './types.js'", `from '${providerImport}/types.js'`)
+      .replace("from './live.js'", `from '${providerImport}/live.js'`);
+    expect(relocated).not.toBe(mutated); // импорты действительно переписаны
+    const fixturePath = path.join(fixtureDir, `__guard-fixture-${randomUUID()}.ts`);
+    await writeFile(fixturePath, relocated, 'utf8');
     try {
       // КРАСНЫЙ на дефекте: загрузка мутированного модуля обязана бросить синхронно при
       // импорте — это и есть «расхождение валит загрузку модуля», а не поведение вызова.

@@ -692,6 +692,24 @@ input:focus-visible {
 .replace__candidates li button:hover {
   border-color: var(--accent-deep);
 }
+/* Отказ и пустой результат — ВИДИМЫЕ состояния панели замены: молчание здесь читается
+   как неработающая кнопка (дефект владельца 13.09.2026). */
+.replace__failure,
+.replace__empty {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.replace__failure {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-radius: var(--radius-s);
+  padding: 6px 8px;
+}
+.replace__empty {
+  color: var(--ink-2);
+}
 
 /* ── путь дальше (задача N4): «в дневник» / «поделиться», заметка отказа, возврат ────── */
 .result__journey {

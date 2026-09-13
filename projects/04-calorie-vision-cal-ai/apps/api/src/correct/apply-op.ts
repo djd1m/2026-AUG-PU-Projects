@@ -35,6 +35,10 @@ export type ApplyOpResult = { readonly kind: 'ok'; readonly result: AppliedCorre
 interface FoodItemLookupRow {
   readonly source_id: string;
   readonly name_en: string;
+  /** Русское название из курации `food_synonym` — `null`, если записи нет; тогда подписью
+   * становится `name_en` (`buildReplacedLabel`). Приходит ИЗ БАЗЫ, а не из тела запроса:
+   * присланная клиентом подпись позволила бы показать «индейка» над числами свинины. */
+  readonly name_ru: string | null;
   readonly kcal_per_100g: number;
   readonly protein_per_100g: number;
   readonly fat_per_100g: number;
@@ -46,14 +50,18 @@ export async function lookupFoodItem(client: DbClient, id: string): Promise<Food
   const result = await client.query<{
     source_id: string;
     name_en: string;
+    name_ru: string | null;
     kcal_per_100g: number;
     protein_per_100g: string;
     fat_per_100g: string;
     carb_per_100g: string;
     import_snapshot_date: string;
   }>(
-    `SELECT source_id, name_en, kcal_per_100g, protein_per_100g, fat_per_100g, carb_per_100g, import_snapshot_date::text AS import_snapshot_date
-     FROM food_item WHERE id = $1`,
+    `SELECT fi.source_id, fi.name_en, fi.kcal_per_100g, fi.protein_per_100g, fi.fat_per_100g, fi.carb_per_100g,
+            fi.import_snapshot_date::text AS import_snapshot_date,
+            (SELECT fs.name_ru FROM food_synonym fs WHERE fs.food_item_id = fi.id
+              ORDER BY char_length(fs.name_ru), fs.name_ru LIMIT 1) AS name_ru
+     FROM food_item fi WHERE fi.id = $1`,
     [id],
   );
   const row = result.rows[0];
@@ -61,6 +69,7 @@ export async function lookupFoodItem(client: DbClient, id: string): Promise<Food
   return {
     source_id: row.source_id,
     name_en: row.name_en,
+    name_ru: row.name_ru,
     kcal_per_100g: row.kcal_per_100g,
     protein_per_100g: Number(row.protein_per_100g),
     fat_per_100g: Number(row.fat_per_100g),
@@ -70,6 +79,20 @@ export async function lookupFoodItem(client: DbClient, id: string): Promise<Food
 }
 
 export type FoodItemLookupFn = (client: DbClient, id: string) => Promise<FoodItemLookupRow | undefined>;
+
+/**
+ * Подпись позиции ПОСЛЕ замены. Прежняя подпись пережить замену не может: она названа
+ * моделью по прошлому продукту, и оставить её — значит показать «Свинина» над числами
+ * индейки. Читается это как «кнопка не работает» (дефект найден владельцем 13.09.2026).
+ *
+ * Источник подписи — ТОЛЬКО база: русская курация `food_synonym`, иначе английское
+ * название записи. Регистр первой буквы поднимается — курация хранится строчными, а
+ * подписи позиций на экране начинаются с заглавной; это форма показа, не данные.
+ */
+export function buildReplacedLabel(row: Pick<FoodItemLookupRow, 'name_ru' | 'name_en'>): string {
+  const source = row.name_ru !== null && row.name_ru.trim() !== '' ? row.name_ru.trim() : row.name_en;
+  return source.charAt(0).toUpperCase() + source.slice(1);
+}
 
 function toComputedNumbers(item: PersistedItem): ComputedItemNumbers {
   return { unmatched: item.unmatched, kcal: item.kcal, protein: item.protein, fat: item.fat, carb: item.carb };
@@ -136,13 +159,16 @@ export async function applyCorrectOp(
       import_snapshot_date: foodItem.import_snapshot_date,
     };
     const numbers = computeItemFromSnapshot({ foodItemId: idResult.value, portionG: before.mass_g, sourceSnapshot: snapshot });
-    items[indexResult.value] = { ...before, food_item_id: idResult.value, source_snapshot: snapshot, parts: undefined, unmatched: numbers.unmatched, kcal: numbers.kcal, protein: numbers.protein, fat: numbers.fat, carb: numbers.carb };
+    const label = buildReplacedLabel(foodItem);
+    // `candidates[]` — догадки МОДЕЛИ о прежнем продукте; после ручной замены они говорят
+    // о том, чего в позиции больше нет, и на экране выглядят как неприменившаяся замена.
+    items[indexResult.value] = { ...before, label_ru: label, candidates: undefined, food_item_id: idResult.value, source_snapshot: snapshot, parts: undefined, unmatched: numbers.unmatched, kcal: numbers.kcal, protein: numbers.protein, fat: numbers.fat, carb: numbers.carb };
     corrections.push({
       at: now().toISOString(),
       op: 'replace_item',
       index: indexResult.value,
       from: { label_ru: before.label_ru, food_item_id: before.food_item_id, mass_g: before.mass_g },
-      to: { food_item_id: idResult.value, mass_g: before.mass_g },
+      to: { label_ru: label, food_item_id: idResult.value, mass_g: before.mass_g },
     });
     userCorrected = true;
   } else if (op === 'delete_item') {
