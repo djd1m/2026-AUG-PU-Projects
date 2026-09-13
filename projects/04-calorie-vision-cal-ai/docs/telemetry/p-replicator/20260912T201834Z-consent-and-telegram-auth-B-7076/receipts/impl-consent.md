@@ -188,3 +188,82 @@ docker compose -p n4-tarelka-consent-b down -v             -> тома/сеть/
 не поднимался (диск, по указанию координатора).
 
 Status: completed
+
+## Попытка 3 — корректирующий проход по второму слепому ревью (`review-report.md`, CHANGES_REQUIRED)
+
+Разобраны ВСЕ 8 находок (1 blocker RV-01, 6 high RV-02..RV-07, 1 medium RV-08). Полная таблица
+«находка → правка → тест → мутация» — `docs/features/consent-and-telegram-auth/05_completion.md`,
+раздел «Попытка 3». Кратко:
+
+- **RV-01 (blocker)**: `auth-telegram.ts` не переносил `share_card.owner_key` при входе (только
+  `diary_entry`/`recognition`) — анонимная карточка оставалась на `session_id`, `withdraw`/
+  `erase_all` её пропускали, `RunErasureJob` падал на `ON DELETE RESTRICT`. Добавлен перенос
+  `share_card` в ТОЙ ЖЕ транзакции входа.
+- **RV-02 (high)**: `enforce-before-diary-write.ts` теперь разрешает связанный аккаунт из
+  `device_session.account_id` и проверяет ЕГО согласие, а не историческое поле сессии.
+- **RV-03 (high)**: `account-delete.ts` блокирует строку `account` ПЕРВОЙ операцией транзакции,
+  до `UPDATE share_card` — тот же порядок, что `enforceConsentBeforeDiaryWrite`.
+- **RV-04 (high)**: миграция 004 — заявка на повтор `initData` (`telegram_login_replay`)
+  ключуется `telegram_user_id`, не `account_id`, который заменяется новым после эразуры.
+- **RV-05 (high)**: вход в `erasing`-аккаунт отказывается (`409 account_erasing`); отдельно
+  `enforceConsentBeforeDiaryWrite` требует `account.status = 'active'` для записи.
+- **RV-06 (high)**: `apps/web/app/telegram-auto-login.tsx` — автологин смонтирован на корне
+  (`layout.tsx`), SDK Telegram подключён (`next/script`), дедупликация по `localStorage`,
+  `initdata_replayed` трактуется как успех, сетевой отказ пойман `.catch`.
+- **RV-07 (high)**: `erasure-job.ts` — батч постранично (`seen`-множество), а не фиксированный
+  `LIMIT 50` без учёта уже обработанных в прогоне.
+- **RV-08 (medium)**: конкурентный тест `enforce-before-diary-write.test.ts` переписан с
+  управляемым барьером (`FOR UPDATE` снаружи + принудительный порядок коммитов) вместо
+  `Promise.all` с двумя легитимными исходами; AC-6 в `auth-telegram.test.ts` теперь сеет дневник
+  на ОБОИХ устройствах; 73-часовой тест в `erasure-job.test.ts` честно переименован (в коде нет
+  шлюза по времени, 72 ч — SLA, а не условие задачи).
+
+**Испытание стражей мутацией (`guard-must-be-able-to-fail.md`)** — 7 прогонов «дефект внедрён →
+красный → снят → зелёный», каждый на настоящем PostgreSQL/MinIO профиля `test`:
+
+```
+RV-01 (share_card не переносится)        -> 1 failed | 9 skipped  ->  10 passed
+RV-05 вход (erasing-check отключён)      -> 1 failed | 9 skipped  ->  10 passed
+RV-04 (claimReplay keyed по accountId)   -> 1 failed | 9 skipped  ->  10 passed
+RV-02 (device_session.account_id не читается) -> 1 failed | 6 skipped -> 7 passed
+RV-05 запись (status не проверяется)     -> 1 failed | 6 skipped  ->  7 passed
+RV-03 (старый порядок операций)          -> 1 failed | 7 skipped  ->  8 passed
+RV-07 (пагинация ограничена 1 страницей) -> 1 failed | 8 skipped  ->  9 passed
+```
+
+**Честно НЕ выполнено:** поведение React-компонента `TelegramAutoLogin` (монтирование,
+`useEffect`, `localStorage`) не проверено автотестом — `vitest.config.ts` объявляет unit-слой на
+`environment: 'node'` без jsdom, `web-shell.test.tsx` рендерит только через
+`renderToStaticMarkup` (без эффектов). Логика решения вынесена в чистые функции и покрыта
+ПОЛНОСТЬЮ (`tests/unit/telegram-auto-login.test.ts`, 11 тестов); сам компонент проверен чтением
+кода. Маршрут просмотра карточки `/c/{id}` (канон, `scan-pipeline`) в этом worktree отсутствует
+по построению — тот же класс пробела, что AC-9 исходного `review-report.md`.
+
+### Прогоны попытки 3
+
+```
+npm run test                                              -> Test Files 11 passed | Tests 62 passed
+npm run typecheck / npm run lint / npm run build          -> 0 / 0 / 0
+docker compose --env-file .env --profile test run --rm -T test npm run test:integration
+                                                           -> Test Files 20 passed | Tests 78 passed
+                                                              (воспроизведено дважды подряд)
+check-pipeline-gaps.sh --completion                        -> контур consent-and-telegram-auth: 0 GAP
+                                                              (37 GAP scan-pipeline — не этот worktree,
+                                                              DEC-A-011; 1 NOT-ESTABLISHED — вендорный
+                                                              дефект склейки пути, не наш файл)
+node ../../.claude/hooks/check-review-contract.cjs . consent-and-telegram-auth
+                                                           -> PASS AC-ids=20 rows=20
+bash scripts/check-env-wiring.sh .                        -> api/recognizer чисто
+bash ../../scripts/check-port-conflicts.sh .              -> 0 (порт 4181 свободен)
+docker compose -p n4-tarelka-consent-b down -v            -> тома/сеть/контейнеры удалены;
+                                                              docker images | grep n4-tarelka-consent-b:
+                                                              0 образов (профиль edge НЕ поднимался,
+                                                              images НЕ собирались — по указанию
+                                                              координатора, диск машины 99% в начале
+                                                              прохода)
+```
+
+Итого попытки 3: **140 тестов** (62 unit + 78 integration/concurrency), 0 упавших. Новых в этом
+проходе — 11 unit + 7 integration = 18 тестов.
+
+Status: completed

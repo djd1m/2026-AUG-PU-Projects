@@ -56,6 +56,59 @@ check-pipeline-gaps.sh --completion                       -> контур consen
 ```
 Итого: **121 тест** (51 unit + 70 integration/concurrency), 0 упавших.
 
+## Попытка 3 — корректирующий проход по `review-report.md` (второе слепое ревью, CHANGES_REQUIRED)
+
+Разобраны ВСЕ 8 находок (1 blocker, 6 high, 1 medium). Находка → правка → тест → мутация:
+
+| Находка | Правка | Тест | Мутация |
+|---|---|---|---|
+| **RV-01** blocker — `share_card` НЕ переносился при входе (переносились только `diary_entry`/`recognition`); анонимная карточка сохраняла `owner_key = session_id`, `withdraw`/`erase_all` отзывают по `owner_key = account_id` и её пропускают, `RunErasureJob` падал на `ON DELETE RESTRICT` (`share_card.recognition_id → recognition`) | `routes/auth-telegram.ts`: добавлен `UPDATE share_card SET owner_key = $accountId WHERE owner_key = $sessionId` в ТОЙ ЖЕ транзакции входа, что и перенос дневника | `auth-telegram.test.ts` «review3 RV-01 (blocker): анонимная карточка → вход → withdraw → erase_all → RunErasureJob БЕЗ ошибки внешнего ключа» — сквозной сценарий: создание карточки анонимной сессии, вход, withdraw (карточка отозвана), erase_all, реальный `runErasureJob` завершается, `erased`, ноль строк `share_card` | Строка `UPDATE share_card…` закомментирована → `expected '<sessionId>' to be '<accountId>'` (тест падает на шаге проверки переноса, до withdraw/erasure) → раскомментирована → `10 passed` |
+| **RV-02** high — `enforceConsentBeforeDiaryWrite` для `owner.table='device_session'` читал ТОЛЬКО `device_session.consent_at`, никогда не заглядывал в `device_session.account_id`; после «анонимный grant → вход → withdraw» историческое поле сессии оставалось заполненным и разрешало запись, хотя аккаунт отозвал | `enforce-before-diary-write.ts`: если сессия связана (`account_id IS NOT NULL`), актуальное согласие определяет СВЯЗАННЫЙ АККАУНТ (`enforceForAccount`), историческое поле сессии для решения не читается | `enforce-before-diary-write.test.ts` «review3 RV-02: сессия СВЯЗАНА с аккаунтом, который отозвал согласие…» — точный сценарий находки, прямой вызов `createDiaryEntryGuarded` с `device_session`-owner уже связанной сессии | Ветка «если связана — проверить account» удалена (читается только `session.consent_at`) → `expected {outcome:'created', id:…} to deeply equal {outcome:'refused',…}` → восстановлена → `7 passed` |
+| **RV-03** high — карточки закрывались (`UPDATE share_card`) ДО блокировки строки `account`; конкурентный `createShareCardGuarded`, уже держащий блокировку account, но ещё не закоммитивший INSERT, был этим шагом не виден — новая карточка переживала успешный отзыв | `account-delete.ts`: `SELECT status FROM account … FOR UPDATE` — ПЕРВАЯ операция транзакции, ДО `UPDATE share_card` | `account-delete.test.ts` «review3 RV-03: УПРАВЛЯЕМЫЙ барьер…» — второй `pool`-клиент держит лок account и вставляет карточку НЕЗАКОММИЧЕННОЙ, тест ждёт (по `pg_stat_activity.wait_event_type='Lock'`, не по фиксированной паузе), что DELETE реально упёрся в лок, ТОЛЬКО ПОТОМ коммитит | Порядок операций возвращён (`UPDATE share_card` ПЕРЕД `SELECT … FOR UPDATE`) → `expected null not to be null` (карточка осталась `revoked_at IS NULL`) → восстановлен → `8 passed` |
+| **RV-04** high — заявка на повтор `initData` ключевалась `account_id`; после РЕАЛЬНОЙ эразуры повторный вход тем же `telegram_user_id` создаёт НОВЫЙ `account_id` (частичный уникальный индекс исключает только `erased`), и пара `(новый account_id, hash)` не существовала — байт-в-байт та же строка (ещё не просроченная 24-часовым окном) авторизовала заново | Миграция 004: `telegram_login_replay` получает колонку `telegram_user_id`, уникальный индекс переключён на `(telegram_user_id, hash)`; `claimReplay`/`auth-telegram.ts` передают `verified.telegramUserId` | `auth-telegram.test.ts` «review3 RV-04: повтор ТОЙ ЖЕ initData ПОСЛЕ настоящей эразуры…» — реальный `runErasureJob` (не имитация статуса), затем повтор той же строки другой анонимной сессией | `claimReplay` вызван с `accountId` вместо `verified.telegramUserId` (ключ снова эффективно по account) → `expected 200 to be 401` (повтор авторизовал под новым аккаунтом) → восстановлено → `10 passed` |
+| **RV-05** high — вход разрешён и для `status = 'erasing'`; между удалением строк (`RunErasureJob` шаг 1) и коммитом `erased` (шаг 3) не было барьера — присоединение НОВЫХ данных к `erasing`-аккаунту (входом ИЛИ прямой записью) оставалось незамеченным | Два независимых замка: (1) `auth-telegram.ts` — вход в `erasing`-аккаунт ОТКАЗЫВАЕТСЯ (`409 account_erasing`), транзакция откатывается ДО касания сессии; (2) `enforce-before-diary-write.ts` — `enforceForAccount` дополнительно требует `status = 'active'`, отказывая ДАЖЕ при формально заполненном `consent_at` | `auth-telegram.test.ts` «review3 RV-05: вход в erasing-аккаунт ОТКАЗЫВАЕТСЯ 409…» (сторона входа); `enforce-before-diary-write.test.ts` «review3 RV-05 (проверка со стороны записи): аккаунт erasing… ВСЁ РАВНО отказывает записи» (сторона записи) | Вход: удалена ветка `if (…status==='erasing') return {kind:'erasing'}` → `expected 200 to be 409` → восстановлена → `10 passed`. Запись: удалена строка `if (row.status!=='active') return REFUSED` → `expected {outcome:'created'} to deeply equal {outcome:'refused'}` → восстановлена → `7 passed` |
+| **RV-06** high — автоматический вход монтировался ТОЛЬКО на `/settings` с постоянным `isAnonymous={true}`; SDK Telegram нигде не загружался; повторное открытие `/settings` пересылало ТУ ЖЕ `initData` и показывало ошибку replay; сетевой отказ (`.then` без `.catch`) оставлял компонент в `pending` навсегда | Новый `telegram-auto-login.tsx`, смонтированный НА КОРНЕ (`layout.tsx`, + `next/script` SDK); дедупликация по `localStorage` (последняя отправленная строка, флаг «уже связано»); `401 initdata_replayed` трактуется как успех, не ошибка; `.catch` ловит сетевой отказ, строка НЕ помечается использованной | `tests/unit/telegram-auto-login.test.ts` — чистые функции `shouldAttemptTelegramLogin`/`submitTelegramLogin` (11 тестов: дедупликация, классификация `ok`/`replayed`/`failed`, проброс сетевого реджекта) | Мутация не выполнялась отдельно (нет jsdom в этом харнессе — честно названо ниже); чистые функции испытаны прямыми тестами на все ветки, включая намеренно отрицательные (см. таблицу тестов) |
+| **RV-07** high — `SELECT … LIMIT 50` без учёта уже обработанных В ЭТОМ прогоне; если все 50 первых по `deletion_requested_at` пропускались активным сканом, 51-й готовый не обрабатывался НИКОГДА | `erasure-job.ts`: батч — СТРАНИЦЫ (`seen: Set<string>`, исключение уже увиденных `id`, не `OFFSET` — множество `erasing` меняется внутри цикла); цикл до страницы короче `BATCH_SIZE` либо `MAX_PAGES=200` (предохранитель) | `erasure-job.test.ts` «review3 RV-07: 50 заблокированных… НЕ мешают 51-му…» — 50 аккаунтов с активным сканом (более ранний `deletion_requested_at`) + 1 готовый (более поздний, за пределами первой страницы) | Цикл принудительно ограничен ОДНОЙ страницей (`page < 1`) → `expected +0 to be 1` (готовый аккаунт не обработан) → ограничение снято → `9 passed` |
+| **RV-08** medium — конкурентный тест «отзыв против записи» принимал ЛЮБОЙ исход (не доказывал сериализацию); AC-6 начинал с пустого дневника A; тест отзыва не открывал адреса карточек; 73-часовой тест не доказывал «дедлайн» | Новый УПРАВЛЯЕМЫЙ тест с реальным барьером (`FOR UPDATE` держится снаружи, коммит принудительно ПЕРВЫМ) — РОВНО один легитимный исход; AC-6 переписан — ОБА устройства несут записи ДО входа B, итог 4+2=6; 73-часовой тест переименован и честно объясняет отсутствие шлюза по времени в `RunErasureJob` (72 ч — SLA, проверенный в `account-delete.test.ts`, не условие этой задачи) | `enforce-before-diary-write.test.ts` «review3 RV-08: УПРАВЛЯЕМЫЙ барьер…»; `auth-telegram.test.ts` «AC-6: … ОБОИХ устройств»; `erasure-job.test.ts` переименованный тест | Барьерный тест: см. запись RV-08 внутри самого теста — старый (ненадёжный) тест ОСТАВЛЕН РЯДОМ под честным названием «прежний тест… оба исхода легитимны» для сравнения, не удалён |
+
+**Честно НЕ выполнено в этом проходе:** RV-06 — поведение самого React-компонента
+(`TelegramAutoLogin`: монтирование, `useEffect`, `localStorage`, реальный DOM) не проверено
+автотестом — в этом харнессе `vitest.config.ts` объявляет unit-слой на `environment: 'node'`,
+БЕЗ jsdom, и `web-shell.test.tsx` (integration) рендерит только через `renderToStaticMarkup`
+(SSR, без эффектов). Логика решения («пробовать ли вход», классификация ответа сервера) вынесена
+в чистые функции и покрыта ПОЛНОСТЬЮ (`tests/unit/telegram-auto-login.test.ts`, 11 тестов); сама
+привязка к DOM/жизненному циклу React проверена ЧТЕНИЕМ кода (`layout.tsx`,
+`telegram-auto-login.tsx`) — тот же класс ограничения, что RV-09/RV-10 попытки 2. `share_card`
+маршрут просмотра карточки (`/c/{id}`, канон маршрут 5) в этом worktree ОТСУТСТВУЕТ (принадлежит
+`scan-pipeline`, не реализованной здесь по построению) — «карточка отозвана» проверяется чтением
+`share_card.revoked_at`, не HTTP-запросом к несуществующему маршруту; это тот же класс пробела,
+что AC-9 в исходном review-report.md («unverifiable» из-за отсутствия scan-pipeline).
+
+**Прогоны попытки 3:**
+```
+npm run test                                              -> Test Files 11 passed | Tests 62 passed
+npm run typecheck / npm run lint / npm run build          -> 0 / 0 / 0
+docker compose --env-file .env --profile test run --rm -T test npm run test:integration
+                                                           -> Test Files 20 passed | Tests 78 passed
+                                                              (воспроизведено дважды подряд)
+check-pipeline-gaps.sh --completion                        -> контур consent-and-telegram-auth: 0 GAP
+                                                              (37 GAP contour=scan-pipeline — не наш
+                                                              worktree, DEC-A-011; 1 NOT-ESTABLISHED
+                                                              — вендорный дефект склейки пути
+                                                              ./docs/./docs/, не наш файл)
+node ../../.claude/hooks/check-review-contract.cjs . consent-and-telegram-auth
+                                                           -> PASS AC-ids=20 rows=20
+bash scripts/check-env-wiring.sh .                         -> api/recognizer чисто; web — нечего проверять
+bash ../../scripts/check-port-conflicts.sh .               -> 0
+docker compose -p n4-tarelka-consent-b down -v             -> тома/сеть/контейнеры этого прохода удалены;
+                                                              docker images | grep n4-tarelka-consent-b:
+                                                              0 образов (профиль edge не поднимался)
+```
+Итого попытки 3: **140 тестов** (62 unit + 78 integration/concurrency), 0 упавших. Из них НОВЫХ
+в этом проходе — 11 unit + 7 integration = 18 тестов, доказывающих 8 находок. Стражи (RV-01,
+RV-02, RV-03, RV-04, RV-05×2, RV-07 — 7 мутационных испытаний) все прошли цикл «дефект внедрён →
+красный → снят → зелёный» — см. таблицу выше.
+
 ## Что реализовано
 
 Миграция `packages/db/migrations/002_consent_and_telegram_auth.sql`: два поля на `account`
@@ -231,7 +284,7 @@ http://127.0.0.1:4181/api/v1/auth/telegram ...` при появлении дис
 | AC-consent-and-telegram-auth-3 | tests/unit/verify-init-data.test.ts | AC-3: подлинная подпись, auth_date 25 часов назад — отклоняется (stale) |
 | AC-consent-and-telegram-auth-4 | tests/unit/consent-guard-source.test.ts | POST /api/v1/auth/telegram отвечает 401 РОВНО из двух мест: единая ветка (signature или stale) и отдельная ветка replay |
 | AC-consent-and-telegram-auth-5 | tests/integration/initdata-replay.test.ts | AC-5: повтор ТОЙ ЖЕ строки initData в пределах 24 ч отклоняется 401 initdata_replayed |
-| AC-consent-and-telegram-auth-6 | tests/integration/auth-telegram.test.ts | AC-6: вход с другого устройства не теряет и не дублирует дневник |
+| AC-consent-and-telegram-auth-6 | tests/integration/auth-telegram.test.ts | AC-6: вход с другого устройства не теряет и не дублирует дневник ОБОИХ устройств (попытка 3: оба устройства несут записи ДО входа B) |
 | AC-consent-and-telegram-auth-7 | tests/unit/verify-init-data.test.ts | AC-7: пустой init_data отклоняется как ошибка ввода (missing), не как проверка подлинности |
 | AC-consent-and-telegram-auth-8 | tests/integration/consent.test.ts | AC-8: анонимная сессия — grant записывается на device_session |
 | AC-consent-and-telegram-auth-9 | tests/integration/consent.test.ts | AC-9: decline не блокирует чтение результата, только запись дневника остаётся закрытой |
