@@ -96,6 +96,16 @@ export const SOURCE_LABEL_START_FONT_PX = 24;
 export const SOURCE_LABEL_MIN_FONT_PX = 16;
 export const AVAILABLE_TEXT_WIDTH_PX = CARD_WIDTH - 2 * SIDE_MARGIN;
 
+// Шрифты — ТЕ ЖЕ два семейства, что у `web` (`apps/web/app/globals.css`): 'Unbounded' на
+// заголовке/числах, 'Onest' на обычном тексте. `font-family` в SVG раньше не указывался
+// вовсе — на стенде `api` в образе `node:*-slim` нет НИ ОДНОГО шрифта и `fontconfig` не
+// установлен (`fc-list` в контейнере → 0 строк), рисовать текст librsvg было нечем, и он
+// молча пропускался (пустой глиф, а не ошибка). Дублирование строки — не опечатка: SVG не
+// поддерживает CSS custom properties (`var(--font-display)`), и `--font-display` из
+// `globals.css` здесь физически недоступен — этот файл рендерится СЕРВЕРОМ, вне DOM.
+const FONT_FAMILY_DISPLAY = "'Unbounded', 'Onest', sans-serif";
+const FONT_FAMILY_TEXT = "'Onest', sans-serif";
+
 function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): string {
   // Подгонка — на СЫРОМ тексте (по видимым символам), экранирование — ПОСЛЕ: у `&` при
   // экранировании четыре лишних символа разметки (`&amp;`), которые не занимают места на
@@ -118,20 +128,20 @@ function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): s
       const cx = rect.x + rect.width / 2;
       return `
         <rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" rx="16" fill="#1c1c22" />
-        <text x="${cx}" y="${rect.y + 55}" text-anchor="middle" font-size="34" font-weight="700" fill="#ffffff">${escapeSvgText(num.value)}</text>
-        <text x="${cx}" y="${rect.y + 95}" text-anchor="middle" font-size="20" fill="#9a9aa5">${escapeSvgText(num.label)}</text>
+        <text x="${cx}" y="${rect.y + 55}" text-anchor="middle" font-family="${FONT_FAMILY_DISPLAY}" font-size="34" font-weight="700" fill="#ffffff">${escapeSvgText(num.value)}</text>
+        <text x="${cx}" y="${rect.y + 95}" text-anchor="middle" font-family="${FONT_FAMILY_TEXT}" font-size="20" fill="#9a9aa5">${escapeSvgText(num.label)}</text>
       `;
     })
     .join('\n');
 
   const badgeMarkup = input.badgeRendered
     ? `<rect x="${badgeRect.x}" y="${badgeRect.y}" width="${badgeRect.width}" height="${badgeRect.height}" rx="12" fill="#ffffffcc" />
-       <text x="${badgeRect.x + badgeRect.width / 2}" y="${badgeRect.y + badgeRect.height / 2 + 10}" text-anchor="middle" font-size="28" font-weight="600" fill="#101014">распознано в «Тарелке»</text>`
+       <text x="${badgeRect.x + badgeRect.width / 2}" y="${badgeRect.y + badgeRect.height / 2 + 10}" text-anchor="middle" font-family="${FONT_FAMILY_TEXT}" font-size="28" font-weight="600" fill="#101014">распознано в «Тарелке»</text>`
     : '';
 
   return `<svg width="${CARD_WIDTH}" height="${CARD_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-    <text x="${SIDE_MARGIN}" y="${PHOTO_HEIGHT + 60}" font-size="${fittedDishName.fontSizePx}" font-weight="800" fill="#ffffff">${dishName}</text>
-    <text x="${SIDE_MARGIN}" y="${SOURCE_LABEL_Y}" font-size="${fittedSourceLabel.fontSizePx}" fill="#9a9aa5">${sourceLabel}</text>
+    <text x="${SIDE_MARGIN}" y="${PHOTO_HEIGHT + 60}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${fittedDishName.fontSizePx}" font-weight="800" fill="#ffffff">${dishName}</text>
+    <text x="${SIDE_MARGIN}" y="${SOURCE_LABEL_Y}" font-family="${FONT_FAMILY_TEXT}" font-size="${fittedSourceLabel.fontSizePx}" fill="#9a9aa5">${sourceLabel}</text>
     ${tileMarkup}
     ${badgeMarkup}
   </svg>`;

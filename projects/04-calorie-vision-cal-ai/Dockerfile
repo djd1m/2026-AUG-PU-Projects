@@ -46,6 +46,20 @@ RUN npm run build
 FROM node:22.22.0-bookworm-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94 AS api
 WORKDIR /app
 ENV NODE_ENV=production TZ=Europe/Moscow
+# Шрифты карточки шеринга. `render-card-image.ts` рисует текст SVG-слоем поверх фото через
+# `sharp`/librsvg — а `node:*-slim` не несёт НИ ОДНОГО шрифта и НЕ несёт `fontconfig`:
+# на живом стенде `docker exec … fc-list | wc -l` дал `0`, рисовать текст было нечем, и он
+# молча пропускался (пустой глиф — не ошибка сборки и не ошибка рендера). Шрифты — ТЕ ЖЕ
+# файлы, что у `web` (`apps/web/public/fonts/`, уже в контексте сборки — см. .dockerignore),
+# лицензии OFL едут в образ вместе с ними. `fc-cache` регистрирует их в кэше fontconfig, иначе
+# librsvg их не найдёт даже при наличии файлов на диске.
+RUN apt-get update && apt-get install -y --no-install-recommends fontconfig \
+    && rm -rf /var/lib/apt/lists/*
+COPY apps/web/public/fonts/Onest-wght.ttf     /usr/share/fonts/truetype/n4/Onest-wght.ttf
+COPY apps/web/public/fonts/Unbounded-wght.ttf /usr/share/fonts/truetype/n4/Unbounded-wght.ttf
+COPY apps/web/public/fonts/OFL-Onest.txt      /usr/share/fonts/truetype/n4/OFL-Onest.txt
+COPY apps/web/public/fonts/OFL-Unbounded.txt  /usr/share/fonts/truetype/n4/OFL-Unbounded.txt
+RUN fc-cache -f /usr/share/fonts/truetype/n4
 # COPY из ПУТИ WORKSPACE, а не из /app: сборка кладёт результат в apps/api/dist,
 # и COPY /app/dist дал бы рантайм на пустом месте.
 COPY --from=build --chown=node:node /app/node_modules            /app/node_modules
