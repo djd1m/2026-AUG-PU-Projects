@@ -36,7 +36,11 @@ export async function purgeOrphanObjects(pool: DbPool, storage: StorageObjectLis
     scanned += 1;
     if (object.lastModified.getTime() > cutoff) continue;
 
-    const existing = await pool.query('SELECT 1 FROM photo WHERE object_key = $1', [object.key]);
+    // RV-scan-pipeline-03: нормализованная копия живёт ПОД ДРУГИМ ключом
+    // (`normalized_object_key`, `<base>.normalized.jpg`) — проверка ТОЛЬКО по `object_key`
+    // сочла бы каждую живую нормализованную копию сиротой и удалила бы её из-под воркера,
+    // ещё обрабатывающего задание.
+    const existing = await pool.query('SELECT 1 FROM photo WHERE object_key = $1 OR normalized_object_key = $1', [object.key]);
     if ((existing.rowCount ?? 0) > 0) continue;
 
     await storage.removeObject(object.key);

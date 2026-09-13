@@ -47,3 +47,20 @@ export interface ModelProvider {
   readonly kind: 'fake' | 'live';
   recognize(request: ModelRequest): Promise<ModelResponse>;
 }
+
+/**
+ * Сигнал ЛЮБОЙ реализации `ModelProvider`: ответ пришёл, но не соответствует схеме
+ * (RV-scan-pipeline-08) — ОТДЕЛЬНЫЙ от `ProviderUnavailableError`/сетевого сбоя случай.
+ * Живёт здесь, а не в `provider/live.ts`, чтобы `recognize-scan.ts` (доменная логика,
+ * не знающая формы ответа конкретного провайдера) могла классифицировать его как
+ * `failed(schema_violation)`, а не как `failed(provider_unavailable)`, не завися от
+ * конкретной реализации порта.
+ */
+export class ModelSchemaViolationError extends Error {
+  readonly field: string;
+  constructor(field: string) {
+    super(`ответ провайдера не соответствует схеме: ${field}`);
+    this.name = 'ModelSchemaViolationError';
+    this.field = field;
+  }
+}

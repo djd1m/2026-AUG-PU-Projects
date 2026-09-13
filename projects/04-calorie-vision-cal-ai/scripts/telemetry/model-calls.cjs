@@ -5,7 +5,16 @@
 // печатает счётчики по (reason, outcome, model) и суммарное/среднее `ms`.
 //
 // Использование:
-//   node scripts/telemetry/model-calls.cjs <файл-или-'-'-для-stdin> [--json] [--grace-ms N]
+//   node scripts/telemetry/model-calls.cjs <файл-или-'-'-для-stdin> [дата YYYY-MM-DD] [--json] [--grace-ms N]
+//
+// RV-scan-pipeline-17: `01_specification.md`/`02_pseudocode.md` называют команду
+// `model-calls.sh <дата>` — предыдущая версия принимала ТОЛЬКО файл/поток и никогда не
+// применяла поле `day` для отбора суток: смешанный журнал (несколько дней в одном файле)
+// агрегировался ЦЕЛИКОМ. `<дата>` теперь ВТОРОЙ позиционный аргумент, фильтрующий события
+// по полю `day` (проставлено `logModelCallStart`, `Europe/Moscow`, `moscowDay`) — у OUTCOME
+// своего `day` нет, оно наследуется от ПАРНОГО START по `attempt_id`; непарный OUTCOME без
+// известного дня НЕ включается в фильтрованную по дате агрегацию (его день неизвестен).
+// Дата необязательна — без неё поведение прежнее, агрегат по ВСЕМУ журналу.
 //
 // НЕ сервис compose — вызывается по требованию (служебная веб-страница остаётся планом,
 // явно вне недели MVP).
@@ -34,8 +43,10 @@ async function readLines(source) {
   return lines;
 }
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 function parseArgs(argv) {
-  const args = { json: false, graceMs: DEFAULT_GRACE_MS, source: undefined };
+  const args = { json: false, graceMs: DEFAULT_GRACE_MS, source: undefined, date: undefined };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--json') args.json = true;
@@ -43,11 +54,12 @@ function parseArgs(argv) {
       i += 1;
       args.graceMs = Number.parseInt(argv[i], 10);
     } else if (args.source === undefined) args.source = arg;
+    else if (args.date === undefined && DATE_RE.test(arg)) args.date = arg;
   }
   return args;
 }
 
-function aggregate(lines, graceMs, nowMs) {
+function aggregate(lines, graceMs, nowMs, dateFilter) {
   const starts = new Map(); // attempt_id -> {model, ts, day}
   const outcomes = new Map(); // attempt_id -> latest outcome record (last wins: 'late' переписывает предыдущий)
 
@@ -67,6 +79,13 @@ function aggregate(lines, graceMs, nowMs) {
     }
   }
 
+  // RV-scan-pipeline-17: фильтр по `<дата>` — суточная граница ОПРЕДЕЛЯЕТСЯ полем `day`
+  // ПАРНОГО START (`Europe/Moscow`, `moscowDay`), не временем чтения журнала. Непарный
+  // OUTCOME (нет своего START в этом же файле) не имеет известного дня — исключается ИЗ
+  // фильтрованной выборки явно, а не молча включается в «все дни».
+  const dayOf = (attemptId) => starts.get(attemptId)?.day;
+  const inScope = (attemptId) => dateFilter === undefined || dayOf(attemptId) === dateFilter;
+
   const groups = new Map(); // "reason|outcome|model" -> {count, sumMs}
   const bump = (reason, outcome, model, ms) => {
     const key = `${reason}|${outcome}|${model ?? 'unknown'}`;
@@ -77,6 +96,7 @@ function aggregate(lines, graceMs, nowMs) {
   };
 
   for (const [attemptId, outcome] of outcomes) {
+    if (!inScope(attemptId)) continue;
     const start = starts.get(attemptId);
     const model = outcome.model ?? start?.model;
     bump(reasonFromModel(model), outcome.outcome, model, outcome.ms);
@@ -84,6 +104,7 @@ function aggregate(lines, graceMs, nowMs) {
 
   for (const [attemptId, start] of starts) {
     if (outcomes.has(attemptId)) continue;
+    if (dateFilter !== undefined && start.day !== dateFilter) continue;
     const age = nowMs - (Number.isFinite(start.ts) ? start.ts : nowMs);
     if (age > graceMs) bump(reasonFromModel(start.model), 'unknown', start.model, undefined);
   }
@@ -94,12 +115,12 @@ function aggregate(lines, graceMs, nowMs) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.source === undefined) {
-    process.stderr.write('использование: model-calls.cjs <файл|-> [--json] [--grace-ms N]\n');
+    process.stderr.write('использование: model-calls.cjs <файл|-> [дата YYYY-MM-DD] [--json] [--grace-ms N]\n');
     process.exitCode = 2;
     return;
   }
   const lines = await readLines(args.source);
-  const groups = aggregate(lines, args.graceMs, Date.now());
+  const groups = aggregate(lines, args.graceMs, Date.now(), args.date);
 
   if (args.json) {
     process.stdout.write(`${JSON.stringify(groups)}\n`);
@@ -122,4 +143,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { aggregate, reasonFromModel };
+module.exports = { aggregate, reasonFromModel, parseArgs };

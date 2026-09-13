@@ -94,6 +94,9 @@ export interface ResultRecord {
   readonly modelEstimateKcal: number | null;
   readonly modelUsed: 'haiku-4.5' | 'sonnet-5' | null;
   readonly failureReason: string | null;
+  /** RV-scan-pipeline-16: без явной записи оставались бы дефолтом вставки (false/1) НАВСЕГДА. */
+  readonly escalated: boolean;
+  readonly attemptNo: number;
 }
 
 const WRITE_RESULT = `
@@ -104,6 +107,8 @@ const WRITE_RESULT = `
       model_estimate_kcal = $6,
       model_used = $7,
       failure_reason = $8::recognition_failure_reason,
+      escalated = $9,
+      attempt_no = $10,
       finished_at = now(),
       leased_until = NULL,
       lease_owner = NULL
@@ -133,6 +138,8 @@ export async function recordResult(pool: DbPool, job: { id: string; fence: numbe
     record.modelEstimateKcal,
     record.modelUsed,
     record.failureReason,
+    record.escalated,
+    record.attemptNo,
   ]);
   if ((result.rowCount ?? 0) > 0) return 'written';
 

@@ -9,7 +9,7 @@
 // законный источник второго вызова на попытку — эскалация, не библиотека.
 
 import Anthropic from '@anthropic-ai/sdk';
-import type { ModelProvider, ModelRequest, ModelResponse } from './types.js';
+import { ModelSchemaViolationError, type ModelProvider, type ModelRequest, type ModelResponse } from './types.js';
 
 // Без `as const`: SDK ожидает МУТАБЕЛЬНЫЙ `Tool.InputSchema` (обычные `string[]`, не
 // readonly-кортежи) — форма схемы от этого не меняется, только тип объявления в TS.
@@ -42,11 +42,42 @@ export class ProviderUnavailableError extends Error {
   }
 }
 
-export class SchemaViolationError extends Error {
-  constructor(field: string) {
-    super(`ответ провайдера не соответствует схеме: ${field}`);
-    this.name = 'SchemaViolationError';
-  }
+interface ParsedToolInput {
+  readonly items: ReadonlyArray<{ readonly label_ru: string; readonly mass_g: number; readonly candidates: readonly string[] }>;
+  readonly confidence: number;
+  readonly model_estimate_kcal: number;
+}
+
+/**
+ * RV-scan-pipeline-08: ПРЕЖНЯЯ версия делала `JSON.parse(raw) as {...}` — приведение ТИПОМ,
+ * не проверка СТРУКТУРЫ, вне того же `try/catch`, что оборачивал HTTP-вызов. Отсутствующий
+ * `items`/`candidates` в РЕАЛЬНОМ ответе бросал бы необработанный `TypeError` при `.map()`
+ * дальше по функции — вызывающий код (`recognize-scan.ts`) классифицировал бы ЛЮБОЕ
+ * исключение отсюда как `provider_unavailable`, теряя различие «схема нарушена»/«сеть
+ * недоступна». Теперь разбор — ЯВНАЯ проверка из `unknown`, ВНУТРИ того же `try`, что и
+ * вызов, и бросает `ModelSchemaViolationError` (RV-scan-pipeline-10 тоже её требует —
+ * гарантия, что диапазоны и типы проверяются кодом, а не угадываются приведением).
+ */
+function parseToolInput(value: unknown): ParsedToolInput {
+  if (typeof value !== 'object' || value === null) throw new ModelSchemaViolationError('root');
+  const record = value as Record<string, unknown>;
+
+  if (!Array.isArray(record.items)) throw new ModelSchemaViolationError('items');
+  const items = record.items.map((rawItem, index): ParsedToolInput['items'][number] => {
+    if (typeof rawItem !== 'object' || rawItem === null) throw new ModelSchemaViolationError(`items[${index}]`);
+    const item = rawItem as Record<string, unknown>;
+    if (typeof item.label_ru !== 'string') throw new ModelSchemaViolationError(`items[${index}].label_ru`);
+    if (typeof item.mass_g !== 'number') throw new ModelSchemaViolationError(`items[${index}].mass_g`);
+    if (!Array.isArray(item.candidates) || !item.candidates.every((c): c is string => typeof c === 'string')) {
+      throw new ModelSchemaViolationError(`items[${index}].candidates`);
+    }
+    return { label_ru: item.label_ru, mass_g: item.mass_g, candidates: item.candidates };
+  });
+
+  if (typeof record.confidence !== 'number') throw new ModelSchemaViolationError('confidence');
+  if (typeof record.model_estimate_kcal !== 'number') throw new ModelSchemaViolationError('model_estimate_kcal');
+
+  return { items, confidence: record.confidence, model_estimate_kcal: record.model_estimate_kcal };
 }
 
 export interface ImageFetcher {
@@ -63,7 +94,10 @@ export function createLiveModelProvider(apiKey: string, images: ImageFetcher): M
     async recognize(request: ModelRequest): Promise<ModelResponse> {
       const image = await images.fetchBase64(request.imageKey);
 
-      let raw: string;
+      // RV-scan-pipeline-08: разбор и валидация СТРУКТУРЫ — ВНУТРИ ТОГО ЖЕ try/catch, что и
+      // сетевой вызов, чтобы `ModelSchemaViolationError` (нарушение схемы) не смешивалась с
+      // `ProviderUnavailableError` (сеть/транспорт) — они различаются ниже явной проверкой
+      // типа исключения, а не угадываются по тому, где код упал.
       try {
         const response = await client.messages.create(
           {
@@ -93,25 +127,19 @@ export function createLiveModelProvider(apiKey: string, images: ImageFetcher): M
           { signal: request.signal, timeout: request.deadlineMs },
         );
         const toolUse = response.content.find((block): block is Anthropic.ToolUseBlock => block.type === 'tool_use');
-        if (toolUse === undefined) throw new SchemaViolationError('нет structured-output блока в ответе');
-        raw = JSON.stringify(toolUse.input);
+        if (toolUse === undefined) throw new ModelSchemaViolationError('нет structured-output блока в ответе');
+        const parsed = parseToolInput(toolUse.input);
+
+        return {
+          items: parsed.items.map((item) => ({ labelRu: item.label_ru, massG: item.mass_g, candidates: item.candidates })),
+          confidence: parsed.confidence,
+          modelEstimateKcal: parsed.model_estimate_kcal,
+          model: request.model,
+        };
       } catch (error) {
-        if (error instanceof SchemaViolationError) throw error;
+        if (error instanceof ModelSchemaViolationError) throw error;
         throw new ProviderUnavailableError(error);
       }
-
-      const parsed = JSON.parse(raw) as {
-        items: Array<{ label_ru: string; mass_g: number; candidates: string[] }>;
-        confidence: number;
-        model_estimate_kcal: number;
-      };
-
-      return {
-        items: parsed.items.map((item) => ({ labelRu: item.label_ru, massG: item.mass_g, candidates: item.candidates })),
-        confidence: parsed.confidence,
-        modelEstimateKcal: parsed.model_estimate_kcal,
-        model: request.model,
-      };
     },
   };
 }

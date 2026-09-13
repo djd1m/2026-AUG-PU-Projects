@@ -12,6 +12,23 @@ import { createNullMatchIngredientPort } from './match/null-port.js';
 import { createRecognizerStorage } from './photo/storage.js';
 import { createNormalizePhotoForModel, type PhotoLookup } from './photo/normalize.js';
 import { purgeExpiredPhotos } from './photo/purge-expired.js';
+import type { RecognizerStorage } from './photo/storage.js';
+import type { ImageFetcher } from './provider/live.js';
+
+/**
+ * `ImageFetcher` для `LiveModelProvider` (FR-scan-pipeline-13, RV-scan-pipeline-01 —
+ * блокер: `selectModelProvider` вызывался без него и `live` бросал исключение даже с
+ * заданным ключом). Читает НОРМАЛИЗОВАННУЮ копию из хранилища и кодирует в base64.
+ * `normalize.ts` ВСЕГДА выдаёт JPEG (`CANON.normalizedJpegQuality`), поэтому mime фиксирован.
+ */
+function createStorageImageFetcher(storage: RecognizerStorage): ImageFetcher {
+  return {
+    async fetchBase64(imageKey: string) {
+      const buffer = await storage.getObject(imageKey);
+      return { base64: buffer.toString('base64'), mime: 'image/jpeg' as const };
+    },
+  };
+}
 
 /** Адаптер `photo` для нормализации — прямые запросы к таблице, без отдельного репозитория. */
 function createPhotoLookup(pool: DbPool): PhotoLookup {
@@ -62,8 +79,8 @@ async function main(): Promise<void> {
   pool.on('error', (error: Error) => {
     logger.error('pool_client_error', { message: error.message });
   });
-  const provider = selectModelProvider(config);
   const storage = createRecognizerStorage(config.storage);
+  const provider = selectModelProvider(config, createStorageImageFetcher(storage));
   const photos = createPhotoLookup(pool);
   const normalize = createNormalizePhotoForModel(storage, photos);
   const matchPort = createNullMatchIngredientPort(); // `source-and-correct` заменит реализацию за портом.
@@ -72,13 +89,24 @@ async function main(): Promise<void> {
 
   // `PurgeExpiredPhotos` (FR-scan-pipeline-11) — раз в сутки, тем же процессом, не отдельным
   // сервисом (архитектура фичи явно называет это НЕ HTTP-задачей, а шагом того же процесса).
+  // RV-scan-pipeline-04: батч ограничен 500 при разрешённых 3000 сканах/сутки — прогон
+  // повторяет пакет, пока не вычитает ВСЕ просроченные строки этого запуска, а не один
+  // батч наугад.
   const dayMs = 24 * 60 * 60 * 1000;
+  const runPurgeExpired = async (): Promise<void> => {
+    let processed: number;
+    do {
+      const result = await purgeExpiredPhotos(pool, createMinioRemover(config));
+      processed = result.processed;
+    } while (processed > 0);
+  };
   const purgeTimer = setInterval(() => {
-    purgeExpiredPhotos(pool, { removeObject: (key) => removeStorageObject(config, key) }).catch((error: unknown) =>
-      logger.error('purge_expired_failed', { message: (error as Error).message }),
-    );
+    runPurgeExpired().catch((error: unknown) => logger.error('purge_expired_failed', { message: (error as Error).message }));
   }, dayMs);
   purgeTimer.unref();
+  // Уборка орфанов бакета (FR-scan-pipeline-14 шаг 12) — обязанность `apps/api`
+  // (`purge-orphans.ts` живёт там, владеет тем же `PhotoStorage`, что и `POST /scans`);
+  // здесь, в `recognizer`, НЕ дублируется — см. `apps/api/src/bootstrap.ts` (RV-scan-pipeline-03).
 
   const shutdown = (signal: string): void => {
     logger.info('shutdown_started', { signal });
@@ -99,22 +127,35 @@ async function main(): Promise<void> {
   logger.info('worker_started', { lease_owner: worker.ownerId, provider: provider.kind });
 }
 
-async function removeStorageObject(config: RecognizerConfig, objectKey: string): Promise<void> {
+async function createMinioClient(config: RecognizerConfig): Promise<InstanceType<Awaited<typeof import('minio')>['Client']>> {
   const { Client } = await import('minio');
   const url = new URL(config.storage.endpoint);
-  const client = new Client({
+  return new Client({
     endPoint: url.hostname,
     port: url.port !== '' ? Number.parseInt(url.port, 10) : url.protocol === 'https:' ? 443 : 80,
     useSSL: url.protocol === 'https:',
     accessKey: config.storage.accessKey,
     secretKey: config.storage.secretKey,
   });
-  try {
-    await client.removeObject(config.storage.bucket, objectKey);
-  } catch {
-    // Отсутствие объекта — тоже успех (FR-scan-pipeline-11).
-  }
 }
+
+/**
+ * RV-scan-pipeline-04: НЕ проглатывает ошибки — S3-совместимое DELETE идемпотентно
+ * (удаление несуществующего ключа тоже резолвится успехом у MinIO), поэтому «объект уже
+ * удалён» и «сбой обращения» и так различимы БЕЗ ловли исключения здесь: настоящий сбой
+ * (сеть, авторизация) обязан долететь до `purgeExpiredPhotos`, которая оставит строку
+ * `present` для повторной попытки, а не проглотит его молча и не пометит `purged`.
+ */
+function createMinioRemover(config: RecognizerConfig): { removeObject(objectKey: string): Promise<void> } {
+  const clientPromise = createMinioClient(config);
+  return {
+    async removeObject(objectKey: string) {
+      const client = await clientPromise;
+      await client.removeObject(config.storage.bucket, objectKey);
+    },
+  };
+}
+
 
 main().catch((error: unknown) => {
   process.stderr.write(`recognizer не запущен: ${(error as Error).message}\n`);

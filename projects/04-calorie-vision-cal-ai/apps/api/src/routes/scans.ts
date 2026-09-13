@@ -70,7 +70,11 @@ const SELECT_EXISTING_BY_KEY = `
   SELECT id, status FROM recognition WHERE device_session_id = $1 AND idempotency_key = $2
 `;
 
-const SELECT_ANY_PRIOR_SCAN = `SELECT 1 FROM recognition WHERE device_session_id = $1 LIMIT 1`;
+// RV-scan-pipeline-15: БЕЗ `AND id != $2` эта проверка находит СВОЮ ЖЕ ТОЛЬКО ЧТО
+// закоммиченную строку (транзакция уже COMMIT'нута) и потому возвращает ровно одну строку
+// ПРИ КАЖДОМ скане — `growth_event(install)` писался на каждый скан, искажая ростовые
+// метрики, а не только на первый.
+const SELECT_ANY_PRIOR_SCAN = `SELECT 1 FROM recognition WHERE device_session_id = $1 AND id != $2 LIMIT 1`;
 const INSERT_INSTALL_EVENT = `INSERT INTO growth_event (type, device_session_id) VALUES ('install', $1)`;
 
 export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps): void {
@@ -197,8 +201,8 @@ export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps):
 
     // Шаг 10: первый скан сессии — growth_event(install), ВНЕ транзакции.
     try {
-      const prior = await deps.pool.query(SELECT_ANY_PRIOR_SCAN, [session.deviceSessionId]);
-      if (prior.rowCount === 1) await deps.pool.query(INSERT_INSTALL_EVENT, [session.deviceSessionId]);
+      const prior = await deps.pool.query(SELECT_ANY_PRIOR_SCAN, [session.deviceSessionId, outcome.scanId]);
+      if (prior.rowCount === 0) await deps.pool.query(INSERT_INSTALL_EVENT, [session.deviceSessionId]);
     } catch (error) {
       deps.logger.warn('install_event_failed', { message: (error as Error).message });
     }

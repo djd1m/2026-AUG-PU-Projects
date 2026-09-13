@@ -127,9 +127,13 @@ function readWebpDimensions(buffer: Uint8Array): DeclaredDimensions | null {
   if (buffer.length < 30) return null;
   const chunk = String.fromCharCode(buffer[12] ?? 0, buffer[13] ?? 0, buffer[14] ?? 0, buffer[15] ?? 0);
   if (chunk === 'VP8X') {
-    // 24 бита width-1, 24 бита height-1, little-endian, начиная с байта 24.
-    const width = ((buffer[26] ?? 0) | ((buffer[27] ?? 0) << 8) | ((buffer[28] ?? 0) << 16)) + 1;
-    const height = ((buffer[29] ?? 0) | ((buffer[30] ?? 0) << 8) | ((buffer[31] ?? 0) << 16)) + 1;
+    // VP8X chunk data начинается на байте 20 (после 8-байтного RIFF-заголовка и 8-байтного
+    // заголовка чанка 'VP8X'+длина): 1 байт флагов (20) + 3 байта резерва (21-23) + 24 бита
+    // width-1 (24-26) + 24 бита height-1 (27-29), little-endian. RV-scan-pipeline-06:
+    // ПРЕЖНИЙ код читал со смещений 26/29 (на 2 байта дальше верных 24/27) — валидный WebP
+    // 800×600 разбирался как ~153345×4409601 и ложно отвергался как decompression_bomb.
+    const width = ((buffer[24] ?? 0) | ((buffer[25] ?? 0) << 8) | ((buffer[26] ?? 0) << 16)) + 1;
+    const height = ((buffer[27] ?? 0) | ((buffer[28] ?? 0) << 8) | ((buffer[29] ?? 0) << 16)) + 1;
     return { width, height };
   }
   if (chunk === 'VP8 ') {
@@ -156,6 +160,70 @@ export function exceedsDecodeBudget(dimensions: DeclaredDimensions): boolean {
   return dimensions.width * dimensions.height > CANON.maxDecodePixels;
 }
 
+/**
+ * RV-scan-pipeline-07: полиглот — файл, чьи байты ПОСЛЕ конца структуры основного формата
+ * несут постороннюю структуру (`<html`, второй заголовок, ZIP local-file-header). Декодер
+ * (`sharp`, `decode-check.ts`) НЕ обязан это ловить: он читает ПЕРВЫЙ валидный кадр и
+ * молча игнорирует хвост — комментарий предыдущей версии теста ошибочно приписывал эту
+ * защиту декодеру (найдено ревью). Граница проверяется по КАЖДОМУ формату отдельно —
+ * общего правила «конец = буфер» нет, у каждого контейнера свой маркер конца.
+ */
+export function hasTrailingGarbage(buffer: Uint8Array, signature: ImageSignature): boolean {
+  if (signature === 'jpeg') return jpegHasTrailingGarbage(buffer);
+  if (signature === 'png') return pngHasTrailingGarbage(buffer);
+  if (signature === 'webp') return webpHasTrailingGarbage(buffer);
+  // HEIC/HEIF: box-структура ISOBMFF, best-effort — сумма размеров top-level box'ов
+  // обязана точно покрыть буфер (box с size=0 законно тянется до конца файла).
+  return heicHasTrailingGarbage(buffer);
+}
+
+function jpegHasTrailingGarbage(buffer: Uint8Array): boolean {
+  // Внутри энтропийно-кодированных данных JPEG КАЖДЫЙ байт 0xFF обязан сопровождаться
+  // байтом-заглушкой 0x00 (byte stuffing) — литеральная последовательность 0xFF 0xD9
+  // внутри валидных данных сканирования НЕВОЗМОЖНА, поэтому последнее вхождение EOI —
+  // однозначная граница конца изображения.
+  let lastEoi = -1;
+  for (let i = 0; i < buffer.length - 1; i += 1) {
+    if (buffer[i] === 0xff && buffer[i + 1] === 0xd9) lastEoi = i;
+  }
+  if (lastEoi === -1) return true; // нет EOI вовсе — уже подозрительно, декодируемость решит decode-check
+  return lastEoi + 2 !== buffer.length;
+}
+
+function pngHasTrailingGarbage(buffer: Uint8Array): boolean {
+  let offset = 8; // сигнатура PNG — 8 байт
+  while (offset + 8 <= buffer.length) {
+    const length = readUInt32BE(buffer, offset);
+    const type = String.fromCharCode(buffer[offset + 4] ?? 0, buffer[offset + 5] ?? 0, buffer[offset + 6] ?? 0, buffer[offset + 7] ?? 0);
+    const chunkEnd = offset + 8 + length + 4; // + CRC
+    if (type === 'IEND') return chunkEnd !== buffer.length;
+    if (chunkEnd <= offset) return true; // защита от зацикливания на испорченной длине
+    offset = chunkEnd;
+  }
+  return true; // IEND не найден до конца буфера — структура не завершена штатно
+}
+
+function webpHasTrailingGarbage(buffer: Uint8Array): boolean {
+  if (buffer.length < 8) return true;
+  const riffSize = (buffer[4] ?? 0) | ((buffer[5] ?? 0) << 8) | ((buffer[6] ?? 0) << 16) | ((buffer[7] ?? 0) << 24);
+  const expectedLength = 8 + riffSize;
+  // RIFF-чанки выравниваются до чётного размера одним байтом паддинга, который иногда НЕ
+  // учтён в размере — допуск в 1 байт покрывает это, не открывая дверь для настоящего хвоста.
+  return buffer.length > expectedLength + 1;
+}
+
+function heicHasTrailingGarbage(buffer: Uint8Array): boolean {
+  let offset = 0;
+  while (offset + 8 <= buffer.length) {
+    const size = readUInt32BE(buffer, offset);
+    if (size === 0) return false; // box явно тянется до конца файла — легитимно
+    if (size === 1) return true; // 64-битный extended size — редкий случай, не разбираем, считаем подозрительным
+    if (size < 8) return true;
+    offset += size;
+  }
+  return offset !== buffer.length;
+}
+
 export type ContentRejectionCode =
   | 'invalid_image'
   | 'decompression_bomb'
@@ -177,6 +245,11 @@ export interface ContentValidationResult {
 export function validateContent(buffer: Uint8Array): ContentValidationResult {
   const signature = detectImageSignature(buffer);
   if (signature === null) return { ok: false, code: 'invalid_image', httpStatus: 422 };
+
+  // Полиглот — байты ПОСЛЕ конца структуры формата (RV-scan-pipeline-07, PC-05) — до
+  // decompression-bomb: файл с посторонним хвостом отвергается вне зависимости от
+  // заявленных размеров.
+  if (hasTrailingGarbage(buffer, signature)) return { ok: false, code: 'invalid_image', httpStatus: 422 };
 
   const declared = readDeclaredDimensions(buffer, signature);
   if (declared !== null && exceedsDecodeBudget(declared)) {
