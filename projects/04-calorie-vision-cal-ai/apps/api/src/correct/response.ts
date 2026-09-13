@@ -36,6 +36,18 @@ export interface ScanRow {
   readonly user_corrected: boolean;
   readonly finished_at: Date | null;
   readonly created_at: Date;
+  /** ДОБАВЛЕНО задачей «фото на экране результата» (FR-LOOK-007, DEC-A-050): владеет им
+   * `photo`, не `recognition` — здесь только внешний ключ, чтобы обе строки маршрутов
+   * (`scans.ts` GET, `scans-correct.ts` POST) могли попросить presigned-URL кадра тем же
+   * способом (`../photo/photo-url.ts`), не заводя вторую копию условия «когда кадра нет». */
+  readonly photo_id: string | null;
+}
+
+/** Presigned-URL кадра + срок его действия (`../photo/photo-url.ts`) — вычисляется АСИНХРОННО
+ * (клиент хранилища) вызывающим маршрутом ДО `buildScanResponse`, эта функция остаётся синхронной. */
+export interface ScanPhotoInfo {
+  readonly url: string;
+  readonly expiresAt: string;
 }
 
 export function parseItems(raw: unknown): PersistedItem[] {
@@ -50,6 +62,10 @@ function round1(value: number): number {
 export interface ScanResponseOptions {
   /** `candidates[]` появляется ТОЛЬКО в ответе `correct` с `op = 'replace_item'` + `query`. */
   readonly candidates?: readonly FoodSearchCandidate[];
+  /** `null` — ДВА законных исхода (`../photo/photo-url.ts`): нормализации ещё не было, либо
+   * файл удалён по сроку 30 дней. `undefined` не встречается — вызывающий обязан посчитать
+   * значение (даже если оно `null`) ДО вызова этой функции. */
+  readonly photo?: ScanPhotoInfo | null;
 }
 
 /** `kcal_total` — публичный алиас `db_kcal_total` (та же величина, имя канона `diary_entry`). */
@@ -91,6 +107,11 @@ export function buildScanResponse(row: ScanRow, options: ScanResponseOptions = {
     low_confidence: row.confidence !== null && row.confidence < 0.6,
     escalated: row.escalated,
     failure_reason: row.failure_reason,
+    // FR-LOOK-007/DEC-A-050: `null`, а не пустая строка и не выдуманный адрес, когда кадра
+    // нет (см. `ScanResponseOptions.photo`). Пара полей — URL и его срок — обе `null` или
+    // обе заполнены, никогда врозь: клиент не обязан гадать, истекла ли ссылка без срока.
+    photo_url: options.photo?.url ?? null,
+    photo_url_expires_at: options.photo?.expiresAt ?? null,
   };
   if (options.candidates !== undefined) body.candidates = options.candidates;
   return body;

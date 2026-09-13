@@ -20,6 +20,7 @@ import { registerDiaryRoutes } from './routes/diary.js';
 import { registerCodesRoutes } from './routes/codes.js';
 import { registerPartnerRoutes } from './routes/partner.js';
 import { registerScansCorrectRoute } from './routes/scans-correct.js';
+import { registerScansPhotoRoute } from './routes/scans-photo.js';
 import { registerShareCardsRoute } from './routes/share-cards.js';
 import { registerShareCardInternalRoute } from './routes/share-card-internal.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
@@ -85,7 +86,11 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerDiaryRoutes(app, { pool: deps.pool, logger: deps.logger });
   registerCodesRoutes(app, { pool: deps.pool, logger: deps.logger });
   registerPartnerRoutes(app, deps.pool);
-  registerScansCorrectRoute(app, { pool: deps.pool, logger: deps.logger });
+  registerScansCorrectRoute(app, { pool: deps.pool, storage, logger: deps.logger });
+  // FR-LOOK-007/DEC-A-050: `photo_url` из GET/`correct` указывает СЮДА, а не на хранилище
+  // напрямую (`photo/photo-url.ts` объясняет почему). Уже проксируется Caddy как часть
+  // `/api/*` — инфраструктура не менялась.
+  registerScansPhotoRoute(app, { pool: deps.pool, storage, logger: deps.logger });
   registerShareCardsRoute(app, { pool: deps.pool, storage, logger: deps.logger });
   // `/internal/*` — НЕ входит в канон `/api/v1` (ровно 14) и не проксируется `Caddyfile`
   // наружу; вызывается только `apps/web` изнутри сети compose (`routes/share-card-internal.ts`).

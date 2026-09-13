@@ -11,9 +11,15 @@ import { requireSession } from './scans.js';
 import { buildScanResponse, parseItems, type ScanRow } from '../correct/response.js';
 import { applyCorrectOp, type CurrentScanRow } from '../correct/apply-op.js';
 import { validateOp, validateQuery, type CorrectRequestBody } from '../correct/validate-input.js';
+import { resolveScanPhotoResponse } from '../photo/photo-url.js';
+import type { PhotoStorage } from '../photo/store-original.js';
 
 export interface ScansCorrectRouteDeps {
   readonly pool: DbPool;
+  // FR-LOOK-007/DEC-A-050: этот маршрут отдаёт то же тело, что `GET /scans/{id}`
+  // (`buildScanResponse`) — без `storage` ответ правки не мог бы нести `photo_url`, и кадр
+  // тихо пропадал бы с экрана результата после любого действия (степпер, замена, удаление).
+  readonly storage: PhotoStorage;
   readonly logger: Logger;
 }
 
@@ -36,7 +42,8 @@ const UPDATE_AFTER_CORRECT = `
       user_corrected = $10
   WHERE id = $1 AND device_session_id = $2
   RETURNING id, status::text AS status, items, confidence, escalated, model_estimate_kcal, failure_reason::text AS failure_reason,
-            db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at
+            db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at,
+            photo_id
 `;
 
 interface CorrectRow extends ScanRow {
@@ -66,12 +73,15 @@ export function registerScansCorrectRoute(app: FastifyInstance, deps: ScansCorre
       const candidates = await searchFoodCandidatesForReplace(deps.pool, queryResult.value);
       const scanResult = await deps.pool.query<ScanRow>(
         `SELECT id, status::text AS status, items, confidence, escalated, model_estimate_kcal, failure_reason::text AS failure_reason,
-                db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at
+                db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at,
+                photo_id
          FROM recognition WHERE id = $1`,
         [request.params.id],
       );
       const scanRow = scanResult.rows[0] as ScanRow;
-      return reply.code(200).send(ok(buildScanResponse(scanRow, { candidates })));
+      // Чистый поиск не меняет скан — кадр тот же, что и в GET (FR-LOOK-007/DEC-A-050).
+      const photo = await resolveScanPhotoResponse(deps.pool, deps.storage, scanRow.id, scanRow.photo_id);
+      return reply.code(200).send(ok(buildScanResponse(scanRow, { candidates, photo })));
     }
 
     try {
@@ -111,7 +121,11 @@ export function registerScansCorrectRoute(app: FastifyInstance, deps: ScansCorre
         if (updatedRow === undefined) throw new RouteError(404, 'not_found', 'скан не найден');
         return updatedRow;
       });
-      return reply.code(200).send(ok(buildScanResponse(updated)));
+      // Presigned-URL — ПОСЛЕ закрытия транзакции (`shared-resource-verification.md`,
+      // вопрос 1): сетевой вызов клиента хранилища не должен удерживать блокировку строки
+      // `FOR UPDATE`, которую держала транзакция выше.
+      const photo = await resolveScanPhotoResponse(deps.pool, deps.storage, updated.id, updated.photo_id);
+      return reply.code(200).send(ok(buildScanResponse(updated, { photo })));
     } catch (error) {
       if (error instanceof RouteError) {
         return reply.code(error.status).send(fail(error.code, error.message, error.details));

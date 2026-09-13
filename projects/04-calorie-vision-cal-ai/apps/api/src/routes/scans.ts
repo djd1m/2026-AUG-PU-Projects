@@ -14,11 +14,13 @@ import { clientAddressFrom, toIpPrefix } from '../session/ip-prefix.js';
 import { validateContent, isValidIdempotencyKey } from '../photo/validate-content.js';
 import { isDecodable } from '../photo/decode-check.js';
 import { objectKeyFor, mimeFor, type PhotoStorage } from '../photo/store-original.js';
+import { resolveScanPhotoResponse } from '../photo/photo-url.js';
 import { buildScanResponse, type ScanRow } from '../correct/response.js';
 
 export const SELECT_SCAN_ROW = `
   SELECT id, status::text AS status, items, confidence, escalated, model_estimate_kcal, failure_reason::text AS failure_reason,
-         db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at
+         db_kcal_total, discrepancy_ratio, conflict_flag, conflict_choice, conflict_choice_at, user_corrected, finished_at, created_at,
+         photo_id
   FROM recognition WHERE id = $1 AND device_session_id = $2
 `;
 
@@ -256,7 +258,10 @@ export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps):
     // Чужой И несуществующий id — ОДИН и тот же 404 (AC-scan-pipeline-18, AC-source-and-correct-23).
     if (row === undefined) return reply.code(404).send(fail('not_found', 'скан не найден'));
 
-    return reply.code(200).send(ok(buildScanResponse(row), { updated_at: (row.finished_at ?? row.created_at).toISOString() }));
+    // FR-LOOK-007/DEC-A-050: presigned-URL кадра — ПОСЛЕ проверки владения (та же проверка,
+    // что и весь остальной ответ), никогда до неё.
+    const photo = await resolveScanPhotoResponse(deps.pool, deps.storage, row.id, row.photo_id);
+    return reply.code(200).send(ok(buildScanResponse(row, { photo }), { updated_at: (row.finished_at ?? row.created_at).toISOString() }));
   });
 }
 
