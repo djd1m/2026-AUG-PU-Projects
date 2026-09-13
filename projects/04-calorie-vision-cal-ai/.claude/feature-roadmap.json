@@ -213,7 +213,7 @@
       "name": "Коды блогеров, атрибуция, anti-fraud и кабинет партнёра",
       "description": "POST /codes/apply с тремя исходами по полю source: explicit + любой → 409, слабый + explicit → 200 с replaced_source и аудитом replaced_weaker_source, слабый + слабый → 409; недействительный код — ошибка ввода без отката к cookie; самореферал и заблокированный код дают rejected; anti-fraud 50 применений с одного ip_prefix за 10 минут блокирует код, снятие только оператором; переход pending → activated первым успешным распознаванием одной транзакцией с growth_event(activation); GET /partner/dashboard по коду, разрешённому на сервере, четыре счётчика из growth_event, раздельные i и conv%, «недостаточно данных (n из 30)» ниже порога.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "blockers": [],
       "depends_on": [
