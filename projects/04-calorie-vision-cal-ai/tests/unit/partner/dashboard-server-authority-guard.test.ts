@@ -16,9 +16,21 @@ const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const ROUTE_FILE = path.join('apps', 'api', 'src', 'routes', 'partner.ts');
 const QUERY_FILE = path.join('apps', 'api', 'src', 'partner', 'dashboard-query.ts');
 
+/**
+ * Строки кода без комментариев — упоминание запрещённого паттерна В КОММЕНТАРИИ (как в
+ * этом самом файле и в `partner.ts`, объясняющем сам страж) не является нарушением
+ * (тот же приём, что `tests/unit/consent-guard-source.test.ts`).
+ */
+function codeLines(source: string): string {
+  return source
+    .split('\n')
+    .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
+    .join('\n');
+}
+
 describe('страж AC-partner-codes-and-cabinet-17: код кабинета берётся только с сервера', () => {
   it('routes/partner.ts не читает code из query/body/params ни в каком виде', async () => {
-    const code = await readFile(path.join(ROOT, ROUTE_FILE), 'utf8');
+    const code = codeLines(await readFile(path.join(ROOT, ROUTE_FILE), 'utf8'));
     expect(code).not.toMatch(/request\.query\.code/);
     expect(code).not.toMatch(/request\.body\.code/);
     expect(code).not.toMatch(/request\.params\.code/);
@@ -26,7 +38,7 @@ describe('страж AC-partner-codes-and-cabinet-17: код кабинета б
   });
 
   it('queryPartnerDashboard принимает единственный вход, разрешающий код: accountId — параметра code/partnerCodeId нет', async () => {
-    const code = await readFile(path.join(ROOT, QUERY_FILE), 'utf8');
+    const code = codeLines(await readFile(path.join(ROOT, QUERY_FILE), 'utf8'));
     // Сигнатура функции — `input: { accountId, window, now? }`, без поля кода.
     expect(code).toMatch(/accountId:\s*string/);
     expect(code).not.toMatch(/partnerCodeId/);
@@ -34,7 +46,7 @@ describe('страж AC-partner-codes-and-cabinet-17: код кабинета б
   });
 
   it('routes/partner.ts вызывает queryPartnerDashboard только с { accountId, window }', async () => {
-    const code = await readFile(path.join(ROOT, ROUTE_FILE), 'utf8');
+    const code = codeLines(await readFile(path.join(ROOT, ROUTE_FILE), 'utf8'));
     const call = /queryPartnerDashboard\(\s*pool\s*,\s*\{([^}]*)\}\s*\)/.exec(code);
     expect(call).not.toBeNull();
     const args = call?.[1] ?? '';

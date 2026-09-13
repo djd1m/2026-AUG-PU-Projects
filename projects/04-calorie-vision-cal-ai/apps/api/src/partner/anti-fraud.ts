@@ -13,7 +13,14 @@
 import type { DbClient } from '@n4/db';
 import type { Logger } from '@n4/shared';
 
-/** Порог — 51-е применение блокирует код (`> 50`). Окно — 10 минут (канон §7, `security.md`). */
+/**
+ * Порог — РОВНО 50 засчитанных применений допускается; 51-е блокирует код и само
+ * НЕ засчитывается (AC-partner-codes-and-cabinet-9: «Given код с 50 засчитанными …
+ * When выполняется 51-е применение … Then код переходит в blocked, 51-я попытка получает
+ * rejected»). Сравнение — с EXISTING count (до вставки текущей попытки, шаг 2
+ * `AntiFraudOnCode`): `existing >= 50` блокирует, поэтому счётчик никогда не превышает 50.
+ * Окно — 10 минут (канон §7, `security.md`).
+ */
 export const ANTI_FRAUD_THRESHOLD = 50;
 
 const COUNT_RECENT_APPLICATIONS = `
@@ -50,7 +57,7 @@ export function createAntiFraudCheck(logger: Logger): AntiFraudCheck {
   return async (client, input) => {
     const counted = await client.query<{ n: number }>(COUNT_RECENT_APPLICATIONS, [input.partnerCodeId, input.ipPrefix]);
     const count = counted.rows[0]?.n ?? 0;
-    if (count <= ANTI_FRAUD_THRESHOLD) return { outcome: 'allow' };
+    if (count < ANTI_FRAUD_THRESHOLD) return { outcome: 'allow' };
 
     await client.query(BLOCK_CODE, [input.partnerCodeId]);
     // NFR-partner-codes-and-cabinet-2: ip_prefix, НЕ полный адрес.

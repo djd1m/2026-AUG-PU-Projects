@@ -1,15 +1,18 @@
-// NormalizeAndFindCode (AC-partner-codes-and-cabinet-1) — форма кода, границы 4/12,
-// недействительный код и неизвестный код ничего не меняют.
+// NormalizeAndFindCode — форма кода, границы 4/12 (AC-partner-codes-and-cabinet-1). Unit-
+// слой: БАЗЫ НЕТ ВОВСЕ (`vitest.config.ts`). Случай «код проходит форму, но отсутствует в
+// partner_code» требует настоящего Postgres — он в
+// `tests/integration/partner/normalize-code.test.ts`, не здесь.
 //
-// Форма и обрезка пробелов — чистая функция, проверяется без базы. `found`/`invalid` по
-// неизвестному коду требует реального `partner_code` — используется настоящий Postgres
-// (общая оснастка `tests/helpers/db.ts`), мок SELECT здесь не нужен.
+// Инвалидная форма ОБЯЗАНА короткнуть ДО обращения к базе (`02_pseudocode.md`, шаг 1-2):
+// проверяется шпионом-заглушкой `query`, которая бросает исключение, если её вызвали, — не
+// настоящим Postgres.
 
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import type { DbPool } from '@n4/db';
+import { describe, expect, it, vi } from 'vitest';
 import { normalizeAndFindCode, normalizeCode } from '../../../apps/api/src/partner/normalize-code.js';
-import { migratedPool, truncateAll } from '../../helpers/db.js';
-import { seedPartner, seedPartnerCode } from '../../helpers/partner.js';
+
+function poolThatMustNotBeQueried(): { query: ReturnType<typeof vi.fn> } {
+  return { query: vi.fn(async () => { throw new Error('DB не должна вызываться на invalid-форме'); }) };
+}
 
 describe('normalizeCode — обрезка пробелов и верхний регистр (FR-partner-codes-and-cabinet-1, шаг 1)', () => {
   it('обрезает пробелы по краям и приводит к верхнему регистру', () => {
@@ -18,60 +21,32 @@ describe('normalizeCode — обрезка пробелов и верхний р
   });
 });
 
-let pool: DbPool;
-
-beforeAll(async () => {
-  pool = await migratedPool('n4-tests-normalize-code');
-}, 60_000);
-
-afterAll(async () => {
-  await pool.end();
-});
-
-beforeEach(async () => {
-  await truncateAll(pool);
-});
-
-describe('AC-partner-codes-and-cabinet-1: недействительный формат и неизвестный код ничего не меняют', () => {
-  it('код короче 4 символов (форма) → invalid', async () => {
-    const outcome = await normalizeAndFindCode(pool, 'AB');
-    expect(outcome.kind).toBe('invalid');
+describe('AC-partner-codes-and-cabinet-1: недействительная форма короткует ДО обращения к базе', () => {
+  it('код короче 4 символов → invalid, query не вызван', async () => {
+    const pool = poolThatMustNotBeQueried();
+    const outcome = await normalizeAndFindCode(pool as never, 'AB');
+    expect(outcome).toEqual({ kind: 'invalid' });
+    expect(pool.query).not.toHaveBeenCalled();
   });
 
-  it('код длиной 13 символов (граница исключительно) → invalid', async () => {
-    const outcome = await normalizeAndFindCode(pool, 'A'.repeat(13));
-    expect(outcome.kind).toBe('invalid');
+  it('код длиной 13 символов (граница исключительно) → invalid, query не вызван', async () => {
+    const pool = poolThatMustNotBeQueried();
+    const outcome = await normalizeAndFindCode(pool as never, 'A'.repeat(13));
+    expect(outcome).toEqual({ kind: 'invalid' });
+    expect(pool.query).not.toHaveBeenCalled();
   });
 
-  it('код с дефисом/юникодом не проходит форму → invalid', async () => {
-    expect((await normalizeAndFindCode(pool, 'LIZA-10')).kind).toBe('invalid');
-    expect((await normalizeAndFindCode(pool, 'ЛИЗА10')).kind).toBe('invalid');
+  it('код с дефисом/юникодом не проходит форму → invalid, query не вызван', async () => {
+    const pool = poolThatMustNotBeQueried();
+    expect(await normalizeAndFindCode(pool as never, 'LIZA-10')).toEqual({ kind: 'invalid' });
+    expect(await normalizeAndFindCode(pool as never, 'ЛИЗА10')).toEqual({ kind: 'invalid' });
+    expect(pool.query).not.toHaveBeenCalled();
   });
 
-  it('код ровно 4 символа, проходящий форму, но отсутствующий в partner_code → invalid', async () => {
-    const outcome = await normalizeAndFindCode(pool, 'ZZZZ9999'.slice(0, 8));
-    expect(outcome.kind).toBe('invalid');
-  });
-
-  it('код ровно 4 и ровно 12 символов (граница включительно) находится, если существует', async () => {
-    const partner = await seedPartner(pool, 'liza');
-    const short = await seedPartnerCode(pool, partner.partnerId, 'AB12');
-    const long = await seedPartnerCode(pool, partner.partnerId, 'ABCDEFGH1234');
-
-    const foundShort = await normalizeAndFindCode(pool, ' ab12 ');
-    const foundLong = await normalizeAndFindCode(pool, 'abcdefgh1234');
-
-    expect(foundShort).toEqual({ kind: 'found', code: expect.objectContaining({ id: short.id }) });
-    expect(foundLong).toEqual({ kind: 'found', code: expect.objectContaining({ id: long.id }) });
-  });
-
-  it('AC-1: оба случая (форма и отсутствие) не создают и не меняют строк attribution/growth_event', async () => {
-    await normalizeAndFindCode(pool, 'AB'); // не проходит форму
-    await normalizeAndFindCode(pool, 'ZZZZ9999'); // проходит форму, отсутствует
-
-    const attributions = await pool.query('SELECT count(*)::int AS n FROM attribution');
-    const events = await pool.query('SELECT count(*)::int AS n FROM growth_event');
-    expect(attributions.rows[0]?.n).toBe(0);
-    expect(events.rows[0]?.n).toBe(0);
+  it('код ровно 4 и ровно 12 символов ПРОХОДИТ форму (граница включительно) — доходит до query', async () => {
+    const pool = { query: vi.fn(async () => ({ rows: [] })) };
+    await normalizeAndFindCode(pool as never, 'AB12');
+    await normalizeAndFindCode(pool as never, 'ABCDEFGH1234');
+    expect(pool.query).toHaveBeenCalledTimes(2);
   });
 });

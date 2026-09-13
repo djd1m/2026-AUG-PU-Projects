@@ -65,7 +65,8 @@ export async function seedPartnerCode(
   const status = options.status ?? 'active';
   const result = await pool.query<{ id: string }>(
     `INSERT INTO partner_code (partner_id, code, status, blocked_reason, blocked_at)
-     VALUES ($1, $2, $3, $4, CASE WHEN $3 = 'blocked' THEN now() ELSE NULL END) RETURNING id`,
+     VALUES ($1, $2, $3::partner_code_status, $4::partner_code_block_reason, CASE WHEN $3::text = 'blocked' THEN now() ELSE NULL END)
+     RETURNING id`,
     [partnerId, code, status, status === 'blocked' ? (options.blockedReason ?? 'manual') : null],
   );
   const row = result.rows[0];

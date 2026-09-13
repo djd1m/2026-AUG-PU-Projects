@@ -63,11 +63,17 @@ describe('AC-9(б): 20 одновременных применений с одн
 
     const applied = results.filter((r) => r.outcome === 'applied');
     const blockedNow = results.filter((r) => r.outcome === 'rejected' && r.reason === 'antifraud_ip_burst');
+    const blockedAlready = results.filter((r) => r.outcome === 'rejected' && r.reason === 'code_blocked');
 
-    // 50 - 45 + 1 отклонённое = ровно то, что даёт последовательная сериализация по codeLock.
-    expect(applied.length).toBeLessThanOrEqual(6);
-    expect(applied.length).toBeGreaterThan(0);
-    expect(blockedNow.length).toBe(20 - applied.length);
+    // codeLock сериализует ПОЛНОСТЬЮ — под конкуренцией результат детерминирован, не только
+    // ограничен сверху: 45→50 (5 applied), 6-й видит existing=50 → блокирует код
+    // (antifraud_ip_burst), оставшиеся 14 видят уже blocked на шаге 2 гейта → code_blocked
+    // (AC-10: окно НЕ пересчитывается повторно на уже заблокированном коде).
+    expect(applied.length).toBe(5);
+    expect(blockedNow.length).toBe(1);
+    expect(blockedAlready.length).toBe(14);
+    // 50 − 45 + 1 отклонённое (шпаргалка AC-9б в 01_specification.md) = принятые + блокирующая попытка.
+    expect(applied.length + blockedNow.length).toBe(50 - 45 + 1);
 
     const codeRow = await pool.query<{ status: string; blocked_reason: string | null }>(
       'SELECT status::text AS status, blocked_reason::text AS blocked_reason FROM partner_code WHERE id = $1',

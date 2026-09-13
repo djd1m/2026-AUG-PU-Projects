@@ -1,11 +1,34 @@
-# Фича `partner-codes-and-cabinet` — завершение: план (реализация не начата)
+# Фича `partner-codes-and-cabinet` — завершение: план + факт реализации
 
 ## Статус документа
 
-Документ — ПЛАН (Phase 1, режим скорости DEC-A-032). Реализация не выполнялась в рамках этого
-планирования; таблица `## Criterion coverage` ниже называет ПЛАНИРУЕМЫЕ файлы тестов, а не
-фактический прогон. При реализации раздел дополняется фактом по образцу
-`docs/features/foundation/05_completion.md`, расхождение плана и факта не стирается, а дописывается.
+Реализация ВЫПОЛНЕНА (2026-09-13, продолжение сессии, оборванной в 07:54 UTC; исходный
+implementation-код `apps/api/src/partner/*`, `routes/codes.ts`, `routes/partner.ts`,
+`packages/shared/src/partner-types.ts` был написан прежней сессией и принят БЕЗ ИЗМЕНЕНИЙ после
+построчной ревизии против `01-04_*.md`, кроме одного исправления — см. «Расхождение плана и
+факта» ниже). Раздел `## Criterion coverage` ниже — ФАКТ (файлы существуют, тесты прогнаны на
+настоящем PostgreSQL профиля `test`), плановая версия ссылок не стирается, а помечена там, где
+разошлась.
+
+## Расхождение плана и факта: порог anti-fraud (уточнение, не дефект)
+
+`02_pseudocode.md` (`AntiFraudOnCode`, шаг 3) буквально пишет `IF count > 50 THEN block`, где
+`count` — количество УЖЕ существующих (до текущей попытки) `code_applied`. При такой семантике
+50 существующих применений НЕ блокируют 51-ю попытку (50 не больше 50) — блокируется только
+52-я (существующих уже 51). Это на единицу расходится с явным разъяснением тут же в
+`01_specification.md` FR-3 («Порог — `> 50`, то есть 51-е применение блокирует код») и с самим
+текстом `AC-partner-codes-and-cabinet-9` («Given код с 50 засчитанными … When выполняется 51-е
+применение … Then … 51-я попытка получает rejected»).
+
+**Решение реализующего агента:** приоритет отдан АКРИТЕРИЮ ПРИЁМКИ (AC-9) и явному разъяснению
+FR-3, а не буквальному тексту `> 50` в пседокоде — потому что AC — измеримый контракт поставки,
+а «(то есть 51-е применение блокирует)» это авторская, а не автоматически выведенная интерпретация
+того же порога. `apps/api/src/partner/anti-fraud.ts` сравнивает `existing count < 50` для допуска
+(было `<= 50`): при 50 уже существующих 51-я попытка получает `block` НЕ будучи записанной,
+счётчик никогда не превышает 50. Проверено конкурентным тестом на реальном PostgreSQL
+(`tests/concurrency/partner/anti-fraud.test.ts`, оба случая AC-9а/б — см. `## Criterion coverage`).
+`02_pseudocode.md` не правился (вне мандата этой сессии — правка исходного плана); расхождение
+названо здесь явно, как того требует шапка документа.
 
 ## Готовность к реализации
 
@@ -16,16 +39,33 @@
   `03_architecture.md`; конкретную строку интеграции подставляет реализующий агент по факту
   существования того кода.
 
-## Перед передачей результата (по образцу `testing.md`)
+## Перед передачей результата — ФАКТИЧЕСКИЙ прогон (2026-09-13)
 
-```bash
-npm test                                            # unit + integration, включая конкурентные
-npm run lint && npm run build
-node ../../.claude/hooks/check-ports.cjs .          # не тронуто фичей, но не должно сломаться
-bash ../../.claude/hooks/check-review-contract.cjs . 2>/dev/null || true
-bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh . \
-  --role-map-source ../../.claude/commands/feature.md \
-  --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md
+| Проверка | Результат |
+|---|---|
+| `npm run typecheck` | 0 ошибок |
+| `npm run lint` | чисто |
+| `npm run build` (все пять пакетов, включая `@n4/web` → `next build`) | успешно |
+| `npx vitest run` (unit-слой, БЕЗ `DATABASE_URL`) | 147/147 зелёных, включая 11 новых тестов фичи (нормализация формы, оба стража) — база НЕ вызывается на unit-слое (проверено шпионом, не реальным Postgres) |
+| `docker compose --profile test run --rm -T test sh -lc 'npm run test:integration'` | 166 зелёных / 3 скипнуто; ЕДИНСТВЕННЫЙ красный файл — `tests/integration/web-manifest.test.ts` (`next start` не поднимается в контейнере за отведённое время) — это `apps/web`, фичи не касается, воспроизведено и ДО правок этой сессии (изолированный повторный прогон того же файла подтвердил тот же таймаут независимо от партнёрских тестов) |
+| `node ../../.claude/hooks/check-ports.cjs .` | `0` — хранилища не публикуются, reverse-proxy в compose нет |
+| `bash ../../scripts/check-env-wiring.sh` | `0` — `api`/`recognizer`: все читаемые переменные проброшены |
+| `bash ../../scripts/check-port-conflicts.sh .` | `0` — порт 4180 свободен, БД/хранилище не смотрят в интернет |
+| `bash ../../scripts/check-pipeline-gaps.sh . --completion --role-map-source ../../.claude/commands/feature.md --project-role-map-source ../../.claude/skills/sparc-prd-mini/SKILL.md` | код возврата `1` (блокирующие находки), но ВСЕ найденные пункты — `PR-002` (упоминание managed BaaS в `docs/Architecture.md:85`, в контексте «managed BaaS … запрещены», не предложение использовать), `PR-003` (трассировка `FR-LOOK-*` источника `source-product-profile`, вне этой фичи), `PR-007` (формат ссылки на `ADR-002/004/008` в `docs/ADR.md`, авторства Phase 1, задолго до этой сессии), 4 `[GAP]`-маркера — ни один не лежит в `docs/features/partner-codes-and-cabinet/` или в файлах этой фичи (проверено `grep -rn "\[GAP\]" docs/features/partner-codes-and-cabinet/` → пусто). **Контур фичи — без GAP**, но проект в целом (вне мандата этой сессии) — нет |
+
+**Испытание стражей (`guard-must-be-able-to-fail.md`), обе строки квитанции:**
+
+```text
+AC-11 (разблокировка только вручную):
+  дефект внедрён (функция backgroundAutoUnblock с UPDATE partner_code SET status='active'
+  WHERE blocked_at < now() - interval '1 hour', вне manual-unblock.ts)
+    -> Tests  2 failed | 1 passed  (offenders: ["apps/api/src/partner/apply-partner-code.ts"])
+  дефект удалён -> Tests  3 passed
+
+AC-17 (код кабинета только с сервера):
+  дефект внедрён (queryPartnerDashboard(pool, { accountId: request.query.code ?? accountId, window }))
+    -> Tests  1 failed | 2 passed
+  дефект удалён -> Tests  3 passed
 ```
 
 ## Известный, честно названный пробел (follow-up, не блокирует Phase 1)
@@ -50,31 +90,31 @@ bash /root/.npm/_npx/ac10dded1a3b4a50/node_modules/@dzhechkov/p-replicator/scrip
 
 ## Criterion coverage
 
-**Таблица ПЛАНОВАЯ.** Каждый файл — предполагаемое расположение теста, соответствующее
-`.claude/rules/coding-style.md` (структура `apps/api`) и `04_refinement.md` (слой по природе
-признака). Реализующий агент подтверждает или правит расположение по факту.
+**Таблица ФАКТИЧЕСКАЯ** (прогнана 2026-09-13 на реальном PostgreSQL профиля `test`, кроме
+отмеченных `[unit]`, которые намеренно БЕЗ базы — `vitest.config.ts`). Расхождения с ПЛАНОВЫМ
+расположением (см. историю файла) отмечены `←план: …`.
 
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|
-| AC-partner-codes-and-cabinet-1 | tests/unit/partner/normalize-code.test.ts | недействительный формат и неизвестный код ничего не меняют |
+| AC-partner-codes-and-cabinet-1 | tests/unit/partner/normalize-code.test.ts [unit] + tests/integration/partner/normalize-code.test.ts | форма/границы 4-12 короткуют до базы [unit]; неизвестный код и найденные границы — на реальном Postgres |
 | AC-partner-codes-and-cabinet-2 | tests/integration/partner/apply-code.test.ts | первое применение создаёт pending-атрибуцию и одно событие code_applied |
 | AC-partner-codes-and-cabinet-3 | tests/integration/partner/apply-code.test.ts | явный код заменяет cookie и записывает replaced_source |
 | AC-partner-codes-and-cabinet-4 | tests/integration/partner/apply-code.test.ts | explicit не перебивается ни другим, ни тем же кодом |
 | AC-partner-codes-and-cabinet-5 | tests/integration/partner/apply-code.test.ts | слабый источник не перебивает слабый |
-| AC-partner-codes-and-cabinet-6 | tests/concurrency/partner/apply-code-session.test.ts | два кода одной сессией одновременно дают один applied и один conflict |
+| AC-partner-codes-and-cabinet-6 | tests/concurrency/partner/apply-code-session.test.ts | два кода одной сессией одновременно дают один applied и один conflict, ни один не падает 23505 |
 | AC-partner-codes-and-cabinet-7 | tests/integration/partner/apply-code.test.ts | заблокированный код отклоняется до записи в attribution |
-| AC-partner-codes-and-cabinet-8 | tests/integration/partner/apply-code.test.ts | самореферал отклоняется до записи в attribution |
-| AC-partner-codes-and-cabinet-9 | tests/concurrency/partner/anti-fraud.test.ts | 51-е применение блокирует код и переживает 20 одновременных попыток |
-| AC-partner-codes-and-cabinet-10 | tests/integration/partner/anti-fraud.test.ts | заблокированный код не пересчитывает окно повторно |
-| AC-partner-codes-and-cabinet-11 | tests/integration/partner/manual-unblock-guard.test.ts | разблокировка только вручную — страж падает на внедрённом автоснятии |
-| AC-partner-codes-and-cabinet-12 | tests/integration/partner/activate-attribution.test.ts | первое успешное распознавание активирует, второе — no-op |
+| AC-partner-codes-and-cabinet-8 | tests/integration/partner/apply-code.test.ts | самореферал отклоняется до записи в attribution (+ edge case «не тот владелец — не самореферал») |
+| AC-partner-codes-and-cabinet-9 | tests/concurrency/partner/anti-fraud.test.ts | (а) 51-е применение блокирует код последовательно; (б) 20 одновременных при 45 исходных — 5 applied, 1 antifraud_ip_burst, 14 code_blocked, ровно одна причина блокировки |
+| AC-partner-codes-and-cabinet-10 | tests/integration/partner/apply-code.test.ts ←план: anti-fraud.test.ts | rejected(code_blocked) шагом 4 гейта, шпион AntiFraudCheck НЕ вызван |
+| AC-partner-codes-and-cabinet-11 | tests/unit/partner/manual-unblock-guard.test.ts [unit, страж по исходнику] ←план: integration | испытан внедрённым дефектом (см. квитанцию выше) |
+| AC-partner-codes-and-cabinet-12 | tests/integration/partner/activate-attribution.test.ts | первое успешное распознавание активирует, второе — no-op; отдельно: сессия без кода — no_attribution |
 | AC-partner-codes-and-cabinet-13 | tests/integration/partner/activate-attribution.test.ts | код заблокирован между применением и распознаванием даёт rejected(code_blocked) |
 | AC-partner-codes-and-cabinet-14 | tests/integration/partner/activate-attribution.test.ts | самореферал, обнаруженный после входа через Telegram, даёт rejected(self_referral) |
-| AC-partner-codes-and-cabinet-15 | tests/integration/partner/dashboard.test.ts | четыре счётчика кабинета совпадают с посеянными growth_event |
-| AC-partner-codes-and-cabinet-16 | tests/integration/partner/dashboard.test.ts | не-партнёр получает 403 без утечки чужих счётчиков |
-| AC-partner-codes-and-cabinet-17 | tests/integration/partner/dashboard-server-authority-guard.test.ts | код кабинета берётся только с сервера — страж падает на внедрённом чтении query |
-| AC-partner-codes-and-cabinet-18 | tests/integration/partner/dashboard.test.ts | честные нули и порог n<30 вместо процента |
-| AC-partner-codes-and-cabinet-19 | tests/unit/partner/dashboard-schema.test.ts | в ответе кабинета нет денежных полей |
+| AC-partner-codes-and-cabinet-15 | tests/integration/partner/dashboard.test.ts | четыре счётчика кабинета совпадают с посеянными growth_event (функция `queryPartnerDashboard` напрямую) |
+| AC-partner-codes-and-cabinet-16 | tests/integration/partner/dashboard.test.ts | не-партнёр → 403 без утечки счётчиков (HTTP, реальный вход через Telegram); без входа → 401; неизвестный accountId → not_partner на функции |
+| AC-partner-codes-and-cabinet-17 | tests/unit/partner/dashboard-server-authority-guard.test.ts [unit, страж по исходнику] ←план: integration | испытан внедрённым дефектом (см. квитанцию выше) |
+| AC-partner-codes-and-cabinet-18 | tests/integration/partner/dashboard.test.ts | честные нули (no_data=true) и порог n<30 (`insufficient_data`) вместо процента, раздельно `i`/`conv` |
+| AC-partner-codes-and-cabinet-19 | tests/integration/partner/dashboard.test.ts ←план: unit/dashboard-schema.test.ts | сериализованный ответ не содержит ни одного из 6 запрещённых имён (проверено на живых данных, не на пустой схеме — решение: денежное поле легче пропустить на заполненном ответе, чем на пустом) |
 
 ## Answer-map PD-*
 PD-REUSE-001 ← FR-partner-codes-and-cabinet-3 (anti-fraud перенесён из N1 как отправная точка).
