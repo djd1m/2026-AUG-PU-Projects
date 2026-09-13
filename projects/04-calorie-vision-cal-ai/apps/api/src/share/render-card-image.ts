@@ -21,6 +21,12 @@ const TILE_TOP = PHOTO_HEIGHT + 260;
 const TILE_HEIGHT = 140;
 const TILE_GAP = 16;
 const TILE_WIDTH = Math.floor((CARD_WIDTH - 2 * 40 - 3 * TILE_GAP) / 4);
+const SIDE_MARGIN = 40;
+/** Строка источника — сразу ПОД плитками с фиксированным малым зазором, а не «плитка + 180».
+ *  ПРАВКА ПОСЛЕ РЕВЬЮ (RV-share-card-and-growth-events-02): прежняя формула `TILE_TOP + 140 +
+ *  180 = 1924` при `CARD_HEIGHT = 1920` — базовая линия ниже холста, текст обрезан снизу. */
+const SOURCE_LABEL_GAP_BELOW_TILES = 40;
+export const SOURCE_LABEL_Y = TILE_TOP + TILE_HEIGHT + SOURCE_LABEL_GAP_BELOW_TILES;
 
 export interface CardGeometry {
   readonly badgeRect: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
@@ -44,9 +50,60 @@ export function badgeOverlapsAnyTile(geometry: CardGeometry): boolean {
   return geometry.tileRects.some((tile) => rectsOverlap(geometry.badgeRect, tile));
 }
 
+/**
+ * Подгонка текста под ширину холста (RV-share-card-and-growth-events-02). `sharp`/`librsvg` не
+ * даёт измерить реальную ширину текста ДО рендера (нет canvas/font-metrics библиотеки — «НОЛЬ
+ * новых пакетов», `03_architecture.md`), поэтому ширина ОЦЕНИВАЕТСЯ консервативным (заведомо не
+ * заниженным) средним коэффициентом ширины символа для жирного шрифта. Оценка ЗАВЕДОМО ШИРЕ, чем
+ * у большинства реальных символов (в т.ч. кириллицы) — переоценка здесь безопасна (текст выйдет
+ * МЕЛЬЧЕ/короче необходимого, а не вылезет за холст), недооценка была бы дефектом.
+ *
+ * Стратегия: (1) уменьшать размер шрифта до нижней границы; (2) если и на нижней границе строка
+ * не влезает — обрезать по символам с многоточием, пока не влезет. Перенос на вторую строку не
+ * делается — единственная строка проще проверить геометрически и достаточна: `sanitizeForCardText`
+ * УЖЕ ограничивает исходную длину (60/80 символов), это последний рубеж на случай, что даже
+ * ограниченная по символам строка визуально шире холста при максимальном размере шрифта.
+ */
+const AVG_CHAR_WIDTH_FACTOR = 0.62;
+
+export function estimateTextWidthPx(text: string, fontSizePx: number): number {
+  return text.length * fontSizePx * AVG_CHAR_WIDTH_FACTOR;
+}
+
+export interface FittedText {
+  readonly text: string;
+  readonly fontSizePx: number;
+}
+
+export function fitTextToWidth(text: string, maxWidthPx: number, startFontSizePx: number, minFontSizePx: number): FittedText {
+  let fontSizePx = startFontSizePx;
+  while (fontSizePx > minFontSizePx && estimateTextWidthPx(text, fontSizePx) > maxWidthPx) {
+    fontSizePx -= 2;
+  }
+  let candidate = text;
+  while (candidate.length > 1 && estimateTextWidthPx(candidate, fontSizePx) > maxWidthPx) {
+    // Обрезаем по одному символу с конца, заменяя многоточием (или добавляя его при первой
+    // обрезке) — оценка пересчитывается на каждом шаге, а не один раз.
+    const withoutEllipsis = candidate.endsWith('…') ? candidate.slice(0, -1) : candidate;
+    candidate = `${withoutEllipsis.slice(0, Math.max(0, withoutEllipsis.length - 1))}…`;
+  }
+  return { text: candidate, fontSizePx };
+}
+
+export const DISH_NAME_START_FONT_PX = 48;
+export const DISH_NAME_MIN_FONT_PX = 28;
+export const SOURCE_LABEL_START_FONT_PX = 24;
+export const SOURCE_LABEL_MIN_FONT_PX = 16;
+export const AVAILABLE_TEXT_WIDTH_PX = CARD_WIDTH - 2 * SIDE_MARGIN;
+
 function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): string {
-  const dishName = escapeSvgText(input.dishName);
-  const sourceLabel = escapeSvgText(input.sourceLabel);
+  // Подгонка — на СЫРОМ тексте (по видимым символам), экранирование — ПОСЛЕ: у `&` при
+  // экранировании четыре лишних символа разметки (`&amp;`), которые не занимают места на
+  // холсте — считать их в оценке ширины значило бы урезать текст сильнее необходимого.
+  const fittedDishName = fitTextToWidth(input.dishName, AVAILABLE_TEXT_WIDTH_PX, DISH_NAME_START_FONT_PX, DISH_NAME_MIN_FONT_PX);
+  const fittedSourceLabel = fitTextToWidth(input.sourceLabel, AVAILABLE_TEXT_WIDTH_PX, SOURCE_LABEL_START_FONT_PX, SOURCE_LABEL_MIN_FONT_PX);
+  const dishName = escapeSvgText(fittedDishName.text);
+  const sourceLabel = escapeSvgText(fittedSourceLabel.text);
   const { tileRects, badgeRect } = geometry;
   const numbers: ReadonlyArray<{ readonly label: string; readonly value: string }> = [
     { label: 'ккал', value: String(input.kcal) },
@@ -73,8 +130,8 @@ function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): s
     : '';
 
   return `<svg width="${CARD_WIDTH}" height="${CARD_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-    <text x="40" y="${PHOTO_HEIGHT + 60}" font-size="48" font-weight="800" fill="#ffffff">${dishName}</text>
-    <text x="40" y="${TILE_TOP + 4 * (TILE_HEIGHT / 4) + 180}" font-size="24" fill="#9a9aa5">${sourceLabel}</text>
+    <text x="${SIDE_MARGIN}" y="${PHOTO_HEIGHT + 60}" font-size="${fittedDishName.fontSizePx}" font-weight="800" fill="#ffffff">${dishName}</text>
+    <text x="${SIDE_MARGIN}" y="${SOURCE_LABEL_Y}" font-size="${fittedSourceLabel.fontSizePx}" fill="#9a9aa5">${sourceLabel}</text>
     ${tileMarkup}
     ${badgeMarkup}
   </svg>`;

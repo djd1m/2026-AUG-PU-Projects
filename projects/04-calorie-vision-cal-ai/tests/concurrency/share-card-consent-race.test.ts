@@ -17,18 +17,27 @@
 // не промотируется, но здесь наоборот: чужой ПОДТВЕРЖДЁННЫЙ тест переиспользуется, а не копируется).
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import type { FastifyInstance } from 'fastify';
 import type { DbPool } from '@n4/db';
+import { createLogger } from '@n4/shared';
+import { buildServer } from '../../apps/api/src/server.js';
 import { migratedPool, truncateAll } from '../helpers/db.js';
 import { createShareCardGuarded } from '../../apps/api/src/share/share-card-repository.js';
-import { generateSessionToken, hashSessionToken } from '../../apps/api/src/session/create-device-session.js';
+import { generateSessionToken, hashSessionToken, SESSION_COOKIE_NAME } from '../../apps/api/src/session/create-device-session.js';
+import { testApiConfig } from '../helpers/config.js';
+import { buildInitData } from '../helpers/telegram.js';
 
 let pool: DbPool;
+let app: FastifyInstance;
 
 beforeAll(async () => {
   pool = await migratedPool('n4-tests-share-card-consent-race');
+  app = buildServer({ config: testApiConfig(), pool, logger: createLogger({ service: 'api-test', sink: () => {} }) });
+  await app.ready();
 }, 60_000);
 
 afterAll(async () => {
+  await app.close();
   await pool.end();
 });
 
@@ -132,6 +141,57 @@ describe('AC-12 (E8): блокировка ОТЗЫВА раньше созда�
 
       const openCard = await pool.query('SELECT id FROM share_card WHERE recognition_id = $1 AND revoked_at IS NULL', [recognitionId]);
       expect(openCard.rowCount, `прогон ${i}`).toBe(0);
+    }
+  }, 60_000);
+});
+
+describe('AC-12 (полный путь, обе стороны РЕАЛЬНЫЕ): POST /api/v1/share-cards против DELETE /api/v1/account {withdraw_consent}', () => {
+  // ПРАВКА ПОСЛЕ РЕВЬЮ (RV-share-card-and-growth-events-05): дополняет барьерные тесты выше
+  // (детерминированные, но каждый эмулирует ОДНУ сторону вручную) прогоном, где ОБЕ стороны —
+  // настоящие HTTP-маршруты, без ручного управления порядком. `Promise.all` не гарантирует
+  // ПОПАДАНИЕ в узкое окно гонки на каждом прогоне (поэтому это ДОПОЛНЕНИЕ, не замена барьерных
+  // тестов), но проверяет ИНВАРИАНТ на РЕАЛЬНОМ коде обеих сторон целиком — маршруте согласия,
+  // маршруте отзыва и маршруте создания карточки вместе, а не только их общей блокировке.
+  it('после обеих транзакций НЕТ карточки, открытой дольше момента коммита отзыва — 10 повторов реальных HTTP-вызовов', async () => {
+    for (let i = 0; i < 10; i += 1) {
+      await truncateAll(pool);
+
+      const device = await app.inject({ method: 'POST', url: '/api/v1/auth/device', headers: { 'x-forwarded-for': '203.0.113.77' } });
+      const setCookie = device.headers['set-cookie'];
+      const token = (Array.isArray(setCookie) ? setCookie[0] : setCookie)?.split(';')[0]?.split('=')[1] ?? '';
+      const login = await app.inject({
+        method: 'POST',
+        url: '/api/v1/auth/telegram',
+        headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+        payload: { init_data: buildInitData(`95050${i}`) },
+      });
+      const accountId = (login.json() as { data: { account_id: string } }).data.account_id;
+      await pool.query(`UPDATE account SET consent_at = now() WHERE id = $1`, [accountId]);
+
+      const session = await pool.query<{ id: string }>('SELECT id FROM device_session WHERE account_id = $1', [accountId]);
+      const recognition = await pool.query<{ id: string }>(
+        `INSERT INTO recognition (device_session_id, account_id, status) VALUES ($1, $2, 'done') RETURNING id`,
+        [session.rows[0]!.id, accountId],
+      );
+      const recognitionId = recognition.rows[0]!.id;
+
+      const [createResult] = await Promise.all([
+        createShareCardGuarded(pool, { owner: { table: 'account', id: accountId }, recognitionId, objectKey: `share-cards/${recognitionId}-real-${i}.jpg`, badgeRendered: true }),
+        app.inject({
+          method: 'DELETE',
+          url: '/api/v1/account',
+          headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json' },
+          payload: { confirm: true, scope: 'withdraw_consent' },
+        }),
+      ]);
+
+      if (createResult.outcome === 'refused') {
+        const noRow = await pool.query('SELECT id FROM share_card WHERE recognition_id = $1', [recognitionId]);
+        expect(noRow.rowCount, `прогон ${i}: refused без строки`).toBe(0);
+      } else {
+        const row = await pool.query<{ revoked_at: Date | null }>('SELECT revoked_at FROM share_card WHERE id = $1', [createResult.id]);
+        expect(row.rows[0]?.revoked_at, `прогон ${i}: создана — обязана быть закрыта отзывом`).not.toBeNull();
+      }
     }
   }, 60_000);
 });

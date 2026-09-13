@@ -167,8 +167,18 @@ async function invokeModel(
   }
 }
 
-/** Формирует персистентную форму позиции — сохраняет `parts`/`source_snapshot` целиком (RV-13). */
-function persistedItem(item: { labelRu: string; massG: number }, matched: MatchedItem | undefined) {
+/**
+ * Формирует персистентную форму позиции — сохраняет `parts`/`source_snapshot` целиком (RV-13).
+ *
+ * `export` добавлен фичей `share-card-and-growth-events` (RV-share-card-and-growth-events-01,
+ * review-report.md) — ТОЛЬКО видимость для контрактного теста
+ * (`tests/unit/share-card-snapshot-contract.test.ts`), поведение функции не менялось ни на
+ * строку. Причина: сборщик карточки читал числовые поля `kcal/protein/fat/carb` НАПРЯМУЮ с
+ * позиции, которых в РЕАЛЬНОЙ персистентной форме нет и не может быть (эта функция — их
+ * ЕДИНСТВЕННЫЙ производитель); тест обязан вызывать именно ЭТУ функцию, а не собственную копию
+ * её формы, иначе он доказывает совпадение с придуманным, а не с реальным контрактом.
+ */
+export function persistedItem(item: { labelRu: string; massG: number }, matched: MatchedItem | undefined) {
   return {
     label_ru: item.labelRu,
     mass_g: item.massG,

@@ -47,15 +47,15 @@ beforeEach(async () => {
   await truncateAll(pool);
 });
 
+// Форма — РЕАЛЬНАЯ персистентная форма `persistedItem` (см. тот же комментарий в
+// `tests/integration/share-cards-route.test.ts`, RV-share-card-and-growth-events-01): `mass_g` +
+// снимок per-100г, БЕЗ готовых `kcal/protein/fat/carb` на позиции.
 const MATCHED_ITEM = {
   label_ru: 'Тост с авокадо',
+  mass_g: 150,
   unmatched: false,
   food_item_id: '00000000-0000-0000-0000-000000000001',
-  kcal: 310,
-  protein: 9,
-  fat: 18,
-  carb: 27,
-  source_snapshot: { source: 'USDA-FDC', source_id: '999', portion_g: 150 },
+  source_snapshot: { source: 'USDA-FDC', source_id: '999', kcal_per_100g: 207, protein_per_100g: 6.0, fat_per_100g: 12.0, carb_per_100g: 18.0 },
 };
 
 async function seedOpenCard(marker: string): Promise<string> {
@@ -137,14 +137,33 @@ describe('GET /c/{card_id}', () => {
     expect(image.status).toBe(404);
   });
 
-  it('AC-10: успешный просмотр анонимным зрителем пишет card_view от имени ВЛАДЕЛЬЦА, без cookie и IP зрителя', async () => {
+  it('AC-10: успешный просмотр анонимным зрителем пишет card_view от имени ВЛАДЕЛЬЦА с ЕГО partner_code_id, без cookie и IP зрителя', async () => {
+    // ПРАВКА ПОСЛЕ РЕВЬЮ (RV-share-card-and-growth-events-05): прежняя фикстура не заводила
+    // партнёрскую атрибуцию вовсе — `partner_code_id IS NULL` совпал бы и при верном, и при
+    // сломанном коде (`resolveOwnerGrowthContext`, `apps/api/src/growth/record-growth-event.ts`).
+    // Теперь владелец карточки РЕАЛЬНО атрибутирован партнёрскому коду.
     const cardId = await seedOpenCard('ac10');
     const cardRow = await pool.query<{ owner_key: string }>('SELECT owner_key FROM share_card WHERE id = $1', [cardId]);
     const ownerKey = cardRow.rows[0]!.owner_key;
 
-    for (let i = 0; i < 3; i += 1) {
-      const response = await getCardPage(requestFor(cardId), { params: Promise.resolve({ cardId }) });
-      expect(response.status).toBe(200);
+    const partner = await pool.query<{ id: string }>(`INSERT INTO partner (display_name, contact) VALUES ('Тестовый партнёр', 'test@partner.example') RETURNING id`);
+    const partnerCode = await pool.query<{ id: string }>(
+      `INSERT INTO partner_code (partner_id, code) VALUES ($1, 'AC10CODE') RETURNING id`,
+      [partner.rows[0]!.id],
+    );
+    await pool.query(
+      `INSERT INTO attribution (device_session_id, partner_code_id, status, source, activated_at) VALUES ($1, $2, 'activated', 'deeplink', now())`,
+      [ownerKey, partnerCode.rows[0]!.id],
+    );
+
+    // Три РАЗНЫХ анонимных клиента — разные заголовки адреса (архитектурно ИГНОРИРУЮТСЯ этим
+    // маршрутом, NFR-2, но заголовок всё равно передаётся РАЗНЫМ на каждый запрос, чтобы
+    // отсутствие влияния было проверено, а не предположено).
+    const viewerAddresses = ['203.0.113.10', '198.51.100.20', '192.0.2.30'];
+    for (const address of viewerAddresses) {
+      const request = new Request(`http://web.internal/c/${cardId}`, { headers: { 'x-forwarded-for': address } });
+      const response = await getCardPage(request, { params: Promise.resolve({ cardId }) });
+      expect(response.status, address).toBe(200);
       expect(response.headers.get('Set-Cookie')).toBeNull(); // зрителю НЕ ставится cookie
     }
     // Четвёртый запрос — к чужому/несуществующему адресу, событие не создаёт.
@@ -152,11 +171,14 @@ describe('GET /c/{card_id}', () => {
       params: Promise.resolve({ cardId: '00000000-0000-0000-0000-000000000097' }),
     });
 
-    const events = await pool.query<{ device_session_id: string }>(
-      `SELECT device_session_id FROM growth_event WHERE share_card_id = $1 AND type = 'card_view'`,
+    const events = await pool.query<{ device_session_id: string; partner_code_id: string | null }>(
+      `SELECT device_session_id, partner_code_id FROM growth_event WHERE share_card_id = $1 AND type = 'card_view'`,
       [cardId],
     );
     expect(events.rowCount).toBe(3); // РОВНО три, четвёртый (404) не породил события
-    for (const row of events.rows) expect(row.device_session_id).toBe(ownerKey); // от имени ВЛАДЕЛЬЦА, не зрителя
+    for (const row of events.rows) {
+      expect(row.device_session_id).toBe(ownerKey); // от имени ВЛАДЕЛЬЦА, не зрителя
+      expect(row.partner_code_id).toBe(partnerCode.rows[0]!.id); // атрибуция ВЛАДЕЛЬЦА, не зрителя (у зрителя её и не может быть — он без сессии)
+    }
   });
 });
