@@ -58,7 +58,14 @@ async function buildPortionByFdc(directory: string): Promise<Map<string, number>
     const gramWeight = Number.parseFloat(row.gram_weight ?? '');
     if (fdcId === undefined || Number.isNaN(gramWeight) || gramWeight <= 0) continue;
     // Первая встреченная порция этой записи — FNDDS упорядочивает `seq_num` от 1.
-    if (!result.has(fdcId)) result.set(fdcId, gramWeight);
+    //
+    // ОКРУГЛЕНИЕ ЗДЕСЬ, а не в базе: `food_item.default_portion_g` объявлен `integer`
+    // (миграция 001), а USDA отдаёт дробные граммы — «28.35» у унции встречается в SR
+    // Legacy буквально. Без округления импорт падал на первой же такой строке с
+    // «invalid input syntax for type integer» и НЕ импортировал ничего (проверено на
+    // настоящем дампе 2026-09-13). Порция — подсказка размера, а не измерение: доли
+    // грамма в ней не несут смысла, который стоил бы смены типа колонки.
+    if (!result.has(fdcId)) result.set(fdcId, Math.max(1, Math.round(gramWeight)));
   }
   return result;
 }

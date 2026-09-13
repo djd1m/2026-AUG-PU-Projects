@@ -57,7 +57,16 @@ export default function CameraFirstScreen() {
     };
 
     void start();
+    // Разрешение, которое не дали и не отклонили (окно закрыли, вкладка неактивна), оставляло
+    // экран в состоянии `idle` НАВСЕГДА: кнопка была недоступна, и нажатие не давало НИЧЕГО —
+    // ровно тот отказ, который владелец увидел на живом стенде. Молчание не является
+    // состоянием: через 6 секунд оно становится названным.
+    const idleDeadline = setTimeout(() => {
+      if (!cancelled) setState((current) => (current === 'idle' ? 'denied' : current));
+    }, 6000);
+
     return () => {
+      clearTimeout(idleDeadline);
       cancelled = true;
       stream?.getTracks().forEach((track) => track.stop());
     };
@@ -147,7 +156,8 @@ export default function CameraFirstScreen() {
         <video ref={videoRef} className="viewfinder__video" autoPlay playsInline muted />
         <canvas ref={canvasRef} className="viewfinder__canvas" aria-hidden="true" hidden />
         <div className="viewfinder__frame" aria-hidden="true" />
-        {state === 'denied' ? <p className="viewfinder__notice">Нет доступа к камере. Разрешите доступ или выберите фото из галереи.</p> : null}
+        {state === 'idle' ? <p className="viewfinder__notice">Запрашиваем доступ к камере… Если окно разрешения не появилось, нажмите круглую кнопку — откроется выбор фото.</p> : null}
+        {state === 'denied' ? <p className="viewfinder__notice">Нет доступа к камере. Нажмите круглую кнопку или «галерея», чтобы выбрать фото.</p> : null}
         {state === 'unsupported' ? <p className="viewfinder__notice">Камера в этом браузере недоступна. Выберите фото из галереи.</p> : null}
         {send.kind === 'notice' ? (
           <p className="viewfinder__notice" role="alert">
@@ -177,8 +187,8 @@ export default function CameraFirstScreen() {
         type="button"
         className="shutter"
         aria-label="снять кадр"
-        disabled={state !== 'live' || send.kind === 'sending'}
-        onClick={onShutter}
+        disabled={send.kind === 'sending'}
+        onClick={state === 'live' ? onShutter : () => galleryInputRef.current?.click()}
       >
         <span className="shutter__ring" aria-hidden="true" />
       </button>
