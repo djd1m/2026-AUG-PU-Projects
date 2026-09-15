@@ -267,10 +267,14 @@ services:
       NEXT_TELEMETRY_DISABLED: "1"
       # Миграции применяются под n4_admin с SET ROLE n4_migrate — четвёртой учётной записи
       # ради названия роли не заводится.
-      DATABASE_URL: postgresql://n4_admin:${N4_DB_ADMIN_PASSWORD:?задайте пароль администратора БД}@db:5432/n4
+      # ОТДЕЛЬНАЯ БАЗА `n4_test`, а не `n4`. Заслужено 2026-09-13 (DEC-A-051): интеграционные
+      # тесты начинают с TRUNCATE, и, указывая сюда на боевую базу стенда, они стёрли базу
+      # продуктов вместе с импортом USDA. Общий Postgres при этом остаётся один — отдельная
+      # база стоит схемы, а не контейнера и не порта.
+      DATABASE_URL: postgresql://n4_admin:${N4_DB_ADMIN_PASSWORD:?задайте пароль администратора БД}@db:5432/n4_test
       # Отдельное подключение ПОД РОЛЬЮ ПРИЛОЖЕНИЯ: тест прав проверяет, что n4_app не может
       # менять схему. Проверять это из-под администратора невозможно по построению.
-      DATABASE_URL_APP: postgresql://n4_app:${N4_DB_APP_PASSWORD:?задайте пароль роли приложения}@db:5432/n4
+      DATABASE_URL_APP: postgresql://n4_app:${N4_DB_APP_PASSWORD:?задайте пароль роли приложения}@db:5432/n4_test
       N4_RATE_LIMIT_MUTATE_PER_MIN: ${N4_RATE_LIMIT_MUTATE_PER_MIN:?порог частоты для мутирующих маршрутов не задан}
       N4_RATE_LIMIT_READ_PER_MIN: ${N4_RATE_LIMIT_READ_PER_MIN:?порог частоты для чтения не задан}
       APP_ORIGIN: ${APP_ORIGIN:?внешний адрес обязателен}

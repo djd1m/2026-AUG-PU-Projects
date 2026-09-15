@@ -5,13 +5,47 @@
 
 import { createPool, runMigrations, type DbPool } from '@n4/db';
 
+/**
+ * Имя базы, в которую интеграционным тестам РАЗРЕШЕНО писать. Закрытый список В КОДЕ, не в
+ * окружении (`fail-closed-defaults.md`, правило 3): переменная окружения однажды приедет с
+ * именем боевой базы, и список, живущий рядом с ней, этого не заметит.
+ */
+const ALLOWED_TEST_DATABASES: readonly string[] = ['n4_test'];
+
+/**
+ * Страж, заслуженный реальной потерей данных (DEC-A-051, 2026-09-13): `truncateAll` начинает
+ * каждый файл тестов с TRUNCATE, профиль `test` смотрел в боевую базу стенда `n4`, и один
+ * прогон стёр базу продуктов вместе с импортом USDA — 253 синонима и весь FoodData Central.
+ *
+ * Правка compose эту дыру закрывает, но правку можно откатить, перепутать или скопировать в
+ * новый файл окружения. Проверка ИМЕНИ БАЗЫ здесь не откатывается вместе с ней: тест,
+ * нацеленный не туда, не выполняется вовсе.
+ */
 export function requireDatabaseUrl(): string {
   const url = process.env.DATABASE_URL;
   if (url === undefined || url.trim() === '') {
     // Отсутствие базы — это НЕ «тест прошёл»: он не выполнен, и об этом надо упасть.
     throw new Error('DATABASE_URL не задан: интеграционные тесты запускаются в профиле test docker compose');
   }
+  assertTestDatabase(url);
   return url;
+}
+
+/** Отдельно экспортирована, чтобы страж можно было испытать, не поднимая базу. */
+export function assertTestDatabase(url: string): void {
+  let name: string;
+  try {
+    name = new URL(url).pathname.replace(/^\//, '');
+  } catch {
+    // Неразбираемый адрес — ОТКАЗ, а не «наверное, тестовая» (`honest-configuration` CFG-I4).
+    throw new Error(`DATABASE_URL не разбирается как адрес — проверка целевой базы НЕ ВЫПОЛНЕНА, тесты не запускаются: ${url}`);
+  }
+  if (!ALLOWED_TEST_DATABASES.includes(name)) {
+    throw new Error(
+      `интеграционные тесты нацелены на базу «${name}», а разрешены только ${ALLOWED_TEST_DATABASES.join(', ')}. ` +
+      'Они начинаются с TRUNCATE: один прогон по боевой базе стирает дневники, карточки и весь импорт USDA (DEC-A-051)',
+    );
+  }
 }
 
 export function appDatabaseUrl(): string {
