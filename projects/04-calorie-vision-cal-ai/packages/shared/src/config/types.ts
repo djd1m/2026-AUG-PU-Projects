@@ -36,6 +36,18 @@ export interface StorageConfig {
   readonly secretKey: string;
 }
 
+/** Подписка и комиссия (фича `subscription-and-commission`, OWN-002/008/011, ADR-014). */
+export interface SubscriptionConfig {
+  /** Цена в КОПЕЙКАХ. Значения по умолчанию нет: цена — то, что списывают с человека. */
+  readonly priceMinor: number;
+  /** Длина оплаченного периода в днях. */
+  readonly periodDays: number;
+  /** Окно возврата до зрелости начисления (ADR-014). */
+  readonly holdDays: number;
+  /** Суточный потолок распознаваний для подписчика (OWN-008). */
+  readonly scanLimitPro: number;
+}
+
 export interface ApiConfig {
   readonly databaseUrl: string;
   readonly appOrigin: string;
@@ -44,6 +56,7 @@ export interface ApiConfig {
   readonly rateLimits: RateLimits;
   /** Из него производится секрет HMAC для проверки initData (consent-and-telegram-auth). */
   readonly telegramBotToken: string;
+  readonly subscription: SubscriptionConfig;
 }
 
 export interface RecognizerConfig {

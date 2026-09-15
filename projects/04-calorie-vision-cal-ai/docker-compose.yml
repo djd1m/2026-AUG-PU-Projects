@@ -111,6 +111,13 @@ services:
       S3_SECRET_KEY: ${N4_S3_SECRET_KEY:?задайте секрет доступа приложения к бакету}
       # Токен бота — только здесь: из него производится секрет HMAC для проверки initData.
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?токен бота обязателен — без него вход через Mini App неисполним}
+      # ── подписка и комиссия. Секретов платёжного провайдера у `web` и `recognizer` нет
+      # и быть не должно: деньги принимает только `api` (`secrets-management.md`).
+      N4_SUBSCRIPTION_PRICE_MINOR: "${N4_SUBSCRIPTION_PRICE_MINOR:?цена подписки в копейках не задана}"
+      N4_SUBSCRIPTION_PERIOD_DAYS: "${N4_SUBSCRIPTION_PERIOD_DAYS:?длина оплаченного периода не задана}"
+      N4_COMMISSION_HOLD_DAYS: "${N4_COMMISSION_HOLD_DAYS:?окно возврата до выплаты комиссии не задано}"
+      N4_SCAN_LIMIT_PRO: "${N4_SCAN_LIMIT_PRO:?потолок распознаваний подписчика не задан}"
+      N4_PAYMENTS_MODE: "${N4_PAYMENTS_MODE:?режим платежей не задан — он определяет, берутся ли с людей настоящие деньги}"
       # ТРИ потолка. Отсутствие ЛЮБОГО обязано валить старт процесса (ADR-007): проверка
       # одной переменной зеленеет при отсутствующей второй, поэтому объявлены все три.
       N4_SCAN_LIMIT_USER: ${N4_SCAN_LIMIT_USER:?потолок на пользователя не задан — пустое значение не означает «без ограничений»}
@@ -287,6 +294,13 @@ services:
       N4_SCAN_LIMIT_USER: ${N4_SCAN_LIMIT_USER:?потолок на пользователя не задан}
       N4_SCAN_LIMIT_DAY: ${N4_SCAN_LIMIT_DAY:?суточный потолок попыток не задан}
       N4_ESCALATION_LIMIT_DAY: ${N4_ESCALATION_LIMIT_DAY:?суточный потолок эскалаций не задан}
+      # ── подписка и комиссия. Секретов платёжного провайдера у `web` и `recognizer` нет
+      # и быть не должно: деньги принимает только `api` (`secrets-management.md`).
+      N4_SUBSCRIPTION_PRICE_MINOR: "${N4_SUBSCRIPTION_PRICE_MINOR:?цена подписки в копейках не задана}"
+      N4_SUBSCRIPTION_PERIOD_DAYS: "${N4_SUBSCRIPTION_PERIOD_DAYS:?длина оплаченного периода не задана}"
+      N4_COMMISSION_HOLD_DAYS: "${N4_COMMISSION_HOLD_DAYS:?окно возврата до выплаты комиссии не задано}"
+      N4_SCAN_LIMIT_PRO: "${N4_SCAN_LIMIT_PRO:?потолок распознаваний подписчика не задан}"
+      N4_PAYMENTS_MODE: "${N4_PAYMENTS_MODE:?режим платежей не задан — он определяет, берутся ли с людей настоящие деньги}"
     networks: [private]
     depends_on:
       db: { condition: service_healthy }

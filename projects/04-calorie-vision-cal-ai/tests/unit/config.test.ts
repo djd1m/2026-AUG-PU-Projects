@@ -24,6 +24,11 @@ const FULL_API_ENV: Record<string, string | undefined> = {
   N4_RATE_LIMIT_READ_PER_MIN: '120',
   // consent-and-telegram-auth: обязательная переменная сверх набора foundation.
   TELEGRAM_BOT_TOKEN: '111111111:AAHtest-bot-token-1234567890abcdefg',
+  // subscription-and-commission: цена, период, окно возврата и потолок подписчика.
+  N4_SUBSCRIPTION_PRICE_MINOR: '100000',
+  N4_SUBSCRIPTION_PERIOD_DAYS: '30',
+  N4_COMMISSION_HOLD_DAYS: '14',
+  N4_SCAN_LIMIT_PRO: '100',
 };
 
 const FULL_RECOGNIZER_ENV: Record<string, string | undefined> = {
@@ -220,5 +225,30 @@ describe('пороги ограничения частоты соответст�
     expect(example).toMatch(/^N4_SCAN_LIMIT_USER=10$/m);
     expect(example).toMatch(/^N4_SCAN_LIMIT_DAY=3000$/m);
     expect(example).toMatch(/^N4_ESCALATION_LIMIT_DAY=600$/m);
+  });
+});
+
+describe('переменные подписки и комиссии (subscription-and-commission)', () => {
+  // ЧЕТЫРЕ отдельных прогона: проверка одной переменной зеленеет при отсутствующей второй.
+  for (const name of ['N4_SUBSCRIPTION_PRICE_MINOR', 'N4_SUBSCRIPTION_PERIOD_DAYS', 'N4_COMMISSION_HOLD_DAYS', 'N4_SCAN_LIMIT_PRO']) {
+    it(`отсутствие ${name} валит старт с названной переменной`, () => {
+      const env = { ...FULL_API_ENV, [name]: undefined };
+      expect(() => loadApiConfig(env)).toThrow(ConfigValidationError);
+      expect(() => loadApiConfig(env)).toThrow(new RegExp(name));
+    });
+
+    it(`пустая строка и нечисловое значение ${name} отвергаются наравне с отсутствием`, () => {
+      for (const bad of ['', '   ', 'много', '0', '-1', '10.5']) {
+        expect(() => loadApiConfig({ ...FULL_API_ENV, [name]: bad }), `${name}=${bad}`).toThrow(ConfigValidationError);
+      }
+    });
+  }
+
+  it('числа берутся из окружения, а не из литералов кода', () => {
+    const config = loadApiConfig({ ...FULL_API_ENV, N4_SUBSCRIPTION_PRICE_MINOR: '49900', N4_SCAN_LIMIT_PRO: '250' });
+    expect(config.subscription.priceMinor).toBe(49_900);
+    expect(config.subscription.scanLimitPro).toBe(250);
+    expect(config.subscription.periodDays).toBe(30);
+    expect(config.subscription.holdDays).toBe(14);
   });
 });

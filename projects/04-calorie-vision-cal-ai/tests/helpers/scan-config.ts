@@ -24,6 +24,7 @@ export function testScanApiConfig(overrides: { rateLimits?: RateLimits; quota?: 
       accessKey: required('S3_ACCESS_KEY'),
       secretKey: required('S3_SECRET_KEY'),
     },
+    subscription: { priceMinor: 100_000, periodDays: 30, holdDays: 14, scanLimitPro: 100 },
     quota: overrides.quota ?? { scanLimitUser: 10, scanLimitDay: 3000, escalationLimitDay: 600 },
     rateLimits: overrides.rateLimits ?? { mutatePerMinute: 1000, readPerMinute: 1000 },
     // Найдено слиянием: `telegramBotToken` стал ОБЯЗАТЕЛЬНЫМ полем `ApiConfig`

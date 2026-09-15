@@ -57,6 +57,28 @@ export function loadApiConfig(env: EnvSource = process.env): ApiConfig {
         '',
       ),
     },
+    subscription: {
+      priceMinor: attempt(
+        fail,
+        () => requirePositiveInt('N4_SUBSCRIPTION_PRICE_MINOR', env.N4_SUBSCRIPTION_PRICE_MINOR, 'это сумма, которую списывают с человека; умолчание здесь означало бы списать не то, что объявлено'),
+        0,
+      ),
+      periodDays: attempt(
+        fail,
+        () => requirePositiveInt('N4_SUBSCRIPTION_PERIOD_DAYS', env.N4_SUBSCRIPTION_PERIOD_DAYS, 'без длины периода неизвестно, до какого дня оплачен доступ'),
+        0,
+      ),
+      holdDays: attempt(
+        fail,
+        () => requirePositiveInt('N4_COMMISSION_HOLD_DAYS', env.N4_COMMISSION_HOLD_DAYS, 'без окна возврата комиссия становится доступной к выплате сразу, и возврат платежа оставляет продукт в минусе'),
+        0,
+      ),
+      scanLimitPro: attempt(
+        fail,
+        () => requirePositiveInt('N4_SCAN_LIMIT_PRO', env.N4_SCAN_LIMIT_PRO, 'ненастроенный потолок подписчика — это безлимит, а безлимит при комиссии 50 % съедает половину продукта (ADR-007)'),
+        0,
+      ),
+    },
     quota: {
       // ТРИ независимые проверки (ADR-007): проверка одной переменной зеленеет при
       // отсутствующей второй, поэтому объявлены все три и каждая валит старт сама.
@@ -132,4 +154,8 @@ export const API_REQUIRED_VARIABLES: readonly string[] = [
   'N4_RATE_LIMIT_MUTATE_PER_MIN',
   'N4_RATE_LIMIT_READ_PER_MIN',
   'TELEGRAM_BOT_TOKEN',
+  'N4_SUBSCRIPTION_PRICE_MINOR',
+  'N4_SUBSCRIPTION_PERIOD_DAYS',
+  'N4_COMMISSION_HOLD_DAYS',
+  'N4_SCAN_LIMIT_PRO',
 ];
