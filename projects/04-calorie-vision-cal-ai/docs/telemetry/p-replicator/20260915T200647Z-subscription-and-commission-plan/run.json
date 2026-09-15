@@ -1,0 +1,39 @@
+{
+ "schema_version": "feature-telemetry-v1",
+ "policy_version": "compact-quality-first-v2",
+ "run_id": "20260915T200647Z-subscription-and-commission-plan",
+ "batch_id": null,
+ "comparison_id": null,
+ "project": "projects/04-calorie-vision-cal-ai",
+ "feature": "subscription-and-commission",
+ "pipeline": "/feature PLAN только — тир XL требует остановки на плане у владельца",
+ "tier": "XL",
+ "tier_source": "complexity-router.md: признак «деньги» задаёт XL первым же совпадением; скрипт-роутер не запускался, потому что изменений кода ещё нет (он вернул бы 2 — «проверка не выполнена», а не тир)",
+ "arm": null,
+ "arm_model": "claude-opus-5",
+ "judge": null,
+ "profile": "план целиком написан координатором, без фан-аута: параллелить нечего, документ один и связный",
+ "baseline_revision": "6e321a82137c",
+ "final_revision": null,
+ "host": "Claude Code CLI",
+ "started_at": "2026-09-15T20:06:47Z",
+ "ended_at": null,
+ "status": "awaiting_owner_checkpoint",
+ "acceptance_evidence": [
+  "docs/features/subscription-and-commission/01_specification.md",
+  "docs/features/subscription-and-commission/02_pseudocode.md",
+  "docs/features/subscription-and-commission/03_architecture.md",
+  "docs/ADR.md — ADR-011…014",
+  "docs/decisions-owner.md — OWN-001…007"
+ ],
+ "open_questions": [
+  "Что именно даёт Pro: рекомендация — повышенный суточный потолок распознаваний (предлагается 100 против 10)",
+  "Подтверждение ADR-011 (база комиссии от полученного)",
+  "Провайдер: ЮKassa или CloudPayments",
+  "Окно возврата до выплаты N дней (предлагается 14)"
+ ],
+ "not_verified": [
+  "живой приём денег — ключей провайдера нет, ИП в процессе (OWN-007)",
+  "конверсия «переход из Telegram в браузер → оплата» — измеряется после запуска, порог назван в спецификации"
+ ]
+}
