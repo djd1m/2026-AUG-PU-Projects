@@ -13,3 +13,4 @@ export * from './audit/consent-denied.js';
 export * from './partner-types.js';
 export * from './domain/share-card.js';
 export * from './text/sanitize-for-card-text.js';
+export * from './domain/commission.js';
