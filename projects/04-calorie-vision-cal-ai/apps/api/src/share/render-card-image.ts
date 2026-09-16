@@ -181,7 +181,7 @@ function badgeMarkup(rect: Rect): string {
   // отличает стекло от полупрозрачного прямоугольника.
   return `
     <rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" rx="${rect.height / 2}"
-          fill="#15101C" fill-opacity="0.38" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="1.5" />
+          fill="#15101C" fill-opacity="0.30" stroke="#FFFFFF" stroke-opacity="0.30" stroke-width="1.5" />
     <path d="M ${rect.x + rect.height / 2} ${rect.y + 1.5} H ${rect.x + rect.width - rect.height / 2}"
           stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="1.5" stroke-linecap="round" fill="none" />
     ${badgeIconMarkup(iconX, iconY, BADGE_ICON_SIZE)}
@@ -301,10 +301,17 @@ async function frostedPillLayers(
        <rect x="2" y="2" width="${rect.width}" height="${rect.height}" rx="${rect.height / 2}" fill="#fff" />
      </svg>`,
   );
+  // Яркость УМЕНЬШАЕТСЯ, а не увеличивается. Единственный формальный порог, найденный
+  // исследованием, — контраст WCAG AA: 3:1 для крупного текста. Замер на живой карточке:
+  // светлое фото (белая тарелка) под пилюлей давало 1,5:1 на самых ярких пикселях — текст
+  // бейджа на таком фото нечитаем. Полупрозрачной заливки для гарантии мало: чтобы закрыть
+  // белое фото только ею, нужна непрозрачность ≈0,76, и стекло превращается обратно в плашку.
+  // Поэтому затемняется САМ размытый слой, а заливка остаётся лёгкой — стекло сохраняется,
+  // а нижняя граница контраста перестаёт зависеть от того, что на фото.
   const frosted = await sharpModule(photo)
     .extract(region)
     .blur(18)
-    .modulate({ saturation: 1.15, brightness: 1.04 })
+    .modulate({ saturation: 1.25, brightness: 0.5 })
     .composite([{ input: mask, blend: 'dest-in' }])
     .png()
     .toBuffer();
