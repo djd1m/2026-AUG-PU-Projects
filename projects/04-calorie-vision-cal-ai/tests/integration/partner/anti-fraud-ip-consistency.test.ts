@@ -117,3 +117,62 @@ describe('RV-partner-codes-and-cabinet-03: ключ проверки согла�
     expect(statusB).toBe(200);
   }, 30_000);
 });
+
+describe('источник применения кода различается: ссылка слабее введённого руками (ADR-008)', () => {
+  /** Привязанный код сессии — читается из базы, а не из ответа: проверяем СОСТОЯНИЕ, не текст. */
+  async function attributedCodeId(token: string): Promise<string | undefined> {
+    const row = await pool.query<{ partner_code_id: string }>(
+      `SELECT a.partner_code_id FROM attribution a
+       JOIN device_session ds ON ds.id = a.device_session_id
+       WHERE ds.cookie_token_hash = encode(digest($1, 'sha256'), 'hex')`,
+      [token],
+    );
+    return row.rows[0]?.partner_code_id;
+  }
+  async function attributionSource(token: string): Promise<string | undefined> {
+    const row = await pool.query<{ source: string }>(
+      `SELECT a.source::text AS source FROM attribution a
+       JOIN device_session ds ON ds.id = a.device_session_id
+       WHERE ds.cookie_token_hash = encode(digest($1, 'sha256'), 'hex')`,
+      [token],
+    );
+    return row.rows[0]?.source;
+  }
+  async function applyWithSource(token: string, code: string, source?: string): Promise<number> {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/codes/apply',
+      headers: { cookie: `${SESSION_COOKIE_NAME}=${token}`, 'content-type': 'application/json', 'x-forwarded-for': NETWORK_A },
+      payload: source === undefined ? { code } : { code, source },
+    });
+    return response.statusCode;
+  }
+
+  it('вторая ССЫЛКА не вытесняет первую, а код, введённый руками, — вытесняет', async () => {
+    const partnerOne = await seedPartner(pool, 'linkone');
+    const codeOne = await seedPartnerCode(pool, partnerOne.partnerId, 'LINKONE');
+    const partnerTwo = await seedPartner(pool, 'linktwo');
+    const codeTwo = await seedPartnerCode(pool, partnerTwo.partnerId, 'LINKTWO');
+    const token = await newSessionFrom(NETWORK_A);
+
+    expect(await applyWithSource(token, 'LINKONE', 'deeplink')).toBe(200);
+    expect(await attributedCodeId(token)).toBe(codeOne.id);
+
+    // Слабый против слабого — первая ссылка остаётся (ADR-008).
+    expect(await applyWithSource(token, 'LINKTWO', 'deeplink')).toBe(409);
+    expect(await attributedCodeId(token)).toBe(codeOne.id);
+
+    // Явный код сильнее слабого источника.
+    expect(await applyWithSource(token, 'LINKTWO')).toBe(200);
+    expect(await attributedCodeId(token)).toBe(codeTwo.id);
+    expect(await attributionSource(token)).toBe('explicit');
+  });
+
+  it('подделка источника новой силы не даёт: неизвестное значение читается как explicit (fail-closed)', async () => {
+    const partner = await seedPartner(pool, 'srcfake');
+    await seedPartnerCode(pool, partner.partnerId, 'SRCFAKE1');
+    const token = await newSessionFrom(NETWORK_A);
+    expect(await applyWithSource(token, 'SRCFAKE1', 'СУПЕРСИЛЬНЫЙ')).toBe(200);
+    expect(await attributionSource(token)).toBe('explicit');
+  });
+});

@@ -11,6 +11,7 @@
 //   4. ничего не обещается сверх того, что есть: никакого «пробного периода», которого нет.
 
 import { useState } from 'react';
+import { PromoCode } from './promo-code';
 
 export interface ProScreenProps {
   readonly priceMinor: number;
@@ -127,6 +128,8 @@ export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, 
             Войти или зарегистрироваться
           </a>
         ) : null}
+        {/* Второй вход для партнёрского кода — для тех, кто пришёл без ссылки блогера. */}
+        <PromoCode />
       </div>
     </main>
   );

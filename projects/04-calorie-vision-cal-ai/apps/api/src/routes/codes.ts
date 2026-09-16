@@ -51,6 +51,18 @@ async function requireSession(request: FastifyRequest, pool: DbPool): Promise<Ow
 
 interface ApplyCodeBody {
   readonly code?: string;
+  /**
+   * Откуда взялся код. Закрытый набор из двух значений, и распознаётся ТОЛЬКО `deeplink` —
+   * всё остальное (включая отсутствие поля и подделку) читается как `explicit`.
+   *
+   * Почему клиенту вообще позволено это говорить и почему это безопасно. ADR-008: явный код
+   * сильнее слабого источника, слабый слабого не вытесняет. Переход по ссылке блогера — это
+   * `deeplink`, то есть СЛАБЫЙ источник: первая ссылка выигрывает у второй, а код, введённый
+   * человеком руками, выигрывает у обеих. Клиент, объявляющий `deeplink`, ОСЛАБЛЯЕТ себя —
+   * атаки в эту сторону нет. Обратное направление невозможно по построению: сказать
+   * «я explicit» значит ровно то же, что ввести код руками, а это посетителю и так разрешено.
+   */
+  readonly source?: unknown;
 }
 
 export function registerCodesRoutes(app: FastifyInstance, deps: CodesRouteDeps): void {
@@ -65,7 +77,7 @@ export function registerCodesRoutes(app: FastifyInstance, deps: CodesRouteDeps):
 
     const requestId = (request as FastifyRequest & { n4RequestId?: string }).n4RequestId ?? 'unknown';
     const outcome = await applyPartnerCode(
-      { rawCode, source: 'explicit', deviceSessionId: session.deviceSessionId, ipPrefix: session.ipPrefix, requestId },
+      { rawCode, source: request.body?.source === 'deeplink' ? 'deeplink' : 'explicit', deviceSessionId: session.deviceSessionId, ipPrefix: session.ipPrefix, requestId },
       { pool: deps.pool, logger: deps.logger },
     );
 
@@ -76,7 +88,11 @@ export function registerCodesRoutes(app: FastifyInstance, deps: CodesRouteDeps):
 
 function applyOutcomeToEnvelope(outcome: Awaited<ReturnType<typeof applyPartnerCode>>): { readonly status: number; readonly body: unknown } {
   if (outcome.outcome === 'applied') return { status: 200, body: ok({ outcome: 'applied' as const }) };
-  if (outcome.outcome === 'conflict') return { status: 409, body: fail('conflict', 'атрибуция сессии уже определена явным кодом') };
+  if (outcome.outcome === 'conflict') {
+    return outcome.sameCode
+      ? { status: 409, body: fail('conflict', 'этот код уже применён к сессии', { same_code: true }) }
+      : { status: 409, body: fail('conflict', 'атрибуция сессии уже определена другим кодом', { same_code: false }) };
+  }
   if (outcome.outcome === 'invalid') return { status: 422, body: fail('invalid_code', 'код не найден или не проходит формат') };
   // `rejected(*)` — код существует, но применение отклонено ДО записи (ADR-008): заблокирован,
   // самореферал или anti-fraud только что заблокировал его. Ни одна из причин не подтверждает

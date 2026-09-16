@@ -83,7 +83,7 @@ describe('AC-partner-codes-and-cabinet-4: явный источник не пе�
 
     const outcome = await applyPartnerCode({ rawCode: codeB.code, source: 'explicit', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r2' }, { pool, logger });
 
-    expect(outcome).toEqual({ outcome: 'conflict' });
+    expect(outcome).toMatchObject({ outcome: 'conflict' });
     expect(await attributionOf(pool, session.id)).toEqual(before);
   });
 
@@ -97,7 +97,7 @@ describe('AC-partner-codes-and-cabinet-4: явный источник не пе�
 
     const outcome = await applyPartnerCode({ rawCode: codeA.code, source: 'explicit', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r2' }, { pool, logger });
 
-    expect(outcome).toEqual({ outcome: 'conflict' });
+    expect(outcome).toMatchObject({ outcome: 'conflict' });
     expect(await attributionOf(pool, session.id)).toEqual(before);
   });
 });
@@ -114,7 +114,7 @@ describe('AC-partner-codes-and-cabinet-5: слабый не перебивает
 
     const outcome = await applyPartnerCode({ rawCode: codeB.code, source: 'cookie', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r2' }, { pool, logger });
 
-    expect(outcome).toEqual({ outcome: 'conflict' });
+    expect(outcome).toMatchObject({ outcome: 'conflict' });
     expect(await attributionOf(pool, session.id)).toEqual(before);
   });
 });
@@ -194,5 +194,35 @@ describe('порядок операций (security-operation-order.md): лок 
 
     const outcome = await applyPartnerCode({ rawCode: code.code, source: 'explicit', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r1' }, { pool, logger });
     expect(outcome).toEqual({ outcome: 'rejected', reason: 'code_blocked' });
+  });
+});
+
+
+describe('повторный переход по ТОЙ ЖЕ ссылке отличается от чужого кода (16.09.2026)', () => {
+  it('тот же код → conflict с sameCode: true; другой код → sameCode: false', async () => {
+    const partnerOne = await seedPartner(pool, 'samecode-one');
+    const codeOne = await seedPartnerCode(pool, partnerOne.partnerId, 'SAMEONE1');
+    const partnerTwo = await seedPartner(pool, 'samecode-two');
+    await seedPartnerCode(pool, partnerTwo.partnerId, 'SAMETWO1');
+    const session = await seedDeviceSession(pool, 'samecode');
+
+    const first = await applyPartnerCode(
+      { rawCode: 'SAMEONE1', source: 'deeplink', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r1' },
+      { pool, logger },
+    );
+    expect(first).toEqual({ outcome: 'applied' });
+
+    const again = await applyPartnerCode(
+      { rawCode: 'SAMEONE1', source: 'deeplink', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r2' },
+      { pool, logger },
+    );
+    expect(again).toEqual({ outcome: 'conflict', sameCode: true });
+
+    const other = await applyPartnerCode(
+      { rawCode: 'SAMETWO1', source: 'deeplink', deviceSessionId: session.id, ipPrefix: '203.0.113.0/24', requestId: 'r3' },
+      { pool, logger },
+    );
+    expect(other).toEqual({ outcome: 'conflict', sameCode: false });
+    expect(codeOne.id).toBeDefined();
   });
 });

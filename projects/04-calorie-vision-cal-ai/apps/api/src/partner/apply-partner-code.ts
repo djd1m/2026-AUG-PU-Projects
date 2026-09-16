@@ -32,7 +32,7 @@ export type RejectReason = 'code_blocked' | 'self_referral' | 'antifraud_ip_burs
 
 export type ApplyOutcome =
   | { readonly outcome: 'applied' }
-  | { readonly outcome: 'conflict' }
+  | { readonly outcome: 'conflict'; readonly sameCode: boolean }
   | { readonly outcome: 'invalid' }
   | { readonly outcome: 'rejected'; readonly reason: RejectReason };
 
@@ -145,7 +145,11 @@ export async function applyPartnerCode(input: ApplyPartnerCodeInput, deps: Apply
         applied = false;
       }
 
-      if (!applied) return { outcome: 'conflict' };
+      // ТОТ ЖЕ код или ДРУГОЙ — разные события для человека, хотя для базы исход один.
+      // Повторный переход по ссылке блогера — обычное действие (люди открывают ссылки
+      // дважды), и ответ «за вами закреплён ДРУГОЙ код» там просто неправда. Значение кода
+      // наружу не отдаётся — только признак совпадения: чужой код посетителю знать незачем.
+      if (!applied) return { outcome: 'conflict', sameCode: existingRow?.partner_code_id === code.id };
 
       // Шаг 12: событие применения — РОВНО при исходе applied, той же транзакцией.
       await client.query(INSERT_CODE_APPLIED_EVENT, [input.deviceSessionId, code.id]);
