@@ -34,7 +34,7 @@ export function formatPrice(priceMinor: number): string {
   return `${number} ₽`;
 }
 
-async function startCheckout(): Promise<{ url: string } | { error: string }> {
+async function startCheckout(): Promise<{ url: string } | { error: string; needsLogin?: boolean }> {
   const response = await fetch('/api/v1/subscription/checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -48,7 +48,9 @@ async function startCheckout(): Promise<{ url: string } | { error: string }> {
     return { error: 'Платёжная страница недоступна. Попробуйте позже.' };
   }
   const body = (await response.json().catch(() => null)) as { error?: { code?: string } } | null;
-  if (body?.error?.code === 'account_required') return { error: 'Чтобы оформить подписку, войдите через Telegram — она привязывается к аккаунту, а не к браузеру.' };
+  // OWN-012: вход — по почте в настройках (Telegram — вторая очередь). Подписка привязывается
+  // к аккаунту, а не к браузеру: без входа оплата потерялась бы вместе с cookie.
+  if (body?.error?.code === 'account_required') return { error: 'Чтобы оформить подписку, войдите или зарегистрируйтесь в настройках — подписка привязывается к аккаунту, а не к браузеру.', needsLogin: true };
   if (body?.error?.code === 'already_subscribed') return { error: 'Подписка уже действует.' };
   if (body?.error?.code === 'payment_provider_unavailable') return { error: 'Платёжный сервис временно недоступен. Деньги не списаны, попробуйте ещё раз.' };
   return { error: 'Не удалось начать оплату. Деньги не списаны.' };
@@ -57,10 +59,12 @@ async function startCheckout(): Promise<{ url: string } | { error: string }> {
 export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, status = 'none', paymentsMode = 'live' }: ProScreenProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [needsLogin, setNeedsLogin] = useState(false);
 
   const onSubscribe = (): void => {
     setPending(true);
     setError(null);
+    setNeedsLogin(false);
     startCheckout()
       .then((outcome) => {
         if ('url' in outcome) {
@@ -68,6 +72,7 @@ export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, 
           return;
         }
         setError(outcome.error);
+        setNeedsLogin(outcome.needsLogin === true);
       })
       .catch(() => setError('Не удалось начать оплату: проверьте соединение. Деньги не списаны.'))
       .finally(() => setPending(false));
@@ -116,6 +121,11 @@ export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, 
           <p className="pro__error" role="alert">
             {error}
           </p>
+        ) : null}
+        {needsLogin ? (
+          <a className="btn btn--accent btn--wide" href="/settings">
+            Войти или зарегистрироваться
+          </a>
         ) : null}
       </div>
     </main>

@@ -23,6 +23,7 @@ import { linkSessionToAccount } from '../auth/link-session-to-account.js';
 import { dummyHash, hashPassword, isValidPassword, normalizeEmail, verifyPassword } from '../auth/password.js';
 import { requireSession } from './scans.js';
 import { isOwnerAccount, type OwnerLists } from './admin.js';
+import { resolveTier } from '../subscription/is-pro.js';
 
 interface CredentialsBody {
   readonly email?: unknown;
@@ -142,8 +143,8 @@ export function registerAuthEmailRoutes(app: FastifyInstance, deps: AuthEmailDep
   app.get('/api/v1/auth/me', async (request: FastifyRequest, reply: FastifyReply) => {
     const session = await requireSession(request, deps.pool);
     if (session === null || session.accountId === null) return reply.code(200).send(ok({ authenticated: false }));
-    const account = await deps.pool.query<{ email: string | null; telegram_user_id: string | null; tier: string }>(
-      `SELECT email, telegram_user_id, tier FROM account WHERE id = $1`,
+    const account = await deps.pool.query<{ email: string | null; telegram_user_id: string | null }>(
+      `SELECT email, telegram_user_id FROM account WHERE id = $1`,
       [session.accountId],
     );
     const row = account.rows[0];
@@ -154,7 +155,7 @@ export function registerAuthEmailRoutes(app: FastifyInstance, deps: AuthEmailDep
       authenticated: true,
       email: row.email,
       telegram_linked: row.telegram_user_id !== null,
-      tier: row.tier,
+      tier: await resolveTier(deps.pool, session.accountId),
       partner: partner.rows.length > 0,
       owner,
     }));

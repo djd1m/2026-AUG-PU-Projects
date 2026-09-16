@@ -19,6 +19,7 @@
 // `05_completion.md`, тариф не меняется вне прямой записи в тестах).
 
 import type { DbPool } from '@n4/db';
+import { resolveTier } from '../subscription/is-pro.js';
 import { buildCardPayload } from './build-card-payload.js';
 import { renderCardImage, type RenderCardImageDeps } from './render-card-image.js';
 import { createShareCardGuarded } from './share-card-repository.js';
@@ -57,8 +58,9 @@ function ownerRefFor(input: CreateShareCardInput): ConsentOwnerRef {
 
 async function readTier(deps: CreateShareCardDeps, accountId: string | null): Promise<unknown> {
   if (accountId === null) return undefined; // анонимная сессия — строки account нет вовсе (E3, AC-4).
-  const result = await deps.pool.query<{ tier: string }>('SELECT tier FROM account WHERE id = $1', [accountId]);
-  return result.rows[0]?.tier;
+  // Тариф — по АКТИВНОЙ ПОДПИСКЕ, а не по `account.tier`: поле никем не поддерживалось, и
+  // оплатившие получали бейдж как бесплатные (OWN-012, `subscription/is-pro.ts`).
+  return resolveTier(deps.pool, accountId);
 }
 
 export function shareCardObjectKey(recognitionId: string): string {

@@ -6,10 +6,11 @@ import { randomUUID } from 'node:crypto';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { DbPool, DbClient } from '@n4/db';
 import { withTransaction } from '@n4/db';
-import { fail, ok, type ApiConfig, type Logger } from '@n4/shared';
+import { fail, ok, type ApiConfig, type Logger, type QuotaLimits } from '@n4/shared';
 import { SESSION_COOKIE_NAME } from '../session/create-device-session.js';
 import { moscowDay } from '../quota/keys.js';
 import { consumeQuotaInTransaction } from '../quota/consume-in-transaction.js';
+import { effectiveQuotaLimits, hasActiveSubscription } from '../subscription/is-pro.js';
 import { clientAddressFrom, toIpPrefix } from '../session/ip-prefix.js';
 import { validateContent, isValidIdempotencyKey } from '../photo/validate-content.js';
 import { isDecodable } from '../photo/decode-check.js';
@@ -208,14 +209,18 @@ export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps):
         }
 
         const day = moscowDay();
+        // Оплаченный аккаунт — потолок Pro (OWN-012, `subscription/is-pro.ts`); читается в той же
+        // транзакции, что и списание: подписка, истёкшая секунду назад, не даёт лишнего скана.
+        const pro = await hasActiveSubscription(client, session.accountId);
+        const limits = effectiveQuotaLimits(deps.config.quota, deps.config.subscription.scanLimitPro, pro);
         const decision = await consumeQuotaInTransaction(client, {
           sessionId: session.deviceSessionId,
           ipPrefix: session.ipPrefix,
           reason: 'primary',
-          limits: deps.config.quota,
+          limits,
           day,
         });
-        if (decision.outcome === 'refused') throw new QuotaRefused(decision.scope);
+        if (decision.outcome === 'refused') throw new QuotaRefused(decision.scope, limits);
 
         return { kind: 'queued' as const, scanId: recognitionId };
       });
@@ -231,7 +236,7 @@ export function registerScansRoutes(app: FastifyInstance, deps: ScansRouteDeps):
         const resetAt = nextMoscowMidnight();
         return reply
           .code(429)
-          .send(fail('quota_exhausted', 'потолок исчерпан', { limit: limitForScope(deps.config, error.scope), reset_at: resetAt, scope: error.scope }));
+          .send(fail('quota_exhausted', 'потолок исчерпан', { limit: limitForScope(error.limits, error.scope), reset_at: resetAt, scope: error.scope }));
       }
       deps.logger.error('enqueue_scan_failed', { message: (error as Error).message });
       await deps.storage.removeObject(objectKey);
@@ -272,15 +277,16 @@ class IdempotentReplay extends Error {
 }
 
 class QuotaRefused extends Error {
-  constructor(readonly scope: 'user' | 'global' | 'escalation') {
+  constructor(readonly scope: 'user' | 'global' | 'escalation', readonly limits: QuotaLimits) {
     super('quota refused');
   }
 }
 
-function limitForScope(config: ApiConfig, scope: 'user' | 'global' | 'escalation'): number {
-  if (scope === 'user') return config.quota.scanLimitUser;
-  if (scope === 'global') return config.quota.scanLimitDay;
-  return config.quota.escalationLimitDay;
+/** Предел ТОГО тарифа, по которому отказали: у оплаченного — Pro, не бесплатные 20. */
+function limitForScope(limits: QuotaLimits, scope: 'user' | 'global' | 'escalation'): number {
+  if (scope === 'user') return limits.scanLimitUser;
+  if (scope === 'global') return limits.scanLimitDay;
+  return limits.escalationLimitDay;
 }
 
 /** Следующая полночь Europe/Moscow ОТ ЭТОГО момента (FR-scan-pipeline-18). */
