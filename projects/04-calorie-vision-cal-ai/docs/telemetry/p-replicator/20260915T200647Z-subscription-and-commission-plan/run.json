@@ -6,7 +6,7 @@
  "comparison_id": null,
  "project": "projects/04-calorie-vision-cal-ai",
  "feature": "subscription-and-commission",
- "pipeline": "/feature PLAN только — тир XL требует остановки на плане у владельца",
+ "pipeline": "/feature PLAN → IMPLEMENT → выкладка (тир XL, владелец подтвердил план ответами на четыре вопроса)",
  "tier": "XL",
  "tier_source": "complexity-router.md: признак «деньги» задаёт XL первым же совпадением; скрипт-роутер не запускался, потому что изменений кода ещё нет (он вернул бы 2 — «проверка не выполнена», а не тир)",
  "arm": null,
@@ -14,26 +14,25 @@
  "judge": null,
  "profile": "план целиком написан координатором, без фан-аута: параллелить нечего, документ один и связный",
  "baseline_revision": "6e321a82137c",
- "final_revision": null,
+ "final_revision": "b89adbd",
  "host": "Claude Code CLI",
  "started_at": "2026-09-15T20:06:47Z",
- "ended_at": null,
- "status": "awaiting_owner_checkpoint",
+ "ended_at": "2026-09-16T06:20:00Z",
+ "status": "accepted",
  "acceptance_evidence": [
   "docs/features/subscription-and-commission/01_specification.md",
   "docs/features/subscription-and-commission/02_pseudocode.md",
   "docs/features/subscription-and-commission/03_architecture.md",
   "docs/ADR.md — ADR-011…014",
-  "docs/decisions-owner.md — OWN-001…007"
+  "docs/decisions-owner.md — OWN-001…007",
+  "docs/features/subscription-and-commission/05_completion.md",
+  "445 unit + 307 integration/concurrency, 0 отказов",
+  "выложено на стенд, проверено curl по адресу развёртывания"
  ],
- "open_questions": [
-  "Что именно даёт Pro: рекомендация — повышенный суточный потолок распознаваний (предлагается 100 против 10)",
-  "Подтверждение ADR-011 (база комиссии от полученного)",
-  "Провайдер: ЮKassa или CloudPayments",
-  "Окно возврата до выплаты N дней (предлагается 14)"
- ],
+ "open_questions": [],
  "not_verified": [
-  "живой приём денег — ключей провайдера нет, ИП в процессе (OWN-007)",
-  "конверсия «переход из Telegram в браузер → оплата» — измеряется после запуска, порог назван в спецификации"
+  "живой приём денег — ключей провайдера нет, ИП в процессе (OWN-007); прогон на фейке НЕ является смоуком приёма денег",
+  "конверсия «переход из Telegram в браузер → оплата» — измеряется после запуска",
+  "фискальный чек 54-ФЗ не передаётся провайдеру"
  ]
 }
