@@ -48,6 +48,18 @@ export const SERVICE_LOG_FIELDS: readonly string[] = [
   // «Решение: аудит»). Ни одно поле не несёт секрета — внутренние идентификаторы (как
   // `scan_id`), усечённый префикс адреса и закрытые перечисления источника/причины.
   'partner_code_id', 'old_partner_code_id', 'device_session_id', 'source', 'replaced_source', 'operator_id',
+  // subscription-and-commission. Денежных ЗНАЧЕНИЙ плательщика здесь нет: только настройки
+  // процесса и счётчики. `payments_mode` печатается именем, чтобы прогон на фейке нельзя
+  // было принять за живой приём денег.
+  'payments_mode',
+  'subscription_price_minor',
+  'scan_limit_pro',
+  'subscriptionId',
+  'partnerId',
+  'amountMinor',
+  'failedRenewals',
+  'expired',
+  'handled',
 ];
 
 export interface LoggerOptions extends RedactorOptions {

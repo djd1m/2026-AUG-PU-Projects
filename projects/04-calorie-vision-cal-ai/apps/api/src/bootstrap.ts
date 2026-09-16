@@ -10,6 +10,8 @@
 import { ConfigValidationError, createLogger, SERVICE_LOG_FIELDS, type ApiConfig } from '@n4/shared';
 import { createPool } from '@n4/db';
 import { API_REQUIRED_VARIABLES, loadApiConfig } from './env.js';
+import { startRenewalLoop } from './renewals/loop.js';
+import { selectPaymentProvider } from './payments/select-provider.js';
 import { buildServer } from './server.js';
 import { createPhotoStorage } from './photo/store-original.js';
 import { purgeOrphanObjects, type StorageObjectLister } from './photo/purge-orphans.js';
@@ -83,6 +85,11 @@ async function main(): Promise<void> {
     escalation_limit_day: config.quota.escalationLimitDay,
     rate_limit_mutate_per_min: config.rateLimits.mutatePerMinute,
     rate_limit_read_per_min: config.rateLimits.readPerMinute,
+    // Режим платежей печатается ИМЕНЕМ: прогон на фейке не должен выглядеть как живой приём
+    // денег ни в журнале, ни в квитанции.
+    payments_mode: config.payments.N4_PAYMENTS_MODE,
+    subscription_price_minor: config.subscription.priceMinor,
+    scan_limit_pro: config.subscription.scanLimitPro,
   });
 
   const pool = createPool({ databaseUrl: config.databaseUrl, applicationName: 'n4-api' });
@@ -97,6 +104,22 @@ async function main(): Promise<void> {
   });
   const app = buildServer({ config, pool, logger });
 
+  // Цикл продлений живёт ЗДЕСЬ, а не в recognizer: ключи платёжного провайдера принадлежат
+  // только `api` (`secrets-management.md`). Раз в 15 минут — продление не срочно с точностью
+  // до минуты, а частый проход означал бы постоянные запросы к базе ради пустого результата.
+  const renewalPayments = selectPaymentProvider(config.payments);
+  const renewals = startRenewalLoop(
+    {
+      pool,
+      payments: renewalPayments,
+      priceMinor: config.subscription.priceMinor,
+      appOrigin: config.appOrigin,
+      leaseSeconds: 120,
+      logger,
+    },
+    { intervalMs: 15 * 60 * 1000, batchSize: 50 },
+  );
+
   // Уборка орфанов бакета (FR-scan-pipeline-14 шаг 12, RV-scan-pipeline-03). Раз в час —
   // порог самих орфанов уже час (`CANON.orphanObjectMaxAgeMs`); реже сироты копились бы
   // сутками до первой уборки.
@@ -110,6 +133,7 @@ async function main(): Promise<void> {
   const shutdown = (signal: string): void => {
     logger.info('shutdown_started', { signal });
     clearInterval(orphanTimer);
+    renewals.stop();
     void app
       .close()
       .then(() => pool.end())
