@@ -29,6 +29,7 @@ import { registerEarningsRoute } from './routes/earnings.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerAuthEmailRoutes } from './routes/auth-email.js';
 import { registerPartnerInvitesRoutes } from './routes/partner-invites.js';
+import { registerAdminPartnersRoutes } from './routes/admin-partners.js';
 import { selectPaymentProvider } from './payments/select-provider.js';
 import type { PaymentProvider } from './payments/provider.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
@@ -126,6 +127,7 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   const owners = { ownerTelegramUserIds: deps.ownerTelegramUserIds, ownerEmails: deps.ownerEmails };
   registerAuthEmailRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
   registerPartnerInvitesRoutes(app, { pool: deps.pool, logger: deps.logger, owners, appOrigin: deps.config.appOrigin });
+  registerAdminPartnersRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
   registerPaymentsWebhookRoute(app, {
     pool: deps.pool,
     payments,

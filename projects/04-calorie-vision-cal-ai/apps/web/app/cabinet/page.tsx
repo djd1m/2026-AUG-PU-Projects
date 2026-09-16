@@ -11,6 +11,7 @@
 // подсказывать, что маршрут существует.
 
 import { useCallback, useEffect, useState } from 'react';
+import { AddPartner } from './add-partner';
 import {
   ADMIN_OVERVIEW_URL,
   buildInviteCreateUrl,
@@ -286,8 +287,9 @@ function OwnerSection({ overview, reload }: { readonly overview: OwnerOverview; 
       </p>
 
       <h3>Партнёры</h3>
+      <AddPartner onCreated={reload} />
       {overview.partners.length === 0 ? (
-        <p className="muted">Партнёров ещё нет.</p>
+        <p className="muted">Партнёров ещё нет — заведите первого кнопкой выше.</p>
       ) : (
         <ul className="cabinet__entries">
           {overview.partners.map((p) => (

@@ -15,6 +15,52 @@ export const ADMIN_OVERVIEW_URL = '/api/v1/admin/overview';
 export const ADMIN_PAYOUTS_URL = '/api/v1/admin/payouts';
 export const AUTH_DEVICE_URL = '/api/v1/auth/device';
 
+export const ADMIN_PARTNERS_URL = '/api/v1/admin/partners';
+
+export interface CreatePartnerInput {
+  readonly displayName: string;
+  readonly contact: string;
+  readonly code: string;
+}
+
+export type CreatePartnerOutcome =
+  | { readonly kind: 'created'; readonly partnerId: string; readonly code: string }
+  | { readonly kind: 'rejected'; readonly message: string };
+
+/** Тот же формат, что CHECK в схеме и проверка на сервере. */
+export const PARTNER_CODE_RE = /^[A-Z0-9]{4,12}$/;
+
+const CREATE_MESSAGES: Record<string, string> = {
+  invalid_display_name: 'Имя партнёра обязательно (до 100 знаков).',
+  invalid_contact: 'Контакт обязателен (до 100 знаков).',
+  invalid_code: 'Код — от 4 до 12 знаков: заглавная латиница и цифры.',
+  invalid_rate: 'Ставка — целое число базисных пунктов от 0 до 10000.',
+  code_taken: 'Такой код уже занят — придумайте другой.',
+  dependency_unavailable: 'Сервис временно недоступен — попробуйте через минуту.',
+};
+
+export async function createPartner(input: CreatePartnerInput): Promise<CreatePartnerOutcome> {
+  let response: Response;
+  try {
+    response = await fetch(ADMIN_PARTNERS_URL, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ display_name: input.displayName, contact: input.contact, code: input.code }),
+    });
+  } catch {
+    return { kind: 'rejected', message: 'Нет соединения — проверьте сеть.' };
+  }
+  const body = (await response.json().catch(() => null)) as
+    | { data?: { partner_id?: string; code?: string }; error?: { code?: string } }
+    | null;
+  if (response.status === 201 && body?.data?.partner_id !== undefined) {
+    return { kind: 'created', partnerId: body.data.partner_id, code: body.data.code ?? input.code };
+  }
+  const code = body?.error?.code;
+  return { kind: 'rejected', message: (code !== undefined && CREATE_MESSAGES[code]) || `Сервер ответил неожиданно (${response.status}).` };
+}
+
 export function buildInviteCreateUrl(partnerId: string): string {
   return `/api/v1/admin/partners/${encodeURIComponent(partnerId)}/invites`;
 }

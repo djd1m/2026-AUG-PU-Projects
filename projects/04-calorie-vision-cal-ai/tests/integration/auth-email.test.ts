@@ -175,3 +175,60 @@ describe('приглашение партнёра', () => {
     expect((await app.inject({ method: 'POST', url: '/api/v1/partner/enroll', payload: { token } })).statusCode).toBe(401);
   });
 });
+
+describe('заведение партнёра владельцем (пункт 2, 16.09.2026)', () => {
+  async function ownerCookie(): Promise<string> {
+    return cookieOf(await register(OWNER_EMAIL, 'strong-password'))!;
+  }
+  function create(cookie: string, payload: Record<string, unknown>) {
+    return app.inject({ method: 'POST', url: '/api/v1/admin/partners', payload, cookies: { [SESSION_COOKIE_NAME]: cookie } });
+  }
+
+  it('владелец заводит партнёра с кодом — 201, партнёр появляется в сводке', async () => {
+    const owner = await ownerCookie();
+    const created = await create(owner, { display_name: 'Иван Петров', contact: '@ivan', code: 'ivan01' });
+    expect(created.statusCode).toBe(201);
+    const data = JSON.parse(created.body).data;
+    // Код приводится к верхнему регистру: «ivan01» и «IVAN01» — один код для человека.
+    expect(data.code).toBe('IVAN01');
+    expect(data.commission_rate_bp).toBe(5000);
+
+    const overview = await app.inject({ method: 'GET', url: '/api/v1/admin/overview', cookies: { [SESSION_COOKIE_NAME]: owner } });
+    const partners = JSON.parse(overview.body).data.partners;
+    expect(partners).toHaveLength(1);
+    expect(partners[0]).toMatchObject({ display_name: 'Иван Петров', needs_invite: true });
+  });
+
+  it('занятый код — 409, и партнёр НЕ создаётся (одна транзакция, не пустышка в базе)', async () => {
+    const owner = await ownerCookie();
+    expect((await create(owner, { display_name: 'Первый', contact: '@a', code: 'TAKEN1' })).statusCode).toBe(201);
+    const second = await create(owner, { display_name: 'Второй', contact: '@b', code: 'TAKEN1' });
+    expect(second.statusCode).toBe(409);
+    expect(JSON.parse(second.body).error.code).toBe('code_taken');
+    const count = await pool.query<{ c: string }>(`SELECT count(*)::text AS c FROM partner`);
+    expect(count.rows[0]!.c).toBe('1');
+  });
+
+  it('негодные поля — 422 с НАЗВАННЫМ полем, а не общий отказ', async () => {
+    const owner = await ownerCookie();
+    expect(JSON.parse((await create(owner, { display_name: '  ', contact: '@a', code: 'GOOD01' })).body).error.code).toBe('invalid_display_name');
+    expect(JSON.parse((await create(owner, { display_name: 'Имя', contact: '', code: 'GOOD01' })).body).error.code).toBe('invalid_contact');
+    for (const bad of ['ABC', 'СЛИШКОМДЛИННЫЙКОД1', 'БЛОГЕР', 'a b']) {
+      expect(JSON.parse((await create(owner, { display_name: 'Имя', contact: '@a', code: bad })).body).error.code, bad).toBe('invalid_code');
+    }
+    expect(JSON.parse((await create(owner, { display_name: 'Имя', contact: '@a', code: 'GOOD01', commission_rate_bp: 10001 })).body).error.code).toBe('invalid_rate');
+  });
+
+  it('НЕ владелец получает 404 — маршрут для постороннего не существует', async () => {
+    const stranger = cookieOf(await register(`stranger-${Date.now()}@example.com`, 'strong-password'))!;
+    expect((await create(stranger, { display_name: 'Имя', contact: '@a', code: 'NOPE01' })).statusCode).toBe(404);
+  });
+
+  it('заведённый партнёр сразу готов к приглашению — путь целиком без psql', async () => {
+    const owner = await ownerCookie();
+    const partnerId = JSON.parse((await create(owner, { display_name: 'Блогер', contact: '@bl', code: 'FULL01' })).body).data.partner_id;
+    const invite = await app.inject({ method: 'POST', url: `/api/v1/admin/partners/${partnerId}/invites`, cookies: { [SESSION_COOKIE_NAME]: owner } });
+    expect(invite.statusCode).toBe(201);
+    expect(JSON.parse(invite.body).data.url).toContain('/invite/');
+  });
+});
