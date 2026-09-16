@@ -12,6 +12,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { AddPartner } from './add-partner';
+import { PayoutDetailsForm } from './payout-details';
 import {
   ADMIN_OVERVIEW_URL,
   buildInviteCreateUrl,
@@ -214,6 +215,8 @@ function PartnerSection({
         {e.deferred_to_following_minor > 0 ? ` · ${formatRub(e.deferred_to_following_minor)} перейдёт на следующий период` : ''}
       </p>
 
+      <PayoutDetailsForm />
+
       <h3>Воронка по коду</h3>
       <nav className="cabinet__windows" aria-label="период">
         {(['day', 'week', 'all'] as const).map((w) => (
@@ -324,6 +327,9 @@ function OwnerSection({ overview, reload }: { readonly overview: OwnerOverview; 
       <AddPartner onCreated={reload} />
       <a className="btn btn--ghost btn--tiny" href="/api/v1/admin/export/commissions">
         выгрузить движения всех партнёров
+      </a>{' '}
+      <a className="btn btn--ghost btn--tiny" href="/api/v1/admin/export/payout-register">
+        реестр к выплате
       </a>
       {overview.partners.length === 0 ? (
         <p className="muted">Партнёров ещё нет — заведите первого кнопкой выше.</p>

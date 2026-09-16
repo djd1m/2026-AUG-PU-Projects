@@ -125,3 +125,42 @@ describe('доставка наружу — НАДСТРОЙКА, её отка�
     expect(row.rows[0]!.delivery_error).toBe('telegram_not_linked');
   });
 });
+
+describe('реквизиты выплаты и реестр (пункт 3, частично)', () => {
+  it('партнёр задаёт СБП: телефон нормализуется, наружу отдаётся МАСКА, а не номер', async () => {
+    const { token } = await partnerWithAccount(null);
+    const saved = await app.inject({
+      method: 'PUT', url: '/api/v1/partner/payout-details',
+      payload: { method: 'sbp', phone: '8 (999) 123-45-67', bank: 'Т-Банк' },
+      cookies: { [SESSION_COOKIE_NAME]: token },
+    });
+    expect(saved.statusCode).toBe(200);
+    const data = JSON.parse(saved.body).data;
+    expect(data.phone_masked).not.toContain('9991234');
+    // В базе — канонический вид, чтобы реестр был пригоден для перевода.
+    const row = await pool.query<{ payout_phone: string }>(`SELECT payout_phone FROM partner WHERE payout_phone IS NOT NULL`);
+    expect(row.rows[0]!.payout_phone).toBe('+79991234567');
+  });
+
+  it('номер карты отвергается маршрутом, а не только формой', async () => {
+    const { token } = await partnerWithAccount(null);
+    const response = await app.inject({
+      method: 'PUT', url: '/api/v1/partner/payout-details',
+      payload: { method: 'other', note: 'карта 4111 1111 1111 1111' },
+      cookies: { [SESSION_COOKIE_NAME]: token },
+    });
+    expect(response.statusCode).toBe(422);
+    expect(JSON.parse(response.body).error.code).toBe('card_number_refused');
+    expect((await pool.query(`SELECT 1 FROM partner WHERE payout_note IS NOT NULL`)).rows).toHaveLength(0);
+  });
+
+  it('не партнёр реквизиты не задаёт — 403', async () => {
+    const account = await pool.query<{ id: string }>(`INSERT INTO account (email, password_hash) VALUES ('nobody@example.com','x') RETURNING id`);
+    const token = generateSessionToken();
+    await pool.query(
+      `INSERT INTO device_session (cookie_token_hash, ip_prefix, account_id, anonymous_diary_expires_at) VALUES ($1,'203.0.113.0/24',$2, now() + interval '7 days')`,
+      [hashSessionToken(token), account.rows[0]!.id],
+    );
+    expect((await app.inject({ method: 'PUT', url: '/api/v1/partner/payout-details', payload: { method: 'sbp', phone: '+79991234567' }, cookies: { [SESSION_COOKIE_NAME]: token } })).statusCode).toBe(403);
+  });
+});

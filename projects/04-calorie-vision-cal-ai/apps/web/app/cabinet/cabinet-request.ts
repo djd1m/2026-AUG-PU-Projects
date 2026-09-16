@@ -16,7 +16,46 @@ export const ADMIN_PAYOUTS_URL = '/api/v1/admin/payouts';
 export const AUTH_DEVICE_URL = '/api/v1/auth/device';
 
 export const ADMIN_PARTNERS_URL = '/api/v1/admin/partners';
+export const PAYOUT_DETAILS_URL = '/api/v1/partner/payout-details';
 export const NOTIFICATIONS_URL = '/api/v1/notifications';
+
+export interface PayoutDetails {
+  readonly method: 'sbp' | 'other' | null;
+  readonly phone_masked: string | null;
+  readonly bank: string | null;
+  readonly note: string | null;
+}
+
+export async function fetchPayoutDetails(): Promise<PayoutDetails | null> {
+  const response = await fetch(PAYOUT_DETAILS_URL, { credentials: 'same-origin' }).catch(() => null);
+  if (response === null || response.status !== 200) return null;
+  const body = (await response.json().catch(() => null)) as { data?: PayoutDetails } | null;
+  return body?.data ?? null;
+}
+
+const PAYOUT_ERRORS: Record<string, string> = {
+  invalid_phone: 'Телефон для СБП обязателен — российский мобильный.',
+  invalid_bank: 'Название банка — не длиннее 100 знаков.',
+  invalid_note: 'Опишите способ выплаты (до 300 знаков).',
+  card_number_refused: 'Номера карт мы не принимаем и не храним. Укажите телефон для СБП.',
+  not_partner: 'Реквизиты задаёт партнёр.',
+};
+
+export type SavePayoutOutcome = { readonly kind: 'saved' } | { readonly kind: 'rejected'; readonly message: string };
+
+export async function savePayoutDetails(payload: Record<string, unknown>): Promise<SavePayoutOutcome> {
+  const response = await fetch(PAYOUT_DETAILS_URL, {
+    method: 'PUT',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  }).catch(() => null);
+  if (response === null) return { kind: 'rejected', message: 'Нет соединения — проверьте сеть.' };
+  if (response.status === 200) return { kind: 'saved' };
+  const body = (await response.json().catch(() => null)) as { error?: { code?: string } } | null;
+  const code = body?.error?.code;
+  return { kind: 'rejected', message: (code !== undefined && PAYOUT_ERRORS[code]) || `Сервер ответил неожиданно (${response.status}).` };
+}
 export const NOTIFICATIONS_READ_URL = '/api/v1/notifications/read';
 
 export interface NotificationItem {

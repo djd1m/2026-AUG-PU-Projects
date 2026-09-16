@@ -32,6 +32,7 @@ import { registerPartnerInvitesRoutes } from './routes/partner-invites.js';
 import { registerAdminPartnersRoutes } from './routes/admin-partners.js';
 import { registerExportRoutes } from './routes/exports.js';
 import { registerNotificationsRoutes } from './routes/notifications.js';
+import { registerPayoutDetailsRoutes } from './routes/payout-details.js';
 import { createTelegramSender } from './notifications/notify.js';
 import { selectPaymentProvider } from './payments/select-provider.js';
 import type { PaymentProvider } from './payments/provider.js';
@@ -139,6 +140,7 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   registerAdminPartnersRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
   registerExportRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
   registerNotificationsRoutes(app, { pool: deps.pool, logger: deps.logger });
+  registerPayoutDetailsRoutes(app, { pool: deps.pool, logger: deps.logger, owners, holdDays: deps.config.subscription.holdDays });
   registerPaymentsWebhookRoute(app, {
     // Уведомления в Telegram — только тем партнёрам, у кого аккаунт связан с Telegram, и
     // только как НАДСТРОЙКА над строкой в базе. Токен уже есть у `api` и больше нигде.
