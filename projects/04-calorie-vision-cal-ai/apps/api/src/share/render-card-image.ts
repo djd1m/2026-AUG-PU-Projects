@@ -84,7 +84,7 @@ export interface CardGeometry {
 
 /** Ширина бейджа считается по тексту: пилюля обнимает содержимое, а не растянута на глазок. */
 function badgeWidth(): number {
-  return BADGE_PADDING_X * 2 + BADGE_ICON_SIZE + BADGE_GAP + Math.ceil(estimateTextWidthPx(BADGE_TEXT, BADGE_TEXT_FONT_PX));
+  return BADGE_PADDING_X * 2 + BADGE_ICON_SIZE + BADGE_GAP + BADGE_TEXT_WIDTH_PX;
 }
 
 /**
@@ -114,27 +114,56 @@ export function badgeOverlapsAnyTile(geometry: CardGeometry): boolean {
 
 /**
  * Оценка ширины строки без метрик шрифта (у проекта НОЛЬ зависимостей ради этого): средняя
- * ширина глифа как доля кегля. Намеренно завышена — лучше уменьшить лишний раз, чем выпустить
- * текст за край.
+ * ширина глифа как доля кегля.
+ *
+ * ЗАМЕРЕНО 16.09.2026 растеризацией обоих шрифтов (владелец: «слово Тарелка должно быть целиком
+ * внутри бейджа»). Прежний единый коэффициент 0,58 был ЗАНИЖЕН, а комментарий рядом с ним
+ * утверждал обратное — «намеренно завышена». Из-за этого пилюля бейджа оказалась на 25 px уже
+ * своего текста, и последняя буква вылезала за край.
+ *
+ *   Unbounded 700 38px «Тарелка»                 → 180 px, коэффициент 0,677
+ *   Unbounded 800 58px «огурец, помидор и хлеб»  → 808 px, коэффициент 0,633
+ *   Onest     400 34px «огурец · 95 г»           → 226 px, коэффициент 0,511
+ *   Onest     400 26px «USDA FDC · 230 г · …»    → 392 px, коэффициент 0,538
+ *
+ * Единый безопасный коэффициент невозможен: строка из широких глифов («ЩЩЩ…») даёт 1,32 у
+ * Unbounded и 1,09 у Onest. Поэтому оценка остаётся ОЦЕНКОЙ для подгонки кегля, а фактическое
+ * непопадание текста за края ловится ИЗМЕРЕНИЕМ РАСТРА (`share-card-text-fits.test.ts`) — то
+ * есть на слое 1, а не доверием к формуле.
  */
-const AVG_CHAR_WIDTH_FACTOR = 0.58;
+export const CHAR_WIDTH_FACTOR_DISPLAY = 0.72;
+export const CHAR_WIDTH_FACTOR_TEXT = 0.6;
 
-export function estimateTextWidthPx(text: string, fontSizePx: number): number {
-  return text.length * fontSizePx * AVG_CHAR_WIDTH_FACTOR;
+export function estimateTextWidthPx(text: string, fontSizePx: number, factor: number = CHAR_WIDTH_FACTOR_DISPLAY): number {
+  return text.length * fontSizePx * factor;
 }
+
+/**
+ * Ширина слова «Тарелка» в Unbounded 700 на 38 px — ЗАМЕРЕНА, а не оценена: это константа
+ * бренда, она не меняется от карточки к карточке, и пилюля обязана обнимать её точно.
+ * Тест `badge-text-width` перемеряет её растром и падает, если поменялись шрифт, кегль или само
+ * слово.
+ */
+export const BADGE_TEXT_WIDTH_PX = 180;
 
 export interface FittedText {
   readonly text: string;
   readonly fontSizePx: number;
 }
 
-export function fitTextToWidth(text: string, maxWidthPx: number, startFontSizePx: number, minFontSizePx: number): FittedText {
+export function fitTextToWidth(
+  text: string,
+  maxWidthPx: number,
+  startFontSizePx: number,
+  minFontSizePx: number,
+  factor: number = CHAR_WIDTH_FACTOR_DISPLAY,
+): FittedText {
   let fontSizePx = startFontSizePx;
-  while (fontSizePx > minFontSizePx && estimateTextWidthPx(text, fontSizePx) > maxWidthPx) {
+  while (fontSizePx > minFontSizePx && estimateTextWidthPx(text, fontSizePx, factor) > maxWidthPx) {
     fontSizePx -= 2;
   }
   let candidate = text;
-  while (candidate.length > 1 && estimateTextWidthPx(candidate, fontSizePx) > maxWidthPx) {
+  while (candidate.length > 1 && estimateTextWidthPx(candidate, fontSizePx, factor) > maxWidthPx) {
     // На длине 2 отрезать «два символа и добавить многоточие» НЕЛЬЗЯ: `slice(0, max(1, 0))`
     // возвращает тот же один символ, к нему снова приписывается «…», и строка становится
     // НЕПОДВИЖНОЙ ТОЧКОЙ — цикл крутится вечно. Это латентный дефект прежней редакции: он не
@@ -195,7 +224,7 @@ function itemsMarkup(items: readonly ShareCardItem[], topY: number): string {
   return items
     .map((item, i) => {
       const y = topY + i * ITEM_LINE_HEIGHT;
-      const left = fitTextToWidth(`${item.label} · ${item.massG} г`, AVAILABLE_TEXT_WIDTH_PX - 160, ITEM_FONT_PX, 24);
+      const left = fitTextToWidth(`${item.label} · ${item.massG} г`, AVAILABLE_TEXT_WIDTH_PX - 160, ITEM_FONT_PX, 24, CHAR_WIDTH_FACTOR_TEXT);
       return `
         <circle cx="${SIDE_MARGIN + 6}" cy="${y - 10}" r="5" fill="${ACCENT}" opacity="0.85" />
         <text x="${SIDE_MARGIN + 28}" y="${y}" font-family="${FONT_FAMILY_TEXT}" font-size="${left.fontSizePx}" fill="${INK}"
@@ -212,7 +241,7 @@ function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): s
   // экранировании четыре лишних символа разметки (`&amp;`), которые не занимают места на
   // холсте — считать их в оценке ширины значило бы урезать текст сильнее необходимого.
   const fittedDishName = fitTextToWidth(input.dishName, AVAILABLE_TEXT_WIDTH_PX, DISH_NAME_START_FONT_PX, DISH_NAME_MIN_FONT_PX);
-  const fittedSourceLabel = fitTextToWidth(input.sourceLabel, AVAILABLE_TEXT_WIDTH_PX, SOURCE_LABEL_START_FONT_PX, SOURCE_LABEL_MIN_FONT_PX);
+  const fittedSourceLabel = fitTextToWidth(input.sourceLabel, AVAILABLE_TEXT_WIDTH_PX, SOURCE_LABEL_START_FONT_PX, SOURCE_LABEL_MIN_FONT_PX, CHAR_WIDTH_FACTOR_TEXT);
   const dishName = escapeSvgText(fittedDishName.text);
   const sourceLabel = escapeSvgText(fittedSourceLabel.text);
   const { tileRects, badgeRect } = geometry;
