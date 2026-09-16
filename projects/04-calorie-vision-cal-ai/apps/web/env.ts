@@ -28,6 +28,13 @@ export interface WebConfig {
   /** Режим платежей — НЕ секрет, а надпись на экране: в режиме `fake` кнопка не списывает
    * денег, и человек обязан это видеть ДО нажатия. */
   readonly paymentsMode: 'fake' | 'live';
+  /**
+   * Имя бота Telegram для ссылки входа. НЕ секрет (токен бота живёт только в `api`), но и не
+   * литерал в разметке: до 16.09.2026 `t.me/tarelka_bot` было зашито в `settings/page.tsx`, а
+   * настоящий бот проекта называется иначе — кнопка «Войти через Telegram» вела на ЧУЖОГО бота.
+   * Имя, которого нет, — отказ, а не «наверное, тот самый» (`silent-fallbacks.md`).
+   */
+  readonly telegramBotUsername: string;
 }
 
 function requirePositiveInt(env: EnvSource, name: string, consequence: string): number {
@@ -45,6 +52,14 @@ function requirePaymentsMode(env: EnvSource): 'fake' | 'live' {
   return 'fake';
 }
 
+/** `@name_bot` без собачки, латиница/цифры/подчёркивание — как требует Telegram. */
+function requireBotUsername(env: EnvSource): string {
+  const raw = (env.TELEGRAM_BOT_USERNAME ?? '').trim().replace(/^@/, '');
+  if (raw === '') throw new Error('TELEGRAM_BOT_USERNAME не задан — кнопка входа через Telegram повела бы в никуда или на чужого бота');
+  if (!/^[A-Za-z0-9_]{5,32}$/.test(raw)) throw new Error(`TELEGRAM_BOT_USERNAME непригоден («${raw}») — имя бота Telegram это 5-32 символа A-Z, 0-9, _`);
+  return raw;
+}
+
 export function loadWebConfig(env: EnvSource = process.env): WebConfig {
   const apiInternalUrl = env.API_INTERNAL_URL;
   if (apiInternalUrl === undefined || apiInternalUrl.trim() === '') {
@@ -56,5 +71,6 @@ export function loadWebConfig(env: EnvSource = process.env): WebConfig {
     scanLimitFree: requirePositiveInt(env, 'N4_SCAN_LIMIT_USER', 'экран Pro не смог бы назвать бесплатный путь'),
     scanLimitPro: requirePositiveInt(env, 'N4_SCAN_LIMIT_PRO', 'экран Pro не смог бы назвать, что даёт подписка'),
     paymentsMode: requirePaymentsMode(env),
+    telegramBotUsername: requireBotUsername(env),
   };
 }
