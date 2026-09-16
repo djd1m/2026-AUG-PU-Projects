@@ -43,6 +43,13 @@ function feeFor(amountMinor: number, feeBp: number): number {
 }
 
 export interface FakePaymentProvider extends PaymentProvider {
+  /** Найти платёж по НАШЕМУ идентификатору намерения — тесту иначе неоткуда взять id платежа. */
+  getPaymentByOrder(orderId: string): Promise<RemotePayment>;
+  /** Перенять состояние другого фейка: тест подменяет провайдера «сломанным» и обратно,
+   * а платежи при этом обязаны остаться теми же — у настоящего провайдера они на его стороне. */
+  adoptStateFrom(other: FakePaymentProvider): void;
+  /** Внутреннее состояние для `adoptStateFrom`. */
+  readonly __state: { readonly payments: Map<string, RemotePayment>; readonly refunds: Map<string, RemoteRefund> };
   /** Сформировать уведомление так, как его прислал бы провайдер. */
   notificationFor(paymentId: string, kind: 'payment_succeeded' | 'refund_succeeded'): Uint8Array;
   /** Пометить платёж возвращённым (возврат инициируется вне продукта — в кабинете провайдера). */
@@ -65,6 +72,18 @@ export function createFakePaymentProvider(script: FakeScript = {}): FakePaymentP
   const provider: FakePaymentProvider = {
     name: 'fake',
     script,
+    __state: state,
+
+    async getPaymentByOrder(orderId: string): Promise<RemotePayment> {
+      const payment = [...state.payments.values()].find((p) => p.orderId === orderId);
+      if (payment === undefined) throw new PaymentVerificationError('платёж по этому намерению не создан');
+      return payment;
+    },
+
+    adoptStateFrom(other: FakePaymentProvider): void {
+      for (const [id, payment] of other.__state.payments) state.payments.set(id, payment);
+      for (const [id, refund] of other.__state.refunds) state.refunds.set(id, refund);
+    },
 
     async createPayment(input: CreatePaymentInput): Promise<RemotePayment> {
       assertAvailable();

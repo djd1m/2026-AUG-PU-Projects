@@ -71,6 +71,7 @@ export async function migratedPool(applicationName = 'n4-tests'): Promise<DbPool
 /** Чистое состояние между файлами: данные, а не схема. */
 export async function truncateAll(pool: DbPool): Promise<void> {
   await pool.query(`TRUNCATE
+    commission_entry, payment, payment_event, payment_intent, subscription,
     growth_event, pro_interest, attribution, partner_code, partner,
     share_card, diary_entry, scan_quota_counter, recognition, photo,
     telegram_login_replay,
