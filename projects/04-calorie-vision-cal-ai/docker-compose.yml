@@ -194,6 +194,11 @@ services:
       TZ: Europe/Moscow
       APP_ORIGIN: ${APP_ORIGIN:?внешний адрес обязателен}
       API_INTERNAL_URL: http://api:3000
+      # Экран Pro показывает цену и потолки. Секретов платёжного провайдера у `web`
+      # нет и быть не должно — только числа, которые он рисует (`secrets-management.md`).
+      N4_SUBSCRIPTION_PRICE_MINOR: "${N4_SUBSCRIPTION_PRICE_MINOR:?цена подписки в копейках не задана}"
+      N4_SCAN_LIMIT_USER: "${N4_SCAN_LIMIT_USER:?потолок на пользователя не задан}"
+      N4_SCAN_LIMIT_PRO: "${N4_SCAN_LIMIT_PRO:?потолок распознаваний подписчика не задан}"
       NEXT_TELEMETRY_DISABLED: "1"
     # ХОСТОВОГО ПОРТА У web НЕТ, и это не забывчивость. Черновик публиковал
     # 127.0.0.1:${N4_WEB_PORT:-4184}:3000 «для прямой отладки»; проверка

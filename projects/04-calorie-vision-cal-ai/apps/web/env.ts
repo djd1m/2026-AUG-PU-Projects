@@ -19,6 +19,19 @@ export type EnvSource = Readonly<Record<string, string | undefined>>;
 
 export interface WebConfig {
   readonly apiInternalUrl: string;
+  /** Цена подписки в КОПЕЙКАХ и потолки — показываются на экране Pro. Секретом не являются,
+   * но и значения по умолчанию не имеют: цена, взятая с потолка, — это цена, которую
+   * человек увидит и не получит. */
+  readonly subscriptionPriceMinor: number;
+  readonly scanLimitFree: number;
+  readonly scanLimitPro: number;
+}
+
+function requirePositiveInt(env: EnvSource, name: string, consequence: string): number {
+  const raw = env[name];
+  if (raw === undefined || raw.trim() === '') throw new Error(`${name} не задан — ${consequence}`);
+  if (!/^[1-9][0-9]*$/.test(raw.trim())) throw new Error(`${name} непригоден («${raw}») — ${consequence}`);
+  return Number(raw.trim());
 }
 
 export function loadWebConfig(env: EnvSource = process.env): WebConfig {
@@ -26,5 +39,10 @@ export function loadWebConfig(env: EnvSource = process.env): WebConfig {
   if (apiInternalUrl === undefined || apiInternalUrl.trim() === '') {
     throw new Error('API_INTERNAL_URL не задан — маршруты /c/{card_id} не могут обратиться к api');
   }
-  return { apiInternalUrl };
+  return {
+    apiInternalUrl,
+    subscriptionPriceMinor: requirePositiveInt(env, 'N4_SUBSCRIPTION_PRICE_MINOR', 'экран Pro показал бы цену, которой нет'),
+    scanLimitFree: requirePositiveInt(env, 'N4_SCAN_LIMIT_USER', 'экран Pro не смог бы назвать бесплатный путь'),
+    scanLimitPro: requirePositiveInt(env, 'N4_SCAN_LIMIT_PRO', 'экран Pro не смог бы назвать, что даёт подписка'),
+  };
 }
