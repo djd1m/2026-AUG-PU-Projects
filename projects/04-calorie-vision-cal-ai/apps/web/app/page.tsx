@@ -152,6 +152,15 @@ export default function CameraFirstScreen() {
 
   return (
     <main className="screen">
+      {/* Переход в дневник, кабинет и настройки — С ГЛАВНОГО экрана (продуктовое задание:
+          кабинет партнёра и владельца доступны из приложения). Это ссылки, не формы и не
+          `modes__item` — структурный тест главной (`web-shell.test.tsx`) считает режимы и
+          запрещает формы, и то и другое остаётся как было. */}
+      <nav className="topbar" aria-label="разделы">
+        <a href="/diary">дневник</a>
+        <a href="/cabinet">кабинет</a>
+        <a href="/settings">настройки</a>
+      </nav>
       <section className="viewfinder" aria-label="видоискатель">
         <video ref={videoRef} className="viewfinder__video" autoPlay playsInline muted />
         <canvas ref={canvasRef} className="viewfinder__canvas" aria-hidden="true" hidden />

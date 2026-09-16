@@ -15,6 +15,11 @@ export default function SettingsPage() {
       <div className="settings__section">
         <TelegramLoginButton botDeepLink="https://t.me/tarelka_bot" />
       </div>
+      <div className="settings__section">
+        <a className="btn btn--ghost btn--wide" href="/cabinet">
+          Кабинет партнёра и владельца
+        </a>
+      </div>
       <DeleteDataScreen />
     </main>
   );
