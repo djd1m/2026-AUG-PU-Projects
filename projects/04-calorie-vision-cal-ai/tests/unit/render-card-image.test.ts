@@ -53,3 +53,22 @@ describe('fitTextToWidth: оценённая ширина никогда не п
     expect(noFitEstimate).toBeGreaterThan(AVAILABLE_TEXT_WIDTH_PX); // подтверждает, что без правки инвариант был бы нарушен
   });
 });
+
+describe('OWN-013: подгонка текста завершается ВСЕГДА (латентный бесконечный цикл)', () => {
+  it.each([
+    ['ширина 1px', 1],
+    ['ширина 0px', 0],
+    ['отрицательная ширина', -5],
+  ])('%s — функция возвращается, результат непустой', (_label, width) => {
+    const fitted = fitTextToWidth('огурец, помидор и хлеб', width, DISH_NAME_START_FONT_PX, DISH_NAME_MIN_FONT_PX);
+    expect(fitted.text.length).toBeGreaterThanOrEqual(1);
+    expect(fitted.fontSizePx).toBe(DISH_NAME_MIN_FONT_PX);
+  });
+
+  it('ИСПЫТАНИЕ (guard-must-be-able-to-fail): прежняя формула на длине 2 даёт неподвижную точку', () => {
+    // Прежний шаг: slice(0, Math.max(1, len - 2)) + '…'. Для строки длины 2 он возвращает ТУ ЖЕ
+    // строку — цикл `while (length > 1 && слишком широко)` не мог завершиться никогда.
+    const previousStep = (candidate: string): string => `${candidate.slice(0, Math.max(1, candidate.length - 2))}…`;
+    expect(previousStep('х…')).toBe('х…');
+  });
+});

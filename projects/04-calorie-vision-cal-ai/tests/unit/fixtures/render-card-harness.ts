@@ -32,6 +32,10 @@ async function main(): Promise<void> {
   const buf = await renderCardImage(
     {
       dishName: 'Овсянка с ягодами и мёдом',
+    items: [
+      { label: 'овсянка', massG: 180, kcal: 320 },
+      { label: 'черника', massG: 60, kcal: 100 },
+    ],
       kcal: 420 as Kcal,
       proteinG: 12 as Macro,
       fatG: 8 as Macro,

@@ -7,14 +7,19 @@
 // ВТОРОЙ, поведенческий слой защиты — страж по типу (`share-card.ts`) защищает только
 // компилируемый код, не JSON-границу.
 
-import { sanitizeForCardText, type ShareCardRenderInput } from '@n4/shared';
+import { sanitizeForCardText, type ShareCardItem, type ShareCardRenderInput } from '@n4/shared';
 import type { Kcal, Macro } from '@n4/shared';
 
 const DISH_NAME_MAX_LEN = 60;
 const SOURCE_LABEL_MAX_LEN = 80;
 
+/** Сколько позиций состава помещается на карточке, не превращая её в таблицу. */
+export const MAX_CARD_ITEMS = 5;
+const ITEM_LABEL_MAX_LEN = 28;
+
 export interface BuildCardPayloadInput {
   readonly dishName: string;
+  readonly items: readonly ShareCardItem[];
   readonly kcal: Kcal;
   readonly proteinG: Macro;
   readonly fatG: Macro;
@@ -45,9 +50,18 @@ export function isBadgeRequired(tier: unknown): boolean {
  * вызывающего кода), только восемь перечисленных имён читаются ИЗ него.
  */
 export function buildCardPayload(input: BuildCardPayloadInput & Record<string, unknown>): ShareCardRenderInput {
-  const { dishName, kcal, proteinG, fatG, carbG, sourceLabel, photoUrl, tier } = input;
+  const { dishName, items, kcal, proteinG, fatG, carbG, sourceLabel, photoUrl, tier } = input;
   return {
     dishName: sanitizeForCardText(dishName, DISH_NAME_MAX_LEN),
+    // Тот же приём, что и для строк выше: каждая позиция чистится и укорачивается ЗДЕСЬ,
+    // на границе, а не в рендере — в SVG попадает уже безопасный текст. Лишние позиции
+    // отбрасываются, а не ужимаются шрифтом: шесть строк мелким кеглем читаются хуже, чем
+    // пять и «и ещё N» (рисует рендер по длине исходного списка).
+    items: (Array.isArray(items) ? items : []).slice(0, MAX_CARD_ITEMS).map((item) => ({
+      label: sanitizeForCardText(item.label, ITEM_LABEL_MAX_LEN),
+      massG: Math.max(0, Math.round(item.massG)),
+      kcal: Math.max(0, Math.round(item.kcal)),
+    })),
     kcal,
     proteinG,
     fatG,

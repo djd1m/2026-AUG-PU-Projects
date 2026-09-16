@@ -8,6 +8,10 @@ import type { Kcal, Macro } from '@n4/shared';
 
 const BASE_INPUT = {
   dishName: 'Овсянка с ягодами',
+  items: [
+    { label: 'овсянка', massG: 180, kcal: 320 },
+    { label: 'черника', massG: 60, kcal: 100 },
+  ],
   kcal: 420 as Kcal,
   proteinG: 24.5 as Macro,
   fatG: 12.0 as Macro,
@@ -43,10 +47,14 @@ describe('buildCardPayload: тариф читается только с серв
     expect(payload.badgeRendered).toBe(false);
   });
 
-  it('AC-1: собирает ровно восемь полей с числами и строкой источника из Snapshot', () => {
+  it('AC-1: собирает ровно девять полей с числами и строкой источника из Snapshot', () => {
     const payload = buildCardPayload({ ...BASE_INPUT, tier: undefined });
     expect(payload).toEqual({
       dishName: 'Овсянка с ягодами',
+      items: [
+        { label: 'овсянка', massG: 180, kcal: 320 },
+        { label: 'черника', massG: 60, kcal: 100 },
+      ],
       kcal: 420,
       proteinG: 24.5,
       fatG: 12.0,
@@ -56,7 +64,7 @@ describe('buildCardPayload: тариф читается только с серв
       photoUrl: 'https://minio.internal/photo.jpg',
     });
     expect(Object.keys(payload).sort()).toEqual(
-      ['badgeRendered', 'carbG', 'dishName', 'fatG', 'kcal', 'photoUrl', 'proteinG', 'sourceLabel'].sort(),
+      ['badgeRendered', 'carbG', 'dishName', 'fatG', 'items', 'kcal', 'photoUrl', 'proteinG', 'sourceLabel'].sort(),
     );
   });
 

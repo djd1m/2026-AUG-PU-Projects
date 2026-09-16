@@ -19,7 +19,7 @@ import { requireSession } from './scans.js';
  */
 export const OWNER_TELEGRAM_USER_IDS: readonly number[] = [];
 /** OWN-012: владелец входит и по почте (PWA — первый приоритет). Тот же закрытый список В КОДЕ. */
-export const OWNER_EMAILS: readonly string[] = [];
+export const OWNER_EMAILS: readonly string[] = ['jechkov.dmitry@yandex.ru'];
 
 export interface OwnerLists {
   readonly ownerTelegramUserIds?: readonly number[];

@@ -46,7 +46,7 @@ describe('контракт: computeCardSnapshotFromItems совместим с �
     expect(snapshot?.proteinTotal).toBe(24.5);
     expect(snapshot?.fatTotal).toBe(12.0);
     expect(snapshot?.carbTotal).toBe(38.2);
-    expect(snapshot?.sourceLabel).toBe('USDA FDC #123456 · 200 г');
+    expect(snapshot?.sourceLabel).toBe('USDA FDC · 200 г · 1 позиция');
   });
 
   it('позиция без совпадения (matched === undefined, как отдаёт NullMatchIngredientPort) не участвует — Snapshot пуст, а не с нулями', () => {
@@ -72,6 +72,6 @@ describe('контракт: computeCardSnapshotFromItems совместим с �
     // Рис: 150/100×130=195; Курица: 100/100×165=165; сумма 360.
     expect(snapshot?.kcalTotal).toBe(360);
     // "Верхняя" позиция для имени/источника — с БОЛЬШИМ kcal (Рис 195 > Курица 165).
-    expect(snapshot?.dishName).toBe('Рис');
+    expect(snapshot?.dishName).toBe('Рис и Курица');
   });
 });

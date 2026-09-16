@@ -26,7 +26,7 @@ import { describe, expect, it } from 'vitest';
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const FIELD_SET_FILE = path.join(ROOT, 'packages/shared/src/domain/share-card.ts');
 const INTERFACE_NAME = 'ShareCardRenderInput';
-const REFERENCE_FIELDS = ['dishName', 'kcal', 'proteinG', 'fatG', 'carbG', 'sourceLabel', 'badgeRendered', 'photoUrl'];
+const REFERENCE_FIELDS = ['dishName', 'items', 'kcal', 'proteinG', 'fatG', 'carbG', 'sourceLabel', 'badgeRendered', 'photoUrl'];
 
 /**
  * Извлекает имена ВСЕХ свойств интерфейса `interfaceName` через AST компилятора TypeScript —

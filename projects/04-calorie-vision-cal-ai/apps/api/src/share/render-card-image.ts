@@ -1,47 +1,109 @@
 // `RenderCardImage` (02_pseudocode.md) — композиция фото + SVG-оверлей в JPEG 1080×1920
-// через `sharp` (уже зависимость проекта, `03_architecture.md` — второго рендерера не
-// заводится). Единственный вход — `ShareCardRenderInput` (восемь полей).
+// через `sharp` (уже зависимость проекта, `03_architecture.md` — второго рендерера не заводится).
 //
-// Геометрия читается из этого файла тестом на непересечение бейджа и плиток чисел
-// (`AC-share-card-and-growth-events-4/5`, «бейдж ≤8% высоты и не пересекает плитки»).
+// ПЕРЕРАБОТКА ОБЛИКА (OWN-013, 16.09.2026). Прежняя карточка: фото в верхних 70%, чёрный блок
+// снизу, бейдж — белая непрозрачная плашка в правом верхнем углу. Владелец на живой карточке:
+// «бейдж смотрится ОЧЕНЬ убого». Разобрано роем, четыре находки легли в основу новой раскладки:
+//
+//   1. БЕЗОПАСНАЯ ЗОНА Stories. Верхние и нижние ~250 px холста 1080×1920 перекрыты интерфейсом
+//      Instagram/Telegram (аватар, полоса прогресса, поле ответа). Прежний бейдж стоял на y = 24 —
+//      то есть был НЕ ВИДЕН в сторис вообще, ради чего и существовал. Весь читаемый слой теперь
+//      живёт внутри [SAFE_TOP, SAFE_BOTTOM].
+//   2. ФОТО ВО ВЕСЬ КАДР + НАПРАВЛЕННЫЙ ЗАТЕМНИТЕЛЬ. Тёмная плашка на треть карточки — приём
+//      2015 года; современная практика overlay-карточек — градиент, затемняющий РОВНО ту зону,
+//      где лежит текст.
+//   3. СТЕКЛО, А НЕ ПЛАШКА. Бейдж — матовое стекло: подложка делается РАЗМЫТИЕМ САМОГО ФОТО под
+//      ней (`sharp.blur`), сверху полупрозрачная заливка и тонкая светлая обводка. В SVG этого
+//      не сделать (`backdrop-filter` librsvg не знает), поэтому стекло собирается композицией
+//      слоёв ДО оверлея — см. `frostedPillLayers`.
+//   4. ИЕРАРХИЯ «ЧИСЛО-ГЕРОЙ». Первым читается ккал, затем состав блюда, затем макросы, и
+//      самым мелким — строка источника («мелкий шрифт доверия»).
+//
+// Инвариант бейджа из FR-3 (высота ≤ 8% холста, непересечение с числами) сохранён и по-прежнему
+// проверяется тестом по геометрии — он стал строже: бейдж теперь 4% вместо 8%.
 
-import type { ShareCardRenderInput } from '@n4/shared';
+import type { ShareCardItem, ShareCardRenderInput } from '@n4/shared';
 import { escapeSvgText } from '@n4/shared';
 
 export const CARD_WIDTH = 1080;
 export const CARD_HEIGHT = 1920;
-/** Верхние ~70% холста — фото (шаг 1 `RenderCardImage`). */
-export const PHOTO_HEIGHT = Math.round(CARD_HEIGHT * 0.7);
-/** 1920 × 0,08 = 153,6; округление ВНИЗ — превышение недопустимо ни на пиксель (FR-3). */
-export const BADGE_HEIGHT = Math.floor(CARD_HEIGHT * 0.08);
-const BADGE_MARGIN = 24;
-const BADGE_WIDTH = 340;
 
-const TILE_TOP = PHOTO_HEIGHT + 260;
-const TILE_HEIGHT = 140;
-const TILE_GAP = 16;
-const TILE_WIDTH = Math.floor((CARD_WIDTH - 2 * 40 - 3 * TILE_GAP) / 4);
-const SIDE_MARGIN = 40;
-/** Строка источника — сразу ПОД плитками с фиксированным малым зазором, а не «плитка + 180».
- *  ПРАВКА ПОСЛЕ РЕВЬЮ (RV-share-card-and-growth-events-02): прежняя формула `TILE_TOP + 140 +
- *  180 = 1924` при `CARD_HEIGHT = 1920` — базовая линия ниже холста, текст обрезан снизу. */
-const SOURCE_LABEL_GAP_BELOW_TILES = 40;
-export const SOURCE_LABEL_Y = TILE_TOP + TILE_HEIGHT + SOURCE_LABEL_GAP_BELOW_TILES;
+/** Полоса интерфейса сторис сверху и снизу: читаемый слой в неё не заходит. */
+export const SAFE_TOP = 250;
+export const SAFE_BOTTOM = CARD_HEIGHT - 250;
+
+/** Фото — на ВЕСЬ холст. Константа сохранена: на неё ссылаются тесты геометрии. */
+export const PHOTO_HEIGHT = CARD_HEIGHT;
+
+const SIDE_MARGIN = 64;
+export const AVAILABLE_TEXT_WIDTH_PX = CARD_WIDTH - 2 * SIDE_MARGIN;
+
+/** 1920 × 0,08 = 153,6 — верхняя граница FR-3. Фактическая высота вдвое меньше. */
+export const BADGE_MAX_HEIGHT = Math.floor(CARD_HEIGHT * 0.08);
+export const BADGE_HEIGHT = 88;
+const BADGE_ICON_SIZE = 46;
+const BADGE_PADDING_X = 28;
+const BADGE_GAP = 14;
+const BADGE_TEXT = 'Тарелка';
+const BADGE_TEXT_FONT_PX = 38;
+
+/** Текстовый блок снизу: состав → герой → макросы → источник. */
+export const SOURCE_LABEL_Y = SAFE_BOTTOM - 8;
+const MACRO_CHIP_HEIGHT = 92;
+const MACRO_CHIP_GAP = 14;
+const MACRO_ROW_Y = SOURCE_LABEL_Y - MACRO_CHIP_HEIGHT - 46;
+const HERO_BASELINE_Y = MACRO_ROW_Y - 42;
+const HERO_FONT_PX = 132;
+const ITEM_LINE_HEIGHT = 52;
+const ITEM_FONT_PX = 34;
+const DISH_NAME_FONT_PX = 58;
+
+export const SOURCE_LABEL_MIN_FONT_PX = 16;
+export const SOURCE_LABEL_START_FONT_PX = 26;
+export const DISH_NAME_MIN_FONT_PX = 32;
+export const DISH_NAME_START_FONT_PX = DISH_NAME_FONT_PX;
+
+const INK = '#F6EEDF';
+const MUTED = '#B9B0A2';
+const ACCENT = '#FFC531';
+
+export interface Rect {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
 
 export interface CardGeometry {
-  readonly badgeRect: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
-  readonly tileRects: ReadonlyArray<{ readonly x: number; readonly y: number; readonly width: number; readonly height: number }>;
+  readonly badgeRect: Rect;
+  /** Чипы макронутриентов — то, что прежде было «плитками чисел». */
+  readonly tileRects: readonly Rect[];
+  readonly heroBaselineY: number;
+  readonly sourceLabelY: number;
 }
 
-/** Бейдж — в углу зоны фото (y от 0), плитки чисел — НИЖЕ фото: диапазоны Y не пересекаются
- *  геометрически по построению, а не «на глаз» (`04_refinement.md`, «Стражи…»). */
+/** Ширина бейджа считается по тексту: пилюля обнимает содержимое, а не растянута на глазок. */
+function badgeWidth(): number {
+  return BADGE_PADDING_X * 2 + BADGE_ICON_SIZE + BADGE_GAP + Math.ceil(estimateTextWidthPx(BADGE_TEXT, BADGE_TEXT_FONT_PX));
+}
+
+/**
+ * Бейдж — В БЕЗОПАСНОЙ ЗОНЕ сверху слева (над фото), числа — внизу: диапазоны Y не пересекаются
+ * по построению, а не «на глаз» (`04_refinement.md`, «Стражи…»).
+ */
 export function computeCardGeometry(): CardGeometry {
-  const badgeRect = { x: CARD_WIDTH - BADGE_MARGIN - BADGE_WIDTH, y: BADGE_MARGIN, width: BADGE_WIDTH, height: BADGE_HEIGHT };
-  const tileRects = [0, 1, 2, 3].map((i) => ({ x: 40 + i * (TILE_WIDTH + TILE_GAP), y: TILE_TOP, width: TILE_WIDTH, height: TILE_HEIGHT }));
-  return { badgeRect, tileRects };
+  const badgeRect: Rect = { x: SIDE_MARGIN, y: SAFE_TOP + 18, width: badgeWidth(), height: BADGE_HEIGHT };
+  const chipWidth = Math.floor((CARD_WIDTH - 2 * SIDE_MARGIN - 2 * MACRO_CHIP_GAP) / 3);
+  const tileRects: Rect[] = [0, 1, 2].map((i) => ({
+    x: SIDE_MARGIN + i * (chipWidth + MACRO_CHIP_GAP),
+    y: MACRO_ROW_Y,
+    width: chipWidth,
+    height: MACRO_CHIP_HEIGHT,
+  }));
+  return { badgeRect, tileRects, heroBaselineY: HERO_BASELINE_Y, sourceLabelY: SOURCE_LABEL_Y };
 }
 
-function rectsOverlap(a: { x: number; y: number; width: number; height: number }, b: { x: number; y: number; width: number; height: number }): boolean {
+function rectsOverlap(a: Rect, b: Rect): boolean {
   return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 }
 
@@ -51,20 +113,11 @@ export function badgeOverlapsAnyTile(geometry: CardGeometry): boolean {
 }
 
 /**
- * Подгонка текста под ширину холста (RV-share-card-and-growth-events-02). `sharp`/`librsvg` не
- * даёт измерить реальную ширину текста ДО рендера (нет canvas/font-metrics библиотеки — «НОЛЬ
- * новых пакетов», `03_architecture.md`), поэтому ширина ОЦЕНИВАЕТСЯ консервативным (заведомо не
- * заниженным) средним коэффициентом ширины символа для жирного шрифта. Оценка ЗАВЕДОМО ШИРЕ, чем
- * у большинства реальных символов (в т.ч. кириллицы) — переоценка здесь безопасна (текст выйдет
- * МЕЛЬЧЕ/короче необходимого, а не вылезет за холст), недооценка была бы дефектом.
- *
- * Стратегия: (1) уменьшать размер шрифта до нижней границы; (2) если и на нижней границе строка
- * не влезает — обрезать по символам с многоточием, пока не влезет. Перенос на вторую строку не
- * делается — единственная строка проще проверить геометрически и достаточна: `sanitizeForCardText`
- * УЖЕ ограничивает исходную длину (60/80 символов), это последний рубеж на случай, что даже
- * ограниченная по символам строка визуально шире холста при максимальном размере шрифта.
+ * Оценка ширины строки без метрик шрифта (у проекта НОЛЬ зависимостей ради этого): средняя
+ * ширина глифа как доля кегля. Намеренно завышена — лучше уменьшить лишний раз, чем выпустить
+ * текст за край.
  */
-const AVG_CHAR_WIDTH_FACTOR = 0.62;
+const AVG_CHAR_WIDTH_FACTOR = 0.58;
 
 export function estimateTextWidthPx(text: string, fontSizePx: number): number {
   return text.length * fontSizePx * AVG_CHAR_WIDTH_FACTOR;
@@ -82,29 +135,77 @@ export function fitTextToWidth(text: string, maxWidthPx: number, startFontSizePx
   }
   let candidate = text;
   while (candidate.length > 1 && estimateTextWidthPx(candidate, fontSizePx) > maxWidthPx) {
-    // Обрезаем по одному символу с конца, заменяя многоточием (или добавляя его при первой
-    // обрезке) — оценка пересчитывается на каждом шаге, а не один раз.
-    const withoutEllipsis = candidate.endsWith('…') ? candidate.slice(0, -1) : candidate;
-    candidate = `${withoutEllipsis.slice(0, Math.max(0, withoutEllipsis.length - 1))}…`;
+    // На длине 2 отрезать «два символа и добавить многоточие» НЕЛЬЗЯ: `slice(0, max(1, 0))`
+    // возвращает тот же один символ, к нему снова приписывается «…», и строка становится
+    // НЕПОДВИЖНОЙ ТОЧКОЙ — цикл крутится вечно. Это латентный дефект прежней редакции: он не
+    // проявлялся, пока подобранный кегль успевал уложить строку раньше, чем она доходила до
+    // длины 2, и вскрылся при новой ширине колонки (OWN-013). Сравнение с предыдущим значением
+    // оставлено ВТОРЫМ рубежом: оно делает завершение свойством кода, а не расчёта границ.
+    const next = candidate.length <= 2 ? candidate.slice(0, 1) : `${candidate.slice(0, candidate.length - 2)}…`;
+    if (next === candidate) break;
+    candidate = next;
   }
   return { text: candidate, fontSizePx };
 }
 
-export const DISH_NAME_START_FONT_PX = 48;
-export const DISH_NAME_MIN_FONT_PX = 28;
-export const SOURCE_LABEL_START_FONT_PX = 24;
-export const SOURCE_LABEL_MIN_FONT_PX = 16;
-export const AVAILABLE_TEXT_WIDTH_PX = CARD_WIDTH - 2 * SIDE_MARGIN;
-
 // Шрифты — ТЕ ЖЕ два семейства, что у `web` (`apps/web/app/globals.css`): 'Unbounded' на
-// заголовке/числах, 'Onest' на обычном тексте. `font-family` в SVG раньше не указывался
-// вовсе — на стенде `api` в образе `node:*-slim` нет НИ ОДНОГО шрифта и `fontconfig` не
-// установлен (`fc-list` в контейнере → 0 строк), рисовать текст librsvg было нечем, и он
-// молча пропускался (пустой глиф, а не ошибка). Дублирование строки — не опечатка: SVG не
-// поддерживает CSS custom properties (`var(--font-display)`), и `--font-display` из
-// `globals.css` здесь физически недоступен — этот файл рендерится СЕРВЕРОМ, вне DOM.
+// заголовке/числах, 'Onest' на обычном тексте. `font-family` в SVG раньше не указывался вовсе —
+// на стенде `api` в образе `node:*-slim` нет НИ ОДНОГО шрифта и `fontconfig` не установлен
+// (`fc-list` в контейнере → 0 строк), рисовать текст librsvg было нечем, и он молча пропускался
+// (пустой глиф, а не ошибка). Дублирование строки — не опечатка: SVG не поддерживает CSS custom
+// properties (`var(--font-display)`), и `--font-display` из `globals.css` здесь физически
+// недоступен — этот файл рендерится СЕРВЕРОМ, вне DOM.
 const FONT_FAMILY_DISPLAY = "'Unbounded', 'Onest', sans-serif";
 const FONT_FAMILY_TEXT = "'Onest', sans-serif";
+
+/** Знак «Тарелка»: тарелка с бликом. Своя геометрия, без внешних ресурсов. */
+function badgeIconMarkup(x: number, y: number, size: number): string {
+  const cx = x + size / 2;
+  const cy = y + size / 2;
+  const r = size / 2;
+  return `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${INK}" stroke-width="3" opacity="0.9" />
+    <circle cx="${cx}" cy="${cy}" r="${(r * 0.52).toFixed(1)}" fill="${ACCENT}" />
+    <path d="M ${(cx - r * 0.62).toFixed(1)} ${(cy - r * 0.18).toFixed(1)} a ${(r * 0.64).toFixed(1)} ${(r * 0.64).toFixed(1)} 0 0 1 ${(r * 0.52).toFixed(1)} ${(-r * 0.5).toFixed(1)}"
+          fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round" opacity="0.65" />
+  `;
+}
+
+function badgeMarkup(rect: Rect): string {
+  const iconX = rect.x + BADGE_PADDING_X;
+  const iconY = rect.y + (rect.height - BADGE_ICON_SIZE) / 2;
+  const textX = iconX + BADGE_ICON_SIZE + BADGE_GAP;
+  const textY = rect.y + rect.height / 2 + BADGE_TEXT_FONT_PX * 0.35;
+  // Заливка и обводка — поверх УЖЕ размытого участка фото (`frostedPillLayers`): вместе это и
+  // есть матовое стекло. Светлая линия по верхней кромке — «пойманный свет», приём, который
+  // отличает стекло от полупрозрачного прямоугольника.
+  return `
+    <rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" rx="${rect.height / 2}"
+          fill="#15101C" fill-opacity="0.38" stroke="#FFFFFF" stroke-opacity="0.34" stroke-width="1.5" />
+    <path d="M ${rect.x + rect.height / 2} ${rect.y + 1.5} H ${rect.x + rect.width - rect.height / 2}"
+          stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="1.5" stroke-linecap="round" fill="none" />
+    ${badgeIconMarkup(iconX, iconY, BADGE_ICON_SIZE)}
+    <text x="${textX}" y="${textY}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${BADGE_TEXT_FONT_PX}"
+          font-weight="700" letter-spacing="0.5" fill="${INK}">${escapeSvgText(BADGE_TEXT)}</text>
+  `;
+}
+
+/** Состав блюда: «название · масса» слева, ккал справа. Не больше того, что дал `buildCardPayload`. */
+function itemsMarkup(items: readonly ShareCardItem[], topY: number): string {
+  return items
+    .map((item, i) => {
+      const y = topY + i * ITEM_LINE_HEIGHT;
+      const left = fitTextToWidth(`${item.label} · ${item.massG} г`, AVAILABLE_TEXT_WIDTH_PX - 160, ITEM_FONT_PX, 24);
+      return `
+        <circle cx="${SIDE_MARGIN + 6}" cy="${y - 10}" r="5" fill="${ACCENT}" opacity="0.85" />
+        <text x="${SIDE_MARGIN + 28}" y="${y}" font-family="${FONT_FAMILY_TEXT}" font-size="${left.fontSizePx}" fill="${INK}"
+              stroke="#15101C" stroke-opacity="0.32" stroke-width="5" paint-order="stroke" stroke-linejoin="round">${escapeSvgText(left.text)}</text>
+        <text x="${CARD_WIDTH - SIDE_MARGIN}" y="${y}" text-anchor="end" font-family="${FONT_FAMILY_DISPLAY}" font-size="${ITEM_FONT_PX}" font-weight="600" fill="${INK}"
+              stroke="#15101C" stroke-opacity="0.32" stroke-width="5" paint-order="stroke" stroke-linejoin="round" opacity="0.85">${escapeSvgText(String(item.kcal))}</text>
+      `;
+    })
+    .join('\n');
+}
 
 function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): string {
   // Подгонка — на СЫРОМ тексте (по видимым символам), экранирование — ПОСЛЕ: у `&` при
@@ -115,41 +216,99 @@ function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): s
   const dishName = escapeSvgText(fittedDishName.text);
   const sourceLabel = escapeSvgText(fittedSourceLabel.text);
   const { tileRects, badgeRect } = geometry;
-  const numbers: ReadonlyArray<{ readonly label: string; readonly value: string }> = [
-    { label: 'ккал', value: String(input.kcal) },
+
+  const macros: readonly { readonly label: string; readonly value: string }[] = [
     { label: 'белки', value: `${input.proteinG} г` },
     { label: 'жиры', value: `${input.fatG} г` },
     { label: 'углеводы', value: `${input.carbG} г` },
   ];
 
-  const tileMarkup = tileRects
+  const chipsMarkup = tileRects
     .map((rect, i) => {
-      const num = numbers[i]!;
+      const macro = macros[i]!;
       const cx = rect.x + rect.width / 2;
       return `
-        <rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" rx="16" fill="#1c1c22" />
-        <text x="${cx}" y="${rect.y + 55}" text-anchor="middle" font-family="${FONT_FAMILY_DISPLAY}" font-size="34" font-weight="700" fill="#ffffff">${escapeSvgText(num.value)}</text>
-        <text x="${cx}" y="${rect.y + 95}" text-anchor="middle" font-family="${FONT_FAMILY_TEXT}" font-size="20" fill="#9a9aa5">${escapeSvgText(num.label)}</text>
+        <rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" rx="26"
+              fill="#FFFFFF" fill-opacity="0.09" stroke="#FFFFFF" stroke-opacity="0.15" stroke-width="1" />
+        <text x="${cx}" y="${rect.y + 40}" text-anchor="middle" font-family="${FONT_FAMILY_DISPLAY}" font-size="32" font-weight="700" fill="${INK}">${escapeSvgText(macro.value)}</text>
+        <text x="${cx}" y="${rect.y + 72}" text-anchor="middle" font-family="${FONT_FAMILY_TEXT}" font-size="23" fill="${MUTED}">${escapeSvgText(macro.label)}</text>
       `;
     })
     .join('\n');
 
-  const badgeMarkup = input.badgeRendered
-    ? `<rect x="${badgeRect.x}" y="${badgeRect.y}" width="${badgeRect.width}" height="${badgeRect.height}" rx="12" fill="#ffffffcc" />
-       <text x="${badgeRect.x + badgeRect.width / 2}" y="${badgeRect.y + badgeRect.height / 2 + 10}" text-anchor="middle" font-family="${FONT_FAMILY_TEXT}" font-size="28" font-weight="600" fill="#101014">распознано в «Тарелке»</text>`
-    : '';
+  // Состав рисуется ВВЕРХ от названия блюда: сколько позиций пришло, столько строк, и блок
+  // растёт к центру карточки, не наезжая на героя снизу.
+  const itemsTopY = geometry.heroBaselineY - HERO_FONT_PX - 34;
+  const itemsBlockTop = itemsTopY - (input.items.length - 1) * ITEM_LINE_HEIGHT;
+  const dishNameY = itemsBlockTop - 44;
+  const scrimTop = Math.max(SAFE_TOP, dishNameY - DISH_NAME_FONT_PX - 420);
 
   return `<svg width="${CARD_WIDTH}" height="${CARD_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-    <text x="${SIDE_MARGIN}" y="${PHOTO_HEIGHT + 60}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${fittedDishName.fontSizePx}" font-weight="800" fill="#ffffff">${dishName}</text>
-    <text x="${SIDE_MARGIN}" y="${SOURCE_LABEL_Y}" font-family="${FONT_FAMILY_TEXT}" font-size="${fittedSourceLabel.fontSizePx}" fill="#9a9aa5">${sourceLabel}</text>
-    ${tileMarkup}
-    ${badgeMarkup}
+    <defs>
+      <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#15101C" stop-opacity="0" />
+        <stop offset="0.28" stop-color="#15101C" stop-opacity="0.62" />
+        <stop offset="0.52" stop-color="#15101C" stop-opacity="0.90" />
+        <stop offset="1" stop-color="#15101C" stop-opacity="0.985" />
+      </linearGradient>
+      <linearGradient id="topScrim" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#15101C" stop-opacity="0.45" />
+        <stop offset="1" stop-color="#15101C" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+
+    <rect x="0" y="0" width="${CARD_WIDTH}" height="${SAFE_TOP + 180}" fill="url(#topScrim)" />
+    <rect x="0" y="${scrimTop}" width="${CARD_WIDTH}" height="${CARD_HEIGHT - scrimTop}" fill="url(#scrim)" />
+
+    ${badgeMarkup(badgeRect)}
+
+    <text x="${SIDE_MARGIN}" y="${dishNameY}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${fittedDishName.fontSizePx}" font-weight="800"
+          fill="${INK}" stroke="#15101C" stroke-opacity="0.38" stroke-width="7" paint-order="stroke" stroke-linejoin="round">${dishName}</text>
+    ${itemsMarkup(input.items, itemsBlockTop)}
+
+    <text x="${SIDE_MARGIN}" y="${geometry.heroBaselineY}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${HERO_FONT_PX}" font-weight="800" fill="${INK}">${escapeSvgText(String(input.kcal))}</text>
+    <text x="${SIDE_MARGIN + estimateTextWidthPx(String(input.kcal), HERO_FONT_PX) + 30}" y="${geometry.heroBaselineY - 14}" font-family="${FONT_FAMILY_TEXT}" font-size="42" font-weight="500" fill="${ACCENT}">ккал</text>
+
+    ${chipsMarkup}
+
+    <text x="${SIDE_MARGIN}" y="${geometry.sourceLabelY}" font-family="${FONT_FAMILY_TEXT}" font-size="${fittedSourceLabel.fontSizePx}" fill="${MUTED}" opacity="0.85">${sourceLabel}</text>
   </svg>`;
 }
 
 export interface RenderCardImageDeps {
   /** Внедряется тестами: `fetch` реальной presigned-ссылки — сеть, но локальная (MinIO той же сети compose). */
   readonly fetchImpl?: typeof fetch;
+}
+
+/**
+ * Матовое стекло под бейджем: участок УЖЕ готового фото вырезается, размывается и кладётся
+ * обратно через маску со скруглением. В SVG это невозможно (`backdrop-filter` librsvg не
+ * поддерживает), а без размытия пилюля выглядит наклейкой, а не стеклом.
+ */
+async function frostedPillLayers(
+  sharpModule: typeof import('sharp'),
+  photo: Buffer,
+  rect: Rect,
+): Promise<{ readonly input: Buffer; readonly top: number; readonly left: number }[]> {
+  const region = {
+    left: Math.max(0, rect.x - 2),
+    top: Math.max(0, rect.y - 2),
+    width: Math.min(CARD_WIDTH, rect.width + 4),
+    height: Math.min(CARD_HEIGHT, rect.height + 4),
+  };
+  const mask = Buffer.from(
+    `<svg width="${region.width}" height="${region.height}" xmlns="http://www.w3.org/2000/svg">
+       <rect x="2" y="2" width="${rect.width}" height="${rect.height}" rx="${rect.height / 2}" fill="#fff" />
+     </svg>`,
+  );
+  const frosted = await sharpModule(photo)
+    .extract(region)
+    .blur(18)
+    .modulate({ saturation: 1.15, brightness: 1.04 })
+    .composite([{ input: mask, blend: 'dest-in' }])
+    .png()
+    .toBuffer();
+  return [{ input: frosted, top: region.top, left: region.left }];
 }
 
 export async function renderCardImage(input: ShareCardRenderInput, deps: RenderCardImageDeps = {}): Promise<Buffer> {
@@ -163,18 +322,16 @@ export async function renderCardImage(input: ShareCardRenderInput, deps: RenderC
   const geometry = computeCardGeometry();
   const svg = buildSvgOverlay(input, geometry);
 
-  const base = await sharpModule({ create: { width: CARD_WIDTH, height: CARD_HEIGHT, channels: 3, background: '#101014' } })
-    .jpeg()
-    .toBuffer();
-  const photoResized = await sharpModule(photoBuffer)
-    .resize(CARD_WIDTH, PHOTO_HEIGHT, { fit: 'cover' })
+  // Фото — на ВЕСЬ холст (`cover`): карточка перестала быть «фото сверху, плашка снизу».
+  const photoFull = await sharpModule(photoBuffer)
+    .resize(CARD_WIDTH, CARD_HEIGHT, { fit: 'cover', position: 'attention' })
+    .png()
     .toBuffer();
 
-  return sharpModule(base)
-    .composite([
-      { input: photoResized, top: 0, left: 0 },
-      { input: Buffer.from(svg), top: 0, left: 0 },
-    ])
-    .jpeg({ quality: 88 })
+  const glass = input.badgeRendered ? await frostedPillLayers(sharpModule, photoFull, geometry.badgeRect) : [];
+
+  return sharpModule(photoFull)
+    .composite([...glass, { input: Buffer.from(svg), top: 0, left: 0 }])
+    .jpeg({ quality: 90, chromaSubsampling: '4:4:4' })
     .toBuffer();
 }

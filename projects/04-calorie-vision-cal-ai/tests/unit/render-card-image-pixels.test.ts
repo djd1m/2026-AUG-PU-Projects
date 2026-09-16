@@ -34,7 +34,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { afterEach, describe, expect, it } from 'vitest';
-import { CARD_WIDTH, PHOTO_HEIGHT, computeCardGeometry } from '../../apps/api/src/share/render-card-image.js';
+import { CARD_WIDTH, computeCardGeometry } from '../../apps/api/src/share/render-card-image.js';
 
 const PROJECT_ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const HARNESS_SCRIPT = join(PROJECT_ROOT, 'tests/unit/fixtures/render-card-harness.ts');
@@ -105,7 +105,8 @@ describe('карточка шеринга: на растре ЕСТЬ видим
     async () => {
       const { path } = renderAndSave(true);
       const geometry = computeCardGeometry();
-      const dishNameRegion = { left: 40, top: PHOTO_HEIGHT + 10, width: CARD_WIDTH - 80, height: 60 };
+      // Раскладка OWN-013: фото во весь кадр, текстовый блок — над чипами макросов.
+      const dishNameRegion = { left: 60, top: geometry.heroBaselineY - 120, width: CARD_WIDTH - 120, height: 110 };
       const tileRegion = geometry.tileRects[0]!;
 
       const dishRatio = await brightRatioInRegion(path, dishNameRegion);
@@ -122,7 +123,8 @@ describe('карточка шеринга: на растре ЕСТЬ видим
     async () => {
       const { path } = renderAndSave(false);
       const geometry = computeCardGeometry();
-      const dishNameRegion = { left: 40, top: PHOTO_HEIGHT + 10, width: CARD_WIDTH - 80, height: 60 };
+      // Раскладка OWN-013: фото во весь кадр, текстовый блок — над чипами макросов.
+      const dishNameRegion = { left: 60, top: geometry.heroBaselineY - 120, width: CARD_WIDTH - 120, height: 110 };
       const tileRegion = geometry.tileRects[0]!;
 
       const dishRatio = await brightRatioInRegion(path, dishNameRegion);

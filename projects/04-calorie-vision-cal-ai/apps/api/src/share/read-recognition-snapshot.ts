@@ -70,6 +70,8 @@ interface RawRecognitionItem {
 
 export interface RecognitionCardSnapshot {
   readonly dishName: string;
+  /** Состав блюда — ВСЕ сопоставленные позиции, в порядке убывания калорийности (OWN-013). */
+  readonly items: readonly { readonly label: string; readonly massG: number; readonly kcal: number }[];
   readonly kcalTotal: Kcal;
   readonly proteinTotal: Macro;
   readonly fatTotal: Macro;
@@ -135,13 +137,34 @@ function computeItemNutrition(item: RawRecognitionItem): ItemNutrition | null {
   return nutritionFromSnapshot(item.source_snapshot ?? item.sourceSnapshot, massG);
 }
 
-function formatSourceLabel(snapshot: RawSourceSnapshot | null | undefined, portionG: number): string {
+function formatSourceLabel(snapshot: RawSourceSnapshot | null | undefined, totalMassG: number, itemCount: number): string {
   if (snapshot === null || snapshot === undefined) return '';
   const source = snapshot.source ?? '';
-  const sourceId = snapshot.source_id ?? snapshot.sourceId ?? '';
   const displayName = SOURCE_DISPLAY_NAME[source] ?? source;
-  if (displayName === '' || sourceId === '') return '';
-  return `${displayName} #${sourceId} · ${portionG} г`;
+  if (displayName === '') return '';
+  return `${displayName} · ${totalMassG} г · ${pluralItems(itemCount)}`;
+}
+
+/** «1 позиция» / «3 позиции» / «5 позиций» — иначе строка читается как машинный вывод. */
+function pluralItems(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return `${n} позиция`;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return `${n} позиции`;
+  return `${n} позиций`;
+}
+
+/**
+ * Имя блюда из состава: до трёх названий, последнее через «и». Больше трёх — «и ещё N»:
+ * заголовок из шести слов перестаёт быть заголовком.
+ */
+export function composeDishName(labels: readonly string[]): string {
+  const named = labels.map((l) => l.trim()).filter((l) => l !== '');
+  if (named.length === 0) return '';
+  if (named.length === 1) return named[0]!;
+  if (named.length === 2) return `${named[0]} и ${named[1]}`;
+  if (named.length === 3) return `${named[0]}, ${named[1]} и ${named[2]}`;
+  return `${named[0]}, ${named[1]} и ещё ${named.length - 2}`;
 }
 
 /**
@@ -170,12 +193,31 @@ export function computeCardSnapshotFromItems(items: readonly RawRecognitionItem[
     if (contribution.nutrition.kcal > top.nutrition.kcal) top = contribution;
   }
 
-  const dishName = top.item.label_ru ?? top.item.labelRu ?? '';
-  const topMassG = top.item.mass_g ?? top.item.massG ?? 0;
-  const sourceLabel = formatSourceLabel(top.item.source_snapshot ?? top.item.sourceSnapshot, topMassG);
+  // ИМЯ — ПО СОСТАВУ, а не по самой калорийной позиции (OWN-013). Прежнее имя бралось у `top`,
+  // и тарелка «огурец, помидор и хлеб» называлась на карточке «хлеб»: числа считались по трём
+  // позициям, имя описывало одну. Владелец увидел это на живой карточке 16.09.2026.
+  const dishName = composeDishName(contributions.map((c) => c.item.label_ru ?? c.item.labelRu ?? ''));
+  // СТРОКА ИСТОЧНИКА — ТОЖЕ ПРО ВСЁ БЛЮДО. Прежняя несла идентификатор записи и массу ОДНОЙ
+  // позиции («USDA FDC #172686 · 15 г») рядом с итогом по трём — читалось как «77 ккал в 15 г
+  // хлеба», то есть как неверное утверждение о еде. Идентификатор записи уходит с карточки:
+  // для одной позиции он проверяем, для блюда из трёх — бессмыслен; проверяемость сохраняется
+  // на экране результата, где у КАЖДОЙ позиции свой источник.
+  const totalMassG = contributions.reduce((sum, c) => sum + (c.item.mass_g ?? c.item.massG ?? 0), 0);
+  const sourceLabel = formatSourceLabel(top.item.source_snapshot ?? top.item.sourceSnapshot, totalMassG, contributions.length);
+
+  // Состав — по убыванию калорийности: первым идёт то, что определило имя блюда, и читатель
+  // видит, почему блюдо названо именно так.
+  const cardItems = [...contributions]
+    .sort((a, b) => b.nutrition.kcal - a.nutrition.kcal)
+    .map((c) => ({
+      label: c.item.label_ru ?? c.item.labelRu ?? '',
+      massG: c.item.mass_g ?? c.item.massG ?? 0,
+      kcal: c.nutrition.kcal,
+    }));
 
   return {
     dishName,
+    items: cardItems,
     kcalTotal: Math.round(total.kcal) as Kcal,
     proteinTotal: round1(total.protein) as Macro,
     fatTotal: round1(total.fat) as Macro,

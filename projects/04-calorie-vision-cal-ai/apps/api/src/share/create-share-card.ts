@@ -125,6 +125,7 @@ export async function createShareCard(deps: CreateShareCardDeps, input: CreateSh
 
   const payload = buildCardPayload({
     dishName: snapshot.dishName,
+    items: snapshot.items,
     kcal: snapshot.kcalTotal,
     proteinG: snapshot.proteinTotal,
     fatG: snapshot.fatTotal,
