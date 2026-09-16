@@ -48,7 +48,7 @@ afterAll(async () => {
 });
 
 describe('миграции', () => {
-  it('миграции создают четырнадцать таблиц канона и расширение pg_trgm', async () => {
+  it('миграции создают таблицы канона, пять таблиц подписки и расширение pg_trgm', async () => {
     const result = await runMigrations({ databaseUrl: scratchUrl });
     expect(result.applied).toContain('001_init.sql');
 
@@ -61,8 +61,14 @@ describe('миграции', () => {
       for (const table of CANON_TABLES) expect(names, table).toContain(table);
       // 14 сущностей канона плюс журнал самих миграций плюс `telegram_login_replay`
       // (миграция 004, consent-and-telegram-auth, RV-consent-and-telegram-auth-03 — история
-      // использованных подписей initData, не сущность канона) — и ничего сверх.
-      expect(names.sort()).toEqual([...CANON_TABLES, 'schema_migration', 'telegram_login_replay'].sort());
+      // использованных подписей initData, не сущность канона) плюс ПЯТЬ таблиц подписки
+      // (миграция 010) — и ничего сверх.
+      //
+      // Расширение канона §4 объявлено ПОПРАВКОЙ в `docs/decisions-owner.md`, а не внесено
+      // молча: список остаётся закрытым, и таблица, появившаяся без записи, по-прежнему
+      // красит этот тест. Ровно за этим он и написан.
+      const SUBSCRIPTION_TABLES = ['subscription', 'payment_intent', 'payment_event', 'payment', 'commission_entry'];
+      expect(names.sort()).toEqual([...CANON_TABLES, 'schema_migration', 'telegram_login_replay', ...SUBSCRIPTION_TABLES].sort());
 
       const extension = await client.query("SELECT 1 FROM pg_extension WHERE extname = 'pg_trgm'");
       expect(extension.rowCount).toBe(1);
