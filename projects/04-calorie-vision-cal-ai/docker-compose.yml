@@ -118,6 +118,14 @@ services:
       N4_COMMISSION_HOLD_DAYS: "${N4_COMMISSION_HOLD_DAYS:?окно возврата до выплаты комиссии не задано}"
       N4_SCAN_LIMIT_PRO: "${N4_SCAN_LIMIT_PRO:?потолок распознаваний подписчика не задан}"
       N4_PAYMENTS_MODE: "${N4_PAYMENTS_MODE:?режим платежей не задан — он определяет, берутся ли с людей настоящие деньги}"
+      # Реквизиты провайдера. Форма `:-` (пустое по умолчанию) здесь ЗАКОННА и это
+      # единственное исключение среди секретов: в режиме `fake` их нет и быть не должно, а в
+      # режиме `live` пустое значение валит СТАРТ — проверяет `assertPaymentsEnv`, а не
+      # compose. Форма `:?` сделала бы невозможным демонстрационный стенд без ИП.
+      N4_PAYMENTS_PROVIDER: "${N4_PAYMENTS_PROVIDER:-}"
+      YOOKASSA_SHOP_ID: "${YOOKASSA_SHOP_ID:-}"
+      YOOKASSA_SECRET_KEY: "${YOOKASSA_SECRET_KEY:-}"
+      YOOKASSA_TEST_MODE: "${YOOKASSA_TEST_MODE:-}"
       # ТРИ потолка. Отсутствие ЛЮБОГО обязано валить старт процесса (ADR-007): проверка
       # одной переменной зеленеет при отсутствующей второй, поэтому объявлены все три.
       N4_SCAN_LIMIT_USER: ${N4_SCAN_LIMIT_USER:?потолок на пользователя не задан — пустое значение не означает «без ограничений»}
@@ -307,6 +315,14 @@ services:
       N4_COMMISSION_HOLD_DAYS: "${N4_COMMISSION_HOLD_DAYS:?окно возврата до выплаты комиссии не задано}"
       N4_SCAN_LIMIT_PRO: "${N4_SCAN_LIMIT_PRO:?потолок распознаваний подписчика не задан}"
       N4_PAYMENTS_MODE: "${N4_PAYMENTS_MODE:?режим платежей не задан — он определяет, берутся ли с людей настоящие деньги}"
+      # Реквизиты провайдера. Форма `:-` (пустое по умолчанию) здесь ЗАКОННА и это
+      # единственное исключение среди секретов: в режиме `fake` их нет и быть не должно, а в
+      # режиме `live` пустое значение валит СТАРТ — проверяет `assertPaymentsEnv`, а не
+      # compose. Форма `:?` сделала бы невозможным демонстрационный стенд без ИП.
+      N4_PAYMENTS_PROVIDER: "${N4_PAYMENTS_PROVIDER:-}"
+      YOOKASSA_SHOP_ID: "${YOOKASSA_SHOP_ID:-}"
+      YOOKASSA_SECRET_KEY: "${YOOKASSA_SECRET_KEY:-}"
+      YOOKASSA_TEST_MODE: "${YOOKASSA_TEST_MODE:-}"
     networks: [private]
     depends_on:
       db: { condition: service_healthy }

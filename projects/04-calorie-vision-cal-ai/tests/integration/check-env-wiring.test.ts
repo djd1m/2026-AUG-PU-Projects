@@ -23,6 +23,12 @@ const API_VARIABLES = [
   'S3_ACCESS_KEY', 'S3_BUCKET', 'S3_ENDPOINT', 'S3_SECRET_KEY',
   // consent-and-telegram-auth: обязательная переменная сверх набора foundation.
   'TELEGRAM_BOT_TOKEN',
+  // subscription-and-commission: цена, период, окно возврата, потолок Pro, режим платежей и
+  // реквизиты провайдера. Последние четыре объявлены формой `:-` — в режиме `fake` их нет,
+  // а в `live` пустое значение валит старт (`assertPaymentsEnv`), не compose.
+  'N4_COMMISSION_HOLD_DAYS', 'N4_PAYMENTS_MODE', 'N4_PAYMENTS_PROVIDER', 'N4_SCAN_LIMIT_PRO',
+  'N4_SUBSCRIPTION_PERIOD_DAYS', 'N4_SUBSCRIPTION_PRICE_MINOR',
+  'YOOKASSA_SECRET_KEY', 'YOOKASSA_SHOP_ID', 'YOOKASSA_TEST_MODE',
 ];
 const RECOGNIZER_VARIABLES = [
   // OPENROUTER_API_KEY добавлена ТРЕТЬЕЙ реализацией поставщика (DEC-A-045/046):
@@ -40,7 +46,8 @@ function composeConfig(apiVariables: string[]): string {
     'services:',
     block('api', apiVariables),
     block('recognizer', RECOGNIZER_VARIABLES),
-    block('web', ['APP_ORIGIN', 'API_INTERNAL_URL']),
+    // web получил ЧИСЛА и надпись, но НИ ОДНОГО реквизита провайдера: деньги принимает api.
+    block('web', ['APP_ORIGIN', 'API_INTERNAL_URL', 'N4_PAYMENTS_MODE', 'N4_SCAN_LIMIT_PRO', 'N4_SCAN_LIMIT_USER', 'N4_SUBSCRIPTION_PRICE_MINOR']),
     '',
   ].join('\n');
 }
