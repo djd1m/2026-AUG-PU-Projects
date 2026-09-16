@@ -1,0 +1,162 @@
+// Кабинет владельца: `GET /api/v1/admin/overview`, `POST /api/v1/admin/payouts` (FR-CAB-2/3).
+//
+// ДОСТУП — по закрытому списку `telegram_user_id` В КОДЕ, не в окружении
+// (`fail-closed-defaults.md`, правило 3): вынесенный наружу список однажды приедет пустым, а
+// пустой список читается как «ограничений нет» ровно там, где он единственная защита.
+//
+// Чужому — `404`, а не `403`: `403` подтвердил бы, что кабинет существует, а перебор и есть
+// способ это выяснить (`security.md`).
+
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { DbPool } from '@n4/db';
+import { withTransaction } from '@n4/db';
+import { fail, ok, type Logger } from '@n4/shared';
+import { requireSession } from './scans.js';
+
+/**
+ * Владельцы продукта. Пусто ЗАКОННО и означает «кабинет закрыт всем» — это самое строгое
+ * состояние, а не самое разрешающее.
+ */
+export const OWNER_TELEGRAM_USER_IDS: readonly number[] = [];
+
+export interface AdminDeps {
+  readonly pool: DbPool;
+  readonly logger: Logger;
+  /** Подменяется тестом. В проде — список выше. */
+  readonly ownerTelegramUserIds?: readonly number[];
+}
+
+interface PayoutBody {
+  readonly partner_id?: unknown;
+  readonly amount_minor?: unknown;
+  readonly payout_key?: unknown;
+  readonly note?: unknown;
+}
+
+async function requireOwner(request: FastifyRequest, deps: AdminDeps): Promise<{ accountId: string } | null> {
+  const session = await requireSession(request, deps.pool);
+  if (session === null || session.accountId === null) return null;
+  const owners = deps.ownerTelegramUserIds ?? OWNER_TELEGRAM_USER_IDS;
+  const account = await deps.pool.query<{ telegram_user_id: string | null }>(
+    `SELECT telegram_user_id FROM account WHERE id = $1`,
+    [session.accountId],
+  );
+  const raw = account.rows[0]?.telegram_user_id;
+  if (raw === null || raw === undefined) return null;
+  const telegramUserId = Number(raw);
+  if (!Number.isSafeInteger(telegramUserId) || !owners.includes(telegramUserId)) return null;
+  return { accountId: session.accountId };
+}
+
+export function registerAdminRoutes(app: FastifyInstance, deps: AdminDeps): void {
+  app.get('/api/v1/admin/overview', async (request: FastifyRequest, reply: FastifyReply) => {
+    if ((await requireOwner(request, deps)) === null) return reply.code(404).send(fail('not_found', 'маршрут не найден'));
+
+    const revenue = await deps.pool.query<{ gross: string | null; net: string | null; payments: string }>(
+      `SELECT sum(gross_minor) gross, sum(net_minor) net, count(*) payments FROM payment WHERE status = 'succeeded'`,
+    );
+    const subscriptions = await deps.pool.query<{ status: string; c: string }>(
+      `SELECT status::text AS status, count(*) c FROM subscription GROUP BY status`,
+    );
+    const partners = await deps.pool.query<{ partner_id: string; display_name: string; balance: string; available: string }>(
+      `SELECT p.id AS partner_id, p.display_name,
+              coalesce(sum(ce.amount_minor), 0) AS balance,
+              coalesce(sum(ce.amount_minor) FILTER (WHERE ce.amount_minor < 0 OR ce.available_at <= now()), 0) AS available
+       FROM partner p LEFT JOIN commission_entry ce ON ce.partner_id = p.id
+       GROUP BY p.id, p.display_name ORDER BY balance DESC`,
+    );
+    const review = await deps.pool.query<{ c: string }>(`SELECT count(*) c FROM payment WHERE needs_review`);
+
+    return reply.code(200).send(ok({
+      revenue_gross_minor: Number(revenue.rows[0]?.gross ?? 0),
+      revenue_net_minor: Number(revenue.rows[0]?.net ?? 0),
+      payments_count: Number(revenue.rows[0]?.payments ?? 0),
+      subscriptions: Object.fromEntries(subscriptions.rows.map((r) => [r.status, Number(r.c)])),
+      // Платежи, ушедшие в ручной разбор: сумма не совпала с ценой или провайдер не назвал
+      // удержание. Их нельзя не показывать — иначе они тихо копятся.
+      needs_review_count: Number(review.rows[0]?.c ?? 0),
+      partners: partners.rows.map((r) => ({
+        partner_id: r.partner_id,
+        display_name: r.display_name,
+        balance_minor: Number(r.balance),
+        available_minor: Number(r.available),
+      })),
+    }));
+  });
+
+  app.post('/api/v1/admin/payouts', async (request: FastifyRequest<{ Body: PayoutBody }>, reply: FastifyReply) => {
+    if ((await requireOwner(request, deps)) === null) return reply.code(404).send(fail('not_found', 'маршрут не найден'));
+
+    const body = request.body ?? {};
+    const partnerId = typeof body.partner_id === 'string' ? body.partner_id : '';
+    const amountMinor = body.amount_minor;
+    const payoutKey = typeof body.payout_key === 'string' ? body.payout_key.trim() : '';
+    if (partnerId === '' || payoutKey === '') {
+      return reply.code(422).send(fail('invalid_payout', 'partner_id и payout_key обязательны'));
+    }
+    if (typeof amountMinor !== 'number' || !Number.isSafeInteger(amountMinor) || amountMinor <= 0) {
+      return reply.code(422).send(fail('invalid_amount', 'сумма выплаты обязана быть положительным целым числом копеек'));
+    }
+
+    try {
+      const outcome = await withTransaction(deps.pool, async (client) => {
+        // Блокируется СТРОКА ПАРТНЁРА, а не результат суммы: `FOR UPDATE` с агрегатом
+        // Postgres не принимает, а блокировка строк леджера не помешала бы появиться НОВОЙ
+        // записи между чтением и вставкой. Партнёр — та точка, за которую выплаты этому
+        // партнёру выстраиваются в очередь.
+        const locked = await client.query<{ id: string }>(`SELECT id FROM partner WHERE id = $1 FOR UPDATE`, [partnerId]);
+        if (locked.rows[0] === undefined) return { kind: 'unknown_partner' as const };
+
+        // ⚠ ПОВТОРНОСТЬ ПРОВЕРЯЕТСЯ РАНЬШЕ БАЛАНСА, и порядок здесь — не стиль. После
+        // успешной выплаты доступное уменьшается на её сумму, поэтому повтор того же
+        // запроса не проходит проверку баланса и получил бы «недостаточно средств» — то
+        // есть отказ вместо «уже выплачено». Оператор прочитал бы это как несостоявшуюся
+        // выплату и заплатил бы второй раз мимо системы.
+        const already = await client.query<{ id: string }>(
+          `SELECT id FROM commission_entry WHERE partner_id = $1 AND kind = 'payout' AND payout_key = $2`,
+          [partnerId, payoutKey],
+        );
+        if (already.rows[0] !== undefined) return { kind: 'duplicate' as const };
+
+        // Доступное считается ВНУТРИ транзакции: между чтением и записью баланс мог
+        // измениться возвратом, и выплата ушла бы сверх доступного.
+        const available = await client.query<{ s: string | null }>(
+          `SELECT sum(amount_minor) s FROM commission_entry
+           WHERE partner_id = $1 AND (amount_minor < 0 OR available_at <= now())`,
+          [partnerId],
+        );
+        const availableMinor = Number(available.rows[0]?.s ?? 0);
+        if (amountMinor > availableMinor) {
+          return { kind: 'over' as const, availableMinor };
+        }
+        const inserted = await client.query<{ id: string }>(
+          `INSERT INTO commission_entry (partner_id, kind, amount_minor, available_at, payout_key, note)
+           VALUES ($1, 'payout', $2, now(), $3, $4)
+           ON CONFLICT DO NOTHING RETURNING id`,
+          [partnerId, -amountMinor, payoutKey, typeof body.note === 'string' ? body.note.slice(0, 500) : null],
+        );
+        // Двойной клик по кнопке не выплачивает дважды: уникальность держит БАЗА.
+        if (inserted.rows[0] === undefined) return { kind: 'duplicate' as const };
+        return { kind: 'recorded' as const, id: inserted.rows[0].id, availableMinor: availableMinor - amountMinor };
+      });
+
+      if (outcome.kind === 'unknown_partner') {
+        // Несуществующий партнёр — `404`, как и чужой: перебор идентификаторов не должен
+        // отличать «нет такого» от «есть, но не ваш».
+        return reply.code(404).send(fail('not_found', 'партнёр не найден'));
+      }
+      if (outcome.kind === 'over') {
+        // Отказ НАЗЫВАЕТ доступную сумму: «недостаточно» без числа непроверяемо.
+        return reply.code(422).send(fail('over_available', `сумма превышает доступную к выплате: ${outcome.availableMinor} копеек`));
+      }
+      if (outcome.kind === 'duplicate') {
+        return reply.code(200).send(ok({ recorded: false, reason: 'duplicate_payout_key' }));
+      }
+      deps.logger.info('payout_recorded', { partnerId, amountMinor });
+      return reply.code(201).send(ok({ recorded: true, entry_id: outcome.id, available_after_minor: outcome.availableMinor }));
+    } catch (error) {
+      deps.logger.error('payout_failed', { message: (error as Error).message });
+      return reply.code(503).send(fail('dependency_unavailable', 'база данных недоступна'));
+    }
+  });
+}

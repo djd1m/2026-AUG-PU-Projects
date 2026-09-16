@@ -25,6 +25,8 @@ import { registerShareCardsRoute } from './routes/share-cards.js';
 import { registerShareCardInternalRoute } from './routes/share-card-internal.js';
 import { registerSubscriptionRoutes } from './routes/subscription.js';
 import { registerPaymentsWebhookRoute } from './routes/payments-webhook.js';
+import { registerEarningsRoute } from './routes/earnings.js';
+import { registerAdminRoutes } from './routes/admin.js';
 import { selectPaymentProvider } from './payments/select-provider.js';
 import type { PaymentProvider } from './payments/provider.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
@@ -41,6 +43,8 @@ export interface ServerDeps {
   /** Платёжный провайдер. Подменяется тестом детерминированным фейком; в проде выбирается
    * из окружения, и «не настроено» там валит старт, а не откатывается к фейку. */
   readonly payments?: PaymentProvider;
+  /** Владельцы кабинета. Подменяется тестом; в проде — закрытый список в `routes/admin.ts`. */
+  readonly ownerTelegramUserIds?: readonly number[];
 }
 
 export function buildServer(deps: ServerDeps): FastifyInstance {
@@ -113,6 +117,8 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     appOrigin: deps.config.appOrigin,
     logger: deps.logger,
   });
+  registerEarningsRoute(app, { pool: deps.pool });
+  registerAdminRoutes(app, { pool: deps.pool, logger: deps.logger, ownerTelegramUserIds: deps.ownerTelegramUserIds });
   registerPaymentsWebhookRoute(app, {
     pool: deps.pool,
     payments,
