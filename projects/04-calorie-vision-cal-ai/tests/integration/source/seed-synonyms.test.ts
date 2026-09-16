@@ -25,17 +25,22 @@ const FREQUENT_QUERIES = [
 ];
 
 describe('loadFoodSynonyms + coverage (AC-source-and-correct-4/5)', () => {
-  it('AC-4: создаёт ровно 100 строк food_synonym против импортированной фикстуры', async () => {
+  // Число ОБНОВЛЕНО 2026-09-16: словарь расширен со 100 до 153 строк (коммит bca0916,
+  // «индейку не находит» от владельца), и фикстура FDC дополнена 36 записями, на которые
+  // новые синонимы ссылаются. Ожидание «ровно 100» было верно ровно до той правки — и
+  // ПРОМОЛЧАЛО целые сутки, потому что интеграционные тесты в это время было опасно
+  // запускать: они смотрели в боевую базу стенда (DEC-A-056).
+  it('AC-4: создаёт ровно 153 строки food_synonym против импортированной фикстуры', async () => {
     const pool = await migratedPool('n4-tests-seed-synonyms-1');
     await truncateAll(pool);
     await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
 
     const result = await loadFoodSynonyms(pool, SEED_ROWS);
     expect(result.rejected).toEqual([]);
-    expect(result.inserted).toBe(100);
+    expect(result.inserted).toBe(153);
 
     const count = await pool.query('SELECT count(*)::int AS n FROM food_synonym');
-    expect(count.rows[0]?.n).toBe(100);
+    expect(count.rows[0]?.n).toBe(153);
   }, 30_000);
 
   it('AC-4: база (не код) отвергает строку с ОБЕИМИ формами и строку с ОБЕИМИ пустыми', async () => {
@@ -85,9 +90,20 @@ describe('loadFoodSynonyms + coverage (AC-source-and-correct-4/5)', () => {
     // ЦЕЛИКОМ, а не одна из нескольких: иначе триграммный поиск нашёл бы соседнюю форму
     // того же слова и мутация осталась бы незаметной.
     const REMOVE_WORDS = ['рис', 'лук', 'яйцо', 'лосось', 'сельдь'];
-    const mutatedSeed = SEED_ROWS.filter((row) => !REMOVE_WORDS.some((word) => row.name_ru.toLowerCase().includes(word)));
+    // Удаляем по ОСНОВЕ слова, а не по точной форме. Причина названа в комментарии выше и
+    // подтвердилась на практике 2026-09-16: после пополнения курации в словаре появилась
+    // форма «яйца», строку «яйцо» удаление не задевало, и триграммный поиск по запросу
+    // «яйцо» продолжал её находить — мутация переставала краснеть, то есть страж тихо
+    // переставал быть стражем.
+    const REMOVE_STEMS = ['рис', 'лук', 'яйц', 'лосос', 'сельд'];
+    const mutatedSeed = SEED_ROWS.filter((row) => !REMOVE_STEMS.some((stem) => row.name_ru.toLowerCase().includes(stem)));
     const removedCount = SEED_ROWS.length - mutatedSeed.length;
-    expect(removedCount).toBe(10); // подтверждает заявленный масштаб мутации
+    // ИЗМЕНЕНО 2026-09-16: было `toBe(10)`. Точное число описывало РАЗМЕР СЛОВАРЯ на день
+    // написания, а не свойство, которое тест проверяет, — и ломалось при каждом пополнении
+    // курации (со 100 до 153 строк оно стало 15). Проверяется то, ради чего мутация нужна:
+    // она существенна (не одна строка) и уносит слова ЦЕЛИКОМ.
+    expect(removedCount).toBeGreaterThanOrEqual(10);
+    expect(mutatedSeed.some((row) => REMOVE_STEMS.some((stem) => row.name_ru.toLowerCase().includes(stem)))).toBe(false);
 
     const pool = await migratedPool('n4-tests-seed-synonyms-5');
     await truncateAll(pool);
