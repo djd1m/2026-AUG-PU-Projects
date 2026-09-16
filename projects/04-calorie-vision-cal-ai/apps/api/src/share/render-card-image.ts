@@ -43,6 +43,13 @@ export const BADGE_MAX_HEIGHT = Math.floor(CARD_HEIGHT * 0.08);
 export const BADGE_HEIGHT = 88;
 const BADGE_ICON_SIZE = 46;
 const BADGE_PADDING_X = 28;
+/**
+ * Справа отступ БОЛЬШЕ левого и равен радиусу торца. Слева у пилюли круглый знак — он повторяет
+ * форму дуги и смотрится в ней естественно; справа стоит буква, и при отступе «как слева» она
+ * зрительно упирается в скругление (владелец: «слово целиком внутри — НО ВПРИТЫК»). Отступ,
+ * равный радиусу, гарантирует, что последний глиф не заходит в дугу вовсе.
+ */
+const BADGE_PADDING_RIGHT = BADGE_HEIGHT / 2;
 const BADGE_GAP = 14;
 const BADGE_TEXT = 'Тарелка';
 const BADGE_TEXT_FONT_PX = 38;
@@ -84,7 +91,7 @@ export interface CardGeometry {
 
 /** Ширина бейджа считается по тексту: пилюля обнимает содержимое, а не растянута на глазок. */
 function badgeWidth(): number {
-  return BADGE_PADDING_X * 2 + BADGE_ICON_SIZE + BADGE_GAP + BADGE_TEXT_WIDTH_PX;
+  return BADGE_PADDING_X + BADGE_ICON_SIZE + BADGE_GAP + BADGE_TEXT_WIDTH_PX + BADGE_PADDING_RIGHT;
 }
 
 /**
@@ -141,10 +148,12 @@ export function estimateTextWidthPx(text: string, fontSizePx: number, factor: nu
 /**
  * Ширина слова «Тарелка» в Unbounded 700 на 38 px — ЗАМЕРЕНА, а не оценена: это константа
  * бренда, она не меняется от карточки к карточке, и пилюля обязана обнимать её точно.
- * Тест `badge-text-width` перемеряет её растром и падает, если поменялись шрифт, кегль или само
- * слово.
+ * 180 px — сам текст, плюс 4 px на `letter-spacing="0.5"` у семи знаков: интервал добавляется
+ * ПОСЛЕ каждого глифа, включая последний, и без него замер оказывается на 3-4 px короче
+ * фактического растра. Тест `share-card-text-fits` перемеряет это растром и падает, если
+ * поменялись шрифт, кегль, интервал или само слово.
  */
-export const BADGE_TEXT_WIDTH_PX = 180;
+export const BADGE_TEXT_WIDTH_PX = 184;
 
 export interface FittedText {
   readonly text: string;
@@ -295,8 +304,11 @@ function buildSvgOverlay(input: ShareCardRenderInput, geometry: CardGeometry): s
           fill="${INK}" stroke="#15101C" stroke-opacity="0.38" stroke-width="7" paint-order="stroke" stroke-linejoin="round">${dishName}</text>
     ${itemsMarkup(input.items, itemsBlockTop)}
 
-    <text x="${SIDE_MARGIN}" y="${geometry.heroBaselineY}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${HERO_FONT_PX}" font-weight="800" fill="${INK}">${escapeSvgText(String(input.kcal))}</text>
-    <text x="${SIDE_MARGIN + estimateTextWidthPx(String(input.kcal), HERO_FONT_PX) + 30}" y="${geometry.heroBaselineY - 14}" font-family="${FONT_FAMILY_TEXT}" font-size="42" font-weight="500" fill="${ACCENT}">ккал</text>
+    <!-- Число и единица — ОДНА строка с tspan: положение «ккал» задаёт сам растеризатор через
+         dx, а не наша оценка ширины. Оценка здесь была ошибкой: после уточнения коэффициента
+         (0,58 → 0,72) зазор между «41» и «ккал» вырос с 13 px до 50 px — владелец увидел это
+         как «оформление испортилось». dx точен для любого числа знаков и не зависит от шрифта. -->
+    <text x="${SIDE_MARGIN}" y="${geometry.heroBaselineY}" font-family="${FONT_FAMILY_DISPLAY}" font-size="${HERO_FONT_PX}" font-weight="800" fill="${INK}">${escapeSvgText(String(input.kcal))}<tspan dx="2" dy="-14" font-family="${FONT_FAMILY_TEXT}" font-size="42" font-weight="500" fill="${ACCENT}">ккал</tspan></text>
 
     ${chipsMarkup}
 

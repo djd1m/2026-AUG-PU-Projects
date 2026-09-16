@@ -6,6 +6,9 @@ import { loadWebConfig } from '../../apps/web/env.js';
 
 const FULL: Record<string, string | undefined> = {
   API_INTERNAL_URL: 'http://api:3000',
+  // OWN-012 / 16.09.2026: имя бота — обязательная конфигурация `web`; без него кнопка входа
+  // повела бы на чужого бота (см. `web-bot-username.test.ts`).
+  TELEGRAM_BOT_USERNAME: 'calorytarelka_bot',
   N4_SUBSCRIPTION_PRICE_MINOR: '100000',
   N4_SCAN_LIMIT_USER: '10',
   N4_SCAN_LIMIT_PRO: '100',
@@ -22,7 +25,7 @@ describe('loadWebConfig', () => {
   });
 
   it('каждая обязательная переменная проверяется ОТДЕЛЬНЫМ прогоном', () => {
-    for (const name of ['API_INTERNAL_URL', 'N4_SUBSCRIPTION_PRICE_MINOR', 'N4_SCAN_LIMIT_USER', 'N4_SCAN_LIMIT_PRO']) {
+    for (const name of ['API_INTERNAL_URL', 'N4_SUBSCRIPTION_PRICE_MINOR', 'N4_SCAN_LIMIT_USER', 'N4_SCAN_LIMIT_PRO', 'TELEGRAM_BOT_USERNAME']) {
       expect(() => loadWebConfig({ ...FULL, [name]: undefined }), name).toThrow(new RegExp(name));
       expect(() => loadWebConfig({ ...FULL, [name]: '  ' }), `${name} пустой`).toThrow(new RegExp(name));
     }

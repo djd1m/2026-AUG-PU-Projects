@@ -59,8 +59,8 @@ describe('текст помещается в свои границы (измер
       const { badgeRect } = computeCardGeometry();
       const rightmost = await rightmostLightPixel(card, badgeRect.y + 20, badgeRect.height - 40);
       expect(rightmost).toBeGreaterThan(0);
-      // Правый край пилюли минус внутренний отступ: глиф не имеет права зайти в скругление.
-      expect(rightmost).toBeLessThanOrEqual(badgeRect.x + badgeRect.width - 20);
+      // Отступ справа равен радиусу торца: последний глиф не имеет права зайти в дугу.
+      expect(rightmost).toBeLessThanOrEqual(badgeRect.x + badgeRect.width - badgeRect.height / 2);
     },
     60_000,
   );

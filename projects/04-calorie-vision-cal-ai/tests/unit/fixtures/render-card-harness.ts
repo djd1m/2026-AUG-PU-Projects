@@ -25,7 +25,10 @@ const outPath: string = outPathArg;
 
 async function main(): Promise<void> {
   // Фото — крошечный сгенерированный JPEG (сеть не нужна, `fetchImpl` подменяет `fetch`).
-  const photoBuf = await sharp({ create: { width: 20, height: 20, channels: 3, background: '#888888' } })
+  // ТЁМНОЕ фото, а не серое: с раскладкой OWN-013 фото занимает ВЕСЬ холст, и текстовый блок
+  // лежит поверх него. На сером фоне «светлых пикселей нет» перестало означать «текст не
+  // отрисован» — испытание стража (рендер без шрифтов) зеленело на яркости самого фото.
+  const photoBuf = await sharp({ create: { width: 20, height: 20, channels: 3, background: '#111111' } })
     .jpeg()
     .toBuffer();
 
