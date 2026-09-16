@@ -19,6 +19,7 @@
 // (`incoming-webhooks.md`, «порядок доставки не гарантирован»).
 
 import { createHash } from 'node:crypto';
+import { clientAddressFrom } from '../session/ip-prefix.js';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { DbPool } from '@n4/db';
 import { withTransaction } from '@n4/db';
@@ -73,7 +74,12 @@ export function registerPaymentsWebhookRoute(app: FastifyInstance, deps: Payment
         verified = await deps.payments.verifyNotification({
           rawBody,
           headers: request.headers as Record<string, string | undefined>,
-          sourceIp: request.ip,
+          // Адрес ИСТОЧНИКА, а не сокета: `request.ip` при `trustProxy: false` — это адрес НАШЕЙ
+          // двери в сети compose (172.x), и проверка происхождения отвергала КАЖДОЕ уведомление
+          // ЮKassa как `foreign_ip` — поймано первым живым платежом 16.09.2026, тестами не
+          // ловилось (фейковый провайдер адрес не проверяет). Тот же источник адреса, что у
+          // всех остальных маршрутов: последний элемент X-Forwarded-For, поставленный дверью.
+          sourceIp: clientAddressFrom(request.headers['x-forwarded-for'], request.ip),
         });
       } catch (error) {
         if (error instanceof PaymentProviderUnavailable) {
