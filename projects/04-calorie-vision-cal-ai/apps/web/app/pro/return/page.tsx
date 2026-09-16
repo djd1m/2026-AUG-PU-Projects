@@ -1,4 +1,4 @@
-import { ReturnScreen } from './screen.js';
+import { ReturnScreen } from './screen';
 
 export const dynamic = 'force-dynamic';
 

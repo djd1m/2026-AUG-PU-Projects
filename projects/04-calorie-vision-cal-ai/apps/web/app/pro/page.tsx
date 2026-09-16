@@ -2,8 +2,8 @@
 // (`apps/web/env.ts` — единственное место, где он читает `process.env`), а не из литералов
 // в разметке. Цена, зашитая в код, однажды разойдётся с той, что списывает провайдер.
 
-import { loadWebConfig } from '../../env.js';
-import { ProScreen } from './screen.js';
+import { loadWebConfig } from '../../env';
+import { ProScreen } from './screen';
 
 export const dynamic = 'force-dynamic';
 
