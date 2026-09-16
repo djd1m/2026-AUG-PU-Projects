@@ -393,9 +393,10 @@ curl -s -b "$JAR" "$BASE/api/v1/subscription" | J
 `{"data":{"status":"none","current_period_end":null,"price_minor":100000}}`.
 
 ```bash
-# оплата требует ВХОДА — подписка принадлежит аккаунту, а не устройству
+# оплата требует ВХОДА — подписка принадлежит аккаунту, а не устройству.
+# Ключ повторности здесь — в ТЕЛЕ (`idempotency_key`), не в заголовке, в отличие от сканов.
 curl -s -b "$JAR" -X POST "$BASE/api/v1/subscription/checkout" \
-  -H "Idempotency-Key: $(UUID)" -H 'Content-Type: application/json' -d '{}' | J
+  -H 'Content-Type: application/json' -d "{\"idempotency_key\":\"$(UUID)\"}" | J
 ```
 
 **Ожидается без входа:** `401 account_required`. После входа через Telegram — `201` +
@@ -403,7 +404,7 @@ curl -s -b "$JAR" -X POST "$BASE/api/v1/subscription/checkout" \
 
 | Ситуация | Ответ |
 |---|---|
-| без `Idempotency-Key` | `422 idempotency_key_required` |
+| без `idempotency_key` в теле | `422 idempotency_key_required` |
 | подписка уже действует | `409 already_subscribed` |
 | провайдер недоступен | `503 payment_provider_unavailable` |
 | отмена без подписки | `404 not_found` |
@@ -705,8 +706,8 @@ say "7. дневник: дата из будущего"; curl -s -b "$JAR" "$BAS
 say "8. дневник без cookie";  curl -s "$BASE/api/v1/diary" | J
 say "9. подписка";            curl -s -b "$JAR" "$BASE/api/v1/subscription" | J
 say "10. checkout без входа"; curl -s -b "$JAR" -X POST "$BASE/api/v1/subscription/checkout" \
-                                -H "Idempotency-Key: $(python3 -c 'import uuid;print(uuid.uuid4())')" \
-                                -H 'Content-Type: application/json' -d '{}' | J
+                                -H 'Content-Type: application/json' \
+                                -d "{\"idempotency_key\":\"$(python3 -c 'import uuid;print(uuid.uuid4())')\"}" | J
 say "11. неизвестное согласие"; curl -s -b "$JAR" -X POST "$BASE/api/v1/consent" \
                                 -H 'Content-Type: application/json' \
                                 -d '{"decision":"grant","consent_version":"2030-01-v9"}' | J
