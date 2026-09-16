@@ -294,6 +294,13 @@ input:focus-visible {
   overflow: hidden;
 }
 .viewfinder__video {
+  /* Абсолютно, а не в потоке: видео высотой 100% выталкивало уведомления (`.viewfinder__notice`)
+     ЗА нижний край секции, а `overflow: hidden` секции их срезал — отказ сервера (422/413) и
+     «нет доступа к камере» отрисовывались на y = высота окна + 6px и не были видны ни на одном
+     экране (замер 16.09.2026: 1280×800, 1920×1080, 390×844). Уведомление, которое нельзя
+     увидеть, — это молчание, а молчание не является состоянием. */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -311,7 +318,7 @@ input:focus-visible {
 .viewfinder__notice {
   position: relative;
   z-index: 1;
-  margin: 0 var(--sp-4);
+  margin: var(--sp-6) var(--sp-4) 0;
   max-width: 32ch;
   text-align: center;
   font-size: 14px;

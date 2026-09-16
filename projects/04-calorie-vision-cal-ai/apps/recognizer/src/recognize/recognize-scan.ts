@@ -320,12 +320,20 @@ export async function recognizeScan(job: RecognizeJob, deps: RecognizeScanDeps):
         // для арифметики (страж `single-model-estimate-read.test.ts`).
         const persisted = finalResponse.items.map((item, index) => persistedItem(item, matched[index]));
         const dbKcalTotal = sumMatchedKcal(persisted.map((item): ComputedItemNumbers => ({ unmatched: item.unmatched, kcal: item.kcal, protein: item.protein, fat: item.fat, carb: item.carb })));
-        const discrepancy = evaluateDiscrepancy(finalResponse.modelEstimateKcal, dbKcalTotal);
+        // Колонка `recognition.model_estimate_kcal` — INTEGER, а схема ответа модели объявляет
+        // поле как `number`: провайдер законно возвращает `75.4`. Без округления UPDATE падал с
+        // `invalid input syntax for type integer`, tick завершался ошибкой, задание висело в
+        // `queued` до уборщика и уходило в `failed(timeout)` — посетитель видел «снять ещё раз»
+        // на распознанной еде (живой стенд, 16.09.2026, скан e4d3e391). Округляется ОДИН раз и
+        // ОДНО значение идёт и в расхождение, и в запись — иначе ratio считался бы от числа,
+        // которого в базе нет.
+        const modelEstimateKcal = Math.round(finalResponse.modelEstimateKcal);
+        const discrepancy = evaluateDiscrepancy(modelEstimateKcal, dbKcalTotal);
         return {
           status: 'done',
           confidence: finalResponse.confidence,
           items: persisted,
-          modelEstimateKcal: finalResponse.modelEstimateKcal,
+          modelEstimateKcal,
           modelUsed: escalated ? CANON.modelEscalation : CANON.modelPrimary,
           failureReason: lowConfidence ? failureReasonCandidate : null,
           escalated,

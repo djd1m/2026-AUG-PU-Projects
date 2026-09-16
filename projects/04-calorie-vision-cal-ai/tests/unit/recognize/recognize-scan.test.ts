@@ -322,3 +322,17 @@ describe('шаг 9 — поздний ответ отбрасывается ка
     unlinkSync(logPath);
   });
 });
+
+describe('дробная оценка модели — колонка model_estimate_kcal INTEGER (живой стенд 16.09.2026, скан e4d3e391)', () => {
+  it('model_estimate_kcal = 75.4 записывается как целое 75, а не валит UPDATE', async () => {
+    const matchPort: MatchIngredientPort = {
+      match: async (items) => items.map((item): MatchedItem => ({ foodItemId: 'food-1', portionG: item.massG, sourceSnapshot: { source: 'USDA-FDC', source_id: '1', name_en: 'x', kcal_per_100g: 100, protein_per_100g: 1, fat_per_100g: 1, carb_per_100g: 1 } })),
+    };
+    const deps = baseDeps({ provider: stubProvider(() => fixedResponse({ modelEstimateKcal: 75.4 })), matchPort, consumeQuota: grantingQuota() });
+    const outcome = await recognizeScan(job(), deps);
+    expect(outcome.status).toBe('done');
+    const [written] = recordedOf(deps);
+    expect(written?.record.modelEstimateKcal).toBe(75);
+    expect(Number.isInteger(written?.record.modelEstimateKcal)).toBe(true);
+  });
+});
