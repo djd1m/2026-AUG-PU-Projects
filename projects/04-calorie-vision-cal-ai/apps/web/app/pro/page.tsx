@@ -14,6 +14,7 @@ export default function ProPage() {
       priceMinor={config.subscriptionPriceMinor}
       scanLimitFree={config.scanLimitFree}
       scanLimitPro={config.scanLimitPro}
+      paymentsMode={config.paymentsMode}
     />
   );
 }

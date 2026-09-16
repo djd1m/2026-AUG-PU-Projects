@@ -19,6 +19,10 @@ export interface ProScreenProps {
   /** Когда обновятся бесплатные сканы — бесплатный путь обязан быть назван конкретно. */
   readonly resetHint?: string;
   readonly status?: 'none' | 'active' | 'past_due' | 'canceled' | 'expired';
+  /** Режим платежей. `fake` — стенд: кнопка выдаёт подписку, НЕ списывая денег, и это
+   * обязано быть написано на экране. Кнопка «оформить за 1000 ₽», которая ничего не
+   * списывает, — ложь, даже если она в нашу пользу (`honest-configuration.md`). */
+  readonly paymentsMode?: 'fake' | 'live';
 }
 
 /** Копейки → «1000 ₽». Дробная часть показывается, ТОЛЬКО если она есть: «1000,00 ₽»
@@ -50,7 +54,7 @@ async function startCheckout(): Promise<{ url: string } | { error: string }> {
   return { error: 'Не удалось начать оплату. Деньги не списаны.' };
 }
 
-export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, status = 'none' }: ProScreenProps) {
+export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, status = 'none', paymentsMode = 'live' }: ProScreenProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,6 +89,12 @@ export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, 
     <main className="page" aria-label="подписка Pro">
       <div className="card">
         <h1 className="pro__title">Pro</h1>
+        {paymentsMode === 'fake' ? (
+          <p className="pro__demo" role="status">
+            Демонстрационный режим: приём платежей ещё не подключён. Кнопка ниже оформит подписку,
+            НЕ списывая денег.
+          </p>
+        ) : null}
         {/* Цена — ЧИСЛОМ и до нажатия. */}
         <p className="pro__price">{formatPrice(priceMinor)} в месяц</p>
         <p className="pro__line">{scanLimitPro} распознаваний в сутки вместо {scanLimitFree}.</p>
@@ -96,7 +106,11 @@ export function ProScreen({ priceMinor, scanLimitFree, scanLimitPro, resetHint, 
         {/* Отмена описана ДО оплаты. */}
         <p className="pro__cancel">Отменить можно в любой момент — оплаченный период доработает до конца, деньги за него не сгорают.</p>
         <button type="button" className="btn btn--primary btn--wide" onClick={onSubscribe} disabled={pending}>
-          {pending ? 'Открываем оплату…' : `Оформить за ${formatPrice(priceMinor)}`}
+          {pending
+            ? 'Открываем оплату…'
+            : paymentsMode === 'fake'
+              ? 'Оформить (демо, деньги не списываются)'
+              : `Оформить за ${formatPrice(priceMinor)}`}
         </button>
         {error !== null ? (
           <p className="pro__error" role="alert">

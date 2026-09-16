@@ -54,6 +54,26 @@ describe('экран Pro честен до нажатия, а не после', 
   });
 });
 
+describe('демонстрационный режим виден ДО нажатия', () => {
+  it('в режиме fake экран говорит, что деньги не списываются, и кнопка это повторяет', () => {
+    const html = renderToStaticMarkup(
+      <ProScreen priceMinor={PRICE_MINOR} scanLimitFree={10} scanLimitPro={100} paymentsMode="fake" />,
+    );
+    // Кнопка «Оформить за 1000 ₽», которая ничего не списывает, — ложь, даже в нашу пользу.
+    expect(html).toContain('НЕ списывая денег');
+    expect(html).toContain('демо, деньги не списываются');
+    expect(html.indexOf('НЕ списывая денег')).toBeLessThan(html.indexOf('<button'));
+  });
+
+  it('в режиме live никакой пометки о демо нет', () => {
+    const html = renderToStaticMarkup(
+      <ProScreen priceMinor={PRICE_MINOR} scanLimitFree={10} scanLimitPro={100} paymentsMode="live" />,
+    );
+    expect(html).not.toContain('Демонстрационный режим');
+    expect(html).toContain('Оформить за 1000 ₽');
+  });
+});
+
 describe('formatPrice', () => {
   it('целая цена показывается без копеек: «1000,00 ₽» читается как цена с подвохом', () => {
     expect(formatPrice(100_000)).toBe('1000 ₽');

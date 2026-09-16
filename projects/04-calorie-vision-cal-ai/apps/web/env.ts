@@ -25,6 +25,9 @@ export interface WebConfig {
   readonly subscriptionPriceMinor: number;
   readonly scanLimitFree: number;
   readonly scanLimitPro: number;
+  /** Режим платежей — НЕ секрет, а надпись на экране: в режиме `fake` кнопка не списывает
+   * денег, и человек обязан это видеть ДО нажатия. */
+  readonly paymentsMode: 'fake' | 'live';
 }
 
 function requirePositiveInt(env: EnvSource, name: string, consequence: string): number {
@@ -32,6 +35,14 @@ function requirePositiveInt(env: EnvSource, name: string, consequence: string): 
   if (raw === undefined || raw.trim() === '') throw new Error(`${name} не задан — ${consequence}`);
   if (!/^[1-9][0-9]*$/.test(raw.trim())) throw new Error(`${name} непригоден («${raw}») — ${consequence}`);
   return Number(raw.trim());
+}
+
+function requirePaymentsMode(env: EnvSource): 'fake' | 'live' {
+  const raw = env.N4_PAYMENTS_MODE;
+  // Неизвестное значение НЕ трактуется как `live`: подписать «деньги списываются» под
+  // кнопкой, которая их не списывает, — обман; обратная ошибка безобиднее (fail-closed).
+  if (raw === 'live') return 'live';
+  return 'fake';
 }
 
 export function loadWebConfig(env: EnvSource = process.env): WebConfig {
@@ -44,5 +55,6 @@ export function loadWebConfig(env: EnvSource = process.env): WebConfig {
     subscriptionPriceMinor: requirePositiveInt(env, 'N4_SUBSCRIPTION_PRICE_MINOR', 'экран Pro показал бы цену, которой нет'),
     scanLimitFree: requirePositiveInt(env, 'N4_SCAN_LIMIT_USER', 'экран Pro не смог бы назвать бесплатный путь'),
     scanLimitPro: requirePositiveInt(env, 'N4_SCAN_LIMIT_PRO', 'экран Pro не смог бы назвать, что даёт подписка'),
+    paymentsMode: requirePaymentsMode(env),
   };
 }
