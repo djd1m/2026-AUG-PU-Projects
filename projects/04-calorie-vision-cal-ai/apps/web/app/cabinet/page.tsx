@@ -13,6 +13,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   ADMIN_OVERVIEW_URL,
+  buildInviteCreateUrl,
   ADMIN_PAYOUTS_URL,
   AUTH_DEVICE_URL,
   EARNINGS_URL,
@@ -291,7 +292,10 @@ function OwnerSection({ overview, reload }: { readonly overview: OwnerOverview; 
         <ul className="cabinet__entries">
           {overview.partners.map((p) => (
             <li key={p.partner_id} className="cabinet__entry">
-              <span>{p.display_name}</span>
+              <span>
+                {p.display_name}
+                {p.needs_invite === true ? <InviteButton partnerId={p.partner_id} /> : null}
+              </span>
               <span className="muted">доступно {formatRub(p.available_minor)}</span>
               <span className="num">{formatRub(p.balance_minor)}</span>
             </li>
@@ -325,5 +329,34 @@ function OwnerSection({ overview, reload }: { readonly overview: OwnerOverview; 
       {result?.kind === 'duplicate' ? <p className="result__notice">Эта выплата уже была записана — повтор не создал вторую.</p> : null}
       {result?.kind === 'rejected' ? <p className="result__notice result__status--error">{result.message}</p> : null}
     </section>
+  );
+}
+
+/** Ссылка-приглашение для партнёра без аккаунта (OWN-012): одноразовая, 7 дней. */
+function InviteButton({ partnerId }: { readonly partnerId: string }): React.JSX.Element {
+  const [url, setUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const create = async (): Promise<void> => {
+    const response = await fetch(buildInviteCreateUrl(partnerId), { method: 'POST', credentials: 'same-origin' }).catch(() => null);
+    const body = response === null ? null : ((await response.json().catch(() => null)) as { data?: { url?: string }; error?: { message?: string } } | null);
+    if (response?.status === 201 && body?.data?.url !== undefined) setUrl(body.data.url);
+    else setError(body?.error?.message ?? 'Не удалось создать приглашение.');
+  };
+  if (url !== null) {
+    return (
+      <span className="cabinet__invite">
+        <br />
+        <input className="stepper__input" readOnly value={url} onFocus={(e) => e.currentTarget.select()} aria-label="ссылка-приглашение" />
+      </span>
+    );
+  }
+  return (
+    <span className="cabinet__invite">
+      {' '}
+      <button type="button" className="btn btn--tiny btn--ghost" onClick={() => void create()}>
+        пригласить
+      </button>
+      {error !== null ? <span className="limit__error"> {error}</span> : null}
+    </span>
   );
 }

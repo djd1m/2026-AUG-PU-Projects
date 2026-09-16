@@ -18,12 +18,29 @@ import { requireSession } from './scans.js';
  * состояние, а не самое разрешающее.
  */
 export const OWNER_TELEGRAM_USER_IDS: readonly number[] = [];
+/** OWN-012: владелец входит и по почте (PWA — первый приоритет). Тот же закрытый список В КОДЕ. */
+export const OWNER_EMAILS: readonly string[] = [];
 
-export interface AdminDeps {
+export interface OwnerLists {
+  readonly ownerTelegramUserIds?: readonly number[];
+  readonly ownerEmails?: readonly string[];
+}
+
+export interface AdminDeps extends OwnerLists {
   readonly pool: DbPool;
   readonly logger: Logger;
-  /** Подменяется тестом. В проде — список выше. */
-  readonly ownerTelegramUserIds?: readonly number[];
+}
+
+/** Чистая проверка владения — по Telegram-id ИЛИ по почте; пустые списки → никто. */
+export function isOwnerAccount(account: { readonly telegramUserId: string | null; readonly email: string | null }, lists: OwnerLists): boolean {
+  const ids = lists.ownerTelegramUserIds ?? OWNER_TELEGRAM_USER_IDS;
+  const emails = (lists.ownerEmails ?? OWNER_EMAILS).map((e) => e.toLowerCase());
+  if (account.telegramUserId !== null) {
+    const id = Number(account.telegramUserId);
+    if (Number.isSafeInteger(id) && ids.includes(id)) return true;
+  }
+  if (account.email !== null && emails.includes(account.email.toLowerCase())) return true;
+  return false;
 }
 
 interface PayoutBody {
@@ -33,24 +50,22 @@ interface PayoutBody {
   readonly note?: unknown;
 }
 
-async function requireOwner(request: FastifyRequest, deps: AdminDeps): Promise<{ accountId: string } | null> {
+export async function requireOwner(request: FastifyRequest, deps: { readonly pool: DbPool; readonly owners: OwnerLists }): Promise<{ accountId: string } | null> {
   const session = await requireSession(request, deps.pool);
   if (session === null || session.accountId === null) return null;
-  const owners = deps.ownerTelegramUserIds ?? OWNER_TELEGRAM_USER_IDS;
-  const account = await deps.pool.query<{ telegram_user_id: string | null }>(
-    `SELECT telegram_user_id FROM account WHERE id = $1`,
+  const account = await deps.pool.query<{ telegram_user_id: string | null; email: string | null }>(
+    `SELECT telegram_user_id, email FROM account WHERE id = $1`,
     [session.accountId],
   );
-  const raw = account.rows[0]?.telegram_user_id;
-  if (raw === null || raw === undefined) return null;
-  const telegramUserId = Number(raw);
-  if (!Number.isSafeInteger(telegramUserId) || !owners.includes(telegramUserId)) return null;
+  const row = account.rows[0];
+  if (row === undefined) return null;
+  if (!isOwnerAccount({ telegramUserId: row.telegram_user_id, email: row.email }, deps.owners)) return null;
   return { accountId: session.accountId };
 }
 
 export function registerAdminRoutes(app: FastifyInstance, deps: AdminDeps): void {
   app.get('/api/v1/admin/overview', async (request: FastifyRequest, reply: FastifyReply) => {
-    if ((await requireOwner(request, deps)) === null) return reply.code(404).send(fail('not_found', 'маршрут не найден'));
+    if ((await requireOwner(request, { pool: deps.pool, owners: deps })) === null) return reply.code(404).send(fail('not_found', 'маршрут не найден'));
 
     const revenue = await deps.pool.query<{ gross: string | null; net: string | null; payments: string }>(
       `SELECT sum(gross_minor) gross, sum(net_minor) net, count(*) payments FROM payment WHERE status = 'succeeded'`,
@@ -58,12 +73,12 @@ export function registerAdminRoutes(app: FastifyInstance, deps: AdminDeps): void
     const subscriptions = await deps.pool.query<{ status: string; c: string }>(
       `SELECT status::text AS status, count(*) c FROM subscription GROUP BY status`,
     );
-    const partners = await deps.pool.query<{ partner_id: string; display_name: string; balance: string; available: string }>(
-      `SELECT p.id AS partner_id, p.display_name,
+    const partners = await deps.pool.query<{ partner_id: string; display_name: string; balance: string; available: string; has_account: boolean }>(
+      `SELECT p.id AS partner_id, p.display_name, (p.account_id IS NOT NULL) AS has_account,
               coalesce(sum(ce.amount_minor), 0) AS balance,
               coalesce(sum(ce.amount_minor) FILTER (WHERE ce.amount_minor < 0 OR ce.available_at <= now()), 0) AS available
        FROM partner p LEFT JOIN commission_entry ce ON ce.partner_id = p.id
-       GROUP BY p.id, p.display_name ORDER BY balance DESC`,
+       GROUP BY p.id, p.display_name, p.account_id ORDER BY balance DESC`,
     );
     const review = await deps.pool.query<{ c: string }>(`SELECT count(*) c FROM payment WHERE needs_review`);
 
@@ -80,12 +95,14 @@ export function registerAdminRoutes(app: FastifyInstance, deps: AdminDeps): void
         display_name: r.display_name,
         balance_minor: Number(r.balance),
         available_minor: Number(r.available),
+        // OWN-012: партнёру без аккаунта владелец выписывает приглашение из кабинета.
+        needs_invite: !r.has_account,
       })),
     }));
   });
 
   app.post('/api/v1/admin/payouts', async (request: FastifyRequest<{ Body: PayoutBody }>, reply: FastifyReply) => {
-    if ((await requireOwner(request, deps)) === null) return reply.code(404).send(fail('not_found', 'маршрут не найден'));
+    if ((await requireOwner(request, { pool: deps.pool, owners: deps })) === null) return reply.code(404).send(fail('not_found', 'маршрут не найден'));
 
     const body = request.body ?? {};
     const partnerId = typeof body.partner_id === 'string' ? body.partner_id : '';

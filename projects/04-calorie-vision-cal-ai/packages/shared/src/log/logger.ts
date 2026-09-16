@@ -33,6 +33,8 @@ export const SERVICE_LOG_FIELDS: readonly string[] = [
   'rate_limit_mutate_per_min', 'rate_limit_read_per_min', 'model_provider', 'model',
   'ip_prefix', 'scan_id', 'fence', 'lease_owner', 'provider', 'write',
   'never_leased', 'attempts_exhausted', 'message', 'duration_ms',
+  // OWN-012: приглашение партнёра создано/принято — идентификатор строки `partner`, не человека.
+  'partner_id',
   // `scan-pipeline`: поля событий распознавания. Список отстал от кода СВОЕЙ ЖЕ фичи —
   // найдено слиянием сверкой списка с фактическими вызовами журнала.
   'attempt_id', 'current_fence', 'failure_reason', 'field', 'task_budget_expired',

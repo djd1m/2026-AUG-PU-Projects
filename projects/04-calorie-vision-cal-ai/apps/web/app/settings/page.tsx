@@ -4,6 +4,7 @@
 // «удалить мои данные». Дневник дня и кабинет партнёра — другие фичи, здесь не реализуются.
 
 import { TelegramLoginButton } from './telegram-login-button';
+import { EmailAuth } from './email-auth';
 import { DeleteDataScreen } from './delete-data';
 
 export default function SettingsPage() {
@@ -12,6 +13,10 @@ export default function SettingsPage() {
   return (
     <main className="page">
       <h1>Настройки</h1>
+      {/* OWN-012: PWA — первый приоритет: вход по почте — основной, Telegram — вторая очередь. */}
+      <div className="settings__section">
+        <EmailAuth />
+      </div>
       <div className="settings__section">
         <TelegramLoginButton botDeepLink="https://t.me/tarelka_bot" />
       </div>

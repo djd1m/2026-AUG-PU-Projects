@@ -24,6 +24,7 @@ import type { FastifyInstance } from 'fastify';
 import { withTransaction, type DbClient, type DbPool } from '@n4/db';
 import { CANON, fail, ok, type ApiConfig, type Logger } from '@n4/shared';
 import { verifyTelegramInitData } from '../auth/verify-init-data.js';
+import { linkSessionToAccount } from '../auth/link-session-to-account.js';
 import { createOrReuseDeviceSession, SESSION_COOKIE_NAME } from '../session/create-device-session.js';
 import { clientAddressFrom, toIpPrefix } from '../session/ip-prefix.js';
 
@@ -197,45 +198,11 @@ export function registerAuthTelegramRoute(app: FastifyInstance, pool: DbPool, co
       const sessionWasUnlinked = sessionOutcome.session.account_id === null;
       const cookieToken = sessionOutcome.issuedToken ?? presentedToken ?? '';
 
-      // Сессия СВЯЗЫВАЕТСЯ, не заменяется; cookie остаётся тем же значением.
-      await client.query(`UPDATE device_session SET account_id = $2 WHERE id = $1`, [sessionId, accountId]);
+      // Пять переносов входа — ОДНИМ кодом с входом по почте (`auth/link-session-to-account.ts`,
+      // OWN-012); история причин (RV-01, RV-05, RV-06) — там же.
+      const migrated = await linkSessionToAccount(client, { sessionId, accountId, sessionWasUnlinked });
 
-      // Перенос дневника ЦЕЛИКОМ, добавлением к уже перенесённому (AC-consent-and-telegram-auth-6).
-      const migrated = await client.query(`UPDATE diary_entry SET owner_key = $2 WHERE owner_key = $1`, [sessionId, accountId]);
-
-      // Перенос ВЛАДЕНИЯ анонимными карточками (RV-consent-and-telegram-auth-01, третий обзор):
-      // без этого шага анонимная карточка (`share_card.owner_key = session_id`, репозиторий
-      // разрешает создание анонимному владельцу с согласием) переживала вход НЕ ПЕРЕНЕСЁННОЙ.
-      // Два наблюдаемых следствия: (1) `withdraw_consent`/`erase_all` отзывают карточки по
-      // `owner_key = account_id` (`account-delete.ts`) и эту карточку молча пропускали;
-      // (2) `RunErasureJob` удаляет `share_card` по `owner_key = account_id` ДО `recognition`
-      // именно затем, чтобы снять ссылку `ON DELETE RESTRICT` (миграция 001) — неперенесённая
-      // карточка эту ссылку не снимала, и `DELETE FROM recognition` падал на КАЖДОМ прогоне,
-      // оставляя аккаунт `erasing` навсегда. Перенос — в ТОЙ ЖЕ транзакции входа, что и дневник.
-      await client.query(`UPDATE share_card SET owner_key = $2 WHERE owner_key = $1`, [sessionId, accountId]);
-
-      // Перенос ВЛАДЕНИЯ анонимными распознаваниями (RV-06 второго обзора): без этого шага эразура искала
-      // активные/удаляемые сканы ТОЛЬКО по `recognition.account_id` и пропускала распознавания,
-      // созданные анонимно ДО входа, — они переживали `erase_all`, а их `queued`-статус не
-      // откладывал удаление фотографий.
-      await client.query(`UPDATE recognition SET account_id = $2 WHERE device_session_id = $1 AND account_id IS NULL`, [
-        sessionId,
-        accountId,
-      ]);
-
-      // Перенос согласия анонимной сессии на аккаунт (DEC-A-019) — ТОЛЬКО при ПЕРВОМ связывании
-      // ЭТОЙ сессии (RV-05) и только если у аккаунта своего согласия ещё нет; поля device_session
-      // не обнуляются.
-      if (sessionWasUnlinked) {
-        await client.query(
-          `UPDATE account SET consent_version = ds.consent_version, consent_text_hash = ds.consent_text_hash, consent_at = ds.consent_at
-           FROM device_session ds
-           WHERE account.id = $1 AND ds.id = $2 AND account.consent_at IS NULL AND ds.consent_at IS NOT NULL`,
-          [accountId, sessionId],
-        );
-      }
-
-      return { kind: 'success', accountId, migratedEntries: migrated.rowCount ?? 0, cookieToken };
+      return { kind: 'success', accountId, migratedEntries: migrated.diaryMigrated, cookieToken };
       });
     } catch (error) {
       if (error instanceof LoginReplayedError) {

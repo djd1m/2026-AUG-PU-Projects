@@ -15,6 +15,10 @@ export const ADMIN_OVERVIEW_URL = '/api/v1/admin/overview';
 export const ADMIN_PAYOUTS_URL = '/api/v1/admin/payouts';
 export const AUTH_DEVICE_URL = '/api/v1/auth/device';
 
+export function buildInviteCreateUrl(partnerId: string): string {
+  return `/api/v1/admin/partners/${encodeURIComponent(partnerId)}/invites`;
+}
+
 export type DashboardWindow = 'day' | 'week' | 'all';
 
 export function buildDashboardUrl(window: DashboardWindow): string {
@@ -61,6 +65,8 @@ export interface OwnerPartnerRow {
   readonly display_name: string;
   readonly balance_minor: number;
   readonly available_minor: number;
+  /** `true` — у партнёра ещё нет аккаунта: владелец может выписать приглашение (OWN-012). */
+  readonly needs_invite?: boolean;
 }
 
 export interface OwnerOverview {
