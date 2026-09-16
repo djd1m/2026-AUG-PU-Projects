@@ -29,6 +29,9 @@ const FULL_API_ENV: Record<string, string | undefined> = {
   N4_SUBSCRIPTION_PERIOD_DAYS: '30',
   N4_COMMISSION_HOLD_DAYS: '14',
   N4_SCAN_LIMIT_PRO: '100',
+  // Режим платежей: в тестах фейк. Живой режим требует ключей и валит старт без них —
+  // это проверяется отдельно в payments-mode.test.ts.
+  N4_PAYMENTS_MODE: 'fake',
 };
 
 const FULL_RECOGNIZER_ENV: Record<string, string | undefined> = {
@@ -229,6 +232,15 @@ describe('пороги ограничения частоты соответст�
 });
 
 describe('переменные подписки и комиссии (subscription-and-commission)', () => {
+  it('ненастроенный режим платежей валит старт api вместе с остальной конфигурацией', () => {
+    expect(() => loadApiConfig({ ...FULL_API_ENV, N4_PAYMENTS_MODE: undefined })).toThrow(ConfigValidationError);
+    expect(() => loadApiConfig({ ...FULL_API_ENV, N4_PAYMENTS_MODE: 'prod' })).toThrow(/fake \| live/);
+  });
+
+  it('живой режим без ключей провайдера валит СТАРТ, а не первый запрос к оплате', () => {
+    expect(() => loadApiConfig({ ...FULL_API_ENV, N4_PAYMENTS_MODE: 'live', N4_PAYMENTS_PROVIDER: 'yookassa' })).toThrow(/обязательны/);
+  });
+
   // ЧЕТЫРЕ отдельных прогона: проверка одной переменной зеленеет при отсутствующей второй.
   for (const name of ['N4_SUBSCRIPTION_PRICE_MINOR', 'N4_SUBSCRIPTION_PERIOD_DAYS', 'N4_COMMISSION_HOLD_DAYS', 'N4_SCAN_LIMIT_PRO']) {
     it(`отсутствие ${name} валит старт с названной переменной`, () => {

@@ -57,6 +57,10 @@ export interface ApiConfig {
   /** Из него производится секрет HMAC для проверки initData (consent-and-telegram-auth). */
   readonly telegramBotToken: string;
   readonly subscription: SubscriptionConfig;
+  /** СЫРОЙ срез платёжных переменных. Разобранных значений здесь нет намеренно: их
+   * разбирает и проверяет владелец решения — селектор провайдера, и он же испытан на
+   * отказ. Конфигурация лишь доносит срез, не толкуя его. */
+  readonly payments: Readonly<Record<string, string | undefined>>;
 }
 
 export interface RecognizerConfig {

@@ -19,6 +19,7 @@ import {
   type ApiConfig,
 } from '@n4/shared';
 import { isValidTelegramBotTokenFormat } from './auth/token-format.js';
+import { assertPaymentsEnv } from './payments/select-provider.js';
 
 /** Источник значений. По умолчанию — окружение процесса; тест подставляет своё. */
 export type EnvSource = Readonly<Record<string, string | undefined>>;
@@ -57,6 +58,25 @@ export function loadApiConfig(env: EnvSource = process.env): ApiConfig {
         '',
       ),
     },
+    payments: attempt(
+      fail,
+      () => {
+        const slice = {
+          N4_PAYMENTS_MODE: env.N4_PAYMENTS_MODE,
+          N4_PAYMENTS_PROVIDER: env.N4_PAYMENTS_PROVIDER,
+          YOOKASSA_SHOP_ID: env.YOOKASSA_SHOP_ID,
+          YOOKASSA_SECRET_KEY: env.YOOKASSA_SECRET_KEY,
+          YOOKASSA_TEST_MODE: env.YOOKASSA_TEST_MODE,
+        };
+        // Ненастроенные платежи валят СТАРТ, а не первый запрос человека к оплате.
+        assertPaymentsEnv(slice);
+        return slice;
+      },
+      // Запасное значение на случай собранного отказа: пустой срез. До провайдера дело
+      // всё равно не дойдёт — `collectConfig` бросит ConfigValidationError со всеми
+      // накопленными причинами.
+      {} as Readonly<Record<string, string | undefined>>,
+    ),
     subscription: {
       priceMinor: attempt(
         fail,
@@ -158,4 +178,5 @@ export const API_REQUIRED_VARIABLES: readonly string[] = [
   'N4_SUBSCRIPTION_PERIOD_DAYS',
   'N4_COMMISSION_HOLD_DAYS',
   'N4_SCAN_LIMIT_PRO',
+  'N4_PAYMENTS_MODE',
 ];

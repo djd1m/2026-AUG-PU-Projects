@@ -23,6 +23,10 @@ import { registerScansCorrectRoute } from './routes/scans-correct.js';
 import { registerScansPhotoRoute } from './routes/scans-photo.js';
 import { registerShareCardsRoute } from './routes/share-cards.js';
 import { registerShareCardInternalRoute } from './routes/share-card-internal.js';
+import { registerSubscriptionRoutes } from './routes/subscription.js';
+import { registerPaymentsWebhookRoute } from './routes/payments-webhook.js';
+import { selectPaymentProvider } from './payments/select-provider.js';
+import type { PaymentProvider } from './payments/provider.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
 import { createPhotoStorage, type PhotoStorage } from './photo/store-original.js';
 
@@ -34,6 +38,9 @@ export interface ServerDeps {
   readonly rateLimiter?: RateLimiter;
   /** Клиент приватного бакета фото (`scan-pipeline`, FR-scan-pipeline-1/14). Подменяется тестом. */
   readonly storage?: PhotoStorage;
+  /** Платёжный провайдер. Подменяется тестом детерминированным фейком; в проде выбирается
+   * из окружения, и «не настроено» там валит старт, а не откатывается к фейку. */
+  readonly payments?: PaymentProvider;
 }
 
 export function buildServer(deps: ServerDeps): FastifyInstance {
@@ -95,6 +102,25 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   // `/internal/*` — НЕ входит в канон `/api/v1` (ровно 14) и не проксируется `Caddyfile`
   // наружу; вызывается только `apps/web` изнутри сети compose (`routes/share-card-internal.ts`).
   registerShareCardInternalRoute(app, { pool: deps.pool, storage });
+
+  // Подписка и комиссия. Провайдер выбирается ОДИН раз при старте: экземпляр на запрос
+  // означал бы новый HTTP-клиент и новые проверки конфигурации на каждом обращении.
+  const payments = deps.payments ?? selectPaymentProvider(deps.config.payments);
+  registerSubscriptionRoutes(app, {
+    pool: deps.pool,
+    payments,
+    priceMinor: deps.config.subscription.priceMinor,
+    appOrigin: deps.config.appOrigin,
+    logger: deps.logger,
+  });
+  registerPaymentsWebhookRoute(app, {
+    pool: deps.pool,
+    payments,
+    priceMinor: deps.config.subscription.priceMinor,
+    holdDays: deps.config.subscription.holdDays,
+    periodDays: deps.config.subscription.periodDays,
+    logger: deps.logger,
+  });
 
   app.setNotFoundHandler(async (request, reply) => {
     // Неизвестный маршрут ТОЖЕ пишется в журнал: всплеск `404` — это сигнал (сканер, битая
