@@ -86,14 +86,27 @@ async function brightRatioInRegion(cardPath: string, region: { left: number; top
   return bright / total;
 }
 
+/** Кэш fontconfig — В ТОМ ЖЕ одноразовом каталоге, что и сцена (см. комментарий ниже). */
+function cacheDirOf(workDir: string): string {
+  return join(workDir, 'xdg-cache');
+}
+
 function renderAndSave(withShippedFonts: boolean): { readonly path: string } {
   const workDir = mkdtempSync(join(tmpdir(), 'n4-share-card-pixels-'));
   cleanupDirs.push(workDir);
   const fontsConf = writeFontconfigScenario(workDir, withShippedFonts);
+  mkdirSync(cacheDirOf(workDir), { recursive: true });
   const outPath = join(workDir, 'card.jpg');
   execFileSync('npx', ['tsx', HARNESS_SCRIPT, outPath], {
     cwd: PROJECT_ROOT,
-    env: { ...process.env, FONTCONFIG_FILE: fontsConf },
+    // МИГАНИЕ, пойманное 17.09.2026: в полном прогоне «без шрифтов» иногда зеленел ложно.
+    // `FONTCONFIG_FILE` задаёт СВОЙ список каталогов, но fontconfig вдобавок читает ОБЩИЙ кэш
+    // (`$XDG_CACHE_HOME/fontconfig`, иначе `$HOME/.cache`). Соседний тест того же прогона
+    // регистрирует настоящие шрифты и наполняет этот кэш — и «пустая» сцена находит их там,
+    // текст рисуется, а страж, обязанный покраснеть, зеленеет. Кэш и домашний каталог
+    // уводятся в тот же одноразовый рабочий каталог: общего состояния между сценами не
+    // остаётся вовсе.
+    env: { ...process.env, FONTCONFIG_FILE: fontsConf, XDG_CACHE_HOME: cacheDirOf(workDir), HOME: workDir },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   return { path: outPath };
@@ -101,40 +114,38 @@ function renderAndSave(withShippedFonts: boolean): { readonly path: string } {
 
 describe('карточка шеринга: на растре ЕСТЬ видимый текст (не только в SVG-разметке)', () => {
   it(
-    'с шрифтами, которые Dockerfile кладёт в образ api — название блюда и число в плитке видны',
+    'шрифты из образа дают ЗАМЕТНО больше светлых пикселей, чем их отсутствие',
     async () => {
-      const { path } = renderAndSave(true);
+      // СРАВНЕНИЕ ДВУХ РЕНДЕРОВ, а не абсолютный порог. Утверждение стража — «шрифты в образе
+      // делают текст видимым», и проверять его надо именно так.
+      //
+      // Абсолютный порог здесь мигал: 1 отказ на 10 полных прогонов (замерено 17.09.2026).
+      // Ветка «без шрифтов» изредка набирала светлых пикселей чуть выше порога — источник
+      // нашёлся не полностью, а подбирать порог под наблюдаемый разброс значит подгонять
+      // страж под то, что он обязан ловить. Отношение двух рендеров от этого разброса не
+      // зависит: если Dockerfile перестанет класть шрифты, обе сцены станут одинаковыми, и
+      // отношение схлопнется — страж покраснеет по той самой причине, ради которой написан.
       const geometry = computeCardGeometry();
-      // Раскладка OWN-013: фото во весь кадр, текстовый блок — над чипами макросов.
       const dishNameRegion = { left: 60, top: geometry.heroBaselineY - 120, width: CARD_WIDTH - 120, height: 110 };
       const tileRegion = geometry.tileRects[0]!;
+      const tileBox = { left: tileRegion.x, top: tileRegion.y, width: tileRegion.width, height: tileRegion.height };
 
-      const dishRatio = await brightRatioInRegion(path, dishNameRegion);
-      const tileRatio = await brightRatioInRegion(path, { left: tileRegion.x, top: tileRegion.y, width: tileRegion.width, height: tileRegion.height });
+      const withFonts = renderAndSave(true).path;
+      const withoutFonts = renderAndSave(false).path;
 
-      expect(dishRatio).toBeGreaterThanOrEqual(DISH_NAME_BRIGHT_RATIO_MIN);
-      expect(tileRatio).toBeGreaterThanOrEqual(TILE_BRIGHT_RATIO_MIN);
+      const dishWith = await brightRatioInRegion(withFonts, dishNameRegion);
+      const dishWithout = await brightRatioInRegion(withoutFonts, dishNameRegion);
+      const tileWith = await brightRatioInRegion(withFonts, tileBox);
+      const tileWithout = await brightRatioInRegion(withoutFonts, tileBox);
+
+      // Со шрифтами текст ЕСТЬ: доля светлых пикселей заметна сама по себе.
+      expect(dishWith).toBeGreaterThanOrEqual(DISH_NAME_BRIGHT_RATIO_MIN);
+      expect(tileWith).toBeGreaterThanOrEqual(TILE_BRIGHT_RATIO_MIN);
+
+      // И она КРАТНО больше, чем без шрифтов, — это и есть проверяемое утверждение.
+      expect(dishWith).toBeGreaterThan(dishWithout * 5);
+      expect(tileWith).toBeGreaterThan(tileWithout * 5);
     },
-    30_000,
-  );
-
-  it(
-    'ИСПЫТАНИЕ (guard-must-be-able-to-fail): тот же рендер БЕЗ единого зарегистрированного шрифта (найденное на стенде состояние) не проходит те же пороги',
-    async () => {
-      const { path } = renderAndSave(false);
-      const geometry = computeCardGeometry();
-      // Раскладка OWN-013: фото во весь кадр, текстовый блок — над чипами макросов.
-      const dishNameRegion = { left: 60, top: geometry.heroBaselineY - 120, width: CARD_WIDTH - 120, height: 110 };
-      const tileRegion = geometry.tileRects[0]!;
-
-      const dishRatio = await brightRatioInRegion(path, dishNameRegion);
-      const tileRatio = await brightRatioInRegion(path, { left: tileRegion.x, top: tileRegion.y, width: tileRegion.width, height: tileRegion.height });
-
-      // Именно ЭТА пара утверждений красная без фикса Dockerfile — доказательство, что
-      // пороги выше не выбраны так, чтобы совпасть с любым исходом.
-      expect(dishRatio).toBeLessThan(DISH_NAME_BRIGHT_RATIO_MIN);
-      expect(tileRatio).toBeLessThan(TILE_BRIGHT_RATIO_MIN);
-    },
-    30_000,
+    60_000,
   );
 });

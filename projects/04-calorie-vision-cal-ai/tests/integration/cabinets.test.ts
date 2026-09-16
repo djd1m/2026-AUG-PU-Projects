@@ -168,3 +168,40 @@ describe('кабинет владельца', () => {
     expect(Number(payouts.rows[0]!.c)).toBe(1);
   });
 });
+
+describe('выгрузка движений (пункт 5, 16.09.2026)', () => {
+  it('партнёр выгружает СВОИ движения: заголовок CSV, вложение, BOM и запятая в сумме', async () => {
+    const { token } = await seedAccount(555_000_111);
+    const partnerId = await seedPartnerWithEntries((await pool.query<{ id: string }>(`SELECT account_id AS id FROM device_session WHERE cookie_token_hash = $1`, [hashSessionToken(token)])).rows[0]!.id);
+    expect(partnerId).toBeDefined();
+
+    const response = await app.inject({ method: 'GET', url: '/api/v1/partner/earnings/export', cookies: { [SESSION_COOKIE_NAME]: token } });
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['content-type']).toContain('text/csv');
+    expect(String(response.headers['content-disposition'])).toContain('attachment; filename="tarelka-nachisleniya-');
+    const body = response.body;
+    expect(body.charCodeAt(0)).toBe(0xfeff); // BOM — иначе Excel ломает кириллицу
+    expect(body).toContain('Дата;Тип;Сумма, ₽;Доступно с');
+    // Суммы — с запятой, иначе Excel не сложит колонку.
+    expect(body).toMatch(/\d+,\d{2}/);
+    // Плательщики наружу не уходят — тот же запрет, что и в кабинете.
+    expect(body).not.toMatch(/account_id|payment_id|telegram_user_id/);
+  });
+
+  it('не партнёр — 403, посторонний без входа — 401', async () => {
+    const { token } = await seedAccount(555_000_222);
+    expect((await app.inject({ method: 'GET', url: '/api/v1/partner/earnings/export', cookies: { [SESSION_COOKIE_NAME]: token } })).statusCode).toBe(403);
+    expect((await app.inject({ method: 'GET', url: '/api/v1/partner/earnings/export' })).statusCode).toBe(401);
+  });
+
+  it('владелец выгружает движения ВСЕХ партнёров; посторонний получает 404', async () => {
+    const owner = await seedAccount(OWNER_TELEGRAM_ID);
+    await seedPartnerWithEntries(null);
+    const response = await app.inject({ method: 'GET', url: '/api/v1/admin/export/commissions', cookies: { [SESSION_COOKIE_NAME]: owner.token } });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toContain('Партнёр;Контакт;Дата;Тип;Сумма, ₽;Доступно с');
+
+    const stranger = await seedAccount(555_000_333);
+    expect((await app.inject({ method: 'GET', url: '/api/v1/admin/export/commissions', cookies: { [SESSION_COOKIE_NAME]: stranger.token } })).statusCode).toBe(404);
+  });
+});

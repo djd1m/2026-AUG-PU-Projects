@@ -15,6 +15,9 @@ import { AddPartner } from './add-partner';
 import {
   ADMIN_OVERVIEW_URL,
   buildInviteCreateUrl,
+  fetchNotifications,
+  markNotificationsRead,
+  type NotificationItem,
   ADMIN_PAYOUTS_URL,
   AUTH_DEVICE_URL,
   EARNINGS_URL,
@@ -65,6 +68,7 @@ export default function CabinetPage(): React.JSX.Element {
   const [dashboard, setDashboard] = useState<DashboardState>({ kind: 'loading' });
   const [window_, setWindow] = useState<DashboardWindow>('week');
   const [owner, setOwner] = useState<OwnerState>({ kind: 'loading' });
+  const [notifications, setNotifications] = useState<readonly NotificationItem[]>([]);
 
   const loadPartner = useCallback(async (): Promise<void> => {
     try {
@@ -98,6 +102,7 @@ export default function CabinetPage(): React.JSX.Element {
     void (async () => {
       await loadPartner();
       await Promise.all([loadDashboard('week'), loadOwner()]);
+      setNotifications(await fetchNotifications());
     })();
   }, [loadPartner, loadDashboard, loadOwner]);
 
@@ -116,6 +121,30 @@ export default function CabinetPage(): React.JSX.Element {
           <a className="btn btn--accent btn--wide" href="/settings">
             Войти через Telegram
           </a>
+        </section>
+      ) : null}
+
+      {notifications.length > 0 ? (
+        <section className="card cabinet__news">
+          <h2>Новое</h2>
+          <ul className="cabinet__entries">
+            {notifications.map((item) => (
+              <li key={item.id} className="cabinet__entry cabinet__entry--news">
+                <span>{item.text}</span>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className="btn btn--ghost btn--tiny"
+            onClick={() => {
+              // Пометка прочитанными — по ЯВНОМУ действию, а не по факту открытия страницы:
+              // человек мог открыть кабинет в фоне и не увидеть уведомления вовсе.
+              void markNotificationsRead().then(() => setNotifications([]));
+            }}
+          >
+            прочитано
+          </button>
         </section>
       ) : null}
 
@@ -218,6 +247,11 @@ function PartnerSection({
       )}
 
       <h3>Движения</h3>
+      {/* Выгрузка — обычная ссылка, а не fetch: браузер сам сохранит файл с именем из
+          Content-Disposition, и не нужно держать бинарь в памяти вкладки. */}
+      <a className="btn btn--ghost btn--tiny" href="/api/v1/partner/earnings/export">
+        выгрузить в CSV
+      </a>
       {e.entries.length === 0 ? (
         <p className="muted">Начислений пока нет.</p>
       ) : (
@@ -288,6 +322,9 @@ function OwnerSection({ overview, reload }: { readonly overview: OwnerOverview; 
 
       <h3>Партнёры</h3>
       <AddPartner onCreated={reload} />
+      <a className="btn btn--ghost btn--tiny" href="/api/v1/admin/export/commissions">
+        выгрузить движения всех партнёров
+      </a>
       {overview.partners.length === 0 ? (
         <p className="muted">Партнёров ещё нет — заведите первого кнопкой выше.</p>
       ) : (

@@ -16,6 +16,28 @@ export const ADMIN_PAYOUTS_URL = '/api/v1/admin/payouts';
 export const AUTH_DEVICE_URL = '/api/v1/auth/device';
 
 export const ADMIN_PARTNERS_URL = '/api/v1/admin/partners';
+export const NOTIFICATIONS_URL = '/api/v1/notifications';
+export const NOTIFICATIONS_READ_URL = '/api/v1/notifications/read';
+
+export interface NotificationItem {
+  readonly id: string;
+  readonly kind: string;
+  readonly amount_minor: number | null;
+  readonly created_at: string;
+  readonly text: string;
+}
+
+/** Непрочитанные уведомления. Анонимная сессия честно получает пустой список, а не отказ. */
+export async function fetchNotifications(): Promise<readonly NotificationItem[]> {
+  const response = await fetch(NOTIFICATIONS_URL, { credentials: 'same-origin' }).catch(() => null);
+  if (response === null || response.status !== 200) return [];
+  const body = (await response.json().catch(() => null)) as { data?: { items?: readonly NotificationItem[] } } | null;
+  return body?.data?.items ?? [];
+}
+
+export async function markNotificationsRead(): Promise<void> {
+  await fetch(NOTIFICATIONS_READ_URL, { method: 'POST', credentials: 'same-origin' }).catch(() => undefined);
+}
 
 export interface CreatePartnerInput {
   readonly displayName: string;

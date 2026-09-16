@@ -30,6 +30,9 @@ import { registerAdminRoutes } from './routes/admin.js';
 import { registerAuthEmailRoutes } from './routes/auth-email.js';
 import { registerPartnerInvitesRoutes } from './routes/partner-invites.js';
 import { registerAdminPartnersRoutes } from './routes/admin-partners.js';
+import { registerExportRoutes } from './routes/exports.js';
+import { registerNotificationsRoutes } from './routes/notifications.js';
+import { createTelegramSender } from './notifications/notify.js';
 import { selectPaymentProvider } from './payments/select-provider.js';
 import type { PaymentProvider } from './payments/provider.js';
 import { clientAddressFrom, toIpPrefix } from './session/ip-prefix.js';
@@ -122,13 +125,24 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     logger: deps.logger,
   });
   registerEarningsRoute(app, { pool: deps.pool });
-  registerAdminRoutes(app, { pool: deps.pool, logger: deps.logger, ownerTelegramUserIds: deps.ownerTelegramUserIds, ownerEmails: deps.ownerEmails });
+  registerAdminRoutes(app, {
+    pool: deps.pool,
+    logger: deps.logger,
+    ownerTelegramUserIds: deps.ownerTelegramUserIds,
+    ownerEmails: deps.ownerEmails,
+    notificationSender: deps.config.telegramBotToken === '' ? undefined : createTelegramSender(deps.config.telegramBotToken),
+  });
   // OWN-012: PWA-родная идентичность и грант партнёра.
   const owners = { ownerTelegramUserIds: deps.ownerTelegramUserIds, ownerEmails: deps.ownerEmails };
   registerAuthEmailRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
   registerPartnerInvitesRoutes(app, { pool: deps.pool, logger: deps.logger, owners, appOrigin: deps.config.appOrigin });
   registerAdminPartnersRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
+  registerExportRoutes(app, { pool: deps.pool, logger: deps.logger, owners });
+  registerNotificationsRoutes(app, { pool: deps.pool, logger: deps.logger });
   registerPaymentsWebhookRoute(app, {
+    // Уведомления в Telegram — только тем партнёрам, у кого аккаунт связан с Telegram, и
+    // только как НАДСТРОЙКА над строкой в базе. Токен уже есть у `api` и больше нигде.
+    notificationSender: deps.config.telegramBotToken === '' ? undefined : createTelegramSender(deps.config.telegramBotToken),
     pool: deps.pool,
     payments,
     priceMinor: deps.config.subscription.priceMinor,

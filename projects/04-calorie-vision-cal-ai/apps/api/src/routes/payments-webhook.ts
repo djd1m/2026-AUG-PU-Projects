@@ -26,6 +26,7 @@ import { withTransaction } from '@n4/db';
 import { fail, ok, type Logger } from '@n4/shared';
 import { PaymentProviderUnavailable, PaymentVerificationError, type PaymentProvider, type RemotePayment } from '../payments/provider.js';
 import { accrueCommission, clawbackCommission } from '../commission/accrue.js';
+import { deliverNotification, notifyPartner, type TelegramSender } from '../notifications/notify.js';
 
 export interface PaymentsWebhookDeps {
   readonly pool: DbPool;
@@ -34,6 +35,9 @@ export interface PaymentsWebhookDeps {
   readonly holdDays: number;
   readonly periodDays: number;
   readonly logger: Logger;
+  /** Отправитель уведомлений наружу. `undefined` — доставки нет, строка в базе остаётся
+   *  единственным каналом (тесты и стенд без бота). */
+  readonly notificationSender?: TelegramSender;
 }
 
 /**
@@ -120,6 +124,13 @@ export function registerPaymentsWebhookRoute(app: FastifyInstance, deps: Payment
           if (verified.kind === 'refund_succeeded') return applyRefund(client, deps, payment);
           return applyPayment(client, deps, payment);
         });
+        // ПОСЛЕ КОММИТА: доставка уведомления наружу. Ни одна её неудача не влияет на деньги —
+        // строка уведомления уже записана и видна в кабинете (DEC-A-059). `await` здесь
+        // законен: ответ провайдеру и так отдаётся после записи, а сеть к Telegram короткая;
+        // соединение пула при этом НЕ удерживается — транзакция закрыта строкой выше.
+        if (outcome.applied && outcome.notificationId !== null && outcome.notificationId !== undefined) {
+          await deliverNotification(deps.pool, { sender: deps.notificationSender ?? null, logger: deps.logger }, outcome.notificationId);
+        }
         return reply.code(200).send(ok(outcome));
       } catch (error) {
         if (error instanceof PaymentProviderUnavailable) {
@@ -138,7 +149,10 @@ function sha256(body: Buffer): string {
 }
 
 type ApplyOutcome =
-  | { readonly applied: true; readonly commission: string }
+  /** `notificationId` — уведомление партнёру, СОЗДАННОЕ в этой же транзакции. Доставка наружу
+   *  выполняется вызывающим ПОСЛЕ коммита: сеть внутри транзакции держит соединение пула, а
+   *  отказ Telegram не имеет права откатывать деньги (DEC-A-059). */
+  | { readonly applied: true; readonly commission: string; readonly notificationId?: string | null }
   | { readonly applied: false; readonly reason: 'duplicate' | 'needs_review' | 'no_subscription' };
 
 async function applyPayment(client: Parameters<typeof accrueCommission>[0], deps: PaymentsWebhookDeps, payment: RemotePayment): Promise<ApplyOutcome> {
@@ -190,7 +204,14 @@ async function applyPayment(client: Parameters<typeof accrueCommission>[0], deps
     paidAt: paymentRow.paid_at,
     holdDays: deps.holdDays,
   });
-  return { applied: true, commission: accrual.kind === 'accrued' ? `accrued:${accrual.amountMinor}` : `skipped:${accrual.reason}` };
+  const accrualNotification = accrual.kind === 'accrued'
+    ? await notifyPartner(client, { partnerId: accrual.partnerId, kind: 'commission_accrued', amountMinor: accrual.amountMinor })
+    : null;
+  return {
+    applied: true,
+    commission: accrual.kind === 'accrued' ? `accrued:${accrual.amountMinor}` : `skipped:${accrual.reason}`,
+    notificationId: accrualNotification,
+  };
 }
 
 async function applyRefund(client: Parameters<typeof accrueCommission>[0], deps: PaymentsWebhookDeps, payment: RemotePayment): Promise<ApplyOutcome> {
@@ -204,5 +225,12 @@ async function applyRefund(client: Parameters<typeof accrueCommission>[0], deps:
     await client.query(`UPDATE subscription SET status = 'expired' WHERE id = $1`, [row.subscription_id]);
   }
   const clawback = await clawbackCommission(client, row.id);
-  return { applied: true, commission: clawback.kind === 'clawed_back' ? `clawback:${clawback.amountMinor}` : `skipped:${clawback.reason}` };
+  const clawbackNotification = clawback.kind === 'clawed_back'
+    ? await notifyPartner(client, { partnerId: clawback.partnerId, kind: 'commission_clawed_back', amountMinor: clawback.amountMinor })
+    : null;
+  return {
+    applied: true,
+    commission: clawback.kind === 'clawed_back' ? `clawback:${clawback.amountMinor}` : `skipped:${clawback.reason}`,
+    notificationId: clawbackNotification,
+  };
 }

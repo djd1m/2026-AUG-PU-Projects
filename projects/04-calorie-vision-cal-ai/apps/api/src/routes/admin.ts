@@ -12,6 +12,7 @@ import type { DbPool } from '@n4/db';
 import { withTransaction } from '@n4/db';
 import { fail, ok, type Logger } from '@n4/shared';
 import { requireSession } from './scans.js';
+import { deliverNotification, notifyPartner, type TelegramSender } from '../notifications/notify.js';
 
 /**
  * Владельцы продукта. Пусто ЗАКОННО и означает «кабинет закрыт всем» — это самое строгое
@@ -29,6 +30,8 @@ export interface OwnerLists {
 export interface AdminDeps extends OwnerLists {
   readonly pool: DbPool;
   readonly logger: Logger;
+  /** Отправитель уведомлений наружу; `undefined` — только строка в базе. */
+  readonly notificationSender?: TelegramSender;
 }
 
 /** Чистая проверка владения — по Telegram-id ИЛИ по почте; пустые списки → никто. */
@@ -170,6 +173,13 @@ export function registerAdminRoutes(app: FastifyInstance, deps: AdminDeps): void
         return reply.code(200).send(ok({ recorded: false, reason: 'duplicate_payout_key' }));
       }
       deps.logger.info('payout_recorded', { partnerId, amountMinor });
+      // Уведомление о выплате — вне транзакции записи: сама выплата уже зафиксирована, и
+      // отказ уведомления не имеет права её отменять (DEC-A-059). Строка в базе создаётся
+      // всегда, доставка наружу — по возможности.
+      const notificationId = await notifyPartner(deps.pool, { partnerId, kind: 'payout_recorded', amountMinor });
+      if (notificationId !== null) {
+        await deliverNotification(deps.pool, { sender: deps.notificationSender ?? null, logger: deps.logger }, notificationId);
+      }
       return reply.code(201).send(ok({ recorded: true, entry_id: outcome.id, available_after_minor: outcome.availableMinor }));
     } catch (error) {
       deps.logger.error('payout_failed', { message: (error as Error).message });

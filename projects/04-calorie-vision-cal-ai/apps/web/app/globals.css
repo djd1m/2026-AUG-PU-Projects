@@ -984,3 +984,10 @@ input:focus-visible {
   padding-bottom: var(--sp-4);
   border-bottom: 1px solid var(--line-strong);
 }
+
+.cabinet__news {
+  border-left: 3px solid var(--accent);
+}
+.cabinet__entry--news {
+  grid-template-columns: 1fr;
+}
