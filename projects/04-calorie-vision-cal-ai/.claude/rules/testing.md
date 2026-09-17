@@ -7,7 +7,9 @@
 [`shared-resource-verification.md`](../../../../.claude/rules/shared-resource-verification.md),
 [`cost-of-detection-ladder.md`](../../../../.claude/rules/cost-of-detection-ladder.md).
 
-Раннер — vitest. Ни одного тестового файла ещё не существует: план проверок не является проверкой.
+Раннер — vitest. На 17.09.2026: **516 юнит-тестов и стражей в 72 файлах**, интеграционные — на НАСТОЯЩЕМ
+PostgreSQL в профиле `test` compose (отдельная база `n4_test`, DEC-A-056: боевая база защищена
+стражем по закрытому списку имён внутри `tests/helpers/db.ts`).
 
 ## Слой выбирается по природе признака, а не по удобству
 
@@ -92,11 +94,13 @@ node ../../.claude/hooks/check-model-cost.cjs .    # потолки вызово
 node ../../.claude/hooks/check-job-contract.cjs .  # три состояния долгой задачи
 ```
 
-**`scripts/check-env-wiring.sh` в этом репозитории ОТСУТСТВУЕТ**, хотя на него ссылаются
-`docs/Completion.md`, проектный `CLAUDE.md` и корневое правило
-[`deployment-seams.md`](../../../../.claude/rules/deployment-seams.md) (страж №1). Проверено
-`ls scripts/` 2026-09-12: есть `check-pipeline-gaps.sh`, `check-port-conflicts.sh`,
-`check-superseded.sh`, `complexity-router.sh`. Пока скрипта нет, полнота проброса переменных —
-слой 4 (чтение `docker compose config` глазами), и так и помечается в квитанции. Написать его —
-работа фичи `foundation`; при написании учесть две ошибки, названные в `deployment-seams.md`:
-регэксп `[A-Z][A-Z0-9_]*` (без цифр `S3_ENDPOINT` режется до `S`) и ЯВНЫЙ список исключений.
+`scripts/check-env-wiring.sh` (страж №1 из
+[`deployment-seams.md`](../../../../.claude/rules/deployment-seams.md)) НАПИСАН и входит в набор
+перед передачей результата:
+
+```bash
+bash scripts/check-env-wiring.sh   # 0 — потерь нет; 1 — переменная читается кодом, но не проброшена; 2 — НЕ ВЫПОЛНЕНА
+```
+
+Обе ошибки, названные в `deployment-seams.md`, учтены при написании: регэксп `[A-Z][A-Z0-9_]*`
+(без цифр `S3_ENDPOINT` режется до `S`) и ЯВНЫЙ список исключений вместо молчаливого.

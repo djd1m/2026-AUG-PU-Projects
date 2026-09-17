@@ -9,9 +9,18 @@ p-replicator, прежде чем реализовывать что-либо з�
 Фото-трекер калорий: пользователь снимает тарелку, через секунды видит блюдо, калории и три
 макронутриента — и видит, откуда взято каждое число (запись открытой базы USDA FoodData Central, её
 идентификатор, порция в граммах). Клиент — один Next.js-фронт на PWA и Telegram Mini App. Контур
-запуска — Россия и СНГ, Telegram-first. Статус: технический план плюс скелет контейнеров — Phase 1–4 завершены 2026-09-12.
-Реализация не начиналась: `package.json` монорепо, исходники, миграции и тесты не созданы.
-`docker-compose.yml` и `Dockerfile` существуют как скаффолды и сборкой не проверены.
+запуска — Россия и СНГ. **PWA — первый приоритет, Telegram — вторая очередь** (OWN-012 от 16.09.2026):
+вход по почте с паролем основной, вход через Telegram остаётся вторым способом.
+
+**Статус на 17.09.2026: продукт работает на публичном стенде `https://tarelka.aicoding.space`.**
+Все девять фич роадмапа `done`, плюс партнёрская схема доведена до конца (пять пробелов из
+`docs/operations/partner-journey.md`). Живой путь пройден целиком: ссылка блогера → распознавание →
+регистрация → оплата картой через ЮKassa (тестовый магазин) → подписка → начисление комиссии
+партнёру → его кабинет. 516 юнит-тестов и стражей и интеграционные на настоящем PostgreSQL зелёные.
+
+Что НЕ живое и почему: приём НАСТОЯЩИХ денег (магазин ЮKassa в тестовом режиме, `YOOKASSA_TEST_MODE=true`),
+автоматическая отправка выплат партнёрам (нужен отдельный договор на выплаты и ИП — DEC-A-062),
+вход через Telegram живьём не проверялся (нужен аккаунт владельца).
 
 ## Документация — читать в этом порядке
 
@@ -70,14 +79,16 @@ USDA FoodData Central (CC0) + ручная RU-курация 100–300 блюд 
 
 ## Команды разработки
 
-`package.json` монорепо ещё не заведён — появится на шаге `/start`. Команды ниже — целевые, а не
-подтверждённые исходником:
+Монорепо заведено (npm workspaces), команды проверены прогоном:
 
 ```bash
-npm test          # unit + integration (Refinement.md), включая конкурентный тест квоты
+npm test          # unit + стражи: 516 из 516 в 72 файлах на 17.09.2026
 npm run lint
 npm run build      # по каждому workspace: web, api, recognizer
 npm run import:fdc # разовый импорт USDA FoodData Central, не сервис compose
+
+# интеграционные — на НАСТОЯЩЕМ PostgreSQL, профиль `test` compose:
+docker compose --project-directory . --profile test run --rm test
 ```
 
 `docker compose up` — только после проверок:
@@ -85,7 +96,7 @@ npm run import:fdc # разовый импорт USDA FoodData Central, не с�
 ```bash
 bash scripts/check-port-conflicts.sh projects/04-calorie-vision-cal-ai
 node .claude/hooks/check-ports.cjs projects/04-calorie-vision-cal-ai
-# bash scripts/check-env-wiring.sh — СКРИПТА НЕТ в репозитории; см. раздел «Скаффолды Phase 4»
+bash scripts/check-env-wiring.sh   # страж №1 deployment-seams: 17.09.2026 код 0 по api/recognizer/web
 ```
 
 ## Правила репозитория, применимые к этому проекту
@@ -142,12 +153,16 @@ node .claude/hooks/check-ports.cjs projects/04-calorie-vision-cal-ai
 `/feature` прогонять `bash ../../scripts/complexity-router.sh`: код `1` означает L/XL и остановку на
 плане у владельца, код `2` — «проверка не выполнена», а не тир T.
 
-[`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — восемь MVP-фич в линейном порядке
+[`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — одиннадцать фич в линейном порядке
 зависимостей: `foundation` → `scan-pipeline` → `source-and-correct` → `consent-and-telegram-auth` →
 `diary-and-streak` → `share-card-and-growth-events` → `partner-codes-and-cabinet` →
-`pro-interest-and-limits-ui`. Статус `next` только у первой, остальные `planned`; ни одна не `done`.
+`pro-interest-and-limits-ui` → `subscription-and-commission` → `partner-links-and-admin` →
+`partner-notifications-and-payouts`. **Все одиннадцать `done` на 17.09.2026.**
 Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
 `scan-pipeline` записан `complex`, хотя по локальной таблице он XL — трогает деньги.
+
+У каждой фичи есть квитанция `docs/features/<slug>/05_completion.md`: что проверено и ЧЕМ, что фича
+НЕ доказывает, какие стражи испытаны мутацией, что осталось хвостом.
 
 `diary-and-streak` и `share-card-and-growth-events` помечены `medium` и назначены кандидатами
 контролируемых пар эксперимента EXP-N4-001 (плечи Opus 5 / Sonnet 5, судья Codex Astra medium);
@@ -157,22 +172,32 @@ node .claude/hooks/check-ports.cjs projects/04-calorie-vision-cal-ai
 
 `docker-compose.yml` (6 сервисов канона плюс служебный `test`), `Dockerfile` (multi-stage, цели
 `api`/`recognizer`/`web`), `.dockerignore`, `.env.example`, `.gitignore`. Проверено: `docker compose
-config` → 0, `check-ports.cjs` → 0, `check-port-conflicts.sh` → 0, образов без тега нет. **Сборкой
-не проверено** — исходников не существует, и первым делом фичи `foundation` должен быть
-`docker compose build`.
+config` → 0, `check-ports.cjs` → 0, `check-port-conflicts.sh` → 0, образов без тега нет.
+Сборкой подтверждено: образы `api`, `web`, `recognizer` собираются и работают на стенде.
+`docker compose build` запускать **с `--project-directory .`** из каталога проекта — из корня
+монорепо compose не находит конфигурацию.
 
 Единственный публикуемый порт — `127.0.0.1:${N4_EDGE_PORT:-4180}` у Caddy в профиле `edge`. У `web`
 хостового порта НЕТ: черновик его публиковал, и `check-port-conflicts.sh` вернул `1` — публикация
 рядом с прокси позволяет обойти прокси вместе с ограничением частоты, которое тот держит.
 
-`scripts/check-env-wiring.sh`, на который ссылаются `docs/Completion.md` и раздел «Команды
-разработки» выше, в репозитории ОТСУТСТВУЕТ. Пока его нет, полнота проброса переменных остаётся
-суждением и так помечается; написать его — работа фичи `foundation`.
+`scripts/check-env-wiring.sh` НАПИСАН фичей `foundation` и работает: 17.09.2026 код возврата `0`,
+все читаемые кодом переменные доезжают до `api`, `recognizer` и `web`. Полнота проброса переменных
+перестала быть суждением и стала слоем 1.
 
 ## Development insights
 
-_Пусто на момент записи — реализация не начиналась. Заполняется через `/myinsights` по мере
-разработки (`../../.claude/rules/insights-capture.md`)._
+Крупные уроки прогона вынесены в документы, а не в этот раздел:
+
+- [`docs/operations/partner-journey.md`](docs/operations/partner-journey.md) — путь блогера целиком
+  и пять пробелов, которые закрывались 16–17.09.2026.
+- [`docs/operations/functional-verification.md`](docs/operations/functional-verification.md) —
+  сценарий проверки по URI, включая новые экраны.
+- [`docs/operations/share-card-badge-research.md`](docs/operations/share-card-badge-research.md) —
+  почему бейдж выглядит именно так (safe zone сторис, контраст, стекло через `sharp.blur`).
+- [`docs/prompt-playbook.md`](docs/prompt-playbook.md) — 29 повторно применимых постановок.
+
+Точечные грабли — через `/myinsights` (`../../.claude/rules/insights-capture.md`).
 
 ## Parallel execution strategy
 
