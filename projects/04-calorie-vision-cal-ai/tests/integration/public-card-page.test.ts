@@ -35,12 +35,16 @@ beforeAll(async () => {
   if (address === null || typeof address === 'string') throw new Error('эфемерный порт не выдан');
   apiInternalUrl = `http://127.0.0.1:${address.port}`;
   process.env.API_INTERNAL_URL = apiInternalUrl;
+  // Страница рендерится СЕРВЕРОМ и читает конфигурацию `web` целиком, включая имя бота
+  // (c47f369): без него рендер валится, и это правильно — зашитое имя вело на чужого бота.
+  process.env.TELEGRAM_BOT_USERNAME = 'calorytarelka_bot';
 }, 60_000);
 
 afterAll(async () => {
   await app.close();
   await pool.end();
   delete process.env.API_INTERNAL_URL;
+  delete process.env.TELEGRAM_BOT_USERNAME;
 });
 
 beforeEach(async () => {

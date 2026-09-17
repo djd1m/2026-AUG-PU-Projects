@@ -68,7 +68,13 @@ describe('миграции', () => {
       // молча: список остаётся закрытым, и таблица, появившаяся без записи, по-прежнему
       // красит этот тест. Ровно за этим он и написан.
       const SUBSCRIPTION_TABLES = ['subscription', 'payment_intent', 'payment_event', 'payment', 'commission_entry'];
-      expect(names.sort()).toEqual([...CANON_TABLES, 'schema_migration', 'telegram_login_replay', ...SUBSCRIPTION_TABLES].sort());
+      // 011 (вход по почте) и 012 (уведомления) — расширение канона, объявленное в
+      // DEC-A-057/059. Список здесь ЗАКРЫТЫЙ намеренно: молча появившаяся таблица должна
+      // ронять этот тест, иначе схема расходится с каноном незаметно.
+      const LATER_TABLES = ['partner_invite', 'notification'];
+      expect(names.sort()).toEqual(
+        [...CANON_TABLES, 'schema_migration', 'telegram_login_replay', ...SUBSCRIPTION_TABLES, ...LATER_TABLES].sort(),
+      );
 
       const extension = await client.query("SELECT 1 FROM pg_extension WHERE extname = 'pg_trgm'");
       expect(extension.rowCount).toBe(1);

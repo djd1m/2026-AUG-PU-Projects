@@ -67,7 +67,11 @@ describe('конкурентное пересечение: активация и
       expect(activateResult.value).toEqual({ outcome: 'activated' });
     }
     if (applyResult.status === 'fulfilled') {
-      expect(applyResult.value).toEqual({ outcome: 'conflict' }); // тот же код поверх explicit — конфликт (AC-4)
+      // DEC-A-058: исход не изменился, к нему добавилось поле `sameCode` — повтор по ТОЙ ЖЕ
+      // ссылке отличается от чужого кода. Поэтому `toMatchObject`, а не `toEqual`; само
+      // различение стережёт отдельный тест `same_code`, иначе ослабленное ожидание пусто.
+      expect(applyResult.value).toMatchObject({ outcome: 'conflict' }); // тот же код поверх explicit — конфликт (AC-4)
+      expect(applyResult.value).toMatchObject({ sameCode: true });
     }
 
     const attribution = await attributionOf(pool, session.id);

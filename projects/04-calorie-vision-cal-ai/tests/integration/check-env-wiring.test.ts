@@ -47,7 +47,11 @@ function composeConfig(apiVariables: string[]): string {
     block('api', apiVariables),
     block('recognizer', RECOGNIZER_VARIABLES),
     // web получил ЧИСЛА и надпись, но НИ ОДНОГО реквизита провайдера: деньги принимает api.
-    block('web', ['APP_ORIGIN', 'API_INTERNAL_URL', 'N4_PAYMENTS_MODE', 'N4_SCAN_LIMIT_PRO', 'N4_SCAN_LIMIT_USER', 'N4_SUBSCRIPTION_PRICE_MINOR']),
+    // TELEGRAM_BOT_USERNAME — у `web`, а НЕ у `api`: имя бота рисуется на экране, токен
+    // проверяется в `api` (`secrets-management.md`). 16.09.2026 (c47f369) оно переехало из
+    // литерала в разметке в конфигурацию; пока его не было в этой фикстуре, вход 1 («полная
+    // конфигурация») давал код 1 — фикстура полноты сама была неполной, и страж это показал.
+    block('web', ['APP_ORIGIN', 'API_INTERNAL_URL', 'N4_PAYMENTS_MODE', 'N4_SCAN_LIMIT_PRO', 'N4_SCAN_LIMIT_USER', 'N4_SUBSCRIPTION_PRICE_MINOR', 'TELEGRAM_BOT_USERNAME']),
     '',
   ].join('\n');
 }
