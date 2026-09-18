@@ -126,7 +126,12 @@ async function main(): Promise<void> {
   const orphanLister = createBucketLister(config);
   const hourMs = 60 * 60 * 1000;
   const orphanTimer = setInterval(() => {
-    purgeOrphanObjects(pool, orphanLister).catch((error: unknown) => logger.error('purge_orphans_failed', { message: (error as Error).message }));
+    purgeOrphanObjects(pool, orphanLister)
+      // Удаляющая работа ОБЯЗАНА оставлять след. Прежде она писала только про ОТКАЗ, и
+      // поэтому удаление восьми карточек «поделиться» 17.09.2026 не оставило в журнале
+      // ни строки: искать было нечего, и причину пришлось восстанавливать по коду.
+      .then(({ scanned, removed, skippedForeign }) => logger.info('purge_orphans_done', { scanned, removed, skippedForeign }))
+      .catch((error: unknown) => logger.error('purge_orphans_failed', { message: (error as Error).message }));
   }, hourMs);
   orphanTimer.unref();
 

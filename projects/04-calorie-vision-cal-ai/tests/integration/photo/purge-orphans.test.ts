@@ -49,7 +49,10 @@ const ONE_HOUR_MS = 60 * 60 * 1000;
 describe('уборка орфанов (AC-scan-pipeline-19, AC-scan-pipeline-31)', () => {
   it('AC-19/31: объект БЕЗ строки photo, СТАРШЕ часа — удаляется (симулирует крах между PUT и транзакцией)', async () => {
     const storage = createPhotoStorage(testScanApiConfig().storage);
-    const objectKey = `orphan-session/${randomUUID()}.jpg`;
+    // Ключ НАСТОЯЩЕЙ формы `<device_session_id>/<recognition_id>.jpg`: прежде здесь стояло
+    // `orphan-session/…`, а крах между PUT и транзакцией всегда оставляет ключ с настоящим
+    // идентификатором сессии. Неточная фикстура прятала бы проверку формы ключа.
+    const objectKey = `${randomUUID()}/${randomUUID()}.jpg`;
     const jpeg = await makeJpegFixture();
 
     // PUT прошёл (как в EnqueueScanForFeature шаг 8) — но транзакция БД НИКОГДА не
@@ -68,7 +71,7 @@ describe('уборка орфанов (AC-scan-pipeline-19, AC-scan-pipeline-31)
 
   it('AC-31: объект БЕЗ строки photo, МОЛОЖЕ часа — НЕ удаляется (не мешает ещё идущей транзакции)', async () => {
     const storage = createPhotoStorage(testScanApiConfig().storage);
-    const objectKey = `orphan-session/${randomUUID()}.jpg`;
+    const objectKey = `${randomUUID()}/${randomUUID()}.jpg`;
     const jpeg = await makeJpegFixture();
     await storage.putOriginal(objectKey, jpeg, 'image/jpeg');
 
@@ -99,4 +102,46 @@ describe('уборка орфанов (AC-scan-pipeline-19, AC-scan-pipeline-31)
 
     await storage.removeObject(objectKey);
   }, 20_000);
+  // ── Заслужено потерей данных 17–18.09.2026 ──────────────────────────────────────────
+  // Уборка звалась по ВСЕМУ бакету и сверялась ТОЛЬКО с `photo`. Карточки «поделиться»
+  // лежат под `share-cards/…` и в `photo` не значатся никогда — все восемь были удалены.
+  // Снаружи это выглядело как «старые ссылки перестали работать»: строка в базе жива,
+  // страница отдаёт 200, картинки нет. Два стража ниже закрывают обе половины дефекта.
+
+  it('карточка «поделиться» НЕ удаляется: ключ чужой формы не трогается даже будучи древним', async () => {
+    const storage = createPhotoStorage(testScanApiConfig().storage);
+    const objectKey = `share-cards/${randomUUID()}.jpg`;
+    const jpeg = await makeJpegFixture();
+    await storage.putOriginal(objectKey, jpeg, 'image/jpeg');
+
+    // В `photo` такой строки нет и быть не может — карточки живут в `share_card`.
+    const photoRow = await pool.query('SELECT 1 FROM photo WHERE object_key = $1', [objectKey]);
+    expect(photoRow.rowCount).toBe(0);
+
+    const result = await purgeOrphanObjects(pool, listerFor([{ key: objectKey, ageMs: 30 * ONE_HOUR_MS }]));
+
+    expect(result.removed).toBe(0);
+    expect(result.skippedForeign).toBe(1);
+    expect(await storage.exists(objectKey)).toBe(true);
+
+    await storage.removeObject(objectKey);
+  }, 20_000);
+
+  it('НЕЗНАКОМАЯ форма ключа не удаляется: удаление необратимо, поэтому «не понял» значит «не трогай»', async () => {
+    const storage = createPhotoStorage(testScanApiConfig().storage);
+    const keys = [`exports/${randomUUID()}.csv`, 'backups/2026-09-18.tar', `${randomUUID()}.jpg`];
+    const jpeg = await makeJpegFixture();
+    for (const key of keys) await storage.putOriginal(key, jpeg, 'image/jpeg');
+
+    const result = await purgeOrphanObjects(
+      pool,
+      listerFor(keys.map((key) => ({ key, ageMs: 30 * ONE_HOUR_MS }))),
+    );
+
+    expect(result.removed).toBe(0);
+    expect(result.skippedForeign).toBe(keys.length);
+    for (const key of keys) expect(await storage.exists(key), key).toBe(true);
+
+    for (const key of keys) await storage.removeObject(key);
+  }, 30_000);
 });

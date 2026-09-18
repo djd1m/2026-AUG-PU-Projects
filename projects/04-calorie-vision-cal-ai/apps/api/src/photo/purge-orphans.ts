@@ -18,9 +18,33 @@ export function recognitionIdFromObjectKey(key: string): string | null {
   return match?.[1] ?? null;
 }
 
+const UUID = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+const PHOTO_KEY_RE = new RegExp(`^${UUID}/${UUID}(\\.normalized)?\\.[a-z0-9]+$`, 'i');
+
+/**
+ * Форма ключа ФОТО: `device_session_id/recognition_id[.normalized].ext`, обе части — UUID.
+ *
+ * Зачем отдельная проверка формы, если ниже всё равно спрашивается база. Заслужено потерей
+ * данных 17–18.09.2026: уборка звалась с ПУСТЫМ префиксом (то есть по ВСЕМУ бакету) и
+ * сверялась ТОЛЬКО с таблицей `photo`. Карточки «поделиться» лежат под `share-cards/…` и в
+ * `photo` не значатся НИКОГДА — поэтому КАЖДАЯ карточка старше часа опознавалась сиротой и
+ * удалялась. Владелец увидел это как «старые ссылки перестали работать»: строка в базе жива,
+ * страница отдаёт 200, картинки нет.
+ *
+ * Отсюда правило, а не заплатка: **удаление необратимо, поэтому удаляется только то, что
+ * ПОЛОЖИТЕЛЬНО опознано своим.** Незнакомая форма ключа — причина НЕ ТРОГАТЬ объект, а не
+ * причина его удалить (`fail-closed-defaults.md`). Новый вид объектов в бакете отныне
+ * переживает уборку по умолчанию, даже если автор о ней не вспомнит.
+ */
+export function isPhotoObjectKey(key: string): boolean {
+  return PHOTO_KEY_RE.test(key);
+}
+
 export interface PurgeOrphansResult {
   readonly scanned: number;
   readonly removed: number;
+  /** Объекты ЧУЖОЙ формы: не фото, значит не наше дело. Считаются, чтобы молчание было видно. */
+  readonly skippedForeign: number;
 }
 
 /**
@@ -30,22 +54,41 @@ export interface PurgeOrphansResult {
 export async function purgeOrphanObjects(pool: DbPool, storage: StorageObjectLister, prefix = ''): Promise<PurgeOrphansResult> {
   let scanned = 0;
   let removed = 0;
+  let skippedForeign = 0;
   const cutoff = Date.now() - CANON.orphanObjectMaxAgeMs;
 
   for await (const object of storage.listObjects(prefix)) {
     scanned += 1;
+
+    // ПЕРВЫМ делом — форма ключа, ДО возраста и ДО базы: объект чужой формы не становится
+    // нашим оттого, что он старый (см. `isPhotoObjectKey`).
+    if (!isPhotoObjectKey(object.key)) {
+      skippedForeign += 1;
+      continue;
+    }
+
     if (object.lastModified.getTime() > cutoff) continue;
 
     // RV-scan-pipeline-03: нормализованная копия живёт ПОД ДРУГИМ ключом
     // (`normalized_object_key`, `<base>.normalized.jpg`) — проверка ТОЛЬКО по `object_key`
     // сочла бы каждую живую нормализованную копию сиротой и удалила бы её из-под воркера,
     // ещё обрабатывающего задание.
-    const existing = await pool.query('SELECT 1 FROM photo WHERE object_key = $1 OR normalized_object_key = $1', [object.key]);
+    //
+    // ВТОРОЙ пояс, намеренно избыточный рядом с проверкой формы выше: спрашиваются ОБЕ
+    // таблицы, владеющие объектами бакета. Избыточность здесь оправдана ценой ошибки —
+    // удалённый объект не возвращается, а форма ключа может однажды измениться вместе с
+    // кодом, который о существовании этой уборки не знает.
+    const existing = await pool.query(
+      `SELECT 1 FROM photo WHERE object_key = $1 OR normalized_object_key = $1
+       UNION ALL
+       SELECT 1 FROM share_card WHERE object_key = $1`,
+      [object.key],
+    );
     if ((existing.rowCount ?? 0) > 0) continue;
 
     await storage.removeObject(object.key);
     removed += 1;
   }
 
-  return { scanned, removed };
+  return { scanned, removed, skippedForeign };
 }
