@@ -1,0 +1,20 @@
+# N5 «КлипМейкер» — единственная публичная дверь. TLS терминирует внешний прокси машины
+# (порт 127.0.0.1:${N5_EDGE_PORT}), поэтому здесь :80. Лимит частоты — ДО тела запроса.
+:80 {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+	# страницы метки и гостя: без кэша, открываются из WebView без JS
+	@public path /c/* /g/*
+	header @public Cache-Control "no-store"
+	reverse_proxy web:3000 {
+		transport http {
+			read_timeout 60s
+			write_timeout 60s
+		}
+	}
+}

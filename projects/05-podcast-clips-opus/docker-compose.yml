@@ -1,0 +1,200 @@
+# N5 «КлипМейкер» — Docker Compose. Канон §6: ровно 7 сервисов в боевом профиле (web, три воркера,
+# db, redis, proxy) + minio и test в профиле `test`. Хранилища НЕ публикуют портов (Правило №0).
+# Хостовые порты — только ${VAR:-default}; секреты и потолки — ${VAR:?…} без значений по умолчанию.
+name: ${N5_COMPOSE_PROJECT:-n5-clipmaker}
+
+x-app-env: &app-env
+  NODE_ENV: production
+  DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
+  REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
+  TZ: Europe/Moscow
+
+x-quota-env: &quota-env
+  N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}
+  N5_LIMIT_USER_UPLOADS: ${N5_LIMIT_USER_UPLOADS:?потолок загрузок на аккаунт не задан}
+  N5_LIMIT_USER_UPLOAD_REFUNDS: ${N5_LIMIT_USER_UPLOAD_REFUNDS:?потолок возвратов слота не задан}
+  N5_LIMIT_USER_LLM: ${N5_LIMIT_USER_LLM:?потолок вызовов LLM на аккаунт не задан}
+  N5_LIMIT_GLOBAL_MINUTES: ${N5_LIMIT_GLOBAL_MINUTES:?суточный потолок минут не задан — вызов Whisper не ограничен}
+  N5_LIMIT_GLOBAL_LLM: ${N5_LIMIT_GLOBAL_LLM:?суточный потолок вызовов LLM не задан}
+
+x-s3-env: &s3-env
+  S3_ENDPOINT: ${S3_ENDPOINT:?адрес S3 не задан — в бою это Cloud.ru, в тестах http://minio:9000}
+  S3_REGION: ${S3_REGION:?регион S3 не задан}
+  S3_BUCKET: ${S3_BUCKET:?бакет S3 не задан}
+  S3_ACCESS_KEY: ${S3_ACCESS_KEY:?ключ S3 не задан}
+  S3_SECRET_KEY: ${S3_SECRET_KEY:?секрет S3 не задан}
+  S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-false}
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    environment:
+      <<: [*app-env, *quota-env, *s3-env]
+      N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — он вшивается в метку каждого клипа и определяет каждую выдаваемую наружу ссылку}
+      SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан}
+    # порта на хосте НЕТ: единственная дверь — proxy; публикация рядом с прокси обходит лимит частоты
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  worker-stt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    command: ["node", "dist/apps/worker/workers/stt.js"]
+    environment:
+      <<: [*app-env, *quota-env, *s3-env]
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?ключ OpenAI не задан — транскрипция невозможна}
+      N5_WORK_DIR: /work
+    volumes:
+      - stt-work:/work
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker-llm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    command: ["node", "dist/apps/worker/workers/select.js"]
+    environment:
+      <<: [*app-env, *quota-env]
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?ключ Anthropic не задан — выделение фрагментов невозможно}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker-video:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    command: ["node", "dist/apps/worker/workers/render.js"]
+    environment:
+      <<: [*app-env, *s3-env]
+      N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — он вшивается в метку каждого клипа}
+      N5_WORK_DIR: /work
+      N5_RENDER_CONCURRENCY: "1"
+    volumes:
+      - render-work:/work
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_DB: n5
+      POSTGRES_USER: n5
+      POSTGRES_PASSWORD: ${N5_DB_APP_PASSWORD:?пароль БД не задан}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # никакого ports: — это ПОЛНОЕ решение; соседи достучатся по имени db:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n5 -d n5"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine
+    # пароль приходит переменной окружения, а не аргументом: иначе он виден в `ps` внутри контейнера
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?пароль Redis не задан}
+    command: ["sh", "-c", "exec redis-server --appendonly yes --maxmemory-policy noeviction --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - redisdata:/data
+    # никакого ports: — Redis без публикации и с паролем (ADR-001)
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  proxy:
+    image: caddy:2.8-alpine
+    profiles: ["edge"]
+    ports:
+      - "127.0.0.1:${N5_EDGE_PORT:-4181}:80"
+    volumes:
+      - ./proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+    depends_on:
+      web:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── тестовый профиль: тот же S3-код офлайн, без публикации портов ──
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    profiles: ["test"]
+    command: ["server", "/data"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?пользователь MinIO для тестов не задан}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?пароль MinIO для тестов не задан}
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    profiles: ["test"]
+    command: ["npm", "test", "--", "--run"]
+    environment:
+      <<: [*app-env, *quota-env]
+      NODE_ENV: test
+      DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль БД не задан}@db:5432/n5_test
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: n5-test
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:?пользователь MinIO для тестов не задан}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?пароль MinIO для тестов не задан}
+      S3_FORCE_PATH_STYLE: "true"
+      N5_PUBLIC_ORIGIN: http://test.invalid
+      N5_MODEL_PROVIDER: fake
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  redisdata:
+  caddydata:
+  miniodata:
+  stt-work:
+  render-work:
