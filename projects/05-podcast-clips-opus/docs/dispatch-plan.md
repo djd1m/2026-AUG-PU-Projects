@@ -69,6 +69,8 @@ node ../../.claude/hooks/check-file-ownership.cjs .    # один писател
 | algo-writer | docs/Pseudocode.md, docs/Research_Findings.md, docs/Solution_Strategy.md |
 | arch-writer | docs/Architecture.md, docs/ADR.md, docs/C4_Diagrams.md |
 | ops-writer | docs/Refinement.md, docs/Completion.md, docs/Final_Summary.md |
+| validator-stories-ac | docs/validation-stories.md, docs/test-scenarios.md (Phase 2, читает всё, пишет только своё) |
+| validator-docs-coherence | docs/validation-coherence.md (Phase 2) |
 
 ## Владение
 
@@ -92,6 +94,12 @@ node ../../.claude/hooks/check-file-ownership.cjs .    # один писател
 | docs/Completion.md | ops-writer |
 | docs/Final_Summary.md | ops-writer |
 | CLAUDE.md | координатор |
+| docs/validation-stories.md | validator-stories-ac |
+| docs/test-scenarios.md | validator-stories-ac |
+| docs/validation-coherence.md | validator-docs-coherence |
+| docs/validation-report.md | координатор |
+| docs/decisions-owner.md | координатор |
+| docs/decisions-autonomous.md | координатор |
 
 ## После Phase 1 (для полноты картины, не запускается сейчас)
 

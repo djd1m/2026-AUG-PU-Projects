@@ -65,10 +65,30 @@
     "elapsed_wall_ms": null,
     "active_wall_ms": null,
     "usage": {
-      "source": null,
-      "input_tokens_total": null,
-      "output_tokens_total": null,
-      "quality": "unavailable"
+      "source": "scripts/telemetry/collect-usage.cjs (transcript aggregation, dedupe by message.id)",
+      "scope": "coordinator session + subagents, window 18:37Z→Phase 1 commit 2822865",
+      "evidence": "evidence/usage-phase1.json",
+      "requests": 191,
+      "input_tokens_total": 63325303,
+      "uncached_input_tokens": 1774,
+      "cached_input_tokens": 61381844,
+      "cache_creation_input_tokens": 1941685,
+      "output_tokens_total": 385264,
+      "by_model": {
+        "claude-fable-5-1": {
+          "requests": 61,
+          "output_tokens": 157256
+        },
+        "claude-opus-5": {
+          "requests": 86,
+          "output_tokens": 167371
+        },
+        "claude-sonnet-5": {
+          "requests": 44,
+          "output_tokens": 60637
+        }
+      },
+      "quality": "partial: host-written counters, not billing; Codex second-opinion calls counted only if present in ~/.codex/sessions"
     }
   },
   "telemetry_status": "partial",
