@@ -1,0 +1,545 @@
+- region "Our website uses cookies":
+  - link "Cookiebot by Usercentrics - opens in a new window":
+    - /url: https://www.cookiebot.com/en/what-is-behind-powered-by-cookiebot/?utm_source=banner_cb&utm_medium=referral&utm_content=v2
+  - tabpanel "Consent":
+    - heading "Our website uses cookies" [level=2]
+    - text: We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services.
+    - group "Consent Selection":
+      - text: Consent Selection
+      - strong: Necessary
+      - checkbox "Necessary" [checked] [disabled]
+      - strong: Preferences
+      - switch "Preferences"
+      - strong: Statistics
+      - switch "Statistics"
+      - strong: Marketing
+      - switch "Marketing"
+    - link "Show details":
+      - /url: "#"
+  - button "Allow all"
+  - button "Allow selection"
+  - button "Deny"
+- banner:
+  - link "OpusClip homepage":
+    - /url: https://www.opus.pro/
+    - img
+  - navigation:
+    - button "Features":
+      - text: Features
+      - img
+    - button "Solutions":
+      - text: Solutions
+      - img
+    - button "Resources":
+      - text: Resources
+      - img
+    - link "Pricing":
+      - /url: https://www.opus.pro/pricing
+    - link "For business":
+      - /url: https://www.opus.pro/business
+    - button "Opus Labs":
+      - text: Opus Labs
+      - img
+  - link "Sign in":
+    - /url: https://clip.opus.pro/dashboard
+  - link "Sign up - It’s FREE":
+    - /url: https://clip.opus.pro/dashboard
+- main:
+  - text: "#1 AI VIDEO CLIPPING TOOL"
+  - heading "1 long video, 10 viral clips. Create 10x faster." [level=1]
+  - text: OpusClip turns long videos into shorts, and publishes them to all social platforms in one click.
+  - form "Shorts Header Get Clips":
+    - textbox "Video link":
+      - /placeholder: ""
+    - text: Drop a video link
+    - paragraph: "For Pro plan, we support videos from:"
+    - img
+    - paragraph: YouTube,
+    - img
+    - paragraph: Google Drive,
+    - img
+    - paragraph: Vimeo,
+    - img
+    - paragraph: Zoom,
+    - img
+    - paragraph: Rumble,
+    - img
+    - paragraph: Twitch,
+    - img
+    - paragraph: Facebook,
+    - img
+    - paragraph: LinkedIn,
+    - img
+    - paragraph: Twitter,
+    - img
+    - paragraph: Loom,
+    - img
+    - paragraph: Riverside,
+    - paragraph: StreamYard and more.
+    - paragraph: Currently, we support videos in English, German, Spanish, French, Portuguese and other 20 more languages.
+    - button "Get free clips"
+  - paragraph: or
+  - button "Upload files"
+  - group "1 / 6":
+    - img "AI clipping"
+  - group "2 / 6"
+  - group "3 / 6"
+  - group "4 / 6":
+    - img "AI B-roll"
+  - group "5 / 6":
+    - img "AI audio enhance"
+  - group "6 / 6":
+    - img "AI voice-over"
+  - button "Previous slide" [disabled]
+  - button "Next slide":
+    - img
+  - group "1 / 6":
+    - img
+    - text: AI clipping
+  - group "2 / 6":
+    - img
+    - text: AI captioning
+  - group "3 / 6":
+    - img
+    - text: AI reframe
+  - group "4 / 6":
+    - img
+    - text: AI B-Roll
+  - group "5 / 6":
+    - img
+    - text: AI audio enhance
+  - group "6 / 6":
+    - img
+    - text: AI voice-over
+  - heading "Used by 16M+ creators and businesses" [level=2]
+  - group "1 / 19":
+    - strong: Grant Cardone
+    - text: 4.7M
+  - group "2 / 19":
+    - strong: Scott Galloway
+    - text: 192K
+  - group "3 / 19":
+    - strong: What If
+    - text: 7.9M
+  - group "4 / 19":
+    - strong: Logan Paul
+    - text: 23.6M
+  - group "5 / 19":
+    - strong: Jenny Hoyos
+    - text: 4M
+  - group "6 / 19":
+    - strong: Linguamarina
+    - text: 8.52M
+  - group "7 / 19":
+    - img "Dhar Mann Studios"
+    - strong: Dhar Mann Studios
+    - text: 24.8M
+  - group "8 / 19":
+    - strong: TwoSetViolin
+    - text: 4.3M
+  - group "9 / 19":
+    - strong: Jon Youshaei
+    - text: 435K
+  - group "10 / 19":
+    - strong: Armchair Historian
+    - text: 2.2M
+  - group "11 / 19":
+    - strong: SaaStr
+    - text: 54.4K
+  - group "12 / 19":
+    - strong: Sebastien Jefferies
+    - text: 422K
+  - group "13 / 19":
+    - strong: FLAGRANT
+    - text: 1.5M
+  - group "14 / 19":
+    - strong: Mai Pham
+    - text: 3.3M
+  - group "15 / 19":
+    - strong: Valuetainment
+    - text: 5.3M
+  - group "16 / 19":
+    - img "Jubilee Media"
+    - strong: Jubilee Media
+    - text: 9.79M
+  - group "17 / 19":
+    - img "Tom Bilyeu"
+    - strong: Tom Bilyeu
+    - text: 4.5M
+  - group "18 / 19":
+    - img "Jacksfilms"
+    - strong: Jacksfilms
+    - text: 5.08M
+  - group "19 / 19":
+    - img "Mark Rober"
+    - strong: Mark Rober
+    - text: 65.9M
+  - group "1 / 19":
+    - strong: Grant Cardone
+    - text: 4.7M
+  - group "2 / 19":
+    - strong: Scott Galloway
+    - text: 192K
+  - group "3 / 19":
+    - strong: What If
+    - text: 7.9M
+  - group "4 / 19":
+    - strong: Logan Paul
+    - text: 23.6M
+  - group "5 / 19":
+    - strong: Jenny Hoyos
+    - text: 4M
+  - group "6 / 19":
+    - strong: Linguamarina
+    - text: 8.52M
+  - group "7 / 19":
+    - img "Dhar Mann Studios"
+    - strong: Dhar Mann Studios
+    - text: 24.8M
+  - group "8 / 19":
+    - strong: TwoSetViolin
+    - text: 4.3M
+  - group "9 / 19":
+    - strong: Jon Youshaei
+    - text: 435K
+  - group "10 / 19":
+    - strong: Armchair Historian
+    - text: 2.2M
+  - group "11 / 19":
+    - strong: SaaStr
+    - text: 54.4K
+  - group "12 / 19":
+    - strong: Sebastien Jefferies
+    - text: 422K
+  - group "13 / 19":
+    - strong: FLAGRANT
+    - text: 1.5M
+  - group "14 / 19":
+    - strong: Mai Pham
+    - text: 3.3M
+  - group "15 / 19":
+    - strong: Valuetainment
+    - text: 5.3M
+  - group "16 / 19":
+    - img "Jubilee Media"
+    - strong: Jubilee Media
+    - text: 9.79M
+  - group "17 / 19":
+    - img "Tom Bilyeu"
+    - strong: Tom Bilyeu
+    - text: 4.5M
+  - group "18 / 19":
+    - img "Jacksfilms"
+    - strong: Jacksfilms
+    - text: 5.08M
+  - group "19 / 19":
+    - img "Mark Rober"
+    - strong: Mark Rober
+    - text: 65.9M
+  - group "1 / 19":
+    - strong: Grant Cardone
+    - text: 4.7M
+  - group "2 / 19":
+    - strong: Scott Galloway
+    - text: 192K
+  - group "3 / 19":
+    - strong: What If
+    - text: 7.9M
+  - group "4 / 19":
+    - strong: Logan Paul
+    - text: 23.6M
+  - group "5 / 19":
+    - strong: Jenny Hoyos
+    - text: 4M
+  - group "6 / 19":
+    - strong: Linguamarina
+    - text: 8.52M
+  - group "7 / 19":
+    - img "Dhar Mann Studios"
+    - strong: Dhar Mann Studios
+    - text: 24.8M
+  - group "8 / 19":
+    - strong: TwoSetViolin
+    - text: 4.3M
+  - group "9 / 19":
+    - strong: Jon Youshaei
+    - text: 435K
+  - group "10 / 19":
+    - strong: Armchair Historian
+    - text: 2.2M
+  - group "11 / 19":
+    - strong: SaaStr
+    - text: 54.4K
+  - group "12 / 19":
+    - strong: Sebastien Jefferies
+    - text: 422K
+  - group "13 / 19":
+    - strong: FLAGRANT
+    - text: 1.5M
+  - group "14 / 19":
+    - strong: Mai Pham
+    - text: 3.3M
+  - group "15 / 19":
+    - strong: Valuetainment
+    - text: 5.3M
+  - group "16 / 19":
+    - img "Jubilee Media"
+    - strong: Jubilee Media
+    - text: 9.79M
+  - group "17 / 19":
+    - img "Tom Bilyeu"
+    - strong: Tom Bilyeu
+    - text: 4.5M
+  - group "18 / 19":
+    - img "Jacksfilms"
+    - strong: Jacksfilms
+    - text: 5.08M
+  - group "19 / 19":
+    - img "Mark Rober"
+    - strong: Mark Rober
+    - text: 65.9M
+  - group "1 / 10":
+    - img "zoominfo logo"
+  - group "2 / 10":
+    - img "memphis grizzlies logo"
+  - group "3 / 10":
+    - img "chili piper logo"
+  - group "4 / 10":
+    - img "univision logo"
+  - group "5 / 10":
+    - img "audacy logo"
+  - group "6 / 10":
+    - img "visa logo"
+  - group "7 / 10":
+    - img "iHeartMedia logo"
+  - group "8 / 10":
+    - img "GitHub logo"
+  - group "9 / 10":
+    - img "nvidia logo"
+  - group "10 / 10":
+    - img "telefonica logo"
+  - group "1 / 10":
+    - img "zoominfo logo"
+  - group "2 / 10":
+    - img "memphis grizzlies logo"
+  - group "3 / 10":
+    - img "chili piper logo"
+  - group "4 / 10":
+    - img "univision logo"
+  - group "5 / 10":
+    - img "audacy logo"
+  - group "6 / 10":
+    - img "visa logo"
+  - group "7 / 10":
+    - img "iHeartMedia logo"
+  - group "8 / 10":
+    - img "GitHub logo"
+  - group "9 / 10":
+    - img "nvidia logo"
+  - group "10 / 10":
+    - img "telefonica logo"
+  - group "1 / 10":
+    - img "zoominfo logo"
+  - group "2 / 10":
+    - img "memphis grizzlies logo"
+  - group "3 / 10":
+    - img "chili piper logo"
+  - group "4 / 10":
+    - img "univision logo"
+  - group "5 / 10":
+    - img "audacy logo"
+  - group "6 / 10":
+    - img "visa logo"
+  - group "7 / 10":
+    - img "iHeartMedia logo"
+  - group "8 / 10":
+    - img "GitHub logo"
+  - group "9 / 10":
+    - img "nvidia logo"
+  - group "10 / 10":
+    - img "telefonica logo"
+  - img
+  - text: AI editing models
+  - heading "AI that understands every pixel of your video" [level=2]
+  - paragraph: The most powerful AI editing models that work on any video. Built for speed, accuracy, and creative flexibility.
+  - img "ClipAnything"
+  - heading "ClipAnything" [level=3]
+  - paragraph: Every other AI clipping tool only works with video podcasts. ClipAnything is the only AI clipping model that turns any genre — vlogs, gaming, sports, interviews, explainer videos — into viral clips in 1 click.
+  - heading "ReframeAnything" [level=3]
+  - paragraph: The only AI reframe model that resizes any video for any platform and keeps moving subjects centered with AI object tracking. If you want more control, use manual tracking to instruct AI exactly what to follow.
+  - img
+  - text: Workflow automation
+  - heading "Your video creation process — now on autopilot" [level=2]
+  - paragraph: Create and publish videos 5x faster with OpusClip’s web app and API, so you can go on vacation and still keep your content rolling.
+  - img "Your video creation process — now on autopilot"
+  - img
+  - text: AI editor
+  - heading "AI that edits with you, not just for you" [level=2]
+  - paragraph: Take full editing control, or let our AI take over. Either way, it’s effortless.
+  - img
+  - text: OpusClip for teams
+  - heading "Scale your creative output and business without scaling overhead" [level=2]
+  - paragraph: Every business is becoming video-first. OpusClip helps your brand stay top of mind.
+  - img "Brand templates"
+  - heading "Brand templates" [level=3]
+  - paragraph: Create various brand templates with on-brand font style, color, logo, intro&outro and more.
+  - img "Team workspace"
+  - heading "Team workspace" [level=3]
+  - paragraph: Easily set up a team account to collaborate and manage creative projects with your team members.
+  - img "Workflow integration"
+  - heading "Workflow integration" [level=3]
+  - paragraph: With our API, you can integrate OpusClip with your CMS and other tools to automate your video creation workflow.
+  - heading "A partner to your growth" [level=2]
+  - paragraph: The only AI editor that actually drives growth. Just ask millions of creators and brands.
+  - tablist:
+    - tab "From top creators" [selected]
+    - tab "User growth chart"
+  - tabpanel "From top creators":
+    - blockquote: "\"It used to take days to create clips. Now it takes us minutes to create them.\""
+    - text: Lewis Howes
+    - img "Lewis Howes"
+    - blockquote: “The only AI tool that I've found helpful so far is OpusClip. It can do something that I don't have time to do. I'm a super fan.”
+    - text: Jason Lemkin
+    - img "Jason Lemkin"
+    - blockquote: "\"Opusclip has been crucial in helping me upload more short form videos. I get to throw more things at the wall to see what sticks, rather than waste time editing a short that underperforms. It’s a no-brainer for anyone aiming to convert their long, wide form videos to vertical shorts.\""
+    - text: Jacksfilms
+    - img "Jacksfilms"
+    - blockquote: "\"We love YT shorts' massive reach but hate its revenue - that’s why we use OpusClip to bring the cost down.\""
+    - text: WildBrain
+    - img "WildBrain"
+    - blockquote: "\"It used to take days to create clips. Now it takes us minutes to create them.\""
+    - text: Lewis Howes
+    - img "Lewis Howes"
+    - blockquote: “The only AI tool that I've found helpful so far is OpusClip. It can do something that I don't have time to do. I'm a super fan.”
+    - text: Jason Lemkin
+    - img "Jason Lemkin"
+    - blockquote: "\"Opusclip has been crucial in helping me upload more short form videos. I get to throw more things at the wall to see what sticks, rather than waste time editing a short that underperforms. It’s a no-brainer for anyone aiming to convert their long, wide form videos to vertical shorts.\""
+    - text: Jacksfilms
+    - img "Jacksfilms"
+    - blockquote: "\"We love YT shorts' massive reach but hate its revenue - that’s why we use OpusClip to bring the cost down.\""
+    - text: WildBrain
+    - img "WildBrain"
+    - blockquote: "\"It used to take days to create clips. Now it takes us minutes to create them.\""
+    - text: Lewis Howes
+    - img "Lewis Howes"
+    - blockquote: “The only AI tool that I've found helpful so far is OpusClip. It can do something that I don't have time to do. I'm a super fan.”
+    - text: Jason Lemkin
+    - img "Jason Lemkin"
+    - blockquote: "\"Opusclip has been crucial in helping me upload more short form videos. I get to throw more things at the wall to see what sticks, rather than waste time editing a short that underperforms. It’s a no-brainer for anyone aiming to convert their long, wide form videos to vertical shorts.\""
+    - text: Jacksfilms
+    - img "Jacksfilms"
+    - blockquote: "\"We love YT shorts' massive reach but hate its revenue - that’s why we use OpusClip to bring the cost down.\""
+    - text: WildBrain
+    - img "WildBrain"
+    - blockquote: "\"It used to take days to create clips. Now it takes us minutes to create them.\""
+    - text: Lewis Howes
+    - img "Lewis Howes"
+    - blockquote: “The only AI tool that I've found helpful so far is OpusClip. It can do something that I don't have time to do. I'm a super fan.”
+    - text: Jason Lemkin
+    - img "Jason Lemkin"
+    - blockquote: "\"Opusclip has been crucial in helping me upload more short form videos. I get to throw more things at the wall to see what sticks, rather than waste time editing a short that underperforms. It’s a no-brainer for anyone aiming to convert their long, wide form videos to vertical shorts.\""
+    - text: Jacksfilms
+    - img "Jacksfilms"
+    - blockquote: "\"We love YT shorts' massive reach but hate its revenue - that’s why we use OpusClip to bring the cost down.\""
+    - text: WildBrain
+    - img "WildBrain"
+  - heading "Got questions?" [level=2]
+  - button "How does OpusClip work?":
+    - heading "How does OpusClip work?" [level=3]
+  - button "What types of videos can I upload?":
+    - heading "What types of videos can I upload?" [level=3]
+  - button "Which languages are supported?":
+    - heading "Which languages are supported?" [level=3]
+  - button "Can I add captions?":
+    - heading "Can I add captions?" [level=3]
+  - button "Is OpusClip free to use?":
+    - heading "Is OpusClip free to use?" [level=3]
+  - button "I have more questions!":
+    - heading "I have more questions!" [level=3]
+  - heading "Get started with OpusClip" [level=2]
+- contentinfo:
+  - heading "Company" [level=3]
+  - link "About us":
+    - /url: https://www.opus.pro/about
+  - link "Careers We're hiring!":
+    - /url: https://www.opus.pro/careers
+    - text: Careers
+    - strong: We're hiring!
+  - link "Contact Us":
+    - /url: https://www.opus.pro/contact-support
+  - heading "Product" [level=3]
+  - link "Tools":
+    - /url: https://www.opus.pro/tools
+  - link "Product changelog":
+    - /url: https://opusclip.canny.io/changelog
+  - link "Feature Request":
+    - /url: https://opusclip.canny.io/feature-requests
+  - link "OpusClip Captions Free":
+    - /url: https://clip.opus.pro/captions
+    - text: OpusClip Captions
+    - strong: Free
+  - link "How does OpusClip work":
+    - /url: https://www.opus.pro/how-does-opus-clip-work
+  - heading "Resources" [level=3]
+  - link "Customer stories":
+    - /url: https://www.opus.pro/customer-stories
+  - link "Blogs":
+    - /url: https://www.opus.pro/blog
+  - link "Become an affiliate":
+    - /url: https://www.opus.pro/affiliate
+  - link "OpusClip media assets":
+    - /url: https://media.opus.pro/
+  - link "Help center":
+    - /url: https://help.opus.pro/docs/introduction
+  - link "Learning center":
+    - /url: https://www.opus.pro/learning-center
+  - link "Research":
+    - /url: https://www.opus.pro/research/research-hub
+  - heading "Best Practices" [level=3]
+  - link "Hidden strategy top creators use to turn clips into 4M+ long-form views":
+    - /url: https://www.opus.pro/how-clipping-drives-4m-longform-views
+  - 'link "MrBeast''s Vyro: Everything You Need to Know"':
+    - /url: https://www.opus.pro/blog/mrbeasts-vyro
+  - link "From zero to monetization for a new YouTube channel in 40 days":
+    - /url: https://www.opus.pro/blog/from-zero-to-monetization-for-a-new-youtube-channel-in-40-days
+  - 'link "How to Turn Long Videos into Viral Shorts: The Ultimate Guide for 2026"':
+    - /url: https://www.opus.pro/blog/how-to-make-short-videos-from-youtube-long-videos
+  - heading "Trust and Legal" [level=3]
+  - link "Terms and Conditions":
+    - /url: https://www.opus.pro/terms-of-service
+  - link "Privacy Policy":
+    - /url: https://www.opus.pro/privacy-policy
+  - link "Cookies Preferences":
+    - /url: "#"
+  - link "Accessibility Statement":
+    - /url: https://www.opus.pro/accessibility-statement
+  - link "Email protection":
+    - /url: https://www.opus.pro/cdn-cgi/l/email-protection
+  - link "Trust Center":
+    - /url: https://trust.opus.pro/
+  - link "SOC2 TYPE 2":
+    - /url: https://trust.opus.pro/
+    - img "SOC2 TYPE 2"
+  - img "BEST SOFTWARE 2025 Top 50 AI PRODUCTS"
+  - button "English":
+    - img
+    - text: English
+  - text: © 2026 OpusClip by Opusclip Inc. All rights reserved.
+  - link "YouTube":
+    - /url: https://www.youtube.com/@opusclip
+    - img
+  - link "TikTok":
+    - /url: https://www.tiktok.com/@opusclip
+    - img
+  - link "Twitter":
+    - /url: https://twitter.com/opusclip
+    - img
+  - link "Discord":
+    - /url: https://discord.com/invite/wqbb7ZKhjg
+    - img
+  - link "LinkedIn":
+    - /url: https://www.linkedin.com/company/opusclip
+    - img
+  - link "Instagram":
+    - /url: https://www.instagram.com/opusclip/?hl=en
+    - img

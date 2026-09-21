@@ -1,0 +1,228 @@
+- region "Our website uses cookies":
+  - link "Cookiebot by Usercentrics - opens in a new window":
+    - /url: https://www.cookiebot.com/en/what-is-behind-powered-by-cookiebot/?utm_source=banner_cb&utm_medium=referral&utm_content=v2
+  - tabpanel "Consent":
+    - heading "Our website uses cookies" [level=2]
+    - text: We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services.
+    - group "Consent Selection":
+      - text: Consent Selection
+      - strong: Necessary
+      - checkbox "Necessary" [checked] [disabled]
+      - strong: Preferences
+      - switch "Preferences"
+      - strong: Statistics
+      - switch "Statistics"
+      - strong: Marketing
+      - switch "Marketing"
+    - link "Show details":
+      - /url: "#"
+  - button "Allow all"
+  - button "Allow selection"
+  - button "Deny"
+- banner:
+  - link "OpusClip homepage":
+    - /url: https://www.opus.pro/
+    - img
+  - navigation:
+    - button "Features":
+      - text: Features
+      - img
+    - button "Solutions":
+      - text: Solutions
+      - img
+    - button "Resources":
+      - text: Resources
+      - img
+    - link "Pricing":
+      - /url: https://www.opus.pro/pricing
+    - link "For business":
+      - /url: https://www.opus.pro/business
+    - button "Opus Labs":
+      - text: Opus Labs
+      - img
+  - link "Sign in":
+    - /url: https://clip.opus.pro/dashboard
+  - link "Sign up - It’s FREE":
+    - /url: https://clip.opus.pro/dashboard
+- main:
+  - heading "Scale video output and dominate feeds" [level=1]
+  - paragraph: Create an autonomous video pipeline that keeps you in front of your audience every day
+  - link "Contact Sales":
+    - /url: https://www.opus.pro/contact
+  - paragraph: Trusted by 16M+ creators and businesses
+  - img "Univision"
+  - img "Audacy"
+  - img "Valuetainment"
+  - img "Vox Media"
+  - img "Hearst"
+  - img "Revolt"
+  - img "HubSpot"
+  - img "Logan Paul"
+  - img
+  - text: Logan Paul 23.6M
+  - img "The Diary Of A CEO"
+  - img
+  - text: The Diary Of A CEO 19.1M
+  - img "Tom Bilyeu"
+  - img
+  - text: Tom Bilyeu 4.5M
+  - img "BotezLive"
+  - img
+  - text: BotezLive 1.99M
+  - img "Jon Youshaei"
+  - img
+  - text: Jon Youshaei 385K Valuetainment
+  - img
+  - text: Audacy
+  - img
+  - text: Revolt
+  - img
+  - text: The Diary Of A CEO Clips
+  - img
+  - text: BotezLive Univision
+  - img
+  - text: HubSpot
+  - img
+  - text: API
+  - heading "Automate your editing workflow with OpusClip API" [level=2]
+  - link "Learn more about API":
+    - /url: https://www.opus.pro/api
+  - 'heading "The #1 reframe engine" [level=3]'
+  - paragraph: Reframe any video to fit all platforms for enterprise level scale.
+  - text: No.1 reframe engine
+  - paragraph: The No.1 national news network uses OpusClip to generate 500+ brand friendly clips per day across all channels in multiple aspect ratios.
+  - 'link "OpusClip ranks #1 in reframing →"':
+    - /url: https://www.opus.pro/blog/opusclip-ranks-1-across-every-ai-reframe-engine
+  - img "One video reframed to 16:9, 9:16 and 1:1"
+  - heading "Scale and distribute content automatically" [level=3]
+  - paragraph: OpusClip enables teams to scale content output by ~40x per day.
+  - text: 1B+ views
+  - paragraph: OpusClip helped Audacy clip and publish content across 225+ stations to all social platforms without adding headcount.
+  - link "How Audacy drove 1B+ views →":
+    - /url: https://www.opus.pro/how-audacy-drove-1b-views-using-opusclip
+  - img "One clip distributed across TikTok, Instagram, YouTube and X"
+  - heading "Speed to market" [level=3]
+  - paragraph: OpusClip produces publish ready content in minutes allowing you to stay ahead of the market.
+  - text: 20+ clips in 10 min
+  - paragraph: A Fortune 500 financial firm produced 20+ publish-ready in 10 minutes using OpusClip compared to their agency which took 3-5 days for one.
+  - img "A stack of clips produced in ten minutes"
+  - heading "Why choose OpusClip API?" [level=2]
+  - img
+  - text: "The #1 video editing API for scaling videos"
+  - img
+  - text: Trusted by the world's top businesses and developers
+  - img
+  - text: Easily integrates within your existing workflow
+  - img
+  - text: Single sign on (SSO)
+  - img
+  - text: OpusSearch
+  - heading "Automatically scan and find moments from your catalogue" [level=2]
+  - heading "Search & reuse anything from your catalog" [level=3]
+  - paragraph: Type in a name, an object, or a moment, and OpusSearch will scan your catalog and find it.
+  - text: 10M+ views earned in a single month
+  - link "Read case study →":
+    - /url: https://www.opus.pro/how-creators-are-earning-10m-views-in-1-month
+  - img "Searching a video catalog by keyword, moment or object"
+  - heading "Be first to every trend without creating new videos" [level=3]
+  - paragraph: Stay relevant with real-time trend analysis. Our AI finds what's trending and surfaces the best clips from your content library.
+  - text: 5x increase in viewership $30k new brand deal secured in 1 month
+  - link "Read case study →":
+    - /url: https://www.opus.pro/blog/monetize-on-x-tftc-turned-old-videos-into-30000-new-revenue
+  - img "A trending topic matched to a clip from your library"
+  - heading "Generate more revenue by posting your top moments to multiple channels" [level=3]
+  - paragraph: Monetize your audience by posting your top moments at scale.
+  - text: 4M+ longform views driven by clipping
+  - link "Read case study →":
+    - /url: https://www.opus.pro/how-clipping-drives-4m-longform-views
+  - img "Estimated revenue and account views trending up over 30 days"
+  - heading "OpusClip Business at a glance" [level=2]
+  - text: 17M+ creators and businesses 290M+ clips created 87B+ total views from clips 98M+ faster than real-time
+  - heading "Create video workflows that boost output and scale" [level=2]
+  - link "Contact Sales":
+    - /url: https://www.opus.pro/contact
+- contentinfo:
+  - heading "Company" [level=3]
+  - link "About us":
+    - /url: https://www.opus.pro/about
+  - link "Careers We're hiring!":
+    - /url: https://www.opus.pro/careers
+    - text: Careers
+    - strong: We're hiring!
+  - link "Contact Us":
+    - /url: https://www.opus.pro/contact-support
+  - heading "Product" [level=3]
+  - link "Tools":
+    - /url: https://www.opus.pro/tools
+  - link "Product changelog":
+    - /url: https://opusclip.canny.io/changelog
+  - link "Feature Request":
+    - /url: https://opusclip.canny.io/feature-requests
+  - link "OpusClip Captions Free":
+    - /url: https://clip.opus.pro/captions
+    - text: OpusClip Captions
+    - strong: Free
+  - link "How does OpusClip work":
+    - /url: https://www.opus.pro/how-does-opus-clip-work
+  - heading "Resources" [level=3]
+  - link "Customer stories":
+    - /url: https://www.opus.pro/customer-stories
+  - link "Blogs":
+    - /url: https://www.opus.pro/blog
+  - link "Become an affiliate":
+    - /url: https://www.opus.pro/affiliate
+  - link "OpusClip media assets":
+    - /url: https://media.opus.pro/
+  - link "Help center":
+    - /url: https://help.opus.pro/docs/introduction
+  - link "Learning center":
+    - /url: https://www.opus.pro/learning-center
+  - link "Research":
+    - /url: https://www.opus.pro/research/research-hub
+  - heading "Best Practices" [level=3]
+  - link "Hidden strategy top creators use to turn clips into 4M+ long-form views":
+    - /url: https://www.opus.pro/how-clipping-drives-4m-longform-views
+  - 'link "MrBeast''s Vyro: Everything You Need to Know"':
+    - /url: https://www.opus.pro/blog/mrbeasts-vyro
+  - link "From zero to monetization for a new YouTube channel in 40 days":
+    - /url: https://www.opus.pro/blog/from-zero-to-monetization-for-a-new-youtube-channel-in-40-days
+  - 'link "How to Turn Long Videos into Viral Shorts: The Ultimate Guide for 2026"':
+    - /url: https://www.opus.pro/blog/how-to-make-short-videos-from-youtube-long-videos
+  - 'link "Create Videos in Alex Hormozi Style: The Ultimate Guide"':
+    - /url: https://www.opus.pro/blog/create-videos-in-alex-hormozi-style-the-ultimate-guide
+  - heading "Trust and Legal" [level=3]
+  - link "Terms and Conditions":
+    - /url: https://www.opus.pro/terms-of-service
+  - link "Privacy Policy":
+    - /url: https://www.opus.pro/privacy-policy
+  - link "Cookies Preferences":
+    - /url: "#"
+  - link "Accessibility Statement":
+    - /url: https://www.opus.pro/accessibility-statement
+  - link "Email protection":
+    - /url: https://www.opus.pro/cdn-cgi/l/email-protection
+  - link "Trust Center":
+    - /url: https://trust.opus.pro/
+  - link "SOC2 TYPE 2":
+    - /url: https://trust.opus.pro/
+    - img "SOC2 TYPE 2"
+  - img "BEST SOFTWARE 2025 Top 50 AI PRODUCTS"
+  - text: © 2026 OpusClip by Opusclip Inc. All rights reserved.
+  - link "YouTube":
+    - /url: https://www.youtube.com/@opusclip
+    - img
+  - link "TikTok":
+    - /url: https://www.tiktok.com/@opusclip
+    - img
+  - link "Twitter":
+    - /url: https://twitter.com/opusclip
+    - img
+  - link "Discord":
+    - /url: https://discord.com/invite/wqbb7ZKhjg
+    - img
+  - link "LinkedIn":
+    - /url: https://www.linkedin.com/company/opusclip
+    - img
+  - link "Instagram":
+    - /url: https://www.instagram.com/opusclip/?hl=en
+    - img

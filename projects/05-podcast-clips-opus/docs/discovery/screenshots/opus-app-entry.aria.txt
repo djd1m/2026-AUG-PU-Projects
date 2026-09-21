@@ -1,0 +1,25 @@
+- main:
+  - link "Go to main page":
+    - /url: https://opus.pro
+    - img
+  - text: Finish signing up to get your free clips Free plan available. No credit card required.
+  - button "Continue with Google":
+    - img
+    - text: Continue with Google
+  - button "Continue with Apple":
+    - img
+    - text: Continue with Apple
+  - text: or continue with email
+  - textbox "email":
+    - /placeholder: Enter email address
+  - button "Continue with email"
+  - text: Facebook user? Loginhere By continuing, you agree to OpusClip's
+  - link "Terms of Service":
+    - /url: https://www.opus.pro/terms-of-service
+  - text: . Read our
+  - link "Privacy Policy":
+    - /url: https://www.opus.pro/privacy-policy
+  - text: .
+  - region "Notifications alt+T"
+- alert: OpusClip - AI-powered Video Repurposing
+- button "Open cookie settings widget"

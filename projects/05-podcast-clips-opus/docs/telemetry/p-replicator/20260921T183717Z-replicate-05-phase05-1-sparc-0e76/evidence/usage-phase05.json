@@ -1,0 +1,48 @@
+{
+  "source": "transcript-aggregation (Claude Code host-written usage per response; Codex token_count snapshots)",
+  "quality": "partial: реальные счётчики хоста, но не биллинг; попытки/повторы см. events.jsonl",
+  "session": "9a440204-7fe6-43fe-8d49-eaf9c30e3498",
+  "window": {
+    "from": "2026-09-21T18:37:00.000Z",
+    "to": null
+  },
+  "observed": {
+    "first_at": "2026-09-21T18:37:20.837Z",
+    "last_at": "2026-09-21T18:44:56.323Z"
+  },
+  "dedupe": {
+    "raw_assistant_entries": 45,
+    "unique_requests": 9,
+    "bad_lines": 0
+  },
+  "by_model": {
+    "claude-fable-5-1": {
+      "requests": 9,
+      "input_tokens": 228,
+      "cache_creation_input_tokens": 121751,
+      "cache_read_input_tokens": 3086725,
+      "output_tokens": 35307,
+      "thinking_tokens": 10099
+    }
+  },
+  "by_agent": {
+    "coordinator": {
+      "requests": 9,
+      "input_tokens": 228,
+      "cache_creation_input_tokens": 121751,
+      "cache_read_input_tokens": 3086725,
+      "output_tokens": 35307,
+      "thinking_tokens": 10099
+    }
+  },
+  "totals": {
+    "input_tokens_total": 3208704,
+    "cached_input_tokens": 3086725,
+    "cache_creation_input_tokens": 121751,
+    "output_tokens_total": 35307,
+    "reasoning_tokens": 10099,
+    "requests": 9
+  },
+  "codex": null,
+  "generated_at": "2026-09-21T18:45:14.858Z"
+}

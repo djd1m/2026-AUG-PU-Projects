@@ -1,0 +1,981 @@
+{
+  "tool": "capture-source-path.cjs",
+  "start": "https://www.opus.pro/",
+  "at": "2026-09-21T18:38:34.715Z",
+  "robots": "robots.txt прочитан, стартовый путь разрешён",
+  "politeness": {
+    "maxPages": 5,
+    "delayMs": 1500,
+    "threads": 1
+  },
+  "steps": [
+    {
+      "index": 1,
+      "url": "https://www.opus.pro/",
+      "path": "/",
+      "status": 200,
+      "title": "OpusClip: #1 AI video clipping and editing tool",
+      "arrivedBy": null,
+      "authWall": false,
+      "at": "2026-09-21T18:38:01Z",
+      "evidence": {
+        "screenshot": "step-01.png",
+        "aria": "step-01.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 2,
+          "share": 0.93
+        },
+        "spacingTop": [
+          {
+            "value": "8",
+            "count": 109
+          },
+          {
+            "value": "24",
+            "count": 88
+          },
+          {
+            "value": "12",
+            "count": 76
+          },
+          {
+            "value": "28",
+            "count": 76
+          },
+          {
+            "value": "10",
+            "count": 58
+          },
+          {
+            "value": "44",
+            "count": 57
+          }
+        ],
+        "typeScale": [
+          12,
+          14,
+          15,
+          16,
+          18,
+          20,
+          24,
+          36,
+          48,
+          60
+        ],
+        "typeLevels": 10,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          20,
+          32,
+          50,
+          100,
+          1000
+        ],
+        "distinctColors": 13,
+        "rootVars": 145,
+        "breakpoints": [
+          479,
+          767,
+          768,
+          991,
+          992,
+          1280,
+          1440,
+          1920
+        ],
+        "stylesheets": {
+          "total": 20,
+          "unreadable": 1
+        },
+        "headingLevels": 3,
+        "ctaCount": 58,
+        "prominentCtas": 7,
+        "fieldCount": 11
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "1 long video, 10 viral clips. Create 10x faster."
+        },
+        {
+          "level": 2,
+          "text": "Used by 16M+ creators and businesses"
+        },
+        {
+          "level": 2,
+          "text": "AI that understands every pixel of your video"
+        },
+        {
+          "level": 3,
+          "text": "ClipAnything"
+        },
+        {
+          "level": 3,
+          "text": "ReframeAnything"
+        },
+        {
+          "level": 2,
+          "text": "Your video creation process — now on autopilot"
+        },
+        {
+          "level": 2,
+          "text": "AI that edits with you, not just for you"
+        },
+        {
+          "level": 2,
+          "text": "Scale your creative output and business without scaling overhead"
+        }
+      ],
+      "fields": [
+        {
+          "type": "checkbox",
+          "label": "Necessary"
+        },
+        {
+          "type": "checkbox",
+          "label": "Preferences"
+        },
+        {
+          "type": "checkbox",
+          "label": "Statistics"
+        },
+        {
+          "type": "checkbox",
+          "label": "Marketing"
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": "Do not sell or share my personal information"
+        },
+        {
+          "type": "url",
+          "label": "Video link"
+        },
+        {
+          "type": "url",
+          "label": "Video link"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "url": "https://www.opus.pro/pricing",
+      "path": "/pricing",
+      "status": 200,
+      "title": "Pricing - OpusClip",
+      "arrivedBy": "Pricing",
+      "authWall": false,
+      "at": "2026-09-21T18:38:12Z",
+      "evidence": {
+        "screenshot": "step-02.png",
+        "aria": "step-02.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 2,
+          "share": 0.95
+        },
+        "spacingTop": [
+          {
+            "value": "10",
+            "count": 820
+          },
+          {
+            "value": "24",
+            "count": 234
+          },
+          {
+            "value": "12",
+            "count": 185
+          },
+          {
+            "value": "8",
+            "count": 182
+          },
+          {
+            "value": "16",
+            "count": 124
+          },
+          {
+            "value": "17",
+            "count": 75
+          }
+        ],
+        "typeScale": [
+          10,
+          12,
+          13,
+          14,
+          15,
+          16,
+          18,
+          20,
+          22,
+          24,
+          28,
+          30,
+          34,
+          40,
+          56
+        ],
+        "typeLevels": 15,
+        "weights": [
+          400,
+          500,
+          600,
+          700,
+          800
+        ],
+        "radii": [
+          4,
+          6,
+          8,
+          12,
+          16,
+          20,
+          30,
+          32,
+          50,
+          100,
+          1000
+        ],
+        "distinctColors": 14,
+        "rootVars": 145,
+        "breakpoints": [
+          479,
+          767,
+          768,
+          991,
+          992,
+          1280,
+          1440,
+          1920
+        ],
+        "stylesheets": {
+          "total": 22,
+          "unreadable": 2
+        },
+        "headingLevels": 3,
+        "ctaCount": 60,
+        "prominentCtas": 6,
+        "fieldCount": 19
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Choose a plan"
+        },
+        {
+          "level": 2,
+          "text": "Starter"
+        },
+        {
+          "level": 2,
+          "text": "Pro"
+        },
+        {
+          "level": 2,
+          "text": "Business"
+        },
+        {
+          "level": 2,
+          "text": "Free"
+        },
+        {
+          "level": 2,
+          "text": "Create & Grow Faster Calculator"
+        },
+        {
+          "level": 2,
+          "text": "Compare all plans"
+        },
+        {
+          "level": 2,
+          "text": "Many creators gained 1 million views from a single video in just days"
+        }
+      ],
+      "fields": [
+        {
+          "type": "checkbox",
+          "label": "Necessary"
+        },
+        {
+          "type": "checkbox",
+          "label": "Preferences"
+        },
+        {
+          "type": "checkbox",
+          "label": "Statistics"
+        },
+        {
+          "type": "checkbox",
+          "label": "Marketing"
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": "Do not sell or share my personal information"
+        },
+        {
+          "type": "checkbox",
+          "label": "Choose a plan"
+        },
+        {
+          "type": "text",
+          "label": "Number of packs"
+        },
+        {
+          "type": "text",
+          "label": "Number of packs"
+        },
+        {
+          "type": "select-one",
+          "label": "Select number of packs"
+        },
+        {
+          "type": "number",
+          "label": "How many credits do you need?"
+        },
+        {
+          "type": "number",
+          "label": "Average views of your clips"
+        },
+        {
+          "type": "select-one",
+          "label": "calcCategory"
+        },
+        {
+          "type": "checkbox",
+          "label": "calcYoutube"
+        },
+        {
+          "type": "checkbox",
+          "label": "calcTiktok"
+        },
+        {
+          "type": "checkbox",
+          "label": "calcInstagram"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "url": "https://www.opus.pro/contact",
+      "path": "/contact",
+      "status": 200,
+      "title": "Contact",
+      "arrivedBy": "Contact us",
+      "authWall": false,
+      "at": "2026-09-21T18:38:22Z",
+      "evidence": {
+        "screenshot": "step-03.png",
+        "aria": "step-03.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 2,
+          "share": 0.95
+        },
+        "spacingTop": [
+          {
+            "value": "8",
+            "count": 101
+          },
+          {
+            "value": "12",
+            "count": 30
+          },
+          {
+            "value": "16",
+            "count": 29
+          },
+          {
+            "value": "2",
+            "count": 24
+          },
+          {
+            "value": "4",
+            "count": 22
+          },
+          {
+            "value": "10",
+            "count": 22
+          }
+        ],
+        "typeScale": [
+          12,
+          14,
+          15,
+          16,
+          20,
+          32,
+          36
+        ],
+        "typeLevels": 7,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          4,
+          6,
+          8,
+          12,
+          32
+        ],
+        "distinctColors": 10,
+        "rootVars": 145,
+        "breakpoints": [
+          479,
+          767,
+          768,
+          991,
+          992,
+          1280,
+          1440,
+          1920
+        ],
+        "stylesheets": {
+          "total": 12,
+          "unreadable": 1
+        },
+        "headingLevels": 3,
+        "ctaCount": 52,
+        "prominentCtas": 8,
+        "fieldCount": 28
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Talk to our team to get started"
+        },
+        {
+          "level": 2,
+          "text": "Used by teams at"
+        },
+        {
+          "level": 2,
+          "text": "Businesses see more ROI using OpusClip"
+        },
+        {
+          "level": 3,
+          "text": "3x"
+        },
+        {
+          "level": 3,
+          "text": "400%"
+        },
+        {
+          "level": 3,
+          "text": "4.4x"
+        },
+        {
+          "level": 3,
+          "text": "Company"
+        },
+        {
+          "level": 3,
+          "text": "Product"
+        }
+      ],
+      "fields": [
+        {
+          "type": "checkbox",
+          "label": "Necessary"
+        },
+        {
+          "type": "checkbox",
+          "label": "Preferences"
+        },
+        {
+          "type": "checkbox",
+          "label": "Statistics"
+        },
+        {
+          "type": "checkbox",
+          "label": "Marketing"
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": "Do not sell or share my personal information"
+        },
+        {
+          "type": "text",
+          "label": "First name *"
+        },
+        {
+          "type": "text",
+          "label": "Last name *"
+        },
+        {
+          "type": "email",
+          "label": "Business email *"
+        },
+        {
+          "type": "text",
+          "label": "Company name *"
+        },
+        {
+          "type": "select-one",
+          "label": "Company-size"
+        },
+        {
+          "type": "select-one",
+          "label": "Estimated volume of monthly video uploads? *"
+        },
+        {
+          "type": "url",
+          "label": "Your organization's main social channel *"
+        },
+        {
+          "type": "checkbox",
+          "label": "I'm interested in OpusClip Enterprise"
+        },
+        {
+          "type": "checkbox",
+          "label": "I'm interested in OpusClip for my team"
+        },
+        {
+          "type": "checkbox",
+          "label": "I'm interested in OpusClip for my clients"
+        },
+        {
+          "type": "checkbox",
+          "label": "I'm interested in AI Archival Search"
+        },
+        {
+          "type": "checkbox",
+          "label": "I want to be an OpusClip API partner"
+        },
+        {
+          "type": "checkbox",
+          "label": "I'm interested in OpusClip for non-profits"
+        },
+        {
+          "type": "checkbox",
+          "label": "I have a billing issue"
+        },
+        {
+          "type": "checkbox",
+          "label": "I have a support issue"
+        },
+        {
+          "type": "textarea",
+          "label": "How can we help?"
+        },
+        {
+          "type": "submit",
+          "label": ""
+        },
+        {
+          "type": "text",
+          "label": "referrer"
+        },
+        {
+          "type": "text",
+          "label": "current url"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "url": "https://www.opus.pro/business",
+      "path": "/business",
+      "status": 200,
+      "title": "OpusClip for Business: AI Video Editing at Scale",
+      "arrivedBy": "For business",
+      "authWall": false,
+      "at": "2026-09-21T18:38:29Z",
+      "evidence": {
+        "screenshot": "step-04.png",
+        "aria": "step-04.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": {
+          "step": 2,
+          "share": 0.91
+        },
+        "spacingTop": [
+          {
+            "value": "16",
+            "count": 68
+          },
+          {
+            "value": "24",
+            "count": 42
+          },
+          {
+            "value": "4",
+            "count": 40
+          },
+          {
+            "value": "8",
+            "count": 38
+          },
+          {
+            "value": "12",
+            "count": 34
+          },
+          {
+            "value": "10",
+            "count": 26
+          }
+        ],
+        "typeScale": [
+          12,
+          14,
+          15,
+          16,
+          20,
+          32,
+          36,
+          48,
+          56,
+          64
+        ],
+        "typeLevels": 10,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          20,
+          24,
+          32,
+          50,
+          88,
+          400,
+          999
+        ],
+        "distinctColors": 15,
+        "rootVars": 145,
+        "breakpoints": [
+          479,
+          767,
+          768,
+          991,
+          992,
+          1279,
+          1280,
+          1440,
+          1920
+        ],
+        "stylesheets": {
+          "total": 16,
+          "unreadable": 1
+        },
+        "headingLevels": 3,
+        "ctaCount": 54,
+        "prominentCtas": 5,
+        "fieldCount": 9
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "Scale video outputand dominate feeds"
+        },
+        {
+          "level": 2,
+          "text": "Automate your editing workflowwith OpusClip API"
+        },
+        {
+          "level": 3,
+          "text": "The #1 reframe engine"
+        },
+        {
+          "level": 3,
+          "text": "Scale and distribute content automatically"
+        },
+        {
+          "level": 3,
+          "text": "Speed to market"
+        },
+        {
+          "level": 2,
+          "text": "Why choose OpusClip API?"
+        },
+        {
+          "level": 2,
+          "text": "Automatically scan and find moments from your catalogue"
+        },
+        {
+          "level": 3,
+          "text": "Search & reuse anything from your catalog"
+        }
+      ],
+      "fields": [
+        {
+          "type": "checkbox",
+          "label": "Necessary"
+        },
+        {
+          "type": "checkbox",
+          "label": "Preferences"
+        },
+        {
+          "type": "checkbox",
+          "label": "Statistics"
+        },
+        {
+          "type": "checkbox",
+          "label": "Marketing"
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": "Do not sell or share my personal information"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "url": "https://www.opus.pro/api",
+      "path": "/api",
+      "status": 200,
+      "title": "OpusClip API: The #1 AI video clipping API",
+      "arrivedBy": "Learn more about API",
+      "authWall": false,
+      "at": "2026-09-21T18:38:34Z",
+      "evidence": {
+        "screenshot": "step-05.png",
+        "aria": "step-05.aria.txt"
+      },
+      "regularities": {
+        "spacingStep": null,
+        "spacingTop": [
+          {
+            "value": "16",
+            "count": 55
+          },
+          {
+            "value": "24",
+            "count": 52
+          },
+          {
+            "value": "10",
+            "count": 34
+          },
+          {
+            "value": "12",
+            "count": 32
+          },
+          {
+            "value": "8",
+            "count": 27
+          },
+          {
+            "value": "2",
+            "count": 26
+          }
+        ],
+        "typeScale": [
+          12,
+          14,
+          15,
+          16,
+          18,
+          20,
+          22,
+          24,
+          32,
+          36,
+          48,
+          64
+        ],
+        "typeLevels": 12,
+        "weights": [
+          400,
+          500,
+          600,
+          700
+        ],
+        "radii": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          20,
+          32,
+          40
+        ],
+        "distinctColors": 11,
+        "rootVars": 145,
+        "breakpoints": [
+          479,
+          767,
+          768,
+          991,
+          992,
+          1280,
+          1440,
+          1920
+        ],
+        "stylesheets": {
+          "total": 16,
+          "unreadable": 1
+        },
+        "headingLevels": 3,
+        "ctaCount": 58,
+        "prominentCtas": 8,
+        "fieldCount": 9
+      },
+      "headings": [
+        {
+          "level": 1,
+          "text": "The video API every AI agent can call"
+        },
+        {
+          "level": 2,
+          "text": "Built for AI agents"
+        },
+        {
+          "level": 2,
+          "text": "What you can build with OpusClip API"
+        },
+        {
+          "level": 2,
+          "text": "Auto caption & reframe"
+        },
+        {
+          "level": 3,
+          "text": "No.1"
+        },
+        {
+          "level": 2,
+          "text": "Automate your editing workflow"
+        },
+        {
+          "level": 3,
+          "text": "$100k+"
+        },
+        {
+          "level": 2,
+          "text": "Turn your footage into feeds"
+        }
+      ],
+      "fields": [
+        {
+          "type": "checkbox",
+          "label": "Necessary"
+        },
+        {
+          "type": "checkbox",
+          "label": "Preferences"
+        },
+        {
+          "type": "checkbox",
+          "label": "Statistics"
+        },
+        {
+          "type": "checkbox",
+          "label": "Marketing"
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": ""
+        },
+        {
+          "type": "checkbox",
+          "label": "Do not sell or share my personal information"
+        }
+      ]
+    }
+  ]
+}

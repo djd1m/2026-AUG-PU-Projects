@@ -1,0 +1,215 @@
+- region "Our website uses cookies":
+  - link "Cookiebot by Usercentrics - opens in a new window":
+    - /url: https://www.cookiebot.com/en/what-is-behind-powered-by-cookiebot/?utm_source=banner_cb&utm_medium=referral&utm_content=v2
+  - tabpanel "Consent":
+    - heading "Our website uses cookies" [level=2]
+    - text: We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services.
+    - group "Consent Selection":
+      - text: Consent Selection
+      - strong: Necessary
+      - checkbox "Necessary" [checked] [disabled]
+      - strong: Preferences
+      - switch "Preferences"
+      - strong: Statistics
+      - switch "Statistics"
+      - strong: Marketing
+      - switch "Marketing"
+    - link "Show details":
+      - /url: "#"
+  - button "Allow all"
+  - button "Allow selection"
+  - button "Deny"
+- banner:
+  - link "OpusClip homepage":
+    - /url: https://www.opus.pro/
+    - img
+  - navigation:
+    - button "Features":
+      - text: Features
+      - img
+    - button "Solutions":
+      - text: Solutions
+      - img
+    - button "Resources":
+      - text: Resources
+      - img
+    - link "Pricing":
+      - /url: https://www.opus.pro/pricing
+    - link "For business":
+      - /url: https://www.opus.pro/business
+    - button "Opus Labs":
+      - text: Opus Labs
+      - img
+  - link "Sign in":
+    - /url: https://clip.opus.pro/dashboard
+  - link "Sign Up - It’s Free":
+    - /url: https://clip.opus.pro/dashboard
+- main:
+  - heading "Talk to our team to get started" [level=1]
+  - paragraph: We are happy to give you a demo, explore use cases for your team, and create a personalized package to help your organization get the most out of OpusClip.
+  - heading "Used by teams at" [level=2]
+  - img "Audacy"
+  - img "DOAC"
+  - heading "Businesses see more ROI using OpusClip" [level=2]
+  - heading "3x" [level=3]
+  - text: Increase in short video output
+  - heading "400%" [level=3]
+  - text: Cost reduction
+  - heading "4.4x" [level=3]
+  - text: More exposure
+  - paragraph:
+    - text: For product support, please visit our
+    - link "Help Center":
+      - /url: https://help.opus.pro/
+    - text: . You can also join our
+    - link "Discord community":
+      - /url: https://discord.com/invite/wqbb7ZKhjg
+    - text: who are eager to help.
+  - form "Contact Form":
+    - text: First name *
+    - textbox "First name *":
+      - /placeholder: Your first name
+    - text: Last name *
+    - textbox "Last name *":
+      - /placeholder: Your last name
+    - text: Business email *
+    - textbox "Business email *":
+      - /placeholder: Business or company email
+    - text: Company name *
+    - textbox "Company name *":
+      - /placeholder: Company name
+    - text: Company size *
+    - button "Please select an option Please select an option":
+      - text: Please select an option
+      - combobox:
+        - option "Please select an option" [selected]
+        - option "1 - 50"
+        - option "51 - 200"
+        - option "201 - 1000"
+        - option "1001 - 5000"
+        - option "5001 - 10000"
+        - option "10000 or more"
+    - text: Estimated volume of monthly video uploads? *
+    - button "Please select an option Please select an option":
+      - text: Please select an option
+      - combobox "Estimated volume of monthly video uploads? *":
+        - option "Please select an option" [selected]
+        - option "10 hours"
+        - option "50 hours"
+        - option "100 hours"
+        - option "200 hours"
+        - option "+500 hours"
+    - text: Your organization's main social channel *
+    - textbox "Your organization's main social channel *":
+      - /placeholder: Social channel name
+    - text: What is your inquiry about? Select all that apply *
+    - button "Please select an option" [expanded]
+    - navigation "Please select an option":
+      - checkbox "I'm interested in OpusClip Enterprise"
+      - text: I'm interested in OpusClip Enterprise
+      - checkbox "I'm interested in OpusClip for my team"
+      - text: I'm interested in OpusClip for my team
+      - checkbox "I'm interested in OpusClip for my clients"
+      - text: I'm interested in OpusClip for my clients
+      - checkbox "I'm interested in AI Archival Search"
+      - text: I'm interested in AI Archival Search
+      - checkbox "I want to be an OpusClip API partner"
+      - text: I want to be an OpusClip API partner
+      - checkbox "I'm interested in OpusClip for non-profits"
+      - text: I'm interested in OpusClip for non-profits
+      - checkbox "I have a billing issue"
+      - text: I have a billing issue
+      - checkbox "I have a support issue"
+      - text: I have a support issue
+    - text: How can we help?
+    - textbox "How can we help?":
+      - /placeholder: Share your input, and we’ll get back to you faster!
+    - button "Submit" [disabled]
+    - paragraph:
+      - text: By submitting this form, you agree to receive marketing and information from OpusClip. You can opt out at any time by clicking unsubscribe. OpusClip handles your information as described in our
+      - link "Privacy Policy":
+        - /url: https://www.opus.pro/privacy-policy-outdated
+      - text: .
+- contentinfo:
+  - heading "Company" [level=3]
+  - link "About us":
+    - /url: https://www.opus.pro/about
+  - link "Careers We're hiring!":
+    - /url: https://www.opus.pro/careers
+    - text: Careers
+    - strong: We're hiring!
+  - link "Contact Us":
+    - /url: https://www.opus.pro/contact-support
+  - heading "Product" [level=3]
+  - link "Tools":
+    - /url: https://www.opus.pro/tools
+  - link "Product changelog":
+    - /url: https://opusclip.canny.io/changelog
+  - link "Feature Request":
+    - /url: https://opusclip.canny.io/feature-requests
+  - link "OpusClip Captions Free":
+    - /url: https://clip.opus.pro/captions
+    - text: OpusClip Captions
+    - strong: Free
+  - link "How does OpusClip work":
+    - /url: https://www.opus.pro/how-does-opus-clip-work
+  - heading "Resources" [level=3]
+  - link "Customer stories":
+    - /url: https://www.opus.pro/customer-stories
+  - link "Blogs":
+    - /url: https://www.opus.pro/blog
+  - link "Become an affiliate":
+    - /url: https://www.opus.pro/affiliate
+  - link "OpusClip media assets":
+    - /url: https://media.opus.pro/
+  - link "Help center":
+    - /url: https://help.opus.pro/docs/introduction
+  - link "Learning center":
+    - /url: https://www.opus.pro/learning-center
+  - link "Research":
+    - /url: https://www.opus.pro/research/research-hub
+  - heading "Best Practices" [level=3]
+  - link "Hidden strategy top creators use to turn clips into 4M+ long-form views":
+    - /url: https://www.opus.pro/how-clipping-drives-4m-longform-views
+  - 'link "MrBeast''s Vyro: Everything You Need to Know"':
+    - /url: https://www.opus.pro/blog/mrbeasts-vyro
+  - link "From zero to monetization for a new YouTube channel in 40 days":
+    - /url: https://www.opus.pro/blog/from-zero-to-monetization-for-a-new-youtube-channel-in-40-days
+  - 'link "How to Turn Long Videos into Viral Shorts: The Ultimate Guide for 2026"':
+    - /url: https://www.opus.pro/blog/how-to-make-short-videos-from-youtube-long-videos
+  - 'link "Create Videos in Alex Hormozi Style: The Ultimate Guide"':
+    - /url: https://www.opus.pro/blog/create-videos-in-alex-hormozi-style-the-ultimate-guide
+  - heading "Trust and Legal" [level=3]
+  - link "Terms and Conditions":
+    - /url: https://www.opus.pro/terms-of-service
+  - link "Privacy Policy":
+    - /url: https://www.opus.pro/privacy-policy
+  - link "Cookies Preferences":
+    - /url: "#"
+  - link "Accessibility Statement":
+    - /url: https://www.opus.pro/accessibility-statement
+  - link "Trust Center":
+    - /url: https://trust.opus.pro/
+  - link "SOC2 TYPE 2":
+    - /url: https://trust.opus.pro/
+    - img "SOC2 TYPE 2"
+  - img "BEST SOFTWARE 2025 Top 50 AI PRODUCTS"
+  - text: © 2026 OpusClip by Opusclip Inc. All rights reserved.
+  - link "YouTube":
+    - /url: https://www.youtube.com/@opusclip
+    - img
+  - link "TikTok":
+    - /url: https://www.tiktok.com/@opusclip
+    - img
+  - link "Twitter":
+    - /url: https://twitter.com/opusclip
+    - img
+  - link "Discord":
+    - /url: https://discord.com/invite/wqbb7ZKhjg
+    - img
+  - link "LinkedIn":
+    - /url: https://www.linkedin.com/company/opusclip
+    - img
+  - link "Instagram":
+    - /url: https://www.instagram.com/opusclip/?hl=en
+    - img

@@ -1,0 +1,1307 @@
+- region "Our website uses cookies":
+  - link "Cookiebot by Usercentrics - opens in a new window":
+    - /url: https://www.cookiebot.com/en/what-is-behind-powered-by-cookiebot/?utm_source=banner_cb&utm_medium=referral&utm_content=v2
+  - tabpanel "Consent":
+    - heading "Our website uses cookies" [level=2]
+    - text: We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services.
+    - group "Consent Selection":
+      - text: Consent Selection
+      - strong: Necessary
+      - checkbox "Necessary" [checked] [disabled]
+      - strong: Preferences
+      - switch "Preferences"
+      - strong: Statistics
+      - switch "Statistics"
+      - strong: Marketing
+      - switch "Marketing"
+    - link "Show details":
+      - /url: "#"
+  - button "Allow all"
+  - button "Allow selection"
+  - button "Deny"
+- banner:
+  - link "OpusClip homepage":
+    - /url: https://www.opus.pro/
+    - img
+  - navigation:
+    - button "Features":
+      - text: Features
+      - img
+    - button "Solutions":
+      - text: Solutions
+      - img
+    - button "Resources":
+      - text: Resources
+      - img
+    - link "Pricing":
+      - /url: https://www.opus.pro/pricing
+    - link "For business":
+      - /url: https://www.opus.pro/business
+    - button "Opus Labs":
+      - text: Opus Labs
+      - img
+  - link "Sign in":
+    - /url: https://clip.opus.pro/dashboard
+  - link "Sign Up - It’s Free":
+    - /url: https://clip.opus.pro/dashboard
+- main:
+  - form "plans":
+    - heading "Choose a plan" [level=1]
+    - strong: Monthly
+    - checkbox "Choose a plan" [checked]
+    - strong: Yearly
+    - text: Save up to 50% with annual billing
+    - heading "Starter" [level=2]
+    - text: For individual creators
+    - strong: $
+    - strong: "15"
+    - strong: USD
+    - strong: /mo
+    - text: Starter plan only available in monthly
+    - link "Start your free trial No credit card required":
+      - /url: https://clip.opus.pro/subscription?plan=Starter&cycle=Monthly&pack=1
+    - text: $15 billed monthly
+    - button "Open tooltip":
+      - img "Tooltip icon"
+    - strong: "150"
+    - text: credits
+    - button "Open tooltip":
+      - img "Tooltip icon"
+    - strong
+    - text: per month AI clipping with Virality Score AI animated captions in 20+ languages Auto post to YouTube Shorts, TikTok, IG Reels, or download Powerful editor 1 brand template Filler & silence removal Remove Watermark
+    - heading "Pro" [level=2]
+    - text: For professional creators, marketers, & teams
+    - strong: $
+    - strong: "29"
+    - strong: USD
+    - strong: $
+    - strong: "14.5"
+    - strong: USD
+    - strong: /mo
+    - slider "pro-range-yearly-2": 1x
+    - slider "pro-range-monthly-2": 1x
+    - combobox "Select number of packs":
+      - option "1 pack" [selected]
+      - option "2 packs"
+      - option "3 packs"
+      - option "4 packs"
+      - option "5 packs"
+      - option "6 packs"
+      - option "7 packs"
+      - option "8 packs"
+      - option "9 packs"
+      - option "10 packs"
+      - option "11 packs"
+      - option "12 packs"
+      - option "13 packs"
+      - option "14 packs"
+      - option "15 packs"
+      - option "Contact us for more credits"
+    - button "Arrow up":
+      - img "Arrow up"
+    - button "Arrow down":
+      - img "Arrow down"
+    - link "Start your free trial No credit card required":
+      - /url: https://clip.opus.pro/subscription?plan=Pro&cycle=Yearly&pack=1
+    - text: $174 billed annually
+    - button "Open tooltip":
+      - img "Tooltip icon"
+    - strong: 3,600
+    - text: credits
+    - button "Open tooltip":
+      - img "Tooltip icon"
+    - strong
+    - text: per year, available instantly Team workspace with
+    - strong: "2"
+    - text: seats
+    - strong: "2"
+    - text: brand templates
+    - strong: "6"
+    - text: social account connections
+    - strong: "Everything in Starter plan, plus:"
+    - text: AI B-Roll (supports image, video & stock) Input from 10+ sources Export to Adobe Premiere Pro & DaVinci Resolve Multiple aspect ratios (9:16, 1:1, 16:9) Social media scheduler Intercom chat support Custom fonts Speech enhancement Limited API Access Video dubbing
+    - heading "Business" [level=2]
+    - text: For organizations that need tailored solutions, API, and more Custom pricing and packs
+    - link "Contact us":
+      - /url: https://www.opus.pro/contact
+    - strong: "Everything in the Pro plan, plus:"
+    - text: "Priority project processing Customized credits, team seats and social account connections Tailored business assets: brand templates, fonts, vocabulary & more Dedicated storage API & custom integrations Master Service Agreement (MSA) Priority support with a dedicated Slack channel Enterprise-level security Used by teams at"
+    - img "Audacy"
+    - img "DOAC"
+    - img "Voxmedia"
+    - heading "Free" [level=2]
+    - text: Free forever
+    - strong: $0 USD
+    - strong: /mo
+    - link "Create an account":
+      - /url: https://clip.opus.pro/dashboard
+    - strong: "60"
+    - text: credits
+    - button "Open tooltip":
+      - img "Tooltip icon"
+    - strong
+    - text: per month Up to 1080p rendered clips Auto reframe AI captions with emoji and keyword highlighter Has watermark No editing After 3 days, the clips will no longer be exportable
+  - heading "Create & Grow Faster Calculator" [level=2]
+  - text: Use this calculator to understand how OpusClip helps you save time, post daily, and grow/monetize faster.
+  - form "Calculator Form":
+    - text: How many credits do you need?
+    - spinbutton "How many credits do you need?": "600"
+    - button "Arrow up":
+      - img "Arrow up"
+    - button "Arrow down":
+      - img "Arrow down"
+    - text: credits Average views of your clips
+    - spinbutton "Average views of your clips": "500"
+    - button "Arrow up":
+      - img "Arrow up"
+    - button "Arrow down":
+      - img "Arrow down"
+    - text: views What category?
+    - combobox:
+      - option "Podcast" [selected]
+      - option "Speech & interviews"
+      - option "Marketing & Business"
+      - option "Crypto & Finance"
+      - option "Education"
+      - option "Tech"
+      - option "Livestreaming"
+      - option "Sports"
+      - option "News & Commentary"
+      - option "Movies & TV"
+      - option "Art & Creative"
+      - option "Gaming"
+      - option "Other"
+    - button "Arrow up":
+      - img "Arrow up"
+    - button "Arrow down":
+      - img "Arrow down"
+    - text: Which platform will you post to?
+    - checkbox "YouTube Shorts icon" [checked]
+    - img "YouTube Shorts icon"
+    - checkbox "TikTok icon"
+    - img "TikTok icon"
+    - checkbox "Instagram Reels logo"
+    - img "Instagram Reels logo"
+    - button "Calculate"
+  - heading "Compare all plans" [level=2]
+  - table:
+    - rowgroup:
+      - row "Empty header Free $0 Create an account Starter $15/mo Start free trial Pro $29/mo Start free trial Business Custom Contact us":
+        - columnheader "Empty header"
+        - columnheader "Free $0 Create an account":
+          - text: Free $0
+          - link "Create an account":
+            - /url: https://clip.opus.pro/dashboard
+        - columnheader "Starter $15/mo Start free trial":
+          - text: Starter $15/mo
+          - link "Start free trial":
+            - /url: https://clip.opus.pro/subscription?plan=Starter
+        - columnheader "Pro $29/mo Start free trial":
+          - text: Pro $29/mo
+          - link "Start free trial":
+            - /url: https://clip.opus.pro/subscription?plan=Pro
+        - columnheader "Business Custom Contact us":
+          - text: Business Custom
+          - link "Contact us":
+            - /url: https://www.opus.pro/contact
+    - rowgroup:
+      - row "AI clipping":
+        - rowheader "AI clipping"
+      - row "Processing speed Regular speed Faster than Free and Trial Faster than Starter Dedicated enterprise queue; Fastest processing with more powerful servers":
+        - rowheader "Processing speed"
+        - cell "Regular speed"
+        - cell "Faster than Free and Trial"
+        - cell "Faster than Starter"
+        - cell "Dedicated enterprise queue; Fastest processing with more powerful servers"
+      - row "Video import sources Local video (Up to 10GB per video) Open tooltip Local video (Up to 10GB per video) Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Local video (Up to 30GB per video) and Public mp4 url Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Local video (Up to 30GB per video) and Public mp4 url Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+        - rowheader "Video import sources"
+        - cell "Local video (Up to 10GB per video) Open tooltip":
+          - text: Local video (Up to 10GB per video)
+          - button "Open tooltip":
+            - img "YouTube icon"
+        - cell "Local video (Up to 10GB per video) Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - text: Local video (Up to 10GB per video)
+          - button "Open tooltip":
+            - img "YouTube icon"
+          - button "Open tooltip":
+            - img "Google Drive icon"
+          - button "Open tooltip":
+            - img "Vimeo icon"
+          - button "Open tooltip":
+            - img "Zoom icon"
+          - button "Open tooltip":
+            - img "Rumble icon"
+          - button "Open tooltip":
+            - img "StreamYard icon"
+        - cell "Local video (Up to 30GB per video) and Public mp4 url Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - text: Local video (Up to 30GB per video) and Public mp4 url
+          - button "Open tooltip":
+            - img "YouTube icon"
+          - button "Open tooltip":
+            - img "Google Drive icon"
+          - button "Open tooltip"
+          - button "Open tooltip":
+            - img "Vimeo icon"
+          - button "Open tooltip":
+            - img "Zoom icon"
+          - button "Open tooltip":
+            - img "Rumble icon"
+          - button "Open tooltip":
+            - img "Twitch icon"
+          - button "Open tooltip":
+            - img "Facebook icon"
+          - button "Open tooltip"
+          - button "Open tooltip"
+          - button "Open tooltip":
+            - img "LinkedIn icon"
+          - button "Open tooltip":
+            - img "Twitter(X) icon"
+          - button "Open tooltip":
+            - img "Loom icon"
+          - button "Open tooltip":
+            - img "Riverside icon"
+          - button "Open tooltip":
+            - img "Frame.io"
+          - button "Open tooltip":
+            - img "StreamYard icon"
+          - button "Open tooltip"
+          - button "Open tooltip"
+        - cell "Local video (Up to 30GB per video) and Public mp4 url Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - text: Local video (Up to 30GB per video) and Public mp4 url
+          - button "Open tooltip":
+            - img "YouTube icon"
+          - button "Open tooltip":
+            - img "Google Drive icon"
+          - button "Open tooltip"
+          - button "Open tooltip":
+            - img "Vimeo icon"
+          - button "Open tooltip":
+            - img "Zoom icon"
+          - button "Open tooltip":
+            - img "Rumble icon"
+          - button "Open tooltip":
+            - img "Twitch icon"
+          - button "Open tooltip":
+            - img "Facebook icon"
+          - button "Open tooltip"
+          - button "Open tooltip"
+          - button "Open tooltip":
+            - img "LinkedIn icon"
+          - button "Open tooltip":
+            - img "Twitter(X) icon"
+          - button "Open tooltip":
+            - img "Loom icon"
+          - button "Open tooltip":
+            - img "Riverside icon"
+          - button "Open tooltip":
+            - img "Frame.io"
+          - button "Open tooltip":
+            - img "StreamYard icon"
+          - button "Open tooltip"
+          - button "Open tooltip"
+      - row "Auto video import - From verified YouTube account From verified YouTube account Verified YouTube account, CMS, or other cloud servers":
+        - rowheader "Auto video import"
+        - cell "-"
+        - cell "From verified YouTube account"
+        - cell "From verified YouTube account"
+        - cell "Verified YouTube account, CMS, or other cloud servers"
+      - row "AI clipping Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+        - rowheader "AI clipping Open tooltip":
+          - text: AI clipping
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Open tooltip":
+          - button "Open tooltip":
+            - img "Clipping by spoken words icon"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "Clipping by spoken words icon"
+          - button "Open tooltip":
+            - img "Clipping by visual objects icon"
+          - button "Open tooltip":
+            - img "Clipping by sound icon"
+          - button "Open tooltip":
+            - img "Clipping by emotion icon"
+          - button "Open tooltip":
+            - img "Genre-specific curation model icon"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "Clipping by spoken words icon"
+          - button "Open tooltip":
+            - img "Clipping by visual objects icon"
+          - button "Open tooltip":
+            - img "Clipping by sound icon"
+          - button "Open tooltip":
+            - img "Clipping by emotion icon"
+          - button "Open tooltip":
+            - img "Genre-specific curation model icon"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "Clipping by spoken words icon"
+          - button "Open tooltip":
+            - img "Clipping by visual objects icon"
+          - button "Open tooltip":
+            - img "Clipping by sound icon"
+          - button "Open tooltip":
+            - img "Clipping by emotion icon"
+          - button "Open tooltip":
+            - img "Genre-specific curation model icon"
+      - row "AI copilot Open tooltip Select clipping timeframe Select clip length Select clipping timeframe Select clip length Select clipping timeframe Select clip length Topics search Prompt to clip Select clipping timeframe Select clip length Topics search Prompt to clip":
+        - rowheader "AI copilot Open tooltip":
+          - text: AI copilot
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Select clipping timeframe Select clip length"
+        - cell "Select clipping timeframe Select clip length"
+        - cell "Select clipping timeframe Select clip length Topics search Prompt to clip"
+        - cell "Select clipping timeframe Select clip length Topics search Prompt to clip"
+      - row "Reprompt clipping to finetune the results - Check icon Check icon Check icon":
+        - rowheader "Reprompt clipping to finetune the results"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Custom clip length 0-1m, 1-3m, 3-5m, 5-10m, 10-15m 0-1m, 1-3m, 3-5m, 5-10m, 10-15m 0-1m, 1-3m, 3-5m, 5-10m, 10-15m 0-1m, 1-3m, 3-5m, 5-10m, 10-15m":
+        - rowheader "Custom clip length"
+        - cell "0-1m, 1-3m, 3-5m, 5-10m, 10-15m"
+        - cell "0-1m, 1-3m, 3-5m, 5-10m, 10-15m"
+        - cell "0-1m, 1-3m, 3-5m, 5-10m, 10-15m"
+        - cell "0-1m, 1-3m, 3-5m, 5-10m, 10-15m"
+      - row "Virality score Open tooltip - Check icon Check icon Check icon":
+        - rowheader "Virality score Open tooltip":
+          - text: Virality score
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Storage - - 100GB fixed storage Customized":
+        - rowheader "Storage"
+        - cell "-"
+        - cell "-"
+        - cell "100GB fixed storage"
+        - cell "Customized"
+      - row "Auto hook Check icon Check icon Check icon Check icon":
+        - rowheader "Auto hook"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI captions icon AI captions":
+        - rowheader "AI captions icon AI captions":
+          - img "AI captions icon"
+          - text: AI captions
+      - row "Animated caption templates Check icon With watermark Check icon Check icon Check icon":
+        - rowheader "Animated caption templates"
+        - cell "Check icon With watermark":
+          - img "Check icon"
+          - text: With watermark
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Multi-language transcription Open tooltip Check icon Check icon Check icon Check icon":
+        - rowheader "Multi-language transcription Open tooltip":
+          - text: Multi-language transcription
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Upload custom font - - Check icon Up to 2 fonts Check icon":
+        - rowheader "Upload custom font"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon Up to 2 fonts":
+          - img "Check icon"
+          - text: Up to 2 fonts
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Speaker-based caption colors Open tooltip - - - Open tooltip":
+        - rowheader "Speaker-based caption colors Open tooltip":
+          - text: Speaker-based caption colors
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Open tooltip":
+          - button "Open tooltip":
+            - img "Coming soon icon"
+      - row "Auto censor curse words - - Check icon Default censored words list Check icon Custom censored words list":
+        - rowheader "Auto censor curse words"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon Default censored words list":
+          - img "Check icon"
+          - text: Default censored words list
+        - cell "Check icon Custom censored words list":
+          - img "Check icon"
+          - text: Custom censored words list
+      - row "Auto emoji and keyword highlights Check icon Check icon Check icon Check icon":
+        - rowheader "Auto emoji and keyword highlights"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI reframe icon AI reframe":
+        - rowheader "AI reframe icon AI reframe":
+          - img "AI reframe icon"
+          - text: AI reframe
+      - row "Various aspect ratios 9:16 9:16 9:16, 1:1, 16:9 9:16, 1:1, 16:9":
+        - rowheader "Various aspect ratios"
+        - cell "9:16"
+        - cell "9:16"
+        - cell "9:16, 1:1, 16:9"
+        - cell "9:16, 1:1, 16:9"
+      - row "Moving object tracking - - Check icon Check icon":
+        - rowheader "Moving object tracking"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Genre-specific reframing model Open tooltip - Check icon Check icon Check icon":
+        - rowheader "Genre-specific reframing model Open tooltip":
+          - text: Genre-specific reframing model
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Dynamic layout switch Open tooltip Check icon Check icon Check icon Check icon":
+        - rowheader "Dynamic layout switch Open tooltip":
+          - text: Dynamic layout switch
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Screenshare/gameplay layout Open tooltip Check icon Check icon Check icon Check icon":
+        - rowheader "Screenshare/gameplay layout Open tooltip":
+          - text: Screenshare/gameplay layout
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Custom reframing Open tooltip - Check icon Check icon Check icon":
+        - rowheader "Custom reframing Open tooltip":
+          - text: Custom reframing
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI video editing icon AI video editing":
+        - rowheader "AI video editing icon AI video editing":
+          - img "AI video editing icon"
+          - text: AI video editing
+      - row "Text & timeline-based editing - Check icon Check icon Check icon":
+        - rowheader "Text & timeline-based editing"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI image & stock B-Roll - AI image B-Roll (3 clips/month) Stock B-Roll (3 clips/month) AI image B-Roll (50 clips/day) Stock B-Roll (unlimited) AI image B-Roll (50 clips/day) Stock B-Roll (unlimited)":
+        - rowheader "AI image & stock B-Roll"
+        - cell "-"
+        - cell "AI image B-Roll (3 clips/month) Stock B-Roll (3 clips/month)"
+        - cell "AI image B-Roll (50 clips/day) Stock B-Roll (unlimited)"
+        - cell "AI image B-Roll (50 clips/day) Stock B-Roll (unlimited)"
+      - row "AI video B-Roll (powered by Agent Opus) - - Check icon Check icon":
+        - rowheader "AI video B-Roll (powered by Agent Opus)":
+          - strong: AI video B-Roll (powered by Agent Opus)
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI Voice-over Open tooltip - 20 per day 20 per day 20 per day":
+        - rowheader "AI Voice-over Open tooltip":
+          - text: AI Voice-over
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "20 per day"
+        - cell "20 per day"
+        - cell "20 per day"
+      - row "Speech enhancement Open tooltip - - 10 times/day 10 times/day":
+        - rowheader "Speech enhancement Open tooltip":
+          - text: Speech enhancement
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "10 times/day"
+        - cell "10 times/day"
+      - row "Speech cleanup (pause & filler removal) - Check icon Check icon Check icon":
+        - rowheader "Speech cleanup (pause & filler removal)"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Speech cleanup (bad takes removal) - - Check icon Check icon":
+        - rowheader "Speech cleanup (bad takes removal)"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Transition effects - - Check icon Check icon":
+        - rowheader "Transition effects"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Upload media assets Open tooltip - - Check icon Check icon":
+        - rowheader "Upload media assets Open tooltip":
+          - text: Upload media assets
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Add music Open tooltip - - Check icon Check icon":
+        - rowheader "Add music Open tooltip":
+          - text: Add music
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Add text overlay - Check icon Check icon Check icon":
+        - rowheader "Add text overlay"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI video upscaling - Check icon Check icon Check icon":
+        - rowheader "AI video upscaling"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Video dubbing - - Check icon Check icon":
+        - rowheader "Video dubbing"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "AI sound effects - - Check icon Check icon":
+        - rowheader "AI sound effects":
+          - strong: AI sound effects
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Customization & branding icon Customization & branding":
+        - rowheader "Customization & branding icon Customization & branding":
+          - img "Customization & branding icon"
+          - text: Customization & branding
+      - row "Brand template 1 template 1 template Up to 4 templates Custom solution":
+        - rowheader "Brand template"
+        - cell "1 template"
+        - cell "1 template"
+        - cell "Up to 4 templates"
+        - cell "Custom solution"
+      - row "Intro/outro cards - - Check icon Check icon":
+        - rowheader "Intro/outro cards"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Upload custom font - - Up to 2 fonts Check icon":
+        - rowheader "Upload custom font"
+        - cell "-"
+        - cell "-"
+        - cell "Up to 2 fonts"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Brand vocabulary Open tooltip - - Check icon Check icon":
+        - rowheader "Brand vocabulary Open tooltip":
+          - text: Brand vocabulary
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Custom media & asset library - - Check icon Unlimited":
+        - rowheader "Custom media & asset library"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Unlimited"
+      - row "Rename clips and projects - - Check icon Check icon":
+        - rowheader "Rename clips and projects":
+          - strong: Rename clips and projects
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Export & publish icon Export & publish":
+        - rowheader "Export & publish icon Export & publish":
+          - img "Export & publish icon"
+          - text: Export & publish
+      - row "Watermark-free video export - Check icon Check icon Check icon":
+        - rowheader "Watermark-free video export"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Export as MP4 3-day limit; Up to 1080p rendered clips 30-day limit; highest resolution available No limit, highest resolution available No limit, highest resolution available":
+        - rowheader "Export as MP4"
+        - cell "3-day limit; Up to 1080p rendered clips"
+        - cell "30-day limit; highest resolution available"
+        - cell "No limit, highest resolution available"
+        - cell "No limit, highest resolution available"
+      - row "Export in bulk - - Check icon Check icon":
+        - rowheader "Export in bulk"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Export to Adobe Premiere Pro & DaVinci Resolve Open tooltip - - Check icon Check icon":
+        - rowheader "Export to Adobe Premiere Pro & DaVinci Resolve Open tooltip":
+          - text: Export to Adobe Premiere Pro & DaVinci Resolve
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Share projects with external collaborators Open tooltip Check icon Check icon Check icon Check icon":
+        - rowheader "Share projects with external collaborators Open tooltip":
+          - text: Share projects with external collaborators
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Post to social media - Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+        - rowheader "Post to social media"
+        - cell "-"
+        - cell "Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "YouTube Shorts icon"
+          - button "Open tooltip":
+            - img "TikTok icon"
+          - button "Open tooltip":
+            - img "Instagram icon"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "YouTube Shorts icon"
+          - button "Open tooltip":
+            - img "TikTok icon"
+          - button "Open tooltip":
+            - img "Instagram icon"
+          - button "Open tooltip":
+            - img "LinkedIn icon"
+          - button "Open tooltip":
+            - img "Facebook icon"
+          - button "Open tooltip":
+            - img "Twitter(X) icon"
+          - button "Open tooltip":
+            - img "Snapchat coming soon icon"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "YouTube Shorts icon"
+          - button "Open tooltip":
+            - img "TikTok icon"
+          - button "Open tooltip":
+            - img "Instagram icon"
+          - button "Open tooltip":
+            - img "LinkedIn icon"
+          - button "Open tooltip":
+            - img "Facebook icon"
+          - button "Open tooltip":
+            - img "Twitter(X) icon"
+          - button "Open tooltip":
+            - img "Snapchat coming soon icon"
+      - row "Social media scheduler Open tooltip - - Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+        - rowheader "Social media scheduler Open tooltip":
+          - text: Social media scheduler
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "YouTube Shorts icon"
+          - button "Open tooltip":
+            - img "TikTok icon"
+          - button "Open tooltip":
+            - img "Instagram icon"
+          - button "Open tooltip":
+            - img "LinkedIn icon"
+          - button "Open tooltip":
+            - img "Facebook icon"
+          - button "Open tooltip":
+            - img "Twitter(X) icon"
+        - cell "Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip Open tooltip":
+          - button "Open tooltip":
+            - img "YouTube Shorts icon"
+          - button "Open tooltip":
+            - img "TikTok icon"
+          - button "Open tooltip":
+            - img "Instagram icon"
+          - button "Open tooltip":
+            - img "LinkedIn icon"
+          - button "Open tooltip":
+            - img "Facebook icon"
+          - button "Open tooltip":
+            - img "Twitter(X) icon"
+      - row "Post to multiple profiles per social platform - - Check icon Check icon":
+        - rowheader "Post to multiple profiles per social platform"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Clip title & description & hashtag generator - Check icon Check icon Check icon":
+        - rowheader "Clip title & description & hashtag generator"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "4K schedule and download - - - Check icon":
+        - rowheader "4K schedule and download"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Team collaboration icon Team collaboration":
+        - rowheader "Team collaboration icon Team collaboration":
+          - img "Team collaboration icon"
+          - text: Team collaboration
+      - row "Team workspace - - Check icon Check icon":
+        - rowheader "Team workspace"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Member seats - - 2 users / pack, up to 4 users Unlimited":
+        - rowheader "Member seats"
+        - cell "-"
+        - cell "-"
+        - cell "2 users / pack, up to 4 users"
+        - cell "Unlimited"
+      - row "Media storage Open tooltip Expires after 3 days Expires after 29 days 100GB fixed storage Unlimited":
+        - rowheader "Media storage Open tooltip":
+          - text: Media storage
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "Expires after 3 days"
+        - cell "Expires after 29 days"
+        - cell "100GB fixed storage"
+        - cell "Unlimited"
+      - row "Auto-save projects - - Check icon Check icon":
+        - rowheader "Auto-save projects"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Collections Open tooltip - - Check icon Check icon":
+        - rowheader "Collections Open tooltip":
+          - text: Collections
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Sub-teams - - - Check icon":
+        - rowheader "Sub-teams"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Member permissions - - - Open tooltip":
+        - rowheader "Member permissions"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Open tooltip":
+          - button "Open tooltip":
+            - img "Coming soon icon"
+      - row "Analytics icon Analytics":
+        - rowheader "Analytics icon Analytics":
+          - img "Analytics icon"
+          - text: Analytics
+      - row "Clip analytics Open tooltip - - Open tooltip Check icon":
+        - rowheader "Clip analytics Open tooltip":
+          - text: Clip analytics
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "Open tooltip":
+          - button "Open tooltip":
+            - img "Coming soon icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Real-time trend analysis - - - Check icon":
+        - rowheader "Real-time trend analysis"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Security icon Security":
+        - rowheader "Security icon Security":
+          - img "Security icon"
+          - text: Security
+      - row "Email OTP login Check icon Check icon Check icon Check icon":
+        - rowheader "Email OTP login"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Single-Sign On (SSO) - - - Check icon":
+        - rowheader "Single-Sign On (SSO)"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Software License Management (SLM) - - - Check icon":
+        - rowheader "Software License Management (SLM)"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "SOC II Type 2 compliant Check icon Check icon Check icon Check icon":
+        - rowheader "SOC II Type 2 compliant"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Support icon Support":
+        - rowheader "Support icon Support":
+          - img "Support icon"
+          - text: Support
+      - row "MSA - - - Check icon":
+        - rowheader "MSA"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Customer support Discord AI chat Discord AI chat Intercom live chat Discord AI chat Priority customer support with dedicated slack channel; Intercom live chat; AI chat":
+        - rowheader "Customer support"
+        - cell "Discord AI chat"
+        - cell "Discord AI chat"
+        - cell "Intercom live chat Discord AI chat"
+        - cell "Priority customer support with dedicated slack channel; Intercom live chat; AI chat"
+      - row "Custom onboarding Open tooltip - - - Check icon":
+        - rowheader "Custom onboarding Open tooltip":
+          - text: Custom onboarding
+          - button "Open tooltip":
+            - img "Info icon"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Invoice and ACH Payment - - - Check icon":
+        - rowheader "Invoice and ACH Payment"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "API & integration icon API & integration":
+        - rowheader "API & integration icon API & integration":
+          - img "API & integration icon"
+          - text: API & integration
+      - row "Video editing API - - Check icon Check icon":
+        - rowheader "Video editing API"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Scheduler API - - Check icon Check icon":
+        - rowheader "Scheduler API"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "MCP connector - - Check icon Check icon":
+        - rowheader "MCP connector"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "CMS integration - - - Check icon":
+        - rowheader "CMS integration"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon":
+          - img "Check icon"
+      - row "Zapier integration - - Check icon up to 300 credits/mo Check icon":
+        - rowheader "Zapier integration"
+        - cell "-"
+        - cell "-"
+        - cell "Check icon up to 300 credits/mo":
+          - img "Check icon"
+          - text: up to 300 credits/mo
+        - cell "Check icon":
+          - img "Check icon"
+  - heading "Many creators gained 1 million views from a single video in just days" [level=2]
+  - text: 4 days
+  - link "80to4000inamonth 80to4000inamonth":
+    - /url: https://www.tiktok.com/@80to4000inamonth
+    - img "80to4000inamonth"
+    - text: 80to4000inamonth
+  - text: TikTok small creator 6 days
+  - link "zachjustice zachjustice":
+    - /url: https://www.youtube.com/c/ZachJustice
+    - img "zachjustice"
+    - text: zachjustice
+  - text: TikTok creator 6 days
+  - link "Univision Univision":
+    - /url: https://www.youtube.com/channel/UCcEWv_J2SEU8XO2tEm4Phgw
+    - img "Univision"
+    - text: Univision
+  - text: Media 9 days
+  - link "Gli7chSec Gli7chSec":
+    - /url: https://www.youtube.com/@Gli7chSec
+    - img "Gli7chSec"
+    - text: Gli7chSec
+  - text: YouTube small creator 11 days
+  - link "MaxChernov MaxChernov":
+    - /url: https://www.youtube.com/@MaxChernov
+    - img "MaxChernov"
+    - text: MaxChernov
+  - text: YouTube vlogger 11 days
+  - link "Valuetainment Valuetainment":
+    - /url: https://www.youtube.com/channel/UCIHdDJ0tjn_3j-FS7s_X1kQ
+    - img "Valuetainment"
+    - text: Valuetainment
+  - text: Podcaster 4 days
+  - link "80to4000inamonth 80to4000inamonth":
+    - /url: https://www.tiktok.com/@80to4000inamonth
+    - img "80to4000inamonth"
+    - text: 80to4000inamonth
+  - text: TikTok small creator 6 days
+  - link "zachjustice zachjustice":
+    - /url: https://www.youtube.com/c/ZachJustice
+    - img "zachjustice"
+    - text: zachjustice
+  - text: TikTok creator 6 days
+  - link "Univision Univision":
+    - /url: https://www.youtube.com/channel/UCcEWv_J2SEU8XO2tEm4Phgw
+    - img "Univision"
+    - text: Univision
+  - text: Media 9 days
+  - link "Gli7chSec Gli7chSec":
+    - /url: https://www.youtube.com/@Gli7chSec
+    - img "Gli7chSec"
+    - text: Gli7chSec
+  - text: YouTube small creator 11 days
+  - link "MaxChernov MaxChernov":
+    - /url: https://www.youtube.com/@MaxChernov
+    - img "MaxChernov"
+    - text: MaxChernov
+  - text: YouTube vlogger 11 days
+  - link "Valuetainment Valuetainment":
+    - /url: https://www.youtube.com/channel/UCIHdDJ0tjn_3j-FS7s_X1kQ
+    - img "Valuetainment"
+    - text: Valuetainment
+  - text: Podcaster 4 days
+  - link "80to4000inamonth 80to4000inamonth":
+    - /url: https://www.tiktok.com/@80to4000inamonth
+    - img "80to4000inamonth"
+    - text: 80to4000inamonth
+  - text: TikTok small creator 6 days
+  - link "zachjustice zachjustice":
+    - /url: https://www.youtube.com/c/ZachJustice
+    - img "zachjustice"
+    - text: zachjustice
+  - text: TikTok creator 6 days
+  - link "Univision Univision":
+    - /url: https://www.youtube.com/channel/UCcEWv_J2SEU8XO2tEm4Phgw
+    - img "Univision"
+    - text: Univision
+  - text: Media 9 days
+  - link "Gli7chSec Gli7chSec":
+    - /url: https://www.youtube.com/@Gli7chSec
+    - img "Gli7chSec"
+    - text: Gli7chSec
+  - text: YouTube small creator 11 days
+  - link "MaxChernov MaxChernov":
+    - /url: https://www.youtube.com/@MaxChernov
+    - img "MaxChernov"
+    - text: MaxChernov
+  - text: YouTube vlogger 11 days
+  - link "Valuetainment Valuetainment":
+    - /url: https://www.youtube.com/channel/UCIHdDJ0tjn_3j-FS7s_X1kQ
+    - img "Valuetainment"
+    - text: Valuetainment
+  - text: Podcaster 4 days
+  - link "80to4000inamonth 80to4000inamonth":
+    - /url: https://www.tiktok.com/@80to4000inamonth
+    - img "80to4000inamonth"
+    - text: 80to4000inamonth
+  - text: TikTok small creator 6 days
+  - link "zachjustice zachjustice":
+    - /url: https://www.youtube.com/c/ZachJustice
+    - img "zachjustice"
+    - text: zachjustice
+  - text: TikTok creator 6 days
+  - link "Univision Univision":
+    - /url: https://www.youtube.com/channel/UCcEWv_J2SEU8XO2tEm4Phgw
+    - img "Univision"
+    - text: Univision
+  - text: Media 9 days
+  - link "Gli7chSec Gli7chSec":
+    - /url: https://www.youtube.com/@Gli7chSec
+    - img "Gli7chSec"
+    - text: Gli7chSec
+  - text: YouTube small creator 11 days
+  - link "MaxChernov MaxChernov":
+    - /url: https://www.youtube.com/@MaxChernov
+    - img "MaxChernov"
+    - text: MaxChernov
+  - text: YouTube vlogger 11 days
+  - link "Valuetainment Valuetainment":
+    - /url: https://www.youtube.com/channel/UCIHdDJ0tjn_3j-FS7s_X1kQ
+    - img "Valuetainment"
+    - text: Valuetainment
+  - text: Podcaster 4 days
+  - link "80to4000inamonth 80to4000inamonth":
+    - /url: https://www.tiktok.com/@80to4000inamonth
+    - img "80to4000inamonth"
+    - text: 80to4000inamonth
+  - text: TikTok small creator 6 days
+  - link "zachjustice zachjustice":
+    - /url: https://www.youtube.com/c/ZachJustice
+    - img "zachjustice"
+    - text: zachjustice
+  - text: TikTok creator 6 days
+  - link "Univision Univision":
+    - /url: https://www.youtube.com/channel/UCcEWv_J2SEU8XO2tEm4Phgw
+    - img "Univision"
+    - text: Univision
+  - text: Media 9 days
+  - link "Gli7chSec Gli7chSec":
+    - /url: https://www.youtube.com/@Gli7chSec
+    - img "Gli7chSec"
+    - text: Gli7chSec
+  - text: YouTube small creator 11 days
+  - link "MaxChernov MaxChernov":
+    - /url: https://www.youtube.com/@MaxChernov
+    - img "MaxChernov"
+    - text: MaxChernov
+  - text: YouTube vlogger 11 days
+  - link "Valuetainment Valuetainment":
+    - /url: https://www.youtube.com/channel/UCIHdDJ0tjn_3j-FS7s_X1kQ
+    - img "Valuetainment"
+    - text: Valuetainment
+  - text: Podcaster
+  - heading "Post one clip every day for free" [level=2]
+  - link "Get free clips every month":
+    - /url: https://clip.opus.pro/dashboard
+  - text: No credit card required.
+- contentinfo:
+  - heading "Company" [level=3]
+  - link "About us":
+    - /url: https://www.opus.pro/about
+  - link "Careers We're hiring!":
+    - /url: https://www.opus.pro/careers
+    - text: Careers
+    - strong: We're hiring!
+  - link "Contact Us":
+    - /url: https://www.opus.pro/contact-support
+  - heading "Product" [level=3]
+  - link "Tools":
+    - /url: https://www.opus.pro/tools
+  - link "Product changelog":
+    - /url: https://opusclip.canny.io/changelog
+  - link "Feature Request":
+    - /url: https://opusclip.canny.io/feature-requests
+  - link "OpusClip Captions Free":
+    - /url: https://clip.opus.pro/captions
+    - text: OpusClip Captions
+    - strong: Free
+  - link "How does OpusClip work":
+    - /url: https://www.opus.pro/how-does-opus-clip-work
+  - heading "Resources" [level=3]
+  - link "Customer stories":
+    - /url: https://www.opus.pro/customer-stories
+  - link "Blogs":
+    - /url: https://www.opus.pro/blog
+  - link "Become an affiliate":
+    - /url: https://www.opus.pro/affiliate
+  - link "OpusClip media assets":
+    - /url: https://media.opus.pro/
+  - link "Help center":
+    - /url: https://help.opus.pro/docs/introduction
+  - link "Learning center":
+    - /url: https://www.opus.pro/learning-center
+  - link "Research":
+    - /url: https://www.opus.pro/research/research-hub
+  - heading "Best Practices" [level=3]
+  - link "Hidden strategy top creators use to turn clips into 4M+ long-form views":
+    - /url: https://www.opus.pro/how-clipping-drives-4m-longform-views
+  - 'link "MrBeast''s Vyro: Everything You Need to Know"':
+    - /url: https://www.opus.pro/blog/mrbeasts-vyro
+  - link "From zero to monetization for a new YouTube channel in 40 days":
+    - /url: https://www.opus.pro/blog/from-zero-to-monetization-for-a-new-youtube-channel-in-40-days
+  - 'link "How to Turn Long Videos into Viral Shorts: The Ultimate Guide for 2026"':
+    - /url: https://www.opus.pro/blog/how-to-make-short-videos-from-youtube-long-videos
+  - 'link "Create Videos in Alex Hormozi Style: The Ultimate Guide"':
+    - /url: https://www.opus.pro/blog/create-videos-in-alex-hormozi-style-the-ultimate-guide
+  - heading "Trust and Legal" [level=3]
+  - link "Terms and Conditions":
+    - /url: https://www.opus.pro/terms-of-service
+  - link "Privacy Policy":
+    - /url: https://www.opus.pro/privacy-policy
+  - link "Cookies Preferences":
+    - /url: "#"
+  - link "Accessibility Statement":
+    - /url: https://www.opus.pro/accessibility-statement
+  - link "Trust Center":
+    - /url: https://trust.opus.pro/
+  - link "SOC2 TYPE 2":
+    - /url: https://trust.opus.pro/
+    - img "SOC2 TYPE 2"
+  - img "BEST SOFTWARE 2025 Top 50 AI PRODUCTS"
+  - button "English arrow icon":
+    - img
+    - text: English
+    - img "arrow icon"
+  - text: © 2026 OpusClip by Opusclip Inc. All rights reserved.
+  - link "YouTube":
+    - /url: https://www.youtube.com/@opusclip
+    - img
+  - link "TikTok":
+    - /url: https://www.tiktok.com/@opusclip
+    - img
+  - link "Twitter":
+    - /url: https://twitter.com/opusclip
+    - img
+  - link "Discord":
+    - /url: https://discord.com/invite/wqbb7ZKhjg
+    - img
+  - link "LinkedIn":
+    - /url: https://www.linkedin.com/company/opusclip
+    - img
+  - link "Instagram":
+    - /url: https://www.instagram.com/opusclip/?hl=en
+    - img
