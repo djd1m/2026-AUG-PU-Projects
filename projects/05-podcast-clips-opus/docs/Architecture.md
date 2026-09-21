@@ -179,15 +179,16 @@ lifecycle: `AbortIncompleteMultipartUpload` через 1 день, `Expiration` 
 ## Reconciliation with Pseudocode
 
 Сверены ДВЕ секции `Pseudocode.md` — `## Data Structures` (15 сущностей) и `## Core Algorithms`
-(33 алгоритма) — против таблицы «Data Architecture» и канона §4. Дата сверки: 2026-09-21, после
-квитанции `algo-writer` и раунда исправлений DEC-A-007/008. Сверены сущности: `account`, `session`,
+(34 алгоритма) — против таблицы «Data Architecture» и канона §4. Дата сверки: 2026-09-21, после
+квитанций `algo-writer` (раунды 2 и 3) и решений DEC-A-007/008/010…016. Сверены сущности: `account`, `session`,
 `video`, `transcript`, `clip`, `clip_link`, `guest_pack`, `guest_pack_clip`, `growth_event`,
 `partner`, `partner_code`, `attribution`, `quota_counter`, `pro_interest`, `job_attempt`; алгоритмы:
 CreateVideo, CompleteUpload, LeaseAttempt, ExtractAndChunkAudio, Transcribe, SelectFragments,
 ScoreClip, BuildSubtitles, RenderClip, WatermarkRequired, WatchdogTick, RetryVideo, RecordLinkView,
 CreateGuestPack, OpenGuestPack, ApplyPartnerCode, AntiFraudCodeBurst, PartnerDashboard,
-CheckAndConsumeQuota, CreateProInterest, DeleteAccount, AuthRegister/AuthLogin, TelegramLogin и
-остальные из `Pseudocode.md`.
+CheckAndConsumeQuota, RefundUploadSlot, CreateProInterest, DeleteAccount, AuthRegisterAndLogin,
+TelegramLogin, ProbeSource, RevokeOrExpireGuestPack, ComputeWatermarkGeometry и остальные из
+`Pseudocode.md`.
 
 | Сущность.поле | Вид расхождения | Что сделано |
 |---|---|---|
