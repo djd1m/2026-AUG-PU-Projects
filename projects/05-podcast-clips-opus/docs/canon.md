@@ -2,6 +2,9 @@
 
 Замороженный источник имён для всех документов Phase 1. Любой документ ссылается на эти
 идентификаторы, не выдумывает свои. Дата заморозки: 2026-09-21. Владелец канона — координатор.
+**Разморозка на Phase 2 (DEC-A-010, 2026-09-21):** по находкам валидации изменены §4 (пятый scope
+`user_llm`), §5 (регистрация и отзыв гостевой страницы), §6 (`N5_PUBLIC_ORIGIN`), §7 (минуты на
+аккаунт 90; измерение длительности в `worker-stt`). Хеш перепривязан в `dispatch-plan.md`.
 
 ## 1. Продукт и границы
 
@@ -99,31 +102,36 @@ NFR (ровно 6): NFR-PERF-001 часовая запись → все клип
 - `attribution.source` — ровно 3: `explicit | guest_link | cookie`; `attribution.status` — ровно 3:
   `pending | activated | rejected`; `replaced_source` — то же множество или null.
 - `partner_code.status` — ровно 2: `active | blocked`.
-- `quota_counter.scope` — ровно 4: `user_minutes | user_uploads | global_minutes | global_llm`.
-  `UNIQUE (scope, scope_key, day)`; списание — один атомарный оператор с `WHERE used < :limit`.
+- `quota_counter.scope` — ровно 6: `user_minutes | user_uploads | user_upload_refunds | user_llm | global_minutes | global_llm`.
+  `UNIQUE (scope, scope_key, day)`; предел — параметр из окружения, не колонка; списание атомарно:
+  `INSERT … (used = 0) ON CONFLICT DO NOTHING`, затем `UPDATE … SET used = used + :n WHERE used + :n
+  <= :limit RETURNING used` в одной транзакции — пустой результат и есть отказ (V2-R01/R03).
 
 Переиспользование моделей клона (Prisma): `User→account`, `Video→video`, `Transcript→transcript`,
 `Clip→clip`, `UsageRecord→growth_event/quota` (адаптация), `Subscription/Payment/Team/TeamInvite/
 PlatformConnection/Publication` — спящие, не удаляются и не расширяются.
 
-## 5. Маршруты (ровно 9 публичных путей) и процедуры tRPC (ровно 14)
+## 5. Маршруты (ровно 10 публичных путей) и процедуры tRPC (ровно 15)
 
 Публичные пути (route handlers, без tRPC): `GET /health` · `GET /c/{code}` (лендинг с атрибуцией
 и счётчиком перехода) · `GET /g/{guest_code}` (гостевая страница, `noindex`, без входа) ·
 `GET /api/clips/{clip_id}/file` (авторизованный redirect на подписанный GET, для гостя — по
 `guest_code`) · `GET /api/clips/{clip_id}/thumbnail` · `POST /api/upload/complete` (завершение
-multipart сервером) · `POST /api/auth/login` · `POST /api/auth/logout` · `POST /api/auth/telegram`
-(Should).
+multipart сервером: `CompleteMultipartUpload`, `HEAD` размера, тип по первым байтам через Range-GET;
+длительность здесь НЕ измеряется — у `web` нет ffprobe) · `POST /api/auth/register` ·
+`POST /api/auth/login` · `POST /api/auth/logout` · `POST /api/auth/telegram` (Should).
 
 Процедуры tRPC: `video.create` (заголовок `Idempotency-Key`, ответ `video_id` + подписанные
 ссылки) · `video.get` · `video.list` · `video.retry` · `clip.list` · `clip.get` · `clip.markDownloaded` ·
-`link.create` · `guest.create` (галочки + согласие) · `guest.send` · `code.apply` · `partner.dashboard` ·
-`interest.create` · `account.delete`.
+`link.create` · `guest.create` (галочки + согласие) · `guest.send` · `guest.revoke` · `code.apply` ·
+`partner.dashboard` · `interest.create` · `account.delete`.
 
 ## 6. Сервисы compose (ровно 7 в боевом профиле, +1 в тестовом) и стек
 
-`web` (Next.js 15, App Router, tRPC, SSR; единственный, кто подписывает ссылки для браузера) ·
-`worker-stt` · `worker-llm` · `worker-video` (три контейнера из одного образа воркера, каждый
+`web` (Next.js 15, App Router, tRPC, SSR; единственный, кто подписывает ссылки для браузера; без
+ffmpeg/ffprobe) · `worker-stt` (первый шаг стадии — `probe`: скачивает оригинал, `ffprobe`
+длительности и звуковой дорожки, списание минут ДО первого вызова Whisper) · `worker-llm` ·
+`worker-video` (три контейнера из одного образа воркера, каждый
 слушает свою очередь BullMQ; `worker-video` — единственный с ffmpeg и рабочим каталогом на томе) ·
 `db` (PostgreSQL 16) · `redis` (Redis 7, AOF на томе, `maxmemory-policy noeviction`, пароль без
 дефолта) · `proxy` (Caddy, единственная публичная дверь, TLS, лимит частоты). Тестовый профиль
@@ -134,17 +142,21 @@ OWN-004; в тестах — MinIO. Модели: **OpenAI `whisper-1`** (`verbo
 **Claude Sonnet 5** (Messages API, structured outputs) для выделения фрагментов и объяснённой
 оценки. Ключи: `OPENAI_API_KEY` только у `worker-stt`, `ANTHROPIC_API_KEY` только у `worker-llm`,
 `S3_ACCESS_KEY/S3_SECRET_KEY` у `web`, `worker-stt`, `worker-video`; у `proxy` и `db` — ничего.
+**`N5_PUBLIC_ORIGIN`** — публичный origin продукта (`https://<домен>`), объявлен `${N5_PUBLIC_ORIGIN:?}`
+БЕЗ значения по умолчанию у `web` и `worker-video`: он вшивается в пиксели метки и определяет каждую
+выдаваемую наружу ссылку; отсутствие или непригодное значение валит запуск боевого профиля
+(`silent-fallbacks.md`, DEC-A-010).
 
 ## 7. Числа канона
 
 | Параметр | Значение |
 |---|---|
 | Размер файла | ≤ 2 000 000 000 байт; тип по байтам (MP4/MOV/WebM/M4A/MP3) |
-| Длительность записи | 2–90 мин |
-| Минуты записи на аккаунт в сутки | 60 |
+| Длительность записи | 2–90 мин; измеряется `ffprobe` в `worker-stt` после скачивания, ДО списания минут и ДО Whisper; `user_uploads` списан на создании; ВОЗВРАЩАЕТСЯ при отказе по свойствам файла (`too_large`, `not_media`, `no_audio`, `too_short`, `too_long`, `probe_timeout`) и НЕ возвращается при отказе по потолкам (`refused_*`) — DEC-A-014; возвратов не больше 2 в сутки на аккаунт (`user_upload_refunds`, DEC-A-015): иначе заведомо негодные файлы бесплатно занимают `worker-stt` |
+| Минуты записи на аккаунт в сутки | 90 (равно максимальной длительности: одна полная запись в сутки обрабатывается всегда) |
 | Загрузки на аккаунт в сутки | 2; анониму — 0 (обработка только после входа) |
 | Суточный потолок минут (все аккаунты) | 600 |
-| Суточный потолок вызовов LLM | 20 (один вызов выделения на запись, повтор считается) |
+| Суточный потолок вызовов LLM | 20 (один вызов выделения на запись, повтор считается); на аккаунт — 2 (`user_llm`) |
 | Одновременных тяжёлых задач (рендер) | 1 на VPS |
 | Клипов на запись | 3–8; длина клипа 20–75 с |
 | Оценка | 0–99 = хук (0–33) + завершённость (0–33) + длина (0–33); каждая с одной фразой объяснения |

@@ -39,8 +39,9 @@ flowchart LR
 ```
 
 Поток одной записи: `video.create` (строка `video`, списание `user_uploads`, подписанные ссылки) →
-браузер грузит части в S3 → `POST /api/upload/complete` (сервер завершает multipart, `ffprobe`
-длительности, списание минут по трём ключам, `queued`) → очередь `stt` → очередь `select` →
+браузер грузит части в S3 → `POST /api/upload/complete` (сервер завершает multipart, `HEAD` размера,
+тип по байтам, `queued`) → очередь `stt` (шаг `probe`: скачивание, `ffprobe` длительности, списание
+минут ДО Whisper; затем чанки и транскрипция) → очередь `select` →
 очередь `render` (по одному заданию на видео, клипы внутри последовательно) → `done`. Каждая стадия —
 строка `job_attempt` с фенсом (ADR-001).
 
@@ -48,11 +49,11 @@ flowchart LR
 
 | Компонент | Контейнер | Ответственность | Чего НЕ делает |
 |---|---|---|---|
-| Экраны и API | `web` | SSR-страницы (лендинг, `/c/{code}`, `/g/{guest_code}`, дашборд), 14 процедур tRPC и 9 публичных путей канона §5, сессии, квоты, подпись ссылок S3, постановка заданий | не вызывает модели, не запускает ffmpeg, не читает тела видео |
-| Приём загрузки | `web` | `video.create` → presigned multipart; `upload/complete` → `CompleteMultipartUpload`, `HEAD` размера, `ffprobe` по Range-чтению заголовка, списание квот, `queued` | не проксирует байты файла через себя (клон обжёгся на лимите тела) |
-| Транскрипция | `worker-stt` | извлекает аудио потоково (`ffmpeg -vn`, opus/mp3 ≤ 25 МБ на чанк по паузам), шлёт `whisper-1`, склеивает слова со смещением, пишет `transcript`, ставит `select` | не хранит аудио дольше отправки; не держит соединение с БД во время вызова |
+| Экраны и API | `web` | SSR-страницы (лендинг, `/c/{code}`, `/g/{guest_code}`, дашборд), 15 процедур tRPC и 10 публичных путей канона §5, сессии, квоты, подпись ссылок S3, постановка заданий | не вызывает модели, не запускает ffmpeg, не читает тела видео |
+| Приём загрузки | `web` | `video.create` → списание `user_uploads`, presigned multipart; `upload/complete` → `CompleteMultipartUpload`, `HEAD` размера, тип по первым байтам (Range-GET), `queued`, постановка `stt` | не проксирует байты файла через себя (клон обжёгся на лимите тела); НЕ измеряет длительность — у `web` нет ffprobe, а `moov` у MP4 может лежать в конце файла (V2-R11) |
+| Транскрипция | `worker-stt` | шаг `probe`: скачивает оригинал, `ffprobe` (длительность 2–90 мин, звуковая дорожка) с таймаутом → `failed(too_short|too_long|no_audio|probe_timeout)`; списание `user_minutes` + `global_minutes` одним оператором ДО Whisper → `failed(refused_user_minutes|refused_global_minutes)`; затем извлекает аудио потоково (`ffmpeg -vn`, opus/mp3 ≤ 25 МБ на чанк по паузам), шлёт `whisper-1`, повтор чанка списывает его минуты повторно, склеивает слова со смещением, пишет `transcript`, ставит `select` | не хранит аудио дольше отправки; не держит соединение с БД во время вызова |
 | Выделение и оценка | `worker-llm` | один вызов Sonnet 5 со structured outputs: 3–8 кандидатов `{start,end,title,hook,completeness,length_fit,explanations}`; проверка диапазонов НАШИМ кодом (structured outputs числовые ограничения не задают); создаёт `clip` + `clip_link`, ставит `render` | не режет видео; не вызывает модель повторно без новой попытки |
-| Рендер | `worker-video` | `concurrency 1`; резерв диска; скачивание оригинала один раз; ASS из слов; `scale→crop 9:16→ASS→drawtext(метка)`; `PUT` mp4 и jpg; `UPDATE clip … WHERE fence`; очистка | не решает, нужна ли метка (решение приходит от `web` в задании по `account.plan`, но проверяется fail-closed ещё раз) |
+| Рендер | `worker-video` | `concurrency 1`; резерв диска (`deferred(no_disk)` двигает `updated_at` и откладывает задание с задержкой, сторож его не убивает — V2-R15); скачивание оригинала один раз; ASS из слов; `scale→crop 9:16→ASS→drawtext(метка с `N5_PUBLIC_ORIGIN`)`; `PUT` mp4 и jpg под префикс `clips/free/` или `clips/paid/`; `UPDATE clip … WHERE render_fence < :mine`; очистка | не решает, нужна ли метка (решение приходит от `web` в задании по `account.plan`, но проверяется fail-closed ещё раз) |
 | Сторож | `web` (cron внутри процесса) | раз в минуту: `queued` без задания → поставить; `updated_at` > 30 мин при активном статусе → `failed(stalled)`; клипы free старше 3 дней → удалить объекты; гостевые страницы старше 14 дней → закрыть | не чинит данные вручную |
 | Прокси | `proxy` | TLS, HSTS, лимит частоты ДО тела запроса (30/мин мутирующие, 120/мин чтение на IP), окно простоя 60 с, `X-Forwarded-For` | не публикует ничего, кроме себя |
 
@@ -87,7 +88,7 @@ flowchart LR
 | возвращает ответ, обязанный соответствовать заданной JSON-схеме | Anthropic Messages API (structured outputs) | [platform.claude.com/docs/en/build-with-claude/structured-outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) · проверено 2026-09-21 · «Structured outputs guarantee schema-compliant responses through constrained decoding» и «Supported models: … `claude-sonnet-5` …» | CONFIRMED | FR-SELECT-001, FR-SELECT-002 |
 | НЕ гарантирует числовые диапазоны и длину строк в схеме | Anthropic Messages API (structured outputs) | [platform.claude.com/docs/en/build-with-claude/structured-outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) · проверено 2026-09-21 · «Not supported: … Numerical constraints (such as `minimum`, `maximum`, `multipleOf`); String constraints (`minLength`, `maxLength`)» | CONFIRMED | FR-SELECT-002 — диапазоны 0–33 и 20–75 с проверяет наш код |
 | тарифицирует Sonnet 5 за токены | Anthropic, страница тарифов | [platform.claude.com/docs/en/about-claude/pricing](https://platform.claude.com/docs/en/about-claude/pricing) · проверено 2026-09-21 · «Claude Sonnet 5 · $2 / MTok · … · $10 / MTok» | CONFIRMED | FR-LIMIT-002, `model-cost-contract.md` |
-| отдаёт расход и токены по организации за период | Anthropic Usage & Cost Admin API | [platform.claude.com/docs/en/manage-claude/usage-cost-api](https://platform.claude.com/docs/en/manage-claude/usage-cost-api) · проверено 2026-09-21 · «The Usage & Cost Admin API provides programmatic and granular access to historical API usage and cost data for your organization»; эндпоинты `/v1/organizations/usage_report/messages` и `/v1/organizations/cost_report`; «The Admin API is unavailable for individual accounts» | CONFIRMED | NFR-OPS-001, метрика «сверка расхода» |
+| отдаёт расход и токены по организации за период | Anthropic Usage & Cost Admin API | [platform.claude.com/docs/en/manage-claude/usage-cost-api](https://platform.claude.com/docs/en/manage-claude/usage-cost-api) · проверено 2026-09-21 · «The Usage & Cost Admin API provides programmatic and granular access to historical API usage and cost data for your organization»; эндпоинты `/v1/organizations/usage_report/messages` и `/v1/organizations/cost_report`; «The Admin API is unavailable for individual accounts» — ПРЕДУСЛОВИЕ: организационный аккаунт и Admin-ключ `ANTHROPIC_ADMIN_KEY` у оператора (не у сервисов compose); без него метрика сверки выполняется ручным измерением по консоли (V2-R26) | CONFIRMED | NFR-OPS-001, метрика «сверка расхода» |
 | принимает подписанные запросы AWS Signature V4 с ключом `<tenant_id>:<key_id>` | Cloud.ru Object Storage (Evolution) | [cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4](https://cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4) · проверено 2026-09-21 · «Инструкция описывает подписание запросов к API Object Storage с помощью подписи AWS Signature V4», credential `<tenant_id>:<key_id>/<yyyymmdd>/ru-central-1/s3/aws4_request` | CONFIRMED | FR-INGEST-001, FR-RESULT-002, NFR-SEC-001 |
 | ограничивает срок подписанной ссылки | Cloud.ru Object Storage | [cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4](https://cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4) · проверено 2026-09-21 · «Допустимые значения: целые числа от 1 до 604800 (7 дней)» | CONFIRMED | NFR-SEC-001 (мы берём ≤ 900 с) |
 | разрешает CORS-запросы браузера к бакету по списку источников и методов | Cloud.ru Object Storage | [cloud.ru/docs/s3e/ug/topics/guides__cors](https://cloud.ru/docs/s3e/ug/topics/guides__cors) · проверено 2026-09-21 · «Источники — веб-сайты, с которых разрешены CORS-запросы к бакету», «HTTP-методы — HTTP-методы, которые разрешены источникам при запросах к хранилищу», «Максимальное число правил CORS для бакета — 100» | CONFIRMED | FR-INGEST-001 |
@@ -97,8 +98,13 @@ flowchart LR
 | требует `noeviction` и рекомендует AOF для Redis под очередь | BullMQ | [docs.bullmq.io/guide/going-to-production](https://docs.bullmq.io/guide/going-to-production) · проверено 2026-09-21 · «it is very important to configure the `maxmemory-policy` setting to `noeviction`», «We recommend enabling AOF» | CONFIRMED | ADR-001 |
 | аутентифицирует пользователя и возвращает ID-токен, подписанный Telegram | Telegram Login (OIDC) | [core.telegram.org/widgets/login](https://core.telegram.org/widgets/login) · проверено 2026-09-21 · «Verify Signature: Ensure the token was signed by Telegram» (проверка JWT по JWKS); прежний HMAC-виджет архивирован | CONFIRMED | FR-AUTH-002 |
 | скачивает видео по ссылке VK Видео / Rutube | нет официального API для скачивания чужого контента; сторонние инструменты (yt-dlp) | документации поставщика, разрешающей это, не найдено; условия площадок не проверялись | UNCONFIRMED | FR-INGEST-003 (Should) — в Phase 3 НЕ входит, пока не подтверждено; загрузка файлом покрывает неделю |
+| отправляет файл клипа в чат пользователя от имени бота | Telegram Bot API, `sendVideo` / `sendDocument` | страница [core.telegram.org/bots/api](https://core.telegram.org/bots/api) открыта 2026-09-21, но описание методов и лимит размера файла в полученном фрагменте не найдены (страница обрезана инструментом) — цитаты нет | UNCONFIRMED | FR-RESULT-003 (Should) — в Phase 3 НЕ входит; «скопировать ссылку» и «скачать» покрывают неделю (V2-R08) |
 
-Итого: 15 строк CONFIRMED, 1 UNCONFIRMED (`FR-INGEST-003`, Should — отложено, не блокирует).
+Итого: 15 строк CONFIRMED, 2 UNCONFIRMED (`FR-INGEST-003` и `FR-RESULT-003`, оба Should — отложены,
+не блокируют). Ограничение частоты в Caddy — наша конфигурация, не внешняя способность, строки не
+требует. Проверка V2-R07 повторена координатором 2026-09-21 по той же странице: строка «Supported
+models: … `claude-sonnet-5`, `claude-sonnet-4-6` …» присутствует дословно; находка валидатора —
+ложноположительная (его выборка страницы была обрезана), вердикт CONFIRMED сохранён.
 
 ## Data Architecture
 
@@ -107,21 +113,22 @@ flowchart LR
 
 | Сущность | Хранилище | Физические ограничения и индексы |
 |---|---|---|
-| `account`, `session` | PostgreSQL | `UNIQUE (email)`; `session.cookie_token_hash` — только хэш; `ip_prefix` /24 |
-| `video` | PostgreSQL + S3 `videos/{account_id}/{video_id}/source.{ext}` | `UNIQUE (account_id, idempotency_key)`; частичный индекс `WHERE status IN ('queued','transcribing','selecting','rendering')` для сторожа; `deleted_at` |
+| `account`, `session` | PostgreSQL | `UNIQUE (email)`; частичный `UNIQUE (telegram_user_id) WHERE telegram_user_id IS NOT NULL`; `password_hash NOT NULL`; `session.cookie_token_hash` — только хэш; `ip_prefix` /24 |
+| `video` | PostgreSQL + S3 `videos/{account_id}/{video_id}/source.{ext}` | `UNIQUE (account_id, idempotency_key)`; `CHECK (failure_reason IN (…))` по закрытому набору Pseudocode, включая `refused_user_uploads` и `probe_timeout` (V2-R17); частичный индекс `WHERE status IN ('queued','transcribing','selecting','rendering')` для сторожа; `deleted_at` |
 | `transcript` | PostgreSQL (`jsonb` слова и сегменты) | одна строка на видео `UNIQUE (video_id)`; ~15 тыс. слов ≈ 1,5 МБ на час — в пределах строки, отдельной таблицы слов не нужно |
-| `clip`, `clip_link` | PostgreSQL + S3 `clips/{video_id}/{clip_id}.mp4`, `thumbs/{video_id}/{clip_id}.jpg` | `UNIQUE (clip_link.code)`; `clip.expires_at` для free; индекс `(video_id, index)` |
-| `guest_pack`, `guest_pack_clip` | PostgreSQL | `UNIQUE (guest_pack.code)`; составной PK `(guest_pack_id, clip_id)`; `expires_at` 14 дней |
-| `growth_event` | PostgreSQL (append-only) | индекс `(type, created_at)`; `UNIQUE (type, clip_link_id, ip_prefix, day)` для `link_view` — уникальные переходы считает база |
+| `clip`, `clip_link` | PostgreSQL + S3 `clips/free/{video_id}/{clip_id}.mp4` либо `clips/paid/{video_id}/{clip_id}.mp4`, `thumbs/{video_id}/{clip_id}.jpg` | `UNIQUE (clip_link.code)`; `clip.expires_at` для free; `render_fence int NOT NULL DEFAULT 0`; `watermarked boolean NOT NULL`; `CHECK (failure_reason IN ('no_disk','ffmpeg_failed','ffmpeg_timeout','stale_attempt_result'))`; `CHECK (score IS NULL OR (explain_hook <> '' AND explain_completeness <> '' AND explain_length <> ''))` — число без объяснения не существует (V2-R13); индекс `(video_id, index)` |
+| `guest_pack`, `guest_pack_clip` | PostgreSQL | `UNIQUE (guest_pack.code)`; составной PK `(guest_pack_id, clip_id)`; `sent_at`, `expires_at = sent_at + 14 дней` (до отправки страница не открывается — V2-R18); `first_opened_at`, `revoked_at` |
+| `growth_event` | PostgreSQL (append-only) | индекс `(type, created_at)`; частичные `UNIQUE (clip_link_id, ip_prefix, day) WHERE type = 'link_view'` и `UNIQUE (guest_pack_id, ip_prefix, day) WHERE type = 'guest_opened'` — уникальные переходы и открытия считает база (V2-R12); `clip_link.unique_view_count` обновляется в ТОЙ ЖЕ транзакции, что вставка (V2-R20) |
 | `partner`, `partner_code`, `attribution` | PostgreSQL | `UNIQUE (partner_code.code)`; `UNIQUE (attribution.account_id)`; `status` — `CHECK` по закрытому списку |
-| `quota_counter` | PostgreSQL | `UNIQUE (scope, scope_key, day)`; списание — один оператор `INSERT … ON CONFLICT … DO UPDATE … WHERE … RETURNING` |
+| `quota_counter` | PostgreSQL | `UNIQUE (scope, scope_key, day)`; `CHECK (scope IN ('user_minutes','user_uploads','user_upload_refunds','user_llm','global_minutes','global_llm'))` — шесть значений канона §4; возврат слота (`user_uploads` − 1, не ниже 0) и списание `user_upload_refunds` — в ОДНОЙ транзакции с записью `failed` (DEC-A-014/015); хранится только `used`; предел — параметр из окружения, НЕ колонка (V2-R03); списание — два оператора в одной транзакции: `INSERT … (used = 0) ON CONFLICT DO NOTHING`, затем `UPDATE … SET used = used + :n WHERE used + :n <= :limit RETURNING used` — пустой результат = отказ, ветка вставки не обходит предел (V2-R01) |
 | `pro_interest` | PostgreSQL | `UNIQUE (account_id)` |
-| `job_attempt` | PostgreSQL | `UNIQUE (video_id, stage, attempt_no)`; `fence` — монотонный на видео; результат стадии — `UPDATE … WHERE fence = :mine` |
+| `job_attempt` | PostgreSQL | `UNIQUE (video_id, fence)` — единственная уникальность (V2-R02); `series_no int NOT NULL DEFAULT 1` — серия попыток, новая при повторе по кнопке (`RetryVideo`), потолок «≤ 2 автоматических» считается внутри серии; `attempt_no` — порядковый внутри `(stage, clip_id, series_no)`, без `UNIQUE`; результат стадии — `UPDATE … WHERE fence = :mine` (для клипа — `render_fence < :mine`) |
 | задания очереди | Redis (BullMQ) | транспорт, не источник истины; `jobId = {stage}:{video_id}:{fence}` — повторная постановка того же фенса идемпотентна |
 | рабочие файлы рендера | том Docker `render-work` | временный каталог на задание, очистка в `finally`; резерв ≥ 3× оригинала |
 
 Объекты S3 удаляются приложением (клипы free через 3 дня, оригинал — вместе с видео) и страхуются
-lifecycle: `AbortIncompleteMultipartUpload` через 1 день, `Expiration` префикса `clips/` через 7 дней.
+lifecycle: `AbortIncompleteMultipartUpload` через 1 день, `Expiration` ТОЛЬКО префикса `clips/free/`
+через 7 дней; `clips/paid/` lifecycle не трогает (V2-R24).
 Версионирование бакета выключено (иначе удаление создаёт версии и хранение продолжает
 тарифицироваться).
 
@@ -195,9 +202,14 @@ CheckAndConsumeQuota, CreateProInterest, DeleteAccount, AuthRegister/AuthLogin, 
 | `guest_pack.host_partner_code_id`, `consent_version`, `consent_text_hash`, `consent_at`, `first_opened_at`, `revoked_at` | отсутствующие колонки | добавлены; `host_partner_code_id` — личный код ведущего, создаётся при первой отправке гостевой ссылки (ведущий как микро-партнёр) |
 | `attribution.reject_reason` | отсутствующая колонка | добавлена: закрытый набор `self_referral \| code_blocked \| antifraud_ip_burst` |
 | `partner.contact`, `partner_code.blocked_reason/blocked_at` | отсутствующие колонки | добавлены |
-| `quota_counter.limit` | отсутствующая колонка | НЕ добавлена как хранимое значение: предел приходит из окружения при старте (ненастроенный валит процесс, ADR/FR-LIMIT); в строке счётчика хранится только `used`. Pseudocode читает `limit` как параметр алгоритма, не как колонку — семантика сохранена |
+| `quota_counter.limit` | отсутствующая колонка | НЕ добавлена как хранимое значение: предел приходит из окружения при старте (ненастроенный валит процесс, ADR/FR-LIMIT); в строке счётчика хранится только `used`. Pseudocode в раунде 2 переписан: `:limit` — параметр обеих ветвей, колонки `limit` в SQL нет (V2-R03; прежняя строка сверки объявляла закрытым то, что не было закрыто) |
 | `session.revoked_at`, `last_seen_at`; `account.deletion_requested_at`, `erase_deadline` | отсутствующие колонки | добавлены |
 | `transcript.words/segments` | смена типа (списки записей) | `jsonb`, как в Data Architecture; `Word.chunk_index` и `Segment.speaker?` сохраняются в JSON |
+| `job_attempt.series_no` | отсутствующая колонка (V2-R02, следствие DEC-A-009) | добавлена; уникальность `(video_id, fence)`, серия — по кнопке «повторить» |
+| `job_attempt.wait_reason` | отсутствующая колонка (раунд 3 algo-writer, V2-L3) | добавлена: `text NULL`, закрытый набор `no_disk`; причина ОЖИДАНИЯ у попытки `deferred`, чтобы не писать «причину отказа» клипу, который не отказал; отложенное задание ставится с задержкой 5 мин (DEC-A-016) |
+| `guest_pack.sent_at`, `account.telegram_user_id`, `clip.failure_reason`, `clip.score/explain_*` | отсутствующие ограничения (V2-R13) | добавлены: `expires_at` от `sent_at`; частичный `UNIQUE`; `CHECK` по закрытому набору; `CHECK` «число без объяснения не существует» |
+| `quota_counter.scope` | несовпадение набора значений (V2-R21) | канон разморожен DEC-A-010/015: шесть значений, добавлены `user_llm` (2 в сутки на аккаунт) и `user_upload_refunds` (2 возврата слота в сутки) |
+| `video.failure_reason` | несовпадение набора (V2-R17) | добавлены `refused_user_uploads`, `probe_timeout`; `RetryVideo` не повторяет видео без `object_key` (V2-R16) |
 
 Правило разрешения соблюдено: Pseudocode владеет ЛОГИЧЕСКИМ смыслом (наборы значений, поля), этот
 документ — ФИЗИЧЕСКИМ хранением; единственное решение, изменившее смысл (Р-1), принято как DEC-A-007 и

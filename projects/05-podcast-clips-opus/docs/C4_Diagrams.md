@@ -37,7 +37,7 @@ C4Container
   Container_Boundary(vps, "VPS · Docker Compose") {
     Container(proxy, "proxy", "Caddy", "единственная публичная дверь: TLS, лимит частоты, 60 с окно")
     Container(web, "web", "Next.js 15 · App Router · tRPC", "экраны, API, подпись ссылок для браузера, постановка в очередь")
-    Container(wstt, "worker-stt", "Node · BullMQ", "извлечение аудио, чанкинг, whisper-1")
+    Container(wstt, "worker-stt", "Node · BullMQ · ffprobe", "probe: скачивание, ffprobe длительности, списание минут ДО Whisper; затем извлечение аудио, чанкинг, whisper-1")
     Container(wllm, "worker-llm", "Node · BullMQ", "выделение фрагментов, оценка с объяснением")
     Container(wvid, "worker-video", "Node · BullMQ · ffmpeg 7", "кроп 9:16, субтитры, метка; concurrency 1; том рабочей области")
     ContainerDb(db, "db", "PostgreSQL 16", "источник истины: video, clip, job_attempt, quota_counter, attribution")
@@ -70,7 +70,8 @@ C4Container
 
 Ключи по контейнерам (канон §6): `OPENAI_API_KEY` → только `worker-stt`; `ANTHROPIC_API_KEY` → только
 `worker-llm`; `S3_*` → `web`, `worker-stt`, `worker-video`; `REDIS_PASSWORD` → `web` и три воркера;
-`DATABASE_URL` → `web` и три воркера; у `proxy` и `db` секретов приложения нет.
+`DATABASE_URL` → `web` и три воркера; `N5_PUBLIC_ORIGIN` (без дефолта) → `web` и `worker-video`; у `proxy` и
+`db` секретов приложения нет.
 
 ## Уровень 3 · Компоненты `worker-video` (самый тяжёлый контейнер)
 
@@ -83,7 +84,7 @@ C4Component
     Component(fetch, "SourceFetcher", "s3-download.ts", "скачивает оригинал один раз во временный каталог тома")
     Component(subs, "SubtitleBuilder", "ASS из слов транскрипта", "строки ≤ 2, ≤ 32 символа, выделение слова")
     Component(ff, "FfmpegRunner", "child_process, таймаут 15 мин, SIGKILL", "scale→crop 9:16→ASS→drawtext(метка)→mp4")
-    Component(wm, "WatermarkPolicy", "fail-closed по account.plan", "текст «КлипМейкер · <домен>/c/<code>», safe zone, ≥ 3,5 % высоты")
+    Component(wm, "WatermarkPolicy", "fail-closed по account.plan", "текст «КлипМейкер · N5_PUBLIC_ORIGIN/c/<code>» (переменная без дефолта), safe zone, ≥ 3,5 % высоты")
     Component(upload, "ResultPublisher", "S3 PUT + UPDATE clip WHERE fence = :mine", "результат принимается только с актуальным фенсом")
     Component(cleanup, "Cleanup", "finally", "удаляет временный каталог после успеха И отказа")
   }

@@ -4,7 +4,7 @@
 **Координатор пишет:** да
 **Разрезы файлов:** нет
 **Канон:** docs/canon.md
-**Хеш канона:** 8c18b55e382bf288eaadac011e73c85f8f7f42c2704ba7700de6ff814d588e2f
+**Хеш канона:** d5bf72efc63f090267ecb239ea913616221d785e3579fb7a5ca56362675afc84
 **Проверка канона:** ВЫПОЛНЕНА
 **Проверка владения:** ВЫПОЛНЕНА
 **Причина:** —
@@ -71,6 +71,7 @@ node ../../.claude/hooks/check-file-ownership.cjs .    # один писател
 | ops-writer | docs/Refinement.md, docs/Completion.md, docs/Final_Summary.md |
 | validator-stories-ac | docs/validation-stories.md, docs/test-scenarios.md (Phase 2, читает всё, пишет только своё) |
 | validator-docs-coherence | docs/validation-coherence.md (Phase 2) |
+| revalidator | docs/validation-revalidation.md (Phase 2, перепроверка после раунда исправлений) |
 
 ## Владение
 
@@ -98,6 +99,7 @@ node ../../.claude/hooks/check-file-ownership.cjs .    # один писател
 | docs/test-scenarios.md | validator-stories-ac |
 | docs/validation-coherence.md | validator-docs-coherence |
 | docs/validation-report.md | координатор |
+| docs/validation-revalidation.md | revalidator |
 | docs/decisions-owner.md | координатор |
 | docs/decisions-autonomous.md | координатор |
 
