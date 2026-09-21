@@ -35,23 +35,78 @@
 
 > Обязательный блок требований по росту: [`/research/GROWTH-MECHANICS-REQUIREMENTS.md`](../../research/GROWTH-MECHANICS-REQUIREMENTS.md)
 
+## Что решено строить — «КлипМейкер»
+
+Продукт получил рабочее имя **«КлипМейкер»**. Неделя закрывает путь целиком: загрузка записи до
+2 ГБ → транскрипция с таймкодами слов → выделение 3–8 самодостаточных фрагментов по 20–75 с → кроп
+9:16 с вшитыми субтитрами → оценка 0–99 с объяснением из трёх компонентов → экран клипов → метка на
+бесплатном тарифе с короткой ссылкой → «клипы для гостя» без регистрации → коды блогеров и кабинет
+партнёра → потолки расхода → экран интереса «Pro скоро» → срок хранения.
+
+Приёма денег в неделе нет: «снять метку» ведёт на экран интереса, платёжный код из январского клона
+остаётся спящим. Автопостинга, brand kit, диаризации и распознавания лиц нет.
+
+Стек: Next.js 15 + tRPC, PostgreSQL 16 + Prisma, BullMQ на Redis 7, ffmpeg 7, Cloud.ru Object
+Storage (MinIO в тестах), OpenAI `whisper-1` для расшифровки и Claude Sonnet 5 для выделения
+фрагментов. Семь сервисов Docker Compose за Caddy на одном VPS.
+
+## Как запустить
+
+Кода ещё нет — раздел описывает то, что подготовлено скаффолдами. Перед любым запуском:
+
+```bash
+node ../../.claude/hooks/check-ports.cjs .           # хранилища наружу не смотрят
+bash ../../scripts/check-port-conflicts.sh .         # порты этой машины свободны
+```
+
+```bash
+cp .env.example .env        # заполнить секреты; потолки и N5_PUBLIC_ORIGIN дефолтов НЕ имеют
+docker compose --project-directory . --profile edge up -d      # боевой профиль за Caddy
+docker compose --project-directory . --profile test run --rm test   # тесты на реальных PostgreSQL, Redis, MinIO
+```
+
+Отсутствие любой из шести переменных `N5_LIMIT_*` или пустой `N5_PUBLIC_ORIGIN` валят запуск
+намеренно: ненастроенный потолок означает неограниченный платный вызов, а адрес по умолчанию
+уезжает в чужую ленту вшитым в пиксели метки.
+
+## Документация
+
+| Файл | О чём |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | контекст проекта, статус, ключевые инварианты, порядок чтения |
+| [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) | цикл разработки, стражи, проверка на стенде |
+| [`docs/canon.md`](docs/canon.md) | источник имён и чисел |
+| [`docs/Specification.md`](docs/Specification.md) | 29 FR, 6 NFR, 14 историй, 35 критериев приёмки |
+| [`docs/Architecture.md`](docs/Architecture.md) | 7 сервисов, 15 сущностей, 17 внешних зависимостей |
+| [`docs/ADR.md`](docs/ADR.md) | 8 решений, у каждого проверка-Confirmation |
+| [`docs/validation-report.md`](docs/validation-report.md) | вердикт Phase 2 и оставшиеся оговорки |
+| [`docs/toolkit-map.md`](docs/toolkit-map.md) | что сгенерировано и чего сознательно нет |
+
 ## Структура
 
 ```
 05-podcast-clips-opus/
-├── README.md          # этот файл
+├── README.md              # этот файл
+├── CLAUDE.md              # контекст проекта
+├── DEVELOPMENT_GUIDE.md   # цикл разработки
+├── docker-compose.yml     # 7 сервисов + профили edge/test
+├── Dockerfile             # цели web / worker / test
+├── .claude/               # проектный toolkit: агенты, правила, навыки, роадмап
+├── proxy/Caddyfile
 └── docs/
-    ├── discovery/     # Phase 0 — reverse-engineering референса
-    └── ...            # SPARC-документация из /replicate
+    ├── discovery/         # Phase 0.5 — профиль источника
+    ├── telemetry/         # телеметрия p-replicator
+    └── ...                # SPARC-документация из /replicate
 ```
 
 ## Статус
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | ⬜ |
-| Phase 1 — SPARC (`/replicate`) | ⬜ |
-| Phase 2 — Validation | ⬜ |
-| Phase 3 — Toolkit | ⬜ |
-| Phase 4 — Finalize | ⬜ |
-| Реализация | ⬜ |
+| Phase 0 — Product Discovery | ➖ не выполнялась (вход `--from-docs`: постановка владельца + CJM) |
+| Phase 0.5 — Source Product Profile | ✅ облик источника снят, 15 строк `FR-LOOK` |
+| Phase 1 — SPARC (`/replicate`) | ✅ 21.09.2026 |
+| Phase 2 — Validation | ✅ 21.09.2026, вердикт 🟡 CAVEATS (46 находок, блокеров не осталось) |
+| Phase 3 — Toolkit | ✅ 21.09.2026 |
+| Phase 4 — Finalize | 🟡 скаффолды написаны, сборкой не проверены |
+| Реализация | ⬜ кода нет: 12 фич роадмапа в статусе `planned` |

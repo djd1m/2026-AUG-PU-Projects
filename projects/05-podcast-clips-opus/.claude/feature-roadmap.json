@@ -1,0 +1,264 @@
+{
+  "version": "1.0",
+  "project": "N5 «КлипМейкер» — нарезка вертикальных клипов из длинной записи с объяснённой оценкой",
+  "generated_from": [
+    "docs/Specification.md",
+    "docs/Architecture.md",
+    "docs/Pseudocode.md",
+    "docs/ADR.md",
+    "docs/canon.md",
+    "docs/Refinement.md",
+    "docs/Completion.md"
+  ],
+  "notes": {
+    "state": "Реализация не начиналась: монорепо, миграций, package.json и тестов не существует. Написаны только скаффолды координатором (docker-compose.yml, Dockerfile, .dockerignore, .env.example, .gitignore, proxy/Caddyfile). Ни одна фича не done.",
+    "complexity_field": "Закрытый набор пакетной схемы simple|medium|complex (тиры S|M|L). Тира XL в схеме нет: upload-and-quota и render-and-watermark записаны complex, но по .claude/rules/complexity-router.md они XL (трогают деньги и несущие инварианты) и требуют остановки на плане у владельца. Фактический тир изменения решает bash ../../scripts/complexity-router.sh по реальному диффу.",
+    "sc_coverage": "Все 35 критериев SC-US-nnn-k Specification §5 распределены по фичам 2–12 без пересечений и без пропусков. У foundation список sc_ids пуст намеренно: приёмка FR-AUTH-001 живёт Gherkin-сценариями внутри самого требования, а не идентификатором SC-US.",
+    "deferred": "FR-INGEST-003 (ссылка VK/Rutube) и FR-RESULT-003 (отправка ботом Telegram) в роадмап НЕ включены: их внешние зависимости имеют вердикт UNCONFIRMED (Architecture, External Dependencies). FR-AUTH-002 (вход через Telegram) — Should с CONFIRMED-зависимостью, включается в foundation только если неделя позволит; пропуск фиксируется в Completion.md, а не молчанием.",
+    "execution": "cross-family review (OWN-002): планирование и ревью — семейство Anthropic, кодирование — семейство OpenAI. Модель, написавшая код, его не проверяет."
+  },
+  "features": [
+    {
+      "id": "foundation",
+      "number": 1,
+      "title": "Монорепо, схема БД, отказ старта при ненастроенной конфигурации, вход по почте",
+      "description": "npm workspaces (apps/web, apps/worker, packages/db, packages/shared, packages/s3); сборка образов из корня монорепо; миграции SQL на 15 сущностей канона §4 со всеми UNIQUE, частичными индексами и CHECK по закрытым перечислениям; закрытые перечисления объявлены один раз в packages/shared и оттуда же попадают в CHECK; отказ старта web и воркеров при любой из ШЕСТИ ненастроенных N5_LIMIT_* и при пустом N5_PUBLIC_ORIGIN (шесть отдельных прогонов, не один); регистрация, вход по почте с bcrypt вне транзакции, cookie-сессии с хэшем токена и ip_prefix /24, logout; GET /health; scripts/check-env-wiring.sh, которого в репозитории нет.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [],
+      "blockers": [],
+      "fr_ids": ["FR-AUTH-001", "FR-LIMIT-002", "FR-RENDER-002", "NFR-SEC-001", "NFR-OPS-001"],
+      "sc_ids": [],
+      "adr_ids": ["ADR-001", "ADR-002"],
+      "expected_files": [
+        "package.json",
+        "packages/db/migrations/001_init.sql",
+        "packages/shared/src/enums.ts",
+        "packages/shared/src/config.ts",
+        "apps/web/src/server/auth/register.ts",
+        "apps/web/src/app/health/route.ts",
+        "scripts/check-env-wiring.sh"
+      ]
+    },
+    {
+      "id": "upload-and-quota",
+      "number": 2,
+      "title": "Приём загрузки, идемпотентность и шесть ключей квоты",
+      "description": "video.create с обязательным Idempotency-Key клиента и presigned multipart (≤ 900 с); заявка ключа одним атомарным оператором ON CONFLICT DO NOTHING RETURNING; POST /api/upload/complete — CompleteMultipartUpload сервером, HEAD размера, тип по магическим байтам через Range-GET; CheckAndConsumeQuota на шести scope двумя операторами в одной транзакции с пределом из окружения; RefundUploadSlot при отказе по свойствам файла в той же транзакции, что пишет failed. Тир XL по локальному роутеру: трогает деньги, остановка на плане у владельца обязательна.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["foundation"],
+      "blockers": [],
+      "fr_ids": ["FR-INGEST-001", "FR-INGEST-002", "FR-LIMIT-001", "FR-LIMIT-002", "FR-LIMIT-003"],
+      "sc_ids": ["SC-US-001-1", "SC-US-001-2", "SC-US-011-3"],
+      "adr_ids": ["ADR-002", "ADR-006"],
+      "expected_files": [
+        "packages/db/src/quota.ts",
+        "packages/s3/src/multipart.ts",
+        "apps/web/src/server/routers/video.ts",
+        "apps/web/src/app/api/upload/complete/route.ts"
+      ]
+    },
+    {
+      "id": "queue-and-probe",
+      "number": 3,
+      "title": "Очередь с фенсом попыток, probe длительности и сторож",
+      "description": "BullMQ на Redis, три очереди, jobId = {stage}:{video_id}:{fence}; LeaseAttempt с монотонным фенсом на видео, UNIQUE (video_id, fence), series_no и потолком ≤ 2 автоматических попыток внутри серии; ProbeSource в worker-stt — резерв диска ≥ 3× ДО скачивания, ffprobe отдельным процессом с таймаутом, четыре отказа по свойствам файла с возвратом слота, списание user_minutes и global_minutes ДО первого вызова Whisper; deferred(no_disk) двигает video.updated_at; WatchdogTick раз в минуту переводит молчащие задачи в failed(stalled) через 30 мин; RetryVideo с проверкой object_key IS NOT NULL.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["upload-and-quota"],
+      "blockers": [],
+      "fr_ids": ["FR-RENDER-003", "FR-INGEST-002", "FR-LIMIT-001", "NFR-SCALE-001"],
+      "sc_ids": ["SC-US-002-3", "SC-US-011-1", "SC-US-011-2"],
+      "adr_ids": ["ADR-001", "ADR-006"],
+      "expected_files": [
+        "apps/worker/src/queue/lease-attempt.ts",
+        "apps/worker/src/workers/stt.ts",
+        "apps/worker/src/media/probe.ts",
+        "apps/web/src/server/watchdog.ts"
+      ]
+    },
+    {
+      "id": "transcription",
+      "number": 4,
+      "title": "Транскрипция с таймкодами слов, чанкинг и журнал расхода",
+      "description": "ExtractAndChunkAudio — потоковое извлечение звука ffmpeg -vn, чанки ≤ 25 МБ по паузам, без разрезания посреди фразы; Transcribe — whisper-1 с verbose_json и timestamp_granularities=[word,segment], склейка слов со смещением чанка; контракт поставщика: результат без words[].start/end отвергается ДО постановки стадии select; повтор чанка после таймаута списывает минуты заново ДО повторного обращения; RecordModelSpend пишет строку model-spend.jsonl на КАЖДУЮ попытку; адаптер Transcriber с живым клиентом и детерминированным фейком.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["queue-and-probe"],
+      "blockers": [],
+      "fr_ids": ["FR-TRANSCRIBE-001", "FR-TRANSCRIBE-002", "NFR-OPS-001"],
+      "sc_ids": ["SC-US-013-1", "SC-US-013-2"],
+      "adr_ids": ["ADR-003"],
+      "expected_files": [
+        "apps/worker/src/media/extract-chunks.ts",
+        "apps/worker/src/stt/transcribe.ts",
+        "packages/shared/src/providers/transcriber.ts",
+        "apps/worker/src/spend/record-model-spend.ts"
+      ]
+    },
+    {
+      "id": "selection-and-score",
+      "number": 5,
+      "title": "Выделение 3–8 самодостаточных фрагментов и объяснённая оценка",
+      "description": "SelectFragments — один вызов Claude Sonnet 5 со structured outputs, 3–8 кандидатов {start,end,title,hook,completeness,length_fit,explanations}, квота llm на ДВА ключа (user_llm и global_llm) ДО вызова; проверка диапазонов НАШИМ кодом после разбора — structured outputs числовых ограничений и длины строк не задают; границы по словам транскрипта, длина 20,0–75,0 с; ScoreClip — сумма трёх компонентов 0–33, каждая с непустой фразой объяснения (CHECK в базе); честное число фрагментов при находке меньше трёх; создание строк clip и clip_link ДО постановки стадии render; отказ стадии при нуле пригодных кандидатов.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["transcription"],
+      "blockers": [],
+      "fr_ids": ["FR-SELECT-001", "FR-SELECT-002", "FR-LIMIT-002"],
+      "sc_ids": ["SC-US-003-1", "SC-US-003-2", "SC-US-003-3", "SC-US-004-1", "SC-US-004-2"],
+      "adr_ids": ["ADR-003", "ADR-004"],
+      "expected_files": [
+        "apps/worker/src/workers/select.ts",
+        "apps/worker/src/select/select-fragments.ts",
+        "apps/worker/src/select/score-clip.ts",
+        "packages/shared/src/providers/selector.ts"
+      ]
+    },
+    {
+      "id": "render-and-watermark",
+      "number": 6,
+      "title": "Кроп 9:16, вшитые субтитры и метка free с короткой ссылкой",
+      "description": "BuildSubtitles — ASS из слов транскрипта с выделением текущего слова; WatermarkRequired = plan !== 'paid', значение только из базы, поле «без метки» из тела не читается; ComputeWatermarkGeometry — текст «КлипМейкер · <origin>/c/<code>» из N5_PUBLIC_ORIGIN без дефолта, высота ≥ 3,5 % кадра, safe zone сторис, подложка с контрастом ≥ 4,5:1; RenderClip — concurrency литералом 1, резерв диска ДО скачивания, заявка актуальности render_fence, цепочка scale → crop 9:16 → subtitles → drawtext, ffmpeg дочерним процессом с таймаутом 15 мин, выгрузка под префикс clips/free/ либо clips/paid/, принятие результата по фенсу, очистка каталога в finally, активация атрибуции при первом done. Тир XL: несущий инвариант метки и метрика недели.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["selection-and-score"],
+      "blockers": [],
+      "fr_ids": ["FR-RENDER-001", "FR-RENDER-002", "FR-RENDER-003", "FR-GROWTH-003", "FR-GROWTH-005"],
+      "sc_ids": ["SC-US-005-1", "SC-US-005-2", "SC-US-007-2"],
+      "adr_ids": ["ADR-004", "ADR-006"],
+      "expected_files": [
+        "apps/worker/src/workers/render.ts",
+        "apps/worker/src/render/build-subtitles.ts",
+        "apps/worker/src/render/watermark.ts",
+        "apps/worker/src/render/render-clip.ts"
+      ]
+    },
+    {
+      "id": "progress-and-clips-screen",
+      "number": 7,
+      "title": "Экран прогресса с тремя состояниями и экран клипов",
+      "description": "ReadVideoProgress — экран открывается ≤ 1 с и обновляется ≤ 5 с, показывает ровно ТРИ различимых состояния (выполняется / успех / отказ), молчание старше 5 мин даёт «нет ответа от обработки», отказ называет причину словами и предлагает «повторить» либо «загрузить другой файл»; ListClipsForScreen — карточки с плеером, оценкой и тремя объяснениями, независимость карточек (незавершённый клип не блокирует готовый); IssueSignedObjectUrl — redirect на подписанную ссылку ≤ 15 мин, ровно два пути доступа, 404 вместо 403; clip.markDownloaded; share-CTA на карточке первого клипа и «скачать все».",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": ["render-and-watermark"],
+      "blockers": [],
+      "fr_ids": ["FR-RESULT-001", "FR-RESULT-002", "FR-GROWTH-001", "NFR-PERF-002"],
+      "sc_ids": ["SC-US-002-1", "SC-US-002-2", "SC-US-005-4"],
+      "adr_ids": ["ADR-001"],
+      "expected_files": [
+        "apps/web/src/server/routers/clip.ts",
+        "apps/web/src/app/dashboard/videos/[videoId]/page.tsx",
+        "apps/web/src/app/api/clips/[clipId]/file/route.ts",
+        "apps/web/src/app/api/clips/[clipId]/thumbnail/route.ts"
+      ]
+    },
+    {
+      "id": "short-link",
+      "number": 8,
+      "title": "Короткая ссылка /c/{code} и счётчик уникальных переходов",
+      "description": "CreateClipLink — код ≥ 128 бит, UNIQUE, создаётся ДО постановки рендера (метка обязана нести код ЭТОГО клипа); GET /c/{code} — SSR-лендинг продукта с призывом, а НЕ файл клипа, работает в WebView площадок без JS-зависимостей, Cache-Control: no-store; RecordLinkView — установка cookie атрибуции, вставка growth_event(link_view) и обновление clip_link.unique_view_count в ОДНОЙ транзакции, уникальность за сутки на ip_prefix обеспечивает частичный UNIQUE в базе, самопереходы владельца не считаются.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": ["render-and-watermark"],
+      "blockers": [],
+      "fr_ids": ["FR-LINK-001", "FR-GROWTH-001", "FR-GROWTH-005"],
+      "sc_ids": ["SC-US-009-1", "SC-US-009-2"],
+      "adr_ids": ["ADR-004", "ADR-007"],
+      "expected_files": [
+        "apps/web/src/server/routers/link.ts",
+        "apps/web/src/app/c/[code]/page.tsx",
+        "apps/web/src/server/growth/record-link-view.ts"
+      ]
+    },
+    {
+      "id": "guest-pack",
+      "number": 9,
+      "title": "Клипы для гостя: галочки, согласие, гостевая страница без входа",
+      "description": "CreateGuestPack — отметка клипов галочками и ОБЯЗАТЕЛЬНОЕ подтверждение согласия гостя ведущим: без него 422 и guest_pack НЕ создан (правовая граница ADR-008); guest.send выставляет sent_at и expires_at = sent_at + 14 дней (до отправки страница не открывается); GET /g/{guest_code} — SSR без входа, noindex, Cache-Control: no-store, код ≥ 128 бит, обращение по имени, «скачать» на каждом клипе и «скачать все», ссылка несёт код ведущего для атрибуции; OpenGuestPack пишет growth_event(guest_opened) с уникальностью за сутки на ip_prefix через частичный UNIQUE; guest.revoke — немедленный 404 без восстановления.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["progress-and-clips-screen"],
+      "blockers": [],
+      "fr_ids": ["FR-GUEST-001", "FR-GUEST-002", "FR-GUEST-003", "FR-GROWTH-004", "NFR-SEC-002"],
+      "sc_ids": ["SC-US-006-1", "SC-US-006-2", "SC-US-006-3", "SC-US-007-1", "SC-US-007-3"],
+      "adr_ids": ["ADR-008"],
+      "expected_files": [
+        "apps/web/src/server/routers/guest.ts",
+        "apps/web/src/app/g/[guestCode]/page.tsx",
+        "apps/web/src/server/guest/create-guest-pack.ts",
+        "apps/web/src/server/guest/open-guest-pack.ts"
+      ]
+    },
+    {
+      "id": "partner-codes-and-dashboard",
+      "number": 10,
+      "title": "Коды блогеров, атрибуция трёх источников, кабинет и анти-фрод",
+      "description": "code.apply с тремя исходами по полю attribution.source: слабый источник + explicit → 200 с записью прежнего в replaced_source; explicit + любой → 409; guest_link + cookie → 409; недействительный код → 422 и строка НЕ тронута (откат к cookie запрещён, ADR-007); привязка кода при регистрации, источник guest_link из гостевой ссылки, cookie как третий источник; AntiFraudCodeBurst — 50 применений одного кода с одного ip_prefix за 10 мин → blocked, самореферал → rejected, самопереходы владельца не считаются; PartnerDashboard — пять счётчиков воронки РАЗДЕЛЬНО, без перемножения показателей.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": ["guest-pack", "short-link"],
+      "blockers": [],
+      "fr_ids": ["FR-PARTNER-001", "FR-PARTNER-002", "FR-PARTNER-003", "FR-GROWTH-002", "FR-GROWTH-004"],
+      "sc_ids": ["SC-US-008-1", "SC-US-008-2", "SC-US-010-1", "SC-US-010-2"],
+      "adr_ids": ["ADR-007"],
+      "expected_files": [
+        "apps/web/src/server/routers/code.ts",
+        "apps/web/src/server/routers/partner.ts",
+        "apps/web/src/server/partner/apply-partner-code.ts",
+        "apps/web/src/server/partner/anti-fraud.ts",
+        "apps/web/src/app/partner/page.tsx"
+      ]
+    },
+    {
+      "id": "limits-ui-and-pro-interest",
+      "number": 11,
+      "title": "Понятные отказы по потолкам и экран интереса «Pro скоро»",
+      "description": "Пять пользовательских текстов отказа при ШЕСТИ ключах квоты: у user_upload_refunds своего текста нет намеренно — исчерпание права на возврат выглядит как обычный refused_user_uploads; каждый текст называет scope и время возврата (ближайшая полночь Europe/Moscow), текст глобального потолка отличается от персонального; тариф free/paid на экране, «снять метку» ведёт на экран интереса; CreateProInterest — UNIQUE (account_id), экран НЕ принимает платёжных данных и маршрут вебхука ЮKassa в боевом профиле не зарегистрирован (ADR-005).",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": ["progress-and-clips-screen"],
+      "blockers": [],
+      "fr_ids": ["FR-TARIFF-001", "FR-TARIFF-002", "FR-LIMIT-003"],
+      "sc_ids": ["SC-US-012-1"],
+      "adr_ids": ["ADR-005"],
+      "expected_files": [
+        "apps/web/src/server/routers/interest.ts",
+        "apps/web/src/app/pro/page.tsx",
+        "packages/shared/src/quota-messages.ts"
+      ]
+    },
+    {
+      "id": "retention-and-erasure",
+      "number": 12,
+      "title": "Срок хранения клипов, истечение гостевой страницы и удаление аккаунта",
+      "description": "PurgeExpiredClips — клипы free старше 3 дней после done: удаление объектов S3 и проставление clip.expires_at, сохранённая ссылка скачивания отдаёт 404 с объяснением на экране, а не пустой файл; короткая ссылка /c/{code} при этом продолжает работать — она ведёт на лендинг, а не на файл; RevokeOrExpireGuestPack закрывает страницы старше 14 дней; DeleteAccount — статус erasing, завершение ≤ 72 ч, удаление объектов и записей с чужим голосом; lifecycle бакета как страховка: AbortIncompleteMultipartUpload(1 день) на весь бакет, Expiration(7 дней) ТОЛЬКО на префиксе clips/free/, к clips/paid/ не применяется вовсе.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": ["guest-pack", "limits-ui-and-pro-interest"],
+      "blockers": [],
+      "fr_ids": ["FR-TARIFF-003", "FR-GUEST-003", "FR-AUTH-003", "NFR-SEC-002"],
+      "sc_ids": ["SC-US-005-3", "SC-US-012-2", "SC-US-014-1", "SC-US-014-2"],
+      "adr_ids": ["ADR-002", "ADR-008"],
+      "expected_files": [
+        "apps/web/src/server/retention/purge-expired-clips.ts",
+        "apps/web/src/server/routers/account.ts",
+        "apps/web/src/server/account/delete-account.ts",
+        "packages/s3/src/lifecycle.ts"
+      ]
+    }
+  ]
+}
