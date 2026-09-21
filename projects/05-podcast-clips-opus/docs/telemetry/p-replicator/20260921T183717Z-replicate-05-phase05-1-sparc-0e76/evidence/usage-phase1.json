@@ -1,0 +1,232 @@
+{
+  "source": "transcript-aggregation (Claude Code host-written usage per response; Codex token_count snapshots)",
+  "quality": "partial: реальные счётчики хоста, но не биллинг; попытки/повторы см. events.jsonl",
+  "session": "9a440204-7fe6-43fe-8d49-eaf9c30e3498",
+  "window": {
+    "from": "2026-09-21T18:37:00.000Z",
+    "to": null
+  },
+  "observed": {
+    "first_at": "2026-09-21T18:37:20.837Z",
+    "last_at": "2026-09-21T20:00:53.911Z"
+  },
+  "dedupe": {
+    "raw_assistant_entries": 447,
+    "unique_requests": 191,
+    "bad_lines": 0
+  },
+  "by_model": {
+    "claude-fable-5-1": {
+      "requests": 61,
+      "input_tokens": 1514,
+      "cache_creation_input_tokens": 324835,
+      "cache_read_input_tokens": 30061469,
+      "output_tokens": 157256,
+      "thinking_tokens": 36541
+    },
+    "claude-opus-5": {
+      "requests": 86,
+      "input_tokens": 172,
+      "cache_creation_input_tokens": 1020440,
+      "cache_read_input_tokens": 20007211,
+      "output_tokens": 167371,
+      "thinking_tokens": 40363
+    },
+    "claude-sonnet-5": {
+      "requests": 44,
+      "input_tokens": 88,
+      "cache_creation_input_tokens": 596410,
+      "cache_read_input_tokens": 11313164,
+      "output_tokens": 60637,
+      "thinking_tokens": 17473
+    }
+  },
+  "by_agent": {
+    "coordinator": {
+      "requests": 61,
+      "input_tokens": 1514,
+      "cache_creation_input_tokens": 324835,
+      "cache_read_input_tokens": 30061469,
+      "output_tokens": 157256,
+      "thinking_tokens": 36541
+    },
+    "algo-writer": {
+      "requests": 59,
+      "input_tokens": 118,
+      "cache_creation_input_tokens": 554720,
+      "cache_read_input_tokens": 14926597,
+      "output_tokens": 106021,
+      "thinking_tokens": 25703
+    },
+    "ops-writer": {
+      "requests": 44,
+      "input_tokens": 88,
+      "cache_creation_input_tokens": 596410,
+      "cache_read_input_tokens": 11313164,
+      "output_tokens": 60637,
+      "thinking_tokens": 17473
+    },
+    "spec-writer": {
+      "requests": 27,
+      "input_tokens": 54,
+      "cache_creation_input_tokens": 465720,
+      "cache_read_input_tokens": 5080614,
+      "output_tokens": 61350,
+      "thinking_tokens": 14660
+    }
+  },
+  "totals": {
+    "input_tokens_total": 63325303,
+    "cached_input_tokens": 61381844,
+    "cache_creation_input_tokens": 1941685,
+    "output_tokens_total": 385264,
+    "reasoning_tokens": 94377,
+    "requests": 191
+  },
+  "codex": {
+    "sessions": [
+      {
+        "file": "2026/09/21/rollout-2026-09-21T18-38-24-01a0c543-1bcd-77a3-b2e7-6b6bfb4abd75.jsonl",
+        "started_at": "2026-09-21T18:38:24.717Z",
+        "cwd": "/tmp/claude-0/-home-dz-projects-2026-dz-harness-hub/1b415a1a-b955-41e0-a558-a4b89996bde4/scratchpad",
+        "model": "gpt-5.6-sol",
+        "usage": {
+          "input_tokens": 29458,
+          "cached_input_tokens": 24448,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 738,
+          "reasoning_output_tokens": 502,
+          "total_tokens": 30196
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-05-00-01a0c55b-771a-7603-a897-6bcd90d09584.jsonl",
+        "started_at": "2026-09-21T19:05:00.954Z",
+        "cwd": "/tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/9a440204-7fe6-43fe-8d49-eaf9c30e3498/scratchpad",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 86706,
+          "cached_input_tokens": 67584,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1523,
+          "reasoning_output_tokens": 345,
+          "total_tokens": 88229
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-15-51-01a0c565-65a5-7170-afe3-2cba4e2ac22a.jsonl",
+        "started_at": "2026-09-21T19:15:51.846Z",
+        "cwd": "/tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/9a440204-7fe6-43fe-8d49-eaf9c30e3498/scratchpad",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 231946,
+          "cached_input_tokens": 188160,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1835,
+          "reasoning_output_tokens": 194,
+          "total_tokens": 233781
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-19-56-01a0c569-21cf-7e42-b076-201edd45b0e8.jsonl",
+        "started_at": "2026-09-21T19:19:56.630Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 29943,
+          "cached_input_tokens": 26880,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 53,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 29996
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-25-08-01a0c56d-e28d-7e10-bac7-f9e44e92d70b.jsonl",
+        "started_at": "2026-09-21T19:25:08.120Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 386197,
+          "cached_input_tokens": 354944,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 7900,
+          "reasoning_output_tokens": 1076,
+          "total_tokens": 394097
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-31-36-01a0c573-cf67-75c0-8203-3383ad235079.jsonl",
+        "started_at": "2026-09-21T19:31:36.447Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 114570,
+          "cached_input_tokens": 104832,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1568,
+          "reasoning_output_tokens": 47,
+          "total_tokens": 116138
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-33-13-01a0c575-4be2-7b70-8aee-e8acbeee694a.jsonl",
+        "started_at": "2026-09-21T19:33:13.833Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 2261995,
+          "cached_input_tokens": 2165760,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 17528,
+          "reasoning_output_tokens": 3945,
+          "total_tokens": 2279523
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-44-09-01a0c57f-4d17-7e71-99d4-e4012c03a101.jsonl",
+        "started_at": "2026-09-21T19:44:09.508Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 761800,
+          "cached_input_tokens": 696704,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 7228,
+          "reasoning_output_tokens": 564,
+          "total_tokens": 769028
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-51-36-01a0c586-1db6-7282-a255-7e078e19f3d9.jsonl",
+        "started_at": "2026-09-21T19:51:36.127Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 1082791,
+          "cached_input_tokens": 1017728,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 6132,
+          "reasoning_output_tokens": 607,
+          "total_tokens": 1088923
+        }
+      },
+      {
+        "file": "2026/09/21/rollout-2026-09-21T19-57-42-01a0c58b-b5a7-7611-b876-21f4f3b98322.jsonl",
+        "started_at": "2026-09-21T19:57:42.703Z",
+        "cwd": "/home/dz-projects-2026/dz-harness-hub",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 92343,
+          "cached_input_tokens": 76544,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1029,
+          "reasoning_output_tokens": 58,
+          "total_tokens": 93372
+        }
+      }
+    ],
+    "note": "последний кумулятивный снимок total_token_usage на сессию; фильтр по времени старта"
+  },
+  "generated_at": "2026-09-21T20:01:18.909Z"
+}
