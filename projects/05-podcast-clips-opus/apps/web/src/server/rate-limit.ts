@@ -9,7 +9,7 @@ return used
 `;
 export async function allowMutation(redis: Redis, ip: string, secret: string): Promise<boolean> {
   if (redis.status === 'wait' || redis.status === 'end') await redis.connect();
-  // В Redis только HMAC префикса /24 с TTL, полный IP не сохраняется даже на минуту.
-  const key = 'n5:auth:rate:' + createHmac('sha256', secret).update(ipPrefix(ip)).digest('hex');
+  // В Redis только HMAC префикса IPv4 /24 или IPv6 /64 с TTL, полный IP не сохраняется даже на минуту.
+  const key = 'n5:mutation:rate:' + createHmac('sha256', secret).update(ipPrefix(ip)).digest('hex');
   return Number(await redis.eval(RATE_LIMIT_SCRIPT, 1, key)) <= 30;
 }

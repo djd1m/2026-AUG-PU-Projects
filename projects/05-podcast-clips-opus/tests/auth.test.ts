@@ -103,7 +103,7 @@ describe('Аутентификация', () => {
   it('IP: не доверяет первому XFF, сохраняет только /24', () => {
     expect(clientIp(new Headers({ 'x-forwarded-for': '1.1.1.1, 192.0.2.99, 10.0.0.5, 172.18.0.2' }), 2)).toBe('192.0.2.99');
     expect(ipPrefix('::ffff:192.0.2.99')).toBe('192.0.2.0/24');
-    expect(ipPrefix('2001:db8:1234::1')).toBe('2001:d00::/24');
-    expect(ipPrefix('::1')).toBe('0:0::/24');
+    expect(ipPrefix('2001:db8:1234::1')).toBe('2001:db8:1234:0::/64');
+    expect(ipPrefix('::1')).toBe('0:0:0:0::/64');
   });
 });

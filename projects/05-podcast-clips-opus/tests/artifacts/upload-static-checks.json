@@ -1,0 +1,38 @@
+[
+  {
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 0,
+    "output": "✅ каталог /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docker-compose.yml проверен в заявленной области: из 6 сервисов распознано хранилищ 2, reverse-proxy 0; НЕ распознаны и не проверялись: web, worker-llm, worker-stt, worker-video\n"
+  },
+  {
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 0,
+    "output": "== БД и хранилища не смотрят в интернет ==\n  ✅ ни одно хранилище не публикует порт наружу\n\n== За reverse-proxy приложение не публикуется ==\n  ✅ reverse-proxy в compose нет — проверка неприменима\n\n== Конфликты портов с уже занятым на этой машине ==\n  ✅ порт 4181 свободен\n"
+  },
+  {
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 0,
+    "output": "Потерь нет. Явные исключения: NEXT_RUNTIME, NEXT_PHASE\n"
+  },
+  {
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "profiles": "test,edge",
+    "exit_code": 0,
+    "output": "✅ каталог /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docker-compose.yml проверен в заявленной области: из 9 сервисов распознано хранилищ 3, reverse-proxy 1; НЕ распознаны и не проверялись: test, web, worker-llm, worker-stt, worker-video\n"
+  }
+]

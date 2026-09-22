@@ -63,7 +63,7 @@ describe.skipIf(!databaseUrl)('PostgreSQL: ограничения, миграц�
     }
     await pool.query("INSERT INTO growth_event(type,ip_prefix,day) VALUES ('download',NULL,current_date)");
   });
-  it('RV-013: IPv6 /24 принимается настоящей колонкой session.cidr', async () => {
+  it('RV-013: IPv6 /64 принимается настоящей колонкой session.cidr', async () => {
     for (const [index, ip] of ['2001:db8:1234::1', '::1'].entries()) {
       const token = await auth.register(`ipv6-${index}@example.org`, 'пароль аккаунта', ipPrefix(ip));
       expect(await auth.authenticate(token)).not.toBeNull();

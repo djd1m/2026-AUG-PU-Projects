@@ -4,6 +4,8 @@ export default defineConfig({
   resolve: { alias: {
     '@clipmaker/shared/config': path.resolve('packages/shared/src/config.ts'),
     '@clipmaker/shared/enums': path.resolve('packages/shared/src/enums.ts'),
+    '@clipmaker/shared/upload': path.resolve('packages/shared/src/upload.ts'),
+    '@clipmaker/s3': path.resolve('packages/s3/src/index.ts'),
     '@clipmaker/db': path.resolve('packages/db/src/index.ts'),
   } },
   test: { include: ['tests/**/*.test.ts'], testTimeout: 15000, hookTimeout: 15000,

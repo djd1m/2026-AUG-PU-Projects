@@ -29,11 +29,12 @@ describe('Проверяемость проброса окружения', () =>
         cpSync(folder, path.join(dir, folder), { recursive: true });
       }
       cpSync('packages/db/src', path.join(dir, 'packages/db/src'), { recursive: true });
+      cpSync('packages/s3/src', path.join(dir, 'packages/s3/src'), { recursive: true });
       const file = path.join(dir, 'packages/shared/src/config.ts');
       const source = readFileSync(file, 'utf8');
-      writeFileSync(file, source.replace('const limits = loadLimits(env);', "required(env, 'S3_ENDPOINT', 'storage unavailable'); const limits = loadLimits(env);"));
-      expect(checkWiring(compose(), dir)).toContain('web environment.ts: S3_ENDPOINT');
-      expect(checkWiring(compose(), dir)).toContain('web: S3_ENDPOINT');
+      writeFileSync(file, source.replace('const limits = loadLimits(env);', "required(env, 'N5_TEST_UNWIRED', 'storage unavailable'); const limits = loadLimits(env);"));
+      expect(checkWiring(compose(), dir)).toContain('web environment.ts: N5_TEST_UNWIRED');
+      expect(checkWiring(compose(), dir)).toContain('web: N5_TEST_UNWIRED');
       writeFileSync(file, source);
       expect(checkWiring(compose(), dir)).toEqual([]);
     } finally { rmSync(dir, { recursive: true, force: true }); }

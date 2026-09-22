@@ -70,7 +70,7 @@ export function loadWebConfig(env: Environment) {
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодно: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, trustedProxyHops: loadTrustedProxyHops(env) });
+  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, s3: loadS3Config(env), trustedProxyHops: loadTrustedProxyHops(env) });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.
@@ -80,3 +80,21 @@ export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environ
     ? Object.freeze({ ...connections, publicOrigin: loadPublicOrigin(env), role })
     : Object.freeze({ ...connections, limits: loadLimits(env), role });
 }
+
+export function loadS3Config(env: Environment) {
+  const endpoint = url(env, 'S3_ENDPOINT', ['http:', 'https:'], 'прямые загрузки недоступны');
+  const parsed = new URL(endpoint);
+  if (parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/') {
+    throw new Error('S3_ENDPOINT непригодно: нужен origin хранилища без пути и учётных данных');
+  }
+  const forcePathStyle = required(env, 'S3_FORCE_PATH_STYLE', 'не определён способ адресации бакета');
+  if (!['true', 'false'].includes(forcePathStyle)) throw new Error('S3_FORCE_PATH_STYLE непригодно: нужно true или false');
+  return Object.freeze({ endpoint,
+    region: required(env, 'S3_REGION', 'невозможно подписать загрузку'),
+    bucket: required(env, 'S3_BUCKET', 'не определено хранилище файлов'),
+    accessKeyId: required(env, 'S3_ACCESS_KEY', 'невозможно подписать загрузку'),
+    secretAccessKey: required(env, 'S3_SECRET_KEY', 'невозможно подписать загрузку'),
+    forcePathStyle: forcePathStyle === 'true',
+  });
+}
+export type S3Config = ReturnType<typeof loadS3Config>;

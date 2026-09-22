@@ -1,6 +1,12 @@
 // Явное чтение делает проброс окружения проверяемым по графу импортов сервиса.
 export function readEnvironment() {
   return {
+    S3_ENDPOINT: process.env.S3_ENDPOINT,
+    S3_REGION: process.env.S3_REGION,
+    S3_BUCKET: process.env.S3_BUCKET,
+    S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+    S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+    S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE,
     NODE_ENV: process.env.NODE_ENV,
     N5_TRUSTED_PROXY_HOPS: process.env.N5_TRUSTED_PROXY_HOPS,
     N5_LIMIT_USER_MINUTES: process.env.N5_LIMIT_USER_MINUTES,

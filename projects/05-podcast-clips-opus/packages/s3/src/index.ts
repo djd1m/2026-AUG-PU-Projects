@@ -1,2 +1,4 @@
-// Адаптер S3 появится в upload-and-quota; сетевых вызовов в foundation нет.
-export {};
+export * from './client.js';
+export * from './presign.js';
+export * from './multipart.js';
+export * from './operations.js';
