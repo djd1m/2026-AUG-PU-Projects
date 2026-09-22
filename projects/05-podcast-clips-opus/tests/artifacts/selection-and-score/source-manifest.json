@@ -1,0 +1,28 @@
+{
+  "baseline": "5243717b3ac42e661ebed06035373dc53c4e19c0",
+  "revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+  "files": {
+    ".env.example": "c63b45cd8318808166b665164c0e84e11f41c375b7aa8869fe18c4c4b7b5f72d",
+    "apps/worker/src/llm/fake.ts": "0fef0ff1fd6eb0e34ad12b40e33b79821fc6a4a25401aee4b0f8915a004d084d",
+    "apps/worker/src/llm/prompts/selection.ts": "8b421b34288bf2edf669ae403287c0720f97e578d4a0c7675f7fa765d61ce554",
+    "apps/worker/src/llm/provider.ts": "f2506d124cce9774d34f55de68a43b6a6721ae40d823a43bc3517ce7d2da5134",
+    "apps/worker/src/llm/spend.ts": "5ecfb176c7a2bbd51bd9a69b922c2ca23d8545c4e579ef3950e48a17ef247f71",
+    "apps/worker/src/runtime.ts": "5f52c0a387a154ea7a8c10bebecada5a01857db497b037e2c4f0025349067c1f",
+    "apps/worker/src/workers/select.ts": "3850194c5a6afce857a600e60cbdbea499b76563d8bbce52d70d77f588adb0ee",
+    "apps/worker/workers/select.ts": "c9e8c62a1722f80742140557eb29b5cde6e9da3a4f82c30fd864b841ddf98047",
+    "docker-compose.yml": "f9e1117a404d60418334e8d20f659094d18ab49b74f93413e4958d93ed51ceaa",
+    "packages/db/migrations/007_selection.sql": "4bb5a2664300596c029965c79d001255503687358e52160206bdcf7fda2f3d91",
+    "packages/db/src/index.ts": "331436c715d842d227303f015d5f59b041163ec4d163d289c1da71e7f14eda37",
+    "packages/db/src/selection.ts": "d074f4e93d7642b12c7fadd4e7ecb8f610e49d796617f441a3df7a5312658ba1",
+    "packages/shared/src/config.ts": "47bae3149b6f1872a96c8b7ec868487b82f36e0b452b3ac7688b093f7505179e",
+    "packages/shared/src/fragments-schema.json": "d615589f2896b65aaac45fb043c8fdc16e83afec8ff99c9dd151d38af6f777a9",
+    "packages/shared/src/fragments.ts": "5f686d929b607949917ace841eba860d46d12bc59d36c67ea3c877610c9f0e80",
+    "scripts/generate-selection-migration.mjs": "59c5e4130afd0044ea0d474e0ff4d36ed972616624a8a285e74cd3898869fc56",
+    "scripts/test-selection-mutations.mjs": "867cca4a779c53bf47f3ec0694ff4820651c1f065f728e58994247a0163b0d4a",
+    "tests/fixtures/environment.ts": "3124f5ec8039733ec7d7ee3e5134a2f1dffbbb2e9b9a41239b61ce5f80b1f1c0",
+    "tests/selection-order.test.ts": "01c7f89dfecea2aa63cb74c4c6641142cfa7271a6c3b2048cfa6666ab3ad1461",
+    "tests/selection.integration.test.ts": "ae1b459df5b7e7ae7c3a6dcdabaddd4234ee8d2b4c395fbb85642de38d97cf03",
+    "tests/selection.test.ts": "e1ccc0b4b0669b6f7a5cfdf9c2e78777a35d56526ef142aae8fbdd5b4b148a23",
+    "vitest.config.ts": "e43631532bf7dbe882cb776965d894ed0b52a5bf554f12fd83a79f691ff5a6b5"
+  }
+}

@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { Worker, DelayedError, type Job } from 'bullmq';
 import { createPool, type Attempt } from '@clipmaker/db';
 import { createS3Client } from '@clipmaker/s3';
-import { loadWorkerConfig, loadS3Config, loadSttConfig, required, type Environment, type ServiceRole } from '@clipmaker/shared/config';
+import { loadWorkerConfig, loadS3Config, loadSttConfig, loadLlmConfig, required, type Environment, type ServiceRole } from '@clipmaker/shared/config';
 import { createQueues, getRedisConnection, DEFER_DELAY_MS, type AttemptJob } from '@clipmaker/queue';
 import { checkFfprobe } from './media/probe.js';
 import { s3Download } from './media/download.js';
@@ -11,6 +11,9 @@ import { probeSource, transcribeSource } from './workers/stt.js';
 import { checkFfmpeg } from './stt/extract.js';
 import { createTranscriber } from './stt/client.js';
 import { retryProbe } from './retry.js';
+import { createSelector } from './llm/provider.js';
+import { createFakeSelector } from './llm/fake.js';
+import { selectFragments } from './workers/select.js';
 export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Environment) {
   const config = loadWorkerConfig(role, env);
   const connection = getRedisConnection(config);
@@ -18,6 +21,9 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
   const directory = role === 'worker-stt' ? required(env, 'N5_WORK_DIR', 'негде проверять оригинал') : null;
   const s3Config = role === 'worker-stt' ? loadS3Config(env) : null;
   const transcriber = role === 'worker-stt' ? createTranscriber(loadSttConfig(env)) : null;
+  const llmConfig = role === 'worker-llm' ? loadLlmConfig(env) : null;
+  const llmDirectory = role === 'worker-llm' ? required(env, 'N5_WORK_DIR', 'негде учитывать попытки модели') : null;
+  if (llmDirectory) await mkdir(llmDirectory, { recursive: true });
   if (directory) { await checkFfprobe(); await checkFfmpeg(); await mkdir(directory, { recursive: true }); }
   const pool = createPool(config.databaseUrl);
   pool.on('error', () => console.error('Воркер: соединение БД потеряно'));
@@ -51,8 +57,18 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
         throw new DelayedError();
       }
     }, { connection, concurrency: 2, maxStalledCount: 1 });
+  } else if (role === 'worker-llm' && llmConfig && llmDirectory && 'limits' in config) {
+    const selector = llmConfig.mode === 'fake' ? createFakeSelector() : createSelector(llmConfig);
+    worker = new Worker<AttemptJob>('select', async (job: Job<AttemptJob>) => {
+      const row = await pool.query<Attempt>('SELECT * FROM job_attempt WHERE video_id=$1 AND fence=$2 AND stage=$3',
+        [job.data.video_id, job.data.fence, 'select']);
+      const attempt = row.rows[0];
+      if (!attempt) throw new Error('Попытка отсутствует в БД');
+      await selectFragments(attempt, { pool, limits: config.limits, selector, model: llmConfig.model,
+        spendPath: join(llmDirectory, 'model-spend.jsonl'), enqueue: transport.enqueue });
+    }, { connection, concurrency: 2, maxStalledCount: 1 });
   } else {
-    // Consumers for features 5/6 are constructed paused and cannot discard pending work.
+    // Feature 6 consumer remains paused and cannot discard pending render work.
     const unavailable = async () => { throw new Error('Обработчик стадии ещё не установлен'); };
     worker = role === 'worker-video'
       ? new Worker<AttemptJob>('render', unavailable, { connection, concurrency: 1, autorun: false, maxStalledCount: 1 })

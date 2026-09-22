@@ -107,3 +107,13 @@ export function loadSttConfig(env: Environment) {
     apiKey: mode === 'live' ? required(env, 'OPENROUTER_API_KEY', 'транскрипция невозможна') : null });
 }
 export type SttConfig = ReturnType<typeof loadSttConfig>;
+
+export function loadLlmConfig(env: Environment) {
+  const mode = required(env, 'N5_MODEL_PROVIDER', 'режим поставщика LLM не определён');
+  if (mode !== 'live' && mode !== 'fake') throw new Error('N5_MODEL_PROVIDER: нужно live или fake');
+  if (mode === 'fake' && env.NODE_ENV !== 'test') throw new Error('Фейк LLM разрешён только в тестах');
+  const model = required(env, 'N5_LLM_MODEL', 'модель выделения не определена');
+  if (model !== 'anthropic/claude-sonnet-5' && model !== 'google/gemini-3.8-flash') throw new Error('N5_LLM_MODEL: неподдерживаемая модель');
+  return Object.freeze({ mode, model, apiKey: mode === 'live' ? required(env, 'OPENROUTER_API_KEY', 'выделение невозможно') : null });
+}
+export type LlmConfig = ReturnType<typeof loadLlmConfig>;

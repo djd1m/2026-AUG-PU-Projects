@@ -1,0 +1,38 @@
+[
+  {
+    "name": "ports",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "env-wiring",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "port-conflicts",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "docker-access",
+    "command": [
+      "docker",
+      "info",
+      "--format",
+      "{{.ServerVersion}}"
+    ],
+    "exit_code": 1
+  }
+]

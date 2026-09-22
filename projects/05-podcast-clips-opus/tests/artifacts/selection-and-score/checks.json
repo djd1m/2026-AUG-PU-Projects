@@ -1,0 +1,31 @@
+[
+  {
+    "name": "tests",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 0,
+    "at": "2026-09-22T16:54:21.698036+00:00"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "at": "2026-09-22T16:53:27.066885+00:00"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "at": "2026-09-22T16:53:46.164764+00:00"
+  }
+]

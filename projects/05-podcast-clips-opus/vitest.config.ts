@@ -6,6 +6,7 @@ export default defineConfig({
     '@clipmaker/shared/enums': path.resolve('packages/shared/src/enums.ts'),
     '@clipmaker/shared/upload': path.resolve('packages/shared/src/upload.ts'),
     '@clipmaker/shared/transcript': path.resolve('packages/shared/src/transcript.ts'),
+    '@clipmaker/shared/fragments': path.resolve('packages/shared/src/fragments.ts'),
     '@clipmaker/s3': path.resolve('packages/s3/src/index.ts'),
     '@clipmaker/queue': path.resolve('packages/queue/src/index.ts'),
     '@clipmaker/db': path.resolve('packages/db/src/index.ts'),

@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260922T164323Z-selection-and-score",
+    "work_unit_id": "selection-and-score",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/selection-and-score/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/selection-and-score/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "5243717b3ac42e661ebed06035373dc53c4e19c0",
+    "current_revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+    "build_revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/selection-and-score/00_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+      "observed_revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "25d7d245cdc7288fe9d8f7b1b6eb95efe37a94b8c5ce9a78fe5d216dc827f354",
+    "scope": [
+      "Selection provider, validation, fenced persistence and paid retries"
+    ],
+    "exclusions": [
+      "render",
+      "screens",
+      "deployment",
+      "live model evaluation"
+    ],
+    "action_limits": [
+      "Only own report in docs; telemetry stored under tests/artifacts per brief; no applied migration edits"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-SELECTION",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": ".reference/jan-clone/apps/worker/workers/llm-analyze-utils.ts"
+          }
+        },
+        "provenance": "bc2e86787ce56d4f33a17de76f4eb717de91fd132b2c763884a7c98529981821",
+        "useful_fragment": "candidate validation and score sorting",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "word boundaries, three components, no padding or per-clip calls"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; comparable runs not analyzed",
+      "scope_revision": "25d7d245cdc7288fe9d8f7b1b6eb95efe37a94b8c5ce9a78fe5d216dc827f354",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "25d7d245cdc7288fe9d8f7b1b6eb95efe37a94b8c5ce9a78fe5d216dc827f354",
+      "tier": "XL",
+      "rationale": "Paid quotas and fencing; detailed coding brief already authorizes implementation",
+      "script": {
+        "input": "packages/shared/src/fragments.ts packages/db/migrations/007_selection.sql apps/worker/src/llm/provider.ts apps/worker/src/workers/select.ts apps/web/src/server/video-retry.ts",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "25d7d245cdc7288fe9d8f7b1b6eb95efe37a94b8c5ce9a78fe5d216dc827f354",
+      "tier": "XL",
+      "rationale": "Paid quotas and fencing; detailed coding brief already authorizes implementation",
+      "script": {
+        "input": "packages/shared/src/fragments.ts packages/db/migrations/007_selection.sql apps/worker/src/llm/provider.ts apps/worker/src/workers/select.ts apps/web/src/server/video-retry.ts",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requested execution of supplied coding brief; no deployment requested",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No deployed E2E: offline unit tests and attempted container integration only; Docker socket denied",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "selection-and-score",
+      "paths": [
+        {
+          "root": "project",
+          "path": ".env.example"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/llm/fake.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/llm/prompts/selection.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/llm/provider.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/llm/spend.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/workers/select.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/workers/select.ts"
+        },
+        {
+          "root": "project",
+          "path": "docker-compose.yml"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/migrations/007_selection.sql"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/selection.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/config.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/fragments-schema.json"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/fragments.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/generate-selection-migration.mjs"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-selection-mutations.mjs"
+        },
+        {
+          "root": "project",
+          "path": "tests/fixtures/environment.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/selection-order.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/selection.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/selection.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "vitest.config.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260922T164323Z-selection-and-score",
+    "work_unit_id": "selection-and-score",
+    "source_revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+    "blockers": [
+      "PostgreSQL/Redis/MinIO integration unavailable",
+      "Required Anthropic review unavailable"
+    ],
+    "approval_ids": [],
+    "next_allowed_step": "Run Docker test profile with --build; obtain Anthropic review; clarify sparse strict-schema representation before product acceptance",
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct coding brief has no native checkpoint"
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "AC-SELECTION",
+      "outcome": "unknown",
+      "command": "docker compose --project-directory . --profile test run --rm --build test",
+      "exit_code": 1,
+      "source_revision": "dirty-sha256:064ec97c10a8aaff18e68afdb818b191c4704fc7bff07d8c2c341f2bd83d6c72",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

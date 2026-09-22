@@ -1,0 +1,25 @@
+{
+  "type": "object", "additionalProperties": false, "required": ["fragments"],
+  "properties": {
+    "fragments": {
+      "type": "array", "minItems": 3, "maxItems": 8,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["start_seconds", "end_seconds", "title", "score", "score_hook", "score_completeness", "score_length", "explain_hook", "explain_completeness", "explain_length"],
+        "properties": {
+          "start_seconds": { "type": "number", "minimum": 0 },
+          "end_seconds": { "type": "number", "minimum": 0 },
+          "title": { "type": "string", "minLength": 1 },
+          "score": { "type": "integer", "minimum": 0, "maximum": 99 },
+          "score_hook": { "type": "integer", "minimum": 0, "maximum": 33 },
+          "score_completeness": { "type": "integer", "minimum": 0, "maximum": 33 },
+          "score_length": { "type": "integer", "minimum": 0, "maximum": 33 },
+          "explain_hook": { "type": "string", "minLength": 1, "pattern": "[А-Яа-яЁё]" },
+          "explain_completeness": { "type": "string", "minLength": 1, "pattern": "[А-Яа-яЁё]" },
+          "explain_length": { "type": "string", "minLength": 1, "pattern": "[А-Яа-яЁё]" }
+        }
+      }
+    }
+  },
+  "$defs": { "duration": { "type": "number", "minimum": 20, "maximum": 75 } }
+}

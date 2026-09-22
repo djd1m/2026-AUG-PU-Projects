@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "--project-directory",
+    ".",
+    "--profile",
+    "test",
+    "run",
+    "--rm",
+    "--build",
+    "test"
+  ],
+  "exit_code": 1,
+  "preflight": "blocked: Docker daemon socket denied; no E2E claim"
+}

@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/selection.test.ts (18 tests) 59ms
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > Redis publish failure preserves successful commit for watchdog
+Рендер сохранён; сторож восстановит доставку задания
+
+ ✓ tests/selection-order.test.ts (7 tests) 18ms
+
+ Test Files  2 passed (2)
+      Tests  25 passed (25)
+   Start at  16:50:37
+   Duration  959ms (transform 265ms, setup 0ms, collect 346ms, tests 77ms, environment 0ms, prepare 191ms)
+

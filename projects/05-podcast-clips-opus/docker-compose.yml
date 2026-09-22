@@ -79,7 +79,12 @@ services:
     command: ["node", "dist/apps/worker/workers/select.js"]
     environment:
       <<: [*app-env, *quota-env]
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?ключ Anthropic не задан — выделение фрагментов невозможно}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — выделение фрагментов невозможно}
+      N5_MODEL_PROVIDER: live
+      N5_LLM_MODEL: ${N5_LLM_MODEL:?модель выделения не задана}
+      N5_WORK_DIR: /work
+    volumes:
+      - llm-work:/work
     depends_on:
       db:
         condition: service_healthy
@@ -201,4 +206,5 @@ volumes:
   caddydata:
   miniodata:
   stt-work:
+  llm-work:
   render-work:
