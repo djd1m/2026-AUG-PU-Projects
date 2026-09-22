@@ -1,7 +1,7 @@
 import type { Pool } from '@clipmaker/db';
 import { FILE_FAILURES } from '@clipmaker/db';
 import type { VideoStatus, VideoFailureReason, ClipStatus } from '@clipmaker/shared/enums';
-import { quotaResetAt } from '@clipmaker/shared/upload';
+import { moscowDay, quotaResetAt } from '@clipmaker/shared/upload';
 import { failureMessages, scoreSchema, type VideoScreen, type ClipScreen } from '../lib/screen-contract';
 import { UploadError } from './upload-contract';
 import { assertRetryable } from './video-retry';
@@ -60,11 +60,11 @@ export class ScreenService {
     return { clips: rows.map(row => presentClip(row, video, this.clock())) };
   }
   async markDownloaded(account: string, id: string) {
-    const result = await this.pool.query(`INSERT INTO growth_event (type, account_id, clip_id)
-      SELECT 'download',$1,c.id FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
+    const result = await this.pool.query(`INSERT INTO growth_event (type, account_id, clip_id, day)
+      SELECT 'download',$1,c.id,$3::date FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       WHERE c.id=$2 AND v.account_id=$1 AND a.status='active' AND v.deleted_at IS NULL
       AND c.status='done' AND c.object_key IS NOT NULL AND (c.expires_at IS NULL OR c.expires_at>now())
-      AND (a.plan='paid' OR v.finished_at IS NULL OR v.finished_at + interval '72 hours'>now()) RETURNING id`, [account, id]);
+      AND (a.plan='paid' OR v.finished_at IS NULL OR v.finished_at + interval '72 hours'>now()) RETURNING id`, [account, id, moscowDay(this.clock())]);
     if (!result.rowCount) throw notFound();
     return { recorded: true };
   }

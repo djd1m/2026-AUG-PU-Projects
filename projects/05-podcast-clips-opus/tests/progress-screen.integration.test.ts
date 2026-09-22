@@ -45,11 +45,15 @@ describe.skipIf(!dbUrl)('PostgreSQL: экраны и доступ к клипа�
     expect(sign).toHaveBeenCalledTimes(1);
   });
   it('download event только для своего готового клипа, удалённое видео скрыто', async () => {
-    const screen = new ScreenService(pool);
+    let now = new Date('2026-09-22T20:59:59.999Z');
+    const screen = new ScreenService(pool, () => now);
+    await screen.markDownloaded(owner, ready);
+    now = new Date('2026-09-22T21:00:00.000Z');
     await screen.markDownloaded(owner, ready);
     await expect(screen.markDownloaded(stranger, ready)).rejects.toMatchObject({ status: 404 });
     await expect(screen.markDownloaded(owner, unfinished)).rejects.toMatchObject({ status: 404 });
-    expect((await pool.query('SELECT * FROM growth_event WHERE clip_id=$1', [ready])).rowCount).toBe(1);
+    expect((await pool.query('SELECT day::text FROM growth_event WHERE clip_id=$1 ORDER BY day', [ready])).rows)
+      .toEqual([{ day: '2026-09-22' }, { day: '2026-09-23' }]);
     await pool.query('UPDATE video SET deleted_at=now() WHERE id=$1', [video]);
     await expect(screen.get(owner, video)).rejects.toMatchObject({ status: 404 });
     expect((await screen.list(owner, {})).videos).toHaveLength(0);

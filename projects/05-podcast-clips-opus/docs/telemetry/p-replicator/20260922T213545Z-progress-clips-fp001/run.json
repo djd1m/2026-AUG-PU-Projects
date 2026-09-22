@@ -1,0 +1,120 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922T213545Z-progress-clips-fp001",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "progress-and-clips-screen/fix-round-2",
+  "pipeline": "brief-fix",
+  "tier": "S",
+  "risk_flags": [],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Single existing Codex executor; Anthropic review unavailable in this host."
+  ],
+  "comparison_id": null,
+  "baseline_revision": "2d5abc774e4b6baf939d5c2438c48fe44032cb40",
+  "final_revision": {
+    "base_commit": "2d5abc774e4b6baf939d5c2438c48fe44032cb40",
+    "source_manifest_sha256": "b10f989c3a0869b98ab6d2de83eef12ba79f2bbb6c5d284c5a88ed82d80a63e4",
+    "diff_sha256": "70cdd599eb42abcea4d58ef2f183b1505360aa56f2f514058d3d287a7dddde45",
+    "untracked_source_sha256": {
+      "tests/growth-day.test.ts": "70213336bec94282064508864da10d373d279aeb57baa5aed8362e083469b5dd"
+    }
+  },
+  "spec_sha256": "e3a2ed3d446050c6b2a15a5dd2c79bf719e6c9ad3245bcc33bb106799c6a09eb",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-22T21:35:45.621035+00:00",
+  "ended_at": "2026-09-22T21:40:27.419678+00:00",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "../../../features/progress-and-clips-screen/10_fix_report.md",
+    "evidence/source-manifest.json",
+    "evidence/mutation-red.log",
+    "evidence/mutation-green.log",
+    "evidence/build.log",
+    "evidence/lint.log",
+    "evidence/typecheck.log",
+    "evidence/test.log"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 4,
+    "ac_total": 4,
+    "confirmed_findings_by_severity": {
+      "blocker": 1
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "tests_passed": 228,
+    "tests_skipped": 89,
+    "acceptance_scope": "Local fix brief only; Docker integration owner and independent Anthropic review remain pending."
+  },
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "total_elapsed_seconds": null,
+    "measured_elapsed_seconds": 281.799
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading/search preceded this record; its elapsed duration is unavailable, not reconstructed.",
+    "Exact model ID, effort, usage, billing and host version not exposed in execution metadata.",
+    "Cross-family Anthropic review and Docker integration run unavailable; integration is explicitly assigned to owner by brief.",
+    "No regression follow-up or false-positive review population available."
+  ],
+  "model": {
+    "actual_family": "GPT-6 (developer context)",
+    "actual_model": null,
+    "actual_effort": null
+  },
+  "work_record": {
+    "scope": "FP-001: day on all growth_event inserts, existing moscowDay, source guard and mutation, required local gates, report",
+    "exclusions": [
+      "Docker integration and E2E owned by integration owner",
+      "Schema/index changes",
+      "Deployment"
+    ],
+    "acceptance_criteria": [
+      "All production inserts provide Moscow day through existing moscowDay",
+      "Source guard scans insertion sites and mutation demonstrably fails",
+      "build, lint, typecheck, npm test pass",
+      "Report includes insertion count, red/green evidence and terminal status"
+    ],
+    "requirements": "docs/features/progress-and-clips-screen/09_fix_brief_codex.md",
+    "architecture": "docs/Architecture.md:121",
+    "donor": {
+      "path": "packages/shared/src/upload.ts",
+      "fragment": "moscowDay",
+      "decision": "use",
+      "reason": "Existing canonical Moscow date helper"
+    },
+    "route_plan": {
+      "tier": "S",
+      "mechanical_exit_code": 0,
+      "rationale": "Bounded correction, no schema or invariant change"
+    },
+    "route_implementation": {
+      "tier": "S",
+      "rationale": "Scope unchanged after full insertion inventory"
+    },
+    "approval": {
+      "requirement": "not_required",
+      "reason": "User explicitly requested execution of the fix brief"
+    },
+    "preflight": {
+      "status": "not_applicable",
+      "reason": "No E2E; Docker explicitly assigned to integration owner"
+    },
+    "review": {
+      "status": "unavailable",
+      "reason": "Host has no Anthropic executor; local gates are not cross-family review"
+    }
+  }
+}
