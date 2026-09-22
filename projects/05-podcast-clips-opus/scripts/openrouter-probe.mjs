@@ -102,7 +102,8 @@ async function probeStt() {
     console.log(`\n[A2] ${model} @ ${provider}, verbose_json + timestamp_granularities:["word"]`);
     const r = await call('/audio/transcriptions', {
       model,
-      audio: audioB64,
+      // Поле — ОБЪЕКТ input_audio, а не строка audio: установлено ответом 400, не документацией.
+      input_audio: { data: audioB64, format: process.env.N5_PROBE_FORMAT ?? 'mp3' },
       response_format: 'verbose_json',
       timestamp_granularities: ['word'],
       language: 'ru',
