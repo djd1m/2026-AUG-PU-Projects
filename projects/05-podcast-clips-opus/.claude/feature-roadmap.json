@@ -259,7 +259,7 @@
       "title": "Короткая ссылка /c/{code} и счётчик уникальных переходов",
       "description": "CreateClipLink — код ≥ 128 бит, UNIQUE, создаётся ДО постановки рендера (метка обязана нести код ЭТОГО клипа); GET /c/{code} — SSR-лендинг продукта с призывом, а НЕ файл клипа, работает в WebView площадок без JS-зависимостей, Cache-Control: no-store; RecordLinkView — установка cookie атрибуции, вставка growth_event(link_view) и обновление clip_link.unique_view_count в ОДНОЙ транзакции, уникальность за сутки на ip_prefix обеспечивает частичный UNIQUE в базе, самопереходы владельца не считаются.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "medium",
       "depends_on": [
         "render-and-watermark"
