@@ -1,0 +1,35 @@
+
+> n5-clipmaker@0.1.0 typecheck
+> npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json
+
+
+> @clipmaker/web@0.1.0 typecheck
+> tsc --noEmit
+
+src/server/upload-runtime.ts(17,120): error TS2345: Argument of type 'number | number[]' is not assignable to parameter of type 'number'.
+  Type 'number[]' is not assignable to type 'number'.
+src/server/upload-runtime.ts(18,27): error TS2339: Property 'listUploadedParts' does not exist on type 'typeof import("/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/packages/s3/dist/index")'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web
+npm error workspace @clipmaker/web@0.1.0
+npm error location /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web
+npm error command failed
+npm error command sh -c tsc --noEmit
+
+
+> @clipmaker/worker@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/db@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/s3@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/shared@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+

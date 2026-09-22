@@ -1,0 +1,6 @@
+clean: quota SQL uses two statements: exit 0
+mutant: quota SQL uses two statements: exit 1
+clean: upload quota precedes initiation: exit 0
+mutant: upload quota precedes initiation: exit 1
+clean: refund only for file properties: exit 0
+mutant: refund only for file properties: exit 1

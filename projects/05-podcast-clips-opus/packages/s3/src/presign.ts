@@ -4,10 +4,11 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { PRESIGNED_SECONDS } from '@clipmaker/shared/upload';
 import type { StorageContext } from './client.js';
 export interface SignedPart { part_number: number; url: string; expires_at: string }
-export async function signParts(ctx: StorageContext, key: string, uploadId: string, count: number, now: Date): Promise<SignedPart[]> {
-  return Promise.all(Array.from({ length: count }, async (_, i) => ({ part_number: i + 1,
+export async function signParts(ctx: StorageContext, key: string, uploadId: string, count: number | number[], now: Date): Promise<SignedPart[]> {
+  const numbers = typeof count === 'number' ? Array.from({ length: count }, (_, i) => i + 1) : count;
+  return Promise.all(numbers.map(async (part_number) => ({ part_number,
     url: await getSignedUrl(ctx.client, new UploadPartCommand({ Bucket: ctx.bucket, Key: key,
-      UploadId: uploadId, PartNumber: i + 1 }), { expiresIn: PRESIGNED_SECONDS, signingDate: now }),
+      UploadId: uploadId, PartNumber: part_number }), { expiresIn: PRESIGNED_SECONDS, signingDate: now }),
     expires_at: new Date(now.getTime() + PRESIGNED_SECONDS * 1000).toISOString(),
   })));
 }

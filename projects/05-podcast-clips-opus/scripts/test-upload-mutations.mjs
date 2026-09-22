@@ -29,8 +29,8 @@ try {
       WHERE quota_counter.used+$4<=$5 RETURNING used\`, args);`);
   const quotaBlock = video.match(/        const quota = await checkAndConsumeQuota[\s\S]*?        }\n/)?.[0];
   if (!quotaBlock) throw new Error('Блок квоты не найден');
-  const orderMutant = video.replace(quotaBlock, '').replace('        initiated = { key: objectKey, id: uploadId };',
-    '        initiated = { key: objectKey, id: uploadId };\n' + quotaBlock);
+  const orderMutant = video.replace(quotaBlock, '').replace('      const uploadId = await this.storage.initiate(objectKey);',
+    '      const uploadId = await this.storage.initiate(objectKey);\n' + quotaBlock);
   const refundMutant = quota.replace("'too_long', 'probe_timeout'];", "'too_long', 'probe_timeout', 'refused_user_minutes'];");
   for (const [name, file, original, mutant] of [
     ['quota SQL uses two statements', quotaPath, quota, sqlMutant],
@@ -45,6 +45,6 @@ try {
 } catch (error) { console.error(error.message); process.exitCode = 1; }
 finally {
   fs.mkdirSync('tests/artifacts', { recursive: true });
-  fs.writeFileSync('tests/artifacts/upload-mutations.json', JSON.stringify(receipt, null, 2));
+  fs.writeFileSync(process.env.N5_MUTATION_RECEIPT ?? 'tests/artifacts/upload-mutations.json', JSON.stringify(receipt, null, 2));
   fs.rmSync(root, { recursive: true, force: true });
 }

@@ -1,0 +1,91 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/upload-fix.test.ts (4 tests | 4 failed) 67ms
+   × RU-001: Complete has a minutes-scale command timeout, HEAD stays short 19ms
+     → expected undefined to be 300000 // Object.is equality
+   × RU-003: three PUTs run concurrently and completed parts are preserved 38ms
+     → expected 1 to be 3 // Object.is equality
+   × RU-003: expired signatures refresh without re-uploading confirmed parts 2ms
+     → Срок ссылки истёк. Возобновите загрузку
+   × RU-006: saturated anonymous prefix and account do not block another account behind NAT 7ms
+     → expected [] to have a length of 30 but got +0
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+AssertionError: expected undefined to be 300000 // Object.is equality
+
+- Expected: 
+300000
+
++ Received: 
+undefined
+
+ ❯ tests/upload-fix.test.ts:17:51
+     15|   await completeMultipartUpload(ctx, 'key', 'id', [{ part_number: 1, e…
+     16|   await headObject(ctx, 'key');
+     17|   expect(send.mock.calls[1]?.[1]?.requestTimeout).toBe(300_000);
+       |                                                   ^
+     18|   expect(send.mock.calls[2]?.[1]?.requestTimeout).toBe(5000);
+     19|   ctx.client.destroy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-003: three PUTs run concurrently and completed parts are preserved
+AssertionError: expected 1 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 1
+
+ ❯ tests/upload-fix.test.ts:32:16
+     30|   const parts = [2, 3, 4].map((part_number) => ({ part_number, url: `h…
+     31|   const result = await uploadParts(new Blob(['1234']), { part_size: 1,…
+     32|   expect(peak).toBe(3);
+       |                ^
+     33|   expect(result).toEqual([{ part_number: 1, etag: 'old' }, ...[2, 3, 4…
+     34| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-003: expired signatures refresh without re-uploading confirmed parts
+Error: Срок ссылки истёк. Возобновите загрузку
+ ❯ uploadParts apps/web/src/lib/upload-parts.ts:8:58
+      6|   const completed = [];
+      7|   for (const part of upload.parts) {
+      8|     if (Date.parse(part.expires_at) <= Date.now()) throw new Error('Ср…
+       |                                                          ^
+      9|     const start = (part.part_number - 1) * upload.part_size;
+     10|     const body = file.slice(start, Math.min(file.size, start + upload.…
+ ❯ tests/upload-fix.test.ts:41:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-006: saturated anonymous prefix and account do not block another account behind NAT
+AssertionError: expected [] to have a length of 30 but got +0
+
+- Expected
++ Received
+
+- 30
++ 0
+
+ ❯ tests/upload-fix.test.ts:54:35
+     52|   await Promise.all(Array.from({ length: 30 }, () => allowMutation(red…
+     53|   const answers = await Promise.all(Array.from({ length: 31 }, () => a…
+     54|   expect(answers.filter(Boolean)).toHaveLength(30);
+       |                                   ^
+     55|   expect(await allowMutation(redis, '192.0.2.2', 'secret', 'account-b'…
+     56|   expect(await allowMutation(redis, '198.51.100.1', 'secret', 'account…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  11:09:38
+   Duration  881ms (transform 201ms, setup 0ms, collect 483ms, tests 67ms, environment 1ms, prepare 135ms)
+

@@ -23,13 +23,15 @@ export interface HandlerDependencies {
   auth: AuthService;
   publicOrigin: string;
   trustedProxyHops: number;
-  allowMutation: (ip: string) => Promise<boolean>;
+  allowMutation: (ip: string, account?: string) => Promise<boolean>;
 }
 export function createAuthHandler(action: 'login' | 'register' | 'logout', deps: HandlerDependencies) {
   return async (request: Request): Promise<Response> => {
     try {
       const ip = clientIp(request.headers, deps.trustedProxyHops);
-      if (!await deps.allowMutation(ip)) return json({ error: 'Слишком много запросов. Повторите через минуту' }, 429);
+      const logoutToken = action === 'logout' ? readSessionCookie(request) : null;
+      const session = logoutToken ? await deps.auth.authenticate(logoutToken) : null;
+      if (!await deps.allowMutation(ip, session?.account_id)) return json({ error: 'Слишком много запросов. Повторите через минуту' }, 429);
       const origin = request.headers.get('origin');
       if (origin && origin !== new URL(deps.publicOrigin).origin) return json({ error: 'Источник запроса не разрешён' }, 403);
       if (action === 'logout') {

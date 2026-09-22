@@ -1,0 +1,35 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/upload-fix.test.ts (7 tests | 1 failed) 15083ms
+   ✓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short 20ms
+   ✓ RU-003: three PUTs run concurrently and completed parts are preserved 21ms
+   ✓ RU-003: expired signatures refresh without re-uploading confirmed parts 6ms
+   ✓ RU-006: saturated anonymous prefix and account do not block another account behind NAT 5ms
+   ✓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle 5ms
+   ✓ RU-003: persistent 403 has a bounded retry and abort does not refresh 10ms
+   × RU-001: deadline covers a stalled Complete body after HTTP 200 headers 15012ms
+     → Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/upload-fix.test.ts:87:1
+     85| });
+     86| 
+     87| it('RU-001: deadline covers a stalled Complete body after HTTP 200 hea…
+       | ^
+     88|   const { Readable } = await import('node:stream');
+     89|   const ctx = { client: createS3Client(loadS3Config(environment())), b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  11:22:04
+   Duration  18.80s (transform 2.57s, setup 0ms, collect 2.94s, tests 15.08s, environment 0ms, prepare 395ms)
+

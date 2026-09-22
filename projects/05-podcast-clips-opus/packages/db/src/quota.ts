@@ -43,9 +43,15 @@ export const FILE_FAILURES: readonly VideoFailureReason[] = ['too_large', 'not_m
 export async function refundUploadSlot(tx: PoolClient, limits: Limits, account: string,
   uploadDay: string, reason: VideoFailureReason, now: Date): Promise<boolean> {
   if (!FILE_FAILURES.includes(reason)) return false;
-  const allowance = await checkAndConsumeQuota(tx, limits, account, 'upload_refund', 1, now);
-  if (!allowance.granted) return false;
+  // Обе стороны возврата относятся к дню создания загрузки, не к дню отказа.
+  const chargedAt = new Date(`${uploadDay}T00:00:00+03:00`);
+  if (moscowDay(chargedAt) !== uploadDay || uploadDay > moscowDay(now)) throw new Error('Непригодный день загрузки');
+  await tx.query('SAVEPOINT upload_refund');
+  const allowance = await checkAndConsumeQuota(tx, limits, account, 'upload_refund', 1, chargedAt);
+  if (!allowance.granted) { await tx.query('RELEASE SAVEPOINT upload_refund'); return false; }
   const result = await tx.query(`UPDATE quota_counter SET used = used - 1
     WHERE scope = 'user_uploads' AND scope_key = $1 AND day = $2 AND used > 0 RETURNING used`, [account, uploadDay]);
+  if (!result.rowCount) await tx.query('ROLLBACK TO SAVEPOINT upload_refund');
+  await tx.query('RELEASE SAVEPOINT upload_refund');
   return Boolean(result.rowCount);
 }

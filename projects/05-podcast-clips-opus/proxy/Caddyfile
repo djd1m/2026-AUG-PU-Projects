@@ -18,7 +18,8 @@
 		# вместе с ним. Найдено запуском стенда 2026-09-22.
 		trusted_proxies 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 127.0.0.0/8
 		transport http {
-			read_timeout 60s
+			# Complete: 5 минут + короткие ListParts/HEAD/Range и фиксация результата.
+			read_timeout 360s
 			write_timeout 60s
 		}
 	}

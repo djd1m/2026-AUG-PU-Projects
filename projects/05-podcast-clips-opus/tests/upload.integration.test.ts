@@ -1,7 +1,7 @@
 import { beforeAll, afterAll, describe, expect, it, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { Pool } from 'pg';
-import { CreateBucketCommand, HeadBucketCommand } from '@aws-sdk/client-s3';
+import { CreateBucketCommand, HeadBucketCommand, PutBucketLifecycleConfigurationCommand } from '@aws-sdk/client-s3';
 import { migrate } from '../packages/db/src/migrate';
 import { transaction, checkAndConsumeQuota, refundUploadSlot } from '../packages/db/src/quota';
 import { loadLimits, loadS3Config } from '../packages/shared/src/config';
@@ -94,9 +94,13 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
       if (!(error instanceof Error && ['NotFound', 'NoSuchBucket'].includes(error.name))) throw error;
       await ctx.client.send(new CreateBucketCommand({ Bucket: ctx.bucket }));
     }
+    await ctx.client.send(new PutBucketLifecycleConfigurationCommand({ Bucket: ctx.bucket, LifecycleConfiguration: {
+      Rules: [{ ID: 'abort-incomplete', Status: 'Enabled', Filter: { Prefix: '' }, AbortIncompleteMultipartUpload: { DaysAfterInitiation: 1 } }],
+    } }));
     storage = {
       initiate: vi.fn(async (key) => { keys.add(key); const id = await s3.initiateMultipartUpload(ctx, key); uploads.push({ key, id }); return id; }),
       sign: (key, id, count, date) => s3.signParts(ctx, key, id, count, date),
+      list: (key, id) => s3.listUploadedParts(ctx, key, id),
       complete: (key, id, parts) => s3.completeMultipartUpload(ctx, key, id, parts),
       head: (key) => s3.headObject(ctx, key), bytes: (key) => s3.getObjectBytes(ctx, key),
       abort: (key, id) => s3.abortMultipartUpload(ctx, key, id), delete: (key) => s3.deleteObject(ctx, key),
@@ -205,11 +209,14 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
     expect((await pool.query('SELECT status FROM video WHERE id=$1', [upload.video_id])).rows[0].status).toBe('queued');
     expect(await service.complete(id, input)).toMatchObject({ status: 'queued' }); expect(await count(id)).toBe(1);
   });
-  it('Отказ подписания откатывает video+quota и abort multipart', async () => {
+  it('Отказ подписания сохраняет upload_id и квоту для повтора без второго initiate', async () => {
     const id = await account(), abort = vi.fn(storage.abort);
     const broken = new VideoService(pool, limits, { ...storage, abort, sign: async () => { throw new Error('sign failure'); } }, queue);
-    await expect(broken.create(id, randomUUID(), body)).rejects.toThrow('sign failure');
-    expect(await count(id)).toBe(0); expect((await pool.query('SELECT id FROM video WHERE account_id=$1', [id])).rowCount).toBe(0);
-    expect(abort).toHaveBeenCalledTimes(1);
+    const key = randomUUID(), before = vi.mocked(storage.initiate).mock.calls.length;
+    await expect(broken.create(id, key, body)).rejects.toThrow('sign failure');
+    expect(await count(id)).toBe(1); expect((await pool.query('SELECT id FROM video WHERE account_id=$1', [id])).rowCount).toBe(1);
+    expect(abort).not.toHaveBeenCalled();
+    await expect(service.create(id, key, body)).resolves.toHaveProperty('upload_id');
+    expect(vi.mocked(storage.initiate).mock.calls.length - before).toBe(1);
   });
 });

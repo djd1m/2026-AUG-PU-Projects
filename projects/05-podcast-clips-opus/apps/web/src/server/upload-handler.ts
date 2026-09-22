@@ -8,11 +8,11 @@ export function uploadJson(body: object, status: number): Response {
 }
 export async function authorizeUpload(request: Request, deps: HandlerDependencies): Promise<string> {
   const ip = clientIp(request.headers, deps.trustedProxyHops);
-  if (!await deps.allowMutation(ip)) throw new UploadError('refused', 'Слишком много запросов. Повторите через минуту', 429);
   const origin = request.headers.get('origin');
   if (origin && origin !== new URL(deps.publicOrigin).origin) throw new UploadError('invalid', 'Источник запроса не разрешён', 403);
   const token = readSessionCookie(request);
   const session = token ? await deps.auth.authenticate(token) : null;
+  if (!await deps.allowMutation(ip, session?.account_id)) throw new UploadError('refused', 'Слишком много запросов. Повторите через минуту', 429);
   if (!session) throw new UploadError('invalid', 'Войдите в аккаунт', 401);
   return session.account_id;
 }

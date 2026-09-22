@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922-upload-fix-round2",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "upload-and-quota",
+  "pipeline": "review-corrections",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Docs allowlist: telemetry in tests/artifacts, report only in docs",
+    "Existing reviewed fix brief authorizes implementation",
+    "Anthropic review unavailable in agent model registry"
+  ],
+  "baseline_revision": "4436e49bc0203c6384af6e782b6117cb410ebf5d",
+  "started_at": "2026-09-22T11:07:17.452714+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_model": null,
+  "requested_model": "gpt-6-astra",
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host does not expose actual model, effort or usage",
+    "Instruction-reading start was not measured; elapsed starts at recording",
+    "Docker socket permission denied"
+  ],
+  "acceptance_evidence": []
+}

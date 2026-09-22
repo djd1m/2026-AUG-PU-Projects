@@ -7,8 +7,9 @@ export function createS3Client(config: S3Config): S3Client {
     forcePathStyle: config.forcePathStyle,
     requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED',
     maxAttempts: 3,
-    // Ограничиваем удержание соединения БД во время операции хранилища.
-    requestHandler: { connectionTimeout: 2000, requestTimeout: 5000, throwOnRequestTimeout: true },
+    // Длительность запроса выбирает команда, а не общий клиент.
+    requestHandler: { connectionTimeout: 2000, throwOnRequestTimeout: true },
   });
 }
 export interface StorageContext { client: S3Client; bucket: string }
+export const FAST_REQUEST_TIMEOUT_MS = 5000;

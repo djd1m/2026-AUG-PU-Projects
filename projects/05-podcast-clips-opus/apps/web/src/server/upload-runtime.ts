@@ -15,6 +15,7 @@ function createUploadRuntime() {
   queue.on('error', () => console.error('Постановка задания недоступна: повторите завершение загрузки'));
   const video = new VideoService(runtime.pool, runtime.config.limits, {
     initiate: (key) => s3.initiateMultipartUpload(ctx, key), sign: (key, id, count, now) => s3.signParts(ctx, key, id, count, now),
+    list: (key, id) => s3.listUploadedParts(ctx, key, id),
     complete: (key, id, parts) => s3.completeMultipartUpload(ctx, key, id, parts),
     abort: (key, id) => s3.abortMultipartUpload(ctx, key, id), head: (key) => s3.headObject(ctx, key),
     bytes: (key) => s3.getObjectBytes(ctx, key, 'bytes=0-4095'), delete: (key) => s3.deleteObject(ctx, key),
@@ -23,7 +24,7 @@ function createUploadRuntime() {
   });
   return { video, auth: runtime.auth, publicOrigin: runtime.config.publicOrigin,
     trustedProxyHops: runtime.config.trustedProxyHops,
-    allowMutation: (ip: string) => allowMutation(runtime.redis, ip, runtime.config.sessionSecret) };
+    allowMutation: (ip: string, account?: string) => allowMutation(runtime.redis, ip, runtime.config.sessionSecret, account) };
 }
 const singleton = globalThis as typeof globalThis & { n5UploadRuntime?: ReturnType<typeof createUploadRuntime> };
 export function getUploadRuntime() { return singleton.n5UploadRuntime ??= createUploadRuntime(); }
