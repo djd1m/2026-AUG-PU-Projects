@@ -1,0 +1,105 @@
+[
+  {
+    "donor": "components/video/video-detail.tsx",
+    "target": "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
+    "donor_exports": [
+      "VideoDetail"
+    ],
+    "target_exports": [
+      "VideoHeader",
+      "ProgressPanel",
+      "VideoDetail"
+    ],
+    "missing": []
+  },
+  {
+    "donor": "components/video/video-header.tsx",
+    "target": "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
+    "donor_exports": [
+      "VideoHeader"
+    ],
+    "target_exports": [
+      "VideoHeader",
+      "ProgressPanel",
+      "VideoDetail"
+    ],
+    "missing": []
+  },
+  {
+    "donor": "components/dashboard/video-list.tsx",
+    "target": "apps/web/src/app/videos/VideoList.tsx",
+    "donor_exports": [
+      "VideoList"
+    ],
+    "target_exports": [
+      "VideoThumbnail",
+      "VideoRow",
+      "VideoList"
+    ],
+    "missing": []
+  },
+  {
+    "donor": "components/dashboard/video-row.tsx",
+    "target": "apps/web/src/app/videos/VideoList.tsx",
+    "donor_exports": [
+      "VideoRow"
+    ],
+    "target_exports": [
+      "VideoThumbnail",
+      "VideoRow",
+      "VideoList"
+    ],
+    "missing": []
+  },
+  {
+    "donor": "components/dashboard/video-thumbnail.tsx",
+    "target": "apps/web/src/app/videos/VideoList.tsx",
+    "donor_exports": [
+      "VideoThumbnail"
+    ],
+    "target_exports": [
+      "VideoThumbnail",
+      "VideoRow",
+      "VideoList"
+    ],
+    "missing": []
+  },
+  {
+    "donor": "components/upload/video-uploader.tsx",
+    "target": "apps/web/src/app/upload/Uploader.tsx",
+    "donor_exports": [
+      "VideoUploader"
+    ],
+    "target_exports": [
+      "VideoUploader"
+    ],
+    "missing": []
+  },
+  {
+    "donor": "lib/hooks/use-clip-download.ts",
+    "target": "apps/web/src/app/clips/useClipDownload.ts",
+    "donor_exports": [
+      "useClipDownload",
+      "useDownloadAll"
+    ],
+    "target_exports": [
+      "startClipDownload",
+      "useClipDownload"
+    ],
+    "missing": [
+      "useDownloadAll"
+    ]
+  },
+  {
+    "donor": "app/api/clips/[clipId]/file/route.ts",
+    "target": "apps/web/src/app/api/clips/[clipId]/file/route.ts",
+    "donor_exports": [
+      "GET"
+    ],
+    "target_exports": [
+      "runtime",
+      "GET"
+    ],
+    "missing": []
+  }
+]

@@ -1,0 +1,424 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260922T210559Z-progress-and-clips-screen-4d93",
+    "work_unit_id": "progress-and-clips-screen",
+    "current_attempt_id": "implement-fix-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/progress-and-clips-screen/telemetry/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/progress-and-clips-screen/telemetry/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3a85ccf1ca2fd2316b49919521ada6ead61e6f73",
+    "current_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+    "build_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/progress-and-clips-screen/00_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "3a85ccf1ca2fd2316b49919521ada6ead61e6f73",
+      "observed_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "Only scoped implementation and tests changed",
+        "decision": "Bind final tests/build to dirty source manifest",
+        "affected_checks": [
+          "test",
+          "build",
+          "typecheck",
+          "lint"
+        ],
+        "rerun": [
+          "test",
+          "build",
+          "typecheck",
+          "lint"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "652910cc67acf28f8a827249a69f50c3979a230085c3d1ca3a6b9dedecd2f8a4",
+    "scope": [
+      "Owner dashboard, upload, progress, clips and authenticated file redirects"
+    ],
+    "exclusions": [
+      "Short links, guest packs, payments, music, CTA, deployment"
+    ],
+    "action_limits": [
+      "No docs writes except code report; telemetry under tests/artifacts",
+      "No .claude or applied migrations changes"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-STATES",
+        "required": true
+      },
+      {
+        "id": "AC-SILENCE",
+        "required": true
+      },
+      {
+        "id": "AC-OWNER",
+        "required": true
+      },
+      {
+        "id": "AC-READY",
+        "required": true
+      },
+      {
+        "id": "AC-SCORE",
+        "required": true
+      },
+      {
+        "id": "AC-MOBILE",
+        "required": true
+      },
+      {
+        "id": "AC-INTEGRATION",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": ".reference/jan-clone/apps/web/components/video/video-detail.tsx"
+          }
+        },
+        "provenance": "129f9631e08cc6893d8ab3e3e8cd80cc4d0040da662baeb0b41b062b32e26ec0",
+        "useful_fragment": "VideoDetail, VideoHeader, VideoList/Row/Thumbnail, VideoUploader, useClipDownload and GET exports; per-export map in report",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Use canonical statuses, procedures and owner session; replace proxy with signed redirect"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; no comparable-run study",
+      "scope_revision": "652910cc67acf28f8a827249a69f50c3979a230085c3d1ca3a6b9dedecd2f8a4",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "652910cc67acf28f8a827249a69f50c3979a230085c3d1ca3a6b9dedecd2f8a4",
+      "tier": "M",
+      "rationale": "Canonical owner-only contracts; fresh SPARC plan and explicit implementation brief; no schema, monetary or legal invariant change",
+      "script": {
+        "input": "apps/web/src/server/screen.ts apps/web/src/app/dashboard/page.tsx apps/web/src/app/dashboard/videos/[videoId]/page.tsx apps/web/src/app/api/clips/[clipId]/file/route.ts",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "652910cc67acf28f8a827249a69f50c3979a230085c3d1ca3a6b9dedecd2f8a4",
+      "tier": "M",
+      "rationale": "Canonical owner-only contracts; fresh SPARC plan and explicit implementation brief; no schema, monetary or legal invariant change",
+      "script": {
+        "input": "apps/web/src/server/screen.ts apps/web/src/app/dashboard/page.tsx apps/web/src/app/dashboard/videos/[videoId]/page.tsx apps/web/src/app/api/clips/[clipId]/file/route.ts",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly instructed execution of concrete coding brief; no deployment requested",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "blocked",
+    "reason": "Docker socket denied, no test services/stand available; Chromium fails before any screen opens. Probe outcomes recorded; not an E2E run.",
+    "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+    "build_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+    "environment": "Restricted local workspace",
+    "environment_available": false,
+    "test_command": "docker compose --project-directory . --profile test run --rm --build test; browser viewport 390x844",
+    "inputs": [
+      {
+        "name": "PostgreSQL16/Redis7/MinIO",
+        "available": false
+      },
+      {
+        "name": "Runnable Chromium",
+        "available": false
+      }
+    ],
+    "expected_effects": [
+      "Isolated test data and local browser screenshots"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/progress-and-clips-screen"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-anthropic-1",
+      "status": "failed",
+      "reason": "90-second timeout, no substantive response"
+    },
+    {
+      "id": "supplemental-review-1",
+      "status": "completed"
+    },
+    {
+      "id": "implement-fix-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "progress-and-clips-screen",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/web/src/app/AuthForm.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/api/clips/[clipId]/file/route.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/api/clips/[clipId]/thumbnail/route.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/api/trpc/[trpc]/route.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/clips/ClipCard.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/clips/useClipDownload.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/dashboard/error.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/dashboard/layout.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/dashboard/page.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/dashboard/videos/[videoId]/not-found.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/dashboard/videos/[videoId]/page.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/globals.css"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/layout.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/page.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/upload/Uploader.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/videos/VideoList.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/videos/[videoId]/VideoDetail.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/lib/rpc.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/lib/screen-contract.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/clip-file.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/page-account.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/rate-limit.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/screen-runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/screen.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/trpc.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/upload-runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/s3/src/presign.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-progress-mutations.mjs"
+        },
+        {
+          "root": "project",
+          "path": "tests/progress-screen.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/progress-screen.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/tsconfig.json"
+        },
+        {
+          "root": "project",
+          "path": "vitest.config.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260922T210559Z-progress-and-clips-screen-4d93",
+    "work_unit_id": "progress-and-clips-screen",
+    "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+    "blockers": [
+      "89 real-service integration tests not executed",
+      "No screen opened in browser; mobile viewport verification pending",
+      "Required Anthropic review timed out"
+    ],
+    "approval_ids": [],
+    "next_allowed_step": "Run --build test profile on PostgreSQL16/Redis7/MinIO; browser UI at 390x844 and desktop; obtain Anthropic review",
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct coding brief has no native checkpoint"
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "AC-STATES",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-SILENCE",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-OWNER",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-READY",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-SCORE",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-MOBILE",
+      "outcome": "unknown",
+      "command": "Chromium headless viewport test",
+      "exit_code": null,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-INTEGRATION",
+      "outcome": "unknown",
+      "command": "npm test",
+      "exit_code": null,
+      "source_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

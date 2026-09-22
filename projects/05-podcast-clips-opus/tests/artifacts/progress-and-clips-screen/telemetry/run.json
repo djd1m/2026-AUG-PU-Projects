@@ -1,0 +1,93 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922T210559Z-progress-and-clips-screen-4d93",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "progress-and-clips-screen",
+  "pipeline": "coding-brief",
+  "tier": "M",
+  "risk_flags": [
+    "owner-only read endpoints",
+    "new UI using existing contracts"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Telemetry under tests/artifacts: brief forbids other docs changes"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "3a85ccf1ca2fd2316b49919521ada6ead61e6f73",
+  "final_revision": "dirty-sha256:adb373fab0007bad0918f54cef43c9da426363cde47c1f675bf18395f7bd3a7a",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-22T21:05:59.514411+00:00",
+  "ended_at": "2026-09-22T21:28:51.867462+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "docs/features/progress-and-clips-screen/07_code_report.md",
+    "tests/artifacts/progress-and-clips-screen/all-tests-reviewed.txt",
+    "tests/artifacts/progress-and-clips-screen/mutations/results.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 5,
+    "ac_total": 7,
+    "confirmed_findings_by_severity": {
+      "high": 1,
+      "medium": 1,
+      "low_medium": 1
+    },
+    "false_positive_findings": 0,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "test_results": {
+      "passed": 225,
+      "skipped": 89,
+      "failed": 0
+    }
+  },
+  "metrics": {
+    "tokens": null,
+    "cost": null,
+    "wall_seconds": 1372.353051,
+    "active_seconds": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading before this timestamp not measured",
+    "Exact model ID, effort, usage, billing and host version unavailable",
+    "Stage start times not all captured before work; stage events do not prove stage duration",
+    "No actual provider model/usage from supplemental reviewer or timed-out Anthropic CLI",
+    "Real-service integration, browser and required cross-family review not passed"
+  ],
+  "model": {
+    "family": "OpenAI GPT-6 (host instruction)",
+    "actual_model": null,
+    "actual_effort": null
+  },
+  "models": [
+    {
+      "role": "implementation",
+      "requested": null,
+      "actual": null,
+      "evidence": "Host says OpenAI GPT-6 family, exact runtime ID unavailable"
+    },
+    {
+      "role": "supplemental-review",
+      "requested": "gpt-5.6-sol",
+      "requested_effort": "high",
+      "actual": null,
+      "evidence": "Spawn arguments only; exact runtime ID not returned"
+    },
+    {
+      "role": "required-review",
+      "requested": "opus",
+      "actual": null,
+      "evidence": "Claude CLI timeout 124, no response"
+    }
+  ]
+}

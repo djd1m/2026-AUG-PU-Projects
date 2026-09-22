@@ -12,6 +12,8 @@ export async function signParts(ctx: StorageContext, key: string, uploadId: stri
     expires_at: new Date(now.getTime() + PRESIGNED_SECONDS * 1000).toISOString(),
   })));
 }
-export function generateDownloadUrl(ctx: StorageContext, key: string): Promise<string> {
-  return getSignedUrl(ctx.client, new GetObjectCommand({ Bucket: ctx.bucket, Key: key }), { expiresIn: PRESIGNED_SECONDS });
+export function generateDownloadUrl(ctx: StorageContext, key: string, filename?: string): Promise<string> {
+  const disposition = filename ? `attachment; filename="clip.mp4"; filename*=UTF-8''${encodeURIComponent(filename).replace(/['()*]/g, c => '%' + c.charCodeAt(0).toString(16))}` : undefined;
+  return getSignedUrl(ctx.client, new GetObjectCommand({ Bucket: ctx.bucket, Key: key,
+    ...(disposition ? { ResponseContentDisposition: disposition } : {}) }), { expiresIn: PRESIGNED_SECONDS });
 }

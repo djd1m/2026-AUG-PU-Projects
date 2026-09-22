@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config';
 import path from 'node:path';
 export default defineConfig({
+  esbuild: { jsx: 'automatic' },
   resolve: { alias: {
     '@clipmaker/shared/config': path.resolve('packages/shared/src/config.ts'),
     '@clipmaker/shared/enums': path.resolve('packages/shared/src/enums.ts'),
