@@ -13,7 +13,7 @@ import * as rpcClient from '../apps/web/src/lib/rpc';
 import { allowRead, allowMutation } from '../apps/web/src/server/rate-limit';
 import type Redis from 'ioredis';
 import { createS3Client, generateDownloadUrl } from '../packages/s3/src';
-import { loadS3Config } from '../packages/shared/src/config';
+import { loadWebConfig } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 const now = new Date('2026-09-22T12:00:00Z');
@@ -132,7 +132,7 @@ it('чтения 120/мин отдельно от 30 мутаций', async () =
   expect(await allowMutation(redis, '203.0.113.5', 'test-key', 'owner')).toBe(true);
 });
 it('скачивание: UTF-8 имя в подписанном Content-Disposition, TTL 900', async () => {
-  const config = loadS3Config(environment()), client = createS3Client(config);
+  const config = loadWebConfig(environment()).s3, client = createS3Client(config);
   try {
     const url = new URL(await generateDownloadUrl({ client, bucket: config.bucket }, 'clip.mp4', 'Мой выпуск.mp4'));
     expect(url.searchParams.get('response-content-disposition')).toContain("filename*=UTF-8''%D0");

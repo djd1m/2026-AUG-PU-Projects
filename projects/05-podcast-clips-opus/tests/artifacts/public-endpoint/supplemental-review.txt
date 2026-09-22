@@ -1,0 +1,4 @@
+WORK_UNIT_ID: public-endpoint-review
+Requested model: gpt-5.6-sol high; actual exact ID/effort unavailable.
+No findings in scoped diff. Verified public SigV4 signing, internal server operations, destruction of both clients, HTTPS requirement, four mutations. Known missing environment.ts line excluded explicitly; not a cross-family acceptance. Tests TypeScript project passed.
+Status: completed

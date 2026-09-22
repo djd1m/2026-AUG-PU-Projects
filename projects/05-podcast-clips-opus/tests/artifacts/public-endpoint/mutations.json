@@ -1,0 +1,58 @@
+[
+  {
+    "name": "public-host",
+    "file": "packages/s3/src/presign.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/s3-public-endpoint.test.ts",
+      "-t",
+      "Публичные PUT"
+    ],
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "name": "internal-transport",
+    "file": "packages/s3/src/client.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/s3-public-endpoint.test.ts",
+      "-t",
+      "Серверные операции"
+    ],
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "name": "required-config",
+    "file": "packages/shared/src/config.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/config.test.ts",
+      "-t",
+      "Старт web без"
+    ],
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "name": "production-https",
+    "file": "packages/shared/src/config.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/config.test.ts",
+      "-t",
+      "требует HTTPS"
+    ],
+    "red_exit": 1,
+    "green_exit": 0
+  }
+]

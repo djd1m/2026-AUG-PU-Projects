@@ -1,0 +1,121 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "public-endpoint-2026-09-22T21:48:35.113068+00:00",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "upload-and-quota/public-endpoint",
+  "pipeline": "brief-fix",
+  "tier": "M",
+  "risk_flags": [
+    "browser signing endpoint and startup contract"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Telemetry under tests/artifacts: brief permits only own report in docs",
+    "Existing Codex coordinator; Anthropic executor availability to be checked"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "cd7aaf2a4bf65d228994b7c7397f2b288adfc421",
+  "baseline_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "final_revision": {
+    "commit": "cd7aaf2a4bf65d228994b7c7397f2b288adfc421",
+    "source_manifest_sha256": "b236c50cb6e6decdde4825bb2a94934e6047e128238ec894f495dc0ac32a394f",
+    "diff_sha256": "0a6b523d6ccda9b06586b177b34588c1ee513da79f6945229b9a74af0a438fe5"
+  },
+  "spec_sha256": "e4a94191287a993d3f6d1fce2e87bd9b8a13b4e718d9ccf3898adf8f4e9af88b",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-22T21:48:35.113068+00:00",
+  "ended_at": "2026-09-22T21:57:50.507181+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "docs/features/upload-and-quota/12_fix_report_public_endpoint.md",
+    "tests/artifacts/public-endpoint/mutations.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 4,
+    "confirmed_findings_by_severity": {
+      "blocker": 1
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "tests_passed": 243,
+    "tests_failed": 4,
+    "tests_skipped": 89
+  },
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "total_elapsed_seconds": null,
+    "measured_elapsed_seconds": 555.394
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Instruction reading preceded clock capture; total elapsed unknown",
+    "Exact model ID, effort, token usage, billing, host version not exposed",
+    "Docker socket access denied: integration unavailable"
+  ],
+  "model": {
+    "actual_family": "GPT-6 (developer context)",
+    "actual_model": null,
+    "actual_effort": null
+  },
+  "work_record": {
+    "scope": "Four PE-001 guards, mutations, wiring, regression and report",
+    "exclusions": [
+      "Deployment",
+      "Changes to historical docs",
+      "Unrelated dirty progress screen changes"
+    ],
+    "requirements": "docs/features/upload-and-quota/11_fix_brief_public_endpoint.md",
+    "architecture": "docs/Architecture.md",
+    "approval": "User requested brief execution; one environment.ts line pending clarification",
+    "preflight": {
+      "status": "not_applicable",
+      "reason": "No E2E launched"
+    },
+    "forecast": {
+      "status": "insufficient_data"
+    },
+    "route_plan": {
+      "tier": "M",
+      "mechanical_tier": "S",
+      "exit_code": 0,
+      "reason": "Existing browser URL and startup contract; no new service/API/schema"
+    },
+    "route_implementation": {
+      "tier": "M",
+      "reason": "Same approved brief scope; allowlist line pending"
+    },
+    "plan": [
+      "Web-only validated public endpoint",
+      "Separate signing client while preserving server client",
+      "Four behavioral guards and mutations; regression; report"
+    ],
+    "review": {
+      "status": "unavailable",
+      "reason": "Anthropic CLI plan attempt timed out; no response in 40 seconds",
+      "supplemental": "No findings from separate requested gpt-5.6-sol agent; not cross-family review"
+    },
+    "source_continuity": {
+      "baseline": "cd7aaf2a4bf65d228994b7c7397f2b288adfc421",
+      "observed": "cd7aaf2a4bf65d228994b7c7397f2b288adfc421",
+      "reconciliation": "Unrelated initial dirty progress-screen changes committed externally during work. Our scoped files remain in working tree; all checks use current tree."
+    },
+    "pending": [
+      "Owner scope permission for environment.ts one-line wiring",
+      "Rerun full tests after wiring",
+      "Docker integration unavailable",
+      "Anthropic cross-family review unavailable"
+    ],
+    "stage": "paused"
+  }
+}

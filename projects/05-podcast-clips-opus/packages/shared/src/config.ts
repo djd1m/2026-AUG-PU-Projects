@@ -70,7 +70,9 @@ export function loadWebConfig(env: Environment) {
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодно: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, s3: loadS3Config(env), trustedProxyHops: loadTrustedProxyHops(env) });
+  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret,
+    s3: Object.freeze({ ...loadS3Config(env), publicEndpoint: loadS3PublicEndpoint(env) }),
+    trustedProxyHops: loadTrustedProxyHops(env) });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.
@@ -98,6 +100,18 @@ export function loadS3Config(env: Environment) {
   });
 }
 export type S3Config = ReturnType<typeof loadS3Config>;
+
+// Только web выдаёт браузеру ссылки; воркерам нужен лишь внутренний S3_ENDPOINT.
+export function loadS3PublicEndpoint(env: Environment): string {
+  const consequence = 'браузер не сможет загрузить части и скачать клипы; внутренний адрес недоступен, HTTP блокируется на HTTPS-странице';
+  const endpoint = url(env, 'S3_PUBLIC_ENDPOINT',
+    env.NODE_ENV === 'development' || env.NODE_ENV === 'test' ? ['https:', 'http:'] : ['https:'], consequence);
+  const parsed = new URL(endpoint);
+  if (parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/') {
+    throw new Error(`S3_PUBLIC_ENDPOINT непригодно: ${consequence}; нужен origin без пути и учётных данных`);
+  }
+  return endpoint;
+}
 
 export function loadSttConfig(env: Environment) {
   const mode = required(env, 'N5_MODEL_PROVIDER', 'режим поставщика STT не определён');

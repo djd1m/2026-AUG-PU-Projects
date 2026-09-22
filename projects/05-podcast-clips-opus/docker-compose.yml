@@ -33,6 +33,7 @@ services:
       target: web
     environment:
       <<: [*app-env, *quota-env, *s3-env]
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT:?публичный адрес S3 не задан — браузер не сможет загрузить части и скачать клипы}
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — он вшивается в метку каждого клипа и определяет каждую выдаваемую наружу ссылку}
       # 8 потоков: ограниченная параллельность bcrypt, больше исходных 4; проверяется нагрузкой.
       UV_THREADPOOL_SIZE: "8"
@@ -185,6 +186,8 @@ services:
       NODE_ENV: test
       DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль БД не задан}@db:5432/n5_test
       S3_ENDPOINT: http://minio:9000
+      # Тестовый клиент находится в сети compose; HTTP разрешён только NODE_ENV=test/development.
+      S3_PUBLIC_ENDPOINT: http://minio:9000
       S3_REGION: us-east-1
       S3_BUCKET: n5-test
       S3_ACCESS_KEY: ${MINIO_ROOT_USER:?пользователь MinIO для тестов не задан}

@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto';
 export function environment(): NodeJS.ProcessEnv {
   return {
     N5_MODEL_PROVIDER: 'fake', OPENROUTER_API_KEY: 'unused-test-key', N5_LLM_MODEL: 'anthropic/claude-sonnet-5',
-    S3_ENDPOINT: 'http://minio:9000', S3_REGION: 'us-east-1', S3_BUCKET: 'n5-test',
+    S3_ENDPOINT: 'http://minio:9000', S3_PUBLIC_ENDPOINT: 'https://storage.test.invalid', S3_REGION: 'us-east-1', S3_BUCKET: 'n5-test',
     S3_ACCESS_KEY: 'test-key', S3_SECRET_KEY: randomBytes(32).toString('hex'), S3_FORCE_PATH_STYLE: 'true',
     NODE_ENV: 'test', N5_WORK_DIR: '/tmp/n5-test-work', N5_TRUSTED_PROXY_HOPS: '2', N5_LIMIT_USER_MINUTES: '90', N5_LIMIT_USER_UPLOADS: '2',
     N5_LIMIT_USER_UPLOAD_REFUNDS: '2', N5_LIMIT_USER_LLM: '2',

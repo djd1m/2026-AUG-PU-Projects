@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createS3Client, signParts, generateDownloadUrl, calculatePartSize, completeMultipartUpload,
   getObjectBytes, headObject, abortMultipartUpload, UploadTooLarge } from '../packages/s3/src';
-import { loadS3Config } from '../packages/shared/src/config';
+import { loadWebConfig } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
 function mockSend(ctx: ReturnType<typeof context>) {
   const send = vi.fn<(command: { input: unknown }) => Promise<unknown>>();
   ctx.client.send = send as unknown as typeof ctx.client.send; return send;
 }
-function context() { return { client: createS3Client(loadS3Config(environment())), bucket: 'n5-test' }; }
+function context() { return { client: createS3Client(loadWebConfig(environment()).s3), bucket: 'n5-test' }; }
 describe('адаптер январского клона', () => {
   it('Размер части меняется от размера файла', () => {
     expect(calculatePartSize(2_000_000_000)).toBeGreaterThan(calculatePartSize(20_000_000));

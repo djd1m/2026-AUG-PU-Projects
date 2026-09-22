@@ -13,7 +13,7 @@ it('Собранный preflight разрешает корректное окр�
   const result = subprocess([preflight], environment(), 5000);
   expect(result.status, result.output).toBe(0);
 });
-for (const name of ['N5_PUBLIC_ORIGIN', ...LIMIT_NAMES]) {
+for (const name of ['N5_PUBLIC_ORIGIN', 'S3_PUBLIC_ENDPOINT', ...LIMIT_NAMES]) {
   it(`preflight: отдельный процесс без ${name} завершается до сервера`, () => {
     const env = environment(); delete env[name];
     const result = subprocess([preflight], env, 5000);

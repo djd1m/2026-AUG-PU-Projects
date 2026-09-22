@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 import { CreateBucketCommand, DeleteBucketCommand, GetBucketLifecycleConfigurationCommand } from '@aws-sdk/client-s3';
 import { migrate } from '../packages/db/src/migrate';
 import { transaction, checkAndConsumeQuota, refundUploadSlot } from '../packages/db/src/quota';
-import { loadLimits, loadS3Config } from '../packages/shared/src/config';
+import { loadLimits, loadS3Config, loadS3PublicEndpoint } from '../packages/shared/src/config';
 import { moscowDay } from '../packages/shared/src/upload';
 import * as s3 from '../packages/s3/src';
 import { VideoService, type UploadStorage, type UploadData } from '../apps/web/src/server/video';
@@ -83,7 +83,7 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
   const keys = new Set<string>(); const uploads: { key: string; id: string }[] = [];
   beforeAll(async () => {
     if (process.env.NODE_ENV !== 'test' || !dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Только тестовое окружение');
-    const config = loadS3Config(process.env);
+    const config = { ...loadS3Config(process.env), publicEndpoint: loadS3PublicEndpoint(process.env) };
     if (!config.bucket.endsWith('-test')) throw new Error('Только бакет *-test');
     await ensureTestDatabase(dbUrl);
     pool = new Pool({ connectionString: dbUrl, max: 12, options: `-c search_path=${schema},public` });

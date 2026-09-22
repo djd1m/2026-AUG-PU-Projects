@@ -36,6 +36,20 @@ describe('Отказ запуска конфигурации', () => {
     expect(result.stderr).toContain('пустая строка');
     expect(result.stderr).toContain('метку каждого клипа');
   });
+  it('Старт web без S3_PUBLIC_ENDPOINT отказывает с последствием для браузера', () => {
+    const env = environment(); delete env.S3_PUBLIC_ENDPOINT;
+    const result = subprocess(['-e', "require('./packages/shared/dist/config.js').loadWebConfig(process.env)"], env);
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain('S3_PUBLIC_ENDPOINT');
+    expect(result.stderr).toContain('браузер');
+  });
+  it.each(['production', undefined, 'staging'])('S3_PUBLIC_ENDPOINT требует HTTPS вне development/test: %s', (mode) => {
+    expect(() => loadWebConfig({ ...environment(), NODE_ENV: mode, S3_PUBLIC_ENDPOINT: 'http://storage.test.invalid' })).toThrow('S3_PUBLIC_ENDPOINT');
+  });
+  it.each(['', ' ', 'ftp://storage.test.invalid', 'https://u:p@storage.test.invalid', 'https://storage.test.invalid/bucket',
+    'https://storage.test.invalid/?q=1', 'https://storage.test.invalid/#x', ' https://storage.test.invalid', 'https://stor\tage.test.invalid'])('S3_PUBLIC_ENDPOINT отвергает непригодный адрес: %s', (endpoint) => {
+    expect(() => loadWebConfig({ ...environment(), S3_PUBLIC_ENDPOINT: endpoint })).toThrow('S3_PUBLIC_ENDPOINT');
+  });
   it.each(['DATABASE_URL', 'REDIS_URL', 'SESSION_SECRET', 'N5_PUBLIC_ORIGIN'])( '%s обязателен', (name) => {
     const env = environment(); delete env[name]; expect(() => loadWebConfig(env)).toThrow(`${name} отсутствует`);
     env[name] = ''; expect(() => loadWebConfig(env)).toThrow(`${name} пустая строка`);
