@@ -98,3 +98,12 @@ export function loadS3Config(env: Environment) {
   });
 }
 export type S3Config = ReturnType<typeof loadS3Config>;
+
+export function loadSttConfig(env: Environment) {
+  const mode = required(env, 'N5_MODEL_PROVIDER', 'режим поставщика STT не определён');
+  if (mode !== 'live' && mode !== 'fake') throw new Error('N5_MODEL_PROVIDER: нужно live или fake');
+  if (mode === 'fake' && env.NODE_ENV !== 'test') throw new Error('Фейк STT разрешён только в тестах');
+  return Object.freeze({ mode, baseUrl: 'https://openrouter.ai/api/v1', model: 'openai/whisper-large-v3',
+    apiKey: mode === 'live' ? required(env, 'OPENROUTER_API_KEY', 'транскрипция невозможна') : null });
+}
+export type SttConfig = ReturnType<typeof loadSttConfig>;

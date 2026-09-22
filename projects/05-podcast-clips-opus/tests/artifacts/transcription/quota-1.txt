@@ -1,0 +1,15 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run --run tests/transcription-quota.test.ts tests/transcription.integration.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ↓ tests/transcription.integration.test.ts (8 tests | 8 skipped)
+ ✓ tests/transcription-quota.test.ts (4 tests) 13ms
+
+ Test Files  1 passed | 1 skipped (2)
+      Tests  4 passed | 8 skipped (12)
+   Start at  15:41:30
+   Duration  1.71s (transform 421ms, setup 0ms, collect 1.10s, tests 13ms, environment 1ms, prepare 209ms)
+

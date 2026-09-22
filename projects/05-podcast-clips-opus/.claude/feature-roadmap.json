@@ -125,7 +125,7 @@
       "title": "Транскрипция с таймкодами слов, чанкинг и журнал расхода",
       "description": "ExtractAndChunkAudio — потоковое извлечение звука ffmpeg -vn, чанки ≤ 25 МБ по паузам, без разрезания посреди фразы; Transcribe — whisper-1 с verbose_json и timestamp_granularities=[word,segment], склейка слов со смещением чанка; контракт поставщика: результат без words[].start/end отвергается ДО постановки стадии select; повтор чанка после таймаута списывает минуты заново ДО повторного обращения; RecordModelSpend пишет строку model-spend.jsonl на КАЖДУЮ попытку; адаптер Transcriber с живым клиентом и детерминированным фейком.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "queue-and-probe"
@@ -156,7 +156,7 @@
       "title": "Выделение 3–8 самодостаточных фрагментов и объяснённая оценка",
       "description": "SelectFragments — один вызов Claude Sonnet 5 со structured outputs, 3–8 кандидатов {start,end,title,hook,completeness,length_fit,explanations}, квота llm на ДВА ключа (user_llm и global_llm) ДО вызова; проверка диапазонов НАШИМ кодом после разбора — structured outputs числовых ограничений и длины строк не задают; границы по словам транскрипта, длина 20,0–75,0 с; ScoreClip — сумма трёх компонентов 0–33, каждая с непустой фразой объяснения (CHECK в базе); честное число фрагментов при находке меньше трёх; создание строк clip и clip_link ДО постановки стадии render; отказ стадии при нуле пригодных кандидатов.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "transcription"

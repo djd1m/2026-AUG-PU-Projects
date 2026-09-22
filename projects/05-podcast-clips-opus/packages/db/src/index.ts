@@ -9,3 +9,4 @@ export function createPool(databaseUrl: string): Pool {
 export * from './quota.js';
 export * from './attempts.js';
 export * from './probe.js';
+export * from './transcription.js';

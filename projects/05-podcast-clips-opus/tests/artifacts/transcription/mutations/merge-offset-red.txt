@@ -1,0 +1,44 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription.test.ts (15 tests | 1 failed | 14 skipped) 12ms
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text"}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text","start":0,"end":null}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text","start":null,"end":1}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > rejects negative, reversed, out-of-range and nonmonotonic words
+   × STT boundary and media > merge offsets second chunk and deduplicates overlap without sorting away a defect 10ms
+     → Нет пригодных таймкодов слов
+   ↓ STT boundary and media > cuts at a silence midpoint; otherwise explicitly marks hard cut; keeps 2s overlap
+   ↓ STT boundary and media > requires explicit mode/key; fake never silently replaces live
+   ↓ STT boundary and media > provider pin source guard and unique timestamp option
+   ↓ STT boundary and media > sends measured JSON contract, pins Together and rejects 5xx/missing words/empty body
+   ↓ STT boundary and media > abort propagates to the HTTP request and reports timeout
+   ↓ STT boundary and media > 25 MB ceiling prevents any HTTP request
+   ↓ STT boundary and media > spend ledger records attempt before outcome, includes timeouts without secrets
+   ↓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  15:44:56
+   Duration  465ms (transform 138ms, setup 0ms, collect 165ms, tests 12ms, environment 0ms, prepare 89ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription.test.ts > STT boundary and media > merge offsets second chunk and deduplicates overlap without sorting away a defect
+Error: Нет пригодных таймкодов слов
+ ❯ packages/shared/src/transcript.ts:30:92
+     28|   const words = row.words.map(value => {
+     29|     const word = record(value), time = timing(word, duration);
+     30|     if (typeof word.word !== 'string' || !word.word.trim() || time.sta…
+       |                                                                                            ^
+     31|     previous = time.start;
+     32|     return { word: word.word, ...time, ...(Number.isInteger(word.chunk…
+ ❯ parseTranscript packages/shared/src/transcript.ts:28:27
+ ❯ mergeWords apps/worker/src/stt/merge.ts:14:10
+ ❯ tests/transcription.test.ts:31:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

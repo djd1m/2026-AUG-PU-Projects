@@ -1,0 +1,43 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-order.test.ts (5 tests | 1 failed | 4 skipped) 23ms
+   × STT operation order with deterministic dependencies > minutes committed BEFORE first provider call; transcript committed BEFORE enqueue 21ms
+     → expected false to be true // Object.is equality
+   ↓ STT operation order with deterministic dependencies > retry authorizes again before calling provider; timeout also has spend outcome
+   ↓ STT operation order with deterministic dependencies > ADR-003 empty words stop the stage before select; no invented words
+   ↓ STT operation order with deterministic dependencies > all three failures logged and authorized; no select after retry exhaustion
+   ↓ STT operation order with deterministic dependencies > unwritable spend ledger fails closed before network call
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  15:44:51
+   Duration  817ms (transform 284ms, setup 0ms, collect 506ms, tests 23ms, environment 0ms, prepare 90ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-order.test.ts > STT operation order with deterministic dependencies > minutes committed BEFORE first provider call; transcript committed BEFORE enqueue
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ Object.<anonymous> tests/transcription-order.test.ts:44:29
+     42|     const deps = await fixture();
+     43|     deps.transcriber.transcribe.mockImplementation(async () => {
+     44|       expect(state.charged).toBe(true); state.trace.push('provider'); …
+       |                             ^
+     45|     });
+     46|     await probeSource(attempt, { ...deps, available: async () => 300n,…
+ ❯ Module.transcribeSource apps/worker/src/workers/stt.ts:53:61
+ ❯ apps/worker/src/workers/stt.ts:101:9
+ ❯ withSource apps/worker/src/media/download.ts:52:38
+ ❯ Module.probeSource apps/worker/src/workers/stt.ts:88:20
+ ❯ tests/transcription-order.test.ts:46:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

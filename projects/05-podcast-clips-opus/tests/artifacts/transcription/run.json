@@ -1,0 +1,98 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922T153119-transcription",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "transcription",
+  "pipeline": "authorized-code-brief",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "OWN-002: OpenAI implementation; Anthropic review external",
+    "Brief restricts docs writes: telemetry in tests/artifacts/transcription"
+  ],
+  "risk_flags": [
+    "paid attempts",
+    "quota",
+    "fencing"
+  ],
+  "baseline_revision": "97b8c1203ebfb6c4742a66ac450d31863bb88489",
+  "started_at": "2026-09-22T15:31:19.396749+00:00",
+  "status": "blocked",
+  "host": "Codex",
+  "actual_model": null,
+  "metrics": {
+    "tokens": null,
+    "cost": null,
+    "active_wall_ms": null,
+    "elapsed_wall_ms": 1269911,
+    "input_tokens_total": null,
+    "cached_input_tokens": null,
+    "output_tokens_total": null,
+    "cost_basis": "unavailable"
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host does not expose exact model/effort, usage or billing counters",
+    "Initial instruction reading preceded telemetry; its elapsed duration is unknown",
+    "Required Docker integration unavailable: daemon socket denied; local PostgreSQL fallback cannot set groups",
+    "Anthropic CLI timed out after 180s; no actual model/usage receipt",
+    "Stage event timestamps not fully captured; do not infer duration per stage",
+    "E2E and live supplier not run"
+  ],
+  "stage": "IMPLEMENT",
+  "route": {
+    "mechanical_tier": "L",
+    "exit_code": 1,
+    "substantive_tier": "XL",
+    "authorization": "User explicitly requested implementation of the supplied detailed coding brief; no new plan approval inferred."
+  },
+  "models": [
+    {
+      "role": "coordinator/implementation",
+      "actual_model": null,
+      "family": "GPT-6 Codex per host instruction"
+    },
+    {
+      "role": "required cross-family review",
+      "requested_model": "Anthropic CLI default",
+      "actual_model": null,
+      "status": "timeout at 180 seconds"
+    },
+    {
+      "role": "supplemental independent read-only review",
+      "requested_model": "gpt-5.6-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "reason": "Anthropic unavailable; does not replace OWN-002 gate"
+    }
+  ],
+  "final_revision": "dirty-sha256:8e764c2b52313fc529bd87bd4257a4c155524e61dbe28976e820dfa81a2f2cb0",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "batch_id": null,
+  "comparison_id": null,
+  "host_version": null,
+  "billing_mode": "unknown",
+  "quality": {
+    "required_gates_passed": false,
+    "tests_passed": 158,
+    "tests_skipped": 69,
+    "mutation_pairs_passed": 5,
+    "supplemental_review": "1 high finding resolved; no remaining blocker/high",
+    "required_anthropic_review": "unavailable",
+    "followup_status": "pending",
+    "known_defects_missed": null,
+    "work_record_validation_exit": 0,
+    "worker_build_after_fix_exit": 0
+  },
+  "acceptance_evidence": [
+    "tests/artifacts/transcription/checks.json",
+    "tests/artifacts/transcription/mutations/results.json",
+    "tests/artifacts/transcription/fixture-checks.json",
+    "tests/artifacts/transcription/media-local-protocol.txt",
+    "tests/artifacts/transcription/source-manifest.json",
+    "docs/features/transcription/07_code_report.md"
+  ],
+  "ended_at": "2026-09-22T15:52:29.307310+00:00"
+}

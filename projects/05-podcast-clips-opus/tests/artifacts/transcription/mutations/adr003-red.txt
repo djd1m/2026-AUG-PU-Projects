@@ -1,0 +1,40 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-order.test.ts (5 tests | 1 failed | 4 skipped) 22ms
+   ↓ STT operation order with deterministic dependencies > minutes committed BEFORE first provider call; transcript committed BEFORE enqueue
+   ↓ STT operation order with deterministic dependencies > retry authorizes again before calling provider; timeout also has spend outcome
+   × STT operation order with deterministic dependencies > ADR-003 empty words stop the stage before select; no invented words 20ms
+     → promise resolved "undefined" instead of rejecting
+   ↓ STT operation order with deterministic dependencies > all three failures logged and authorized; no select after retry exhaustion
+   ↓ STT operation order with deterministic dependencies > unwritable spend ledger fails closed before network call
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  15:44:46
+   Duration  797ms (transform 259ms, setup 0ms, collect 488ms, tests 22ms, environment 0ms, prepare 89ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-order.test.ts > STT operation order with deterministic dependencies > ADR-003 empty words stop the stage before select; no invented words
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected: 
+Error {
+  "message": "rejected promise",
+}
+
++ Received: 
+undefined
+
+ ❯ tests/transcription-order.test.ts:60:64
+     58|   it('ADR-003 empty words stop the stage before select; no invented wo…
+     59|     const deps = await fixture(); deps.transcriber.transcribe.mockReso…
+     60|     await expect(transcribeSource('source', 120, attempt, deps)).rejec…
+       |                                                                ^
+     61|     expect(state.failure).toBe('no_timestamps'); expect(deps.enqueue).…
+     62|     expect(state.trace).not.toContain('commit');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

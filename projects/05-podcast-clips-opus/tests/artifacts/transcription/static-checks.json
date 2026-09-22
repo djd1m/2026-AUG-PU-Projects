@@ -1,0 +1,37 @@
+[
+  {
+    "name": "ports",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 2
+  },
+  {
+    "name": "port-conflicts",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 1
+  },
+  {
+    "name": "env-wiring",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 2
+  },
+  {
+    "name": "model-cost",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-model-cost.cjs",
+      "."
+    ],
+    "exit_code": 0
+  }
+]

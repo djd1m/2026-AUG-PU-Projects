@@ -59,7 +59,8 @@ services:
     command: ["node", "dist/apps/worker/workers/stt.js"]
     environment:
       <<: [*app-env, *quota-env, *s3-env]
-      OPENAI_API_KEY: ${OPENAI_API_KEY:?ключ OpenAI не задан — транскрипция невозможна}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — транскрипция невозможна}
+      N5_MODEL_PROVIDER: live
       N5_WORK_DIR: /work
     volumes:
       - stt-work:/work

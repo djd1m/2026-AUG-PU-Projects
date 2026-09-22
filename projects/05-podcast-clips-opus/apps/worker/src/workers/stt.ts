@@ -3,11 +3,72 @@ import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { withSource, type Download, freeBytes } from '../media/download.js';
 import { probeFile, ProbeError, type ProbeResult } from '../media/probe.js';
+import { dirname, join } from 'node:path';
+import { unlink } from 'node:fs/promises';
+import { acceptTranscript, authorizeSttCall, failTranscription, transcriptionDeadline } from '@clipmaker/db';
+import { parseTranscript, TranscriptError, STT_MAX_ATTEMPTS, type TranscriptResult } from '@clipmaker/shared/transcript';
+import { extractAudio } from '../stt/extract.js';
+import { splitAudio } from '../stt/chunker.js';
+import { ProviderError, type Transcriber } from '../stt/client.js';
+import { mergeWords } from '../stt/merge.js';
+import { recordModelSpend, type SpendEvent } from '../stt/spend.js';
 export function fileFailure(probe: ProbeResult): VideoFailureReason | null {
   if (!probe.hasAudio) return 'no_audio';
   if (probe.durationSec < 120) return 'too_short';
   if (probe.durationSec > 5400) return 'too_long';
   return null;
+}
+
+export interface TranscriptionDependencies {
+  pool: Pool; limits: Limits; transcriber: Transcriber; spendPath: string;
+  enqueue: (attempt: Attempt) => Promise<void>;
+  extract?: typeof extractAudio; chunks?: typeof splitAudio; spend?: typeof recordModelSpend;
+  clock?: () => Date;
+}
+// Adapted from jan-clone/workers/stt.ts: offset merge + atomic save then enqueue.
+// Probe owns initial quota and the source file; this stage never probes/downloads.
+export async function transcribeSource(file: string, duration: number, attempt: Attempt, deps: TranscriptionDependencies): Promise<void> {
+  const clock = deps.clock ?? (() => new Date());
+  const deadline = await transcriptionDeadline(deps.pool, attempt);
+  if (deadline === null) return;
+  if (deadline <= clock().getTime()) { await failTranscription(deps.pool, attempt, 'stalled', clock()); return; }
+  const signal = AbortSignal.timeout(Math.max(1, deadline - clock().getTime()));
+  let next: Attempt | null = null;
+  try {
+    const audio = await (deps.extract ?? extractAudio)(file, join(dirname(file), 'audio.mp3'), duration, signal);
+    const results: { result: TranscriptResult; offsetSeconds: number; durationSeconds: number }[] = [];
+    for await (const chunk of (deps.chunks ?? splitAudio)(audio, dirname(file), duration, signal)) {
+      if (chunk.hardCut) console.warn(JSON.stringify({ event: 'stt_hard_cut', video_id: attempt.video_id, chunk_index: chunk.index, offset_seconds: chunk.offsetSeconds }));
+      try {
+        for (;;) {
+          signal.throwIfAborted();
+          const call = await authorizeSttCall(deps.pool, attempt, deps.limits, chunk.index, chunk.durationSeconds, clock());
+          if (call === null) return;
+          const event: SpendEvent = { video_id: attempt.video_id, fence: attempt.fence, stage: 'stt', chunk_index: chunk.index,
+            attempt: call, unit: 'minutes', quantity: Math.ceil(chunk.durationSeconds / 60), result: 'started', phase: 'attempt' };
+          const spend = deps.spend ?? recordModelSpend;
+          await spend(deps.spendPath, event);
+          let result: TranscriptResult;
+          try {
+            result = parseTranscript(await deps.transcriber.transcribe(chunk.path, chunk.durationSeconds, signal), chunk.durationSeconds);
+          } catch (error) {
+            await spend(deps.spendPath, { ...event, phase: 'outcome', result: error instanceof TranscriptError ? 'no_timestamps' : error instanceof ProviderError ? error.outcome : 'provider_error' });
+            if (error instanceof ProviderError && error.retryable && call < STT_MAX_ATTEMPTS && !signal.aborted) continue;
+            throw error;
+          }
+          await spend(deps.spendPath, { ...event, phase: 'outcome', result: 'success' });
+          results.push({ result, offsetSeconds: chunk.offsetSeconds, durationSeconds: chunk.durationSeconds });
+          break;
+        }
+      } finally { await unlink(chunk.path); }
+    }
+    next = await acceptTranscript(deps.pool, attempt, mergeWords(results, duration), results.length, clock());
+  } catch (error) {
+    await failTranscription(deps.pool, attempt, signal.aborted ? 'stalled' : error instanceof TranscriptError ? 'no_timestamps' : 'stt_failed', clock());
+    throw error;
+  }
+  // Commit returned before publishing. Watchdog republishes a lost enqueue.
+  if (next) await deps.enqueue(next);
 }
 export interface ProbeDependencies {
   pool: Pool; limits: Limits; directory: string; download: Download;

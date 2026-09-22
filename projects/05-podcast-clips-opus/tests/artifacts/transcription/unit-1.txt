@@ -1,0 +1,15 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run --run tests/transcription.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/transcription.test.ts (15 tests) 30137ms
+   ✓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling  30091ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  15:38:50
+   Duration  30.62s (transform 173ms, setup 0ms, collect 212ms, tests 30.14s, environment 0ms, prepare 86ms)
+

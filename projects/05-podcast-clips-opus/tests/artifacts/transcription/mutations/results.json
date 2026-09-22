@@ -1,0 +1,77 @@
+[
+  {
+    "guard": "adr003",
+    "file": "packages/shared/src/transcript.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/transcription-order.test.ts",
+      "-t",
+      "ADR-003 empty words"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "source_sha256": "83601cba94c4bba9b06e59c678d224adc10f6ee22d143ba867e825cc93513f2a"
+  },
+  {
+    "guard": "provider-pin",
+    "file": "apps/worker/src/stt/client.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/transcription.test.ts",
+      "-t",
+      "provider pin source guard"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "source_sha256": "218045d3b98ad02c6b6521e08ad1a9cbf8dc6b873b5546b61c34f4ab6409cd90"
+  },
+  {
+    "guard": "quota-order",
+    "file": "apps/worker/src/workers/stt.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/transcription-order.test.ts",
+      "-t",
+      "minutes committed BEFORE"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "source_sha256": "ee0ae43c014c10e02b8bf00d873948d7ad5bdf2b895239b5f81d913395e5cf1e"
+  },
+  {
+    "guard": "retry-quota",
+    "file": "packages/db/src/transcription.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/transcription-quota.test.ts",
+      "-t",
+      "retry charges both"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "source_sha256": "ed00ca1f375253318cd2a4826810a53b88d7e542369d6135fe8b42945d6ed8cc"
+  },
+  {
+    "guard": "merge-offset",
+    "file": "apps/worker/src/stt/merge.ts",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/transcription.test.ts",
+      "-t",
+      "merge offsets second"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "source_sha256": "9314a7a12646b2baffdcee1b08a0fb07b8fb0211f323feb74e77faf0b6329b5b"
+  }
+]

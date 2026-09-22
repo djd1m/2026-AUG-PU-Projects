@@ -1,0 +1,109 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { mkdtemp, readFile, rm, writeFile, stat } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { parseTranscript, STT_MAX_BYTES, TranscriptError } from '../packages/shared/src/transcript';
+import { loadSttConfig } from '../packages/shared/src/config';
+import { createTranscriber } from '../apps/worker/src/stt/client';
+import { chunkBoundaries, splitAudio } from '../apps/worker/src/stt/chunker';
+import { extractAudio, runFfmpeg } from '../apps/worker/src/stt/extract';
+import { mergeWords } from '../apps/worker/src/stt/merge';
+import { recordModelSpend } from '../apps/worker/src/stt/spend';
+const valid = { language: 'ru', words: [{ word: 'Привет', start: 0.2, end: 1 }], segments: [{ text: 'Привет', start: 0.2, end: 1 }] };
+const dirs: string[] = [];
+async function temp() { const dir = await mkdtemp(join(tmpdir(), 'n5-stt-')); dirs.push(dir); return dir; }
+afterEach(async () => { vi.useRealTimers(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
+describe('STT boundary and media', () => {
+  it.each([{}, { ...valid, words: [] }, { ...valid, words: [{ word: 'text' }] },
+    { ...valid, words: [{ word: 'text', start: 0, end: null }] }, { ...valid, words: [{ word: 'text', start: NaN, end: 1 }] }])('ADR-003 rejects missing timestamps: %j', input => {
+    expect(() => parseTranscript(input, 10)).toThrow(TranscriptError);
+  });
+  it('rejects negative, reversed, out-of-range and nonmonotonic words', () => {
+    for (const [start, end] of [[-1, 1], [3, 2], [0, 11], [0, Infinity]]) {
+      expect(() => parseTranscript({ ...valid, words: [{ word: 'x', start, end }] }, 10)).toThrow();
+    }
+    expect(() => parseTranscript({ ...valid, words: [valid.words[0], { word: 'x', start: 0, end: 1 }] }, 10)).toThrow();
+  });
+  it('merge offsets second chunk and deduplicates overlap without sorting away a defect', () => {
+    const first = { ...valid, words: [{ word: 'Привет', start: 179, end: 180 }] };
+    const second = { ...valid, words: [{ word: 'Привет', start: 1, end: 2 }, { word: 'мир', start: 3, end: 4 }] };
+    const merged = mergeWords([{ result: first, offsetSeconds: 0, durationSeconds: 180 }, { result: second, offsetSeconds: 178, durationSeconds: 10 }], 188);
+    expect(merged.words.map(w => [w.word, w.start])).toEqual([['Привет', 179], ['мир', 181]]);
+    expect(merged.segments[1]?.start).toBe(178.2);
+  });
+  it('cuts at a silence midpoint; otherwise explicitly marks hard cut; keeps 2s overlap', () => {
+    const silence = chunkBoundaries(400, [175, 365]);
+    expect(silence[0]).toMatchObject({ durationSeconds: 175, hardCut: false });
+    expect(silence[1]?.offsetSeconds).toBe(173);
+    expect(chunkBoundaries(400, [10])[0]?.hardCut).toBe(true);
+    expect(chunkBoundaries(120, [])).toHaveLength(1);
+  });
+  it('requires explicit mode/key; fake never silently replaces live', () => {
+    expect(() => loadSttConfig({})).toThrow('N5_MODEL_PROVIDER');
+    expect(() => loadSttConfig({ N5_MODEL_PROVIDER: 'live' })).toThrow('OPENROUTER_API_KEY');
+    expect(() => loadSttConfig({ N5_MODEL_PROVIDER: 'fake', NODE_ENV: 'production' })).toThrow();
+    expect(loadSttConfig({ N5_MODEL_PROVIDER: 'fake', NODE_ENV: 'test' }).apiKey).toBeNull();
+  });
+  it('provider pin source guard and unique timestamp option', () => {
+    const source = readFileSync('apps/worker/src/stt/client.ts', 'utf8');
+    expect(source).toMatch(/provider:\s*\{\s*only:\s*\['Together'\],\s*allow_fallbacks:\s*false/);
+    expect(source.match(/timestamp_granularities/g)).toHaveLength(1);
+    expect(source).not.toContain('process.env');
+  });
+  async function clientFixture(request: typeof fetch) {
+    const path = join(await temp(), 'chunk.mp3'); await writeFile(path, 'mp3');
+    return { path, client: createTranscriber(loadSttConfig({ N5_MODEL_PROVIDER: 'live', OPENROUTER_API_KEY: 'unit-secret' }), request) };
+  }
+  it('sends measured JSON contract, pins Together and rejects 5xx/missing words/empty body', async () => {
+    const request = vi.fn<typeof fetch>(async (_url, init) => {
+      expect(init?.signal).toBeDefined();
+      expect(JSON.parse(String(init?.body))).toMatchObject({ model: 'openai/whisper-large-v3', input_audio: { data: 'bXAz', format: 'mp3' },
+        provider: { only: ['Together'], allow_fallbacks: false }, timestamp_granularities: ['word', 'segment'] });
+      return Response.json(valid);
+    });
+    const { path, client } = await clientFixture(request);
+    expect(await client.transcribe(path, 10, new AbortController().signal)).toEqual(valid);
+    request.mockResolvedValueOnce(new Response('', { status: 503 }));
+    await expect(client.transcribe(path, 10, new AbortController().signal)).rejects.toMatchObject({ retryable: true });
+    request.mockResolvedValueOnce(Response.json({ text: 'Привет' }));
+    await expect(client.transcribe(path, 10, new AbortController().signal)).rejects.toBeInstanceOf(TranscriptError);
+    request.mockResolvedValueOnce(new Response(''));
+    await expect(client.transcribe(path, 10, new AbortController().signal)).rejects.toThrow();
+  });
+  it('abort propagates to the HTTP request and reports timeout', async () => {
+    const controller = new AbortController();
+    const { path, client } = await clientFixture(async (_url, init) => {
+      controller.abort(); init!.signal!.throwIfAborted(); throw new Error('unreachable');
+    });
+    await expect(client.transcribe(path, 10, controller.signal)).rejects.toMatchObject({ outcome: 'timeout' });
+  });
+  it('25 MB ceiling prevents any HTTP request', async () => {
+    const request = vi.fn<typeof fetch>(); const { path, client } = await clientFixture(request);
+    const handle = await import('node:fs/promises').then(fs => fs.open(path, 'w'));
+    await handle.truncate(STT_MAX_BYTES + 1); await handle.close();
+    await expect(client.transcribe(path, 10, new AbortController().signal)).rejects.toThrow('лимит');
+    expect(request).not.toHaveBeenCalled();
+  });
+  it('spend ledger records attempt before outcome, includes timeouts without secrets', async () => {
+    const path = join(await temp(), 'model-spend.jsonl');
+    const event = { video_id: 'test', fence: 1, stage: 'stt' as const, chunk_index: 0, attempt: 1, unit: 'minutes' as const, quantity: 3 };
+    await recordModelSpend(path, { ...event, phase: 'attempt', result: 'started' });
+    await recordModelSpend(path, { ...event, phase: 'outcome', result: 'timeout' });
+    const rows = (await readFile(path, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+    expect(rows.map(r => r.result)).toEqual(['started', 'timeout']);
+    expect(rows.filter(r => r.phase === 'attempt').reduce((n, r) => n + r.quantity, 0)).toBe(3);
+  });
+  it('real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling', async () => {
+    const dir = await temp(), signal = AbortSignal.timeout(110_000), source = join(dir, 'source.wav');
+    await runFfmpeg(['-y', '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=16000', '-af', "volume=enable='lt(mod(t,180),2)':volume=0", '-t', '3600', source], signal);
+    const audio = await extractAudio(source, join(dir, 'audio.mp3'), 3600, signal);
+    expect(audio.pauses.length).toBeGreaterThan(10);
+    let count = 0, previous = -1;
+    for await (const chunk of splitAudio(audio, dir, 3600, signal)) {
+      expect((await stat(chunk.path)).size).toBeLessThanOrEqual(STT_MAX_BYTES);
+      expect(chunk.offsetSeconds).toBeGreaterThan(previous); previous = chunk.offsetSeconds; count++;
+    }
+    expect(count).toBeGreaterThan(1);
+  }, 120_000);
+});

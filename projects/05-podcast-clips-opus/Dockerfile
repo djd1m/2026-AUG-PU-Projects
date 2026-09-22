@@ -48,5 +48,6 @@ CMD ["node", "dist/apps/worker/workers/stt.js"]
 
 # ── test: dev-зависимости и исходники; ходит в настоящие db/redis/minio профиля test ──
 FROM build AS test
+RUN apk add --no-cache ffmpeg && ffmpeg -version && ffprobe -version
 ENV NODE_ENV=test TZ=Europe/Moscow
 CMD ["npm", "test", "--", "--run"]

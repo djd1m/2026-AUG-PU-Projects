@@ -1,12 +1,15 @@
 import { mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import { Worker, DelayedError, type Job } from 'bullmq';
 import { createPool, type Attempt } from '@clipmaker/db';
 import { createS3Client } from '@clipmaker/s3';
-import { loadWorkerConfig, loadS3Config, required, type Environment, type ServiceRole } from '@clipmaker/shared/config';
+import { loadWorkerConfig, loadS3Config, loadSttConfig, required, type Environment, type ServiceRole } from '@clipmaker/shared/config';
 import { createQueues, getRedisConnection, DEFER_DELAY_MS, type AttemptJob } from '@clipmaker/queue';
 import { checkFfprobe } from './media/probe.js';
 import { s3Download } from './media/download.js';
-import { probeSource } from './workers/stt.js';
+import { probeSource, transcribeSource } from './workers/stt.js';
+import { checkFfmpeg } from './stt/extract.js';
+import { createTranscriber } from './stt/client.js';
 import { retryProbe } from './retry.js';
 export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Environment) {
   const config = loadWorkerConfig(role, env);
@@ -14,13 +17,14 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
   // Validate dependencies before opening sockets or registering signal handlers.
   const directory = role === 'worker-stt' ? required(env, 'N5_WORK_DIR', 'негде проверять оригинал') : null;
   const s3Config = role === 'worker-stt' ? loadS3Config(env) : null;
-  if (directory) { await checkFfprobe(); await mkdir(directory, { recursive: true }); }
+  const transcriber = role === 'worker-stt' ? createTranscriber(loadSttConfig(env)) : null;
+  if (directory) { await checkFfprobe(); await checkFfmpeg(); await mkdir(directory, { recursive: true }); }
   const pool = createPool(config.databaseUrl);
   pool.on('error', () => console.error('Воркер: соединение БД потеряно'));
   const transport = createQueues(config);
   const storage = s3Config ? { client: createS3Client(s3Config), bucket: s3Config.bucket } : null;
   let worker: Worker<AttemptJob>;
-  if (role === 'worker-stt' && directory && storage && 'limits' in config) {
+  if (role === 'worker-stt' && directory && storage && transcriber && 'limits' in config) {
     worker = new Worker<AttemptJob>('stt', async (job: Job<AttemptJob>, token?: string) => {
       const row = await pool.query<Attempt>('SELECT * FROM job_attempt WHERE video_id=$1 AND fence=$2 AND stage=$3',
         [job.data.video_id, job.data.fence, 'stt']);
@@ -28,7 +32,9 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
       if (!attempt) throw new Error('Попытка отсутствует в БД');
       let outcome: Awaited<ReturnType<typeof probeSource>>;
       try {
-        outcome = await probeSource(attempt, { pool, limits: config.limits, directory, download: s3Download(storage) });
+        outcome = await probeSource(attempt, { pool, limits: config.limits, directory, download: s3Download(storage),
+          continueTranscription: (file, duration, current) => transcribeSource(file, duration, current,
+            { pool, limits: config.limits, transcriber, spendPath: join(directory, 'model-spend.jsonl'), enqueue: transport.enqueue }) });
       } catch {
         const next = await retryProbe(pool, attempt);
         if (next) await transport.enqueue(next, 2000);

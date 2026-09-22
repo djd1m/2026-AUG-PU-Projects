@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260922T153119-transcription",
+    "work_unit_id": "transcription",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/transcription/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/transcription/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "97b8c1203ebfb6c4742a66ac450d31863bb88489",
+    "current_revision": "dirty-sha256:8e764c2b52313fc529bd87bd4257a4c155524e61dbe28976e820dfa81a2f2cb0",
+    "build_revision": "dirty-sha256:bf966aa861e0d1751faa8fac4ca96ea9e6fc4092d0d3753df998d21b119ff58c",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/transcription/00_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "97b8c1203ebfb6c4742a66ac450d31863bb88489",
+      "observed_revision": "dirty-sha256:8e764c2b52313fc529bd87bd4257a4c155524e61dbe28976e820dfa81a2f2cb0",
+      "reconciliation": {
+        "status": "completed",
+        "reason": "Authorized implementation and one concrete security correction; source-manifest and focused media rerun recorded",
+        "impact": "Whitelist only changes ffmpeg allowed input protocols; unit/media rerun passed and worker rebuilt",
+        "decision": "Retain authorized implementation with external integration/review gates pending",
+        "affected_checks": [
+          "media extraction",
+          "chunking",
+          "worker build"
+        ],
+        "rerun": [
+          "15 STT tests passed after whitelist fix",
+          "worker build exit 0"
+        ],
+        "pending": [
+          "Docker integration",
+          "Anthropic review",
+          "Docker test stage now explicitly installs ffmpeg; image build unverified because daemon denied"
+        ]
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "14a3721628e6834f7aff554beec7718d892759f515728d12ab10a35cfcce2cba",
+    "scope": [
+      "Transcription stage only; pinned OpenRouter adapter, pause chunks, paid retries, transcript persistence"
+    ],
+    "exclusions": [
+      "selection",
+      "render",
+      "UI",
+      "deployment"
+    ],
+    "action_limits": [
+      "No docs outside requested report; no applied migration changes; no packages/s3 edits"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-STT",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": ".reference/jan-clone/apps/worker/lib/audio-chunker.ts"
+          }
+        },
+        "provenance": "January clone read before code; source path documented in report",
+        "useful_fragment": "180-second MP3 chunk loop and offsets",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "add silence boundaries, overlap and byte ceiling"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; no comparable run analysis",
+      "scope_revision": "14a3721628e6834f7aff554beec7718d892759f515728d12ab10a35cfcce2cba",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "14a3721628e6834f7aff554beec7718d892759f515728d12ab10a35cfcce2cba",
+      "tier": "XL",
+      "rationale": "Paid attempts and quota invariants; detailed implementation brief already authorized",
+      "script": {
+        "input": "apps/worker/src/stt/client.ts apps/worker/src/stt/chunker.ts apps/worker/src/workers/stt.ts packages/db/migrations/006_transcription.sql",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "14a3721628e6834f7aff554beec7718d892759f515728d12ab10a35cfcce2cba",
+      "tier": "XL",
+      "rationale": "Paid attempts and quota invariants; detailed implementation brief already authorized",
+      "script": {
+        "input": "apps/worker/src/stt/client.ts apps/worker/src/stt/chunker.ts apps/worker/src/workers/stt.ts packages/db/migrations/006_transcription.sql",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Explicit user instruction executes supplied implementation brief; no deployment requested",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No deployed E2E executed; only unit/media and skipped integration suite",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "transcription",
+      "paths": [
+        {
+          "root": "project",
+          "path": ".env.example"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/stt/chunker.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/stt/client.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/stt/extract.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/stt/merge.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/stt/spend.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/workers/stt.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/workers/stt.ts"
+        },
+        {
+          "root": "project",
+          "path": "docker-compose.yml"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/migrations/006_transcription.sql"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/transcription.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/config.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/transcript.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/fixtures/environment.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription-order.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription-quota.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "vitest.config.ts"
+        },
+        {
+          "root": "project",
+          "path": "Dockerfile"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260922T153119-transcription",
+    "work_unit_id": "transcription",
+    "source_revision": "dirty-sha256:8e764c2b52313fc529bd87bd4257a4c155524e61dbe28976e820dfa81a2f2cb0",
+    "blockers": [
+      "Docker/PostgreSQL/Redis/MinIO validation unavailable in sandbox",
+      "Required Anthropic review unavailable"
+    ],
+    "approval_ids": [],
+    "next_allowed_step": "Run Docker profile test with --build and conduct Anthropic code review against source-manifest",
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct coding brief has no native checkpoint"
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "AC-STT",
+      "outcome": "unknown",
+      "command": "docker compose --project-directory . --profile test run --rm --build test",
+      "exit_code": null,
+      "source_revision": "dirty-sha256:8e764c2b52313fc529bd87bd4257a4c155524e61dbe28976e820dfa81a2f2cb0",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

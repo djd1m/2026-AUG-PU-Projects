@@ -1,0 +1,84 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription.test.ts (15 tests | 1 failed | 14 skipped) 13ms
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text"}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text","start":0,"end":null}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text","start":null,"end":1}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > rejects negative, reversed, out-of-range and nonmonotonic words
+   ↓ STT boundary and media > merge offsets second chunk and deduplicates overlap without sorting away a defect
+   ↓ STT boundary and media > cuts at a silence midpoint; otherwise explicitly marks hard cut; keeps 2s overlap
+   ↓ STT boundary and media > requires explicit mode/key; fake never silently replaces live
+   × STT boundary and media > provider pin source guard and unique timestamp option 11ms
+     → expected '// Adapter replaces jan-clone STT str…' to match /provider:\s*\{\s*only:\s*\['Together'…/
+   ↓ STT boundary and media > sends measured JSON contract, pins Together and rejects 5xx/missing words/empty body
+   ↓ STT boundary and media > abort propagates to the HTTP request and reports timeout
+   ↓ STT boundary and media > 25 MB ceiling prevents any HTTP request
+   ↓ STT boundary and media > spend ledger records attempt before outcome, includes timeouts without secrets
+   ↓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  15:44:49
+   Duration  460ms (transform 158ms, setup 0ms, collect 191ms, tests 13ms, environment 0ms, prepare 83ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription.test.ts > STT boundary and media > provider pin source guard and unique timestamp option
+AssertionError: expected '// Adapter replaces jan-clone STT str…' to match /provider:\s*\{\s*only:\s*\['Together'…/
+
+- Expected: 
+/provider:\s*\{\s*only:\s*\['Together'\],\s*allow_fallbacks:\s*false/
+
++ Received: 
+"// Adapter replaces jan-clone STT strategies/BYOK; DEC-A-022 is the wire contract.
+import { readFile, stat } from 'node:fs/promises';
+import type { SttConfig } from '@clipmaker/shared/config';
+import { parseTranscript, STT_MAX_BYTES, STT_TIMEOUT_MS, type TranscriptResult } from '@clipmaker/shared/transcript';
+export interface Transcriber { transcribe(path: string, duration: number, signal: AbortSignal): Promise<TranscriptResult> }
+export class ProviderError extends Error {
+  constructor(public readonly retryable: boolean, public readonly outcome: 'timeout' | 'provider_error') { super('Поставщик STT не завершил запрос'); }
+}
+export function createTranscriber(config: SttConfig, request: typeof fetch = fetch): Transcriber {
+  if (config.mode === 'fake') return { async transcribe(_path, duration, signal) {
+    signal.throwIfAborted();
+    return { language: 'ru', words: [{ word: 'Проверка', start: 0, end: Math.min(1, duration) }], segments: [] };
+  } };
+  return { async transcribe(path, duration, signal) {
+    if ((await stat(path)).size > STT_MAX_BYTES) throw new Error('Чанк превышает лимит');
+    const data = await readFile(path);
+    if (!data.length || data.length > STT_MAX_BYTES) throw new Error('Непригодный чанк');
+    const timeout = AbortSignal.timeout(STT_TIMEOUT_MS);
+    const combined = AbortSignal.any([signal, timeout]);
+    try {
+      const response = await request(`${config.baseUrl}/audio/transcriptions`, {
+        method: 'POST', signal: combined, redirect: 'error',
+        headers: { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: config.model, input_audio: { data: data.toString('base64'), format: 'mp3' },
+          response_format: 'verbose_json', timestamp_granularities: ['word', 'segment'], language: 'ru',
+          provider: { allow_fallbacks: false } }),
+      });
+      if (!response.ok) { await response.body?.cancel(); throw new ProviderError(response.status >= 500 || response.status === 429, 'provider_error'); }
+      return parseTranscript(await response.json(), duration);
+    } catch (error) {
+      if (combined.aborted) throw new ProviderError(true, 'timeout');
+      if (error instanceof TypeError) throw new ProviderError(true, 'provider_error');
+      throw error;
+    }
+  } };
+}
+"
+
+ ❯ tests/transcription.test.ts:50:20
+     48|   it('provider pin source guard and unique timestamp option', () => {
+     49|     const source = readFileSync('apps/worker/src/stt/client.ts', 'utf8…
+     50|     expect(source).toMatch(/provider:\s*\{\s*only:\s*\['Together'\],\s…
+       |                    ^
+     51|     expect(source.match(/timestamp_granularities/g)).toHaveLength(1);
+     52|     expect(source).not.toContain('process.env');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

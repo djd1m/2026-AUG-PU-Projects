@@ -1,0 +1,7 @@
+violation: source.continuity.reconciliation.impact: expected non-empty string
+violation: source.continuity.reconciliation.decision: expected non-empty string
+violation: source.continuity.reconciliation.affected_checks: expected array
+violation: source.continuity.reconciliation.affected_checks: expected non-empty string array
+violation: source.continuity.reconciliation.rerun: expected array
+violation: source.continuity.reconciliation.pending: expected array
+violation: preflight: must execute no external action and make no E2E claim
