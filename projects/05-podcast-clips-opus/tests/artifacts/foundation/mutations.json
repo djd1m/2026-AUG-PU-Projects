@@ -1,0 +1,22 @@
+[
+  {
+    "mutation": "plan-fail-open",
+    "exit_code": 1,
+    "expected_nonzero": true
+  },
+  {
+    "mutation": "quota-default",
+    "exit_code": 1,
+    "expected_nonzero": true
+  },
+  {
+    "mutation": "bcrypt-in-store",
+    "exit_code": 1,
+    "expected_nonzero": true
+  },
+  {
+    "mutation": "bcrypt-in-transaction-executable",
+    "exit_code": 1,
+    "expected_nonzero": true
+  }
+]

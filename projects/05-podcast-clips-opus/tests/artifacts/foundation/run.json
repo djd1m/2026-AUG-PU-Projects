@@ -1,0 +1,68 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "foundation-2026-09-21T211436",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "foundation",
+  "pipeline": "authorized-brief",
+  "tier": "L",
+  "risk_flags": [
+    "schema",
+    "authentication",
+    "cross-service"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Single Codex implementer; OWN-002 Anthropic review pending",
+    "Telemetry under tests/artifacts: brief forbids docs changes except final report"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "8e444cad796a3114adbf6cf5a134ae8519900ab9",
+  "final_revision": "sha256:8857bf1eab563373faa0448f97250cfc604958db0fac233c742aa1fd2937e7c8",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-21T21:14:36.767785+00:00",
+  "ended_at": "2026-09-21T21:35:11.315653+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "build-final.txt",
+    "lint-final.txt",
+    "typecheck-final.txt",
+    "tests-final.txt",
+    "startup-built.json",
+    "mutations.json",
+    "wiring-configured-final.txt",
+    "anthropic-review.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 7,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null
+  },
+  "metrics": {
+    "elapsed_wall_ms": 1234547,
+    "active_wall_ms": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host exposes no exact model ID, effort or usage counters",
+    "Preparation before this timestamp unmeasured",
+    "Baseline comparison absent",
+    "Independent Anthropic review timed out; no actual model ID",
+    "Real PostgreSQL and runtime E2E unavailable",
+    "Active time and full task elapsed unavailable: preparation began before recorder",
+    "Docker build incompatible with protected scaffold and cannot be corrected in authorized scope"
+  ]
+}

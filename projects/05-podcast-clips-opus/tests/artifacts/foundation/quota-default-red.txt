@@ -1,0 +1,62 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/config.test.ts (26 tests | 6 failed) 1616ms
+   × Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_MINUTES 40ms
+     → expected +0 not to be +0 // Object.is equality
+   × Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_UPLOADS 30ms
+     → expected +0 not to be +0 // Object.is equality
+   × Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_UPLOAD_REFUNDS 28ms
+     → expected +0 not to be +0 // Object.is equality
+   × Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_LLM 33ms
+     → expected +0 not to be +0 // Object.is equality
+   × Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_GLOBAL_MINUTES 33ms
+     → expected +0 not to be +0 // Object.is equality
+   × Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_GLOBAL_LLM 29ms
+     → expected +0 not to be +0 // Object.is equality
+   ✓ Отказ запуска конфигурации > Седьмой процесс: пустой origin 32ms
+   ✓ Отказ запуска конфигурации > DATABASE_URL обязателен 2ms
+   ✓ Отказ запуска конфигурации > REDIS_URL обязателен 1ms
+   ✓ Отказ запуска конфигурации > SESSION_SECRET обязателен 1ms
+   ✓ Отказ запуска конфигурации > N5_PUBLIC_ORIGIN обязателен 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 0 1ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка -1 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 1.5 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 2x 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 1e2 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка  2 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка Infinity 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 2147483648 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: ftp://test.invalid 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: https://test.invalid/path 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: https://u:p@test.invalid 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается:  https://test.invalid 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: https://test.invalid/?q=1 0ms
+   ✓ Отказ запуска конфигурации > http разрешён только в development/test 0ms
+   ✓ Отказ запуска конфигурации > Воркеры не требуют чужой секрет сессий 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/config.test.ts > Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_MINUTES
+ FAIL  tests/config.test.ts > Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_UPLOADS
+ FAIL  tests/config.test.ts > Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_UPLOAD_REFUNDS
+ FAIL  tests/config.test.ts > Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_LLM
+ FAIL  tests/config.test.ts > Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_GLOBAL_MINUTES
+ FAIL  tests/config.test.ts > Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_GLOBAL_LLM
+AssertionError: expected +0 not to be +0 // Object.is equality
+ ❯ tests/config.test.ts:28:33
+     26|       const env = environment(); delete env[name];
+     27|       const result = subprocess(['-e', "require('./packages/shared/dis…
+     28|       expect(result.status).not.toBe(0);
+       |                                 ^
+     29|       expect(result.stderr).toContain(name);
+     30|       expect(result.stderr).toMatch(/вызов|выдача загрузки|скачивание …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 20 passed (26)
+   Start at  21:31:06
+   Duration  2.00s (transform 110ms, setup 0ms, collect 110ms, tests 1.62s, environment 0ms, prepare 101ms)
+

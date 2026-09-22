@@ -5,20 +5,18 @@
 # ── deps: манифесты ВСЕХ workspace, иначе npm ci падает «Exit handler never called» ──
 FROM node:22.11-alpine AS deps
 WORKDIR /app
-COPY package.json package-lock.json turbo.json ./
+COPY package.json package-lock.json ./
 COPY apps/web/package.json ./apps/web/
 COPY apps/worker/package.json ./apps/worker/
+COPY packages/shared/package.json ./packages/shared/
 COPY packages/db/package.json ./packages/db/
 COPY packages/s3/package.json ./packages/s3/
-COPY packages/queue/package.json ./packages/queue/
-COPY packages/types/package.json ./packages/types/
-COPY packages/config/package.json ./packages/config/
 RUN npm ci
 
 # ── build: один раз для обеих рантайм-целей ──
 FROM deps AS build
 COPY . .
-RUN npx turbo build
+RUN npm run build
 
 # ── web: SSR Next.js; НЕТ ffmpeg/ffprobe (канон §6: медиа-инструменты только у воркеров) ──
 FROM node:22.11-alpine AS web

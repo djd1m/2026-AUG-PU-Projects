@@ -8,3 +8,6 @@ coverage/
 *.log
 .p-replicator/source-path-capture/
 .turbo/
+# сборочные артефакты пакетов (собираются npm run build)
+packages/*/dist/
+apps/worker/dist/

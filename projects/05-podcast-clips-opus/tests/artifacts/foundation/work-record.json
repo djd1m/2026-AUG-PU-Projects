@@ -1,0 +1,41 @@
+{
+  "run_id": "foundation-2026-09-21T211436",
+  "source": "8e444cad796a3114adbf6cf5a134ae8519900ab9",
+  "stage": "paused",
+  "scope": "foundation brief sections 1–7",
+  "exclusions": "all later roadmap features; protected docs/compose/Dockerfile/env/proxy/.claude",
+  "approval": "User explicitly requested entire brief",
+  "route_plan": {
+    "tier": "L",
+    "exit": 1
+  },
+  "route_implement": {
+    "tier": "L",
+    "reason": "same approved scope"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No HTTP E2E or deployment performed; startup checks execute built instrumentation only"
+  },
+  "checks": [
+    "build-final.txt",
+    "lint-final.txt",
+    "typecheck-final.txt",
+    "tests-final.txt",
+    "startup-built.json",
+    "mutations.json",
+    "wiring-configured-final.txt",
+    "anthropic-review.json"
+  ],
+  "source_snapshot": "sha256:8857bf1eab563373faa0448f97250cfc604958db0fac233c742aa1fd2937e7c8",
+  "blockers": [
+    "PostgreSQL unavailable",
+    "Anthropic review timed out",
+    "Protected Dockerfile incompatible with explicit brief workspace set"
+  ],
+  "next_allowed_step": "Run PostgreSQL tests and independent Anthropic review in an authorized environment; reconcile Dockerfile in a separate authorized change"
+}

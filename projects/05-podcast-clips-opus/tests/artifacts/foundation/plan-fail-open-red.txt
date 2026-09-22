@@ -1,0 +1,64 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/enums.test.ts (14 tests | 11 failed) 29ms
+   × Закрытые перечисления > Мусор null читается fail-closed 11ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор undefined читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор "" читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор "PAID" читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор " paid" читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор "premium" читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор 0 читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор 1 читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор true читается fail-closed 2ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор {} читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   × Закрытые перечисления > Мусор ["paid"] читается fail-closed 1ms
+     → expected 'paid' to be 'free' // Object.is equality
+   ✓ Закрытые перечисления > Только точное paid разрешает платный тариф 0ms
+   ✓ Закрытые перечисления > Каждый CHECK равен массиву единственного источника 5ms
+   ✓ Закрытые перечисления > Мутация CHECK обнаруживается стражем 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор null читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор undefined читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор "" читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор "PAID" читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор " paid" читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор "premium" читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор 0 читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор 1 читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор true читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор {} читается fail-closed
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Мусор ["paid"] читается fail-closed
+AssertionError: expected 'paid' to be 'free' // Object.is equality
+
+Expected: "free"
+Received: "paid"
+
+ ❯ tests/enums.test.ts:18:31
+     16| describe('Закрытые перечисления', () => {
+     17|   it.each(garbage.map((v) => [v]))('Мусор %j читается fail-closed', (v…
+     18|     expect(e.readPlan(value)).toBe('free'); expect(e.readAccountStatus…
+       |                               ^
+     19|     expect(e.readVideoStatus(value)).toBe('failed'); expect(e.readClip…
+     20|     expect(e.readJobStatus(value)).toBe('failed'); expect(e.readAttrib…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 3 passed (14)
+   Start at  21:31:05
+   Duration  462ms (transform 70ms, setup 0ms, collect 76ms, tests 29ms, environment 0ms, prepare 92ms)
+

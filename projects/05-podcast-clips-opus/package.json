@@ -1,0 +1,16 @@
+{
+  "name": "n5-clipmaker", "version": "0.1.0", "private": true,
+  "engines": { "node": ">=22 <23" },
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/db && npm run build --workspace=packages/s3 && npm run build --workspace=apps/worker && npm run build --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json",
+    "lint": "node scripts/lint.mjs",
+    "test": "vitest run",
+    "db:migrate": "npm run build --workspace=packages/db && node packages/db/dist/migrate.js"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2", "@types/node": "^22.0.0", "@types/pg": "^8.11.0",
+    "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0", "typescript": "~5.9.3", "vitest": "^3.2.4"
+  }
+}

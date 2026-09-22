@@ -1,0 +1,72 @@
+export const LIMIT_NAMES = [
+  'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
+  'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
+] as const;
+export type LimitName = typeof LIMIT_NAMES[number];
+export type Limits = Readonly<Record<LimitName, number>>;
+export type Environment = Readonly<Record<string, string | undefined>>;
+export type ServiceRole = 'web' | 'worker-stt' | 'worker-llm' | 'worker-video';
+const consequences: Record<LimitName, string> = {
+  N5_LIMIT_USER_MINUTES: 'вызов Whisper на аккаунт останется без потолка платных минут',
+  N5_LIMIT_USER_UPLOADS: 'выдача загрузки и последующая обработка останутся без суточного потолка',
+  N5_LIMIT_USER_UPLOAD_REFUNDS: 'возврат слота позволит безгранично вызывать скачивание и ffprobe',
+  N5_LIMIT_USER_LLM: 'вызов LLM одного аккаунта сможет израсходовать общий бюджет',
+  N5_LIMIT_GLOBAL_MINUTES: 'платный вызов Whisper останется без общего потолка минут',
+  N5_LIMIT_GLOBAL_LLM: 'платный вызов LLM останется без общего потолка попыток',
+};
+export function required(env: Environment, name: string, consequence: string): string {
+  const value = env[name];
+  if (value === undefined) throw new Error(`${name} отсутствует: ${consequence}`);
+  if (value.trim() === '') throw new Error(`${name} пустая строка: ${consequence}`);
+  return value;
+}
+export function loadLimits(env: Environment): Limits {
+  const entries = LIMIT_NAMES.map((name) => {
+    const raw = required(env, name, consequences[name]);
+    const n = Number(raw);
+    if (!/^[1-9][0-9]*$/.test(raw) || !Number.isSafeInteger(n) || n > 2147483647) {
+      throw new Error(`${name} непригодно: ${consequences[name]}; нужно положительное целое в диапазоне PostgreSQL int`);
+    }
+    return [name, n];
+  });
+  return Object.freeze(Object.fromEntries(entries)) as Limits;
+}
+function url(env: Environment, name: string, protocols: string[], consequence: string): string {
+  const value = required(env, name, consequence);
+  try {
+    const parsed = new URL(value);
+    if (value !== value.trim() || /[\r\n\t]/.test(value) || !protocols.includes(parsed.protocol) || !parsed.hostname) throw new Error();
+    if (name === 'N5_PUBLIC_ORIGIN' && (parsed.username || parsed.password || parsed.pathname !== '/' || parsed.search || parsed.hash)) throw new Error();
+    return value;
+  } catch {
+    throw new Error(`${name} непригодно: ${consequence}; нужен URL с протоколом ${protocols.join(' или ')}`);
+  }
+}
+export function loadConnectionConfig(env: Environment) {
+  return Object.freeze({
+    databaseUrl: url(env, 'DATABASE_URL', ['postgres:', 'postgresql:'], 'сессии и атомарные ограничения базы будут недоступны'),
+    redisUrl: url(env, 'REDIS_URL', ['redis:', 'rediss:'], 'ограничитель частоты и транспорт заданий будут недоступны'),
+  });
+}
+export function loadPublicOrigin(env: Environment): string {
+  return url(env, 'N5_PUBLIC_ORIGIN', env.NODE_ENV === 'development' || env.NODE_ENV === 'test' ? ['https:', 'http:'] : ['https:'],
+    'он вшивается в метку каждого клипа и определяет каждую выдаваемую наружу ссылку; с дефолтом они вели бы в никуда');
+}
+export function loadWebConfig(env: Environment) {
+  const limits = loadLimits(env);
+  const publicOrigin = loadPublicOrigin(env);
+  const connections = loadConnectionConfig(env);
+  const sessionSecret = required(env, 'SESSION_SECRET', 'без секрета нельзя защитить хэши сессий и отозвать их ротацией');
+  if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
+    throw new Error('SESSION_SECRET непригодно: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
+  }
+  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret });
+}
+export type WebConfig = ReturnType<typeof loadWebConfig>;
+// Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.
+export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environment) {
+  const connections = loadConnectionConfig(env);
+  return role === 'worker-video'
+    ? Object.freeze({ ...connections, publicOrigin: loadPublicOrigin(env), role })
+    : Object.freeze({ ...connections, limits: loadLimits(env), role });
+}

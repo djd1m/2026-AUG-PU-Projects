@@ -1,0 +1,59 @@
+import { describe, expect, it, beforeAll } from 'vitest';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, openSync, closeSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { LIMIT_NAMES, loadWebConfig, loadWorkerConfig } from '../packages/shared/src/config';
+import { environment } from './fixtures/environment';
+
+function subprocess(args: string[], env: NodeJS.ProcessEnv = process.env) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'n5-config-'));
+  const file = path.join(dir, 'output');
+  const fd = openSync(file, 'w');
+  try {
+    // Файловые дескрипторы работают и в среде, где синхронные pipe запрещены.
+    const result = spawnSync(process.execPath, args, { env, stdio: ['ignore', fd, fd], timeout: 15000 });
+    if (result.error) throw result.error;
+    return { status: result.status, stderr: readFileSync(file, 'utf8') };
+  } finally { closeSync(fd); rmSync(dir, { recursive: true, force: true }); }
+}
+beforeAll(() => {
+  expect(subprocess(['node_modules/typescript/bin/tsc', '-p', 'packages/shared/tsconfig.json']).status).toBe(0);
+});
+describe('Отказ запуска конфигурации', () => {
+  for (const name of LIMIT_NAMES) {
+    it(`Отдельный процесс без ${name}`, () => {
+      const env = environment(); delete env[name];
+      const result = subprocess(['-e', "require('./packages/shared/dist/config.js').loadWebConfig(process.env)"], env);
+      expect(result.status).not.toBe(0);
+      expect(result.stderr).toContain(name);
+      expect(result.stderr).toMatch(/вызов|выдача загрузки|скачивание и ffprobe/);
+    });
+  }
+  it('Седьмой процесс: пустой origin', () => {
+    const result = subprocess(['-e', "require('./packages/shared/dist/config.js').loadWebConfig(process.env)"], { ...environment(), N5_PUBLIC_ORIGIN: '' });
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain('пустая строка');
+    expect(result.stderr).toContain('метку каждого клипа');
+  });
+  it.each(['DATABASE_URL', 'REDIS_URL', 'SESSION_SECRET', 'N5_PUBLIC_ORIGIN'])( '%s обязателен', (name) => {
+    const env = environment(); delete env[name]; expect(() => loadWebConfig(env)).toThrow(`${name} отсутствует`);
+    env[name] = ''; expect(() => loadWebConfig(env)).toThrow(`${name} пустая строка`);
+  });
+  it.each(['0', '-1', '1.5', '2x', '1e2', ' 2', 'Infinity', '2147483648'])('Отказ непригодного потолка %s', (raw) => {
+    expect(() => loadWebConfig({ ...environment(), N5_LIMIT_USER_LLM: raw })).toThrow('N5_LIMIT_USER_LLM непригодно');
+  });
+  it.each(['ftp://test.invalid', 'https://test.invalid/path', 'https://u:p@test.invalid', ' https://test.invalid', 'https://test.invalid/?q=1'])('Origin не подчищается: %s', (origin) => {
+    expect(() => loadWebConfig({ ...environment(), N5_PUBLIC_ORIGIN: origin })).toThrow('N5_PUBLIC_ORIGIN непригодно');
+  });
+  it('http разрешён только в development/test', () => {
+    expect(() => loadWebConfig({ ...environment(), NODE_ENV: 'production', N5_PUBLIC_ORIGIN: 'http://test.invalid' })).toThrow();
+    expect(loadWebConfig({ ...environment(), NODE_ENV: 'development', N5_PUBLIC_ORIGIN: 'http://test.invalid' }).publicOrigin).toBe('http://test.invalid');
+  });
+  it('Воркеры не требуют чужой секрет сессий', () => {
+    const env = environment(); delete env.SESSION_SECRET; delete env.N5_PUBLIC_ORIGIN;
+    expect(loadWorkerConfig('worker-stt', env).role).toBe('worker-stt');
+    expect(loadWorkerConfig('worker-llm', env).role).toBe('worker-llm');
+    expect(() => loadWorkerConfig('worker-video', env)).toThrow('N5_PUBLIC_ORIGIN');
+  });
+});
