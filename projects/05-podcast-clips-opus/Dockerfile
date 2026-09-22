@@ -3,7 +3,7 @@
 # Цели: web (Next.js), worker (ffmpeg + ffprobe), test (раннер с dev-зависимостями).
 
 # ── deps: манифесты ВСЕХ workspace, иначе npm ci падает «Exit handler never called» ──
-FROM node:22.11-alpine AS deps
+FROM node:22.22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/web/package.json ./apps/web/
@@ -19,7 +19,7 @@ COPY . .
 RUN npm run build
 
 # ── web: SSR Next.js; НЕТ ffmpeg/ffprobe (канон §6: медиа-инструменты только у воркеров) ──
-FROM node:22.11-alpine AS web
+FROM node:22.22-alpine AS web
 WORKDIR /app
 ENV NODE_ENV=production TZ=Europe/Moscow
 COPY --from=build /app/node_modules ./node_modules
@@ -33,7 +33,7 @@ EXPOSE 3000
 CMD ["npm", "run", "start", "--workspace=apps/web"]
 
 # ── worker: ffmpeg 7 и ffprobe; один образ на три контейнера, команда задаётся в compose ──
-FROM node:22.11-alpine AS worker
+FROM node:22.22-alpine AS worker
 WORKDIR /app
 # ffmpeg в alpine приносит ffprobe той же версии; проверяется при сборке, а не предполагается
 RUN apk add --no-cache ffmpeg && ffmpeg -version && ffprobe -version

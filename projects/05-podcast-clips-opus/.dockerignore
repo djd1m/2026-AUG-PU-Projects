@@ -7,6 +7,7 @@ coverage
 .env
 .env.*
 docs
-tests
+# tests НЕ исключаются: цель `test` собирается из этого же контекста и без них
+# образ поднимается с «No test files found» — зелёный прогон на пустом множестве
 .p-replicator
 *.md
