@@ -63,7 +63,7 @@ flowchart LR
 |---|---|---|
 | Frontend | Next.js 15 (App Router, SSR), React 19, Tailwind, shadcn/ui | стек январского клона; SSR нужен для `/c/{code}` и `/g/{guest_code}` в WebView площадок без JS-зависимостей |
 | Backend | Next.js route handlers + tRPC, Zod на границе | клон; типизированные процедуры канона §5 |
-| Database | PostgreSQL 16, Prisma (схема — контракт, миграции SQL проверяются) | источник истины; `UNIQUE`-ограничения и атомарные счётчики в базе, не в коде |
+| Database | PostgreSQL 16, драйвер `pg` напрямую; схема — SQL-миграции, типы объявлены в `packages/shared` | источник истины; `UNIQUE`-ограничения и атомарные счётчики в базе, не в коде. Prisma отклонена (DEC-A-017): атомарное списание квоты и фенс требуют параметризованного сырого SQL, а переносимые из клона куски от ORM не зависят |
 | Cache | нет | кэш не нужен; страницы `/c/`, `/g/` отдаются с `Cache-Control: no-store` |
 | Queue | BullMQ 5 на Redis 7 (AOF, `noeviction`, пароль) | ADR-001; задания минутной длительности, повторы, stalled-детект |
 | Object storage | Cloud.ru Object Storage (S3, SigV4, `ru-central-1`); MinIO в тестовом профиле | ADR-002 |
