@@ -2,7 +2,7 @@
   "type": "object", "additionalProperties": false, "required": ["fragments"],
   "properties": {
     "fragments": {
-      "type": "array", "minItems": 3, "maxItems": 8,
+      "type": "array", "minItems": 1, "maxItems": 8,
       "items": {
         "type": "object", "additionalProperties": false,
         "required": ["start_seconds", "end_seconds", "title", "score", "score_hook", "score_completeness", "score_length", "explain_hook", "explain_completeness", "explain_length"],

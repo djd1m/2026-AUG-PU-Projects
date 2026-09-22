@@ -62,6 +62,26 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
     expect((await pool.query('SELECT * FROM clip')).rowCount).toBe(1);
     expect((await pool.query('SELECT * FROM clip_link')).rowCount).toBe(1);
   });
+  it('one strong fragment is persisted as the honest count', async () => {
+    const f = await fixture();
+    await authorizeSelection(pool, f.attempt, limits, model);
+    const fragments = validateFragments({ fragments: [fakeFragment()] }, transcript, 360);
+    const jobs = await acceptSelection(pool, f.attempt, fragments);
+    expect(jobs).toHaveLength(1);
+    expect((await pool.query('SELECT clips_total,status FROM video WHERE id=$1', [f.video])).rows[0])
+      .toEqual({ clips_total: 1, status: 'rendering' });
+    expect((await pool.query('SELECT * FROM clip WHERE video_id=$1', [f.video])).rowCount).toBe(1);
+  });
+  it('one out-of-range candidate rejects all three without saving clips', async () => {
+    const f = await fixture();
+    await authorizeSelection(pool, f.attempt, limits, model);
+    const fragments = [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), score_hook: 34, score: 84 }];
+    expect(await acceptSelection(pool, f.attempt, fragments)).toEqual([]);
+    expect((await pool.query('SELECT status,failure_reason FROM video WHERE id=$1', [f.video])).rows[0])
+      .toEqual({ status: 'failed', failure_reason: 'no_fragments' });
+    expect((await pool.query('SELECT * FROM clip WHERE video_id=$1', [f.video])).rowCount).toBe(0);
+    expect((await pool.query('SELECT * FROM clip_link')).rowCount).toBe(0);
+  });
   it('old fence cannot spend or save after a new lease', async () => {
     const f = await fixture(); await leaseAttempt(pool, f.video, 'select', 2);
     expect(await authorizeSelection(pool, f.attempt, limits, model)).toBeNull();

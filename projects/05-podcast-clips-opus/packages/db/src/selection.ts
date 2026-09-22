@@ -36,20 +36,26 @@ export async function authorizeSelection(pool: Pool, attempt: Attempt, limits: L
   return transaction(pool, async tx => {
     const row = await lockCurrent(tx, attempt);
     if (!row) { auditAttempt('stale_attempt_result', attempt); return null; }
-    if (row.llm_dispatched) return null;
     if (now.getTime() - row.started_at.getTime() >= 30 * 60_000) { await failTx(tx, attempt, 'stalled', now); return null; }
     const duration = Number(row.duration_seconds);
     let transcript: TranscriptResult;
     try { transcript = await readTranscript(tx, attempt.video_id, duration); }
     catch { await failTx(tx, attempt, 'no_timestamps', now); return null; }
+    // The joined SELECT can carry an older job_attempt snapshot while waiting
+    // for video. Only this conditional UPDATE grants the right to spend.
+    const claimed = await tx.query<{ unit_count: number }>(`UPDATE job_attempt SET llm_dispatched=true
+      WHERE video_id=$1 AND fence=$2 AND stage='select' AND status='running' AND llm_dispatched=false
+      RETURNING unit_count`, [attempt.video_id, attempt.fence]);
+    const claim = claimed.rows[0];
+    if (!claim) return null;
     // RetryVideo reserves exactly one call in its transaction, before enqueue.
-    if (row.unit_count === 0) {
+    if (claim.unit_count === 0) {
       const quota = await checkAndConsumeQuota(tx, limits, row.account_id, 'llm', 1, now);
       if (!quota.granted) {
         await failTx(tx, attempt, quota.scope === 'user_llm' ? 'refused_user_llm' : 'refused_global_llm', now); return null;
       }
-    } else if (row.unit_count !== 1) throw new Error('Непригодный резерв вызова');
-    await tx.query(`UPDATE job_attempt SET llm_dispatched=true,unit_count=1,provider='openrouter',model=$3
+    } else if (claim.unit_count !== 1) throw new Error('Непригодный резерв вызова');
+    await tx.query(`UPDATE job_attempt SET unit_count=1,provider='openrouter',model=$3
       WHERE video_id=$1 AND fence=$2`, [attempt.video_id, attempt.fence, model]);
     await tx.query('UPDATE video SET updated_at=$3 WHERE id=$1 AND fence=$2', [attempt.video_id, attempt.fence, now]);
     return { transcript, duration };

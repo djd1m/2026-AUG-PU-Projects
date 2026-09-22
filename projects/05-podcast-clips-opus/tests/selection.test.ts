@@ -4,17 +4,29 @@ import { FRAGMENTS_SCHEMA, validateFragments, SELECT_TIMEOUT_MS } from '../packa
 import { loadLlmConfig } from '../packages/shared/src/config';
 import { createSelector } from '../apps/worker/src/llm/provider';
 import { createFakeSelector, fakeFragment, type FakeCase } from '../apps/worker/src/llm/fake';
+import { SYSTEM_PROMPT } from '../apps/worker/src/llm/prompts/selection';
 import { selectionMigration } from '../scripts/generate-selection-migration.mjs';
 import { environment } from './fixtures/environment';
 const transcript = { language: 'ru', words: Array.from({ length: 360 }, (_, i) => ({ word: 'слово', start: i, end: i + 0.8 })), segments: [] };
 const valid = (scenario: FakeCase) => createFakeSelector(scenario).select(transcript, 360, new AbortController().signal);
 describe('selection semantics', () => {
   it('honest count: never pads fewer than three', async () => {
+    expect(validateFragments({ fragments: [fakeFragment()] }, transcript, 360)).toHaveLength(1);
     expect(validateFragments(await valid('few'), transcript, 360)).toHaveLength(2);
     expect(validateFragments(await valid('empty'), transcript, 360)).toEqual([]);
   });
   it.each(['score', 'explanation', 'length'] as const)('our code rejects invalid %s', async scenario => {
     expect(validateFragments(await valid(scenario), transcript, 360)).toEqual([]);
+  });
+  it('never salvages a padded response with an invalid candidate', () => {
+    for (const patch of [{ score_hook: 34, score: 84 }, { end_seconds: 136 }, { explain_hook: ' ' }]) {
+      expect(validateFragments({ fragments: [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), ...patch }] }, transcript, 360)).toEqual([]);
+    }
+  });
+  it('prompt keeps the target at three to eight while explicitly allowing fewer', () => {
+    expect(SYSTEM_PROMPT).toContain('3–8');
+    expect(SYSTEM_PROMPT).toContain('меньше трёх, верни столько, сколько есть');
+    expect(SYSTEM_PROMPT).toContain('не добирай слабые фрагменты');
   });
   it('rejects bad total, fractions, NaN, infinity, negatives and foreign explanations', () => {
     for (const patch of [{ score: 99 }, { score_hook: 1.5 }, { start_seconds: NaN }, { end_seconds: Infinity },
@@ -49,7 +61,7 @@ describe('selection semantics', () => {
     expect(() => validateFragments({ fragments: [fakeFragment()] }, { ...transcript, words: [] }, 360)).toThrow();
   });
   it('schema request and migration share exactly one declaration', () => {
-    expect(FRAGMENTS_SCHEMA.properties.fragments).toMatchObject({ minItems: 3, maxItems: 8 });
+    expect(FRAGMENTS_SCHEMA.properties.fragments).toMatchObject({ minItems: 1, maxItems: 8 });
     expect(readFileSync('packages/db/migrations/007_selection.sql', 'utf8')).toBe(selectionMigration());
   });
 });
@@ -70,14 +82,12 @@ describe('OpenRouter adapter', () => {
     expect(source).toMatch(/provider:\s*\{\s*only:/);
     expect(source).toContain('allow_fallbacks: false'); expect(source).toContain('require_parameters: true');
   });
-  it('adapter path preserves two usable clips from three schema-shaped candidates without padding', async () => {
-    // Schema's count is explicitly required by the brief. Cross-field duration
-    // and word/overlap semantics still belong to our validator, not the provider.
+  it('adapter path rejects the whole response when one of three candidates is out of range', async () => {
     const response = { fragments: [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), end_seconds: 61 }] };
     const request = vi.fn(async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(response) } }] })));
     const output = await createSelector(loadLlmConfig({ ...environment(), N5_MODEL_PROVIDER: 'live' }), request)
       .select(transcript, 360, new AbortController().signal);
-    expect(validateFragments(output, transcript, 360)).toHaveLength(2);
+    expect(validateFragments(output, transcript, 360)).toEqual([]);
     expect(request).toHaveBeenCalledTimes(1);
   });
   it('configuration rejects missing model/key and production fake', () => {

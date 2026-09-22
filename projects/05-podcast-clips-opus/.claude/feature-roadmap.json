@@ -156,7 +156,7 @@
       "title": "Выделение 3–8 самодостаточных фрагментов и объяснённая оценка",
       "description": "SelectFragments — один вызов Claude Sonnet 5 со structured outputs, 3–8 кандидатов {start,end,title,hook,completeness,length_fit,explanations}, квота llm на ДВА ключа (user_llm и global_llm) ДО вызова; проверка диапазонов НАШИМ кодом после разбора — structured outputs числовых ограничений и длины строк не задают; границы по словам транскрипта, длина 20,0–75,0 с; ScoreClip — сумма трёх компонентов 0–33, каждая с непустой фразой объяснения (CHECK в базе); честное число фрагментов при находке меньше трёх; создание строк clip и clip_link ДО постановки стадии render; отказ стадии при нуле пригодных кандидатов.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "transcription"
@@ -191,7 +191,7 @@
       "title": "Кроп 9:16, вшитые субтитры и метка free с короткой ссылкой",
       "description": "BuildSubtitles — ASS из слов транскрипта с выделением текущего слова; WatermarkRequired = plan !== 'paid', значение только из базы, поле «без метки» из тела не читается; ComputeWatermarkGeometry — текст «КлипМейкер · <origin>/c/<code>» из N5_PUBLIC_ORIGIN без дефолта, высота ≥ 3,5 % кадра, safe zone сторис, подложка с контрастом ≥ 4,5:1; RenderClip — concurrency литералом 1, резерв диска ДО скачивания, заявка актуальности render_fence, цепочка scale → crop 9:16 → subtitles → drawtext, ffmpeg дочерним процессом с таймаутом 15 мин, выгрузка под префикс clips/free/ либо clips/paid/, принятие результата по фенсу, очистка каталога в finally, активация атрибуции при первом done. Тир XL: несущий инвариант метки и метрика недели.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "selection-and-score"
