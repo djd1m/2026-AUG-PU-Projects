@@ -24,13 +24,22 @@
       "title": "Монорепо, схема БД, отказ старта при ненастроенной конфигурации, вход по почте",
       "description": "npm workspaces (apps/web, apps/worker, packages/db, packages/shared, packages/s3); сборка образов из корня монорепо; миграции SQL на 15 сущностей канона §4 со всеми UNIQUE, частичными индексами и CHECK по закрытым перечислениям; закрытые перечисления объявлены один раз в packages/shared и оттуда же попадают в CHECK; отказ старта web и воркеров при любой из ШЕСТИ ненастроенных N5_LIMIT_* и при пустом N5_PUBLIC_ORIGIN (шесть отдельных прогонов, не один); регистрация, вход по почте с bcrypt вне транзакции, cookie-сессии с хэшем токена и ip_prefix /24, logout; GET /health; scripts/check-env-wiring.sh, которого в репозитории нет.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [],
       "blockers": [],
-      "fr_ids": ["FR-AUTH-001", "FR-LIMIT-002", "FR-RENDER-002", "NFR-SEC-001", "NFR-OPS-001"],
+      "fr_ids": [
+        "FR-AUTH-001",
+        "FR-LIMIT-002",
+        "FR-RENDER-002",
+        "NFR-SEC-001",
+        "NFR-OPS-001"
+      ],
       "sc_ids": [],
-      "adr_ids": ["ADR-001", "ADR-002"],
+      "adr_ids": [
+        "ADR-001",
+        "ADR-002"
+      ],
       "expected_files": [
         "package.json",
         "packages/db/migrations/001_init.sql",
@@ -47,13 +56,28 @@
       "title": "Приём загрузки, идемпотентность и шесть ключей квоты",
       "description": "video.create с обязательным Idempotency-Key клиента и presigned multipart (≤ 900 с); заявка ключа одним атомарным оператором ON CONFLICT DO NOTHING RETURNING; POST /api/upload/complete — CompleteMultipartUpload сервером, HEAD размера, тип по магическим байтам через Range-GET; CheckAndConsumeQuota на шести scope двумя операторами в одной транзакции с пределом из окружения; RefundUploadSlot при отказе по свойствам файла в той же транзакции, что пишет failed. Тир XL по локальному роутеру: трогает деньги, остановка на плане у владельца обязательна.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
-      "depends_on": ["foundation"],
+      "depends_on": [
+        "foundation"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-INGEST-001", "FR-INGEST-002", "FR-LIMIT-001", "FR-LIMIT-002", "FR-LIMIT-003"],
-      "sc_ids": ["SC-US-001-1", "SC-US-001-2", "SC-US-011-3"],
-      "adr_ids": ["ADR-002", "ADR-006"],
+      "fr_ids": [
+        "FR-INGEST-001",
+        "FR-INGEST-002",
+        "FR-LIMIT-001",
+        "FR-LIMIT-002",
+        "FR-LIMIT-003"
+      ],
+      "sc_ids": [
+        "SC-US-001-1",
+        "SC-US-001-2",
+        "SC-US-011-3"
+      ],
+      "adr_ids": [
+        "ADR-002",
+        "ADR-006"
+      ],
       "expected_files": [
         "packages/db/src/quota.ts",
         "packages/s3/src/multipart.ts",
@@ -67,13 +91,27 @@
       "title": "Очередь с фенсом попыток, probe длительности и сторож",
       "description": "BullMQ на Redis, три очереди, jobId = {stage}:{video_id}:{fence}; LeaseAttempt с монотонным фенсом на видео, UNIQUE (video_id, fence), series_no и потолком ≤ 2 автоматических попыток внутри серии; ProbeSource в worker-stt — резерв диска ≥ 3× ДО скачивания, ffprobe отдельным процессом с таймаутом, четыре отказа по свойствам файла с возвратом слота, списание user_minutes и global_minutes ДО первого вызова Whisper; deferred(no_disk) двигает video.updated_at; WatchdogTick раз в минуту переводит молчащие задачи в failed(stalled) через 30 мин; RetryVideo с проверкой object_key IS NOT NULL.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
-      "depends_on": ["upload-and-quota"],
+      "depends_on": [
+        "upload-and-quota"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-RENDER-003", "FR-INGEST-002", "FR-LIMIT-001", "NFR-SCALE-001"],
-      "sc_ids": ["SC-US-002-3", "SC-US-011-1", "SC-US-011-2"],
-      "adr_ids": ["ADR-001", "ADR-006"],
+      "fr_ids": [
+        "FR-RENDER-003",
+        "FR-INGEST-002",
+        "FR-LIMIT-001",
+        "NFR-SCALE-001"
+      ],
+      "sc_ids": [
+        "SC-US-002-3",
+        "SC-US-011-1",
+        "SC-US-011-2"
+      ],
+      "adr_ids": [
+        "ADR-001",
+        "ADR-006"
+      ],
       "expected_files": [
         "apps/worker/src/queue/lease-attempt.ts",
         "apps/worker/src/workers/stt.ts",
@@ -87,13 +125,24 @@
       "title": "Транскрипция с таймкодами слов, чанкинг и журнал расхода",
       "description": "ExtractAndChunkAudio — потоковое извлечение звука ffmpeg -vn, чанки ≤ 25 МБ по паузам, без разрезания посреди фразы; Transcribe — whisper-1 с verbose_json и timestamp_granularities=[word,segment], склейка слов со смещением чанка; контракт поставщика: результат без words[].start/end отвергается ДО постановки стадии select; повтор чанка после таймаута списывает минуты заново ДО повторного обращения; RecordModelSpend пишет строку model-spend.jsonl на КАЖДУЮ попытку; адаптер Transcriber с живым клиентом и детерминированным фейком.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
-      "depends_on": ["queue-and-probe"],
+      "depends_on": [
+        "queue-and-probe"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-TRANSCRIBE-001", "FR-TRANSCRIBE-002", "NFR-OPS-001"],
-      "sc_ids": ["SC-US-013-1", "SC-US-013-2"],
-      "adr_ids": ["ADR-003"],
+      "fr_ids": [
+        "FR-TRANSCRIBE-001",
+        "FR-TRANSCRIBE-002",
+        "NFR-OPS-001"
+      ],
+      "sc_ids": [
+        "SC-US-013-1",
+        "SC-US-013-2"
+      ],
+      "adr_ids": [
+        "ADR-003"
+      ],
       "expected_files": [
         "apps/worker/src/media/extract-chunks.ts",
         "apps/worker/src/stt/transcribe.ts",
@@ -109,11 +158,26 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "complex",
-      "depends_on": ["transcription"],
+      "depends_on": [
+        "transcription"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-SELECT-001", "FR-SELECT-002", "FR-LIMIT-002"],
-      "sc_ids": ["SC-US-003-1", "SC-US-003-2", "SC-US-003-3", "SC-US-004-1", "SC-US-004-2"],
-      "adr_ids": ["ADR-003", "ADR-004"],
+      "fr_ids": [
+        "FR-SELECT-001",
+        "FR-SELECT-002",
+        "FR-LIMIT-002"
+      ],
+      "sc_ids": [
+        "SC-US-003-1",
+        "SC-US-003-2",
+        "SC-US-003-3",
+        "SC-US-004-1",
+        "SC-US-004-2"
+      ],
+      "adr_ids": [
+        "ADR-003",
+        "ADR-004"
+      ],
       "expected_files": [
         "apps/worker/src/workers/select.ts",
         "apps/worker/src/select/select-fragments.ts",
@@ -129,11 +193,26 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "complex",
-      "depends_on": ["selection-and-score"],
+      "depends_on": [
+        "selection-and-score"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-RENDER-001", "FR-RENDER-002", "FR-RENDER-003", "FR-GROWTH-003", "FR-GROWTH-005"],
-      "sc_ids": ["SC-US-005-1", "SC-US-005-2", "SC-US-007-2"],
-      "adr_ids": ["ADR-004", "ADR-006"],
+      "fr_ids": [
+        "FR-RENDER-001",
+        "FR-RENDER-002",
+        "FR-RENDER-003",
+        "FR-GROWTH-003",
+        "FR-GROWTH-005"
+      ],
+      "sc_ids": [
+        "SC-US-005-1",
+        "SC-US-005-2",
+        "SC-US-007-2"
+      ],
+      "adr_ids": [
+        "ADR-004",
+        "ADR-006"
+      ],
       "expected_files": [
         "apps/worker/src/workers/render.ts",
         "apps/worker/src/render/build-subtitles.ts",
@@ -149,11 +228,24 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "medium",
-      "depends_on": ["render-and-watermark"],
+      "depends_on": [
+        "render-and-watermark"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-RESULT-001", "FR-RESULT-002", "FR-GROWTH-001", "NFR-PERF-002"],
-      "sc_ids": ["SC-US-002-1", "SC-US-002-2", "SC-US-005-4"],
-      "adr_ids": ["ADR-001"],
+      "fr_ids": [
+        "FR-RESULT-001",
+        "FR-RESULT-002",
+        "FR-GROWTH-001",
+        "NFR-PERF-002"
+      ],
+      "sc_ids": [
+        "SC-US-002-1",
+        "SC-US-002-2",
+        "SC-US-005-4"
+      ],
+      "adr_ids": [
+        "ADR-001"
+      ],
       "expected_files": [
         "apps/web/src/server/routers/clip.ts",
         "apps/web/src/app/dashboard/videos/[videoId]/page.tsx",
@@ -169,11 +261,23 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "medium",
-      "depends_on": ["render-and-watermark"],
+      "depends_on": [
+        "render-and-watermark"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-LINK-001", "FR-GROWTH-001", "FR-GROWTH-005"],
-      "sc_ids": ["SC-US-009-1", "SC-US-009-2"],
-      "adr_ids": ["ADR-004", "ADR-007"],
+      "fr_ids": [
+        "FR-LINK-001",
+        "FR-GROWTH-001",
+        "FR-GROWTH-005"
+      ],
+      "sc_ids": [
+        "SC-US-009-1",
+        "SC-US-009-2"
+      ],
+      "adr_ids": [
+        "ADR-004",
+        "ADR-007"
+      ],
       "expected_files": [
         "apps/web/src/server/routers/link.ts",
         "apps/web/src/app/c/[code]/page.tsx",
@@ -188,11 +292,27 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "complex",
-      "depends_on": ["progress-and-clips-screen"],
+      "depends_on": [
+        "progress-and-clips-screen"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-GUEST-001", "FR-GUEST-002", "FR-GUEST-003", "FR-GROWTH-004", "NFR-SEC-002"],
-      "sc_ids": ["SC-US-006-1", "SC-US-006-2", "SC-US-006-3", "SC-US-007-1", "SC-US-007-3"],
-      "adr_ids": ["ADR-008"],
+      "fr_ids": [
+        "FR-GUEST-001",
+        "FR-GUEST-002",
+        "FR-GUEST-003",
+        "FR-GROWTH-004",
+        "NFR-SEC-002"
+      ],
+      "sc_ids": [
+        "SC-US-006-1",
+        "SC-US-006-2",
+        "SC-US-006-3",
+        "SC-US-007-1",
+        "SC-US-007-3"
+      ],
+      "adr_ids": [
+        "ADR-008"
+      ],
       "expected_files": [
         "apps/web/src/server/routers/guest.ts",
         "apps/web/src/app/g/[guestCode]/page.tsx",
@@ -208,11 +328,27 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "complex",
-      "depends_on": ["guest-pack", "short-link"],
+      "depends_on": [
+        "guest-pack",
+        "short-link"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-PARTNER-001", "FR-PARTNER-002", "FR-PARTNER-003", "FR-GROWTH-002", "FR-GROWTH-004"],
-      "sc_ids": ["SC-US-008-1", "SC-US-008-2", "SC-US-010-1", "SC-US-010-2"],
-      "adr_ids": ["ADR-007"],
+      "fr_ids": [
+        "FR-PARTNER-001",
+        "FR-PARTNER-002",
+        "FR-PARTNER-003",
+        "FR-GROWTH-002",
+        "FR-GROWTH-004"
+      ],
+      "sc_ids": [
+        "SC-US-008-1",
+        "SC-US-008-2",
+        "SC-US-010-1",
+        "SC-US-010-2"
+      ],
+      "adr_ids": [
+        "ADR-007"
+      ],
       "expected_files": [
         "apps/web/src/server/routers/code.ts",
         "apps/web/src/server/routers/partner.ts",
@@ -229,11 +365,21 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "medium",
-      "depends_on": ["progress-and-clips-screen"],
+      "depends_on": [
+        "progress-and-clips-screen"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-TARIFF-001", "FR-TARIFF-002", "FR-LIMIT-003"],
-      "sc_ids": ["SC-US-012-1"],
-      "adr_ids": ["ADR-005"],
+      "fr_ids": [
+        "FR-TARIFF-001",
+        "FR-TARIFF-002",
+        "FR-LIMIT-003"
+      ],
+      "sc_ids": [
+        "SC-US-012-1"
+      ],
+      "adr_ids": [
+        "ADR-005"
+      ],
       "expected_files": [
         "apps/web/src/server/routers/interest.ts",
         "apps/web/src/app/pro/page.tsx",
@@ -248,11 +394,27 @@
       "priority": "mvp",
       "status": "planned",
       "complexity": "medium",
-      "depends_on": ["guest-pack", "limits-ui-and-pro-interest"],
+      "depends_on": [
+        "guest-pack",
+        "limits-ui-and-pro-interest"
+      ],
       "blockers": [],
-      "fr_ids": ["FR-TARIFF-003", "FR-GUEST-003", "FR-AUTH-003", "NFR-SEC-002"],
-      "sc_ids": ["SC-US-005-3", "SC-US-012-2", "SC-US-014-1", "SC-US-014-2"],
-      "adr_ids": ["ADR-002", "ADR-008"],
+      "fr_ids": [
+        "FR-TARIFF-003",
+        "FR-GUEST-003",
+        "FR-AUTH-003",
+        "NFR-SEC-002"
+      ],
+      "sc_ids": [
+        "SC-US-005-3",
+        "SC-US-012-2",
+        "SC-US-014-1",
+        "SC-US-014-2"
+      ],
+      "adr_ids": [
+        "ADR-002",
+        "ADR-008"
+      ],
       "expected_files": [
         "apps/web/src/server/retention/purge-expired-clips.ts",
         "apps/web/src/server/routers/account.ts",
