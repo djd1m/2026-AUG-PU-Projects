@@ -1,0 +1,73 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922-short-link-codex",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "short-link",
+  "pipeline": "brief implementation",
+  "tier": "M",
+  "risk_flags": [
+    "public landing",
+    "concurrent growth counter"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Telemetry stored in tests/artifacts per brief docs restriction",
+    "Mechanical S before implementation, L with additive migration; substantive M by fresh SPARC exception",
+    "OpenAI Codex implements; Anthropic opus review requested through CLI, actual model unconfirmed, timeout 124"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "1477138ee7596cf26e66f715d834dc86690ec285",
+  "final_revision": "dirty-sha256:a78eaab390ad4f77c5214914afc66defe39dd36221d58075db18fec30a6ed1a9",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-22T22:26:28.972095+00:00",
+  "ended_at": "2026-09-22T22:39:18.717214+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "all-tests.txt",
+    "build.txt",
+    "typecheck-final.txt",
+    "lint-final.txt",
+    "mutations/results.json",
+    "source-manifest.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 6,
+    "confirmed_findings_by_severity": {
+      "typecheck_test_fix": 1
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "elapsed_wall_ms": 769745,
+    "active_wall_ms": null,
+    "cost_basis": "unavailable",
+    "retry_count": 1,
+    "escalation_count": 0,
+    "first_pass_acceptance": false
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading before timestamp not measured",
+    "Actual model identifier and effort not provided by execution metadata",
+    "Usage and billing unavailable",
+    "Anthropic review unavailable",
+    "Full 337-test baseline requires Docker/PostgreSQL/Redis/MinIO; 98 tests skipped here",
+    "Initial reading duration and active time not measurable"
+  ],
+  "actual_model": null,
+  "model_family": "OpenAI Codex"
+}

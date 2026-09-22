@@ -1,0 +1,91 @@
+{
+  "identity": {
+    "run_id": "20260922-short-link-codex",
+    "work_unit_id": "short-link",
+    "current_attempt_id": "implement-1"
+  },
+  "stage": "paused",
+  "scope": [
+    "GET /c/{code} landing and thumbnail",
+    "atomic deduplicated link_view",
+    "owner link_copy"
+  ],
+  "exclusions": [
+    "guest pages",
+    "partner codes and attribution cookie",
+    "deployment"
+  ],
+  "source": {
+    "baseline_revision": "1477138ee7596cf26e66f715d834dc86690ec285",
+    "current_revision": "dirty-sha256:a78eaab390ad4f77c5214914afc66defe39dd36221d58075db18fec30a6ed1a9",
+    "build_revision": "dirty-sha256:a78eaab390ad4f77c5214914afc66defe39dd36221d58075db18fec30a6ed1a9",
+    "manifest": "source-manifest.json",
+    "requirements": "docs/features/short-link/00_brief_codex.md",
+    "architecture": "docs/Architecture.md"
+  },
+  "route": {
+    "plan": {
+      "mechanical_exit": 0,
+      "mechanical_tier": "S",
+      "tier": "M",
+      "reason": "Fresh SPARC covers public route and existing counter invariant"
+    },
+    "implementation": {
+      "mechanical_exit": 1,
+      "mechanical_tier": "L",
+      "tier": "M",
+      "reason": "Additive revocation field implements brief; no new invariant or table; fresh SPARC exception"
+    }
+  },
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requested implementation of brief; no deployment performed"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null,
+    "cost": null
+  },
+  "donors": [
+    {
+      "path": ".reference/jan-clone/apps/web/app/api/auth/logout/route.ts",
+      "decision": "adapt",
+      "reason": "Route/session/response pattern only"
+    },
+    {
+      "path": "packages/db/migrations/001_init.sql",
+      "decision": "use",
+      "reason": "Existing event table and unique partial index"
+    },
+    {
+      "path": "packages/shared/src/upload.ts",
+      "decision": "use",
+      "reason": "Existing moscowDay"
+    }
+  ],
+  "preflight": {
+    "status": "blocked",
+    "reason": "Docker permission denied; local PostgreSQL cannot initialize as unprivileged user; no candidate runtime",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "telemetry": {
+    "run": "run.json",
+    "events": "events.jsonl"
+  },
+  "pause": {
+    "from_stage": "implement",
+    "continuation": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Brief provides no native checkpoint"
+    },
+    "blockers": [
+      "PostgreSQL 16/Redis 7/MinIO test environment",
+      "Independent Anthropic review",
+      "Candidate E2E"
+    ],
+    "next_allowed_step": "Run compose test with --build, six mutation pairs, candidate E2E, independent review; do not deploy before gates"
+  },
+  "delivery": null
+}

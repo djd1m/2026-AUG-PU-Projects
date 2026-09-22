@@ -259,7 +259,7 @@
       "title": "Короткая ссылка /c/{code} и счётчик уникальных переходов",
       "description": "CreateClipLink — код ≥ 128 бит, UNIQUE, создаётся ДО постановки рендера (метка обязана нести код ЭТОГО клипа); GET /c/{code} — SSR-лендинг продукта с призывом, а НЕ файл клипа, работает в WebView площадок без JS-зависимостей, Cache-Control: no-store; RecordLinkView — установка cookie атрибуции, вставка growth_event(link_view) и обновление clip_link.unique_view_count в ОДНОЙ транзакции, уникальность за сутки на ip_prefix обеспечивает частичный UNIQUE в базе, самопереходы владельца не считаются.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "render-and-watermark"
@@ -290,7 +290,7 @@
       "title": "Клипы для гостя: галочки, согласие, гостевая страница без входа",
       "description": "CreateGuestPack — отметка клипов галочками и ОБЯЗАТЕЛЬНОЕ подтверждение согласия гостя ведущим: без него 422 и guest_pack НЕ создан (правовая граница ADR-008); guest.send выставляет sent_at и expires_at = sent_at + 14 дней (до отправки страница не открывается); GET /g/{guest_code} — SSR без входа, noindex, Cache-Control: no-store, код ≥ 128 бит, обращение по имени, «скачать» на каждом клипе и «скачать все», ссылка несёт код ведущего для атрибуции; OpenGuestPack пишет growth_event(guest_opened) с уникальностью за сутки на ip_prefix через частичный UNIQUE; guest.revoke — немедленный 404 без восстановления.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "progress-and-clips-screen"

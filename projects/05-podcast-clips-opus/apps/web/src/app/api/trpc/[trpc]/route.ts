@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const body = await readUploadJson(request);
     const bounded = new Request(request.url, { method: 'POST', headers: request.headers, body: JSON.stringify(body) });
     return await fetchRequestHandler({ endpoint: '/api/trpc', req: bounded, router: appRouter, allowBatching: false,
-      createContext: () => ({ account, idempotencyKey: request.headers.get('idempotency-key'), requestId, video: deps.video, retry: deps.retry, screen: deps.screen }),
+      createContext: () => ({ account, idempotencyKey: request.headers.get('idempotency-key'), requestId, video: deps.video, retry: deps.retry, screen: deps.screen, links: deps.links }),
       responseMeta: ({ errors }) => ({ status: errors.length ? undefined : 202, headers: { 'Cache-Control': 'private, no-store' } }) });
   } catch (error) { return uploadFailure(error, requestId); }
 }

@@ -3,8 +3,9 @@ import { z, ZodError } from 'zod';
 import type { VideoRetryService } from './video-retry';
 import type { VideoService } from './video';
 import type { ScreenService } from './screen';
+import type { ShortLinkService } from './short-link';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService }
+interface Context { account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -52,5 +53,15 @@ export const appRouter = t.router({ video: t.router({
   list: validatedProcedure.input(videoId).query(({ ctx, input }) => readResult(ctx, s => s.clips(ctx.account, input.video_id))),
   markDownloaded: validatedProcedure.input(z.object({ clip_id: z.string().uuid() }).strict())
     .mutation(({ ctx, input }) => readResult(ctx, s => s.markDownloaded(ctx.account, input.clip_id))),
+}), link: t.router({
+  create: validatedProcedure.input(z.object({ clip_id: z.string().uuid() }).strict()).mutation(async ({ ctx, input }) => {
+    try {
+      if (!ctx.links) throw new Error('Link runtime unavailable');
+      return { data: await ctx.links.copy(ctx.account, input.clip_id), meta: { request_id: ctx.requestId } };
+    } catch (cause) {
+      throw new TRPCError({ code: cause instanceof UploadError && cause.status === 404 ? 'NOT_FOUND' : 'INTERNAL_SERVER_ERROR',
+        message: cause instanceof UploadError ? cause.message : 'Не удалось скопировать ссылку. Повторите позже', cause });
+    }
+  }),
 }) });
 export type AppRouter = typeof appRouter;

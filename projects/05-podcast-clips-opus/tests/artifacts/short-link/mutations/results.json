@@ -1,0 +1,40 @@
+[
+  {
+    "id": "database-uniqueness",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "DATABASE_URL unavailable: real PostgreSQL is mandatory; no skipped test is a pass"
+  },
+  {
+    "id": "transaction",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "DATABASE_URL unavailable: real PostgreSQL is mandatory; no skipped test is a pass"
+  },
+  {
+    "id": "expired-landing",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "same-404",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "self-view",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "explicit-day",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  }
+]

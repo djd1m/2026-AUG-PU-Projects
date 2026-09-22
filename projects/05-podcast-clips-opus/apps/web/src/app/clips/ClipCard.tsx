@@ -1,8 +1,22 @@
 'use client';
+import { useState } from 'react';
+import { rpc } from '../../lib/rpc';
 import type { ClipScreen } from '../../lib/screen-contract';
 import { useClipDownload } from './useClipDownload';
 export function ClipCard({ clip }: { clip: ClipScreen }) {
   const { download, downloadingId, error } = useClipDownload();
+  const [copying, setCopying] = useState(false);
+  const [copyMessage, setCopyMessage] = useState('');
+  async function copyLink() {
+    setCopying(true); setCopyMessage('');
+    try {
+      const { url } = await rpc<{ code: string; url: string }>('link.create', { clip_id: clip.clip_id }, true);
+      const absolute = new URL(url, window.location.origin).href;
+      try { await navigator.clipboard.writeText(absolute); setCopyMessage('Ссылка скопирована'); }
+      catch { setCopyMessage(`Скопируйте ссылку вручную: ${absolute}`); }
+    } catch (cause) { setCopyMessage(cause instanceof Error ? cause.message : 'Не удалось получить ссылку'); }
+    finally { setCopying(false); }
+  }
   const expired = !!clip.expires_at && Date.parse(clip.expires_at) <= Date.now();
   return <article className="clip-card">
     <div className="clip-preview">{clip.available ? <video controls playsInline preload="none"
@@ -17,5 +31,8 @@ export function ClipCard({ clip }: { clip: ClipScreen }) {
       {clip.expires_at && <p className="muted">{expired ? 'Файл больше недоступен' : `Хранится до ${new Date(clip.expires_at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })} МСК`}</p>}
       <button disabled={!clip.available || downloadingId !== null} onClick={() => void download(clip.clip_id, clip.title)}>
         {downloadingId ? 'Открываем файл…' : clip.available ? '↓ Скачать клип' : expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать' : 'Собираем…'}</button>
+      <button className="secondary" disabled={copying} onClick={() => void copyLink()}>
+        {copying ? 'Получаем ссылку…' : 'Скопировать ссылку'}</button>
+      {copyMessage && <p role="status" className="video-id">{copyMessage}</p>}
       {error && <p role="alert">{error}</p>}</div></article>;
 }
