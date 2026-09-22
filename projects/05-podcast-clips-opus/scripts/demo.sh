@@ -52,10 +52,10 @@ printf '   первый запрос  → %s\n   повтор тем же клю
 [ -n "$id1" ] && [ "$id1" = "$id2" ] && echo "   вернулся ТОТ ЖЕ идентификатор записи: $id1"
 
 hr "8 · Что реально лежит в базе после показа"
-dbq "SELECT '   ключ '||scope||': у '||count(*)||' аккаунт(ов), суммарно списано '||sum(used) FROM quota_counter GROUP BY scope ORDER BY scope;"
+dbq "SELECT '   ключ '||scope||': аккаунтов '||count(*)||', суммарно списано '||sum(used)||' единиц' FROM quota_counter GROUP BY scope;"
 dbq "SELECT '   аккаунтов: '||(SELECT count(*) FROM account)||', записей видео: '||count(*) FROM video;"
 
 hr "9 · Конфигурация отказывает, а не подставляет дефолт"
-tail -1 docs/features/upload-and-quota/demo-evidence-preflight.txt 2>/dev/null | sed 's/^web-1  | /   /'
+grep -m1 "не запущен" docs/features/upload-and-quota/demo-evidence-preflight.txt 2>/dev/null | sed 's/^web-1  | /   /'
 echo "   ↑ так продукт ОТКАЗАЛСЯ стартовать, когда публичный адрес был без HTTPS"
 echo
