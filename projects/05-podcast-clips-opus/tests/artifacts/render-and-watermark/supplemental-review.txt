@@ -1,0 +1,6 @@
+Source: collaboration agent /root/render_audit; requested gpt-6-astra/high, actual model ID not exposed.
+Initial read-only review: HIGH RENDER-001, DB connection loss releases the row lock during canonical S3 publication, allowing stale overwrite/delete.
+Fix: IfNoneMatch=*; adopt only matching metadata render contract; no canonical deletes.
+Corrective review: original HIGH addressed, no residual concrete defect in corrective scope.
+Limit: no real PostgreSQL/S3 tests, no Anthropic review replacement.
+Status: completed

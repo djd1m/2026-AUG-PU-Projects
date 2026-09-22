@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260922T202940Z-render-and-watermark-0370",
+    "work_unit_id": "render-and-watermark",
+    "current_attempt_id": "implement-fix-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/render-and-watermark/telemetry/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/render-and-watermark/telemetry/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "73f2fc5dfff08954e3061b0887bbc1dfddaa7828",
+    "current_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+    "build_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/render-and-watermark/00_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "73f2fc5dfff08954e3061b0887bbc1dfddaa7828",
+      "observed_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "Implementation changed source; external commit7a8d7ed captured two feature scripts unchanged and added an unrelated cleanup script",
+        "decision": "Preserve external commit, exclude unrelated cleanup script, bind final checks to exact file hashes",
+        "affected_checks": [
+          "test",
+          "build",
+          "typecheck",
+          "lint",
+          "mutations"
+        ],
+        "rerun": [
+          "test",
+          "build",
+          "typecheck",
+          "lint",
+          "mutations"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "ce0e045fa709c8180b2f3e7cf27ff22c7980f01e3e357697dd18bf6de6a0aecc",
+    "scope": [
+      "Port donor render, word subtitles, fail-closed two-line watermark, worker fencing and publication"
+    ],
+    "exclusions": [
+      "Music, CTA, hooks, UI, deployment, historical link rekey"
+    ],
+    "action_limits": [
+      "Only own code report under docs; telemetry under project tests/artifacts to preserve brief boundary"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-RENDER",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": ".reference/jan-clone/apps/worker/lib/ffmpeg.ts"
+          }
+        },
+        "provenance": "d3f5b5837ef78cb07c4582c475bf2010f2dd620f641a4cfa4ac0b304e41ff729",
+        "useful_fragment": "All 21 exports classified in report; escaping/filter/execution/subtitle core reused",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Canonical crop, word timing, watermark geometry, DB fencing supersede donor defaults"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested or comparable-run analysis performed",
+      "scope_revision": "ce0e045fa709c8180b2f3e7cf27ff22c7980f01e3e357697dd18bf6de6a0aecc",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "ce0e045fa709c8180b2f3e7cf27ff22c7980f01e3e357697dd18bf6de6a0aecc",
+      "tier": "XL",
+      "rationale": "ADR-004 bearing invariant; user authorized coordinator implementation brief",
+      "script": {
+        "input": "apps/worker/src/render/watermark.ts apps/worker/src/workers/render.ts packages/db/migrations/008_render.sql",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "ce0e045fa709c8180b2f3e7cf27ff22c7980f01e3e357697dd18bf6de6a0aecc",
+      "tier": "XL",
+      "rationale": "ADR-004 bearing invariant; user authorized coordinator implementation brief",
+      "script": {
+        "input": "apps/worker/src/render/watermark.ts apps/worker/src/workers/render.ts packages/db/migrations/008_render.sql",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Explicit user instruction to execute coordinator brief; no deploy or external communications",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Offline subsystem MP4/unit tests only; deployed E2E blocked by Docker socket and missing routes. No E2E pass claimed.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-anthropic-1",
+      "status": "failed",
+      "reason": "Claude CLI timed out; mandatory review blocked"
+    },
+    {
+      "id": "implement-fix-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "render-and-watermark",
+      "paths": [
+        {
+          "root": "project",
+          "path": "Dockerfile"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/assets/fonts/ClipMakerNarrow-Bold.ttf"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/assets/fonts/GPL-2.txt"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/assets/fonts/LICENSE.txt"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/assets/fonts/LiberationSansNarrow-Bold.ttf"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/assets/fonts/metrics.json"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/escape.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/exec.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/ffmpeg.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/format.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/storage.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/subtitles.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/watermark.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/workers/render.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/workers/render.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/migrations/008_render.sql"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/clip-link.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/render.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/selection.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/build-render-font.py"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-render-mutations.mjs"
+        },
+        {
+          "root": "project",
+          "path": "tests/database.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/queue-probe-guards.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/queue-probe.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-media.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-storage.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-worker.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render.test.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260922T202940Z-render-and-watermark-0370",
+    "work_unit_id": "render-and-watermark",
+    "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+    "blockers": [
+      "Real PostgreSQL and S3 integration unavailable",
+      "Required Anthropic cross-family review unavailable"
+    ],
+    "approval_ids": [],
+    "next_allowed_step": "Run PostgreSQL16/Redis7/MinIO test profile with --build, verify conditional S3 contract and duplicate deliveries, obtain Anthropic review",
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct coding brief has no native checkpoint"
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "AC-RENDER",
+      "outcome": "unknown",
+      "command": "DATABASE_URL=<test> npx vitest run tests/render.integration.test.ts",
+      "exit_code": 1,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

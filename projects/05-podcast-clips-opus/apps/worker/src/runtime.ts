@@ -13,17 +13,21 @@ import { createTranscriber } from './stt/client.js';
 import { retryProbe } from './retry.js';
 import { createSelector } from './llm/provider.js';
 import { createFakeSelector } from './llm/fake.js';
+import { createRenderWorker } from './workers/render.js';
+import { checkRenderFont } from './render/watermark.js';
+import { renderStorage } from './render/storage.js';
 import { selectFragments } from './workers/select.js';
 export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Environment) {
   const config = loadWorkerConfig(role, env);
   const connection = getRedisConnection(config);
   // Validate dependencies before opening sockets or registering signal handlers.
-  const directory = role === 'worker-stt' ? required(env, 'N5_WORK_DIR', 'негде проверять оригинал') : null;
-  const s3Config = role === 'worker-stt' ? loadS3Config(env) : null;
+  const directory = role !== 'worker-llm' ? required(env, 'N5_WORK_DIR', 'негде проверять оригинал') : null;
+  const s3Config = role !== 'worker-llm' ? loadS3Config(env) : null;
   const transcriber = role === 'worker-stt' ? createTranscriber(loadSttConfig(env)) : null;
   const llmConfig = role === 'worker-llm' ? loadLlmConfig(env) : null;
   const llmDirectory = role === 'worker-llm' ? required(env, 'N5_WORK_DIR', 'негде учитывать попытки модели') : null;
   if (llmDirectory) await mkdir(llmDirectory, { recursive: true });
+  if (role === 'worker-video') checkRenderFont();
   if (directory) { await checkFfprobe(); await checkFfmpeg(); await mkdir(directory, { recursive: true }); }
   const pool = createPool(config.databaseUrl);
   pool.on('error', () => console.error('Воркер: соединение БД потеряно'));
@@ -67,15 +71,10 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
       await selectFragments(attempt, { pool, limits: config.limits, selector, model: llmConfig.model,
         spendPath: join(llmDirectory, 'model-spend.jsonl'), enqueue: transport.enqueue });
     }, { connection, concurrency: 2, maxStalledCount: 1 });
-  } else {
-    // Feature 6 consumer remains paused and cannot discard pending render work.
-    const unavailable = async () => { throw new Error('Обработчик стадии ещё не установлен'); };
-    worker = role === 'worker-video'
-      ? new Worker<AttemptJob>('render', unavailable, { connection, concurrency: 1, autorun: false, maxStalledCount: 1 })
-      : new Worker<AttemptJob>('select', unavailable, { connection, concurrency: 2, autorun: false, maxStalledCount: 1 });
-    await worker.pause();
-    void worker.run().catch(() => console.error('Воркер: обработчик остановлен'));
-  }
+  } else if (role === 'worker-video' && directory && storage && 'publicOrigin' in config) {
+    worker = createRenderWorker(connection, { pool, directory, origin: config.publicOrigin,
+      download: s3Download(storage), storage: renderStorage(storage), enqueue: transport.enqueue });
+  } else { throw new Error('Непригодная конфигурация воркера'); }
   worker.on('error', () => console.error('Воркер: транспорт недоступен'));
   worker.on('failed', () => console.error('Воркер: попытка завершилась отказом'));
   let stopping: Promise<void> | undefined;

@@ -1,0 +1,44 @@
+import { it, expect } from 'vitest';
+import { execFile as execFileCb } from 'node:child_process';
+import { promisify } from 'node:util';
+import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFFmpeg, generateThumbnail } from '../apps/worker/src/render/exec';
+import { renderClip } from '../apps/worker/src/render/ffmpeg';
+const execFile = promisify(execFileCb);
+it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'n5-real-render-'));
+  // Keep the passing output for visual inspection; report path is printed to the receipt.
+  const input = join(dir, 'source.mp4'), output = join(dir, 'clip.mp4');
+  await execFFmpeg(['-y', '-f', 'lavfi', '-i', 'color=c=0x224466:s=640x360:r=5:d=20', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
+    '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
+  await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
+    words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
+    watermark: true, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
+  await generateThumbnail(output, join(dir, 'thumb.jpg'), 5);
+  expect((await readFile(join(dir, 'thumb.jpg'))).subarray(0, 2)).toEqual(Buffer.from([0xff, 0xd8]));
+  const probe = JSON.parse((await execFile('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', output])).stdout);
+  expect(probe.streams[0]).toMatchObject({ width: 1080, height: 1920 }); expect(Number(probe.format.duration)).toBeCloseTo(20, 1);
+  expect(probe.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
+  await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vframes', '1', join(dir, 'frame.png')]);
+  await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', 'crop=972:160:54:1517,format=gray', '-vframes', '1', '-f', 'rawvideo', join(dir, 'mark.raw')]);
+  const pixels = await readFile(join(dir, 'mark.raw'));
+  // Both lines contain bright glyphs on an opaque black background, including URL's right end.
+  for (const [start, end] of [[0, 80], [80, 160]]) {
+    const band = pixels.subarray(start! * 972, end! * 972);
+    expect(band.filter(p => p > 220).length).toBeGreaterThan(100);
+    expect(band.filter(p => p < 20).length).toBeGreaterThan(100);
+  }
+  expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+  console.info(`REAL_RENDER_ARTIFACT=${dir}`);
+}, 90_000);
+it('ffmpeg timeout kills the child and waits for close before returning', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'n5-timeout-'));
+  try {
+    await expect(execFFmpeg(['-f', 'lavfi', '-i', 'testsrc2=s=640x360', '-f', 'null', '-'], 100)).rejects.toMatchObject({ reason: 'ffmpeg_timeout' });
+    await expect(renderClip({ inputPath: join(dir, 'absent.mp4'), outputPath: join(dir, 'out.mp4'), startTime: 0, endTime: 20,
+      format: 'portrait', words: [], watermark: false, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' })).rejects.toThrow();
+    expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+}, 15_000);

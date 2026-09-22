@@ -41,6 +41,7 @@ RUN apk add --no-cache ffmpeg && ffmpeg -version && ffprobe -version
 ENV NODE_ENV=production TZ=Europe/Moscow
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/apps/worker/assets ./apps/worker/assets
 COPY --from=build /app/apps/worker/dist ./dist/apps/worker
 COPY --from=build /app/apps/worker/package.json ./apps/worker/package.json
 COPY --from=build /app/packages ./packages

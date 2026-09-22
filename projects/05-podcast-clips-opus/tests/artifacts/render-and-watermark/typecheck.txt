@@ -1,0 +1,40 @@
+
+> n5-clipmaker@0.1.0 typecheck
+> npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json
+
+
+> @clipmaker/web@0.1.0 typecheck
+> tsc --noEmit
+
+
+> @clipmaker/worker@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+src/workers/render.ts(5,10): error TS2305: Module '"@clipmaker/db"' has no exported member 'getRenderInput'.
+src/workers/render.ts(5,26): error TS2305: Module '"@clipmaker/db"' has no exported member 'setRenderDeferred'.
+src/workers/render.ts(5,45): error TS2305: Module '"@clipmaker/db"' has no exported member 'retryRender'.
+src/workers/render.ts(5,58): error TS2305: Module '"@clipmaker/db"' has no exported member 'publishRenderResult'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/worker
+npm error workspace @clipmaker/worker@0.1.0
+npm error location /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/worker
+npm error command failed
+npm error command sh -c tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/db@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/queue@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/s3@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/shared@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+

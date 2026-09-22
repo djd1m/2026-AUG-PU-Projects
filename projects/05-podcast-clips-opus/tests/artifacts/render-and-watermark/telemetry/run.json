@@ -1,0 +1,90 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922T202940Z-render-and-watermark-0370",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "render-and-watermark",
+  "pipeline": "Codex implementation of coordinator brief",
+  "tier": "XL",
+  "risk_flags": [
+    "ADR-004 fail-closed watermark",
+    "render fencing"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "OWN-002: OpenAI implementation; Anthropic review required and unavailable in tool registry",
+    "Brief docs-only-own-report scope: telemetry under tests/artifacts/render-and-watermark/telemetry"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "73f2fc5dfff08954e3061b0887bbc1dfddaa7828",
+  "final_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-22T20:29:40.417353+00:00",
+  "ended_at": "2026-09-22T20:54:25.576299+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "docs/features/render-and-watermark/07_code_report.md",
+    "tests/artifacts/render-and-watermark/checks.json",
+    "tests/artifacts/render-and-watermark/source-manifest.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": null,
+    "confirmed_findings_by_severity": {
+      "high": 1
+    },
+    "resolved_findings": [
+      "RENDER-001"
+    ],
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 1485159,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable",
+    "agent_work_ms": null,
+    "retry_count": null,
+    "escalation_count": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Exact model ID/effort and usage not exposed by host; developer identifies GPT-6 family only",
+    "Initial instruction reading preceded telemetry; start time excludes that unmeasured interval",
+    "No billing/version counters; no comparable baseline",
+    "Accepted AC total not claimed: mandatory integration/review gates unavailable",
+    "No historical attempt-duration/retry counter reconstruction; stage timing incomplete",
+    "No regression follow-up window or known-defect oracle"
+  ],
+  "models": [
+    {
+      "role": "coordinator/implementation",
+      "requested": "gpt-6-astra",
+      "actual": null,
+      "family_evidence": "Developer host instruction identifies GPT-6 family; exact execution ID unavailable"
+    },
+    {
+      "role": "supplemental-review",
+      "requested": "gpt-6-astra",
+      "actual": null,
+      "evidence": "collaboration tool confirms task launch but provides no actual model metadata"
+    },
+    {
+      "role": "mandatory-review",
+      "requested": "opus",
+      "actual": null,
+      "evidence": "CLI timeout exit124; no response/model usage"
+    }
+  ]
+}

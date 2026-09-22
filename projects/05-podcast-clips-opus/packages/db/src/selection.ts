@@ -1,4 +1,4 @@
-import { randomBytes } from 'node:crypto';
+import { createClipLink } from './clip-link.js';
 import type { Pool, PoolClient } from 'pg';
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
@@ -78,7 +78,7 @@ export async function acceptSelection(pool: Pool, attempt: Attempt, fragments: F
       [attempt.video_id, index + 1, f.start_seconds, f.end_seconds, f.title, f.score, f.score_hook,
         f.score_completeness, f.score_length, f.explain_hook, f.explain_completeness, f.explain_length, row.plan !== 'paid']);
       const id = clip.rows[0]!.id;
-      await tx.query('INSERT INTO clip_link(clip_id,code) VALUES ($1,$2)', [id, randomBytes(16).toString('base64url')]);
+      await createClipLink(tx, id);
       const next = await leaseAttemptTx(tx, attempt.video_id, 'render', attempt.series_no, id, now);
       if (!next) throw new Error('Не удалось создать попытку рендера');
       jobs.push(next);

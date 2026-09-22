@@ -41,8 +41,10 @@ describe.skipIf(!url)('Queue/probe on PostgreSQL 16', () => {
   const videoRow = async (id: string) => (await pool.query('SELECT * FROM video WHERE id=$1', [id])).rows[0];
   const used = async (account: string, scope: string) => (await pool.query('SELECT used FROM quota_counter WHERE scope_key=$1 AND scope=$2', [account, scope])).rows[0]?.used ?? 0;
   async function clip(video: string) {
-    return (await pool.query(`INSERT INTO clip(video_id,"index",start_seconds,end_seconds,title,status,watermarked)
+    const id = (await pool.query(`INSERT INTO clip(video_id,"index",start_seconds,end_seconds,title,status,watermarked)
       VALUES ($1,1,0,30,'clip','queued',true) RETURNING id`, [video])).rows[0].id as string;
+    await pool.query('INSERT INTO clip_link(clip_id,code) VALUES ($1,$2)', [id, randomUUID()]);
+    return id;
   }
   it('two initial publishers reuse one lease; eight clips each get their own first attempt', async () => {
     const f = await fixture();

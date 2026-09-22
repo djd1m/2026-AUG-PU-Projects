@@ -11,3 +11,4 @@ export * from './attempts.js';
 export * from './probe.js';
 export * from './transcription.js';
 export * from './selection.js';
+export * from './render.js';

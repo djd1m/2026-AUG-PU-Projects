@@ -191,7 +191,7 @@
       "title": "Кроп 9:16, вшитые субтитры и метка free с короткой ссылкой",
       "description": "BuildSubtitles — ASS из слов транскрипта с выделением текущего слова; WatermarkRequired = plan !== 'paid', значение только из базы, поле «без метки» из тела не читается; ComputeWatermarkGeometry — текст «КлипМейкер · <origin>/c/<code>» из N5_PUBLIC_ORIGIN без дефолта, высота ≥ 3,5 % кадра, safe zone сторис, подложка с контрастом ≥ 4,5:1; RenderClip — concurrency литералом 1, резерв диска ДО скачивания, заявка актуальности render_fence, цепочка scale → crop 9:16 → subtitles → drawtext, ffmpeg дочерним процессом с таймаутом 15 мин, выгрузка под префикс clips/free/ либо clips/paid/, принятие результата по фенсу, очистка каталога в finally, активация атрибуции при первом done. Тир XL: несущий инвариант метки и метрика недели.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "selection-and-score"
@@ -226,7 +226,7 @@
       "title": "Экран прогресса с тремя состояниями и экран клипов",
       "description": "ReadVideoProgress — экран открывается ≤ 1 с и обновляется ≤ 5 с, показывает ровно ТРИ различимых состояния (выполняется / успех / отказ), молчание старше 5 мин даёт «нет ответа от обработки», отказ называет причину словами и предлагает «повторить» либо «загрузить другой файл»; ListClipsForScreen — карточки с плеером, оценкой и тремя объяснениями, независимость карточек (незавершённый клип не блокирует готовый); IssueSignedObjectUrl — redirect на подписанную ссылку ≤ 15 мин, ровно два пути доступа, 404 вместо 403; clip.markDownloaded; share-CTA на карточке первого клипа и «скачать все».",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "medium",
       "depends_on": [
         "render-and-watermark"

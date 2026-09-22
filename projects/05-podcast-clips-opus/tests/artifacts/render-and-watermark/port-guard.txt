@@ -1,0 +1,2 @@
+⚠️  проверка НЕ выполнена: docker compose config вернул ошибку: error while interpolating services.worker-llm.environment.REDIS_URL: required variable REDIS_PASSWORD is missing a value: пароль Redis не задан — очередь без пароля не поднимается
+    повторить ровно то, что делали мы: docker compose -f /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docker-compose.yml config

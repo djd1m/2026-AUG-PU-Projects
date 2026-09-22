@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import { migrate } from '../packages/db/src/migrate';
@@ -76,6 +76,7 @@ describe.skipIf(!databaseUrl)('PostgreSQL: ограничения, миграц�
     const video = (await pool.query("INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status) VALUES ($1,'one','upload',1,'rendering') RETURNING id", [account])).rows[0].id;
     for (let i = 1; i <= 8; i++) {
       const clip = (await pool.query('INSERT INTO clip(video_id,"index",start_seconds,end_seconds,title,status,watermarked) VALUES ($1,$2,0,20,\'Клип\',\'queued\',true) RETURNING id', [video, i])).rows[0].id;
+      await pool.query('INSERT INTO clip_link(clip_id,code) VALUES ($1,$2)', [clip, randomUUID()]);
       await pool.query("INSERT INTO job_attempt(video_id,clip_id,stage,attempt_no,fence,status,unit,unit_count,started_at) VALUES ($1,$2,'render',1,$3,'running','none',0,now())", [video, clip, i]);
     }
     await expect(pool.query("INSERT INTO job_attempt(video_id,stage,attempt_no,fence,status,unit,unit_count,started_at) VALUES ($1,'stt',1,1,'running','none',0,now())", [video])).rejects.toMatchObject({ code: '23505' });

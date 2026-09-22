@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/render-media.test.ts > real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-i3tu3F
+
+ ✓ tests/render-media.test.ts (2 tests) 8812ms
+   ✓ real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  8547ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  20:40:27
+   Duration  9.78s (transform 237ms, setup 0ms, collect 314ms, tests 8.81s, environment 0ms, prepare 229ms)
+

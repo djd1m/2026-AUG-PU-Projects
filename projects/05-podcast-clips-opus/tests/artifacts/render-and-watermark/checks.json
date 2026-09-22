@@ -1,0 +1,82 @@
+{
+  "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+  "checks": [
+    {
+      "name": "all-tests-final",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/all-tests-final.txt"
+    },
+    {
+      "name": "build-final",
+      "command": "npm run build",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/build-final.txt"
+    },
+    {
+      "name": "typecheck3",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/typecheck3.txt"
+    },
+    {
+      "name": "lint-final",
+      "command": "npm run lint",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/lint-final.txt"
+    },
+    {
+      "name": "mutations-final",
+      "command": "node scripts/test-render-mutations.mjs",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/mutations-final.txt"
+    },
+    {
+      "name": "wiring-fixture",
+      "command": "bash scripts/check-env-wiring.sh (generated fixture environment)",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/wiring-fixture.txt"
+    },
+    {
+      "name": "ports-fixture",
+      "command": "node ../../.claude/hooks/check-ports.cjs . (fixture environment)",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/ports-fixture.txt"
+    },
+    {
+      "name": "conflicts-fixture",
+      "command": "bash ../../scripts/check-port-conflicts.sh . (fixture environment)",
+      "exit_code": 0,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/conflicts-fixture.txt"
+    },
+    {
+      "name": "db-integration",
+      "command": "DATABASE_URL=<local test socket> npx vitest run tests/render.integration.test.ts",
+      "exit_code": 1,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/db-integration.txt"
+    },
+    {
+      "name": "review",
+      "command": "timeout 60s claude -p --model opus --output-format json --tools empty --no-session-persistence",
+      "exit_code": 124,
+      "source_revision": "dirty-sha256:abc8b69567fb62ff4f67ddef04d0630a89de31e9395bac348f8d122d4b76a3a8",
+      "evidence": "tests/artifacts/render-and-watermark/review.exit"
+    }
+  ],
+  "tests": {
+    "passed": 213,
+    "skipped": 86,
+    "files_passed": 28,
+    "files_skipped": 10
+  },
+  "required_gates_passed": false
+}

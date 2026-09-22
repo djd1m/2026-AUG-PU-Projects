@@ -11,7 +11,7 @@ it('deferred source guard: video heartbeat updated under current fence', () => {
   expect(body).toContain('UPDATE video SET updated_at=$3 WHERE id=$1 AND fence=$2');
 });
 it('ADR-006 source guard: render concurrency is literal one', () => {
-  expect(readFileSync('apps/worker/src/runtime.ts','utf8')).toMatch(/new Worker<AttemptJob>\('render', unavailable, \{ connection, concurrency: 1,/);
+  expect(readFileSync('apps/worker/src/workers/render.ts','utf8')).toMatch(/\{ connection, concurrency: 1, maxStalledCount: 1 \}/);
 });
 it('Redis colon ID compatibility is pinned by installed BullMQ check', () => {
   const source=readFileSync('node_modules/bullmq/dist/cjs/classes/job.js','utf8');
