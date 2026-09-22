@@ -1,0 +1,54 @@
+[
+  {
+    "name": "env-wiring",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 2
+  },
+  {
+    "name": "ports",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 2
+  },
+  {
+    "name": "port-conflicts",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 1
+  },
+  {
+    "name": "integration",
+    "command": [
+      "docker",
+      "compose",
+      "--project-directory",
+      ".",
+      "--profile",
+      "test",
+      "run",
+      "--rm",
+      "test"
+    ],
+    "exit_code": null,
+    "result": "not executed; no Docker access per user addendum"
+  },
+  {
+    "name": "CJM",
+    "command": [
+      "bash",
+      "scripts/check-cjm.sh",
+      "<deployed-url>"
+    ],
+    "exit_code": null,
+    "result": "not executed: no deployed URL, script absent, UI out of scope"
+  }
+]

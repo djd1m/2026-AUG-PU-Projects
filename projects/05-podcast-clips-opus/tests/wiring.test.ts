@@ -25,7 +25,7 @@ describe('Проверяемость проброса окружения', () =>
   it('Новая обязательная переменная config.ts не теряется в environment.ts', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'n5-config-wiring-'));
     try {
-      for (const folder of ['apps/web/src', 'apps/worker', 'packages/shared/src']) {
+      for (const folder of ['apps/web/src', 'apps/worker', 'packages/shared/src', 'packages/queue/src']) {
         cpSync(folder, path.join(dir, folder), { recursive: true });
       }
       cpSync('packages/db/src', path.join(dir, 'packages/db/src'), { recursive: true });

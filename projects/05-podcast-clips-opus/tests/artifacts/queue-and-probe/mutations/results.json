@@ -1,0 +1,26 @@
+[
+  {
+    "name": "fence",
+    "red": 1,
+    "green": 0,
+    "layer": "source guard; PostgreSQL mutation not run"
+  },
+  {
+    "name": "disk",
+    "red": 1,
+    "green": 0,
+    "layer": "unit behavior"
+  },
+  {
+    "name": "heartbeat",
+    "red": 1,
+    "green": 0,
+    "layer": "source guard; PostgreSQL mutation not run"
+  },
+  {
+    "name": "retry-source",
+    "red": 1,
+    "green": 0,
+    "layer": "unit behavior"
+  }
+]

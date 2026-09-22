@@ -1,0 +1,49 @@
+[
+  {
+    "name": "build-final",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "source_sha256": "870507ac84c9658fe65563781184757851f2bee38bf2d6e8a9aeea9119fd15c2",
+    "exit_code": 0,
+    "started_at": "2026-09-22T12:51:19.737247+00:00",
+    "ended_at": "2026-09-22T12:52:13.552219+00:00"
+  },
+  {
+    "name": "typecheck-final",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "source_sha256": "870507ac84c9658fe65563781184757851f2bee38bf2d6e8a9aeea9119fd15c2",
+    "exit_code": 0,
+    "started_at": "2026-09-22T12:52:13.552590+00:00",
+    "ended_at": "2026-09-22T12:52:35.051417+00:00"
+  },
+  {
+    "name": "lint-final",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "source_sha256": "870507ac84c9658fe65563781184757851f2bee38bf2d6e8a9aeea9119fd15c2",
+    "exit_code": 0,
+    "started_at": "2026-09-22T12:52:35.051771+00:00",
+    "ended_at": "2026-09-22T12:52:36.276628+00:00"
+  },
+  {
+    "name": "tests-final",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "source_sha256": "870507ac84c9658fe65563781184757851f2bee38bf2d6e8a9aeea9119fd15c2",
+    "exit_code": 0,
+    "started_at": "2026-09-22T12:52:36.277103+00:00",
+    "ended_at": "2026-09-22T12:53:01.846931+00:00"
+  }
+]

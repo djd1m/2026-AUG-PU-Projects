@@ -1,0 +1,16 @@
+{
+  "root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/.reference/jan-clone",
+  "sha256": {
+    "packages/queue/src/queues.ts": "6d6febdeac3a8d7ec3beaf70dacb230915b57ae1ec6f50d9f9ba8e331b3c3913",
+    "packages/queue/src/constants.ts": "8d188374d47238750695ba6bd07f6f3669dc0d27a3f0cf6221d142abd645e4af",
+    "apps/worker/workers/index.ts": "a7d51da2aac35b5bc79695f0de1f459ba306bf08de6a2e7b66ccc5e1d0b2e3dc",
+    "apps/worker/lib/retry.ts": "b7de64f6a800da79403c8881696de784804c356f6cab179978bd5a8565bdc128",
+    "apps/worker/lib/s3-download.ts": "c354eb82183b20a76e22fd6d6ada8eb9e5aece165b884acd760c5a93d4397218",
+    "apps/worker/lib/ffmpeg.ts": "d3f5b5837ef78cb07c4582c475bf2010f2dd620f641a4cfa4ac0b304e41ff729",
+    "apps/worker/workers/stt.ts": "6f96d501a12f885df9f5f4e2b928a6e62a46115929b7e83fe0152b6637ec010f",
+    "myinsights/INS-010-ffprobe-not-installed.md": "2e04ec87cd041b00fd5dd7e93d7d64872b7be33d2a8677521c742766157d7463",
+    "myinsights/INS-022-worker-import-paths.md": "be882b67d0229572860f84252f4e35ae4f02d87beee471137814037bd6d6dd77",
+    "myinsights/INS-026-port-3000-zombie-processes.md": "5843787abd4b501be40bef79226a2b520a400c0dfa5db371c3a64b889b4c7a4c"
+  },
+  "limitation": "Donor absent in worktree; located and read after initial implementation, not before code as brief required"
+}

@@ -1,0 +1,54 @@
+{
+  "identity": {
+    "run_id": "20260922T123000Z-queue-and-probe-codex",
+    "work_unit_id": "queue-and-probe",
+    "current_attempt_id": "implementation-1"
+  },
+  "stage": "paused",
+  "source": {
+    "baseline_revision": "6850cfd4da3d0d2c367177963aeddc611f75d419"
+  },
+  "scope": "Three queues, fenced attempts, probe, watchdog, retry; tests and report",
+  "exclusions": [
+    "Whisper",
+    "selection",
+    "rendering",
+    "UI",
+    "packages/s3",
+    "apps/web/src/server/video.ts",
+    "migrations 001-004",
+    "docs except report"
+  ],
+  "route": {
+    "risk_tier": "M",
+    "mechanical_tier": "L",
+    "exit_code": 1,
+    "reason": "fresh SPARC 2026-09-21 plus explicit implementation brief"
+  },
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requests implementation of supplied brief"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Docker unavailable per addendum; no E2E claim"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null
+  },
+  "plan": [
+    "Queue adapter and transactional fence lease/CAS",
+    "Probe disk/download/process/quota in order",
+    "Singleton watchdog and authenticated retry",
+    "Unit, mutation, integration test definitions; offline checks; report"
+  ],
+  "pending": [
+    "Real PostgreSQL/Redis execution by integration owner",
+    "Cross-family Anthropic review by integration owner"
+  ],
+  "implementation_status": "completed",
+  "source_snapshot_sha256": "870507ac84c9658fe65563781184757851f2bee38bf2d6e8a9aeea9119fd15c2",
+  "receipt": "docs/features/queue-and-probe/07_code_report.md",
+  "checks": "tests/artifacts/queue-and-probe/final-checks.json"
+}

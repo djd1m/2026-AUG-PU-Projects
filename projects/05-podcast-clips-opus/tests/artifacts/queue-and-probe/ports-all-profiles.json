@@ -1,0 +1,10 @@
+{
+  "command": [
+    "node",
+    "../../.claude/hooks/check-ports.cjs",
+    "."
+  ],
+  "exit_code": 0,
+  "profiles": "edge,test",
+  "environment": "generated disposable fixture; no containers started"
+}
