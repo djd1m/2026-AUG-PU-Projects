@@ -1,0 +1,35 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-4UAir2
+
+ ❯ tests/upload-fix.test.ts (8 tests | 1 failed | 7 skipped) 39ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   × RU-003: expired signatures refresh without re-uploading confirmed parts 37ms
+     → Срок ссылки истёк. Возобновите загрузку
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   ↓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   ↓ RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-003: expired signatures refresh without re-uploading confirmed parts
+Error: Срок ссылки истёк. Возобновите загрузку
+ ❯ uploadParts apps/web/src/lib/upload-parts.ts:39:23
+     37|     const expired = batch.filter((part) => !completed.has(part.part_nu…
+     38|     if (expired.length) {
+     39|       if (true) throw new Error('Срок ссылки истёк. Возобновите загруз…
+       |                       ^
+     40|       for (const part of expired) {
+     41|         const n = (attempts.get(part.part_number) ?? 0) + 1; attempts.…
+ ❯ tests/upload-fix.test.ts:41:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  11:38:12
+   Duration  1.90s (transform 465ms, setup 0ms, collect 1.01s, tests 39ms, environment 0ms, prepare 213ms)
+

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "ports-retry",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 0,
+    "evidence": "tests/artifacts/upload-fix-round2/ports-retry.txt"
+  },
+  {
+    "name": "port-conflicts-retry",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 0,
+    "evidence": "tests/artifacts/upload-fix-round2/port-conflicts-retry.txt"
+  }
+]

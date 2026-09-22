@@ -1,0 +1,54 @@
+[
+  {
+    "id": "RU-008-cleanup",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "3fc0d0a99df9a1bccf34baebc5277da72894129e41e67552ea994d8ea938111b",
+    "log": "tests/artifacts/upload-fix-round2/mutations-UHVpu3/RU-008-cleanup-red.txt"
+  },
+  {
+    "id": "RU-008-cleanup",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "405340354a02a31d7b094ad6200e83fb902cbd14c2a2c4af6e64ef8d70909a7c",
+    "log": "tests/artifacts/upload-fix-round2/mutations-UHVpu3/RU-008-cleanup-green.txt"
+  },
+  {
+    "id": "RU-009-lifecycle",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "6ae6825b8d33b64f70d39632a83ab300a757bca14dce413b17699916eb3c3cf8",
+    "log": "tests/artifacts/upload-fix-round2/mutations-UHVpu3/RU-009-lifecycle-red.txt"
+  },
+  {
+    "id": "RU-009-lifecycle",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "5ee59a791df73b838b07ba421770b72a82e98c0bba1a06a6fc773d6edb280ef6",
+    "log": "tests/artifacts/upload-fix-round2/mutations-UHVpu3/RU-009-lifecycle-green.txt"
+  },
+  {
+    "id": "RU-002-pool",
+    "state": "not_run",
+    "exit_code": null,
+    "reason": "DATABASE_URL unavailable; requires real PostgreSQL in compose test"
+  },
+  {
+    "id": "RU-004-day",
+    "state": "not_run",
+    "exit_code": null,
+    "reason": "DATABASE_URL unavailable; requires real PostgreSQL in compose test"
+  },
+  {
+    "id": "RU-004-rollback",
+    "state": "not_run",
+    "exit_code": null,
+    "reason": "DATABASE_URL unavailable; requires real PostgreSQL in compose test"
+  },
+  {
+    "id": "RU-007-migration",
+    "state": "not_run",
+    "exit_code": null,
+    "reason": "DATABASE_URL unavailable; requires real PostgreSQL in compose test"
+  }
+]

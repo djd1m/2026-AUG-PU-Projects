@@ -1,0 +1,41 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-aTiyiX
+
+ ❯ tests/upload-fix.test.ts (8 tests | 1 failed | 7 skipped) 101ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   × RU-003: three PUTs run concurrently and completed parts are preserved 94ms
+     → expected 1 to be 3 // Object.is equality
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   ↓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   ↓ RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-003: three PUTs run concurrently and completed parts are preserved
+AssertionError: expected 1 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 1
+
+ ❯ tests/upload-fix.test.ts:32:16
+     30|   const parts = [2, 3, 4].map((part_number) => ({ part_number, url: `h…
+     31|   const result = await uploadParts(new Blob(['1234']), { part_size: 1,…
+     32|   expect(peak).toBe(3);
+       |                ^
+     33|   expect(result).toEqual([{ part_number: 1, etag: 'old' }, ...[2, 3, 4…
+     34| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  11:32:47
+   Duration  2.27s (transform 504ms, setup 0ms, collect 1.24s, tests 101ms, environment 0ms, prepare 271ms)
+

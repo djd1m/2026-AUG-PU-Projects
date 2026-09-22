@@ -1,0 +1,59 @@
+[
+  {
+    "id": "RU-003-parallel",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "0259fc40f9d5022e9c1ed78e4a81bc9ba75377a649473c4d74f99a28912458d6",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-003-parallel-red.txt"
+  },
+  {
+    "id": "RU-003-parallel",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "4d7d33d6bde4db41ae7ac87740b574225acfd5a359df1791083e32b7302605b9",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-003-parallel-green.txt"
+  },
+  {
+    "id": "RU-003-renew",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "61ee06fc074aa5872bbe2b89ba606b4f47a62656feb0057beb52b09fd7021dc2",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-003-renew-red.txt"
+  },
+  {
+    "id": "RU-003-renew",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "4d7d33d6bde4db41ae7ac87740b574225acfd5a359df1791083e32b7302605b9",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-003-renew-green.txt"
+  },
+  {
+    "id": "RU-006-account",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "c0b3f84d7e6abe9573656076f3b4cd30d83f0e67be0e3f54ce662f786ab1d1fb",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-006-account-red.txt"
+  },
+  {
+    "id": "RU-006-account",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "adac66041287b79c312d51f2d5bc02bbf17976504c2b90289bb6bf4f32f74169",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-006-account-green.txt"
+  },
+  {
+    "id": "RU-008-cleanup",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "3fc0d0a99df9a1bccf34baebc5277da72894129e41e67552ea994d8ea938111b",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-008-cleanup-red.txt"
+  },
+  {
+    "id": "RU-008-cleanup",
+    "state": "green",
+    "exit_code": 143,
+    "source_sha256": "405340354a02a31d7b094ad6200e83fb902cbd14c2a2c4af6e64ef8d70909a7c",
+    "log": "tests/artifacts/upload-fix-round2/mutations-TwAppq/RU-008-cleanup-green.txt",
+    "error": "ETIMEDOUT"
+  }
+]

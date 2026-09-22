@@ -1,0 +1,41 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-aTiyiX
+
+ ❯ tests/upload-fix.test.ts (8 tests | 1 failed | 7 skipped) 45ms
+   × RU-001: Complete has a minutes-scale command timeout, HEAD stays short 43ms
+     → expected 5000 to be 300000 // Object.is equality
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   ↓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   ↓ RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+AssertionError: expected 5000 to be 300000 // Object.is equality
+
+- Expected
++ Received
+
+- 300000
++ 5000
+
+ ❯ tests/upload-fix.test.ts:17:51
+     15|   await completeMultipartUpload(ctx, 'key', 'id', [{ part_number: 1, e…
+     16|   await headObject(ctx, 'key');
+     17|   expect(send.mock.calls[1]?.[1]?.requestTimeout).toBe(300_000);
+       |                                                   ^
+     18|   expect(send.mock.calls[2]?.[1]?.requestTimeout).toBe(5000);
+     19|   ctx.client.destroy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  11:32:23
+   Duration  1.85s (transform 425ms, setup 0ms, collect 1.05s, tests 45ms, environment 0ms, prepare 272ms)
+

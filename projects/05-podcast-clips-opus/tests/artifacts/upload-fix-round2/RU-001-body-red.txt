@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-aTiyiX
+
+ ❯ tests/upload-fix.test.ts (8 tests | 1 failed | 7 skipped) 457ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   ↓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   × RU-001: deadline covers a stalled Complete body after HTTP 200 headers 455ms
+     → expected 'deadline ignored' to contain 'body deadline'
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+AssertionError: expected 'deadline ignored' to contain 'body deadline'
+
+Expected: "body deadline"
+Received: "deadline ignored"
+
+ ❯ tests/upload-fix.test.ts:110:20
+    108|     await Promise.race([started, observed.then((message) => { throw ne…
+    109|     const answer = await Promise.race([observed, new Promise<string>((…
+    110|     expect(answer).toContain('body deadline');
+       |                    ^
+    111|     expect(AbortSignal.timeout).toHaveBeenCalledWith(300_000);
+    112|   } finally { clearTimeout(timer); stalled.destroy(new Error('test cle…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  11:32:33
+   Duration  3.63s (transform 653ms, setup 0ms, collect 1.33s, tests 457ms, environment 0ms, prepare 594ms)
+

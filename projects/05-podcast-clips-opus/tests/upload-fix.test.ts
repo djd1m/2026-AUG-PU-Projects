@@ -92,22 +92,37 @@ it('RU-001: deadline covers a stalled Complete body after HTTP 200 headers', asy
   vi.spyOn(AbortSignal, 'timeout').mockReturnValue(controller.signal);
   let bodyStarted!: () => void;
   const started = new Promise<void>((resolve) => { bodyStarted = resolve; });
-  const stalled = new Readable({ read() {} });
+  const stalled = new Readable({ read() { bodyStarted(); } });
+  stalled.on('error', () => {});
   vi.spyOn(ctx.client.config.requestHandler, 'handle').mockImplementation(async (request, options) => {
     if (request.method === 'GET') return { response: { statusCode: 200, headers: { 'content-type': 'application/xml' },
-      body: '<ListPartsResult><IsTruncated>false</IsTruncated><Part><PartNumber>1</PartNumber><ETag>a</ETag><Size>24</Size></Part></ListPartsResult>' } };
+      body: Readable.from([Buffer.from('<ListPartsResult><IsTruncated>false</IsTruncated><Part><PartNumber>1</PartNumber><ETag>a</ETag><Size>24</Size></Part></ListPartsResult>')]) } };
     // Сервер уже дал заголовки 200; тело остаётся открытым.
-    options?.abortSignal?.addEventListener?.('abort', () => stalled.destroy(new Error('body deadline')), { once: true });
-    stalled.once('resume', bodyStarted);
+    (options as { abortSignal?: AbortSignal } | undefined)?.abortSignal?.addEventListener('abort', () => stalled.destroy(new Error('body deadline')), { once: true });
     return { response: { statusCode: 200, headers: { 'content-type': 'application/xml' }, body: stalled } };
   });
   const result = completeMultipartUpload(ctx, 'key', 'id', [{ part_number: 1, etag: 'a' }]);
   const observed = result.then(() => 'unexpected success', (error: Error) => error.message);
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    await started; controller.abort();
+    await Promise.race([started, observed.then((message) => { throw new Error(message); })]); controller.abort();
     const answer = await Promise.race([observed, new Promise<string>((resolve) => { timer = setTimeout(() => resolve('deadline ignored'), 150); })]);
     expect(answer).toContain('body deadline');
     expect(AbortSignal.timeout).toHaveBeenCalledWith(300_000);
   } finally { clearTimeout(timer); stalled.destroy(new Error('test cleanup')); await observed; ctx.client.destroy(); }
+});
+
+it('RU-008: abort failure still deletes and preserves the file rejection', async () => {
+  const { VideoService } = await import('../apps/web/src/server/video');
+  const { loadLimits } = await import('../packages/shared/src/config');
+  const id = 'a65e5f33-3194-46c3-8c18-1d3a42bfe158';
+  const pool = { query: vi.fn(async () => ({ rows: [{ id, account_id: 'account', status: 'failed',
+    failure_reason: 'not_media', upload_id: 'upload', object_key: 'key' }] })) };
+  const abort = vi.fn(async () => { throw new Error('offline'); }), remove = vi.fn(async () => {});
+  const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+  const storage = { abort, delete: remove } as unknown as import('../apps/web/src/server/video').UploadStorage;
+  const run = new VideoService(pool as unknown as import('pg').Pool, loadLimits(environment()), storage, async () => {});
+  await expect(run.complete('account', { video_id: id, parts: [{ part_number: 1, etag: 'a' }] }))
+    .rejects.toMatchObject({ status: 422, details: { reason: 'not_media' } });
+  expect(remove).toHaveBeenCalledWith('key'); expect(log).toHaveBeenCalledTimes(1);
 });

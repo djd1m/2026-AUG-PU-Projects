@@ -1,0 +1,8 @@
+RU-008-cleanup red: exit 1
+RU-008-cleanup green: exit 0
+RU-009-lifecycle red: exit 1
+RU-009-lifecycle green: exit 0
+RU-002-pool: NOT RUN (real PostgreSQL required)
+RU-004-day: NOT RUN (real PostgreSQL required)
+RU-004-rollback: NOT RUN (real PostgreSQL required)
+RU-007-migration: NOT RUN (real PostgreSQL required)

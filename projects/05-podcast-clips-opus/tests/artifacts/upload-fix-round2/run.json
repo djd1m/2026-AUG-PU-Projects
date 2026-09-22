@@ -14,21 +14,71 @@
   ],
   "baseline_revision": "4436e49bc0203c6384af6e782b6117cb410ebf5d",
   "started_at": "2026-09-22T11:07:17.452714+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-22T11:55:28.055473+00:00",
+  "status": "failed",
   "actual_model": null,
   "requested_model": "gpt-6-astra",
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 2890602,
     "input_tokens_total": null,
     "output_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "cached_input_tokens": null,
+    "reasoning_tokens": null,
+    "cost_basis": "unavailable"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Host does not expose actual model, effort or usage",
     "Instruction-reading start was not measured; elapsed starts at recording",
-    "Docker socket permission denied"
+    "Docker socket permission denied",
+    "Separate process/model timing and infra wait intervals unavailable; active time null",
+    "No paired baseline; comparison/batch null",
+    "No semantic acceptance on real DB; ac_met null",
+    "No independent false-positive, missed-defect or regression measurement",
+    "Actual total time includes unmeasured instruction-reading before started_at"
   ],
-  "acceptance_evidence": []
+  "acceptance_evidence": [
+    "tests/artifacts/upload-fix-round2/tests-final.txt",
+    "tests/artifacts/upload-fix-round2/build-final.txt",
+    "tests/artifacts/upload-fix-round2/typecheck-final-retry.txt",
+    "tests/artifacts/upload-fix-round2/lint-final-retry.txt",
+    "docs/features/upload-and-quota/10_fix_report.md"
+  ],
+  "source_snapshot": "517a3de10aaffc334cad324ee7b66ec230d06bceb5cabbe3776819ca339f7d8c",
+  "source_drift": {
+    "initial_head": "4436e49bc0203c6384af6e782b6117cb410ebf5d",
+    "current_head": "f5b1a1986fd40f4a256e6c18085e3d4614b0ed95",
+    "reconciliation": "External commit f5b1a19 included ongoing fixes. Source reread and final build passed. No external files reverted; final gates bind source-final.json."
+  },
+  "final_revision": "f5b1a1986fd40f4a256e6c18085e3d4614b0ed95",
+  "batch_id": null,
+  "comparison_id": null,
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "risk_flags": [
+    "quota",
+    "shared_pool",
+    "migration"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 10,
+    "confirmed_findings_by_severity": {
+      "blocker": 2,
+      "high": 1,
+      "medium": 3,
+      "low": 4
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  }
 }

@@ -1,0 +1,62 @@
+{
+  "identity": {
+    "run_id": "20260922-upload-fix-round2",
+    "work_unit_id": "upload-fix-round2",
+    "current_attempt_id": "integrate-1"
+  },
+  "stage": "paused",
+  "scope": "Correct RU001–RU010 per approved 09_fix_brief_codex.md; RU005 retention follow-up permitted by brief",
+  "exclusions": [
+    "production deployment",
+    "queue-and-probe",
+    "historical docs and telemetry"
+  ],
+  "source": {
+    "baseline": "4436e49bc0203c6384af6e782b6117cb410ebf5d",
+    "current": "f5b1a1986fd40f4a256e6c18085e3d4614b0ed95",
+    "snapshot": "517a3de10aaffc334cad324ee7b66ec230d06bceb5cabbe3776819ca339f7d8c",
+    "requirements": "docs/features/upload-and-quota/09_fix_brief_codex.md",
+    "architecture": "docs/Architecture.md"
+  },
+  "route": {
+    "mechanical_exit": 0,
+    "mechanical_tier": "S",
+    "substantive_tier": "XL",
+    "reason": "Quota accounting and shared DB connections; already reviewed corrective plan explicitly authorized"
+  },
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly instructed complete execution of corrective brief"
+  },
+  "preflight": {
+    "status": "blocked",
+    "source": "517a3de10aaffc334cad324ee7b66ec230d06bceb5cabbe3776819ca339f7d8c",
+    "build": "npm run build exit 0",
+    "environment": "compose test PostgreSQL16 Redis7 MinIO",
+    "inputs": "synthetic config, *_test DB and *-test bucket only",
+    "command": "docker compose --project-directory . --profile test run --build --rm test",
+    "expected_effects": "isolated test schemas and test bucket objects",
+    "evidence_root": "tests/artifacts/upload-fix-round2",
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "reason": "Docker socket permission denied; local HTTP bind EPERM; environment availability cannot be established"
+  },
+  "telemetry": {
+    "run": "tests/artifacts/upload-fix-round2/run.json",
+    "events": "tests/artifacts/upload-fix-round2/events.jsonl"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "estimate": null
+  },
+  "pending": [
+    "compose suite including 37 skipped tests",
+    "four real DB mutation pairs",
+    "OWN002 cross-family review"
+  ],
+  "pause": {
+    "reason": "Docker unavailable, no permission escalation allowed",
+    "next_step": "Run prepared tests on Docker-capable host",
+    "checkpoint": "not_applicable: corrective brief provides no native checkpoint"
+  }
+}

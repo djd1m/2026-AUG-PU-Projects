@@ -1,0 +1,41 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-4UAir2
+
+ ❯ tests/upload-fix.test.ts (8 tests | 1 failed | 7 skipped) 51ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   × RU-006: saturated anonymous prefix and account do not block another account behind NAT 49ms
+     → expected [] to have a length of 30 but got +0
+   ↓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   ↓ RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-006: saturated anonymous prefix and account do not block another account behind NAT
+AssertionError: expected [] to have a length of 30 but got +0
+
+- Expected
++ Received
+
+- 30
++ 0
+
+ ❯ tests/upload-fix.test.ts:54:35
+     52|   await Promise.all(Array.from({ length: 30 }, () => allowMutation(red…
+     53|   const answers = await Promise.all(Array.from({ length: 31 }, () => a…
+     54|   expect(answers.filter(Boolean)).toHaveLength(30);
+       |                                   ^
+     55|   expect(await allowMutation(redis, '192.0.2.2', 'secret', 'account-b'…
+     56|   expect(await allowMutation(redis, '198.51.100.1', 'secret', 'account…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  11:38:26
+   Duration  2.74s (transform 949ms, setup 0ms, collect 1.57s, tests 51ms, environment 0ms, prepare 305ms)
+

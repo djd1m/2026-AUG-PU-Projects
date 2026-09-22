@@ -1,0 +1,37 @@
+[
+  {
+    "id": "RU-001-timeout",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "73c6e0eeb333a1bbdede4c8a1f56cbfbfd4723691e36d5d5673b685cd5b0010a",
+    "log": "tests/artifacts/upload-fix-round2/RU-001-timeout-red.txt"
+  },
+  {
+    "id": "RU-001-timeout",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "5ee59a791df73b838b07ba421770b72a82e98c0bba1a06a6fc773d6edb280ef6",
+    "log": "tests/artifacts/upload-fix-round2/RU-001-timeout-green.txt"
+  },
+  {
+    "id": "RU-001-body",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "42d13d111f1c546165b7b51744ce259e5e03ff40952c0d345a4442f1ce75b1ef",
+    "log": "tests/artifacts/upload-fix-round2/RU-001-body-red.txt"
+  },
+  {
+    "id": "RU-001-body",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "5ee59a791df73b838b07ba421770b72a82e98c0bba1a06a6fc773d6edb280ef6",
+    "log": "tests/artifacts/upload-fix-round2/RU-001-body-green.txt"
+  },
+  {
+    "id": "RU-003-parallel",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "0259fc40f9d5022e9c1ed78e4a81bc9ba75377a649473c4d74f99a28912458d6",
+    "log": "tests/artifacts/upload-fix-round2/RU-003-parallel-red.txt"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "ports-final",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 2,
+    "evidence": "tests/artifacts/upload-fix-round2/ports-final.txt"
+  },
+  {
+    "name": "env-wiring",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 0,
+    "evidence": "tests/artifacts/upload-fix-round2/env-wiring.txt"
+  },
+  {
+    "name": "port-conflicts",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "projects/05-podcast-clips-opus"
+    ],
+    "exit_code": 2,
+    "evidence": "tests/artifacts/upload-fix-round2/port-conflicts.txt"
+  },
+  {
+    "name": "model-cost",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-model-cost.cjs",
+      "."
+    ],
+    "exit_code": 0,
+    "evidence": "tests/artifacts/upload-fix-round2/model-cost.txt"
+  },
+  {
+    "name": "docker-access",
+    "command": [
+      "docker",
+      "version",
+      "--format",
+      "{{.Server.Version}}"
+    ],
+    "exit_code": 1,
+    "evidence": "tests/artifacts/upload-fix-round2/docker-access.txt"
+  }
+]

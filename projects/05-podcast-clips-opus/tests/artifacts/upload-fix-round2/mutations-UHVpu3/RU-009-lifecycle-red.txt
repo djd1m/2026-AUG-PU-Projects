@@ -1,0 +1,35 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-ywjrYE
+
+ ❯ tests/upload-fix.test.ts (8 tests | 1 failed | 7 skipped) 26ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   × RU-009: initiation refuses missing, disabled or filtered abort lifecycle 24ms
+     → Хранилище не выдало идентификатор загрузки
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   ↓ RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+Error: Хранилище не выдало идентификатор загрузки
+ ❯ initiateMultipartUpload packages/s3/src/multipart.ts:17:31
+     15|   const result = await ctx.client.send(new CreateMultipartUploadComman…
+     16|     ContentType: 'application/octet-stream' }), { requestTimeout: FAST…
+     17|   if (!result.UploadId) throw new Error('Хранилище не выдало идентифик…
+       |                               ^
+     18|   return result.UploadId;
+     19| }
+ ❯ tests/upload-fix.test.ts:70:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  11:50:35
+   Duration  928ms (transform 297ms, setup 0ms, collect 566ms, tests 26ms, environment 0ms, prepare 107ms)
+

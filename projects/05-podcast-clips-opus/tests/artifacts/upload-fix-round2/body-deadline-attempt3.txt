@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/upload-fix.test.ts (7 tests | 1 failed | 6 skipped) 331ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   ↓ RU-009: initiation refuses missing, disabled or filtered abort lifecycle
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   × RU-001: deadline covers a stalled Complete body after HTTP 200 headers 329ms
+     → nodeStream.pipe is not a function
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+Error: nodeStream.pipe is not a function
+ ❯ tests/upload-fix.test.ts:107:69
+    105|   let timer: ReturnType<typeof setTimeout> | undefined;
+    106|   try {
+    107|     await Promise.race([started, observed.then((message) => { throw ne…
+       |                                                                     ^
+    108|     const answer = await Promise.race([observed, new Promise<string>((…
+    109|     expect(answer).toContain('body deadline');
+ ❯ tests/upload-fix.test.ts:107:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: test cleanup
+ ❯ tests/upload-fix.test.ts:111:52
+    109|     expect(answer).toContain('body deadline');
+    110|     expect(AbortSignal.timeout).toHaveBeenCalledWith(300_000);
+    111|   } finally { clearTimeout(timer); stalled.destroy(new Error('test cle…
+       |                                                    ^
+    112| });
+    113| 
+ ❯ node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+This error originated in "tests/upload-fix.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+     Errors  1 error
+   Start at  11:25:06
+   Duration  1.91s (transform 465ms, setup 0ms, collect 988ms, tests 331ms, environment 0ms, prepare 219ms)
+
