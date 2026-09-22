@@ -3,7 +3,6 @@ import { CreateMultipartUploadCommand, CompleteMultipartUploadCommand, AbortMult
   ListPartsCommand } from '@aws-sdk/client-s3';
 import { MAX_UPLOAD_BYTES } from '@clipmaker/shared/upload';
 import { FAST_REQUEST_TIMEOUT_MS, type StorageContext } from './client.js';
-import { assertMultipartLifecycle } from './lifecycle.js';
 export interface CompletedPart { part_number: number; etag: string }
 export class UploadTooLarge extends Error {}
 export function calculatePartSize(fileSize: number): number {
@@ -11,7 +10,8 @@ export function calculatePartSize(fileSize: number): number {
   return Math.max(10 * 1024 * 1024, Math.ceil(fileSize / 100));
 }
 export async function initiateMultipartUpload(ctx: StorageContext, key: string): Promise<string> {
-  await assertMultipartLifecycle(ctx);
+  // Сироты старше суток: сборщик сторожа queue-and-probe; контракт в 13_fix_report.md.
+  // Поддержка lifecycle и права на его чтение не являются условием загрузки.
   const result = await ctx.client.send(new CreateMultipartUploadCommand({ Bucket: ctx.bucket, Key: key,
     ContentType: 'application/octet-stream' }), { requestTimeout: FAST_REQUEST_TIMEOUT_MS });
   if (!result.UploadId) throw new Error('Хранилище не выдало идентификатор загрузки');

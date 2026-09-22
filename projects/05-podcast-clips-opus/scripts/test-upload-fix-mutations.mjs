@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 const project = process.cwd();
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'n5-upload-fix-mutations-'));
-const evidenceRoot = path.join(project, 'tests/artifacts/upload-fix-round2');
+const evidenceRoot = path.join(project, 'tests/artifacts/upload-fix-round3');
 fs.mkdirSync(evidenceRoot, { recursive: true });
 const evidence = fs.mkdtempSync(path.join(evidenceRoot, 'mutations-'));
 const selected = process.argv.slice(2);
@@ -18,7 +18,16 @@ const tests = [
   ['RU-003-renew', 'apps/web/src/lib/upload-parts.ts', 'if (!refresh) throw', 'if (true) throw', 'tests/upload-fix.test.ts', 'expired signatures refresh'],
   ['RU-006-account', 'apps/web/src/server/rate-limit.ts', 'account ? `account:${account}`', 'false ? `account:${account}`', 'tests/upload-fix.test.ts', 'saturated anonymous'],
   ['RU-008-cleanup', 'apps/web/src/server/video.ts', 'await this.cleanup(() => this.storage.abort(row.object_key, row.upload_id!), \'abort\')', 'await this.storage.abort(row.object_key, row.upload_id!)', 'tests/upload-fix.test.ts', 'abort failure still deletes'],
-  ['RU-009-lifecycle', 'packages/s3/src/multipart.ts', '  await assertMultipartLifecycle(ctx);', '', 'tests/upload-fix.test.ts', 'initiation refuses'],
+  // RI-001 заменяет прежний RU-009: возвращаем запрет Create без lifecycle.
+  ['RI-001-lifecycle', 'packages/s3/src/multipart.ts',
+    '  // Сироты старше суток:',
+    `  const lifecycle = await ctx.client.send(new (await import('@aws-sdk/client-s3')).GetBucketLifecycleConfigurationCommand({ Bucket: ctx.bucket }), { requestTimeout: FAST_REQUEST_TIMEOUT_MS });
+  if (!lifecycle.Rules?.some((rule) => rule.Status === 'Enabled'
+    && rule.AbortIncompleteMultipartUpload?.DaysAfterInitiation === 1
+    && (!rule.Prefix || rule.Prefix === '')
+    && (!rule.Filter || Object.keys(rule.Filter).length === 0
+      || (Object.keys(rule.Filter).length === 1 && rule.Filter.Prefix === '')))) throw new Error('S3: требуется lifecycle');
+  // Сироты старше суток:`, 'tests/upload-fix.test.ts', 'RI-001: initiation'],
   ['RU-002-pool', 'apps/web/src/server/video.ts', 'await this.storage.initiate(objectKey)', 'await transaction(this.pool, async () => this.storage.initiate(objectKey))', 'tests/upload-fix.integration.test.ts', 'pending initiate'],
   ['RU-004-day', 'packages/db/src/quota.ts', "'upload_refund', 1, chargedAt", "'upload_refund', 1, now", 'tests/upload-fix.integration.test.ts', 'midnight refund'],
   ['RU-004-rollback', 'packages/db/src/quota.ts', "if (!result.rowCount) await tx.query('ROLLBACK TO SAVEPOINT upload_refund');", '', 'tests/upload-fix.integration.test.ts', 'midnight refund'],

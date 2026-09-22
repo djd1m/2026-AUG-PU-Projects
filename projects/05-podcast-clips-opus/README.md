@@ -62,7 +62,7 @@ bash ../../scripts/check-port-conflicts.sh .         # порты этой ма�
 ```bash
 cp .env.example .env        # заполнить секреты; потолки и N5_PUBLIC_ORIGIN дефолтов НЕ имеют
 docker compose --project-directory . --profile edge up -d      # боевой профиль за Caddy
-docker compose --project-directory . --profile test run --rm test   # тесты на реальных PostgreSQL, Redis, MinIO
+docker compose --project-directory . --profile test run --rm --build test   # тесты на реальных PostgreSQL, Redis, MinIO
 ```
 
 Отсутствие любой из шести переменных `N5_LIMIT_*` или пустой `N5_PUBLIC_ORIGIN` валят запуск

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "RI-001-lifecycle",
+    "state": "red",
+    "exit_code": 1,
+    "source_sha256": "026c469ea5ffe49d82445b73f6655dde757d717f08da4563e6b3a0fdf08d201e",
+    "log": "tests/artifacts/upload-fix-round3/mutations-28Ezvu/RI-001-lifecycle-red.txt"
+  },
+  {
+    "id": "RI-001-lifecycle",
+    "state": "green",
+    "exit_code": 0,
+    "source_sha256": "a29aa54b45ed82d83ea3761c5ef1a650b227023db59e398ff063eb6836daa26c",
+    "log": "tests/artifacts/upload-fix-round3/mutations-28Ezvu/RI-001-lifecycle-green.txt"
+  }
+]

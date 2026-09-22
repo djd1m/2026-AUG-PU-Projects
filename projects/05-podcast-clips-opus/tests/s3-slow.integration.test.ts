@@ -3,6 +3,8 @@ import { createServer } from 'node:http';
 import { createS3Client, completeMultipartUpload, headObject } from '../packages/s3/src';
 import { loadS3Config } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
+// 5,5 с Complete + 3 × 5 с HEAD + 9,5 с на SDK backoff, подготовку и очистку.
+const SLOW_HTTP_TEST_TIMEOUT_MS = 30_000;
 // Исполняется в compose test: sandbox хоста запрещает даже bind(127.0.0.1).
 // Это реальный HTTP/SDK, а не mock send; 24 байта специально склеиваются >5 секунд.
 describe.skipIf(!process.env.DATABASE_URL)('RU-001 slow HTTP endpoint', () => {
@@ -29,5 +31,5 @@ describe.skipIf(!process.env.DATABASE_URL)('RU-001 slow HTTP endpoint', () => {
       for (const timer of timers) clearTimeout(timer);
       client.destroy(); server.closeAllConnections(); await new Promise<void>((resolve) => server.close(() => resolve()));
     }
-  }, 20000);
+  }, SLOW_HTTP_TEST_TIMEOUT_MS);
 });

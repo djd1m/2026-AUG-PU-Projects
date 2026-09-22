@@ -1,0 +1,58 @@
+
+ RUN  v3.2.7 /tmp/n5-upload-fix-mutations-8F4hwf
+
+ ❯ tests/upload-fix.test.ts (9 tests | 2 failed | 7 skipped) 147ms
+   ↓ RU-001: Complete has a minutes-scale command timeout, HEAD stays short
+   ↓ RU-003: three PUTs run concurrently and completed parts are preserved
+   ↓ RU-003: expired signatures refresh without re-uploading confirmed parts
+   ↓ RU-006: saturated anonymous prefix and account do not block another account behind NAT
+   × RI-001: initiation succeeds without lifecycle (NoSuchLifecycleConfiguration) 120ms
+     → promise rejected "NoSuchLifecycleConfiguration: NoSuchLifec…" instead of resolving
+   × RI-001: initiation succeeds without lifecycle (AccessDenied) 25ms
+     → promise rejected "AccessDenied: AccessDenied" instead of resolving
+   ↓ RU-003: persistent 403 has a bounded retry and abort does not refresh
+   ↓ RU-001: deadline covers a stalled Complete body after HTTP 200 headers
+   ↓ RU-008: abort failure still deletes and preserves the file rejection
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/upload-fix.test.ts > RI-001: initiation succeeds without lifecycle (NoSuchLifecycleConfiguration)
+AssertionError: promise rejected "NoSuchLifecycleConfiguration: NoSuchLifec…" instead of resolving
+ ❯ tests/upload-fix.test.ts:71:53
+     69|   ctx.client.send = send as unknown as typeof ctx.client.send;
+     70|   try {
+     71|     await expect(initiateMultipartUpload(ctx, 'key')).resolves.toBe('i…
+       |                                                     ^
+     72|     expect(send).toHaveBeenCalledTimes(1);
+     73|     expect(send.mock.calls[0]?.[0].constructor.name).toBe('CreateMulti…
+
+Caused by: NoSuchLifecycleConfiguration: NoSuchLifecycleConfiguration
+ ❯ S3Client.<anonymous> tests/upload-fix.test.ts:64:27
+ ❯ initiateMultipartUpload packages/s3/src/multipart.ts:13:38
+ ❯ tests/upload-fix.test.ts:71:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/upload-fix.test.ts > RI-001: initiation succeeds without lifecycle (AccessDenied)
+AssertionError: promise rejected "AccessDenied: AccessDenied" instead of resolving
+ ❯ tests/upload-fix.test.ts:71:53
+     69|   ctx.client.send = send as unknown as typeof ctx.client.send;
+     70|   try {
+     71|     await expect(initiateMultipartUpload(ctx, 'key')).resolves.toBe('i…
+       |                                                     ^
+     72|     expect(send).toHaveBeenCalledTimes(1);
+     73|     expect(send.mock.calls[0]?.[0].constructor.name).toBe('CreateMulti…
+
+Caused by: AccessDenied: AccessDenied
+ ❯ S3Client.<anonymous> tests/upload-fix.test.ts:64:27
+ ❯ initiateMultipartUpload packages/s3/src/multipart.ts:13:38
+ ❯ tests/upload-fix.test.ts:71:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 skipped (9)
+   Start at  12:29:37
+   Duration  2.63s (transform 650ms, setup 0ms, collect 1.59s, tests 147ms, environment 0ms, prepare 283ms)
+

@@ -135,8 +135,10 @@ npm run lint
 npm run build            # по каждому workspace
 
 # интеграционные — на НАСТОЯЩЕМ PostgreSQL 16 и Redis 7, MinIO вместо Cloud.ru:
-docker compose --project-directory . --profile test run --rm test
+docker compose --project-directory . --profile test run --rm --build test
 ```
+
+`--build` ОБЯЗАТЕЛЕН. Без него `run` берёт РАНЕЕ СОБРАННЫЙ образ, и прогон молча проверяет старый код. Наблюдено 22.09.2026: после правок раунда 3 фичи 2 результат совпал с предыдущим побайтово, включая длительность упавшего теста — зелёное и красное одинаково не значили ничего.
 
 `docker compose up` — только после проверок, и `--project-directory .` обязателен (из корня
 монорепо compose не находит конфигурацию):

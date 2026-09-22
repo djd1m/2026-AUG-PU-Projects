@@ -1,7 +1,7 @@
 import { beforeAll, afterAll, describe, expect, it, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { Pool } from 'pg';
-import { CreateBucketCommand, HeadBucketCommand, PutBucketLifecycleConfigurationCommand } from '@aws-sdk/client-s3';
+import { CreateBucketCommand, DeleteBucketCommand, GetBucketLifecycleConfigurationCommand } from '@aws-sdk/client-s3';
 import { migrate } from '../packages/db/src/migrate';
 import { transaction, checkAndConsumeQuota, refundUploadSlot } from '../packages/db/src/quota';
 import { loadLimits, loadS3Config } from '../packages/shared/src/config';
@@ -88,15 +88,9 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
     await ensureTestDatabase(dbUrl);
     pool = new Pool({ connectionString: dbUrl, max: 12, options: `-c search_path=${schema},public` });
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
-    ctx = { client: s3.createS3Client(config), bucket: config.bucket };
-    try { await ctx.client.send(new HeadBucketCommand({ Bucket: ctx.bucket })); }
-    catch (error) {
-      if (!(error instanceof Error && ['NotFound', 'NoSuchBucket'].includes(error.name))) throw error;
-      await ctx.client.send(new CreateBucketCommand({ Bucket: ctx.bucket }));
-    }
-    await ctx.client.send(new PutBucketLifecycleConfigurationCommand({ Bucket: ctx.bucket, LifecycleConfiguration: {
-      Rules: [{ ID: 'abort-incomplete', Status: 'Enabled', Filter: { Prefix: '' }, AbortIncompleteMultipartUpload: { DaysAfterInitiation: 1 } }],
-    } }));
+    // Отдельный новый бакет гарантирует отсутствие lifecycle, не меняя общий бакет стенда.
+    ctx = { client: s3.createS3Client(config), bucket: `n5-upload-${randomBytes(8).toString('hex')}-test` };
+    await ctx.client.send(new CreateBucketCommand({ Bucket: ctx.bucket }));
     storage = {
       initiate: vi.fn(async (key) => { keys.add(key); const id = await s3.initiateMultipartUpload(ctx, key); uploads.push({ key, id }); return id; }),
       sign: (key, id, count, date) => s3.signParts(ctx, key, id, count, date),
@@ -111,6 +105,7 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
     if (ctx) {
       for (const u of uploads) await s3.abortMultipartUpload(ctx, u.key, u.id);
       for (const key of keys) await s3.deleteObject(ctx, key);
+      await ctx.client.send(new DeleteBucketCommand({ Bucket: ctx.bucket }));
       ctx.client.destroy();
     }
     if (pool) { await pool.query(`DROP SCHEMA ${schema} CASCADE`); await pool.end(); }
@@ -147,7 +142,9 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
     for (let i = 0; i < 2; i++) await expect(service.create(id, key, body)).rejects.toMatchObject({ code: 'refused' });
     expect(vi.mocked(storage.initiate).mock.calls.length).toBe(before); expect(await count(id)).toBe(2);
   });
-  it('Настоящий PUT по подписанной ссылке → Complete → HEAD → Range → queued, commit ДО enqueue', async () => {
+  it('RI-001: бакет без lifecycle → подписанный PUT → Complete → HEAD → Range → queued', async () => {
+    await expect(ctx.client.send(new GetBucketLifecycleConfigurationCommand({ Bucket: ctx.bucket })))
+      .rejects.toMatchObject({ name: 'NoSuchLifecycleConfiguration' });
     const id = await account(), upload = await service.create(id, randomUUID(), body);
     queue.mockImplementationOnce(async (videoId) => {
       expect((await pool.query('SELECT status FROM video WHERE id=$1', [videoId])).rows[0].status).toBe('queued');

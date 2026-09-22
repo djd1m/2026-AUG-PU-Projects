@@ -56,20 +56,22 @@ it('RU-006: saturated anonymous prefix and account do not block another account 
   expect(await allowMutation(redis, '198.51.100.1', 'secret', 'account-a')).toBe(false);
 });
 
-it('RU-009: initiation refuses missing, disabled or filtered abort lifecycle', async () => {
+it.each(['NoSuchLifecycleConfiguration', 'AccessDenied'])('RI-001: initiation succeeds without lifecycle (%s)', async (lifecycleError) => {
   const { initiateMultipartUpload } = await import('../packages/s3/src');
   const ctx = { client: createS3Client(loadS3Config(environment())), bucket: 'n5-test' };
-  const send = vi.fn(); ctx.client.send = send as unknown as typeof ctx.client.send;
-  const rule = { Status: 'Enabled', Filter: { Prefix: '' }, AbortIncompleteMultipartUpload: { DaysAfterInitiation: 1 } };
-  for (const rules of [[], [{ ...rule, Status: 'Disabled' }], [{ ...rule, Filter: { Prefix: 'other/' } }],
-    [{ ...rule, Filter: { Tag: { Key: 'x', Value: 'y' } } }], [{ ...rule, AbortIncompleteMultipartUpload: { DaysAfterInitiation: 7 } }]]) {
-    send.mockReset().mockResolvedValueOnce({ Rules: rules }).mockResolvedValueOnce({ UploadId: 'must-not-create' });
-    await expect(initiateMultipartUpload(ctx, 'key')).rejects.toThrow(); expect(send).toHaveBeenCalledTimes(1);
-  }
-  send.mockReset().mockResolvedValueOnce({ Rules: [rule] }).mockResolvedValueOnce({ UploadId: 'id' });
-  expect(await initiateMultipartUpload(ctx, 'key')).toBe('id');
-  expect(send.mock.calls[0]?.[0].constructor.name).toBe('GetBucketLifecycleConfigurationCommand');
-  expect(send.mock.calls[1]?.[0].constructor.name).toBe('CreateMultipartUploadCommand'); ctx.client.destroy();
+  const send = vi.fn(async (command: { constructor: { name: string } }) => {
+    if (command.constructor.name === 'GetBucketLifecycleConfigurationCommand') {
+      throw Object.assign(new Error(lifecycleError), { name: lifecycleError });
+    }
+    if (command.constructor.name === 'CreateMultipartUploadCommand') return { UploadId: 'id' };
+    throw new Error(`Unexpected command: ${command.constructor.name}`);
+  });
+  ctx.client.send = send as unknown as typeof ctx.client.send;
+  try {
+    await expect(initiateMultipartUpload(ctx, 'key')).resolves.toBe('id');
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0]?.[0].constructor.name).toBe('CreateMultipartUploadCommand');
+  } finally { ctx.client.destroy(); }
 });
 
 it('RU-003: persistent 403 has a bounded retry and abort does not refresh', async () => {
