@@ -1,0 +1,84 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922T123000Z-queue-and-probe-codex",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "queue-and-probe",
+  "pipeline": "Approved implementation brief + validation + supplemental review",
+  "tier": "M (L with fresh SPARC)",
+  "profile": "compact-quality-first-v2",
+  "baseline_revision": "6850cfd4da3d0d2c367177963aeddc611f75d419",
+  "started_at": "2026-09-22T12:31:06.597076+00:00",
+  "ended_at": "2026-09-22T12:55:43.078003+00:00",
+  "status": "blocked",
+  "actual_model": null,
+  "model_family": "OpenAI Codex GPT-6 (host instruction)",
+  "usage": null,
+  "cost": null,
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Exact model ID/effort and provider usage unavailable",
+    "Initial instruction reading preceded timestamp; total end-to-end duration unknown",
+    "Telemetry relocated from docs per explicit brief boundary",
+    "Anthropic independent review unavailable in host; integration owner gate",
+    "Host version and billing mode unavailable",
+    "No provider execution receipts for child model; requested recorded separately"
+  ],
+  "acceptance_evidence": [
+    "tests/artifacts/queue-and-probe/final-checks.json",
+    "tests/artifacts/queue-and-probe/mutations/results.json",
+    "tests/artifacts/queue-and-probe/environment-fixture-checks.json",
+    "tests/artifacts/queue-and-probe/ports-all-profiles.json",
+    "tests/artifacts/queue-and-probe/ffprobe-smoke.json",
+    "docs/features/queue-and-probe/07_code_report.md"
+  ],
+  "risk_flags": [
+    "cross-container queue",
+    "concurrency fencing",
+    "quota transactions"
+  ],
+  "batch_id": null,
+  "profile_overrides": [
+    "Root session retained; exact model ID unavailable",
+    "Anthropic review unavailable in this host",
+    "Telemetry in tests/artifacts because docs are restricted"
+  ],
+  "comparison_id": null,
+  "final_revision": "dirty-sha256:870507ac84c9658fe65563781184757851f2bee38bf2d6e8a9aeea9119fd15c2",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "quality": {
+    "required_gates_passed": false,
+    "known_defects_missed": null,
+    "followup_status": "pending",
+    "local_checks_passed": true,
+    "tests_passed": 133,
+    "tests_skipped": 61,
+    "reason": "Integration execution and Anthropic review belong to integration owner; code handoff complete"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 1476000,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "models": [
+    {
+      "role": "implementation/coordinator",
+      "actual_model": null,
+      "family": "GPT-6 Codex per host instruction",
+      "requested_model": null
+    },
+    {
+      "role": "read-only validation/review",
+      "requested_model": "gpt-5.6-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "model_evidence": "Explicit tool model parameter; no execution receipt returned"
+    }
+  ]
+}

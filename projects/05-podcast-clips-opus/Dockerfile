@@ -11,6 +11,7 @@ COPY apps/worker/package.json ./apps/worker/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/db/package.json ./packages/db/
 COPY packages/s3/package.json ./packages/s3/
+COPY packages/queue/package.json ./packages/queue/
 RUN npm ci
 
 # ── build: один раз для обеих рантайм-целей ──

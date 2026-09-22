@@ -1,8 +1,9 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { ZodError } from 'zod';
+import { z, ZodError } from 'zod';
+import type { VideoRetryService } from './video-retry';
 import type { VideoService } from './video';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'> }
+interface Context { account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -22,6 +23,15 @@ export const appRouter = t.router({ video: t.router({ create: validatedProcedure
     const code = status === 429 ? 'TOO_MANY_REQUESTS' : status === 422 ? 'UNPROCESSABLE_CONTENT' :
       status === 404 ? 'NOT_FOUND' : status === 409 ? 'CONFLICT' : 'INTERNAL_SERVER_ERROR';
     throw new TRPCError({ code, message: cause instanceof UploadError ? cause.message : 'Загрузка временно недоступна', cause });
+  }
+}), retry: validatedProcedure.input(z.object({ video_id: z.string().uuid() }).strict()).mutation(async ({ ctx, input }) => {
+  try {
+    if (!ctx.retry) throw new Error('Retry runtime unavailable');
+    return { data: await ctx.retry.retry(ctx.account, input.video_id), meta: { request_id: ctx.requestId } };
+  } catch (cause) {
+    const status = cause instanceof UploadError ? cause.status : 503;
+    throw new TRPCError({ code: status === 404 ? 'NOT_FOUND' : status === 409 ? 'CONFLICT' : status === 429 ? 'TOO_MANY_REQUESTS' : 'INTERNAL_SERVER_ERROR',
+      message: cause instanceof UploadError ? cause.message : 'Повтор временно недоступен', cause });
   }
 }) }) });
 export type AppRouter = typeof appRouter;

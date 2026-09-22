@@ -1,0 +1,4 @@
+Read-only agent: contract_check. Requested gpt-5.6-sol/high via host tool. No provider receipt. Supplemental validation, NOT Anthropic cross-family gate.
+Findings fixed: select quota refusal state; terminal job delay; continuation recovery + heartbeat; fair watchdog batch rotation; ffprobe operational errors.
+Initial source/worker build and typecheck passed; final checks after these concrete corrections in final-checks.json.
+PostgreSQL/Redis runtime behavior and Anthropic acceptance remain integration owner gates.
