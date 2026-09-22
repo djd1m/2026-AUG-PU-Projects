@@ -16,11 +16,11 @@ function store(account: AccountCredentials | null = null): AuthStore {
 }
 function request(password = 'неправильный пароль', headers: Record<string, string> = {}) {
   return new Request('https://test.invalid/api/auth/login', { method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-forwarded-for': '192.0.2.99', ...headers },
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': '192.0.2.99, 10.0.0.5, 172.18.0.2', ...headers },
     body: JSON.stringify({ email: 'user@example.org', password }) });
 }
 function handler(action: 'login' | 'register' | 'logout', db: AuthStore, allowMutation = async () => true) {
-  return createAuthHandler(action, { auth: new AuthService(db, secret), publicOrigin: 'https://test.invalid', allowMutation });
+  return createAuthHandler(action, { auth: new AuthService(db, secret), publicOrigin: 'https://test.invalid', trustedProxyHops: 2, allowMutation });
 }
 describe('Аутентификация', () => {
   it('Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время', async () => {
@@ -101,7 +101,7 @@ describe('Аутентификация', () => {
     expect(() => check(logic, persistence + '\n await bcrypt.hash(password, 10)')).toThrow();
   });
   it('IP: не доверяет первому XFF, сохраняет только /24', () => {
-    expect(clientIp(new Headers({ 'x-forwarded-for': '1.1.1.1, 192.0.2.99' }))).toBe('192.0.2.99');
+    expect(clientIp(new Headers({ 'x-forwarded-for': '1.1.1.1, 192.0.2.99, 10.0.0.5, 172.18.0.2' }), 2)).toBe('192.0.2.99');
     expect(ipPrefix('::ffff:192.0.2.99')).toBe('192.0.2.0/24');
     expect(ipPrefix('2001:db8:1234::1')).toBe('2001:d00::/24');
     expect(ipPrefix('::1')).toBe('0:0::/24');

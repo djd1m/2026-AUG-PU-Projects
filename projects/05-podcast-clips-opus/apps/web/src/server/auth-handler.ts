@@ -22,12 +22,13 @@ export function readSessionCookie(request: Request): string | null {
 export interface HandlerDependencies {
   auth: AuthService;
   publicOrigin: string;
+  trustedProxyHops: number;
   allowMutation: (ip: string) => Promise<boolean>;
 }
 export function createAuthHandler(action: 'login' | 'register' | 'logout', deps: HandlerDependencies) {
   return async (request: Request): Promise<Response> => {
     try {
-      const ip = clientIp(request.headers);
+      const ip = clientIp(request.headers, deps.trustedProxyHops);
       if (!await deps.allowMutation(ip)) return json({ error: 'Слишком много запросов. Повторите через минуту' }, 429);
       const origin = request.headers.get('origin');
       if (origin && origin !== new URL(deps.publicOrigin).origin) return json({ error: 'Источник запроса не разрешён' }, 403);

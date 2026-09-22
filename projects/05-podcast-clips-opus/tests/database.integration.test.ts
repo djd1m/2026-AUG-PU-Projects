@@ -4,6 +4,8 @@ import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import { migrate } from '../packages/db/src/migrate';
 import { AuthService, BCRYPT_COST } from '../apps/web/src/server/auth';
+import { ipPrefix } from '../apps/web/src/server/ip';
+import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { PgAuthStore } from '../apps/web/src/server/auth-store';
 
 // Compose test передаёт DATABASE_URL с БД n5_test. Без URL логические тесты идут без PostgreSQL.
@@ -13,6 +15,8 @@ describe.skipIf(!databaseUrl)('PostgreSQL: ограничения, миграц�
   const schema = `foundation_${randomBytes(8).toString('hex')}`;
   beforeAll(async () => {
     if (!databaseUrl || !new URL(databaseUrl).pathname.endsWith('_test')) throw new Error('Интеграционные тесты разрешены только в отдельной БД *_test');
+    await ensureTestDatabase(databaseUrl);
+    await ensureTestDatabase(databaseUrl);
     pool = new Pool({ connectionString: databaseUrl, max: 4, options: `-c search_path=${schema},public` });
     await pool.query(`CREATE SCHEMA ${schema}`);
     await migrate(pool); await migrate(pool);
@@ -51,6 +55,21 @@ describe.skipIf(!databaseUrl)('PostgreSQL: ограничения, миграц�
       await Promise.race([allEntered, new Promise((_, reject) => setTimeout(() => reject(new Error('Пул удерживается во время bcrypt')), 2000))]);
       expect((await pool.query('SELECT 1 AS ok')).rows[0].ok).toBe(1);
     } finally { release(); await Promise.all(calls); compare.mockRestore(); }
+  });
+  it('RV-004: NULL-префикс запрещён у обоих дедуплицируемых событий', async () => {
+    for (const type of ['link_view', 'guest_opened']) {
+      await expect(pool.query('INSERT INTO growth_event(type,ip_prefix,day) VALUES ($1,NULL,current_date)', [type]))
+        .rejects.toMatchObject({ code: '23514', constraint: 'growth_event_dedup_prefix_required' });
+    }
+    await pool.query("INSERT INTO growth_event(type,ip_prefix,day) VALUES ('download',NULL,current_date)");
+  });
+  it('RV-013: IPv6 /24 принимается настоящей колонкой session.cidr', async () => {
+    for (const [index, ip] of ['2001:db8:1234::1', '::1'].entries()) {
+      const token = await auth.register(`ipv6-${index}@example.org`, 'пароль аккаунта', ipPrefix(ip));
+      expect(await auth.authenticate(token)).not.toBeNull();
+      const result = await pool.query('SELECT ip_prefix = $1::cidr AS matches FROM session WHERE cookie_token_hash=$2', [ipPrefix(ip), auth.tokenHash(token)]);
+      expect(result.rows[0].matches).toBe(true);
+    }
   });
   it('8 первых рендеров имеют общий монотонный fence; повтор fence отвергнут', async () => {
     const account = (await pool.query("INSERT INTO account(email,password_hash) VALUES ('fence@example.org','test-hash') RETURNING id")).rows[0].id;

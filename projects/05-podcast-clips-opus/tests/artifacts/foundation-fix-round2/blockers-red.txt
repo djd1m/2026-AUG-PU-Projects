@@ -1,0 +1,210 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/proxy-rate.test.ts (9 tests | 9 failed) 29ms
+   × RV-001/003: доверенные звенья и независимые /24 > Примеры брифа: пропускает 2 или 1 звено, отказывает при 5 12ms
+     → expected '172.18.0.2' to be '203.0.113.9' // Object.is equality
+   × RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 0 3ms
+     → expected [Function] to throw an error
+   × RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев -1 1ms
+     → expected [Function] to throw an error
+   × RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 1.5 1ms
+     → expected [Function] to throw an error
+   × RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев NaN 1ms
+     → expected [Function] to throw an error
+   × RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев Infinity 1ms
+     → expected [Function] to throw an error
+   × RV-001/003: доверенные звенья и независимые /24 > Недостаточная цепочка и неверный адрес закрывают вход 1ms
+     → expected [Function] to throw an error
+   × RV-001/003: доверенные звенья и независимые /24 > Явный дефолт 2, настраиваемое положительное целое 2ms
+     → expected undefined to be 2 // Object.is equality
+   × RV-001/003: доверенные звенья и независимые /24 > 31-й запрос первой /24 отклонён; другая /24 проходит; соседний адрес не сбрасывает счётчик 6ms
+     → expected false to be true // Object.is equality
+ ❯ tests/preflight.test.ts (9 tests | 9 failed) 259ms
+   × Собранный preflight разрешает корректное окружение без подключения к БД 41ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_PUBLIC_ORIGIN завершается до сервера 28ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_LIMIT_USER_MINUTES завершается до сервера 28ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_LIMIT_USER_UPLOADS завершается до сервера 29ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_LIMIT_USER_UPLOAD_REFUNDS завершается до сервера 28ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_LIMIT_USER_LLM завершается до сервера 37ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_LIMIT_GLOBAL_MINUTES завершается до сервера 31ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × preflight: отдельный процесс без N5_LIMIT_GLOBAL_LLM завершается до сервера 30ms
+     → expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+   × Оба production entrypoint запускают preflight до Next 4ms
+     → expected 'next start' to be 'node .next/preflight/preflight.js && …' // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/preflight.test.ts > Собранный preflight разрешает корректное окружение без подключения к БД
+AssertionError: expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+
+- Expected: 
+undefined
+
++ Received: 
+Error {
+  "message": "spawnSync /usr/bin/node EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync /usr/bin/node",
+  "path": "/usr/bin/node",
+  "spawnargs": [
+    "apps/web/.next/preflight/preflight.js",
+  ],
+}
+
+ ❯ tests/preflight.test.ts:10:24
+      8| it('Собранный preflight разрешает корректное окружение без подключения…
+      9|   const result = spawnSync(process.execPath, [preflight], { env: envir…
+     10|   expect(result.error).toBeUndefined(); expect(result.status, result.s…
+       |                        ^
+     11| });
+     12| for (const name of ['N5_PUBLIC_ORIGIN', ...LIMIT_NAMES]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_PUBLIC_ORIGIN завершается до сервера
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_LIMIT_USER_MINUTES завершается до сервера
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_LIMIT_USER_UPLOADS завершается до сервера
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_LIMIT_USER_UPLOAD_REFUNDS завершается до сервера
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_LIMIT_USER_LLM завершается до сервера
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_LIMIT_GLOBAL_MINUTES завершается до сервера
+ FAIL  tests/preflight.test.ts > preflight: отдельный процесс без N5_LIMIT_GLOBAL_LLM завершается до сервера
+AssertionError: expected Error: spawnSync /usr/bin/node EPERM { …(5) } to be undefined
+
+- Expected: 
+undefined
+
++ Received: 
+Error {
+  "message": "spawnSync /usr/bin/node EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync /usr/bin/node",
+  "path": "/usr/bin/node",
+  "spawnargs": [
+    "apps/web/.next/preflight/preflight.js",
+  ],
+}
+
+ ❯ tests/preflight.test.ts:16:26
+     14|     const env = environment(); delete env[name];
+     15|     const result = spawnSync(process.execPath, [preflight], { env, enc…
+     16|     expect(result.error).toBeUndefined(); expect(result.signal).toBeNu…
+       |                          ^
+     17|     expect(result.status).toBe(1); expect(result.stderr).toContain(nam…
+     18|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  tests/preflight.test.ts > Оба production entrypoint запускают preflight до Next
+AssertionError: expected 'next start' to be 'node .next/preflight/preflight.js && …' // Object.is equality
+
+Expected: "node .next/preflight/preflight.js && next start"
+Received: "next start"
+
+ ❯ tests/preflight.test.ts:22:29
+     20| it('Оба production entrypoint запускают preflight до Next', () => {
+     21|   const pkg = JSON.parse(readFileSync('apps/web/package.json', 'utf8')…
+     22|   expect(pkg.scripts.start).toBe('node .next/preflight/preflight.js &&…
+       |                             ^
+     23|   const docker = readFileSync('Dockerfile', 'utf8').split(' AS web')[1…
+     24|   expect(docker).toContain('node apps/web/.next/preflight/preflight.js…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Примеры брифа: пропускает 2 или 1 звено, отказывает при 5
+AssertionError: expected '172.18.0.2' to be '203.0.113.9' // Object.is equality
+
+Expected: "203.0.113.9"
+Received: "172.18.0.2"
+
+ ❯ tests/proxy-rate.test.ts:11:49
+      9| describe('RV-001/003: доверенные звенья и независимые /24', () => {
+     10|   it('Примеры брифа: пропускает 2 или 1 звено, отказывает при 5', () =…
+     11|     expect(clientIp(headers('203.0.113.9'), 2)).toBe('203.0.113.9');
+       |                                                 ^
+     12|     expect(clientIp(headers('203.0.113.9'), 1)).toBe('10.0.0.5');
+     13|     expect(() => clientIp(headers('203.0.113.9'), 5)).toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 0
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев -1
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 1.5
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев NaN
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев Infinity
+AssertionError: expected [Function] to throw an error
+ ❯ tests/proxy-rate.test.ts:16:58
+     14|   });
+     15|   it.each([0, -1, 1.5, NaN, Infinity])('Непригодное число звеньев %s',…
+     16|     expect(() => clientIp(headers('203.0.113.9'), hops)).toThrow();
+       |                                                          ^
+     17|   });
+     18|   it('Недостаточная цепочка и неверный адрес закрывают вход', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Недостаточная цепочка и неверный адрес закрывают вход
+AssertionError: expected [Function] to throw an error
+ ❯ tests/proxy-rate.test.ts:20:76
+     18|   it('Недостаточная цепочка и неверный адрес закрывают вход', () => {
+     19|     for (const value of ['', '203.0.113.9', '203.0.113.9, 10.0.0.5', '…
+     20|       expect(() => clientIp(new Headers({ 'x-forwarded-for': value }),…
+       |                                                                            ^
+     21|     }
+     22|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Явный дефолт 2, настраиваемое положительное целое
+AssertionError: expected undefined to be 2 // Object.is equality
+
+- Expected: 
+2
+
++ Received: 
+undefined
+
+ ❯ tests/proxy-rate.test.ts:24:59
+     22|   });
+     23|   it('Явный дефолт 2, настраиваемое положительное целое', () => {
+     24|     expect(loadWebConfig(environment()).trustedProxyHops).toBe(2);
+       |                                                           ^
+     25|     expect(loadWebConfig({ ...environment(), N5_TRUSTED_PROXY_HOPS: '1…
+     26|     for (const value of ['', '0', '-1', '1.5', ' 2', '2e0', '900719925…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/18]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > 31-й запрос первой /24 отклонён; другая /24 проходит; соседний адрес не сбрасывает счётчик
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/proxy-rate.test.ts:37:90
+     35|     const first = clientIp(headers('203.0.113.9'), 2);
+     36|     expect((await Promise.all(Array.from({ length: 31 }, () => allowMu…
+     37|     expect(await allowMutation(redis, clientIp(headers('198.51.100.7')…
+       |                                                                                          ^
+     38|     expect(await allowMutation(redis, clientIp(headers('203.0.113.10')…
+     39|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/18]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  18 failed (18)
+   Start at  05:44:05
+   Duration  920ms (transform 115ms, setup 0ms, collect 133ms, tests 288ms, environment 0ms, prepare 167ms)
+

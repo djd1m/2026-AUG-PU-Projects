@@ -2,6 +2,7 @@
 export function readEnvironment() {
   return {
     NODE_ENV: process.env.NODE_ENV,
+    N5_TRUSTED_PROXY_HOPS: process.env.N5_TRUSTED_PROXY_HOPS,
     N5_LIMIT_USER_MINUTES: process.env.N5_LIMIT_USER_MINUTES,
     N5_LIMIT_USER_UPLOADS: process.env.N5_LIMIT_USER_UPLOADS,
     N5_LIMIT_USER_UPLOAD_REFUNDS: process.env.N5_LIMIT_USER_UPLOAD_REFUNDS,

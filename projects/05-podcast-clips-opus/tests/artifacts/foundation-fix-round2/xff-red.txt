@@ -1,0 +1,72 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/proxy-rate.test.ts (9 tests | 3 failed) 28ms
+   × RV-001/003: доверенные звенья и независимые /24 > Примеры брифа: пропускает 2 или 1 звено, отказывает при 5 12ms
+     → expected '172.18.0.2' to be '203.0.113.9' // Object.is equality
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 0 1ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев -1 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 1.5 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев NaN 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев Infinity 0ms
+   × RV-001/003: доверенные звенья и независимые /24 > Недостаточная цепочка и неверный адрес закрывают вход 3ms
+     → expected [Function] to throw an error
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Явный дефолт 2, настраиваемое положительное целое 3ms
+   × RV-001/003: доверенные звенья и независимые /24 > 31-й запрос первой /24 отклонён; другая /24 проходит; соседний адрес не сбрасывает счётчик 6ms
+     → expected false to be true // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Примеры брифа: пропускает 2 или 1 звено, отказывает при 5
+AssertionError: expected '172.18.0.2' to be '203.0.113.9' // Object.is equality
+
+Expected: "203.0.113.9"
+Received: "172.18.0.2"
+
+ ❯ tests/proxy-rate.test.ts:11:49
+      9| describe('RV-001/003: доверенные звенья и независимые /24', () => {
+     10|   it('Примеры брифа: пропускает 2 или 1 звено, отказывает при 5', () =…
+     11|     expect(clientIp(headers('203.0.113.9'), 2)).toBe('203.0.113.9');
+       |                                                 ^
+     12|     expect(clientIp(headers('203.0.113.9'), 1)).toBe('10.0.0.5');
+     13|     expect(() => clientIp(headers('203.0.113.9'), 5)).toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > Недостаточная цепочка и неверный адрес закрывают вход
+AssertionError: expected [Function] to throw an error
+ ❯ tests/proxy-rate.test.ts:20:76
+     18|   it('Недостаточная цепочка и неверный адрес закрывают вход', () => {
+     19|     for (const value of ['', '203.0.113.9', '203.0.113.9, 10.0.0.5', '…
+     20|       expect(() => clientIp(new Headers({ 'x-forwarded-for': value }),…
+       |                                                                            ^
+     21|     }
+     22|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > 31-й запрос первой /24 отклонён; другая /24 проходит; соседний адрес не сбрасывает счётчик
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/proxy-rate.test.ts:37:90
+     35|     const first = clientIp(headers('203.0.113.9'), 2);
+     36|     expect((await Promise.all(Array.from({ length: 31 }, () => allowMu…
+     37|     expect(await allowMutation(redis, clientIp(headers('198.51.100.7')…
+       |                                                                                          ^
+     38|     expect(await allowMutation(redis, clientIp(headers('203.0.113.10')…
+     39|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 6 passed (9)
+   Start at  05:49:47
+   Duration  405ms (transform 138ms, setup 0ms, collect 144ms, tests 28ms, environment 0ms, prepare 75ms)
+

@@ -1,0 +1,52 @@
+[
+  {
+    "mutation": "xff",
+    "command": "node node_modules/vitest/vitest.mjs run tests/proxy-rate.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "mutation": "rate-prefix",
+    "command": "node node_modules/vitest/vitest.mjs run tests/proxy-rate.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "mutation": "preflight",
+    "command": "node node_modules/vitest/vitest.mjs run tests/preflight.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "mutation": "config-wiring",
+    "command": "node node_modules/vitest/vitest.mjs run tests/wiring.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "mutation": "libuv",
+    "command": "node node_modules/vitest/vitest.mjs run tests/bcrypt-load.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "mutation": "test-db",
+    "command": "node node_modules/vitest/vitest.mjs run tests/test-db.test.ts",
+    "red_exit": 1,
+    "green_exit": 1
+  },
+  {
+    "mutation": "test-db",
+    "attempt_suffix": "-retry1",
+    "command": "node node_modules/vitest/vitest.mjs run tests/test-db.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "mutation": "growth-check",
+    "attempt_suffix": "",
+    "command": "node node_modules/vitest/vitest.mjs run tests/growth-prefix.test.ts",
+    "red_exit": 1,
+    "green_exit": 0
+  }
+]

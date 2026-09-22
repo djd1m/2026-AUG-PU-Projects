@@ -1,0 +1,56 @@
+
+> n5-clipmaker@0.1.0 build
+> npm run build --workspace=packages/shared && npm run build --workspace=packages/db && npm run build --workspace=packages/s3 && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+
+
+> @clipmaker/shared@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @clipmaker/db@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @clipmaker/s3@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @clipmaker/worker@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @clipmaker/web@0.1.0 build
+> next build && tsc -p tsconfig.preflight.json
+
+   ▲ Next.js 15.5.25
+   - Experiments (use with caution):
+     · cpus: 2
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.3s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/7) ...
+   Generating static pages (1/7) 
+   Generating static pages (3/7) 
+   Generating static pages (5/7) 
+ ✓ Generating static pages (7/7)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      138 B         103 kB
+├ ○ /_not-found                            988 B         104 kB
+├ ƒ /api/auth/login                        138 B         103 kB
+├ ƒ /api/auth/logout                       138 B         103 kB
+├ ƒ /api/auth/register                     138 B         103 kB
+└ ƒ /health                                138 B         103 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/18-2c82660ce7c4918d.js        46.4 kB
+  ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+  └ other shared chunks (total)          1.88 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

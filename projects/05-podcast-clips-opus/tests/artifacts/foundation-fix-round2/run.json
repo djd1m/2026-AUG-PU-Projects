@@ -1,0 +1,72 @@
+{
+  "run_id": "foundation-fix-round2",
+  "started_at": "2026-09-22T05:43:11.940640+00:00",
+  "profile": "compact-quality-first-v2",
+  "source_revision": "1354f03069cfe44904b5b3980f2f775e5064c5c4",
+  "stage": "implementation_complete_acceptance_blocked",
+  "requested_model": "current Codex coordinator",
+  "actual_model": null,
+  "model_gap": "Host provides GPT-6 identity, no exact execution model identifier or usage counters",
+  "usage": null,
+  "cost": null,
+  "active_wall_ms": null,
+  "telemetry_override": "Brief prohibits docs writes except final report; artifacts here",
+  "scope": "Mandatory fixes RV-001,002,003,004,006,008,009 and disposition RV-001..013",
+  "route": {
+    "mechanical": "L",
+    "substantive": "M: existing invariant repairs, fresh approved foundation plan/review/brief; full checks retained"
+  },
+  "agents": [
+    {
+      "task": "validate_fixes",
+      "requested_model": "gpt-5.6-sol",
+      "actual_model": null,
+      "reason": "Read-only plan validation; tool did not return model metadata",
+      "budget_minutes": 5
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Implementation and local checks; no deployed E2E; Docker socket permission denied"
+  },
+  "measurement_gaps": [
+    "Token/cost counters unavailable",
+    "Preparation before timestamp not measured; do not infer"
+  ],
+  "implementation_route": {
+    "tier": "M",
+    "reason": "Scope remains approved invariant repairs, no new product routes; retain mutation/concurrency/full regression gates"
+  },
+  "limitations": [
+    "Docker socket permission denied",
+    "Local PostgreSQL init blocked by runuser permission",
+    "Anthropic cross-family reviewer unavailable in agent model catalog"
+  ],
+  "finished_at": "2026-09-22T05:53:38.896615+00:00",
+  "source_snapshot_sha256": "594bfe607d0004fa79616e207e71b2b4dc2df382a6e7c48113f12db392f8a94a",
+  "build_id": "ptXg0FHU8SgXsNNacotMM",
+  "recorded_elapsed_ms": 626955,
+  "elapsed_wall_ms": null,
+  "elapsed_gap": "Preparation predates recorded start; full task elapsed unknown",
+  "checks": {
+    "build": 0,
+    "lint": 0,
+    "typecheck": 0,
+    "tests": {
+      "exit": 0,
+      "passed": 83,
+      "skipped": 8
+    },
+    "mutations": "seven red=1 / green=0; SQL source guard only",
+    "env_wiring": 0,
+    "ports_all_profiles": 0
+  },
+  "pending": [
+    "Real PostgreSQL tests / SQL mutation",
+    "Clean compose test profile run",
+    "Deployed proxy XFF shape",
+    "Anthropic cross-family review"
+  ],
+  "acceptance": "incomplete",
+  "review": "Read-only gpt-5.6-sol requested; actual execution model not confirmed; not cross-family"
+}

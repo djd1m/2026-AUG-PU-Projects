@@ -1,0 +1,111 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/test-db.test.ts (7 tests | 1 failed) 29ms
+   × RV-009: новая БД создаётся до тестов; соединение закрывается 22ms
+     → expected ' ["CMD", "node", "-e", "fetch(\'http:…' to contain 'node scripts/test-db.mjs && npm test …'
+   ✓ Существующая БД не пересоздаётся; гонка создания допустима 1ms
+   ✓ Отсутствие права создания не маскируется 1ms
+   ✓ Непригодная или продуктовая БД undefined не затрагивается 2ms
+   ✓ Непригодная или продуктовая БД postgresql://n5@db/n5 не затрагивается 1ms
+   ✓ Непригодная или продуктовая БД postgresql://n5@db/x%22_test не затрагивается 0ms
+   ✓ Непригодная или продуктовая БД mysql://n5@db/n5_test не затрагивается 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/test-db.test.ts > RV-009: новая БД создаётся до тестов; соединение закрывается
+AssertionError: expected ' ["CMD", "node", "-e", "fetch(\'http:…' to contain 'node scripts/test-db.mjs && npm test …'
+
+- Expected
++ Received
+
+- node scripts/test-db.mjs && npm test -- --run
++  ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
++       interval: 15s
++       timeout: 5s
++       retries: 5
++     restart: unless-stopped
++
++   worker-stt:
++     build:
++       context: .
++       dockerfile: Dockerfile
++       target: worker
++     command: ["node", "dist/apps/worker/workers/stt.js"]
++     environment:
++       <<: [*app-env, *quota-env, *s3-env]
++       OPENAI_API_KEY: ${OPENAI_API_KEY:?ключ OpenAI не задан — транскрипция невозможна}
++       N5_WORK_DIR: /work
++     volumes:
++       - stt-work:/work
++     depends_on:
++       db:
++         condition: service_healthy
++       redis:
++         condition: service_healthy
++     restart: unless-stopped
++
++   worker-llm:
++     build:
++       context: .
++       dockerfile: Dockerfile
++       target: worker
++     command: ["node", "dist/apps/worker/workers/select.js"]
++     environment:
++       <<: [*app-env, *quota-env]
++       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?ключ Anthropic не задан — выделение фрагментов невозможно}
++     depends_on:
++       db:
++         condition: service_healthy
++       redis:
++         condition: service_healthy
++     restart: unless-stopped
++
++   worker-video:
++     build:
++       context: .
++       dockerfile: Dockerfile
++       target: worker
++     command: ["node", "dist/apps/worker/workers/render.js"]
++     environment:
++       <<: [*app-env, *s3-env]
++       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — он вшивается в метку каждого клипа}
++       N5_WORK_DIR: /work
++       N5_RENDER_CONCURRENCY: "1"
++     volumes:
++       - render-work:/work
++     depends_on:
++       db:
++         condition: service_healthy
++       redis:
++         condition: service_healthy
++     restart: unless-stopped
++
++   db:
++     image: postgres:16.4-alpine
++     environment:
++       POSTGRES_DB: n5
++       POSTGRES_USER: n5
++       POSTGRES_PASSWORD: ${N5_DB_APP_PASSWORD:?пароль БД не задан}
++     volumes:
++       - pgdata:/var/lib/postgresql/data
++     # никакого ports: — это ПОЛНОЕ решение; соседи достучатся по имени db:5432
++     healthcheck:
++     
+
+ ❯ tests/test-db.test.ts:14:19
+     12|   expect(end).toHaveBeenCalledOnce();
+     13|   const compose = readFileSync('docker-compose.yml', 'utf8').split('  …
+     14|   expect(compose).toContain('node scripts/test-db.mjs && npm test -- -…
+       |                   ^
+     15| });
+     16| it('Существующая БД не пересоздаётся; гонка создания допустима', async…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  05:50:07
+   Duration  375ms (transform 80ms, setup 0ms, collect 84ms, tests 29ms, environment 0ms, prepare 79ms)
+

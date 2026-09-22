@@ -1,0 +1,55 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/test-db.test.ts (7 tests | 2 failed) 19ms
+   × RV-009: новая БД создаётся до тестов; соединение закрывается 8ms
+     → expected 2nd "spy" call to have been called with [ 'CREATE DATABASE "n5_test"' ], but called only 1 times
+   ✓ Существующая БД не пересоздаётся; гонка создания допустима 1ms
+   × Отсутствие права создания не маскируется 4ms
+     → promise resolved "undefined" instead of rejecting
+   ✓ Непригодная или продуктовая БД undefined не затрагивается 2ms
+   ✓ Непригодная или продуктовая БД postgresql://n5@db/n5 не затрагивается 0ms
+   ✓ Непригодная или продуктовая БД postgresql://n5@db/x%22_test не затрагивается 0ms
+   ✓ Непригодная или продуктовая БД mysql://n5@db/n5_test не затрагивается 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/test-db.test.ts > RV-009: новая БД создаётся до тестов; соединение закрывается
+AssertionError: expected 2nd "spy" call to have been called with [ 'CREATE DATABASE "n5_test"' ], but called only 1 times
+ ❯ tests/test-db.test.ts:11:17
+      9|   await ensureTestDatabase('postgresql://n5@db:5432/n5_test');
+     10|   expect(createPool.mock.calls[0]![0].connectionString).toBe('postgres…
+     11|   expect(query).toHaveBeenNthCalledWith(2, 'CREATE DATABASE "n5_test"'…
+       |                 ^
+     12|   expect(end).toHaveBeenCalledOnce();
+     13|   const compose = readFileSync('docker-compose.yml', 'utf8').split('  …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/test-db.test.ts > Отсутствие права создания не маскируется
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected: 
+Error {
+  "message": "rejected promise",
+}
+
++ Received: 
+undefined
+
+ ❯ tests/test-db.test.ts:25:69
+     23| it('Отсутствие права создания не маскируется', async () => {
+     24|   query.mockResolvedValueOnce({ rowCount: 0 }).mockRejectedValueOnce({…
+     25|   await expect(ensureTestDatabase('postgresql://n5@db:5432/n5_test')).…
+       |                                                                     ^
+     26|   expect(end).toHaveBeenCalledOnce();
+     27| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 passed (7)
+   Start at  05:50:06
+   Duration  379ms (transform 67ms, setup 0ms, collect 69ms, tests 19ms, environment 0ms, prepare 83ms)
+

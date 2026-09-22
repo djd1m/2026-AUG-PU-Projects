@@ -30,7 +30,7 @@ COPY --from=build /app/apps/web/package.json ./apps/web/package.json
 COPY --from=build /app/packages ./packages
 EXPOSE 3000
 # CMD ссылается на скрипт, существующий В ЭТОМ package.json (грабля клона: npm start в корне)
-CMD ["npm", "run", "start", "--workspace=apps/web"]
+CMD ["sh", "-c", "node apps/web/.next/preflight/preflight.js && exec node node_modules/next/dist/bin/next start apps/web"]
 
 # ── worker: ffmpeg 7 и ffprobe; один образ на три контейнера, команда задаётся в compose ──
 FROM node:22.22-alpine AS worker

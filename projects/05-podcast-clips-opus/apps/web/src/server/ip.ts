@@ -1,9 +1,13 @@
 import { isIP } from 'node:net';
 
-export function clientIp(headers: Headers): string {
-  // Только сеть compose: Caddy добавляет адрес непосредственного клиента справа.
-  // Входящий X-Forwarded-For пользователя слева не является доверенным.
-  const candidate = headers.get('x-forwarded-for')?.split(',').at(-1)?.trim();
+export function clientIp(headers: Headers, trustedProxyHops: number): string {
+  if (!Number.isSafeInteger(trustedProxyHops) || trustedProxyHops < 1) {
+    throw new Error('N5_TRUSTED_PROXY_HOPS непригодно: нельзя определить границу доверия');
+  }
+  // По контракту цепочка содержит клиента и trustedProxyHops адресов справа.
+  // Индекс с нуля: length - 1 - hops. Недостающую цепочку не дополняем.
+  const chain = headers.get('x-forwarded-for')?.split(',');
+  const candidate = chain?.[chain.length - 1 - trustedProxyHops]?.trim();
   if (!candidate || !isIP(candidate)) throw new Error('Адрес клиента недоступен: ограничитель не может защитить вход');
   return candidate.toLowerCase();
 }

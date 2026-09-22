@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { cpSync, readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { checkWiring, collectEnvironment } from '../scripts/check-env-wiring.mjs';
@@ -21,6 +21,22 @@ describe('Проверяемость проброса окружения', () =>
   });
   it('Пустой или неполный compose не зеленеет', () => {
     expect(() => checkWiring({})).toThrow(); expect(() => checkWiring({ services: {} })).toThrow();
+  });
+  it('Новая обязательная переменная config.ts не теряется в environment.ts', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'n5-config-wiring-'));
+    try {
+      for (const folder of ['apps/web/src', 'apps/worker', 'packages/shared/src']) {
+        cpSync(folder, path.join(dir, folder), { recursive: true });
+      }
+      cpSync('packages/db/src', path.join(dir, 'packages/db/src'), { recursive: true });
+      const file = path.join(dir, 'packages/shared/src/config.ts');
+      const source = readFileSync(file, 'utf8');
+      writeFileSync(file, source.replace('const limits = loadLimits(env);', "required(env, 'S3_ENDPOINT', 'storage unavailable'); const limits = loadLimits(env);"));
+      expect(checkWiring(compose(), dir)).toContain('web environment.ts: S3_ENDPOINT');
+      expect(checkWiring(compose(), dir)).toContain('web: S3_ENDPOINT');
+      writeFileSync(file, source);
+      expect(checkWiring(compose(), dir)).toEqual([]);
+    } finally { rmSync(dir, { recursive: true, force: true }); }
   });
   it('S3_ENDPOINT не режется до S; динамическое чтение не пропускается', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'n5-wiring-'));

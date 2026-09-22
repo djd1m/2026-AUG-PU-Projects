@@ -52,6 +52,16 @@ export function loadPublicOrigin(env: Environment): string {
   return url(env, 'N5_PUBLIC_ORIGIN', env.NODE_ENV === 'development' || env.NODE_ENV === 'test' ? ['https:', 'http:'] : ['https:'],
     'он вшивается в метку каждого клипа и определяет каждую выдаваемую наружу ссылку; с дефолтом они вели бы в никуда');
 }
+// Два доверенных адреса справа: внешний прокси машины и внутренний edge.
+export const DEFAULT_TRUSTED_PROXY_HOPS = 2;
+function loadTrustedProxyHops(env: Environment): number {
+  const raw = env.N5_TRUSTED_PROXY_HOPS ?? String(DEFAULT_TRUSTED_PROXY_HOPS);
+  const hops = Number(raw);
+  if (!/^[1-9][0-9]*$/.test(raw) || !Number.isSafeInteger(hops)) {
+    throw new Error('N5_TRUSTED_PROXY_HOPS непригодно: ограничитель и anti-fraud потеряют адрес клиента; нужно целое >= 1');
+  }
+  return hops;
+}
 export function loadWebConfig(env: Environment) {
   const limits = loadLimits(env);
   const publicOrigin = loadPublicOrigin(env);
@@ -60,7 +70,7 @@ export function loadWebConfig(env: Environment) {
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодно: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret });
+  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, trustedProxyHops: loadTrustedProxyHops(env) });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.

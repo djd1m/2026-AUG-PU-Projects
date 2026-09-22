@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/proxy-rate.test.ts (9 tests | 1 failed) 28ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Примеры брифа: пропускает 2 или 1 звено, отказывает при 5 4ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 0 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев -1 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев 1.5 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев NaN 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Непригодное число звеньев Infinity 0ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Недостаточная цепочка и неверный адрес закрывают вход 5ms
+   ✓ RV-001/003: доверенные звенья и независимые /24 > Явный дефолт 2, настраиваемое положительное целое 3ms
+   × RV-001/003: доверенные звенья и независимые /24 > 31-й запрос первой /24 отклонён; другая /24 проходит; соседний адрес не сбрасывает счётчик 12ms
+     → expected true to be false // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/proxy-rate.test.ts > RV-001/003: доверенные звенья и независимые /24 > 31-й запрос первой /24 отклонён; другая /24 проходит; соседний адрес не сбрасывает счётчик
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/proxy-rate.test.ts:38:90
+     36|     expect((await Promise.all(Array.from({ length: 31 }, () => allowMu…
+     37|     expect(await allowMutation(redis, clientIp(headers('198.51.100.7')…
+     38|     expect(await allowMutation(redis, clientIp(headers('203.0.113.10')…
+       |                                                                                          ^
+     39|   });
+     40| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  05:49:49
+   Duration  454ms (transform 112ms, setup 0ms, collect 122ms, tests 28ms, environment 0ms, prepare 107ms)
+
