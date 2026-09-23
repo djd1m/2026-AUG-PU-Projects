@@ -1,4 +1,5 @@
 'use client';
+import { ProInterest } from '../dashboard/ProInterest';
 import { useState } from 'react';
 import { rpc } from '../../lib/rpc';
 import type { ClipScreen } from '../../lib/screen-contract';
@@ -34,5 +35,6 @@ export function ClipCard({ clip }: { clip: ClipScreen }) {
       <button className="secondary" disabled={copying} onClick={() => void copyLink()}>
         {copying ? 'Получаем ссылку…' : 'Скопировать ссылку'}</button>
       {copyMessage && <p role="status" className="video-id">{copyMessage}</p>}
+      {clip.watermarked && <ProInterest source="clip_card" />}
       {error && <p role="alert">{error}</p>}</div></article>;
 }

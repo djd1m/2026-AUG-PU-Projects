@@ -7,6 +7,7 @@ import { createVideoSchema, completeUploadSchema, quotaError } from '../apps/web
 import { createCompleteHandler } from '../apps/web/src/server/upload-handler';
 import { AuthService, type AuthStore } from '../apps/web/src/server/auth';
 import { appRouter } from '../apps/web/src/server/trpc';
+import { quotaMessages } from '../apps/web/src/lib/limits-contract';
 import { environment } from './fixtures/environment';
 
 describe('upload: границы', () => {
@@ -32,8 +33,8 @@ describe('upload: границы', () => {
   });
   it('Пять пользовательских текстов; refunds скрыт за uploads', () => {
     expect(quotaError('user_upload_refunds', new Date()).message).toBe(quotaError('user_uploads', new Date()).message);
-    expect(new Set(['user_uploads', 'user_minutes', 'user_llm', 'global_minutes', 'global_llm'].map((s) =>
-      quotaError(s as 'user_uploads', new Date()).message)).size).toBe(5);
+    expect(Object.keys(quotaMessages)).toHaveLength(5);
+    expect(quotaError('global_minutes', new Date()).message).toBe(quotaError('global_llm', new Date()).message);
   });
   it('MP4, MOV, M4A, WebM, MP3 по байтам; мусор отвергнут', () => {
     for (const brand of ['isom', 'qt  ', 'M4A ']) {

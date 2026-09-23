@@ -363,7 +363,7 @@
       "title": "Понятные отказы по потолкам и экран интереса «Pro скоро»",
       "description": "Пять пользовательских текстов отказа при ШЕСТИ ключах квоты: у user_upload_refunds своего текста нет намеренно — исчерпание права на возврат выглядит как обычный refused_user_uploads; каждый текст называет scope и время возврата (ближайшая полночь Europe/Moscow), текст глобального потолка отличается от персонального; тариф free/paid на экране, «снять метку» ведёт на экран интереса; CreateProInterest — UNIQUE (account_id), экран НЕ принимает платёжных данных и маршрут вебхука ЮKassa в боевом профиле не зарегистрирован (ADR-005).",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "progress-and-clips-screen"
@@ -392,7 +392,7 @@
       "title": "Срок хранения клипов, истечение гостевой страницы и удаление аккаунта",
       "description": "PurgeExpiredClips — клипы free старше 3 дней после done: удаление объектов S3 и проставление clip.expires_at, сохранённая ссылка скачивания отдаёт 404 с объяснением на экране, а не пустой файл; короткая ссылка /c/{code} при этом продолжает работать — она ведёт на лендинг, а не на файл; RevokeOrExpireGuestPack закрывает страницы старше 14 дней; DeleteAccount — статус erasing, завершение ≤ 72 ч, удаление объектов и записей с чужим голосом; lifecycle бакета как страховка: AbortIncompleteMultipartUpload(1 день) на весь бакет, Expiration(7 дней) ТОЛЬКО на префиксе clips/free/, к clips/paid/ не применяется вовсе.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "medium",
       "depends_on": [
         "guest-pack",

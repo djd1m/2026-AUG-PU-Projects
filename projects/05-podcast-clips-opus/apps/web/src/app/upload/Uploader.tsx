@@ -39,7 +39,7 @@ export function VideoUploader() {
       resume.current = null;
       router.push(`/dashboard/videos/${result.data.video_id}`); router.refresh();
     } catch (cause) { setMessage(abort.signal.aborted ? 'Загрузка приостановлена. Продолжите с тем же файлом.' : cause instanceof Error ? cause.message : 'Ошибка загрузки'); }
-    finally { controller.current = null; setBusy(false); }
+    finally { controller.current = null; setBusy(false); router.refresh(); }
   }
   return <section className="upload-panel"><div><p className="eyebrow">НОВЫЙ ВЫПУСК</p><h2>Один разговор.<br />Несколько сильных моментов.</h2>
     <p>Загрузите подкаст или вебинар. Мы найдём фрагменты и соберём вертикальные клипы с субтитрами.</p></div>

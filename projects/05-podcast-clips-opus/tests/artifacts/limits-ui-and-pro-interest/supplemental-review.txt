@@ -1,0 +1,4 @@
+Read-only review by gpt-5.6-sol (high), collaboration agent limits_review.
+High: video-retry.ts used generic refusal with no resets_at. Corrected to quotaError at refusal timestamp.
+Medium: persisted past reset displayed as future. Corrected UI tense without rewriting historical retry_after.
+Not a substitute for Anthropic OWN-002.

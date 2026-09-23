@@ -35,8 +35,19 @@ button{cursor:pointer;margin-bottom:20px}button:disabled{opacity:.6}footer{margi
 <a class="download" href="${base}/file?${query}&amp;download=1" download>Скачать</a>`
       : '<p>Срок хранения клипа истёк или файл пока недоступен.</p>'}</article>`;
   }).join('')}</div><footer><a href="/">Сделать свои клипы</a>
+<section aria-label="Интерес к тарифу"><p>Сейчас доступен только бесплатный тариф.</p>
+<p>Нужны больше минут или клипы без метки? Отметьте интерес — это поможет нам оценить спрос.</p>
+<button id="pro-interest">Нужен тариф побольше</button><p id="interest-status" role="status"></p>
+<a id="interest-login" href="/" hidden>Войти в аккаунт</a></section>
 <p>Чтобы отозвать публикацию, свяжитесь с ведущим, который прислал эту ссылку: он может закрыть доступ к пакету.</p></footer>
-<script nonce="${nonce}">document.getElementById('download-all').addEventListener('click',async function(){
+<script nonce="${nonce}">document.getElementById('pro-interest').addEventListener('click',async function(){
+this.disabled=true;const status=document.getElementById('interest-status');status.textContent='Записываем…';
+try{const response=await fetch('/api/trpc/interest.create',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({source_screen:'guest_page'})});
+if(response.status===401){document.getElementById('interest-login').hidden=false;throw new Error('Войдите в аккаунт, затем вернитесь сюда и отметьте интерес.');}
+if(!response.ok)throw new Error('Не удалось записать интерес. Повторите позже');
+status.textContent='Спасибо, ваш интерес записан.';
+}catch(error){status.textContent=error.message;this.disabled=false;}});
+document.getElementById('download-all').addEventListener('click',async function(){
 this.disabled=true;const status=document.getElementById('download-status');let count=0;
 try{for(const link of document.querySelectorAll('a.download')){status.textContent='Скачиваем клип '+(count+1);
 const response=await fetch(link.href,{cache:'no-store'});if(!response.ok)throw new Error('Файл недоступен');

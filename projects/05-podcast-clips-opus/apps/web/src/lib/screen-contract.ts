@@ -1,3 +1,4 @@
+import { quotaMessages } from './limits-contract';
 import { z } from 'zod';
 import type { VideoStatus, VideoFailureReason, ClipStatus } from '@clipmaker/shared/enums';
 
@@ -7,9 +8,9 @@ export const failureMessages = {
   too_long: 'Запись длиннее 90 минут.', probe_timeout: 'Не удалось прочитать свойства файла.',
   stt_failed: 'Не удалось расшифровать речь.', no_timestamps: 'Не удалось определить время слов.',
   no_fragments: 'Самодостаточных фрагментов не найдено.', schema_violation: 'Не удалось проверить выбранные фрагменты.',
-  refused_user_uploads: 'Загрузки на сегодня исчерпаны.', refused_user_minutes: 'Минуты на сегодня исчерпаны.',
-  refused_user_llm: 'Обработки на сегодня исчерпаны.', refused_global_minutes: 'Общий суточный объём исчерпан.',
-  refused_global_llm: 'Общий суточный лимит обработок исчерпан.',
+  refused_user_uploads: quotaMessages.user_uploads, refused_user_minutes: quotaMessages.user_minutes,
+  refused_user_llm: quotaMessages.user_llm, refused_global_minutes: quotaMessages.global_minutes,
+  refused_global_llm: quotaMessages.global_llm,
   stalled: 'Обработка перестала отвечать.', render_failed: 'Не удалось собрать клипы.',
 } satisfies Record<VideoFailureReason, string>;
 export interface VideoScreen {

@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 /tmp/n5-limits-mutations-Or0syl
+
+ ❯ tests/limits.test.ts (9 tests | 1 failed | 8 skipped) 29ms
+   ↓ personal refusal names the exhausted key and the actual Moscow reset
+   ↓ refunds have no sixth text and use the upload refusal
+   ↓ global refusal hides named global ceilings on both request and progress surfaces
+   ↓ remaining values use configured limits, never used counts, and clamp to zero
+   ↓ absent counters start full; midnight changes both query day and reset; storage errors are not full quota
+   × interest UI offers no deadline, paid launch promise or payment form 26ms
+     → expected '<section aria-label="Интерес к тарифу…' not to match /…/]\d{1,2}|<form|<input|оплат|checkout|payment
+   ↓ ADR-005 production route registry contains no payment or webhook handler
+   ↓ invalid interest input is rejected before a database connection
+   ↓ interest atomically records existing event and rolls back if event storage fails
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/limits.test.ts > interest UI offers no deadline, paid launch promise or payment form
+AssertionError: expected '<section aria-label="Интерес к тарифу…' not to match /…/]\d{1,2}|<form|<input|оплат|checkout|payment
+
+- Expected: 
+/скоро|запустим|откроется|через\s+\d|\d{1,2}[./]\d{1,2}|<form|<input|оплат|checkout|payment/i
+
++ Received: 
+"<section aria-label=\"Интерес к тарифу\"><p>Сейчас доступен только бесплатный тариф.</p><form><input name=\"card\"/></form><p>Нужны больше минут или клипы без метки? Отметьте интерес — это поможет нам оценить спрос.</p><button class=\"secondary\">Нужен тариф побольше</button></section>"
+
+ ❯ tests/limits.test.ts:61:20
+     59|   const html = renderToStaticMarkup(createElement(ProInterest, { sourc…
+     60|   expect(html).toContain('Сейчас доступен только бесплатный тариф'); e…
+     61|   expect(html).not.toMatch(/скоро|запустим|откроется|через\s+\d|\d{1,2…
+       |                    ^
+     62|   const guest = readFileSync('apps/web/src/server/guest-page.ts', 'utf…
+     63|   expect(guest).toContain("source_screen:'guest_page'");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  04:45:55
+   Duration  1.06s (transform 486ms, setup 0ms, collect 735ms, tests 29ms, environment 0ms, prepare 100ms)
+

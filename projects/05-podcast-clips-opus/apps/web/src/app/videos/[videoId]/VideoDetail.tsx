@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { resetLabel } from '../../../lib/limits-contract';
 import { rpc } from '../../../lib/rpc';
 import type { VideoScreen, ClipScreen } from '../../../lib/screen-contract';
 import { ClipCard } from '../../clips/ClipCard';
@@ -18,13 +20,15 @@ export function ProgressPanel({ video, onRetry, busy = false }: { video: VideoSc
       <h2>{failure ? 'Обработка не завершена' : success ? 'Клипы готовы' : video.no_response ? 'Нет ответа от обработки' : 'Выполняется'}</h2>
       <p>{failure ? video.failure_reason ?? 'Не удалось завершить обработку.' : video.stage_label}</p>
       {!failure && !success && !video.no_response && <progress aria-label="Прогресс этапа" max={100} value={video.stage_progress ?? undefined} />}
+      {failure && video.retry_after && <p>{Date.parse(video.retry_after) > Date.now() ? 'Лимиты обновятся' : 'Лимиты обновились'} {resetLabel(video.retry_after)}.</p>}
       {video.next_action === 'retry' && <button disabled={busy || !!video.retry_after && Date.parse(video.retry_after) > Date.now()} onClick={onRetry}>
-        {busy ? 'Запускаем…' : video.retry_after ? 'Повторить завтра после 00:00 МСК' : 'Повторить'}</button>}
+        {busy ? 'Запускаем…' : video.retry_after && Date.parse(video.retry_after) > Date.now() ? 'Повторить после обновления лимитов' : 'Повторить'}</button>}
       {video.next_action === 'upload' && <Link className="button secondary" href="/dashboard">Загрузить другой файл</Link>}
-      {video.next_action === 'tomorrow' && <p>Загрузите заново завтра после 00:00 МСК.</p>}
+      {video.next_action === 'tomorrow' && <p>После обновления лимитов можно загрузить файл заново.</p>}
     </div></section>;
 }
 export function VideoDetail({ videoId, initialVideo, initialClips, initialPacks = [], consentHash }: { videoId: string; initialVideo: VideoScreen; initialClips: ClipScreen[]; initialPacks?: GuestPackSummary[]; consentHash?: string }) {
+  const router = useRouter();
   const [video, setVideo] = useState(initialVideo), [clips, setClips] = useState(initialClips);
   const [error, setError] = useState<string | null>(null), [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Date.now());
@@ -48,7 +52,7 @@ export function VideoDetail({ videoId, initialVideo, initialClips, initialPacks 
     setBusy(true); setError(null);
     try { await rpc('video.retry', { video_id: videoId }, true); setVideo(await rpc<VideoScreen>('video.get', { video_id: videoId })); }
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Не удалось повторить'); }
-    finally { setBusy(false); }
+    finally { setBusy(false); router.refresh(); }
   }
   // Local clock also detects silence when polling itself loses the network.
   const shown = video.user_state === 'выполняется' && now - Date.parse(video.updated_at) > 300000

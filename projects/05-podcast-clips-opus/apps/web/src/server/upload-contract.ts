@@ -1,3 +1,4 @@
+import { quotaMessages, resetLabel } from '../lib/limits-contract';
 import { z } from 'zod';
 import { MAX_UPLOAD_BYTES, quotaResetAt } from '@clipmaker/shared/upload';
 import type { QuotaScope } from '@clipmaker/shared/enums';
@@ -15,10 +16,7 @@ export class UploadError extends Error {
   constructor(readonly code: 'invalid' | 'not_found' | 'conflict' | 'refused' | 'unavailable',
     message: string, readonly status: number, readonly details: Record<string, unknown> = {}) { super(message); }
 }
-const quotaMessages = { user_uploads: 'Загрузки на сегодня исчерпаны', user_minutes: 'Минуты на сегодня исчерпаны',
-  user_llm: 'Обработки на сегодня исчерпаны', global_minutes: 'Общий суточный объём исчерпан',
-  global_llm: 'Общий суточный лимит обработок исчерпан' };
 export function quotaError(scope: QuotaScope, now: Date) {
   const visible = scope === 'user_upload_refunds' ? 'user_uploads' : scope;
-  return new UploadError('refused', quotaMessages[visible], 429, { scope: visible, resets_at: quotaResetAt(now) });
+  return new UploadError('refused', `${quotaMessages[visible]}. Лимиты обновятся ${resetLabel(quotaResetAt(now))}`, 429, { scope: visible, resets_at: quotaResetAt(now) });
 }

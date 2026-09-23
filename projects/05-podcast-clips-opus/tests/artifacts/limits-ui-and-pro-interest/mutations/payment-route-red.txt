@@ -1,0 +1,44 @@
+
+ RUN  v3.2.7 /tmp/n5-limits-mutations-Or0syl
+
+ ❯ tests/limits.test.ts (9 tests | 1 failed | 8 skipped) 27ms
+   ↓ personal refusal names the exhausted key and the actual Moscow reset
+   ↓ refunds have no sixth text and use the upload refusal
+   ↓ global refusal hides named global ceilings on both request and progress surfaces
+   ↓ remaining values use configured limits, never used counts, and clamp to zero
+   ↓ absent counters start full; midnight changes both query day and reset; storage errors are not full quota
+   ↓ interest UI offers no deadline, paid launch promise or payment form
+   × ADR-005 production route registry contains no payment or webhook handler 26ms
+     → expected [ Array(1) ] to deeply equal []
+   ↓ invalid interest input is rejected before a database connection
+   ↓ interest atomically records existing event and rolls back if event storage fails
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/limits.test.ts > ADR-005 production route registry contains no payment or webhook handler
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "apps/web/src/app/api/webhooks/yookassa/route.ts",
++ ]
+
+ ❯ tests/limits.test.ts:72:112
+     70|       : /^(route|page)\.(ts|tsx|js|jsx)$/.test(entry.name) ? [join(dir…
+     71|   }
+     72|   expect(routes('apps/web/src/app').filter(path => /yookassa|webhooks|…
+       |                                                                                                                ^
+     73|   const config = readFileSync('apps/web/next.config.ts', 'utf8');
+     74|   expect(config).not.toMatch(/yookassa|webhooks|checkout/i);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  04:45:35
+   Duration  1.56s (transform 576ms, setup 0ms, collect 969ms, tests 27ms, environment 0ms, prepare 253ms)
+

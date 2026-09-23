@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T043751Z-limits-ui",
+    "work_unit_id": "limits-ui-and-pro-interest",
+    "current_attempt_id": "verification-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/limits-ui-and-pro-interest/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/limits-ui-and-pro-interest/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "199bf8a36c7237e109f2459dc6abed46613c3ced",
+    "current_revision": "sha256:6df972540bb306b074a1340b1969f31eef7cf10648040d825548b5e7d55fea93",
+    "build_revision": "sha256:f6826b8bc7f1ccbcbe36ac6ec207a01518793d02e3446f66421b38c324f651ff",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/limits-ui-and-pro-interest/00_brief_codex.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "sha256:f6826b8bc7f1ccbcbe36ac6ec207a01518793d02e3446f66421b38c324f651ff",
+      "observed_revision": "sha256:6df972540bb306b074a1340b1969f31eef7cf10648040d825548b5e7d55fea93",
+      "reconciliation": {
+        "status": "completed",
+        "reason": "Test mock SQL matching string triggered source guard; application code unchanged",
+        "impact": "Single test predicate string only",
+        "affected_checks": [
+          "growth-day",
+          "limits",
+          "full regression"
+        ],
+        "checks_status": "rerun_passed",
+        "decision": "Application source unchanged; targeted and final regression pass for available local tests",
+        "rerun": [
+          "15 targeted passed",
+          "314 passed,129 skipped full regression"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "sha256:b0c705affc040af02d3210c19efb32c0abfe05aa16359af11cf5266e15d6c5e7",
+    "scope": [
+      "Remaining personal quotas; honest interest recording; Moscow reset copy; five mutation guards"
+    ],
+    "exclusions": [
+      "Payments and account erasure",
+      "New routes/event types, migrations and .claude edits",
+      "Deployment"
+    ],
+    "action_limits": [
+      "User explicitly requested brief execution; docs edits only code report"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "remaining",
+        "required": true
+      },
+      {
+        "id": "refusals",
+        "required": true
+      },
+      {
+        "id": "interest",
+        "required": true
+      },
+      {
+        "id": "mutations",
+        "required": true
+      },
+      {
+        "id": "OWN002",
+        "required": true
+      },
+      {
+        "id": "integration",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "packages/shared/src/upload.ts"
+          }
+        },
+        "provenance": "199bf8a36c7237e109f2459dc6abed46613c3ced",
+        "useful_fragment": "moscowDay and quotaResetAt",
+        "compatibility": "compatible",
+        "decision": "use",
+        "reason": "Same calendar and quota keys"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "packages/db/migrations/001_init.sql"
+          }
+        },
+        "provenance": "199bf8a36c7237e109f2459dc6abed46613c3ced",
+        "useful_fragment": "Existing pro_interest and growth_event schema",
+        "compatibility": "compatible",
+        "decision": "use",
+        "reason": "No new schema or event required"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; no comparable calibrated run selected",
+      "scope_revision": "sha256:b0c705affc040af02d3210c19efb32c0abfe05aa16359af11cf5266e15d6c5e7",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:b0c705affc040af02d3210c19efb32c0abfe05aa16359af11cf5266e15d6c5e7",
+      "tier": "M",
+      "rationale": "Mechanical S lower bound; authenticated quota presentation and transactional interest contract. No payments or invariant change",
+      "script": {
+        "input": "apps/web/src/server/limits.ts apps/web/src/server/interest.ts apps/web/src/server/trpc.ts apps/web/src/app/dashboard/page.tsx",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "sha256:b0c705affc040af02d3210c19efb32c0abfe05aa16359af11cf5266e15d6c5e7",
+      "tier": "M",
+      "rationale": "Mechanical S lower bound; authenticated quota presentation and transactional interest contract. No payments or invariant change",
+      "script": {
+        "input": "apps/web/src/server/limits.ts apps/web/src/server/interest.ts apps/web/src/server/trpc.ts apps/web/src/app/dashboard/page.tsx",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Detailed implementation brief expressly authorized by user; no external release",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "blocked",
+    "reason": "Docker socket denied, database/storage environment not configured, browser tool unavailable",
+    "source_revision": "sha256:6df972540bb306b074a1340b1969f31eef7cf10648040d825548b5e7d55fea93",
+    "build_revision": "sha256:f6826b8bc7f1ccbcbe36ac6ec207a01518793d02e3446f66421b38c324f651ff",
+    "environment": "Codex sandbox",
+    "environment_available": false,
+    "test_command": "docker compose --project-directory . --profile test run --rm --build test",
+    "inputs": [
+      {
+        "name": "PostgreSQL16 Redis7 MinIO",
+        "available": false
+      }
+    ],
+    "expected_effects": [
+      "Isolated test schemas and objects"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/limits-ui-and-pro-interest"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "verification-1",
+      "status": "paused"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "limits-ui-and-pro-interest",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/web/src/server/interest.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/limits.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/limits.integration.test.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260923T043751Z-limits-ui",
+    "work_unit_id": "limits-ui-and-pro-interest",
+    "source_revision": "sha256:6df972540bb306b074a1340b1969f31eef7cf10648040d825548b5e7d55fea93",
+    "blockers": [
+      "Real PostgreSQL/Redis/MinIO full regression and concurrent interest proof pending",
+      "Required Anthropic OWN-002 review timed out",
+      "Deployed mobile/CJM E2E unavailable"
+    ],
+    "approval_ids": [],
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct brief has no native checkpoint; source manifest and logs preserve work"
+    },
+    "next_allowed_step": "Run rebuilt test profile with configured environment, then Anthropic review and live E2E"
+  },
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

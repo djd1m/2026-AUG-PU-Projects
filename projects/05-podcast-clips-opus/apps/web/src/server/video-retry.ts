@@ -1,7 +1,7 @@
 import { transaction, leaseAttemptTx, checkAndConsumeQuota, FILE_FAILURES, type Attempt, type Pool } from '@clipmaker/db';
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
-import { UploadError } from './upload-contract';
+import { UploadError, quotaError } from './upload-contract';
 export function assertRetryable(row: { status: string; failure_reason: VideoFailureReason | null; object_key: string | null; actual_bytes: string | null }) {
   if (row.status !== 'failed') throw new UploadError('conflict', 'Повторять нечего', 409);
   if (row.failure_reason && FILE_FAILURES.includes(row.failure_reason)) throw new UploadError('conflict', 'Загрузите другой файл', 409);
@@ -29,7 +29,7 @@ export class VideoRetryService {
         if (!quota.granted) {
           await tx.query('UPDATE video SET failure_reason=$2, updated_at=$3 WHERE id=$1',
             [videoId, quota.scope === 'user_llm' ? 'refused_user_llm' : 'refused_global_llm', now]);
-          return { refused: quota.scope, status: 'failed', jobs: [] };
+          return { refused: quota.scope, refusedAt: now, status: 'failed', jobs: [] };
         }
       }
       const series = (await tx.query<{ series: number }>('SELECT COALESCE(max(series_no),0)+1 AS series FROM job_attempt WHERE video_id=$1', [videoId])).rows[0]!.series;
@@ -46,7 +46,7 @@ export class VideoRetryService {
       if (stage === 'select') await tx.query('UPDATE job_attempt SET unit_count=1 WHERE video_id=$1 AND series_no=$2', [videoId, series]);
       return { status, jobs, refused: null };
     });
-    if (result.refused) throw new UploadError('refused', 'Вызовы на сегодня исчерпаны. Повторите завтра', 429, { scope: result.refused });
+    if (result.refused) throw quotaError(result.refused, result.refusedAt!);
     // Commit is authoritative. A failed Redis publish is recovered by watchdog.
     for (const job of result.jobs) {
       try { await this.enqueue(job); } catch { console.error('Повтор сохранён; сторож восстановит доставку задания'); }

@@ -1,0 +1,98 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260923T043751Z-limits-ui",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "limits-ui-and-pro-interest",
+  "pipeline": "brief implementation",
+  "tier": "M",
+  "risk_flags": [
+    "authenticated quota display",
+    "idempotent interest write"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Brief forbids docs changes except report: telemetry in tests/artifacts",
+    "Explicit implementation brief; existing specification and architecture reused"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "199bf8a36c7237e109f2459dc6abed46613c3ced",
+  "final_revision": "sha256:6df972540bb306b074a1340b1969f31eef7cf10648040d825548b5e7d55fea93",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-23T04:37:51.479660+00:00",
+  "ended_at": "2026-09-23T04:51:21.862320+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "tests/artifacts/limits-ui-and-pro-interest/full-test-final.txt",
+    "tests/artifacts/limits-ui-and-pro-interest/review-fix-tests.txt",
+    "tests/artifacts/limits-ui-and-pro-interest/build.txt",
+    "tests/artifacts/limits-ui-and-pro-interest/typecheck.txt",
+    "tests/artifacts/limits-ui-and-pro-interest/lint.txt",
+    "tests/artifacts/limits-ui-and-pro-interest/mutations/results.json",
+    "tests/artifacts/limits-ui-and-pro-interest/supplemental-review.txt",
+    "tests/artifacts/limits-ui-and-pro-interest/anthropic-review.exit",
+    "tests/artifacts/limits-ui-and-pro-interest/work-record.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 5,
+    "confirmed_findings_by_severity": {
+      "high": 1,
+      "medium": 1
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "Real integration/concurrency, Anthropic OWN-002 and deployed browser E2E pending"
+  },
+  "metrics": {
+    "measured_elapsed_seconds": 810.383,
+    "full_elapsed_seconds": null,
+    "input_tokens_total": null,
+    "cached_input_tokens": null,
+    "output_tokens_total": null,
+    "reasoning_tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Instruction reading before first timestamp not measured",
+    "Host exposes GPT-6 family only; exact model, effort, usage, pricing unavailable",
+    "No batch or calibrated comparison selected",
+    "Token usage, billing, exact coordinator model/effort and active time not exposed; unknown values remain null",
+    "Sol delegation journal timestamp recorded after result; actual spawn time unavailable",
+    "Build precedes test-only predicate correction; app source unchanged and manifests preserved",
+    "129 integration tests skipped; real concurrency and E2E not measured; Anthropic review timed out"
+  ],
+  "diff_sha256": "d802f87c676c368af8727c5e817aec06fbe112349a1e832c75d099ec7601bd64",
+  "source_manifest": "tests/artifacts/limits-ui-and-pro-interest/source-manifest.json",
+  "build_revision": "sha256:f6826b8bc7f1ccbcbe36ac6ec207a01518793d02e3446f66421b38c324f651ff",
+  "models": [
+    {
+      "role": "implementation",
+      "actual_model": "GPT-6 family",
+      "exact_model": null,
+      "effort": null
+    },
+    {
+      "role": "supplemental_review",
+      "requested_model": "gpt-5.6-sol",
+      "actual_model": "gpt-5.6-sol",
+      "effort": "high",
+      "evidence": "explicit collaboration spawn override and completed response"
+    },
+    {
+      "role": "OWN002_review",
+      "requested_model": "opus",
+      "actual_model": null,
+      "status": "timeout",
+      "fallback": null
+    }
+  ]
+}

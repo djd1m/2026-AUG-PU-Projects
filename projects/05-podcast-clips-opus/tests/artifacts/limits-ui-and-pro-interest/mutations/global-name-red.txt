@@ -1,0 +1,39 @@
+
+ RUN  v3.2.7 /tmp/n5-limits-mutations-Or0syl
+
+ ❯ tests/limits.test.ts (9 tests | 1 failed | 8 skipped) 54ms
+   ↓ personal refusal names the exhausted key and the actual Moscow reset
+   ↓ refunds have no sixth text and use the upload refusal
+   × global refusal hides named global ceilings on both request and progress surfaces 53ms
+     → expected 'Общий суточный объём минут исчерпан. …' to be 'Сервис перегружен, попробуйте позже. …' // Object.is equality
+   ↓ remaining values use configured limits, never used counts, and clamp to zero
+   ↓ absent counters start full; midnight changes both query day and reset; storage errors are not full quota
+   ↓ interest UI offers no deadline, paid launch promise or payment form
+   ↓ ADR-005 production route registry contains no payment or webhook handler
+   ↓ invalid interest input is rejected before a database connection
+   ↓ interest atomically records existing event and rolls back if event storage fails
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/limits.test.ts > global refusal hides named global ceilings on both request and progress surfaces
+AssertionError: expected 'Общий суточный объём минут исчерпан. …' to be 'Сервис перегружен, попробуйте позже. …' // Object.is equality
+
+Expected: "Сервис перегружен, попробуйте позже. Лимиты обновятся 24.09.2026, 00:00 МСК"
+Received: "Общий суточный объём минут исчерпан. Лимиты обновятся 24.09.2026, 00:00 МСК"
+
+ ❯ tests/limits.test.ts:36:44
+     34| it('global refusal hides named global ceilings on both request and pro…
+     35|   for (const scope of ['global_minutes', 'global_llm'] as const) {
+     36|     expect(quotaError(scope, now).message).toBe('Сервис перегружен, по…
+       |                                            ^
+     37|     expect(failureMessages[`refused_${scope}`]).toBe('Сервис перегруже…
+     38|     expect(quotaError(scope, now).details.scope).toBe(scope); // machi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  04:45:47
+   Duration  1.44s (transform 546ms, setup 0ms, collect 915ms, tests 54ms, environment 0ms, prepare 179ms)
+
