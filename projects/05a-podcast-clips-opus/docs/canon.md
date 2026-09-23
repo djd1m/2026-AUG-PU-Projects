@@ -56,7 +56,7 @@
 
 | Таблица | Ключевые поля |
 |---|---|
-| `account` | `id`, `email` (уникальный, нижний регистр), `password_hash`, `email_verified_at`, `plan`, `created_at` |
+| `account` | `id`, `email` (уникальный, нижний регистр), `password_hash`, `email_verified_at`, `plan`, `role`, `created_at` |
 | `email_token` | `id`, `account_id`, `token_hash`, `expires_at`, `used_at` |
 | `refresh_token` | `id`, `account_id`, `token_hash`, `expires_at`, `revoked_at` |
 | `video` | `id`, `account_id`, `s3_key_source`, `size_bytes`, `duration_ms`, `container`, `source_deleted_at`, `deleted_at` |
@@ -86,6 +86,7 @@
 | `transcript_chunk.status` | `pending`, `done` |
 | `clip.render_status` | `queued`, `rendering`, `ready`, `failed` |
 | `account.plan` | `free`, `paid`; всё прочее читается как `free` |
+| `account.role` | `user`, `operator`; всё прочее читается как `user` |
 | `publication.status` | `candidate`, `confirmed`, `rejected`, `removed` |
 | `publication.platform` по хосту | `tiktok.com`, `vt.tiktok.com`, `youtube.com`, `youtu.be`, `vk.com`, `vkvideo.ru`, `t.me`, `rutube.ru`, `dzen.ru` |
 | `attribution.stage` | `signup`, `fakedoor` |
@@ -155,8 +156,14 @@
 | `POST /api/clips/{clip_id}/publications` | владелец | paste-back |
 | `POST /api/clips/{clip_id}/self-report` | владелец | «я опубликовал» |
 | `POST /api/fakedoor` | сессия | клик «Хочу без знака», промокод |
+| `POST /api/clips/{clip_id}/caption-copied` | владелец | `caption_copied` |
+| `GET /admin/partners` | роль `operator` | партнёры и `partner_code` (FR-GROWTH-004) |
+| `GET /admin/publications` | роль `operator` | проверка paste-back, перепроверка на 7-й день |
+| `GET /admin/spend` | роль `operator` | расход за сутки по вызовам и аккаунтам |
+| `GET /admin/metrics?from=<YYYY-MM-DD>` | роль `operator` | метрики недели |
+| `GET /admin/users` | роль `operator` | смена плана с причиной |
 
-Операторский CLI — `ops …` по FR-clips-11, внутри `worker-ai`: `docker compose exec worker-ai ops …`.
+Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`.
 
 ## 8. Ключи объектов S3
 
@@ -169,7 +176,7 @@
 
 ## 9. События аналитики и метрики роста
 
-Таблица `event`, набор закрытый. Всего 16 событий: signup, email_verified, upload_started, job_succeeded, job_failed, clip_viewed, download_clicked, share_clicked, self_reported_published, publication_submitted, publication_confirmed, fakedoor_clicked, promo_code_entered, partner_link_visited, clip_link_visited, landing_visited
+Таблица `event`, набор закрытый. Всего 17 событий: signup, email_verified, upload_started, job_succeeded, job_failed, clip_viewed, download_clicked, share_clicked, caption_copied, self_reported_published, publication_submitted, publication_confirmed, fakedoor_clicked, promo_code_entered, partner_link_visited, clip_link_visited, landing_visited
 
 | Метрика | Определение |
 |---|---|
@@ -227,3 +234,10 @@
 | FR-clips-13 п. 1 | исходник 7 дней | исходник 72 ч (страховка бакета — 7 дней) | ADR-007 |
 | FR-clips-14 п. 2 | на знаке домен с путём `/w` | на знаке `clipmkr.ru`; маршрут `/w` снят | OWN-05A-006, ADR-015 |
 | `{BRAND}`, `{BRAND_HANDLE}` | OWNER-PENDING | `ClipMkr`, `clipmkr.ru` | OWN-05A-006 |
+| раздел учёта расхода | таблица `usage_attempt` | таблица `spend_ledger` | ADR-006 |
+| события FR-clips-12 | `direct_visit`, `email_confirmed` | `landing_visited` с `source=direct`; `email_verified` (`caption_copied` принят в канон) | ADR-015, ADR-011 |
+| FR-clips-4, резка | перекрытие кусков 2 с | перекрытие 5 с | ADR-002 |
+| FR-clips-4 п. 8 | метки спикеров на шве печатаются «как есть» | при неуверенной сшивке подпись спикера не печатается | ADR-002 |
+| AC-clips-24 | нет `speaker` → задача падает | нет `speaker` → субтитры без подписи, задача продолжается | ADR-001 |
+| §9 долгой задачи | `job_id = video_id`, выдаётся до загрузки | отдельный `job_id`, выдаётся `POST …/complete` (202) до начала обработки | FR-clips-3, long-running-job |
+| FR-clips-11 | `/admin/*` и роль `operator` — не в каноне | приняты в канон (правка координатора 2026-09-23) | — |
