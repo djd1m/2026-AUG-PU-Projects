@@ -1,0 +1,36 @@
+
+> n5-clipmaker@0.1.0 typecheck
+> npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json
+
+
+> @clipmaker/web@0.1.0 typecheck
+> tsc --noEmit
+
+
+> @clipmaker/worker@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/db@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/queue@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/s3@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/shared@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+tests/watermark-startup.test.ts(38,50): error TS2339: Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; ... 5 more ...; redisUrl: string; }> | Readonly<...> | Readonly<...>'.
+  Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; role: "worker-stt" | "worker-llm"; databaseUrl: string; redisUrl: string; }>'.
+tests/watermark-startup.test.ts(39,44): error TS2339: Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; ... 5 more ...; redisUrl: string; }> | Readonly<...> | Readonly<...>'.
+  Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; role: "worker-stt" | "worker-llm"; databaseUrl: string; redisUrl: string; }>'.
+tests/watermark-startup.test.ts(43,39): error TS2339: Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; ... 5 more ...; redisUrl: string; }> | Readonly<...> | Readonly<...>'.
+  Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; role: "worker-stt" | "worker-llm"; databaseUrl: string; redisUrl: string; }>'.
+tests/watermark-startup.test.ts(46,47): error TS2339: Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; ... 5 more ...; redisUrl: string; }> | Readonly<...> | Readonly<...>'.
+  Property 'publicOrigin' does not exist on type 'Readonly<{ limits: Readonly<Record<"N5_LIMIT_USER_MINUTES" | "N5_LIMIT_USER_UPLOADS" | "N5_LIMIT_USER_UPLOAD_REFUNDS" | "N5_LIMIT_USER_LLM" | "N5_LIMIT_GLOBAL_MINUTES" | "N5_LIMIT_GLOBAL_LLM", number>>; role: "worker-stt" | "worker-llm"; databaseUrl: string; redisUrl: string; }>'.

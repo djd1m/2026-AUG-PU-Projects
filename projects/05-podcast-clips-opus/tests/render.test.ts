@@ -4,28 +4,46 @@ import { watermarkRequired, watermarkGeometry, buildWatermarkDrawtext, checkRend
 import { buildFilterChain } from '../apps/worker/src/render/ffmpeg';
 import { generateSubtitleFile, wrapSubtitleText, formatASSTimecode } from '../apps/worker/src/render/subtitles';
 import { escapeDrawtext, escapeFFmpegPath, escapeAssText } from '../apps/worker/src/render/escape';
-const origin = 'https://clipmaker.aicoding.space', code = 'WWWWWWWWWW';
+const origin = 'https://clipmkr.ru', code = 'WWWWWW';
 it.each([null, undefined, '', 'PAID', ' paid', 'premium', 0, true, 'free'])('ADR-004 fails closed for %s', plan => {
   expect(watermarkRequired(plan)).toBe(true);
 });
 it('only exact paid removes watermark', () => expect(watermarkRequired('paid')).toBe(false));
-it('two lines fit including background, and obey font size, margins, contrast', () => {
+it('one-line worst code fits strict 880 zone with full brand and inverse chip', () => {
   checkRenderFont();
-  const g = watermarkGeometry(1080, 1920, origin, code);
-  expect(g.lines).toEqual(['КлипМейкер', `clipmaker.aicoding.space/c/${code}`]);
-  expect(g.fontSize).toBeGreaterThanOrEqual(1920 * .035);
+  const alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const widest = [...alphabet].sort((a, b) => measureText(b, 73) - measureText(a, 73))[0]!;
+  const g = watermarkGeometry(1080, 1920, origin, widest.repeat(6));
+  expect(g.plateWidth).toBeLessThanOrEqual(880);
+  expect(g.prefix).toBe('КлипМейкер · clipmkr.ru/c/');
+  expect(g.fontSize).toBe(73); expect(g.fontSize).toBeGreaterThanOrEqual(1920 * .035);
+  expect(g.prefixWidth).toBe(555); expect(g.codeWidth).toBe(240);
+  expect(g.plateHeight).toBe(116);
   expect(g.left).toBeGreaterThanOrEqual(1080 * .05); expect(g.bottom).toBeGreaterThanOrEqual(1920 * .12);
-  for (const w of g.widths) expect(w + 2 * g.padding).toBeLessThanOrEqual(1080 - 2 * g.left);
-  expect(g.contrast).toBeGreaterThanOrEqual(4.5);
-  expect(measureText(g.lines.join(' · '), g.fontSize) + 2 * g.padding).toBeGreaterThan(1080 - 2 * g.left);
+  expect(g.y + g.plateHeight).toBeLessThanOrEqual(1920 * .88);
   expect(() => watermarkGeometry(1080, 1920, 'https://' + 'x'.repeat(100) + '.com', code)).toThrow(/не помещается/);
+});
+it('badge contrast and nonverbal text: translucent plate, opaque inverse chip, common baseline', () => {
+  const filter = buildWatermarkDrawtext(1080, 1920, origin, code);
+  const alpha = Number(filter.match(/color=black@([0-9.]+)/)![1]);
+  // Worst background is white; sRGB relative luminance after black compositing.
+  const channel = 1 - alpha;
+  const luminance = channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+  expect(1.05 / (luminance + .05)).toBeGreaterThanOrEqual(4.5);
+  const filters = filter.split(',');
+  expect(filters).toHaveLength(4);
+  expect(filters[0]).toMatch(/^drawbox=.*:t=fill$/);
+  expect(filters[1]).toContain("text='КлипМейкер · clipmkr.ru/c/'");
+  expect(filters[2]).toMatch(/^drawbox=.*:color=white:t=fill$/);
+  expect(filters[3]).toContain("text='WWWWWW'"); expect(filters[3]).toContain('fontcolor=black');
+  expect(filters[1]!.split(':y=')[1]).toBe(filters[3]!.split(':y=')[1]);
 });
 it('fontfile only; font bytes are pinned and shipped in runtime image', () => {
   const source = readFileSync('apps/worker/src/render/watermark.ts', 'utf8');
   expect(source).not.toMatch(/\bfont=/); expect(source).toContain('fontfile=');
   const filter = buildWatermarkDrawtext(1080, 1920, origin, code);
   expect(filter).not.toMatch(/\bfont=/); expect(filter).toContain('fontfile=');
-  expect(filter).toContain(`/c/${code}`); expect(filter).toContain('boxcolor=black');
+  expect(filter).toContain('/c/'); expect(filter).toContain(`text='${code}'`); expect(filter).toContain('color=black@0.6');
   expect(readFileSync('Dockerfile', 'utf8')).toContain('COPY --from=build /app/apps/worker/assets ./apps/worker/assets');
 });
 it('filter order in source and graph: scale crop ASS watermark last', () => {
@@ -36,6 +54,7 @@ it('filter order in source and graph: scale crop ASS watermark last', () => {
   expect(graph.indexOf('scale=')).toBeLessThan(graph.indexOf('crop='));
   expect(graph.indexOf('crop=')).toBeLessThan(graph.indexOf('ass='));
   expect(graph.indexOf('ass=')).toBeLessThan(graph.indexOf('drawtext='));
+  expect(graph.endsWith(buildWatermarkDrawtext(1080, 1920, origin, code))).toBe(true);
   expect(graph).not.toContain('pad=');
   expect(buildFilterChain('portrait', null, false, origin, code)).not.toMatch(/drawtext|ass=/);
 });

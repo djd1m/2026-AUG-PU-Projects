@@ -17,6 +17,7 @@ export function readEnvironment() {
     N5_LIMIT_GLOBAL_MINUTES: process.env.N5_LIMIT_GLOBAL_MINUTES,
     N5_LIMIT_GLOBAL_LLM: process.env.N5_LIMIT_GLOBAL_LLM,
     N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN,
+    N5_SHORT_CODE_LENGTH: process.env.N5_SHORT_CODE_LENGTH,
     DATABASE_URL: process.env.DATABASE_URL,
     REDIS_URL: process.env.REDIS_URL,
     SESSION_SECRET: process.env.SESSION_SECRET,

@@ -8,7 +8,7 @@ x-app-env: &app-env
   DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
   REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
   TZ: Europe/Moscow
-  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-10}
+  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}
 
 x-quota-env: &quota-env
   N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}

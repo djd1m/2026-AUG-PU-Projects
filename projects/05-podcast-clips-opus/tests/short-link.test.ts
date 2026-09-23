@@ -114,5 +114,5 @@ it('И-1 lowercase and uppercase codes resolve to the same public page', async (
 it('И-2 six-character links resolve alongside old ten-character links', async () => {
   const query = vi.fn().mockResolvedValue({ rows: [row] }), links = new ShortLinkService({ query } as unknown as Pool);
   for (const code of ['k7m2xq', 'K7M2XQ', 'K7M2XQ9PRT']) expect(await links.find(code)).toEqual(row);
-  for (const code of ['K7M2X', 'K7M2XQ9', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
+  for (const code of ['K7M2X', 'K7M2XQ9', 'K7M2XQ9PRTW', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
 });

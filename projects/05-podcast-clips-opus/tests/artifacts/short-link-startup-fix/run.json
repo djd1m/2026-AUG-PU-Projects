@@ -1,0 +1,81 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "profile": "compact-quality-first-v2",
+  "run_id": "20260923T091523Z-short-link-startup-fix",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "short-link SL-003/004/005",
+  "pipeline": "approved owner brief → implement → checks → owner review",
+  "tier": "L",
+  "risk_flags": [
+    "startup contract across web and worker-video"
+  ],
+  "profile_overrides": [
+    "Single Codex implementer; integration and Anthropic review owned by integration owner per brief",
+    "Telemetry in tests/artifacts because docs limited to own report"
+  ],
+  "baseline_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a",
+  "started_at": "2026-09-23T09:15:55.931833+00:00",
+  "ended_at": "2026-09-23T09:24:15.354129+00:00",
+  "status": "accepted",
+  "actual_model": "GPT-6 (system identity)",
+  "actual_effort": null,
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "elapsed_wall_ms": 499422,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "retry_count": 2,
+    "escalation_count": 0,
+    "first_pass_acceptance": null,
+    "cost_basis": "unavailable"
+  },
+  "missing_data": [
+    "Exact model variant, effort, usage and cost unavailable",
+    "Initial instruction reading before first timestamp not measured; elapsed is lower bound",
+    "Independent review and integration acceptance not performed here; accepted means bounded fix scope only",
+    "No measured comparable baseline; savings not established"
+  ],
+  "route": {
+    "mechanical": "L exit 1",
+    "substantive": "L cross-service startup validation; approved 11_fix_brief_codex.md is plan; no new scope",
+    "plan": "Share pure geometry/font metrics and code alphabet/length. Validate config before startup. Prove with subprocess and mutation. Keep font size 73. Report geometry at smaller sizes.",
+    "validation": "No renderer imports in web: shared packaged JSON supports web without font file or ffmpeg",
+    "preflight": {
+      "status": "not_applicable",
+      "reason": "Local startup and unit checks; deployed E2E owned by integration owner"
+    }
+  },
+  "acceptance_evidence": [
+    "docs/features/short-link/12_fix_report.md",
+    "tests/artifacts/short-link-startup-fix/all-tests.txt",
+    "tests/artifacts/short-link-startup-fix/mutations/results.json",
+    "tests/artifacts/short-link-startup-fix/source-manifest.json"
+  ],
+  "final_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a+manifest-sha256:8b8b009ef39e3a1f102934f3f4fbe7821497d37172b2a6c67f6c1010d8cc649f",
+  "batch_id": null,
+  "comparison_id": null,
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "spec_sha256": "4eb25a23857a156359f397fd4c9cb91cbe0800cf74f3dd23434bf769ab38ed7a",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "telemetry_status": "partial",
+  "quality": {
+    "required_gates_passed": false,
+    "accepted_scope_checks_passed": true,
+    "ac_met": 3,
+    "ac_total": 3,
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "owner_pending": [
+      "137 integration tests unavailable; Docker socket denied",
+      "Anthropic independent review and deployment acceptance owned by integration owner per brief"
+    ]
+  }
+}

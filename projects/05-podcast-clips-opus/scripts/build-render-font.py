@@ -30,4 +30,4 @@ output = root / 'ClipMakerNarrow-Bold.ttf'; font.save(output)
 font = TTFont(output)
 metrics = {'sha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'unitsPerEm': font['head'].unitsPerEm,
            'advance': {str(cp): font['hmtx'][name][0] for cp, name in font.getBestCmap().items()}}
-(root / 'metrics.json').write_text(json.dumps(metrics, sort_keys=True) + '\n')
+(Path(__file__).resolve().parents[1] / 'packages/shared/src/watermark-metrics.json').write_text(json.dumps(metrics, sort_keys=True) + '\n')

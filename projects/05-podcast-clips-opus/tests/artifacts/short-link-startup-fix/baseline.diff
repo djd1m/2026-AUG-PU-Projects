@@ -1,0 +1,330 @@
+diff --git a/projects/05-podcast-clips-opus/.env.example b/projects/05-podcast-clips-opus/.env.example
+index 05b0bb9..1d8120c 100644
+--- a/projects/05-podcast-clips-opus/.env.example
++++ b/projects/05-podcast-clips-opus/.env.example
+@@ -10,8 +10,8 @@ N5_TRUSTED_PROXY_HOPS=2
+ 
+ # ── публичный origin: вшивается в метку каждого клипа, дефолта нет ──
+ N5_PUBLIC_ORIGIN=https://clipmaker.aicoding.space
+-# И-2: 6 только после решения владельца; старые коды из 10 символов сохраняются.
+-N5_SHORT_CODE_LENGTH=10
++# SL-001: новые коды из 6 символов; старые коды из 10 символов сохраняются.
++N5_SHORT_CODE_LENGTH=6
+ 
+ # ── база и очередь ──
+ N5_DB_APP_PASSWORD=
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts b/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts
+index dd5c9aa..686a333 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts
+@@ -1,4 +1,4 @@
+-// Adapted from jan-clone: two opaque lines, fixed file, >=3.5% height, safe margins.
++// One-line brand/address with an inverse code chip; fixed font and safe margins.
+ import { readFileSync } from 'node:fs';
+ import { createHash } from 'node:crypto';
+ import { resolve } from 'node:path';
+@@ -8,6 +8,7 @@ export const SUBTITLE_FONTS = resolve('apps/worker/assets/fonts');
+ const metrics: { sha256: string; unitsPerEm: number; advance: Record<string, number> } =
+   JSON.parse(readFileSync(resolve('apps/worker/assets/fonts/metrics.json'), 'utf8'));
+ export const RENDER_FONT_SHA256 = metrics.sha256;
++export const WATERMARK_OPACITY = 0.60;
+ export function checkRenderFont(): void {
+   if (createHash('sha256').update(readFileSync(FONT_FILE)).digest('hex') !== metrics.sha256) {
+     throw new Error('Файл шрифта метки не совпадает с измеренными метриками');
+@@ -26,19 +27,26 @@ export function watermarkGeometry(width: number, height: number, origin: string,
+   const url = new URL(origin);
+   if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash ||
+     !/^[A-Za-z0-9_-]+$/.test(code)) throw new Error('Непригодный адрес метки');
+-  const lines = ['КлипМейкер', `${url.host}/c/${code}`];
+-  const fontSize = Math.ceil(height * 0.035), padding = 8, gap = 12;
++  const prefix = `КлипМейкер · ${url.host}/c/`;
++  const fontSize = Math.ceil(height * 73 / 1920), paddingX = 24, paddingY = 16, chipPadding = 16;
+   const left = Math.ceil(width * 0.05), bottom = Math.ceil(height * 0.12);
+-  const widths = lines.map(text => measureText(text, fontSize));
+-  if (widths.some(w => w + 2 * padding > width - 2 * left)) throw new Error('Адрес метки не помещается в безопасную область');
+-  return { lines, widths, fontSize, padding, left, bottom, gap,
+-    y: height - bottom - 2 * fontSize - gap - padding, contrast: 21 };
++  const prefixWidth = measureText(prefix, fontSize), codeWidth = measureText(code, fontSize);
++  const chipWidth = codeWidth + 2 * chipPadding, chipHeight = Math.ceil(fontSize * 1.15);
++  const plateWidth = 2 * paddingX + prefixWidth + chipWidth, plateHeight = 2 * paddingY + chipHeight;
++  if (plateWidth > width - 2 * left) throw new Error('Адрес метки не помещается в безопасную область');
++  return { prefix, code, prefixWidth, codeWidth, fontSize, paddingX, paddingY, chipPadding,
++    chipWidth, chipHeight, plateWidth, plateHeight, left, bottom, y: height - bottom - plateHeight };
+ }
+ export function buildWatermarkDrawtext(width: number, height: number, origin: string, code: string): string {
+   const g = watermarkGeometry(width, height, origin, code);
+-  return g.lines.map((text, i) =>
++  const textY = g.y + g.paddingY, chipX = g.left + g.paddingX + g.prefixWidth;
++  const drawText = (text: string, x: number, color: string) =>
+     `drawtext=text='${escapeDrawtext(text)}':expansion=none:fontfile='${escapeFFmpegPath(FONT_FILE)}':` +
+-    `fontsize=${g.fontSize}:fontcolor=white:box=1:boxcolor=black:boxborderw=${g.padding}:` +
+-    `x=${g.left + g.padding}:y=${g.y + i * (g.fontSize + g.gap)}`
+-  ).join(',');
++    `fontsize=${g.fontSize}:fontcolor=${color}:x=${x}:y=${textY + g.fontSize}-ascent`;
++  return [
++    `drawbox=x=${g.left}:y=${g.y}:w=${g.plateWidth}:h=${g.plateHeight}:color=black@${WATERMARK_OPACITY}:t=fill`,
++    drawText(g.prefix, g.left + g.paddingX, 'white'),
++    `drawbox=x=${chipX}:y=${textY}:w=${g.chipWidth}:h=${g.chipHeight}:color=white:t=fill`,
++    drawText(g.code, chipX + g.chipPadding, 'black'),
++  ].join(',');
+ }
+diff --git a/projects/05-podcast-clips-opus/docker-compose.yml b/projects/05-podcast-clips-opus/docker-compose.yml
+index c2edfe9..03b114b 100644
+--- a/projects/05-podcast-clips-opus/docker-compose.yml
++++ b/projects/05-podcast-clips-opus/docker-compose.yml
+@@ -8,7 +8,7 @@ x-app-env: &app-env
+   DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
+   REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
+   TZ: Europe/Moscow
+-  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-10}
++  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}
+ 
+ x-quota-env: &quota-env
+   N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}
+diff --git a/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts b/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts
+index fd39580..8a0b799 100644
+--- a/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts
++++ b/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts
+@@ -1,9 +1,9 @@
+ import { randomInt } from 'node:crypto';
+ import type { PoolClient } from 'pg';
+-// Default remains the canonical 10 characters; 6 is an owner-controlled experiment.
++// New links use six characters; readers retain compatibility with legacy ten-character codes.
+ export function clipCodeLength(value = process.env.N5_SHORT_CODE_LENGTH): 6 | 10 {
+-  if (value === undefined || value === '10') return 10;
+-  if (value === '6') return 6;
++  if (value === undefined || value === '6') return 6;
++  if (value === '10') return 10;
+   throw new Error('N5_SHORT_CODE_LENGTH: expected 6 or 10');
+ }
+ const ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+diff --git a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+index 8f5bc5c..fc575ec 100644
+--- a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
++++ b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+@@ -3,37 +3,48 @@ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { spawnSync } from 'node:child_process';
+ const project = process.cwd(), directory = mkdtempSync(join(tmpdir(), 'n5-render-mutations-'));
+-const output = resolve('tests/artifacts/render-and-watermark/mutations'); mkdirSync(output, { recursive: true });
++const output = resolve(process.env.N5_MUTATION_OUTPUT ?? 'tests/artifacts/render-and-watermark/mutations'); mkdirSync(output, { recursive: true });
+ const results = [];
+ try {
+   for (const name of ['apps', 'packages', 'tests', 'scripts']) cpSync(name, join(directory, name), {
+     recursive: true, filter: path => !/(^|\/)(node_modules|dist|\.next|artifacts)(\/|$)/.test(path),
+   });
+-  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'Dockerfile']) cpSync(name, join(directory, name));
++  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'Dockerfile', 'docker-compose.yml', '.env.example']) cpSync(name, join(directory, name));
+   symlinkSync(join(project, 'node_modules'), join(directory, 'node_modules'), 'dir');
+   const mutations = [
+     ['plan-fail-closed', 'apps/worker/src/render/watermark.ts', "return plan !== 'paid';", "return plan === 'free';", 'tests/render.test.ts', 'ADR-004 fails closed'],
+     ['link-before-render', 'packages/db/src/selection.ts', 'await createClipLink(tx, id);', '/* mutant: link deferred until after rendering */', 'tests/render.test.ts', 'link created before'],
+-    ['two-line-width', 'apps/worker/src/render/watermark.ts', "const lines = ['КлипМейкер', `${url.host}/c/${code}`];", "const lines = [`КлипМейкер · ${url.host}/c/${code}`];", 'tests/render.test.ts', 'two lines fit'],
++    ['one-line-width', 'apps/worker/src/render/watermark.ts', 'height * 73 / 1920', 'height * 75 / 1920', 'tests/render.test.ts', 'one-line worst code'],
++    ['badge-contrast', 'apps/worker/src/render/watermark.ts', 'WATERMARK_OPACITY = 0.60', 'WATERMARK_OPACITY = 0.20', 'tests/render.test.ts', 'badge contrast'],
++    ['badge-nonverbal', 'apps/worker/src/render/watermark.ts', 'КлипМейкер · ${url.host}', 'Создай клип · ${url.host}', 'tests/render.test.ts', 'badge contrast'],
++    ['legacy-code', 'apps/web/src/server/short-link.ts', '(?:[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}|[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{10})', '[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}', 'tests/short-link.test.ts', 'six-character links'],
++    ['default-six', 'packages/db/src/clip-link.ts', "if (value === undefined || value === '6') return 6;", "if (value === undefined || value === '6') return 10;", 'tests/trust-guards.test.ts', 'generator defaults to six'],
+     ['font-file', 'apps/worker/src/render/watermark.ts', 'fontfile=', 'font=', 'tests/render.test.ts', 'fontfile only'],
+     ['filter-order', 'apps/worker/src/render/ffmpeg.ts', 'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));', 'if (watermark) filters.unshift(buildWatermarkDrawtext(width, height, origin, code));', 'tests/render.test.ts', 'filter order'],
+     ['concurrency', 'apps/worker/src/workers/render.ts', 'concurrency: 1,', 'concurrency: Number(process.env.RENDER_CONCURRENCY),', 'tests/render.test.ts', 'ADR-006 actual registered'],
+     ['disk-before-get', 'apps/worker/src/media/download.ts', 'if (await available(directory) - reserved < required) return null;', 'if (false) return null;', 'tests/render-worker.test.ts', 'disk reserve before'],
+     ['conditional-publish', 'apps/worker/src/render/storage.ts', "IfNoneMatch: '*'", "IfNoneMatch: undefined", 'tests/render-storage.test.ts', 'S3 conditional publication'],
+   ];
++  for (const id of process.argv.slice(2)) {
++    if (!mutations.some(mutation => mutation[0] === id)) throw new Error(`Unknown mutation: ${id}`);
++  }
+   for (const [id, file, before, after, test, title] of mutations) {
++    if (process.argv.length > 2 && !process.argv.slice(2).includes(id)) continue;
+     const path = join(directory, file), source = readFileSync(path, 'utf8');
+     if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
+     writeFileSync(path, source.replace(before, after));
+     const run = phase => {
+-      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', test, '-t', title],
++      const receipt = join(output, `${id}-${phase}.json`);
++      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', test, '-t', title,
++        '--reporter=json', `--outputFile=${receipt}`],
+         { cwd: directory, encoding: 'utf8', timeout: 60000, env: { ...process.env, DATABASE_URL: '', REDIS_URL: '' } });
+       writeFileSync(join(output, `${id}-${phase}.txt`), `${result.stdout ?? ''}${result.stderr ?? ''}`);
+-      return result.status;
++      const report = JSON.parse(readFileSync(receipt, 'utf8'));
++      return { exit: result.status, failed: report.numFailedTests, passed: report.numPassedTests };
+     };
+     const red = run('red'); writeFileSync(path, source); const green = run('green');
+-    results.push({ id, red, green, passed: red === 1 && green === 0 });
+-    console.log(`${id}: red=${red}, green=${green}`);
++    results.push({ id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 });
++    console.log(`${id}: red=${red.exit} (${red.failed} failed), green=${green.exit} (${green.passed} passed)`);
+   }
+   writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
+   if (results.some(r => !r.passed)) process.exitCode = 1;
+diff --git a/projects/05-podcast-clips-opus/tests/render-audio.test.ts b/projects/05-podcast-clips-opus/tests/render-audio.test.ts
+index cd4b841..f854608 100644
+--- a/projects/05-podcast-clips-opus/tests/render-audio.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render-audio.test.ts
+@@ -19,7 +19,7 @@ it('RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark
+     expect(await videoStreamIndex(input)).toBeNull();
+     await renderClip({ inputPath: input, outputPath: output, startTime: 2, endTime: 22, format: 'portrait',
+       words: [{ word: 'Привет', start: 3, end: 5 }], watermark: true,
+-      origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
++      origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+     const result = await probe(output);
+     expect(result.streams.find((s: { codec_type: string }) => s.codec_type === 'video')).toMatchObject({ width: 1080, height: 1920 });
+     expect(result.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
+@@ -47,7 +47,7 @@ it('RD-001 real video retains its picture; attached MP3 cover and M4A use the ba
+       '-f', 'lavfi', '-i', 'sine=duration=21', '-c:v', 'libx264', '-c:a', 'aac', '-shortest', input]);
+     expect(await videoStreamIndex(input)).toBe(0);
+     await renderClip({ inputPath: input, outputPath: output, startTime: 1, endTime: 21, format: 'portrait',
+-      words: [], watermark: false, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
++      words: [], watermark: false, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+     const frame = (await exec('ffmpeg', ['-v', 'error', '-i', output, '-frames:v', '1', '-vf', 'crop=2:2:0:0',
+       '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1'], { encoding: 'buffer' })).stdout;
+     expect(frame[2]).toBeGreaterThan(200); expect(frame[0]).toBeLessThan(30);
+diff --git a/projects/05-podcast-clips-opus/tests/render-media.test.ts b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+index 2595c47..a8b39fd 100644
+--- a/projects/05-podcast-clips-opus/tests/render-media.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+@@ -15,20 +15,20 @@ it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG
+     '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
+   await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
+     words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
+-    watermark: true, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
++    watermark: true, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+   await generateThumbnail(output, join(dir, 'thumb.jpg'), 5);
+   expect((await readFile(join(dir, 'thumb.jpg'))).subarray(0, 2)).toEqual(Buffer.from([0xff, 0xd8]));
+   const probe = JSON.parse((await execFile('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', output])).stdout);
+   expect(probe.streams[0]).toMatchObject({ width: 1080, height: 1920 }); expect(Number(probe.format.duration)).toBeCloseTo(20, 1);
+   expect(probe.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
+   await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vframes', '1', join(dir, 'frame.png')]);
+-  await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', 'crop=972:160:54:1517,format=gray', '-vframes', '1', '-f', 'rawvideo', join(dir, 'mark.raw')]);
+-  const pixels = await readFile(join(dir, 'mark.raw'));
+-  // Both lines contain bright glyphs on an opaque black background, including URL's right end.
+-  for (const [start, end] of [[0, 80], [80, 160]]) {
+-    const band = pixels.subarray(start! * 972, end! * 972);
+-    expect(band.filter(p => p > 220).length).toBeGreaterThan(100);
+-    expect(band.filter(p => p < 20).length).toBeGreaterThan(100);
++  // Inspect prefix and chip independently in the encoded frame (same baseline).
++  for (const [name, crop] of [['prefix', 'crop=555:84:78:1589'], ['chip', 'crop=272:84:633:1589']]) {
++    const path = join(dir, `${name}.raw`);
++    await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', `${crop},format=gray`, '-vframes', '1', '-f', 'rawvideo', path]);
++    const pixels = await readFile(path);
++    expect(pixels.filter(p => p > 220).length).toBeGreaterThan(100);
++    expect(pixels.filter(p => p < 50).length).toBeGreaterThan(100);
+   }
+   expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+   console.info(`REAL_RENDER_ARTIFACT=${dir}`);
+@@ -38,7 +38,7 @@ it('ffmpeg timeout kills the child and waits for close before returning', async
+   try {
+     await expect(execFFmpeg(['-f', 'lavfi', '-i', 'testsrc2=s=640x360', '-f', 'null', '-'], 100)).rejects.toMatchObject({ reason: 'ffmpeg_timeout' });
+     await expect(renderClip({ inputPath: join(dir, 'absent.mp4'), outputPath: join(dir, 'out.mp4'), startTime: 0, endTime: 20,
+-      format: 'portrait', words: [], watermark: false, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' })).rejects.toThrow();
++      format: 'portrait', words: [], watermark: false, origin: 'https://clipmkr.ru', code: 'WWWWWW' })).rejects.toThrow();
+     expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+   } finally { await rm(dir, { recursive: true, force: true }); }
+ }, 15_000);
+diff --git a/projects/05-podcast-clips-opus/tests/render.test.ts b/projects/05-podcast-clips-opus/tests/render.test.ts
+index 6a3b71e..e0a078b 100644
+--- a/projects/05-podcast-clips-opus/tests/render.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render.test.ts
+@@ -4,28 +4,46 @@ import { watermarkRequired, watermarkGeometry, buildWatermarkDrawtext, checkRend
+ import { buildFilterChain } from '../apps/worker/src/render/ffmpeg';
+ import { generateSubtitleFile, wrapSubtitleText, formatASSTimecode } from '../apps/worker/src/render/subtitles';
+ import { escapeDrawtext, escapeFFmpegPath, escapeAssText } from '../apps/worker/src/render/escape';
+-const origin = 'https://clipmaker.aicoding.space', code = 'WWWWWWWWWW';
++const origin = 'https://clipmkr.ru', code = 'WWWWWW';
+ it.each([null, undefined, '', 'PAID', ' paid', 'premium', 0, true, 'free'])('ADR-004 fails closed for %s', plan => {
+   expect(watermarkRequired(plan)).toBe(true);
+ });
+ it('only exact paid removes watermark', () => expect(watermarkRequired('paid')).toBe(false));
+-it('two lines fit including background, and obey font size, margins, contrast', () => {
++it('one-line worst code fits strict 880 zone with full brand and inverse chip', () => {
+   checkRenderFont();
+-  const g = watermarkGeometry(1080, 1920, origin, code);
+-  expect(g.lines).toEqual(['КлипМейкер', `clipmaker.aicoding.space/c/${code}`]);
+-  expect(g.fontSize).toBeGreaterThanOrEqual(1920 * .035);
++  const alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
++  const widest = [...alphabet].sort((a, b) => measureText(b, 73) - measureText(a, 73))[0]!;
++  const g = watermarkGeometry(1080, 1920, origin, widest.repeat(6));
++  expect(g.plateWidth).toBeLessThanOrEqual(880);
++  expect(g.prefix).toBe('КлипМейкер · clipmkr.ru/c/');
++  expect(g.fontSize).toBe(73); expect(g.fontSize).toBeGreaterThanOrEqual(1920 * .035);
++  expect(g.prefixWidth).toBe(555); expect(g.codeWidth).toBe(240);
++  expect(g.plateHeight).toBe(116);
+   expect(g.left).toBeGreaterThanOrEqual(1080 * .05); expect(g.bottom).toBeGreaterThanOrEqual(1920 * .12);
+-  for (const w of g.widths) expect(w + 2 * g.padding).toBeLessThanOrEqual(1080 - 2 * g.left);
+-  expect(g.contrast).toBeGreaterThanOrEqual(4.5);
+-  expect(measureText(g.lines.join(' · '), g.fontSize) + 2 * g.padding).toBeGreaterThan(1080 - 2 * g.left);
++  expect(g.y + g.plateHeight).toBeLessThanOrEqual(1920 * .88);
+   expect(() => watermarkGeometry(1080, 1920, 'https://' + 'x'.repeat(100) + '.com', code)).toThrow(/не помещается/);
+ });
++it('badge contrast and nonverbal text: translucent plate, opaque inverse chip, common baseline', () => {
++  const filter = buildWatermarkDrawtext(1080, 1920, origin, code);
++  const alpha = Number(filter.match(/color=black@([0-9.]+)/)![1]);
++  // Worst background is white; sRGB relative luminance after black compositing.
++  const channel = 1 - alpha;
++  const luminance = channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
++  expect(1.05 / (luminance + .05)).toBeGreaterThanOrEqual(4.5);
++  const filters = filter.split(',');
++  expect(filters).toHaveLength(4);
++  expect(filters[0]).toMatch(/^drawbox=.*:t=fill$/);
++  expect(filters[1]).toContain("text='КлипМейкер · clipmkr.ru/c/'");
++  expect(filters[2]).toMatch(/^drawbox=.*:color=white:t=fill$/);
++  expect(filters[3]).toContain("text='WWWWWW'"); expect(filters[3]).toContain('fontcolor=black');
++  expect(filters[1]!.split(':y=')[1]).toBe(filters[3]!.split(':y=')[1]);
++});
+ it('fontfile only; font bytes are pinned and shipped in runtime image', () => {
+   const source = readFileSync('apps/worker/src/render/watermark.ts', 'utf8');
+   expect(source).not.toMatch(/\bfont=/); expect(source).toContain('fontfile=');
+   const filter = buildWatermarkDrawtext(1080, 1920, origin, code);
+   expect(filter).not.toMatch(/\bfont=/); expect(filter).toContain('fontfile=');
+-  expect(filter).toContain(`/c/${code}`); expect(filter).toContain('boxcolor=black');
++  expect(filter).toContain('/c/'); expect(filter).toContain(`text='${code}'`); expect(filter).toContain('color=black@0.6');
+   expect(readFileSync('Dockerfile', 'utf8')).toContain('COPY --from=build /app/apps/worker/assets ./apps/worker/assets');
+ });
+ it('filter order in source and graph: scale crop ASS watermark last', () => {
+@@ -36,6 +54,7 @@ it('filter order in source and graph: scale crop ASS watermark last', () => {
+   expect(graph.indexOf('scale=')).toBeLessThan(graph.indexOf('crop='));
+   expect(graph.indexOf('crop=')).toBeLessThan(graph.indexOf('ass='));
+   expect(graph.indexOf('ass=')).toBeLessThan(graph.indexOf('drawtext='));
++  expect(graph.endsWith(buildWatermarkDrawtext(1080, 1920, origin, code))).toBe(true);
+   expect(graph).not.toContain('pad=');
+   expect(buildFilterChain('portrait', null, false, origin, code)).not.toMatch(/drawtext|ass=/);
+ });
+diff --git a/projects/05-podcast-clips-opus/tests/short-link.test.ts b/projects/05-podcast-clips-opus/tests/short-link.test.ts
+index ad8ec61..89dcf3a 100644
+--- a/projects/05-podcast-clips-opus/tests/short-link.test.ts
++++ b/projects/05-podcast-clips-opus/tests/short-link.test.ts
+@@ -114,5 +114,5 @@ it('И-1 lowercase and uppercase codes resolve to the same public page', async (
+ it('И-2 six-character links resolve alongside old ten-character links', async () => {
+   const query = vi.fn().mockResolvedValue({ rows: [row] }), links = new ShortLinkService({ query } as unknown as Pool);
+   for (const code of ['k7m2xq', 'K7M2XQ', 'K7M2XQ9PRT']) expect(await links.find(code)).toEqual(row);
+-  for (const code of ['K7M2X', 'K7M2XQ9', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
++  for (const code of ['K7M2X', 'K7M2XQ9', 'K7M2XQ9PRTW', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
+ });
+diff --git a/projects/05-podcast-clips-opus/tests/trust-guards.test.ts b/projects/05-podcast-clips-opus/tests/trust-guards.test.ts
+index 596fe66..067ceac 100644
+--- a/projects/05-podcast-clips-opus/tests/trust-guards.test.ts
++++ b/projects/05-podcast-clips-opus/tests/trust-guards.test.ts
+@@ -6,16 +6,19 @@ import { join } from 'node:path';
+ import type { PoolClient, Pool } from 'pg';
+ import { createClipLink, clipCodeLength } from '../packages/db/src/clip-link';
+ import { createClipFileHandler } from '../apps/web/src/server/clip-file';
+-it('И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed', async () => {
++it('И-2 generator defaults to six, flag retains ten, collisions retry and invalid flags fail closed', async () => {
+   const query = vi.fn().mockResolvedValueOnce({ rowCount: 0 }).mockResolvedValue({ rowCount: 1 });
+   try {
+-    vi.stubEnv('N5_SHORT_CODE_LENGTH', '6');
++    vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
+     await createClipLink({ query } as unknown as PoolClient, 'clip');
+     expect(query).toHaveBeenCalledTimes(2);
+     for (const call of query.mock.calls) expect(call[1][1]).toMatch(/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}$/);
+-    vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
++    vi.stubEnv('N5_SHORT_CODE_LENGTH', '10');
+     await createClipLink({ query } as unknown as PoolClient, 'clip');
+     expect(query.mock.calls.at(-1)![1][1]).toHaveLength(10);
++    expect(clipCodeLength('6')).toBe(6);
++    expect(readFileSync('docker-compose.yml', 'utf8')).toContain('N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}');
++    expect(readFileSync('.env.example', 'utf8')).toContain('N5_SHORT_CODE_LENGTH=6');
+     for (const value of ['', '4', '7', ' 6', 'six']) expect(() => clipCodeLength(value)).toThrow('N5_SHORT_CODE_LENGTH');
+   } finally { vi.unstubAllEnvs(); }
+ });

@@ -1,0 +1,449 @@
+diff --git a/projects/05-podcast-clips-opus/.env.example b/projects/05-podcast-clips-opus/.env.example
+index 05b0bb9..1d8120c 100644
+--- a/projects/05-podcast-clips-opus/.env.example
++++ b/projects/05-podcast-clips-opus/.env.example
+@@ -10,8 +10,8 @@ N5_TRUSTED_PROXY_HOPS=2
+ 
+ # ── публичный origin: вшивается в метку каждого клипа, дефолта нет ──
+ N5_PUBLIC_ORIGIN=https://clipmaker.aicoding.space
+-# И-2: 6 только после решения владельца; старые коды из 10 символов сохраняются.
+-N5_SHORT_CODE_LENGTH=10
++# SL-001: новые коды из 6 символов; старые коды из 10 символов сохраняются.
++N5_SHORT_CODE_LENGTH=6
+ 
+ # ── база и очередь ──
+ N5_DB_APP_PASSWORD=
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/environment.ts b/projects/05-podcast-clips-opus/apps/web/src/server/environment.ts
+index 9d91d28..bbffa02 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/environment.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/environment.ts
+@@ -17,6 +17,7 @@ export function readEnvironment() {
+     N5_LIMIT_GLOBAL_MINUTES: process.env.N5_LIMIT_GLOBAL_MINUTES,
+     N5_LIMIT_GLOBAL_LLM: process.env.N5_LIMIT_GLOBAL_LLM,
+     N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN,
++    N5_SHORT_CODE_LENGTH: process.env.N5_SHORT_CODE_LENGTH,
+     DATABASE_URL: process.env.DATABASE_URL,
+     REDIS_URL: process.env.REDIS_URL,
+     SESSION_SECRET: process.env.SESSION_SECRET,
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/fonts/metrics.json b/projects/05-podcast-clips-opus/apps/worker/assets/fonts/metrics.json
+deleted file mode 100644
+index abf71a5..0000000
+--- a/projects/05-podcast-clips-opus/apps/worker/assets/fonts/metrics.json
++++ /dev/null
+@@ -1 +0,0 @@
+-{"advance": {"100": 718, "101": 654, "102": 391, "1024": 784, "1025": 784, "1026": 1041, "1027": 707, "1028": 836, "1029": 784, "103": 718, "1030": 327, "1031": 327, "1032": 654, "1033": 1286, "1034": 1250, "1035": 1028, "1036": 718, "1037": 846, "1038": 731, "1039": 846, "104": 718, "1040": 848, "1041": 846, "1042": 848, "1043": 707, "1044": 837, "1045": 784, "1046": 1063, "1047": 736, "1048": 846, "1049": 846, "105": 327, "1050": 718, "1051": 826, "1052": 979, "1053": 848, "1054": 915, "1055": 848, "1056": 784, "1057": 848, "1058": 718, "1059": 731, "106": 327, "1060": 1002, "1061": 784, "1062": 859, "1063": 826, "1064": 1182, "1065": 1198, "1066": 1022, "1067": 1172, "1068": 846, "1069": 836, "107": 654, "1070": 1212, "1071": 848, "1072": 654, "1073": 727, "1074": 722, "1075": 490, "1076": 747, "1077": 654, "1078": 833, "1079": 585, "108": 327, "1080": 722, "1081": 722, "1082": 588, "1083": 747, "1084": 870, "1085": 710, "1086": 718, "1087": 710, "1088": 718, "1089": 654, "109": 1045, "1090": 576, "1091": 654, "1092": 1028, "1093": 654, "1094": 722, "1095": 682, "1096": 979, "1097": 992, "1098": 858, "1099": 1049, "110": 718, "1100": 722, "1101": 650, "1102": 1004, "1103": 685, "1104": 654, "1105": 654, "1106": 718, "1107": 490, "1108": 650, "1109": 654, "111": 718, "1110": 327, "1111": 327, "1112": 327, "1113": 1140, "1114": 1065, "1115": 718, "1116": 588, "1117": 722, "1118": 654, "1119": 710, "112": 718, "113": 718, "1138": 915, "1139": 718, "114": 457, "115": 654, "116": 391, "1168": 650, "1169": 490, "117": 718, "118": 654, "119": 915, "120": 654, "121": 654, "122": 588, "123": 457, "124": 330, "125": 457, "126": 687, "160": 327, "161": 391, "162": 654, "163": 654, "164": 654, "165": 654, "166": 330, "167": 654, "168": 391, "169": 866, "170": 435, "171": 654, "172": 687, "173": 391, "174": 866, "175": 391, "176": 573, "177": 787, "178": 391, "179": 391, "180": 391, "181": 718, "182": 654, "183": 391, "184": 391, "185": 391, "186": 428, "187": 654, "188": 981, "189": 981, "190": 981, "191": 718, "192": 848, "193": 848, "194": 848, "195": 848, "196": 848, "197": 848, "198": 1175, "199": 848, "200": 784, "201": 784, "202": 784, "203": 784, "204": 327, "205": 327, "206": 327, "207": 327, "208": 848, "209": 848, "210": 915, "211": 915, "212": 915, "213": 915, "214": 915, "215": 687, "216": 915, "217": 848, "218": 848, "219": 848, "220": 848, "221": 784, "222": 784, "223": 718, "224": 654, "225": 654, "226": 654, "227": 654, "228": 654, "229": 654, "230": 1045, "231": 654, "232": 654, "233": 654, "234": 654, "235": 654, "236": 327, "237": 327, "238": 327, "239": 327, "240": 718, "241": 718, "242": 718, "243": 718, "244": 718, "245": 718, "246": 718, "247": 787, "248": 718, "249": 718, "250": 718, "251": 718, "252": 718, "253": 654, "254": 718, "255": 654, "256": 848, "257": 654, "258": 848, "259": 654, "260": 848, "261": 654, "262": 848, "263": 654, "264": 848, "265": 654, "266": 848, "267": 654, "268": 848, "269": 654, "270": 848, "271": 844, "272": 848, "273": 722, "274": 784, "275": 654, "276": 784, "277": 654, "278": 784, "279": 654, "280": 784, "281": 654, "282": 784, "283": 654, "284": 915, "285": 718, "286": 915, "287": 718, "288": 915, "289": 718, "290": 915, "291": 718, "292": 848, "293": 718, "294": 848, "295": 718, "296": 327, "297": 327, "298": 327, "299": 327, "300": 327, "301": 327, "302": 327, "303": 327, "304": 327, "305": 327, "306": 981, "307": 654, "308": 654, "309": 327, "310": 848, "311": 654, "312": 655, "313": 718, "314": 327, "315": 718, "316": 327, "317": 718, "318": 453, "319": 718, "32": 327, "320": 479, "321": 718, "322": 327, "323": 848, "324": 718, "325": 848, "326": 718, "327": 848, "328": 718, "329": 969, "33": 391, "330": 850, "331": 718, "332": 915, "333": 718, "334": 915, "335": 718, "336": 915, "337": 718, "338": 1175, "339": 1110, "34": 558, "340": 848, "341": 457, "342": 848, "343": 457, "344": 848, "345": 457, "346": 784, "347": 654, "348": 784, "349": 654, "35": 654, "350": 784, "351": 654, "352": 784, "353": 654, "354": 718, "355": 391, "356": 718, "357": 564, "358": 718, "359": 391, "36": 654, "360": 848, "361": 718, "362": 848, "363": 718, "364": 848, "365": 718, "366": 848, "367": 718, "368": 848, "369": 718, "37": 1045, "370": 848, "371": 718, "372": 1110, "373": 915, "374": 784, "375": 654, "376": 784, "377": 718, "378": 588, "379": 718, "38": 848, "380": 588, "381": 718, "382": 588, "383": 327, "39": 279, "40": 391, "402": 654, "41": 391, "42": 457, "43": 687, "44": 327, "45": 391, "46": 327, "47": 327, "48": 654, "49": 654, "50": 654, "506": 848, "507": 654, "508": 1175, "509": 1045, "51": 654, "510": 915, "511": 718, "52": 654, "53": 654, "536": 784, "537": 654, "538": 718, "539": 391, "54": 654, "55": 654, "56": 654, "57": 654, "58": 391, "59": 391, "60": 687, "61": 687, "61441": 718, "61442": 718, "61445": 391, "62": 687, "63": 718, "64": 1147, "64257": 718, "64258": 718, "65": 848, "66": 848, "67": 848, "68": 848, "69": 784, "70": 718, "71": 915, "710": 391, "711": 391, "713": 717, "72": 848, "728": 391, "729": 391, "73": 327, "730": 391, "731": 391, "732": 391, "733": 391, "74": 654, "75": 848, "76": 718, "77": 979, "78": 848, "7808": 1110, "7809": 915, "7810": 1110, "7811": 915, "7812": 1110, "7813": 915, "79": 915, "7922": 784, "7923": 654, "80": 784, "81": 915, "82": 848, "8208": 391, "8209": 391, "8211": 654, "8212": 1175, "8213": 1175, "8215": 717, "8216": 327, "8217": 327, "8218": 327, "8219": 327, "8220": 588, "8221": 588, "8222": 588, "8224": 654, "8225": 654, "8226": 412, "8230": 1175, "8240": 1175, "8242": 279, "8243": 558, "8249": 391, "8250": 391, "8252": 783, "8254": 391, "8260": 197, "83": 784, "8319": 466, "8355": 722, "8356": 654, "8359": 1377, "8364": 654, "84": 718, "8453": 1132, "8467": 703, "8470": 1310, "8482": 1175, "8486": 942, "8494": 860, "85": 848, "8539": 981, "8540": 981, "8541": 981, "8542": 981, "8592": 1434, "8593": 717, "8594": 1434, "8595": 717, "8596": 1434, "8597": 717, "86": 784, "8616": 717, "87": 1110, "8706": 708, "8710": 877, "8719": 1180, "8721": 1022, "8722": 687, "8725": 197, "8729": 391, "8730": 787, "8734": 1022, "8735": 1404, "8745": 1035, "8747": 393, "8776": 787, "88": 784, "8800": 787, "8801": 685, "8804": 787, "8805": 787, "89": 784, "894": 391, "8962": 860, "8976": 687, "8992": 866, "8993": 866, "90": 718, "900": 391, "901": 391, "902": 848, "903": 391, "904": 1004, "905": 1065, "906": 552, "908": 967, "91": 391, "910": 1091, "911": 985, "912": 327, "913": 848, "914": 848, "915": 707, "916": 844, "917": 784, "918": 718, "919": 848, "92": 327, "920": 915, "921": 327, "922": 848, "923": 784, "924": 979, "925": 848, "926": 757, "927": 915, "928": 848, "929": 784, "93": 391, "931": 706, "932": 718, "933": 784, "934": 962, "935": 784, "936": 951, "937": 942, "938": 327, "939": 784, "94": 687, "940": 722, "941": 558, "942": 718, "943": 327, "944": 684, "945": 722, "946": 718, "947": 654, "9472": 1016, "9474": 883, "948": 713, "9484": 1016, "9488": 1016, "949": 558, "9492": 1016, "9496": 1016, "95": 654, "950": 540, "9500": 1016, "9508": 1016, "951": 718, "9516": 1016, "952": 635, "9524": 1016, "953": 327, "9532": 1016, "954": 655, "955": 654, "9552": 1016, "9553": 1016, "9554": 1016, "9555": 1016, "9556": 1016, "9557": 1016, "9558": 1016, "9559": 1016, "956": 718, "9560": 1016, "9561": 1016, "9562": 1016, "9563": 1016, "9564": 1016, "9565": 1016, "9566": 1016, "9567": 1016, "9568": 1016, "9569": 1016, "957": 654, "9570": 1016, "9571": 1016, "9572": 1016, "9573": 1016, "9574": 1016, "9575": 1016, "9576": 1016, "9577": 1016, "9578": 1016, "9579": 1016, "958": 524, "9580": 1016, "959": 718, "96": 391, "960": 900, "9600": 1016, "9604": 1016, "9608": 1016, "961": 727, "9612": 1016, "9616": 1016, "9617": 1016, "9618": 1016, "9619": 1045, "962": 610, "963": 804, "9632": 866, "9633": 866, "964": 525, "9642": 508, "9643": 508, "9644": 1434, "965": 684, "9650": 1419, "9658": 1419, "966": 841, "9660": 1419, "9668": 1419, "967": 677, "9674": 708, "9675": 866, "9679": 866, "968": 886, "9688": 866, "9689": 866, "969": 993, "97": 654, "970": 327, "9702": 508, "971": 684, "972": 718, "973": 684, "974": 993, "9786": 1464, "9787": 1508, "9788": 1314, "9792": 1075, "9794": 1075, "98": 718, "9824": 762, "9827": 941, "9829": 851, "9830": 732, "9834": 717, "9835": 1075, "9836": 1075, "99": 654}, "sha256": "43f6f10c6a265edfb4f34e64b1a60743610ab58c748e25eb4ef9bb54e388c38f", "unitsPerEm": 2048}
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts b/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts
+index dd5c9aa..a9892db 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/render/watermark.ts
+@@ -1,44 +1,29 @@
+-// Adapted from jan-clone: two opaque lines, fixed file, >=3.5% height, safe margins.
++// One-line brand/address with an inverse code chip; fixed font and safe margins.
+ import { readFileSync } from 'node:fs';
+ import { createHash } from 'node:crypto';
+ import { resolve } from 'node:path';
+ import { escapeDrawtext, escapeFFmpegPath } from './escape.js';
+ export const FONT_FILE = resolve('apps/worker/assets/fonts/ClipMakerNarrow-Bold.ttf');
+ export const SUBTITLE_FONTS = resolve('apps/worker/assets/fonts');
+-const metrics: { sha256: string; unitsPerEm: number; advance: Record<string, number> } =
+-  JSON.parse(readFileSync(resolve('apps/worker/assets/fonts/metrics.json'), 'utf8'));
+-export const RENDER_FONT_SHA256 = metrics.sha256;
++import { watermarkGeometry, RENDER_FONT_SHA256 } from '@clipmaker/shared/watermark';
++export { watermarkGeometry, measureText, RENDER_FONT_SHA256 } from '@clipmaker/shared/watermark';
++export const WATERMARK_OPACITY = 0.60;
+ export function checkRenderFont(): void {
+-  if (createHash('sha256').update(readFileSync(FONT_FILE)).digest('hex') !== metrics.sha256) {
++  if (createHash('sha256').update(readFileSync(FONT_FILE)).digest('hex') !== RENDER_FONT_SHA256) {
+     throw new Error('Файл шрифта метки не совпадает с измеренными метриками');
+   }
+ }
+ export function watermarkRequired(plan: unknown): boolean { return plan !== 'paid'; }
+-export function measureText(text: string, fontSize: number): number {
+-  // Per-glyph ceiling bounds FreeType pixel rounding; kerning is absent in this font.
+-  return [...text].reduce((width, char) => {
+-    const advance = metrics.advance[String(char.codePointAt(0))];
+-    if (advance === undefined) throw new Error('Шрифт не содержит символ метки');
+-    return width + Math.ceil(advance * fontSize / metrics.unitsPerEm);
+-  }, 0);
+-}
+-export function watermarkGeometry(width: number, height: number, origin: string, code: string) {
+-  const url = new URL(origin);
+-  if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash ||
+-    !/^[A-Za-z0-9_-]+$/.test(code)) throw new Error('Непригодный адрес метки');
+-  const lines = ['КлипМейкер', `${url.host}/c/${code}`];
+-  const fontSize = Math.ceil(height * 0.035), padding = 8, gap = 12;
+-  const left = Math.ceil(width * 0.05), bottom = Math.ceil(height * 0.12);
+-  const widths = lines.map(text => measureText(text, fontSize));
+-  if (widths.some(w => w + 2 * padding > width - 2 * left)) throw new Error('Адрес метки не помещается в безопасную область');
+-  return { lines, widths, fontSize, padding, left, bottom, gap,
+-    y: height - bottom - 2 * fontSize - gap - padding, contrast: 21 };
+-}
+ export function buildWatermarkDrawtext(width: number, height: number, origin: string, code: string): string {
+   const g = watermarkGeometry(width, height, origin, code);
+-  return g.lines.map((text, i) =>
++  const textY = g.y + g.paddingY, chipX = g.left + g.paddingX + g.prefixWidth;
++  const drawText = (text: string, x: number, color: string) =>
+     `drawtext=text='${escapeDrawtext(text)}':expansion=none:fontfile='${escapeFFmpegPath(FONT_FILE)}':` +
+-    `fontsize=${g.fontSize}:fontcolor=white:box=1:boxcolor=black:boxborderw=${g.padding}:` +
+-    `x=${g.left + g.padding}:y=${g.y + i * (g.fontSize + g.gap)}`
+-  ).join(',');
++    `fontsize=${g.fontSize}:fontcolor=${color}:x=${x}:y=${textY + g.fontSize}-ascent`;
++  return [
++    `drawbox=x=${g.left}:y=${g.y}:w=${g.plateWidth}:h=${g.plateHeight}:color=black@${WATERMARK_OPACITY}:t=fill`,
++    drawText(g.prefix, g.left + g.paddingX, 'white'),
++    `drawbox=x=${chipX}:y=${textY}:w=${g.chipWidth}:h=${g.chipHeight}:color=white:t=fill`,
++    drawText(g.code, chipX + g.chipPadding, 'black'),
++  ].join(',');
+ }
+diff --git a/projects/05-podcast-clips-opus/apps/worker/workers/render.ts b/projects/05-podcast-clips-opus/apps/worker/workers/render.ts
+index 5497047..67f8c52 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/workers/render.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/workers/render.ts
+@@ -1,7 +1,12 @@
++import { renderErrorMessage } from '../src/render/diagnostics';
+ import { startWorker } from '../src/runtime';
+ void startWorker('worker-video', { DATABASE_URL: process.env.DATABASE_URL, REDIS_URL: process.env.REDIS_URL,
+-  N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN, NODE_ENV: process.env.NODE_ENV,
++  N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN,
++  N5_SHORT_CODE_LENGTH: process.env.N5_SHORT_CODE_LENGTH, NODE_ENV: process.env.NODE_ENV,
+   N5_WORK_DIR: process.env.N5_WORK_DIR, S3_ENDPOINT: process.env.S3_ENDPOINT,
+   S3_REGION: process.env.S3_REGION, S3_BUCKET: process.env.S3_BUCKET,
+   S3_ACCESS_KEY: process.env.S3_ACCESS_KEY, S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+-  S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE }).catch(() => { console.error('Воркер не запущен: проверьте конфигурацию и зависимости'); process.exitCode = 1; });
++  S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE }).catch((error: unknown) => {
++  console.error(`Воркер не запущен: ${renderErrorMessage(error)}`);
++  process.exitCode = 1;
++});
+diff --git a/projects/05-podcast-clips-opus/docker-compose.yml b/projects/05-podcast-clips-opus/docker-compose.yml
+index c2edfe9..03b114b 100644
+--- a/projects/05-podcast-clips-opus/docker-compose.yml
++++ b/projects/05-podcast-clips-opus/docker-compose.yml
+@@ -8,7 +8,7 @@ x-app-env: &app-env
+   DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
+   REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
+   TZ: Europe/Moscow
+-  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-10}
++  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}
+ 
+ x-quota-env: &quota-env
+   N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}
+diff --git a/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts b/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts
+index fd39580..2705dcf 100644
+--- a/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts
++++ b/projects/05-podcast-clips-opus/packages/db/src/clip-link.ts
+@@ -1,12 +1,9 @@
+ import { randomInt } from 'node:crypto';
+ import type { PoolClient } from 'pg';
+-// Default remains the canonical 10 characters; 6 is an owner-controlled experiment.
++import { CLIP_CODE_ALPHABET as ALPHABET, clipCodeLength as parseClipCodeLength } from '@clipmaker/shared/clip-code';
+ export function clipCodeLength(value = process.env.N5_SHORT_CODE_LENGTH): 6 | 10 {
+-  if (value === undefined || value === '10') return 10;
+-  if (value === '6') return 6;
+-  throw new Error('N5_SHORT_CODE_LENGTH: expected 6 or 10');
++  return parseClipCodeLength(value);
+ }
+-const ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+ export async function createClipLink(tx: PoolClient, clipId: string): Promise<void> {
+   const length = clipCodeLength();
+   for (let attempt = 0; attempt < 3; attempt++) {
+diff --git a/projects/05-podcast-clips-opus/packages/shared/src/config.ts b/projects/05-podcast-clips-opus/packages/shared/src/config.ts
+index 1fd33b4..fc36571 100644
+--- a/projects/05-podcast-clips-opus/packages/shared/src/config.ts
++++ b/projects/05-podcast-clips-opus/packages/shared/src/config.ts
+@@ -1,3 +1,4 @@
++import { assertWatermarkFits } from './watermark.js';
+ export const LIMIT_NAMES = [
+   'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
+   'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
+@@ -62,9 +63,14 @@ function loadTrustedProxyHops(env: Environment): number {
+   }
+   return hops;
+ }
++function loadRenderOrigin(env: Environment): string {
++  const origin = loadPublicOrigin(env);
++  assertWatermarkFits(origin, env.N5_SHORT_CODE_LENGTH);
++  return origin;
++}
+ export function loadWebConfig(env: Environment) {
+   const limits = loadLimits(env);
+-  const publicOrigin = loadPublicOrigin(env);
++  const publicOrigin = loadRenderOrigin(env);
+   const connections = loadConnectionConfig(env);
+   const sessionSecret = required(env, 'SESSION_SECRET', 'без секрета нельзя защитить хэши сессий и отозвать их ротацией');
+   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
+@@ -79,7 +85,7 @@ export type WebConfig = ReturnType<typeof loadWebConfig>;
+ export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environment) {
+   const connections = loadConnectionConfig(env);
+   return role === 'worker-video'
+-    ? Object.freeze({ ...connections, publicOrigin: loadPublicOrigin(env), role })
++    ? Object.freeze({ ...connections, publicOrigin: loadRenderOrigin(env), role })
+     : Object.freeze({ ...connections, limits: loadLimits(env), role });
+ }
+ 
+diff --git a/projects/05-podcast-clips-opus/scripts/build-render-font.py b/projects/05-podcast-clips-opus/scripts/build-render-font.py
+index 487ee8b..333b757 100644
+--- a/projects/05-podcast-clips-opus/scripts/build-render-font.py
++++ b/projects/05-podcast-clips-opus/scripts/build-render-font.py
+@@ -30,4 +30,4 @@ output = root / 'ClipMakerNarrow-Bold.ttf'; font.save(output)
+ font = TTFont(output)
+ metrics = {'sha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'unitsPerEm': font['head'].unitsPerEm,
+            'advance': {str(cp): font['hmtx'][name][0] for cp, name in font.getBestCmap().items()}}
+-(root / 'metrics.json').write_text(json.dumps(metrics, sort_keys=True) + '\n')
++(Path(__file__).resolve().parents[1] / 'packages/shared/src/watermark-metrics.json').write_text(json.dumps(metrics, sort_keys=True) + '\n')
+diff --git a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+index 8f5bc5c..bb7a23a 100644
+--- a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
++++ b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+@@ -3,37 +3,49 @@ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ import { spawnSync } from 'node:child_process';
+ const project = process.cwd(), directory = mkdtempSync(join(tmpdir(), 'n5-render-mutations-'));
+-const output = resolve('tests/artifacts/render-and-watermark/mutations'); mkdirSync(output, { recursive: true });
++const output = resolve(process.env.N5_MUTATION_OUTPUT ?? 'tests/artifacts/render-and-watermark/mutations'); mkdirSync(output, { recursive: true });
+ const results = [];
+ try {
+   for (const name of ['apps', 'packages', 'tests', 'scripts']) cpSync(name, join(directory, name), {
+     recursive: true, filter: path => !/(^|\/)(node_modules|dist|\.next|artifacts)(\/|$)/.test(path),
+   });
+-  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'Dockerfile']) cpSync(name, join(directory, name));
++  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'Dockerfile', 'docker-compose.yml', '.env.example']) cpSync(name, join(directory, name));
+   symlinkSync(join(project, 'node_modules'), join(directory, 'node_modules'), 'dir');
+   const mutations = [
++    ['startup-watermark', 'packages/shared/src/config.ts', 'assertWatermarkFits(origin, env.N5_SHORT_CODE_LENGTH);', '/* mutant: defer geometry rejection until rendering */', 'tests/watermark-startup.test.ts', 'startup guard rejects configuration|render retains rejection'],
+     ['plan-fail-closed', 'apps/worker/src/render/watermark.ts', "return plan !== 'paid';", "return plan === 'free';", 'tests/render.test.ts', 'ADR-004 fails closed'],
+     ['link-before-render', 'packages/db/src/selection.ts', 'await createClipLink(tx, id);', '/* mutant: link deferred until after rendering */', 'tests/render.test.ts', 'link created before'],
+-    ['two-line-width', 'apps/worker/src/render/watermark.ts', "const lines = ['КлипМейкер', `${url.host}/c/${code}`];", "const lines = [`КлипМейкер · ${url.host}/c/${code}`];", 'tests/render.test.ts', 'two lines fit'],
++    ['one-line-width', 'packages/shared/src/watermark.ts', 'height * 73 / 1920', 'height * 75 / 1920', 'tests/render.test.ts', 'one-line worst code'],
++    ['badge-contrast', 'apps/worker/src/render/watermark.ts', 'WATERMARK_OPACITY = 0.60', 'WATERMARK_OPACITY = 0.20', 'tests/render.test.ts', 'badge contrast'],
++    ['badge-nonverbal', 'packages/shared/src/watermark.ts', 'КлипМейкер · ${url.host}', 'Создай клип · ${url.host}', 'tests/render.test.ts', 'badge contrast'],
++    ['legacy-code', 'apps/web/src/server/short-link.ts', '(?:[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}|[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{10})', '[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}', 'tests/short-link.test.ts', 'six-character links'],
++    ['default-six', 'packages/shared/src/clip-code.ts', "if (value === undefined || value === '6') return 6;", "if (value === undefined || value === '6') return 10;", 'tests/trust-guards.test.ts', 'generator defaults to six'],
+     ['font-file', 'apps/worker/src/render/watermark.ts', 'fontfile=', 'font=', 'tests/render.test.ts', 'fontfile only'],
+     ['filter-order', 'apps/worker/src/render/ffmpeg.ts', 'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));', 'if (watermark) filters.unshift(buildWatermarkDrawtext(width, height, origin, code));', 'tests/render.test.ts', 'filter order'],
+     ['concurrency', 'apps/worker/src/workers/render.ts', 'concurrency: 1,', 'concurrency: Number(process.env.RENDER_CONCURRENCY),', 'tests/render.test.ts', 'ADR-006 actual registered'],
+     ['disk-before-get', 'apps/worker/src/media/download.ts', 'if (await available(directory) - reserved < required) return null;', 'if (false) return null;', 'tests/render-worker.test.ts', 'disk reserve before'],
+     ['conditional-publish', 'apps/worker/src/render/storage.ts', "IfNoneMatch: '*'", "IfNoneMatch: undefined", 'tests/render-storage.test.ts', 'S3 conditional publication'],
+   ];
++  for (const id of process.argv.slice(2)) {
++    if (!mutations.some(mutation => mutation[0] === id)) throw new Error(`Unknown mutation: ${id}`);
++  }
+   for (const [id, file, before, after, test, title] of mutations) {
++    if (process.argv.length > 2 && !process.argv.slice(2).includes(id)) continue;
+     const path = join(directory, file), source = readFileSync(path, 'utf8');
+     if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
+     writeFileSync(path, source.replace(before, after));
+     const run = phase => {
+-      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', test, '-t', title],
++      const receipt = join(output, `${id}-${phase}.json`);
++      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', test, '-t', title,
++        '--reporter=json', `--outputFile=${receipt}`],
+         { cwd: directory, encoding: 'utf8', timeout: 60000, env: { ...process.env, DATABASE_URL: '', REDIS_URL: '' } });
+       writeFileSync(join(output, `${id}-${phase}.txt`), `${result.stdout ?? ''}${result.stderr ?? ''}`);
+-      return result.status;
++      const report = JSON.parse(readFileSync(receipt, 'utf8'));
++      return { exit: result.status, failed: report.numFailedTests, passed: report.numPassedTests };
+     };
+     const red = run('red'); writeFileSync(path, source); const green = run('green');
+-    results.push({ id, red, green, passed: red === 1 && green === 0 });
+-    console.log(`${id}: red=${red}, green=${green}`);
++    results.push({ id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 });
++    console.log(`${id}: red=${red.exit} (${red.failed} failed), green=${green.exit} (${green.passed} passed)`);
+   }
+   writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
+   if (results.some(r => !r.passed)) process.exitCode = 1;
+diff --git a/projects/05-podcast-clips-opus/tests/fixtures/environment.ts b/projects/05-podcast-clips-opus/tests/fixtures/environment.ts
+index a003103..77ff911 100644
+--- a/projects/05-podcast-clips-opus/tests/fixtures/environment.ts
++++ b/projects/05-podcast-clips-opus/tests/fixtures/environment.ts
+@@ -8,7 +8,7 @@ export function environment(): NodeJS.ProcessEnv {
+     NODE_ENV: 'test', N5_WORK_DIR: '/tmp/n5-test-work', N5_TRUSTED_PROXY_HOPS: '2', N5_LIMIT_USER_MINUTES: '90', N5_LIMIT_USER_UPLOADS: '2',
+     N5_LIMIT_USER_UPLOAD_REFUNDS: '2', N5_LIMIT_USER_LLM: '2',
+     N5_LIMIT_GLOBAL_MINUTES: '600', N5_LIMIT_GLOBAL_LLM: '20',
+-    N5_SHORT_CODE_LENGTH: '10', N5_PUBLIC_ORIGIN: 'https://test.invalid', DATABASE_URL: 'postgresql://test@localhost/test',
++    N5_SHORT_CODE_LENGTH: '6', N5_PUBLIC_ORIGIN: 'https://test.invalid', DATABASE_URL: 'postgresql://test@localhost/test',
+     REDIS_URL: 'redis://localhost:6379', SESSION_SECRET: randomBytes(32).toString('hex'),
+   };
+ }
+diff --git a/projects/05-podcast-clips-opus/tests/render-audio.test.ts b/projects/05-podcast-clips-opus/tests/render-audio.test.ts
+index cd4b841..f854608 100644
+--- a/projects/05-podcast-clips-opus/tests/render-audio.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render-audio.test.ts
+@@ -19,7 +19,7 @@ it('RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark
+     expect(await videoStreamIndex(input)).toBeNull();
+     await renderClip({ inputPath: input, outputPath: output, startTime: 2, endTime: 22, format: 'portrait',
+       words: [{ word: 'Привет', start: 3, end: 5 }], watermark: true,
+-      origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
++      origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+     const result = await probe(output);
+     expect(result.streams.find((s: { codec_type: string }) => s.codec_type === 'video')).toMatchObject({ width: 1080, height: 1920 });
+     expect(result.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
+@@ -47,7 +47,7 @@ it('RD-001 real video retains its picture; attached MP3 cover and M4A use the ba
+       '-f', 'lavfi', '-i', 'sine=duration=21', '-c:v', 'libx264', '-c:a', 'aac', '-shortest', input]);
+     expect(await videoStreamIndex(input)).toBe(0);
+     await renderClip({ inputPath: input, outputPath: output, startTime: 1, endTime: 21, format: 'portrait',
+-      words: [], watermark: false, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
++      words: [], watermark: false, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+     const frame = (await exec('ffmpeg', ['-v', 'error', '-i', output, '-frames:v', '1', '-vf', 'crop=2:2:0:0',
+       '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1'], { encoding: 'buffer' })).stdout;
+     expect(frame[2]).toBeGreaterThan(200); expect(frame[0]).toBeLessThan(30);
+diff --git a/projects/05-podcast-clips-opus/tests/render-media.test.ts b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+index 2595c47..a8b39fd 100644
+--- a/projects/05-podcast-clips-opus/tests/render-media.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+@@ -15,20 +15,20 @@ it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG
+     '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
+   await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
+     words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
+-    watermark: true, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
++    watermark: true, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+   await generateThumbnail(output, join(dir, 'thumb.jpg'), 5);
+   expect((await readFile(join(dir, 'thumb.jpg'))).subarray(0, 2)).toEqual(Buffer.from([0xff, 0xd8]));
+   const probe = JSON.parse((await execFile('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', output])).stdout);
+   expect(probe.streams[0]).toMatchObject({ width: 1080, height: 1920 }); expect(Number(probe.format.duration)).toBeCloseTo(20, 1);
+   expect(probe.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
+   await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vframes', '1', join(dir, 'frame.png')]);
+-  await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', 'crop=972:160:54:1517,format=gray', '-vframes', '1', '-f', 'rawvideo', join(dir, 'mark.raw')]);
+-  const pixels = await readFile(join(dir, 'mark.raw'));
+-  // Both lines contain bright glyphs on an opaque black background, including URL's right end.
+-  for (const [start, end] of [[0, 80], [80, 160]]) {
+-    const band = pixels.subarray(start! * 972, end! * 972);
+-    expect(band.filter(p => p > 220).length).toBeGreaterThan(100);
+-    expect(band.filter(p => p < 20).length).toBeGreaterThan(100);
++  // Inspect prefix and chip independently in the encoded frame (same baseline).
++  for (const [name, crop] of [['prefix', 'crop=555:84:78:1589'], ['chip', 'crop=272:84:633:1589']]) {
++    const path = join(dir, `${name}.raw`);
++    await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', `${crop},format=gray`, '-vframes', '1', '-f', 'rawvideo', path]);
++    const pixels = await readFile(path);
++    expect(pixels.filter(p => p > 220).length).toBeGreaterThan(100);
++    expect(pixels.filter(p => p < 50).length).toBeGreaterThan(100);
+   }
+   expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+   console.info(`REAL_RENDER_ARTIFACT=${dir}`);
+@@ -38,7 +38,7 @@ it('ffmpeg timeout kills the child and waits for close before returning', async
+   try {
+     await expect(execFFmpeg(['-f', 'lavfi', '-i', 'testsrc2=s=640x360', '-f', 'null', '-'], 100)).rejects.toMatchObject({ reason: 'ffmpeg_timeout' });
+     await expect(renderClip({ inputPath: join(dir, 'absent.mp4'), outputPath: join(dir, 'out.mp4'), startTime: 0, endTime: 20,
+-      format: 'portrait', words: [], watermark: false, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' })).rejects.toThrow();
++      format: 'portrait', words: [], watermark: false, origin: 'https://clipmkr.ru', code: 'WWWWWW' })).rejects.toThrow();
+     expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+   } finally { await rm(dir, { recursive: true, force: true }); }
+ }, 15_000);
+diff --git a/projects/05-podcast-clips-opus/tests/render.test.ts b/projects/05-podcast-clips-opus/tests/render.test.ts
+index 6a3b71e..e0a078b 100644
+--- a/projects/05-podcast-clips-opus/tests/render.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render.test.ts
+@@ -4,28 +4,46 @@ import { watermarkRequired, watermarkGeometry, buildWatermarkDrawtext, checkRend
+ import { buildFilterChain } from '../apps/worker/src/render/ffmpeg';
+ import { generateSubtitleFile, wrapSubtitleText, formatASSTimecode } from '../apps/worker/src/render/subtitles';
+ import { escapeDrawtext, escapeFFmpegPath, escapeAssText } from '../apps/worker/src/render/escape';
+-const origin = 'https://clipmaker.aicoding.space', code = 'WWWWWWWWWW';
++const origin = 'https://clipmkr.ru', code = 'WWWWWW';
+ it.each([null, undefined, '', 'PAID', ' paid', 'premium', 0, true, 'free'])('ADR-004 fails closed for %s', plan => {
+   expect(watermarkRequired(plan)).toBe(true);
+ });
+ it('only exact paid removes watermark', () => expect(watermarkRequired('paid')).toBe(false));
+-it('two lines fit including background, and obey font size, margins, contrast', () => {
++it('one-line worst code fits strict 880 zone with full brand and inverse chip', () => {
+   checkRenderFont();
+-  const g = watermarkGeometry(1080, 1920, origin, code);
+-  expect(g.lines).toEqual(['КлипМейкер', `clipmaker.aicoding.space/c/${code}`]);
+-  expect(g.fontSize).toBeGreaterThanOrEqual(1920 * .035);
++  const alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
++  const widest = [...alphabet].sort((a, b) => measureText(b, 73) - measureText(a, 73))[0]!;
++  const g = watermarkGeometry(1080, 1920, origin, widest.repeat(6));
++  expect(g.plateWidth).toBeLessThanOrEqual(880);
++  expect(g.prefix).toBe('КлипМейкер · clipmkr.ru/c/');
++  expect(g.fontSize).toBe(73); expect(g.fontSize).toBeGreaterThanOrEqual(1920 * .035);
++  expect(g.prefixWidth).toBe(555); expect(g.codeWidth).toBe(240);
++  expect(g.plateHeight).toBe(116);
+   expect(g.left).toBeGreaterThanOrEqual(1080 * .05); expect(g.bottom).toBeGreaterThanOrEqual(1920 * .12);
+-  for (const w of g.widths) expect(w + 2 * g.padding).toBeLessThanOrEqual(1080 - 2 * g.left);
+-  expect(g.contrast).toBeGreaterThanOrEqual(4.5);
+-  expect(measureText(g.lines.join(' · '), g.fontSize) + 2 * g.padding).toBeGreaterThan(1080 - 2 * g.left);
++  expect(g.y + g.plateHeight).toBeLessThanOrEqual(1920 * .88);
+   expect(() => watermarkGeometry(1080, 1920, 'https://' + 'x'.repeat(100) + '.com', code)).toThrow(/не помещается/);
+ });
++it('badge contrast and nonverbal text: translucent plate, opaque inverse chip, common baseline', () => {
++  const filter = buildWatermarkDrawtext(1080, 1920, origin, code);
++  const alpha = Number(filter.match(/color=black@([0-9.]+)/)![1]);
++  // Worst background is white; sRGB relative luminance after black compositing.
++  const channel = 1 - alpha;
++  const luminance = channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
++  expect(1.05 / (luminance + .05)).toBeGreaterThanOrEqual(4.5);
++  const filters = filter.split(',');
++  expect(filters).toHaveLength(4);
++  expect(filters[0]).toMatch(/^drawbox=.*:t=fill$/);
++  expect(filters[1]).toContain("text='КлипМейкер · clipmkr.ru/c/'");
++  expect(filters[2]).toMatch(/^drawbox=.*:color=white:t=fill$/);
++  expect(filters[3]).toContain("text='WWWWWW'"); expect(filters[3]).toContain('fontcolor=black');
++  expect(filters[1]!.split(':y=')[1]).toBe(filters[3]!.split(':y=')[1]);
++});
+ it('fontfile only; font bytes are pinned and shipped in runtime image', () => {
+   const source = readFileSync('apps/worker/src/render/watermark.ts', 'utf8');
+   expect(source).not.toMatch(/\bfont=/); expect(source).toContain('fontfile=');
+   const filter = buildWatermarkDrawtext(1080, 1920, origin, code);
+   expect(filter).not.toMatch(/\bfont=/); expect(filter).toContain('fontfile=');
+-  expect(filter).toContain(`/c/${code}`); expect(filter).toContain('boxcolor=black');
++  expect(filter).toContain('/c/'); expect(filter).toContain(`text='${code}'`); expect(filter).toContain('color=black@0.6');
+   expect(readFileSync('Dockerfile', 'utf8')).toContain('COPY --from=build /app/apps/worker/assets ./apps/worker/assets');
+ });
+ it('filter order in source and graph: scale crop ASS watermark last', () => {
+@@ -36,6 +54,7 @@ it('filter order in source and graph: scale crop ASS watermark last', () => {
+   expect(graph.indexOf('scale=')).toBeLessThan(graph.indexOf('crop='));
+   expect(graph.indexOf('crop=')).toBeLessThan(graph.indexOf('ass='));
+   expect(graph.indexOf('ass=')).toBeLessThan(graph.indexOf('drawtext='));
++  expect(graph.endsWith(buildWatermarkDrawtext(1080, 1920, origin, code))).toBe(true);
+   expect(graph).not.toContain('pad=');
+   expect(buildFilterChain('portrait', null, false, origin, code)).not.toMatch(/drawtext|ass=/);
+ });
+diff --git a/projects/05-podcast-clips-opus/tests/short-link.test.ts b/projects/05-podcast-clips-opus/tests/short-link.test.ts
+index ad8ec61..89dcf3a 100644
+--- a/projects/05-podcast-clips-opus/tests/short-link.test.ts
++++ b/projects/05-podcast-clips-opus/tests/short-link.test.ts
+@@ -114,5 +114,5 @@ it('И-1 lowercase and uppercase codes resolve to the same public page', async (
+ it('И-2 six-character links resolve alongside old ten-character links', async () => {
+   const query = vi.fn().mockResolvedValue({ rows: [row] }), links = new ShortLinkService({ query } as unknown as Pool);
+   for (const code of ['k7m2xq', 'K7M2XQ', 'K7M2XQ9PRT']) expect(await links.find(code)).toEqual(row);
+-  for (const code of ['K7M2X', 'K7M2XQ9', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
++  for (const code of ['K7M2X', 'K7M2XQ9', 'K7M2XQ9PRTW', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
+ });
+diff --git a/projects/05-podcast-clips-opus/tests/trust-guards.test.ts b/projects/05-podcast-clips-opus/tests/trust-guards.test.ts
+index 596fe66..067ceac 100644
+--- a/projects/05-podcast-clips-opus/tests/trust-guards.test.ts
++++ b/projects/05-podcast-clips-opus/tests/trust-guards.test.ts
+@@ -6,16 +6,19 @@ import { join } from 'node:path';
+ import type { PoolClient, Pool } from 'pg';
+ import { createClipLink, clipCodeLength } from '../packages/db/src/clip-link';
+ import { createClipFileHandler } from '../apps/web/src/server/clip-file';
+-it('И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed', async () => {
++it('И-2 generator defaults to six, flag retains ten, collisions retry and invalid flags fail closed', async () => {
+   const query = vi.fn().mockResolvedValueOnce({ rowCount: 0 }).mockResolvedValue({ rowCount: 1 });
+   try {
+-    vi.stubEnv('N5_SHORT_CODE_LENGTH', '6');
++    vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
+     await createClipLink({ query } as unknown as PoolClient, 'clip');
+     expect(query).toHaveBeenCalledTimes(2);
+     for (const call of query.mock.calls) expect(call[1][1]).toMatch(/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}$/);
+-    vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
++    vi.stubEnv('N5_SHORT_CODE_LENGTH', '10');
+     await createClipLink({ query } as unknown as PoolClient, 'clip');
+     expect(query.mock.calls.at(-1)![1][1]).toHaveLength(10);
++    expect(clipCodeLength('6')).toBe(6);
++    expect(readFileSync('docker-compose.yml', 'utf8')).toContain('N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}');
++    expect(readFileSync('.env.example', 'utf8')).toContain('N5_SHORT_CODE_LENGTH=6');
+     for (const value of ['', '4', '7', ' 6', 'six']) expect(() => clipCodeLength(value)).toThrow('N5_SHORT_CODE_LENGTH');
+   } finally { vi.unstubAllEnvs(); }
+ });
+diff --git a/projects/05-podcast-clips-opus/vitest.config.ts b/projects/05-podcast-clips-opus/vitest.config.ts
+index ee34272..cdf8f7a 100644
+--- a/projects/05-podcast-clips-opus/vitest.config.ts
++++ b/projects/05-podcast-clips-opus/vitest.config.ts
+@@ -3,6 +3,8 @@ import path from 'node:path';
+ export default defineConfig({
+   esbuild: { jsx: 'automatic' },
+   resolve: { alias: {
++    '@clipmaker/shared/watermark': path.resolve('packages/shared/src/watermark.ts'),
++    '@clipmaker/shared/clip-code': path.resolve('packages/shared/src/clip-code.ts'),
+     '@clipmaker/shared/config': path.resolve('packages/shared/src/config.ts'),
+     '@clipmaker/shared/enums': path.resolve('packages/shared/src/enums.ts'),
+     '@clipmaker/shared/upload': path.resolve('packages/shared/src/upload.ts'),

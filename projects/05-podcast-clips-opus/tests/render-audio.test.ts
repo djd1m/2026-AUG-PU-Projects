@@ -19,7 +19,7 @@ it('RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark 
     expect(await videoStreamIndex(input)).toBeNull();
     await renderClip({ inputPath: input, outputPath: output, startTime: 2, endTime: 22, format: 'portrait',
       words: [{ word: 'Привет', start: 3, end: 5 }], watermark: true,
-      origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
+      origin: 'https://clipmkr.ru', code: 'WWWWWW' });
     const result = await probe(output);
     expect(result.streams.find((s: { codec_type: string }) => s.codec_type === 'video')).toMatchObject({ width: 1080, height: 1920 });
     expect(result.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
@@ -47,7 +47,7 @@ it('RD-001 real video retains its picture; attached MP3 cover and M4A use the ba
       '-f', 'lavfi', '-i', 'sine=duration=21', '-c:v', 'libx264', '-c:a', 'aac', '-shortest', input]);
     expect(await videoStreamIndex(input)).toBe(0);
     await renderClip({ inputPath: input, outputPath: output, startTime: 1, endTime: 21, format: 'portrait',
-      words: [], watermark: false, origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' });
+      words: [], watermark: false, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
     const frame = (await exec('ffmpeg', ['-v', 'error', '-i', output, '-frames:v', '1', '-vf', 'crop=2:2:0:0',
       '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1'], { encoding: 'buffer' })).stdout;
     expect(frame[2]).toBeGreaterThan(200); expect(frame[0]).toBeLessThan(30);

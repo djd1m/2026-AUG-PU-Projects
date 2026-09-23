@@ -1,3 +1,4 @@
+import { assertWatermarkFits } from './watermark.js';
 export const LIMIT_NAMES = [
   'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
   'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
@@ -62,9 +63,14 @@ function loadTrustedProxyHops(env: Environment): number {
   }
   return hops;
 }
+function loadRenderOrigin(env: Environment): string {
+  const origin = loadPublicOrigin(env);
+  assertWatermarkFits(origin, env.N5_SHORT_CODE_LENGTH);
+  return origin;
+}
 export function loadWebConfig(env: Environment) {
   const limits = loadLimits(env);
-  const publicOrigin = loadPublicOrigin(env);
+  const publicOrigin = loadRenderOrigin(env);
   const connections = loadConnectionConfig(env);
   const sessionSecret = required(env, 'SESSION_SECRET', 'без секрета нельзя защитить хэши сессий и отозвать их ротацией');
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
@@ -79,7 +85,7 @@ export type WebConfig = ReturnType<typeof loadWebConfig>;
 export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environment) {
   const connections = loadConnectionConfig(env);
   return role === 'worker-video'
-    ? Object.freeze({ ...connections, publicOrigin: loadPublicOrigin(env), role })
+    ? Object.freeze({ ...connections, publicOrigin: loadRenderOrigin(env), role })
     : Object.freeze({ ...connections, limits: loadLimits(env), role });
 }
 

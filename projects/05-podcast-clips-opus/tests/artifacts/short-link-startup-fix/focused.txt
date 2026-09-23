@@ -1,0 +1,92 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/watermark-startup.test.ts tests/config.test.ts tests/preflight.test.ts tests/wiring.test.ts tests/render.test.ts tests/trust-guards.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/preflight.test.ts (10 tests) 4500ms
+ ✓ tests/config.test.ts (39 tests) 2597ms
+ ❯ tests/watermark-startup.test.ts (9 tests | 1 failed) 8956ms
+   ✓ SL-003 web actual startup rejects oversized origin with price before work (6) 54ms
+   ✓ SL-003 web actual startup rejects oversized origin with price before work (10) 78ms
+   ✓ SL-003 web startup guard rejects configuration in a separate process 47ms
+   ✓ SL-003 web uses configured length, widest alphabet glyph and default six 5ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (6)  377ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (10)  386ms
+   ✓ SL-003 worker-video startup guard rejects configuration in a separate process 43ms
+   ✓ SL-003 worker-video uses configured length, widest alphabet glyph and default six 3ms
+   × SL-003 web preflight accepts a short origin with ten-character codes 61ms
+     → node:internal/modules/cjs/loader:1386
+  throw err;
+  ^
+
+Error: Cannot find module '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/.next/preflight/preflight.js'
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v22.22.0
+: expected 1 to be +0 // Object.is equality
+ ✓ tests/wiring.test.ts (5 tests) 2849ms
+   ✓ Проверяемость проброса окружения > Полная конфигурация проходит, отсутствие потолка даёт находку  1301ms
+   ✓ Проверяемость проброса окружения > Соседнему воркеру не приписываются переменные web  412ms
+   ✓ Проверяемость проброса окружения > Новая обязательная переменная config.ts не теряется в environment.ts  1128ms
+ ✓ tests/trust-guards.test.ts (5 tests) 3389ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=0  1719ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=1  1649ms
+ ✓ tests/render.test.ts (19 tests) 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/watermark-startup.test.ts > SL-003 web preflight accepts a short origin with ten-character codes
+AssertionError: node:internal/modules/cjs/loader:1386
+  throw err;
+  ^
+
+Error: Cannot find module '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/.next/preflight/preflight.js'
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v22.22.0
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/watermark-startup.test.ts:54:40
+     52|   const result = subprocess(['apps/web/.next/preflight/preflight.js'],
+     53|     { ...environment(), N5_PUBLIC_ORIGIN: 'https://i.io', N5_SHORT_COD…
+     54|   expect(result.status, result.output).toBe(0);
+       |                                        ^
+     55| });
+     56| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 86 passed (87)
+   Start at  09:18:34
+   Duration  25.76s (transform 441ms, setup 0ms, collect 1.46s, tests 22.32s, environment 2ms, prepare 716ms)
+

@@ -1,0 +1,23 @@
+{
+  "baseline_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a",
+  "diff_sha256": "26be6c9c47e12f778fc9cf0efe99ec9163b431d6aa5ef0d42b6eaeab8a8a4f94",
+  "files": {
+    "apps/web/src/server/environment.ts": "0b70f1d87b5ee52048ee979edb21f21891a087982ca45934fb7360c78c853043",
+    "apps/worker/src/render/watermark.ts": "7e3ca04a091d8626c8c815c8ec539cdeda2584d8c0f0a64de084f8615a6c0e5d",
+    "apps/worker/workers/render.ts": "e3ae89787b6369ffd8454151829bf9b7bcd92ad86cbc999e29a935cc07938d9c",
+    "packages/db/src/clip-link.ts": "94f521e64acac4aacdbf2300dbed5701a2c39459ed74ea01482a17d569d7f52f",
+    "packages/shared/src/config.ts": "36464802a98d11b56ee716b17f4ed53a247ebd0f2a72e6bea83052ef6e28b130",
+    "packages/shared/src/clip-code.ts": "bd20e9047c3175cc6f6ff5da19bb8fb5655dfffdc87800844020ae1f39118e8c",
+    "packages/shared/src/watermark.ts": "c0fa50dfcee9fc21242bc3446789084aa20c5d9f318503fefa5ed9fce01821cd",
+    "packages/shared/src/watermark-metrics.json": "2fa9dc3a7ef8859f087daaf939696139e59fa31b88ef2ece85946747e47226e0",
+    "scripts/build-render-font.py": "c66cade79393e9411b0317d753dee67fc8c26e29fa45a858b5f5d6755300e81f",
+    "scripts/test-render-mutations.mjs": "a3593a4b3c09b71901e51eb0edea3f8848ee371d9ecd01cb4b41409caf0a2969",
+    "tests/fixtures/environment.ts": "1bf4916c93e0b2c146316022597b2e64b47e5b081ff161012df05ef415804d5e",
+    "tests/watermark-startup.test.ts": "406bbded73b993333fa11a532ab4cc608efd6b8ccc63ec06de33e08522ff5ba7",
+    "vitest.config.ts": "da40d5a362d47d748274b5691ca3e85df407fd07a160c71b5762234a0e3ef69d"
+  },
+  "removed": [
+    "apps/worker/assets/fonts/metrics.json"
+  ],
+  "note": "baseline.diff preserves pre-existing user changes; all source files in this change are bound separately"
+}

@@ -6,16 +6,19 @@ import { join } from 'node:path';
 import type { PoolClient, Pool } from 'pg';
 import { createClipLink, clipCodeLength } from '../packages/db/src/clip-link';
 import { createClipFileHandler } from '../apps/web/src/server/clip-file';
-it('И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed', async () => {
+it('И-2 generator defaults to six, flag retains ten, collisions retry and invalid flags fail closed', async () => {
   const query = vi.fn().mockResolvedValueOnce({ rowCount: 0 }).mockResolvedValue({ rowCount: 1 });
   try {
-    vi.stubEnv('N5_SHORT_CODE_LENGTH', '6');
+    vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
     await createClipLink({ query } as unknown as PoolClient, 'clip');
     expect(query).toHaveBeenCalledTimes(2);
     for (const call of query.mock.calls) expect(call[1][1]).toMatch(/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}$/);
-    vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
+    vi.stubEnv('N5_SHORT_CODE_LENGTH', '10');
     await createClipLink({ query } as unknown as PoolClient, 'clip');
     expect(query.mock.calls.at(-1)![1][1]).toHaveLength(10);
+    expect(clipCodeLength('6')).toBe(6);
+    expect(readFileSync('docker-compose.yml', 'utf8')).toContain('N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}');
+    expect(readFileSync('.env.example', 'utf8')).toContain('N5_SHORT_CODE_LENGTH=6');
     for (const value of ['', '4', '7', ' 6', 'six']) expect(() => clipCodeLength(value)).toThrow('N5_SHORT_CODE_LENGTH');
   } finally { vi.unstubAllEnvs(); }
 });

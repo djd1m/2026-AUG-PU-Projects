@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T091523Z-short-link-startup-fix",
+    "work_unit_id": "SL-003-005",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/short-link-startup-fix/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/short-link-startup-fix/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a",
+    "current_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a+manifest-sha256:8b8b009ef39e3a1f102934f3f4fbe7821497d37172b2a6c67f6c1010d8cc649f",
+    "build_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a+manifest-sha256:8b8b009ef39e3a1f102934f3f4fbe7821497d37172b2a6c67f6c1010d8cc649f",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/short-link/11_fix_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a+manifest-sha256:8b8b009ef39e3a1f102934f3f4fbe7821497d37172b2a6c67f6c1010d8cc649f",
+      "observed_revision": "2466e93500b65e3bb437bcb06fb640bd5415de6a+manifest-sha256:8b8b009ef39e3a1f102934f3f4fbe7821497d37172b2a6c67f6c1010d8cc649f",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "4eb25a23857a156359f397fd4c9cb91cbe0800cf74f3dd23434bf769ab38ed7a",
+    "scope": [
+      "SL-003 startup geometry validation in web and worker-video",
+      "SL-004 distinguish 972 runtime and 880 reference-test limits",
+      "SL-005 size versus margin report"
+    ],
+    "exclusions": [
+      "production origin, DNS and deployment",
+      "integration-owner acceptance and Anthropic review"
+    ],
+    "action_limits": [
+      "Local source edits and checks only; docs only 12_fix_report.md"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "SL-003",
+        "required": true
+      },
+      {
+        "id": "SL-004",
+        "required": true
+      },
+      {
+        "id": "SL-005",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/worker/src/render/watermark.ts"
+          }
+        },
+        "provenance": "2466e93500b65e3bb437bcb06fb640bd5415de6a with baseline.diff",
+        "useful_fragment": "existing geometry and measured font metrics",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "share identical formula with web startup; keep rendering unchanged"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable runs requested",
+      "scope_revision": "4eb25a23857a156359f397fd4c9cb91cbe0800cf74f3dd23434bf769ab38ed7a",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "4eb25a23857a156359f397fd4c9cb91cbe0800cf74f3dd23434bf769ab38ed7a",
+      "tier": "L",
+      "rationale": "Crosses web and worker-video; approved owner fix brief is plan",
+      "script": {
+        "command": "bash ../../scripts/complexity-router.sh packages/shared/src/config.ts apps/worker/src/render/watermark.ts apps/web/src/server/environment.ts",
+        "input": "Explicit paths for both services and shared config",
+        "exit_code": 1
+      },
+      "phase": "plan"
+    },
+    {
+      "scope_revision": "4eb25a23857a156359f397fd4c9cb91cbe0800cf74f3dd23434bf769ab38ed7a",
+      "tier": "L",
+      "rationale": "Crosses web and worker-video; approved owner fix brief is plan",
+      "script": {
+        "command": "bash ../../scripts/complexity-router.sh packages/shared/src/config.ts apps/worker/src/render/watermark.ts apps/web/src/server/environment.ts",
+        "input": "Explicit paths for both services and shared config",
+        "exit_code": 1
+      },
+      "phase": "implementation"
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requested implementation of the bounded owner brief; no new scope",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No deployed E2E; local subprocess/unit/media tests only. Docker socket denied; integration owner performs integration per brief",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "SL-003-005",
+      "paths": [
+        {
+          "root": "project",
+          "path": "packages/shared/src/watermark.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/watermark-startup.test.ts"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null,
+  "handoff": {
+    "report": "docs/features/short-link/12_fix_report.md",
+    "local_scope": "completed",
+    "owner_review": "pending",
+    "integration": "137 skipped; Docker socket denied"
+  }
+}
