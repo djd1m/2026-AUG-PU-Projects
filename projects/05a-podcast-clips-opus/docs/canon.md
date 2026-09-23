@@ -115,7 +115,7 @@
 | `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` | web, worker-ai, worker-render | без дефолта | Cloud.ru Evolution |
 | `S3_TENANT_ID` | web, worker-ai, worker-render | без дефолта (в test пусто разрешено) | префикс ключа Cloud.ru `tenant_id:key_id` |
 | `JWT_SECRET` | web | без дефолта, ≥ 32 байт | — |
-| `SMTP_URL`, `MAIL_FROM` | web | без дефолта | письма подтверждения |
+| `SMTP_URL`, `MAIL_FROM` | web | без дефолта | письма подтверждения; провайдер Resend (`smtps://resend:<key>@smtp.resend.com:465`), `MAIL_FROM` на домене `clipmkr.ru` (OWN-05A-011) |
 | `OPENROUTER_API_KEY` | worker-ai | без дефолта | только здесь |
 | `STT_PROVIDER` | worker-ai | без дефолта | раздел 5 |
 | `STT_MODEL` | worker-ai | без дефолта | выбирает проба дня 1 (ADR-001) |
