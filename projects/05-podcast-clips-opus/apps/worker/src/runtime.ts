@@ -27,6 +27,9 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
   const llmConfig = role === 'worker-llm' ? loadLlmConfig(env) : null;
   const llmDirectory = role === 'worker-llm' ? required(env, 'N5_WORK_DIR', 'негде учитывать попытки модели') : null;
   if (llmDirectory) await mkdir(llmDirectory, { recursive: true });
+  const spendDirectory = role === 'worker-stt' ? directory : llmDirectory;
+  const spendPath = spendDirectory ? join(spendDirectory, 'spend', 'model-spend.jsonl') : null;
+  if (spendDirectory) await mkdir(join(spendDirectory, 'spend'), { recursive: true });
   if (role === 'worker-video') checkRenderFont();
   if (directory) { await checkFfprobe(); await checkFfmpeg(); await mkdir(directory, { recursive: true }); }
   const pool = createPool(config.databaseUrl);
@@ -34,7 +37,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
   const transport = createQueues(config);
   const storage = s3Config ? { client: createS3Client(s3Config), bucket: s3Config.bucket } : null;
   let worker: Worker<AttemptJob>;
-  if (role === 'worker-stt' && directory && storage && transcriber && 'limits' in config) {
+  if (role === 'worker-stt' && directory && storage && transcriber && spendPath && 'limits' in config) {
     worker = new Worker<AttemptJob>('stt', async (job: Job<AttemptJob>, token?: string) => {
       const row = await pool.query<Attempt>('SELECT * FROM job_attempt WHERE video_id=$1 AND fence=$2 AND stage=$3',
         [job.data.video_id, job.data.fence, 'stt']);
@@ -44,7 +47,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
       try {
         outcome = await probeSource(attempt, { pool, limits: config.limits, directory, download: s3Download(storage),
           continueTranscription: (file, duration, current) => transcribeSource(file, duration, current,
-            { pool, limits: config.limits, transcriber, spendPath: join(directory, 'model-spend.jsonl'), enqueue: transport.enqueue }) });
+            { pool, limits: config.limits, transcriber, spendPath, enqueue: transport.enqueue }) });
       } catch (error) {
         console.error('Воркер: проверка оригинала не завершилась', error);
         const next = await retryProbe(pool, attempt);
@@ -62,7 +65,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
         throw new DelayedError();
       }
     }, { connection, concurrency: 2, maxStalledCount: 1 });
-  } else if (role === 'worker-llm' && llmConfig && llmDirectory && 'limits' in config) {
+  } else if (role === 'worker-llm' && llmConfig && spendPath && 'limits' in config) {
     const selector = llmConfig.mode === 'fake' ? createFakeSelector() : createSelector(llmConfig);
     worker = new Worker<AttemptJob>('select', async (job: Job<AttemptJob>) => {
       const row = await pool.query<Attempt>('SELECT * FROM job_attempt WHERE video_id=$1 AND fence=$2 AND stage=$3',
@@ -70,7 +73,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
       const attempt = row.rows[0];
       if (!attempt) throw new Error('Попытка отсутствует в БД');
       await selectFragments(attempt, { pool, limits: config.limits, selector, model: llmConfig.model,
-        spendPath: join(llmDirectory, 'model-spend.jsonl'), enqueue: transport.enqueue });
+        spendPath, enqueue: transport.enqueue });
     }, { connection, concurrency: 2, maxStalledCount: 1 });
   } else if (role === 'worker-video' && directory && storage && 'publicOrigin' in config) {
     worker = createRenderWorker(connection, { pool, directory, origin: config.publicOrigin,

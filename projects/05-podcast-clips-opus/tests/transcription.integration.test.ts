@@ -46,6 +46,37 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
       [f.video, f.attempt.fence])).rows[0].stt_calls).toEqual({ '0': 1 });
     expect(await used(f.account)).toBe(2); expect(await used('all', 'global_minutes')).toBe(2);
   });
+  it('RM-004 concurrent FIRST dispatch: authorized calls equal charged units with ample quota', async () => {
+    const f = await fixture(), blocker = await pool.connect();
+    const beforeUser = await used(f.account), beforeGlobal = await used('all', 'global_minutes');
+    let pending: Promise<(number | null)[]> | undefined;
+    let waiting = 0;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('SELECT id FROM video WHERE id=$1 FOR UPDATE', [f.video]);
+      pending = Promise.all([1, 2].map(() => authorizeSttCall(pool, f.attempt, limits, 0, 120)));
+      // Observe BOTH locking SELECTs waiting, rather than hope Promise.all overlaps.
+      const deadline = Date.now() + 3000;
+      do {
+        waiting = Number((await pool.query(`SELECT count(*) AS n FROM pg_stat_activity
+          WHERE application_name=$1 AND wait_event_type='Lock'
+            AND query LIKE '%FOR UPDATE OF v%'`, [schema])).rows[0].n);
+        if (waiting < 2) await new Promise(resolve => setTimeout(resolve, 10));
+      } while (waiting < 2 && Date.now() < deadline);
+    } finally {
+      await blocker.query('ROLLBACK'); blocker.release();
+    }
+    const calls = await pending!;
+    expect(waiting, 'both dispatches must reach the blocked SQL snapshot').toBe(2);
+    const authorized = calls.filter(n => n !== null).length;
+    expect(authorized).toBeGreaterThan(0);
+    // The fixture's probe prepaid ONE 120-second call. Every additional
+    // authorization must be reflected in BOTH counters; ceilings alone miss RM-001.
+    expect(await used(f.account) - beforeUser).toBe((authorized - 1) * 2);
+    expect(await used('all', 'global_minutes') - beforeGlobal).toBe((authorized - 1) * 2);
+    expect(await used(f.account)).toBe(authorized * 2);
+    expect(await used('all', 'global_minutes')).toBe(authorized * 2);
+  });
   it('first dispatch uses committed probe charge; explicit provider retry charges again', async () => {
     const f = await fixture();
     expect(await used(f.account)).toBe(2);

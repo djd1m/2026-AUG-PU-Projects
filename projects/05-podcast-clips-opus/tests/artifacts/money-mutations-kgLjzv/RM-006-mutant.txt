@@ -23,8 +23,8 @@ export async function selectFragments(attempt: Attempt, deps: Dependencies) {
   } catch (error) {
     const outcome = error instanceof FragmentSchemaError ? 'schema_violation' :
       error instanceof SelectionProviderError ? error.outcome : 'provider_error';
-    await spend(deps.spendPath, { ...event, phase: 'outcome', result: outcome });
     await failSelection(deps.pool, attempt, outcome === 'schema_violation' ? 'schema_violation' : 'stalled');
+    await spend(deps.spendPath, { ...event, phase: 'outcome', result: outcome });
     throw error;
   }
   if (!fragments.length) { await failSelection(deps.pool, attempt, 'no_fragments'); return; }

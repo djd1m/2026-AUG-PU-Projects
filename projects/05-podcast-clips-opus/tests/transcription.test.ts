@@ -145,12 +145,12 @@ describe('STT boundary and media', () => {
   });
   it('spend ledger records attempt before outcome, includes timeouts without secrets', async () => {
     const path = join(await temp(), 'model-spend.jsonl');
-    const event = { video_id: 'test', fence: 1, stage: 'stt' as const, chunk_index: 0, attempt: 1, unit: 'minutes' as const, quantity: 3 };
+    const event = { video_id: 'test', fence: 1, stage: 'stt' as const, chunk_index: 0, attempt: 1, unit: 'seconds' as const, quantity: 180 };
     await recordModelSpend(path, { ...event, phase: 'attempt', result: 'started' });
     await recordModelSpend(path, { ...event, phase: 'outcome', result: 'timeout' });
     const rows = (await readFile(path, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
     expect(rows.map(r => r.result)).toEqual(['started', 'timeout']);
-    expect(rows.filter(r => r.phase === 'attempt').reduce((n, r) => n + r.quantity, 0)).toBe(3);
+    expect(rows.filter(r => r.phase === 'attempt').reduce((n, r) => n + r.quantity, 0)).toBe(180);
   });
   it('real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling', async () => {
     const dir = await temp(), signal = AbortSignal.timeout(110_000), source = join(dir, 'source.wav');

@@ -8,6 +8,8 @@ import { loadLimits } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
 import { ProviderError } from '../apps/worker/src/stt/client';
 import { parseTranscript } from '../packages/shared/src/transcript';
+import { chunkBoundaries } from '../apps/worker/src/stt/chunker';
+import type { SpendEvent } from '../apps/worker/src/stt/spend';
 import { acceptTranscript, authorizeSttCall } from '@clipmaker/db';
 import { ProbeError } from '../apps/worker/src/media/probe';
 const state = vi.hoisted(() => ({ charged: false, calls: 0, trace: [] as string[], failure: '' }));
@@ -37,11 +39,26 @@ async function fixture() {
     chunks: async function* () { const path = join(directory, 'chunk'); await writeFile(path, 'fake');
       yield { path, offsetSeconds: 0, durationSeconds: 120, hardCut: false, index: 0 }; },
     enqueue: vi.fn(async () => { state.trace.push('enqueue'); }),
-    spend: vi.fn(async () => { state.trace.push('spend'); }),
+    spend: vi.fn(async (_path: string, _event: SpendEvent) => { state.trace.push('spend'); }),
     transcriber: { transcribe: vi.fn(async () => { state.trace.push('provider'); return valid; }) } };
   return deps;
 }
 describe('STT operation order with deterministic dependencies', () => {
+  it.each([[300, 302], [5400, 5460]])('RM-005 logs exact dispatched seconds for %i seconds of source', async (duration, expected) => {
+    const deps = await fixture();
+    deps.probeAudio.mockResolvedValue({ durationSec: duration, hasAudio: true });
+    deps.chunks = async function* () {
+      for (const chunk of chunkBoundaries(duration, [])) {
+        const path = join(deps.directory, `chunk-${chunk.index}`); await writeFile(path, 'fake');
+        yield { ...chunk, path };
+      }
+    };
+    await transcribeSource('source', duration, attempt, deps);
+    const attempts = deps.spend.mock.calls.map(([, event]) => event).filter(event => event.phase === 'attempt');
+    expect(attempts.every(event => event.unit === 'seconds')).toBe(true);
+    expect(attempts.reduce((sum, event) => sum + event.quantity, 0)).toBe(expected);
+    expect(attempts).toHaveLength(deps.transcriber.transcribe.mock.calls.length);
+  });
   async function tailFixture(excess: number) {
     const deps = await fixture();
     deps.probeAudio.mockResolvedValue({ durationSec: 237.55, hasAudio: true });

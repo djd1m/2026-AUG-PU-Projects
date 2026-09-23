@@ -5,6 +5,7 @@ import { loadLimits } from '../packages/shared/src/config';
 import { selectFragments } from '../apps/worker/src/workers/select';
 import { createFakeSelector, type FakeCase } from '../apps/worker/src/llm/fake';
 import { environment } from './fixtures/environment';
+import { failSelection } from '@clipmaker/db';
 const state = vi.hoisted(() => ({ trace: [] as string[], failure: '', refused: false }));
 vi.mock('@clipmaker/db', () => ({
   authorizeSelection: vi.fn(async () => { state.trace.push('quota'); return state.refused ? null : {
@@ -42,6 +43,13 @@ describe('SelectFragments order and attempt accounting', () => {
   it('empty selection is a named failure, never rendering with zero cards', async () => {
     const deps = fixture('empty'); await selectFragments(attempt, deps);
     expect(state.failure).toBe('no_fragments'); expect(state.trace).not.toContain('commit');
+  });
+  it('RM-006 records provider outcome before a database outage can interrupt failure handling', async () => {
+    const deps = fixture('5xx');
+    vi.mocked(failSelection).mockImplementationOnce(async () => { state.trace.push('db-down'); throw new Error('db down'); });
+    await expect(selectFragments(attempt, deps)).rejects.toThrow('db down');
+    expect(state.trace).toEqual(['quota', 'attempt', 'call', 'outcome', 'db-down']);
+    expect(deps.spend).toHaveBeenLastCalledWith(deps.spendPath, expect.objectContaining({ phase: 'outcome', result: 'provider_error' }));
   });
   it('spend ledger unavailable blocks network', async () => {
     const deps = fixture(); deps.spend.mockRejectedValue(new Error('disk full'));

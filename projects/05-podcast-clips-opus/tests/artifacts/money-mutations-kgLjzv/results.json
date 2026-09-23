@@ -1,0 +1,65 @@
+[
+  {
+    "id": "RM-003",
+    "source_sha256": "838735873295f500c0bbe0e9d47a6060754723fcf6f1ef4cf834498e611c2cd5",
+    "baseline": {
+      "exit": 0,
+      "verified": true
+    },
+    "red": {
+      "exit": 1,
+      "verified": true
+    },
+    "green": {
+      "exit": 0,
+      "verified": true
+    },
+    "passed": true,
+    "mutant_sha256": "e3cea36f56f461684762888f966ac44bd591f27d3b744b9963bcde70dba8ce0c"
+  },
+  {
+    "id": "RM-004",
+    "source_sha256": "1812c6a3091aa97f5013c32536e427a70e2ef6fa9be7e453f8d77929a7b2da5e",
+    "baseline": null,
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "DATABASE_URL absent: real PostgreSQL race and mutation NOT EXECUTED"
+  },
+  {
+    "id": "RM-005",
+    "source_sha256": "0a8e42b89555d2f6bcdf19a4e00318138710b234bf8e5e7ef3f282d7c873e3da",
+    "baseline": {
+      "exit": 0,
+      "verified": true
+    },
+    "red": {
+      "exit": 1,
+      "verified": true
+    },
+    "green": {
+      "exit": 0,
+      "verified": true
+    },
+    "passed": true,
+    "mutant_sha256": "5ed37f127bce9ee269647fd1ffeb1b65f524741d3e01b4e277cc50e0f6df71f2"
+  },
+  {
+    "id": "RM-006",
+    "source_sha256": "76f3b65db94119875aa94d5030f013488242948b9df1e2368208146b41f629dc",
+    "baseline": {
+      "exit": 0,
+      "verified": true
+    },
+    "red": {
+      "exit": 1,
+      "verified": true
+    },
+    "green": {
+      "exit": 0,
+      "verified": true
+    },
+    "passed": true,
+    "mutant_sha256": "d43a27f2dbeefece1e2baa6a7bb8152777e3a115511f8c904a71eba2352d5b00"
+  }
+]

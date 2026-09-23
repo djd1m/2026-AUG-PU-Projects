@@ -1,0 +1,21 @@
+[
+  {
+    "id": "RM-003",
+    "source_sha256": "838735873295f500c0bbe0e9d47a6060754723fcf6f1ef4cf834498e611c2cd5",
+    "test_sha256": "6d6028f9e9c483ff262cbc269f41e568c8423141f28f078f01979b5c8f32eac1",
+    "baseline": {
+      "exit": 0,
+      "verified": true
+    },
+    "red": {
+      "exit": 1,
+      "verified": true
+    },
+    "green": {
+      "exit": 0,
+      "verified": true
+    },
+    "passed": true,
+    "mutant_sha256": "e3cea36f56f461684762888f966ac44bd591f27d3b744b9963bcde70dba8ce0c"
+  }
+]

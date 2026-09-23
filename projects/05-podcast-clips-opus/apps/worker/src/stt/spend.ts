@@ -1,7 +1,7 @@
 import { open } from 'node:fs/promises';
 export interface SpendEvent {
   video_id: string; fence: number; stage: 'stt'; chunk_index: number; attempt: number;
-  unit: 'minutes'; quantity: number; result: 'started' | 'success' | 'timeout' | 'provider_error' | 'no_timestamps';
+  unit: 'seconds'; quantity: number; result: 'started' | 'success' | 'timeout' | 'provider_error' | 'no_timestamps';
   phase: 'attempt' | 'outcome';
 }
 // Count phase=attempt only. An outcome shares its (video,fence,chunk,attempt)

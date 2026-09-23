@@ -58,7 +58,7 @@ export async function transcribeSource(file: string, duration: number, attempt: 
           const call = await authorizeSttCall(deps.pool, attempt, deps.limits, chunk.index, chunk.durationSeconds, clock(), previousCall);
           if (call === null) return;
           const event: SpendEvent = { video_id: attempt.video_id, fence: attempt.fence, stage: 'stt', chunk_index: chunk.index,
-            attempt: call, unit: 'seconds', quantity: chunk.durationSeconds, result: 'started', phase: 'attempt' };
+            attempt: call, unit: 'minutes', quantity: Math.ceil(chunk.durationSeconds / 60), result: 'started', phase: 'attempt' };
           const spend = deps.spend ?? recordModelSpend;
           await spend(deps.spendPath, event);
           let result: TranscriptResult;
