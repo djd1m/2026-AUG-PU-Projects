@@ -132,7 +132,8 @@ postgres, redis, minio. Профиль `prod` — VPS в Нидерландах;
 Сумма `mem_limit` в prod — 6,75 ГБ при 8 ГБ VPS: OOM-killer хоста не доходит до `postgres` (VA-23). Исходник больше
 3840×2160 отвергается на подготовке (`file_invalid`), ffmpeg рендера декодирует с `-threads 2`.
 `migrate` после миграций БД идемпотентно применяет к бакету CORS (канон §8: `AllowedOrigins = BASE_URL`,
-`AllowedMethods = PUT, GET`, `ExposeHeaders = ETag`) и правила жизненного цикла (ADR-007); в тестовом профиле он же создаёт
+`AllowedMethods = PUT, GET`, `ExposeHeaders = ETag`, `AllowedHeaders = content-type` `[правка канона запрошена]`) и правила
+жизненного цикла, включая `AbortIncompleteMultipartUpload` через 1 день (ADR-007); в тестовом профиле он же создаёт
 бакет MinIO, если его нет. Отдельного контейнера `minio-init` нет: канон §1 перечисляет ровно 8 сервисов.
 
 Правила топологии (каждое проверяется скриптом, а не глазами):
@@ -165,7 +166,10 @@ postgres, redis, minio. Профиль `prod` — VPS в Нидерландах;
 | Команда — существующий скрипт | точка входа `docker-entrypoint.sh` с ролями `web`, `migrate`, `worker-ai`, `worker-render`; каждая роль → скрипт своего `package.json` (у донора compose звал несуществующий `video.js`) |
 | `.dockerignore` | `node_modules`, `.env*`, `tests`, `.reference`, `docs` |
 
-ffmpeg ставится в финальный образ один раз (`apk add ffmpeg font-noto`); шрифт для кириллицы и знака — из образа.
+ffmpeg ставится в финальный образ один раз (`apk add ffmpeg`). Шрифт — **один файл** с кириллицей в `/app/fonts/` (из
+репозитория, не из `apk`): `ass=…:fontsdir=/app/fonts`, `drawtext=fontfile=/app/fonts/<файл>`, и по его же метрикам
+считается ширина плашки знака; при старте `worker-render` рендерит пробный кадр со знаком и не стартует, если текста в
+плашке нет (ADR-010, VA2-10).
 
 ### Деплой на VPS в Нидерландах
 
@@ -218,8 +222,10 @@ erDiagram
 - `quota_counter` PK (`scope`, `scope_id`, `day`, `kind`); резерв —
   `INSERT … ON CONFLICT DO UPDATE SET used = used + :n WHERE quota_counter.used + :n <= :limit RETURNING used`;
   пустой `RETURNING` = отказ. Схема «прочитать, затем записать» запрещена;
-- `event` — дедупликация `download_clicked`/`share_clicked` частичным уникальным индексом по
-  (`name`, `account_id`, `clip_id`, дата Europe/Moscow).
+- `event` — дедупликация четырьмя частичными уникальными индексами из Pseudocode «Data Structures»:
+  `download_clicked`/`share_clicked` раз в сутки на (автор, клип); `clip_viewed`/`self_reported_published` раз на
+  (автор, клип); `fakedoor_clicked` раз в сутки на автора; `clip_link_visited` раз в сутки на (клип, сессия `sid`).
+  День — `(created_at AT TIME ZONE 'Europe/Moscow')::date`.
 
 Деньги — целые копейки (`_kop`), стоимость OpenRouter — целые микродоллары (`_usd_micro`), медиа — миллисекунды
 (`_ms`), квоты STT — секунды (`_sec`); плавающей точки в схеме нет (канон §11).
@@ -237,7 +243,7 @@ sequenceDiagram
   participant AI as worker-ai
   participant OR as OpenRouter
   participant R as worker-render
-  B->>W: POST /api/videos {size, name}
+  B->>W: POST /api/videos {size_bytes, ext, rights_confirmed}
   W->>W: сессия, email подтверждён, лимит частоты, размер ≤ 2 ГБ, ≤ 3 загрузок в сутки
   W->>S3: CreateMultipartUpload
   W-->>B: video_id + подписанные ссылки на части (TTL 15 мин)
@@ -248,8 +254,8 @@ sequenceDiagram
   W->>Q: add stt {job_id}.stt.prepare
   W-->>B: 202 {job_id}
   AI->>S3: скачать исходник один раз; перепроверка magic bytes; ffprobe (≤ 120 мин, ≤ 3840×2160, длительность совпадает с заявленной)
-  AI->>PG: допуск: остаток LLM автора и сервиса ≥ LIMIT_LLM_KOP_JOB (OWN-05A-012), иначе failed/quota_* до STT
-  AI->>PG: резерв quota_counter STT на секунды всего видео (атомарно), иначе failed/quota_*
+  AI->>PG: допуск: оценка LLM по длительности ≤ LIMIT_LLM_KOP_JOB и ≤ остатков автора и сервиса (OWN-05A-012), иначе failed/quota_* до STT
+  AI->>PG: резерв STT (атомарно): автору ceil(Σ unique_ms/1000), сервису Σ ceil(chunk.duration_ms/1000); иначе failed/quota_*
   loop кусок 60–120 с, пропуская done
     AI->>PG: spend_ledger попытка; повтор куска резервирует его секунды дополнительно
     AI->>OR: transcriptions (verbose_json, диаризация)
@@ -387,39 +393,24 @@ fake-door (2-я очередь, OWN-05A-014) пишет только событ�
 
 ## Reconciliation with Pseudocode
 
-`Pseudocode.md` пишется параллельно другой единицей и на момент написания этого файла недоступен. Поэтому
-сверка по шагу 5.9 **не выполнена**: это не «расхождений нет». Ниже — чек-лист того, что `Pseudocode.md` обязан
-содержать, чтобы совпасть с этой архитектурой. Сверку по нему делает координатор на валидации.
+Сверка по шагу 5.9 выполнена 2026-09-23 по `Pseudocode.md` (45 алгоритмов, раздел «Data Structures»). Метод:
+каждое поле структур и каждая ссылка `таблица.поле`, `SET` и `INSERT` в «Core Algorithms» сверены с каноном §4
+скриптом (ссылки на поля, которых нет в каноне: 0; найденные совпадения по имени вроде `account.set_plan` — это имена
+действий `audit_log`, не колонки), наборы значений — с каноном §5.
 
-| Сущность.поле / алгоритм | Что обязан реализовать Pseudocode | Вид расхождения, если нет |
+| Сущность.поле | Вид расхождения | Что сделано |
 |---|---|---|
-| `job.status` | ровно `running`, `succeeded`, `failed` | несовпадение набора значений |
-| `job.step`, `job.fail_reason` | наборы канона §5 (3 шага, 9 причин) | несовпадение набора значений |
-| `job.heartbeat_at`, `job.attempt_count` | запись heartbeat раз в 30 с; перестановка после 300 с; `worker_lost` после 3 | отсутствующая колонка |
-| `job.idempotency_key` | создание задачи с `ON CONFLICT` по (`account_id`, `idempotency_key`) | отсутствующая колонка |
-| `transcript_chunk.status`, `.speaker_map`, `.speaker_map_confident` | пропуск `done` при повторе; сшивка спикеров с флагом уверенности | отсутствующая колонка / смена типа (флаг — boolean) |
-| `clip.start_unit`, `.end_unit`, `.start_ms`, `.end_ms` | модель отдаёт индексы, код считает мс | смена типа |
-| `clip.hook_score`, `.completeness_score`, `.length_score`, `.total_score` | целые; длину и итог считает код | смена типа |
-| `clip.render_status`, `.watermarked`, `.speaker_labels_shown` | 4 состояния рендера; знак по `plan !== 'paid'` | несовпадение набора значений |
-| `quota_counter.used` | атомарный условный резерв, без «прочитать, затем записать» | — (алгоритм) |
-| допуск задачи | до резерва STT проверить остаток LLM автора и сервиса ≥ `LIMIT_LLM_KOP_JOB` (OWN-05A-012) | отсутствующий алгоритм |
-| `spend_ledger.units_reserved`, `.units_actual`, `.cost_kop`, `.cost_usd_micro`, `.outcome` | резерв до вызова, факт после; таймаут не возвращает резерв | отсутствующая колонка |
-| `account.email_verified_at`, `account.plan`, `account.role` | `403` без подтверждения; `plan` и `role` fail-closed (2 значения каждый) | смена типа / несовпадение набора значений |
-| `publication.status`, `.url_normalized` | 4 статуса; уникальность нормализованной ссылки | несовпадение набора значений |
-| `attribution.stage`, `.source`, `.self_referral` | код сильнее cookie; неизвестный код — отказ | несовпадение набора значений |
-| Алгоритмы | загрузка и `complete`; нарезка аудио; STT куска; склейка и монотонность; сшивка спикеров; выбор фрагментов; оценка и сверка цитат; рендер; резерв потолка; paste-back; атрибуция; уборка исходников | отсутствующий алгоритм |
+| `spend_ledger.cost_estimated` | отсутствующая колонка: в каноне §4 и ADR-006 есть, в `SpendLedger` Pseudocode нет; признак оценки там — `cost_usd_micro IS NULL` | Architecture следует канону; правка Pseudocode (единица pseudocode) — писать `cost_estimated` явно (VT2-03, VA2-06) |
+| цена секунды STT | несовпадение источника: ADR-006 — `pricing.prompt` из `GET /api/v1/models` при старте; Pseudocode — константа `STT_PRICES` из пробы | канон источник не называет — запрошено закрепить в каноне (рекомендация ADR-варианта: нет цены — старт падает, а не выдуманное число) |
+| допуск LLM | было: «остаток ≥ `LIMIT_LLM_KOP_JOB`» | приведено к Specification FR-clips-10 и Pseudocode «Допуск STT», шаг 2a (VT2-01) |
+| резерв STT | было: «секунды всего видео» | приведено к Pseudocode «Допуск STT», шаг 1: автору по длительности записи, сервису по секундам провайдера (VT2-07) |
 
-## Открытые расхождения (не решены этим документом)
+Остальное совпало. Сверены сущности: `Account`, `EmailToken`, `RefreshToken`, `Video`, `Job`, `TranscriptChunk`,
+`Unit`, `Clip`, `QuotaCounter`, `SpendLedger`, `Event`, `Publication`, `Partner`, `Attribution`, `AuditLog`; наборы
+`job.status` (3), `job.step` (3), `job.fail_reason` (9), `clip.render_status` (4), `quota_counter.kind` (4),
+`publication.status` (4), `attribution.stage`/`.source` (2/2). Алгоритмы: допуск STT, транскрипция куска, разбор ответа
+STT, склейка, сшивка спикеров, выбор фрагментов, валидация, оценка, сохранение клипов, раскладка кадра и знака, ASS,
+рендер, heartbeat и уборщик аренды, начало и завершение загрузки, резерв потолков, проверка сессии, paste-back,
+атрибуция, уборщик хранилища.
 
-Канон обновлён координатором 2026-09-23 (`/admin/*`, `account.role`, `caption_copied`); оставшиеся строки ниже
-внесены в канон §12, Specification правит её автор. Эта архитектура следует канону и ADR.
-`jobId` `{job_id}.stt.prepare` (разделитель — точка, VT-01) и переменные compose `REDIS_PASSWORD`, `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`
-внесены в канон (§3, §6) координатором.
-
-| Specification | Канон / ADR | Здесь принято |
-|---|---|---|
-| таблица `usage_attempt` (FR-clips-10) | `spend_ledger` (канон §4) | `spend_ledger` |
-| события `direct_visit`, `email_confirmed` (FR-clips-12) | `landing_visited` с `source=direct`, `email_verified` (канон §9, 17 событий, `caption_copied` принят) | имена канона |
-| перекрытие кусков 2 с; подписи спикеров на шве «как есть» (FR-clips-4 п. 3, 8) | перекрытие 5 с, при неуверенной сшивке подписи не печатаются (ADR-002) | ADR-002 |
-| ответ без `speaker` → `failed/stt_failed` (AC-clips-24) | субтитры без подписи (ADR-001) | ADR-001 |
-| `job_id = video_id`, выдаётся до загрузки (Spec §9) | отдельный `job_id` на `…/complete` (канон §4, §7; FR-clips-3) | канон |
+Прежний раздел «Открытые расхождения» закрыт: Specification приведена к канону (канон §12).

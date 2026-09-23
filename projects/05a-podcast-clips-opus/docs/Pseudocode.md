@@ -28,7 +28,8 @@
 | `SPEAKER_MATCH_SHARE` | 0,60 | ADR-002 п. 3 |
 | `STT_HTTP_TIMEOUT_MS` | 90 000 `[ПРЕДЛОЖЕНИЕ]` (апстрим обрывает ~60 с) | ADR-001 |
 | `LLM_HTTP_TIMEOUT_MS` | 120 000 `[ПРЕДЛОЖЕНИЕ]` | — |
-| `LLM_MAX_OUTPUT_TOKENS` | 3 000 `[ПРЕДЛОЖЕНИЕ]` (10 фрагментов × ~250 токенов) | ADR-005 |
+| `LLM_MAX_OUTPUT_TOKENS` | 3 000 `[ПРЕДЛОЖЕНИЕ; выход 10 фрагментов замеряется на пробе дня 1 по `usage.completion_tokens`]` | ADR-005, VA2-04 |
+| `LLM_FIELD_MAX_CHARS` | `title` 50 · `hook_quote` 80 · `completeness_quote` 80 · `hook_reason` 90 · `completeness_reason` 90 | VA2-04: 390 символов текста на фрагмент ≈ 195 токенов по пессимистичным 2 симв./токен + ~60 токенов структуры JSON = ~255; 10 фрагментов ≈ 2 550 + 30 = 2 580 ≤ 3 000 (запас ~14 %) |
 | `LLM_CHARS_PER_TOKEN_DIVISOR` | 3, плюс 500 токенов служебных `[ПРЕДЛОЖЕНИЕ; калибруется по `usage.prompt_tokens` первых 3 выпусков]` | ADR-005 «Последствия» |
 | `LLM_EST_CHARS_PER_SEC` | 22 `[ПРЕДЛОЖЕНИЕ; верхняя оценка русской речи со служебной разметкой единиц, калибруется по первым 3 выпускам]` | OWN-05A-012 |
 | `WM_OPACITY` / `WM_INSET` | 0,55 / 24 px; не ближе x = 70, y = 200 | FR-GROWTH-003 п. 4–5, OWN-05A-013 |
@@ -45,7 +46,7 @@
 | `ARGON2_MAX_CONCURRENT` | 4 на процесс `web` `[ПРЕДЛОЖЕНИЕ]` | VT-07 |
 | `REFRESH_GRACE_SEC` | 60 | VA-13 |
 | `EXTRACT_TIMEOUT_MS` / `DURATION_MISMATCH_MAX` / `MAX_SOURCE_KBPS` | 900 000 / 0,02 / 60 000 `[ПРЕДЛОЖЕНИЕ]` | VA-04 |
-| `STT_PRICES` | `{<STT_MODEL>: kop_per_sec}` — заполняется результатом пробы дня 1 | VA-15 |
+| `STT_PRICE_PUSD_PER_SEC` | цена `STT_MODEL` в пико-долларах за секунду аудио, целое: `round(pricing.prompt × 10¹²)` из `GET https://openrouter.ai/api/v1/models` при старте `worker-ai` (ADR-006); модели нет в ответе или цена не число → процесс не стартует | VA2-06, VT2-03, VT2-04 |
 | `DISPOSABLE_DOMAINS` | закрытый список доменов одноразовых ящиков в `@clipmkr/types` | VA-02 |
 | `PLATFORM_KEEP_QUERY` | `{'youtube.com': ['v'], 'vk.com': ['z'], 'vkvideo.ru': ['z']}`, прочие хосты — `[]` | VT-06 |
 | `RL_API_WRITE` | 60 / аккаунт / 1 мин `[ПРЕДЛОЖЕНИЕ]` | NFR-clips-2 п. 1 |
@@ -105,12 +106,14 @@ AuditLog       { id: UUID, actor: Text, action: Text, target: Text, reason: Text
 
 | Индекс | Ключ | Условие |
 |---|---|---|
-| `event_once_per_day_clip` | (`name`, `account_id`, `clip_id`, msk_day) | `name IN ('download_clicked','share_clicked')` |
+| `event_once_per_day_clip` | (`name`, `account_id`, `clip_id`, msk_day) | `name IN ('download_clicked','share_clicked','caption_copied')` |
 | `event_once_per_clip` | (`name`, `account_id`, `clip_id`) | `name IN ('clip_viewed','self_reported_published')` |
 | `event_once_per_day_account` | (`name`, `account_id`, msk_day) | `name = 'fakedoor_clicked'` |
 | `event_once_per_day_session` | (`name`, `clip_id`, `session_id`, msk_day) | `name = 'clip_link_visited'` |
 
 `msk_day(t) = (t AT TIME ZONE 'Europe/Moscow')::date`.
+
+Отметка допуска STT — одна на задачу при любом `day` (VA2-15): частичный уникальный индекс `quota_counter_stt_admission ON quota_counter(scope_id) WHERE scope='job' AND kind='stt_sec'`; конфликт вставки в «Допуске STT», шаг 2.1, ловится по нему.
 
 ## Core Algorithms
 
@@ -137,12 +140,13 @@ STEPS:
       - `JWT_SECRET`: длина в байтах UTF-8 ≥ 32.
       - `WATERMARK_TEXT`: после `trim` 1…32 символа, без `\n`.
       - `LLM_MODEL`: ключ `MODEL_PRICES` (иначе резерв LLM посчитать нечем → ошибка «модель без цены»).
-      - `STT_MODEL`: ключ `STT_PRICES` (иначе рублёвая оценка STT без `usage.cost` невозможна → ошибка «модель без цены», VA-15).
+      - `STT_MODEL`: при старте `worker-ai` цена читается из API моделей OpenRouter (константа `STT_PRICE_PUSD_PER_SEC`); модели нет в ответе → ошибка «модель без цены» (VA-15, ADR-006). При `STT_PROVIDER=openai` цена — константа кода для `gpt-4o-transcribe-diarize`.
       - `REDIS_URL`, `DATABASE_URL`, `SMTP_URL`, `S3_ENDPOINT`: `new URL(raw)` проходит.
 4. Условные переменные: IF `STT_PROVIDER == 'openai'` THEN `OPENAI_API_KEY` обязателен. IF `PAYMENTS_MODE == 'live'` THEN `PAYMENTS_PROVIDER`, `PAYMENTS_SHOP_ID`, `PAYMENTS_SECRET_KEY` обязательны.
 5. Согласованность потолков (model-call-cost: персональный не выше суточного), только если оба заданы:
    `LIMIT_STT_USER_SEC_DAY ≤ LIMIT_STT_GLOBAL_SEC_DAY`; `LIMIT_LLM_USER_KOP_DAY ≤ LIMIT_LLM_GLOBAL_KOP_DAY`;
    `LIMIT_LLM_KOP_JOB ≤ LIMIT_LLM_USER_KOP_DAY`. Нарушение → ошибка «предел не сработает никогда».
+5a. Только `worker-ai` (VA2-05): `llm_reserve_kop(7200 × LLM_EST_CHARS_PER_SEC) × LIMIT_LLM_ATTEMPTS_JOB ≤ LIMIT_LLM_KOP_JOB`; иначе ошибка «для 120-минутной записи потолок задачи не вмещает повтор LLM (AC-clips-8)». При 2 400 коп. и 2 попытках: ≈ 1 170 × 2 = 2 340 — проходит.
 6. IF `env.NODE_TLS_REJECT_UNAUTHORIZED === '0'` THEN ошибка «проверка TLS отключена» (NFR-clips-2 п. 6).
 7. Секреты моделей вне `worker-ai`: IF `service ≠ worker-ai` AND (`OPENROUTER_API_KEY` или `OPENAI_API_KEY` заданы) THEN ошибка «ключ модели у сервиса, которому он не положен» (ADR-004).
 8. IF `errors` не пуст THEN печатать в stderr по строке на ошибку: `<ИМЯ>: <что не так> — <последствие>` (например `LIMIT_STT_USER_SEC_DAY: пусто — вызов STT остался бы без предела на пользователя`); `exit(1)`.
@@ -220,7 +224,7 @@ STEPS:
    5. `INSERT event(name='signup', account_id)`.
 6. После COMMIT письмо отправляется ПОСЛЕ ответа клиенту (`setImmediate`), в обеих ветках шага 5 время ответа одинаково — существование адреса по времени не узнать (VA-25). Отправка через SMTP со ссылкой `{BASE_URL}/api/auth/verify?token={token}`. Ошибка SMTP → журнал `email_send_failed` с `account_id`; ответ клиенту тот же (повторная отправка — алгоритм «Повторная отправка письма»).
 7. RETURN `201 {status:'check_email'}`.
-8. `canonical_email(e)`: `e ← lower(trim(e))`; `(local, domain) ← split('@')`; IF `domain ∈ {gmail.com, googlemail.com}` THEN `domain ← 'gmail.com'`, `local ← local.split('+')[0].replace(/\./g,'')`; ELSE IF `domain ∈ {yandex.ru, ya.ru, yandex.com, yandex.by, yandex.kz, mail.ru, bk.ru, inbox.ru, list.ru}` THEN `local ← local.split('+')[0]`. Каноническая форма хранится в `account.email` и сравнивается во входе: `x+1@gmail.com` и `x.@gmail.com` — один аккаунт (VA-02). Письмо уходит на каноническую форму — она доставляется в тот же ящик.
+8. `canonical_email(e)`: `e ← lower(trim(e))`; `(local, domain) ← split('@')`; IF `domain ∈ {gmail.com, googlemail.com}` THEN `domain ← 'gmail.com'`, `local ← local.split('+')[0].replace(/\./g,'')`; ELSE IF `domain ∈ {yandex.ru, ya.ru, yandex.com, yandex.by, yandex.kz}` THEN `domain ← 'yandex.ru'`, `local ← local.split('+')[0].replace(/\./g,'-')` (у Яндекса `.` и `-` в имени — один ящик, VA2-19); ELSE IF `domain ∈ {mail.ru, bk.ru, inbox.ru, list.ru, outlook.com, hotmail.com, live.com, icloud.com, me.com}` THEN `local ← local.split('+')[0]`. У прочих доменов `+` может быть буквой адреса — не трогается. Каноническая форма хранится в `account.email` и сравнивается во входе: `x+1@gmail.com` и `x.@gmail.com` — один аккаунт (VA-02). Письмо уходит на каноническую форму — она доставляется в тот же ящик.
 COMPLEXITY: O(1); время доминирует argon2 (~50 мс) вне транзакции.
 
 ### Algorithm: Подтверждение почты
@@ -261,9 +265,9 @@ COMPLEXITY: O(1).
 REQUIREMENT: `FR-clips-1`
 REQUIREMENT: `NFR-clips-2`
 REQUIREMENT: `AC-clips-25`
-REALISES: SC-VS-001-4
+REALISES: SC-VS-001-4, SC-VS-001-7
 INPUT: `POST /api/auth/login {email, password}` | `POST /api/auth/refresh` (cookie) | `POST /api/auth/logout`
-OUTPUT: `200 {access_token}` + cookie `refresh` | `401` | `429`
+OUTPUT: `200 {}` + cookie `access`, `refresh` | `401` | `429` | `503`
 STEPS:
 1. **login.** `email ← canonical_email(email)`. До проверки пароля, атомарно (`INCR` из «Лимит частоты», шаг 2, без отдельного чтения): `rate_limit('login_ip', ip, 50, 900)` и `rate_limit('login_email', email, 10, 900)`; любой DENY → 429. Каждая попытка считается ДО argon2, поэтому 100 параллельных запросов дают не больше 10 проверок пароля на email (VT-07).
 2. Семафор `ARGON2_MAX_CONCURRENT` на процесс: занят → 503 `busy` (память argon2 19 МиБ × N не растёт без предела).
@@ -273,6 +277,7 @@ STEPS:
 6. `access ← JWT HS256 {sub: account_id, exp: now+15 мин}` на `JWT_SECRET`. `refresh ← base64url(random(32))`; `INSERT refresh_token(account_id, token_hash=sha256(refresh), expires_at=now()+30 дней [ПРЕДЛОЖЕНИЕ])`.
 7. Две cookie (канон §7, заголовка `Authorization` нет): `access` — `HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=900`; `refresh` — `HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=2592000`. RETURN `200 {}`.
 8. **refresh.** `g ← Redis GET rt_grace:{sha256(c)}`; IF есть THEN RETURN ту же новую пару из `g` (вторая вкладка в окне `REFRESH_GRACE_SEC` не считается кражей, VA-13). Транзакция: `UPDATE refresh_token SET revoked_at = now() WHERE token_hash = sha256($c) AND revoked_at IS NULL AND expires_at > now() RETURNING account_id`. Нет строки → IF `Redis EXISTS rt_rotated:{sha256(c)}` (токен ротирован, окно льготы прошло) THEN отозвать все refresh аккаунта (повторное использование = кража); RETURN 401. Иначе новая пара как в шагах 6–7; `SET rt_grace:{hash} <новая пара> EX 60`; `SET rt_rotated:{hash} 1 EX 2592000`. Выход (`logout`) `rt_rotated` не ставит — устаревшая вкладка после выхода получает 401 без отзыва остальных сессий.
+8a. **Кто зовёт refresh (VT2-05).** (а) Middleware страниц: нет валидной `access`, но есть `refresh` → на сервере выполнить шаг 8, выставить новые cookie в ответ и продолжить рендер той же страницы; неудача → редирект на вход. (б) Клиентская обёртка `fetch`: ответ 401 → ОДИН вызов `POST /api/auth/refresh`, затем повтор исходного запроса; второй 401 → экран входа. Параллельные обновления покрывает окно `REFRESH_GRACE_SEC`. Тест: запрос через 16 мин после входа проходит без повторного входа.
 9. **logout.** `UPDATE refresh_token SET revoked_at = now() WHERE token_hash = sha256($c)`; стереть обе cookie; RETURN 200.
 10. Названный риск (VA-12 б): знающий email оператора держит его вне системы 15 мин десятью неверными паролями. Восстановление — ожидание окна; ключ `login_ip` ограничивает одного атакующего. Отдельного обхода для роли `operator` на неделе нет.
 COMPLEXITY: O(1).
@@ -353,8 +358,8 @@ STEPS:
 3. `key ← header Idempotency-Key`; IF отсутствует OR не `/^[A-Za-z0-9_-]{8,128}$/` THEN RETURN 422.
 4. Идемпотентный ответ ПЕРВЫМ (без сети): `j ← SELECT id FROM job WHERE account_id=$a AND idempotency_key=$key`; IF есть THEN RETURN `202 {job_id: j.id}`. `j2 ← SELECT id FROM job WHERE video_id=$v`; IF есть THEN RETURN `202 {job_id: j2.id}` (тот же файл не создаёт вторую задачу, FR-clips-3 п. 7).
 5. Вне транзакции, S3:
-   0. `lp ← S3.ListParts(key, upload_id)`; IF любая часть кроме последней ≠ `PART_SIZE_BYTES` OR `Σ size ≠ video.size_bytes` THEN `AbortMultipartUpload`; `source_deleted_at=now()`; RETURN `422 {error:'file_invalid'}` (VA-16).
-   1. `S3.CompleteMultipartUpload(key, upload_id, parts)`; ошибка `NoSuchUpload` → IF `HeadObject(key)` успешен THEN продолжить (загрузка уже собрана повтором) ELSE RETURN 409 «загрузка не найдена, начните заново».
+   0. `lp ← S3.ListParts(key, upload_id)`; `NoSuchUpload` → IF `h ← HeadObject(key)` есть AND `h.ContentLength = video.size_bytes` THEN перейти к шагу 5.2 (загрузку собрал предыдущий, оборванный вызов, VA2-07) ELSE RETURN 409 «загрузка не найдена, начните заново». IF любая часть кроме последней ≠ `PART_SIZE_BYTES` OR `Σ size ≠ video.size_bytes` THEN `AbortMultipartUpload`; `source_deleted_at=now()`; RETURN `422 {error:'file_invalid'}` (VA-16).
+   1. `S3.CompleteMultipartUpload(key, upload_id, parts = lp)` — номера и ETag частей берутся из `ListParts`, а не из тела клиента (тело `parts` только сверяется: расхождение → журнал, не отказ); ошибка `NoSuchUpload` → как в шаге 0. Тест: обработчик убит после `CompleteMultipartUpload`, повтор `complete` → `202`, одна задача.
    2. `h ← HeadObject(key)`. IF `h.ContentLength > MAX_SOURCE_BYTES` OR `h.ContentLength ≠ video.size_bytes` THEN `DeleteObject(key)`; `UPDATE video SET source_deleted_at=now()`; RETURN `422 {error:'file_invalid'}`.
    3. `head16 ← GetObject(key, Range: bytes=0-15)`. `is_mp4 ← head16[4..8] == 'ftyp'`; `is_ebml ← head16[0..4] == 1A 45 DF A3`. IF NOT (is_mp4 OR is_ebml) THEN `DeleteObject`; `source_deleted_at=now()`; RETURN `422 {error:'file_invalid'}` — задача не создаётся, платных вызовов нет (AC-clips-2). `container ← is_mp4 ? 'mp4' : 'webm'`.
 6. Транзакция:
@@ -385,7 +390,7 @@ STEPS:
       - IF хоть одна в `waiting` | `delayed` THEN `UPDATE job SET heartbeat_at=now() WHERE id AND heartbeat_at=$old`; CONTINUE — ожидание в очереди не потеря воркера.
       - Транзакция: `UPDATE job SET attempt_count = attempt_count + 1, heartbeat_at = now() WHERE id=$j AND status='running' AND heartbeat_at=$old RETURNING attempt_count` (условие по старому значению — второй уборщик не посчитает попытку дважды).
       - IF `attempt_count ≥ MAX_JOB_ATTEMPTS` THEN `finish_failed(tx, j, 'worker_lost')`; CONTINUE.
-      - После COMMIT: для каждого `id` из `expected` в состоянии `completed` | `failed` → `Job.remove(id)`; затем `add` с тем же `jobId`. Работа в состоянии `active` при устаревшем heartbeat удаляется `Job.remove(id)` с игнорированием ошибки блокировки и ставится заново: её исполнитель на следующем heartbeat увидит 0 строк (задача переставлена) и прекратит работу.
+      - После COMMIT, по состоянию каждого `id` из `expected` (VT2-06): `unknown` (работы в Redis нет — например, сбой Redis при «Завершении загрузки», шаг 7) → `add`; `completed` | `failed` → `Job.remove(id)`, затем `add` с тем же `jobId`; `active` → не трогать в этом проходе: её исполнитель на следующем heartbeat увидит изменившийся `attempt_count` (шаг 6) и прекратит работу, BullMQ переведёт работу в `failed` (stalled), и следующий проход поставит её заново (`remove` активной работы бросает исключение, а `add` с занятым `jobId` BullMQ молча игнорирует). Тест: удалить работу из Redis → первый же проход ставит её.
 4. `expected_bullmq_ids(j)`: `transcribing` без строк `transcript_chunk` → `[{j}.stt.prepare]`; `transcribing` с кусками → `{j}.stt.{idx}` двух наименьших `pending`; `selecting` → `[{j}.llm]`; `rendering` → `{clip_id}.render` всех клипов не в `ready`.
 5. `finish_failed(tx, j, reason)`: `UPDATE job SET status='failed', fail_reason=$reason, finished_at=now() WHERE id=$j AND status='running' RETURNING id`; IF обновилось THEN `INSERT event(name='job_failed', account_id, props={job_id, reason, step})`; `release_stt_admission(tx, j)` («Допуск STT», шаг 5 — неиспользованный резерв возвращается, VT-09); журнал JSON `{job_id, step, reason}`.
 6. Heartbeat обновляет и `job.heartbeat_at`, и — через `attempt_count` задачи, прочитанный при старте работы, — проверяет, что задача не переставлена: `UPDATE … WHERE id=$j AND status='running' AND attempt_count=$seen`; 0 строк → `abort`.
@@ -407,9 +412,11 @@ STEPS:
 4. Повторная проверка magic bytes по первым 16 байтам локального файла (канон §3, §12: `web` проверил до создания задачи, подготовка перепроверяет); не совпало → `finish_failed('file_invalid')`, `DeleteObject`; RETURN.
    `fmt ← container == 'mp4' ? 'mov' : 'matroska'` (демультиплексор по magic bytes, а не по угадыванию). `probe ← execFile('ffprobe', ['-v','error','-f',fmt,'-protocol_whitelist','file','-print_format','json','-show_format','-show_streams', path], timeout 30 с)`.
    IF ошибка разбора OR нет потока `codec_type='video'` OR нет потока `codec_type='audio'` OR нет `format.duration` THEN `finish_failed('file_invalid')`; RETURN.
+   `(dw, dh) ← display_dims(probe)` (функция ниже). IF `max(dw, dh) > 3840` OR `min(dw, dh) > 2160` THEN `finish_failed('file_invalid')` — больше 4K (VA2-08; 2160×3840 принимается, 4096×2304 отвергается). IF `watermark_fits(dw, dh) = false` («Раскладка кадра и знака», шаг 3) THEN `finish_failed('file_invalid')` с причиной «кадр слишком мал для знака» — ДО допуска STT и оплаты (VA2-09); повтор недоступен.
+   `display_dims(probe)` (VA2-03): `v ← видеопоток`; `(w, h) ← (v.width, v.height)`; `sar ← v.sample_aspect_ratio` (`N:D`, отсутствие или `0:1` = `1:1`); IF `sar ≠ 1:1` THEN `w ← even(round(w × N / D))`; `rot ← rotation` из `v.side_data_list` (`Display Matrix`), иначе `v.tags.rotate`, иначе 0, по модулю 360; IF `rot ∈ {90, 270}` THEN поменять `w` и `h`. RETURN `(w, h)`. ffmpeg по умолчанию применяет поворот при декодировании (`autorotate`), поэтому раскладка обязана считать в тех же, повёрнутых, размерах. Фикстура: MOV 1920×1080 с `rotate=90` → выход без боковых полей, кадр 1080×1920, знак в (70, 200).
 5. `header_ms ← round(format.duration × 1000)`. IF `header_ms > MAX_DURATION_MS` THEN `finish_failed('duration_exceeded')`; RETURN — резерв STT не делается (AC-clips-2 SC-US-002-2). IF `size_bytes × 8 / (header_ms / 1000) / 1000 > MAX_SOURCE_KBPS` THEN `finish_failed('file_invalid')` (объём не соответствует заявленной длительности, VA-04).
 6. `execFile('ffmpeg', ['-f',fmt,'-protocol_whitelist','file','-i', src, '-vn', '-t', MAX_DURATION_MS/1000 + 1, '-ac','1', '-ar','16000', '-c:a','libmp3lame', '-b:a','64k', audio], {timeout: EXTRACT_TIMEOUT_MS, killSignal:'SIGKILL'})` — извлечение ограничено и по длительности, и по времени; таймаут → `finish_failed('file_invalid')`.
-   **Длительность — по декодированному аудио, а не по заголовку** (VA-04): `actual_ms ← длительность audio.mp3` (ffprobe по пакетам). IF `actual_ms > MAX_DURATION_MS` THEN `finish_failed('duration_exceeded')`; IF `|actual_ms − header_ms| / header_ms > DURATION_MISMATCH_MAX` THEN `finish_failed('file_invalid')`; RETURN. `duration_ms ← actual_ms`; `UPDATE video SET duration_ms`. Тест: MKV с подделанным `Duration` = 10 мин и часами реального звука → `file_invalid` за ≤ `EXTRACT_TIMEOUT_MS`.
+   **Длительность — по декодированному аудио, а не по заголовку** (VA-04, VA2-18): `actual_ms ← длительность audio.mp3` (ffprobe по пакетам); `declared_ms ← round(аудиопоток.duration × 1000)`, при отсутствии — `header_ms`. IF `actual_ms > MAX_DURATION_MS` THEN `finish_failed('duration_exceeded')`; IF `actual_ms > declared_ms + max(declared_ms × DURATION_MISMATCH_MAX, 3000)` THEN `finish_failed('file_invalid')` — бомба та, где фактически БОЛЬШЕ заявленного; фактически меньше (обрезанная запись) не отказ; RETURN. `duration_ms ← actual_ms`; `UPDATE video SET duration_ms`. Тест: MKV с подделанным `Duration` = 10 мин и часами реального звука → `file_invalid` за ≤ `EXTRACT_TIMEOUT_MS`.
 7. `silences ← parse stderr` от `ffmpeg -i audio -af silencedetect=noise=-35dB:d=0.3 -f null -` → список `[s_ms, e_ms]`.
 8. **План кусков** (детерминирован для одного и того же аудио):
    ```
@@ -448,7 +455,7 @@ STEPS:
 2. Транзакция (день допуска `d ← msk_day(now())`):
    1. **Отметка первой** (VA-18): `INSERT INTO quota_counter(scope, scope_id, day, kind, used) VALUES ('job', $j, $d, 'stt_sec', $global_sec) ON CONFLICT DO NOTHING RETURNING used`. Конкурентный второй допуск ждёт на уникальном ключе; нет строки → допуск уже сделан → COMMIT; RETURN ok. Отметка ищется по (`scope='job'`, `scope_id`, `kind='stt_sec'`) при любом `day` — её не больше одной (шаг 5 удаляет).
    2. IF `S` пуст THEN COMMIT; RETURN ok.
-   2a. **Выполнимость LLM до оплаты STT** (OWN-05A-012; закрывает VA-03/VT-03): `est_chars ← ceil(video.duration_ms / 1000) × LLM_EST_CHARS_PER_SEC`; `est_kop ← llm_reserve_kop(est_chars)` — та же формула, что «Выбор фрагментов», шаг 3. Проверка чтением в этой же транзакции (это не резерв): IF `est_kop > LIMIT_LLM_KOP_JOB` THEN отказ `quota_user`; IF `used(account, d, 'llm_kop') + est_kop > LIMIT_LLM_USER_KOP_DAY` THEN `quota_user`; IF `used(global, d, 'llm_kop') + est_kop > LIMIT_LLM_GLOBAL_KOP_DAY` THEN `quota_global`. Отказ → как шаг 4 (ROLLBACK, `finish_failed`, 0 вызовов STT). Для 120 мин: ≈ 158 тыс. символов → ≈ 1 170 коп. на попытку; две попытки (1 повтор AC-clips-8) = 2 340 ≤ 2 400. Настоящий резерв на шаге LLM остаётся и может отказать отдельно, если остаток выбрали другие задачи.
+   2a. **Выполнимость LLM до оплаты STT** — формулировка Specification FR-clips-10 (OWN-05A-012, VA2-05): `est_chars ← ceil(video.duration_ms / 1000) × LLM_EST_CHARS_PER_SEC`; `est_kop ← llm_reserve_kop(est_chars)` («Выбор фрагментов», шаг 3). Это проверка чтением, не резерв: IF `est_kop > LIMIT_LLM_KOP_JOB` THEN `quota_user`; IF `used(account, d, 'llm_kop') + est_kop > LIMIT_LLM_USER_KOP_DAY` THEN `quota_user`; IF `used(global, d, 'llm_kop') + est_kop > LIMIT_LLM_GLOBAL_KOP_DAY` THEN `quota_global`. Отказ → как шаг 4 (ROLLBACK, `finish_failed`, 0 вызовов STT). Настоящий резерв на шаге LLM остаётся и может отказать отдельно. Один повтор AC-clips-8 гарантирует проверка при старте («Проверка конфигурации», шаг 5a), а не этот шаг.
    3. `r ← reserve([{account, account_id, d, 'stt_sec', user_sec, LIMIT_STT_USER_SEC_DAY, 'quota_user'}, {global, GLOBAL_SCOPE_ID, d, 'stt_sec', global_sec, LIMIT_STT_GLOBAL_SEC_DAY, 'quota_global'}])` — без строки-отметки в списке; значение `'—'` вне закрытого списка причин не существует нигде.
    4. IF NOT r.ok THEN ROLLBACK (отметка откатывается вместе с резервом); новая транзакция `finish_failed(j, r.fail_reason)`; RETURN (вызова STT нет; `spend_ledger` не меняется — AC-clips-12).
 3. RETURN ok. Первая попытка каждого куска из `S` оплачена этим допуском; каждая следующая попытка (`attempt_count ≥ 2`) резервирует `provider_sec(k)` сама на ОБОИХ счётчиках («Транскрипция куска», шаг 3).
@@ -471,15 +478,15 @@ STEPS:
 1. Heartbeat. `c ← SELECT transcript_chunk …`; IF `c.status='done'` THEN перейти к шагу 8 (повтор не зовёт STT, AC-clips-5). IF задача не `running` THEN RETURN.
    **Ворота допуска (VA-01):** IF `c.attempt_count = 0` AND отметки допуска задачи нет THEN `admit_stt(job_id)`; отказ → RETURN (задача `failed/quota_*`, 0 вызовов).
    **Ворота детерминированного отказа (VA-19):** IF `EXISTS spend_ledger WHERE job_id=$j AND call='stt' AND model=STT_MODEL AND outcome='schema_invalid'` THEN `finish_failed('stt_failed')`, журнал `same_model_invalid`; RETURN — та же модель на том же аудио платно дала бы тот же отказ.
-2. Транзакция: `n ← UPDATE transcript_chunk SET attempt_count = attempt_count + 1 WHERE id=$c AND status='pending' RETURNING attempt_count`.
+2. Транзакция: `SELECT 1 FROM job WHERE id=$j AND status='running' FOR SHARE` и `m ← SELECT 1 FROM quota_counter WHERE scope='job' AND scope_id=$j AND kind='stt_sec' FOR SHARE` (VA2-14, VT2-13: `finish_failed` соседа, снимающий отметку, ждёт эту транзакцию или она видит снятую отметку). IF задачи в `running` нет THEN ROLLBACK; RETURN. IF `m` нет THEN ROLLBACK; вернуться к воротам допуска шага 1. `n ← UPDATE transcript_chunk SET attempt_count = attempt_count + 1 WHERE id=$c AND status='pending' RETURNING attempt_count`.
 3. IF `n ≥ 2` THEN `r ← reserve([{account,…,'stt_sec', provider_sec(k), LIMIT_STT_USER_SEC_DAY,'quota_user'}, {global,…,provider_sec(k),…}])`; отказ → ROLLBACK; `finish_failed(r.fail_reason)`; RETURN. (Каждая попытка учтена ДО вызова; повтор расходует потолок как успех.)
-4. `INSERT spend_ledger(account_id, job_id, call='stt', model=STT_MODEL, attempt=n, units_reserved=provider_sec(k), cost_usd_micro=NULL, cost_kop=provider_sec(k) × STT_PRICES[STT_MODEL], outcome='timeout') RETURNING id` — `cost_kop` до ответа есть ОЦЕНКА по цене в коде (не 0, VA-15); `cost_usd_micro IS NULL` отличает оценку от факта — пессимистичная запись: падение процесса посреди вызова читается как «таймаут, резерв удержан». COMMIT.
+4. `INSERT spend_ledger(account_id, job_id, call='stt', model=STT_MODEL, attempt=n, units_reserved=provider_sec(k), cost_usd_micro = ceil(provider_sec(k) × STT_PRICE_PUSD_PER_SEC / 10⁶), cost_kop = ceil(cost_usd_micro × FX_USD_RUB_KOP / 10⁶), cost_estimated = true, outcome='timeout') RETURNING id` — до ответа стоимость есть ОЦЕНКА по цене из API; только целые числа, копеек за секунду нет (VT2-04: 9,2 с не округляются до 1–2 коп./с); признак оценки — явное поле `cost_estimated` (канон §4), а не `NULL` — пессимистичная запись: падение процесса посреди вызова читается как «таймаут, резерв удержан». COMMIT.
 5. Вне транзакции: `audio ← GetObject('tmp/{job_id}/chunk-{idx}.mp3')`; объекта нет (правило бакета `tmp/` 1 день) → перерезать этот кусок из исходника по `offset_ms`/`duration_ms` (шаги 3, 6, 8 подготовки для одного куска); исходника нет → `finish_failed('stt_failed')`.
 6. Вне транзакции: `resp ← Transcriber.transcribeChunk(audio, {language:'ru', timeout: STT_HTTP_TIMEOUT_MS})`:
    - `OpenRouterTranscriber`: `POST https://openrouter.ai/api/v1/audio/transcriptions`, multipart: `file`, `model=STT_MODEL`, `response_format=verbose_json`, `timestamp_granularities[]=segment`, `timestamp_granularities[]=word`, `language=ru`, диаризация — `provider.options` по закрытой таблице `DIARIZE_OPTIONS[STT_MODEL]` в коде. Поля `models` в запросе нет (ADR-003). TLS проверяется всегда.
    - `OpenAiTranscriber` (только при `STT_PROVIDER=openai`): тот же интерфейс, модель `gpt-4o-transcribe-diarize`.
 7. Разбор результата — алгоритм «Разбор ответа STT». Исход:
-   - `ok(units, cost_usd_micro?)`: транзакция `UPDATE spend_ledger SET outcome='ok', units_actual=provider_sec(k)` и, только если `usage.cost` вернулся, `cost_usd_micro, cost_kop=ceil(cost_usd_micro × FX_USD_RUB_KOP / 1e6)` (иначе остаётся оценка) `WHERE id`; `UPDATE transcript_chunk SET status='done', units=$units, model=resp.model WHERE id AND status='pending'`.
+   - `ok(units, cost_usd_micro?)`: транзакция `UPDATE spend_ledger SET outcome='ok', units_actual=provider_sec(k)` и, только если `usage.cost` вернулся, `cost_usd_micro = round(usage.cost × 10⁶), cost_kop = ceil(cost_usd_micro × FX_USD_RUB_KOP / 10⁶), cost_estimated = false` (иначе остаётся оценка с `cost_estimated = true`) `WHERE id`; `UPDATE transcript_chunk SET status='done', units=$units, model=resp.model WHERE id AND status='pending'`.
    - `no_timestamps`: `spend_ledger.outcome='schema_invalid'`; `finish_failed('no_timestamps')`; RETURN (повтор той же модели не даст таймкодов — работа завершается без повторов BullMQ).
    - `invalid` (немонотонно, время вне куска): `outcome='schema_invalid'`; `finish_failed('stt_failed')`; RETURN.
    - сетевой отказ, 5xx, 429: `outcome = timeout ? 'timeout' : 'provider_error'`; бросить исключение → повтор BullMQ (3 попытки, экспонента 5 с). После последней попытки обработчик `failed` BullMQ вызывает `finish_failed('stt_failed')` (кроме ошибки stalled — см. «Уборщик», шаг 3). Подмены модели нет (ADR-004).
@@ -561,13 +568,14 @@ STEPS:
 4. Транзакция резерва (день попытки `d = msk_day(now())`):
    `reserve([{account, a, d, 'llm_kop', reserve_kop, LIMIT_LLM_USER_KOP_DAY, 'quota_user'}, {global, G, d, 'llm_kop', reserve_kop, LIMIT_LLM_GLOBAL_KOP_DAY, 'quota_global'}, {job, j, d, 'llm_kop', reserve_kop, LIMIT_LLM_KOP_JOB, 'selection_failed'}, {job, j, d, 'llm_attempts', 1, LIMIT_LLM_ATTEMPTS_JOB, 'selection_failed'}])`.
    Отказ → ROLLBACK; `finish_failed(r.fail_reason)`; журнал `llm_refused {reserve_kop, limit}`; RETURN (вызова нет).
-   `attempt ← used('llm_attempts')`; `INSERT spend_ledger(call='llm', model=LLM_MODEL, attempt, units_reserved=reserve_kop, cost_kop=reserve_kop, outcome='timeout') RETURNING ledger_id`. COMMIT.
+   `attempt ← used('llm_attempts')`; `INSERT spend_ledger(call='llm', model=LLM_MODEL, attempt, units_reserved=reserve_kop, cost_kop=reserve_kop, cost_estimated=true, outcome='timeout') RETURNING ledger_id`. COMMIT.
 5. Вне транзакции: `POST https://openrouter.ai/api/v1/chat/completions` `{model: LLM_MODEL, messages, max_tokens: LLM_MAX_OUTPUT_TOKENS, temperature: 0.2, response_format: {type:'json_schema', json_schema:{name:'clip_selection', strict:true, schema: SELECTION_SCHEMA}}, usage:{include:true}}`, без поля `models`, таймаут `LLM_HTTP_TIMEOUT_MS`.
-   `SELECTION_SCHEMA = {fragments: array of {start_unit: integer, end_unit: integer, title: string, hook_quote: string, hook_reason: string, hook_score: integer, completeness_quote: string, completeness_reason: string, completeness_score: integer}}`, все поля в `required`, `additionalProperties: false`. В схему, отправляемую провайдеру, НЕ входят `maxItems`, `minimum`/`maximum`, `minLength`/`maxLength` — их поддержка строгим режимом у `anthropic/claude-sonnet-5` через OpenRouter не проверена (VT-16); все эти ограничения проверяет код на шаге 7: `≤ 10` фрагментов, баллы `0..10`, `title` 1…100 символов. Проба точной схемы одним вызовом — день 1 (Architecture/Completion).
+   `SELECTION_SCHEMA = {fragments: array of {start_unit: integer, end_unit: integer, title: string, hook_quote: string, hook_reason: string, hook_score: integer, completeness_quote: string, completeness_reason: string, completeness_score: integer}}`, все поля в `required`, `additionalProperties: false`. Промпт называет предел каждого поля в символах (`LLM_FIELD_MAX_CHARS`) и требует не больше 10 фрагментов. В схему, отправляемую провайдеру, НЕ входят `maxItems`, `minimum`/`maximum`, `minLength`/`maxLength` — их поддержка строгим режимом у `anthropic/claude-sonnet-5` через OpenRouter не проверена (VT-16); все эти ограничения проверяет код на шаге 7: `≤ 10` фрагментов, баллы `0..10`, `title` 1…100 символов. Проба точной схемы одним вызовом — день 1 (Architecture/Completion).
 6. Учёт факта (транзакция): `actual_kop ← usage.cost известен ? ceil(usage.cost × 1e6 × FX_USD_RUB_KOP / 1e6) : null`.
-   - IF `actual_kop ≠ null`: `delta ← actual_kop − reserve_kop`; `delta < 0` → `release` трёх `llm_kop`-счётчиков на `−delta`; `delta > 0` → `charge_over` на `delta`, журнал `llm_reserve_underestimated`. `spend_ledger.units_actual ← usage.total_tokens`, `cost_usd_micro ← round(usage.cost × 1e6)`, `cost_kop ← actual_kop`, `model ← resp.model`.
+   - IF `actual_kop ≠ null`: `delta ← actual_kop − reserve_kop`; `delta < 0` → `release` трёх `llm_kop`-счётчиков на `−delta`; `delta > 0` → `charge_over` на `delta`, журнал `llm_reserve_underestimated`. `spend_ledger.units_actual ← usage.total_tokens`, `cost_usd_micro ← round(usage.cost × 1e6)`, `cost_kop ← actual_kop`, `cost_estimated ← false`, `model ← resp.model`.
    - Таймаут: резерв не возвращается, `outcome` остаётся `timeout` (провайдер мог взять деньги, ADR-006).
-7. Разбор: `JSON.parse` + проверка схемы кодом (даже при `strict`): типы, `len(fragments) ≤ 10`, `0 ≤ hook_score, completeness_score ≤ 10`, `1 ≤ len(title) ≤ 100`, `0 ≤ start_unit ≤ end_unit ≤ N−1`. Нарушение → `outcome='schema_invalid'`; бросить `SchemaInvalid` → повтор BullMQ (попыток `LIMIT_LLM_ATTEMPTS_JOB`); вторая неудача упрётся в счётчик `llm_attempts` на шаге 4 → `failed/selection_failed` (AC-clips-8). 5xx/429/сеть → `outcome='provider_error'|'timeout'`, повтор тем же путём. Подставных моментов без LLM нет.
+7. Разбор: `JSON.parse` + проверка схемы кодом (даже при `strict`): типы, `len(fragments) ≤ 10`, `0 ≤ hook_score, completeness_score ≤ 10`, `1 ≤ len(title)`, `0 ≤ start_unit ≤ end_unit ≤ N−1`. Поле длиннее `LLM_FIELD_MAX_CHARS` обрезается кодом по границе слова с «…» (цитата после обрезки — префикс исходной и проверяется как обычно); это не ошибка схемы, деньги на повтор не тратятся.
+   **Обрыв по длине (VA2-04):** IF `resp.choices[0].finish_reason == 'length'` THEN `outcome='schema_invalid'`, журнал `llm_output_truncated {completion_tokens}`, `finish_failed('selection_failed')` сразу, БЕЗ повтора BullMQ: повтор с тем же `max_tokens` оборвётся так же. Число `LLM_MAX_OUTPUT_TOKENS` подтверждается замером на пробе дня 1. Нарушение → `outcome='schema_invalid'`; бросить `SchemaInvalid` → повтор BullMQ (попыток `LIMIT_LLM_ATTEMPTS_JOB`); вторая неудача упрётся в счётчик `llm_attempts` на шаге 4 → `failed/selection_failed` (AC-clips-8). 5xx/429/сеть → `outcome='provider_error'|'timeout'`, повтор тем же путём. Подставных моментов без LLM нет.
 8. `frags ← validate_fragments(resp.fragments, U)`; `scored ← score(frags, U)`.
 9. `save_clips(job, scored, U)` (алгоритм «Сохранение клипов»). `outcome ← 'ok'`.
 COMPLEXITY: O(N) подготовка + O(f²) дедупликация, f ≤ 10.
@@ -619,7 +627,7 @@ OUTPUT: строки `clip`, работы `render`, либо `succeeded` с 0 к
 STEPS:
 1. Транзакция: `SELECT job FOR UPDATE`; IF у задачи уже есть `clip` THEN перейти к шагу 5.
 2. FOR EACH `f`: `clip_code ← 7 символов из [a-z0-9] через crypto.randomInt`; `INSERT clip(…, clip_code, start_unit, end_unit, start_ms, end_ms, title, hook_*, completeness_*, length_score, total_score, render_status='queued', speaker_labels_shown)`; конфликт уникальности `clip_code` → новый код, не более 5 раз, затем исключение.
-3. `speaker_labels_shown ← NOT ∃ k: seam_{k−1} ∈ (start_ms, end_ms) AND chunk[k].speaker_map_confident = false`, а также `false`, если в отрезке нет ни одной единицы с `speaker_global`.
+3. `speaker_labels_shown ← ∀ k, где кусок k пересекается с [start_ms, end_ms): chunk[k].speaker_map_confident = true` — одно правило, как в Specification FR-clips-7 п. 4 (строже, чем «только швы внутри клипа», VT2-16); а также `false`, если в отрезке нет ни одной единицы с `speaker_global`.
 4. IF клипов 0 THEN `UPDATE job SET status='succeeded', clips_total=0, finished_at=now()`; `INSERT event('job_succeeded', props={job_id, clips:0})`; экран «0 клипов» с причиной «самодостаточных фрагментов не нашлось». COMMIT; RETURN.
 5. `UPDATE job SET step='rendering', clips_total=count WHERE id AND status='running' AND step='selecting'`. COMMIT.
 6. После COMMIT: `queue('render').add({clip_id}, {jobId: clip_id + '.render'})` для каждого клипа не в `ready`.
@@ -632,12 +640,12 @@ REQUIREMENT: `FR-GROWTH-003`
 REQUIREMENT: `FR-clips-9`
 REQUIREMENT: `AC-clips-11`
 REALISES: SC-US-008-1, SC-US-008-2
-INPUT: `probe` видеопотока (`w`, `h`), `WATERMARK_TEXT`, шрифт образа
+INPUT: `(w, h) ← display_dims(probe)` — эффективные размеры с учётом поворота и SAR («Подготовка задачи», шаг 4); `WATERMARK_TEXT`, шрифт образа
 OUTPUT: строка фильтра видео, прямоугольник кадра `(video_x, video_y, vw, vh)` и положение плашки `(wm_x, wm_y)`
 STEPS:
 1. IF `w > h` THEN `f ← min(1080 / w, 608 / h)`; `vw ← even(round(w·f))`, `vh ← even(round(h·f))`; `video_x ← (1080 − vw) / 2`; `video_y ← 420 + (608 − vh) / 2`; `vf ← "scale=1080:608:force_original_aspect_ratio=decrease,pad=1080:1920:(1080-iw)/2:420+(608-ih)/2:black"` — кадр целиком в полосе y = 420…1028 (16:9 → 1080×608, 4:3 → 811×608 по центру), поля чёрные (ADR-009). ELSE `f ← min(1080 / w, 1920 / h)`, `vw, vh` так же; `video_x ← (1080 − vw)/2`; `video_y ← (1920 − vh)/2`; `vf ← "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black"`. Кропа нет. `even(n)` — ближайшее чётное (как делает `scale` с сохранением пропорций).
-2. **Геометрия знака — считается один раз при старте `worker-render`:** для `fs` от 44 до 52: `tw ← ширина WATERMARK_TEXT` по метрикам шрифта (сумма advance × fs / unitsPerEm), `pw ← tw + 32`, `ph ← ceil(fs × 1,2) + 20`, `area ← pw × ph / (1080 × 1920)`. Взять наименьший `fs` с `0,01 ≤ area ≤ 0,04`. IF такого нет THEN завершить процесс: «WATERMARK_TEXT: знак не укладывается в 1–4 % кадра при кегле 44–52 — геометрия FR-GROWTH-003 п. 5 невыполнима».
-3. **Знак внутри картинки видео, не на чёрном поле** (OWN-05A-013, VA-05): `wm_x ← max(video_x + WM_INSET, 70)`, `wm_y ← max(video_y + WM_INSET, 200)` (16:9 → (70, 444); 4:3 → (158, 444); вертикальный → (70, 200)). IF `wm_x + pw > video_x + vw` OR `wm_y + ph > video_y + vh` THEN рендер клипа отказывает `render_failed` с журналом `watermark_no_room` — знак не кладётся на поле ни при каком исходнике (кадр уже ~330 px, реального подкаста такого нет). Плашка `pw × ph`, радиус 12, чёрная с непрозрачностью `WM_OPACITY` (ASS `&H73000000`: альфа 0x73 ≈ 0,55), текст белый полужирный `fs`, отступ 16×10. Контраст белого на плашке 0,55 поверх белого кадра ≈ 4,7:1 — у нижней границы 4,5:1, поэтому проверяется OCR на светлом, тёмном и пёстром кадре (SC-US-008-1), а не выводится.
+2. **Геометрия знака — считается один раз при старте `worker-render`:** для `fs` от 44 до 52: `tw ← ширина WATERMARK_TEXT` по метрикам шрифта (сумма advance × fs / unitsPerEm), `pw ← tw + 32`, `ph ← ceil(fs × 1,2) + 20`, `area ← pw × ph / (1080 × 1920)`. Взять наименьший `fs` с `0,01 ≤ area ≤ 0,04`. IF такого нет THEN завершить процесс: «WATERMARK_TEXT: знак не укладывается в 1–4 % кадра при кегле 44–52 — геометрия FR-GROWTH-003 п. 5 невыполнима». Шрифт — один файл `WM_FONT_FILE = /app/fonts/<файл>.ttf` в образе; его имя семейства читается из того же файла, передаётся в ASS (`Fontname`) и в фильтр как `ass=<файл>:fontsdir=/app/fonts` — libass не подставит запасной шрифт через fontconfig (VA2-10). **Самопроверка при старте `worker-render`:** отрендерить 1 кадр 1080×1920 белого фона со знаком; IF внутри прямоугольника плашки нет пикселей текста (яркость ≥ 240 при плашке ≤ 140) THEN процесс не стартует: «знак не рисуется: шрифт не найден libass».
+3. **Знак внутри картинки видео, не на чёрном поле** (OWN-05A-013, VA-05): `wm_x ← max(video_x + WM_INSET, 70)`, `wm_y ← max(video_y + WM_INSET, 200)` (16:9 → (70, 444); 4:3 → (158, 444); вертикальный → (70, 200)). IF `wm_x + pw > video_x + vw` OR `wm_y + ph > video_y + vh` THEN `watermark_fits = false`: подготовка отказывает такой файл `file_invalid` ещё до оплаты STT (VA2-09), а рендер при невозможном случае отказывает `render_failed` с журналом `watermark_no_room` — знак не кладётся на поле ни при каком исходнике (кадр уже ~330 px, реального подкаста такого нет). Плашка `pw × ph`, радиус 12, чёрная с непрозрачностью `WM_OPACITY` (ASS `&H73000000`: альфа 0x73 ≈ 0,55), текст белый полужирный `fs`, отступ 16×10. Контраст белого на плашке 0,55 поверх белого кадра ≈ 4,7:1 — у нижней границы 4,5:1, поэтому проверяется OCR на светлом, тёмном и пёстром кадре (SC-US-008-1), а не выводится.
 4. `watermark_required(plan) ← plan !== 'paid'` — строгое сравнение; `null`, `''`, `'PAID'`, `' paid'`, `'premium'` дают знак (fail-closed).
 COMPLEXITY: O(1) на клип; O(len) при старте.
 
@@ -676,7 +684,7 @@ STEPS:
 2. `UPDATE clip SET render_status='rendering' WHERE id AND render_status IN ('queued','failed','rendering')`.
 3. `watermark ← watermark_required(account.plan)` — читается из БД сейчас; параметры клиента (`watermark=false`, `plan=paid`) на рендер не попадают никаким путём (SC-US-008-3).
 4. `src ← presignGet(video.s3_key_source, ttl=PRESIGN_TTL_SEC)`; IF `video.source_deleted_at` THEN `finish_failed('render_failed')`, журнал `source_gone`; RETURN.
-5. `tmp ← /tmp/render/{clip_id}`; `ass ← generate_ass(…)`; `vf ← layout(...) + ",ass=" + escapeFFmpegPath(ass)`.
+5. `probe ← ffprobe(src)` (только заголовки, по подписанной ссылке, таймаут 30 с); `(w, h) ← display_dims(probe)` (VA2-03). `tmp ← /tmp/render/{clip_id}`; `ass ← generate_ass(…)`; `vf ← layout(w, h) + ",ass=" + escapeFFmpegPath(ass) + ":fontsdir=/app/fonts"`.
 6. `execFile('ffmpeg', ['-ss', sec(start_ms), '-i', src, '-t', sec(end_ms−start_ms), '-vf', vf, '-r','30', '-c:v','libx264','-preset','veryfast','-crf','23','-maxrate','6M','-bufsize','12M','-pix_fmt','yuv420p', '-c:a','aac','-b:a','128k', '-movflags','+faststart', out.mp4], {timeout: RENDER_TIMEOUT_MS(dur), killSignal:'SIGKILL'})` — без shell. Затем превью: `ffmpeg -ss {dur/2} -i out.mp4 -frames:v 1 out.jpg`.
 7. Проверка результата: `ffprobe out.mp4` → 1080×1920, `h264`, битрейт ≤ 6 Мбит/с; иначе исключение. `PutObject(clips/{account_id}/{job_id}/{clip_id}.mp4)` и `.jpg`.
 8. Транзакция: `SELECT job FOR UPDATE`; `UPDATE clip SET render_status='ready', watermarked=$watermark, s3_key_clip WHERE id AND render_status≠'ready' RETURNING id`; IF обновилось THEN `UPDATE job SET clips_done = clips_done + 1`; IF `clips_done = clips_total` AND `status='running'` THEN `status='succeeded'`, `finished_at=now()`, `INSERT event('job_succeeded')`.
@@ -697,7 +705,7 @@ STEPS:
 2. `v.status, v.step, v.fail_reason` — ровно из закрытых списков канона; неизвестное значение в БД → `worker_lost` и журнал со стеком (не «выполняется»).
 3. `running`: прогресс — `transcribing`: `done/total` кусков («кусок k из n»); `selecting`: без числа; `rendering`: `clips_done/clips_total` («клип k из n»). `v.updated_sec_ago ← now − heartbeat_at`. IF `> SILENT_UI_MS` THEN `v.silent_minutes ← floor(… / 60 000)` («обработчик молчит N мин»).
 4. `succeeded`: `v.clips` — клипы, отсортированные: `total_score` убыв. (`null` в конце), затем `length_score` убыв., затем `start_ms`; у каждого три компонента с причинами, `speaker_labels_shown`, `clip_code`. IF 0 клипов THEN `v.empty_reason`.
-5. `failed`: `v.retryable ← fail_reason ∉ {file_invalid, duration_exceeded, no_timestamps} AND video.source_deleted_at IS NULL` — `no_timestamps` детерминирован для модели и аудио, платный повтор даст тот же отказ (VA-19; решение координатора по В-24); для `quota_*` — `v.resets_at` (00:00 МСК).
+5. `failed`: `v.retryable ← fail_reason ∉ {file_invalid, duration_exceeded, no_timestamps} AND NOT (fail_reason = 'stt_failed' AND EXISTS spend_ledger WHERE job_id AND call='stt' AND outcome='schema_invalid') AND video.source_deleted_at IS NULL` — невалидный ответ модели на этом файле повтором не лечится, текст «модель не справилась с этим файлом» (VA2-23) — `no_timestamps` детерминирован для модели и аудио, платный повтор даст тот же отказ (VA-19; решение координатора по В-24); для `quota_*` — `v.resets_at` (00:00 МСК).
 6. `v.source_delete_at ← job.finished_at + 72 ч` (обещание хранения, FR-clips-13).
 7. RETURN 200.
 COMPLEXITY: O(c).
@@ -713,7 +721,7 @@ INPUT: `POST /api/jobs/{job_id}/retry`
 OUTPUT: `202 {job_id}` | `409`
 STEPS:
 1. `auth({verified:true, owns:{job, job_id}})`; `rate_limit('api_write', …)`.
-2. Транзакция: `UPDATE job SET status='running', fail_reason=NULL, attempt_count=0, heartbeat_at=now(), finished_at=NULL WHERE id=$j AND status='failed' AND fail_reason NOT IN ('file_invalid','duration_exceeded','no_timestamps') AND EXISTS (SELECT 1 FROM video WHERE id=job.video_id AND source_deleted_at IS NULL AND deleted_at IS NULL) RETURNING step`. Нет строки → RETURN 409 с причиной (не `failed`, неповторяемая причина или исходник удалён).
+2. Транзакция: `UPDATE job SET status='running', fail_reason=NULL, attempt_count=0, heartbeat_at=now(), finished_at=NULL WHERE id=$j AND status='failed' AND fail_reason NOT IN ('file_invalid','duration_exceeded','no_timestamps') AND NOT (fail_reason='stt_failed' AND EXISTS (SELECT 1 FROM spend_ledger WHERE job_id=$j AND call='stt' AND outcome='schema_invalid')) AND EXISTS (SELECT 1 FROM video WHERE id=job.video_id AND source_deleted_at IS NULL AND deleted_at IS NULL) RETURNING step`. Нет строки → RETURN 409 с причиной (не `failed`, неповторяемая причина или исходник удалён).
 3. `UPDATE clip SET render_status='queued' WHERE job_id AND render_status='failed'`. COMMIT.
 4. После COMMIT поставить `expected_bullmq_ids(job)` («Heartbeat и уборщик аренды», шаг 4), предварительно удалив из BullMQ одноимённые работы в `completed`/`failed`.
 5. Сохранённые шаги не повторяются: `done`-куски пропускаются, строки `clip` не пересоздаются, `ready`-клипы не рендерятся; отметки допуска после `finish_failed` нет (её снял `release_stt_admission`), поэтому ещё не вызванные куски снова проходят допуск в «Транскрипции куска», шаг 1: после `quota_*` в те же сутки допуск откажет и STT вызван не будет (VA-01). Повторные попытки кусков резервируют потолок сами. Счётчик `llm_attempts` задачи ведётся по суткам (канон §12): повтор после `selection_failed` в те же сутки получит отказ и текст «попробуйте завтра».
@@ -796,7 +804,7 @@ OUTPUT: смена `publication.status` и `audit_log`
 STEPS:
 1. `auth({role:'operator'})` в middleware И в каждой процедуре.
 2. Список: `candidate` по `created_at` (старые первыми); отдельный список «перепроверка» — `confirmed` с `verified_at ≤ now − 6 дней` и `rechecked_at IS NULL`.
-3. Публикация с `clip_id IS NULL` показывается с пометкой «клип удалён автором»; действия над ней те же.
+3. Публикация с `clip_id IS NULL` показывается с пометкой «клип удалён автором». `confirm` для `candidate` с `clip_id IS NULL` запрещён (409): проверить «в посте этот клип» уже не с чем — только `reject` (VA2-16). `recheck` подтверждённой ранее публикации разрешён.
 3b. `confirm(id, checks)`: `checks` обязан содержать все четыре отметки `public`, `this_clip`, `watermark_visible`, `account_not_empty`, и `channel_key` — handle или id канала площадки, `lower(trim)`, 1…100 символов (иначе 422). Дубль исходника оператор отклоняет `reject` с причиной «дубль исходника». Транзакция: `UPDATE publication SET status='confirmed', channel_key=$channel_key, verified_at=now() WHERE id AND status='candidate' RETURNING clip_id, account_id`; нет строки → 409. `record_event('publication_confirmed', account_id, clip_id)`; `INSERT audit_log(actor=operator_email, action='publication.confirm', target=id, reason=checks)`.
 4. `reject(id, reason)`: `reason` непуст; `status='rejected'` из `candidate`; `audit_log`.
 5. `recheck(id, still_there: bool, reason?)`: только из `confirmed`; `rechecked_at=now()`; IF NOT `still_there` THEN `status='removed'`, `reason` обязателен; `audit_log`.
@@ -870,11 +878,11 @@ REALISES: SC-US-010-1, SC-US-010-2
 INPUT: неделя 1 — `ops partner-add <имя> [код]` (канон §7); 2-я очередь — `/admin/partners`, процедура `create {name, contact, audience_url, code?, account_email?}`
 OUTPUT: `partner` с уникальным `partner_code` и ссылкой `{BASE_URL}/p/{code}`
 STEPS:
-0. **Неделя 1 — `ops partner-add <имя> [код]`:** шаги 3 и 5 без проверки роли (доступ к CLI = доступ к серверу); `name` непуст ≤ 200; `contact`, `audience_url`, `account_id` = `NULL` (дозаполняются на `/admin/partners` во второй очереди; в схеме эти поля допускают `NULL`); `audit_log(actor='ops-cli')`. Вывод: код и ссылка `{BASE_URL}/p/{code}`; `код занят` → код возврата 1. Дальше — страница второй очереди:
+0. **Неделя 1 — `ops partner-add <имя> [код] [--account <email>]`** (VA2-21: `--account` связывает партнёра с его аккаунтом, чтобы самореферал отсекался и в первую неделю; без него когорта в `/admin/metrics` помечается «самореферал не проверялся»): шаги 3 и 5 без проверки роли (доступ к CLI = доступ к серверу); `name` непуст ≤ 200; `contact`, `audience_url` = `NULL`, `account_id` — по `--account` через `canonical_email` (нет аккаунта → код 1) (дозаполняются на `/admin/partners` во второй очереди; в схеме эти поля допускают `NULL`); `audit_log(actor='ops-cli')`. Вывод: код и ссылка `{BASE_URL}/p/{code}`; `код занят` → код возврата 1. Дальше — страница второй очереди:
 1. `auth({role:'operator'})`.
 2. Валидация: `name`, `contact` непусты ≤ 200; `audience_url` — `new URL`, `https:`.
 3. IF `code` задан THEN `code ← upper(trim(code))`; IF не `/^[A-Z0-9]{6,12}$/` THEN 422. ELSE `code ← 7 символов [A-Z0-9] crypto.randomInt`.
-4. `account_id ← account_email ? SELECT id FROM account WHERE email = lower(trim(…)) : null` (нет → 422).
+4. `account_id ← account_email ? SELECT id FROM account WHERE email = canonical_email(account_email) : null` (нет → 404 «аккаунт не найден», `audit_log` не пишется, VA2-12).
 5. Транзакция: `INSERT partner(...) ON CONFLICT (partner_code) DO NOTHING RETURNING id`. Нет строки: IF код задан оператором THEN RETURN `409 'код занят'`; ELSE сгенерировать новый и повторить (≤ 5 раз). `audit_log(action='partner.create', target=code, reason='выдача кода; вознаграждения на неделе нет')`.
 6. Интерфейс автора экрана выдачи кодов не имеет (маршрут только под ролью `operator`).
 COMPLEXITY: O(1).
@@ -885,14 +893,16 @@ REQUIREMENT: `FR-clips-9`
 REQUIREMENT: `FR-clips-11`
 REQUIREMENT: `FR-clips-1`
 REQUIREMENT: `AC-clips-21`
-REALISES: SC-US-001-6
+REQUIREMENT: `AC-clips-29`
+REALISES: SC-US-001-6, SC-US-001-7
 INPUT: `/admin/users` процедуры `set_plan {email, plan, reason}`, `reset_password {email, reason}`, `verify_email {email, reason}`; CLI `ops grant-operator <email>`
 OUTPUT: изменённый аккаунт и `audit_log`
 STEPS:
+0. Во всех процедурах и в `ops grant-operator` аккаунт ищется по `canonical_email(input)` (VA2-12: `Ivan.Petrov+x@GMAIL.com` находит `ivanpetrov@gmail.com`); 0 строк → 404 «аккаунт не найден» (CLI — код 1), `audit_log` не пишется.
 1. `set_plan`: `auth({role:'operator'})`; `plan ∈ {free, paid}`; `reason` непуст; транзакция: `UPDATE account SET plan WHERE email`; `audit_log(action='account.set_plan', target=email, reason)`. Уже отрендеренные клипы не перерендериваются: решение о знаке принимается в момент рендера.
 2. `reset_password` (канон §7) — **2-я очередь (OWN-05A-014)**: `auth({role:'operator'})`; `reason` непуст; транзакция: `token ← base64url(random(32))`; `INSERT email_token(account_id, purpose='reset', token_hash=sha256(token), expires_at=now()+1 ч [ПРЕДЛОЖЕНИЕ])`; `audit_log(action='account.reset_password', target=email, reason)`. После COMMIT вне транзакции — письмо через `SMTP_URL` (Resend) со ссылкой `{BASE_URL}/reset?token={token}`; оператор токена не видит.
    `GET /reset?token=` — форма нового пароля. `POST /api/auth/reset {token, password}`: `rate_limit('api_write', ip, 60, 60)`; `len(password) ≥ 10`; `hash ← argon2id` вне транзакции; транзакция: `UPDATE email_token SET used_at=now() WHERE token_hash=sha256($t) AND purpose='reset' AND used_at IS NULL AND expires_at>now() RETURNING account_id` (нет строки → 400 «ссылка недействительна»); `UPDATE account SET password_hash`; `UPDATE refresh_token SET revoked_at=now() WHERE account_id AND revoked_at IS NULL`. Токены `verify` и `reset` не взаимозаменяемы — различие по `purpose`.
-2a. `verify_email` (письмо не дошло, SC-US-001-6): `auth({role:'operator'})`; `reason` пуст → 422, `email_verified_at` не меняется; транзакция: `UPDATE account SET email_verified_at=now() WHERE email AND email_verified_at IS NULL RETURNING id`; IF обновилось THEN `INSERT event('email_verified', account_id, props={manual:true})`; `audit_log(actor=operator_email, action='account.verify_email', target=email, reason)`.
+2a. `verify_email` (письмо не дошло, SC-US-001-6): `auth({role:'operator'})`; `reason` пуст → 422, `email_verified_at` не меняется; транзакция: `UPDATE account SET email_verified_at=now() WHERE email AND email_verified_at IS NULL RETURNING id`; не обновилось, но аккаунт есть → 409 «почта уже подтверждена», без `audit_log`; IF обновилось THEN `INSERT event('email_verified', account_id, props={manual:true})`; `audit_log(actor=operator_email, action='account.verify_email', target=email, reason)`.
 3. `ops grant-operator <email>` (внутри `worker-ai`, доступ = доступ к серверу): `UPDATE account SET role='operator' WHERE email`; нет строки → код выхода 1; `audit_log(actor='ops-cli')`. Через веб роль не выдаётся.
 COMPLEXITY: O(1).
 
@@ -940,7 +950,8 @@ STEPS:
 1. `auth({role:'operator'})`. `from` — дата; невалидна → 422. `W = [from 00:00 МСК, from + 7 дней)`.
 2. `activated ← DISTINCT account_id` событий `clip_viewed` в `W`; `n ← |activated|`.
 3. `confirmed ← publication` со `status='confirmed'` (на момент запроса; перепроверка 7-го дня уже перевела удалённые в `removed`) и `created_at ∈ W`.
-   `clips_confirmed ← COUNT(DISTINCT clip_code)` — `publication.clip_code` переживает удаление клипа (канон §4), поэтому несколько ссылок на один клип дают 1 клип и после удаления; автор — `publication.account_id`; `accounts ← COUNT(DISTINCT account_id)`; `channels ← COUNT(DISTINCT channel_key)`; `authors_confirmed ← min(accounts, channels)` — три аккаунта с одним каналом площадки дают одного автора (VA-14, FR-GROWTH-005 п. 4); выводятся все три числа; `authors_confirmed ← COUNT(DISTINCT account_id)`; `goal_met ← clips_confirmed ≥ 5 AND authors_confirmed ≥ 3`. Несколько ссылок на клип — 1 клип.
+   `clips_confirmed ← COUNT(DISTINCT clip_code)` — `publication.clip_code` переживает удаление клипа (канон §4), поэтому несколько ссылок на один клип дают 1 клип и после удаления; автор — `publication.account_id`; `accounts ← COUNT(DISTINCT account_id)`; `channels ← COUNT(DISTINCT channel_key)`; `authors_confirmed ← min(accounts, channels)` — три аккаунта с одним каналом площадки дают одного автора (VA-14, FR-GROWTH-005 п. 4); выводятся все три числа; `goal_met ← clips_confirmed ≥ 5 AND authors_confirmed ≥ 3`. Несколько ссылок на клип — 1 клип.
+   Тест (VT2-02): 3 аккаунта × 1 `channel_key` × 5 подтверждённых клипов → `authors_confirmed = 1`, `goal_met = false`; мутация «считать авторов по `account_id`» → тест красный.
    `rechecked ← k из m` подтверждённых с `rechecked_at ≥ from + 6 дней` — метрика объявляется окончательной только при `k = m`.
 4. Отдельными строками, не складывая: кандидаты; `rejected`; `removed`; самоотчёты «заявлено, не подтверждено»; `download_clicked`; `share_clicked`; `caption_copied`; `clip_link_visited`; `landing_visited` по каждому `source`; `partner_link_visited`; `fakedoor_clicked`.
 5. `i` по каждому активированному автору: `confirmed_clips(author) / 1`, выводится списком «автор — k клипов»; среднее — только при `n ≥ 30`.
@@ -961,7 +972,7 @@ OUTPUT: расход за сегодня (МСК) до счёта провайд
 STEPS:
 1. `/admin/spend`: `auth({role:'operator'})` — без роли 404. `ops spend-today`: проверки роли нет, вывод — те же строки шагов 2–5 в stdout, код возврата 0; недоступная БД → код 2 и сообщение (не «расхода нет»).
 2. `d ← msk_day(now())`. Из `quota_counter` (scope `global`, день `d`): `stt_sec` → «STT {ceil(used/60)} из {LIMIT_STT_GLOBAL_SEC_DAY/60} мин»; `llm_kop` → «LLM {used/100 с двумя знаками} из {LIMIT_LLM_GLOBAL_KOP_DAY/100} ₽».
-3. Из `spend_ledger` за `d`: число попыток по `call` и `outcome`; рубли тремя отдельными числами (VA-15, CFG-I7): **факт** — Σ `cost_kop` при `cost_usd_micro IS NOT NULL`; **оценка** — Σ `cost_kop` при `cost_usd_micro IS NULL` (цена из кода); **неизвестно** — число попыток, у которых нет ни факта, ни цены (не выводится как 0 ₽).
+3. Из `spend_ledger` за `d`: число попыток по `call` и `outcome`; рубли тремя отдельными числами (VA-15, CFG-I7): **факт** — Σ `cost_kop` при `cost_estimated = false`; **оценка** — Σ `cost_kop` при `cost_estimated = true` (цена из API моделей или резерв LLM); **неизвестно** — число попыток без `cost_kop` (не выводится как 0 ₽). Группировка — по полю `cost_estimated`, не по `NULL` (VA2-06).
 4. По аккаунтам: `quota_counter` scope `account` за `d` — единицы и доля персонального потолка, по строке на аккаунт.
 5. Пусто → «сегодня вызовов не было», а не `0 %` доли.
 COMPLEXITY: O(a) по аккаунтам дня.
@@ -1004,25 +1015,29 @@ COMPLEXITY: O(v) за проход, v ≤ 100.
 REQUIREMENT: `FR-clips-4`
 REQUIREMENT: `AC-clips-24`
 REALISES: SC-US-004-7
-INPUT: `ops stt-probe <файл>` (канон §7): 10 мин, 2 голоса; эталон и список кандидатов — рядом с файлом
-OUTPUT: `docs/probes/stt-day1.md` и рекомендация значения `STT_MODEL`
+INPUT: `ops stt-probe <файл>` (канон §7): 10 мин русского подкаста, 2 голоса; эталон и список кандидатов — рядом с файлом. Запуск с хоста VPS в Нидерландах без стека: `node apps/worker/dist/cli/ops.js stt-probe <файл>` (ADR-001 п. 4)
+OUTPUT: `docs/probes/stt-day1.md`: ответы моделей, значения критериев, выбранная ветка и значения `STT_PROVIDER`/`STT_MODEL`
 STEPS:
-1. Эталон (готовит оператор): ручная расшифровка 2 мин с метками спикеров и 10 выбранных фраз с временем начала.
-2. Аудио режется алгоритмом «Подготовка задачи», шаг 8 (те же куски, что в бою). Каждый кандидат вызывается через тот же адрес OpenRouter и тот же ключ, что и боевой контур, с сервера в Нидерландах.
-3. Для каждой модели считать семь критериев FR-clips-4 п. 9, все обязательны:
-   | # | Критерий | Порог |
-   |---|---|---|
-   | 1 | у каждого сегмента есть `start_ms`/`end_ms` | 100 % |
-   | 2 | метки спикеров вернулись через OpenRouter | есть |
-   | 3 | WER на эталоне 2 мин | ≤ 15 % |
-   | 4 | верная метка спикера у сегментов эталона после сопоставления (алгоритм «Сшивка меток») | ≥ 90 % |
-   | 5 | расхождение начала фразы со звуком, 10 фраз | ≤ 300 мс |
-   | 6 | каждый кусок ответил | < 60 с, 0 обрывов |
-   | 7 | цена по `usage.cost` | ≤ 62 ₽ за час (`cost_usd_micro × FX_USD_RUB_KOP / 1e6` в пересчёте на 60 мин) |
-4. `passed ← модели, прошедшие все 7`. Выбор — самая дешёвая по `usage.cost` за час. Пороги тихо не снижаются.
-5. IF `passed` пуст THEN записать провал; человек явной правкой конфигурации ставит `STT_PROVIDER=openai` и повторяет пробу; не прошёл и он → стоп, вопрос владельцу. Автоматического переключения нет.
-6. Записать файл: дата, модели, сырые ответы (ссылки на файлы), значения каждой строки таблицы, выбор.
-COMPLEXITY: O(m · c), m ≤ 5 моделей, c ≈ 7 кусков.
+1. Зависимости — только Node 20, ffmpeg, `OPENROUTER_API_KEY` (и `OPENAI_API_KEY` для ветки 2). Postgres, Redis и S3 проба НЕ открывает: `@clipmkr/config` для этой подкоманды проверяет только эти переменные (VA2-17).
+2. Нарезка: `ffmpeg -i <файл> -vn -ac 1 -ar 16000 -f segment -segment_time 90 …` с перекрытием 5 с (второй проход со сдвигом `-ss 85` склеивает пары) — простая нарезка по 90 с, без плана по паузам. Эталон (готовит оператор): ручная расшифровка 2 мин с метками спикеров и 10 выбранных фраз с временем начала.
+3. Каждый кандидат зовётся тем же адаптером `Transcriber`, что и боевой воркер, с тем же адресом OpenRouter и ключом.
+4. Критерии ADR-001 п. 4, две группы:
+   | # | Критерий | Порог | Группа |
+   |---|---|---|---|
+   | 1 | у каждого сегмента есть `start_ms`/`end_ms` | 100 % | продуктовый |
+   | 2 | метки спикеров вернулись через OpenRouter | есть | подписи |
+   | 3 | WER на эталоне 2 мин | ≤ 15 % | продуктовый |
+   | 4 | верная метка спикера после сопоставления («Сшивка меток») | ≥ 90 % | подписи |
+   | 5 | расхождение начала фразы со звуком, 10 фраз | ≤ 300 мс | продуктовый |
+   | 6 | каждый кусок ответил | < 60 с, 0 обрывов | продуктовый |
+   | 7 | цена за час: `usage.cost`, а без него — `usage.seconds × STT_PRICE_PUSD_PER_SEC` | ≤ 62 ₽ | продуктовый |
+5. Выбор — первая сработавшая ступень:
+   1. самая дешёвая модель OpenRouter, прошедшая все 7 → `STT_PROVIDER=openrouter`, подписи включены;
+   2. иначе та же проба для прямого OpenAI `gpt-4o-transcribe-diarize` (человек явно задаёт `STT_PROVIDER=openai`); прошёл все 7 → подписи включены;
+   3. иначе самая дешёвая модель OpenRouter, прошедшая продуктовые 1, 3, 5, 6, 7 → `STT_PROVIDER=openrouter`, подписей спикеров нет, субтитры фразами (канон §12, AC-clips-24);
+   4. продуктовые критерии не прошёл никто → стоп, вопрос владельцу. Пороги тихо не снижаются, переключения без человека нет.
+6. Записать файл: дата, модели, сырые ответы (ссылки на файлы), значения каждой строки таблицы, ступень выбора.
+COMPLEXITY: O(m · c), m ≤ 6 моделей, c ≈ 7 кусков.
 
 ## API Contracts
 
@@ -1076,7 +1091,7 @@ stateDiagram-v2
   }
   running --> succeeded: clips_done = clips_total, или 0 клипов
   running --> failed: причина из 9 (finish_failed)
-  failed --> running: retry (кроме file_invalid, duration_exceeded; исходник цел)
+  failed --> running: retry (кроме file_invalid, duration_exceeded, no_timestamps, stt_failed по той же модели; исходник цел)
   succeeded --> [*]
 ```
 
@@ -1120,7 +1135,7 @@ stateDiagram-v2
 
 ## Scenario Coverage
 
-Scenarios in Specification.md: 61  ·  claimed by an algorithm: 59
+Scenarios in Specification.md: 63  ·  claimed by an algorithm: 61
 
 Not claimed by any algorithm:
 | Scenario | Reason |

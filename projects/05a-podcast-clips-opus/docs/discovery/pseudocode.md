@@ -104,4 +104,40 @@
 
 - Метрика недели считает уникальные клипы по `publication.clip_code` (заполняется при paste-back, канон §4); оговорка о завышении снята; покрытие без изменений (53/56 + 3, 59/61 + 2).
 
+
+## Итерация исправлений 2 (ре-валидация: val2-adversarial, val2-trace; canon 2acd0f44…)
+
+| Находка | Статус | Как |
+|---|---|---|
+| VT2-02 = VA2-01 (high) | закрыта | лишнее присваивание `authors_confirmed ← COUNT(DISTINCT account_id)` удалено; итог — `min(accounts, channels)`; тест 3 аккаунта × 1 канал × 5 клипов → `authors_confirmed = 1`, `goal_met = false`, мутация названа |
+| VA2-03 (high) | закрыта | функция `display_dims(probe)`: SAR (`sample_aspect_ratio`) и поворот (`side_data_list` Display Matrix / `tags.rotate`, 90/270 → обмен сторон); раскладка и рендер считают в повёрнутых размерах (autorotate ffmpeg); рендер берёт `probe` сам по подписанной ссылке; фикстура MOV 1920×1080 `rotate=90` → вертикальный кадр без полей, знак (70, 200) |
+| VA2-04 (high) | закрыта (число — замер) | `LLM_FIELD_MAX_CHARS` (title 50, цитаты 80, причины 90) в промпте и в коде (обрезка по слову, не ошибка схемы); расчёт ≈ 2 580 ≤ 3 000 токенов (запас ~14 %, пессимистично 2 симв./токен); `finish_reason='length'` → `selection_failed` сразу, без повтора той же длины, журнал `llm_output_truncated`; `LLM_MAX_OUTPUT_TOKENS` помечен «замер на пробе дня 1». Потолки 2 400 / 5 000 не менялись |
+| VA2-05 | закрыта | шаг 2a допуска — одна формулировка как в Spec FR-clips-10 (оценка одной попытки против потолка задачи и остатков); один повтор AC-clips-8 гарантирует новая проверка конфигурации 5a: `llm_reserve_kop(7200 × LLM_EST) × LIMIT_LLM_ATTEMPTS_JOB ≤ LIMIT_LLM_KOP_JOB`, иначе `worker-ai` не стартует. Расхождение ADR-006 / Refinement (VT2-01) — их владельцы |
+| VA2-06 / VT2-03 / VT2-04 | закрыты | цена STT — из `GET /api/v1/models` при старте (ADR-006), целое `STT_PRICE_PUSD_PER_SEC` (пико-доллары/с), нет модели → старт падает; `cost_usd_micro`, `cost_kop` считаются целыми без «коп./с»; пишется `cost_estimated` (канон §4), для LLM — true до ответа, false по `usage.cost`; `/admin/spend` и `ops spend-today` группируют по `cost_estimated` |
+| VA2-07 | закрыта | `complete`: `NoSuchUpload` у `ListParts`/`Complete` → `HeadObject` с тем же размером → продолжить (идемпотентно после обрыва); части и ETag — из `ListParts`, тело клиента только сверяется |
+| VA2-08 | закрыта | `max > 3840 OR min > 2160` по эффективным размерам → `file_invalid` |
+| VA2-09 | закрыта | `watermark_fits` проверяется в подготовке до допуска STT → `file_invalid` «кадр слишком мал для знака» |
+| VA2-10 | закрыта | один файл шрифта, семейство из него же, `ass=…:fontsdir=/app/fonts`; самопроверка при старте `worker-render` (кадр со знаком на белом, нет текста → не стартует) |
+| VA2-11 | не локальная | настройки клиента S3 (`requestChecksumCalculation`/`responseChecksumValidation: WHEN_REQUIRED`) и `AllowedHeaders` CORS — канон/ADR-007 (координатор, adr) |
+| VA2-12 | закрыта | все операции оператора и `ops` ищут аккаунт по `canonical_email`; 0 строк → 404 / код 1 без `audit_log`; `verify_email` уже подтверждённого → 409 |
+| VA2-14 / VT2-13 | закрыты | «Транскрипция куска» шаг 2: `FOR SHARE` на задаче в `running` и на отметке допуска в той же транзакции, что и инкремент попытки |
+| VA2-15 | закрыта | частичный уникальный индекс `quota_counter_stt_admission ON quota_counter(scope_id) WHERE scope='job' AND kind='stt_sec'` |
+| VA2-16 | закрыта | `confirm` кандидата с `clip_id IS NULL` запрещён (только `reject`) |
+| VA2-17 | закрыта | проба переписана по ADR-001 п. 4: без БД/Redis/S3, `ffmpeg -f segment` 90 с + перекрытие 5 с, продуктовые и «подписные» критерии, 4 ступени выбора |
+| VA2-18 | закрыта | сравнение с длительностью аудиопотока, допуск `max(2 %, 3 с)`, отказ только когда фактически больше |
+| VA2-19 | закрыта | Яндекс (`.` ≡ `-`, домены → yandex.ru), `+tag` у outlook/hotmail/live/icloud/me |
+| VA2-20 | закрыта в своей части | диаграмма `failed → running` дополнена `no_timestamps` и `stt_failed` той же модели; ADR-009/ADR-007 — adr |
+| VA2-21 | закрыта | `ops partner-add <имя> [код] [--account <email>]`; без `--account` когорта помечается «самореферал не проверялся» |
+| VA2-22 | не трогалась | вопрос владельцу (сброс пароля во 2-й очереди); CLI `ops reset-password` вне канона |
+| VA2-23 | закрыта | `stt_failed` с `schema_invalid` в `spend_ledger` задачи → без кнопки «Повторить», текст «модель не справилась с этим файлом» |
+| VT2-05 | закрыта | шаг 8a входа: middleware страниц сам обновляет пару по `refresh`; клиентский `fetch` при 401 один раз зовёт `refresh` и повторяет запрос; покрыт SC-VS-001-7 |
+| VT2-06 | закрыта | уборщик по состоянию работы: `unknown` → `add`; `completed/failed` → `remove` + `add`; `active` — следующим проходом |
+| VT2-16 | закрыта в своей части | OUTPUT входа без `access_token`; `caption_copied` в `event_once_per_day_clip`; подписи спикеров — одно правило Spec FR-clips-7 п. 4 (все пересекаемые куски `confident`) |
+| VT2-01, VT2-11 | не локальные | правило допуска записано по Spec; противоречия ADR-006/Refinement и день job-счётчиков в каноне — координатор/adr/refinement |
+| VA2-02, VA2-13 | не трогались | ждут владельца |
+| VA2-25, VT2-14 | не мои | ворота допуска стоят в «Транскрипции куска», шаг 1 — ссылка для refinement-completion |
+
+Покрыт новый AC-clips-29 (SC-US-001-7, сброс пароля, 2-я очередь) и SC-VS-001-7 (продление сессии).
+Итог: 45 алгоритмов; ключей 57, покрыто REQUIREMENT 54 (+3 с причиной: NFR-clips-4, NFR-clips-7, AC-clips-15), лишних 0; сценариев 63, заявлено 61 (+2 с причиной: SC-US-006-2 ui-only, SC-US-012-3 config-only), висячих 0; `grep -c ':llm\|:render\|:stt\|Bearer'` = 0; `check-docs-complete` → 0.
+
 Status: completed

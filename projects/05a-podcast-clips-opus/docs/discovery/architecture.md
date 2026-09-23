@@ -185,4 +185,34 @@ exit=2
 
 - Знак приведён к Specification FR-GROWTH-003: ADR-010 п. 2 и reuse map Architecture — x = 70 / y = 444 (16:9), x = 158 (4:3), x = 70 / y = 200 (вертикальный), плашка 0,5–0,6, радиус 12 px; пометка о проверке OCR и телефоном сохранена.
 
+
+## Итерация исправлений 2
+
+| Находка | Что сделано | Где |
+|---|---|---|
+| VT2-01 / VA2-05 (high) | правило выполнимости LLM переписано дословно по Specification FR-clips-10: оценка LLM по длительности записи > `LIMIT_LLM_KOP_JOB` → `quota_user`; > остатка автора → `quota_user`; > остатка сервиса → `quota_global`; это проверка, а не резерв. Пример «3 × 24 ₽ > 50 ₽» и тест «осталось 20 ₽» убраны, тесты переписаны под правило | ADR-006 п. 3 и «Как проверить»; Architecture — sequence-диаграмма, сверка |
+| VT2-07 | резерв STT: автору `ceil(Σ unique_ms / 1000)` по длительности записи, сервису `Σ ceil(chunk.duration_ms / 1000)` по секундам провайдера | ADR-006 п. 2, Architecture — диаграмма |
+| VT2-03 / VA2-06 | ADR оставляет вариант, рекомендованный VA2-06: цена секунды STT из `pricing.prompt` `GET /api/v1/models` при старте, признак `cost_estimated`; единица цены помечена `[ВЫВОД]`, проба сверяет `usage.cost` с `seconds × price`. Расхождение с Pseudocode (`STT_PRICES`, `cost_usd_micro IS NULL`) записано в сверку | ADR-006 п. 2; Architecture «Reconciliation» |
+| VT2-17 | сверка с Pseudocode выполнена по-настоящему (45 алгоритмов; поля, `SET` и `INSERT` сверены с каноном §4 скриптом): расхождения — только `cost_estimated` и источник цены STT; раздел «Открытые расхождения» закрыт; тело `POST /api/videos` — `{size_bytes, ext, rights_confirmed}`; в Caddyfile добавлено `respond /api/health 404` | Architecture, Architecture-compose |
+| VA2-10 | один файл шрифта в `/app/fonts`, `fontsdir` у `ass=` и `fontfile` у `drawtext`, метрики плашки — по тому же файлу; самопроверка пробного кадра при старте `worker-render` | ADR-010 п. 1, Architecture «Сборка» |
+| VA2-11 | клиент S3: `requestChecksumCalculation`/`responseChecksumValidation = 'WHEN_REQUIRED'`, SDK из lock-файла; CORS + `AllowedHeaders = content-type` (правка канона запрошена); E2E — с SDK из lock-файла | ADR-007 п. 3a и «Как проверить»; Architecture |
+| VA2-20 | ADR-009: фильтр `scale=1080:608:force_original_aspect_ratio=decrease,pad=…:420+(608-ih)/2` (4:3 больше не наезжает на субтитры) и ветка вертикального исходника; ADR-007 п. 3: `AbortIncompleteMultipartUpload` через 1 день | ADR-009, ADR-007, C4 |
+
+Не тронуто: VA2-02 (место знака — ждёт владельца).
+
+### Нужны правки канона (вношу не я)
+1. §8 CORS: `AllowedHeaders = content-type` (VA2-11).
+2. §1: для `web` в prod разрешить публикацию только на петлю `127.0.0.1` (эскиз так и делает; правило docker-ports это
+   разрешает) — либо я уберу `ports:` из prod, если координатор оставит «нет» (VT2-17).
+3. §4/§6: закрепить источник цены секунды STT — `pricing.prompt` из `GET /api/v1/models` при старте (ADR) или константа
+   `STT_PRICES` из пробы (Pseudocode); и что `cost_estimated` пишется явно (VT2-03, VA2-06).
+
+### Проверки
+- эскиз `docker compose --profile prod --profile test config -q` → 0;
+- check-external-deps → 0 (16 CONFIRMED, 1 UNCONFIRMED);
+- check-file-ownership → 0;
+- check-canon → 2 («повторяются строки: docs/architecture-compose.md» — известная несовместимость стражей при разрезе);
+  sha256 canon.md вручную совпал с dispatch-plan (2acd0f443199f4e3…).
+- Размеры: ADR.md 472, Architecture.md 416, Architecture-compose.md 132, C4_Diagrams.md 140 — все < 500.
+
 Status: completed

@@ -38,7 +38,7 @@ services:
     profiles: [prod, test]
     command: ["web"]
     mem_limit: 1g
-    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]            # только петля: снаружи обойти caddy нельзя
+    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]            # только петля; канон §1 для prod пишет «нет» — [правка канона запрошена]: петля законна по docker-ports
     environment:
       <<: [*db-env, *redis-env, *s3-env, *limits-env]
       BASE_URL: ${BASE_URL:?}
@@ -123,6 +123,7 @@ volumes: { pgdata: {}, redisdata: {}, caddy_data: {}, caddy_config: {}, minio_da
 ```text
 clipmkr.ru {
 	encode gzip
+	respond /api/health 404        # health — только для healthcheck внутри сети (канон §7: внутренний)
 	request_body /api/* {
 		max_size 1MB
 	}
