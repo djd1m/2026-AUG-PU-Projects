@@ -69,7 +69,7 @@
 | `quota_counter` | `scope` (`account` \| `global` \| `job`), `scope_id`, `day` (дата Europe/Moscow), `kind`, `used`; первичный ключ из всех, кроме `used` |
 | `spend_ledger` | `id`, `account_id`, `job_id`, `call` (`stt` \| `llm`), `model`, `attempt`, `units_reserved`, `units_actual`, `cost_usd_micro`, `cost_kop`, `outcome`, `created_at` |
 | `event` | `id`, `name`, `account_id`, `clip_id`, `session_id`, `props` (jsonb), `created_at`; сырой IP не пишется |
-| `publication` | `id`, `clip_id`, `account_id`, `url`, `url_normalized` (уникальный), `platform`, `status`, `reason`, `verified_at`, `rechecked_at`, `created_at`; удаляется вместе с клипом |
+| `publication` | `id`, `clip_id`, `account_id`, `url`, `url_normalized` (уникальный), `platform`, `channel_key` (канал/профиль автора на площадке, нижний регистр; для подсчёта «разных авторов», VA-14), `status`, `reason`, `verified_at`, `rechecked_at`, `created_at`; удаляется вместе с клипом |
 | `partner` | `id`, `name`, `contact`, `audience_url`, `partner_code` (уникальный, верхний регистр), `account_id`, `created_at` |
 | `attribution` | `id`, `account_id`, `partner_id`, `stage`, `source`, `self_referral`, `created_at`; уникально (`account_id`, `stage`) |
 | `audit_log` | `id`, `actor`, `action`, `target`, `reason`, `created_at` |
@@ -221,7 +221,7 @@ CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `Exp
 
 Всего 8 NFR: NFR-clips-1, NFR-clips-2, NFR-clips-3, NFR-clips-4, NFR-clips-5, NFR-clips-6, NFR-clips-7, NFR-clips-8
 
-Всего 24 AC: AC-clips-1, AC-clips-2, AC-clips-3, AC-clips-4, AC-clips-5, AC-clips-6, AC-clips-7, AC-clips-8, AC-clips-9, AC-clips-10, AC-clips-11, AC-clips-12, AC-clips-13, AC-clips-14, AC-clips-15, AC-clips-16, AC-clips-17, AC-clips-18, AC-clips-19, AC-clips-20, AC-clips-21, AC-clips-22, AC-clips-23, AC-clips-24
+Всего 28 AC: AC-clips-1, AC-clips-2, AC-clips-3, AC-clips-4, AC-clips-5, AC-clips-6, AC-clips-7, AC-clips-8, AC-clips-9, AC-clips-10, AC-clips-11, AC-clips-12, AC-clips-13, AC-clips-14, AC-clips-15, AC-clips-16, AC-clips-17, AC-clips-18, AC-clips-19, AC-clips-20, AC-clips-21, AC-clips-22, AC-clips-23, AC-clips-24, AC-clips-25, AC-clips-26, AC-clips-27, AC-clips-28
 
 В Pseudocode каждое `### Algorithm:` несёт `REQUIREMENT:` с одним из этих ключей.
 
