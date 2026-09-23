@@ -28,9 +28,10 @@ maturity: beta
 5. Блокированные показывать вместе с явным блокером.
 6. Показывать не больше трёх ограниченных действий и называть связывающие документы и FR/AC.
 
-Роадмап ядра линеен по зависимостям (Completion §1.3, дни 1–12): `stt-probe` (день 1) →
+Роадмап ядра — 13 фич, линеен по зависимостям (Completion §1.3, дни 1–12): `stt-probe` (день 1) →
 `foundation-auth` (день 1) → `upload-and-admission` (дни 2–3а) → `stt-pipeline` (дни 2–3б) →
 `llm-selection` (день 4) → `render-pipeline` (день 5) → `job-lifecycle-and-viewer` (день 6) →
+`video-deletion-and-cleanup` (малая фича, встык с днём 6-7, toolkit-review TK-04) →
 `growth-loop-and-ops` (день 7) → `testing-hardening` (дни 8–9) → `watermark-ocr-verification` +
 `measurement-and-calibration` (дни 10–11, могут идти параллельно друг другу, но не раньше
 `render-pipeline`) → `deploy-netherlands` (день 12, буфер 14–19). Параллелить можно только внутри

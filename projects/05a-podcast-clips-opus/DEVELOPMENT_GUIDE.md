@@ -8,9 +8,10 @@
    для затронутого решения, `docs/Pseudocode.md` для затронутого алгоритма.
 2. Проверить `.claude/feature-roadmap.json`: зависимости фичи `done`? Если нет — работать над
    зависимостью, не над этой фичей.
-3. Прогнать роутер сложности:
+3. Прогнать роутер сложности (из корня репозитория; скрипт сам переходит в корень через
+   `git rev-parse --show-toplevel`, путь безопасен из любого cwd):
    ```bash
-   bash ../../scripts/complexity-router.sh
+   bash scripts/complexity-router.sh
    ```
    `1` (L/XL) — стоп на плане у владельца перед реализацией, это ожидаемо для
    `stt-pipeline`/`llm-selection`/деплоя. `2` — разобраться, не считать тиром T.
@@ -19,16 +20,29 @@
 
 Без этого агенту НЕКУДА развернуть код: домен `clipmkr.ru` + DNS + TLS (на 2026-09-23 HTTPS не
 отвечает, ADR-017); Resend с SPF/DKIM (OWN-05A-011); Cloud.ru аккаунт + бакет с CORS
-(`AllowedOrigins=BASE_URL`, `AllowedMethods=PUT,GET`, `ExposeHeaders=ETag`); сервер в
-Нидерландах; `OPENROUTER_API_KEY`. **Параллельно** — ручной набор 8–12 авторов беты; каждого до
+(`AllowedOrigins=BASE_URL`, `AllowedMethods=PUT,GET`, `AllowedHeaders=content-type`,
+`ExposeHeaders=ETag`); сервер в Нидерландах; `OPENROUTER_API_KEY`. **Параллельно** — ручной набор
+8–12 авторов беты; каждого до
 старта отмечает оператор `ops beta-add <email>`.
 
 ## 2. Проба STT дня 1 (первая фича, `stt-probe`)
 
-Выполняется ДО кода конвейера, БЕЗ развёрнутого стека:
+Выполняется ДО кода конвейера, БЕЗ монорепо (решение координатора, TK-05, второй проход):
+`stt-probe` — САМОСТОЯТЕЛЬНЫЙ скрипт `projects/05a-podcast-clips-opus/scripts/stt-probe.mjs`
+(Node 22, только `fetch` к OpenRouter/OpenAI и `ffmpeg` с хоста для нарезки ~90с/перекрытие 5с) —
+никакого `package.json`, `workspaces` или TypeScript-сборки не требует и не создаёт. Фича не
+зависит ни от чего и не блокирует, и её ничто не блокирует:
 
 ```bash
-node apps/worker/dist/cli/ops.js stt-probe <файл>
+node projects/05a-podcast-clips-opus/scripts/stt-probe.mjs <файл>
+```
+
+Позже, когда `foundation-auth` подняла `apps/worker`, ТА ЖЕ логика доступна как ТОНКАЯ ОБЁРТКА —
+CLI-подкоманда `ops stt-probe <файл>` (canon §7), переиспользующая адаптер `Transcriber` из
+`packages/models`, а не повторяющая пробный код:
+
+```bash
+docker compose exec worker-ai ops stt-probe <файл>
 ```
 
 5 кандидатов OpenRouter, 7 критериев (ADR-001). Результат — `docs/probes/stt-day1.md`,
@@ -50,11 +64,13 @@ node apps/worker/dist/cli/ops.js stt-probe <файл>
 
 ## 4. Проверки перед коммитом
 
+Из корня репозитория:
+
 ```bash
 npm test && npm run lint && npm run build
 node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus
 bash scripts/check-port-conflicts.sh projects/05a-podcast-clips-opus
-bash scripts/check-env-wiring.sh projects/05a-podcast-clips-opus
+bash projects/05a-podcast-clips-opus/scripts/check-env-wiring.sh          # создаётся в Phase 4 (Codex)
 node .claude/hooks/check-model-cost.cjs projects/05a-podcast-clips-opus
 node .claude/hooks/check-job-contract.cjs projects/05a-podcast-clips-opus
 ```
@@ -70,7 +86,7 @@ node .claude/hooks/check-job-contract.cjs projects/05a-podcast-clips-opus
 
 ```bash
 docker compose --profile test up
-bash scripts/check-cjm.sh <адрес тестового стенда>
+bash projects/05a-podcast-clips-opus/scripts/check-cjm.sh <адрес тестового стенда>   # создаётся в Phase 4 (Codex)
 ```
 
 ## 6. Коммит и передача
@@ -83,7 +99,9 @@ Commit message по `../../.claude/rules/git-workflow.md` (Conventional Commits)
 ## 7. Развёртывание (фича `deploy-netherlands`)
 
 Порядок обязателен, каждый шаг предполагает, что предыдущий прошёл (`docs/Completion.md` §2):
-проверки портов/env/buildable → миграции → старт сервисов → `check-cjm.sh https://clipmkr.ru`.
+проверки портов/env/buildable → миграции → старт сервисов →
+`bash projects/05a-podcast-clips-opus/scripts/check-cjm.sh https://clipmkr.ru` (скрипт создаётся
+в Phase 4, до того — заглушка `2` «проверка не выполнена», не «всё чисто»).
 
 ## 8. Модели разработки и телеметрия
 
@@ -97,6 +115,6 @@ Cross-family (OWN-05A-00M) — отдельное решение владель�
 ## 9. Известные оговорки, с которыми нужно работать осознанно
 
 См. `CLAUDE.md` §«Известные оговорки Phase 2»: `check-canon.cjs` = 2 (дефект стражей, не проекта,
-sha256 сверяется вручную), несколько мест ADR/C4/Completion со ссылками на отменённое место знака
-OWN-05A-013 (сверять с FR-GROWTH-003 п.4 действующей формулы), число потолков в некоторых
-документах может отставать от канона (9, не 7).
+sha256 сверяется вручную), число потолков в некоторых документах может отставать от канона
+(9, не 7). Место знака (OWN-05A-015) на 2026-09-23 согласовано во всех документах — сверять с
+`Specification.md` FR-GROWTH-003 п.4 при любой новой правке, а не предполагать расхождение.

@@ -47,13 +47,29 @@ ClipMkr превращает длинную русскоязычную запи�
 
 Решение владельца: **планирование и проверка — семейство Anthropic** (Opus 5.5 / Sonnet 5 / Haiku
 4.5; Fable исключён — квота), **код — семейство OpenAI через Codex** (`gpt-6-astra` / `gpt-6-sol` /
-`gpt-6-luna`, класс задачи выбирает модель); синтез CJM и HTML — Codex `gpt-6-astra` medium;
-архитектура и ADR писала Opus 5.5. Правило `codex-invocation-local.md` (корень) и
-`feature-adr-ultracode.md` §«Cross-model QE default» применяются буквально: **автор кода не
-рецензирует сам себя** — QE и код-ревью этого проекта идут на модели ДРУГОГО семейства, чем та,
-что написала правку. Смена семейства для стадии — решение владельца, не тихая подстановка при
-исчерпании лимита; см. `../../.claude/rules/feature-adr-ultracode.md` §«Usage-adaptive routing» про
-разницу между заявленной сменой и предохранителем от лимита.
+`gpt-6-luna`); синтез CJM и HTML — Codex `gpt-6-astra` medium; архитектура и ADR писала Opus 5.5.
+Таблица ниже — **окончательное решение координатора** по `docs/decisions-owner.md` OWN-05A-00M
+(TK-09, второй проход после review): привязывает три модели Codex и двух ревьюеров Anthropic к
+классу задачи. Обязательна к исполнению.
+
+| Класс работы | Codex (модель, effort) | Ревью/QE (Anthropic) |
+|---|---|---|
+| Обычные фичи (маршруты, экраны, миграции, CLI `ops`) | `gpt-6-sol`, high | Sonnet 5 |
+| Конвейер STT→LLM→рендер, денежный контур (допуск, потолки, резерв), знак | `gpt-6-astra`, high | Opus 5.5 |
+| Перенос из донора, изолированные модули (Solution_Strategy «взять»/«доработать») | `gpt-6-sol`, medium | Sonnet 5 |
+| Механика (конфиги, фикстуры, `.env.example`, разметка тестовых данных) | `gpt-6-luna`, low | Sonnet 5 |
+
+Безопасность — Opus 5.5, вместе с денежным контуром (одна строка ревьюера, не отдельная).
+`gpt-6-luna` назначена ровно механическим задачам — не оставлена без назначения, как в
+предыдущей версии этой таблицы.
+
+Правило `codex-invocation-local.md` (корень) и `feature-adr-ultracode.md` §«Cross-model QE
+default» применяются буквально: **автор кода не рецензирует сам себя** — ревью и QE идут на
+модели ДРУГОГО семейства, чем та, что написала правку. **Для 05a `usageAdaptive: false`**
+(отклонение от дефолта `feature-adr-ultracode.md` §«Usage-adaptive routing»): при исчерпании
+лимита Anthropic стадия ЖДЁТ или СПРАШИВАЕТ владельца, а НЕ переключается автоматически на
+Codex-QE того же семейства, что писало код — автоматическое переключение нарушило бы «автор кода
+не рецензирует сам себя» (то самое исключение FR-2.9, которого в этом проекте допускать нельзя).
 
 ## Стек и сервисы compose (ровно 8, канон §1)
 
@@ -125,21 +141,30 @@ npm test           # unit + integration; конкурентные — Refinement
 npm run lint
 npm run build       # по каждому workspace: web, worker, db, queue, s3, config, models, payments, types
 
-# STT-проба дня 1 — БЕЗ развёрнутого стека (ADR-001 п.4, Completion §5):
-node apps/worker/dist/cli/ops.js stt-probe <файл>
+# STT-проба дня 1 — самостоятельный скрипт, БЕЗ монорепо (ADR-001 п.4, Completion §5, TK-05):
+node projects/05a-podcast-clips-opus/scripts/stt-probe.mjs <файл>
+# позже, когда worker-ai существует — та же логика тонкой обёрткой:
+docker compose exec worker-ai ops stt-probe <файл>
 
 # интеграционные — на НАСТОЯЩЕМ Postgres/Redis/MinIO, тестовый профиль:
 docker compose --profile test up
 ```
 
-`docker compose up` — только после проверок:
+`docker compose up` — только после проверок. **Все команды ниже — из корня репозитория** (той же
+директории, откуда запускается `claude`):
 
 ```bash
-node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus         # Правило №0: хранилища/web без публикации
-bash scripts/check-port-conflicts.sh projects/05a-podcast-clips-opus      # занятость портов этой машины (80/443 заняты)
-bash scripts/check-env-wiring.sh projects/05a-podcast-clips-opus          # process.env.X ↔ environment: сервиса
-bash scripts/check-compose-buildable.sh projects/05a-podcast-clips-opus   # собрать И стартовать каждый build-сервис
+node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus              # Правило №0: хранилища/web без публикации
+bash scripts/check-port-conflicts.sh projects/05a-podcast-clips-opus           # занятость портов этой машины (80/443 заняты)
+bash projects/05a-podcast-clips-opus/scripts/check-env-wiring.sh                # создаётся в Phase 4 (Codex); process.env.X ↔ environment: сервиса
+bash projects/05a-podcast-clips-opus/scripts/check-compose-buildable.sh        # создаётся в Phase 4 (Codex); собрать И стартовать каждый build-сервис
 ```
+
+Первые два скрипта существуют (репозиторий, `TK-02`); третий и четвёртый — Phase 4 переносит их из
+шаблона `.claude/snippets/bash/check-env-wiring.sh` и образца `projects/01-testimonials-senja/scripts/`
+в `projects/05a-podcast-clips-opus/scripts/` (roadmap, фича `foundation-auth`/`deploy-netherlands`,
+`expected_files`). Оба самостоятельны в выборе рабочего каталога (`cd "$(dirname "$0")/.."`
+внутри скрипта) — путь можно давать откуда угодно, лишь бы он вёл к самому файлу.
 
 ## Правила репозитория, применимые к этому проекту
 
@@ -205,17 +230,25 @@ bash scripts/check-compose-buildable.sh projects/05a-podcast-clips-opus   # со
 
 Реализация — через `/feature` (4+ файлов или новая архитектура) с маршрутизацией `/go`. Порядок
 фаз PLAN → VALIDATE → IMPLEMENT → REVIEW не пропускается (`../../.claude/rules/feature-lifecycle.md`).
-Перед `/go`/`/feature` — `bash ../../scripts/complexity-router.sh`: код `1` — L/XL, остановка на
+Перед `/go`/`/feature` — `bash scripts/complexity-router.sh` (из корня репозитория; скрипт сам
+переходит в корень через `git rev-parse --show-toplevel`, поэтому путь безопасен из любого cwd):
+код `1` — L/XL, остановка на
 плане у владельца (это ожидаемо для фич, трогающих деньги — `stt-pipeline`, `llm-selection`); код
 `2` — «проверка не выполнена», не тир T.
 
-[`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — ядро недели (`priority: mvp`) в
-линейном порядке зависимостей, первая фича — `stt-probe` (`ops stt-probe`, блокирующая проба дня 1
-по ADR-001), затем `foundation-auth` → `upload-and-admission` → `stt-pipeline` → `llm-selection` →
-`render-pipeline` → `job-lifecycle-and-viewer` → `growth-loop-and-ops` → `testing-hardening` →
-`watermark-ocr-verification` → `measurement-and-calibration` → `deploy-netherlands`. Вторая очередь
-(`priority: low`, тег `queue-2` — сброс пароля на `/admin/users`, `/admin/partners`, `/admin/spend`,
-экран fake-door) не блокирует метрику недели (PRD §«Очереди поставки», OWN-05A-014).
+[`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — 17 фич; ядро недели
+(`priority: mvp`, 13 фич) в линейном порядке зависимостей, первая — `stt-probe`
+(`scripts/stt-probe.mjs`, самостоятельный Node 22 + ffmpeg скрипт без монорепо, блокирующая проба
+дня 1 по ADR-001; не зависит ни от чего — TK-05, второй проход), затем
+`foundation-auth` → `upload-and-admission` → `stt-pipeline` → `llm-selection` → `render-pipeline`
+→ `job-lifecycle-and-viewer` → `video-deletion-and-cleanup` → `growth-loop-and-ops` →
+`testing-hardening` → `watermark-ocr-verification` → `measurement-and-calibration` →
+`deploy-netherlands`. Вторая очередь (`priority: low`, тег `queue-2`, 4 фичи — сброс пароля на
+`/admin/users`, `/admin/partners`, `/admin/spend`, экран fake-door) не блокирует метрику недели
+(PRD §«Очереди поставки», OWN-05A-014). Каждый FR-clips/FR-GROWTH/принятый FR-LOOK/NFR-clips/
+AC-clips из canon §10 закреплён за ≥1 фичей (mvp или queue-2) — таблица «ключ → фича» и проверка
+скриптом (0 непривязанных) — `docs/discovery/toolkit.md` §«Трассировка ключей после TK-04»
+(toolkit-review, TK-04).
 
 ## Известные оговорки Phase 2 (перенесены в реализацию, а не забыты)
 
@@ -244,7 +277,9 @@ bash scripts/check-compose-buildable.sh projects/05a-podcast-clips-opus   # со
 Без этого агенту НЕКУДА развернуть код и НЕЧЕМ отправить письмо (Completion §1.3): домен + DNS +
 TLS для `clipmkr.ru` (на 2026-09-23 HTTPS не отвечает, ADR-017); аккаунт и домен Resend с SPF/DKIM
 (OWN-05A-011); аккаунт и бакет Cloud.ru с CORS (`AllowedOrigins=BASE_URL`,
-`AllowedMethods=PUT,GET`, `ExposeHeaders=ETag`); доступ к серверу в Нидерландах; ключ
+`AllowedMethods=PUT,GET`, `AllowedHeaders=content-type`, `ExposeHeaders=ETag` — без
+`AllowedHeaders=content-type` браузер не пройдёт preflight на `PUT` с заголовком `Content-Type`,
+`curl` этого не покажет); доступ к серверу в Нидерландах; ключ
 `OPENROUTER_API_KEY`. **Параллельно, не после** — ручной набор 8–12 авторов беты; каждого до старта
 беты отмечает оператор `ops beta-add <email>`, иначе он получит квоту новичка (30 мин), а не 120.
 

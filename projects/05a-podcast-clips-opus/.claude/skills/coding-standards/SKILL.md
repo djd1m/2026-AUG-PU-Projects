@@ -45,7 +45,7 @@ ADR. Для любого изменения admission/quota/spend — `.claude/a
 
 ## Порядок шагов в конвейере (принадлежит защите, не удобству)
 
-`POST /api/videos` → `…/complete` (`EnqueueScan`-аналог, «Завершение загрузки»):
+`POST /api/videos` → `…/complete` («Завершение загрузки»):
 
 ```
 подтверждение почты → лимит частоты → размер ≤ 2 ГБ → РЕЗЕРВ лимита загрузок (на POST /api/videos,
@@ -57,8 +57,11 @@ ADR. Для любого изменения admission/quota/spend — `.claude/a
 допуска THEN admit_stt(job_id)`; отказ → `RETURN`. Это единственное место, где резервируется
 STT — «Повтор задачи» ПОЛАГАЕТСЯ на эти ворота, а не проверяет их сам.
 
-«Допуск STT» (шаг 2a — ВЫПОЛНИМОСТЬ LLM, до резерва STT самого): `est_kop ←
-llm_reserve_kop(video.duration_ms, LLM_EST_CHARS_PER_SEC)`; `est_kop > LIMIT_LLM_KOP_JOB` →
+«Допуск STT» (шаг 2a — ВЫПОЛНИМОСТЬ LLM, до резерва STT самого) — дословно по Pseudocode и
+canon §11, ДВА шага, не один: `est_chars ← ceil(video.duration_ms / 1000) × LLM_EST_CHARS_PER_SEC`;
+`est_kop ← llm_reserve_kop(est_chars)` (функция принимает ЧИСЛО СИМВОЛОВ — та же функция, что и на
+шаге LLM, TK-07: подстановка `duration_ms` прямо в `llm_reserve_kop` завышает оценку в ~1000 раз и
+роняет `quota_user` на каждой задаче). `est_kop > LIMIT_LLM_KOP_JOB` →
 `quota_user` немедленно; иначе сверить остатки автора/сервиса. Пройдено → шаг 3 резервирует
 секунды STT (два разных счётчика — персональный по записи, глобальный по провайдеру,
 плюс пул новичка при `is_newbie`).

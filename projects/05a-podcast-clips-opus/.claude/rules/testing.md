@@ -113,11 +113,13 @@ spend-today`, не веб-страница) — это удовлетворяе�
 
 ## Перед передачей результата
 
+Из корня репозитория:
+
 ```bash
 npm test && npm run lint && npm run build
 node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus
 bash scripts/check-port-conflicts.sh projects/05a-podcast-clips-opus
-bash scripts/check-env-wiring.sh projects/05a-podcast-clips-opus
+bash projects/05a-podcast-clips-opus/scripts/check-env-wiring.sh          # создаётся в Phase 4 (Codex), TK-02
 node .claude/hooks/check-model-cost.cjs projects/05a-podcast-clips-opus
 node .claude/hooks/check-job-contract.cjs projects/05a-podcast-clips-opus
 node .claude/hooks/check-webhook-contract.cjs projects/05a-podcast-clips-opus   # ожидаемо 2 — «вебхуков нет»
