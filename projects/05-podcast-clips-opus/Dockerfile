@@ -36,8 +36,13 @@ CMD ["sh", "-c", "node apps/web/.next/preflight/preflight.js && exec node node_m
 # ── worker: ffmpeg 7 и ffprobe; один образ на три контейнера, команда задаётся в compose ──
 FROM node:22.22-alpine AS worker
 WORKDIR /app
-# ffmpeg в alpine приносит ffprobe той же версии; проверяется при сборке, а не предполагается
-RUN apk add --no-cache ffmpeg && ffmpeg -version && ffprobe -version
+# ffmpeg в alpine приносит ffprobe той же версии; проверяется при сборке, а не предполагается.
+# python3 и OpenCV — ради поиска лиц (FR-2): кадрирование ставится по ЛЮДЯМ, а не по половинам
+# кадра. Измерено 23.09.2026 на живом клипе: вслепую нижняя панель пуста в 10 замерах из 12.
+# Детектор YuNet входит в состав самого OpenCV; модель лежит в assets и в сеть не ходит.
+RUN apk add --no-cache ffmpeg python3 py3-opencv py3-numpy \
+ && ffmpeg -version && ffprobe -version \
+ && python3 -c "import cv2; assert hasattr(cv2, 'FaceDetectorYN'), 'OpenCV без YuNet'; print(cv2.__version__)"
 ENV NODE_ENV=production TZ=Europe/Moscow
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
