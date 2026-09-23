@@ -43,10 +43,12 @@
 
 | Очередь | Потребитель | `jobId` | Полезная нагрузка |
 |---|---|---|---|
-| `stt` | `worker-ai` | `{job_id}:stt:prepare` — подготовка (magic bytes, ffprobe, нарезка) | `job_id` |
-| `stt` | `worker-ai` | `{job_id}:stt:{chunk_idx}` | `job_id`, `chunk_idx` |
-| `llm` | `worker-ai` | `{job_id}:llm` | `job_id` |
-| `render` | `worker-render` | `{clip_id}:render` | `clip_id` |
+Разделитель в `jobId` — точка: BullMQ 5 отвергает `:` (`bullmq@5.81.5 job.js:1075` «Custom Id cannot contain :», VT-01).
+
+| `stt` | `worker-ai` | `{job_id}.stt.prepare` — подготовка (magic bytes, ffprobe, нарезка) | `job_id` |
+| `stt` | `worker-ai` | `{job_id}.stt.{chunk_idx}` | `job_id`, `chunk_idx` |
+| `llm` | `worker-ai` | `{job_id}.llm` | `job_id` |
+| `render` | `worker-render` | `{clip_id}.render` | `clip_id` |
 
 Попытки BullMQ: `attempts: 3`, экспонента от 5 000 мс. `lockDuration` 120 000 мс. Heartbeat задачи — раз в 30 с в
 `job.heartbeat_at`; нет heartbeat 300 с → задача переставляется; 3 попытки → `failed/worker_lost` (ADR-008).
@@ -125,9 +127,9 @@
 | `FX_USD_RUB_KOP` | worker-ai | без дефолта | копеек за доллар, например `8600` |
 | `LIMIT_STT_USER_SEC_DAY` | web, worker-ai | без дефолта | `7200` |
 | `LIMIT_UPLOADS_USER_DAY` | web | без дефолта | `3` |
-| `LIMIT_LLM_USER_KOP_DAY` | worker-ai | без дефолта | `3000` |
+| `LIMIT_LLM_USER_KOP_DAY` | web, worker-ai | без дефолта | `3000` |
 | `LIMIT_STT_GLOBAL_SEC_DAY` | web, worker-ai | без дефолта | `90000` |
-| `LIMIT_LLM_GLOBAL_KOP_DAY` | worker-ai | без дефолта | `30000` |
+| `LIMIT_LLM_GLOBAL_KOP_DAY` | web, worker-ai | без дефолта | `30000` |
 | `LIMIT_LLM_ATTEMPTS_JOB` | worker-ai | без дефолта | `2` |
 | `LIMIT_LLM_KOP_JOB` | worker-ai | без дефолта | `1000` |
 | `PAYMENTS_MODE` | web | без дефолта | на неделе `fake` |
@@ -146,6 +148,7 @@
 
 | Маршрут | Доступ | Назначение |
 |---|---|---|
+| `GET /api/health` | внутренний (healthcheck compose) | `200` при доступных БД и Redis; без данных пользователей |
 | `GET /` | публичный | лендинг; пишет `landing_visited` |
 | `GET /plans` | публичный | таблица планов и fake-door |
 | `GET /p/{partner_code}` | публичный | cookie `pref`, `partner_link_visited`, редирект на `/` |
@@ -174,6 +177,10 @@
 
 Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>` и `ops stt-probe <файл>` (проба STT дня 1, ADR-001). Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
 
+Сессия: access-JWT и refresh — только в cookie `httpOnly; Secure; SameSite=Lax; Path=/`; заголовок `Authorization: Bearer`
+не используется. Мутирующие запросы (`POST`/`DELETE`) проверяют `Origin` = `BASE_URL` (CSRF). Серверный рендер `/admin/*`
+и API читают сессию одинаково (VT-04, VA-06).
+
 ## 8. Ключи объектов S3
 
 | Объект | Ключ |
@@ -182,6 +189,9 @@
 | аудио-кусок | `tmp/{job_id}/chunk-{chunk_idx}.mp3` |
 | клип | `clips/{account_id}/{job_id}/{clip_id}.mp4` |
 | превью | `clips/{account_id}/{job_id}/{clip_id}.jpg` |
+
+CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `ExposeHeaders` = `ETag` — без него браузер не прочитает ETag части
+и `complete` не соберёт загрузку (VT-05, VA-07). Проверяется браузерным E2E, не `curl`.
 
 ## 9. События аналитики и метрики роста
 
