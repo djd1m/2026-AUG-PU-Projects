@@ -1,0 +1,122 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/config.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/config.test.ts (49 tests | 10 failed) 2389ms
+   ✓ Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_MINUTES 38ms
+   ✓ Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_UPLOADS 34ms
+   ✓ Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_UPLOAD_REFUNDS 36ms
+   ✓ Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_USER_LLM 35ms
+   ✓ Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_GLOBAL_MINUTES 42ms
+   ✓ Отказ запуска конфигурации > Отдельный процесс без N5_LIMIT_GLOBAL_LLM 34ms
+   ✓ Отказ запуска конфигурации > Седьмой процесс: пустой origin 39ms
+   ✓ Отказ запуска конфигурации > Старт web без S3_PUBLIC_ENDPOINT отказывает с последствием для браузера 39ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT требует HTTPS вне development/test: production 3ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT требует HTTPS вне development/test: undefined 1ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT требует HTTPS вне development/test: staging 1ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес:  0ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес:   0ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес: ftp://storage.test.invalid 0ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес: https://u:p@storage.test.invalid 0ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес: https://storage.test.invalid/bucket 0ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес: https://storage.test.invalid/?q=1 4ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес: https://storage.test.invalid/#x 1ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес:  https://storage.test.invalid 0ms
+   ✓ Отказ запуска конфигурации > S3_PUBLIC_ENDPOINT отвергает непригодный адрес: https://stor	age.test.invalid 0ms
+   ✓ Отказ запуска конфигурации > DATABASE_URL обязателен 1ms
+   ✓ Отказ запуска конфигурации > REDIS_URL обязателен 1ms
+   ✓ Отказ запуска конфигурации > SESSION_SECRET обязателен 0ms
+   ✓ Отказ запуска конфигурации > N5_PUBLIC_ORIGIN обязателен 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 0 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка -1 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 1.5 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 2x 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 1e2 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка  2 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка Infinity 0ms
+   ✓ Отказ запуска конфигурации > Отказ непригодного потолка 2147483648 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: ftp://test.invalid 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: https://test.invalid/path 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: https://u:p@test.invalid 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается:  https://test.invalid 0ms
+   ✓ Отказ запуска конфигурации > Origin не подчищается: https://test.invalid/?q=1 0ms
+   ✓ Отказ запуска конфигурации > http разрешён только в development/test 1ms
+   ✓ Отказ запуска конфигурации > Воркеры не требуют чужой секрет сессий 0ms
+   × SL-007 worker-stt refuses unusable origin undefined before paid work 41ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-stt refuses unusable origin  before paid work 34ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-stt refuses unusable origin https://test.invalid/path before paid work 34ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-stt refuses unusable origin https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com before paid work 43ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-stt accepts configured six-character width and rejects ten 2ms
+     → expected undefined to be 'https://clipmkr.ru' // Object.is equality
+   × SL-007 worker-llm refuses unusable origin undefined before paid work 37ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-llm refuses unusable origin  before paid work 38ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-llm refuses unusable origin https://test.invalid/path before paid work 44ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-llm refuses unusable origin https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com before paid work 35ms
+     → expected +0 to be 1 // Object.is equality
+   × SL-007 worker-llm accepts configured six-character width and rejects ten 1ms
+     → expected undefined to be 'https://clipmkr.ru' // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/config.test.ts > SL-007 worker-stt refuses unusable origin undefined before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-stt refuses unusable origin  before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-stt refuses unusable origin https://test.invalid/path before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-stt refuses unusable origin https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-llm refuses unusable origin undefined before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-llm refuses unusable origin  before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-llm refuses unusable origin https://test.invalid/path before paid work
+ FAIL  tests/config.test.ts > SL-007 worker-llm refuses unusable origin https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.com before paid work
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/config.test.ts:80:29
+     78|       const env = { ...environment(), N5_PUBLIC_ORIGIN: origin };
+     79|       const result = subprocess(['-e', `require('./packages/shared/dis…
+     80|       expect(result.status).toBe(1);
+       |                             ^
+     81|       expect(result.stderr).toContain('N5_PUBLIC_ORIGIN');
+     82|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/config.test.ts > SL-007 worker-stt accepts configured six-character width and rejects ten
+ FAIL  tests/config.test.ts > SL-007 worker-llm accepts configured six-character width and rejects ten
+AssertionError: expected undefined to be 'https://clipmkr.ru' // Object.is equality
+
+- Expected: 
+"https://clipmkr.ru"
+
++ Received: 
+undefined
+
+ ❯ tests/config.test.ts:85:54
+     83|   it(`SL-007 ${role} accepts configured six-character width and reject…
+     84|     const env = { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr…
+     85|     expect(loadWorkerConfig(role, env).publicOrigin).toBe(env.N5_PUBLI…
+       |                                                      ^
+     86|     expect(() => loadWorkerConfig(role, { ...env, N5_SHORT_CODE_LENGTH…
+     87|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 39 passed (49)
+   Start at  15:03:47
+   Duration  2.87s (transform 164ms, setup 0ms, collect 167ms, tests 2.39s, environment 0ms, prepare 94ms)
+

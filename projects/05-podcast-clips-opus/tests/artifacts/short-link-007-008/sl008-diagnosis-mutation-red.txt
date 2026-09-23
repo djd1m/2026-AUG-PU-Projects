@@ -1,0 +1,79 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/render-worker.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+stderr | tests/render-worker.test.ts > SL-008 real geometry failure is classified before ffmpeg and never enqueued
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"Адрес метки не помещается в безопасную область: ширина 1035 px, предел 972 px"}
+
+ ❯ tests/render-worker.test.ts (7 tests | 1 failed) 55ms
+   ✓ disk reserve before S3 GET; deferred heartbeat and zero download/render calls 8ms
+   ✓ DB plan free controls filter and canonical key, not job payload 11ms
+   ✓ DB plan paid controls filter and canonical key, not job payload 5ms
+   ✓ failure cleans working directory and schedules only DB-issued retry 9ms
+   ✓ stale input does not download or publish 1ms
+   ✓ RD-002 worker logs attempt identity and sanitized non-ffmpeg failure before retry 5ms
+   × SL-008 real geometry failure is classified before ffmpeg and never enqueued 15ms
+     → expected "spy" to be called with arguments: [ {}, …(2) ]
+
+Received: 
+
+  1st spy call:
+
+@@ -7,7 +7,7 @@
+      "series_no": 1,
+      "stage": "render",
+      "status": "running",
+      "video_id": "video",
+    },
+-   "watermark_geometry",
++   "ffmpeg_failed",
+  ]
+
+
+Number of calls: 1
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/render-worker.test.ts > SL-008 real geometry failure is classified before ffmpeg and never enqueued
+AssertionError: expected "spy" to be called with arguments: [ {}, …(2) ]
+
+Received: 
+
+  1st spy call:
+
+@@ -7,7 +7,7 @@
+      "series_no": 1,
+      "stage": "render",
+      "status": "running",
+      "video_id": "video",
+    },
+-   "watermark_geometry",
++   "ffmpeg_failed",
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/render-worker.test.ts:74:26
+     72|     start_seconds: '0', end_seconds: '20', words: [], code: 'W'.repeat…
+     73|   expect(await handleRenderJob(attempt, { ...deps, render: renderClip …
+     74|   expect(db.retryRender).toHaveBeenCalledWith(deps.pool, attempt, 'wat…
+       |                          ^
+     75|   expect(encoding).not.toHaveBeenCalled();
+     76|   expect(deps.enqueue).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  15:03:50
+   Duration  989ms (transform 302ms, setup 0ms, collect 636ms, tests 55ms, environment 0ms, prepare 99ms)
+

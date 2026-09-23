@@ -15,9 +15,11 @@ describe('Проверяемость проброса окружения', () =>
   it('Соседнему воркеру не приписываются переменные web', () => {
     const config = compose();
     for (const name of ['worker-stt', 'worker-llm', 'worker-video']) delete config.services[name]!.environment.SESSION_SECRET;
-    delete config.services['worker-stt']!.environment.N5_PUBLIC_ORIGIN;
-    delete config.services['worker-llm']!.environment.N5_PUBLIC_ORIGIN;
     expect(checkWiring(config)).toEqual([]);
+  });
+  it.each(['worker-stt', 'worker-llm'])('SL-007 %s requires the public origin in compose', role => {
+    const config = compose(); delete config.services[role]!.environment.N5_PUBLIC_ORIGIN;
+    expect(checkWiring(config)).toContain(`${role}: N5_PUBLIC_ORIGIN`);
   });
   it('Пустой или неполный compose не зеленеет', () => {
     expect(() => checkWiring({})).toThrow(); expect(() => checkWiring({ services: {} })).toThrow();

@@ -61,3 +61,19 @@ it('RD-002 worker logs attempt identity and sanitized non-ffmpeg failure before 
   expect(log).toHaveBeenCalledTimes(2);
   expect(JSON.stringify(log.mock.calls)).not.toMatch(/PRIVATE_|https:\/\/|redis:\/\//);
 });
+
+it('SL-008 real geometry failure is classified before ffmpeg and never enqueued', async () => {
+  const { renderClip } = await import('../apps/worker/src/render/ffmpeg');
+  const exec = await import('../apps/worker/src/render/exec');
+  const encoding = vi.spyOn(exec, 'execFFmpeg');
+  const deps = await fixture();
+  deps.origin = 'https://clipmkr.ru';
+  db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan: 'free',
+    start_seconds: '0', end_seconds: '20', words: [], code: 'W'.repeat(10) });
+  expect(await handleRenderJob(attempt, { ...deps, render: renderClip })).toBe('failed');
+  expect(db.retryRender).toHaveBeenCalledWith(deps.pool, attempt, 'watermark_geometry');
+  expect(encoding).not.toHaveBeenCalled();
+  expect(deps.enqueue).not.toHaveBeenCalled();
+  expect(deps.thumbnail).not.toHaveBeenCalled(); expect(deps.storage.put).not.toHaveBeenCalled();
+  expect(await readdir(directory)).toEqual([]);
+});

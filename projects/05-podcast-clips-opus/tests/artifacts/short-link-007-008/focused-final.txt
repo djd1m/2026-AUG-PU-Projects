@@ -1,0 +1,36 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/render-failure.test.ts tests/watermark-startup.test.ts tests/wiring.test.ts tests/render-worker.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/watermark-startup.test.ts (18 tests) 8968ms
+   ✓ SL-006 worker-video startup rejects an added unfit format and names it  340ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (10)  319ms
+   ✓ SL-007 actual worker-stt entry refuses bad geometry and names origin (6)  308ms
+   ✓ SL-007 actual worker-stt entry refuses bad geometry and names origin (10)  322ms
+   ✓ SL-007 actual worker-llm entry refuses bad geometry and names origin (6)  302ms
+ ✓ tests/wiring.test.ts (7 tests) 2895ms
+   ✓ Проверяемость проброса окружения > Полная конфигурация проходит, отсутствие потолка даёт находку  903ms
+   ✓ Проверяемость проброса окружения > Соседнему воркеру не приписываются переменные web  311ms
+   ✓ Проверяемость проброса окружения > SL-007 worker-stt requires the public origin in compose  346ms
+   ✓ Проверяемость проброса окружения > SL-007 worker-llm requires the public origin in compose  392ms
+   ✓ Проверяемость проброса окружения > Новая обязательная переменная config.ts не теряется в environment.ts  935ms
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+stderr | tests/render-worker.test.ts > SL-008 real geometry failure is classified before ffmpeg and never enqueued
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"Адрес метки не помещается в безопасную область: ширина 1035 px, предел 972 px"}
+
+ ✓ tests/render-worker.test.ts (7 tests) 52ms
+stdout | tests/render-failure.test.ts > SL-008 obsolete geometry failure cannot change a clip or allocate an attempt
+{"event":"stale_attempt_result","video_id":"video","clip_id":"clip","fence":4,"stage":"render","series_no":1,"attempt_no":1,"status":"running"}
+
+ ✓ tests/render-failure.test.ts (3 tests) 13ms
+
+ Test Files  4 passed (4)
+      Tests  35 passed (35)
+   Start at  15:03:20
+   Duration  14.52s (transform 474ms, setup 0ms, collect 1.58s, tests 11.93s, environment 1ms, prepare 347ms)
+

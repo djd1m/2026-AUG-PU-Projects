@@ -52,7 +52,7 @@ ADR-007, ADR-008), `docs/canon.md` §6–7. Корневые правила:
 |---|---|
 | `account.plan` не равен ровно `paid` (`null`, `''`, `PAID`, ` paid`, `premium`, число, булево) | метка ставится. `WatermarkRequired = plan !== 'paid'`, сравнение НА РАВЕНСТВО |
 | Любая из ШЕСТИ `N5_LIMIT_*` не задана или пуста | старт процесса валится, сообщение называет ИМЕННО эту переменную |
-| `N5_PUBLIC_ORIGIN` не задана, пуста или непригодна | старт `web` и `worker-video` валится; ни один клип не рендерится с адресом по умолчанию |
+| `N5_PUBLIC_ORIGIN` не задана, пуста или непригодна (в том числе метка не помещается в кадр) | старт ВСЕХ ЧЕТЫРЁХ процессов валится — `web`, `worker-stt`, `worker-llm`, `worker-video`. Двух мало: платящие стадии разобрали бы очередь и оплатили клипы, которые нельзя отрендерить (SL-007) |
 | `S3_ENDPOINT` не задан | старт валится; дефолт `http://minio:9000` в боевом профиле — дефект (ADR-002) |
 | Пароль Redis не задан | очередь не поднимается |
 | Результат STT без `words[].start/end` | отвергается ДО постановки стадии `select` |
@@ -98,7 +98,7 @@ ADR-007, ADR-008), `docs/canon.md` §6–7. Корневые правила:
 | `N5_DB_APP_PASSWORD` | `web`, три воркера, `db` | `proxy` |
 | `REDIS_PASSWORD` | `web`, три воркера, `redis` | `db`, `proxy` |
 | `SESSION_SECRET` | `web` | все остальные |
-| `N5_PUBLIC_ORIGIN` | `web`, `worker-video` | остальные |
+| `N5_PUBLIC_ORIGIN` | `web`, `worker-stt`, `worker-llm`, `worker-video` | `db`, `redis`, `proxy` |
 | `ANTHROPIC_ADMIN_KEY` | **оператор, не контейнер** | все сервисы compose |
 
 Подробности хранения и ротации — [`secrets-management.md`](secrets-management.md).

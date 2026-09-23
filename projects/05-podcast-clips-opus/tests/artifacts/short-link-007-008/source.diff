@@ -1,0 +1,370 @@
+diff --git a/apps/worker/src/workers/render.ts b/apps/worker/src/workers/render.ts
+index af0ac2f..4a26796 100644
+--- a/apps/worker/src/workers/render.ts
++++ b/apps/worker/src/workers/render.ts
+@@ -1,3 +1,4 @@
++import { WatermarkGeometryError } from '@clipmaker/shared/watermark';
+ // Adapted from jan-clone/workers/video-render.ts; job payload contains identity only.
+ import { Worker, DelayedError, type Job, type ConnectionOptions } from 'bullmq';
+ import { createHash } from 'node:crypto';
+@@ -52,7 +53,8 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
+   } catch (error) {
+     console.error(JSON.stringify({ event: 'render_attempt_failed', video_id: attempt.video_id,
+       clip_id: attempt.clip_id, fence: attempt.fence, message: renderErrorMessage(error) }));
+-    const next = await retryRender(deps.pool, attempt, error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
++    const next = await retryRender(deps.pool, attempt, error instanceof WatermarkGeometryError ? 'watermark_geometry'
++      : error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
+     if (next) {
+       try { await deps.enqueue(next, 2000); }
+       catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', renderErrorMessage(error)); }
+diff --git a/apps/worker/workers/select.ts b/apps/worker/workers/select.ts
+index 2a508bc..5d03cc1 100644
+--- a/apps/worker/workers/select.ts
++++ b/apps/worker/workers/select.ts
+@@ -1,6 +1,8 @@
++import { renderErrorMessage } from '../src/render/diagnostics';
+ import { quotaEnvironment } from '../src/quota-environment';
+ import { startWorker } from '../src/runtime';
+ void startWorker('worker-llm', { ...quotaEnvironment(), DATABASE_URL: process.env.DATABASE_URL, REDIS_URL: process.env.REDIS_URL,
++  N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN, N5_SHORT_CODE_LENGTH: process.env.N5_SHORT_CODE_LENGTH,
+   NODE_ENV: process.env.NODE_ENV, N5_MODEL_PROVIDER: process.env.N5_MODEL_PROVIDER, N5_LLM_MODEL: process.env.N5_LLM_MODEL,
+   OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY, N5_WORK_DIR: process.env.N5_WORK_DIR,
+-}).catch(() => { console.error('Воркер не запущен: проверьте конфигурацию и зависимости'); process.exitCode = 1; });
++}).catch(error => { console.error('Воркер не запущен:', renderErrorMessage(error)); process.exitCode = 1; });
+diff --git a/apps/worker/workers/stt.ts b/apps/worker/workers/stt.ts
+index b49f7e8..1d645bb 100644
+--- a/apps/worker/workers/stt.ts
++++ b/apps/worker/workers/stt.ts
+@@ -1,8 +1,10 @@
++import { renderErrorMessage } from '../src/render/diagnostics';
+ import { quotaEnvironment } from '../src/quota-environment';
+ import { startWorker } from '../src/runtime';
+ void startWorker('worker-stt', { ...quotaEnvironment(), DATABASE_URL: process.env.DATABASE_URL, REDIS_URL: process.env.REDIS_URL,
++  N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN, N5_SHORT_CODE_LENGTH: process.env.N5_SHORT_CODE_LENGTH,
+   NODE_ENV: process.env.NODE_ENV, N5_MODEL_PROVIDER: process.env.N5_MODEL_PROVIDER, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+   N5_WORK_DIR: process.env.N5_WORK_DIR, S3_ENDPOINT: process.env.S3_ENDPOINT,
+   S3_REGION: process.env.S3_REGION, S3_BUCKET: process.env.S3_BUCKET,
+   S3_ACCESS_KEY: process.env.S3_ACCESS_KEY, S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+-  S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE }).catch(() => { console.error('Воркер не запущен: проверьте конфигурацию и зависимости'); process.exitCode = 1; });
++  S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE }).catch(error => { console.error('Воркер не запущен:', renderErrorMessage(error)); process.exitCode = 1; });
+diff --git a/docker-compose.yml b/docker-compose.yml
+index f86d72a..af56d9b 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -62,6 +62,7 @@ services:
+     environment:
+       <<: [*app-env, *quota-env, *s3-env]
+       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — транскрипция невозможна}
++      N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
+       N5_MODEL_PROVIDER: live
+       N5_WORK_DIR: /work
+     volumes:
+@@ -83,6 +84,7 @@ services:
+     environment:
+       <<: [*app-env, *quota-env]
+       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — выделение фрагментов невозможно}
++      N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
+       N5_MODEL_PROVIDER: live
+       N5_LLM_MODEL: ${N5_LLM_MODEL:?модель выделения не задана}
+       N5_WORK_DIR: /work
+diff --git a/packages/db/src/render.ts b/packages/db/src/render.ts
+index b5d19a1..686bbd2 100644
+--- a/packages/db/src/render.ts
++++ b/packages/db/src/render.ts
+@@ -52,12 +52,13 @@ export async function updateRenderProgress(tx: PoolClient, videoId: string) {
+   if (terminal && counts.done > 0) await tx.query(`UPDATE attribution SET status='activated',activated_at=now()
+     WHERE account_id=(SELECT account_id FROM video WHERE id=$1) AND status='pending'`, [videoId]);
+ }
+-export async function retryRender(pool: Pool, attempt: Attempt, reason: 'ffmpeg_failed' | 'ffmpeg_timeout'): Promise<Attempt | null> {
++export async function retryRender(pool: Pool, attempt: Attempt, reason: 'ffmpeg_failed' | 'ffmpeg_timeout' | 'watermark_geometry'): Promise<Attempt | null> {
+   return transaction(pool, async tx => {
+     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
+     await tx.query(`UPDATE job_attempt SET status='failed',failure_reason=$3,finished_at=now() WHERE video_id=$1 AND fence=$2`,
+       [attempt.video_id, attempt.fence, reason]);
+-    const next = await leaseAttemptTx(tx, attempt.video_id, 'render', attempt.series_no, attempt.clip_id);
++    const next = reason === 'watermark_geometry' ? null
++      : await leaseAttemptTx(tx, attempt.video_id, 'render', attempt.series_no, attempt.clip_id);
+     if (next) return next;
+     await tx.query(`UPDATE clip SET status='failed',failure_reason=$3 WHERE id=$1 AND render_fence=$2`, [attempt.clip_id, attempt.fence, reason]);
+     await updateRenderProgress(tx, attempt.video_id);
+diff --git a/packages/shared/src/config.ts b/packages/shared/src/config.ts
+index fc36571..29402ef 100644
+--- a/packages/shared/src/config.ts
++++ b/packages/shared/src/config.ts
+@@ -84,9 +84,10 @@ export type WebConfig = ReturnType<typeof loadWebConfig>;
+ // Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.
+ export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environment) {
+   const connections = loadConnectionConfig(env);
++  const publicOrigin = loadRenderOrigin(env);
+   return role === 'worker-video'
+-    ? Object.freeze({ ...connections, publicOrigin: loadRenderOrigin(env), role })
+-    : Object.freeze({ ...connections, limits: loadLimits(env), role });
++    ? Object.freeze({ ...connections, publicOrigin, role })
++    : Object.freeze({ ...connections, limits: loadLimits(env), publicOrigin, role });
+ }
+ 
+ export function loadS3Config(env: Environment) {
+diff --git a/packages/shared/src/enums.ts b/packages/shared/src/enums.ts
+index d4ebf5c..b7db911 100644
+--- a/packages/shared/src/enums.ts
++++ b/packages/shared/src/enums.ts
+@@ -16,7 +16,7 @@ export const VIDEO_FAILURE_REASON = [
+ export type VideoFailureReason = typeof VIDEO_FAILURE_REASON[number];
+ export const CLIP_STATUS = ['queued', 'rendering', 'done', 'failed'] as const;
+ export type ClipStatus = typeof CLIP_STATUS[number];
+-export const CLIP_FAILURE_REASON = ['no_disk', 'ffmpeg_failed', 'ffmpeg_timeout', 'stale_attempt_result'] as const;
++export const CLIP_FAILURE_REASON = ['no_disk', 'ffmpeg_failed', 'ffmpeg_timeout', 'stale_attempt_result', 'watermark_geometry'] as const;
+ export type ClipFailureReason = typeof CLIP_FAILURE_REASON[number];
+ export const JOB_STAGE = ['stt', 'select', 'render'] as const;
+ export type JobStage = typeof JOB_STAGE[number];
+diff --git a/packages/shared/src/watermark.ts b/packages/shared/src/watermark.ts
+index 59285c0..6e3786f 100644
+--- a/packages/shared/src/watermark.ts
++++ b/packages/shared/src/watermark.ts
+@@ -3,11 +3,14 @@ import { CLIP_CODE_ALPHABET, clipCodeLength } from './clip-code.js';
+ import { FORMAT_DIMENSIONS } from './formats.js';
+ const metrics: { sha256: string; unitsPerEm: number; advance: Record<string, number> } = fontMetrics;
+ export const RENDER_FONT_SHA256 = metrics.sha256;
++export class WatermarkGeometryError extends Error {
++  constructor(message: string) { super(message); this.name = 'WatermarkGeometryError'; }
++}
+ export function measureText(text: string, fontSize: number): number {
+   // Per-glyph ceiling bounds FreeType pixel rounding; kerning is absent in this font.
+   return [...text].reduce((width, char) => {
+     const advance = metrics.advance[String(char.codePointAt(0))];
+-    if (advance === undefined) throw new Error('Шрифт не содержит символ метки');
++    if (advance === undefined) throw new WatermarkGeometryError('Шрифт не содержит символ метки');
+     return width + Math.ceil(advance * fontSize / metrics.unitsPerEm);
+   }, 0);
+ }
+@@ -15,7 +18,7 @@ function watermarkFontSize(height: number): number { return Math.ceil(height * 7
+ export function watermarkGeometry(width: number, height: number, origin: string, code: string) {
+   const url = new URL(origin);
+   if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash ||
+-    !/^[A-Za-z0-9_-]+$/.test(code)) throw new Error('Непригодный адрес метки');
++    !/^[A-Za-z0-9_-]+$/.test(code)) throw new WatermarkGeometryError('Непригодный адрес метки');
+   const prefix = `КлипМейкер · ${url.host}/c/`;
+   const fontSize = watermarkFontSize(height), paddingX = 24, paddingY = 16, chipPadding = 16;
+   const left = Math.ceil(width * 0.05), bottom = Math.ceil(height * 0.12);
+@@ -24,7 +27,7 @@ export function watermarkGeometry(width: number, height: number, origin: string,
+   const plateWidth = 2 * paddingX + prefixWidth + chipWidth, plateHeight = 2 * paddingY + chipHeight;
+   // Runtime enforces the canonical safe area: 972 px at 1080 width.
+   // The stricter 880 px stories target is asserted by the reference-domain test only.
+-  if (plateWidth > width - 2 * left) throw new Error(
++  if (plateWidth > width - 2 * left) throw new WatermarkGeometryError(
+     `Адрес метки не помещается в безопасную область: ширина ${plateWidth} px, предел ${width - 2 * left} px`);
+   return { prefix, code, prefixWidth, codeWidth, fontSize, paddingX, paddingY, chipPadding,
+     chipWidth, chipHeight, plateWidth, plateHeight, left, bottom, y: height - bottom - plateHeight };
+diff --git a/tests/config.test.ts b/tests/config.test.ts
+index 1910a15..67f7d36 100644
+--- a/tests/config.test.ts
++++ b/tests/config.test.ts
+@@ -65,9 +65,24 @@ describe('Отказ запуска конфигурации', () => {
+     expect(loadWebConfig({ ...environment(), NODE_ENV: 'development', N5_PUBLIC_ORIGIN: 'http://test.invalid' }).publicOrigin).toBe('http://test.invalid');
+   });
+   it('Воркеры не требуют чужой секрет сессий', () => {
+-    const env = environment(); delete env.SESSION_SECRET; delete env.N5_PUBLIC_ORIGIN;
++    const env = environment(); delete env.SESSION_SECRET;
+     expect(loadWorkerConfig('worker-stt', env).role).toBe('worker-stt');
+     expect(loadWorkerConfig('worker-llm', env).role).toBe('worker-llm');
+-    expect(() => loadWorkerConfig('worker-video', env)).toThrow('N5_PUBLIC_ORIGIN');
++    expect(loadWorkerConfig('worker-video', env).role).toBe('worker-video');
+   });
+ });
++
++for (const role of ['worker-stt', 'worker-llm'] as const) {
++  it.each([undefined, '', 'https://test.invalid/path', 'https://' + 'x'.repeat(100) + '.com'])(
++    `SL-007 ${role} refuses unusable origin %s before paid work`, origin => {
++      const env = { ...environment(), N5_PUBLIC_ORIGIN: origin };
++      const result = subprocess(['-e', `require('./packages/shared/dist/config.js').loadWorkerConfig('${role}',process.env)`], env);
++      expect(result.status).toBe(1);
++      expect(result.stderr).toContain('N5_PUBLIC_ORIGIN');
++    });
++  it(`SL-007 ${role} accepts configured six-character width and rejects ten`, () => {
++    const env = { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr.ru', N5_SHORT_CODE_LENGTH: '6' };
++    expect(loadWorkerConfig(role, env).publicOrigin).toBe(env.N5_PUBLIC_ORIGIN);
++    expect(() => loadWorkerConfig(role, { ...env, N5_SHORT_CODE_LENGTH: '10' })).toThrow('N5_PUBLIC_ORIGIN');
++  });
++}
+diff --git a/tests/enums.test.ts b/tests/enums.test.ts
+index f6a6ee1..1edc73a 100644
+--- a/tests/enums.test.ts
++++ b/tests/enums.test.ts
+@@ -6,7 +6,9 @@ export function checkSqlEnums(sql: string): void {
+   for (const [key, values] of Object.entries(e.SQL_ENUMS)) {
+     const [table, column] = key.split('.');
+     const body = sql.match(new RegExp(`CREATE TABLE ${table} \\(([\\s\\S]*?)\\n\\);`))?.[1];
+-    const check = body?.match(new RegExp(`CHECK \\(${column} IN \\(([^)]+)\\)\\)`))?.[1];
++    const replacement = table === 'clip' && column === 'failure_reason'
++      ? readFileSync('packages/db/migrations/013_watermark_geometry.sql', 'utf8') : body;
++    const check = replacement?.match(new RegExp(`CHECK \\(${column} IN \\(([^)]+)\\)\\)`))?.[1];
+     expect(check, key).toBeDefined();
+     const actual = [...(check ?? '').matchAll(/'([^']+)'/g)].map((m) => m[1]);
+     expect(actual.sort(), key).toEqual([...values].sort());
+diff --git a/tests/render-worker.test.ts b/tests/render-worker.test.ts
+index 2d7f7f4..591740f 100644
+--- a/tests/render-worker.test.ts
++++ b/tests/render-worker.test.ts
+@@ -61,3 +61,19 @@ it('RD-002 worker logs attempt identity and sanitized non-ffmpeg failure before
+   expect(log).toHaveBeenCalledTimes(2);
+   expect(JSON.stringify(log.mock.calls)).not.toMatch(/PRIVATE_|https:\/\/|redis:\/\//);
+ });
++
++it('SL-008 real geometry failure is classified before ffmpeg and never enqueued', async () => {
++  const { renderClip } = await import('../apps/worker/src/render/ffmpeg');
++  const exec = await import('../apps/worker/src/render/exec');
++  const encoding = vi.spyOn(exec, 'execFFmpeg');
++  const deps = await fixture();
++  deps.origin = 'https://clipmkr.ru';
++  db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan: 'free',
++    start_seconds: '0', end_seconds: '20', words: [], code: 'W'.repeat(10) });
++  expect(await handleRenderJob(attempt, { ...deps, render: renderClip })).toBe('failed');
++  expect(db.retryRender).toHaveBeenCalledWith(deps.pool, attempt, 'watermark_geometry');
++  expect(encoding).not.toHaveBeenCalled();
++  expect(deps.enqueue).not.toHaveBeenCalled();
++  expect(deps.thumbnail).not.toHaveBeenCalled(); expect(deps.storage.put).not.toHaveBeenCalled();
++  expect(await readdir(directory)).toEqual([]);
++});
+diff --git a/tests/render.integration.test.ts b/tests/render.integration.test.ts
+index d87e7cd..ba578ed 100644
+--- a/tests/render.integration.test.ts
++++ b/tests/render.integration.test.ts
+@@ -33,6 +33,38 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
+     return { account, video, attempts, attempt: attempts[0]! };
+   }
+   const output = { object_key: 'clip', thumbnail_key: 'thumb', bytes: 10, watermarked: true };
++  it('SL-008 saved wide code fails immediately with own reason, even with duplicate deliveries', async () => {
++    const { mkdtemp, rm, writeFile } = await import('node:fs/promises');
++    const { tmpdir } = await import('node:os');
++    const { join } = await import('node:path');
++    const { handleRenderJob } = await import('../apps/worker/src/workers/render');
++    const { loadWorkerConfig } = await import('../packages/shared/src/config');
++    const { environment } = await import('./fixtures/environment');
++    const f = await fixture();
++    const origin = 'https://clipmkr.ru';
++    expect(loadWorkerConfig('worker-video', { ...environment(), N5_PUBLIC_ORIGIN: origin,
++      N5_SHORT_CODE_LENGTH: '6' }).publicOrigin).toBe(origin);
++    await pool.query('UPDATE clip_link SET code=$2 WHERE clip_id=$1', [f.attempt.clip_id, 'W'.repeat(10)]);
++    const directory = await mkdtemp(join(tmpdir(), 'sl008-'));
++    const deps = { pool, directory, origin, available: async () => 10000n,
++      download: async (_key: string, file: string) => { await writeFile(file, 'not media; ffmpeg must not run'); },
++      storage: { put: vi.fn(async () => 10) }, enqueue: vi.fn(async () => {}), thumbnail: vi.fn(async () => {}) };
++    try {
++      const results = await Promise.all([handleRenderJob(f.attempt, deps), handleRenderJob(f.attempt, deps)]);
++      expect(results).toContain('failed');
++      expect((await pool.query('SELECT status,failure_reason,render_fence FROM clip WHERE id=$1', [f.attempt.clip_id])).rows[0])
++        .toMatchObject({ status: 'failed', failure_reason: 'watermark_geometry', render_fence: f.attempt.fence });
++      expect((await pool.query('SELECT status,failure_reason,attempt_no,finished_at FROM job_attempt WHERE video_id=$1', [f.video])).rows)
++        .toEqual([expect.objectContaining({ status: 'failed', failure_reason: 'watermark_geometry', attempt_no: 1,
++          finished_at: expect.any(Date) })]);
++      expect((await pool.query('SELECT status,failure_reason FROM video WHERE id=$1', [f.video])).rows[0])
++        .toMatchObject({ status: 'failed', failure_reason: 'render_failed' });
++      expect(deps.enqueue).not.toHaveBeenCalled(); expect(deps.storage.put).not.toHaveBeenCalled();
++      expect(deps.thumbnail).not.toHaveBeenCalled();
++      expect(await retryRender(pool, f.attempt, 'ffmpeg_failed')).toBeNull();
++    } finally { await rm(directory, { recursive: true, force: true }); }
++  });
++
+   it('MANDATORY same fence delivered concurrently: exactly one result UPDATE, idempotent publication, stale audit', async () => {
+     const { attempt } = await fixture(); const publish = vi.fn(async () => 10);
+     const audit = vi.spyOn(console, 'info');
+diff --git a/tests/watermark-startup.test.ts b/tests/watermark-startup.test.ts
+index 9242274..6b8f5db 100644
+--- a/tests/watermark-startup.test.ts
++++ b/tests/watermark-startup.test.ts
+@@ -83,3 +83,15 @@ it('SL-003 web preflight accepts a short origin with ten-character codes', () =>
+ it('SL-003 render retains rejection after the startup check is removed', () => {
+   expect(() => watermarkGeometry(1080, 1920, 'https://clipmaker.aicoding.space', 'WWWWWW')).toThrow('1190 px, предел 972 px');
+ });
++
++for (const [role, entry] of [['worker-stt', 'stt'], ['worker-llm', 'select']]) {
++  it.each(['6', '10'])(`SL-007 actual ${role} entry refuses bad geometry and names origin (%s)`, length => {
++    const result = subprocess([`apps/worker/dist/workers/${entry}.js`], { ...environment(),
++      N5_PUBLIC_ORIGIN: 'https://clipmaker.aicoding.space', N5_SHORT_CODE_LENGTH: length });
++    expect(result.status, result.output).toBe(1);
++    expect(result.signal).toBeNull();
++    expect(result.output).toContain('N5_PUBLIC_ORIGIN');
++    expect(result.output).toContain(`N5_SHORT_CODE_LENGTH=${length}`);
++    expect(result.output).toContain('не помещается');
++  });
++}
+diff --git a/tests/wiring.test.ts b/tests/wiring.test.ts
+index 6de91ca..794f78c 100644
+--- a/tests/wiring.test.ts
++++ b/tests/wiring.test.ts
+@@ -15,10 +15,12 @@ describe('Проверяемость проброса окружения', () =>
+   it('Соседнему воркеру не приписываются переменные web', () => {
+     const config = compose();
+     for (const name of ['worker-stt', 'worker-llm', 'worker-video']) delete config.services[name]!.environment.SESSION_SECRET;
+-    delete config.services['worker-stt']!.environment.N5_PUBLIC_ORIGIN;
+-    delete config.services['worker-llm']!.environment.N5_PUBLIC_ORIGIN;
+     expect(checkWiring(config)).toEqual([]);
+   });
++  it.each(['worker-stt', 'worker-llm'])('SL-007 %s requires the public origin in compose', role => {
++    const config = compose(); delete config.services[role]!.environment.N5_PUBLIC_ORIGIN;
++    expect(checkWiring(config)).toContain(`${role}: N5_PUBLIC_ORIGIN`);
++  });
+   it('Пустой или неполный compose не зеленеет', () => {
+     expect(() => checkWiring({})).toThrow(); expect(() => checkWiring({ services: {} })).toThrow();
+   });
+diff --git a/packages/db/migrations/013_watermark_geometry.sql b/packages/db/migrations/013_watermark_geometry.sql
+new file mode 100644
+index 0000000..b361b0a
+--- /dev/null
++++ b/packages/db/migrations/013_watermark_geometry.sql
+@@ -0,0 +1,4 @@
++-- Geometry is deterministic for the stored code; it is not an ffmpeg failure.
++ALTER TABLE clip DROP CONSTRAINT clip_failure_reason_check;
++ALTER TABLE clip ADD CONSTRAINT clip_failure_reason_check
++  CHECK (failure_reason IN ('no_disk', 'ffmpeg_failed', 'ffmpeg_timeout', 'stale_attempt_result', 'watermark_geometry'));
+diff --git a/tests/render-failure.test.ts b/tests/render-failure.test.ts
+new file mode 100644
+index 0000000..366f907
+--- /dev/null
++++ b/tests/render-failure.test.ts
+@@ -0,0 +1,45 @@
++import { afterEach, expect, it, vi } from 'vitest';
++import type { Pool, Attempt } from '../packages/db/src';
++const lease = vi.hoisted(() => vi.fn());
++vi.mock('../packages/db/src/attempts', async importOriginal => ({
++  ...await importOriginal<typeof import('../packages/db/src/attempts')>(), leaseAttemptTx: lease,
++}));
++import { retryRender } from '../packages/db/src/render';
++
++afterEach(() => { vi.resetAllMocks(); });
++const attempt: Attempt = { video_id: 'video', clip_id: 'clip', fence: 4, stage: 'render',
++  series_no: 1, attempt_no: 1, status: 'running' };
++function fixture(stale = false) {
++  const query = vi.fn(async (sql: string, _params?: unknown[]) => {
++    if (sql.includes('count(*)')) return { rowCount: 1, rows: [{ total: 1, done: 0, terminal: 1 }] };
++    return { rowCount: stale ? 0 : 1, rows: [] };
++  });
++  const client = { query, release: vi.fn() };
++  const pool = { connect: async () => client } as unknown as Pool;
++  return { pool, query };
++}
++it('SL-008 geometry terminalizes the first attempt atomically without leasing a retry', async () => {
++  const { pool, query } = fixture();
++  lease.mockResolvedValue({ ...attempt, fence: 5, attempt_no: 2 });
++  expect(await retryRender(pool, attempt, 'watermark_geometry')).toBeNull();
++  expect(lease).not.toHaveBeenCalled();
++  expect(query).toHaveBeenCalledWith(expect.stringContaining("UPDATE job_attempt SET status='failed'"),
++    ['video', 4, 'watermark_geometry']);
++  expect(query).toHaveBeenCalledWith(expect.stringContaining("UPDATE clip SET status='failed'"),
++    ['clip', 4, 'watermark_geometry']);
++  expect(query.mock.calls[0]?.[0]).toBe('BEGIN');
++  expect(query.mock.calls.at(-1)?.[0]).toBe('COMMIT');
++});
++it('SL-008 transient ffmpeg failure still leases its retry', async () => {
++  const { pool, query } = fixture(), next = { ...attempt, fence: 5, attempt_no: 2 };
++  lease.mockResolvedValue(next);
++  expect(await retryRender(pool, attempt, 'ffmpeg_failed')).toEqual(next);
++  expect(lease).toHaveBeenCalledOnce();
++  expect(query.mock.calls.some(([sql]) => sql.includes("UPDATE clip SET status='failed'"))).toBe(false);
++});
++it('SL-008 obsolete geometry failure cannot change a clip or allocate an attempt', async () => {
++  const { pool, query } = fixture(true);
++  expect(await retryRender(pool, attempt, 'watermark_geometry')).toBeNull();
++  expect(lease).not.toHaveBeenCalled();
++  expect(query.mock.calls.some(([sql]) => sql.startsWith('UPDATE'))).toBe(false);
++});

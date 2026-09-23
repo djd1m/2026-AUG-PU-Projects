@@ -52,12 +52,13 @@ export async function updateRenderProgress(tx: PoolClient, videoId: string) {
   if (terminal && counts.done > 0) await tx.query(`UPDATE attribution SET status='activated',activated_at=now()
     WHERE account_id=(SELECT account_id FROM video WHERE id=$1) AND status='pending'`, [videoId]);
 }
-export async function retryRender(pool: Pool, attempt: Attempt, reason: 'ffmpeg_failed' | 'ffmpeg_timeout'): Promise<Attempt | null> {
+export async function retryRender(pool: Pool, attempt: Attempt, reason: 'ffmpeg_failed' | 'ffmpeg_timeout' | 'watermark_geometry'): Promise<Attempt | null> {
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
     await tx.query(`UPDATE job_attempt SET status='failed',failure_reason=$3,finished_at=now() WHERE video_id=$1 AND fence=$2`,
       [attempt.video_id, attempt.fence, reason]);
-    const next = await leaseAttemptTx(tx, attempt.video_id, 'render', attempt.series_no, attempt.clip_id);
+    const next = reason === 'watermark_geometry' ? null
+      : await leaseAttemptTx(tx, attempt.video_id, 'render', attempt.series_no, attempt.clip_id);
     if (next) return next;
     await tx.query(`UPDATE clip SET status='failed',failure_reason=$3 WHERE id=$1 AND render_fence=$2`, [attempt.clip_id, attempt.fence, reason]);
     await updateRenderProgress(tx, attempt.video_id);

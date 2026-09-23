@@ -1,0 +1,51 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/render-failure.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/render-failure.test.ts > SL-008 obsolete geometry failure cannot change a clip or allocate an attempt
+{"event":"stale_attempt_result","video_id":"video","clip_id":"clip","fence":4,"stage":"render","series_no":1,"attempt_no":1,"status":"running"}
+
+ ❯ tests/render-failure.test.ts (3 tests | 1 failed) 17ms
+   × SL-008 geometry terminalizes the first attempt atomically without leasing a retry 10ms
+     → expected { video_id: 'video', …(6) } to be null
+   ✓ SL-008 transient ffmpeg failure still leases its retry 2ms
+   ✓ SL-008 obsolete geometry failure cannot change a clip or allocate an attempt 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/render-failure.test.ts > SL-008 geometry terminalizes the first attempt atomically without leasing a retry
+AssertionError: expected { video_id: 'video', …(6) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "attempt_no": 2,
+  "clip_id": "clip",
+  "fence": 5,
+  "series_no": 1,
+  "stage": "render",
+  "status": "running",
+  "video_id": "video",
+}
+
+ ❯ tests/render-failure.test.ts:24:66
+     22|   const { pool, query } = fixture();
+     23|   lease.mockResolvedValue({ ...attempt, fence: 5, attempt_no: 2 });
+     24|   expect(await retryRender(pool, attempt, 'watermark_geometry')).toBeN…
+       |                                                                  ^
+     25|   expect(lease).not.toHaveBeenCalled();
+     26|   expect(query).toHaveBeenCalledWith(expect.stringContaining("UPDATE j…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  15:03:52
+   Duration  423ms (transform 143ms, setup 0ms, collect 145ms, tests 17ms, environment 0ms, prepare 85ms)
+

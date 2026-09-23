@@ -1,3 +1,4 @@
+import { WatermarkGeometryError } from '@clipmaker/shared/watermark';
 // Adapted from jan-clone/workers/video-render.ts; job payload contains identity only.
 import { Worker, DelayedError, type Job, type ConnectionOptions } from 'bullmq';
 import { createHash } from 'node:crypto';
@@ -52,7 +53,8 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
   } catch (error) {
     console.error(JSON.stringify({ event: 'render_attempt_failed', video_id: attempt.video_id,
       clip_id: attempt.clip_id, fence: attempt.fence, message: renderErrorMessage(error) }));
-    const next = await retryRender(deps.pool, attempt, error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
+    const next = await retryRender(deps.pool, attempt, error instanceof WatermarkGeometryError ? 'watermark_geometry'
+      : error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
     if (next) {
       try { await deps.enqueue(next, 2000); }
       catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', renderErrorMessage(error)); }

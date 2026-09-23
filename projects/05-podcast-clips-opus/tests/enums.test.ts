@@ -6,7 +6,9 @@ export function checkSqlEnums(sql: string): void {
   for (const [key, values] of Object.entries(e.SQL_ENUMS)) {
     const [table, column] = key.split('.');
     const body = sql.match(new RegExp(`CREATE TABLE ${table} \\(([\\s\\S]*?)\\n\\);`))?.[1];
-    const check = body?.match(new RegExp(`CHECK \\(${column} IN \\(([^)]+)\\)\\)`))?.[1];
+    const replacement = table === 'clip' && column === 'failure_reason'
+      ? readFileSync('packages/db/migrations/013_watermark_geometry.sql', 'utf8') : body;
+    const check = replacement?.match(new RegExp(`CHECK \\(${column} IN \\(([^)]+)\\)\\)`))?.[1];
     expect(check, key).toBeDefined();
     const actual = [...(check ?? '').matchAll(/'([^']+)'/g)].map((m) => m[1]);
     expect(actual.sort(), key).toEqual([...values].sort());

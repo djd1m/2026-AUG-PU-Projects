@@ -83,3 +83,15 @@ it('SL-003 web preflight accepts a short origin with ten-character codes', () =>
 it('SL-003 render retains rejection after the startup check is removed', () => {
   expect(() => watermarkGeometry(1080, 1920, 'https://clipmaker.aicoding.space', 'WWWWWW')).toThrow('1190 px, предел 972 px');
 });
+
+for (const [role, entry] of [['worker-stt', 'stt'], ['worker-llm', 'select']]) {
+  it.each(['6', '10'])(`SL-007 actual ${role} entry refuses bad geometry and names origin (%s)`, length => {
+    const result = subprocess([`apps/worker/dist/workers/${entry}.js`], { ...environment(),
+      N5_PUBLIC_ORIGIN: 'https://clipmaker.aicoding.space', N5_SHORT_CODE_LENGTH: length });
+    expect(result.status, result.output).toBe(1);
+    expect(result.signal).toBeNull();
+    expect(result.output).toContain('N5_PUBLIC_ORIGIN');
+    expect(result.output).toContain(`N5_SHORT_CODE_LENGTH=${length}`);
+    expect(result.output).toContain('не помещается');
+  });
+}

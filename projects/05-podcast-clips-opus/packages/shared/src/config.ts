@@ -84,9 +84,10 @@ export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.
 export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environment) {
   const connections = loadConnectionConfig(env);
+  const publicOrigin = loadRenderOrigin(env);
   return role === 'worker-video'
-    ? Object.freeze({ ...connections, publicOrigin: loadRenderOrigin(env), role })
-    : Object.freeze({ ...connections, limits: loadLimits(env), role });
+    ? Object.freeze({ ...connections, publicOrigin, role })
+    : Object.freeze({ ...connections, limits: loadLimits(env), publicOrigin, role });
 }
 
 export function loadS3Config(env: Environment) {

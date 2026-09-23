@@ -62,6 +62,7 @@ services:
     environment:
       <<: [*app-env, *quota-env, *s3-env]
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — транскрипция невозможна}
+      N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
       N5_WORK_DIR: /work
     volumes:
@@ -83,6 +84,7 @@ services:
     environment:
       <<: [*app-env, *quota-env]
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — выделение фрагментов невозможно}
+      N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
       N5_LLM_MODEL: ${N5_LLM_MODEL:?модель выделения не задана}
       N5_WORK_DIR: /work

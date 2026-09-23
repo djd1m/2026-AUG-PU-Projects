@@ -33,6 +33,38 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
     return { account, video, attempts, attempt: attempts[0]! };
   }
   const output = { object_key: 'clip', thumbnail_key: 'thumb', bytes: 10, watermarked: true };
+  it('SL-008 saved wide code fails immediately with own reason, even with duplicate deliveries', async () => {
+    const { mkdtemp, rm, writeFile } = await import('node:fs/promises');
+    const { tmpdir } = await import('node:os');
+    const { join } = await import('node:path');
+    const { handleRenderJob } = await import('../apps/worker/src/workers/render');
+    const { loadWorkerConfig } = await import('../packages/shared/src/config');
+    const { environment } = await import('./fixtures/environment');
+    const f = await fixture();
+    const origin = 'https://clipmkr.ru';
+    expect(loadWorkerConfig('worker-video', { ...environment(), N5_PUBLIC_ORIGIN: origin,
+      N5_SHORT_CODE_LENGTH: '6' }).publicOrigin).toBe(origin);
+    await pool.query('UPDATE clip_link SET code=$2 WHERE clip_id=$1', [f.attempt.clip_id, 'W'.repeat(10)]);
+    const directory = await mkdtemp(join(tmpdir(), 'sl008-'));
+    const deps = { pool, directory, origin, available: async () => 10000n,
+      download: async (_key: string, file: string) => { await writeFile(file, 'not media; ffmpeg must not run'); },
+      storage: { put: vi.fn(async () => 10) }, enqueue: vi.fn(async () => {}), thumbnail: vi.fn(async () => {}) };
+    try {
+      const results = await Promise.all([handleRenderJob(f.attempt, deps), handleRenderJob(f.attempt, deps)]);
+      expect(results).toContain('failed');
+      expect((await pool.query('SELECT status,failure_reason,render_fence FROM clip WHERE id=$1', [f.attempt.clip_id])).rows[0])
+        .toMatchObject({ status: 'failed', failure_reason: 'watermark_geometry', render_fence: f.attempt.fence });
+      expect((await pool.query('SELECT status,failure_reason,attempt_no,finished_at FROM job_attempt WHERE video_id=$1', [f.video])).rows)
+        .toEqual([expect.objectContaining({ status: 'failed', failure_reason: 'watermark_geometry', attempt_no: 1,
+          finished_at: expect.any(Date) })]);
+      expect((await pool.query('SELECT status,failure_reason FROM video WHERE id=$1', [f.video])).rows[0])
+        .toMatchObject({ status: 'failed', failure_reason: 'render_failed' });
+      expect(deps.enqueue).not.toHaveBeenCalled(); expect(deps.storage.put).not.toHaveBeenCalled();
+      expect(deps.thumbnail).not.toHaveBeenCalled();
+      expect(await retryRender(pool, f.attempt, 'ffmpeg_failed')).toBeNull();
+    } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+
   it('MANDATORY same fence delivered concurrently: exactly one result UPDATE, idempotent publication, stale audit', async () => {
     const { attempt } = await fixture(); const publish = vi.fn(async () => 10);
     const audit = vi.spyOn(console, 'info');

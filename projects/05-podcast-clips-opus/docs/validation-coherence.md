@@ -177,7 +177,7 @@ Architecture, ни в каноне:
 | Поле | Почему это не косметика |
 |---|---|
 | `account.telegram_user_id` | `TelegramLogin` шаг 5 ищет аккаунт ПО НЕМУ. Без `UNIQUE` два аккаунта могут заявить один Telegram-аккаунт; при `NULL` у большинства строк обычный `UNIQUE` это допускает — нужен частичный `WHERE telegram_user_id IS NOT NULL` |
-| `clip.failure_reason` | ЗАКРЫТЫЙ набор `no_disk / ffmpeg_failed / ffmpeg_timeout / stale_attempt_result`. Для `video.failure_reason` Reconciliation `CHECK` назначила, для `clip.failure_reason` — нет. Закрытое перечисление без `CHECK` закрыто только на словах |
+| `clip.failure_reason` | ЗАКРЫТЫЙ набор `no_disk / ffmpeg_failed / ffmpeg_timeout / stale_attempt_result / watermark_geometry` (пятая — миграция 013, SL-008). Для `video.failure_reason` Reconciliation `CHECK` назначила, для `clip.failure_reason` — нет. Закрытое перечисление без `CHECK` закрыто только на словах |
 | `clip.score` / три `explain_*` | Инвариант FR-SELECT-002 «число без объяснения не показывается НИКОГДА» выразим как `CHECK (score IS NULL OR (explain_hook <> '' AND explain_completeness <> '' AND explain_length <> ''))`. Architecture сама объявляет принцип «`UNIQUE`-ограничения и атомарные счётчики в базе, не в коде» — и здесь его не применяет |
 | `guest_pack.sent_at` | См. V2-R16: от него зависит срок жизни страницы, и он не отображён |
 | `video.source_url`, `video.object_key` | `object_key` выводится из схемы ключей, `source_url` не назван нигде (низкий приоритет: только FR-INGEST-003, UNCONFIRMED) |

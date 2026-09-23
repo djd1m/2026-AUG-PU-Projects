@@ -65,9 +65,24 @@ describe('Отказ запуска конфигурации', () => {
     expect(loadWebConfig({ ...environment(), NODE_ENV: 'development', N5_PUBLIC_ORIGIN: 'http://test.invalid' }).publicOrigin).toBe('http://test.invalid');
   });
   it('Воркеры не требуют чужой секрет сессий', () => {
-    const env = environment(); delete env.SESSION_SECRET; delete env.N5_PUBLIC_ORIGIN;
+    const env = environment(); delete env.SESSION_SECRET;
     expect(loadWorkerConfig('worker-stt', env).role).toBe('worker-stt');
     expect(loadWorkerConfig('worker-llm', env).role).toBe('worker-llm');
-    expect(() => loadWorkerConfig('worker-video', env)).toThrow('N5_PUBLIC_ORIGIN');
+    expect(loadWorkerConfig('worker-video', env).role).toBe('worker-video');
   });
 });
+
+for (const role of ['worker-stt', 'worker-llm'] as const) {
+  it.each([undefined, '', 'https://test.invalid/path', 'https://' + 'x'.repeat(100) + '.com'])(
+    `SL-007 ${role} refuses unusable origin %s before paid work`, origin => {
+      const env = { ...environment(), N5_PUBLIC_ORIGIN: origin };
+      const result = subprocess(['-e', `require('./packages/shared/dist/config.js').loadWorkerConfig('${role}',process.env)`], env);
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain('N5_PUBLIC_ORIGIN');
+    });
+  it(`SL-007 ${role} accepts configured six-character width and rejects ten`, () => {
+    const env = { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr.ru', N5_SHORT_CODE_LENGTH: '6' };
+    expect(loadWorkerConfig(role, env).publicOrigin).toBe(env.N5_PUBLIC_ORIGIN);
+    expect(() => loadWorkerConfig(role, { ...env, N5_SHORT_CODE_LENGTH: '10' })).toThrow('N5_PUBLIC_ORIGIN');
+  });
+}

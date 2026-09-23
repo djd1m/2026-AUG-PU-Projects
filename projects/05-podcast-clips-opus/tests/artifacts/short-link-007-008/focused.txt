@@ -1,0 +1,22 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/config.test.ts tests/render-worker.test.ts tests/enums.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/config.test.ts (49 tests) 2555ms
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+stderr | tests/render-worker.test.ts > SL-008 real geometry failure is classified before ffmpeg and never enqueued
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"Адрес метки не помещается в безопасную область: ширина 1035 px, предел 972 px"}
+
+ ✓ tests/render-worker.test.ts (7 tests) 59ms
+ ✓ tests/enums.test.ts (14 tests) 15ms
+
+ Test Files  3 passed (3)
+      Tests  70 passed (70)
+   Start at  15:01:53
+   Duration  4.35s (transform 321ms, setup 0ms, collect 921ms, tests 2.63s, environment 1ms, prepare 287ms)
+
