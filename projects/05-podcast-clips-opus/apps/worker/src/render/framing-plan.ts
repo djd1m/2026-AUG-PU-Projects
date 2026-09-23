@@ -31,6 +31,18 @@ export const PRESENCE_FOR_SINGLE = 0.5;
 export const MIN_SEPARATION = 0.15;
 /** Лицо занимает примерно эту долю высоты окна: остальное — торс. Иначе выйдет «кусок руки». */
 export const FACE_SHARE_OF_WINDOW = 0.34;
+/**
+ * Лицо уже этой доли ширины кадра — не участник разговора, а фон или ложное срабатывание.
+ *
+ * Заслужено жалобой владельца 23.09.2026: «на с 1 по 2 секунды камера смотрит в стену». Замер
+ * показал причину точно: на нулевой секунде детектор нашёл лицо шириной 0,04 кадра при cx=0,79,
+ * а настоящий участник — 0,13 при cx=0,35. Других лиц в кадре не было, единственное было принято
+ * за ведущее, окно уехало вправо, и правило «не переключаться чаще полутора секунд» продержало
+ * его там ровно до 1,5 с.
+ *
+ * Порог 0,06 разделяет измеренные величины втрое надёжнее середины между ними.
+ */
+export const MIN_FACE_WIDTH = 0.06;
 
 export interface FramingPlan {
   mode: 'dual' | 'single' | 'center';
@@ -51,7 +63,7 @@ const median = (values: number[]): number => {
  * Группировка простая — по медиане: сложнее не нужно, участников в подкасте двое.
  */
 function cluster(samples: FaceSample[]): { x: number; y: number; presence: number }[] {
-  const all = samples.flatMap(s => s.faces);
+  const all = samples.flatMap(s => s.faces).filter(f => f.w >= MIN_FACE_WIDTH);
   if (!all.length) return [];
   const split = median(all.map(f => f.cx));
   const left = all.filter(f => f.cx <= split), right = all.filter(f => f.cx > split);
@@ -141,7 +153,7 @@ export function planFollow(report: FaceReport, source: SourceDimensions, windowS
 
   // Безопасное положение на случай, когда лица не видно: медиана всех найденных за клип.
   // Это НЕ середина кадра: середина в подкасте и есть та самая стена между участниками.
-  const seen = report.samples.flatMap(s => s.faces);
+  const seen = report.samples.flatMap(s => s.faces).filter(f => f.w >= MIN_FACE_WIDTH);
   const safe = seen.length
     ? { x: Math.min(1, Math.max(0, (median(seen.map(f => f.cx)) * source.width - windowSize.width / 2) / travelX)),
         y: Math.min(1, Math.max(0, (median(seen.map(f => f.cy)) * source.height - windowSize.height * FACE_SHARE_OF_WINDOW) / travelY)) }
@@ -152,7 +164,7 @@ export function planFollow(report: FaceReport, source: SourceDimensions, windowS
     const from = Math.max(0, sample.t - clipStart);
     const last = segments[segments.length - 1];
     // Ведущее лицо — самое крупное: ближний план важнее случайно попавшего в кадр затылка.
-    const lead = sample.faces.reduce<DetectedFace | null>(
+    const lead = sample.faces.filter(f => f.w >= MIN_FACE_WIDTH).reduce<DetectedFace | null>(
       (best, f) => (!best || f.w * f.h > best.w * best.h ? f : best), null);
 
     if (!lead) {
