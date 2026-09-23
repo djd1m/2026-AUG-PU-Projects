@@ -10,6 +10,7 @@ import { renderClip } from '../render/ffmpeg.js';
 import { generateThumbnail, FFmpegError, RENDER_JOB_TIMEOUT_MS } from '../render/exec.js';
 import { watermarkRequired, RENDER_FONT_SHA256 } from '../render/watermark.js';
 import type { RenderStorage } from '../render/storage.js';
+import { renderErrorMessage } from '../render/diagnostics.js';
 export interface RenderDependencies {
   pool: Pool; directory: string; origin: string; download: Download; storage: RenderStorage;
   enqueue: (attempt: Attempt, delay?: number) => Promise<void>;
@@ -49,10 +50,12 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
     if (outcome.deferred) return await setRenderDeferred(deps.pool, attempt, true) ? 'deferred' : 'stale';
     return outcome.value;
   } catch (error) {
+    console.error(JSON.stringify({ event: 'render_attempt_failed', video_id: attempt.video_id,
+      clip_id: attempt.clip_id, fence: attempt.fence, message: renderErrorMessage(error) }));
     const next = await retryRender(deps.pool, attempt, error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
     if (next) {
       try { await deps.enqueue(next, 2000); }
-      catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', error); }
+      catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', renderErrorMessage(error)); }
     }
     return 'failed';
   }

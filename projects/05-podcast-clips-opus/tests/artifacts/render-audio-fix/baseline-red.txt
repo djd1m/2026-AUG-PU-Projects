@@ -1,0 +1,95 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/render-diagnostics.test.ts (4 tests | 4 failed) 35ms
+   × RD-002 logs exit code and stderr tail when ffmpeg fails 17ms
+     → Cannot read properties of undefined (reading '0')
+   × RD-002 signed URLs and credentials never reach failure logs 9ms
+     → expected "error" to be called 1 times, but got 0 times
+   × RD-002 timeout logs signal and final stderr after killing and awaiting close 5ms
+     → Cannot read properties of undefined (reading '0')
+   × RD-002 spawn failure logs safe code once without raw process arguments 2ms
+     → expected "error" to be called 1 times, but got 0 times
+ ❯ tests/render-audio.test.ts (2 tests | 1 failed) 2342ms
+   × RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark and audio 2315ms
+     → expected undefined to match object { width: 1080, height: 1920 }
+   ✓ RD-001 source guard: exactly one ffmpeg encoding pass per renderClip 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/render-audio.test.ts > RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark and audio
+AssertionError: expected undefined to match object { width: 1080, height: 1920 }
+
+- Expected: 
+{
+  "height": 1920,
+  "width": 1080,
+}
+
++ Received: 
+undefined
+
+ ❯ tests/render-audio.test.ts:22:90
+     20|       origin: 'https://clipmaker.aicoding.space', code: 'WWWWWWWWWW' }…
+     21|     const result = await probe(output);
+     22|     expect(result.streams.find((s: { codec_type: string }) => s.codec_…
+       |                                                                                          ^
+     23|     expect(result.streams.some((s: { codec_type: string }) => s.codec_…
+     24|     expect(Number(result.format.duration)).toBeCloseTo(20, 0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/render-diagnostics.test.ts > RD-002 logs exit code and stderr tail when ffmpeg fails
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ tests/render-diagnostics.test.ts:20:45
+     18|   proc.emit('close', 7, null);
+     19|   await expect(result).rejects.toThrow('ffmpeg_failed');
+     20|   const record = JSON.parse(log.mock.calls[0]![0] as string);
+       |                                             ^
+     21|   expect(record).toMatchObject({ event: 'ffmpeg_failed', exit_code: 7,…
+     22|   expect(record.stderr_tail).toContain('No such filter: broken_filter'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/render-diagnostics.test.ts > RD-002 signed URLs and credentials never reach failure logs
+AssertionError: expected "error" to be called 1 times, but got 0 times
+ ❯ tests/render-diagnostics.test.ts:34:15
+     32|   proc.emit('close', 1, null);
+     33|   await expect(result).rejects.toThrow('ffmpeg_failed');
+     34|   expect(log).toHaveBeenCalledTimes(1);
+       |               ^
+     35|   const logged = JSON.stringify(log.mock.calls);
+     36|   expect(logged).toContain('Invalid argument');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/render-diagnostics.test.ts > RD-002 timeout logs signal and final stderr after killing and awaiting close
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ tests/render-diagnostics.test.ts:47:37
+     45|   proc.stderr.write('last diagnostic\n'); proc.emit('close', null, 'SI…
+     46|   await expect(result).rejects.toThrow('ffmpeg_timeout');
+     47|   expect(JSON.parse(log.mock.calls[0]![0] as string)).toMatchObject({ …
+       |                                     ^
+     48| });
+     49| it('RD-002 spawn failure logs safe code once without raw process argum…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/render-diagnostics.test.ts > RD-002 spawn failure logs safe code once without raw process arguments
+AssertionError: expected "error" to be called 1 times, but got 0 times
+ ❯ tests/render-diagnostics.test.ts:55:15
+     53|   proc.emit('close', -2, null);
+     54|   await expect(result).rejects.toThrow('ffmpeg_failed');
+     55|   expect(log).toHaveBeenCalledTimes(1);
+       |               ^
+     56|   expect(JSON.stringify(log.mock.calls)).toContain('ENOENT');
+     57|   expect(JSON.stringify(log.mock.calls)).not.toContain('PRIVATE_SECRET…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 1 passed (6)
+   Start at  05:55:20
+   Duration  4.14s (transform 232ms, setup 0ms, collect 1.07s, tests 2.38s, environment 1ms, prepare 236ms)
+

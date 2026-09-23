@@ -7,6 +7,7 @@ import { escapeFFmpegPath } from './escape.js';
 import { generateSubtitleFile } from './subtitles.js';
 import { buildWatermarkDrawtext, SUBTITLE_FONTS } from './watermark.js';
 import { execFFmpeg, FFMPEG_TIMEOUT_MS } from './exec.js';
+import { videoStreamIndex } from './probe.js';
 export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   watermark: boolean, origin: string, code: string): string {
   const filters: string[] = [];
@@ -31,8 +32,12 @@ export async function renderClip(options: RenderOptions): Promise<void> {
     const ass = subtitles ? join(temp, 'subtitles.ass') : null;
     if (ass) await writeFile(ass, subtitles!, { mode: 0o600 });
     const vf = buildFilterChain(options.format, ass, options.watermark, options.origin, options.code);
+    const video = await videoStreamIndex(options.inputPath, options.signal);
+    const { width, height } = FORMAT_DIMENSIONS[options.format];
+    const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : `[0:${video}]`;
     await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(duration),
-      '-i', options.inputPath, '-vf', vf, '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
+      '-i', options.inputPath, '-filter_complex', `${source}${vf}[video]`, '-map', '[video]', '-map', '0:a:0',
+      '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
       '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
       '-ar', '44100', '-ac', '2', '-movflags', '+faststart', options.outputPath], FFMPEG_TIMEOUT_MS, options.signal);
   } finally { await rm(temp, { recursive: true, force: true }); }

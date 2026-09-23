@@ -8,7 +8,7 @@ vi.mock('@clipmaker/db', () => db);
 import { handleRenderJob } from '../apps/worker/src/workers/render';
 const attempt: Attempt = { video_id: 'video', clip_id: 'clip', fence: 4, stage: 'render', series_no: 1, attempt_no: 1, status: 'running' };
 let directory: string;
-afterEach(async () => { if (directory) await rm(directory, { recursive: true, force: true }); vi.resetAllMocks(); });
+afterEach(async () => { if (directory) await rm(directory, { recursive: true, force: true }); vi.resetAllMocks(); vi.restoreAllMocks(); });
 async function fixture(plan: unknown = 'free') {
   directory = await mkdtemp(join(tmpdir(), 'render-worker-'));
   db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan,
@@ -46,4 +46,18 @@ it('failure cleans working directory and schedules only DB-issued retry', async 
 it('stale input does not download or publish', async () => {
   const deps = await fixture(); db.getRenderInput.mockResolvedValue(null);
   expect(await handleRenderJob(attempt, deps)).toBe('stale'); expect(deps.download).not.toHaveBeenCalled();
+});
+it('RD-002 worker logs attempt identity and sanitized non-ffmpeg failure before retry', async () => {
+  const deps = await fixture(), log = vi.spyOn(console, 'error').mockImplementation(() => {});
+  deps.storage.put.mockRejectedValue(new Error('S3 denied https://example.invalid/?X-Amz-Signature=PRIVATE_SIGNATURE'));
+  db.retryRender.mockImplementation(async () => {
+    expect(log).toHaveBeenCalledTimes(1);
+    return { ...attempt, fence: 5, attempt_no: 2 };
+  });
+  deps.enqueue.mockRejectedValue(new Error('Redis offline redis://user:PRIVATE_PASSWORD@example.invalid'));
+  expect(await handleRenderJob(attempt, deps)).toBe('failed');
+  expect(JSON.parse(log.mock.calls[0]![0] as string)).toMatchObject({ event: 'render_attempt_failed',
+    video_id: 'video', clip_id: 'clip', fence: 4, message: 'S3 denied [redacted-url]' });
+  expect(log).toHaveBeenCalledTimes(2);
+  expect(JSON.stringify(log.mock.calls)).not.toMatch(/PRIVATE_|https:\/\/|redis:\/\//);
 });

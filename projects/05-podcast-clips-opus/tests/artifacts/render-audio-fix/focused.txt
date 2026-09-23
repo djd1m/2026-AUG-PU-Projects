@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/render-audio.test.ts (2 tests) 6514ms
+   ✓ RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark and audio  6488ms
+ ✓ tests/render-diagnostics.test.ts (4 tests) 23ms
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+ ✓ tests/render-worker.test.ts (5 tests) 33ms
+ ✓ tests/render.test.ts (18 tests) 15ms
+
+ Test Files  4 passed (4)
+      Tests  29 passed (29)
+   Start at  05:56:42
+   Duration  9.17s (transform 239ms, setup 0ms, collect 1.57s, tests 6.58s, environment 1ms, prepare 354ms)
+

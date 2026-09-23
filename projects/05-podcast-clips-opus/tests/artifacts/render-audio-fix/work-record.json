@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923-render-audio-fix-codex",
+    "work_unit_id": "RD-001-RD-002",
+    "current_attempt_id": "fix-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/render-audio-fix/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/render-audio-fix/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "99b80f6469f9ea8bbbfe14bfb6d1470de9f6c39e",
+    "current_revision": "sha256:4db11fe559ee0e4ac7a4242b48fbac81fcb6ccf7cbf4b4ed925c3541ffbe1f7a",
+    "build_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/render-and-watermark/09_fix_brief_codex.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "observed_revision": "sha256:4db11fe559ee0e4ac7a4242b48fbac81fcb6ccf7cbf4b4ed925c3541ffbe1f7a",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "Only mutation runner output capture changed; production and test assertions identical",
+        "decision": "Rerun mutations and lint; preserve prior build/full suite/reviewer receipts bound to unchanged code",
+        "affected_checks": [
+          "mutations",
+          "lint"
+        ],
+        "rerun": [
+          "mutations",
+          "lint"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "RD-001-RD-002/09_fix_brief_codex.md",
+    "scope": [
+      "Audio-only render in existing one-pass graph",
+      "Bounded safe ffmpeg and render-worker diagnostics",
+      "Real media and mutation checks; catch audit report"
+    ],
+    "exclusions": [
+      "STT/selection modifications",
+      "Production deployment",
+      "Frozen spec and schema changes"
+    ],
+    "action_limits": [
+      "Local source/tests/report only; no external writes"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "RD-001",
+        "required": true
+      },
+      {
+        "id": "RD-002",
+        "required": true
+      },
+      {
+        "id": "mutations",
+        "required": true
+      },
+      {
+        "id": "catch-audit",
+        "required": true
+      },
+      {
+        "id": "regression",
+        "required": true
+      },
+      {
+        "id": "Anthropic-review",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/worker/src/render/ffmpeg.ts"
+          }
+        },
+        "provenance": "99b80f6469f9ea8bbbfe14bfb6d1470de9f6c39e",
+        "useful_fragment": "buildFilterChain and renderClip",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "Preserve filter ordering, fonts and limits; only replace missing visual source"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparison run; no numeric prediction requested",
+      "scope_revision": "RD-001-RD-002/09_fix_brief_codex.md",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "RD-001-RD-002/09_fix_brief_codex.md",
+      "tier": "M",
+      "rationale": "Mechanical S raised to M: existing media behavior and sensitive diagnostics change; no shared-resource algorithm, billing or invariant changes",
+      "script": {
+        "input": "Explicit render/worker/test file list in route.txt",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "RD-001-RD-002/09_fix_brief_codex.md",
+      "tier": "M",
+      "rationale": "Mechanical S raised to M: existing media behavior and sensitive diagnostics change; no shared-resource algorithm, billing or invariant changes",
+      "script": {
+        "input": "Explicit render/worker/test file list in route.txt",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Explicit user instruction authorizes the concrete fix brief; no additional permission required for M-tier local edits/tests",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Real ffmpeg integration executed locally with generated sine/video fixtures; no deployment or application E2E claim",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "fix-1",
+      "status": "completed"
+    },
+    {
+      "id": "anthropic-review-1",
+      "status": "failed"
+    },
+    {
+      "id": "supplemental-review-1",
+      "status": "completed"
+    },
+    {
+      "id": "mutation-evidence-2",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "RD-001-RD-002",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/ffmpeg.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/exec.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/probe.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/diagnostics.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/workers/render.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-audio.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-diagnostics.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-worker.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/run-render-fix-mutations.mjs"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260923-render-audio-fix-codex",
+    "work_unit_id": "RD-001-RD-002",
+    "source_revision": "sha256:4db11fe559ee0e4ac7a4242b48fbac81fcb6ccf7cbf4b4ed925c3541ffbe1f7a",
+    "next_allowed_step": "Obtain authenticated Anthropic review and environment verification before acceptance; implementation and local checks are complete",
+    "blockers": [
+      "Anthropic CLI Not logged in",
+      "Compose environment unavailable; DB/Redis integration and live CJM not executed"
+    ],
+    "approval_ids": [],
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Brief-based fix has no native checkpoint; source manifest and fresh check logs preserve handoff"
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "real-media",
+      "command": "npx vitest run tests/render-audio.test.ts tests/render-diagnostics.test.ts tests/render-worker.test.ts",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/focused-final.txt"
+    },
+    {
+      "ac_id": "mutations",
+      "command": "node tests/run-render-fix-mutations.mjs",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/mutations.txt"
+    },
+    {
+      "ac_id": "regression",
+      "command": "npm test",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/all-tests.txt"
+    },
+    {
+      "ac_id": "typecheck",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/typecheck.txt"
+    },
+    {
+      "ac_id": "lint",
+      "command": "npm run lint",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/lint.txt"
+    },
+    {
+      "ac_id": "build",
+      "command": "npm run build",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/build.txt"
+    },
+    {
+      "ac_id": "env-wiring",
+      "command": "bash scripts/check-env-wiring.sh",
+      "exit_code": 2,
+      "outcome": "unknown",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/wiring.txt"
+    },
+    {
+      "ac_id": "ports",
+      "command": "bash ../../scripts/check-port-conflicts.sh .",
+      "exit_code": 1,
+      "outcome": "unknown",
+      "source_revision": "sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39",
+      "evidence": "tests/artifacts/render-audio-fix/ports.txt"
+    },
+    {
+      "ac_id": "mutations",
+      "command": "node tests/run-render-fix-mutations.mjs",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:4db11fe559ee0e4ac7a4242b48fbac81fcb6ccf7cbf4b4ed925c3541ffbe1f7a",
+      "evidence": "tests/artifacts/render-audio-fix/mutations-verified/results.json"
+    },
+    {
+      "ac_id": "lint",
+      "command": "npm run lint",
+      "exit_code": 0,
+      "outcome": "pass",
+      "source_revision": "sha256:4db11fe559ee0e4ac7a4242b48fbac81fcb6ccf7cbf4b4ed925c3541ffbe1f7a",
+      "evidence": "tests/artifacts/render-audio-fix/lint-final.txt"
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

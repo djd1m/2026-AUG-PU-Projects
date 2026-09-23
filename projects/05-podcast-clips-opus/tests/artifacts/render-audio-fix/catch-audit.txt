@@ -1,0 +1,14 @@
+apps/worker/src/runtime.ts:48:      } catch (error) {
+apps/worker/src/runtime.ts:86:  const onSignal = () => { void stop().catch((error) => { console.error('Воркер: остановка не завершена', error); process.exitCode = 1; }); };
+apps/worker/src/llm/provider.ts:32:    } catch (error) {
+apps/worker/src/media/probe.ts:13:  } catch { throw new ProbeError('probe_timeout'); }
+apps/worker/src/media/probe.ts:25:      try { resolve(parseProbe(stdout)); } catch (cause) { reject(cause); }
+apps/worker/src/render/storage.ts:17:      } catch (error) {
+apps/worker/src/stt/client.ts:30:    } catch (error) {
+apps/worker/src/workers/stt.ts:54:          } catch (error) {
+apps/worker/src/workers/stt.ts:66:  } catch (error) {
+apps/worker/src/workers/stt.ts:108:  } catch (error) {
+apps/worker/src/workers/select.ts:23:  } catch (error) {
+apps/worker/src/workers/select.ts:34:    try { await deps.enqueue(job); } catch (error) { console.error('Рендер сохранён; сторож восстановит доставку задания', error); }
+apps/worker/src/workers/render.ts:52:  } catch (error) {
+apps/worker/src/workers/render.ts:58:      catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', renderErrorMessage(error)); }

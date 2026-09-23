@@ -1,0 +1,7 @@
+RUN_ID: 20260923-render-audio-fix-codex
+WORK_UNIT_ID: RD-001-RD-002-review
+Source-Revision: sha256:71fc03ebc37a824f057a7d028aae1f4532f9f8b6d9cde4c7280441722a1b3d39
+Requested: gpt-5.6-sol/high; exact actual model metadata unavailable.
+Reviewer: /root/render_fix_review (independent, read-only).
+No concrete correctness or security findings in the 8 assigned files. Video source classification uses V:0 excluding cover art; bounded color source uses the original graph and one encode; original audio explicitly mapped. Diagnostics bound/redact stderr and discard truncated first line. Worker logs before retry. No tests rerun by reviewer. Coverage limits: MP3 rendered end-to-end; M4A and attached-cover inputs classified by real ffprobe only. Does not replace mandatory Anthropic review (CLI Not logged in).
+Status: completed
