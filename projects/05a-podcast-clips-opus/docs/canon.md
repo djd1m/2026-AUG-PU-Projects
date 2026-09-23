@@ -257,7 +257,7 @@ CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `GET
 | FR-clips-5 п. 2 | модель возвращает `start_ms`, `end_ms` | модель возвращает `start_unit`, `end_unit`; мс считает код | ADR-005 |
 | FR-clips-7 п. 2 | поля — размытая копия кадра | чёрные поля | OWN-05A-008, ADR-009 |
 | FR-clips-9 п. 5 | `[ADR-PENDING: провайдер оплаты]` | адаптер `PaymentProvider`, ЮKassa или CloudPayments, фейк по умолчанию | OWN-05A-010, ADR-013 |
-| FR-clips-10 | 180/1800 мин STT, LLM 12/150 попыток | 120 мин и 3 загрузки на автора, 1 500 мин STT, LLM 30 ₽ на автора, 300 ₽ на сервис | OWN-05A-007, ADR-006 |
+| FR-clips-10 | 180/1800 мин STT, LLM 12/150 попыток | 120 мин и 3 загрузки на автора, 1 500 мин STT, LLM 50 ₽ на автора, 24 ₽ на задачу, 300 ₽ на сервис (OWN-05A-012) | OWN-05A-007, ADR-006 |
 | FR-clips-12 п. 1 | `watermark_path_visited` | снято; добавлены `clip_link_visited`, `landing_visited`, `email_verified` | ADR-015, ADR-011 |
 | FR-clips-13 п. 1 | исходник 7 дней | исходник 72 ч (страховка бакета — 7 дней) | ADR-007 |
 | FR-clips-14 п. 2 | на знаке домен с путём `/w` | на знаке `clipmkr.ru`; маршрут `/w` снят | OWN-05A-006, ADR-015 |
