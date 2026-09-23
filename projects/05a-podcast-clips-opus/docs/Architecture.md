@@ -61,7 +61,7 @@ flowchart LR
 | Render | `worker-render` | ffmpeg: чёрные поля, ASS-субтитры, знак, превью; загрузка клипа в S3 | не имеет ключей моделей |
 | Quota & spend | библиотека в `worker-ai` и `web` | атомарный резерв в `quota_counter`, факт в `spend_ledger` | не решает «пропустить» при недоступной БД — это отказ |
 | Migrations | `migrate` | `prisma migrate deploy` до старта остальных | — |
-| Ops | `/admin/*` в `web`, роль `operator` | партнёры, проверка публикаций, расход, метрики, смена плана; каждое изменение — в `audit_log` | роль не выдаётся через интерфейс: только `ops grant-operator <email>` внутри контейнера |
+| Ops | `/admin/*` в `web`, роль `operator` | партнёры, проверка публикаций, расход, метрики, смена плана; каждое изменение — в `audit_log` | роль не выдаётся через интерфейс: только `docker compose exec worker-ai ops grant-operator <email>` |
 
 ## Technology Stack
 
@@ -319,7 +319,7 @@ refresh-cookie `HttpOnly; Secure; SameSite=Lax`; refresh хранится хэш
 **Авторизация.** Проверка владения в каждом обработчике, не только в middleware (урок CVE-2025-29927). Чужой
 `clip_id`/`job_id` → `404`. `/admin/*` — только `account.role = operator`, проверка в middleware **и** в каждом
 серверном обработчике; значение роли, отличное от ровно `operator`, читается как `user` (fail-closed). Роль ставит
-только `ops grant-operator <email>` из контейнера. План `paid` меняет только оператор; решение о знаке принимает `worker-render` по БД.
+только `docker compose exec worker-ai ops grant-operator <email>`. План `paid` меняет только оператор; решение о знаке принимает `worker-render` по БД.
 
 **Границы доверия и порядок операций** (security-operation-order):
 

@@ -43,4 +43,14 @@ developers.openai.com speech-to-text; cloud.ru/docs/s3e: api__methods, api__aws-
 - Трафик Нидерланды ↔ Cloud.ru не измерен.
 - Mermaid-диаграммы не прогонялись рендером (диск VPS почти полон, mermaid-cli не ставил).
 
+
+## Дополнение: обновлённый канон (правка координатора 2026-09-23)
+- Architecture.md приведён к канону: `/admin/*` с ролью `operator` (`account.role` = `user` | `operator`, fail-closed,
+  проверка в middleware и каждом обработчике), выдача роли только `docker compose exec worker-ai ops grant-operator <email>`,
+  событие `caption_copied` и маршрут `…/caption-copied`; ссылка на хеш канона — через dispatch-plan.md; строки про /admin
+  и caption_copied убраны из «Открытых расхождений».
+- В канон пока не внесено, остаётся предложением: jobId `{job_id}:stt:prepare`; переменные compose `REDIS_PASSWORD`,
+  `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`.
+- check-canon.cjs после правки — exit 0.
+
 Status: completed
