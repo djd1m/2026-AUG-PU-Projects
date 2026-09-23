@@ -58,17 +58,17 @@
 | Таблица | Ключевые поля |
 |---|---|
 | `account` | `id`, `email` (уникальный, нижний регистр), `password_hash`, `email_verified_at`, `plan`, `role`, `created_at` |
-| `email_token` | `id`, `account_id`, `token_hash`, `expires_at`, `used_at` |
-| `refresh_token` | `id`, `account_id`, `token_hash`, `expires_at`, `revoked_at` |
-| `video` | `id`, `account_id`, `s3_key_source`, `size_bytes`, `duration_ms`, `container`, `source_deleted_at`, `deleted_at` |
-| `job` | `id` (это `job_id`), `video_id`, `account_id`, `idempotency_key`, `status`, `step`, `fail_reason`, `attempt_count`, `heartbeat_at`, `clips_total`, `clips_done`, `finished_at`; уникально (`account_id`, `idempotency_key`) |
-| `transcript_chunk` | `id`, `job_id`, `chunk_idx`, `offset_ms`, `duration_ms`, `status`, `units` (jsonb), `speaker_map` (jsonb), `speaker_map_confident`, `model`; уникально (`job_id`, `chunk_idx`) |
-| `clip` | `id`, `job_id`, `clip_code` (уникальный), `start_unit`, `end_unit`, `start_ms`, `end_ms`, `title`, `hook_quote`, `hook_reason`, `hook_score`, `completeness_quote`, `completeness_reason`, `completeness_score`, `length_score`, `total_score`, `render_status`, `watermarked`, `s3_key_clip`, `speaker_labels_shown` |
+| `email_token` | `id`, `account_id`, `purpose` (`verify` \| `reset`), `token_hash`, `expires_at`, `used_at`, `created_at` |
+| `refresh_token` | `id`, `account_id`, `token_hash`, `expires_at`, `revoked_at`, `created_at` |
+| `video` | `id`, `account_id`, `s3_key_source`, `size_bytes`, `duration_ms`, `container`, `s3_upload_id`, `rights_confirmed_at`, `source_deleted_at`, `deleted_at`, `created_at` |
+| `job` | `id` (это `job_id`), `video_id`, `account_id`, `idempotency_key`, `status`, `step`, `fail_reason`, `attempt_count`, `heartbeat_at`, `clips_total`, `clips_done`, `created_at` (задаёт день job-счётчиков), `finished_at`; уникально (`account_id`, `idempotency_key`) |
+| `transcript_chunk` | `id`, `job_id`, `chunk_idx`, `offset_ms`, `duration_ms`, `status`, `units` (jsonb), `speaker_map` (jsonb), `speaker_map_confident`, `model`, `attempt_count`, `created_at`; уникально (`job_id`, `chunk_idx`) |
+| `clip` | `id`, `job_id`, `clip_code` (уникальный), `start_unit`, `end_unit`, `start_ms`, `end_ms`, `title`, `hook_quote`, `hook_reason`, `hook_score`, `completeness_quote`, `completeness_reason`, `completeness_score`, `length_score`, `total_score`, `render_status`, `watermarked`, `s3_key_clip`, `speaker_labels_shown`, `created_at` |
 | `quota_counter` | `scope` (`account` \| `global` \| `job`), `scope_id`, `day` (дата Europe/Moscow), `kind`, `used`; первичный ключ из всех, кроме `used` |
 | `spend_ledger` | `id`, `account_id`, `job_id`, `call` (`stt` \| `llm`), `model`, `attempt`, `units_reserved`, `units_actual`, `cost_usd_micro`, `cost_kop`, `outcome`, `created_at` |
 | `event` | `id`, `name`, `account_id`, `clip_id`, `session_id`, `props` (jsonb), `created_at`; сырой IP не пишется |
-| `publication` | `id`, `clip_id`, `account_id`, `url`, `url_normalized` (уникальный), `platform`, `status`, `reason`, `verified_at`, `rechecked_at` |
-| `partner` | `id`, `name`, `contact`, `audience_url`, `partner_code` (уникальный, верхний регистр), `account_id` |
+| `publication` | `id`, `clip_id`, `account_id`, `url`, `url_normalized` (уникальный), `platform`, `status`, `reason`, `verified_at`, `rechecked_at`, `created_at`; удаляется вместе с клипом |
+| `partner` | `id`, `name`, `contact`, `audience_url`, `partner_code` (уникальный, верхний регистр), `account_id`, `created_at` |
 | `attribution` | `id`, `account_id`, `partner_id`, `stage`, `source`, `self_referral`, `created_at`; уникально (`account_id`, `stage`) |
 | `audit_log` | `id`, `actor`, `action`, `target`, `reason`, `created_at` |
 
@@ -93,6 +93,7 @@
 | `attribution.stage` | `signup`, `fakedoor` |
 | `attribution.source` | `cookie`, `code` |
 | `spend_ledger.outcome` | `ok`, `provider_error`, `timeout`, `schema_invalid` |
+| `quota_counter.kind` | `stt_sec`, `uploads`, `llm_kop`, `llm_attempts`; для `scope = global` `scope_id` = нулевой UUID |
 | `landing_visited.props.source` | `direct`, `partner`, `clip_link`, `other` |
 | `STT_PROVIDER` | `openrouter`, `openai` |
 | `PAYMENTS_MODE` | `fake`, `live` |
@@ -149,6 +150,8 @@
 | `GET /plans` | публичный | таблица планов и fake-door |
 | `GET /p/{partner_code}` | публичный | cookie `pref`, `partner_link_visited`, редирект на `/` |
 | `GET /c/{clip_code}` | публичный | `clip_link_visited`, редирект на `/` |
+| `POST /api/auth/resend-verification` | сессия, почта не подтверждена | повторная отправка письма, не чаще 1 раза в 60 с и 5 в сутки |
+| `POST /api/videos/{video_id}/parts` | владелец | перевыдать подписанные ссылки на незагруженные части (TTL 15 мин) |
 | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout` | публичный / сессия | вход |
 | `GET /api/auth/verify?token=` | публичный | подтверждение почты |
 | `POST /api/videos` | сессия, почта подтверждена | создать `video`, начать multipart, выдать ссылки на части |
@@ -168,7 +171,7 @@
 | `GET /admin/metrics?from=<YYYY-MM-DD>` | роль `operator` | метрики недели |
 | `GET /admin/users` | роль `operator` | смена плана с причиной; сброс пароля пользователя (одноразовая ссылка на почту) |
 
-Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`.
+Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>` и `ops stt-probe <файл>` (проба STT дня 1, ADR-001). Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
 
 ## 8. Ключи объектов S3
 
@@ -197,7 +200,7 @@
 
 Ключи из `Specification.md` на 2026-09-23. Новые ключи добавляет только автор Specification.
 
-Всего 14 FR-clips: FR-clips-1, FR-clips-2, FR-clips-3, FR-clips-4, FR-clips-5, FR-clips-6, FR-clips-7, FR-clips-8, FR-clips-9, FR-clips-10, FR-clips-11, FR-clips-12, FR-clips-13, FR-clips-14
+Всего 15 FR-clips: FR-clips-1, FR-clips-2, FR-clips-3, FR-clips-4, FR-clips-5, FR-clips-6, FR-clips-7, FR-clips-8, FR-clips-9, FR-clips-10, FR-clips-11, FR-clips-12, FR-clips-13, FR-clips-14, FR-clips-15
 
 Всего 5 FR-GROWTH: FR-GROWTH-001, FR-GROWTH-002, FR-GROWTH-003, FR-GROWTH-004, FR-GROWTH-005
 
@@ -207,7 +210,7 @@
 
 Всего 8 NFR: NFR-clips-1, NFR-clips-2, NFR-clips-3, NFR-clips-4, NFR-clips-5, NFR-clips-6, NFR-clips-7, NFR-clips-8
 
-Всего 20 AC: AC-clips-1, AC-clips-2, AC-clips-3, AC-clips-4, AC-clips-5, AC-clips-6, AC-clips-7, AC-clips-8, AC-clips-9, AC-clips-10, AC-clips-11, AC-clips-12, AC-clips-13, AC-clips-14, AC-clips-15, AC-clips-16, AC-clips-17, AC-clips-18, AC-clips-19, AC-clips-20
+Всего 24 AC: AC-clips-1, AC-clips-2, AC-clips-3, AC-clips-4, AC-clips-5, AC-clips-6, AC-clips-7, AC-clips-8, AC-clips-9, AC-clips-10, AC-clips-11, AC-clips-12, AC-clips-13, AC-clips-14, AC-clips-15, AC-clips-16, AC-clips-17, AC-clips-18, AC-clips-19, AC-clips-20, AC-clips-21, AC-clips-22, AC-clips-23, AC-clips-24
 
 В Pseudocode каждое `### Algorithm:` несёт `REQUIREMENT:` с одним из этих ключей.
 
@@ -245,4 +248,8 @@
 | FR-clips-4 п. 8 | метки спикеров на шве печатаются «как есть» | при неуверенной сшивке подпись спикера не печатается | ADR-002 |
 | AC-clips-24 | нет `speaker` → задача падает | нет `speaker` → субтитры без подписи, задача продолжается | ADR-001 |
 | §9 долгой задачи | `job_id = video_id`, выдаётся до загрузки | отдельный `job_id`, выдаётся `POST …/complete` (202) до начала обработки | FR-clips-3, long-running-job |
+| LIMIT_LLM_ATTEMPTS_JOB | «2 попытки на задачу» | 2 попытки на задачу в сутки (повтор после `selection_failed` на следующий день возможен) | вопрос Pseudocode В-11 |
+| FR-GROWTH-002 | «запись хранит оба источника» | `attribution` — одна строка на стадию; второй источник — в `props` события `promo_code_entered` | В-12 |
+| AC-clips-2 / FR-clips-2 п. 3 | magic bytes только в подготовке воркера | проверка в web ДО создания задачи + перепроверка в `stt:prepare` | В-14, security-operation-order |
+| FR-clips-2 п. 5 | лимит загрузок до проверки размера | квота ПОСЛЕ валидации (NFR-clips-2) | В-15 |
 | FR-clips-11 | `/admin/*` и роль `operator` — не в каноне | приняты в канон (правка координатора 2026-09-23) | — |

@@ -4,9 +4,12 @@
 
 **Пишущий фан-аут:** да
 **Канон:** docs/canon.md
-**Хеш канона:** db7d3a7e25e46daabf37755d1b3a615d2b1aa81624864ad1d84177b5b92b0981
+**Хеш канона:** 4654dcd30656577de610ba2651654a2c29d653746e3eeb29ed3c5cc083c4389a
 **Проверка канона:** ВЫПОЛНЕНА
 **Причина:** —
+**Координатор пишет:** да
+**Разрезы файлов:** нет
+**Проверка владения:** ВЫПОЛНЕНА
 
 Канон заморожен после ответов владельца на СТОП 2 (OWN-05A-002…010) и решений [`ADR.md`](ADR.md). Каждая единица
 пишет только свои файлы; общие имена берёт из канона. Правка канона после заморозки — только через координатора, с
@@ -19,3 +22,33 @@
 | pseudocode | docs/Pseudocode.md |
 | architecture | docs/Architecture.md, docs/C4_Diagrams.md |
 | refinement-completion | docs/Refinement.md, docs/Completion.md, docs/long-job-contract.md, docs/model-cost-contract.md, docs/webhook-contract.md, docs/embed-contract.md |
+| spec | docs/PRD.md, docs/Specification.md, docs/Solution_Strategy.md, docs/Research_Findings.md |
+| adr | docs/ADR.md |
+
+## Владение
+
+Единицы `spec` и `adr` писали параллельно с фан-аутом (приведение к канону), поэтому объявлены единицами.
+Координатор внёс одну пост-правку в чужой файл после закрытия единицы — `docs/model-cost-contract.md`
+(закрыл устаревший раздел о расхождении); она записана в `docs/source-versions.md`, владелец файла не меняется.
+
+| Файл | Владелец |
+|---|---|
+| docs/Pseudocode.md | pseudocode |
+| docs/Architecture.md | architecture |
+| docs/C4_Diagrams.md | architecture |
+| docs/Refinement.md | refinement-completion |
+| docs/Completion.md | refinement-completion |
+| docs/long-job-contract.md | refinement-completion |
+| docs/model-cost-contract.md | refinement-completion |
+| docs/webhook-contract.md | refinement-completion |
+| docs/embed-contract.md | refinement-completion |
+| docs/PRD.md | spec |
+| docs/Specification.md | spec |
+| docs/Solution_Strategy.md | spec |
+| docs/Research_Findings.md | spec |
+| docs/ADR.md | adr |
+| docs/canon.md | координатор |
+| docs/dispatch-plan.md | координатор |
+| docs/decisions-owner.md | координатор |
+| docs/source-versions.md | координатор |
+| docs/Final_Summary.md | координатор |
