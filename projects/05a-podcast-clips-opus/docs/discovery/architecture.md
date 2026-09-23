@@ -89,4 +89,58 @@ developers.openai.com speech-to-text; cloud.ru/docs/s3e: api__methods, api__aws-
 exit=0
 ```
 
+
+## Итерация исправлений 1 (валидация Phase 2)
+
+| Находка | Что сделано | Где |
+|---|---|---|
+| VT-04 | транспорт сессии по канону: оба токена в cookie `HttpOnly; Secure; SameSite=Lax; Path=/`, без Bearer, CSRF — проверка `Origin`; сброс пароля ссылкой из `/admin/users` | ADR-011, Architecture «Security», reuse map `middleware.ts` |
+| VT-05 | CORS бакета `AllowedOrigins=BASE_URL`, `PUT`, `ExposeHeaders=ETag`; `migrate` применяет CORS и lifecycle; проверка — браузерный E2E на реальном бакете; строка зависимости с цитатой Cloud.ru (`<ExposeHeader>…</ExposeHeader>` в GetBucketCors) | ADR-007, Architecture |
+| VT-13 | эскиз compose запускаемый: `environment:` каждого сервиса по канону §6, `POSTGRES_*`, тома `pgdata`/`redisdata`/`caddy_data`/`caddy_config`/`minio_data`, Caddyfile с `request_body max_size 1MB` и `reverse_proxy web:3000`, `minio command server /data`, `mem_limit` | Architecture «Deployment Topology» |
+| VT-15 | `usage.cost` у `/audio/transcriptions` подтверждён цитатой примера ответа (`"cost": 0.000508`); без поля — `usage.seconds` × цена из `/api/v1/models`, помечается оценочной; ноль не пишется | ADR-006, Architecture |
+| VT-16 | в схеме запроса нет `minimum/maximum/multipleOf/minLength/maxLength` — по «Not supported» документации Anthropic; все ограничения проверяет код; приём очищенной схемы проверяет один вызов пробы | ADR-005 п. 4, Architecture |
+| VT-21 | ADR догнаны до канона: `/admin/spend`, `/admin/publications`; резерв STT на всё видео + секунды повторного куска; magic bytes сначала в `web` (В-14); jobId через точку | ADR-006/007/008/014 |
+| VT-22 | строка «25 МБ и ~60 с» разбита на две, у каждой своя цитата | Architecture |
+| VA-08 | проба не требует развёрнутого стека: `node apps/worker/dist/cli/ops.js stt-probe <файл>` с хоста (Node 20, ffmpeg, ключ); критерии разделены на продуктовые и подписи; порядок: OpenRouter → прямой OpenAI → субтитры без подписи → стоп, только если не прошли продуктовые | ADR-001, Architecture «Деплой», C4 |
+| VA-21 | один стиль API — REST route handlers по канону §7; tRPC не используется, роутеры донора — источник логики (ПЕРЕПИСАТЬ); `JWT_SECRET` вместо `NEXTAUTH_SECRET` | ADR-012, Architecture, C4 |
+| VA-22 | три сетевых пути названы, замер дня 0 (2 ГБ из Cloud.ru, открытие с 2 операторов РФ, цена трафика); рендер читает отрезок по HTTP range, исходник качает только подготовка | ADR-003 п. 4–5, Architecture |
+| VA-23 | `mem_limit` у каждого сервиса (сумма 6,75 ГБ при 8 ГБ), redis `maxmemory 384mb noeviction`; отказ `file_invalid` выше 3840×2160; ffmpeg `-threads 2` | ADR-007/010, Architecture |
+
+Не тронуто по указанию: VA-03/VT-03, VA-05, VA-09 (ждут владельца).
+
+### Проверки
+- Эскиз compose вынут из Architecture.md в scratchpad: `docker compose --profile prod --profile test config -q` → 0; без
+  `POSTGRES_PASSWORD` → «required variable POSTGRES_PASSWORD is missing a value» (страж падает).
+- `COMPOSE_PROFILES=prod,test node .claude/hooks/check-ports.cjs <эскиз>` → exit 0 (8 сервисов, 3 хранилища, 1 прокси).
+  Без `COMPOSE_PROFILES` проверка видит только 2 сервиса — записано в правило 1 Architecture.
+- check-external-deps и check-canon:
+```
+✅ инвентарь на месте: 17 способност(ей), у каждой вердикт из закрытой тройки (16 CONFIRMED, 1 UNCONFIRMED)
+   UNCONFIRMED — не отказ, но и не бесплатный пропуск. Требования этих строк НЕ входят в Фазу 3, пока их не отложат, не уберут или не перепишут:
+   • Конкретная модель OpenRouter, которая возвращает метки спикеров на русской речи с нужной точностью (OpenRouter: кандидаты `assemblyai/universal-3-5-pro`, `deepgram/nova-3`, `microsoft/mai-transcribe-2`, `meta/muse-voice-transcribe-1.0`, `x-ai/grok-stt-1.0`) ← FR-clips-7 (подписи спикеров), AC-clips-24
+   Ограничение: проверка НЕ ОТКРЫВАЕТ ссылку и не отличает настоящую цитату от выдуманной. Доказано, что доказательство ПРЕДЪЯВЛЕНО в требуемой форме, — не что оно истинно (слой 3).
+exit=0
+✅ канон зафиксирован и цел: docs/canon.md (sha256 совпал), 25 параллельных пишущих единиц
+   Проверено внутри канона: порядковые номера различимы у соседей (13 заголовков), перечни держат своё число (10)
+   Ограничение: совпавший хеш доказывает, что канон НЕ МЕНЯЛСЯ, — но не то, что он перечислил все разделяемые выборы. Полнота канона остаётся суждением координатора (слой 3).
+exit=0
+```
+
+### Нужны правки канона (вношу не я)
+1. §6: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` (postgres; без дефолта) и `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`
+   (minio, тестовый профиль; без дефолта). В эскизе помечены `[правка канона запрошена]`.
+2. §4 `spend_ledger`: признак оценочной стоимости STT, например `cost_estimated` (boolean), — иначе `/admin/spend` не отличит
+   факт от оценки (VT-15).
+3. §7: `ops stt-probe` запускается и с хоста без стека (`node apps/worker/dist/cli/ops.js stt-probe <файл>`), не только через
+   `docker compose exec worker-ai` (VA-08).
+4. Константа отказа `file_invalid` при разрешении больше 3840×2160 (VA-23) — в §5 или в правилах подготовки.
+5. На будущее к VT-14 (pseudocode): «Поделиться» файлом тянет клип `fetch` с S3 — нужен `GET` в `AllowedMethods` CORS бакета; сейчас в каноне только `PUT`.
+
+### Неуверенности
+- Отдают ли `usage.cost` все STT-модели OpenRouter — только пример в документации; есть запасной расчёт.
+- Примет ли OpenRouter очищенную схему для `anthropic/claude-sonnet-5` — проверит один вызов пробы.
+- Все три сетевых пути по-прежнему не измерены (замер дня 0).
+- Architecture.md — 536 строк, это больше предела в 500 строк из CLAUDE.md. Уменьшить можно, если вынести эскиз compose в отдельный файл
+  (решение координатора: файл вне моего владения).
+
 Status: completed

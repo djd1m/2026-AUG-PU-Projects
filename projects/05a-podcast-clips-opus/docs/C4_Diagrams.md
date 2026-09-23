@@ -46,7 +46,7 @@ C4Container
   System_Ext(smtp, "Resend SMTP")
   System_Boundary(vps, "VPS в Нидерландах") {
     Container(caddy, "caddy", "Caddy 2.8", "Единственная дверь: TLS clipmkr.ru, прокси на web:3000")
-    Container(web, "web", "Next.js 15.5, tRPC, Prisma", "Страницы, API, вход, выдача подписанных ссылок, события, /admin")
+    Container(web, "web", "Next.js 15.5 (REST route handlers), Prisma", "Страницы, API, вход, выдача подписанных ссылок, события, /admin")
     Container(migrate, "migrate", "Prisma", "Одноразово: prisma migrate deploy")
     Container(workerai, "worker-ai", "Node.js 20, BullMQ", "Очереди stt и llm; единственный владелец OPENROUTER_API_KEY")
     Container(workerrender, "worker-render", "Node.js 20, ffmpeg", "Очередь render: чёрные поля, ASS, знак")
@@ -58,6 +58,7 @@ C4Container
   Rel(author, s3, "PUT частей по подписанным ссылкам", "HTTPS")
   Rel(caddy, web, "HTTP", "сеть compose")
   Rel(web, postgres, "SQL")
+  Rel(web, s3, "magic bytes первых байт до создания задачи")
   Rel(web, redis, "Добавляет задачи, лимиты частоты")
   Rel(web, s3, "Multipart, HeadObject, подписанные ссылки")
   Rel(web, smtp, "Письмо подтверждения")
@@ -85,7 +86,7 @@ C4Component
   System_Ext(s3, "Cloud.ru S3")
   Container_Boundary(ai, "worker-ai") {
     Component(config, "Config guard", "@clipmkr/config", "Проверка окружения при старте; пусто или потолок ≤ 0 — процесс не стартует")
-    Component(sttw, "STT worker", "BullMQ Worker: stt", "prepare: magic bytes, ffprobe, нарезка; кусок: вызов Transcriber")
+    Component(sttw, "STT worker", "BullMQ Worker: stt", "{job_id}.stt.prepare: magic bytes, ffprobe, ≤ 3840×2160, нарезка; {job_id}.stt.{chunk_idx}: вызов Transcriber")
     Component(chunker, "Audio chunker", "ffmpeg silencedetect", "Куски 60–120 с по паузе, перекрытие, смещения в мс")
     Component(transcriber, "Transcriber", "@clipmkr/models", "OpenRouterTranscriber | OpenAiTranscriber; ответ → сегменты {speaker, start_ms, end_ms, text}")
     Component(stitch, "Merger & speaker stitcher", "чистые функции", "Склейка, монотонность, сшивка меток спикеров, флаг speaker_map_confident")
@@ -94,6 +95,7 @@ C4Component
     Component(scoring, "Scorer & quote check", "чистые функции", "Длина и итог считает код; цитаты сверяются с текстом")
     Component(quota, "Quota & spend", "SQL", "Атомарный резерв quota_counter; spend_ledger по попыткам")
     Component(lease, "Lease & heartbeat", "таймер", "job.heartbeat_at раз в 30 с; worker.close() по SIGTERM")
+    Component(probe, "ops stt-probe", "CLI", "Проба STT дня 1: тот же Transcriber; запускается и с хоста без Postgres, Redis, S3")
   }
   Rel(redis, sttw, "stt")
   Rel(redis, llmw, "llm")
@@ -101,6 +103,7 @@ C4Component
   Rel(sttw, quota, "резерв до вызова")
   Rel(sttw, transcriber, "кусок")
   Rel(transcriber, openrouter, "POST /api/v1/audio/transcriptions")
+  Rel(probe, transcriber, "10 мин русского подкаста")
   Rel(sttw, stitch, "все куски done")
   Rel(sttw, postgres, "transcript_chunk")
   Rel(sttw, s3, "исходник, tmp/")
@@ -124,14 +127,14 @@ C4Component
     Component(renderw, "Render worker", "BullMQ Worker: render", "Идемпотентно: ready не рендерится повторно")
     Component(plan, "Watermark decision", "чистая функция", "watermark = plan !== 'paid'; план читается из БД")
     Component(ass, "Subtitle builder", "ASS", "Фразы ≤ 2 строк × 32 символа; префикс «Спикер N:» только при speaker_map_confident")
-    Component(ffmpeg, "FFmpeg runner", "execFile без shell", "scale=1080:-2, pad=1080:1920:0:420:black; ass=; drawtext знака; таймаут 5 мин")
+    Component(ffmpeg, "FFmpeg runner", "execFile без shell", "-ss по подписанной ссылке (HTTP range); scale=1080:-2, pad=1080:1920:0:420:black; ass=; drawtext знака; -threads 2; таймаут 5 мин")
     Component(finisher, "Job finisher", "SQL", "clips_done++; последний клип → job succeeded")
   }
   Rel(redis, renderw, "render")
   Rel(renderw, plan, "account.plan")
   Rel(renderw, ass, "сегменты фрагмента")
   Rel(renderw, ffmpeg, "исходник, ASS, текст знака")
-  Rel(ffmpeg, s3, "клип и превью")
+  Rel(ffmpeg, s3, "отрезок исходника; клип и превью")
   Rel(renderw, finisher, "клип ready")
   Rel(finisher, postgres, "clip, job")
 ```

@@ -68,7 +68,7 @@ flowchart LR
 | Layer | Technology | Rationale |
 |---|---|---|
 | Frontend | Next.js 15.5.12 (App Router), React 19.2.4, Tailwind — по lock-файлу донора | переиспользование UI донора; версии после исправлений CVE-2025-29927 и CVE-2025-55182 (ADR-012) |
-| Backend | Next.js route handlers + tRPC 11 (донор); Node.js 20 в воркерах | один язык, общие пакеты `@clipmkr/*` |
+| Backend | Next.js REST route handlers по маршрутам канона §7 (tRPC не используется, VA-21); Node.js 20 в воркерах | один язык, общие пакеты `@clipmkr/*`; один стиль API для всех исполнителей |
 | Database | PostgreSQL 16 (`postgres:16-alpine`), Prisma 6 | схема донора урезается; атомарные условные `UPDATE` для потолков |
 | Cache / rate limit | Redis 7 (`redis:7-alpine`, пароль) | общий с очередью; счётчики частоты входа и регистраций |
 | Queue | BullMQ 5 на Redis (OWN-003) | три очереди `stt`/`llm`/`render` (канон §3) |
@@ -87,13 +87,16 @@ Every capability this product needs from someone else's service. One row per cap
 | Транскрипция аудиофайла с метками времени | OpenRouter `/api/v1/audio/transcriptions` | [openrouter.ai/docs/guides/overview/multimodal/stt](https://openrouter.ai/docs/guides/overview/multimodal/stt) · checked 2026-09-23 · «Set `response_format` to `verbose_json` and include `"timestamp_granularities": ["segment"]`» | CONFIRMED | FR-clips-4, AC-clips-6 |
 | Механизм включения диаризации в запросе транскрипции | OpenRouter, опция провайдера модели | [openrouter.ai/docs/guides/overview/multimodal/stt](https://openrouter.ai/docs/guides/overview/multimodal/stt) · checked 2026-09-23 · «Speaker diarization is enabled through the provider's own option under `provider.options`» | CONFIRMED | FR-clips-4 |
 | Конкретная модель OpenRouter, которая возвращает метки спикеров на русской речи с нужной точностью | OpenRouter: кандидаты `assemblyai/universal-3-5-pro`, `deepgram/nova-3`, `microsoft/mai-transcribe-2`, `meta/muse-voice-transcribe-1.0`, `x-ai/grok-stt-1.0` | цитаты документации, что выбранная модель через OpenRouter возвращает `speaker` для русского, нет; ответ даёт только проба дня 1 (ADR-001, критерии FR-clips-4 п. 9) · checked 2026-09-23 | UNCONFIRMED | FR-clips-7 (подписи спикеров), AC-clips-24 |
-| Предел одного запроса транскрипции (25 МБ, ~60 с обработки) | OpenRouter | [openrouter.ai/docs/guides/overview/multimodal/stt](https://openrouter.ai/docs/guides/overview/multimodal/stt) · checked 2026-09-23 · «Multipart uploads are limited to 25 MB, the same cap OpenAI enforces»; ограничение учтено куском 60–120 с (ADR-002) | CONFIRMED | FR-clips-4 |
+| Предел размера одного запроса транскрипции (25 МБ) | OpenRouter | [openrouter.ai/docs/guides/overview/multimodal/stt](https://openrouter.ai/docs/guides/overview/multimodal/stt) · checked 2026-09-23 · «Multipart uploads are limited to 25 MB, the same cap OpenAI enforces»; кусок 60–120 с mp3 — около 1–2 МБ | CONFIRMED | FR-clips-4 |
+| Предел времени обработки одного запроса транскрипции (~60 с) | OpenRouter | [openrouter.ai/docs/guides/overview/multimodal/stt](https://openrouter.ai/docs/guides/overview/multimodal/stt) · checked 2026-09-23 · «Recordings longer than about a minute of processing time should be split anyway, since upstream providers time out after 60 seconds per request»; фактическое время куска меряет критерий 6 пробы дня 1 | CONFIRMED | FR-clips-4 |
+| Стоимость транскрипции в ответе | OpenRouter `/api/v1/audio/transcriptions` | [openrouter.ai/docs/guides/overview/multimodal/stt](https://openrouter.ai/docs/guides/overview/multimodal/stt) · checked 2026-09-23 · пример ответа: `"cost": 0.000508` внутри `"usage"` вместе с `"seconds": 9.2`. Отдают ли поле все STT-модели, не утверждается; без поля стоимость считается как `usage.seconds` × цена модели из `GET /api/v1/models` и помечается оценочной (ADR-006, VT-15) | CONFIRMED | FR-clips-10, AC-clips-16 |
 | Выбор фрагментов с ответом по JSON-схеме | OpenRouter, `anthropic/claude-sonnet-5` | [openrouter.ai/docs/features/structured-outputs](https://openrouter.ai/docs/features/structured-outputs) · checked 2026-09-23 · «OpenRouter supports structured outputs for compatible models, ensuring responses follow a specific JSON Schema format»; в [openrouter.ai/api/v1/models](https://openrouter.ai/api/v1/models) у `anthropic/claude-sonnet-5` в `supported_parameters` есть `structured_outputs` | CONFIRMED | FR-clips-5, FR-clips-6, AC-clips-8, AC-clips-9 |
+| JSON-схема ответа только из ключевых слов, которые Claude поддерживает в structured outputs | Anthropic structured outputs (через OpenRouter) | [platform.claude.com/docs/en/build-with-claude/structured-outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) · checked 2026-09-23 · в разделе «Not supported»: «Numerical constraints (such as `minimum`, `maximum`, `multipleOf`)» и «String constraints (`minLength`, `maxLength`)». Поэтому в запросе этих ключевых слов нет, диапазоны 0–40, ≤ 10 фрагментов и длины строк проверяет код (ADR-005 п. 4, VT-16); что OpenRouter принимает очищенную схему, проверяет один вызов пробы дня 1 | CONFIRMED | FR-clips-5, FR-clips-6, AC-clips-8 |
 | Фактическая стоимость каждого вызова | OpenRouter usage accounting | [openrouter.ai/docs/use-cases/usage-accounting](https://openrouter.ai/docs/use-cases/usage-accounting) · checked 2026-09-23 · «`cost`: The total amount charged to your account» | CONFIRMED | FR-clips-10, AC-clips-16 |
 | Запасной STT с диаризацией напрямую | OpenAI `gpt-4o-transcribe-diarize` | [developers.openai.com/api/docs/guides/speech-to-text](https://developers.openai.com/api/docs/guides/speech-to-text) · checked 2026-09-23 · «Request the `diarized_json` response format to receive segments with `speaker`, `start`, and `end` metadata» | CONFIRMED | FR-clips-4 |
 | Загрузка частями из браузера в бакет | Cloud.ru Evolution Object Storage | [cloud.ru/docs/s3e/ug/topics/api__methods](https://cloud.ru/docs/s3e/ug/topics/api__methods) · checked 2026-09-23 · `CreateMultipartUpload` — «Запускает multipart-загрузку объекта» | CONFIRMED | FR-clips-2, AC-clips-2 |
 | Подписанные ссылки на объект | Cloud.ru Evolution Object Storage | [cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4](https://cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4) · checked 2026-09-23 · «Такой метод аутентификации позволяет сформировать подписанную ссылку (presigned URL)» | CONFIRMED | FR-clips-2, FR-clips-8, AC-clips-20 |
-| CORS бакета для загрузки из браузера | Cloud.ru Evolution Object Storage | [cloud.ru/docs/s3e/ug/topics/api__methods](https://cloud.ru/docs/s3e/ug/topics/api__methods) · checked 2026-09-23 · `PutBucketCors` — «Устанавливает конфигурацию CORS бакета» | CONFIRMED | FR-clips-2 |
+| CORS бакета с `ExposeHeaders: ETag` для загрузки частями из браузера | Cloud.ru Evolution Object Storage | [cloud.ru/docs/s3e/ug/topics/api__methods](https://cloud.ru/docs/s3e/ug/topics/api__methods) · checked 2026-09-23 · `PutBucketCors` — «Устанавливает конфигурацию CORS бакета»; [cloud.ru/docs/s3e/ug/topics/api__getbucketcors.html](https://cloud.ru/docs/s3e/ug/topics/api__getbucketcors.html) · checked 2026-09-23 · в примере конфигурации `<ExposeHeader>header3</ExposeHeader>` и `<AllowedMethod>PUT</AllowedMethod>`. Что браузер реально читает `ETag` части, доказывает только браузерный E2E дня 1 на реальном бакете (VT-05) | CONFIRMED | FR-clips-2, AC-clips-2 |
 | Удаление объектов по сроку | Cloud.ru Evolution Object Storage | [cloud.ru/docs/s3e/ug/topics/api__methods](https://cloud.ru/docs/s3e/ug/topics/api__methods) · checked 2026-09-23 · `PutBucketLifecycleConfiguration` — «Создает новую конфигурацию жизненного цикла бакета» | CONFIRMED | FR-clips-13, AC-clips-17 |
 | Отправка письма подтверждения email по SMTP | Resend, `smtp.resend.com:465` (OWN-05A-011) | [resend.com/docs/send-with-smtp](https://resend.com/docs/send-with-smtp) · checked 2026-09-23 · порт `465` — «Implicit SSL/TLS (Immediately connects via SSL/TLS)»; пароль — API-ключ | CONFIRMED | FR-clips-1, AC-clips-21 |
 | Отправка с домена `clipmkr.ru` (SPF/DKIM) | Resend, проверка домена | [resend.com/docs/add-a-domain](https://resend.com/docs/add-a-domain) · checked 2026-09-23 · «Provide the DKIM and SPF configurations (`TXT` and `MX` or `CNAME` records) to your DNS provider»; внесение записей в зону `clipmkr.ru` — чек-лист до беты | CONFIRMED | FR-clips-1, AC-clips-21 |
@@ -103,8 +106,9 @@ Every capability this product needs from someone else's service. One row per cap
 подтверждён документацией, но ни одна цитата не утверждает, что выбранная модель через OpenRouter вернёт `speaker` для
 русской речи с нужной точностью. Что это блокирует до пробы дня 1: подписи спикеров в субтитрах (FR-clips-7, часть про
 «Спикер N:») и AC-clips-24. Транскрипция с метками времени, выбор фрагментов, рендер без подписей и всё остальное
-в Phase 3 входят. Проба дня 1 переводит строку в CONFIRMED (с цитатой ответа модели в `docs/probes/stt-day1.md`) или
-включает запасной путь — прямой OpenAI, у которого возможность подтверждена.
+в Phase 3 входят, и продукт от этой строки не останавливается (решение координатора, VA-08). Порядок: модель
+OpenRouter прошла пробу → строка CONFIRMED с цитатой ответа в `docs/probes/stt-day1.md`; иначе прямой OpenAI, у которого
+возможность подтверждена; иначе субтитры без подписи спикера (канон §12, AC-clips-24).
 
 Почтовый провайдер выбран владельцем — Resend (OWN-05A-011): `SMTP_URL=smtps://resend:<API-ключ>@smtp.resend.com:465`,
 `MAIL_FROM` на домене `clipmkr.ru` с SPF/DKIM; FR-clips-1 п. 1 и AC-clips-21 входят в Phase 3. Доставка на `mail.ru` и
@@ -118,66 +122,138 @@ postgres, redis, minio. Профиль `prod` — VPS в Нидерландах;
 
 ```yaml
 name: clipmkr
+# `${VAR:?}` — без дефолта (compose не соберёт конфиг); `${VAR?}` — объявить обязательно, пусто можно;
+# `${VAR:-x}` — дефолт разрешён каноном §6.
+x-db: &db-env { DATABASE_URL: "${DATABASE_URL:?}" }
+x-redis: &redis-env { REDIS_URL: "${REDIS_URL:?}", REDIS_PASSWORD: "${REDIS_PASSWORD:?}" }
+x-s3: &s3-env { S3_ENDPOINT: "${S3_ENDPOINT:?}", S3_REGION: "${S3_REGION:?}", S3_BUCKET: "${S3_BUCKET:?}",
+                S3_ACCESS_KEY: "${S3_ACCESS_KEY:?}", S3_SECRET_KEY: "${S3_SECRET_KEY:?}", S3_TENANT_ID: "${S3_TENANT_ID?}" }
+x-limits: &limits-env { LIMIT_STT_USER_SEC_DAY: "${LIMIT_STT_USER_SEC_DAY:?}", LIMIT_LLM_USER_KOP_DAY: "${LIMIT_LLM_USER_KOP_DAY:?}",
+                        LIMIT_STT_GLOBAL_SEC_DAY: "${LIMIT_STT_GLOBAL_SEC_DAY:?}", LIMIT_LLM_GLOBAL_KOP_DAY: "${LIMIT_LLM_GLOBAL_KOP_DAY:?}",
+                        LOG_LEVEL: "${LOG_LEVEL:-info}" }
 x-app: &app
-  build: { context: ., dockerfile: Dockerfile }   # контекст — корень монорепо
-  image: clipmkr/app:${APP_VERSION:?APP_VERSION обязателен}
+  build: { context: ., dockerfile: Dockerfile }            # контекст — корень монорепо
+  image: clipmkr/app:${APP_VERSION:?}
   restart: unless-stopped
-  depends_on:
-    postgres: { condition: service_healthy }
-    redis:    { condition: service_healthy }
-    migrate:  { condition: service_completed_successfully }
+  depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_healthy },
+                migrate: { condition: service_completed_successfully } }
 services:
   caddy:
     image: caddy:2.8-alpine
     profiles: [prod]
     restart: unless-stopped
+    mem_limit: 256m
     ports: ["${CADDY_HTTP_PORT:-80}:80", "${CADDY_HTTPS_PORT:-443}:443"]
+    volumes: [./deploy/Caddyfile:/etc/caddy/Caddyfile:ro, caddy_data:/data, caddy_config:/config]  # без тома /data — повторный выпуск сертификата
     depends_on: { web: { condition: service_healthy } }
   web:
     <<: *app
     profiles: [prod, test]
     command: ["web"]
-    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]   # только петля: снаружи обойти caddy нельзя
+    mem_limit: 1g
+    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]            # только петля: снаружи обойти caddy нельзя
+    environment:
+      <<: [*db-env, *redis-env, *s3-env, *limits-env]
+      BASE_URL: ${BASE_URL:?}
+      BRAND_NAME: ${BRAND_NAME:?}
+      JWT_SECRET: ${JWT_SECRET:?}
+      SMTP_URL: ${SMTP_URL:?}
+      MAIL_FROM: ${MAIL_FROM:?}
+      LIMIT_UPLOADS_USER_DAY: ${LIMIT_UPLOADS_USER_DAY:?}
+      PAYMENTS_MODE: ${PAYMENTS_MODE:?}
+      PAYMENTS_PROVIDER: ${PAYMENTS_PROVIDER:-}            # три PAYMENTS_* обязательны только при live — проверяет @clipmkr/config
+      PAYMENTS_SHOP_ID: ${PAYMENTS_SHOP_ID:-}
+      PAYMENTS_SECRET_KEY: ${PAYMENTS_SECRET_KEY:-}
     healthcheck: { test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"], interval: 10s, retries: 6 }
   migrate:
     <<: *app
     profiles: [prod, test]
     command: ["migrate"]
     restart: "no"
+    mem_limit: 512m
+    environment: { <<: [*db-env, *s3-env], BASE_URL: "${BASE_URL:?}" }
     depends_on: { postgres: { condition: service_healthy } }
   worker-ai:
     <<: *app
     profiles: [prod, test]
     command: ["worker-ai"]
     stop_grace_period: 60s
+    mem_limit: 1g
+    environment:
+      <<: [*db-env, *redis-env, *s3-env, *limits-env]
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?}          # только здесь
+      STT_PROVIDER: ${STT_PROVIDER:?}
+      STT_MODEL: ${STT_MODEL:?}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}                  # обязателен только при STT_PROVIDER=openai
+      LLM_MODEL: ${LLM_MODEL:?}
+      FX_USD_RUB_KOP: ${FX_USD_RUB_KOP:?}
+      LIMIT_LLM_ATTEMPTS_JOB: ${LIMIT_LLM_ATTEMPTS_JOB:?}
+      LIMIT_LLM_KOP_JOB: ${LIMIT_LLM_KOP_JOB:?}
   worker-render:
     <<: *app
     profiles: [prod, test]
     command: ["worker-render"]
     stop_grace_period: 60s
     cpus: "${RENDER_CPUS:-2}"
-  postgres:
+    mem_limit: 3g
+    environment:
+      <<: [*db-env, *redis-env, *s3-env]
+      BASE_URL: ${BASE_URL:?}
+      WATERMARK_TEXT: ${WATERMARK_TEXT:?}
+      RENDER_CONCURRENCY: ${RENDER_CONCURRENCY:-1}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+  postgres:                                                # ports: НЕТ — правило №0 docker-ports
     image: postgres:16-alpine
     restart: unless-stopped
-    healthcheck: { test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"], interval: 5s, retries: 10 }
-    # ports: НЕТ — правило №0 docker-ports
+    mem_limit: 1g
+    environment: { POSTGRES_USER: "${POSTGRES_USER:?}", POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}",
+                   POSTGRES_DB: "${POSTGRES_DB:?}" }       # [правка канона запрошена]; пароль случайный
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"], interval: 5s, retries: 10 }
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    environment: { REDIS_PASSWORD: "${REDIS_PASSWORD:?REDIS_PASSWORD обязателен}" }   # нужен healthcheck внутри контейнера
-    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD обязателен}"]
+    mem_limit: 512m
+    environment: { REDIS_PASSWORD: "${REDIS_PASSWORD:?}" }  # нужен healthcheck внутри контейнера
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?}", "--maxmemory", "384mb",
+              "--maxmemory-policy", "noeviction", "--appendonly", "yes"]   # BullMQ требует noeviction
+    volumes: [redisdata:/data]
     healthcheck: { test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping"], interval: 5s, retries: 10 }
   minio:
-    image: minio/minio:${MINIO_TAG:?тег RELEASE.… обязателен}
+    image: minio/minio:${MINIO_TAG:?}
     profiles: [test]
     restart: unless-stopped
+    mem_limit: 512m
+    command: ["server", "/data"]
+    environment: { MINIO_ROOT_USER: "${MINIO_ROOT_USER:?}", MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?}" }  # [правка канона запрошена]
+    volumes: [minio_data:/data]
     healthcheck: { test: ["CMD", "mc", "ready", "local"], interval: 5s, retries: 10 }
+volumes: { pgdata: {}, redisdata: {}, caddy_data: {}, caddy_config: {}, minio_data: {} }
 ```
+
+`deploy/Caddyfile` (домен в файле, а не в переменной: это конфигурация, прошедшая ревью):
+
+```text
+clipmkr.ru {
+	encode gzip
+	request_body /api/* {
+		max_size 1MB
+	}
+	reverse_proxy web:3000
+}
+```
+
+Сумма `mem_limit` в prod — 6,75 ГБ при 8 ГБ VPS: OOM-killer хоста не доходит до `postgres` (VA-23). Исходник больше
+3840×2160 отвергается на подготовке (`file_invalid`), ffmpeg рендера декодирует с `-threads 2`.
+`migrate` после миграций БД идемпотентно применяет к бакету CORS (канон §8: `AllowedOrigins = BASE_URL`,
+`AllowedMethods = PUT`, `ExposeHeaders = ETag`) и правила жизненного цикла (ADR-007); в тестовом профиле он же создаёт
+бакет MinIO, если его нет. Отдельного контейнера `minio-init` нет: канон §1 перечисляет ровно 8 сервисов.
 
 Правила топологии (каждое проверяется скриптом, а не глазами):
 
 1. **Хранилища не публикуются.** У `postgres`, `redis`, `minio` нет `ports:`; соседи обращаются по имени сервиса.
-   Проверка: `node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus` → 0.
+   Проверка: `COMPOSE_PROFILES=prod,test node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus` → 0.
+   Без `COMPOSE_PROFILES` проверка видит только сервисы без профиля (`postgres`, `redis`) и молча пропускает `caddy` и `web`.
 2. **Единственная дверь в prod — `caddy`.** `web` публикуется только на петлю `127.0.0.1` (для отладки с самого
    сервера); на внешний интерфейс — никогда, иначе прокси обходится вместе с TLS и лимитами. Проверка — тот же
    `check-ports.cjs` (раздел «за reverse-proxy»).
@@ -187,8 +263,11 @@ services:
    приложения — `service_completed_successfully` у `migrate` (урок compose-hygiene §4: воркер раньше миграций).
 5. Все образы с тегами; `latest` запрещён; у каждого дополнительного compose-файла свой `name:` (для тестового
    стека — `clipmkr-test`).
-6. Секреты — `env_file` на сервер (права 600, вне git); список `environment:` у каждого сервиса — ровно его
-   переменные из канона §6: ключи моделей есть только у `worker-ai`, ключи оплаты (v1) — только у `web`.
+6. Секреты — файл `.env` на сервере (права 600, вне git), из которого compose подставляет значения; список
+   `environment:` у каждого сервиса — ровно его переменные из канона §6 (эскиз выше): ключи моделей есть только у
+   `worker-ai`, ключи оплаты (v1) — только у `web`. Проверка: `bash scripts/check-env-wiring.sh`.
+7. У каждого сервиса `mem_limit`; у хранилищ — именованные тома (`pgdata`, `redisdata`, `minio_data`), у `caddy` —
+   `caddy_data` и `caddy_config`.
 
 ### Сборка монорепо (compose-hygiene §5)
 
@@ -210,7 +289,12 @@ ffmpeg ставится в финальный образ один раз (`apk a
    HTTPS не отвечает — OWN-05A-006).
 3. Файрвол: наружу открыты только 22, 80, 443.
 4. `git pull` → `docker compose --profile prod build` → `docker compose --profile prod up -d`. Откат: предыдущий `APP_VERSION`.
-5. После `up`: `bash scripts/check-cjm.sh https://clipmkr.ru` — сквозной путь по выданным адресам, не по
+5. **Замер дня 0, до кода** (ADR-003 п. 5, VA-22): время скачивания 2 ГБ из Cloud.ru на этот VPS; открытие
+   `https://clipmkr.ru` с двух мобильных операторов РФ; цена исходящего трафика Cloud.ru из тарифа. Три числа — в
+   `Research_Findings.md`.
+6. **Проба STT дня 1** — с хоста, до развёртывания стека: `node apps/worker/dist/cli/ops.js stt-probe <файл>` (нужны
+   Node 20, ffmpeg, `OPENROUTER_API_KEY`; Postgres, Redis и S3 не нужны; ADR-001 п. 4).
+7. После `up`: `bash scripts/check-cjm.sh https://clipmkr.ru` — сквозной путь по выданным адресам, не по
    `localhost` (deployment-seams).
 
 ## Data Architecture
@@ -273,11 +357,11 @@ sequenceDiagram
   W-->>B: video_id + подписанные ссылки на части (TTL 15 мин)
   B->>S3: PUT частей
   B->>W: POST /api/videos/{video_id}/complete (Idempotency-Key)
-  W->>S3: CompleteMultipartUpload, HeadObject
+  W->>S3: CompleteMultipartUpload, HeadObject, первые байты → magic bytes (отказ удаляет объект)
   W->>PG: INSERT job (running, transcribing) ON CONFLICT → тот же job_id
-  W->>Q: add stt {job_id}:stt:prepare
+  W->>Q: add stt {job_id}.stt.prepare
   W-->>B: 202 {job_id}
-  AI->>S3: скачать исходник; magic bytes; ffprobe (длительность ≤ 120 мин)
+  AI->>S3: скачать исходник один раз; перепроверка magic bytes; ffprobe (≤ 120 мин, ≤ 3840×2160)
   AI->>PG: резерв quota_counter STT на секунды всего видео (атомарно), иначе failed/quota_*
   loop кусок 60–120 с, пропуская done
     AI->>PG: spend_ledger попытка; повтор куска резервирует его секунды дополнительно
@@ -289,7 +373,7 @@ sequenceDiagram
   AI->>OR: chat.completions anthropic/claude-sonnet-5, json_schema
   AI->>PG: clip × N (queued), step = rendering
   AI->>Q: add render {clip_id} × N
-  R->>S3: исходник → ffmpeg (поля, ASS, знак) → клип
+  R->>S3: подписанная ссылка на исходник, ffmpeg -ss (HTTP range) → поля, ASS, знак → клип
   R->>PG: clip ready; clips_done++; последний → job succeeded
   B->>W: GET /api/jobs/{job_id} (опрос)
   B->>W: GET /api/clips/{clip_id}/file → подписанная ссылка 15 мин
@@ -304,9 +388,9 @@ sequenceDiagram
 
 | Очередь | Потребитель | Конкурентность | `jobId` | Повтор |
 |---|---|---|---|---|
-| `stt` | `worker-ai` | 2 задачи на процесс; ≤ 2 параллельных куска на задачу, ≤ 4 глобально (NFR-clips-5) | `{job_id}:stt:prepare` — подготовка (magic bytes, `ffprobe`, нарезка); `{job_id}:stt:{chunk_idx}` — кусок | 3 попытки, экспонента от 5 с |
-| `llm` | `worker-ai` | 2 | `{job_id}:llm` | ≤ `LIMIT_LLM_ATTEMPTS_JOB` = 2 |
-| `render` | `worker-render` | `RENDER_CONCURRENCY` (1 на 2 vCPU) | `{clip_id}:render` | 3 попытки; готовый клип не рендерится повторно |
+| `stt` | `worker-ai` | 2 задачи на процесс; ≤ 2 параллельных куска на задачу, ≤ 4 глобально (NFR-clips-5) | `{job_id}.stt.prepare` — подготовка (magic bytes, `ffprobe`, нарезка); `{job_id}.stt.{chunk_idx}` — кусок | 3 попытки, экспонента от 5 с |
+| `llm` | `worker-ai` | 2 | `{job_id}.llm` | ≤ `LIMIT_LLM_ATTEMPTS_JOB` = 2 |
+| `render` | `worker-render` | `RENDER_CONCURRENCY` (1 на 2 vCPU) | `{clip_id}.render` | 3 попытки; готовый клип не рендерится повторно |
 
 - **Три состояния** `running` · `succeeded` · `failed` — поле `job.status`; шаг — `job.step`; причина —
   `job.fail_reason` из закрытого списка (канон §5).
@@ -322,7 +406,10 @@ sequenceDiagram
 ## Security Architecture
 
 **Аутентификация.** Email + пароль (argon2id), подтверждение почты до первой загрузки, JWT access 15 мин +
-refresh-cookie `HttpOnly; Secure; SameSite=Lax`; refresh хранится хэшем в `refresh_token`, отзывается. Лимиты
+refresh. **Транспорт** (канон §7, VT-04): оба токена — только в cookie `HttpOnly; Secure; SameSite=Lax; Path=/`;
+`Authorization: Bearer` не используется, поэтому серверный рендер `/admin/*` и API читают сессию одинаково. CSRF:
+`POST`/`DELETE` принимаются только с `Origin` = `BASE_URL`, иначе `403`. Refresh хранится хэшем в `refresh_token`,
+отзывается. Лимиты
 регистраций и входа — в Redis, **до** проверки пароля; недоступный Redis — отказ `503`, а не «без лимита» (у донора
 `rate-limit.ts` открывался при сбое — переписывается).
 
@@ -336,7 +423,7 @@ refresh-cookie `HttpOnly; Secure; SameSite=Lax`; refresh хранится хэш
 | Граница | Порядок |
 |---|---|
 | Интернет → `caddy` → `web` | TLS → лимит тела → сессия → лимит частоты → валидация (размер, схема) → резерв потолка → действие |
-| Браузер → S3 | подписанная ссылка на конкретный ключ и часть, TTL 15 мин; после сборки — `HeadObject`, magic bytes, `ffprobe` в воркере; отказ удаляет объект |
+| Браузер → S3 | подписанная ссылка на конкретный ключ и часть, TTL 15 мин; CORS бакета: `AllowedOrigins = BASE_URL`, `AllowedMethods = PUT`, `ExposeHeaders = ETag`; после сборки — `HeadObject` и magic bytes в `web` до создания задачи, затем перепроверка и `ffprobe` в `…stt.prepare`; отказ удаляет объект |
 | `worker-ai` → OpenRouter | резерв потолка → вызов вне транзакции → факт в `spend_ledger`; TLS всегда проверяется |
 | Транскрипт → LLM | транскрипт внутри `<transcript>` как данные; ответ проходит JSON-схему; цитаты сверяются с текстом кодом |
 | Текст → ffmpeg | `execFile`/`spawn` без shell; экранирование `escapeAssText`/`escapeDrawtext` донора |
@@ -361,7 +448,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 |---|---|---|
 | CPU рендера | десятки клипов одновременно | `RENDER_CONCURRENCY`, второй `worker-render` на другом хосте (очередь общая) |
 | Время STT | 40 кусков на час записи | параллельность кусков (≤ 4 глобально) и суточный потолок 90 000 с |
-| Трафик Нидерланды ↔ Cloud.ru | исходник 1–2 ГБ идёт в воркер | замер в день 1; при проблеме — локальный кэш исходника на время задачи `[НЕ ПРОВЕРЕНО]` |
+| Сеть: РФ → Нидерланды, РФ → Cloud.ru, Нидерланды ↔ Cloud.ru | исходник до 2 ГБ идёт в воркер; зрители и авторы из РФ открывают сайт в Нидерландах | ни один путь не измерен `[НЕ ПРОВЕРЕНО]` (VA-22). Исходник качает только подготовка, один раз; рендер читает отрезок по HTTP range. Замер дня 0 — три числа (ниже), деградация пути РФ → Нидерланды = нет беты, запасного пути на неделе нет |
 | Postgres | не узкое место на неделе | пул 10 на процесс, `connectionTimeoutMillis` 5 000 |
 | Деньги | суточные потолки | числа в конфигурации (ADR-006) |
 
@@ -396,7 +483,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 | `apps/worker/workers/index.ts` | ПЕРЕПИСАТЬ | две точки входа по ролям; `worker.close()` по SIGTERM |
 | `apps/worker/__tests__/llm-analyze-utils.test.ts` | ДОРАБОТАТЬ | под новую схему ответа |
 | `apps/worker/workers/{publish,stats-collector,billing-cron,download}.ts`, `lib/providers/*`, `lib/byok-cache.ts`, `lib/yookassa.ts`, `lib/ssrf-validator.ts` | НЕ БРАТЬ | вне недели (загрузка по URL, автопостинг, BYOK, оплата) |
-| `apps/web/middleware.ts` | ДОРАБОТАТЬ | JWT + refresh сохранить; очистка `x-user-*` сохранить; убрать VK/NextAuth-мост |
+| `apps/web/middleware.ts` | ДОРАБОТАТЬ | JWT из cookie `Path=/` (не Bearer), проверка `Origin` у `POST`/`DELETE`, роль `operator` для `/admin/*`; `JWT_SECRET` вместо `NEXTAUTH_SECRET`; очистка `x-user-*` сохранить; убрать VK/NextAuth-мост |
 | `apps/web/lib/auth/{jwt,cookies,schemas}.ts` | ВЗЯТЬ | — |
 | `apps/web/lib/auth/password.ts` | ДОРАБОТАТЬ | bcrypt → argon2id (FR-clips-1) |
 | `apps/web/lib/auth/rate-limit.ts` | ПЕРЕПИСАТЬ | при недоступном Redis — отказ, а не «лимита нет» |
@@ -407,7 +494,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 | `apps/web/app/api/upload/route.ts` | ПЕРЕПИСАТЬ | байты не идут через `web`; выдача ссылок на части |
 | `apps/web/app/api/clips/[clipId]/file/route.ts` | ДОРАБОТАТЬ | подписанная ссылка 15 мин вместо стрима через `web`; владение из сессии |
 | `apps/web/app/api/webhooks/yookassa/route.ts`, `lib/yookassa.ts`, `lib/trpc/routers/billing.ts` | НЕ БРАТЬ (справка для v1) | вебхуков на неделе нет |
-| `apps/web/lib/trpc/routers/{video,clip,transcript,user}.ts` | ДОРАБОТАТЬ | подмножество процедур под экраны недели |
+| `apps/web/lib/trpc/routers/{video,clip,transcript,user}.ts` | ПЕРЕПИСАТЬ | логика переносится в REST route handlers канона §7; tRPC не используется (ADR-012, VA-21) |
 | `apps/web/lib/trpc/routers/{team,platform,analytics}.ts`, `lib/stores/clip-editor-store.ts`, `lib/crypto/byok-vault.ts` | НЕ БРАТЬ | вне недели |
 | `docker-compose.yml`, `Dockerfile` | ПЕРЕПИСАТЬ | см. раздел «Deployment Topology» |
 
@@ -438,7 +525,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 
 Канон обновлён координатором 2026-09-23 (`/admin/*`, `account.role`, `caption_copied`); оставшиеся строки ниже
 внесены в канон §12, Specification правит её автор. Эта архитектура следует канону и ADR.
-`jobId` `{job_id}:stt:prepare` и переменные compose `REDIS_PASSWORD`, `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`
+`jobId` `{job_id}.stt.prepare` (разделитель — точка, VT-01) и переменные compose `REDIS_PASSWORD`, `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`
 внесены в канон (§3, §6) координатором.
 
 | Specification | Канон / ADR | Здесь принято |

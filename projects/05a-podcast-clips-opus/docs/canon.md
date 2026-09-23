@@ -67,7 +67,7 @@
 | `transcript_chunk` | `id`, `job_id`, `chunk_idx`, `offset_ms`, `duration_ms`, `status`, `units` (jsonb), `speaker_map` (jsonb), `speaker_map_confident`, `model`, `attempt_count`, `created_at`; уникально (`job_id`, `chunk_idx`) |
 | `clip` | `id`, `job_id`, `clip_code` (уникальный), `start_unit`, `end_unit`, `start_ms`, `end_ms`, `title`, `hook_quote`, `hook_reason`, `hook_score`, `completeness_quote`, `completeness_reason`, `completeness_score`, `length_score`, `total_score`, `render_status`, `watermarked`, `s3_key_clip`, `speaker_labels_shown`, `created_at` |
 | `quota_counter` | `scope` (`account` \| `global` \| `job`), `scope_id`, `day` (дата Europe/Moscow), `kind`, `used`; первичный ключ из всех, кроме `used` |
-| `spend_ledger` | `id`, `account_id`, `job_id`, `call` (`stt` \| `llm`), `model`, `attempt`, `units_reserved`, `units_actual`, `cost_usd_micro`, `cost_kop`, `outcome`, `created_at` |
+| `spend_ledger` | `id`, `account_id`, `job_id`, `call` (`stt` \| `llm`), `model`, `attempt`, `units_reserved`, `units_actual`, `cost_usd_micro`, `cost_kop`, `cost_estimated` (boolean: стоимость STT оценена по длительности, а не взята из `usage.cost`), `outcome`, `created_at` |
 | `event` | `id`, `name`, `account_id`, `clip_id`, `session_id`, `props` (jsonb), `created_at`; сырой IP не пишется |
 | `publication` | `id`, `clip_id`, `account_id`, `url`, `url_normalized` (уникальный), `platform`, `channel_key` (канал/профиль автора на площадке, нижний регистр; для подсчёта «разных авторов», VA-14), `status`, `reason`, `verified_at`, `rechecked_at`, `created_at`; удаляется вместе с клипом |
 | `partner` | `id`, `name`, `contact`, `audience_url`, `partner_code` (уникальный, верхний регистр), `account_id`, `created_at` |
@@ -100,6 +100,8 @@
 | `STT_PROVIDER` | `openrouter`, `openai` |
 | `PAYMENTS_MODE` | `fake`, `live` |
 | `PAYMENTS_PROVIDER` | `yookassa`, `cloudpayments` |
+
+Отказ `file_invalid` включает: не видео по magic bytes, разрешение больше 3840×2160, фактическая длительность по пакетам расходится с заявленной (VA-04, VA-23).
 
 Всего 9 причин отказа: file_invalid, duration_exceeded, quota_user, quota_global, stt_failed, no_timestamps, selection_failed, render_failed, worker_lost.
 
@@ -137,6 +139,8 @@
 | `RENDER_CONCURRENCY` | worker-render | дефолт `1` разрешён | параллельные рендеры |
 | `LOG_LEVEL` | все | дефолт `info` разрешён | — |
 | `WEB_PORT`, `CADDY_HTTP_PORT`, `CADDY_HTTPS_PORT` | compose | `${VAR:-default}` | хостовые порты |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | postgres | без дефолта | учётные данные БД в сети compose |
+| `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD` | minio (тестовый профиль) | без дефолта | не `minioadmin` |
 | `REDIS_PASSWORD` | redis, web, worker-ai, worker-render | без дефолта | пароль Redis в сети compose |
 | `APP_VERSION` | compose | без дефолта | тег собранных образов |
 | `MINIO_TAG` | compose (тестовый профиль) | без дефолта | явный тег образа MinIO |
@@ -175,7 +179,7 @@
 | `GET /admin/metrics?from=<YYYY-MM-DD>` | роль `operator` | метрики недели |
 | `GET /admin/users` | роль `operator` | смена плана с причиной; сброс пароля пользователя (одноразовая ссылка на почту) |
 
-Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`, `ops stt-probe <файл>` (проба STT дня 1, ADR-001); в первой неделе (OWN-05A-014) также `ops partner-add <имя> [код]` и `ops spend-today` — до появления `/admin/partners` и `/admin/spend` во второй очереди. Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
+Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`, `ops stt-probe <файл>` (проба STT дня 1, ADR-001; запускается и с хоста без стека: `node apps/worker/dist/cli/ops.js stt-probe <файл>`); в первой неделе (OWN-05A-014) также `ops partner-add <имя> [код]` и `ops spend-today` — до появления `/admin/partners` и `/admin/spend` во второй очереди. Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
 
 Сессия: access-JWT и refresh — только в cookie `httpOnly; Secure; SameSite=Lax; Path=/`; заголовок `Authorization: Bearer`
 не используется. Мутирующие запросы (`POST`/`DELETE`) проверяют `Origin` = `BASE_URL` (CSRF). Серверный рендер `/admin/*`
@@ -190,7 +194,7 @@
 | клип | `clips/{account_id}/{job_id}/{clip_id}.mp4` |
 | превью | `clips/{account_id}/{job_id}/{clip_id}.jpg` |
 
-CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `ExposeHeaders` = `ETag` — без него браузер не прочитает ETag части
+CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `GET` (GET — загрузка клипа для «Поделиться» файлом, VT-14), `ExposeHeaders` = `ETag` — без него браузер не прочитает ETag части
 и `complete` не соберёт загрузку (VT-05, VA-07). Проверяется браузерным E2E, не `curl`.
 
 ## 9. События аналитики и метрики роста

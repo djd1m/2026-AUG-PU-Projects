@@ -4,11 +4,11 @@
 
 **Пишущий фан-аут:** да
 **Канон:** docs/canon.md
-**Хеш канона:** 6ed791dc58958af5418f7be53fbdb3375e6b7dab4211228ca71dd23c8fd3b26e
+**Хеш канона:** 7f81d92437fc5a0058a097eb8cc520454bff3f52a4fdb81774f7b38b0767540a
 **Проверка канона:** ВЫПОЛНЕНА
 **Причина:** —
 **Координатор пишет:** да
-**Разрезы файлов:** нет
+**Разрезы файлов:** да
 **Проверка владения:** ВЫПОЛНЕНА
 
 Канон заморожен после ответов владельца на СТОП 2 (OWN-05A-002…010) и решений [`ADR.md`](ADR.md). Каждая единица
@@ -36,6 +36,7 @@
 | docs/Pseudocode.md | pseudocode |
 | docs/Architecture.md | architecture |
 | docs/C4_Diagrams.md | architecture |
+| docs/Architecture-compose.md | architecture |
 | docs/Refinement.md | refinement-completion |
 | docs/Completion.md | refinement-completion |
 | docs/long-job-contract.md | refinement-completion |
@@ -52,3 +53,9 @@
 | docs/decisions-owner.md | координатор |
 | docs/source-versions.md | координатор |
 | docs/Final_Summary.md | координатор |
+
+## События разреза
+
+| Новый файл | Разрезан из | Владелец |
+|---|---|---|
+| docs/Architecture-compose.md | docs/Architecture.md | architecture |
