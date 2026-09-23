@@ -1,0 +1,230 @@
+{
+  "source": "transcript-aggregation (Claude Code host-written usage per response; Codex token_count snapshots)",
+  "quality": "partial: реальные счётчики хоста, но не биллинг; попытки/повторы см. events.jsonl",
+  "session": "8ac45330-2dd0-4ef3-86ce-f64d46a9ca67",
+  "window": {
+    "from": "2026-09-23T17:32:00.000Z",
+    "to": null
+  },
+  "observed": {
+    "first_at": "2026-09-23T17:32:10.901Z",
+    "last_at": "2026-09-23T20:39:11.074Z"
+  },
+  "dedupe": {
+    "raw_assistant_entries": 2474,
+    "unique_requests": 1389,
+    "bad_lines": 0
+  },
+  "by_model": {
+    "claude-opus-5-5": {
+      "requests": 987,
+      "input_tokens": 2194,
+      "cache_creation_input_tokens": 11151512,
+      "cache_read_input_tokens": 353875828,
+      "output_tokens": 531637,
+      "thinking_tokens": 69095
+    },
+    "claude-sonnet-5": {
+      "requests": 402,
+      "input_tokens": 804,
+      "cache_creation_input_tokens": 3304219,
+      "cache_read_input_tokens": 151051760,
+      "output_tokens": 218409,
+      "thinking_tokens": 23757
+    }
+  },
+  "by_agent": {
+    "coordinator": {
+      "requests": 270,
+      "input_tokens": 710,
+      "cache_creation_input_tokens": 434632,
+      "cache_read_input_tokens": 103614057,
+      "output_tokens": 222035,
+      "thinking_tokens": 30771
+    },
+    "R1-market": {
+      "requests": 10,
+      "input_tokens": 20,
+      "cache_creation_input_tokens": 207737,
+      "cache_read_input_tokens": 1514250,
+      "output_tokens": 14194,
+      "thinking_tokens": 555
+    },
+    "R2-growth": {
+      "requests": 12,
+      "input_tokens": 24,
+      "cache_creation_input_tokens": 191905,
+      "cache_read_input_tokens": 1728965,
+      "output_tokens": 17312,
+      "thinking_tokens": 282
+    },
+    "R3-jan-audit": {
+      "requests": 28,
+      "input_tokens": 56,
+      "cache_creation_input_tokens": 243968,
+      "cache_read_input_tokens": 4813240,
+      "output_tokens": 13431,
+      "thinking_tokens": 0
+    },
+    "R4-source-profile": {
+      "requests": 26,
+      "input_tokens": 52,
+      "cache_creation_input_tokens": 206251,
+      "cache_read_input_tokens": 3978519,
+      "output_tokens": 14042,
+      "thinking_tokens": 2493
+    },
+    "adr-architect": {
+      "requests": 217,
+      "input_tokens": 458,
+      "cache_creation_input_tokens": 3164328,
+      "cache_read_input_tokens": 80982626,
+      "output_tokens": 67398,
+      "thinking_tokens": 5074
+    },
+    "cjm-critic": {
+      "requests": 21,
+      "input_tokens": 42,
+      "cache_creation_input_tokens": 225433,
+      "cache_read_input_tokens": 3495714,
+      "output_tokens": 1947,
+      "thinking_tokens": 0
+    },
+    "pseudocode": {
+      "requests": 136,
+      "input_tokens": 280,
+      "cache_creation_input_tokens": 2434516,
+      "cache_read_input_tokens": 50695981,
+      "output_tokens": 72828,
+      "thinking_tokens": 9964
+    },
+    "refinement-completion": {
+      "requests": 270,
+      "input_tokens": 540,
+      "cache_creation_input_tokens": 2032633,
+      "cache_read_input_tokens": 129674667,
+      "output_tokens": 128729,
+      "thinking_tokens": 20068
+    },
+    "spec-author": {
+      "requests": 186,
+      "input_tokens": 390,
+      "cache_creation_input_tokens": 3471791,
+      "cache_read_input_tokens": 82946814,
+      "output_tokens": 70753,
+      "thinking_tokens": 9136
+    },
+    "val-adversarial": {
+      "requests": 24,
+      "input_tokens": 48,
+      "cache_creation_input_tokens": 255871,
+      "cache_read_input_tokens": 4418619,
+      "output_tokens": 17711,
+      "thinking_tokens": 78
+    },
+    "val-stories": {
+      "requests": 20,
+      "input_tokens": 40,
+      "cache_creation_input_tokens": 240555,
+      "cache_read_input_tokens": 3499279,
+      "output_tokens": 21004,
+      "thinking_tokens": 165
+    },
+    "val-trace": {
+      "requests": 23,
+      "input_tokens": 46,
+      "cache_creation_input_tokens": 315115,
+      "cache_read_input_tokens": 5150091,
+      "output_tokens": 22479,
+      "thinking_tokens": 5299
+    },
+    "val2-adversarial": {
+      "requests": 19,
+      "input_tokens": 38,
+      "cache_creation_input_tokens": 275458,
+      "cache_read_input_tokens": 3595807,
+      "output_tokens": 21735,
+      "thinking_tokens": 493
+    },
+    "val2-stories": {
+      "requests": 36,
+      "input_tokens": 72,
+      "cache_creation_input_tokens": 181170,
+      "cache_read_input_tokens": 5842840,
+      "output_tokens": 9697,
+      "thinking_tokens": 194
+    },
+    "val2-trace": {
+      "requests": 32,
+      "input_tokens": 64,
+      "cache_creation_input_tokens": 323119,
+      "cache_read_input_tokens": 7442676,
+      "output_tokens": 23675,
+      "thinking_tokens": 8061
+    },
+    "val3-verify": {
+      "requests": 59,
+      "input_tokens": 118,
+      "cache_creation_input_tokens": 251249,
+      "cache_read_input_tokens": 11533443,
+      "output_tokens": 11076,
+      "thinking_tokens": 219
+    }
+  },
+  "totals": {
+    "input_tokens_total": 519386317,
+    "cached_input_tokens": 504927588,
+    "cache_creation_input_tokens": 14455731,
+    "output_tokens_total": 750046,
+    "reasoning_tokens": 92852,
+    "requests": 1389
+  },
+  "codex": {
+    "sessions": [
+      {
+        "file": "2026/09/23/rollout-2026-09-23T17-43-23-01a0cf5d-7369-7ca1-973e-efc747ca688e.jsonl",
+        "started_at": "2026-09-23T17:43:23.268Z",
+        "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05a-podcast-clips-opus",
+        "model": "gpt-6-astra",
+        "usage": {
+          "input_tokens": 1517990,
+          "cached_input_tokens": 1405824,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 24197,
+          "reasoning_output_tokens": 1097,
+          "total_tokens": 1542187
+        }
+      },
+      {
+        "file": "2026/09/23/rollout-2026-09-23T18-05-19-01a0cf71-8ae5-7cd3-b02a-0f66b18b74d1.jsonl",
+        "started_at": "2026-09-23T18:05:19.980Z",
+        "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05a-podcast-clips-opus",
+        "model": "gpt-6-luna",
+        "usage": {
+          "input_tokens": 30953,
+          "cached_input_tokens": 26112,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 165,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 31118
+        }
+      },
+      {
+        "file": "2026/09/23/rollout-2026-09-23T18-05-55-01a0cf72-13ae-7f23-aefe-95ab26b137b5.jsonl",
+        "started_at": "2026-09-23T18:05:55.018Z",
+        "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05a-podcast-clips-opus",
+        "model": "gpt-6-luna",
+        "usage": {
+          "input_tokens": 30962,
+          "cached_input_tokens": 26112,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 250,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 31212
+        }
+      }
+    ],
+    "note": "последний кумулятивный снимок total_token_usage на сессию; фильтр по времени старта"
+  },
+  "generated_at": "2026-09-23T20:39:36.953Z"
+}
