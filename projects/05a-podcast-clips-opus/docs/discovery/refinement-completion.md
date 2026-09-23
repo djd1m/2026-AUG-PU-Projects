@@ -367,3 +367,26 @@ check-embed-contract.cjs   → 2 (законно, без изменений)
 ```
 
 Status: completed
+
+## Хранилище квоты новичка — снята пометка «моё предположение»
+
+Specification/Pseudocode дописали механизм после моей предыдущей правки. Перечитал
+Specification FR-clips-16 (п.1–7) и AC-clips-30 (SC-US-002-7…10), Pseudocode `is_newbie`
+(строка 35), `QuotaKind` (104), «Допуск STT» шаг 2.2.3/2.2.4 и `release_stt_admission` (466),
+canon §4/§5. `model-cost-contract.md` переписан дословно по ним:
+
+- убрана вся формулировка «моё предположение о механизме / открытый вопрос»;
+- `is_newbie(acc, t)` цитируется как определение Pseudocode, с явным «пересчитывается на каждую
+  попытку, не замораживается при первом допуске» (это отличие от того, что я писал раньше);
+- превышение ПУЛА новичков — `failed/quota_global`, не `quota_user` (я раньше не уточнял причину;
+  Specification FR-clips-16 п.4 и AC-clips-30 SC-US-002-8 различают персональную причину и пуловую);
+- добавлен явный пункт про отметку `quota_counter(scope='job', kind='stt_sec_newbie')` — это то,
+  что закрывает В-27 (точный возврат пула при отказе независимо от того, что статус аккаунта мог
+  измениться между допуском и отказом).
+- `Refinement.md` §2.4 п.10 дополнен ссылкой на AC-clips-30/SC-US-002-8 и явным `quota_global` для
+  причины отказа пула.
+
+Прогон ворот не изменился: `check-job-contract.cjs` → 0, `check-model-cost.cjs` → 0,
+`check-webhook-contract.cjs` → 2 (законно), `check-embed-contract.cjs` → 2 (законно).
+
+Status: completed
