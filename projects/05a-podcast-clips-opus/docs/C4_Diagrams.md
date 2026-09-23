@@ -86,7 +86,7 @@ C4Component
   System_Ext(s3, "Cloud.ru S3")
   Container_Boundary(ai, "worker-ai") {
     Component(config, "Config guard", "@clipmkr/config", "Проверка окружения при старте; пусто или потолок ≤ 0 — процесс не стартует")
-    Component(sttw, "STT worker", "BullMQ Worker: stt", "{job_id}.stt.prepare: magic bytes, ffprobe, ≤ 3840×2160, нарезка; {job_id}.stt.{chunk_idx}: вызов Transcriber")
+    Component(sttw, "STT worker", "BullMQ Worker: stt", "{job_id}.stt.prepare: magic bytes, ffprobe, ≤ 3840×2160, длительность совпадает с заявленной, нарезка; {job_id}.stt.{chunk_idx}: вызов Transcriber")
     Component(chunker, "Audio chunker", "ffmpeg silencedetect", "Куски 60–120 с по паузе, перекрытие, смещения в мс")
     Component(transcriber, "Transcriber", "@clipmkr/models", "OpenRouterTranscriber | OpenAiTranscriber; ответ → сегменты {speaker, start_ms, end_ms, text}")
     Component(stitch, "Merger & speaker stitcher", "чистые функции", "Склейка, монотонность, сшивка меток спикеров, флаг speaker_map_confident")

@@ -262,4 +262,16 @@ OWN-05A-013 это нужно привести к FR-GROWTH-003 п.4–5. ADR.md
 Проверки: check-growth-trace 0, check-look-trace 0, check-metric-source 0, check-handoff-manifest 0;
 дублей сценариев нет.
 
+### Дополнение к итерации 1 — channel_key, В-24, В-25
+
+| Правка | Статус | Как |
+|---|---|---|
+| `publication.channel_key` (canon §4) | внесено | FR-GROWTH-005 п.3: оператор при `confirmed` пишет канал в `publication.channel_key`; п.4: «разные авторы» = меньшее из числа разных `account_id` и разных `channel_key`. Пометка «поле требует добавления в канон» удалена |
+| В-24: `no_timestamps` неповторяема | внесено | FR-clips-3 п.3: кнопки «Повторить» нет у `file_invalid`, `duration_exceeded`, `no_timestamps`; SC-US-004-1: «без кнопки „Повторить“» |
+| В-25: 20 регистраций с IP в час | внесено | FR-clips-1 п.4: 20 в час, IP — грубый ключ из-за CGNAT; защита от мультиаккаунтов — нормализация email, блок-лист одноразовых доменов, потолки на автора. SC-US-001-2 (AC-clips-1): 21-я → 429, 20-я проходит. Solution_Strategy, риск «обход новыми аккаунтами» — те же меры |
+| канон §4: `publication` сохраняется при удалении клипа | совпадает | FR-clips-13 п.2 и SC-US-014-1 уже это требуют (`clip_id` → NULL, статус сохраняется) |
+
+Решения OWN-05A-012…014 уже внесены (раздел выше). Проверки: check-growth-trace 0, check-look-trace 0,
+check-metric-source 0, check-handoff-manifest 0.
+
 Status: completed

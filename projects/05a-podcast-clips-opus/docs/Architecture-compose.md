@@ -94,7 +94,7 @@ services:
     restart: unless-stopped
     mem_limit: 1g
     environment: { POSTGRES_USER: "${POSTGRES_USER:?}", POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}",
-                   POSTGRES_DB: "${POSTGRES_DB:?}" }       # [правка канона запрошена]; пароль случайный
+                   POSTGRES_DB: "${POSTGRES_DB:?}" }       # канон §6; пароль случайный
     volumes: [pgdata:/var/lib/postgresql/data]
     healthcheck: { test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"], interval: 5s, retries: 10 }
   redis:
@@ -112,7 +112,7 @@ services:
     restart: unless-stopped
     mem_limit: 512m
     command: ["server", "/data"]
-    environment: { MINIO_ROOT_USER: "${MINIO_ROOT_USER:?}", MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?}" }  # [правка канона запрошена]
+    environment: { MINIO_ROOT_USER: "${MINIO_ROOT_USER:?}", MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?}" }  # канон §6; не `minioadmin`
     volumes: [minio_data:/data]
     healthcheck: { test: ["CMD", "mc", "ready", "local"], interval: 5s, retries: 10 }
 volumes: { pgdata: {}, redisdata: {}, caddy_data: {}, caddy_config: {}, minio_data: {} }

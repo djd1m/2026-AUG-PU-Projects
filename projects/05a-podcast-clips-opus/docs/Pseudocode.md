@@ -3,7 +3,7 @@
 **RUN_ID:** 20260923T173212Z-replicate-05a-475b · **WORK_UNIT_ID:** pseudocode · **Автор:** Claude Opus 5.5 · 2026-09-23
 **Фаза:** Phase 1, sparc-prd-mini AUTO, фаза 4 (Pseudocode).
 **Опирается на:** [Specification.md](Specification.md) v0.2, [ADR.md](ADR.md) ADR-001…017,
-[canon.md](canon.md) (хеш `6ed791dc…26e` на момент сдачи), [decisions-owner.md](decisions-owner.md).
+[canon.md](canon.md) (хеш `dc2cb9b8…566` на момент сдачи), [decisions-owner.md](decisions-owner.md).
 
 **Правило имён.** Таблицы, поля, очереди, `jobId`, маршруты, события, переменные окружения и закрытые списки — строго
 по канону. Где канон и Specification расходятся, действует канон (canon §12). Все имена, которые алгоритмам понадобились сверх
@@ -91,7 +91,7 @@ Event          { id: UUID, name: EventName, account_id: UUID?, clip_id: UUID?, s
 Publication    { id: UUID, clip_id: UUID, account_id: UUID, url: Text, url_normalized: Text(unique),
                  platform: Platform, channel_key: Text?, status: PubStatus, reason: Text?, verified_at: Timestamp?,
                  rechecked_at: Timestamp?, created_at: Timestamp }
-Partner        { id: UUID, name: Text, contact: Text, audience_url: Text, partner_code: Text(unique, upper),
+Partner        { id: UUID, name: Text, contact: Text?, audience_url: Text?, partner_code: Text(unique, upper),
                  account_id: UUID?, created_at: Timestamp }
 Attribution    { id: UUID, account_id: UUID, partner_id: UUID, stage: 'signup'|'fakedoor', source: 'cookie'|'code',
                  self_referral: Bool, created_at: Timestamp }  UNIQUE(account_id, stage)
@@ -954,7 +954,7 @@ REQUIREMENT: `FR-clips-10`
 REQUIREMENT: `FR-clips-11`
 REQUIREMENT: `AC-clips-16`
 REQUIREMENT: `NFR-clips-8`
-REALISES: SC-US-012-4
+REALISES: SC-US-012-4, SC-US-012-6
 INPUT: неделя 1 — `ops spend-today` (канон §7, внутри `worker-ai`, доступ = доступ к серверу); 2-я очередь — `GET /admin/spend`
 OUTPUT: расход за сегодня (МСК) до счёта провайдера
 STEPS:
@@ -1119,7 +1119,7 @@ stateDiagram-v2
 
 ## Scenario Coverage
 
-Scenarios in Specification.md: 58  ·  claimed by an algorithm: 56
+Scenarios in Specification.md: 61  ·  claimed by an algorithm: 59
 
 Not claimed by any algorithm:
 | Scenario | Reason |
