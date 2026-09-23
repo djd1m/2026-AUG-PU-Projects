@@ -71,4 +71,22 @@ developers.openai.com speech-to-text; cloud.ru/docs/s3e: api__methods, api__aws-
 - C4_Diagrams.md и обзорная диаграмма: «SMTP-провайдер» → Resend.
 - Остаётся непроверенным: доставляемость на mail.ru/yandex.ru (письмо в день 1).
 
+
+## Задание 4: ячейки вердикта External Dependencies
+- Причина exit 1: в ячейках вердикта было лишнее текстовое пояснение («CONFIRMED (механизм); модель — проба», «CONFIRMED (…DNS…)»).
+  Теперь в каждой ячейке ровно одно слово; пояснения перенесены в колонку доказательства.
+- Строку «метки спикеров» разбил на две: механизм диаризации OpenRouter — CONFIRMED (цитата про `provider.options`);
+  конкретная модель OpenRouter с метками спикеров на русском — UNCONFIRMED до пробы дня 1. Она блокирует только
+  подписи спикеров в FR-clips-7 и AC-clips-24; прочее входит в Phase 3. Абзац-последствие в Architecture переписан.
+- Строкам про предел запроса, CORS и lifecycle добавлены полные ссылки (было «та же страница», «methods»).
+- Итог: 14 строк — 13 CONFIRMED и 1 UNCONFIRMED.
+- Вывод `node .claude/hooks/check-external-deps.cjs projects/05a-podcast-clips-opus`:
+```
+✅ инвентарь на месте: 14 способност(ей), у каждой вердикт из закрытой тройки (13 CONFIRMED, 1 UNCONFIRMED)
+   UNCONFIRMED — не отказ, но и не бесплатный пропуск. Требования этих строк НЕ входят в Фазу 3, пока их не отложат, не уберут или не перепишут:
+   • Конкретная модель OpenRouter, которая возвращает метки спикеров на русской речи с нужной точностью (OpenRouter: кандидаты `assemblyai/universal-3-5-pro`, `deepgram/nova-3`, `microsoft/mai-transcribe-2`, `meta/muse-voice-transcribe-1.0`, `x-ai/grok-stt-1.0`) ← FR-clips-7 (подписи спикеров), AC-clips-24
+   Ограничение: проверка НЕ ОТКРЫВАЕТ ссылку и не отличает настоящую цитату от выдуманной. Доказано, что доказательство ПРЕДЪЯВЛЕНО в требуемой форме, — не что оно истинно (слой 3).
+exit=0
+```
+
 Status: completed

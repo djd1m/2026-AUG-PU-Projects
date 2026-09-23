@@ -154,6 +154,7 @@
 | `POST /api/videos/{video_id}/parts` | владелец | перевыдать подписанные ссылки на незагруженные части (TTL 15 мин) |
 | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout` | публичный / сессия | вход |
 | `GET /api/auth/verify?token=` | публичный | подтверждение почты |
+| `GET /reset?token=`, `POST /api/auth/reset` | публичный | установка нового пароля по токену `email_token.purpose = reset`; все `refresh_token` пользователя отзываются |
 | `POST /api/videos` | сессия, почта подтверждена | создать `video`, начать multipart, выдать ссылки на части |
 | `POST /api/videos/{video_id}/complete` | то же, `Idempotency-Key` | завершить загрузку → `202 {job_id}` |
 | `DELETE /api/videos/{video_id}` | владелец | удалить видео и клипы |
