@@ -1,0 +1,69 @@
+{
+  "run_id": "20260923T174426Z-cjm-synthesis",
+  "profile": "compact-quality-first-v2",
+  "status": "completed_pending_owner_review",
+  "started_at": "2026-09-23T17:44:50.589988+00:00",
+  "source_revision": "fb3f6ff013a9a4b7ee49d9fa2ebad7d774d4666c",
+  "tier": "S",
+  "scope": "Phase 0 synthesis: brief, four CJM variants, standalone offline HTML",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host model/effort metadata and usage unavailable; requested model is not evidence of actual model.",
+    "Initial instruction/source reading preceded telemetry creation; full elapsed time unavailable."
+  ],
+  "acceptance": [
+    "Brief with verbatim R2 seed and FR001–004",
+    "Four different growth loops, all required fields and citations",
+    "Offline six-screen prototype per variant; builder, copy, overlay, mobile and themes",
+    "Owner choice remains pending"
+  ],
+  "excluded": [
+    "Network",
+    "Donor source access",
+    "Product implementation",
+    "Owner choice",
+    "Deployment"
+  ],
+  "route": {
+    "plan": {
+      "tier": "S",
+      "exit_code": 0,
+      "rationale": "Local documents and simulated HTML; no payments, APIs or production state"
+    },
+    "implement": {
+      "tier": "S",
+      "rationale": "Same three output files, no new risks",
+      "exit_code": 0
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No product E2E; local prototype interaction tests only"
+  },
+  "review": "Separate cross-family reviewer arranged by owner per brief; not claimed here",
+  "finished_at": "2026-09-23T17:56:09.734823+00:00",
+  "elapsed_wall_ms": 679144,
+  "full_task_elapsed_wall_ms": null,
+  "active_wall_ms": null,
+  "artifact_sha256": {
+    "docs/product-discovery-brief.md": "24618591be81fca9398c13b585f875cccacdf34e0ffb5db6ef38091248d10e90",
+    "docs/CJM_Variants.md": "81c9d1ca78a6d6d894016d84137dc513cf68a1113155290600bad574cdbfc076",
+    "docs/CJM_Variants.html": "1a704cc65e98528754b88b4173996a5ff7c056a0e28efd999fc5c86d85ef143b"
+  },
+  "artifact_snapshot": "f355f8cf2663adfbf03ff3949cf033eab3f1e36efccf7ae6293354c67f99993b",
+  "checks": {
+    "structure": "pass",
+    "javascript_behavior_dom_adapter": "pass",
+    "mutation": "pass",
+    "browser_visual": "blocked: Chromium sandbox_host_linux.cc shutdown Operation not permitted",
+    "independent_review": "pending separate owner-appointed reviewer"
+  },
+  "cost_basis": "unavailable",
+  "retry_count": 0,
+  "escalation_count": 0
+}

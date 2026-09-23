@@ -1,0 +1,88 @@
+{
+  "identity": {
+    "run_id": "20260923T174426Z-cjm-synthesis",
+    "work_unit_id": "cjm-synthesis",
+    "current_attempt_id": "cjm-1"
+  },
+  "stage": "implement",
+  "scope": [
+    "docs/product-discovery-brief.md",
+    "docs/CJM_Variants.md",
+    "docs/CJM_Variants.html"
+  ],
+  "exclusions": [
+    "Network",
+    "Donor source access",
+    "Product implementation",
+    "Owner choice",
+    "Deployment"
+  ],
+  "source": {
+    "baseline_revision": "fb3f6ff013a9a4b7ee49d9fa2ebad7d774d4666c",
+    "current_revision": "sha256:f355f8cf2663adfbf03ff3949cf033eab3f1e36efccf7ae6293354c67f99993b",
+    "build_revision": null,
+    "artifacts": {
+      "docs/product-discovery-brief.md": "24618591be81fca9398c13b585f875cccacdf34e0ffb5db6ef38091248d10e90",
+      "docs/CJM_Variants.md": "81c9d1ca78a6d6d894016d84137dc513cf68a1113155290600bad574cdbfc076",
+      "docs/CJM_Variants.html": "1a704cc65e98528754b88b4173996a5ff7c056a0e28efd999fc5c86d85ef143b"
+    },
+    "requirements": "docs/discovery/codex-brief-cjm.md",
+    "architecture": "not_applicable: static prototype, no product implementation"
+  },
+  "route": {
+    "plan": {
+      "tier": "S",
+      "exit_code": 0,
+      "rationale": "Local documents and simulated HTML; no payments, APIs or production state"
+    },
+    "implement": {
+      "tier": "S",
+      "rationale": "Same three output files, no new risks",
+      "exit_code": 0
+    }
+  },
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requested all three artifacts; owner CJM choice is a later checkpoint"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "elapsed_forecast_ms": null,
+    "reason": "No comparable run analysis requested"
+  },
+  "donor_decisions": [
+    {
+      "path": "docs/discovery/R3-jan-audit.md",
+      "decision": "use",
+      "compatibility": "partial",
+      "reason": "Audit only; donor source prohibited; candidates require timing/TLS/render changes"
+    }
+  ],
+  "telemetry": {
+    "run": "docs/telemetry/p-replicator/20260923T174426Z-cjm-synthesis/run.json",
+    "events": "docs/telemetry/p-replicator/20260923T174426Z-cjm-synthesis/events.jsonl"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No product E2E; local prototype interaction tests only"
+  },
+  "handoff": {
+    "artifacts": [
+      "docs/product-discovery-brief.md",
+      "docs/CJM_Variants.md",
+      "docs/CJM_Variants.html"
+    ],
+    "receipt": "docs/telemetry/p-replicator/20260923T174426Z-cjm-synthesis/evidence/verification.md",
+    "pending": [
+      "Owner choice",
+      "Owner-appointed independent review",
+      "Visual mobile/browser verification blocked by environment"
+    ],
+    "no_product_e2e_claim": true
+  },
+  "limitations": [
+    "Work record is a local evidence index; companion structural validator was not run.",
+    "Telemetry begins after initial reading; full duration and stage boundaries were not captured live.",
+    "No frontend-design skill available; specialist design-quality assessment not performed."
+  ]
+}
