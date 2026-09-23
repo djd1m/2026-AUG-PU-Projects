@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { referralCookie } from '../lib/partner-referral';
 import type { AuthService } from './auth';
 import { readSessionCookie } from './auth-handler';
 import { clientIp, ipPrefix } from './ip';
@@ -56,7 +57,8 @@ export function createGuestPageHandler(deps: Dependencies) {
       if (!await deps.allowRead(ip, session?.account_id)) return new Response('Слишком много запросов. Повторите через минуту', { status: 429, headers });
       const pack = await deps.guests.find(code);
       await deps.guests.recordOpen(pack, session?.account_id ?? null, ipPrefix(ip));
-      return new Response(landing(pack, nonce), { headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8',
+      const referral = referralCookie(request.headers.get('cookie') ?? '', pack.partner_code, 'guest_link', session?.account_id === pack.account_id);
+      return new Response(landing(pack, nonce), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8',
         'Content-Security-Policy': `default-src 'none'; img-src 'self'; media-src 'self'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'` } });
     } catch (error) {
       if (error instanceof UploadError && error.status === 404) return new Response('Ссылка не найдена', { status: 404, headers });

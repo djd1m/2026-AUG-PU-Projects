@@ -1,0 +1,17 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run tests/partner.test.ts tests/guest-pack.test.ts tests/short-link.test.ts tests/upload-route.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/short-link.test.ts (14 tests) 33ms
+ ✓ tests/guest-pack.test.ts (20 tests) 88ms
+ ✓ tests/partner.test.ts (12 tests) 79ms
+ ✓ tests/upload-route.test.ts (3 tests) 46ms
+
+ Test Files  4 passed (4)
+      Tests  49 passed (49)
+   Start at  04:17:22
+   Duration  2.75s (transform 711ms, setup 0ms, collect 1.51s, tests 246ms, environment 1ms, prepare 340ms)
+

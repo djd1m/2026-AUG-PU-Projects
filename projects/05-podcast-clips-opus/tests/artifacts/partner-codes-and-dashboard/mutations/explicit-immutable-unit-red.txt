@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-glBo2q
+
+ ❯ tests/partner.test.ts (12 tests | 1 failed | 11 skipped) 13ms
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source
+   × partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409 11ms
+     → expected true to be false // Object.is equality
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > 50 attempts block code and commit refusal audit
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection
+   ↓ passive referral preserves stronger source and ignores self visits
+   ↓ dashboard renders five counters, blocked explanation and attribution status without identity leakage
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/partner.test.ts:45:52
+     43|     for (const source of ['explicit', 'guest_link', 'cookie'] as const…
+     44|       const existing = { ...row, source: 'explicit' as const };
+     45|       expect(replacementAllowed(existing, source)).toBe(false);
+       |                                                    ^
+     46|       const response = await rpc(new PartnerService(db({ existing }).p…
+     47|       expect(response.status).toBe(409);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  04:17:26
+   Duration  552ms (transform 164ms, setup 0ms, collect 260ms, tests 13ms, environment 0ms, prepare 93ms)
+

@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T040530Z-partner-codes",
+    "work_unit_id": "partner-codes-and-dashboard",
+    "current_attempt_id": "verification-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/partner-codes-and-dashboard/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/partner-codes-and-dashboard/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "2ea1a38ab60a0bf64d4199d954067a4edc2a1d73",
+    "current_revision": "sha256:efdf11b72620858906a97fd8451bec5768bebbb8bf25997e77ead164c9048f18",
+    "build_revision": "sha256:8535c6a8e23433feaa09be5333ed4da984d318008f6c7014d9d7b905b1c740ca",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/partner-codes-and-dashboard/00_brief_codex.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "sha256:8535c6a8e23433feaa09be5333ed4da984d318008f6c7014d9d7b905b1c740ca",
+      "observed_revision": "sha256:efdf11b72620858906a97fd8451bec5768bebbb8bf25997e77ead164c9048f18",
+      "reconciliation": {
+        "status": "completed",
+        "reason": "Only test assertion string changed to avoid false SQL scanner match; application/build source identical",
+        "impact": "Test-only correction",
+        "affected_checks": [
+          "growth-day",
+          "partner tests",
+          "full regression"
+        ],
+        "checks_status": "rerun_passed",
+        "decision": "Accept test-only drift after fresh full regression; built application source unchanged",
+        "rerun": [
+          "npm test:299 passed124 skipped",
+          "growth-day and partner focused:20 passed"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "sha256:75519daef2d6db3638b24bd2df4c56783886f0dcd858a64390bb48f86c3d115a",
+    "scope": [
+      "ADR-007 four transitions",
+      "atomic 50-attempt block and rejected self referral",
+      "owner dashboard five counters and responsive UI"
+    ],
+    "exclusions": [
+      "features11/12",
+      "new event types and public routes",
+      "deployment"
+    ],
+    "action_limits": [
+      "Owner instruction executes detailed brief; docs only report; telemetry in tests/artifacts",
+      "No applied migration, vendor/global config or .claude edits"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "ADR007",
+        "required": true
+      },
+      {
+        "id": "anti-fraud",
+        "required": true
+      },
+      {
+        "id": "concurrency",
+        "required": true
+      },
+      {
+        "id": "dashboard",
+        "required": true
+      },
+      {
+        "id": "mutations",
+        "required": true
+      },
+      {
+        "id": "OWN002",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/web/src/server/short-link.ts"
+          }
+        },
+        "provenance": "2ea1a38ab60a0bf64d4199d954067a4edc2a1d73",
+        "useful_fragment": "Existing event uniqueness and owner self-visit guard",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "Attach partner code to existing transaction without duplicating analytics"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable measurement or forecast requested",
+      "scope_revision": "sha256:75519daef2d6db3638b24bd2df4c56783886f0dcd858a64390bb48f86c3d115a",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:75519daef2d6db3638b24bd2df4c56783886f0dcd858a64390bb48f86c3d115a",
+      "tier": "XL",
+      "rationale": "Owner brief attributes future partner money; mechanical L is lower bound",
+      "script": {
+        "input": "apps/web/src/server/partner.ts apps/web/src/server/trpc.ts apps/web/src/app/dashboard/PartnerPanel.tsx packages/db/migrations/011_partner.sql tests/partner.integration.test.ts",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "sha256:75519daef2d6db3638b24bd2df4c56783886f0dcd858a64390bb48f86c3d115a",
+      "tier": "XL",
+      "rationale": "Owner brief attributes future partner money; mechanical L is lower bound",
+      "script": {
+        "input": "apps/web/src/server/partner.ts apps/web/src/server/trpc.ts apps/web/src/app/dashboard/PartnerPanel.tsx packages/db/migrations/011_partner.sql tests/partner.integration.test.ts",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User expressly authorizes execution of detailed XL implementation brief using existing specification; no deployment requested",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "blocked",
+    "reason": "Docker socket denied; local PostgreSQL cannot run as root and runuser is prohibited; browser tool unavailable",
+    "source_revision": "sha256:efdf11b72620858906a97fd8451bec5768bebbb8bf25997e77ead164c9048f18",
+    "build_revision": "sha256:8535c6a8e23433feaa09be5333ed4da984d318008f6c7014d9d7b905b1c740ca",
+    "environment": "Codex sandbox",
+    "environment_available": false,
+    "test_command": "docker compose --project-directory . --profile test run --rm --build test",
+    "inputs": [
+      {
+        "name": "PostgreSQL16 Redis7 MinIO test environment",
+        "available": false
+      }
+    ],
+    "expected_effects": [
+      "Isolated test schemas and test objects"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/partner-codes-and-dashboard"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "verification-1",
+      "status": "paused"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "partner-codes-and-dashboard",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/web/src/server/partner.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/partner.integration.test.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260923T040530Z-partner-codes",
+    "work_unit_id": "partner-codes-and-dashboard",
+    "source_revision": "sha256:efdf11b72620858906a97fd8451bec5768bebbb8bf25997e77ead164c9048f18",
+    "blockers": [
+      "Mandatory real PostgreSQL concurrency/integration/mutation proofs unavailable",
+      "Anthropic OWN-002 review unavailable"
+    ],
+    "approval_ids": [],
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct brief has no native checkpoint; source manifest and logs preserve work"
+    },
+    "next_allowed_step": "Run real integration/regression and mutation script, obtain Anthropic review, address concrete failures"
+  },
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

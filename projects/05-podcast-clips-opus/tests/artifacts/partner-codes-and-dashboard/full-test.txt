@@ -1,0 +1,112 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/render-media.test.ts > real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-wvjupz
+
+ ✓ tests/render-media.test.ts (2 tests) 10569ms
+   ✓ real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  10258ms
+   ✓ ffmpeg timeout kills the child and waits for close before returning  309ms
+ ✓ tests/preflight.test.ts (10 tests) 8514ms
+ ✓ tests/config.test.ts (39 tests) 5341ms
+ ✓ tests/wiring.test.ts (5 tests) 5684ms
+   ✓ Проверяемость проброса окружения > Полная конфигурация проходит, отсутствие потолка даёт находку  2649ms
+   ✓ Проверяемость проброса окружения > Соседнему воркеру не приписываются переменные web  683ms
+   ✓ Проверяемость проброса окружения > Новая обязательная переменная config.ts не теряется в environment.ts  2340ms
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+{"logins":12,"threads":"8","elapsed_ms":294.697365,"fs_ms":177.071103}
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 434ms
+   ✓ RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8  432ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  04:18:55
+   Duration  1.36s (transform 396ms, setup 0ms, collect 219ms, tests 434ms, environment 0ms, prepare 368ms)
+
+
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 2890ms
+   ✓ RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8  2889ms
+ ✓ tests/auth.test.ts (10 tests) 2044ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  1248ms
+ ✓ tests/queue-probe.test.ts (14 tests) 279ms
+ ✓ tests/guest-pack.test.ts (20 tests) 325ms
+ ✓ tests/progress-screen.test.ts (12 tests) 292ms
+ ↓ tests/partner.integration.test.ts (15 tests | 15 skipped)
+ ✓ tests/short-link.test.ts (14 tests) 65ms
+ ✓ tests/transcription.test.ts (15 tests) 50459ms
+   ✓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling  50315ms
+ ✓ tests/upload-fix.test.ts (9 tests) 263ms
+ ✓ tests/s3-public-endpoint.test.ts (6 tests) 94ms
+ ✓ tests/selection.test.ts (21 tests) 161ms
+ ✓ tests/s3.test.ts (6 tests) 160ms
+ ✓ tests/upload-route.test.ts (3 tests) 81ms
+ ✓ tests/partner.test.ts (12 tests) 71ms
+ ✓ tests/render-worker.test.ts (5 tests) 46ms
+ ✓ tests/upload.test.ts (8 tests) 78ms
+ ✓ tests/transcription-order.test.ts (5 tests) 35ms
+ ✓ tests/proxy-rate.test.ts (9 tests) 52ms
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > Redis publish failure preserves successful commit for watchdog
+Рендер сохранён; сторож восстановит доставку задания
+
+ ✓ tests/selection-order.test.ts (7 tests) 37ms
+ ✓ tests/render-storage.test.ts (2 tests) 48ms
+ ✓ tests/upload-browser.test.ts (3 tests) 14ms
+ ✓ tests/render.test.ts (18 tests) 23ms
+ ✓ tests/queue-probe-guards.test.ts (4 tests) 5ms
+ ↓ tests/progress-screen.integration.test.ts (3 tests | 3 skipped)
+ ✓ tests/partner-route.test.ts (5 tests) 65ms
+ ❯ tests/growth-day.test.ts (3 tests | 1 failed) 67ms
+   × каждая вставка growth_event явно задаёт day 46ms
+     → tests/partner.test.ts: вставка без явных колонок: expected undefined to be defined
+   ✓ download использует московские сутки в 2026-09-22T20:59:59.999Z 10ms
+   ✓ download использует московские сутки в 2026-09-22T21:00:00.000Z 1ms
+ ✓ tests/test-db.test.ts (7 tests) 26ms
+ ✓ tests/enums.test.ts (14 tests) 16ms
+ ✓ tests/ip-prefix.test.ts (1 test) 11ms
+ ✓ tests/transcription-quota.test.ts (4 tests) 16ms
+ ✓ tests/upload-guards.test.ts (3 tests) 5ms
+ ✓ tests/health.test.ts (1 test) 6ms
+ ✓ tests/growth-prefix.test.ts (1 test) 5ms
+ ↓ tests/database.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/guest-pack.integration.test.ts (11 tests | 11 skipped)
+ ↓ tests/queue-probe.integration.test.ts (22 tests | 22 skipped)
+ ↓ tests/queue-redis.integration.test.ts (2 tests | 2 skipped)
+ ↓ tests/render.integration.test.ts (7 tests | 7 skipped)
+ ↓ tests/s3-slow.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/selection.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/short-link.integration.test.ts (9 tests | 9 skipped)
+ ↓ tests/transcription.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/upload-fix.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/upload-migration.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/upload.integration.test.ts (17 tests | 17 skipped)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/growth-day.test.ts > каждая вставка growth_event явно задаёт day
+AssertionError: tests/partner.test.ts: вставка без явных колонок: expected undefined to be defined
+ ❯ tests/growth-day.test.ts:22:61
+     20|       inserts++;
+     21|       const columns = source.slice(match.index + match[0].length).matc…
+     22|       expect(columns, `${file}: вставка без явных колонок`).toBeDefine…
+       |                                                             ^
+     23|       expect(columns?.split(',').map(column => column.trim().replaceAl…
+     24|         `${file}: вставка growth_event без day`).toContain('day');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 34 passed | 14 skipped (49)
+      Tests  1 failed | 298 passed | 124 skipped (423)
+   Start at  04:18:19
+   Duration  126.75s (transform 1.96s, setup 0ms, collect 14.73s, tests 87.85s, environment 16ms, prepare 8.67s)
+

@@ -1,0 +1,16 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run tests/growth-day.test.ts tests/partner.test.ts tests/partner-route.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/growth-day.test.ts (3 tests) 55ms
+ ✓ tests/partner.test.ts (12 tests) 129ms
+ ✓ tests/partner-route.test.ts (5 tests) 47ms
+
+ Test Files  3 passed (3)
+      Tests  20 passed (20)
+   Start at  04:21:03
+   Duration  2.70s (transform 682ms, setup 0ms, collect 1.29s, tests 231ms, environment 1ms, prepare 425ms)
+

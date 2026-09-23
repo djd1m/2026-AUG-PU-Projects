@@ -326,7 +326,7 @@
       "title": "Коды блогеров, атрибуция трёх источников, кабинет и анти-фрод",
       "description": "code.apply с тремя исходами по полю attribution.source: слабый источник + explicit → 200 с записью прежнего в replaced_source; explicit + любой → 409; guest_link + cookie → 409; недействительный код → 422 и строка НЕ тронута (откат к cookie запрещён, ADR-007); привязка кода при регистрации, источник guest_link из гостевой ссылки, cookie как третий источник; AntiFraudCodeBurst — 50 применений одного кода с одного ip_prefix за 10 мин → blocked, самореферал → rejected, самопереходы владельца не считаются; PartnerDashboard — пять счётчиков воронки РАЗДЕЛЬНО, без перемножения показателей.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "guest-pack",
@@ -363,7 +363,7 @@
       "title": "Понятные отказы по потолкам и экран интереса «Pro скоро»",
       "description": "Пять пользовательских текстов отказа при ШЕСТИ ключах квоты: у user_upload_refunds своего текста нет намеренно — исчерпание права на возврат выглядит как обычный refused_user_uploads; каждый текст называет scope и время возврата (ближайшая полночь Europe/Moscow), текст глобального потолка отличается от персонального; тариф free/paid на экране, «снять метку» ведёт на экран интереса; CreateProInterest — UNIQUE (account_id), экран НЕ принимает платёжных данных и маршрут вебхука ЮKassa в боевом профиле не зарегистрирован (ADR-005).",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "medium",
       "depends_on": [
         "progress-and-clips-screen"

@@ -1,0 +1,264 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run tests/partner.test.ts tests/guest-pack.test.ts tests/short-link.test.ts tests/upload-route.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/guest-pack.test.ts (20 tests) 137ms
+ ✓ tests/partner.test.ts (12 tests) 74ms
+ ❯ tests/short-link.test.ts (14 tests | 2 failed) 51ms
+   ✓ anonymous landing returns escaped preview and CTA, no redirect, no cache, mobile viewport 14ms
+   ✓ expired landing survives file removal or 72-hour boundary 2ms
+   ✓ expired landing survives file removal or 72-hour boundary 1ms
+   ✓ missing object keeps landing and explains unavailable preview 1ms
+   ✓ non-ready clip does not expose its preview 1ms
+   ✓ unknown and revoked use identical 404 handler response 2ms
+   ✓ invalid trusted IP and rate refusal cannot write events 2ms
+   ✓ analytics failure is visible and never a false 200 1ms
+   ✓ owner self-visit never opens a transaction 1ms
+   × conflict is normal; increment only if event inserted (0) 14ms
+     → expected "spy" to be called with arguments: [ StringContaining{…}, …(1) ]
+
+Received: 
+
+  1st spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "BEGIN",
+  ]
+
+  2nd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
++   "INSERT INTO growth_event (type, clip_link_id, ip_prefix, day, partner_code_id)
++         VALUES ('link_view',$1,$2::cidr,$3::date,$4) ON CONFLICT DO NOTHING RETURNING id",
+    [
+      "link",
+      "192.0.2.0/24",
+      "2026-09-23",
++     null,
+    ],
+  ]
+
+  3rd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "COMMIT",
+  ]
+
+
+Number of calls: 3
+
+   × conflict is normal; increment only if event inserted (1) 3ms
+     → expected "spy" to be called with arguments: [ StringContaining{…}, …(1) ]
+
+Received: 
+
+  1st spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "BEGIN",
+  ]
+
+  2nd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
++   "INSERT INTO growth_event (type, clip_link_id, ip_prefix, day, partner_code_id)
++         VALUES ('link_view',$1,$2::cidr,$3::date,$4) ON CONFLICT DO NOTHING RETURNING id",
+    [
+      "link",
+      "192.0.2.0/24",
+      "2026-09-23",
++     null,
+    ],
+  ]
+
+  3rd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
++   "UPDATE clip_link SET unique_view_count=unique_view_count+1,
++         last_view_at=$2 WHERE id=$1",
+    [
+      "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
++     2026-09-22T21:00:00.000Z,
+    ],
+  ]
+
+  4th spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "COMMIT",
+  ]
+
+
+Number of calls: 4
+
+   ✓ query filters revoked links, deleted videos and inactive accounts; malformed code never queries 3ms
+   ✓ link.create is mutation using authenticated owner and validates clip UUID 6ms
+   ✓ copy button remains available after file expiry and uses canonical RPC 0ms
+ ✓ tests/upload-route.test.ts (3 tests) 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/short-link.test.ts > conflict is normal; increment only if event inserted (0)
+AssertionError: expected "spy" to be called with arguments: [ StringContaining{…}, …(1) ]
+
+Received: 
+
+  1st spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "BEGIN",
+  ]
+
+  2nd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
++   "INSERT INTO growth_event (type, clip_link_id, ip_prefix, day, partner_code_id)
++         VALUES ('link_view',$1,$2::cidr,$3::date,$4) ON CONFLICT DO NOTHING RETURNING id",
+    [
+      "link",
+      "192.0.2.0/24",
+      "2026-09-23",
++     null,
+    ],
+  ]
+
+  3rd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "COMMIT",
+  ]
+
+
+Number of calls: 3
+
+ ❯ tests/short-link.test.ts:78:17
+     76|   expect(query.mock.calls[0]?.[0]).toBe('BEGIN'); expect(query.mock.ca…
+     77|   expect(query.mock.calls.filter(([sql]) => sql.includes('UPDATE'))).t…
+     78|   expect(query).toHaveBeenCalledWith(expect.stringContaining('ON CONFL…
+       |                 ^
+     79|   expect(release).toHaveBeenCalledOnce();
+     80| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/short-link.test.ts > conflict is normal; increment only if event inserted (1)
+AssertionError: expected "spy" to be called with arguments: [ StringContaining{…}, …(1) ]
+
+Received: 
+
+  1st spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "BEGIN",
+  ]
+
+  2nd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
++   "INSERT INTO growth_event (type, clip_link_id, ip_prefix, day, partner_code_id)
++         VALUES ('link_view',$1,$2::cidr,$3::date,$4) ON CONFLICT DO NOTHING RETURNING id",
+    [
+      "link",
+      "192.0.2.0/24",
+      "2026-09-23",
++     null,
+    ],
+  ]
+
+  3rd spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
++   "UPDATE clip_link SET unique_view_count=unique_view_count+1,
++         last_view_at=$2 WHERE id=$1",
+    [
+      "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
++     2026-09-22T21:00:00.000Z,
+    ],
+  ]
+
+  4th spy call:
+
+  [
+-   StringContaining "ON CONFLICT DO NOTHING RETURNING id",
+-   [
+-     "link",
+-     "192.0.2.0/24",
+-     "2026-09-23",
+-   ],
++   "COMMIT",
+  ]
+
+
+Number of calls: 4
+
+ ❯ tests/short-link.test.ts:78:17
+     76|   expect(query.mock.calls[0]?.[0]).toBe('BEGIN'); expect(query.mock.ca…
+     77|   expect(query.mock.calls.filter(([sql]) => sql.includes('UPDATE'))).t…
+     78|   expect(query).toHaveBeenCalledWith(expect.stringContaining('ON CONFL…
+       |                 ^
+     79|   expect(release).toHaveBeenCalledOnce();
+     80| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  2 failed | 47 passed (49)
+   Start at  04:15:36
+   Duration  2.60s (transform 556ms, setup 0ms, collect 1.28s, tests 295ms, environment 1ms, prepare 328ms)
+

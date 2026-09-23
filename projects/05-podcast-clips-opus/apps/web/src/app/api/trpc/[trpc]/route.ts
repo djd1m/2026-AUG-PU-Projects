@@ -6,7 +6,7 @@ import { authorizeUpload, readUploadJson, uploadFailure } from '../../../../serv
 import { getScreenRuntime } from '../../../../server/screen-runtime';
 import { readSessionCookie } from '../../../../server/auth-handler';
 import { allowRead } from '../../../../server/rate-limit';
-import { clientIp } from '../../../../server/ip';
+import { clientIp, ipPrefix } from '../../../../server/ip';
 export const runtime = 'nodejs';
 export async function POST(request: Request) {
   const requestId = randomUUID();
@@ -16,8 +16,8 @@ export async function POST(request: Request) {
     const body = await readUploadJson(request);
     const bounded = new Request(request.url, { method: 'POST', headers: request.headers, body: JSON.stringify(body) });
     return await fetchRequestHandler({ endpoint: '/api/trpc', req: bounded, router: appRouter, allowBatching: false,
-      createContext: () => ({ account, idempotencyKey: request.headers.get('idempotency-key'), requestId, video: deps.video, retry: deps.retry, screen: deps.screen, links: deps.links, guests: deps.guests }),
-      responseMeta: ({ errors }) => ({ status: errors.length ? undefined : 202, headers: { 'Cache-Control': 'private, no-store' } }) });
+      createContext: () => ({ account, idempotencyKey: request.headers.get('idempotency-key'), requestId, video: deps.video, retry: deps.retry, screen: deps.screen, links: deps.links, guests: deps.guests, partners: deps.partners, ipPrefix: ipPrefix(clientIp(request.headers, deps.trustedProxyHops)) }),
+      responseMeta: ({ errors }) => ({ status: errors.length ? undefined : new URL(request.url).pathname === '/api/trpc/code.apply' ? 200 : 202, headers: { 'Cache-Control': 'private, no-store' } }) });
   } catch (error) { return uploadFailure(error, requestId); }
 }
 export async function GET(request: Request) {
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     }
     if (!session) return Response.json({ error: { message: 'Войдите в аккаунт' } }, { status: 401, headers: { 'Cache-Control': 'no-store' } });
     return await fetchRequestHandler({ endpoint: '/api/trpc', req: request, router: appRouter, allowBatching: false,
-      createContext: () => ({ account: session.account_id, idempotencyKey: null, requestId, screen: deps.screen,
+      createContext: () => ({ account: session.account_id, idempotencyKey: null, requestId, screen: deps.screen, partners: deps.partners,
         video: { create: async () => { throw new Error('GET cannot create'); } } }),
       responseMeta: () => ({ headers: { 'Cache-Control': 'private, no-store' } }) });
   } catch (error) { return uploadFailure(error, requestId); }

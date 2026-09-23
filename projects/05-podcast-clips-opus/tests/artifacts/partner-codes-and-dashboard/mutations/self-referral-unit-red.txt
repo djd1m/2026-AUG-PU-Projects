@@ -1,0 +1,51 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-glBo2q
+
+ ❯ tests/partner.test.ts (12 tests | 1 failed | 11 skipped) 20ms
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > 50 attempts block code and commit refusal audit
+   × partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded 18ms
+     → expected { …(6) } to match object { status: 'rejected', …(1) }
+(4 matching properties omitted from actual)
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection
+   ↓ passive referral preserves stronger source and ignores self visits
+   ↓ dashboard renders five counters, blocked explanation and attribution status without identity leakage
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded
+AssertionError: expected { …(6) } to match object { status: 'rejected', …(1) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "reject_reason": "self_referral",
+-   "status": "rejected",
++   "reject_reason": null,
++   "status": "pending",
+  }
+
+ ❯ tests/partner.test.ts:72:20
+     70|     const fake = db({ self: true });
+     71|     const result = await new PartnerService(fake.pool).apply(account, …
+     72|     expect(result).toMatchObject({ status: 'rejected', reject_reason: …
+       |                    ^
+     73|   });
+     74|   it('foreign partner code returns 403', async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  04:17:36
+   Duration  592ms (transform 168ms, setup 0ms, collect 262ms, tests 20ms, environment 0ms, prepare 111ms)
+

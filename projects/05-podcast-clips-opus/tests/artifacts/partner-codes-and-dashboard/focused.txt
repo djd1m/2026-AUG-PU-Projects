@@ -1,0 +1,72 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run tests/partner.test.ts tests/guest-pack.test.ts tests/short-link.test.ts tests/upload-route.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/guest-pack.test.ts [ tests/guest-pack.test.ts ]
+Error: Reserved words used in `router({})` call: apply
+ ❯ Object.createRouterInner [as router] node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:259:13
+ ❯ apps/web/src/server/trpc.ts:53:45
+     51|   }
+     52| }
+     53| export const appRouter = t.router({ code: t.router({
+       |                                             ^
+     54|   apply: validatedProcedure.input(z.unknown()).mutation(({ ctx, input …
+     55|     if (!ctx.ipPrefix) throw new Error('Client prefix unavailable');
+ ❯ tests/guest-pack.test.ts:10:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/partner.test.ts [ tests/partner.test.ts ]
+Error: Reserved words used in `router({})` call: apply
+ ❯ Object.createRouterInner [as router] node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:259:13
+ ❯ apps/web/src/server/trpc.ts:53:45
+     51|   }
+     52| }
+     53| export const appRouter = t.router({ code: t.router({
+       |                                             ^
+     54|   apply: validatedProcedure.input(z.unknown()).mutation(({ ctx, input …
+     55|     if (!ctx.ipPrefix) throw new Error('Client prefix unavailable');
+ ❯ tests/partner.test.ts:8:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/short-link.test.ts [ tests/short-link.test.ts ]
+Error: Reserved words used in `router({})` call: apply
+ ❯ Object.createRouterInner [as router] node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:259:13
+ ❯ apps/web/src/server/trpc.ts:53:45
+     51|   }
+     52| }
+     53| export const appRouter = t.router({ code: t.router({
+       |                                             ^
+     54|   apply: validatedProcedure.input(z.unknown()).mutation(({ ctx, input …
+     55|     if (!ctx.ipPrefix) throw new Error('Client prefix unavailable');
+ ❯ tests/short-link.test.ts:7:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/upload-route.test.ts [ tests/upload-route.test.ts ]
+Error: Reserved words used in `router({})` call: apply
+ ❯ Object.createRouterInner [as router] node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:259:13
+ ❯ apps/web/src/server/trpc.ts:53:45
+     51|   }
+     52| }
+     53| export const appRouter = t.router({ code: t.router({
+       |                                             ^
+     54|   apply: validatedProcedure.input(z.unknown()).mutation(({ ctx, input …
+     55|     if (!ctx.ipPrefix) throw new Error('Client prefix unavailable');
+ ❯ apps/web/src/app/api/trpc/[trpc]/route.ts:3:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  no tests
+   Start at  04:13:14
+   Duration  1.98s (transform 528ms, setup 0ms, collect 0ms, tests 0ms, environment 1ms, prepare 380ms)
+

@@ -1,3 +1,4 @@
+import { referralCookie } from '../lib/partner-referral';
 import type { AuthService } from './auth';
 import { readSessionCookie } from './auth-handler';
 import { clientIp, ipPrefix } from './ip';
@@ -46,7 +47,8 @@ export function createShortLinkHandler(deps: Dependencies) {
       const state = previewState(link, (deps.clock ?? (() => new Date()))());
       const preview = state === 'ready' ? await deps.preview(link.thumbnail_key!) : null;
       await deps.links.recordView(link, session?.account_id ?? null, ipPrefix(ip));
-      return new Response(landing(link.title, preview, state === 'expired'), { headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8' } });
+      const referral = referralCookie(request.headers.get('cookie') ?? '', link.partner_code, 'cookie', session?.account_id === link.account_id);
+      return new Response(landing(link.title, preview, state === 'expired'), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8' } });
     } catch (error) {
       if (error instanceof UploadError && error.status === 404) return new Response('Ссылка не найдена', { status: 404, headers });
       return new Response('Не удалось открыть страницу. Повторите позже', { status: 503, headers });

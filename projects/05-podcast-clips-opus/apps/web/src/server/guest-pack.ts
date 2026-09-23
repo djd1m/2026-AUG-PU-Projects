@@ -4,6 +4,7 @@ import type { Pool } from '@clipmaker/db';
 import { moscowDay } from '@clipmaker/shared/upload';
 import { GUEST_CONSENT_TEXT, GUEST_CONSENT_VERSION, type GuestPackSummary } from '../lib/guest-contract';
 import { UploadError } from './upload-contract';
+import { ensurePartnerCode } from './partner-code';
 import { presentClip, type ClipRow } from './screen';
 
 export const consentHash = createHash('sha256').update(GUEST_CONSENT_TEXT).digest('hex');
@@ -14,9 +15,9 @@ const missing = () => new UploadError('not_found', 'Ссылка не найде
 interface Pack {
   id: string; code: string; account_id: string; guest_name: string; video_id: string;
   sent_at: Date | null; expires_at: Date | null; revoked_at: Date | null;
-  plan: string; finished_at: Date | null;
+  plan: string; finished_at: Date | null; partner_code?: string;
 }
-const selectPack = `SELECT p.*,a.plan,v.finished_at FROM guest_pack p
+const selectPack = `SELECT p.*,a.plan,v.finished_at,pc.code AS partner_code FROM guest_pack p LEFT JOIN partner_code pc ON pc.id=p.host_partner_code_id
   JOIN video v ON v.id=p.video_id AND v.account_id=p.account_id JOIN account a ON a.id=p.account_id
   WHERE v.deleted_at IS NULL AND a.status='active'`;
 function summary(p: Pack): GuestPackSummary {
@@ -59,8 +60,9 @@ export class GuestPackService {
       const owned = (await tx.query<Pack>(`${selectPack} AND p.id=$1 AND p.account_id=$2 FOR UPDATE OF p`, [id, account])).rows[0];
       if (!owned) throw missing();
       if (owned.revoked_at || owned.sent_at) throw new UploadError('invalid', 'Пакет уже отправлен или отозван', 409);
-      const pack = (await tx.query<Pack>(`UPDATE guest_pack SET sent_at=$2,expires_at=$2::timestamptz+interval '336 hours'
-        WHERE id=$1 AND sent_at IS NULL AND revoked_at IS NULL RETURNING *`, [id, now])).rows[0]!;
+      const personal = await ensurePartnerCode(tx, account);
+      const pack = (await tx.query<Pack>(`UPDATE guest_pack SET host_partner_code_id=$3,sent_at=$2,expires_at=$2::timestamptz+interval '336 hours'
+        WHERE id=$1 AND sent_at IS NULL AND revoked_at IS NULL RETURNING *`, [id, now, personal.id])).rows[0]!;
       await tx.query(`INSERT INTO growth_event (type,account_id,video_id,guest_pack_id,day)
         VALUES ('guest_sent',$1,$2,$3,$4::date)`, [account, pack.video_id, id, moscowDay(now)]);
       await tx.query('COMMIT'); return summary(pack);

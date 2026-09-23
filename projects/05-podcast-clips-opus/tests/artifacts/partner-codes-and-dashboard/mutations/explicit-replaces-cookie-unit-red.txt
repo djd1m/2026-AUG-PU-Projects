@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-glBo2q
+
+ ❯ tests/partner.test.ts (12 tests | 1 failed | 11 skipped) 55ms
+   × partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source 52ms
+     → expected 409 to be 200 // Object.is equality
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > 50 attempts block code and commit refusal audit
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection
+   ↓ passive referral preserves stronger source and ignores self visits
+   ↓ dashboard renders five counters, blocked explanation and attribution status without identity leakage
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source
+AssertionError: expected 409 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 409
+
+ ❯ tests/partner.test.ts:39:29
+     37|     const fake = db({ existing: row });
+     38|     const response = await rpc(new PartnerService(fake.pool), 'code.ap…
+     39|     expect(response.status).toBe(200);
+       |                             ^
+     40|     expect((await response.json()).result.data.data).toMatchObject({ s…
+     41|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  04:17:31
+   Duration  695ms (transform 206ms, setup 0ms, collect 320ms, tests 55ms, environment 0ms, prepare 98ms)
+

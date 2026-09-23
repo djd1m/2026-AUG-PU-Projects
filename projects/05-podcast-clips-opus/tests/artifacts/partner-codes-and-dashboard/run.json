@@ -1,0 +1,72 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260923T040530Z-partner-codes",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "partner-codes-and-dashboard",
+  "pipeline": "brief implementation",
+  "tier": "XL",
+  "risk_flags": [
+    "attribution",
+    "concurrency"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Telemetry under tests/artifacts: brief forbids docs changes except report.",
+    "Existing owner brief authorizes implementation; OWN-002 review still required."
+  ],
+  "comparison_id": null,
+  "baseline_revision": "2ea1a38ab60a0bf64d4199d954067a4edc2a1d73",
+  "final_revision": "sha256:efdf11b72620858906a97fd8451bec5768bebbb8bf25997e77ead164c9048f18",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-23T04:05:30Z",
+  "ended_at": "2026-09-23T04:25:37.523018+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "tests/artifacts/partner-codes-and-dashboard/full-test-final.txt",
+    "tests/artifacts/partner-codes-and-dashboard/final-focused.txt",
+    "tests/artifacts/partner-codes-and-dashboard/typecheck3.txt",
+    "tests/artifacts/partner-codes-and-dashboard/lint.txt",
+    "tests/artifacts/partner-codes-and-dashboard/build.txt",
+    "tests/artifacts/partner-codes-and-dashboard/mutations/results.json",
+    "tests/artifacts/partner-codes-and-dashboard/review.md"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 6,
+    "confirmed_findings_by_severity": {
+      "P2": 2
+    },
+    "false_positive_findings": 1,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "Real PostgreSQL/Redis/MinIO regression and mutations, concurrency proof, mobile E2E, Anthropic OWN-002 pending"
+  },
+  "metrics": {
+    "measured_elapsed_seconds": 1207.523,
+    "full_elapsed_seconds": null,
+    "input_tokens_total": null,
+    "cached_input_tokens": null,
+    "output_tokens_total": null,
+    "reasoning_tokens": null,
+    "cost": null,
+    "active_time_seconds": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Exact model id, effort, usage and billing not exposed; system identifies GPT-6.",
+    "Initial instruction reading before first clock measurement not measured.",
+    "No batch or comparison; final revision pending.",
+    "Acceptance criteria cannot be measured as met without database proof; regression coverage incomplete (124 skipped).",
+    "Build hash precedes test-string-only correction; application source unchanged; before/after manifests preserved."
+  ],
+  "source_manifest": "tests/artifacts/partner-codes-and-dashboard/source-manifest.json",
+  "diff_sha256": "ad625f4f68905093ace9070d0972eeac22ac6bc94496599cfbfb25f95a9ea7d1",
+  "build_revision": "sha256:8535c6a8e23433feaa09be5333ed4da984d318008f6c7014d9d7b905b1c740ca"
+}

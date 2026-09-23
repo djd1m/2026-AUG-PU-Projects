@@ -3,13 +3,15 @@ import { moscowDay } from '@clipmaker/shared/upload';
 import { UploadError } from './upload-contract';
 
 export interface ShortLink {
-  id: string; code: string; account_id: string; title: string; status: string;
+  id: string; code: string; partner_code?: string | null; partner_code_id?: string | null; account_id: string; title: string; status: string;
   thumbnail_key: string | null; expires_at: Date | null; finished_at: Date | null; plan: string;
 }
 const missing = () => new UploadError('not_found', 'Ссылка не найдена', 404);
-const linkSelect = `SELECT l.id,l.code,v.account_id,c.title,c.status,c.thumbnail_key,c.expires_at,v.finished_at,a.plan
+const linkSelect = `SELECT l.id,l.code,v.account_id,c.title,c.status,c.thumbnail_key,c.expires_at,v.finished_at,a.plan,pc.code AS partner_code,pc.id AS partner_code_id
   FROM clip_link l JOIN clip c ON c.id=l.clip_id JOIN video v ON v.id=c.video_id
   JOIN account a ON a.id=v.account_id
+  LEFT JOIN LATERAL (SELECT c.id,c.code FROM partner p JOIN partner_code c ON c.partner_id=p.id
+    WHERE p.account_id=v.account_id ORDER BY c.created_at,c.id LIMIT 1) pc ON true
   WHERE l.revoked_at IS NULL AND v.deleted_at IS NULL AND a.status='active'`;
 
 export class ShortLinkService {
@@ -25,9 +27,9 @@ export class ShortLinkService {
     const tx = await this.pool.connect();
     try {
       await tx.query('BEGIN');
-      const inserted = await tx.query(`INSERT INTO growth_event (type, clip_link_id, ip_prefix, day)
-        VALUES ('link_view',$1,$2::cidr,$3::date) ON CONFLICT DO NOTHING RETURNING id`,
-      [link.id, prefix, moscowDay(this.clock())]);
+      const inserted = await tx.query(`INSERT INTO growth_event (type, clip_link_id, ip_prefix, day, partner_code_id)
+        VALUES ('link_view',$1,$2::cidr,$3::date,$4) ON CONFLICT DO NOTHING RETURNING id`,
+      [link.id, prefix, moscowDay(this.clock()), link.partner_code_id ?? null]);
       if (inserted.rowCount) await tx.query(`UPDATE clip_link SET unique_view_count=unique_view_count+1,
         last_view_at=$2 WHERE id=$1`, [link.id, this.clock()]);
       await tx.query('COMMIT');

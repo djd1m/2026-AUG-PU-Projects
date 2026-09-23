@@ -84,3 +84,7 @@ dd { margin:3px 0 0; color:var(--muted); overflow-wrap:anywhere; }
   .status-panel { padding:18px; gap:12px; } .section-heading { display:block; margin-bottom:20px; }
   .section-heading h2 { margin-bottom:8px; } .status-panel button { width:100%; }
 }
+
+.partner-counters { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:16px; }
+.partner-counters > div,.partner-code { min-width:0; padding:20px; border:1px solid var(--line); border-radius:12px; background:white; margin-bottom:16px; overflow-wrap:anywhere; }
+.partner-counters dd { font-size:28px; color:var(--green); }

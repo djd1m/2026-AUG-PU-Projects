@@ -5,8 +5,9 @@ import type { VideoService } from './video';
 import type { ScreenService } from './screen';
 import type { ShortLinkService } from './short-link';
 import type { GuestPackService } from './guest-pack';
+import type { PartnerService } from './partner';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
+interface Context { partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -39,7 +40,26 @@ async function guestResult<T>(ctx: Context, operation: (service: NonNullable<Con
       message: cause instanceof UploadError ? cause.message : 'Пакеты временно недоступны. Повторите позже', cause });
   }
 }
-export const appRouter = t.router({ video: t.router({
+async function partnerResult<T>(ctx: Context, operation: (service: NonNullable<Context['partners']>) => Promise<T>) {
+  try {
+    if (!ctx.partners) throw new Error('Partner runtime unavailable');
+    return { data: await operation(ctx.partners), meta: { request_id: ctx.requestId } };
+  } catch (cause) {
+    const status = cause instanceof UploadError ? cause.status : 503;
+    throw new TRPCError({ code: status === 403 ? 'FORBIDDEN' : status === 404 ? 'NOT_FOUND' : status === 422 ? 'UNPROCESSABLE_CONTENT' : status === 409 ? 'CONFLICT' : 'INTERNAL_SERVER_ERROR',
+      message: cause instanceof UploadError ? cause.message : 'Партнёрские данные временно недоступны. Повторите позже', cause });
+  }
+}
+// Flat key preserves canonical HTTP code.apply; apply is reserved as a standalone router key.
+export const appRouter = t.router({
+  'code.apply': validatedProcedure.input(z.unknown()).mutation(({ ctx, input }) => partnerResult(ctx, s => {
+    if (!ctx.ipPrefix) throw new Error('Client prefix unavailable');
+    return s.apply(ctx.account, input, ctx.ipPrefix);
+  })),
+partner: t.router({
+  dashboard: validatedProcedure.input(z.object({ code_id: z.string().uuid().optional() }).strict())
+    .query(({ ctx, input }) => partnerResult(ctx, s => s.dashboard(ctx.account, input.code_id))),
+}), video: t.router({
   get: validatedProcedure.input(videoId).query(({ ctx, input }) => readResult(ctx, s => s.get(ctx.account, input.video_id))),
   list: validatedProcedure.input(z.object({ cursor: z.string().uuid().optional(), limit: z.number().int().min(1).max(50).optional() }).strict())
     .query(({ ctx, input }) => readResult(ctx, s => s.list(ctx.account, input))),

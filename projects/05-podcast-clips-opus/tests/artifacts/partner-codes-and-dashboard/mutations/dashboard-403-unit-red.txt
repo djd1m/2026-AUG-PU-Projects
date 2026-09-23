@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-glBo2q
+
+ ❯ tests/partner.test.ts (12 tests | 1 failed | 11 skipped) 44ms
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > 50 attempts block code and commit refusal audit
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded
+   × partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403 42ms
+     → expected 404 to be 403 // Object.is equality
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection
+   ↓ passive referral preserves stronger source and ignores self visits
+   ↓ dashboard renders five counters, blocked explanation and attribution status without identity leakage
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/partner.test.ts:76:111
+     74|   it('foreign partner code returns 403', async () => {
+     75|     const fake = db(); fake.query.mockResolvedValue({ rowCount: 0, row…
+     76|     expect((await rpc(new PartnerService(fake.pool), 'partner.dashboar…
+       |                                                                                                               ^
+     77|     expect(fake.query).toHaveBeenCalledTimes(1);
+     78|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  04:17:38
+   Duration  601ms (transform 162ms, setup 0ms, collect 299ms, tests 44ms, environment 0ms, prepare 90ms)
+

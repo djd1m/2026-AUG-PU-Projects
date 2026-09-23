@@ -75,7 +75,7 @@ it.each([0, 1])('conflict is normal; increment only if event inserted (%s)', asy
   await links.recordView(row, null, '192.0.2.0/24');
   expect(query.mock.calls[0]?.[0]).toBe('BEGIN'); expect(query.mock.calls.at(-1)?.[0]).toBe('COMMIT');
   expect(query.mock.calls.filter(([sql]) => sql.includes('UPDATE'))).toHaveLength(rowCount);
-  expect(query).toHaveBeenCalledWith(expect.stringContaining('ON CONFLICT DO NOTHING RETURNING id'), ['link', '192.0.2.0/24', '2026-09-23']);
+  expect(query).toHaveBeenCalledWith(expect.stringContaining('ON CONFLICT DO NOTHING RETURNING id'), ['link', '192.0.2.0/24', '2026-09-23', null]);
   expect(release).toHaveBeenCalledOnce();
 });
 it('query filters revoked links, deleted videos and inactive accounts; malformed code never queries', async () => {

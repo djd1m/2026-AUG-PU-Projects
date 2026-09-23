@@ -1,11 +1,12 @@
 import { createS3Client, generateDownloadUrl } from '@clipmaker/s3';
 import { getRuntime } from './runtime';
 import { ScreenService } from './screen';
+import { PartnerService } from './partner';
 import { createClipFileHandler } from './clip-file';
 import { streamGuestFile } from './guest-file';
 export function getScreenRuntime() {
   const runtime = getRuntime();
-  return { ...runtime, screen: new ScreenService(runtime.pool) };
+  return { ...runtime, partners: new PartnerService(runtime.pool), screen: new ScreenService(runtime.pool) };
 }
 export function clipRoute(kind: 'file' | 'thumbnail') {
   return async (request: Request, { params }: { params: Promise<{ clipId: string }> }) => {
