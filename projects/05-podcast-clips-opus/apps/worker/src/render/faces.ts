@@ -13,8 +13,11 @@ import { join } from 'node:path';
 import type { FaceReport } from './framing-plan.js';
 
 const ASSETS = join(process.cwd(), 'apps', 'worker', 'assets');
-export const FACE_MODEL = process.env.N5_FACE_MODEL ?? join(ASSETS, 'models', 'face_detection_yunet.onnx');
-export const FACE_SCRIPT = process.env.N5_FACE_SCRIPT ?? join(ASSETS, 'scripts', 'detect_faces.py');
+// Пути фиксированы: модель и скрипт лежат в образе. Переопределение через окружение убрано —
+// оно никому не было нужно, а страж проброса переменных справедливо требовал объявить его в
+// compose каждому воркеру. Настройка без потребителя — это поверхность для ошибки, а не гибкость.
+export const FACE_MODEL = join(ASSETS, 'models', 'face_detection_yunet.onnx');
+export const FACE_SCRIPT = join(ASSETS, 'scripts', 'detect_faces.py');
 /**
  * Шаг между кадрами — 0,5 с, то есть 120 замеров на минуту клипа.
  *

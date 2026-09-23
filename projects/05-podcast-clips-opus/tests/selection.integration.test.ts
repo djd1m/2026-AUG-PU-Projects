@@ -72,15 +72,35 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
       .toEqual({ clips_total: 1, status: 'rendering' });
     expect((await pool.query('SELECT * FROM clip WHERE video_id=$1', [f.video])).rowCount).toBe(1);
   });
-  it('one out-of-range candidate rejects all three without saving clips', async () => {
+  // LV-4 (23.09.2026): негодный кандидат отбрасывается ОДИН, годные сохраняются.
+  // Прежде один промах из восьми отбрасывал все, и владелец видел «самодостаточных фрагментов
+  // не найдено» на записи, где модель нашла семь годных.
+  // Отсеивает обработчик (validateFragments), база — вторая линия обороны: она перепроверяет и
+  // НЕ ПУСКАЕТ набор, который расходится с проверенным. Поэтому сюда приходит уже отсеянное.
+  it('DB boundary refuses fragments that were not pre-validated and saves nothing', async () => {
     const f = await fixture();
     await authorizeSelection(pool, f.attempt, limits, model);
-    const fragments = [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), score_hook: 34, score: 84 }];
-    expect(await acceptSelection(pool, f.attempt, fragments)).toEqual([]);
+    const raw = [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), score_hook: 34, score: 84 }];
+    await expect(acceptSelection(pool, f.attempt, raw)).rejects.toThrow('Непроверенные фрагменты на границе БД');
+    expect((await pool.query('SELECT count(*)::int AS n FROM clip WHERE video_id=$1', [f.video])).rows[0].n).toBe(0);
+  });
+  it('pre-validated survivors are saved after one candidate is dropped', async () => {
+    const f = await fixture();
+    await authorizeSelection(pool, f.attempt, limits, model);
+    const fragments = [fakeFragment(0), fakeFragment(1)];
+    const jobs = await acceptSelection(pool, f.attempt, fragments);
+    expect(jobs).toHaveLength(2);
+    expect((await pool.query('SELECT count(*)::int AS n FROM clip WHERE video_id=$1', [f.video])).rows[0].n).toBe(2);
+    expect((await pool.query('SELECT count(*)::int AS n FROM clip_link')).rows[0].n).toBe(2);
+  });
+  it('all candidates out of range still fail as no_fragments and save nothing', async () => {
+    const f = await fixture();
+    await authorizeSelection(pool, f.attempt, limits, model);
+    const bad = [0, 1, 2].map(i => ({ ...fakeFragment(i), score_hook: 34, score: 84 }));
+    expect(await acceptSelection(pool, f.attempt, bad)).toEqual([]);
     expect((await pool.query('SELECT status,failure_reason FROM video WHERE id=$1', [f.video])).rows[0])
       .toEqual({ status: 'failed', failure_reason: 'no_fragments' });
     expect((await pool.query('SELECT * FROM clip WHERE video_id=$1', [f.video])).rowCount).toBe(0);
-    expect((await pool.query('SELECT * FROM clip_link')).rowCount).toBe(0);
   });
   it('old fence cannot spend or save after a new lease', async () => {
     const f = await fixture(); await leaseAttempt(pool, f.video, 'select', 2);

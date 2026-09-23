@@ -33,17 +33,22 @@ export function validFragment(f: Fragment, duration: number): boolean {
   return length >= schema.$defs.duration.minimum && length <= schema.$defs.duration.maximum && f.end_seconds <= duration &&
     f.score === f.score_hook + f.score_completeness + f.score_length;
 }
+// ОТБРАКОВЫВАЕТСЯ ОТДЕЛЬНЫЙ ФРАГМЕНТ, А НЕ ВЕСЬ ОТВЕТ (23.09.2026).
+// Было: `if (parsed.some(...)) return []` — один негодный фрагмент из восьми отбрасывал ВСЕ, и
+// пользователь видел «самодостаточных фрагментов не найдено», хотя они нашлись. Сообщение лгало,
+// а причина была невидима: в журнале тот же `no_fragments`, что и при пустом ответе модели.
+// Живой случай 23.09.2026: запись на 88 минут, модель отработала 39 с, показано «не найдено».
+// Негодный фрагмент — это промах ОДНОГО кандидата (длина вне 20–75 с, оценка не сходится с суммой
+// составляющих, пустое объяснение), а не признак негодности остальных семи.
 export function validateFragments(value: unknown, transcript: TranscriptResult, duration: number): Fragment[] {
   const words = parseTranscript(transcript, duration).words;
   const nearest = (time: number, side: 'start' | 'end') => words.reduce((best, word) =>
     Math.abs(word[side] - time) < Math.abs(best - time) ? word[side] : best, words[0]![side]);
-  const parsed = parseCandidates(value);
-  if (parsed.some(f => !validFragment(f, duration))) return [];
+  const parsed = parseCandidates(value).filter(f => validFragment(f, duration));
   const candidates = parsed.map(f => ({ ...f,
     start_seconds: nearest(f.start_seconds, 'start'), end_seconds: nearest(f.end_seconds, 'end'),
-  }));
-  if (candidates.some(f => !validFragment(f, duration) || words.some(w =>
-    (w.start < f.start_seconds && w.end > f.start_seconds) || (w.start < f.end_seconds && w.end > f.end_seconds)))) return [];
+  })).filter(f => validFragment(f, duration) && !words.some(w =>
+    (w.start < f.start_seconds && w.end > f.start_seconds) || (w.start < f.end_seconds && w.end > f.end_seconds)));
   candidates.sort((a, b) => b.score - a.score || a.start_seconds - b.start_seconds);
   const accepted: Fragment[] = [];
   for (const f of candidates) {

@@ -86,17 +86,31 @@ describe('STT operation order with deterministic dependencies', () => {
     expect(log).toMatchObject({ video_id: 'video', fence: 1, kind: 'word', index: 1, chunk_index: 1, end_seconds: 237.533, duration_seconds: 237.433 });
     expect(log.excess_seconds).toBeCloseTo(0.1);
   });
-  it('TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes', async () => {
+  it('TR-002 clamps a merged word 5s past video, logs both bounds and continues selection', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     const deps = await tailFixture(5);
-    await expect(transcribeSource('source', 237.433, attempt, deps)).rejects.toThrow();
-    expect(state.failure).toBe('stt_failed');
-    expect(state.trace).not.toContain('commit'); expect(deps.enqueue).not.toHaveBeenCalled();
+    await transcribeSource('source', 237.433, attempt, deps);
+    expect(state.failure).toBe(''); expect(error).not.toHaveBeenCalled();
+    expect(state.trace.indexOf('commit')).toBeGreaterThan(-1);
+    expect(state.trace.indexOf('enqueue')).toBeGreaterThan(state.trace.indexOf('commit'));
+    expect(deps.enqueue).toHaveBeenCalledTimes(1);
     expect(deps.spend).toHaveBeenCalledWith(deps.spendPath, expect.objectContaining({ result: 'success', chunk_index: 1 }));
-    const log = JSON.parse(error.mock.calls.at(-1)![0]);
-    expect(log).toMatchObject({ event: 'stt_merge_failed', reason: 'bounds', video_id: 'video', fence: 1, kind: 'word', index: 1,
-      chunk_index: 1, end_seconds: 242.433, duration_seconds: 237.55 });
-    expect(log.excess_seconds).toBeCloseTo(4.883);
+    const transcript = vi.mocked(acceptTranscript).mock.calls.at(-1)![2];
+    expect(transcript.words.at(-1)).toMatchObject({ word: 'хвост', start: 237, end: 237.433 });
+    expect(parseTranscript(transcript, 237.433)).toEqual(transcript);
+    transcript.words.forEach((word, i) => {
+      expect(word.start).toBeGreaterThanOrEqual(i ? transcript.words[i - 1]!.start : 0);
+      expect(word.end).toBeGreaterThanOrEqual(word.start); expect(word.end).toBeLessThanOrEqual(237.433);
+    });
+    const events = warn.mock.calls.map(([line]) => JSON.parse(line));
+    expect(events).toHaveLength(2);
+    expect(events[0]).toMatchObject({ event: 'stt_timing_clamped', kind: 'word', index: 1, chunk_index: 1,
+      start_seconds: 237, end_seconds: 242.433, corrected_start_seconds: 237,
+      corrected_end_seconds: 237.55, duration_seconds: 237.55 });
+    expect(events[0].excess_seconds).toBeCloseTo(4.883);
+    expect(events[1]).toMatchObject({ event: 'stt_timestamp_clamped', video_id: 'video', fence: 1,
+      kind: 'word', index: 1, chunk_index: 1, end_seconds: 237.55, duration_seconds: 237.433 });
   });
   it('failed MP3 measurement stops before provider and cannot become a source-file refund', async () => {
     const deps = await fixture(); deps.probeAudio.mockRejectedValueOnce(new ProbeError('probe_timeout'));

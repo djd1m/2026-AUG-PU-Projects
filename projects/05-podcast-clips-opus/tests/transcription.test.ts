@@ -14,7 +14,7 @@ import { recordModelSpend } from '../apps/worker/src/stt/spend';
 const valid = { language: 'ru', words: [{ word: 'Привет', start: 0.2, end: 1 }], segments: [{ text: 'Привет', start: 0.2, end: 1 }] };
 const dirs: string[] = [];
 async function temp() { const dir = await mkdtemp(join(tmpdir(), 'n5-stt-')); dirs.push(dir); return dir; }
-afterEach(async () => { vi.useRealTimers(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
+afterEach(async () => { vi.useRealTimers(); vi.restoreAllMocks(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
 describe('STT boundary and media', () => {
   it('TR-001 modeled MP3 tail is accepted, logged and clipped for strict persistence', () => {
     const videoDuration = 2.433, audioDuration = videoDuration + 0.1;
@@ -30,14 +30,19 @@ describe('STT boundary and media', () => {
       expect(log.mock.calls[index]?.[0].excess_seconds).toBeCloseTo(0.1);
     }
   });
-  it('TR-001 rejects a five-second excess beyond the measured MP3 without clamping', () => {
+  it('TR-001 clamps a five-second end excess at audio and video bounds with logs', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const videoDuration = 2.433, audioDuration = videoDuration + 0.1;
     const tail = { ...valid, words: [{ word: 'хвост', start: videoDuration - 0.2, end: videoDuration + 5 }] };
     const log = vi.fn();
-    // A valid chunk result must still be rejected at the merged audio boundary.
-    expect(() => mergeWords([{ result: tail, offsetSeconds: 0, durationSeconds: videoDuration + 5 }],
-      videoDuration, audioDuration, log)).toThrow();
-    expect(log).not.toHaveBeenCalled();
+    const merged = mergeWords([{ result: tail, offsetSeconds: 0, durationSeconds: videoDuration + 5 }],
+      videoDuration, audioDuration, log);
+    expect(merged.words[0]).toMatchObject({ start: videoDuration - .2, end: videoDuration });
+    expect(JSON.parse(warn.mock.calls[0]![0])).toMatchObject({ event: 'stt_timing_clamped', kind: 'word',
+      end_seconds: videoDuration + 5, corrected_end_seconds: audioDuration });
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(log.mock.calls[0]![0]).toMatchObject({ kind: 'word', end_seconds: audioDuration, duration_seconds: videoDuration });
+    expect(parseTranscript(merged, videoDuration)).toEqual(merged);
   });
   it('TR-001 equal audio and video durations are accepted unchanged without clamp logs', () => {
     const duration = 2.433;
@@ -64,24 +69,42 @@ describe('STT boundary and media', () => {
     expect(merged.words[0]?.end).toBe(end); expect(merged.segments[0]?.end).toBe(end);
     expect(log).not.toHaveBeenCalled();
   });
-  it('TR-001 keeps strict bounds for words, segments and invalid duration; rejects whole words outside video', () => {
+  it('TR-001 rejects invalid duration and wholly outside starts; clamps word and segment ends', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     for (const duration of [NaN, Infinity, 0, -1]) expect(() => parseTranscript(valid, duration)).toThrow();
     const merge = (result: typeof valid) => mergeWords([{ result, offsetSeconds: 0, durationSeconds: 125 }], 120, 120.1, vi.fn());
     expect(() => merge({ ...valid, words: [{ word: 'x', start: 120.01, end: 120.05 }] })).toThrow();
-    expect(() => merge({ ...valid, segments: [{ text: 'x', start: 119, end: 125 }] })).toThrow();
+    const merged = merge({ ...valid, segments: [{ text: 'x', start: 119, end: 125 }] });
+    expect(merged.segments).toEqual([{ text: 'x', start: 119, end: 120 }]);
+    expect(JSON.parse(warn.mock.calls[0]![0])).toMatchObject({ event: 'stt_timing_clamped', kind: 'segment',
+      end_seconds: 125, corrected_end_seconds: 120.1 });
     const shortAudio = () => mergeWords([{ result: { ...valid, words: [{ word: 'x', start: 118, end: 120 }] },
       offsetSeconds: 0, durationSeconds: 120 }], 120, 119, vi.fn());
-    expect(shortAudio).toThrow();
+    expect(shortAudio().words[0]).toMatchObject({ start: 118, end: 119 });
+    expect(JSON.parse(warn.mock.calls.at(-1)![0])).toMatchObject({ event: 'stt_timing_clamped', kind: 'word',
+      end_seconds: 120, corrected_end_seconds: 119 });
   });
   it.each([{}, { ...valid, words: [] }, { ...valid, words: [{ word: 'text' }] },
     { ...valid, words: [{ word: 'text', start: 0, end: null }] }, { ...valid, words: [{ word: 'text', start: NaN, end: 1 }] }])('ADR-003 rejects missing timestamps: %j', input => {
     expect(() => parseTranscript(input, 10)).toThrow(TranscriptError);
   });
-  it('rejects negative, reversed, out-of-range and nonmonotonic words', () => {
-    for (const [start, end] of [[-1, 1], [3, 2], [0, 11], [0, Infinity]]) {
-      expect(() => parseTranscript({ ...valid, words: [{ word: 'x', start, end }] }, 10)).toThrow();
+  it('clamps negative, reversed, out-of-range and nonmonotonic words; rejects nonfinite times', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    for (const [start, end, fixedStart, fixedEnd] of [[-1, 1, 0, 1], [3, 2, 3, 3], [0, 11, 0, 10]]) {
+      warn.mockClear();
+      const parsed = parseTranscript({ ...valid, words: [{ word: 'x', start, end }] }, 10);
+      expect(parsed.words).toEqual([{ word: 'x', start: fixedStart, end: fixedEnd }]);
+      expect(JSON.parse(warn.mock.calls[0]![0])).toMatchObject({ event: 'stt_timing_clamped',
+        start_seconds: start, end_seconds: end, corrected_start_seconds: fixedStart, corrected_end_seconds: fixedEnd });
     }
-    expect(() => parseTranscript({ ...valid, words: [valid.words[0], { word: 'x', start: 0, end: 1 }] }, 10)).toThrow();
+    warn.mockClear();
+    const parsed = parseTranscript({ ...valid, words: [valid.words[0], { word: 'x', start: 0, end: 1 }] }, 10);
+    expect(parsed.words).toEqual([valid.words[0], { word: 'x', start: .2, end: 1 }]);
+    expect(JSON.parse(warn.mock.calls[0]![0])).toMatchObject({ event: 'stt_word_order_clamped', corrected_start_seconds: .2 });
+    for (const time of [NaN, Infinity, -Infinity]) {
+      expect(() => parseTranscript({ ...valid, words: [{ word: 'x', start: 0, end: time }] }, 10)).toThrow(TranscriptError);
+      expect(() => parseTranscript({ ...valid, words: [{ word: 'x', start: time, end: 1 }] }, 10)).toThrow(TranscriptError);
+    }
   });
   it('merge offsets second chunk and deduplicates overlap without sorting away a defect', () => {
     const first = { ...valid, words: [{ word: 'Привет', start: 179, end: 180 }] };

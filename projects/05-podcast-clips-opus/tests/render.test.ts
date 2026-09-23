@@ -48,7 +48,7 @@ it('fontfile only; font bytes are pinned and shipped in runtime image', () => {
 });
 it('filter order in source and graph: scale crop ASS watermark last', () => {
   const source = readFileSync('apps/worker/src/render/ffmpeg.ts', 'utf8');
-  expect(source.indexOf('filters.push(getScaleFilter')).toBeLessThan(source.indexOf('filters.push(`ass='));
+  expect(source.indexOf('filters.push(source ? getFramingFilter')).toBeLessThan(source.indexOf('filters.push(`ass='));
   expect(source.indexOf('filters.push(`ass=')).toBeLessThan(source.indexOf('filters.push(buildWatermarkDrawtext'));
   const graph = buildFilterChain('portrait', '/tmp/subtitles.ass', true, origin, code);
   expect(graph.indexOf('scale=')).toBeLessThan(graph.indexOf('crop='));

@@ -18,9 +18,11 @@ describe('selection semantics', () => {
   it.each(['score', 'explanation', 'length'] as const)('our code rejects invalid %s', async scenario => {
     expect(validateFragments(await valid(scenario), transcript, 360)).toEqual([]);
   });
-  it('never salvages a padded response with an invalid candidate', () => {
+  it('keeps the two valid candidates when the third is invalid', () => {
     for (const patch of [{ score_hook: 34, score: 84 }, { end_seconds: 136 }, { explain_hook: ' ' }]) {
-      expect(validateFragments({ fragments: [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), ...patch }] }, transcript, 360)).toEqual([]);
+      expect(validateFragments({ fragments: [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), ...patch }] }, transcript, 360)).toEqual([
+        { ...fakeFragment(0), end_seconds: 24.8 }, { ...fakeFragment(1), end_seconds: 54.8 },
+      ]);
     }
   });
   it('prompt keeps the target at three to eight while explicitly allowing fewer', () => {
@@ -75,19 +77,22 @@ describe('OpenRouter adapter', () => {
     const body = JSON.parse(String(args[1].body));
     expect(body.model).toBe(model); expect(body.response_format.json_schema).toEqual({ name: 'fragments', strict: true, schema: FRAGMENTS_SCHEMA });
     expect(body.provider).toEqual({ only: model.startsWith('anthropic') ? ['Anthropic', 'Claude Platform on AWS'] : ['Google'], allow_fallbacks: false, require_parameters: true });
-    expect(body.messages[1].content).toContain('359'); expect(request).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(body.messages[1].content)).toEqual({ duration_seconds: 360,
+      transcript: { language: 'ru', segments: transcript.segments } }); expect(request).toHaveBeenCalledTimes(1);
   });
   it('source guard requires provider.only, no fallbacks and required parameters', () => {
     const source = readFileSync('apps/worker/src/llm/provider.ts', 'utf8');
     expect(source).toMatch(/provider:\s*\{\s*only:/);
     expect(source).toContain('allow_fallbacks: false'); expect(source).toContain('require_parameters: true');
   });
-  it('adapter path rejects the whole response when one of three candidates is out of range', async () => {
+  it('adapter path preserves valid candidates when one of three is out of range', async () => {
     const response = { fragments: [fakeFragment(0), fakeFragment(1), { ...fakeFragment(2), end_seconds: 61 }] };
     const request = vi.fn(async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(response) } }] })));
     const output = await createSelector(loadLlmConfig({ ...environment(), N5_MODEL_PROVIDER: 'live' }), request)
       .select(transcript, 360, new AbortController().signal);
-    expect(validateFragments(output, transcript, 360)).toEqual([]);
+    expect(validateFragments(output, transcript, 360)).toEqual([
+      { ...fakeFragment(0), end_seconds: 24.8 }, { ...fakeFragment(1), end_seconds: 54.8 },
+    ]);
     expect(request).toHaveBeenCalledTimes(1);
   });
   it('configuration rejects missing model/key and production fake', () => {

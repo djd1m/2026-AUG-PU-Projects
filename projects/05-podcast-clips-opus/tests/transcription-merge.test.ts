@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { chunkBoundaries } from '../apps/worker/src/stt/chunker';
-import { mergeWords, TranscriptMergeError } from '../apps/worker/src/stt/merge';
+import { mergeWords } from '../apps/worker/src/stt/merge';
 import { parseTranscript, type TranscriptResult } from '../packages/shared/src/transcript';
 
+afterEach(() => vi.restoreAllMocks());
 const duration = 237.433;
 function pauseFixture() {
   // The pause moves the first cut from 180 to 175, so chunk 2 starts at 173.
@@ -45,16 +46,26 @@ describe('TR-003 overlap merge with pauses', () => {
   });
   it.each([
     { reason: 'order', words: [{ word: 'a', start: 3, end: 4 }, { word: 'b', start: 2, end: 3 }],
-      issue: { index: 1, start_seconds: 2, end_seconds: 3, previous_start_seconds: 3 } },
+      index: 1, start: 3, end: 3, event: 'stt_word_order_clamped' },
     { reason: 'bounds', words: [{ word: 'a', start: 9, end: 11 }],
-      issue: { index: 0, start_seconds: 9, end_seconds: 11, excess_seconds: 1 } },
-  ])('merge failure names $reason and numbers', ({ reason, words, issue }) => {
-    let error: unknown;
-    try { mergeWords([{ offsetSeconds: 0, durationSeconds: 10, result: { language: 'ru', words, segments: [] } }], 10); }
-    catch (caught) { error = caught; }
-    expect(error).toBeInstanceOf(TranscriptMergeError);
-    expect(error).toMatchObject({ timingIssue: { reason, kind: 'word', duration_seconds: 10, ...issue } });
-    expect((error as Error).message).toContain(reason);
-    for (const [key, value] of Object.entries(issue)) expect((error as Error).message).toContain(`"${key}":${value}`);
+      index: 0, start: 9, end: 10, event: 'stt_timing_clamped' },
+  ])('merge clamps $reason and journals original and corrected numbers', ({ words, index, start, end, event }) => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const merged = mergeWords([{ offsetSeconds: 0, durationSeconds: 10, result: { language: 'ru', words, segments: [] } }], 10);
+    expect(merged.words[index]).toMatchObject({ start, end, chunk_index: 0 });
+    merged.words.forEach((w, i) => {
+      expect(w.start).toBeGreaterThanOrEqual(i ? merged.words[i - 1]!.start : 0);
+      expect(w.end).toBeGreaterThanOrEqual(w.start); expect(w.end).toBeLessThanOrEqual(10);
+    });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(warn.mock.calls[0]![0])).toMatchObject({ event, kind: 'word', index,
+      start_seconds: words[index]!.start, end_seconds: words[index]!.end,
+      corrected_start_seconds: start, corrected_end_seconds: end, duration_seconds: 10 });
+  });
+  it('merge failure still names bounds when a word starts wholly outside', () => {
+    expect(() => mergeWords([{ offsetSeconds: 0, durationSeconds: 10,
+      result: { language: 'ru', words: [{ word: 'a', start: 11, end: 12 }], segments: [] } }], 10))
+      .toThrowError(expect.objectContaining({ name: 'Error', timingIssue: { reason: 'bounds', kind: 'word',
+        index: 0, start_seconds: 11, end_seconds: 12, duration_seconds: 10, excess_seconds: 1 } }));
   });
 });

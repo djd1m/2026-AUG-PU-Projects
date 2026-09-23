@@ -21,6 +21,8 @@ export const SUBTITLE_OUTLINE = 5;
 /** Лёгкая тень: обводка спасает на пёстром фоне, тень добавляет отрыв от светлого. */
 export const SUBTITLE_SHADOW = 1;
 export const SUBTITLE_WRAP_CHARS = 24;
+/** Сколько держать подпись после конца слова, если следующее не началось. */
+export const SUBTITLE_HOLD_SECONDS = 1;
 export type SubtitleSegment = TranscriptWord;
 export function formatASSTimecode(seconds: number): string {
   const h = Math.floor(seconds / 3600);
@@ -79,7 +81,10 @@ export function generateSubtitleFile(words: SubtitleSegment[], start: number, en
   for (const [groupIndex, words] of groups.entries()) {
     const groupEnd = groups[groupIndex + 1]?.[0]?.start ?? end;
     for (const [index, active] of words.entries()) {
-      const stop = words[index + 1]?.start ?? groupEnd;
+      // Встык — но не бесконечно. Промежуток меньше секунды перекрывается (от таких и было
+      // мигание), настоящая пауза — нет: иначе последняя реплика висела бы до конца клипа, и
+      // зритель секундами смотрел бы на застывший текст после того, как речь кончилась.
+      const stop = Math.min(words[index + 1]?.start ?? groupEnd, active.end + SUBTITLE_HOLD_SECONDS);
       if (stop <= active.start) continue;
       let lineLength = 0;
       const text = words.map((w, i) => {

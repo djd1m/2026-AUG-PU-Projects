@@ -61,8 +61,12 @@ export function getFramingFilter(format: ClipFormat, source: SourceDimensions, p
     const p = plan.positions[0];
     return crop(singleWindow(source, p.x, p.y), width, height);
   }
-  if (plan?.mode === 'center') return getScaleFilter(format);
-  if (!plan && selectFraming(source) === 'center') return getScaleFilter(format);
+  // Нет плана (детектор недоступен) ведёт себя ТАК ЖЕ, как «лиц не найдено»: обрезка центра.
+  // Прежде отсутствие плана откатывалось к слепым двум этажам — то есть два случая отсутствия
+  // информации давали РАЗНОЕ кадрирование. Разница вскрылась тестом в контейнере без OpenCV.
+  // Правило владельца — «два этажа только если на обоих люди» — без информации не выполнимо,
+  // значит этажей нет. Двухэтажный граф ниже строится только по явному плану.
+  if (!plan || plan.mode === 'center') return getScaleFilter(format);
 
   const top = plan?.positions[0] ?? { x: 0, y: 0.25 };
   const bottom = plan?.positions[1] ?? { x: 1, y: 0.25 };
