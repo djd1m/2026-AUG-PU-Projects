@@ -1,6 +1,8 @@
 import { parseTranscript, TranscriptError, type TranscriptTimingIssue, type TranscriptResult, type TranscriptWord, type TranscriptSegment } from '@clipmaker/shared/transcript';
 export class TranscriptMergeError extends Error {
-  constructor(readonly timingIssue?: TranscriptTimingIssue) { super('Не удалось собрать транскрипт'); }
+  constructor(readonly timingIssue?: TranscriptTimingIssue) {
+    super(`Не удалось собрать транскрипт: ${JSON.stringify(timingIssue ?? { reason: 'invalid_transcript' })}`);
+  }
 }
 export function mergeWords(chunks: { result: TranscriptResult; offsetSeconds: number; durationSeconds: number }[], duration: number,
   audioDuration = duration, onClamp = (issue: TranscriptTimingIssue) => console.warn(JSON.stringify({ event: 'stt_timestamp_clamped', ...issue }))): TranscriptResult {
@@ -10,9 +12,10 @@ export function mergeWords(chunks: { result: TranscriptResult; offsetSeconds: nu
     const result = parseTranscript(chunk.result, chunk.durationSeconds);
     for (const word of result.words) {
       const shifted = { ...word, start: word.start + chunk.offsetSeconds, end: word.end + chunk.offsetSeconds, chunk_index: index };
-      const duplicate = index > 0 && word.start <= 2 && words.slice(-30).some(prior =>
-        prior.word.trim().toLocaleLowerCase() === shifted.word.trim().toLocaleLowerCase() && Math.abs(prior.start - shifted.start) <= 1);
-      if (!duplicate) words.push(shifted);
+      // Keep only words beyond the accepted audio; recognition text can differ at a seam.
+      const previous = words.at(-1);
+      if (index > 0 && previous && shifted.start < previous.end) continue;
+      words.push(shifted);
     }
     segments.push(...result.segments.map(segment => ({ ...segment, start: segment.start + chunk.offsetSeconds, end: segment.end + chunk.offsetSeconds })));
   }

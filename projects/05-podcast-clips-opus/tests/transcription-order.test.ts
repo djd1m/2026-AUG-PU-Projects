@@ -77,7 +77,7 @@ describe('STT operation order with deterministic dependencies', () => {
     expect(state.trace).not.toContain('commit'); expect(deps.enqueue).not.toHaveBeenCalled();
     expect(deps.spend).toHaveBeenCalledWith(deps.spendPath, expect.objectContaining({ result: 'success', chunk_index: 1 }));
     const log = JSON.parse(error.mock.calls.at(-1)![0]);
-    expect(log).toMatchObject({ event: 'stt_merge_failed', video_id: 'video', fence: 1, kind: 'word', index: 1,
+    expect(log).toMatchObject({ event: 'stt_merge_failed', reason: 'bounds', video_id: 'video', fence: 1, kind: 'word', index: 1,
       chunk_index: 1, end_seconds: 242.433, duration_seconds: 237.55 });
     expect(log.excess_seconds).toBeCloseTo(4.883);
   });

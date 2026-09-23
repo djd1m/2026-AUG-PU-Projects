@@ -1,0 +1,50 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-merge.test.ts (4 tests | 2 failed | 2 skipped) 25ms
+   ↓ TR-003 overlap merge with pauses > different overlap text merges monotonically by time
+   ↓ TR-003 overlap merge with pauses > preserves uncovered seam words including exact equality inside overlap
+   × TR-003 overlap merge with pauses > merge failure names 'order' and numbers 19ms
+     → expected Error: Не удалось собрать транскрипт: {"r… { timingIssue: undefined } to match object { timingIssue: { …(7) } }
+   × TR-003 overlap merge with pauses > merge failure names 'bounds' and numbers 3ms
+     → expected Error: Не удалось собрать транскрипт: {"r… { timingIssue: undefined } to match object { timingIssue: { …(7) } }
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-merge.test.ts > TR-003 overlap merge with pauses > merge failure names 'order' and numbers
+ FAIL  tests/transcription-merge.test.ts > TR-003 overlap merge with pauses > merge failure names 'bounds' and numbers
+AssertionError: expected Error: Не удалось собрать транскрипт: {"r… { timingIssue: undefined } to match object { timingIssue: { …(7) } }
+
+- Expected
++ Received
+
+- {
+-   "timingIssue": {
+-     "duration_seconds": 10,
+-     "end_seconds": 3,
+-     "index": 1,
+-     "kind": "word",
+-     "previous_start_seconds": 3,
+-     "reason": "order",
+-     "start_seconds": 2,
+-   },
++ TranscriptMergeError {
++   "timingIssue": undefined,
+  }
+
+ ❯ tests/transcription-merge.test.ts:56:19
+     54|     catch (caught) { error = caught; }
+     55|     expect(error).toBeInstanceOf(TranscriptMergeError);
+     56|     expect(error).toMatchObject({ timingIssue: { reason, kind: 'word',…
+       |                   ^
+     57|     expect((error as Error).message).toContain(reason);
+     58|     for (const [key, value] of Object.entries(issue)) expect((error as…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 skipped (4)
+   Start at  07:05:07
+   Duration  435ms (transform 125ms, setup 0ms, collect 136ms, tests 25ms, environment 0ms, prepare 90ms)
+

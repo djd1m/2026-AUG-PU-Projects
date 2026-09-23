@@ -1,0 +1,58 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-merge.test.ts (4 tests | 1 failed | 3 skipped) 17ms
+   ↓ TR-003 overlap merge with pauses > different overlap text merges monotonically by time
+   × TR-003 overlap merge with pauses > preserves uncovered seam words including exact equality inside overlap 15ms
+     → expected [ [ 'замок', 173.4, 174, +0 ], …(1) ] to deeply equal [ [ 'замок', 173.4, 174, +0 ], …(3) ]
+   ↓ TR-003 overlap merge with pauses > merge failure names 'order' and numbers
+   ↓ TR-003 overlap merge with pauses > merge failure names 'bounds' and numbers
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-merge.test.ts > TR-003 overlap merge with pauses > preserves uncovered seam words including exact equality inside overlap
+AssertionError: expected [ [ 'замок', 173.4, 174, +0 ], …(1) ] to deeply equal [ [ 'замок', 173.4, 174, +0 ], …(3) ]
+
+- Expected
++ Received
+
+@@ -4,22 +4,10 @@
+      173.4,
+      174,
+      0,
+    ],
+    [
+-     "на",
+-     174,
+-     174.2,
+-     1,
+-   ],
+-   [
+-     "стыке",
+-     174.3,
+-     174.7,
+-     1,
+-   ],
+-   [
+      "дальше",
+      175.2,
+      175.6,
+      1,
+    ],
+
+ ❯ tests/transcription-merge.test.ts:41:69
+     39|     chunks[1]!.result.words[0]!.word = 'замок';
+     40|     const words = mergeWords(chunks, duration).words;
+     41|     expect(words.map(w => [w.word, w.start, w.end, w.chunk_index])).to…
+       |                                                                     ^
+     42|       ['замок', 173.4, 174, 0], ['на', 174, 174.2, 1],
+     43|       ['стыке', 174.3, 174.7, 1], ['дальше', 175.2, 175.6, 1],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  07:05:03
+   Duration  629ms (transform 275ms, setup 0ms, collect 279ms, tests 17ms, environment 0ms, prepare 101ms)
+

@@ -1,0 +1,95 @@
+{
+  "run_id": "20260923T070309Z-transcription-tr003-codex",
+  "work_unit_id": "TR-003",
+  "stage": "paused",
+  "scope": "Time-based overlap filtering and numeric merge diagnostics",
+  "exclusions": [
+    "paid provider calls",
+    "deployment",
+    "schema or quota changes"
+  ],
+  "acceptance_criteria": [
+    "Different overlap text with pause-derived chunks merges monotonically",
+    "Uncovered seam words and exact equality retained",
+    "Bounds/order errors carry reason and numbers",
+    "Three mutations fail and restored tests pass"
+  ],
+  "source_revision": "sha256:5060a0d3775238db712b617188c3dd83d2e9128e8cf5c8a58cc5dcabae1bda78",
+  "requirements": "docs/features/transcription/12_fix_brief_codex.md",
+  "architecture": "docs/Architecture.md",
+  "routes": [
+    {
+      "stage": "plan",
+      "tier": "M",
+      "mechanical_tier": "S",
+      "exit_code": 0,
+      "reason": "Existing ordering behavior; shared validator diagnostics. No new invariant or external call."
+    },
+    {
+      "stage": "implement",
+      "tier": "M",
+      "mechanical_tier": "S",
+      "exit_code": 0,
+      "reason": "Existing ordering behavior; shared validator diagnostics. No new invariant or external call."
+    }
+  ],
+  "approval": "User requested execution of explicit brief",
+  "forecast": {
+    "status": "insufficient_data",
+    "usage": null,
+    "cost": null
+  },
+  "attempt_budget": "One implementation and concrete corrections; review timeout 60s",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local deterministic tests; no live E2E"
+  },
+  "telemetry": {
+    "run": "run.json",
+    "events": "events.jsonl"
+  },
+  "source_manifest": "tests/artifacts/transcription-fix/brief-12/source-manifest.json",
+  "checks": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 56.45559473382309
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 25.548406969755888
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.3291112035512924
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 96.6304986141622
+    }
+  ],
+  "pending": [
+    "134 environment-dependent integration tests; DATABASE_URL, REDIS_URL and S3_ENDPOINT absent",
+    "OWN-002 independent Anthropic review: 60s timeout, no verdict"
+  ],
+  "report": "docs/features/transcription/13_fix_report.md",
+  "next_allowed_step": "Run integration tests in configured test environment and independent Anthropic review on source manifest; no deployment performed."
+}

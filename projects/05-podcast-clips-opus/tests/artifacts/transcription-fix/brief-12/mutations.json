@@ -1,0 +1,44 @@
+[
+  {
+    "name": "text-overlap",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/transcription-merge.test.ts",
+      "-t",
+      "different overlap text"
+    ],
+    "mutation_sha256": "aa56e1487679d71f757aa5afd3bcb6d5f694c0ef9cc9e48cefbb82247a83b7c3",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "name": "whole-overlap",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/transcription-merge.test.ts",
+      "-t",
+      "preserves uncovered seam"
+    ],
+    "mutation_sha256": "cd55cd9af688a76246ce563a5dc188737678cba4c6c8a338fdeb833670dc612b",
+    "red_exit": 1,
+    "green_exit": 0
+  },
+  {
+    "name": "empty-diagnostic",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/transcription-merge.test.ts",
+      "-t",
+      "merge failure names"
+    ],
+    "mutation_sha256": "75acbef988a0116003ab78bdc42e867501d4ff0c77048253615a2c1a4a89f29f",
+    "red_exit": 1,
+    "green_exit": 0
+  }
+]

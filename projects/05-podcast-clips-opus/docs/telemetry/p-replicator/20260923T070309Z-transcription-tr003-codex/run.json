@@ -1,0 +1,66 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260923T070309Z-transcription-tr003-codex",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "transcription/TR-003",
+  "pipeline": "bounded-fix",
+  "tier": "M",
+  "risk_flags": [
+    "overlap ordering",
+    "shared transcript validation diagnostics"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Current Codex coordinator implements bounded approved brief; OWN-002 Anthropic review attempted separately"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "14e9c965922a0eff0f2e753958cbd09dc6702b6c",
+  "final_revision": "sha256:5060a0d3775238db712b617188c3dd83d2e9128e8cf5c8a58cc5dcabae1bda78",
+  "spec_sha256": "c861f07837a0fbf7df10c8b71312ee0746acd0f91f15cb66b8ebb1e50e087c16",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-23T07:03:27.979695+00:00",
+  "ended_at": "2026-09-23T07:08:05.286693+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "tests/artifacts/transcription-fix/brief-12/source-manifest.json",
+    "tests/artifacts/transcription-fix/brief-12/focused.txt",
+    "tests/artifacts/transcription-fix/brief-12/mutations.json",
+    "tests/artifacts/transcription-fix/brief-12/tests.txt",
+    "tests/artifacts/transcription-fix/brief-12/build-checks.json",
+    "tests/artifacts/transcription-fix/brief-12/review-result.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 4,
+    "ac_total": 4,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 277300,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host version, exact model id/effort, usage and billing counters not exposed; developer identifies GPT-6 Codex.",
+    "Initial instruction reads preceded first timestamp; elapsed excludes unmeasured preparation, not reconstructed.",
+    "batch_id/comparison_id: no batch or comparison experiment.",
+    "active_wall_ms: separate waiting intervals not collected.",
+    "quality false positives, unknown defects and regressions: no independent review or follow-up observation."
+  ],
+  "pending": [
+    "134 environment-dependent integration tests; DATABASE_URL, REDIS_URL and S3_ENDPOINT absent",
+    "OWN-002 independent Anthropic review: 60s timeout, no verdict"
+  ]
+}

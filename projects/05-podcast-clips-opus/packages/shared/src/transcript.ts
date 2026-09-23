@@ -8,6 +8,7 @@ export const STT_MAX_ATTEMPTS = 3;
 export const STT_TIMEOUT_MS = 120_000;
 export const STT_JOB_TIMEOUT_MS = 30 * 60_000;
 export interface TranscriptTimingIssue {
+  reason?: 'bounds' | 'order'; previous_start_seconds?: number;
   kind: 'word' | 'segment'; index: number; chunk_index?: number;
   start_seconds: number | null; end_seconds: number | null; duration_seconds: number; excess_seconds: number | null;
 }
@@ -21,7 +22,7 @@ function record(value: unknown): Record<string, unknown> {
 function timing(row: Record<string, unknown>, duration: number, kind: 'word' | 'segment', index: number): { start: number; end: number } {
   const { start, end } = row;
   if (typeof start !== 'number' || typeof end !== 'number' || !Number.isFinite(start) || !Number.isFinite(end) ||
-    start < 0 || end < start || end > duration) throw new TranscriptError({ kind, index,
+    start < 0 || end < start || end > duration) throw new TranscriptError({ reason: 'bounds', kind, index,
       ...(Number.isInteger(row.chunk_index) ? { chunk_index: Number(row.chunk_index) } : {}),
       start_seconds: typeof start === 'number' && Number.isFinite(start) ? start : null,
       end_seconds: typeof end === 'number' && Number.isFinite(end) ? end : null,
@@ -36,7 +37,11 @@ export function parseTranscript(value: unknown, duration: number): TranscriptRes
   let previous = -1;
   const words = row.words.map((value, index) => {
     const word = record(value), time = timing(word, duration, 'word', index);
-    if (typeof word.word !== 'string' || !word.word.trim() || time.start < previous) throw new TranscriptError();
+    if (typeof word.word !== 'string' || !word.word.trim()) throw new TranscriptError();
+    if (time.start < previous) throw new TranscriptError({ reason: 'order', kind: 'word', index,
+      ...(Number.isInteger(word.chunk_index) ? { chunk_index: Number(word.chunk_index) } : {}),
+      start_seconds: time.start, end_seconds: time.end, previous_start_seconds: previous,
+      duration_seconds: duration, excess_seconds: null });
     previous = time.start;
     return { word: word.word, ...time, ...(Number.isInteger(word.chunk_index) ? { chunk_index: Number(word.chunk_index) } : {}) };
   });

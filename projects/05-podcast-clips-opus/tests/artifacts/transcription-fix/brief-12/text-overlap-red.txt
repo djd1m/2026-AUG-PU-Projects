@@ -1,0 +1,31 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-merge.test.ts (4 tests | 1 failed | 3 skipped) 14ms
+   × TR-003 overlap merge with pauses > different overlap text merges monotonically by time 12ms
+     → Не удалось собрать транскрипт: {"reason":"order","kind":"word","index":1,"chunk_index":1,"start_seconds":173.3,"end_seconds":173.9,"previous_start_seconds":173.4,"duration_seconds":237.433,"excess_seconds":null}
+   ↓ TR-003 overlap merge with pauses > preserves uncovered seam words including exact equality inside overlap
+   ↓ TR-003 overlap merge with pauses > merge failure names 'order' and numbers
+   ↓ TR-003 overlap merge with pauses > merge failure names 'bounds' and numbers
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-merge.test.ts > TR-003 overlap merge with pauses > different overlap text merges monotonically by time
+Error: Не удалось собрать транскрипт: {"reason":"order","kind":"word","index":1,"chunk_index":1,"start_seconds":173.3,"end_seconds":173.9,"previous_start_seconds":173.4,"duration_seconds":237.433,"excess_seconds":null}
+ ❯ mergeWords apps/worker/src/stt/merge.ts:37:49
+     35|   return validated;
+     36|   } catch (error) {
+     37|     if (error instanceof TranscriptError) throw new TranscriptMergeErr…
+       |                                                 ^
+     38|     throw error;
+     39|   }
+ ❯ tests/transcription-merge.test.ts:28:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  07:05:00
+   Duration  473ms (transform 123ms, setup 0ms, collect 135ms, tests 14ms, environment 0ms, prepare 111ms)
+
