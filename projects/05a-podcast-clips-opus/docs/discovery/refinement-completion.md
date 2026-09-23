@@ -76,3 +76,28 @@ exit=2   ← ЗАКОННЫЙ ответ: Specification.md §1 объявляе�
    менять только заголовок.
 
 Status: completed
+
+## Правка после амендмента канона (координатор, 2026-09-23, после первой сдачи)
+
+Перечитал `docs/canon.md` после уведомления координатора (§4/§5 `account.role`, §7 `/admin/*` +
+роль `operator`, §9 — 17 событий, §12 новые строки). Свёл шесть файлов с обновлённым каноном:
+
+- `usage_attempt` → `spend_ledger`/`quota_counter`: уже было закрыто в `model-cost-contract.md`
+  разделом «Расхождение со Specification — закрыто» на момент правки — без изменений.
+- `landing_visited(source=direct)`, `email_verified`, перекрытие кусков 5 с, «нет speaker →
+  субтитры без подписи, задача продолжается», отдельный `job_id` на `POST …/complete` (202) — во
+  всех шести файлах уже были согласованы с этими значениями ДО амендмента (взяты напрямую из
+  ADR.md, который канон и подтвердил), правок не потребовалось.
+- **Реальная правка:** `ops spend today` как CLI-адрес расхода — снят из
+  `model-cost-contract.md` (`**Где виден расход:**`) и `Completion.md` (§3 «Наблюдаемость», §7
+  «Operations») и заменён на единственный адрес `/admin/spend` (роль `operator`); добавлено явное
+  примечание, что CLI `ops` канон сузил до `ops grant-operator <email>`.
+- **Мелкая правка для полноты:** `long-job-contract.md` — в список детерминированных `jobId`
+  BullMQ добавлен `{job_id}:stt:prepare` (новая строка canon §3, подготовительный этап до
+  нарезки на куски).
+
+Все четыре ворот перепрогнаны после правки — коды не изменились: `check-job-contract.cjs` → 0,
+`check-model-cost.cjs` → 0, `check-webhook-contract.cjs` → 2 (законно), `check-embed-contract.cjs`
+→ 2 (законно).
+
+Status: completed

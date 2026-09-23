@@ -125,7 +125,7 @@ bash scripts/check-cjm.sh https://clipmkr.ru
 | Что | Где | Формат |
 |---|---|---|
 | Журнал | stdout контейнеров (`docker compose logs`) | JSON: `job_id`, шаг, длительность, результат |
-| Расход на модели | `/admin/spend` (веб), `ops spend today` (CLI) | по вызову и по аккаунту; раньше счёта провайдера — `model-cost-contract.md` |
+| Расход на модели | `/admin/spend` (веб-страница, роль `operator`, canon §7) | по вызову и по аккаунту; раньше счёта провайдера — `model-cost-contract.md` |
 | Отказы задач | `job_failed` с причиной из 9 значений; доля по причинам | `/admin/metrics` |
 | Долгая задача | `job.heartbeat_at`, `job.attempt_count` | `GET /api/jobs/{job_id}`, `long-job-contract.md` |
 | Аудит операторских действий | `audit_log` | кто/что/когда/причина, FR-clips-11 |
@@ -237,8 +237,11 @@ bash scripts/check-cjm.sh https://clipmkr.ru
 
 ### Operations
 
-- Продакшн-доступ: только через `ops …` CLI внутри `worker-ai` (`docker compose exec worker-ai
-  ops …`) и веб-страницы `/admin/*` — прямого доступа к БД в проде нет в этом раннере.
+- Продакшн-доступ оператора — веб-страницы `/admin/*` под ролью `account.role = 'operator'`
+  (canon §5, §7); роль проверяется и в middleware, и в каждом серверном обработчике (ADR-012).
+  CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) сужен каноном до ОДНОЙ
+  команды — выдачи роли: `ops grant-operator <email>` (canon §7, правка координатора
+  2026-09-23). Прямого доступа к БД в проде нет в этом раннере.
 - Runbook на этот файл (§2 «Развёртывание», §5 «Проба STT дня 1»).
 - Эскалация: на неделе — ручная (владелец/оператор смотрят `/admin/spend` раз в день, §3); нет
   автоматической эскалации, потому что она сама была бы внешним вызовом вне скоупа недели.
