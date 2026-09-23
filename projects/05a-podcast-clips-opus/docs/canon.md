@@ -43,6 +43,7 @@
 
 | Очередь | Потребитель | `jobId` | Полезная нагрузка |
 |---|---|---|---|
+| `stt` | `worker-ai` | `{job_id}:stt:prepare` — подготовка (magic bytes, ffprobe, нарезка) | `job_id` |
 | `stt` | `worker-ai` | `{job_id}:stt:{chunk_idx}` | `job_id`, `chunk_idx` |
 | `llm` | `worker-ai` | `{job_id}:llm` | `job_id` |
 | `render` | `worker-render` | `{clip_id}:render` | `clip_id` |
@@ -133,6 +134,10 @@
 | `RENDER_CONCURRENCY` | worker-render | дефолт `1` разрешён | параллельные рендеры |
 | `LOG_LEVEL` | все | дефолт `info` разрешён | — |
 | `WEB_PORT`, `CADDY_HTTP_PORT`, `CADDY_HTTPS_PORT` | compose | `${VAR:-default}` | хостовые порты |
+| `REDIS_PASSWORD` | redis, web, worker-ai, worker-render | без дефолта | пароль Redis в сети compose |
+| `APP_VERSION` | compose | без дефолта | тег собранных образов |
+| `MINIO_TAG` | compose (тестовый профиль) | без дефолта | явный тег образа MinIO |
+| `RENDER_CPUS` | compose | дефолт `2` разрешён | лимит CPU контейнера `worker-render` |
 
 Всего 7 потолков: LIMIT_STT_USER_SEC_DAY, LIMIT_UPLOADS_USER_DAY, LIMIT_LLM_USER_KOP_DAY, LIMIT_STT_GLOBAL_SEC_DAY, LIMIT_LLM_GLOBAL_KOP_DAY, LIMIT_LLM_ATTEMPTS_JOB, LIMIT_LLM_KOP_JOB.
 
