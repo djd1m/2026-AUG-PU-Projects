@@ -7,6 +7,9 @@ import type { Attempt } from '../packages/db/src/attempts';
 import { loadLimits } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
 import { ProviderError } from '../apps/worker/src/stt/client';
+import { parseTranscript } from '../packages/shared/src/transcript';
+import { acceptTranscript } from '@clipmaker/db';
+import { ProbeError } from '../apps/worker/src/media/probe';
 const state = vi.hoisted(() => ({ charged: false, calls: 0, trace: [] as string[], failure: '' }));
 vi.mock('@clipmaker/db', async importOriginal => {
   const original = await importOriginal<typeof import('../packages/db/src/index')>();
@@ -25,11 +28,12 @@ const attempt: Attempt = { video_id: 'video', fence: 1, stage: 'stt', series_no:
 const pool = {} as Pool, limits = loadLimits(environment());
 const valid = { language: 'ru', words: [{ word: 'Привет', start: 1, end: 2 }], segments: [] };
 beforeEach(() => { state.charged = false; state.calls = 0; state.trace = []; state.failure = ''; });
-afterEach(async () => { await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
+afterEach(async () => { vi.restoreAllMocks(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
 async function fixture() {
   const directory = await mkdtemp(join(tmpdir(), 'n5-stt-order-')); dirs.push(directory);
   const deps = { pool, limits, directory, spendPath: join(directory, 'model-spend.jsonl'),
     extract: async () => ({ path: 'audio', pauses: [] }),
+    probeAudio: vi.fn(async () => ({ durationSec: 120, hasAudio: true })),
     chunks: async function* () { const path = join(directory, 'chunk'); await writeFile(path, 'fake');
       yield { path, offsetSeconds: 0, durationSeconds: 120, hardCut: false, index: 0 }; },
     enqueue: vi.fn(async () => { state.trace.push('enqueue'); }),
@@ -38,6 +42,51 @@ async function fixture() {
   return deps;
 }
 describe('STT operation order with deterministic dependencies', () => {
+  async function tailFixture(excess: number) {
+    const deps = await fixture();
+    deps.probeAudio.mockResolvedValue({ durationSec: 237.55, hasAudio: true });
+    deps.chunks = async function* () {
+      for (const [index, offsetSeconds] of [0, 178].entries()) {
+        const path = join(deps.directory, `chunk-${index}`); await writeFile(path, 'fake');
+        yield { path, offsetSeconds, durationSeconds: index === 0 ? 180 : 65, hardCut: false, index };
+      }
+    };
+    deps.transcriber.transcribe.mockResolvedValueOnce(valid).mockResolvedValueOnce({
+      language: 'ru', words: [{ word: 'хвост', start: 59, end: 237.433 + excess - 178 }], segments: [],
+    });
+    return deps;
+  }
+  it('TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const deps = await tailFixture(0.1);
+    await transcribeSource('source', 237.433, attempt, deps);
+    const transcript = vi.mocked(acceptTranscript).mock.calls.at(-1)![2];
+    expect(transcript.words.at(-1)).toMatchObject({ word: 'хвост', end: 237.433 });
+    expect(parseTranscript(transcript, 237.433)).toEqual(transcript);
+    expect(deps.enqueue).toHaveBeenCalled();
+    expect(deps.probeAudio).toHaveBeenCalledWith('audio', expect.any(Number));
+    const log = warn.mock.calls.map(([line]) => JSON.parse(line)).find(row => row.event === 'stt_timestamp_clamped');
+    expect(log).toMatchObject({ video_id: 'video', fence: 1, kind: 'word', index: 1, chunk_index: 1, end_seconds: 237.533, duration_seconds: 237.433 });
+    expect(log.excess_seconds).toBeCloseTo(0.1);
+  });
+  it('TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const deps = await tailFixture(5);
+    await expect(transcribeSource('source', 237.433, attempt, deps)).rejects.toThrow();
+    expect(state.failure).toBe('stt_failed');
+    expect(state.trace).not.toContain('commit'); expect(deps.enqueue).not.toHaveBeenCalled();
+    expect(deps.spend).toHaveBeenCalledWith(deps.spendPath, expect.objectContaining({ result: 'success', chunk_index: 1 }));
+    const log = JSON.parse(error.mock.calls.at(-1)![0]);
+    expect(log).toMatchObject({ event: 'stt_merge_failed', video_id: 'video', fence: 1, kind: 'word', index: 1,
+      chunk_index: 1, end_seconds: 242.433, duration_seconds: 237.55 });
+    expect(log.excess_seconds).toBeCloseTo(4.883);
+  });
+  it('failed MP3 measurement stops before provider and cannot become a source-file refund', async () => {
+    const deps = await fixture(); deps.probeAudio.mockRejectedValueOnce(new ProbeError('probe_timeout'));
+    await expect(transcribeSource('source', 120, attempt, deps)).rejects.not.toBeInstanceOf(ProbeError);
+    expect(state.failure).toBe('stt_failed'); expect(deps.transcriber.transcribe).not.toHaveBeenCalled();
+    expect(deps.enqueue).not.toHaveBeenCalled();
+  });
   it('minutes committed BEFORE first provider call; transcript committed BEFORE enqueue', async () => {
     const deps = await fixture();
     deps.transcriber.transcribe.mockImplementation(async () => {

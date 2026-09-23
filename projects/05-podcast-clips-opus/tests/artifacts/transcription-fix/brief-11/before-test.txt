@@ -16,8 +16,13 @@ const dirs: string[] = [];
 async function temp() { const dir = await mkdtemp(join(tmpdir(), 'n5-stt-')); dirs.push(dir); return dir; }
 afterEach(async () => { vi.useRealTimers(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
 describe('STT boundary and media', () => {
-  it('TR-001 modeled MP3 tail is accepted, logged and clipped for strict persistence', () => {
-    const videoDuration = 2.433, audioDuration = videoDuration + 0.1;
+  it('TR-001 real AAC extraction: measured MP3 tail is accepted, logged and clipped for strict persistence', async () => {
+    const dir = await temp(), source = join(dir, 'source.m4a'), signal = AbortSignal.timeout(10_000);
+    await runFfmpeg(['-y', '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '2.433', '-c:a', 'aac', source], signal);
+    const videoDuration = (await probeFile(source)).durationSec;
+    const audio = await extractAudio(source, join(dir, 'audio.mp3'), videoDuration, signal);
+    const audioDuration = (await probeFile(audio.path)).durationSec;
+    expect(audioDuration).toBeGreaterThan(videoDuration);
     const tail = { language: 'ru', words: [{ word: 'хвост', start: videoDuration - 0.2, end: audioDuration }],
       segments: [{ text: 'хвост', start: videoDuration - 0.2, end: audioDuration }] };
     const log = vi.fn();
@@ -25,44 +30,6 @@ describe('STT boundary and media', () => {
     expect(parseTranscript(merged, videoDuration)).toEqual(merged);
     expect(merged.words[0]?.end).toBe(videoDuration); expect(merged.segments[0]?.end).toBe(videoDuration);
     expect(log).toHaveBeenCalledTimes(2);
-    for (const [index, kind] of ['word', 'segment'].entries()) {
-      expect(log.mock.calls[index]?.[0]).toMatchObject({ kind, index: 0, end_seconds: audioDuration, duration_seconds: videoDuration });
-      expect(log.mock.calls[index]?.[0].excess_seconds).toBeCloseTo(0.1);
-    }
-  });
-  it('TR-001 rejects a five-second excess beyond the measured MP3 without clamping', () => {
-    const videoDuration = 2.433, audioDuration = videoDuration + 0.1;
-    const tail = { ...valid, words: [{ word: 'хвост', start: videoDuration - 0.2, end: videoDuration + 5 }] };
-    const log = vi.fn();
-    // A valid chunk result must still be rejected at the merged audio boundary.
-    expect(() => mergeWords([{ result: tail, offsetSeconds: 0, durationSeconds: videoDuration + 5 }],
-      videoDuration, audioDuration, log)).toThrow();
-    expect(log).not.toHaveBeenCalled();
-  });
-  it('TR-001 equal audio and video durations are accepted unchanged without clamp logs', () => {
-    const duration = 2.433;
-    const transcript = { language: 'ru', words: [{ word: 'конец', start: duration - 0.2, end: duration }],
-      segments: [{ text: 'конец', start: duration - 0.2, end: duration }] };
-    const log = vi.fn();
-    const merged = mergeWords([{ result: transcript, offsetSeconds: 0, durationSeconds: duration }], duration, duration, log);
-    expect(merged).toEqual({ ...transcript, words: [{ ...transcript.words[0], chunk_index: 0 }] });
-    expect(parseTranscript(merged, duration)).toEqual(merged);
-    expect(log).not.toHaveBeenCalled();
-  });
-  it('real AAC extraction accepts timestamps within both measured durations without assuming encoder padding', async () => {
-    const dir = await temp(), source = join(dir, 'source.m4a'), signal = AbortSignal.timeout(10_000);
-    await runFfmpeg(['-y', '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '2.433', '-c:a', 'aac', source], signal);
-    const videoDuration = (await probeFile(source)).durationSec;
-    const audio = await extractAudio(source, join(dir, 'audio.mp3'), videoDuration, signal);
-    const audioDuration = (await probeFile(audio.path)).durationSec;
-    const end = Math.min(videoDuration, audioDuration);
-    const tail = { language: 'ru', words: [{ word: 'конец', start: end - 0.2, end }],
-      segments: [{ text: 'конец', start: end - 0.2, end }] };
-    const log = vi.fn();
-    const merged = mergeWords([{ result: tail, offsetSeconds: 0, durationSeconds: audioDuration }], videoDuration, audioDuration, log);
-    expect(parseTranscript(merged, videoDuration)).toEqual(merged);
-    expect(merged.words[0]?.end).toBe(end); expect(merged.segments[0]?.end).toBe(end);
-    expect(log).not.toHaveBeenCalled();
   });
   it('TR-001 keeps strict bounds for words, segments and invalid duration; rejects whole words outside video', () => {
     for (const duration of [NaN, Infinity, 0, -1]) expect(() => parseTranscript(valid, duration)).toThrow();

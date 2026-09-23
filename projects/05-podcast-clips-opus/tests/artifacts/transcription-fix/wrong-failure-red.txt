@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-order.test.ts (8 tests | 1 failed | 7 skipped) 24ms
+   ↓ STT operation order with deterministic dependencies > TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict
+   × STT operation order with deterministic dependencies > TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes 22ms
+     → expected 'no_timestamps' to be 'stt_failed' // Object.is equality
+   ↓ STT operation order with deterministic dependencies > failed MP3 measurement stops before provider and cannot become a source-file refund
+   ↓ STT operation order with deterministic dependencies > minutes committed BEFORE first provider call; transcript committed BEFORE enqueue
+   ↓ STT operation order with deterministic dependencies > retry authorizes again before calling provider; timeout also has spend outcome
+   ↓ STT operation order with deterministic dependencies > ADR-003 empty words stop the stage before select; no invented words
+   ↓ STT operation order with deterministic dependencies > all three failures logged and authorized; no select after retry exhaustion
+   ↓ STT operation order with deterministic dependencies > unwritable spend ledger fails closed before network call
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-order.test.ts > STT operation order with deterministic dependencies > TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes
+AssertionError: expected 'no_timestamps' to be 'stt_failed' // Object.is equality
+
+Expected: "stt_failed"
+Received: "no_timestamps"
+
+ ❯ tests/transcription-order.test.ts:76:27
+     74|     const deps = await tailFixture(5);
+     75|     await expect(transcribeSource('source', 237.433, attempt, deps)).r…
+     76|     expect(state.failure).toBe('stt_failed');
+       |                           ^
+     77|     expect(state.trace).not.toContain('commit'); expect(deps.enqueue).…
+     78|     expect(deps.spend).toHaveBeenCalledWith(deps.spendPath, expect.obj…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  06:32:58
+   Duration  979ms (transform 393ms, setup 0ms, collect 666ms, tests 24ms, environment 0ms, prepare 88ms)
+

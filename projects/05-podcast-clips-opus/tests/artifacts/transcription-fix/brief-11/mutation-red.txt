@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription.test.ts (20 tests | 1 failed | 19 skipped) 17ms
+   × STT boundary and media > TR-001 modeled MP3 tail is accepted, logged and clipped for strict persistence 15ms
+     → Не удалось собрать транскрипт
+   ↓ STT boundary and media > TR-001 rejects a five-second excess beyond the measured MP3 without clamping
+   ↓ STT boundary and media > TR-001 equal audio and video durations are accepted unchanged without clamp logs
+   ↓ STT boundary and media > real AAC extraction accepts timestamps within both measured durations without assuming encoder padding
+   ↓ STT boundary and media > TR-001 keeps strict bounds for words, segments and invalid duration; rejects whole words outside video
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text"}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text","start":0,"end":null}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > ADR-003 rejects missing timestamps: {"language":"ru","words":[{"word":"text","start":null,"end":1}],"segments":[{"text":"Привет","start":0.2,"end":1}]}
+   ↓ STT boundary and media > rejects negative, reversed, out-of-range and nonmonotonic words
+   ↓ STT boundary and media > merge offsets second chunk and deduplicates overlap without sorting away a defect
+   ↓ STT boundary and media > cuts at a silence midpoint; otherwise explicitly marks hard cut; keeps 2s overlap
+   ↓ STT boundary and media > requires explicit mode/key; fake never silently replaces live
+   ↓ STT boundary and media > provider pin source guard and unique timestamp option
+   ↓ STT boundary and media > sends measured JSON contract, pins Together and rejects 5xx/missing words/empty body
+   ↓ STT boundary and media > abort propagates to the HTTP request and reports timeout
+   ↓ STT boundary and media > 25 MB ceiling prevents any HTTP request
+   ↓ STT boundary and media > spend ledger records attempt before outcome, includes timeouts without secrets
+   ↓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription.test.ts > STT boundary and media > TR-001 modeled MP3 tail is accepted, logged and clipped for strict persistence
+Error: Не удалось собрать транскрипт
+ ❯ mergeWords apps/worker/src/stt/merge.ts:34:49
+     32|   return validated;
+     33|   } catch (error) {
+     34|     if (error instanceof TranscriptError) throw new TranscriptMergeErr…
+       |                                                 ^
+     35|     throw error;
+     36|   }
+ ❯ tests/transcription.test.ts:24:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  06:46:38
+   Duration  876ms (transform 371ms, setup 0ms, collect 454ms, tests 17ms, environment 1ms, prepare 135ms)
+

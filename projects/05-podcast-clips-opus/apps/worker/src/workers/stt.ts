@@ -2,7 +2,7 @@ import { acceptProbe, deferProbe, failProbe, getProbeSource, auditAttempt, heart
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { withSource, type Download, freeBytes } from '../media/download.js';
-import { probeFile, ProbeError, type ProbeResult } from '../media/probe.js';
+import { probeFile, ProbeError, PROBE_TIMEOUT_MS, type ProbeResult } from '../media/probe.js';
 import { dirname, join } from 'node:path';
 import { unlink } from 'node:fs/promises';
 import { acceptTranscript, authorizeSttCall, failTranscription, transcriptionDeadline } from '@clipmaker/db';
@@ -10,7 +10,7 @@ import { parseTranscript, TranscriptError, STT_MAX_ATTEMPTS, type TranscriptResu
 import { extractAudio } from '../stt/extract.js';
 import { splitAudio } from '../stt/chunker.js';
 import { ProviderError, type Transcriber } from '../stt/client.js';
-import { mergeWords } from '../stt/merge.js';
+import { mergeWords, TranscriptMergeError } from '../stt/merge.js';
 import { recordModelSpend, type SpendEvent } from '../stt/spend.js';
 export function fileFailure(probe: ProbeResult): VideoFailureReason | null {
   if (!probe.hasAudio) return 'no_audio';
@@ -23,10 +23,11 @@ export interface TranscriptionDependencies {
   pool: Pool; limits: Limits; transcriber: Transcriber; spendPath: string;
   enqueue: (attempt: Attempt) => Promise<void>;
   extract?: typeof extractAudio; chunks?: typeof splitAudio; spend?: typeof recordModelSpend;
+  probeAudio?: typeof probeFile;
   clock?: () => Date;
 }
 // Adapted from jan-clone/workers/stt.ts: offset merge + atomic save then enqueue.
-// Probe owns initial quota and the source file; this stage never probes/downloads.
+// Probe owns initial quota and the source file; this stage measures only its extracted MP3.
 export async function transcribeSource(file: string, duration: number, attempt: Attempt, deps: TranscriptionDependencies): Promise<void> {
   const clock = deps.clock ?? (() => new Date());
   const deadline = await transcriptionDeadline(deps.pool, attempt);
@@ -36,6 +37,17 @@ export async function transcribeSource(file: string, duration: number, attempt: 
   let next: Attempt | null = null;
   try {
     const audio = await (deps.extract ?? extractAudio)(file, join(dirname(file), 'audio.mp3'), duration, signal);
+    signal.throwIfAborted();
+    let audioDuration: number;
+    try {
+      const measured = await (deps.probeAudio ?? probeFile)(audio.path, Math.max(1, Math.min(PROBE_TIMEOUT_MS, deadline - clock().getTime())));
+      if (!measured.hasAudio || !Number.isFinite(measured.durationSec) || measured.durationSec <= 0) throw new Error('Непригодная длительность MP3');
+      audioDuration = measured.durationSec;
+    } catch (cause) {
+      // An extracted-file fault must not reach probeSource's source rejection/refund path.
+      throw new Error('Не удалось измерить извлечённый MP3', { cause });
+    }
+    signal.throwIfAborted();
     const results: { result: TranscriptResult; offsetSeconds: number; durationSeconds: number }[] = [];
     for await (const chunk of (deps.chunks ?? splitAudio)(audio, dirname(file), duration, signal)) {
       if (chunk.hardCut) console.warn(JSON.stringify({ event: 'stt_hard_cut', video_id: attempt.video_id, chunk_index: chunk.index, offset_seconds: chunk.offsetSeconds }));
@@ -62,8 +74,12 @@ export async function transcribeSource(file: string, duration: number, attempt: 
         }
       } finally { await unlink(chunk.path); }
     }
-    next = await acceptTranscript(deps.pool, attempt, mergeWords(results, duration), results.length, clock());
+    const transcript = mergeWords(results, duration, audioDuration, issue => console.warn(JSON.stringify({
+      event: 'stt_timestamp_clamped', video_id: attempt.video_id, fence: attempt.fence, audio_duration_seconds: audioDuration, ...issue })));
+    next = await acceptTranscript(deps.pool, attempt, transcript, results.length, clock());
   } catch (error) {
+    if (error instanceof TranscriptMergeError) console.error(JSON.stringify({ event: 'stt_merge_failed',
+      video_id: attempt.video_id, fence: attempt.fence, video_duration_seconds: duration, ...error.timingIssue }));
     await failTranscription(deps.pool, attempt, signal.aborted ? 'stalled' : error instanceof TranscriptError ? 'no_timestamps' : 'stt_failed', clock());
     throw error;
   }

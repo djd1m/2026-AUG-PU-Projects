@@ -1,0 +1,37 @@
+
+> n5-clipmaker@0.1.0 typecheck
+> npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json
+
+
+> @clipmaker/web@0.1.0 typecheck
+> tsc --noEmit
+
+
+> @clipmaker/worker@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/db@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/queue@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/s3@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @clipmaker/shared@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+tests/artifacts/transcription-fix/brief-11/before-test.ts(6,65): error TS2307: Cannot find module '../packages/shared/src/transcript' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(7,31): error TS2307: Cannot find module '../packages/shared/src/config' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(8,35): error TS2307: Cannot find module '../apps/worker/src/stt/client' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(9,45): error TS2307: Cannot find module '../apps/worker/src/stt/chunker' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(10,41): error TS2307: Cannot find module '../apps/worker/src/stt/extract' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(11,28): error TS2307: Cannot find module '../apps/worker/src/stt/merge' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(12,27): error TS2307: Cannot find module '../apps/worker/src/media/probe' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(13,34): error TS2307: Cannot find module '../apps/worker/src/stt/spend' or its corresponding type declarations.
+tests/artifacts/transcription-fix/brief-11/before-test.ts(57,29): error TS7006: Parameter 'w' implicitly has an 'any' type.

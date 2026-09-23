@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/transcription.test.ts (20 tests | 15 skipped) 746ms
+   ✓ STT boundary and media > real AAC extraction accepts timestamps within both measured durations without assuming encoder padding  725ms
+ ✓ tests/transcription-order.test.ts (8 tests | 6 skipped) 38ms
+
+ Test Files  2 passed (2)
+      Tests  7 passed | 21 skipped (28)
+   Start at  06:46:21
+   Duration  2.45s (transform 532ms, setup 0ms, collect 993ms, tests 784ms, environment 0ms, prepare 214ms)
+

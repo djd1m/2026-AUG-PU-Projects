@@ -1,0 +1,39 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/transcription-order.test.ts > STT operation order with deterministic dependencies > TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict
+{"event":"stt_merge_failed","video_id":"video","fence":1,"video_duration_seconds":237.433,"kind":"word","index":1,"chunk_index":1,"start_seconds":237,"end_seconds":237.533,"duration_seconds":237.433,"excess_seconds":0.09999999999999432}
+
+ ❯ tests/transcription-order.test.ts (8 tests | 1 failed | 7 skipped) 20ms
+   × STT operation order with deterministic dependencies > TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict 18ms
+     → Не удалось собрать транскрипт
+   ↓ STT operation order with deterministic dependencies > TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes
+   ↓ STT operation order with deterministic dependencies > failed MP3 measurement stops before provider and cannot become a source-file refund
+   ↓ STT operation order with deterministic dependencies > minutes committed BEFORE first provider call; transcript committed BEFORE enqueue
+   ↓ STT operation order with deterministic dependencies > retry authorizes again before calling provider; timeout also has spend outcome
+   ↓ STT operation order with deterministic dependencies > ADR-003 empty words stop the stage before select; no invented words
+   ↓ STT operation order with deterministic dependencies > all three failures logged and authorized; no select after retry exhaustion
+   ↓ STT operation order with deterministic dependencies > unwritable spend ledger fails closed before network call
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-order.test.ts > STT operation order with deterministic dependencies > TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict
+Error: Не удалось собрать транскрипт
+ ❯ mergeWords apps/worker/src/stt/merge.ts:34:49
+     32|   return validated;
+     33|   } catch (error) {
+     34|     if (error instanceof TranscriptError) throw new TranscriptMergeErr…
+       |                                                 ^
+     35|     throw error;
+     36|   }
+ ❯ Module.transcribeSource apps/worker/src/workers/stt.ts:77:24
+ ❯ tests/transcription-order.test.ts:62:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  06:32:50
+   Duration  1.18s (transform 467ms, setup 0ms, collect 728ms, tests 20ms, environment 0ms, prepare 175ms)
+

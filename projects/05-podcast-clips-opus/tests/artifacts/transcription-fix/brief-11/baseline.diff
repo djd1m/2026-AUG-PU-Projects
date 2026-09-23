@@ -1,0 +1,296 @@
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/stt/merge.ts b/projects/05-podcast-clips-opus/apps/worker/src/stt/merge.ts
+index 280cd4e..d406a6f 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/stt/merge.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/stt/merge.ts
+@@ -1,5 +1,10 @@
+-import { parseTranscript, type TranscriptResult, type TranscriptWord, type TranscriptSegment } from '@clipmaker/shared/transcript';
+-export function mergeWords(chunks: { result: TranscriptResult; offsetSeconds: number; durationSeconds: number }[], duration: number): TranscriptResult {
++import { parseTranscript, TranscriptError, type TranscriptTimingIssue, type TranscriptResult, type TranscriptWord, type TranscriptSegment } from '@clipmaker/shared/transcript';
++export class TranscriptMergeError extends Error {
++  constructor(readonly timingIssue?: TranscriptTimingIssue) { super('Не удалось собрать транскрипт'); }
++}
++export function mergeWords(chunks: { result: TranscriptResult; offsetSeconds: number; durationSeconds: number }[], duration: number,
++  audioDuration = duration, onClamp = (issue: TranscriptTimingIssue) => console.warn(JSON.stringify({ event: 'stt_timestamp_clamped', ...issue }))): TranscriptResult {
++  try {
+   const words: TranscriptWord[] = [], segments: TranscriptSegment[] = [];
+   for (const [index, chunk] of chunks.entries()) {
+     const result = parseTranscript(chunk.result, chunk.durationSeconds);
+@@ -11,5 +16,22 @@ export function mergeWords(chunks: { result: TranscriptResult; offsetSeconds: nu
+     }
+     segments.push(...result.segments.map(segment => ({ ...segment, start: segment.start + chunk.offsetSeconds, end: segment.end + chunk.offsetSeconds })));
+   }
+-  return parseTranscript({ language: chunks[0]?.result.language, words, segments }, duration);
++  // The MP3 is the measured recognition boundary. No tolerance at this boundary.
++  const merged = parseTranscript({ language: chunks[0]?.result.language, words, segments }, audioDuration);
++  const adjustments: TranscriptTimingIssue[] = [];
++  function clamp<T extends TranscriptWord | TranscriptSegment>(row: T, kind: 'word' | 'segment', index: number): T {
++    // Only an ending crossing into the measured MP3 tail can be shortened.
++    if (row.end <= duration || row.start > duration) return row;
++    adjustments.push({ kind, index, ...('chunk_index' in row ? { chunk_index: row.chunk_index } : {}),
++      start_seconds: row.start, end_seconds: row.end, duration_seconds: duration, excess_seconds: row.end - duration });
++    return { ...row, end: duration };
++  }
++  const validated = parseTranscript({ ...merged, words: merged.words.map((row, i) => clamp(row, 'word', i)),
++    segments: merged.segments.map((row, i) => clamp(row, 'segment', i)) }, duration);
++  adjustments.forEach(onClamp);
++  return validated;
++  } catch (error) {
++    if (error instanceof TranscriptError) throw new TranscriptMergeError(error.timingIssue);
++    throw error;
++  }
+ }
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts b/projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts
+index 1e294aa..82a2346 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts
+@@ -2,7 +2,7 @@ import { acceptProbe, deferProbe, failProbe, getProbeSource, auditAttempt, heart
+ import type { Limits } from '@clipmaker/shared/config';
+ import type { VideoFailureReason } from '@clipmaker/shared/enums';
+ import { withSource, type Download, freeBytes } from '../media/download.js';
+-import { probeFile, ProbeError, type ProbeResult } from '../media/probe.js';
++import { probeFile, ProbeError, PROBE_TIMEOUT_MS, type ProbeResult } from '../media/probe.js';
+ import { dirname, join } from 'node:path';
+ import { unlink } from 'node:fs/promises';
+ import { acceptTranscript, authorizeSttCall, failTranscription, transcriptionDeadline } from '@clipmaker/db';
+@@ -10,7 +10,7 @@ import { parseTranscript, TranscriptError, STT_MAX_ATTEMPTS, type TranscriptResu
+ import { extractAudio } from '../stt/extract.js';
+ import { splitAudio } from '../stt/chunker.js';
+ import { ProviderError, type Transcriber } from '../stt/client.js';
+-import { mergeWords } from '../stt/merge.js';
++import { mergeWords, TranscriptMergeError } from '../stt/merge.js';
+ import { recordModelSpend, type SpendEvent } from '../stt/spend.js';
+ export function fileFailure(probe: ProbeResult): VideoFailureReason | null {
+   if (!probe.hasAudio) return 'no_audio';
+@@ -23,10 +23,11 @@ export interface TranscriptionDependencies {
+   pool: Pool; limits: Limits; transcriber: Transcriber; spendPath: string;
+   enqueue: (attempt: Attempt) => Promise<void>;
+   extract?: typeof extractAudio; chunks?: typeof splitAudio; spend?: typeof recordModelSpend;
++  probeAudio?: typeof probeFile;
+   clock?: () => Date;
+ }
+ // Adapted from jan-clone/workers/stt.ts: offset merge + atomic save then enqueue.
+-// Probe owns initial quota and the source file; this stage never probes/downloads.
++// Probe owns initial quota and the source file; this stage measures only its extracted MP3.
+ export async function transcribeSource(file: string, duration: number, attempt: Attempt, deps: TranscriptionDependencies): Promise<void> {
+   const clock = deps.clock ?? (() => new Date());
+   const deadline = await transcriptionDeadline(deps.pool, attempt);
+@@ -36,6 +37,17 @@ export async function transcribeSource(file: string, duration: number, attempt:
+   let next: Attempt | null = null;
+   try {
+     const audio = await (deps.extract ?? extractAudio)(file, join(dirname(file), 'audio.mp3'), duration, signal);
++    signal.throwIfAborted();
++    let audioDuration: number;
++    try {
++      const measured = await (deps.probeAudio ?? probeFile)(audio.path, Math.max(1, Math.min(PROBE_TIMEOUT_MS, deadline - clock().getTime())));
++      if (!measured.hasAudio || !Number.isFinite(measured.durationSec) || measured.durationSec <= 0) throw new Error('Непригодная длительность MP3');
++      audioDuration = measured.durationSec;
++    } catch (cause) {
++      // An extracted-file fault must not reach probeSource's source rejection/refund path.
++      throw new Error('Не удалось измерить извлечённый MP3', { cause });
++    }
++    signal.throwIfAborted();
+     const results: { result: TranscriptResult; offsetSeconds: number; durationSeconds: number }[] = [];
+     for await (const chunk of (deps.chunks ?? splitAudio)(audio, dirname(file), duration, signal)) {
+       if (chunk.hardCut) console.warn(JSON.stringify({ event: 'stt_hard_cut', video_id: attempt.video_id, chunk_index: chunk.index, offset_seconds: chunk.offsetSeconds }));
+@@ -62,8 +74,12 @@ export async function transcribeSource(file: string, duration: number, attempt:
+         }
+       } finally { await unlink(chunk.path); }
+     }
+-    next = await acceptTranscript(deps.pool, attempt, mergeWords(results, duration), results.length, clock());
++    const transcript = mergeWords(results, duration, audioDuration, issue => console.warn(JSON.stringify({
++      event: 'stt_timestamp_clamped', video_id: attempt.video_id, fence: attempt.fence, audio_duration_seconds: audioDuration, ...issue })));
++    next = await acceptTranscript(deps.pool, attempt, transcript, results.length, clock());
+   } catch (error) {
++    if (error instanceof TranscriptMergeError) console.error(JSON.stringify({ event: 'stt_merge_failed',
++      video_id: attempt.video_id, fence: attempt.fence, video_duration_seconds: duration, ...error.timingIssue }));
+     await failTranscription(deps.pool, attempt, signal.aborted ? 'stalled' : error instanceof TranscriptError ? 'no_timestamps' : 'stt_failed', clock());
+     throw error;
+   }
+diff --git a/projects/05-podcast-clips-opus/packages/shared/src/transcript.ts b/projects/05-podcast-clips-opus/packages/shared/src/transcript.ts
+index 53d091e..f4ef112 100644
+--- a/projects/05-podcast-clips-opus/packages/shared/src/transcript.ts
++++ b/projects/05-podcast-clips-opus/packages/shared/src/transcript.ts
+@@ -7,33 +7,42 @@ export const STT_OVERLAP_SECONDS = 2;
+ export const STT_MAX_ATTEMPTS = 3;
+ export const STT_TIMEOUT_MS = 120_000;
+ export const STT_JOB_TIMEOUT_MS = 30 * 60_000;
++export interface TranscriptTimingIssue {
++  kind: 'word' | 'segment'; index: number; chunk_index?: number;
++  start_seconds: number | null; end_seconds: number | null; duration_seconds: number; excess_seconds: number | null;
++}
+ export class TranscriptError extends Error {
+-  constructor() { super('Нет пригодных таймкодов слов'); }
++  constructor(readonly timingIssue?: TranscriptTimingIssue) { super('Нет пригодных таймкодов слов'); }
+ }
+ function record(value: unknown): Record<string, unknown> {
+   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TranscriptError();
+   return value as Record<string, unknown>;
+ }
+-function timing(row: Record<string, unknown>, duration: number): { start: number; end: number } {
++function timing(row: Record<string, unknown>, duration: number, kind: 'word' | 'segment', index: number): { start: number; end: number } {
+   const { start, end } = row;
+   if (typeof start !== 'number' || typeof end !== 'number' || !Number.isFinite(start) || !Number.isFinite(end) ||
+-    start < 0 || end < start || end > duration) throw new TranscriptError();
++    start < 0 || end < start || end > duration) throw new TranscriptError({ kind, index,
++      ...(Number.isInteger(row.chunk_index) ? { chunk_index: Number(row.chunk_index) } : {}),
++      start_seconds: typeof start === 'number' && Number.isFinite(start) ? start : null,
++      end_seconds: typeof end === 'number' && Number.isFinite(end) ? end : null,
++      duration_seconds: duration, excess_seconds: typeof end === 'number' && Number.isFinite(end) ? Math.max(0, end - duration) : null });
+   return { start, end };
+ }
+ // Validate at both the provider boundary and the persistence boundary (ADR-003).
+ export function parseTranscript(value: unknown, duration: number): TranscriptResult {
++  if (!Number.isFinite(duration) || duration <= 0) throw new TranscriptError();
+   const row = record(value);
+   if (!Array.isArray(row.words) || row.words.length === 0) throw new TranscriptError();
+   let previous = -1;
+-  const words = row.words.map(value => {
+-    const word = record(value), time = timing(word, duration);
++  const words = row.words.map((value, index) => {
++    const word = record(value), time = timing(word, duration, 'word', index);
+     if (typeof word.word !== 'string' || !word.word.trim() || time.start < previous) throw new TranscriptError();
+     previous = time.start;
+     return { word: word.word, ...time, ...(Number.isInteger(word.chunk_index) ? { chunk_index: Number(word.chunk_index) } : {}) };
+   });
+   if (!Array.isArray(row.segments) || typeof row.language !== 'string' || !row.language.trim()) throw new TranscriptError();
+-  const segments = row.segments.map(value => {
+-    const segment = record(value), time = timing(segment, duration);
++  const segments = row.segments.map((value, index) => {
++    const segment = record(value), time = timing(segment, duration, 'segment', index);
+     if (typeof segment.text !== 'string' || (segment.speaker !== undefined && typeof segment.speaker !== 'string')) throw new TranscriptError();
+     return { text: segment.text, ...time, ...(typeof segment.speaker === 'string' ? { speaker: segment.speaker } : {}) };
+   });
+diff --git a/projects/05-podcast-clips-opus/tests/transcription-order.test.ts b/projects/05-podcast-clips-opus/tests/transcription-order.test.ts
+index 9fc9a8b..a8308d2 100644
+--- a/projects/05-podcast-clips-opus/tests/transcription-order.test.ts
++++ b/projects/05-podcast-clips-opus/tests/transcription-order.test.ts
+@@ -7,6 +7,9 @@ import type { Attempt } from '../packages/db/src/attempts';
+ import { loadLimits } from '../packages/shared/src/config';
+ import { environment } from './fixtures/environment';
+ import { ProviderError } from '../apps/worker/src/stt/client';
++import { parseTranscript } from '../packages/shared/src/transcript';
++import { acceptTranscript } from '@clipmaker/db';
++import { ProbeError } from '../apps/worker/src/media/probe';
+ const state = vi.hoisted(() => ({ charged: false, calls: 0, trace: [] as string[], failure: '' }));
+ vi.mock('@clipmaker/db', async importOriginal => {
+   const original = await importOriginal<typeof import('../packages/db/src/index')>();
+@@ -25,11 +28,12 @@ const attempt: Attempt = { video_id: 'video', fence: 1, stage: 'stt', series_no:
+ const pool = {} as Pool, limits = loadLimits(environment());
+ const valid = { language: 'ru', words: [{ word: 'Привет', start: 1, end: 2 }], segments: [] };
+ beforeEach(() => { state.charged = false; state.calls = 0; state.trace = []; state.failure = ''; });
+-afterEach(async () => { await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
++afterEach(async () => { vi.restoreAllMocks(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
+ async function fixture() {
+   const directory = await mkdtemp(join(tmpdir(), 'n5-stt-order-')); dirs.push(directory);
+   const deps = { pool, limits, directory, spendPath: join(directory, 'model-spend.jsonl'),
+     extract: async () => ({ path: 'audio', pauses: [] }),
++    probeAudio: vi.fn(async () => ({ durationSec: 120, hasAudio: true })),
+     chunks: async function* () { const path = join(directory, 'chunk'); await writeFile(path, 'fake');
+       yield { path, offsetSeconds: 0, durationSeconds: 120, hardCut: false, index: 0 }; },
+     enqueue: vi.fn(async () => { state.trace.push('enqueue'); }),
+@@ -38,6 +42,51 @@ async function fixture() {
+   return deps;
+ }
+ describe('STT operation order with deterministic dependencies', () => {
++  async function tailFixture(excess: number) {
++    const deps = await fixture();
++    deps.probeAudio.mockResolvedValue({ durationSec: 237.55, hasAudio: true });
++    deps.chunks = async function* () {
++      for (const [index, offsetSeconds] of [0, 178].entries()) {
++        const path = join(deps.directory, `chunk-${index}`); await writeFile(path, 'fake');
++        yield { path, offsetSeconds, durationSeconds: index === 0 ? 180 : 65, hardCut: false, index };
++      }
++    };
++    deps.transcriber.transcribe.mockResolvedValueOnce(valid).mockResolvedValueOnce({
++      language: 'ru', words: [{ word: 'хвост', start: 59, end: 237.433 + excess - 178 }], segments: [],
++    });
++    return deps;
++  }
++  it('TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict', async () => {
++    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
++    const deps = await tailFixture(0.1);
++    await transcribeSource('source', 237.433, attempt, deps);
++    const transcript = vi.mocked(acceptTranscript).mock.calls.at(-1)![2];
++    expect(transcript.words.at(-1)).toMatchObject({ word: 'хвост', end: 237.433 });
++    expect(parseTranscript(transcript, 237.433)).toEqual(transcript);
++    expect(deps.enqueue).toHaveBeenCalled();
++    expect(deps.probeAudio).toHaveBeenCalledWith('audio', expect.any(Number));
++    const log = warn.mock.calls.map(([line]) => JSON.parse(line)).find(row => row.event === 'stt_timestamp_clamped');
++    expect(log).toMatchObject({ video_id: 'video', fence: 1, kind: 'word', index: 1, chunk_index: 1, end_seconds: 237.533, duration_seconds: 237.433 });
++    expect(log.excess_seconds).toBeCloseTo(0.1);
++  });
++  it('TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes', async () => {
++    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
++    const deps = await tailFixture(5);
++    await expect(transcribeSource('source', 237.433, attempt, deps)).rejects.toThrow();
++    expect(state.failure).toBe('stt_failed');
++    expect(state.trace).not.toContain('commit'); expect(deps.enqueue).not.toHaveBeenCalled();
++    expect(deps.spend).toHaveBeenCalledWith(deps.spendPath, expect.objectContaining({ result: 'success', chunk_index: 1 }));
++    const log = JSON.parse(error.mock.calls.at(-1)![0]);
++    expect(log).toMatchObject({ event: 'stt_merge_failed', video_id: 'video', fence: 1, kind: 'word', index: 1,
++      chunk_index: 1, end_seconds: 242.433, duration_seconds: 237.55 });
++    expect(log.excess_seconds).toBeCloseTo(4.883);
++  });
++  it('failed MP3 measurement stops before provider and cannot become a source-file refund', async () => {
++    const deps = await fixture(); deps.probeAudio.mockRejectedValueOnce(new ProbeError('probe_timeout'));
++    await expect(transcribeSource('source', 120, attempt, deps)).rejects.not.toBeInstanceOf(ProbeError);
++    expect(state.failure).toBe('stt_failed'); expect(deps.transcriber.transcribe).not.toHaveBeenCalled();
++    expect(deps.enqueue).not.toHaveBeenCalled();
++  });
+   it('minutes committed BEFORE first provider call; transcript committed BEFORE enqueue', async () => {
+     const deps = await fixture();
+     deps.transcriber.transcribe.mockImplementation(async () => {
+diff --git a/projects/05-podcast-clips-opus/tests/transcription.integration.test.ts b/projects/05-podcast-clips-opus/tests/transcription.integration.test.ts
+index 6916242..01d3d47 100644
+--- a/projects/05-podcast-clips-opus/tests/transcription.integration.test.ts
++++ b/projects/05-podcast-clips-opus/tests/transcription.integration.test.ts
+@@ -89,6 +89,7 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
+     try {
+       await transcribeSource(join(dir, 'source'), 120, f.attempt, { pool, limits, transcriber, spendPath,
+         extract: async () => ({ path: join(dir, 'audio'), pauses: [] }),
++        probeAudio: async () => ({ durationSec: 120, hasAudio: true }),
+         chunks: async function* () { const path = join(dir, 'chunk'); await writeFile(path, 'fake');
+           yield { path, offsetSeconds: 0, durationSeconds: 120, hardCut: false, index: 0 }; },
+         enqueue: async next => {
+diff --git a/projects/05-podcast-clips-opus/tests/transcription.test.ts b/projects/05-podcast-clips-opus/tests/transcription.test.ts
+index f528b3b..914a636 100644
+--- a/projects/05-podcast-clips-opus/tests/transcription.test.ts
++++ b/projects/05-podcast-clips-opus/tests/transcription.test.ts
+@@ -9,12 +9,37 @@ import { createTranscriber } from '../apps/worker/src/stt/client';
+ import { chunkBoundaries, splitAudio } from '../apps/worker/src/stt/chunker';
+ import { extractAudio, runFfmpeg } from '../apps/worker/src/stt/extract';
+ import { mergeWords } from '../apps/worker/src/stt/merge';
++import { probeFile } from '../apps/worker/src/media/probe';
+ import { recordModelSpend } from '../apps/worker/src/stt/spend';
+ const valid = { language: 'ru', words: [{ word: 'Привет', start: 0.2, end: 1 }], segments: [{ text: 'Привет', start: 0.2, end: 1 }] };
+ const dirs: string[] = [];
+ async function temp() { const dir = await mkdtemp(join(tmpdir(), 'n5-stt-')); dirs.push(dir); return dir; }
+ afterEach(async () => { vi.useRealTimers(); await Promise.all(dirs.splice(0).map(dir => rm(dir, { recursive: true, force: true }))); });
+ describe('STT boundary and media', () => {
++  it('TR-001 real AAC extraction: measured MP3 tail is accepted, logged and clipped for strict persistence', async () => {
++    const dir = await temp(), source = join(dir, 'source.m4a'), signal = AbortSignal.timeout(10_000);
++    await runFfmpeg(['-y', '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '2.433', '-c:a', 'aac', source], signal);
++    const videoDuration = (await probeFile(source)).durationSec;
++    const audio = await extractAudio(source, join(dir, 'audio.mp3'), videoDuration, signal);
++    const audioDuration = (await probeFile(audio.path)).durationSec;
++    expect(audioDuration).toBeGreaterThan(videoDuration);
++    const tail = { language: 'ru', words: [{ word: 'хвост', start: videoDuration - 0.2, end: audioDuration }],
++      segments: [{ text: 'хвост', start: videoDuration - 0.2, end: audioDuration }] };
++    const log = vi.fn();
++    const merged = mergeWords([{ result: tail, offsetSeconds: 0, durationSeconds: audioDuration }], videoDuration, audioDuration, log);
++    expect(parseTranscript(merged, videoDuration)).toEqual(merged);
++    expect(merged.words[0]?.end).toBe(videoDuration); expect(merged.segments[0]?.end).toBe(videoDuration);
++    expect(log).toHaveBeenCalledTimes(2);
++  });
++  it('TR-001 keeps strict bounds for words, segments and invalid duration; rejects whole words outside video', () => {
++    for (const duration of [NaN, Infinity, 0, -1]) expect(() => parseTranscript(valid, duration)).toThrow();
++    const merge = (result: typeof valid) => mergeWords([{ result, offsetSeconds: 0, durationSeconds: 125 }], 120, 120.1, vi.fn());
++    expect(() => merge({ ...valid, words: [{ word: 'x', start: 120.01, end: 120.05 }] })).toThrow();
++    expect(() => merge({ ...valid, segments: [{ text: 'x', start: 119, end: 125 }] })).toThrow();
++    const shortAudio = () => mergeWords([{ result: { ...valid, words: [{ word: 'x', start: 118, end: 120 }] },
++      offsetSeconds: 0, durationSeconds: 120 }], 120, 119, vi.fn());
++    expect(shortAudio).toThrow();
++  });
+   it.each([{}, { ...valid, words: [] }, { ...valid, words: [{ word: 'text' }] },
+     { ...valid, words: [{ word: 'text', start: 0, end: null }] }, { ...valid, words: [{ word: 'text', start: NaN, end: 1 }] }])('ADR-003 rejects missing timestamps: %j', input => {
+     expect(() => parseTranscript(input, 10)).toThrow(TranscriptError);

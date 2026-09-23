@@ -89,6 +89,7 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
     try {
       await transcribeSource(join(dir, 'source'), 120, f.attempt, { pool, limits, transcriber, spendPath,
         extract: async () => ({ path: join(dir, 'audio'), pauses: [] }),
+        probeAudio: async () => ({ durationSec: 120, hasAudio: true }),
         chunks: async function* () { const path = join(dir, 'chunk'); await writeFile(path, 'fake');
           yield { path, offsetSeconds: 0, durationSeconds: 120, hardCut: false, index: 0 }; },
         enqueue: async next => {

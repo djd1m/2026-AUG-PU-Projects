@@ -1,0 +1,32 @@
+[
+  {
+    "name": "video-duration",
+    "file": "apps/worker/src/workers/stt.ts",
+    "original_sha256": "07cfaca9bdcbc6569a0910bf15bdc31cb29f70acb71432f20dcc7e4564417025",
+    "old": "mergeWords(results, duration, audioDuration,",
+    "new": "mergeWords(results, duration, duration,",
+    "red_exit": 1,
+    "green_exit": 0,
+    "restored": true
+  },
+  {
+    "name": "no-audio-bound",
+    "file": "packages/shared/src/transcript.ts",
+    "original_sha256": "de50024a78a664083a4e15bbc4c98b11f7d7217edc59d26e0732ef3f22170e9c",
+    "old": "end > duration",
+    "new": "false",
+    "red_exit": 1,
+    "green_exit": 0,
+    "restored": true
+  },
+  {
+    "name": "wrong-failure",
+    "file": "apps/worker/src/workers/stt.ts",
+    "original_sha256": "07cfaca9bdcbc6569a0910bf15bdc31cb29f70acb71432f20dcc7e4564417025",
+    "old": "signal.aborted ? 'stalled' : error instanceof TranscriptError ? 'no_timestamps'",
+    "new": "signal.aborted ? 'stalled' : (error instanceof TranscriptError || error instanceof TranscriptMergeError) ? 'no_timestamps'",
+    "red_exit": 1,
+    "green_exit": 0,
+    "restored": true
+  }
+]

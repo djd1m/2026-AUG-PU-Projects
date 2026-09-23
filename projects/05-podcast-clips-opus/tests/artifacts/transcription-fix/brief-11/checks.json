@@ -1,0 +1,81 @@
+[
+  {
+    "name": "tests",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 95.96534681785852
+  },
+  {
+    "name": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 54.186801243107766
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 2,
+    "elapsed_seconds": 23.345816744025797
+  },
+  {
+    "name": "lint",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1.1798694618046284
+  },
+  {
+    "name": "env-wiring",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 2,
+    "elapsed_seconds": 0.23739880416542292
+  },
+  {
+    "name": "port-conflicts",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 0.289295663125813
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.012277764733880758
+  },
+  {
+    "name": "typecheck-retry",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": null,
+    "reason": "Only evidence backup renamed from .ts to .txt; retry exit 0 observed via exec session 66656"
+  }
+]
