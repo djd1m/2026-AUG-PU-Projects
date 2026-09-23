@@ -1,0 +1,416 @@
+{
+  "version": "1.0",
+  "project": "ClipMkr (05a) — content-driven конвейер «файл → объяснённый вертикальный клип со знаком»",
+  "generated_from": [
+    "docs/PRD.md",
+    "docs/Specification.md",
+    "docs/Architecture.md",
+    "docs/Architecture-compose.md",
+    "docs/Pseudocode.md",
+    "docs/ADR.md",
+    "docs/canon.md",
+    "docs/Refinement.md",
+    "docs/Completion.md"
+  ],
+  "notes": {
+    "complexity_field": "Закрытый набор пакетной схемы simple|medium|complex (тиры S|M|L). Тира XL в схеме нет: stt-pipeline и llm-selection записаны complex, но по .claude/rules/complexity-router.md они XL (трогают деньги) и требуют остановки на плане у владельца. Фактический тир изменения решает bash ../../scripts/complexity-router.sh по реальному диффу.",
+    "queues": "priority=mvp — ядро первой недели (PRD §«Очереди поставки», OWN-05A-014); priority=low с tags=[\"queue-2\"] — вторая очередь, не блокирует метрику недели. Первая неделя закрывает те же действия через CLI ops (canon §7).",
+    "cross_family": "OWN-05A-00M: планирование и ревью — семейство Anthropic; код — Codex (семейство OpenAI). Автор кода не рецензирует сам себя.",
+    "state": "Реализация не начиналась на 2026-09-23: кода, миграций, package.json монорепо не существует. Ни одна фича не done. День 0 (домен, DNS/TLS, Resend, Cloud.ru, сервер, набор беты) — действия владельца, не входят в дни агента (Completion §1.3)."
+  },
+  "features": [
+    {
+      "id": "stt-probe",
+      "number": 1,
+      "name": "Проба STT дня 1 (без развёрнутого стека)",
+      "description": "ops stt-probe <файл> — блокирующая проба ADR-001: 5 кандидатов OpenRouter (assemblyai/universal-3-5-pro, deepgram/nova-3, microsoft/mai-transcribe-2, meta/muse-voice-transcribe-1.0, x-ai/grok-stt-1.0), 7 критериев (таймкоды, метки спикеров, WER≤15%, точность метки≥90%, рассинхрон≤300мс, <60с на кусок, цена≤62₽/час), запасной путь — прямой OpenAI gpt-4o-transcribe-diarize, иначе субтитры без подписи. Нужны только Node 20, ffmpeg, OPENROUTER_API_KEY — Postgres/Redis/S3 не требуются. Результат фиксирует STT_MODEL/STT_PROVIDER в конфигурации, не в коде.",
+      "priority": "mvp",
+      "status": "next",
+      "complexity": "medium",
+      "blockers": [],
+      "depends_on": [],
+      "source_ids": [
+        "ADR-001",
+        "FR-clips-4",
+        "OWN-05A-003",
+        "OWN-05A-005"
+      ],
+      "expected_files": [
+        "apps/worker/src/cli/ops.ts",
+        "packages/models/src/transcriber.ts",
+        "docs/probes/stt-day1.md"
+      ]
+    },
+    {
+      "id": "foundation-auth",
+      "number": 2,
+      "name": "Monorepo-скелет, честная конфигурация, вход email+пароль с подтверждением",
+      "description": "npm workspaces (apps/web, apps/worker, packages/db|queue|s3|config|models|payments|types); @clipmkr/config проверяет 9 потолков и все переменные canon §6 без дефолта, отказ старта называет переменную; регистрация email+пароль (argon2id), подтверждение почты до первой загрузки (email_token, Resend SMTP), JWT access 15 мин + refresh только в httpOnly cookie, CSRF по Origin; квота новичка (account.beta_at, 30 мин первые 24 ч).",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [],
+      "source_ids": [
+        "FR-clips-1",
+        "FR-clips-16",
+        "NFR-clips-3",
+        "ADR-011",
+        "OWN-05A-007",
+        "OWN-05A-011",
+        "OWN-05A-016"
+      ],
+      "expected_files": [
+        "package.json",
+        "packages/config/src/env.ts",
+        "packages/db/prisma/schema.prisma",
+        "apps/web/lib/auth/jwt.ts",
+        "apps/web/app/api/auth/register/route.ts",
+        "apps/web/app/api/auth/verify/route.ts"
+      ]
+    },
+    {
+      "id": "upload-and-admission",
+      "number": 3,
+      "name": "Прямая загрузка в S3, лимит загрузок, допуск STT+LLM",
+      "description": "POST /api/videos (multipart-ссылки, лимит частоты, объявленный размер ≤2ГБ, лимит загрузок резервируется здесь — VT-17), .../complete (Idempotency-Key, HeadObject+magic bytes, 202 {job_id}); {job_id}.stt.prepare (перепроверка magic bytes, ffprobe ≤120мин/≤3840×2160); допуск STT — сначала выполнимость LLM (est_kop против трёх пределов, OWN-05A-012, ДО оплаты STT), затем атомарный резерв секунд STT (персональный по записи, глобальный по провайдеру, квота новичка + пул stt_sec_newbie).",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "foundation-auth"
+      ],
+      "source_ids": [
+        "FR-clips-2",
+        "FR-clips-3",
+        "FR-clips-10",
+        "FR-clips-16",
+        "ADR-006",
+        "ADR-007",
+        "OWN-05A-012",
+        "OWN-05A-016"
+      ],
+      "expected_files": [
+        "apps/web/app/api/videos/route.ts",
+        "apps/web/app/api/videos/[videoId]/complete/route.ts",
+        "packages/s3/src/multipart.ts",
+        "packages/queue/src/admission.ts"
+      ]
+    },
+    {
+      "id": "stt-pipeline",
+      "number": 4,
+      "name": "Нарезка, транскрипция с диаризацией, сшивка спикеров",
+      "description": "worker-ai: нарезка ~90с по паузе (silencedetect), перекрытие 5с; Transcriber (OpenRouterTranscriber/OpenAiTranscriber) кусками; ворота допуска VA-01 в шаге 1 (не в Повторе); склейка по монотонности start_ms; сшивка меток спикеров эвристикой 60% в окне перекрытия, speaker_map_confident=false при 3+ голосах или отсутствии второго в перекрытии. Тир XL по локальному роутеру (деньги) — остановка на плане у владельца.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "upload-and-admission",
+        "stt-probe"
+      ],
+      "source_ids": [
+        "FR-clips-4",
+        "ADR-001",
+        "ADR-002",
+        "ADR-008"
+      ],
+      "expected_files": [
+        "apps/worker/src/workers/stt.ts",
+        "apps/worker/src/lib/audio-chunker.ts",
+        "apps/worker/src/lib/speaker-stitching.ts"
+      ]
+    },
+    {
+      "id": "llm-selection",
+      "number": 5,
+      "name": "Выбор фрагментов и объяснимая оценка одним вызовом LLM",
+      "description": "worker-ai: один вызов anthropic/claude-sonnet-5 через OpenRouter, структурированный ответ (индексы start_unit/end_unit, без numeric/string constraints — код проверяет диапазоны); проверка finish_reason='length' ДО JSON.parse; валидация границ индексов, дедупликация; хук/завершённость с цитатами, сверка цитат кодом; длину считает код (0-20). Резерв LLM — верхняя оценка вход×цена+max_tokens×цена. Тир XL — остановка на плане у владельца.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "stt-pipeline"
+      ],
+      "source_ids": [
+        "FR-clips-5",
+        "FR-clips-6",
+        "AC-clips-7",
+        "AC-clips-8",
+        "AC-clips-9",
+        "ADR-005",
+        "ADR-006"
+      ],
+      "expected_files": [
+        "apps/worker/src/workers/llm-analyze.ts",
+        "apps/worker/src/lib/prompts/moment-selection.ts",
+        "packages/models/src/selection-model.ts"
+      ]
+    },
+    {
+      "id": "render-pipeline",
+      "number": 6,
+      "name": "Рендер: вертикализация чёрными полями, ASS-субтитры, знак",
+      "description": "worker-render: ffmpeg pad на чёрные поля (учёт rotation SAR), ASS-субтитры фразами с подписью спикера (один файл шрифта в образе), знак по центру у нижней кромки полосы над субтитрами; геометрия знака (кегль 40-52, площадь 1-4%, pw≤294px) считается один раз при старте worker-render — процесс не стартует, если для WATERMARK_TEXT такого кегля нет; экранирование execFile/spawn без shell; лимиты CPU/памяти per-service.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "llm-selection"
+      ],
+      "source_ids": [
+        "FR-clips-7",
+        "FR-GROWTH-003",
+        "ADR-009",
+        "ADR-010",
+        "OWN-05A-008",
+        "OWN-05A-015"
+      ],
+      "expected_files": [
+        "apps/worker/src/workers/video-render.ts",
+        "apps/worker/src/lib/ffmpeg.ts",
+        "apps/worker/fonts/"
+      ]
+    },
+    {
+      "id": "job-lifecycle-and-viewer",
+      "number": 7,
+      "name": "Состояние задачи, аренда/heartbeat, повтор, экран клипа",
+      "description": "job_id выдаётся до работы (202); три состояния running/succeeded/failed; heartbeat 30с, лок BullMQ 120с, worker_lost после 3 попыток без heartbeat; retry продолжает с сохранённых шагов, не платит повторно за готовое; GET /api/jobs/{job_id}, GET /api/clips/{clip_id}/file (подписанная ссылка 15 мин, владение из сессии → 404 чужому); фронтенд экрана задачи и клипов; «Скачать»/«Поделиться» (Web Share API где доступен) + «Скопировать подпись к посту».",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "blockers": [],
+      "depends_on": [
+        "render-pipeline"
+      ],
+      "source_ids": [
+        "FR-clips-3",
+        "FR-clips-8",
+        "ADR-008",
+        "long-job-contract"
+      ],
+      "expected_files": [
+        "apps/web/app/api/jobs/[jobId]/route.ts",
+        "apps/web/app/api/jobs/[jobId]/retry/route.ts",
+        "apps/web/app/api/clips/[clipId]/file/route.ts",
+        "apps/worker/src/lib/heartbeat.ts"
+      ]
+    },
+    {
+      "id": "growth-loop-and-ops",
+      "number": 8,
+      "name": "Paste-back, атрибуция, операторские страницы ядра, ops CLI",
+      "description": "POST /api/clips/{clipId}/publications (paste-back), самоотчёт, событие caption-copied, /c/{clip_code} и /p/{partner_code} (cookie pref 60 дней, код сильнее cookie); /admin/publications (проверка оператором, статусы candidate→confirmed|rejected→removed), /admin/metrics (authors_confirmed=min(accounts,channels)); ops grant-operator, ops partner-add, ops spend-today, ops beta-add, ops reset-link (все доступны и с хоста без стека).",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "job-lifecycle-and-viewer"
+      ],
+      "source_ids": [
+        "FR-GROWTH-001",
+        "FR-GROWTH-004",
+        "FR-GROWTH-005",
+        "FR-clips-11",
+        "FR-clips-15",
+        "ADR-014",
+        "ADR-015",
+        "OWN-05A-002",
+        "OWN-05A-014a"
+      ],
+      "expected_files": [
+        "apps/web/app/api/clips/[clipId]/publications/route.ts",
+        "apps/web/app/admin/publications/page.tsx",
+        "apps/web/app/admin/metrics/page.tsx",
+        "apps/worker/src/cli/ops.ts"
+      ]
+    },
+    {
+      "id": "testing-hardening",
+      "number": 9,
+      "name": "13 конкурентных/адверсариальных тестов + 15 мутационных стражей",
+      "description": "Unit+integration по Refinement §2.1-2.2; все 13 обязательных тестов §2.4 (лимит загрузок, допуск STT, NAT, аренда рендера, VA-01, перебор паролей, LLM-выполнимость, знак-три-обрезки, новичок-30мин, пул-новичков, бета-120мин, самопроверка worker-ai, finish_reason=length); все 15 мутационных стражей §2.5 прогнаны с внедрённым дефектом до зачёта (guard-must-be-able-to-fail).",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [],
+      "depends_on": [
+        "growth-loop-and-ops"
+      ],
+      "source_ids": [
+        "NFR-clips-2",
+        "NFR-clips-5",
+        "AC-clips-12",
+        "AC-clips-23",
+        "AC-clips-30"
+      ],
+      "expected_files": [
+        "tests/concurrency/",
+        "tests/mutation/"
+      ]
+    },
+    {
+      "id": "watermark-ocr-verification",
+      "number": 10,
+      "name": "OCR-стенд знака и ручная проверка на 4 площадках",
+      "description": "Рендер тестовых клипов, сжатие 720×1280 H.264 1.5 Мбит/с, OCR (rus+eng) на трёх обрезках (crop=1080:608:0:420, crop=608:608:236:420, crop=342:608:369:420) ≥9/10 на светлом/тёмном/пёстром фоне; ручной просмотр на TikTok/YouTube Shorts/VK/Telegram шириной экрана 360-414px до приглашения беты.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "blockers": [],
+      "depends_on": [
+        "render-pipeline"
+      ],
+      "source_ids": [
+        "FR-GROWTH-003",
+        "ADR-009",
+        "ADR-010"
+      ],
+      "expected_files": [
+        "scripts/ocr-watermark-check.sh"
+      ]
+    },
+    {
+      "id": "measurement-and-calibration",
+      "number": 11,
+      "name": "Замер рендера и токенов LLM на реальных выпусках",
+      "description": "Замер CPU/времени рендера клипа 90с на целевом сервере; один реальный вызов LLM на настоящем транскрипте с записью completion_tokens (калибровка LLM_EST_CHARS_PER_SEC/LLM_MAX_OUTPUT_TOKENS); правки чисел NFR-clips-1 по факту замера, не тихая подмена.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "blockers": [],
+      "depends_on": [
+        "render-pipeline",
+        "llm-selection"
+      ],
+      "source_ids": [
+        "NFR-clips-1",
+        "ADR-005",
+        "ADR-010"
+      ],
+      "expected_files": [
+        "docs/measurements/render-and-tokens.md"
+      ]
+    },
+    {
+      "id": "deploy-netherlands",
+      "number": 12,
+      "name": "Развёртывание на VPS в Нидерландах, сквозной CJM",
+      "description": "docker compose --profile prod build/up по чек-листу Completion §2 (порядок обязателен: check-ports → check-port-conflicts → check-env-wiring → check-compose-buildable → миграции → старт); bash scripts/check-cjm.sh https://clipmkr.ru — путь целиком по выданному адресу, не localhost.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "blockers": [
+        "владелец: домен/DNS/TLS clipmkr.ru, доступ к серверу в Нидерландах (день 0, Completion §1.3)"
+      ],
+      "depends_on": [
+        "testing-hardening",
+        "watermark-ocr-verification",
+        "measurement-and-calibration"
+      ],
+      "source_ids": [
+        "ADR-017",
+        "NFR-clips-2"
+      ],
+      "expected_files": [
+        "docker-compose.yml",
+        "Dockerfile",
+        "deploy/Caddyfile"
+      ]
+    },
+    {
+      "id": "password-reset-page",
+      "number": 13,
+      "name": "Кнопка сброса пароля на /admin/users",
+      "description": "Веб-страница вместо ops reset-link — тот же контракт (email_token.purpose=reset, отзыв всех refresh_token). 2-я очередь (OWN-05A-014a): сам сброс уже работает CLI-командой с первой недели.",
+      "priority": "low",
+      "status": "planned",
+      "complexity": "simple",
+      "blockers": [],
+      "depends_on": [
+        "growth-loop-and-ops"
+      ],
+      "tags": ["queue-2"],
+      "source_ids": [
+        "FR-clips-1",
+        "SC-US-001-8",
+        "OWN-05A-014a"
+      ],
+      "expected_files": [
+        "apps/web/app/admin/users/page.tsx"
+      ]
+    },
+    {
+      "id": "admin-partners-page",
+      "number": 14,
+      "name": "Веб-страница /admin/partners",
+      "description": "Веб-интерфейс вместо ops partner-add — тот же контракт данных (partner_code уникален, коллизия отклоняется). 2-я очередь (OWN-05A-014).",
+      "priority": "low",
+      "status": "planned",
+      "complexity": "simple",
+      "blockers": [],
+      "depends_on": [
+        "growth-loop-and-ops"
+      ],
+      "tags": ["queue-2"],
+      "source_ids": [
+        "FR-GROWTH-004",
+        "ADR-015"
+      ],
+      "expected_files": [
+        "apps/web/app/admin/partners/page.tsx"
+      ]
+    },
+    {
+      "id": "admin-spend-page",
+      "number": 15,
+      "name": "Веб-страница /admin/spend",
+      "description": "Веб-интерфейс вместо ops spend-today — тот же источник данных (spend_ledger/quota_counter). 2-я очередь (OWN-05A-014); model-cost-contract.md меняет адрес расхода на эту страницу в момент появления.",
+      "priority": "low",
+      "status": "planned",
+      "complexity": "simple",
+      "blockers": [],
+      "depends_on": [
+        "growth-loop-and-ops"
+      ],
+      "tags": ["queue-2"],
+      "source_ids": [
+        "FR-clips-11",
+        "model-cost-contract"
+      ],
+      "expected_files": [
+        "apps/web/app/admin/spend/page.tsx"
+      ]
+    },
+    {
+      "id": "fakedoor-screen",
+      "number": 16,
+      "name": "Экран fake-door «Хочу без знака»",
+      "description": "/plans, кнопка «Хочу без знака», POST /api/fakedoor, событие fakedoor_clicked, стадия атрибуции fakedoor. Метрика недели не использует этот экран — клик fake-door — сигнал интереса, не конверсия. 2-я очередь (OWN-05A-014).",
+      "priority": "low",
+      "status": "planned",
+      "complexity": "simple",
+      "blockers": [],
+      "depends_on": [
+        "growth-loop-and-ops"
+      ],
+      "tags": ["queue-2"],
+      "source_ids": [
+        "FR-GROWTH-002",
+        "FR-GROWTH-003",
+        "FR-clips-14",
+        "ADR-013"
+      ],
+      "expected_files": [
+        "apps/web/app/plans/page.tsx",
+        "apps/web/app/api/fakedoor/route.ts"
+      ]
+    }
+  ]
+}
