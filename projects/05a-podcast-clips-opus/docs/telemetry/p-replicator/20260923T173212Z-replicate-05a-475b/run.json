@@ -1,0 +1,33 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260923T173212Z-replicate-05a-475b",
+  "batch_id": null,
+  "project": "projects/05a-podcast-clips-opus",
+  "feature": "replicate-05a (Phase 0 → 4, затем реализация по конвейеру p-replicator)",
+  "pipeline": "/replicate",
+  "tier": "XL",
+  "risk_flags": ["money: тарифы и снятие watermark", "external-model-calls: транскрипция + LLM", "long-running-job: рендер ffmpeg", "public-paths"],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "cross-family: планирование/проверка — Anthropic, код — OpenAI Codex (владелец 21.09 и 23.09.2026)",
+    "линейка Codex обновлена: gpt-6-astra / gpt-6-sol / gpt-6-luna вместо gpt-5.6-* (codex-cli 0.156.1, пробы 23.09.2026)",
+    "Fable 5.1 исключён: недельная квота исчерпана → Opus 5.5",
+    "синтез CJM и HTML-прототипы — Codex gpt-6-astra medium (назначение владельца); проверка — Opus 5.5",
+    "projects/05 НЕ используется; единственный источник переиспользования — djd1m/2026-jan-pu-opus-clone@cc6ac59",
+    "claude-flow MCP не подключился — рой через встроенный Agent tool"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "58e9bb4d1344e55f2d64e86c87791b3a15e93d80",
+  "final_revision": null,
+  "spec_sha256": "9f541ecf623ef436bde01327dbb4c0146a6f78beabaf199888aa551092b2a348",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "reference_source": {"repo": "https://github.com/djd1m/2026-jan-pu-opus-clone", "commit": "cc6ac599baa472937324c835a4fdb89fd09c92ce", "local": ".reference/jan-clone (gitignored)"},
+  "host": "claude-code", "host_version": null,
+  "billing_mode": "unknown",
+  "coordinator": {"model": "claude-opus-5-5", "source": "session metadata"},
+  "started_at": "2026-09-23T17:32:30Z", "ended_at": null, "status": "running",
+  "acceptance_evidence": null, "quality": null, "metrics": null,
+  "telemetry_status": "partial",
+  "missing_data": ["host_version: не извлечено", "billing: подписка, стоимость по тарифам не рассчитывается до rates.json"]
+}
