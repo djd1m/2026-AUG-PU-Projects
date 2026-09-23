@@ -242,4 +242,6 @@ exit=2
 - check-external-deps → 0; check-canon → 2 (известная проблема разреза), sha256 канона вручную совпал с dispatch-plan
   (73fce1cb70205de5…). Размеры: ADR 487, Architecture 421, compose 144, C4 140.
 
+- V3: ADR-009 «Как проверить» — третий OCR-прогон `crop=342:608:369:420` и ширина плашки ≤ 294 px (V3-12); ADR-010 п. 2 — формула знака по Spec FR-GROWTH-003 п. 4, для вертикального исходника нижний край y = 1084 (V3-02); ADR-006 п. 3 — проверка при старте `worker-ai` `llm_reserve_kop(7200 × LLM_EST_CHARS_PER_SEC) × LIMIT_LLM_ATTEMPTS_JOB ≤ LIMIT_LLM_KOP_JOB` (V3-08); в compose у `worker-ai` добавлен `LLM_EST_CHARS_PER_SEC` (V3-07, config → 0); в C4 убрано «в углу» (V3-03); check-external-deps → 0.
+
 Status: completed

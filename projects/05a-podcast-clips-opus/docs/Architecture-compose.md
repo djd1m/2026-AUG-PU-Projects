@@ -75,6 +75,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}                  # обязателен только при STT_PROVIDER=openai
       LLM_MODEL: ${LLM_MODEL:?}
       FX_USD_RUB_KOP: ${FX_USD_RUB_KOP:?}
+      LLM_EST_CHARS_PER_SEC: ${LLM_EST_CHARS_PER_SEC:?}   # канон §6, V3-07
       LIMIT_LLM_ATTEMPTS_JOB: ${LIMIT_LLM_ATTEMPTS_JOB:?}
       LIMIT_LLM_KOP_JOB: ${LIMIT_LLM_KOP_JOB:?}
   worker-render:

@@ -127,7 +127,7 @@ C4Component
     Component(renderw, "Render worker", "BullMQ Worker: render", "Идемпотентно: ready не рендерится повторно")
     Component(plan, "Watermark decision", "чистая функция", "watermark = plan !== 'paid'; план читается из БД")
     Component(ass, "Subtitle builder", "ASS", "Фразы ≤ 2 строк × 32 символа; префикс «Спикер N:» только при speaker_map_confident")
-    Component(ffmpeg, "FFmpeg runner", "execFile без shell", "-ss по подписанной ссылке (HTTP range); scale=1080:608:force_original_aspect_ratio=decrease, pad в полосу y=420…1028, поля чёрные; знак по центру у нижней кромки полосы видео; шрифт /app/fonts; ass=; знак полупрозрачный в углу полосы видео; -threads 2; таймаут 5 мин")
+    Component(ffmpeg, "FFmpeg runner", "execFile без shell", "-ss по подписанной ссылке (HTTP range); scale=1080:608:force_original_aspect_ratio=decrease, pad в полосу y=420…1028, поля чёрные; знак по центру у нижней кромки полосы видео; шрифт /app/fonts; ass=; -threads 2; таймаут 5 мин")
     Component(finisher, "Job finisher", "SQL", "clips_done++; последний клип → job succeeded")
   }
   Rel(redis, renderw, "render")

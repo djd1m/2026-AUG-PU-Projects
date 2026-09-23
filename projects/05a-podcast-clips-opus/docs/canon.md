@@ -157,7 +157,7 @@
 |---|---|---|
 | `GET /api/health` | внутренний (healthcheck compose) | `200` при доступных БД и Redis; без данных пользователей |
 | `GET /` | публичный | лендинг; пишет `landing_visited` |
-| `GET /plans` | публичный | таблица планов и fake-door |
+| `GET /plans` (2-я очередь, OWN-05A-014) | публичный | таблица планов и fake-door |
 | `GET /p/{partner_code}` | публичный | cookie `pref`, `partner_link_visited`, редирект на `/` |
 | `GET /c/{clip_code}` | публичный | `clip_link_visited`, редирект на `/` |
 | `POST /api/auth/resend-verification` | сессия, почта не подтверждена | повторная отправка письма, не чаще 1 раза в 60 с и 5 в сутки |
@@ -174,7 +174,7 @@
 | `POST /api/clips/{clip_id}/events` | владелец | `clip_viewed`, `download_clicked`, `share_clicked` |
 | `POST /api/clips/{clip_id}/publications` | владелец | paste-back |
 | `POST /api/clips/{clip_id}/self-report` | владелец | «я опубликовал» |
-| `POST /api/fakedoor` | сессия | клик «Хочу без знака», промокод |
+| `POST /api/fakedoor` (2-я очередь, OWN-05A-014) | сессия | клик «Хочу без знака», промокод |
 | `POST /api/clips/{clip_id}/caption-copied` | владелец | `caption_copied` |
 | `GET /admin/partners` (2-я очередь, OWN-05A-014) | роль `operator` | партнёры и `partner_code` (FR-GROWTH-004) |
 | `GET /admin/publications` | роль `operator` | проверка paste-back, перепроверка на 7-й день |
@@ -245,6 +245,7 @@ CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `GET
 | граница суток для потолков | 00:00 Europe/Moscow; для ВСЕХ счётчиков, включая job-счётчики LLM, день = `msk_day(now())` в момент попытки, не `job.created_at` (VT2-11) | `day` |
 | выполнимость LLM при допуске STT | `est_chars = ceil(video.duration_ms/1000) × LLM_EST_CHARS_PER_SEC`; `est_kop = llm_reserve_kop(est_chars)`; отказ, если `est_kop > LIMIT_LLM_KOP_JOB` (quota_user), или `llm_kop` автора + `est_kop` > `LIMIT_LLM_USER_KOP_DAY` (quota_user), или `llm_kop` сервиса + `est_kop` > `LIMIT_LLM_GLOBAL_KOP_DAY` (quota_global); проверка чтением, не резерв; при старте `worker-ai`: `llm_reserve_kop(7200 × LLM_EST_CHARS_PER_SEC) × LIMIT_LLM_ATTEMPTS_JOB ≤ LIMIT_LLM_KOP_JOB`, иначе не стартует (VT2-01, VA2-05) | `_kop` |
 | цена STT | берётся из `GET /api/v1/models` OpenRouter при старте `worker-ai` (микродоллары за секунду); до ответа провайдера в `spend_ledger` пишется оценка с `cost_estimated = true`, при `usage.cost` — факт с `cost_estimated = false` | `_usd_micro` |
+| кегль знака | px, целое: наибольший из 40–52, при котором плашка занимает 1–4 % кадра 1080×1920 и не шире 294 px; если такого нет — `worker-render` не стартует (ошибка конфигурации `WATERMARK_TEXT`, V3-12) | `_px` |
 | баллы оценки | целые: хук 0–40, завершённость 0–40, длина 0–20, итог 0–100 | `_score` |
 
 ## 12. Расхождения со Specification (канон действует, Specification правит её автор)
