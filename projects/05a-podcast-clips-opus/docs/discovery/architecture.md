@@ -170,4 +170,19 @@ exit=2
   (промежуточное состояние dispatch-plan.md у координатора); повторный прогон — exit 0, 28 единиц.
 - check-external-deps → 0 (16 CONFIRMED, 1 UNCONFIRMED — подписи спикеров).
 
+
+## Правки канона внесены координатором — приведение
+- Сняты пометки «[правка канона запрошена]» в `Architecture-compose.md` (POSTGRES_*, MINIO_ROOT_* теперь в каноне §6).
+- CORS бакета: `AllowedMethods = PUT, GET` в ADR-007, Architecture (Security, `migrate`, строка зависимости — добавлена цитата
+  `<AllowedMethod>GET</AllowedMethod>` из GetBucketCors).
+- Оценочная стоимость STT помечается `spend_ledger.cost_estimated = true` (ADR-006, Architecture).
+- `file_invalid` также при расхождении фактической длительности с заявленной (ADR-007, Architecture sequence, C4).
+- Размеры: Architecture.md 425, Architecture-compose.md 131, ADR.md 449 строк — все < 500.
+- Проверки: check-external-deps → 0; эскиз `docker compose … config -q` → 0; check-file-ownership → 0;
+  check-canon → 2 «в таблице единиц повторяются строки: docs/architecture-compose.md» — известная несовместимость стражей при
+  разрезе (validation-report, «Дефект стражей»). Целостность канона проверена вручную: sha256 `docs/canon.md` =
+  dc2cb9b8…c57566 совпадает с записью в dispatch-plan.md.
+
+- Знак приведён к Specification FR-GROWTH-003: ADR-010 п. 2 и reuse map Architecture — x = 70 / y = 444 (16:9), x = 158 (4:3), x = 70 / y = 200 (вертикальный), плашка 0,5–0,6, радиус 12 px; пометка о проверке OCR и телефоном сохранена.
+
 Status: completed

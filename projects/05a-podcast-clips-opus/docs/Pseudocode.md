@@ -41,7 +41,7 @@
 | `GLOBAL_SCOPE_ID` | `00000000-0000-0000-0000-000000000000` | канон §5 |
 | `PREF_MAX_AGE_SEC` | 5 184 000 (60 дней) | ADR-015, FR-GROWTH-002 п. 1 |
 | `SOURCE_RETENTION_MS` | 259 200 000 (72 ч) | ADR-007 |
-| `RL_REGISTER` / `RL_LOGIN_EMAIL` / `RL_LOGIN_IP` / `RL_PUBLIC_CODE` | 5 / IP / 1 ч · 10 / email / 15 мин · 50 / IP / 15 мин `[ПРЕДЛОЖЕНИЕ]` · 30 событий / IP / 1 ч (сверх — редирект без события) | FR-clips-1 п. 4, SC-US-010-3, VT-07, VA-11 |
+| `RL_REGISTER` / `RL_LOGIN_EMAIL` / `RL_LOGIN_IP` / `RL_PUBLIC_CODE` | 20 / IP / 1 ч (В-25) · 10 / email / 15 мин · 50 / IP / 15 мин `[ПРЕДЛОЖЕНИЕ]` · 30 событий / IP / 1 ч (сверх — редирект без события) | FR-clips-1 п. 4, SC-US-010-3, VT-07, VA-11 |
 | `ARGON2_MAX_CONCURRENT` | 4 на процесс `web` `[ПРЕДЛОЖЕНИЕ]` | VT-07 |
 | `REFRESH_GRACE_SEC` | 60 | VA-13 |
 | `EXTRACT_TIMEOUT_MS` / `DURATION_MISMATCH_MAX` / `MAX_SOURCE_KBPS` | 900 000 / 0,02 / 60 000 `[ПРЕДЛОЖЕНИЕ]` | VA-04 |
@@ -88,7 +88,7 @@ SpendLedger    { id: UUID, account_id: UUID, job_id: UUID?, call: 'stt'|'llm', m
                  created_at: Timestamp }
 Event          { id: UUID, name: EventName, account_id: UUID?, clip_id: UUID?, session_id: Text?, props: Jsonb,
                  created_at: Timestamp }  — сырого IP нет (NFR-clips-6)
-Publication    { id: UUID, clip_id: UUID, account_id: UUID, url: Text, url_normalized: Text(unique),
+Publication    { id: UUID, clip_id: UUID? (NULL после удаления клипа), account_id: UUID, url: Text, url_normalized: Text(unique),
                  platform: Platform, channel_key: Text?, status: PubStatus, reason: Text?, verified_at: Timestamp?,
                  rechecked_at: Timestamp?, created_at: Timestamp }
 Partner        { id: UUID, name: Text, contact: Text?, audience_url: Text?, partner_code: Text(unique, upper),
@@ -208,7 +208,7 @@ REALISES: SC-US-001-1, SC-US-001-2, SC-US-001-4, SC-US-001-5, SC-US-009-1, SC-US
 INPUT: `POST /api/auth/register {email, password, consent_pd: bool, consent_terms: bool, partner_code?}`, cookie `pref?`, IP
 OUTPUT: `201 {status:'check_email'}` | `422` | `429`
 STEPS:
-1. `rate_limit('register', ip, 5, 3600)`; DENY → RETURN 429 (до проверки полей, AC-clips-1).
+1. `rate_limit('register', ip, 20, 3600)`; DENY → RETURN 429 (до проверки полей, AC-clips-1). Порог 20, а не 5: за CGNAT мобильного оператора — много честных людей (В-25, VA-11); основная защита от множества аккаунтов — `canonical_email`, `DISPOSABLE_DOMAINS` и потолки на автора (VA-02).
 2. Валидация: `email ← canonical_email(email)` (ниже), формат `local@domain.tld`, ≤ 254; IF домен ∈ `DISPOSABLE_DOMAINS` THEN 422 «используйте постоянный адрес», аккаунт не создаётся, письмо не отправляется (VA-02, AC-clips-28); `len(password) ≥ 10`, ≤ 128; `consent_pd === true` AND `consent_terms === true`; иначе `422` с перечнем полей.
 3. IF `partner_code` задан THEN `code ← upper(trim(partner_code))`; `partner ← SELECT … WHERE partner_code = code`; нет → `422 'код не найден'` (атрибуция не создаётся, аккаунт не создаётся — пользователь исправляет или очищает поле).
 4. `hash ← argon2id(password, m=19456 KiB, t=2, p=1)` — ВНЕ транзакции (дорогая операция не держит соединение пула).
@@ -697,7 +697,7 @@ STEPS:
 2. `v.status, v.step, v.fail_reason` — ровно из закрытых списков канона; неизвестное значение в БД → `worker_lost` и журнал со стеком (не «выполняется»).
 3. `running`: прогресс — `transcribing`: `done/total` кусков («кусок k из n»); `selecting`: без числа; `rendering`: `clips_done/clips_total` («клип k из n»). `v.updated_sec_ago ← now − heartbeat_at`. IF `> SILENT_UI_MS` THEN `v.silent_minutes ← floor(… / 60 000)` («обработчик молчит N мин»).
 4. `succeeded`: `v.clips` — клипы, отсортированные: `total_score` убыв. (`null` в конце), затем `length_score` убыв., затем `start_ms`; у каждого три компонента с причинами, `speaker_labels_shown`, `clip_code`. IF 0 клипов THEN `v.empty_reason`.
-5. `failed`: `v.retryable ← fail_reason ∉ {file_invalid, duration_exceeded, no_timestamps} AND video.source_deleted_at IS NULL` — `no_timestamps` детерминирован для модели и аудио, платный повтор даст тот же отказ (VA-19; расхождение со Specification FR-clips-3 п. 3 — вопрос В-24); для `quota_*` — `v.resets_at` (00:00 МСК).
+5. `failed`: `v.retryable ← fail_reason ∉ {file_invalid, duration_exceeded, no_timestamps} AND video.source_deleted_at IS NULL` — `no_timestamps` детерминирован для модели и аудио, платный повтор даст тот же отказ (VA-19; решение координатора по В-24); для `quota_*` — `v.resets_at` (00:00 МСК).
 6. `v.source_delete_at ← job.finished_at + 72 ч` (обещание хранения, FR-clips-13).
 7. RETURN 200.
 COMPLEXITY: O(c).
@@ -745,7 +745,7 @@ INPUT: карточка клипа в `ready` на мобильном брауз
 OUTPUT: системный лист отправки с файлом; событие `share_clicked`
 STEPS:
 1. Кнопка «Поделиться» изначально скрыта; «Скачать» видна и активна сразу.
-2. Файл готовится ЗАРАНЕЕ, до жеста (VT-14: `navigator.share` обязан вызываться в пределах жеста, а скачивание до 68 МБ жест переживает не всегда — iOS Safari бросает `NotAllowedError`): после первого `clip_viewed` на этой карточке (только для одной карточки одновременно, чтобы не держать в памяти десяток блобов) `u ← GET /api/clips/{id}/file`; `blob ← fetch(u.url)` (кросс-доменный GET к бакету — нужен `GET` в CORS бакета, вопрос В-23); `file ← new File([blob], 'clipmkr-{clip_code}.mp4', {type:'video/mp4'})`.
+2. Файл готовится ЗАРАНЕЕ, до жеста (VT-14: `navigator.share` обязан вызываться в пределах жеста, а скачивание до 68 МБ жест переживает не всегда — iOS Safari бросает `NotAllowedError`): после первого `clip_viewed` на этой карточке (только для одной карточки одновременно, чтобы не держать в памяти десяток блобов) `u ← GET /api/clips/{id}/file`; `blob ← fetch(u.url)` (кросс-доменный GET к бакету — `GET` в CORS бакета, канон §8); `file ← new File([blob], 'clipmkr-{clip_code}.mp4', {type:'video/mp4'})`.
 3. IF `navigator.canShare && navigator.canShare({files:[file]})` THEN показать «Поделиться»; ELSE кнопка не показывается (SC-US-006-2), ошибок в консоли нет.
 4. Нажатие: синхронно в обработчике жеста `navigator.share({files:[file], title})`; затем `POST /api/clips/{id}/events {name:'share_clicked'}` («Запись события»). Отмена пользователем (`AbortError`) события не пишет. Продукт ничего не публикует сам.
 5. Ссылка из шага 2 живёт 15 мин: если блоб не скачан за это время, запрос ссылки повторяется при следующем `clip_viewed`.
@@ -796,7 +796,8 @@ OUTPUT: смена `publication.status` и `audit_log`
 STEPS:
 1. `auth({role:'operator'})` в middleware И в каждой процедуре.
 2. Список: `candidate` по `created_at` (старые первыми); отдельный список «перепроверка» — `confirmed` с `verified_at ≤ now − 6 дней` и `rechecked_at IS NULL`.
-3. `confirm(id, checks)`: `checks` обязан содержать все четыре отметки `public`, `this_clip`, `watermark_visible`, `account_not_empty`, и `channel_key` — handle или id канала площадки, `lower(trim)`, 1…100 символов (иначе 422). Дубль исходника оператор отклоняет `reject` с причиной «дубль исходника». Транзакция: `UPDATE publication SET status='confirmed', channel_key=$channel_key, verified_at=now() WHERE id AND status='candidate' RETURNING clip_id, account_id`; нет строки → 409. `record_event('publication_confirmed', account_id, clip_id)`; `INSERT audit_log(actor=operator_email, action='publication.confirm', target=id, reason=checks)`.
+3. Публикация с `clip_id IS NULL` показывается с пометкой «клип удалён автором»; действия над ней те же.
+3b. `confirm(id, checks)`: `checks` обязан содержать все четыре отметки `public`, `this_clip`, `watermark_visible`, `account_not_empty`, и `channel_key` — handle или id канала площадки, `lower(trim)`, 1…100 символов (иначе 422). Дубль исходника оператор отклоняет `reject` с причиной «дубль исходника». Транзакция: `UPDATE publication SET status='confirmed', channel_key=$channel_key, verified_at=now() WHERE id AND status='candidate' RETURNING clip_id, account_id`; нет строки → 409. `record_event('publication_confirmed', account_id, clip_id)`; `INSERT audit_log(actor=operator_email, action='publication.confirm', target=id, reason=checks)`.
 4. `reject(id, reason)`: `reason` непуст; `status='rejected'` из `candidate`; `audit_log`.
 5. `recheck(id, still_there: bool, reason?)`: только из `confirmed`; `rechecked_at=now()`; IF NOT `still_there` THEN `status='removed'`, `reason` обязателен; `audit_log`.
 COMPLEXITY: O(1) на действие.
@@ -939,7 +940,7 @@ STEPS:
 1. `auth({role:'operator'})`. `from` — дата; невалидна → 422. `W = [from 00:00 МСК, from + 7 дней)`.
 2. `activated ← DISTINCT account_id` событий `clip_viewed` в `W`; `n ← |activated|`.
 3. `confirmed ← publication` со `status='confirmed'` (на момент запроса; перепроверка 7-го дня уже перевела удалённые в `removed`) и `created_at ∈ W`.
-   `clips_confirmed ← COUNT(DISTINCT clip_id)`; `accounts ← COUNT(DISTINCT account_id)`; `channels ← COUNT(DISTINCT channel_key)`; `authors_confirmed ← min(accounts, channels)` — три аккаунта с одним каналом площадки дают одного автора (VA-14, FR-GROWTH-005 п. 4); выводятся все три числа; `authors_confirmed ← COUNT(DISTINCT account_id)`; `goal_met ← clips_confirmed ≥ 5 AND authors_confirmed ≥ 3`. Несколько ссылок на клип — 1 клип.
+   `clips_confirmed ← COUNT(DISTINCT COALESCE(clip_id, id))` — публикация удалённого автором клипа (`clip_id IS NULL`) остаётся в счёте как отдельный клип (несколько её ссылок на один удалённый клип посчитаются раздельно — завышение возможно только у удалённых клипов, видно в строке «клип удалён: k»); автор — `publication.account_id`; `accounts ← COUNT(DISTINCT account_id)`; `channels ← COUNT(DISTINCT channel_key)`; `authors_confirmed ← min(accounts, channels)` — три аккаунта с одним каналом площадки дают одного автора (VA-14, FR-GROWTH-005 п. 4); выводятся все три числа; `authors_confirmed ← COUNT(DISTINCT account_id)`; `goal_met ← clips_confirmed ≥ 5 AND authors_confirmed ≥ 3`. Несколько ссылок на клип — 1 клип.
    `rechecked ← k из m` подтверждённых с `rechecked_at ≥ from + 6 дней` — метрика объявляется окончательной только при `k = m`.
 4. Отдельными строками, не складывая: кандидаты; `rejected`; `removed`; самоотчёты «заявлено, не подтверждено»; `download_clicked`; `share_clicked`; `caption_copied`; `clip_link_visited`; `landing_visited` по каждому `source`; `partner_link_visited`; `fakedoor_clicked`.
 5. `i` по каждому активированному автору: `confirmed_clips(author) / 1`, выводится списком «автор — k клипов»; среднее — только при `n ≥ 30`.
@@ -975,7 +976,7 @@ INPUT: `DELETE /api/videos/{video_id}`
 OUTPUT: `204`
 STEPS:
 1. `auth({owns:{video}})`; `rate_limit('api_write')`.
-2. Транзакция: `UPDATE video SET deleted_at=now() WHERE id AND deleted_at IS NULL`; собрать ключи S3 (исходник, `tmp/{job_id}/`, клипы и превью); `UPDATE event SET clip_id=NULL WHERE clip_id IN (клипы)`; `UPDATE spend_ledger SET job_id=NULL WHERE job_id=$j`; `DELETE publication, clip, transcript_chunk, job` этого видео — публикация удаляется вместе с клипом по канону §4 (Specification FR-clips-13 п. 2 требует обратного — вопрос В-26). С этого момента все `clip_id` отвечают 404, а heartbeat воркера получает 0 строк и прерывает работу.
+2. Транзакция: `UPDATE video SET deleted_at=now() WHERE id AND deleted_at IS NULL`; собрать ключи S3 (исходник, `tmp/{job_id}/`, клипы и превью); `UPDATE event SET clip_id=NULL WHERE clip_id IN (клипы)`; `UPDATE spend_ledger SET job_id=NULL WHERE job_id=$j`; `UPDATE publication SET clip_id=NULL WHERE clip_id IN (клипы)` — строки публикаций и их статусы сохраняются (канон §4, FR-clips-13 п. 2, FR-GROWTH-005 п. 4): подтверждённый пост со знаком уже висит на площадке и остаётся в метрике недели; `DELETE clip, transcript_chunk, job` этого видео. С этого момента все `clip_id` отвечают 404, а heartbeat воркера получает 0 строк и прерывает работу.
 3. Вне транзакции: `DeleteObjects` по собранным ключам; `AbortMultipartUpload`, если `s3_upload_id` незавершён. Успех → `UPDATE video SET source_deleted_at=now()`. Ошибка S3 → остаётся `deleted_at IS NOT NULL AND source_deleted_at IS NULL`, объекты дочищает «Уборщик хранилища».
 4. RETURN 204.
 COMPLEXITY: O(c).
@@ -1149,11 +1150,8 @@ Claimed by an algorithm but absent from Specification.md:
 
 Чужие файлы не правились. Предложения этой единицы (В-1…В-5, В-7…В-9, В-11, В-12, В-14, В-15, В-19…В-22)
 приняты координатором в канон 2026-09-23 и здесь применены; В-6, В-13, В-16…В-18 закрыты правкой
-Specification. Итерация исправлений 1 (валидация Phase 2) добавила В-23…В-26; В-10 закрыт решением владельца OWN-05A-012.
+Specification. Итерация исправлений 1 (валидация Phase 2) добавила В-23…В-26 — все закрыты координатором: `GET` в CORS бакета (канон §8), `no_timestamps` неповторяема, лимит регистраций 20 с IP в час, публикация сохраняется с `clip_id = NULL` (канон §4). В-10 закрыт решением владельца OWN-05A-012. Открытых вопросов нет.
 
 | # | Где | Суть | Что принято здесь до решения |
 |---|---|---|---|
-| В-23 | канон §8, CORS бакета `AllowedMethods = PUT` | «Поделиться» с файлом требует заранее скачать клип `fetch` с бакета — кросс-доменный `GET` без `GET` в CORS браузер отвергнет (VT-14) | алгоритм «Поделиться файлом клипа» опирается на `GET` в `AllowedMethods`; до правки канона «Поделиться» на мобильных не заработает |
-| В-24 | Specification FR-clips-3 п. 3 (без кнопки только `file_invalid`, `duration_exceeded`) | `no_timestamps` детерминирован для модели: повтор платит за тот же отказ (VA-19) | `no_timestamps` без кнопки «Повторить»; `stt_failed` после невалидного ответа той же модели повторно не вызывает STT |
-| В-25 | Specification AC-clips-1 SC-US-001-2 (5 регистраций с IP в час → 429) vs VA-11 (CGNAT) | лимит по IP наказывает мобильную сеть | оставлен по AC; смягчение — решение Spec/владельца вместе с VA-02 (вход по приглашению) |
-| В-26 | канон §4 `publication` «удаляется вместе с клипом» vs Specification FR-clips-13 п. 2 и FR-GROWTH-005 п. 4 (строка сохраняется, `clip_id = NULL`, клип остаётся в метрике) | противоречие канона и Specification после VA-14 | по правилу координатора — канон: публикация удаляется; при смене канона правка — одна строка в «Удалении видео» и `COALESCE(clip_id, id)` в метриках |
+| — | — | открытых вопросов нет | — |

@@ -357,7 +357,7 @@ fake-door (2-я очередь, OWN-05A-014) пишет только событ�
 | `packages/config/src/env.ts`, `llm-providers.ts` | ПЕРЕПИСАТЬ | проверка канона §6 без дефолтов; таблица провайдеров не нужна |
 | `packages/types/src/*` | ПЕРЕПИСАТЬ | закрытые списки канона §5 |
 | `packages/crypto/*` | НЕ БРАТЬ | BYOK вне недели |
-| `apps/worker/lib/ffmpeg.ts` | ДОРАБОТАТЬ | `pad` на y = 420 вместо центра; знак — полупрозрачный в левом верхнем углу полосы видео (x = 24, y = 444 для 16:9; OWN-05A-013), не на чёрном поле; `WATERMARK_TEXT` из конфигурации; таймаут; экранирование и `execFile` сохранить |
+| `apps/worker/lib/ffmpeg.ts` | ДОРАБОТАТЬ | `pad` на y = 420 вместо центра; знак — полупрозрачный в левом верхнем углу полосы видео (x = 70, y = 444 для 16:9, x = 158 для 4:3, x = 70, y = 200 для вертикального; плашка 0,5–0,6; FR-GROWTH-003, OWN-05A-013), не на чёрном поле; `WATERMARK_TEXT` из конфигурации; таймаут; экранирование и `execFile` сохранить |
 | `apps/worker/workers/video-render.ts` | ДОРАБОТАТЬ | `watermark = plan !== 'paid'` из БД; `clip.render_status`; завершение задачи при последнем клипе |
 | `apps/worker/workers/stt.ts` | ПЕРЕПИСАТЬ | куски 60–120 с по паузе, `Transcriber`, `transcript_chunk`, резерв по попыткам; инфраструктура (`ffprobe`, WAV, `p-map`) как справка |
 | `apps/worker/lib/audio-chunker.ts` | ПЕРЕПИСАТЬ | рез в паузе (`silencedetect`), перекрытие, смещения в мс |
