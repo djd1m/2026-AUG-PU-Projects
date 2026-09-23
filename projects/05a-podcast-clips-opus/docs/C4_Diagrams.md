@@ -17,7 +17,7 @@ C4Context
   System_Ext(openrouter, "OpenRouter", "STT с диаризацией; anthropic/claude-sonnet-5")
   System_Ext(openai, "OpenAI API", "Запасной STT gpt-4o-transcribe-diarize, включается конфигурацией")
   System_Ext(s3, "Cloud.ru Object Storage", "Исходники и клипы (S3)")
-  System_Ext(smtp, "SMTP-провайдер", "Письма подтверждения email (провайдер не выбран)")
+  System_Ext(smtp, "Resend", "SMTP smtp.resend.com:465; письма подтверждения с домена clipmkr.ru")
   System_Ext(social, "Площадки", "TikTok, YouTube Shorts, VK, Telegram, Rutube, Дзен — автор публикует вручную")
   Rel(author, clipmkr, "Регистрируется, загружает, смотрит, скачивает, возвращает ссылку", "HTTPS")
   Rel(author, social, "Публикует клип сам")
@@ -43,7 +43,7 @@ C4Container
   Person(operator, "Оператор")
   System_Ext(openrouter, "OpenRouter")
   System_Ext(s3, "Cloud.ru Object Storage")
-  System_Ext(smtp, "SMTP-провайдер")
+  System_Ext(smtp, "Resend SMTP")
   System_Boundary(vps, "VPS в Нидерландах") {
     Container(caddy, "caddy", "Caddy 2.8", "Единственная дверь: TLS clipmkr.ru, прокси на web:3000")
     Container(web, "web", "Next.js 15.5, tRPC, Prisma", "Страницы, API, вход, выдача подписанных ссылок, события, /admin")

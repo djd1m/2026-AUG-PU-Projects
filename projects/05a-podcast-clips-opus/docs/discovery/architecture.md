@@ -61,4 +61,14 @@ developers.openai.com speech-to-text; cloud.ru/docs/s3e: api__methods, api__aws-
   `${VAR:?}` без дефолта; `RENDER_CPUS` — `${RENDER_CPUS:-2}`; всё совпадает с каноном.
 - Абзац «остаются предложением» в «Открытых расхождениях» заменён записью, что правки внесены.
 
+
+## Дополнение: почтовый провайдер Resend (OWN-05A-011)
+- ADR.md, ADR-011: в «Решение» записан SMTP Resend `smtps://resend:<API-ключ>@smtp.resend.com:465`, `MAIL_FROM` на `clipmkr.ru`
+  с SPF/DKIM; в «Последствия» — FR-clips-1 п. 1 и AC-clips-21 входят в Phase 3, DNS-записи Resend — чек-лист до беты.
+- Architecture.md, External Dependencies: строка SMTP из UNCONFIRMED стала двумя CONFIRMED с цитатами
+  (resend.com/docs/send-with-smtp — порт 465 «Implicit SSL/TLS»; resend.com/docs/add-a-domain — «Provide the DKIM and SPF
+  configurations…»), checked 2026-09-23. Итог: 13 строк, все CONFIRMED. Абзац-последствие UNCONFIRMED заменён.
+- C4_Diagrams.md и обзорная диаграмма: «SMTP-провайдер» → Resend.
+- Остаётся непроверенным: доставляемость на mail.ru/yandex.ru (письмо в день 1).
+
 Status: completed

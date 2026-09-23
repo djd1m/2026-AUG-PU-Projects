@@ -35,7 +35,7 @@ flowchart LR
   end
   subgraph External
     OR[OpenRouter<br/>STT + Claude Sonnet 5]
-    SMTP[SMTP-провайдер]
+    SMTP[Resend SMTP]
   end
   B -->|HTTPS| C --> W
   V -.->|набирает clipmkr.ru или ссылку /c/код| C
@@ -94,12 +94,13 @@ Every capability this product needs from someone else's service. One row per cap
 | Подписанные ссылки на объект | Cloud.ru Evolution Object Storage | [cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4](https://cloud.ru/docs/s3e/ug/topics/api__aws-sig-v4) · checked 2026-09-23 · «Такой метод аутентификации позволяет сформировать подписанную ссылку (presigned URL)» | CONFIRMED | FR-clips-2, FR-clips-8, AC-clips-20 |
 | CORS бакета для загрузки из браузера | Cloud.ru Evolution Object Storage | methods · checked 2026-09-23 · `PutBucketCors` — «Устанавливает конфигурацию CORS бакета» | CONFIRMED | FR-clips-2 |
 | Удаление объектов по сроку | Cloud.ru Evolution Object Storage | methods · checked 2026-09-23 · `PutBucketLifecycleConfiguration` — «Создает новую конфигурацию жизненного цикла бакета» | CONFIRMED | FR-clips-13, AC-clips-17 |
-| Отправка письма подтверждения email | SMTP-провайдер — **не выбран** | — | UNCONFIRMED | FR-clips-1, AC-clips-21 |
+| Отправка письма подтверждения email по SMTP | Resend, `smtp.resend.com:465` (OWN-05A-011) | [resend.com/docs/send-with-smtp](https://resend.com/docs/send-with-smtp) · checked 2026-09-23 · host `smtp.resend.com`, порт `465` — «Implicit SSL/TLS (Immediately connects via SSL/TLS)», пароль — API-ключ | CONFIRMED | FR-clips-1, AC-clips-21 |
+| Отправка с домена `clipmkr.ru` (SPF/DKIM) | Resend, проверка домена | [resend.com/docs/add-a-domain](https://resend.com/docs/add-a-domain) · checked 2026-09-23 · «Provide the DKIM and SPF configurations (`TXT` and `MX` or `CNAME` records) to your DNS provider» | CONFIRMED (записи в DNS — чек-лист до беты) | FR-clips-1, AC-clips-21 |
 | Выпуск TLS-сертификата для `clipmkr.ru` | Caddy + ACME (Let's Encrypt / ZeroSSL) | [caddyserver.com/docs/automatic-https](https://caddyserver.com/docs/automatic-https) · checked 2026-09-23 · «By default, Caddy serves all sites over HTTPS» | CONFIRMED (требует DNS A на сервер и открытые 80/443) | NFR-clips-2, FR-clips-14 |
 
-**Последствие строки UNCONFIRMED.** FR-clips-1 п. 1 (подтверждение почты) и AC-clips-21 не входят в Phase 3, пока
-не выбран SMTP-провайдер и не приложена цитата его документации. Остальная работа продолжается. Выбор провайдера —
-вопрос координатору/владельцу; критерий — доставка на `mail.ru` и `yandex.ru` проверяется письмом в день 1.
+**Строк UNCONFIRMED нет.** Почтовый провайдер выбран владельцем — Resend (OWN-05A-011): `SMTP_URL=smtps://resend:<API-ключ>@smtp.resend.com:465`,
+`MAIL_FROM` на домене `clipmkr.ru` с SPF/DKIM. FR-clips-1 п. 1 и AC-clips-21 входят в Phase 3. Доставка на
+`mail.ru` и `yandex.ru` проверяется письмом в день 1 `[НЕ ПРОВЕРЕНО]`.
 
 ## Deployment Topology (Docker Compose)
 
