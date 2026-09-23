@@ -33,4 +33,12 @@
 - В-21 подкоманда `ops stt-probe` не в каноне.
 - Закрыты правкой Specification/канона во время работы: срок pref 60 дней, `{job_id}:stt:prepare`, 7 критериев пробы, один вызов LLM, хосты канона, selection_failed вместо provider_unavailable, минимум клипа 20 с.
 
+
+## Дополнение 3 — приведение к канону c252341b8dee99cf… (принятые предложения)
+
+- Сняты все пометки `[ПРЕДЛОЖЕНИЕ КАНОНА]`: `grep -c` = 0. Поля (`email_token.purpose` verify|reset, `transcript_chunk.attempt_count`, `video.s3_upload_id`, `video.rights_confirmed_at`, `created_at`), `quota_counter.kind`, нулевой UUID для global, cookie `sid`, `ops stt-probe <файл>` — теперь со ссылкой на канон.
+- Новые алгоритмы: «Повторная отправка письма подтверждения» (`POST /api/auth/resend-verification`, 1 раз в 60 с и 5 в сутки), «Перевыдача ссылок на незагруженные части» (`POST /api/videos/{video_id}/parts`, ListParts → ссылки на недостающие части). Сброс пароля: `purpose='reset'`, `GET /reset?token=`, `POST /api/auth/reset`, отзыв всех refresh; подтверждение почты принимает только `purpose='verify'`.
+- API Contracts дополнены четырьмя маршрутами. Раздел вопросов переписан: открыт только В-10 (потолок LLM на задачу у 120-мин выпуска) — риск назван, уходит на валидацию.
+- Алгоритмов: 44 (было 42). Ключей Specification: 52, покрыто REQUIREMENT 49 (+3 с причиной), лишних 0. Сценариев: 48, заявлено 46 (+2 с причиной), висячих 0.
+
 Status: completed

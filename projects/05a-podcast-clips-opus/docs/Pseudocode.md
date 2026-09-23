@@ -6,9 +6,9 @@
 [canon.md](canon.md) (хеш `db7d3a7e…981` на момент сдачи), [decisions-owner.md](decisions-owner.md).
 
 **Правило имён.** Таблицы, поля, очереди, `jobId`, маршруты, события, переменные окружения и закрытые списки — строго
-по канону. Где канон и Specification расходятся, действует канон (canon §12). Имена, которых в каноне нет, но без
-которых алгоритм не записать, помечены `[ПРЕДЛОЖЕНИЕ КАНОНА]` и собраны в разделе «Вопросы к канону и
-Specification» — исполнитель не вводит их молча, а сверяет с координатором.
+по канону. Где канон и Specification расходятся, действует канон (canon §12). Все имена, которые алгоритмам понадобились сверх
+первой версии канона (поля, `kind`, маршруты, cookie `sid`, `ops stt-probe`), координатор внёс в канон
+2026-09-23; открытые вопросы — в последнем разделе.
 
 **Для исполнителя (Codex).** Каждый шаг однозначен. `ОТКАЗ(код, причина)` — немедленный возврат ошибки клиенту или
 перевод задачи в `failed`; шагов после него нет. «Вне транзакции» — соединение пула в этот момент НЕ удерживается.
@@ -36,44 +36,44 @@ Specification» — исполнитель не вводит их молча, а
 | `RENDER_TIMEOUT_MS(d)` | `max(60 000, ceil(d × 300 000 / 90 000))`, потолок 300 000 | FR-clips-7 п. 6, ADR-010 |
 | `HEARTBEAT_EVERY_MS` / `LEASE_LOST_MS` / `SILENT_UI_MS` | 30 000 / 300 000 / 120 000 | canon §3, FR-clips-3 п. 5 |
 | `MAX_JOB_ATTEMPTS` | 3 | canon §3 |
-| `GLOBAL_SCOPE_ID` | `00000000-0000-0000-0000-000000000000` `[ПРЕДЛОЖЕНИЕ КАНОНА]` | — |
+| `GLOBAL_SCOPE_ID` | `00000000-0000-0000-0000-000000000000` | канон §5 |
 | `PREF_MAX_AGE_SEC` | 5 184 000 (60 дней) | ADR-015, FR-GROWTH-002 п. 1 |
 | `SOURCE_RETENTION_MS` | 259 200 000 (72 ч) | ADR-007 |
 | `RL_REGISTER` / `RL_LOGIN_FAIL` / `RL_PUBLIC_CODE` | 5 / IP / 1 ч · 10 / email / 15 мин · 30 / IP / 1 ч | FR-clips-1 п. 4, SC-US-010-3 |
 | `RL_API_WRITE` | 60 / аккаунт / 1 мин `[ПРЕДЛОЖЕНИЕ]` | NFR-clips-2 п. 1 |
-| `RESEND_EVERY_SEC` | 120 | FR-clips-1 п. 1 |
+| `RESEND_EVERY_SEC` / `RESEND_PER_DAY` | 60 / 5 | канон §7 |
 
 ## Data Structures
 
 Все сущности — канон §4. `id: UUID` у каждой, кроме `quota_counter` (составной первичный ключ по канону).
-`created_at: Timestamp` у каждой; где канон его не перечисляет, он добавлен по требованию навыка и помечен `†`.
+`created_at: Timestamp` у каждой (канон §4).
 Типы: `Timestamp` = `timestamptz` UTC; деньги — целые копейки; медиа — целые мс.
 
 ```
 Account        { id: UUID, email: Text(lower, unique), password_hash: Text, email_verified_at: Timestamp?,
                  plan: Text, role: Text, created_at: Timestamp }
-EmailToken     { id: UUID, account_id: UUID, token_hash: Text(sha256 hex), expires_at: Timestamp,
-                 used_at: Timestamp?, created_at†: Timestamp }
+EmailToken     { id: UUID, account_id: UUID, purpose: 'verify'|'reset', token_hash: Text(sha256 hex), expires_at: Timestamp,
+                 used_at: Timestamp?, created_at: Timestamp }
 RefreshToken   { id: UUID, account_id: UUID, token_hash: Text, expires_at: Timestamp, revoked_at: Timestamp?,
-                 created_at†: Timestamp }
+                 created_at: Timestamp }
 Video          { id: UUID, account_id: UUID, s3_key_source: Text, size_bytes: BigInt, duration_ms: Int?,
                  container: Text('mp4'|'webm'), source_deleted_at: Timestamp?, deleted_at: Timestamp?,
-                 s3_upload_id‡: Text?, rights_confirmed_at‡: Timestamp, created_at†: Timestamp }
+                 s3_upload_id: Text?, rights_confirmed_at: Timestamp, created_at: Timestamp }
 Job            { id: UUID, video_id: UUID, account_id: UUID, idempotency_key: Text, status: JobStatus,
                  step: JobStep, fail_reason: FailReason?, attempt_count: Int, heartbeat_at: Timestamp,
-                 clips_total: Int?, clips_done: Int, finished_at: Timestamp?, created_at†: Timestamp }
+                 clips_total: Int?, clips_done: Int, finished_at: Timestamp?, created_at: Timestamp }
                  UNIQUE(account_id, idempotency_key)
 TranscriptChunk{ id: UUID, job_id: UUID, chunk_idx: Int, offset_ms: Int, duration_ms: Int, status: 'pending'|'done',
                  units: Jsonb<Unit[]>?, speaker_map: Jsonb<{local→global:Int}>?, speaker_map_confident: Bool?,
-                 model: Text?, attempt_count‡: Int = 0, created_at†: Timestamp }  UNIQUE(job_id, chunk_idx)
+                 model: Text?, attempt_count: Int = 0, created_at: Timestamp }  UNIQUE(job_id, chunk_idx)
 Unit           { start_ms: Int, end_ms: Int, speaker_local: Text?, text: Text, words: [{text, start_ms, end_ms}]? }
                  — время внутри JSON куска хранится УЖЕ сдвинутым на offset_ms (абсолютное в исходнике)
 Clip           { id: UUID, job_id: UUID, clip_code: Text(unique), start_unit: Int, end_unit: Int, start_ms: Int,
                  end_ms: Int, title: Text, hook_quote, hook_reason: Text, hook_score: Int?, completeness_quote,
                  completeness_reason: Text, completeness_score: Int?, length_score: Int, total_score: Int?,
                  render_status: RenderStatus, watermarked: Bool?, s3_key_clip: Text?, speaker_labels_shown: Bool,
-                 created_at†: Timestamp }
-QuotaCounter   { scope: 'account'|'global'|'job', scope_id: UUID, day: Date(Europe/Moscow), kind: QuotaKind‡,
+                 created_at: Timestamp }
+QuotaCounter   { scope: 'account'|'global'|'job', scope_id: UUID, day: Date(Europe/Moscow), kind: QuotaKind,
                  used: BigInt }  PK(scope, scope_id, day, kind)
 SpendLedger    { id: UUID, account_id: UUID, job_id: UUID?, call: 'stt'|'llm', model: Text, attempt: Int,
                  units_reserved: Int, units_actual: Int?, cost_usd_micro: BigInt?, cost_kop: Int, outcome: Outcome,
@@ -82,17 +82,16 @@ Event          { id: UUID, name: EventName, account_id: UUID?, clip_id: UUID?, s
                  created_at: Timestamp }  — сырого IP нет (NFR-clips-6)
 Publication    { id: UUID, clip_id: UUID, account_id: UUID, url: Text, url_normalized: Text(unique),
                  platform: Platform, status: PubStatus, reason: Text?, verified_at: Timestamp?,
-                 rechecked_at: Timestamp?, created_at†: Timestamp }
+                 rechecked_at: Timestamp?, created_at: Timestamp }
 Partner        { id: UUID, name: Text, contact: Text, audience_url: Text, partner_code: Text(unique, upper),
-                 account_id: UUID?, created_at†: Timestamp }
+                 account_id: UUID?, created_at: Timestamp }
 Attribution    { id: UUID, account_id: UUID, partner_id: UUID, stage: 'signup'|'fakedoor', source: 'cookie'|'code',
                  self_referral: Bool, created_at: Timestamp }  UNIQUE(account_id, stage)
 AuditLog       { id: UUID, actor: Text, action: Text, target: Text, reason: Text, created_at: Timestamp }
 ```
 
-`‡` — поле, которого нет в каноне, но без которого алгоритм не записывается: вопросы В-1…В-4.
 
-`QuotaKind‡` `[ПРЕДЛОЖЕНИЕ КАНОНА]` = `stt_sec` | `uploads` | `llm_kop` | `llm_attempts`.
+`QuotaKind` = `stt_sec` | `uploads` | `llm_kop` | `llm_attempts` (канон §5).
 
 **Частичные уникальные индексы `event` для дедупликации** (Architecture: частичный уникальный индекс; день — `msk_day(created_at)`):
 
@@ -207,9 +206,9 @@ STEPS:
    1. `INSERT INTO account(email, password_hash, plan, role) VALUES ($email, $hash, 'free', 'user') ON CONFLICT (email) DO NOTHING RETURNING id`.
    2. IF строки нет THEN COMMIT; RETURN `201 {status:'check_email'}` тем же ответом (перечисление аккаунтов не раскрывается; письмо не отправляется).
    3. `resolve_attribution(tx, account_id, 'signup', code_partner, pref_cookie)` (алгоритм «Разрешение атрибуции»).
-   4. `token ← base64url(random(32))`; `INSERT email_token(account_id, token_hash=sha256(token), expires_at=now()+24h)`.
+   4. `token ← base64url(random(32))`; `INSERT email_token(account_id, purpose='verify', token_hash=sha256(token), expires_at=now()+24h)`.
    5. `INSERT event(name='signup', account_id)`.
-6. После COMMIT, вне транзакции: отправить письмо через SMTP со ссылкой `{BASE_URL}/api/auth/verify?token={token}`. Ошибка SMTP → журнал `email_send_failed` с `account_id`; ответ клиенту тот же (повторная отправка — вопрос В-5).
+6. После COMMIT, вне транзакции: отправить письмо через SMTP со ссылкой `{BASE_URL}/api/auth/verify?token={token}`. Ошибка SMTP → журнал `email_send_failed` с `account_id`; ответ клиенту тот же (повторная отправка — алгоритм «Повторная отправка письма»).
 7. RETURN `201 {status:'check_email'}`.
 COMPLEXITY: O(1); время доминирует argon2 (~50 мс) вне транзакции.
 
@@ -224,11 +223,26 @@ STEPS:
 1. `rate_limit('api_write', ip, 60, 60)`.
 2. IF `token` не соответствует `/^[A-Za-z0-9_-]{43}$/` THEN RETURN экран «ссылка недействительна».
 3. Транзакция:
-   1. `UPDATE email_token SET used_at = now() WHERE token_hash = sha256($token) AND used_at IS NULL AND expires_at > now() RETURNING account_id`.
+   1. `UPDATE email_token SET used_at = now() WHERE token_hash = sha256($token) AND purpose = 'verify' AND used_at IS NULL AND expires_at > now() RETURNING account_id`.
    2. IF строки нет THEN ROLLBACK; RETURN «ссылка недействительна или устарела» (использованная и старше 24 ч — одинаково).
    3. `UPDATE account SET email_verified_at = now() WHERE id = $account_id AND email_verified_at IS NULL RETURNING id`.
    4. IF обновилось THEN `INSERT event(name='email_verified', account_id)`.
 4. RETURN редирект `/` с сообщением «почта подтверждена, можно загружать».
+COMPLEXITY: O(1).
+
+### Algorithm: Повторная отправка письма подтверждения
+
+REQUIREMENT: `FR-clips-1`
+REQUIREMENT: `AC-clips-21`
+REALISES: SC-US-001-3
+INPUT: `POST /api/auth/resend-verification` (сессия, почта не подтверждена)
+OUTPUT: `202` | `409` | `429`
+STEPS:
+1. `ctx ← auth({})`; IF `email_verified_at IS NOT NULL` THEN RETURN 409 «почта уже подтверждена».
+2. `rate_limit('resend', account_id, 1, 60)` и `rate_limit('resend_day', account_id, 5, 86400)` (сутки — окно 24 ч); DENY → 429 с `retry_after`.
+3. Транзакция: `UPDATE email_token SET used_at=now() WHERE account_id AND purpose='verify' AND used_at IS NULL` (старые ссылки гаснут); `token ← base64url(random(32))`; `INSERT email_token(account_id, purpose='verify', token_hash=sha256(token), expires_at=now()+24h)`.
+4. После COMMIT, вне транзакции: письмо через `SMTP_URL` (Resend). Ошибка → журнал `email_send_failed`; 503.
+5. RETURN 202.
 COMPLEXITY: O(1).
 
 ### Algorithm: Вход, обновление и выход
@@ -288,8 +302,23 @@ STEPS:
 8. `n_parts ← ceil(size_bytes / PART_SIZE_BYTES)`; FOR `p` IN 1..n_parts: `url_p ← presign(UploadPart, key, upload_id, p, ttl=PRESIGN_TTL_SEC)`.
 9. Транзакция B: `INSERT video(id, account_id, s3_key_source=key, size_bytes, container = ext∈{mp4,mov}?'mp4':'webm', s3_upload_id=upload_id, rights_confirmed_at=now())`; `INSERT event(name='upload_started', account_id, props={video_id, size_bytes})`.
 10. RETURN 201.
-**Риск, названный явно:** 2 ГБ при 10 Мбит/с грузятся ~27 мин, а ссылки живут 15 мин. Маршрута перевыдачи ссылок в каноне нет (вопрос В-7); до решения части, начатые после `expires_at`, получат 403 от S3.
+2 ГБ при 10 Мбит/с грузятся ~27 мин, а ссылки живут 15 мин: клиент до `expires_at` (или по 403 от S3) перевыдаёт ссылки на оставшиеся части следующим алгоритмом.
 COMPLEXITY: O(p), p ≤ 205 частей.
+
+### Algorithm: Перевыдача ссылок на незагруженные части
+
+REQUIREMENT: `FR-clips-2`
+REQUIREMENT: `NFR-clips-2`
+INPUT: `POST /api/videos/{video_id}/parts`
+OUTPUT: `200 {parts:[{part_number, url}], expires_at}` | `404` | `409`
+STEPS:
+1. `auth({verified:true, owns:{video, video_id}})`; `rate_limit('api_write', account_id, 60, 60)`.
+2. IF `video.s3_upload_id IS NULL` OR у видео уже есть задача OR `source_deleted_at IS NOT NULL` THEN RETURN 409 «загрузка завершена или отменена».
+3. Вне транзакции: `done ← S3.ListParts(key, s3_upload_id)` (номера загруженных частей); `NoSuchUpload` → 409.
+4. `n_parts ← ceil(video.size_bytes / PART_SIZE_BYTES)`; `missing ← {1..n_parts} \ done`.
+5. FOR `p` IN `missing`: `presign(UploadPart, key, s3_upload_id, p, ttl=PRESIGN_TTL_SEC)`. Лимит загрузок и потолок STT не трогаются: видео уже учтено.
+6. RETURN 200.
+COMPLEXITY: O(p).
 
 ### Algorithm: Завершение загрузки и создание задачи
 
@@ -355,7 +384,7 @@ STEPS:
 1. Heartbeat запущен. `j ← SELECT job JOIN video WHERE job.id=$j`; IF нет OR `status≠'running'` OR `video.deleted_at` THEN RETURN.
 2. IF у задачи уже есть строки `transcript_chunk` THEN перейти к шагу 9 (повтор подготовки не перерезает).
 3. Вне транзакции: скачать исходник потоком в `/tmp/{job_id}/source` (удаляется в `finally`). Диск: ≤ 2 ГБ на задачу, одновременно ≤ 2 подготовки на процесс (конкурентность очереди `stt` = 2).
-4. Повторная проверка magic bytes по первым 16 байтам локального файла (канон §3 относит её к подготовке; `web` уже проверил до создания задачи — В-14); не совпало → `finish_failed('file_invalid')`, `DeleteObject`; RETURN.
+4. Повторная проверка magic bytes по первым 16 байтам локального файла (канон §3, §12: `web` проверил до создания задачи, подготовка перепроверяет); не совпало → `finish_failed('file_invalid')`, `DeleteObject`; RETURN.
    `probe ← execFile('ffprobe', ['-v','error','-print_format','json','-show_format','-show_streams', path], timeout 30 с)`.
    IF ошибка разбора OR нет потока `codec_type='video'` OR нет потока `codec_type='audio'` OR нет `format.duration` THEN `finish_failed('file_invalid')`; RETURN.
 5. `duration_ms ← round(format.duration × 1000)`; `UPDATE video SET duration_ms`. IF `duration_ms > MAX_DURATION_MS` THEN `finish_failed('duration_exceeded')`; RETURN — резерв STT не делается (AC-clips-2 SC-US-002-2).
@@ -513,7 +542,7 @@ STEPS:
 9. `save_clips(job, scored, U)` (алгоритм «Сохранение клипов»). `outcome ← 'ok'`.
 COMPLEXITY: O(N) подготовка + O(f²) дедупликация, f ≤ 10.
 
-**Названный риск:** выпуск 120 мин ≈ 110–130 тыс. символов → резерв ≈ 950–1 100 коп., у самой границы `LIMIT_LLM_KOP_JOB = 1000`. Если резерв одной попытки больше предела задачи, задача честно падает `selection_failed` с записью `llm_refused` — число пересматривается после замера на 3 выпусках (вопрос В-10), а не обходится.
+**Названный риск:** выпуск 120 мин ≈ 110–130 тыс. символов → резерв ≈ 950–1 100 коп., у самой границы `LIMIT_LLM_KOP_JOB = 1000`. Если резерв одной попытки больше предела задачи, задача честно падает `selection_failed` с записью `llm_refused` — число пересматривается после замера на 3 выпусках (открытый вопрос В-10, Phase 2), а не обходится.
 
 ### Algorithm: Валидация и дедупликация фрагментов
 
@@ -656,7 +685,7 @@ STEPS:
 2. Транзакция: `UPDATE job SET status='running', fail_reason=NULL, attempt_count=0, heartbeat_at=now(), finished_at=NULL WHERE id=$j AND status='failed' AND fail_reason NOT IN ('file_invalid','duration_exceeded') AND EXISTS (SELECT 1 FROM video WHERE id=job.video_id AND source_deleted_at IS NULL AND deleted_at IS NULL) RETURNING step`. Нет строки → RETURN 409 с причиной (не `failed`, неповторяемая причина или исходник удалён).
 3. `UPDATE clip SET render_status='queued' WHERE job_id AND render_status='failed'`. COMMIT.
 4. После COMMIT поставить `expected_bullmq_ids(job)` («Heartbeat и уборщик аренды», шаг 4), предварительно удалив из BullMQ одноимённые работы в `completed`/`failed`.
-5. Сохранённые шаги не повторяются: `done`-куски пропускаются, строки `clip` не пересоздаются, `ready`-клипы не рендерятся; допуск STT не повторяется (отметка `job`-счётчика). Повторные попытки кусков резервируют потолок сами. Счётчик `llm_attempts` задачи ведётся по суткам: повтор после `selection_failed` в те же сутки получит отказ и понятный текст «попробуйте завтра» (вопрос В-11).
+5. Сохранённые шаги не повторяются: `done`-куски пропускаются, строки `clip` не пересоздаются, `ready`-клипы не рендерятся; допуск STT не повторяется (отметка `job`-счётчика). Повторные попытки кусков резервируют потолок сами. Счётчик `llm_attempts` задачи ведётся по суткам (канон §12): повтор после `selection_failed` в те же сутки получит отказ и текст «попробуйте завтра».
 6. RETURN `202 {job_id}`.
 COMPLEXITY: O(c).
 
@@ -749,7 +778,7 @@ OUTPUT: `302 /?via=p` с cookie или без
 STEPS:
 1. `rate_limit('public_code', ip, 30, 3600)`; DENY → 429.
 2. `code ← upper(partner_code)`; IF не `/^[A-Z0-9]{6,12}$/` OR партнёра нет THEN RETURN `302 /` — тот же ответ, что у обычного захода на лендинг: без cookie, без события (перебор кодов ничего не узнаёт).
-3. `sid ← cookie sid` или новый `base64url(random(16))` (cookie `sid` `[ПРЕДЛОЖЕНИЕ КАНОНА, В-9]`: `HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`).
+3. `sid ← cookie sid` или новый `base64url(random(16))` (cookie `sid`, канон §7: `HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`).
 4. IF cookie `pref` отсутствует THEN `Set-Cookie: pref={code}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=PREF_MAX_AGE_SEC` — ставит сервер (у JS-cookie Safari ITP срезает срок до 7 дней). Уже стоящая cookie не перезаписывается (первое касание).
 5. `record_event('partner_link_visited', null, null, sid, {partner_id})`.
 6. RETURN `302 /?via=p`.
@@ -767,7 +796,7 @@ STEPS:
 2. IF `code_partner` THEN `(partner, source) ← (code_partner, 'code')` — код сильнее cookie; ELSE IF `cookie_partner` THEN `(cookie_partner, 'cookie')`; ELSE RETURN (атрибуции нет).
 3. `self ← partner.account_id ≠ null AND partner.account_id = account_id`.
 4. `INSERT attribution(account_id, partner_id, stage, source, self_referral=self) ON CONFLICT (account_id, stage) DO NOTHING` — повторный ввод кода той же стадии не создаёт записей.
-5. IF `code_partner` THEN `record_event('promo_code_entered', account_id, null, null, {partner_id, stage, cookie_partner_id: cookie_partner?.id})` — вторая отметка (cookie) сохраняется в событии, а не во второй строке атрибуции (вопрос В-12).
+5. IF `code_partner` THEN `record_event('promo_code_entered', account_id, null, null, {partner_id, stage, cookie_partner_id: cookie_partner?.id})` — вторая отметка (cookie) сохраняется в событии, а не во второй строке атрибуции (канон §12).
 COMPLEXITY: O(1).
 
 ### Algorithm: Fake-door «Хочу без знака»
@@ -811,7 +840,8 @@ INPUT: `/admin/users` процедуры `set_plan {email, plan, reason}`, `rese
 OUTPUT: изменённый аккаунт и `audit_log`
 STEPS:
 1. `set_plan`: `auth({role:'operator'})`; `plan ∈ {free, paid}`; `reason` непуст; транзакция: `UPDATE account SET plan WHERE email`; `audit_log(action='account.set_plan', target=email, reason)`. Уже отрендеренные клипы не перерендериваются: решение о знаке принимается в момент рендера.
-2. `reset_password` (одноразовая ссылка на почту, канон §7): `auth({role:'operator'})`; `reason` непуст; транзакция: `token ← base64url(random(32))`; `INSERT email_token(account_id, token_hash=sha256(token), expires_at=now()+1 ч [ПРЕДЛОЖЕНИЕ], purpose='password_reset' [ПРЕДЛОЖЕНИЕ КАНОНА, В-22])`; `UPDATE refresh_token SET revoked_at=now() WHERE account_id AND revoked_at IS NULL`; `audit_log(action='account.reset_password', target=email, reason)`. После COMMIT вне транзакции — письмо через `SMTP_URL` (Resend) со ссылкой `{BASE_URL}/reset?token={token}`; оператор токена не видит. Переход: `UPDATE email_token SET used_at=now() WHERE token_hash=sha256($t) AND purpose='password_reset' AND used_at IS NULL AND expires_at>now() RETURNING account_id`; нет строки → «ссылка недействительна»; иначе новый пароль ≥ 10 символов → `argon2id` вне транзакции → `UPDATE account SET password_hash`. Маршрута установки пароля в каноне нет (В-22). Токен подтверждения почты этой ссылкой не принимается и наоборот — различие по `purpose`.
+2. `reset_password` (канон §7): `auth({role:'operator'})`; `reason` непуст; транзакция: `token ← base64url(random(32))`; `INSERT email_token(account_id, purpose='reset', token_hash=sha256(token), expires_at=now()+1 ч [ПРЕДЛОЖЕНИЕ])`; `audit_log(action='account.reset_password', target=email, reason)`. После COMMIT вне транзакции — письмо через `SMTP_URL` (Resend) со ссылкой `{BASE_URL}/reset?token={token}`; оператор токена не видит.
+   `GET /reset?token=` — форма нового пароля. `POST /api/auth/reset {token, password}`: `rate_limit('api_write', ip, 60, 60)`; `len(password) ≥ 10`; `hash ← argon2id` вне транзакции; транзакция: `UPDATE email_token SET used_at=now() WHERE token_hash=sha256($t) AND purpose='reset' AND used_at IS NULL AND expires_at>now() RETURNING account_id` (нет строки → 400 «ссылка недействительна»); `UPDATE account SET password_hash`; `UPDATE refresh_token SET revoked_at=now() WHERE account_id AND revoked_at IS NULL`. Токены `verify` и `reset` не взаимозаменяемы — различие по `purpose`.
 3. `ops grant-operator <email>` (внутри `worker-ai`, доступ = доступ к серверу): `UPDATE account SET role='operator' WHERE email`; нет строки → код выхода 1; `audit_log(actor='ops-cli')`. Через веб роль не выдаётся.
 COMPLEXITY: O(1).
 
@@ -920,7 +950,7 @@ COMPLEXITY: O(v) за проход, v ≤ 100.
 REQUIREMENT: `FR-clips-4`
 REQUIREMENT: `AC-clips-24`
 REALISES: SC-US-004-7
-INPUT: `ops stt-probe --audio <10 мин, 2 голоса> --reference <эталон> --models m1,m2,m3` `[ПРЕДЛОЖЕНИЕ КАНОНА: подкоманда ops]`
+INPUT: `ops stt-probe <файл>` (канон §7): 10 мин, 2 голоса; эталон и список кандидатов — рядом с файлом
 OUTPUT: `docs/probes/stt-day1.md` и рекомендация значения `STT_MODEL`
 STEPS:
 1. Эталон (готовит оператор): ручная расшифровка 2 мин с метками спикеров и 10 выбранных фраз с временем начала.
@@ -953,8 +983,12 @@ COMPLEXITY: O(m · c), m ≤ 5 моделей, c ≈ 7 кусков.
 | `POST /api/auth/login` | `{email, password}` | `200 {access_token}` + cookie | `401 bad_credentials` · `429` |
 | `POST /api/auth/refresh` | cookie | `200 {access_token}` | `401` |
 | `POST /api/auth/logout` | cookie | `200` | — |
+| `POST /api/auth/resend-verification` | — | `202` | `409 already_verified` · `429` · `503` |
+| `GET /reset?token=` | — | `200` HTML | — |
+| `POST /api/auth/reset` | `{token, password}` | `200` | `400 token_invalid` · `422` · `429` |
 | `POST /api/videos` | `{size_bytes, ext, rights_confirmed}` | `201 {video_id, upload_id, part_size_bytes, parts[], expires_at}` | `401` · `403 email_not_verified` · `422 file_too_large` · `429 quota_user|quota_global` (+`resets_at`) · `503` |
 | `POST /api/videos/{video_id}/complete` | `Idempotency-Key`; `{parts:[{part_number, etag}]}` | `202 {job_id}` | `404` · `409 upload_not_found` · `422 file_invalid` · `422 bad_idempotency_key` |
+| `POST /api/videos/{video_id}/parts` | — | `200 {parts[], expires_at}` | `404` · `409 upload_closed` |
 | `DELETE /api/videos/{video_id}` | — | `204` | `404` |
 | `GET /api/jobs/{job_id}` | — | `200 JobView` | `404` |
 | `POST /api/jobs/{job_id}/retry` | — | `202 {job_id}` | `404` · `409 not_retryable|source_gone|not_failed` |
@@ -1058,23 +1092,10 @@ Claimed by an algorithm but absent from Specification.md:
 
 ## Вопросы к канону и Specification
 
-Чужие файлы не правились. Каждый пункт — либо имя, которого нет в каноне, либо противоречие. Номера В-6, В-8, В-13, В-16, В-17, В-18 закрыты правкой Specification и канона во время работы этой единицы (срок `pref` 60 дней, `jobId` `{job_id}:stt:prepare` в каноне §3, 7 критериев пробы, один вызов LLM, хосты канона, причина `selection_failed`) и из таблицы сняты.
+Чужие файлы не правились. Предложения этой единицы (В-1…В-5, В-7…В-9, В-11, В-12, В-14, В-15, В-19…В-22)
+приняты координатором в канон 2026-09-23 и здесь применены; В-6, В-13, В-16…В-18 закрыты правкой
+Specification. Открытым остаётся один пункт — он уходит на валидацию Phase 2.
 
 | # | Где | Суть | Что принято здесь до решения |
 |---|---|---|---|
-| В-1 | канон §4 `transcript_chunk` | нужен счётчик попыток куска: первая попытка оплачена допуском, следующие резервируют сами | `transcript_chunk.attempt_count` (int, 0) |
-| В-2 | канон §4 `video` | `CompleteMultipartUpload` требует `UploadId`; галочка прав на запись — доказательство | `video.s3_upload_id`, `video.rights_confirmed_at` |
-| В-3 | канон §4 | навык требует `created_at` у каждой сущности; день задачи для job-счётчиков берётся из `job.created_at` | `created_at` у `email_token`, `refresh_token`, `video`, `job`, `transcript_chunk`, `clip`, `publication`, `partner` |
-| В-4 | канон §4 `quota_counter.kind`, `scope_id` для `global` | значения не перечислены | `stt_sec`, `uploads`, `llm_kop`, `llm_attempts`; `GLOBAL_SCOPE_ID` = нулевой UUID |
-| В-5 | канон §7, FR-clips-1 п. 1 | повторная отправка письма «не чаще раза в 2 мин» — маршрута нет | не реализовано; нужен маршрут (например `POST /api/auth/resend-verification`) |
-| В-7 | канон §7, ADR-007 | ссылки на части живут 15 мин, 2 ГБ грузятся дольше; маршрута перевыдачи нет | риск назван в «Начало загрузки»; нужен маршрут перевыдачи ссылок на оставшиеся части |
-| В-9 | канон §4 `event.session_id` | нет имени cookie сессии посетителя для дедупликации `/c/` | cookie `sid`, 1 год, `HttpOnly` |
-| В-10 | ADR-006 `LIMIT_LLM_KOP_JOB=1000` | резерв для 120-минутного выпуска ≈ 950–1 100 коп. — у границы | честный отказ `selection_failed` + журнал `llm_refused`; число пересмотреть после замера на 3 выпусках |
-| В-11 | ADR-006, FR-clips-3 п. 6 | «LLM на задачу: 2 попытки» — без суток повтор после `selection_failed` невозможен никогда | job-счётчики LLM ведутся по суткам попытки |
-| В-12 | FR-GROWTH-002 «запись хранит оба источника» vs канон `attribution` (одна строка на стадию, одно `source`) | второй источник некуда положить | cookie-партнёр пишется в `promo_code_entered.props.cookie_partner_id` |
-| В-14 | FR-clips-2 п. 3, канон §3 и Architecture.md (magic bytes в подготовке воркера) vs AC-clips-2 SC-US-002-1 («задача не создаётся») | где проверяются magic bytes | обе: `web` на `…/complete` читает 16 байт по Range до создания задачи (иначе AC-clips-2 невыполним), подготовка перепроверяет; `ffprobe` — в воркере |
-| В-15 | FR-clips-2 п. 5 (лимит 3 загрузок до проверки размера) vs NFR-clips-2 п. 1 и security-operation-order (квота после валидации) | порядок | лимит частоты → валидация размера → резерв загрузки |
-| В-19 | канон §10 | перечислены 14 FR-clips и 20 AC, а в Specification 15 FR (`FR-clips-15`) и 24 AC (`AC-clips-21…24`) | покрыты все ключи Specification |
-| В-20 | FR-clips-13 п. 2 | судьба `publication` при удалении клипа автором не названа | удаляются вместе с клипом; подтверждённая публикация удалённого клипа выпадает из метрики |
-| В-21 | `ops stt-probe` | подкоманды нет в каноне (канон оставил в `ops` только `grant-operator`) | предложена для пробы дня 1 |
-| В-22 | канон §4 `email_token`, §7 | сброс пароля одноразовой ссылкой: у `email_token` нет признака назначения, маршрута установки нового пароля нет | `email_token.purpose` (`verify` \| `password_reset`), маршрут вида `GET/POST /reset?token=` — предложение |
+| В-10 | ADR-006, канон §6 `LIMIT_LLM_KOP_JOB=1000` | резерв LLM для 120-минутного выпуска ≈ 950–1 100 коп. — у самой границы; оценка токенов (`chars/3 + 500`) не измерена | честный отказ `selection_failed` + журнал `llm_refused {reserve_kop, limit}`; число пересматривается после замера `usage.prompt_tokens` на 3 выпусках, обходить предел запрещено |
