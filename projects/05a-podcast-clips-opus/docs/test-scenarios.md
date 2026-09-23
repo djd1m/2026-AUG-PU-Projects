@@ -1,7 +1,7 @@
 # BDD-сценарии — проект 05a, ClipMkr
 
 **RUN_ID:** 20260923T173212Z-replicate-05a-475b · **Владелец файла:** spec-author (с итерации исправлений 2)
-**Источник:** все 67 сценариев из [Specification.md](Specification.md) (разделы 5 и 8), тексты — дословно из
+**Источник:** все 68 сценариев из [Specification.md](Specification.md) (разделы 5 и 8), тексты — дословно из
 Specification; сценарии `SC-VS-*` найдены на валидации (`docs/validation/val-stories.md`, VS-03…VS-06) и
 перенесены в Specification. Файл генерируется из Specification: при расхождении прав Specification.
 Теги: у каждого сценария есть `@FR-…` или `@NFR-…`; `@AC-clips-N` — критерий приёмки из §8 Specification;
@@ -91,6 +91,14 @@ Scenario: SC-US-001-7 Сброс пароля по одноразовой ссы
   Then автору на подтверждённую почту уходит одноразовая ссылка GET /reset?token= (email_token.purpose = reset), а в audit_log записаны actor, action, target и reason
   And после POST /api/auth/reset с новым паролем все refresh_token пользователя отозваны, вход со старым паролем отказывает
   And использованный второй раз или просроченный токен пароль не меняет
+
+@FR-clips-1 @FR-clips-11 @security @AC-clips-29
+Scenario: SC-US-001-8 Сброс пароля в первую неделю через CLI
+  Given автор беты забыл пароль, страницы сброса на /admin/users ещё нет
+  When оператор выполняет docker compose exec worker-ai ops reset-link author@gmail.com
+  Then на каноническую почту аккаунта уходит одноразовая ссылка GET /reset?token=, в audit_log записано действие reset-link
+  And после POST /api/auth/reset все refresh_token пользователя отозваны
+  And для email, которого нет, команда сообщает оператору «аккаунт не найден» и письмо не отправляется
 ```
 
 ## FR-clips-2 — Загрузка видео

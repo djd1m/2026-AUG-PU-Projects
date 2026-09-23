@@ -3,7 +3,7 @@
 **RUN_ID:** 20260923T173212Z-replicate-05a-475b · **WORK_UNIT_ID:** pseudocode · **Автор:** Claude Opus 5.5 · 2026-09-23
 **Фаза:** Phase 1, sparc-prd-mini AUTO, фаза 4 (Pseudocode).
 **Опирается на:** [Specification.md](Specification.md) v0.2, [ADR.md](ADR.md) ADR-001…017,
-[canon.md](canon.md) (хеш `372e9b03…0b2` на момент сдачи), [decisions-owner.md](decisions-owner.md).
+[canon.md](canon.md) (хеш `73fce1cb…0d4` на момент сдачи), [decisions-owner.md](decisions-owner.md).
 
 **Правило имён.** Таблицы, поля, очереди, `jobId`, маршруты, события, переменные окружения и закрытые списки — строго
 по канону. Где канон и Specification расходятся, действует канон (canon §12). Все имена, которые алгоритмам понадобились сверх
@@ -31,7 +31,7 @@
 | `LLM_MAX_OUTPUT_TOKENS` | 3 000 `[ПРЕДЛОЖЕНИЕ; выход 10 фрагментов замеряется на пробе дня 1 по `usage.completion_tokens`]` | ADR-005, VA2-04 |
 | `LLM_FIELD_MAX_CHARS` | `title` 50 · `hook_quote` 80 · `completeness_quote` 80 · `hook_reason` 90 · `completeness_reason` 90 | VA2-04: 390 символов текста на фрагмент ≈ 195 токенов по пессимистичным 2 симв./токен + ~60 токенов структуры JSON = ~255; 10 фрагментов ≈ 2 550 + 30 = 2 580 ≤ 3 000 (запас ~14 %) |
 | `LLM_CHARS_PER_TOKEN_DIVISOR` | 3, плюс 500 токенов служебных `[ПРЕДЛОЖЕНИЕ; калибруется по `usage.prompt_tokens` первых 3 выпусков]` | ADR-005 «Последствия» |
-| `LLM_EST_CHARS_PER_SEC` | 22 `[ПРЕДЛОЖЕНИЕ; верхняя оценка русской речи со служебной разметкой единиц, калибруется по первым 3 выпускам]` | OWN-05A-012 |
+| `LLM_EST_CHARS_PER_SEC` | переменная окружения `worker-ai` без дефолта (канон §6), `22`; калибруется по первым 3 выпускам | OWN-05A-012, канон §6 |
 | `is_newbie(acc, t)` | `acc.beta_at IS NULL AND acc.created_at > t − 24 ч`; в допуске STT `t = now()` — возраст на момент допуска (FR-clips-16 п. 1); повторные попытки кусков — тоже `now()`; возврат резерва — по отметке новичка задачи, а не по пересчёту | OWN-05A-016, FR-clips-16 |
 | `WM_OPACITY` / `WM_INSET` / `SUB_TOP` / `WM_GAP` / `SAFE_RIGHT` | 0,55 / 24 px / 1 100 / 16 px / 900 (правые 180 px — интерфейс площадок) | FR-GROWTH-003 п. 4–5, OWN-05A-015 |
 | `MODEL_PRICES` | `{"anthropic/claude-sonnet-5": {in_usd_micro_per_token: 2, out_usd_micro_per_token: 10}}` | ADR-005 (API OpenRouter 2026-09-23) |
@@ -136,7 +136,7 @@ STEPS:
    2. IF `raw.trim() === ''` AND NOT (`name == 'S3_TENANT_ID'` AND профиль test) THEN `errors.push(name, 'пусто', …)`; CONTINUE.
    3. `VALIDATOR[name](raw)`; ошибка → `errors.push(name, 'невалидно: <причина>', …)`. Валидаторы:
       - `BASE_URL`: `new URL(raw)`; протокол `https:` (в test также `http:`); путь `/` или пуст; иначе ошибка.
-      - `LIMIT_*`, `FX_USD_RUB_KOP`: `/^[1-9][0-9]*$/`, целое > 0 (число ≤ 0 и `'0'` — ошибка).
+      - `LIMIT_*`, `FX_USD_RUB_KOP`, `LLM_EST_CHARS_PER_SEC`: `/^[1-9][0-9]*$/`, целое > 0 (число ≤ 0 и `'0'` — ошибка).
       - `STT_PROVIDER`, `PAYMENTS_MODE`, `PAYMENTS_PROVIDER`: значение из закрытого списка канона §5; иначе ошибка со списком допустимых.
       - `JWT_SECRET`: длина в байтах UTF-8 ≥ 32.
       - `WATERMARK_TEXT`: после `trim` 1…32 символа, без `\n`.
@@ -181,7 +181,7 @@ STEPS:
 3. RETURN `{ok:true}`.
 4. **Возврат резерва** `release(tx, item, delta)`: `UPDATE quota_counter SET used = GREATEST(used - $delta, 0) WHERE <PK>`.
    **Доплата факта** `charge_over(tx, item, delta)`: `UPDATE … SET used = used + $delta` безусловно (факт уже списан провайдером; счётчик может превысить предел, следующий резерв получит отказ).
-5. `day` всегда вычисляется на сервере БД: `msk_day(now())`; для `scope='job'` правило дня задаёт вызывающий алгоритм.
+5. `day` для ВСЕХ счётчиков, включая `scope='job'`, — `msk_day(now())` на сервере БД в момент попытки (канон §11, VT2-11); `job.created_at` день не задаёт. Отметки допуска ищутся без условия на `day` (их не больше одной на задачу).
 6. Запрещено: читать `used`, сравнивать в коде и затем писать (canon, FR-clips-10 п. 3).
 COMPLEXITY: O(k), k ≤ 4 счётчика; транзакция держит только строки `quota_counter`, сетевых вызовов внутри нет.
 
@@ -459,7 +459,7 @@ STEPS:
    1. **Отметка первой** (VA-18): `INSERT INTO quota_counter(scope, scope_id, day, kind, used) VALUES ('job', $j, $d, 'stt_sec', $global_sec) ON CONFLICT DO NOTHING RETURNING used`. Конкурентный второй допуск ждёт на уникальном ключе; нет строки → допуск уже сделан → COMMIT; RETURN ok. Отметка ищется по (`scope='job'`, `scope_id`, `kind='stt_sec'`) при любом `day` — её не больше одной (шаг 5 удаляет).
    2. IF `S` пуст THEN COMMIT; RETURN ok.
    2a. **Выполнимость LLM до оплаты STT** — формулировка Specification FR-clips-10 (OWN-05A-012, VA2-05): `est_chars ← ceil(video.duration_ms / 1000) × LLM_EST_CHARS_PER_SEC`; `est_kop ← llm_reserve_kop(est_chars)` («Выбор фрагментов», шаг 3). Это проверка чтением, не резерв: IF `est_kop > LIMIT_LLM_KOP_JOB` THEN `quota_user`; IF `used(account, d, 'llm_kop') + est_kop > LIMIT_LLM_USER_KOP_DAY` THEN `quota_user`; IF `used(global, d, 'llm_kop') + est_kop > LIMIT_LLM_GLOBAL_KOP_DAY` THEN `quota_global`. Отказ → как шаг 4 (ROLLBACK, `finish_failed`, 0 вызовов STT). Настоящий резерв на шаге LLM остаётся и может отказать отдельно. Один повтор AC-clips-8 гарантирует проверка при старте («Проверка конфигурации», шаг 5a), а не этот шаг.
-   3. `nb ← is_newbie(account, now())` (OWN-05A-016, FR-clips-16 п. 1 — на момент допуска); `ulim ← nb ? LIMIT_STT_NEWBIE_SEC_DAY : LIMIT_STT_USER_SEC_DAY`. `items ← [{account, account_id, d, 'stt_sec', user_sec, ulim, 'quota_user'}, {global, GLOBAL_SCOPE_ID, d, 'stt_sec', global_sec, LIMIT_STT_GLOBAL_SEC_DAY, 'quota_global'}]`; IF `nb` THEN `items.push({global, GLOBAL_SCOPE_ID, d, 'stt_sec_newbie', global_sec, LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY, 'quota_global'})` — общий пул новичков резервируется в той же транзакции, атомарно вместе с остальными. IF `nb` THEN в той же транзакции `INSERT quota_counter('job', $j, $d, 'stt_sec_newbie', global_sec)` — отметка «эта задача допущена как новичок» для точного возврата пула (вопрос В-27: канон §5 разрешает `stt_sec_newbie` только для `scope = global`). `r ← reserve(items)` — без строки-отметки в списке; значение `'—'` вне закрытого списка причин не существует нигде. Новичок с 45-минутной записью получает `quota_user` с текстом «первые сутки — до 30 минут записи» до первого вызова (1 800 с < 2 700 с); отказ пула новичков — `quota_global`; бета-автор (`beta_at` задан) и аккаунт старше 24 ч — обычные 7 200 с.
+   3. `nb ← is_newbie(account, now())` (OWN-05A-016, FR-clips-16 п. 1 — на момент допуска); `ulim ← nb ? LIMIT_STT_NEWBIE_SEC_DAY : LIMIT_STT_USER_SEC_DAY`. `items ← [{account, account_id, d, 'stt_sec', user_sec, ulim, 'quota_user'}, {global, GLOBAL_SCOPE_ID, d, 'stt_sec', global_sec, LIMIT_STT_GLOBAL_SEC_DAY, 'quota_global'}]`; IF `nb` THEN `items.push({global, GLOBAL_SCOPE_ID, d, 'stt_sec_newbie', global_sec, LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY, 'quota_global'})` — общий пул новичков резервируется в той же транзакции, атомарно вместе с остальными. IF `nb` THEN в той же транзакции `INSERT quota_counter('job', $j, $d, 'stt_sec_newbie', global_sec)` — отметка «эта задача допущена как новичок» для точного возврата пула (канон §5, В-27). `r ← reserve(items)` — без строки-отметки в списке; значение `'—'` вне закрытого списка причин не существует нигде. Новичок с 45-минутной записью получает `quota_user` с текстом «первые сутки — до 30 минут записи» до первого вызова (1 800 с < 2 700 с); отказ пула новичков — `quota_global`; бета-автор (`beta_at` задан) и аккаунт старше 24 ч — обычные 7 200 с.
    4. IF NOT r.ok THEN ROLLBACK (отметка откатывается вместе с резервом); новая транзакция `finish_failed(j, r.fail_reason)`; RETURN (вызова STT нет; `spend_ledger` не меняется — AC-clips-12).
 3. RETURN ok. Первая попытка каждого куска из `S` оплачена этим допуском; каждая следующая попытка (`attempt_count ≥ 2`) резервирует `provider_sec(k)` сама на ОБОИХ счётчиках («Транскрипция куска», шаг 3).
 4. **Инвариант (VA-01):** вызов STT для куска с `attempt_count = 0` возможен только при существующей отметке допуска. Проверяет его «Транскрипция куска», шаг 1; тест мутацией: убрать проверку отметки → тест «отказ по потолку → повтор в те же сутки → 0 вызовов STT, `spend_ledger` не вырос» красный.
@@ -653,7 +653,7 @@ STEPS:
    - `x_lo ← max(video_x + WM_INSET, 70)`, `x_hi ← min(video_x + vw − WM_INSET, SAFE_RIGHT) − pw`; `wm_x ← clamp(video_x + (vw − pw) / 2, x_lo, x_hi)` — по центру картинки по горизонтали;
    - `watermark_fits ← x_lo ≤ x_hi AND wm_y ≥ max(video_y + WM_INSET, 200)` — плашка целиком внутри картинки, вне верхней зоны интерфейса площадок.
    Примеры при `ph = 78` (кегль 48): 16:9 (кадр y 420…1 028) → `wm_y = 926`, `wm_x = 540 − pw/2`; 4:3 (811×608 по центру) → те же `wm_y = 926` и центр; 21:9 (1 080×463, y 492…955) → `wm_y = 853`; вертикальный 9:16 и видео с телефона с `rotate=90` (после `display_dims`: кадр 1 080×1 920) → `wm_y = 1 084 − 78 = 1 006`, по центру — на картинке, над субтитрами; квадрат 1:1 (1 080×1 080, y 420…1 500) → `wm_y = 1 006`; крайне широкий 4:1 (1 080×270, y 589…859) → `wm_y = 757 ≥ 613` — помещается; полоса выше ~126 px или уже `pw + 48` → `watermark_fits = false`.
-   IF NOT `watermark_fits` THEN подготовка отказывает файл `file_invalid` ещё до оплаты STT (VA2-09), а рендер при невозможном случае отказывает `render_failed` с журналом `watermark_no_room` — знак не кладётся на чёрное поле ни при каком исходнике. Плашка `pw × ph`, радиус 12, чёрная с непрозрачностью `WM_OPACITY` (ASS `&H73000000`: альфа 0x73 ≈ 0,55), текст белый полужирный `fs`, отступ 16×10. Контраст белого на плашке 0,55 поверх белого кадра ≈ 4,7:1 — у нижней границы 4,5:1, поэтому проверяется OCR на светлом, тёмном и пёстром кадре (SC-US-008-1), а не выводится. Тест мутацией: вернуть угол → проверка «плашка по центру полосы ±2 px и над y = 1 100» красная. Specification SC-US-008-1 ещё называет угол (70, 444) — правит spec-author.
+   IF NOT `watermark_fits` THEN подготовка отказывает файл `file_invalid` ещё до оплаты STT (VA2-09), а рендер при невозможном случае отказывает `render_failed` с журналом `watermark_no_room` — знак не кладётся на чёрное поле ни при каком исходнике. Плашка `pw × ph`, радиус 12, чёрная с непрозрачностью `WM_OPACITY` (ASS `&H73000000`: альфа 0x73 ≈ 0,55), текст белый полужирный `fs`, отступ 16×10. Контраст белого на плашке 0,55 поверх белого кадра ≈ 4,7:1 — у нижней границы 4,5:1, поэтому проверяется OCR на светлом, тёмном и пёстром кадре (SC-US-008-1), а не выводится. Тест мутацией: вернуть угол → проверка «плашка по центру полосы ±2 px и над y = 1 100» красная. Для 16:9 это совпадает с Specification FR-GROWTH-003 п. 4 и SC-US-008-1: центр x = 540, нижний край плашки y = 1 004.
 4. `watermark_required(plan) ← plan !== 'paid'` — строгое сравнение; `null`, `''`, `'PAID'`, `' paid'`, `'premium'` дают знак (fail-closed).
 COMPLEXITY: O(1) на клип; O(len) при старте.
 
@@ -903,17 +903,18 @@ REQUIREMENT: `FR-clips-1`
 REQUIREMENT: `AC-clips-21`
 REQUIREMENT: `AC-clips-29`
 REQUIREMENT: `FR-clips-16`
-REALISES: SC-US-001-6, SC-US-001-7, SC-US-002-9
-INPUT: `/admin/users` процедуры `set_plan {email, plan, reason}`, `reset_password {email, reason}`, `verify_email {email, reason}`; CLI `ops grant-operator <email>`, `ops beta-add <email>`
+REALISES: SC-US-001-6, SC-US-001-7, SC-US-001-8, SC-US-002-9
+INPUT: `/admin/users` процедуры `set_plan {email, plan, reason}`, `reset_password {email, reason}`, `verify_email {email, reason}`; CLI `ops grant-operator <email>`, `ops beta-add <email>`, `ops reset-link <email>`
 OUTPUT: изменённый аккаунт и `audit_log`
 STEPS:
 0. Во всех процедурах и в `ops grant-operator` аккаунт ищется по `canonical_email(input)` (VA2-12: `Ivan.Petrov+x@GMAIL.com` находит `ivanpetrov@gmail.com`); 0 строк → 404 «аккаунт не найден» (CLI — код 1), `audit_log` не пишется.
 1. `set_plan`: `auth({role:'operator'})`; `plan ∈ {free, paid}`; `reason` непуст; транзакция: `UPDATE account SET plan WHERE email`; `audit_log(action='account.set_plan', target=email, reason)`. Уже отрендеренные клипы не перерендериваются: решение о знаке принимается в момент рендера.
-2. `reset_password` (канон §7) — **2-я очередь (OWN-05A-014)**: `auth({role:'operator'})`; `reason` непуст; транзакция: `token ← base64url(random(32))`; `INSERT email_token(account_id, purpose='reset', token_hash=sha256(token), expires_at=now()+1 ч [ПРЕДЛОЖЕНИЕ])`; `audit_log(action='account.reset_password', target=email, reason)`. После COMMIT вне транзакции — письмо через `SMTP_URL` (Resend) со ссылкой `{BASE_URL}/reset?token={token}`; оператор токена не видит.
+2. `reset_password` (канон §7) — страница `/admin/users` во **2-й очереди (OWN-05A-014)**, в неделю 1 тот же путь запускает `ops reset-link` (шаг 5): `auth({role:'operator'})`; `reason` непуст; транзакция: `token ← base64url(random(32))`; `INSERT email_token(account_id, purpose='reset', token_hash=sha256(token), expires_at=now()+1 ч [ПРЕДЛОЖЕНИЕ])`; `audit_log(action='account.reset_password', target=email, reason)`. После COMMIT вне транзакции — письмо через `SMTP_URL` (Resend) со ссылкой `{BASE_URL}/reset?token={token}`; оператор токена не видит.
    `GET /reset?token=` — форма нового пароля. `POST /api/auth/reset {token, password}`: `rate_limit('api_write', ip, 60, 60)`; `len(password) ≥ 10`; `hash ← argon2id` вне транзакции; транзакция: `UPDATE email_token SET used_at=now() WHERE token_hash=sha256($t) AND purpose='reset' AND used_at IS NULL AND expires_at>now() RETURNING account_id` (нет строки → 400 «ссылка недействительна»); `UPDATE account SET password_hash`; `UPDATE refresh_token SET revoked_at=now() WHERE account_id AND revoked_at IS NULL`. Токены `verify` и `reset` не взаимозаменяемы — различие по `purpose`.
 2a. `verify_email` (письмо не дошло, SC-US-001-6): `auth({role:'operator'})`; `reason` пуст → 422, `email_verified_at` не меняется; транзакция: `UPDATE account SET email_verified_at=now() WHERE email AND email_verified_at IS NULL RETURNING id`; не обновилось, но аккаунт есть → 409 «почта уже подтверждена», без `audit_log`; IF обновилось THEN `INSERT event('email_verified', account_id, props={manual:true})`; `audit_log(actor=operator_email, action='account.verify_email', target=email, reason)`.
 3. `ops grant-operator <email>` (внутри `worker-ai`, доступ = доступ к серверу): `UPDATE account SET role='operator' WHERE email`; нет строки → код выхода 1; `audit_log(actor='ops-cli')`. Через веб роль не выдаётся.
 4. `ops beta-add <email>` (OWN-05A-016, внутри `worker-ai`): `UPDATE account SET beta_at = now() WHERE email = canonical_email($email) AND beta_at IS NULL RETURNING id`; нет аккаунта → код 1; уже бета → код 0 с сообщением «уже в бете»; `audit_log(actor='ops-cli', action='account.beta_add', target=email, reason='бета-автор из списка оператора')`. Статус считается на момент допуска: задача, допущенная до `beta-add`, уже зарезервирована как у новичка; её невызванные куски после повтора пройдут допуск заново по полной квоте.
+5. `ops reset-link <email>` — **неделя 1** (канон §7, VA2-22; страница `/admin/users` — вторая очередь): аккаунт по `canonical_email` (нет → код 1 и сообщение «аккаунт не найден», письмо не отправляется); далее шаг 2 без проверки роли и без `reason` из формы: `reason='ops-cli'`; письмо со ссылкой `{BASE_URL}/reset?token=` уходит на почту аккаунта, ссылка в stdout НЕ печатается (оператор токена не видит); `GET /reset` и `POST /api/auth/reset` — неделя 1, как у шага 2. `audit_log(actor='ops-cli', action='account.reset_link', target=email)`.
 COMPLEXITY: O(1).
 
 ### Algorithm: Подпись к посту и ссылка клипа
@@ -1067,7 +1068,7 @@ COMPLEXITY: O(m · c), m ≤ 6 моделей, c ≈ 7 кусков.
 | `GET /reset?token=` | — | `200` HTML | — |
 | `POST /api/auth/reset` | `{token, password}` | `200` | `400 token_invalid` · `422` · `429` |
 | `POST /api/videos` | `{size_bytes, ext, rights_confirmed}` | `201 {video_id, upload_id, part_size_bytes, parts[], expires_at}` | `401` · `403 email_not_verified` · `422 file_too_large` · `429 quota_user|quota_global` (+`resets_at`) · `503` |
-| `POST /api/videos/{video_id}/complete` | `Idempotency-Key`; `{parts:[{part_number, etag}]}` (ETag читается браузером благодаря `ExposeHeaders: ETag` CORS бакета, канон §8) | `202 {job_id}` | `404` · `409 upload_not_found` · `422 file_invalid` · `422 bad_idempotency_key` |
+| `POST /api/videos/{video_id}/complete` | `Idempotency-Key`; `{parts:[{part_number, etag}]}` (ETag читается браузером благодаря `ExposeHeaders: ETag` CORS бакета; `PUT` частей шлёт только заголовок `Content-Type`, разрешённый `AllowedHeaders = content-type`, канон §8) | `202 {job_id}` | `404` · `409 upload_not_found` · `422 file_invalid` · `422 bad_idempotency_key` |
 | `POST /api/videos/{video_id}/parts` | — | `200 {parts[], expires_at}` | `404` · `409 upload_closed` |
 | `DELETE /api/videos/{video_id}` | — | `204` | `404` |
 | `GET /api/jobs/{job_id}` | — | `200 JobView` | `404` |
@@ -1145,7 +1146,7 @@ stateDiagram-v2
 
 ## Scenario Coverage
 
-Scenarios in Specification.md: 67  ·  claimed by an algorithm: 65
+Scenarios in Specification.md: 68  ·  claimed by an algorithm: 66
 
 Not claimed by any algorithm:
 | Scenario | Reason |
@@ -1175,8 +1176,8 @@ Claimed by an algorithm but absent from Specification.md:
 
 Чужие файлы не правились. Предложения этой единицы (В-1…В-5, В-7…В-9, В-11, В-12, В-14, В-15, В-19…В-22)
 приняты координатором в канон 2026-09-23 и здесь применены; В-6, В-13, В-16…В-18 закрыты правкой
-Specification. Итерация исправлений 1 (валидация Phase 2) добавила В-23…В-26 — все закрыты координатором: `GET` в CORS бакета (канон §8), `no_timestamps` неповторяема, лимит регистраций 20 с IP в час, публикация сохраняется с `clip_id = NULL` (канон §4). В-10 закрыт решением владельца OWN-05A-012. Открыт В-27 (итерация 2, квота новичка).
+Specification. Итерация исправлений 1 (валидация Phase 2) добавила В-23…В-26 — все закрыты координатором: `GET` в CORS бакета (канон §8), `no_timestamps` неповторяема, лимит регистраций 20 с IP в час, публикация сохраняется с `clip_id = NULL` (канон §4). В-10 закрыт решением владельца OWN-05A-012. В-27 закрыт каноном §5 (`stt_sec_newbie` со `scope = job` — отметка новичка задачи). Открытых вопросов нет.
 
 | # | Где | Суть | Что принято здесь до решения |
 |---|---|---|---|
-| В-27 | канон §5 `quota_counter.kind`: `stt_sec_newbie` только для `scope = global` | возврат пула новичков при отказе задачи требует знать, была ли задача допущена как новичок; пересчёт по возрасту на момент возврата неточен (статус меняется через 24 ч и после `beta-add`) | отметка `quota_counter('job', job_id, day, 'stt_sec_newbie')` в транзакции допуска; нужна строка канона «`stt_sec_newbie` также `scope = job` — отметка допуска новичка» |
+| — | — | открытых вопросов нет | — |

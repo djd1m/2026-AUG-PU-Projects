@@ -227,4 +227,19 @@ exit=2
 - Проверки: compose config → 0; check-external-deps → 0; check-canon → 2 (известная проблема разреза), sha256 канона
   вручную совпал с dispatch-plan (372e9b0361ca5c16…). Размеры: ADR 486, Architecture 421, compose 133, C4 140.
 
+
+## Сверка с каноном после трёх правок координатора (+ §11, ops reset-link)
+- `web` в prod не публикуется: у `web` убраны `ports:`; для dev добавлен оверлей `docker-compose.dev.yml`
+  (`127.0.0.1:${WEB_PORT:-3105}:3000`, `name: clipmkr`). Проверки: base `config -q` → 0; оверлей даёт `host_ip: 127.0.0.1`;
+  `COMPOSE_PROFILES=prod,test check-ports.cjs` → 0. Architecture (сводка, правило 2), C4 — поправлены.
+- CORS `AllowedHeaders = content-type` — пометки «[правка канона запрошена]» сняты в ADR-007 и Architecture.
+- Цена STT (канон §11): ADR-006 п. 2 — цена из `GET /api/v1/models` при старте `worker-ai`; до ответа — оценка с
+  `cost_estimated = true`, при `usage.cost` — факт с `false`.
+- Формула выполнимости LLM (канон §11) совпадает с ADR-006 п. 3 (формулировка Specification); правило секунд STT совпадает
+  с ADR-006 п. 2.
+- `ops reset-link <email>`: ADR-011 и reuse map Architecture; C4 — связь оператора (`ops beta-add`, `ops reset-link`).
+- OWN-05A-015/016 уже внесены (раздел выше).
+- check-external-deps → 0; check-canon → 2 (известная проблема разреза), sha256 канона вручную совпал с dispatch-plan
+  (73fce1cb70205de5…). Размеры: ADR 487, Architecture 421, compose 144, C4 140.
+
 Status: completed

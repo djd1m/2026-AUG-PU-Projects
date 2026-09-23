@@ -312,4 +312,19 @@ check-metric-source 0, check-handoff-manifest 0.
 Метрика недели не менялась. Проверки: check-growth-trace 0, check-look-trace 0, check-metric-source 0,
 check-handoff-manifest 0.
 
+### Дополнение к итерации 2 — формулы канона §11 в FR-clips-10, `ops reset-link`
+
+| Пункт | Как внесено |
+|---|---|
+| VT2-01 / VA2-05 (выполнимость LLM) | FR-clips-10: блок формул дословно из канона §11 — `est_chars = ceil(video.duration_ms/1000) × LLM_EST_CHARS_PER_SEC`, `est_kop = llm_reserve_kop(est_chars)`, три отказа (задача/автор → `quota_user`, сервис → `quota_global`). Это проверка чтением, а не резерв. Проверка при старте `worker-ai`: `llm_reserve_kop(7200 × LLM_EST_CHARS_PER_SEC) × LIMIT_LLM_ATTEMPTS_JOB ≤ LIMIT_LLM_KOP_JOB`. `LLM_EST_CHARS_PER_SEC` (22) — в NFR-clips-3 |
+| VT2-07 (секунды STT) | персональные счётчики — `ceil(Σ unique_ms/1000)` по длительности записи без перекрытий (120 мин = 7 200 с); глобальные — `Σ ceil(chunk.duration_ms/1000)` по секундам провайдера с перекрытиями; единица в таблице переписана |
+| VT2-11 (граница суток) | FR-clips-10 п.1: для всех счётчиков, включая попытки LLM на задачу, день = `msk_day(now())` в момент попытки, а не `job.created_at` |
+| цена STT | из `GET /api/v1/models` при старте `worker-ai`; до `usage.cost` в `spend_ledger` пишется оценка с `cost_estimated = true`, потом факт с `false` |
+| web в prod не публикуется | NFR-clips-2 п.10: в prod у `web` нет публикации, дверь — `caddy`; в test — только `127.0.0.1:${WEB_PORT:-3105}` |
+| VA2-22 (`ops reset-link`) | FR-clips-1 п.5 и FR-clips-11: сброс пароля в первую неделю — `ops reset-link <email>`; кнопка на `/admin/users` осталась во 2-й очереди. Новый сценарий SC-US-001-8 в AC-clips-29. PRD «Очереди поставки»: reset-link в ядре |
+| OWN-05A-015/016 | внесены раньше (предыдущий раздел) |
+
+test-scenarios.md перегенерирован: 68 сценариев, наборы совпадают. Проверки: check-growth-trace 0,
+check-look-trace 0, check-metric-source 0, check-handoff-manifest 0.
+
 Status: completed
