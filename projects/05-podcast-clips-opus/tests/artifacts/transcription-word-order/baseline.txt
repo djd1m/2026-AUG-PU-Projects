@@ -1,0 +1,83 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-word-order.test.ts (8 tests | 4 failed) 36ms
+   × TR-010 jitter accepts the live 0.26 second reversal in a full provider response 15ms
+     → N5_MODEL_PROVIDER отсутствует: режим поставщика STT не определён
+   × TR-010 journal records the correction, original times and count without speech text 2ms
+     → Нет пригодных таймкодов слов
+   ✓ TR-010 disorder rejects a reversal of 0.5 seconds with original diagnostics 2ms
+   ✓ TR-010 disorder rejects a reversal of 2 seconds with original diagnostics 1ms
+   ✓ TR-010 disorder rejects a reversal of 20 seconds with original diagnostics 1ms
+   × TR-010 ratio permits exactly one percent and rejects above it, counting cascading clamps 1ms
+     → Нет пригодных таймкодов слов
+   × TR-010 messages name missing, bounds and order causes and keep UI wording truthful 8ms
+     → expected [Function] to throw error including 'Таймкоды вне границ записи' but got 'Нет пригодных таймкодов слов'
+   ✓ TR-010 strict bounds remain enforced before normalization; ordered words do not log 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-word-order.test.ts > TR-010 jitter accepts the live 0.26 second reversal in a full provider response
+Error: N5_MODEL_PROVIDER отсутствует: режим поставщика STT не определён
+ ❯ required packages/shared/src/config.ts:20:34
+     18| export function required(env: Environment, name: string, consequence: …
+     19|   const value = env[name];
+     20|   if (value === undefined) throw new Error(`${name} отсутствует: ${con…
+       |                                  ^
+     21|   if (value.trim() === '') throw new Error(`${name} пустая строка: ${c…
+     22|   return value;
+ ❯ loadSttConfig packages/shared/src/config.ts:124:16
+ ❯ tests/transcription-word-order.test.ts:21:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/transcription-word-order.test.ts > TR-010 journal records the correction, original times and count without speech text
+Error: Нет пригодных таймкодов слов
+ ❯ packages/shared/src/transcript.ts:41:38
+     39|     const word = record(value), time = timing(word, duration, 'word', …
+     40|     if (typeof word.word !== 'string' || !word.word.trim()) throw new …
+     41|     if (time.start < previous) throw new TranscriptError({ reason: 'or…
+       |                                      ^
+     42|       ...(Number.isInteger(word.chunk_index) ? { chunk_index: Number(w…
+     43|       start_seconds: time.start, end_seconds: time.end, previous_start…
+ ❯ parseTranscript packages/shared/src/transcript.ts:38:27
+ ❯ tests/transcription-word-order.test.ts:35:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/transcription-word-order.test.ts > TR-010 ratio permits exactly one percent and rejects above it, counting cascading clamps
+Error: Нет пригодных таймкодов слов
+ ❯ packages/shared/src/transcript.ts:41:38
+     39|     const word = record(value), time = timing(word, duration, 'word', …
+     40|     if (typeof word.word !== 'string' || !word.word.trim()) throw new …
+     41|     if (time.start < previous) throw new TranscriptError({ reason: 'or…
+       |                                      ^
+     42|       ...(Number.isInteger(word.chunk_index) ? { chunk_index: Number(w…
+     43|       start_seconds: time.start, end_seconds: time.end, previous_start…
+ ❯ parseTranscript packages/shared/src/transcript.ts:38:27
+ ❯ tests/transcription-word-order.test.ts:55:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/transcription-word-order.test.ts > TR-010 messages name missing, bounds and order causes and keep UI wording truthful
+AssertionError: expected [Function] to throw error including 'Таймкоды вне границ записи' but got 'Нет пригодных таймкодов слов'
+
+Expected: "Таймкоды вне границ записи"
+Received: "Нет пригодных таймкодов слов"
+
+ ❯ tests/transcription-word-order.test.ts:66:100
+     64|   logs(); expect(() => parseTranscript({ ...input(), words: [] }, 110)…
+     65|   expect(() => parseTranscript({ ...input(), words: [{ word: 'a' }] },…
+     66|   expect(() => parseTranscript({ ...input(), words: [{ word: 'a', star…
+       |                                                                                                    ^
+     67|   const value = input(); value.words[98].start = 49;
+     68|   expect(() => parseTranscript(value, 110)).toThrow('Таймкоды слов не …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  16:33:53
+   Duration  454ms (transform 141ms, setup 0ms, collect 169ms, tests 36ms, environment 0ms, prepare 77ms)
+

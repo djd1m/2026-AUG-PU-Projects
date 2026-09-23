@@ -1,0 +1,105 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/selection-order.test.ts tests/render-media.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/render-media.test.ts > real ffmpeg (0x224466): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-wP2QqY
+
+stdout | tests/render-media.test.ts > real ffmpeg (white): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-LYkr3q
+
+stdout | tests/render-media.test.ts > real ffmpeg (black): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-TBS2Gs
+
+stderr | tests/render-media.test.ts > ffmpeg timeout kills the child and waits for close before returning
+{"event":"ffmpeg_timeout","exit_code":null,"signal":"SIGKILL","stderr_tail":""}
+
+ ✓ tests/render-media.test.ts (4 tests) 19226ms
+   ✓ real ffmpeg (0x224466): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  6599ms
+   ✓ real ffmpeg (white): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  6482ms
+   ✓ real ffmpeg (black): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  5920ms
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > RV-5 database failure preserves the ledger outcome and original provider error
+Не удалось завершить попытку выделения в БД Error: db down
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:50:102
+    at mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at spy (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at Module.selectFragments (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/worker/src/workers/select.ts:29:17)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:51:5
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > RV-5 spend ledger unavailable blocks network, closes failure and preserves the original error
+Не удалось записать исход выделения в журнал Error: outcome disk full
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:57:34
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > RV-5 outcome ledger failure still attempts database closure (database down: false)
+Не удалось записать исход выделения в журнал Error: outcome disk full
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:68:67
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:863:59
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > RV-5 outcome ledger failure still attempts database closure (database down: true)
+Не удалось записать исход выделения в журнал Error: outcome disk full
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:68:67
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:863:59
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > RV-5 outcome ledger failure still attempts database closure (database down: true)
+Не удалось завершить попытку выделения в БД Error: db down
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:69:70
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:863:59
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > Redis publish failure preserves successful commit for watchdog
+Рендер сохранён; сторож восстановит доставку задания Error: redis down
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:77:60
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ ✓ tests/selection-order.test.ts (10 tests) 46ms
+
+ Test Files  2 passed (2)
+      Tests  14 passed (14)
+   Start at  16:21:33
+   Duration  20.67s (transform 622ms, setup 0ms, collect 738ms, tests 19.27s, environment 0ms, prepare 231ms)
+

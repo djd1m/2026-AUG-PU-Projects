@@ -31,6 +31,11 @@ it.each(['0x224466', 'white', 'black'])('real ffmpeg (%s): center crop, ASS high
     // Relative text/background contrast in the same region, independent of source brightness.
     // Percentiles ignore codec noise and antialiased glyph edges; both tones need substantial area.
     const sorted = [...pixels].sort((a, b) => a - b);
+    if (color === 'white' && name === 'prefix') {
+      // White source + white glyphs cannot darken this area without the plate.
+      // black@0.60 gives about 102; tolerate encoding noise, but reject no plate (~255).
+      expect(sorted[Math.floor(sorted.length * 0.5)], 'RV-6 plate darkens the white source').toBeLessThan(140);
+    }
     const luminance = (value: number) => {
       const srgb = value / 255;
       return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;

@@ -120,6 +120,19 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
       const enqueue = vi.fn(); await watchdogTick(pool, enqueue); expect(enqueue).toHaveBeenCalledTimes(2);
     } finally { await rm(dir, { recursive: true, force: true }); }
   });
+  it('RV-5 ledger outage immediately marks video and attempt failed without calling the provider', async () => {
+    const f = await fixture(), original = new Error('attempt disk full');
+    const selector = { select: vi.fn(createFakeSelector('valid').select) }, enqueue = vi.fn();
+    const spend = vi.fn().mockRejectedValue(new Error('outcome disk full')).mockRejectedValueOnce(original);
+    await expect(selectFragments(f.attempt, { pool, limits, selector, model, spendPath: '/unused', spend, enqueue }))
+      .rejects.toBe(original);
+    expect(selector.select).not.toHaveBeenCalled(); expect(enqueue).not.toHaveBeenCalled();
+    expect(spend.mock.calls.map(call => call[1].phase)).toEqual(['attempt', 'outcome']);
+    expect((await pool.query('SELECT status,failure_reason FROM video WHERE id=$1', [f.video])).rows[0])
+      .toEqual({ status: 'failed', failure_reason: 'stalled' });
+    expect((await pool.query('SELECT status,finished_at FROM job_attempt WHERE video_id=$1 AND fence=$2',
+      [f.video, f.attempt.fence])).rows[0]).toEqual({ status: 'failed', finished_at: expect.any(Date) });
+  });
   it('word precision survives PostgreSQL and SQL CHECK rejects invalid scores and length', async () => {
     const f = await fixture();
     const words = [{ word: 'начало', start: 0.1234, end: 1 }, { word: 'конец', start: 25, end: 25.4321 }];

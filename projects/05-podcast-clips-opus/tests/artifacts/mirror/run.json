@@ -1,0 +1,77 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260923T161957Z-fix-mirror",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "RV-5/RV-6",
+  "pipeline": "authorized-review-fixes",
+  "tier": "M",
+  "risk_flags": [
+    "failure-operation-order"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Existing Codex session; no model switch",
+    "Anthropic plan supplied by owner in brief",
+    "Artifacts outside docs per explicit scope restriction"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "63c9a9df474e6e0d436d96c0ab6f5c78bd1d5b9d",
+  "final_revision": "source-snapshot.json",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-23T16:19:57Z",
+  "ended_at": "2026-09-23T16:26:40.336546+00:00",
+  "status": "blocked",
+  "model": {
+    "requested": "current Codex session",
+    "actual": null,
+    "effort": null,
+    "context_identity": "GPT-6; no exact runtime model ID exported"
+  },
+  "acceptance_evidence": [
+    "focused.txt",
+    "mutations/results.json",
+    "build.txt",
+    "typecheck-final.txt",
+    "lint-final.txt",
+    "all-tests.txt",
+    "anthropic-review-attempt.json",
+    "../../../docs/reviews/13_fix_report_mirror.md"
+  ],
+  "metrics": {
+    "elapsed_wall_ms": 403336,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable",
+    "retry_count": 0,
+    "escalation_count": 0
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading before first clock sample not measured",
+    "Host exports no exact actual model/effort or token/billing counters",
+    "Wait intervals unavailable; active time unknown",
+    "No comparison baseline",
+    "Anthropic review attempt timed out; no response or actual model evidence"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local unit/media/integration tests, no deployed E2E"
+  },
+  "quality": {
+    "required_gates_passed": false,
+    "followup_status": "pending",
+    "independent_review": "blocked: timeout 60 seconds",
+    "integration": "blocked: Docker API permission denied",
+    "unit_tests_passed": 432,
+    "integration_tests_skipped": 140,
+    "mutation_guards_passed": 3
+  },
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9"
+}

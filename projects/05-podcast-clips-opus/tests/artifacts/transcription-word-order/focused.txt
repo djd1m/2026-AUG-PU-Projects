@@ -1,0 +1,43 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-word-order.test.ts (8 tests | 1 failed) 34ms
+   × TR-010 jitter accepts the live 0.26 second reversal in a full provider response 19ms
+     → N5_MODEL_PROVIDER отсутствует: режим поставщика STT не определён
+   ✓ TR-010 journal records the correction, original times and count without speech text 4ms
+   ✓ TR-010 disorder rejects a reversal of 0.5 seconds with original diagnostics 1ms
+   ✓ TR-010 disorder rejects a reversal of 2 seconds with original diagnostics 1ms
+   ✓ TR-010 disorder rejects a reversal of 20 seconds with original diagnostics 1ms
+   ✓ TR-010 ratio permits exactly one percent and rejects above it, counting cascading clamps 1ms
+   ✓ TR-010 messages name missing, bounds and order causes and keep UI wording truthful 2ms
+   ✓ TR-010 strict bounds remain enforced before normalization; ordered words do not log 3ms
+stderr | tests/transcription.test.ts > STT boundary and media > rejects negative, reversed, out-of-range and nonmonotonic words
+{"event":"stt_word_order_clamped","reason":"order","kind":"word","index":1,"start_seconds":0,"end_seconds":1,"previous_start_seconds":0.2,"duration_seconds":10,"excess_seconds":null,"corrected_start_seconds":0.2,"corrected_end_seconds":1,"corrected_words":1,"total_words":2}
+
+ ✓ tests/transcription.test.ts (20 tests) 31314ms
+   ✓ STT boundary and media > real AAC extraction accepts timestamps within both measured durations without assuming encoder padding  413ms
+   ✓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling  30853ms
+ ✓ tests/transcription-merge.test.ts (4 tests) 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-word-order.test.ts > TR-010 jitter accepts the live 0.26 second reversal in a full provider response
+Error: N5_MODEL_PROVIDER отсутствует: режим поставщика STT не определён
+ ❯ required packages/shared/src/config.ts:20:34
+     18| export function required(env: Environment, name: string, consequence: …
+     19|   const value = env[name];
+     20|   if (value === undefined) throw new Error(`${name} отсутствует: ${con…
+       |                                  ^
+     21|   if (value.trim() === '') throw new Error(`${name} пустая строка: ${c…
+     22|   return value;
+ ❯ loadSttConfig packages/shared/src/config.ts:124:16
+ ❯ tests/transcription-word-order.test.ts:21:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 31 passed (32)
+   Start at  16:34:51
+   Duration  32.53s (transform 252ms, setup 0ms, collect 356ms, tests 31.36s, environment 1ms, prepare 282ms)
+

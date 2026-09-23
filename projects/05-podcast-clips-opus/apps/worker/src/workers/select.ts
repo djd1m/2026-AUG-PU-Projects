@@ -23,8 +23,11 @@ export async function selectFragments(attempt: Attempt, deps: Dependencies) {
   } catch (error) {
     const outcome = error instanceof FragmentSchemaError ? 'schema_violation' :
       error instanceof SelectionProviderError ? error.outcome : 'provider_error';
-    await spend(deps.spendPath, { ...event, phase: 'outcome', result: outcome });
-    await failSelection(deps.pool, attempt, outcome === 'schema_violation' ? 'schema_violation' : 'stalled');
+    // Both failure records are best-effort; neither may hide the original cause.
+    try { await spend(deps.spendPath, { ...event, phase: 'outcome', result: outcome }); }
+    catch (recordError) { console.error('Не удалось записать исход выделения в журнал', recordError); }
+    try { await failSelection(deps.pool, attempt, outcome === 'schema_violation' ? 'schema_violation' : 'stalled'); }
+    catch (recordError) { console.error('Не удалось завершить попытку выделения в БД', recordError); }
     throw error;
   }
   if (!fragments.length) { await failSelection(deps.pool, attempt, 'no_fragments'); return; }

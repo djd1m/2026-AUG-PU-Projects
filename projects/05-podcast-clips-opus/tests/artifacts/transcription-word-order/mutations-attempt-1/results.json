@@ -1,0 +1,76 @@
+{
+  "total": 5,
+  "partial": false,
+  "results": [
+    {
+      "id": "zero-tolerance",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "green": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "passed": false
+    },
+    {
+      "id": "above-overlap",
+      "red": {
+        "exit": 1,
+        "failed": 2,
+        "passed": 1
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 3
+      },
+      "passed": true
+    },
+    {
+      "id": "no-ratio-guard",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 1
+      },
+      "passed": true
+    },
+    {
+      "id": "generic-message",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 1
+      },
+      "passed": true
+    },
+    {
+      "id": "no-clamp-journal",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 1
+      },
+      "passed": true
+    }
+  ]
+}

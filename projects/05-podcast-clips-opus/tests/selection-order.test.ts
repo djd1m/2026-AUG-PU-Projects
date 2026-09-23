@@ -24,7 +24,7 @@ function fixture(scenario: FakeCase = 'valid') {
   };
 }
 describe('SelectFragments order and attempt accounting', () => {
-  beforeEach(() => { state.trace = []; state.failure = ''; state.refused = false; });
+  beforeEach(() => { vi.clearAllMocks(); state.trace = []; state.failure = ''; state.refused = false; });
   it('user_llm consumed BEFORE model, one call per video and commit BEFORE enqueue', async () => {
     const deps = fixture(); await selectFragments(attempt, deps);
     expect(state.trace).toEqual(['quota', 'attempt', 'call', 'outcome', 'commit', 'enqueue']);
@@ -44,16 +44,34 @@ describe('SelectFragments order and attempt accounting', () => {
     const deps = fixture('empty'); await selectFragments(attempt, deps);
     expect(state.failure).toBe('no_fragments'); expect(state.trace).not.toContain('commit');
   });
-  it('RM-006 records provider outcome before a database outage can interrupt failure handling', async () => {
-    const deps = fixture('5xx');
+  it('RV-5 database failure preserves the ledger outcome and original provider error', async () => {
+    const deps = fixture('5xx'), original = new Error('provider unavailable');
+    deps.selector.select.mockImplementationOnce(async () => { state.trace.push('call'); throw original; });
     vi.mocked(failSelection).mockImplementationOnce(async () => { state.trace.push('db-down'); throw new Error('db down'); });
-    await expect(selectFragments(attempt, deps)).rejects.toThrow('db down');
+    await expect(selectFragments(attempt, deps)).rejects.toBe(original);
     expect(state.trace).toEqual(['quota', 'attempt', 'call', 'outcome', 'db-down']);
     expect(deps.spend).toHaveBeenLastCalledWith(deps.spendPath, expect.objectContaining({ phase: 'outcome', result: 'provider_error' }));
   });
-  it('spend ledger unavailable blocks network', async () => {
-    const deps = fixture(); deps.spend.mockRejectedValue(new Error('disk full'));
-    await expect(selectFragments(attempt, deps)).rejects.toThrow(); expect(deps.selector.select).not.toHaveBeenCalled();
+  it('RV-5 spend ledger unavailable blocks network, closes failure and preserves the original error', async () => {
+    const deps = fixture(), original = new Error('attempt disk full');
+    deps.spend.mockRejectedValue(new Error('outcome disk full')).mockRejectedValueOnce(original);
+    await expect(selectFragments(attempt, deps)).rejects.toBe(original);
+    expect(deps.selector.select).not.toHaveBeenCalled();
+    expect(deps.spend.mock.calls.map(c => c[1].phase)).toEqual(['attempt', 'outcome']);
+    expect(failSelection).toHaveBeenCalledWith(deps.pool, attempt, 'stalled');
+    expect(state.failure).toBe('stalled');
+    expect(deps.enqueue).not.toHaveBeenCalled();
+  });
+  it.each([false, true])('RV-5 outcome ledger failure still attempts database closure (database down: %s)', async databaseDown => {
+    const deps = fixture(), original = new Error('provider unavailable');
+    deps.selector.select.mockRejectedValueOnce(original);
+    deps.spend.mockResolvedValueOnce(undefined).mockRejectedValue(new Error('outcome disk full'));
+    if (databaseDown) vi.mocked(failSelection).mockRejectedValueOnce(new Error('db down'));
+    await expect(selectFragments(attempt, deps)).rejects.toBe(original);
+    expect(deps.spend.mock.calls.map(c => c[1].phase)).toEqual(['attempt', 'outcome']);
+    expect(failSelection).toHaveBeenCalledWith(deps.pool, attempt, 'stalled');
+    if (!databaseDown) expect(state.failure).toBe('stalled');
+    expect(deps.enqueue).not.toHaveBeenCalled();
   });
   it('Redis publish failure preserves successful commit for watchdog', async () => {
     const deps = fixture(); deps.enqueue.mockRejectedValue(new Error('redis down'));
