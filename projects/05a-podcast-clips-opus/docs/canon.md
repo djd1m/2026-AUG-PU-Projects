@@ -127,11 +127,11 @@
 | `FX_USD_RUB_KOP` | worker-ai | без дефолта | копеек за доллар, например `8600` |
 | `LIMIT_STT_USER_SEC_DAY` | web, worker-ai | без дефолта | `7200` |
 | `LIMIT_UPLOADS_USER_DAY` | web | без дефолта | `3` |
-| `LIMIT_LLM_USER_KOP_DAY` | web, worker-ai | без дефолта | `3000` |
+| `LIMIT_LLM_USER_KOP_DAY` | web, worker-ai | без дефолта | `5000` (OWN-05A-012) |
 | `LIMIT_STT_GLOBAL_SEC_DAY` | web, worker-ai | без дефолта | `90000` |
 | `LIMIT_LLM_GLOBAL_KOP_DAY` | web, worker-ai | без дефолта | `30000` |
 | `LIMIT_LLM_ATTEMPTS_JOB` | worker-ai | без дефолта | `2` |
-| `LIMIT_LLM_KOP_JOB` | worker-ai | без дефолта | `1000` |
+| `LIMIT_LLM_KOP_JOB` | worker-ai | без дефолта | `2400` (OWN-05A-012); выполнимость резерва проверяется при допуске STT |
 | `PAYMENTS_MODE` | web | без дефолта | на неделе `fake` |
 | `PAYMENTS_PROVIDER`, `PAYMENTS_SHOP_ID`, `PAYMENTS_SECRET_KEY` | web | без дефолта только при `live` | v1 |
 | `RENDER_CONCURRENCY` | worker-render | дефолт `1` разрешён | параллельные рендеры |
@@ -169,13 +169,13 @@
 | `POST /api/clips/{clip_id}/self-report` | владелец | «я опубликовал» |
 | `POST /api/fakedoor` | сессия | клик «Хочу без знака», промокод |
 | `POST /api/clips/{clip_id}/caption-copied` | владелец | `caption_copied` |
-| `GET /admin/partners` | роль `operator` | партнёры и `partner_code` (FR-GROWTH-004) |
+| `GET /admin/partners` (2-я очередь, OWN-05A-014) | роль `operator` | партнёры и `partner_code` (FR-GROWTH-004) |
 | `GET /admin/publications` | роль `operator` | проверка paste-back, перепроверка на 7-й день |
-| `GET /admin/spend` | роль `operator` | расход за сутки по вызовам и аккаунтам |
+| `GET /admin/spend` (2-я очередь, OWN-05A-014) | роль `operator` | расход за сутки по вызовам и аккаунтам |
 | `GET /admin/metrics?from=<YYYY-MM-DD>` | роль `operator` | метрики недели |
 | `GET /admin/users` | роль `operator` | смена плана с причиной; сброс пароля пользователя (одноразовая ссылка на почту) |
 
-Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>` и `ops stt-probe <файл>` (проба STT дня 1, ADR-001). Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
+Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`, `ops stt-probe <файл>` (проба STT дня 1, ADR-001); в первой неделе (OWN-05A-014) также `ops partner-add <имя> [код]` и `ops spend-today` — до появления `/admin/partners` и `/admin/spend` во второй очереди. Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
 
 Сессия: access-JWT и refresh — только в cookie `httpOnly; Secure; SameSite=Lax; Path=/`; заголовок `Authorization: Bearer`
 не используется. Мутирующие запросы (`POST`/`DELETE`) проверяют `Origin` = `BASE_URL` (CSRF). Серверный рендер `/admin/*`
