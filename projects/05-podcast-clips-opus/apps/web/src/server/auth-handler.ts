@@ -63,7 +63,8 @@ export function createAuthHandler(action: 'login' | 'register' | 'logout', deps:
       const token = await deps.auth[action](email, password, ipPrefix(ip));
       if (!token) return json(LOGIN_FAILURE, 401);
       return json({ ok: true }, 200, cookie(token));
-    } catch {
+    } catch (error) {
+      console.error('Авторизация: запрос не завершён; вход временно недоступен', error);
       return json({ error: 'Вход временно недоступен. Повторите позже' }, 503);
     }
   };

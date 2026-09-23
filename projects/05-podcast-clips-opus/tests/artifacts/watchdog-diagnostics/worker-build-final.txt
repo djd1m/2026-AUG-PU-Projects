@@ -1,0 +1,8 @@
+
+> @clipmaker/worker@0.1.0 build
+> npm run build --workspace=@clipmaker/queue && tsc -p tsconfig.json
+
+
+> @clipmaker/queue@0.1.0 build
+> tsc -p tsconfig.json
+

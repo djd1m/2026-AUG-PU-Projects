@@ -65,13 +65,16 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
       try {
         for (const key of [clip.object_key, clip.thumbnail_key]) if (key) await storage.delete(key);
         await pool.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
-      } catch { errors++; }
+      } catch (error) { console.error('Очистка: удаление клипа не завершено; повтор на следующем проходе', error); errors++; }
     }
     const accounts = await pool.query<{ id: string }>(`SELECT id FROM account WHERE status='erasing' AND deletion_requested_at <= $1
       ORDER BY updated_at,id LIMIT $2`, [new Date(now.getTime() - ERASURE_QUIET_MS), batch]);
     for (const account of accounts.rows) {
       try { await eraseAccount(pool, storage, account.id, now); }
-      catch { errors++; await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]); }
+      catch (error) {
+        console.error('Очистка: стирание аккаунта не завершено; повтор на следующем проходе', error);
+        errors++; await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]);
+      }
     }
     if (errors) throw new Error(`Очистка: не завершено операций ${errors}; повтор на следующем проходе`);
     return { backlog: backlog || clips.rows.length === batch || accounts.rows.length === batch };

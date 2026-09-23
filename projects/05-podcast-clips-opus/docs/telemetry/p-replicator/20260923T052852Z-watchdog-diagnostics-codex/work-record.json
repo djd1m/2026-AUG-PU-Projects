@@ -1,0 +1,67 @@
+{
+  "run_id": "20260923T052852Z-watchdog-diagnostics-codex",
+  "work_unit_id": "WD-001",
+  "stage": "paused",
+  "scope": "09_fix_brief_codex.md: diagnostics only",
+  "exclusions": [
+    "control flow",
+    "SQL",
+    "API responses",
+    "deployment",
+    "fixing unconfirmed root cause"
+  ],
+  "acceptance_criteria": [
+    "original error reaches watchdog logger/callback",
+    "failed watchdog step named",
+    "unbound catches audited with verdict",
+    "mutation loses binding and fails test"
+  ],
+  "source_revision": "sha256:152b4e6d73e63b826818f19da73f63ca31505de6411598bdaa8ff64d2c70dc93",
+  "requirements": "docs/features/retention-and-erasure/09_fix_brief_codex.md",
+  "architecture": "docs/Pseudocode.md#algorithm-watchdogtick",
+  "routes": [
+    {
+      "stage": "plan",
+      "tier": "L",
+      "exit_code": 1
+    },
+    {
+      "stage": "implement",
+      "tier": "L",
+      "reason": "same scope; no logic changes"
+    }
+  ],
+  "approval": "User explicitly requested implementation of the concrete fix brief",
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null,
+    "usage": null,
+    "cost": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "local automated checks; no live E2E or deployment"
+  },
+  "telemetry": {
+    "run": "run.json",
+    "events": "events.jsonl"
+  },
+  "checks": {
+    "focused": "9/9 pass",
+    "mutation": "3 failures, killed",
+    "full_test": "335 passed, 134 skipped",
+    "typecheck": "pass",
+    "lint": "pass",
+    "build": "pass",
+    "worker_build_final": "pass",
+    "env_wiring": "unavailable",
+    "ports": "unavailable",
+    "independent_review": "not performed"
+  },
+  "pending": [
+    "full integration/environment checks on permitted test host",
+    "Anthropic review per OWN-002",
+    "next live watchdog run to establish production cause"
+  ],
+  "report": "docs/features/retention-and-erasure/10_fix_report.md"
+}

@@ -101,7 +101,7 @@ export class VideoService {
   }
   private async cleanup(operation: () => Promise<void>, operationName: string) {
     try { await operation(); }
-    catch { console.error(`Upload cleanup failed: ${operationName}; повтор завершения повторит очистку`); }
+    catch (error) { console.error(`Upload cleanup failed: ${operationName}; повтор завершения повторит очистку`, error); }
   }
   private async cleanupFile(row: VideoRow) {
     if (row.upload_id) await this.cleanup(() => this.storage.abort(row.object_key, row.upload_id!), 'abort');
@@ -131,7 +131,11 @@ export class VideoService {
       if (error instanceof UploadTooLarge) reason = 'too_large';
       else {
         // Ответ мог потеряться после склейки; иначе сохраняем части и повтор тем же ключом.
-        try { bytes = await this.storage.head(row.object_key); } catch { throw unavailable(); }
+        try { bytes = await this.storage.head(row.object_key); } catch (headError) {
+          console.error('Загрузка: завершение multipart не подтверждено', error);
+          console.error('Загрузка: проверка HEAD недоступна; повторите завершение', headError);
+          throw unavailable();
+        }
       }
     }
     if (!reason) {

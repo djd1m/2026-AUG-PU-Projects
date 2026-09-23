@@ -1,0 +1,117 @@
+[
+  {
+    "file": "apps/web/src/app/clips/ClipCard.tsx",
+    "baseline_line": 17,
+    "source": "catch { setCopyMessage(`Скопируйте ссылку вручную: ${absolute}`); }"
+  },
+  {
+    "file": "apps/web/src/app/clips/GuestPacks.tsx",
+    "baseline_line": 30,
+    "source": "catch { setMessage('Ссылка включена. Скопируйте её из поля пакета и отправьте гостю.'); }"
+  },
+  {
+    "file": "apps/web/src/app/health/route.ts",
+    "baseline_line": 8,
+    "source": "} catch {"
+  },
+  {
+    "file": "apps/web/src/app/upload/Uploader.tsx",
+    "baseline_line": 16,
+    "source": "useEffect(() => { try { const value = sessionStorage.getItem(storageKey); if (value) resume.current = JSON.parse(value); } catch { setMessage('Не удалось восстановить предыдущую загрузку. Выберите файл заново.'); }"
+  },
+  {
+    "file": "apps/web/src/app/upload/Uploader.tsx",
+    "baseline_line": 18,
+    "source": "function save(value: Resume) { resume.current = value; try { sessionStorage.setItem(storageKey, JSON.stringify(value)); } catch { /* in-memory retry stays available */ } }"
+  },
+  {
+    "file": "apps/web/src/app/upload/Uploader.tsx",
+    "baseline_line": 38,
+    "source": "try { sessionStorage.removeItem(storageKey); } catch { /* cleanup cannot undo the successful upload */ }"
+  },
+  {
+    "file": "apps/web/src/server/auth-handler.ts",
+    "baseline_line": 59,
+    "source": "catch { return json({ error: 'Непригодный JSON' }, 422); }"
+  },
+  {
+    "file": "apps/web/src/server/auth-handler.ts",
+    "baseline_line": 66,
+    "source": "} catch {"
+  },
+  {
+    "file": "apps/web/src/server/clip-file.ts",
+    "baseline_line": 58,
+    "source": "} catch {"
+  },
+  {
+    "file": "apps/web/src/server/guest-page.ts",
+    "baseline_line": 57,
+    "source": "}catch{status.textContent='Не удалось скачать все файлы. Попробуйте кнопки на отдельных клипах.';}finally{this.disabled=false;}});</script>"
+  },
+  {
+    "file": "apps/web/src/server/retention.ts",
+    "baseline_line": 68,
+    "source": "} catch { errors++; }"
+  },
+  {
+    "file": "apps/web/src/server/retention.ts",
+    "baseline_line": 74,
+    "source": "catch { errors++; await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]); }"
+  },
+  {
+    "file": "apps/web/src/server/screen.ts",
+    "baseline_line": 26,
+    "source": "try { assertRetryable(row); nextAction = 'retry'; } catch { nextAction = 'upload'; }"
+  },
+  {
+    "file": "apps/web/src/server/upload-handler.ts",
+    "baseline_line": 31,
+    "source": "catch { throw new UploadError('invalid', 'Непригодный JSON', 422); }"
+  },
+  {
+    "file": "apps/web/src/server/video-retry.ts",
+    "baseline_line": 52,
+    "source": "try { await this.enqueue(job); } catch { console.error('Повтор сохранён; сторож восстановит доставку задания'); }"
+  },
+  {
+    "file": "apps/web/src/server/video.ts",
+    "baseline_line": 104,
+    "source": "catch { console.error(`Upload cleanup failed: ${operationName}; повтор завершения повторит очистку`); }"
+  },
+  {
+    "file": "apps/web/src/server/video.ts",
+    "baseline_line": 134,
+    "source": "try { bytes = await this.storage.head(row.object_key); } catch { throw unavailable(); }"
+  },
+  {
+    "file": "apps/web/src/server/watchdog.ts",
+    "baseline_line": 40,
+    "source": "try { await enqueue(job, delay); published++; } catch { console.error('Сторож: транспорт заданий недоступен'); }"
+  },
+  {
+    "file": "apps/web/src/server/watchdog.ts",
+    "baseline_line": 53,
+    "source": "try { await tick(); } catch { onError(); } finally { running = false; }"
+  },
+  {
+    "file": "apps/worker/src/media/probe.ts",
+    "baseline_line": 13,
+    "source": "} catch { throw new ProbeError('probe_timeout'); }"
+  },
+  {
+    "file": "apps/worker/src/runtime.ts",
+    "baseline_line": 48,
+    "source": "} catch {"
+  },
+  {
+    "file": "apps/worker/src/workers/render.ts",
+    "baseline_line": 55,
+    "source": "catch { console.error('Попытка рендера сохранена; сторож восстановит доставку'); }"
+  },
+  {
+    "file": "apps/worker/src/workers/select.ts",
+    "baseline_line": 34,
+    "source": "try { await deps.enqueue(job); } catch { console.error('Рендер сохранён; сторож восстановит доставку задания'); }"
+  }
+]

@@ -7,7 +7,7 @@ export function startClipDownload(clipId: string, clipTitle?: string): void {
   anchor.download = `${clipTitle?.trim().slice(0, 100) || 'clip'}.mp4`;
   anchor.rel = 'noreferrer'; document.body.appendChild(anchor); anchor.click(); anchor.remove();
   // The authorized file route owns delivery; an analytics outage must not block it.
-  void rpc('clip.markDownloaded', { clip_id: clipId }, true).catch(() => console.warn('Событие скачивания не записано'));
+  void rpc('clip.markDownloaded', { clip_id: clipId }, true).catch((error) => console.warn('Событие скачивания не записано', error));
 }
 // Donor useClipDownload: keep anchor download and busy/error state; no proxy or invented clip.download procedure.
 export function useClipDownload() {

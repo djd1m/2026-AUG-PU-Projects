@@ -31,6 +31,6 @@ export async function selectFragments(attempt: Attempt, deps: Dependencies) {
   const jobs = await acceptSelection(deps.pool, attempt, fragments);
   // Committed attempts are the outbox; watchdog recovers any Redis publish loss.
   for (const job of jobs ?? []) {
-    try { await deps.enqueue(job); } catch { console.error('Рендер сохранён; сторож восстановит доставку задания'); }
+    try { await deps.enqueue(job); } catch (error) { console.error('Рендер сохранён; сторож восстановит доставку задания', error); }
   }
 }

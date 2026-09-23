@@ -30,7 +30,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
   if (role === 'worker-video') checkRenderFont();
   if (directory) { await checkFfprobe(); await checkFfmpeg(); await mkdir(directory, { recursive: true }); }
   const pool = createPool(config.databaseUrl);
-  pool.on('error', () => console.error('Воркер: соединение БД потеряно'));
+  pool.on('error', (error) => console.error('Воркер: соединение БД потеряно', error));
   const transport = createQueues(config);
   const storage = s3Config ? { client: createS3Client(s3Config), bucket: s3Config.bucket } : null;
   let worker: Worker<AttemptJob>;
@@ -45,10 +45,11 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
         outcome = await probeSource(attempt, { pool, limits: config.limits, directory, download: s3Download(storage),
           continueTranscription: (file, duration, current) => transcribeSource(file, duration, current,
             { pool, limits: config.limits, transcriber, spendPath: join(directory, 'model-spend.jsonl'), enqueue: transport.enqueue }) });
-      } catch {
+      } catch (error) {
+        console.error('Воркер: проверка оригинала не завершилась', error);
         const next = await retryProbe(pool, attempt);
         if (next) await transport.enqueue(next, 2000);
-        throw new Error('Проверка оригинала не завершилась');
+        throw new Error('Проверка оригинала не завершилась', { cause: error });
       }
       if (outcome === 'deferred' || outcome === 'transcribing') {
         // Feature 4 owns the transcribe continuation; keep its job pending, never claim STT success.
@@ -75,14 +76,14 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
     worker = createRenderWorker(connection, { pool, directory, origin: config.publicOrigin,
       download: s3Download(storage), storage: renderStorage(storage), enqueue: transport.enqueue });
   } else { throw new Error('Непригодная конфигурация воркера'); }
-  worker.on('error', () => console.error('Воркер: транспорт недоступен'));
-  worker.on('failed', () => console.error('Воркер: попытка завершилась отказом'));
+  worker.on('error', (error) => console.error('Воркер: транспорт недоступен', error));
+  worker.on('failed', (_job, error) => console.error('Воркер: попытка завершилась отказом', error));
   let stopping: Promise<void> | undefined;
   const stop = () => stopping ??= (async () => {
     await worker.close(); await transport.close(); await pool.end(); storage?.client.destroy();
     process.removeListener('SIGINT', onSignal); process.removeListener('SIGTERM', onSignal);
   })();
-  const onSignal = () => { void stop().catch(() => { process.exitCode = 1; }); };
+  const onSignal = () => { void stop().catch((error) => { console.error('Воркер: остановка не завершена', error); process.exitCode = 1; }); };
   process.once('SIGINT', onSignal); process.once('SIGTERM', onSignal);
   return { worker, stop };
 }

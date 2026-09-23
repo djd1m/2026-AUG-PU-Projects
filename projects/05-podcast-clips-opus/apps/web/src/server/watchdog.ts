@@ -5,6 +5,8 @@ import { DEFER_DELAY_MS, STALLED_AFTER_MS, WATCHDOG_INTERVAL_MS } from '@clipmak
 // Per-process cursor keeps retained jobs from starving attempts beyond the batch boundary.
 const recoveryCursor = new WeakMap<Pool, string>();
 export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: number) => Promise<void>, now = new Date(), batch = 100, storage?: RetentionStorage) {
+  let step = 'закрытие зависших задач';
+  try {
   const failed = await transaction(pool, async tx => {
     const stale = await tx.query<{ id: string }>(`SELECT id FROM video
       WHERE status IN ('queued','transcribing','selecting','rendering') AND deleted_at IS NULL AND updated_at < $1
@@ -17,10 +19,12 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
     }
     return stale.rowCount;
   });
+  step = 'создание отсутствующих попыток';
   const missing = await pool.query<{ id: string }>(`SELECT v.id FROM video v JOIN account a ON a.id=v.account_id
     WHERE v.status='queued' AND v.deleted_at IS NULL AND a.status='active'
     AND NOT EXISTS (SELECT 1 FROM job_attempt j WHERE j.video_id=v.id) ORDER BY v.updated_at LIMIT $1`, [batch]);
   for (const { id } of missing.rows) await ensureInitialAttempt(pool, id);
+  step = 'восстановление доставки заданий';
   // Also recover publish failures after retries into select/render (not only queued).
   const readPending = (cursor: string | null) => pool.query<Attempt & { id: string; updated_at: Date; video_status: string }>(`SELECT j.*, v.updated_at, v.status AS video_status FROM job_attempt j
     JOIN video v ON v.id=j.video_id JOIN account a ON a.id=v.account_id
@@ -37,20 +41,25 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
   let published = 0;
   for (const job of pending.rows) {
     const delay = job.status === 'deferred' ? Math.max(0, job.updated_at.getTime() + DEFER_DELAY_MS - now.getTime()) : 0;
-    try { await enqueue(job, delay); published++; } catch { console.error('Сторож: транспорт заданий недоступен'); }
+    try { await enqueue(job, delay); published++; } catch (error) { console.error('Сторож: транспорт заданий недоступен', error); }
   }
   if (storage && now.getTime() - (retentionLastRun.get(pool) ?? -Infinity) >= RETENTION_INTERVAL_MS) {
+    step = 'retention';
     const result = await retentionTick(pool, storage, now, batch);
     if (result && !result.backlog) retentionLastRun.set(pool, now.getTime());
   }
   return { failed, published };
+  } catch (error) {
+    console.error(`Сторож: шаг «${step}» не завершён`, error);
+    throw error;
+  }
 }
-export function startWatchdog(tick: () => Promise<unknown>, onError = () => console.error('Сторож: проход не завершён')) {
+export function startWatchdog(tick: () => Promise<unknown>, onError: (error: unknown) => void = (error) => console.error('Сторож: проход не завершён', error)) {
   let running = false;
   const run = async () => {
     if (running) return;
     running = true;
-    try { await tick(); } catch { onError(); } finally { running = false; }
+    try { await tick(); } catch (error) { onError(error); } finally { running = false; }
   };
   const timer = setInterval(() => { void run(); }, WATCHDOG_INTERVAL_MS);
   timer.unref();

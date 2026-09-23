@@ -1,0 +1,242 @@
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/app/clips/useClipDownload.ts b/projects/05-podcast-clips-opus/apps/web/src/app/clips/useClipDownload.ts
+index 8804781..d995d63 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/app/clips/useClipDownload.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/app/clips/useClipDownload.ts
+@@ -7,7 +7,7 @@ export function startClipDownload(clipId: string, clipTitle?: string): void {
+   anchor.download = `${clipTitle?.trim().slice(0, 100) || 'clip'}.mp4`;
+   anchor.rel = 'noreferrer'; document.body.appendChild(anchor); anchor.click(); anchor.remove();
+   // The authorized file route owns delivery; an analytics outage must not block it.
+-  void rpc('clip.markDownloaded', { clip_id: clipId }, true).catch(() => console.warn('Событие скачивания не записано'));
++  void rpc('clip.markDownloaded', { clip_id: clipId }, true).catch((error) => console.warn('Событие скачивания не записано', error));
+ }
+ // Donor useClipDownload: keep anchor download and busy/error state; no proxy or invented clip.download procedure.
+ export function useClipDownload() {
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/app/health/route.ts b/projects/05-podcast-clips-opus/apps/web/src/app/health/route.ts
+index 04ce00f..3c43911 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/app/health/route.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/app/health/route.ts
+@@ -5,7 +5,8 @@ export async function GET(): Promise<Response> {
+   try {
+     await getRuntime().pool.query('SELECT 1');
+     return Response.json({ status: 'ok' }, { headers: { 'Cache-Control': 'no-store' } });
+-  } catch {
++  } catch (error) {
++    console.error('Проверка здоровья: сервис недоступен', error);
+     return Response.json({ status: 'unavailable' }, { status: 503, headers: { 'Cache-Control': 'no-store' } });
+   }
+ }
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts b/projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts
+index 5243bd3..6ccdaf5 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts
+@@ -63,7 +63,8 @@ export function createAuthHandler(action: 'login' | 'register' | 'logout', deps:
+       const token = await deps.auth[action](email, password, ipPrefix(ip));
+       if (!token) return json(LOGIN_FAILURE, 401);
+       return json({ ok: true }, 200, cookie(token));
+-    } catch {
++    } catch (error) {
++      console.error('Авторизация: запрос не завершён; вход временно недоступен', error);
+       return json({ error: 'Вход временно недоступен. Повторите позже' }, 503);
+     }
+   };
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts b/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts
+index 66e5a6a..217ea63 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts
+@@ -55,7 +55,8 @@ export function createClipFileHandler(deps: ClipFileDependencies, kind: 'file' |
+       }
+       return new Response(null, { status: 302, headers: { Location: await deps.sign(key, filename),
+         'Cache-Control': 'private, no-store', 'Referrer-Policy': 'no-referrer' } });
+-    } catch {
++    } catch (error) {
++      console.error('Выдача клипа: не удалось получить файл', error);
+       return new Response('Не удалось получить файл. Повторите позже', { status: 503, headers: { 'Cache-Control': 'no-store' } });
+     }
+   };
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts b/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts
+index 3a8722d..4ad1f8e 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts
+@@ -65,13 +65,16 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
+       try {
+         for (const key of [clip.object_key, clip.thumbnail_key]) if (key) await storage.delete(key);
+         await pool.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
+-      } catch { errors++; }
++      } catch (error) { console.error('Очистка: удаление клипа не завершено; повтор на следующем проходе', error); errors++; }
+     }
+     const accounts = await pool.query<{ id: string }>(`SELECT id FROM account WHERE status='erasing' AND deletion_requested_at <= $1
+       ORDER BY updated_at,id LIMIT $2`, [new Date(now.getTime() - ERASURE_QUIET_MS), batch]);
+     for (const account of accounts.rows) {
+       try { await eraseAccount(pool, storage, account.id, now); }
+-      catch { errors++; await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]); }
++      catch (error) {
++        console.error('Очистка: стирание аккаунта не завершено; повтор на следующем проходе', error);
++        errors++; await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]);
++      }
+     }
+     if (errors) throw new Error(`Очистка: не завершено операций ${errors}; повтор на следующем проходе`);
+     return { backlog: backlog || clips.rows.length === batch || accounts.rows.length === batch };
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/video-retry.ts b/projects/05-podcast-clips-opus/apps/web/src/server/video-retry.ts
+index e4eeab9..0e69a01 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/video-retry.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/video-retry.ts
+@@ -49,7 +49,7 @@ export class VideoRetryService {
+     if (result.refused) throw quotaError(result.refused, result.refusedAt!);
+     // Commit is authoritative. A failed Redis publish is recovered by watchdog.
+     for (const job of result.jobs) {
+-      try { await this.enqueue(job); } catch { console.error('Повтор сохранён; сторож восстановит доставку задания'); }
++      try { await this.enqueue(job); } catch (error) { console.error('Повтор сохранён; сторож восстановит доставку задания', error); }
+     }
+     return { video_id: videoId, status: result.status };
+   }
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/video.ts b/projects/05-podcast-clips-opus/apps/web/src/server/video.ts
+index 8fe8f65..e9578fa 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/video.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/video.ts
+@@ -101,7 +101,7 @@ export class VideoService {
+   }
+   private async cleanup(operation: () => Promise<void>, operationName: string) {
+     try { await operation(); }
+-    catch { console.error(`Upload cleanup failed: ${operationName}; повтор завершения повторит очистку`); }
++    catch (error) { console.error(`Upload cleanup failed: ${operationName}; повтор завершения повторит очистку`, error); }
+   }
+   private async cleanupFile(row: VideoRow) {
+     if (row.upload_id) await this.cleanup(() => this.storage.abort(row.object_key, row.upload_id!), 'abort');
+@@ -131,7 +131,11 @@ export class VideoService {
+       if (error instanceof UploadTooLarge) reason = 'too_large';
+       else {
+         // Ответ мог потеряться после склейки; иначе сохраняем части и повтор тем же ключом.
+-        try { bytes = await this.storage.head(row.object_key); } catch { throw unavailable(); }
++        try { bytes = await this.storage.head(row.object_key); } catch (headError) {
++          console.error('Загрузка: завершение multipart не подтверждено', error);
++          console.error('Загрузка: проверка HEAD недоступна; повторите завершение', headError);
++          throw unavailable();
++        }
+       }
+     }
+     if (!reason) {
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/watchdog.ts b/projects/05-podcast-clips-opus/apps/web/src/server/watchdog.ts
+index 90099f0..b314a8d 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/watchdog.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/watchdog.ts
+@@ -5,6 +5,8 @@ import { DEFER_DELAY_MS, STALLED_AFTER_MS, WATCHDOG_INTERVAL_MS } from '@clipmak
+ // Per-process cursor keeps retained jobs from starving attempts beyond the batch boundary.
+ const recoveryCursor = new WeakMap<Pool, string>();
+ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: number) => Promise<void>, now = new Date(), batch = 100, storage?: RetentionStorage) {
++  let step = 'закрытие зависших задач';
++  try {
+   const failed = await transaction(pool, async tx => {
+     const stale = await tx.query<{ id: string }>(`SELECT id FROM video
+       WHERE status IN ('queued','transcribing','selecting','rendering') AND deleted_at IS NULL AND updated_at < $1
+@@ -17,10 +19,12 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
+     }
+     return stale.rowCount;
+   });
++  step = 'создание отсутствующих попыток';
+   const missing = await pool.query<{ id: string }>(`SELECT v.id FROM video v JOIN account a ON a.id=v.account_id
+     WHERE v.status='queued' AND v.deleted_at IS NULL AND a.status='active'
+     AND NOT EXISTS (SELECT 1 FROM job_attempt j WHERE j.video_id=v.id) ORDER BY v.updated_at LIMIT $1`, [batch]);
+   for (const { id } of missing.rows) await ensureInitialAttempt(pool, id);
++  step = 'восстановление доставки заданий';
+   // Also recover publish failures after retries into select/render (not only queued).
+   const readPending = (cursor: string | null) => pool.query<Attempt & { id: string; updated_at: Date; video_status: string }>(`SELECT j.*, v.updated_at, v.status AS video_status FROM job_attempt j
+     JOIN video v ON v.id=j.video_id JOIN account a ON a.id=v.account_id
+@@ -37,20 +41,25 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
+   let published = 0;
+   for (const job of pending.rows) {
+     const delay = job.status === 'deferred' ? Math.max(0, job.updated_at.getTime() + DEFER_DELAY_MS - now.getTime()) : 0;
+-    try { await enqueue(job, delay); published++; } catch { console.error('Сторож: транспорт заданий недоступен'); }
++    try { await enqueue(job, delay); published++; } catch (error) { console.error('Сторож: транспорт заданий недоступен', error); }
+   }
+   if (storage && now.getTime() - (retentionLastRun.get(pool) ?? -Infinity) >= RETENTION_INTERVAL_MS) {
++    step = 'retention';
+     const result = await retentionTick(pool, storage, now, batch);
+     if (result && !result.backlog) retentionLastRun.set(pool, now.getTime());
+   }
+   return { failed, published };
++  } catch (error) {
++    console.error(`Сторож: шаг «${step}» не завершён`, error);
++    throw error;
++  }
+ }
+-export function startWatchdog(tick: () => Promise<unknown>, onError = () => console.error('Сторож: проход не завершён')) {
++export function startWatchdog(tick: () => Promise<unknown>, onError: (error: unknown) => void = (error) => console.error('Сторож: проход не завершён', error)) {
+   let running = false;
+   const run = async () => {
+     if (running) return;
+     running = true;
+-    try { await tick(); } catch { onError(); } finally { running = false; }
++    try { await tick(); } catch (error) { onError(error); } finally { running = false; }
+   };
+   const timer = setInterval(() => { void run(); }, WATCHDOG_INTERVAL_MS);
+   timer.unref();
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/runtime.ts b/projects/05-podcast-clips-opus/apps/worker/src/runtime.ts
+index 064653f..1e1d4b3 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/runtime.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/runtime.ts
+@@ -30,7 +30,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
+   if (role === 'worker-video') checkRenderFont();
+   if (directory) { await checkFfprobe(); await checkFfmpeg(); await mkdir(directory, { recursive: true }); }
+   const pool = createPool(config.databaseUrl);
+-  pool.on('error', () => console.error('Воркер: соединение БД потеряно'));
++  pool.on('error', (error) => console.error('Воркер: соединение БД потеряно', error));
+   const transport = createQueues(config);
+   const storage = s3Config ? { client: createS3Client(s3Config), bucket: s3Config.bucket } : null;
+   let worker: Worker<AttemptJob>;
+@@ -45,10 +45,11 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
+         outcome = await probeSource(attempt, { pool, limits: config.limits, directory, download: s3Download(storage),
+           continueTranscription: (file, duration, current) => transcribeSource(file, duration, current,
+             { pool, limits: config.limits, transcriber, spendPath: join(directory, 'model-spend.jsonl'), enqueue: transport.enqueue }) });
+-      } catch {
++      } catch (error) {
++        console.error('Воркер: проверка оригинала не завершилась', error);
+         const next = await retryProbe(pool, attempt);
+         if (next) await transport.enqueue(next, 2000);
+-        throw new Error('Проверка оригинала не завершилась');
++        throw new Error('Проверка оригинала не завершилась', { cause: error });
+       }
+       if (outcome === 'deferred' || outcome === 'transcribing') {
+         // Feature 4 owns the transcribe continuation; keep its job pending, never claim STT success.
+@@ -75,14 +76,14 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
+     worker = createRenderWorker(connection, { pool, directory, origin: config.publicOrigin,
+       download: s3Download(storage), storage: renderStorage(storage), enqueue: transport.enqueue });
+   } else { throw new Error('Непригодная конфигурация воркера'); }
+-  worker.on('error', () => console.error('Воркер: транспорт недоступен'));
+-  worker.on('failed', () => console.error('Воркер: попытка завершилась отказом'));
++  worker.on('error', (error) => console.error('Воркер: транспорт недоступен', error));
++  worker.on('failed', (_job, error) => console.error('Воркер: попытка завершилась отказом', error));
+   let stopping: Promise<void> | undefined;
+   const stop = () => stopping ??= (async () => {
+     await worker.close(); await transport.close(); await pool.end(); storage?.client.destroy();
+     process.removeListener('SIGINT', onSignal); process.removeListener('SIGTERM', onSignal);
+   })();
+-  const onSignal = () => { void stop().catch(() => { process.exitCode = 1; }); };
++  const onSignal = () => { void stop().catch((error) => { console.error('Воркер: остановка не завершена', error); process.exitCode = 1; }); };
+   process.once('SIGINT', onSignal); process.once('SIGTERM', onSignal);
+   return { worker, stop };
+ }
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts b/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts
+index fe935dd..4837732 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts
+@@ -52,7 +52,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
+     const next = await retryRender(deps.pool, attempt, error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
+     if (next) {
+       try { await deps.enqueue(next, 2000); }
+-      catch { console.error('Попытка рендера сохранена; сторож восстановит доставку'); }
++      catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', error); }
+     }
+     return 'failed';
+   }
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/workers/select.ts b/projects/05-podcast-clips-opus/apps/worker/src/workers/select.ts
+index 8378e1e..e39b318 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/workers/select.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/workers/select.ts
+@@ -31,6 +31,6 @@ export async function selectFragments(attempt: Attempt, deps: Dependencies) {
+   const jobs = await acceptSelection(deps.pool, attempt, fragments);
+   // Committed attempts are the outbox; watchdog recovers any Redis publish loss.
+   for (const job of jobs ?? []) {
+-    try { await deps.enqueue(job); } catch { console.error('Рендер сохранён; сторож восстановит доставку задания'); }
++    try { await deps.enqueue(job); } catch (error) { console.error('Рендер сохранён; сторож восстановит доставку задания', error); }
+   }
+ }

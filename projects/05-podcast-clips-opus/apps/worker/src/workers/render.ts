@@ -52,7 +52,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
     const next = await retryRender(deps.pool, attempt, error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
     if (next) {
       try { await deps.enqueue(next, 2000); }
-      catch { console.error('Попытка рендера сохранена; сторож восстановит доставку'); }
+      catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', error); }
     }
     return 'failed';
   }

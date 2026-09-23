@@ -55,7 +55,8 @@ export function createClipFileHandler(deps: ClipFileDependencies, kind: 'file' |
       }
       return new Response(null, { status: 302, headers: { Location: await deps.sign(key, filename),
         'Cache-Control': 'private, no-store', 'Referrer-Policy': 'no-referrer' } });
-    } catch {
+    } catch (error) {
+      console.error('Выдача клипа: не удалось получить файл', error);
       return new Response('Не удалось получить файл. Повторите позже', { status: 503, headers: { 'Cache-Control': 'no-store' } });
     }
   };

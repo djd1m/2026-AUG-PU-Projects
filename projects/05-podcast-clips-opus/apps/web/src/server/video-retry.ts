@@ -49,7 +49,7 @@ export class VideoRetryService {
     if (result.refused) throw quotaError(result.refused, result.refusedAt!);
     // Commit is authoritative. A failed Redis publish is recovered by watchdog.
     for (const job of result.jobs) {
-      try { await this.enqueue(job); } catch { console.error('Повтор сохранён; сторож восстановит доставку задания'); }
+      try { await this.enqueue(job); } catch (error) { console.error('Повтор сохранён; сторож восстановит доставку задания', error); }
     }
     return { video_id: videoId, status: result.status };
   }
