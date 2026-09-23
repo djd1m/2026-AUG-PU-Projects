@@ -1,0 +1,96 @@
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/render/format.ts b/projects/05-podcast-clips-opus/apps/worker/src/render/format.ts
+index cb9240d..a66c7e5 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/render/format.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/render/format.ts
+@@ -1,6 +1,6 @@
+ // Adapted from jan-clone: only portrait; canon requires center crop, not padding.
+-export type ClipFormat = 'portrait';
+-export const FORMAT_DIMENSIONS = { portrait: { width: 1080, height: 1920 } } as const;
++import { FORMAT_DIMENSIONS, type ClipFormat } from '@clipmaker/shared/formats';
++export { FORMAT_DIMENSIONS, type ClipFormat } from '@clipmaker/shared/formats';
+ export function getScaleFilter(format: ClipFormat): string {
+   const { width, height } = FORMAT_DIMENSIONS[format];
+   return `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1`;
+diff --git a/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts b/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
+index e1077c2..59285c0 100644
+--- a/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
++++ b/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
+@@ -1,5 +1,6 @@
+ import fontMetrics from './watermark-metrics.json';
+ import { CLIP_CODE_ALPHABET, clipCodeLength } from './clip-code.js';
++import { FORMAT_DIMENSIONS } from './formats.js';
+ const metrics: { sha256: string; unitsPerEm: number; advance: Record<string, number> } = fontMetrics;
+ export const RENDER_FONT_SHA256 = metrics.sha256;
+ export function measureText(text: string, fontSize: number): number {
+@@ -31,13 +32,16 @@ export function watermarkGeometry(width: number, height: number, origin: string,
+ 
+ export function assertWatermarkFits(origin: string, rawLength: string | undefined): void {
+   const length = clipCodeLength(rawLength);
+-  const widest = [...CLIP_CODE_ALPHABET].reduce((best, char) =>
+-    measureText(char, watermarkFontSize(1920)) > measureText(best, watermarkFontSize(1920)) ? char : best);
+-  try {
+-    watermarkGeometry(1080, 1920, origin, widest.repeat(length));
+-  } catch (error) {
+-    throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}: ` +
+-      `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
+-      'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
++  for (const [format, { width, height }] of Object.entries(FORMAT_DIMENSIONS)) {
++    const fontSize = watermarkFontSize(height);
++    const widest = [...CLIP_CODE_ALPHABET].reduce((best, char) =>
++      measureText(char, fontSize) > measureText(best, fontSize) ? char : best);
++    try {
++      watermarkGeometry(width, height, origin, widest.repeat(length));
++    } catch (error) {
++      throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}, формат ${format}: ` +
++        `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
++        'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
++    }
+   }
+ }
+diff --git a/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts b/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
+index 1a1cf4b..9242274 100644
+--- a/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
++++ b/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
+@@ -14,6 +14,30 @@ beforeAll(() => {
+ 
+ for (const role of ['web', 'worker-video'] as const) {
+   const entry = role === 'web' ? 'apps/web/.next/preflight/preflight.js' : 'apps/worker/dist/workers/render.js';
++  it(`SL-006 ${role} startup rejects an added unfit format and names it`, () => {
++    // Inject into the compiled authoritative map before loading the real entry point.
++    // The extra key is deliberately after portrait: checking only the first entry fails.
++    const inject = "require('./packages/shared/dist/formats.js').FORMAT_DIMENSIONS.unfit_test = { width: 540, height: 960 };";
++    const env = { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr.ru', N5_SHORT_CODE_LENGTH: '6' };
++    const call = role === 'web' ? 'loadWebConfig(process.env)' : "loadWorkerConfig('worker-video', process.env)";
++    const config = subprocess(['-e', `${inject} require('./packages/shared/dist/config.js').${call}`], env);
++    expect(config.status, config.output).toBe(1);
++    expect(config.output).toContain('формат unfit_test');
++    const result = subprocess(['-e', `
++      ${inject}
++      require('./${entry}');
++    `], env);
++    expect(result.status, result.output).toBe(1);
++    expect(result.signal).toBeNull();
++    expect(result.output).toContain('формат unfit_test');
++    expect(result.output).toContain('не помещается в безопасную область');
++  });
++  it(`SL-006 ${role} startup configuration passes without the unfit format`, () => {
++    const call = role === 'web' ? 'loadWebConfig(process.env)' : "loadWorkerConfig('worker-video', process.env)";
++    const result = subprocess(['-e', `require('./packages/shared/dist/config.js').${call}`],
++      { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr.ru', N5_SHORT_CODE_LENGTH: '6' });
++    expect(result.status, result.output).toBe(0);
++  });
+   it.each(['6', '10'])(`SL-003 ${role} actual startup rejects oversized origin with price before work (%s)`, length => {
+     const result = subprocess([entry], { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmaker.aicoding.space', N5_SHORT_CODE_LENGTH: length });
+     expect(result.status, result.output).toBe(1);
+diff --git a/projects/05-podcast-clips-opus/vitest.config.ts b/projects/05-podcast-clips-opus/vitest.config.ts
+index cdf8f7a..04ebebb 100644
+--- a/projects/05-podcast-clips-opus/vitest.config.ts
++++ b/projects/05-podcast-clips-opus/vitest.config.ts
+@@ -3,6 +3,7 @@ import path from 'node:path';
+ export default defineConfig({
+   esbuild: { jsx: 'automatic' },
+   resolve: { alias: {
++    '@clipmaker/shared/formats': path.resolve('packages/shared/src/formats.ts'),
+     '@clipmaker/shared/watermark': path.resolve('packages/shared/src/watermark.ts'),
+     '@clipmaker/shared/clip-code': path.resolve('packages/shared/src/clip-code.ts'),
+     '@clipmaker/shared/config': path.resolve('packages/shared/src/config.ts'),

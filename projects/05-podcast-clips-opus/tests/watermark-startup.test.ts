@@ -14,6 +14,30 @@ beforeAll(() => {
 
 for (const role of ['web', 'worker-video'] as const) {
   const entry = role === 'web' ? 'apps/web/.next/preflight/preflight.js' : 'apps/worker/dist/workers/render.js';
+  it(`SL-006 ${role} startup rejects an added unfit format and names it`, () => {
+    // Inject into the compiled authoritative map before loading the real entry point.
+    // The extra key is deliberately after portrait: checking only the first entry fails.
+    const inject = "require('./packages/shared/dist/formats.js').FORMAT_DIMENSIONS.unfit_test = { width: 540, height: 960 };";
+    const env = { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr.ru', N5_SHORT_CODE_LENGTH: '6' };
+    const call = role === 'web' ? 'loadWebConfig(process.env)' : "loadWorkerConfig('worker-video', process.env)";
+    const config = subprocess(['-e', `${inject} require('./packages/shared/dist/config.js').${call}`], env);
+    expect(config.status, config.output).toBe(1);
+    expect(config.output).toContain('формат unfit_test');
+    const result = subprocess(['-e', `
+      ${inject}
+      require('./${entry}');
+    `], env);
+    expect(result.status, result.output).toBe(1);
+    expect(result.signal).toBeNull();
+    expect(result.output).toContain('формат unfit_test');
+    expect(result.output).toContain('не помещается в безопасную область');
+  });
+  it(`SL-006 ${role} startup configuration passes without the unfit format`, () => {
+    const call = role === 'web' ? 'loadWebConfig(process.env)' : "loadWorkerConfig('worker-video', process.env)";
+    const result = subprocess(['-e', `require('./packages/shared/dist/config.js').${call}`],
+      { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmkr.ru', N5_SHORT_CODE_LENGTH: '6' });
+    expect(result.status, result.output).toBe(0);
+  });
   it.each(['6', '10'])(`SL-003 ${role} actual startup rejects oversized origin with price before work (%s)`, length => {
     const result = subprocess([entry], { ...environment(), N5_PUBLIC_ORIGIN: 'https://clipmaker.aicoding.space', N5_SHORT_CODE_LENGTH: length });
     expect(result.status, result.output).toBe(1);

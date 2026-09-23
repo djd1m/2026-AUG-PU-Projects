@@ -1,0 +1,18 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/watermark-startup.test.ts -t SL-006
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/watermark-startup.test.ts (14 tests | 10 skipped) 10654ms
+   ✓ SL-006 worker-video startup rejects an added unfit format and names it  561ms
+
+WARNING: ПРОПУЩЕНО 10 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts: 10 skipped
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 10 skipped (14)
+   Start at  11:30:27
+   Duration  11.69s (transform 327ms, setup 0ms, collect 361ms, tests 10.65s, environment 0ms, prepare 242ms)
+

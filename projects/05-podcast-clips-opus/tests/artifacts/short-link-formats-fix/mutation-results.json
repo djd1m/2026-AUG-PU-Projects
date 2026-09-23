@@ -1,0 +1,26 @@
+{
+  "red": {
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "tests/watermark-startup.test.ts",
+      "-t",
+      "SL-006"
+    ],
+    "exit_code": 1,
+    "source_sha256": "12d1222e6a394d177f5bd4b3ca36a2cd76c344a21d6f3be5f529c51b9eb80f09"
+  },
+  "green": {
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "tests/watermark-startup.test.ts",
+      "-t",
+      "SL-006"
+    ],
+    "exit_code": 0,
+    "source_sha256": "b4390df86cc3332e70321e4607b846d38b7d943442625056759db8ff135ee7ce"
+  }
+}

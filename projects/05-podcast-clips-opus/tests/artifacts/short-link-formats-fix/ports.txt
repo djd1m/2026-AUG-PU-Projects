@@ -1,0 +1,2 @@
+⚠️  проверка НЕ выполнена: docker compose config вернул ошибку: error while interpolating x-s3-env.S3_ACCESS_KEY: required variable S3_ACCESS_KEY is missing a value: ключ S3 не задан
+    повторить ровно то, что делали мы: docker compose -f /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docker-compose.yml config

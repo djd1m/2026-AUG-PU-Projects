@@ -1,0 +1,17 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/watermark-startup.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/watermark-startup.test.ts (14 tests) 19188ms
+   ✓ SL-006 worker-video startup rejects an added unfit format and names it  1381ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (6)  739ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (10)  584ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  11:27:02
+   Duration  20.00s (transform 347ms, setup 0ms, collect 344ms, tests 19.19s, environment 0ms, prepare 158ms)
+

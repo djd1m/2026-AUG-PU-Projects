@@ -1,0 +1,92 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "profile": "compact-quality-first-v2",
+  "run_id": "20260923T112511Z-short-link-formats-fix",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "short-link SL-006",
+  "pipeline": "brief → implementation → mutation and regression → independent review",
+  "tier": "M",
+  "risk_flags": [
+    "existing startup validation shared by web and worker"
+  ],
+  "profile_overrides": [
+    "Current coordinator implements narrow approved fix; independent Sol review",
+    "Telemetry outside docs per brief",
+    "Supplementary Sol review does not replace required Anthropic review; unavailable in this host"
+  ],
+  "baseline_revision": "025657621aa5d8e17a221f030109ac48c0438e43",
+  "final_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+  "started_at": "2026-09-23T11:25:38.349810+00:00",
+  "ended_at": "2026-09-23T11:33:39.860975+00:00",
+  "status": "blocked",
+  "actual_model": "GPT-6 (developer identity; exact runtime model unavailable)",
+  "actual_effort": null,
+  "batch_id": null,
+  "comparison_id": null,
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "spec_sha256": "85e0f14966c67d9e27cfc04caa1d56effbc1f76894598bc11b8c30bbaff4caaa",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable",
+    "elapsed_wall_ms": 481511,
+    "active_wall_ms": null,
+    "agent_work_ms": null,
+    "retry_count": 0,
+    "escalation_count": 0,
+    "first_pass_acceptance": null
+  },
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 3,
+    "ac_total": 3,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "accepted_scope_checks_passed": true,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "owner_pending": [
+      "138 integration tests skipped: no service environment and Docker socket denied",
+      "Required OWN-002 Anthropic review unavailable",
+      "Deployed CJM check outside brief; script absent"
+    ]
+  },
+  "acceptance_evidence": [
+    "docs/features/short-link/14_fix_report.md",
+    "tests/artifacts/short-link-formats-fix/all-tests.txt",
+    "tests/artifacts/short-link-formats-fix/mutation-results.json",
+    "tests/artifacts/short-link-formats-fix/review.txt"
+  ],
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Instruction-reading duration before first clock observation unavailable; full elapsed is a lower bound",
+    "Runtime model variant, effort, usage and billing unavailable",
+    "No comparable baseline; savings not established",
+    "No measured full instruction-reading start or isolated agent timestamps; active/agent work duration unavailable"
+  ],
+  "route": {
+    "plan": {
+      "tier": "M",
+      "mechanical_exit": 0,
+      "mechanical_tier": "S",
+      "reason": "Existing startup check behavior; approved brief is complete plan; no new service seam or formats"
+    },
+    "implementation": {
+      "tier": "M",
+      "mechanical_exit": 0,
+      "reason": "Scope unchanged after reading map, geometry, loaders and architecture"
+    },
+    "plan_text": "Move map to shared, derive ClipFormat from keys, re-export from worker, iterate dimensions with format-specific widest glyph and error. Test actual startup with injected bad format; mutation restores fixed dimensions.",
+    "validation": "Pure shared dependency; renderer and startup consume same map; geometry and product formats unchanged",
+    "preflight": {
+      "status": "not_applicable",
+      "reason": "Local startup subprocess checks; no deployed E2E or external actions"
+    }
+  }
+}

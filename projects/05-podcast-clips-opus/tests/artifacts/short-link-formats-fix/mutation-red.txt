@@ -1,0 +1,56 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/watermark-startup.test.ts -t SL-006
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/watermark-startup.test.ts (14 tests | 2 failed | 10 skipped) 13054ms
+   × SL-006 web startup rejects an added unfit format and names it 108ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ SL-006 web startup configuration passes without the unfit format 86ms
+   ↓ SL-003 web actual startup rejects oversized origin with price before work (6)
+   ↓ SL-003 web actual startup rejects oversized origin with price before work (10)
+   ↓ SL-003 web startup guard rejects configuration in a separate process
+   ↓ SL-003 web uses configured length, widest alphabet glyph and default six
+   × SL-006 worker-video startup rejects an added unfit format and names it 61ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ SL-006 worker-video startup configuration passes without the unfit format 125ms
+   ↓ SL-003 worker-video actual startup rejects oversized origin with price before work (6)
+   ↓ SL-003 worker-video actual startup rejects oversized origin with price before work (10)
+   ↓ SL-003 worker-video startup guard rejects configuration in a separate process
+   ↓ SL-003 worker-video uses configured length, widest alphabet glyph and default six
+   ↓ SL-003 web preflight accepts a short origin with ten-character codes
+   ↓ SL-003 render retains rejection after the startup check is removed
+
+WARNING: ПРОПУЩЕНО 10 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts: 10 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/watermark-startup.test.ts > SL-006 web startup rejects an added unfit format and names it
+ FAIL  tests/watermark-startup.test.ts > SL-006 worker-video startup rejects an added unfit format and names it
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/watermark-startup.test.ts:24:42
+     22|     const call = role === 'web' ? 'loadWebConfig(process.env)' : "load…
+     23|     const config = subprocess(['-e', `${inject} require('./packages/sh…
+     24|     expect(config.status, config.output).toBe(1);
+       |                                          ^
+     25|     expect(config.output).toContain('формат unfit_test');
+     26|     const result = subprocess(['-e', `
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed | 10 skipped (14)
+   Start at  11:30:11
+   Duration  14.01s (transform 234ms, setup 0ms, collect 237ms, tests 13.05s, environment 0ms, prepare 194ms)
+

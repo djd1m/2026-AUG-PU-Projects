@@ -1,5 +1,6 @@
 import fontMetrics from './watermark-metrics.json';
 import { CLIP_CODE_ALPHABET, clipCodeLength } from './clip-code.js';
+import { FORMAT_DIMENSIONS } from './formats.js';
 const metrics: { sha256: string; unitsPerEm: number; advance: Record<string, number> } = fontMetrics;
 export const RENDER_FONT_SHA256 = metrics.sha256;
 export function measureText(text: string, fontSize: number): number {
@@ -31,13 +32,16 @@ export function watermarkGeometry(width: number, height: number, origin: string,
 
 export function assertWatermarkFits(origin: string, rawLength: string | undefined): void {
   const length = clipCodeLength(rawLength);
-  const widest = [...CLIP_CODE_ALPHABET].reduce((best, char) =>
-    measureText(char, watermarkFontSize(1920)) > measureText(best, watermarkFontSize(1920)) ? char : best);
-  try {
-    watermarkGeometry(1080, 1920, origin, widest.repeat(length));
-  } catch (error) {
-    throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}: ` +
-      `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
-      'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
+  for (const [format, { width, height }] of Object.entries(FORMAT_DIMENSIONS)) {
+    const fontSize = watermarkFontSize(height);
+    const widest = [...CLIP_CODE_ALPHABET].reduce((best, char) =>
+      measureText(char, fontSize) > measureText(best, fontSize) ? char : best);
+    try {
+      watermarkGeometry(width, height, origin, widest.repeat(length));
+    } catch (error) {
+      throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}, формат ${format}: ` +
+        `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
+        'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
+    }
   }
 }

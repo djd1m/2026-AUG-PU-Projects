@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T112511Z-short-link-formats-fix",
+    "work_unit_id": "SL-006",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/short-link-formats-fix/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/short-link-formats-fix/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "025657621aa5d8e17a221f030109ac48c0438e43",
+    "current_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+    "build_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/short-link/13_fix_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+      "observed_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "85e0f14966c67d9e27cfc04caa1d56effbc1f76894598bc11b8c30bbaff4caaa",
+    "scope": [
+      "SL-006 single shared format map used by render and every startup geometry validation"
+    ],
+    "exclusions": [
+      "New formats, geometry changes, production origin, DNS and deployment"
+    ],
+    "action_limits": [
+      "Local patch, checks and report; docs only 14_fix_report.md"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "one-map",
+        "required": true
+      },
+      {
+        "id": "all-formats-named",
+        "required": true
+      },
+      {
+        "id": "mutation",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/worker/src/render/format.ts"
+          }
+        },
+        "provenance": "025657621aa5d8e17a221f030109ac48c0438e43",
+        "useful_fragment": "Existing portrait dimensions",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "Move unchanged dimensions into shared authoritative map"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable runs requested",
+      "scope_revision": "85e0f14966c67d9e27cfc04caa1d56effbc1f76894598bc11b8c30bbaff4caaa",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "85e0f14966c67d9e27cfc04caa1d56effbc1f76894598bc11b8c30bbaff4caaa",
+      "tier": "M",
+      "rationale": "Existing startup check change; no new service boundary or product formats; mechanical S is lower bound",
+      "script": {
+        "command": "bash ../../scripts/complexity-router.sh packages/shared/src/watermark.ts packages/shared/src/formats.ts apps/worker/src/render/format.ts tests/watermark-startup.test.ts",
+        "input": "Explicit implementation and guard paths",
+        "exit_code": 0
+      },
+      "phase": "plan"
+    },
+    {
+      "scope_revision": "85e0f14966c67d9e27cfc04caa1d56effbc1f76894598bc11b8c30bbaff4caaa",
+      "tier": "M",
+      "rationale": "Existing startup check change; no new service boundary or product formats; mechanical S is lower bound",
+      "script": {
+        "command": "bash ../../scripts/complexity-router.sh packages/shared/src/watermark.ts packages/shared/src/formats.ts apps/worker/src/render/format.ts tests/watermark-startup.test.ts",
+        "input": "Explicit implementation and guard paths",
+        "exit_code": 0
+      },
+      "phase": "implementation"
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requested implementation of the bounded owner brief; no new scope",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local subprocess/unit checks. No deployed E2E; Docker API socket denied; no integration pass claimed",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "SL-006",
+      "paths": [
+        {
+          "root": "project",
+          "path": "packages/shared/src/formats.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/watermark.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/format.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/watermark-startup.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "vitest.config.ts"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "one-map",
+      "outcome": "pass",
+      "command": "npm test; python3 tests/artifacts/short-link-formats-fix/run-mutation.py",
+      "exit_code": 0,
+      "source_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "all-formats-named",
+      "outcome": "pass",
+      "command": "npm test; python3 tests/artifacts/short-link-formats-fix/run-mutation.py",
+      "exit_code": 0,
+      "source_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "mutation",
+      "outcome": "pass",
+      "command": "npm test; python3 tests/artifacts/short-link-formats-fix/run-mutation.py",
+      "exit_code": 0,
+      "source_revision": "025657621aa5d8e17a221f030109ac48c0438e43+manifest-sha256:5cd0ea7c2408a62076ee92d873801aea26bbd70835b5344faf2904efc368a9cc",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null,
+  "handoff": {
+    "report": "docs/features/short-link/14_fix_report.md",
+    "local_scope": "completed",
+    "owner_review": "Anthropic pending",
+    "integration": "138 skipped: Docker socket denied, service env unavailable",
+    "reason_not_delivered": "Mandatory full regression and OWN-002 gates pending; no full delivery claim"
+  }
+}
