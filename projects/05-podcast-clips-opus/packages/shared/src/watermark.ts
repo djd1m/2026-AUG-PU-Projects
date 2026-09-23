@@ -44,6 +44,7 @@ export function assertWatermarkFits(origin: string, rawLength: string | undefine
     } catch (error) {
       throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}, формат ${format}: ` +
         `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
+        'Сократите адрес в N5_PUBLIC_ORIGIN или уменьшите N5_SHORT_CODE_LENGTH (допустимы 6 и 10). ' +
         'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
     }
   }

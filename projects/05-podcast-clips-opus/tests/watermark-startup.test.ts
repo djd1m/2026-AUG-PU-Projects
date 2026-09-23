@@ -66,6 +66,8 @@ for (const role of ['web', 'worker-video'] as const) {
     // A typical 10-character code fits; the worst one does not.
     expect(watermarkGeometry(1080, 1920, 'https://clipmkr.ru', 'AB3XK9AB3X').plateWidth).toBeLessThan(972);
     expect(() => load('https://clipmkr.ru', '10')).toThrow('1035 px');
+    expect(() => load('https://clipmkr.ru', '10')).toThrow(
+      'Сократите адрес в N5_PUBLIC_ORIGIN или уменьшите N5_SHORT_CODE_LENGTH');
     expect(load('https://i.io', '10').publicOrigin).toBe('https://i.io');
     for (const length of ['', '7', ' 6']) expect(() => load('https://i.io', length)).toThrow('N5_SHORT_CODE_LENGTH');
     // The runtime safe area is 972; 880 is only a reference-layout test target.

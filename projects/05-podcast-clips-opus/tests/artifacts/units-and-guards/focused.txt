@@ -1,0 +1,39 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/units-and-guards.test.ts tests/render-media.test.ts tests/watermark-startup.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/watermark-startup.test.ts (18 tests) 9373ms
+   ✓ SL-006 worker-video startup rejects an added unfit format and names it  589ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (6)  334ms
+   ✓ SL-003 worker-video actual startup rejects oversized origin with price before work (10)  338ms
+   ✓ SL-007 actual worker-stt entry refuses bad geometry and names origin (6)  305ms
+   ✓ SL-007 actual worker-stt entry refuses bad geometry and names origin (10)  319ms
+   ✓ SL-007 actual worker-llm entry refuses bad geometry and names origin (6)  335ms
+   ✓ SL-007 actual worker-llm entry refuses bad geometry and names origin (10)  302ms
+stdout | tests/render-media.test.ts > real ffmpeg (0x224466): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-OCOuUi
+
+stdout | tests/render-media.test.ts > real ffmpeg (white): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-FmpIiz
+
+stdout | tests/render-media.test.ts > real ffmpeg (black): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-TddS4P
+
+stderr | tests/render-media.test.ts > ffmpeg timeout kills the child and waits for close before returning
+{"event":"ffmpeg_timeout","exit_code":null,"signal":"SIGKILL","stderr_tail":""}
+
+ ✓ tests/render-media.test.ts (4 tests) 16971ms
+   ✓ real ffmpeg (0x224466): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  5535ms
+   ✓ real ffmpeg (white): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  5916ms
+   ✓ real ffmpeg (black): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  5313ms
+ ✓ tests/units-and-guards.test.ts (2 tests) 1499ms
+   ✓ RV-3 real runner marks filtered receipts partial and preserves total inventory  1495ms
+
+ Test Files  3 passed (3)
+      Tests  24 passed (24)
+   Start at  15:29:58
+   Duration  28.94s (transform 248ms, setup 0ms, collect 314ms, tests 27.84s, environment 1ms, prepare 299ms)
+

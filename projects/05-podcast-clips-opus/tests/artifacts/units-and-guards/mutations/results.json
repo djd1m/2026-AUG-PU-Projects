@@ -1,0 +1,321 @@
+{
+  "requested": [],
+  "total": 5,
+  "partial": false,
+  "results": [
+    {
+      "id": "RV-1-monitor",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0,
+        "tests": [
+          {
+            "name": "RV-1 STT journal writer and monitoring agree on seconds and daily threshold",
+            "status": "failed"
+          },
+          {
+            "name": "RV-3 real runner marks filtered receipts partial and preserves total inventory",
+            "status": "skipped"
+          }
+        ]
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 1,
+        "tests": [
+          {
+            "name": "RV-1 STT journal writer and monitoring agree on seconds and daily threshold",
+            "status": "passed"
+          },
+          {
+            "name": "RV-3 real runner marks filtered receipts partial and preserves total inventory",
+            "status": "skipped"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "RV-1-writer",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0,
+        "tests": [
+          {
+            "name": "RV-1 STT journal writer and monitoring agree on seconds and daily threshold",
+            "status": "failed"
+          },
+          {
+            "name": "RV-3 real runner marks filtered receipts partial and preserves total inventory",
+            "status": "skipped"
+          }
+        ]
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 1,
+        "tests": [
+          {
+            "name": "RV-1 STT journal writer and monitoring agree on seconds and daily threshold",
+            "status": "passed"
+          },
+          {
+            "name": "RV-3 real runner marks filtered receipts partial and preserves total inventory",
+            "status": "skipped"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "RV-2",
+      "red": {
+        "exit": 1,
+        "failed": 2,
+        "passed": 0,
+        "tests": [
+          {
+            "name": "SL-006 web startup rejects an added unfit format and names it",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-006 web startup configuration passes without the unfit format",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web actual startup rejects oversized origin with price before work (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web actual startup rejects oversized origin with price before work (10)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web startup guard rejects configuration in a separate process",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web uses configured length, widest alphabet glyph and default six",
+            "status": "failed"
+          },
+          {
+            "name": "SL-006 worker-video startup rejects an added unfit format and names it",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-006 worker-video startup configuration passes without the unfit format",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video actual startup rejects oversized origin with price before work (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video actual startup rejects oversized origin with price before work (10)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video startup guard rejects configuration in a separate process",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video uses configured length, widest alphabet glyph and default six",
+            "status": "failed"
+          },
+          {
+            "name": "SL-003 web preflight accepts a short origin with ten-character codes",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 render retains rejection after the startup check is removed",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-stt entry refuses bad geometry and names origin (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-stt entry refuses bad geometry and names origin (10)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-llm entry refuses bad geometry and names origin (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-llm entry refuses bad geometry and names origin (10)",
+            "status": "skipped"
+          }
+        ]
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 2,
+        "tests": [
+          {
+            "name": "SL-006 web startup rejects an added unfit format and names it",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-006 web startup configuration passes without the unfit format",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web actual startup rejects oversized origin with price before work (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web actual startup rejects oversized origin with price before work (10)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web startup guard rejects configuration in a separate process",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 web uses configured length, widest alphabet glyph and default six",
+            "status": "passed"
+          },
+          {
+            "name": "SL-006 worker-video startup rejects an added unfit format and names it",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-006 worker-video startup configuration passes without the unfit format",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video actual startup rejects oversized origin with price before work (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video actual startup rejects oversized origin with price before work (10)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video startup guard rejects configuration in a separate process",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 worker-video uses configured length, widest alphabet glyph and default six",
+            "status": "passed"
+          },
+          {
+            "name": "SL-003 web preflight accepts a short origin with ten-character codes",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-003 render retains rejection after the startup check is removed",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-stt entry refuses bad geometry and names origin (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-stt entry refuses bad geometry and names origin (10)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-llm entry refuses bad geometry and names origin (6)",
+            "status": "skipped"
+          },
+          {
+            "name": "SL-007 actual worker-llm entry refuses bad geometry and names origin (10)",
+            "status": "skipped"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "RV-3",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 0,
+        "tests": [
+          {
+            "name": "RV-1 STT journal writer and monitoring agree on seconds and daily threshold",
+            "status": "skipped"
+          },
+          {
+            "name": "RV-3 real runner marks filtered receipts partial and preserves total inventory",
+            "status": "failed"
+          }
+        ]
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 1,
+        "tests": [
+          {
+            "name": "RV-1 STT journal writer and monitoring agree on seconds and daily threshold",
+            "status": "skipped"
+          },
+          {
+            "name": "RV-3 real runner marks filtered receipts partial and preserves total inventory",
+            "status": "passed"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "RV-4",
+      "red": {
+        "exit": 1,
+        "failed": 1,
+        "passed": 2,
+        "tests": [
+          {
+            "name": "real ffmpeg (0x224466): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail",
+            "status": "passed"
+          },
+          {
+            "name": "real ffmpeg (white): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail",
+            "status": "failed"
+          },
+          {
+            "name": "real ffmpeg (black): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail",
+            "status": "passed"
+          },
+          {
+            "name": "ffmpeg timeout kills the child and waits for close before returning",
+            "status": "skipped"
+          }
+        ]
+      },
+      "green": {
+        "exit": 0,
+        "failed": 0,
+        "passed": 3,
+        "tests": [
+          {
+            "name": "real ffmpeg (0x224466): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail",
+            "status": "passed"
+          },
+          {
+            "name": "real ffmpeg (white): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail",
+            "status": "passed"
+          },
+          {
+            "name": "real ffmpeg (black): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail",
+            "status": "passed"
+          },
+          {
+            "name": "ffmpeg timeout kills the child and waits for close before returning",
+            "status": "skipped"
+          }
+        ]
+      },
+      "passed": true
+    }
+  ]
+}

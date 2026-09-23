@@ -1,0 +1,124 @@
+diff --git a/projects/05-podcast-clips-opus/docs/Architecture.md b/projects/05-podcast-clips-opus/docs/Architecture.md
+index 952418f..609899f 100644
+--- a/projects/05-podcast-clips-opus/docs/Architecture.md
++++ b/projects/05-podcast-clips-opus/docs/Architecture.md
+@@ -202,7 +202,7 @@ TelegramLogin, ProbeSource, RevokeOrExpireGuestPack, ComputeWatermarkGeometry и
+ | `clip.watermarked` | отсутствующая колонка | добавлена: `boolean NOT NULL`; решение сервера по `account.plan` fail-closed, хранится вместе с результатом рендера |
+ | `video.upload_id`, `declared_bytes`, `actual_bytes`, `duration_seconds`, `minutes_charged`, `stage_progress`, `clips_total`, `clips_done`, `updated_at`, `finished_at` | отсутствующие колонки | добавлены; `declared_bytes` — заявлено клиентом и НЕ доверяется, `actual_bytes` — `HEAD` после завершения; `updated_at` двигается каждым шагом стадии (на нём стоит различение молчания, `long-job-contract.md`) |
+ | `video.failure_reason` | несовпадение набора значений (в каноне не объявлен) | принят закрытый набор из Pseudocode (`too_large … render_failed`), `CHECK`; отказ по потолку называет `scope` через `refused_user_minutes \| refused_global_minutes \| refused_global_llm` |
+-| `job_attempt.clip_id`, `unit`, `unit_count`, `provider`, `model` | отсутствующие колонки | добавлены: `clip_id` только у стадии `render`; `unit/unit_count` — источник журнала расхода `model-spend.jsonl` (NFR-OPS-001) |
++| `job_attempt.clip_id`, `unit`, `unit_count`, `provider`, `model` | отсутствующие колонки | добавлены: `clip_id` только у стадии `render`; `job_attempt.unit/unit_count` для STT — минуты квоты; `model-spend.jsonl` — отдельный счёт попыток в секундах (`unit=seconds`, включая перекрытия и повторы). Это разные величины: сравнение требует пересчёта единиц и учёта округления квоты, прямое сравнение недопустимо (NFR-OPS-001) |
+ | `guest_pack.host_partner_code_id`, `consent_version`, `consent_text_hash`, `consent_at`, `first_opened_at`, `revoked_at` | отсутствующие колонки | добавлены; `host_partner_code_id` — личный код ведущего, создаётся при первой отправке гостевой ссылки (ведущий как микро-партнёр) |
+ | `attribution.reject_reason` | отсутствующая колонка | добавлена: закрытый набор `self_referral \| code_blocked \| antifraud_ip_burst` |
+ | `partner.contact`, `partner_code.blocked_reason/blocked_at` | отсутствующие колонки | добавлены |
+diff --git a/projects/05-podcast-clips-opus/docs/Completion.md b/projects/05-podcast-clips-opus/docs/Completion.md
+index acbd8ff..54ea66c 100644
+--- a/projects/05-podcast-clips-opus/docs/Completion.md
++++ b/projects/05-podcast-clips-opus/docs/Completion.md
+@@ -102,7 +102,7 @@
+ | Response time p99 | > 500ms | наш журнал | PagerDuty |
+ | Error rate | > 1% | наш журнал | Slack |
+ | CPU usage | > 80% | ручное измерение: метрики контейнера | Email |
+-| Минуты STT в сутки против потолка 600 | > 90 % потолка | наш журнал `model-spend.jsonl` | Telegram владельцу |
++| Секунды STT в сутки (`unit=seconds`) против потолка 36 000 с (600 мин) | > 32 400 с (90 % потолка) | сумма `quantity` строк `stage=stt`, `phase=attempt` за московские сутки в `model-spend.jsonl` | Telegram владельцу |
+ | Вызовы LLM в сутки против потолка 20 | > 90 % потолка | наш журнал | Telegram владельцу |
+ | Отказы по потолку, доля от попыток, с разбивкой по `scope` | > 5 % суммарно (Specification §8) | наш журнал | Telegram владельцу |
+ | Stalled-задания (`failed(stalled)` за сутки) | > 0 | наша БД, `job_attempt` | Telegram владельцу |
+@@ -134,8 +134,7 @@ Dependencies; V2-R08). Способность доставки СООБЩЕНИ
+ ## Logging
+ 
+ Уровни `info`/`warn`/`error`/`fatal` с `video_id` как correlation id. `model-spend.jsonl` —
+-строка НА КАЖДУЮ попытку: `video_id`, стадия (`stt`/`select`/`render`), единица счёта (минуты или
+-вызов), исход (NFR-OPS-001, счёт по попыткам, не по успехам). **Не логировать:** подписи presigned-
++строка НА КАЖДУЮ попытку: `video_id`, стадия (`stt`/`select`/`render`), единица счёта (секунды STT — `unit=seconds`, вызовы LLM — `unit=calls`), исход (NFR-OPS-001, счёт по попыткам, не по успехам). **Не логировать:** подписи presigned-
+ ссылок, ключи хранилища и моделей, тела/байты видео и аудио, полный (не усечённый) `ip_prefix`,
+ содержимое транскрипта целиком (живёт в БД, не в логе). Retention операционных логов — 30 суток,
+ совпадает со сроком хранения клипов free (3 дня) плюс запас на разбор инцидента; журнал расхода —
+diff --git a/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts b/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
+index 6e3786f..68015a8 100644
+--- a/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
++++ b/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
+@@ -44,6 +44,7 @@ export function assertWatermarkFits(origin: string, rawLength: string | undefine
+     } catch (error) {
+       throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}, формат ${format}: ` +
+         `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
++        'Сократите адрес в N5_PUBLIC_ORIGIN или уменьшите N5_SHORT_CODE_LENGTH (допустимы 6 и 10). ' +
+         'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
+     }
+   }
+diff --git a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+index bb7a23a..7b84910 100644
+--- a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
++++ b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+@@ -26,11 +26,12 @@ try {
+     ['disk-before-get', 'apps/worker/src/media/download.ts', 'if (await available(directory) - reserved < required) return null;', 'if (false) return null;', 'tests/render-worker.test.ts', 'disk reserve before'],
+     ['conditional-publish', 'apps/worker/src/render/storage.ts', "IfNoneMatch: '*'", "IfNoneMatch: undefined", 'tests/render-storage.test.ts', 'S3 conditional publication'],
+   ];
+-  for (const id of process.argv.slice(2)) {
++  const requested = process.argv.slice(2);
++  for (const id of requested) {
+     if (!mutations.some(mutation => mutation[0] === id)) throw new Error(`Unknown mutation: ${id}`);
+   }
+   for (const [id, file, before, after, test, title] of mutations) {
+-    if (process.argv.length > 2 && !process.argv.slice(2).includes(id)) continue;
++    if (requested.length > 0 && !requested.includes(id)) continue;
+     const path = join(directory, file), source = readFileSync(path, 'utf8');
+     if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
+     writeFileSync(path, source.replace(before, after));
+@@ -47,6 +48,6 @@ try {
+     results.push({ id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 });
+     console.log(`${id}: red=${red.exit} (${red.failed} failed), green=${green.exit} (${green.passed} passed)`);
+   }
+-  writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
++  writeFileSync(join(output, 'results.json'), JSON.stringify({ requested, total: mutations.length, partial: requested.length > 0, results }, null, 2) + '\n');
+   if (results.some(r => !r.passed)) process.exitCode = 1;
+ } finally { rmSync(directory, { recursive: true, force: true }); }
+diff --git a/projects/05-podcast-clips-opus/tests/render-media.test.ts b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+index a8b39fd..cf947d2 100644
+--- a/projects/05-podcast-clips-opus/tests/render-media.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+@@ -7,11 +7,11 @@ import { join } from 'node:path';
+ import { execFFmpeg, generateThumbnail } from '../apps/worker/src/render/exec';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
+ const execFile = promisify(execFileCb);
+-it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async () => {
++it.each(['0x224466', 'white', 'black'])('real ffmpeg (%s): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async color => {
+   const dir = await mkdtemp(join(tmpdir(), 'n5-real-render-'));
+   // Keep the passing output for visual inspection; report path is printed to the receipt.
+   const input = join(dir, 'source.mp4'), output = join(dir, 'clip.mp4');
+-  await execFFmpeg(['-y', '-f', 'lavfi', '-i', 'color=c=0x224466:s=640x360:r=5:d=20', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
++  await execFFmpeg(['-y', '-f', 'lavfi', '-i', `color=c=${color}:s=640x360:r=5:d=20`, '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
+     '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
+   await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
+     words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
+@@ -28,7 +28,16 @@ it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG
+     await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', `${crop},format=gray`, '-vframes', '1', '-f', 'rawvideo', path]);
+     const pixels = await readFile(path);
+     expect(pixels.filter(p => p > 220).length).toBeGreaterThan(100);
+-    expect(pixels.filter(p => p < 50).length).toBeGreaterThan(100);
++    // Relative text/background contrast in the same region, independent of source brightness.
++    // Percentiles ignore codec noise and antialiased glyph edges; both tones need substantial area.
++    const sorted = [...pixels].sort((a, b) => a - b);
++    const luminance = (value: number) => {
++      const srgb = value / 255;
++      return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
++    };
++    const dark = luminance(sorted[Math.floor(sorted.length * 0.10)]!);
++    const light = luminance(sorted[Math.floor(sorted.length * 0.95)]!);
++    expect((light + 0.05) / (dark + 0.05), `${color} ${name} contrast`).toBeGreaterThanOrEqual(4.5);
+   }
+   expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+   console.info(`REAL_RENDER_ARTIFACT=${dir}`);
+diff --git a/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts b/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
+index 6b8f5db..6e378e6 100644
+--- a/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
++++ b/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
+@@ -66,6 +66,8 @@ for (const role of ['web', 'worker-video'] as const) {
+     // A typical 10-character code fits; the worst one does not.
+     expect(watermarkGeometry(1080, 1920, 'https://clipmkr.ru', 'AB3XK9AB3X').plateWidth).toBeLessThan(972);
+     expect(() => load('https://clipmkr.ru', '10')).toThrow('1035 px');
++    expect(() => load('https://clipmkr.ru', '10')).toThrow(
++      'Сократите адрес в N5_PUBLIC_ORIGIN или уменьшите N5_SHORT_CODE_LENGTH');
+     expect(load('https://i.io', '10').publicOrigin).toBe('https://i.io');
+     for (const length of ['', '7', ' 6']) expect(() => load('https://i.io', length)).toThrow('N5_SHORT_CODE_LENGTH');
+     // The runtime safe area is 972; 880 is only a reference-layout test target.

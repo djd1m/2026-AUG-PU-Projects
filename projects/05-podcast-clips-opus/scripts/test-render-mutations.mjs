@@ -26,11 +26,12 @@ try {
     ['disk-before-get', 'apps/worker/src/media/download.ts', 'if (await available(directory) - reserved < required) return null;', 'if (false) return null;', 'tests/render-worker.test.ts', 'disk reserve before'],
     ['conditional-publish', 'apps/worker/src/render/storage.ts', "IfNoneMatch: '*'", "IfNoneMatch: undefined", 'tests/render-storage.test.ts', 'S3 conditional publication'],
   ];
-  for (const id of process.argv.slice(2)) {
+  const requested = process.argv.slice(2);
+  for (const id of requested) {
     if (!mutations.some(mutation => mutation[0] === id)) throw new Error(`Unknown mutation: ${id}`);
   }
   for (const [id, file, before, after, test, title] of mutations) {
-    if (process.argv.length > 2 && !process.argv.slice(2).includes(id)) continue;
+    if (requested.length > 0 && !requested.includes(id)) continue;
     const path = join(directory, file), source = readFileSync(path, 'utf8');
     if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
     writeFileSync(path, source.replace(before, after));
@@ -47,6 +48,6 @@ try {
     results.push({ id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 });
     console.log(`${id}: red=${red.exit} (${red.failed} failed), green=${green.exit} (${green.passed} passed)`);
   }
-  writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
+  writeFileSync(join(output, 'results.json'), JSON.stringify({ requested, total: mutations.length, partial: requested.length > 0, results }, null, 2) + '\n');
   if (results.some(r => !r.passed)) process.exitCode = 1;
 } finally { rmSync(directory, { recursive: true, force: true }); }

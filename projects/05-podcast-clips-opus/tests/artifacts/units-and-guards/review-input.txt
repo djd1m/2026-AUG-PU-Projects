@@ -1,0 +1,421 @@
+Read-only independent Anthropic review required by OWN-002. Budget 3 minutes, one pass, no tools or edits. Review RV-1..RV-4 acceptance and the patch. Report only concrete findings with severity/file and verdict; zero findings is acceptable. Do not run or propose unrelated workflow. Scope excludes .claude edits, env changes, deployment.
+# Постановка RV-1…RV-4 — единица уехала в одном месте из четырёх, и два стража перестали стеречь
+
+Находки независимого ревью Anthropic (OWN-002, агенты `review-today` и `review-sl`) по правкам
+23.09.2026. Все четыре подтверждены мной в коде. Две — прямые последствия моих же правок, и это
+названо, а не смягчено.
+
+## RV-1 · единица счёта сменилась в журнале и НЕ прошла насквозь
+
+Правка RM-005 перевела `quantity` строки STT из округлённых минут в СЕКУНДЫ. Число поменялось в
+одном месте из четырёх:
+
+| Место | Что говорит сейчас |
+|---|---|
+| `docs/model-cost-contract.md` | секунды — **обновлено** |
+| `docs/Completion.md:105` | «Минуты STT в сутки против потолка 600 \| > 90 % потолка \| наш журнал `model-spend.jsonl`» |
+| `docs/Completion.md:137` | «единица счёта (минуты или вызов)» |
+| `.claude/rules/coding-style.md:117` | «единица (минуты или токены)» |
+
+**Сценарий отказа, посчитанный.** Оператор строит суточный сигнал ровно по таблице Monitoring:
+суммирует `quantity` строк `phase=attempt` за сутки и сравнивает с 600. Одна запись длиной 90 минут
+даёт в журнале **5460**, а не 91. Порог «> 90 % потолка» срабатывает на ПЕРВОЙ записи дня — и так
+каждый день. Сигнал, который кричит всегда, не сигнал.
+
+**Отдельная половина — база.** `packages/db/migrations/001_init.sql:149` держит
+`CHECK (unit IN ('minutes','calls','none'))`, а `packages/db/src/transcription.ts:71` копит
+`unit_count` в МИНУТАХ. `docs/Architecture.md:205` объявляет `job_attempt.unit/unit_count`
+источником журнала расхода — теперь это неверно: журнал в секундах, база в минутах.
+
+**Сделать.** Привести объявления в соответствие с кодом, а не наоборот: журнал остаётся в секундах
+(это решение RM-005 и оно верно — сумма сводится с квотой). Правки:
+
+1. `docs/Completion.md` — строка мониторинга называет СЕКУНДЫ и порог в секундах (600 мин = 36 000 с),
+   либо предписывает делить на 60. Назови, какой вариант выбрал, и почему.
+2. `docs/Completion.md:137` и `.claude/rules/coding-style.md:117` — единица названа верно.
+   **`.claude/` правлю я, не ты** — дай точную формулировку строкой отчёта.
+3. `docs/Architecture.md:205` — сказать прямо, что `job_attempt.unit_count` (минуты, квота) и
+   `model-spend.jsonl` (секунды, счёт попыток) — РАЗНЫЕ величины с разными единицами, и что
+   сравнивать их нельзя без пересчёта. Это и есть корень находки.
+
+**Страж, обязательный:** тест по исходнику, утверждающий, что единица в journal-писателе и единица в
+строке мониторинга `Completion.md` согласованы. Мутация — вернуть «минуты» в одно место, страж
+краснеет. Без такого стража находка повторится при следующей смене единицы: механизм, породивший 38
+расхождений на Phase 2, до сих пор не устранён (см. `CLAUDE.md` проекта).
+
+## RV-2 · закрытое множество обещает значение, с которым система не поднимается
+
+`packages/shared/src/clip-code.ts:2` — комментарий «ten remains a supported generation setting»,
+против `tests/watermark-startup.test.ts:44`, где закреплено
+`expect(() => load('https://clipmkr.ru', '10')).toThrow('1035 px')`.
+
+Разборщик объявляет `'10'` законным членом закрытого множества, а страж старта на выбранном домене
+его отвергает. Поведение fail-closed и потому безопасное — **неверна декларация**: множество
+допустимых длин на самом деле ЗАВИСИТ от `N5_PUBLIC_ORIGIN`, а записано как безусловное.
+
+Сценарий: оператор читает `clipCodeLength` или `.env.example`, видит `{6, 10}`, ставит `10` — и все
+четыре сервиса отказываются стартовать, при том что ни одна строка конфигурации не предупреждала о
+несовместимости.
+
+**Сделать:** одно из двух, на выбор, с обоснованием.
+- комментарий и `.env.example` говорят, что 10 поддерживается только при достаточно коротком origin;
+- **либо** сообщение стража называет ОБЕ переменные как пару: сейчас оно говорит
+  `N5_SHORT_CODE_LENGTH=10` и ширину, но не говорит, что альтернатива — сменить origin.
+
+Второе предпочтительнее: сообщение читают в момент отказа, а комментарий — никогда.
+
+## RV-3 · квитанция мутаций не отличает полный прогон от частичного
+
+`scripts/test-render-mutations.mjs` — фильтр по `process.argv` (`:29`, `:33`), запись `results.json`
+(`:50`), `process.exitCode` (`:51`).
+
+Прогон с фильтром пишет `results.json` ТОЙ ЖЕ ФОРМЫ, что полный, без пометки, что 11 из 12 мутаций
+пропущены, и завершается кодом 0. Читающий отчёт видит «квитанция мутаций, exit 0» и не может
+отличить «12 стражей испытаны внедрённым дефектом» от «испытан один».
+
+Это ровно класс `guard-must-be-able-to-fail`: проверка обязана уметь сказать «НЕ ВЫПОЛНЕНА».
+В отчёте `10_fix_report.md` частичный повтор ИМЕННО делался — от подмены квитанции спасла
+аккуратность исполнителя (вручную другой каталог), а не механизм.
+
+**Сделать:** в `results.json` два поля — `requested` (что просили) и `total` (сколько мутаций
+объявлено); при непустом `process.argv.slice(2)` квитанция НЕ пишется под именем полной, либо несёт
+явный признак частичности. Читатель обязан видеть неполноту, не сверяя команду запуска.
+
+Страж: частичный прогон даёт квитанцию, отличимую от полной. Мутация — убрать признак, страж краснеет.
+
+## RV-4 · пиксельный страж метки измеряет ФИКСТУРУ, а не метку
+
+`tests/render-media.test.ts:26-31` против фикстуры `:14`.
+
+Было: один кроп, порог `p < 20` по НЕПРОЗРАЧНОЙ чёрной подложке. Стало: два кропа, порог `p < 50` по
+подложке `black@0.60`. Подложка стала полупрозрачной — значит «тёмная» половина утверждения теперь
+измеряет исходное видео.
+
+**Числа.** Фикстура `color=c=0x224466`, яркость в gray ≈ 62; под плитой 0,6 это ≈ 25, порог `< 50`
+проходит с запасом 25 единиц. Замени фикстуру на `color=c=white` или возьми кадр светлой студии — та
+же, ничем не изменённая, КОРРЕКТНАЯ метка даёт под плитой ≈ 102, и утверждение падает, хотя контраст
+префикса 5,74:1 в порядке.
+
+То есть страж перестал быть свойством метки и стал свойством цвета фона.
+
+**Сделать:** утверждать СВОЙСТВО, а не абсолютную яркость. Например, контраст между пикселями текста
+и пикселями подложки внутри той же области, либо потемнение области относительно того же места ДО
+наложения метки. Что именно — решай, но утверждение обязано выполняться и на белой, и на чёрной
+фикстуре.
+
+**Страж обязан быть испытан обеими фикстурами:** тёмной И белой. Мутация — вернуть абсолютный порог,
+тест на белой фикстуре краснеет.
+
+## Границы
+
+`.claude/` не трогать — правлю я. `N5_PUBLIC_ORIGIN`, DNS, развёртывание, длину кода не трогать.
+`docs/` — `Completion.md`, `Architecture.md` (они предмет RV-1) и свой отчёт.
+
+## Отчёт
+
+`docs/reviews/11_fix_report_units_and_guards.md`: по строке на находку; мутации обеими строками;
+RV-4 — обе фикстуры; точная формулировка для `.claude/rules/coding-style.md` отдельной строкой.
+Последняя строка — ровно `Status: completed` либо `Status: failed`.
+
+PATCH
+diff --git a/projects/05-podcast-clips-opus/docs/Architecture.md b/projects/05-podcast-clips-opus/docs/Architecture.md
+index 952418f..609899f 100644
+--- a/projects/05-podcast-clips-opus/docs/Architecture.md
++++ b/projects/05-podcast-clips-opus/docs/Architecture.md
+@@ -202,7 +202,7 @@ TelegramLogin, ProbeSource, RevokeOrExpireGuestPack, ComputeWatermarkGeometry и
+ | `clip.watermarked` | отсутствующая колонка | добавлена: `boolean NOT NULL`; решение сервера по `account.plan` fail-closed, хранится вместе с результатом рендера |
+ | `video.upload_id`, `declared_bytes`, `actual_bytes`, `duration_seconds`, `minutes_charged`, `stage_progress`, `clips_total`, `clips_done`, `updated_at`, `finished_at` | отсутствующие колонки | добавлены; `declared_bytes` — заявлено клиентом и НЕ доверяется, `actual_bytes` — `HEAD` после завершения; `updated_at` двигается каждым шагом стадии (на нём стоит различение молчания, `long-job-contract.md`) |
+ | `video.failure_reason` | несовпадение набора значений (в каноне не объявлен) | принят закрытый набор из Pseudocode (`too_large … render_failed`), `CHECK`; отказ по потолку называет `scope` через `refused_user_minutes \| refused_global_minutes \| refused_global_llm` |
+-| `job_attempt.clip_id`, `unit`, `unit_count`, `provider`, `model` | отсутствующие колонки | добавлены: `clip_id` только у стадии `render`; `unit/unit_count` — источник журнала расхода `model-spend.jsonl` (NFR-OPS-001) |
++| `job_attempt.clip_id`, `unit`, `unit_count`, `provider`, `model` | отсутствующие колонки | добавлены: `clip_id` только у стадии `render`; `job_attempt.unit/unit_count` для STT — минуты квоты; `model-spend.jsonl` — отдельный счёт попыток в секундах (`unit=seconds`, включая перекрытия и повторы). Это разные величины: сравнение требует пересчёта единиц и учёта округления квоты, прямое сравнение недопустимо (NFR-OPS-001) |
+ | `guest_pack.host_partner_code_id`, `consent_version`, `consent_text_hash`, `consent_at`, `first_opened_at`, `revoked_at` | отсутствующие колонки | добавлены; `host_partner_code_id` — личный код ведущего, создаётся при первой отправке гостевой ссылки (ведущий как микро-партнёр) |
+ | `attribution.reject_reason` | отсутствующая колонка | добавлена: закрытый набор `self_referral \| code_blocked \| antifraud_ip_burst` |
+ | `partner.contact`, `partner_code.blocked_reason/blocked_at` | отсутствующие колонки | добавлены |
+diff --git a/projects/05-podcast-clips-opus/docs/Completion.md b/projects/05-podcast-clips-opus/docs/Completion.md
+index acbd8ff..54ea66c 100644
+--- a/projects/05-podcast-clips-opus/docs/Completion.md
++++ b/projects/05-podcast-clips-opus/docs/Completion.md
+@@ -102,7 +102,7 @@
+ | Response time p99 | > 500ms | наш журнал | PagerDuty |
+ | Error rate | > 1% | наш журнал | Slack |
+ | CPU usage | > 80% | ручное измерение: метрики контейнера | Email |
+-| Минуты STT в сутки против потолка 600 | > 90 % потолка | наш журнал `model-spend.jsonl` | Telegram владельцу |
++| Секунды STT в сутки (`unit=seconds`) против потолка 36 000 с (600 мин) | > 32 400 с (90 % потолка) | сумма `quantity` строк `stage=stt`, `phase=attempt` за московские сутки в `model-spend.jsonl` | Telegram владельцу |
+ | Вызовы LLM в сутки против потолка 20 | > 90 % потолка | наш журнал | Telegram владельцу |
+ | Отказы по потолку, доля от попыток, с разбивкой по `scope` | > 5 % суммарно (Specification §8) | наш журнал | Telegram владельцу |
+ | Stalled-задания (`failed(stalled)` за сутки) | > 0 | наша БД, `job_attempt` | Telegram владельцу |
+@@ -134,8 +134,7 @@ Dependencies; V2-R08). Способность доставки СООБЩЕНИ
+ ## Logging
+ 
+ Уровни `info`/`warn`/`error`/`fatal` с `video_id` как correlation id. `model-spend.jsonl` —
+-строка НА КАЖДУЮ попытку: `video_id`, стадия (`stt`/`select`/`render`), единица счёта (минуты или
+-вызов), исход (NFR-OPS-001, счёт по попыткам, не по успехам). **Не логировать:** подписи presigned-
++строка НА КАЖДУЮ попытку: `video_id`, стадия (`stt`/`select`/`render`), единица счёта (секунды STT — `unit=seconds`, вызовы LLM — `unit=calls`), исход (NFR-OPS-001, счёт по попыткам, не по успехам). **Не логировать:** подписи presigned-
+ ссылок, ключи хранилища и моделей, тела/байты видео и аудио, полный (не усечённый) `ip_prefix`,
+ содержимое транскрипта целиком (живёт в БД, не в логе). Retention операционных логов — 30 суток,
+ совпадает со сроком хранения клипов free (3 дня) плюс запас на разбор инцидента; журнал расхода —
+diff --git a/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts b/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
+index 6e3786f..68015a8 100644
+--- a/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
++++ b/projects/05-podcast-clips-opus/packages/shared/src/watermark.ts
+@@ -44,6 +44,7 @@ export function assertWatermarkFits(origin: string, rawLength: string | undefine
+     } catch (error) {
+       throw new Error(`N5_PUBLIC_ORIGIN непригодно при N5_SHORT_CODE_LENGTH=${length}, формат ${format}: ` +
+         `${error instanceof Error ? error.message : 'геометрия недоступна'}. ` +
++        'Сократите адрес в N5_PUBLIC_ORIGIN или уменьшите N5_SHORT_CODE_LENGTH (допустимы 6 и 10). ' +
+         'Запуск остановлен до приёма загрузок: иначе минуты будут списаны, Whisper и выделение оплачены, а рендер откажет.');
+     }
+   }
+diff --git a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+index bb7a23a..7b84910 100644
+--- a/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
++++ b/projects/05-podcast-clips-opus/scripts/test-render-mutations.mjs
+@@ -26,11 +26,12 @@ try {
+     ['disk-before-get', 'apps/worker/src/media/download.ts', 'if (await available(directory) - reserved < required) return null;', 'if (false) return null;', 'tests/render-worker.test.ts', 'disk reserve before'],
+     ['conditional-publish', 'apps/worker/src/render/storage.ts', "IfNoneMatch: '*'", "IfNoneMatch: undefined", 'tests/render-storage.test.ts', 'S3 conditional publication'],
+   ];
+-  for (const id of process.argv.slice(2)) {
++  const requested = process.argv.slice(2);
++  for (const id of requested) {
+     if (!mutations.some(mutation => mutation[0] === id)) throw new Error(`Unknown mutation: ${id}`);
+   }
+   for (const [id, file, before, after, test, title] of mutations) {
+-    if (process.argv.length > 2 && !process.argv.slice(2).includes(id)) continue;
++    if (requested.length > 0 && !requested.includes(id)) continue;
+     const path = join(directory, file), source = readFileSync(path, 'utf8');
+     if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
+     writeFileSync(path, source.replace(before, after));
+@@ -47,6 +48,6 @@ try {
+     results.push({ id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 });
+     console.log(`${id}: red=${red.exit} (${red.failed} failed), green=${green.exit} (${green.passed} passed)`);
+   }
+-  writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
++  writeFileSync(join(output, 'results.json'), JSON.stringify({ requested, total: mutations.length, partial: requested.length > 0, results }, null, 2) + '\n');
+   if (results.some(r => !r.passed)) process.exitCode = 1;
+ } finally { rmSync(directory, { recursive: true, force: true }); }
+diff --git a/projects/05-podcast-clips-opus/tests/render-media.test.ts b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+index a8b39fd..cf947d2 100644
+--- a/projects/05-podcast-clips-opus/tests/render-media.test.ts
++++ b/projects/05-podcast-clips-opus/tests/render-media.test.ts
+@@ -7,11 +7,11 @@ import { join } from 'node:path';
+ import { execFFmpeg, generateThumbnail } from '../apps/worker/src/render/exec';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
+ const execFile = promisify(execFileCb);
+-it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async () => {
++it.each(['0x224466', 'white', 'black'])('real ffmpeg (%s): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async color => {
+   const dir = await mkdtemp(join(tmpdir(), 'n5-real-render-'));
+   // Keep the passing output for visual inspection; report path is printed to the receipt.
+   const input = join(dir, 'source.mp4'), output = join(dir, 'clip.mp4');
+-  await execFFmpeg(['-y', '-f', 'lavfi', '-i', 'color=c=0x224466:s=640x360:r=5:d=20', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
++  await execFFmpeg(['-y', '-f', 'lavfi', '-i', `color=c=${color}:s=640x360:r=5:d=20`, '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
+     '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
+   await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
+     words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
+@@ -28,7 +28,16 @@ it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG
+     await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', `${crop},format=gray`, '-vframes', '1', '-f', 'rawvideo', path]);
+     const pixels = await readFile(path);
+     expect(pixels.filter(p => p > 220).length).toBeGreaterThan(100);
+-    expect(pixels.filter(p => p < 50).length).toBeGreaterThan(100);
++    // Relative text/background contrast in the same region, independent of source brightness.
++    // Percentiles ignore codec noise and antialiased glyph edges; both tones need substantial area.
++    const sorted = [...pixels].sort((a, b) => a - b);
++    const luminance = (value: number) => {
++      const srgb = value / 255;
++      return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
++    };
++    const dark = luminance(sorted[Math.floor(sorted.length * 0.10)]!);
++    const light = luminance(sorted[Math.floor(sorted.length * 0.95)]!);
++    expect((light + 0.05) / (dark + 0.05), `${color} ${name} contrast`).toBeGreaterThanOrEqual(4.5);
+   }
+   expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+   console.info(`REAL_RENDER_ARTIFACT=${dir}`);
+diff --git a/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts b/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
+index 6b8f5db..6e378e6 100644
+--- a/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
++++ b/projects/05-podcast-clips-opus/tests/watermark-startup.test.ts
+@@ -66,6 +66,8 @@ for (const role of ['web', 'worker-video'] as const) {
+     // A typical 10-character code fits; the worst one does not.
+     expect(watermarkGeometry(1080, 1920, 'https://clipmkr.ru', 'AB3XK9AB3X').plateWidth).toBeLessThan(972);
+     expect(() => load('https://clipmkr.ru', '10')).toThrow('1035 px');
++    expect(() => load('https://clipmkr.ru', '10')).toThrow(
++      'Сократите адрес в N5_PUBLIC_ORIGIN или уменьшите N5_SHORT_CODE_LENGTH');
+     expect(load('https://i.io', '10').publicOrigin).toBe('https://i.io');
+     for (const length of ['', '7', ' 6']) expect(() => load('https://i.io', length)).toThrow('N5_SHORT_CODE_LENGTH');
+     // The runtime safe area is 972; 880 is only a reference-layout test target.
+
+FILE tests/units-and-guards.test.ts
+import { expect, it } from 'vitest';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
+
+it('RV-1 STT journal writer and monitoring agree on seconds and daily threshold', () => {
+  const writer = readFileSync('apps/worker/src/workers/stt.ts', 'utf8');
+  const event = readFileSync('apps/worker/src/stt/spend.ts', 'utf8');
+  const completion = readFileSync('docs/Completion.md', 'utf8');
+  const row = completion.split('\n').find(line => /^\| .*STT в сутки/.test(line));
+  expect(writer).toMatch(/unit: 'seconds', quantity: chunk\.durationSeconds/);
+  expect(event).toContain("unit: 'seconds'");
+  expect(row).toContain('Секунды STT');
+  expect(row).toContain('unit=seconds');
+  expect(row).toContain('36 000 с (600 мин)');
+  expect(row).toContain('> 32 400 с');
+  expect(row).toContain('phase=attempt');
+  expect(row).toContain('stage=stt');
+  expect(row).toContain('московские сутки');
+});
+
+it('RV-3 real runner marks filtered receipts partial and preserves total inventory', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'n5-receipt-contract-'));
+  try {
+    for (const name of ['apps', 'packages', 'tests', 'scripts']) cpSync(name, join(dir, name), {
+      recursive: true, filter: path => !/(^|\/)(node_modules|dist|\.next|artifacts)(\/|$)/.test(path),
+    });
+    for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'Dockerfile', 'docker-compose.yml', '.env.example']) {
+      cpSync(name, join(dir, name));
+    }
+    mkdirSync(join(dir, 'node_modules/vitest'), { recursive: true });
+    // Only the expensive test subprocess is stubbed. The actual runner selects
+    // mutations, edits/restores their source and writes its real receipt.
+    writeFileSync(join(dir, 'node_modules/vitest/vitest.mjs'), `
+      import { writeFileSync } from 'node:fs';
+      const output = process.argv.find(arg => arg.startsWith('--outputFile=')).slice(13);
+      const red = output.endsWith('-red.json');
+      writeFileSync(output, JSON.stringify({ numFailedTests: red ? 1 : 0, numPassedTests: red ? 0 : 1 }));
+      process.exitCode = red ? 1 : 0;
+    `);
+    const output = join(dir, 'receipts');
+    const run = (ids: string[]) => {
+      const result = spawnSync(process.execPath, ['scripts/test-render-mutations.mjs', ...ids], {
+        cwd: dir, encoding: 'utf8', timeout: 25_000, env: { ...process.env, N5_MUTATION_OUTPUT: output },
+      });
+      expect(result.status, result.stdout + result.stderr).toBe(0);
+      return JSON.parse(readFileSync(join(output, 'results.json'), 'utf8')) as {
+        requested: string[]; total: number; partial: boolean; results: { id: string; passed: boolean }[];
+      };
+    };
+    const full = run([]);
+    expect(full.requested).toEqual([]);
+    expect(full.partial).toBe(false);
+    expect(full.total).toBeGreaterThan(1);
+    expect(full.results).toHaveLength(full.total);
+    expect(full.results.every(result => result.passed)).toBe(true);
+    // Reuse the output directory: even overwriting a full receipt cannot hide filtering.
+    const partial = run(['default-six']);
+    expect(partial.requested).toEqual(['default-six']);
+    expect(partial.partial).toBe(true);
+    expect(partial.total).toBe(full.total);
+    expect(partial.results).toEqual([expect.objectContaining({ id: 'default-six', passed: true })]);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+}, 60_000);
+
+FILE scripts/test-render-mutations.mjs
+import { mkdtempSync, cpSync, symlinkSync, readFileSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+const project = process.cwd(), directory = mkdtempSync(join(tmpdir(), 'n5-render-mutations-'));
+const output = resolve(process.env.N5_MUTATION_OUTPUT ?? 'tests/artifacts/render-and-watermark/mutations'); mkdirSync(output, { recursive: true });
+const results = [];
+try {
+  for (const name of ['apps', 'packages', 'tests', 'scripts']) cpSync(name, join(directory, name), {
+    recursive: true, filter: path => !/(^|\/)(node_modules|dist|\.next|artifacts)(\/|$)/.test(path),
+  });
+  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'Dockerfile', 'docker-compose.yml', '.env.example']) cpSync(name, join(directory, name));
+  symlinkSync(join(project, 'node_modules'), join(directory, 'node_modules'), 'dir');
+  const mutations = [
+    ['startup-watermark', 'packages/shared/src/config.ts', 'assertWatermarkFits(origin, env.N5_SHORT_CODE_LENGTH);', '/* mutant: defer geometry rejection until rendering */', 'tests/watermark-startup.test.ts', 'startup guard rejects configuration|render retains rejection'],
+    ['plan-fail-closed', 'apps/worker/src/render/watermark.ts', "return plan !== 'paid';", "return plan === 'free';", 'tests/render.test.ts', 'ADR-004 fails closed'],
+    ['link-before-render', 'packages/db/src/selection.ts', 'await createClipLink(tx, id);', '/* mutant: link deferred until after rendering */', 'tests/render.test.ts', 'link created before'],
+    ['one-line-width', 'packages/shared/src/watermark.ts', 'height * 73 / 1920', 'height * 75 / 1920', 'tests/render.test.ts', 'one-line worst code'],
+    ['badge-contrast', 'apps/worker/src/render/watermark.ts', 'WATERMARK_OPACITY = 0.60', 'WATERMARK_OPACITY = 0.20', 'tests/render.test.ts', 'badge contrast'],
+    ['badge-nonverbal', 'packages/shared/src/watermark.ts', 'КлипМейкер · ${url.host}', 'Создай клип · ${url.host}', 'tests/render.test.ts', 'badge contrast'],
+    ['legacy-code', 'apps/web/src/server/short-link.ts', '(?:[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}|[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{10})', '[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}', 'tests/short-link.test.ts', 'six-character links'],
+    ['default-six', 'packages/shared/src/clip-code.ts', "if (value === undefined || value === '6') return 6;", "if (value === undefined || value === '6') return 10;", 'tests/trust-guards.test.ts', 'generator defaults to six'],
+    ['font-file', 'apps/worker/src/render/watermark.ts', 'fontfile=', 'font=', 'tests/render.test.ts', 'fontfile only'],
+    ['filter-order', 'apps/worker/src/render/ffmpeg.ts', 'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));', 'if (watermark) filters.unshift(buildWatermarkDrawtext(width, height, origin, code));', 'tests/render.test.ts', 'filter order'],
+    ['concurrency', 'apps/worker/src/workers/render.ts', 'concurrency: 1,', 'concurrency: Number(process.env.RENDER_CONCURRENCY),', 'tests/render.test.ts', 'ADR-006 actual registered'],
+    ['disk-before-get', 'apps/worker/src/media/download.ts', 'if (await available(directory) - reserved < required) return null;', 'if (false) return null;', 'tests/render-worker.test.ts', 'disk reserve before'],
+    ['conditional-publish', 'apps/worker/src/render/storage.ts', "IfNoneMatch: '*'", "IfNoneMatch: undefined", 'tests/render-storage.test.ts', 'S3 conditional publication'],
+  ];
+  const requested = process.argv.slice(2);
+  for (const id of requested) {
+    if (!mutations.some(mutation => mutation[0] === id)) throw new Error(`Unknown mutation: ${id}`);
+  }
+  for (const [id, file, before, after, test, title] of mutations) {
+    if (requested.length > 0 && !requested.includes(id)) continue;
+    const path = join(directory, file), source = readFileSync(path, 'utf8');
+    if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
+    writeFileSync(path, source.replace(before, after));
+    const run = phase => {
+      const receipt = join(output, `${id}-${phase}.json`);
+      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', test, '-t', title,
+        '--reporter=json', `--outputFile=${receipt}`],
+        { cwd: directory, encoding: 'utf8', timeout: 60000, env: { ...process.env, DATABASE_URL: '', REDIS_URL: '' } });
+      writeFileSync(join(output, `${id}-${phase}.txt`), `${result.stdout ?? ''}${result.stderr ?? ''}`);
+      const report = JSON.parse(readFileSync(receipt, 'utf8'));
+      return { exit: result.status, failed: report.numFailedTests, passed: report.numPassedTests };
+    };
+    const red = run('red'); writeFileSync(path, source); const green = run('green');
+    results.push({ id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 });
+    console.log(`${id}: red=${red.exit} (${red.failed} failed), green=${green.exit} (${green.passed} passed)`);
+  }
+  writeFileSync(join(output, 'results.json'), JSON.stringify({ requested, total: mutations.length, partial: requested.length > 0, results }, null, 2) + '\n');
+  if (results.some(r => !r.passed)) process.exitCode = 1;
+} finally { rmSync(directory, { recursive: true, force: true }); }
+
+FILE tests/render-media.test.ts
+import { it, expect } from 'vitest';
+import { execFile as execFileCb } from 'node:child_process';
+import { promisify } from 'node:util';
+import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFFmpeg, generateThumbnail } from '../apps/worker/src/render/exec';
+import { renderClip } from '../apps/worker/src/render/ffmpeg';
+const execFile = promisify(execFileCb);
+it.each(['0x224466', 'white', 'black'])('real ffmpeg (%s): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async color => {
+  const dir = await mkdtemp(join(tmpdir(), 'n5-real-render-'));
+  // Keep the passing output for visual inspection; report path is printed to the receipt.
+  const input = join(dir, 'source.mp4'), output = join(dir, 'clip.mp4');
+  await execFFmpeg(['-y', '-f', 'lavfi', '-i', `color=c=${color}:s=640x360:r=5:d=20`, '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
+    '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
+  await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
+    words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
+    watermark: true, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+  await generateThumbnail(output, join(dir, 'thumb.jpg'), 5);
+  expect((await readFile(join(dir, 'thumb.jpg'))).subarray(0, 2)).toEqual(Buffer.from([0xff, 0xd8]));
+  const probe = JSON.parse((await execFile('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', output])).stdout);
+  expect(probe.streams[0]).toMatchObject({ width: 1080, height: 1920 }); expect(Number(probe.format.duration)).toBeCloseTo(20, 1);
+  expect(probe.streams.some((s: { codec_type: string }) => s.codec_type === 'audio')).toBe(true);
+  await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vframes', '1', join(dir, 'frame.png')]);
+  // Inspect prefix and chip independently in the encoded frame (same baseline).
+  for (const [name, crop] of [['prefix', 'crop=555:84:78:1589'], ['chip', 'crop=272:84:633:1589']]) {
+    const path = join(dir, `${name}.raw`);
+    await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', `${crop},format=gray`, '-vframes', '1', '-f', 'rawvideo', path]);
+    const pixels = await readFile(path);
+    expect(pixels.filter(p => p > 220).length).toBeGreaterThan(100);
+    // Relative text/background contrast in the same region, independent of source brightness.
+    // Percentiles ignore codec noise and antialiased glyph edges; both tones need substantial area.
+    const sorted = [...pixels].sort((a, b) => a - b);
+    const luminance = (value: number) => {
+      const srgb = value / 255;
+      return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+    };
+    const dark = luminance(sorted[Math.floor(sorted.length * 0.10)]!);
+    const light = luminance(sorted[Math.floor(sorted.length * 0.95)]!);
+    expect((light + 0.05) / (dark + 0.05), `${color} ${name} contrast`).toBeGreaterThanOrEqual(4.5);
+  }
+  expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+  console.info(`REAL_RENDER_ARTIFACT=${dir}`);
+}, 90_000);
+it('ffmpeg timeout kills the child and waits for close before returning', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'n5-timeout-'));
+  try {
+    await expect(execFFmpeg(['-f', 'lavfi', '-i', 'testsrc2=s=640x360', '-f', 'null', '-'], 100)).rejects.toMatchObject({ reason: 'ffmpeg_timeout' });
+    await expect(renderClip({ inputPath: join(dir, 'absent.mp4'), outputPath: join(dir, 'out.mp4'), startTime: 0, endTime: 20,
+      format: 'portrait', words: [], watermark: false, origin: 'https://clipmkr.ru', code: 'WWWWWW' })).rejects.toThrow();
+    expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+}, 15_000);

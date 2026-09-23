@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T152753Z-units-and-guards",
+    "work_unit_id": "RV-1..RV-4",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/units-and-guards/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/units-and-guards/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "46b4a37a0dcf38b6bdaac453677124a5b38c2334",
+    "current_revision": "47f6f5c684028048cf1034edc48e5a1857d8ea54ed5a20fffad96e1480c42e65",
+    "build_revision": "47f6f5c684028048cf1034edc48e5a1857d8ea54ed5a20fffad96e1480c42e65",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/reviews/10_fix_brief_units_and_guards.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/model-cost-contract.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "47f6f5c684028048cf1034edc48e5a1857d8ea54ed5a20fffad96e1480c42e65",
+      "observed_revision": "47f6f5c684028048cf1034edc48e5a1857d8ea54ed5a20fffad96e1480c42e65",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "83884658b1506904598f94330f95c4cd34b41c2888b0a96ddd54310158375ad3",
+    "scope": [
+      "RV-1 units",
+      "RV-2 actionable startup error",
+      "RV-3 partial receipt",
+      "RV-4 relative pixel contrast"
+    ],
+    "exclusions": [
+      ".claude changes",
+      "origin, DNS, deployment, code length",
+      "database and quota changes"
+    ],
+    "action_limits": [
+      "Local code, tests and reports only; no deployment or external messages"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "RV-1",
+        "required": true
+      },
+      {
+        "id": "RV-2",
+        "required": true
+      },
+      {
+        "id": "RV-3",
+        "required": true
+      },
+      {
+        "id": "RV-4",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "scripts/test-render-mutations.mjs"
+          }
+        },
+        "provenance": "46b4a37a0dcf38b6bdaac453677124a5b38c2334",
+        "useful_fragment": "isolated copy, mutation anchors and red/green receipts",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "reuse existing testing pattern"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable-run forecast requested; insufficient measurements",
+      "scope_revision": "83884658b1506904598f94330f95c4cd34b41c2888b0a96ddd54310158375ad3",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "83884658b1506904598f94330f95c4cd34b41c2888b0a96ddd54310158375ad3",
+      "tier": "M",
+      "rationale": "Mutation receipt contract changes; S mechanical lower bound; no runtime business invariant changes",
+      "script": {
+        "input": "docs/Completion.md docs/Architecture.md packages/shared/src/watermark.ts scripts/test-render-mutations.mjs tests/render-media.test.ts tests/watermark-startup.test.ts",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "83884658b1506904598f94330f95c4cd34b41c2888b0a96ddd54310158375ad3",
+      "tier": "M",
+      "rationale": "Mutation receipt contract changes; S mechanical lower bound; no runtime business invariant changes",
+      "script": {
+        "input": "docs/Completion.md docs/Architecture.md packages/shared/src/watermark.ts scripts/test-render-mutations.mjs tests/render-media.test.ts tests/watermark-startup.test.ts",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Explicit user brief authorizes fixes and checks"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local unit/source/media integration tests; no deployed E2E claim",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "failed",
+      "reason": "bare CLI disables credential sources: Not logged in"
+    },
+    {
+      "id": "review-2",
+      "status": "failed",
+      "reason": "API unreachable EAI_AGAIN; no model response"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "RV-1..RV-4",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/Architecture.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/Completion.md"
+        },
+        {
+          "root": "project",
+          "path": "packages/shared/src/watermark.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-render-mutations.mjs"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-media.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/watermark-startup.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/units-and-guards.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-units-guards-mutations.mjs"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

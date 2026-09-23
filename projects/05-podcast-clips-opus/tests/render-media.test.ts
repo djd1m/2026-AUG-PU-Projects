@@ -7,11 +7,11 @@ import { join } from 'node:path';
 import { execFFmpeg, generateThumbnail } from '../apps/worker/src/render/exec';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
 const execFile = promisify(execFileCb);
-it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async () => {
+it.each(['0x224466', 'white', 'black'])('real ffmpeg (%s): center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail', async color => {
   const dir = await mkdtemp(join(tmpdir(), 'n5-real-render-'));
   // Keep the passing output for visual inspection; report path is printed to the receipt.
   const input = join(dir, 'source.mp4'), output = join(dir, 'clip.mp4');
-  await execFFmpeg(['-y', '-f', 'lavfi', '-i', 'color=c=0x224466:s=640x360:r=5:d=20', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
+  await execFFmpeg(['-y', '-f', 'lavfi', '-i', `color=c=${color}:s=640x360:r=5:d=20`, '-f', 'lavfi', '-i', 'sine=frequency=440:duration=20',
     '-c:v', 'libx264', '-threads', '1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', input]);
   await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: 20, format: 'portrait',
     words: [{ word: 'Привет', start: 0, end: 10 }, { word: 'мир', start: 10, end: 20 }],
@@ -28,7 +28,16 @@ it('real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG
     await execFFmpeg(['-y', '-ss', '1', '-i', output, '-vf', `${crop},format=gray`, '-vframes', '1', '-f', 'rawvideo', path]);
     const pixels = await readFile(path);
     expect(pixels.filter(p => p > 220).length).toBeGreaterThan(100);
-    expect(pixels.filter(p => p < 50).length).toBeGreaterThan(100);
+    // Relative text/background contrast in the same region, independent of source brightness.
+    // Percentiles ignore codec noise and antialiased glyph edges; both tones need substantial area.
+    const sorted = [...pixels].sort((a, b) => a - b);
+    const luminance = (value: number) => {
+      const srgb = value / 255;
+      return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+    };
+    const dark = luminance(sorted[Math.floor(sorted.length * 0.10)]!);
+    const light = luminance(sorted[Math.floor(sorted.length * 0.95)]!);
+    expect((light + 0.05) / (dark + 0.05), `${color} ${name} contrast`).toBeGreaterThanOrEqual(4.5);
   }
   expect((await readdir(dir)).filter(p => p.startsWith('render-'))).toEqual([]);
   console.info(`REAL_RENDER_ARTIFACT=${dir}`);
