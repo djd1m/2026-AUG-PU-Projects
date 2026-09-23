@@ -8,7 +8,7 @@
 
 | Что | Вид | Источник | Хеш источника |
 |---|---|---|---|
-| канон: закрыты вопросы Pseudocode В-1…В-21 (поля, значения, маршруты, §10, §12) | правка | docs/discovery/pseudocode.md | a5f2b053ebe66685aa1f851d5d74d7d1d43af28dbed46e79fdf745a5c9633e31 |
-| канон: /admin + operator, caption_copied, stt:prepare, переменные compose | правка | docs/discovery/architecture.md | 4b922666934cf2f30fe94ebb5c0b06a9012c6302b5da0c522a80f84228561064 |
-| model-cost-contract: раздел о расхождении usage_attempt закрыт | правка | docs/Specification.md | 0825733a086a2e202b18d034f83bc159bf9480f983f27ccf8882682e3552b526 |
-| ключи Specification ↔ Pseudocode: 44 алгоритма; 49 из 52 ключей связаны, 3 объявлены неалгоритмическими | вывод | docs/Pseudocode.md | 40dba44106313bb07a57ab7d4c5d6393b95f495c07dcfcc91757dad8cb71d295 |
+| канон: закрыты вопросы Pseudocode В-1…В-21 (поля, значения, маршруты, §10, §12) | правка | docs/discovery/pseudocode.md | aa02a296faf60cd110f595c3dc88bcbafed0135e83318879fb4ef33942eaf4ff |
+| канон: /admin + operator, caption_copied, stt:prepare, переменные compose | правка | docs/discovery/architecture.md | f02073b701d456b71f9a1615ccae0abd8043bb90edc5bf4abcbf259a741fab86 |
+| model-cost-contract: раздел о расхождении usage_attempt закрыт | правка | docs/Specification.md | b3f966c3cafcf71184c767a048062e35bf9ee31cb4e8fbf8c684ff5ea8a7eb8e |
+| ключи Specification ↔ Pseudocode: 44 алгоритма; 49 из 52 ключей связаны, 3 объявлены неалгоритмическими | вывод | docs/Pseudocode.md | 8867399d5e80f5ffb7ebffe1d3ca7170a2b3dab26e8bd77284919a4fe8705680 |

@@ -3,7 +3,7 @@
 **RUN_ID:** 20260923T173212Z-replicate-05a-475b · **WORK_UNIT_ID:** pseudocode · **Автор:** Claude Opus 5.5 · 2026-09-23
 **Фаза:** Phase 1, sparc-prd-mini AUTO, фаза 4 (Pseudocode).
 **Опирается на:** [Specification.md](Specification.md) v0.2, [ADR.md](ADR.md) ADR-001…017,
-[canon.md](canon.md) (хеш `dc2cb9b8…566` на момент сдачи), [decisions-owner.md](decisions-owner.md).
+[canon.md](canon.md) (хеш `2acd0f44…722` на момент сдачи), [decisions-owner.md](decisions-owner.md).
 
 **Правило имён.** Таблицы, поля, очереди, `jobId`, маршруты, события, переменные окружения и закрытые списки — строго
 по канону. Где канон и Specification расходятся, действует канон (canon §12). Все имена, которые алгоритмам понадобились сверх
@@ -88,7 +88,7 @@ SpendLedger    { id: UUID, account_id: UUID, job_id: UUID?, call: 'stt'|'llm', m
                  created_at: Timestamp }
 Event          { id: UUID, name: EventName, account_id: UUID?, clip_id: UUID?, session_id: Text?, props: Jsonb,
                  created_at: Timestamp }  — сырого IP нет (NFR-clips-6)
-Publication    { id: UUID, clip_id: UUID? (NULL после удаления клипа), account_id: UUID, url: Text, url_normalized: Text(unique),
+Publication    { id: UUID, clip_id: UUID? (NULL после удаления клипа), clip_code: Text (копия, не обнуляется), account_id: UUID, url: Text, url_normalized: Text(unique),
                  platform: Platform, channel_key: Text?, status: PubStatus, reason: Text?, verified_at: Timestamp?,
                  rechecked_at: Timestamp?, created_at: Timestamp }
 Partner        { id: UUID, name: Text, contact: Text?, audience_url: Text?, partner_code: Text(unique, upper),
@@ -782,7 +782,7 @@ STEPS:
 4. `host ← lower(u.hostname).replace(/\.$/, '')`; снять ровно один префикс `www.` или `m.`. IF `host` ∉ `PLATFORM_HOSTS` канона §5 (`tiktok.com`, `vt.tiktok.com`, `youtube.com`, `youtu.be`, `vk.com`, `vkvideo.ru`, `t.me`, `rutube.ru`, `dzen.ru`) THEN RETURN `422 {error:'host_not_allowed', allowed: PLATFORM_HOSTS}` (ничего не сохраняется).
 5. `keep ← PLATFORM_KEEP_QUERY[host] ?? []`; `q ← параметры u.searchParams с именами из keep`, отсортированные по имени, пустые значения отброшены; `url_normalized ← 'https://' + host + u.pathname.replace(/\/+$/, '') + (q ? '?' + q : '')`. Идентифицирующий параметр площадки сохраняется (`youtube.com/watch?v=…`, `vk.com/clips?z=…`), трекинговые (`utm_*`, `si`, `feature`) и фрагмент отбрасываются; регистр пути сохраняется (VT-06). Юнит-тест: 9 хостов × 2 разных поста → 18 разных строк; одна ссылка с `utm_source` и без → одна строка.
 6. Сервер ссылку НЕ открывает (ни fetch, ни oEmbed).
-7. Транзакция: `INSERT publication(clip_id, account_id, url, url_normalized, platform=host, status='candidate') ON CONFLICT (url_normalized) DO NOTHING RETURNING id`. Нет строки → RETURN `409 'эта ссылка уже прикреплена'`. `record_event('publication_submitted', account_id, clip_id)`.
+7. Транзакция: `INSERT publication(clip_id, clip_code = clip.clip_code, account_id, url, url_normalized, platform=host, status='candidate') ON CONFLICT (url_normalized) DO NOTHING RETURNING id`. Нет строки → RETURN `409 'эта ссылка уже прикреплена'`. `record_event('publication_submitted', account_id, clip_id)`.
 8. RETURN 201.
 COMPLEXITY: O(len(url)).
 
@@ -940,7 +940,7 @@ STEPS:
 1. `auth({role:'operator'})`. `from` — дата; невалидна → 422. `W = [from 00:00 МСК, from + 7 дней)`.
 2. `activated ← DISTINCT account_id` событий `clip_viewed` в `W`; `n ← |activated|`.
 3. `confirmed ← publication` со `status='confirmed'` (на момент запроса; перепроверка 7-го дня уже перевела удалённые в `removed`) и `created_at ∈ W`.
-   `clips_confirmed ← COUNT(DISTINCT COALESCE(clip_id, id))` — публикация удалённого автором клипа (`clip_id IS NULL`) остаётся в счёте как отдельный клип (несколько её ссылок на один удалённый клип посчитаются раздельно — завышение возможно только у удалённых клипов, видно в строке «клип удалён: k»); автор — `publication.account_id`; `accounts ← COUNT(DISTINCT account_id)`; `channels ← COUNT(DISTINCT channel_key)`; `authors_confirmed ← min(accounts, channels)` — три аккаунта с одним каналом площадки дают одного автора (VA-14, FR-GROWTH-005 п. 4); выводятся все три числа; `authors_confirmed ← COUNT(DISTINCT account_id)`; `goal_met ← clips_confirmed ≥ 5 AND authors_confirmed ≥ 3`. Несколько ссылок на клип — 1 клип.
+   `clips_confirmed ← COUNT(DISTINCT clip_code)` — `publication.clip_code` переживает удаление клипа (канон §4), поэтому несколько ссылок на один клип дают 1 клип и после удаления; автор — `publication.account_id`; `accounts ← COUNT(DISTINCT account_id)`; `channels ← COUNT(DISTINCT channel_key)`; `authors_confirmed ← min(accounts, channels)` — три аккаунта с одним каналом площадки дают одного автора (VA-14, FR-GROWTH-005 п. 4); выводятся все три числа; `authors_confirmed ← COUNT(DISTINCT account_id)`; `goal_met ← clips_confirmed ≥ 5 AND authors_confirmed ≥ 3`. Несколько ссылок на клип — 1 клип.
    `rechecked ← k из m` подтверждённых с `rechecked_at ≥ from + 6 дней` — метрика объявляется окончательной только при `k = m`.
 4. Отдельными строками, не складывая: кандидаты; `rejected`; `removed`; самоотчёты «заявлено, не подтверждено»; `download_clicked`; `share_clicked`; `caption_copied`; `clip_link_visited`; `landing_visited` по каждому `source`; `partner_link_visited`; `fakedoor_clicked`.
 5. `i` по каждому активированному автору: `confirmed_clips(author) / 1`, выводится списком «автор — k клипов»; среднее — только при `n ≥ 30`.
