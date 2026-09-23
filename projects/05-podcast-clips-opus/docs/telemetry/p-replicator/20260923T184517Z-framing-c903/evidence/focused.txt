@@ -1,0 +1,22 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/framing.test.ts tests/framing-media.test.ts tests/render.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/framing-media.test.ts > FR-1 real render: left red above right blue, ASS on final canvas, watermark pixels
+FR-1 pixels: red top / blue bottom at x=100,900; ASS visible at t=1, absent t=8; watermark visible
+
+ ✓ tests/framing-media.test.ts (2 tests) 6360ms
+   ✓ FR-1 real render: left red above right blue, ASS on final canvas, watermark pixels  5968ms
+   ✓ FR-1 real odd source: exact window encodes as yuv420p without implicit crop rounding  390ms
+ ✓ tests/framing.test.ts (9 tests) 2172ms
+   ✓ FR-1 odd sources always produce even windows and in-bounds even positions  2161ms
+ ✓ tests/render.test.ts (19 tests) 19ms
+
+ Test Files  3 passed (3)
+      Tests  30 passed (30)
+   Start at  18:49:03
+   Duration  9.80s (transform 257ms, setup 0ms, collect 374ms, tests 8.55s, environment 1ms, prepare 287ms)
+

@@ -1,0 +1,56 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/framing.test.ts tests/framing-media.test.ts tests/render.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/render.test.ts (19 tests) 31ms
+ ❯ tests/framing-media.test.ts (2 tests | 2 failed) 1284ms
+   × FR-1 real render: left red above right blue, ASS on final canvas, watermark pixels 963ms
+     → Render probe failed: Command failed: ffprobe -v error -protocol_whitelist file -select_streams V:0 -show_entries stream=index,width,height:stream_tags=rotate:stream_side_data=rotation -of json /tmp/n5-framing-ZtXsfO/source.mkv
+No match for section 'stream_side_data'
+Failed to set value 'stream=index,width,height:stream_tags=rotate:stream_side_data=rotation' for option 'show_entries': Invalid argument
+   × FR-1 real odd source: exact window encodes as yuv420p without implicit crop rounding 318ms
+     → Render probe failed: Command failed: ffprobe -v error -protocol_whitelist file -select_streams V:0 -show_entries stream=index,width,height:stream_tags=rotate:stream_side_data=rotation -of json /tmp/n5-framing-odd-Wq3zIV/window.mp4
+No match for section 'stream_side_data'
+Failed to set value 'stream=index,width,height:stream_tags=rotate:stream_side_data=rotation' for option 'show_entries': Invalid argument
+ ✓ tests/framing.test.ts (9 tests) 1967ms
+   ✓ FR-1 odd sources always produce even windows and in-bounds even positions  1955ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/framing-media.test.ts > FR-1 real render: left red above right blue, ASS on final canvas, watermark pixels
+Error: Render probe failed: Command failed: ffprobe -v error -protocol_whitelist file -select_streams V:0 -show_entries stream=index,width,height:stream_tags=rotate:stream_side_data=rotation -of json /tmp/n5-framing-ZtXsfO/source.mkv
+No match for section 'stream_side_data'
+Failed to set value 'stream=index,width,height:stream_tags=rotate:stream_side_data=rotation' for option 'show_entries': Invalid argument
+ ❯ apps/worker/src/render/probe.ts:15:27
+     13|       '-show_entries', 'stream=index,width,height:stream_tags=rotate:s…
+     14|     { timeout: 30_000, killSignal: 'SIGKILL', maxBuffer: 64 * 1024, si…
+     15|       if (error) { reject(new Error(`Render probe failed: ${renderErro…
+       |                           ^
+     16|       try {
+     17|         const result = JSON.parse(stdout);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/framing-media.test.ts > FR-1 real odd source: exact window encodes as yuv420p without implicit crop rounding
+Error: Render probe failed: Command failed: ffprobe -v error -protocol_whitelist file -select_streams V:0 -show_entries stream=index,width,height:stream_tags=rotate:stream_side_data=rotation -of json /tmp/n5-framing-odd-Wq3zIV/window.mp4
+No match for section 'stream_side_data'
+Failed to set value 'stream=index,width,height:stream_tags=rotate:stream_side_data=rotation' for option 'show_entries': Invalid argument
+ ❯ apps/worker/src/render/probe.ts:15:27
+     13|       '-show_entries', 'stream=index,width,height:stream_tags=rotate:s…
+     14|     { timeout: 30_000, killSignal: 'SIGKILL', maxBuffer: 64 * 1024, si…
+     15|       if (error) { reject(new Error(`Render probe failed: ${renderErro…
+       |                           ^
+     16|       try {
+     17|         const result = JSON.parse(stdout);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 28 passed (30)
+   Start at  18:47:46
+   Duration  4.59s (transform 258ms, setup 0ms, collect 404ms, tests 3.28s, environment 1ms, prepare 305ms)
+

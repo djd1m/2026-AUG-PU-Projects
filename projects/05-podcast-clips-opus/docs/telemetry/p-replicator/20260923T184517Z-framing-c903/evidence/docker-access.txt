@@ -1,0 +1,4 @@
+docker ps --format {{.Names}}
+exit=1
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+No containers started. No container integration tests claimed.

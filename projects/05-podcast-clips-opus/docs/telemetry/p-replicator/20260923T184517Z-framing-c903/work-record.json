@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T184517Z-framing-c903",
+    "work_unit_id": "FR-1",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260923T184517Z-framing-c903/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260923T184517Z-framing-c903/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "ddde605bc5030567d00533a3459bf4868634ddf9",
+    "current_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+    "build_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/framing/00_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "observed_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "1ee8ede14394999c219e27a6058b881da1ac384e2c16e4deb947a6d15c913980",
+    "scope": [
+      "Two-panel geometry, source dimensions, filter graph, unit/pixel/mutation checks, canon and report"
+    ],
+    "exclusions": [
+      ".claude",
+      "DNS",
+      "N5_PUBLIC_ORIGIN configuration",
+      "deployment",
+      "face/active-speaker detection",
+      "pre-existing user edits"
+    ],
+    "action_limits": [
+      "Local source and synthetic files only; no production mutation"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "geometry",
+        "required": true
+      },
+      {
+        "id": "fallbacks",
+        "required": true
+      },
+      {
+        "id": "order",
+        "required": true
+      },
+      {
+        "id": "even",
+        "required": true
+      },
+      {
+        "id": "pixels",
+        "required": true
+      },
+      {
+        "id": "ASS",
+        "required": true
+      },
+      {
+        "id": "report",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/worker/src/render/ffmpeg.ts"
+          }
+        },
+        "provenance": "ddde605bc5030567d00533a3459bf4868634ddf9",
+        "useful_fragment": "render lifecycle, subtitle/mark overlay, single encoding pass",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Preserve lifecycle, replace center-only geometry per owner brief"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable timing study requested; 40 minute execution budget is a stop/check limit, not forecast",
+      "scope_revision": "1ee8ede14394999c219e27a6058b881da1ac384e2c16e4deb947a6d15c913980",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "stage": "plan",
+      "scope_revision": "1ee8ede14394999c219e27a6058b881da1ac384e2c16e4deb947a6d15c913980",
+      "tier": "M",
+      "rationale": "Existing render behavior and ordering; mark-last invariant preserved, no shared state, services, money or schema changes. Owner explicitly authorizes implementation.",
+      "script_input": "Five named render/test paths, nonempty",
+      "exit_code": 0,
+      "mechanical_tier": "S"
+    },
+    {
+      "stage": "implement",
+      "scope_revision": "1ee8ede14394999c219e27a6058b881da1ac384e2c16e4deb947a6d15c913980",
+      "tier": "M",
+      "rationale": "Existing render behavior and ordering; mark-last invariant preserved, no shared state, services, money or schema changes. Owner explicitly authorizes implementation.",
+      "script_input": "Five named render/test paths, nonempty",
+      "exit_code": 0,
+      "mechanical_tier": "S"
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requests execution of owner-selected framing brief; no new scope",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local unit and synthetic media integration checks, no deployed E2E requested; Docker daemon inaccessible, no E2E claim",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "blocked"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "FR-1",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/format.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/probe.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/ffmpeg.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/framing.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/framing-media.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-framing-mutations.mjs"
+        },
+        {
+          "root": "project",
+          "path": "docs/canon.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "geometry",
+      "outcome": "pass",
+      "command": "npm test -- tests/render-worker.test.ts tests/framing.test.ts tests/framing-media.test.ts",
+      "exit_code": 0,
+      "source_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "fallbacks",
+      "outcome": "pass",
+      "command": "npm test -- tests/render-worker.test.ts tests/framing.test.ts tests/framing-media.test.ts",
+      "exit_code": 0,
+      "source_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "order",
+      "outcome": "pass",
+      "command": "npm test -- tests/render-worker.test.ts tests/framing.test.ts tests/framing-media.test.ts",
+      "exit_code": 0,
+      "source_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "even",
+      "outcome": "pass",
+      "command": "npm test -- tests/render-worker.test.ts tests/framing.test.ts tests/framing-media.test.ts",
+      "exit_code": 0,
+      "source_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "pixels",
+      "outcome": "pass",
+      "command": "npm test -- tests/render-worker.test.ts tests/framing.test.ts tests/framing-media.test.ts",
+      "exit_code": 0,
+      "source_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ASS",
+      "outcome": "pass",
+      "command": "npm test -- tests/render-worker.test.ts tests/framing.test.ts tests/framing-media.test.ts",
+      "exit_code": 0,
+      "source_revision": "dbd3e6ddd8a03e301fb2e37359a2c5d66535aa094616d4f0d23be7e2357a4cdd",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

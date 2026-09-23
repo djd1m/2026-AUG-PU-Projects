@@ -1,0 +1,37 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/framing.test.ts tests/framing-media.test.ts tests/render.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/framing-media.test.ts (2 tests | 2 failed) 5595ms
+   × FR-1 real render: left red above right blue, ASS on final canvas, watermark pixels 5267ms
+     → Render probe returned invalid video stream geometry
+   × FR-1 real odd source: exact window encodes as yuv420p without implicit crop rounding 325ms
+     → Render probe returned invalid video stream geometry
+ ✓ tests/framing.test.ts (9 tests) 2042ms
+   ✓ FR-1 odd sources always produce even windows and in-bounds even positions  2031ms
+ ✓ tests/render.test.ts (19 tests) 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/framing-media.test.ts > FR-1 real render: left red above right blue, ASS on final canvas, watermark pixels
+ FAIL  tests/framing-media.test.ts > FR-1 real odd source: exact window encodes as yuv420p without implicit crop rounding
+Error: Render probe returned invalid video stream geometry
+ ❯ apps/worker/src/render/probe.ts:30:24
+     28|         if (Math.abs(rotation % 180) === 90) [width, height] = [height…
+     29|         resolve({ index, width, height });
+     30|       } catch { reject(new Error('Render probe returned invalid video …
+       |                        ^
+     31|     });
+     32|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 28 passed (30)
+   Start at  18:48:34
+   Duration  9.21s (transform 331ms, setup 0ms, collect 497ms, tests 7.66s, environment 1ms, prepare 368ms)
+
