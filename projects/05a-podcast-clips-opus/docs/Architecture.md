@@ -155,6 +155,7 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    environment: { REDIS_PASSWORD: "${REDIS_PASSWORD:?REDIS_PASSWORD обязателен}" }   # нужен healthcheck внутри контейнера
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD обязателен}"]
     healthcheck: { test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping"], interval: 5s, retries: 10 }
   minio:
@@ -265,7 +266,7 @@ sequenceDiagram
   B->>W: POST /api/videos/{video_id}/complete (Idempotency-Key)
   W->>S3: CompleteMultipartUpload, HeadObject
   W->>PG: INSERT job (running, transcribing) ON CONFLICT → тот же job_id
-  W->>Q: add stt {job_id}:stt:prepare [правка канона предложена]
+  W->>Q: add stt {job_id}:stt:prepare
   W-->>B: 202 {job_id}
   AI->>S3: скачать исходник; magic bytes; ffprobe (длительность ≤ 120 мин)
   AI->>PG: резерв quota_counter STT на секунды всего видео (атомарно), иначе failed/quota_*
@@ -294,7 +295,7 @@ sequenceDiagram
 
 | Очередь | Потребитель | Конкурентность | `jobId` | Повтор |
 |---|---|---|---|---|
-| `stt` | `worker-ai` | 2 задачи на процесс; ≤ 2 параллельных куска на задачу, ≤ 4 глобально (NFR-clips-5) | `{job_id}:stt:{chunk_idx}` | 3 попытки, экспонента от 5 с |
+| `stt` | `worker-ai` | 2 задачи на процесс; ≤ 2 параллельных куска на задачу, ≤ 4 глобально (NFR-clips-5) | `{job_id}:stt:prepare` — подготовка (magic bytes, `ffprobe`, нарезка); `{job_id}:stt:{chunk_idx}` — кусок | 3 попытки, экспонента от 5 с |
 | `llm` | `worker-ai` | 2 | `{job_id}:llm` | ≤ `LIMIT_LLM_ATTEMPTS_JOB` = 2 |
 | `render` | `worker-render` | `RENDER_CONCURRENCY` (1 на 2 vCPU) | `{clip_id}:render` | 3 попытки; готовый клип не рендерится повторно |
 
@@ -428,8 +429,8 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 
 Канон обновлён координатором 2026-09-23 (`/admin/*`, `account.role`, `caption_copied`); оставшиеся строки ниже
 внесены в канон §12, Specification правит её автор. Эта архитектура следует канону и ADR.
-Не внесены в канон и остаются предложением: `jobId` `{job_id}:stt:prepare` для шага подготовки и переменные compose
-`REDIS_PASSWORD`, `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`.
+`jobId` `{job_id}:stt:prepare` и переменные compose `REDIS_PASSWORD`, `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`
+внесены в канон (§3, §6) координатором.
 
 | Specification | Канон / ADR | Здесь принято |
 |---|---|---|

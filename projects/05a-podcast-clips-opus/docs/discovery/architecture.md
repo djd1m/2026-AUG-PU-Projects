@@ -53,4 +53,12 @@ developers.openai.com speech-to-text; cloud.ru/docs/s3e: api__methods, api__aws-
   `APP_VERSION`, `MINIO_TAG`, `RENDER_CPUS`.
 - check-canon.cjs после правки — exit 0.
 
+
+## Сверка с каноном после коммита 42a133f
+- `{job_id}:stt:prepare` (канон §3): добавлен в таблицу очередей Architecture, пометка «правка предложена» в sequence-диаграмме снята.
+- `REDIS_PASSWORD` (канон §6: redis, web, worker-ai, worker-render): в скелете compose у `redis` добавлен `environment`,
+  иначе healthcheck `redis-cli -a $$REDIS_PASSWORD` внутри контейнера не видит пароль. `APP_VERSION`, `MINIO_TAG` —
+  `${VAR:?}` без дефолта; `RENDER_CPUS` — `${RENDER_CPUS:-2}`; всё совпадает с каноном.
+- Абзац «остаются предложением» в «Открытых расхождениях» заменён записью, что правки внесены.
+
 Status: completed

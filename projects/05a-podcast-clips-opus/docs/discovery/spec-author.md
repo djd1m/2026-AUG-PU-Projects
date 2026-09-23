@@ -119,4 +119,74 @@ RUN_ID: 20260923T173212Z-replicate-05a-475b · WORK_UNIT_ID: spec-author · ис
 - ADR-forks — это развилки, а не итоговый ADR.md. Если архитектор в ADR.md отойдёт от рекомендаций (например, по cookie 90 дней или списку хостов), Specification нужно будет сверить.
 - Число `/admin/*`-страниц увеличивает объём работ по сравнению с CLI. Это следует ADR-006/014, но в неделю влезает хуже.
 
+### Дополнение к заданию 2 — сверка с canon.md §12 и ADR.md
+
+Канон имеет приоритет. canon.md и ADR.md не редактировались. Все 11 пунктов §12 закрыты, таблица
+сверки — в Specification §10 «Сверка с каноном».
+
+| # §12 | Пункт | Где закрыт |
+|---|---|---|
+| 1 | подтверждение почты до первой загрузки; `email_token`, `email_verified` | FR-clips-1 п.1, AC-clips-21 |
+| 2 | диаризация через OpenRouter, подписи спикера, без караоке | FR-clips-4, FR-clips-7 п.4 |
+| 3 | `anthropic/claude-sonnet-5` через OpenRouter | FR-clips-5 п.1 |
+| 4 | `start_unit`/`end_unit`, мс считает код | FR-clips-5 п.2 |
+| 5 | чёрные поля | FR-clips-7 п.2, AC-clips-11 |
+| 6 | `PaymentProvider`, ЮKassa/CloudPayments, фейк по умолчанию | FR-clips-9 п.5, NFR-clips-3 |
+| 7 | 120 мин/3 загрузки/30 ₽ LLM на автора; 1 500 мин STT/300 ₽ LLM на сервис | FR-clips-2 п.7, FR-clips-10 |
+| 8 | `watermark_path_visited` снят; `clip_link_visited`, `landing_visited`, `email_verified` | FR-clips-12, FR-clips-14 п.2, AC-clips-18/22 |
+| 9 | исходник 72 ч после завершения задачи, страховка 7 дней | FR-clips-13 п.1 |
+| 10 | на знаке `clipmkr.ru`, `/w` снят | FR-GROWTH-003 п.2, FR-clips-14 п.2 |
+| 11 | ClipMkr / clipmkr.ru вместо плейсхолдеров | весь документ |
+
+**Отозваны мои решения задания 2, которые расходились с каноном или ADR.md:**
+
+- операторские страницы `/admin/*` → снова CLI `ops` в `worker-ai`;
+- `usage_attempt` → `quota_counter` + `spend_ledger`;
+- cookie `first_ref` на 90 дней → `pref` на 60 дней;
+- в список хостов снова канонический (без `instagram.com`, `vk.ru`; с `vt.tiktok.com`, `vkvideo.ru`, `rutube.ru`, `dzen.ru`);
+- 4 ГБ → 2 ГБ; ключ S3 `videos/{account_id}/{video_id}/source.{ext}`;
+- `job_id` отдельный от `video_id`: `202 {job_id}` на `POST /api/videos/{video_id}/complete`; состояние — `GET /api/jobs/{job_id}`;
+- причина `provider_unavailable` удалена (9 причин канона);
+- LLM — один вызов, хук и завершённость сразу 0–40, длина 20–90 с;
+- события `direct_visit`, `caption_copied`, `email_confirmed` удалены. Подпись к посту (FR-clips-15) осталась без своего события;
+- сброс пароля письмом → сбрасывает оператор (ADR-011);
+- куски STT 60–120 с / перекрытие 2 с → около 90 с (окно 75–105), перекрытие 5 с, сшивка спикеров. Если сшивка не уверена, подписи не печатаются (ADR-002);
+- ответ STT без спикера теперь не отказ, а субтитры без подписей и `speaker_labels_missing` (ADR-001). SC-US-004-6 переписан;
+- проба дня 1: 5 кандидатов из ADR-001, включая `x-ai/grok-stt-1.0`, 7 критериев, результат в `docs/probes/stt-day1.md`.
+
+Переменные окружения в NFR-clips-3 — ровно канон §6 (7 `LIMIT_*`, `PAYMENTS_MODE`, `STT_PROVIDER`, `FX_USD_RUB_KOP` и т. д.).
+Новый сценарий: SC-US-004-8 (шов с `speaker_map_confident = false` → клип без подписей) в AC-clips-24.
+Оценка работ — ≈ 11,5 дня (auth без сброса письмом 0,75; CLI 0,5).
+
+Проверки после дополнения: grep ADR-/OWNER-PENDING пуст; следов `/admin`, `usage_attempt`, `first_ref`,
+`direct_visit`, `provider_unavailable` нет; дублей SC нет; `### AC-clips-` 24; check-growth-trace 0,
+check-look-trace 0, check-metric-source 0.
+
+## Задание 3 — Specification приведена к обновлённому канону (2026-09-23)
+
+Канон обновил координатор (§12, 7 новых строк). canon.md и ADR.md не редактировались, машинные
+ключи не перенумерованы, новых ключей нет.
+
+| Пункт §12 | Состояние |
+|---|---|
+| `usage_attempt` → `spend_ledger` | было закрыто в дополнении к заданию 2; grep по `usage_attempt` пуст |
+| `direct_visit` → `landing_visited(source=direct)`, `email_confirmed` → `email_verified` | было закрыто; grep пуст |
+| `caption_copied` принят в канон | **восстановлен**: FR-clips-12 п. 1 (17 событий), FR-clips-15 п. 2 (`POST /api/clips/{clip_id}/caption-copied`, не чаще 1 раза на пару аккаунт–клип в сутки), выводится в метриках отдельно |
+| перекрытие кусков 5 с | было закрыто (FR-clips-4 п. 3) |
+| неуверенная сшивка → без подписи спикера | было закрыто (FR-clips-4 п. 8, FR-clips-7 п. 4, SC-US-004-8) |
+| AC-clips-24: нет speaker → субтитры без подписи, задача продолжается | было закрыто (SC-US-004-6) |
+| отдельный `job_id` на `POST …/complete` (202) | было закрыто в FR-clips-2/3; **дочищена** строка «Долгая задача» в §9, где оставалось `job_id = video_id` |
+| `/admin/*` и `account.role` | **переделано**: FR-clips-11 снова «Операторский интерфейс» — 5 страниц `/admin/*` по canon §7, роль `operator` проверяется в middleware и в каждом обработчике, чужой роли — 404; CLI — только `ops grant-operator <email>`. Все `ops …` в FR-GROWTH-002/004/005, NFR-clips-8, AC-clips-16/19, §9 заменены страницами; PRD и Solution_Strategy тоже |
+
+В Specification §10 «Сверка с каноном» теперь 18 строк. Solution_Strategy: строка оператора —
+страницы + роль (0,75 дня), итог ≈ 11,75 дня; PRD: срок ≈ 11,75 дня, операторские страницы в scope.
+
+**Вопрос к канону:** сброс пароля оператором (ADR-011) я поставил на `/admin/users`, но канон §7
+описывает эту страницу только как «смена плана с причиной». Прошу координатора подтвердить или
+указать другое место.
+
+Проверки: grep по `usage_attempt`, `direct_visit`, `email_confirmed`, прежним `ops …`-командам,
+`job_id = video_id` и PENDING-меткам пуст; дублей SC нет; check-growth-trace 0, check-look-trace 0,
+check-metric-source 0.
+
 Status: completed

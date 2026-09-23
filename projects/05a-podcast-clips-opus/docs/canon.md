@@ -166,7 +166,7 @@
 | `GET /admin/publications` | роль `operator` | проверка paste-back, перепроверка на 7-й день |
 | `GET /admin/spend` | роль `operator` | расход за сутки по вызовам и аккаунтам |
 | `GET /admin/metrics?from=<YYYY-MM-DD>` | роль `operator` | метрики недели |
-| `GET /admin/users` | роль `operator` | смена плана с причиной |
+| `GET /admin/users` | роль `operator` | смена плана с причиной; сброс пароля пользователя (одноразовая ссылка на почту) |
 
 Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`.
 
