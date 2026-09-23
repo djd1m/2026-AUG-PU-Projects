@@ -1,0 +1,35 @@
+
+ RUN  v3.2.7 /tmp/n5-erasure-mutations-It0fJP
+
+ ❯ tests/retention-storage.test.ts (2 tests | 1 failed | 1 skipped) 22ms
+   × S3 physical erasure > objects physically removed, unknown multipart aborted, listing paginated 20ms
+     → expected 2 to be +0 // Object.is equality
+   ↓ S3 physical erasure > versioning and S3 failures never report erasure complete
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention-storage.test.ts > S3 physical erasure > objects physically removed, unknown multipart aborted, listing paginated
+AssertionError: expected 2 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ tests/retention-storage.test.ts:25:28
+     23|     try {
+     24|       await erasePrefix(ctx, prefix);
+     25|       expect(objects.size).toBe(0); expect(aborts).toEqual(['u1', 'u2'…
+       |                            ^
+     26|     } finally { ctx.client.destroy(); }
+     27|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  05:05:37
+   Duration  610ms (transform 147ms, setup 0ms, collect 307ms, tests 22ms, environment 0ms, prepare 92ms)
+

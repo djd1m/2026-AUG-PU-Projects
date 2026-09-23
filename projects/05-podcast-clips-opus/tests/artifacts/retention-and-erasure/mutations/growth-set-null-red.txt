@@ -1,0 +1,57 @@
+
+ RUN  v3.2.7 /tmp/n5-erasure-mutations-It0fJP
+
+ ❯ tests/retention.test.ts (8 tests | 1 failed | 7 skipped) 24ms
+   ↓ retention and erasure guards > confirmation required before state changes
+   ↓ retention and erasure guards > revokes guests before any storage deletion and completion follows objects
+   ↓ retention and erasure guards > storage failure preserves database rows for retry
+   ↓ retention and erasure guards > free clips older than three days are removed before row markers
+   ↓ retention and erasure guards > expired guest packs are revoked using existing fourteen-day expiry
+   × retention and erasure guards > growth events survive clip deletion with SET NULL 22ms
+     → expected ' (\n  id uuid PRIMARY KEY DEFAULT gen…' to contain 'clip_id uuid REFERENCES clip(id) ON D…'
+   ↓ retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation
+   ↓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > retention and erasure guards > growth events survive clip deletion with SET NULL
+AssertionError: expected ' (\n  id uuid PRIMARY KEY DEFAULT gen…' to contain 'clip_id uuid REFERENCES clip(id) ON D…'
+
+- Expected
++ Received
+
+- clip_id uuid REFERENCES clip(id) ON DELETE SET NULL
++  (
++   id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(),
++   type text NOT NULL CHECK (type IN ('download', 'link_copy', 'link_view', 'guest_sent', 'guest_opened', 'guest_registered', 'code_applied', 'interest')),
++   account_id uuid REFERENCES account(id) ON DELETE SET NULL,
++   video_id uuid REFERENCES video(id) ON DELETE SET NULL,
++   clip_id uuid REFERENCES clip(id) ON DELETE CASCADE,
++   clip_link_id uuid REFERENCES clip_link(id) ON DELETE SET NULL,
++   guest_pack_id uuid REFERENCES guest_pack(id) ON DELETE SET NULL,
++   partner_code_id uuid REFERENCES partner_code(id) ON DELETE SET NULL,
++   ip_prefix cidr CHECK (masklen(ip_prefix) = 24), day date NOT NULL,
++   source_screen text CHECK (source_screen IN ('clip_card', 'guest_page', 'partner_dashboard'))
++ );
++ CREATE INDEX growth_event_type_created ON growth_event (type, created_at);
++ CREATE UNIQUE INDEX growth_event_link_view_unique ON growth_event (clip_link_id, ip_prefix, day) WHERE type = 'link_view';
++ CREATE UNIQUE INDEX growth_event_guest_opened_unique ON growth_event (guest_pack_id, ip_prefix, day) WHERE type = 'guest_opened';
++
++
+
+ ❯ tests/retention.test.ts:74:17
+     72|   it('growth events survive clip deletion with SET NULL', () => {
+     73|     const sql = readFileSync('packages/db/migrations/001_init.sql', 'u…
+     74|     expect(sql).toContain('clip_id uuid REFERENCES clip(id) ON DELETE …
+       |                 ^
+     75|   });
+     76|   it('irreversibility and external copies disclosed BEFORE confirmatio…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  05:05:42
+   Duration  962ms (transform 471ms, setup 0ms, collect 535ms, tests 24ms, environment 0ms, prepare 218ms)
+

@@ -392,7 +392,7 @@
       "title": "Срок хранения клипов, истечение гостевой страницы и удаление аккаунта",
       "description": "PurgeExpiredClips — клипы free старше 3 дней после done: удаление объектов S3 и проставление clip.expires_at, сохранённая ссылка скачивания отдаёт 404 с объяснением на экране, а не пустой файл; короткая ссылка /c/{code} при этом продолжает работать — она ведёт на лендинг, а не на файл; RevokeOrExpireGuestPack закрывает страницы старше 14 дней; DeleteAccount — статус erasing, завершение ≤ 72 ч, удаление объектов и записей с чужим голосом; lifecycle бакета как страховка: AbortIncompleteMultipartUpload(1 день) на весь бакет, Expiration(7 дней) ТОЛЬКО на префиксе clips/free/, к clips/paid/ не применяется вовсе.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "guest-pack",

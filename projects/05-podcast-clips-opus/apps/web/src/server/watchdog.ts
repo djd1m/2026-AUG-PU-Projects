@@ -1,8 +1,10 @@
+import { retentionTick, RETENTION_INTERVAL_MS, type RetentionStorage } from './retention';
+const retentionLastRun = new WeakMap<Pool, number>();
 import { transaction, ensureInitialAttempt, type Attempt, type Pool } from '@clipmaker/db';
 import { DEFER_DELAY_MS, STALLED_AFTER_MS, WATCHDOG_INTERVAL_MS } from '@clipmaker/queue';
 // Per-process cursor keeps retained jobs from starving attempts beyond the batch boundary.
 const recoveryCursor = new WeakMap<Pool, string>();
-export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: number) => Promise<void>, now = new Date(), batch = 100) {
+export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: number) => Promise<void>, now = new Date(), batch = 100, storage?: RetentionStorage) {
   const failed = await transaction(pool, async tx => {
     const stale = await tx.query<{ id: string }>(`SELECT id FROM video
       WHERE status IN ('queued','transcribing','selecting','rendering') AND deleted_at IS NULL AND updated_at < $1
@@ -36,6 +38,10 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
   for (const job of pending.rows) {
     const delay = job.status === 'deferred' ? Math.max(0, job.updated_at.getTime() + DEFER_DELAY_MS - now.getTime()) : 0;
     try { await enqueue(job, delay); published++; } catch { console.error('Сторож: транспорт заданий недоступен'); }
+  }
+  if (storage && now.getTime() - (retentionLastRun.get(pool) ?? -Infinity) >= RETENTION_INTERVAL_MS) {
+    const result = await retentionTick(pool, storage, now, batch);
+    if (result && !result.backlog) retentionLastRun.set(pool, now.getTime());
   }
   return { failed, published };
 }

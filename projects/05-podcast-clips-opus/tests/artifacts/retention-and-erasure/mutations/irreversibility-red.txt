@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /tmp/n5-erasure-mutations-It0fJP
+
+ ❯ tests/retention.test.ts (8 tests | 1 failed | 7 skipped) 29ms
+   ↓ retention and erasure guards > confirmation required before state changes
+   ↓ retention and erasure guards > revokes guests before any storage deletion and completion follows objects
+   ↓ retention and erasure guards > storage failure preserves database rows for retry
+   ↓ retention and erasure guards > free clips older than three days are removed before row markers
+   ↓ retention and erasure guards > expired guest packs are revoked using existing fourteen-day expiry
+   ↓ retention and erasure guards > growth events survive clip deletion with SET NULL
+   × retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation 27ms
+     → expected '<section aria-label="Удаление аккаунт…' to contain 'Удаление необратимо'
+   ↓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation
+AssertionError: expected '<section aria-label="Удаление аккаунт…' to contain 'Удаление необратимо'
+
+Expected: "Удаление необратимо"
+Received: "<section aria-label="Удаление аккаунта"><h2>Удалить аккаунт</h2><p>Удаление аккаунта: восстановить аккаунт, оригиналы и клипы будет невозможно. Завершим удаление в течение 72 часов.</p><p>Клипы, уже скачанные или опубликованные в чужих лентах, мы удалить не можем: эти копии находятся не у нас.</p><label><input type="checkbox"/> Подтверждаю необратимое удаление</label><button disabled="">Удалить аккаунт навсегда</button></section>"
+
+ ❯ tests/retention.test.ts:78:18
+     76|   it('irreversibility and external copies disclosed BEFORE confirmatio…
+     77|     const html = renderToStaticMarkup(createElement(AccountDeletion));
+     78|     expect(html).toContain('Удаление необратимо');
+       |                  ^
+     79|     expect(html).toContain('уже скачанные или опубликованные в чужих л…
+     80|     expect(html.indexOf('Удаление необратимо')).toBeLessThan(html.inde…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  05:05:54
+   Duration  919ms (transform 366ms, setup 0ms, collect 609ms, tests 29ms, environment 0ms, prepare 99ms)
+

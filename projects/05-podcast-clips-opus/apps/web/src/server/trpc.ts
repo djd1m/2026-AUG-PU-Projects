@@ -1,3 +1,4 @@
+import type { ErasureService } from './erasure';
 import type { InterestService } from './interest';
 import { initTRPC, TRPCError } from '@trpc/server';
 import { z, ZodError } from 'zod';
@@ -8,7 +9,7 @@ import type { ShortLinkService } from './short-link';
 import type { GuestPackService } from './guest-pack';
 import type { PartnerService } from './partner';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
+interface Context { erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -53,6 +54,16 @@ async function partnerResult<T>(ctx: Context, operation: (service: NonNullable<C
 }
 // Flat key preserves canonical HTTP code.apply; apply is reserved as a standalone router key.
 export const appRouter = t.router({
+  account: t.router({ delete: validatedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {
+    try {
+      if (!ctx.erasure) throw new Error('Erasure runtime unavailable');
+      return { data: await ctx.erasure.request(ctx.account, input), meta: { request_id: ctx.requestId } };
+    } catch (cause) {
+      const status = cause instanceof UploadError ? cause.status : 503;
+      throw new TRPCError({ code: status === 422 ? 'UNPROCESSABLE_CONTENT' : status === 409 ? 'CONFLICT' : status === 404 ? 'NOT_FOUND' : 'INTERNAL_SERVER_ERROR',
+        message: cause instanceof UploadError ? cause.message : 'Не удалось запросить удаление. Повторите позже', cause });
+    }
+  }) }),
   interest: t.router({ create: validatedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {
     try {
       if (!ctx.interest) throw new Error('Interest runtime unavailable');

@@ -1,0 +1,26 @@
+{
+  "requested_model": "gpt-6-astra",
+  "actual_model": null,
+  "effort": "high",
+  "independence": "separate read-only agent; same provider; not Anthropic acceptance",
+  "findings": [
+    {
+      "id": "RE-01",
+      "finding": "refused backlog limited to 100/hour",
+      "resolution": "drain up to 100 chunks/tick, backlog resumes next minute",
+      "verification": "PostgreSQL scenario written, blocked; source reviewed"
+    },
+    {
+      "id": "RE-02",
+      "finding": "done clips on stalled videos excluded",
+      "resolution": "include terminal failed videos",
+      "verification": "PostgreSQL scenario written, blocked"
+    },
+    {
+      "id": "RE-03",
+      "finding": "tombstone email collision",
+      "resolution": "non-email deleted:UUID inaccessible to registration",
+      "verification": "PostgreSQL collision scenario written, blocked"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+
+ RUN  v3.2.7 /tmp/n5-erasure-mutations-jxQuON
+
+ ❯ tests/retention.test.ts (8 tests | 1 failed | 7 skipped) 25ms
+   ↓ retention and erasure guards > confirmation required before state changes
+   × retention and erasure guards > revokes guests before any storage deletion and completion follows objects 23ms
+     → expected false to be true // Object.is equality
+   ↓ retention and erasure guards > storage failure preserves database rows for retry
+   ↓ retention and erasure guards > free clips older than three days are removed before row markers
+   ↓ retention and erasure guards > expired guest packs are revoked using existing fourteen-day expiry
+   ↓ retention and erasure guards > growth events survive clip deletion with SET NULL
+   ↓ retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation
+   ↓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > retention and erasure guards > revokes guests before any storage deletion and completion follows objects
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ Object.<anonymous> tests/retention.test.ts:39:86
+     37|     await new ErasureService(f.pool, () => now).request(account, { con…
+     38|     f.storage.erasePrefix.mockImplementation(async () => {
+     39|       expect(f.commands.some(s => s.startsWith('UPDATE guest_pack SET …
+       |                                                                                      ^
+     40|       expect(f.commands.some(s => s.startsWith('UPDATE account SET sta…
+     41|     });
+ ❯ Module.eraseAccount apps/web/src/server/retention.ts:8:17
+ ❯ tests/retention.test.ts:42:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  05:09:33
+   Duration  916ms (transform 356ms, setup 0ms, collect 527ms, tests 25ms, environment 0ms, prepare 101ms)
+

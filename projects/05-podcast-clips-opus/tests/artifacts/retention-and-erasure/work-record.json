@@ -1,0 +1,86 @@
+{
+  "tier": "XL",
+  "authorization": "User explicitly requests execution of implementation brief",
+  "scope": [
+    "account.delete confirmation, immediate revocation, durable erasing status",
+    "existing watchdog maintenance: S3 before DB; 1h quiescence; retries",
+    "RU-005 partial index and hourly cleanup",
+    "status via signed receipt on existing dashboard; no new routes",
+    "unit, integration MinIO HEAD, mutations and regression"
+  ],
+  "validation": [
+    "Existing status/deadline columns and SET NULL FKs reused",
+    "Revocation commits before storage cleanup",
+    "New migration only adds indexes",
+    "Anthropic review unavailable; not represented as completed"
+  ],
+  "preflight": {
+    "status": "blocked",
+    "reason": "Docker socket permission denied",
+    "e2e_claim": null
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null
+  },
+  "stage": "paused",
+  "source_snapshot": "ffbe8a27d988f95a8fd83c035874f22ab592c84d235f50a6ce1ef46230ab714b",
+  "delivery": null,
+  "blockers": [
+    "Docker socket access denied",
+    "Anthropic review timed out"
+  ],
+  "next_allowed_step": "On a permitted test host: port preflight, rebuilt compose test, retention mutation integration, Anthropic review",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/typecheck-2.txt"
+    },
+    {
+      "name": "test-types",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/test-types.txt"
+    },
+    {
+      "name": "lint",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/lint-final.txt"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/build.txt"
+    },
+    {
+      "name": "npm test",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/tests.txt"
+    },
+    {
+      "name": "retention focused",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/retention-final.txt"
+    },
+    {
+      "name": "env-wiring without env",
+      "exit_code": 2,
+      "evidence": "tests/artifacts/retention-and-erasure/env-wiring.txt"
+    },
+    {
+      "name": "env-wiring test env",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/retention-and-erasure/env-wiring-test-env.txt"
+    },
+    {
+      "name": "docker access",
+      "exit_code": 1,
+      "evidence": "tests/artifacts/retention-and-erasure/docker-access.txt"
+    },
+    {
+      "name": "Anthropic review",
+      "exit_code": 124,
+      "evidence": "tests/artifacts/retention-and-erasure/anthropic-review.json"
+    }
+  ]
+}

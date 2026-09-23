@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /tmp/n5-erasure-mutations-It0fJP
+
+ ❯ tests/retention.test.ts (8 tests | 1 failed | 7 skipped) 17ms
+   × retention and erasure guards > confirmation required before state changes 15ms
+     → promise resolved "{ accepted: true, …(1) }" instead of rejecting
+   ↓ retention and erasure guards > revokes guests before any storage deletion and completion follows objects
+   ↓ retention and erasure guards > storage failure preserves database rows for retry
+   ↓ retention and erasure guards > free clips older than three days are removed before row markers
+   ↓ retention and erasure guards > expired guest packs are revoked using existing fourteen-day expiry
+   ↓ retention and erasure guards > growth events survive clip deletion with SET NULL
+   ↓ retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation
+   ↓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > retention and erasure guards > confirmation required before state changes
+AssertionError: promise resolved "{ accepted: true, …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "accepted": true,
++   "erase_deadline": "2026-09-26T05:05:52.545Z",
+  }
+
+ ❯ tests/retention.test.ts:30:57
+     28|     const f = fixture(), service = new ErasureService(f.pool);
+     29|     for (const confirm of [false, undefined, 'true', 1, null]) {
+     30|       await expect(service.request(account, { confirm })).rejects.toMa…
+       |                                                         ^
+     31|     }
+     32|     expect(f.query).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  05:05:51
+   Duration  1.09s (transform 355ms, setup 0ms, collect 474ms, tests 17ms, environment 0ms, prepare 175ms)
+

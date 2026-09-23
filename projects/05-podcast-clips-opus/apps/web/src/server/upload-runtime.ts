@@ -1,3 +1,4 @@
+import { ErasureService } from './erasure';
 import { InterestService } from './interest';
 import { getQueueRuntime } from './queue-runtime';
 import * as s3 from '@clipmaker/s3';
@@ -19,7 +20,7 @@ function createUploadRuntime() {
     abort: (key, id) => s3.abortMultipartUpload(ctx, key, id), head: (key) => s3.headObject(ctx, key),
     bytes: (key) => s3.getObjectBytes(ctx, key, 'bytes=0-4095'), delete: (key) => s3.deleteObject(ctx, key),
   }, (videoId) => queueRuntime.enqueueInitial(videoId));
-  return { video, interest: new InterestService(runtime.pool), partners: new PartnerService(runtime.pool), guests: new GuestPackService(runtime.pool), links: new ShortLinkService(runtime.pool), screen: new ScreenService(runtime.pool), retry: queueRuntime.retry, auth: runtime.auth, publicOrigin: runtime.config.publicOrigin,
+  return { video, erasure: new ErasureService(runtime.pool), interest: new InterestService(runtime.pool), partners: new PartnerService(runtime.pool), guests: new GuestPackService(runtime.pool), links: new ShortLinkService(runtime.pool), screen: new ScreenService(runtime.pool), retry: queueRuntime.retry, auth: runtime.auth, publicOrigin: runtime.config.publicOrigin,
     trustedProxyHops: runtime.config.trustedProxyHops,
     allowMutation: (ip: string, account?: string) => allowMutation(runtime.redis, ip, runtime.config.sessionSecret, account) };
 }

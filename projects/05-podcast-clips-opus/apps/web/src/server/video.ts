@@ -36,6 +36,8 @@ export class VideoService {
     const body = parsed.data, now = this.clock();
     // Заявка и квота фиксируются до сети. upload_id=NULL — восстанавливаемая инициализация.
     const claimed = await transaction(this.pool, async (tx) => {
+      const active = await tx.query("SELECT id FROM account WHERE id=$1 AND status='active' FOR SHARE", [account]);
+      if (!active.rowCount) throw new UploadError('not_found', 'Аккаунт не найден', 404);
       const id = randomUUID();
       const ext = body.filename.split('.').pop()?.toLowerCase();
       const objectKey = `videos/${account}/${id}/source.${ext && ['mp4', 'mov', 'webm', 'm4a', 'mp3'].includes(ext) ? ext : 'bin'}`;
