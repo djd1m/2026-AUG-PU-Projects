@@ -59,7 +59,7 @@
 
 | Таблица | Ключевые поля |
 |---|---|
-| `account` | `id`, `email` (уникальный, нижний регистр), `password_hash`, `email_verified_at`, `plan`, `role`, `created_at` |
+| `account` | `id`, `email` (уникальный, нижний регистр), `password_hash`, `email_verified_at`, `plan`, `role`, `beta_at` (бета-автор из списка оператора, OWN-05A-016), `created_at` |
 | `email_token` | `id`, `account_id`, `purpose` (`verify` \| `reset`), `token_hash`, `expires_at`, `used_at`, `created_at` |
 | `refresh_token` | `id`, `account_id`, `token_hash`, `expires_at`, `revoked_at`, `created_at` |
 | `video` | `id`, `account_id`, `s3_key_source`, `size_bytes`, `duration_ms`, `container`, `s3_upload_id`, `rights_confirmed_at`, `source_deleted_at`, `deleted_at`, `created_at` |
@@ -95,7 +95,7 @@
 | `attribution.stage` | `signup`, `fakedoor` |
 | `attribution.source` | `cookie`, `code` |
 | `spend_ledger.outcome` | `ok`, `provider_error`, `timeout`, `schema_invalid` |
-| `quota_counter.kind` | `stt_sec`, `uploads`, `llm_kop`, `llm_attempts`; для `scope = global` `scope_id` = нулевой UUID |
+| `quota_counter.kind` | `stt_sec`, `stt_sec_newbie` (общий пул новичков, `scope = global`), `uploads`, `llm_kop`, `llm_attempts`; для `scope = global` `scope_id` = нулевой UUID |
 | `landing_visited.props.source` | `direct`, `partner`, `clip_link`, `other` |
 | `STT_PROVIDER` | `openrouter`, `openai` |
 | `PAYMENTS_MODE` | `fake`, `live` |
@@ -128,6 +128,8 @@
 | `LLM_MODEL` | worker-ai | без дефолта | `anthropic/claude-sonnet-5` |
 | `FX_USD_RUB_KOP` | worker-ai | без дефолта | копеек за доллар, например `8600` |
 | `LIMIT_STT_USER_SEC_DAY` | web, worker-ai | без дефолта | `7200` |
+| `LIMIT_STT_NEWBIE_SEC_DAY` | web, worker-ai | без дефолта | `1800` — аккаунт младше 24 ч без `beta_at` (OWN-05A-016) |
+| `LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY` | web, worker-ai | без дефолта | `45000` — все новички вместе, половина `LIMIT_STT_GLOBAL_SEC_DAY` |
 | `LIMIT_UPLOADS_USER_DAY` | web | без дефолта | `3` |
 | `LIMIT_LLM_USER_KOP_DAY` | web, worker-ai | без дефолта | `5000` (OWN-05A-012) |
 | `LIMIT_STT_GLOBAL_SEC_DAY` | web, worker-ai | без дефолта | `90000` |
@@ -146,7 +148,7 @@
 | `MINIO_TAG` | compose (тестовый профиль) | без дефолта | явный тег образа MinIO |
 | `RENDER_CPUS` | compose | дефолт `2` разрешён | лимит CPU контейнера `worker-render` |
 
-Всего 7 потолков: LIMIT_STT_USER_SEC_DAY, LIMIT_UPLOADS_USER_DAY, LIMIT_LLM_USER_KOP_DAY, LIMIT_STT_GLOBAL_SEC_DAY, LIMIT_LLM_GLOBAL_KOP_DAY, LIMIT_LLM_ATTEMPTS_JOB, LIMIT_LLM_KOP_JOB.
+Всего 9 потолков: LIMIT_STT_USER_SEC_DAY, LIMIT_STT_NEWBIE_SEC_DAY, LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY, LIMIT_UPLOADS_USER_DAY, LIMIT_LLM_USER_KOP_DAY, LIMIT_STT_GLOBAL_SEC_DAY, LIMIT_LLM_GLOBAL_KOP_DAY, LIMIT_LLM_ATTEMPTS_JOB, LIMIT_LLM_KOP_JOB.
 
 ## 7. Маршруты
 
@@ -179,7 +181,7 @@
 | `GET /admin/metrics?from=<YYYY-MM-DD>` | роль `operator` | метрики недели |
 | `GET /admin/users` | роль `operator` | смена плана с причиной; сброс пароля пользователя (одноразовая ссылка на почту) |
 
-Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`, `ops stt-probe <файл>` (проба STT дня 1, ADR-001; запускается и с хоста без стека: `node apps/worker/dist/cli/ops.js stt-probe <файл>`); в первой неделе (OWN-05A-014) также `ops partner-add <имя> [код]` и `ops spend-today` — до появления `/admin/partners` и `/admin/spend` во второй очереди. Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
+Оператор работает на страницах `/admin/*` (FR-clips-11); роль `operator` проверяется и в middleware, и в каждом серверном обработчике. CLI `ops` внутри `worker-ai` (`docker compose exec worker-ai ops …`) остаётся только для выдачи роли: `ops grant-operator <email>`, `ops stt-probe <файл>` (проба STT дня 1, ADR-001; запускается и с хоста без стека: `node apps/worker/dist/cli/ops.js stt-probe <файл>`); в первой неделе (OWN-05A-014) также `ops partner-add <имя> [код]`, `ops spend-today` и `ops beta-add <email>` (отметка бета-автора, OWN-05A-016) — до появления `/admin/partners` и `/admin/spend` во второй очереди. Cookie сессии посетителя — `sid` (дедупликация `clip_link_visited`).
 
 Сессия: access-JWT и refresh — только в cookie `httpOnly; Secure; SameSite=Lax; Path=/`; заголовок `Authorization: Bearer`
 не используется. Мутирующие запросы (`POST`/`DELETE`) проверяют `Origin` = `BASE_URL` (CSRF). Серверный рендер `/admin/*`
