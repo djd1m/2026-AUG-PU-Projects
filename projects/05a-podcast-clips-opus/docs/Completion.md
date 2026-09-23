@@ -81,6 +81,9 @@ web:                                    # только тестовый проф
 - `migrate` — одноразовый сервис, остальные ждут `condition: service_completed_successfully`
   (canon §1); зависимости с healthcheck — `condition: service_healthy` (compose-hygiene правило
   №3).
+- `web` несёт `GET /api/health` — внутренний маршрут (canon §7), `200` только при доступных
+  Postgres и Redis, без пользовательских данных; это и есть healthcheck сервиса `web` в
+  `docker-compose.yml`, не отдельный ping без проверки зависимостей.
 
 ### 2.4 Секреты и переменные — полный список без дефолта
 
@@ -164,8 +167,9 @@ bash scripts/check-cjm.sh https://clipmkr.ru
    расшифровка 2 мин с разметкой спикеров (ADR-001 п.4).
 2. Прогнать через тот же маршрут OpenRouter, что пойдёт в бой (тот же ключ, тот же адрес
    `https://openrouter.ai/api/v1`), с сервера в Нидерландах — не с машины разработки (ADR-003
-   «Как проверить»): кандидаты — `assemblyai/universal-3-5-pro`, `deepgram/nova-3`,
-   `microsoft/mai-transcribe-2` (ADR-001, таблица кандидатов).
+   «Как проверить»): все 5 кандидатов ADR-001 — `assemblyai/universal-3-5-pro`,
+   `deepgram/nova-3`, `microsoft/mai-transcribe-2`, `meta/muse-voice-transcribe-1.0`,
+   `x-ai/grok-stt-1.0` (ADR-001, таблица кандидатов).
 3. Резать по правилу ADR-002 (~90 с, пауза `silencedetect`, перекрытие 5 с) — тот же код, что
    пойдёт в конвейер, не отдельный скрипт пробы.
 4. Оценить каждого кандидата по 7 критериям ADR-001 (таблица в разделе «Проба дня 1»): наличие

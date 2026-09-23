@@ -6,6 +6,10 @@
 `.reference/jan-clone@cc6ac59`. Имена сервисов, таблиц, очередей, переменных и событий — только из канона.
 Диаграммы C4 — в [`C4_Diagrams.md`](C4_Diagrams.md).
 
+**Объём первой недели (OWN-05A-014):** ядро — загрузка → клипы со знаком → скачать/поделиться → paste-back;
+`/admin/publications`, `/admin/metrics`. Помечено «2-я очередь» ниже: сброс пароля, `/admin/partners` (на неделе —
+`ops partner-add`), `/admin/spend` (на неделе — `ops spend-today`), fake-door и `/plans`.
+
 ## Architecture Overview
 
 **Стиль:** распределённый монолит в монорепо (Distributed Monolith). Один репозиторий, один образ, пять
@@ -55,13 +59,13 @@ flowchart LR
 | Компонент | Процесс | Отвечает за | Не делает |
 |---|---|---|---|
 | Edge | `caddy` | TLS для `clipmkr.ru` (ACME), проксирование на `web:3000`, лимит размера тела 1 МБ на `/api/*` | не видит видео: байты идут в S3 мимо него |
-| Web UI | `web` | лендинг, `/plans`, fake-door, экраны задачи и клипов, `/admin/*` оператора | не зовёт модели, не запускает ffmpeg |
+| Web UI | `web` | лендинг, экраны задачи и клипов, `/admin/publications`, `/admin/metrics`, `/admin/users`; 2-я очередь — `/plans`, fake-door, `/admin/partners`, `/admin/spend` | не зовёт модели, не запускает ffmpeg |
 | Web API | `web` | вход, `POST /api/videos` (multipart-ссылки), `…/complete` → `202 {job_id}`, состояние задачи, события (включая `caption-copied`), paste-back, `/p/…`, `/c/…` | не держит соединение БД во время чтения тела запроса |
 | Pipeline orchestration | `worker-ai` | нарезка аудио на куски, STT через `Transcriber`, сшивка спикеров, выбор фрагментов через `SelectionModel`, постановка рендеров, heartbeat задачи | не рендерит видео |
 | Render | `worker-render` | ffmpeg: чёрные поля, ASS-субтитры, знак, превью; загрузка клипа в S3 | не имеет ключей моделей |
 | Quota & spend | библиотека в `worker-ai` и `web` | атомарный резерв в `quota_counter`, факт в `spend_ledger` | не решает «пропустить» при недоступной БД — это отказ |
 | Migrations | `migrate` | `prisma migrate deploy` до старта остальных | — |
-| Ops | `/admin/*` в `web`, роль `operator` | партнёры, проверка публикаций, расход, метрики, смена плана; каждое изменение — в `audit_log` | роль не выдаётся через интерфейс: только `docker compose exec worker-ai ops grant-operator <email>` |
+| Ops | `/admin/*` в `web`, роль `operator`; CLI `ops` в `worker-ai` | неделя: проверка публикаций и метрики в `/admin/*`, партнёры — `ops partner-add`, расход — `ops spend-today`; 2-я очередь: `/admin/partners`, `/admin/spend`; каждое изменение — в `audit_log` | роль не выдаётся через интерфейс: только `docker compose exec worker-ai ops grant-operator <email>` |
 
 ## Technology Stack
 
@@ -120,128 +124,10 @@ OpenRouter прошла пробу → строка CONFIRMED с цитатой 
 postgres, redis, minio. Профиль `prod` — VPS в Нидерландах; профиль `test` — машина разработки (здесь заняты 80, 443,
 3002, 5480, 8080, 8081, 8088, 11000, 11001, 11379, 11432, поэтому `caddy` здесь не стартует).
 
-```yaml
-name: clipmkr
-# `${VAR:?}` — без дефолта (compose не соберёт конфиг); `${VAR?}` — объявить обязательно, пусто можно;
-# `${VAR:-x}` — дефолт разрешён каноном §6.
-x-db: &db-env { DATABASE_URL: "${DATABASE_URL:?}" }
-x-redis: &redis-env { REDIS_URL: "${REDIS_URL:?}", REDIS_PASSWORD: "${REDIS_PASSWORD:?}" }
-x-s3: &s3-env { S3_ENDPOINT: "${S3_ENDPOINT:?}", S3_REGION: "${S3_REGION:?}", S3_BUCKET: "${S3_BUCKET:?}",
-                S3_ACCESS_KEY: "${S3_ACCESS_KEY:?}", S3_SECRET_KEY: "${S3_SECRET_KEY:?}", S3_TENANT_ID: "${S3_TENANT_ID?}" }
-x-limits: &limits-env { LIMIT_STT_USER_SEC_DAY: "${LIMIT_STT_USER_SEC_DAY:?}", LIMIT_LLM_USER_KOP_DAY: "${LIMIT_LLM_USER_KOP_DAY:?}",
-                        LIMIT_STT_GLOBAL_SEC_DAY: "${LIMIT_STT_GLOBAL_SEC_DAY:?}", LIMIT_LLM_GLOBAL_KOP_DAY: "${LIMIT_LLM_GLOBAL_KOP_DAY:?}",
-                        LOG_LEVEL: "${LOG_LEVEL:-info}" }
-x-app: &app
-  build: { context: ., dockerfile: Dockerfile }            # контекст — корень монорепо
-  image: clipmkr/app:${APP_VERSION:?}
-  restart: unless-stopped
-  depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_healthy },
-                migrate: { condition: service_completed_successfully } }
-services:
-  caddy:
-    image: caddy:2.8-alpine
-    profiles: [prod]
-    restart: unless-stopped
-    mem_limit: 256m
-    ports: ["${CADDY_HTTP_PORT:-80}:80", "${CADDY_HTTPS_PORT:-443}:443"]
-    volumes: [./deploy/Caddyfile:/etc/caddy/Caddyfile:ro, caddy_data:/data, caddy_config:/config]  # без тома /data — повторный выпуск сертификата
-    depends_on: { web: { condition: service_healthy } }
-  web:
-    <<: *app
-    profiles: [prod, test]
-    command: ["web"]
-    mem_limit: 1g
-    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]            # только петля: снаружи обойти caddy нельзя
-    environment:
-      <<: [*db-env, *redis-env, *s3-env, *limits-env]
-      BASE_URL: ${BASE_URL:?}
-      BRAND_NAME: ${BRAND_NAME:?}
-      JWT_SECRET: ${JWT_SECRET:?}
-      SMTP_URL: ${SMTP_URL:?}
-      MAIL_FROM: ${MAIL_FROM:?}
-      LIMIT_UPLOADS_USER_DAY: ${LIMIT_UPLOADS_USER_DAY:?}
-      PAYMENTS_MODE: ${PAYMENTS_MODE:?}
-      PAYMENTS_PROVIDER: ${PAYMENTS_PROVIDER:-}            # три PAYMENTS_* обязательны только при live — проверяет @clipmkr/config
-      PAYMENTS_SHOP_ID: ${PAYMENTS_SHOP_ID:-}
-      PAYMENTS_SECRET_KEY: ${PAYMENTS_SECRET_KEY:-}
-    healthcheck: { test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"], interval: 10s, retries: 6 }
-  migrate:
-    <<: *app
-    profiles: [prod, test]
-    command: ["migrate"]
-    restart: "no"
-    mem_limit: 512m
-    environment: { <<: [*db-env, *s3-env], BASE_URL: "${BASE_URL:?}" }
-    depends_on: { postgres: { condition: service_healthy } }
-  worker-ai:
-    <<: *app
-    profiles: [prod, test]
-    command: ["worker-ai"]
-    stop_grace_period: 60s
-    mem_limit: 1g
-    environment:
-      <<: [*db-env, *redis-env, *s3-env, *limits-env]
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?}          # только здесь
-      STT_PROVIDER: ${STT_PROVIDER:?}
-      STT_MODEL: ${STT_MODEL:?}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}                  # обязателен только при STT_PROVIDER=openai
-      LLM_MODEL: ${LLM_MODEL:?}
-      FX_USD_RUB_KOP: ${FX_USD_RUB_KOP:?}
-      LIMIT_LLM_ATTEMPTS_JOB: ${LIMIT_LLM_ATTEMPTS_JOB:?}
-      LIMIT_LLM_KOP_JOB: ${LIMIT_LLM_KOP_JOB:?}
-  worker-render:
-    <<: *app
-    profiles: [prod, test]
-    command: ["worker-render"]
-    stop_grace_period: 60s
-    cpus: "${RENDER_CPUS:-2}"
-    mem_limit: 3g
-    environment:
-      <<: [*db-env, *redis-env, *s3-env]
-      BASE_URL: ${BASE_URL:?}
-      WATERMARK_TEXT: ${WATERMARK_TEXT:?}
-      RENDER_CONCURRENCY: ${RENDER_CONCURRENCY:-1}
-      LOG_LEVEL: ${LOG_LEVEL:-info}
-  postgres:                                                # ports: НЕТ — правило №0 docker-ports
-    image: postgres:16-alpine
-    restart: unless-stopped
-    mem_limit: 1g
-    environment: { POSTGRES_USER: "${POSTGRES_USER:?}", POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}",
-                   POSTGRES_DB: "${POSTGRES_DB:?}" }       # [правка канона запрошена]; пароль случайный
-    volumes: [pgdata:/var/lib/postgresql/data]
-    healthcheck: { test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"], interval: 5s, retries: 10 }
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    mem_limit: 512m
-    environment: { REDIS_PASSWORD: "${REDIS_PASSWORD:?}" }  # нужен healthcheck внутри контейнера
-    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?}", "--maxmemory", "384mb",
-              "--maxmemory-policy", "noeviction", "--appendonly", "yes"]   # BullMQ требует noeviction
-    volumes: [redisdata:/data]
-    healthcheck: { test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping"], interval: 5s, retries: 10 }
-  minio:
-    image: minio/minio:${MINIO_TAG:?}
-    profiles: [test]
-    restart: unless-stopped
-    mem_limit: 512m
-    command: ["server", "/data"]
-    environment: { MINIO_ROOT_USER: "${MINIO_ROOT_USER:?}", MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?}" }  # [правка канона запрошена]
-    volumes: [minio_data:/data]
-    healthcheck: { test: ["CMD", "mc", "ready", "local"], interval: 5s, retries: 10 }
-volumes: { pgdata: {}, redisdata: {}, caddy_data: {}, caddy_config: {}, minio_data: {} }
-```
+Запускаемый эскиз `docker-compose.yml` и `deploy/Caddyfile` — в [`Architecture-compose.md`](Architecture-compose.md)
+(разрез файла, объявлен в `dispatch-plan.md`). Главное из него: у хранилищ нет `ports:`, `web` привязан к
+`127.0.0.1`, у каждого сервиса `environment:` по канону §6 и `mem_limit`, у хранилищ и `caddy` — именованные тома.
 
-`deploy/Caddyfile` (домен в файле, а не в переменной: это конфигурация, прошедшая ревью):
-
-```text
-clipmkr.ru {
-	encode gzip
-	request_body /api/* {
-		max_size 1MB
-	}
-	reverse_proxy web:3000
-}
-```
 
 Сумма `mem_limit` в prod — 6,75 ГБ при 8 ГБ VPS: OOM-killer хоста не доходит до `postgres` (VA-23). Исходник больше
 3840×2160 отвергается на подготовке (`file_invalid`), ffmpeg рендера декодирует с `-threads 2`.
@@ -362,6 +248,7 @@ sequenceDiagram
   W->>Q: add stt {job_id}.stt.prepare
   W-->>B: 202 {job_id}
   AI->>S3: скачать исходник один раз; перепроверка magic bytes; ffprobe (≤ 120 мин, ≤ 3840×2160)
+  AI->>PG: допуск: остаток LLM автора и сервиса ≥ LIMIT_LLM_KOP_JOB (OWN-05A-012), иначе failed/quota_* до STT
   AI->>PG: резерв quota_counter STT на секунды всего видео (атомарно), иначе failed/quota_*
   loop кусок 60–120 с, пропуская done
     AI->>PG: spend_ledger попытка; повтор куска резервирует его секунды дополнительно
@@ -440,7 +327,7 @@ refresh. **Транспорт** (канон §7, VT-04): оба токена —
 **Оплата (v1, образец проекта 04).** Интерфейс `PaymentProvider` в `@clipmkr/payments` с
 `FakePaymentProvider` (по умолчанию), `YooKassaProvider`, `CloudPaymentsProvider`; включён один
 (`PAYMENTS_PROVIDER`), режим `PAYMENTS_MODE=fake|live` без дефолта. На неделе маршрутов оплаты и вебхуков нет;
-fake-door пишет только событие и атрибуцию (ADR-013).
+fake-door (2-я очередь, OWN-05A-014) пишет только событие и атрибуцию (ADR-013).
 
 ## Scalability Considerations
 
@@ -470,7 +357,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 | `packages/config/src/env.ts`, `llm-providers.ts` | ПЕРЕПИСАТЬ | проверка канона §6 без дефолтов; таблица провайдеров не нужна |
 | `packages/types/src/*` | ПЕРЕПИСАТЬ | закрытые списки канона §5 |
 | `packages/crypto/*` | НЕ БРАТЬ | BYOK вне недели |
-| `apps/worker/lib/ffmpeg.ts` | ДОРАБОТАТЬ | `pad` на y = 420 вместо центра; знак сверху слева на плашке; `WATERMARK_TEXT` из конфигурации; таймаут; экранирование и `execFile` сохранить |
+| `apps/worker/lib/ffmpeg.ts` | ДОРАБОТАТЬ | `pad` на y = 420 вместо центра; знак — полупрозрачный в левом верхнем углу полосы видео (x = 24, y = 444 для 16:9; OWN-05A-013), не на чёрном поле; `WATERMARK_TEXT` из конфигурации; таймаут; экранирование и `execFile` сохранить |
 | `apps/worker/workers/video-render.ts` | ДОРАБОТАТЬ | `watermark = plan !== 'paid'` из БД; `clip.render_status`; завершение задачи при последнем клипе |
 | `apps/worker/workers/stt.ts` | ПЕРЕПИСАТЬ | куски 60–120 с по паузе, `Transcriber`, `transcript_chunk`, резерв по попыткам; инфраструктура (`ffprobe`, WAV, `p-map`) как справка |
 | `apps/worker/lib/audio-chunker.ts` | ПЕРЕПИСАТЬ | рез в паузе (`silencedetect`), перекрытие, смещения в мс |
@@ -490,7 +377,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 | `apps/web/lib/auth/email.ts` | ДОРАБОТАТЬ | в prod без SMTP — отказ старта, а не Ethereal |
 | `apps/web/lib/auth/{options,vk-provider}.ts`, `app/api/auth/[...nextauth]`, `session-bridge`, `app/api/oauth/*` | НЕ БРАТЬ | NextAuth и VK OAuth не нужны |
 | `apps/web/app/api/auth/{login,logout,verify-email}/route.ts` | ДОРАБОТАТЬ | маршруты канона §7; токен подтверждения хэшем, 24 ч |
-| `apps/web/app/api/auth/{reset-password,new-password}/route.ts` | НЕ БРАТЬ | сброс делает оператор |
+| `apps/web/app/api/auth/{reset-password,new-password}/route.ts` | НЕ БРАТЬ (справка для 2-й очереди) | сброс пароля — 2-я очередь, ссылка из `/admin/users` (OWN-05A-014) |
 | `apps/web/app/api/upload/route.ts` | ПЕРЕПИСАТЬ | байты не идут через `web`; выдача ссылок на части |
 | `apps/web/app/api/clips/[clipId]/file/route.ts` | ДОРАБОТАТЬ | подписанная ссылка 15 мин вместо стрима через `web`; владение из сессии |
 | `apps/web/app/api/webhooks/yookassa/route.ts`, `lib/yookassa.ts`, `lib/trpc/routers/billing.ts` | НЕ БРАТЬ (справка для v1) | вебхуков на неделе нет |
@@ -515,6 +402,7 @@ fake-door пишет только событие и атрибуцию (ADR-013)
 | `clip.hook_score`, `.completeness_score`, `.length_score`, `.total_score` | целые; длину и итог считает код | смена типа |
 | `clip.render_status`, `.watermarked`, `.speaker_labels_shown` | 4 состояния рендера; знак по `plan !== 'paid'` | несовпадение набора значений |
 | `quota_counter.used` | атомарный условный резерв, без «прочитать, затем записать» | — (алгоритм) |
+| допуск задачи | до резерва STT проверить остаток LLM автора и сервиса ≥ `LIMIT_LLM_KOP_JOB` (OWN-05A-012) | отсутствующий алгоритм |
 | `spend_ledger.units_reserved`, `.units_actual`, `.cost_kop`, `.cost_usd_micro`, `.outcome` | резерв до вызова, факт после; таймаут не возвращает резерв | отсутствующая колонка |
 | `account.email_verified_at`, `account.plan`, `account.role` | `403` без подтверждения; `plan` и `role` fail-closed (2 значения каждый) | смена типа / несовпадение набора значений |
 | `publication.status`, `.url_normalized` | 4 статуса; уникальность нормализованной ссылки | несовпадение набора значений |

@@ -143,4 +143,31 @@ exit=0
 - Architecture.md — 536 строк, это больше предела в 500 строк из CLAUDE.md. Уменьшить можно, если вынести эскиз compose в отдельный файл
   (решение координатора: файл вне моего владения).
 
+
+## Итерация исправлений 1, дополнение: решения владельца OWN-05A-012…014
+
+| Решение | Что изменено |
+|---|---|
+| OWN-05A-012 | ADR-006: LLM 2 400 коп. на задачу, 5 000 коп. на автора в сутки, 30 000 коп. на сервис; новый пункт — выполнимость LLM проверяется при допуске STT (остаток автора и сервиса ≥ `LIMIT_LLM_KOP_JOB`, иначе `quota_*` до оплаты STT); названо следствие 3 × 24 ₽ > 50 ₽; тест на допуск. ADR-005 п. 6 → 24 ₽. Architecture: шаг допуска в sequence-диаграмме и в чек-листе Reconciliation; C4 — компонент Quota. |
+| OWN-05A-013 | ADR-009/ADR-010: знак полупрозрачный в левом верхнем углу полосы видео (x = 24, y = 444 для 16:9; для вертикального исходника y не выше 200), не на чёрном поле; проверка — OCR после обрезки до полосы 1080×608. Architecture: reuse map `ffmpeg.ts`; C4 — FFmpeg runner. Позиция и прозрачность — `[ПРЕДЛОЖЕНИЕ]`. |
+| OWN-05A-014 | ADR и Architecture: абзац «Объём первой недели»; сброс пароля, fake-door, `/plans`, `/admin/partners`, `/admin/spend` — 2-я очередь; на неделе `ops partner-add` и `ops spend-today` (ADR-006 п. 4, ADR-011, ADR-013 п. 1, ADR-015 п. 3; Architecture — Web UI, Ops, Security/оплата, reuse map; C4 — связь оператора). |
+
+Проверки после правок:
+```
+✅ инвентарь на месте: 17 способност(ей), у каждой вердикт из закрытой тройки (16 CONFIRMED, 1 UNCONFIRMED)
+exit=0
+⚠️  проверка НЕ выполнена: в таблице единиц повторяются строки: docs/architecture-compose.md
+exit=2
+```
+(Строка про 543 строки устарела — см. раздел «Разрез» ниже.)
+
+
+## Разрез Architecture.md (объявлен координатором в dispatch-plan.md)
+- Эскиз `docker-compose.yml` и `deploy/Caddyfile` перенесены в `docs/Architecture-compose.md` (131 строка); в Architecture.md
+  вместо них ссылка и три главных свойства. Architecture.md теперь 425 строк (предел 500 соблюдён).
+- Повторная проверка эскиза из нового файла: `docker compose … config -q` → 0; `COMPOSE_PROFILES=prod,test check-ports.cjs` → 0.
+- Первый прогон check-canon в этом раунде дал exit 2 «в таблице единиц повторяются строки: docs/architecture-compose.md»
+  (промежуточное состояние dispatch-plan.md у координатора); повторный прогон — exit 0, 28 единиц.
+- check-external-deps → 0 (16 CONFIRMED, 1 UNCONFIRMED — подписи спикеров).
+
 Status: completed
