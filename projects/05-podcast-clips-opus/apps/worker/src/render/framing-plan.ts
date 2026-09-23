@@ -40,9 +40,27 @@ export const FACE_SHARE_OF_WINDOW = 0.34;
  * за ведущее, окно уехало вправо, и правило «не переключаться чаще полутора секунд» продержало
  * его там ровно до 1,5 с.
  *
- * Порог 0,06 разделяет измеренные величины втрое надёжнее середины между ними.
+ * ПОСТОЯННОЕ ЧИСЛО ЗДЕСЬ НЕВЕРНО, и это выяснилось на следующем же прогоне. Порог 0,06 отсёк не
+ * только фон: на ОБЩЕМ плане, где видны оба участника, лицо каждого законно занимает 5–8 % кадра.
+ * Такие замеры стали читаться как «лица нет», кадр переставал переключаться, и владелец сказал
+ * прямо: «а теперь нет переключения на того, кто говорит». Число планов упало с 4–10 до 1–4.
+ *
+ * Сравнивать надо не с постоянной величиной, а с ТИПИЧНЫМ размером лица в этом же клипе: ложное
+ * срабатывание втрое мельче обычного (0,04 против 0,13), а участник на общем плане — лишь вдвое.
+ * Доля от медианы устойчива к тому, как снята конкретная запись, а постоянное число — нет.
  */
-export const MIN_FACE_WIDTH = 0.06;
+export const MIN_FACE_SHARE_OF_MEDIAN = 0.4;
+/** Нижняя граница на случай, когда в клипе вообще нет крупных планов: ниже этого — шум детектора. */
+export const MIN_FACE_WIDTH = 0.03;
+
+/** Порог размера для КОНКРЕТНОГО клипа: доля от медианы найденных лиц, но не ниже абсолютной. */
+export function faceSizeThreshold(samples: FaceSample[]): number {
+  const widths = samples.flatMap(s => s.faces).map(f => f.w).sort((a, b) => a - b);
+  if (!widths.length) return MIN_FACE_WIDTH;
+  const mid = Math.floor(widths.length / 2);
+  const med = widths.length % 2 ? widths[mid]! : (widths[mid - 1]! + widths[mid]!) / 2;
+  return Math.max(MIN_FACE_WIDTH, med * MIN_FACE_SHARE_OF_MEDIAN);
+}
 
 export interface FramingPlan {
   mode: 'dual' | 'single' | 'center';
@@ -63,7 +81,8 @@ const median = (values: number[]): number => {
  * Группировка простая — по медиане: сложнее не нужно, участников в подкасте двое.
  */
 function cluster(samples: FaceSample[]): { x: number; y: number; presence: number }[] {
-  const all = samples.flatMap(s => s.faces).filter(f => f.w >= MIN_FACE_WIDTH);
+  const limit = faceSizeThreshold(samples);
+  const all = samples.flatMap(s => s.faces).filter(f => f.w >= limit);
   if (!all.length) return [];
   const split = median(all.map(f => f.cx));
   const left = all.filter(f => f.cx <= split), right = all.filter(f => f.cx > split);
@@ -153,7 +172,8 @@ export function planFollow(report: FaceReport, source: SourceDimensions, windowS
 
   // Безопасное положение на случай, когда лица не видно: медиана всех найденных за клип.
   // Это НЕ середина кадра: середина в подкасте и есть та самая стена между участниками.
-  const seen = report.samples.flatMap(s => s.faces).filter(f => f.w >= MIN_FACE_WIDTH);
+  const limit = faceSizeThreshold(report.samples);
+  const seen = report.samples.flatMap(s => s.faces).filter(f => f.w >= limit);
   const safe = seen.length
     ? { x: Math.min(1, Math.max(0, (median(seen.map(f => f.cx)) * source.width - windowSize.width / 2) / travelX)),
         y: Math.min(1, Math.max(0, (median(seen.map(f => f.cy)) * source.height - windowSize.height * FACE_SHARE_OF_WINDOW) / travelY)) }
@@ -164,7 +184,7 @@ export function planFollow(report: FaceReport, source: SourceDimensions, windowS
     const from = Math.max(0, sample.t - clipStart);
     const last = segments[segments.length - 1];
     // Ведущее лицо — самое крупное: ближний план важнее случайно попавшего в кадр затылка.
-    const lead = sample.faces.filter(f => f.w >= MIN_FACE_WIDTH).reduce<DetectedFace | null>(
+    const lead = sample.faces.filter(f => f.w >= limit).reduce<DetectedFace | null>(
       (best, f) => (!best || f.w * f.h > best.w * best.h ? f : best), null);
 
     if (!lead) {
