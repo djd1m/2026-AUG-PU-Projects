@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260922T224807Z-guest-pack",
+    "work_unit_id": "guest-pack",
+    "current_attempt_id": "verification-2"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "tests/artifacts/guest-pack/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "tests/artifacts/guest-pack/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "90bc71d1a9e390e47af46f3c42b39d7bc896c784",
+    "current_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+    "build_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/guest-pack/00_brief_codex.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+      "observed_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "sha256:32360cf42c4f68e8e6607df2be6bc1a7ea85fc15f5aa68517d016e79d072abe4",
+    "scope": [
+      "guest.create/send/revoke",
+      "canonical guest page",
+      "revocable guest file authorization",
+      "guest_sent/guest_opened and six mutation guards"
+    ],
+    "exclusions": [
+      "partner codes and attribution feature10",
+      "limits UI feature11",
+      "account deletion feature12",
+      "deployment"
+    ],
+    "action_limits": [
+      "Only this project; no applied migration or canon edits",
+      "User restricts docs changes to 07 report, telemetry stored under tests/artifacts",
+      "No Docker access escalation possible"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "consent",
+        "required": true
+      },
+      {
+        "id": "revoked-file",
+        "required": true
+      },
+      {
+        "id": "same-404",
+        "required": true
+      },
+      {
+        "id": "two-paths",
+        "required": true
+      },
+      {
+        "id": "guest-opened-index",
+        "required": true
+      },
+      {
+        "id": "noindex",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/web/src/server/short-link-handler.ts"
+          }
+        },
+        "provenance": "90bc71d1a9e390e47af46f3c42b39d7bc896c784",
+        "useful_fragment": "Session, IP prefix, response and rate limit handling",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Guest page needs noindex and revocation"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "packages/db/migrations/001_init.sql"
+          }
+        },
+        "provenance": "90bc71d1a9e390e47af46f3c42b39d7bc896c784",
+        "useful_fragment": "Existing guest tables and partial unique event index",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Only new nullable partner reference migration; no duplicate schema"
+      },
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/web/src/server/clip-file.ts"
+          }
+        },
+        "provenance": "90bc71d1a9e390e47af46f3c42b39d7bc896c784",
+        "useful_fragment": "Owner authorization and S3 signing",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Extend with second path and signed same-route streaming"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable measured runs or forecast requested; numbers unavailable",
+      "scope_revision": "sha256:32360cf42c4f68e8e6607df2be6bc1a7ea85fc15f5aa68517d016e79d072abe4",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:32360cf42c4f68e8e6607df2be6bc1a7ea85fc15f5aa68517d016e79d072abe4",
+      "tier": "XL",
+      "rationale": "Consent legal boundary and new guest access path; mechanical L is only lower bound; detailed user brief authorizes implementation",
+      "script": {
+        "input": "apps/web/src/server/guest-pack.ts apps/web/src/server/clip-file.ts packages/db/migrations/010_guest_pack.sql",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "sha256:32360cf42c4f68e8e6607df2be6bc1a7ea85fc15f5aa68517d016e79d072abe4",
+      "tier": "XL",
+      "rationale": "Consent legal boundary and new guest access path; mechanical L is only lower bound; detailed user brief authorizes implementation",
+      "script": {
+        "input": "apps/web/src/server/guest-pack.ts apps/web/src/server/clip-file.ts packages/db/migrations/010_guest_pack.sql",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly instructed execution of detailed XL Codex implementation brief; no deployment or extra external action is requested",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "blocked",
+    "reason": "Docker socket permission denied; live integration environment unavailable; no E2E run claimed",
+    "source_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+    "build_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+    "environment": "Codex sandbox, local Node; PostgreSQL16/Redis7/MinIO compose inaccessible",
+    "environment_available": false,
+    "test_command": "docker compose --project-directory . --profile test run --rm --build test",
+    "inputs": [
+      {
+        "name": "Docker daemon and test service credentials",
+        "available": false
+      }
+    ],
+    "expected_effects": [
+      "Isolated *_test database schemas and temporary MinIO objects"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/guest-pack"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "failed"
+    },
+    {
+      "id": "verification-2",
+      "status": "paused"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "guest-pack",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/web/src/server/guest-pack.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/clip-file.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260922T224807Z-guest-pack",
+    "work_unit_id": "guest-pack",
+    "source_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+    "blockers": [
+      "PostgreSQL/MinIO guards and three mutation pairs unexecuted",
+      "Anthropic review timed out"
+    ],
+    "approval_ids": [],
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Direct user brief provides no native checkpoint; preserve working tree, source manifest and logs"
+    },
+    "next_allowed_step": "Run integration and mutation suite with the existing test compose environment; obtain independent Anthropic review; fix concrete findings"
+  },
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

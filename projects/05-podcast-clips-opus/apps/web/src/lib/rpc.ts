@@ -1,4 +1,4 @@
-type RpcMethod = 'video.get' | 'video.list' | 'clip.list' | 'video.create' | 'video.retry' | 'clip.markDownloaded' | 'link.create';
+type RpcMethod = 'video.get' | 'video.list' | 'clip.list' | 'video.create' | 'video.retry' | 'clip.markDownloaded' | 'link.create' | 'guest.create' | 'guest.send' | 'guest.revoke';
 export async function rpc<T>(method: RpcMethod, input: object, mutation = false, key?: string, signal?: AbortSignal): Promise<T> {
   const url = `/api/trpc/${method}${mutation ? '' : `?input=${encodeURIComponent(JSON.stringify(input))}`}`;
   const deadline = AbortSignal.timeout(mutation ? 360000 : 4500);

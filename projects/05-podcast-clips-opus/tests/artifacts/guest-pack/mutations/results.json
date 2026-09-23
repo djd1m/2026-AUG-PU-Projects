@@ -1,0 +1,41 @@
+[
+  {
+    "id": "consent-before-create",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "revoked-file",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "DATABASE_URL unavailable: real PostgreSQL required; not run is not a pass"
+  },
+  {
+    "id": "same-404",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "two-paths",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "DATABASE_URL unavailable: real PostgreSQL required; not run is not a pass"
+  },
+  {
+    "id": "guest-opened-index",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "DATABASE_URL unavailable: real PostgreSQL required; not run is not a pass"
+  },
+  {
+    "id": "noindex",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  }
+]

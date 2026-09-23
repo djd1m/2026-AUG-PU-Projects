@@ -84,7 +84,7 @@ describe('авторизованный redirect файла и превью', () 
     const f = fixture([]); const handler = createClipFileHandler(f.deps);
     const foreign = await handler(f.request, id), absent = await handler(f.request, '00000000-0000-4000-8000-000000000002');
     expect(foreign.status).toBe(404); expect(absent.status).toBe(404); expect(await foreign.text()).toBe(await absent.text());
-    expect(f.query.mock.calls[0]?.[0]).toContain('v.account_id=$2'); expect(f.query.mock.calls[0]?.[1]).toEqual([id, 'owner']);
+    expect(f.query.mock.calls[0]?.[0]).toContain('v.account_id=$2'); expect(f.query.mock.calls[0]?.[1]).toEqual([id, 'owner', null, now]);
     expect(f.sign).not.toHaveBeenCalled();
   });
   it('клип не done даёт 404, соседний готовый отдаётся', async () => {

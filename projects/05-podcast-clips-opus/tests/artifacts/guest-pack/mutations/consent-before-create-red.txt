@@ -1,0 +1,53 @@
+
+ RUN  v3.2.7 /tmp/n5-guest-mutations-eCSFkl
+
+ ❯ tests/guest-pack.test.ts (20 tests | 1 failed | 19 skipped) 27ms
+   × guest consent boundary > ADR-008 consent undefined returns 422 before any database operation 26ms
+     → expected 200 to be 422 // Object.is equality
+   ↓ guest consent boundary > ADR-008 consent false returns 422 before any database operation
+   ↓ guest consent boundary > ADR-008 consent true returns 422 before any database operation
+   ↓ guest consent boundary > ADR-008 consent 1 returns 422 before any database operation
+   ↓ guest consent boundary > ADR-008 consent null returns 422 before any database operation
+   ↓ guest consent boundary > rejects invalid input {"consent_version":"future"}
+   ↓ guest consent boundary > rejects invalid input {"consent_text_hash":"unknown"}
+   ↓ guest consent boundary > rejects invalid input {"clip_ids":[]}
+   ↓ guest consent boundary > rejects invalid input {"guest_name":" "}
+   ↓ guest consent boundary > records consent in pack INSERT, membership after it, commits before returning a 192-bit code
+   ↓ guest consent boundary > membership failure rolls back the whole pack
+   ↓ guest page > noindex guest page is anonymous, mobile, escaped and serves only member file routes
+   ↓ guest page > same 404 for unavailable packs and malformed codes
+   ↓ guest page > rate limit precedes lookup; unavailable DB is 503, not an empty successful page
+   ↓ guest page > owner self-open never writes growth events
+   ↓ guest file capability > guest gets signed app URL, not S3; every followup repeats DB authorization
+   ↓ guest file capability > exactly two credentials: owner or guest code; short link, user header and bare signature fail
+   ↓ guest file capability > signed ticket binds clip, kind, code, download flag and TTL <= 15 minutes
+   ↓ guest file capability > bad ticket fails before signing; DB or storage outage is fail closed
+   ↓ guest file capability > proxy forwards a single Range and bytes, excludes Location/cookies, refuses redirects
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/guest-pack.test.ts > guest consent boundary > ADR-008 consent undefined returns 422 before any database operation
+AssertionError: expected 200 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 200
+
+ ❯ tests/guest-pack.test.ts:38:29
+     36|     const db = fakeDb(), service = new GuestPackService(db.pool);
+     37|     const response = await createRpc(service, { ...input, consent_conf…
+     38|     expect(response.status).toBe(422); expect(db.connect).not.toHaveBe…
+       |                             ^
+     39|   });
+     40|   it.each([{ consent_version: 'future' }, { consent_text_hash: 'unknow…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  23:02:32
+   Duration  942ms (transform 417ms, setup 0ms, collect 626ms, tests 27ms, environment 0ms, prepare 107ms)
+

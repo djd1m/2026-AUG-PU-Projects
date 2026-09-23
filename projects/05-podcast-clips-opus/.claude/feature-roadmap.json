@@ -290,7 +290,7 @@
       "title": "Клипы для гостя: галочки, согласие, гостевая страница без входа",
       "description": "CreateGuestPack — отметка клипов галочками и ОБЯЗАТЕЛЬНОЕ подтверждение согласия гостя ведущим: без него 422 и guest_pack НЕ создан (правовая граница ADR-008); guest.send выставляет sent_at и expires_at = sent_at + 14 дней (до отправки страница не открывается); GET /g/{guest_code} — SSR без входа, noindex, Cache-Control: no-store, код ≥ 128 бит, обращение по имени, «скачать» на каждом клипе и «скачать все», ссылка несёт код ведущего для атрибуции; OpenGuestPack пишет growth_event(guest_opened) с уникальностью за сутки на ip_prefix через частичный UNIQUE; guest.revoke — немедленный 404 без восстановления.",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "progress-and-clips-screen"
@@ -326,7 +326,7 @@
       "title": "Коды блогеров, атрибуция трёх источников, кабинет и анти-фрод",
       "description": "code.apply с тремя исходами по полю attribution.source: слабый источник + explicit → 200 с записью прежнего в replaced_source; explicit + любой → 409; guest_link + cookie → 409; недействительный код → 422 и строка НЕ тронута (откат к cookie запрещён, ADR-007); привязка кода при регистрации, источник guest_link из гостевой ссылки, cookie как третий источник; AntiFraudCodeBurst — 50 применений одного кода с одного ip_prefix за 10 мин → blocked, самореферал → rejected, самопереходы владельца не считаются; PartnerDashboard — пять счётчиков воронки РАЗДЕЛЬНО, без перемножения показателей.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "guest-pack",

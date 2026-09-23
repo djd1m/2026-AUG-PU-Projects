@@ -1,0 +1,75 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260922T224807Z-guest-pack",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "guest-pack",
+  "pipeline": "brief implementation",
+  "tier": "XL",
+  "risk_flags": [
+    "consent",
+    "guest access",
+    "revocation"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "User brief authorizes implementation; docs writes restricted to report: telemetry stored in tests/artifacts/guest-pack",
+    "Cross-family review requested via local Claude CLI; availability unconfirmed"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "90bc71d1a9e390e47af46f3c42b39d7bc896c784",
+  "final_revision": "sha256:ad01b460b1ca9f7d9f99b185e7696ceda02becfb27737e8b42681747fa893bff",
+  "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-22T22:48:07.266597+00:00",
+  "ended_at": "2026-09-22T23:08:13.689682+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "tests/artifacts/guest-pack/source-manifest.json",
+    "tests/artifacts/guest-pack/build-final.txt",
+    "tests/artifacts/guest-pack/typecheck-delivery.txt",
+    "tests/artifacts/guest-pack/lint-final.txt",
+    "tests/artifacts/guest-pack/all-tests-final.txt",
+    "tests/artifacts/guest-pack/mutations/results.json",
+    "tests/artifacts/guest-pack/work-record-validation.txt"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 6,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null,
+    "evidence": [
+      "tests/artifacts/guest-pack/all-tests-final.txt",
+      "tests/artifacts/guest-pack/mutations/results.json"
+    ]
+  },
+  "metrics": {
+    "elapsed_wall_ms": 1206423,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "retry_count": null,
+    "escalation_count": 0
+  },
+  "actual_model": "GPT-6 (system identity; precise model id not exposed)",
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction-reading interval predates first clock capture; complete task duration unknown",
+    "Exact execution model identifier, effort, token usage, billed cost unavailable; system identifies GPT-6",
+    "PostgreSQL16/Redis7/MinIO unavailable in sandbox: 109 integration tests skipped",
+    "Three database mutation pairs not run",
+    "Anthropic Opus requested: CLI timeout124, actual model/usage/review unknown",
+    "No browser/mobile end-to-end or Cloud.ru acceptance",
+    "Per-stage retry counter not consistently recorded; detailed failed and repeated command logs retained",
+    "No independent review: severity counts unavailable"
+  ]
+}

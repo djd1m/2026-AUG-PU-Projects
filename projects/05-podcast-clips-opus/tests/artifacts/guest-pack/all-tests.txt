@@ -1,0 +1,87 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ↓ tests/guest-pack.integration.test.ts (11 tests | 11 skipped)
+ ✓ tests/transcription.test.ts (15 tests) 31347ms
+   ✓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling  31240ms
+stdout | tests/render-media.test.ts > real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-ANA9qA
+
+ ✓ tests/render-media.test.ts (2 tests) 5021ms
+   ✓ real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  4821ms
+ ✓ tests/preflight.test.ts (10 tests) 3302ms
+ ✓ tests/wiring.test.ts (5 tests) 1948ms
+   ✓ Проверяемость проброса окружения > Полная конфигурация проходит, отсутствие потолка даёт находку  887ms
+   ✓ Проверяемость проброса окружения > Новая обязательная переменная config.ts не теряется в environment.ts  789ms
+ ✓ tests/config.test.ts (39 tests) 1993ms
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+{"logins":12,"threads":"8","elapsed_ms":145.52609199999995,"fs_ms":75.04364700000002}
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 231ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  23:00:53
+   Duration  636ms (transform 113ms, setup 0ms, collect 129ms, tests 231ms, environment 0ms, prepare 90ms)
+
+
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 1289ms
+   ✓ RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8  1288ms
+ ✓ tests/auth.test.ts (10 tests) 953ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  656ms
+ ✓ tests/queue-probe.test.ts (14 tests) 196ms
+ ✓ tests/upload-fix.test.ts (9 tests) 190ms
+ ✓ tests/s3-public-endpoint.test.ts (6 tests) 89ms
+ ✓ tests/progress-screen.test.ts (12 tests) 103ms
+ ✓ tests/selection.test.ts (21 tests) 58ms
+ ✓ tests/s3.test.ts (6 tests) 53ms
+ ✓ tests/short-link.test.ts (14 tests) 39ms
+ ✓ tests/guest-pack.test.ts (20 tests) 104ms
+ ✓ tests/render-worker.test.ts (5 tests) 22ms
+ ✓ tests/upload-route.test.ts (3 tests) 43ms
+ ✓ tests/upload.test.ts (8 tests) 45ms
+ ✓ tests/transcription-order.test.ts (5 tests) 43ms
+ ✓ tests/proxy-rate.test.ts (9 tests) 21ms
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > Redis publish failure preserves successful commit for watchdog
+Рендер сохранён; сторож восстановит доставку задания
+
+ ✓ tests/selection-order.test.ts (7 tests) 23ms
+ ✓ tests/growth-day.test.ts (3 tests) 20ms
+ ✓ tests/render-storage.test.ts (2 tests) 42ms
+ ✓ tests/render.test.ts (18 tests) 18ms
+ ✓ tests/enums.test.ts (14 tests) 16ms
+ ✓ tests/upload-browser.test.ts (3 tests) 13ms
+ ✓ tests/transcription-quota.test.ts (4 tests) 17ms
+ ✓ tests/test-db.test.ts (7 tests) 14ms
+ ✓ tests/ip-prefix.test.ts (1 test) 9ms
+ ✓ tests/health.test.ts (1 test) 6ms
+ ✓ tests/upload-guards.test.ts (3 tests) 5ms
+ ✓ tests/queue-probe-guards.test.ts (4 tests) 4ms
+ ✓ tests/growth-prefix.test.ts (1 test) 3ms
+ ↓ tests/database.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/progress-screen.integration.test.ts (3 tests | 3 skipped)
+ ↓ tests/queue-probe.integration.test.ts (22 tests | 22 skipped)
+ ↓ tests/queue-redis.integration.test.ts (2 tests | 2 skipped)
+ ↓ tests/render.integration.test.ts (7 tests | 7 skipped)
+ ↓ tests/s3-slow.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/selection.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/short-link.integration.test.ts (9 tests | 9 skipped)
+ ↓ tests/transcription.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/upload-fix.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/upload-migration.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/upload.integration.test.ts (17 tests | 17 skipped)
+
+ Test Files  33 passed | 13 skipped (46)
+      Tests  282 passed | 109 skipped (391)
+   Start at  23:00:05
+   Duration  67.18s (transform 1.49s, setup 0ms, collect 8.24s, tests 47.05s, environment 13ms, prepare 4.22s)
+

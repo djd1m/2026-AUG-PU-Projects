@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { rpc } from '../../../lib/rpc';
 import type { VideoScreen, ClipScreen } from '../../../lib/screen-contract';
 import { ClipCard } from '../../clips/ClipCard';
+import { GuestPacks } from '../../clips/GuestPacks';
+import type { GuestPackSummary } from '../../../lib/guest-contract';
 export function VideoHeader({ video }: { video: VideoScreen }) {
   return <header className="detail-header"><Link href="/dashboard">← Все записи</Link><p className="eyebrow">ВАШ ВЫПУСК</p>
     <h1>Из длинного разговора —<br />короткие моменты</h1><p className="video-id">video_id: <code>{video.video_id}</code></p></header>;
@@ -22,7 +24,7 @@ export function ProgressPanel({ video, onRetry, busy = false }: { video: VideoSc
       {video.next_action === 'tomorrow' && <p>Загрузите заново завтра после 00:00 МСК.</p>}
     </div></section>;
 }
-export function VideoDetail({ videoId, initialVideo, initialClips }: { videoId: string; initialVideo: VideoScreen; initialClips: ClipScreen[] }) {
+export function VideoDetail({ videoId, initialVideo, initialClips, initialPacks = [], consentHash }: { videoId: string; initialVideo: VideoScreen; initialClips: ClipScreen[]; initialPacks?: GuestPackSummary[]; consentHash?: string }) {
   const [video, setVideo] = useState(initialVideo), [clips, setClips] = useState(initialClips);
   const [error, setError] = useState<string | null>(null), [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Date.now());
@@ -57,5 +59,6 @@ export function VideoDetail({ videoId, initialVideo, initialClips }: { videoId: 
       {video.clips_total > 0 && video.clips_total < 3 && <p className="notice">Найдено фрагментов: {video.clips_total}. Самодостаточных моментов меньше трёх — показываем столько, сколько есть.</p>}
       {video.status === 'done' && video.clips_done < video.clips_total && <p className="notice">Часть клипов не удалось собрать. Готовые клипы доступны для скачивания.</p>}
       <div className="clip-grid">{clips.map(clip => <ClipCard key={clip.clip_id} clip={clip} />)}</div>
-      {!clips.length && <p className="empty">{video.status === 'failed' ? 'Готовых клипов нет.' : 'Фрагменты появятся здесь после выделения.'}</p>}</section></>;
+      {!clips.length && <p className="empty">{video.status === 'failed' ? 'Готовых клипов нет.' : 'Фрагменты появятся здесь после выделения.'}</p>}</section>
+    {consentHash && <GuestPacks videoId={videoId} clips={clips} initialPacks={initialPacks} consentHash={consentHash} />}</>;
 }
