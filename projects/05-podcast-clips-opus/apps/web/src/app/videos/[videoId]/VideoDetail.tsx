@@ -21,8 +21,14 @@ export function ProgressPanel({ video, onRetry, busy = false }: { video: VideoSc
       <p>{failure ? video.failure_reason ?? 'Не удалось завершить обработку.' : video.stage_label}</p>
       {!failure && !success && !video.no_response && <progress aria-label="Прогресс этапа" max={100} value={video.stage_progress ?? undefined} />}
       {failure && video.retry_after && <p>{Date.parse(video.retry_after) > Date.now() ? 'Лимиты обновятся' : 'Лимиты обновились'} {resetLabel(video.retry_after)}.</p>}
-      {video.next_action === 'retry' && <button disabled={busy || !!video.retry_after && Date.parse(video.retry_after) > Date.now()} onClick={onRetry}>
-        {busy ? 'Запускаем…' : video.retry_after && Date.parse(video.retry_after) > Date.now() ? 'Повторить после обновления лимитов' : 'Повторить'}</button>}
+      {/* Кнопка НЕ гасится по предсказанию: `retry_after` — это «когда обновятся лимиты, ЕСЛИ они
+          не изменятся», а они меняются (владелец может поднять потолок, слот может вернуться).
+          Экран, гасящий кнопку по такому предсказанию, утверждает то, чего не проверял. Решает
+          сервер: у него счётчик перед глазами, и при настоящей нехватке он ответит отказом с
+          причиной. Заслужено 23.09.2026: потолок подняли, места стало 284 минуты, а кнопка
+          оставалась серой до полуночи. */}
+      {video.next_action === 'retry' && <button disabled={busy} onClick={onRetry}>
+        {busy ? 'Запускаем…' : 'Повторить'}</button>}
       {video.next_action === 'upload' && <Link className="button secondary" href="/dashboard">Загрузить другой файл</Link>}
       {video.next_action === 'tomorrow' && <p>После обновления лимитов можно загрузить файл заново.</p>}
     </div></section>;
