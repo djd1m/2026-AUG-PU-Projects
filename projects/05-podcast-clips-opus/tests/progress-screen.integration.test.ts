@@ -35,8 +35,8 @@ describe.skipIf(!dbUrl)('PostgreSQL: экраны и доступ к клипа�
   it('одинаковый 404 чужому и отсутствующему, недоделанный 404, соседний 302', async () => {
     const sign = vi.fn().mockResolvedValue('https://storage.example/signed');
     const auth = { authenticate: vi.fn().mockResolvedValue({ account_id: owner }) };
-    const handler = createClipFileHandler({ pool, auth, sign });
-    const request = new Request('https://app.example/file', { headers: { cookie: `__Host-n5_session=${'a'.repeat(43)}` } });
+    const handler = createClipFileHandler({ allowRead: async () => true, trustedProxyHops: 1, pool, auth, sign });
+    const request = new Request('https://app.example/file', { headers: { 'x-forwarded-for': '192.0.2.1, 127.0.0.1', cookie: `__Host-n5_session=${'a'.repeat(43)}` } });
     expect((await handler(request, unfinished)).status).toBe(404); expect(sign).not.toHaveBeenCalled();
     expect((await handler(request, ready)).status).toBe(302);
     auth.authenticate.mockResolvedValue({ account_id: stranger });

@@ -84,7 +84,7 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
     expect(storage.delete).toHaveBeenCalledWith(free.keys[1]); expect(storage.delete).toHaveBeenCalledWith(stalled.keys[1]);
     expect(storage.delete).not.toHaveBeenCalledWith(paid.keys[1]); expect(storage.delete).not.toHaveBeenCalledWith(young.keys[1]);
     expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [free.clip])).rows[0].object_key).toBeNull();
-    expect((await pool.query('SELECT revoked_at FROM guest_pack WHERE id=$1', [free.pack])).rows[0].revoked_at).toEqual(now);
+    expect((await pool.query('SELECT revoked_at FROM guest_pack WHERE id=$1', [free.pack])).rows[0].revoked_at).toBeNull();
     expect((await pool.query("SELECT count(*)::int n FROM video WHERE failure_reason='refused_user_uploads'")).rows[0].n).toBe(1);
     expect((await pool.query("SELECT indexdef FROM pg_indexes WHERE schemaname=$1 AND indexname='video_refused_upload_retention'", [schema])).rows[0].indexdef).toContain('created_at');
   });

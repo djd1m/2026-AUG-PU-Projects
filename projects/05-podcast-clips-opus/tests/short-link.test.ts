@@ -15,7 +15,7 @@ function setup(overrides: Partial<ShortLink> = {}) {
   const auth = { authenticate: vi.fn().mockResolvedValue(null) };
   const allowRead = vi.fn().mockResolvedValue(true);
   return { links, preview, auth, allowRead,
-    handle: createShortLinkHandler({ links, preview, auth, allowRead, trustedProxyHops: 1, clock: () => now }) };
+    handle: createShortLinkHandler({ referralSecret: 'test-secret', links, preview, auth, allowRead, trustedProxyHops: 1, clock: () => now }) };
 }
 it('anonymous landing returns escaped preview and CTA, no redirect, no cache, mobile viewport', async () => {
   const deps = setup(); const response = await deps.handle(request(), row.code); const html = await response.text();
@@ -100,4 +100,19 @@ it('copy button remains available after file expiry and uses canonical RPC', () 
   const source = readFileSync('apps/web/src/app/clips/ClipCard.tsx', 'utf8');
   expect(source).toContain("'link.create'"); expect(source).toContain('navigator.clipboard.writeText(absolute)');
   expect(source).toContain('disabled={copying}'); expect(source).toContain('Скопируйте ссылку вручную');
+});
+it('И-1 lowercase and uppercase codes resolve to the same public page', async () => {
+  const query = vi.fn(async (_sql: string, values: unknown[]) => ({ rows: values[0] === 'K7M2XQ9PRT' ? [row] : [] }));
+  const links = new ShortLinkService({ query } as unknown as Pool);
+  links.recordView = vi.fn();
+  const handler = createShortLinkHandler({ links, auth: { authenticate: vi.fn() }, referralSecret: 'test-secret',
+    trustedProxyHops: 1, allowRead: async () => true, preview: async () => null });
+  const lower = await handler(request(), 'k7m2xq9prt'), upper = await handler(request(), 'K7M2XQ9PRT');
+  expect(lower.status).toBe(200); expect(upper.status).toBe(200);
+  expect(await lower.text()).toBe(await upper.text());
+});
+it('И-2 six-character links resolve alongside old ten-character links', async () => {
+  const query = vi.fn().mockResolvedValue({ rows: [row] }), links = new ShortLinkService({ query } as unknown as Pool);
+  for (const code of ['k7m2xq', 'K7M2XQ', 'K7M2XQ9PRT']) expect(await links.find(code)).toEqual(row);
+  for (const code of ['K7M2X', 'K7M2XQ9', '000000']) await expect(links.find(code)).rejects.toMatchObject({ status: 404 });
 });

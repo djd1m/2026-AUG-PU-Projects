@@ -1,0 +1,18 @@
+{
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "reviewer": "trust_review",
+  "independence": "separate read-only agent, same provider; not OWN-002",
+  "findings": [
+    {
+      "id": "review-clock-window",
+      "severity": "medium",
+      "description": "Sampling now before acquiring code lock excludes newer committed events when lock acquisition order differs.",
+      "resolution": "Sample counting timestamp after code lock; tests/partner.test.ts delayed lock guard passes."
+    }
+  ],
+  "plan_note": "HttpOnly referrals need server-side clearing; implemented successful apply and discard_referral branch.",
+  "time_budget_minutes_per_attempt": 5,
+  "usage": null
+}

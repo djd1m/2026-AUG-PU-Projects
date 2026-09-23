@@ -13,7 +13,7 @@ function request() {
   return new Request('https://app.example/api/trpc/code.apply', { method: 'POST', headers: {
     'Content-Type': 'application/json', cookie: '__Host-n5_session=' + 'x'.repeat(43),
     'x-forwarded-for': '192.0.2.9, 127.0.0.1', origin: 'https://app.example',
-  }, body: JSON.stringify({ code: 'CODE123', source: 'explicit' }) });
+  }, body: JSON.stringify({ code: 'CODE123' }) });
 }
 beforeEach(() => {
   vi.clearAllMocks(); deps.auth.authenticate.mockResolvedValue({ account_id: 'session-account' });
@@ -22,7 +22,7 @@ beforeEach(() => {
 it('canonical code.apply HTTP route returns 200, real session identity and server-derived prefix', async () => {
   const response = await POST(request()); expect(response.status).toBe(200);
   expect((await response.json()).result.data.data).toMatchObject({ replaced_source: 'cookie' });
-  expect(deps.partners.apply).toHaveBeenCalledWith('session-account', { code: 'CODE123', source: 'explicit' }, '192.0.2.0/24');
+  expect(deps.partners.apply).toHaveBeenCalledWith('session-account', { code: 'CODE123' }, '192.0.2.0/24', '__Host-n5_session=' + 'x'.repeat(43));
   expect(response.headers.get('cache-control')).toContain('no-store');
 });
 it('code.apply refusal stays 422, never mapped to accepted', async () => {

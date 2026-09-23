@@ -26,7 +26,7 @@ describe.skipIf(!dbUrl)('PostgreSQL guest-pack', () => {
   const request = (url = 'https://app.example/g/code', ip = '192.0.2.1', signedIn = false) => new Request(url, {
     headers: { 'x-forwarded-for': `${ip}, 127.0.0.1`, ...(signedIn ? { cookie } : {}) },
   });
-  const page = () => createGuestPageHandler({ guests, auth, trustedProxyHops: 1, allowRead: async () => true });
+  const page = () => createGuestPageHandler({ referralSecret: 'test-secret', guests, auth, trustedProxyHops: 1, allowRead: async () => true });
   const eventCount = async (type = 'guest_opened') => (await pool.query('SELECT count(*)::int AS n FROM growth_event WHERE type=$1', [type])).rows[0].n;
   const created = async () => guests.create(owner, input);
   const sent = async () => { const p = await created(); return guests.send(owner, p.guest_pack_id); };
@@ -121,7 +121,7 @@ describe.skipIf(!dbUrl)('PostgreSQL guest-pack', () => {
   it('exactly two file paths: owner or live guest membership; all other access is 404', async () => {
     const pack = await sent(), code = pack.url.split('/').at(-1)!;
     const sign = vi.fn().mockResolvedValue('https://private.example/signed');
-    const handler = createClipFileHandler({ pool, auth, sign, clock: () => now, guestSecret: 'test-only', stream: async () => new Response('bytes') });
+    const handler = createClipFileHandler({ allowRead: async () => true, trustedProxyHops: 1, pool, auth, sign, clock: () => now, guestSecret: 'test-only', stream: async () => new Response('bytes') });
     for (const query of ['', '?code=23456789AB', '?guest_pack_id=' + pack.guest_pack_id]) {
       expect((await handler(request(`https://app.example/api/clips/${clip}/file${query}`), clip)).status).toBe(404);
     }
@@ -138,7 +138,7 @@ describe.skipIf(!dbUrl)('PostgreSQL guest-pack', () => {
     const deps = { pool, auth, sign, stream, guestSecret: 'test-only', clock: () => now };
     const tickets = [];
     for (const kind of ['file', 'thumbnail'] as const) {
-      const handler = createClipFileHandler(deps, kind);
+      const handler = createClipFileHandler({ ...deps, allowRead: async () => true, trustedProxyHops: 1 }, kind);
       const issued = await handler(request(`https://app.example/api/clips/${clip}/${kind}?g=${code}`), clip);
       expect(issued.status).toBe(302); const url = new URL(issued.headers.get('location')!, 'https://app.example').href;
       expect((await handler(request(url), clip)).status).toBe(200); tickets.push({ handler, url });
@@ -147,13 +147,13 @@ describe.skipIf(!dbUrl)('PostgreSQL guest-pack', () => {
     for (const { handler, url } of tickets) expect((await handler(request(url), clip)).status).toBe(404);
     expect(stream).toHaveBeenCalledTimes(2);
     auth.authenticate.mockResolvedValue({ account_id: owner });
-    expect((await createClipFileHandler(deps)(request(`https://app.example/api/clips/${clip}/file`, undefined, true), clip)).status).toBe(302);
+    expect((await createClipFileHandler({ ...deps, allowRead: async () => true, trustedProxyHops: 1 })(request(`https://app.example/api/clips/${clip}/file`, undefined, true), clip)).status).toBe(302);
   });
   it('clip expiry, video removal, inactive owner and foreign membership fail closed', async () => {
     await expect(guests.create(stranger, input)).rejects.toMatchObject({ status: 404 });
     await expect(guests.create(owner, { ...input, clip_ids: [randomUUID()] })).rejects.toMatchObject({ status: 422 });
     const pack = await sent(), code = pack.url.split('/').at(-1)!;
-    const handler = createClipFileHandler({ pool, auth, sign: vi.fn(), guestSecret: 'test', stream: vi.fn(), clock: () => now });
+    const handler = createClipFileHandler({ allowRead: async () => true, trustedProxyHops: 1, pool, auth, sign: vi.fn(), guestSecret: 'test', stream: vi.fn(), clock: () => now });
     now = new Date(now.getTime() + 3 * 86400000);
     expect((await page()(request(), code)).status).toBe(200);
     expect((await handler(request(`https://app.example/api/clips/${clip}/file?g=${code}`), clip)).status).toBe(404);
@@ -168,7 +168,7 @@ describe.skipIf(!dbUrl)('PostgreSQL guest-pack', () => {
     try {
       await client.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: 'guest-clip-bytes', ContentType: 'video/mp4' }));
       const pack = await sent(), code = pack.url.split('/').at(-1)!;
-      const handler = createClipFileHandler({ pool, auth, clock: () => now, guestSecret: 'test-only', stream: streamGuestFile,
+      const handler = createClipFileHandler({ allowRead: async () => true, trustedProxyHops: 1, pool, auth, clock: () => now, guestSecret: 'test-only', stream: streamGuestFile,
         sign: (object, filename) => generateDownloadUrl({ client, bucket }, object, filename) });
       const issued = await handler(request(`https://app.example/api/clips/${clip}/file?g=${code}`), clip);
       expect(issued.status).toBe(302); const url = new URL(issued.headers.get('location')!, 'https://app.example').href;

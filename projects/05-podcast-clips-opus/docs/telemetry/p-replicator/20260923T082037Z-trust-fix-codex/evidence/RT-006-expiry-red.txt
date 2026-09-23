@@ -1,0 +1,81 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/retention.test.ts > RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure
+Очистка: наблюдение срока стирания; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:51:42
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:50:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/retention.test.ts > RT-004 independent failure at DELETE FROM video cannot suppress erasure
+Очистка: удаление отказанных загрузок; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:74:36
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:72:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/retention.test.ts > RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure
+Очистка: очистка клипов; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:82:32
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:81:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ❯ tests/retention.test.ts (12 tests | 1 failed) 65ms
+   ✓ retention and erasure guards > confirmation required before state changes 12ms
+   ✓ retention and erasure guards > revokes guests before any storage deletion and completion follows objects 3ms
+   ✓ retention and erasure guards > storage failure preserves database rows for retry 2ms
+   ✓ retention and erasure guards > free clips older than three days are removed before row markers 3ms
+   × retention and erasure guards > expiry does not overwrite explicit revocation 10ms
+     → expected true to be false // Object.is equality
+   ✓ retention and erasure guards > growth events survive clip deletion with SET NULL 1ms
+   ✓ retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation 15ms
+   ✓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant 5ms
+   ✓ RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure 5ms
+   ✓ RT-004 independent failure at DELETE FROM video cannot suppress erasure 2ms
+   ✓ RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure 2ms
+   ✓ RT-004 overdue erasure is observable even if this tick successfully deletes the account 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > retention and erasure guards > expiry does not overwrite explicit revocation
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/retention.test.ts:70:119
+     68|   it('expiry does not overwrite explicit revocation', async () => {
+     69|     const f = fixture(); await retentionTick(f.pool, f.storage);
+     70|     expect(f.commands.some(s => s.startsWith('UPDATE guest_pack SET re…
+       |                                                                                                                       ^
+     71|     const sql = readFileSync('packages/db/migrations/001_init.sql', 'u…
+     72|     expect(sql).toContain("expires_at = sent_at + interval '336 hours'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  08:31:53
+   Duration  847ms (transform 355ms, setup 0ms, collect 485ms, tests 65ms, environment 0ms, prepare 89ms)
+

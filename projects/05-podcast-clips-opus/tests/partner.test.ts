@@ -8,6 +8,7 @@ import { PartnerService, replacementAllowed, type Attribution } from '../apps/we
 import { appRouter } from '../apps/web/src/server/trpc';
 import { referralCookie, readReferral } from '../apps/web/src/lib/partner-referral';
 import { PartnerSummary } from '../apps/web/src/app/dashboard/PartnerPanel';
+const secret = 'test-referral-secret';
 const account = randomUUID(), codeId = randomUUID(), prefix = '192.0.2.0/24';
 const row: Attribution = { id: randomUUID(), partner_code_id: codeId, source: 'cookie', status: 'pending', replaced_source: null, reject_reason: null };
 function db(options: { existing?: Attribution; count?: number; missing?: boolean; self?: boolean; blocked?: boolean; broken?: boolean } = {}) {
@@ -24,18 +25,18 @@ function db(options: { existing?: Attribution; count?: number; missing?: boolean
   const release = vi.fn(), connect = vi.fn(async () => ({ query, release }));
   return { query, connect, release, pool: { query, connect } as unknown as Pool };
 }
-async function rpc(service: PartnerService, method: string, input: unknown) {
+async function rpc(service: PartnerService, method: string, input: unknown, referral = '') {
   const mutation = method === 'code.apply';
   const req = new Request(`https://app.example/api/trpc/${method}${mutation ? '' : '?input=' + encodeURIComponent(JSON.stringify(input))}`, {
     method: mutation ? 'POST' : 'GET', ...(mutation ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) } : {}),
   });
   return fetchRequestHandler({ endpoint: '/api/trpc', req, router: appRouter,
-    createContext: () => ({ account, requestId: 'test', idempotencyKey: null, video: { create: vi.fn() }, partners: service, ipPrefix: prefix }) });
+    createContext: () => ({ account, requestId: 'test', idempotencyKey: null, video: { create: vi.fn() }, partners: service, ipPrefix: prefix, referralCookie: referral }) });
 }
 describe('partner ADR-007 isolated behavior (SQL effects require integration)', () => {
   it('cookie to explicit returns 200 and replaced_source', async () => {
     const fake = db({ existing: row });
-    const response = await rpc(new PartnerService(fake.pool), 'code.apply', { code: 'CODE123', source: 'explicit' });
+    const response = await rpc(new PartnerService(fake.pool, secret), 'code.apply', { code: 'CODE123' });
     expect(response.status).toBe(200);
     expect((await response.json()).result.data.data).toMatchObject({ source: 'explicit', replaced_source: 'cookie' });
   });
@@ -43,37 +44,37 @@ describe('partner ADR-007 isolated behavior (SQL effects require integration)', 
     for (const source of ['explicit', 'guest_link', 'cookie'] as const) {
       const existing = { ...row, source: 'explicit' as const };
       expect(replacementAllowed(existing, source)).toBe(false);
-      const response = await rpc(new PartnerService(db({ existing }).pool), 'code.apply', { code: 'CODE123', source });
+      const response = await rpc(new PartnerService(db({ existing }).pool, secret), 'code.apply', { code: 'CODE123' }, source === 'explicit' ? '' : referralCookie('', 'CODE123', source, false, secret)!);
       expect(response.status).toBe(409);
     }
   });
   it('guest_link to cookie returns 409', async () => {
     const existing = { ...row, source: 'guest_link' as const };
     expect(replacementAllowed(existing, 'cookie')).toBe(false);
-    expect((await rpc(new PartnerService(db({ existing }).pool), 'code.apply', { code: 'CODE123', source: 'cookie' })).status).toBe(409);
+    expect((await rpc(new PartnerService(db({ existing }).pool, secret), 'code.apply', { code: 'CODE123' }, referralCookie('', 'CODE123', 'cookie', false, secret)!)).status).toBe(409);
   });
   it('invalid code returns 422 without cookie fallback or attribution writes', async () => {
     const fake = db({ missing: true, existing: row });
-    const response = await rpc(new PartnerService(fake.pool), 'code.apply', { code: 'INVALID', source: 'explicit' });
+    const response = await rpc(new PartnerService(fake.pool, secret), 'code.apply', { code: 'INVALID' });
     expect(response.status).toBe(422);
     expect(fake.query.mock.calls.some(([sql]) => /INSERT INTO attribution|UPDATE attribution/.test(sql))).toBe(false);
     expect(fake.query.mock.calls.at(-1)?.[0]).toBe('ROLLBACK');
   });
-  it('50 attempts block code and commit refusal audit', async () => {
+  it('50th success blocks future applications and commits attribution', async () => {
     const fake = db({ count: 50 });
-    expect((await rpc(new PartnerService(fake.pool), 'code.apply', { code: 'CODE123' })).status).toBe(422);
+    expect((await rpc(new PartnerService(fake.pool, secret), 'code.apply', { code: 'CODE123' })).status).toBe(200);
     expect(fake.query.mock.calls.some(([sql]) => sql.includes("SET status='blocked'"))).toBe(true);
     expect(fake.query.mock.calls.at(-1)?.[0]).toBe('COMMIT');
-    expect(fake.query.mock.calls.some(([sql]) => sql.includes('INSERT INTO attribution'))).toBe(false);
+    expect(fake.query.mock.calls.some(([sql]) => sql.includes('INSERT INTO attribution'))).toBe(true);
   });
   it('self referral is rejected and recorded', async () => {
     const fake = db({ self: true });
-    const result = await new PartnerService(fake.pool).apply(account, { code: 'CODE123' }, prefix);
+    const result = await new PartnerService(fake.pool, secret).apply(account, { code: 'CODE123' }, prefix);
     expect(result).toMatchObject({ status: 'rejected', reject_reason: 'self_referral' });
   });
   it('foreign partner code returns 403', async () => {
     const fake = db(); fake.query.mockResolvedValue({ rowCount: 0, rows: [] });
-    expect((await rpc(new PartnerService(fake.pool), 'partner.dashboard', { code_id: randomUUID() })).status).toBe(403);
+    expect((await rpc(new PartnerService(fake.pool, secret), 'partner.dashboard', { code_id: randomUUID() })).status).toBe(403);
     expect(fake.query).toHaveBeenCalledTimes(1);
   });
   it('rejected cannot be resurrected; equal sources conflict', () => {
@@ -84,7 +85,7 @@ describe('partner ADR-007 isolated behavior (SQL effects require integration)', 
     expect(replacementAllowed({ ...row, source: 'guest_link' }, 'explicit')).toBe(true);
   });
   it('bad shape fails before connection; blocked code cannot produce another event', async () => {
-    const fake = db({ blocked: true }), service = new PartnerService(fake.pool);
+    const fake = db({ blocked: true }), service = new PartnerService(fake.pool, secret);
     for (const input of [{ code: '' }, { code: 'CODE123', source: 'unknown' }, { code: 'CODE123', account_id: account }]) {
       await expect(service.apply(account, input, prefix)).rejects.toMatchObject({ status: 422 });
     }
@@ -94,16 +95,16 @@ describe('partner ADR-007 isolated behavior (SQL effects require integration)', 
   });
   it('unexpected database failure rolls back audit and releases connection', async () => {
     const fake = db({ broken: true });
-    await expect(new PartnerService(fake.pool).apply(account, { code: 'CODE123' }, prefix)).rejects.toThrow('database unavailable');
+    await expect(new PartnerService(fake.pool, secret).apply(account, { code: 'CODE123' }, prefix)).rejects.toThrow('database unavailable');
     expect(fake.query.mock.calls.at(-1)?.[0]).toBe('ROLLBACK'); expect(fake.release).toHaveBeenCalledOnce();
   });
 });
 it('passive referral preserves stronger source and ignores self visits', () => {
-  const guest = referralCookie('', 'CODE123', 'guest_link', false)!;
-  expect(readReferral(guest)).toEqual({ code: 'CODE123', source: 'guest_link' });
-  expect(referralCookie(guest, 'OTHER12', 'cookie', false)).toBeNull();
-  expect(referralCookie('', 'CODE123', 'cookie', true)).toBeNull();
-  expect(readReferral('__Host-n5_referral=unknown:CODE123')).toBeNull();
+  const guest = referralCookie('', 'CODE123', 'guest_link', false, secret)!;
+  expect(readReferral(guest, secret)).toEqual({ code: 'CODE123', source: 'guest_link' });
+  expect(referralCookie(guest, 'OTHER12', 'cookie', false, secret)).toBeNull();
+  expect(referralCookie('', 'CODE123', 'cookie', true, secret)).toBeNull();
+  expect(readReferral('__Host-n5_referral=unknown:CODE123', secret)).toBeNull();
 });
 it('dashboard renders five counters, blocked explanation and attribution status without identity leakage', () => {
   const html = renderToStaticMarkup(createElement(PartnerSummary, { data: { codes: [{ id: codeId, code: 'CODE123', status: 'blocked', blocked_reason: 'antifraud_ip_burst' }],
@@ -111,4 +112,58 @@ it('dashboard renders five counters, blocked explanation and attribution status 
     statuses: [{ partner_code_id: codeId, source: 'explicit', status: 'rejected', count: 1 }] } }));
   expect(html.match(/<dt>/g)).toHaveLength(5); expect(html).toContain('Код заблокирован'); expect(html).toContain('Отклонены');
   expect(html).not.toContain(account);
+});
+it('RT-001 body source cannot forge provenance, signed evidence alone selects guest_link', async () => {
+  const f = db(), service = new PartnerService(f.pool, secret);
+  for (const source of ['explicit', 'guest_link', 'cookie']) {
+    expect((await rpc(service, 'code.apply', { code: 'CODE123', source })).status).toBe(422);
+  }
+  expect(f.connect).not.toHaveBeenCalled();
+  const cookie = referralCookie('', 'CODE123', 'guest_link', false, secret)!;
+  expect((await rpc(service, 'code.apply', {}, cookie)).status).toBe(200);
+  expect(f.query.mock.calls.some(([sql]) => sql.includes("VALUES('guest_registered'"))).toBe(true);
+  expect(await service.apply(account, { code: 'OTHER12' }, prefix, cookie)).toMatchObject({ source: 'explicit' });
+  expect(await service.apply(account, { code: 'CODE123' }, prefix, cookie)).toMatchObject({ source: 'guest_link' });
+  expect(await service.apply(account, {}, prefix, '__Host-n5_referral=guest_link:CODE123')).toBeNull();
+  expect(await service.apply(account, { code: 'CODE123' }, prefix)).toMatchObject({ source: 'explicit' });
+});
+it('RT-001 invalid explicit code never falls back to signed evidence; skip has no database effects', async () => {
+  const f = db(), service = new PartnerService(f.pool, secret);
+  const cookie = referralCookie('', 'CODE123', 'guest_link', false, secret)!;
+  await expect(service.apply(account, { code: '!' }, prefix, cookie)).rejects.toMatchObject({ status: 422 });
+  expect(await service.apply(account, { discard_referral: true }, prefix, cookie)).toBeNull();
+  expect(f.connect).not.toHaveBeenCalled();
+});
+it('RT-001 referral signature binds source, code and deadline; legacy/duplicate/expired cookies fail closed', () => {
+  const now = Date.now(), cookie = referralCookie('', 'CODE123', 'cookie', false, secret, now)!;
+  expect(cookie).toContain('; HttpOnly; Secure;');
+  expect(readReferral(cookie, secret, now)).toEqual({ code: 'CODE123', source: 'cookie' });
+  for (const invalid of [cookie.replace('cookie:','guest_link:'), cookie.replace('CODE123','OTHER12'),
+    cookie.replace(/:\d{10}:/, ':9999999999:'), `${cookie}; ${cookie}`, '__Host-n5_referral=guest_link:CODE123']) {
+    expect(readReferral(invalid, secret, now)).toBeNull();
+  }
+  expect(readReferral(cookie, 'wrong-key', now)).toBeNull();
+  expect(readReferral(cookie, secret, now + 14 * 86400_000)).toBeNull();
+  expect(readReferral(cookie, secret, now - 86400_000)).toBeNull();
+});
+it('RT-002 rejected repeated attempts cannot move the blocking counter', async () => {
+  const f = db({ existing: { ...row, source: 'explicit' } }), service = new PartnerService(f.pool, secret);
+  for (let i = 0; i < 50; i++) await expect(service.apply(account, { code: 'CODE123' }, prefix)).rejects.toMatchObject({ status: 409 });
+  expect(f.query.mock.calls.some(([sql]) => sql.includes('INTO growth_event') || sql.includes("SET status='blocked'"))).toBe(false);
+});
+it.each(['cookie', 'guest_link'] as const)('RT-003 self referral preserves existing %s attribution', async source => {
+  const f = db({ self: true, existing: { ...row, source, status: 'activated' } });
+  await expect(new PartnerService(f.pool, secret).apply(account, { code: 'CODE123' }, prefix)).rejects.toMatchObject({ status: 409 });
+  expect(f.query.mock.calls.some(([sql]) => /INSERT INTO attribution|UPDATE attribution|INTO growth_event/.test(sql))).toBe(false);
+});
+it('RT-002 burst window is sampled after the code lock, including successes committed while waiting', async () => {
+  const f = db(), original = f.query.getMockImplementation()!;
+  let now = new Date('2026-09-23T00:00:00Z');
+  const serialized = new Date(now.getTime() + 5000);
+  f.query.mockImplementation(async (sql, values) => {
+    if (sql.includes('FOR NO KEY UPDATE OF c')) now = serialized;
+    return original(sql, values);
+  });
+  await new PartnerService(f.pool, secret, () => now).apply(account, { code: 'CODE123' }, prefix);
+  expect(f.query.mock.calls.find(([sql]) => sql.includes("VALUES('code_applied'"))?.[1]?.[4]).toEqual(serialized);
 });

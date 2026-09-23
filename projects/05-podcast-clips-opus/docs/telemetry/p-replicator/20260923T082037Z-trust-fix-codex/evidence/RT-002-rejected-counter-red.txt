@@ -1,0 +1,86 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/partner.test.ts > RT-003 self referral preserves existing cookie attribution
+self_referral_rejected {
+  account_id: '7dd7a069-bae3-434b-9623-7a5c694e3988',
+  partner_code_id: '2aebfec2-4d59-4647-9485-0616934898e3'
+}
+
+stderr | tests/partner.test.ts > RT-003 self referral preserves existing guest_link attribution
+self_referral_rejected {
+  account_id: '7dd7a069-bae3-434b-9623-7a5c694e3988',
+  partner_code_id: '2aebfec2-4d59-4647-9485-0616934898e3'
+}
+
+ ❯ tests/partner.test.ts (19 tests | 3 failed) 125ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source 16ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409 40ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > 50th success blocks future applications and commits attribution 2ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded 1ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict 0ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event 5ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection 2ms
+   ✓ passive referral preserves stronger source and ignores self visits 1ms
+   ✓ dashboard renders five counters, blocked explanation and attribution status without identity leakage 15ms
+   ✓ RT-001 body source cannot forge provenance, signed evidence alone selects guest_link 9ms
+   ✓ RT-001 invalid explicit code never falls back to signed evidence; skip has no database effects 1ms
+   ✓ RT-001 referral signature binds source, code and deadline; legacy/duplicate/expired cookies fail closed 2ms
+   × RT-002 rejected repeated attempts cannot move the blocking counter 18ms
+     → expected true to be false // Object.is equality
+   × RT-003 self referral preserves existing cookie attribution 3ms
+     → expected true to be false // Object.is equality
+   × RT-003 self referral preserves existing guest_link attribution 1ms
+     → expected true to be false // Object.is equality
+   ✓ RT-002 burst window is sampled after the code lock, including successes committed while waiting 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > RT-002 rejected repeated attempts cannot move the blocking counter
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/partner.test.ts:152:121
+    150|   const f = db({ existing: { ...row, source: 'explicit' } }), service …
+    151|   for (let i = 0; i < 50; i++) await expect(service.apply(account, { c…
+    152|   expect(f.query.mock.calls.some(([sql]) => sql.includes('INTO growth_…
+       |                                                                                                                         ^
+    153| });
+    154| it.each(['cookie', 'guest_link'] as const)('RT-003 self referral prese…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/partner.test.ts > RT-003 self referral preserves existing cookie attribution
+ FAIL  tests/partner.test.ts > RT-003 self referral preserves existing guest_link attribution
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/partner.test.ts:157:120
+    155|   const f = db({ self: true, existing: { ...row, source, status: 'acti…
+    156|   await expect(new PartnerService(f.pool, secret).apply(account, { cod…
+    157|   expect(f.query.mock.calls.some(([sql]) => /INSERT INTO attribution|U…
+       |                                                                                                                        ^
+    158| });
+    159| it('RT-002 burst window is sampled after the code lock, including succ…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 16 passed (19)
+   Start at  08:31:46
+   Duration  820ms (transform 235ms, setup 0ms, collect 340ms, tests 125ms, environment 0ms, prepare 105ms)
+

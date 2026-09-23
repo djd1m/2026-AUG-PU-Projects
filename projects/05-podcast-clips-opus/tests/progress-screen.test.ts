@@ -77,18 +77,18 @@ describe('авторизованный redirect файла и превью', () 
     const auth = { authenticate: vi.fn().mockResolvedValue({ account_id: 'owner' }) };
     const sign = vi.fn().mockResolvedValue('https://storage.example/file?signed=true');
     const deps = { pool: { query } as unknown as Pick<Pool, 'query'>, auth, sign, clock: () => now };
-    const request = new Request(`https://app.example/api/clips/${id}/file?download=1`, { headers: { cookie: `__Host-n5_session=${'a'.repeat(43)}`, 'x-user-id': 'attacker' } });
+    const request = new Request(`https://app.example/api/clips/${id}/file?download=1`, { headers: { 'x-forwarded-for': '192.0.2.1, 127.0.0.1', cookie: `__Host-n5_session=${'a'.repeat(43)}`, 'x-user-id': 'attacker' } });
     return { query, auth, sign, deps, request };
   }
   it('чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии', async () => {
-    const f = fixture([]); const handler = createClipFileHandler(f.deps);
+    const f = fixture([]); const handler = createClipFileHandler({ ...f.deps, allowRead: async () => true, trustedProxyHops: 1 });
     const foreign = await handler(f.request, id), absent = await handler(f.request, '00000000-0000-4000-8000-000000000002');
     expect(foreign.status).toBe(404); expect(absent.status).toBe(404); expect(await foreign.text()).toBe(await absent.text());
     expect(f.query.mock.calls[0]?.[0]).toContain('v.account_id=$2'); expect(f.query.mock.calls[0]?.[1]).toEqual([id, 'owner', null, now]);
     expect(f.sign).not.toHaveBeenCalled();
   });
   it('клип не done даёт 404, соседний готовый отдаётся', async () => {
-    const f = fixture(); const handler = createClipFileHandler(f.deps);
+    const f = fixture(); const handler = createClipFileHandler({ ...f.deps, allowRead: async () => true, trustedProxyHops: 1 });
     for (const status of ['queued', 'rendering', 'failed']) {
       f.query.mockResolvedValueOnce({ rows: [{ ...row, status }] }); expect((await handler(f.request, id)).status).toBe(404);
     }
@@ -97,12 +97,12 @@ describe('авторизованный redirect файла и превью', () 
     expect(response.headers.get('location')).toBe('https://storage.example/file?signed=true');
     expect(f.sign).toHaveBeenCalledWith('clips/free/file.mp4', 'Имя выпуска.mp4');
     expect(response.headers.get('cache-control')).toContain('no-store');
-    const thumbnail = await createClipFileHandler(f.deps, 'thumbnail')(f.request, id);
+    const thumbnail = await createClipFileHandler({ ...f.deps, allowRead: async () => true, trustedProxyHops: 1 }, 'thumbnail')(f.request, id);
     expect(thumbnail.status).toBe(302); expect(f.sign).toHaveBeenLastCalledWith('thumb.jpg', undefined);
   });
   it('нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима', async () => {
-    const f = fixture(); const handler = createClipFileHandler(f.deps);
-    expect((await handler(new Request(f.request.url), id)).status).toBe(404);
+    const f = fixture(); const handler = createClipFileHandler({ ...f.deps, allowRead: async () => true, trustedProxyHops: 1 });
+    expect((await handler(new Request(f.request.url, { headers: { 'x-forwarded-for': '192.0.2.1, 127.0.0.1' } }), id)).status).toBe(404);
     expect((await handler(f.request, 'bad')).status).toBe(404); expect(f.query).not.toHaveBeenCalled();
     f.query.mockResolvedValueOnce({ rows: [{ ...row, expires_at: now }] }); expect((await handler(f.request, id)).status).toBe(404);
     f.query.mockResolvedValueOnce({ rows: [{ ...row, object_key: null }] }); expect((await handler(f.request, id)).status).toBe(404);

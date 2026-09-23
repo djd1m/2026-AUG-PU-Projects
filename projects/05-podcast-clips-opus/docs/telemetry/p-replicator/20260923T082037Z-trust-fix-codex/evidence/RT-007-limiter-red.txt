@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/trust-guards.test.ts > RT-007 file limiter rejects before query/sign/stream including signed guest tickets
+Выдача клипа: не удалось получить файл TypeError: Cannot read properties of undefined (reading 'rows')
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts:37:137
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/trust-guards.test.ts:26:20
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/trust-guards.test.ts > RT-007 thumbnail limiter rejects before query/sign/stream including signed guest tickets
+Выдача клипа: не удалось получить файл TypeError: Cannot read properties of undefined (reading 'rows')
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts:37:137
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/trust-guards.test.ts:26:20
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ❯ tests/trust-guards.test.ts (5 tests | 2 failed) 2987ms
+   ✓ И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed 10ms
+   × RT-007 file limiter rejects before query/sign/stream including signed guest tickets 19ms
+     → expected 503 to be 429 // Object.is equality
+   × RT-007 thumbnail limiter rejects before query/sign/stream including signed guest tickets 3ms
+     → expected 503 to be 429 // Object.is equality
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=0  1506ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=1  1447ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/trust-guards.test.ts > RT-007 file limiter rejects before query/sign/stream including signed guest tickets
+ FAIL  tests/trust-guards.test.ts > RT-007 thumbnail limiter rejects before query/sign/stream including signed guest tickets
+AssertionError: expected 503 to be 429 // Object.is equality
+
+- Expected
++ Received
+
+- 429
++ 503
+
+ ❯ tests/trust-guards.test.ts:29:27
+     27|     headers: { 'x-forwarded-for': '192.0.2.5, 127.0.0.1' },
+     28|   }), '11111111-1111-4111-8111-111111111111');
+     29|   expect(response.status).toBe(429);
+       |                           ^
+     30|   expect(allowRead).toHaveBeenCalledWith('192.0.2.5', undefined);
+     31|   expect(query).not.toHaveBeenCalled(); expect(sign).not.toHaveBeenCal…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  08:31:54
+   Duration  3.44s (transform 143ms, setup 0ms, collect 179ms, tests 2.99s, environment 0ms, prepare 96ms)
+

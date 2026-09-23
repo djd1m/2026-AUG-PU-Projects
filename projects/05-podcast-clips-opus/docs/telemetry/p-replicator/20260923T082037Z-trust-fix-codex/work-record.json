@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T082037Z-trust-fix-codex",
+    "work_unit_id": "trust-fix",
+    "current_attempt_id": "gates-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "0534c903cd5353bca5cd56daef452a5ae2f4fa30",
+    "current_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+    "build_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/reviews/06_fix_brief_trust.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "0534c903cd5353bca5cd56daef452a5ae2f4fa30",
+      "observed_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "Authorized repair; final scoped manifest excludes concurrent badge documents and images. Only test fixtures changed after successful build; production hashes verified identical.",
+        "decision": "Keep other work untouched; require remaining integration and cross-family gates before acceptance.",
+        "affected_checks": [
+          "lint",
+          "typecheck",
+          "tests"
+        ],
+        "rerun": [
+          "lint-final",
+          "typecheck-final",
+          "tests-final"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "sha256:9b0335766b7e9317e744ed33ff76dd7d49cf4bee9ad14cd36287690beef5da0b",
+    "scope": [
+      "Remediate RT-001/002/003/004/006/007/011 and I1/I2; adjudicate all 13 findings"
+    ],
+    "exclusions": [
+      "Changing frozen canon",
+      "Deployment",
+      "Inventing operator complaint contact",
+      "RT-008/009/010 product-policy decisions"
+    ],
+    "action_limits": [
+      "Only selected project code, tests, report and telemetry; no paid provider calls or external messaging"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "local-gates",
+        "required": true
+      },
+      {
+        "id": "postgres-concurrency",
+        "required": true
+      },
+      {
+        "id": "independent-review",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "apps/web/src/server/erasure-receipt.ts"
+          }
+        },
+        "provenance": "0534c903cd5353bca5cd56daef452a5ae2f4fa30",
+        "useful_fragment": "Existing domain-separated HMAC capability pattern with expiry and HttpOnly cookie",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "Reuse sessionSecret and cryptographic primitive; referral uses a distinct signature domain."
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable measured runs; no forecast",
+      "scope_revision": "sha256:9b0335766b7e9317e744ed33ff76dd7d49cf4bee9ad14cd36287690beef5da0b",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:9b0335766b7e9317e744ed33ff76dd7d49cf4bee9ad14cd36287690beef5da0b",
+      "tier": "XL",
+      "rationale": "Attribution and erasure trust invariants; execute explicit owner-authorized fix brief, preserve canon. Timing gaps disclosed in run.json.",
+      "script": {
+        "input": "apps/web/src/server/partner.ts apps/web/src/server/retention.ts apps/web/src/server/short-link.ts",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "sha256:9b0335766b7e9317e744ed33ff76dd7d49cf4bee9ad14cd36287690beef5da0b",
+      "tier": "XL",
+      "rationale": "Attribution and erasure trust invariants; execute explicit owner-authorized fix brief, preserve canon. Timing gaps disclosed in run.json.",
+      "script": {
+        "input": "apps/web/src/server/partner.ts apps/web/src/server/retention.ts apps/web/src/server/short-link.ts",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "No additional approval: user explicitly requested execution of the concrete fix brief.",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No live E2E attempted; Docker inaccessible and CJM script absent. Local unit/HTTP tests do not establish deployment readiness.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "trust-fix-1",
+      "status": "completed"
+    },
+    {
+      "id": "trust-readonly-plan",
+      "status": "completed"
+    },
+    {
+      "id": "same-family-review",
+      "status": "completed"
+    },
+    {
+      "id": "gates-1",
+      "status": "failed"
+    },
+    {
+      "id": "anthropic-review-1",
+      "status": "failed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "trust-fix",
+      "paths": [
+        {
+          "root": "project",
+          "path": ".env.example"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/AuthForm.tsx"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/api/trpc/[trpc]/route.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/c/[code]/route.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/g/[guest_code]/route.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/lib/partner-referral.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/clip-file.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/guest-page.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/partner.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/retention.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/screen-runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/short-link-handler.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/short-link.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/trpc.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/upload-runtime.ts"
+        },
+        {
+          "root": "project",
+          "path": "docker-compose.yml"
+        },
+        {
+          "root": "project",
+          "path": "package.json"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/clip-link.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/fixtures/environment.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/guest-pack.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/guest-pack.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/partner-route.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/partner.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/partner.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/progress-screen.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/progress-screen.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/retention.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/retention.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/short-link.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/short-link.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/watchdog-diagnostics.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "vitest.config.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test.mjs"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-skip-reporter.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/trust-guards.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/trust-route.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "docs/reviews/07_fix_report_trust.md"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260923T082037Z-trust-fix-codex",
+    "work_unit_id": "trust-fix",
+    "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+    "blockers": [
+      "137 integration tests skipped: DATABASE_URL, REDIS_URL and S3_ENDPOINT unavailable; Docker socket permission denied.",
+      "OWN-002 Anthropic review timeout after 60s.",
+      "Live environment/port conflict checks and CJM/E2E not verified; synthetic compose configuration guards passed."
+    ],
+    "next_allowed_step": "Run full test profile with --build and zero skips, independent Anthropic review; owner resolves operator contact and canon questions.",
+    "approval_ids": [],
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Review fix brief has no native workflow checkpoint; report and source manifest form handoff."
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm run build",
+      "exit_code": 0,
+      "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/build.txt"
+      }
+    },
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm run lint",
+      "exit_code": 0,
+      "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/lint-final.txt"
+      }
+    },
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/typecheck-final.txt"
+      }
+    },
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/tests-final.txt"
+      }
+    },
+    {
+      "ac_id": "postgres-concurrency",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

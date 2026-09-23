@@ -8,6 +8,7 @@ afterEach(() => { vi.clearAllTimers(); vi.useRealTimers(); vi.restoreAllMocks();
 function fixture(failAt = '', error: unknown = new Error('named database failure')) {
   const query = vi.fn(async (sql: string): Promise<{ rows: Record<string, unknown>[]; rowCount: number }> => {
     if (failAt && sql.includes(failAt)) throw error;
+    if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
     if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
     return { rows: [], rowCount: 0 };
   });
@@ -61,7 +62,8 @@ describe('WD-001: watchdog failure diagnostics', () => {
       if (sql.includes('SELECT j.*')) return { rows: [
         { id: 'first', status: 'running' }, { id: 'second', status: 'running' },
       ], rowCount: 2 };
-      if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
+      if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
+    if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
       return { rows: [], rowCount: 0 };
     });
     const log = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -76,7 +78,8 @@ describe('WD-001: watchdog failure diagnostics', () => {
     const f = fixture(), clipError = new Error('WD-001 clip deletion denied'), accountError = new Error('WD-001 account erasure denied');
     const now = new Date();
     f.query.mockImplementation(async sql => {
-      if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
+      if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
+    if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
       if (sql.startsWith('SELECT c.id')) return { rows: [{ id: 'clip', object_key: 'clip.mp4', thumbnail_key: null }], rowCount: 1 };
       if (sql.startsWith('SELECT id FROM account')) return { rows: [{ id: 'account' }], rowCount: 1 };
       return { rows: [], rowCount: 0 };
@@ -85,8 +88,8 @@ describe('WD-001: watchdog failure diagnostics', () => {
     f.storage.erasePrefix.mockRejectedValue(accountError);
     const log = vi.spyOn(console, 'error').mockImplementation(() => {});
     await expect(retentionTick(f.pool, f.storage, now)).rejects.toThrow('не завершено операций 2');
-    expect(log).toHaveBeenCalledWith('Очистка: удаление клипа не завершено; повтор на следующем проходе', clipError);
-    expect(log).toHaveBeenCalledWith('Очистка: стирание аккаунта не завершено; повтор на следующем проходе', accountError);
+    expect(log).toHaveBeenCalledWith('Очистка: удаление клипа; повтор на следующем проходе', clipError);
+    expect(log).toHaveBeenCalledWith('Очистка: стирание аккаунта; повтор на следующем проходе', accountError);
     expect(f.query).toHaveBeenCalledWith('UPDATE account SET updated_at=$2 WHERE id=$1', ['account', now]);
     expect(f.query).toHaveBeenCalledWith('SELECT pg_advisory_unlock(50921012)');
     expect(f.release).toHaveBeenCalledOnce();

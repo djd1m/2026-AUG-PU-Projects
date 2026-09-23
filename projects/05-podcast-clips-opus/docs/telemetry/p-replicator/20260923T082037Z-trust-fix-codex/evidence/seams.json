@@ -1,0 +1,34 @@
+[
+  {
+    "name": "env-wiring-synthetic",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 0,
+    "environment": "Synthetic ephemeral values from .env.example; config-only, no container startup",
+    "evidence": "env-wiring-synthetic.txt"
+  },
+  {
+    "name": "ports-synthetic",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 0,
+    "environment": "Synthetic ephemeral values from .env.example; config-only, no container startup",
+    "evidence": "ports-synthetic.txt"
+  },
+  {
+    "name": "port-conflicts-corrected",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 0,
+    "environment": "Synthetic ephemeral values from .env.example; config-only, no container startup",
+    "evidence": "port-conflicts-corrected.txt"
+  }
+]

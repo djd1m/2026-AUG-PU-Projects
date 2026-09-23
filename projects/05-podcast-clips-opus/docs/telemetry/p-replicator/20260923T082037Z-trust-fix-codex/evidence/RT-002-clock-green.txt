@@ -1,0 +1,22 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/partner.test.ts > RT-003 self referral preserves existing cookie attribution
+self_referral_rejected {
+  account_id: 'a2d664e2-e18d-4d4f-a1c4-cfaef1b9a433',
+  partner_code_id: '895c68c6-3f6a-462d-a3da-d22d081583fc'
+}
+
+stderr | tests/partner.test.ts > RT-003 self referral preserves existing guest_link attribution
+self_referral_rejected {
+  account_id: 'a2d664e2-e18d-4d4f-a1c4-cfaef1b9a433',
+  partner_code_id: '895c68c6-3f6a-462d-a3da-d22d081583fc'
+}
+
+ ✓ tests/partner.test.ts (19 tests) 109ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  08:37:40
+   Duration  857ms (transform 265ms, setup 0ms, collect 396ms, tests 109ms, environment 0ms, prepare 111ms)
+

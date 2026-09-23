@@ -8,6 +8,7 @@ x-app-env: &app-env
   DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
   REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
   TZ: Europe/Moscow
+  N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-10}
 
 x-quota-env: &quota-env
   N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}
@@ -183,6 +184,7 @@ services:
     environment:
       <<: [*app-env, *quota-env]
       NODE_ENV: test
+      N5_ACCEPTANCE: "1"
       DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль БД не задан}@db:5432/n5_test
       S3_ENDPOINT: http://minio:9000
       # Тестовый клиент находится в сети compose; HTTP разрешён только NODE_ENV=test/development.

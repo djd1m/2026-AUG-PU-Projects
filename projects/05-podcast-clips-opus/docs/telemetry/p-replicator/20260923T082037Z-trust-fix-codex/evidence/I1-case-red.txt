@@ -1,0 +1,64 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/short-link.test.ts (16 tests | 2 failed) 62ms
+   ✓ anonymous landing returns escaped preview and CTA, no redirect, no cache, mobile viewport 17ms
+   ✓ expired landing survives file removal or 72-hour boundary 3ms
+   ✓ expired landing survives file removal or 72-hour boundary 2ms
+   ✓ missing object keeps landing and explains unavailable preview 1ms
+   ✓ non-ready clip does not expose its preview 1ms
+   ✓ unknown and revoked use identical 404 handler response 3ms
+   ✓ invalid trusted IP and rate refusal cannot write events 2ms
+   ✓ analytics failure is visible and never a false 200 1ms
+   ✓ owner self-visit never opens a transaction 1ms
+   ✓ conflict is normal; increment only if event inserted (0) 2ms
+   ✓ conflict is normal; increment only if event inserted (1) 1ms
+   ✓ query filters revoked links, deleted videos and inactive accounts; malformed code never queries 4ms
+   ✓ link.create is mutation using authenticated owner and validates clip UUID 6ms
+   ✓ copy button remains available after file expiry and uses canonical RPC 0ms
+   × И-1 lowercase and uppercase codes resolve to the same public page 11ms
+     → expected 404 to be 200 // Object.is equality
+   × И-2 six-character links resolve alongside old ten-character links 4ms
+     → Ссылка не найдена
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/short-link.test.ts > И-1 lowercase and uppercase codes resolve to the same public page
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/short-link.test.ts:111:24
+    109|     trustedProxyHops: 1, allowRead: async () => true, preview: async (…
+    110|   const lower = await handler(request(), 'k7m2xq9prt'), upper = await …
+    111|   expect(lower.status).toBe(200); expect(upper.status).toBe(200);
+       |                        ^
+    112|   expect(await lower.text()).toBe(await upper.text());
+    113| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/short-link.test.ts > И-2 six-character links resolve alongside old ten-character links
+Error: Ссылка не найдена
+ ❯ missing apps/web/src/server/short-link.ts:9:23
+      7|   thumbnail_key: string | null; expires_at: Date | null; finished_at: …
+      8| }
+      9| const missing = () => new UploadError('not_found', 'Ссылка не найдена'…
+       |                       ^
+     10| const linkSelect = `SELECT l.id,l.code,v.account_id,c.title,c.status,c…
+     11|   FROM clip_link l JOIN clip c ON c.id=l.clip_id JOIN video v ON v.id=…
+ ❯ ShortLinkService.find apps/web/src/server/short-link.ts:21:113
+ ❯ tests/short-link.test.ts:116:77
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  08:31:59
+   Duration  728ms (transform 275ms, setup 0ms, collect 364ms, tests 62ms, environment 0ms, prepare 89ms)
+

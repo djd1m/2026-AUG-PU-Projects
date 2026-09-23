@@ -1,3 +1,4 @@
+import { clientIp } from './ip';
 import { z } from 'zod';
 import type { Pool } from '@clipmaker/db';
 import { readSessionCookie } from './auth-handler';
@@ -5,6 +6,8 @@ import type { AuthService } from './auth';
 import { guestFileTicket, validGuestFileTicket } from './guest-file';
 
 export interface ClipFileDependencies {
+  allowRead: (ip: string, account?: string) => Promise<boolean>;
+  trustedProxyHops: number;
   pool: Pick<Pool, 'query'>; auth: Pick<AuthService, 'authenticate'>;
   sign: (key: string, filename?: string) => Promise<string>;
   clock?: () => Date;
@@ -17,6 +20,9 @@ export function createClipFileHandler(deps: ClipFileDependencies, kind: 'file' |
     try {
       const token = readSessionCookie(request);
       const session = token ? await deps.auth.authenticate(token) : null;
+      if (!await deps.allowRead(clientIp(request.headers, deps.trustedProxyHops), session?.account_id)) {
+        return new Response('Слишком много запросов. Повторите через минуту', { status: 429, headers: { 'Cache-Control': 'no-store' } });
+      }
       const url = new URL(request.url), code = url.searchParams.get('g');
       if ((!session && !code) || !z.string().uuid().safeParse(id).success) return missing();
       if (code !== null && !/^[A-Za-z0-9_-]{32}$/.test(code)) return missing();

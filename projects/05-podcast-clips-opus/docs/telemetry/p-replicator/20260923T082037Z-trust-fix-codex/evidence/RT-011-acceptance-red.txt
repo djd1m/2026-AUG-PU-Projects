@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/trust-guards.test.ts (5 tests | 1 failed) 3350ms
+   ✓ И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed 7ms
+   ✓ RT-007 file limiter rejects before query/sign/stream including signed guest tickets 8ms
+   ✓ RT-007 thumbnail limiter rejects before query/sign/stream including signed guest tickets 2ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=0  1793ms
+   × RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=1 1539ms
+     → expected +0 to be 1 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/trust-guards.test.ts > RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=1
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/trust-guards.test.ts:41:27
+     39|       { env, stdio: ['ignore', fd, fd], timeout: 25000 });
+     40|     expect(result.error).toBeUndefined();
+     41|     expect(result.status).toBe(acceptance === '1' ? 1 : 0);
+       |                           ^
+     42|     const output = readFileSync(file, 'utf8');
+     43|     expect(output).toMatch(/WARNING: ПРОПУЩЕНО 9 тестов; отсутствуют D…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  08:32:05
+   Duration  3.88s (transform 198ms, setup 0ms, collect 240ms, tests 3.35s, environment 0ms, prepare 92ms)
+

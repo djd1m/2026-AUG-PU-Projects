@@ -6,7 +6,7 @@
     "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/db && npm run build --workspace=packages/s3 && npm run build --workspace=apps/worker && npm run build --workspace=apps/web",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json",
     "lint": "node scripts/lint.mjs",
-    "test": "vitest run",
+    "test": "node scripts/test.mjs",
     "db:migrate": "npm run build --workspace=packages/db && node packages/db/dist/migrate.js"
   },
   "devDependencies": {

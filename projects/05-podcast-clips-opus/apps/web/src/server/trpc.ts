@@ -9,7 +9,7 @@ import type { ShortLinkService } from './short-link';
 import type { GuestPackService } from './guest-pack';
 import type { PartnerService } from './partner';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
+interface Context { referralCookie?: string; erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -76,7 +76,7 @@ export const appRouter = t.router({
   }) }),
   'code.apply': validatedProcedure.input(z.unknown()).mutation(({ ctx, input }) => partnerResult(ctx, s => {
     if (!ctx.ipPrefix) throw new Error('Client prefix unavailable');
-    return s.apply(ctx.account, input, ctx.ipPrefix);
+    return s.apply(ctx.account, input, ctx.ipPrefix, ctx.referralCookie);
   })),
 partner: t.router({
   dashboard: validatedProcedure.input(z.object({ code_id: z.string().uuid().optional() }).strict())

@@ -13,6 +13,7 @@ function fixture() {
   const commands: string[] = [];
   const query = vi.fn(async (sql: string) => {
     commands.push(sql);
+    if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
     if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
     if (sql.startsWith('SELECT status FROM account')) return { rows: [{ status: 'active' }], rowCount: 1 };
     if (sql.startsWith('SELECT id FROM account')) return { rows: [{ id: account }], rowCount: 1 };
@@ -54,7 +55,8 @@ describe('retention and erasure guards', () => {
     const f = fixture();
     f.query.mockImplementation(async sql => {
       f.commands.push(sql);
-      if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
+      if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
+    if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
       if (sql.startsWith('SELECT c.id,c.object_key')) return { rows: [{ id: account, object_key: 'clip', thumbnail_key: 'thumb' }], rowCount: 1 };
       return { rows: [], rowCount: 0 };
     });
@@ -63,9 +65,9 @@ describe('retention and erasure guards', () => {
     expect(f.query).toHaveBeenCalledWith(expect.stringContaining("a.plan <> 'paid'"), [new Date('2026-09-21T12:00:00Z'), 100]);
     expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(true);
   });
-  it('expired guest packs are revoked using existing fourteen-day expiry', async () => {
+  it('expiry does not overwrite explicit revocation', async () => {
     const f = fixture(); await retentionTick(f.pool, f.storage);
-    expect(f.commands.some(s => s.startsWith('UPDATE guest_pack SET revoked_at=$1') && s.includes('expires_at<=$1'))).toBe(true);
+    expect(f.commands.some(s => s.startsWith('UPDATE guest_pack SET revoked_at=$1') && s.includes('expires_at<=$1'))).toBe(false);
     const sql = readFileSync('packages/db/migrations/001_init.sql', 'utf8');
     expect(sql).toContain("expires_at = sent_at + interval '336 hours'");
   });
@@ -87,4 +89,23 @@ describe('retention and erasure guards', () => {
     expect(readErasureReceipt(token.replace('11111111', '22222222'), 'secret', now)).toBeNull();
     expect(readErasureReceipt(token, 'secret', now + 8 * 86400_000)).toBeNull();
   });
+});
+it.each(['SELECT count(*) FROM account', 'DELETE FROM video', 'SELECT c.id,c.object_key'])('RT-004 independent failure at %s cannot suppress erasure', async failure => {
+  const f = fixture(), original = f.query.getMockImplementation()!;
+  f.query.mockImplementation(async sql => { if ((sql.includes(failure) && (failure !== 'DELETE FROM video' || sql.includes('refused_user_uploads')))) throw new Error('injected step failure'); return original(sql); });
+  await expect(retentionTick(f.pool, f.storage)).rejects.toThrow('Очистка: не завершено операций');
+  expect(f.storage.erasePrefix).toHaveBeenCalledWith(`videos/${account}/`);
+  expect(f.commands.some(sql => sql.includes("UPDATE account SET status='deleted'"))).toBe(true);
+  expect(f.commands.some(sql => sql.includes('pg_advisory_unlock'))).toBe(true);
+});
+it('RT-004 overdue erasure is observable even if this tick successfully deletes the account', async () => {
+  const f = fixture(), original = f.query.getMockImplementation()!;
+  f.query.mockImplementation(async sql => sql.includes('SELECT count(*) FROM account') ? { rows: [{ count: '1' }], rowCount: 1 } : original(sql));
+  const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+  try {
+    await expect(retentionTick(f.pool, f.storage)).rejects.toThrow('Очистка: не завершено операций');
+    expect(log.mock.calls.some(call => String(call[1]).includes('erase_deadline_overdue: 1'))).toBe(true);
+    expect(f.storage.erasePrefix).toHaveBeenCalled();
+    expect(f.query).toHaveBeenCalledWith(expect.stringContaining('erase_deadline < $1'), [expect.any(Date)]);
+  } finally { log.mockRestore(); }
 });

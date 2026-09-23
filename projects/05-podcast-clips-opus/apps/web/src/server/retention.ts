@@ -41,43 +41,57 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
   const lease = await pool.connect();
   try {
     if (!(await lease.query<{ locked: boolean }>('SELECT pg_try_advisory_lock(50921012) AS locked')).rows[0]?.locked) return;
-    let backlog = false;
-    for (let page = 0; page < 100; page++) {
-    const expired = await pool.query(`UPDATE guest_pack SET revoked_at=$1 WHERE id IN
-      (SELECT id FROM guest_pack WHERE revoked_at IS NULL AND expires_at<=$1 ORDER BY expires_at LIMIT $2)`, [now, batch]);
-      if ((expired.rowCount ?? 0) < batch) break;
-      if (page === 99) backlog = true;
-    }
-    for (let page = 0; page < 100; page++) {
-    const refused = await pool.query(`DELETE FROM video WHERE id IN (SELECT id FROM video
-      WHERE status='failed' AND failure_reason='refused_user_uploads' AND created_at<=$1 ORDER BY created_at LIMIT $2)`,
-    [new Date(now.getTime() - 24 * 3600_000), batch]);
-      if ((refused.rowCount ?? 0) < batch) break;
-      if (page === 99) backlog = true;
-    }
-    const clips = await pool.query<{ id: string; object_key: string | null; thumbnail_key: string | null }>(`SELECT c.id,c.object_key,c.thumbnail_key FROM clip c
-      JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
-      WHERE c.status='done' AND a.status='active' AND a.plan <> 'paid' AND v.status IN ('done','failed')
-      AND v.finished_at <= $1 AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
-      ORDER BY v.finished_at LIMIT $2`, [new Date(now.getTime() - 3 * 86400_000), batch]);
-    let errors = 0;
-    for (const clip of clips.rows) {
-      try {
+    let backlog = false, errors = 0;
+    const step = async (name: string, work: () => Promise<void>) => {
+      try { await work(); }
+      catch (error) { errors++; console.error(`Очистка: ${name}; повтор на следующем проходе`, error); }
+    };
+    // Observe before retries: a late successful erase must not hide a missed deadline.
+    await step('наблюдение срока стирания', async () => {
+      const overdue = Number((await pool.query<{ count: string }>(`SELECT count(*) FROM account
+        WHERE status='erasing' AND erase_deadline < $1`, [now])).rows[0]!.count);
+      if (overdue > 0) throw new Error(`erase_deadline_overdue: ${overdue}`);
+    });
+    await step('стирание аккаунтов', async () => {
+      const accounts = await pool.query<{ id: string }>(`SELECT id FROM account WHERE status='erasing' AND deletion_requested_at <= $1
+        ORDER BY updated_at,id LIMIT $2`, [new Date(now.getTime() - ERASURE_QUIET_MS), batch]);
+      backlog ||= accounts.rows.length === batch;
+      for (const account of accounts.rows) await step('стирание аккаунта', async () => {
+        try { await eraseAccount(pool, storage, account.id, now); }
+        catch (error) {
+          // A failed fairness update must not stop other accounts or retention steps.
+          await step('очередность повторного стирания', async () => {
+            await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]);
+          });
+          throw error;
+        }
+      });
+    });
+    // Expiry is enforced on reads; revoked_at records an explicit revocation only.
+    await step('удаление отказанных загрузок', async () => {
+      for (let page = 0; page < 100; page++) {
+        const refused = await pool.query(`DELETE FROM video WHERE id IN (SELECT id FROM video
+          WHERE status='failed' AND failure_reason='refused_user_uploads' AND created_at<=$1 ORDER BY created_at LIMIT $2)`,
+        [new Date(now.getTime() - 24 * 3600_000), batch]);
+        if ((refused.rowCount ?? 0) < batch) break;
+        if (page === 99) backlog = true;
+      }
+    });
+    await step('очистка клипов', async () => {
+      const clips = await pool.query<{ id: string; object_key: string | null; thumbnail_key: string | null }>(`SELECT c.id,c.object_key,c.thumbnail_key FROM clip c
+        JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
+        WHERE c.status='done' AND a.status='active' AND a.plan <> 'paid' AND v.status IN ('done','failed')
+        AND v.finished_at <= $1 AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
+        ORDER BY v.finished_at LIMIT $2`, [new Date(now.getTime() - 3 * 86400_000), batch]);
+      backlog ||= clips.rows.length === batch;
+      for (const clip of clips.rows) await step('удаление клипа', async () => {
         for (const key of [clip.object_key, clip.thumbnail_key]) if (key) await storage.delete(key);
         await pool.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
-      } catch (error) { console.error('Очистка: удаление клипа не завершено; повтор на следующем проходе', error); errors++; }
-    }
-    const accounts = await pool.query<{ id: string }>(`SELECT id FROM account WHERE status='erasing' AND deletion_requested_at <= $1
-      ORDER BY updated_at,id LIMIT $2`, [new Date(now.getTime() - ERASURE_QUIET_MS), batch]);
-    for (const account of accounts.rows) {
-      try { await eraseAccount(pool, storage, account.id, now); }
-      catch (error) {
-        console.error('Очистка: стирание аккаунта не завершено; повтор на следующем проходе', error);
-        errors++; await pool.query('UPDATE account SET updated_at=$2 WHERE id=$1', [account.id, now]);
-      }
-    }
+      });
+    });
     if (errors) throw new Error(`Очистка: не завершено операций ${errors}; повтор на следующем проходе`);
-    return { backlog: backlog || clips.rows.length === batch || accounts.rows.length === batch };
+    return { backlog };
+
   } finally {
     try { await lease.query('SELECT pg_advisory_unlock(50921012)'); } finally { lease.release(); }
   }

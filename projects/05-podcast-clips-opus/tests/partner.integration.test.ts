@@ -6,13 +6,15 @@ import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { PartnerService } from '../apps/web/src/server/partner';
 import { ensurePartnerCode } from '../apps/web/src/server/partner-code';
 import { ipPrefix } from '../apps/web/src/server/ip';
+import { referralCookie } from '../apps/web/src/lib/partner-referral';
+const secret = 'test-referral-secret';
 const url = process.env.DATABASE_URL;
 describe.skipIf(!url)('PostgreSQL partner attribution', () => {
   let pool: Pool, service: PartnerService;
   const schema = `partner_${randomBytes(8).toString('hex')}`;
   const owner = randomUUID(), visitor = randomUUID(), other = randomUUID(), codeId = randomUUID(), otherCode = randomUUID();
   const now = new Date('2026-09-23T00:00:00Z'), prefix = '192.0.2.0/24';
-  const apply = (code = 'CODE123', source = 'explicit', account = visitor, ip = prefix) => service.apply(account, { code, source }, ip);
+  const apply = (code = 'CODE123', source: 'explicit' | 'cookie' | 'guest_link' = 'explicit', account = visitor, ip = prefix) => service.apply(account, { code }, ip, source === 'explicit' ? '' : referralCookie('', code, source, false, secret, now.getTime())!);
   const attribution = async () => (await pool.query('SELECT * FROM attribution WHERE account_id=$1', [visitor])).rows[0];
   const seed = async (source: string, status = 'pending') => pool.query(`INSERT INTO attribution(account_id,partner_code_id,source,status)
     VALUES($1,$2,$3,$4)`, [visitor, otherCode, source, status]);
@@ -23,7 +25,7 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await ensureTestDatabase(url);
     pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
-    service = new PartnerService(pool, () => now);
+    service = new PartnerService(pool, secret, () => now);
   });
   beforeEach(async () => {
     await pool.query('TRUNCATE account CASCADE');
@@ -41,7 +43,7 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
   });
   it('explicit to any returns 409 and preserves every column', async () => {
     await seed('explicit'); const before = await attribution();
-    for (const source of ['explicit', 'guest_link', 'cookie']) await expect(apply('CODE123', source)).rejects.toMatchObject({ status: 409 });
+    for (const source of ['explicit', 'guest_link', 'cookie'] as const) await expect(apply('CODE123', source)).rejects.toMatchObject({ status: 409 });
     expect(await attribution()).toEqual(before);
   });
   it('guest_link to cookie returns 409 and preserves attribution', async () => {
@@ -53,12 +55,12 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await expect(apply('INVALID')).rejects.toMatchObject({ status: 422 }); expect(await attribution()).toEqual(before);
     expect((await pool.query('SELECT count(*) FROM growth_event')).rows[0].count).toBe('0');
   });
-  it('50 attempts block code globally, retain prior attribution and commit audit', async () => {
+  it('50th successful application blocks subsequent applications', async () => {
     await seed('cookie'); const before = await attribution(); await events(49);
-    await expect(apply()).rejects.toMatchObject({ status: 422 });
+    expect(await apply()).toMatchObject({ status: 'pending' });
     expect((await pool.query('SELECT status,blocked_reason FROM partner_code WHERE id=$1', [codeId])).rows[0])
       .toEqual({ status: 'blocked', blocked_reason: 'antifraud_ip_burst' });
-    expect(await attribution()).toEqual(before);
+    expect(await attribution()).toMatchObject({ id: before.id, partner_code_id: codeId });
     await expect(apply('CODE123', 'explicit', other, '198.51.100.0/24')).rejects.toMatchObject({ status: 422 });
     expect((await pool.query("SELECT count(*) FROM growth_event WHERE type='code_applied'")).rows[0].count).toBe('50');
     expect((await pool.query('SELECT status FROM account WHERE id=$1', [owner])).rows[0].status).toBe('active');
@@ -67,6 +69,21 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     expect(await apply('CODE123', 'explicit', owner)).toMatchObject({ status: 'rejected', reject_reason: 'self_referral' });
     expect((await service.dashboard(owner)).counters.registrations).toBe(0);
     expect((await service.dashboard(owner)).statuses).toContainEqual({ partner_code_id: codeId, source: 'explicit', status: 'rejected', count: 1 });
+  });
+  it('RT-002 fifty conflicting requests from one account never block the code or add counting events', async () => {
+    await seed('explicit'); const before = await attribution();
+    const results = await Promise.allSettled(Array.from({ length: 50 }, () => apply()));
+    expect(results.every(result => result.status === 'rejected' && result.reason.status === 409)).toBe(true);
+    expect(await attribution()).toEqual(before);
+    expect((await pool.query("SELECT status FROM partner_code WHERE id=$1", [codeId])).rows[0].status).toBe('active');
+    expect((await pool.query("SELECT count(*) FROM growth_event WHERE type='code_applied'")).rows[0].count).toBe('0');
+  });
+  it('RT-003 self referral preserves activated attribution and adds no counting event', async () => {
+    await pool.query(`INSERT INTO attribution(account_id,partner_code_id,source,status) VALUES($1,$2,'cookie','activated')`, [owner, otherCode]);
+    const before = (await pool.query('SELECT * FROM attribution WHERE account_id=$1', [owner])).rows[0];
+    await expect(apply('CODE123', 'explicit', owner)).rejects.toMatchObject({ status: 409 });
+    expect((await pool.query('SELECT * FROM attribution WHERE account_id=$1', [owner])).rows[0]).toEqual(before);
+    expect((await pool.query("SELECT count(*) FROM growth_event WHERE type='code_applied'")).rows[0].count).toBe('0');
   });
   it('foreign partner code returns 403 including unknown UUID', async () => {
     await expect(service.dashboard(other, codeId)).rejects.toMatchObject({ status: 403 });
@@ -83,11 +100,11 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
       const accounts = Array.from({ length: 20 }, () => randomUUID());
       for (const id of accounts) await pool.query("INSERT INTO account(id,email,password_hash) VALUES($1,$2,'test-only')", [id, `${id}@example.test`]);
       const results = await Promise.allSettled(accounts.map((id, i) => apply('CODE123', 'explicit', id, ipPrefix(`192.0.2.${i + 1}`))));
-      expect(results.filter(r => r.status === 'fulfilled')).toHaveLength(1);
+      expect(results.filter(r => r.status === 'fulfilled')).toHaveLength(2);
       for (const r of results) if (r.status === 'rejected') expect(r.reason).toMatchObject({ status: 422 });
       expect((await pool.query('SELECT count(*) FROM test_blocks')).rows[0].count).toBe('1');
       expect((await pool.query("SELECT count(*) FROM growth_event WHERE type='code_applied'")).rows[0].count).toBe('50');
-      expect((await pool.query('SELECT count(*) FROM attribution WHERE partner_code_id=$1', [codeId])).rows[0].count).toBe('1');
+      expect((await pool.query('SELECT count(*) FROM attribution WHERE partner_code_id=$1', [codeId])).rows[0].count).toBe('2');
     } finally {
       await pool.query('DROP TRIGGER test_block ON partner_code'); await pool.query('DROP FUNCTION test_block_audit()'); await pool.query('DROP TABLE test_blocks');
     }
@@ -113,7 +130,7 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await events(49, '198.51.100.0/24');
     expect(await apply()).toMatchObject({ status: 'pending' });
     const ipv6 = ipPrefix('2001:db8:1:2::1'); await events(49, ipv6);
-    await expect(apply('CODE123', 'explicit', other, ipPrefix('2001:db8:1:2::ffff'))).rejects.toMatchObject({ status: 422 });
+    expect(await apply('CODE123', 'explicit', other, ipPrefix('2001:db8:1:2::ffff'))).toMatchObject({ status: 'pending' });
   });
   it('database exception rolls back event and attribution together', async () => {
     await pool.query(`CREATE FUNCTION test_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected'; END $$`);

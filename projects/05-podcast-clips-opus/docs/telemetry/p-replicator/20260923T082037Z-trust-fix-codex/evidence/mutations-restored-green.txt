@@ -1,0 +1,64 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/trust-guards.test.ts (5 tests) 3416ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=0  1763ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=1  1635ms
+stderr | tests/partner.test.ts > RT-003 self referral preserves existing cookie attribution
+self_referral_rejected {
+  account_id: 'b3a91c24-a9ed-4e9b-aa63-0558d387947e',
+  partner_code_id: '51ddc61b-2ae3-4dbb-95bb-e395d142330b'
+}
+
+stderr | tests/partner.test.ts > RT-003 self referral preserves existing guest_link attribution
+self_referral_rejected {
+  account_id: 'b3a91c24-a9ed-4e9b-aa63-0558d387947e',
+  partner_code_id: '51ddc61b-2ae3-4dbb-95bb-e395d142330b'
+}
+
+ ✓ tests/partner.test.ts (19 tests) 97ms
+stderr | tests/retention.test.ts > RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure
+Очистка: наблюдение срока стирания; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:51:42
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:50:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/retention.test.ts > RT-004 independent failure at DELETE FROM video cannot suppress erasure
+Очистка: удаление отказанных загрузок; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:73:36
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:71:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/retention.test.ts > RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure
+Очистка: очистка клипов; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:81:32
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:80:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/retention.test.ts (12 tests) 56ms
+ ✓ tests/short-link.test.ts (16 tests) 50ms
+ ✓ tests/trust-route.test.ts (1 test) 34ms
+
+ Test Files  5 passed (5)
+      Tests  53 passed (53)
+   Start at  08:32:09
+   Duration  6.11s (transform 486ms, setup 0ms, collect 1.04s, tests 3.65s, environment 2ms, prepare 461ms)
+

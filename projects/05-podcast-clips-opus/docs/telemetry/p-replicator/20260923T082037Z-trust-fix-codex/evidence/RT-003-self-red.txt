@@ -1,0 +1,62 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/partner.test.ts (19 tests | 2 failed) 125ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source 22ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409 29ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > 50th success blocks future applications and commits attribution 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded 1ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403 3ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict 0ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event 4ms
+   ✓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection 2ms
+   ✓ passive referral preserves stronger source and ignores self visits 1ms
+   ✓ dashboard renders five counters, blocked explanation and attribution status without identity leakage 15ms
+   ✓ RT-001 body source cannot forge provenance, signed evidence alone selects guest_link 9ms
+   ✓ RT-001 invalid explicit code never falls back to signed evidence; skip has no database effects 1ms
+   ✓ RT-001 referral signature binds source, code and deadline; legacy/duplicate/expired cookies fail closed 1ms
+   ✓ RT-002 rejected repeated attempts cannot move the blocking counter 10ms
+   × RT-003 self referral preserves existing cookie attribution 13ms
+     → promise resolved "{ …(6) }" instead of rejecting
+   × RT-003 self referral preserves existing guest_link attribution 2ms
+     → promise resolved "{ …(6) }" instead of rejecting
+   ✓ RT-002 burst window is sampled after the code lock, including successes committed while waiting 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > RT-003 self referral preserves existing cookie attribution
+ FAIL  tests/partner.test.ts > RT-003 self referral preserves existing guest_link attribution
+AssertionError: promise resolved "{ …(6) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "id": "c2a7c8ea-0e3c-4717-83d3-a77a9853ed9b",
++   "partner_code_id": "05f365cf-5d82-4799-8060-525346091728",
++   "reject_reason": "self_referral",
++   "replaced_source": "cookie",
++   "source": "explicit",
++   "status": "rejected",
+  }
+
+ ❯ tests/partner.test.ts:156:94
+    154| it.each(['cookie', 'guest_link'] as const)('RT-003 self referral prese…
+    155|   const f = db({ self: true, existing: { ...row, source, status: 'acti…
+    156|   await expect(new PartnerService(f.pool, secret).apply(account, { cod…
+       |                                                                                              ^
+    157|   expect(f.query.mock.calls.some(([sql]) => /INSERT INTO attribution|U…
+    158| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed (19)
+   Start at  08:31:48
+   Duration  748ms (transform 209ms, setup 0ms, collect 316ms, tests 125ms, environment 0ms, prepare 102ms)
+

@@ -17,7 +17,8 @@ const linkSelect = `SELECT l.id,l.code,v.account_id,c.title,c.status,c.thumbnail
 export class ShortLinkService {
   constructor(private readonly pool: Pool, private readonly clock = () => new Date()) {}
   async find(code: string): Promise<ShortLink> {
-    if (!/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{10}$/.test(code)) throw missing();
+    code = code.toUpperCase();
+    if (!/^(?:[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}|[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{10})$/.test(code)) throw missing();
     const row = (await this.pool.query<ShortLink>(`${linkSelect} AND l.code=$1`, [code])).rows[0];
     if (!row) throw missing();
     return row;

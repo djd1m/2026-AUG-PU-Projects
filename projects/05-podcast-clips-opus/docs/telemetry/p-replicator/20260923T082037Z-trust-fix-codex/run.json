@@ -18,28 +18,49 @@
   ],
   "comparison_id": null,
   "baseline_revision": "0534c903cd5353bca5cd56daef452a5ae2f4fa30",
-  "final_revision": null,
+  "final_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
   "spec_sha256": "3ac09f3dcccc354f292ac0ed0452de0e7f14f8bafd68b6f8e54354e303407532",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-23T08:20:37Z",
-  "ended_at": null,
-  "status": "running",
-  "acceptance_evidence": [],
+  "ended_at": "2026-09-23T08:42:56.412097+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/build.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/lint.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/typecheck.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/tests.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/env-wiring.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/ports.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/port-conflicts.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/lint-final.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/typecheck-final.txt",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/tests-final.txt",
+    "docs/reviews/07_fix_report_trust.md",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/mutations.json",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/final-source-manifest.json",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/seams.json",
+    "docs/telemetry/p-replicator/20260923T082037Z-trust-fix-codex/evidence/work-record-validation-final.txt"
+  ],
   "quality": {
     "required_gates_passed": false,
     "ac_met": null,
     "ac_total": 13,
-    "confirmed_findings_by_severity": {},
+    "confirmed_findings_by_severity": {
+      "high": 4,
+      "medium": 6,
+      "low": 3
+    },
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "pending"
+    "followup_status": "pending",
+    "local_gates_passed": true
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 1339412,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
@@ -49,6 +70,34 @@
   "missing_data": [
     "Instruction reading preceded first captured timestamp; preparation duration unknown.",
     "Exact model id/effort, usage and billing unavailable; developer identifies GPT-6 Codex.",
-    "No comparison run or follow-up observations."
-  ]
+    "No comparison run or follow-up observations.",
+    "PLAN/IMPLEMENT stage boundaries and delegation were not timestamped at occurrence; recorded at receipt collection, not reconstructed."
+  ],
+  "pending": [
+    "137 integration tests skipped: DATABASE_URL, REDIS_URL and S3_ENDPOINT unavailable; Docker socket permission denied.",
+    "OWN-002 Anthropic review timeout after 60s.",
+    "Live environment/port conflict checks and CJM/E2E not verified; synthetic compose configuration guards passed."
+  ],
+  "models": [
+    {
+      "role": "implementation",
+      "family": "GPT-6 Codex",
+      "actual_model": null,
+      "evidence": "Developer identifies family, runtime metadata unavailable"
+    },
+    {
+      "role": "same-family-readonly-review",
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": null
+    },
+    {
+      "role": "OWN-002-review",
+      "requested_model": "sonnet",
+      "requested_effort": "high",
+      "actual_model": null,
+      "exit_code": 124
+    }
+  ],
+  "final_head_observed": "4a2ab57961db1d5f810d0b12e46af9ea44ddc115"
 }

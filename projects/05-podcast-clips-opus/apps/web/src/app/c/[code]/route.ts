@@ -10,7 +10,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
   const ctx = { client: createS3Client(config.s3), bucket: config.s3.bucket };
   try {
     return await createShortLinkHandler({ links: new ShortLinkService(pool), auth,
-      trustedProxyHops: config.trustedProxyHops,
+      trustedProxyHops: config.trustedProxyHops, referralSecret: config.sessionSecret,
       allowRead: (ip, account) => allowRead(redis, ip, config.sessionSecret, account),
       preview: async key => {
         try { await headObject(ctx, key); }

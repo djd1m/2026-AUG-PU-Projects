@@ -17,7 +17,7 @@ describe.skipIf(!dbUrl)('PostgreSQL short-link', () => {
   const request = (ip = '192.0.2.10', cookie = '') => new Request(`https://app.example/c/${code}`, {
     headers: { 'x-forwarded-for': `${ip}, 127.0.0.1`, cookie },
   });
-  const handler = () => createShortLinkHandler({ links, auth, preview, trustedProxyHops: 1,
+  const handler = () => createShortLinkHandler({ referralSecret: 'test-secret', links, auth, preview, trustedProxyHops: 1,
     allowRead: async () => true, clock: () => now });
   const totals = async () => ({
     count: (await pool.query('SELECT unique_view_count FROM clip_link WHERE id=$1', [linkId])).rows[0].unique_view_count,

@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/trust-guards.test.ts (5 tests | 1 failed) 3302ms
+   × И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed 17ms
+     → expected 'TLV4S5SPUK' to match /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6…/
+   ✓ RT-007 file limiter rejects before query/sign/stream including signed guest tickets 8ms
+   ✓ RT-007 thumbnail limiter rejects before query/sign/stream including signed guest tickets 2ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=0  1592ms
+   ✓ RT-011 absent DATABASE_URL warns with exact skipped count; acceptance=1  1681ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/trust-guards.test.ts > И-2 generator defaults to ten, flag enables six, collisions retry and invalid flags fail closed
+AssertionError: expected 'TLV4S5SPUK' to match /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6…/
+
+- Expected: 
+/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}$/
+
++ Received: 
+"TLV4S5SPUK"
+
+ ❯ tests/trust-guards.test.ts:15:61
+     13|     await createClipLink({ query } as unknown as PoolClient, 'clip');
+     14|     expect(query).toHaveBeenCalledTimes(2);
+     15|     for (const call of query.mock.calls) expect(call[1][1]).toMatch(/^…
+       |                                                             ^
+     16|     vi.stubEnv('N5_SHORT_CODE_LENGTH', undefined);
+     17|     await createClipLink({ query } as unknown as PoolClient, 'clip');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  08:32:00
+   Duration  3.88s (transform 179ms, setup 0ms, collect 240ms, tests 3.30s, environment 0ms, prepare 97ms)
+

@@ -1,0 +1,136 @@
+
+> n5-clipmaker@0.1.0 test
+> node scripts/test.mjs tests/partner.test.ts tests/short-link.test.ts tests/guest-pack.test.ts tests/retention.test.ts tests/progress-screen.test.ts
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/guest-pack.test.ts > guest file capability > bad ticket fails before signing; DB or storage outage is fail closed
+Выдача клипа: не удалось получить файл Error: secret
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/guest-pack.test.ts:147:70
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/guest-pack.test.ts (20 tests) 185ms
+stderr | tests/progress-screen.test.ts > авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии
+Выдача клипа: не удалось получить файл Error: Адрес клиента недоступен: ограничитель не может защитить вход
+    at clientIp (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/ip.ts:11:45)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts:23:33
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/progress-screen.test.ts:85:21
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/progress-screen.test.ts > авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии
+Выдача клипа: не удалось получить файл Error: Адрес клиента недоступен: ограничитель не может защитить вход
+    at clientIp (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/ip.ts:11:45)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts:23:33
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/progress-screen.test.ts:85:60
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/progress-screen.test.ts > авторизованный redirect файла и превью > клип не done даёт 404, соседний готовый отдаётся
+Выдача клипа: не удалось получить файл Error: Адрес клиента недоступен: ограничитель не может защитить вход
+    at clientIp (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/ip.ts:11:45)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts:23:33
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/progress-screen.test.ts:93:78
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/progress-screen.test.ts > авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+Выдача клипа: не удалось получить файл Error: Адрес клиента недоступен: ограничитель не может защитить вход
+    at clientIp (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/ip.ts:11:45)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/clip-file.ts:23:33
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/progress-screen.test.ts:105:19
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+ ❯ tests/progress-screen.test.ts (12 tests | 3 failed) 156ms
+   ✓ экран прогресса и оценки > три состояния различимы в HTML и тексте 18ms
+   ✓ экран прогресса и оценки > молчание после пяти минут не показывается как идёт 3ms
+   ✓ экран прогресса и оценки > все причины имеют человеческий текст; незаконный retry скрыт 2ms
+   ✓ экран прогресса и оценки > пустое объяснение оценки отвергается, null score не становится нулём 13ms
+   ✓ экран прогресса и оценки > срок бесплатного файла считается с первого дня, истёкший нельзя скачать 1ms
+   × авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии 30ms
+     → expected 503 to be 404 // Object.is equality
+   × авторизованный redirect файла и превью > клип не done даёт 404, соседний готовый отдаётся 3ms
+     → expected 503 to be 404 // Object.is equality
+   × авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима 3ms
+     → expected 503 to be 404 // Object.is equality
+   ✓ tRPC read contract > GET video.get passes canonical input and ownership into service; result wrapper matches client 11ms
+   ✓ чтения 120/мин отдельно от 30 мутаций 14ms
+   ✓ скачивание: UTF-8 имя в подписанном Content-Disposition, TTL 900 54ms
+   ✓ файл открывается сразу, даже если запись события не отвечает 2ms
+ ✓ tests/partner.test.ts (12 tests) 137ms
+ ✓ tests/retention.test.ts (8 tests) 124ms
+ ✓ tests/short-link.test.ts (14 tests) 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/progress-screen.test.ts > авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии
+AssertionError: expected 503 to be 404 // Object.is equality
+
+- Expected
++ Received
+
+- 404
++ 503
+
+ ❯ tests/progress-screen.test.ts:86:28
+     84|     const f = fixture([]); const handler = createClipFileHandler({ ...…
+     85|     const foreign = await handler(f.request, id), absent = await handl…
+     86|     expect(foreign.status).toBe(404); expect(absent.status).toBe(404);…
+       |                            ^
+     87|     expect(f.query.mock.calls[0]?.[0]).toContain('v.account_id=$2'); e…
+     88|     expect(f.sign).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/progress-screen.test.ts > авторизованный redirect файла и превью > клип не done даёт 404, соседний готовый отдаётся
+AssertionError: expected 503 to be 404 // Object.is equality
+
+- Expected
++ Received
+
+- 404
++ 503
+
+ ❯ tests/progress-screen.test.ts:93:116
+     91|     const f = fixture(); const handler = createClipFileHandler({ ...f.…
+     92|     for (const status of ['queued', 'rendering', 'failed']) {
+     93|       f.query.mockResolvedValueOnce({ rows: [{ ...row, status }] }); e…
+       |                                                                                                                    ^
+     94|     }
+     95|     expect(f.sign).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/progress-screen.test.ts > авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+AssertionError: expected 503 to be 404 // Object.is equality
+
+- Expected
++ Received
+
+- 404
++ 503
+
+ ❯ tests/progress-screen.test.ts:105:68
+    103|   it('нет сессии / плохой id / истечение / нет ключа — без подписи; ош…
+    104|     const f = fixture(); const handler = createClipFileHandler({ ...f.…
+    105|     expect((await handler(new Request(f.request.url), id)).status).toB…
+       |                                                                    ^
+    106|     expect((await handler(f.request, 'bad')).status).toBe(404); expect…
+    107|     f.query.mockResolvedValueOnce({ rows: [{ ...row, expires_at: now }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  3 failed | 63 passed (66)
+   Start at  08:26:13
+   Duration  6.05s (transform 1.45s, setup 0ms, collect 3.32s, tests 645ms, environment 1ms, prepare 730ms)
+

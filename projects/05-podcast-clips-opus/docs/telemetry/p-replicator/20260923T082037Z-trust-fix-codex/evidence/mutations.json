@@ -1,0 +1,108 @@
+[
+  {
+    "name": "RT-001-body",
+    "file": "apps/web/src/server/partner.ts",
+    "test": "tests/trust-route.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-001-body-red.txt",
+    "restored_sha256": "a928779aa622b586e7384ef3af7be55338d2f3404be876587cfff7fb648c87fa"
+  },
+  {
+    "name": "RT-001-signature",
+    "file": "apps/web/src/lib/partner-referral.ts",
+    "test": "tests/partner.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-001-signature-red.txt",
+    "restored_sha256": "49e4f5969b1a47c468c5337d1dc27ed2fc9009a01f04eecc28043f64de78e456"
+  },
+  {
+    "name": "RT-001-context",
+    "file": "apps/web/src/app/api/trpc/[trpc]/route.ts",
+    "test": "tests/trust-route.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-001-context-red.txt",
+    "restored_sha256": "2f5a45fa8c252836c6d39ac1adb1cf950ce3d77b54fddd8c38c5b008b985f344"
+  },
+  {
+    "name": "RT-002-rejected-counter",
+    "file": "apps/web/src/server/partner.ts",
+    "test": "tests/partner.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-002-rejected-counter-red.txt",
+    "restored_sha256": "a928779aa622b586e7384ef3af7be55338d2f3404be876587cfff7fb648c87fa"
+  },
+  {
+    "name": "RT-003-self",
+    "file": "apps/web/src/server/partner.ts",
+    "test": "tests/partner.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-003-self-red.txt",
+    "restored_sha256": "a928779aa622b586e7384ef3af7be55338d2f3404be876587cfff7fb648c87fa"
+  },
+  {
+    "name": "RT-004-isolation",
+    "file": "apps/web/src/server/retention.ts",
+    "test": "tests/retention.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-004-isolation-red.txt",
+    "restored_sha256": "0b2eeb91f5287983226f038890cefdc7cc7670ddec6a67b4e0ae9e3ce0573bc6"
+  },
+  {
+    "name": "RT-004-deadline",
+    "file": "apps/web/src/server/retention.ts",
+    "test": "tests/retention.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-004-deadline-red.txt",
+    "restored_sha256": "0b2eeb91f5287983226f038890cefdc7cc7670ddec6a67b4e0ae9e3ce0573bc6"
+  },
+  {
+    "name": "RT-006-expiry",
+    "file": "apps/web/src/server/retention.ts",
+    "test": "tests/retention.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-006-expiry-red.txt",
+    "restored_sha256": "0b2eeb91f5287983226f038890cefdc7cc7670ddec6a67b4e0ae9e3ce0573bc6"
+  },
+  {
+    "name": "RT-007-limiter",
+    "file": "apps/web/src/server/clip-file.ts",
+    "test": "tests/trust-guards.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-007-limiter-red.txt",
+    "restored_sha256": "0cc2224d5fafbb85e24b2da8ec520d00ee4a423e645dda40dddde6d191dfc96b"
+  },
+  {
+    "name": "I1-case",
+    "file": "apps/web/src/server/short-link.ts",
+    "test": "tests/short-link.test.ts",
+    "red_exit_code": 1,
+    "evidence": "I1-case-red.txt",
+    "restored_sha256": "e28274468e741318bc87097cb92bee7840e0b335584033b3cf785aa98ac74645"
+  },
+  {
+    "name": "I2-flag",
+    "file": "packages/db/src/clip-link.ts",
+    "test": "tests/trust-guards.test.ts",
+    "red_exit_code": 1,
+    "evidence": "I2-flag-red.txt",
+    "restored_sha256": "a689aaa1a35db398243cb8af9d1a4f5f5a5517e739c251fd620fea17c6f0d0c2"
+  },
+  {
+    "name": "RT-011-acceptance",
+    "file": "scripts/test-skip-reporter.ts",
+    "test": "tests/trust-guards.test.ts",
+    "red_exit_code": 1,
+    "evidence": "RT-011-acceptance-red.txt",
+    "restored_sha256": "a55addd49aefaf2b48c8ce8c0efb9ad421458985bbbbbfbb9534928bd0e58fbd"
+  },
+  {
+    "name": "RT-002-clock",
+    "file": "apps/web/src/server/partner.ts",
+    "test": "tests/partner.test.ts",
+    "red_exit_code": 1,
+    "green_exit_code": 0,
+    "evidence": "RT-002-clock-red.txt",
+    "green_evidence": "RT-002-clock-green.txt",
+    "restored_sha256": "a928779aa622b586e7384ef3af7be55338d2f3404be876587cfff7fb648c87fa"
+  }
+]

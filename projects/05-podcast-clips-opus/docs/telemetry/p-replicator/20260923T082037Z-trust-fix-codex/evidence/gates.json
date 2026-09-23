@@ -1,0 +1,129 @@
+[
+  {
+    "name": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-23T08:32:39.419088+00:00",
+    "ended_at": "2026-09-23T08:33:38.761604+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "build.txt"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-23T08:33:38.762138+00:00",
+    "ended_at": "2026-09-23T08:33:39.988205+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "lint.txt"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-23T08:33:39.988761+00:00",
+    "ended_at": "2026-09-23T08:34:03.654777+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "typecheck.txt"
+  },
+  {
+    "name": "tests",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 1,
+    "started_at": "2026-09-23T08:34:03.655342+00:00",
+    "ended_at": "2026-09-23T08:35:56.287950+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "tests.txt"
+  },
+  {
+    "name": "env-wiring",
+    "command": [
+      "bash",
+      "scripts/check-env-wiring.sh"
+    ],
+    "exit_code": 2,
+    "started_at": "2026-09-23T08:35:56.289037+00:00",
+    "ended_at": "2026-09-23T08:35:56.711871+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "env-wiring.txt"
+  },
+  {
+    "name": "ports",
+    "command": [
+      "node",
+      "../../.claude/hooks/check-ports.cjs",
+      "."
+    ],
+    "exit_code": 2,
+    "started_at": "2026-09-23T08:35:56.712763+00:00",
+    "ended_at": "2026-09-23T08:35:56.881119+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "ports.txt"
+  },
+  {
+    "name": "port-conflicts",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "projects/05-podcast-clips-opus"
+    ],
+    "exit_code": 2,
+    "started_at": "2026-09-23T08:35:56.881940+00:00",
+    "ended_at": "2026-09-23T08:35:56.886443+00:00",
+    "source_revision": "sha256:bc77beb768f8c9c96c14fbc423c4e89ef34c523fe66ca4f719a850ad42c2a682",
+    "evidence": "port-conflicts.txt"
+  },
+  {
+    "name": "lint-final",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-23T08:38:22.537579+00:00",
+    "ended_at": "2026-09-23T08:38:23.809284+00:00",
+    "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+    "evidence": "lint-final.txt"
+  },
+  {
+    "name": "typecheck-final",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-23T08:38:23.810580+00:00",
+    "ended_at": "2026-09-23T08:38:46.930361+00:00",
+    "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+    "evidence": "typecheck-final.txt"
+  },
+  {
+    "name": "tests-final",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-23T08:38:46.930999+00:00",
+    "ended_at": "2026-09-23T08:40:33.491287+00:00",
+    "source_revision": "sha256:83b10a74aa7d2554b67a1f2d0bcdd43c7975bdad7f8e938b6bac96232b544e6b",
+    "evidence": "tests-final.txt"
+  }
+]

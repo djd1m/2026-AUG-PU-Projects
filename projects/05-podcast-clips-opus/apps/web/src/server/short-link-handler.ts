@@ -6,6 +6,7 @@ import { UploadError } from './upload-contract';
 import { previewState, type ShortLinkService } from './short-link';
 
 interface Dependencies {
+  referralSecret: string;
   links: Pick<ShortLinkService, 'find' | 'recordView'>;
   auth: Pick<AuthService, 'authenticate'>;
   trustedProxyHops: number;
@@ -47,7 +48,7 @@ export function createShortLinkHandler(deps: Dependencies) {
       const state = previewState(link, (deps.clock ?? (() => new Date()))());
       const preview = state === 'ready' ? await deps.preview(link.thumbnail_key!) : null;
       await deps.links.recordView(link, session?.account_id ?? null, ipPrefix(ip));
-      const referral = referralCookie(request.headers.get('cookie') ?? '', link.partner_code, 'cookie', session?.account_id === link.account_id);
+      const referral = referralCookie(request.headers.get('cookie') ?? '', link.partner_code, 'cookie', session?.account_id === link.account_id, deps.referralSecret);
       return new Response(landing(link.title, preview, state === 'expired'), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8' } });
     } catch (error) {
       if (error instanceof UploadError && error.status === 404) return new Response('Ссылка не найдена', { status: 404, headers });

@@ -1,0 +1,58 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/retention.test.ts (12 tests | 4 failed) 56ms
+   ✓ retention and erasure guards > confirmation required before state changes 8ms
+   ✓ retention and erasure guards > revokes guests before any storage deletion and completion follows objects 3ms
+   ✓ retention and erasure guards > storage failure preserves database rows for retry 2ms
+   ✓ retention and erasure guards > free clips older than three days are removed before row markers 4ms
+   ✓ retention and erasure guards > expiry does not overwrite explicit revocation 1ms
+   ✓ retention and erasure guards > growth events survive clip deletion with SET NULL 0ms
+   ✓ retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation 12ms
+   ✓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant 1ms
+   × RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure 14ms
+     → expected [Function] to throw error including 'Очистка: не завершено операций' but got 'injected step failure'
+   × RT-004 independent failure at DELETE FROM video cannot suppress erasure 2ms
+     → expected [Function] to throw error including 'Очистка: не завершено операций' but got 'injected step failure'
+   × RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure 2ms
+     → expected [Function] to throw error including 'Очистка: не завершено операций' but got 'injected step failure'
+   × RT-004 overdue erasure is observable even if this tick successfully deletes the account 4ms
+     → expected [Function] to throw error including 'Очистка: не завершено операций' but got 'erase_deadline_overdue: 1'
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure
+ FAIL  tests/retention.test.ts > RT-004 independent failure at DELETE FROM video cannot suppress erasure
+ FAIL  tests/retention.test.ts > RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure
+AssertionError: expected [Function] to throw error including 'Очистка: не завершено операций' but got 'injected step failure'
+
+Expected: "Очистка: не завершено операций"
+Received: "injected step failure"
+
+ ❯ tests/retention.test.ts:96:3
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/retention.test.ts > RT-004 overdue erasure is observable even if this tick successfully deletes the account
+AssertionError: expected [Function] to throw error including 'Очистка: не завершено операций' but got 'erase_deadline_overdue: 1'
+
+Expected: "Очистка: не завершено операций"
+Received: "erase_deadline_overdue: 1"
+
+ ❯ tests/retention.test.ts:106:5
+    104|   const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    105|   try {
+    106|     await expect(retentionTick(f.pool, f.storage)).rejects.toThrow('Оч…
+       |     ^
+    107|     expect(log.mock.calls.some(call => String(call[1]).includes('erase…
+    108|     expect(f.storage.erasePrefix).toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 8 passed (12)
+   Start at  08:31:49
+   Duration  888ms (transform 363ms, setup 0ms, collect 518ms, tests 56ms, environment 0ms, prepare 99ms)
+

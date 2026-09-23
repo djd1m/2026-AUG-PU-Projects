@@ -12,6 +12,6 @@ export default defineConfig({
     '@clipmaker/queue': path.resolve('packages/queue/src/index.ts'),
     '@clipmaker/db': path.resolve('packages/db/src/index.ts'),
   } },
-  test: { include: ['tests/**/*.test.ts'], testTimeout: 15000, hookTimeout: 15000,
+  test: { reporters: ['default', './scripts/test-skip-reporter.ts'], include: ['tests/**/*.test.ts'], testTimeout: 15000, hookTimeout: 15000,
     pool: 'forks', maxWorkers: 2, fileParallelism: false },
 });

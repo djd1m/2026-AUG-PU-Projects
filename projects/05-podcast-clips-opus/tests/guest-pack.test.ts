@@ -69,7 +69,7 @@ describe('guest page', () => {
       clips: [{ clip_id: clip, title: '<img src=x onerror=alert(1)>', available: true, index: 1, start: 0, end: 25, status: 'done' as const, watermarked: true, expires_at: null }] };
     const guests = { find: vi.fn().mockResolvedValue(pack), recordOpen: vi.fn().mockResolvedValue(undefined) };
     const auth = { authenticate: vi.fn().mockResolvedValue(null) }, allowRead = vi.fn().mockResolvedValue(true);
-    return { guests, auth, allowRead, handler: createGuestPageHandler({ guests, auth, allowRead, trustedProxyHops: 1 }) };
+    return { guests, auth, allowRead, handler: createGuestPageHandler({ referralSecret: 'test-secret', guests, auth, allowRead, trustedProxyHops: 1 }) };
   }
   it('noindex guest page is anonymous, mobile, escaped and serves only member file routes', async () => {
     const f = fixture(), response = await f.handler(request(), code), html = await response.text();
@@ -86,7 +86,7 @@ describe('guest page', () => {
   it('same 404 for unavailable packs and malformed codes', async () => {
     const query = vi.fn().mockResolvedValue({ rows: [] });
     const guests = new GuestPackService({ query } as unknown as Pool, () => now);
-    const get = createGuestPageHandler({ guests, auth: { authenticate: vi.fn() }, trustedProxyHops: 1, allowRead: async () => true });
+    const get = createGuestPageHandler({ referralSecret: 'test-secret', guests, auth: { authenticate: vi.fn() }, trustedProxyHops: 1, allowRead: async () => true });
     const absent = await get(request(), code), malformed = await get(request(), 'bad');
     expect([absent.status, malformed.status]).toEqual([404, 404]); expect(await absent.text()).toBe(await malformed.text());
     absent.headers.forEach((value, key) => expect(malformed.headers.get(key)).toBe(value));
@@ -110,7 +110,7 @@ describe('guest file capability', () => {
     const sign = vi.fn().mockResolvedValue('https://private.example/internal-signature');
     const stream = vi.fn().mockImplementation(async () => new Response('bytes', { headers: { 'Cache-Control': 'no-store' } }));
     const deps = { pool: { query } as unknown as Pool, auth, sign, stream, guestSecret: 'test-only-secret', clock: () => now };
-    return { ...deps, query, handler: createClipFileHandler(deps) };
+    return { ...deps, query, handler: createClipFileHandler({ ...deps, allowRead: async () => true, trustedProxyHops: 1 }) };
   }
   it('guest gets signed app URL, not S3; every followup repeats DB authorization', async () => {
     const f = fixture(), response = await f.handler(request(`https://app.example/api/clips/${clip}/file?g=${code}&download=1`), clip);

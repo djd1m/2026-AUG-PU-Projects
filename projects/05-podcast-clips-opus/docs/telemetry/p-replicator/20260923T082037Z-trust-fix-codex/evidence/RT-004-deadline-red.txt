@@ -1,0 +1,84 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stderr | tests/retention.test.ts > RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure
+Очистка: наблюдение срока стирания; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:51:42
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:50:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/retention.test.ts > RT-004 independent failure at DELETE FROM video cannot suppress erasure
+Очистка: удаление отказанных загрузок; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:73:36
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:71:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+stderr | tests/retention.test.ts > RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure
+Очистка: очистка клипов; повтор на следующем проходе Error: injected step failure
+    at Object.<anonymous> (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:95:157)
+    at Object.mockCall (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/spy/dist/index.js:96:15)
+    at Object.spy [as query] (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/tinyspy/dist/index.js:47:80)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:81:32
+    at step (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:46:19)
+    at Module.retentionTick (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/retention.ts:80:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/retention.test.ts:96:3
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ❯ tests/retention.test.ts (12 tests | 1 failed) 60ms
+   ✓ retention and erasure guards > confirmation required before state changes 9ms
+   ✓ retention and erasure guards > revokes guests before any storage deletion and completion follows objects 3ms
+   ✓ retention and erasure guards > storage failure preserves database rows for retry 2ms
+   ✓ retention and erasure guards > free clips older than three days are removed before row markers 3ms
+   ✓ retention and erasure guards > expiry does not overwrite explicit revocation 1ms
+   ✓ retention and erasure guards > growth events survive clip deletion with SET NULL 0ms
+   ✓ retention and erasure guards > irreversibility and external copies disclosed BEFORE confirmation 14ms
+   ✓ retention and erasure guards > receipt is status-only, expiring, signed and tamper resistant 1ms
+   ✓ RT-004 independent failure at SELECT count(*) FROM account cannot suppress erasure 10ms
+   ✓ RT-004 independent failure at DELETE FROM video cannot suppress erasure 2ms
+   ✓ RT-004 independent failure at SELECT c.id,c.object_key cannot suppress erasure 2ms
+   × RT-004 overdue erasure is observable even if this tick successfully deletes the account 10ms
+     → promise resolved "{ backlog: false }" instead of rejecting
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/retention.test.ts > RT-004 overdue erasure is observable even if this tick successfully deletes the account
+AssertionError: promise resolved "{ backlog: false }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "backlog": false,
+  }
+
+ ❯ tests/retention.test.ts:106:50
+    104|   const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    105|   try {
+    106|     await expect(retentionTick(f.pool, f.storage)).rejects.toThrow('Оч…
+       |                                                  ^
+    107|     expect(log.mock.calls.some(call => String(call[1]).includes('erase…
+    108|     expect(f.storage.erasePrefix).toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  08:31:51
+   Duration  908ms (transform 330ms, setup 0ms, collect 503ms, tests 60ms, environment 0ms, prepare 111ms)
+
