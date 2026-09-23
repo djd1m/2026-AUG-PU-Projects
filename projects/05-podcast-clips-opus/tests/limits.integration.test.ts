@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterAll, describe, it, expect } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { loadLimits } from '../packages/shared/src/config';
@@ -15,7 +15,7 @@ describe.skipIf(!url)('PostgreSQL limits and interest', () => {
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Requires isolated *_test database');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 10, connectionTimeoutMillis: 3000, statement_timeout: 5000, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
     service = new InterestService(pool, () => now);
   });

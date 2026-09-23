@@ -5,9 +5,14 @@ import { moscowDay } from '@clipmaker/shared/upload';
 
 export async function transaction<T>(pool: Pool, work: (tx: PoolClient) => Promise<T>): Promise<T> {
   const tx = await pool.connect();
+  let discard = false;
   try { await tx.query('BEGIN'); const result = await work(tx); await tx.query('COMMIT'); return result; }
-  catch (error) { await tx.query('ROLLBACK'); throw error; }
-  finally { tx.release(); }
+  catch (error) {
+    try { await tx.query('ROLLBACK'); }
+    catch { discard = true; } // Original error remains the diagnostic; this client is unusable.
+    throw error;
+  }
+  finally { tx.release(discard || undefined); }
 }
 const limitNames: Record<QuotaScope, LimitName> = {
   user_minutes: 'N5_LIMIT_USER_MINUTES', user_uploads: 'N5_LIMIT_USER_UPLOADS',

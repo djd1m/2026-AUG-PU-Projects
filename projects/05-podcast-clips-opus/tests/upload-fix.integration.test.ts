@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { transaction, checkAndConsumeQuota, refundUploadSlot } from '../packages/db/src/quota';
 import { loadLimits } from '../packages/shared/src/config';
@@ -31,9 +31,8 @@ describe.skipIf(!dbUrl)('RU fixes: real PostgreSQL', () => {
   beforeAll(async () => {
     if (!dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Only *_test database');
     await ensureTestDatabase(dbUrl);
-    pool = new Pool({ connectionString: dbUrl, max: 10, connectionTimeoutMillis: 1000,
-      application_name: schema, options: `-c search_path=${schema},public` });
-    inspector = new Pool({ connectionString: dbUrl, max: 1 });
+    pool = createPool(dbUrl, schema);
+    inspector = createPool(dbUrl);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   afterAll(async () => {

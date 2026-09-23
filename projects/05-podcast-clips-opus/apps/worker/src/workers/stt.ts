@@ -4,7 +4,7 @@ import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { withSource, type Download, freeBytes } from '../media/download.js';
 import { probeFile, ProbeError, PROBE_TIMEOUT_MS, type ProbeResult } from '../media/probe.js';
 import { dirname, join } from 'node:path';
-import { unlink } from 'node:fs/promises';
+import { rm } from 'node:fs/promises';
 import { acceptTranscript, authorizeSttCall, failTranscription, transcriptionDeadline } from '@clipmaker/db';
 import { parseTranscript, TranscriptError, STT_MAX_ATTEMPTS, type TranscriptResult } from '@clipmaker/shared/transcript';
 import { extractAudio } from '../stt/extract.js';
@@ -52,9 +52,10 @@ export async function transcribeSource(file: string, duration: number, attempt: 
     for await (const chunk of (deps.chunks ?? splitAudio)(audio, dirname(file), duration, signal)) {
       if (chunk.hardCut) console.warn(JSON.stringify({ event: 'stt_hard_cut', video_id: attempt.video_id, chunk_index: chunk.index, offset_seconds: chunk.offsetSeconds }));
       try {
+        let previousCall = 0;
         for (;;) {
           signal.throwIfAborted();
-          const call = await authorizeSttCall(deps.pool, attempt, deps.limits, chunk.index, chunk.durationSeconds, clock());
+          const call = await authorizeSttCall(deps.pool, attempt, deps.limits, chunk.index, chunk.durationSeconds, clock(), previousCall);
           if (call === null) return;
           const event: SpendEvent = { video_id: attempt.video_id, fence: attempt.fence, stage: 'stt', chunk_index: chunk.index,
             attempt: call, unit: 'minutes', quantity: Math.ceil(chunk.durationSeconds / 60), result: 'started', phase: 'attempt' };
@@ -65,14 +66,14 @@ export async function transcribeSource(file: string, duration: number, attempt: 
             result = parseTranscript(await deps.transcriber.transcribe(chunk.path, chunk.durationSeconds, signal), chunk.durationSeconds);
           } catch (error) {
             await spend(deps.spendPath, { ...event, phase: 'outcome', result: error instanceof TranscriptError ? 'no_timestamps' : error instanceof ProviderError ? error.outcome : 'provider_error' });
-            if (error instanceof ProviderError && error.retryable && call < STT_MAX_ATTEMPTS && !signal.aborted) continue;
+            if (error instanceof ProviderError && error.retryable && call < STT_MAX_ATTEMPTS && !signal.aborted) { previousCall = call; continue; }
             throw error;
           }
           await spend(deps.spendPath, { ...event, phase: 'outcome', result: 'success' });
           results.push({ result, offsetSeconds: chunk.offsetSeconds, durationSeconds: chunk.durationSeconds });
           break;
         }
-      } finally { await unlink(chunk.path); }
+      } finally { await rm(chunk.path, { force: true }); }
     }
     const transcript = mergeWords(results, duration, audioDuration, issue => console.warn(JSON.stringify({
       event: 'stt_timestamp_clamped', video_id: attempt.video_id, fence: attempt.fence, audio_duration_seconds: audioDuration, ...issue })));

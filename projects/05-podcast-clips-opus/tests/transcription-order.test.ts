@@ -8,7 +8,7 @@ import { loadLimits } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
 import { ProviderError } from '../apps/worker/src/stt/client';
 import { parseTranscript } from '../packages/shared/src/transcript';
-import { acceptTranscript } from '@clipmaker/db';
+import { acceptTranscript, authorizeSttCall } from '@clipmaker/db';
 import { ProbeError } from '../apps/worker/src/media/probe';
 const state = vi.hoisted(() => ({ charged: false, calls: 0, trace: [] as string[], failure: '' }));
 vi.mock('@clipmaker/db', async importOriginal => {
@@ -101,6 +101,7 @@ describe('STT operation order with deterministic dependencies', () => {
     deps.transcriber.transcribe.mockRejectedValueOnce(new ProviderError(true, 'timeout'));
     await transcribeSource('source', 120, attempt, deps);
     expect(state.calls).toBe(2);
+    expect(vi.mocked(authorizeSttCall).mock.calls.slice(-2).map(args => args[6])).toEqual([0, 1]);
     expect(state.trace.slice(0, 7)).toEqual(['authorize', 'spend', 'spend', 'authorize', 'spend', 'provider', 'spend']);
     expect(deps.spend).toHaveBeenCalledWith(deps.spendPath, expect.objectContaining({ result: 'timeout', phase: 'outcome' }));
   });
@@ -115,6 +116,13 @@ describe('STT operation order with deterministic dependencies', () => {
     await expect(transcribeSource('source', 120, attempt, deps)).rejects.toThrow();
     expect(state.calls).toBe(3); expect(deps.spend).toHaveBeenCalledTimes(6);
     expect(state.failure).toBe('stt_failed'); expect(deps.enqueue).not.toHaveBeenCalled();
+  });
+  it('RC-010 already removed chunk cannot replace the original provider failure', async () => {
+    const deps = await fixture(), original = new ProviderError(false, 'provider_error');
+    deps.transcriber.transcribe.mockImplementation(async () => {
+      await rm(join(deps.directory, 'chunk'), { force: true }); throw original;
+    });
+    await expect(transcribeSource('source', 120, attempt, deps)).rejects.toBe(original);
   });
   it('unwritable spend ledger fails closed before network call', async () => {
     const deps = await fixture(); deps.spend.mockRejectedValueOnce(new Error('disk full'));

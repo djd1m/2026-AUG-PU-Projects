@@ -3,7 +3,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { mkdtemp, rm, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureInitialAttempt, leaseAttempt } from '../packages/db/src/attempts';
 import { acceptProbe } from '../packages/db/src/probe';
@@ -23,7 +23,7 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Нужна БД *_test');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   beforeEach(async () => { await pool.query('TRUNCATE account,quota_counter CASCADE'); });
@@ -38,19 +38,27 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
     return { account, video, attempt };
   }
   const used = async (account: string, scope = 'user_minutes') => (await pool.query('SELECT used FROM quota_counter WHERE scope_key=$1 AND scope=$2', [account, scope])).rows[0]?.used ?? 0;
-  it('first dispatch uses committed probe charge; durable replay charges again, including timeout', async () => {
+  it('RC-001 two simultaneous first dispatches with ample quota authorize exactly one call', async () => {
+    const f = await fixture();
+    const calls = await Promise.all([1, 2].map(() => authorizeSttCall(pool, f.attempt, limits, 0, 120)));
+    expect(calls.filter(n => n !== null)).toEqual([1]);
+    expect((await pool.query('SELECT stt_calls FROM job_attempt WHERE video_id=$1 AND fence=$2',
+      [f.video, f.attempt.fence])).rows[0].stt_calls).toEqual({ '0': 1 });
+    expect(await used(f.account)).toBe(2); expect(await used('all', 'global_minutes')).toBe(2);
+  });
+  it('first dispatch uses committed probe charge; explicit provider retry charges again', async () => {
     const f = await fixture();
     expect(await used(f.account)).toBe(2);
     expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120)).toBe(1);
     expect(await used(f.account)).toBe(2);
-    expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120)).toBe(2);
+    expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120, new Date(), 1)).toBe(2);
     expect(await used(f.account)).toBe(4);
     expect(await used('all', 'global_minutes')).toBe(4);
   });
   it.each(['user_minutes', 'global_minutes'])('refused retry %s has no additional call or refund', async scope => {
     const f = await fixture(); await authorizeSttCall(pool, f.attempt, limits, 0, 120);
     await pool.query('UPDATE quota_counter SET used=$2 WHERE scope=$1', [scope, scope === 'user_minutes' ? 90 : 600]);
-    expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120)).toBeNull();
+    expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120, new Date(), 1)).toBeNull();
     expect((await pool.query('SELECT failure_reason FROM video WHERE id=$1', [f.video])).rows[0].failure_reason).toBe(`refused_${scope}`);
     expect(await used(f.account, 'user_uploads')).toBe(1);
     expect(await used(f.account, 'user_upload_refunds')).toBe(0);
@@ -59,9 +67,20 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
   it('concurrent replays at the last two minutes never overrun either quota', async () => {
     const f = await fixture(); await authorizeSttCall(pool, f.attempt, limits, 0, 120);
     await pool.query("UPDATE quota_counter SET used=88 WHERE scope='user_minutes'");
-    const calls = await Promise.all(Array.from({ length: 8 }, () => authorizeSttCall(pool, f.attempt, limits, 0, 120)));
+    const calls = await Promise.all(Array.from({ length: 8 }, () => authorizeSttCall(pool, f.attempt, limits, 0, 120, new Date(), 1)));
     expect(calls.filter(n => n !== null)).toHaveLength(1);
     expect(await used(f.account)).toBe(90); expect(await used('all', 'global_minutes')).toBe(4);
+  });
+  it('RC-001 concurrent explicit retries charge once and never exceed the attempt ceiling', async () => {
+    const f = await fixture();
+    expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120)).toBe(1);
+    for (const previous of [1, 2]) {
+      const calls = await Promise.all([1, 2].map(() => authorizeSttCall(pool, f.attempt, limits, 0, 120, new Date(), previous)));
+      expect(calls.filter(n => n !== null)).toEqual([previous + 1]);
+    }
+    expect(await authorizeSttCall(pool, f.attempt, limits, 0, 120, new Date(), 3)).toBeNull();
+    expect((await pool.query('SELECT stt_calls FROM job_attempt WHERE video_id=$1', [f.video])).rows[0].stt_calls).toEqual({ '0': 3 });
+    expect(await used(f.account)).toBe(6); expect(await used('all', 'global_minutes')).toBe(6);
   });
   it('ADR-003: missing words cannot persist or create a select attempt', async () => {
     const f = await fixture();

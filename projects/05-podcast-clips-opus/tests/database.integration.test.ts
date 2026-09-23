@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import bcrypt from 'bcrypt';
 import { migrate } from '../packages/db/src/migrate';
 import { AuthService, BCRYPT_COST } from '../apps/web/src/server/auth';
@@ -17,7 +17,7 @@ describe.skipIf(!databaseUrl)('PostgreSQL: ограничения, миграц�
     if (!databaseUrl || !new URL(databaseUrl).pathname.endsWith('_test')) throw new Error('Интеграционные тесты разрешены только в отдельной БД *_test');
     await ensureTestDatabase(databaseUrl);
     await ensureTestDatabase(databaseUrl);
-    pool = new Pool({ connectionString: databaseUrl, max: 4, options: `-c search_path=${schema},public` });
+    pool = createPool(databaseUrl, schema);
     await pool.query(`CREATE SCHEMA ${schema}`);
     await migrate(pool); await migrate(pool);
     auth = new AuthService(new PgAuthStore(pool), randomBytes(32).toString('hex'));

@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterAll, describe, it, expect, vi } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { leaseAttempt, type Attempt } from '../packages/db/src/attempts';
 import { getRenderInput, publishRenderResult, retryRender, setRenderDeferred } from '../packages/db/src/render';
@@ -12,7 +12,7 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Нужна БД *_test');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   beforeEach(async () => { await pool.query('TRUNCATE account CASCADE'); });
@@ -33,12 +33,12 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
     return { account, video, attempts, attempt: attempts[0]! };
   }
   const output = { object_key: 'clip', thumbnail_key: 'thumb', bytes: 10, watermarked: true };
-  it('MANDATORY same fence delivered concurrently: exactly one result UPDATE, one publish, stale audit', async () => {
+  it('MANDATORY same fence delivered concurrently: exactly one result UPDATE, idempotent publication, stale audit', async () => {
     const { attempt } = await fixture(); const publish = vi.fn(async () => 10);
     const audit = vi.spyOn(console, 'info');
     try {
       const results = await Promise.all([1, 2].map(() => publishRenderResult(pool, attempt, output, publish)));
-      expect(results.sort()).toEqual([false, true]); expect(publish).toHaveBeenCalledTimes(1);
+      expect(results.sort()).toEqual([false, true]); expect(publish).toHaveBeenCalledTimes(2);
       expect(audit).toHaveBeenCalledWith(expect.stringContaining('stale_attempt_result'));
       expect((await pool.query('SELECT status FROM clip WHERE id=$1', [attempt.clip_id])).rows[0].status).toBe('done');
     } finally { audit.mockRestore(); }
@@ -47,18 +47,41 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
     const { attempt } = await fixture(); const next = (await retryRender(pool, attempt, 'ffmpeg_failed'))!;
     const publish = vi.fn(async () => 10);
     expect(await publishRenderResult(pool, attempt, output, publish)).toBe(false);
-    expect(publish).not.toHaveBeenCalled();
+    expect(publish).toHaveBeenCalledTimes(1); // Storage enforces create-only, even for an obsolete producer.
     expect(await publishRenderResult(pool, next, output, publish)).toBe(true);
     expect(await publishRenderResult(pool, attempt, output, publish)).toBe(false);
   });
-  it('publication locks out retry until its acceptance; next lease cannot replace done clip', async () => {
+  it('RC-003 slow publication does not block retry; late upload cannot accept the old fence', async () => {
     const { attempt } = await fixture();
     let release!: () => void, entered!: () => void;
     const blocked = new Promise<void>(r => { release = r; }), started = new Promise<void>(r => { entered = r; });
     const publication = publishRenderResult(pool, attempt, output, async () => { entered(); await blocked; return 10; });
     await started;
-    const retry = retryRender(pool, attempt, 'ffmpeg_timeout'); release();
-    expect(await publication).toBe(true); expect(await retry).toBeNull();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const retry = retryRender(pool, attempt, 'ffmpeg_timeout');
+    try {
+      const next = await Promise.race([retry, new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Publication holds video lock')), 1000);
+      })]);
+      expect(next?.fence).toBeGreaterThan(attempt.fence);
+      release(); expect(await publication).toBe(false);
+      expect(await publishRenderResult(pool, next!, output, async () => 10)).toBe(true);
+      expect(await retryRender(pool, next!, 'ffmpeg_timeout')).toBeNull();
+    } finally { clearTimeout(timer); release(); await Promise.allSettled([publication, retry]); }
+  });
+  it('RC-002 real row contention expires at production statement_timeout with driver error', async () => {
+    const { attempt } = await fixture(), holder = await pool.connect();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let retry: Promise<Attempt | null> | undefined;
+    try {
+      expect((await holder.query('SHOW statement_timeout')).rows[0].statement_timeout).toBe('5s');
+      await holder.query('BEGIN'); await holder.query('SELECT id FROM video WHERE id=$1 FOR UPDATE', [attempt.video_id]);
+      retry = retryRender(pool, attempt, 'ffmpeg_timeout');
+      await expect(Promise.race([retry, new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('statement_timeout did not fire')), 6500);
+      })])).rejects.toMatchObject({ code: '57014' });
+    } finally { clearTimeout(timer); await holder.query('ROLLBACK'); holder.release(); if (retry) await Promise.allSettled([retry]); }
+    expect((await pool.query('SELECT render_fence FROM clip WHERE id=$1', [attempt.clip_id])).rows[0].render_fence).toBe(attempt.fence);
   });
   it('siblings use clip fence, mixed terminal outcome finishes video with available clips', async () => {
     const f = await fixture(2);

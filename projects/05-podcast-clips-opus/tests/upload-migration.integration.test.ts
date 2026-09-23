@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto';
 import { mkdtemp, readdir, copyFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 const dbUrl = process.env.DATABASE_URL;
@@ -12,7 +12,7 @@ describe.skipIf(!dbUrl)('RU-007 upgrade', () => {
     if (!dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Only *_test');
     await ensureTestDatabase(dbUrl);
     const schema = `upgrade_${randomBytes(8).toString('hex')}`;
-    const pool = new Pool({ connectionString: dbUrl, options: `-c search_path=${schema},public` });
+    const pool = createPool(dbUrl, schema);
     const directory = await mkdtemp(path.join(os.tmpdir(), 'n5-old-migrations-'));
     try {
       for (const name of await readdir('packages/db/migrations')) {

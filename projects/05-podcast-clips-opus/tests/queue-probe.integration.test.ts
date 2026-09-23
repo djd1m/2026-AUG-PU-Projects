@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
-import { leaseAttempt, ensureInitialAttempt, acceptRenderResult, type Attempt } from '../packages/db/src/attempts';
+import { leaseAttempt, ensureInitialAttempt, type Attempt } from '../packages/db/src/attempts';
 import { acceptProbe, deferProbe, failProbe } from '../packages/db/src/probe';
 import { checkAndConsumeQuota, transaction } from '../packages/db/src/quota';
 import { loadLimits } from '../packages/shared/src/config';
@@ -26,7 +26,7 @@ describe.skipIf(!url)('Queue/probe on PostgreSQL 16', () => {
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Нужна отдельная БД *_test');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   beforeEach(async () => { await pool.query('TRUNCATE account,quota_counter CASCADE'); });
@@ -54,25 +54,6 @@ describe.skipIf(!url)('Queue/probe on PostgreSQL 16', () => {
     const attempts = await Promise.all(clips.map(id => leaseAttempt(pool, f.video, 'render', 1, id)));
     expect(attempts.map(a => a!.fence).sort((a,b) => a-b)).toEqual([2,3,4,5,6,7,8,9]);
     expect(attempts.every(a => a!.attempt_no === 1)).toBe(true);
-  });
-  it('ADR-001: late old render is rejected before a current result is accepted', async () => {
-    const { video } = await fixture(), id = await clip(video);
-    const old = (await leaseAttempt(pool, video, 'render', 1, id))!;
-    const current = (await leaseAttempt(pool, video, 'render', 1, id))!;
-    const audit = vi.fn();
-    // Old result arrives while the new clip is still rendering: removing the fence must break this.
-    expect(await acceptRenderResult(pool, old, { object_key:'old',thumbnail_key:'old',bytes:1 }, audit)).toBe(false);
-    expect(audit).toHaveBeenCalledWith('stale_attempt_result', expect.objectContaining({ fence: old.fence }));
-    expect(await acceptRenderResult(pool, current, { object_key:'new',thumbnail_key:'new',bytes:2 })).toBe(true);
-    expect(await acceptRenderResult(pool, old, { object_key:'old',thumbnail_key:'old',bytes:1 }, audit)).toBe(false);
-    expect((await pool.query('SELECT object_key FROM clip WHERE id=$1',[id])).rows[0].object_key).toBe('new');
-  });
-  it('MANDATORY concurrency: render(fence=N) delivered twice accepts exactly one UPDATE', async () => {
-    const { video } = await fixture(), id = await clip(video);
-    const attempt = (await leaseAttempt(pool, video, 'render', 1, id))!, audit = vi.fn();
-    const results = await Promise.all([1,2].map(bytes => acceptRenderResult(pool, attempt, { object_key:'result',thumbnail_key:'thumb',bytes }, audit)));
-    expect(results.filter(Boolean)).toHaveLength(1); expect(audit).toHaveBeenCalledTimes(1);
-    expect(audit.mock.calls[0]![0]).toBe('stale_attempt_result');
   });
   it('automatic retries stop at two, owner retry opens a new series/fence', async () => {
     const f = await fixture();

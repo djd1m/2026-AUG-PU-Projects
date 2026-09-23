@@ -1,0 +1,46 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/concurrency-fix.test.ts (11 tests | 1 failed) 33ms
+   ✓ RC-001 duplicate initial dispatch does not claim the next paid retry 4ms
+   ✓ RC-001 losing conditional claim never consumes retry quota 1ms
+   ✓ RC-002 every integration pool uses production factory; timeouts cannot be overridden 4ms
+   ✓ RC-003 publication holds no transaction or pool client 4ms
+   ✓ RC-005 compose does not advertise prohibited render concurrency configuration 0ms
+   × RC-006 database error propagates by identity without terminal no_timestamps 11ms
+     → promise resolved "null" instead of rejecting
+   ✓ RC-006 malformed transcript still produces no_timestamps 3ms
+   ✓ RC-006 malformed ffprobe output retains cause and is not a refundable timeout 1ms
+   ✓ RC-008 failed rollback preserves original error and destroys the client 1ms
+   ✓ RC-008 successful rollback returns a reusable client and preserves error identity 1ms
+   ✓ RC-009 nested causes are bounded, cycle-safe and sanitized at every level 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/concurrency-fix.test.ts > RC-006 database error propagates by identity without terminal no_timestamps
+AssertionError: promise resolved "null" instead of rejecting
+
+- Expected: 
+Error {
+  "message": "rejected promise",
+}
+
++ Received: 
+null
+
+ ❯ tests/concurrency-fix.test.ts:72:81
+     70|     return { rowCount: 1, rows: [] };
+     71|   });
+     72|   await expect(authorizeSelection(database(query).pool, attempt, limit…
+       |                                                                                 ^
+     73|   expect(query.mock.calls.some(([sql]) => sql.includes("SET status='fa…
+     74| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  07:52:46
+   Duration  768ms (transform 409ms, setup 0ms, collect 324ms, tests 33ms, environment 0ms, prepare 235ms)
+

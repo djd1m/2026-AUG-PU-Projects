@@ -57,7 +57,7 @@ describe('Queue and probe contracts', () => {
   it('ffprobe verifies audio and rejects malformed/nonfinite output', () => {
     expect(parseProbe('{"format":{"duration":"120.5"},"streams":[{"codec_type":"audio"}]}')).toEqual({ durationSec: 120.5, hasAudio: true });
     expect(fileFailure(parseProbe('{"format":{"duration":"120"},"streams":[{"codec_type":"video"}]}'))).toBe('no_audio');
-    for (const input of ['{}', '{', '{"format":{"duration":"NaN"},"streams":[]}']) expect(() => parseProbe(input)).toThrow(ProbeError);
+    for (const input of ['{}', '{', '{"format":{"duration":"NaN"},"streams":[]}']) expect(() => parseProbe(input)).toThrow('Непригодный вывод ffprobe');
   });
   it('hung child is killed and reports probe_timeout without blocking event loop', async () => {
     const dir = await temp(), executable = join(dir, 'hung');

@@ -8,5 +8,12 @@ export function safeDiagnostic(text: string): string {
     .split('\n').slice(-20).join('\n').slice(-4096);
 }
 export function renderErrorMessage(error: unknown): string {
-  return safeDiagnostic(error instanceof Error ? error.message : typeof error === 'string' ? error : 'Unknown render error');
+  const messages: string[] = [], seen = new Set<unknown>();
+  let current = error;
+  while (current !== undefined && !seen.has(current) && messages.length < 8) {
+    seen.add(current);
+    messages.push(safeDiagnostic(current instanceof Error ? current.message : typeof current === 'string' ? current : 'Unknown render error'));
+    current = current instanceof Error ? current.cause : undefined;
+  }
+  return safeDiagnostic(messages.join('\nCaused by: '));
 }

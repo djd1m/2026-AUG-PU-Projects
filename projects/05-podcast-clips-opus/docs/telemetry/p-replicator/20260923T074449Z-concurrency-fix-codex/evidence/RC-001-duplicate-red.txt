@@ -1,0 +1,44 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/concurrency-fix.test.ts (11 tests | 1 failed) 35ms
+   × RC-001 duplicate initial dispatch does not claim the next paid retry 17ms
+     → expected 2 to be null
+   ✓ RC-001 losing conditional claim never consumes retry quota 1ms
+   ✓ RC-002 every integration pool uses production factory; timeouts cannot be overridden 4ms
+   ✓ RC-003 publication holds no transaction or pool client 1ms
+   ✓ RC-005 compose does not advertise prohibited render concurrency configuration 1ms
+   ✓ RC-006 database error propagates by identity without terminal no_timestamps 2ms
+   ✓ RC-006 malformed transcript still produces no_timestamps 2ms
+   ✓ RC-006 malformed ffprobe output retains cause and is not a refundable timeout 1ms
+   ✓ RC-008 failed rollback preserves original error and destroys the client 1ms
+   ✓ RC-008 successful rollback returns a reusable client and preserves error identity 1ms
+   ✓ RC-009 nested causes are bounded, cycle-safe and sanitized at every level 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/concurrency-fix.test.ts > RC-001 duplicate initial dispatch does not claim the next paid retry
+AssertionError: expected 2 to be null
+
+- Expected: 
+null
+
++ Received: 
+2
+
+ ❯ tests/concurrency-fix.test.ts:27:81
+     25|     return { rowCount: 1, rows: [{ used: 2 }] };
+     26|   });
+     27|   expect(await authorizeSttCall(database(query).pool, attempt, limits,…
+       |                                                                                 ^
+     28|   expect(query.mock.calls.some(([sql]) => sql.includes('UPDATE quota_c…
+     29| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  07:52:41
+   Duration  809ms (transform 376ms, setup 0ms, collect 469ms, tests 35ms, environment 0ms, prepare 93ms)
+

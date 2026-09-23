@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "paused",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260923T074449Z-concurrency-fix-codex",
+    "work_unit_id": "concurrency-fix",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "ab2a8f8c47453761aa0b4497192b2ab77c4eee51",
+    "current_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+    "build_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/reviews/04_fix_brief_concurrency.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "ab2a8f8c47453761aa0b4497192b2ab77c4eee51",
+      "observed_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "HEAD advanced by another process; only docs/reviews/01_money_and_quota.md and 06_fix_brief_trust.md were added, no repaired code changed. Intended repair diff is bound in source-manifest.",
+        "decision": "Keep external review documents unchanged, deliver only this repair scope.",
+        "affected_checks": [
+          "local gates"
+        ],
+        "rerun": [
+          "local gates"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "sha256:95fd386b46c13403dd75d63593e9a5930315ca84e4b8352475e4a1f14a94a757",
+    "scope": [
+      "RC-001,002,003,005,006,007,008,009,010 repair and evidence"
+    ],
+    "exclusions": [
+      "RC-004 operations",
+      "Deployment and paid provider calls"
+    ],
+    "action_limits": [
+      "Only project code/tests/report and telemetry",
+      "No live integration infrastructure changes"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "local-gates",
+        "required": true
+      },
+      {
+        "id": "postgres-concurrency",
+        "required": true
+      },
+      {
+        "id": "independent-review",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "packages/db/src/selection.ts"
+          }
+        },
+        "provenance": "ab2a8f8c47453761aa0b4497192b2ab77c4eee51",
+        "useful_fragment": "Conditional job_attempt UPDATE RETURNING grants paid dispatch right",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "Use existing form for STT chunk ordinal; read joined state only after lock in separate statement."
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable measured run for this repair scope; no cost forecast",
+      "scope_revision": "sha256:95fd386b46c13403dd75d63593e9a5930315ca84e4b8352475e4a1f14a94a757",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:95fd386b46c13403dd75d63593e9a5930315ca84e4b8352475e4a1f14a94a757",
+      "tier": "XL",
+      "rationale": "Paid-call concurrency and fence invariants; execute concrete owner-authorized Anthropic brief",
+      "script": {
+        "input": "packages/db/src/transcription.ts packages/db/src/render.ts apps/worker/src/workers/stt.ts docker-compose.yml",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "sha256:95fd386b46c13403dd75d63593e9a5930315ca84e4b8352475e4a1f14a94a757",
+      "tier": "XL",
+      "rationale": "Paid-call concurrency and fence invariants; execute concrete owner-authorized Anthropic brief",
+      "script": {
+        "input": "packages/db/src/transcription.ts packages/db/src/render.ts apps/worker/src/workers/stt.ts docker-compose.yml",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "No additional approval: user explicitly authorized execution of the concrete review fix brief; implementation and local tests are within that scope.",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No live E2E. Integration runs explicitly reserved for integration owner; test service environment absent.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "route-1",
+      "status": "completed"
+    },
+    {
+      "id": "implement-1",
+      "status": "completed"
+    },
+    {
+      "id": "anthropic-review-1",
+      "status": "failed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "concurrency-fix",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps/worker/src/media/probe.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/render/diagnostics.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/worker/src/workers/stt.ts"
+        },
+        {
+          "root": "project",
+          "path": "docker-compose.yml"
+        },
+        {
+          "root": "project",
+          "path": "docs/reviews/05_fix_report_concurrency.md"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/attempts.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/quota.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/render.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/selection.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/db/src/transcription.ts"
+        },
+        {
+          "root": "project",
+          "path": "scripts/test-db.mjs"
+        },
+        {
+          "root": "project",
+          "path": "tests/concurrency-fix.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/database.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/guest-pack.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/limits.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/partner.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/progress-screen.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/queue-probe-guards.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/queue-probe.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/queue-probe.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render-storage.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/render.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/retention.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/selection.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/short-link.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription-order.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription-quota.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/transcription.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/upload-fix.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/upload-migration.integration.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "tests/upload.integration.test.ts"
+        }
+      ]
+    }
+  ],
+  "pause": {
+    "from_stage": "implement",
+    "run_id": "20260923T074449Z-concurrency-fix-codex",
+    "work_unit_id": "concurrency-fix",
+    "source_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+    "blockers": [
+      "RC-001 real PostgreSQL red-before/green-after verification, reserved for integration owner",
+      "135 skipped environment-dependent tests, including RC-002/003 concurrency",
+      "Independent Anthropic review returned no result in 60s",
+      "Live environment wiring and CJM/E2E not checked"
+    ],
+    "next_allowed_step": "Integration owner runs PostgreSQL baseline red and repaired green, full integration suites, then independent Anthropic review on source manifest. No deployment authorized by this handoff.",
+    "approval_ids": [],
+    "continuation_mode": "handoff",
+    "checkpoint": {
+      "status": "not_applicable",
+      "reason": "Fix brief provides no native workflow checkpoint; source manifest, telemetry and report form the handoff."
+    }
+  },
+  "checks": [
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm run build",
+      "exit_code": 0,
+      "source_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/build.txt"
+      }
+    },
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm run lint",
+      "exit_code": 0,
+      "source_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/lint.txt"
+      }
+    },
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "source_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/typecheck-final.txt"
+      }
+    },
+    {
+      "ac_id": "local-gates",
+      "outcome": "pass",
+      "command": "npm test",
+      "exit_code": 0,
+      "source_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/tests-final.txt"
+      }
+    },
+    {
+      "ac_id": "postgres-concurrency",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

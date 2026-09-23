@@ -1,0 +1,90 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260923T074449Z-concurrency-fix-codex",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "review-concurrency-RC-001-RC-010",
+  "pipeline": "approved-review-fix",
+  "tier": "XL",
+  "risk_flags": [
+    "paid call concurrency",
+    "fences",
+    "shared pool configuration"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "User explicitly authorized concrete Anthropic fix brief; current Codex implements; integration owner runs integration checks; Anthropic review pending availability"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "ab2a8f8c47453761aa0b4497192b2ab77c4eee51",
+  "final_revision": "sha256:4a0cd373b68d8abae5e81fda1a17949873c8e294eacb674b4fc0188dff137b52",
+  "spec_sha256": "95fd386b46c13403dd75d63593e9a5930315ca84e4b8352475e4a1f14a94a757",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-23T07:44:49+00:00",
+  "ended_at": "2026-09-23T08:00:21.261708+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/build.txt",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/lint.txt",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/typecheck-final.txt",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/tests-final.txt",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/env-wiring.txt",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/review-result.json",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/mutations.json",
+    "docs/reviews/05_fix_report_concurrency.md",
+    "docs/telemetry/p-replicator/20260923T074449Z-concurrency-fix-codex/evidence/source-manifest.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 9,
+    "confirmed_findings_by_severity": {
+      "high": 2
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "local_gates_passed": true
+  },
+  "metrics": {
+    "elapsed_wall_ms": 932261,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Instruction reading preceded first captured timestamp; full preparation duration unknown, not reconstructed.",
+    "Exact model id/effort, host version, usage and billing not exposed; developer identifies GPT-6 Codex.",
+    "No comparison run; active time and follow-up regressions unknown.",
+    "Integration/database acceptance and cross-family review pending; AC total describes nine repaired findings, ac_met cannot be certified.",
+    "Initial unrelated untracked money review was not hashed before the external documentation commit."
+  ],
+  "pending": [
+    "RC-001 real PostgreSQL red-before/green-after verification, reserved for integration owner",
+    "135 skipped environment-dependent tests, including RC-002/003 concurrency",
+    "Independent Anthropic review returned no result in 60s",
+    "Live environment wiring and CJM/E2E not checked"
+  ],
+  "models": [
+    {
+      "role": "implementation",
+      "family": "GPT-6 Codex",
+      "actual_model": null,
+      "evidence": "Developer identifies family; exact runtime metadata unavailable"
+    },
+    {
+      "role": "review",
+      "requested_model": "sonnet",
+      "requested_effort": "high",
+      "actual_model": null,
+      "exit_code": 124
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/transcription.test.ts (20 tests) 33283ms
+   ✓ STT boundary and media > real AAC extraction accepts timestamps within both measured durations without assuming encoder padding  830ms
+   ✓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling  32366ms
+ ✓ tests/render-audio.test.ts (3 tests) 14130ms
+   ✓ RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark and audio  6783ms
+   ✓ RD-001 real video retains its picture; attached MP3 cover and M4A use the background  7321ms
+stdout | tests/render-media.test.ts > real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-QIk5FT
+
+stderr | tests/render-media.test.ts > ffmpeg timeout kills the child and waits for close before returning
+{"event":"ffmpeg_timeout","exit_code":null,"signal":"SIGKILL","stderr_tail":"Input #0, lavfi, from 'testsrc2=s=640x360':\n  Duration: N/A, start: 0.000000, bitrate: N/A\n  Stream #0:0: Video: rawvideo (I420 / 0x30323449), yuv420p, 640x360 [SAR 1:1 DAR 16:9], 25 tbr, 25 tbn, 25 tbc\nStream mapping:\n  Stream #0:0 -> #0:0 (rawvideo (native) -> wrapped_avframe (native))\nOutput #0, null, to 'pipe:':\n  Metadata:\n    encoder         : Lavf58.76.100\n  Stream #0:0: Video: wrapped_avframe, yuv420p(progressive), 640x360 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 25 fps, 25 tbn\n    Metadata:\n      encoder         : Lavc58.134.100 wrapped_avframe\nframe=    1 fps=0.0 q=-0.0 size=N/A time=00:00:00.04 bitrate=N/A speed=4e+04x"}
+
+ ✓ tests/render-media.test.ts (2 tests) 5158ms
+   ✓ real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  4955ms
+ ✓ tests/preflight.test.ts (10 tests) 3518ms
+ ↓ tests/selection.integration.test.ts (10 tests | 10 skipped)
+ ✓ tests/wiring.test.ts (5 tests) 2369ms
+   ✓ Проверяемость проброса окружения > Полная конфигурация проходит, отсутствие потолка даёт находку  1066ms
+   ✓ Проверяемость проброса окружения > Соседнему воркеру не приписываются переменные web  330ms
+   ✓ Проверяемость проброса окружения > Новая обязательная переменная config.ts не теряется в environment.ts  966ms
+ ✓ tests/config.test.ts (39 tests) 2123ms
+ ↓ tests/limits.integration.test.ts (5 tests | 5 skipped)
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+{"logins":12,"threads":"8","elapsed_ms":159.01677600000005,"fs_ms":75.85798699999998}
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 232ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  07:54:53
+   Duration  654ms (transform 89ms, setup 0ms, collect 105ms, tests 232ms, environment 0ms, prepare 100ms)
+
+
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 1303ms
+   ✓ RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8  1301ms
+stderr | tests/auth.test.ts > Аутентификация > Отказ Redis закрывает вход до bcrypt/БД
+Авторизация: запрос не завершён; вход временно недоступен Error: offline
+    at Object.allowMutation (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/auth.test.ts:81:67)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts:34:23
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/auth.test.ts:81:90
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ ✓ tests/auth.test.ts (10 tests) 956ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  642ms
+ ↓ tests/upload.integration.test.ts (17 tests | 17 skipped)
+ ✓ tests/upload-fix.test.ts (9 tests) 158ms
+ ✓ tests/queue-probe.test.ts (14 tests) 198ms
+stderr | tests/guest-pack.test.ts > guest file capability > bad ticket fails before signing; DB or storage outage is fail closed
+Выдача клипа: не удалось получить файл Error: secret
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/guest-pack.test.ts:147:70
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/guest-pack.test.ts (20 tests) 113ms
+ ✓ tests/s3-public-endpoint.test.ts (6 tests) 88ms
+stderr | tests/progress-screen.test.ts > авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+Выдача клипа: не удалось получить файл Error: private details
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/progress-screen.test.ts:109:73
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/progress-screen.test.ts (12 tests) 109ms
+ ✓ tests/partner.test.ts (12 tests) 84ms
+ ✓ tests/limits.test.ts (9 tests) 60ms
+ ✓ tests/transcription-order.test.ts (9 tests) 54ms
+ ✓ tests/upload.test.ts (8 tests) 57ms
+ ✓ tests/selection.test.ts (21 tests) 64ms
+ ✓ tests/s3.test.ts (6 tests) 62ms
+ ✓ tests/limits-retry.test.ts (3 tests) 55ms
+ ✓ tests/retention-route.test.ts (2 tests) 38ms
+ ✓ tests/upload-route.test.ts (3 tests) 47ms
+ ✓ tests/short-link.test.ts (14 tests) 42ms
+ ✓ tests/retention.test.ts (8 tests) 35ms
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+ ✓ tests/render-worker.test.ts (6 tests) 38ms
+ ✓ tests/partner-route.test.ts (5 tests) 46ms
+ ✓ tests/interest-route.test.ts (3 tests) 34ms
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > Redis publish failure preserves successful commit for watchdog
+Рендер сохранён; сторож восстановит доставку задания Error: redis down
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:51:60
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ ✓ tests/selection-order.test.ts (7 tests) 41ms
+ ✓ tests/concurrency-fix.test.ts (11 tests) 23ms
+ ✓ tests/growth-day.test.ts (3 tests) 22ms
+ ✓ tests/render-diagnostics.test.ts (5 tests) 26ms
+ ✓ tests/watchdog-diagnostics.test.ts (9 tests) 27ms
+ ✓ tests/render-storage.test.ts (2 tests) 48ms
+ ✓ tests/proxy-rate.test.ts (9 tests) 28ms
+ ✓ tests/upload-browser.test.ts (3 tests) 14ms
+ ✓ tests/retention-storage.test.ts (2 tests) 24ms
+ ✓ tests/enums.test.ts (14 tests) 17ms
+ ✓ tests/render.test.ts (18 tests) 19ms
+ ✓ tests/transcription-quota.test.ts (4 tests) 12ms
+ ✓ tests/test-db.test.ts (7 tests) 12ms
+stderr | tests/health.test.ts > health: при корректной конфигурации 200 с доступной БД, 503 при отказе БД
+Проверка здоровья: сервис недоступен Error: offline
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/health.test.ts:10:31
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/health.test.ts (1 test) 12ms
+ ✓ tests/ip-prefix.test.ts (1 test) 10ms
+ ✓ tests/transcription-merge.test.ts (4 tests) 17ms
+ ❯ tests/queue-probe-guards.test.ts (4 tests | 1 failed) 16ms
+   × ADR-001 source guard: result UPDATE compares render_fence to own fence 13ms
+     → expected '\n' to match /WHERE id=\$1 AND video_id=\$2 AND ren…/
+   ✓ deferred source guard: video heartbeat updated under current fence 1ms
+   ✓ ADR-006 source guard: render concurrency is literal one 0ms
+   ✓ Redis colon ID compatibility is pinned by installed BullMQ check 1ms
+ ✓ tests/upload-guards.test.ts (3 tests) 6ms
+ ✓ tests/growth-prefix.test.ts (1 test) 4ms
+ ↓ tests/database.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/guest-pack.integration.test.ts (11 tests | 11 skipped)
+ ↓ tests/partner.integration.test.ts (15 tests | 15 skipped)
+ ↓ tests/progress-screen.integration.test.ts (3 tests | 3 skipped)
+ ↓ tests/queue-probe.integration.test.ts (20 tests | 20 skipped)
+ ↓ tests/queue-redis.integration.test.ts (2 tests | 2 skipped)
+ ↓ tests/render.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/retention.integration.test.ts (5 tests | 5 skipped)
+ ↓ tests/s3-slow.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/short-link.integration.test.ts (9 tests | 9 skipped)
+ ↓ tests/transcription.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/upload-fix.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/upload-migration.integration.test.ts (1 test | 1 skipped)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/queue-probe-guards.test.ts > ADR-001 source guard: result UPDATE compares render_fence to own fence
+AssertionError: expected '\n' to match /WHERE id=\$1 AND video_id=\$2 AND ren…/
+
+- Expected: 
+/WHERE id=\$1 AND video_id=\$2 AND render_fence=\$3 AND status='rendering'/
+
++ Received: 
+"
+"
+
+ ❯ tests/queue-probe-guards.test.ts:6:18
+      4|   const source=readFileSync('packages/db/src/attempts.ts','utf8');
+      5|   const update=source.slice(source.indexOf('UPDATE clip SET status=\'d…
+      6|   expect(update).toMatch(/WHERE id=\$1 AND video_id=\$2 AND render_fen…
+       |                  ^
+      7| });
+      8| it('deferred source guard: video heartbeat updated under current fence…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 45 passed | 16 skipped (62)
+      Tests  1 failed | 367 passed | 135 skipped (503)
+   Start at  07:53:46
+   Duration  93.92s (transform 1.87s, setup 0ms, collect 12.13s, tests 64.60s, environment 18ms, prepare 6.18s)
+

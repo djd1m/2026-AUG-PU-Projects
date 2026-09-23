@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, describe, expect, it, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { CreateBucketCommand, DeleteBucketCommand, GetBucketLifecycleConfigurationCommand } from '@aws-sdk/client-s3';
 import { migrate } from '../packages/db/src/migrate';
 import { transaction, checkAndConsumeQuota, refundUploadSlot } from '../packages/db/src/quota';
@@ -23,7 +23,7 @@ describe.skipIf(!dbUrl)('PostgreSQL: конкурентная квота', () =>
   beforeAll(async () => {
     if (!dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Нужна отдельная БД *_test');
     await ensureTestDatabase(dbUrl);
-    pool = new Pool({ connectionString: dbUrl, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(dbUrl, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   afterAll(async () => { if (pool) { await pool.query(`DROP SCHEMA ${schema} CASCADE`); await pool.end(); } });
@@ -86,7 +86,7 @@ describe.skipIf(!dbUrl || !process.env.S3_ENDPOINT)('PostgreSQL + MinIO: пол�
     const config = { ...loadS3Config(process.env), publicEndpoint: loadS3PublicEndpoint(process.env) };
     if (!config.bucket.endsWith('-test')) throw new Error('Только бакет *-test');
     await ensureTestDatabase(dbUrl);
-    pool = new Pool({ connectionString: dbUrl, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(dbUrl, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
     // Отдельный новый бакет гарантирует отсутствие lifecycle, не меняя общий бакет стенда.
     ctx = { client: s3.createS3Client(config), bucket: `n5-upload-${randomBytes(8).toString('hex')}-test` };

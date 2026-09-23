@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterAll, describe, it, expect, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { ShortLinkService } from '../apps/web/src/server/short-link';
@@ -26,7 +26,7 @@ describe.skipIf(!dbUrl)('PostgreSQL short-link', () => {
   beforeAll(async () => {
     if (!dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Requires isolated *_test database');
     await ensureTestDatabase(dbUrl);
-    pool = new Pool({ connectionString: dbUrl, max: 24, options: `-c search_path=${schema},public` });
+    pool = createPool(dbUrl, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
     links = new ShortLinkService(pool, () => now);
   });

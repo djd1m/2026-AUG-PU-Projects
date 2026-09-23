@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterAll, describe, it, expect } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { PartnerService } from '../apps/web/src/server/partner';
@@ -21,7 +21,7 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Requires isolated *_test database');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 24, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
     service = new PartnerService(pool, () => now);
   });

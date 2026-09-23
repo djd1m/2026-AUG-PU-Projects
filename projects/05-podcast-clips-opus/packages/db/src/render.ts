@@ -65,15 +65,15 @@ export async function retryRender(pool: Pool, attempt: Attempt, reason: 'ffmpeg_
   });
 }
 export interface RenderResult { object_key: string; thumbnail_key: string; bytes: number; watermarked: boolean }
-// Serialize DB acceptance with retries. Storage must independently enforce create-only
-// publication: a connection loss releases this row lock before an in-flight PUT stops.
+// Publish outside the transaction; storage must enforce create-only publication.
+// Concurrent PUTs may adopt the same immutable contract; DB acceptance remains fenced.
 // Never delete canonical objects here: after a DB error they may already be adopted
 // by the next attempt. Matching immutable render contracts make that recovery safe.
 export async function publishRenderResult(pool: Pool, attempt: Attempt, result: RenderResult,
   publish: () => Promise<number>): Promise<boolean> {
+  const bytes = await publish();
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return false; }
-    const bytes = await publish();
     const accepted = await tx.query(`UPDATE clip SET status='done',object_key=$4,thumbnail_key=$5,bytes=$6,watermarked=$7,failure_reason=NULL
       WHERE id=$1 AND video_id=$2 AND render_fence=$3 AND status='rendering' RETURNING id`,
     [attempt.clip_id, attempt.video_id, attempt.fence, result.object_key, result.thumbnail_key, bytes, result.watermarked]);

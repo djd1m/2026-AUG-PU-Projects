@@ -103,7 +103,6 @@ services:
       <<: [*app-env, *s3-env]
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — он вшивается в метку каждого клипа}
       N5_WORK_DIR: /work
-      N5_RENDER_CONCURRENCY: "1"
     volumes:
       - render-work:/work
     depends_on:

@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterAll, describe, it, expect, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { CreateBucketCommand, DeleteBucketCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { migrate } from '../packages/db/src/migrate';
@@ -33,7 +33,7 @@ describe.skipIf(!dbUrl)('PostgreSQL guest-pack', () => {
   beforeAll(async () => {
     if (!dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Requires isolated *_test database');
     await ensureTestDatabase(dbUrl);
-    pool = new Pool({ connectionString: dbUrl, max: 12, connectionTimeoutMillis: 3000, statement_timeout: 10000, options: `-c search_path=${schema},public` });
+    pool = createPool(dbUrl, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
     guests = new GuestPackService(pool, () => now);
   });

@@ -3,7 +3,7 @@ import type { Pool, PoolClient } from 'pg';
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { validateFragments, type Fragment } from '@clipmaker/shared/fragments';
-import { parseTranscript, type TranscriptResult } from '@clipmaker/shared/transcript';
+import { parseTranscript, TranscriptError, type TranscriptResult } from '@clipmaker/shared/transcript';
 import { transaction, checkAndConsumeQuota } from './quota.js';
 import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
 interface Current { account_id: string; plan: string; duration_seconds: string; unit_count: number; llm_dispatched: boolean; started_at: Date }
@@ -40,7 +40,10 @@ export async function authorizeSelection(pool: Pool, attempt: Attempt, limits: L
     const duration = Number(row.duration_seconds);
     let transcript: TranscriptResult;
     try { transcript = await readTranscript(tx, attempt.video_id, duration); }
-    catch { await failTx(tx, attempt, 'no_timestamps', now); return null; }
+    catch (error) {
+      if (!(error instanceof TranscriptError)) throw error;
+      await failTx(tx, attempt, 'no_timestamps', now); return null;
+    }
     // The joined SELECT can carry an older job_attempt snapshot while waiting
     // for video. Only this conditional UPDATE grants the right to spend.
     const claimed = await tx.query<{ unit_count: number }>(`UPDATE job_attempt SET llm_dispatched=true

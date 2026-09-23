@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { createPool } from '@clipmaker/db';
 import { pathToFileURL } from 'node:url';
 
 // Работает и на новом volume, и на старом: initdb.d выполнялся бы лишь один раз.
@@ -10,7 +10,7 @@ export async function ensureTestDatabase(databaseUrl) {
     throw new Error('Подготовка разрешена только для отдельной базы *_test');
   }
   url.pathname = '/postgres';
-  const pool = new Pool({ connectionString: url.href, connectionTimeoutMillis: 3000, statement_timeout: 5000 });
+  const pool = createPool(url.href);
   try {
     if (!(await pool.query('SELECT 1 FROM pg_database WHERE datname=$1', [name])).rowCount) {
       try { await pool.query(`CREATE DATABASE "${name}"`); }

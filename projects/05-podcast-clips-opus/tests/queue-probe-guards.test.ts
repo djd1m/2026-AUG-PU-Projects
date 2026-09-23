@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, it } from 'vitest';
 it('ADR-001 source guard: result UPDATE compares render_fence to own fence', () => {
-  const source=readFileSync('packages/db/src/attempts.ts','utf8');
+  const source=readFileSync('packages/db/src/render.ts','utf8');
   const update=source.slice(source.indexOf('UPDATE clip SET status=\'done\''));
   expect(update).toMatch(/WHERE id=\$1 AND video_id=\$2 AND render_fence=\$3 AND status='rendering'/);
 });

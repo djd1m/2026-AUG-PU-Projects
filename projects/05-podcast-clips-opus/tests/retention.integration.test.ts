@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterAll, describe, it, expect, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { CreateBucketCommand, DeleteBucketCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
@@ -16,7 +16,7 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Нужна отдельная БД *_test');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   beforeEach(async () => { await pool.query('TRUNCATE account,quota_counter CASCADE'); });

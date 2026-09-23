@@ -1,0 +1,69 @@
+{
+  "mutations": [
+    {
+      "finding": "RC-001-duplicate",
+      "mutation": "    if (previous !== expectedPrevious) return null; -> ",
+      "source_sha256": "1812c6a3091aa97f5013c32536e427a70e2ef6fa9be7e453f8d77929a7b2da5e",
+      "mutated_sha256": "e2f5e2561046176f3e8bb35989bb75cac5a7e711d46160783cc2775a29aeecd0",
+      "exit_code": 1,
+      "elapsed_seconds": 1.7463469132781029
+    },
+    {
+      "finding": "RC-001-claim",
+      "mutation": "    if (!claimed.rowCount) return null; -> ",
+      "source_sha256": "1812c6a3091aa97f5013c32536e427a70e2ef6fa9be7e453f8d77929a7b2da5e",
+      "mutated_sha256": "fcfae88191ffa20d69cb471154a0fef0f9dfdd7f322307a110b3cf90133a2acf",
+      "exit_code": 1,
+      "elapsed_seconds": 1.6076820939779282
+    },
+    {
+      "finding": "RC-002-timeout",
+      "mutation": "statement_timeout: 5000, -> ",
+      "source_sha256": "be3e94ca8fcd01a34de69cf383b88f9d1bd7fe8beee2cec1148418f495c21e7a",
+      "mutated_sha256": "cd944e90b4b13c3bcd3ad38e6d32a38920574073a30483e4b374688e715fe069",
+      "exit_code": 1,
+      "elapsed_seconds": 1.6185007779859006
+    },
+    {
+      "finding": "RC-006-db",
+      "mutation": "      if (!(error instanceof TranscriptError)) throw error; -> ",
+      "source_sha256": "c6fc3249bfe96b9fdf232ecdd8a94d76d4f32a64083b028417b892c14f35f6e7",
+      "mutated_sha256": "4766841b0b477a25c20a99df2b957dd7453b047be65f883fcc6abe509b983541",
+      "exit_code": 1,
+      "elapsed_seconds": 1.7480586636811495
+    },
+    {
+      "finding": "RC-006-probe",
+      "mutation": "throw new Error('\u041d\u0435\u043f\u0440\u0438\u0433\u043e\u0434\u043d\u044b\u0439 \u0432\u044b\u0432\u043e\u0434 ffprobe', { cause }); -> throw new ProbeError('probe_timeout', { cause });",
+      "source_sha256": "5b5096a8542b634e9b47033a1c13f168daf26e66f8a44d26ccee3f9090b793ad",
+      "mutated_sha256": "dfa61a3f05bf55bb7d78e904063d74dedb9ac845fa697bfa2f0abcf9873d0637",
+      "exit_code": 1,
+      "elapsed_seconds": 1.6009967816062272
+    },
+    {
+      "finding": "RC-008-rollback",
+      "mutation": "    catch { discard = true; } ->     catch (rollback) { throw rollback; }",
+      "source_sha256": "24461abb2f2a56585290cb4cb24a64a791e4b9e5f53ccf398e4a1eed83ec17bb",
+      "mutated_sha256": "e0a3ca49de599d7f9f57a279db64f3a8073cf4c186f6751ea9195c24df6cade9",
+      "exit_code": 1,
+      "elapsed_seconds": 1.6382666639983654
+    },
+    {
+      "finding": "RC-009-cause",
+      "mutation": "    current = current instanceof Error ? current.cause : undefined; ->     current = undefined;",
+      "source_sha256": "2fe7fb0e6f34aae22a79e836156661645f980261b5291096e8d2569da7e0a51d",
+      "mutated_sha256": "17b8cc351f35bb6c1ee7feb66642eb9385b8848a97bc6d2affb3ed8681903a78",
+      "exit_code": 1,
+      "elapsed_seconds": 1.6469972073100507
+    },
+    {
+      "finding": "RC-010-cleanup",
+      "mutation": "await rm(chunk.path, { force: true }) -> await rm(chunk.path)",
+      "source_sha256": "5ed37f127bce9ee269647fd1ffeb1b65f524741d3e01b4e277cc50e0f6df71f2",
+      "mutated_sha256": "ad401c65b9178e22f49ad97d3f49533474f8447daa29fc8f6f8d68ec4f1ff233",
+      "exit_code": 1,
+      "elapsed_seconds": 1.844417508225888
+    }
+  ],
+  "restored_exit_code": 0
+}

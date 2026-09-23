@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, describe, it, expect, vi } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { ScreenService } from '../apps/web/src/server/screen';
@@ -13,7 +13,7 @@ describe.skipIf(!dbUrl)('PostgreSQL: экраны и доступ к клипа�
   beforeAll(async () => {
     if (!dbUrl || !new URL(dbUrl).pathname.endsWith('_test')) throw new Error('Нужна отдельная БД *_test');
     await ensureTestDatabase(dbUrl);
-    pool = new Pool({ connectionString: dbUrl, options: `-c search_path=${schema},public` });
+    pool = createPool(dbUrl, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
     for (const id of [owner, stranger]) await pool.query("INSERT INTO account(id,email,password_hash,plan,status) VALUES($1,$2,'test-only','free','active')", [id, `${id}@example.test`]);
     await pool.query(`INSERT INTO video(id,account_id,idempotency_key,source,declared_bytes,actual_bytes,object_key,status,clips_total,clips_done)

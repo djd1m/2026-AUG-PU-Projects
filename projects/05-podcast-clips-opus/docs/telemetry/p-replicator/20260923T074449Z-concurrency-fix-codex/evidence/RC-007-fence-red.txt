@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/queue-probe-guards.test.ts (4 tests | 1 failed) 11ms
+   × ADR-001 source guard: result UPDATE compares render_fence to own fence 8ms
+     → expected 'UPDATE clip SET status=\'done\',objec…' to match /WHERE id=\$1 AND video_id=\$2 AND ren…/
+   ✓ deferred source guard: video heartbeat updated under current fence 0ms
+   ✓ ADR-006 source guard: render concurrency is literal one 0ms
+   ✓ Redis colon ID compatibility is pinned by installed BullMQ check 1ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  07:55:55
+   Duration  371ms (transform 57ms, setup 0ms, collect 43ms, tests 11ms, environment 0ms, prepare 108ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/queue-probe-guards.test.ts > ADR-001 source guard: result UPDATE compares render_fence to own fence
+AssertionError: expected 'UPDATE clip SET status=\'done\',objec…' to match /WHERE id=\$1 AND video_id=\$2 AND ren…/
+
+- Expected: 
+/WHERE id=\$1 AND video_id=\$2 AND render_fence=\$3 AND status='rendering'/
+
++ Received: 
+"UPDATE clip SET status='done',object_key=$4,thumbnail_key=$5,bytes=$6,watermarked=$7,failure_reason=NULL
+      WHERE id=$1 AND video_id=$2 AND status='rendering' RETURNING id`,
+    [attempt.clip_id, attempt.video_id, attempt.fence, result.object_key, result.thumbnail_key, bytes, result.watermarked]);
+    if (!accepted.rowCount) { auditAttempt('stale_attempt_result', attempt); return false; }
+    await tx.query(`UPDATE job_attempt SET status='succeeded',wait_reason=NULL,finished_at=now() WHERE video_id=$1 AND fence=$2`,
+      [attempt.video_id, attempt.fence]);
+    await updateRenderProgress(tx, attempt.video_id);
+    return true;
+  });
+}
+"
+
+ ❯ tests/queue-probe-guards.test.ts:6:18
+      4|   const source=readFileSync('packages/db/src/render.ts','utf8');
+      5|   const update=source.slice(source.indexOf('UPDATE clip SET status=\'d…
+      6|   expect(update).toMatch(/WHERE id=\$1 AND video_id=\$2 AND render_fen…
+       |                  ^
+      7| });
+      8| it('deferred source guard: video heartbeat updated under current fence…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

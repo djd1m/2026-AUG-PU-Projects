@@ -1,0 +1,51 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/transcription-order.test.ts (9 tests | 1 failed) 60ms
+   ✓ STT operation order with deterministic dependencies > TR-001 accepts a merged word 0.1s past video within measured MP3; persistence stays strict 16ms
+   ✓ STT operation order with deterministic dependencies > TR-002 rejects a merged word 5s past video and logs assembly failure after provider successes 8ms
+   ✓ STT operation order with deterministic dependencies > failed MP3 measurement stops before provider and cannot become a source-file refund 2ms
+   ✓ STT operation order with deterministic dependencies > minutes committed BEFORE first provider call; transcript committed BEFORE enqueue 4ms
+   ✓ STT operation order with deterministic dependencies > retry authorizes again before calling provider; timeout also has spend outcome 3ms
+   ✓ STT operation order with deterministic dependencies > ADR-003 empty words stop the stage before select; no invented words 3ms
+   ✓ STT operation order with deterministic dependencies > all three failures logged and authorized; no select after retry exhaustion 3ms
+   × STT operation order with deterministic dependencies > RC-010 already removed chunk cannot replace the original provider failure 15ms
+     → expected Error: ENOENT: no such file or directory,… { …(4) } to be Error: Поставщик STT не завершил запрос { …(2) } // Object.is equality
+   ✓ STT operation order with deterministic dependencies > unwritable spend ledger fails closed before network call 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/transcription-order.test.ts > STT operation order with deterministic dependencies > RC-010 already removed chunk cannot replace the original provider failure
+AssertionError: expected Error: ENOENT: no such file or directory,… { …(4) } to be Error: Поставщик STT не завершил запрос { …(2) } // Object.is equality
+
+- Expected
++ Received
+
+- ProviderError {
+-   "message": "Поставщик STT не завершил запрос",
+-   "retryable": false,
+-   "outcome": "provider_error",
++ Error {
++   "message": "ENOENT: no such file or directory, lstat '/tmp/n5-stt-order-aBNxyz/chunk'",
++   "errno": -2,
++   "code": "ENOENT",
++   "syscall": "lstat",
++   "path": "/tmp/n5-stt-order-aBNxyz/chunk",
+  }
+
+ ❯ tests/transcription-order.test.ts:125:5
+    123|       await rm(join(deps.directory, 'chunk'), { force: true }); throw …
+    124|     });
+    125|     await expect(transcribeSource('source', 120, attempt, deps)).rejec…
+       |     ^
+    126|   });
+    127|   it('unwritable spend ledger fails closed before network call', async…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  07:52:53
+   Duration  915ms (transform 332ms, setup 0ms, collect 589ms, tests 60ms, environment 0ms, prepare 80ms)
+

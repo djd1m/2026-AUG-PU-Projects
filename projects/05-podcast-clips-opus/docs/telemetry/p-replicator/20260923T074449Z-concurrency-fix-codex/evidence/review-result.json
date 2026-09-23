@@ -1,0 +1,23 @@
+{
+  "exit_code": 124,
+  "elapsed_seconds": 60.103589795995504,
+  "requested_model": "sonnet",
+  "actual_model": null,
+  "input_sha256": "583f5df6974f66c08e82408d365cd3257682b062ba89d4867fb9677b4d0d80e1",
+  "source_hashes": {
+    "docs/reviews/04_fix_brief_concurrency.md": "95fd386b46c13403dd75d63593e9a5930315ca84e4b8352475e4a1f14a94a757",
+    "packages/db/src/transcription.ts": "1812c6a3091aa97f5013c32536e427a70e2ef6fa9be7e453f8d77929a7b2da5e",
+    "packages/db/src/selection.ts": "c6fc3249bfe96b9fdf232ecdd8a94d76d4f32a64083b028417b892c14f35f6e7",
+    "packages/db/src/render.ts": "3e1a1a0ca1702b7eeee2e921c37ed631fc1716656589741d62040e58d66b0587",
+    "packages/db/src/quota.ts": "24461abb2f2a56585290cb4cb24a64a791e4b9e5f53ccf398e4a1eed83ec17bb",
+    "packages/db/src/index.ts": "be3e94ca8fcd01a34de69cf383b88f9d1bd7fe8beee2cec1148418f495c21e7a",
+    "apps/worker/src/workers/stt.ts": "5ed37f127bce9ee269647fd1ffeb1b65f524741d3e01b4e277cc50e0f6df71f2",
+    "apps/worker/src/media/probe.ts": "5b5096a8542b634e9b47033a1c13f168daf26e66f8a44d26ccee3f9090b793ad",
+    "apps/worker/src/render/diagnostics.ts": "2fe7fb0e6f34aae22a79e836156661645f980261b5291096e8d2569da7e0a51d",
+    "apps/worker/src/render/storage.ts": "01afa6fd101a295abda3cd2a7834857ff517b66d819f561804fd2314de5edb52",
+    "tests/concurrency-fix.test.ts": "b6a5bb4cf338dec50072f244b53958f50c3d82987e50da977a951defb1c560bb",
+    "tests/transcription.integration.test.ts": "91413aa84ac02eb56b2a6a5a8b494707a41f765709ad7b10af12293e5919d88f",
+    "tests/render.integration.test.ts": "0f4dbe5f97005901922086cfe97d84e087034672aeb293683c98674695c106df"
+  },
+  "verdict": null
+}

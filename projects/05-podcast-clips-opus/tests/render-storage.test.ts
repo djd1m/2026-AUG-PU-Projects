@@ -46,7 +46,7 @@ it('connection loss during publication cannot make an old attempt delete or over
   const pool = { connect: async () => ({ query, release: vi.fn() }) } as unknown as Pool;
   await expect(publishRenderResult(pool, attempt, { object_key: 'clip', thumbnail_key: 'thumb', bytes: 5, watermarked: true }, async () => {
     await f.storage.put('clip', f.file, 'video/mp4', 'same-contract', signal);
-    connectionLost = true; // PostgreSQL lock is gone while the first publisher still runs.
+    connectionLost = true; // DB becomes unavailable while the publisher runs outside its transaction.
     expect(await f.storage.put('clip', f.file, 'video/mp4', 'same-contract', signal)).toBe(5); // next delivery adopted it
     await expect(f.storage.put('clip', f.file, 'video/mp4', 'old-contract', signal)).rejects.toThrow(/другому рендеру/);
     return 5;

@@ -3,7 +3,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { mkdtemp, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { Pool } from 'pg';
+import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { leaseAttempt } from '../packages/db/src/attempts';
 import { authorizeSelection, acceptSelection } from '../packages/db/src/selection';
@@ -25,7 +25,7 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Нужна БД *_test');
     await ensureTestDatabase(url);
-    pool = new Pool({ connectionString: url, max: 12, options: `-c search_path=${schema},public` });
+    pool = createPool(url, schema);
     await pool.query(`CREATE SCHEMA ${schema}`); await migrate(pool);
   });
   beforeEach(async () => { await pool.query('TRUNCATE account,quota_counter CASCADE'); });

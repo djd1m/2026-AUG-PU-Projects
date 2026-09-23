@@ -1,0 +1,154 @@
+
+> n5-clipmaker@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/transcription.test.ts (20 tests) 32390ms
+   ✓ STT boundary and media > real AAC extraction accepts timestamps within both measured durations without assuming encoder padding  579ms
+   ✓ STT boundary and media > real ffmpeg: hour input with pauses is streamed to mono MP3 chunks below ceiling  31743ms
+ ✓ tests/render-audio.test.ts (3 tests) 14899ms
+   ✓ RD-001 real MP3 without video renders 9:16 with burned subtitles, watermark and audio  7128ms
+   ✓ RD-001 real video retains its picture; attached MP3 cover and M4A use the background  7737ms
+stdout | tests/render-media.test.ts > real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail
+REAL_RENDER_ARTIFACT=/tmp/n5-real-render-dGqYq7
+
+stderr | tests/render-media.test.ts > ffmpeg timeout kills the child and waits for close before returning
+{"event":"ffmpeg_timeout","exit_code":null,"signal":"SIGKILL","stderr_tail":""}
+
+ ✓ tests/render-media.test.ts (2 tests) 5832ms
+   ✓ real ffmpeg: center crop, ASS highlighting, Cyrillic/address pixels and JPEG thumbnail  5633ms
+ ✓ tests/preflight.test.ts (10 tests) 3584ms
+ ✓ tests/wiring.test.ts (5 tests) 2478ms
+   ✓ Проверяемость проброса окружения > Полная конфигурация проходит, отсутствие потолка даёт находку  1018ms
+   ✓ Проверяемость проброса окружения > Соседнему воркеру не приписываются переменные web  370ms
+   ✓ Проверяемость проброса окружения > Новая обязательная переменная config.ts не теряется в environment.ts  1083ms
+ ✓ tests/config.test.ts (39 tests) 2301ms
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/bcrypt-load.test.ts > RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8
+{"logins":12,"threads":"8","elapsed_ms":142.43721999999997,"fs_ms":82.58139900000003}
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 223ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  07:57:04
+   Duration  682ms (transform 140ms, setup 0ms, collect 156ms, tests 223ms, environment 0ms, prepare 98ms)
+
+
+
+ ✓ tests/bcrypt-load.test.ts (1 test) 1298ms
+   ✓ RV-008: 12 реальных входов <= 3000 мс, fs во время нагрузки <= 1000 мс, libuv=8  1297ms
+stderr | tests/auth.test.ts > Аутентификация > Отказ Redis закрывает вход до bcrypt/БД
+Авторизация: запрос не завершён; вход временно недоступен Error: offline
+    at Object.allowMutation (/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/auth.test.ts:81:67)
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts:34:23
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/auth.test.ts:81:90
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ ✓ tests/auth.test.ts (10 tests) 994ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  677ms
+ ✓ tests/queue-probe.test.ts (14 tests) 207ms
+ ✓ tests/upload-fix.test.ts (9 tests) 178ms
+stderr | tests/guest-pack.test.ts > guest file capability > bad ticket fails before signing; DB or storage outage is fail closed
+Выдача клипа: не удалось получить файл Error: secret
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/guest-pack.test.ts:147:70
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/guest-pack.test.ts (20 tests) 119ms
+stderr | tests/progress-screen.test.ts > авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+Выдача клипа: не удалось получить файл Error: private details
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/progress-screen.test.ts:109:73
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/progress-screen.test.ts (12 tests) 115ms
+ ✓ tests/s3-public-endpoint.test.ts (6 tests) 125ms
+ ✓ tests/partner.test.ts (12 tests) 86ms
+ ✓ tests/selection.test.ts (21 tests) 69ms
+ ✓ tests/s3.test.ts (6 tests) 66ms
+ ✓ tests/limits.test.ts (9 tests) 80ms
+ ✓ tests/upload.test.ts (8 tests) 60ms
+ ✓ tests/limits-retry.test.ts (3 tests) 42ms
+ ✓ tests/transcription-order.test.ts (9 tests) 42ms
+ ✓ tests/render-storage.test.ts (2 tests) 25ms
+ ✓ tests/upload-route.test.ts (3 tests) 41ms
+ ✓ tests/partner-route.test.ts (5 tests) 34ms
+ ✓ tests/short-link.test.ts (14 tests) 36ms
+stderr | tests/selection-order.test.ts > SelectFragments order and attempt accounting > Redis publish failure preserves successful commit for watchdog
+Рендер сохранён; сторож восстановит доставку задания Error: redis down
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/selection-order.test.ts:51:60
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ ✓ tests/selection-order.test.ts (7 tests) 26ms
+ ✓ tests/retention-route.test.ts (2 tests) 44ms
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+ ✓ tests/render-worker.test.ts (6 tests) 60ms
+ ✓ tests/retention.test.ts (8 tests) 45ms
+ ✓ tests/interest-route.test.ts (3 tests) 32ms
+ ✓ tests/proxy-rate.test.ts (9 tests) 22ms
+ ✓ tests/watchdog-diagnostics.test.ts (9 tests) 21ms
+ ✓ tests/render-diagnostics.test.ts (5 tests) 27ms
+ ✓ tests/retention-storage.test.ts (2 tests) 23ms
+ ✓ tests/concurrency-fix.test.ts (11 tests) 25ms
+ ✓ tests/growth-day.test.ts (3 tests) 26ms
+ ✓ tests/render.test.ts (18 tests) 22ms
+ ✓ tests/transcription-merge.test.ts (4 tests) 10ms
+ ✓ tests/enums.test.ts (14 tests) 15ms
+ ✓ tests/upload-browser.test.ts (3 tests) 13ms
+ ✓ tests/test-db.test.ts (7 tests) 12ms
+stderr | tests/health.test.ts > health: при корректной конфигурации 200 с доступной БД, 503 при отказе БД
+Проверка здоровья: сервис недоступен Error: offline
+    at /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/health.test.ts:10:31
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
+
+ ✓ tests/health.test.ts (1 test) 11ms
+ ✓ tests/transcription-quota.test.ts (4 tests) 13ms
+ ✓ tests/ip-prefix.test.ts (1 test) 10ms
+ ✓ tests/upload-guards.test.ts (3 tests) 6ms
+ ✓ tests/queue-probe-guards.test.ts (4 tests) 4ms
+ ✓ tests/growth-prefix.test.ts (1 test) 3ms
+ ↓ tests/database.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/guest-pack.integration.test.ts (11 tests | 11 skipped)
+ ↓ tests/limits.integration.test.ts (5 tests | 5 skipped)
+ ↓ tests/partner.integration.test.ts (15 tests | 15 skipped)
+ ↓ tests/progress-screen.integration.test.ts (3 tests | 3 skipped)
+ ↓ tests/queue-probe.integration.test.ts (20 tests | 20 skipped)
+ ↓ tests/queue-redis.integration.test.ts (2 tests | 2 skipped)
+ ↓ tests/render.integration.test.ts (8 tests | 8 skipped)
+ ↓ tests/retention.integration.test.ts (5 tests | 5 skipped)
+ ↓ tests/s3-slow.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/selection.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/short-link.integration.test.ts (9 tests | 9 skipped)
+ ↓ tests/transcription.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/upload-fix.integration.test.ts (10 tests | 10 skipped)
+ ↓ tests/upload-migration.integration.test.ts (1 test | 1 skipped)
+ ↓ tests/upload.integration.test.ts (17 tests | 17 skipped)
+
+ Test Files  46 passed | 16 skipped (62)
+      Tests  368 passed | 135 skipped (503)
+   Start at  07:55:58
+   Duration  94.99s (transform 1.84s, setup 0ms, collect 12.23s, tests 65.57s, environment 17ms, prepare 6.23s)
+

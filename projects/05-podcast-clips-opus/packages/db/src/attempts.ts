@@ -46,19 +46,3 @@ export async function ensureInitialAttempt(pool: Pool, videoId: string): Promise
     return leaseAttemptTx(tx, videoId, 'stt', 1);
   });
 }
-export async function acceptRenderResult(pool: Pool, attempt: Attempt,
-  result: { object_key: string; thumbnail_key: string; bytes: number }, audit: Audit = auditAttempt): Promise<boolean> {
-  const accepted = await transaction(pool, async tx => {
-    // Same lock order as retry/watchdog; status makes duplicate delivery one-shot.
-    await tx.query('SELECT id FROM video WHERE id=$1 FOR UPDATE', [attempt.video_id]);
-    const changed = await tx.query(`UPDATE clip SET status='done', object_key=$4, thumbnail_key=$5, bytes=$6
-      WHERE id=$1 AND video_id=$2 AND render_fence=$3 AND status='rendering'
-      AND EXISTS (SELECT 1 FROM job_attempt WHERE video_id=$2 AND fence=$3 AND stage='render' AND status='running')
-      RETURNING id`, [attempt.clip_id, attempt.video_id, attempt.fence, result.object_key, result.thumbnail_key, result.bytes]);
-    if (!changed.rowCount) return false;
-    await tx.query("UPDATE job_attempt SET status='succeeded', finished_at=now() WHERE video_id=$1 AND fence=$2", [attempt.video_id, attempt.fence]);
-    return true;
-  });
-  if (!accepted) audit('stale_attempt_result', attempt);
-  return accepted;
-}

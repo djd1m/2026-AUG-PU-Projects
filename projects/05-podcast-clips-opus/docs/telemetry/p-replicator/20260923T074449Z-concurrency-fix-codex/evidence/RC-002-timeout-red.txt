@@ -1,0 +1,50 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ❯ tests/concurrency-fix.test.ts (11 tests | 1 failed) 34ms
+   ✓ RC-001 duplicate initial dispatch does not claim the next paid retry 4ms
+   ✓ RC-001 losing conditional claim never consumes retry quota 1ms
+   × RC-002 every integration pool uses production factory; timeouts cannot be overridden 17ms
+     → expected { …(9) } to match object { max: 10, …(3) }
+(6 matching properties omitted from actual)
+   ✓ RC-003 publication holds no transaction or pool client 2ms
+   ✓ RC-005 compose does not advertise prohibited render concurrency configuration 1ms
+   ✓ RC-006 database error propagates by identity without terminal no_timestamps 2ms
+   ✓ RC-006 malformed transcript still produces no_timestamps 3ms
+   ✓ RC-006 malformed ffprobe output retains cause and is not a refundable timeout 1ms
+   ✓ RC-008 failed rollback preserves original error and destroys the client 1ms
+   ✓ RC-008 successful rollback returns a reusable client and preserves error identity 1ms
+   ✓ RC-009 nested causes are bounded, cycle-safe and sanitized at every level 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/concurrency-fix.test.ts > RC-002 every integration pool uses production factory; timeouts cannot be overridden
+AssertionError: expected { …(9) } to match object { max: 10, …(3) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "connectionTimeoutMillis": 3000,
+    "idleTimeoutMillis": 30000,
+    "max": 10,
+-   "statement_timeout": 5000,
+  }
+
+ ❯ tests/concurrency-fix.test.ts:42:30
+     40| it('RC-002 every integration pool uses production factory; timeouts ca…
+     41|   const pool = createPool('postgresql://test@localhost/test_test');
+     42|   try { expect(pool.options).toMatchObject({ max: 10, connectionTimeou…
+       |                              ^
+     43|   finally { await pool.end(); }
+     44|   for (const file of readdirSync('tests').filter(f => f.endsWith('.int…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  07:52:45
+   Duration  668ms (transform 249ms, setup 0ms, collect 349ms, tests 34ms, environment 0ms, prepare 97ms)
+

@@ -1,0 +1,16 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+ ✓ tests/transcription-order.test.ts (9 tests) 61ms
+ ✓ tests/concurrency-fix.test.ts (11 tests) 24ms
+ ✓ tests/queue-probe.test.ts (14 tests) 203ms
+ ✓ tests/render-diagnostics.test.ts (5 tests) 23ms
+ ✓ tests/render-storage.test.ts (2 tests) 20ms
+ ✓ tests/transcription-quota.test.ts (4 tests) 12ms
+ ✓ tests/test-db.test.ts (7 tests) 12ms
+
+ Test Files  7 passed (7)
+      Tests  52 passed (52)
+   Start at  07:52:55
+   Duration  3.69s (transform 607ms, setup 0ms, collect 1.56s, tests 355ms, environment 2ms, prepare 636ms)
+
