@@ -24,7 +24,7 @@ C4Context
   Rel(viewer, social, "Смотрит клип")
   Rel(viewer, clipmkr, "Набирает clipmkr.ru или открывает /c/{clip_code}", "HTTPS")
   Rel(partner, clipmkr, "Приводит по /p/{partner_code}", "HTTPS")
-  Rel(operator, clipmkr, "/admin/publications, /admin/metrics; неделя: ops partner-add, ops spend-today", "HTTPS / CLI")
+  Rel(operator, clipmkr, "/admin/publications, /admin/metrics; неделя: ops partner-add, ops spend-today, ops beta-add, ops reset-link", "HTTPS / CLI")
   Rel(clipmkr, openrouter, "Транскрипция и выбор фрагментов", "HTTPS")
   Rel(clipmkr, openai, "Только при STT_PROVIDER=openai", "HTTPS")
   Rel(clipmkr, s3, "Подписанные ссылки, чтение и запись объектов", "HTTPS/S3")
@@ -73,7 +73,7 @@ C4Container
 ```
 
 Порты на хосте: `caddy` — `${CADDY_HTTP_PORT:-80}`, `${CADDY_HTTPS_PORT:-443}` (только профиль `prod`); `web` —
-`127.0.0.1:${WEB_PORT:-3105}`; `postgres`, `redis`, `minio` (тестовый профиль, на схеме не показан) — без публикации.
+в prod не публикуется, в dev `127.0.0.1:${WEB_PORT:-3105}` через оверлей; `postgres`, `redis`, `minio` (тестовый профиль, на схеме не показан) — без публикации.
 
 ## Уровень 3 — Components: worker-ai
 
@@ -93,7 +93,7 @@ C4Component
     Component(llmw, "LLM worker", "BullMQ Worker: llm", "Один вызов выбора и объяснения")
     Component(selection, "SelectionModel", "@clipmkr/models", "anthropic/claude-sonnet-5, json_schema, start_unit/end_unit")
     Component(scoring, "Scorer & quote check", "чистые функции", "Длина и итог считает код; цитаты сверяются с текстом")
-    Component(quota, "Quota & spend", "SQL", "Допуск: остаток LLM ≥ LIMIT_LLM_KOP_JOB до STT; атомарный резерв quota_counter; spend_ledger по попыткам")
+    Component(quota, "Quota & spend", "SQL", "Допуск: оценка LLM ≤ LIMIT_LLM_KOP_JOB и остатков до STT; квота новичка и пул stt_sec_newbie; атомарный резерв quota_counter; spend_ledger по попыткам")
     Component(lease, "Lease & heartbeat", "таймер", "job.heartbeat_at раз в 30 с; worker.close() по SIGTERM")
     Component(probe, "ops stt-probe", "CLI", "Проба STT дня 1: тот же Transcriber; запускается и с хоста без Postgres, Redis, S3")
   }
@@ -127,7 +127,7 @@ C4Component
     Component(renderw, "Render worker", "BullMQ Worker: render", "Идемпотентно: ready не рендерится повторно")
     Component(plan, "Watermark decision", "чистая функция", "watermark = plan !== 'paid'; план читается из БД")
     Component(ass, "Subtitle builder", "ASS", "Фразы ≤ 2 строк × 32 символа; префикс «Спикер N:» только при speaker_map_confident")
-    Component(ffmpeg, "FFmpeg runner", "execFile без shell", "-ss по подписанной ссылке (HTTP range); scale=1080:608:force_original_aspect_ratio=decrease, pad в полосу y=420…1028, поля чёрные; шрифт /app/fonts; ass=; знак полупрозрачный в углу полосы видео; -threads 2; таймаут 5 мин")
+    Component(ffmpeg, "FFmpeg runner", "execFile без shell", "-ss по подписанной ссылке (HTTP range); scale=1080:608:force_original_aspect_ratio=decrease, pad в полосу y=420…1028, поля чёрные; знак по центру у нижней кромки полосы видео; шрифт /app/fonts; ass=; знак полупрозрачный в углу полосы видео; -threads 2; таймаут 5 мин")
     Component(finisher, "Job finisher", "SQL", "clips_done++; последний клип → job succeeded")
   }
   Rel(redis, renderw, "render")

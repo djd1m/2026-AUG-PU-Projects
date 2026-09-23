@@ -15,7 +15,8 @@ x-db: &db-env { DATABASE_URL: "${DATABASE_URL:?}" }
 x-redis: &redis-env { REDIS_URL: "${REDIS_URL:?}", REDIS_PASSWORD: "${REDIS_PASSWORD:?}" }
 x-s3: &s3-env { S3_ENDPOINT: "${S3_ENDPOINT:?}", S3_REGION: "${S3_REGION:?}", S3_BUCKET: "${S3_BUCKET:?}",
                 S3_ACCESS_KEY: "${S3_ACCESS_KEY:?}", S3_SECRET_KEY: "${S3_SECRET_KEY:?}", S3_TENANT_ID: "${S3_TENANT_ID?}" }
-x-limits: &limits-env { LIMIT_STT_USER_SEC_DAY: "${LIMIT_STT_USER_SEC_DAY:?}", LIMIT_LLM_USER_KOP_DAY: "${LIMIT_LLM_USER_KOP_DAY:?}",
+x-limits: &limits-env { LIMIT_STT_USER_SEC_DAY: "${LIMIT_STT_USER_SEC_DAY:?}",
+                        LIMIT_STT_NEWBIE_SEC_DAY: "${LIMIT_STT_NEWBIE_SEC_DAY:?}", LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY: "${LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY:?}", LIMIT_LLM_USER_KOP_DAY: "${LIMIT_LLM_USER_KOP_DAY:?}",
                         LIMIT_STT_GLOBAL_SEC_DAY: "${LIMIT_STT_GLOBAL_SEC_DAY:?}", LIMIT_LLM_GLOBAL_KOP_DAY: "${LIMIT_LLM_GLOBAL_KOP_DAY:?}",
                         LOG_LEVEL: "${LOG_LEVEL:-info}" }
 x-app: &app
@@ -38,7 +39,7 @@ services:
     profiles: [prod, test]
     command: ["web"]
     mem_limit: 1g
-    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]            # только петля; канон §1 для prod пишет «нет» — [правка канона запрошена]: петля законна по docker-ports
+    # ports: НЕТ — в prod единственная дверь caddy (канон §1, §6); для dev — оверлей docker-compose.dev.yml ниже
     environment:
       <<: [*db-env, *redis-env, *s3-env, *limits-env]
       BASE_URL: ${BASE_URL:?}
@@ -129,4 +130,15 @@ clipmkr.ru {
 	}
 	reverse_proxy web:3000
 }
+```
+
+`docker-compose.dev.yml` — только машина разработки (канон §6: `WEB_PORT` только в dev и только на `127.0.0.1`);
+запуск `docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile test up -d`. `name:` совпадает с основным
+файлом намеренно: это оверлей того же проекта, а не отдельный стек.
+
+```yaml
+name: clipmkr
+services:
+  web:
+    ports: ["127.0.0.1:${WEB_PORT:-3105}:3000"]
 ```

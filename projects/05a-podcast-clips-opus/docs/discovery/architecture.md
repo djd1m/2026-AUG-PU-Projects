@@ -215,4 +215,16 @@ exit=2
   sha256 canon.md вручную совпал с dispatch-plan (2acd0f443199f4e3…).
 - Размеры: ADR.md 472, Architecture.md 416, Architecture-compose.md 132, C4_Diagrams.md 140 — все < 500.
 
+
+## Итерация 2, дополнение: OWN-05A-015/016
+- OWN-05A-015: ADR-009 «Последствия» и ADR-010 п. 2 — знак по центру у нижней кромки полосы видео, над субтитрами:
+  `x = video_x + (vw − pw)/2`, `y = min(video_y + vh, 1100) − 24 − ph` (низ плашки 1004 для 16:9 и 4:3, 1076 для
+  вертикального); точные числа — по Specification FR-GROWTH-003 после её правки. Architecture reuse map `ffmpeg.ts`, C4.
+- OWN-05A-016: ADR-006 — строки новичка (1 800 с) и общего пула (45 000 с, `stt_sec_newbie`), определение новичка
+  (младше 24 ч без `beta_at`), резерв на допуске тремя счётчиками одной атомарной операцией; ADR-011 — открытая регистрация
+  с квотой новичка, `ops beta-add`, два теста; Architecture — абзац «Квота новичка» в Security, шаг резерва в sequence;
+  Architecture-compose — `LIMIT_STT_NEWBIE_SEC_DAY`, `LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY` в `x-limits` (web, worker-ai).
+- Проверки: compose config → 0; check-external-deps → 0; check-canon → 2 (известная проблема разреза), sha256 канона
+  вручную совпал с dispatch-plan (372e9b0361ca5c16…). Размеры: ADR 486, Architecture 421, compose 133, C4 140.
+
 Status: completed

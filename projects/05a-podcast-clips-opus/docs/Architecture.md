@@ -125,14 +125,14 @@ postgres, redis, minio. Профиль `prod` — VPS в Нидерландах;
 3002, 5480, 8080, 8081, 8088, 11000, 11001, 11379, 11432, поэтому `caddy` здесь не стартует).
 
 Запускаемый эскиз `docker-compose.yml` и `deploy/Caddyfile` — в [`Architecture-compose.md`](Architecture-compose.md)
-(разрез файла, объявлен в `dispatch-plan.md`). Главное из него: у хранилищ нет `ports:`, `web` привязан к
-`127.0.0.1`, у каждого сервиса `environment:` по канону §6 и `mem_limit`, у хранилищ и `caddy` — именованные тома.
+(разрез файла, объявлен в `dispatch-plan.md`). Главное из него: у хранилищ и у `web` в prod нет `ports:` (`web` на
+`127.0.0.1:${WEB_PORT}` — только оверлей `docker-compose.dev.yml` для dev), у каждого сервиса `environment:` по канону §6 и `mem_limit`, у хранилищ и `caddy` — именованные тома.
 
 
 Сумма `mem_limit` в prod — 6,75 ГБ при 8 ГБ VPS: OOM-killer хоста не доходит до `postgres` (VA-23). Исходник больше
 3840×2160 отвергается на подготовке (`file_invalid`), ffmpeg рендера декодирует с `-threads 2`.
 `migrate` после миграций БД идемпотентно применяет к бакету CORS (канон §8: `AllowedOrigins = BASE_URL`,
-`AllowedMethods = PUT, GET`, `ExposeHeaders = ETag`, `AllowedHeaders = content-type` `[правка канона запрошена]`) и правила
+`AllowedMethods = PUT, GET`, `ExposeHeaders = ETag`, `AllowedHeaders = content-type`) и правила
 жизненного цикла, включая `AbortIncompleteMultipartUpload` через 1 день (ADR-007); в тестовом профиле он же создаёт
 бакет MinIO, если его нет. Отдельного контейнера `minio-init` нет: канон §1 перечисляет ровно 8 сервисов.
 
@@ -141,8 +141,8 @@ postgres, redis, minio. Профиль `prod` — VPS в Нидерландах;
 1. **Хранилища не публикуются.** У `postgres`, `redis`, `minio` нет `ports:`; соседи обращаются по имени сервиса.
    Проверка: `COMPOSE_PROFILES=prod,test node .claude/hooks/check-ports.cjs projects/05a-podcast-clips-opus` → 0.
    Без `COMPOSE_PROFILES` проверка видит только сервисы без профиля (`postgres`, `redis`) и молча пропускает `caddy` и `web`.
-2. **Единственная дверь в prod — `caddy`.** `web` публикуется только на петлю `127.0.0.1` (для отладки с самого
-   сервера); на внешний интерфейс — никогда, иначе прокси обходится вместе с TLS и лимитами. Проверка — тот же
+2. **Единственная дверь в prod — `caddy`.** `web` в prod не публикуется вовсе (канон §1, §6); на машине
+   разработки — оверлей `docker-compose.dev.yml` с `127.0.0.1:${WEB_PORT:-3105}`; на внешний интерфейс — никогда, иначе прокси обходится вместе с TLS и лимитами. Проверка — тот же
    `check-ports.cjs` (раздел «за reverse-proxy»).
 3. **Хостовые порты — только `${VAR:-default}`**; дефолты `3105`, `80`, `443`. Перед `up` на машине разработки —
    `bash scripts/check-port-conflicts.sh projects/05a-podcast-clips-opus`.
@@ -255,7 +255,7 @@ sequenceDiagram
   W-->>B: 202 {job_id}
   AI->>S3: скачать исходник один раз; перепроверка magic bytes; ffprobe (≤ 120 мин, ≤ 3840×2160, длительность совпадает с заявленной)
   AI->>PG: допуск: оценка LLM по длительности ≤ LIMIT_LLM_KOP_JOB и ≤ остатков автора и сервиса (OWN-05A-012), иначе failed/quota_* до STT
-  AI->>PG: резерв STT (атомарно): автору ceil(Σ unique_ms/1000), сервису Σ ceil(chunk.duration_ms/1000); иначе failed/quota_*
+  AI->>PG: резерв STT (атомарно): автору ceil(Σ unique_ms/1000) — новичку по LIMIT_STT_NEWBIE_SEC_DAY и в пул stt_sec_newbie; сервису Σ ceil(chunk.duration_ms/1000); иначе failed/quota_*
   loop кусок 60–120 с, пропуская done
     AI->>PG: spend_ledger попытка; повтор куска резервирует его секунды дополнительно
     AI->>OR: transcriptions (verbose_json, диаризация)
@@ -305,6 +305,11 @@ refresh. **Транспорт** (канон §7, VT-04): оба токена —
 отзывается. Лимиты
 регистраций и входа — в Redis, **до** проверки пароля; недоступный Redis — отказ `503`, а не «без лимита» (у донора
 `rate-limit.ts` открывался при сбое — переписывается).
+
+**Квота новичка** (OWN-05A-016, ADR-006 п. 1). Аккаунт младше 24 ч без `account.beta_at` получает
+`LIMIT_STT_NEWBIE_SEC_DAY` (30 мин) в сутки, все новички вместе — `LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY` (750 мин, пул
+`stt_sec_newbie`); бета-авторов отмечает `docker compose exec worker-ai ops beta-add <email>`. Обе переменные — у `web`
+(отказ до создания задачи) и у `worker-ai` (резерв на допуске), без дефолта.
 
 **Авторизация.** Проверка владения в каждом обработчике, не только в middleware (урок CVE-2025-29927). Чужой
 `clip_id`/`job_id` → `404`. `/admin/*` — только `account.role = operator`, проверка в middleware **и** в каждом
@@ -363,7 +368,7 @@ fake-door (2-я очередь, OWN-05A-014) пишет только событ�
 | `packages/config/src/env.ts`, `llm-providers.ts` | ПЕРЕПИСАТЬ | проверка канона §6 без дефолтов; таблица провайдеров не нужна |
 | `packages/types/src/*` | ПЕРЕПИСАТЬ | закрытые списки канона §5 |
 | `packages/crypto/*` | НЕ БРАТЬ | BYOK вне недели |
-| `apps/worker/lib/ffmpeg.ts` | ДОРАБОТАТЬ | `pad` на y = 420 вместо центра; знак — полупрозрачный в левом верхнем углу полосы видео (x = 70, y = 444 для 16:9, x = 158 для 4:3, x = 70, y = 200 для вертикального; плашка 0,5–0,6; FR-GROWTH-003, OWN-05A-013), не на чёрном поле; `WATERMARK_TEXT` из конфигурации; таймаут; экранирование и `execFile` сохранить |
+| `apps/worker/lib/ffmpeg.ts` | ДОРАБОТАТЬ | `pad` на y = 420 вместо центра; знак — полупрозрачный, по центру у нижней кромки полосы видео над субтитрами (ADR-010 п. 2, OWN-05A-015), не на чёрном поле и не в углу; шрифт из `/app/fonts`; `WATERMARK_TEXT` из конфигурации; таймаут; экранирование и `execFile` сохранить |
 | `apps/worker/workers/video-render.ts` | ДОРАБОТАТЬ | `watermark = plan !== 'paid'` из БД; `clip.render_status`; завершение задачи при последнем клипе |
 | `apps/worker/workers/stt.ts` | ПЕРЕПИСАТЬ | куски 60–120 с по паузе, `Transcriber`, `transcript_chunk`, резерв по попыткам; инфраструктура (`ffprobe`, WAV, `p-map`) как справка |
 | `apps/worker/lib/audio-chunker.ts` | ПЕРЕПИСАТЬ | рез в паузе (`silencedetect`), перекрытие, смещения в мс |
@@ -383,7 +388,7 @@ fake-door (2-я очередь, OWN-05A-014) пишет только событ�
 | `apps/web/lib/auth/email.ts` | ДОРАБОТАТЬ | в prod без SMTP — отказ старта, а не Ethereal |
 | `apps/web/lib/auth/{options,vk-provider}.ts`, `app/api/auth/[...nextauth]`, `session-bridge`, `app/api/oauth/*` | НЕ БРАТЬ | NextAuth и VK OAuth не нужны |
 | `apps/web/app/api/auth/{login,logout,verify-email}/route.ts` | ДОРАБОТАТЬ | маршруты канона §7; токен подтверждения хэшем, 24 ч |
-| `apps/web/app/api/auth/{reset-password,new-password}/route.ts` | НЕ БРАТЬ (справка для 2-й очереди) | сброс пароля — 2-я очередь, ссылка из `/admin/users` (OWN-05A-014) |
+| `apps/web/app/api/auth/{reset-password,new-password}/route.ts` | НЕ БРАТЬ (справка) | ссылку сброса на неделе шлёт `ops reset-link <email>`, во 2-й очереди — `/admin/users`; сброс пароля — 2-я очередь, ссылка из `/admin/users` (OWN-05A-014) |
 | `apps/web/app/api/upload/route.ts` | ПЕРЕПИСАТЬ | байты не идут через `web`; выдача ссылок на части |
 | `apps/web/app/api/clips/[clipId]/file/route.ts` | ДОРАБОТАТЬ | подписанная ссылка 15 мин вместо стрима через `web`; владение из сессии |
 | `apps/web/app/api/webhooks/yookassa/route.ts`, `lib/yookassa.ts`, `lib/trpc/routers/billing.ts` | НЕ БРАТЬ (справка для v1) | вебхуков на неделе нет |

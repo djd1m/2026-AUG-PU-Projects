@@ -95,7 +95,7 @@
 | `attribution.stage` | `signup`, `fakedoor` |
 | `attribution.source` | `cookie`, `code` |
 | `spend_ledger.outcome` | `ok`, `provider_error`, `timeout`, `schema_invalid` |
-| `quota_counter.kind` | `stt_sec`, `stt_sec_newbie` (общий пул новичков, `scope = global`), `uploads`, `llm_kop`, `llm_attempts`; для `scope = global` `scope_id` = нулевой UUID |
+| `quota_counter.kind` | `stt_sec`, `stt_sec_newbie` (общий пул новичков — `scope = global`; отметка новичка у задачи для возврата при отказе — `scope = job`, В-27), `uploads`, `llm_kop`, `llm_attempts`; для `scope = global` `scope_id` = нулевой UUID |
 | `landing_visited.props.source` | `direct`, `partner`, `clip_link`, `other` |
 | `STT_PROVIDER` | `openrouter`, `openai` |
 | `PAYMENTS_MODE` | `fake`, `live` |
@@ -218,7 +218,7 @@ CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `GET
 
 Ключи из `Specification.md` на 2026-09-23. Новые ключи добавляет только автор Specification.
 
-Всего 15 FR-clips: FR-clips-1, FR-clips-2, FR-clips-3, FR-clips-4, FR-clips-5, FR-clips-6, FR-clips-7, FR-clips-8, FR-clips-9, FR-clips-10, FR-clips-11, FR-clips-12, FR-clips-13, FR-clips-14, FR-clips-15
+Всего 16 FR-clips: FR-clips-1, FR-clips-2, FR-clips-3, FR-clips-4, FR-clips-5, FR-clips-6, FR-clips-7, FR-clips-8, FR-clips-9, FR-clips-10, FR-clips-11, FR-clips-12, FR-clips-13, FR-clips-14, FR-clips-15, FR-clips-16
 
 Всего 5 FR-GROWTH: FR-GROWTH-001, FR-GROWTH-002, FR-GROWTH-003, FR-GROWTH-004, FR-GROWTH-005
 
@@ -228,7 +228,7 @@ CORS бакета: `AllowedOrigins` = `BASE_URL`, `AllowedMethods` = `PUT`, `GET
 
 Всего 8 NFR: NFR-clips-1, NFR-clips-2, NFR-clips-3, NFR-clips-4, NFR-clips-5, NFR-clips-6, NFR-clips-7, NFR-clips-8
 
-Всего 28 AC: AC-clips-1, AC-clips-2, AC-clips-3, AC-clips-4, AC-clips-5, AC-clips-6, AC-clips-7, AC-clips-8, AC-clips-9, AC-clips-10, AC-clips-11, AC-clips-12, AC-clips-13, AC-clips-14, AC-clips-15, AC-clips-16, AC-clips-17, AC-clips-18, AC-clips-19, AC-clips-20, AC-clips-21, AC-clips-22, AC-clips-23, AC-clips-24, AC-clips-25, AC-clips-26, AC-clips-27, AC-clips-28
+Всего 30 AC: AC-clips-1, AC-clips-2, AC-clips-3, AC-clips-4, AC-clips-5, AC-clips-6, AC-clips-7, AC-clips-8, AC-clips-9, AC-clips-10, AC-clips-11, AC-clips-12, AC-clips-13, AC-clips-14, AC-clips-15, AC-clips-16, AC-clips-17, AC-clips-18, AC-clips-19, AC-clips-20, AC-clips-21, AC-clips-22, AC-clips-23, AC-clips-24, AC-clips-25, AC-clips-26, AC-clips-27, AC-clips-28, AC-clips-29, AC-clips-30
 
 В Pseudocode каждое `### Algorithm:` несёт `REQUIREMENT:` с одним из этих ключей.
 

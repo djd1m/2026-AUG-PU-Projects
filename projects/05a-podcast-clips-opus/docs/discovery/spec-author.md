@@ -298,4 +298,18 @@ check-metric-source 0, check-handoff-manifest 0.
 Проверки: check-growth-trace 0, check-look-trace 0, check-metric-source 0, check-handoff-manifest 0;
 дублей сценариев в Specification нет; множества сценариев Specification и test-scenarios совпадают (63).
 
+### Дополнение к итерации 2 — решения владельца OWN-05A-015 и OWN-05A-016
+
+Правились Specification.md, PRD.md и test-scenarios.md (перегенерирован из Specification: 67 сценариев,
+расхождений в множествах 0). Ключи не перенумерованы. Новое в конце нумерации: `FR-clips-16`,
+`AC-clips-30`, сценарии SC-US-002-7…10.
+
+| Решение | Как внесено |
+|---|---|
+| OWN-05A-015 — знак по центру у нижней кромки полосы видео, над субтитрами | FR-GROWTH-003 п.4 переписан. Центр плашки `x = video_x + video_w/2`, нижний край `y = min(video_y + video_h − 24, 1100 − 16)`: для 16:9 и 4:3 — 540/1004, для вертикального видео — 540/1084. Плашка не касается чёрного поля и полосы субтитров. FR-clips-7 п.2, SC-US-008-1 (центр 540 ±2, нижний край 1004 ±2), PRD scope, §8 и PD-WMARK-001, Spec §10 |
+| OWN-05A-016 — открытая регистрация с квотой новичка | FR-clips-16: новичок — аккаунт моложе 24 ч без `account.beta_at` в момент допуска STT; 1 800 с в сутки (`LIMIT_STT_NEWBIE_SEC_DAY`); пул всех новичков 45 000 с (`LIMIT_STT_NEWBIE_GLOBAL_SEC_DAY`, `quota_counter` kind `stt_sec_newbie`) — в зачёт общего потолка; отказ `quota_user` (личный) или `quota_global` (пул или сервис) до вызова STT; бета-автор — `ops beta-add <email>` с `audit_log`, полные 7 200 с; через 24 ч квота снимается сама; новичку показывается остаток. FR-clips-1 п.7, FR-clips-10 (таблица), FR-clips-11 (CLI), NFR-clips-3 (9 потолков), AC-clips-30 (SC-US-002-7…10), §10, §11. PRD: абзац о квоте новичка, §8, «Очереди поставки» (ядро) |
+
+Метрика недели не менялась. Проверки: check-growth-trace 0, check-look-trace 0, check-metric-source 0,
+check-handoff-manifest 0.
+
 Status: completed
