@@ -23,8 +23,8 @@
     {
       "id": "stt-probe",
       "number": 1,
-      "name": "Проба STT дня 1 (самостоятельный скрипт, без монорепо)",
-      "description": "Решение координатора (второй проход, TK-05): проба — самостоятельный скрипт `projects/05a-podcast-clips-opus/scripts/stt-probe.mjs` (Node 22, только `fetch` к OpenRouter/OpenAI и `ffmpeg` с хоста для нарезки ~90с/перекрытие 5с — без монорепо, без package.json, без TypeScript-сборки). Блокирующая проба ADR-001: 5 кандидатов OpenRouter (assemblyai/universal-3-5-pro, deepgram/nova-3, microsoft/mai-transcribe-2, meta/muse-voice-transcribe-1.0, x-ai/grok-stt-1.0), 7 критериев (таймкоды, метки спикеров, WER≤15%, точность метки≥90%, рассинхрон≤300мс, <60с на кусок, цена≤62₽/час), запасной путь — прямой OpenAI gpt-4o-transcribe-diarize, иначе субтитры без подписи (AC-clips-24). Нужны только Node 22, ffmpeg, OPENROUTER_API_KEY — Postgres/Redis/S3 и монорепо не требуются (ADR-001 п.4). Позже, когда `worker-ai` существует, CLI-подкоманда `ops stt-probe <файл>` (canon §7) становится ТОНКОЙ ОБЁРТКОЙ вокруг той же логики (переиспользует `Transcriber` из `packages/models`, не дублирует пробный код вслепую). Результат фиксирует STT_MODEL/STT_PROVIDER в конфигурации, не в коде. Фича ни от чего не зависит и остаётся первой.",
+      "name": "Проба STT дня 1 (минимальный скелет, без полного монорепо)",
+      "description": "ops stt-probe <файл> — блокирующая проба ADR-001: 5 кандидатов OpenRouter (assemblyai/universal-3-5-pro, deepgram/nova-3, microsoft/mai-transcribe-2, meta/muse-voice-transcribe-1.0, x-ai/grok-stt-1.0), 7 критериев (таймкоды, метки спикеров, WER≤15%, точность метки≥90%, рассинхрон≤300мс, <60с на кусок, цена≤62₽/час), запасной путь — прямой OpenAI gpt-4o-transcribe-diarize, иначе субтитры без подписи (AC-clips-24). Нужны только Node 20, ffmpeg, OPENROUTER_API_KEY — Postgres/Redis/S3 не требуются (ADR-001 п.4). ПРАВКА TK-05 (принято координатором): эта фича ВЛАДЕЕТ созданием минимального корневого package.json (workspaces-заготовка) и заготовок packages/models, packages/config, apps/worker/src/cli+lib — первым шагом, до того как package.json существует вообще; запускается `npx tsx apps/worker/src/cli/ops.ts stt-probe <файл>`, без сборки dist. foundation-auth и последующие фичи ТОЛЬКО РАСШИРЯЮТ этот package.json (добавляют apps/web, packages/db и т.д.), не пересоздают — общие манифесты правит integration owner. Результат фиксирует STT_MODEL/STT_PROVIDER в конфигурации, не в коде.",
       "priority": "mvp",
       "status": "next",
       "complexity": "medium",
@@ -38,20 +38,26 @@
         "OWN-05A-005"
       ],
       "expected_files": [
-        "projects/05a-podcast-clips-opus/scripts/stt-probe.mjs",
+        "package.json",
+        "packages/models/src/transcriber.ts",
+        "packages/config/src/env.ts",
+        "apps/worker/src/cli/ops.ts",
+        "apps/worker/src/lib/audio-chunker.ts",
         "docs/probes/stt-day1.md"
       ]
     },
     {
       "id": "foundation-auth",
       "number": 2,
-      "name": "Monorepo-скелет, честная конфигурация, вход email+пароль с подтверждением",
-      "description": "npm workspaces (apps/web, apps/worker, packages/db|queue|s3|config|models|payments|types) — package.json создаётся здесь СВЕЖИМ, не расширяет ничего (TK-05, второй проход: stt-probe — самостоятельный .mjs-скрипт вне монорепо, конфликта владения манифестом нет). apps/worker/src/cli/ops.ts несёт подкоманду `ops stt-probe`, обёртывающую тот же адаптер `Transcriber`, что и standalone-скрипт фичи stt-probe. @clipmkr/config проверяет 9 потолков и все переменные canon §6 без дефолта, отказ старта называет переменную (AC-clips-14); регистрация email+пароль argon2id с нормализацией email и блок-листом одноразовых доменов (AC-clips-28), лимит ≤20 регистраций/IP/ч (FR-clips-1 п.4, TK-01) и ≤10 неуспехов входа/аккаунт/15 мин атомарным INCR (AC-clips-25); POST /api/auth/resend-verification (не чаще 1/60с и 5/сутки); подтверждение почты до первой загрузки (email_token, Resend SMTP, AC-clips-21); JWT access 15 мин + refresh только в httpOnly cookie, Bearer не принимается — обход через заголовок отклоняется (AC-clips-26); квота новичка (account.beta_at, 30 мин первые 24 ч).",
+      "name": "Честная конфигурация, вход email+пароль с подтверждением (расширяет скелет stt-probe)",
+      "description": "РАСШИРЯЕТ (не пересоздаёт, TK-05) package.json фичи stt-probe: добавляет apps/web, packages/db|queue|s3|payments|types в workspaces. @clipmkr/config проверяет 9 потолков и все переменные canon §6 без дефолта, отказ старта называет переменную (AC-clips-14); регистрация email+пароль argon2id с нормализацией email и блок-листом одноразовых доменов (AC-clips-28), лимит ≤20 регистраций/IP/ч (FR-clips-1 п.4, TK-01) и ≤10 неуспехов входа/аккаунт/15 мин атомарным INCR (AC-clips-25); POST /api/auth/resend-verification (не чаще 1/60с и 5/сутки); подтверждение почты до первой загрузки (email_token, Resend SMTP, AC-clips-21); JWT access 15 мин + refresh только в httpOnly cookie, Bearer не принимается — обход через заголовок отклоняется (AC-clips-26); квота новичка (account.beta_at, 30 мин первые 24 ч).",
       "priority": "mvp",
       "status": "planned",
       "complexity": "complex",
       "blockers": [],
-      "depends_on": [],
+      "depends_on": [
+        "stt-probe"
+      ],
       "source_ids": [
         "FR-clips-1",
         "FR-clips-16",
@@ -68,10 +74,6 @@
         "OWN-05A-016"
       ],
       "expected_files": [
-        "package.json",
-        "packages/config/src/env.ts",
-        "packages/models/src/transcriber.ts",
-        "apps/worker/src/cli/ops.ts",
         "packages/db/prisma/schema.prisma",
         "apps/web/lib/auth/jwt.ts",
         "apps/web/app/api/auth/register/route.ts",

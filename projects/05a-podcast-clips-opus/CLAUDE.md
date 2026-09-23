@@ -48,20 +48,17 @@ ClipMkr превращает длинную русскоязычную запи�
 Решение владельца: **планирование и проверка — семейство Anthropic** (Opus 5.5 / Sonnet 5 / Haiku
 4.5; Fable исключён — квота), **код — семейство OpenAI через Codex** (`gpt-6-astra` / `gpt-6-sol` /
 `gpt-6-luna`); синтез CJM и HTML — Codex `gpt-6-astra` medium; архитектура и ADR писала Opus 5.5.
-Таблица ниже — **окончательное решение координатора** по `docs/decisions-owner.md` OWN-05A-00M
-(TK-09, второй проход после review): привязывает три модели Codex и двух ревьюеров Anthropic к
-классу задачи. Обязательна к исполнению.
+OWN-05A-00M называет три модели Codex, но не привязывает их к классу задачи — таблица ниже
+закрывает это как **рекомендацию координатора Phase 3**, а НЕ как переопределение OWN-05A-00M
+(TK-09): она проверяема и обязательна к исполнению, пока владелец не назначит иначе явно.
 
 | Класс работы | Codex (модель, effort) | Ревью/QE (Anthropic) |
 |---|---|---|
-| Обычные фичи (маршруты, экраны, миграции, CLI `ops`) | `gpt-6-sol`, high | Sonnet 5 |
-| Конвейер STT→LLM→рендер, денежный контур (допуск, потолки, резерв), знак | `gpt-6-astra`, high | Opus 5.5 |
-| Перенос из донора, изолированные модули (Solution_Strategy «взять»/«доработать») | `gpt-6-sol`, medium | Sonnet 5 |
-| Механика (конфиги, фикстуры, `.env.example`, разметка тестовых данных) | `gpt-6-luna`, low | Sonnet 5 |
-
-Безопасность — Opus 5.5, вместе с денежным контуром (одна строка ревьюера, не отдельная).
-`gpt-6-luna` назначена ровно механическим задачам — не оставлена без назначения, как в
-предыдущей версии этой таблицы.
+| Обычный код (маршруты, экраны, миграции, CLI `ops`) | `gpt-6-sol`, high | Sonnet 5 |
+| Конвейер STT→LLM→рендер, ffmpeg, раскладка и геометрия знака | `gpt-6-astra`, high | Opus 5.5 |
+| Денежный контур (допуск, потолки, резерв, `spend_ledger`), безопасность/auth | `gpt-6-astra`, high | Opus 5.5 |
+| Перенос из донора, изолированные модули с согласованным контрактом, скаффолды Phase 4 | `gpt-6-sol`, medium | Sonnet 5 |
+| Механика: конфиги, фикстуры, переименования | `gpt-6-luna` | Sonnet 5 |
 
 Правило `codex-invocation-local.md` (корень) и `feature-adr-ultracode.md` §«Cross-model QE
 default» применяются буквально: **автор кода не рецензирует сам себя** — ревью и QE идут на
@@ -141,10 +138,8 @@ npm test           # unit + integration; конкурентные — Refinement
 npm run lint
 npm run build       # по каждому workspace: web, worker, db, queue, s3, config, models, payments, types
 
-# STT-проба дня 1 — самостоятельный скрипт, БЕЗ монорепо (ADR-001 п.4, Completion §5, TK-05):
-node projects/05a-podcast-clips-opus/scripts/stt-probe.mjs <файл>
-# позже, когда worker-ai существует — та же логика тонкой обёрткой:
-docker compose exec worker-ai ops stt-probe <файл>
+# STT-проба дня 1 — БЕЗ развёрнутого стека (ADR-001 п.4, Completion §5, TK-05):
+npx tsx apps/worker/src/cli/ops.ts stt-probe <файл>
 
 # интеграционные — на НАСТОЯЩЕМ Postgres/Redis/MinIO, тестовый профиль:
 docker compose --profile test up
@@ -237,9 +232,8 @@ bash projects/05a-podcast-clips-opus/scripts/check-compose-buildable.sh        #
 `2` — «проверка не выполнена», не тир T.
 
 [`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — 17 фич; ядро недели
-(`priority: mvp`, 13 фич) в линейном порядке зависимостей, первая — `stt-probe`
-(`scripts/stt-probe.mjs`, самостоятельный Node 22 + ffmpeg скрипт без монорепо, блокирующая проба
-дня 1 по ADR-001; не зависит ни от чего — TK-05, второй проход), затем
+(`priority: mvp`, 13 фич) в линейном порядке зависимостей, первая — `stt-probe` (`ops stt-probe`,
+блокирующая проба дня 1 по ADR-001, владеет минимальным скелетом монорепо — TK-05), затем
 `foundation-auth` → `upload-and-admission` → `stt-pipeline` → `llm-selection` → `render-pipeline`
 → `job-lifecycle-and-viewer` → `video-deletion-and-cleanup` → `growth-loop-and-ops` →
 `testing-hardening` → `watermark-ocr-verification` → `measurement-and-calibration` →

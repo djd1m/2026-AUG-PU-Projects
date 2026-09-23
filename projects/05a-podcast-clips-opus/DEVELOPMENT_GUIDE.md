@@ -27,23 +27,21 @@
 
 ## 2. Проба STT дня 1 (первая фича, `stt-probe`)
 
-Выполняется ДО кода конвейера, БЕЗ монорепо (решение координатора, TK-05, второй проход):
-`stt-probe` — САМОСТОЯТЕЛЬНЫЙ скрипт `projects/05a-podcast-clips-opus/scripts/stt-probe.mjs`
-(Node 22, только `fetch` к OpenRouter/OpenAI и `ffmpeg` с хоста для нарезки ~90с/перекрытие 5с) —
-никакого `package.json`, `workspaces` или TypeScript-сборки не требует и не создаёт. Фича не
-зависит ни от чего и не блокирует, и её ничто не блокирует:
+Выполняется ДО кода конвейера, БЕЗ полного монорепо (TK-05, принято координатором): `stt-probe`
+первым шагом создаёт только МИНИМАЛЬНЫЙ корневой скелет — `package.json` с `workspaces`,
+заготовки `packages/models` (интерфейс `Transcriber`), `packages/config` (чтение окружения) и
+`apps/worker/src/cli/ops.ts` + `apps/worker/src/lib/audio-chunker.ts` — и владеет этими файлами
+при создании. Дальше фичи (`foundation-auth` и позже) ТОЛЬКО РАСШИРЯЮТ `package.json`
+(добавляют `apps/web`, `packages/db` и т.д. в `workspaces`), не пересоздают его — общие манифесты
+правит integration owner (`CLAUDE.md` §Parallel execution strategy). Без сборки в `dist/`:
 
 ```bash
-node projects/05a-podcast-clips-opus/scripts/stt-probe.mjs <файл>
+npx tsx apps/worker/src/cli/ops.ts stt-probe <файл>
 ```
 
-Позже, когда `foundation-auth` подняла `apps/worker`, ТА ЖЕ логика доступна как ТОНКАЯ ОБЁРТКА —
-CLI-подкоманда `ops stt-probe <файл>` (canon §7), переиспользующая адаптер `Transcriber` из
-`packages/models`, а не повторяющая пробный код:
-
-```bash
-docker compose exec worker-ai ops stt-probe <файл>
-```
+После того как `foundation-auth` настроит полную сборку, тот же код доступен и как
+`node apps/worker/dist/cli/ops.js stt-probe <файл>` (боевая форма из ADR-001 п.4/Completion §5) —
+это тот же файл, скомпилированный, а не вторая реализация.
 
 5 кандидатов OpenRouter, 7 критериев (ADR-001). Результат — `docs/probes/stt-day1.md`,
 `STT_MODEL`/`STT_PROVIDER` фиксируются в конфигурации прод-профиля, не в коде. Не прошёл никто из
