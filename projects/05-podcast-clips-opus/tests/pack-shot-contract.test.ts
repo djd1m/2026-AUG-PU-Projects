@@ -6,7 +6,8 @@ import * as exec from '../apps/worker/src/render/exec';
 import * as probe from '../apps/worker/src/render/probe';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
 import * as pack from '../apps/worker/src/render/packshot';
-import { resetStingerCache } from '../apps/worker/src/render/packshot';
+import { resetStingerCache, STINGER_MARGIN_LU } from '../apps/worker/src/render/packshot';
+const EXPECTED_GAIN = Math.floor(Math.min(-16 - STINGER_MARGIN_LU + 13, -3 + 0.8) * 10) / 10;
 import { RENDER_FONT_SHA256 } from '../apps/worker/src/render/watermark';
 const db = vi.hoisted(() => ({ getRenderInput: vi.fn(), setRenderDeferred: vi.fn(), retryRender: vi.fn(), publishRenderResult: vi.fn() }));
 vi.mock('@clipmaker/db', () => db);
@@ -39,7 +40,7 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
     const expected = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
       video: 'video', clip: 'clip', source: 'source', sourceBytes: '10', start: '0', end: '20', words: [], watermark: true,
       origin, code: input.code, font: RENDER_FONT_SHA256, music: `${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`, margin: 18, gain_db: -23,
-      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: -9, margin: 6, envelope: 'atrim=0:0.8,afade=t=out:st=0.6:d=0.2', flash: 'v1:0.35:0.25' } })).digest('hex');
+      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: EXPECTED_GAIN, margin: STINGER_MARGIN_LU, envelope: 'atrim=0:0.8,afade=t=out:st=0.6:d=0.2', flash: 'v1:0.35:0.25' } })).digest('hex');
     expect(hashes[2]).toBe(expected);
     // Keep measured gains identical: only the envelope changes render identity.
     full.mockResolvedValueOnce({ integrated: -16, peak: -4 });

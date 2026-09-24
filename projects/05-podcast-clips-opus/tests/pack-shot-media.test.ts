@@ -4,7 +4,7 @@ import { promisify } from 'node:util';
 import { mkdtemp, rm, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { buildMusicAudioGraph, MUSIC_TRACKS, STINGERS, prepareMusic } from '../apps/worker/src/render/music';
-import { preparePackshot, resetStingerCache } from '../apps/worker/src/render/packshot';
+import { preparePackshot, resetStingerCache, STINGER_MARGIN_LU } from '../apps/worker/src/render/packshot';
 import * as pack from '../apps/worker/src/render/packshot';
 import * as faces from '../apps/worker/src/render/faces';
 import { measureFullLoudness, parseIntegratedLoudness, parseTruePeak } from '../apps/worker/src/render/loudness';
@@ -44,7 +44,7 @@ it('audio placement, full-band level and float/AAC peaks through production grap
   const encoded = await measure(mp4);
   console.log(JSON.stringify({ guard: 'pack-audio', speech: s, gain: accent!.gain_db, isolated: sample,
     endOn, endOff, earlyOn, earlyOff, float, encoded }));
-  expect.soft(sample.integrated).toBeLessThanOrEqual(s.integrated - 6 + 0.5);
+  expect.soft(sample.integrated).toBeLessThanOrEqual(s.integrated - STINGER_MARGIN_LU + 0.5);
   expect.soft(endOn.integrated - endOff.integrated).toBeGreaterThan(3);
   expect.soft(Math.abs(earlyOn.integrated - earlyOff.integrated)).toBeLessThanOrEqual(0.5);
   expect.soft(float.peak).toBeLessThanOrEqual(-1); expect.soft(encoded.peak).toBeLessThanOrEqual(-1);

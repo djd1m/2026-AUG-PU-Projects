@@ -17,7 +17,7 @@ const cases = [
   ['skip', pack, "return skip('measure_failed')", "(() => { throw error; })()", unit, 'music-only baseline'],
   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.packshot ?', '...(false ?', 'tests/pack-shot-contract.test.ts', 'hash comes'],
   ['contract-absent', 'apps/worker/src/workers/render.ts', "flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {})", "flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : { packshot: null })", 'tests/pack-shot-contract.test.ts', 'hash comes'],
-  ['catalogue', 'apps/worker/src/render/music.ts', 'cdda50600a4928f2f1b8371224d53c171ac799c1cf2c30b11999508985250b3b', '0'.repeat(64), unit, 'catalogue'],
+  ['catalogue', 'apps/worker/src/render/music.ts', 'be2b8ddc62e4a24c91e2e77793de98549ce216faf2f323a917e7d6f34321ff97', '0'.repeat(64), unit, 'catalogue'],
   ['cache', pack, 'sampleMeasurement ?? await', 'await', unit, 'successful finite sample'],
   ['cache-error', pack, "signal?.throwIfAborted();\n    if (error instanceof", "sampleMeasurement = { integrated: -16, peak: -4 };\n    signal?.throwIfAborted();\n    if (error instanceof", unit, 'sample cache does not retain'],
   ['clock', pack, 'Math.round((duration - STINGER_SECONDS) * 1000)', 'Math.round(duration - STINGER_SECONDS) * 1000', unit, 'fractional clock'],

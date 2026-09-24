@@ -9,7 +9,9 @@ import * as probe from '../apps/worker/src/render/probe';
 import * as faces from '../apps/worker/src/render/faces';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
 import { STINGERS, MUSIC_TRACKS } from '../apps/worker/src/render/music';
-import { preparePackshot, resetStingerCache, buildFlashFilter } from '../apps/worker/src/render/packshot';
+import { preparePackshot, resetStingerCache, buildFlashFilter, STINGER_MARGIN_LU } from '../apps/worker/src/render/packshot';
+// Моки: речь −16 LUFS, сэмпл −13 LUFS с пиком −0,8 dBTP → усиление = min(−16 − M + 13, −3 + 0,8).
+const EXPECTED_GAIN = Math.floor(Math.min(-16 - STINGER_MARGIN_LU + 13, -3 + 0.8) * 10) / 10;
 const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
   format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
   origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true };
@@ -26,7 +28,7 @@ function setup() {
 it.each([null, { index: 2, width: 1920, height: 1080 }])('third input, one mix, flash ordering and fractional clock %j', async video => {
   const { encode, band, full } = setup(); vi.mocked(probe.probeVideoStream).mockResolvedValue(video);
   const result = await renderClip({ ...options, endTime: 24.47 });
-  expect(result.packshot?.gain_db).toBe(-9);
+  expect(result.packshot?.gain_db).toBe(EXPECTED_GAIN);
   expect(result.music).toEqual({ track: `${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`, gain_db: -23 });
   expect(band).toHaveBeenCalledTimes(2); expect(full).toHaveBeenCalledTimes(2);
   const args = encode.mock.calls[0]![0], graph = args[args.indexOf('-filter_complex') + 1]!;
@@ -74,7 +76,7 @@ it.each(['ffmpeg_failed', 'ffmpeg_timeout', 'invalid', 'abort'])('sample cache d
 });
 it('gain respects full-band loudness, sample peak and amplification ceiling', async () => {
   const full = vi.spyOn(loudness, 'measureFullLoudness');
-  for (const [speech, sample, peak, expected] of [[-16, -13, -0.8, -9], [-10, -30, -1, -2], [-10, -50, -40, null]]) {
+  for (const [speech, sample, peak, expected] of [[-16, -13, -0.8, EXPECTED_GAIN], [-20, -15, -10, -5 - STINGER_MARGIN_LU], [-10, -30, -1, -2], [-10, -50, -40, null]]) {
     resetStingerCache(); full.mockReset().mockResolvedValueOnce({ integrated: speech!, peak: -4 })
       .mockResolvedValueOnce({ integrated: sample!, peak: peak! });
     const result = await preparePackshot('input', 0, 20);
