@@ -627,6 +627,36 @@
         "apps/web/src/server/upload-contract.ts",
         "apps/web/src/server/video.ts"
       ]
+    },
+    {
+      "id": "partner-fairness",
+      "number": 20,
+      "title": "Партнёрка: различные аккаунты, разблокировка, обезличивание",
+      "description": "FR-PARTNER-004/005, ADR-014 (RT-002, RT-009). DISTINCT account_id в окне с unblocked_at; скрипт разблокировки с причиной; миграция 016: partner_deleted, FK ON DELETE SET NULL, CHECK.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "high",
+      "depends_on": [
+        "partner-codes-and-dashboard",
+        "retention-and-erasure"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-PARTNER-004",
+        "FR-PARTNER-005"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-014"
+      ],
+      "expected_files": [
+        "packages/db/migrations/016_partner_fairness.sql",
+        "packages/db/scripts/partner-code-unblock.mjs",
+        "apps/web/src/server/partner.ts",
+        "apps/web/src/server/retention.ts",
+        "apps/web/src/app/dashboard/PartnerPanel.tsx",
+        "packages/shared/src/enums.ts"
+      ]
     }
   ]
 }
