@@ -1,0 +1,33 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/music.test.ts > mix graph is attached in video branch null
+{"event":"music_mix","speech_lufs":-20,"track_lufs":-15,"gain_db":-23}
+
+stdout | tests/music.test.ts > mix graph is attached in video branch {"index":2,"width":1920,"height":1080}
+{"event":"music_mix","speech_lufs":-20,"track_lufs":-15,"gain_db":-23}
+
+stdout | tests/music.test.ts > invalid track -60 skips
+{"event":"music_skipped","reason":"track_too_quiet"}
+
+stdout | tests/music.test.ts > invalid track NaN skips
+{"event":"music_skipped","reason":"track_too_quiet"}
+
+stdout | tests/music.test.ts > gain rounds to tenths before filter and returned contract
+{"event":"music_mix","speech_lufs":-16.3,"track_lufs":-28.2,"gain_db":-6.1}
+
+ ✓ tests/music.test.ts (19 tests) 305ms
+stderr | tests/render-worker.test.ts > failure cleans working directory and schedules only DB-issued retry
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"ffmpeg died"}
+
+stderr | tests/render-worker.test.ts > SL-008 real geometry failure is classified before ffmpeg and never enqueued
+{"event":"render_attempt_failed","video_id":"video","clip_id":"clip","fence":4,"message":"Адрес метки не помещается в безопасную область: ширина 1035 px, предел 972 px"}
+
+ ✓ tests/render-worker.test.ts (8 tests) 100ms
+ ✓ tests/music-uploader.test.ts (6 tests) 81ms
+
+ Test Files  3 passed (3)
+      Tests  33 passed (33)
+   Start at  08:48:20
+   Duration  2.59s (transform 528ms, setup 0ms, collect 1.20s, tests 487ms, environment 1ms, prepare 284ms)
+

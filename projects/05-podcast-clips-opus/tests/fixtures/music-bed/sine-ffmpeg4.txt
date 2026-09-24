@@ -1,0 +1,36 @@
+Input #0, lavfi, from 'sine=frequency=1000:duration=1':
+  Duration: N/A, start: 0.000000, bitrate: 705 kb/s
+  Stream #0:0: Audio: pcm_s16le, 44100 Hz, mono, s16, 705 kb/s
+Stream mapping:
+  Stream #0:0 -> #0:0 (pcm_s16le (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    encoder         : Lavf58.76.100
+  Stream #0:0: Audio: pcm_s16le, 48000 Hz, mono, s16, 768 kb/s
+    Metadata:
+      encoder         : Lavc58.134.100 pcm_s16le
+size=N/A time=00:00:00.00 bitrate=N/A speed=N/A    [Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.0999792  TARGET:-23 LUFS    M:-120.7 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.199979   TARGET:-23 LUFS    M:-120.7 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.299979   TARGET:-23 LUFS    M:-120.7 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.399979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.499979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.599979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.699979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.799979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.899979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+[Parsed_sine_0 @ 0x55e9d6d1cec0] EOF timestamp not reliable
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] t: 0.999979   TARGET:-23 LUFS    M: -21.1 S:-120.7     I: -21.1 LUFS       LRA:   0.0 LU
+size=N/A time=00:00:00.99 bitrate=N/A speed=35.6x    
+video:0kB audio:94kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+[Parsed_ebur128_2 @ 0x55e9d6d3a600] Summary:
+
+  Integrated loudness:
+    I:         -21.1 LUFS
+    Threshold: -31.1 LUFS
+
+  Loudness range:
+    LRA:         0.0 LU
+    Threshold:   0.0 LUFS
+    LRA low:     0.0 LUFS
+    LRA high:    0.0 LUFS

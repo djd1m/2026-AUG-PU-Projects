@@ -7,6 +7,7 @@ import { stat } from 'node:fs/promises';
 import { getRenderInput, setRenderDeferred, retryRender, publishRenderResult, type Pool, type Attempt } from '@clipmaker/db';
 import { DEFER_DELAY_MS, type AttemptJob } from '@clipmaker/queue';
 import { withSource, type Download, type freeBytes } from '../media/download.js';
+import { MUSIC_MARGIN_LU } from '../render/music.js';
 import { renderClip } from '../render/ffmpeg.js';
 import { generateThumbnail, FFmpegError, RENDER_JOB_TIMEOUT_MS } from '../render/exec.js';
 import { watermarkRequired, RENDER_FONT_SHA256 } from '../render/watermark.js';
@@ -28,9 +29,9 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
       signal.throwIfAborted();
       if (!await setRenderDeferred(deps.pool, attempt, false)) return 'stale' as const;
       const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
-      await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
+      const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
         endTime: Number(input.end_seconds), format: 'portrait', words: input.words, watermark,
-        origin: deps.origin, code: input.code, signal });
+        origin: deps.origin, code: input.code, signal, music: input.music });
       await (deps.thumbnail ?? generateThumbnail)(output, thumb, (Number(input.end_seconds) - Number(input.start_seconds)) * 0.25);
       signal.throwIfAborted();
       const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;
@@ -39,7 +40,8 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
       const contract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
         video: attempt.video_id, clip: attempt.clip_id, source: input.object_key, sourceBytes: input.actual_bytes,
         start: input.start_seconds, end: input.end_seconds, words: input.words, watermark, origin: deps.origin,
-        code: input.code, font: RENDER_FONT_SHA256 })).digest('hex');
+        code: input.code, font: RENDER_FONT_SHA256,
+        ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}) })).digest('hex');
       const uploadSignal = AbortSignal.any([signal, AbortSignal.timeout(120_000)]);
       const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark }, async () => {
         const storedBytes = await deps.storage.put(object_key, output, 'video/mp4', contract, uploadSignal);

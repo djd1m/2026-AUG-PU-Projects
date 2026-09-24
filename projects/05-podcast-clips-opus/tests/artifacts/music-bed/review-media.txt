@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus
+
+stdout | tests/music-media.test.ts > G1 silent music preserves speech within 0.1 LU
+{"guard":"G1","base":-27.1,"mixed":-27.1}
+
+stdout | tests/music-media.test.ts > G2 real bed through production graph respects measured speech minus margin
+{"event":"music_mix","speech_lufs":-27.2,"track_lufs":-28.2,"gain_db":-17}
+
+stdout | tests/music-media.test.ts > G2 real bed through production graph respects measured speech minus margin
+{"guard":"G2","speech_lufs":-27.2,"track_lufs":-28.2,"gain_db":-17,"bed_lufs":-45.5}
+
+stdout | tests/music-media.test.ts > G3 encoded mix true peak stays below -1 dBTP
+{"event":"music_mix","speech_lufs":-16.3,"track_lufs":-28.2,"gain_db":-6.1}
+
+stdout | tests/music-media.test.ts > G3 encoded mix true peak stays below -1 dBTP
+{"event":"music_mix","speech_lufs":-16.3,"track_lufs":-28.2,"gain_db":-6.1}
+
+stdout | tests/music-media.test.ts > G3 encoded mix true peak stays below -1 dBTP
+{"guard":"G3","speech_lufs":-16.3,"gain_db":-6.1,"peak_dbtp":-3.3}
+
+stdout | tests/music-media.test.ts > real render music true mixes and adds out-of-tone energy
+{"event":"music_mix","speech_lufs":-27.2,"track_lufs":-28.2,"gain_db":-17}
+
+stdout | tests/music-media.test.ts > real render music true mixes and adds out-of-tone energy
+{"guard":"real-render","off_band_lufs":-48.1,"on_band_lufs":-37.5}
+
+stdout | tests/music-media.test.ts > real video input renders music with video and audio streams at clip duration
+{"event":"music_mix","speech_lufs":-21.1,"track_lufs":-28.2,"gain_db":-10.9}
+
+stdout | tests/music-media.test.ts > real video input renders music with video and audio streams at clip duration
+{"event":"framing_plan","mode":"center","reason":"лиц не найдено","samples":40,"shots":1}
+
+ ✓ tests/music-media.test.ts (5 tests) 34097ms
+   ✓ G1 silent music preserves speech within 0.1 LU  619ms
+   ✓ G2 real bed through production graph respects measured speech minus margin  1756ms
+   ✓ G3 encoded mix true peak stays below -1 dBTP  9682ms
+   ✓ real render music true mixes and adds out-of-tone energy  10771ms
+   ✓ real video input renders music with video and audio streams at clip duration  11093ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  08:48:29
+   Duration  34.78s (transform 294ms, setup 0ms, collect 358ms, tests 34.10s, environment 0ms, prepare 118ms)
+

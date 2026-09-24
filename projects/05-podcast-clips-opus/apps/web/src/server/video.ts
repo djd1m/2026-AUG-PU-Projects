@@ -23,7 +23,7 @@ export interface UploadData {
 interface VideoRow {
   id: string; account_id: string; upload_id: string | null; object_key: string; declared_bytes: string;
   status: VideoStatus; failure_reason: VideoFailureReason | null; upload_parts: SignedPart[] | null;
-  upload_part_size: number; upload_day: string; upload_enqueued_at: Date | null;
+  music: boolean; upload_part_size: number; upload_day: string; upload_enqueued_at: Date | null;
 }
 const selectVideo = `SELECT *, upload_day::text AS upload_day FROM video`;
 const unavailable = () => new UploadError('unavailable', 'Хранилище временно недоступно. Повторите завершение этой загрузки', 503);
@@ -42,10 +42,10 @@ export class VideoService {
       const ext = body.filename.split('.').pop()?.toLowerCase();
       const objectKey = `videos/${account}/${id}/source.${ext && ['mp4', 'mov', 'webm', 'm4a', 'mp3'].includes(ext) ? ext : 'bin'}`;
       const claim = await tx.query<VideoRow>(`INSERT INTO video
-        (id, account_id, idempotency_key, status, source, declared_bytes, upload_day, object_key, upload_part_size)
-        VALUES ($1, $2, $3, 'uploading', 'upload', $4, $5, $6, $7)
+        (id, account_id, idempotency_key, status, source, declared_bytes, upload_day, object_key, upload_part_size, music)
+        VALUES ($1, $2, $3, 'uploading', 'upload', $4, $5, $6, $7, $8)
         ON CONFLICT (account_id, idempotency_key) DO NOTHING RETURNING *, upload_day::text AS upload_day`,
-      [id, account, key, BigInt(body.declared_bytes), moscowDay(now), objectKey, calculatePartSize(body.declared_bytes)]);
+      [id, account, key, BigInt(body.declared_bytes), moscowDay(now), objectKey, calculatePartSize(body.declared_bytes), body.music ?? false]);
       if (claim.rowCount) {
         const quota = await checkAndConsumeQuota(tx, this.limits, account, 'upload', 1, now);
         if (!quota.granted) {
@@ -62,6 +62,7 @@ export class VideoService {
     if (row.failure_reason === 'refused_user_uploads') throw quotaError('user_uploads', now);
     if (row.status !== 'uploading') throw new UploadError('conflict', 'Загрузка уже завершена', 409);
     if (Number(row.declared_bytes) !== body.declared_bytes) throw new UploadError('conflict', 'Ключ уже привязан к другому размеру файла', 409);
+    if (row.music !== (body.music ?? false)) throw new UploadError('conflict', 'Ключ уже привязан к другому выбору музыки', 409);
     if (!row.upload_id) {
       const objectKey = row.object_key;
       const uploadId = await this.storage.initiate(objectKey);

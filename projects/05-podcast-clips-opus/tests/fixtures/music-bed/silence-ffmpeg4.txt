@@ -1,0 +1,35 @@
+Input #0, lavfi, from 'anullsrc=r=44100:cl=stereo':
+  Duration: N/A, start: 0.000000, bitrate: 705 kb/s
+  Stream #0:0: Audio: pcm_u8, 44100 Hz, stereo, u8, 705 kb/s
+Stream mapping:
+  Stream #0:0 -> #0:0 (pcm_u8 (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    encoder         : Lavf58.76.100
+  Stream #0:0: Audio: pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s
+    Metadata:
+      encoder         : Lavc58.134.100 pcm_s16le
+size=N/A time=00:00:00.00 bitrate=N/A speed=N/A    [Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.0999792  TARGET:-23 LUFS    M:-120.7 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.199979   TARGET:-23 LUFS    M:-120.7 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.299979   TARGET:-23 LUFS    M:-120.7 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.399979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.499979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.599979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.699979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.799979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.899979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] t: 0.999979   TARGET:-23 LUFS    M:-163.5 S:-120.7     I: -70.0 LUFS       LRA:   0.0 LU
+size=N/A time=00:00:00.99 bitrate=N/A speed=28.3x    
+video:0kB audio:188kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+[Parsed_ebur128_2 @ 0x55f6b6a093c0] Summary:
+
+  Integrated loudness:
+    I:         -70.0 LUFS
+    Threshold:   0.0 LUFS
+
+  Loudness range:
+    LRA:         0.0 LU
+    Threshold:   0.0 LUFS
+    LRA low:     0.0 LUFS
+    LRA high:    0.0 LUFS

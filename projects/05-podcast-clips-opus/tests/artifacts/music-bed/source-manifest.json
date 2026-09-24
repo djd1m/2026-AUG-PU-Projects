@@ -1,0 +1,26 @@
+{
+  "baseline_revision": "345fdbd1c5e00ce5c50d02993c866c47a2e6ed69",
+  "files": {
+    "apps/web/src/app/upload/Uploader.tsx": "e3e0682d127e9e7487333ef511b41bbc3d675cd86129964262343ba5b2f14f3a",
+    "apps/web/src/server/upload-contract.ts": "9a135d07c8adf4ff1a5f19847cc5f886290448e08a5b383d7a804b71169f7fbd",
+    "apps/web/src/server/video.ts": "9a60fe475d99209a8f02442ee146db7b491cb71c891c7f410af105d7aa52ab3f",
+    "apps/worker/assets/music/README.md": "2da78360a3201d0f165b0dc42e96f04cbc6f54f74e59fd96fe002465cb164030",
+    "apps/worker/assets/music/komiku-everything-is-groovy.mp3": "8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d",
+    "apps/worker/src/render/ffmpeg.ts": "505ac9ccb78c22639d4c0e5da7cb2b7c997c3191a8d4dcc51e7121c66b06a15f",
+    "apps/worker/src/render/loudness.ts": "891a8a9d66d1d0ea9a296a3f29888b80ee0c5e7e0ca3bbb7705d042911edf67b",
+    "apps/worker/src/render/music.ts": "5e50e8f013e4889593f5c2028d489e9a7fbd966b4f1e316d77b224aed687a2de",
+    "apps/worker/src/workers/render.ts": "52626ed922c3e4cc912abdf4f0cc9f43dab6de37564b4d30ba7179eb79a4675d",
+    "packages/db/migrations/014_music.sql": "3c28b2faac7105ada02cae2ecd8284a1a221b3f1510c51d5ded805493dd7cde5",
+    "packages/db/src/render.ts": "075e9322ba306b34a50e4b0c572885f734ac2c3b49681327733e4c74f78d0516",
+    "tests/fixtures/music-bed/baseline.json": "61698bd1f23290c73e99393528240e558e7a8e919c571468e9f8e4eadcacec75",
+    "tests/fixtures/music-bed/silence-ffmpeg4.txt": "5e152085e79ae4fade9f87e1d345ec66718404e6e24a9a8f4b75418b773d0fad",
+    "tests/fixtures/music-bed/sine-ffmpeg4.txt": "ac1f7886a8df2ec940c299fd8fc315894f387e2a567915b1ee506d0cd50ceed7",
+    "tests/music-media.test.ts": "37afd6986abe2f3e984727942898085fa5a67c6bf7ee6d380a13c0681c73bd73",
+    "tests/music-upload.integration.test.ts": "ba7cdebbbb2fd36f2f4d83d1d2409db5d0b8982e5c48ce1adde344231c3a31cc",
+    "tests/music-uploader.test.ts": "6fc204e4ae03ef1293a3e489a376f501056639a59db4aa1adc80a2e3a9536122",
+    "tests/music.test.ts": "7d224f4d2f9a5c230d5b7e8b72538de90b64a479035a11ae6688e89f3a8a1f34",
+    "tests/render-worker.test.ts": "fd6fec1c5ba8f93128d96c9224a7d7e77c02bfb3303375ef3c967a98877ab9b9",
+    "tests/run-music-mutations.mjs": "50f11cb843f8ede531e942d33d37167a1d90bed05d226a6101e63e39fd5078f9"
+  },
+  "tracked_diff_sha256": "a45f612739e8725f1bcea8ffb9052f9bab113d72e7860aec40a4eedeb72fafd6"
+}
