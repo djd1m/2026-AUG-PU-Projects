@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 import { measureLoudness } from './loudness.js';
 import { FFmpegError } from './exec.js';
 
-// Оценка, не измерение; заморозить после прослушивания владельцем (В-8).
+// Решение владельца 24.09.2026 (OWN-009, В-8): прослушаны 7 клипов записи 88 мин — «нормально».
 export const MUSIC_MARGIN_LU = 18;
 export const MUSIC_MAX_GAIN_DB = 12;
 export const MUSIC_TRACKS = [{ id: 'komiku-everything-is-groovy',
