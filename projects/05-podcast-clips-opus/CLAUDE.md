@@ -15,8 +15,11 @@ p-replicator, прежде чем реализовывать что-либо з�
 
 **Статус на 24.09.2026: MVP собран и работает на живом стенде.** Все двенадцать фич MVP сделаны,
 плюс три фичи, появившиеся после первого живого прогона: кадр по лицу (ADR-009), субтитры и словарь
-терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Тесты — **604 из 604**
-на настоящих PostgreSQL 16, Redis 7 и MinIO. Живой прогон записи 88,4 мин: 7 клипов за 12 мин 39 с.
+терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Затем 24.09 — фоновая
+CC0-музыка по галочке и библиотека из 11 треков (ADR-011), пэк-шот наложением (ADR-012), заголовок
+в начале клипа (ADR-013). Всего **19 фич**, тесты — **684 из 684** на настоящих PostgreSQL 16, Redis 7
+и MinIO. Живой прогон записи 88,4 мин: 7 клипов за 12 мин 39 с. **Прогон `REPRODUCE.md` с нуля
+(свежий клон, изолированный стек) прошёл 24.09** — `docs/measurements/2026-09-24-reproduce-from-scratch.md`.
 
 **Повторить проект в другом окружении — [`docs/REPRODUCE.md`](docs/REPRODUCE.md).** Он же перечисляет,
 где реализация отошла от SPARC-документов и почему; при расхождении прав он, а не Phase 1–2.
@@ -50,7 +53,7 @@ p-replicator, прежде чем реализовывать что-либо з�
    growth-требований, 15 look-требований, 6 NFR, 14 историй и 35 критериев `SC-US-nnn-k`.
 2. **Architecture** ([`docs/Architecture.md`](docs/Architecture.md)) — устройство: 7 сервисов
    compose, отображение 15 сущностей на хранилища, 17 внешних зависимостей, безопасность.
-3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — десять решений (ADR-001…010), у каждого Confirmation —
+3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — тринадцать решений (ADR-001…013), у каждого Confirmation —
    проверка, обязанная упасть при нарушении решения.
 4. **Pseudocode** ([`docs/Pseudocode.md`](docs/Pseudocode.md)) — 34 алгоритма, контракты маршрутов,
    переходы состояний, стратегия ошибок.
@@ -227,8 +230,9 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 порядке зависимостей: `foundation` → `upload-and-quota` → `queue-and-probe` → `transcription` →
 `selection-and-score` → `render-and-watermark` → `progress-and-clips-screen` → `short-link` →
 `guest-pack` → `partner-codes-and-dashboard` → `limits-ui-and-pro-interest` →
-`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс три фичи после живого прогона:
-`framing`, `subtitles-and-glossary`, `transcript-tolerance`.
+`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс семь после живого прогона:
+`transcript-tolerance`, `framing`, `subtitles-and-glossary`, `music-bed`, `pack-shot`,
+`music-library`, `teaser-headline`. Указатель с доказательствами — `docs/features/README.md`.
 
 Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
 `upload-and-quota` и `render-and-watermark` записаны `complex`, хотя по

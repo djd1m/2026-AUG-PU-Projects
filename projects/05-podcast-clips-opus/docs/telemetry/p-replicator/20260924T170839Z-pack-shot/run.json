@@ -1,0 +1,32 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260924T170839Z-pack-shot",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "pack-shot",
+  "pipeline": "/feature PLAN→VALIDATE→IMPLEMENT→REVIEW",
+  "tier": "L",
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "cross-family: VALIDATE/REVIEW Anthropic Opus 5.5 (subagents), IMPLEMENT Codex gpt-6-astra medium (codex exec, model line confirmed in log)"
+  ],
+  "host": "Claude Code",
+  "status": "completed",
+  "ended_at": "2026-09-24T17:08:39.245968+00:00",
+  "final_revision": "b26bd905ca9e68cfb63fc49a1a7af8541a1c65b3",
+  "commits": "57b6a46..fbbebf8",
+  "quality": {
+    "required_gates_passed": true,
+    "gates": "full-suite 653/653; 19 mutations"
+  },
+  "metrics": {
+    "codex_tokens_by_attempt": [
+      141497,
+      null
+    ],
+    "claude_tokens": null,
+    "cost": null,
+    "cost_basis": "unavailable: no per-run Claude usage source; Codex tokens from codex log 'tokens used'"
+  },
+  "note": "record written retrospectively at end of autonomous block; started_at not captured"
+}
