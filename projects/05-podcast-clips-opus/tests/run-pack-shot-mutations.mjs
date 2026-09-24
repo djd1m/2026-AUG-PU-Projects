@@ -14,7 +14,7 @@ const cases = [
   ['watermark', render, 'if (flash) filters.push(flash);\n  if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));',
     'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));\n  if (flash) filters.push(flash);', media, 'video duration'],
   ['off-input', render, "...(music ? ['-i', music.path] : [])", "...['-i', music?.path ?? 'unexpected-music.mp3']", 'tests/music.test.ts', 'off arguments'],
-  ['music-catalogue', 'apps/worker/src/render/music.ts', '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
+  ['music-catalogue', 'apps/worker/src/render/music.ts', '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
   ['off', render, "...(packshot ? ['-i', STINGERS[0].path] : [])", "...['-i', STINGERS[0].path]", 'tests/music.test.ts', 'off arguments'],
   ['skip', pack, "return skip('measure_failed')", "(() => { throw error; })()", unit, 'music-only baseline'],
   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.packshot ?', '...(false ?', 'tests/pack-shot-contract.test.ts', 'hash comes'],

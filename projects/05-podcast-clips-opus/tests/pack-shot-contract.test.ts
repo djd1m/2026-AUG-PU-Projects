@@ -5,6 +5,8 @@ import * as loudness from '../apps/worker/src/render/loudness';
 import * as exec from '../apps/worker/src/render/exec';
 import * as probe from '../apps/worker/src/render/probe';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
+import * as music from '../apps/worker/src/render/music';
+import { TEST_MUSIC_TRACKS } from './fixtures/music-catalogue';
 import * as pack from '../apps/worker/src/render/packshot';
 import { resetStingerCache, STINGER_MARGIN_LU, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../apps/worker/src/render/packshot';
 const EXPECTED_GAIN = Math.floor(Math.min(-16 - STINGER_MARGIN_LU + 13, -3 + 0.8) * 10) / 10;
@@ -34,10 +36,11 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
   try {
     expect(await handleRenderJob(attempt, deps)).toBe('done');
     expect(hashes[0]).toBe(JSON.parse(await readFile('tests/fixtures/pack-shot/music-only.json', 'utf8')).contract);
+    const realSelectTrack = music.selectTrack;
+    const selection = vi.spyOn(music, 'selectTrack').mockImplementation(index => realSelectTrack(index, TEST_MUSIC_TRACKS));
     input.index = 2;
     expect(await handleRenderJob(attempt, deps)).toBe('done');
-    const { MUSIC_TRACKS: tracks } = await import('../apps/worker/src/render/music');
-    const selected = tracks[1];
+    const selected = TEST_MUSIC_TRACKS[1];
     const args = encode.mock.calls.at(-1)![0];
     expect(args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []).slice(1)).toEqual([selected.path]);
     const selectedContract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
@@ -45,6 +48,7 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
       origin, code: input.code, font: RENDER_FONT_SHA256, music: `${selected.id}:${selected.sha256}`, margin: 18, gain_db: -23 })).digest('hex');
     expect(hashes[2]).toBe(selectedContract);
     expect(hashes[2]).not.toBe(hashes[0]);
+    selection.mockRestore();
     input.index = 1;
     hashes.splice(2);
     full.mockResolvedValueOnce({ integrated: -16, peak: -4 }).mockResolvedValue({ integrated: -13, peak: -0.8 });

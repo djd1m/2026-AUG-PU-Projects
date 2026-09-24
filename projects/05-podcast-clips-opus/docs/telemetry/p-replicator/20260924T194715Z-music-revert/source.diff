@@ -1,0 +1,286 @@
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/app/upload/Uploader.tsx b/projects/05-podcast-clips-opus/apps/web/src/app/upload/Uploader.tsx
+index d792aee..d7580fb 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/app/upload/Uploader.tsx
++++ b/projects/05-podcast-clips-opus/apps/web/src/app/upload/Uploader.tsx
+@@ -53,7 +53,7 @@ export function VideoUploader() {
+       <p className="muted">MP4, MOV, WebM, M4A, MP3 · 2–90 минут · до 2 ГБ</p>
+       <label><input type="checkbox" checked={music} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
+         onChange={e => setMusic(e.target.checked)} /> Добавить музыку и финальный акцент</label>
+-      <small className="muted">Komiku — Helice Awesome Dance Adventure · Kenney — Sci-Fi Sounds, CC0</small>
++      <small className="muted">Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0</small>
+       <label><input type="checkbox" checked={teaser} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
+         onChange={e => setTeaser(e.target.checked)} /> Заголовок в начале клипа</label>
+       <label><input type="checkbox" checked={compact} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/README.md b/projects/05-podcast-clips-opus/apps/worker/assets/music/README.md
+index 957cbd6..ac77e50 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/assets/music/README.md
++++ b/projects/05-podcast-clips-opus/apps/worker/assets/music/README.md
+@@ -1,22 +1,14 @@
+-# Komiku — Helice Awesome Dance Adventure !!
++# Komiku — Everything is groovy
+ 
+-All tracks: CC0 1.0 Universal. License evidence supplied with the approved brief:
++Track: CC0 1.0 Universal. License evidence supplied with the approved brief:
+ - Internet Archive: `Komiku-HeliceAwesomeDanceAdventure`, `licenseurl` = `http://creativecommons.org/publicdomain/zero/1.0/`.
+ - Free Music Archive: album «Helice Awesome Dance Adventure !!», «CC0 1.0 Universal».
+ 
+-Both sources apply to every row below. Files are MP3; filename is `<id>.mp3`.
++Album: Helice Awesome Dance Adventure !!. File is MP3; filename is `<id>.mp3`.
+ The closed catalogue is `apps/worker/src/render/music.ts`; order is significant.
+ 
+ | id | Title | Album track | Duration (s) | SHA-256 |
+ |---|---|---|---|---|
+ | `komiku-everything-is-groovy` | Everything is groovy | 04 | 116 | `8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d` |
+-| `komiku-the-journey-begins` | The journey begins | 11 | 101 | `3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67` |
+-| `komiku-road-1-fight` | Road 1 Fight | 13 | 107 | `5115398ad1370cfa862306cc3b59a22a5f537e8a9d2a1a57761bb0aa110f6040` |
+-| `komiku-little-town-before-big-city` | Little town before Big city | 18 | 122 | `b6ba5a7e386cbb7fefd2cb8051eff7b9c847a0672e92c27b22585393a3d6edc8` |
+-| `komiku-road-3-fight` | Road 3 Fight | 20 | 106 | `b956814f178b345a009cccf8e311339074f8167a276c085cb2b8d2e71479358b` |
+-| `komiku-road-4-chill` | Road 4 Chill | 25 | 88 | `eaecda0bc1a72bd38dee47e3e40c27b6627b10f5d328781199a4c7fb2d305ae3` |
+-| `komiku-cliff-road-fight` | Cliff Road Fight | 30 | 88 | `e2cde1c16d953533e6307d9feac4878b0a29d66d1febbf4bcf04cc8698936d17` |
+-| `komiku-pop-city` | Pop City | 32 | 96 | `8bde21764ab786c422759fd88bb490c6986ac37860366afcc98f9cbeff1fe0d8` |
+-| `komiku-dance-with-two-or-more` | Dance with two or more | 36 | 134 | `905eae2cb2d0b80ec063795455e667e08a06b95a5b39c43ef2862d6a567b8ae1` |
+-| `komiku-to-fight-a-spell-by-dancing` | To fight a spell by dancing | 39 | 115 | `53542983e293c3b3474ded04c98ba5b7f03653e407e73418069c0d5224d73fc8` |
+-| `komiku-we-have-to-dance-together` | We have to dance TOGETHER | 41 | 138 | `78400352ff85490fb1f971956933c26907a481892850a7fe2d07e795366283e8` |
++
++остальные 10 треков альбома удалены по OWN-013, в истории git — коммит `53f18f7`
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-cliff-road-fight.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-cliff-road-fight.mp3
+deleted file mode 100644
+index dc92566..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-cliff-road-fight.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-dance-with-two-or-more.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-dance-with-two-or-more.mp3
+deleted file mode 100644
+index c85794d..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-dance-with-two-or-more.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-little-town-before-big-city.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-little-town-before-big-city.mp3
+deleted file mode 100644
+index 801b585..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-little-town-before-big-city.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-pop-city.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-pop-city.mp3
+deleted file mode 100644
+index 6c021b6..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-pop-city.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-1-fight.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-1-fight.mp3
+deleted file mode 100644
+index b35bcef..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-1-fight.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-3-fight.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-3-fight.mp3
+deleted file mode 100644
+index 41295ba..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-3-fight.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-4-chill.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-4-chill.mp3
+deleted file mode 100644
+index fb4a082..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-road-4-chill.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-the-journey-begins.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-the-journey-begins.mp3
+deleted file mode 100644
+index 0773512..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-the-journey-begins.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-to-fight-a-spell-by-dancing.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-to-fight-a-spell-by-dancing.mp3
+deleted file mode 100644
+index a08145b..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-to-fight-a-spell-by-dancing.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-we-have-to-dance-together.mp3 b/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-we-have-to-dance-together.mp3
+deleted file mode 100644
+index 6f678a4..0000000
+Binary files a/projects/05-podcast-clips-opus/apps/worker/assets/music/komiku-we-have-to-dance-together.mp3 and /dev/null differ
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts b/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts
+index f5d1c44..9cc7367 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts
+@@ -9,43 +9,13 @@ export const MUSIC_MAX_GAIN_DB = 12;
+ export const MUSIC_TRACKS = [
+   { id: 'komiku-everything-is-groovy',
+     sha256: '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d',
+-    path: resolve('apps/worker/assets/music/komiku-everything-is-groovy.mp3') },
+-  { id: 'komiku-the-journey-begins',
+-    sha256: '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67',
+-    path: resolve('apps/worker/assets/music/komiku-the-journey-begins.mp3') },
+-  { id: 'komiku-road-1-fight',
+-    sha256: '5115398ad1370cfa862306cc3b59a22a5f537e8a9d2a1a57761bb0aa110f6040',
+-    path: resolve('apps/worker/assets/music/komiku-road-1-fight.mp3') },
+-  { id: 'komiku-little-town-before-big-city',
+-    sha256: 'b6ba5a7e386cbb7fefd2cb8051eff7b9c847a0672e92c27b22585393a3d6edc8',
+-    path: resolve('apps/worker/assets/music/komiku-little-town-before-big-city.mp3') },
+-  { id: 'komiku-road-3-fight',
+-    sha256: 'b956814f178b345a009cccf8e311339074f8167a276c085cb2b8d2e71479358b',
+-    path: resolve('apps/worker/assets/music/komiku-road-3-fight.mp3') },
+-  { id: 'komiku-road-4-chill',
+-    sha256: 'eaecda0bc1a72bd38dee47e3e40c27b6627b10f5d328781199a4c7fb2d305ae3',
+-    path: resolve('apps/worker/assets/music/komiku-road-4-chill.mp3') },
+-  { id: 'komiku-cliff-road-fight',
+-    sha256: 'e2cde1c16d953533e6307d9feac4878b0a29d66d1febbf4bcf04cc8698936d17',
+-    path: resolve('apps/worker/assets/music/komiku-cliff-road-fight.mp3') },
+-  { id: 'komiku-pop-city',
+-    sha256: '8bde21764ab786c422759fd88bb490c6986ac37860366afcc98f9cbeff1fe0d8',
+-    path: resolve('apps/worker/assets/music/komiku-pop-city.mp3') },
+-  { id: 'komiku-dance-with-two-or-more',
+-    sha256: '905eae2cb2d0b80ec063795455e667e08a06b95a5b39c43ef2862d6a567b8ae1',
+-    path: resolve('apps/worker/assets/music/komiku-dance-with-two-or-more.mp3') },
+-  { id: 'komiku-to-fight-a-spell-by-dancing',
+-    sha256: '53542983e293c3b3474ded04c98ba5b7f03653e407e73418069c0d5224d73fc8',
+-    path: resolve('apps/worker/assets/music/komiku-to-fight-a-spell-by-dancing.mp3') },
+-  { id: 'komiku-we-have-to-dance-together',
+-    sha256: '78400352ff85490fb1f971956933c26907a481892850a7fe2d07e795366283e8',
+-    path: resolve('apps/worker/assets/music/komiku-we-have-to-dance-together.mp3') }
++    path: resolve('apps/worker/assets/music/komiku-everything-is-groovy.mp3') }
+ ] as const;
+-export type MusicTrack = (typeof MUSIC_TRACKS)[number];
++export interface MusicTrack { readonly id: string; readonly sha256: string; readonly path: string }
+ // Zero-based selector; database clip indices are converted at the render boundary.
+-export function selectTrack(index: unknown): MusicTrack {
+-  if (typeof index !== 'number' || !Number.isSafeInteger(index)) return MUSIC_TRACKS[0];
+-  return MUSIC_TRACKS[((index % MUSIC_TRACKS.length) + MUSIC_TRACKS.length) % MUSIC_TRACKS.length]!;
++export function selectTrack(index: unknown, catalogue: readonly [MusicTrack, ...MusicTrack[]] = MUSIC_TRACKS): MusicTrack {
++  if (typeof index !== 'number' || !Number.isSafeInteger(index)) return catalogue[0];
++  return catalogue[((index % catalogue.length) + catalogue.length) % catalogue.length]!;
+ }
+ export const STINGERS = [{ id: 'kenney-explosion-crunch-002',
+   sha256: 'be2b8ddc62e4a24c91e2e77793de98549ce216faf2f323a917e7d6f34321ff97',
+diff --git a/projects/05-podcast-clips-opus/tests/music.test.ts b/projects/05-podcast-clips-opus/tests/music.test.ts
+index 1fe7ced..168442d 100644
+--- a/projects/05-podcast-clips-opus/tests/music.test.ts
++++ b/projects/05-podcast-clips-opus/tests/music.test.ts
+@@ -9,6 +9,8 @@ import * as probe from '../apps/worker/src/render/probe';
+ import * as faces from '../apps/worker/src/render/faces';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
+ import { resetStingerCache } from '../apps/worker/src/render/packshot';
++import * as music from '../apps/worker/src/render/music';
++import { TEST_MUSIC_TRACKS } from './fixtures/music-catalogue';
+ import { MUSIC_TRACKS, selectTrack, prepareMusic } from '../apps/worker/src/render/music';
+ import { createVideoSchema } from '../apps/web/src/server/upload-contract';
+ const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
+@@ -32,13 +34,9 @@ it('parser uses final Summary from real silence/sine logs, never frame I', async
+   expect(loudness.parseIntegratedLoudness('Summary:\n I: -10 LUFS\nSummary:\n I: -25 LUFS')).toBe(-25);
+ });
+ it('catalogue bytes and duration are pinned without reading README', async () => {
+-  expect(MUSIC_TRACKS).toHaveLength(11);
+-  expect(MUSIC_TRACKS.map(t => t.id)).toEqual([
+-    'komiku-everything-is-groovy', 'komiku-the-journey-begins', 'komiku-road-1-fight',
+-    'komiku-little-town-before-big-city', 'komiku-road-3-fight', 'komiku-road-4-chill',
+-    'komiku-cliff-road-fight', 'komiku-pop-city', 'komiku-dance-with-two-or-more',
+-    'komiku-to-fight-a-spell-by-dancing', 'komiku-we-have-to-dance-together',
+-  ]);
++  expect(MUSIC_TRACKS).toHaveLength(1);
++  expect(MUSIC_TRACKS[0].id).toBe('komiku-everything-is-groovy');
++  expect(MUSIC_TRACKS[0].sha256).toBe('8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d');
+   for (const track of MUSIC_TRACKS) {
+     expect(createHash('sha256').update(await readFile(track.path)).digest('hex')).toBe(track.sha256);
+     const { stdout } = await promisify(execFile)('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', track.path]);
+@@ -148,22 +146,25 @@ it('measurement default timeout is two minutes and external abort kills running
+ });
+ 
+ it('selection cycles deterministically over the ordered catalogue twice', () => {
+-  for (let index = 0; index < 22; index++) {
+-    expect(selectTrack(index)).toBe(MUSIC_TRACKS[index % 11]);
+-    expect(selectTrack(index)).toBe(selectTrack(index));
++  for (let index = 0; index < 6; index++) {
++    expect(selectTrack(index, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[index % 3]);
++    expect(selectTrack(index, TEST_MUSIC_TRACKS)).toBe(selectTrack(index, TEST_MUSIC_TRACKS));
++    expect(selectTrack(index)).toBe(MUSIC_TRACKS[0]);
+   }
+-  expect(selectTrack(-1)).toBe(MUSIC_TRACKS[10]);
++  expect(selectTrack(-1, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[2]);
+   for (const invalid of [1.5, '3', Infinity, NaN, undefined, null, -Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+-    expect(selectTrack(invalid)).toBe(MUSIC_TRACKS[0]);
++    expect(selectTrack(invalid, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[0]);
+   }
+ });
+-it.each([2, 5, 13])('selected track drives measurement, ffmpeg input and identity for clip %s', async clipIndex => {
++it.each([2, 3, 5, 13])('selected track drives measurement, ffmpeg input and identity for clip %s', async clipIndex => {
++  const realSelectTrack = music.selectTrack;
++  vi.spyOn(music, 'selectTrack').mockImplementation(index => realSelectTrack(index, TEST_MUSIC_TRACKS));
+   vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
+   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
+   const measure = vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);
+   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
+   const result = await renderClip({ ...options, music: true, clipIndex });
+-  const track = MUSIC_TRACKS[(clipIndex - 1) % 11]!;
++  const track = TEST_MUSIC_TRACKS[(clipIndex - 1) % 3]!;
+   expect(measure).toHaveBeenNthCalledWith(2, track.path, 0, 20, undefined);
+   const args = encode.mock.calls[0]![0];
+   const inputs = args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []);
+diff --git a/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts b/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts
+index 85a9b2f..07482d6 100644
+--- a/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts
++++ b/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts
+@@ -5,6 +5,8 @@ import * as loudness from '../apps/worker/src/render/loudness';
+ import * as exec from '../apps/worker/src/render/exec';
+ import * as probe from '../apps/worker/src/render/probe';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
++import * as music from '../apps/worker/src/render/music';
++import { TEST_MUSIC_TRACKS } from './fixtures/music-catalogue';
+ import * as pack from '../apps/worker/src/render/packshot';
+ import { resetStingerCache, STINGER_MARGIN_LU, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../apps/worker/src/render/packshot';
+ const EXPECTED_GAIN = Math.floor(Math.min(-16 - STINGER_MARGIN_LU + 13, -3 + 0.8) * 10) / 10;
+@@ -34,10 +36,11 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes
+   try {
+     expect(await handleRenderJob(attempt, deps)).toBe('done');
+     expect(hashes[0]).toBe(JSON.parse(await readFile('tests/fixtures/pack-shot/music-only.json', 'utf8')).contract);
++    const realSelectTrack = music.selectTrack;
++    const selection = vi.spyOn(music, 'selectTrack').mockImplementation(index => realSelectTrack(index, TEST_MUSIC_TRACKS));
+     input.index = 2;
+     expect(await handleRenderJob(attempt, deps)).toBe('done');
+-    const { MUSIC_TRACKS: tracks } = await import('../apps/worker/src/render/music');
+-    const selected = tracks[1];
++    const selected = TEST_MUSIC_TRACKS[1];
+     const args = encode.mock.calls.at(-1)![0];
+     expect(args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []).slice(1)).toEqual([selected.path]);
+     const selectedContract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
+@@ -45,6 +48,7 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes
+       origin, code: input.code, font: RENDER_FONT_SHA256, music: `${selected.id}:${selected.sha256}`, margin: 18, gain_db: -23 })).digest('hex');
+     expect(hashes[2]).toBe(selectedContract);
+     expect(hashes[2]).not.toBe(hashes[0]);
++    selection.mockRestore();
+     input.index = 1;
+     hashes.splice(2);
+     full.mockResolvedValueOnce({ integrated: -16, peak: -4 }).mockResolvedValue({ integrated: -13, peak: -0.8 });
+diff --git a/projects/05-podcast-clips-opus/tests/pack-shot-uploader.test.ts b/projects/05-podcast-clips-opus/tests/pack-shot-uploader.test.ts
+index b4ade39..cbd8e76 100644
+--- a/projects/05-podcast-clips-opus/tests/pack-shot-uploader.test.ts
++++ b/projects/05-podcast-clips-opus/tests/pack-shot-uploader.test.ts
+@@ -6,6 +6,6 @@ import { VideoUploader } from '../apps/web/src/app/upload/Uploader';
+ it('checkbox names both effects and credits both CC0 sources', () => {
+   const html = renderToStaticMarkup(createElement(VideoUploader));
+   expect(html).toContain('Добавить музыку и финальный акцент');
+-  expect(html.match(/<small class="muted">([^<]*)<\/small>/)?.[1]).toBe('Komiku — Helice Awesome Dance Adventure · Kenney — Sci-Fi Sounds, CC0');
++  expect(html.match(/<small class="muted">([^<]*)<\/small>/)?.[1]).toBe('Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0');
+   expect(html.match(/type="checkbox"/g)).toHaveLength(3);
+ });
+diff --git a/projects/05-podcast-clips-opus/tests/run-music-mutations.mjs b/projects/05-podcast-clips-opus/tests/run-music-mutations.mjs
+index 8684d9f..f385177 100644
+--- a/projects/05-podcast-clips-opus/tests/run-music-mutations.mjs
++++ b/projects/05-podcast-clips-opus/tests/run-music-mutations.mjs
+@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+ import { spawnSync } from 'node:child_process';
+ const music = 'apps/worker/src/render/music.ts', loudness = 'apps/worker/src/render/loudness.ts';
+ const cases = [
+-  ['selection', music, 'return MUSIC_TRACKS[((index % MUSIC_TRACKS.length) + MUSIC_TRACKS.length) % MUSIC_TRACKS.length]!', 'return MUSIC_TRACKS[0]', 'tests/music.test.ts', 'selection cycles'],
++  ['selection', music, 'return catalogue[((index % catalogue.length) + catalogue.length) % catalogue.length]!', 'return catalogue[0]', 'tests/music.test.ts', 'selection cycles'],
+   ['selected-measure', music, 'measureLoudness(track.path,', 'measureLoudness(MUSIC_TRACKS[0].path,', 'tests/music.test.ts', 'selected track drives'],
+   ['selected-input', 'apps/worker/src/render/ffmpeg.ts', "['-i', music.path]", "['-i', selectTrack(0).path]", 'tests/music.test.ts', 'selected track drives'],
+   ['selected-contract', music, '`${track.id}:${track.sha256}`', '`${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`', 'tests/pack-shot-contract.test.ts', 'hash comes'],
+@@ -19,9 +19,9 @@ const cases = [
+   ['parser-NaN', loudness, 'return value ? Number(value[1]) : NaN;', 'return NaN;', 'tests/music-media.test.ts', 'real render'],
+   ['off-input', 'apps/worker/src/render/ffmpeg.ts', "...(music ? ['-i', music.path] : [])", "...['-i', music?.path ?? 'unexpected-music.mp3']", 'tests/music.test.ts', 'off arguments'],
+   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.music ?', '...(false ?', 'tests/render-worker.test.ts', 'music contract'],
+-  ['strict', 'apps/web/src/server/upload-contract.ts', 'music: z.boolean().optional() }).strict()', 'music: z.boolean().optional() })', 'tests/music.test.ts', 'strict upload'],
++  ['strict', 'apps/web/src/server/upload-contract.ts', 'compact: z.boolean().optional() }).strict()', 'compact: z.boolean().optional() })', 'tests/music.test.ts', 'strict upload'],
+   ['skip-throws', music, "return skip('speech_too_quiet');", "throw new Error('quiet');", 'tests/music.test.ts', 'quiet/invalid speech'],
+-  ['catalogue', music, '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
++  ['catalogue', music, '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
+   ['gain-ceiling', music, 'gain > MUSIC_MAX_GAIN_DB', 'false', 'tests/music.test.ts', 'gain ceiling'],
+ ];
+ const root = process.env.MUSIC_MUTATION_DIR ?? 'tests/artifacts/music-bed';
+diff --git a/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs b/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs
+index 1ded2b2..2cebb60 100644
+--- a/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs
++++ b/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs
+@@ -14,7 +14,7 @@ const cases = [
+   ['watermark', render, 'if (flash) filters.push(flash);\n  if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));',
+     'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));\n  if (flash) filters.push(flash);', media, 'video duration'],
+   ['off-input', render, "...(music ? ['-i', music.path] : [])", "...['-i', music?.path ?? 'unexpected-music.mp3']", 'tests/music.test.ts', 'off arguments'],
+-  ['music-catalogue', 'apps/worker/src/render/music.ts', '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
++  ['music-catalogue', 'apps/worker/src/render/music.ts', '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
+   ['off', render, "...(packshot ? ['-i', STINGERS[0].path] : [])", "...['-i', STINGERS[0].path]", 'tests/music.test.ts', 'off arguments'],
+   ['skip', pack, "return skip('measure_failed')", "(() => { throw error; })()", unit, 'music-only baseline'],
+   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.packshot ?', '...(false ?', 'tests/pack-shot-contract.test.ts', 'hash comes'],

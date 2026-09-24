@@ -9,6 +9,8 @@ import * as probe from '../apps/worker/src/render/probe';
 import * as faces from '../apps/worker/src/render/faces';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
 import { resetStingerCache } from '../apps/worker/src/render/packshot';
+import * as music from '../apps/worker/src/render/music';
+import { TEST_MUSIC_TRACKS } from './fixtures/music-catalogue';
 import { MUSIC_TRACKS, selectTrack, prepareMusic } from '../apps/worker/src/render/music';
 import { createVideoSchema } from '../apps/web/src/server/upload-contract';
 const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
@@ -32,13 +34,9 @@ it('parser uses final Summary from real silence/sine logs, never frame I', async
   expect(loudness.parseIntegratedLoudness('Summary:\n I: -10 LUFS\nSummary:\n I: -25 LUFS')).toBe(-25);
 });
 it('catalogue bytes and duration are pinned without reading README', async () => {
-  expect(MUSIC_TRACKS).toHaveLength(11);
-  expect(MUSIC_TRACKS.map(t => t.id)).toEqual([
-    'komiku-everything-is-groovy', 'komiku-the-journey-begins', 'komiku-road-1-fight',
-    'komiku-little-town-before-big-city', 'komiku-road-3-fight', 'komiku-road-4-chill',
-    'komiku-cliff-road-fight', 'komiku-pop-city', 'komiku-dance-with-two-or-more',
-    'komiku-to-fight-a-spell-by-dancing', 'komiku-we-have-to-dance-together',
-  ]);
+  expect(MUSIC_TRACKS).toHaveLength(1);
+  expect(MUSIC_TRACKS[0].id).toBe('komiku-everything-is-groovy');
+  expect(MUSIC_TRACKS[0].sha256).toBe('8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d');
   for (const track of MUSIC_TRACKS) {
     expect(createHash('sha256').update(await readFile(track.path)).digest('hex')).toBe(track.sha256);
     const { stdout } = await promisify(execFile)('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', track.path]);
@@ -148,22 +146,25 @@ it('measurement default timeout is two minutes and external abort kills running 
 });
 
 it('selection cycles deterministically over the ordered catalogue twice', () => {
-  for (let index = 0; index < 22; index++) {
-    expect(selectTrack(index)).toBe(MUSIC_TRACKS[index % 11]);
-    expect(selectTrack(index)).toBe(selectTrack(index));
+  for (let index = 0; index < 6; index++) {
+    expect(selectTrack(index, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[index % 3]);
+    expect(selectTrack(index, TEST_MUSIC_TRACKS)).toBe(selectTrack(index, TEST_MUSIC_TRACKS));
+    expect(selectTrack(index)).toBe(MUSIC_TRACKS[0]);
   }
-  expect(selectTrack(-1)).toBe(MUSIC_TRACKS[10]);
+  expect(selectTrack(-1, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[2]);
   for (const invalid of [1.5, '3', Infinity, NaN, undefined, null, -Infinity, Number.MAX_SAFE_INTEGER + 1]) {
-    expect(selectTrack(invalid)).toBe(MUSIC_TRACKS[0]);
+    expect(selectTrack(invalid, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[0]);
   }
 });
-it.each([2, 5, 13])('selected track drives measurement, ffmpeg input and identity for clip %s', async clipIndex => {
+it.each([2, 3, 5, 13])('selected track drives measurement, ffmpeg input and identity for clip %s', async clipIndex => {
+  const realSelectTrack = music.selectTrack;
+  vi.spyOn(music, 'selectTrack').mockImplementation(index => realSelectTrack(index, TEST_MUSIC_TRACKS));
   vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   const measure = vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const result = await renderClip({ ...options, music: true, clipIndex });
-  const track = MUSIC_TRACKS[(clipIndex - 1) % 11]!;
+  const track = TEST_MUSIC_TRACKS[(clipIndex - 1) % 3]!;
   expect(measure).toHaveBeenNthCalledWith(2, track.path, 0, 20, undefined);
   const args = encode.mock.calls[0]![0];
   const inputs = args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []);

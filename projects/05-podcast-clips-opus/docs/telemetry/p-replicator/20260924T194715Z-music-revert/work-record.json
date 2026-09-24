@@ -1,0 +1,95 @@
+{
+  "identity": {
+    "run_id": "20260924T194715Z-music-revert",
+    "work_unit_id": "music-revert",
+    "current_attempt_id": "checks-1"
+  },
+  "stage": "delivered",
+  "source": {
+    "baseline_revision": "c1eccf6eb18cbce594f90013316d172b8925e790",
+    "requirements": "docs/features/music-library/09_revert_to_one_codex.md",
+    "architecture": "docs/ADR.md#adr-011"
+  },
+  "scope": [
+    "OWN-013: one production track, preserve indexed selection, synthetic catalogue tests, mutation targets, uploader attribution"
+  ],
+  "exclusions": [
+    "commits",
+    "deployment",
+    "media baselines",
+    "global toolkit",
+    "historical evidence"
+  ],
+  "routes": [
+    {
+      "stage": "PLAN",
+      "tier": "S",
+      "mechanical_exit_code": 0,
+      "reason": "Bounded approved catalogue rollback; unchanged selection algorithm and service contracts; UI attribution only"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "tier": "S",
+      "mechanical_exit_code": 0,
+      "reason": "Bounded approved catalogue rollback; unchanged selection algorithm and service contracts; UI attribution only"
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local tests and mutations only; no deployed E2E requested or claimed"
+  },
+  "telemetry": {
+    "run": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/run.json",
+    "events": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/events.jsonl"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null,
+    "cost": null
+  },
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly instructed execution of 09_revert_to_one_codex.md; no commit"
+  },
+  "checks": [
+    {
+      "name": "targeted-vitest",
+      "exit_code": 0,
+      "result": "53 passed, 0 failed, 0 skipped",
+      "evidence": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/targeted-tests.json"
+    },
+    {
+      "name": "music-mutations",
+      "exit_code": 0,
+      "result": "19/19 red + green",
+      "evidence": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/music-mutations/mutations.json"
+    },
+    {
+      "name": "pack-mutations",
+      "exit_code": 0,
+      "result": "21/21 red + green",
+      "evidence": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/pack-mutations/results.json"
+    },
+    {
+      "name": "typecheck",
+      "exit_code": 0,
+      "result": "passed",
+      "evidence": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/typecheck.log"
+    },
+    {
+      "name": "lint",
+      "exit_code": 0,
+      "result": "passed",
+      "evidence": "docs/telemetry/p-replicator/20260924T194715Z-music-revert/lint.log"
+    }
+  ],
+  "limitations": [
+    "No independent Anthropic reviewer available; no cross-family review claim"
+  ],
+  "delivery": {
+    "receipt": "docs/features/music-library/10_revert_report.md",
+    "source_sha256": "cc70e94e86c5484e82ece4453891ed0d9ad40b60b13e734484569e6499e05081",
+    "pending": [],
+    "e2e_claim": null
+  }
+}
