@@ -101,3 +101,12 @@
 
 ## Отчёт
 `docs/features/teaser-headline/07_code_report.md`; последняя строка — ровно `Status: completed` либо `Status: failed`.
+
+## Попутно — две находки ревью фичи 18 (music-library, APPROVE)
+
+База: коммит `53f18f7` (music-library приземлилась). Эталоны — в её редакции.
+
+- `tests/music.test.ts:155`: в `it.each([2, 5, 12])` клип 12 даёт трек 0, и мутации «всегда `[0]`»
+  на нём не краснеют — заменить 12 на 13.
+- `apps/worker/src/render/ffmpeg.ts:49`: при `clipIndex !== undefined && !Number.isSafeInteger(clipIndex)`
+  писать `{"event":"music_track_fallback"}` в журнал (fail-closed остаётся, но становится видимым).
