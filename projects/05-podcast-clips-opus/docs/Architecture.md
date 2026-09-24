@@ -1,5 +1,11 @@
 # N5 «КлипМейкер» — Architecture
 
+> **Как собрано (24.09.2026).** Документ — замысел от 21.09. Где он расходится с кодом, верен код и
+> [`REPRODUCE.md`](REPRODUCE.md) (таблица отклонений): STT — `openai/whisper-large-v3` через OpenRouter
+> вместо `whisper-1`, выделение — `anthropic/claude-sonnet-5` через тот же шлюз, один ключ
+> `OPENROUTER_API_KEY`; ffmpeg 8.1 вместо 7; кадрирование по лицам OpenCV YuNet (ADR-009); допуск
+> таймкодов (ADR-010). Новые требования — [`Specification-addendum.md`](Specification-addendum.md).
+
 **Версия:** 0.1 · **Дата:** 2026-09-21 · **CJM:** D · **Канон:** [`canon.md`](canon.md) (заморожен
 2026-09-21) · **Решения:** [`ADR.md`](ADR.md) · **Диаграммы:** [`C4_Diagrams.md`](C4_Diagrams.md).
 Документ владеет ФИЗИЧЕСКИМ устройством: контейнеры, стек, хранение, безопасность, внешние

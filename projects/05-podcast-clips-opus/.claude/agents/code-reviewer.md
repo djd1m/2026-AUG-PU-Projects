@@ -32,7 +32,7 @@ description: >
       (`user_llm` И `global_llm`; один `global_llm` не связывает — V2-R21).
 - [ ] Вызов поставщика после `refused` не выполняется ни на одной ветке.
 - [ ] Счёт по ПОПЫТКАМ: повтор чанка после таймаута вызывает `CheckAndConsumeQuota` ДО повторного
-      обращения к `whisper-1` (V2-R14).
+      обращения к Whisper (`openai/whisper-large-v3` через OpenRouter; V2-R14).
 - [ ] `RefundUploadSlot` вызывается только из `CompleteUpload` и `ProbeSource`, только при отказе по
       СВОЙСТВАМ файла, только в той же транзакции, что пишет `failed`, и сам проходит через
       `user_upload_refunds`. Возврат при `refused_*` — **blocker** (DEC-A-014).
@@ -90,7 +90,7 @@ description: >
 
 ### 6. Секреты по контейнерам
 
-- [ ] `OPENAI_API_KEY` — только `worker-stt`. `ANTHROPIC_API_KEY` — только `worker-llm`.
+- [ ] `OPENROUTER_API_KEY` — только `worker-stt` и `worker-llm`; у `web` ключа моделей нет.
       `S3_ACCESS_KEY`/`S3_SECRET_KEY` — `web`, `worker-stt`, `worker-video`. У `proxy` и `db` —
       ничего. Ключ, появившийся у лишнего сервиса, — **blocker**.
 - [ ] `ANTHROPIC_ADMIN_KEY` не передаётся ни одному контейнеру: он у оператора, не в compose.

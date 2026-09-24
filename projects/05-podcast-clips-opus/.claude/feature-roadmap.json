@@ -421,6 +421,94 @@
         "apps/web/src/server/account/delete-account.ts",
         "packages/s3/src/lifecycle.ts"
       ]
+    },
+    {
+      "id": "transcript-tolerance",
+      "number": 13,
+      "title": "Погрешность таймкодов исправляется, а не отвергает запись",
+      "description": "ADR-010, FR-TRANSCRIBE-003. Откат начала слова и выход за границы поджимаются с событиями stt_word_order_clamped / stt_timing_clamped; отказ только при отсутствии таймкодов. Негодный кандидат фрагмента отбрасывается один (FR-SELECT-003); модели уходят сегменты, не слова (FR-SELECT-004). Появилась после живой записи 88 мин, отвергнутой трижды подряд.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "transcription",
+        "selection-and-score"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-TRANSCRIBE-003",
+        "FR-SELECT-003",
+        "FR-SELECT-004"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-003",
+        "ADR-010"
+      ],
+      "expected_files": [
+        "packages/shared/src/transcript.ts",
+        "packages/shared/src/fragments.ts",
+        "apps/worker/src/llm/prompts/selection.ts",
+        "tests/transcription-word-order.test.ts"
+      ]
+    },
+    {
+      "id": "framing",
+      "number": 14,
+      "title": "Кадр следует за лицом",
+      "description": "ADR-009, FR-RENDER-004. Детектор YuNet (OpenCV 4.12) раз в 0,5 с; порог размера — 0,4 медианы лиц клипа; два этажа только при присутствии обоих ≥ 0,9; без плана — центральный кроп. python3 + py3-opencv в образе воркера, модель вендорена. Появилась после жалобы владельца «камера смотрит в стену».",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "complex",
+      "depends_on": [
+        "render-and-watermark"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RENDER-004",
+        "NFR-CFG-001"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-009"
+      ],
+      "expected_files": [
+        "apps/worker/src/render/format.ts",
+        "apps/worker/src/render/framing-plan.ts",
+        "apps/worker/src/render/faces.ts",
+        "apps/worker/assets/scripts/detect_faces.py",
+        "apps/worker/assets/models/face_detection_yunet.onnx",
+        "Dockerfile",
+        "tests/framing.test.ts",
+        "tests/framing-media.test.ts"
+      ]
+    },
+    {
+      "id": "subtitles-and-glossary",
+      "number": 15,
+      "title": "Субтитры без мигания, крупнее, английские термины латиницей",
+      "description": "FR-RENDER-005/006. События встык с удержанием ≤ 1 с; кегль 86, обводка 5, тень 1, перенос 24 знака (измерен отрисовкой); словарь терминов только для показа (N5_GLOSSARY), расшифровка не меняется. Кнопка «Повторить» решается сервером, а не прогнозом квоты (FR-RESULT-004).",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "render-and-watermark",
+        "framing"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RENDER-005",
+        "FR-RENDER-006",
+        "FR-RESULT-004"
+      ],
+      "sc_ids": [],
+      "adr_ids": [],
+      "expected_files": [
+        "apps/worker/src/render/subtitles.ts",
+        "apps/worker/src/render/glossary.ts",
+        "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
+        "docker-compose.yml"
+      ]
     }
   ]
 }
