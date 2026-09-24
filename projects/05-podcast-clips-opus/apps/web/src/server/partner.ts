@@ -10,8 +10,8 @@ export const applyCodeSchema = z.union([
 ]);
 export type AttributionSource = 'explicit' | 'guest_link' | 'cookie';
 export interface Attribution {
-  id: string; partner_code_id: string; source: AttributionSource;
-  status: 'pending' | 'activated' | 'rejected'; replaced_source: AttributionSource | null;
+  id: string; partner_code_id: string | null; source: AttributionSource;
+  status: 'pending' | 'activated' | 'rejected' | 'partner_deleted'; replaced_source: AttributionSource | null;
   reject_reason: string | null;
 }
 const invalid = (reason = 'invalid_code') => new UploadError('invalid',
@@ -20,6 +20,7 @@ const conflict = () => new UploadError('conflict', 'Источник уже вы
 
 // ADR-007: keep the asymmetric outcomes visible, including equal-source conflicts.
 export function replacementAllowed(existing: Attribution, source: AttributionSource): boolean {
+  if (existing.status === 'partner_deleted') return false;
   if (existing.source === 'explicit') return false; // explicit → any: 409
   if (existing.status === 'rejected') return false;
   if (existing.source === 'guest_link' && source === 'cookie') return false; // 409
@@ -44,7 +45,7 @@ export class PartnerService {
       // Same account first, then same code: one lock order for concurrent replacements.
       const active = await tx.query("SELECT id FROM account WHERE id=$1 AND status='active' FOR NO KEY UPDATE", [account]);
       if (!active.rowCount) throw new UploadError('not_found', 'Аккаунт не найден', 404);
-      const code = (await tx.query<{ id: string; status: string; account_id: string }>(`SELECT c.id,c.status,p.account_id
+      const code = (await tx.query<{ id: string; status: string; account_id: string; unblocked_at: Date | null }>(`SELECT c.id,c.status,p.account_id,c.unblocked_at
         FROM partner_code c JOIN partner p ON p.id=c.partner_id JOIN account a ON a.id=p.account_id
         WHERE c.code=$1 AND a.status='active' FOR NO KEY UPDATE OF c`, [codeValue])).rows[0];
       if (!code) throw invalid();
@@ -62,16 +63,17 @@ export class PartnerService {
         VALUES($1,$2,$3,$4,$5) ON CONFLICT(account_id) DO NOTHING RETURNING *`, values);
       const updated = inserted.rows[0] ? inserted : await tx.query<Attribution>(`UPDATE attribution
         SET partner_code_id=$2,replaced_source=source,source=$3,status=$4,reject_reason=$5,activated_at=NULL
-        WHERE account_id=$1 AND status <> 'rejected' AND
+        WHERE account_id=$1 AND status NOT IN ('rejected','partner_deleted') AND
           (($3='explicit' AND source IN ('cookie','guest_link')) OR ($3='guest_link' AND source='cookie')) RETURNING *`, values);
       const result = updated.rows[0];
       if (!result) throw conflict();
       if (!self) {
         await tx.query(`INSERT INTO growth_event(type,account_id,partner_code_id,ip_prefix,day,created_at)
           VALUES('code_applied',$1,$2,$3::cidr,$4::date,$5)`, [account, code.id, prefix, moscowDay(now), now]);
-        const count = Number((await tx.query<{ count: string }>(`SELECT count(*) FROM growth_event
+        const count = Number((await tx.query<{ count: string }>(`SELECT count(DISTINCT account_id) FROM growth_event
+          CROSS JOIN (SELECT $4::timestamptz AS unblocked_at) c
           WHERE type='code_applied' AND partner_code_id=$1 AND ip_prefix=$2::cidr
-          AND created_at > $3::timestamptz - interval '10 minutes' AND created_at <= $3`, [code.id, prefix, now])).rows[0]!.count);
+          AND created_at > GREATEST($3::timestamptz - interval '10 minutes', c.unblocked_at) AND created_at <= $3`, [code.id, prefix, now, code.unblocked_at])).rows[0]!.count);
         // The 50th successful application commits; the block rejects subsequent applications.
         if (count >= 50) await tx.query(`UPDATE partner_code SET status='blocked',blocked_reason='antifraud_ip_burst',blocked_at=$2
           WHERE id=$1 AND status='active'`, [code.id, now]);
@@ -85,9 +87,9 @@ export class PartnerService {
   }
 
   async dashboard(account: string, codeId?: string) {
-    const codes = (await this.pool.query<{ id: string; code: string; status: 'active' | 'blocked'; blocked_reason: string | null }>(
-      `SELECT c.id,c.code,c.status,c.blocked_reason FROM partner_code c JOIN partner p ON p.id=c.partner_id
-       WHERE p.account_id=$1 ORDER BY c.created_at,c.id`, [account])).rows;
+    const codes = (await this.pool.query<{ id: string; code: string; status: 'active' | 'blocked'; blocked_reason: string | null; unblocked_at: Date | null; unblock_reason: string | null }>(
+      `SELECT c.id,c.code,c.status,c.blocked_reason,c.unblocked_at,c.unblock_reason FROM partner_code c JOIN partner p ON p.id=c.partner_id
+       WHERE p.account_id=$1 ORDER BY c.created_at,c.id`, [account])).rows.map(c => ({ ...c, unblocked_at: c.unblocked_at?.toISOString() ?? null }));
     if (codeId && !codes.some(c => c.id === codeId)) {
       throw new UploadError('invalid', 'Нет доступа к этому партнёрскому коду', 403);
     }

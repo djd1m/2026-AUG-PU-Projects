@@ -65,6 +65,32 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
       { account_id: null, video_id: null, clip_id: null, guest_pack_id: null, ip_prefix: null },
     ]);
   });
+  it('RT-009 partner deletion preserves three foreign attributions and erases own attribution', async () => {
+    const owner = await fixture(), upstream = await fixture();
+    const code = async (account: string) => (await pool.query(`WITH p AS (
+      INSERT INTO partner(account_id,display_name) VALUES($1,'Private partner') RETURNING id)
+      INSERT INTO partner_code(partner_id,code,status) SELECT id,$2,'active' FROM p RETURNING id`,
+    [account, randomUUID().slice(0, 8)])).rows[0].id as string;
+    const ownCode = await code(owner.account), upstreamCode = await code(upstream.account);
+    await pool.query("INSERT INTO attribution(account_id,partner_code_id,source,status) VALUES($1,$2,'cookie','pending')", [owner.account, upstreamCode]);
+    const visitors: string[] = [];
+    for (const status of ['pending', 'activated', 'rejected']) {
+      const id = (await pool.query("INSERT INTO account(email,password_hash) VALUES($1,'private') RETURNING id", [`${randomUUID()}@test.invalid`])).rows[0].id as string;
+      visitors.push(id);
+      await pool.query(`INSERT INTO attribution(account_id,partner_code_id,source,status,activated_at,reject_reason)
+        VALUES($1,$2,'cookie',$3,$4,$5)`, [id, ownCode, status, status === 'activated' ? now : null, status === 'rejected' ? 'code_blocked' : null]);
+    }
+    const before = (await pool.query('SELECT * FROM attribution WHERE account_id=ANY($1::uuid[]) ORDER BY id', [visitors])).rows;
+    await new ErasureService(pool, () => now).request(owner.account, { confirm: true });
+    await retentionTick(pool, memoryStorage(), new Date(now.getTime() + ERASURE_QUIET_MS));
+    const after = (await pool.query('SELECT * FROM attribution WHERE account_id=ANY($1::uuid[]) ORDER BY id', [visitors])).rows;
+    expect(after).toEqual(before.map(row => ({ ...row, status: 'partner_deleted', partner_code_id: null, reject_reason: null })));
+    expect(after).toHaveLength(3);
+    expect((await pool.query('SELECT * FROM attribution WHERE account_id=$1', [owner.account])).rowCount).toBe(0);
+    expect((await pool.query('SELECT * FROM partner_code WHERE id=$1', [ownCode])).rowCount).toBe(0);
+    expect((await pool.query('SELECT status FROM account WHERE id=$1', [owner.account])).rows[0].status).toBe('deleted');
+    expect((await pool.query('SELECT status FROM account WHERE id=ANY($1::uuid[])', [visitors])).rows.every(r => r.status === 'active')).toBe(true);
+  });
   it('growth_event FK survives direct clip deletion with SET NULL', async () => {
     const f = await fixture();
     await pool.query('DELETE FROM guest_pack_clip WHERE clip_id=$1', [f.clip]);

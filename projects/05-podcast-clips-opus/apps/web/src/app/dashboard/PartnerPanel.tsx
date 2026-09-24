@@ -4,7 +4,7 @@ import { rpc } from '../../lib/rpc';
 import type { PartnerService } from '../../server/partner';
 type Dashboard = Awaited<ReturnType<PartnerService['dashboard']>>;
 const labels = { visits: 'Переходы', registrations: 'Регистрации', uploaded: 'Загруженные записи', shared: 'Клипы, вышедшие наружу', guests: 'Приглашённые гости' };
-const statuses = { pending: 'Ожидают первого выпуска', activated: 'Первый выпуск готов', rejected: 'Отклонены' };
+const statuses = { pending: 'Ожидают первого выпуска', activated: 'Первый выпуск готов', rejected: 'Отклонены', partner_deleted: 'Партнёр удалён' };
 const sources = { explicit: 'Явный код', guest_link: 'Гостевая ссылка', cookie: 'Переход по ссылке' };
 export function PartnerSummary({ data }: { data: Dashboard }) {
   return <><dl className="partner-counters">{Object.entries(labels).map(([key, label]) =>
@@ -13,6 +13,7 @@ export function PartnerSummary({ data }: { data: Dashboard }) {
     {data.codes.map(code => <article className="partner-code" key={code.id}><h3>{code.code}</h3>
       <p className={code.status === 'blocked' ? 'notice' : ''}>{code.status === 'blocked' ? 'Код заблокирован' : 'Код активен'}</p>
       {code.status === 'blocked' && <p>{code.blocked_reason === 'antifraud_ip_burst' ? 'Обнаружено много применений из одной сети. Прежние атрибуции сохранены для проверки.' : 'Код заблокирован вручную.'}</p>}
+      {code.status === 'active' && code.unblocked_at && <p>Код разблокирован {new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow' }).format(new Date(code.unblocked_at))}: {code.unblock_reason}</p>}
       <ul>{data.statuses.filter(s => s.partner_code_id === code.id).map(s => <li key={`${s.source}-${s.status}`}>
         {sources[s.source]} · {statuses[s.status]}: {s.count}</li>)}</ul>
     </article>)}</>;

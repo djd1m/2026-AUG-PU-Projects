@@ -7,19 +7,28 @@ import { PartnerService } from '../apps/web/src/server/partner';
 import { ensurePartnerCode } from '../apps/web/src/server/partner-code';
 import { ipPrefix } from '../apps/web/src/server/ip';
 import { referralCookie } from '../apps/web/src/lib/partner-referral';
+import { unblockPartnerCode } from '../packages/db/scripts/partner-code-unblock.mjs';
 const secret = 'test-referral-secret';
 const url = process.env.DATABASE_URL;
 describe.skipIf(!url)('PostgreSQL partner attribution', () => {
   let pool: Pool, service: PartnerService;
   const schema = `partner_${randomBytes(8).toString('hex')}`;
   const owner = randomUUID(), visitor = randomUUID(), other = randomUUID(), codeId = randomUUID(), otherCode = randomUUID();
-  const now = new Date('2026-09-23T00:00:00Z'), prefix = '192.0.2.0/24';
+  let now = new Date('2026-09-23T00:00:00Z');
+  const prefix = '192.0.2.0/24';
   const apply = (code = 'CODE123', source: 'explicit' | 'cookie' | 'guest_link' = 'explicit', account = visitor, ip = prefix) => service.apply(account, { code }, ip, source === 'explicit' ? '' : referralCookie('', code, source, false, secret, now.getTime())!);
   const attribution = async () => (await pool.query('SELECT * FROM attribution WHERE account_id=$1', [visitor])).rows[0];
   const seed = async (source: string, status = 'pending') => pool.query(`INSERT INTO attribution(account_id,partner_code_id,source,status)
     VALUES($1,$2,$3,$4)`, [visitor, otherCode, source, status]);
-  const events = async (n: number, ip = prefix, at = now) => pool.query(`INSERT INTO growth_event(type,partner_code_id,ip_prefix,day,created_at)
-    SELECT 'code_applied',$1,$2::cidr,'2026-09-23',$3 FROM generate_series(1,$4::int)`, [codeId, ip, at, n]);
+  const accounts = async (n: number) => {
+    const ids = Array.from({ length: n }, () => randomUUID());
+    for (const id of ids) await pool.query("INSERT INTO account(id,email,password_hash) VALUES($1,$2,'test-only')", [id, `${id}@example.test`]);
+    return ids;
+  };
+  const events = async (n: number, ip = prefix, at = now) => {
+    for (const id of await accounts(n)) await pool.query(`INSERT INTO growth_event(type,account_id,partner_code_id,ip_prefix,day,created_at)
+      VALUES('code_applied',$1,$2,$3::cidr,'2026-09-23',$4)`, [id, codeId, ip, at]);
+  };
   beforeAll(async () => {
     if (!url || !new URL(url).pathname.endsWith('_test')) throw new Error('Requires isolated *_test database');
     await ensureTestDatabase(url);
@@ -28,6 +37,7 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     service = new PartnerService(pool, secret, () => now);
   });
   beforeEach(async () => {
+    now = new Date('2026-09-23T00:00:00Z');
     await pool.query('TRUNCATE account CASCADE');
     for (const id of [owner, visitor, other]) await pool.query("INSERT INTO account(id,email,password_hash) VALUES($1,$2,'test-only')", [id, `${id}@example.test`]);
     for (const [account, id, code] of [[owner, codeId, 'CODE123'], [other, otherCode, 'OTHER12']]) {
@@ -65,6 +75,67 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     expect((await pool.query("SELECT count(*) FROM growth_event WHERE type='code_applied'")).rows[0].count).toBe('50');
     expect((await pool.query('SELECT status FROM account WHERE id=$1', [owner])).rows[0].status).toBe('active');
   });
+  it('RT-002 distinct accounts: 17 accounts with three sources produce 51 events without blocking', async () => {
+    for (const id of await accounts(17)) for (const source of ['cookie', 'guest_link', 'explicit'] as const) {
+      await expect(apply('CODE123', source, id)).resolves.toMatchObject({ status: 'pending' });
+    }
+    expect((await pool.query("SELECT count(*) n,count(DISTINCT account_id) distinct_n FROM growth_event WHERE type='code_applied'")).rows[0])
+      .toEqual({ n: '51', distinct_n: '17' });
+    expect((await service.dashboard(owner)).codes[0]!.status).toBe('active');
+  });
+  it('RT-002 49 distinct accounts remain active, the 50th blocks', async () => {
+    const ids = await accounts(50);
+    for (const id of ids.slice(0, 49)) await apply('CODE123', 'explicit', id);
+    expect((await service.dashboard(owner)).codes[0]!.status).toBe('active');
+    await apply('CODE123', 'explicit', ids[49]!);
+    expect((await service.dashboard(owner)).codes[0]!.status).toBe('blocked');
+  });
+  it('RT-002 unblock window excludes 50 old events and blocks after 50 new distinct accounts', async () => {
+    const old = await accounts(50);
+    for (const id of old) await apply('CODE123', 'explicit', id);
+    expect((await service.dashboard(owner)).codes[0]!.status).toBe('blocked');
+    // Old events exactly at unblocked_at are excluded too.
+    await unblockPartnerCode(pool, 'CODE123', '  Проверено  ', now);
+    expect((await service.dashboard(owner)).codes[0]).toMatchObject({
+      status: 'active', blocked_reason: null, unblocked_at: now.toISOString(), unblock_reason: 'Проверено',
+    });
+    expect((await pool.query('SELECT blocked_at FROM partner_code WHERE id=$1', [codeId])).rows[0].blocked_at).toBeNull();
+    now = new Date(now.getTime() + 1);
+    const fresh = await accounts(50);
+    await apply('CODE123', 'explicit', fresh[0]!);
+    expect((await service.dashboard(owner)).codes[0]!.status).toBe('active');
+    for (const id of fresh.slice(1)) await apply('CODE123', 'explicit', id);
+    expect((await service.dashboard(owner)).codes[0]!.status).toBe('blocked');
+  });
+  it('RT-002 unblock accepts manual blocks, rejects invalid reasons and active or missing codes', async () => {
+    await pool.query("UPDATE partner_code SET status='blocked',blocked_reason='manual',blocked_at=$2 WHERE id=$1", [codeId, now]);
+    for (const reason of ['', '   ', 'x'.repeat(501)]) {
+      await expect(unblockPartnerCode(pool, 'CODE123', reason, now)).rejects.toThrow('Причина');
+      expect((await service.dashboard(owner)).codes[0]!.status).toBe('blocked');
+    }
+    await unblockPartnerCode(pool, 'CODE123', 'x'.repeat(500), now);
+    await expect(unblockPartnerCode(pool, 'CODE123', 'Причина', now)).rejects.toThrow('не заблокирован');
+    await expect(unblockPartnerCode(pool, 'MISSING', 'Причина', now)).rejects.toThrow('не найден');
+  });
+  it('RT-009 partner_deleted cannot be replaced and preserves every column', async () => {
+    await pool.query("INSERT INTO attribution(account_id,source,status) VALUES($1,'cookie','partner_deleted')", [visitor]);
+    const before = await attribution();
+    await expect(apply()).rejects.toMatchObject({ status: 409 });
+    expect(await attribution()).toEqual(before);
+  });
+  it('RT-009 CHECK rejects null code for activated; status has exactly one enum CHECK', async () => {
+    await expect(pool.query("INSERT INTO attribution(account_id,source,status) VALUES($1,'cookie','activated')", [visitor]))
+      .rejects.toMatchObject({ code: '23514', constraint: 'attribution_partner_deleted_null' });
+    const checks = (await pool.query(`SELECT conname FROM pg_constraint
+      WHERE conrelid='attribution'::regclass AND contype='c'
+      AND conkey=ARRAY[(SELECT attnum FROM pg_attribute WHERE attrelid='attribution'::regclass AND attname='status')]`)).rows;
+    expect(checks).toEqual([{ conname: 'attribution_status_check' }]);
+    const fk = (await pool.query("SELECT confdeltype FROM pg_constraint WHERE conrelid='attribution'::regclass AND conname='attribution_partner_code_id_fkey'")).rows;
+    expect(fk).toEqual([{ confdeltype: 'n' }]);
+    await seed('cookie');
+    await expect(pool.query('DELETE FROM partner_code WHERE id=$1', [otherCode]))
+      .rejects.toMatchObject({ code: '23514', constraint: 'attribution_partner_deleted_null' });
+  });
   it('self referral is rejected and excluded from registrations', async () => {
     expect(await apply('CODE123', 'explicit', owner)).toMatchObject({ status: 'rejected', reject_reason: 'self_referral' });
     expect((await service.dashboard(owner)).counters.registrations).toBe(0);
@@ -90,21 +161,23 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await expect(service.dashboard(other, randomUUID())).rejects.toMatchObject({ status: 403 });
     expect((await service.dashboard(owner, codeId)).codes.map(c => c.id)).toEqual([codeId]);
   });
-  it('20 concurrent boundary attempts produce exactly one block and exactly 50 audited attempts', async () => {
-    await events(48);
-    await pool.query('CREATE TABLE test_blocks(id uuid)');
+  it('60 concurrent requests by 55 accounts block once after exactly 50 successes', async () => {
+    await pool.query('CREATE TABLE test_blocks(id uuid, blocked_at timestamptz)');
     await pool.query(`CREATE FUNCTION test_block_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-      IF OLD.status='active' AND NEW.status='blocked' THEN INSERT INTO test_blocks VALUES(NEW.id); END IF; RETURN NEW; END $$`);
+      IF NEW.blocked_at IS DISTINCT FROM OLD.blocked_at THEN INSERT INTO test_blocks VALUES(NEW.id,NEW.blocked_at); END IF; RETURN NEW; END $$`);
     await pool.query('CREATE TRIGGER test_block AFTER UPDATE ON partner_code FOR EACH ROW EXECUTE FUNCTION test_block_audit()');
     try {
-      const accounts = Array.from({ length: 20 }, () => randomUUID());
+      const accounts = Array.from({ length: 55 }, () => randomUUID());
       for (const id of accounts) await pool.query("INSERT INTO account(id,email,password_hash) VALUES($1,$2,'test-only')", [id, `${id}@example.test`]);
-      const results = await Promise.allSettled(accounts.map((id, i) => apply('CODE123', 'explicit', id, ipPrefix(`192.0.2.${i + 1}`))));
-      expect(results.filter(r => r.status === 'fulfilled')).toHaveLength(2);
-      for (const r of results) if (r.status === 'rejected') expect(r.reason).toMatchObject({ status: 422 });
-      expect((await pool.query('SELECT count(*) FROM test_blocks')).rows[0].count).toBe('1');
+      const results = await Promise.allSettled([...accounts, ...accounts.slice(0, 5)].map((id, i) => apply('CODE123', 'explicit', id, ipPrefix(`192.0.2.${i + 1}`))));
+      expect(results.filter(r => r.status === 'fulfilled')).toHaveLength(50);
+      for (const r of results) if (r.status === 'rejected') {
+        expect([409, 422]).toContain(r.reason.status);
+        if (r.reason.status === 422) expect(r.reason.details).toEqual({ reason: 'code_blocked' });
+      }
+      expect((await pool.query('SELECT * FROM test_blocks')).rows).toEqual([{ id: codeId, blocked_at: now }]);
       expect((await pool.query("SELECT count(*) FROM growth_event WHERE type='code_applied'")).rows[0].count).toBe('50');
-      expect((await pool.query('SELECT count(*) FROM attribution WHERE partner_code_id=$1', [codeId])).rows[0].count).toBe('2');
+      expect((await pool.query('SELECT count(*) FROM attribution WHERE partner_code_id=$1', [codeId])).rows[0].count).toBe('50');
     } finally {
       await pool.query('DROP TRIGGER test_block ON partner_code'); await pool.query('DROP FUNCTION test_block_audit()'); await pool.query('DROP TABLE test_blocks');
     }

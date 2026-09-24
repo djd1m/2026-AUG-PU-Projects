@@ -1,0 +1,57 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-J4sNPK
+
+ ❯ tests/partner.test.ts (21 tests | 1 failed | 20 skipped) 32ms
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > cookie to explicit returns 200 and replaced_source
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > explicit to any returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > guest_link to cookie returns 409
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > invalid code returns 422 without cookie fallback or attribution writes
+   × partner ADR-007 isolated behavior (SQL effects require integration) > 50th success blocks future applications and commits attribution 30ms
+     → expected false to be true // Object.is equality
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > self referral is rejected and recorded
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > foreign partner code returns 403
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > rejected cannot be resurrected; equal sources conflict
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > bad shape fails before connection; blocked code cannot produce another event
+   ↓ partner ADR-007 isolated behavior (SQL effects require integration) > unexpected database failure rolls back audit and releases connection
+   ↓ passive referral preserves stronger source and ignores self visits
+   ↓ dashboard renders five counters, blocked explanation and attribution status without identity leakage
+   ↓ RT-001 body source cannot forge provenance, signed evidence alone selects guest_link
+   ↓ RT-001 invalid explicit code never falls back to signed evidence; skip has no database effects
+   ↓ RT-001 referral signature binds source, code and deadline; legacy/duplicate/expired cookies fail closed
+   ↓ RT-002 rejected repeated attempts cannot move the blocking counter
+   ↓ RT-003 self referral preserves existing cookie attribution
+   ↓ RT-003 self referral preserves existing guest_link attribution
+   ↓ RT-002 burst window is sampled after the code lock, including successes committed while waiting
+   ↓ RT-009 partner_deleted is terminal for every source and returns 409
+   ↓ RT-002 dashboard shows Moscow unblock date and escaped reason only for active codes
+
+WARNING: ПРОПУЩЕНО 20 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-partner-mutations-J4sNPK/tests/partner.test.ts: 20 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner.test.ts > partner ADR-007 isolated behavior (SQL effects require integration) > 50th success blocks future applications and commits attribution
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/partner.test.ts:66:89
+     64|     const fake = db({ count: 50 });
+     65|     expect((await rpc(new PartnerService(fake.pool, secret), 'code.app…
+     66|     expect(fake.query.mock.calls.some(([sql]) => sql.includes("SET sta…
+       |                                                                                         ^
+     67|     expect(fake.query.mock.calls.at(-1)?.[0]).toBe('COMMIT');
+     68|     expect(fake.query.mock.calls.some(([sql]) => sql.includes('INSERT …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  17:39:20
+   Duration  745ms (transform 233ms, setup 0ms, collect 341ms, tests 32ms, environment 0ms, prepare 143ms)
+

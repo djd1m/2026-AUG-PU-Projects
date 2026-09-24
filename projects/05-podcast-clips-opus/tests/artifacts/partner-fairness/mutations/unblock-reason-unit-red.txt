@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-J4sNPK
+
+ ❯ tests/partner-unblock.test.ts (3 tests | 1 failed | 2 skipped) 19ms
+   × RT-002 unblock reason validates before SQL, trims and accepts 500 characters 17ms
+     → promise resolved "{ code: 'CODE123' }" instead of rejecting
+   ↓ RT-002 unblock missing or active code fails after a single atomic statement
+   ↓ RT-002 operator CLI without DATABASE_URL exits 2; invalid arguments exit 1
+
+WARNING: ПРОПУЩЕНО 2 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-partner-mutations-J4sNPK/tests/partner-unblock.test.ts: 2 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/partner-unblock.test.ts > RT-002 unblock reason validates before SQL, trims and accepts 500 characters
+AssertionError: promise resolved "{ code: 'CODE123' }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "code": "CODE123",
+  }
+
+ ❯ tests/partner-unblock.test.ts:10:76
+      8|   const pool = { query } as unknown as Pool;
+      9|   for (const reason of [undefined, '', ' \n\t ', 'x'.repeat(501)]) {
+     10|     await expect(unblockPartnerCode(pool, 'CODE123', reason as string,…
+       |                                                                            ^
+     11|   }
+     12|   expect(query).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  17:39:33
+   Duration  537ms (transform 103ms, setup 0ms, collect 139ms, tests 19ms, environment 1ms, prepare 109ms)
+

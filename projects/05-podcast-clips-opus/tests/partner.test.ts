@@ -16,7 +16,7 @@ function db(options: { existing?: Attribution; count?: number; missing?: boolean
     if (options.broken && sql.includes('INSERT INTO attribution')) throw new Error('database unavailable');
     if (sql.includes('FROM partner_code c JOIN partner p') && sql.includes('FOR NO KEY UPDATE')) return { rowCount: 1,
       rows: options.missing ? [] : [{ id: codeId, account_id: options.self ? account : randomUUID(), status: options.blocked ? 'blocked' : 'active' }] };
-    if (sql.includes('SELECT count(*)')) return { rowCount: 1, rows: [{ count: String(options.count ?? 1) }] };
+    if (sql.includes('SELECT count(DISTINCT account_id)')) return { rowCount: 1, rows: [{ count: String(options.count ?? 1) }] };
     if (sql.includes('SELECT * FROM attribution')) return { rowCount: options.existing ? 1 : 0, rows: options.existing ? [options.existing] : [] };
     if (sql.includes('INSERT INTO attribution') && options.existing) return { rowCount: 0, rows: [] };
     if (sql.includes('RETURNING *')) return { rowCount: 1, rows: [{ ...row, source: values[2], status: values[3], reject_reason: values[4], replaced_source: options.existing?.source ?? null }] };
@@ -107,7 +107,7 @@ it('passive referral preserves stronger source and ignores self visits', () => {
   expect(readReferral('__Host-n5_referral=unknown:CODE123', secret)).toBeNull();
 });
 it('dashboard renders five counters, blocked explanation and attribution status without identity leakage', () => {
-  const html = renderToStaticMarkup(createElement(PartnerSummary, { data: { codes: [{ id: codeId, code: 'CODE123', status: 'blocked', blocked_reason: 'antifraud_ip_burst' }],
+  const html = renderToStaticMarkup(createElement(PartnerSummary, { data: { codes: [{ id: codeId, code: 'CODE123', status: 'blocked', blocked_reason: 'antifraud_ip_burst', unblocked_at: null, unblock_reason: null }],
     counters: { visits: 10, registrations: 3, uploaded: 2, shared: 1, guests: 1 },
     statuses: [{ partner_code_id: codeId, source: 'explicit', status: 'rejected', count: 1 }] } }));
   expect(html.match(/<dt>/g)).toHaveLength(5); expect(html).toContain('Код заблокирован'); expect(html).toContain('Отклонены');
@@ -166,4 +166,25 @@ it('RT-002 burst window is sampled after the code lock, including successes comm
   });
   await new PartnerService(f.pool, secret, () => now).apply(account, { code: 'CODE123' }, prefix);
   expect(f.query.mock.calls.find(([sql]) => sql.includes("VALUES('code_applied'"))?.[1]?.[4]).toEqual(serialized);
+});
+it('RT-009 partner_deleted is terminal for every source and returns 409', async () => {
+  for (const source of ['cookie', 'guest_link', 'explicit'] as const) {
+    const existing: Attribution = { ...row, source, status: 'partner_deleted', partner_code_id: null };
+    expect(replacementAllowed(existing, 'explicit')).toBe(false);
+    const f = db({ existing });
+    expect((await rpc(new PartnerService(f.pool, secret), 'code.apply', { code: 'CODE123' })).status).toBe(409);
+    expect(f.query.mock.calls.some(([sql]) => /INSERT INTO attribution|UPDATE attribution|INTO growth_event/.test(sql))).toBe(false);
+  }
+});
+it('RT-002 dashboard shows Moscow unblock date and escaped reason only for active codes', async () => {
+  const { readFileSync } = await import('node:fs');
+  const data = { codes: [{ id: codeId, code: 'CODE123', status: 'active' as 'active' | 'blocked', blocked_reason: null,
+    unblocked_at: '2026-09-23T22:30:00.000Z', unblock_reason: '<script>alert(1)</script>' }],
+  counters: { visits: 0, registrations: 0, uploaded: 0, shared: 0, guests: 0 }, statuses: [] };
+  const html = renderToStaticMarkup(createElement(PartnerSummary, { data }));
+  expect(html).toContain('Код разблокирован 24.09.2026: &lt;script&gt;alert(1)&lt;/script&gt;');
+  expect(html).not.toContain('<script>');
+  data.codes[0]!.status = 'blocked';
+  expect(renderToStaticMarkup(createElement(PartnerSummary, { data }))).not.toContain('Код разблокирован');
+  expect(readFileSync('apps/web/src/app/dashboard/PartnerPanel.tsx', 'utf8')).not.toContain('dangerouslySetInnerHTML');
 });

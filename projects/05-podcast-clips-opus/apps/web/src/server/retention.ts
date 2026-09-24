@@ -28,8 +28,10 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
     await tx.query('DELETE FROM transcript WHERE video_id IN (SELECT id FROM video WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM video WHERE account_id=$1', [account]);
     for (const table of ['session', 'pro_interest']) await tx.query(`DELETE FROM ${table} WHERE account_id=$1`, [account]);
-    await tx.query(`DELETE FROM attribution WHERE account_id=$1 OR partner_code_id IN
+    await tx.query(`UPDATE attribution SET status='partner_deleted',partner_code_id=NULL,reject_reason=NULL
+      WHERE account_id<>$1 AND partner_code_id IN
       (SELECT pc.id FROM partner_code pc JOIN partner p ON p.id=pc.partner_id WHERE p.account_id=$1)`, [account]);
+    await tx.query('DELETE FROM attribution WHERE account_id=$1', [account]);
     await tx.query('DELETE FROM partner_code WHERE partner_id IN (SELECT id FROM partner WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM partner WHERE account_id=$1', [account]);
     await tx.query("DELETE FROM quota_counter WHERE scope_key=$1 AND scope LIKE 'user_%'", [account]);

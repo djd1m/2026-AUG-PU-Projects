@@ -13,6 +13,10 @@ try {
   for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts']) cpSync(name, join(directory, name));
   symlinkSync(join(project, 'node_modules'), join(directory, 'node_modules'), 'dir');
   const mutations = [
+    { id: 'partner-deleted-preserved', test: 'tests/retention.integration.test.ts', title: 'RT-009 partner deletion',
+      file: 'apps/web/src/server/retention.ts',
+      before: "UPDATE attribution SET status='partner_deleted',partner_code_id=NULL,reject_reason=NULL",
+      after: 'DELETE FROM attribution' },
     { id: 's3-objects', test: 'tests/retention-storage.test.ts', title: 'objects physically removed', file: 'packages/s3/src/erasure.ts',
       before: '  // Re-read the first page', after: '  return;\n  // Re-read the first page' },
     { id: 'guests-first', title: 'revokes guests before', file: 'apps/web/src/server/erasure.ts',
@@ -24,14 +28,20 @@ try {
       before: 'clip_id uuid REFERENCES clip(id) ON DELETE SET NULL', after: 'clip_id uuid REFERENCES clip(id) ON DELETE CASCADE' },
     { id: 'free-expiry', title: 'free clips older', file: 'apps/web/src/server/retention.ts',
       before: 'for (const key of [clip.object_key, clip.thumbnail_key]) if (key) await storage.delete(key);', after: '// injected: only delete database references' },
-    { id: 'guest-expiry', title: 'expired guest packs', file: 'apps/web/src/server/retention.ts',
-      before: 'UPDATE guest_pack SET revoked_at=$1 WHERE id IN', after: 'UPDATE guest_pack SET revoked_at=revoked_at WHERE id IN' },
+    // 'guest-expiry' снята 24.09.2026: ни её опорной строки в retention.ts, ни теста 'expired guest packs'
+    // больше нет (истечение гостевой страницы проверяется по expires_at при чтении). Мутация падала
+    // на «anchor not unique» и не проверяла ничего — найдено первым полным прогоном набора в образе.
     { id: 'confirmation', title: 'confirmation required', file: 'apps/web/src/server/erasure.ts',
       before: "if (!z.object({ confirm: z.literal(true) }).strict().safeParse(input).success)", after: 'if (false)' },
     { id: 'irreversibility', title: 'irreversibility and external', file: 'apps/web/src/app/dashboard/AccountDeletion.tsx',
       before: 'Удаление необратимо:', after: 'Удаление аккаунта:' },
   ];
   for (const mutation of mutations.filter(m => !selected || m.id === selected)) {
+    if (mutation.test?.includes('.integration.') && !process.env.DATABASE_URL) {
+      for (const phase of ['red', 'green']) writeFileSync(join(output, `${mutation.id}-${phase}.txt`), 'NOT RUN: real PostgreSQL DATABASE_URL unavailable\n');
+      results.push({ id: mutation.id, red: null, green: null, passed: false, reason: 'Real PostgreSQL unavailable' });
+      continue;
+    }
     const path = join(directory, mutation.file), source = readFileSync(path, 'utf8');
     if (source.split(mutation.before).length !== 2) throw new Error(`Mutation anchor not unique: ${mutation.id}`);
     const secondaryPath = mutation.secondary ? join(directory, mutation.secondary.file) : null;
@@ -55,5 +65,5 @@ try {
     console.log(`${mutation.id}: defect=${red.code}, restored=${green.code}`);
   }
   writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
-  if (results.some(r => !r.passed)) process.exitCode = 1;
+  if (results.some(r => !r.passed)) process.exitCode = results.some(r => r.red === null) ? 2 : 1;
 } finally { rmSync(directory, { recursive: true, force: true }); }

@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-J4sNPK
+
+ ✓ tests/partner.test.ts (21 tests | 20 skipped) 49ms
+
+WARNING: ПРОПУЩЕНО 20 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-partner-mutations-J4sNPK/tests/partner.test.ts: 20 skipped
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  17:39:12
+   Duration  606ms (transform 195ms, setup 0ms, collect 288ms, tests 49ms, environment 0ms, prepare 86ms)
+

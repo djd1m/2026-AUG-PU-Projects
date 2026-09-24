@@ -1,0 +1,56 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-J4sNPK
+
+ ❯ tests/enums.test.ts (15 tests | 1 failed | 14 skipped) 26ms
+   ↓ Закрытые перечисления > Мусор null читается fail-closed
+   ↓ Закрытые перечисления > Мусор undefined читается fail-closed
+   ↓ Закрытые перечисления > Мусор "" читается fail-closed
+   ↓ Закрытые перечисления > Мусор "PAID" читается fail-closed
+   ↓ Закрытые перечисления > Мусор " paid" читается fail-closed
+   ↓ Закрытые перечисления > Мусор "premium" читается fail-closed
+   ↓ Закрытые перечисления > Мусор 0 читается fail-closed
+   ↓ Закрытые перечисления > Мусор 1 читается fail-closed
+   ↓ Закрытые перечисления > Мусор true читается fail-closed
+   ↓ Закрытые перечисления > Мусор {} читается fail-closed
+   ↓ Закрытые перечисления > Мусор ["paid"] читается fail-closed
+   ↓ Закрытые перечисления > Только точное paid разрешает платный тариф
+   × Закрытые перечисления > Каждый CHECK равен массиву единственного источника 23ms
+     → attribution.status: expected [ 'activated', 'pending', 'rejected' ] to deeply equal [ Array(4) ]
+   ↓ Закрытые перечисления > RT-009 four statuses and stale attribution CHECK mutation
+   ↓ Закрытые перечисления > Мутация CHECK обнаруживается стражем
+
+WARNING: ПРОПУЩЕНО 14 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-partner-mutations-J4sNPK/tests/enums.test.ts: 14 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/enums.test.ts > Закрытые перечисления > Каждый CHECK равен массиву единственного источника
+AssertionError: attribution.status: expected [ 'activated', 'pending', 'rejected' ] to deeply equal [ Array(4) ]
+
+- Expected
++ Received
+
+  [
+    "activated",
+-   "partner_deleted",
+    "pending",
+    "rejected",
+  ]
+
+ ❯ checkSqlEnums tests/enums.test.ts:15:32
+     13|     expect(check, key).toBeDefined();
+     14|     const actual = [...(check ?? '').matchAll(/'([^']+)'/g)].map((m) =…
+     15|     expect(actual.sort(), key).toEqual([...values].sort());
+       |                                ^
+     16|   }
+     17| }
+ ❯ tests/enums.test.ts:29:66
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  17:39:36
+   Duration  407ms (transform 98ms, setup 0ms, collect 73ms, tests 26ms, environment 0ms, prepare 101ms)
+

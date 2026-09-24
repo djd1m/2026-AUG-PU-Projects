@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-J4sNPK
+
+ ✓ tests/enums.test.ts (15 tests | 14 skipped) 13ms
+
+WARNING: ПРОПУЩЕНО 14 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-partner-mutations-J4sNPK/tests/enums.test.ts: 14 skipped
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 14 skipped (15)
+   Start at  17:39:37
+   Duration  388ms (transform 97ms, setup 0ms, collect 64ms, tests 13ms, environment 0ms, prepare 106ms)
+

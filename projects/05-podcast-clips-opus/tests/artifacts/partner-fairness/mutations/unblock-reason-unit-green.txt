@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /tmp/n5-partner-mutations-J4sNPK
+
+ ✓ tests/partner-unblock.test.ts (3 tests | 2 skipped) 13ms
+
+WARNING: ПРОПУЩЕНО 2 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-partner-mutations-J4sNPK/tests/partner-unblock.test.ts: 2 skipped
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 2 skipped (3)
+   Start at  17:39:34
+   Duration  481ms (transform 97ms, setup 0ms, collect 113ms, tests 13ms, environment 0ms, prepare 118ms)
+

@@ -1,0 +1,160 @@
+[
+  {
+    "id": "invalid-no-fallback",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "invalid-no-fallback",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "explicit-immutable",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "explicit-immutable",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "guest-over-cookie",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "guest-over-cookie",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "explicit-replaces-cookie",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "explicit-replaces-cookie",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "burst-50",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "burst-50",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "self-referral",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "self-referral",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "dashboard-403",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "dashboard-403",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "distinct-accounts",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "unblock-window",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "deleted-terminal",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "deleted-terminal",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "unblock-reason",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  },
+  {
+    "id": "null-code-check",
+    "kind": "integration",
+    "red": null,
+    "green": null,
+    "passed": false,
+    "reason": "Real PostgreSQL unavailable"
+  },
+  {
+    "id": "stale-status-check",
+    "kind": "unit",
+    "red": 1,
+    "green": 0,
+    "passed": true
+  }
+]
