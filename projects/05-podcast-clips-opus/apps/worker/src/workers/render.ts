@@ -32,7 +32,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
       const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
       const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
         endTime: Number(input.end_seconds), format: 'portrait', words: input.words, watermark,
-        origin: deps.origin, code: input.code, signal, music: input.music, clipIndex: input.index });
+        origin: deps.origin, code: input.code, signal, music: input.music, clipIndex: input.index, teaser: input.teaser, title: input.title });
       await (deps.thumbnail ?? generateThumbnail)(output, thumb, (Number(input.end_seconds) - Number(input.start_seconds)) * 0.25);
       signal.throwIfAborted();
       const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;
@@ -42,6 +42,8 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
         video: attempt.video_id, clip: attempt.clip_id, source: input.object_key, sourceBytes: input.actual_bytes,
         start: input.start_seconds, end: input.end_seconds, words: input.words, watermark, origin: deps.origin,
         code: input.code, font: RENDER_FONT_SHA256,
+        ...(rendered.teaser ? { teaser: { text_sha256: createHash('sha256').update(rendered.teaser.lines.join('\n'), 'utf8').digest('hex'),
+          lines: rendered.teaser.lines.length, font_size: rendered.teaser.font_size, version: 'v1' } } : {}),
         ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}),
         ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU, envelope: STINGER_ENVELOPE,
           flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');

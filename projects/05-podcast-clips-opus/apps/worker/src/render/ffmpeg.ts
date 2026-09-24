@@ -1,3 +1,4 @@
+import { prepareTeaser } from './teaser.js';
 import { preparePackshot, buildFlashFilter } from './packshot.js';
 // Adapted from jan-clone buildFilterChain/renderClip. Filter ordering is a security invariant.
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
@@ -16,20 +17,21 @@ import { prepareMusic, buildMusicAudioGraph, selectTrack, STINGERS, type RenderO
 export { buildMusicAudioGraph } from './music.js';
 export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   watermark: boolean, origin: string, code: string, source?: SourceDimensions,
-  plan?: FramingPositions, follow?: FollowSegment[], flash?: string): string {
+  plan?: FramingPositions, follow?: FollowSegment[], flash?: string, teaser?: string): string {
   const filters: string[] = [];
   const { width, height } = FORMAT_DIMENSIONS[format];
   // Следование за лицом важнее неподвижного плана: оно и есть неподвижный план, когда лицо одно.
   filters.push(source && follow?.length ? getFollowFilter(format, source, follow)
     : source ? getFramingFilter(format, source, plan) : getScaleFilter(format));
   if (assFilePath !== null) filters.push(`ass='${escapeFFmpegPath(assFilePath)}':fontsdir='${escapeFFmpegPath(SUBTITLE_FONTS)}'`);
+  if (teaser) filters.push(teaser);
   if (flash) filters.push(flash);
   if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));
   return filters.join(',');
 }
 export interface RenderOptions {
   inputPath: string; outputPath: string; startTime: number; endTime: number;
-  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean; clipIndex?: number;
+  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean; clipIndex?: number; teaser?: boolean; title?: string;
 }
 export async function renderClip(options: RenderOptions): Promise<RenderOutcome> {
   const duration = options.endTime - options.startTime;
@@ -45,6 +47,10 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
     // Keep permanent watermark geometry failures ahead of probing/retryable media errors.
     if (options.watermark) watermarkGeometry(width, height, options.origin, options.code);
     const video = await probeVideoStream(options.inputPath, options.signal);
+    if (options.clipIndex !== undefined && !Number.isSafeInteger(options.clipIndex)) {
+      console.info(JSON.stringify({ event: 'music_track_fallback' }));
+    }
+    const teaser = options.teaser ? await prepareTeaser(options.title ?? '', width, temp) : null;
     const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration,
       selectTrack(typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined), options.signal) : null;
     const packshot = music ? await preparePackshot(options.inputPath, options.startTime, duration, options.signal) : null;
@@ -66,7 +72,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       }
     }
     const vf = buildFilterChain(options.format, ass, options.watermark, options.origin, options.code,
-      video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined);
+      video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined, teaser?.filter);
     const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : `[0:${video.index}]`;
     await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(duration),
       '-i', options.inputPath, ...(music ? ['-i', music.path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
@@ -75,7 +81,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
       '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
       '-ar', '44100', '-ac', '2', '-movflags', '+faststart', options.outputPath], FFMPEG_TIMEOUT_MS, options.signal);
-    return { music: music ? { track: music.track, gain_db: music.gain_db } : null,
+    return { teaser: teaser?.result ?? null, music: music ? { track: music.track, gain_db: music.gain_db } : null,
       packshot: packshot ? { stinger: packshot.stinger, gain_db: packshot.gain_db } : null };
   } finally { await rm(temp, { recursive: true, force: true }); }
 }
