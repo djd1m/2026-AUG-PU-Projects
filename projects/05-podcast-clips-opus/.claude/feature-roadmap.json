@@ -570,6 +570,34 @@
         "apps/web/src/app/upload/Uploader.tsx",
         "apps/worker/assets/sfx/kenney-explosion-crunch-002.ogg"
       ]
+    },
+    {
+      "id": "music-library",
+      "number": 18,
+      "title": "Библиотека из 11 CC0-треков, выбор по номеру клипа",
+      "description": "ADR-011 (расширение), FR-RENDER-007. MUSIC_TRACKS — 11 треков Komiku; selectTrack((clip.index−1) mod 11), fail-closed на нецелых; путь -i и контракт из выбранного трека.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "music-bed",
+        "pack-shot"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RENDER-007"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-011"
+      ],
+      "expected_files": [
+        "apps/worker/src/render/music.ts",
+        "apps/worker/src/render/ffmpeg.ts",
+        "apps/worker/src/workers/render.ts",
+        "packages/db/src/render.ts",
+        "apps/worker/assets/music/README.md"
+      ]
     }
   ]
 }
