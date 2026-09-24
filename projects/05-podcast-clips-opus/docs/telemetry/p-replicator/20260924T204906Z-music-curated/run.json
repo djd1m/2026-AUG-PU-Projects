@@ -1,0 +1,61 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260924T204906Z-music-curated",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "music-library-curated",
+  "pipeline": "bounded-owner-brief",
+  "tier": "S",
+  "risk_flags": [],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Explicit owner brief limits scope and checks; mechanical L is caused by worker data plus web attribution text, no service contract changes.",
+    "Single Codex executor; Anthropic review unavailable."
+  ],
+  "comparison_id": null,
+  "baseline_revision": "3e7d4d11b90c92082a44c90a8e82901856705bc6",
+  "final_revision": "sha256:64f90d00c6d4b3f76190eacd2615b953e2953bb84d379480acafe5c445368c44",
+  "spec_sha256": "98cdfcba1969e693de094d41bceb2d0a944ff6c91e0df937001d2919e909e595",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-24T20:49:06.603677+00:00",
+  "ended_at": "2026-09-24T20:50:32.651810+00:00",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "docs/features/music-library/12_curated_report.md",
+    "docs/telemetry/p-replicator/20260924T204906Z-music-curated/evidence/catalogue/mutations.json",
+    "docs/telemetry/p-replicator/20260924T204906Z-music-curated/evidence/uploader-packshot.json"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 4,
+    "ac_total": 4,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "measured_interval_ms": 86000,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable",
+    "retry_count": 1,
+    "escalation_count": 0
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading preceded telemetry; its duration unavailable.",
+    "Exact actual model/effort and usage/billing not exposed.",
+    "Anthropic cross-family review unavailable."
+  ],
+  "actual_model": null,
+  "actual_effort": null
+}

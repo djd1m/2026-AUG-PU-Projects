@@ -34,9 +34,18 @@ it('parser uses final Summary from real silence/sine logs, never frame I', async
   expect(loudness.parseIntegratedLoudness('Summary:\n I: -10 LUFS\nSummary:\n I: -25 LUFS')).toBe(-25);
 });
 it('catalogue bytes and duration are pinned without reading README', async () => {
-  expect(MUSIC_TRACKS).toHaveLength(1);
-  expect(MUSIC_TRACKS[0].id).toBe('komiku-everything-is-groovy');
-  expect(MUSIC_TRACKS[0].sha256).toBe('8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d');
+  expect(MUSIC_TRACKS).toHaveLength(9);
+  expect(MUSIC_TRACKS.map(({ id, sha256 }) => [id, sha256])).toEqual([
+    ['komiku-everything-is-groovy', '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d'],
+    ['holizna-bubbles', '73efb557d8cfcca0f5cf3b435d3a0157bf9a702115b55266b8a2529f3997b542'],
+    ['holizna-tranquil-mindscape', '488d9693c13e44c5213c0647ee89ea91b21e17d9ac602225a78ee089720134c0'],
+    ['holizna-walking-away', 'fd8a618a4076b76f02f69414d6beb4ad7ddf3b8c26164085bd6dc1a9fd2f7610'],
+    ['holizna-doodles', '84db72387b14fa51294ba76a0bb3f72f39172527e5eb7964da8567596561ae72'],
+    ['holizna-one-good-day', 'dd6f973da34bad28bc16b794601b952bd1506472ed7fb979b3e41369bd831427'],
+    ['holizna-warm-fuzz', '974ffd083b09aecbe60412f3376db07fb241adbbb0abf89698a22229a2de02c6'],
+    ['holizna-roof-tops', 'f6e619fbfdc0898c409494d5c810d34d9cd29be2b75bb2d8c197e1edb37155b5'],
+    ['holizna-ocean-memory', '6121e8621b6d7894ba413b502092e7a57c74772021a5220f1dee354d7d496276'],
+  ]);
   for (const track of MUSIC_TRACKS) {
     expect(createHash('sha256').update(await readFile(track.path)).digest('hex')).toBe(track.sha256);
     const { stdout } = await promisify(execFile)('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', track.path]);
@@ -149,7 +158,6 @@ it('selection cycles deterministically over the ordered catalogue twice', () => 
   for (let index = 0; index < 6; index++) {
     expect(selectTrack(index, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[index % 3]);
     expect(selectTrack(index, TEST_MUSIC_TRACKS)).toBe(selectTrack(index, TEST_MUSIC_TRACKS));
-    expect(selectTrack(index)).toBe(MUSIC_TRACKS[0]);
   }
   expect(selectTrack(-1, TEST_MUSIC_TRACKS)).toBe(TEST_MUSIC_TRACKS[2]);
   for (const invalid of [1.5, '3', Infinity, NaN, undefined, null, -Infinity, Number.MAX_SAFE_INTEGER + 1]) {

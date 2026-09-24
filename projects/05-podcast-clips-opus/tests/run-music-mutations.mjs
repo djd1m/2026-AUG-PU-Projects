@@ -21,7 +21,7 @@ const cases = [
   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.music ?', '...(false ?', 'tests/render-worker.test.ts', 'music contract'],
   ['strict', 'apps/web/src/server/upload-contract.ts', 'compact: z.boolean().optional() }).strict()', 'compact: z.boolean().optional() })', 'tests/music.test.ts', 'strict upload'],
   ['skip-throws', music, "return skip('speech_too_quiet');", "throw new Error('quiet');", 'tests/music.test.ts', 'quiet/invalid speech'],
-  ['catalogue', music, '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
+  ['catalogue', music, '73efb557d8cfcca0f5cf3b435d3a0157bf9a702115b55266b8a2529f3997b542', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
   ['gain-ceiling', music, 'gain > MUSIC_MAX_GAIN_DB', 'false', 'tests/music.test.ts', 'gain ceiling'],
 ];
 const root = process.env.MUSIC_MUTATION_DIR ?? 'tests/artifacts/music-bed';

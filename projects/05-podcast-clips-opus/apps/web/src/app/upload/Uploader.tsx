@@ -53,7 +53,7 @@ export function VideoUploader() {
       <p className="muted">MP4, MOV, WebM, M4A, MP3 · 2–90 минут · до 2 ГБ</p>
       <label><input type="checkbox" checked={music} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
         onChange={e => setMusic(e.target.checked)} /> Добавить музыку и финальный акцент</label>
-      <small className="muted">Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0</small>
+      <small className="muted">Komiku, HoliznaCC0 — музыка CC0 · Kenney — Sci-Fi Sounds, CC0</small>
       <label><input type="checkbox" checked={teaser} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
         onChange={e => setTeaser(e.target.checked)} /> Заголовок в начале клипа</label>
       <label><input type="checkbox" checked={compact} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
