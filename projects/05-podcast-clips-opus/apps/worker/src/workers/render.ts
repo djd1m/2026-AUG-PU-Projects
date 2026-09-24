@@ -1,3 +1,4 @@
+import { STINGER_MARGIN_LU, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../render/packshot.js';
 import { WatermarkGeometryError } from '@clipmaker/shared/watermark';
 // Adapted from jan-clone/workers/video-render.ts; job payload contains identity only.
 import { Worker, DelayedError, type Job, type ConnectionOptions } from 'bullmq';
@@ -41,7 +42,9 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
         video: attempt.video_id, clip: attempt.clip_id, source: input.object_key, sourceBytes: input.actual_bytes,
         start: input.start_seconds, end: input.end_seconds, words: input.words, watermark, origin: deps.origin,
         code: input.code, font: RENDER_FONT_SHA256,
-        ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}) })).digest('hex');
+        ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}),
+        ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU,
+          flash: `v1:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');
       const uploadSignal = AbortSignal.any([signal, AbortSignal.timeout(120_000)]);
       const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark }, async () => {
         const storedBytes = await deps.storage.put(object_key, output, 'video/mp4', contract, uploadSignal);

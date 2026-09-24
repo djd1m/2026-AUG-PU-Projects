@@ -17,7 +17,7 @@ async function fixture(plan: unknown = 'free') {
   db.publishRenderResult.mockImplementation(async (_pool, _attempt, _result, publish: () => Promise<void>) => { await publish(); return true; });
   return { pool: {} as Pool, directory, origin: 'https://clipmaker.aicoding.space',
     download: vi.fn(async (_key: string, path: string) => { await writeFile(path, 'source'); }),
-    render: vi.fn(async (opts: { outputPath: string }) => { await writeFile(opts.outputPath, 'video'); return { music: null as import('../apps/worker/src/render/music').MusicMix | null }; }),
+    render: vi.fn(async (opts: { outputPath: string }) => { await writeFile(opts.outputPath, 'video'); return { packshot: null, music: null as import('../apps/worker/src/render/music').MusicMix | null }; }),
     thumbnail: vi.fn(async (_path: string, output: string) => { await writeFile(output, 'thumb'); }),
     storage: { put: vi.fn(async () => 5) },
     enqueue: vi.fn(async () => {}), available: vi.fn(async () => 30n) };
@@ -86,7 +86,7 @@ it('music contract comes from rendered fact, off hash stays equal to main', asyn
   expect(await handleRenderJob(attempt, deps)).toBe('done');
   const calls = () => deps.storage.put.mock.calls as unknown as [string, string, string, string][];
   expect(calls()[0]![3]).toBe(baseline);
-  deps.render.mockImplementation(async opts => { await writeFile(opts.outputPath, 'video'); return { music: { track: 'id:sha256', gain_db: -23 } }; });
+  deps.render.mockImplementation(async opts => { await writeFile(opts.outputPath, 'video'); return { packshot: null, music: { track: 'id:sha256', gain_db: -23 } }; });
   expect(await handleRenderJob(attempt, deps)).toBe('done');
   expect(calls()[2]![3]).not.toBe(baseline);
   expect(deps.render).toHaveBeenCalledWith(expect.objectContaining({ music: true }));

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "pack-shot-20260924-111414",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "pack-shot",
+  "pipeline": "PLAN/VALIDATE supplied → IMPLEMENT → cross-family REVIEW handoff",
+  "tier": "L",
+  "risk_flags": [
+    "audio clipping",
+    "watermark visibility",
+    "timeline preservation",
+    "contract compatibility"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Current Codex model unchanged; cross-family review requires Anthropic"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "57b6a464363c2dac4595695aca98429c2e8a86e7",
+  "final_revision": "1465b06331562df17eec587b9ccffa6d0ec7fda3 + dirty snapshot tests/artifacts/pack-shot/source-manifest.json",
+  "spec_sha256": "3d021a0188ea292a6f5a62f09da90941479f4b33344355a43484cf19f535ab8b",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-24T11:14:14Z",
+  "ended_at": "2026-09-24T11:29:54.333046+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "tests/artifacts/pack-shot/initial.log",
+    "tests/artifacts/pack-shot/typecheck.log",
+    "tests/artifacts/pack-shot/checks.json",
+    "tests/artifacts/pack-shot/mutations/results.json",
+    "docs/features/pack-shot/07_code_report.md"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 12,
+    "ac_total": 12,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending",
+    "implementation_checks_passed": true,
+    "independent_review": "not executed: CLI not logged in",
+    "ac_definition": "Mandatory brief corrections 0 through 11; paragraph 12 is informational"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 940333,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host actual model/effort and usage are unavailable",
+    "Initial reading before first captured test time was not measured",
+    "Batch/comparison not applicable; no paired experiment",
+    "Structured telemetry created during verification; earlier record was in 07_code_report.md",
+    "End-to-end elapsed before first captured test unavailable; elapsed_wall_ms is measured interval only",
+    "Independent cross-family review and coordinator Docker/full-E2E checks remain pending; blocked applies to feature acceptance, not code-task completion"
+  ]
+}

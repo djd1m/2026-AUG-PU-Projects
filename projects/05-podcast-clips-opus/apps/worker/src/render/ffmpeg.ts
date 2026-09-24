@@ -1,3 +1,4 @@
+import { preparePackshot, buildFlashFilter } from './packshot.js';
 // Adapted from jan-clone buildFilterChain/renderClip. Filter ordering is a security invariant.
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
@@ -11,17 +12,18 @@ import { probeVideoStream } from './probe.js';
 import { detectFaces } from './faces.js';
 import { planFraming, planFollow, type FramingPlan, type FollowSegment } from './framing-plan.js';
 import { panelWindow, singleWindow, getFollowFilter, type FramingPositions } from './format.js';
-import { prepareMusic, buildMusicAudioGraph, MUSIC_TRACKS, type RenderOutcome } from './music.js';
+import { prepareMusic, buildMusicAudioGraph, MUSIC_TRACKS, STINGERS, type RenderOutcome } from './music.js';
 export { buildMusicAudioGraph } from './music.js';
 export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   watermark: boolean, origin: string, code: string, source?: SourceDimensions,
-  plan?: FramingPositions, follow?: FollowSegment[]): string {
+  plan?: FramingPositions, follow?: FollowSegment[], flash?: string): string {
   const filters: string[] = [];
   const { width, height } = FORMAT_DIMENSIONS[format];
   // Следование за лицом важнее неподвижного плана: оно и есть неподвижный план, когда лицо одно.
   filters.push(source && follow?.length ? getFollowFilter(format, source, follow)
     : source ? getFramingFilter(format, source, plan) : getScaleFilter(format));
   if (assFilePath !== null) filters.push(`ass='${escapeFFmpegPath(assFilePath)}':fontsdir='${escapeFFmpegPath(SUBTITLE_FONTS)}'`);
+  if (flash) filters.push(flash);
   if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));
   return filters.join(',');
 }
@@ -44,6 +46,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
     if (options.watermark) watermarkGeometry(width, height, options.origin, options.code);
     const video = await probeVideoStream(options.inputPath, options.signal);
     const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration, options.signal) : null;
+    const packshot = music ? await preparePackshot(options.inputPath, options.startTime, duration, options.signal) : null;
     // Кадрирование по лицам: где люди на самом деле, а не «по половинам кадра».
     // Отказ детектора НЕ валит рендер — план просто остаётся пустым, и кадрирование прежнее.
     let plan: FramingPlan | undefined;
@@ -62,15 +65,16 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       }
     }
     const vf = buildFilterChain(options.format, ass, options.watermark, options.origin, options.code,
-      video ?? undefined, plan, follow);
+      video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined);
     const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : `[0:${video.index}]`;
     await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(duration),
-      '-i', options.inputPath, ...(music ? ['-i', MUSIC_TRACKS[0].path] : []),
-      '-filter_complex', `${source}${vf}[video]${music ? ';' + buildMusicAudioGraph(music.gain_db, duration) : ''}`,
+      '-i', options.inputPath, ...(music ? ['-i', MUSIC_TRACKS[0].path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
+      '-filter_complex', `${source}${vf}[video]${music ? ';' + buildMusicAudioGraph(music.gain_db, duration, packshot) : ''}`,
       '-map', '[video]', '-map', music ? '[aout]' : '0:a:0',
       '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
       '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
       '-ar', '44100', '-ac', '2', '-movflags', '+faststart', options.outputPath], FFMPEG_TIMEOUT_MS, options.signal);
-    return { music };
+    return { music: music ? { track: music.track, gain_db: music.gain_db } : null,
+      packshot: packshot ? { stinger: packshot.stinger, gain_db: packshot.gain_db } : null };
   } finally { await rm(temp, { recursive: true, force: true }); }
 }

@@ -1,0 +1,21 @@
+{
+  "baseline_revision": "57b6a464363c2dac4595695aca98429c2e8a86e7",
+  "observed_head": "1465b06331562df17eec587b9ccffa6d0ec7fda3",
+  "tracked_diff_sha256": "947451a05f9dc5968bcad2ad1ed35c969c249a9825eeaa69c6e48b72bc8a901d",
+  "files": {
+    "apps/web/src/app/upload/Uploader.tsx": "0e866e9ba4f84cac8747604430eee5c87d3eda93fcd214c8a72a2d0014ebadbf",
+    "apps/worker/src/render/ffmpeg.ts": "9bb809eb5838a3a9d9e6ba6fd286d6ca010cb8e901dd2295b4ca52a8a42fa04b",
+    "apps/worker/src/render/music.ts": "a0637e787fe059eaab8374dd858d5710bfe43ab54b50d14e24a5a2341ba660e8",
+    "apps/worker/src/render/loudness.ts": "9587d1b470939ff6e3ba7ac8fb98ad918b2df22ca792b7fa7cfa24fc6bab7e0c",
+    "apps/worker/src/render/packshot.ts": "ccae31511029df0c2a51539f75d5d6ba0926cebab56346d090a4f0a4871cc89c",
+    "apps/worker/src/workers/render.ts": "4371bba02c31818a8cd3d32a2c2386ec082ee5a130384ac527b7e7f0f72784c2",
+    "tests/music.test.ts": "b38e70dda373387065aac83322db5d57f609e0de49887977a68f17d5b422c8a9",
+    "tests/render-worker.test.ts": "bf2e2837019b5dff390b2044f108fc210a079802e06757b6bbae1394932a41cf",
+    "tests/pack-shot.test.ts": "41d9836ee9ccb2b5b4adedb0e115bd626b349a31240c75dcf2450346f38ab611",
+    "tests/pack-shot-contract.test.ts": "e74b58402151789c21ff961d6b3fc7c4dbe6ad37e3b14496044d87fc0c7ce6c0",
+    "tests/pack-shot-media.test.ts": "22e14b8948e7e797114c593f9d260e6556bc9f5ed984e4506c5b0dc5b3d4b9a3",
+    "tests/pack-shot-uploader.test.ts": "161d3ab76eff556381d405e6ee5074e9f1fa4b7bb3fc7a54e93375982205d98d",
+    "tests/run-pack-shot-mutations.mjs": "4e55b37dc0b82082a34c409490a39ca4fe40f6e7c2d61eee302e97c78fca8f7e",
+    "tests/fixtures/pack-shot/music-only.json": "c5a8a0702ecdb09a2cb0b3e703dd268b3bbaac30ed0c0e5614434a85b730bb20"
+  }
+}

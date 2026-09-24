@@ -36,3 +36,17 @@ export async function measureLoudness(path: string, start: number, duration: num
     '-i', path, '-map', '0:a:0', '-af', 'highpass=f=300,lowpass=f=3400,ebur128', '-f', 'null', '-'], signal);
   return parseIntegratedLoudness(stderr);
 }
+
+export interface FullLoudness { integrated: number; peak: number }
+export function parseTruePeak(stderr: string): number {
+  const summary = stderr.slice(stderr.lastIndexOf('Summary:'));
+  if (!summary.startsWith('Summary:')) return NaN;
+  const value = summary.match(/Peak:\s*(-?\d+(?:\.\d+)?|-inf)\s+dBFS\b/);
+  return value ? Number(value[1]) : NaN;
+}
+export async function measureFullLoudness(path: string, start: number, duration: number,
+  signal?: AbortSignal, envelope?: string): Promise<FullLoudness> {
+  const stderr = await execLoudness(['-protocol_whitelist', 'file', '-ss', String(start), '-t', String(duration),
+    '-i', path, '-map', '0:a:0', '-af', `${envelope ? envelope + ',' : ''}ebur128=peak=true`, '-f', 'null', '-'], signal);
+  return { integrated: parseIntegratedLoudness(stderr), peak: parseTruePeak(stderr) };
+}

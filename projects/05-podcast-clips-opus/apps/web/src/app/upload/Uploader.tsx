@@ -50,8 +50,8 @@ export function VideoUploader() {
         if (previous) setMusic(previous.music); setMessage(''); }} />
       <p className="muted">MP4, MOV, WebM, M4A, MP3 · 2–90 минут · до 2 ГБ</p>
       <label><input type="checkbox" checked={music} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
-        onChange={e => setMusic(e.target.checked)} /> Добавить фоновую музыку</label>
-      <small className="muted">Komiku — Everything is groovy, CC0</small>
+        onChange={e => setMusic(e.target.checked)} /> Добавить музыку и финальный акцент</label>
+      <small className="muted">Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0</small>
       <button disabled={busy || !file} onClick={() => void upload()}>{busy ? 'Загружаем…' : resume.current ? 'Начать / продолжить загрузку' : 'Создать клипы →'}</button>
       {busy && <button className="secondary" onClick={() => controller.current?.abort()}>Приостановить</button>}
       <p role="status">{message}</p>{videoId && <p className="video-id">video_id: <a href={`/dashboard/videos/${videoId}`}>{videoId}</a></p>}</div></section>;

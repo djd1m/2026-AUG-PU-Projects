@@ -2,7 +2,7 @@
 
 RUN_ID: pack-shot-20260924-111414. Исходная ревизия: `57b6a464363c2dac4595695aca98429c2e8a86e7`.
 Профиль: compact-quality-first-v2, действующий Codex без смены модели. Actual model/effort, usage и стоимость: null — хост не предоставил подтверждающих метаданных. Cross-family REVIEW остаётся координатору (Anthropic здесь недоступен).
-Телеметрия ведётся в этом отчёте: бриф запрещает прочие изменения docs. Начало измеряемого интервала — 2026-09-24 11:14:14 UTC (первый тест); время чтения до этого не измерено.
+Телеметрия: первоначальная запись в этом отчёте; структурированные файлы `tests/artifacts/pack-shot/run.json` и `events.jsonl` (вне docs, как требует бриф). Начало измеряемого интервала — 2026-09-24 11:14:14 UTC (первый тест); время чтения до этого не измерено.
 
 - ROUTE/IMPLEMENT: tier L (web + worker), complexity-router exit 1. PLAN и VALIDATE — входной бриф, пользователь явно поручил реализацию обязательных исправлений.
 - Пункт 0 выполнен до правок исходников: чистый HEAD, временный capture-тест, `npx vitest run tests/pack-shot-capture.test.ts`, exit 0, 1 passed. Аргументы и фактический worker hash сохранены в `tests/fixtures/pack-shot/music-only.json`; временный тест удалён.
@@ -38,16 +38,73 @@ RUN_ID: pack-shot-20260924-111414. Исходная ревизия: `57b6a464363
 
 Координаты chip берутся из `watermarkGeometry`; полупрозрачная общая плашка не сравнивается. Источник изображения — движущийся `testsrc` со счётчиком кадров и обрезкой исходника с 2 с: проверяется именно время клипа.
 
-## Проверки (дополняется)
+## Проверки
 
 - Capture пункта 0: exit 0, 1 passed.
 - Первичная регрессия: `npx vitest run tests/music.test.ts tests/render-worker.test.ts` — exit 0, 27 passed.
-- Новые четыре файла `pack-shot*.test.ts` — exit 0, 16 passed, 31,64 с. `tests/artifacts/pack-shot/initial.log`.
+- `npx vitest run tests/pack-shot.test.ts tests/pack-shot-contract.test.ts tests/pack-shot-uploader.test.ts tests/pack-shot-media.test.ts` — exit 0, 16 passed, 31,64 с. `tests/artifacts/pack-shot/initial.log`.
 - `npm run typecheck` — exit 0. `tests/artifacts/pack-shot/typecheck.log`.
-- Мутации выполняются; итоговые пары и команды будут добавлены после завершения.
+- `node tests/run-pack-shot-mutations.mjs` — exit 0, все 17 пар подтвердились. Артефакты: `tests/artifacts/pack-shot/mutations/{id}-{red,green}.{json,log}`, итог `results.json`.
+- `npm run lint` — exit 0, статические правила без ошибок.
+- `npm run build` — exit 0: shared/db/s3/queue/worker/web, включая production Next.js и preflight TypeScript.
+- `npx vitest run tests/music.test.ts tests/music-media.test.ts tests/music-uploader.test.ts tests/render.test.ts tests/render-worker.test.ts tests/render-audio.test.ts tests/render-diagnostics.test.ts tests/render-failure.test.ts tests/render-media.test.ts` — exit 0, 72 passed / 9 файлов, 103,08 с; включает неизменные RD-001 и SL-008.
+- `git diff --check` — exit 0. Прежний baseline не изменён.
+- Всего уникальных тестов в новых и регрессионных наборах: 88; повторные и мутационные прогоны не прибавлены к этому числу.
+- Независимый Anthropic REVIEW: `claude -p --bare --model sonnet --effort medium --tools "" --no-session-persistence --output-format json` — exit 1, `Not logged in`. Actual model отсутствует, API-вызовов 0, расход этой попытки по CLI 0. Это НЕ пройденное ревью; координатору требуется выполнить cross-family REVIEW. Настройки/auth не менялись.
+
+## Мутации: обе строки каждого опыта
+
+| Дефект | Фаза | Exit | Failed | Passed |
+|---|---|---:|---:|---:|
+| duration | red | 1 | 1 | 0 |
+| duration | green | 0 | 0 | 1 |
+| placement | red | 1 | 1 | 0 |
+| placement | green | 0 | 0 | 1 |
+| level | red | 1 | 1 | 0 |
+| level | green | 0 | 0 | 1 |
+| peak | red | 1 | 1 | 0 |
+| peak | green | 0 | 0 | 1 |
+| flash-timing | red | 1 | 1 | 0 |
+| flash-timing | green | 0 | 0 | 1 |
+| watermark | red | 1 | 1 | 0 |
+| watermark | green | 0 | 0 | 1 |
+| off | red | 1 | 1 | 0 |
+| off | green | 0 | 0 | 1 |
+| skip | red | 1 | 2 | 0 |
+| skip | green | 0 | 0 | 2 |
+| contract | red | 1 | 1 | 0 |
+| contract | green | 0 | 0 | 1 |
+| contract-absent | red | 1 | 1 | 0 |
+| contract-absent | green | 0 | 0 | 1 |
+| catalogue | red | 1 | 1 | 0 |
+| catalogue | green | 0 | 0 | 1 |
+| cache | red | 1 | 1 | 0 |
+| cache | green | 0 | 0 | 1 |
+| cache-error | red | 1 | 3 | 1 |
+| cache-error | green | 0 | 0 | 4 |
+| clock | red | 1 | 2 | 0 |
+| clock | green | 0 | 0 | 2 |
+| peak-ceiling | red | 1 | 1 | 0 |
+| peak-ceiling | green | 0 | 0 | 1 |
+| gain-ceiling | red | 1 | 1 | 0 |
+| gain-ceiling | green | 0 | 0 | 1 |
+| ui | red | 1 | 1 | 0 |
+| ui | green | 0 | 0 | 1 |
+
+Проверено по конкретным assertion failures: вставка дала отличие кадра 6,376 > 2; adelay=0 — изменение первого окна 6,4 LU; gain=0 — −12,8 LUFS при потолке −21,7; +20 дБ — пики +10,2 dBTP float / −0,4 dBTP AAC; вспышка в начале — прирост яркости в нужном окне 0 вместо >20.
 
 ## Ограничения и передача
 
 Прослушивание владельцем не выполнено. `STINGER_MARGIN_LU=6`, `FLASH_PEAK=0.35`, `FLASH_HALF_WIDTH_SECONDS=0.25` — оценки, не результат субъективной приёмки. Docker, ffmpeg 8.1.2 из образа, полный набор и живой E2E на стенде проверяет координатор по брифу. Здесь не выполнялись развёртывание, перерендер существующих объектов и изменения S3. Новый хеш ранее готового музыкального клипа ожидаемо отвергается `storage.put`; удаление старых объектов перед перерендером — работа координатора.
 
-Status: failed
+Во время работы сторонний процесс обновил HEAD до `1465b06` (документы/roadmap, включая промежуточный отчёт). Исполнитель команд коммита не выполнял. Дифф `57b6a46..1465b06` не меняет приложение и тесты; эталон пункта 0 остаётся снятым на исходном HEAD. Чужие изменения сохранены.
+
+## Телеметрия и статус поставки
+
+Измеряемый интервал 11:14:14 UTC → 11:29:54 UTC: **940.3 с (15.67 мин)**. Это нижняя граница полной длительности: чтение до первого временного маркера не измерено; active wall time = null. Один исполнитель Codex без смены модели; exact actual model/effort и расход основной сессии = null. Запрошенный независимый reviewer `sonnet`, medium не выполнил API-вызов и не подтверждает фактическую модель. Общая стоимость неизвестна; экономия не установлена.
+
+Пути: `tests/artifacts/pack-shot/run.json`, `events.jsonl`, `checks.json`, `source-manifest.json`. SHA каждого исходника, новых тестов и эталона связывает проверки с грязным деревом. Структурированная телеметрия начата позже первой записи в отчёте; неизвестные ранние интервалы не восстановлены по памяти. Механический валидатор companion не запускался; это не объявляется подтверждением его схемы.
+
+Задание на реализацию завершено. Приёмка фичи ещё требует независимого Anthropic REVIEW, полного Docker-прогона координатора и прослушивания владельцем; `run.json.status=blocked` обозначает эту границу приёмки, а не незавершённый код. Ни коммит, ни публикация этим исполнителем не выполнялись.
+
+Status: completed

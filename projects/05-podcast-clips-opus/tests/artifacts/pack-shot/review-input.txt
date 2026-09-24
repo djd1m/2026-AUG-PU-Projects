@@ -1,0 +1,724 @@
+Independent cross-family code review only. Do not implement changes. Scope is pack-shot feature; the mandatory corrections section in the brief overrides earlier text. Find concrete bugs or unmet acceptance criteria in the following exact source snapshot. Prioritize clipping, timeline, cache/abort, watermark order, hash compatibility and tests. Existing unit/media/typecheck pass and all 17 mutation pairs are red/green. Budget one review pass, max 90 seconds, stop after concrete findings or no findings. Report severity, file, reason, minimal fix.
+
+FILE docs/features/pack-shot/00_brief_codex.md
+# Постановка для Codex — фича 17 `pack-shot`: финальный акцент клипа
+
+Готовы фичи 1–16 (16 — `music-bed`, коммит `5f38ac2`), **637 тестов зелёные**. Стенд `https://clipmkr.ru`.
+
+Пэк-шот — короткий звуко-визуальный акцент на последних долях секунды клипа. Разбор и измерения:
+`docs/proposals/music-and-stinger/00_proposal.md` §6 (обязательно). Главный вывод оттуда:
+**пэк-шот — НАЛОЖЕНИЕ, а не вставка.** Кадров не прибавляется, длительность не меняется (опыт О-3),
+шкала времени звука, картинки и субтитров одна. Вставка кадров запрещена (О-1, О-2, Л-1…Л-4).
+
+Решения владельца (24.09.2026):
+- картинка — **вспышка без текста** (без бренда: годится и для `paid` без метки, и для гостевых
+  клипов — предмет согласия гостя не меняется);
+- звук — **CC0-сэмпл**;
+- включение — **той же галочкой**, что и музыка: пэк-шот ставится ТОГДА И ТОЛЬКО ТОГДА, когда в
+  клип фактически смешана подложка (`renderClip` вернул `music !== null`). Схема БД не меняется.
+
+Тир L по `scripts/complexity-router.sh` (web + worker).
+
+## Что читать
+
+- `apps/worker/src/render/{ffmpeg.ts,music.ts,loudness.ts}`, `apps/worker/src/workers/render.ts` —
+  как устроена подложка (фича 16). Пэк-шот встраивается в ТОТ ЖЕ граф и ТОТ ЖЕ результат.
+- `docs/features/music-bed/00_brief_codex.md` — раздел «ОБЯЗАТЕЛЬНЫЕ правки после VALIDATE»:
+  все 12 свойств (RD-001, выключено = побайтово прежнее, хеш из факта, отказ не валит рендер,
+  `aformat` на ветвях, `normalize=0`) действуют и здесь.
+- `docs/Specification.md` FR-GROWTH-003 — метка на КАЖДОМ кадре free-клипа.
+
+## Сэмпл
+
+Лежит: `apps/worker/assets/sfx/kenney-low-frequency-explosion-001.ogg` — Kenney, набор «Sci-Fi
+Sounds 1.0», файл `lowFrequency_explosion_001.ogg`. **CC0 1.0** — подтверждено дважды: страница
+`https://kenney.nl/assets/sci-fi-sounds` («Creative Commons CC0») и `License.txt` внутри архива
+(лежит рядом: `LICENSE-kenney-sci-fi-sounds.txt`). Vorbis 44,1 кГц стерео, 1,00 с, 9 408 байт,
+sha256 `cdda50600a4928f2f1b8371224d53c171ac799c1cf2c30b11999508985250b3b`, истинный пик −0,8 dBFS.
+
+Закрытый каталог в коде рядом с `MUSIC_TRACKS` (`STINGERS`, один элемент: id, путь через
+`resolve('apps/worker/assets/sfx/…')`, sha256). Никакой переменной окружения.
+
+## Что построить
+
+### 1. Звук
+
+- Длительность акцента `STINGER_SECONDS = 0.8`: сэмпл обрезается `atrim=0:0.8` с затуханием
+  `afade=t=out:st=0.6:d=0.2` (без щелчка на обрезе).
+- Начало `t0 = duration − STINGER_SECONDS`; задержка `adelay=<t0 в мс>:all=1`.
+- **Уровень — вычисляется, как у подложки, а не задаётся константой** (§4.1): громкость сэмпла
+  измеряется тем же `measureLoudness` в той же полосе 300–3400 Гц (результат можно кэшировать в
+  памяти процесса — сэмпл один и не меняется); `gain = S_speech − STINGER_MARGIN_LU − S_stinger`,
+  `STINGER_MARGIN_LU = 6` с комментарием «оценка, не измерение; заморозить после прослушивания
+  владельцем». Потолок усиления тот же `MUSIC_MAX_GAIN_DB`.
+- Смешение — **третьим входом того же `amix`**: `amix=inputs=3:duration=first:normalize=0`, `aformat`
+  на ветви сэмпла, как на двух других. Второго `amix` и второго прохода кодирования нет.
+- Сэмпл — ТРЕТИЙ `-i`, после трека, без `-ss`/`-t`.
+- Если замер сэмпла не удался или усиление вне потолка — пэк-шот пропускается
+  (`{"event":"packshot_skipped","reason":…}`), **подложка остаётся**. Отказ пэк-шота не валит рендер
+  и не снимает музыку.
+
+### 2. Картинка — вспышка
+
+- Вспышка короткая: подъём яркости с пиком в `t_peak = t0 + 0.05` и спадом за ~0,5 с, например
+  `eq=brightness='<A>*max(0,1-abs(t-<t_peak>)/<W>)':eval=frame` или равноценный детерминированный
+  фильтр; константы `FLASH_PEAK = 0.35`, `FLASH_HALF_WIDTH_SECONDS = 0.25` — оценки, названы.
+- **Порядок фильтров: кадрирование → субтитры → ВСПЫШКА → метка.** Метка верхним слоем и НЕ
+  засвечивается: FR-GROWTH-003 требует читаемую метку на каждом кадре.
+- `t` в графе — время клипа (как у кадрирования `if(lt(t,…))`). Проверить тестом, что пик вспышки
+  приходится на последние 0,8 с, а не на начало.
+- Работает в обеих ветках источника: `[0:idx]` и `color=` (аудио без видео).
+
+### 3. Результат и контракт
+
+- `renderClip` возвращает `{ music: {...} | null, packshot: { stinger: string, gain_db: number } | null }`.
+- В хеш контракта `packshot` добавляется ТОЛЬКО при фактическом наложении. При `music = false` —
+  аргументы ffmpeg и JSON контракта побайтово прежние (эталон `tests/fixtures/music-bed/baseline.json`
+  остаётся зелёным без правки). При музыке без пэк-шота — контракт равен сегодняшнему контракту с
+  музыкой.
+- Журнал: `{"event":"packshot_mix","t0":…,"gain_db":…}`.
+
+### 4. Интерфейс
+
+`Uploader.tsx`: подпись галочки «Добавить музыку и финальный акцент»; строка источников под ней:
+«Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0». Поведение галочки не меняется.
+
+## ОБЯЗАТЕЛЬНЫЕ правки после VALIDATE (перекрывают текст выше при расхождении)
+
+Независимая проверка (Anthropic, 24.09.2026): NOT READY → правки 1–4 обязательны, 5–11 тоже вносятся.
+Замеры валидатора: ffmpeg 4.4.2 (хост) и 8.1.2 (образ).
+
+0. **ПЕРВЫМ делом, до любых правок кода:** на текущем `HEAD` снять эталон случая «музыка включена»
+   — аргументы ffmpeg (временные пути нормализовать, как в `music.test.ts`) и хеш контракта при
+   `music:true` с фиксированными моками замера (−20 / −15) — в `tests/fixtures/pack-shot/music-only.json`.
+1. **[blocker] Уровень акцента — в ПОЛНОЙ полосе, не в 300–3400 Гц.** Сэмпл — низкочастотный взрыв:
+   в полосе −29,3 LUFS, в полной −12,8 LUFS, истинный пик −0,8 dBTP. По полосе формула даёт +7 дБ и
+   клиппинг (+6,8 dBFS во float, −0,45 dBTP после AAC). Поэтому:
+   - `S_stinger` — интегральная громкость `ebur128` (K-взвешенная, без полосовых фильтров) обрезанного
+     и затухающего сэмпла (0,8 с); `S_speech_full` — громкость речи клипа ТОЖЕ в полной полосе,
+     отдельным замером того же прохода 1 (допускается ещё один аудиовызов в `loudness.ts`; в
+     `render/ffmpeg.ts` по-прежнему ровно один `execFFmpeg`);
+   - `gain = min(S_speech_full − STINGER_MARGIN_LU − S_stinger, −3 − P_stinger)`, где `P_stinger` —
+     истинный пик сэмпла (dBTP, измеряется тем же `ebur128=peak=true`), плюс прежний потолок
+     `MUSIC_MAX_GAIN_DB`; `STINGER_MARGIN_LU = 6` остаётся оценкой (ожидаемо gain ≈ −9 дБ);
+   - страж «уровень» — в полной полосе; мутация `gain = 0` обязана его покрасить на громком сэмпле;
+   - страж «пик» мерить ДВАЖДЫ: до кодера (float WAV из того же графа) и в готовом MP4; оба ≤ −1,0 dBTP.
+2. **[high] Страж «длительность» против вставки.** Выходной `-t` прячет вставку (О-1), поэтому
+   длительность и число кадров её не ловят. Добавить: источник с меняющимся содержимым (`testsrc` со
+   счётчиком); кадр в `t0 − 0,5` совпадает с рендером «только музыка» в пределах допуска кодека; и
+   страж по исходнику: в графе пэк-шота нет `tpad|concat|loop|setpts`.
+3. **[high] Страж «метка цела» — только непрозрачная часть.** Плашка метки полупрозрачная
+   (`black@0.6`) и законно светлеет под вспышкой (9 → 44). Сравнивать только непрозрачный
+   прямоугольник кода (белая плашка и чёрный текст, для `WWWWWW` — `x=633..905, y=1589..1673`, брать
+   из `watermarkGeometry`, не числами): при «вспышке после метки» чёрный текст светлеет → красный.
+4. **[high] «Музыка без пэк-шота = прежний контракт» — против эталона из п. 0**, побайтово: и
+   аргументы (два `-i`, `amix inputs=2`), и хеш.
+5. **[medium] «Место звука».** Полоса сэмпла — `lowpass=f=300`. Второе окно — `[0, 0.8]`, а не
+   `[0, t0]` (на длинном окне дефект `adelay=0` размывается до 0,05 LU).
+6. **[medium] Кэш замера сэмпла.** Кэшировать только конечное число, не промис; отмена, таймаут и
+   `FFmpegError` в кэш не попадают; после ошибки — `signal?.throwIfAborted()`, как в `prepareMusic`.
+   Экспортировать сброс кэша для тестов.
+7. **[medium] `S_speech` не мерить повторно** — полосовое значение брать из `prepareMusic`
+   (внутреннее поле результата, НЕ в контракт); полнополосное — см. п. 1. **Разрешённые правки
+   существующих тестов — только эти:** `toEqual({music:null})` → `{music:null, packshot:null}` в
+   `music.test.ts`; число `-i` 2 → 3 там, где пэк-шот есть; мок `render` в `render-worker.test.ts`.
+   Прочие стражи (RD-001, SL-008, baseline) не трогать.
+8. **[medium] В контракт при наложении — все оценки:** `packshot: { stinger:<id>:<sha256>, gain_db,
+   margin: STINGER_MARGIN_LU, flash: 'v1:<FLASH_PEAK>:<FLASH_HALF_WIDTH_SECONDS>' }`, иначе смена
+   константы после прослушивания не доедет (Л-5).
+9. **[medium] `t0` округлять один раз до целых миллисекунд**; из него же — `adelay`, `t_peak`,
+   журнал. Тест на дробную длительность клипа (например 22,47 с).
+10. **[medium] Интерфейс:** тест на новую подпись галочки и строку источников.
+11. **[medium] Форма вспышки — асимметричная и не раньше звука:** 0 до `t0`, быстрый подъём к пику в
+    `t0 + 0,05`, линейный спад до нуля к `t0 + 0,55`. Страж: кадр в `t0 − 1` совпадает с рендером
+    «только музыка». В отчёте назвать, что вспышка высветляет и субтитры (порядок «субтитры →
+    вспышка → метка» — решение).
+12. Для сведения: клипы, уже отрендеренные с музыкой, при повторном рендере получат новый хеш —
+    `storage.put` откажет. Это ожидаемо (контракт изменился); координатор перед перерендером удаляет
+    объекты, как делалось 24.09.
+
+## Тесты, без которых фича не принимается
+
+Медиа-тесты — на настоящем ffmpeg (как `tests/music-media.test.ts`).
+
+| Страж | Что проверяет | Внедряемый дефект → ожидание |
+|---|---|---|
+| длительность | клип с пэк-шотом той же длительности и того же числа кадров, что без него (±1 кадр) | вставка вместо наложения (`concat`/`tpad`) → красный |
+| место звука | энергия в полосе сэмпла на `[t0, duration]` заметно выше, чем в том же окне рендера только с музыкой; до `t0` — без разницы (≤ 0,5 LU) | `adelay=0` → красный |
+| уровень | сэмпл через тот же граф один на окне `[t0, duration]` не громче `S − 6 + 0,5` в полосе | `gain=0` при громком сэмпле → красный |
+| пик | истинный пик клипа с пэк-шотом ≤ −1,0 dBTP на заглушке И-5 (≈−4 dBTP при −17 LUFS) | +20 дБ → красный |
+| вспышка там | средняя яркость кадра в `t_peak` выше, чем в `t0 − 1` | пик вспышки в `t=0.05` → красный |
+| метка цела | пиксели области метки в `t_peak` совпадают с теми же пикселями рендера без пэк-шота (допуск кодека) | вспышка ПОСЛЕ метки → красный |
+| выключено | `music=false` → эталон `baseline.json` побайтово | безусловный третий вход → красный |
+| музыка без пэк-шота | отказ замера сэмпла → `music` смешана, `packshot=null`, рендер успешен | бросок из пэк-шота → красный |
+| хеш | контракт с пэк-шотом ≠ контракт только с музыкой; контракт при `packshot=null` = прежний с музыкой | поле безусловно → красный |
+| каталог | сэмпл существует, sha256 совпадает, длительность ≥ 0,8 с | подменить хеш → красный |
+| RD-001 | ровно один `execFFmpeg` на кодирование в `render/ffmpeg.ts` | — не ослаблять |
+
+Мутации — обеими строками в отчёте, скрипт по образцу `tests/run-music-mutations.mjs`.
+Прогон: `npx vitest run` по затронутым файлам (Docker тебе недоступен — полный прогон делает координатор,
+и это НЕ повод для `Status: failed`).
+
+## Границы
+
+НЕ реализуй: текст в пэк-шоте, отдельную галочку, колонку в БД, вставку кадров, ducking, окно
+приманки, библиотеку треков. НЕ правь: `docs/` кроме отчёта, `.claude/`, миграции.
+
+## Отчёт
+
+`docs/features/pack-shot/07_code_report.md`: что сделано по пунктам 1–4; измеренные числа из
+медиа-тестов (S, gain, пик, яркость, энергия в окне); мутации обеими строками; команды и коды
+возврата; что НЕ проверено (прослушивание, `STINGER_MARGIN_LU` и параметры вспышки — оценки).
+Последняя строка — ровно `Status: completed` либо `Status: failed`.
+
+FILE apps/worker/src/render/packshot.ts
+import { measureFullLoudness, type FullLoudness } from './loudness.js';
+import { FFmpegError } from './exec.js';
+import { MUSIC_MAX_GAIN_DB, STINGERS } from './music.js';
+
+export const STINGER_SECONDS = 0.8;
+// Оценки, не измерения; заморозить после прослушивания владельцем.
+export const STINGER_MARGIN_LU = 6;
+export const FLASH_PEAK = 0.35;
+export const FLASH_HALF_WIDTH_SECONDS = 0.25;
+export const STINGER_ENVELOPE = `atrim=0:${STINGER_SECONDS},afade=t=out:st=0.6:d=0.2`;
+export interface PackshotMix { stinger: string; gain_db: number }
+export interface PreparedPackshot extends PackshotMix { t0_ms: number }
+let sampleMeasurement: FullLoudness | undefined;
+export function resetStingerCache(): void { sampleMeasurement = undefined; }
+export function buildFlashFilter(t0Ms: number): string {
+  const t0 = t0Ms / 1000, peak = t0 + 0.05;
+  return `eq=brightness='${FLASH_PEAK}*if(lt(t,${t0}),0,if(lt(t,${peak}),(t-${t0})/0.05,max(0,1-(t-${peak})/${2 * FLASH_HALF_WIDTH_SECONDS})))':eval=frame`;
+}
+export function buildStingerAudioGraph(packshot: PreparedPackshot): string {
+  return `[2:a:0]${STINGER_ENVELOPE},volume=${packshot.gain_db}dB,`
+    + `aformat=sample_rates=44100:channel_layouts=stereo,adelay=${packshot.t0_ms}:all=1[stinger];`;
+}
+export async function preparePackshot(input: string, start: number, duration: number, signal?: AbortSignal): Promise<PreparedPackshot | null> {
+  const skip = (reason: string) => { console.info(JSON.stringify({ event: 'packshot_skipped', reason })); return null; };
+  const stinger = STINGERS[0];
+  let speech: FullLoudness, sample: FullLoudness;
+  try {
+    signal?.throwIfAborted();
+    speech = await measureFullLoudness(input, start, duration, signal);
+    sample = sampleMeasurement ?? await measureFullLoudness(stinger.path, 0, STINGER_SECONDS, signal, STINGER_ENVELOPE);
+    signal?.throwIfAborted();
+    // Cache only successful finite measurements, never an in-flight promise or failure.
+    if (Number.isFinite(sample.integrated) && Number.isFinite(sample.peak)) sampleMeasurement = sample;
+  } catch (error) {
+    signal?.throwIfAborted();
+    if (error instanceof FFmpegError && (error.reason === 'ffmpeg_failed' || error.reason === 'ffmpeg_timeout')) return skip('measure_failed');
+    throw error;
+  }
+  if (!Number.isFinite(speech.integrated) || speech.integrated <= -60) return skip('speech_too_quiet');
+  if (!Number.isFinite(sample.integrated) || sample.integrated <= -60 || !Number.isFinite(sample.peak)) return skip('stinger_invalid');
+  const gain = Math.min(speech.integrated - STINGER_MARGIN_LU - sample.integrated, -3 - sample.peak);
+  if (gain > MUSIC_MAX_GAIN_DB) return skip('gain_out_of_range');
+  // Round down: rounding must not exceed either measured ceiling.
+  const gainDb = Math.floor(gain * 10) / 10;
+  const t0_ms = Math.round((duration - STINGER_SECONDS) * 1000);
+  console.info(JSON.stringify({ event: 'packshot_mix', t0: t0_ms / 1000, gain_db: gainDb }));
+  return { stinger: `${stinger.id}:${stinger.sha256}`, gain_db: gainDb, t0_ms };
+}
+
+FILE apps/worker/src/render/music.ts
+import { buildStingerAudioGraph, type PackshotMix, type PreparedPackshot } from './packshot.js';
+import { resolve } from 'node:path';
+import { measureLoudness } from './loudness.js';
+import { FFmpegError } from './exec.js';
+
+// Решение владельца 24.09.2026 (OWN-009, В-8): прослушаны 7 клипов записи 88 мин — «нормально».
+export const MUSIC_MARGIN_LU = 18;
+export const MUSIC_MAX_GAIN_DB = 12;
+export const MUSIC_TRACKS = [{ id: 'komiku-everything-is-groovy',
+  sha256: '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d',
+  path: resolve('apps/worker/assets/music/komiku-everything-is-groovy.mp3') }] as const;
+export const STINGERS = [{ id: 'kenney-low-frequency-explosion-001',
+  sha256: 'cdda50600a4928f2f1b8371224d53c171ac799c1cf2c30b11999508985250b3b',
+  path: resolve('apps/worker/assets/sfx/kenney-low-frequency-explosion-001.ogg') }] as const;
+export interface MusicMix { track: string; gain_db: number }
+export interface RenderOutcome { music: MusicMix | null; packshot: PackshotMix | null }
+export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?: PreparedPackshot | null): string {
+  return '[0:a:0]aformat=sample_rates=44100:channel_layouts=stereo[speech];'
+    + `[1:a:0]atrim=0:${duration},asetpts=PTS-STARTPTS,volume=${gainDb}dB,`
+    + `afade=t=in:d=0.5,afade=t=out:st=${duration - 1}:d=1,`
+    + 'aformat=sample_rates=44100:channel_layouts=stereo[bed];'
+    + (packshot ? buildStingerAudioGraph(packshot) + '[speech][bed][stinger]amix=inputs=3:duration=first:normalize=0[aout]'
+      : '[speech][bed]amix=inputs=2:duration=first:normalize=0[aout]');
+}
+export async function prepareMusic(input: string, start: number, duration: number, signal?: AbortSignal): Promise<(MusicMix & { speech_lufs: number }) | null> {
+  const skip = (reason: string) => { console.info(JSON.stringify({ event: 'music_skipped', reason })); return null; };
+  const track = MUSIC_TRACKS[0];
+  let speech: number, bed: number;
+  try {
+    speech = await measureLoudness(input, start, duration, signal);
+    bed = await measureLoudness(track.path, 0, duration, signal);
+  } catch (error) {
+    signal?.throwIfAborted();
+    if (error instanceof FFmpegError && (error.reason === 'ffmpeg_failed' || error.reason === 'ffmpeg_timeout')) return skip('measure_failed');
+    throw error;
+  }
+  if (!Number.isFinite(speech) || speech <= -60) return skip('speech_too_quiet');
+  if (!Number.isFinite(bed) || bed <= -60) return skip('track_too_quiet');
+  const gain = speech - MUSIC_MARGIN_LU - bed;
+  if (gain > MUSIC_MAX_GAIN_DB) return skip('gain_out_of_range');
+  const roundedGain = Math.round(gain * 10) / 10;
+  console.info(JSON.stringify({ event: 'music_mix', speech_lufs: speech, track_lufs: bed, gain_db: roundedGain }));
+  return { track: `${track.id}:${track.sha256}`, gain_db: roundedGain, speech_lufs: speech };
+}
+
+FILE apps/worker/src/render/loudness.ts
+import { spawn } from 'node:child_process';
+import { FFmpegError } from './exec.js';
+
+export const MUSIC_MEASURE_TIMEOUT_MS = 120_000;
+
+// Frame logs also contain I:. Only the final Summary belongs to the whole clip.
+export function parseIntegratedLoudness(stderr: string): number {
+  const summary = stderr.slice(stderr.lastIndexOf('Summary:'));
+  if (!summary.startsWith('Summary:')) return NaN;
+  const value = summary.match(/\bI:\s*(-?\d+(?:\.\d+)?|-inf)\s+LUFS\b/);
+  return value ? Number(value[1]) : NaN;
+}
+export function execLoudness(args: string[], signal?: AbortSignal, timeoutMs = MUSIC_MEASURE_TIMEOUT_MS): Promise<string> {
+  return new Promise((resolve, reject) => {
+    signal?.throwIfAborted();
+    const child = spawn('ffmpeg', ['-nostdin', '-hide_banner', ...args], { stdio: ['ignore', 'ignore', 'pipe'] });
+    let stderr = '', timedOut = false;
+    const abort = () => { child.kill('SIGKILL'); };
+    const timer = setTimeout(() => { timedOut = true; abort(); }, timeoutMs);
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) abort();
+    const cleanup = () => { clearTimeout(timer); signal?.removeEventListener('abort', abort); };
+    child.stderr.on('data', (data: Buffer) => { stderr = (stderr + data.toString()).slice(-65536); });
+    child.once('error', () => { cleanup(); reject(new FFmpegError('ffmpeg_failed')); });
+    child.once('close', code => {
+      cleanup();
+      if (signal?.aborted) reject(signal.reason);
+      else if (timedOut) reject(new FFmpegError('ffmpeg_timeout'));
+      else if (code !== 0) reject(new FFmpegError('ffmpeg_failed'));
+      else resolve(stderr);
+    });
+  });
+}
+export async function measureLoudness(path: string, start: number, duration: number, signal?: AbortSignal): Promise<number> {
+  const stderr = await execLoudness(['-protocol_whitelist', 'file', '-ss', String(start), '-t', String(duration),
+    '-i', path, '-map', '0:a:0', '-af', 'highpass=f=300,lowpass=f=3400,ebur128', '-f', 'null', '-'], signal);
+  return parseIntegratedLoudness(stderr);
+}
+
+export interface FullLoudness { integrated: number; peak: number }
+export function parseTruePeak(stderr: string): number {
+  const summary = stderr.slice(stderr.lastIndexOf('Summary:'));
+  if (!summary.startsWith('Summary:')) return NaN;
+  const value = summary.match(/Peak:\s*(-?\d+(?:\.\d+)?|-inf)\s+dBFS\b/);
+  return value ? Number(value[1]) : NaN;
+}
+export async function measureFullLoudness(path: string, start: number, duration: number,
+  signal?: AbortSignal, envelope?: string): Promise<FullLoudness> {
+  const stderr = await execLoudness(['-protocol_whitelist', 'file', '-ss', String(start), '-t', String(duration),
+    '-i', path, '-map', '0:a:0', '-af', `${envelope ? envelope + ',' : ''}ebur128=peak=true`, '-f', 'null', '-'], signal);
+  return { integrated: parseIntegratedLoudness(stderr), peak: parseTruePeak(stderr) };
+}
+
+FILE apps/worker/src/render/ffmpeg.ts
+import { preparePackshot, buildFlashFilter } from './packshot.js';
+// Adapted from jan-clone buildFilterChain/renderClip. Filter ordering is a security invariant.
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import type { TranscriptWord } from '@clipmaker/shared/transcript';
+import { getScaleFilter, getFramingFilter, FORMAT_DIMENSIONS, type ClipFormat, type SourceDimensions } from './format.js';
+import { escapeFFmpegPath } from './escape.js';
+import { generateSubtitleFile } from './subtitles.js';
+import { buildWatermarkDrawtext, watermarkGeometry, SUBTITLE_FONTS } from './watermark.js';
+import { execFFmpeg, FFMPEG_TIMEOUT_MS } from './exec.js';
+import { probeVideoStream } from './probe.js';
+import { detectFaces } from './faces.js';
+import { planFraming, planFollow, type FramingPlan, type FollowSegment } from './framing-plan.js';
+import { panelWindow, singleWindow, getFollowFilter, type FramingPositions } from './format.js';
+import { prepareMusic, buildMusicAudioGraph, MUSIC_TRACKS, STINGERS, type RenderOutcome } from './music.js';
+export { buildMusicAudioGraph } from './music.js';
+export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
+  watermark: boolean, origin: string, code: string, source?: SourceDimensions,
+  plan?: FramingPositions, follow?: FollowSegment[], flash?: string): string {
+  const filters: string[] = [];
+  const { width, height } = FORMAT_DIMENSIONS[format];
+  // Следование за лицом важнее неподвижного плана: оно и есть неподвижный план, когда лицо одно.
+  filters.push(source && follow?.length ? getFollowFilter(format, source, follow)
+    : source ? getFramingFilter(format, source, plan) : getScaleFilter(format));
+  if (assFilePath !== null) filters.push(`ass='${escapeFFmpegPath(assFilePath)}':fontsdir='${escapeFFmpegPath(SUBTITLE_FONTS)}'`);
+  if (flash) filters.push(flash);
+  if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));
+  return filters.join(',');
+}
+export interface RenderOptions {
+  inputPath: string; outputPath: string; startTime: number; endTime: number;
+  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean;
+}
+export async function renderClip(options: RenderOptions): Promise<RenderOutcome> {
+  const duration = options.endTime - options.startTime;
+  if (!Number.isFinite(options.startTime) || options.startTime < 0 || !Number.isFinite(duration) || duration < 20 || duration > 75) {
+    throw new Error('Длительность клипа вне канона');
+  }
+  const temp = await mkdtemp(join(dirname(options.outputPath), 'render-'));
+  try {
+    const subtitles = generateSubtitleFile(options.words, options.startTime, options.endTime, options.format);
+    const ass = subtitles ? join(temp, 'subtitles.ass') : null;
+    if (ass) await writeFile(ass, subtitles!, { mode: 0o600 });
+    const { width, height } = FORMAT_DIMENSIONS[options.format];
+    // Keep permanent watermark geometry failures ahead of probing/retryable media errors.
+    if (options.watermark) watermarkGeometry(width, height, options.origin, options.code);
+    const video = await probeVideoStream(options.inputPath, options.signal);
+    const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration, options.signal) : null;
+    const packshot = music ? await preparePackshot(options.inputPath, options.startTime, duration, options.signal) : null;
+    // Кадрирование по лицам: где люди на самом деле, а не «по половинам кадра».
+    // Отказ детектора НЕ валит рендер — план просто остаётся пустым, и кадрирование прежнее.
+    let plan: FramingPlan | undefined;
+    let follow: FollowSegment[] | undefined;
+    if (video) {
+      const report = await detectFaces(options.inputPath, options.startTime, options.endTime, options.signal);
+      if (report) {
+        plan = planFraming(report, video, panelWindow(video, 0));
+        // Два этажа остаются неподвижными: переезжающие панели читались бы как рябь.
+        // Во всех прочих случаях кадр СЛЕДУЕТ за лицом.
+        if (plan.mode !== 'dual') {
+          follow = planFollow(report, video, singleWindow(video, 0.5), options.startTime);
+        }
+        console.info(JSON.stringify({ event: 'framing_plan', mode: plan.mode, reason: plan.reason,
+          samples: report.samples.length, shots: follow?.length ?? 0 }));
+      }
+    }
+    const vf = buildFilterChain(options.format, ass, options.watermark, options.origin, options.code,
+      video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined);
+    const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : `[0:${video.index}]`;
+    await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(duration),
+      '-i', options.inputPath, ...(music ? ['-i', MUSIC_TRACKS[0].path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
+      '-filter_complex', `${source}${vf}[video]${music ? ';' + buildMusicAudioGraph(music.gain_db, duration, packshot) : ''}`,
+      '-map', '[video]', '-map', music ? '[aout]' : '0:a:0',
+      '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
+      '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
+      '-ar', '44100', '-ac', '2', '-movflags', '+faststart', options.outputPath], FFMPEG_TIMEOUT_MS, options.signal);
+    return { music: music ? { track: music.track, gain_db: music.gain_db } : null,
+      packshot: packshot ? { stinger: packshot.stinger, gain_db: packshot.gain_db } : null };
+  } finally { await rm(temp, { recursive: true, force: true }); }
+}
+
+FILE apps/worker/src/workers/render.ts
+import { STINGER_MARGIN_LU, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../render/packshot.js';
+import { WatermarkGeometryError } from '@clipmaker/shared/watermark';
+// Adapted from jan-clone/workers/video-render.ts; job payload contains identity only.
+import { Worker, DelayedError, type Job, type ConnectionOptions } from 'bullmq';
+import { createHash } from 'node:crypto';
+import { dirname, join } from 'node:path';
+import { stat } from 'node:fs/promises';
+import { getRenderInput, setRenderDeferred, retryRender, publishRenderResult, type Pool, type Attempt } from '@clipmaker/db';
+import { DEFER_DELAY_MS, type AttemptJob } from '@clipmaker/queue';
+import { withSource, type Download, type freeBytes } from '../media/download.js';
+import { MUSIC_MARGIN_LU } from '../render/music.js';
+import { renderClip } from '../render/ffmpeg.js';
+import { generateThumbnail, FFmpegError, RENDER_JOB_TIMEOUT_MS } from '../render/exec.js';
+import { watermarkRequired, RENDER_FONT_SHA256 } from '../render/watermark.js';
+import type { RenderStorage } from '../render/storage.js';
+import { renderErrorMessage } from '../render/diagnostics.js';
+export interface RenderDependencies {
+  pool: Pool; directory: string; origin: string; download: Download; storage: RenderStorage;
+  enqueue: (attempt: Attempt, delay?: number) => Promise<void>;
+  available?: typeof freeBytes; render?: typeof renderClip; thumbnail?: typeof generateThumbnail;
+}
+export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies): Promise<'done' | 'stale' | 'deferred' | 'failed'> {
+  try {
+    const input = await getRenderInput(deps.pool, attempt);
+    if (!input) return 'stale';
+    const signal = AbortSignal.timeout(RENDER_JOB_TIMEOUT_MS);
+    // Authoritative account value, never job.data.watermark or clip.watermarked.
+    const watermark = watermarkRequired(input.plan);
+    const outcome = await withSource(deps.directory, input.object_key, BigInt(input.actual_bytes), deps.download, async source => {
+      signal.throwIfAborted();
+      if (!await setRenderDeferred(deps.pool, attempt, false)) return 'stale' as const;
+      const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
+      const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
+        endTime: Number(input.end_seconds), format: 'portrait', words: input.words, watermark,
+        origin: deps.origin, code: input.code, signal, music: input.music });
+      await (deps.thumbnail ?? generateThumbnail)(output, thumb, (Number(input.end_seconds) - Number(input.start_seconds)) * 0.25);
+      signal.throwIfAborted();
+      const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;
+      const thumbnail_key = `thumbs/${attempt.video_id}/${attempt.clip_id}.jpg`;
+      const bytes = (await stat(output)).size;
+      const contract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
+        video: attempt.video_id, clip: attempt.clip_id, source: input.object_key, sourceBytes: input.actual_bytes,
+        start: input.start_seconds, end: input.end_seconds, words: input.words, watermark, origin: deps.origin,
+        code: input.code, font: RENDER_FONT_SHA256,
+        ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}),
+        ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU,
+          flash: `v1:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');
+      const uploadSignal = AbortSignal.any([signal, AbortSignal.timeout(120_000)]);
+      const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark }, async () => {
+        const storedBytes = await deps.storage.put(object_key, output, 'video/mp4', contract, uploadSignal);
+        await deps.storage.put(thumbnail_key, thumb, 'image/jpeg', contract, uploadSignal);
+        return storedBytes;
+      });
+      return accepted ? 'done' as const : 'stale' as const;
+    }, deps.available);
+    if (outcome.deferred) return await setRenderDeferred(deps.pool, attempt, true) ? 'deferred' : 'stale';
+    return outcome.value;
+  } catch (error) {
+    console.error(JSON.stringify({ event: 'render_attempt_failed', video_id: attempt.video_id,
+      clip_id: attempt.clip_id, fence: attempt.fence, message: renderErrorMessage(error) }));
+    const next = await retryRender(deps.pool, attempt, error instanceof WatermarkGeometryError ? 'watermark_geometry'
+      : error instanceof FFmpegError ? error.reason : 'ffmpeg_failed');
+    if (next) {
+      try { await deps.enqueue(next, 2000); }
+      catch (error) { console.error('Попытка рендера сохранена; сторож восстановит доставку', renderErrorMessage(error)); }
+    }
+    return 'failed';
+  }
+}
+export function createRenderWorker(connection: ConnectionOptions, deps: RenderDependencies): Worker<AttemptJob> {
+  return new Worker<AttemptJob>('render', async (job: Job<AttemptJob>, token?: string) => {
+    const row = await deps.pool.query<Attempt>(`SELECT * FROM job_attempt WHERE video_id=$1 AND fence=$2 AND stage='render'`,
+      [job.data.video_id, job.data.fence]);
+    const attempt = row.rows[0];
+    if (!attempt) throw new Error('Попытка рендера отсутствует в БД');
+    if (await handleRenderJob(attempt, deps) === 'deferred') {
+      await job.moveToDelayed(Date.now() + DEFER_DELAY_MS, token);
+      throw new DelayedError();
+    }
+  }, { connection, concurrency: 1, maxStalledCount: 1 });
+}
+
+FILE tests/pack-shot.test.ts
+import { afterEach, expect, it, vi } from 'vitest';
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import * as loudness from '../apps/worker/src/render/loudness';
+import * as exec from '../apps/worker/src/render/exec';
+import * as probe from '../apps/worker/src/render/probe';
+import * as faces from '../apps/worker/src/render/faces';
+import { renderClip } from '../apps/worker/src/render/ffmpeg';
+import { STINGERS, MUSIC_TRACKS } from '../apps/worker/src/render/music';
+import { preparePackshot, resetStingerCache, buildFlashFilter } from '../apps/worker/src/render/packshot';
+const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
+  format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
+  origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true };
+afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
+function setup() {
+  vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
+  vi.spyOn(faces, 'detectFaces').mockResolvedValue(null);
+  const band = vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);
+  const full = vi.spyOn(loudness, 'measureFullLoudness').mockResolvedValueOnce({ integrated: -16, peak: -4 })
+    .mockResolvedValue({ integrated: -13, peak: -0.8 });
+  const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
+  return { full, band, encode };
+}
+it.each([null, { index: 2, width: 1920, height: 1080 }])('third input, one mix, flash ordering and fractional clock %j', async video => {
+  const { encode, band, full } = setup(); vi.mocked(probe.probeVideoStream).mockResolvedValue(video);
+  const result = await renderClip({ ...options, endTime: 24.47 });
+  expect(result.packshot?.gain_db).toBe(-9);
+  expect(result.music).toEqual({ track: `${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`, gain_db: -23 });
+  expect(band).toHaveBeenCalledTimes(2); expect(full).toHaveBeenCalledTimes(2);
+  const args = encode.mock.calls[0]![0], graph = args[args.indexOf('-filter_complex') + 1]!;
+  expect(encode).toHaveBeenCalledTimes(1); expect(args.filter(x => x === '-i')).toHaveLength(3);
+  expect(args.slice(args.indexOf(STINGERS[0].path) - 3, args.indexOf(STINGERS[0].path) + 2))
+    .toEqual(['-i', MUSIC_TRACKS[0].path, '-i', STINGERS[0].path, '-filter_complex']);
+  expect(graph.match(/amix=/g)).toHaveLength(1);
+  expect(graph).toContain('amix=inputs=3:duration=first:normalize=0');
+  expect(graph.match(/aformat=/g)).toHaveLength(3);
+  expect(graph).toContain('adelay=21670:all=1');
+  expect(graph).toContain(buildFlashFilter(21670));
+  expect(graph.indexOf('ass=')).toBeLessThan(graph.indexOf('eq=brightness'));
+  expect(graph.indexOf('eq=brightness')).toBeLessThan(graph.indexOf('drawbox='));
+  expect(graph.split('[video]')[0]).not.toMatch(/\b(?:tpad|concat|loop|setpts)\b/);
+});
+it.each(['ffmpeg_failed', 'ffmpeg_timeout'] as const)('music-only baseline survives sample %s', async reason => {
+  const { full, encode } = setup();
+  full.mockReset().mockResolvedValueOnce({ integrated: -16, peak: -4 }).mockRejectedValueOnce(new exec.FFmpegError(reason));
+  const log = vi.spyOn(console, 'info');
+  const result = await renderClip(options);
+  expect(result.music?.gain_db).toBe(-23); expect(result.packshot).toBeNull();
+  expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'packshot_skipped', reason: 'measure_failed' }));
+  const args = encode.mock.calls[0]![0].map(s => s.replace(/\/tmp\/render-[^/]+/g, '<TEMP>').replaceAll(process.cwd() + '/', '<ROOT>/'));
+  const baseline = JSON.parse(await readFile('tests/fixtures/pack-shot/music-only.json', 'utf8'));
+  expect(JSON.stringify(args)).toBe(JSON.stringify(baseline.args));
+});
+it('successful finite sample is cached, speech full is not; reset discards it', async () => {
+  const full = vi.spyOn(loudness, 'measureFullLoudness').mockResolvedValue({ integrated: -16, peak: -4 });
+  await preparePackshot('input', 2, 20); await preparePackshot('input', 2, 20);
+  expect(full).toHaveBeenCalledTimes(3);
+  expect(full.mock.calls.filter(c => c[0] === STINGERS[0].path)).toHaveLength(1);
+  resetStingerCache(); await preparePackshot('input', 2, 20); expect(full).toHaveBeenCalledTimes(5);
+});
+it.each(['ffmpeg_failed', 'ffmpeg_timeout', 'invalid', 'abort'])('sample cache does not retain %s', async reason => {
+  const controller = new AbortController();
+  const full = vi.spyOn(loudness, 'measureFullLoudness').mockResolvedValueOnce({ integrated: -16, peak: -4 })
+    .mockImplementationOnce(async () => {
+      if (reason === 'invalid') return { integrated: NaN, peak: NaN };
+      if (reason === 'abort') controller.abort(new Error('cancelled'));
+      throw new exec.FFmpegError(reason === 'ffmpeg_timeout' ? 'ffmpeg_timeout' : 'ffmpeg_failed');
+    }).mockResolvedValue({ integrated: -16, peak: -4 });
+  if (reason === 'abort') await expect(preparePackshot('input', 0, 20, controller.signal)).rejects.toThrow('cancelled');
+  else expect(await preparePackshot('input', 0, 20)).toBeNull();
+  expect(await preparePackshot('input', 0, 20)).not.toBeNull(); expect(full).toHaveBeenCalledTimes(4);
+});
+it('gain respects full-band loudness, sample peak and amplification ceiling', async () => {
+  const full = vi.spyOn(loudness, 'measureFullLoudness');
+  for (const [speech, sample, peak, expected] of [[-16, -13, -0.8, -9], [-10, -30, -1, -2], [-10, -50, -40, null]]) {
+    resetStingerCache(); full.mockReset().mockResolvedValueOnce({ integrated: speech!, peak: -4 })
+      .mockResolvedValueOnce({ integrated: sample!, peak: peak! });
+    const result = await preparePackshot('input', 0, 20);
+    expect(result?.gain_db ?? null).toBe(expected);
+  }
+});
+it('catalogue pins bytes and enough duration', async () => {
+  const sample = STINGERS[0];
+  expect(createHash('sha256').update(await readFile(sample.path)).digest('hex')).toBe(sample.sha256);
+  const { stdout } = await promisify(execFile)('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', sample.path]);
+  expect(Number(JSON.parse(stdout).format.duration)).toBeGreaterThanOrEqual(0.8);
+});
+it('true peak parser uses only final summary and rejects missing/invalid peak', () => {
+  expect(loudness.parseTruePeak('Peak: 20 dBFS\nSummary:\n True peak:\n Peak: -0.8 dBFS')).toBe(-0.8);
+  for (const bad of ['', 'Peak: -1 dBFS', 'Summary:\n Peak: rubbish dBFS', 'Summary:\n Peak: -inf dBFS']) {
+    expect(Number.isFinite(loudness.parseTruePeak(bad))).toBe(false);
+  }
+});
+
+FILE tests/pack-shot-contract.test.ts
+import { afterEach, expect, it, vi } from 'vitest';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import * as loudness from '../apps/worker/src/render/loudness';
+import * as exec from '../apps/worker/src/render/exec';
+import * as probe from '../apps/worker/src/render/probe';
+import { renderClip } from '../apps/worker/src/render/ffmpeg';
+import { resetStingerCache } from '../apps/worker/src/render/packshot';
+import { RENDER_FONT_SHA256 } from '../apps/worker/src/render/watermark';
+const db = vi.hoisted(() => ({ getRenderInput: vi.fn(), setRenderDeferred: vi.fn(), retryRender: vi.fn(), publishRenderResult: vi.fn() }));
+vi.mock('@clipmaker/db', () => db);
+import { handleRenderJob } from '../apps/worker/src/workers/render';
+afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
+it('hash comes from actual packshot; absent equals HEAD music-only and includes all estimates', async () => {
+  vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
+  vi.spyOn(loudness, 'measureLoudness').mockImplementation(async path => path.includes('komiku') ? -15 : -20);
+  const full = vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));
+  vi.spyOn(exec, 'execFFmpeg').mockImplementation(async args => { await writeFile(args.at(-1)!, 'video'); });
+  const directory = await mkdtemp('/tmp/pack-contract-');
+  const input = { object_key: 'source', actual_bytes: '10', plan: 'free', start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789', music: true };
+  db.getRenderInput.mockResolvedValue(input); db.setRenderDeferred.mockResolvedValue(true);
+  db.publishRenderResult.mockImplementation(async (_p, _a, _r, publish) => { await publish(); return true; });
+  const hashes: string[] = [];
+  const origin = 'https://clipmaker.aicoding.space';
+  const deps = { pool: {} as never, directory, origin, download: async (_k: string, p: string) => { await writeFile(p, 'source'); },
+    // Baseline uses historical worker fixture geometry. A mock renderer transfers actual render outcome.
+    render: async (opts: Parameters<typeof renderClip>[0]) => renderClip({ ...opts, code: 'WWWWWW', origin: 'https://clipmkr.ru' }),
+    thumbnail: async (_p: string, o: string) => { await writeFile(o, 'thumb'); },
+    storage: { put: async (_k: string, _p: string, _t: string, c: string) => { hashes.push(c); return 5; } }, enqueue: async () => {}, available: async () => 30n };
+  const attempt = { video_id: 'video', clip_id: 'clip', fence: 4, stage: 'render' as const, series_no: 1, attempt_no: 1, status: 'running' as const };
+  try {
+    expect(await handleRenderJob(attempt, deps)).toBe('done');
+    expect(hashes[0]).toBe(JSON.parse(await readFile('tests/fixtures/pack-shot/music-only.json', 'utf8')).contract);
+    full.mockResolvedValueOnce({ integrated: -16, peak: -4 }).mockResolvedValue({ integrated: -13, peak: -0.8 });
+    expect(await handleRenderJob(attempt, deps)).toBe('done');
+    expect(hashes[2]).not.toBe(hashes[0]);
+    const { MUSIC_TRACKS, STINGERS } = await import('../apps/worker/src/render/music');
+    const expected = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
+      video: 'video', clip: 'clip', source: 'source', sourceBytes: '10', start: '0', end: '20', words: [], watermark: true,
+      origin, code: input.code, font: RENDER_FONT_SHA256, music: `${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`, margin: 18, gain_db: -23,
+      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: -9, margin: 6, flash: 'v1:0.35:0.25' } })).digest('hex');
+    expect(hashes[2]).toBe(expected);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+FILE tests/pack-shot-media.test.ts
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { mkdtemp, rm, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { buildMusicAudioGraph, MUSIC_TRACKS, STINGERS, prepareMusic } from '../apps/worker/src/render/music';
+import { preparePackshot, resetStingerCache } from '../apps/worker/src/render/packshot';
+import * as pack from '../apps/worker/src/render/packshot';
+import * as faces from '../apps/worker/src/render/faces';
+import { measureFullLoudness, parseIntegratedLoudness, parseTruePeak } from '../apps/worker/src/render/loudness';
+import { renderClip } from '../apps/worker/src/render/ffmpeg';
+import { watermarkGeometry, FONT_FILE } from '../apps/worker/src/render/watermark';
+const exec = promisify(execFile), duration = 20, t0 = 19.2;
+let dir: string, speech: string;
+async function ff(args: string[]) { return exec('ffmpeg', ['-nostdin', '-hide_banner', '-y', ...args], { maxBuffer: 4_000_000 }); }
+async function measure(path: string, start = 0, length = duration, filter = 'anull') {
+  const log = (await ff(['-ss', String(start), '-t', String(length), '-i', path, '-vn', '-af', `${filter},ebur128=peak=true`, '-f', 'null', '-'])).stderr;
+  return { integrated: parseIntegratedLoudness(log), peak: parseTruePeak(log) };
+}
+beforeAll(async () => {
+  dir = await mkdtemp('/tmp/pack-media-'); speech = join(dir, 'speech.wav');
+  await ff(['-f', 'lavfi', '-i', `aevalsrc=0.20*sin(2*PI*1000*t)*(1+2*lt(mod(t\\,1)\\,0.025)):s=44100:d=22`, '-ac', '2', speech]);
+});
+afterAll(async () => { vi.restoreAllMocks(); resetStingerCache(); if (dir) await rm(dir, { recursive: true, force: true }); });
+it('audio placement, full-band level and float/AAC peaks through production graph', async () => {
+  const music = await prepareMusic(speech, 0, duration), accent = await preparePackshot(speech, 0, duration);
+  expect(music).not.toBeNull(); expect(accent).not.toBeNull();
+  const silence = join(dir, 'silence.wav');
+  await ff(['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-t', '20', silence]);
+  async function mix(name: string, input: string, gain: number, stinger: typeof accent) {
+    const out = join(dir, name + '.wav');
+    await ff(['-i', input, '-i', MUSIC_TRACKS[0].path, '-i', STINGERS[0].path,
+      '-filter_complex', buildMusicAudioGraph(gain, duration, stinger), '-map', '[aout]', '-t', '20', '-c:a', 'pcm_f32le', out]);
+    return out;
+  }
+  const on = await mix('on', speech, music!.gain_db, accent), off = await mix('off', speech, music!.gain_db, null);
+  const isolated = await mix('isolated', silence, -Infinity, accent);
+  const s = await measureFullLoudness(speech, 0, duration), sample = await measure(isolated, t0, 0.8);
+  const endOn = await measure(on, t0, 0.8, 'lowpass=f=300'), endOff = await measure(off, t0, 0.8, 'lowpass=f=300');
+  const earlyOn = await measure(on, 0, 0.8, 'lowpass=f=300'), earlyOff = await measure(off, 0, 0.8, 'lowpass=f=300');
+  const float = await measure(on);
+  const mp4 = join(dir, 'encoded.mp4');
+  await ff(['-i', on, '-c:a', 'aac', '-b:a', '128k', mp4]);
+  const encoded = await measure(mp4);
+  console.log(JSON.stringify({ guard: 'pack-audio', speech: s, gain: accent!.gain_db, isolated: sample,
+    endOn, endOff, earlyOn, earlyOff, float, encoded }));
+  expect.soft(sample.integrated).toBeLessThanOrEqual(s.integrated - 6 + 0.5);
+  expect.soft(endOn.integrated - endOff.integrated).toBeGreaterThan(3);
+  expect.soft(Math.abs(earlyOn.integrated - earlyOff.integrated)).toBeLessThanOrEqual(0.5);
+  expect.soft(float.peak).toBeLessThanOrEqual(-1); expect.soft(encoded.peak).toBeLessThanOrEqual(-1);
+}, 180_000);
+async function frame(path: string, time: number, crop?: string): Promise<Buffer> {
+  const { stdout } = await exec('ffmpeg', ['-v', 'error', '-ss', String(time), '-i', path, '-frames:v', '1',
+    '-vf', crop ?? 'scale=108:192', '-pix_fmt', 'gray', '-f', 'rawvideo', '-'], { encoding: 'buffer', maxBuffer: 4_000_000 });
+  return stdout;
+}
+const mean = (b: Buffer) => b.reduce((sum, value) => sum + value, 0) / b.length;
+function difference(a: Buffer, b: Buffer) { expect(a.length).toBe(b.length); expect(a.length).toBeGreaterThan(0); return a.reduce((sum, v, i) => sum + Math.abs(v - b[i]!), 0) / a.length; }
+it('video duration/content, flash timing and opaque watermark pixels', async () => {
+  const source = join(dir, 'source.mp4');
+  // Moving test source and a changing frame counter make an inserted/frozen frame observable.
+  await ff(['-f', 'lavfi', '-i', 'testsrc=size=320x180:rate=25:duration=22', '-i', speech,
+    '-vf', `drawtext=fontfile=${FONT_FILE}:text='%{n}':x=160:y=90:fontsize=30:fontcolor=white`,
+    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', source]);
+  vi.spyOn(faces, 'detectFaces').mockResolvedValue(null);
+  const opts = { inputPath: source, startTime: 2, endTime: 22, format: 'portrait' as const,
+    words: [{ word: 'Проверка', start: 20, end: 22 }], watermark: true, music: true, origin: 'https://clipmkr.ru', code: 'WWWWWW' };
+  const off = join(dir, 'off.mp4'), on = join(dir, 'on.mp4');
+  const disabled = vi.spyOn(pack, 'preparePackshot').mockResolvedValue(null);
+  try { expect((await renderClip({ ...opts, outputPath: off })).music).not.toBeNull(); }
+  finally { disabled.mockRestore(); }
+  expect((await renderClip({ ...opts, outputPath: on })).packshot).not.toBeNull();
+  const probe = async (path: string) => JSON.parse((await exec('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', path])).stdout);
+  const a = await probe(off), b = await probe(on);
+  expect(Math.abs(Number(a.format.duration) - Number(b.format.duration))).toBeLessThanOrEqual(0.04);
+  expect(Math.abs(Number(a.streams[0].nb_frames) - Number(b.streams[0].nb_frames))).toBeLessThanOrEqual(1);
+  const early = difference(await frame(off, t0 - 1), await frame(on, t0 - 1));
+  const before = difference(await frame(off, t0 - 0.5), await frame(on, t0 - 0.5));
+  const peakBase = mean(await frame(off, t0 + 0.05)), peak = mean(await frame(on, t0 + 0.05));
+  const g = watermarkGeometry(1080, 1920, opts.origin, opts.code);
+  // Crop exactly the opaque inverse code chip; not the translucent surrounding plate.
+  const crop = `crop=${g.chipWidth}:${g.chipHeight}:${g.left + g.paddingX + g.prefixWidth}:${g.y + g.paddingY}`;
+  const chip = difference(await frame(off, t0 + 0.05, crop), await frame(on, t0 + 0.05, crop));
+  const peakAudio = await measure(on);
+  console.log(JSON.stringify({ guard: 'pack-video', duration: b.format.duration, frames: b.streams[0].nb_frames,
+    earlyDifference: early, beforeDifference: before, peakBase, peak, chipDifference: chip, peakAudio }));
+  expect(early).toBeLessThan(2); expect(before).toBeLessThan(2);
+  expect(peak - peakBase).toBeGreaterThan(20); expect(chip).toBeLessThan(3);
+  expect(peakAudio.peak).toBeLessThanOrEqual(-1);
+  const graphSource = await readFile('apps/worker/src/render/packshot.ts', 'utf8');
+  expect(graphSource).not.toMatch(/\b(?:tpad|concat|loop|setpts)\b/);
+}, 240_000);
