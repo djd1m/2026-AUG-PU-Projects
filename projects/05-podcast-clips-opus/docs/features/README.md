@@ -1,6 +1,6 @@
 # Фичи «КлипМейкера» — указатель
 
-Все пятнадцать — `done` на 24.09.2026. Двенадцать — MVP по плану; три появились после первого живого
+Все шестнадцать — `done` на 24.09.2026 (шестнадцатая — `music-bed`, добавлена в тот же день). Двенадцать — MVP по плану; три появились после первого живого
 прогона 23.09.2026 и в замороженной спецификации отсутствуют (их требования —
 `../Specification-addendum.md`).
 
@@ -26,6 +26,7 @@
 | 13 | `transcript-tolerance` | Погрешность таймкодов исправляется, а не отвергает запись | post-mvp | [05_completion.md](transcript-tolerance/05_completion.md) |
 | 14 | `framing` | Кадр следует за лицом | post-mvp | [05_completion.md](framing/05_completion.md) |
 | 15 | `subtitles-and-glossary` | Субтитры без мигания, крупнее, английские термины латиницей | post-mvp | [05_completion.md](subtitles-and-glossary/05_completion.md) |
+| 16 | `music-bed` | Фоновая CC0-музыка по галочке, уровень из речи клипа | post-mvp | [05_completion.md](music-bed/05_completion.md) |
 
 ## Сквозные документы, без которых фичи не читаются
 

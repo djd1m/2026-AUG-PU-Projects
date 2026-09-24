@@ -509,6 +509,38 @@
         "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
         "docker-compose.yml"
       ]
+    },
+    {
+      "id": "music-bed",
+      "number": 16,
+      "title": "Фоновая CC0-музыка по галочке при загрузке",
+      "description": "FR-RENDER-007, ADR-011. Галочка при загрузке (video.music, миграция 014); уровень подложки = речь клипа − 18 LU в полосе 300–3400 Гц, amix normalize=0, без ducking; сбой замера — клип без музыки. Таймаут выделения 240 с (FR-SELECT-005).",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "high",
+      "depends_on": [
+        "render-and-watermark",
+        "upload-and-quota"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RENDER-007",
+        "FR-SELECT-005"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-011"
+      ],
+      "expected_files": [
+        "packages/db/migrations/014_music.sql",
+        "apps/worker/src/render/music.ts",
+        "apps/worker/src/render/loudness.ts",
+        "apps/worker/src/render/ffmpeg.ts",
+        "apps/worker/src/workers/render.ts",
+        "apps/web/src/app/upload/Uploader.tsx",
+        "apps/worker/assets/music/komiku-everything-is-groovy.mp3",
+        "packages/shared/src/fragments.ts"
+      ]
     }
   ]
 }
