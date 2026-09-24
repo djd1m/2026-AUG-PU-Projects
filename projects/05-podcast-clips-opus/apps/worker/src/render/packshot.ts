@@ -3,9 +3,10 @@ import { FFmpegError } from './exec.js';
 import { MUSIC_MAX_GAIN_DB, STINGERS } from './music.js';
 
 export const STINGER_SECONDS = 0.8;
-// 24.09.2026: владелец — «удар слишком тихий, я не понял даже где он» при 6 LU и низкочастотном сэмпле.
-// Акцент на уровне речи; от перегрузки защищает пиковый потолок −3 − P. Вспышка — оценки, не измерения.
-export const STINGER_MARGIN_LU = 0;
+// 24.09.2026, два прослушивания владельца: 6 LU и низкочастотный сэмпл — «не понял даже где он»;
+// 0 LU с новым сэмплом — «слишком громкий, чуть потише». Итог 3 LU. Пиковый потолок −3 − P сохранён.
+// Вспышка 0,35 / 0,25 — владелец: «заметил вспышку, норм» (24.09.2026).
+export const STINGER_MARGIN_LU = 3;
 export const FLASH_PEAK = 0.35;
 export const FLASH_HALF_WIDTH_SECONDS = 0.25;
 export const STINGER_ENVELOPE = `atrim=0:${STINGER_SECONDS},afade=t=out:st=0.6:d=0.2`;
