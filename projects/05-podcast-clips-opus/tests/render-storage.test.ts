@@ -44,7 +44,7 @@ it('connection loss during publication cannot make an old attempt delete or over
     return { rowCount: 1, rows: [{ id: 'clip' }] };
   });
   const pool = { connect: async () => ({ query, release: vi.fn() }) } as unknown as Pool;
-  await expect(publishRenderResult(pool, attempt, { object_key: 'clip', thumbnail_key: 'thumb', bytes: 5, watermarked: true }, async () => {
+  await expect(publishRenderResult(pool, attempt, { object_key: 'clip', thumbnail_key: 'thumb', bytes: 5, watermarked: true, duration_seconds: 20 }, async () => {
     await f.storage.put('clip', f.file, 'video/mp4', 'same-contract', signal);
     connectionLost = true; // DB becomes unavailable while the publisher runs outside its transaction.
     expect(await f.storage.put('clip', f.file, 'video/mp4', 'same-contract', signal)).toBe(5); // next delivery adopted it

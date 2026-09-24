@@ -13,6 +13,7 @@ vi.mock('@clipmaker/db', () => db);
 import { handleRenderJob } from '../apps/worker/src/workers/render';
 afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
 it('actual teaser bytes bind contract; absent equals baseline and music-only fixtures', async () => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(loudness, 'measureLoudness').mockImplementation(async p => p.includes('komiku') ? -15 : -20);
   vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));

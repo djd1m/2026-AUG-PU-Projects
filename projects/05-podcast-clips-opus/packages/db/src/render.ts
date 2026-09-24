@@ -3,6 +3,7 @@ import { transaction } from './quota.js';
 import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
 import { parseTranscript } from '@clipmaker/shared/transcript';
 export interface RenderInput {
+  compact: boolean; loudness_median_db: string | null; cut_plan: [number, number][] | null;
   object_key: string; actual_bytes: string; duration_seconds: string; music: boolean; teaser: boolean; title: string; plan: unknown;
   index: number; start_seconds: string; end_seconds: string; code: string; words: unknown; language: string; segments: unknown;
 }
@@ -20,7 +21,7 @@ export async function lockRender(tx: PoolClient, attempt: Attempt): Promise<bool
 export async function getRenderInput(pool: Pool, attempt: Attempt) {
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
-    const result = await tx.query<RenderInput>(`SELECT v.object_key,v.actual_bytes,v.duration_seconds,v.music,v.teaser,c.title,a.plan,
+    const result = await tx.query<RenderInput>(`SELECT v.object_key,v.actual_bytes,v.duration_seconds,v.music,v.teaser,v.compact,v.loudness_median_db,c.cut_plan,c.title,a.plan,
       c.index,c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
       JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       JOIN clip_link l ON l.clip_id=c.id JOIN transcript t ON t.video_id=v.id WHERE c.id=$1`, [attempt.clip_id]);
@@ -65,7 +66,7 @@ export async function retryRender(pool: Pool, attempt: Attempt, reason: 'ffmpeg_
     return null;
   });
 }
-export interface RenderResult { object_key: string; thumbnail_key: string; bytes: number; watermarked: boolean }
+export interface RenderResult { object_key: string; thumbnail_key: string; bytes: number; watermarked: boolean; duration_seconds: number }
 // Publish outside the transaction; storage must enforce create-only publication.
 // Concurrent PUTs may adopt the same immutable contract; DB acceptance remains fenced.
 // Never delete canonical objects here: after a DB error they may already be adopted
@@ -75,13 +76,31 @@ export async function publishRenderResult(pool: Pool, attempt: Attempt, result: 
   const bytes = await publish();
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return false; }
-    const accepted = await tx.query(`UPDATE clip SET status='done',object_key=$4,thumbnail_key=$5,bytes=$6,watermarked=$7,failure_reason=NULL
+    const accepted = await tx.query(`UPDATE clip SET status='done',object_key=$4,thumbnail_key=$5,bytes=$6,watermarked=$7,duration_seconds=$8,failure_reason=NULL
       WHERE id=$1 AND video_id=$2 AND render_fence=$3 AND status='rendering' RETURNING id`,
-    [attempt.clip_id, attempt.video_id, attempt.fence, result.object_key, result.thumbnail_key, bytes, result.watermarked]);
+    [attempt.clip_id, attempt.video_id, attempt.fence, result.object_key, result.thumbnail_key, bytes, result.watermarked, result.duration_seconds]);
     if (!accepted.rowCount) { auditAttempt('stale_attempt_result', attempt); return false; }
     await tx.query(`UPDATE job_attempt SET status='succeeded',wait_reason=NULL,finished_at=now() WHERE video_id=$1 AND fence=$2`,
       [attempt.video_id, attempt.fence]);
     await updateRenderProgress(tx, attempt.video_id);
     return true;
+  });
+}
+
+// Both conditional write and authoritative reread are protected by the attempt fence.
+export async function saveCutPlan(pool: Pool, attempt: Attempt, plan: [number, number][], signal?: AbortSignal) {
+  return transaction(pool, async tx => {
+    if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
+    signal?.throwIfAborted();
+    await tx.query('UPDATE clip SET cut_plan=$1 WHERE id=$2 AND cut_plan IS NULL', [JSON.stringify(plan), attempt.clip_id]);
+    return (await tx.query<{ cut_plan: [number, number][] }>('SELECT cut_plan FROM clip WHERE id=$1', [attempt.clip_id])).rows[0]!.cut_plan;
+  });
+}
+export async function saveLoudnessMedian(pool: Pool, attempt: Attempt, median: number, signal?: AbortSignal) {
+  return transaction(pool, async tx => {
+    if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
+    signal?.throwIfAborted();
+    await tx.query('UPDATE video SET loudness_median_db=$1 WHERE id=$2 AND loudness_median_db IS NULL', [median, attempt.video_id]);
+    return Number((await tx.query<{ loudness_median_db: string }>('SELECT loudness_median_db FROM video WHERE id=$1', [attempt.video_id])).rows[0]!.loudness_median_db);
   });
 }

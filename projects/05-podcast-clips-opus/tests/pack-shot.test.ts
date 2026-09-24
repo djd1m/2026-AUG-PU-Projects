@@ -17,6 +17,7 @@ const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', st
   origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true, clipIndex: 1 };
 afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
 function setup() {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(faces, 'detectFaces').mockResolvedValue(null);
   const band = vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);

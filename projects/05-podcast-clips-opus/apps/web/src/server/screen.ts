@@ -70,6 +70,7 @@ export class ScreenService {
   }
 }
 export interface ClipRow {
+  duration_seconds?: string | null;
   id: string; index: number; start_seconds: string; end_seconds: string; title: string; status: ClipStatus;
   watermarked: boolean; object_key: string | null; expires_at: Date | null;
   score: number | null; score_hook: number | null; score_completeness: number | null; score_length: number | null;
@@ -80,7 +81,7 @@ export function presentClip(row: ClipRow, video: Pick<VideoRow, 'plan' | 'finish
   const score = row.score === null ? {} : scoreSchema.parse({ score: row.score,
     components: { hook: row.score_hook, completeness: row.score_completeness, length: row.score_length },
     explanations: { hook: row.explain_hook, completeness: row.explain_completeness, length: row.explain_length } });
-  return { clip_id: row.id, index: row.index, start: Number(row.start_seconds), end: Number(row.end_seconds), title: row.title,
+  return { duration_seconds: row.duration_seconds == null ? null : Number(row.duration_seconds), clip_id: row.id, index: row.index, start: Number(row.start_seconds), end: Number(row.end_seconds), title: row.title,
     status: row.status, watermarked: row.watermarked, expires_at: expires?.toISOString() ?? null,
     available: row.status === 'done' && !!row.object_key && (!expires || expires > now), ...score };
 }

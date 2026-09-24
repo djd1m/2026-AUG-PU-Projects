@@ -32,7 +32,7 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
     }
     return { account, video, attempts, attempt: attempts[0]! };
   }
-  const output = { object_key: 'clip', thumbnail_key: 'thumb', bytes: 10, watermarked: true };
+  const output = { object_key: 'clip', thumbnail_key: 'thumb', bytes: 10, watermarked: true, duration_seconds: 20 };
   it('SL-008 saved wide code fails immediately with own reason, even with duplicate deliveries', async () => {
     const { mkdtemp, rm, writeFile } = await import('node:fs/promises');
     const { tmpdir } = await import('node:os');

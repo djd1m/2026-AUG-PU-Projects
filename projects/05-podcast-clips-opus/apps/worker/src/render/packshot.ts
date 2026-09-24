@@ -23,13 +23,13 @@ export function buildStingerAudioGraph(packshot: PreparedPackshot): string {
   return `[2:a:0]${STINGER_ENVELOPE},volume=${packshot.gain_db}dB,`
     + `aformat=sample_rates=44100:channel_layouts=stereo,adelay=${packshot.t0_ms}:all=1[stinger];`;
 }
-export async function preparePackshot(input: string, start: number, duration: number, signal?: AbortSignal): Promise<PreparedPackshot | null> {
+export async function preparePackshot(input: string, start: number, duration: number, signal?: AbortSignal, sourceDuration = duration): Promise<PreparedPackshot | null> {
   const skip = (reason: string) => { console.info(JSON.stringify({ event: 'packshot_skipped', reason })); return null; };
   const stinger = STINGERS[0];
   let speech: FullLoudness, sample: FullLoudness;
   try {
     signal?.throwIfAborted();
-    speech = await measureFullLoudness(input, start, duration, signal);
+    speech = await measureFullLoudness(input, start, sourceDuration, signal);
     sample = sampleMeasurement ?? await measureFullLoudness(stinger.path, 0, STINGER_SECONDS, signal, STINGER_ENVELOPE);
     signal?.throwIfAborted();
     // Cache only successful finite measurements, never an in-flight promise or failure.

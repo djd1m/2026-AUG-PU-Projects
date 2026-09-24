@@ -31,3 +31,17 @@ export function probeVideoStream(path: string, signal?: AbortSignal): Promise<Vi
     });
   });
 }
+
+export function probeDuration(path: string, signal?: AbortSignal): Promise<number> {
+  return new Promise((resolve, reject) => {
+    execFile('ffprobe', ['-v', 'error', '-protocol_whitelist', 'file', '-show_entries', 'format=duration', '-of', 'json', path],
+      { timeout: 30_000, maxBuffer: 65536, signal }, (error, stdout) => {
+        if (error) { reject(error); return; }
+        try {
+          const duration = Number(JSON.parse(stdout).format?.duration);
+          if (!Number.isFinite(duration) || duration <= 0) throw new Error('Invalid rendered duration');
+          resolve(duration);
+        } catch (error) { reject(error); }
+      });
+  });
+}

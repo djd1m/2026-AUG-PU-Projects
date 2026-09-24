@@ -1,3 +1,5 @@
+import { parseCutPlan, planCuts, planDuration, COMPACT_KEEP_SECONDS, COMPACT_XFADE_SECONDS, type Segment } from '../render/compaction.js';
+import { measureEnvelope, envelopeMedian, InvalidEnvelopeError } from '../render/envelope.js';
 import { STINGER_MARGIN_LU, STINGER_ENVELOPE, FLASH_SHAPE_VERSION, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../render/packshot.js';
 import { WatermarkGeometryError } from '@clipmaker/shared/watermark';
 // Adapted from jan-clone/workers/video-render.ts; job payload contains identity only.
@@ -5,7 +7,7 @@ import { Worker, DelayedError, type Job, type ConnectionOptions } from 'bullmq';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { stat } from 'node:fs/promises';
-import { getRenderInput, setRenderDeferred, retryRender, publishRenderResult, type Pool, type Attempt } from '@clipmaker/db';
+import { getRenderInput, saveCutPlan, saveLoudnessMedian, setRenderDeferred, retryRender, publishRenderResult, type Pool, type Attempt } from '@clipmaker/db';
 import { DEFER_DELAY_MS, type AttemptJob } from '@clipmaker/queue';
 import { withSource, type Download, type freeBytes } from '../media/download.js';
 import { MUSIC_MARGIN_LU } from '../render/music.js';
@@ -29,11 +31,39 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
     const outcome = await withSource(deps.directory, input.object_key, BigInt(input.actual_bytes), deps.download, async source => {
       signal.throwIfAborted();
       if (!await setRenderDeferred(deps.pool, attempt, false)) return 'stale' as const;
+      const start = Number(input.start_seconds), end = Number(input.end_seconds);
+      let cutPlan: Segment[] | null = input.compact && input.cut_plan !== null ? parseCutPlan(input.cut_plan, start, end) : null;
+      if (input.compact && !cutPlan) {
+        let candidate: Segment[] = [[start, end]];
+        try {
+          let median = input.loudness_median_db === null ? null : Number(input.loudness_median_db);
+          if (median === null) {
+            const measured = envelopeMedian(await measureEnvelope(source, undefined, undefined, signal));
+            median = await saveLoudnessMedian(deps.pool, attempt, measured, signal);
+            if (median === null) return 'stale' as const;
+          }
+          const planned = planCuts(await measureEnvelope(source, start, end - start, signal), median, start, end);
+          candidate = planned.plan;
+          if (planned.reason) console.info(JSON.stringify({ event: 'compaction_skipped', reason: planned.reason }));
+        } catch (error) {
+          signal.throwIfAborted();
+          if (!(error instanceof FFmpegError) && !(error instanceof InvalidEnvelopeError)) throw error;
+          console.info(JSON.stringify({ event: 'compaction_skipped', reason: 'analysis_failed', message: renderErrorMessage(error) }));
+        }
+        signal.throwIfAborted();
+        cutPlan = await saveCutPlan(deps.pool, attempt, candidate, signal);
+        if (!cutPlan) return 'stale' as const;
+        cutPlan = parseCutPlan(cutPlan, start, end);
+      }
+      const compacted = cutPlan && cutPlan.length > 1 ? cutPlan : null;
+      const duration = compacted ? planDuration(compacted) : end - start;
+      if (compacted) console.info(JSON.stringify({ event: 'compaction', cuts: compacted.length - 1,
+        saved_s: end - start - duration, saved_pct: 100 * (end - start - duration) / (end - start) }));
       const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
       const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
-        endTime: Number(input.end_seconds), format: 'portrait', words: input.words, watermark,
+        endTime: Number(input.end_seconds), cutPlan: cutPlan ?? undefined, format: 'portrait', words: input.words, watermark,
         origin: deps.origin, code: input.code, signal, music: input.music, clipIndex: input.index, teaser: input.teaser, title: input.title });
-      await (deps.thumbnail ?? generateThumbnail)(output, thumb, (Number(input.end_seconds) - Number(input.start_seconds)) * 0.25);
+      await (deps.thumbnail ?? generateThumbnail)(output, thumb, duration * 0.25);
       signal.throwIfAborted();
       const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;
       const thumbnail_key = `thumbs/${attempt.video_id}/${attempt.clip_id}.jpg`;
@@ -42,13 +72,14 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
         video: attempt.video_id, clip: attempt.clip_id, source: input.object_key, sourceBytes: input.actual_bytes,
         start: input.start_seconds, end: input.end_seconds, words: input.words, watermark, origin: deps.origin,
         code: input.code, font: RENDER_FONT_SHA256,
+        ...(compacted ? { cut_plan: compacted, compact: `v1:${COMPACT_KEEP_SECONDS}:${COMPACT_XFADE_SECONDS}` } : {}),
         ...(rendered.teaser ? { teaser: { text_sha256: createHash('sha256').update(rendered.teaser.lines.join('\n'), 'utf8').digest('hex'),
           lines: rendered.teaser.lines.length, font_size: rendered.teaser.font_size, version: 'v1' } } : {}),
         ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}),
         ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU, envelope: STINGER_ENVELOPE,
           flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');
       const uploadSignal = AbortSignal.any([signal, AbortSignal.timeout(120_000)]);
-      const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark }, async () => {
+      const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark, duration_seconds: rendered.duration_seconds }, async () => {
         const storedBytes = await deps.storage.put(object_key, output, 'video/mp4', contract, uploadSignal);
         await deps.storage.put(thumbnail_key, thumb, 'image/jpeg', contract, uploadSignal);
         return storedBytes;

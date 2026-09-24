@@ -150,3 +150,10 @@ it('файл открывается сразу, даже если запись �
     expect(anchor.click.mock.invocationCallOrder[0]).toBeLessThan(analytics.mock.invocationCallOrder[0]!);
   } finally { vi.unstubAllGlobals(); analytics.mockRestore(); }
 });
+
+it('actual clip duration is numeric in screen and used by ClipCard; null falls back', () => {
+  const screen = presentClip({ ...clip, duration_seconds: '20.12' }, video, now);
+  expect(screen.duration_seconds).toBe(20.12);
+  expect(renderToStaticMarkup(createElement(ClipCard, { clip: screen }))).toContain('20.1');
+  expect(renderToStaticMarkup(createElement(ClipCard, { clip: { ...screen, duration_seconds: null } }))).toContain('23.0');
+});

@@ -23,7 +23,7 @@ export function ClipCard({ clip }: { clip: ClipScreen }) {
     <div className="clip-preview">{clip.available ? <video controls playsInline preload="none"
       poster={`/api/clips/${clip.clip_id}/thumbnail`} src={`/api/clips/${clip.clip_id}/file`} aria-label={clip.title} />
       : <p>{expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать клип' : 'Собираем клип…'}</p>}</div>
-    <div className="clip-body"><div className="eyebrow">ФРАГМЕНТ {String(clip.index).padStart(2, '0')} · {(clip.end - clip.start).toFixed(1)} с</div>
+    <div className="clip-body"><div className="eyebrow">ФРАГМЕНТ {String(clip.index).padStart(2, '0')} · {(clip.duration_seconds == null ? clip.end - clip.start : Number(clip.duration_seconds)).toFixed(1)} с</div>
       <h3>{clip.title}</h3>{clip.score !== undefined && clip.components && clip.explanations ? <section aria-label="Оценка фрагмента">
         <p className="score"><strong>{clip.score}</strong><span> / 99</span></p><dl className="score-details">
           <dt>Цепкость · {clip.components.hook}/33</dt><dd>{clip.explanations.hook}</dd>

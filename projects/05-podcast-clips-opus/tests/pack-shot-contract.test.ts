@@ -14,6 +14,7 @@ vi.mock('@clipmaker/db', () => db);
 import { handleRenderJob } from '../apps/worker/src/workers/render';
 afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
 it('hash comes from actual packshot; absent equals HEAD music-only and includes all estimates', async () => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(loudness, 'measureLoudness').mockImplementation(async path => path.includes('komiku') ? -15 : -20);
   const full = vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));

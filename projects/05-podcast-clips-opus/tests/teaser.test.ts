@@ -72,6 +72,7 @@ it('safe area and no intersections with subtitle or watermark zones', () => {
   expect(buildTeaserFilter('/tmp/t.txt', 84)).toContain(`y=${TEASER_Y}*h`);
 });
 it('emoji skips teaser and render succeeds with one encode, never watermark_geometry', async () => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
@@ -81,6 +82,7 @@ it('emoji skips teaser and render succeeds with one encode, never watermark_geom
   expect(encode.mock.calls[0]![0].join(' ')).not.toContain('textfile=');
 });
 it('render uses textfile once and returns actual layout; off means no overlay', async () => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   let text = '';
   const encode = vi.spyOn(exec, 'execFFmpeg').mockImplementation(async args => {
@@ -110,6 +112,7 @@ it('strict teaser schema accepts only optional boolean', () => {
   }
 });
 it.each([NaN, Infinity, 1.5])('invalid clip index %s logs fallback', async clipIndex => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});

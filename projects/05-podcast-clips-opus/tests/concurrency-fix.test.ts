@@ -55,7 +55,7 @@ it('RC-003 publication holds no transaction or pool client', async () => {
   });
   const pool = { connect: async () => { clients++; return { query, release: () => { clients--; } }; } } as unknown as Pool;
   expect(await publishRenderResult(pool, { ...attempt, stage: 'render', clip_id: 'clip' },
-    { object_key: 'clip', thumbnail_key: 'thumb', bytes: 1, watermarked: true }, async () => {
+    { object_key: 'clip', thumbnail_key: 'thumb', bytes: 1, watermarked: true, duration_seconds: 20 }, async () => {
       expect(inTransaction).toBe(false); expect(clients).toBe(0); return 1;
     })).toBe(true);
 });

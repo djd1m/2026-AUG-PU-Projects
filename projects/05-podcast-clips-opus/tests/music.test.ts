@@ -46,15 +46,17 @@ it('catalogue bytes and duration are pinned without reading README', async () =>
   }
 });
 it('off arguments equal main fixture byte for byte', async () => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   const measure = vi.spyOn(loudness, 'measureLoudness');
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
-  expect(await renderClip({ ...options, music: false })).toEqual({ teaser: null, music: null, packshot: null });
+  expect(await renderClip({ ...options, music: false })).toEqual({ duration_seconds: 20, teaser: null, music: null, packshot: null });
   const args = encode.mock.calls[0]![0].map(s => s.replace(/\/tmp\/render-[^/]+/g, '<TEMP>').replaceAll(process.cwd() + '/', '<ROOT>/'));
   expect(args).toEqual(JSON.parse(await readFile('tests/fixtures/music-bed/baseline.json', 'utf8')).args);
   expect(measure).not.toHaveBeenCalled();
 });
 it.each([null, { index: 2, width: 1920, height: 1080 }])('mix graph is attached in video branch %j', async video => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(video);
   vi.spyOn(faces, 'detectFaces').mockResolvedValue(null);
   vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);
@@ -68,11 +70,12 @@ it.each([null, { index: 2, width: 1920, height: 1080 }])('mix graph is attached 
   expect(args).toContain('[aout]'); expect(args).not.toContain('0:a:0');
 });
 it.each([NaN, -Infinity, -70, -60])('quiet/invalid speech %s skips, rendering succeeds', async value => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(value).mockResolvedValueOnce(-15);
   vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-  expect(await renderClip({ ...options, music: true })).toEqual({ teaser: null, music: null, packshot: null });
+  expect(await renderClip({ ...options, music: true })).toEqual({ duration_seconds: 20, teaser: null, music: null, packshot: null });
   expect(log).toHaveBeenCalledWith(expect.stringContaining('music_skipped'));
 });
 it.each([-60, NaN])('invalid track %s skips', async value => {
@@ -86,11 +89,12 @@ it('gain ceiling skips rather than amplifying beyond 12 dB', async () => {
   expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'music_skipped', reason: 'gain_out_of_range' }));
 });
 it.each(['ffmpeg_failed', 'ffmpeg_timeout'] as const)('measurement %s skips music; external cancellation propagates', async reason => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   const measure = vi.spyOn(loudness, 'measureLoudness').mockRejectedValue(new exec.FFmpegError(reason));
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-  expect(await renderClip({ ...options, music: true })).toEqual({ teaser: null, music: null, packshot: null });
+  expect(await renderClip({ ...options, music: true })).toEqual({ duration_seconds: 20, teaser: null, music: null, packshot: null });
   expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'music_skipped', reason: 'measure_failed' }));
   expect(encode).toHaveBeenCalledTimes(1);
   const controller = new AbortController();
@@ -120,6 +124,7 @@ it('strict upload schema accepts optional boolean only', () => {
 });
 
 it('gain rounds to tenths before filter and returned contract', async () => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-16.3).mockResolvedValueOnce(-28.2);
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
@@ -153,6 +158,7 @@ it('selection cycles deterministically over the ordered catalogue twice', () => 
   }
 });
 it.each([2, 5, 13])('selected track drives measurement, ffmpeg input and identity for clip %s', async clipIndex => {
+  vi.spyOn(probe, 'probeDuration').mockResolvedValue(20);
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   const measure = vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
