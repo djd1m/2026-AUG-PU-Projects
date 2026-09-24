@@ -11,7 +11,7 @@ let directory: string;
 afterEach(async () => { if (directory) await rm(directory, { recursive: true, force: true }); vi.resetAllMocks(); vi.restoreAllMocks(); });
 async function fixture(plan: unknown = 'free') {
   directory = await mkdtemp(join(tmpdir(), 'render-worker-'));
-  db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan,
+  db.getRenderInput.mockResolvedValue({ index: 1, object_key: 'source', actual_bytes: '10', plan,
     start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789' });
   db.setRenderDeferred.mockResolvedValue(true); db.retryRender.mockResolvedValue(null);
   db.publishRenderResult.mockImplementation(async (_pool, _attempt, _result, publish: () => Promise<void>) => { await publish(); return true; });
@@ -68,7 +68,7 @@ it('SL-008 real geometry failure is classified before ffmpeg and never enqueued'
   const encoding = vi.spyOn(exec, 'execFFmpeg');
   const deps = await fixture();
   deps.origin = 'https://clipmkr.ru';
-  db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan: 'free',
+  db.getRenderInput.mockResolvedValue({ index: 1, object_key: 'source', actual_bytes: '10', plan: 'free',
     start_seconds: '0', end_seconds: '20', words: [], code: 'W'.repeat(10) });
   expect(await handleRenderJob(attempt, { ...deps, render: renderClip })).toBe('failed');
   expect(db.retryRender).toHaveBeenCalledWith(deps.pool, attempt, 'watermark_geometry');

@@ -32,7 +32,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
       const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
       const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
         endTime: Number(input.end_seconds), format: 'portrait', words: input.words, watermark,
-        origin: deps.origin, code: input.code, signal, music: input.music });
+        origin: deps.origin, code: input.code, signal, music: input.music, clipIndex: input.index });
       await (deps.thumbnail ?? generateThumbnail)(output, thumb, (Number(input.end_seconds) - Number(input.start_seconds)) * 0.25);
       signal.throwIfAborted();
       const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;

@@ -17,9 +17,9 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(loudness, 'measureLoudness').mockImplementation(async path => path.includes('komiku') ? -15 : -20);
   const full = vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));
-  vi.spyOn(exec, 'execFFmpeg').mockImplementation(async args => { await writeFile(args.at(-1)!, 'video'); });
+  const encode = vi.spyOn(exec, 'execFFmpeg').mockImplementation(async args => { await writeFile(args.at(-1)!, 'video'); });
   const directory = await mkdtemp('/tmp/pack-contract-');
-  const input = { object_key: 'source', actual_bytes: '10', plan: 'free', start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789', music: true };
+  const input = { index: 1, object_key: 'source', actual_bytes: '10', plan: 'free', start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789', music: true };
   db.getRenderInput.mockResolvedValue(input); db.setRenderDeferred.mockResolvedValue(true);
   db.publishRenderResult.mockImplementation(async (_p, _a, _r, publish) => { await publish(); return true; });
   const hashes: string[] = [];
@@ -33,6 +33,19 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
   try {
     expect(await handleRenderJob(attempt, deps)).toBe('done');
     expect(hashes[0]).toBe(JSON.parse(await readFile('tests/fixtures/pack-shot/music-only.json', 'utf8')).contract);
+    input.index = 2;
+    expect(await handleRenderJob(attempt, deps)).toBe('done');
+    const { MUSIC_TRACKS: tracks } = await import('../apps/worker/src/render/music');
+    const selected = tracks[1];
+    const args = encode.mock.calls.at(-1)![0];
+    expect(args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []).slice(1)).toEqual([selected.path]);
+    const selectedContract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
+      video: 'video', clip: 'clip', source: 'source', sourceBytes: '10', start: '0', end: '20', words: [], watermark: true,
+      origin, code: input.code, font: RENDER_FONT_SHA256, music: `${selected.id}:${selected.sha256}`, margin: 18, gain_db: -23 })).digest('hex');
+    expect(hashes[2]).toBe(selectedContract);
+    expect(hashes[2]).not.toBe(hashes[0]);
+    input.index = 1;
+    hashes.splice(2);
     full.mockResolvedValueOnce({ integrated: -16, peak: -4 }).mockResolvedValue({ integrated: -13, peak: -0.8 });
     expect(await handleRenderJob(attempt, deps)).toBe('done');
     expect(hashes[2]).not.toBe(hashes[0]);

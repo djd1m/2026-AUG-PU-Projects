@@ -12,7 +12,7 @@ import { probeVideoStream } from './probe.js';
 import { detectFaces } from './faces.js';
 import { planFraming, planFollow, type FramingPlan, type FollowSegment } from './framing-plan.js';
 import { panelWindow, singleWindow, getFollowFilter, type FramingPositions } from './format.js';
-import { prepareMusic, buildMusicAudioGraph, MUSIC_TRACKS, STINGERS, type RenderOutcome } from './music.js';
+import { prepareMusic, buildMusicAudioGraph, selectTrack, STINGERS, type RenderOutcome } from './music.js';
 export { buildMusicAudioGraph } from './music.js';
 export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   watermark: boolean, origin: string, code: string, source?: SourceDimensions,
@@ -29,7 +29,7 @@ export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
 }
 export interface RenderOptions {
   inputPath: string; outputPath: string; startTime: number; endTime: number;
-  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean;
+  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean; clipIndex?: number;
 }
 export async function renderClip(options: RenderOptions): Promise<RenderOutcome> {
   const duration = options.endTime - options.startTime;
@@ -45,7 +45,8 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
     // Keep permanent watermark geometry failures ahead of probing/retryable media errors.
     if (options.watermark) watermarkGeometry(width, height, options.origin, options.code);
     const video = await probeVideoStream(options.inputPath, options.signal);
-    const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration, options.signal) : null;
+    const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration,
+      selectTrack(typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined), options.signal) : null;
     const packshot = music ? await preparePackshot(options.inputPath, options.startTime, duration, options.signal) : null;
     // Кадрирование по лицам: где люди на самом деле, а не «по половинам кадра».
     // Отказ детектора НЕ валит рендер — план просто остаётся пустым, и кадрирование прежнее.
@@ -68,7 +69,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined);
     const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : `[0:${video.index}]`;
     await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(duration),
-      '-i', options.inputPath, ...(music ? ['-i', MUSIC_TRACKS[0].path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
+      '-i', options.inputPath, ...(music ? ['-i', music.path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
       '-filter_complex', `${source}${vf}[video]${music ? ';' + buildMusicAudioGraph(music.gain_db, duration, packshot) : ''}`,
       '-map', '[video]', '-map', music ? '[aout]' : '0:a:0',
       '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',

@@ -4,7 +4,7 @@ import { promisify } from 'node:util';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { buildMusicAudioGraph, MUSIC_TRACKS, MUSIC_MARGIN_LU, prepareMusic } from '../apps/worker/src/render/music';
+import { buildMusicAudioGraph, MUSIC_TRACKS, selectTrack, MUSIC_MARGIN_LU, prepareMusic } from '../apps/worker/src/render/music';
 import { measureLoudness, parseIntegratedLoudness } from '../apps/worker/src/render/loudness';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
 const exec = promisify(execFile), duration = 20;
@@ -14,9 +14,9 @@ async function ff(args: string[]) { return exec('ffmpeg', ['-nostdin', '-hide_ba
 async function level(path: string, filter = 'anull') {
   return parseIntegratedLoudness((await ff(['-i', path, '-vn', '-af', `${filter},ebur128`, '-f', 'null', '-'])).stderr);
 }
-async function mix(name: string, gain: number, input = speech) {
+async function mix(name: string, gain: number, input = speech, selectedPath = track) {
   const output = join(dir, name + '.wav');
-  await ff(['-i', input, '-i', track, '-filter_complex', buildMusicAudioGraph(gain, duration), '-map', '[aout]', '-t', String(duration), '-ac', '2', output]);
+  await ff(['-i', input, '-i', selectedPath, '-filter_complex', buildMusicAudioGraph(gain, duration), '-map', '[aout]', '-t', String(duration), '-ac', '2', output]);
   return output;
 }
 beforeAll(async () => {
@@ -29,25 +29,29 @@ it('G1 silent music preserves speech within 0.1 LU', async () => {
   console.log(JSON.stringify({ guard: 'G1', base, mixed }));
   expect(Math.abs(mixed - base)).toBeLessThanOrEqual(0.1);
 });
-it('G2 real bed through production graph respects measured speech minus margin', async () => {
-  const s = await measureLoudness(speech, 0, duration), t = await measureLoudness(track, 0, duration);
-  const chosen = await prepareMusic(speech, 0, duration); expect(chosen).not.toBeNull();
+it.each([1, 5])('G2 real bed through production graph respects measured speech minus margin, clip %s', async clipIndex => {
+  const track = selectTrack(clipIndex - 1);
+  const s = await measureLoudness(speech, 0, duration), t = await measureLoudness(track.path, 0, duration);
+  const chosen = await prepareMusic(speech, 0, duration, track); expect(chosen).not.toBeNull();
   expect(t).toBeGreaterThan(s - MUSIC_MARGIN_LU + 0.5);
   const silence = join(dir, 'silence.wav');
   await ff(['-f', 'lavfi', '-i', `anullsrc=r=44100:cl=stereo`, '-t', String(duration), silence]);
-  const bed = await measureLoudness(await mix('bed-only', chosen!.gain_db, silence), 0, duration);
+  const bed = await measureLoudness(await mix('bed-only', chosen!.gain_db, silence, chosen!.path), 0, duration);
   console.log(JSON.stringify({ guard: 'G2', speech_lufs: s, track_lufs: t, gain_db: chosen!.gain_db, bed_lufs: bed }));
   expect(bed).toBeLessThanOrEqual(s - MUSIC_MARGIN_LU + 0.5);
 });
-it('G3 encoded mix true peak stays below -1 dBTP', async () => {
+it.each([1, 5])('G3 encoded mix true peak stays below -1 dBTP, clip %s', async clipIndex => {
   // Short periodic louder bursts provide crest factor, unlike a steady sine.
   const input = join(dir, 'crest.wav');
   await ff(['-f', 'lavfi', '-i', `aevalsrc=0.20*sin(2*PI*1000*t)*(1+2*lt(mod(t\\,1)\\,0.025)):s=44100:d=${duration}`, '-ac', '2', input]);
-  const chosen = await prepareMusic(input, 0, duration); expect(chosen).not.toBeNull();
+  const chosen = await prepareMusic(input, 0, duration, selectTrack(clipIndex - 1)); expect(chosen).not.toBeNull();
   const output = join(dir, 'peak.mp4');
-  const result = await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: duration,
+  const logMix = vi.spyOn(console, 'info');
+  const result = await renderClip({ clipIndex, inputPath: input, outputPath: output, startTime: 0, endTime: duration,
     format: 'portrait', words: [], watermark: false, music: true, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
-  expect(result.music).not.toBeNull();
+  expect(result.music?.track).toBe(chosen!.track);
+  expect(logMix).toHaveBeenCalledWith(expect.stringContaining('music_mix'));
+  logMix.mockRestore();
   const log = (await ff(['-i', output, '-af', 'ebur128=peak=true', '-f', 'null', '-'])).stderr;
   const peak = Number(log.slice(log.lastIndexOf('Summary:')).match(/Peak:\s*([-\d.]+)\s+dBFS/)?.[1]);
   console.log(JSON.stringify({ guard: 'G3', speech_lufs: await measureLoudness(input, 0, duration), gain_db: chosen!.gain_db, peak_dbtp: peak }));

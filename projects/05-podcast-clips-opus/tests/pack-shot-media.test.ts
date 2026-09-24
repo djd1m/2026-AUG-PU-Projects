@@ -23,7 +23,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { vi.restoreAllMocks(); resetStingerCache(); if (dir) await rm(dir, { recursive: true, force: true }); });
 it('audio placement, full-band level and float/AAC peaks through production graph', async () => {
-  const music = await prepareMusic(speech, 0, duration), accent = await preparePackshot(speech, 0, duration);
+  const music = await prepareMusic(speech, 0, duration, MUSIC_TRACKS[0]), accent = await preparePackshot(speech, 0, duration);
   expect(music).not.toBeNull(); expect(accent).not.toBeNull();
   const silence = join(dir, 'silence.wav');
   await ff(['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-t', '20', silence]);

@@ -4,7 +4,7 @@ import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
 import { parseTranscript } from '@clipmaker/shared/transcript';
 export interface RenderInput {
   object_key: string; actual_bytes: string; duration_seconds: string; music: boolean; plan: unknown;
-  start_seconds: string; end_seconds: string; code: string; words: unknown; language: string; segments: unknown;
+  index: number; start_seconds: string; end_seconds: string; code: string; words: unknown; language: string; segments: unknown;
 }
 // Lock video first, as retry/watchdog do. Never compare the video fence for sibling clips.
 export async function lockRender(tx: PoolClient, attempt: Attempt): Promise<boolean> {
@@ -21,7 +21,7 @@ export async function getRenderInput(pool: Pool, attempt: Attempt) {
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
     const result = await tx.query<RenderInput>(`SELECT v.object_key,v.actual_bytes,v.duration_seconds,v.music,a.plan,
-      c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
+      c.index,c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
       JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       JOIN clip_link l ON l.clip_id=c.id JOIN transcript t ON t.video_id=v.id WHERE c.id=$1`, [attempt.clip_id]);
     const row = result.rows[0];

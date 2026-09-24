@@ -1,0 +1,516 @@
+diff --git a/apps/web/src/app/upload/Uploader.tsx b/apps/web/src/app/upload/Uploader.tsx
+index 8f72c12..5995d44 100644
+--- a/apps/web/src/app/upload/Uploader.tsx
++++ b/apps/web/src/app/upload/Uploader.tsx
+@@ -51,7 +51,7 @@ export function VideoUploader() {
+       <p className="muted">MP4, MOV, WebM, M4A, MP3 · 2–90 минут · до 2 ГБ</p>
+       <label><input type="checkbox" checked={music} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
+         onChange={e => setMusic(e.target.checked)} /> Добавить музыку и финальный акцент</label>
+-      <small className="muted">Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0</small>
++      <small className="muted">Komiku — Helice Awesome Dance Adventure · Kenney — Sci-Fi Sounds, CC0</small>
+       <button disabled={busy || !file} onClick={() => void upload()}>{busy ? 'Загружаем…' : resume.current ? 'Начать / продолжить загрузку' : 'Создать клипы →'}</button>
+       {busy && <button className="secondary" onClick={() => controller.current?.abort()}>Приостановить</button>}
+       <p role="status">{message}</p>{videoId && <p className="video-id">video_id: <a href={`/dashboard/videos/${videoId}`}>{videoId}</a></p>}</div></section>;
+diff --git a/apps/worker/assets/music/README.md b/apps/worker/assets/music/README.md
+index 8b068e2..957cbd6 100644
+--- a/apps/worker/assets/music/README.md
++++ b/apps/worker/assets/music/README.md
+@@ -1,11 +1,22 @@
+-# Komiku — Everything is groovy (How to move your body)
++# Komiku — Helice Awesome Dance Adventure !!
+ 
+-Album: Helice Awesome Dance Adventure !!. License: CC0 1.0 Universal.
+-License evidence supplied with the approved brief: Internet Archive item
+-`Komiku-HeliceAwesomeDanceAdventure` (`licenseurl`:
+-`http://creativecommons.org/publicdomain/zero/1.0/`) and the album page on Free Music Archive.
++All tracks: CC0 1.0 Universal. License evidence supplied with the approved brief:
++- Internet Archive: `Komiku-HeliceAwesomeDanceAdventure`, `licenseurl` = `http://creativecommons.org/publicdomain/zero/1.0/`.
++- Free Music Archive: album «Helice Awesome Dance Adventure !!», «CC0 1.0 Universal».
+ 
+-File: `komiku-everything-is-groovy.mp3`, 116 s, MP3, 44.1 kHz, stereo,
+-2,381,126 bytes. SHA-256:
+-`8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d`.
+-The closed catalogue is `src/render/music.ts`; the image need not ship this README.
++Both sources apply to every row below. Files are MP3; filename is `<id>.mp3`.
++The closed catalogue is `apps/worker/src/render/music.ts`; order is significant.
++
++| id | Title | Album track | Duration (s) | SHA-256 |
++|---|---|---|---|---|
++| `komiku-everything-is-groovy` | Everything is groovy | 04 | 116 | `8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d` |
++| `komiku-the-journey-begins` | The journey begins | 11 | 101 | `3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67` |
++| `komiku-road-1-fight` | Road 1 Fight | 13 | 107 | `5115398ad1370cfa862306cc3b59a22a5f537e8a9d2a1a57761bb0aa110f6040` |
++| `komiku-little-town-before-big-city` | Little town before Big city | 18 | 122 | `b6ba5a7e386cbb7fefd2cb8051eff7b9c847a0672e92c27b22585393a3d6edc8` |
++| `komiku-road-3-fight` | Road 3 Fight | 20 | 106 | `b956814f178b345a009cccf8e311339074f8167a276c085cb2b8d2e71479358b` |
++| `komiku-road-4-chill` | Road 4 Chill | 25 | 88 | `eaecda0bc1a72bd38dee47e3e40c27b6627b10f5d328781199a4c7fb2d305ae3` |
++| `komiku-cliff-road-fight` | Cliff Road Fight | 30 | 88 | `e2cde1c16d953533e6307d9feac4878b0a29d66d1febbf4bcf04cc8698936d17` |
++| `komiku-pop-city` | Pop City | 32 | 96 | `8bde21764ab786c422759fd88bb490c6986ac37860366afcc98f9cbeff1fe0d8` |
++| `komiku-dance-with-two-or-more` | Dance with two or more | 36 | 134 | `905eae2cb2d0b80ec063795455e667e08a06b95a5b39c43ef2862d6a567b8ae1` |
++| `komiku-to-fight-a-spell-by-dancing` | To fight a spell by dancing | 39 | 115 | `53542983e293c3b3474ded04c98ba5b7f03653e407e73418069c0d5224d73fc8` |
++| `komiku-we-have-to-dance-together` | We have to dance TOGETHER | 41 | 138 | `78400352ff85490fb1f971956933c26907a481892850a7fe2d07e795366283e8` |
+diff --git a/apps/worker/src/render/ffmpeg.ts b/apps/worker/src/render/ffmpeg.ts
+index 3b4d35e..69e1805 100644
+--- a/apps/worker/src/render/ffmpeg.ts
++++ b/apps/worker/src/render/ffmpeg.ts
+@@ -12,7 +12,7 @@ import { probeVideoStream } from './probe.js';
+ import { detectFaces } from './faces.js';
+ import { planFraming, planFollow, type FramingPlan, type FollowSegment } from './framing-plan.js';
+ import { panelWindow, singleWindow, getFollowFilter, type FramingPositions } from './format.js';
+-import { prepareMusic, buildMusicAudioGraph, MUSIC_TRACKS, STINGERS, type RenderOutcome } from './music.js';
++import { prepareMusic, buildMusicAudioGraph, selectTrack, STINGERS, type RenderOutcome } from './music.js';
+ export { buildMusicAudioGraph } from './music.js';
+ export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
+   watermark: boolean, origin: string, code: string, source?: SourceDimensions,
+@@ -29,7 +29,7 @@ export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
+ }
+ export interface RenderOptions {
+   inputPath: string; outputPath: string; startTime: number; endTime: number;
+-  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean;
++  format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean; clipIndex?: number;
+ }
+ export async function renderClip(options: RenderOptions): Promise<RenderOutcome> {
+   const duration = options.endTime - options.startTime;
+@@ -45,7 +45,8 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
+     // Keep permanent watermark geometry failures ahead of probing/retryable media errors.
+     if (options.watermark) watermarkGeometry(width, height, options.origin, options.code);
+     const video = await probeVideoStream(options.inputPath, options.signal);
+-    const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration, options.signal) : null;
++    const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration,
++      selectTrack(typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined), options.signal) : null;
+     const packshot = music ? await preparePackshot(options.inputPath, options.startTime, duration, options.signal) : null;
+     // Кадрирование по лицам: где люди на самом деле, а не «по половинам кадра».
+     // Отказ детектора НЕ валит рендер — план просто остаётся пустым, и кадрирование прежнее.
+@@ -68,7 +69,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
+       video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined);
+     const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : `[0:${video.index}]`;
+     await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(duration),
+-      '-i', options.inputPath, ...(music ? ['-i', MUSIC_TRACKS[0].path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
++      '-i', options.inputPath, ...(music ? ['-i', music.path] : []), ...(packshot ? ['-i', STINGERS[0].path] : []),
+       '-filter_complex', `${source}${vf}[video]${music ? ';' + buildMusicAudioGraph(music.gain_db, duration, packshot) : ''}`,
+       '-map', '[video]', '-map', music ? '[aout]' : '0:a:0',
+       '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
+diff --git a/apps/worker/src/render/music.ts b/apps/worker/src/render/music.ts
+index e8300af..31e779f 100644
+--- a/apps/worker/src/render/music.ts
++++ b/apps/worker/src/render/music.ts
+@@ -6,9 +6,47 @@ import { FFmpegError } from './exec.js';
+ // Решение владельца 24.09.2026 (OWN-009, В-8): прослушаны 7 клипов записи 88 мин — «нормально».
+ export const MUSIC_MARGIN_LU = 18;
+ export const MUSIC_MAX_GAIN_DB = 12;
+-export const MUSIC_TRACKS = [{ id: 'komiku-everything-is-groovy',
+-  sha256: '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d',
+-  path: resolve('apps/worker/assets/music/komiku-everything-is-groovy.mp3') }] as const;
++export const MUSIC_TRACKS = [
++  { id: 'komiku-everything-is-groovy',
++    sha256: '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d',
++    path: resolve('apps/worker/assets/music/komiku-everything-is-groovy.mp3') },
++  { id: 'komiku-the-journey-begins',
++    sha256: '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67',
++    path: resolve('apps/worker/assets/music/komiku-the-journey-begins.mp3') },
++  { id: 'komiku-road-1-fight',
++    sha256: '5115398ad1370cfa862306cc3b59a22a5f537e8a9d2a1a57761bb0aa110f6040',
++    path: resolve('apps/worker/assets/music/komiku-road-1-fight.mp3') },
++  { id: 'komiku-little-town-before-big-city',
++    sha256: 'b6ba5a7e386cbb7fefd2cb8051eff7b9c847a0672e92c27b22585393a3d6edc8',
++    path: resolve('apps/worker/assets/music/komiku-little-town-before-big-city.mp3') },
++  { id: 'komiku-road-3-fight',
++    sha256: 'b956814f178b345a009cccf8e311339074f8167a276c085cb2b8d2e71479358b',
++    path: resolve('apps/worker/assets/music/komiku-road-3-fight.mp3') },
++  { id: 'komiku-road-4-chill',
++    sha256: 'eaecda0bc1a72bd38dee47e3e40c27b6627b10f5d328781199a4c7fb2d305ae3',
++    path: resolve('apps/worker/assets/music/komiku-road-4-chill.mp3') },
++  { id: 'komiku-cliff-road-fight',
++    sha256: 'e2cde1c16d953533e6307d9feac4878b0a29d66d1febbf4bcf04cc8698936d17',
++    path: resolve('apps/worker/assets/music/komiku-cliff-road-fight.mp3') },
++  { id: 'komiku-pop-city',
++    sha256: '8bde21764ab786c422759fd88bb490c6986ac37860366afcc98f9cbeff1fe0d8',
++    path: resolve('apps/worker/assets/music/komiku-pop-city.mp3') },
++  { id: 'komiku-dance-with-two-or-more',
++    sha256: '905eae2cb2d0b80ec063795455e667e08a06b95a5b39c43ef2862d6a567b8ae1',
++    path: resolve('apps/worker/assets/music/komiku-dance-with-two-or-more.mp3') },
++  { id: 'komiku-to-fight-a-spell-by-dancing',
++    sha256: '53542983e293c3b3474ded04c98ba5b7f03653e407e73418069c0d5224d73fc8',
++    path: resolve('apps/worker/assets/music/komiku-to-fight-a-spell-by-dancing.mp3') },
++  { id: 'komiku-we-have-to-dance-together',
++    sha256: '78400352ff85490fb1f971956933c26907a481892850a7fe2d07e795366283e8',
++    path: resolve('apps/worker/assets/music/komiku-we-have-to-dance-together.mp3') }
++] as const;
++export type MusicTrack = (typeof MUSIC_TRACKS)[number];
++// Zero-based selector; database clip indices are converted at the render boundary.
++export function selectTrack(index: unknown): MusicTrack {
++  if (typeof index !== 'number' || !Number.isSafeInteger(index)) return MUSIC_TRACKS[0];
++  return MUSIC_TRACKS[((index % MUSIC_TRACKS.length) + MUSIC_TRACKS.length) % MUSIC_TRACKS.length]!;
++}
+ export const STINGERS = [{ id: 'kenney-explosion-crunch-002',
+   sha256: 'be2b8ddc62e4a24c91e2e77793de98549ce216faf2f323a917e7d6f34321ff97',
+   path: resolve('apps/worker/assets/sfx/kenney-explosion-crunch-002.ogg') }] as const;
+@@ -22,9 +60,8 @@ export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?
+     + (packshot ? buildStingerAudioGraph(packshot) + '[speech][bed][stinger]amix=inputs=3:duration=first:normalize=0[aout]'
+       : '[speech][bed]amix=inputs=2:duration=first:normalize=0[aout]');
+ }
+-export async function prepareMusic(input: string, start: number, duration: number, signal?: AbortSignal): Promise<MusicMix | null> {
++export async function prepareMusic(input: string, start: number, duration: number, track: MusicTrack, signal?: AbortSignal): Promise<(MusicMix & { path: string }) | null> {
+   const skip = (reason: string) => { console.info(JSON.stringify({ event: 'music_skipped', reason })); return null; };
+-  const track = MUSIC_TRACKS[0];
+   let speech: number, bed: number;
+   try {
+     speech = await measureLoudness(input, start, duration, signal);
+@@ -40,5 +77,5 @@ export async function prepareMusic(input: string, start: number, duration: numbe
+   if (gain > MUSIC_MAX_GAIN_DB) return skip('gain_out_of_range');
+   const roundedGain = Math.round(gain * 10) / 10;
+   console.info(JSON.stringify({ event: 'music_mix', speech_lufs: speech, track_lufs: bed, gain_db: roundedGain }));
+-  return { track: `${track.id}:${track.sha256}`, gain_db: roundedGain };
++  return { track: `${track.id}:${track.sha256}`, path: track.path, gain_db: roundedGain };
+ }
+diff --git a/apps/worker/src/workers/render.ts b/apps/worker/src/workers/render.ts
+index 4721275..e4dab50 100644
+--- a/apps/worker/src/workers/render.ts
++++ b/apps/worker/src/workers/render.ts
+@@ -32,7 +32,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
+       const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
+       const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
+         endTime: Number(input.end_seconds), format: 'portrait', words: input.words, watermark,
+-        origin: deps.origin, code: input.code, signal, music: input.music });
++        origin: deps.origin, code: input.code, signal, music: input.music, clipIndex: input.index });
+       await (deps.thumbnail ?? generateThumbnail)(output, thumb, (Number(input.end_seconds) - Number(input.start_seconds)) * 0.25);
+       signal.throwIfAborted();
+       const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;
+diff --git a/packages/db/src/render.ts b/packages/db/src/render.ts
+index 0bf5c8f..0a5c33a 100644
+--- a/packages/db/src/render.ts
++++ b/packages/db/src/render.ts
+@@ -4,7 +4,7 @@ import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
+ import { parseTranscript } from '@clipmaker/shared/transcript';
+ export interface RenderInput {
+   object_key: string; actual_bytes: string; duration_seconds: string; music: boolean; plan: unknown;
+-  start_seconds: string; end_seconds: string; code: string; words: unknown; language: string; segments: unknown;
++  index: number; start_seconds: string; end_seconds: string; code: string; words: unknown; language: string; segments: unknown;
+ }
+ // Lock video first, as retry/watchdog do. Never compare the video fence for sibling clips.
+ export async function lockRender(tx: PoolClient, attempt: Attempt): Promise<boolean> {
+@@ -21,7 +21,7 @@ export async function getRenderInput(pool: Pool, attempt: Attempt) {
+   return transaction(pool, async tx => {
+     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
+     const result = await tx.query<RenderInput>(`SELECT v.object_key,v.actual_bytes,v.duration_seconds,v.music,a.plan,
+-      c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
++      c.index,c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
+       JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
+       JOIN clip_link l ON l.clip_id=c.id JOIN transcript t ON t.video_id=v.id WHERE c.id=$1`, [attempt.clip_id]);
+     const row = result.rows[0];
+diff --git a/tests/music-media.test.ts b/tests/music-media.test.ts
+index 71b2395..04450cf 100644
+--- a/tests/music-media.test.ts
++++ b/tests/music-media.test.ts
+@@ -4,7 +4,7 @@ import { promisify } from 'node:util';
+ import { mkdtemp, rm } from 'node:fs/promises';
+ import { tmpdir } from 'node:os';
+ import { join } from 'node:path';
+-import { buildMusicAudioGraph, MUSIC_TRACKS, MUSIC_MARGIN_LU, prepareMusic } from '../apps/worker/src/render/music';
++import { buildMusicAudioGraph, MUSIC_TRACKS, selectTrack, MUSIC_MARGIN_LU, prepareMusic } from '../apps/worker/src/render/music';
+ import { measureLoudness, parseIntegratedLoudness } from '../apps/worker/src/render/loudness';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
+ const exec = promisify(execFile), duration = 20;
+@@ -14,9 +14,9 @@ async function ff(args: string[]) { return exec('ffmpeg', ['-nostdin', '-hide_ba
+ async function level(path: string, filter = 'anull') {
+   return parseIntegratedLoudness((await ff(['-i', path, '-vn', '-af', `${filter},ebur128`, '-f', 'null', '-'])).stderr);
+ }
+-async function mix(name: string, gain: number, input = speech) {
++async function mix(name: string, gain: number, input = speech, selectedPath = track) {
+   const output = join(dir, name + '.wav');
+-  await ff(['-i', input, '-i', track, '-filter_complex', buildMusicAudioGraph(gain, duration), '-map', '[aout]', '-t', String(duration), '-ac', '2', output]);
++  await ff(['-i', input, '-i', selectedPath, '-filter_complex', buildMusicAudioGraph(gain, duration), '-map', '[aout]', '-t', String(duration), '-ac', '2', output]);
+   return output;
+ }
+ beforeAll(async () => {
+@@ -29,25 +29,29 @@ it('G1 silent music preserves speech within 0.1 LU', async () => {
+   console.log(JSON.stringify({ guard: 'G1', base, mixed }));
+   expect(Math.abs(mixed - base)).toBeLessThanOrEqual(0.1);
+ });
+-it('G2 real bed through production graph respects measured speech minus margin', async () => {
+-  const s = await measureLoudness(speech, 0, duration), t = await measureLoudness(track, 0, duration);
+-  const chosen = await prepareMusic(speech, 0, duration); expect(chosen).not.toBeNull();
++it.each([1, 5])('G2 real bed through production graph respects measured speech minus margin, clip %s', async clipIndex => {
++  const track = selectTrack(clipIndex - 1);
++  const s = await measureLoudness(speech, 0, duration), t = await measureLoudness(track.path, 0, duration);
++  const chosen = await prepareMusic(speech, 0, duration, track); expect(chosen).not.toBeNull();
+   expect(t).toBeGreaterThan(s - MUSIC_MARGIN_LU + 0.5);
+   const silence = join(dir, 'silence.wav');
+   await ff(['-f', 'lavfi', '-i', `anullsrc=r=44100:cl=stereo`, '-t', String(duration), silence]);
+-  const bed = await measureLoudness(await mix('bed-only', chosen!.gain_db, silence), 0, duration);
++  const bed = await measureLoudness(await mix('bed-only', chosen!.gain_db, silence, chosen!.path), 0, duration);
+   console.log(JSON.stringify({ guard: 'G2', speech_lufs: s, track_lufs: t, gain_db: chosen!.gain_db, bed_lufs: bed }));
+   expect(bed).toBeLessThanOrEqual(s - MUSIC_MARGIN_LU + 0.5);
+ });
+-it('G3 encoded mix true peak stays below -1 dBTP', async () => {
++it.each([1, 5])('G3 encoded mix true peak stays below -1 dBTP, clip %s', async clipIndex => {
+   // Short periodic louder bursts provide crest factor, unlike a steady sine.
+   const input = join(dir, 'crest.wav');
+   await ff(['-f', 'lavfi', '-i', `aevalsrc=0.20*sin(2*PI*1000*t)*(1+2*lt(mod(t\\,1)\\,0.025)):s=44100:d=${duration}`, '-ac', '2', input]);
+-  const chosen = await prepareMusic(input, 0, duration); expect(chosen).not.toBeNull();
++  const chosen = await prepareMusic(input, 0, duration, selectTrack(clipIndex - 1)); expect(chosen).not.toBeNull();
+   const output = join(dir, 'peak.mp4');
+-  const result = await renderClip({ inputPath: input, outputPath: output, startTime: 0, endTime: duration,
++  const logMix = vi.spyOn(console, 'info');
++  const result = await renderClip({ clipIndex, inputPath: input, outputPath: output, startTime: 0, endTime: duration,
+     format: 'portrait', words: [], watermark: false, music: true, origin: 'https://clipmkr.ru', code: 'WWWWWW' });
+-  expect(result.music).not.toBeNull();
++  expect(result.music?.track).toBe(chosen!.track);
++  expect(logMix).toHaveBeenCalledWith(expect.stringContaining('music_mix'));
++  logMix.mockRestore();
+   const log = (await ff(['-i', output, '-af', 'ebur128=peak=true', '-f', 'null', '-'])).stderr;
+   const peak = Number(log.slice(log.lastIndexOf('Summary:')).match(/Peak:\s*([-\d.]+)\s+dBFS/)?.[1]);
+   console.log(JSON.stringify({ guard: 'G3', speech_lufs: await measureLoudness(input, 0, duration), gain_db: chosen!.gain_db, peak_dbtp: peak }));
+diff --git a/tests/music.test.ts b/tests/music.test.ts
+index f6564f7..168fed0 100644
+--- a/tests/music.test.ts
++++ b/tests/music.test.ts
+@@ -9,11 +9,11 @@ import * as probe from '../apps/worker/src/render/probe';
+ import * as faces from '../apps/worker/src/render/faces';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
+ import { resetStingerCache } from '../apps/worker/src/render/packshot';
+-import { MUSIC_TRACKS, prepareMusic } from '../apps/worker/src/render/music';
++import { MUSIC_TRACKS, selectTrack, prepareMusic } from '../apps/worker/src/render/music';
+ import { createVideoSchema } from '../apps/web/src/server/upload-contract';
+ const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
+   format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
+-  origin: 'https://clipmkr.ru', code: 'WWWWWW' };
++  origin: 'https://clipmkr.ru', code: 'WWWWWW', clipIndex: 1 };
+ beforeEach(() => {
+   // Эти тесты — про музыку без пэк-шота.
+   resetStingerCache();
+@@ -32,10 +32,18 @@ it('parser uses final Summary from real silence/sine logs, never frame I', async
+   expect(loudness.parseIntegratedLoudness('Summary:\n I: -10 LUFS\nSummary:\n I: -25 LUFS')).toBe(-25);
+ });
+ it('catalogue bytes and duration are pinned without reading README', async () => {
+-  const track = MUSIC_TRACKS[0];
+-  expect(createHash('sha256').update(await readFile(track.path)).digest('hex')).toBe(track.sha256);
+-  const { stdout } = await promisify(execFile)('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', track.path]);
+-  expect(Number(JSON.parse(stdout).format.duration)).toBeGreaterThanOrEqual(75);
++  expect(MUSIC_TRACKS).toHaveLength(11);
++  expect(MUSIC_TRACKS.map(t => t.id)).toEqual([
++    'komiku-everything-is-groovy', 'komiku-the-journey-begins', 'komiku-road-1-fight',
++    'komiku-little-town-before-big-city', 'komiku-road-3-fight', 'komiku-road-4-chill',
++    'komiku-cliff-road-fight', 'komiku-pop-city', 'komiku-dance-with-two-or-more',
++    'komiku-to-fight-a-spell-by-dancing', 'komiku-we-have-to-dance-together',
++  ]);
++  for (const track of MUSIC_TRACKS) {
++    expect(createHash('sha256').update(await readFile(track.path)).digest('hex')).toBe(track.sha256);
++    const { stdout } = await promisify(execFile)('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', track.path]);
++    expect(Number(JSON.parse(stdout).format.duration)).toBeGreaterThanOrEqual(75);
++  }
+ });
+ it('off arguments equal main fixture byte for byte', async () => {
+   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
+@@ -69,12 +77,12 @@ it.each([NaN, -Infinity, -70, -60])('quiet/invalid speech %s skips, rendering su
+ });
+ it.each([-60, NaN])('invalid track %s skips', async value => {
+   vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(value);
+-  expect(await prepareMusic('input', 0, 20)).toBeNull();
++  expect(await prepareMusic('input', 0, 20, MUSIC_TRACKS[0])).toBeNull();
+ });
+ it('gain ceiling skips rather than amplifying beyond 12 dB', async () => {
+   vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-10).mockResolvedValueOnce(-50);
+   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
+-  expect(await prepareMusic('input', 0, 20)).toBeNull();
++  expect(await prepareMusic('input', 0, 20, MUSIC_TRACKS[0])).toBeNull();
+   expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'music_skipped', reason: 'gain_out_of_range' }));
+ });
+ it.each(['ffmpeg_failed', 'ffmpeg_timeout'] as const)('measurement %s skips music; external cancellation propagates', async reason => {
+@@ -133,3 +141,26 @@ it('measurement default timeout is two minutes and external abort kills running
+     await rejected;
+   }
+ });
++
++it('selection cycles deterministically over the ordered catalogue twice', () => {
++  for (let index = 0; index < 22; index++) {
++    expect(selectTrack(index)).toBe(MUSIC_TRACKS[index % 11]);
++    expect(selectTrack(index)).toBe(selectTrack(index));
++  }
++  expect(selectTrack(-1)).toBe(MUSIC_TRACKS[10]);
++  for (const invalid of [1.5, '3', Infinity, NaN, undefined, null, -Infinity, Number.MAX_SAFE_INTEGER + 1]) {
++    expect(selectTrack(invalid)).toBe(MUSIC_TRACKS[0]);
++  }
++});
++it.each([2, 5, 12])('selected track drives measurement, ffmpeg input and identity for clip %s', async clipIndex => {
++  vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
++  const measure = vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(-20).mockResolvedValueOnce(-15);
++  const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
++  const result = await renderClip({ ...options, music: true, clipIndex });
++  const track = MUSIC_TRACKS[(clipIndex - 1) % 11]!;
++  expect(measure).toHaveBeenNthCalledWith(2, track.path, 0, 20, undefined);
++  const args = encode.mock.calls[0]![0];
++  const inputs = args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []);
++  expect(inputs).toEqual([options.inputPath, track.path]);
++  expect(result.music).toEqual({ track: `${track.id}:${track.sha256}`, gain_db: -23 });
++});
+diff --git a/tests/pack-shot-contract.test.ts b/tests/pack-shot-contract.test.ts
+index b660618..ded115b 100644
+--- a/tests/pack-shot-contract.test.ts
++++ b/tests/pack-shot-contract.test.ts
+@@ -17,9 +17,9 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes
+   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
+   vi.spyOn(loudness, 'measureLoudness').mockImplementation(async path => path.includes('komiku') ? -15 : -20);
+   const full = vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));
+-  vi.spyOn(exec, 'execFFmpeg').mockImplementation(async args => { await writeFile(args.at(-1)!, 'video'); });
++  const encode = vi.spyOn(exec, 'execFFmpeg').mockImplementation(async args => { await writeFile(args.at(-1)!, 'video'); });
+   const directory = await mkdtemp('/tmp/pack-contract-');
+-  const input = { object_key: 'source', actual_bytes: '10', plan: 'free', start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789', music: true };
++  const input = { index: 1, object_key: 'source', actual_bytes: '10', plan: 'free', start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789', music: true };
+   db.getRenderInput.mockResolvedValue(input); db.setRenderDeferred.mockResolvedValue(true);
+   db.publishRenderResult.mockImplementation(async (_p, _a, _r, publish) => { await publish(); return true; });
+   const hashes: string[] = [];
+@@ -33,6 +33,19 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes
+   try {
+     expect(await handleRenderJob(attempt, deps)).toBe('done');
+     expect(hashes[0]).toBe(JSON.parse(await readFile('tests/fixtures/pack-shot/music-only.json', 'utf8')).contract);
++    input.index = 2;
++    expect(await handleRenderJob(attempt, deps)).toBe('done');
++    const { MUSIC_TRACKS: tracks } = await import('../apps/worker/src/render/music');
++    const selected = tracks[1];
++    const args = encode.mock.calls.at(-1)![0];
++    expect(args.flatMap((arg, i) => arg === '-i' ? [args[i + 1]] : []).slice(1)).toEqual([selected.path]);
++    const selectedContract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
++      video: 'video', clip: 'clip', source: 'source', sourceBytes: '10', start: '0', end: '20', words: [], watermark: true,
++      origin, code: input.code, font: RENDER_FONT_SHA256, music: `${selected.id}:${selected.sha256}`, margin: 18, gain_db: -23 })).digest('hex');
++    expect(hashes[2]).toBe(selectedContract);
++    expect(hashes[2]).not.toBe(hashes[0]);
++    input.index = 1;
++    hashes.splice(2);
+     full.mockResolvedValueOnce({ integrated: -16, peak: -4 }).mockResolvedValue({ integrated: -13, peak: -0.8 });
+     expect(await handleRenderJob(attempt, deps)).toBe('done');
+     expect(hashes[2]).not.toBe(hashes[0]);
+diff --git a/tests/pack-shot-media.test.ts b/tests/pack-shot-media.test.ts
+index b710aa2..f3dc108 100644
+--- a/tests/pack-shot-media.test.ts
++++ b/tests/pack-shot-media.test.ts
+@@ -23,7 +23,7 @@ beforeAll(async () => {
+ });
+ afterAll(async () => { vi.restoreAllMocks(); resetStingerCache(); if (dir) await rm(dir, { recursive: true, force: true }); });
+ it('audio placement, full-band level and float/AAC peaks through production graph', async () => {
+-  const music = await prepareMusic(speech, 0, duration), accent = await preparePackshot(speech, 0, duration);
++  const music = await prepareMusic(speech, 0, duration, MUSIC_TRACKS[0]), accent = await preparePackshot(speech, 0, duration);
+   expect(music).not.toBeNull(); expect(accent).not.toBeNull();
+   const silence = join(dir, 'silence.wav');
+   await ff(['-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-t', '20', silence]);
+diff --git a/tests/pack-shot-uploader.test.ts b/tests/pack-shot-uploader.test.ts
+index 6b03781..95d5a0b 100644
+--- a/tests/pack-shot-uploader.test.ts
++++ b/tests/pack-shot-uploader.test.ts
+@@ -6,6 +6,6 @@ import { VideoUploader } from '../apps/web/src/app/upload/Uploader';
+ it('checkbox names both effects and credits both CC0 sources', () => {
+   const html = renderToStaticMarkup(createElement(VideoUploader));
+   expect(html).toContain('Добавить музыку и финальный акцент');
+-  expect(html).toContain('Komiku — Everything is groovy · Kenney — Sci-Fi Sounds, CC0');
++  expect(html.match(/<small class="muted">([^<]*)<\/small>/)?.[1]).toBe('Komiku — Helice Awesome Dance Adventure · Kenney — Sci-Fi Sounds, CC0');
+   expect(html.match(/type="checkbox"/g)).toHaveLength(1);
+ });
+diff --git a/tests/pack-shot.test.ts b/tests/pack-shot.test.ts
+index 0109316..258d20f 100644
+--- a/tests/pack-shot.test.ts
++++ b/tests/pack-shot.test.ts
+@@ -14,7 +14,7 @@ import { preparePackshot, resetStingerCache, buildFlashFilter, STINGER_MARGIN_LU
+ const EXPECTED_GAIN = Math.floor(Math.min(-16 - STINGER_MARGIN_LU + 13, -3 + 0.8) * 10) / 10;
+ const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
+   format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
+-  origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true };
++  origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true, clipIndex: 1 };
+ afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
+ function setup() {
+   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
+diff --git a/tests/render-worker.test.ts b/tests/render-worker.test.ts
+index e8e6adb..7bf6f73 100644
+--- a/tests/render-worker.test.ts
++++ b/tests/render-worker.test.ts
+@@ -11,7 +11,7 @@ let directory: string;
+ afterEach(async () => { if (directory) await rm(directory, { recursive: true, force: true }); vi.resetAllMocks(); vi.restoreAllMocks(); });
+ async function fixture(plan: unknown = 'free') {
+   directory = await mkdtemp(join(tmpdir(), 'render-worker-'));
+-  db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan,
++  db.getRenderInput.mockResolvedValue({ index: 1, object_key: 'source', actual_bytes: '10', plan,
+     start_seconds: '0', end_seconds: '20', words: [], code: 'AB23456789' });
+   db.setRenderDeferred.mockResolvedValue(true); db.retryRender.mockResolvedValue(null);
+   db.publishRenderResult.mockImplementation(async (_pool, _attempt, _result, publish: () => Promise<void>) => { await publish(); return true; });
+@@ -68,7 +68,7 @@ it('SL-008 real geometry failure is classified before ffmpeg and never enqueued'
+   const encoding = vi.spyOn(exec, 'execFFmpeg');
+   const deps = await fixture();
+   deps.origin = 'https://clipmkr.ru';
+-  db.getRenderInput.mockResolvedValue({ object_key: 'source', actual_bytes: '10', plan: 'free',
++  db.getRenderInput.mockResolvedValue({ index: 1, object_key: 'source', actual_bytes: '10', plan: 'free',
+     start_seconds: '0', end_seconds: '20', words: [], code: 'W'.repeat(10) });
+   expect(await handleRenderJob(attempt, { ...deps, render: renderClip })).toBe('failed');
+   expect(db.retryRender).toHaveBeenCalledWith(deps.pool, attempt, 'watermark_geometry');
+diff --git a/tests/run-music-mutations.mjs b/tests/run-music-mutations.mjs
+index 567f9c5..8684d9f 100644
+--- a/tests/run-music-mutations.mjs
++++ b/tests/run-music-mutations.mjs
+@@ -1,22 +1,31 @@
+-import { readFileSync, writeFileSync } from 'node:fs';
++import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+ import { spawnSync } from 'node:child_process';
+ const music = 'apps/worker/src/render/music.ts', loudness = 'apps/worker/src/render/loudness.ts';
+ const cases = [
++  ['selection', music, 'return MUSIC_TRACKS[((index % MUSIC_TRACKS.length) + MUSIC_TRACKS.length) % MUSIC_TRACKS.length]!', 'return MUSIC_TRACKS[0]', 'tests/music.test.ts', 'selection cycles'],
++  ['selected-measure', music, 'measureLoudness(track.path,', 'measureLoudness(MUSIC_TRACKS[0].path,', 'tests/music.test.ts', 'selected track drives'],
++  ['selected-input', 'apps/worker/src/render/ffmpeg.ts', "['-i', music.path]", "['-i', selectTrack(0).path]", 'tests/music.test.ts', 'selected track drives'],
++  ['selected-contract', music, '`${track.id}:${track.sha256}`', '`${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`', 'tests/pack-shot-contract.test.ts', 'hash comes'],
++  ['index-passing', 'apps/worker/src/workers/render.ts', ', clipIndex: input.index', '', 'tests/pack-shot-contract.test.ts', 'hash comes'],
++  ['index-origin', 'apps/worker/src/render/ffmpeg.ts', 'options.clipIndex - 1', 'options.clipIndex', 'tests/pack-shot-contract.test.ts', 'hash comes'],
++
+   ['gain-rounding', music, 'Math.round(gain * 10) / 10', 'gain', 'tests/music.test.ts', 'gain rounds'],
+   ['measure-timeout', loudness, 'timeoutMs = MUSIC_MEASURE_TIMEOUT_MS', 'timeoutMs = 900_000', 'tests/music.test.ts', 'measurement default timeout'],
+   ['timeout-skip', music, " || error.reason === 'ffmpeg_timeout'", '', 'tests/music.test.ts', 'measurement ffmpeg_timeout'],
+ 
+-  ['G1', music, 'normalize=0', 'normalize=1', 'tests/music-media.test.ts', 'G1'],
++  ['G1', music, 'inputs=2:duration=first:normalize=0', 'inputs=2:duration=first:normalize=1', 'tests/music-media.test.ts', 'G1'],
+   ['G2', music, 'volume=${gainDb}dB', 'volume=0dB', 'tests/music-media.test.ts', 'G2'],
+   ['G3', music, 'volume=${gainDb}dB', 'volume=${gainDb + 20}dB', 'tests/music-media.test.ts', 'G3'],
+   ['parser-NaN', loudness, 'return value ? Number(value[1]) : NaN;', 'return NaN;', 'tests/music-media.test.ts', 'real render'],
+-  ['off-input', 'apps/worker/src/render/ffmpeg.ts', "...(music ? ['-i', MUSIC_TRACKS[0].path] : [])", "...['-i', MUSIC_TRACKS[0].path]", 'tests/music.test.ts', 'off arguments'],
++  ['off-input', 'apps/worker/src/render/ffmpeg.ts', "...(music ? ['-i', music.path] : [])", "...['-i', music?.path ?? 'unexpected-music.mp3']", 'tests/music.test.ts', 'off arguments'],
+   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.music ?', '...(false ?', 'tests/render-worker.test.ts', 'music contract'],
+   ['strict', 'apps/web/src/server/upload-contract.ts', 'music: z.boolean().optional() }).strict()', 'music: z.boolean().optional() })', 'tests/music.test.ts', 'strict upload'],
+   ['skip-throws', music, "return skip('speech_too_quiet');", "throw new Error('quiet');", 'tests/music.test.ts', 'quiet/invalid speech'],
+-  ['catalogue', music, '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
++  ['catalogue', music, '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
+   ['gain-ceiling', music, 'gain > MUSIC_MAX_GAIN_DB', 'false', 'tests/music.test.ts', 'gain ceiling'],
+ ];
++const root = process.env.MUSIC_MUTATION_DIR ?? 'tests/artifacts/music-bed';
++mkdirSync(root, { recursive: true });
+ const results = [];
+ const selected = process.argv.slice(2);
+ for (const [id, file, original, mutation, test, pattern] of cases) {
+@@ -24,10 +33,10 @@ for (const [id, file, original, mutation, test, pattern] of cases) {
+   const source = readFileSync(file, 'utf8');
+   if (!source.includes(original)) throw new Error(`Missing mutation target ${id}`);
+   const run = phase => {
+-    const result = spawnSync(process.execPath, ['node_modules/vitest/vitest.mjs', 'run', test, '-t', pattern, '--reporter=json', `--outputFile=tests/artifacts/music-bed/${id}-${phase}.json`], { encoding: 'utf8', timeout: 240000 });
+-    const report = JSON.parse(readFileSync(`tests/artifacts/music-bed/${id}-${phase}.json`, 'utf8'));
++    const result = spawnSync(process.execPath, ['node_modules/vitest/vitest.mjs', 'run', test, '-t', pattern, '--reporter=json', `--outputFile=${root}/${id}-${phase}.json`], { encoding: 'utf8', timeout: 240000 });
++    const report = JSON.parse(readFileSync(`${root}/${id}-${phase}.json`, 'utf8'));
+     const measured = { exit: result.status, failed: report.numFailedTests, passed: report.numPassedTests };
+-    writeFileSync(`tests/artifacts/music-bed/${id}-${phase}.log`, JSON.stringify(measured) + '\n' + result.stdout + result.stderr);
++    writeFileSync(`${root}/${id}-${phase}.log`, JSON.stringify(measured) + '\n' + result.stdout + result.stderr);
+     return measured;
+   };
+   let red;
+@@ -37,6 +46,6 @@ for (const [id, file, original, mutation, test, pattern] of cases) {
+   const item = { id, red, green, passed: red.exit === 1 && red.failed > 0 && green.exit === 0 && green.failed === 0 && green.passed > 0 };
+   results.push(item); console.log(JSON.stringify(item));
+ }
+-const prior = selected.length ? JSON.parse(readFileSync('tests/artifacts/music-bed/mutations.json', 'utf8')).filter(r => !selected.includes(r.id)) : [];
+-writeFileSync('tests/artifacts/music-bed/mutations.json', JSON.stringify([...prior, ...results], null, 2));
++const prior = selected.length && existsSync(`${root}/mutations.json`) ? JSON.parse(readFileSync(`${root}/mutations.json`, 'utf8')).filter(r => !selected.includes(r.id)) : [];
++writeFileSync(`${root}/mutations.json`, JSON.stringify([...prior, ...results], null, 2));
+ if (results.some(r => !r.passed)) process.exitCode = 1;
+diff --git a/tests/run-pack-shot-mutations.mjs b/tests/run-pack-shot-mutations.mjs
+index f0151c1..1ded2b2 100644
+--- a/tests/run-pack-shot-mutations.mjs
++++ b/tests/run-pack-shot-mutations.mjs
+@@ -13,6 +13,8 @@ const cases = [
+   ['envelope-contract', 'apps/worker/src/workers/render.ts', 'envelope: STINGER_ENVELOPE,', "envelope: 'atrim=0:0.8,afade=t=out:st=0.6:d=0.2',", 'tests/pack-shot-contract.test.ts', 'hash comes'],
+   ['watermark', render, 'if (flash) filters.push(flash);\n  if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));',
+     'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));\n  if (flash) filters.push(flash);', media, 'video duration'],
++  ['off-input', render, "...(music ? ['-i', music.path] : [])", "...['-i', music?.path ?? 'unexpected-music.mp3']", 'tests/music.test.ts', 'off arguments'],
++  ['music-catalogue', 'apps/worker/src/render/music.ts', '3a7298ca305fda5f4b77dc14df1b6b0d9c7c3294dec806ca29539ea7e8ff9a67', '0'.repeat(64), 'tests/music.test.ts', 'catalogue'],
+   ['off', render, "...(packshot ? ['-i', STINGERS[0].path] : [])", "...['-i', STINGERS[0].path]", 'tests/music.test.ts', 'off arguments'],
+   ['skip', pack, "return skip('measure_failed')", "(() => { throw error; })()", unit, 'music-only baseline'],
+   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.packshot ?', '...(false ?', 'tests/pack-shot-contract.test.ts', 'hash comes'],

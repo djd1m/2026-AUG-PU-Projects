@@ -14,7 +14,7 @@ import { preparePackshot, resetStingerCache, buildFlashFilter, STINGER_MARGIN_LU
 const EXPECTED_GAIN = Math.floor(Math.min(-16 - STINGER_MARGIN_LU + 13, -3 + 0.8) * 10) / 10;
 const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
   format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
-  origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true };
+  origin: 'https://clipmkr.ru', code: 'WWWWWW', music: true, clipIndex: 1 };
 afterEach(() => { vi.restoreAllMocks(); resetStingerCache(); });
 function setup() {
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
