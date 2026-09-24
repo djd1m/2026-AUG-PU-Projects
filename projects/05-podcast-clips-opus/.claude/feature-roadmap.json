@@ -598,6 +598,35 @@
         "packages/db/src/render.ts",
         "apps/worker/assets/music/README.md"
       ]
+    },
+    {
+      "id": "teaser-headline",
+      "number": 19,
+      "title": "Заголовок клипа крупно в первые 2,5 с",
+      "description": "FR-RENDER-009, ADR-013. video.teaser (миграция 015), галочка по умолчанию вкл.; drawtext через textfile, text_align=C, разметка measureText, lt(t,2.5) + исчезновение; ошибка разметки — клип без заголовка.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "high",
+      "depends_on": [
+        "music-library"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RENDER-009"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-013"
+      ],
+      "expected_files": [
+        "packages/db/migrations/015_teaser.sql",
+        "apps/worker/src/render/teaser.ts",
+        "apps/worker/src/render/ffmpeg.ts",
+        "apps/worker/src/workers/render.ts",
+        "apps/web/src/app/upload/Uploader.tsx",
+        "apps/web/src/server/upload-contract.ts",
+        "apps/web/src/server/video.ts"
+      ]
     }
   ]
 }
