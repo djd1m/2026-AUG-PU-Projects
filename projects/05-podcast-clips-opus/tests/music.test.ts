@@ -1,4 +1,4 @@
-import { afterEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
@@ -8,11 +8,17 @@ import * as exec from '../apps/worker/src/render/exec';
 import * as probe from '../apps/worker/src/render/probe';
 import * as faces from '../apps/worker/src/render/faces';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
+import { resetStingerCache } from '../apps/worker/src/render/packshot';
 import { MUSIC_TRACKS, prepareMusic } from '../apps/worker/src/render/music';
 import { createVideoSchema } from '../apps/web/src/server/upload-contract';
 const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
   format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
   origin: 'https://clipmkr.ru', code: 'WWWWWW' };
+beforeEach(() => {
+  // Эти тесты — про музыку без пэк-шота.
+  resetStingerCache();
+  vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));
+});
 afterEach(() => vi.restoreAllMocks());
 it('parser uses final Summary from real silence/sine logs, never frame I', async () => {
   const silence = await readFile('tests/fixtures/music-bed/silence-ffmpeg4.txt', 'utf8');

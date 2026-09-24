@@ -76,6 +76,8 @@ it('video duration/content, flash timing and opaque watermark pixels', async () 
   expect(Math.abs(Number(a.streams[0].nb_frames) - Number(b.streams[0].nb_frames))).toBeLessThanOrEqual(1);
   const early = difference(await frame(off, t0 - 1), await frame(on, t0 - 1));
   const before = difference(await frame(off, t0 - 0.5), await frame(on, t0 - 0.5));
+  const justBefore = difference(await frame(off, t0 - 0.1), await frame(on, t0 - 0.1));
+  const tailBase = mean(await frame(off, t0 + 0.4)), tail = mean(await frame(on, t0 + 0.4));
   const peakBase = mean(await frame(off, t0 + 0.05)), peak = mean(await frame(on, t0 + 0.05));
   const g = watermarkGeometry(1080, 1920, opts.origin, opts.code);
   // Crop exactly the opaque inverse code chip; not the translucent surrounding plate.
@@ -83,8 +85,9 @@ it('video duration/content, flash timing and opaque watermark pixels', async () 
   const chip = difference(await frame(off, t0 + 0.05, crop), await frame(on, t0 + 0.05, crop));
   const peakAudio = await measure(on);
   console.log(JSON.stringify({ guard: 'pack-video', duration: b.format.duration, frames: b.streams[0].nb_frames,
-    earlyDifference: early, beforeDifference: before, peakBase, peak, chipDifference: chip, peakAudio }));
+    earlyDifference: early, beforeDifference: before, justBeforeDifference: justBefore, tailBase, tail, peakBase, peak, chipDifference: chip, peakAudio }));
   expect(early).toBeLessThan(2); expect(before).toBeLessThan(2);
+  expect.soft(justBefore).toBeLessThan(2); expect.soft(tail - tailBase).toBeGreaterThan(5);
   expect(peak - peakBase).toBeGreaterThan(20); expect(chip).toBeLessThan(3);
   expect(peakAudio.peak).toBeLessThanOrEqual(-1);
   const graphSource = await readFile('apps/worker/src/render/packshot.ts', 'utf8');

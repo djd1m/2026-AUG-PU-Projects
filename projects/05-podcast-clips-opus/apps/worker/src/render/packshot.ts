@@ -12,8 +12,9 @@ export interface PackshotMix { stinger: string; gain_db: number }
 export interface PreparedPackshot extends PackshotMix { t0_ms: number }
 let sampleMeasurement: FullLoudness | undefined;
 export function resetStingerCache(): void { sampleMeasurement = undefined; }
+export const FLASH_SHAPE_VERSION = 'v1';
 export function buildFlashFilter(t0Ms: number): string {
-  const t0 = t0Ms / 1000, peak = t0 + 0.05;
+  const t0 = t0Ms / 1000, peak = (t0Ms + 50) / 1000;
   return `eq=brightness='${FLASH_PEAK}*if(lt(t,${t0}),0,if(lt(t,${peak}),(t-${t0})/0.05,max(0,1-(t-${peak})/${2 * FLASH_HALF_WIDTH_SECONDS})))':eval=frame`;
 }
 export function buildStingerAudioGraph(packshot: PreparedPackshot): string {

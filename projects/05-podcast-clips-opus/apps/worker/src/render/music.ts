@@ -22,7 +22,7 @@ export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?
     + (packshot ? buildStingerAudioGraph(packshot) + '[speech][bed][stinger]amix=inputs=3:duration=first:normalize=0[aout]'
       : '[speech][bed]amix=inputs=2:duration=first:normalize=0[aout]');
 }
-export async function prepareMusic(input: string, start: number, duration: number, signal?: AbortSignal): Promise<(MusicMix & { speech_lufs: number }) | null> {
+export async function prepareMusic(input: string, start: number, duration: number, signal?: AbortSignal): Promise<MusicMix | null> {
   const skip = (reason: string) => { console.info(JSON.stringify({ event: 'music_skipped', reason })); return null; };
   const track = MUSIC_TRACKS[0];
   let speech: number, bed: number;
@@ -40,5 +40,5 @@ export async function prepareMusic(input: string, start: number, duration: numbe
   if (gain > MUSIC_MAX_GAIN_DB) return skip('gain_out_of_range');
   const roundedGain = Math.round(gain * 10) / 10;
   console.info(JSON.stringify({ event: 'music_mix', speech_lufs: speech, track_lufs: bed, gain_db: roundedGain }));
-  return { track: `${track.id}:${track.sha256}`, gain_db: roundedGain, speech_lufs: speech };
+  return { track: `${track.id}:${track.sha256}`, gain_db: roundedGain };
 }

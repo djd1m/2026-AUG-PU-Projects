@@ -5,6 +5,7 @@ import * as loudness from '../apps/worker/src/render/loudness';
 import * as exec from '../apps/worker/src/render/exec';
 import * as probe from '../apps/worker/src/render/probe';
 import { renderClip } from '../apps/worker/src/render/ffmpeg';
+import * as pack from '../apps/worker/src/render/packshot';
 import { resetStingerCache } from '../apps/worker/src/render/packshot';
 import { RENDER_FONT_SHA256 } from '../apps/worker/src/render/watermark';
 const db = vi.hoisted(() => ({ getRenderInput: vi.fn(), setRenderDeferred: vi.fn(), retryRender: vi.fn(), publishRenderResult: vi.fn() }));
@@ -38,7 +39,12 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
     const expected = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
       video: 'video', clip: 'clip', source: 'source', sourceBytes: '10', start: '0', end: '20', words: [], watermark: true,
       origin, code: input.code, font: RENDER_FONT_SHA256, music: `${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`, margin: 18, gain_db: -23,
-      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: -9, margin: 6, flash: 'v1:0.35:0.25' } })).digest('hex');
+      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: -9, margin: 6, envelope: 'atrim=0:0.8,afade=t=out:st=0.6:d=0.2', flash: 'v1:0.35:0.25' } })).digest('hex');
     expect(hashes[2]).toBe(expected);
+    // Keep measured gains identical: only the envelope changes render identity.
+    full.mockResolvedValueOnce({ integrated: -16, peak: -4 });
+    vi.spyOn(pack as { readonly STINGER_ENVELOPE: string }, 'STINGER_ENVELOPE', 'get').mockReturnValue('atrim=0:0.8,afade=t=out:st=0.5:d=0.3');
+    expect(await handleRenderJob(attempt, deps)).toBe('done');
+    expect(hashes[4]).not.toBe(hashes[2]);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

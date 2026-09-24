@@ -1,0 +1,47 @@
+{
+  "run_id": "20260924T113949Z-pack-shot-review-fixes",
+  "feature": "pack-shot-review-fixes",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "status": "accepted",
+  "started_at": "2026-09-24T11:39:49Z",
+  "baseline_revision": "3b2710c32d9e34a56d4f176266ef56f75599ebce",
+  "actual_model": null,
+  "actual_effort": null,
+  "model_family": "OpenAI Codex",
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Exact model/effort and usage metadata unavailable",
+    "Reading before first timestamp unmeasured"
+  ],
+  "scope": "Five approved review fixes in docs/features/pack-shot/08_review_fixes_codex.md; no commit",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local unit/media tests, no live E2E or deployment"
+  },
+  "telemetry_status": "partial",
+  "source_diff_sha256": "c7db7d7cf33c29a7426cadc9a588a061f3e479938e561d55501c5f3bf3927cef",
+  "ended_at": "2026-09-24T11:48:41.873200+00:00",
+  "final_revision": "3b2710c32d9e34a56d4f176266ef56f75599ebce",
+  "metrics": {
+    "measured_wall_seconds": 532.9,
+    "active_wall_seconds": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null
+  },
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 5,
+    "ac_total": 5,
+    "scope": "Approved review fixes only; not full product acceptance"
+  },
+  "acceptance_evidence": [
+    "targeted.log",
+    "typecheck-final.log",
+    "lint.log",
+    "mutations/results.json",
+    "source-manifest.json"
+  ]
+}

@@ -1,0 +1,164 @@
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts b/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts
+index 917981e..ed20496 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/render/music.ts
+@@ -22,7 +22,7 @@ export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?
+     + (packshot ? buildStingerAudioGraph(packshot) + '[speech][bed][stinger]amix=inputs=3:duration=first:normalize=0[aout]'
+       : '[speech][bed]amix=inputs=2:duration=first:normalize=0[aout]');
+ }
+-export async function prepareMusic(input: string, start: number, duration: number, signal?: AbortSignal): Promise<(MusicMix & { speech_lufs: number }) | null> {
++export async function prepareMusic(input: string, start: number, duration: number, signal?: AbortSignal): Promise<MusicMix | null> {
+   const skip = (reason: string) => { console.info(JSON.stringify({ event: 'music_skipped', reason })); return null; };
+   const track = MUSIC_TRACKS[0];
+   let speech: number, bed: number;
+@@ -40,5 +40,5 @@ export async function prepareMusic(input: string, start: number, duration: numbe
+   if (gain > MUSIC_MAX_GAIN_DB) return skip('gain_out_of_range');
+   const roundedGain = Math.round(gain * 10) / 10;
+   console.info(JSON.stringify({ event: 'music_mix', speech_lufs: speech, track_lufs: bed, gain_db: roundedGain }));
+-  return { track: `${track.id}:${track.sha256}`, gain_db: roundedGain, speech_lufs: speech };
++  return { track: `${track.id}:${track.sha256}`, gain_db: roundedGain };
+ }
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/render/packshot.ts b/projects/05-podcast-clips-opus/apps/worker/src/render/packshot.ts
+index b834d7a..d501cc5 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/render/packshot.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/render/packshot.ts
+@@ -12,8 +12,9 @@ export interface PackshotMix { stinger: string; gain_db: number }
+ export interface PreparedPackshot extends PackshotMix { t0_ms: number }
+ let sampleMeasurement: FullLoudness | undefined;
+ export function resetStingerCache(): void { sampleMeasurement = undefined; }
++export const FLASH_SHAPE_VERSION = 'v1';
+ export function buildFlashFilter(t0Ms: number): string {
+-  const t0 = t0Ms / 1000, peak = t0 + 0.05;
++  const t0 = t0Ms / 1000, peak = (t0Ms + 50) / 1000;
+   return `eq=brightness='${FLASH_PEAK}*if(lt(t,${t0}),0,if(lt(t,${peak}),(t-${t0})/0.05,max(0,1-(t-${peak})/${2 * FLASH_HALF_WIDTH_SECONDS})))':eval=frame`;
+ }
+ export function buildStingerAudioGraph(packshot: PreparedPackshot): string {
+diff --git a/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts b/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts
+index 3fe94ac..4721275 100644
+--- a/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts
++++ b/projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts
+@@ -1,4 +1,4 @@
+-import { STINGER_MARGIN_LU, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../render/packshot.js';
++import { STINGER_MARGIN_LU, STINGER_ENVELOPE, FLASH_SHAPE_VERSION, FLASH_PEAK, FLASH_HALF_WIDTH_SECONDS } from '../render/packshot.js';
+ import { WatermarkGeometryError } from '@clipmaker/shared/watermark';
+ // Adapted from jan-clone/workers/video-render.ts; job payload contains identity only.
+ import { Worker, DelayedError, type Job, type ConnectionOptions } from 'bullmq';
+@@ -43,8 +43,8 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
+         start: input.start_seconds, end: input.end_seconds, words: input.words, watermark, origin: deps.origin,
+         code: input.code, font: RENDER_FONT_SHA256,
+         ...(rendered.music ? { music: rendered.music.track, margin: MUSIC_MARGIN_LU, gain_db: rendered.music.gain_db } : {}),
+-        ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU,
+-          flash: `v1:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');
++        ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU, envelope: STINGER_ENVELOPE,
++          flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');
+       const uploadSignal = AbortSignal.any([signal, AbortSignal.timeout(120_000)]);
+       const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark }, async () => {
+         const storedBytes = await deps.storage.put(object_key, output, 'video/mp4', contract, uploadSignal);
+diff --git a/projects/05-podcast-clips-opus/tests/music.test.ts b/projects/05-podcast-clips-opus/tests/music.test.ts
+index 6f53cf9..f6564f7 100644
+--- a/projects/05-podcast-clips-opus/tests/music.test.ts
++++ b/projects/05-podcast-clips-opus/tests/music.test.ts
+@@ -1,4 +1,4 @@
+-import { afterEach, expect, it, vi } from 'vitest';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+ import { readFile } from 'node:fs/promises';
+ import { createHash } from 'node:crypto';
+ import { execFile } from 'node:child_process';
+@@ -8,11 +8,17 @@ import * as exec from '../apps/worker/src/render/exec';
+ import * as probe from '../apps/worker/src/render/probe';
+ import * as faces from '../apps/worker/src/render/faces';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
++import { resetStingerCache } from '../apps/worker/src/render/packshot';
+ import { MUSIC_TRACKS, prepareMusic } from '../apps/worker/src/render/music';
+ import { createVideoSchema } from '../apps/web/src/server/upload-contract';
+ const options = { inputPath: '/tmp/input.wav', outputPath: '/tmp/output.mp4', startTime: 2, endTime: 22,
+   format: 'portrait' as const, words: [{ word: 'Привет', start: 3, end: 4 }], watermark: true,
+   origin: 'https://clipmkr.ru', code: 'WWWWWW' };
++beforeEach(() => {
++  // Эти тесты — про музыку без пэк-шота.
++  resetStingerCache();
++  vi.spyOn(loudness, 'measureFullLoudness').mockRejectedValue(new exec.FFmpegError('ffmpeg_failed'));
++});
+ afterEach(() => vi.restoreAllMocks());
+ it('parser uses final Summary from real silence/sine logs, never frame I', async () => {
+   const silence = await readFile('tests/fixtures/music-bed/silence-ffmpeg4.txt', 'utf8');
+diff --git a/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts b/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts
+index d453609..3c4a06c 100644
+--- a/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts
++++ b/projects/05-podcast-clips-opus/tests/pack-shot-contract.test.ts
+@@ -5,6 +5,7 @@ import * as loudness from '../apps/worker/src/render/loudness';
+ import * as exec from '../apps/worker/src/render/exec';
+ import * as probe from '../apps/worker/src/render/probe';
+ import { renderClip } from '../apps/worker/src/render/ffmpeg';
++import * as pack from '../apps/worker/src/render/packshot';
+ import { resetStingerCache } from '../apps/worker/src/render/packshot';
+ import { RENDER_FONT_SHA256 } from '../apps/worker/src/render/watermark';
+ const db = vi.hoisted(() => ({ getRenderInput: vi.fn(), setRenderDeferred: vi.fn(), retryRender: vi.fn(), publishRenderResult: vi.fn() }));
+@@ -38,7 +39,12 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes
+     const expected = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
+       video: 'video', clip: 'clip', source: 'source', sourceBytes: '10', start: '0', end: '20', words: [], watermark: true,
+       origin, code: input.code, font: RENDER_FONT_SHA256, music: `${MUSIC_TRACKS[0].id}:${MUSIC_TRACKS[0].sha256}`, margin: 18, gain_db: -23,
+-      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: -9, margin: 6, flash: 'v1:0.35:0.25' } })).digest('hex');
++      packshot: { stinger: `${STINGERS[0].id}:${STINGERS[0].sha256}`, gain_db: -9, margin: 6, envelope: 'atrim=0:0.8,afade=t=out:st=0.6:d=0.2', flash: 'v1:0.35:0.25' } })).digest('hex');
+     expect(hashes[2]).toBe(expected);
++    // Keep measured gains identical: only the envelope changes render identity.
++    full.mockResolvedValueOnce({ integrated: -16, peak: -4 });
++    vi.spyOn(pack as { readonly STINGER_ENVELOPE: string }, 'STINGER_ENVELOPE', 'get').mockReturnValue('atrim=0:0.8,afade=t=out:st=0.5:d=0.3');
++    expect(await handleRenderJob(attempt, deps)).toBe('done');
++    expect(hashes[4]).not.toBe(hashes[2]);
+   } finally { await rm(directory, { recursive: true, force: true }); }
+ });
+diff --git a/projects/05-podcast-clips-opus/tests/pack-shot-media.test.ts b/projects/05-podcast-clips-opus/tests/pack-shot-media.test.ts
+index 972f7c4..5717793 100644
+--- a/projects/05-podcast-clips-opus/tests/pack-shot-media.test.ts
++++ b/projects/05-podcast-clips-opus/tests/pack-shot-media.test.ts
+@@ -76,6 +76,8 @@ it('video duration/content, flash timing and opaque watermark pixels', async ()
+   expect(Math.abs(Number(a.streams[0].nb_frames) - Number(b.streams[0].nb_frames))).toBeLessThanOrEqual(1);
+   const early = difference(await frame(off, t0 - 1), await frame(on, t0 - 1));
+   const before = difference(await frame(off, t0 - 0.5), await frame(on, t0 - 0.5));
++  const justBefore = difference(await frame(off, t0 - 0.1), await frame(on, t0 - 0.1));
++  const tailBase = mean(await frame(off, t0 + 0.4)), tail = mean(await frame(on, t0 + 0.4));
+   const peakBase = mean(await frame(off, t0 + 0.05)), peak = mean(await frame(on, t0 + 0.05));
+   const g = watermarkGeometry(1080, 1920, opts.origin, opts.code);
+   // Crop exactly the opaque inverse code chip; not the translucent surrounding plate.
+@@ -83,8 +85,9 @@ it('video duration/content, flash timing and opaque watermark pixels', async ()
+   const chip = difference(await frame(off, t0 + 0.05, crop), await frame(on, t0 + 0.05, crop));
+   const peakAudio = await measure(on);
+   console.log(JSON.stringify({ guard: 'pack-video', duration: b.format.duration, frames: b.streams[0].nb_frames,
+-    earlyDifference: early, beforeDifference: before, peakBase, peak, chipDifference: chip, peakAudio }));
++    earlyDifference: early, beforeDifference: before, justBeforeDifference: justBefore, tailBase, tail, peakBase, peak, chipDifference: chip, peakAudio }));
+   expect(early).toBeLessThan(2); expect(before).toBeLessThan(2);
++  expect.soft(justBefore).toBeLessThan(2); expect.soft(tail - tailBase).toBeGreaterThan(5);
+   expect(peak - peakBase).toBeGreaterThan(20); expect(chip).toBeLessThan(3);
+   expect(peakAudio.peak).toBeLessThanOrEqual(-1);
+   const graphSource = await readFile('apps/worker/src/render/packshot.ts', 'utf8');
+diff --git a/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs b/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs
+index e258d80..d81f3e2 100644
+--- a/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs
++++ b/projects/05-podcast-clips-opus/tests/run-pack-shot-mutations.mjs
+@@ -8,12 +8,15 @@ const cases = [
+   ['level', pack, 'volume=${packshot.gain_db}dB', 'volume=0dB', media, 'audio placement'],
+   ['peak', pack, 'volume=${packshot.gain_db}dB', 'volume=${packshot.gain_db + 20}dB', media, 'audio placement'],
+   ['flash-timing', pack, 'const t0 = t0Ms / 1000', 'const t0 = 0', media, 'video duration'],
++  ['flash-shape', pack, 'if(lt(t,${t0}),0,if(lt(t,${peak}),(t-${t0})/0.05,max(0,1-(t-${peak})/${2 * FLASH_HALF_WIDTH_SECONDS})))',
++    'max(0,1-abs(t-${peak})/0.25)', media, 'video duration'],
++  ['envelope-contract', 'apps/worker/src/workers/render.ts', 'envelope: STINGER_ENVELOPE,', "envelope: 'atrim=0:0.8,afade=t=out:st=0.6:d=0.2',", 'tests/pack-shot-contract.test.ts', 'hash comes'],
+   ['watermark', render, 'if (flash) filters.push(flash);\n  if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));',
+     'if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));\n  if (flash) filters.push(flash);', media, 'video duration'],
+   ['off', render, "...(packshot ? ['-i', STINGERS[0].path] : [])", "...['-i', STINGERS[0].path]", 'tests/music.test.ts', 'off arguments'],
+   ['skip', pack, "return skip('measure_failed')", "(() => { throw error; })()", unit, 'music-only baseline'],
+   ['contract', 'apps/worker/src/workers/render.ts', '...(rendered.packshot ?', '...(false ?', 'tests/pack-shot-contract.test.ts', 'hash comes'],
+-  ['contract-absent', 'apps/worker/src/workers/render.ts', "flash: `v1:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {})", "flash: `v1:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : { packshot: null })", 'tests/pack-shot-contract.test.ts', 'hash comes'],
++  ['contract-absent', 'apps/worker/src/workers/render.ts', "flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {})", "flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : { packshot: null })", 'tests/pack-shot-contract.test.ts', 'hash comes'],
+   ['catalogue', 'apps/worker/src/render/music.ts', 'cdda50600a4928f2f1b8371224d53c171ac799c1cf2c30b11999508985250b3b', '0'.repeat(64), unit, 'catalogue'],
+   ['cache', pack, 'sampleMeasurement ?? await', 'await', unit, 'successful finite sample'],
+   ['cache-error', pack, "signal?.throwIfAborted();\n    if (error instanceof", "sampleMeasurement = { integrated: -16, peak: -4 };\n    signal?.throwIfAborted();\n    if (error instanceof", unit, 'sample cache does not retain'],
+@@ -22,7 +25,7 @@ const cases = [
+   ['gain-ceiling', pack, 'gain > MUSIC_MAX_GAIN_DB', 'false', unit, 'gain respects'],
+   ['ui', 'apps/web/src/app/upload/Uploader.tsx', 'Добавить музыку и финальный акцент', 'Добавить фоновую музыку', 'tests/pack-shot-uploader.test.ts', 'checkbox names'],
+ ];
+-const root = 'tests/artifacts/pack-shot/mutations'; mkdirSync(root, { recursive: true });
++const root = process.env.PACK_SHOT_MUTATION_DIR ?? 'tests/artifacts/pack-shot/mutations'; mkdirSync(root, { recursive: true });
+ const selected = process.argv.slice(2), results = [];
+ for (const [id, file, original, mutation, test, pattern] of cases) {
+   if (selected.length && !selected.includes(id)) continue;

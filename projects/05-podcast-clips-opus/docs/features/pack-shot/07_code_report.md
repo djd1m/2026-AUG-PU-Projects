@@ -108,3 +108,67 @@ RUN_ID: pack-shot-20260924-111414. Исходная ревизия: `57b6a464363
 Задание на реализацию завершено. Приёмка фичи ещё требует независимого Anthropic REVIEW, полного Docker-прогона координатора и прослушивания владельцем; `run.json.status=blocked` обозначает эту границу приёмки, а не незавершённый код. Ни коммит, ни публикация этим исполнителем не выполнялись.
 
 Status: completed
+
+## Правки после REVIEW
+
+Выполнено по `08_review_fixes_codex.md`, исходный и конечный HEAD: `3b2710c32d9e34a56d4f176266ef56f75599ebce`; коммитов и развёртывания нет.
+
+1. Медиа-страж проверяет `t0 − 0,1` (отличие от музыки без пэк-шота **0,06279/255**, допуск <2) и `t0 + 0,4` (яркость **154,24460** против **126,77252**, прирост **27,47208**, порог >5). Симметричная мутация `max(0,1-abs(t-t_peak)/0.25)` даёт два assertion failure: преждевременное отличие **38,69092** и исчезнувший хвост **0,00907**. После восстановления оба утверждения зелёные.
+2. В `music.test.ts` добавлен `beforeEach`: сброс кэша сэмпла и явный отказ `measureFullLoudness` с `FFmpegError('ffmpeg_failed')`. Допущение «тесты про музыку без пэк-шота» названо; прежние утверждения не ослаблены.
+3. `FLASH_SHAPE_VERSION` экспортируется рядом с `buildFlashFilter` и используется worker-контрактом; добавлено `envelope: STINGER_ENVELOPE`. Тест меняет только огибающую при одинаковых измеренных уровнях и проверяет смену фактического хеша worker. Мутация фиксированной огибающей в контракте ловится. `tests/fixtures/pack-shot/music-only.json` побайтово сохранён (git diff exit 0).
+4. Неиспользуемое поле `speech_lufs` удалено из возвращаемого значения и типа `prepareMusic`; диагностическое значение в журнале сохранено.
+5. Пик вспышки вычисляется как `(t0Ms + 50) / 1000`.
+
+Проверки на настоящем **ffmpeg 4.4.2**:
+
+- `npx vitest run tests/music.test.ts tests/pack-shot.test.ts tests/pack-shot-contract.test.ts tests/pack-shot-media.test.ts tests/render-worker.test.ts` — **exit 0, 42/42**, 40,64 с.
+- `PACK_SHOT_MUTATION_DIR=docs/telemetry/p-replicator/20260924T113949Z-pack-shot-review-fixes/mutations node tests/run-pack-shot-mutations.mjs` — **exit 0, 19/19 пар**. Необязательный путь артефактов добавлен, чтобы сохранить результаты прежнего прогона.
+- `npm run typecheck` — первый exit 2: литеральный тип новой тестовой подмены огибающей. Тип цели мока расширен до `string`; повторный прогон **exit 0**. Изменённый тест повторно прошёл в зелёных фазах мутаций контракта.
+- `npm run lint` — **exit 0**; `git diff --check` — **exit 0**.
+
+| Дефект | Фаза | Exit | Failed | Passed |
+|---|---|---:|---:|---:|
+| duration | red | 1 | 1 | 0 |
+| duration | green | 0 | 0 | 1 |
+| placement | red | 1 | 1 | 0 |
+| placement | green | 0 | 0 | 1 |
+| level | red | 1 | 1 | 0 |
+| level | green | 0 | 0 | 1 |
+| peak | red | 1 | 1 | 0 |
+| peak | green | 0 | 0 | 1 |
+| flash-timing | red | 1 | 1 | 0 |
+| flash-timing | green | 0 | 0 | 1 |
+| flash-shape | red | 1 | 1 | 0 |
+| flash-shape | green | 0 | 0 | 1 |
+| envelope-contract | red | 1 | 1 | 0 |
+| envelope-contract | green | 0 | 0 | 1 |
+| watermark | red | 1 | 1 | 0 |
+| watermark | green | 0 | 0 | 1 |
+| off | red | 1 | 1 | 0 |
+| off | green | 0 | 0 | 1 |
+| skip | red | 1 | 2 | 0 |
+| skip | green | 0 | 0 | 2 |
+| contract | red | 1 | 1 | 0 |
+| contract | green | 0 | 0 | 1 |
+| contract-absent | red | 1 | 1 | 0 |
+| contract-absent | green | 0 | 0 | 1 |
+| catalogue | red | 1 | 1 | 0 |
+| catalogue | green | 0 | 0 | 1 |
+| cache | red | 1 | 1 | 0 |
+| cache | green | 0 | 0 | 1 |
+| cache-error | red | 1 | 3 | 1 |
+| cache-error | green | 0 | 0 | 4 |
+| clock | red | 1 | 2 | 0 |
+| clock | green | 0 | 0 | 2 |
+| peak-ceiling | red | 1 | 1 | 0 |
+| peak-ceiling | green | 0 | 0 | 1 |
+| gain-ceiling | red | 1 | 1 | 0 |
+| gain-ceiling | green | 0 | 0 | 1 |
+| ui | red | 1 | 1 | 0 |
+| ui | green | 0 | 0 | 1 |
+
+Телеметрия: `docs/telemetry/p-replicator/20260924T113949Z-pack-shot-review-fixes/run.json`, `events.jsonl`; проверки связаны с `source-manifest.json` и SHA-256 снимка `source.diff`. Профиль **compact-quality-first-v2**, один исполнитель **OpenAI Codex**, без переключения модели. Точный actual model/effort и usage/стоимость — **null**, хост не предоставил подтверждающих метаданных. Механический ROUTE: S, exit 0; содержательный: M из-за изменения идентичности рендера, повторно подтверждён перед IMPLEMENT. Разрешённый объём и проверки заданы текущим заданием после REVIEW; новая фича не планировалась.
+
+Измеренный интервал 2026-09-24T11:39:49Z → 2026-09-24T11:48:41.873200+00:00: **532.9 с (8.88 мин)**; чтение до первого временного маркера не измерено. Навык companion применён для границ и передачи; его структурный валидатор не запускался. E2E preflight: `not_applicable` — локальные тесты, без живого E2E. Новый cross-family REVIEW, полный Docker-набор, сборка и прослушивание в этом проходе не выполнялись; предыдущие 653/653 не выдаются за результаты текущего исходника. Параметры громкости/вспышки остаются оценками до прослушивания владельцем. Доставка ограничена пятью порученными исправлениями.
+
+Status: completed
