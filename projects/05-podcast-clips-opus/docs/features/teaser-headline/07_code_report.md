@@ -147,3 +147,66 @@
   адресный повтор exit 0; код и отчёт переданы без коммита.
 
 Status: completed
+
+## Правки после REVIEW
+
+- RUN_ID: `20260924T163751Z-teaser-review-fixes`; attempt: `review-fixes-1`.
+  Начало измерения 2026-09-24T16:37:51Z; предварительное чтение не измерено.
+- База: `10333f650a2e69cdd2a9d65d29d248c5fa67a9b3`, содержит переданный `e4d06ba`.
+  Существующие сторонние изменения документации и `scripts/acceptance-upload.mjs` вне scope.
+- ROUTE/IMPLEMENT: S, механический роутер exit 0 по пяти целевым файлам;
+  содержательно — локальные исправления рендера и тестов без схемы, API и новых вызовов.
+  AC и согласованный план: пять пунктов `08_review_fixes_codex.md`.
+  Донор: существующие teaser-тесты этой базы; адаптация совместима.
+- Профиль `compact-quality-first-v2`; исполнитель OpenAI Codex / GPT-6 (текущая сессия).
+  Точный actual model ID, effort, usage input/output/cache и стоимость: `null`,
+  хост не предоставляет подтверждающие счётчики. Делегирование и fallback отсутствуют.
+  Forecast: `insufficient_data`; полная длительность до принятия: `null`.
+- Телеметрия этого корректирующего прохода ведётся в данном разделе, как и исходного
+  прогона; исходная история и артефакты сохраняются. E2E: `not_applicable` —
+  задание на адресные тесты, медиамутация в образе передана координатору.
+- 16:37:51Z: начало IMPLEMENT; разрешение — явное поручение выполнить review fixes,
+  без коммита. Независимый повторный Anthropic REVIEW остаётся у координатора.
+
+Внесены все пять исправлений:
+
+1. `TEASER_FADE_SECONDS = 0.3`; обе временные границы alpha и делитель вычисляются
+   из констант. Строковое ожидание alpha также использует экспортируемые константы.
+   Фиксированное ожидание окна 2,5 с сохранено как независимый контрактный страж.
+2. При `NOT_EXECUTED` runner выставляет `process.exitCode ||= 2`, сохраняя exit 1
+   при наличии FAIL. Реальный пропуск `window-pixels` подтвердил exit 2.
+3. `music_track_fallback` требует `options.music`; тесты NaN/Infinity/1.5 проверяют
+   запись при `music: true` и отсутствие при false/undefined. Подготовка музыки
+   в этих unit-тестах замокана, платных/внешних вызовов нет.
+4. Граница безопасной зоны вычисляется из `TEASER_MAX_LINES`, `TEASER_FONT_SIZE`,
+   экспортируемой `TEASER_BOX_BORDER_WIDTH`; прямое ожидание `TEASER_Y === 0.17` удалено.
+5. Медиатест измеряет Δ в t=2,4: наложение ещё видно (`fading > 1`), но заметно
+   слабее t=1 (`early - fading > 5`). Δ выводится вместе с early/late/watermark.
+   Громкий пропуск на ffmpeg < 6.1 сохранён.
+
+Проверки и журнал:
+
+- 16:38:43Z, адресный `npx vitest run tests/teaser.test.ts tests/teaser-media.test.ts`:
+  exit 0, **13 passed, 1 skipped**.
+- Мутации `window`, `intersection`, `fallback-log`: соответственно 1/1/3 failed
+  на дефекте и 1/1/3 passed после восстановления — **3 PASS**.
+  `window-pixels`: обе фазы по 1 skipped, **NOT_EXECUTED**, общий runner **exit 2**.
+- Дополнительный прогон пяти наборов рендера/музыки/контракта: 58 passed, exit 0.
+  Он пересёкся по времени с мутациями, поэтому не используется как итоговое
+  доказательство неизменного снимка. После восстановления выполнен последовательный
+  итоговый прогон семи файлов:
+  `npx vitest run tests/teaser.test.ts tests/teaser-media.test.ts tests/render.test.ts tests/render-audio.test.ts tests/music.test.ts tests/pack-shot.test.ts tests/teaser-contract.test.ts`.
+  Начало 16:39:34Z, длительность Vitest 27,47 с, exit 0:
+  **71 passed, 1 skipped**. `git diff --check`: exit 0.
+- Свежие доказательства, не заменяющие исходные:
+  `tests/artifacts/teaser-headline/review-fixes-mutations/` — results.json,
+  red/green JSON и логи, `final-tests.log`, `source-manifest.json` с SHA-256 пяти файлов.
+- Медиатест fade и красная `window-pixels` на ffmpeg 8.1 здесь **не подтверждены**;
+  по заданию это проверяет координатор в образе. Полный интеграционный прогон,
+  build и повторное независимое Anthropic REVIEW в этом проходе не запускались.
+- Работа завершена без коммита. `scripts/acceptance-upload.mjs` не читался и не менялся.
+
+Завершение IMPLEMENT: 2026-09-24T16:40:36+00:00; измеренный интервал 165 с. Чтение до начала измерения и будущее принятие
+не включены; токены и стоимость недоступны (`null`). Телеметрия — этот раздел.
+
+Status: completed

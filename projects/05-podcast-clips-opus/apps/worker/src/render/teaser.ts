@@ -7,6 +7,8 @@ export const TEASER_FONT_SIZE = 84;
 export const TEASER_MIN_FONT_SIZE = 60;
 export const TEASER_MAX_LINES = 3;
 export const TEASER_SECONDS = 2.5;
+export const TEASER_FADE_SECONDS = 0.3;
+export const TEASER_BOX_BORDER_WIDTH = 24;
 export const TEASER_Y = 0.17;
 export interface TeaserResult { lines: string[]; font_size: number }
 const normalize = (title: string) => title.replace(/\s+/gu, ' ').trim();
@@ -52,8 +54,8 @@ export function layoutTeaser(title: string, width: number): { lines: string[]; f
 export function buildTeaserFilter(path: string, fontSize: number): string {
   return `drawtext=textfile='${escapeFFmpegPath(path)}':expansion=none:fontfile='${escapeFFmpegPath(FONT_FILE)}':` +
     `fontsize=${fontSize}:fontcolor=white:text_align=C:x=(w-text_w)/2:y=${TEASER_Y}*h:` +
-    `box=1:boxcolor=black@0.55:boxborderw=24:enable='lt(t,${TEASER_SECONDS})':` +
-    "alpha='if(lt(t,2.2),1,max(0,(2.5-t)/0.3))'";
+    `box=1:boxcolor=black@0.55:boxborderw=${TEASER_BOX_BORDER_WIDTH}:enable='lt(t,${TEASER_SECONDS})':` +
+    `alpha='if(lt(t,${TEASER_SECONDS - TEASER_FADE_SECONDS}),1,max(0,(${TEASER_SECONDS}-t)/${TEASER_FADE_SECONDS}))'`;
 }
 export async function prepareTeaser(title: string, width: number, directory: string) {
   const skip = (reason: string) => { console.info(JSON.stringify({ event: 'teaser_skipped', reason })); return null; };

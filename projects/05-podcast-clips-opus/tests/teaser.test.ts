@@ -1,9 +1,11 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
-import { layoutTeaser, buildTeaserFilter, prepareTeaser, TEASER_Y } from '../apps/worker/src/render/teaser';
+import { layoutTeaser, buildTeaserFilter, prepareTeaser, TEASER_Y, TEASER_SECONDS, TEASER_FADE_SECONDS,
+  TEASER_MAX_LINES, TEASER_FONT_SIZE, TEASER_BOX_BORDER_WIDTH } from '../apps/worker/src/render/teaser';
 import { measureText, watermarkGeometry } from '../packages/shared/src/watermark';
 import { buildFilterChain, renderClip } from '../apps/worker/src/render/ffmpeg';
 import * as exec from '../apps/worker/src/render/exec';
+import * as music from '../apps/worker/src/render/music';
 import * as probe from '../apps/worker/src/render/probe';
 import { createVideoSchema } from '../apps/web/src/server/upload-contract';
 import { SUBTITLE_FONT_SIZE } from '../apps/worker/src/render/subtitles';
@@ -58,14 +60,13 @@ it('order is ass < teaser < flash < watermark and subtitles stay active', () => 
   expect(filter.indexOf('textfile=')).toBeLessThan(filter.indexOf('eq='));
   expect(filter.indexOf('eq=')).toBeLessThan(filter.indexOf('drawbox='));
   expect(filter).toContain("enable='lt(t,2.5)'");
-  expect(filter).toContain("alpha='if(lt(t,2.2),1,max(0,(2.5-t)/0.3))'");
+  expect(filter).toContain(`alpha='if(lt(t,${TEASER_SECONDS - TEASER_FADE_SECONDS}),1,max(0,(${TEASER_SECONDS}-t)/${TEASER_FADE_SECONDS}))'`);
 });
 it('safe area and no intersections with subtitle or watermark zones', () => {
   const h = 1920, g = watermarkGeometry(1080, h, options.origin, options.code);
-  expect(TEASER_Y).toBe(0.17);
   const y0 = TEASER_Y * h;
-  expect(y0 - 24).toBeGreaterThanOrEqual(0.14 * h);
-  const bottom = y0 + 3 * Math.ceil(1.25 * 84) + 2 * 24;
+  expect(y0 - TEASER_BOX_BORDER_WIDTH).toBeGreaterThanOrEqual(0.14 * h);
+  const bottom = y0 + TEASER_MAX_LINES * Math.ceil(1.25 * TEASER_FONT_SIZE) + 2 * TEASER_BOX_BORDER_WIDTH;
   expect(bottom).toBeLessThan(g.y);
   expect(bottom).toBeLessThan(h - 500 - 2 * Math.ceil(1.25 * SUBTITLE_FONT_SIZE));
   expect(buildTeaserFilter('/tmp/t.txt', 84)).toContain(`y=${TEASER_Y}*h`);
@@ -112,8 +113,14 @@ it.each([NaN, Infinity, 1.5])('invalid clip index %s logs fallback', async clipI
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-  await renderClip({ ...options, teaser: false, clipIndex });
+  vi.spyOn(music, 'prepareMusic').mockResolvedValue(null);
+  await renderClip({ ...options, teaser: false, music: true, clipIndex });
   expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'music_track_fallback' }));
+  log.mockClear();
+  for (const enabled of [false, undefined]) {
+    await renderClip({ ...options, teaser: false, music: enabled, clipIndex });
+    expect(log).not.toHaveBeenCalledWith(JSON.stringify({ event: 'music_track_fallback' }));
+  }
 });
 
 it('preparation failure skips visibly instead of refusing clip', async () => {

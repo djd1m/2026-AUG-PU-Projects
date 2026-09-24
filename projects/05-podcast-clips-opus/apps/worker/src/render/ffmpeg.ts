@@ -47,7 +47,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
     // Keep permanent watermark geometry failures ahead of probing/retryable media errors.
     if (options.watermark) watermarkGeometry(width, height, options.origin, options.code);
     const video = await probeVideoStream(options.inputPath, options.signal);
-    if (options.clipIndex !== undefined && !Number.isSafeInteger(options.clipIndex)) {
+    if (options.music && options.clipIndex !== undefined && !Number.isSafeInteger(options.clipIndex)) {
       console.info(JSON.stringify({ event: 'music_track_fallback' }));
     }
     const teaser = options.teaser ? await prepareTeaser(options.title ?? '', width, temp) : null;

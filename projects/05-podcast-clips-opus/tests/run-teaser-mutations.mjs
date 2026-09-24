@@ -56,4 +56,7 @@ for (const [id, file, original, mutation, test, pattern] of cases) {
 }
 writeFileSync(`${root}/results.json`, JSON.stringify(results, null, 2) + '\n');
 if (results.some(r => r.status === 'FAIL')) process.exitCode = 1;
-if (results.some(r => r.status === 'NOT_EXECUTED')) console.error('НЕ ВЫПОЛНЕН: media mutation; see logs, requires ffmpeg >= 6.1');
+if (results.some(r => r.status === 'NOT_EXECUTED')) {
+  process.exitCode ||= 2;
+  console.error('НЕ ВЫПОЛНЕН: media mutation; see logs, requires ffmpeg >= 6.1');
+}

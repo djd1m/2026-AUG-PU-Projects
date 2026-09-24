@@ -26,10 +26,14 @@ it.skipIf(!supported)('real teaser window and opaque watermark pixels with compr
         '-vf', crop, '-pix_fmt', 'gray', '-f', 'rawvideo', '-'], { encoding: 'buffer', maxBuffer: 4_000_000 })).stdout;
     }
     const delta = async (t: number, crop: string) => Math.abs(mean(await frame(true, t, crop)) - mean(await frame(false, t, crop)));
+    const fading = await delta(2.4, 'crop=1080:640:0:100');
     const early = await delta(1, 'crop=1080:640:0:100'), late = await delta(3, 'crop=1080:640:0:100');
     const g = watermarkGeometry(1080, 1920, origin, code);
     const mark = await delta(1, `crop=${g.chipWidth}:${g.chipHeight}:${g.left + g.paddingX + g.prefixWidth}:${g.y + g.paddingY}`);
-    console.log(JSON.stringify({ event: 'teaser_pixel_delta', early, late, watermark: mark }));
+    console.log(JSON.stringify({ event: 'teaser_pixel_delta', early, fading, late, watermark: mark }));
+    // The overlay remains visible during the fade, with a clear loss of opacity.
+    expect(fading).toBeGreaterThan(1);
+    expect(early - fading).toBeGreaterThan(5);
     expect(early).toBeGreaterThan(5); expect(late).toBeLessThan(1); expect(mark).toBeLessThan(1);
   } finally { await rm(dir, { recursive: true, force: true }); }
 }, 180000);
