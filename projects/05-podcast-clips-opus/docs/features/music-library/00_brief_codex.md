@@ -52,6 +52,29 @@
   контракт (эталон `tests/fixtures/pack-shot/music-only.json` — там индекс считать 0 или 11×k).
 - RD-001, SL-008, все стражи Г-1…Г-3 и пэк-шота.
 
+## ОБЯЗАТЕЛЬНЫЕ правки после VALIDATE (перекрывают текст выше)
+
+Проверка плана (Anthropic): READY WITH FIXES. Ассеты сверены: 11 sha256 и длительности совпадают.
+
+1. **[high] `clip.index` начинается с 1** (`001_init.sql:48`, `CHECK ("index" > 0)`). Выбор —
+   `selectTrack(index - 1)`: первый клип каждой записи получает `komiku-everything-is-groovy`, как и
+   раньше. Во ВСЕ моки `getRenderInput` в эталонных тестах добавить явный `index: 1`. Новый тест через
+   `handleRenderJob` с `index: 2`: контракт и `-i` содержат `MUSIC_TRACKS[1]`. Мутация «индекс не
+   передаётся» → красный.
+2. **[high] Путь трека в аргументах ffmpeg.** `ffmpeg.ts` сейчас берёт `-i MUSIC_TRACKS[0].path`
+   отдельно от `prepareMusic`. `prepareMusic` возвращает выбранный трек (или путь), и `-i` берёт его
+   ОТТУДА. Мутация «`-i` = `[0]` при выбранном `[k]`» → красный в `tests/music.test.ts`.
+3. **[medium] Сквозная передача индекса:** поле `clipIndex` в `RenderOptions`, `index: number` в
+   `RenderInput`, передача в `handleRenderJob`.
+4. **[medium] Fail-closed для нецелых:** `Number.isSafeInteger(i) ? … : MUSIC_TRACKS[0]`; в тест —
+   `1.5`, `'3'`, `Infinity`, `NaN`, `-1`, `undefined`.
+5. **[medium] Обновить цели мутаций** `off-input` и `catalogue` в `tests/run-music-mutations.mjs` и те
+   же строки в `tests/run-pack-shot-mutations.mjs`, чтобы старые мутации продолжали проверять.
+6. **[low] Разрешено** обновить точное ожидание строки источников в `tests/pack-shot-uploader.test.ts`
+   на новую — точным сравнением, не поиском подстроки.
+7. **[low] Медиа-страж на двух треках** — через настоящий выбор по индексу (например `index: 1` и
+   `index: 5`), а не через `MUSIC_TRACKS[0]`/`[1]` напрямую.
+
 ## Тесты
 
 | Страж | Что проверяет | Внедряемый дефект → ожидание |
