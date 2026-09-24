@@ -2,7 +2,9 @@ import schema from './fragments-schema.json';
 import { parseTranscript, type TranscriptResult } from './transcript.js';
 export const FRAGMENTS_SCHEMA = schema;
 export const SELECTION_TARGET_MIN = 3;
-export const SELECT_TIMEOUT_MS = 120_000;
+// Измерено на записи 88 мин: 1:45 (23.09) и > 2:00 (24.09, оборвано). Потолок — окно молчания
+// 5 мин из long-job-contract: дольше экран покажет «нет ответа» при живом вызове.
+export const SELECT_TIMEOUT_MS = 240_000;
 export interface Fragment {
   start_seconds: number; end_seconds: number; title: string; score: number;
   score_hook: number; score_completeness: number; score_length: number;
