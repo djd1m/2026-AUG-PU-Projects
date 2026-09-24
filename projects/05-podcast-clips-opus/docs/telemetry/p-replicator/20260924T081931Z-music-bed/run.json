@@ -18,20 +18,30 @@
   ],
   "comparison_id": null,
   "baseline_revision": "e7792379d66fd7d39339c25db7d63974c7eb528c",
-  "final_revision": null,
+  "final_revision": "5f38ac202b68a0ee44a5c1af61a6e3a33139e9bc",
   "host": "Claude Code",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-09-24T08:19:31.602862+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-09-24T08:57:15.119766+00:00",
+  "status": "completed",
   "acceptance_evidence": [],
   "quality": {
-    "required_gates_passed": null,
+    "required_gates_passed": true,
     "ac_met": null,
     "ac_total": 8,
-    "confirmed_findings_by_severity": {},
-    "regressions": null,
+    "confirmed_findings_by_severity": {
+      "validate": {
+        "blocker": 1,
+        "high": 6,
+        "medium": 5
+      },
+      "review": {
+        "medium": 2,
+        "low": 5
+      }
+    },
+    "regressions": 0,
     "followup_status": "pending"
   },
   "metrics": {
