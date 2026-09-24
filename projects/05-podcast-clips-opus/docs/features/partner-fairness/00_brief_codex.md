@@ -49,6 +49,56 @@
 `docs/` НЕ правь (кроме отчёта) — координатор сам обновит канон §4 и §7. Но в отчёте перечисли все
 места кода, где закрытые наборы и числа («ровно 3») проверяются тестами.
 
+## ОБЯЗАТЕЛЬНЫЕ правки после VALIDATE (перекрывают текст выше)
+
+Проверка плана (Anthropic): READY WITH FIXES.
+
+1. **[high] Скрипт — в образе.** `scripts/` в образ `web` не копируется. Положить скрипт в
+   `packages/db/scripts/partner-code-unblock.mjs` (или `packages/db/src` → `dist`), чтобы он ехал с
+   `packages/`. Команда оператора (впиши её в шапку скрипта и в отчёт):
+   `docker compose --project-directory . --env-file .env exec web node packages/db/<путь>/partner-code-unblock.mjs <код> "<причина>"`.
+   Без `DATABASE_URL` — код 2 с сообщением («проверка НЕ ВЫПОЛНЕНА»), не «не найдено». Логику
+   вынести в функцию `unblockPartnerCode(pool, code, reason, now)` — её и зовёт тест.
+2. **[high] Тест «различные аккаунты» должен различать.** Один аккаунт даёт не больше 3 успешных
+   событий на код (`cookie → guest_link → explicit`), повторы дают 409 и событий не пишут. Сценарий:
+   **17 аккаунтов × 3 смены источника = 51 событие, 17 различных** → код активен при `DISTINCT`, и
+   блокируется при `count(*)` (мутация обязана покраснеть). Плюс: 50 разных → `blocked`, 49 → активен.
+3. **[high] Окно после разблокировки — одни часы.** `unblockPartnerCode` принимает момент `now`
+   (скрипт передаёт `new Date()`), в тестах — тот же `clock`. `unblocked_at` читается в том же
+   `SELECT … FOR NO KEY UPDATE OF c`. Нижняя граница окна:
+   `created_at > GREATEST($3::timestamptz - interval '10 minutes', c.unblocked_at)` (GREATEST
+   игнорирует NULL). Стражи: «50 событий до + 1 после → активен» И «после разблокировки 50 НОВЫХ
+   различных аккаунтов → снова `blocked`».
+4. **[medium] Страж перечислений `tests/enums.test.ts`** читает CHECK только из `001` (+ исключение
+   `013`). Обобщить: для каждой `table.column` берётся ПОСЛЕДНЕЕ определение CHECK по всем миграциям;
+   CHECK в `016` писать в форме `CHECK (status IN (…))`. Мутация «4-е значение в enums, CHECK из 001» → красный.
+5. **[medium] Миграция 016 — порядок и имена:** `ALTER COLUMN partner_code_id DROP NOT NULL` →
+   `DROP CONSTRAINT attribution_partner_code_id_fkey` (без `IF EXISTS`) → `ADD CONSTRAINT
+   attribution_partner_code_id_fkey FOREIGN KEY … ON DELETE SET NULL` → `DROP CONSTRAINT
+   attribution_status_check` → `ADD CONSTRAINT attribution_status_check CHECK (status IN
+   ('pending','activated','rejected','partner_deleted'))` → `ADD CONSTRAINT attribution_partner_deleted_null
+   CHECK (partner_code_id IS NOT NULL OR status = 'partner_deleted')`. Тест через `pg_constraint`: на
+   `attribution.status` ровно один CHECK. (Следствие: удаление кода мимо `retention` упадёт на CHECK —
+   это fail-closed, так и задумано.)
+6. **[medium] `retention.ts`:** `UPDATE` чужих атрибуций (`status='partner_deleted',
+   partner_code_id=NULL, reject_reason=NULL`) — ДО `DELETE FROM attribution` и `DELETE FROM
+   partner_code`; сам `DELETE FROM attribution` сузить до `account_id=$1`. Тест — в
+   `tests/retention.integration.test.ts` (там его сейчас нет); мутация `UPDATE → DELETE` — в
+   `scripts/test-retention-mutations.mjs`.
+7. **[medium] `partner.ts`:** тип `Attribution` (`partner_code_id: string | null`, статус с
+   `partner_deleted`); `UPDATE … status NOT IN ('rejected','partner_deleted')`; в `replacementAllowed`
+   проверка `partner_deleted` ПЕРВОЙ. `PartnerPanel.tsx`: словарь статусов — без поломки типов.
+8. **[medium] `tests/partner.test.ts:19`** — заглушка ищет `SELECT count(*)`; обновить под новый
+   запрос. Строку `if (count >= 50)` сохранить дословно (её ищет мутация `burst-50`).
+9. **[low] Кабинет:** дата — `Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow' })`;
+   `unblocked_at` приходит строкой — тип честный; страж «в `PartnerPanel.tsx` нет
+   `dangerouslySetInnerHTML`». В шапке скрипта: «причину видит партнёр — не писать в неё данные
+   чужих аккаунтов (адреса, IP)».
+10. **[low] Семантика скрипта:** снимает блокировку с ЛЮБОЙ причиной (`antifraud_ip_burst` и `manual`
+    — ручную ставит тот же оператор). Причина: `trim`, затем 1..500, хранится обрезанной.
+    Конкурентный тест утверждает распределение ответов (ровно 50 успехов до блокировки, остальные —
+    409 или 422 `code_blocked`) и что `blocked_at` выставлен один раз.
+
 ## Тесты
 
 | Страж | Что проверяет | Дефект → ожидание |
