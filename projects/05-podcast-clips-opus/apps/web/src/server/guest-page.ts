@@ -1,3 +1,4 @@
+import { THEME_COLOR, themeFromCookie, type Theme } from '../lib/theme';
 import { pluralRu } from '../lib/plural-ru';
 import { randomBytes } from 'node:crypto';
 import { referralCookie } from '../lib/partner-referral';
@@ -12,18 +13,20 @@ interface Dependencies {
   guests: Pick<GuestPackService, 'find' | 'recordOpen'>; auth: Pick<AuthService, 'authenticate'>;
   trustedProxyHops: number; allowRead: (ip: string, account?: string) => Promise<boolean>;
 }
+// Colour tokens duplicated from apps/web/src/app/globals.css (values must match: tests/theme.test.ts).
+const THEME_TOKENS = ':root{color-scheme:dark;--paper:#0e1311;--surface:#1a211d;--ink:#eef2ec;--green:#8fd4a4;--btn-bg:#dcefd9;--btn-fg:#0f1a14;--media-bg:#060807;--media-fg:#d5ddd6;--focus:#f2b552;}:root[data-theme=light]{color-scheme:light;--paper:#f7f8f3;--surface:#ffffff;--ink:#202a27;--green:#305d45;--btn-bg:#305d45;--btn-fg:#ffffff;--media-bg:#1d2822;--media-fg:#e2e7db;--focus:#9c5e0a;}';
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[c]!);
-function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string) {
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string, theme: Theme) {
+  return `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${theme}"><meta name="theme-color" content="${THEME_COLOR[theme]}"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow"><title>Ваши клипы — КлипМейкер</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:1.125rem/1.6 system-ui,sans-serif}
+<style>${THEME_TOKENS}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:1.125rem/1.6 system-ui,sans-serif}
 main{max-width:65.625rem;margin:auto;padding:1.5rem}h1{font-size:clamp(2rem,4vw,2.625rem);line-height:1.2;overflow-wrap:anywhere}
 .clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16.25rem),1fr));gap:1.5rem}
-article{min-width:0;background:white;padding:1rem;border-radius:1rem}h2{overflow-wrap:anywhere;font-size:1.375rem}
-video{width:100%;max-height:31.25rem;aspect-ratio:9/16;background:#21382a;border-radius:0.625rem}
-a{color:#355e2a}button,.download{display:inline-block;padding:0.75rem 1.125rem;border:0;border-radius:0.5rem;background:#355e2a;color:white;font:inherit}
+article{min-width:0;background:var(--surface);padding:1rem;border-radius:1rem}h2{overflow-wrap:anywhere;font-size:1.375rem}
+video{width:100%;max-height:31.25rem;aspect-ratio:9/16;background:var(--media-bg);border-radius:0.625rem}
+a{color:var(--green)}button,.download{display:inline-block;padding:0.75rem 1.125rem;border:0;border-radius:0.5rem;background:var(--btn-bg);color:var(--btn-fg);font:inherit}:focus-visible{outline:0.1875rem solid var(--focus);outline-offset:0.25rem}
 button{cursor:pointer;margin-bottom:1.25rem}button:disabled{opacity:.6}footer{margin-top:2rem}small{display:block}
 @media(max-width:600px){main{padding:1rem}.clips{grid-template-columns:1fr}}
 h1,h2,h3,p,label,button,a,input,select,textarea{overflow-wrap:anywhere;hyphens:none}nav a,main>a:not([hidden]),footer a:not([hidden]){display:inline-flex;align-items:center;min-height:2.75rem}
@@ -77,7 +80,7 @@ export function createGuestPageHandler(deps: Dependencies) {
       const pack = await deps.guests.find(code);
       await deps.guests.recordOpen(pack, session?.account_id ?? null, ipPrefix(ip));
       const referral = referralCookie(request.headers.get('cookie') ?? '', pack.partner_code, 'guest_link', session?.account_id === pack.account_id, deps.referralSecret);
-      return new Response(landing(pack, nonce), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8',
+      return new Response(landing(pack, nonce, themeFromCookie(request.headers.get('cookie') ?? undefined)), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8',
         'Content-Security-Policy': `default-src 'none'; img-src 'self'; media-src 'self'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'` } });
     } catch (error) {
       if (error instanceof UploadError && error.status === 404) return new Response('Ссылка не найдена', { status: 404, headers });

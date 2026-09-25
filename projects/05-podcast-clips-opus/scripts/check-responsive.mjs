@@ -34,6 +34,18 @@ export async function login(browser, base, fixture) {
     throw new Error('Вход не удался: лимит частоты');
   } finally { await context.close(); }
 }
+// Theme is an OUTER dimension (A-2509-03): dark = no cookie (checks the default), light = cookie n5_theme=light.
+// The cookie is Secure: a browser sends it only over https, so a --base http:// light run fails the precondition (code 2).
+export const THEMES = ['dark', 'light'];
+export async function themedContext(browser, options, theme, base) {
+  const context = await browser.newContext(options);
+  if (theme === 'light') await context.addCookies([{ name: 'n5_theme', value: 'light', url: base }]);
+  return context;
+}
+export async function themePrecondition(page, theme) {
+  const applied = await page.evaluate(() => document.documentElement.dataset.theme);
+  if (applied !== theme) throw new Error(`Тема не применена — проверка не выполнена (ожидалась ${theme}, на странице ${applied ?? 'нет'})`);
+}
 export async function routePreconditions(page, route) {
   if (route.startsWith('/dashboard/videos/')) {
     try { await page.locator('.clip-card').first().waitFor({ timeout: 15000 }); await page.locator('.clip-card video').first().waitFor({ timeout: 15000 }); }
@@ -42,10 +54,11 @@ export async function routePreconditions(page, route) {
   if (route.startsWith('/g/') && await page.locator('article video').count() < 1) throw new Error('Фикстура непригодна: гостевая страница без доступного клипа');
 }
 export function summary(report) {
-  const r2 = new Set(report.findings.filter(f => f.rule === 'R2').map(f => `${f.engine}|${f.scenario}|${f.route}|${f.selector}`));
-  const rows = report.findings.filter(f => !(f.axeRule === 'target-size' && r2.has(`${f.engine}|${f.scenario}|${f.route}|${f.selector}`)));
+  const key = f => `${f.engine}|${f.scenario}|${f.route}|${f.selector}|${f.theme}`;
+  const r2 = new Set(report.findings.filter(f => f.rule === 'R2').map(key));
+  const rows = report.findings.filter(f => !(f.axeRule === 'target-size' && r2.has(key(f))));
   return `# Responsive check\n\nКод: ${exitCode(report)}; завершено страниц: ${report.pages.length}.\n\n` +
-    report.errors.map(e => `НЕ ВЫПОЛНЕНО: ${e}\n`).join('') + '\n' + rows.map(f => `- ${f.severity} ${f.rule}${f.axeRule ? '/' + f.axeRule : ''} ${f.route ?? 'CSS'} ${f.engine ?? ''} ${f.width ?? ''} ${f.selector}: ${f.message} ${JSON.stringify(f.size ?? null)}`).join('\n') +
+    report.errors.map(e => `НЕ ВЫПОЛНЕНО: ${e}\n`).join('') + '\n' + rows.map(f => `- ${f.severity} ${f.rule}${f.axeRule ? '/' + f.axeRule : ''} ${f.route ?? 'CSS'} ${f.engine ?? ''} ${f.theme ?? ''} ${f.width ?? ''} ${f.selector}: ${f.message} ${JSON.stringify(f.size ?? null)}`).join('\n') +
     '\n\nR2/axe target-size с одинаковым селектором объединены только в summary. Скриншоты — улики, не ассерт.\nОткрытие /c/ пишет link_view (не чаще раза в сутки на префикс); /g/ пишет guest_opened.\nR5 не проверяет input[type=file], checkbox, radio, hidden.\n';
 }
 export async function main(args, { launchOptions = {} } = {}) {
@@ -53,7 +66,7 @@ export async function main(args, { launchOptions = {} } = {}) {
   let options, fixture;
   try {
     options = parseArgs(args);
-    report.configuration = { base: options.base, engines: options.engines, widths: options.widths };
+    report.configuration = { base: options.base, engines: options.engines, widths: options.widths, themes: THEMES };
     fixture = await loadFixture(options.fixture, options.base);
     await mkdir(options.out, { recursive: true });
     await preflight(options.engines, launchOptions);
@@ -63,45 +76,58 @@ export async function main(args, { launchOptions = {} } = {}) {
       const browser = await playwright[engine].launch({ headless: true, ...launchOptions });
       try {
         const storageState = await login(browser, options.base, fixture);
-        for (const scenario of scenarios(engine, playwright.devices, options.widths)) {
-          for (const route of fixture.routes) {
-            const context = await browser.newContext({ ...scenario.options, ...(route.startsWith('/dashboard') ? { storageState } : {}) });
-            const meta = { engine, scenario: scenario.name, route, width: scenario.options.viewport.width, height: scenario.options.viewport.height };
-            try {
-              const page = await context.newPage();
-              await navigate(page, options.base + route);
-              await routePreconditions(page, route);
-              const findings = [...await domRules(page), ...await axeRule(page)];
-              if (scenario.name === 'width-390' && !route.startsWith('/dashboard')) findings.push(...await textZoomRule(page));
-              const screenshot = `${engine}-${scenario.name}-${report.pages.length}.png`;
-              await page.screenshot({ path: resolve(options.out, screenshot), fullPage: true });
-              report.findings.push(...findings.map(f => ({ ...meta, ...f })));
-              report.pages.push({ ...meta, screenshot });
-            } catch (error) {
-              // Browser errors can contain page content/URLs: report only controlled diagnostics.
-              report.errors.push(`${engine} ${scenario.name} ${route}: ${safeError(error)}`);
-            } finally { await context.close(); }
+        for (const theme of THEMES) {
+          const probe = await themedContext(browser, {}, theme, options.base);
+          try {
+            const page = await probe.newPage();
+            await navigate(page, options.base + '/');
+            await themePrecondition(page, theme);
+          } catch (error) {
+            report.errors.push(`${engine} ${theme} /: ${safeError(error)}`);
+            continue;
+          } finally { await probe.close(); }
+          for (const scenario of scenarios(engine, playwright.devices, options.widths)) {
+            for (const route of fixture.routes) {
+              const context = await themedContext(browser, { ...scenario.options, ...(route.startsWith('/dashboard') ? { storageState } : {}) }, theme, options.base);
+              const meta = { engine, theme, scenario: scenario.name, route, width: scenario.options.viewport.width, height: scenario.options.viewport.height };
+              try {
+                const page = await context.newPage();
+                await navigate(page, options.base + route);
+                await routePreconditions(page, route);
+                await themePrecondition(page, theme);
+                const findings = [...await domRules(page), ...await axeRule(page)];
+                if (scenario.name === 'width-390' && !route.startsWith('/dashboard')) findings.push(...await textZoomRule(page));
+                const screenshot = `${engine}-${theme}-${scenario.name}-${report.pages.length}.png`;
+                await page.screenshot({ path: resolve(options.out, screenshot), fullPage: true });
+                report.findings.push(...findings.map(f => ({ ...meta, ...f })));
+                report.pages.push({ ...meta, screenshot });
+              } catch (error) {
+                // Browser errors can contain page content/URLs: report only controlled diagnostics.
+                report.errors.push(`${engine} ${theme} ${scenario.name} ${route}: ${safeError(error)}`);
+              } finally { await context.close(); }
+            }
           }
-        }
-        for (const { w, h } of FIRST_SCREEN_VIEWPORTS) {
-          for (const route of fixture.routes) {
-            const selector = firstScreenSelector(route);
-            if (!selector) continue;
-            const scenario = `first-screen-${w}x${h}`;
-            const meta = { engine, scenario, route, width: w, height: h };
-            const context = await browser.newContext({ viewport: { width: w, height: h }, isMobile: true, hasTouch: true });
-            try {
-              const page = await context.newPage();
-              await navigate(page, options.base + route);
-              await routePreconditions(page, route);
-              const findings = await firstScreenRule(page, selector);
-              const screenshot = `${engine}-${scenario}-${report.pages.length}.png`;
-              await page.screenshot({ path: resolve(options.out, screenshot), fullPage: false });
-              report.findings.push(...findings.map(f => ({ ...meta, ...f })));
-              report.pages.push({ ...meta, screenshot });
-            } catch (error) {
-              report.errors.push(`${engine} ${scenario} ${route}: ${safeError(error)}`);
-            } finally { await context.close(); }
+          for (const { w, h } of FIRST_SCREEN_VIEWPORTS) {
+            for (const route of fixture.routes) {
+              const selector = firstScreenSelector(route);
+              if (!selector) continue;
+              const scenario = `first-screen-${w}x${h}`;
+              const meta = { engine, theme, scenario, route, width: w, height: h };
+              const context = await themedContext(browser, { viewport: { width: w, height: h }, isMobile: true, hasTouch: true }, theme, options.base);
+              try {
+                const page = await context.newPage();
+                await navigate(page, options.base + route);
+                await routePreconditions(page, route);
+                await themePrecondition(page, theme);
+                const findings = await firstScreenRule(page, selector);
+                const screenshot = `${engine}-${theme}-${scenario}-${report.pages.length}.png`;
+                await page.screenshot({ path: resolve(options.out, screenshot), fullPage: false });
+                report.findings.push(...findings.map(f => ({ ...meta, ...f })));
+                report.pages.push({ ...meta, screenshot });
+              } catch (error) {
+                report.errors.push(`${engine} ${theme} ${scenario} ${route}: ${safeError(error)}`);
+              } finally { await context.close(); }
+            }
           }
         }
       } finally { await browser.close(); }
@@ -119,7 +145,7 @@ export async function main(args, { launchOptions = {} } = {}) {
 }
 function safeError(error) {
   const message = error instanceof Error ? error.message : '';
-  return /^(Нужен|Неверные аргументы|Неизвестный движок|Некорректные ширины|--base должен|Фикстура|Браузер (chromium|webkit) недоступен|Маршрут недоступен|Неожиданное перенаправление|Вход не удался|Нет выборки текста)/.test(message)
+  return /^(Нужен|Неверные аргументы|Неизвестный движок|Некорректные ширины|--base должен|Фикстура|Браузер (chromium|webkit) недоступен|Маршрут недоступен|Неожиданное перенаправление|Вход не удался|Нет выборки текста|Тема не применена)/.test(message)
     ? message : 'Ошибка выполнения браузера/сети/файла; проверка не выполнена';
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) process.exitCode = await main(process.argv.slice(2));

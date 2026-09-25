@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs, validateFixture, exitCode } from '../scripts/responsive/input.mjs';
 import { lintCSS, firstScreenSelector, FIRST_SCREEN_VIEWPORTS } from '../scripts/responsive/rules.mjs';
-import { login, main, summary } from '../scripts/check-responsive.mjs';
+import { login, main, summary, themedContext, themePrecondition, THEMES } from '../scripts/check-responsive.mjs';
 
 const fixture = { origin: 'http://localhost', email: 'fixture@example.test', password: 'never-log-this-password', video_id: 'video-1', short_code: 'short-1', clip_ids: ['clip-1'], screens: { guest: '/g/guest-1' } };
 describe('responsive — без браузера', () => {
@@ -53,6 +53,33 @@ describe('responsive — без браузера', () => {
     const report = { errors: [], pages: [], findings: [{ ...common, rule: 'R2' }, { ...common, rule: 'R4', axeRule: 'target-size' }] };
     expect(summary(report)).not.toContain('R4/target-size');
     expect(report.findings).toHaveLength(2);
+  });
+});
+
+describe('responsive — измерение темы', () => {
+  it('summary: тема входит в ключ объединения R2/target-size', () => {
+    const common = { engine: 'webkit', scenario: 'phone', route: '/', selector: '#small', severity: 'error', message: 'small' };
+    const report = { errors: [], pages: [], findings: [{ ...common, theme: 'dark', rule: 'R2' }, { ...common, theme: 'light', rule: 'R4', axeRule: 'target-size' }] };
+    expect(summary(report)).toContain('R4/target-size');
+    expect(summary({ ...report, findings: [report.findings[0]!, { ...report.findings[1]!, theme: 'dark' }] })).not.toContain('R4/target-size');
+    expect(summary(report)).toContain(' light ');
+  });
+  it('тёмная — без cookie, светлая — cookie n5_theme=light на --base', async () => {
+    expect(THEMES).toEqual(['dark', 'light']);
+    const added: unknown[] = [];
+    const browser = { newContext: async (o: unknown) => ({ o, addCookies: async (c: unknown[]) => { added.push(...c); } }) };
+    await themedContext(browser, { viewport: { width: 1, height: 1 } }, 'dark', 'https://x.test');
+    expect(added).toEqual([]);
+    const context = await themedContext(browser, { storageState: { cookies: [] } }, 'light', 'https://x.test');
+    expect(added).toEqual([{ name: 'n5_theme', value: 'light', url: 'https://x.test' }]);
+    expect(context.o).toEqual({ storageState: { cookies: [] } });
+  });
+  it('предусловие: не та тема на странице → ошибка «не выполнена», не зелёный', async () => {
+    const page = (theme: string | undefined) => ({ evaluate: async () => theme });
+    await expect(themePrecondition(page('dark'), 'dark')).resolves.toBeUndefined();
+    await expect(themePrecondition(page('light'), 'light')).resolves.toBeUndefined();
+    for (const [applied, expected] of [['dark', 'light'], ['light', 'dark'], [undefined, 'dark'], ['', 'light']] as const)
+      await expect(themePrecondition(page(applied), expected)).rejects.toThrow('Тема не применена — проверка не выполнена');
   });
 });
 

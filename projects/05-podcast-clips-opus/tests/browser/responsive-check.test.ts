@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { domRules, axeRule, textZoomRule, firstScreenRule } from '../../scripts/responsive/rules.mjs';
 import { preflight } from '../../scripts/responsive/input.mjs';
@@ -67,6 +68,28 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) describe(name
   }));
   it('R4: контраст', () => fixture('r4', async page => {
     expect((await axeRule(page)).some((f: { axeRule: string; severity: string }) => f.axeRule === 'color-contrast' && f.severity === 'error')).toBe(true);
+  }));
+  it('R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто', async () => {
+    const contrast = (found: { axeRule: string; severity: string }[]) => found.filter(f => f.axeRule === 'color-contrast' && f.severity === 'error');
+    await fixture('r4-dark', async page => { expect(contrast(await axeRule(page)).length).toBeGreaterThan(0); });
+    await fixture('dark-clean', async page => { expect(contrast(await axeRule(page))).toEqual([]); });
+  });
+  // The real tokens from globals.css in both themes: every text/background pair of the product passes axe (AA).
+  for (const theme of ['dark', 'light']) it(`палитра globals.css (${theme}): контраст AA на всех парах токенов`, () => fixture('clean', async page => {
+    const css = readFileSync('apps/web/src/app/globals.css', 'utf8');
+    await page.setContent(`<!doctype html><html lang="ru" data-theme="${theme}"><head><style>${css}</style></head><body>
+      <nav class="navigation"><a class="brand" href="/"><span>◧</span> КлипМейкер</a><a href="/">Мои записи</a><button type="button" class="theme-toggle secondary" aria-label="Светлая тема">☾</button></nav>
+      <main class="container"><p class="eyebrow">ВАШИ МЫСЛИ</p><h1>Заголовок <em>акцент</em></h1><p class="intro">Вводный текст</p><p class="muted">Второстепенный</p>
+      <section class="auth-card"><label>Почта <input value="a@b.c"></label><select><option>Трек</option></select><button>Войти</button><button class="secondary">Вторичная</button><button class="text-button">Ссылка</button><button class="danger">Удалить аккаунт</button></section>
+      <section class="upload-panel"><div><h2>Загрузка</h2><p>Текст панели</p><p class="muted">Подсказка</p></div></section>
+      <div class="video-list"><a class="video-row" href="/"><span class="video-thumbnail">▶</span><span class="video-summary"><p>Запись</p><p class="video-id">id</p></span><span class="badge running">Идёт</span></a>
+      <a class="video-row" href="/"><span class="video-summary"><p>Запись</p></span><span class="badge success">Готово</span><span class="badge failure">Ошибка</span><span class="badge silent">Тишина</span></a></div>
+      <div class="status-panel failure"><div><h2>Отказ</h2><p>Причина</p></div></div><div class="status-panel running"><div><h2>Идёт</h2><p>Шаг 2 из 7</p></div></div>
+      <div class="clip-grid"><article class="clip-card"><div class="clip-preview"><p>Превью недоступно</p></div><div class="clip-body"><p class="eyebrow">КЛИП 1</p><p class="score"><strong>87</strong><span> из 99</span></p><dl class="score-details"><dt>Крючок</dt><dd>Объяснение</dd></dl><button>Скачать</button></div></article></div>
+      <p class="notice">Уведомление</p><p class="empty">Пусто</p><dl class="partner-counters"><div><dt>Переходы</dt><dd>12</dd></div></dl></main></body></html>`);
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(theme === 'dark' ? 'rgb(14, 19, 17)' : 'rgb(247, 248, 243)');
+    const found = (await axeRule(page)).filter((f: { axeRule: string; severity: string }) => f.axeRule === 'color-contrast' && f.severity === 'error');
+    expect(found).toEqual([]);
   }));
   it('R4: теги сохраняются при явном target-size', () => fixture('r4-both', async page => {
     const ids = (await axeRule(page)).map((f: { axeRule: string }) => f.axeRule);

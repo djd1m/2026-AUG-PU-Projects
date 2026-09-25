@@ -42,7 +42,7 @@ export function GuestPacks({ videoId, clips, initialPacks, consentHash }: {
       </fieldset>
     </form>
     {message && <p role="status">{message}</p>}
-    {packs.map(pack => <article key={pack.guest_pack_id} style={{ marginTop: 20, padding: 16, border: '1px solid #ced6cb', borderRadius: 12 }}>
+    {packs.map(pack => <article key={pack.guest_pack_id} className="guest-pack">
       <h3>{pack.guest_name}</h3>
       <p>{pack.revoked_at ? 'Пакет отозван' : pack.expires_at ? `Ссылка действует до ${new Date(pack.expires_at).toLocaleString('ru-RU')}` : 'Ещё не отправлен. Ссылка закрыта.'}</p>
       {!pack.revoked_at && <>
