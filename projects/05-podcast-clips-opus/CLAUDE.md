@@ -17,7 +17,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 плюс три фичи, появившиеся после первого живого прогона: кадр по лицу (ADR-009), субтитры и словарь
 терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Затем 24.09 — фоновая
 CC0-музыка по галочке и библиотека из 11 треков (ADR-011), пэк-шот наложением (ADR-012), заголовок
-в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0). Всего **24 фичи**, тесты — **809 из 809** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
+в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008). Всего **25 фич**, тесты — **841 из 841** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
 и MinIO. Живой прогон записи 88,4 мин: 7 клипов за 12 мин 39 с. **Прогон `REPRODUCE.md` с нуля
 (свежий клон, изолированный стек) прошёл 24.09** — `docs/measurements/2026-09-24-reproduce-from-scratch.md`.
 
@@ -231,9 +231,9 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 порядке зависимостей: `foundation` → `upload-and-quota` → `queue-and-probe` → `transcription` →
 `selection-and-score` → `render-and-watermark` → `progress-and-clips-screen` → `short-link` →
 `guest-pack` → `partner-codes-and-dashboard` → `limits-ui-and-pro-interest` →
-`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс двенадцать после живого прогона:
+`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс тринадцать после живого прогона:
 `transcript-tolerance`, `framing`, `subtitles-and-glossary`, `music-bed`, `pack-shot`,
-`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`. Указатель с доказательствами — `docs/features/README.md`.
+`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`. Указатель с доказательствами — `docs/features/README.md`.
 
 Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
 `upload-and-quota` и `render-and-watermark` записаны `complex`, хотя по
@@ -246,7 +246,8 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 ## Режим исполнения: cross-family review (OWN-002)
 
 Планирование и проверка — семейство Anthropic; кодирование — семейство OpenAI (Codex); ревью кода
-возвращается на Anthropic. Модель, написавшая код, не проверяет его сама. Телеметрия p-replicator
+возвращается на Anthropic. **С 25.09.2026 (фича 25 и далее) OpenAI не используется — квота исчерпана:**
+код пишет Opus 5.5, план и код проверяет другой агент Anthropic (Sonnet 5); в квитанции это отмечено. Модель, написавшая код, не проверяет его сама. Телеметрия p-replicator
 ведётся с первой стадии: `docs/telemetry/p-replicator/<RUN_ID>/` — `run.json`, `events.jsonl`,
 квитанции. Недоступные счётчики помечаются `null` с причиной, а не опускаются.
 

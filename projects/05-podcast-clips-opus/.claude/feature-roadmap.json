@@ -773,6 +773,32 @@
         "tests/plural-ru.test.ts",
         "tests/fixtures/responsive/r9-below.html"
       ]
+    },
+    {
+      "id": "dark-theme",
+      "number": 25,
+      "title": "Тёмная тема по умолчанию",
+      "description": "FR-LOOK-008, OWN-016, A-2509-03, шаг 3 плана mobile-ui. Тёмная по умолчанию, светлая по cookie n5_theme, тема на сервере, токены двух тем, прибор в обеих темах (194 прохода, код 0).",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "mobile-audit-fixes"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-LOOK-008",
+        "NFR-UI-001"
+      ],
+      "sc_ids": [],
+      "adr_ids": [],
+      "expected_files": [
+        "apps/web/src/lib/theme.ts",
+        "apps/web/src/app/theme-server.ts",
+        "apps/web/src/app/ThemeToggle.tsx",
+        "apps/web/src/app/globals.css",
+        "tests/theme.test.ts"
+      ]
     }
   ]
 }
