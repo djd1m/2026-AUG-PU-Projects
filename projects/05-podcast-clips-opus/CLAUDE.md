@@ -13,7 +13,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 СНГ, интерфейс русский; публикует пользователь сам в VK Клипы, Telegram, Rutube, Дзен. Клон
 референса Opus Clip; CJM — вариант **D** (путь A целиком плюс блок «клипы для гостя», OWN-001).
 
-**Статус на 24.09.2026: MVP собран и работает на живом стенде.** Все двенадцать фич MVP сделаны,
+**Статус на 25.09.2026: MVP собран и работает на живом стенде.** Все двенадцать фич MVP сделаны,
 плюс три фичи, появившиеся после первого живого прогона: кадр по лицу (ADR-009), субтитры и словарь
 терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Затем 24.09 — фоновая
 CC0-музыка по галочке и библиотека из 11 треков (ADR-011), пэк-шот наложением (ADR-012), заголовок
@@ -78,7 +78,7 @@ CC0-музыка по галочке и библиотека из 11 треко�
 
 | Сервис | Технология | Роль |
 |---|---|---|
-| `web` | Next.js 15 App Router, tRPC, SSR | 10 публичных путей и 15 процедур канона §5, сессии, квоты, подпись ссылок S3, постановка заданий, сторож раз в минуту |
+| `web` | Next.js 15 App Router, tRPC, SSR | 10 публичных путей и 16 процедур канона §5, сессии, квоты, подпись ссылок S3, постановка заданий, сторож раз в минуту |
 | `worker-stt` | образ воркера, ffprobe | шаг `probe` (длительность, звук, резерв диска), списание минут, куски 180 с с перекрытием 2 с, `openai/whisper-large-v3` через OpenRouter |
 | `worker-llm` | образ воркера | один вызов `anthropic/claude-sonnet-5` через OpenRouter, в запросе сегменты; диапазоны проверяет НАШ код |
 | `worker-video` | образ воркера, ffmpeg 8.1 + libass + python3/OpenCV 4.12 | `concurrency 1`, кадр по лицу (YuNet), ASS-субтитры, метка, выгрузка в S3 |
@@ -102,11 +102,11 @@ Storage** (S3, `ru-central-1`, OWN-004). Модели — через ОДИН ш
   отказ. Однооператорная форма `INSERT … ON CONFLICT DO UPDATE … WHERE …` НЕДЕЙСТВИТЕЛЬНА: её
   `WHERE` принадлежит ветке `DO UPDATE` и на вставку не действует, поэтому первый за сутки запрос
   проходил бы без проверки потолка. **Предел — параметр окружения `:limit`, не колонка** (V2-R03).
-- **Шесть scope квоты, и каждый нужен:** `user_minutes` (90), `user_uploads` (2),
-  `user_upload_refunds` (2), `user_llm` (2), `global_minutes` (600), `global_llm` (20). Ключей
-  шесть, пользовательских текстов пять — у `user_upload_refunds` своего текста нет намеренно.
-  Отсутствие ЛЮБОЙ из шести переменных `N5_LIMIT_*` валит старт; проверяется ШЕСТЬЮ отдельными
-  прогонами, не одним (V3-R02).
+- **Семь scope квоты, и каждый нужен:** `user_minutes` (90), `user_uploads` (2),
+  `user_upload_refunds` (2), `user_llm` (2), `global_minutes` (600), `global_llm` (20) и с 25.09.2026
+  `user_rerenders` (20, смены музыки у готового клипа, OWN-015). Пользовательских текстов меньше —
+  у `user_upload_refunds` своего текста нет намеренно. Отсутствие ЛЮБОЙ из семи переменных `N5_LIMIT_*`
+  валит старт; проверяется отдельным прогоном на каждую, не одним (V3-R02).
 - **Слот `user_uploads` возвращается при отказе по СВОЙСТВАМ файла** (`too_large`, `not_media`,
   `no_audio`, `too_short`, `too_long`, `probe_timeout`) в той же транзакции, что пишет `failed`, и
   НЕ возвращается при отказе по потолкам (`refused_*`) — DEC-A-014. Возвратов не больше 2 в сутки
@@ -202,7 +202,7 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 | Агент | Когда звать |
 |---|---|
 | [`planner`](.claude/agents/planner.md) | разложить фичу на единицы, назвать связывающие FR/SC/ADR и порядок операций |
-| [`architect`](.claude/agents/architect.md) | схема, 10 путей и 15 процедур, границы сервисов, новый ADR |
+| [`architect`](.claude/agents/architect.md) | схема, 10 путей и 16 процедур, границы сервисов, новый ADR |
 | [`code-reviewer`](.claude/agents/code-reviewer.md) | после каждой единицы: атомарность квоты, фенс, fail-closed метки, согласие, владение, `404` |
 
 | Навык | Когда грузить |
@@ -231,7 +231,7 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 порядке зависимостей: `foundation` → `upload-and-quota` → `queue-and-probe` → `transcription` →
 `selection-and-score` → `render-and-watermark` → `progress-and-clips-screen` → `short-link` →
 `guest-pack` → `partner-codes-and-dashboard` → `limits-ui-and-pro-interest` →
-`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс семь после живого прогона:
+`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс одиннадцать после живого прогона:
 `transcript-tolerance`, `framing`, `subtitles-and-glossary`, `music-bed`, `pack-shot`,
 `music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`. Указатель с доказательствами — `docs/features/README.md`.
 
