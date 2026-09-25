@@ -1,6 +1,6 @@
 # Фичи «КлипМейкера» — указатель
 
-Все двадцать — `done` на 24.09.2026 (16–20 добавлены в тот же день). Двенадцать — MVP по плану; три появились после первого живого
+Все двадцать одна — `done` на 25.09.2026 (16–21 добавлены 24–25.09). Двенадцать — MVP по плану; три появились после первого живого
 прогона 23.09.2026 и в замороженной спецификации отсутствуют (их требования —
 `../Specification-addendum.md`).
 
@@ -31,6 +31,7 @@
 | 18 | `music-library` | 11 CC0-треков, выбор по номеру клипа | post-mvp | [05_completion.md](music-library/05_completion.md) |
 | 19 | `teaser-headline` | Заголовок клипа крупно в первые 2,5 с | post-mvp | [05_completion.md](teaser-headline/05_completion.md) |
 | 20 | `partner-fairness` | Блокировка по людям, разблокировка, обезличивание атрибуций | post-mvp | [05_completion.md](partner-fairness/05_completion.md) |
+| 21 | `pause-compaction` | Уплотнение пауз | post-mvp | [05_completion.md](pause-compaction/05_completion.md) |
 
 ## Сквозные документы, без которых фичи не читаются
 

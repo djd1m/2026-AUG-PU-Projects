@@ -575,7 +575,7 @@
       "id": "music-library",
       "number": 18,
       "title": "Библиотека из 11 CC0-треков, выбор по номеру клипа",
-      "description": "ADR-011 (расширение), FR-RENDER-007. MUSIC_TRACKS — 11 треков Komiku; selectTrack((clip.index−1) mod 11), fail-closed на нецелых; путь -i и контракт из выбранного трека.",
+      "description": "ADR-011 (расширение), FR-RENDER-007. MUSIC_TRACKS — 11 треков Komiku; selectTrack((clip.index−1) mod 11), fail-closed на нецелых; путь -i и контракт из выбранного трека. Пересмотрено OWN-013/014: 9 треков, каждый прослушан владельцем.",
       "priority": "post-mvp",
       "status": "done",
       "complexity": "medium",
@@ -656,6 +656,38 @@
         "apps/web/src/server/retention.ts",
         "apps/web/src/app/dashboard/PartnerPanel.tsx",
         "packages/shared/src/enums.ts"
+      ]
+    },
+    {
+      "id": "pause-compaction",
+      "number": 21,
+      "title": "Уплотнение пауз",
+      "description": "FR-RENDER-010, ADR-015, OWN-012. Огибающая звука, порог медиана−18 дБ, K=0,05 с, перекрестие 0,08 с на сетке 25 к/с, D', mapTime; план в clip.cut_plan под фенсом; миграция 017.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "high",
+      "depends_on": [
+        "music-bed",
+        "pack-shot",
+        "teaser-headline",
+        "framing"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RENDER-010"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-015"
+      ],
+      "expected_files": [
+        "packages/db/migrations/017_compaction.sql",
+        "apps/worker/src/render/compaction.ts",
+        "apps/worker/src/render/envelope.ts",
+        "apps/worker/src/render/ffmpeg.ts",
+        "apps/worker/src/workers/render.ts",
+        "apps/web/src/app/clips/ClipCard.tsx",
+        "apps/web/src/app/upload/Uploader.tsx"
       ]
     }
   ]
