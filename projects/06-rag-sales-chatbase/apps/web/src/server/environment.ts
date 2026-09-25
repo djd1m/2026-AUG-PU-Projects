@@ -10,6 +10,7 @@ export function readEnvironment() {
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
     ANSWER_MODEL: process.env.ANSWER_MODEL,
     EMBED_MODEL: process.env.EMBED_MODEL,
+    N6_SPEND_LOG: process.env.N6_SPEND_LOG,
     QUOTA_VISITOR_ANSWERS: process.env.QUOTA_VISITOR_ANSWERS,
     QUOTA_IP_ANSWERS: process.env.QUOTA_IP_ANSWERS,
     QUOTA_BOT_DAY_FREE: process.env.QUOTA_BOT_DAY_FREE,

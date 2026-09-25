@@ -4,11 +4,11 @@
   "engines": { "node": ">=22 <23" },
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "npm run build --workspace=packages/db && npm run build --workspace=packages/rag && npm run build --workspace=apps/worker && npm run build --workspace=apps/web",
-    "typecheck": "npm run build --workspace=packages/db && npm run build --workspace=packages/rag && npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json",
+    "build": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=apps/worker && npm run build --workspace=apps/web",
+    "typecheck": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json",
     "lint": "node scripts/lint.mjs",
     "test": "node scripts/test.mjs",
-    "db:migrate": "npm run build --workspace=packages/db && node packages/db/dist/migrate.js"
+    "db:migrate": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && node packages/db/dist/migrate.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2", "@types/node": "^22.0.0", "@types/pg": "^8.11.0",

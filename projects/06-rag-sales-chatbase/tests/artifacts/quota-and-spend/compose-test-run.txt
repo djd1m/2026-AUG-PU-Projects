@@ -1,0 +1,199 @@
+ Network n6-test_default Creating 
+ Network n6-test_default Created 
+ Container n6-test-db-1 Creating 
+ Container n6-test-redis-1 Creating 
+ Container n6-test-db-1 Created 
+ Container n6-test-redis-1 Created 
+ Container n6-test-db-1 Starting 
+ Container n6-test-redis-1 Starting 
+ Container n6-test-redis-1 Started 
+ Container n6-test-db-1 Started 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 671B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.24kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.4s
+
+#4 [deps  1/10] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#4 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 1.26kB done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 61.14MB 0.6s done
+#6 DONE 0.6s
+
+#7 [deps  2/10] WORKDIR /app
+#7 CACHED
+
+#8 [deps 3/8] COPY package.json package-lock.json ./
+#8 DONE 0.4s
+
+#9 [deps 4/8] COPY apps/web/package.json ./apps/web/
+#9 DONE 0.2s
+
+#10 [deps 5/8] COPY apps/worker/package.json ./apps/worker/
+#10 DONE 0.1s
+
+#11 [deps 6/8] COPY packages/db/package.json ./packages/db/
+#11 DONE 0.2s
+
+#12 [deps 7/8] COPY packages/rag/package.json ./packages/rag/
+#12 DONE 0.1s
+
+#13 [deps 8/8] RUN npm ci
+#13 14.23 
+#13 14.23 added 112 packages, and audited 117 packages in 14s
+#13 14.23 
+#13 14.23 24 packages are looking for funding
+#13 14.23   run `npm fund` for details
+#13 14.28 
+#13 14.28 4 vulnerabilities (3 moderate, 1 high)
+#13 14.28 
+#13 14.28 To address all issues (including breaking changes), run:
+#13 14.28   npm audit fix --force
+#13 14.28 
+#13 14.28 Run `npm audit` for details.
+#13 14.28 npm notice
+#13 14.28 npm notice New major version of npm available! 10.9.8 -> 12.1.0
+#13 14.28 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+#13 14.28 npm notice To update run: npm install -g npm@12.1.0
+#13 14.28 npm notice
+#13 DONE 15.2s
+
+#14 [build 1/2] COPY . .
+#14 DONE 0.7s
+
+#15 [build 2/2] RUN npm run build
+#15 0.521 
+#15 0.521 > n6-sufler@0.1.0 build
+#15 0.521 > npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#15 0.521 
+#15 0.729 
+#15 0.729 > @n6/rag@0.1.0 build
+#15 0.729 > tsc -p tsconfig.json
+#15 0.729 
+#15 3.333 
+#15 3.333 > @n6/db@0.1.0 build
+#15 3.333 > tsc -p tsconfig.json
+#15 3.333 
+#15 5.432 
+#15 5.432 > @n6/worker@0.1.0 build
+#15 5.432 > tsc -p tsconfig.json
+#15 5.432 
+#15 7.470 
+#15 7.470 > @n6/web@0.1.0 build
+#15 7.470 > next build && tsc -p tsconfig.preflight.json
+#15 7.470 
+#15 8.874 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#15 8.875 This information is used to shape Next.js' roadmap and prioritize features.
+#15 8.875 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#15 8.875 https://nextjs.org/telemetry
+#15 8.875 
+#15 9.173    ▲ Next.js 15.5.25
+#15 9.173    - Experiments (use with caution):
+#15 9.173      · cpus: 2
+#15 9.173 
+#15 9.387    Creating an optimized production build ...
+#15 21.15  ✓ Compiled successfully in 7.9s
+#15 21.15    Linting and checking validity of types ...
+#15 25.11    Collecting page data ...
+#15 27.01    Generating static pages (0/5) ...
+#15 27.77    Generating static pages (1/5) 
+#15 27.77    Generating static pages (2/5) 
+#15 27.77    Generating static pages (3/5) 
+#15 27.77  ✓ Generating static pages (5/5)
+#15 28.94    Finalizing page optimization ...
+#15 28.94    Collecting build traces ...
+#15 37.94 
+#15 37.94 Route (app)                                  Size  First Load JS
+#15 37.94 ┌ ƒ /api/auth/login                         133 B         102 kB
+#15 37.94 ├ ƒ /api/auth/logout                        133 B         102 kB
+#15 37.94 ├ ƒ /api/auth/register                      133 B         102 kB
+#15 37.94 └ ƒ /health                                 133 B         102 kB
+#15 37.94 + First Load JS shared by all              101 kB
+#15 37.94   ├ chunks/87c73c54-24122e7b92478d00.js   54.2 kB
+#15 37.94   ├ chunks/956-915b2f7c381780d8.js        45.6 kB
+#15 37.94   └ other shared chunks (total)           1.59 kB
+#15 37.94 
+#15 37.94 Route (pages)                                Size  First Load JS
+#15 37.94 ─ ○ /404                                    180 B         107 kB
+#15 37.94 + First Load JS shared by all              107 kB
+#15 37.94   ├ chunks/framework-9d5fabc6d68642b8.js  68.7 kB
+#15 37.94   ├ chunks/main-e7f3731ffdf0a93c.js       36.9 kB
+#15 37.94   └ other shared chunks (total)           1.66 kB
+#15 37.94 
+#15 37.94 ○  (Static)   prerendered as static content
+#15 37.94 ƒ  (Dynamic)  server-rendered on demand
+#15 37.94 
+#15 DONE 40.0s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 40.0s done
+#16 exporting manifest sha256:3d8ad2ba24c2a632b3461ad96d689b5b57f0898558cf216021f3e025f35761dd 0.0s done
+#16 exporting config sha256:9f8196659d35333a14590643d6a48e151d3b40c7b18108e6d576604219b6261e 0.0s done
+#16 exporting attestation manifest sha256:d7896af2ae21c7d3e3a99dd5599f0734cbc70892c52b7745aa5a8f83b81a542d 0.0s done
+#16 exporting manifest list sha256:524fd2f3f49efc453d63c8e3b59cee7ee49d7ffa408a28c4cda202a746c083fe done
+#16 naming to docker.io/library/n6-sufler-test:foundation done
+#16 unpacking to docker.io/library/n6-sufler-test:foundation
+#16 unpacking to docker.io/library/n6-sufler-test:foundation 9.9s done
+#16 DONE 50.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-test-run-d9884b500858 Creating 
+ Container n6-test-test-run-d9884b500858 Created 
+
+> n6-sufler@0.1.0 test
+> node scripts/test.mjs --run
+
+
+ RUN  v3.2.7 /app
+
+ ✓ tests/quota.concurrency.test.ts (11 tests) 1695ms
+   ✓ Квота на настоящем Postgres: два оператора, откат всех scope, конкурентность > прогон 6, добросовестный NAT: 60 разных посетителей за одним префиксом одновременно → 60 без ложных отказов, 61-й — ip_answers  417ms
+ ✓ tests/database.integration.test.ts (10 tests) 1370ms
+ ✓ tests/config.test.ts (192 tests) 13937ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3011ms
+stderr | tests/auth.test.ts > Аутентификация > Отказ Redis закрывает вход до bcrypt/БД
+Авторизация: запрос не завершён; вход временно недоступен offline
+
+ ✓ tests/auth.test.ts (10 tests) 1023ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  706ms
+ ✓ tests/openrouter.test.ts (15 tests) 30ms
+ ✓ tests/spend.test.ts (8 tests) 74ms
+ ✓ tests/quota-keys.test.ts (8 tests) 15ms
+ ✓ tests/probes.test.ts (6 tests) 10559ms
+   ✓ EmbedProbe при старте worker-index > шлюз отвечает 1536 — процесс живёт; запрос с dimensions 1536; attempt → outcome success в журнале  3018ms
+ ✓ tests/proxy-rate.test.ts (8 tests) 24ms
+ ✓ tests/compose.test.ts (16 tests) 12ms
+ ✓ tests/enums.test.ts (22 tests) 14ms
+ ✓ tests/redis.integration.test.ts (1 test) 29ms
+stderr | tests/health.test.ts > health: 200 при БД с pgvector, 503 без расширения и при отказе БД
+Проверка здоровья: сервис недоступен pgvector не установлен
+
+stderr | tests/health.test.ts > health: 200 при БД с pgvector, 503 без расширения и при отказе БД
+Проверка здоровья: сервис недоступен offline
+
+ ✓ tests/health.test.ts (1 test) 9ms
+
+ Test Files  13 passed (13)
+      Tests  308 passed (308)
+   Start at  01:39:12
+   Duration  35.10s (transform 691ms, setup 0ms, collect 1.56s, tests 28.79s, environment 4ms, prepare 1.54s)
+

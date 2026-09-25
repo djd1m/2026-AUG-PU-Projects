@@ -88,7 +88,7 @@
       "title": "Атомарная квота на 10 scope / 14 переменных, журнал попыток, клиент OpenRouter, EmbedProbe",
       "description": "packages/db/src/quota.ts — CheckAndConsumeQuota двумя операторами в одной транзакции, откат всех scope, предел по паре (scope, вид) из LoadCeilings; ключи для анонимов (сессия, префикс /24 и /48, бот, глобально); RecordModelSpend в /work/spend/model-spend.jsonl (attempt с fsync до вызова, outcome после); клиент OpenRouter: chat/completions (json_schema, temperature 0, max_tokens 400) + embeddings (dimensions 1536); EmbedProbe при старте worker-index и пробный вызов ANSWER_MODEL в web — ответ ≠ 200 или длина ≠ 1536 валит старт. Тир XL: деньги — остановка на плане у владельца.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "foundation"
@@ -145,7 +145,8 @@
         "tests/quota.concurrency.test.ts",
         "scripts/test-quota-mutations.mjs"
       ],
-      "notes": "Конкурентные прогоны 1, 4, 5 из .claude/rules/testing.md. SC-US-007-3 закрывается в visitor-ask-and-limits, где появляется маршрут ответа."
+      "notes": "Конкурентные прогоны 1, 4, 5 из .claude/rules/testing.md. SC-US-007-3 закрывается в visitor-ask-and-limits, где появляется маршрут ответа.",
+      "completion": "docs/features/quota-and-spend/05_completion.md"
     },
     {
       "id": "index-job-core",
@@ -639,7 +640,8 @@
         "tests/cors-single-acao.test.ts",
         "tests/visitor-quota.concurrency.test.ts",
         "tests/e2e/host-8099/host.html"
-      ]
+      ],
+      "carry_over": "Ревью quota-and-spend: M1 — reserveProbe (spend.ts:94-104) «записать, потом прочитать» → перенести на атомарный quota_counter или flock + конкурентный тест; M2 — период квоты от SELECT now() БД, а не часов процесса; L — правило «openrouter.ts только через meteredCall» в coding-style.md. Закрыть ДО реального трафика."
     },
     {
       "id": "public-page-and-summary",

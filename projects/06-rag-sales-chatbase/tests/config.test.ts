@@ -56,8 +56,10 @@ describe('Отказ старта: 14 прогонов web + 14 прогонов
         expect(result.output).toContain('не ограничен и оплачивается без предела');
       });
     }
+    // С фичи quota-and-spend старт включает пробу модели (EmbedProbe / проба ANSWER_MODEL): положительный
+    // контроль идёт через подменный шлюз, настоящая сеть не вызывается (tests/probes.test.ts — отказы пробы).
     it(`${label}: положительный контроль — с полной конфигурацией процесс не отказывает`, () => {
-      const result = subprocess(entry, environment(), 3000);
+      const result = subprocess(['--import', './tests/fixtures/fake-gateway.mjs', ...entry], { ...environment(), FAKE_GATEWAY: 'ok' }, 3000);
       if (label === 'web') expect(result.status, result.output).toBe(0);
       else { expect(result.timedOut, result.output).toBe(true); expect(result.output).toContain('конфигурация принята'); }
     });

@@ -1,99 +1,99 @@
 
- RUN  v3.2.7 /tmp/n6-ceilings-mutations-AaBOTi
+ RUN  v3.2.7 /tmp/n6-ceilings-mutations-1BEiUQ
 
- ❯ tests/config.test.ts (192 tests | 18 failed) 8993ms
-   ✓ Перечень потолков — один источник > 14 имён кода = 14 имён канона §7, значения фикстуры = значения канона 3ms
+ ❯ tests/config.test.ts (192 tests | 18 failed) 10440ms
+   ✓ Перечень потолков — один источник > 14 имён кода = 14 имён канона §7, значения фикстуры = значения канона 4ms
    ✓ Перечень потолков — один источник > docker-compose.yml x-quota-env требует все 14 через ${VAR:?} и ни одной лишней 2ms
-   ✓ Перечень потолков — один источник > .env.example объявляет все 14 со значениями канона 2ms
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_VISITOR_ANSWERS: код 1, имя переменной и незащищённый вызов 48ms
+   ✓ Перечень потолков — один источник > .env.example объявляет все 14 со значениями канона 1ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_VISITOR_ANSWERS: код 1, имя переменной и незащищённый вызов 77ms
      → web не запущен: QUOTA_VISITOR_ANSWERS не задана: без неё вызов «ответ модели посетителю одной сессии виджета» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_IP_ANSWERS: код 1, имя переменной и незащищённый вызов 39ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_IP_ANSWERS: код 1, имя переменной и незащищённый вызов 66ms
      → web не запущен: QUOTA_IP_ANSWERS не задана: без неё вызов «ответ модели посетителям одного префикса IP (смена сессии обходит предел)» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов 40ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов 76ms
      → web не запущен: QUOTA_BOT_DAY_FREE не задана: без неё вызов «суточные ответы модели бота на плане free» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов 39ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов 74ms
      → web не запущен: QUOTA_BOT_DAY_PAID не задана: без неё вызов «суточные ответы модели бота на платном плане» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов 40ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов 72ms
      → web не запущен: QUOTA_BOT_MONTH_FREE не задана: без неё вызов «месячные ответы модели бота на плане free» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_MONTH_PAID: код 1, имя переменной и незащищённый вызов 47ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_BOT_MONTH_PAID: код 1, имя переменной и незащищённый вызов 73ms
      → web не запущен: QUOTA_BOT_MONTH_PAID не задана: без неё вызов «месячные ответы модели бота на платном плане» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов 39ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов 67ms
      → web не запущен: QUOTA_GLOBAL_ANSWERS не задана: без неё вызов «все ответы модели за сутки (худшие сутки)» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_PREVIEW_SESSION_CREATE: код 1, имя переменной и незащищённый вызов 37ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_PREVIEW_SESSION_CREATE: код 1, имя переменной и незащищённый вызов 83ms
      → web не запущен: QUOTA_PREVIEW_SESSION_CREATE не задана: без неё вызов «создание предпросмотра одним браузером (краулинг и эмбеддинги)» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов 46ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов 65ms
      → web не запущен: QUOTA_PREVIEW_SESSION_ANSWERS не задана: без неё вызов «ответ модели в предпросмотре одного браузера» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов 41ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов 77ms
      → web не запущен: QUOTA_IP_PREVIEWS не задана: без неё вызов «создание предпросмотров с одного префикса IP» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов 38ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов 65ms
      → web не запущен: QUOTA_GLOBAL_PREVIEWS не задана: без неё вызов «все создания предпросмотра за сутки» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов 34ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов 64ms
      → web не запущен: QUOTA_GLOBAL_PREVIEW_ANSWERS не задана: без неё вызов «все ответы модели в предпросмотрах за сутки» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_ACCOUNT_EMBED: код 1, имя переменной и незащищённый вызов 48ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_ACCOUNT_EMBED: код 1, имя переменной и незащищённый вызов 68ms
      → web не запущен: QUOTA_ACCOUNT_EMBED не задана: без неё вызов «эмбеддинги индексации одного аккаунта» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов 45ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов 73ms
      → web не запущен: QUOTA_GLOBAL_EMBED не задана: без неё вызов «все эмбеддинги индексации и предпросмотра за сутки» не ограничен и оплачивается без предела
 : expected +0 to be 1 // Object.is equality
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > web: положительный контроль — с полной конфигурацией процесс не отказывает 31ms
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без ANSWER_MODEL: код 1 и имя переменной 44ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > web: положительный контроль — с полной конфигурацией процесс не отказывает 111ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без ANSWER_MODEL: код 1 и имя переменной 63ms
      → web не запущен: ANSWER_MODEL не задана: модель ответов не определена (канон §7)
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без EMBED_MODEL: код 1 и имя переменной 45ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без EMBED_MODEL: код 1 и имя переменной 71ms
      → web не запущен: EMBED_MODEL не задана: модель эмбеддингов не определена (канон §7, 1536 измерений)
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без OPENROUTER_API_KEY: код 1 и имя переменной 38ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без OPENROUTER_API_KEY: код 1 и имя переменной 65ms
      → web не запущен: OPENROUTER_API_KEY не задана: ни эмбеддинги, ни ответы невозможны
 : expected +0 to be 1 // Object.is equality
-   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без N6_PUBLIC_ORIGIN: код 1 и имя переменной 48ms
+   × Отказ старта: 14 прогонов web + 14 прогонов worker-index > web без N6_PUBLIC_ORIGIN: код 1 и имя переменной 66ms
      → web не запущен: N6_PUBLIC_ORIGIN не задана: он определяет ссылку бейджа, демо-страницу, приглашения и границу «установка ≠ свой origin»; с дефолтом все они вели бы в никуда
 : expected +0 to be 1 // Object.is equality
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_VISITOR_ANSWERS: код 1, имя переменной и незащищённый вызов 39ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_ANSWERS: код 1, имя переменной и незащищённый вызов 33ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов 34ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов 34ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов 52ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_PAID: код 1, имя переменной и незащищённый вызов 39ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов 35ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_CREATE: код 1, имя переменной и незащищённый вызов 34ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов 36ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов 42ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов 49ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов 38ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_ACCOUNT_EMBED: код 1, имя переменной и незащищённый вызов 31ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов 33ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3006ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без ANSWER_MODEL: код 1 и имя переменной 38ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без EMBED_MODEL: код 1 и имя переменной 44ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без OPENROUTER_API_KEY: код 1 и имя переменной 50ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без N6_PUBLIC_ORIGIN: код 1 и имя переменной 50ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_VISITOR_ANSWERS: код 1, имя переменной и незащищённый вызов 65ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_ANSWERS: код 1, имя переменной и незащищённый вызов 64ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов 64ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов 65ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов 66ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_PAID: код 1, имя переменной и незащищённый вызов 66ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов 78ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_CREATE: код 1, имя переменной и незащищённый вызов 76ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов 66ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов 73ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов 75ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов 85ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_ACCOUNT_EMBED: код 1, имя переменной и незащищённый вызов 85ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов 77ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3009ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без ANSWER_MODEL: код 1 и имя переменной 62ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без EMBED_MODEL: код 1 и имя переменной 69ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без OPENROUTER_API_KEY: код 1 и имя переменной 64ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без N6_PUBLIC_ORIGIN: код 1 и имя переменной 67ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«» — пустая строка 2ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=« » — пустая строка 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«abc» — непригодна 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«abc» — непригодна 1ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«-1» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«1.5» — непригодна 1ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«1.5» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«1e2» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=« 20» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«2147483648» — непригодна 1ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=« 20» — непригодна 1ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS=«2147483648» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«» — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=« » — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«abc» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«-1» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«1.5» — непригодна 1ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«1.5» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«1e2» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=« 20» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_ANSWERS=«2147483648» — непригодна 0ms
@@ -115,7 +115,7 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_DAY_PAID=«1e2» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_DAY_PAID=« 20» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_DAY_PAID=«2147483648» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_FREE=«» — пустая строка 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_FREE=«» — пустая строка 1ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_FREE=« » — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_FREE=«abc» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_FREE=«0» — непригодна 0ms
@@ -129,7 +129,7 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«abc» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«-1» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«1.5» — непригодна 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«1.5» — непригодна 2ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«1e2» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=« 20» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_BOT_MONTH_PAID=«2147483648» — непригодна 0ms
@@ -138,12 +138,12 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«abc» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«-1» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«1.5» — непригодна 2ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«1.5» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«1e2» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=« 20» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_ANSWERS=«2147483648» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE=«» — пустая строка 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE=« » — пустая строка 2ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE=« » — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE=«abc» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE=«-1» — непригодна 0ms
@@ -155,7 +155,7 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=« » — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=«abc» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=«0» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=«-1» — непригодна 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=«-1» — непригодна 1ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=«1.5» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=«1e2» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS=« 20» — непригодна 0ms
@@ -171,7 +171,7 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_IP_PREVIEWS=«2147483648» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=«» — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=« » — пустая строка 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=«abc» — непригодна 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=«abc» — непригодна 1ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=«-1» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_PREVIEWS=«1.5» — непригодна 0ms
@@ -190,12 +190,12 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«» — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=« » — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«abc» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«0» — непригодна 1ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«0» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«-1» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«1.5» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«1e2» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=« 20» — непригодна 0ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«2147483648» — непригодна 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_ACCOUNT_EMBED=«2147483648» — непригодна 1ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_EMBED=«» — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_EMBED=« » — пустая строка 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_EMBED=«abc» — непригодна 0ms
@@ -206,7 +206,7 @@
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_EMBED=« 20» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_GLOBAL_EMBED=«2147483648» — непригодна 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > таблица пределов индексирована парой (scope, вид предела), 14 ключей 1ms
-   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS выше QUOTA_IP_ANSWERS — отказ 0ms
+   ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS выше QUOTA_IP_ANSWERS — отказ 1ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_VISITOR_ANSWERS выше QUOTA_GLOBAL_ANSWERS — отказ 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_ANSWERS выше QUOTA_GLOBAL_PREVIEW_ANSWERS — отказ 0ms
    ✓ LoadCeilings: пустое, мусор, ноль — отказ; пары «персональный ≤ общего» > QUOTA_PREVIEW_SESSION_CREATE выше QUOTA_IP_PREVIEWS — отказ 0ms
@@ -224,10 +224,10 @@
    ✓ Модели, origin, секреты > N6_PUBLIC_ORIGIN «ftp://sufler.ru» не подчищается — отказ 0ms
    ✓ Модели, origin, секреты > N6_PUBLIC_ORIGIN « https://sufler.ru» не подчищается — отказ 0ms
    ✓ Модели, origin, секреты > N6_PUBLIC_ORIGIN «https://sufler.ru?x=1» не подчищается — отказ 0ms
-   ✓ Модели, origin, секреты > вне development/test: только https и не петля 1ms
+   ✓ Модели, origin, секреты > вне development/test: только https и не петля 2ms
    ✓ Модели, origin, секреты > DATABASE_URL обязателен у web 1ms
    ✓ Модели, origin, секреты > REDIS_URL обязателен у web 1ms
-   ✓ Модели, origin, секреты > SESSION_SECRET обязателен у web 0ms
+   ✓ Модели, origin, секреты > SESSION_SECRET обязателен у web 1ms
    ✓ Модели, origin, секреты > REDIS_URL без пароля и короткий SESSION_SECRET — отказ 1ms
    ✓ Модели, origin, секреты > worker-index не требует секрет сессий web 0ms
 
@@ -523,13 +523,13 @@ AssertionError: web не запущен: ANSWER_MODEL не задана: мод�
 - 1
 + 0
 
- ❯ tests/config.test.ts:68:46
-     66|         const env = environment(); delete env[name];
-     67|         const result = subprocess(entry, env);
-     68|         expect(result.status, result.output).toBe(1);
+ ❯ tests/config.test.ts:70:46
+     68|         const env = environment(); delete env[name];
+     69|         const result = subprocess(entry, env);
+     70|         expect(result.status, result.output).toBe(1);
        |                                              ^
-     69|         expect(result.output).toContain(name);
-     70|       });
+     71|         expect(result.output).toContain(name);
+     72|       });
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/18]⎯
 
@@ -543,13 +543,13 @@ AssertionError: web не запущен: EMBED_MODEL не задана: моде
 - 1
 + 0
 
- ❯ tests/config.test.ts:68:46
-     66|         const env = environment(); delete env[name];
-     67|         const result = subprocess(entry, env);
-     68|         expect(result.status, result.output).toBe(1);
+ ❯ tests/config.test.ts:70:46
+     68|         const env = environment(); delete env[name];
+     69|         const result = subprocess(entry, env);
+     70|         expect(result.status, result.output).toBe(1);
        |                                              ^
-     69|         expect(result.output).toContain(name);
-     70|       });
+     71|         expect(result.output).toContain(name);
+     72|       });
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/18]⎯
 
@@ -563,13 +563,13 @@ AssertionError: web не запущен: OPENROUTER_API_KEY не задана: �
 - 1
 + 0
 
- ❯ tests/config.test.ts:68:46
-     66|         const env = environment(); delete env[name];
-     67|         const result = subprocess(entry, env);
-     68|         expect(result.status, result.output).toBe(1);
+ ❯ tests/config.test.ts:70:46
+     68|         const env = environment(); delete env[name];
+     69|         const result = subprocess(entry, env);
+     70|         expect(result.status, result.output).toBe(1);
        |                                              ^
-     69|         expect(result.output).toContain(name);
-     70|       });
+     71|         expect(result.output).toContain(name);
+     72|       });
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/18]⎯
 
@@ -583,19 +583,19 @@ AssertionError: web не запущен: N6_PUBLIC_ORIGIN не задана: о�
 - 1
 + 0
 
- ❯ tests/config.test.ts:68:46
-     66|         const env = environment(); delete env[name];
-     67|         const result = subprocess(entry, env);
-     68|         expect(result.status, result.output).toBe(1);
+ ❯ tests/config.test.ts:70:46
+     68|         const env = environment(); delete env[name];
+     69|         const result = subprocess(entry, env);
+     70|         expect(result.status, result.output).toBe(1);
        |                                              ^
-     69|         expect(result.output).toContain(name);
-     70|       });
+     71|         expect(result.output).toContain(name);
+     72|       });
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/18]⎯
 
 
  Test Files  1 failed (1)
       Tests  18 failed | 174 passed (192)
-   Start at  22:16:51
-   Duration  9.59s (transform 299ms, setup 0ms, collect 300ms, tests 8.99s, environment 0ms, prepare 106ms)
+   Start at  22:45:39
+   Duration  10.89s (transform 136ms, setup 0ms, collect 149ms, tests 10.44s, environment 0ms, prepare 79ms)
 

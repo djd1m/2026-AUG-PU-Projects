@@ -2,5 +2,5 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "rootDir": "src", "outDir": ".next/preflight", "declaration": false },
-  "include": ["src/preflight.ts", "src/server/environment.ts"]
+  "include": ["src/preflight.ts", "src/answer-probe.ts", "src/server/environment.ts"]
 }

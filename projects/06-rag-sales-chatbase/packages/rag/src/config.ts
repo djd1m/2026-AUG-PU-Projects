@@ -3,6 +3,7 @@
 // модели из закрытого набора и попарная проверка «персональный ≤ общего»; S3, водяной знак и
 // N5_TRUSTED_PROXY_HOPS убраны (у N6 их нет: дверь заменяет XFF одним адресом клиента).
 import { ANSWER_MODELS, EMBED_MODELS } from './constants.js';
+import { validateSpendPath } from './spend.js';
 
 // Порядок и имена — канон §7 «Перечень переменных (14)»; tests/config.test.ts сверяет этот список
 // с каноном, docker-compose.yml (x-quota-env) и .env.example, а не перепечатывает его.
@@ -138,16 +139,21 @@ export function loadModelConfig(env: Environment) {
     embedModel: oneOf(env, 'EMBED_MODEL', EMBED_MODELS, 'модель эмбеддингов не определена (канон §7, 1536 измерений)'),
   });
 }
+// Журнал попыток (NFR-OPS-001): без него платный вызов не выполняется — значит и процесс не стартует.
+export function loadSpendLog(env: Environment): string {
+  return validateSpendPath(required(env, 'N6_SPEND_LOG', 'без журнала попыток платный вызов нельзя учесть — вызовы не выполняются'));
+}
 export function loadWebConfig(env: Environment) {
   const ceilings = loadCeilings(env);
   const models = loadModelConfig(env);
+  const spendLog = loadSpendLog(env);
   const publicOrigin = loadPublicOrigin(env);
   const connections = loadConnectionConfig(env);
   const sessionSecret = required(env, 'SESSION_SECRET', 'без секрета нельзя защитить хэши сессий и отозвать их ротацией');
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодна: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, ceilings, models, publicOrigin, sessionSecret });
+  return Object.freeze({ ...connections, ceilings, models, publicOrigin, sessionSecret, spendLog });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: worker-index не получает SESSION_SECRET.
@@ -155,6 +161,7 @@ export function loadWorkerConfig(env: Environment) {
   const ceilings = loadCeilings(env);
   const models = loadModelConfig(env);
   const publicOrigin = loadPublicOrigin(env);
-  return Object.freeze({ ...loadConnectionConfig(env), ceilings, models, publicOrigin, role: 'worker-index' as const });
+  const spendLog = loadSpendLog(env);
+  return Object.freeze({ ...loadConnectionConfig(env), ceilings, models, publicOrigin, spendLog, role: 'worker-index' as const });
 }
 export type WorkerConfig = ReturnType<typeof loadWorkerConfig>;
