@@ -2,7 +2,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs, loadFixture, preflight, exitCode } from './responsive/input.mjs';
-import { domRules, textZoomRule, axeRule, lintCSS } from './responsive/rules.mjs';
+import { domRules, textZoomRule, axeRule, lintCSS, FIRST_SCREEN_VIEWPORTS, firstScreenSelector, firstScreenRule } from './responsive/rules.mjs';
 
 export function scenarios(engine, devices, widths) {
   const names = engine === 'webkit' ? ['iPhone 13', 'iPhone SE'] : ['Pixel 7'];
@@ -80,6 +80,27 @@ export async function main(args, { launchOptions = {} } = {}) {
             } catch (error) {
               // Browser errors can contain page content/URLs: report only controlled diagnostics.
               report.errors.push(`${engine} ${scenario.name} ${route}: ${safeError(error)}`);
+            } finally { await context.close(); }
+          }
+        }
+        for (const { w, h } of FIRST_SCREEN_VIEWPORTS) {
+          for (const route of fixture.routes) {
+            const selector = firstScreenSelector(route);
+            if (!selector) continue;
+            const scenario = `first-screen-${w}x${h}`;
+            const meta = { engine, scenario, route, width: w, height: h };
+            const context = await browser.newContext({ viewport: { width: w, height: h }, isMobile: true, hasTouch: true });
+            try {
+              const page = await context.newPage();
+              await navigate(page, options.base + route);
+              await routePreconditions(page, route);
+              const findings = await firstScreenRule(page, selector);
+              const screenshot = `${engine}-${scenario}-${report.pages.length}.png`;
+              await page.screenshot({ path: resolve(options.out, screenshot), fullPage: false });
+              report.findings.push(...findings.map(f => ({ ...meta, ...f })));
+              report.pages.push({ ...meta, screenshot });
+            } catch (error) {
+              report.errors.push(`${engine} ${scenario} ${route}: ${safeError(error)}`);
             } finally { await context.close(); }
           }
         }

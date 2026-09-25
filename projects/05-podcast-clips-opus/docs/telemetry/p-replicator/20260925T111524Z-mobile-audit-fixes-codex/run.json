@@ -1,0 +1,82 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260925T111524Z-mobile-audit-fixes-codex",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "mobile-audit-fixes",
+  "pipeline": "brief-validate-implement-review",
+  "tier": "M",
+  "risk_flags": [
+    "responsive CLI report adds R9 scenarios"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "Current coordinator retained; independent read-only review planned"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a",
+  "final_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a+sha256:1b1f0614655106d3a71d964599171a4a4bed7f18af120e8a2ae3cc7adbe9ed2c",
+  "spec_sha256": "aa8c4a0821d9cf5ebe383dda87689bbcdbfab1ce1ed8fd5cc96d1c97aafb19ed",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-09-25T11:15:24.869871+00:00",
+  "ended_at": "2026-09-25T11:44:39.860258+00:00",
+  "status": "blocked",
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20260925T111524Z-mobile-audit-fixes-codex/evidence/checks.txt",
+    "docs/features/mobile-audit-fixes/07_code_report.md"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": 9,
+    "followup_status": "pending",
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null
+  },
+  "metrics": {
+    "elapsed_wall_ms": 559081,
+    "active_wall_ms": null,
+    "tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Initial instruction reading preceded record; duration unavailable, not reconstructed.",
+    "Host does not expose exact coordinator model/effort, usage or billing metadata.",
+    "No comparison baseline.",
+    "WebKit/Chromium runtime and mutations blocked by permissions; live rollout/check belongs to coordinator.",
+    "Full local test run skips 172 tests without infrastructure/media prerequisites.",
+    "No exact actual-model execution metadata for reviewer; requested gpt-5.6-sol high accepted by spawn tool.",
+    "Second round initial instruction reading precedes attempt timestamp; duration not reconstructed.",
+    "Round2 browser R8 scroll, R9 geometry and responsive live acceptance not measured; assigned to coordinator. Overall feature acceptance remains pending."
+  ],
+  "round2": {
+    "attempt_id": "round2-implement",
+    "status": "completed",
+    "scope": "Eight review fixes and local checks; browser acceptance owned by coordinator",
+    "started_at": "2026-09-25T11:39:19.411409+00:00",
+    "ended_at": "2026-09-25T11:44:39.860258+00:00",
+    "elapsed_wall_ms": 320449,
+    "active_wall_ms": null,
+    "actual_model": null,
+    "actual_effort": null,
+    "tokens": null,
+    "cost": null,
+    "checks": {
+      "typecheck": 0,
+      "lint": 0,
+      "build": 0,
+      "npm_test": 0,
+      "tests_passed": 637,
+      "tests_skipped": 172
+    },
+    "receipt_path": "docs/features/mobile-audit-fixes/07_code_report.md",
+    "source_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a+sha256:1b1f0614655106d3a71d964599171a4a4bed7f18af120e8a2ae3cc7adbe9ed2c"
+  }
+}

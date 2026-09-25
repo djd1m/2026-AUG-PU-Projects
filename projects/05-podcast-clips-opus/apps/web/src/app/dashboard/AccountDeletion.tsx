@@ -37,8 +37,8 @@ export function AccountDeletion() {
   return <section aria-label="Удаление аккаунта"><h2>Удалить аккаунт</h2>
     <p>Удаление необратимо: восстановить аккаунт, оригиналы и клипы будет невозможно. Завершим удаление в течение 72 часов.</p>
     <p>Клипы, уже скачанные или опубликованные в чужих лентах, мы удалить не можем: эти копии находятся не у нас.</p>
-    <label><input type="checkbox" checked={confirm} onChange={e => setConfirm(e.target.checked)} disabled={busy} /> Подтверждаю необратимое удаление</label>
-    <button disabled={!confirm || busy} onClick={() => void remove()}>{busy ? 'Запрашиваем удаление…' : 'Удалить аккаунт навсегда'}</button>
+    <label className="check"><input type="checkbox" checked={confirm} onChange={e => setConfirm(e.target.checked)} disabled={busy} /> Подтверждаю необратимое удаление</label>
+    <button disabled={!confirm || busy} className="danger" onClick={() => void remove()}>{busy ? 'Запрашиваем удаление…' : 'Удалить аккаунт навсегда'}</button>
     {error && <p role="alert">{error}</p>}
   </section>;
 }

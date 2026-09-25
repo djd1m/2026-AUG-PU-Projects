@@ -144,3 +144,34 @@ export function lintCSS(source, filename) {
   return [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\b100vh\b|clamp\([^;{}]*?\b[\d.]+px[^;{}]*?\)/g)]
     .map(m => ({ rule: 'R7', severity: 'warning', selector: filename, message: m[0], size: null }));
 }
+
+export const FIRST_SCREEN_VIEWPORTS = [{ w: 390, h: 844 }, { w: 375, h: 667 }, { w: 360, h: 740 }];
+export const FIRST_SCREEN_ACTIONS = [
+  { pattern: /^\/$/, selector: 'form.auth-card button:not([type=button])' },
+  { pattern: /^\/c\/[\w-]+$/, selector: '.cta' },
+];
+export function firstScreenSelector(route) {
+  return FIRST_SCREEN_ACTIONS.find(action => action.pattern.test(route))?.selector ?? null;
+}
+// Run immediately after navigation/preconditions, before anything can scroll the page.
+export async function firstScreenRule(page, selector) {
+  return page.evaluate(selector => {
+    const visible = el => {
+      if (el.checkVisibility?.({ contentVisibilityAuto: true, opacityProperty: true, visibilityProperty: true }) === false) return false;
+      for (let parent = el; parent; parent = parent.parentElement) {
+        const style = getComputedStyle(parent);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse' || Number(style.opacity) === 0) return false;
+        if (parent.matches('details:not([open])') && !parent.querySelector(':scope > summary')?.contains(el)) return false;
+      }
+      const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
+    const element = [...document.querySelectorAll(selector)].find(visible);
+    const finding = { rule: 'R9', severity: 'error', selector, scrollY, innerHeight, rect: null };
+    if (!element) return [{ ...finding, message: 'действие не найдено' }];
+    const bounds = element.getBoundingClientRect();
+    const rect = { top: bounds.top, bottom: bounds.bottom, left: bounds.left, right: bounds.right, width: bounds.width, height: bounds.height };
+    if (rect.top >= 0 && rect.bottom <= innerHeight) return [];
+    return [{ ...finding, rect, message: 'Основное действие вне первого экрана' }];
+  }, selector);
+}

@@ -1,3 +1,4 @@
+import { pluralRu } from '../lib/plural-ru';
 import { randomBytes } from 'node:crypto';
 import { referralCookie } from '../lib/partner-referral';
 import type { AuthService } from './auth';
@@ -15,17 +16,23 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[c]!);
 function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string) {
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow"><title>Ваши клипы — КлипМейкер</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:18px/1.6 system-ui,sans-serif}
-main{max-width:1050px;margin:auto;padding:24px}h1{font-size:clamp(26px,5vw,42px);line-height:1.2;overflow-wrap:anywhere}
-.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px}
-article{min-width:0;background:white;padding:16px;border-radius:16px}h2{overflow-wrap:anywhere;font-size:22px}
-video{width:100%;max-height:500px;aspect-ratio:9/16;background:#21382a;border-radius:10px}
-a{color:#355e2a}button,.download{display:inline-block;padding:12px 18px;border:0;border-radius:8px;background:#355e2a;color:white;font:inherit}
-button{cursor:pointer;margin-bottom:20px}button:disabled{opacity:.6}footer{margin-top:32px}small{display:block}
-@media(max-width:600px){main{padding:16px}.clips{grid-template-columns:1fr}}</style></head><body><main>
-<a href="/">КлипМейкер</a><h1>${escapeHtml(pack.guest_name)}, ваши ${pack.clips.length} моментов из выпуска</h1>
+<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:1.125rem/1.6 system-ui,sans-serif}
+main{max-width:65.625rem;margin:auto;padding:1.5rem}h1{font-size:clamp(2rem,4vw,2.625rem);line-height:1.2;overflow-wrap:anywhere}
+.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16.25rem),1fr));gap:1.5rem}
+article{min-width:0;background:white;padding:1rem;border-radius:1rem}h2{overflow-wrap:anywhere;font-size:1.375rem}
+video{width:100%;max-height:31.25rem;aspect-ratio:9/16;background:#21382a;border-radius:0.625rem}
+a{color:#355e2a}button,.download{display:inline-block;padding:0.75rem 1.125rem;border:0;border-radius:0.5rem;background:#355e2a;color:white;font:inherit}
+button{cursor:pointer;margin-bottom:1.25rem}button:disabled{opacity:.6}footer{margin-top:2rem}small{display:block}
+@media(max-width:600px){main{padding:1rem}.clips{grid-template-columns:1fr}}
+h1,h2,h3,p,label,button,a,input,select,textarea{overflow-wrap:anywhere;hyphens:none}nav a,main>a:not([hidden]),footer a:not([hidden]){display:inline-flex;align-items:center;min-height:2.75rem}
+main,nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}nav{padding-top:max(1rem,env(safe-area-inset-top))}main{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
+button,.download,.cta{min-height:2.75rem;min-width:2.75rem}
+video{max-height:min(70svh,31.25rem);object-fit:contain}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style></head><body><main>
+<a href="/">КлипМейкер</a><h1>${escapeHtml(pack.guest_name)}, ${pluralRu(pack.clips.length, ['ваш', 'ваши', 'ваши'])} ${pack.clips.length} ${pluralRu(pack.clips.length, ['момент', 'момента', 'моментов'])} из выпуска</h1>
 <p>Ведущий отметил эти клипы для вас. Скачайте и опубликуйте их у себя.</p>
 <p>Ссылка действует до ${escapeHtml(pack.expires_at!.toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow' }))}. Файлы могут стать недоступны раньше по сроку хранения.</p>
 <button id="download-all" ${pack.clips.some(c => c.available) ? '' : 'disabled'}>Скачать все</button><p id="download-status" role="status"></p>

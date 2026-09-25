@@ -1,0 +1,32 @@
+{
+  "run_id": "20260925T111524Z-mobile-audit-fixes-codex",
+  "work_unit_id": "round2-review-fixes",
+  "stage": "implement",
+  "scope": "Eight CSS/markup corrections from 08_review_fixes_codex.md",
+  "source_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a+sha256:1b1f0614655106d3a71d964599171a4a4bed7f18af120e8a2ae3cc7adbe9ed2c",
+  "requirements": "docs/features/mobile-audit-fixes/08_review_fixes_codex.md",
+  "architecture": "docs/features/mobile-audit-fixes/08_review.md",
+  "route": {
+    "tier": "S",
+    "mechanical_exit_code": 0,
+    "reason": "Presentation only; no contract, resource, or service changes"
+  },
+  "authorization": "Explicit user instruction to execute review corrections",
+  "executor": "Current Codex session; exact model and effort unavailable",
+  "review": "Anthropic review supplied; subsequent cross-family acceptance belongs to coordinator",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Browser/E2E explicitly assigned to coordinator by task"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "range": null
+  },
+  "evidence": "evidence/round2-*.log",
+  "out_of_scope": [
+    "Docker",
+    "browser tests and mutation checks",
+    "responsive live matrix",
+    "deployment"
+  ]
+}

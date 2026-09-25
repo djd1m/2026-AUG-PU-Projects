@@ -1,0 +1,25 @@
+Source: b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a+sha256:a50fd7a039aadcd2f9473bebcefa6b4868633a24ddeaddccef8530ff4248d680
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Duration  619ms (transform 103ms, setup 0ms, collect 108ms, tests 232ms, environment 0ms, prepare 90ms)
+WARNING: ПРОПУЩЕНО 172 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+ Test Files  78 passed | 21 skipped (99)
+      Tests  637 passed | 172 skipped (809)
+   Duration  224.30s (transform 2.45s, setup 0ms, collect 16.85s, tests 183.02s, environment 24ms, prepare 8.89s)
+
+npm run build (final): exit 0
+npm run typecheck: exit 0
+npm run lint: Статические правила: ошибок нет
+git diff --check: exit 0
+CSP headers: byte-identical to baseline
+R7: [] for all 3 sources
+
+unable to get image 'minio/minio:RELEASE.2025-04-22T22-12-26Z': permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+
+> n5-clipmaker@0.1.0 test:responsive
+> bash scripts/check-responsive.sh --test
+
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+
+Browser local + both mutants + restored: beforeAll fails: Браузер chromium недоступен; Test Files 1 failed (1); Tests 44 skipped (44)

@@ -11,7 +11,6 @@ export function GuestPacks({ videoId, clips, initialPacks, consentHash }: {
   const [name, setName] = useState(''), [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false), [message, setMessage] = useState('');
   const update = (p: GuestPackSummary) => setPacks(old => [{ ...p, url: new URL(p.url, window.location.origin).href }, ...old.filter(v => v.guest_pack_id !== p.guest_pack_id)]);
-  const checkboxStyle = { width: 20, minHeight: 20, margin: '8px 10px 8px 0', verticalAlign: 'middle' };
   async function action(work: () => Promise<void>) {
     setBusy(true); setMessage('');
     try { await work(); } catch (error) { setMessage(error instanceof Error ? error.message : 'Не удалось выполнить действие'); }
@@ -34,11 +33,11 @@ export function GuestPacks({ videoId, clips, initialPacks, consentHash }: {
     <form onSubmit={event => { event.preventDefault(); void action(create); }}>
       <fieldset disabled={busy} style={{ border: 0, padding: 0, minWidth: 0 }}>
         <label>Имя гостя <input value={name} maxLength={100} required onChange={e => setName(e.target.value)} /></label>
-        {clips.filter(c => c.available).map(c => <label key={c.clip_id} style={{ display: 'block', padding: '8px 0', overflowWrap: 'anywhere' }}>
-          <input type="checkbox" style={checkboxStyle} checked={selected.includes(c.clip_id)} onChange={e => setSelected(old => e.target.checked ? [...old, c.clip_id] : old.filter(id => id !== c.clip_id))} /> {c.title}
+        {clips.filter(c => c.available).map(c => <label key={c.clip_id} className="check">
+          <input type="checkbox" checked={selected.includes(c.clip_id)} onChange={e => setSelected(old => e.target.checked ? [...old, c.clip_id] : old.filter(id => id !== c.clip_id))} /> {c.title}
         </label>)}
         {!clips.some(c => c.available) && <p>Для пакета нужны готовые клипы с действующим сроком хранения.</p>}
-        <label style={{ display: 'block', margin: '16px 0' }}><input type="checkbox" style={checkboxStyle} checked={consent} required onChange={e => setConsent(e.target.checked)} /> {GUEST_CONSENT_TEXT}</label>
+        <label className="check"><input type="checkbox" checked={consent} required onChange={e => setConsent(e.target.checked)} /> {GUEST_CONSENT_TEXT}</label>
         <button disabled={!consent || !selected.length || !name.trim()}>Создать пакет</button>
       </fieldset>
     </form>

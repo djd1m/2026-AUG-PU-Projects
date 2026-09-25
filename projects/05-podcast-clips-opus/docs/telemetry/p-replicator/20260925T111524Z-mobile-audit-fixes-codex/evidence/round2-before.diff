@@ -1,0 +1,311 @@
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/app/globals.css b/projects/05-podcast-clips-opus/apps/web/src/app/globals.css
+index 2ed2b53..1668c22 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/app/globals.css
++++ b/projects/05-podcast-clips-opus/apps/web/src/app/globals.css
+@@ -1,90 +1,130 @@
+-:root { color-scheme: light; --ink:#202a27; --muted:#65716a; --paper:#f7f8f3; --line:#dce1d7; --green:#305d45; }
++:root { color-scheme: light; --ink:#202a27; --muted:#56615a; --paper:#f7f8f3; --line:#dce1d7; --green:#305d45; }
+ * { box-sizing:border-box; }
+-body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+-a { color:inherit; text-underline-offset:4px; }
+-button,input { font:inherit; }
+-button,.button { display:inline-flex; justify-content:center; align-items:center; min-height:46px; border:1px solid var(--green); border-radius:9px; padding:10px 18px; background:var(--green); color:white; font-weight:650; text-decoration:none; cursor:pointer; }
++body { margin:0; background:var(--paper); color:var(--ink); font:1rem/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
++a { color:inherit; text-underline-offset:0.25rem; }
++button { font:inherit; }
++input, select, textarea { font:inherit; font-size:max(1rem, 16px); }
++button,.button { display:inline-flex; justify-content:center; align-items:center; min-height:2.875rem; border:0.0625rem solid var(--green); border-radius:0.5625rem; padding:0.625rem 1.125rem; background:var(--green); color:white; font-weight:650; text-decoration:none; cursor:pointer; }
+ button:disabled { cursor:not-allowed; opacity:.55; }
+ button:hover:not(:disabled),.button:hover { filter:brightness(.92); }
+ .secondary { color:var(--green); background:transparent; }
+-:focus-visible { outline:3px solid #ce8b25; outline-offset:4px; }
+-input { width:100%; border:1px solid #b8c3b6; background:white; border-radius:8px; padding:11px; min-height:46px; margin:6px 0 16px; }
+-input[type=file] { font-size:14px; }
++:focus-visible { outline:0.1875rem solid #ce8b25; outline-offset:0.25rem; }
++input:not([type=checkbox]):not([type=radio]):not([type=file]) { width:100%; border:0.0625rem solid #b8c3b6; background:var(--surface); border-radius:0.5rem; padding:0.6875rem; min-height:2.875rem; margin:0.375rem 0 1rem; }
++input[type=file] { max-width:100%; min-height:2.75rem; }
+ h1,h2,h3,p { margin-top:0; }
+-h1 { font-size:clamp(30px,4vw,54px); line-height:1.13; letter-spacing:-1.8px; font-weight:650; }
+-h2 { font-size:26px; line-height:1.25; letter-spacing:-.5px; }
+-h3 { font-size:20px; line-height:1.35; }
+-.navigation { min-height:84px; display:flex; justify-content:space-between; align-items:center; gap:18px; padding:18px max(24px,calc((100vw - 1180px)/2)); border-bottom:1px solid var(--line); font-size:14px; }
+-.brand { display:flex; align-items:center; gap:10px; font-size:22px; font-weight:750; text-decoration:none; letter-spacing:-.8px; }
+-.brand span { display:grid; place-items:center; background:var(--green); color:#dcefbb; width:34px; height:34px; border-radius:8px; }
+-.container { width:min(1180px,100% - 48px); margin:0 auto; padding:42px 0 72px; }
+-.landing { display:grid; grid-template-columns:1.3fr 1fr; gap:80px; align-items:center; min-height:calc(100vh - 84px); }
+-.landing h1 { font-size:clamp(36px,4.5vw,62px); }
++h1 { font-size:clamp(2rem,1.9rem + .4vw,3.375rem); line-height:1.13; letter-spacing:-0.1125rem; font-weight:650; }
++h2 { font-size:1.625rem; line-height:1.25; letter-spacing:-0.03125rem; }
++h3 { font-size:1.25rem; line-height:1.35; }
++.navigation { min-height:5.25rem; display:flex; justify-content:space-between; align-items:center; gap:1.125rem; padding:1.125rem max(1.5rem,calc((100vw - 73.75rem)/2)); border-bottom:0.0625rem solid var(--line); font-size:0.875rem; }
++.brand { display:flex; align-items:center; gap:0.625rem; font-size:1.375rem; font-weight:750; text-decoration:none; letter-spacing:-0.05rem; }
++.brand span { display:grid; place-items:center; background:var(--green); color:#dcefbb; width:2.125rem; height:2.125rem; border-radius:0.5rem; }
++.container { width:min(73.75rem,100% - 3rem); margin:0 auto; padding:2.625rem 0 4.5rem; }
++.landing { display:grid; grid-template-columns:1.3fr 1fr; gap:5rem; align-items:center; min-height:calc(100svh - 5.25rem); }
++.landing h1 { font-size:clamp(2rem,1.9rem + .4vw,3.875rem); }
+ em { font-style:normal; color:var(--green); }
+-.intro { font-size:19px; max-width:470px; color:var(--muted); }
+-.eyebrow { font-size:11px; font-weight:700; letter-spacing:1.8px; color:var(--green); margin-bottom:18px; }
+-.muted { color:var(--muted); font-size:13px; }
+-.auth-card { padding:32px; background:white; border:1px solid var(--line); border-radius:18px; box-shadow:0 12px 40px #263b2610; }
+-.auth-card label { display:block; font-size:14px; }
++.intro { font-size:1.1875rem; max-width:29.375rem; color:var(--muted); }
++.eyebrow { font-size:0.6875rem; font-weight:700; letter-spacing:0.1125rem; color:var(--green); margin-bottom:1.125rem; }
++.muted { color:var(--muted); font-size:0.8125rem; }
++.auth-card { padding:2rem; background:var(--surface); border:0.0625rem solid var(--line); border-radius:1.125rem; box-shadow:0 0.75rem 2.5rem #263b2610; }
++.auth-card label { display:block; font-size:0.875rem; }
+ .auth-card button { width:100%; }
+-.text-button { background:none; color:var(--green); border:0; font-size:13px; margin-top:12px; }
+-.upload-panel { display:grid; grid-template-columns:1fr 1fr; gap:54px; background:#eaf0df; border:1px solid #d8e2cc; padding:36px; border-radius:18px; margin-bottom:44px; }
+-.upload-panel h2 { font-size:32px; }
+-.upload-panel p { max-width:450px; }
++.text-button { background:none; color:var(--green); border:0; font-size:0.8125rem; margin-top:0.75rem; }
++.upload-panel { display:grid; grid-template-columns:1fr 1fr; gap:3.375rem; background:#eaf0df; border:0.0625rem solid #d8e2cc; padding:2.25rem; border-radius:1.125rem; margin-bottom:2.75rem; }
++.upload-panel h2 { font-size:2rem; }
++.upload-panel p { max-width:28.125rem; }
+ .upload-controls { min-width:0; }
+-.upload-controls label { font-weight:600; font-size:14px; }
+-.upload-controls button { margin:0 8px 8px 0; }
+-.video-id { overflow-wrap:anywhere; font-size:12px; color:var(--muted); }
+-.video-list { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:white; margin-bottom:20px; }
+-.video-row { display:flex; gap:20px; align-items:center; padding:22px; text-decoration:none; }
+-.video-row + .video-row { border-top:1px solid var(--line); }
++.upload-controls label { font-weight:600; font-size:0.875rem; }
++.upload-controls button { margin:0 0.5rem 0.5rem 0; }
++.video-id { overflow-wrap:anywhere; font-size:0.75rem; color:var(--muted); }
++.video-list { border:0.0625rem solid var(--line); border-radius:0.875rem; overflow:hidden; background:var(--surface); margin-bottom:1.25rem; }
++.video-row { display:flex; gap:1.25rem; align-items:center; padding:1.375rem; text-decoration:none; }
++.video-row + .video-row { border-top:0.0625rem solid var(--line); }
+ .video-row:hover { background:#f4f6ee; }
+ .video-summary { flex:1; min-width:0; }
+-.video-summary p { font-size:13px; margin:4px 0; }
+-.video-thumbnail { display:grid; place-items:center; width:80px; height:60px; background:#e8edde; color:var(--green); border-radius:8px; flex-shrink:0; }
+-.badge { display:inline-block; padding:3px 9px; border-radius:5px; font-size:12px; }
++.video-summary p { font-size:0.8125rem; margin:0.25rem 0; }
++.video-thumbnail { display:grid; place-items:center; width:5rem; height:3.75rem; background:#e8edde; color:var(--green); border-radius:0.5rem; flex-shrink:0; }
++.badge { display:inline-block; padding:0.1875rem 0.5625rem; border-radius:0.3125rem; font-size:0.75rem; }
+ .running { background:#edf2fa; border-color:#9db1d1; color:#304e80; }
+ .success { background:#eaf4df; border-color:#a9c18f; color:#365620; }
+ .failure { background:#fae9e6; border-color:#df9e95; color:#922f27; }
+ .silent { background:#fff3d9; border-color:#d5b564; color:#7c5919; }
+-.detail-header > a { font-size:14px; }
+-.detail-header .eyebrow { margin-top:30px; }
+-.status-panel { display:flex; gap:18px; padding:24px; border-width:1px; border-style:solid; border-radius:13px; margin:28px 0 36px; }
+-.status-panel h2 { font-size:21px; margin-bottom:8px; }
+-.status-panel p { margin-bottom:12px; }
+-.state-icon { display:grid; place-items:center; border:1px solid currentColor; width:32px; height:32px; border-radius:50%; flex-shrink:0; font-weight:800; }
+-progress { width:min(400px,100%); accent-color:var(--green); }
+-.section-heading { display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
+-.section-heading span { font-size:13px; color:var(--muted); }
+-.clip-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; align-items:start; }
+-.clip-card { background:white; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
++.detail-header > a { font-size:0.875rem; }
++.detail-header .eyebrow { margin-top:1.875rem; }
++.status-panel { display:flex; gap:1.125rem; padding:1.5rem; border-width:0.0625rem; border-style:solid; border-radius:0.8125rem; margin:1.75rem 0 2.25rem; }
++.status-panel h2 { font-size:1.3125rem; margin-bottom:0.5rem; }
++.status-panel p { margin-bottom:0.75rem; }
++.state-icon { display:grid; place-items:center; border:0.0625rem solid currentColor; width:2rem; height:2rem; border-radius:50%; flex-shrink:0; font-weight:800; }
++progress { width:min(25rem,100%); accent-color:var(--green); }
++.section-heading { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; }
++.section-heading span { font-size:0.8125rem; color:var(--muted); }
++.clip-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.5rem; align-items:start; }
++.clip-card { background:var(--surface); border:0.0625rem solid var(--line); border-radius:1rem; overflow:hidden; }
+ .clip-preview { aspect-ratio:9/16; background:#1d2822; display:grid; place-items:center; color:#e2e7db; }
+-.clip-preview p { padding:20px; text-align:center; }
++.clip-preview p { padding:1.25rem; text-align:center; }
+ .clip-preview video { width:100%; height:100%; object-fit:contain; }
+-.clip-body { padding:24px; }
+-.clip-body .eyebrow { font-size:10px; letter-spacing:1px; }
++.clip-body { padding:1.5rem; }
++.clip-body .eyebrow { font-size:0.625rem; letter-spacing:0.0625rem; }
+ .clip-body button { width:100%; }
+-.score { color:var(--green); margin:18px 0 14px; }
+-.score strong { font-size:34px; letter-spacing:-1px; }
+-.score span { font-size:14px; color:var(--muted); }
+-.score-details { font-size:13px; margin:0 0 22px; }
+-dt { font-weight:700; margin-top:12px; }
+-dd { margin:3px 0 0; color:var(--muted); overflow-wrap:anywhere; }
+-.notice { padding:16px 20px; background:#fff4da; border-left:3px solid #b99138; border-radius:5px; }
+-.empty { padding:32px; text-align:center; color:var(--muted); border:1px dashed #c8d1c0; border-radius:12px; }
+-@media(max-width:900px) { .landing { gap:36px; } .clip-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .upload-panel { gap:26px; padding:26px; } }
+-@media(max-width:600px) {
+-  .container { width:calc(100% - 32px); padding-top:26px; } .navigation { min-height:72px; padding:16px; }
+-  .navigation > span { display:none; } .brand { font-size:20px; }
+-  .landing,.upload-panel { grid-template-columns:1fr; gap:26px; } .landing { align-items:start; }
+-  .landing h1 { letter-spacing:-1.4px; } .auth-card { padding:24px; }
+-  .upload-panel { padding:22px; margin-bottom:32px; } .upload-panel h2 { font-size:29px; }
+-  .clip-grid { grid-template-columns:1fr; } .clip-preview { max-height:520px; }
+-  .video-row { gap:12px; padding:16px; } .video-thumbnail { width:44px; height:52px; }
+-  .status-panel { padding:18px; gap:12px; } .section-heading { display:block; margin-bottom:20px; }
+-  .section-heading h2 { margin-bottom:8px; } .status-panel button { width:100%; }
+-}
++.score { color:var(--green); margin:1.125rem 0 0.875rem; }
++.score strong { font-size:2.125rem; letter-spacing:-0.0625rem; }
++.score span { font-size:0.875rem; color:var(--muted); }
++.score-details { font-size:0.8125rem; margin:0 0 1.375rem; }
++dt { font-weight:700; margin-top:0.75rem; }
++dd { margin:0.1875rem 0 0; color:var(--muted); overflow-wrap:anywhere; }
++.notice { padding:1rem 1.25rem; background:#fff4da; border-left:0.1875rem solid #b99138; border-radius:0.3125rem; }
++.empty { padding:2rem; text-align:center; color:var(--muted); border:0.0625rem dashed #c8d1c0; border-radius:0.75rem; }
++.partner-counters { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:1rem; }
++.partner-counters > div,.partner-code { min-width:0; padding:1.25rem; border:0.0625rem solid var(--line); border-radius:0.75rem; background:var(--surface); margin-bottom:1rem; overflow-wrap:anywhere; }
++.partner-counters dd { font-size:1.75rem; color:var(--green); }
+ 
+-.partner-counters { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:16px; }
+-.partner-counters > div,.partner-code { min-width:0; padding:20px; border:1px solid var(--line); border-radius:12px; background:white; margin-bottom:16px; overflow-wrap:anywhere; }
+-.partner-counters dd { font-size:28px; color:var(--green); }
++:root { --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem; --surface:white; --upload:#eaf0df; --danger:#922f27; }
++h1,h2,h3,p,label,button,a,.intro { overflow-wrap:anywhere; hyphens:auto; }
++.navigation { min-height:4.5rem; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) 1rem max(1rem,env(safe-area-inset-left)); flex-wrap:wrap; }
++.navigation a,.detail-header > a { display:inline-flex; align-items:center; min-height:2.75rem; }
++.navigation > span { display:none; }
++.brand { font-size:1.25rem; }
++.container { width:100%; padding:1.5rem max(1rem,env(safe-area-inset-right)) max(4.5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); }
++main:not(.landing) > * + * { margin-top:var(--space-10); }
++.landing { grid-template-columns:minmax(0,1fr); gap:var(--space-4); align-items:start; align-content:start; min-height:calc(100svh - 4.5rem); }
++.landing h1 { margin:0; letter-spacing:-.05em; }
++.landing > * { min-width:0; }
++.auth-card { padding:var(--space-4); }
++.upload-panel { grid-template-columns:minmax(0,1fr); gap:var(--space-6); padding:1.375rem; margin-bottom:0; background:var(--upload); }
++.upload-panel h2 { font-size:1.8125rem; }
++.clip-grid { grid-template-columns:minmax(0,1fr); }
++.clip-preview { max-height:min(70svh,32.5rem); }
++.clip-preview video { max-height:min(70svh,32.5rem); }
++.video-row { gap:.75rem; padding:1rem; }
++.video-thumbnail { width:2.75rem; height:3.25rem; }
++.status-panel { padding:1.125rem; gap:.75rem; }
++.section-heading { display:block; margin-bottom:1.25rem; }
++.section-heading h2 { margin-bottom:.5rem; }
++.status-panel button { width:100%; }
++.check { display:flex; gap:.75rem; align-items:center; min-height:2.75rem; margin-block:.5rem; overflow-wrap:anywhere; }
++input[type=checkbox],input[type=radio] { width:1.25rem; height:1.25rem; flex-shrink:0; margin:0; }
++select { appearance:none; -webkit-appearance:none; width:100%; min-width:0; min-height:2.75rem; padding:.5rem 2rem .5rem .75rem; border:1px solid var(--line); border-radius:.5rem; color:var(--ink); background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23202a27' stroke-width='2'/%3E%3C/svg%3E") no-repeat right .5rem center; }
++summary { min-height:2.75rem; padding-block:.625rem; cursor:pointer; }
++button,.button { min-width:2.75rem; }
++.danger { color:var(--danger); border-color:var(--danger); background:var(--surface); margin-top:var(--space-4); }
++.limits-panel h2 { font-size:1rem; margin-bottom:.5rem; }
++.limits-panel .partner-counters { display:flex; flex-wrap:wrap; gap:.5rem 1.5rem; margin:0; }
++.limits-panel .partner-counters > div { display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; border:0; padding:0; margin:0; background:transparent; }
++.limits-panel dt,.limits-panel dd { margin:0; font-size:1rem; }
++.limits-panel p { margin-block:.5rem 0; }
++@media(min-width:37.5rem) {
++  .container { max-width:76.75rem; padding-top:2.625rem; }
++  .navigation > span { display:inline; }
++  .landing { grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:2rem; align-content:center; }
++  .landing .auth-card { grid-column:2; grid-row:1 / span 2; }
++  .landing-copy { grid-column:1; }
++  .auth-card { padding:2rem; }
++  .upload-panel { grid-template-columns:1fr 1fr; padding:2rem; }
++  .clip-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
++  .section-heading { display:flex; }
++}
++@media(min-width:56.25rem) {
++  .navigation { padding-left:max(1.5rem,calc((100vw - 73.75rem)/2),env(safe-area-inset-left)); padding-right:max(1.5rem,calc((100vw - 73.75rem)/2),env(safe-area-inset-right)); }
++  .landing { column-gap:5rem; }
++  .clip-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
++}
++@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/app/page.tsx b/projects/05-podcast-clips-opus/apps/web/src/app/page.tsx
+index feafe01..c0cbc84 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/app/page.tsx
++++ b/projects/05-podcast-clips-opus/apps/web/src/app/page.tsx
+@@ -1,8 +1,7 @@
+ import { AuthForm } from './AuthForm';
+ export default function Page() {
+   return <><nav className="navigation"><a className="brand" href="/"><span>◧</span> КлипМейкер</a><span>Из разговора — в ленту</span></nav>
+-    <main className="landing container"><section><p className="eyebrow">ВАШИ МЫСЛИ. НОВАЯ АУДИТОРИЯ.</p>
+-      <h1>Хороший разговор<br />заслуживает<br /><em>больше зрителей.</em></h1>
+-      <p className="intro">Превратите подкаст или вебинар в короткие вертикальные клипы. С субтитрами, готовые к публикации.</p>
+-      <p className="muted">Загрузите запись → получите фрагменты → скачайте клипы</p></section><AuthForm /></main></>;
++    <main className="landing container"><header><h1>Хороший разговор заслуживает <em>зрителей.</em></h1></header>
++      <AuthForm /><section className="landing-copy"><p className="intro">Превратите подкаст или вебинар в короткие вертикальные клипы. С субтитрами, готовые к публикации.</p>
++      <p className="muted">Загрузите запись → получите фрагменты → скачайте клипы</p></section></main></>;
+ }
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/guest-page.ts b/projects/05-podcast-clips-opus/apps/web/src/server/guest-page.ts
+index 7ae7023..630d84c 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/guest-page.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/guest-page.ts
+@@ -1,3 +1,4 @@
++import { pluralRu } from '../lib/plural-ru';
+ import { randomBytes } from 'node:crypto';
+ import { referralCookie } from '../lib/partner-referral';
+ import type { AuthService } from './auth';
+@@ -15,17 +16,23 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
+   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+ })[c]!);
+ function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string) {
+-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
++  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+ <meta name="robots" content="noindex, nofollow"><title>Ваши клипы — КлипМейкер</title>
+-<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:18px/1.6 system-ui,sans-serif}
+-main{max-width:1050px;margin:auto;padding:24px}h1{font-size:clamp(26px,5vw,42px);line-height:1.2;overflow-wrap:anywhere}
+-.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px}
+-article{min-width:0;background:white;padding:16px;border-radius:16px}h2{overflow-wrap:anywhere;font-size:22px}
+-video{width:100%;max-height:500px;aspect-ratio:9/16;background:#21382a;border-radius:10px}
+-a{color:#355e2a}button,.download{display:inline-block;padding:12px 18px;border:0;border-radius:8px;background:#355e2a;color:white;font:inherit}
+-button{cursor:pointer;margin-bottom:20px}button:disabled{opacity:.6}footer{margin-top:32px}small{display:block}
+-@media(max-width:600px){main{padding:16px}.clips{grid-template-columns:1fr}}</style></head><body><main>
+-<a href="/">КлипМейкер</a><h1>${escapeHtml(pack.guest_name)}, ваши ${pack.clips.length} моментов из выпуска</h1>
++<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:1.125rem/1.6 system-ui,sans-serif}
++main{max-width:65.625rem;margin:auto;padding:1.5rem}h1{font-size:clamp(2rem,1.9rem + .4vw,2.625rem);line-height:1.2;overflow-wrap:anywhere}
++.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16.25rem),1fr));gap:1.5rem}
++article{min-width:0;background:white;padding:1rem;border-radius:1rem}h2{overflow-wrap:anywhere;font-size:1.375rem}
++video{width:100%;max-height:31.25rem;aspect-ratio:9/16;background:#21382a;border-radius:0.625rem}
++a{color:#355e2a}button,.download{display:inline-block;padding:0.75rem 1.125rem;border:0;border-radius:0.5rem;background:#355e2a;color:white;font:inherit}
++button{cursor:pointer;margin-bottom:1.25rem}button:disabled{opacity:.6}footer{margin-top:2rem}small{display:block}
++@media(max-width:600px){main{padding:1rem}.clips{grid-template-columns:1fr}}
++h1,p{overflow-wrap:anywhere;hyphens:auto}nav a,main>a:not([hidden]),footer a:not([hidden]){display:inline-flex;align-items:center;min-height:2.75rem}
++main,nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}nav{padding-top:max(1rem,env(safe-area-inset-top))}main{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
++button,.download,.cta{min-height:2.75rem;min-width:2.75rem}
++video{max-height:min(70svh,31.25rem);object-fit:contain}
++@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
++</style></head><body><main>
++<a href="/">КлипМейкер</a><h1>${escapeHtml(pack.guest_name)}, ${pluralRu(pack.clips.length, ['ваш', 'ваши', 'ваши'])} ${pack.clips.length} ${pluralRu(pack.clips.length, ['момент', 'момента', 'моментов'])} из выпуска</h1>
+ <p>Ведущий отметил эти клипы для вас. Скачайте и опубликуйте их у себя.</p>
+ <p>Ссылка действует до ${escapeHtml(pack.expires_at!.toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow' }))}. Файлы могут стать недоступны раньше по сроку хранения.</p>
+ <button id="download-all" ${pack.clips.some(c => c.available) ? '' : 'disabled'}>Скачать все</button><p id="download-status" role="status"></p>
+diff --git a/projects/05-podcast-clips-opus/apps/web/src/server/short-link-handler.ts b/projects/05-podcast-clips-opus/apps/web/src/server/short-link-handler.ts
+index 2783579..e94878a 100644
+--- a/projects/05-podcast-clips-opus/apps/web/src/server/short-link-handler.ts
++++ b/projects/05-podcast-clips-opus/apps/web/src/server/short-link-handler.ts
+@@ -19,20 +19,28 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
+ })[c]!);
+ function landing(title: string, preview: string | null, expired: boolean): string {
+   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1"><title>КлипМейкер — ${escapeHtml(title)}</title>
+-<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:18px/1.6 system-ui,sans-serif}
+-nav,main{max-width:1000px;margin:auto;padding:24px}nav a{color:inherit;text-decoration:none;font-weight:750}
+-main{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:48px;align-items:center}
+-.preview{aspect-ratio:9/16;background:#21382a;color:white;border-radius:18px;overflow:hidden;display:grid;place-items:center}
+-.preview img{width:100%;height:100%;object-fit:contain}.preview p{padding:24px}h1{font-size:clamp(28px,5vw,44px);line-height:1.15;overflow-wrap:anywhere}
+-.cta{display:inline-block;padding:14px 24px;border-radius:10px;background:#355e2a;color:white;text-decoration:none;font-weight:650}
+-@media(max-width:600px){main{grid-template-columns:1fr;gap:20px;padding:16px}.preview{max-height:380px;width:100%;aspect-ratio:auto}.preview img{max-height:380px}.preview p{min-height:120px}nav{padding:16px}}
++<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>КлипМейкер — ${escapeHtml(title)}</title>
++<style>*{box-sizing:border-box}body{margin:0;background:#f8f9f4;color:#21382a;font:1.125rem/1.6 system-ui,sans-serif}
++nav,main{max-width:62.5rem;margin:auto;padding:1.5rem}nav a{color:inherit;text-decoration:none;font-weight:750}
++main{display:grid;grid-template-columns:minmax(0,1fr);gap:3rem;align-items:center}
++.preview{aspect-ratio:9/16;background:#21382a;color:white;border-radius:1.125rem;overflow:hidden;display:grid;place-items:center}
++.preview img{width:100%;height:100%;object-fit:contain}.preview p{padding:1.5rem}h1{font-size:clamp(2rem,1.9rem + .4vw,2.75rem);line-height:1.15;overflow-wrap:anywhere}
++.cta{display:inline-block;padding:0.875rem 1.5rem;border-radius:0.625rem;background:#355e2a;color:white;text-decoration:none;font-weight:650}
++@media(max-width:600px){main{grid-template-columns:1fr;gap:1.25rem;padding:1rem}.preview{max-height:23.75rem;width:100%;aspect-ratio:auto}.preview img{max-height:23.75rem}.preview p{min-height:7.5rem}nav{padding:1rem}}
++
++h1,p{overflow-wrap:anywhere;hyphens:auto}nav a,main>a:not([hidden]),footer a:not([hidden]){display:inline-flex;align-items:center;min-height:2.75rem}
++main,nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}nav{padding-top:max(1rem,env(safe-area-inset-top))}main{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
++button,.download,.cta{min-height:2.75rem;min-width:2.75rem}
++video{max-height:min(70svh,31.25rem);object-fit:contain}
++@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
++@media(min-width:601px){main{grid-template-columns:minmax(0,1fr) minmax(0,21.25rem)}}
++.cta{display:inline-flex;align-items:center}h1{margin-top:0}
+ </style></head><body><nav><a href="/">◧ КлипМейкер</a></nav><main>
+-<section class="preview" aria-label="Превью клипа">${preview ? `<img src="${escapeHtml(preview)}" alt="${escapeHtml(title)}" referrerpolicy="no-referrer">`
+-    : `<p>${expired ? 'Срок хранения клипа истёк. Файл больше недоступен, но вы можете сделать свои клипы.' : 'Превью этого клипа пока недоступно. Попробуйте сделать свои клипы.'}</p>`}</section>
+-<section><h1>${escapeHtml(title)}</h1><p>Этот фрагмент создан в КлипМейкере.</p>
++
++<section><h1>${escapeHtml(title)}</h1><a class="cta" href="/">Сделать свои клипы</a><p>Этот фрагмент создан в КлипМейкере.</p>
+ <p>Превратите свой подкаст или вебинар в короткие вертикальные клипы с субтитрами — готовые к публикации.</p>
+-<a class="cta" href="/">Сделать свои клипы</a></section></main></body></html>`;
++</section><section class="preview" aria-label="Превью клипа">${preview ? `<img src="${escapeHtml(preview)}" alt="${escapeHtml(title)}" referrerpolicy="no-referrer">`
++    : `<p>${expired ? 'Срок хранения клипа истёк. Файл больше недоступен, но вы можете сделать свои клипы.' : 'Превью этого клипа пока недоступно. Попробуйте сделать свои клипы.'}</p>`}</section></main></body></html>`;
+ }
+ export function createShortLinkHandler(deps: Dependencies) {
+   return async (request: Request, code: string): Promise<Response> => {

@@ -11,7 +11,7 @@ export function LimitsPanel({ remaining }: { remaining: RemainingLimits }) {
     window.addEventListener('focus', refresh);
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh); };
   }, [router]);
-  return <section aria-label="Остатки на сегодня"><h2>Осталось на сегодня</h2>
+  return <section className="limits-panel" aria-label="Остатки на сегодня"><h2>Осталось на сегодня</h2>
     <dl className="partner-counters">
       <div><dt>Загрузок</dt><dd>{remaining.uploads}</dd></div>
       <div><dt>Минут расшифровки</dt><dd>{remaining.minutes}</dd></div>

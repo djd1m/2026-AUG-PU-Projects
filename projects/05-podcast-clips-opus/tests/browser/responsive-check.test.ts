@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { domRules, axeRule, textZoomRule } from '../../scripts/responsive/rules.mjs';
+import { domRules, axeRule, textZoomRule, firstScreenRule } from '../../scripts/responsive/rules.mjs';
 import { preflight } from '../../scripts/responsive/input.mjs';
 import { chromium, webkit, type Browser, type Page } from 'playwright';
 let server: Server;
@@ -27,11 +27,37 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) describe(name
   let browser: Browser;
   beforeAll(async () => { browser = await engine.launch(); });
   afterAll(async () => { await browser?.close(); });
-  async function fixture(name: string, run: (page: Page) => Promise<void>) {
-    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  async function fixture(name: string, run: (page: Page) => Promise<void>, viewport?: { width: number; height: number }) {
+    // Mobile emulation only for R9 (as in the tool's first-screen scenarios): in Chromium isMobile zooms out
+    // pages without a viewport meta, which would hide the R1/R8 defects the other fixtures inject.
+    const context = await browser.newContext(viewport ? { viewport, isMobile: true, hasTouch: true } : { viewport: { width: 390, height: 844 } });
     try { const page = await context.newPage(); await page.goto(`${base}/${name}.html`); await run(page); }
     finally { await context.close(); }
   }
+  for (const viewport of [{ width: 390, height: 844 }, { width: 360, height: 740 }]) {
+    for (const state of ['below', 'above', 'missing']) it(`R9 ${state} ${viewport.width}`, () => fixture(`r9-${state}`, async page => {
+      const found = await firstScreenRule(page, '.cta');
+      if (state === 'above') expect(found).toEqual([]);
+      else {
+        expect(found).toHaveLength(1);
+        expect(found[0]).toMatchObject({ rule: 'R9', severity: 'error', scrollY: 0, innerHeight: viewport.height });
+        if (state === 'missing') expect(found[0].message).toBe('действие не найдено');
+        else expect(found[0].rect.bottom).toBeGreaterThan(viewport.height);
+      }
+      expect(await page.evaluate(() => scrollY)).toBe(0);
+    }, viewport));
+  }
+  for (const fallback of [false, true]) it(`R9 visibility and first visible match (fallback=${fallback})`, () => fixture('r9-above', async page => {
+    if (fallback) await page.evaluate(() => Object.defineProperty(Element.prototype, 'checkVisibility', { value: undefined, configurable: true }));
+    await page.setContent('<div style="opacity:0"><button class="cta">Hidden</button></div><button class="cta" disabled>Visible</button>');
+    expect(await firstScreenRule(page, '.cta')).toEqual([]);
+    await page.locator('button').last().evaluate(el => { el.style.position = 'absolute'; el.style.top = '-50px'; });
+    expect((await firstScreenRule(page, '.cta'))[0].rect.top).toBeLessThan(0);
+    for (const style of ['display:none', 'visibility:hidden', 'opacity:0']) {
+      await page.setContent(`<div style="${style}"><button class="cta">Hidden</button></div>`);
+      expect((await firstScreenRule(page, '.cta'))[0].message).toBe('действие не найдено');
+    }
+  }));
   it('чистая страница: все отказы отсутствуют', () => fixture('clean', async page => {
     expect([...await domRules(page), ...await axeRule(page), ...await textZoomRule(page)].filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
   }));

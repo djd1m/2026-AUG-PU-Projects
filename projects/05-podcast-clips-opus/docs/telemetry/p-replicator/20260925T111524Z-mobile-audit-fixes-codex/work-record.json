@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20260925T111524Z-mobile-audit-fixes-codex",
+    "work_unit_id": "mobile-audit-fixes",
+    "current_attempt_id": "root-implementation-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260925T111524Z-mobile-audit-fixes-codex/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20260925T111524Z-mobile-audit-fixes-codex/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a",
+    "current_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a+sha256:a50fd7a039aadcd2f9473bebcefa6b4868633a24ddeaddccef8530ff4248d680",
+    "build_revision": "b6c4a0940c6408bfc9f5fb6dd4b60783bc5aba3a+sha256:a50fd7a039aadcd2f9473bebcefa6b4868633a24ddeaddccef8530ff4248d680",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/mobile-audit-fixes/00_brief_codex.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/features/mobile-audit-fixes/01_validate.md"
+      }
+    ]
+  },
+  "prepare": {
+    "scope_revision": "aa8c4a0821d9cf5ebe383dda87689bbcdbfab1ce1ed8fd5cc96d1c97aafb19ed",
+    "scope": [
+      "A-H mobile fixes and R9 standalone scenarios"
+    ],
+    "exclusions": [
+      "API, DB, workers, CSP, dependencies, deployment"
+    ],
+    "action_limits": [
+      "Local source edits and checks only"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "A",
+        "required": true
+      },
+      {
+        "id": "B",
+        "required": true
+      },
+      {
+        "id": "C",
+        "required": true
+      },
+      {
+        "id": "D",
+        "required": true
+      },
+      {
+        "id": "E",
+        "required": true
+      },
+      {
+        "id": "F",
+        "required": true
+      },
+      {
+        "id": "G",
+        "required": true
+      },
+      {
+        "id": "H",
+        "required": true
+      },
+      {
+        "id": "R9",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "decision": "reject",
+        "reason": "No donor implementation needed; validated existing-code fixes"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "stage": "before_plan",
+      "tier": "M",
+      "script_exit_code": 0,
+      "mechanical_tier": "S",
+      "reason": "CLI report adds R9; accepted brief/validation serve as plan"
+    },
+    {
+      "stage": "before_implement",
+      "tier": "M",
+      "script_exit_code": 0,
+      "reason": "Same scope; no new shared resources, APIs or data changes"
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requested implementation of validated brief"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Live E2E delegated to coordinator by brief; local browser readiness fails at launch; no E2E claim"
+  },
+  "attempts": [
+    {
+      "id": "root-implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
+    }
+  ],
+  "checks": [
+    {
+      "ac_id": "A",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "B",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "C",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "D",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "E",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "F",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "G",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "H",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    },
+    {
+      "ac_id": "R9",
+      "outcome": "unknown",
+      "reason": "Implemented; mandatory browser/container verification blocked"
+    }
+  ],
+  "receipts": [],
+  "delivery": null,
+  "handoff": {
+    "report": "docs/features/mobile-audit-fixes/07_code_report.md",
+    "reason": "Implementation complete; acceptance pending infrastructure checks",
+    "checkpoint": "not_applicable: caller has no native checkpoint"
+  }
+}
