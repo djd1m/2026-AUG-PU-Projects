@@ -1,0 +1,18 @@
+import { writeFileSync, readFileSync } from 'node:fs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { ClipCard } from '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/app/clips/ClipCard';
+import { presentClip } from '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/apps/web/src/server/screen';
+const P = '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus';
+const now = new Date();
+const row: any = { id: '00000000-0000-4000-8000-000000000001', index: 1, start_seconds: '2', end_seconds: '31.2', title: 'Почему подкаст без монтажа теряет половину слушателей', status: 'done',
+  watermarked: true, object_key: 'file', expires_at: null, score: 85, score_hook: 29, score_completeness: 29, score_length: 27,
+  explain_hook: 'Вопрос с первых слов', explain_completeness: 'Есть законченный ответ', explain_length: 'Нет лишних слов' };
+const clip = presentClip(row, { plan: 'free', finished_at: now }, now);
+const card = renderToStaticMarkup(createElement(ClipCard, { clip, onSendToGuest: () => {} }));
+const css = readFileSync(P + '/apps/web/src/app/globals.css', 'utf8');
+for (const theme of ['dark', 'light']) writeFileSync(`${process.argv[2]}/record-${theme}.html`, `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>${css}</style></head><body>
+<nav class="navigation"><a class="brand" href="/dashboard"><span>◧</span> КлипМейкер</a><a href="/dashboard">Мои записи</a><button type="button" class="theme-toggle secondary" aria-label="Светлая тема">☾</button></nav><main class="container">
+<header class="detail-header"><a href="/dashboard">← Все записи</a><p class="eyebrow">ВАШ ВЫПУСК</p><h1>Из длинного разговора —<br />короткие моменты</h1><p class="video-id">video_id: <code>00000000-0000-4000-8000-000000000009</code></p></header>
+<section class="status-panel success" role="status" data-state="success"><span class="state-icon" aria-hidden="true">✓</span><div><h2>Клипы готовы</h2><p>Готово</p></div></section>
+<section><div class="section-heading"><h2>Ваши клипы</h2><span>7 готово / 7 выбрано</span></div><div class="clip-grid">${card}${card}</div></section></main></body></html>`);

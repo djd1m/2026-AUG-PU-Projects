@@ -1,7 +1,7 @@
 /* Colour tokens: dark is the default for everyone (A-2509-03), light only via <html data-theme=light> (cookie n5_theme).
    Every colour below lives ONLY in these two blocks; /c/ and /g/ duplicate the subset they use (tests/theme.test.ts). */
-:root { color-scheme:dark; --ink:#eef2ec; --muted:#a9b4ac; --paper:#0e1311; --surface:#1a211d; --surface-2:#262f2a; --line:#3f4b45; --green:#8fd4a4; --btn-bg:#dcefd9; --btn-fg:#0f1a14; --brand-bg:#8fd4a4; --brand-fg:#0f1a14; --media-bg:#060807; --media-fg:#d5ddd6; --focus:#f2b552; --shadow:#00000066; --upload:#1c2a20; --upload-line:#3c5543; --hover:#222b26; --danger:#ff9f94; --field-bg:var(--surface-2); --notice-bg:#2d2616; --notice-line:#d6a94a; --empty-line:#5b6962; --running-bg:#18223a; --running-line:#5d79a8; --running-fg:#a9c4f0; --success-bg:#18291a; --success-line:#4f7a3c; --success-fg:#a8d98a; --failure-bg:#34191a; --failure-line:#a3554c; --failure-fg:#ffa59a; --silent-bg:#302611; --silent-line:#8d7233; --silent-fg:#f0cd7a; --select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23eef2ec' stroke-width='2'/%3E%3C/svg%3E"); --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem; --nav-h:calc(3.8125rem + max(1rem,env(safe-area-inset-top))); }
-:root[data-theme=light] { color-scheme:light; --ink:#202a27; --muted:#56615a; --paper:#f7f8f3; --surface:#ffffff; --surface-2:#e8edde; --line:#dce1d7; --green:#305d45; --btn-bg:#305d45; --btn-fg:#ffffff; --brand-bg:#305d45; --brand-fg:#dcefbb; --media-bg:#1d2822; --media-fg:#e2e7db; --focus:#9c5e0a; --shadow:#263b2610; --upload:#eaf0df; --upload-line:#d8e2cc; --hover:#f4f6ee; --danger:#922f27; --field-bg:var(--surface); --notice-bg:#fff4da; --notice-line:#b99138; --empty-line:#c8d1c0; --running-bg:#edf2fa; --running-line:#9db1d1; --running-fg:#304e80; --success-bg:#eaf4df; --success-line:#a9c18f; --success-fg:#365620; --failure-bg:#fae9e6; --failure-line:#df9e95; --failure-fg:#922f27; --silent-bg:#fff3d9; --silent-line:#d5b564; --silent-fg:#7c5919; --select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23202a27' stroke-width='2'/%3E%3C/svg%3E"); }
+:root { color-scheme:dark; --ink:#eef2ec; --muted:#a9b4ac; --paper:#0e1311; --surface:#1a211d; --surface-2:#262f2a; --line:#3f4b45; --green:#8fd4a4; --btn-bg:#dcefd9; --btn-fg:#0f1a14; --brand-bg:#8fd4a4; --brand-fg:#0f1a14; --media-bg:#060807; --media-fg:#d5ddd6; --focus:#f2b552; --shadow:#00000066; --upload:#1c2a20; --upload-line:#3c5543; --hover:#222b26; --danger:#ff9f94; --field-bg:var(--surface-2); --notice-bg:#2d2616; --notice-line:#d6a94a; --empty-line:#5b6962; --running-bg:#18223a; --running-line:#5d79a8; --running-fg:#a9c4f0; --success-bg:#18291a; --success-line:#4f7a3c; --success-fg:#a8d98a; --failure-bg:#34191a; --failure-line:#a3554c; --failure-fg:#ffa59a; --silent-bg:#302611; --silent-line:#8d7233; --silent-fg:#f0cd7a; --score-bg:#dcefd9; --score-fg:#0f1a14; --select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23eef2ec' stroke-width='2'/%3E%3C/svg%3E"); --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem; --nav-h:calc(3.8125rem + max(1rem,env(safe-area-inset-top))); }
+:root[data-theme=light] { color-scheme:light; --ink:#202a27; --muted:#56615a; --paper:#f7f8f3; --surface:#ffffff; --surface-2:#e8edde; --line:#dce1d7; --green:#305d45; --btn-bg:#305d45; --btn-fg:#ffffff; --brand-bg:#305d45; --brand-fg:#dcefbb; --media-bg:#1d2822; --media-fg:#e2e7db; --focus:#9c5e0a; --shadow:#263b2610; --upload:#eaf0df; --upload-line:#d8e2cc; --hover:#f4f6ee; --danger:#922f27; --field-bg:var(--surface); --notice-bg:#fff4da; --notice-line:#b99138; --empty-line:#c8d1c0; --running-bg:#edf2fa; --running-line:#9db1d1; --running-fg:#304e80; --success-bg:#eaf4df; --success-line:#a9c18f; --success-fg:#365620; --failure-bg:#fae9e6; --failure-line:#df9e95; --failure-fg:#922f27; --silent-bg:#fff3d9; --silent-line:#d5b564; --silent-fg:#7c5919; --score-bg:#ffffff; --score-fg:#305d45; --select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23202a27' stroke-width='2'/%3E%3C/svg%3E"); }
 * { box-sizing:border-box; }
 body { margin:0; background:var(--paper); color:var(--ink); font:1rem/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 a { color:inherit; text-underline-offset:0.25rem; }
@@ -64,15 +64,12 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .section-heading span { font-size:0.8125rem; color:var(--muted); }
 .clip-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.5rem; align-items:start; }
 .clip-card { background:var(--surface); border:0.0625rem solid var(--line); border-radius:1rem; overflow:hidden; }
-.clip-preview { border-bottom:0.0625rem solid var(--line); aspect-ratio:9/16; background:var(--media-bg); display:grid; place-items:center; color:var(--media-fg); }
+.clip-preview { position:relative; border-bottom:0.0625rem solid var(--line); aspect-ratio:9/16; background:var(--media-bg); display:grid; place-items:center; color:var(--media-fg); }
 .clip-preview p { padding:1.25rem; text-align:center; }
 .clip-preview video { width:100%; height:100%; object-fit:contain; }
 .clip-body { padding:1.5rem; }
 .clip-body .eyebrow { font-size:0.625rem; letter-spacing:0.0625rem; }
 .clip-body button { width:100%; }
-.score { color:var(--green); margin:1.125rem 0 0.875rem; }
-.score strong { font-size:2.125rem; letter-spacing:-0.0625rem; }
-.score span { font-size:0.875rem; color:var(--muted); }
 .score-details { font-size:0.8125rem; margin:0 0 1.375rem; }
 dt { font-weight:700; margin-top:0.75rem; }
 dd { margin:0.1875rem 0 0; color:var(--muted); overflow-wrap:anywhere; }
@@ -146,3 +143,20 @@ button,.button { min-width:2.75rem; }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
 /* ≤359 px: brand + «Мои записи» + theme toggle fit one row (no wrap at 320). */
 @media(max-width:22.49rem) { .brand { font-size:1.125rem; gap:var(--space-2); } }
+/* Clip card (feature 26): lays out by ITS OWN width, not the window — narrow in a 3-column grid at 1024, wide on a phone. */
+.clip-card { container-type:inline-size; }
+.score-badge { position:absolute; z-index:1; inset-block-start:var(--space-3); inset-inline-start:var(--space-3); min-width:2.75rem; padding:.125rem var(--space-2); border-radius:.5rem; background:var(--score-bg); color:var(--score-fg); font-size:1.25rem; font-weight:750; line-height:1.4; text-align:center; pointer-events:none; }
+.clip-body { padding:var(--space-4); }
+.clip-body .clip-actions { display:flex; flex-wrap:wrap; gap:var(--space-2); align-items:center; margin-block-end:var(--space-4); }
+.clip-body .clip-actions button { width:auto; flex:1 1 auto; padding-inline:var(--space-3); }
+.clip-body .clip-actions > :first-child { flex-grow:2; }
+.clip-body h3 { margin-block-end:var(--space-2); }
+.score-line { margin-block-end:0; font-size:.9375rem; color:var(--green); }
+.score-parts { margin-block-end:0; font-size:.8125rem; color:var(--muted); }
+.score-why { margin-block-end:var(--space-4); }
+.score-why summary { font-size:.9375rem; font-weight:600; color:var(--green); }
+.score-why .score-details { margin-block-end:0; }
+@container (min-width:22rem) {
+  .clip-body { padding:1.5rem; }
+  .clip-body .clip-actions { gap:var(--space-3); }
+}

@@ -1,0 +1,21 @@
+const { chromium, webkit } = require('/w/node_modules/playwright');
+const sizes = [[390,844],[375,667],[360,740],[320,568],[1024,768],[1440,900]];
+(async () => {
+  for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
+    const browser = await engine.launch();
+    for (const theme of ['dark', 'light']) for (const [w, h] of sizes) {
+      const page = await browser.newPage({ viewport: { width: w, height: h } });
+      await page.goto(`file:///s/record-${theme}.html`);
+      const m = await page.evaluate(() => {
+        const r = s => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { top: Math.round(b.top), bottom: Math.round(b.bottom), w: Math.round(b.width), h: Math.round(b.height) }; };
+        const btns = [...document.querySelector('.clip-actions').querySelectorAll('button')].map(b => { const x = b.getBoundingClientRect(); return `${Math.round(x.width)}x${Math.round(x.height)}@${Math.round(x.top)}`; });
+        return { overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth, preview: r('.clip-preview'), badge: r('.score-badge'), actions: r('.clip-actions'), summary: r('.score-why summary'), card: r('.clip-card'), btns };
+      });
+      const firstScreen = m.actions.bottom <= h;
+      console.log(JSON.stringify({ engine: name, theme, vp: `${w}x${h}`, firstScreenActions: firstScreen, ...m }));
+      if (theme === 'dark' || w === 390) { await page.screenshot({ path: `/s/shots/${name}-${theme}-${w}x${h}.png` }); await page.locator('.clip-card').first().screenshot({ path: `/s/shots/card-${name}-${theme}-${w}x${h}.png` }); }
+      await page.close();
+    }
+    await browser.close();
+  }
+})().catch(e => { console.error(e); process.exit(2); });
