@@ -54,7 +54,7 @@
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | ⬜ |
+| Phase 0 — Product Discovery | 🟡 выполнена, ждёт выбора CJM ([итог](docs/phase0-summary.md)) |
 | Phase 1 — SPARC (`/replicate`) | ⬜ |
 | Phase 2 — Validation | ⬜ |
 | Phase 3 — Toolkit | ⬜ |

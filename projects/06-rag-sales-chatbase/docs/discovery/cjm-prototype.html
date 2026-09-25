@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Суфлёр — CJM-прототип (N6)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Токены: тёмная тема по умолчанию (тренд T6, N5 A-2509-03), светлая — [data-theme=light].
+   Палитра своя, нейтральная (FR-LOOK-008), не из источника. Один акцент — «готово / деньги». */
+:root{color-scheme:dark;--bg:#0d0f12;--surface:#161a1f;--surface-2:#20262d;--line:#2e3640;--ink:#eef1f4;--muted:#9aa5b1;--accent:#7fd8a6;--accent-ink:#0b1a12;--warn:#f2c46b;--btn:#eef1f4;--btn-ink:#0d0f12;--site-bg:#faf7f2;--site-ink:#2b2420;--site-accent:#c0506a;--shadow:0 12px 32px #0008;--focus:#f2c46b}
+:root[data-theme=light]{color-scheme:light;--bg:#f6f7f9;--surface:#ffffff;--surface-2:#eef1f4;--line:#dde2e8;--ink:#14181d;--muted:#5a6572;--accent:#1f8a55;--accent-ink:#ffffff;--warn:#9a6a08;--btn:#14181d;--btn-ink:#ffffff;--shadow:0 12px 32px #14181d22;--focus:#9a6a08}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 Onest,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+a{color:inherit;text-underline-offset:3px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+/* шапка прототипа */
+.proto-bar{position:relative;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.proto-bar .wrap{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding-block:10px}
+.logo{display:flex;gap:8px;align-items:center;font-weight:700;letter-spacing:-.3px}
+.logo i{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-style:normal;font-size:15px}
+.variants{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.variants button,.chip-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;min-height:36px}
+.variants button[aria-pressed=true]{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+.theme-btn{border:1px solid var(--line);background:transparent;border-radius:8px;min-height:36px;padding:6px 10px;cursor:pointer;font-size:13px}
+.variant-note{font-size:12.5px;color:var(--muted);padding:8px 0 10px;border-top:1px dashed var(--line)}
+.variant-note b{color:var(--ink)}
+/* раскладка шага */
+.stage{display:grid;grid-template-columns:1fr;gap:16px;padding-block:16px 96px}
+@media (min-width:960px){.stage{grid-template-columns:minmax(0,1fr) 320px}.proto-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20}}
+.screen{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-height:520px}
+.screen-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.growth{display:inline-flex;gap:6px;align-items:center;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);border-radius:999px;padding:3px 10px;font-weight:600;font-size:12px}
+.growth.none{background:transparent;color:var(--muted);border-color:var(--line)}
+.screen-body{padding:20px 16px}
+@media (min-width:600px){.screen-body{padding:28px}}
+aside.notes{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;font-size:14px;align-self:start}
+aside.notes h3{margin:0 0 6px;font-size:15px}
+aside.notes dl{margin:0}
+aside.notes dt{color:var(--muted);font-size:12px;margin-top:10px;text-transform:uppercase;letter-spacing:.6px}
+aside.notes dd{margin:2px 0 0}
+.stepper{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.stepper .wrap{display:flex;gap:10px;align-items:center;padding-block:10px}
+.dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+.dots button{width:10px;height:10px;padding:0;border-radius:50%;border:0;background:var(--line);cursor:pointer}
+.dots button[aria-current=step]{background:var(--accent);width:22px;border-radius:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:10px;border:1px solid var(--btn);background:var(--btn);color:var(--btn-ink);font-weight:600;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{min-height:40px;padding:6px 12px;font-size:14px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.full{width:100%}
+@media (min-width:600px){.full-sm{width:auto}}
+h1{font-size:clamp(30px,6.5vw,52px);line-height:1.08;letter-spacing:-1.2px;font-weight:600;margin:0 0 12px}
+h2{font-size:clamp(22px,4.5vw,30px);line-height:1.2;letter-spacing:-.5px;font-weight:600;margin:0 0 10px}
+h3{font-size:18px;margin:0 0 8px;font-weight:600}
+p{margin:0 0 12px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.eyebrow{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px}
+.field{display:flex;flex-direction:column;gap:8px}
+@media (min-width:600px){.field.row{flex-direction:row}}
+.input{flex:1;min-height:48px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 14px;font-size:16px;min-width:0}
+.ref-banner{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:16px;background:var(--surface-2)}
+.grid2{display:grid;gap:16px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--surface-2)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kpi b{display:block;font-size:24px;letter-spacing:-.5px}
+.progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:12px 0}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+ol.steps{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ol.steps li{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px}
+ol.steps li .st{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none}
+ol.steps li.done .st{background:var(--accent);border-color:var(--accent)}
+ol.steps li.run .st{border-color:var(--accent);border-top-color:transparent;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;white-space:pre;margin:0 0 12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+tr:last-child td{border-bottom:0}
+.price b{font-size:26px}
+.plan-hl{outline:2px solid var(--accent);outline-offset:-2px}
+/* макет сайта клиента */
+.site{background:var(--site-bg);color:var(--site-ink);border-radius:12px;position:relative;min-height:460px;overflow:hidden;border:1px solid var(--line)}
+.site-top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #0001;font-size:13px}
+.site-top b{font-size:15px}
+.site-url{font-size:11px;background:#0000000d;border-radius:6px;padding:3px 8px;color:#6b605a;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-hero{padding:22px 16px;max-width:60%}
+.site-hero h4{margin:0 0 6px;font-size:22px;line-height:1.15}
+.site-hero p{font-size:13px;color:#6b605a}
+.site-btn{display:inline-block;background:var(--site-accent);color:#fff;border-radius:8px;padding:8px 12px;font-size:13px}
+@media (max-width:520px){.site-hero{max-width:100%}}
+/* виджет (у клиента) — следует теме хозяина, здесь светлый */
+.w-panel{position:absolute;right:12px;bottom:78px;width:min(340px,calc(100% - 24px));background:#fff;color:#1d1f23;border-radius:16px;box-shadow:0 18px 40px #0003;display:flex;flex-direction:column;max-height:calc(100% - 96px);overflow:hidden;border:1px solid #0000001a}
+.w-head{display:flex;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid #0000000f;font-size:14px}
+.w-head .av{width:30px;height:30px;border-radius:50%;background:var(--site-accent);display:grid;place-items:center;color:#fff;font-size:13px;flex:none}
+.w-head small{display:block;color:#6a6f78;font-size:11px}
+.w-msgs{padding:12px;display:flex;flex-direction:column;gap:8px;overflow:auto;flex:1;min-height:120px}
+.msg{max-width:88%;padding:8px 11px;border-radius:12px;font-size:13.5px;line-height:1.45}
+.msg.bot{background:#f1f2f4;border-bottom-left-radius:4px}
+.msg.me{background:var(--site-accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.src{display:block;margin-top:6px;font-size:11.5px;background:#fff;border:1px solid #0000001a;border-radius:8px;padding:6px 8px;color:#3a3f47}
+.src b{color:#1d1f23}
+.src q{display:block;color:#6a6f78;margin-top:2px;quotes:"«" "»"}
+.msg.idk{background:#fff7e6;border:1px solid #f2c46b88}
+.suggest{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 8px}
+.suggest button{font-size:12px;border:1px solid #0000001f;background:#fff;color:#1d1f23;border-radius:999px;padding:6px 10px;cursor:pointer;min-height:32px}
+.w-input{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #0000000f}
+.w-input input{flex:1;border:1px solid #0000001f;border-radius:10px;padding:8px 10px;font-size:16px;background:#fff;color:#1d1f23;min-width:0}
+.w-input button{border:0;background:var(--site-accent);color:#fff;border-radius:10px;padding:0 12px;cursor:pointer;min-height:40px}
+.w-badge{display:block;text-align:center;font-size:11px;color:#6a6f78;padding:6px 0 8px;text-decoration:none;border-top:1px solid #0000000a}
+.w-badge b{color:#1d1f23}
+.w-bubble{position:absolute;right:14px;bottom:14px;width:54px;height:54px;border-radius:50%;background:var(--site-accent);color:#fff;border:0;display:grid;place-items:center;font-size:22px;box-shadow:0 8px 20px #0003;cursor:pointer}
+.bot-self{font-size:10.5px;color:#6a6f78;padding:0 14px 6px}
+.cta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--btn);color:var(--btn-ink);padding:10px 14px;border-radius:10px;font-size:14px;z-index:30;box-shadow:var(--shadow)}
+.aha{border:1px solid color-mix(in srgb,var(--accent) 50%,transparent);background:color-mix(in srgb,var(--accent) 10%,transparent);border-radius:14px;padding:14px;margin-top:14px}
+.aha[hidden]{display:none}
+.list{margin:0;padding-left:18px}
+.list li{margin-bottom:6px}
+footer.sources{border-top:1px solid var(--line);padding-block:24px 120px;font-size:13px;color:var(--muted)}
+footer.sources h3{color:var(--ink);font-size:15px}
+footer.sources li{margin-bottom:4px}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--muted);margin-right:4px}
+</style>
+</head>
+<body>
+<header class="proto-bar">
+  <div class="wrap">
+    <div class="logo"><i>С</i><span>Суфлёр</span><span class="small muted">· CJM-прототип N6</span></div>
+    <div class="variants" role="group" aria-label="Вариант CJM">
+      <button data-v="H" aria-pressed="true">H · рекомендация</button>
+      <button data-v="A" aria-pressed="false">A · badge</button>
+      <button data-v="B" aria-pressed="false">B · студии</button>
+      <button data-v="C" aria-pressed="false">C · страница бота</button>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Переключить тему">☀︎ Светлая</button>
+  </div>
+  <div class="wrap"><div class="variant-note" id="variantNote"></div></div>
+</header>
+
+<main class="wrap">
+  <div class="stage">
+    <section class="screen" aria-live="polite">
+      <div class="screen-head"><span id="screenTitle"></span><span class="growth" id="growthTag"></span></div>
+      <div class="screen-body" id="screenBody"></div>
+    </section>
+    <aside class="notes" id="notes"></aside>
+  </div>
+</main>
+
+<nav class="stepper" aria-label="Шаги пути">
+  <div class="wrap">
+    <button class="btn ghost sm" id="prevBtn" type="button">← Назад</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn sm" id="nextBtn" type="button">Далее →</button>
+  </div>
+</nav>
+
+<footer class="wrap sources">
+  <h3>Источники трендов и фактов (сняты 2026-09-25)</h3>
+  <ul class="list">
+    <li>T1 Time-to-first-value: <a href="https://userpilot.com/blog/saas-user-onboarding-funnel/">Userpilot, 2026</a>; Chatbase «value in under 60 seconds» — <a href="https://productled.com/blog/how-chatbase-hit-8m-arr-with-18-people">ProductLed</a></li>
+    <li>T2 ИИ настраивает продукт сам, T3 try-before-signup / песочница: <a href="https://userpilot.com/blog/best-user-onboarding-experience/">Userpilot «Best onboarding 2026»</a>, <a href="https://www.gleap.io/blog/ai-powered-onboarding-saas-trends">Gleap</a></li>
+    <li>T4 Прозрачность источника и её пределы: <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1935527/full">Frontiers in Psychology, 2026</a>; <a href="https://journals.sagepub.com/doi/10.1177/10711813251357884">Lenz et al., 2025</a></li>
+    <li>T5 Агентства как канал: <a href="https://www.chatbase.co/experts/terms">Chatbase Experts terms (16.12.2025)</a></li>
+    <li>T6 Тёмная тема, mobile-first: <a href="https://forms.app/en/blog/dark-mode-statistics">forms.app, 2026</a> (агрегатор, уверенность низкая)</li>
+    <li>T7 Бейдж как платный продукт: <a href="https://www.chatbase.co/pricing">Chatbase pricing — «Remove 'Powered By Chatbase'» $99/мес</a>; <a href="https://www.carrotquest.io/price/">Carrot quest «Без брендинга» 2 290 ₽/мес</a></li>
+  </ul>
+  <p>Сайт «Цветочная лавка Пион», домены и цифры в прототипе — вымышленные. Имя «Суфлёр» — рабочее, доступность не проверялась. Полные варианты — <a href="CJM_Variants.md">CJM_Variants.md</a>, бриф — <a href="../product-discovery-brief.md">product-discovery-brief.md</a>.</p>
+</footer>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  "use strict";
+  var state = { v: "H", i: 0, site: "pion-kazan.ru", ref: "ulybka-dent.ru", studio: false };
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+  function toast(t){ var el=document.getElementById("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(function(){ el.hidden=true; },2200); }
+
+  /* Ответы бота — только из «материалов» сайта; вне материалов — «не знаю» (PD-CORE-001). */
+  var KB = {
+    "Сколько стоит доставка в Казани?": { a:"Доставка по Казани — 350 ₽, бесплатно от 3 000 ₽. Привозим за 2 часа с 9:00 до 21:00.", src:"/dostavka", q:"Доставка по городу — 350 ₽. При заказе от 3 000 ₽ доставка бесплатная. Срок — 2 часа…" },
+    "Есть ли пионы в октябре?": { a:"Пионы в октябре — только под заказ, импортные, от 450 ₽ за стебель, срок 3 дня.", src:"Прайс-осень-2026.pdf, стр. 2", q:"Пион импортный (под заказ, 3 дня) — от 450 ₽/шт…" },
+    "Можно оплатить при получении?": { a:"Да: наличными или картой курьеру. Для заказов от 10 000 ₽ — предоплата 50 %.", src:"/oplata", q:"Оплата курьеру наличными или картой. Заказы от 10 000 ₽ — предоплата 50 %…" },
+    "Вы делаете свадебное оформление зала?": null
+  };
+
+  var SCREENS = {
+    landing: { title:"Лендинг — вход по бейджу", growth:"Badge loop: приход с чужого сайта · FR-GROWTH-002 ref",
+      notes:{ who:"S1 — владелец малого бизнеса. Пришёл, кликнув «Работает на Суфлёре» в чате стоматологии.", why:"Лендинг помнит домен-источник (из ссылки бейджа) и говорит на языке примера. Одно поле — адрес сайта: ИИ собирает бота сам (T2), регистрации нет до ценности (T3).", fr:"FR-GROWTH-003 (клик по бейджу несёт домен), FR-GROWTH-002 (ref/код партнёра в ссылке сохраняется до оплаты).", trend:"T2, T3", risk:"Если домен-источник не передан, баннер не показываем — без выдуманного контекста." },
+      render:function(){ return (state.v==="B" ? "" : '<div class="ref-banner">👋 Вы пришли с сайта <b>'+esc(state.ref)+'</b> — там на вопросы отвечает бот на Суфлёре. Такой же для вашего сайта — за 5 минут, бесплатно.</div>')+
+        '<div class="eyebrow">Бот для сайта на ваших материалах</div><h1>Отвечает клиентам ночью — и&nbsp;показывает, откуда взял ответ</h1>'+
+        '<p class="muted">Вставьте адрес сайта. Мы прочитаем страницы и PDF, соберём бота и покажем его прямо на вашем сайте — до регистрации.</p>'+
+        '<form class="field row" id="urlForm"><input class="input" id="urlIn" inputmode="url" autocomplete="url" aria-label="Адрес вашего сайта" value="'+esc(state.site)+'"><button class="btn accent" type="submit">Собрать бота</button></form>'+
+        '<p class="small muted" style="margin-top:10px">+ добавить PDF (прайс, условия) — необязательно · Бесплатно, с пометкой «Работает на Суфлёре»</p>'+
+        '<div class="grid2" style="margin-top:18px"><div class="card"><h3>Каждый ответ — со ссылкой</h3><p class="small muted">Под ответом — страница или PDF и цитата. Нет в материалах — бот честно говорит «не знаю» и даёт ваш контакт.</p></div><div class="card"><h3>Одна строка кода</h3><p class="small muted">Tilda, WordPress, Битрикс, свой сайт — вставьте &lt;script&gt; и готово.</p></div></div>'; },
+      bind:function(){ var f=document.getElementById("urlForm"); f.addEventListener("submit",function(e){ e.preventDefault(); var v=document.getElementById("urlIn").value.trim(); if(!v){ toast("Введите адрес сайта"); return; } state.site=v.replace(/^https?:\/\//,"").replace(/\/.*$/,""); go(1); }); } },
+
+    reading: { title:"Чтение сайта — прогресс по шагам", growth:"Время до первой ценности (T1)", g2:true,
+      notes:{ who:"Владелец ждёт. Каждая секунда ожидания — риск закрытой вкладки.", why:"Прогресс показывает шаги, а не крутилку: ожидание понятно и конечно. Это долгая задача: идентификатор выдаётся ДО начала работы, три состояния (идёт / готово / отказ) — правило long-running-job.", fr:"Метрика: время от ввода URL до первого ответа, цель < 5 мин.", trend:"T1", risk:"Сайт на JS или закрыт robots.txt → честный отказ с причиной и предложение загрузить PDF." },
+      render:function(){ return '<h2>Читаем '+esc(state.site)+'</h2><p class="muted small">Задача #J-7Q2F · можно закрыть вкладку — пришлём ссылку, когда бот будет готов</p><div class="progress"><i id="bar"></i></div>'+
+        '<ol class="steps" id="stepsList"><li data-s="0"><span class="st"></span>robots.txt прочитан, домен ваш — обходим вежливо</li><li data-s="1"><span class="st"></span>Страницы: <b id="pc">0</b> из 38</li><li data-s="2"><span class="st"></span>PDF: Прайс-осень-2026.pdf (4 стр.)</li><li data-s="3"><span class="st"></span>Фрагменты: <b id="fc">0</b> проиндексировано</li><li data-s="4"><span class="st"></span>Приветствие и 3 подсказки-вопроса собраны из сайта</li></ol>'+
+        '<p class="small muted" style="margin-top:12px">Прошло <b id="elapsed">0:00</b> · обычно 2–4 минуты</p><div class="cta-row"><button class="btn accent" id="toPreview" disabled>Открыть предпросмотр →</button></div>'; },
+      bind:function(){ var s=0,t0=Date.now(),lis=document.querySelectorAll("#stepsList li"),bar=document.getElementById("bar"),btn=document.getElementById("toPreview");
+        function tick(){ if(!document.getElementById("stepsList")) return; lis.forEach(function(li,k){ li.className = k<s ? "done" : (k===s ? "run" : ""); }); bar.style.width=Math.min(100,s*20)+"%"; document.getElementById("pc").textContent=Math.min(38,s*10); document.getElementById("fc").textContent=Math.min(412,s*103); var sec=Math.round((Date.now()-t0)/1000)*37; document.getElementById("elapsed").textContent=Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); if(s<5){ s++; setTimeout(tick,650);} else { btn.disabled=false; } }
+        tick(); btn.addEventListener("click",function(){ go(state.i+1); }); } },
+
+    preview: { title:"Предпросмотр на ВАШЕМ сайте — момент ценности", growth:"FR-GROWTH-001: share-CTA в момент aha",
+      notes:{ who:"Владелец проверяет бота на вопросах своих клиентов.", why:"Aha = верный ответ про свой бизнес со ссылкой на свою же страницу (постановка). Ссылка здесь — инструмент ВЛАДЕЛЬЦА: он сверяет и доверяет (T4). Вопрос вне материалов показывает честное «не знаю».", fr:"FR-GROWTH-001: «Поставить на сайт» и «Поделиться ссылкой на бота» появляются ровно после первого верного ответа, не раньше.", trend:"T3, T4", risk:"Если первый ответ неверный — share-CTA не показываем, предлагаем добавить материал." },
+      render:function(){ return '<h2>Спросите бота, как спросил бы клиент</h2><p class="muted small">Так бот будет выглядеть на '+esc(state.site)+'. Посетители увидят его в правом нижнем углу.</p>'+siteMock(true)+
+        '<div class="aha" id="aha" hidden><b>✓ Бот ответил по вашему сайту и показал источник.</b><p class="small muted" style="margin:6px 0 0">Время до первого ответа: 3 мин 40 с</p><div class="cta-row"><button class="btn accent" id="install">Поставить на сайт</button><button class="btn ghost" id="share">Поделиться ссылкой на бота</button></div></div>'; },
+      bind:function(){ document.getElementById("install").addEventListener("click",function(){ go(state.i+1); }); document.getElementById("share").addEventListener("click",function(){ jumpTo("publicPage"); });
+        bindWidget(function(){ var a=document.getElementById("aha"); if(a && a.hidden){ a.hidden=false; } }); } },
+
+    signin: { title:"Вход — чтобы сохранить бота", growth:"FR-GROWTH-002: код партнёра до оплаты",
+      notes:{ who:"Владелец уже видел ценность — вход теперь обоснован.", why:"Регистрация ПОСЛЕ aha (T3). Поле кода студии/партнёра необязательно; если пришёл по ссылке с кодом — поле предзаполнено, промокод сильнее cookie.", fr:"FR-GROWTH-002 — атрибуция хранится до платной конверсии; self-referral отсекается.", trend:"T3", risk:"Вход через Яндекс ID — донор N1 sso.ts; почта+пароль — донор N5." },
+      render:function(){ return '<div style="max-width:420px"><h2>Сохраните бота</h2><p class="muted small">Бот для '+esc(state.site)+' готов. Войдите, чтобы получить код для сайта.</p>'+
+        '<div class="field"><button class="btn full" type="button" data-next>Войти через Яндекс ID</button><div class="small muted" style="text-align:center">или</div><input class="input" type="email" autocomplete="email" placeholder="Почта" aria-label="Почта"><input class="input" type="password" autocomplete="new-password" placeholder="Пароль" aria-label="Пароль"><input class="input" id="refCode" placeholder="Код студии или партнёра (необязательно)" aria-label="Код партнёра" value="'+(state.v==="B"?"STUDIO-VEKTOR":"")+'"><button class="btn accent full" type="button" data-next>Сохранить и получить код</button></div>'+
+        '<p class="small muted" style="margin-top:12px">Бесплатно навсегда: 1 бот, 300 ответов в месяц, пометка «Работает на Суфлёре». Без карты.</p></div>'; },
+      bind:function(){ document.querySelectorAll("[data-next]").forEach(function(b){ b.addEventListener("click",function(){ go(state.i+1); }); }); } },
+
+    install: { title:"Установка — одна строка кода", growth:"Метрика недели: виджет на внешнем домене",
+      notes:{ who:"Владелец или его студия вставляют код.", why:"Установка засчитывается только когда с ВНЕШНЕГО домена пришёл запрос конфигурации И первый вопрос посетителя — «вставил и забыл» не считается. Проверка ждёт настоящий домен, а не localhost (embeddable-widget).", fr:"PD-METRIC-001: 15 виджетов на внешних доменах за неделю. Виджет проверяется на чужом origin под CSP и враждебным CSS.", trend:"T1", risk:"CORS: заголовок ставит ровно одно место (двойной ACAO уже ломал N1)." },
+      render:function(){ var code='<script src="https://sufler.example/w.js"\n        data-bot="pion-kazan" async></'+'script>'; return '<h2>Вставьте код перед &lt;/body&gt;</h2>'+
+        '<div class="tabs" role="tablist"><button class="chip-btn" aria-pressed="true">Любой сайт</button><button class="chip-btn">Tilda</button><button class="chip-btn">WordPress</button><button class="chip-btn">Битрикс</button></div><pre id="code">'+esc(code)+'</pre>'+
+        '<div class="cta-row"><button class="btn" id="copy">Скопировать код</button><button class="btn ghost" id="sendDev">Отправить разработчику</button></div>'+
+        '<div class="card" style="margin-top:16px"><h3>Проверка установки</h3><ol class="steps"><li class="done"><span class="st"></span>Код создан</li><li class="run" id="chk1"><span class="st"></span>Ждём первый запрос с '+esc(state.site)+'…</li><li id="chk2"><span class="st"></span>Первый вопрос посетителя</li></ol><button class="btn ghost sm" id="sim" style="margin-top:10px">Смоделировать установку</button></div>'; },
+      bind:function(){ document.getElementById("copy").addEventListener("click",function(){ var t=document.getElementById("code").textContent; try{ navigator.clipboard.writeText(t).then(function(){ toast("Код скопирован"); },function(){ toast("Выделите код и скопируйте вручную"); }); }catch(e){ toast("Выделите код и скопируйте вручную"); } });
+        document.getElementById("sendDev").addEventListener("click",function(){ toast("Ссылка с инструкцией готова — отправьте её разработчику"); });
+        document.getElementById("sim").addEventListener("click",function(){ document.getElementById("chk1").className="done"; document.getElementById("chk1").lastChild.textContent="Запрос с "+state.site+" получен"; document.getElementById("chk2").className="done"; toast("✓ Виджет установлен на внешнем домене"); setTimeout(function(){ go(state.i+1); },900); }); } },
+
+    visitor: { title:"Сайт клиента глазами посетителя — бейдж", growth:"FR-GROWTH-003: badge loop",
+      notes:{ who:"Посетитель сайта клиента. Кто-то из них — сам владелец сайта.", why:"Бейдж «Работает на Суфлёре» внизу окна чата. Показывать ли его, решает ТОЛЬКО сервер по тарифу. Клик ведёт на лендинг с доменом-источником — петля замыкается на экране 1.", fr:"FR-GROWTH-003; i = клики по бейджу на 1000 показов, conv% = клик → первый ответ своего бота (FR-GROWTH-006), раздельно.", trend:"T7", risk:"Бейдж на плохом боте — антиреклама; поэтому инвариант «нет фрагмента — нет ответа» защищает и петлю." },
+      render:function(){ return '<h2>Так бот видят посетители '+esc(state.site)+'</h2><p class="muted small">Бот представляется ботом. Бейдж ведёт к нам — так каждый клиент бесплатно раздаёт показы.</p>'+siteMock(true,true)+'<p class="small muted" style="margin-top:10px">Нажмите бейдж под окном чата →</p>'; },
+      bind:function(){ bindWidget(function(){}); var b=document.querySelector(".w-badge"); if(b){ b.addEventListener("click",function(e){ e.preventDefault(); state.ref=state.site; toast("Переход на лендинг с ref="+state.site); setTimeout(function(){ jumpTo("landing"); },700); }); } } },
+
+    publicPage: { title:"Публичная страница бота /b/pion-kazan", growth:"Вторичная тактика: демо-страница (FR-GROWTH-005)",
+      notes:{ who:"Подписчики владельца в Telegram-канале; владелец без доступа к коду сайта.", why:"Тот же чат на нашей странице — нового бэкенда нет. Бейдж и «Сделать такого же для своего сайта». По умолчанию noindex: шаблонные страницы в индексе — риск scaled content abuse.", fr:"FR-GROWTH-005, FR-GROWTH-003 (бейдж на странице Free), FR-GROWTH-002 (код в ссылке «сделать такого же»).", trend:"T4", risk:"Без аудитории владельца страница мертва — поэтому это вторичная тактика, а не основной loop." },
+      render:function(){ return '<div class="small muted">sufler.example/b/pion-kazan · <span class="tag">noindex</span></div><h2 style="margin-top:8px">Спросите «Цветочную лавку Пион»</h2><p class="muted small">Бот отвечает по сайту и прайсу лавки. Каждый ответ — со ссылкой.</p>'+
+        '<div class="site" style="min-height:0;background:var(--surface-2);border-color:var(--line)"><div class="w-panel" style="position:static;width:100%;max-height:none;box-shadow:none">'+widgetInner(true)+'</div></div>'+
+        '<div class="cta-row"><button class="btn accent" id="shareTg">Поделиться в Telegram</button><button class="btn ghost" id="copyLink">Скопировать ссылку</button></div><div class="card" style="margin-top:14px"><b>Сделать такого же для своего сайта →</b><p class="small muted" style="margin:4px 0 0">Бесплатно, 5 минут. Ссылка несёт код владельца страницы.</p></div>'; },
+      bind:function(){ bindWidget(function(){}); document.getElementById("shareTg").addEventListener("click",function(){ toast("Откроется окно «Поделиться» — текст пишет владелец, мы ничего не публикуем за него"); }); document.getElementById("copyLink").addEventListener("click",function(){ toast("Ссылка скопирована"); }); } },
+
+    dashboard: { title:"Кабинет — сводка и «не знаю»", growth:"Удержание · paywall FR-GROWTH-003",
+      notes:{ who:"Владелец через неделю.", why:"Главный повод вернуться — вопросы, на которые бот сказал «не знаю»: добавьте материал — бот узнает. Потолок ответов назван числом; при достижении — отказ посетителю с контактом, а не тихая деградация (model-call-cost).", fr:"Paywall: «Убрать бейдж» и больший потолок. Сводка — через Telegram-уведомление (донор N2 notifier).", trend:"T6: тёмная тема по умолчанию", risk:"Цифры в сводке — пусто, если данных нет («—», не «0 %»)." },
+      render:function(){ return '<h2>Бот за 7 дней</h2><div class="kpis"><div class="kpi"><b>126</b><span class="small muted">вопросов</span></div><div class="kpi"><b>109</b><span class="small muted">ответов со ссылкой</span></div><div class="kpi"><b>17</b><span class="small muted">«не знаю»</span></div><div class="kpi"><b>214 / 300</b><span class="small muted">ответов в месяце</span></div></div>'+
+        '<div class="card"><h3>Бот не знал — добавьте материал</h3><ul class="list small"><li>«Делаете свадебное оформление зала?» — 6 раз</li><li>«Есть ли самовывоз в выходные?» — 4 раза</li><li>«Работаете с юрлицами по счёту?» — 3 раза</li></ul><button class="btn sm" type="button" id="addMat">+ Добавить страницу или PDF</button></div>'+
+        '<div class="card" style="margin-top:12px"><h3>Пометка «Работает на Суфлёре»</h3><p class="small muted">На бесплатном тарифе пометка видна в окне чата. Уберите её — и лимит станет 2 000 ответов.</p><button class="btn accent sm" id="toPricing">Убрать пометку</button></div>'; },
+      bind:function(){ document.getElementById("addMat").addEventListener("click",function(){ toast("Загрузка PDF → переиндексация как долгая задача"); }); document.getElementById("toPricing").addEventListener("click",function(){ go(state.i+1); }); } },
+
+    pricing: { title:"Тарифы — снятие бейджа платно", growth:"FR-GROWTH-003: бейдж — часть тарифной архитектуры",
+      notes:{ who:"Владелец, которому бот уже приносит заявки.", why:"Снятие бейджа — видимая строка тарифа, а не мелкий аддон (у источника $99/мес отдельно). Цены — ГИПОТЕЗА (A-N6-004), не цифры Chatbase.", fr:"FR-GROWTH-003; FR-GROWTH-002 — атрибуция к студии засчитывается здесь, на оплате, а не на регистрации.", trend:"T7", risk:"Отмена подписки не сложнее оформления (чеклист №2)." },
+      render:function(){ return '<h2>Тарифы</h2><p class="muted small">Цены — рабочая гипотеза для проверки спроса.</p><div class="tablewrap"><table><thead><tr><th></th><th>Бесплатно</th><th class="plan-hl">Без пометки</th><th>Студия</th></tr></thead><tbody>'+
+        '<tr><td>Цена</td><td class="price"><b>0 ₽</b></td><td class="price plan-hl"><b>1 190 ₽</b>/мес</td><td class="price"><b>4 900 ₽</b>/мес</td></tr>'+
+        '<tr><td>Ботов</td><td>1</td><td class="plan-hl">1</td><td>до 10 клиентских</td></tr><tr><td>Ответов в месяц</td><td>300</td><td class="plan-hl">2 000</td><td>10 000 на всех</td></tr>'+
+        '<tr><td>Пометка «Работает на Суфлёре»</td><td>есть</td><td class="plan-hl"><b>нет</b></td><td>знак студии вместо нашего</td></tr><tr><td>Ссылка на источник в ответе</td><td>✓</td><td class="plan-hl">✓</td><td>✓</td></tr><tr><td>Перенос бота клиенту</td><td>—</td><td class="plan-hl">—</td><td>✓</td></tr>'+
+        '<tr><td></td><td><button class="btn ghost sm">Текущий</button></td><td class="plan-hl"><button class="btn accent sm" id="pay">Оплатить через ЮKassa</button></td><td><button class="btn ghost sm" id="studioBtn">Для студий</button></td></tr></tbody></table></div>'; },
+      bind:function(){ document.getElementById("pay").addEventListener("click",function(){ toast("Переход в ЮKassa (тестовый магазин). Бейдж снимет сервер после вебхука"); }); document.getElementById("studioBtn").addEventListener("click",function(){ jumpTo("studio"); }); } },
+
+    studio: { title:"Кабинет студии — клиентские боты", growth:"FR-GROWTH-004: партнёры-студии, sub-аккаунты",
+      notes:{ who:"S2 — веб-студия, ставит сайты клиентам.", why:"Много ботов в одном кабинете, перенос бота клиенту приглашением, код студии и когорта «установки → ответы → оплаты». Знак студии вместо нашего — план «Студия» (в неделе закладывается в тарифную архитектуру, реализуется после сигнала).", fr:"FR-GROWTH-004; FR-GROWTH-002 — клиент атрибутирован к студии приглашением (сильнее cookie), комиссия — только с ОПЛАТ.", trend:"T5", risk:"Выплаты студиям-физлицам — прогрессивный НДФЛ 13–22 % / НПД 6 %: учёт годового итога." },
+      render:function(){ return '<div class="eyebrow">Студия «Вектор» · код STUDIO-VEKTOR</div><h2>Клиентские боты</h2><div class="kpis"><div class="kpi"><b>7</b><span class="small muted">ботов</span></div><div class="kpi"><b>5</b><span class="small muted">установлено</span></div><div class="kpi"><b>2</b><span class="small muted">оплатили</span></div><div class="kpi"><b>714 ₽</b><span class="small muted">к выплате (холд 14 дн.)</span></div></div>'+
+        '<div class="tablewrap"><table><thead><tr><th>Клиент</th><th>Бот</th><th>Статус</th><th></th></tr></thead><tbody><tr><td>pion-kazan.ru</td><td>Лавка Пион</td><td>установлен · 126 вопросов</td><td>—</td></tr><tr><td>ulybka-dent.ru</td><td>Стоматология</td><td>установлен · оплачен</td><td>—</td></tr><tr><td>autoservis-16.ru</td><td>Автосервис</td><td>готов, не передан</td><td><button class="btn sm accent" id="handover">Передать клиенту</button></td></tr></tbody></table></div>'+
+        '<div class="cta-row"><button class="btn" id="newClient">+ Новый клиент по URL</button><button class="btn ghost" id="brand">Знак студии в виджете</button></div>'; },
+      bind:function(){ document.getElementById("handover").addEventListener("click",function(){ toast("Приглашение клиенту отправлено: бот перейдёт в его аккаунт, атрибуция — к студии"); }); document.getElementById("newClient").addEventListener("click",function(){ jumpTo("landing"); }); document.getElementById("brand").addEventListener("click",function(){ toast("Доступно на тарифе «Студия»"); }); } }
+  };
+
+  function widgetInner(open){ return '<div class="w-head"><span class="av">П</span><span><b>Помощник лавки «Пион»</b><small>Бот · отвечает по материалам лавки</small></span></div>'+
+    '<div class="w-msgs" id="wMsgs"><div class="msg bot">Здравствуйте! Я бот лавки «Пион». Отвечаю по сайту и прайсу — и показываю, откуда взял ответ.</div></div>'+
+    '<div class="suggest" id="wSug">'+Object.keys(KB).map(function(q){ return '<button type="button">'+esc(q)+'</button>'; }).join("")+'</div>'+
+    '<form class="w-input" id="wForm"><input id="wIn" placeholder="Ваш вопрос…" aria-label="Вопрос боту"><button type="submit" aria-label="Отправить">➤</button></form>'+
+    '<a class="w-badge" href="#landing">Работает на <b>Суфлёре</b></a>'; }
+  function siteMock(open){ return '<div class="site"><div class="site-top"><b>Пион</b><span class="site-url">'+esc(state.site)+'</span></div><div class="site-hero"><h4>Цветы с доставкой по Казани за 2 часа</h4><p>Букеты, пионы под заказ, оформление.</p><span class="site-btn">Каталог</span></div>'+
+    (open ? '<div class="w-panel">'+widgetInner(true)+'</div>' : '')+'<button class="w-bubble" type="button" aria-label="Чат">💬</button></div>'; }
+  function answer(q){ var box=document.getElementById("wMsgs"); if(!box) return false; var hit=KB[q]; var me=document.createElement("div"); me.className="msg me"; me.textContent=q; box.appendChild(me);
+    var bot=document.createElement("div"); if(hit===undefined){ var keys=Object.keys(KB).filter(function(k){ return KB[k] && q.toLowerCase().split(/\s+/).some(function(w){ return w.length>4 && k.toLowerCase().indexOf(w.slice(0,5))>=0; }); }); hit = keys.length ? KB[keys[0]] : null; }
+    if(hit){ bot.className="msg bot"; bot.innerHTML=esc(hit.a)+'<span class="src">Источник: <b>'+esc(hit.src)+'</b><q>'+esc(hit.q)+'</q></span>'; }
+    else { bot.className="msg bot idk"; bot.innerHTML='Не нашёл этого в материалах лавки, поэтому не буду гадать. Напишите нам: <b>+7 900 000-00-00</b> или в Telegram <b>@pion_kazan</b>.'; }
+    box.appendChild(bot); box.scrollTop=box.scrollHeight; return !!hit; }
+  function bindWidget(onGood){ var sug=document.getElementById("wSug"), f=document.getElementById("wForm");
+    if(sug) sug.addEventListener("click",function(e){ if(e.target.tagName==="BUTTON"){ if(answer(e.target.textContent)) onGood(); } });
+    if(f) f.addEventListener("submit",function(e){ e.preventDefault(); var i=document.getElementById("wIn"); var q=i.value.trim(); if(!q) return; i.value=""; if(answer(q)) onGood(); }); }
+
+  var VARIANTS = {
+    H:{ note:"<b>H — рекомендация (ожидает владельца):</b> ядро A (badge) + демо-страница из C + минимум студий из B. Метрика недели: 15 виджетов на внешних доменах с ≥1 вопросом.", path:["landing","reading","preview","signin","install","visitor","publicPage","dashboard","pricing","studio"] },
+    A:{ note:"<b>A — Бот из URL за 5 минут · growth loop: badge.</b> Aha — верный ответ со ссылкой на свою страницу в предпросмотре. Метрика: 15 виджетов на внешних доменах.", path:["landing","reading","preview","signin","install","visitor","dashboard","pricing"] },
+    B:{ note:"<b>B — Студия ставит всем · growth loop: incentivized referral через студии.</b> Aha — бот передан клиенту за 2 минуты. Метрика: 3 студии × ≥3 клиентских бота. Не выбран основным: цикл продажи студии дольше недели.", path:["studio","landing","reading","preview","signin","install","pricing"] },
+    C:{ note:"<b>C — Публичная страница бота · growth loop: content-driven.</b> Aha — незнакомец по ссылке получил ответ. Метрика: 30 диалогов на публичных страницах. Не выбран основным: не растит метрику постановки.", path:["landing","reading","preview","publicPage","signin","dashboard","pricing"] }
+  };
+
+  function path(){ return VARIANTS[state.v].path; }
+  function jumpTo(key){ var k=path().indexOf(key); if(k<0){ toast("Этого экрана нет в варианте "+state.v+" — показан вне пути"); renderKey(key); return; } go(k); }
+  function go(k){ var p=path(); state.i=Math.max(0,Math.min(p.length-1,k)); renderKey(p[state.i]); }
+  function renderKey(key){ var s=SCREENS[key];
+    document.getElementById("screenTitle").textContent=(path().indexOf(key)+1||"·")+" / "+path().length+" — "+s.title;
+    var g=document.getElementById("growthTag"); g.textContent="Рост: "+s.growth; g.className="growth";
+    document.getElementById("screenBody").innerHTML=s.render();
+    var n=s.notes; document.getElementById("notes").innerHTML='<h3>Зачем этот экран</h3><dl><dt>Кто</dt><dd>'+esc(n.who)+'</dd><dt>Почему так</dt><dd>'+esc(n.why)+'</dd><dt>Механика роста / FR</dt><dd>'+esc(n.fr)+'</dd><dt>Микро-тренд</dt><dd>'+esc(n.trend)+'</dd><dt>Риск</dt><dd>'+esc(n.risk)+'</dd></dl>';
+    var d=document.getElementById("dots"); d.innerHTML=path().map(function(x,j){ return '<button type="button" aria-label="Шаг '+(j+1)+': '+esc(SCREENS[x].title)+'"'+(x===key?' aria-current="step"':'')+' data-j="'+j+'"></button>'; }).join("");
+    var onPath=path()[state.i]===key; document.getElementById("prevBtn").disabled=onPath && state.i===0; document.getElementById("nextBtn").disabled=onPath && state.i===path().length-1;
+    if(s.bind) s.bind(); window.scrollTo(0,0); }
+
+  document.getElementById("dots").addEventListener("click",function(e){ var j=e.target.getAttribute("data-j"); if(j!==null) go(+j); });
+  document.getElementById("prevBtn").addEventListener("click",function(){ go(state.i-1); });
+  document.getElementById("nextBtn").addEventListener("click",function(){ go(state.i+1); });
+  document.querySelectorAll(".variants button").forEach(function(b){ b.addEventListener("click",function(){ state.v=b.getAttribute("data-v"); document.querySelectorAll(".variants button").forEach(function(x){ x.setAttribute("aria-pressed", String(x===b)); }); document.getElementById("variantNote").innerHTML=VARIANTS[state.v].note; go(0); }); });
+  var themeBtn=document.getElementById("themeBtn");
+  themeBtn.addEventListener("click",function(){ var r=document.documentElement, light=r.getAttribute("data-theme")==="light"; if(light){ r.removeAttribute("data-theme"); themeBtn.textContent="☀︎ Светлая"; } else { r.setAttribute("data-theme","light"); themeBtn.textContent="☾ Тёмная"; } });
+  document.getElementById("variantNote").innerHTML=VARIANTS.H.note;
+  go(0);
+})();
+</script>
+</body>
+</html>
