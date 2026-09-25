@@ -3,7 +3,7 @@
 # из N5: projects/05-podcast-clips-opus/Dockerfile — цели web/worker/test; добавлена цель migrate;
 # без ffmpeg/OpenCV (у N6 нет медиа) и без браузера в worker (ADR-007).
 # Цели: web (Next.js), worker (worker-index), migrate (одноразовые миграции), test (раннер с dev-зависимостями).
-# Workspace apps/widget и packages/queue появятся со своими фичами — тогда же их манифесты сюда.
+# Workspace apps/widget появится со своей фичей — тогда же его манифест сюда; packages/queue — с index-job-core.
 
 # ── deps: манифесты ВСЕХ workspace, иначе npm ci падает «Exit handler never called» ──
 FROM node:22.22-alpine AS deps
@@ -13,9 +13,10 @@ COPY apps/web/package.json ./apps/web/
 COPY apps/worker/package.json ./apps/worker/
 COPY packages/db/package.json ./packages/db/
 COPY packages/rag/package.json ./packages/rag/
+COPY packages/queue/package.json ./packages/queue/
 RUN npm ci
 
-# ── build: один раз для всех рантайм-целей (db → rag → worker → web) ──
+# ── build: один раз для всех рантайм-целей (rag → db → queue → worker → web) ──
 FROM deps AS build
 COPY . .
 RUN npm run build

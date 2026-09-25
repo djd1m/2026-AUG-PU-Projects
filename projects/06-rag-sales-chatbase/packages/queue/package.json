@@ -1,0 +1,10 @@
+{
+  "//": "из N5: projects/05-podcast-clips-opus/packages/queue/package.json — имя @n6/queue; без @clipmaker/shared (одна очередь index, стадий нет)",
+  "name": "@n6/queue",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc --noEmit -p tsconfig.json" },
+  "dependencies": { "bullmq": "^5.81.5" }
+}

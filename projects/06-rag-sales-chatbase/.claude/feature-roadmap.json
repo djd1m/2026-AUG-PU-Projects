@@ -154,7 +154,7 @@
       "title": "Задача индексации: идентификатор до работы, три состояния, fence, сторож",
       "description": "packages/queue + index_job/job_attempt: CreateSource-каркас с Idempotency-Key → UNIQUE (bot_id, idempotency_key); 202 { index_job_id } ДО постановки; аренда с current_fence + 1; каждая запись WHERE current_fence = :mine; ReadIndexJob (GET /api/index-jobs/{id}: state, pages_done, pages_total, chunks_done, reason); WatchdogTick раз в минуту: running без updated_at 5 мин → failed(stalled), draft старше 24 ч → удалить; «Повторить» — новая серия того же index_job_id; ≤ 2 автоматических попыток шага; предел задачи 15 мин. long-job-contract.md остаётся not-deployed до стенда.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "foundation"
@@ -185,7 +185,8 @@
         "apps/web/src/app/api/index-jobs/[id]/route.ts",
         "tests/index-job.fence.test.ts"
       ],
-      "carry_over": "Ревью foundation M1: объявить JOB_ATTEMPT_STATUS в packages/rag/src/enums.ts и сверить с CHECK 001_init.sql:129 в tests/enums.test.ts ДО записи в job_attempt."
+      "carry_over": "Ревью foundation M1: объявить JOB_ATTEMPT_STATUS в packages/rag/src/enums.ts и сверить с CHECK 001_init.sql:129 в tests/enums.test.ts ДО записи в job_attempt.",
+      "completion": "docs/features/index-job-core/05_completion.md"
     },
     {
       "id": "crawler",
@@ -229,7 +230,8 @@
         "apps/worker/src/crawl/extract-text.ts",
         "tests/ssrf.test.ts",
         "tests/robots.test.ts"
-      ]
+      ],
+      "carry_over": "Ревью index-job-core: MEDIUM — closeFailedTx (packages/db/src/index-jobs.ts:107-112) добавить AND status IN ('queued','running'), 0 строк = no-op, тест «done не переводится в failed» + мутация; LOW — маршрут POST retry для retryIndexJob или явная запись пробела в 05_completion."
     },
     {
       "id": "pdf-source",

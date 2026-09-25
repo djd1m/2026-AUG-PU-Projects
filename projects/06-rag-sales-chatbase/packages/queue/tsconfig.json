@@ -1,0 +1,2 @@
+// из N5: projects/05-podcast-clips-opus/packages/queue/tsconfig.json — только src
+{ "extends": "../../tsconfig.base.json", "compilerOptions": { "rootDir": "src", "outDir": "dist" }, "include": ["src/**/*.ts"] }

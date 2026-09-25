@@ -1,0 +1,149 @@
+ Container n6-test-db-1 Running 
+ Container n6-test-redis-1 Running 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 671B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.32kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 1.26kB done
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 38.61kB 0.0s done
+#6 DONE 0.0s
+
+#7 [deps 3/9] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#8 CACHED
+
+#9 [deps 5/9] COPY apps/worker/package.json ./apps/worker/
+#9 CACHED
+
+#10 [deps 7/9] COPY packages/rag/package.json ./packages/rag/
+#10 CACHED
+
+#11 [deps 8/9] COPY packages/queue/package.json ./packages/queue/
+#11 CACHED
+
+#12 [deps 2/9] WORKDIR /app
+#12 CACHED
+
+#13 [deps 6/9] COPY packages/db/package.json ./packages/db/
+#13 CACHED
+
+#14 [deps 9/9] RUN npm ci
+#14 CACHED
+
+#15 [build 1/2] COPY . .
+#15 DONE 0.9s
+
+#16 [build 2/2] RUN npm run build
+#16 0.472 
+#16 0.472 > n6-sufler@0.1.0 build
+#16 0.472 > npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#16 0.472 
+#16 0.683 
+#16 0.683 > @n6/rag@0.1.0 build
+#16 0.683 > tsc -p tsconfig.json
+#16 0.683 
+#16 3.366 
+#16 3.366 > @n6/db@0.1.0 build
+#16 3.366 > tsc -p tsconfig.json
+#16 3.366 
+#16 5.960 
+#16 5.960 > @n6/queue@0.1.0 build
+#16 5.960 > tsc -p tsconfig.json
+#16 5.960 
+#16 8.314 
+#16 8.314 > @n6/worker@0.1.0 build
+#16 8.314 > tsc -p tsconfig.json
+#16 8.314 
+#16 10.61 
+#16 10.61 > @n6/web@0.1.0 build
+#16 10.61 > next build && tsc -p tsconfig.preflight.json
+#16 10.61 
+#16 11.84 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#16 11.84 This information is used to shape Next.js' roadmap and prioritize features.
+#16 11.84 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#16 11.84 https://nextjs.org/telemetry
+#16 11.84 
+#16 11.96    ▲ Next.js 15.5.25
+#16 11.96    - Experiments (use with caution):
+#16 11.96      · cpus: 2
+#16 11.96 
+#16 12.08    Creating an optimized production build ...
+#16 24.53  ✓ Compiled successfully in 8.7s
+#16 24.65    Linting and checking validity of types ...
+#16 30.20    Collecting page data ...
+#16 32.06    Generating static pages (0/5) ...
+#16 32.83    Generating static pages (1/5) 
+#16 32.83    Generating static pages (2/5) 
+#16 32.83    Generating static pages (3/5) 
+#16 32.83  ✓ Generating static pages (5/5)
+#16 34.17    Finalizing page optimization ...
+#16 34.17    Collecting build traces ...
+#16 43.59 
+#16 43.60 Route (app)                                  Size  First Load JS
+#16 43.60 ┌ ƒ /api/auth/login                         137 B         102 kB
+#16 43.60 ├ ƒ /api/auth/logout                        137 B         102 kB
+#16 43.60 ├ ƒ /api/auth/register                      137 B         102 kB
+#16 43.60 ├ ƒ /api/index-jobs/[id]                    137 B         102 kB
+#16 43.60 └ ƒ /health                                 137 B         102 kB
+#16 43.60 + First Load JS shared by all              101 kB
+#16 43.60   ├ chunks/87c73c54-24122e7b92478d00.js   54.2 kB
+#16 43.60   ├ chunks/956-915b2f7c381780d8.js        45.6 kB
+#16 43.60   └ other shared chunks (total)           1.59 kB
+#16 43.60 
+#16 43.60 Route (pages)                                Size  First Load JS
+#16 43.60 ─ ○ /404                                    180 B         107 kB
+#16 43.60 + First Load JS shared by all              107 kB
+#16 43.60   ├ chunks/framework-9d5fabc6d68642b8.js  68.7 kB
+#16 43.60   ├ chunks/main-e7f3731ffdf0a93c.js       36.9 kB
+#16 43.60   └ other shared chunks (total)           1.66 kB
+#16 43.60 
+#16 43.60 ○  (Static)   prerendered as static content
+#16 43.60 ƒ  (Dynamic)  server-rendered on demand
+#16 43.60 
+#16 DONE 45.6s
+
+#17 exporting to image
+#17 exporting layers
+#17 exporting layers 2.0s done
+#17 exporting manifest sha256:c3c821cd93d352d2fe079fa8ebf6e8fb10442fc107a1b0c65ede1f17a0fcb14e
+#17 exporting manifest sha256:c3c821cd93d352d2fe079fa8ebf6e8fb10442fc107a1b0c65ede1f17a0fcb14e 0.0s done
+#17 exporting config sha256:52c04d9edd320b462e4ecd151d212ab5642f1abd84982971d7d3f54867833788 0.0s done
+#17 exporting attestation manifest sha256:51bb56e1cab039bf35154aef1357b2107cf92ecdd69cf2a14bcdc0d2f017ab42 0.0s done
+#17 exporting manifest list sha256:e89b0ef65e2885c49027cdf5c51b2f8ce7ea8b319824f01b2429d99454331a89 0.0s done
+#17 naming to docker.io/library/n6-sufler-test:foundation done
+#17 unpacking to docker.io/library/n6-sufler-test:foundation
+#17 unpacking to docker.io/library/n6-sufler-test:foundation 0.9s done
+#17 DONE 3.0s
+
+#18 resolving provenance for metadata file
+#18 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-test-run-794f8a559255 Creating 
+ Container n6-test-test-run-794f8a559255 Created 
+progress-without-fence: дефект возвращён → 2 failed | 47 passed (49) (код 1); код восстановлен → 49 passed (49) (код 0)
+lease-ignores-generation: дефект возвращён → 1 failed | 48 passed (49) (код 1); код восстановлен → 49 passed (49) (код 0)
+attempt-status-out-of-set: дефект возвращён → 2 failed | 47 passed (49) (код 1); код восстановлен → 49 passed (49) (код 0)
+unknown-status-reads-running: дефект возвращён → 7 failed | 42 passed (49) (код 1); код восстановлен → 49 passed (49) (код 0)
+silence-reads-running: дефект возвращён → 2 failed | 47 passed (49) (код 1); код восстановлен → 49 passed (49) (код 0)

@@ -1,5 +1,5 @@
 {
-  "//": "из N5: projects/05-podcast-clips-opus/apps/worker/package.json — без очереди, S3 и ffmpeg; задачи индексации — фича index-job-core",
+  "//": "из N5: projects/05-podcast-clips-opus/apps/worker/package.json — без S3 и ffmpeg; очередь индексации и сторож — фича index-job-core",
   "name": "@n6/worker",
   "version": "0.1.0",
   "private": true,
@@ -9,6 +9,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@n6/rag": "0.1.0"
+    "@n6/db": "0.1.0",
+    "@n6/queue": "0.1.0",
+    "@n6/rag": "0.1.0",
+    "bullmq": "^5.81.5"
   }
 }
