@@ -43,8 +43,8 @@ packages/s3/         адаптер объектного хранилища (Sig
   export const VIDEO_STATUS = ['uploading','queued','transcribing','selecting','rendering','done','failed'] as const;
   export type VideoStatus = typeof VIDEO_STATUS[number];        // ровно 7
 
-  export const QUOTA_SCOPE = ['user_minutes','user_uploads','user_upload_refunds','user_llm','global_minutes','global_llm'] as const;
-  export type QuotaScope = typeof QUOTA_SCOPE[number];          // ровно 6, не 5
+  export const QUOTA_SCOPE = ['user_minutes','user_uploads','user_upload_refunds','user_llm','global_minutes','global_llm','user_rerenders'] as const;
+  export type QuotaScope = typeof QUOTA_SCOPE[number];          // ровно 7 (седьмой — user_rerenders, OWN-015)
   ```
 
 - **Неопознанное значение → самый строгий вариант.** Сравнение на равенство с единственным
@@ -123,7 +123,7 @@ UPDATE quota_counter SET used = used + $4
 Шесть причин по свойствам файла (`too_large`, `not_media`, `no_audio`, `too_short`, `too_long`,
 `probe_timeout`) отличаются от отказов по потолкам (`refused_user_minutes`, `refused_global_minutes`,
 `refused_user_uploads`, `refused_user_llm`, `refused_global_llm`) — на этом различии держится
-возврат слота. Ключей квоты ШЕСТЬ, пользовательских текстов ПЯТЬ: у `user_upload_refunds` своего
+возврат слота. Ключей квоты СЕМЬ (с 25.09.2026 — `user_rerenders`), пользовательских текстов меньше: у `user_upload_refunds` своего
 текста нет намеренно.
 
 `try/catch` вокруг проверки запрещён: проверка не становится необязательной молча. Недоступность
