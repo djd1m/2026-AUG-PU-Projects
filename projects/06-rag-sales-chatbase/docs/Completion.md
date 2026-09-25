@@ -21,7 +21,7 @@
       не опубликован мимо `proxy`) И `bash ../../scripts/check-port-conflicts.sh .` → свободен
       `${HTTP_PORT:-8086}`. Хостовые порты — только `${VAR:-default}`; у `db` и `redis` нет `ports:`.
 - [ ] **Проброс переменных:** `bash ../../scripts/check-env-wiring.sh` → `0`: каждый `process.env.X`
-      сервиса есть в его `environment:`; секреты, модели и десять потолков — `${VAR:?}` без дефолта.
+      сервиса есть в его `environment:`; секреты, модели и 14 переменных потолков (`QUOTA_*`, канон §7) — `${VAR:?}` без дефолта.
 - [ ] **Гигиена compose:** явные теги образов (`pgvector/pgvector:0.8.6-pg16`, `redis:7.4-alpine`,
       `caddy:2.8-alpine`), `restart: unless-stopped` у каждого сервиса, `service_healthy` в
       `depends_on`, `.dockerignore`.
@@ -32,7 +32,7 @@
 1. **Подготовка машины.** `.env` из `.env.example` на VPS: `N6_PUBLIC_ORIGIN` (выданный DNS-адрес,
    `https:`), `DATABASE_URL`, `REDIS_PASSWORD`, `SESSION_SECRET` (`openssl rand -hex 32`),
    `OPENROUTER_API_KEY`, `ANSWER_MODEL=anthropic/claude-haiku-4.5`,
-   `EMBED_MODEL=openai/text-embedding-3-small`, десять `QUOTA_*` из канона §7. Блок в общем
+   `EMBED_MODEL=openai/text-embedding-3-small`, 14 `QUOTA_*` из канона §7 (10 scope, 14 переменных). Блок в общем
    TLS-прокси машины → `proxy:${HTTP_PORT:-8086}`.
 2. **Сборка и миграции.** `docker compose build` (бандл виджета собирается в образе `web`, сборка
    падает при > 45 КБ gzip) → `docker compose up -d db redis` → `migrate` (`CREATE EXTENSION
@@ -41,8 +41,9 @@
    строки «проба» через `https://openrouter.ai/api/v1/embeddings` и сверяет длину вектора с 1536;
    ответ ≠ 200 или длина ≠ 1536 — процесс не стартует. Одновременно `web` выполняет пробный вызов
    `ANSWER_MODEL` с `max_tokens 5`. Стоимость пробы — доли цента, строка в `model-spend.jsonl`.
-   Успех ЗАКРЫВАЕТ строку `UNCONFIRMED` «отвечает на запросы с этой VPS» в Architecture «External
-   Dependencies»: вердикт меняется на CONFIRMED с датой и выдержкой из журнала.
+   Сетевая доступность УЖЕ подтверждена (A-N6-019, чужим ключом стенда N5); при первом деплое
+   `EmbedProbe` повторяет пробу СВОИМ ключом N6 — это отдельная проверка (ключ, не сеть), и она
+   остаётся обязательной. Не путать «сеть доступна» (доказано) и «ключ N6 работает» (ещё нет).
 4. **Старт приложения.** `docker compose up -d web worker-index proxy`; healthcheck зелёный.
 5. **Сквозной сценарий на ВЫДАННОМ адресе** (не на localhost, [`deployment-seams`](../../../.claude/rules/deployment-seams.md)):
    URL → предпросмотр → ответ с источником → регистрация → claim → домен → код → виджет на чужой

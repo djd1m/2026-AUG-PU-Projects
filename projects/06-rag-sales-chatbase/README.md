@@ -44,19 +44,31 @@
 
 ```
 06-rag-sales-chatbase/
-├── README.md          # этот файл
+├── README.md, CLAUDE.md, DEVELOPMENT_GUIDE.md
+├── docker-compose.yml, Dockerfile, proxy/     # скаффолды: 6 сервисов, сборкой не проверены
+├── .env.example                               # имена всех переменных, 14 потолков, пустые секреты
+├── .claude/                                   # проектный toolkit: 3 агента, 4 правила, 4 навыка, роадмап
 └── docs/
-    ├── discovery/     # Phase 0 — reverse-engineering референса
-    └── ...            # SPARC-документация из /replicate
+    ├── discovery/                             # Phase 0 — reverse-engineering референса, CJM A/B/C/H
+    ├── canon.md, PRD.md, Specification.md …   # Phase 1 — SPARC
+    ├── validation-report.md, test-scenarios.md # Phase 2
+    ├── toolkit-map.md, phase3-4-summary.md    # Phase 3–4
+    └── features/                              # квитанции фич (пусто до реализации)
 ```
+
+## С чего начать
+
+1. [`CLAUDE.md`](CLAUDE.md) — что это, инварианты, режим исполнения.
+2. [`docs/canon.md`](docs/canon.md) → [`docs/Specification.md`](docs/Specification.md) → [`docs/Architecture.md`](docs/Architecture.md).
+3. [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) и [`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — первая фича `foundation`.
 
 ## Статус
 
 | Этап | Статус |
 |---|---|
 | Phase 0 — Product Discovery | 🟡 выполнена; CJM H принят ВРЕМЕННО (A-N6-008), ждёт владельца ([итог](docs/phase0-summary.md)) |
-| Phase 1 — SPARC (`/replicate`) | 🟡 выполнена автономно 2026-09-25, не закоммичена; ждёт владельца по открытым вопросам ([итог](docs/phase1-summary.md)) |
-| Phase 2 — Validation | ⬜ |
-| Phase 3 — Toolkit | ⬜ |
-| Phase 4 — Finalize | ⬜ |
-| Реализация | ⬜ |
+| Phase 1 — SPARC (`/replicate`) | 🟡 выполнена автономно 2026-09-25; открытые вопросы владельцу ([итог](docs/phase1-summary.md)) |
+| Phase 2 — Validation | 🟡 CAVEATS, блокеров нет; H1/M1/M2 закрыты правками, L1 перенесён ([отчёт](docs/validation-report.md) §9) |
+| Phase 3 — Toolkit | ✅ 2026-09-25 ([карта](docs/toolkit-map.md)) |
+| Phase 4 — Finalize | ✅ 2026-09-25, скаффолды без сборки ([итог](docs/phase3-4-summary.md)) |
+| Реализация | ⬜ 0 из 17 фич; следующая — `foundation` |

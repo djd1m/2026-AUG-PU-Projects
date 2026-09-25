@@ -72,8 +72,8 @@ Postgres (pgvector), модели — через шлюз OpenRouter.
 
 ## Immediate Next Steps
 1. **Владелец** утром: подтвердить CJM H, маршрут моделей/152-ФЗ, число метрики — открытые вопросы PRD §13.
-2. **Phase 2** (requirements-validator): вердикт; строка `UNCONFIRMED` сетевой доступности OpenRouter
-   делает результат не лучше 🟡 до пробы с ключом.
+2. **Phase 2** (requirements-validator): вердикт; выполнена — 🟡 CAVEATS (H1/M1/M2 закрыты правками,
+   L1 перенесён; сеть OpenRouter подтверждена пробой A-N6-019).
 3. **Phase 3** (toolkit) — после вердикта, с ADR-012…016 как переносами.
 
 ## Documentation Package

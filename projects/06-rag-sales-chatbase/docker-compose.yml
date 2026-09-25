@@ -1,0 +1,179 @@
+# N6 «Суфлёр» — Docker Compose. Канон §6: ровно 6 сервисов (proxy, web, worker-index, db, redis,
+# migrate). Хранилища НЕ публикуют портов (docker-ports, Правило №0); web не публикуется мимо proxy
+# (deployment-seams: иначе X-Forwarded-For от клиента обходит лимит двери).
+# Хостовый порт — только ${VAR:-default} и только на петлю; секреты, модели и 14 потолков —
+# ${VAR:?…} без значений по умолчанию. Тестовый стек — отдельный compose.test.yml (name: n6-test),
+# его пишет фича foundation.
+# СКАФФОЛД Phase 3/4 (2026-09-25): кода нет, сборкой не проверен. Первое дело foundation —
+# `docker compose build` и исправление того, что он найдёт.
+name: ${N6_COMPOSE_PROJECT:-n6-sufler}
+
+x-app-env: &app-env
+  NODE_ENV: production
+  TZ: Europe/Moscow
+  # DATABASE_URL и REDIS_URL собираются из паролей: одно значение не может разойтись с паролем БД
+  DATABASE_URL: postgresql://n6:${N6_DB_PASSWORD:?пароль БД не задан — сгенерировать openssl rand -hex 24}@db:5432/n6
+  REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
+
+x-model-env: &model-env
+  N6_PUBLIC_ORIGIN: ${N6_PUBLIC_ORIGIN:?публичный origin не задан — он определяет ссылку бейджа, демо-страницу, приглашения и границу «установка ≠ свой origin»}
+  OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — ни эмбеддинги, ни ответы невозможны}
+  ANSWER_MODEL: ${ANSWER_MODEL:?модель ответов не задана (канон §7 anthropic/claude-haiku-4.5)}
+  EMBED_MODEL: ${EMBED_MODEL:?модель эмбеддингов не задана (канон §7 openai/text-embedding-3-small, 1536)}
+  N6_SPEND_LOG: /work/spend/model-spend.jsonl
+  N6_UPLOAD_DIR: /work/uploads
+
+# 14 переменных на 10 scope (канон §7, A-N6-020): у каждого предела своя переменная.
+# Пустая переменная не означает «без ограничений» — LoadCeilings валит старт и называет её.
+x-quota-env: &quota-env
+  QUOTA_VISITOR_ANSWERS: ${QUOTA_VISITOR_ANSWERS:?потолок ответов на сессию посетителя не задан — ответ модели не ограничен}
+  QUOTA_IP_ANSWERS: ${QUOTA_IP_ANSWERS:?потолок ответов на префикс IP не задан — смена сессии обходит предел}
+  QUOTA_BOT_DAY_FREE: ${QUOTA_BOT_DAY_FREE:?суточный потолок ответов бота free не задан}
+  QUOTA_BOT_DAY_PAID: ${QUOTA_BOT_DAY_PAID:?суточный потолок ответов платного бота не задан}
+  QUOTA_BOT_MONTH_FREE: ${QUOTA_BOT_MONTH_FREE:?месячный потолок ответов бота free не задан}
+  QUOTA_BOT_MONTH_PAID: ${QUOTA_BOT_MONTH_PAID:?месячный потолок ответов платного бота не задан}
+  QUOTA_GLOBAL_ANSWERS: ${QUOTA_GLOBAL_ANSWERS:?глобальный суточный потолок ответов не задан — худшие сутки без предела}
+  QUOTA_PREVIEW_SESSION_CREATE: ${QUOTA_PREVIEW_SESSION_CREATE:?потолок созданий предпросмотра на браузер не задан}
+  QUOTA_PREVIEW_SESSION_ANSWERS: ${QUOTA_PREVIEW_SESSION_ANSWERS:?потолок ответов предпросмотра на браузер не задан}
+  QUOTA_IP_PREVIEWS: ${QUOTA_IP_PREVIEWS:?потолок предпросмотров на префикс IP не задан}
+  QUOTA_GLOBAL_PREVIEWS: ${QUOTA_GLOBAL_PREVIEWS:?глобальный потолок предпросмотров не задан}
+  QUOTA_GLOBAL_PREVIEW_ANSWERS: ${QUOTA_GLOBAL_PREVIEW_ANSWERS:?глобальный потолок ответов предпросмотра не задан}
+  QUOTA_ACCOUNT_EMBED: ${QUOTA_ACCOUNT_EMBED:?потолок токенов эмбеддингов на аккаунт не задан — индексация не ограничена}
+  QUOTA_GLOBAL_EMBED: ${QUOTA_GLOBAL_EMBED:?глобальный потолок токенов эмбеддингов не задан}
+
+services:
+  proxy:
+    # образ собирается: модуля caddy-ratelimit нет в стандартном caddy (донор N4, ADR-014)
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    # имя образа начинается с caddy намеренно: по нему стражи check-ports.cjs и
+    # check-port-conflicts.sh узнают reverse-proxy и проверяют, что рядом никто не опубликован;
+    # pull_policy: build — образ только собирается локально, из реестра не тянется
+    image: caddy:2.8-n6-ratelimit-${IMAGE_TAG:-dev}
+    pull_policy: build
+    ports:
+      # ЕДИНСТВЕННАЯ публикация проекта — на петлю, к общему TLS-прокси машины
+      - "127.0.0.1:${N6_HTTP_PORT:-8086}:80"
+    volumes:
+      - ./proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+    depends_on:
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    image: n6-sufler-web:${IMAGE_TAG:-dev}
+    environment:
+      <<: [*app-env, *model-env, *quota-env]
+      SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан — openssl rand -hex 32}
+    # порта на хосте НЕТ: единственная дверь — proxy
+    volumes:
+      - uploads:/work/uploads
+      - model-spend:/work/spend
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  worker-index:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    image: n6-sufler-worker:${IMAGE_TAG:-dev}
+    environment:
+      <<: [*app-env, *model-env, *quota-env]
+      N6_INDEX_CONCURRENCY: "2"
+    volumes:
+      - uploads:/work/uploads
+      - model-spend:/work/spend
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    # воркер пишет отметку жизни раз в 30 с; старше 120 с — нездоров (молчание ≠ «работает»)
+    healthcheck:
+      test: ["CMD", "node", "-e", "const s=require('fs').statSync('/tmp/n6-worker-heartbeat');process.exit(Date.now()-s.mtimeMs<120000?0:1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    image: n6-sufler-migrate:${IMAGE_TAG:-dev}
+    environment:
+      <<: *app-env
+    depends_on:
+      db:
+        condition: service_healthy
+    # одноразовый: web и worker-index ждут service_completed_successfully
+    restart: "no"
+
+  db:
+    image: pgvector/pgvector:0.8.6-pg16
+    environment:
+      POSTGRES_DB: n6
+      POSTGRES_USER: n6
+      POSTGRES_PASSWORD: ${N6_DB_PASSWORD:?пароль БД не задан}
+    command: ["postgres", "-c", "shared_buffers=2GB"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # никакого ports: — это ПОЛНОЕ решение; соседи достучатся по имени db:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n6 -d n6"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine
+    # пароль — переменной окружения, а не аргументом: иначе он виден в `ps` внутри контейнера
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?пароль Redis не задан}
+    command: ["sh", "-c", "exec redis-server --appendonly yes --maxmemory-policy noeviction --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - redisdata:/data
+    # никакого ports: — Redis без публикации и с паролем
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:
+  caddydata:
+  uploads:        # сырой PDF до конца индексации (ADR-018)
+  model-spend:    # журнал попыток платных вызовов (model-cost-contract)

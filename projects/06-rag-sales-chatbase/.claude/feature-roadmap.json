@@ -1,0 +1,860 @@
+{
+  "version": "1.0",
+  "project": "N6 «Суфлёр» — RAG-бот для сайта малого бизнеса, клон Chatbase (CJM H, временно)",
+  "generated": "2026-09-25",
+  "generated_from": [
+    "docs/Specification.md",
+    "docs/Architecture.md",
+    "docs/Pseudocode.md",
+    "docs/ADR.md",
+    "docs/canon.md",
+    "docs/reuse-inventory.md",
+    "docs/Refinement.md",
+    "docs/Completion.md",
+    "docs/validation-report.md"
+  ],
+  "notes": {
+    "state": "Реализация не начиналась: package.json, миграций, тестов нет. Скаффолды docker-compose.yml, Dockerfile, proxy/, .env.example написаны Phase 3/4 и сборкой не проверены. Ни одна фича не done.",
+    "order": "Линейный порядок зависимостей; каждая фича строит на предыдущих. SC-US распределены без пересечений: 43 из 43 (Specification §5). foundation, quota-and-spend и design-shell без sc_ids намеренно: FR-AUTH-001 и FR-LIMIT-004 приняты Gherkin внутри требования и 14 прогонами старта; SC-US-007-3 закрывается в visitor-ask-and-limits, где появляется маршрут.",
+    "reuse": "Поле reuse — строки ADR-012…016 с путём источника (P/ = projects/). Квитанция фичи отвечает по КАЖДОЙ строке: перенесено | адаптировано (что) | написано заново (почему). Молчание — незакрытая строка (reuse-inventory «Как применяется»).",
+    "complexity_field": "Пакетная схема simple|medium|complex (S/M/L). Тира XL нет: quota-and-spend, rag-answer, visitor-ask-and-limits записаны complex, но по .claude/rules/complexity-router.md они XL (деньги, главный инвариант) — остановка на плане у владельца. Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
+    "deferred": "Не в роадмапе недели: оплата ЮKassa и входящий вебхук (ADR-017, UNCONFIRMED), рассылка сводки в Telegram (ADR-015, UNCONFIRMED канал), white-label, сброс пароля, OCR, скриншот сайта, стриминг.",
+    "caveats_phase2": "H1/M1/M2 закрыты правками (validation-report §9, A-N6-020); повторного независимого прохода валидатора не было — рекомендуется до quota-and-spend. L1: фичи widget-runtime-and-badge/visitor-ask-and-limits называют ADR-013, рассылка сводки — ADR-015.",
+    "execution": "Только Anthropic (OWN-017): код — Opus 5.5, план и ревью — Sonnet 5; модель, написавшая код, его не проверяет."
+  },
+  "features": [
+    {
+      "id": "foundation",
+      "number": 1,
+      "title": "Монорепо, схема БД с pgvector, отказ старта, вход по почте, дверь с лимитом",
+      "description": "npm workspaces (apps/web, apps/worker, apps/widget, packages/db, packages/rag, packages/queue); сборка образов из корня; migrate: CREATE EXTENSION vector, 19 сущностей канона §4, CHECK по закрытым перечислениям, UNIQUE, несущие атомарность, HNSW vector_cosine_ops на chunk.embedding; LoadCeilings в web и worker-index — 14 переменных QUOTA_* + модели + N6_PUBLIC_ORIGIN (14 отдельных прогонов, не 10); регистрация/вход/выход, bcrypt вне транзакции, cookie __Host-n6_session; GET /health; proxy/Dockerfile с caddy-ratelimit и проверкой модуля на сборке; compose.test.yml с name: n6-test; scripts/check-env-wiring.sh. Первым делом — docker compose build (скаффолды не проверены сборкой).",
+      "priority": "mvp",
+      "status": "next",
+      "complexity": "complex",
+      "depends_on": [],
+      "blockers": [],
+      "fr_ids": [
+        "FR-AUTH-001",
+        "FR-LIMIT-004",
+        "NFR-OPS-001"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-001",
+        "ADR-012",
+        "ADR-014"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "вход, сессии, bcrypt вне транзакции",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/server/auth.ts, auth-store.ts, auth-handler.ts",
+          "take": "адаптировать: cookie __Host-n6_session, имена таблиц"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "префикс IP, лимит частоты",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/server/ip.ts, rate-limit.ts",
+          "take": "перенести"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "compose, Caddy, воспроизведение",
+          "source": "projects/05-podcast-clips-opus/docker-compose.yml, proxy/Caddyfile, docs/REPRODUCE.md, scripts/check-env-wiring.*, check-env-complete.sh",
+          "take": "адаптировать: образ pgvector, без MinIO, 6 сервисов"
+        },
+        {
+          "adr": "ADR-014",
+          "block": "дверь с лимитом",
+          "source": "projects/04-calorie-vision-cal-ai/Caddyfile, proxy/Dockerfile",
+          "take": "перенести: xcaddy + caddy-ratelimit, XFF → {client_ip}, trusted_proxies"
+        }
+      ],
+      "expected_files": [
+        "package.json",
+        "packages/db/migrations/001_init.sql",
+        "packages/db/src/pool.ts",
+        "packages/rag/src/config.ts",
+        "apps/web/src/server/auth.ts",
+        "apps/web/src/app/health/route.ts",
+        "compose.test.yml",
+        "scripts/check-env-wiring.sh"
+      ]
+    },
+    {
+      "id": "quota-and-spend",
+      "number": 2,
+      "title": "Атомарная квота на 10 scope / 14 переменных, журнал попыток, клиент OpenRouter, EmbedProbe",
+      "description": "packages/db/src/quota.ts — CheckAndConsumeQuota двумя операторами в одной транзакции, откат всех scope, предел по паре (scope, вид) из LoadCeilings; ключи для анонимов (сессия, префикс /24 и /48, бот, глобально); RecordModelSpend в /work/spend/model-spend.jsonl (attempt с fsync до вызова, outcome после); клиент OpenRouter: chat/completions (json_schema, temperature 0, max_tokens 400) + embeddings (dimensions 1536); EmbedProbe при старте worker-index и пробный вызов ANSWER_MODEL в web — ответ ≠ 200 или длина ≠ 1536 валит старт. Тир XL: деньги — остановка на плане у владельца.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-LIMIT-001",
+        "FR-LIMIT-002",
+        "FR-LIMIT-003",
+        "NFR-OPS-001",
+        "FR-INDEX-002"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-001",
+        "ADR-002",
+        "ADR-008",
+        "ADR-011",
+        "ADR-012",
+        "ADR-014"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "атомарная квота",
+          "source": "projects/05-podcast-clips-opus/packages/db/src/quota.ts",
+          "take": "адаптировать: 10 scope, 14 переменных, scope_key с видом предела"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "журнал расхода по попыткам",
+          "source": "projects/05-podcast-clips-opus/apps/worker/src/llm/spend.ts",
+          "take": "перенести"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "клиент OpenRouter",
+          "source": "projects/05-podcast-clips-opus/apps/worker/src/llm/provider.ts",
+          "take": "адаптировать: + эмбеддинги, dimensions 1536"
+        },
+        {
+          "adr": "ADR-014",
+          "block": "ключи квоты для анонимов",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/quota/keys.ts, check-and-consume.ts",
+          "take": "переписать логику в Next (донор на Fastify)"
+        }
+      ],
+      "expected_files": [
+        "packages/db/src/quota.ts",
+        "packages/db/src/ceilings.ts",
+        "packages/rag/src/openrouter.ts",
+        "packages/rag/src/spend.ts",
+        "apps/worker/src/embed-probe.ts",
+        "tests/quota.concurrency.test.ts",
+        "scripts/test-quota-mutations.mjs"
+      ],
+      "notes": "Конкурентные прогоны 1, 4, 5 из .claude/rules/testing.md. SC-US-007-3 закрывается в visitor-ask-and-limits, где появляется маршрут ответа."
+    },
+    {
+      "id": "index-job-core",
+      "number": 3,
+      "title": "Задача индексации: идентификатор до работы, три состояния, fence, сторож",
+      "description": "packages/queue + index_job/job_attempt: CreateSource-каркас с Idempotency-Key → UNIQUE (bot_id, idempotency_key); 202 { index_job_id } ДО постановки; аренда с current_fence + 1; каждая запись WHERE current_fence = :mine; ReadIndexJob (GET /api/index-jobs/{id}: state, pages_done, pages_total, chunks_done, reason); WatchdogTick раз в минуту: running без updated_at 5 мин → failed(stalled), draft старше 24 ч → удалить; «Повторить» — новая серия того же index_job_id; ≤ 2 автоматических попыток шага; предел задачи 15 мин. long-job-contract.md остаётся not-deployed до стенда.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-INDEX-003"
+      ],
+      "sc_ids": [
+        "SC-US-016-3"
+      ],
+      "adr_ids": [
+        "ADR-009",
+        "ADR-012"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "очередь и fence",
+          "source": "projects/05-podcast-clips-opus/packages/queue, packages/db/src/attempts.ts",
+          "take": "перенести"
+        }
+      ],
+      "expected_files": [
+        "packages/queue/src/index.ts",
+        "packages/db/src/index-jobs.ts",
+        "apps/worker/src/watchdog.ts",
+        "apps/web/src/app/api/index-jobs/[id]/route.ts",
+        "tests/index-job.fence.test.ts"
+      ]
+    },
+    {
+      "id": "crawler",
+      "number": 4,
+      "title": "Краулер сайта: SSRF-фильтр, robots.txt, вежливость, извлечение текста",
+      "description": "CheckAddress (схема, порт, учётные данные; все адреса DNS против запретных диапазонов; соединение по проверенному IP; перенаправления вручную ≤ 5, каждое через проверку); robots.txt ДО первой страницы (4xx = разрешено, 5xx/таймаут = unreachable); CrawlSite: только хост + www., <a href> и sitemap.xml, 1 поток, пауза 1000 мс, таймаут 15 с, text/html ≤ 2 МБ с обрывом чтения, linkedom + извлечение основного текста и заголовков; бюджет страниц по плану (50/300, предпросмотр 20); пустая оболочка SPA → no_text с подсказкой про PDF; content_hash страницы; User-Agent с именем продукта и адресом страницы о боте. Без браузера (страж манифеста).",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "index-job-core"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-SOURCE-001",
+        "FR-SOURCE-002",
+        "NFR-SEC-004"
+      ],
+      "sc_ids": [
+        "SC-US-001-2",
+        "SC-US-001-3",
+        "SC-US-001-4"
+      ],
+      "adr_ids": [
+        "ADR-007",
+        "ADR-010",
+        "ADR-016"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "краулер",
+          "source": "— (донора нет, reuse-inventory §9)",
+          "take": "написано заново: нет в донорах"
+        }
+      ],
+      "expected_files": [
+        "apps/worker/src/crawl/check-address.ts",
+        "apps/worker/src/crawl/robots.ts",
+        "apps/worker/src/crawl/crawl-site.ts",
+        "apps/worker/src/crawl/extract-text.ts",
+        "tests/ssrf.test.ts",
+        "tests/robots.test.ts"
+      ]
+    },
+    {
+      "id": "pdf-source",
+      "number": 5,
+      "title": "Загрузка PDF: граница файла, текстовый слой, том uploads",
+      "description": "POST /api/bots/{bot_id}/sources с multipart PDF и Idempotency-Key: предел числа PDF по плану (3/10) ДО приёма; тип по первым байтам %PDF-; размер по Content-Length И по принятым байтам (≤ 10 МБ); файл в томе uploads/<index_job_id>; ExtractPdf через pdfjs-dist: ≤ 100 страниц, ≥ 90 % страниц < 20 символов → no_text_layer; источник ответа — «файл.pdf, с. N»; файл удаляется в finally после done И после failed.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": [
+        "index-job-core"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-SOURCE-003"
+      ],
+      "sc_ids": [
+        "SC-US-004-2",
+        "SC-US-004-3"
+      ],
+      "adr_ids": [
+        "ADR-016",
+        "ADR-018"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "разбор PDF",
+          "source": "— (донора нет, reuse-inventory §9)",
+          "take": "написано заново: нет в донорах"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "загрузка файла с квотой",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/server/upload-*",
+          "take": "адаптировать логику границы файла (двойная проверка размера); S3 не переносится (ADR-018)"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/bots/[botId]/sources/route.ts",
+        "apps/worker/src/pdf/extract-pdf.ts",
+        "tests/pdf-boundary.test.ts"
+      ]
+    },
+    {
+      "id": "chunk-embed",
+      "number": 6,
+      "title": "Фрагменты с контекстом, эмбеддинги в pgvector, продолжение по content_hash",
+      "description": "ChunkDocument: заголовки → абзацы → предложения, цель 500 токенов, потолок 600, перекрытие 80, context_path «заголовок › h2 › h3», эмбеддинг от context_path + текст; EmbedAndStore: пачки ≤ 64, квота account_embed_tokens + global_embed_tokens ДО пачки (предпросмотр — index_job.embed_budget 40 000 + global_embed_tokens), 2 повтора при 429/5xx (каждый — новое списание), длина вектора ≠ 1536 → internal, запись страницы в одной транзакции с проверкой fence; RunIndexJob: страницы с известным content_hash пропускаются; вставка по странице, не пачкой на сайт.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "quota-and-spend",
+        "crawler",
+        "pdf-source"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-INDEX-001",
+        "FR-INDEX-002",
+        "FR-INDEX-003",
+        "NFR-SCALE-001",
+        "NFR-PERF-002"
+      ],
+      "sc_ids": [
+        "SC-US-004-1",
+        "SC-US-016-1",
+        "SC-US-016-2"
+      ],
+      "adr_ids": [
+        "ADR-001",
+        "ADR-002",
+        "ADR-009",
+        "ADR-016"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "чанкинг и эмбеддинги",
+          "source": "— (донора нет)",
+          "take": "написано заново: нет в донорах"
+        }
+      ],
+      "expected_files": [
+        "packages/rag/src/chunk.ts",
+        "apps/worker/src/embed/embed-and-store.ts",
+        "apps/worker/src/run-index-job.ts",
+        "tests/chunk.test.ts",
+        "tests/resume.test.ts"
+      ]
+    },
+    {
+      "id": "rag-answer",
+      "number": 7,
+      "title": "Ответ по фрагментам с источником, «не знаю», изоляция ботов, калибровка порога",
+      "description": "AnswerQuestion (ядро, без маршрута виджета): квота → эмбеддинг вопроса → поиск WHERE bot_id = $1 ORDER BY embedding <=> $2 LIMIT 4 → порог 0.40 ДО модели → промпт (системные правила отдельно, фрагменты в <материал id=F…> как данные, 2 хода истории) → Haiku 4.5 json_schema → ValidateModelAnswer (8 форм мусора, цитата вне меток → unknown) → лог (текст только у unknown). Недоступность модели → «не знаю» с пометкой. Тест изоляции двух ботов с одинаковым прайсом (SC-SEC-001), вредоносная страница, набор калибровки 20 + 20 → docs/measurements/threshold-calibration.md. Тир XL: главный инвариант продукта и платный вызов.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "chunk-embed"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-ANSWER-001",
+        "FR-ANSWER-002",
+        "FR-ANSWER-003",
+        "FR-ANSWER-004",
+        "FR-ANSWER-005",
+        "NFR-SEC-001",
+        "NFR-PERF-001"
+      ],
+      "sc_ids": [
+        "SC-US-002-1",
+        "SC-US-002-2",
+        "SC-US-006-3",
+        "SC-US-006-4"
+      ],
+      "adr_ids": [
+        "ADR-003",
+        "ADR-006",
+        "ADR-011",
+        "ADR-016"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "поиск, промпт, проверка цитат",
+          "source": "— (донора нет)",
+          "take": "написано заново: нет в донорах"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "клиент OpenRouter (chat)",
+          "source": "projects/05-podcast-clips-opus/apps/worker/src/llm/provider.ts",
+          "take": "уже адаптирован в quota-and-spend — сослаться, не дублировать"
+        }
+      ],
+      "expected_files": [
+        "packages/rag/src/answer.ts",
+        "packages/rag/src/prompt.ts",
+        "packages/rag/src/validate-model-answer.ts",
+        "packages/rag/src/search.ts",
+        "tests/validate-model-answer.test.ts",
+        "tests/bot-isolation.test.ts",
+        "docs/measurements/threshold-calibration.md"
+      ]
+    },
+    {
+      "id": "design-shell",
+      "number": 8,
+      "title": "Дизайн-токены, тема, лендинг и тарифы, прибор адаптивности",
+      "description": "globals.css на токенах N5 с нейтральной палитрой (FR-LOOK-008), Onest через next/font, шкала 4 px, пара кнопок 48 px; тема: кабинет тёмный по умолчанию, cookie n6_theme (всё, кроме ровно light, — тёмная); лендинг по порядку FR-LOOK-012 с ОДНИМ полем URL и одним призывом (FR-LOOK-001, 006, 007); страница тарифов (FR-LOOK-002, 013) с видимой строкой снятия бейджа; перенос прибора check-responsive из N5 на маршруты N6. Без маршрута предпросмотра: форма ведёт в preview-flow.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-TARIFF-002"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-012"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "токены, тёмная тема",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/app/globals.css, src/lib/theme.ts, ThemeToggle.tsx",
+          "take": "адаптировать палитру (FR-LOOK-008), шрифт Onest, cookie n6_theme"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "прибор адаптивности",
+          "source": "projects/05-podcast-clips-opus/scripts/check-responsive.sh, check-responsive.mjs, scripts/responsive/rules.mjs, tests/browser/responsive-check.test.ts",
+          "take": "адаптировать: маршруты N6 + чужая страница с виджетом; брать после коммита N5"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/globals.css",
+        "apps/web/src/lib/theme.ts",
+        "apps/web/src/app/page.tsx",
+        "apps/web/src/app/pricing/page.tsx",
+        "scripts/check-responsive.sh",
+        "tests/theme.test.ts"
+      ],
+      "notes": "Look-обязательства FR-LOOK-001/002/006…010/012…014 (ui-only, без алгоритма) проверяются прибором и скриншотами; FR-LOOK-011 — в widget-runtime-and-badge."
+    },
+    {
+      "id": "preview-flow",
+      "number": 9,
+      "title": "Предпросмотр до регистрации и сохранение бота",
+      "description": "POST /api/preview: CheckAddress → квота [(preview_session, <сессия>:create, 1), (ip_previews, префикс, 1), (global_previews, previews, 1)] → bot draft + source + preview (24 ч) + index_job (page_budget 20, embed_budget 40 000) в одной транзакции → 202 { index_job_id } + HttpOnly-cookie; экран «Читаем сайт: k из ≤ 20» (role=progressbar); макет страницы (title, H1, фавикон — ADR-007); POST /api/preview/{token}/ask — квота [(preview_session, <сессия>:answers, 1), (global_previews, preview_answers, 1)] → AnswerQuestion; развёрнутая цитата владельцу; CTA под первым answered (FR-GROWTH-001); ClaimPreview при регистрации: одноразовый UPDATE … WHERE claimed_at IS NULL AND expires_at > now, чужой → 404, свой повторно → 409, истёкший → «создайте заново». Мутация: создание списывает :answers → тест «создание + 10 ответов» краснеет на 10-м.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "rag-answer",
+        "design-shell"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-PREVIEW-001",
+        "FR-PREVIEW-002",
+        "FR-LIMIT-002",
+        "FR-GROWTH-001"
+      ],
+      "sc_ids": [
+        "SC-US-001-1",
+        "SC-US-002-3",
+        "SC-US-003-1",
+        "SC-US-003-2",
+        "SC-US-003-3"
+      ],
+      "adr_ids": [
+        "ADR-007",
+        "ADR-008"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "предпросмотр",
+          "source": "— (донора нет)",
+          "take": "написано заново: нет в донорах"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/preview/route.ts",
+        "apps/web/src/app/api/preview/[token]/ask/route.ts",
+        "apps/web/src/app/api/preview/[token]/claim/route.ts",
+        "apps/web/src/app/preview/[jobId]/page.tsx",
+        "tests/preview-quota.test.ts"
+      ]
+    },
+    {
+      "id": "bot-cabinet",
+      "number": 10,
+      "title": "Кабинет бота: настройки, источники, домены, код установки",
+      "description": "CreateBot (предел ботов по плану: free/nobadge 1, studio 10; public_key 22 символа base64url); PATCH настроек (контакт, приветствие); список источников с прогрессом задачи и причиной отказа + «Повторить»; AddAllowedOrigin (host без пути через new URL, origin https://host); InstallSnippet: без контакта для «не знаю» код не показывается; тег <script async data-bot> + кнопка копирования + точный список CSP-директив хозяину.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": [
+        "preview-flow"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-BOT-001",
+        "FR-BOT-002",
+        "FR-TARIFF-003"
+      ],
+      "sc_ids": [
+        "SC-US-005-1",
+        "SC-US-005-2",
+        "SC-US-005-3",
+        "SC-US-012-3"
+      ],
+      "adr_ids": [
+        "ADR-005",
+        "ADR-012"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "вход и сессии (кабинет)",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/server/auth-handler.ts",
+          "take": "уже перенесено в foundation — сослаться"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/bots/route.ts",
+        "apps/web/src/app/api/bots/[botId]/origins/route.ts",
+        "apps/web/src/app/dashboard/bots/[botId]/install/page.tsx",
+        "tests/install-snippet.test.ts"
+      ]
+    },
+    {
+      "id": "widget-runtime-and-badge",
+      "number": 11,
+      "title": "Виджет: загрузчик, Shadow DOM, конфигурация, бейдж fail-closed",
+      "description": "apps/widget: один <script async data-bot> через currentScript, открытый Shadow DOM, all: initial, окно чата по клику (ленивая загрузка), пузырь 56 px / 16 px (FR-LOOK-011), тема хозяина, доступность (dialog, aria-live, Esc), предупреждение «не сообщайте паспортные и платёжные данные»; сборка IIFE esbuild → apps/web/public/w/widget.<hash>.js, check-bundle-size ≤ 45 КБ gzip (сборка падает выше); GET /w/v1/config: CheckOrigin, бот без контакта → 404, ResolveWidgetConfig с BadgeRequired (строгое равенство, 11 форм); POST /w/v1/event (badge_impression/badge_click); бейдж с MutationObserver. Квитанция называет ADR-013 (перенос L1 Phase 2). Тесты донора badge-integrity, isolation, xss — зелёные до первой фичи виджета.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "bot-cabinet"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-WIDGET-001",
+        "FR-WIDGET-003",
+        "FR-WIDGET-004",
+        "FR-TARIFF-001",
+        "FR-GROWTH-003",
+        "NFR-PERF-003",
+        "NFR-SEC-002"
+      ],
+      "sc_ids": [
+        "SC-US-011-2"
+      ],
+      "adr_ids": [
+        "ADR-004",
+        "ADR-005",
+        "ADR-013"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-013",
+          "block": "загрузчик виджета, Shadow DOM",
+          "source": "projects/01-testimonials-senja/apps/widget/src/index.ts, render.ts, styles.ts, api.ts",
+          "take": "адаптировать: окно чата, POST"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "бейдж с анти-тампером",
+          "source": "projects/01-testimonials-senja/apps/widget/src/badge.ts",
+          "take": "перенести, текст и UTM /?from=<домен>&utm_source=badge"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "сборка и потолок бандла",
+          "source": "projects/01-testimonials-senja/apps/widget/scripts/build.mjs, check-bundle-size.mjs",
+          "take": "адаптировать: потолок 45 КБ"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "конфигурация виджета, установка по Origin",
+          "source": "projects/01-testimonials-senja/apps/web/src/lib/widget-config.ts, widget-install.ts",
+          "take": "адаптировать: + allowlist, first_answer"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "тариф решает сервер",
+          "source": "projects/01-testimonials-senja/apps/web/src/lib/tariff.ts",
+          "take": "адаптировать: три плана, строгое равенство"
+        }
+      ],
+      "expected_files": [
+        "apps/widget/src/index.ts",
+        "apps/widget/src/chat-window.ts",
+        "apps/widget/src/badge.ts",
+        "apps/widget/scripts/check-bundle-size.mjs",
+        "apps/web/src/app/w/v1/config/route.ts",
+        "apps/web/src/lib/badge-required.ts",
+        "tests/badge-required.test.ts"
+      ]
+    },
+    {
+      "id": "visitor-ask-and-limits",
+      "number": 12,
+      "title": "Ответ посетителю на чужом сайте: CORS, пять потолков, установки",
+      "description": "POST /w/v1/ask: лимит двери → zod (≤ 500 символов) → CheckOrigin (403 без ACAO и без списания) → квота 5 scope [(visitor_answers, vs), (ip_answers, префикс), (bot_day_answers, бот, план), (bot_month_answers, бот, план), (global_answers, all)] → AnswerQuestion → плашка источника; отказ 429 с контактом, исход refused_limit, баннер владельцу при исчерпании месяца; ровно один ACAO (ставит только web, Vary: Origin); RecordWidgetInstall по first_answer, свой origin (N6_PUBLIC_ORIGIN) не считается; E2E на ЧУЖОМ origin: host.html на :8099 с ограничительным CSP и враждебным CSS по ВЫДАННОМУ адресу → строки embed-contract.md, check-embed-contract.cjs → 0 на стенде. Тир XL: платный вызов, запускаемый посторонним.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "widget-runtime-and-badge",
+        "rag-answer",
+        "quota-and-spend"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-WIDGET-002",
+        "FR-LIMIT-001",
+        "FR-BOT-003",
+        "FR-ANSWER-003",
+        "FR-GROWTH-006"
+      ],
+      "sc_ids": [
+        "SC-US-006-1",
+        "SC-US-006-2",
+        "SC-US-007-1",
+        "SC-US-007-2",
+        "SC-US-007-3",
+        "SC-US-008-1",
+        "SC-US-008-2",
+        "SC-US-009-1",
+        "SC-US-009-2"
+      ],
+      "adr_ids": [
+        "ADR-005",
+        "ADR-008",
+        "ADR-013",
+        "ADR-014"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-014",
+          "block": "ключи квоты для анонимов",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/quota/keys.ts",
+          "take": "уже перенесено в quota-and-spend — сослаться; конкурентный тест повторяет тест донора N4"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "установка по Origin",
+          "source": "projects/01-testimonials-senja/apps/web/src/lib/widget-install.ts",
+          "take": "адаптировать: first_answer, исключение своего origin"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/w/v1/ask/route.ts",
+        "apps/web/src/server/check-origin.ts",
+        "apps/web/src/server/record-widget-install.ts",
+        "tests/cors-single-acao.test.ts",
+        "tests/visitor-quota.concurrency.test.ts",
+        "tests/e2e/host-8099/host.html"
+      ]
+    },
+    {
+      "id": "public-page-and-summary",
+      "number": 13,
+      "title": "Демо-страница /b/{slug}, сводка «ответил / не знал», события роста",
+      "description": "PublishPublicPage: /b/{slug} без входа, SSR, чат + бейдж, noindex по умолчанию, снятие публикации → 404; вопросы с N6_PUBLIC_ORIGIN не считаются установкой; BotSummary за 7 дней: answered / unknown / refused_limit и последние 20 вопросов без ответа с «Добавить материалы», «вопросов ещё не было» вместо 0 %; RecordGrowthEvent (dedup_key): badge_impression, badge_click, share_cta_*, widget_install, first_answer, public_page_view; вход по бейджу /?from= — атрибуция домена для i и conv%.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": [
+        "visitor-ask-and-limits"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-GROWTH-005",
+        "FR-GROWTH-006",
+        "FR-BOT-004"
+      ],
+      "sc_ids": [
+        "SC-US-013-1",
+        "SC-US-013-2",
+        "SC-US-013-3",
+        "SC-US-010-1",
+        "SC-US-010-2"
+      ],
+      "adr_ids": [
+        "ADR-013"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-013",
+          "block": "публичная страница по слагу",
+          "source": "projects/01-testimonials-senja/apps/web/src/lib/wall.ts",
+          "take": "адаптировать: /b/{slug}, noindex"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/b/[slug]/page.tsx",
+        "apps/web/src/app/api/bots/[botId]/summary/route.ts",
+        "apps/web/src/server/growth-event.ts",
+        "tests/summary.test.ts"
+      ],
+      "notes": "Рассылка сводки в Telegram (ADR-015, донор N2) — НЕ в неделю; первая фича, которая её тронет, называет ADR-015 в квитанции (перенос L1 Phase 2)."
+    },
+    {
+      "id": "tariffs-and-interest",
+      "number": 14,
+      "title": "Экран интереса вместо оплаты, план назначает оператор",
+      "description": "«Убрать бейдж» / «Студия» → экран интереса, запись pro_interest, никаких платёжных полей; SetPlanByOperator (npm run ops:set-plan -- <email> <plan>) с журналом аудита (кто, когда, зачем) и конвертацией атрибуции; пределы плана (страницы, PDF, ответы) читаются из канона; страж по дереву маршрутов — нет /api/webhooks/* (ADR-017). Провайдер и вебхук ЮKassa — спящий код, в сборку недели не входят.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "simple",
+      "depends_on": [
+        "public-page-and-summary"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-TARIFF-002",
+        "FR-TARIFF-003"
+      ],
+      "sc_ids": [
+        "SC-US-011-1"
+      ],
+      "adr_ids": [
+        "ADR-014",
+        "ADR-017"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-014",
+          "block": "провайдер ЮKassa",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/payments/yookassa.ts",
+          "take": "спящий код до своего магазина (ADR-017) — НЕ переносить в неделю"
+        },
+        {
+          "adr": "ADR-014",
+          "block": "вебхук оплаты",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/routes/payments-webhook.ts + projects/01-testimonials-senja/apps/web/src/lib/payment.ts",
+          "take": "спящий код — НЕ переносить в неделю"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/interest/route.ts",
+        "scripts/ops-set-plan.mjs",
+        "tests/no-webhook-routes.test.ts"
+      ]
+    },
+    {
+      "id": "partner-and-studio",
+      "number": 15,
+      "title": "Коды партнёров, анти-фрод, кабинет студии и перенос бота клиенту",
+      "description": "ApplyPartnerCode: /r/{code} ставит HMAC-подписанную cookie на 30 дней, поле кода при регистрации, приглашение студии — третий источник; сила invite > code > cookie; атрибуция pending до назначения плана; анти-фрод — всплеск регистраций по коду замораживает код с записью в аудит; seeding-коды групп seed-net / seed-studio-<имя> / seed-dogfood (partner_code.group); StudioInvite: одноразовая ссылка на 7 дней (хэш токена), принятие → клиент владелец бота, студия видит сводку только для чтения, атрибуция invite; 410 для истёкшего.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "tariffs-and-interest"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-PARTNER-001",
+        "FR-PARTNER-002",
+        "FR-PARTNER-003",
+        "FR-GROWTH-002",
+        "FR-GROWTH-004",
+        "FR-GROWTH-007"
+      ],
+      "sc_ids": [
+        "SC-US-012-1",
+        "SC-US-012-2"
+      ],
+      "adr_ids": [
+        "ADR-012",
+        "ADR-013"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "cookie реферала",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/server/partner.ts, lib/partner-referral.ts",
+          "take": "адаптировать: 30 дней, коды студий"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "реферал и кабинет партнёра",
+          "source": "projects/01-testimonials-senja/apps/web/src/lib/referral.ts, partner.ts",
+          "take": "адаптировать: студии, invite, анти-фрод 50 регистраций / IP / 10 мин как опора"
+        },
+        {
+          "adr": "ADR-013",
+          "block": "брендинг (знак студии)",
+          "source": "projects/01-testimonials-senja/apps/web/src/lib/branding.ts",
+          "take": "отложено до v1 — white-label не в неделю"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/server/partner.ts",
+        "apps/web/src/app/r/[code]/route.ts",
+        "apps/web/src/app/api/studio/invites/route.ts",
+        "apps/web/src/app/api/invites/[token]/accept/route.ts",
+        "tests/attribution.test.ts"
+      ]
+    },
+    {
+      "id": "source-lifecycle",
+      "number": 16,
+      "title": "Обновление и удаление источника",
+      "description": "POST /api/sources/{id}/reindex — переиндексация той же задачей: переэмбеддятся только страницы с изменённым content_hash; DeleteSource: в одной транзакции поднять fence активной задачи и удалить фрагменты/страницы источника; следующий ответ не ссылается на его фрагменты.",
+      "priority": "should",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": [
+        "chunk-embed",
+        "bot-cabinet"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-INDEX-004"
+      ],
+      "sc_ids": [
+        "SC-US-014-1",
+        "SC-US-014-2"
+      ],
+      "adr_ids": [
+        "ADR-009"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "переиндексация",
+          "source": "— (донора нет)",
+          "take": "написано заново: нет в донорах"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/sources/[sourceId]/route.ts",
+        "apps/web/src/app/api/sources/[sourceId]/reindex/route.ts",
+        "tests/delete-source.test.ts"
+      ]
+    },
+    {
+      "id": "account-erasure",
+      "number": 17,
+      "title": "Удаление аккаунта и данных посетителей (152-ФЗ)",
+      "description": "DELETE /api/account с confirm: одна транзакция — status erasing, erase_deadline now + 72 ч, все сессии отозваны, все боты deleted (виджеты сразу 403); WatchdogTick стирает фрагменты, страницы, источники, журналы вопросов, установки, боты, обезличивает growth_event, затем status deleted; question_log.text у unknown — очистка после 14 дней; PDF-тома пусты.",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "medium",
+      "depends_on": [
+        "partner-and-studio",
+        "source-lifecycle"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-AUTH-002",
+        "NFR-SEC-003"
+      ],
+      "sc_ids": [
+        "SC-US-015-1"
+      ],
+      "adr_ids": [
+        "ADR-018"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-012",
+          "block": "вход и сессии (отзыв сессий)",
+          "source": "projects/05-podcast-clips-opus/apps/web/src/server/auth-store.ts",
+          "take": "уже перенесено в foundation — сослаться"
+        }
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/account/route.ts",
+        "apps/worker/src/erase-account.ts",
+        "tests/erasure.test.ts"
+      ],
+      "notes": "Зависит от source-lifecycle (should) только ради переиспользования DeleteSource; если source-lifecycle отложена, удаление пишет стирание источников само."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+# N6 «Суфлёр» — единственная дверь стека. TLS терминирует общий прокси машины
+# (публикация 127.0.0.1:${N6_HTTP_PORT}), поэтому здесь :80.
+#
+# Что эта дверь НЕ делает, и почему это записано:
+# 1. НЕ ставит CORS-заголовков. Access-Control-Allow-Origin для /w/v1/* ставит ТОЛЬКО web,
+#    точным origin из списка бота. Второй такой же заголовок отсюда молча ломает CORS в браузере,
+#    а curl этого не видит (deployment-seams, ADR-005; страж «ровно один ACAO»).
+# 2. НЕ ставит Content-Security-Policy — это делает приложение для своих страниц; виджет живёт
+#    под CSP ХОЗЯИНА, а не нашим.
+# 3. ОГРАНИЧИВАЕТ ЧАСТОТУ ДО разбора тела: 30 мутаций / 120 чтений в минуту на адрес клиента
+#    (Specification §1 п.1, канон — числа в коде, а не в окружении: пустая переменная здесь
+#    означала бы отсутствие предела).
+
+{
+	auto_https off
+	# директива стороннего модуля — порядок задаётся явно и ПЕРВЫМ
+	order rate_limit before basicauth
+
+	# Доверие к X-Forwarded-For. Дверь опубликована только на петлю хоста, поэтому до неё
+	# добираются лишь процессы этой машины (общий TLS-прокси) через шлюз docker-сети — адреса
+	# частных диапазонов. Заголовку прямого клиента веры нет: он сюда не попадает.
+	# При развёртывании сузить до подсети общего прокси (у N4 — 172.21.0.0/16), docs/REPRODUCE.md.
+	servers {
+		trusted_proxies static private_ranges
+		client_ip_headers X-Forwarded-For
+	}
+}
+
+:80 {
+	@mutations not method GET HEAD OPTIONS
+	rate_limit @mutations {
+		zone door_mutate {
+			key {client_ip}
+			events 30
+			window 1m
+		}
+	}
+
+	@reads method GET HEAD OPTIONS
+	rate_limit @reads {
+		zone door_read {
+			key {client_ip}
+			events 120
+			window 1m
+		}
+	}
+
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	# бандл виджета иммутабелен по хэшу — старые хэши остаются в образе (Completion «Rollback»)
+	@widget path_regexp widget ^/w/widget\.[0-9a-f]+\.js$
+	header @widget Cache-Control "public, max-age=31536000, immutable"
+
+	# конфигурация виджета зависит от плана и меняется сразу — без кэша
+	@widgetapi path /w/v1/*
+	header @widgetapi Cache-Control "no-store"
+
+	# X-Forwarded-For ЗАМЕНЯЕТСЯ адресом клиента, а не дописывается (урок N4: Caddy дописывал свой
+	# адрес, приложение читало последний элемент, и все посетители сливались в один префикс)
+	reverse_proxy web:3000 {
+		header_up X-Forwarded-For {client_ip}
+		transport http {
+			read_timeout 60s
+			write_timeout 60s
+		}
+	}
+}

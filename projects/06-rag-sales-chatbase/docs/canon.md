@@ -115,7 +115,7 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 
 Переменные БЕЗ значения по умолчанию (`${VAR:?}`): `N6_PUBLIC_ORIGIN`, `DATABASE_URL`,
 `REDIS_PASSWORD`, `OPENROUTER_API_KEY`, `SESSION_SECRET`, `ANSWER_MODEL`, `EMBED_MODEL`, все
-десять потолков §7 (`QUOTA_*`).
+четырнадцать переменных потолков §7 (`QUOTA_*`; scope — 10, переменных — 14).
 
 ## 7. Числа (единый источник)
 
@@ -142,22 +142,26 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 | `nobadge` | 1 | 300 | 10 | 3000 | 300 | нет | 990 ₽/мес |
 | `studio` | 10 | 300 | 10 | 3000 | 300 | наш бейдж у клиентских ботов на free-клиентах | 4 900 ₽/мес |
 
-**Потолки (`quota_counter.scope`, ровно 10; сутки — `Europe/Moscow`):**
+**Потолки (`quota_counter.scope` — ровно 10 значений; переменных окружения `QUOTA_*` — ровно 14; сутки — `Europe/Moscow`).** Scope, несущий больше одного предела, разводится по `scope_key` (суффикс вида предела), и у КАЖДОГО предела своя переменная — одно имя не держит два числа (A-N6-020, закрывает H1/M2 отчёта Phase 2):
 
-| scope | Ключ | Предел | Переменная |
+| scope | Ключ (`scope_key`) | Предел | Переменная |
 |---|---|---|---|
 | `visitor_answers` | `visitor_session` | 20 ответов/сутки | `QUOTA_VISITOR_ANSWERS` |
 | `ip_answers` | префикс IP /24 (IPv6 /48) | 60 ответов/сутки | `QUOTA_IP_ANSWERS` |
-| `bot_day_answers` | `bot_id` | по плану (50 / 300) | `QUOTA_BOT_DAY_FREE`, `QUOTA_BOT_DAY_PAID` |
-| `bot_month_answers` | `bot_id` | по плану (300 / 3000) | `QUOTA_BOT_MONTH_FREE`, `QUOTA_BOT_MONTH_PAID` |
+| `bot_day_answers` | `bot_id` | по плану: free 50 / платные 300 | `QUOTA_BOT_DAY_FREE`, `QUOTA_BOT_DAY_PAID` |
+| `bot_month_answers` | `bot_id` | по плану: free 300 / платные 3000 | `QUOTA_BOT_MONTH_FREE`, `QUOTA_BOT_MONTH_PAID` |
 | `global_answers` | `all` | 3000 ответов/сутки | `QUOTA_GLOBAL_ANSWERS` |
-| `preview_session` | сессия браузера | 1 предпросмотр + 10 ответов/сутки | `QUOTA_PREVIEW_SESSION` |
+| `preview_session` | `<сессия браузера>:create` | 1 предпросмотр/сутки | `QUOTA_PREVIEW_SESSION_CREATE` |
+| `preview_session` | `<сессия браузера>:answers` | 10 ответов/сутки (создание их НЕ расходует) | `QUOTA_PREVIEW_SESSION_ANSWERS` |
 | `ip_previews` | префикс IP | 3 предпросмотра/сутки | `QUOTA_IP_PREVIEWS` |
-| `global_previews` | `all` | 200 предпросмотров, 1000 ответов предпросмотра/сутки | `QUOTA_GLOBAL_PREVIEWS` |
+| `global_previews` | `previews` | 200 предпросмотров/сутки | `QUOTA_GLOBAL_PREVIEWS` |
+| `global_previews` | `preview_answers` | 1000 ответов предпросмотра/сутки | `QUOTA_GLOBAL_PREVIEW_ANSWERS` |
 | `account_embed_tokens` | `account_id` | 2 000 000 токенов/сутки | `QUOTA_ACCOUNT_EMBED` |
 | `global_embed_tokens` | `all` | 20 000 000 токенов/сутки | `QUOTA_GLOBAL_EMBED` |
 
-Предпросмотр: ≤ 20 страниц, ≤ 40 000 токенов эмбеддингов, живёт 24 ч до сохранения.
+Предпросмотр: ≤ 20 страниц, ≤ 40 000 токенов эмбеддингов (константы кода в `index_job.page_budget`/`embed_budget`, не `quota_counter`; эмбеддинги предпросмотра дополнительно списывают `global_embed_tokens`), живёт 24 ч до сохранения.
+
+Перечень переменных (14): `QUOTA_VISITOR_ANSWERS`=20, `QUOTA_IP_ANSWERS`=60, `QUOTA_BOT_DAY_FREE`=50, `QUOTA_BOT_DAY_PAID`=300, `QUOTA_BOT_MONTH_FREE`=300, `QUOTA_BOT_MONTH_PAID`=3000, `QUOTA_GLOBAL_ANSWERS`=3000, `QUOTA_PREVIEW_SESSION_CREATE`=1, `QUOTA_PREVIEW_SESSION_ANSWERS`=10, `QUOTA_IP_PREVIEWS`=3, `QUOTA_GLOBAL_PREVIEWS`=200, `QUOTA_GLOBAL_PREVIEW_ANSWERS`=1000, `QUOTA_ACCOUNT_EMBED`=2000000, `QUOTA_GLOBAL_EMBED`=20000000. Проверка старта — 14 отдельных прогонов, по одному на ИМЯ переменной, не на scope.
 
 **Худший суточный расход при всех потолках:** 3000 × ≈ $0,0051 + 1000 × ≈ $0,0051 + 22 млн × $0,02/млн (индексация + предпросмотр)
 ≈ **$20,9 в сутки** (оценка ответа: ≈ 3100 входных + ≤ 400 выходных токенов).

@@ -266,4 +266,45 @@ Phase 3 (генерация проектного тулкита) **разреш�
 правки текстовые и не меняют ни одного числа канона, кроме явного исправления scope-модели
 предпросмотра (H1), которое координатор Phase 1 решает сам при первом чтении этого отчёта.
 
+## 9. Повторная проверка после правок
+
+**Дата:** 2026-09-25 · **Исполнитель правок:** Claude Opus 5.5 (агент Phase 3, автономно) ·
+**Ревизия спецификации после правок:**
+`sha256:d2d054b49247067e99888f6e74c220a0f40f6b72cd65f317188099e4ab8ff667` (609 строк) ·
+**Канон:** новая редакция §6–§7, `sha256:cb97296b6fd55dd56fea6e0a659161ce7126c1a017e7486e10ef654689af89e2`.
+Верхняя строка отчёта (`🟡 CAVEATS`) — вердикт исходной ревизии и не переписывается: правки закрывают
+находки, но повторного независимого прохода INVEST/SMART другим агентом не было.
+
+| Находка | Решение | Что изменено (все цитаты числа, не только документ-владелец) |
+|---|---|---|
+| **H1** | разведено по `scope_key` (A-N6-020): `preview_session` → `<сессия>:create` (1/сутки) и `<сессия>:answers` (10/сутки); создание предпросмотра ответы НЕ расходует — 10-й ответ проходит, 11-й отказывает | `canon.md` §7; `Pseudocode.md` `CreatePreview` шаг 2, `AnswerQuestion` шаг 2, `EmbedAndStore` шаг 1 (бюджет 40 000 — поле задачи `embed_budget`, не `preview_session`), `LoadCeilings`, Data Structures (`index_job.page_budget/embed_budget/embed_used`, `quota_counter.scope_key`); `Architecture.md` Reconciliation (новая строка); `Specification.md` FR-LIMIT-002; `model-cost-contract.md`; `Refinement.md` (граничный случай «создание + 10 ответов» и мутация «создание списывает `:answers`»); `test-scenarios.md` SC-US-002-3 |
+| **M1** | строка инвентаря «отвечает с этой VPS» → `CONFIRMED` (проверено 2026-09-25, A-N6-019); открыт только вопрос СВОЕГО ключа N6 — его проверяет `EmbedProbe` при первом старте | `Architecture.md` (строка + абзац под таблицей), `Completion.md` шаг 3, `phase1-summary.md` вопрос №3 и строки инвентаря, `PRD.md` §13 вопрос №5 (в отчёте ошибочно назван `Specification.md` §13 — там раздела нет), `ADR.md` ADR-002, `Research_Findings.md`, `Final_Summary.md` |
+| **M2** | scope — 10, переменных `QUOTA_*` — **14** (не 12: сквозной поиск нашёл второй случай того же класса — `global_previews` держал ДВА числа (200 и 1000) под ОДНОЙ переменной `QUOTA_GLOBAL_PREVIEWS`; добавлена `QUOTA_GLOBAL_PREVIEW_ANSWERS`, а H1 добавил `QUOTA_PREVIEW_SESSION_CREATE/ANSWERS` вместо `QUOTA_PREVIEW_SESSION`) | `canon.md` §6 и §7 (перечень всех 14 со значениями), `Specification.md` FR-LIMIT-004, `Completion.md` (два места), `Pseudocode.md` `LoadCeilings` (14 имён + проверки «персональный ≤ суточного» для пар предпросмотра и `BOT_DAY ≤ BOT_MONTH`), `model-cost-contract.md`, `Refinement.md` («14 отдельных прогонов, по одному на ИМЯ») |
+| **L1** | ПЕРЕНОС, не правка Phase 1: первая фича, трогающая виджет (ADR-013) или уведомления (ADR-015), обязана назвать номер ADR в квитанции | записано в `.claude/feature-roadmap.json` (`adr_ids` и описание фич `widget-runtime-and-badge`, `visitor-ask-and-limits`; `notes` фичи `public-page-and-summary` для ADR-015) и в чек-листе `.claude/agents/code-reviewer.md` §7 |
+
+Сквозной поиск после правок: `grep -rohE 'QUOTA_[A-Z_]+' docs` по всем документам N6 (кроме этого
+отчёта, где старые имена — цитаты находок) даёт ровно 14 имён; `QUOTA_PREVIEW_SESSION` без суффикса
+и фраз «десять потолков»/«10 потолков» не осталось. Ссылки `Specification.md:N` в
+`test-scenarios.md` сдвинуты на +3 после FR-LIMIT-002 и сверены скриптом (43 из 43 SC находятся на
+названной строке).
+
+**Детерминированные стражи, повторный запуск после правок** (из корня N6, `node ../../.claude/hooks/<страж>.cjs .`):
+
+| Страж | Код | Комментарий |
+|---|---|---|
+| `check-docs-complete` | 0 | |
+| `check-growth-trace` | 0 | |
+| `check-look-trace` | 0 | |
+| `check-handoff-manifest` | 0 | |
+| `check-model-cost` | 0 | 5 вызовов, пределы — числа |
+| `check-external-deps` | 0 | 9 CONFIRMED / 2 UNCONFIRMED (Telegram, ЮKassa). **Страж показал, что умеет падать:** первая редакция строки M1 без слова «проверено <дата>» дала код `1` («CONFIRMED без даты проверки»); исправлено форматом строки, не ослаблением проверки |
+| `check-metric-source` | 0 | |
+| `check-embed-contract`, `check-job-contract` | 2 | законно: `not-deployed`, кода и стенда нет |
+| `check-webhook-contract` | 2 | законно: «входящих вебхуков нет в неделе» (ADR-017) |
+
+Кодов `1` после правок нет. Код `2` ни в одной строке не значит «всё в порядке».
+**Ограничение:** правки проверены детерминированными стражами (слой 1) и сквозным поиском, но
+повторного независимого прохода валидатора (Sonnet) по новой ревизии не было — это остаётся
+рекомендацией до первой фичи квоты (`quota-core` в roadmap).
+
 Status: completed

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.next/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.turbo/
+.responsive-artifacts/
+apps/web/public/w/widget.*.js
+test-results/
+playwright-report/

@@ -95,14 +95,14 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 | отвечает моделью `anthropic/claude-haiku-4.5` через chat/completions | OpenRouter | [openrouter.ai/anthropic/claude-haiku-4.5](https://openrouter.ai/anthropic/claude-haiku-4.5) · проверено 2026-09-25 · «Model ID: `anthropic/claude-haiku-4.5`» и «POST https://openrouter.ai/api/v1/chat/completions» | CONFIRMED | FR-ANSWER-002 |
 | принимает для этой модели структурированный ответ по схеме | OpenRouter, каталог `GET /api/v1/models` | [openrouter.ai/api/v1/models](https://openrouter.ai/api/v1/models) · проверено 2026-09-25 · `"response_format","stop","structured_outputs"` в `supported_parameters` модели `anthropic/claude-haiku-4.5` | CONFIRMED | FR-ANSWER-002 (проверку цитат делает наш код — ADR-003) |
 | тарифицирует Haiku 4.5 за токены ($1 / $5 за 1 млн) | OpenRouter, каталог `GET /api/v1/models` | [openrouter.ai/api/v1/models](https://openrouter.ai/api/v1/models) · проверено 2026-09-25 · `"pricing":{"prompt":"0.000001","completion":"0.000005"` | CONFIRMED | FR-LIMIT-001, FR-LIMIT-002, `model-cost-contract.md` |
-| отвечает на запросы с этой VPS (РФ-контур) | OpenRouter, сетевая проба без ключа | `curl -X POST https://openrouter.ai/api/v1/embeddings` с этой машины 2026-09-25 → HTTP 401 `"No cookie auth credentials found"`: сеть доступна, отказ по ключу. Вызов с ключом и оплатой НЕ выполнялся (A-N6-012) | UNCONFIRMED | FR-INDEX-002, FR-ANSWER-002 — до пробы с ключом при старте (Completion, шаг 3) |
+| отвечает на запросы с этой VPS (РФ-контур) | OpenRouter, проба с ключом | проверено 2026-09-25 · проба с ключом 21:19Z (A-N6-019): `POST https://openrouter.ai/api/v1/embeddings`, `openai/text-embedding-3-small`, `dimensions:1536` → HTTP 200, 1536 измерений, 6 токенов, $0.00000012 (ключ стенда N5, временный); ранее без ключа — HTTP 401 (сеть доступна) | CONFIRMED | FR-INDEX-002, FR-ANSWER-002 — сеть подтверждена; СВОЙ ключ N6 проверяет `EmbedProbe` при первом старте (Completion, шаг 3) |
 | индексирует `vector` до 2000 измерений HNSW | pgvector (библиотека в нашем образе, не сервис) | [github.com/pgvector/pgvector](https://github.com/pgvector/pgvector) · проверено 2026-09-25 · «Supported types are: `vector` - up to 2,000 dimensions» | CONFIRMED | FR-INDEX-002, ADR-001 |
 | доставляет оповещение мониторинга оператору | Telegram Bot API `sendMessage` (как у N5) | не проверялось в этой фазе: это операционный канал, не функция продукта | UNCONFIRMED | Completion «Monitoring» (оповещения) — до подтверждения мониторинг читается вручную раз в сутки |
 | принимает платежи и шлёт уведомления | ЮKassa | не проверялось в этой фазе: оплата — спящий код (A-N6-011), собственного тестового магазина N6 нет | UNCONFIRMED | FR-TARIFF-002 (оплата) — отложено, в неделю только экран интереса |
 
-Строка сетевой доступности `UNCONFIRMED` честно: документы шлюза подтверждают способность, но
-ответ шлюза на НАШ ключ из РФ не проверен вызовом. Требования этой строки в Phase 3 входят только с
-пробой при старте `worker-index` (`EmbedProbe`: один эмбеддинг «проба», проверка длины 1536 — иначе
+Строка сетевой доступности — `CONFIRMED` по пробе A-N6-019 (обновлено после Phase 2, находка M1):
+шлюз отвечает с этой VPS на ключ, но ключ был ЧУЖОЙ (стенд N5). «Сеть доступна» доказано, «ключ N6
+работает» — ещё нет; поэтому требования этой строки в Phase 3 входят вместе с пробой при старте `worker-index` (`EmbedProbe`: один эмбеддинг «проба», проверка длины 1536 — иначе
 процесс не стартует). N5 на этой же машине ходит к OpenRouter за chat/completions в проде
 (reuse-inventory §6) — косвенный, не прямой довод.
 
@@ -171,5 +171,6 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 |---|---|---|
 | `index_job.current_fence` | отсутствующая колонка | `RunIndexJob`, `EmbedAndStore`, `DeleteSource`, `WatchdogTick` читают и пишут fence, а в первой редакции Data Structures его не было — поле добавлено в Pseudocode (логический смысл) и в схему `bigint NOT NULL DEFAULT 0` |
 | `quota_counter.scope` | несовпадение набора значений | `global_previews` в каноне несёт ДВА предела (предпросмотры и ответы предпросмотра) при одном scope — разведено на ключи `scope_key = 'previews'` и `'preview_answers'` при `scope = global_previews`; набор scope остаётся 10 |
+| `quota_counter.scope` (preview_session) | один scope — два предела, общий счётчик | после Phase 2 (H1): `CreatePreview` и ответы предпросмотра списывали ОДНУ пару `(preview_session, сессия)` — создание съедало 1 из 10 ответов, SC-US-002-3 давал 9. Разведено на `scope_key = '<сессия>:create'` (1/сутки) и `'<сессия>:answers'` (10/сутки), у каждого своя переменная; у `global_previews` так же две переменные (`QUOTA_GLOBAL_PREVIEWS` / `QUOTA_GLOBAL_PREVIEW_ANSWERS`) — одно имя не держит два числа. Scope — 10, переменных — 14 (A-N6-020) |
 | `question_log.text` | смена типа | логически «только у unknown» — физически `text NULL` + `CHECK (outcome = 'unknown' OR text IS NULL)`, чтобы инвариант держала БД |
 | `bot.account_id` | смена типа | у `draft` владельца нет — колонка `NULL`-допустима, `CHECK (status = 'draft' OR account_id IS NOT NULL)` |
