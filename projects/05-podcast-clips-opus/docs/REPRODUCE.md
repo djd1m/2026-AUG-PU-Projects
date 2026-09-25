@@ -372,6 +372,16 @@ docker compose --project-directory . --env-file .env exec web \
 # 0 — снят; 1 — код не найден, не заблокирован или причина непригодна; 2 — нет DATABASE_URL
 ```
 
+**Тестовые данные для проверки интерфейса** (шаг 0 плана mobile UI, OWN-016): аккаунт, запись со
+всеми галочками, готовые клипы и гостевой пакет — одной командой через настоящий API (≈ 5 мин, центы за
+распознавание). Учётные данные пишутся в файл с правами 0600 ВНЕ репозитория; повторный запуск продолжает:
+
+```bash
+docker run --rm --network <N5_COMPOSE_PROJECT>_default -v "$PWD:/w" -v <каталог>:/out -w /w \
+  -e ORIGIN=https://ваш.домен -e S3_INTERNAL=http://minio:9000 \
+  --entrypoint node <N5_COMPOSE_PROJECT>-web scripts/seed-ui-fixture.mjs /out/запись.mp4 /out/ui-fixture.json
+```
+
 **Мутационные скрипты** (`scripts/test-*-mutations.mjs`) запускать в тестовом контейнере БЕЗ
 приёмочного режима — он превращает любой пропуск в отказ, а скрипт гоняет тесты по одному через `-t`:
 
