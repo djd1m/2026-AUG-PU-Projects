@@ -102,7 +102,7 @@ NFR (ровно 6): NFR-PERF-001 часовая запись → все клип
 - `attribution.source` — ровно 3: `explicit | guest_link | cookie`; `attribution.status` — ровно 4:
   `pending | activated | rejected | partner_deleted` (последний — терминальный, 24.09.2026, RT-009); `replaced_source` — то же множество или null.
 - `partner_code.status` — ровно 2: `active | blocked`.
-- `quota_counter.scope` — ровно 6: `user_minutes | user_uploads | user_upload_refunds | user_llm | global_minutes | global_llm`.
+- `quota_counter.scope` — ровно 7: `user_minutes | user_uploads | user_upload_refunds | user_llm | global_minutes | global_llm | user_rerenders` (седьмой — 25.09.2026, OWN-015).
   `UNIQUE (scope, scope_key, day)`; предел — параметр из окружения, не колонка; списание атомарно:
   `INSERT … (used = 0) ON CONFLICT DO NOTHING`, затем `UPDATE … SET used = used + :n WHERE used + :n
   <= :limit RETURNING used` в одной транзакции — пустой результат и есть отказ (V2-R01/R03).
@@ -111,7 +111,7 @@ NFR (ровно 6): NFR-PERF-001 часовая запись → все клип
 `Clip→clip`, `UsageRecord→growth_event/quota` (адаптация), `Subscription/Payment/Team/TeamInvite/
 PlatformConnection/Publication` — спящие, не удаляются и не расширяются.
 
-## 5. Маршруты (ровно 10 публичных путей) и процедуры tRPC (ровно 15)
+## 5. Маршруты (ровно 10 публичных путей) и процедуры tRPC (ровно 16)
 
 Публичные пути (route handlers, без tRPC): `GET /health` · `GET /c/{code}` (лендинг с атрибуцией
 и счётчиком перехода) · `GET /g/{guest_code}` (гостевая страница, `noindex`, без входа) ·
@@ -124,7 +124,8 @@ multipart сервером: `CompleteMultipartUpload`, `HEAD` размера, т
 Процедуры tRPC: `video.create` (заголовок `Idempotency-Key`, ответ `video_id` + подписанные
 ссылки) · `video.get` · `video.list` · `video.retry` · `clip.list` · `clip.get` · `clip.markDownloaded` ·
 `link.create` · `guest.create` (галочки + согласие) · `guest.send` · `guest.revoke` · `code.apply` ·
-`partner.dashboard` · `interest.create` · `account.delete`.
+`partner.dashboard` · `interest.create` · `account.delete` · `clip.setMusic` (16-я, 25.09.2026, OWN-015:
+выбор/смена музыки у готового клипа, пересборка одного клипа).
 
 ## 6. Сервисы compose (ровно 7 в боевом профиле, +1 в тестовом) и стек
 
@@ -173,6 +174,7 @@ YuNet, ADR-009).
 | Пэк-шот (FR-RENDER-008, ADR-012) | Последние **0,8 с**, только при смешанной музыке. Удар Kenney `explosionCrunch_002` (CC0) на **`STINGER_MARGIN_LU`** ниже речи в полной полосе, потолок `−3 − P_сэмпл` dBTP; вспышка `eq` пик **0,35**, подъём 0,05 с, спад до t0+0,55; под меткой. |
 | Заголовок в начале (FR-RENDER-009, ADR-013) | Галочка, по умолчанию вкл. `clip.title` через `textfile`, `ClipMakerNarrow-Bold`, кегль **84 → 60**, ≤ **3** строки, `y = 0,17·h`, подложка `black@0.55`, показ **2,5 с**, исчезновение **0,3 с**. |
 | Уплотнение пауз (FR-RENDER-010, ADR-015) | Галочка, по умолчанию вкл. Порог — медиана записи − **18** дБ, паузы **0,30–2,0** с, края **0,5** с не трогаются; на стыке остаётся **K = 0,05** с тишины (OWN-012), перекрестие **0,08** с (2 кадра при **25** к/с); уплотнение только при экономии ≥ **3 %** и итоге ≥ **20,0 с + 1 кадр**. План резов хранится в `clip.cut_plan` и не пересчитывается. |
+| Смена музыки у клипа (FR-RESULT-005, ADR-016) | `clip.setMusic`: `auto` / 9 треков / `none`; не больше **20** смен в сутки на аккаунт (`N5_LIMIT_USER_RERENDERS`); пересборка оставляет клип `done` и старый файл доступным; ключи версий `-vN`; срок хранения не продлевается; превью ▶ **20 с**. |
 | Таймаут выделения (FR-SELECT-005) | **240 с**; потолок — окно молчания 5 мин. |
 | Словарь терминов (FR-RENDER-006) | Замена английских названий, записанных распознавателем кириллицей («Велоклауд» → VeloCloud), **только в субтитрах**; сохранённая расшифровка не меняется. Встроенный словарь + `N5_GLOSSARY` (`услышано=правильно;…`); каждая замена — событие `glossary_applied`. Подсказка словаря модели распознавания проверена и **не работает** у исполнителя Together. |
 | Оценка | 0–99 = хук (0–33) + завершённость (0–33) + длина (0–33); каждая с одной фразой объяснения |

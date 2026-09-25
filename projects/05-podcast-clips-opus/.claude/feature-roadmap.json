@@ -689,6 +689,38 @@
         "apps/web/src/app/clips/ClipCard.tsx",
         "apps/web/src/app/upload/Uploader.tsx"
       ]
+    },
+    {
+      "id": "clip-music-choice",
+      "number": 22,
+      "title": "Выбор и смена музыки у готового клипа",
+      "description": "FR-RESULT-005, ADR-016, OWN-015. clip.setMusic (16-я процедура), пересборка без выхода из done, версии ключей -vN, квота user_rerenders (20/сутки), превью ▶; миграция 018.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "high",
+      "depends_on": [
+        "music-library",
+        "pause-compaction"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RESULT-005"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-016"
+      ],
+      "expected_files": [
+        "packages/db/migrations/018_clip_music.sql",
+        "packages/shared/src/music-catalog.ts",
+        "apps/web/src/server/clip-music.ts",
+        "packages/db/src/render.ts",
+        "packages/db/src/attempts.ts",
+        "apps/web/src/server/watchdog.ts",
+        "apps/web/src/server/retention.ts",
+        "apps/web/src/app/clips/ClipCard.tsx",
+        "apps/web/public/music-previews"
+      ]
     }
   ]
 }
