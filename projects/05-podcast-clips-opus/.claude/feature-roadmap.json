@@ -748,6 +748,31 @@
         "vitest.browser.config.ts",
         ".claude/skills/responsive-ui/SKILL.md"
       ]
+    },
+    {
+      "id": "mobile-audit-fixes",
+      "number": 24,
+      "title": "Исправления мобильной вёрстки по прибору",
+      "description": "NFR-UI-001, OWN-016, шаг 2 плана mobile-ui. rem-типографика, цели 44 px, поля 16 px, контраст, порядок экранов, опасная кнопка, склонение plural-ru; правило R9 первого экрана. Прибор по стенду — код 0.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "responsive-check"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "NFR-UI-001"
+      ],
+      "sc_ids": [],
+      "adr_ids": [],
+      "expected_files": [
+        "apps/web/src/app/globals.css",
+        "apps/web/src/lib/plural-ru.ts",
+        "scripts/responsive/rules.mjs",
+        "tests/plural-ru.test.ts",
+        "tests/fixtures/responsive/r9-below.html"
+      ]
     }
   ]
 }
