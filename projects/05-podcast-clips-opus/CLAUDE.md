@@ -17,7 +17,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 плюс три фичи, появившиеся после первого живого прогона: кадр по лицу (ADR-009), субтитры и словарь
 терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Затем 24.09 — фоновая
 CC0-музыка по галочке и библиотека из 11 треков (ADR-011), пэк-шот наложением (ADR-012), заголовок
-в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008), карточка клипа с панелью «Скачать · Ссылка · Гостю» (FR-RESULT-002). Всего **26 фич**, тесты — **857 из 857** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
+в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008), карточка клипа с панелью «Скачать · Ссылка · Гостю» (FR-RESULT-002). Всего **27 фич** (последняя — призыв в конце клипа 27a, ADR-017), тесты — **904 из 904** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
 и MinIO. Живой прогон записи 88,4 мин: 7 клипов за 12 мин 39 с. **Прогон `REPRODUCE.md` с нуля
 (свежий клон, изолированный стек) прошёл 24.09** — `docs/measurements/2026-09-24-reproduce-from-scratch.md`.
 
@@ -53,7 +53,7 @@ CC0-музыка по галочке и библиотека из 11 треко�
    growth-требований, 15 look-требований, 6 NFR, 14 историй и 35 критериев `SC-US-nnn-k`.
 2. **Architecture** ([`docs/Architecture.md`](docs/Architecture.md)) — устройство: 7 сервисов
    compose, отображение 15 сущностей на хранилища, 17 внешних зависимостей, безопасность.
-3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — шестнадцать решений (ADR-001…016), у каждого Confirmation —
+3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — семнадцать решений (ADR-001…017), у каждого Confirmation —
    проверка, обязанная упасть при нарушении решения.
 4. **Pseudocode** ([`docs/Pseudocode.md`](docs/Pseudocode.md)) — 34 алгоритма, контракты маршрутов,
    переходы состояний, стратегия ошибок.
@@ -78,7 +78,7 @@ CC0-музыка по галочке и библиотека из 11 треко�
 
 | Сервис | Технология | Роль |
 |---|---|---|
-| `web` | Next.js 15 App Router, tRPC, SSR | 10 публичных путей и 16 процедур канона §5, сессии, квоты, подпись ссылок S3, постановка заданий, сторож раз в минуту |
+| `web` | Next.js 15 App Router, tRPC, SSR | 10 публичных путей и 17 процедур канона §5, сессии, квоты, подпись ссылок S3, постановка заданий, сторож раз в минуту |
 | `worker-stt` | образ воркера, ffprobe | шаг `probe` (длительность, звук, резерв диска), списание минут, куски 180 с с перекрытием 2 с, `openai/whisper-large-v3` через OpenRouter |
 | `worker-llm` | образ воркера | один вызов `anthropic/claude-sonnet-5` через OpenRouter, в запросе сегменты; диапазоны проверяет НАШ код |
 | `worker-video` | образ воркера, ffmpeg 8.1 + libass + python3/OpenCV 4.12 | `concurrency 1`, кадр по лицу (YuNet), ASS-субтитры, метка, выгрузка в S3 |
@@ -202,7 +202,7 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 | Агент | Когда звать |
 |---|---|
 | [`planner`](.claude/agents/planner.md) | разложить фичу на единицы, назвать связывающие FR/SC/ADR и порядок операций |
-| [`architect`](.claude/agents/architect.md) | схема, 10 путей и 16 процедур, границы сервисов, новый ADR |
+| [`architect`](.claude/agents/architect.md) | схема, 10 путей и 17 процедур, границы сервисов, новый ADR |
 | [`code-reviewer`](.claude/agents/code-reviewer.md) | после каждой единицы: атомарность квоты, фенс, fail-closed метки, согласие, владение, `404` |
 
 | Навык | Когда грузить |
@@ -231,9 +231,9 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 порядке зависимостей: `foundation` → `upload-and-quota` → `queue-and-probe` → `transcription` →
 `selection-and-score` → `render-and-watermark` → `progress-and-clips-screen` → `short-link` →
 `guest-pack` → `partner-codes-and-dashboard` → `limits-ui-and-pro-interest` →
-`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс четырнадцать после живого прогона:
+`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс пятнадцать после живого прогона:
 `transcript-tolerance`, `framing`, `subtitles-and-glossary`, `music-bed`, `pack-shot`,
-`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`, `clip-card`. Указатель с доказательствами — `docs/features/README.md`.
+`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`, `clip-card`, `clip-cta` (27a). Указатель с доказательствами — `docs/features/README.md`.
 
 Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
 `upload-and-quota` и `render-and-watermark` записаны `complex`, хотя по

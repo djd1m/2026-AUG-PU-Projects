@@ -102,6 +102,9 @@ NFR (ровно 6): NFR-PERF-001 часовая запись → все клип
 - `attribution.source` — ровно 3: `explicit | guest_link | cookie`; `attribution.status` — ровно 4:
   `pending | activated | rejected | partner_deleted` (последний — терминальный, 24.09.2026, RT-009); `replaced_source` — то же множество или null.
 - `partner_code.status` — ровно 2: `active | blocked`.
+- `video.cta_kind` — ровно 4: `none | watch_full | subscribe | open_link` (25.09.2026, OWN-018, ADR-017,
+  миграция `020_clip_cta.sql`; по умолчанию `none`). Пара `video.cta_url`: `NULL` ровно при `none`, иначе
+  `https://…` длиной 9–2048 (CHECK). Надписи — закрытый словарь в коде (`packages/shared/src/cta.ts`), не свободный текст.
 - `quota_counter.scope` — ровно 7: `user_minutes | user_uploads | user_upload_refunds | user_llm | global_minutes | global_llm | user_rerenders` (седьмой — 25.09.2026, OWN-015).
   `UNIQUE (scope, scope_key, day)`; предел — параметр из окружения, не колонка; списание атомарно:
   `INSERT … (used = 0) ON CONFLICT DO NOTHING`, затем `UPDATE … SET used = used + :n WHERE used + :n
@@ -111,7 +114,7 @@ NFR (ровно 6): NFR-PERF-001 часовая запись → все клип
 `Clip→clip`, `UsageRecord→growth_event/quota` (адаптация), `Subscription/Payment/Team/TeamInvite/
 PlatformConnection/Publication` — спящие, не удаляются и не расширяются.
 
-## 5. Маршруты (ровно 10 публичных путей) и процедуры tRPC (ровно 16)
+## 5. Маршруты (ровно 10 публичных путей) и процедуры tRPC (ровно 17)
 
 Публичные пути (route handlers, без tRPC): `GET /health` · `GET /c/{code}` (лендинг с атрибуцией
 и счётчиком перехода) · `GET /g/{guest_code}` (гостевая страница, `noindex`, без входа) ·
@@ -125,7 +128,8 @@ multipart сервером: `CompleteMultipartUpload`, `HEAD` размера, т
 ссылки) · `video.get` · `video.list` · `video.retry` · `clip.list` · `clip.get` · `clip.markDownloaded` ·
 `link.create` · `guest.create` (галочки + согласие) · `guest.send` · `guest.revoke` · `code.apply` ·
 `partner.dashboard` · `interest.create` · `account.delete` · `clip.setMusic` (16-я, 25.09.2026, OWN-015:
-выбор/смена музыки у готового клипа, пересборка одного клипа).
+выбор/смена музыки у готового клипа, пересборка одного клипа) · `video.setCta` (17-я, 25.09.2026,
+OWN-018, ADR-017: вид и адрес призыва в конце клипа у записи; в части 27a только сохраняет, без пересборки).
 
 ## 6. Сервисы compose (ровно 7 в боевом профиле, +1 в тестовом) и стек
 

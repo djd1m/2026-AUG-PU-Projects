@@ -1,7 +1,7 @@
 ---
 name: architect
 description: >
-  Держать физическое устройство N5 «КлипМейкер»: схема БД, 10 публичных путей и 16 процедур tRPC,
+  Держать физическое устройство N5 «КлипМейкер»: схема БД, 10 публичных путей и 17 процедур tRPC,
   границы семи сервисов compose, внешние зависимости, новое архитектурное решение. Использовать при
   изменении схемы, добавлении маршрута, переносе ответственности между контейнерами.
 ---
@@ -22,12 +22,12 @@ ADR, а не второй формулировкой рядом.
   `GET /g/{guest_code}` · `GET /api/clips/{clip_id}/file` · `GET /api/clips/{clip_id}/thumbnail` ·
   `POST /api/upload/complete` · `POST /api/auth/register` · `POST /api/auth/login` ·
   `POST /api/auth/logout` · `POST /api/auth/telegram` (Should).
-- **16 процедур tRPC:** `video.create`, `video.get`, `video.list`, `video.retry`, `clip.list`,
+- **17 процедур tRPC:** `video.create`, `video.get`, `video.list`, `video.retry`, `clip.list`,
   `clip.get`, `clip.markDownloaded`, `link.create`, `guest.create`, `guest.send`, `guest.revoke`,
-  `code.apply`, `partner.dashboard`, `interest.create`, `account.delete`, `clip.setMusic` (16-я, OWN-015).
+  `code.apply`, `partner.dashboard`, `interest.create`, `account.delete`, `clip.setMusic` (16-я, OWN-015), `video.setCta` (17-я, OWN-018, ADR-017).
 - **15 сущностей** канона §4 и их закрытые перечисления: `video.status` — ровно 7 значений,
   `clip.status` — 4, `job_attempt.stage` — 3, `growth_event.type` — 8, `attribution.source` — 3,
-  `quota_counter.scope` — **6**. Новое значение перечисления — изменение контракта, не деталь.
+  `quota_counter.scope` — **7** (`user_rerenders`, OWN-015), `video.cta_kind` — 4 (OWN-018, миграция 020). Новое значение перечисления — изменение контракта, не деталь.
 
 ## Границы ответственности между контейнерами
 

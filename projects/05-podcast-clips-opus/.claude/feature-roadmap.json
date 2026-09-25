@@ -825,6 +825,33 @@
         "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
         "tests/clip-card.test.ts"
       ]
+    },
+    {
+      "id": "clip-cta",
+      "number": 27,
+      "title": "Призыв в конце клипа (27a: выбор и кнопка на /c/)",
+      "description": "OWN-018, ADR-017, FR-RESULT-006, A-2509-04. 27a done: выбор при загрузке/на экране записи, video.setCta, кнопка на /c/. 27b (надпись в кадре + пересборка всех клипов записи) — в очереди.",
+      "priority": "post-mvp",
+      "status": "in_progress",
+      "complexity": "complex",
+      "depends_on": [
+        "clip-card"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RESULT-006"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-017"
+      ],
+      "expected_files": [
+        "packages/shared/src/cta.ts",
+        "packages/db/migrations/020_clip_cta.sql",
+        "apps/web/src/server/video-cta.ts",
+        "apps/web/src/app/videos/CtaFields.tsx",
+        "tests/clip-cta.test.ts"
+      ]
     }
   ]
 }
