@@ -43,7 +43,8 @@ function put(url, body) {
 // Повторный запуск продолжает: учётные данные и video_id пишутся в файл сразу, а не в конце.
 const prior = existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : null;
 const email = prior?.email ?? `ui-fixture-${Date.now()}@example.ru`, password = prior?.password ?? randomBytes(18).toString('base64url');
-const save = extra => writeFile(out, JSON.stringify({ ...(prior ?? {}), origin: ORIGIN, email, password, ...extra }, null, 2), { mode: 0o600 });
+const progress = { ...(prior ?? {}), origin: ORIGIN, email, password };
+const save = extra => { Object.assign(progress, extra); return writeFile(out, JSON.stringify(progress, null, 2), { mode: 0o600 }); };
 let r;
 if (!prior) {
   r = await post('/api/auth/register', { email, password });
@@ -86,18 +87,31 @@ const list = Array.isArray(clips) ? clips : clips?.clips ?? [];
 if (!list.length) fail('clip.list', JSON.stringify(clips).slice(0, 300));
 console.log(`✅ клипов: ${list.length}`);
 
-r = await post('/api/trpc/guest.create', { video_id: upload.video_id, clip_ids: list.slice(0, 2).map(c => c.clip_id), guest_name: 'Тестовый гость',
-  consent_confirmed: true, consent_version: 'guest-publication-v1',
-  consent_text_hash: (await import('node:crypto')).createHash('sha256').update('Гость согласен на публикацию этих клипов').digest('hex') });
-const pack = data(r);
-if (r.status >= 300 || !pack?.guest_pack_id) fail('guest.create', `${r.status} ${JSON.stringify(r.body).slice(0, 300)}`);
-r = await post('/api/trpc/guest.send', { guest_pack_id: pack.guest_pack_id, channel: 'copy' });
-const sent = data(r);
-if (r.status >= 300) fail('guest.send', `${r.status} ${JSON.stringify(r.body).slice(0, 300)}`);
+let short_code = prior?.short_code;
+if (!short_code) {
+  r = await post('/api/trpc/link.create', { clip_id: list[0].clip_id });
+  short_code = data(r)?.code;
+  if (r.status >= 300 || !short_code) fail('link.create', `HTTP ${r.status}: короткая ссылка не создана`);
+  await save({ video_id: upload.video_id, short_code });
+}
 
-const fixture = { created_at: new Date().toISOString(), origin: ORIGIN, email, password, video_id: upload.video_id,
-  screens: { dashboard: '/dashboard', video: `/dashboard/videos/${upload.video_id}`, guest: sent?.url ?? pack.url,
-    short_links: list.map(c => c.short_url ?? c.link?.url ?? null).filter(Boolean) }, clip_ids: list.map(c => c.clip_id) };
+if (!progress.guest_pack_id) {
+  r = await post('/api/trpc/guest.create', { video_id: upload.video_id, clip_ids: list.slice(0, 2).map(c => c.clip_id), guest_name: 'Тестовый гость',
+    consent_confirmed: true, consent_version: 'guest-publication-v1',
+    consent_text_hash: (await import('node:crypto')).createHash('sha256').update('Гость согласен на публикацию этих клипов').digest('hex') });
+  const pack = data(r);
+  if (r.status >= 300 || !pack?.guest_pack_id) fail('guest.create', `${r.status} ${JSON.stringify(r.body).slice(0, 300)}`);
+  await save({ guest_pack_id: pack.guest_pack_id, screens: {} });
+}
+if (!progress.screens?.guest) {
+  r = await post('/api/trpc/guest.send', { guest_pack_id: progress.guest_pack_id, channel: 'copy' });
+  const guest = data(r)?.url;
+  if (r.status >= 300 || !guest) fail('guest.send', `HTTP ${r.status}: гостевая ссылка не получена`);
+  await save({ screens: { guest } });
+}
+
+const fixture = { ...progress, created_at: new Date().toISOString(), video_id: upload.video_id, short_code,
+  screens: { dashboard: '/dashboard', video: `/dashboard/videos/${upload.video_id}`, guest: progress.screens.guest }, clip_ids: list.map(c => c.clip_id) };
 await writeFile(out, JSON.stringify(fixture, null, 2), { mode: 0o600 });
 console.log(`✅ гостевая страница ${fixture.screens.guest}`);
 console.log(`FIXTURE=${out}`);

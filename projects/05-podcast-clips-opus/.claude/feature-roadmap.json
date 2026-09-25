@@ -721,6 +721,33 @@
         "apps/web/src/app/clips/ClipCard.tsx",
         "apps/web/public/music-previews"
       ]
+    },
+    {
+      "id": "responsive-check",
+      "number": 23,
+      "title": "Автоматическая проверка мобильной вёрстки",
+      "description": "NFR-UI-001, OWN-016. scripts/check-responsive.* в контейнере Playwright 1.60 (WebKit+Chromium), правила R1–R8 с axe, навык responsive-ui, тестовые данные seed-ui-fixture. Базовая линия 25.09.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "clip-music-choice"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "NFR-UI-001"
+      ],
+      "sc_ids": [],
+      "adr_ids": [],
+      "expected_files": [
+        "scripts/check-responsive.mjs",
+        "scripts/check-responsive.sh",
+        "scripts/responsive/rules.mjs",
+        "scripts/seed-ui-fixture.mjs",
+        "tests/browser",
+        "vitest.browser.config.ts",
+        ".claude/skills/responsive-ui/SKILL.md"
+      ]
     }
   ]
 }

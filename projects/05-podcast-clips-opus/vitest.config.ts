@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import path from 'node:path';
 export default defineConfig({
   esbuild: { jsx: 'automatic' },
@@ -16,6 +16,6 @@ export default defineConfig({
     '@clipmaker/queue': path.resolve('packages/queue/src/index.ts'),
     '@clipmaker/db': path.resolve('packages/db/src/index.ts'),
   } },
-  test: { reporters: ['default', './scripts/test-skip-reporter.ts'], include: ['tests/**/*.test.ts'], testTimeout: 15000, hookTimeout: 15000,
+  test: { exclude: [...configDefaults.exclude, 'tests/browser/**'], reporters: ['default', './scripts/test-skip-reporter.ts'], include: ['tests/**/*.test.ts'], testTimeout: 15000, hookTimeout: 15000,
     pool: 'forks', maxWorkers: 2, fileParallelism: false },
 });

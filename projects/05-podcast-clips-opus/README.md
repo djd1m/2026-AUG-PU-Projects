@@ -78,7 +78,7 @@ bash ../../scripts/check-port-conflicts.sh .         # порты этой ма�
 
 ```bash
 cp .env.example .env        # заполнить секреты (openssl rand -hex 24); потолки и N5_PUBLIC_ORIGIN дефолтов НЕ имеют
-docker compose --project-directory . --env-file .env --profile test run --rm --build test   # 786 тестов на реальных PostgreSQL, Redis, MinIO
+docker compose --project-directory . --env-file .env --profile test run --rm --build test   # 795 тестов на реальных PostgreSQL, Redis, MinIO
 docker compose --project-directory . --env-file .env --profile test --profile edge up -d --build
 ```
 
@@ -94,7 +94,7 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 |---|---|
 | [`docs/REPRODUCE.md`](docs/REPRODUCE.md) | **как поднять заново в другом окружении**; расхождения реализации с замыслом |
 | [`docs/pipeline-walkthrough.md`](docs/pipeline-walkthrough.md) | конвейер по шагам: акторы, инструменты, ресурсы, модели |
-| [`docs/features/README.md`](docs/features/README.md) | 22 фичи и где лежит доказательство каждой |
+| [`docs/features/README.md`](docs/features/README.md) | 23 фичи и где лежит доказательство каждой |
 | [`CLAUDE.md`](CLAUDE.md) | контекст проекта, статус, ключевые инварианты, порядок чтения |
 | [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) | цикл разработки, стражи, проверка на стенде |
 | [`docs/canon.md`](docs/canon.md) | источник имён и чисел |
@@ -118,7 +118,7 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 ├── apps/web/              # Next.js: экраны, tRPC, сессии, квоты, подпись ссылок S3
 ├── apps/worker/           # один образ на три обработчика: stt, select, render (+ модель детектора лиц)
 ├── packages/              # db (миграции), shared (перечисления, геометрия метки, таймкоды), s3, queue
-├── tests/                 # 97 файлов, 786 тестов
+├── tests/                 # 98 файлов, 795 тестов
 ├── scripts/               # проверки стыков, мутационные испытания стражей, переключение домена
 ├── proxy/Caddyfile
 └── docs/
@@ -137,6 +137,6 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 | Phase 2 — Validation | ✅ 21.09.2026, вердикт 🟡 CAVEATS (46 находок, блокеров не осталось) |
 | Phase 3 — Toolkit | ✅ 21.09.2026 |
 | Phase 4 — Finalize | ✅ |
-| Реализация | ✅ 12 фич MVP + 10 после живого прогона (кадр, субтитры, таймкоды, музыка, библиотека, пэк-шот, заголовок) + справедливость партнёрки + уплотнение пауз + смена музыки у клипа, все `done`; 786 тестов зелёные; прогон с нуля пройден (24.09.2026) |
+| Реализация | ✅ 12 фич MVP + 11 после живого прогона (кадр, субтитры, таймкоды, музыка, библиотека, пэк-шот, заголовок) + справедливость партнёрки + уплотнение пауз + смена музыки у клипа + прибор мобильной вёрстки, все `done`; 795 тестов зелёные; прогон с нуля пройден (24.09.2026) |
 | Живой прогон | ✅ запись 88,4 мин → 7 клипов за 12 мин 39 с (23.09.2026) |
 | Выпуск на короткий домен | ✅ `clipmkr.ru` с 24.09.2026, стенд собран из `main` |
