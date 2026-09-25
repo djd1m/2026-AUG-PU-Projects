@@ -799,6 +799,32 @@
         "apps/web/src/app/globals.css",
         "tests/theme.test.ts"
       ]
+    },
+    {
+      "id": "clip-card",
+      "number": 26,
+      "title": "Карточка клипа: плашка оценки, объяснения раскрытием, панель действий",
+      "description": "FR-RESULT-002 полностью, шаг 4 плана mobile-ui. «Гостю» отмечает клип в форме гостя (ADR-008). FR-GROWTH-001 не закрыт — шаг 6.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "dark-theme"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-RESULT-002"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-008"
+      ],
+      "expected_files": [
+        "apps/web/src/app/clips/ClipCard.tsx",
+        "apps/web/src/app/clips/GuestPacks.tsx",
+        "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
+        "tests/clip-card.test.ts"
+      ]
     }
   ]
 }

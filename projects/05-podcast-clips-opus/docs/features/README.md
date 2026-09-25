@@ -36,6 +36,7 @@
 | 23 | `responsive-check` | Автоматическая проверка мобильной вёрстки (прибор + навык) | post-mvp | [05_completion.md](responsive-check/05_completion.md) |
 | 24 | `mobile-audit-fixes` | Исправления мобильной вёрстки по прибору + правило R9 (первый экран) | post-mvp | [05_completion.md](mobile-audit-fixes/05_completion.md) |
 | 25 | `dark-theme` | Тёмная тема по умолчанию, светлая по выбору; прибор в двух темах | post-mvp | [05_completion.md](dark-theme/05_completion.md) |
+| 26 | `clip-card` | Карточка клипа: плашка оценки, объяснения раскрытием, «Скачать · Ссылка · Гостю» | post-mvp | [05_completion.md](clip-card/05_completion.md) |
 
 ## Сквозные документы, без которых фичи не читаются
 

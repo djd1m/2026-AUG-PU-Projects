@@ -17,7 +17,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 плюс три фичи, появившиеся после первого живого прогона: кадр по лицу (ADR-009), субтитры и словарь
 терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Затем 24.09 — фоновая
 CC0-музыка по галочке и библиотека из 11 треков (ADR-011), пэк-шот наложением (ADR-012), заголовок
-в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008). Всего **25 фич**, тесты — **841 из 841** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
+в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008), карточка клипа с панелью «Скачать · Ссылка · Гостю» (FR-RESULT-002). Всего **26 фич**, тесты — **857 из 857** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
 и MinIO. Живой прогон записи 88,4 мин: 7 клипов за 12 мин 39 с. **Прогон `REPRODUCE.md` с нуля
 (свежий клон, изолированный стек) прошёл 24.09** — `docs/measurements/2026-09-24-reproduce-from-scratch.md`.
 
@@ -231,9 +231,9 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 порядке зависимостей: `foundation` → `upload-and-quota` → `queue-and-probe` → `transcription` →
 `selection-and-score` → `render-and-watermark` → `progress-and-clips-screen` → `short-link` →
 `guest-pack` → `partner-codes-and-dashboard` → `limits-ui-and-pro-interest` →
-`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс тринадцать после живого прогона:
+`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс четырнадцать после живого прогона:
 `transcript-tolerance`, `framing`, `subtitles-and-glossary`, `music-bed`, `pack-shot`,
-`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`. Указатель с доказательствами — `docs/features/README.md`.
+`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`, `clip-card`. Указатель с доказательствами — `docs/features/README.md`.
 
 Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
 `upload-and-quota` и `render-and-watermark` записаны `complex`, хотя по
