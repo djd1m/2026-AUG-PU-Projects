@@ -3,6 +3,7 @@
 :root { color-scheme:dark; --ink:#eef2ec; --muted:#a9b4ac; --paper:#0e1311; --surface:#1a211d; --surface-2:#262f2a; --line:#3f4b45; --green:#8fd4a4; --btn-bg:#dcefd9; --btn-fg:#0f1a14; --brand-bg:#8fd4a4; --brand-fg:#0f1a14; --media-bg:#060807; --media-fg:#d5ddd6; --focus:#f2b552; --shadow:#00000066; --upload:#1c2a20; --upload-line:#3c5543; --hover:#222b26; --danger:#ff9f94; --field-bg:var(--surface-2); --notice-bg:#2d2616; --notice-line:#d6a94a; --empty-line:#5b6962; --running-bg:#18223a; --running-line:#5d79a8; --running-fg:#a9c4f0; --success-bg:#18291a; --success-line:#4f7a3c; --success-fg:#a8d98a; --failure-bg:#34191a; --failure-line:#a3554c; --failure-fg:#ffa59a; --silent-bg:#302611; --silent-line:#8d7233; --silent-fg:#f0cd7a; --score-bg:#dcefd9; --score-fg:#0f1a14; --select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23eef2ec' stroke-width='2'/%3E%3C/svg%3E"); --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem; --nav-h:calc(3.8125rem + max(1rem,env(safe-area-inset-top))); }
 :root[data-theme=light] { color-scheme:light; --ink:#202a27; --muted:#56615a; --paper:#f7f8f3; --surface:#ffffff; --surface-2:#e8edde; --line:#dce1d7; --green:#305d45; --btn-bg:#305d45; --btn-fg:#ffffff; --brand-bg:#305d45; --brand-fg:#dcefbb; --media-bg:#1d2822; --media-fg:#e2e7db; --focus:#9c5e0a; --shadow:#263b2610; --upload:#eaf0df; --upload-line:#d8e2cc; --hover:#f4f6ee; --danger:#922f27; --field-bg:var(--surface); --notice-bg:#fff4da; --notice-line:#b99138; --empty-line:#c8d1c0; --running-bg:#edf2fa; --running-line:#9db1d1; --running-fg:#304e80; --success-bg:#eaf4df; --success-line:#a9c18f; --success-fg:#365620; --failure-bg:#fae9e6; --failure-line:#df9e95; --failure-fg:#922f27; --silent-bg:#fff3d9; --silent-line:#d5b564; --silent-fg:#7c5919; --score-bg:#ffffff; --score-fg:#305d45; --select-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m3 6 5 5 5-5' fill='none' stroke='%23202a27' stroke-width='2'/%3E%3C/svg%3E"); }
 * { box-sizing:border-box; }
+html { background:var(--paper); }
 body { margin:0; background:var(--paper); color:var(--ink); font:1rem/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 a { color:inherit; text-underline-offset:0.25rem; }
 button { font:inherit; }
@@ -111,7 +112,7 @@ main:not(.landing) > * + * { margin-top:var(--space-10); }
 .status-panel button { width:100%; }
 .check { display:flex; gap:.75rem; align-items:center; min-height:2.75rem; margin-block:.5rem; overflow-wrap:anywhere; }
 input[type=checkbox],input[type=radio] { width:1.25rem; height:1.25rem; flex-shrink:0; margin:0; }
-select { appearance:none; -webkit-appearance:none; width:100%; min-width:0; min-height:2.75rem; padding:.5rem 2rem .5rem .75rem; border:1px solid var(--muted); border-radius:.5rem; color:var(--ink); background:var(--field-bg) var(--select-arrow) no-repeat right .5rem center; }
+select { appearance:none; -webkit-appearance:none; width:100%; min-width:0; min-height:2.75rem; padding:.5rem 2rem .5rem .75rem; border:1px solid var(--muted); border-radius:.5rem; color:var(--ink); background-color:var(--field-bg); background-image:var(--select-arrow); background-repeat:no-repeat; background-position:right .5rem center; /* раздельными свойствами: так проще читать и переопределять */ }
 summary { min-height:2.75rem; padding-block:.625rem; cursor:pointer; }
 button,.button { min-width:2.75rem; }
 .danger { color:var(--danger); border-color:var(--danger); background:var(--surface); margin-top:var(--space-4); }
@@ -160,3 +161,12 @@ button,.button { min-width:2.75rem; }
   .clip-body { padding:1.5rem; }
   .clip-body .clip-actions { gap:var(--space-3); }
 }
+/* Призыв в конце (ADR-017, FR-RESULT-006): поле выбора и панель на экране записи. Только токены темы. */
+.cta-fields { margin-block:var(--space-2) var(--space-3); }
+.cta-fields label { display:block; font-weight:600; font-size:0.875rem; margin-top:var(--space-3); }
+.cta-fields select { margin-block:var(--space-2) var(--space-1); }
+.cta-fields small { display:block; margin-bottom:var(--space-3); }
+.cta-panel { padding:var(--space-4); background:var(--surface); border:0.0625rem solid var(--line); border-radius:0.8125rem; margin:0 0 2.25rem; max-width:40rem; }
+.cta-panel h2 { font-size:1.3125rem; margin-bottom:var(--space-2); }
+.cta-panel button { margin-top:var(--space-2); }
+@media (min-width:601px) { .cta-panel { padding:var(--space-6); } }

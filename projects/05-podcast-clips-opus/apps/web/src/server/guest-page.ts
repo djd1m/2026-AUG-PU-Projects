@@ -21,7 +21,7 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
 function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string, theme: Theme) {
   return `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${theme}"><meta name="theme-color" content="${THEME_COLOR[theme]}"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow"><title>Ваши клипы — КлипМейкер</title>
-<style>${THEME_TOKENS}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:1.125rem/1.6 system-ui,sans-serif}
+<style>${THEME_TOKENS}*{box-sizing:border-box}html{background:var(--paper)}body{margin:0;background:var(--paper);color:var(--ink);font:1.125rem/1.6 system-ui,sans-serif}
 main{max-width:65.625rem;margin:auto;padding:1.5rem}h1{font-size:clamp(2rem,4vw,2.625rem);line-height:1.2;overflow-wrap:anywhere}
 .clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16.25rem),1fr));gap:1.5rem}
 article{min-width:0;background:var(--surface);padding:1rem;border-radius:1rem}h2{overflow-wrap:anywhere;font-size:1.375rem}

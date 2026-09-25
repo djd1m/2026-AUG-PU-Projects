@@ -5,12 +5,13 @@ import { moscowDay, quotaResetAt } from '@clipmaker/shared/upload';
 import { failureMessages, scoreSchema, type VideoScreen, type ClipScreen } from '../lib/screen-contract';
 import { UploadError } from './upload-contract';
 import { assertRetryable } from './video-retry';
+import { readStoredCta } from '@clipmaker/shared/cta';
 
 export interface VideoRow {
   id: string; status: VideoStatus; created_at: Date; updated_at: Date; finished_at: Date | null;
   duration_seconds: string | null; stage_progress: number | null; clips_done: number | null; clips_total: number | null;
   failure_reason: VideoFailureReason | null; object_key: string | null; actual_bytes: string | null;
-  plan: string; wait_reason: string | null;
+  plan: string; wait_reason: string | null; cta_kind?: string | null; cta_url?: string | null;
 }
 export function presentVideo(row: VideoRow, now = new Date()): VideoScreen {
   const state = row.status === 'done' ? 'успех' : row.status === 'failed' ? 'отказ' : 'выполняется';
@@ -27,7 +28,8 @@ export function presentVideo(row: VideoRow, now = new Date()): VideoScreen {
     }
     if (row.clips_total && row.clips_done === row.clips_total) nextAction = null;
   }
-  return { video_id: row.id, status: row.status, created_at: row.created_at.toISOString(), updated_at: row.updated_at.toISOString(),
+  const cta = readStoredCta(row.cta_kind, row.cta_url);
+  return { video_id: row.id, status: row.status, cta_kind: cta.kind, cta_url: cta.url, created_at: row.created_at.toISOString(), updated_at: row.updated_at.toISOString(),
     duration_seconds: row.duration_seconds === null ? null : Number(row.duration_seconds), user_state: state,
     stage_label: noResponse ? 'Нет ответа от обработки, проверяем' : row.wait_reason === 'no_disk' && state === 'выполняется' ? 'Ждём свободного места' : stages[row.status],
     stage_progress: row.stage_progress, clips_done: row.clips_done ?? 0, clips_total: row.clips_total ?? 0,

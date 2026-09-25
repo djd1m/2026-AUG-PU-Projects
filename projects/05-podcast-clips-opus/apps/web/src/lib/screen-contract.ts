@@ -1,6 +1,6 @@
 import { quotaMessages } from './limits-contract';
 import { z } from 'zod';
-import type { VideoStatus, VideoFailureReason, ClipStatus } from '@clipmaker/shared/enums';
+import type { VideoStatus, VideoFailureReason, ClipStatus, CtaKind } from '@clipmaker/shared/enums';
 
 export const failureMessages = {
   too_large: 'Файл больше 2 ГБ.', not_media: 'Формат файла не поддерживается.',
@@ -19,6 +19,7 @@ export interface VideoScreen {
   stage_label: string; stage_progress: number | null; clips_done: number; clips_total: number;
   no_response: boolean; failure_reason: string | null; next_action: 'retry' | 'upload' | 'tomorrow' | null;
   retry_after: string | null; poll_after_seconds: 5;
+  cta_kind: CtaKind; cta_url: string | null;
 }
 const explanation = z.string().trim().min(1);
 export const scoreSchema = z.object({

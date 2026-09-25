@@ -8,6 +8,7 @@ import type { VideoScreen, ClipScreen } from '../../../lib/screen-contract';
 import { ClipCard } from '../../clips/ClipCard';
 import { GuestPacks, type GuestPreselect } from '../../clips/GuestPacks';
 import type { GuestPackSummary } from '../../../lib/guest-contract';
+import { VideoCtaForm } from '../CtaFields';
 export function VideoHeader({ video }: { video: VideoScreen }) {
   return <header className="detail-header"><Link href="/dashboard">← Все записи</Link><p className="eyebrow">ВАШ ВЫПУСК</p>
     <h1>Из длинного разговора —<br />короткие моменты</h1><p className="video-id">video_id: <code>{video.video_id}</code></p></header>;
@@ -74,5 +75,6 @@ export function VideoDetail({ videoId, initialVideo, initialClips, initialPacks 
       <div className="clip-grid">{clips.map(clip => <ClipCard key={clip.clip_id} clip={clip} onSendToGuest={sendToGuest} onMusicQueued={track => setClips(current => current.map(item => item.clip_id === clip.clip_id
         ? { ...item, music_track_id: track === 'auto' ? null : track, rerendering: true } : item))} />)}</div>
       {!clips.length && <p className="empty">{video.status === 'failed' ? 'Готовых клипов нет.' : 'Фрагменты появятся здесь после выделения.'}</p>}</section>
+    <VideoCtaForm videoId={videoId} initialKind={initialVideo.cta_kind} initialUrl={initialVideo.cta_url} />
     {consentHash && <GuestPacks videoId={videoId} clips={clips} initialPacks={initialPacks} consentHash={consentHash} preselect={guestPreselect} />}</>;
 }

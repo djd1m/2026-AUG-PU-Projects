@@ -59,6 +59,20 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) describe(name
       expect((await firstScreenRule(page, '.cta'))[0].message).toBe('действие не найдено');
     }
   }));
+  // Фича 27a clip-cta: настоящая страница /c/ (фикстуры сверяет с обработчиком tests/clip-cta.test.ts).
+  // .cta — основное действие: кнопка призыва автора, если он задан, иначе «Сделать свои клипы».
+  for (const [page_, expected] of [['c-cta-dark', 'Смотреть полный выпуск →'], ['c-cta-light', 'Смотреть полный выпуск →'], ['c-plain-dark', 'Сделать свои клипы']] as const) {
+    for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }, { width: 360, height: 740 }]) {
+      it(`R9 /c/ ${page_} ${viewport.width}x${viewport.height}: основное действие в первом экране`, () => fixture(page_, async page => {
+        expect(await firstScreenRule(page, '.cta')).toEqual([]);
+        expect(await page.locator('.cta').evaluateAll(els => els.map(el => el.textContent))).toEqual([expected]);
+      }, viewport));
+    }
+    it(`/c/ ${page_}: R1/R2/R5 и контраст без отказов`, () => fixture(page_, async page => {
+      expect((await domRules(page, ['R1', 'R2', 'R5'])).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
+      expect((await axeRule(page)).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
+    }));
+  }
   it('чистая страница: все отказы отсутствуют', () => fixture('clean', async page => {
     expect([...await domRules(page), ...await axeRule(page), ...await textZoomRule(page)].filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
   }));
@@ -86,6 +100,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) describe(name
       <a class="video-row" href="/"><span class="video-summary"><p>Запись</p></span><span class="badge success">Готово</span><span class="badge failure">Ошибка</span><span class="badge silent">Тишина</span></a></div>
       <div class="status-panel failure"><div><h2>Отказ</h2><p>Причина</p></div></div><div class="status-panel running"><div><h2>Идёт</h2><p>Шаг 2 из 7</p></div></div>
       <div class="clip-grid"><article class="clip-card"><div class="clip-preview"><p>Превью недоступно</p><span class="score-badge">87</span></div><div class="clip-body"><div class="clip-actions"><button>↓ Скачать</button><button class="secondary">Ссылка</button><button class="secondary">Гостю</button></div><p class="eyebrow">КЛИП 1</p><p class="score-line"><strong>Оценка 87 из 99</strong></p><p class="score-parts">Цепкость 29</p><details class="score-why" open><summary>Почему такая оценка</summary></details><p class="score"><strong>87</strong><span> из 99</span></p><dl class="score-details"><dt>Крючок</dt><dd>Объяснение</dd></dl><button>Скачать</button></div></article></div>
+      <section class="cta-panel"><h2>Призыв в конце</h2><p class="muted">Главная кнопка на странице клипа</p><div class="cta-fields"><label for="k">Что сделать зрителю в конце</label><select id="k"><option>Смотреть полный выпуск</option></select><label for="u">Ссылка (https://…)</label><input id="u" type="url" value="https://www.youtube.com/watch?v=1"><small class="muted">Домен увидит зритель</small></div><button>Сохранить призыв</button></section>
       <p class="notice">Уведомление</p><p class="empty">Пусто</p><dl class="partner-counters"><div><dt>Переходы</dt><dd>12</dd></div></dl></main></body></html>`);
     expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(theme === 'dark' ? 'rgb(14, 19, 17)' : 'rgb(247, 248, 243)');
     const found = (await axeRule(page)).filter((f: { axeRule: string; severity: string }) => f.axeRule === 'color-contrast' && f.severity === 'error');

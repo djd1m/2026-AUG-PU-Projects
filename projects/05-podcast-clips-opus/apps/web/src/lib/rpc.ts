@@ -1,4 +1,4 @@
-type RpcMethod = 'clip.setMusic' | 'account.delete' | 'interest.create' | 'code.apply' | 'partner.dashboard' | 'video.get' | 'video.list' | 'clip.list' | 'video.create' | 'video.retry' | 'clip.markDownloaded' | 'link.create' | 'guest.create' | 'guest.send' | 'guest.revoke';
+type RpcMethod = 'clip.setMusic' | 'video.setCta' | 'account.delete' | 'interest.create' | 'code.apply' | 'partner.dashboard' | 'video.get' | 'video.list' | 'clip.list' | 'video.create' | 'video.retry' | 'clip.markDownloaded' | 'link.create' | 'guest.create' | 'guest.send' | 'guest.revoke';
 export async function rpc<T>(method: RpcMethod, input: object, mutation = false, key?: string, signal?: AbortSignal): Promise<T> {
   const url = `/api/trpc/${method}${mutation ? '' : `?input=${encodeURIComponent(JSON.stringify(input))}`}`;
   const deadline = AbortSignal.timeout(mutation ? 360000 : 4500);

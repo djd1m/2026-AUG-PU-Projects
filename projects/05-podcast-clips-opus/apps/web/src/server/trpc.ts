@@ -1,4 +1,5 @@
 import type { ClipMusicService } from './clip-music';
+import type { VideoCtaService } from './video-cta';
 import type { ErasureService } from './erasure';
 import type { InterestService } from './interest';
 import { initTRPC, TRPCError } from '@trpc/server';
@@ -10,7 +11,7 @@ import type { ShortLinkService } from './short-link';
 import type { GuestPackService } from './guest-pack';
 import type { PartnerService } from './partner';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { music?: Pick<ClipMusicService, 'setMusic'>; referralCookie?: string; erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
+interface Context { cta?: Pick<VideoCtaService, 'setCta'>; music?: Pick<ClipMusicService, 'setMusic'>; referralCookie?: string; erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -102,6 +103,15 @@ partner: t.router({
     const status = cause instanceof UploadError ? cause.status : 503;
     throw new TRPCError({ code: status === 404 ? 'NOT_FOUND' : status === 409 ? 'CONFLICT' : status === 429 ? 'TOO_MANY_REQUESTS' : 'INTERNAL_SERVER_ERROR',
       message: cause instanceof UploadError ? cause.message : 'Повтор временно недоступен', cause });
+  }
+}), setCta: validatedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {
+  try {
+    if (!ctx.cta) throw new Error('CTA runtime unavailable');
+    return { data: await ctx.cta.setCta(ctx.account, input), meta: { request_id: ctx.requestId } };
+  } catch (cause) {
+    const status = cause instanceof UploadError ? cause.status : 503;
+    throw new TRPCError({ code: status === 404 ? 'NOT_FOUND' : status === 422 ? 'UNPROCESSABLE_CONTENT' : 'INTERNAL_SERVER_ERROR',
+      message: cause instanceof UploadError ? cause.message : 'Не удалось сохранить призыв. Повторите позже', cause });
   }
 }) }), clip: t.router({
   setMusic: validatedProcedure.input(z.unknown()).mutation(async ({ ctx, input }) => {

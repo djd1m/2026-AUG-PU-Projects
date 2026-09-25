@@ -33,6 +33,15 @@ describe('Закрытые перечисления', () => {
     expect(() => checkSqlEnums(migrations().replace("CHECK (status IN ('pending','activated','rejected','partner_deleted'))",
       "CHECK (status IN ('pending','activated','rejected'))"))).toThrow();
   });
+  it('Каждый CHECK … IN (…) миграций объявлен в SQL_ENUMS (иначе страж выше его не видит)', () => {
+    // Страж checkSqlEnums проверяет только перечисленное в SQL_ENUMS: забытая запись = молчаливый пропуск
+    // (01_validate фичи 27, правка 1). Исключения — ЯВНЫЕ, существовавшие до фичи 27 перечисления вне shared.
+    const legacy = ['attribution.reject_reason', 'clip.music_skip_reason', 'job_attempt.unit', 'job_attempt.wait_reason', 'partner_code.blocked_reason'];
+    const declared = new Set([...migrations().replace(/--[^\n]*/g, '').matchAll(/(?:CREATE TABLE|ALTER TABLE)\s+(\w+)\s+([^;]+);/g)]
+      .flatMap(m => [...m[2]!.matchAll(/CHECK\s*\(\s*(\w+)\s+IN\s*\(/g)].map(c => `${m[1]}.${c[1]}`)));
+    expect([...declared].filter(key => !(key in e.SQL_ENUMS) && !legacy.includes(key))).toEqual([]);
+    expect(declared.has('video.cta_kind')).toBe(true);
+  });
   it('Мутация CHECK обнаруживается стражем', () => {
     const sql = migrations();
     expect(() => checkSqlEnums(sql.replace("'free', 'paid'", "'free', 'premium'"))).toThrow();

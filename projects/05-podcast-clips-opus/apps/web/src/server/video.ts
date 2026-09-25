@@ -7,6 +7,8 @@ import { MAX_UPLOAD_BYTES, moscowDay } from '@clipmaker/shared/upload';
 import { calculatePartSize, UploadTooLarge, type SignedPart, type CompletedPart } from '@clipmaker/s3';
 import { createVideoSchema, completeUploadSchema, UploadError, quotaError } from './upload-contract';
 import { isAllowedMedia } from './media-type';
+import { CtaError, parseCtaTarget } from '@clipmaker/shared/cta';
+import type { CtaKind } from '@clipmaker/shared/enums';
 export interface UploadStorage {
   initiate(key: string): Promise<string>;
   sign(key: string, uploadId: string, numbers: number | number[], now: Date): Promise<SignedPart[]>;
@@ -23,7 +25,7 @@ export interface UploadData {
 interface VideoRow {
   id: string; account_id: string; upload_id: string | null; object_key: string; declared_bytes: string;
   status: VideoStatus; failure_reason: VideoFailureReason | null; upload_parts: SignedPart[] | null;
-  music: boolean; teaser: boolean; compact: boolean; upload_part_size: number; upload_day: string; upload_enqueued_at: Date | null;
+  music: boolean; teaser: boolean; compact: boolean; cta_kind: CtaKind; cta_url: string | null; upload_part_size: number; upload_day: string; upload_enqueued_at: Date | null;
 }
 const selectVideo = `SELECT *, upload_day::text AS upload_day FROM video`;
 const unavailable = () => new UploadError('unavailable', 'Хранилище временно недоступно. Повторите завершение этой загрузки', 503);
@@ -34,6 +36,10 @@ export class VideoService {
     const parsed = createVideoSchema.safeParse(input);
     if (!parsed.success || !z.string().uuid().safeParse(key).success) throw new UploadError('invalid', 'Проверьте имя, размер файла и ключ запроса', 422);
     const body = parsed.data, now = this.clock();
+    // Призыв разбирается ДО заявки ключа и квоты: непригодный адрес не тратит слот загрузки.
+    let cta;
+    try { cta = parseCtaTarget(body.cta_kind, body.cta_url); }
+    catch (error) { if (error instanceof CtaError) throw new UploadError('invalid', error.message, 422, { field: 'cta_url' }); throw error; }
     // Заявка и квота фиксируются до сети. upload_id=NULL — восстанавливаемая инициализация.
     const claimed = await transaction(this.pool, async (tx) => {
       const active = await tx.query("SELECT id FROM account WHERE id=$1 AND status='active' FOR SHARE", [account]);
@@ -42,10 +48,10 @@ export class VideoService {
       const ext = body.filename.split('.').pop()?.toLowerCase();
       const objectKey = `videos/${account}/${id}/source.${ext && ['mp4', 'mov', 'webm', 'm4a', 'mp3'].includes(ext) ? ext : 'bin'}`;
       const claim = await tx.query<VideoRow>(`INSERT INTO video
-        (id, account_id, idempotency_key, status, source, declared_bytes, upload_day, object_key, upload_part_size, music, teaser, compact)
-        VALUES ($1, $2, $3, 'uploading', 'upload', $4, $5, $6, $7, $8, $9, $10)
+        (id, account_id, idempotency_key, status, source, declared_bytes, upload_day, object_key, upload_part_size, music, teaser, compact, cta_kind, cta_url)
+        VALUES ($1, $2, $3, 'uploading', 'upload', $4, $5, $6, $7, $8, $9, $10, $11, $12)
         ON CONFLICT (account_id, idempotency_key) DO NOTHING RETURNING *, upload_day::text AS upload_day`,
-      [id, account, key, BigInt(body.declared_bytes), moscowDay(now), objectKey, calculatePartSize(body.declared_bytes), body.music ?? false, body.teaser ?? false, body.compact ?? false]);
+      [id, account, key, BigInt(body.declared_bytes), moscowDay(now), objectKey, calculatePartSize(body.declared_bytes), body.music ?? false, body.teaser ?? false, body.compact ?? false, cta.kind, cta.url]);
       if (claim.rowCount) {
         const quota = await checkAndConsumeQuota(tx, this.limits, account, 'upload', 1, now);
         if (!quota.granted) {
@@ -65,6 +71,7 @@ export class VideoService {
     if (row.music !== (body.music ?? false)) throw new UploadError('conflict', 'Ключ уже привязан к другому выбору музыки', 409);
     if (row.teaser !== (body.teaser ?? false)) throw new UploadError('conflict', 'Ключ уже привязан к другому выбору заголовка', 409);
     if (row.compact !== (body.compact ?? false)) throw new UploadError('conflict', 'Ключ уже привязан к другому выбору пауз', 409);
+    if (row.cta_kind !== cta.kind || (row.cta_url ?? null) !== cta.url) throw new UploadError('conflict', 'Ключ уже привязан к другому призыву в конце', 409);
     if (!row.upload_id) {
       const objectKey = row.object_key;
       const uploadId = await this.storage.initiate(objectKey);

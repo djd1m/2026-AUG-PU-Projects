@@ -1,0 +1,221 @@
+[
+  {
+    "id": "check-pair",
+    "red": {
+      "id": "check-pair",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "check-pair",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "where": "docker test image, real PostgreSQL 16",
+    "status": "killed"
+  },
+  {
+    "id": "check-url",
+    "red": {
+      "id": "check-url",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "check-url",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "where": "docker test image, real PostgreSQL 16",
+    "status": "killed"
+  },
+  {
+    "id": "owner",
+    "red": {
+      "id": "owner",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "owner",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "where": "docker test image, real PostgreSQL 16",
+    "status": "killed"
+  },
+  {
+    "id": "protocol",
+    "red": {
+      "id": "protocol",
+      "phase": "red",
+      "exit": 1,
+      "passed": 19,
+      "failed": 1
+    },
+    "green": {
+      "id": "protocol",
+      "phase": "green",
+      "exit": 0,
+      "passed": 20,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "credentials",
+    "red": {
+      "id": "credentials",
+      "phase": "red",
+      "exit": 1,
+      "passed": 18,
+      "failed": 2
+    },
+    "green": {
+      "id": "credentials",
+      "phase": "green",
+      "exit": 0,
+      "passed": 20,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "escape",
+    "red": {
+      "id": "escape",
+      "phase": "red",
+      "exit": 1,
+      "passed": 7,
+      "failed": 2
+    },
+    "green": {
+      "id": "escape",
+      "phase": "green",
+      "exit": 0,
+      "passed": 9,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "stored-fail-closed",
+    "red": {
+      "id": "stored-fail-closed",
+      "phase": "red",
+      "exit": 1,
+      "passed": 7,
+      "failed": 2
+    },
+    "green": {
+      "id": "stored-fail-closed",
+      "phase": "green",
+      "exit": 0,
+      "passed": 9,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "primary-class",
+    "red": {
+      "id": "primary-class",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "primary-class",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "idempotency",
+    "red": {
+      "id": "idempotency",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "idempotency",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "parse-before-claim",
+    "red": {
+      "id": "parse-before-claim",
+      "phase": "red",
+      "exit": 1,
+      "passed": 1,
+      "failed": 1
+    },
+    "green": {
+      "id": "parse-before-claim",
+      "phase": "green",
+      "exit": 0,
+      "passed": 2,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "enum-check",
+    "red": {
+      "id": "enum-check",
+      "phase": "red",
+      "exit": 1,
+      "passed": 1,
+      "failed": 1
+    },
+    "green": {
+      "id": "enum-check",
+      "phase": "green",
+      "exit": 0,
+      "passed": 2,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "sql-enums-entry",
+    "red": {
+      "id": "sql-enums-entry",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "sql-enums-entry",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  }
+]

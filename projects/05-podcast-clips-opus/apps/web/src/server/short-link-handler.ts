@@ -5,6 +5,7 @@ import { readSessionCookie } from './auth-handler';
 import { clientIp, ipPrefix } from './ip';
 import { UploadError } from './upload-contract';
 import { previewState, type ShortLinkService } from './short-link';
+import { CTA_BUTTON_LABELS, ctaDisplayHost, readStoredCta, type CtaTarget } from '@clipmaker/shared/cta';
 
 interface Dependencies {
   referralSecret: string;
@@ -20,10 +21,20 @@ const THEME_TOKENS = ':root{color-scheme:dark;--paper:#0e1311;--surface:#1a211d;
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[c]!);
-function landing(title: string, preview: string | null, expired: boolean, theme: Theme): string {
+// Призыв автора (ADR-017): обычная внешняя ссылка, НЕ редирект через наш домен (нет открытого редиректа);
+// видимый домен и пометка «ссылка автора клипа» — против фишинга. Сервер по адресу не ходит.
+// Класс .cta несёт ОСНОВНОЕ действие страницы (R9, FIRST_SCREEN_ACTIONS): кнопка призыва, если он задан,
+// иначе «Сделать свои клипы». Второе действие — .secondary-link.
+function actions(cta: CtaTarget): string {
+  const own = (primary: boolean) => `<a class="${primary ? 'cta' : 'secondary-link'}" href="/">Сделать свои клипы</a>`;
+  if (cta.kind === 'none') return own(true);
+  return `<div class="author-cta"><a class="cta" href="${escapeHtml(cta.url)}" rel="noopener noreferrer nofollow" target="_blank">${escapeHtml(CTA_BUTTON_LABELS[cta.kind])}</a>
+<p class="cta-host">Ссылка автора клипа · <span>${escapeHtml(ctaDisplayHost(cta.url))}</span></p></div>${own(false)}`;
+}
+function landing(title: string, preview: string | null, expired: boolean, theme: Theme, cta: CtaTarget = { kind: 'none', url: null }): string {
   return `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${theme}"><meta name="theme-color" content="${THEME_COLOR[theme]}">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>КлипМейкер — ${escapeHtml(title)}</title>
-<style>${THEME_TOKENS}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:1.125rem/1.6 system-ui,sans-serif}
+<style>${THEME_TOKENS}*{box-sizing:border-box}html{background:var(--paper)}body{margin:0;background:var(--paper);color:var(--ink);font:1.125rem/1.6 system-ui,sans-serif}
 nav,main{max-width:62.5rem;margin:auto;padding:1.5rem}nav a{color:inherit;text-decoration:none;font-weight:750}
 main{display:grid;grid-template-columns:minmax(0,1fr);gap:3rem;align-items:center}
 .preview{aspect-ratio:9/16;background:var(--media-bg);color:var(--media-fg);border-radius:1.125rem;overflow:hidden;display:grid;place-items:center}
@@ -38,9 +49,11 @@ video{max-height:min(70svh,31.25rem);object-fit:contain}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media(min-width:601px){main{grid-template-columns:minmax(0,1fr) minmax(0,21.25rem)}}
 .cta{display:inline-flex;align-items:center}h1{margin-top:0}
+.author-cta{margin-bottom:0.75rem}.cta-host{margin:0.5rem 0 0;font-size:0.875rem;overflow-wrap:anywhere}.cta-host span{font-weight:650}
+.secondary-link{display:inline-flex;align-items:center;min-height:2.75rem;min-width:2.75rem;padding:0.625rem 1.25rem;border:0.0625rem solid var(--green);border-radius:0.625rem;color:var(--green);text-decoration:none;font-weight:650}
 </style></head><body><nav><a href="/">◧ КлипМейкер</a></nav><main>
 
-<section><h1>${escapeHtml(title)}</h1><a class="cta" href="/">Сделать свои клипы</a><p>Этот фрагмент создан в КлипМейкере.</p>
+<section><h1>${escapeHtml(title)}</h1>${actions(cta)}<p>Этот фрагмент создан в КлипМейкере.</p>
 <p>Превратите свой подкаст или вебинар в короткие вертикальные клипы с субтитрами — готовые к публикации.</p>
 </section><section class="preview" aria-label="Превью клипа">${preview ? `<img src="${escapeHtml(preview)}" alt="${escapeHtml(title)}" referrerpolicy="no-referrer">`
     : `<p>${expired ? 'Срок хранения клипа истёк. Файл больше недоступен, но вы можете сделать свои клипы.' : 'Превью этого клипа пока недоступно. Попробуйте сделать свои клипы.'}</p>`}</section></main></body></html>`;
@@ -60,7 +73,7 @@ export function createShortLinkHandler(deps: Dependencies) {
       const preview = state === 'ready' ? await deps.preview(link.thumbnail_key!) : null;
       await deps.links.recordView(link, session?.account_id ?? null, ipPrefix(ip));
       const referral = referralCookie(request.headers.get('cookie') ?? '', link.partner_code, 'cookie', session?.account_id === link.account_id, deps.referralSecret);
-      return new Response(landing(link.title, preview, state === 'expired', themeFromCookie(request.headers.get('cookie') ?? undefined)), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8' } });
+      return new Response(landing(link.title, preview, state === 'expired', themeFromCookie(request.headers.get('cookie') ?? undefined), readStoredCta(link.cta_kind, link.cta_url)), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8' } });
     } catch (error) {
       if (error instanceof UploadError && error.status === 404) return new Response('Ссылка не найдена', { status: 404, headers });
       return new Response('Не удалось открыть страницу. Повторите позже', { status: 503, headers });

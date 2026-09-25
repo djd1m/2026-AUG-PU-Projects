@@ -34,6 +34,9 @@ export const QUOTA_SCOPE = ['user_minutes', 'user_uploads', 'user_upload_refunds
 export type QuotaScope = typeof QUOTA_SCOPE[number];
 export const SOURCE_SCREEN = ['clip_card', 'guest_page', 'partner_dashboard'] as const;
 export type SourceScreen = typeof SOURCE_SCREEN[number];
+// Призыв к действию в конце клипа (ADR-017, FR-RESULT-006). Надписи — только из кода, не свободный текст.
+export const CTA_KIND = ['none', 'watch_full', 'subscribe', 'open_link'] as const;
+export type CtaKind = typeof CTA_KIND[number];
 
 export function isEnumValue<T extends string>(values: readonly T[], value: unknown): value is T {
   return typeof value === 'string' && values.includes(value as T);
@@ -48,6 +51,8 @@ export const readClipStatus = (v: unknown): ClipStatus => closed(CLIP_STATUS, 'f
 export const readJobStatus = (v: unknown): JobStatus => closed(JOB_STATUS, 'failed', v);
 export const readAttributionStatus = (v: unknown): AttributionStatus => closed(ATTRIBUTION_STATUS, 'rejected', v);
 export const readPartnerCodeStatus = (v: unknown): PartnerCodeStatus => closed(PARTNER_CODE_STATUS, 'blocked', v);
+// Неизвестный вид призыва из хранилища читается как самый строгий — «без призыва».
+export const readCtaKind = (v: unknown): CtaKind => closed(CTA_KIND, 'none', v);
 // Для источников/событий нет безопасного разрешающего значения: null означает отказ действия.
 export function readEnum<T extends string>(values: readonly T[], value: unknown): T | null {
   return isEnumValue(values, value) ? value : null;
@@ -61,4 +66,5 @@ export const SQL_ENUMS = {
   'attribution.source': ATTRIBUTION_SOURCE, 'attribution.replaced_source': ATTRIBUTION_SOURCE,
   'attribution.status': ATTRIBUTION_STATUS, 'partner_code.status': PARTNER_CODE_STATUS,
   'quota_counter.scope': QUOTA_SCOPE, 'pro_interest.source_screen': SOURCE_SCREEN,
+  'video.cta_kind': CTA_KIND,
 } as const;

@@ -9,6 +9,7 @@ export default defineConfig({
     '@clipmaker/shared/clip-code': path.resolve('packages/shared/src/clip-code.ts'),
     '@clipmaker/shared/config': path.resolve('packages/shared/src/config.ts'),
     '@clipmaker/shared/enums': path.resolve('packages/shared/src/enums.ts'),
+    '@clipmaker/shared/cta': path.resolve('packages/shared/src/cta.ts'),
     '@clipmaker/shared/upload': path.resolve('packages/shared/src/upload.ts'),
     '@clipmaker/shared/transcript': path.resolve('packages/shared/src/transcript.ts'),
     '@clipmaker/shared/fragments': path.resolve('packages/shared/src/fragments.ts'),

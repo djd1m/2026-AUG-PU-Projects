@@ -5,9 +5,10 @@ import { UploadError } from './upload-contract';
 export interface ShortLink {
   id: string; code: string; partner_code?: string | null; partner_code_id?: string | null; account_id: string; title: string; status: string;
   thumbnail_key: string | null; expires_at: Date | null; finished_at: Date | null; plan: string;
+  cta_kind?: string | null; cta_url?: string | null;
 }
 const missing = () => new UploadError('not_found', 'Ссылка не найдена', 404);
-const linkSelect = `SELECT l.id,l.code,v.account_id,c.title,c.status,c.thumbnail_key,c.expires_at,v.finished_at,a.plan,pc.code AS partner_code,pc.id AS partner_code_id
+const linkSelect = `SELECT l.id,l.code,v.account_id,c.title,c.status,c.thumbnail_key,c.expires_at,v.finished_at,a.plan,v.cta_kind,v.cta_url,pc.code AS partner_code,pc.id AS partner_code_id
   FROM clip_link l JOIN clip c ON c.id=l.clip_id JOIN video v ON v.id=c.video_id
   JOIN account a ON a.id=v.account_id
   LEFT JOIN LATERAL (SELECT c.id,c.code FROM partner p JOIN partner_code c ON c.partner_id=p.id

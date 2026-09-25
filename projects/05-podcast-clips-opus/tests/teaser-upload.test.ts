@@ -9,12 +9,12 @@ it('default false persists in SQL parameter, true passes; changed flag is 409 be
     const query = vi.fn(async (sql: string, params?: unknown[]) => {
       if (sql.includes('SELECT id FROM account')) return { rowCount: 1, rows: [{ id: 'account' }] };
       if (sql.includes('INSERT INTO video')) {
-        expect(sql).toMatch(/music, teaser, compact\)/); expect(sql).toContain('$8, $9, $10)');
+        expect(sql).toMatch(/music, teaser, compact, cta_kind, cta_url\)/); expect(sql).toContain('$8, $9, $10, $11, $12)');
         expect(params?.[8]).toBe(teaser ?? false);
         return { rowCount: 0, rows: [] };
       }
       if (sql.includes('FROM video')) return { rowCount: 1, rows: [{ id: 'video', declared_bytes: '24',
-        status: 'uploading', failure_reason: null, music: false, teaser: false, compact: false, upload_id: 'upload',
+        status: 'uploading', failure_reason: null, music: false, teaser: false, compact: false, cta_kind: 'none', cta_url: null, upload_id: 'upload',
         object_key: 'source', upload_part_size: 24, upload_parts: [] }] };
       return { rowCount: 0, rows: [] };
     });

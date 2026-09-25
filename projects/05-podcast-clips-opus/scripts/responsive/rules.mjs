@@ -118,6 +118,25 @@ export async function axeRule(page) {
     .flatMap(v => v.nodes.map(node => ({ rule: 'R4', axeRule: v.id, selector: node.target.join(' '),
       severity: !v.incomplete && ['serious', 'critical'].includes(v.impact) ? 'error' : 'warning',
       impact: v.impact, incomplete: v.incomplete, message: v.help, size: null })));
+  // WebKit (mobile emulation) sometimes hands axe a stale computed style for an existing node: the pixels are
+  // right, getComputedStyle is not (N5 feature 27a, 2026-09-25: a select measured black-on-black while its
+  // screenshot showed light text). A colour-contrast error is kept only if it survives a forced style flush and a
+  // second axe pass after a stylesheet nudge; one that vanishes becomes a warning with the reason named — never silently dropped.
+  const contrast = findings.filter(f => f.axeRule === 'color-contrast' && f.severity === 'error');
+  if (contrast.length) {
+    await page.evaluate(() => new Promise(resolve => {
+      // A bare layout flush is not enough (measured): only a stylesheet mutation makes WebKit recompute the stale node.
+      const nudge = document.createElement('style'); nudge.textContent = ':root{}'; document.head.append(nudge);
+      void document.documentElement.getBoundingClientRect(); nudge.remove(); void document.documentElement.getBoundingClientRect();
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    }));
+    const again = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
+    const persisting = new Set(again.violations.flatMap(v => v.nodes.map(node => node.target.join(' '))));
+    for (const finding of contrast) if (!persisting.has(finding.selector)) {
+      finding.severity = 'warning';
+      finding.message += ' (нестабильный замер: не повторился после пересчёта стилей)';
+    }
+  }
   // Use the same selector representation as R2, so summary deduplication is exact.
   for (const finding of findings) {
     const geometry = await page.evaluate(selector => {
