@@ -1,12 +1,14 @@
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
-import { PutObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, HeadObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import type { StorageContext } from '@clipmaker/s3';
 export interface RenderStorage {
+  delete(key: string): Promise<void>;
   put(key: string, path: string, contentType: string, contract: string, signal: AbortSignal): Promise<number>;
 }
 export function renderStorage(ctx: StorageContext): RenderStorage {
   return {
+    async delete(key) { await ctx.client.send(new DeleteObjectCommand({ Bucket: ctx.bucket, Key: key })); },
     async put(key, path, contentType, contract, signal) {
       const size = (await stat(path)).size, body = createReadStream(path);
       try {

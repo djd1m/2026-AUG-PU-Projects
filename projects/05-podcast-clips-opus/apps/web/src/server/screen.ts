@@ -56,7 +56,11 @@ export class ScreenService {
   }
   async clips(account: string, id: string): Promise<{ clips: ClipScreen[] }> {
     const video = await this.owned(account, id);
-    const rows = (await this.pool.query<ClipRow>('SELECT * FROM clip WHERE video_id=$1 ORDER BY "index",id', [id])).rows;
+    const rows = (await this.pool.query<ClipRow>(`SELECT c.*,EXISTS (SELECT 1 FROM job_attempt j WHERE j.clip_id=c.id AND j.rerender
+      AND j.fence=c.render_fence AND j.status IN ('running','deferred')) AS rerendering,
+      (SELECT j.failure_reason FROM job_attempt j WHERE j.clip_id=c.id AND j.rerender
+        AND j.fence=c.render_fence AND j.status='failed') AS rerender_failure
+      FROM clip c WHERE c.video_id=$1 ORDER BY c.index,c.id`, [id])).rows;
     return { clips: rows.map(row => presentClip(row, video, this.clock())) };
   }
   async markDownloaded(account: string, id: string) {
@@ -70,6 +74,8 @@ export class ScreenService {
   }
 }
 export interface ClipRow {
+  rendered_music_track_id?: string | null; music_skip_reason?: string | null; rerender_failure?: string | null;
+  music_track_id?: string | null; render_version?: number; rerendering?: boolean;
   duration_seconds?: string | null;
   id: string; index: number; start_seconds: string; end_seconds: string; title: string; status: ClipStatus;
   watermarked: boolean; object_key: string | null; expires_at: Date | null;
@@ -81,7 +87,9 @@ export function presentClip(row: ClipRow, video: Pick<VideoRow, 'plan' | 'finish
   const score = row.score === null ? {} : scoreSchema.parse({ score: row.score,
     components: { hook: row.score_hook, completeness: row.score_completeness, length: row.score_length },
     explanations: { hook: row.explain_hook, completeness: row.explain_completeness, length: row.explain_length } });
-  return { duration_seconds: row.duration_seconds == null ? null : Number(row.duration_seconds), clip_id: row.id, index: row.index, start: Number(row.start_seconds), end: Number(row.end_seconds), title: row.title,
+  return { rendered_music_track_id: row.rendered_music_track_id ?? null, music_skip_reason: row.music_skip_reason ?? null,
+    rerender_failure: row.rerender_failure ?? null,
+    published_render_version: Number(row.object_key?.match(/-v(\d+)\.mp4$/)?.[1] ?? 1), music_track_id: row.music_track_id ?? null, render_version: row.render_version ?? 1, rerendering: row.rerendering ?? false, duration_seconds: row.duration_seconds == null ? null : Number(row.duration_seconds), clip_id: row.id, index: row.index, start: Number(row.start_seconds), end: Number(row.end_seconds), title: row.title,
     status: row.status, watermarked: row.watermarked, expires_at: expires?.toISOString() ?? null,
     available: row.status === 'done' && !!row.object_key && (!expires || expires > now), ...score };
 }

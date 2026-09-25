@@ -27,7 +27,7 @@ describe('Отказ запуска конфигурации', () => {
       const result = subprocess(['-e', "require('./packages/shared/dist/config.js').loadWebConfig(process.env)"], env);
       expect(result.status).not.toBe(0);
       expect(result.stderr).toContain(name);
-      expect(result.stderr).toMatch(/вызов|выдача загрузки|скачивание и ffprobe/);
+      expect(result.stderr).toMatch(/вызов|выдача загрузки|скачивание и ffprobe|смена музыки/);
     });
   }
   it('Седьмой процесс: пустой origin', () => {
@@ -86,3 +86,11 @@ for (const role of ['worker-stt', 'worker-llm'] as const) {
     expect(() => loadWorkerConfig(role, { ...env, N5_SHORT_CODE_LENGTH: '10' })).toThrow('N5_PUBLIC_ORIGIN');
   });
 }
+
+it.each(['worker-stt', 'worker-llm'] as const)('%s subprocess refuses missing rerender limit', role => {
+  const env = environment(); delete env.N5_LIMIT_USER_RERENDERS;
+  const result = subprocess(['-e', `require('./packages/shared/dist/config.js').loadWorkerConfig('${role}', process.env)`], env);
+  expect(result.status).not.toBe(0);
+  expect(result.stderr).toContain('N5_LIMIT_USER_RERENDERS');
+  expect(result.stderr).toContain('смена музыки останется без потолка перерендеров');
+});

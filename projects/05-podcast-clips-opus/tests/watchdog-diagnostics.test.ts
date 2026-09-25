@@ -14,7 +14,7 @@ function fixture(failAt = '', error: unknown = new Error('named database failure
   });
   const release = vi.fn();
   const pool = { query, connect: async () => ({ query, release }) } as unknown as Pool;
-  const storage = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}) };
+  const storage = { delete: vi.fn(async () => {}), eraseClipPrefix: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}) };
   return { query, pool, release, storage };
 }
 
@@ -46,7 +46,8 @@ describe('WD-001: watchdog failure diagnostics', () => {
 
   it.each([
     ['SELECT id FROM video', 'закрытие зависших задач'],
-    ['SELECT v.id FROM video', 'создание отсутствующих попыток'],
+    ['SELECT v.id FROM video', 'закрытие зависших пересборок'],
+    ["v.status='queued'", 'создание отсутствующих попыток'],
     ['SELECT j.*', 'восстановление доставки заданий'],
     ['pg_try_advisory_lock', 'retention'],
   ])('names the failed step for %s and preserves rejection identity', async (sql, step) => {
@@ -80,12 +81,12 @@ describe('WD-001: watchdog failure diagnostics', () => {
     f.query.mockImplementation(async sql => {
       if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
     if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
-      if (sql.startsWith('SELECT c.id')) return { rows: [{ id: 'clip', object_key: 'clip.mp4', thumbnail_key: null }], rowCount: 1 };
+      if (sql.startsWith('SELECT c.id')) return { rows: [{ id: 'clip', video_id: 'video', object_key: 'clip.mp4', thumbnail_key: null }], rowCount: 1 };
       if (sql.startsWith('SELECT id FROM account')) return { rows: [{ id: 'account' }], rowCount: 1 };
       return { rows: [], rowCount: 0 };
     });
-    f.storage.delete.mockRejectedValue(clipError);
-    f.storage.erasePrefix.mockRejectedValue(accountError);
+    f.storage.eraseClipPrefix.mockRejectedValue(clipError);
+    f.storage.erasePrefix.mockImplementation(async (...args: unknown[]) => { throw String(args[0]).startsWith('videos/') ? accountError : clipError; });
     const log = vi.spyOn(console, 'error').mockImplementation(() => {});
     await expect(retentionTick(f.pool, f.storage, now)).rejects.toThrow('не завершено операций 2');
     expect(log).toHaveBeenCalledWith('Очистка: удаление клипа; повтор на следующем проходе', clipError);

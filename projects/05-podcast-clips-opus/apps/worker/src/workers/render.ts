@@ -25,6 +25,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
   try {
     const input = await getRenderInput(deps.pool, attempt);
     if (!input) return 'stale';
+    if (!await setRenderDeferred(deps.pool, attempt, false)) return 'stale';
     const signal = AbortSignal.timeout(RENDER_JOB_TIMEOUT_MS);
     // Authoritative account value, never job.data.watermark or clip.watermarked.
     const watermark = watermarkRequired(input.plan);
@@ -33,7 +34,7 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
       if (!await setRenderDeferred(deps.pool, attempt, false)) return 'stale' as const;
       const start = Number(input.start_seconds), end = Number(input.end_seconds);
       let cutPlan: Segment[] | null = input.compact && input.cut_plan !== null ? parseCutPlan(input.cut_plan, start, end) : null;
-      if (input.compact && !cutPlan) {
+      if (input.compact && !cutPlan && !attempt.rerender) {
         let candidate: Segment[] = [[start, end]];
         try {
           let median = input.loudness_median_db === null ? null : Number(input.loudness_median_db);
@@ -62,11 +63,12 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
       const output = join(dirname(source), 'clip.mp4'), thumb = join(dirname(source), 'thumb.jpg');
       const rendered = await (deps.render ?? renderClip)({ inputPath: source, outputPath: output, startTime: Number(input.start_seconds),
         endTime: Number(input.end_seconds), cutPlan: cutPlan ?? undefined, format: 'portrait', words: input.words, watermark,
-        origin: deps.origin, code: input.code, signal, music: input.music, clipIndex: input.index, teaser: input.teaser, title: input.title });
+        origin: deps.origin, code: input.code, signal, music: input.music, musicTrackId: input.music_track_id, clipIndex: input.index, teaser: input.teaser, title: input.title });
       await (deps.thumbnail ?? generateThumbnail)(output, thumb, duration * 0.25);
       signal.throwIfAborted();
-      const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}.mp4`;
-      const thumbnail_key = `thumbs/${attempt.video_id}/${attempt.clip_id}.jpg`;
+      const suffix = input.render_version > 1 ? `-v${input.render_version}` : '';
+      const object_key = `clips/${watermark ? 'free' : 'paid'}/${attempt.video_id}/${attempt.clip_id}${suffix}.mp4`;
+      const thumbnail_key = `thumbs/${attempt.video_id}/${attempt.clip_id}${suffix}.jpg`;
       const bytes = (await stat(output)).size;
       const contract = createHash('sha256').update(JSON.stringify({ renderer: 'render-and-watermark-v1',
         video: attempt.video_id, clip: attempt.clip_id, source: input.object_key, sourceBytes: input.actual_bytes,
@@ -79,11 +81,11 @@ export async function handleRenderJob(attempt: Attempt, deps: RenderDependencies
         ...(rendered.packshot ? { packshot: { ...rendered.packshot, margin: STINGER_MARGIN_LU, envelope: STINGER_ENVELOPE,
           flash: `${FLASH_SHAPE_VERSION}:${FLASH_PEAK}:${FLASH_HALF_WIDTH_SECONDS}` } } : {}) })).digest('hex');
       const uploadSignal = AbortSignal.any([signal, AbortSignal.timeout(120_000)]);
-      const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, watermarked: watermark, duration_seconds: rendered.duration_seconds }, async () => {
+      const accepted = await publishRenderResult(deps.pool, attempt, { object_key, thumbnail_key, bytes, music_skip_reason: rendered.music_skip_reason, rendered_music_track_id: rendered.music?.track.split(':')[0] ?? 'none', watermarked: watermark, duration_seconds: rendered.duration_seconds }, async () => {
         const storedBytes = await deps.storage.put(object_key, output, 'video/mp4', contract, uploadSignal);
         await deps.storage.put(thumbnail_key, thumb, 'image/jpeg', contract, uploadSignal);
         return storedBytes;
-      });
+      }, key => deps.storage.delete(key));
       return accepted ? 'done' as const : 'stale' as const;
     }, deps.available);
     if (outcome.deferred) return await setRenderDeferred(deps.pool, attempt, true) ? 'deferred' : 'stale';

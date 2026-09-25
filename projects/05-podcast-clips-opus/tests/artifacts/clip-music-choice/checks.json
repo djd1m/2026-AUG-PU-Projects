@@ -1,0 +1,38 @@
+{
+  "run_id": "20260925T062837Z-clip-music-choice",
+  "source_manifest_sha256": "1ae36356449fb634b63e6ad73246592540441c068c4ee7c60fa1439240d09f7c",
+  "ended_at": "2026-09-25T06:50:11.783578+00:00",
+  "elapsed_seconds_since_record_start": 1294.783578,
+  "checks": [
+    {
+      "command": "npx vitest run",
+      "exit_code": 0,
+      "receipt": "tests/artifacts/clip-music-choice/tests-final.txt",
+      "sha256": "54c52dd13aa56d93a3f100b4d0ddefa45087783fad320c4ed0a4cd6481c30b1d"
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 0,
+      "receipt": "tests/artifacts/clip-music-choice/build-final.txt",
+      "sha256": "cf9cbb4909ddb09fc84bb98afbb8cb077beed67affa61d2182c8b4637d1bc65a"
+    },
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "receipt": "tests/artifacts/clip-music-choice/typecheck-final.txt",
+      "sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13"
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "receipt": "tests/artifacts/clip-music-choice/lint-final.txt",
+      "sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    }
+  ],
+  "tests": {
+    "passed": 604,
+    "failed": 0,
+    "skipped": 169
+  },
+  "acceptance": "incomplete_infrastructure_and_cross_family_review"
+}

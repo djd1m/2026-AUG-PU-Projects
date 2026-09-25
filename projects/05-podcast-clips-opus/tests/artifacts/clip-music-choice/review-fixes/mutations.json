@@ -1,0 +1,138 @@
+[
+  {
+    "id": "review-retention",
+    "red": {
+      "id": "review-retention",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "review-retention",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-skip",
+    "red": {
+      "id": "review-skip",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "review-skip",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-player",
+    "red": {
+      "id": "review-player",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "review-player",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-failure",
+    "red": {
+      "id": "review-failure",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "review-failure",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-orphans",
+    "red": {
+      "id": "review-orphans",
+      "phase": "red",
+      "exit": 1,
+      "passed": 3,
+      "failed": 2
+    },
+    "green": {
+      "id": "review-orphans",
+      "phase": "green",
+      "exit": 0,
+      "passed": 5,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-loudness",
+    "red": {
+      "id": "review-loudness",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 2
+    },
+    "green": {
+      "id": "review-loudness",
+      "phase": "green",
+      "exit": 0,
+      "passed": 2,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-start",
+    "red": {
+      "id": "review-start",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "review-start",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "review-heartbeat",
+    "status": "not_run",
+    "reason": "DATABASE_URL unavailable; real PostgreSQL required"
+  },
+  {
+    "id": "review-persist",
+    "status": "not_run",
+    "reason": "DATABASE_URL unavailable; real PostgreSQL required"
+  }
+]

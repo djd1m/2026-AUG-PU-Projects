@@ -1,5 +1,6 @@
 export function quotaEnvironment() {
   return {
+    N5_LIMIT_USER_RERENDERS: process.env.N5_LIMIT_USER_RERENDERS,
     N5_LIMIT_USER_MINUTES: process.env.N5_LIMIT_USER_MINUTES,
     N5_LIMIT_USER_UPLOADS: process.env.N5_LIMIT_USER_UPLOADS,
     N5_LIMIT_USER_UPLOAD_REFUNDS: process.env.N5_LIMIT_USER_UPLOAD_REFUNDS,

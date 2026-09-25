@@ -6,6 +6,15 @@ import { deleteObject } from './operations.js';
 // Fail closed: a delete marker would conceal retained versions, not erase data.
 export async function erasePrefix(ctx: StorageContext, prefix: string): Promise<void> {
   if (!prefix.endsWith('/') || !/^(videos|clips\/free|clips\/paid|thumbs)\/[a-f0-9-]{36}\/$/.test(prefix)) throw new Error('Непригодный префикс удаления');
+  return eraseValidatedPrefix(ctx, prefix);
+}
+// Clip UUID has fixed length: all its versions, never a neighbouring clip.
+export async function eraseClipPrefix(ctx: StorageContext, prefix: string): Promise<void> {
+  const uuid = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
+  if (!new RegExp(`^(clips/free|clips/paid|thumbs)/${uuid}/${uuid}$`).test(prefix)) throw new Error('Непригодный префикс удаления');
+  return eraseValidatedPrefix(ctx, prefix);
+}
+async function eraseValidatedPrefix(ctx: StorageContext, prefix: string): Promise<void> {
   const options = { requestTimeout: FAST_REQUEST_TIMEOUT_MS, abortSignal: AbortSignal.timeout(60_000) };
   const versioning = await ctx.client.send(new GetBucketVersioningCommand({ Bucket: ctx.bucket }), options);
   if (versioning.Status) throw new Error('Для удаления требуется бакет без версионирования');

@@ -19,7 +19,7 @@ async function fixture(plan: unknown = 'free') {
     download: vi.fn(async (_key: string, path: string) => { await writeFile(path, 'source'); }),
     render: vi.fn(async (opts: { outputPath: string }) => { await writeFile(opts.outputPath, 'video'); return { duration_seconds: 20, packshot: null, music: null as import('../apps/worker/src/render/music').MusicMix | null }; }),
     thumbnail: vi.fn(async (_path: string, output: string) => { await writeFile(output, 'thumb'); }),
-    storage: { put: vi.fn(async () => 5) },
+    storage: { delete: vi.fn(async () => {}), put: vi.fn(async () => 5) },
     enqueue: vi.fn(async () => {}), available: vi.fn(async () => 30n) };
 }
 it('disk reserve before S3 GET; deferred heartbeat and zero download/render calls', async () => {
@@ -90,4 +90,30 @@ it('music contract comes from rendered fact, off hash stays equal to main', asyn
   expect(await handleRenderJob(attempt, deps)).toBe('done');
   expect(calls()[2]![3]).not.toBe(baseline);
   expect(deps.render).toHaveBeenCalledWith(expect.objectContaining({ music: true }));
+});
+
+it('rerender uses v2 keys, forwards selection, persists actual mixed track and provides deletion callback', async () => {
+  const deps = await fixture();
+  db.getRenderInput.mockResolvedValue({ ...(await db.getRenderInput()), render_version: 2, music_track_id: 'holizna-bubbles', music: false });
+  deps.render.mockImplementation(async opts => { await writeFile(opts.outputPath, 'video'); return { duration_seconds: 20, packshot: null, music: { track: 'holizna-bubbles:sha256', gain_db: -23 } }; });
+  expect(await handleRenderJob({ ...attempt, rerender: true }, deps)).toBe('done');
+  expect(deps.render).toHaveBeenCalledWith(expect.objectContaining({ music: false, musicTrackId: 'holizna-bubbles' }));
+  expect(deps.storage.put.mock.calls[0]).toContain('clips/free/video/clip-v2.mp4');
+  expect(deps.storage.put.mock.calls[1]).toContain('thumbs/video/clip-v2.jpg');
+  expect(db.publishRenderResult.mock.calls[0]![2]).toMatchObject({ rendered_music_track_id: 'holizna-bubbles' });
+  await db.publishRenderResult.mock.calls[0]![4]('actual-old-key');
+  expect(deps.storage.delete).toHaveBeenCalledWith('actual-old-key');
+});
+
+it('attempt heartbeat precedes source download and publishes skip reason', async () => {
+  const deps = await fixture();
+  deps.download.mockImplementation(async (_key, path) => {
+    expect(db.setRenderDeferred).toHaveBeenCalledWith(deps.pool, attempt, false);
+    await writeFile(path, 'source');
+  });
+  deps.render.mockImplementation(async opts => { await writeFile(opts.outputPath, 'video'); return {
+    duration_seconds: 20, packshot: null, music: null, music_skip_reason: 'speech_too_quiet' as const }; });
+  expect(await handleRenderJob(attempt, deps)).toBe('done');
+  expect(db.publishRenderResult).toHaveBeenCalledWith(deps.pool, attempt,
+    expect.objectContaining({ music_skip_reason: 'speech_too_quiet', rendered_music_track_id: 'none' }), expect.any(Function), expect.any(Function));
 });

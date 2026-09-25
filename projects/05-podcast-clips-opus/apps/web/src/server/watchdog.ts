@@ -15,9 +15,30 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
       await tx.query("UPDATE video SET status='failed', failure_reason='stalled', finished_at=$2, updated_at=$2 WHERE id=$1", [id, now]);
       await tx.query("UPDATE clip SET status='failed', failure_reason='ffmpeg_timeout' WHERE video_id=$1 AND status <> 'done'", [id]);
       await tx.query(`UPDATE job_attempt SET status='failed', failure_reason='stalled', finished_at=$2
-        WHERE video_id=$1 AND status IN ('running','deferred')`, [id, now]);
+        WHERE video_id=$1 AND NOT rerender AND status IN ('running','deferred')`, [id, now]);
     }
     return stale.rowCount;
+  });
+  step = 'закрытие зависших пересборок';
+  // Rerenders are timed from their own attempt; video completion stays untouched.
+  await transaction(pool, async tx => {
+    const videos = await tx.query<{ id: string }>(`SELECT v.id FROM video v JOIN account a ON a.id=v.account_id
+      WHERE v.deleted_at IS NULL AND a.status='active' AND EXISTS (SELECT 1 FROM job_attempt j
+        JOIN clip c ON c.id=j.clip_id WHERE j.video_id=v.id AND j.rerender
+        AND j.status IN ('running','deferred') AND c.status='done' AND c.render_fence=j.fence
+        AND j.started_at < $1) ORDER BY v.id LIMIT $2 FOR UPDATE OF v SKIP LOCKED`,
+    [new Date(now.getTime() - STALLED_AFTER_MS), batch]);
+    for (const { id } of videos.rows) {
+      const attempts = await tx.query<Attempt>(`SELECT j.* FROM job_attempt j JOIN clip c ON c.id=j.clip_id
+        WHERE j.video_id=$1 AND j.rerender AND j.status IN ('running','deferred')
+        AND c.status='done' AND c.render_fence=j.fence AND j.started_at < $2 FOR UPDATE OF c,j`,
+      [id, new Date(now.getTime() - STALLED_AFTER_MS)]);
+      for (const job of attempts.rows) {
+        await tx.query(`UPDATE job_attempt SET status='failed',failure_reason='stalled',finished_at=$3
+          WHERE video_id=$1 AND fence=$2`, [id, job.fence, now]);
+        await tx.query('UPDATE clip SET music_track_id=rendered_music_track_id WHERE id=$1 AND render_fence=$2', [job.clip_id, job.fence]);
+      }
+    }
   });
   step = 'создание отсутствующих попыток';
   const missing = await pool.query<{ id: string }>(`SELECT v.id FROM video v JOIN account a ON a.id=v.account_id
@@ -28,10 +49,10 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
   // Also recover publish failures after retries into select/render (not only queued).
   const readPending = (cursor: string | null) => pool.query<Attempt & { id: string; updated_at: Date; video_status: string }>(`SELECT j.*, v.updated_at, v.status AS video_status FROM job_attempt j
     JOIN video v ON v.id=j.video_id JOIN account a ON a.id=v.account_id
-    WHERE j.status IN ('running','deferred') AND v.status IN ('queued','transcribing','selecting','rendering')
+    WHERE j.status IN ('running','deferred') AND (j.rerender OR v.status IN ('queued','transcribing','selecting','rendering'))
     AND v.deleted_at IS NULL AND a.status='active'
     AND ((j.stage <> 'render' AND j.fence=v.fence) OR (j.stage='render' AND EXISTS
-      (SELECT 1 FROM clip c WHERE c.id=j.clip_id AND c.render_fence=j.fence AND c.status='rendering')))
+      (SELECT 1 FROM clip c WHERE c.id=j.clip_id AND c.render_fence=j.fence AND c.status=CASE WHEN j.rerender THEN 'done' ELSE 'rendering' END)))
     AND ($2::uuid IS NULL OR j.id > $2::uuid)
     ORDER BY j.id LIMIT $1`, [batch, cursor]);
   let pending = await readPending(recoveryCursor.get(pool) ?? null);

@@ -3,7 +3,9 @@ import { expect, it } from 'vitest';
 it('ADR-001 source guard: result UPDATE compares render_fence to own fence', () => {
   const source=readFileSync('packages/db/src/render.ts','utf8');
   const update=source.slice(source.indexOf('UPDATE clip SET status=\'done\''));
-  expect(update).toMatch(/WHERE id=\$1 AND video_id=\$2 AND render_fence=\$3 AND status='rendering'/);
+  expect(update).toContain("attempt.rerender ? 'done' : 'rendering'");
+  expect(update).toContain('if (!written.rowCount)');
+  expect(update).toMatch(/WHERE id=\$1 AND video_id=\$2 AND render_fence=\$3 AND status=\$10 RETURNING id/);
 });
 it('deferred source guard: video heartbeat updated under current fence', () => {
   const source=readFileSync('packages/db/src/probe.ts','utf8');

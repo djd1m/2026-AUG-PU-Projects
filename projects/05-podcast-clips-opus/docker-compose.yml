@@ -11,6 +11,7 @@ x-app-env: &app-env
   N5_SHORT_CODE_LENGTH: ${N5_SHORT_CODE_LENGTH:-6}
 
 x-quota-env: &quota-env
+  N5_LIMIT_USER_RERENDERS: ${N5_LIMIT_USER_RERENDERS:?смена музыки останется без потолка перерендеров}
   N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}
   N5_LIMIT_USER_UPLOADS: ${N5_LIMIT_USER_UPLOADS:?потолок загрузок на аккаунт не задан}
   N5_LIMIT_USER_UPLOAD_REFUNDS: ${N5_LIMIT_USER_UPLOAD_REFUNDS:?потолок возвратов слота не задан}

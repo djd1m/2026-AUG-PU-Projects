@@ -27,7 +27,7 @@ it('personal refusal names the exhausted key and the actual Moscow reset', () =>
   }
 });
 it('refunds have no sixth text and use the upload refusal', () => {
-  expect(Object.keys(quotaMessages).sort()).toEqual(['global_llm', 'global_minutes', 'user_llm', 'user_minutes', 'user_uploads']);
+  expect(Object.keys(quotaMessages).sort()).toEqual(['global_llm', 'global_minutes', 'user_llm', 'user_minutes', 'user_rerenders', 'user_uploads']);
   expect(quotaError('user_upload_refunds', now)).toEqual(quotaError('user_uploads', now));
   expect(quotaError('user_upload_refunds', now).details.scope).toBe('user_uploads');
 });

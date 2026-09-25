@@ -1,0 +1,1350 @@
+{
+  "revision": "821e1c38915eb0a18109c9f2f8460b2fd2cae744",
+  "captured_at": "2026-09-25T07:12:09.320886+00:00",
+  "files": [
+    {
+      "path": "apps/web/next-env.d.ts",
+      "sha256": "85ae5aee75f011967cf2d25cbc342f62d69314e9d925f7f4aa3456fc2cffcca6"
+    },
+    {
+      "path": "apps/web/next.config.ts",
+      "sha256": "b8977b7015ce1b164292e0bf462fb3a3b685f94fbc59553340b707d886f806ee"
+    },
+    {
+      "path": "apps/web/package.json",
+      "sha256": "f775a072dcf12ed66ea6d45de78173a19c7fa28e83c34ec429772061ba3a34a9"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-bubbles.mp3",
+      "sha256": "7a409aa9d7ca3c7da357c1ba0758df5c3f1defc9eae2acf65dae9c32c43803c3"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-doodles.mp3",
+      "sha256": "fa444fe390a89fa287a144ccb7088e9fdcc624afbe90535f9f8c3f6223a4fc80"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-ocean-memory.mp3",
+      "sha256": "34aaa4a1aca7dd7f824e84413150c6b399d8eb0bef36d535a4a8083ee1170ccb"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-one-good-day.mp3",
+      "sha256": "5a2655eb7d477fa4b2b9b3a8e20b84249e2656149c1e56314910ab7ea087fe7b"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-roof-tops.mp3",
+      "sha256": "374c27fb436518f8594e5284c3c1d04f1dede5c6f267ace12bb7168b338058d3"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-tranquil-mindscape.mp3",
+      "sha256": "0f1e5969b7f711ca3322b6ceebad6df62f5a443cf05a17081f66f1959306c552"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-walking-away.mp3",
+      "sha256": "ba10bb5088480e5c56a0cbbfa8bc92166bf73b6fa3ec8dd1a5560264d305c61f"
+    },
+    {
+      "path": "apps/web/public/music-previews/holizna-warm-fuzz.mp3",
+      "sha256": "1c494050bf7fd565080f65477db3997b0b5ebfed70f87cfb4f43c3d62c796e98"
+    },
+    {
+      "path": "apps/web/public/music-previews/komiku-everything-is-groovy.mp3",
+      "sha256": "64cc753ef450f1a56056d982305291687a05874ee43b83c3729b932bad92fd6c"
+    },
+    {
+      "path": "apps/web/src/app/AuthForm.tsx",
+      "sha256": "7b6525929fae0bbb09dd64c4bb645e3358e3b67b0ccaf0c8ca8dfff776b06e9b"
+    },
+    {
+      "path": "apps/web/src/app/api/auth/login/route.ts",
+      "sha256": "4cc0f75b86acd7ddabc14b05a99e654c4387a166f548530a8ab72e987cb9d292"
+    },
+    {
+      "path": "apps/web/src/app/api/auth/logout/route.ts",
+      "sha256": "92a3cd7d484ae726b365bc9df0dba18d71cdc7fb8f4a1728259cb8f18a7e681a"
+    },
+    {
+      "path": "apps/web/src/app/api/auth/register/route.ts",
+      "sha256": "9e74fec53dd54e103ce01154ade4547f936c7a1ddc159804b7eb117182f0cc0d"
+    },
+    {
+      "path": "apps/web/src/app/api/clips/[clipId]/file/route.ts",
+      "sha256": "55c6d9d89eb287681eb47f0ff7b8ede714e6eecd07bbefd41b5e4c7210b2a16e"
+    },
+    {
+      "path": "apps/web/src/app/api/clips/[clipId]/thumbnail/route.ts",
+      "sha256": "81725e0f71a49608a240a5b07cf373abb9aecdc13e1ab8cba14bbb7f80c62746"
+    },
+    {
+      "path": "apps/web/src/app/api/trpc/[trpc]/route.ts",
+      "sha256": "a9ba56049dc859c71fb06e872242c180f12867ac284335e845c39c7436eb0b92"
+    },
+    {
+      "path": "apps/web/src/app/api/upload/complete/route.ts",
+      "sha256": "3c1b44d91e18ebda628345ca14d297fffec3e71d9653ab9587bcd94dbf0e1db0"
+    },
+    {
+      "path": "apps/web/src/app/c/[code]/route.ts",
+      "sha256": "fe2d9a925f1d2f5d841a19d72c90b8b8294657e0b9c00da52b52b7d309c4ec98"
+    },
+    {
+      "path": "apps/web/src/app/clips/ClipCard.tsx",
+      "sha256": "53bfddf5fbd3c7d1aba3e4c8ea39a4a5fdf9e721e2ce073c7932f223b92766c2"
+    },
+    {
+      "path": "apps/web/src/app/clips/ClipMusicChoice.tsx",
+      "sha256": "51b351fee98a33b70abdc587ae6fb05e7a03d19e45da535570cc85a962b8de85"
+    },
+    {
+      "path": "apps/web/src/app/clips/GuestPacks.tsx",
+      "sha256": "f2c7c7994c0ecb71b2e6d63dd4f3ab696149938b997b4a9142d11ac6d30f1265"
+    },
+    {
+      "path": "apps/web/src/app/clips/useClipDownload.ts",
+      "sha256": "7ea8cddd4d04b4e24911a8c401a2218268163218aac794f257c0c852c5327664"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/AccountDeletion.tsx",
+      "sha256": "0dbef948761092270cee367185e76a1ddf30d80348c22b2fcc0165e8c33f89fd"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/LimitsPanel.tsx",
+      "sha256": "dbda880e6fa37fd36d080df2ffa71bb03d1feb83255ead5bb2b19c79d0aece00"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/PartnerPanel.tsx",
+      "sha256": "40a9a9e9cf731bac3c061b88c7229bcffd916d3c5deac99cca3279b595a14da3"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/ProInterest.tsx",
+      "sha256": "c19ce995df5cfbe4a9d88bb860aa9b0d0003ff95606e6c373c3468dc1b7da4db"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/error.tsx",
+      "sha256": "b5914128e5eefda5df44fd2e11616bcfb339cb8ae3af9c931fbb05859b66056a"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/layout.tsx",
+      "sha256": "7fc870b9c709a1855a049a6ad1ef9eb34f0f6807386f170f56d56373b63abf1a"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/page.tsx",
+      "sha256": "08701c0ca1128ff5256c61695304b4bc8c01374b441aaafc99046826cb3a31fb"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/videos/[videoId]/not-found.tsx",
+      "sha256": "3f64668c8c38cb87f72981931079b78210795e4e7e08b4c11926c3f0d29d01a3"
+    },
+    {
+      "path": "apps/web/src/app/dashboard/videos/[videoId]/page.tsx",
+      "sha256": "07b89544fbd36101de78fed0d22b53a421edb4d1d4a64f5217a5136b2c95d691"
+    },
+    {
+      "path": "apps/web/src/app/g/[guest_code]/route.ts",
+      "sha256": "444649f8f465eea5de3fa83ea3694eda1201cdecc67346d34186987b14d1e432"
+    },
+    {
+      "path": "apps/web/src/app/health/route.ts",
+      "sha256": "ff3e3540a06f8c9737a044c066d4662185fe6da859cf20408a072f1752122492"
+    },
+    {
+      "path": "apps/web/src/app/layout.tsx",
+      "sha256": "1f0ee9a8e76555e8725cb0605ac6e8f7e4ed2db34c49739311bbeca38ec8a1f7"
+    },
+    {
+      "path": "apps/web/src/app/page.tsx",
+      "sha256": "b32e0753e15e7c610c3505646d1c1f8db0e0c828c6fcafc694018a7b477197fe"
+    },
+    {
+      "path": "apps/web/src/app/upload/Uploader.tsx",
+      "sha256": "9712d577cd2bb760a84799814ed931704e95cc0e8d393fd504d386f620351257"
+    },
+    {
+      "path": "apps/web/src/app/videos/VideoList.tsx",
+      "sha256": "1d98d11073bcf47a4957bd1f839ea5cf57b994049619467ff0466fb5911e5356"
+    },
+    {
+      "path": "apps/web/src/app/videos/[videoId]/VideoDetail.tsx",
+      "sha256": "2265cc23a78bf0f390eb39bdfd594cf3325e9c50db53de554a95bb5dd76f684a"
+    },
+    {
+      "path": "apps/web/src/instrumentation.ts",
+      "sha256": "63ce9e83d69bc72a92179b13e3e8163c50fae82d9a12945f79178557c3f14541"
+    },
+    {
+      "path": "apps/web/src/lib/guest-contract.ts",
+      "sha256": "6550e79a90d1b20a9e720b48d446ea949d41222dd25087f26abacde30cfd89c1"
+    },
+    {
+      "path": "apps/web/src/lib/limits-contract.ts",
+      "sha256": "b1e5b3819406048e074b9936357ad33940bfd5b2f15fbbda9ce20f29c680324b"
+    },
+    {
+      "path": "apps/web/src/lib/partner-referral.ts",
+      "sha256": "49e4f5969b1a47c468c5337d1dc27ed2fc9009a01f04eecc28043f64de78e456"
+    },
+    {
+      "path": "apps/web/src/lib/rpc.ts",
+      "sha256": "fe103e409373ff506f9f0bcd6e253cff27b771515c5574c00be0cd1fa7dacfbb"
+    },
+    {
+      "path": "apps/web/src/lib/screen-contract.ts",
+      "sha256": "84e2aaef9a784261aeef25fd717bc6fb37f0f648aa20ef3cca7a49263db8abf6"
+    },
+    {
+      "path": "apps/web/src/lib/upload-parts.ts",
+      "sha256": "4d7d33d6bde4db41ae7ac87740b574225acfd5a359df1791083e32b7302605b9"
+    },
+    {
+      "path": "apps/web/src/preflight.ts",
+      "sha256": "b02acbae7c59bde881b483c5a22b837ac2302de464a8f387280708469b7ced8f"
+    },
+    {
+      "path": "apps/web/src/server/auth-handler.ts",
+      "sha256": "03033f61d0d383580d902d12fe8d6ffb9c64ef488c0628a9e74b50d1e5dc2bd5"
+    },
+    {
+      "path": "apps/web/src/server/auth-store.ts",
+      "sha256": "ffb5732338f23e598262e1b82fc0959e2fd80fdb8b57d89b8a015504f2929063"
+    },
+    {
+      "path": "apps/web/src/server/auth.ts",
+      "sha256": "699076bf660eee46cfc1a3e67258cfc438219eabe958ce9d4b319816b438ead3"
+    },
+    {
+      "path": "apps/web/src/server/clip-file.ts",
+      "sha256": "0cc2224d5fafbb85e24b2da8ec520d00ee4a423e645dda40dddde6d191dfc96b"
+    },
+    {
+      "path": "apps/web/src/server/clip-music.ts",
+      "sha256": "3ed2bbac4cb3240ebeea912669e4bfc865b08fd68add05f08578c4e1bb9adab3"
+    },
+    {
+      "path": "apps/web/src/server/environment.ts",
+      "sha256": "2c0f526d7653f20408b4d5c0b1f76c39c2020d00c2120d6084296da90d41c98e"
+    },
+    {
+      "path": "apps/web/src/server/erasure-page.ts",
+      "sha256": "f0769958d720c26af84b51fcd35b3792c738006a3c519a7f1666c663d1aae4d2"
+    },
+    {
+      "path": "apps/web/src/server/erasure-receipt.ts",
+      "sha256": "4ff330cf733929550e63c8d6e21af209c26cf6026e095dffdd12a579b2e1d294"
+    },
+    {
+      "path": "apps/web/src/server/erasure.ts",
+      "sha256": "633cc2eaa0d164a3af8d6bfcddad7ef6b9f33a793e551513f4661a2d160d2834"
+    },
+    {
+      "path": "apps/web/src/server/guest-file.ts",
+      "sha256": "19bd437dfd3b53dca0611a95cca8eac23639c2fe9a872de8289b61dacae07590"
+    },
+    {
+      "path": "apps/web/src/server/guest-pack.ts",
+      "sha256": "395ed9be4e0a1576f71a3ecfc77f8d2891ba6dc8a30adb53734faabfd4ca3dce"
+    },
+    {
+      "path": "apps/web/src/server/guest-page.ts",
+      "sha256": "c582a8d0843d52f66341a4503246033a25afc89dc07ff2744745278999c52d8b"
+    },
+    {
+      "path": "apps/web/src/server/interest.ts",
+      "sha256": "f572709d32ff5aa63c4fcb9c2eeb91e641640ee2636cfd2e352386d875f1f65b"
+    },
+    {
+      "path": "apps/web/src/server/ip.ts",
+      "sha256": "af357f46c7cad2def1629a34e85b576237fd6a5db8ca9d2249639e706c823301"
+    },
+    {
+      "path": "apps/web/src/server/limits.ts",
+      "sha256": "1953ecbae592b84509e89f4839a20f48f95a9d717233e91b1ddc6b18342f992c"
+    },
+    {
+      "path": "apps/web/src/server/media-type.ts",
+      "sha256": "898fa78965975961dec0e208966a4dbc5f795f4e7406b07b344c2097cd59d15b"
+    },
+    {
+      "path": "apps/web/src/server/page-account.ts",
+      "sha256": "f2ad4a67d8fea549e39bcf3f30be779f5420405a9503d1fe45606343f30e1713"
+    },
+    {
+      "path": "apps/web/src/server/partner-code.ts",
+      "sha256": "0eb0e2998ecfade604c0d60d108a9c9534eea18fdd5865c024ee477d126fdcd1"
+    },
+    {
+      "path": "apps/web/src/server/partner.ts",
+      "sha256": "14a95dd3cb45289c8f976a4088c65ffd4a70a3f5e30453e95be79b6c30b594bd"
+    },
+    {
+      "path": "apps/web/src/server/queue-runtime.ts",
+      "sha256": "3407846824e6660f27d74b20352b33ee76edb2ea5b0b5aa00e092621857e8e10"
+    },
+    {
+      "path": "apps/web/src/server/rate-limit.ts",
+      "sha256": "d2f563e44884de73ea1291816880da8605b3aa795bd1cbcc36909f05d6d5c90a"
+    },
+    {
+      "path": "apps/web/src/server/retention.ts",
+      "sha256": "2134241dbcf2c829f8fe14c4a7f45961d5d2adbf0e20b99e7adfc667b851a78b"
+    },
+    {
+      "path": "apps/web/src/server/route.ts",
+      "sha256": "266d450015830a2aed78055f1521f0aaca5306d0255ece43a559bbc0aed23543"
+    },
+    {
+      "path": "apps/web/src/server/runtime.ts",
+      "sha256": "c76599c5008c4ee560854fb49c0d503d4ef4757fdfa89e9703102b66f8f0f9c9"
+    },
+    {
+      "path": "apps/web/src/server/screen-runtime.ts",
+      "sha256": "67935b2ebee085a7986f9450930e12eb0f4e77de170581a35029f8b20ed4c206"
+    },
+    {
+      "path": "apps/web/src/server/screen.ts",
+      "sha256": "1a903da56d2c074cbf9b5bd8b83ea214f5825e6012993221ffa5837c902b2749"
+    },
+    {
+      "path": "apps/web/src/server/short-link-handler.ts",
+      "sha256": "b9d41c2c1846e69aa1fc9774908dc3fb37b3bb61e57cb974ce9ba54dc393732b"
+    },
+    {
+      "path": "apps/web/src/server/short-link.ts",
+      "sha256": "e28274468e741318bc87097cb92bee7840e0b335584033b3cf785aa98ac74645"
+    },
+    {
+      "path": "apps/web/src/server/trpc.ts",
+      "sha256": "9ee5c35c9d26cc9058d9b1bd4dd0a34d9c1b0143d075fb4b3ddb10078263a2f4"
+    },
+    {
+      "path": "apps/web/src/server/upload-contract.ts",
+      "sha256": "bbdf2860c4cd0674fdd3ea6d4e19b391bce8ee72f30a1a2de437fddebf67b270"
+    },
+    {
+      "path": "apps/web/src/server/upload-handler.ts",
+      "sha256": "15049962bac9d98a63074183a1a53ae83ae8b7c4194608db81721d98f67eafc0"
+    },
+    {
+      "path": "apps/web/src/server/upload-runtime.ts",
+      "sha256": "b4b0195399a72c870e1c99a6975a92314cff5540a1dd2b8a07f6d1a5b8594b35"
+    },
+    {
+      "path": "apps/web/src/server/video-retry.ts",
+      "sha256": "f3a63ddf85d3487e958e891b679fa2ff7b02d9e60cc1f64dedac1f535ed0146c"
+    },
+    {
+      "path": "apps/web/src/server/video.ts",
+      "sha256": "1941417cb8b6310b234dbb6810bb71b14fe9569367b9a5164933d77f28088f26"
+    },
+    {
+      "path": "apps/web/src/server/watchdog.ts",
+      "sha256": "4faedc9e8b7a7035f7a70576064a48f54bc1489cfc8ae85bdbe05d72522e6e19"
+    },
+    {
+      "path": "apps/web/tsconfig.json",
+      "sha256": "54cd6d4e32b1c5fb5f07b746a27ccc6fc67c25d57d5c88bec65a8b235d351010"
+    },
+    {
+      "path": "apps/web/tsconfig.preflight.json",
+      "sha256": "def706549f990cf4708a8bd66542a16d1ebd5f21fbd0d214b37bae663aa01cd3"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-bubbles.mp3",
+      "sha256": "73efb557d8cfcca0f5cf3b435d3a0157bf9a702115b55266b8a2529f3997b542"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-doodles.mp3",
+      "sha256": "84db72387b14fa51294ba76a0bb3f72f39172527e5eb7964da8567596561ae72"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-ocean-memory.mp3",
+      "sha256": "6121e8621b6d7894ba413b502092e7a57c74772021a5220f1dee354d7d496276"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-one-good-day.mp3",
+      "sha256": "dd6f973da34bad28bc16b794601b952bd1506472ed7fb979b3e41369bd831427"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-roof-tops.mp3",
+      "sha256": "f6e619fbfdc0898c409494d5c810d34d9cd29be2b75bb2d8c197e1edb37155b5"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-tranquil-mindscape.mp3",
+      "sha256": "488d9693c13e44c5213c0647ee89ea91b21e17d9ac602225a78ee089720134c0"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-walking-away.mp3",
+      "sha256": "fd8a618a4076b76f02f69414d6beb4ad7ddf3b8c26164085bd6dc1a9fd2f7610"
+    },
+    {
+      "path": "apps/worker/assets/music/holizna-warm-fuzz.mp3",
+      "sha256": "974ffd083b09aecbe60412f3376db07fb241adbbb0abf89698a22229a2de02c6"
+    },
+    {
+      "path": "apps/worker/assets/music/komiku-everything-is-groovy.mp3",
+      "sha256": "8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d"
+    },
+    {
+      "path": "apps/worker/package.json",
+      "sha256": "7f75729998c59138fecaf141cfca0bcd20a12aae9c50010cf1c9943228d188e5"
+    },
+    {
+      "path": "apps/worker/src/llm/fake.ts",
+      "sha256": "0fef0ff1fd6eb0e34ad12b40e33b79821fc6a4a25401aee4b0f8915a004d084d"
+    },
+    {
+      "path": "apps/worker/src/llm/prompts/selection.ts",
+      "sha256": "c0c11919a52939ee0fc7a44b670f9f483778feaf022444c8b777fe7ea397d42e"
+    },
+    {
+      "path": "apps/worker/src/llm/provider.ts",
+      "sha256": "f2506d124cce9774d34f55de68a43b6a6721ae40d823a43bc3517ce7d2da5134"
+    },
+    {
+      "path": "apps/worker/src/llm/spend.ts",
+      "sha256": "5ecfb176c7a2bbd51bd9a69b922c2ca23d8545c4e579ef3950e48a17ef247f71"
+    },
+    {
+      "path": "apps/worker/src/media/download.ts",
+      "sha256": "de8a67ec163e477bef692ad0baae1db5b24f9cb35c95e6b9211bf6d50daee774"
+    },
+    {
+      "path": "apps/worker/src/media/probe.ts",
+      "sha256": "5b5096a8542b634e9b47033a1c13f168daf26e66f8a44d26ccee3f9090b793ad"
+    },
+    {
+      "path": "apps/worker/src/quota-environment.ts",
+      "sha256": "02d69c73eff9e3b32e0ac2f9c9155a49588cfcaf82299e0ea153f5311d331084"
+    },
+    {
+      "path": "apps/worker/src/render/compaction.ts",
+      "sha256": "5ba58a62fadedfae67a36d82587fce7f9c98054852853d6655ac17f3f2533862"
+    },
+    {
+      "path": "apps/worker/src/render/diagnostics.ts",
+      "sha256": "2fe7fb0e6f34aae22a79e836156661645f980261b5291096e8d2569da7e0a51d"
+    },
+    {
+      "path": "apps/worker/src/render/envelope.ts",
+      "sha256": "1de7f170c8aab2d5fbde5e0f7e42843f942b47fae59efba48c6dffc950a3e609"
+    },
+    {
+      "path": "apps/worker/src/render/escape.ts",
+      "sha256": "00d65e6b82d65bda28d000ce845e3596df9ac831f460270db5565a7b1850d8db"
+    },
+    {
+      "path": "apps/worker/src/render/exec.ts",
+      "sha256": "5e5ec11ce5890d0a5e43946a724c6e9b5dd8bc8fefaed0b1a667545a91c9a9aa"
+    },
+    {
+      "path": "apps/worker/src/render/faces.ts",
+      "sha256": "a557399d9cc4550b5ddbb277707114439d8571ac421f887e8ee6e54c07933fea"
+    },
+    {
+      "path": "apps/worker/src/render/ffmpeg.ts",
+      "sha256": "499d98440d6d8d67c7d6bfb8ab2516c0120c9a31e6c4b35e746322b4ddc334f2"
+    },
+    {
+      "path": "apps/worker/src/render/format.ts",
+      "sha256": "492b13ab405bb98afcb796cc837e118e7910e2fa40f803ef570bf763eaaa77f1"
+    },
+    {
+      "path": "apps/worker/src/render/framing-plan.ts",
+      "sha256": "cb173f98cc2e69416c7f4cbe875411090bd62eb2f698177bb238b605e495384c"
+    },
+    {
+      "path": "apps/worker/src/render/glossary.ts",
+      "sha256": "6ce01571a94252f3b538a6a1a659ef08a3878b32c3283c89f5d4ce8ee11e6f5f"
+    },
+    {
+      "path": "apps/worker/src/render/loudness.ts",
+      "sha256": "9587d1b470939ff6e3ba7ac8fb98ad918b2df22ca792b7fa7cfa24fc6bab7e0c"
+    },
+    {
+      "path": "apps/worker/src/render/music.ts",
+      "sha256": "73b5c1b0aee520d87042e71649843d432c1ebf1b52c72e72d10a26d41317b119"
+    },
+    {
+      "path": "apps/worker/src/render/packshot.ts",
+      "sha256": "662698ba5954274e3ada9c1be14028b62e65609a28d7317bf5fc7acacf673b37"
+    },
+    {
+      "path": "apps/worker/src/render/probe.ts",
+      "sha256": "4097fadf763a2347ae42a3c07585aedbf5fbed15bcf035776acc47ad09363935"
+    },
+    {
+      "path": "apps/worker/src/render/storage.ts",
+      "sha256": "be2deb188c91059bba0885be7caad8538c25477981ed74669104ee5f78863493"
+    },
+    {
+      "path": "apps/worker/src/render/subtitles.ts",
+      "sha256": "8d8a98b600d547834f81ebea2c61ed3670b53f72f0db9300e0630677dda743a5"
+    },
+    {
+      "path": "apps/worker/src/render/teaser.ts",
+      "sha256": "af40a762b702d6929ea935abe27b493a2213bb74a5e59c3d8f58bdbc51ef37bd"
+    },
+    {
+      "path": "apps/worker/src/render/watermark.ts",
+      "sha256": "7e3ca04a091d8626c8c815c8ec539cdeda2584d8c0f0a64de084f8615a6c0e5d"
+    },
+    {
+      "path": "apps/worker/src/retry.ts",
+      "sha256": "c808e408163ada7b12c6702246a496ec849798095225dc2cec8482da2f971626"
+    },
+    {
+      "path": "apps/worker/src/runtime.ts",
+      "sha256": "e295bd1c064b7196cf4841fb50794adcf34ecaabf5f8174cb76d12172eb26b0d"
+    },
+    {
+      "path": "apps/worker/src/stt/chunker.ts",
+      "sha256": "cbb6fe7e7d06a6018a30d438ca17fff2c15abc4ecd52f12f81ed277d1af53dbb"
+    },
+    {
+      "path": "apps/worker/src/stt/client.ts",
+      "sha256": "218045d3b98ad02c6b6521e08ad1a9cbf8dc6b873b5546b61c34f4ab6409cd90"
+    },
+    {
+      "path": "apps/worker/src/stt/extract.ts",
+      "sha256": "bb01907c2996b64eaad21dec86eafc5c5be6d563d6596f0d84e02bd27878ae12"
+    },
+    {
+      "path": "apps/worker/src/stt/merge.ts",
+      "sha256": "4fd7273ff5980a0f6c38ffb65b4f0d7eb0affbd0dc94de307726b3d2c2b3494d"
+    },
+    {
+      "path": "apps/worker/src/stt/spend.ts",
+      "sha256": "5f63234f5de387119b86bfe6fff6784e25cc8b5c1f022230dee6f9d70bfc92e9"
+    },
+    {
+      "path": "apps/worker/src/wait.ts",
+      "sha256": "d35b9c2882b0d89f614bf2a3a073df4d738e03a0e2f17cd402b55bff5f3221d8"
+    },
+    {
+      "path": "apps/worker/src/workers/render.ts",
+      "sha256": "12f39eeae0331318966d8138c3763e6a317ae65486eec229d08ed7aef432eef0"
+    },
+    {
+      "path": "apps/worker/src/workers/select.ts",
+      "sha256": "8a0e5f838092c719e7b3ecf6f6e2e5e1f331737fc357ba80bde7e9ee9d490f11"
+    },
+    {
+      "path": "apps/worker/src/workers/stt.ts",
+      "sha256": "0a8e42b89555d2f6bcdf19a4e00318138710b234bf8e5e7ef3f282d7c873e3da"
+    },
+    {
+      "path": "apps/worker/tsconfig.json",
+      "sha256": "fa0cb40f77697705869ab6d7efff064906f4cac8498ae95cf0d4e09b2881ab4e"
+    },
+    {
+      "path": "apps/worker/workers/render.ts",
+      "sha256": "e3ae89787b6369ffd8454151829bf9b7bcd92ad86cbc999e29a935cc07938d9c"
+    },
+    {
+      "path": "apps/worker/workers/select.ts",
+      "sha256": "2fef8c6a1292e06b7c2d6dc82ae2b22de63d1b8c1d9f1f137705f7b36d760bc0"
+    },
+    {
+      "path": "apps/worker/workers/stt.ts",
+      "sha256": "571a2eeaeee2f6918ce8d972064f0560dad5b026507dcf426af8cef0ce8dd1d1"
+    },
+    {
+      "path": "packages/db/migrations/001_init.sql",
+      "sha256": "96e64cf44ca9e1842b524f4047344406e647b150e3eb4f628d83b8bdae79a107"
+    },
+    {
+      "path": "packages/db/migrations/002_growth_event_prefix.sql",
+      "sha256": "7cc0f6608638f6455a222079dd032aabdfa893e1c9e5ae32c7c8aee4260eaa63"
+    },
+    {
+      "path": "packages/db/migrations/003_ipv6_legacy_cleanup.sql",
+      "sha256": "d67d53d976a85df31c7a0badfaafc781d7b0d208551e0b2cb62c3cb980baad46"
+    },
+    {
+      "path": "packages/db/migrations/003_upload.sql",
+      "sha256": "37d58b90a50643ee855a428a1f916a8323e8fe365edc5138fd795ebcb647d558"
+    },
+    {
+      "path": "packages/db/migrations/004_ipv6_prefix_masklen.sql",
+      "sha256": "931bd1e22bc6a2b8134db2c2935165f8c62cf09c044859c9b039f0a61bd24651"
+    },
+    {
+      "path": "packages/db/migrations/005_queue_probe.sql",
+      "sha256": "56f7596827d9c6a4bde7a594cc064151fff95c0ef8464b5d60e83a299ea6d9ab"
+    },
+    {
+      "path": "packages/db/migrations/006_transcription.sql",
+      "sha256": "a29192f0d00382faf7c2abff255c6a9bb210ed452d803fd554feebe6470c6ddb"
+    },
+    {
+      "path": "packages/db/migrations/007_selection.sql",
+      "sha256": "4bb5a2664300596c029965c79d001255503687358e52160206bdcf7fda2f3d91"
+    },
+    {
+      "path": "packages/db/migrations/008_render.sql",
+      "sha256": "f58b0e95eba0e116f2ce5339c9bafef65a69cf5d0d57e8395af42e96126c1d93"
+    },
+    {
+      "path": "packages/db/migrations/009_short_link.sql",
+      "sha256": "1ae9770f9cdb7a9e448e154434b9f4d8fb97cec3f9bd7e68809469049a641165"
+    },
+    {
+      "path": "packages/db/migrations/010_guest_pack.sql",
+      "sha256": "ba9502f92ab5f5d63189a06ca254355a6d944a757837b896af62d2ebfde27807"
+    },
+    {
+      "path": "packages/db/migrations/011_partner.sql",
+      "sha256": "db9435a8126f757d9a82796a897482238e3f8eeeb9219f5b233811e25496ecc3"
+    },
+    {
+      "path": "packages/db/migrations/012_retention.sql",
+      "sha256": "581f8b0e48478b9ef52442f9a94323d50ab7d0aa6faaa477e80d97d57eeeaa94"
+    },
+    {
+      "path": "packages/db/migrations/013_watermark_geometry.sql",
+      "sha256": "3ad6b8dc0d663d7fb1186d63d64b65c8113f14f93de0e354343f1d9fa9b47faf"
+    },
+    {
+      "path": "packages/db/migrations/014_music.sql",
+      "sha256": "3c28b2faac7105ada02cae2ecd8284a1a221b3f1510c51d5ded805493dd7cde5"
+    },
+    {
+      "path": "packages/db/migrations/015_teaser.sql",
+      "sha256": "91b901c924022f23fbbd17c28faaee2930015b72aaa2881638978c4e38e27209"
+    },
+    {
+      "path": "packages/db/migrations/016_partner_fairness.sql",
+      "sha256": "c62565deed9db14229fbf16c43f03b73d4db80b424bbcdd308349618aef783cd"
+    },
+    {
+      "path": "packages/db/migrations/017_compaction.sql",
+      "sha256": "e82364688460aee545e31ca349c77202481fd7591b187f77bc137646a672d670"
+    },
+    {
+      "path": "packages/db/migrations/018_clip_music.sql",
+      "sha256": "963bef3e870ee0cd543eac35b1c03245cd48f68b4cb60aa2bab8288c842b02b1"
+    },
+    {
+      "path": "packages/db/migrations/019_music_skip_reason.sql",
+      "sha256": "0b6701fbb8182fd83164dd3b3a1cda12c94a2e361a19a8dda436928eb38f47e9"
+    },
+    {
+      "path": "packages/db/package.json",
+      "sha256": "92b2de66cf1b2555df99e0975f7dd2f48b0a701f9d50b1e1e0935249cceb45d8"
+    },
+    {
+      "path": "packages/db/scripts/partner-code-unblock.mjs",
+      "sha256": "b0f78619185e8f39fa465398ef207149223ae3487560cba69c0091652428fc81"
+    },
+    {
+      "path": "packages/db/src/attempts.ts",
+      "sha256": "1ea18327be1e2f2b405576b5b8a3dc3f5a518dcd4131a93652816c77b7181855"
+    },
+    {
+      "path": "packages/db/src/clip-link.ts",
+      "sha256": "94f521e64acac4aacdbf2300dbed5701a2c39459ed74ea01482a17d569d7f52f"
+    },
+    {
+      "path": "packages/db/src/index.ts",
+      "sha256": "be3e94ca8fcd01a34de69cf383b88f9d1bd7fe8beee2cec1148418f495c21e7a"
+    },
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "811b03ea40ec002f99c872744eb8a45410c5d5ad508d2395e23078b4b29ab7a3"
+    },
+    {
+      "path": "packages/db/src/probe.ts",
+      "sha256": "57e3c9b27fd85507cbaec74fb2d27c6405ef0e336dee648e9b553a7a85c82f64"
+    },
+    {
+      "path": "packages/db/src/quota.ts",
+      "sha256": "ff26c9202ec711de70169371ef8159c0f1afa76ddd40a32a41a893ae1179ed47"
+    },
+    {
+      "path": "packages/db/src/render.ts",
+      "sha256": "23252c3820456f72fb012c220f483889068c87f43b0d0b942574dec96ce43849"
+    },
+    {
+      "path": "packages/db/src/selection.ts",
+      "sha256": "c6fc3249bfe96b9fdf232ecdd8a94d76d4f32a64083b028417b892c14f35f6e7"
+    },
+    {
+      "path": "packages/db/src/transcription.ts",
+      "sha256": "1812c6a3091aa97f5013c32536e427a70e2ef6fa9be7e453f8d77929a7b2da5e"
+    },
+    {
+      "path": "packages/db/tsconfig.json",
+      "sha256": "f0b29eb4cf66109ddaa38cf326692a9db2a6109e68a2709ec214f9a3fb700a2c"
+    },
+    {
+      "path": "packages/queue/package.json",
+      "sha256": "a063a67b62f3bc7661e1f82017f2e2886a41891f16bbf27d57bb83e008162e13"
+    },
+    {
+      "path": "packages/queue/src/constants.ts",
+      "sha256": "2a3aff14d91cb3c4ffd0cbe2bd14322a2fd2966a0617e508a2351390ec51c0eb"
+    },
+    {
+      "path": "packages/queue/src/index.ts",
+      "sha256": "74e342d7d86729e563e28d4bc5c1f64f9bcf96ec9b4d2a12fab73295a1851651"
+    },
+    {
+      "path": "packages/queue/src/queues.ts",
+      "sha256": "33d9fb6b833677aa31f473bf4203c47dff7c851d244a9f8ea319079a3b8958e7"
+    },
+    {
+      "path": "packages/queue/tsconfig.json",
+      "sha256": "f0b29eb4cf66109ddaa38cf326692a9db2a6109e68a2709ec214f9a3fb700a2c"
+    },
+    {
+      "path": "packages/s3/package.json",
+      "sha256": "560721e0ce049cdb52fddfb536fec38e6e5825a073263c1fa046efe230d012c5"
+    },
+    {
+      "path": "packages/s3/src/client.ts",
+      "sha256": "8734febdd7c9905b8e529e76a585210a5b4e120c54317447b3134f82d92148be"
+    },
+    {
+      "path": "packages/s3/src/erasure.ts",
+      "sha256": "4b9e759aaa00f019ab633368590319ff639f6a05901aa45051911fda22ac9937"
+    },
+    {
+      "path": "packages/s3/src/index.ts",
+      "sha256": "50ebf509561e0bcf45b51288616443b9ab1989b764ea63dad088da8d011afb62"
+    },
+    {
+      "path": "packages/s3/src/multipart.ts",
+      "sha256": "a29aa54b45ed82d83ea3761c5ef1a650b227023db59e398ff063eb6836daa26c"
+    },
+    {
+      "path": "packages/s3/src/operations.ts",
+      "sha256": "ecf5a0a284d6f3b833cf31adb48d15ee344dca0db1823a1eb69ba686bdb5e0fe"
+    },
+    {
+      "path": "packages/s3/src/presign.ts",
+      "sha256": "ff846c390cb8ff77689723377a539013022aa99fd23c0a5fb532da049c930776"
+    },
+    {
+      "path": "packages/s3/tsconfig.json",
+      "sha256": "f0b29eb4cf66109ddaa38cf326692a9db2a6109e68a2709ec214f9a3fb700a2c"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "35e7ce2656f89f998cfd2079549f5f20a53782a2786a2f5fa86f9be8e9b3cc64"
+    },
+    {
+      "path": "packages/shared/src/clip-code.ts",
+      "sha256": "bd20e9047c3175cc6f6ff5da19bb8fb5655dfffdc87800844020ae1f39118e8c"
+    },
+    {
+      "path": "packages/shared/src/config.ts",
+      "sha256": "4ba22ee8af51af60311530b2ed04d6707c02ae1ff4f53d9f9c9f5ee5cebe48bf"
+    },
+    {
+      "path": "packages/shared/src/enums.ts",
+      "sha256": "a4acaee7f50dcc45f8dad2f915d4c65693006716047892571506a80d14615c71"
+    },
+    {
+      "path": "packages/shared/src/formats.ts",
+      "sha256": "f2a93e74f6cfcda9c7481166126be9d00c86ad09ee6e137516586fec82bb5177"
+    },
+    {
+      "path": "packages/shared/src/fragments-schema.json",
+      "sha256": "3b3f983d3a03df0d688510cf65aea2292e4411054c21b392f0a8d44efb557cb2"
+    },
+    {
+      "path": "packages/shared/src/fragments.ts",
+      "sha256": "42aaed57c3520b8b9a65b66c6d9bf20d261907f42716b795f8d0b44296069ea1"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "e02a74b6c350ec2989cd9538d24399ed39df84553e99bfdd407e53d00ed4f8d6"
+    },
+    {
+      "path": "packages/shared/src/music-catalog.ts",
+      "sha256": "1f59fce4c7fd88e3521d9ba30803adf7060e547205afa7831155ebb984ebc483"
+    },
+    {
+      "path": "packages/shared/src/transcript.ts",
+      "sha256": "2471bb6ddd58e5b12003fd2b96c461449cf2f0c9ec0092c36153379ee034c2ab"
+    },
+    {
+      "path": "packages/shared/src/upload.ts",
+      "sha256": "95192199f0e5cbca8978fcb0eb3a8b9a243008e8ab76d4d64be36c3159f131b6"
+    },
+    {
+      "path": "packages/shared/src/watermark-metrics.json",
+      "sha256": "2fa9dc3a7ef8859f087daaf939696139e59fa31b88ef2ece85946747e47226e0"
+    },
+    {
+      "path": "packages/shared/src/watermark.ts",
+      "sha256": "5ef4ca272f24d0f160e5bd266a2b5f8355a526b1bfb08cf2680ea2a17b399dde"
+    },
+    {
+      "path": "packages/shared/tsconfig.json",
+      "sha256": "f0b29eb4cf66109ddaa38cf326692a9db2a6109e68a2709ec214f9a3fb700a2c"
+    },
+    {
+      "path": "scripts/acceptance-upload.mjs",
+      "sha256": "bd8e356a87841164a888414eb34e3f9b2dd4c8451b04f7246d4267ceb4f22df8"
+    },
+    {
+      "path": "scripts/build-music-previews.mjs",
+      "sha256": "3159cb205a54cb091a138a9992540e7aeb3c9363d12b945f2828e4b8064b8816"
+    },
+    {
+      "path": "scripts/check-env-complete.sh",
+      "sha256": "40e40a19a3a3cce6665ec61732680e171877b0f1f665fbdf2b11eb9328daedce"
+    },
+    {
+      "path": "scripts/check-env-wiring.mjs",
+      "sha256": "95e6b41f7a45f20352dba2165b9b722bc570b6e11822b1ea5d2fc948824c5199"
+    },
+    {
+      "path": "scripts/check-env-wiring.sh",
+      "sha256": "39ec141840a1ad87235c1fbc068db5485abadcaad714474de62f342114155d06"
+    },
+    {
+      "path": "scripts/cleanup-our-docker.sh",
+      "sha256": "12e6ef9d86cfc4ac531a29173c4fcbeb9f90b297855d5673f20896c5675b195b"
+    },
+    {
+      "path": "scripts/demo.sh",
+      "sha256": "044f67c2b2217ae1b424a73929f871862058d0190ab0a0f703bbdfd8aa94d659"
+    },
+    {
+      "path": "scripts/generate-selection-migration.mjs",
+      "sha256": "59c5e4130afd0044ea0d474e0ff4d36ed972616624a8a285e74cd3898869fc56"
+    },
+    {
+      "path": "scripts/lint.mjs",
+      "sha256": "902665a64628229fe84e17127dd8905c951949543d818b8bd18b4c2c6dfc38b0"
+    },
+    {
+      "path": "scripts/openrouter-probe.mjs",
+      "sha256": "733c98e36ff0103dbaf065e76735c32ccd0e7c2d5d183b027d21f73c1be9965b"
+    },
+    {
+      "path": "scripts/switch-to-clipmkr.sh",
+      "sha256": "fe8bca9f33672c47d71404e63f83e829e73c0ed5923e0adfcf6e505a704be4a8"
+    },
+    {
+      "path": "scripts/test-db.mjs",
+      "sha256": "4332b3c8f432fe18de7427ca088a74b3f2f7b70d32f2fb0c06ab8769b06ca394"
+    },
+    {
+      "path": "scripts/test-framing-mutations.mjs",
+      "sha256": "206f79b0a3b6c3f1b15c1256b239af7ba2661805b60323a16a0059359044c89d"
+    },
+    {
+      "path": "scripts/test-guest-pack-mutations.mjs",
+      "sha256": "1a5b678c48ab8b729a07c3937e69ac4c29fba94e2a33f02f88461b13067f8db3"
+    },
+    {
+      "path": "scripts/test-limits-mutations.mjs",
+      "sha256": "fb1e5152b7ef06199b90b04521717410c389ab9789716c334261de3a106dec30"
+    },
+    {
+      "path": "scripts/test-live-findings-mutations.mjs",
+      "sha256": "ac8e7627af8a6ce8c5b0837215cd9dccbe7c4feedf9350a82f5c6d49d3ad7978"
+    },
+    {
+      "path": "scripts/test-mirror-mutations.mjs",
+      "sha256": "c9e6391622c5e637a8cafe4529de46cc34a7a5a96ead1ba5f3c45baa2e907c42"
+    },
+    {
+      "path": "scripts/test-money-mutations.mjs",
+      "sha256": "aa733aee099848559d5934c208e586f7b99b5de1082402bcac1817a6847c154a"
+    },
+    {
+      "path": "scripts/test-partner-mutations.mjs",
+      "sha256": "ebe4babc9b6a60bc2e73a4fe870a722cb9b2fbceb55255811ee0a776155b0734"
+    },
+    {
+      "path": "scripts/test-progress-mutations.mjs",
+      "sha256": "600aa1432cec224165a70bfcd40ae6a0e46621858f76ad86f44947082c1efd70"
+    },
+    {
+      "path": "scripts/test-queue-probe-mutations.mjs",
+      "sha256": "65bc5597bb31498e6ec4ae33dc4c463c51bfed5fed419e5550781ce68b604979"
+    },
+    {
+      "path": "scripts/test-render-mutations.mjs",
+      "sha256": "82044b658735dd5422c7e0062a7d2a822d65d036118d61d8c0e15c45bc32202b"
+    },
+    {
+      "path": "scripts/test-retention-mutations.mjs",
+      "sha256": "72fa308a4c0a387cb3f18ceba2ccf2412446325b90b8d901ab8a71daf340ec8c"
+    },
+    {
+      "path": "scripts/test-selection-mutations.mjs",
+      "sha256": "867cca4a779c53bf47f3ec0694ff4820651c1f065f728e58994247a0163b0d4a"
+    },
+    {
+      "path": "scripts/test-short-link-mutations.mjs",
+      "sha256": "c01f40b987865d6f32195bd2ae58d4895260dbec49ab5a6af85762e30789fe16"
+    },
+    {
+      "path": "scripts/test-skip-reporter.ts",
+      "sha256": "a55addd49aefaf2b48c8ce8c0efb9ad421458985bbbbbfbb9534928bd0e58fbd"
+    },
+    {
+      "path": "scripts/test-transcription-word-order-mutations.mjs",
+      "sha256": "4e4a225e1e5fb894e69b24692f63cd76c652ed841825f9dd4c6d29f0e10d6025"
+    },
+    {
+      "path": "scripts/test-units-guards-mutations.mjs",
+      "sha256": "d24c50f1d2653f42a4869a2de02425bc471bb1b9a925726071ab683cdf909a35"
+    },
+    {
+      "path": "scripts/test-upload-fix-mutations.mjs",
+      "sha256": "8b4eb21a3c8629e3c56b4abce0f62f6b020a7193bda5c2d24a2862853b19044d"
+    },
+    {
+      "path": "scripts/test-upload-mutations.mjs",
+      "sha256": "f8bf0e55c476c39f89398f576ea34b7ab79d4a092ac2a151573b7ee16170ac88"
+    },
+    {
+      "path": "scripts/test.mjs",
+      "sha256": "dda18b9aabd2ae546f766d39f23af59ba0c1c238cee88f23af0536b5141df3b9"
+    },
+    {
+      "path": "tests/auth.test.ts",
+      "sha256": "737f74067e4d170289c8e7b202d4628af7ac20a62abb2d766c1598a113fa1097"
+    },
+    {
+      "path": "tests/bcrypt-load.test.ts",
+      "sha256": "35bb8e2fc470085d70167897845719ed2ad359d4120abab4f5986bbf85e3c78e"
+    },
+    {
+      "path": "tests/clip-music-choice.integration.test.ts",
+      "sha256": "01fbe888b21a2e97d10da59e32a3d22e64f659a96d111e105dff3207785a8dde"
+    },
+    {
+      "path": "tests/clip-music-choice.test.ts",
+      "sha256": "9380f4a7e4894669c3d0e8b89fbfb78ff6bcaf437b094a6d0e5ab7f19bf66b4e"
+    },
+    {
+      "path": "tests/clip-music-review-fixes.test.ts",
+      "sha256": "54b3fda4dcbcd6b68d83ecac5e059ffccaf71b959d73de3dc92bf2bd6bb88240"
+    },
+    {
+      "path": "tests/compaction-media.test.ts",
+      "sha256": "827b14d39c215af1669d852ee1aa7c26adf536fe99ca1ed48dd599c180bf547d"
+    },
+    {
+      "path": "tests/compaction-render.test.ts",
+      "sha256": "ca30ea9e25081a29d9350343c981fb15aef71b8a7169afdf883010ae51d45a3b"
+    },
+    {
+      "path": "tests/compaction-upload.integration.test.ts",
+      "sha256": "760d26aaeb35b24b825a924c7a42190043e4160d014ed4a8000564d6a9e380a8"
+    },
+    {
+      "path": "tests/compaction-upload.test.ts",
+      "sha256": "f8abefc16ee079d61f20e0c56ab5f482ebe26745e17b84acaca3bbb4fce50f34"
+    },
+    {
+      "path": "tests/compaction-uploader.test.ts",
+      "sha256": "c400d261b5219145a75fcbb99b728308030d8d46e7786d9b4fb78efe19f8e955"
+    },
+    {
+      "path": "tests/compaction-worker.test.ts",
+      "sha256": "ebda09d42a44ce70d8f7a86dbfb47ef2f799d5d1fbb385d59f649a3a1d9e8bb9"
+    },
+    {
+      "path": "tests/compaction.test.ts",
+      "sha256": "ecb4dc5753bd06445f007f54dcbbb2096026b5432efb2c85cb4555cfcdaf57db"
+    },
+    {
+      "path": "tests/concurrency-fix.test.ts",
+      "sha256": "acc33650216017358f53f2da11169967cb43cc4a4d4b2d851c3439b277d296c1"
+    },
+    {
+      "path": "tests/config.test.ts",
+      "sha256": "38d2a77863c1e93cbba4aefc8c2fa8fee39ef1dc973ddd915952ab5435267a78"
+    },
+    {
+      "path": "tests/database.integration.test.ts",
+      "sha256": "27019d3013c12e3da9f326d96000c83fd92e1ff8549f9aa68fc668465d143136"
+    },
+    {
+      "path": "tests/enums.test.ts",
+      "sha256": "65cc818927d814cb9826bb29c3719b418c1983c10c156b9e5c3f6472beba5933"
+    },
+    {
+      "path": "tests/fixtures/environment.ts",
+      "sha256": "f435d6038d5ff01176ea514e7d1b26538cec6b01d1db016a3b779d0e0fb548c2"
+    },
+    {
+      "path": "tests/fixtures/music-bed/baseline.json",
+      "sha256": "61698bd1f23290c73e99393528240e558e7a8e919c571468e9f8e4eadcacec75"
+    },
+    {
+      "path": "tests/fixtures/music-catalogue.ts",
+      "sha256": "e849c2a7f40d72fd568605649304b84ce716906c3a1d946e6de30ac9a69dde26"
+    },
+    {
+      "path": "tests/fixtures/pack-shot/music-only.json",
+      "sha256": "c5a8a0702ecdb09a2cb0b3e703dd268b3bbaac30ed0c0e5614434a85b730bb20"
+    },
+    {
+      "path": "tests/fixtures/subprocess.ts",
+      "sha256": "ededfe702ecf739a4db4c97ebcb87ef23668b45459982d69134f110002608abc"
+    },
+    {
+      "path": "tests/fixtures/transcription/word-order-response.json",
+      "sha256": "baede9c6d9f612b857d3cbf944235fdf1b39dd7761d2c782b39e295b7a9e291e"
+    },
+    {
+      "path": "tests/framing-media.test.ts",
+      "sha256": "c7910b867600c010d4929315751f12dc2d4f1c4d21665c631ae945935a0f2f13"
+    },
+    {
+      "path": "tests/framing.test.ts",
+      "sha256": "a570beef07c3502d9052418922fb1120490404db02fa864f71688f3542db5785"
+    },
+    {
+      "path": "tests/growth-day.test.ts",
+      "sha256": "70213336bec94282064508864da10d373d279aeb57baa5aed8362e083469b5dd"
+    },
+    {
+      "path": "tests/growth-prefix.test.ts",
+      "sha256": "394f32edcfce9ee6750bead8419644f74ab6fe454e04c274f6e9bf73496e2b17"
+    },
+    {
+      "path": "tests/guest-pack.integration.test.ts",
+      "sha256": "bb539ac47495b6f80edd2da914541a0790e9df6f39e4883b2ec91bfc8dd43d89"
+    },
+    {
+      "path": "tests/guest-pack.test.ts",
+      "sha256": "a656bdf2f9616f2db393b245888e311eb6c5d5a6ce62a4310b077b5dfa907de8"
+    },
+    {
+      "path": "tests/health.test.ts",
+      "sha256": "57c7b15a71d53ce2ad894ae8339474e1c87fef84ca315ddbbe04f0928d72a6b3"
+    },
+    {
+      "path": "tests/interest-route.test.ts",
+      "sha256": "eeac8a7ea60448518ab86269fd0178e8ab077640dfb85054c71a665c691518e4"
+    },
+    {
+      "path": "tests/ip-prefix.test.ts",
+      "sha256": "e17cd7a5c4aca86a2750019cda85b3cdf6188a2bcc5680f7792fbdf247672cf0"
+    },
+    {
+      "path": "tests/limits-retry.test.ts",
+      "sha256": "1211b17f58c750a3df419a0023424353610b85050d0ae48751f6e63de4d39f73"
+    },
+    {
+      "path": "tests/limits.integration.test.ts",
+      "sha256": "02a7c85af94203e72f6275f27c6275c33c95db06037ef797265db14c70180187"
+    },
+    {
+      "path": "tests/limits.test.ts",
+      "sha256": "8756ec3cd4e8473cf3ebf34abd0583f27e6c93e59bc1c57a72132fb9a93bfbc3"
+    },
+    {
+      "path": "tests/live-findings.test.ts",
+      "sha256": "ddffe0b9ae91223d391f4246bc6749dd1789fd41231fc7ac9c6480037faf9922"
+    },
+    {
+      "path": "tests/model-spend.test.ts",
+      "sha256": "6d6028f9e9c483ff262cbc269f41e568c8423141f28f078f01979b5c8f32eac1"
+    },
+    {
+      "path": "tests/music-media.test.ts",
+      "sha256": "6bf11c2d21bcd9600b44a9fab409dff17cc1d9f7a7a4f7ebf7091981fb172e4e"
+    },
+    {
+      "path": "tests/music-upload.integration.test.ts",
+      "sha256": "ba7cdebbbb2fd36f2f4d83d1d2409db5d0b8982e5c48ce1adde344231c3a31cc"
+    },
+    {
+      "path": "tests/music-uploader.test.ts",
+      "sha256": "77328b784a6c666a6cc21a4242de3e06731774d662793df2b61548280090be97"
+    },
+    {
+      "path": "tests/music.test.ts",
+      "sha256": "65e9c486c1ccb8953b45e94e436ae2cfcda241d0f2e63084e6562ebe429dd93a"
+    },
+    {
+      "path": "tests/pack-shot-contract.test.ts",
+      "sha256": "e62268f66a572dca375ba3204b4e13942ca19b4066fb86c27caa81aee68ee022"
+    },
+    {
+      "path": "tests/pack-shot-media.test.ts",
+      "sha256": "d0c481caa7881a865ab9dfc84a33fff7daeeb4d38c111e54aee66bb5a46caf4c"
+    },
+    {
+      "path": "tests/pack-shot-uploader.test.ts",
+      "sha256": "e39312fee53af5ca08c162b3bef272b7c572a95ad14cb8eee02dd2227feee2e9"
+    },
+    {
+      "path": "tests/pack-shot.test.ts",
+      "sha256": "7cea0885e80080ff2f8eeea355fcf5111e9cda471077625719997b715bca7b81"
+    },
+    {
+      "path": "tests/partner-route.test.ts",
+      "sha256": "c7a2b27fcfde25f41f836c70b3982d2082d220490a8bd979921d5fd3305fb179"
+    },
+    {
+      "path": "tests/partner-unblock.test.ts",
+      "sha256": "26566dbf58adbaf4fc3d7f121ae4e36d17215669b18073480af18ea481e0ae32"
+    },
+    {
+      "path": "tests/partner.integration.test.ts",
+      "sha256": "a2a027f565a64716df4f6641c2284b08659520bc2633ae71b8baffc86c0413d3"
+    },
+    {
+      "path": "tests/partner.test.ts",
+      "sha256": "921bc68d57e9dd17ee167b1844d3568626a8f1ba6f9eee4bcc9cd1c4f3f57a4f"
+    },
+    {
+      "path": "tests/preflight.test.ts",
+      "sha256": "0e92984c7404eae8c9fcb74bdec076d4176822a4ada338dedec6162441b58604"
+    },
+    {
+      "path": "tests/progress-screen.integration.test.ts",
+      "sha256": "ee0ecb21d03cb084b2592c9ad57b7592c402464c9b32a5c5822aac5b6849789f"
+    },
+    {
+      "path": "tests/progress-screen.test.ts",
+      "sha256": "352800a8356f22d5f838d5071cb06ce2e4d1ec0bfa8eefd3614265a4e5770472"
+    },
+    {
+      "path": "tests/proxy-rate.test.ts",
+      "sha256": "f0f872622114f85aba3eec0a41f2fd6ae27775efb360b7043ff3fd858f28edde"
+    },
+    {
+      "path": "tests/queue-probe-guards.test.ts",
+      "sha256": "b161895c75891839575d921dcae2893e6ca449b86dd60e38f5cd5e5636dd59db"
+    },
+    {
+      "path": "tests/queue-probe.integration.test.ts",
+      "sha256": "d003cf6aaadfe023b6caf7b5c81c4a89961929a2459ca622b72cdb24081c6711"
+    },
+    {
+      "path": "tests/queue-probe.test.ts",
+      "sha256": "2c3326b6afef8ff4b9255bc96c42286e8d8b353493fc9528af3a7d77a9bdc1dd"
+    },
+    {
+      "path": "tests/queue-redis.integration.test.ts",
+      "sha256": "996f545f0995e52a33b09aa85846e956f63527f012eb4562b38dbac55a8294e5"
+    },
+    {
+      "path": "tests/render-audio.test.ts",
+      "sha256": "788b250e3f9a83231ac9bb3ca9e00f58bfd8f88c2342498131629a04ef32dbc6"
+    },
+    {
+      "path": "tests/render-diagnostics.test.ts",
+      "sha256": "4d3fb4fdb606feb990a687b58471110b84da4ce806a8a7351e1a5dfdaff769db"
+    },
+    {
+      "path": "tests/render-failure.test.ts",
+      "sha256": "4e5d983b505a8d9508f2cdc6b9dbaa71bf95984a4227dbf9561dbb5a098c1bad"
+    },
+    {
+      "path": "tests/render-media.test.ts",
+      "sha256": "8f567b058c7aa356c7240e09b04b4d26da3b0870d4f1d487d62dd17b1dde6996"
+    },
+    {
+      "path": "tests/render-storage.test.ts",
+      "sha256": "3dbc3e46a68de822b5aa690017ccfee0701c1410e4bc004c709e306e441e318c"
+    },
+    {
+      "path": "tests/render-worker.test.ts",
+      "sha256": "abec70c81f96a384d9cd01016e671f65e2f2f70b2b217f6a5ca7b03fda1935cf"
+    },
+    {
+      "path": "tests/render.integration.test.ts",
+      "sha256": "313c27dd9d81d14d9ceff8893c64e41b76b9238226733214ed2aaf04c7471361"
+    },
+    {
+      "path": "tests/render.test.ts",
+      "sha256": "8f889ed4d3da628545205544d631d11b34affb09e06f1cb17388e36dcf25961d"
+    },
+    {
+      "path": "tests/retention-route.test.ts",
+      "sha256": "c2391a5d561ce2e955903727ffb61e02fc76f0bd66e63ed358df96db3449294a"
+    },
+    {
+      "path": "tests/retention-storage.test.ts",
+      "sha256": "2a1c7d635290fe237d037e80be9a2ac47f7aceef58682a8576bd12cafa821ee3"
+    },
+    {
+      "path": "tests/retention.integration.test.ts",
+      "sha256": "5ae10aefc05724a587f4fa1325d5d29d425dbe1e2e3987dfe94514cd3d71b737"
+    },
+    {
+      "path": "tests/retention.test.ts",
+      "sha256": "20b78e9a41073a65b6e89d17d8de7b33102c1af26c6b2b534bf08b8a0d99c6ce"
+    },
+    {
+      "path": "tests/run-clip-music-choice-mutations.mjs",
+      "sha256": "cda18a6a47267d452ecdaf08e5bfa833e7558a26e73a0d9ec4df960e4b1a6e54"
+    },
+    {
+      "path": "tests/run-compaction-mutations.mjs",
+      "sha256": "1cfacfbd40f13e28c7dc75bd01e0ad329e9ecb05dd9fde04f81d53a3b4866368"
+    },
+    {
+      "path": "tests/run-music-mutations.mjs",
+      "sha256": "7297120474e790f302a3c67c7653ef3c57686f520529454b3fc14964d2e79baf"
+    },
+    {
+      "path": "tests/run-pack-shot-mutations.mjs",
+      "sha256": "58848c853587fe263fca55928268665a08d49e3277bfa8bbe6575b74d026897a"
+    },
+    {
+      "path": "tests/run-render-fix-mutations.mjs",
+      "sha256": "c9734f96ebee0922b79af3bb96580d6131bb5c28aea9cee05621cb10c91c7d22"
+    },
+    {
+      "path": "tests/run-teaser-mutations.mjs",
+      "sha256": "af562e7624134902fbd9d834b259ad55331ea1a404abe854bb1d1f0edccb9c93"
+    },
+    {
+      "path": "tests/s3-public-endpoint.test.ts",
+      "sha256": "4a59abe25562cff01911eb9b96358ce40e3f763bea5ae8f1f62bffbeeed48f12"
+    },
+    {
+      "path": "tests/s3-slow.integration.test.ts",
+      "sha256": "2a63eb419c5c7897c8c1fddc512ee25b840b9344241829e029cce64d9736f399"
+    },
+    {
+      "path": "tests/s3.test.ts",
+      "sha256": "9e29ce4953cf8b4a193597271cf1653603462d5d86ca48f4c071b5b9ce47c512"
+    },
+    {
+      "path": "tests/selection-order.test.ts",
+      "sha256": "37ba0ec723f9820e206b3da24cc534f4b230e9719c983d4df124f8295f7ef16c"
+    },
+    {
+      "path": "tests/selection.integration.test.ts",
+      "sha256": "5023de1e2e26e7377aa17a566a94d1500863b91dd328d91176eba56f1e1c4931"
+    },
+    {
+      "path": "tests/selection.test.ts",
+      "sha256": "9c555cdb9751de07312c957547d35c6ba7c6570f929fe0019be6dff12fb5cd92"
+    },
+    {
+      "path": "tests/short-link.integration.test.ts",
+      "sha256": "4baeb3d26acfaffb868852057e78d352a0f4adab29cc876ef8e15680eac66131"
+    },
+    {
+      "path": "tests/short-link.test.ts",
+      "sha256": "2d7d1ca9d2396cc8edae020c42f5263c23a73d229a857012f6d60999aa6ca028"
+    },
+    {
+      "path": "tests/teaser-contract.test.ts",
+      "sha256": "c88dd46a8544ad6f5676f16772348390b6f835096f6f90e96223e3b163a633cc"
+    },
+    {
+      "path": "tests/teaser-media.test.ts",
+      "sha256": "e972d8b9b31654151ff61332b662ead2e9160b5c43970de04eac27dddeeb31fe"
+    },
+    {
+      "path": "tests/teaser-upload.integration.test.ts",
+      "sha256": "9aa8c4b8261af968474c5cd49ef7de02691f3f54f780d2490f6d3f78e1b44798"
+    },
+    {
+      "path": "tests/teaser-upload.test.ts",
+      "sha256": "70c1f28a705c18f657003b7de8c09ca3ca7c14d0ef447e664b740258d2ff4284"
+    },
+    {
+      "path": "tests/teaser-uploader.test.ts",
+      "sha256": "79371a9a6b87aa467f58531f8e8c0960db731be098d574528511d3f08e572a57"
+    },
+    {
+      "path": "tests/teaser.test.ts",
+      "sha256": "c37c72e2ce8ad00fd1a80955423ba06f122317dadcc7bc76bde43db6b0415c70"
+    },
+    {
+      "path": "tests/test-db.test.ts",
+      "sha256": "4c23ea6e2867fb2172fa3227697056285db5c05f5dcad4f661a7891415087679"
+    },
+    {
+      "path": "tests/transcription-merge.test.ts",
+      "sha256": "da9d95dbf7880aa07d412959f2c93ffd02c3b927be8c775bbd328108bb190008"
+    },
+    {
+      "path": "tests/transcription-order.test.ts",
+      "sha256": "e5012f24a5090be5e92095bb5792be875b2ba51dbd2e3825c28adc93ae0fef6f"
+    },
+    {
+      "path": "tests/transcription-quota.test.ts",
+      "sha256": "77e60d8168ad3e6cc6292751d4ab554f2694c8301fdd1e590df3c0519211ea5d"
+    },
+    {
+      "path": "tests/transcription-word-order.test.ts",
+      "sha256": "19f15146d0c19b603f407851896a8d7e1a4270623fc3c5d4cf4f87e622bf0bdb"
+    },
+    {
+      "path": "tests/transcription.integration.test.ts",
+      "sha256": "6a8e6983aeb8bf5867433fb9a6fe1c2fc6284fe988602e51b22f4f5df4b65fe5"
+    },
+    {
+      "path": "tests/transcription.test.ts",
+      "sha256": "f47f86c2856ac47a65b07685f9bf63354a31d0c97a5d0a0d0da7678c082bd197"
+    },
+    {
+      "path": "tests/trust-guards.test.ts",
+      "sha256": "f1703ea589aa01c11bef13dc3379a8973fd6818cf43c2ee618419ac2245df567"
+    },
+    {
+      "path": "tests/trust-route.test.ts",
+      "sha256": "4b9d8ab6a1cb99bde616ebe9460ff9bfc118d34c5c4df8eabea5b3e568b32d85"
+    },
+    {
+      "path": "tests/tsconfig.json",
+      "sha256": "c81060daa49604e887796c60e81e1d87894529c4bd25b8389e0424f4ab0be881"
+    },
+    {
+      "path": "tests/units-and-guards.test.ts",
+      "sha256": "70aea1288eb839908a918d487bccc7d056e0f74b241e520293ccf7be45403865"
+    },
+    {
+      "path": "tests/upload-browser.test.ts",
+      "sha256": "89375c5bf4c7dc54839bab97a18618fca87fa5304fe35ba01546ed65f82048cb"
+    },
+    {
+      "path": "tests/upload-fix.integration.test.ts",
+      "sha256": "e0eeaf28e7e8d961f33e040b755c171ebed218398c41f1841fd5ca48d862589b"
+    },
+    {
+      "path": "tests/upload-fix.test.ts",
+      "sha256": "2a32b222aa6dafa5aae1db6c152d6d5bd30934ae5b605e05384d3bb8ef8ae6d8"
+    },
+    {
+      "path": "tests/upload-guards.test.ts",
+      "sha256": "ef518a5a00f72b035cc7c2fc0fb14ce7255e1c24223567cb31b22e316479005e"
+    },
+    {
+      "path": "tests/upload-migration.integration.test.ts",
+      "sha256": "1b307b4490e01404be05a85db3a0f93830181d68f5fb6b1495a577b3d3f5c86c"
+    },
+    {
+      "path": "tests/upload-route.test.ts",
+      "sha256": "eb920e83bd10974ffbe59ae847b99fd7de38072ba612504df0e318d1e3a24a77"
+    },
+    {
+      "path": "tests/upload.integration.test.ts",
+      "sha256": "7a3b5beedd483156ab78ce5f5b948899b6b27e4d8a54fdd9313e7fd45c87737f"
+    },
+    {
+      "path": "tests/upload.test.ts",
+      "sha256": "4d794b6d63eae01af7232166f38bb34499539ed0203e273eca1af14ab5248b51"
+    },
+    {
+      "path": "tests/watchdog-diagnostics.test.ts",
+      "sha256": "6ade6b880cf6552e397b118189bcd4cabb00a4da9392407f3205bc3fb19233a2"
+    },
+    {
+      "path": "tests/watermark-startup.test.ts",
+      "sha256": "0851e06371d038e0cd98dac4977a9db9885df95213120f227a87800b4c6fdae0"
+    },
+    {
+      "path": "tests/wiring.test.ts",
+      "sha256": "87420fe6a83e339e9bf58c8e855297fc0af67809db5c381b349ee9f0580948f1"
+    }
+  ]
+}

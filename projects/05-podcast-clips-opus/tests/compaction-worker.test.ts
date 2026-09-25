@@ -19,7 +19,7 @@ async function setup() {
   const deps = { pool: {} as never, directory, origin: 'https://clipmkr.ru', download: async (_k: string, p: string) => { await writeFile(p, 'source'); },
     render: vi.fn(async (o: { outputPath: string }) => { await writeFile(o.outputPath, 'video'); return { duration_seconds: 27.16, music: null, packshot: null }; }),
     thumbnail: vi.fn(async (_p: string, o: string, _t: number) => { await writeFile(o, 'thumb'); }),
-    storage: { put: vi.fn(async (_k: string, _p: string, _type: string, _contract: string) => 5) }, enqueue: vi.fn(async () => {}), available: async () => 30n };
+    storage: { delete: vi.fn(async () => {}), put: vi.fn(async (_k: string, _p: string, _type: string, _contract: string) => 5) }, enqueue: vi.fn(async () => {}), available: async () => 30n };
   return { input, deps };
 }
 it('persist/reread wins over computed candidate; retry reads only DB plan; duration and contract', async () => {

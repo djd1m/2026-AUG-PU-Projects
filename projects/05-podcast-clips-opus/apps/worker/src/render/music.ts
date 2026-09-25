@@ -1,3 +1,4 @@
+import { MUSIC_CATALOG } from '@clipmaker/shared/music-catalog';
 import { buildStingerAudioGraph, type PackshotMix, type PreparedPackshot } from './packshot.js';
 import { resolve } from 'node:path';
 import { measureLoudness } from './loudness.js';
@@ -6,7 +7,7 @@ import { FFmpegError } from './exec.js';
 // Решение владельца 24.09.2026 (OWN-009, В-8): прослушаны 7 клипов записи 88 мин — «нормально».
 export const MUSIC_MARGIN_LU = 18;
 export const MUSIC_MAX_GAIN_DB = 12;
-export const MUSIC_TRACKS = [
+const TRACK_ASSETS = [
   { id: 'komiku-everything-is-groovy',
     sha256: '8ee1e5f475d0aeae548dc15d97fa967f0e5d5db72d8a7f605fecb2f5dd7f2f8d',
     path: resolve('apps/worker/assets/music/komiku-everything-is-groovy.mp3') },
@@ -35,6 +36,18 @@ export const MUSIC_TRACKS = [
     sha256: '6121e8621b6d7894ba413b502092e7a57c74772021a5220f1dee354d7d496276',
     path: resolve('apps/worker/assets/music/holizna-ocean-memory.mp3') }
 ] as const;
+export const MUSIC_TRACKS = MUSIC_CATALOG.map(({ id }) => {
+  const asset = TRACK_ASSETS.find(track => track.id === id);
+  if (!asset) throw new Error(`Missing music asset: ${id}`);
+  return asset;
+}) as [MusicTrack, ...MusicTrack[]];
+export function resolveMusicTrack(choice: string | null | undefined, enabled: boolean, index: unknown): MusicTrack | null {
+  if (choice == null) return enabled ? selectTrack(index) : null;
+  if (choice === 'none') return null;
+  const track = MUSIC_TRACKS.find(track => track.id === choice);
+  if (!track) console.info(JSON.stringify({ event: 'music_track_unknown', track: choice }));
+  return track ?? null;
+}
 export interface MusicTrack { readonly id: string; readonly sha256: string; readonly path: string }
 // Zero-based selector; database clip indices are converted at the render boundary.
 export function selectTrack(index: unknown, catalogue: readonly [MusicTrack, ...MusicTrack[]] = MUSIC_TRACKS): MusicTrack {
@@ -45,7 +58,8 @@ export const STINGERS = [{ id: 'kenney-explosion-crunch-002',
   sha256: 'be2b8ddc62e4a24c91e2e77793de98549ce216faf2f323a917e7d6f34321ff97',
   path: resolve('apps/worker/assets/sfx/kenney-explosion-crunch-002.ogg') }] as const;
 export interface MusicMix { track: string; gain_db: number }
-export interface RenderOutcome { duration_seconds: number; teaser?: import('./teaser.js').TeaserResult | null; music: MusicMix | null; packshot: PackshotMix | null }
+export type MusicSkipReason = 'speech_too_quiet' | 'track_too_quiet' | 'gain_out_of_range' | 'measure_failed';
+export interface RenderOutcome { music_skip_reason?: MusicSkipReason | null; duration_seconds: number; teaser?: import('./teaser.js').TeaserResult | null; music: MusicMix | null; packshot: PackshotMix | null }
 export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?: PreparedPackshot | null, speechLabel = '[0:a:0]'): string {
   return speechLabel + 'aformat=sample_rates=44100:channel_layouts=stereo[speech];'
     + `[1:a:0]atrim=0:${duration},asetpts=PTS-STARTPTS,volume=${gainDb}dB,`
@@ -54,8 +68,8 @@ export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?
     + (packshot ? buildStingerAudioGraph(packshot) + '[speech][bed][stinger]amix=inputs=3:duration=first:normalize=0[aout]'
       : '[speech][bed]amix=inputs=2:duration=first:normalize=0[aout]');
 }
-export async function prepareMusic(input: string, start: number, duration: number, track: MusicTrack, signal?: AbortSignal, sourceDuration = duration): Promise<(MusicMix & { path: string }) | null> {
-  const skip = (reason: string) => { console.info(JSON.stringify({ event: 'music_skipped', reason })); return null; };
+export async function prepareMusic(input: string, start: number, duration: number, track: MusicTrack, signal?: AbortSignal, sourceDuration = duration, onSkip?: (reason: MusicSkipReason) => void): Promise<(MusicMix & { path: string }) | null> {
+  const skip = (reason: MusicSkipReason) => { onSkip?.(reason); console.info(JSON.stringify({ event: 'music_skipped', reason })); return null; };
   let speech: number, bed: number;
   try {
     speech = await measureLoudness(input, start, sourceDuration, signal);

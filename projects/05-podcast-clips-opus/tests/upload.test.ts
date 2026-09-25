@@ -33,7 +33,7 @@ describe('upload: границы', () => {
   });
   it('Пять пользовательских текстов; refunds скрыт за uploads', () => {
     expect(quotaError('user_upload_refunds', new Date()).message).toBe(quotaError('user_uploads', new Date()).message);
-    expect(Object.keys(quotaMessages)).toHaveLength(5);
+    expect(Object.keys(quotaMessages)).toHaveLength(6);
     expect(quotaError('global_minutes', new Date()).message).toBe(quotaError('global_llm', new Date()).message);
   });
   it('MP4, MOV, M4A, WebM, MP3 по байтам; мусор отвергнут', () => {

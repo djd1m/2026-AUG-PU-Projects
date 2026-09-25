@@ -1,10 +1,11 @@
 'use client';
+import { ClipMusicChoice } from './ClipMusicChoice';
 import { ProInterest } from '../dashboard/ProInterest';
 import { useState } from 'react';
 import { rpc } from '../../lib/rpc';
 import type { ClipScreen } from '../../lib/screen-contract';
 import { useClipDownload } from './useClipDownload';
-export function ClipCard({ clip }: { clip: ClipScreen }) {
+export function ClipCard({ clip, onMusicQueued }: { clip: ClipScreen; onMusicQueued?: (track: string) => void }) {
   const { download, downloadingId, error } = useClipDownload();
   const [copying, setCopying] = useState(false);
   const [copyMessage, setCopyMessage] = useState('');
@@ -18,10 +19,11 @@ export function ClipCard({ clip }: { clip: ClipScreen }) {
     } catch (cause) { setCopyMessage(cause instanceof Error ? cause.message : 'Не удалось получить ссылку'); }
     finally { setCopying(false); }
   }
+  const fileVersion = String(clip.published_render_version ?? clip.render_version ?? 1);
   const expired = !!clip.expires_at && Date.parse(clip.expires_at) <= Date.now();
   return <article className="clip-card">
-    <div className="clip-preview">{clip.available ? <video controls playsInline preload="none"
-      poster={`/api/clips/${clip.clip_id}/thumbnail`} src={`/api/clips/${clip.clip_id}/file`} aria-label={clip.title} />
+    <div className="clip-preview">{clip.available ? <video key={fileVersion} controls playsInline preload="none"
+      poster={`/api/clips/${clip.clip_id}/thumbnail?v=${fileVersion}`} src={`/api/clips/${clip.clip_id}/file?v=${fileVersion}`} aria-label={clip.title} />
       : <p>{expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать клип' : 'Собираем клип…'}</p>}</div>
     <div className="clip-body"><div className="eyebrow">ФРАГМЕНТ {String(clip.index).padStart(2, '0')} · {(clip.duration_seconds == null ? clip.end - clip.start : Number(clip.duration_seconds)).toFixed(1)} с</div>
       <h3>{clip.title}</h3>{clip.score !== undefined && clip.components && clip.explanations ? <section aria-label="Оценка фрагмента">
@@ -30,6 +32,8 @@ export function ClipCard({ clip }: { clip: ClipScreen }) {
           <dt>Самодостаточность · {clip.components.completeness}/33</dt><dd>{clip.explanations.completeness}</dd>
           <dt>Длина · {clip.components.length}/33</dt><dd>{clip.explanations.length}</dd></dl></section> : <p>Без оценки</p>}
       {clip.expires_at && <p className="muted">{expired ? 'Файл больше недоступен' : `Хранится до ${new Date(clip.expires_at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })} МСК`}</p>}
+      {clip.rerender_failure && !clip.rerendering && <p role="alert">Не удалось пересобрать клип. Предыдущий файл сохранён. Попробуйте ещё раз.</p>}
+      <ClipMusicChoice clip={clip} onQueued={onMusicQueued} />
       <button disabled={!clip.available || downloadingId !== null} onClick={() => void download(clip.clip_id, clip.title)}>
         {downloadingId ? 'Открываем файл…' : clip.available ? '↓ Скачать клип' : expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать' : 'Собираем…'}</button>
       <button className="secondary" disabled={copying} onClick={() => void copyLink()}>

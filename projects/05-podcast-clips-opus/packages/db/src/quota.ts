@@ -15,12 +15,12 @@ export async function transaction<T>(pool: Pool, work: (tx: PoolClient) => Promi
   finally { tx.release(discard || undefined); }
 }
 const limitNames: Record<QuotaScope, LimitName> = {
-  user_minutes: 'N5_LIMIT_USER_MINUTES', user_uploads: 'N5_LIMIT_USER_UPLOADS',
+  user_rerenders: 'N5_LIMIT_USER_RERENDERS', user_minutes: 'N5_LIMIT_USER_MINUTES', user_uploads: 'N5_LIMIT_USER_UPLOADS',
   user_upload_refunds: 'N5_LIMIT_USER_UPLOAD_REFUNDS', user_llm: 'N5_LIMIT_USER_LLM',
   global_minutes: 'N5_LIMIT_GLOBAL_MINUTES', global_llm: 'N5_LIMIT_GLOBAL_LLM',
 };
-export type QuotaReason = 'upload' | 'upload_refund' | 'minutes' | 'llm';
-const scopes: Record<QuotaReason, QuotaScope[]> = { upload: ['user_uploads'], upload_refund: ['user_upload_refunds'],
+export type QuotaReason = 'upload' | 'upload_refund' | 'minutes' | 'llm' | 'rerender';
+const scopes: Record<QuotaReason, QuotaScope[]> = { rerender: ['user_rerenders'], upload: ['user_uploads'], upload_refund: ['user_upload_refunds'],
   minutes: ['user_minutes', 'global_minutes'], llm: ['user_llm', 'global_llm'] };
 export type QuotaResult = { granted: true } | { granted: false; scope: QuotaScope };
 export async function checkAndConsumeQuota(tx: PoolClient, limits: Limits, account: string,

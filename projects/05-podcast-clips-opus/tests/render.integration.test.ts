@@ -48,7 +48,7 @@ describe.skipIf(!url)('Render PostgreSQL fences, publication and completion', ()
     const directory = await mkdtemp(join(tmpdir(), 'sl008-'));
     const deps = { pool, directory, origin, available: async () => 10000n,
       download: async (_key: string, file: string) => { await writeFile(file, 'not media; ffmpeg must not run'); },
-      storage: { put: vi.fn(async () => 10) }, enqueue: vi.fn(async () => {}), thumbnail: vi.fn(async () => {}) };
+      storage: { delete: vi.fn(async () => {}), put: vi.fn(async () => 10) }, enqueue: vi.fn(async () => {}), thumbnail: vi.fn(async () => {}) };
     try {
       const results = await Promise.all([handleRenderJob(f.attempt, deps), handleRenderJob(f.attempt, deps)]);
       expect(results).toContain('failed');

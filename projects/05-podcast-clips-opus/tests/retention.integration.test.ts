@@ -41,7 +41,7 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
       VALUES($1,$2,'192.0.2.0/24',$3)`, [account, randomUUID(), new Date(now.getTime() + 86400_000)]);
     return { account, video, clip, pack, keys };
   }
-  const memoryStorage = (): RetentionStorage => ({ delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}) });
+  const memoryStorage = (): RetentionStorage => ({ delete: vi.fn(async () => {}), eraseClipPrefix: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}) });
   it('immediate erasing, revoked guests and sessions; concurrent repeat cannot extend deadline', async () => {
     const f = await fixture(), service = new ErasureService(pool, () => now);
     const results = await Promise.allSettled([service.request(f.account, { confirm: true }), service.request(f.account, { confirm: true })]);
@@ -107,8 +107,8 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
     await pool.query(`INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status,failure_reason,created_at)
       VALUES($1,'young-refusal','upload',100,'failed','refused_user_uploads',$2)`, [free.account, now]);
     const storage = memoryStorage(); await retentionTick(pool, storage, now, 100);
-    expect(storage.delete).toHaveBeenCalledWith(free.keys[1]); expect(storage.delete).toHaveBeenCalledWith(stalled.keys[1]);
-    expect(storage.delete).not.toHaveBeenCalledWith(paid.keys[1]); expect(storage.delete).not.toHaveBeenCalledWith(young.keys[1]);
+    expect(storage.eraseClipPrefix).toHaveBeenCalledWith(`clips/free/${free.video}/${free.clip}`); expect(storage.eraseClipPrefix).toHaveBeenCalledWith(`clips/free/${stalled.video}/${stalled.clip}`);
+    expect(storage.eraseClipPrefix).not.toHaveBeenCalledWith(`clips/paid/${paid.video}/${paid.clip}`); expect(storage.eraseClipPrefix).not.toHaveBeenCalledWith(`clips/free/${young.video}/${young.clip}`);
     expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [free.clip])).rows[0].object_key).toBeNull();
     expect((await pool.query('SELECT revoked_at FROM guest_pack WHERE id=$1', [free.pack])).rows[0].revoked_at).toBeNull();
     expect((await pool.query("SELECT count(*)::int n FROM video WHERE failure_reason='refused_user_uploads'")).rows[0].n).toBe(1);
@@ -129,6 +129,7 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
       await new ErasureService(pool, () => now).request(f.account, { confirm: true });
       await retentionTick(pool, {
         delete: key => s3.deleteObject(ctx, key),
+        eraseClipPrefix: prefix => s3.eraseClipPrefix(ctx, prefix),
         erasePrefix: async prefix => {
           expect((await pool.query('SELECT revoked_at FROM guest_pack WHERE id=$1', [f.pack])).rows[0].revoked_at).toEqual(now);
           await s3.erasePrefix(ctx, prefix);

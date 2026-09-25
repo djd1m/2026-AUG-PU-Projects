@@ -1,13 +1,14 @@
 import { assertWatermarkFits } from './watermark.js';
 export const LIMIT_NAMES = [
   'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
-  'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
+  'N5_LIMIT_USER_RERENDERS', 'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
 ] as const;
 export type LimitName = typeof LIMIT_NAMES[number];
 export type Limits = Readonly<Record<LimitName, number>>;
 export type Environment = Readonly<Record<string, string | undefined>>;
 export type ServiceRole = 'web' | 'worker-stt' | 'worker-llm' | 'worker-video';
 const consequences: Record<LimitName, string> = {
+  N5_LIMIT_USER_RERENDERS: 'смена музыки останется без потолка перерендеров',
   N5_LIMIT_USER_MINUTES: 'вызов Whisper на аккаунт останется без потолка платных минут',
   N5_LIMIT_USER_UPLOADS: 'выдача загрузки и последующая обработка останутся без суточного потолка',
   N5_LIMIT_USER_UPLOAD_REFUNDS: 'возврат слота позволит безгранично вызывать скачивание и ffprobe',

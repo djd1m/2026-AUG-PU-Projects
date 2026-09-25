@@ -14,7 +14,7 @@ import { probeVideoStream, probeDuration } from './probe.js';
 import { detectFaces } from './faces.js';
 import { planFraming, planFollow, type FramingPlan, type FollowSegment } from './framing-plan.js';
 import { panelWindow, singleWindow, getFollowFilter, type FramingPositions } from './format.js';
-import { prepareMusic, buildMusicAudioGraph, selectTrack, STINGERS, type RenderOutcome } from './music.js';
+import { prepareMusic, buildMusicAudioGraph, selectTrack, resolveMusicTrack, STINGERS, type RenderOutcome } from './music.js';
 export { buildMusicAudioGraph } from './music.js';
 export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   watermark: boolean, origin: string, code: string, source?: SourceDimensions,
@@ -31,6 +31,7 @@ export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   return filters.join(',');
 }
 export interface RenderOptions {
+  musicTrackId?: string | null;
   cutPlan?: Segment[];
   inputPath: string; outputPath: string; startTime: number; endTime: number;
   format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean; clipIndex?: number; teaser?: boolean; title?: string;
@@ -57,8 +58,13 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       console.info(JSON.stringify({ event: 'music_track_fallback' }));
     }
     const teaser = options.teaser ? await prepareTeaser(options.title ?? '', width, temp) : null;
-    const music = options.music ? await prepareMusic(options.inputPath, options.startTime, duration,
-      selectTrack(typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined), options.signal, sourceDuration) : null;
+    const trackIndex = typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined;
+    const track = options.musicTrackId == null
+      ? (options.music ? selectTrack(trackIndex) : null)
+      : resolveMusicTrack(options.musicTrackId, !!options.music, trackIndex);
+    let musicSkipReason: import('./music.js').MusicSkipReason | null = null;
+    const music = track ? await prepareMusic(options.inputPath, options.startTime, duration,
+      track, options.signal, sourceDuration, reason => { musicSkipReason = reason; }) : null;
     const packshot = music ? await preparePackshot(options.inputPath, options.startTime, duration, options.signal, sourceDuration) : null;
     // Кадрирование по лицам: где люди на самом деле, а не «по половинам кадра».
     // Отказ детектора НЕ валит рендер — план просто остаётся пустым, и кадрирование прежнее.
@@ -89,7 +95,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
       '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
       '-ar', '44100', '-ac', '2', '-movflags', '+faststart', options.outputPath], FFMPEG_TIMEOUT_MS, options.signal);
-    return { duration_seconds: await probeDuration(options.outputPath, options.signal), teaser: teaser?.result ?? null, music: music ? { track: music.track, gain_db: music.gain_db } : null,
+    return { music_skip_reason: musicSkipReason, duration_seconds: await probeDuration(options.outputPath, options.signal), teaser: teaser?.result ?? null, music: music ? { track: music.track, gain_db: music.gain_db } : null,
       packshot: packshot ? { stinger: packshot.stinger, gain_db: packshot.gain_db } : null };
   } finally { await rm(temp, { recursive: true, force: true }); }
 }

@@ -21,7 +21,7 @@ function fixture() {
   });
   const release = vi.fn();
   const pool = { query, connect: async () => ({ query, release }) } as unknown as Pool;
-  const storage = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}) };
+  const storage = { delete: vi.fn(async () => {}), eraseClipPrefix: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}) };
   return { pool, query, commands, storage };
 }
 describe('retention and erasure guards', () => {
@@ -57,11 +57,11 @@ describe('retention and erasure guards', () => {
       f.commands.push(sql);
       if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
     if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
-      if (sql.startsWith('SELECT c.id,c.object_key')) return { rows: [{ id: account, object_key: 'clip', thumbnail_key: 'thumb' }], rowCount: 1 };
+      if (sql.startsWith('SELECT c.id,c.object_key')) return { rows: [{ id: account, video_id: 'video', object_key: 'clip', thumbnail_key: 'thumb' }], rowCount: 1 };
       return { rows: [], rowCount: 0 };
     });
     await retentionTick(f.pool, f.storage, new Date('2026-09-24T12:00:00Z'));
-    expect(f.storage.delete.mock.calls).toEqual([['clip'], ['thumb']]);
+    expect(f.storage.eraseClipPrefix.mock.calls).toEqual(['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]));
     expect(f.query).toHaveBeenCalledWith(expect.stringContaining("a.plan <> 'paid'"), [new Date('2026-09-21T12:00:00Z'), 100]);
     expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(true);
   });

@@ -1,0 +1,81 @@
+{
+  "attempt_id": "review-fixes-1",
+  "finished_at": "2026-09-25T07:14:10.162262+00:00",
+  "elapsed_seconds": 907.162262,
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "exact runtime model/effort and usage unavailable",
+    "reading before measurement not timed",
+    "SQL/Docker/E2E and Anthropic review unavailable"
+  ],
+  "source_manifest_sha256": "8a6103f44a5c6b6913576993900c1a298f93c7d4f0b980dfc1a063cbef0efda6",
+  "checks": [
+    {
+      "receipt": "targeted-1.log",
+      "exit_code": 1,
+      "sha256": "156857c1595275a10c02983a31d5538fe3e4ccbd8547352dd4582e1018c04e39"
+    },
+    {
+      "receipt": "targeted-2.log",
+      "exit_code": 0,
+      "sha256": "6ffa43e8efcec7a18b33741ecfc2c489dd62d4cadedc84ba308a5d5c9fbb9cb9"
+    },
+    {
+      "receipt": "all-tests.log",
+      "exit_code": 1,
+      "sha256": "0a9e81ad0153d3ad5f3c931dd9cdb25671423a91d809c1c5cfa65eb602c71eff"
+    },
+    {
+      "receipt": "all-tests-final.log",
+      "exit_code": 0,
+      "sha256": "d4a0d1a793c08d185b46d841b194fe46989679d41cfa5610ce6f7607f69af58b"
+    },
+    {
+      "receipt": "build.log",
+      "exit_code": 0,
+      "sha256": "406a773ff7ddeb5f682e98a5162daa8fe832397efc624daeb9bf7cbb97d695d3"
+    },
+    {
+      "receipt": "typecheck.log",
+      "exit_code": 0,
+      "sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13"
+    },
+    {
+      "receipt": "test-types-final.log",
+      "exit_code": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "lint.log",
+      "exit_code": 0,
+      "sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    },
+    {
+      "receipt": "mutation-run.log",
+      "exit_code": 0,
+      "sha256": "e3266a0390d325fcf723ec2c2a5add27eb45629748af7e534200962e1592d407"
+    },
+    {
+      "receipt": "env-wiring.log",
+      "exit_code": 2,
+      "sha256": "df685f3969e5775214b00003b157e4395d23e2a3c2c6ab5750f28f765056c909"
+    },
+    {
+      "receipt": "ports.log",
+      "exit_code": 2,
+      "sha256": "148098ed02f2e3a21a4b2e31483ebfbff71a0fd530266b938e91b0e4fe868dde"
+    },
+    {
+      "receipt": "ports-corrected.log",
+      "exit_code": 1,
+      "sha256": "d38feab9ce33e3c7f3efa73632fad8de8253f50e7d9d169105edce1f2fa9d2b7"
+    },
+    {
+      "receipt": "diff-check.log",
+      "exit_code": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+[
+  {
+    "id": "none",
+    "red": {
+      "id": "none",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "none",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "explicit",
+    "red": {
+      "id": "explicit",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "explicit",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "version",
+    "red": {
+      "id": "version",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "version",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "startup",
+    "red": {
+      "id": "startup",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 3
+    },
+    "green": {
+      "id": "startup",
+      "phase": "green",
+      "exit": 0,
+      "passed": 3,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "strict",
+    "red": {
+      "id": "strict",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "strict",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "owner",
+    "status": "not_run",
+    "reason": "DATABASE_URL unavailable; real PostgreSQL required"
+  },
+  {
+    "id": "quota",
+    "status": "not_run",
+    "reason": "DATABASE_URL unavailable; real PostgreSQL required"
+  },
+  {
+    "id": "fence",
+    "status": "not_run",
+    "reason": "DATABASE_URL unavailable; real PostgreSQL required"
+  },
+  {
+    "id": "preview",
+    "red": {
+      "id": "preview",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "preview",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  }
+]

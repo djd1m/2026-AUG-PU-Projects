@@ -31,7 +31,7 @@ it('hash comes from actual packshot; absent equals HEAD music-only and includes 
     // Baseline uses historical worker fixture geometry. A mock renderer transfers actual render outcome.
     render: async (opts: Parameters<typeof renderClip>[0]) => renderClip({ ...opts, code: 'WWWWWW', origin: 'https://clipmkr.ru' }),
     thumbnail: async (_p: string, o: string) => { await writeFile(o, 'thumb'); },
-    storage: { put: async (_k: string, _p: string, _t: string, c: string) => { hashes.push(c); return 5; } }, enqueue: async () => {}, available: async () => 30n };
+    storage: { delete: vi.fn(async () => {}), put: async (_k: string, _p: string, _t: string, c: string) => { hashes.push(c); return 5; } }, enqueue: async () => {}, available: async () => 30n };
   const attempt = { video_id: 'video', clip_id: 'clip', fence: 4, stage: 'render' as const, series_no: 1, attempt_no: 1, status: 'running' as const };
   try {
     expect(await handleRenderJob(attempt, deps)).toBe('done');

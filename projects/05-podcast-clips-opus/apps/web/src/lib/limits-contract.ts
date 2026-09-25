@@ -2,6 +2,7 @@ import type { QuotaScope } from '@clipmaker/shared/enums';
 
 // Five refusal entries for six accounting scopes. Refunds share the upload refusal.
 export const quotaMessages = {
+  user_rerenders: 'Смены музыки на сегодня исчерпаны',
   user_uploads: 'Загрузки на сегодня исчерпаны',
   user_minutes: 'Минуты на сегодня исчерпаны',
   user_llm: 'Обработки на сегодня исчерпаны',

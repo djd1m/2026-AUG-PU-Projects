@@ -27,7 +27,8 @@ try {
     { id: 'growth-set-null', title: 'growth events survive', file: 'packages/db/migrations/001_init.sql',
       before: 'clip_id uuid REFERENCES clip(id) ON DELETE SET NULL', after: 'clip_id uuid REFERENCES clip(id) ON DELETE CASCADE' },
     { id: 'free-expiry', title: 'free clips older', file: 'apps/web/src/server/retention.ts',
-      before: 'for (const key of [clip.object_key, clip.thumbnail_key]) if (key) await storage.delete(key);', after: '// injected: only delete database references' },
+      before: "for (const prefix of ['clips/free', 'clips/paid', 'thumbs']) await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);", after: '// injected: only delete database references' },
+    // 25.09.2026: опора перенесена — фича 22 удаляет файлы клипа по префиксу клипа, а не по object_key.
     // 'guest-expiry' снята 24.09.2026: ни её опорной строки в retention.ts, ни теста 'expired guest packs'
     // больше нет (истечение гостевой страницы проверяется по expires_at при чтении). Мутация падала
     // на «anchor not unique» и не проверяла ничего — найдено первым полным прогоном набора в образе.

@@ -2,6 +2,7 @@ import type { Pool, PoolClient } from 'pg';
 import type { JobStage } from '@clipmaker/shared/enums';
 import { transaction } from './quota.js';
 export interface Attempt {
+  rerender?: boolean;
   video_id: string; stage: JobStage; clip_id: string | null; series_no: number;
   fence: number; attempt_no: number; status: 'running' | 'deferred' | 'succeeded' | 'failed';
 }
@@ -9,7 +10,8 @@ export type Audit = (event: 'stale_attempt_result', data: { video_id: string; fe
 export const auditAttempt: Audit = (event, data) => console.info(JSON.stringify({ event, ...data }));
 // Caller holds video FOR UPDATE. This also serializes eight independent render leases.
 export async function leaseAttemptTx(tx: PoolClient, videoId: string, stage: JobStage,
-  series: number, clipId: string | null = null, now = new Date()): Promise<Attempt | null> {
+  series: number, clipId: string | null = null, now = new Date(), rerender = false): Promise<Attempt | null> {
+  if (rerender && stage !== 'render') throw new Error('Пересборка требует render');
   if (!Number.isSafeInteger(series) || series < 1 || (stage === 'render') !== (clipId !== null)) throw new Error('Непригодная попытка');
   const video = await tx.query('SELECT fence FROM video WHERE id=$1 FOR UPDATE', [videoId]);
   if (!video.rowCount) return null;
@@ -20,14 +22,16 @@ export async function leaseAttemptTx(tx: PoolClient, videoId: string, stage: Job
   if (prior.attempt_no >= 2) return null;
   const fence = Math.max(prior.fence, video.rows[0].fence) + 1;
   if (stage === 'render') {
-    const clip = await tx.query(`UPDATE clip SET render_fence=$3, status='rendering', failure_reason=NULL
+    const clip = await tx.query(rerender
+      ? `UPDATE clip SET render_fence=$3 WHERE id=$1 AND video_id=$2 AND status='done' RETURNING id`
+      : `UPDATE clip SET render_fence=$3, status='rendering', failure_reason=NULL
       WHERE id=$1 AND video_id=$2 AND status <> 'done' RETURNING id`, [clipId, videoId, fence]);
     if (!clip.rowCount) return null;
   }
   const result = await tx.query<Attempt>(`INSERT INTO job_attempt
-    (video_id,stage,clip_id,series_no,attempt_no,fence,status,unit,unit_count,started_at)
-    VALUES ($1,$2,$3,$4,$5,$6,'running',$7,0,$8) RETURNING *`,
-  [videoId, stage, clipId, series, prior.attempt_no + 1, fence, stage === 'stt' ? 'minutes' : stage === 'select' ? 'calls' : 'none', now]);
+    (video_id,stage,clip_id,series_no,attempt_no,fence,status,unit,unit_count,started_at,rerender)
+    VALUES ($1,$2,$3,$4,$5,$6,'running',$7,0,$8,$9) RETURNING *`,
+  [videoId, stage, clipId, series, prior.attempt_no + 1, fence, stage === 'stt' ? 'minutes' : stage === 'select' ? 'calls' : 'none', now, rerender]);
   await tx.query('UPDATE video SET fence=$2, updated_at=$3 WHERE id=$1', [videoId, fence, now]);
   return result.rows[0]!;
 }

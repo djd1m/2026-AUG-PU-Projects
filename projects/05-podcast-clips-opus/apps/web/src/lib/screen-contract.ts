@@ -27,6 +27,8 @@ export const scoreSchema = z.object({
   explanations: z.object({ hook: explanation, completeness: explanation, length: explanation }),
 }).refine(v => v.score === v.components.hook + v.components.completeness + v.components.length);
 export type ClipScreen = {
+  rendered_music_track_id?: string | null; music_skip_reason?: string | null; rerender_failure?: string | null; published_render_version?: number;
+  music_track_id?: string | null; render_version?: number; rerendering?: boolean;
   duration_seconds?: number | null;
   clip_id: string; index: number; start: number; end: number; title: string; status: ClipStatus;
   watermarked: boolean; expires_at: string | null; available: boolean;

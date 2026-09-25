@@ -57,7 +57,7 @@ it('off arguments equal main fixture byte for byte', async () => {
   vi.spyOn(probe, 'probeVideoStream').mockResolvedValue(null);
   const measure = vi.spyOn(loudness, 'measureLoudness');
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
-  expect(await renderClip({ ...options, music: false })).toEqual({ duration_seconds: 20, teaser: null, music: null, packshot: null });
+  expect(await renderClip({ ...options, music: false })).toEqual({ music_skip_reason: null, duration_seconds: 20, teaser: null, music: null, packshot: null });
   const args = encode.mock.calls[0]![0].map(s => s.replace(/\/tmp\/render-[^/]+/g, '<TEMP>').replaceAll(process.cwd() + '/', '<ROOT>/'));
   expect(args).toEqual(JSON.parse(await readFile('tests/fixtures/music-bed/baseline.json', 'utf8')).args);
   expect(measure).not.toHaveBeenCalled();
@@ -82,7 +82,7 @@ it.each([NaN, -Infinity, -70, -60])('quiet/invalid speech %s skips, rendering su
   vi.spyOn(loudness, 'measureLoudness').mockResolvedValueOnce(value).mockResolvedValueOnce(-15);
   vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-  expect(await renderClip({ ...options, music: true })).toEqual({ duration_seconds: 20, teaser: null, music: null, packshot: null });
+  expect(await renderClip({ ...options, music: true })).toEqual({ music_skip_reason: 'speech_too_quiet', duration_seconds: 20, teaser: null, music: null, packshot: null });
   expect(log).toHaveBeenCalledWith(expect.stringContaining('music_skipped'));
 });
 it.each([-60, NaN])('invalid track %s skips', async value => {
@@ -101,7 +101,7 @@ it.each(['ffmpeg_failed', 'ffmpeg_timeout'] as const)('measurement %s skips musi
   const measure = vi.spyOn(loudness, 'measureLoudness').mockRejectedValue(new exec.FFmpegError(reason));
   const encode = vi.spyOn(exec, 'execFFmpeg').mockResolvedValue();
   const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-  expect(await renderClip({ ...options, music: true })).toEqual({ duration_seconds: 20, teaser: null, music: null, packshot: null });
+  expect(await renderClip({ ...options, music: true })).toEqual({ music_skip_reason: 'measure_failed', duration_seconds: 20, teaser: null, music: null, packshot: null });
   expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'music_skipped', reason: 'measure_failed' }));
   expect(encode).toHaveBeenCalledTimes(1);
   const controller = new AbortController();

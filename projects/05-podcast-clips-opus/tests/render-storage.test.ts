@@ -54,3 +54,12 @@ it('connection loss during publication cannot make an old attempt delete or over
   expect(f.objects.get('clip')?.contract).toBe('same-contract');
   expect(f.send.mock.calls.every(([command]) => command instanceof PutObjectCommand || command instanceof HeadObjectCommand)).toBe(true);
 });
+
+it('render storage deletes only the explicit key supplied after database publication', async () => {
+  const { DeleteObjectCommand } = await import('@aws-sdk/client-s3');
+  const send = vi.fn(async (_command: import('@aws-sdk/client-s3').DeleteObjectCommand) => ({}));
+  const storage = renderStorage({ client: { send } as unknown as S3Client, bucket: 'private' });
+  await storage.delete('clips/paid/video/clip-v2.mp4');
+  expect(send.mock.calls[0]![0]).toBeInstanceOf(DeleteObjectCommand);
+  expect(send.mock.calls[0]![0].input).toEqual({ Bucket: 'private', Key: 'clips/paid/video/clip-v2.mp4' });
+});

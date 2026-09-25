@@ -1,5 +1,5 @@
 import { transaction, type Pool } from '@clipmaker/db';
-export interface RetentionStorage { delete(key: string): Promise<void>; erasePrefix(prefix: string): Promise<void> }
+export interface RetentionStorage { delete(key: string): Promise<void>; erasePrefix(prefix: string): Promise<void>; eraseClipPrefix(prefix: string): Promise<void> }
 export const RETENTION_INTERVAL_MS = 3600_000;
 // One hour lets already-issued part URLs and bounded in-flight storage writes settle.
 export const ERASURE_QUIET_MS = 3600_000;
@@ -80,14 +80,14 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
       }
     });
     await step('очистка клипов', async () => {
-      const clips = await pool.query<{ id: string; object_key: string | null; thumbnail_key: string | null }>(`SELECT c.id,c.object_key,c.thumbnail_key FROM clip c
+      const clips = await pool.query<{ id: string; video_id: string; object_key: string | null; thumbnail_key: string | null }>(`SELECT c.id,c.object_key,c.thumbnail_key,c.video_id FROM clip c
         JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
         WHERE c.status='done' AND a.status='active' AND a.plan <> 'paid' AND v.status IN ('done','failed')
         AND v.finished_at <= $1 AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
         ORDER BY v.finished_at LIMIT $2`, [new Date(now.getTime() - 3 * 86400_000), batch]);
       backlog ||= clips.rows.length === batch;
       for (const clip of clips.rows) await step('удаление клипа', async () => {
-        for (const key of [clip.object_key, clip.thumbnail_key]) if (key) await storage.delete(key);
+        for (const prefix of ['clips/free', 'clips/paid', 'thumbs']) await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);
         await pool.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
       });
     });
