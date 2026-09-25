@@ -1,0 +1,16 @@
+{
+  "//": "из N5: projects/05-podcast-clips-opus/packages/db/package.json — имя @n6/db, скрипт migrate для цели migrate Dockerfile",
+  "name": "@n6/db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "migrate": "node dist/migrate.js"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}

@@ -1,0 +1,6 @@
+// из N5: projects/05-podcast-clips-opus/tests/tsconfig.json — без изменений
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "allowJs": true, "checkJs": false, "jsx": "react-jsx" },
+  "include": ["**/*.ts", "../vitest.config.ts"]
+}

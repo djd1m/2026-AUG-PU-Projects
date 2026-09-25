@@ -29,7 +29,7 @@
       "title": "Монорепо, схема БД с pgvector, отказ старта, вход по почте, дверь с лимитом",
       "description": "npm workspaces (apps/web, apps/worker, apps/widget, packages/db, packages/rag, packages/queue); сборка образов из корня; migrate: CREATE EXTENSION vector, 19 сущностей канона §4, CHECK по закрытым перечислениям, UNIQUE, несущие атомарность, HNSW vector_cosine_ops на chunk.embedding; LoadCeilings в web и worker-index — 14 переменных QUOTA_* + модели + N6_PUBLIC_ORIGIN (14 отдельных прогонов, не 10); регистрация/вход/выход, bcrypt вне транзакции, cookie __Host-n6_session; GET /health; proxy/Dockerfile с caddy-ratelimit и проверкой модуля на сборке; compose.test.yml с name: n6-test; scripts/check-env-wiring.sh. Первым делом — docker compose build (скаффолды не проверены сборкой).",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [],
       "blockers": [],
@@ -79,7 +79,8 @@
         "apps/web/src/app/health/route.ts",
         "compose.test.yml",
         "scripts/check-env-wiring.sh"
-      ]
+      ],
+      "completion": "docs/features/foundation/05_completion.md"
     },
     {
       "id": "quota-and-spend",
@@ -182,7 +183,8 @@
         "apps/worker/src/watchdog.ts",
         "apps/web/src/app/api/index-jobs/[id]/route.ts",
         "tests/index-job.fence.test.ts"
-      ]
+      ],
+      "carry_over": "Ревью foundation M1: объявить JOB_ATTEMPT_STATUS в packages/rag/src/enums.ts и сверить с CHECK 001_init.sql:129 в tests/enums.test.ts ДО записи в job_attempt."
     },
     {
       "id": "crawler",

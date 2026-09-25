@@ -1,0 +1,7 @@
+{
+  "//": "из N5: projects/05-podcast-clips-opus/packages/shared/package.json — роль общего пакета у N6 несёт @n6/rag (канон: packages/{db,rag,queue})",
+  "name": "@n6/rag", "version": "0.1.0", "private": true,
+  "main": "dist/index.js", "types": "dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }, "./*": { "types": "./dist/*.d.ts", "default": "./dist/*.js" } },
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc --noEmit -p tsconfig.json" }
+}

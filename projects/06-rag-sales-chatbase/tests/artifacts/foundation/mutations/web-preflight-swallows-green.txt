@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /tmp/n6-ceilings-mutations-AaBOTi
+
+ ✓ tests/config.test.ts (192 tests) 9237ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3008ms
+
+ Test Files  1 passed (1)
+      Tests  192 passed (192)
+   Start at  22:17:02
+   Duration  9.72s (transform 145ms, setup 0ms, collect 150ms, tests 9.24s, environment 0ms, prepare 104ms)
+

@@ -1,0 +1,2 @@
+// из N5: projects/05-podcast-clips-opus/packages/shared/tsconfig.json — без изменений
+{ "extends": "../../tsconfig.base.json", "compilerOptions": { "rootDir": "src", "outDir": "dist" }, "include": ["src/**/*.ts"] }

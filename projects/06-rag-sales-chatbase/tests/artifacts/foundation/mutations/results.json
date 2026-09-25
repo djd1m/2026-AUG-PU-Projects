@@ -1,0 +1,67 @@
+[
+  {
+    "id": "default-ceiling",
+    "title": "ненастроенный потолок получает дефолт вместо отказа",
+    "red": {
+      "code": 1,
+      "summary": "33 failed | 159 passed (192)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "192 passed (192)"
+    },
+    "passed": true
+  },
+  {
+    "id": "zero-accepted",
+    "title": "0 принимается как предел",
+    "red": {
+      "code": 1,
+      "summary": "14 failed | 178 passed (192)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "192 passed (192)"
+    },
+    "passed": true
+  },
+  {
+    "id": "one-name-two-numbers",
+    "title": "создание предпросмотра тратит предел ответов (класс H1/M2)",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 191 passed (192)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "192 passed (192)"
+    },
+    "passed": true
+  },
+  {
+    "id": "pairs-skipped",
+    "title": "персональный предел выше общего пропущен",
+    "red": {
+      "code": 1,
+      "summary": "8 failed | 184 passed (192)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "192 passed (192)"
+    },
+    "passed": true
+  },
+  {
+    "id": "web-preflight-swallows",
+    "title": "preflight web глотает отказ и отдаёт код 0",
+    "red": {
+      "code": 1,
+      "summary": "18 failed | 174 passed (192)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "192 passed (192)"
+    },
+    "passed": true
+  }
+]

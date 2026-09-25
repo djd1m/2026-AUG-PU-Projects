@@ -1,0 +1,22 @@
+{
+  "//": "из N5: projects/05-podcast-clips-opus/apps/web/package.json — без tRPC, S3 и очереди (их фичи позже)",
+  "name": "@n6/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build && tsc -p tsconfig.preflight.json",
+    "start": "node .next/preflight/preflight.js && next start",
+    "dev": "next dev",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@n6/db": "0.1.0",
+    "@n6/rag": "0.1.0",
+    "bcrypt": "^6.0.0",
+    "ioredis": "^5.7.0",
+    "next": "15.5.25",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.0"
+  }
+}

@@ -14,9 +14,10 @@ p-replicator, прежде чем реализовывать что-либо з�
 петля роста. Контур — Россия/СНГ, интерфейс и ответы на русском. CJM — вариант **H** (ядро A «бейдж»
 + демо-страница из C + партнёрский минимум из B), принят **ВРЕМЕННО** (A-N6-008, ждёт владельца).
 
-**Статус на 25.09.2026: документы Phase 0–2 и toolkit Phase 3 готовы, кода нет.** Ни один маршрут,
-миграция, тест и образ не существуют; `docker-compose.yml`, `Dockerfile` и `proxy/` — скаффолды,
-сборкой не проверены. Первая фича — `foundation` ([роадмап](.claude/feature-roadmap.json)).
+**Статус на 25.09.2026: фича `foundation` реализована** (монорепо, миграция 001 с pgvector, отказ
+старта по 14 `QUOTA_*`, вход/выход, `/health`; образы собраны, тесты зелёные в образе на настоящих
+Postgres+pgvector и Redis) — квитанция [`docs/features/foundation/05_completion.md`](docs/features/foundation/05_completion.md).
+Стек целиком (`docker compose up`) ещё не поднимался; виджета, очереди, RAG и квот ещё нет.
 
 Что перенесено из отчёта валидации ([`docs/validation-report.md`](docs/validation-report.md), вердикт
 🟡 CAVEATS) и в каком состоянии:
@@ -112,13 +113,14 @@ p-replicator, прежде чем реализовывать что-либо з�
 
 ## Команды разработки
 
-Кода ещё нет; команды ниже — контракт, который фича `foundation` обязана сделать исполнимым.
+Команды исполнимы с фичи `foundation`; `npm run build` пока без виджета (он появится с `widget-runtime-and-badge`).
 
 ```bash
 npm test                 # vitest: unit + стражи по исходнику
 npm run lint
 npm run build            # виджет (check-bundle-size ≤ 45 КБ gzip) → web → worker
-docker compose -f compose.test.yml --project-directory . run --rm --build test   # name: n6-test
+docker compose -f compose.test.yml --project-directory . --env-file <вне репо> run --rm --build test   # name: n6-test
+node scripts/test-ceilings-mutations.mjs   # страж отказа старта испытан мутациями → 0
 ```
 
 `--build` обязателен (урок N5: без него прогон молча проверяет старый образ). Перед `docker compose up`:

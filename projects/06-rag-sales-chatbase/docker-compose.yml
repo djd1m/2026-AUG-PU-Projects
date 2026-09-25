@@ -2,10 +2,9 @@
 # migrate). Хранилища НЕ публикуют портов (docker-ports, Правило №0); web не публикуется мимо proxy
 # (deployment-seams: иначе X-Forwarded-For от клиента обходит лимит двери).
 # Хостовый порт — только ${VAR:-default} и только на петлю; секреты, модели и 14 потолков —
-# ${VAR:?…} без значений по умолчанию. Тестовый стек — отдельный compose.test.yml (name: n6-test),
-# его пишет фича foundation.
-# СКАФФОЛД Phase 3/4 (2026-09-25): кода нет, сборкой не проверен. Первое дело foundation —
-# `docker compose build` и исправление того, что он найдёт.
+# ${VAR:?…} без значений по умолчанию. Тестовый стек — отдельный compose.test.yml (name: n6-test).
+# Фича foundation (2026-09-25): все четыре образа собраны `docker compose build`; стек целиком
+# (`up`) ещё НЕ поднимался — healthcheck'и и порядок старта не проверены запуском.
 name: ${N6_COMPOSE_PROJECT:-n6-sufler}
 
 x-app-env: &app-env

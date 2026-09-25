@@ -1,0 +1,14 @@
+{
+  "//": "из N5: projects/05-podcast-clips-opus/apps/worker/package.json — без очереди, S3 и ffmpeg; задачи индексации — фича index-job-core",
+  "name": "@n6/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@n6/rag": "0.1.0"
+  }
+}
