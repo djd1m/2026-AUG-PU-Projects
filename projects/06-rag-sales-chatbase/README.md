@@ -54,8 +54,8 @@
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | 🟡 выполнена, ждёт выбора CJM ([итог](docs/phase0-summary.md)) |
-| Phase 1 — SPARC (`/replicate`) | ⬜ |
+| Phase 0 — Product Discovery | 🟡 выполнена; CJM H принят ВРЕМЕННО (A-N6-008), ждёт владельца ([итог](docs/phase0-summary.md)) |
+| Phase 1 — SPARC (`/replicate`) | 🟡 выполнена автономно 2026-09-25, не закоммичена; ждёт владельца по открытым вопросам ([итог](docs/phase1-summary.md)) |
 | Phase 2 — Validation | ⬜ |
 | Phase 3 — Toolkit | ⬜ |
 | Phase 4 — Finalize | ⬜ |
