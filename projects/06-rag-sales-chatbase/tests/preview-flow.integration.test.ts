@@ -4,7 +4,7 @@
 // подменены только сеть (DNS, шлюз модели — живые вызовы НЕ делаются), транспорт очереди и ограничитель двери.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createHash, randomBytes } from 'node:crypto';
-import { createPool, type Pool } from '../packages/db/src/index';
+import { claimPreview, createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { loadCeilings, type Ceilings } from '../packages/rag/src/index';
 import { createPreviewDependencies } from '../apps/web/src/server/preview-deps';
@@ -13,6 +13,7 @@ import { createPreviewAskHandler, createPreviewClaimHandler, createPreviewCreate
 import { createAuthHandler } from '../apps/web/src/server/auth-handler';
 import { AuthService } from '../apps/web/src/server/auth';
 import { PgAuthStore } from '../apps/web/src/server/auth-store';
+import { tokenHash } from '../apps/web/src/server/preview-session';
 import { watchdogTick } from '../apps/worker/src/watchdog';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { environment } from './fixtures/environment';
@@ -324,5 +325,58 @@ describe.skipIf(!databaseUrl)('preview-flow на настоящем Postgres + p
     expect(r.status).toBe(403);
     expect((await r.json() as { error: { code: string } }).error.code).toBe('plan_limit');
     expect((await pool.query('SELECT status FROM bot WHERE id = $1', [(await botOf(id3)).bot_id])).rows[0]!.status).toBe('draft');
+  });
+
+  // carry_over ревью preview-flow, находка 1 (MEDIUM): гонка claim — конкурентным прогоном, а не чтением SQL.
+  const newAccount = async (w: ReturnType<typeof wire>) => (await w.auth.authenticate(
+    await w.auth.register(`race-${randomBytes(6).toString('hex')}@example.org`, 'пароль-надёжный-1', '93.184.1.0/24')))!.account_id;
+  it('claim одновременно: ОДИН предпросмотр двумя аккаунтами → ровно один claimed, второй 404; владелец бота — победивший', async () => {
+    const w = wire();
+    for (let round = 0; round < 3; round++) {
+      const b = new Browser(freshIp());
+      const id = await ready(w, b);
+      const hash = tokenHash(secret, 'preview', b.jar.get('__Host-n6_preview')!);
+      const accounts = [await newAccount(w), await newAccount(w)];
+      const outcomes = await Promise.all(accounts.map((accountId) => claimPreview(pool, { tokenHash: hash, accountId, indexJobId: id })));
+      expect(outcomes.map((o) => o.status).sort()).toEqual(['claimed', 'not_found']);
+      const winner = accounts[outcomes.findIndex((o) => o.status === 'claimed')];
+      expect((await pool.query('SELECT account_id, status FROM bot WHERE id = $1', [(await botOf(id)).bot_id])).rows[0]).toEqual({ account_id: winner, status: 'active' });
+    }
+  });
+
+  it('claim одновременно: ЧЕТЫРЕ предпросмотра одним аккаунтом free → ровно один claimed, три plan_limit, ботов у аккаунта 1', async () => {
+    const w = wire();
+    for (let round = 0; round < 3; round++) {
+      const accountId = await newAccount(w);
+      const previews = await Promise.all(Array.from({ length: 4 }, async () => {
+        const b = new Browser(freshIp());
+        const id = await ready(w, b);
+        return { id, hash: tokenHash(secret, 'preview', b.jar.get('__Host-n6_preview')!) };
+      }));
+      const outcomes = await Promise.all(previews.map((p) => claimPreview(pool, { tokenHash: p.hash, accountId, indexJobId: p.id })));
+      expect(outcomes.map((o) => o.status).sort()).toEqual(['claimed', 'plan_limit', 'plan_limit', 'plan_limit']);
+      expect(await count(`SELECT count(*)::int AS n FROM bot WHERE account_id = $1 AND status <> 'deleted'`, [accountId])).toBe(1);
+      expect(await count(`SELECT count(*)::int AS n FROM preview p JOIN index_job j ON j.bot_id = p.bot_id WHERE j.id = ANY($1::uuid[]) AND p.claimed_at IS NULL`,
+        [previews.map((p) => p.id)])).toBe(3);
+    }
+  });
+
+  it('carry_over (LOW): вопрос СРАЗУ после claim тем же держателем токена → 404 preview_saved, модель и квота не тронуты', async () => {
+    const w = wire(), b = new Browser(freshIp());
+    const id = await ready(w, b);
+    const token = b.jar.get('__Host-n6_preview')!;
+    const key = await browserKey(id);
+    await w.register(b, `after-${randomBytes(4).toString('hex')}@example.org`);
+    b.jar.set('__Host-n6_preview', token);                        // cookie очищен сервером — вернуть использованный токен
+    const embeds = w.h.gateway.embeds.length, chats = w.h.gateway.chats.length;
+    const r = await w.ask(b, id, { question: QUESTION });
+    expect(r.status).toBe(404);
+    expect((await r.json() as { error: { code: string } }).error.code).toBe('preview_saved');
+    expect([w.h.gateway.embeds.length, w.h.gateway.chats.length]).toEqual([embeds, chats]);
+    expect(await used('preview_session', `${key}:answers`)).toBe(0);
+    // Ядро само отказывает активному боту в режиме предпросмотра (второй барьер, answer.ts): not_found без вызовов.
+    const bot = await w.deps.answer((await botOf(id)).bot_id, key, { question: QUESTION, history: [] });
+    expect(bot).toEqual({ status: 'not_found' });
+    expect(w.h.gateway.embeds.length).toBe(embeds);
   });
 });

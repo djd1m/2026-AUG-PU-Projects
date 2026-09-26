@@ -49,6 +49,18 @@ export function visitorAnswerCharges(ceilings: Ceilings, input: { visitorSession
     { scope: 'global_answers', scopeKey: GLOBAL_KEY, period: day, n: 1, limit: ceiling(ceilings, 'global_answers') },
   ];
 }
+// Тестовый чат владельца в кабинете (bot-cabinet, A-N6-033): ТРИ scope — суточный и месячный предел бота по плану
+// и общий суточный. Владелец спрашивает своего бота из того же бюджета ответов, что и посетители (FR-TARIFF-003:
+// «ответов в сутки на бота»): отдельного scope и переменной нет — канон §7 держит 10 scope и 14 переменных.
+export function ownerAnswerCharges(ceilings: Ceilings, input: { botId: string; plan: unknown; now: Date }): QuotaCharge[] {
+  const day = moscowDay(input.now), month = moscowMonth(input.now), tier = planTier(input.plan);
+  const bot = uuid(input.botId, 'бот');
+  return [
+    { scope: 'bot_day_answers', scopeKey: bot, period: day, n: 1, limit: ceiling(ceilings, `bot_day_answers:${tier}`) },
+    { scope: 'bot_month_answers', scopeKey: bot, period: month, n: 1, limit: ceiling(ceilings, `bot_month_answers:${tier}`) },
+    { scope: 'global_answers', scopeKey: GLOBAL_KEY, period: day, n: 1, limit: ceiling(ceilings, 'global_answers') },
+  ];
+}
 // FR-LIMIT-002: создание предпросмотра расходует ТОЛЬКО «:create» — ни одного из 10 ответов (SC-US-002-3).
 export function previewCreateCharges(ceilings: Ceilings, input: { browserSession: string; ipPrefix: string; now: Date }): QuotaCharge[] {
   const day = moscowDay(input.now);

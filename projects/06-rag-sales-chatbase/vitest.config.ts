@@ -6,7 +6,7 @@ export default defineConfig({
   esbuild: { jsx: 'automatic' },
   // Массив, а не объект: строковый псевдоним '@n6/rag' съел бы и подпуть '@n6/rag/check-address' (preview-flow).
   resolve: { alias: [
-    { find: /^@n6\/rag\/check-address$/, replacement: path.resolve('packages/rag/src/check-address.ts') },
+    { find: /^@n6\/rag\/(check-address|bot-settings)$/, replacement: path.resolve('packages/rag/src') + '/$1.ts' },
     { find: /^@n6\/rag$/, replacement: path.resolve('packages/rag/src/index.ts') },
     { find: /^@n6\/db$/, replacement: path.resolve('packages/db/src/index.ts') },
     { find: /^@n6\/queue$/, replacement: path.resolve('packages/queue/src/index.ts') },

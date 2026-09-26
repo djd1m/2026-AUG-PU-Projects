@@ -2,7 +2,7 @@
 // (ADR-016). Три операции: бот ответа из доверенного идентификатора, квота вопроса по часам БД, журнал вопроса.
 import type { Pool } from 'pg';
 import { QUESTION_TEXT_TTL_DAYS, readAccountPlan, type AnswerBot, type Ceilings, type ChargeDecision, type QuestionLogEntry } from '@n6/rag';
-import { previewAnswerCharges, visitorAnswerCharges } from './ceilings.js';
+import { ownerAnswerCharges, previewAnswerCharges, visitorAnswerCharges } from './ceilings.js';
 import { isUuid } from './index-jobs.js';
 import { chargeQuota, transaction } from './quota.js';
 
@@ -20,14 +20,16 @@ export async function loadAnswerBot(pool: Pool, botId: string): Promise<LoadedAn
 
 export type AnswerQuotaInput =
   | { mode: 'widget'; botId: string; plan: unknown; visitorSession: string; ipPrefix: string }
-  | { mode: 'preview'; browserSession: string };
+  | { mode: 'preview'; browserSession: string }
+  | { mode: 'owner'; botId: string; plan: unknown };
 // Квота вопроса одной КОРОТКОЙ транзакцией, сутки — по часам БД (урок quota-and-spend M2), все scope или ни одного.
 export function chargeAnswerQuota(pool: Pool, ceilings: Ceilings, input: AnswerQuotaInput): Promise<ChargeDecision> {
   return transaction(pool, async (tx) => {
     const now = (await tx.query<{ now: Date }>('SELECT now() AS now')).rows[0]!.now;
     const charges = input.mode === 'widget'
       ? visitorAnswerCharges(ceilings, { visitorSession: input.visitorSession, ipPrefix: input.ipPrefix, botId: input.botId, plan: input.plan, now })
-      : previewAnswerCharges(ceilings, { browserSession: input.browserSession, now });
+      : input.mode === 'owner' ? ownerAnswerCharges(ceilings, { botId: input.botId, plan: input.plan, now })
+        : previewAnswerCharges(ceilings, { browserSession: input.browserSession, now });
     const decision = await chargeQuota(tx, charges);
     return decision.granted ? { granted: true } : { granted: false, scope: decision.scope };
   });

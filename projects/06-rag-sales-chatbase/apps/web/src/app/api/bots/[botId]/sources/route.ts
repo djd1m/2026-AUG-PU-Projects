@@ -1,12 +1,17 @@
-// POST /api/bots/{bot_id}/sources — CreateSource для PDF (фича pdf-source, FR-SOURCE-003, ADR-018).
-// Оформление — как у GET /api/index-jobs/{id}: runtime nodejs, зависимости из getRuntime().
+// POST /api/bots/{bot_id}/sources — CreateSource: PDF multipart (фича pdf-source, FR-SOURCE-003, ADR-018) или сайт
+// JSON { url } (фича bot-cabinet, FR-SOURCE-001: CheckAddress в web ДО записи). Выбор — по Content-Type.
 import { createPdfSource, findJobByIdempotencyKey, pdfLimitFor, readOwnedBotForPdf } from '@n6/db';
 import { getIndexQueue, getRuntime } from '../../../../../server/runtime';
 import { allowMutation } from '../../../../../server/rate-limit';
 import { createSourceUploadHandler } from '../../../../../server/source-upload-handler';
+import { getCabinetDependencies } from '../../../../../server/cabinet-runtime';
+import { createSiteSourceHandler } from '../../../../../server/cabinet-handler';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request, context: { params: Promise<{ botId: string }> }): Promise<Response> {
+  if (request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) {
+    return createSiteSourceHandler(getCabinetDependencies())(request, (await context.params).botId);
+  }
   const { pool, auth, redis, config } = getRuntime();
   const handler = createSourceUploadHandler({
     publicOrigin: config.publicOrigin, uploadDir: config.uploadDir,

@@ -480,7 +480,7 @@
       "title": "Кабинет бота: настройки, источники, домены, код установки",
       "description": "CreateBot (предел ботов по плану: free/nobadge 1, studio 10; public_key 22 символа base64url); PATCH настроек (контакт, приветствие); список источников с прогрессом задачи и причиной отказа + «Повторить»; AddAllowedOrigin (host без пути через new URL, origin https://host); InstallSnippet: без контакта для «не знаю» код не показывается; тег <script async data-bot> + кнопка копирования + точный список CSP-директив хозяину.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "preview-flow"
@@ -587,7 +587,7 @@
         "apps/web/src/lib/badge-required.ts",
         "tests/badge-required.test.ts"
       ],
-      "carry_over": " | Ревью design-shell: MEDIUM — в Specification у FR-LOOK-012 отметить расхождение: секция доверия НЕ обещает «данные в РФ» (A-N6-031 п.5, 152-ФЗ открыт) — трассировка FR→код."
+      "carry_over": " | Ревью design-shell: MEDIUM — в Specification у FR-LOOK-012 отметить расхождение: секция доверия НЕ обещает «данные в РФ» (A-N6-031 п.5, 152-ФЗ открыт) — трассировка FR→код. | bot-cabinet (A-N6-033 (5)): код установки ждёт манифест сборки apps/web/public/w/manifest.json вида { \"file\": \"widget.<hex>.js\" } (apps/web/src/server/widget-bundle.ts, WIDGET_BUNDLE_FILE) — без него экран «виджет ещё не собран»; ResolveWidgetConfig читает контакт через readContact (@n6/rag/bot-settings, fail-closed), а не «непустая строка». Проверить: тег из экрана «Установка» ведёт на СУЩЕСТВУЮЩИЙ файл после деплоя (старый hash не пропадает у уже вставленных тегов — решить до выпуска)."
     },
     {
       "id": "visitor-ask-and-limits",
@@ -692,7 +692,8 @@
         "apps/web/src/server/growth-event.ts",
         "tests/summary.test.ts"
       ],
-      "notes": "Рассылка сводки в Telegram (ADR-015, донор N2) — НЕ в неделю; первая фича, которая её тронет, называет ADR-015 в квитанции (перенос L1 Phase 2)."
+      "notes": "Рассылка сводки в Telegram (ADR-015, донор N2) — НЕ в неделю; первая фича, которая её тронет, называет ADR-015 в квитанции (перенос L1 Phase 2).",
+      "carry_over": " | bot-cabinet (A-N6-033 (1)): вопросы тестового чата владельца в question_log НЕ пишутся (сводка — только посетители), но списывают bot_day/bot_month/global_answers — баннер исчерпания месяца обязан это называть."
     },
     {
       "id": "tariffs-and-interest",
@@ -792,7 +793,8 @@
         "apps/web/src/app/api/studio/invites/route.ts",
         "apps/web/src/app/api/invites/[token]/accept/route.ts",
         "tests/attribution.test.ts"
-      ]
+      ],
+      "carry_over": " | bot-cabinet (A-N6-033 (6)): предел ботов плана считает и bot.studio_account_id (lockAccountBots) — перенос бота клиенту обязан проверять предел клиента под той же блокировкой."
     },
     {
       "id": "source-lifecycle",
@@ -830,7 +832,7 @@
         "apps/web/src/app/api/sources/[sourceId]/reindex/route.ts",
         "tests/delete-source.test.ts"
       ],
-      "carry_over": "Ревью pdf-source: MEDIUM-1 — один worker-index на всю платформу, failed-PDF не считаются в предел: суточный предел попыток загрузки на бота/аккаунт (включая failed) или справедливая очередь по ботам; LOW-2 — Architecture.md concurrency:2 vs код 1 — привести к одному. MEDIUM-2 — тест конфликта Content-Length + Transfer-Encoding через Caddy на стенде. | chunk-embed: бюджета токенов на ИСТОЧНИК нет (есть аккаунт/сутки, global и embed_budget предпросмотра) — один большой источник может съесть суточную квоту аккаунта; транзакция страницы с тысячами фрагментов держит соединение пула и строку index_job десятки секунд (вставка в HNSW ≈ 2,8 мс/фрагмент, индекс поиском не используется) — решить: снять HNSW миграцией или ограничить фрагменты страницы. | Ревью chunk-embed MEDIUM: предел числа фрагментов на страницу (или разбиение вставки на пачки вне одной длинной транзакции) + замер writeIndexedPage с живым HNSW на странице 2 млн символов; LOW: NFR-SCALE-001 (1 млн фрагментов) замер; сверка estimateTokens с tokens_actual."
+      "carry_over": "Ревью pdf-source: MEDIUM-1 — один worker-index на всю платформу, failed-PDF не считаются в предел: суточный предел попыток загрузки на бота/аккаунт (включая failed) или справедливая очередь по ботам; LOW-2 — Architecture.md concurrency:2 vs код 1 — привести к одному. MEDIUM-2 — тест конфликта Content-Length + Transfer-Encoding через Caddy на стенде. | chunk-embed: бюджета токенов на ИСТОЧНИК нет (есть аккаунт/сутки, global и embed_budget предпросмотра) — один большой источник может съесть суточную квоту аккаунта; транзакция страницы с тысячами фрагментов держит соединение пула и строку index_job десятки секунд (вставка в HNSW ≈ 2,8 мс/фрагмент, индекс поиском не используется) — решить: снять HNSW миграцией или ограничить фрагменты страницы. | Ревью chunk-embed MEDIUM: предел числа фрагментов на страницу (или разбиение вставки на пачки вне одной длинной транзакции) + замер writeIndexedPage с живым HNSW на странице 2 млн символов; LOW: NFR-SCALE-001 (1 млн фрагментов) замер; сверка estimateTokens с tokens_actual. | bot-cabinet (A-N6-033 (2)): POST /api/sources/{id}/reindex уже есть для failed-сайта (retrySource, packages/db/src/bots.ts) — done → 409 not_failed ждёт переиндексации здесь; DELETE /api/sources/{id} и кнопка «Удалить» в SourceList (CabinetViews.tsx) — здесь; удаления домена и бота в каноне нет. | Ревью bot-cabinet LOW: readOwnedBotForPdf (packages/db/src/pdf-sources.ts:19-20) — переиспользовать константу OWNED или страж на совпадение литералов."
     },
     {
       "id": "account-erasure",

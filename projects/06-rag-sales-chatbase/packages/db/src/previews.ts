@@ -6,7 +6,8 @@
 // Доступ к предпросмотру — ТОЛЬКО по хэшу токена из HttpOnly cookie. Идентификатор в адресе (index_job_id) не
 // секрет и доступа не даёт: чужая задача с моим токеном — то же «не найдено», что несуществующая.
 import type { Pool, PoolClient } from 'pg';
-import { BOTS_BY_PLAN, HISTORY_TURNS, PREVIEW_TTL_HOURS, readAccountPlan, readAccountStatus, type AccountPlan, type Ceilings, type HistoryTurn } from '@n6/rag';
+import { HISTORY_TURNS, PREVIEW_TTL_HOURS, type AccountPlan, type Ceilings, type HistoryTurn } from '@n6/rag';
+import { lockAccountBots } from './bots.js';
 import { previewCreateCharges } from './ceilings.js';
 import { createSourceJobTx, isUuid } from './index-jobs.js';
 import { chargeQuota, transaction } from './quota.js';
@@ -151,9 +152,10 @@ export function claimPreview(pool: Pool, input: { tokenHash: string; accountId: 
   return transaction(pool, async (tx) => claimPreviewTx(tx, input));
 }
 async function claimPreviewTx(tx: PoolClient, input: { tokenHash: string; accountId: string; indexJobId?: string }): Promise<ClaimOutcome> {
-  // Строка аккаунта под блокировкой: два одновременных claim одного аккаунта не превысят предел ботов.
-  const account = (await tx.query<{ plan: unknown; status: unknown }>('SELECT plan, status FROM account WHERE id = $1 FOR UPDATE', [input.accountId])).rows[0];
-  if (!account || readAccountStatus(account.status) !== 'active') return { status: 'not_found' };
+  // Строка аккаунта под блокировкой (lockAccountBots, общий с CreateBot): два одновременных claim/создания одного
+  // аккаунта не превысят предел ботов плана.
+  const bots = await lockAccountBots(tx, input.accountId);
+  if (!bots) return { status: 'not_found' };
   const preview = (await tx.query<{ id: string; bot_id: string; claimed: boolean; expired: boolean; owner: string | null }>(
     `SELECT p.id, p.bot_id, p.claimed_at IS NOT NULL AS claimed, p.expires_at <= now() AS expired, b.account_id AS owner
      FROM preview p JOIN bot b ON b.id = p.bot_id
@@ -162,9 +164,7 @@ async function claimPreviewTx(tx: PoolClient, input: { tokenHash: string; accoun
   if (!preview) return { status: 'not_found' };
   if (preview.claimed) return preview.owner === input.accountId ? { status: 'already_claimed' } : { status: 'not_found' };
   if (preview.expired) return { status: 'expired' };
-  const plan = readAccountPlan(account.plan), limit = BOTS_BY_PLAN[plan];
-  const bots = (await tx.query<{ n: number }>(`SELECT count(*)::int AS n FROM bot WHERE account_id = $1 AND status <> 'deleted'`, [input.accountId])).rows[0]!.n;
-  if (bots >= limit) return { status: 'plan_limit', plan, limit };
+  if (bots.count >= bots.limit) return { status: 'plan_limit', plan: bots.plan, limit: bots.limit };
   const claimed = await tx.query<{ bot_id: string }>(`UPDATE preview SET claimed_at = now(), history = '[]'::jsonb
     WHERE id = $1 AND claimed_at IS NULL AND expires_at > now() RETURNING bot_id`, [preview.id]);
   if (!claimed.rowCount) return { status: 'not_found' };

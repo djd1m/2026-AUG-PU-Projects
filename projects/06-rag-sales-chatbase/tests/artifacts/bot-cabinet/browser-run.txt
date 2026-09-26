@@ -1,0 +1,179 @@
+
+ RUN  v3.2.7 /w
+
+ ✓ tests/browser/bot-cabinet.test.ts (72 tests) 49182ms
+   ✓ chromium > list dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1046ms
+   ✓ chromium > limit dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  799ms
+   ✓ chromium > bot dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1389ms
+   ✓ chromium > empty dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  917ms
+   ✓ chromium > install-contact dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  885ms
+   ✓ chromium > install-missing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  853ms
+   ✓ chromium > install-ready dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  889ms
+   ✓ chromium > list light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  976ms
+   ✓ chromium > limit light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  783ms
+   ✓ chromium > bot light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1228ms
+   ✓ chromium > empty light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  877ms
+   ✓ chromium > install-contact light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  830ms
+   ✓ chromium > install-missing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  850ms
+   ✓ chromium > install-ready light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  895ms
+   ✓ chromium > bot 320: без горизонтального скролла, цели ≥ 44  302ms
+   ✓ chromium > bot 1440: без горизонтального скролла, цели ≥ 44  388ms
+   ✓ webkit > list dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1459ms
+   ✓ webkit > limit dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1243ms
+   ✓ webkit > bot dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2067ms
+   ✓ webkit > empty dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1910ms
+   ✓ webkit > install-contact dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1328ms
+   ✓ webkit > install-missing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1253ms
+   ✓ webkit > install-ready dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1302ms
+   ✓ webkit > list light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1352ms
+   ✓ webkit > limit light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1337ms
+   ✓ webkit > bot light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1807ms
+   ✓ webkit > empty light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1534ms
+   ✓ webkit > install-contact light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1259ms
+   ✓ webkit > install-missing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1290ms
+   ✓ webkit > install-ready light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1696ms
+   ✓ webkit > list 320: без горизонтального скролла, цели ≥ 44  561ms
+   ✓ webkit > bot 320: без горизонтального скролла, цели ≥ 44  732ms
+   ✓ webkit > install-ready 320: без горизонтального скролла, цели ≥ 44  449ms
+   ✓ webkit > list 360: без горизонтального скролла, цели ≥ 44  392ms
+   ✓ webkit > bot 360: без горизонтального скролла, цели ≥ 44  446ms
+   ✓ webkit > install-ready 360: без горизонтального скролла, цели ≥ 44  439ms
+   ✓ webkit > list 414: без горизонтального скролла, цели ≥ 44  393ms
+   ✓ webkit > bot 414: без горизонтального скролла, цели ≥ 44  469ms
+   ✓ webkit > install-ready 414: без горизонтального скролла, цели ≥ 44  377ms
+   ✓ webkit > list 768: без горизонтального скролла, цели ≥ 44  387ms
+   ✓ webkit > bot 768: без горизонтального скролла, цели ≥ 44  435ms
+   ✓ webkit > install-ready 768: без горизонтального скролла, цели ≥ 44  396ms
+   ✓ webkit > list 1024: без горизонтального скролла, цели ≥ 44  400ms
+   ✓ webkit > bot 1024: без горизонтального скролла, цели ≥ 44  546ms
+   ✓ webkit > install-ready 1024: без горизонтального скролла, цели ≥ 44  453ms
+   ✓ webkit > list 1440: без горизонтального скролла, цели ≥ 44  537ms
+   ✓ webkit > bot 1440: без горизонтального скролла, цели ≥ 44  726ms
+   ✓ webkit > install-ready 1440: без горизонтального скролла, цели ≥ 44  640ms
+   ✓ webkit > экран бота: три состояния задачи различимы текстом ленты; «Повторить» только у отказавшего сайта  460ms
+   ✓ webkit > SC-US-005-3: без контакта — формы контакта есть, кода установки и кнопки копирования нет  395ms
+   ✓ webkit > SC-US-005-1/2: код с data-bot и async, кнопка «Скопировать», три директивы CSP, список доменов  480ms
+   ✓ webkit > виджет не собран — кода нет, честное уведомление  389ms
+ ✓ tests/browser/design-shell.test.ts (84 tests) 43017ms
+   ✓ chromium > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1048ms
+   ✓ chromium > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1069ms
+   ✓ chromium > login dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  788ms
+   ✓ chromium > cabinet dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  734ms
+   ✓ chromium > states dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  745ms
+   ✓ chromium > landing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1045ms
+   ✓ chromium > pricing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1074ms
+   ✓ chromium > login light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  735ms
+   ✓ chromium > cabinet light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  685ms
+   ✓ chromium > states light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  745ms
+   ✓ webkit > R9 / dark 390x844: поле адреса и «Создать бота» в первом экране  494ms
+   ✓ webkit > R9 / dark 375x667: поле адреса и «Создать бота» в первом экране  468ms
+   ✓ webkit > R9 / dark 360x740: поле адреса и «Создать бота» в первом экране  458ms
+   ✓ webkit > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1577ms
+   ✓ webkit > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1631ms
+   ✓ webkit > login dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1182ms
+   ✓ webkit > cabinet dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1511ms
+   ✓ webkit > states dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1369ms
+   ✓ webkit > R9 / light 390x844: поле адреса и «Создать бота» в первом экране  479ms
+   ✓ webkit > R9 / light 375x667: поле адреса и «Создать бота» в первом экране  671ms
+   ✓ webkit > R9 / light 360x740: поле адреса и «Создать бота» в первом экране  697ms
+   ✓ webkit > landing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1793ms
+   ✓ webkit > pricing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1764ms
+   ✓ webkit > login light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1164ms
+   ✓ webkit > cabinet light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1325ms
+   ✓ webkit > states light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1329ms
+   ✓ webkit > landing 320: без горизонтального скролла, цели ≥ 44  438ms
+   ✓ webkit > pricing 320: без горизонтального скролла, цели ≥ 44  489ms
+   ✓ webkit > login 320: без горизонтального скролла, цели ≥ 44  364ms
+   ✓ webkit > cabinet 320: без горизонтального скролла, цели ≥ 44  408ms
+   ✓ webkit > landing 360: без горизонтального скролла, цели ≥ 44  525ms
+   ✓ webkit > pricing 360: без горизонтального скролла, цели ≥ 44  482ms
+   ✓ webkit > login 360: без горизонтального скролла, цели ≥ 44  404ms
+   ✓ webkit > cabinet 360: без горизонтального скролла, цели ≥ 44  485ms
+   ✓ webkit > landing 414: без горизонтального скролла, цели ≥ 44  559ms
+   ✓ webkit > pricing 414: без горизонтального скролла, цели ≥ 44  677ms
+   ✓ webkit > login 414: без горизонтального скролла, цели ≥ 44  341ms
+   ✓ webkit > cabinet 414: без горизонтального скролла, цели ≥ 44  358ms
+   ✓ webkit > landing 768: без горизонтального скролла, цели ≥ 44  498ms
+   ✓ webkit > pricing 768: без горизонтального скролла, цели ≥ 44  474ms
+   ✓ webkit > login 768: без горизонтального скролла, цели ≥ 44  361ms
+   ✓ webkit > cabinet 768: без горизонтального скролла, цели ≥ 44  374ms
+   ✓ webkit > landing 1024: без горизонтального скролла, цели ≥ 44  473ms
+   ✓ webkit > pricing 1024: без горизонтального скролла, цели ≥ 44  524ms
+   ✓ webkit > login 1024: без горизонтального скролла, цели ≥ 44  356ms
+   ✓ webkit > cabinet 1024: без горизонтального скролла, цели ≥ 44  378ms
+   ✓ webkit > landing 1440: без горизонтального скролла, цели ≥ 44  628ms
+   ✓ webkit > pricing 1440: без горизонтального скролла, цели ≥ 44  639ms
+   ✓ webkit > login 1440: без горизонтального скролла, цели ≥ 44  471ms
+   ✓ webkit > cabinet 1440: без горизонтального скролла, цели ≥ 44  453ms
+   ✓ webkit > таблица сравнения тарифов на 320 прокручивается в своём контейнере, а не страницей  441ms
+   ✓ webkit > обе палитры применяются к одной разметке по data-theme  487ms
+ ✓ tests/browser/preview-flow.test.ts (64 tests) 38853ms
+   ✓ chromium > start dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  893ms
+   ✓ chromium > progress dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  826ms
+   ✓ chromium > silent dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  790ms
+   ✓ chromium > failed dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  768ms
+   ✓ chromium > empty dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  891ms
+   ✓ chromium > chat dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  959ms
+   ✓ chromium > start light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  752ms
+   ✓ chromium > progress light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  744ms
+   ✓ chromium > silent light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  720ms
+   ✓ chromium > failed light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  832ms
+   ✓ chromium > empty light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  898ms
+   ✓ chromium > chat light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1034ms
+   ✓ webkit > R9 / dark 390x844: поле вопроса предпросмотра в первом экране  447ms
+   ✓ webkit > R9 / dark 375x667: поле вопроса предпросмотра в первом экране  444ms
+   ✓ webkit > R9 / dark 360x740: поле вопроса предпросмотра в первом экране  410ms
+   ✓ webkit > start dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1254ms
+   ✓ webkit > progress dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1298ms
+   ✓ webkit > silent dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1202ms
+   ✓ webkit > failed dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1256ms
+   ✓ webkit > empty dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1504ms
+   ✓ webkit > chat dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1617ms
+   ✓ webkit > R9 / light 390x844: поле вопроса предпросмотра в первом экране  508ms
+   ✓ webkit > R9 / light 375x667: поле вопроса предпросмотра в первом экране  435ms
+   ✓ webkit > R9 / light 360x740: поле вопроса предпросмотра в первом экране  446ms
+   ✓ webkit > start light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1277ms
+   ✓ webkit > progress light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1285ms
+   ✓ webkit > silent light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1113ms
+   ✓ webkit > failed light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1161ms
+   ✓ webkit > empty light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1423ms
+   ✓ webkit > chat light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1640ms
+   ✓ webkit > progress 320: без горизонтального скролла, цели ≥ 44  433ms
+   ✓ webkit > chat 320: без горизонтального скролла, цели ≥ 44  579ms
+   ✓ webkit > progress 360: без горизонтального скролла, цели ≥ 44  387ms
+   ✓ webkit > chat 360: без горизонтального скролла, цели ≥ 44  597ms
+   ✓ webkit > progress 414: без горизонтального скролла, цели ≥ 44  411ms
+   ✓ webkit > chat 414: без горизонтального скролла, цели ≥ 44  399ms
+   ✓ webkit > progress 768: без горизонтального скролла, цели ≥ 44  390ms
+   ✓ webkit > chat 768: без горизонтального скролла, цели ≥ 44  474ms
+   ✓ webkit > progress 1024: без горизонтального скролла, цели ≥ 44  411ms
+   ✓ webkit > chat 1024: без горизонтального скролла, цели ≥ 44  444ms
+   ✓ webkit > progress 1440: без горизонтального скролла, цели ≥ 44  551ms
+   ✓ webkit > chat 1440: без горизонтального скролла, цели ≥ 44  640ms
+   ✓ webkit > прогресс — role=progressbar со значением «k из ≤ 20»; три состояния различимы текстом  374ms
+   ✓ webkit > чат: развёрнутая цитата, ссылка на страницу с rel=noopener nofollow, CTA ровно одна, бейдж «Работает на Суфлёре»  439ms
+ ✓ tests/browser/responsive-check.test.ts (46 tests) 19411ms
+   ✓ chromium > чистая страница: все отказы отсутствуют  810ms
+   ✓ chromium > R4: контраст  1055ms
+   ✓ chromium > R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто  1641ms
+   ✓ chromium > R4: теги сохраняются при явном target-size  1041ms
+   ✓ webkit > R9 visibility and first visible match (fallback=false)  335ms
+   ✓ webkit > R9 visibility and first visible match (fallback=true)  359ms
+   ✓ webkit > чистая страница: все отказы отсутствуют  1123ms
+   ✓ webkit > R1: внедрённый дефект  311ms
+   ✓ webkit > R5: внедрённый дефект  315ms
+   ✓ webkit > R4: контраст  1499ms
+   ✓ webkit > R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто  2253ms
+   ✓ webkit > R4: теги сохраняются при явном target-size  1349ms
+   ✓ webkit > R8: rem растёт и переполняет только на 200%  349ms
+   ✓ webkit > R8: px не растёт  328ms
+   ✓ webkit > details: закрытые цели исключены, открытые проверяются (fallback=false)  373ms
+   ✓ webkit > details: закрытые цели исключены, открытые проверяются (fallback=true)  354ms
+   ✓ webkit > tabindex=-1 исключён, tabindex=0 проверяется  358ms
+
+ Test Files  4 passed (4)
+      Tests  266 passed (266)
+   Start at  05:11:26
+   Duration  153.95s (transform 431ms, setup 0ms, collect 2.42s, tests 150.46s, environment 1ms, prepare 331ms)
+
+exit=0

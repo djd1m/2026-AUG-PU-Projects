@@ -6,7 +6,7 @@ import { mkdirSync, openSync, writeSync, closeSync, readFileSync } from 'node:fs
 import { open } from 'node:fs/promises';
 import { dirname, isAbsolute, join } from 'node:path';
 
-export const SPEND_CALLS = ['answer', 'embed_question', 'embed_index', 'answer_preview', 'embed_preview',
+export const SPEND_CALLS = ['answer', 'embed_question', 'embed_index', 'answer_preview', 'answer_owner', 'embed_preview',
   'probe_answer', 'probe_embed'] as const;
 export type SpendCall = typeof SPEND_CALLS[number];
 export type SpendResult = 'started' | 'success' | 'timeout' | 'rate_limited' | 'provider_error' | 'schema_violation' | 'dimension_mismatch';

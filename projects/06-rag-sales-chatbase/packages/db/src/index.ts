@@ -9,3 +9,4 @@ export * from './pdf-sources.js';
 export * from './chunks.js';
 export * from './answers.js';
 export * from './previews.js';
+export * from './bots.js';

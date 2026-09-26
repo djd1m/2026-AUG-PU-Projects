@@ -22,7 +22,8 @@ import { validateModelAnswer } from './validate-model-answer.js';
 // кабинет: сессия) — см. loadAnswerBot в @n6/db. Тело запроса посетителя бота не выбирает: parseVisitorRequest
 // отвергает любые ключи, кроме вопроса и истории.
 export interface AnswerBot { id: string; status: unknown; companyName: string; contact: string | null }
-export type AnswerMode = 'widget' | 'preview';
+// owner — тестовый чат владельца в кабинете (bot-cabinet, FR-BOT-001): активный бот, бот — из сессии владельца.
+export type AnswerMode = 'widget' | 'preview' | 'owner';
 export interface VisitorRequest { question: string; history: HistoryTurn[] }
 export type QuestionOutcome = 'answered' | 'unknown' | 'refused_limit';
 export interface QuestionLogEntry { botId: string; outcome: QuestionOutcome; text: string | null; citedChunkIds: string[] }
@@ -93,9 +94,9 @@ export async function answerQuestion(deps: AnswerDeps, bot: AnswerBot, mode: Ans
   if (!(ANSWER_MODELS as readonly string[]).includes(deps.models.answerModel) || !(EMBED_MODELS as readonly string[]).includes(deps.models.embedModel)) {
     throw new Error('Модель вне закрытого набора канона: ответ не выполняется');
   }
-  // Виджет отвечает только активным ботом, предпросмотр — только черновиком. Неизвестный статус — deleted.
+  // Виджет и кабинет отвечают только активным ботом, предпросмотр — только черновиком. Неизвестный статус — deleted.
   const status = readBotStatus(bot.status);
-  if (status !== (mode === 'widget' ? 'active' : 'draft')) return { status: 'not_found' };
+  if (status !== (mode === 'preview' ? 'draft' : 'active')) return { status: 'not_found' };
   // Повтор проверки границы: ядро не доверяет, что вызывающий звал parseVisitorRequest.
   const parsed = parseVisitorRequest({ question: request.question, history: request.history });
   if (!parsed.ok) return { status: 'invalid', reason: parsed.reason };
@@ -140,7 +141,7 @@ export async function answerQuestion(deps: AnswerDeps, bot: AnswerBot, mode: Ans
   try {
     completion = await meteredCall({
       spend: deps.spend, retries: 0,
-      event: { call: mode === 'widget' ? 'answer' : 'answer_preview', model: deps.models.answerModel, request_id: requestId, bot_id: bot.id, unit: 'calls', quantity: 1 },
+      event: { call: mode === 'widget' ? 'answer' : mode === 'owner' ? 'answer_owner' : 'answer_preview', model: deps.models.answerModel, request_id: requestId, bot_id: bot.id, unit: 'calls', quantity: 1 },
       run: () => deps.client.complete({ messages: prompt.messages, schemaName: 'answer', schema: prompt.schema,
         signal: AbortSignal.timeout(deps.answerTimeoutMs ?? ANSWER_TIMEOUT_MS) }),
     });

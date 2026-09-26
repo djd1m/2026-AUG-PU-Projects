@@ -1,0 +1,22 @@
+ Container n6-test-redis-1 Running 
+ Container n6-test-db-1 Running 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-test-run-8df545da05c6 Creating 
+ Container n6-test-test-run-8df545da05c6 Created 
+single-statement: дефект возвращён → 2 failed | 46 passed (48) (код 1); код восстановлен → 48 passed (48) (код 0)
+read-then-write: дефект возвращён → 3 failed | 45 passed (48) (код 1); код восстановлен → 48 passed (48) (код 0)
+count-by-success: дефект возвращён → 10 failed | 38 passed (48) (код 1); код восстановлен → 48 passed (48) (код 0)
+no-visitor-limit: дефект возвращён → 6 failed | 42 passed (48) (код 1); код восстановлен → 48 passed (48) (код 0)
+create-spends-answers: дефект возвращён → 2 failed | 46 passed (48) (код 1); код восстановлен → 48 passed (48) (код 0)
+dimension-unchecked: дефект возвращён → 3 failed | 45 passed (48) (код 1); код восстановлен → 48 passed (48) (код 0)
+threshold-removed: дефект возвращён → 3 failed | 74 passed (77) (код 1); код восстановлен → 77 passed (77) (код 0)
+citation-check-removed: дефект возвращён → 8 failed | 69 passed (77) (код 1); код восстановлен → 77 passed (77) (код 0)
+foreign-citation-accepted: дефект возвращён → 2 failed | 75 passed (77) (код 1); код восстановлен → 77 passed (77) (код 0)
+checkaddress-removed-in-web: дефект возвращён → 3 failed | 25 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+bot-id-from-body: дефект возвращён → 2 failed | 26 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+client-history-accepted: дефект возвращён → 2 failed | 26 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+answers-quota-removed: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+exit=0

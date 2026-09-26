@@ -1,5 +1,5 @@
 // Пустой кабинет (каркас design-shell): состояние «ботов нет» — пустота показывается пустотой (CFG-I7), без «0 %».
-// Список ботов, источники и код установки — фича bot-cabinet.
+// Создание бота вручную — форма под этим блоком (bot-cabinet, dashboard/page.tsx).
 export function CabinetEmpty() {
   return <><div className="cabinet-head"><h1>Мои боты</h1></div>
     <section className="empty stack" aria-labelledby="empty-title">
