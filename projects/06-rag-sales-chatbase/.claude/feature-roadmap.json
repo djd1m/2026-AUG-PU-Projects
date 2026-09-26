@@ -284,7 +284,7 @@
       "title": "Фрагменты с контекстом, эмбеддинги в pgvector, продолжение по content_hash",
       "description": "ChunkDocument: заголовки → абзацы → предложения, цель 500 токенов, потолок 600, перекрытие 80, context_path «заголовок › h2 › h3», эмбеддинг от context_path + текст; EmbedAndStore: пачки ≤ 64, квота account_embed_tokens + global_embed_tokens ДО пачки (предпросмотр — index_job.embed_budget 40 000 + global_embed_tokens), 2 повтора при 429/5xx (каждый — новое списание), длина вектора ≠ 1536 → internal, запись страницы в одной транзакции с проверкой fence; RunIndexJob: страницы с известным content_hash пропускаются; вставка по странице, не пачкой на сайт.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "quota-and-spend",
@@ -381,7 +381,8 @@
         "tests/validate-model-answer.test.ts",
         "tests/bot-isolation.test.ts",
         "docs/measurements/threshold-calibration.md"
-      ]
+      ],
+      "carry_over": "chunk-embed (A-N6-028): поиск — searchChunks (packages/db/src/chunks.ts), ТОЧНЫЙ перебор внутри бота; путь HNSW + фильтр bot_id + iterative_scan вернул 0 из 3 своих фрагментов при 300 чужих ближайших — не возвращать без теста полноты на той же форме данных. Эмбеддинг вопроса — через meteredCall и тот же isEmbeddingOfDimension; токены фрагментов — оценка estimateTokens (сверх), не токенизатор. | Ревью chunk-embed INFO: bot_id в HTTP-пути ответа — ТОЛЬКО из доверенного источника (бот по slug/домену виджета, проверенный сервером; кабинет — сессия), никогда из тела запроса; тест."
     },
     {
       "id": "design-shell",
@@ -825,7 +826,7 @@
         "apps/web/src/app/api/sources/[sourceId]/reindex/route.ts",
         "tests/delete-source.test.ts"
       ],
-      "carry_over": "Ревью pdf-source: MEDIUM-1 — один worker-index на всю платформу, failed-PDF не считаются в предел: суточный предел попыток загрузки на бота/аккаунт (включая failed) или справедливая очередь по ботам; LOW-2 — Architecture.md concurrency:2 vs код 1 — привести к одному. MEDIUM-2 — тест конфликта Content-Length + Transfer-Encoding через Caddy на стенде."
+      "carry_over": "Ревью pdf-source: MEDIUM-1 — один worker-index на всю платформу, failed-PDF не считаются в предел: суточный предел попыток загрузки на бота/аккаунт (включая failed) или справедливая очередь по ботам; LOW-2 — Architecture.md concurrency:2 vs код 1 — привести к одному. MEDIUM-2 — тест конфликта Content-Length + Transfer-Encoding через Caddy на стенде. | chunk-embed: бюджета токенов на ИСТОЧНИК нет (есть аккаунт/сутки, global и embed_budget предпросмотра) — один большой источник может съесть суточную квоту аккаунта; транзакция страницы с тысячами фрагментов держит соединение пула и строку index_job десятки секунд (вставка в HNSW ≈ 2,8 мс/фрагмент, индекс поиском не используется) — решить: снять HNSW миграцией или ограничить фрагменты страницы. | Ревью chunk-embed MEDIUM: предел числа фрагментов на страницу (или разбиение вставки на пачки вне одной длинной транзакции) + замер writeIndexedPage с живым HNSW на странице 2 млн символов; LOW: NFR-SCALE-001 (1 млн фрагментов) замер; сверка estimateTokens с tokens_actual."
     },
     {
       "id": "account-erasure",

@@ -1,12 +1,13 @@
 // worker-index: отказ старта (FR-LIMIT-004), затем EmbedProbe (FR-INDEX-002, фича quota-and-spend), затем
 // очередь индексации и сторож (фича index-job-core, ADR-009), затем отметка жизни для healthcheck compose.
 // Источник «сайт» — CrawlSite (фича crawler); «PDF» — ExtractPdf в дочернем процессе (фича pdf-source);
-// фрагменты и эмбеддинги — chunk-embed. После done/failed сырой PDF удаляется из тома (ADR-018), сторож
+// фрагменты и эмбеддинги — ChunkDocument + EmbedAndStore (фича chunk-embed): каждая попытка пачки через
+// meteredCall с квотой и журналом, страница и её фрагменты — одной транзакцией с фенсом. После done/failed сырой PDF удаляется из тома (ADR-018), сторож
 // раз в минуту подметает том от файлов завершённых и несуществующих задач.
 // Подключение Worker BullMQ — по образцу N5 apps/worker/src/index.ts (concurrency 1: вежливость краулера).
 import { writeFileSync } from 'node:fs';
 import { Worker } from 'bullmq';
-import { loadWorkerConfig } from '@n6/rag';
+import { createOpenRouter, loadWorkerConfig, spendRecorder } from '@n6/rag';
 import { createPool } from '@n6/db';
 import { createIndexQueue, getRedisConnection, INDEX_QUEUE, type IndexMessage } from '@n6/queue';
 import { readEnvironment } from './environment';
@@ -15,6 +16,7 @@ import { processByKind, runIndexJob } from './run-index-job';
 import { createSiteProcessor } from './crawl/site-processor';
 import { userAgentFor } from './crawl/limits';
 import { createPdfProcessor } from './pdf/pdf-processor';
+import { createEmbedder } from './embed/embed-and-store';
 import { removeUpload, sweepUploads } from './pdf/uploads';
 import { startWatchdog, watchdogTick } from './watchdog';
 
@@ -34,8 +36,10 @@ async function main(): Promise<void> {
   const pool = createPool(config.databaseUrl);
   pool.on('error', () => console.error('Соединение БД потеряно: задачи индексации временно не арендуются'));
   const queue = createIndexQueue(config);
-  const site = createSiteProcessor({ pool, userAgent: userAgentFor(config.publicOrigin) });
-  const pdf = createPdfProcessor({ pool, uploadDir: config.uploadDir });
+  const embedder = createEmbedder({ pool, client: createOpenRouter(config.models), ceilings: config.ceilings,
+    spend: spendRecorder(config.spendLog), embedModel: config.models.embedModel });
+  const site = createSiteProcessor({ pool, userAgent: userAgentFor(config.publicOrigin), embedder });
+  const pdf = createPdfProcessor({ pool, uploadDir: config.uploadDir, embedder });
   const deps = { pool, enqueue: queue.enqueue, process: processByKind(pool, { site, pdf }),
     onSettled: async (lease: { indexJobId: string }) => { await removeUpload(config.uploadDir, lease.indexJobId); } };
   const worker = new Worker<IndexMessage>(INDEX_QUEUE, async (job) => runIndexJob(deps, job.data),

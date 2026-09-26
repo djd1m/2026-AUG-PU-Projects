@@ -17,6 +17,7 @@ import { removeUpload, sweepUploads } from '../apps/worker/src/pdf/uploads';
 import { extractPdf } from '../apps/worker/src/pdf/extract-pdf';
 import { createSourceUploadHandler } from '../apps/web/src/server/source-upload-handler';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
+import { testEmbedder } from './fixtures/fake-embeddings';
 import { brokenPdf, encryptedPdf, multiPagePdf, multipart, BOUNDARY, normalPdf, scanPdf } from './fixtures/pdf-factory';
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -50,7 +51,7 @@ describe.skipIf(!databaseUrl)('PDF в задаче индексации на н�
   };
   const run = (indexJobId: string, extract = extractPdf) => runIndexJob({
     pool, enqueue: async () => {},
-    process: processByKind(pool, { site: noProcessorYet, pdf: createPdfProcessor({ pool, uploadDir: dir, extract, log: (l) => logs.push(l) }) }),
+    process: processByKind(pool, { site: noProcessorYet, pdf: createPdfProcessor({ pool, uploadDir: dir, embedder: testEmbedder(pool, { log: (l) => logs.push(l) }).embedder, extract, log: (l) => logs.push(l) }) }),
     onSettled: async (lease) => { await removeUpload(dir, lease.indexJobId); },
   }, { index_job_id: indexJobId, generation: 0 });
   const job = async (id: string) => (await pool.query('SELECT * FROM index_job WHERE id = $1', [id])).rows[0];
@@ -122,6 +123,10 @@ describe.skipIf(!databaseUrl)('PDF в задаче индексации на н�
     const owner = await account('free');
     const botId = await bot(owner);
     for (let i = 0; i < 2; i++) await createSourceJob(pool, { botId, kind: 'pdf', fileName: `${i}.pdf`, idempotencyKey: randomUUID() });
+    // Прогрев 6 соединений пула: иначе первая транзакция успевает завершиться, пока остальные ещё
+    // открывают соединение, и гонка «прочитать, потом записать» не возникает (мутация plan-limit-unlocked
+    // дважды прошла незамеченной на прогоне chunk-embed).
+    await Promise.all(Array.from({ length: 6 }, () => pool.query('SELECT pg_sleep(0.05)')));
     const results = await Promise.all(Array.from({ length: 6 }, () => createPdfSource(pool,
       { accountId: owner, botId, fileName: 'x.pdf', idempotencyKey: randomUUID(), indexJobId: randomUUID() })));
     expect(results.filter((r) => r.kind === 'created')).toHaveLength(1);

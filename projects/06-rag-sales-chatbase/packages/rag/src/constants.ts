@@ -18,3 +18,22 @@ const PDF_MAGIC = [0x25, 0x50, 0x44, 0x46, 0x2d];    // «%PDF-»: тип по �
 export function isPdfMagic(bytes: Uint8Array): boolean {
   return bytes.length >= PDF_MAGIC.length && PDF_MAGIC.every((b, i) => bytes[i] === b);
 }
+
+// Фрагменты и эмбеддинги — канон §7 «Поиск и ответ» (A-N6-013: гипотезы до калибровки), FR-INDEX-001/002,
+// Pseudocode ChunkDocument / EmbedAndStore. Токены — ОЦЕНКА кода (packages/rag/src/chunk.ts,
+// estimateTokens), а не счёт токенизатора поставщика: фактические токены пишутся в журнал попыток
+// (tokens_actual) и сверяются с оценкой по журналу.
+export const CHUNK_TARGET_TOKENS = 500;
+export const CHUNK_MAX_TOKENS = 600;                 // CHECK token_count BETWEEN 1 AND 600 в 001_init.sql
+export const CHUNK_OVERLAP_TOKENS = 80;
+export const CONTEXT_PATH_SEPARATOR = ' › ';
+export const CONTEXT_HEADING_MAX_CHARS = 120;        // один заголовок в пути; путь не раздувает вход эмбеддинга
+export const EMBED_BATCH_MAX = 64;                   // EmbedAndStore п.1: пачки по ≤ 64 фрагмента
+export const EMBED_RETRIES = 2;                      // EmbedAndStore п.2: 2 повтора при 429/5xx, каждый — новое списание
+export const SEARCH_TOP_K = 4;                       // канон §7: top_k = 4
+
+// ADR-001: колонка vector(1536). ЕДИНСТВЕННАЯ проверка длины вектора в коде — её зовут и клиент шлюза
+// (openrouter.ts), и EmbedAndStore перед записью, и запись фрагментов (packages/db/src/chunks.ts).
+export function isEmbeddingOfDimension(vector: unknown): vector is number[] {
+  return Array.isArray(vector) && vector.length === EMBED_DIMENSIONS && vector.every((x) => typeof x === 'number' && Number.isFinite(x));
+}

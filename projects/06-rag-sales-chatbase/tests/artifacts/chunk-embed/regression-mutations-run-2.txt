@@ -1,0 +1,180 @@
+ Container n6-test-redis-1 Running 
+ Container n6-test-db-1 Running 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 671B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.88kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.5s
+
+#4 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#4 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#4 DONE 0.1s
+
+#5 [deps 2/9] WORKDIR /app
+#5 DONE 0.1s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 1.26kB done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 50.83kB 0.0s done
+#7 DONE 0.0s
+
+#8 [deps 3/9] COPY package.json package-lock.json ./
+#8 DONE 1.2s
+
+#9 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#9 DONE 0.1s
+
+#10 [deps 5/9] COPY apps/worker/package.json ./apps/worker/
+#10 DONE 0.1s
+
+#11 [deps 6/9] COPY packages/db/package.json ./packages/db/
+#11 DONE 0.1s
+
+#12 [deps 7/9] COPY packages/rag/package.json ./packages/rag/
+#12 DONE 0.1s
+
+#13 [deps 8/9] COPY packages/queue/package.json ./packages/queue/
+#13 DONE 0.1s
+
+#14 [deps 9/9] RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
+#14 3.280 npm warn deprecated cron-parser@4.9.0: v4 is no longer maintained, upgrade to v5
+#14 15.05 
+#14 15.05 added 125 packages, and audited 131 packages in 15s
+#14 15.05 
+#14 15.05 27 packages are looking for funding
+#14 15.05   run `npm fund` for details
+#14 15.10 
+#14 15.10 4 vulnerabilities (3 moderate, 1 high)
+#14 15.10 
+#14 15.10 To address all issues (including breaking changes), run:
+#14 15.10   npm audit fix --force
+#14 15.10 
+#14 15.10 Run `npm audit` for details.
+#14 15.10 npm notice
+#14 15.10 npm notice New major version of npm available! 10.9.8 -> 12.1.0
+#14 15.10 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+#14 15.10 npm notice To update run: npm install -g npm@12.1.0
+#14 15.10 npm notice
+#14 DONE 15.6s
+
+#15 [build 1/2] COPY . .
+#15 DONE 0.7s
+
+#16 [build 2/2] RUN npm run build
+#16 0.650 
+#16 0.650 > n6-sufler@0.1.0 build
+#16 0.650 > npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#16 0.650 
+#16 0.874 
+#16 0.874 > @n6/rag@0.1.0 build
+#16 0.874 > tsc -p tsconfig.json
+#16 0.874 
+#16 3.279 
+#16 3.279 > @n6/db@0.1.0 build
+#16 3.279 > tsc -p tsconfig.json
+#16 3.279 
+#16 5.767 
+#16 5.767 > @n6/queue@0.1.0 build
+#16 5.767 > tsc -p tsconfig.json
+#16 5.767 
+#16 7.850 
+#16 7.850 > @n6/worker@0.1.0 build
+#16 7.850 > tsc -p tsconfig.json && node -e "require('node:fs').copyFileSync('src/pdf/extract-child.mjs', 'dist/pdf/extract-child.mjs')"
+#16 7.850 
+#16 10.96 
+#16 10.96 > @n6/web@0.1.0 build
+#16 10.96 > next build && tsc -p tsconfig.preflight.json
+#16 10.96 
+#16 12.13 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#16 12.13 This information is used to shape Next.js' roadmap and prioritize features.
+#16 12.13 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#16 12.13 https://nextjs.org/telemetry
+#16 12.13 
+#16 12.28    ▲ Next.js 15.5.25
+#16 12.28    - Experiments (use with caution):
+#16 12.28      · cpus: 2
+#16 12.28 
+#16 12.46    Creating an optimized production build ...
+#16 23.49  ✓ Compiled successfully in 7.5s
+#16 23.51    Linting and checking validity of types ...
+#16 27.62    Collecting page data ...
+#16 29.69    Generating static pages (0/5) ...
+#16 30.54    Generating static pages (1/5) 
+#16 30.54    Generating static pages (2/5) 
+#16 30.54    Generating static pages (3/5) 
+#16 30.54  ✓ Generating static pages (5/5)
+#16 31.75    Finalizing page optimization ...
+#16 31.75    Collecting build traces ...
+#16 41.38 
+#16 41.39 Route (app)                                  Size  First Load JS
+#16 41.39 ┌ ƒ /api/auth/login                         139 B         102 kB
+#16 41.39 ├ ƒ /api/auth/logout                        139 B         102 kB
+#16 41.39 ├ ƒ /api/auth/register                      139 B         102 kB
+#16 41.39 ├ ƒ /api/bots/[botId]/sources               139 B         102 kB
+#16 41.39 ├ ƒ /api/index-jobs/[id]                    139 B         102 kB
+#16 41.39 └ ƒ /health                                 139 B         102 kB
+#16 41.39 + First Load JS shared by all              101 kB
+#16 41.39   ├ chunks/87c73c54-24122e7b92478d00.js   54.2 kB
+#16 41.39   ├ chunks/956-915b2f7c381780d8.js        45.6 kB
+#16 41.39   └ other shared chunks (total)           1.59 kB
+#16 41.39 
+#16 41.39 Route (pages)                                Size  First Load JS
+#16 41.39 ─ ○ /404                                    180 B         107 kB
+#16 41.39 + First Load JS shared by all              107 kB
+#16 41.39   ├ chunks/framework-9d5fabc6d68642b8.js  68.7 kB
+#16 41.39   ├ chunks/main-e7f3731ffdf0a93c.js       36.9 kB
+#16 41.39   └ other shared chunks (total)           1.66 kB
+#16 41.39 
+#16 41.39 ○  (Static)   prerendered as static content
+#16 41.39 ƒ  (Dynamic)  server-rendered on demand
+#16 41.39 
+#16 DONE 43.2s
+
+#17 exporting to image
+#17 exporting layers
+#17 exporting layers 40.7s done
+#17 exporting manifest sha256:93c8ff83b5bfa7604afb699299201966032c872fbd2a6b221f43a068360018c0 0.0s done
+#17 exporting config sha256:b2c1c6b1a9f016b868efe0840b7e7f93fe9aa41d3bc60e3d6f52d1df78bb49f3 0.0s done
+#17 exporting attestation manifest sha256:6568199db960089e9036153f313222e46a357a7a289c7c8a2c23d9228074a7b9 0.0s done
+#17 exporting manifest list sha256:e8c6678eee401843dbda1d6de84320b95474b355746a0f481cb6a12e70142754 0.0s done
+#17 naming to docker.io/library/n6-sufler-test:foundation done
+#17 unpacking to docker.io/library/n6-sufler-test:foundation
+#17 unpacking to docker.io/library/n6-sufler-test:foundation 8.7s done
+#17 DONE 49.5s
+
+#18 resolving provenance for metadata file
+#18 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-test-run-6119fb9135e2 Creating 
+ Container n6-test-test-run-6119fb9135e2 Created 
+=== quota
+single-statement: дефект возвращён → 2 failed | 40 passed | 6 skipped (48) (код 1); код восстановлен → 42 passed | 6 skipped (48) (код 1)
+read-then-write: дефект возвращён → 3 failed | 39 passed | 6 skipped (48) (код 1); код восстановлен → 42 passed | 6 skipped (48) (код 1)
+count-by-success: дефект возвращён → 8 failed | 34 passed | 6 skipped (48) (код 1); код восстановлен → 42 passed | 6 skipped (48) (код 1)
+no-visitor-limit: дефект возвращён → 6 failed | 36 passed | 6 skipped (48) (код 1); код восстановлен → 42 passed | 6 skipped (48) (код 1)
+create-spends-answers: дефект возвращён → 2 failed | 40 passed | 6 skipped (48) (код 1); код восстановлен → 42 passed | 6 skipped (48) (код 1)
+dimension-unchecked: дефект возвращён → 2 failed | 40 passed | 6 skipped (48) (код 1); код восстановлен → 42 passed | 6 skipped (48) (код 1)
+=== quota exit=1
+=== pdf
+child-timeout-removed: дефект возвращён → 2 failed | 103 passed (105) (код 1); код восстановлен → 105 passed (105) (код 0)
+magic-check-removed: дефект возвращён → 3 failed | 102 passed (105) (код 1); код восстановлен → 105 passed (105) (код 0)
+scan-accepted: дефект возвращён → 6 failed | 99 passed (105) (код 1); код восстановлен → 105 passed (105) (код 0)
+memory-limit-removed: дефект возвращён → 2 failed | 103 passed (105) (код 1); код восстановлен → 105 passed (105) (код 0)
+pdf-deleted-only-on-success: дефект возвращён → 5 failed | 100 passed (105) (код 1); код восстановлен → 105 passed (105) (код 0)
+size-declared-only: дефект возвращён → 1 failed | 104 passed (105) (код 1); код восстановлен → 105 passed (105) (код 0)
+plan-limit-unlocked: дефект возвращён → 105 passed (105) (код 0); код восстановлен → 105 passed (105) (код 0)
+=== pdf exit=1
+exit=0

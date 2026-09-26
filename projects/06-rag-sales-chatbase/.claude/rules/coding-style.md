@@ -35,8 +35,11 @@ npm workspaces: `apps/web` (Next.js 15 App Router, route handlers), `apps/worker
   сверяются тестом.
 - Эмбеддинг — `vector(1536)`; размерность — константа кода (`EMBED_DIMENSIONS = 1536`), не
   окружение; в запросе к OpenRouter передаётся `dimensions: 1536`.
-- Поиск: `SELECT … FROM chunk WHERE bot_id = $1 ORDER BY embedding <=> $2 LIMIT 4` и только потом
-  порог `1 − distance ≥ 0.40` в коде. `SET LOCAL hnsw.ef_search = 40` внутри транзакции поиска.
+- Поиск: только `searchChunks` (`packages/db/src/chunks.ts`) — точный перебор фрагментов ОДНОГО бота
+  (`MATERIALIZED`-выборка `WHERE bot_id = $1`, затем `ORDER BY distance LIMIT 4`), и только потом порог
+  `1 − distance ≥ 0.40` в коде. HNSW с фильтром терял свои фрагменты (A-N6-028).
+- Страница и её фрагменты — только `writeIndexedPage` (одна транзакция с фенсом); эмбеддинги — только
+  через `createEmbedder` (meteredCall: квота + журнал на КАЖДУЮ попытку), вне транзакции.
 - Квота — только через `packages/db/src/quota.ts` (два оператора, откат всех scope); прямой `UPDATE
   quota_counter` вне модуля — запрещён.
 - Миграции только добавляющие в неделю (откат приложения без отката схемы, Completion).

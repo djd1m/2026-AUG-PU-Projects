@@ -10,6 +10,7 @@ import { noProcessorYet, processByKind, runIndexJob } from '../apps/worker/src/r
 import { createSiteProcessor } from '../apps/worker/src/crawl/site-processor';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { article, html, redirect, startFakeSite, text, type FakeSite, type Handler } from './fixtures/fake-site';
+import { testEmbedder } from './fixtures/fake-embeddings';
 
 const databaseUrl = process.env.DATABASE_URL;
 const UA = 'SuflerBot/0.1 (+https://sufler.example/bot)';
@@ -39,7 +40,7 @@ describe.skipIf(!databaseUrl)('Краулер в задаче индексаци
   };
   const run = (s: FakeSite, indexJobId: string, generation = 0) => runIndexJob({
     pool, enqueue: async () => {},
-    process: processByKind(pool, { site: createSiteProcessor({ pool, userAgent: UA, net: s.net, crawl: { pauseMs: 0, timeoutMs: 2000 }, log: (l) => logs.push(l) }), pdf: noProcessorYet }),
+    process: processByKind(pool, { site: createSiteProcessor({ pool, userAgent: UA, embedder: testEmbedder(pool, { log: (l) => logs.push(l) }).embedder, net: s.net, crawl: { pauseMs: 0, timeoutMs: 2000 }, log: (l) => logs.push(l) }), pdf: noProcessorYet }),
   }, { index_job_id: indexJobId, generation });
   const job = async (id: string) => (await pool.query('SELECT * FROM index_job WHERE id = $1', [id])).rows[0];
   const pages = async (sourceId: string) => (await pool.query('SELECT id, url_or_page, content_hash FROM page WHERE source_id = $1 ORDER BY url_or_page', [sourceId])).rows;

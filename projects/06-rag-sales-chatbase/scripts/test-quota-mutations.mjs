@@ -48,7 +48,7 @@ const mutations = [
     apply: span('`${browser(input.browserSession)}:create`, period: day, n: 1, limit: ceiling(ceilings, \'preview_session:create\')', "'preview_session:create')",
       '`${browser(input.browserSession)}:answers`, period: day, n: 1, limit: ceiling(ceilings, \'preview_session:answers\')') },
   { id: 'dimension-unchecked', title: 'клиент не сверяет длину вектора с 1536 (ADR-001)', file: 'packages/rag/src/openrouter.ts',
-    apply: span('if (embedding.length !== EMBED_DIMENSIONS) {', '}\n        return embedding', 'return embedding') },
+    apply: span('if (!isEmbeddingOfDimension(embedding)) {', '}\n        return embedding', 'return embedding') },
 ];
 const results = [];
 try {
@@ -60,7 +60,7 @@ try {
   for (const entry of readdirSync(join(project, 'node_modules'))) {
     if (entry !== '@n6') symlinkSync(join(project, 'node_modules', entry), join(directory, 'node_modules', entry));
   }
-  for (const [name, path] of [['db', 'packages/db'], ['rag', 'packages/rag'], ['web', 'apps/web'], ['worker', 'apps/worker']]) {
+  for (const [name, path] of [['db', 'packages/db'], ['rag', 'packages/rag'], ['queue', 'packages/queue'], ['web', 'apps/web'], ['worker', 'apps/worker']]) {
     symlinkSync(join(directory, path), join(directory, 'node_modules', '@n6', name), 'dir');
   }
   const run = (id, phase) => {

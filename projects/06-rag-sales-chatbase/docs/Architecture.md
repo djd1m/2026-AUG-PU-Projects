@@ -119,6 +119,10 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
   `WHERE bot_id = $1`: при малых ботах planner выберет индекс `(bot_id)` и точный перебор — это
   корректно и быстро (≤ 3000 фрагментов на бот); при большом боте — HNSW с пост-фильтром и
   `hnsw.iterative_scan = relaxed_order` (pgvector ≥ 0.8), чтобы фильтр не выедал результаты.
+  **Поправка A-N6-028 (фича `chunk-embed`, 2026-09-26):** путь HNSW + фильтр + `iterative_scan` на прогоне
+  вернул 0 из 3 своих фрагментов при 300 чужих ближайших; поиск реализован ТОЧНЫМ перебором внутри бота
+  (`MATERIALIZED`-выборка по `bot_id`, 5001 фрагмент — 34 мс), индекс HNSW остаётся в схеме и поиском не
+  используется.
 - Связи: `account 1—N bot`; `bot 1—N source 1—N page 1—N chunk`; `bot 1—N allowed_origin`,
   `widget_install (UNIQUE bot_id, origin)`, `question_log`, `visitor_session`; `index_job N—1 source`,
   `job_attempt N—1 index_job`; `attribution (UNIQUE account_id) N—1 partner_code`;

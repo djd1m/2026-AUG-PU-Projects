@@ -1,0 +1,119 @@
+
+ RUN  v3.2.7 /tmp/n6-chunk-embed-mutations-mnijha
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+hnsw-insert: 2.8 мс на фрагмент (100 случайных векторов)
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+search-exact 5001 фрагментов одного бота: 39 мс
+
+ ❯ tests/chunk-embed.integration.test.ts (15 tests | 2 failed) 4067ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > SC-US-004-1: страницы PDF → фрагменты с контекстом «прайс.pdf, с. N», поиск возвращает источник; квота = оценка по попыткам 112ms
+   × chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > план по умолчанию: бот A получает только свои 3 фрагмента, бот B — только свои 19ms
+     → expected [ …(4) ] to deeply equal [ …(3) ]
+   × chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются 240ms
+     → expected [ …(4) ] to deeply equal [ …(3) ]
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW  1833ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > непригодный bot_id и вектор не 1536 — отказ до запроса 4ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Два прогона одной задачи → одна копия фрагментов > одновременная двойная доставка сообщения: один done, второй skipped 176ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Два прогона одной задачи → одна копия фрагментов > вторая попытка перехватила фенс, пока первая ждала шлюз: первая stale и ничего не дописала 94ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Два прогона одной задачи → одна копия фрагментов > повторная доставка после done — skipped, фрагменты не тронуты 88ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > сбой записи фрагментов откатывает страницу: «Повторить» эмбеддит её заново, а не пропускает как известную 154ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Квота и бюджет ДО вызова (FR-LIMIT-003) > предел аккаунта исчерпан → failed(quota_refused), шлюз не вызван, попытки не записаны 24ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Квота и бюджет ДО вызова (FR-LIMIT-003) > предпросмотр: бюджет задачи + global_embed_tokens; аккаунт не списывается; сверх бюджета — отказ с откатом global 117ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Квота и бюджет ДО вызова (FR-LIMIT-003) > две задачи одного аккаунта одновременно у потолка: списано ≤ предела и ровно сумма разрешённых попыток 53ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Размерность 1536 (ADR-001) и отказы поставщика > вектор 3072 от клиента → failed(internal), outcome dimension_mismatch, сигнал оператору, ни страницы, ни фрагмента 35ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Размерность 1536 (ADR-001) и отказы поставщика > вектор 3072 от шлюза через настоящий клиент → тот же отказ 39ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Размерность 1536 (ADR-001) и отказы поставщика > отказ 400 (ключ, модель) — не повторяется: failed(embedding_unavailable) с первой попытки, одна попытка списана 22ms
+ ✓ tests/resume.test.ts (3 tests) 1066ms
+   ✓ Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-2: после отказа «Повторить» эмбеддит только оставшиеся страницы сайта (3 из 5 уже есть → 2)  679ms
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > русский текст абзацами с заголовками — < 3 с, инварианты фрагментов соблюдены
+chunk-time русский текст абзацами с заголовками: 176 мс, фрагментов 2317
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > одно слово без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time одно слово без пробелов: 222 мс, фрагментов 2000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены
+chunk-time один абзац слов без точек: 325 мс, фрагментов 2009
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены
+chunk-time один абзац из крошечных предложений: 648 мс, фрагментов 3175
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > точки без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time точки без пробелов: 214 мс, фрагментов 4000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > 100 000 заголовков — < 3 с, инварианты фрагментов соблюдены
+chunk-time 100 000 заголовков: 163 мс, фрагментов 50000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > PDF: 2 млн символов строками — < 3 с, инварианты фрагментов соблюдены
+chunk-time PDF: 2 млн символов строками: 159 мс, фрагментов 1923
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > эмодзи без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time эмодзи без пробелов: 189 мс, фрагментов 4000
+
+ ✓ tests/chunk.test.ts (28 tests) 2225ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены  327ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены  649ms
+ ✓ tests/openrouter.test.ts (15 tests) 45ms
+ ✓ tests/spend.test.ts (8 tests) 111ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > план по умолчанию: бот A получает только свои 3 фрагмента, бот B — только свои
+AssertionError: expected [ …(4) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+  [
+-   "426d0480-c01e-47fa-8b3f-900ed1cce5b0",
+-   "6540a259-a23a-47dc-9760-2c17d99923d0",
+-   "c4572584-0647-49c5-a421-9a442520f74b",
++   "000d338e-285f-4fb3-85d8-a906553af42c",
++   "022304a2-98ba-4e42-adc3-9f6f9e9d740c",
++   "0320ecb8-16e0-4a6f-a683-309f1f40c863",
++   "05b445fb-5d52-4b4f-badc-5d639b2c10f5",
+  ]
+
+ ❯ tests/chunk-embed.integration.test.ts:113:50
+    111|     it('план по умолчанию: бот A получает только свои 3 фрагмента, бот…
+    112|       const hitsA = await searchChunks(pool, a.botId, q, 4);
+    113|       expect(hitsA.map((h) => h.chunkId).sort()).toEqual([...a.ids].so…
+       |                                                  ^
+    114|       const hitsB = await searchChunks(pool, b.botId, q, 4);
+    115|       expect(hitsB).toHaveLength(4);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются
+AssertionError: expected [ …(4) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+  [
+-   "426d0480-c01e-47fa-8b3f-900ed1cce5b0",
+-   "6540a259-a23a-47dc-9760-2c17d99923d0",
+-   "c4572584-0647-49c5-a421-9a442520f74b",
++   "000d338e-285f-4fb3-85d8-a906553af42c",
++   "022304a2-98ba-4e42-adc3-9f6f9e9d740c",
++   "0320ecb8-16e0-4a6f-a683-309f1f40c863",
++   "05b445fb-5d52-4b4f-badc-5d639b2c10f5",
+  ]
+
+ ❯ tests/chunk-embed.integration.test.ts:127:52
+    125|         expect(plan).not.toContain('chunk_embedding_hnsw');
+    126|         const hitsA = await searchChunks(forced as unknown as Pool, a.…
+    127|         expect(hitsA.map((h) => h.chunkId).sort()).toEqual([...a.ids].…
+       |                                                    ^
+    128|         expect((await searchChunks(forced as unknown as Pool, b.botId,…
+    129|       } finally { await forced.end(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 67 passed (69)
+   Start at  04:49:04
+   Duration  10.34s (transform 782ms, setup 0ms, collect 1.11s, tests 7.51s, environment 2ms, prepare 569ms)
+

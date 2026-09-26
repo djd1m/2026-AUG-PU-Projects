@@ -2,7 +2,7 @@
 // без BYOK и фолбэков сохранён; добавлены эмбеддинги (POST /embeddings, dimensions 1536, ADR-001/002),
 // ответ по JSON-схеме ADR-011 (temperature 0, max_tokens 400); повторяемые отказы (429/5xx/сеть/таймаут)
 // выделены в RetryableCallError — повтор решает meteredCall, и каждая попытка списывается заново.
-import { EMBED_DIMENSIONS } from './constants.js';
+import { EMBED_BATCH_MAX, EMBED_DIMENSIONS, isEmbeddingOfDimension } from './constants.js';
 import { RetryableCallError, type SpendResult } from './spend.js';
 
 // Адрес шлюза — константа кода, не окружение (honest-configuration CFG-I8): ключ уходит только сюда.
@@ -76,7 +76,7 @@ export function createOpenRouter(config: ModelConfig, request: typeof fetch = fe
       catch { throw new GatewayResponseError('schema_violation', 'Ответ модели не соответствует JSON-схеме'); }
     },
     async embed({ texts, signal }) {
-      if (!texts.length || texts.length > 64 || texts.some((t) => typeof t !== 'string' || !t)) throw new Error('Пачка эмбеддингов: 1–64 непустых текста');
+      if (!texts.length || texts.length > EMBED_BATCH_MAX || texts.some((t) => typeof t !== 'string' || !t)) throw new Error('Пачка эмбеддингов: 1–64 непустых текста');
       const body = await post('/embeddings', { model: config.embedModel, input: texts, dimensions: EMBED_DIMENSIONS }, EMBED_TIMEOUT_MS, signal);
       const data = body.data;
       if (!Array.isArray(data) || data.length !== texts.length) throw new GatewayResponseError('schema_violation', 'Эмбеддинги: число векторов ≠ числу текстов');
@@ -86,7 +86,7 @@ export function createOpenRouter(config: ModelConfig, request: typeof fetch = fe
           throw new GatewayResponseError('schema_violation', 'Эмбеддинги: вектор не массив чисел');
         }
         // ADR-001: колонка vector(1536); другая длина — не «почти подходит», а отказ.
-        if (embedding.length !== EMBED_DIMENSIONS) {
+        if (!isEmbeddingOfDimension(embedding)) {
           throw new GatewayResponseError('dimension_mismatch', `Эмбеддинги: длина ${embedding.length} ≠ ${EMBED_DIMENSIONS}`);
         }
         return embedding as number[];

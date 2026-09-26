@@ -1,0 +1,121 @@
+
+ RUN  v3.2.7 /tmp/n6-chunk-embed-mutations-mnijha
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+hnsw-insert: 2.9 мс на фрагмент (100 случайных векторов)
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+search-exact 5001 фрагментов одного бота: 31 мс
+
+ ✓ tests/chunk-embed.integration.test.ts (15 tests) 4665ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > SC-US-004-1: страницы PDF → фрагменты с контекстом «прайс.pdf, с. N», поиск возвращает источник; квота = оценка по попыткам  974ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются  364ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW  1699ms
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > русский текст абзацами с заголовками — < 3 с, инварианты фрагментов соблюдены
+chunk-time русский текст абзацами с заголовками: 146 мс, фрагментов 2317
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > одно слово без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time одно слово без пробелов: 205 мс, фрагментов 2000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены
+chunk-time один абзац слов без точек: 317 мс, фрагментов 2009
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены
+chunk-time один абзац из крошечных предложений: 606 мс, фрагментов 3175
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > точки без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time точки без пробелов: 196 мс, фрагментов 4000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > 100 000 заголовков — < 3 с, инварианты фрагментов соблюдены
+chunk-time 100 000 заголовков: 183 мс, фрагментов 50000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > PDF: 2 млн символов строками — < 3 с, инварианты фрагментов соблюдены
+chunk-time PDF: 2 млн символов строками: 173 мс, фрагментов 1923
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > эмодзи без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time эмодзи без пробелов: 178 мс, фрагментов 4000
+
+ ✓ tests/chunk.test.ts (28 tests) 2139ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены  318ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены  607ms
+ ❯ tests/resume.test.ts (3 tests | 1 failed) 643ms
+   × Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-1: шлюз недоступен → 2 повтора на пачку, серия из 2 попыток → failed(embedding_unavailable); каждая попытка списана 137ms
+     → expected 90 to be 210 // Object.is equality
+   ✓ Отказ шлюза эмбеддингов и продолжение по content_hash > автоповтор серии продолжает: страница, записанная первой попыткой, второй раз не эмбеддится 121ms
+   ✓ Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-2: после отказа «Повторить» эмбеддит только оставшиеся страницы сайта (3 из 5 уже есть → 2) 252ms
+ ❯ tests/spend.test.ts (8 tests | 2 failed) 93ms
+   ✓ Журнал попыток: attempt с fsync ДО вызова > в момент вызова строка attempt уже на диске; после — outcome success 17ms
+   ✓ Журнал попыток: attempt с fsync ДО вызова > отказ модели: попытка учтена, списание НЕ возвращено, ошибка не проглочена 11ms
+   × Журнал попыток: attempt с fsync ДО вызова > повтор после 503 — НОВАЯ попытка: новое списание и новая строка attempt (3 из 3) 27ms
+     → expected [ 1, 3 ] to deeply equal [ 3, 3 ]
+   ✓ Журнал попыток: attempt с fsync ДО вызова > квота отказала — ни вызова, ни строки attempt; отказ назван scope 1ms
+   × Журнал попыток: attempt с fsync ДО вызова > повтор упёрся в квоту: оплачено ровно столько попыток, сколько списано 27ms
+     → 429
+   ✓ Журнал попыток: attempt с fsync ДО вызова > нет учёта — нет траты: журнал недоступен → вызов не выполняется 4ms
+   ✓ Журнал попыток: attempt с fsync ДО вызова > N6_SPEND_LOG: относительный путь, не .jsonl — отказ 1ms
+   ✓ Пробы старта ограничены числом в сутки (свой-код) > 24 проб проходят, 25-я — отказ с объяснением; другой вид и другие сутки — свой счёт 5ms
+ ✓ tests/openrouter.test.ts (15 tests) 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/resume.test.ts > Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-1: шлюз недоступен → 2 повтора на пачку, серия из 2 попыток → failed(embedding_unavailable); каждая попытка списана
+AssertionError: expected 90 to be 210 // Object.is equality
+
+- Expected
++ Received
+
+- 210
++ 90
+
+ ❯ tests/resume.test.ts:77:31
+     75|       ['rate_limited', 'provider_error', 'rate_limited', 'provider_err…
+     76|     // Счёт по ПОПЫТКАМ: отказ поставщика списанное не возвращает, пов…
+     77|     expect(await used(owner)).toBe(attempts.reduce((n, e) => n + e.qua…
+       |                               ^
+     78|     expect(await used(owner)).toBe(attempts[0]!.quantity + 6 * attempt…
+     79|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/spend.test.ts > Журнал попыток: attempt с fsync ДО вызова > повтор после 503 — НОВАЯ попытка: новое списание и новая строка attempt (3 из 3)
+AssertionError: expected [ 1, 3 ] to deeply equal [ 3, 3 ]
+
+- Expected
++ Received
+
+  [
+-   3,
++   1,
+    3,
+  ]
+
+ ❯ tests/spend.test.ts:36:30
+     34|       charge: async () => { charges++; return { granted: true }; },
+     35|       run: async () => { calls++; throw new RetryableCallError('provid…
+     36|     expect([charges, calls]).toEqual([3, 3]);
+       |                              ^
+     37|     expect(lines(file).filter((l) => l.phase === 'attempt').map((l) =>…
+     38|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/spend.test.ts > Журнал попыток: attempt с fsync ДО вызова > повтор упёрся в квоту: оплачено ровно столько попыток, сколько списано
+Error: 429
+ ❯ Object.run tests/spend.test.ts:50:41
+     48|     const result = await meteredCall({ spend: spendRecorder(file), eve…
+     49|       charge: async () => (left-- > 0 ? { granted: true } : { granted:…
+     50|       run: async () => { calls++; throw new RetryableCallError('rate_l…
+       |                                         ^
+     51|     expect(result).toEqual({ status: 'refused', scope: 'visitor_answer…
+     52|     expect(calls).toBe(2);
+ ❯ meteredCall packages/rag/src/spend.ts:74:44
+ ❯ tests/spend.test.ts:48:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 3 passed (5)
+      Tests  3 failed | 66 passed (69)
+   Start at  04:49:48
+   Duration  10.35s (transform 646ms, setup 0ms, collect 1.09s, tests 7.58s, environment 1ms, prepare 569ms)
+

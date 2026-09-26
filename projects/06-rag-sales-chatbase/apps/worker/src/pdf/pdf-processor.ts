@@ -1,18 +1,21 @@
 // Обработчик источника «PDF» внутри задачи индексации (RunIndexJob п.2–5, ExtractPdf, ADR-009, ADR-018) —
 // написано заново; форма — как у crawl/site-processor.ts: сброс счётчиков новой попытки под фенсом, затем
 // каждая страница — одна транзакция «прогресс с фенсом (он же пульс) + строка page или пропуск».
-// Граница с chunk-embed: страница пишется со своим content_hash; фрагменты и эмбеддинги подключаются той
-// фичей в ТУ ЖЕ транзакцию страницы. Файл из тома удаляет RunIndexJob (onSettled) после done И failed.
+// chunk-embed: страница с текстом → ChunkDocument → EmbedAndStore (векторы до транзакции) → writeIndexedPage —
+// строка page и её фрагменты ОДНОЙ транзакцией с фенсом: текст страницы живёт только в памяти воркера, файл
+// после задачи удаляется (ADR-018), и страница с хэшем без фрагментов была бы потеряна навсегда.
+// Файл из тома удаляет RunIndexJob (onSettled) после done И failed.
 import { createHash } from 'node:crypto';
 import { lstat, readFile } from 'node:fs/promises';
-import { recordProgressTx, StaleAttemptError, transaction, type Lease, type Pool } from '@n6/db';
-import { isPdfMagic, PDF_MAX_BYTES } from '@n6/rag';
+import { recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
+import { chunkDocument, isPdfMagic, PDF_MAX_BYTES, plainTextBlocks } from '@n6/rag';
+import type { Embedder } from '../embed/embed-and-store';
 import { StepFailure, type SourceProcessor } from '../run-index-job';
 import { extractPdf, isPageWithoutText, PdfFailure, type ExtractOptions, type PdfText } from './extract-pdf';
 import { uploadPath } from './uploads';
 
 export interface PdfProcessorOptions {
-  pool: Pool; uploadDir: string;
+  pool: Pool; uploadDir: string; embedder: Embedder;
   extract?: (bytes: Buffer, options?: ExtractOptions) => Promise<PdfText>;
   extractOptions?: ExtractOptions;
   log?: (line: string) => void;
@@ -55,35 +58,33 @@ export function createPdfProcessor(options: PdfProcessorOptions): SourceProcesso
     }
     const known = new Set((await pool.query<{ url_or_page: string; content_hash: string }>(
       'SELECT url_or_page, content_hash FROM page WHERE source_id = $1', [lease.sourceId])).rows.map((r) => `${r.url_or_page}\u0000${r.content_hash}`));
-    // Новая попытка пересчитывает страницы заново: счётчики — с нуля, всего — число страниц документа.
-    await transaction(pool, async (tx) => {
-      const reset = await tx.query(`UPDATE index_job SET pages_done = 0, pages_total = $3, updated_at = now()
-        WHERE id = $1 AND current_fence = $2 AND status = 'running'`, [lease.indexJobId, lease.fence, text.numPages]);
-      if (!reset.rowCount) throw new StaleAttemptError(lease.indexJobId, lease.fence);
-      await tx.query('UPDATE source SET pages_skipped = 0 WHERE id = $1', [lease.sourceId]);
-    });
+    // Новая попытка пересчитывает страницы заново: счётчики — с нуля, всего — число страниц документа,
+    // фрагменты — от числа уже записанных у источника.
+    await transaction(pool, (tx) => resetAttemptCountersTx(tx, lease, text.numPages));
     const seen = new Set<string>();
-    let read = 0, unchanged = 0, empty = 0, duplicate = 0;
+    let read = 0, unchanged = 0, empty = 0, duplicate = 0, chunksWritten = 0;
     for (let index = 0; index < text.pages.length; index++) {
       const pageText = text.pages[index]!;
       const label = pageLabel(fileName, index + 1);
       const hash = pdfPageHash(pageText);
       const kind = isPageWithoutText(pageText) ? 'empty' : seen.has(hash) ? 'duplicate' : known.has(`${label}\u0000${hash}`) ? 'unchanged' : 'page';
       seen.add(hash);
-      await transaction(pool, async (tx) => {
-        await recordProgressTx(tx, lease, { pagesDone: kind === 'empty' || kind === 'duplicate' ? 0 : 1 });
-        if (kind === 'page') {
-          await tx.query(`INSERT INTO page (source_id, bot_id, url_or_page, title, content_hash) VALUES ($1, $2, $3, $4, $5)
-            ON CONFLICT (source_id, url_or_page) DO UPDATE SET title = EXCLUDED.title, content_hash = EXCLUDED.content_hash, skipped_reason = NULL`,
-          [lease.sourceId, lease.botId, label, `${fileName}, с. ${index + 1}`.slice(0, 500), hash]);
-        } else if (kind === 'empty' || kind === 'duplicate') {
-          await tx.query('UPDATE source SET pages_skipped = pages_skipped + 1 WHERE id = $1', [lease.sourceId]);
-        }
-      });
+      if (kind === 'page') {
+        const title = `${fileName}, с. ${index + 1}`;
+        const chunks = chunkDocument({ title, blocks: plainTextBlocks(pageText) });
+        const vectors = await options.embedder.embed(lease, chunks);
+        chunksWritten += (await writeIndexedPage(pool, lease, { urlOrPage: label, title, contentHash: hash },
+          chunks.map((c, i) => ({ ...c, embedding: vectors[i]! })))).inserted;
+      } else {
+        await transaction(pool, async (tx) => {
+          await recordProgressTx(tx, lease, { pagesDone: kind === 'unchanged' ? 1 : 0 });
+          if (kind === 'empty' || kind === 'duplicate') await tx.query('UPDATE source SET pages_skipped = pages_skipped + 1 WHERE id = $1', [lease.sourceId]);
+        });
+      }
       if (kind === 'page') read++; else if (kind === 'unchanged') unchanged++; else if (kind === 'empty') empty++; else duplicate++;
     }
     // В журнал — только счётчики: ни текста, ни имени файла.
     log(`worker-index: PDF задачи ${lease.indexJobId}: страниц ${text.numPages}, прочитано ${read}, без изменений ${unchanged}, `
-      + `без текста ${empty}, дублей ${duplicate}; разбор ${Date.now() - startedAt} мс`);
+      + `без текста ${empty}, дублей ${duplicate}, фрагментов ${chunksWritten}; разбор ${Date.now() - startedAt} мс`);
   };
 }

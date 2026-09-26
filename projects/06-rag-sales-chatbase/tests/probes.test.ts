@@ -13,7 +13,8 @@ const FAKE = ['--import', './tests/fixtures/fake-gateway.mjs'];
 const WEB = [...FAKE, 'apps/web/.next/preflight/preflight.js'];
 const WORKER = [...FAKE, 'apps/worker/dist/index.js'];
 beforeAll(() => {
-  for (const project of ['packages/rag/tsconfig.json', 'apps/worker/tsconfig.json', 'apps/web/tsconfig.preflight.json']) {
+  // db и queue — до воркера: он импортирует их типы из dist (копия проекта в мутационных прогонах собирается без dist).
+  for (const project of ['packages/rag/tsconfig.json', 'packages/db/tsconfig.json', 'packages/queue/tsconfig.json', 'apps/worker/tsconfig.json', 'apps/web/tsconfig.preflight.json']) {
     const result = subprocess(['node_modules/typescript/bin/tsc', '-p', project], process.env, 60000);
     expect(result.status, result.output).toBe(0);
   }
