@@ -49,7 +49,7 @@ export function PartnerScreen({ cabinet, origin }: { cabinet: PartnerCabinet; or
           <li><strong>{formatRub(m.deferred_minor)}</strong> <span>перенесено на следующий месяц</span></li>
         </ul>}
       <p className="muted">Выплата — раз в месяц 5-го числа по СБП, от {formatRub(m.minimum_minor)}. Меньшая сумма переносится на следующий месяц.</p>
-      {cabinet.entries.length > 0 && <div className="table-wrap"><table>
+      {cabinet.entries.length > 0 && <div className="table-wrap" role="region" aria-label="Последние движения денег" tabIndex={0}><table>
         <thead><tr><th scope="col">Движение</th><th scope="col">Сумма</th><th scope="col">Дата</th></tr></thead>
         <tbody>{cabinet.entries.map((e, i) => <tr key={`${e.created_at}-${i}`}><td>{KIND[e.kind] ?? e.kind}</td><td>{formatRub(e.amount_minor)}</td><td>{date(e.created_at)}</td></tr>)}</tbody>
       </table></div>}
