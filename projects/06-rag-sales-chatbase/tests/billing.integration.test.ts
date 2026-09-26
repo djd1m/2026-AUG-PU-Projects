@@ -256,6 +256,79 @@ describe.skipIf(!databaseUrl)('оплата ЮKassa и интерес на на�
     expect((await w.status(a.token, intent)).body.data).toMatchObject({ status: 'canceled' });
   });
 
+  it('ревью, находка 1 (перестановка оплата/возврат): возврат ПРЕЖДЕ оплаты — платёж записан refunded на разбор, оплата после него план не выдаёт', async () => {
+    const w = wire();
+    const a = await account();
+    const { intent, paymentId } = await paid(a, 'nobadge', w);
+    const refundId = yk.refund(paymentId);
+    expect((await w.notify(yk.refundNotification(refundId))).body.data).toEqual({ applied: false, reason: 'refund_recorded' });
+    expect((await w.notify(yk.notification(paymentId))).body.data).toEqual({ applied: false, reason: 'refunded' });
+    expect((await billing(a.id)).plan).toBe('free');
+    expect((await pool.query('SELECT status, needs_review, review_reason, intent_id FROM payment WHERE provider_payment_id = $1', [paymentId])).rows[0])
+      .toEqual({ status: 'refunded', needs_review: true, review_reason: 'refund', intent_id: intent });
+    // Одновременно: 10 доставок оплаты и 10 возврата одного платежа — в ЛЮБОМ порядке строка платежа одна и она refunded
+    // (оплата, успевшая первой, законно выдаёт план — возврат затем разбирает оператор), событий ровно два.
+    const b = await account();
+    const p2 = await paid(b, 'studio', w);
+    const r2 = yk.refund(p2.paymentId);
+    await Promise.all([...Array.from({ length: 10 }, () => w.notify(yk.notification(p2.paymentId))), ...Array.from({ length: 10 }, () => w.notify(yk.refundNotification(r2)))]);
+    expect((await pool.query('SELECT status, needs_review FROM payment WHERE provider_payment_id = $1', [p2.paymentId])).rows).toEqual([{ status: 'refunded', needs_review: true }]);
+    expect(await count(`SELECT count(*)::int AS n FROM payment_event WHERE provider_event_id IN ($1, $2)`, [`payment_succeeded:${p2.paymentId}`, `refund_succeeded:${r2}`])).toBe(2);
+  });
+
+  it('ревью, находка 2: повтор оформления после суток (ключ у ЮKassa забыт) — тот же платёж, второго нет; отменённый — намерение canceled', async () => {
+    const w = wire();
+    const a = await account();
+    const k = key();
+    const before = yk.created;
+    const first = await w.checkout(a.token, { plan: 'nobadge', idempotency_key: k });
+    yk.forgetIdempotence();
+    const again = await w.checkout(a.token, { plan: 'nobadge', idempotency_key: k });
+    expect(again.body.data!.redirect_url).toBe(first.body.data!.redirect_url);
+    expect(yk.created - before).toBe(1);
+    yk.cancel(yk.byOrder(first.body.data!.intent_id as string)!.id);
+    expect((await w.checkout(a.token, { plan: 'nobadge', idempotency_key: k })).body.data).toMatchObject({ status: 'canceled', redirect_url: null });
+    expect(yk.created - before).toBe(1);
+  });
+
+  it('исключение ВНУТРИ транзакции оплаты (урок N1): ключ откатывается, ответ 503, повтор той же доставки применяет полным путём', async () => {
+    const w = wire();
+    const a = await account();
+    const { paymentId } = await paid(a, 'nobadge', w);
+    await pool.query(`CREATE FUNCTION ${schema}.boom() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'сбой записи'; END $$`);
+    await pool.query(`CREATE TRIGGER boom BEFORE INSERT ON ${schema}.payment FOR EACH ROW EXECUTE FUNCTION ${schema}.boom()`);
+    try { expect((await w.notify(yk.notification(paymentId))).status).toBe(503); }
+    finally { await pool.query(`DROP TRIGGER boom ON ${schema}.payment`); await pool.query(`DROP FUNCTION ${schema}.boom()`); }
+    expect(await count(`SELECT count(*)::int AS n FROM payment_event WHERE provider_event_id = $1`, [`payment_succeeded:${paymentId}`])).toBe(0);
+    expect((await w.notify(yk.notification(paymentId))).body.data).toMatchObject({ applied: true, plan: 'nobadge' });
+  });
+
+  it('ревью, находка 3: оператор снял план (free) — оплаченный остаток стёрт; новая оплата даёт ровно 30 дней', async () => {
+    const w = wire();
+    const a = await account();
+    const first = await paid(a, 'nobadge', w);
+    await w.notify(yk.notification(first.paymentId));
+    const email = (await pool.query<{ email: string }>('SELECT email FROM account WHERE id = $1', [a.id])).rows[0]!.email;
+    await setPlanByOperator(pool, { email, plan: 'free', operator: 'ops', reason: 'возврат по заявке клиента' });
+    expect(await billing(a.id)).toMatchObject({ plan: 'free', plan_source: 'none', plan_paid_until: null });
+    const second = await paid(a, 'nobadge', w);
+    await w.notify(yk.notification(second.paymentId));
+    const b = await billing(a.id);
+    expect(Math.round((b.plan_paid_until!.getTime() - b.now.getTime()) / DAY)).toBe(30);
+  });
+
+  it('план до миграции 006 (plan_source none): оплата старшего плана — план оплаты; младшего — старший не понижается', async () => {
+    const w = wire();
+    const legacy = await account('nobadge');
+    const up = await paid(legacy, 'studio', w);
+    await w.notify(yk.notification(up.paymentId));
+    expect(await billing(legacy.id)).toMatchObject({ plan: 'studio', plan_source: 'payment' });
+    const legacyStudio = await account('studio');
+    const down = await paid(legacyStudio, 'nobadge', w);
+    await w.notify(yk.notification(down.paymentId));
+    expect(await billing(legacyStudio.id)).toMatchObject({ plan: 'studio', plan_source: 'none' });
+  });
+
   it('AC-10 оператор: план + журнал + атрибуция converted; без причины, неизвестный план и почта — отказ без изменений', async () => {
     const a = await account();
     const email = (await pool.query<{ email: string }>('SELECT email FROM account WHERE id = $1', [a.id])).rows[0]!.email;

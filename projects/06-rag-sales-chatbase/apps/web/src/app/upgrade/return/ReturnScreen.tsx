@@ -4,7 +4,7 @@
 // два неразличимых на экране состояния — одно состояние). Опрос — GET /api/checkout/{intent_id} по идентификатору,
 // выданному ДО ухода к провайдеру.
 import { useEffect, useState } from 'react';
-import { RETURN_MAX_ATTEMPTS, RETURN_POLL_INTERVAL_MS, decideReturnState, type CheckoutSnapshot, type ReturnState } from '../../../lib/payment-return';
+import { RETURN_FETCH_TIMEOUT_MS, RETURN_MAX_ATTEMPTS, RETURN_POLL_INTERVAL_MS, decideReturnState, type CheckoutSnapshot, type ReturnState } from '../../../lib/payment-return';
 
 const date = (iso: string) => new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 const PLAN = { nobadge: 'Без бейджа', studio: 'Студия' } as const;
@@ -19,6 +19,11 @@ export function ReturnView({ state }: { state: ReturnState }) {
       <h1>План «{PLAN[state.plan as keyof typeof PLAN] ?? 'Без бейджа'}» включён</h1>
       <p role="status" className="notice">{state.until ? `Оплачено до ${date(state.until)}.` : 'Оплата подтверждена.'} Подпись «Работает на Суфлёре» исчезнет с сайта при следующей загрузке страницы.</p>
       <a className="button" href="/dashboard">В кабинет</a>
+    </div>;
+    case 'paid_inactive': return <div className="stack" data-state="paid_inactive">
+      <h1>Оплата прошла, но план сейчас не действует</h1>
+      <p role="status" className="notice">Срок оплаченного плана истёк или план снят вручную. Подпись «Работает на Суфлёре» снова видна на сайте.</p>
+      <a className="button" href="/pricing">Тарифы</a>
     </div>;
     case 'failed': return <div className="stack" data-state="failed">
       <h1>Оплата не прошла</h1>
@@ -42,17 +47,18 @@ export function ReturnScreen({ intentId }: { intentId: string }) {
   const [state, setState] = useState<ReturnState>({ kind: 'waiting', attempts: 0 });
   useEffect(() => {
     let attempts = 0, stopped = false, timer: ReturnType<typeof setTimeout> | undefined;
+    const started = Date.now();
     const poll = async () => {
       if (stopped) return;
       let snapshot: CheckoutSnapshot | null | 'not_found' = null;
       try {
-        const response = await fetch(`/api/checkout/${encodeURIComponent(intentId)}`, { cache: 'no-store' });
+        const response = await fetch(`/api/checkout/${encodeURIComponent(intentId)}`, { cache: 'no-store', signal: AbortSignal.timeout(RETURN_FETCH_TIMEOUT_MS) });
         if (response.status === 404) snapshot = 'not_found';
         else if (response.ok) snapshot = ((await response.json()) as { data?: CheckoutSnapshot }).data ?? null;
       } catch { snapshot = null; /* сбой опроса — не отказ оплаты */ }
       if (stopped) return;
       attempts += 1;
-      const next = decideReturnState(snapshot, attempts);
+      const next = decideReturnState(snapshot, attempts, Date.now() - started);
       setState(next);
       if (next.kind === 'waiting') timer = setTimeout(() => { void poll(); }, RETURN_POLL_INTERVAL_MS);
     };

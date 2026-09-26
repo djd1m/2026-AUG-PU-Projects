@@ -29,9 +29,11 @@ export async function createPaymentIntent(pool: Pool, input: { accountId: string
 }
 
 // Идентификатор платежа у провайдера — для опроса возврата с формы (отменённый платёж → состояние «отказ»).
-export async function setIntentProviderPayment(pool: Pool, intentId: string, providerPaymentId: string): Promise<void> {
-  await pool.query(`UPDATE payment_intent SET provider_payment_id = $2 WHERE id = $1 AND (provider_payment_id IS NULL OR provider_payment_id = $2)`,
+// false — у намерения уже ДРУГОЙ платёж (ревью фичи 14, находка 2): расхождение не игнорируется молча.
+export async function setIntentProviderPayment(pool: Pool, intentId: string, providerPaymentId: string): Promise<boolean> {
+  const updated = await pool.query(`UPDATE payment_intent SET provider_payment_id = $2 WHERE id = $1 AND (provider_payment_id IS NULL OR provider_payment_id = $2)`,
     [intentId, providerPaymentId]);
+  return updated.rowCount === 1;
 }
 export async function markIntentCanceled(pool: Pool, intentId: string): Promise<void> {
   await pool.query(`UPDATE payment_intent SET status = 'canceled' WHERE id = $1 AND status = 'created'`, [intentId]);
@@ -51,7 +53,7 @@ export async function readPaymentIntent(pool: Pool, intentId: string, accountId:
 export interface VerifiedPayment { id: string; orderId: string | null; amountMinor: number; feeMinor: number | null; paidAt: string | null }
 export type ApplyPaymentOutcome =
   | { applied: true; plan: string; paidUntil: string }
-  | { applied: false; reason: 'duplicate' | 'amount_mismatch' | 'unknown_intent' | 'refund_recorded' | 'refund_unknown_payment' };
+  | { applied: false; reason: 'duplicate' | 'amount_mismatch' | 'unknown_intent' | 'refunded' | 'refund_recorded' };
 
 // Ключ повторности (incoming-webhooks): ПОЛЕ — событие + object.id у ЮKassa; МЕСТО — payment_event; МЕХАНИЗМ — уникальный
 // индекс, конфликт вставки И ЕСТЬ «уже обработано» (две одновременные доставки не проходят обе).
@@ -60,6 +62,11 @@ async function claimEvent(tx: PoolClient, provider: PaymentProviderName, eventKe
     ON CONFLICT (provider, provider_event_id) DO NOTHING RETURNING id`, [provider, eventKey, payloadSha256]);
   return claimed.rowCount === 1;
 }
+// Оплата и возврат ОДНОГО платежа — разные события с разными ключами и приходят в любом порядке и одновременно (ревью
+// фичи 14, находка 1): транзакции по одному платежу сериализуются блокировкой до конца транзакции.
+async function lockPayment(tx: PoolClient, provider: PaymentProviderName, paymentId: string): Promise<void> {
+  await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`payment:${provider}:${paymentId}`]);
+}
 
 // Успешная оплата → план. Перестановочно (incoming-webhooks «перестановка»): план — СТАРШИЙ из действующего и
 // оплаченного, срок — GREATEST(срок, now()) + 30 дней; две оплаты в любом порядке дают один итог.
@@ -67,6 +74,11 @@ export function applyVerifiedPayment(pool: Pool, input: { provider: PaymentProvi
   const { payment } = input;
   return transaction(pool, async (tx) => {
     if (!await claimEvent(tx, input.provider, input.eventKey, input.payloadSha256)) return { applied: false, reason: 'duplicate' } as const;
+    await lockPayment(tx, input.provider, payment.id);
+    // Возврат приехал РАНЬШЕ оплаты (перестановка): платёж уже записан refunded на разбор — план по нему не выдаётся.
+    const prior = (await tx.query<{ status: string }>(`SELECT status FROM payment WHERE provider = $1 AND provider_payment_id = $2`,
+      [input.provider, payment.id])).rows[0];
+    if (prior?.status === 'refunded') return { applied: false, reason: 'refunded' } as const;
     const paidAt = payment.paidAt ?? new Date().toISOString();
     const intent = payment.orderId && isUuid(payment.orderId)
       ? (await tx.query<{ account_id: string; plan: string; price_minor: number }>(`SELECT account_id, plan, price_minor FROM payment_intent
@@ -108,12 +120,22 @@ async function grantPaidPlan(tx: PoolClient, accountId: string, paid: PaidPlan):
 }
 
 // Возврат (refund.succeeded): принимается и помечается на разбор; план снимает оператор (решение владельца 26.09).
-export function recordVerifiedRefund(pool: Pool, input: { provider: PaymentProviderName; eventKey: string; payloadSha256: string; paymentId: string }): Promise<ApplyPaymentOutcome> {
+// Перестановочно (ревью фичи 14, находка 1): если строки платежа ещё нет (возврат раньше оплаты), она создаётся СРАЗУ
+// refunded из перезапрошенного у ЮKassa платежа — последующая оплата увидит возврат и план не выдаст.
+export function recordVerifiedRefund(pool: Pool, input: { provider: PaymentProviderName; eventKey: string; payloadSha256: string; payment: VerifiedPayment }): Promise<ApplyPaymentOutcome> {
+  const { payment } = input;
   return transaction(pool, async (tx) => {
     if (!await claimEvent(tx, input.provider, input.eventKey, input.payloadSha256)) return { applied: false, reason: 'duplicate' } as const;
-    const updated = await tx.query(`UPDATE payment SET status = 'refunded', needs_review = true, review_reason = 'refund'
-      WHERE provider = $1 AND provider_payment_id = $2`, [input.provider, input.paymentId]);
-    return { applied: false, reason: updated.rowCount === 1 ? 'refund_recorded' : 'refund_unknown_payment' } as const;
+    await lockPayment(tx, input.provider, payment.id);
+    const intent = payment.orderId && isUuid(payment.orderId)
+      ? (await tx.query<{ account_id: string; plan: string }>('SELECT account_id, plan FROM payment_intent WHERE id = $1', [payment.orderId])).rows[0]
+      : undefined;
+    await tx.query(`INSERT INTO payment (intent_id, account_id, provider, provider_payment_id, plan, amount_minor, fee_minor, status, needs_review, review_reason, paid_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, 'refunded', true, 'refund', $8)
+      ON CONFLICT (provider, provider_payment_id) DO UPDATE SET status = 'refunded', needs_review = true, review_reason = 'refund'`,
+    [intent ? payment.orderId : null, intent?.account_id ?? null, input.provider, payment.id, intent && isPaidPlan(intent.plan) ? intent.plan : null,
+      payment.amountMinor, payment.feeMinor, payment.paidAt ?? new Date().toISOString()]);
+    return { applied: false, reason: 'refund_recorded' } as const;
   });
 }
 

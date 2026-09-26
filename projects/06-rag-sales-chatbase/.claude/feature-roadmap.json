@@ -701,10 +701,10 @@
     {
       "id": "tariffs-and-interest",
       "number": 14,
-      "title": "Экран интереса вместо оплаты, план назначает оператор",
+      "title": "Тарифы, живая оплата ЮKassa (решение владельца A-N6-040) и экран интереса при выключенной оплате",
       "description": "«Убрать бейдж» / «Студия» → экран интереса, запись pro_interest, никаких платёжных полей; SetPlanByOperator (npm run ops:set-plan -- <email> <plan>) с журналом аудита (кто, когда, зачем) и конвертацией атрибуции; пределы плана (страницы, PDF, ответы) читаются из канона; страж по дереву маршрутов — нет /api/webhooks/* (ADR-017). Провайдер и вебхук ЮKassa — спящий код, в сборку недели не входят.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "simple",
       "depends_on": [
         "public-page-and-summary"
@@ -725,14 +725,20 @@
         {
           "adr": "ADR-014",
           "block": "провайдер ЮKassa",
-          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/payments/yookassa.ts",
-          "take": "спящий код до своего магазина (ADR-017) — НЕ переносить в неделю"
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/payments/{provider,yookassa,origin,cidr-match,fake,select-provider}.ts",
+          "take": "ПЕРЕНЕСЕНО в apps/web/src/server/payments/ (select-provider адаптирован: режим off, fake запрещён в production) — A-N6-040"
         },
         {
           "adr": "ADR-014",
           "block": "вебхук оплаты",
-          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/routes/payments-webhook.ts + projects/01-testimonials-senja/apps/web/src/lib/payment.ts",
-          "take": "спящий код — НЕ переносить в неделю"
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/routes/payments-webhook.ts + projects/01-testimonials-senja/apps/web/src/app/api/webhooks/payment/route.ts",
+          "take": "АДАПТИРОВАНО: route handler Next, план вместо подписки, без комиссий (фича 15), возврат — на разбор оператору"
+        },
+        {
+          "adr": "ADR-014",
+          "block": "оформление и интерес",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/routes/subscription.ts, interest/record-pro-interest.ts, apps/web/app/pro/*",
+          "take": "АДАПТИРОВАНО: намерение до провайдера, разовая оплата; интерес — уникальный ключ события вместо advisory-lock; экран возврата — шесть состояний"
         }
       ],
       "expected_files": [
@@ -740,7 +746,8 @@
         "scripts/ops-set-plan.mjs",
         "tests/no-webhook-routes.test.ts"
       ],
-      "carry_over": " | Ревью design-shell: MEDIUM — пометку «цены предварительные» поставить рядом с цифрами цены (Pricing.tsx:16)."
+      "carry_over": " | Ревью design-shell: MEDIUM — пометку «цены предварительные» поставить рядом с цифрами цены (Pricing.tsx:16).",
+      "completion": "docs/features/tariffs-and-interest/05_completion.md"
     },
     {
       "id": "partner-and-studio",
@@ -788,6 +795,12 @@
           "block": "брендинг (знак студии)",
           "source": "projects/01-testimonials-senja/apps/web/src/lib/branding.ts",
           "take": "отложено до v1 — white-label не в неделю"
+        },
+        {
+          "adr": "ADR-014",
+          "block": "комиссии и выплаты партнёрам (оплата теперь живая, A-N6-040)",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/partner/*, commission/accrue.ts, payouts/payout-details.ts, routes/earnings.ts, apps/web/app/cabinet/*",
+          "take": "адаптировать: начисление на оплате ЮKassa фичи 14 (packages/db/src/payments.ts applyVerifiedPayment), студии; возврат — clawback вручную оператором"
         }
       ],
       "expected_files": [
@@ -835,7 +848,8 @@
         "apps/web/src/app/api/sources/[sourceId]/reindex/route.ts",
         "tests/delete-source.test.ts"
       ],
-      "carry_over": "Ревью pdf-source: MEDIUM-1 — один worker-index на всю платформу, failed-PDF не считаются в предел: суточный предел попыток загрузки на бота/аккаунт (включая failed) или справедливая очередь по ботам; LOW-2 — Architecture.md concurrency:2 vs код 1 — привести к одному. MEDIUM-2 — тест конфликта Content-Length + Transfer-Encoding через Caddy на стенде. | chunk-embed: бюджета токенов на ИСТОЧНИК нет (есть аккаунт/сутки, global и embed_budget предпросмотра) — один большой источник может съесть суточную квоту аккаунта; транзакция страницы с тысячами фрагментов держит соединение пула и строку index_job десятки секунд (вставка в HNSW ≈ 2,8 мс/фрагмент, индекс поиском не используется) — решить: снять HNSW миграцией или ограничить фрагменты страницы. | Ревью chunk-embed MEDIUM: предел числа фрагментов на страницу (или разбиение вставки на пачки вне одной длинной транзакции) + замер writeIndexedPage с живым HNSW на странице 2 млн символов; LOW: NFR-SCALE-001 (1 млн фрагментов) замер; сверка estimateTokens с tokens_actual. | bot-cabinet (A-N6-033 (2)): POST /api/sources/{id}/reindex уже есть для failed-сайта (retrySource, packages/db/src/bots.ts) — done → 409 not_failed ждёт переиндексации здесь; DELETE /api/sources/{id} и кнопка «Удалить» в SourceList (CabinetViews.tsx) — здесь; удаления домена и бота в каноне нет. | Ревью bot-cabinet LOW: readOwnedBotForPdf (packages/db/src/pdf-sources.ts:19-20) — переиспользовать константу OWNED или страж на совпадение литералов."
+      "carry_over": "Ревью pdf-source: MEDIUM-1 — один worker-index на всю платформу, failed-PDF не считаются в предел: суточный предел попыток загрузки на бота/аккаунт (включая failed) или справедливая очередь по ботам; LOW-2 — Architecture.md concurrency:2 vs код 1 — привести к одному. MEDIUM-2 — тест конфликта Content-Length + Transfer-Encoding через Caddy на стенде. | chunk-embed: бюджета токенов на ИСТОЧНИК нет (есть аккаунт/сутки, global и embed_budget предпросмотра) — один большой источник может съесть суточную квоту аккаунта; транзакция страницы с тысячами фрагментов держит соединение пула и строку index_job десятки секунд (вставка в HNSW ≈ 2,8 мс/фрагмент, индекс поиском не используется) — решить: снять HNSW миграцией или ограничить фрагменты страницы. | Ревью chunk-embed MEDIUM: предел числа фрагментов на страницу (или разбиение вставки на пачки вне одной длинной транзакции) + замер writeIndexedPage с живым HNSW на странице 2 млн символов; LOW: NFR-SCALE-001 (1 млн фрагментов) замер; сверка estimateTokens с tokens_actual. | bot-cabinet (A-N6-033 (2)): POST /api/sources/{id}/reindex уже есть для failed-сайта (retrySource, packages/db/src/bots.ts) — done → 409 not_failed ждёт переиндексации здесь; DELETE /api/sources/{id} и кнопка «Удалить» в SourceList (CabinetViews.tsx) — здесь; удаления домена и бота в каноне нет. | Ревью bot-cabinet LOW: readOwnedBotForPdf (packages/db/src/pdf-sources.ts:19-20) — переиспользовать константу OWNED или страж на совпадение литералов.",
+      "reuse_note": "Правило владельца 26.09 «используй кодовые базы уже сделанных проектов»: перед реализацией искать донора удаления и повтора источника в N1 import и N5 upload; строка «написано заново» — только если их нет."
     },
     {
       "id": "account-erasure",
@@ -866,6 +880,12 @@
           "block": "вход и сессии (отзыв сессий)",
           "source": "projects/05-podcast-clips-opus/apps/web/src/server/auth-store.ts",
           "take": "уже перенесено в foundation — сослаться"
+        },
+        {
+          "adr": "ADR-012",
+          "block": "удаление аккаунта и стирание данных",
+          "source": "projects/04-calorie-vision-cal-ai/apps/api/src/routes/account-delete.ts, apps/recognizer/src/consent/erasure-job.ts; projects/05-podcast-clips-opus/apps/web/src/server/erasure-page.ts, retention.ts",
+          "take": "адаптировать: боты deleted в той же транзакции, виджеты 403 сразу, ≤ 72 ч; payment/payment_intent — account_id SET NULL (учёт денег остаётся)"
         }
       ],
       "expected_files": [

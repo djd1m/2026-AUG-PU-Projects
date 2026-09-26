@@ -48,6 +48,17 @@ const mutations = [
     edits: [{ file: ret, apply: once('const NEXT_ALLOWED = /^\\/upgrade\\?plan=(nobadge|studio)$/;', 'const NEXT_ALLOWED = /^\\/upgrade/;') }] },
   { id: 'unavailable-as-value', title: 'ЮKassa 5xx читается как «платёж не найден» (значение вместо исключения, урок N1)',
     edits: [{ file: yookassa, apply: once('    if (!response.ok) throw new PaymentProviderUnavailable(`http ${response.status}`);', '    if (!response.ok) throw new PaymentVerificationError(`http ${response.status}`);') }] },
+  // Независимое ревью Codex (08_review.md): по мутации на каждое исправление.
+  { id: 'refund-then-payment-grants', title: 'возврат раньше оплаты не учитывается — оплата по возвращённому платежу выдаёт план (ревью, находка 1)',
+    edits: [{ file: payments, apply: once("    if (prior?.status === 'refunded') return { applied: false, reason: 'refunded' } as const;\n", '') }] },
+  { id: 'checkout-recreates-payment', title: 'повтор оформления создаёт новый платёж вместо сохранённого (ревью, находка 2)',
+    edits: [{ file: 'apps/web/src/server/billing-handler.ts', apply: once('      if (intent.provider_payment_id) {', '      if (intent.provider_payment_id && false) {') }] },
+  { id: 'operator-free-keeps-remainder', title: 'снятие плана оператором оставляет оплаченный остаток (ревью, находка 3)',
+    edits: [{ file: 'packages/db/src/tariffs.ts', apply: once("      plan_paid_until = CASE WHEN $2 = 'free' THEN NULL ELSE plan_paid_until END WHERE id = $1`", '      plan_paid_until = plan_paid_until WHERE id = $1`') }] },
+  { id: 'poll-without-deadline', title: 'опрос экрана возврата без предела по времени (ревью, находка 5)',
+    edits: [{ file: ret, apply: once(' || elapsedMs >= RETURN_DEADLINE_MS', '') }] },
+  { id: 'inactive-shown-as-success', title: 'старая оплата при недействующем плане показана как «включён» (ревью, находка 6)',
+    edits: [{ file: ret, apply: once("    if (snapshot.account_plan !== 'nobadge' && snapshot.account_plan !== 'studio') return { kind: 'paid_inactive' };\n", '') }] },
 ];
 // Убитый по таймауту тест оставляет дочерний процесс разбора сиротой — прибрать его, не трогая чужое.
 const reap = () => {

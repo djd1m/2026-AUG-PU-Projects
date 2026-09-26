@@ -10,7 +10,7 @@ import { assertPaymentsEnv, selectPaymentProvider } from '../apps/web/src/server
 import { verifyYooKassaOrigin } from '../apps/web/src/server/payments/origin';
 import { PaymentProviderUnavailable, PaymentVerificationError, type PaymentProvider } from '../apps/web/src/server/payments/provider';
 import { createCheckoutHandler, createInterestHandler, createPaymentWebhookHandler, type BillingDependencies } from '../apps/web/src/server/billing-handler';
-import { RETURN_MAX_ATTEMPTS, decideReturnState, safeNextPath } from '../apps/web/src/lib/payment-return';
+import { RETURN_DEADLINE_MS, RETURN_MAX_ATTEMPTS, decideReturnState, safeNextPath } from '../apps/web/src/lib/payment-return';
 
 const LIVE = { N6_PAYMENTS_MODE: 'live', YOOKASSA_SHOP_ID: '123456', YOOKASSA_SECRET_KEY: 'secret', YOOKASSA_TEST_MODE: 'true' };
 
@@ -55,13 +55,20 @@ describe('цены и адрес источника', () => {
   });
 });
 
-describe('экран возврата: пять различимых состояний (AC-9)', () => {
+describe('экран возврата: шесть различимых состояний (AC-9 + ревью фичи 14)', () => {
   it('успех, отказ, выполняется, не подтверждено, не найдено', () => {
     expect(decideReturnState({ status: 'succeeded', account_plan: 'studio', plan_paid_until: '2026-10-26T00:00:00.000Z' }, 1))
       .toEqual({ kind: 'succeeded', plan: 'studio', until: '2026-10-26T00:00:00.000Z' });
     expect(decideReturnState({ status: 'canceled' }, 1)).toEqual({ kind: 'failed' });
     expect(decideReturnState({ status: 'pending' }, 3)).toEqual({ kind: 'waiting', attempts: 3 });
     expect(decideReturnState('not_found', 1)).toEqual({ kind: 'not_found' });
+  });
+  it('ревью, находка 6: оплата прошла, но план сейчас free — «не действует», а не «включён»', () => {
+    for (const plan of ['free', undefined, 'NOBADGE', null]) expect(decideReturnState({ status: 'succeeded', account_plan: plan }, 1), String(plan)).toEqual({ kind: 'paid_inactive' });
+  });
+  it('ревью, находка 5: предел по времени — зависшие опросы не держат «выполняется» дольше срока', () => {
+    expect(decideReturnState(null, 2, RETURN_DEADLINE_MS - 1)).toEqual({ kind: 'waiting', attempts: 2 });
+    expect(decideReturnState(null, 2, RETURN_DEADLINE_MS)).toEqual({ kind: 'unconfirmed' });
   });
   it('молчание (сбой опроса) — «выполняется», а после предела попыток — «не подтверждено», НЕ «отказ»', () => {
     expect(decideReturnState(null, 1)).toEqual({ kind: 'waiting', attempts: 1 });
@@ -147,6 +154,13 @@ describe('стражи по исходнику', () => {
       return [...code.matchAll(/UPDATE account SET plan\b/g)].map(() => path.basename(file));
     }).sort();
     expect(writers).toEqual(['payments.ts', 'payments.ts', 'tariffs.ts']);
+  });
+  it('ревью, находка 4: compose подставляет off ТОЛЬКО для незаданной переменной — явно пустая доходит до preflight', () => {
+    const compose = readFileSync('docker-compose.yml', 'utf8');
+    expect(compose).toContain('N6_PAYMENTS_MODE: ${N6_PAYMENTS_MODE-off}');
+    expect(compose).not.toMatch(/N6_PAYMENTS_MODE:-/);
+    // Секрет магазина — только у web (x-app-env/x-model-env его не несут).
+    expect(compose.match(/^\s+YOOKASSA_SECRET_KEY:/gm)).toHaveLength(1);
   });
   it('AC-15: в дереве маршрутов ровно один вебхук — /api/webhooks/yookassa', () => {
     expect(readdirSync('apps/web/src/app/api/webhooks')).toEqual(['yookassa']);

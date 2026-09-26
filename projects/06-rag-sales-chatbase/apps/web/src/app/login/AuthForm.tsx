@@ -27,12 +27,13 @@ export function AuthForm({ initialMode = 'login', next = null }: { initialMode?:
 // preview-flow: сервер сохранил (или не смог сохранить) бот предпросмотра по cookie — кабинет показывает итог.
 const PREVIEW_OUTCOMES: Readonly<Record<string, string>> = { claimed: '?saved=1', already_claimed: '?saved=1', expired: '?preview=expired',
   not_found: '?preview=expired', plan_limit: '?preview=plan_limit', unavailable: '?preview=unavailable' };
-// next уже проверен страницей (safeNextPath); итог сохранения предпросмотра важнее — он объясняет, где бот.
+// next уже проверен страницей (safeNextPath) и ВАЖНЕЕ итога предпросмотра: человек явно выбрал тариф (ревью фичи 14,
+// находка 7); сохранённый бот никуда не денется — он в кабинете.
 function afterLogin(body: unknown, next: string | null): string {
+  if (next) return next;
   const data = typeof body === 'object' && body !== null && 'data' in body ? (body as { data: { preview?: unknown } }).data : null;
   const outcome = data && typeof data.preview === 'string' ? PREVIEW_OUTCOMES[data.preview] : undefined;
-  if (outcome) return `/dashboard${outcome}`;
-  return next ?? '/dashboard';
+  return `/dashboard${outcome ?? ''}`;
 }
 // Текст отказа берётся только из закрытой формы ответа; любое другое тело — общий текст, а не сырой JSON.
 function errorMessage(body: unknown): string | null {

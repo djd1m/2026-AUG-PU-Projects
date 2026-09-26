@@ -29,11 +29,12 @@ export interface BillingDependencies {
   // null — оплата выключена (N6_PAYMENTS_MODE=off): оформление отвечает 409 payments_off, вебхук — 404.
   provider: PaymentProvider | null;
   createIntent: (input: { accountId: string; plan: PaidPlan; priceMinor: number; idempotencyKey: string }) => Promise<CreateIntentResult>;
-  setIntentPayment: (intentId: string, providerPaymentId: string) => Promise<void>;
+  // false — у намерения уже ДРУГОЙ платёж: второй платёж по одному намерению — отказ, а не молчание.
+  setIntentPayment: (intentId: string, providerPaymentId: string) => Promise<boolean>;
   readIntent: (intentId: string, accountId: string) => Promise<IntentView | null>;
   markCanceled: (intentId: string) => Promise<void>;
   applyPayment: (input: { provider: PaymentProviderName; eventKey: string; payloadSha256: string; payment: VerifiedPayment }) => Promise<ApplyPaymentOutcome>;
-  recordRefund: (input: { provider: PaymentProviderName; eventKey: string; payloadSha256: string; paymentId: string }) => Promise<ApplyPaymentOutcome>;
+  recordRefund: (input: { provider: PaymentProviderName; eventKey: string; payloadSha256: string; payment: VerifiedPayment }) => Promise<ApplyPaymentOutcome>;
   recordInterest: (input: { accountId: string; plan: PaidPlan; originScreen: InterestOriginScreen }) => Promise<'recorded' | 'already_recorded' | 'not_found'>;
   isOriginScreen: (value: unknown) => value is InterestOriginScreen;
   log?: (line: string) => void;
@@ -75,6 +76,17 @@ export function createCheckoutHandler(deps: BillingDependencies) {
     const intent = created.intent;
     if (intent.status !== 'created') return json({ data: { intent_id: intent.id, redirect_url: null, status: intent.status } });
     try {
+      // Платёж по намерению уже создан (ревью фичи 14, находка 2): НЕ создавать второй — идемпотентность ЮKassa держит
+      // ключ только 24 часа. Перезапросить сохранённый: ждёт оплаты — та же форма; отменён — намерение canceled;
+      // оплачен или ждёт подтверждения — на экран возврата (план выдаст уведомление).
+      if (intent.provider_payment_id) {
+        const existing = await provider.getPayment(intent.provider_payment_id);
+        if (existing.status === 'pending' && existing.confirmationUrl) {
+          return json({ data: { intent_id: intent.id, redirect_url: existing.confirmationUrl, status: 'created' } }, 201);
+        }
+        if (existing.status === 'canceled') { await deps.markCanceled(intent.id); return json({ data: { intent_id: intent.id, redirect_url: null, status: 'canceled' } }); }
+        return json({ data: { intent_id: intent.id, redirect_url: null, status: 'created' } });
+      }
       // Сетевой вызов ВНЕ транзакции (shared-resource-verification п.1). Ключ идемпотентности у ЮKassa — id намерения:
       // повтор с тем же ключом клиента не создаёт второй платёж.
       const payment = await provider.createPayment({
@@ -83,7 +95,10 @@ export function createCheckoutHandler(deps: BillingDependencies) {
         description: `Суфлёр: план «${PLAN_TITLE[plan]}» на 30 дней`,
       });
       if (!payment.confirmationUrl) return fail(503, 'payment_provider_failed', 'Платёжный сервис не выдал форму оплаты. Повторите позже');
-      await deps.setIntentPayment(intent.id, payment.id);
+      if (!await deps.setIntentPayment(intent.id, payment.id)) {
+        logOf(deps)('Оплата: у намерения уже другой платёж — второй не выдаётся');
+        return fail(409, 'intent_has_payment', 'По этой оплате уже создан платёж. Обновите страницу');
+      }
       return json({ data: { intent_id: intent.id, redirect_url: payment.confirmationUrl, status: 'created' } }, 201);
     } catch (error) {
       // Намерение остаётся created: повтор с тем же ключом попадёт в него же.
@@ -181,11 +196,12 @@ export function createPaymentWebhookHandler(deps: BillingDependencies) {
     if (verified.kind === 'ignored') return json({ data: { applied: false, reason: 'ignored_event' } });
     const name = providerName(provider);
     const payloadSha256 = createHash('sha256').update(raw).digest('hex');
+    const p = verified.payment;
     if (verified.kind === 'refund_succeeded') {
-      const outcome = await deps.recordRefund({ provider: name, eventKey: `refund_succeeded:${verified.refund.id}`, payloadSha256, paymentId: verified.payment.id });
+      const outcome = await deps.recordRefund({ provider: name, eventKey: `refund_succeeded:${verified.refund.id}`, payloadSha256,
+        payment: { id: p.id, orderId: p.orderId, amountMinor: p.amountMinor, feeMinor: p.feeMinor, paidAt: p.paidAt } });
       return json({ data: outcome });
     }
-    const p = verified.payment;
     const outcome = await deps.applyPayment({ provider: name, eventKey: `payment_succeeded:${p.id}`, payloadSha256,
       payment: { id: p.id, orderId: p.orderId, amountMinor: p.amountMinor, feeMinor: p.feeMinor, paidAt: p.paidAt } });
     return json({ data: outcome });

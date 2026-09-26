@@ -40,6 +40,7 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
   'return-failed': ret({ kind: 'failed' }),
   'return-unconfirmed': ret({ kind: 'unconfirmed' }),
   'return-not_found': ret({ kind: 'not_found' }),
+  'return-paid_inactive': ret({ kind: 'paid_inactive' }),
 };
 const NAMES = Object.keys(PAGES);
 const doc = (body: string, theme: Theme, script = '') => `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8">
@@ -146,12 +147,12 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     expect(await page.getByRole('link', { name: 'Убрать бейдж' }).getAttribute('href')).toBe('/upgrade?plan=nobadge');
     expect(await page.getByRole('link', { name: 'Подключить студию' }).getAttribute('href')).toBe('/upgrade?plan=studio');
   }));
-  it('AC-9: пять состояний возврата различимы (data-state и заголовок у каждого свой)', async () => {
+  it('AC-9: шесть состояний возврата различимы (data-state и заголовок у каждого свой)', async () => {
     const seen = new Set<string>();
     for (const name of NAMES.filter((n) => n.startsWith('return-'))) await open(name, 'dark', { width: 390, height: 844 }, async page => {
       seen.add(`${await page.locator('[data-state]').getAttribute('data-state')}|${await page.locator('h1').textContent()}`);
     });
-    expect(seen.size).toBe(5);
+    expect(seen.size).toBe(6);
   });
   it('AC-2 интерактив: «Оплатить» → POST /api/checkout с планом и ключом → переход на confirmation_url; кнопка гаснет, ключ один на экран', () => live('upgrade', async page => {
     api.checkout.push({ status: 503, body: { error: { code: 'payment_provider_unavailable', message: 'Платёжный сервис временно недоступен. Повторите через минуту' } } });

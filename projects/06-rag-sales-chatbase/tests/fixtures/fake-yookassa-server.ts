@@ -19,6 +19,8 @@ export interface FakeYooKassa {
   failReads: boolean;
   readAmountOverride: string | null;
   refunds: Map<string, { id: string; payment_id: string; status: 'succeeded'; amount: { value: string; currency: 'RUB' }; created_at: string }>;
+  // ЮKassa держит ключ идемпотентности 24 часа: «забыть» ключи = повтор после суток.
+  forgetIdempotence(): void;
   pay(paymentId: string): void;
   cancel(paymentId: string): void;
   refund(paymentId: string): string;
@@ -41,6 +43,7 @@ export async function startFakeYooKassa(options: { test?: boolean } = {}): Promi
   const byKey = new Map<string, string>();
   const state: Omit<FakeYooKassa, 'apiBase' | 'close'> = {
     payments: new Map(), refunds: new Map(), created: 0, failReads: false, readAmountOverride: null,
+    forgetIdempotence() { byKey.clear(); },
     pay(id) { const p = state.payments.get(id)!; p.status = 'succeeded'; p.paid = true; p.captured_at = stamp(); p.income_amount = { value: p.amount.value, currency: 'RUB' }; },
     cancel(id) { const p = state.payments.get(id)!; p.status = 'canceled'; },
     refund(paymentId) {

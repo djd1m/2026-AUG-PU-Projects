@@ -40,7 +40,10 @@ export function setPlanByOperator(pool: Pool, input: { email: string; plan: stri
     const account = (await tx.query<{ id: string; plan: string }>(`SELECT id, plan FROM account WHERE email = lower(btrim($1)) AND status = 'active' FOR UPDATE`,
       [input.email])).rows[0];
     if (!account) return { kind: 'not_found' } as const;
-    await tx.query(`UPDATE account SET plan = $2, plan_source = CASE WHEN $2 = 'free' THEN 'none' ELSE 'operator' END WHERE id = $1`, [account.id, plan]);
+    // Снятие плана (free) стирает и оплаченный остаток: иначе следующая оплата продлила бы срок, снятый после возврата
+    // (ревью фичи 14, находка 3). Назначение платного плана остаток не трогает — он не истекает, пока источник operator.
+    await tx.query(`UPDATE account SET plan = $2, plan_source = CASE WHEN $2 = 'free' THEN 'none' ELSE 'operator' END,
+      plan_paid_until = CASE WHEN $2 = 'free' THEN NULL ELSE plan_paid_until END WHERE id = $1`, [account.id, plan]);
     if (plan !== 'free') await tx.query(`UPDATE attribution SET status = 'converted' WHERE account_id = $1 AND status = 'pending'`, [account.id]);
     const before = readAccountPlan(account.plan);
     await tx.query(`INSERT INTO operator_action (operator, reason, account_id, action, plan_before, plan_after) VALUES ($1, $2, $3, 'set_plan', $4, $5)`,
