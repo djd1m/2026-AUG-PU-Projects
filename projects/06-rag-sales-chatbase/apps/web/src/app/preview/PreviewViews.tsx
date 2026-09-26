@@ -61,7 +61,7 @@ export function PreviewProgress({ host, view }: { host: string; view: PreviewJob
   </section>;
 }
 
-function Message({ message, signedIn, onSave, saving }: { message: ChatMessage; signedIn: boolean; onSave: () => void; saving: boolean }) {
+function Message({ message, signedIn, onSave, onShare, saving }: { message: ChatMessage; signedIn: boolean; onSave: () => void; onShare?: () => void; saving: boolean }) {
   if (message.kind === 'question') return <li className="chat-question">{message.text}</li>;
   if (message.kind === 'refused') {
     // role=alert — на вложенном элементе: у <li> роль остаётся listitem (axe: list).
@@ -84,6 +84,8 @@ function Message({ message, signedIn, onSave, saving }: { message: ChatMessage; 
       {signedIn
         ? <button type="button" onClick={onSave} disabled={saving}>{saving ? 'Сохраняем…' : 'Сохранить бота и поставить на сайт'}</button>
         : <a className="button" href="/login?mode=register&from=preview">Сохранить бота и поставить на сайт</a>}
+      {/* Второе действие CTA (public-page-and-summary): клик пишет share_cta_click, демо-страницу публикует владелец в кабинете. */}
+      {onShare && <button type="button" className="secondary" onClick={onShare} disabled={saving}>Поделиться ссылкой на бота</button>}
     </div>}
   </li>;
 }
@@ -91,7 +93,7 @@ function Message({ message, signedIn, onSave, saving }: { message: ChatMessage; 
 export interface PreviewChatProps {
   site: PreviewSiteView; messages: ChatMessage[]; questionsLeft: number | null; draft: string; busy: boolean; error: string;
   signedIn: boolean; saving: boolean;
-  onDraft: (value: string) => void; onAsk: (question: string) => void; onSave: () => void;
+  onDraft: (value: string) => void; onAsk: (question: string) => void; onSave: () => void; onShare?: () => void;
 }
 export function PreviewChat(p: PreviewChatProps) {
   const host = p.site.host || 'ваш сайт';
@@ -104,7 +106,7 @@ export function PreviewChat(p: PreviewChatProps) {
       <div className="chat-window" role="group" aria-label={`Бот сайта ${host}`}>
         <p className="chat-title"><strong>Бот {host}</strong></p>
         {p.messages.length > 0 && <ul className="chat-log" aria-live="polite">{p.messages.map((m, i) =>
-          <Message key={i} message={m} signedIn={p.signedIn} onSave={p.onSave} saving={p.saving} />)}</ul>}
+          <Message key={i} message={m} signedIn={p.signedIn} onSave={p.onSave} onShare={p.onShare} saving={p.saving} />)}</ul>}
         {p.messages.length === 0 && p.site.suggestions.length > 0 && <div className="suggestions" role="group" aria-label="Подсказки">
           {p.site.suggestions.map((s) => <button key={s} type="button" className="secondary" disabled={p.busy} onClick={() => p.onAsk(s)}>{s}</button>)}
         </div>}

@@ -4,11 +4,13 @@
 // Форма — только разметка: маршрут /preview и его логика — фича preview-flow (FR-PREVIEW-001).
 import type { Theme } from '../lib/theme';
 import { SiteHeader } from './SiteHeader';
-export function Landing({ theme }: { theme: Theme }) {
+// arrival — строка входа по бейджу или демо-странице (FR-GROWTH-003): «Бот как на <домен> — для вашего сайта».
+export function Landing({ theme, arrival = null }: { theme: Theme; arrival?: string | null }) {
   return <><SiteHeader theme={theme} />
     <main className="landing">
       <section className="hero center" aria-labelledby="hero-title">
         <p className="eyebrow">Бот для сайта на ваших материалах</p>
+        {arrival && <p className="notice arrival-line">{arrival}</p>}
         <h1 id="hero-title">Отвечает клиентам ночью — и показывает, откуда взял ответ</h1>
         <p className="intro">Вставьте адрес сайта. Мы прочитаем страницы, соберём бота и покажем его в работе — до регистрации.</p>
         <form className="url-form" action="/preview" method="get">

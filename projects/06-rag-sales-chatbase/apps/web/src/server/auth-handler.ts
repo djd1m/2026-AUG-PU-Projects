@@ -33,6 +33,9 @@ export interface HandlerDependencies {
   // ClaimPreview при регистрации и входе (Pseudocode AuthRegisterAndLogin п.5, фича preview-flow): cookie
   // предпросмотра есть → бот сохраняется в аккаунт. null — сохранять нечего.
   claimPreview?: (request: Request, sessionToken: string) => Promise<{ status: string; clearCookie: boolean } | null>;
+  // Приход по бейджу / демо-странице (фича public-page-and-summary, FR-GROWTH-006): только при РЕГИСТРАЦИИ — cookie
+  // прихода пишется в новый аккаунт один раз. Сбой записи регистрацию не валит (метрика, а не доступ).
+  recordArrival?: (request: Request, sessionToken: string) => Promise<void>;
 }
 const CLEAR_PREVIEW_COOKIE = '__Host-n6_preview=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
 export function createAuthHandler(action: 'login' | 'register' | 'logout', deps: HandlerDependencies) {
@@ -80,6 +83,10 @@ export function createAuthHandler(action: 'login' | 'register' | 'logout', deps:
           const claimed = await deps.claimPreview(request, token);
           if (claimed) { preview = claimed.status; if (claimed.clearCookie) cookies.push(CLEAR_PREVIEW_COOKIE); }
         } catch { preview = 'unavailable'; console.error('Авторизация: предпросмотр не сохранён — вход выполнен без него'); }
+      }
+      if (action === 'register' && deps.recordArrival) {
+        try { await deps.recordArrival(request, token); }
+        catch { console.error('Авторизация: приход по бейджу не записан — регистрация выполнена без него'); }
       }
       return json({ data: { ok: true, ...(preview ? { preview } : {}) } }, 200, cookies);
     } catch (error) {

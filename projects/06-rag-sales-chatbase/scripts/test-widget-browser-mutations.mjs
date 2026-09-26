@@ -28,16 +28,22 @@ const all = [
     file: 'apps/web/src/server/check-origin.ts', apply: once("return { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' };", "return { 'Access-Control-Allow-Origin': '*', Vary: 'Origin' };") },
   { id: 'unverified-shown', title: 'ответ модели показан посетителю бота без отметки «Я проверил ответы бота» (A-N6-035)',
     file: 'apps/web/src/server/widget-ask-handler.ts', apply: once('if (!bot.row.answersVerified) {', 'if (bot.row.answersVerified === null) {') },
+  // public-page-and-summary: демо-страница /b/{slug} — набор tests/browser/public-page.test.ts.
+  { id: 'demo-page-same-origin', title: 'GET /w/v1/config с демо-страницы без Origin не признаётся своим origin (Sec-Fetch-Site не читается) — чата нет',
+    file: 'apps/web/src/server/check-origin.ts', test: 'tests/browser/public-page.test.ts',
+    apply: once("  if (!raw && publicOrigin && headers.get('sec-fetch-site') === 'same-origin') return new URL(publicOrigin).origin;\n", '') },
+  { id: 'demo-page-not-opened', title: 'data-open не открывает окно чата на демо-странице — чат не в первом экране',
+    file: 'apps/widget/src/chat-window.ts', test: 'tests/browser/public-page.test.ts', apply: once('  if (options.openAtStart) open(false);\n', '') },
 ];
 const only = (process.env.N6_BROWSER_MUTATIONS_ONLY ?? '').split(',').filter(Boolean);
 const mutations = only.length ? all.filter((m) => only.includes(m.id)) : all;
 if (only.length && mutations.length !== only.length) { console.error(`Неизвестная мутация в N6_BROWSER_MUTATIONS_ONLY: ${only.join(',')}`); process.exit(2); }
 
 const build = () => spawnSync(process.execPath, ['apps/widget/scripts/build.mjs'], { encoding: 'utf8' });
-function browserRun(id, phase) {
+function browserRun(id, phase, test = 'tests/browser/widget-embed.test.ts') {
   const b = build();
   if (b.status !== 0) return { code: 2, summary: `бандл не собрался: ${b.stderr.trim()}` };
-  const r = spawnSync('bash', ['scripts/check-responsive.sh', '--test', 'tests/browser/widget-embed.test.ts'], { encoding: 'utf8', timeout: 900000, env: { ...process.env, NO_COLOR: '1' } });
+  const r = spawnSync('bash', ['scripts/check-responsive.sh', '--test', test], { encoding: 'utf8', timeout: 900000, env: { ...process.env, NO_COLOR: '1' } });
   const log = `${r.stdout ?? ''}${r.stderr ?? ''}`;
   writeFileSync(resolve(output, `${id}-${phase}.txt`), log);
   return { code: r.status, summary: /^\s+Tests\s{2}(.+)$/m.exec(log)?.[1]?.trim() ?? 'нет итога' };
@@ -50,9 +56,9 @@ for (const m of mutations) {
   const mutated = m.apply(original);
   if (mutated === null) { console.error(`Якорь мутации не найден или не уникален: ${m.id}`); process.exit(2); }
   let red, green;
-  try { writeFileSync(path, mutated); red = browserRun(m.id, 'red'); }
+  try { writeFileSync(path, mutated); red = browserRun(m.id, 'red', m.test); }
   finally { writeFileSync(path, original); }
-  green = browserRun(m.id, 'green');
+  green = browserRun(m.id, 'green', m.test);
   if (readFileSync(path, 'utf8') !== original) { console.error(`Файл не восстановлен: ${m.file}`); process.exit(2); }
   if (red.code === 2 || green.code === 2) infrastructure = true;
   const passed = red.code === 1 && /\d+ failed/.test(red.summary) && green.code === 0;

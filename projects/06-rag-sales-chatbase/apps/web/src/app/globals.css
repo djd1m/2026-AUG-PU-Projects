@@ -195,6 +195,18 @@ tbody tr:last-child > * { border-bottom:0; }
 .file-input::file-selector-button { min-height:2.75rem; margin-right:var(--space-3); padding:var(--space-2) var(--space-4); border:0.0625rem solid var(--ink); border-radius:var(--radius-control); background:transparent; color:var(--ink); font:inherit; font-weight:600; cursor:pointer; }
 .bot-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--space-8); align-items:start; margin-bottom:var(--space-8); }
 .bot-grid h2, .bot-settings h2, .create-bot h2 { font-size:1.5rem; margin:0; }
+.bot-extra { margin-bottom:var(--space-8); }
+.bot-extra h2 { font-size:1.5rem; margin:0; }
+.bot-extra h3 { font-size:1.125rem; margin:0; }
+.summary-counts { display:flex; flex-wrap:wrap; gap:var(--space-4); list-style:none; margin:0; padding:0; }
+.summary-counts li { display:flex; flex-direction:column; min-width:7rem; padding:var(--space-3) var(--space-4); background:var(--surface-2); border-radius:var(--radius-control); }
+.summary-counts strong { font-size:1.75rem; font-weight:500; line-height:1.2; }
+.question-list li { display:flex; flex-wrap:wrap; justify-content:space-between; gap:var(--space-2); padding:var(--space-3) 0; border-bottom:0.0625rem solid var(--line); overflow-wrap:anywhere; }
+.check { display:flex; align-items:center; gap:var(--space-3); min-height:2.75rem; cursor:pointer; }
+/* Демо-страница /b/{slug}: окно виджета открыто сразу (360 px + 16 px от края). До 64rem оно поверх страницы
+   (на ≤ 400 px — на весь экран: первый экран — чат); шире — текст страницы не заходит под окно. */
+.public-page { padding-block:var(--space-8); }
+@media(min-width:64rem) { .public-page { padding-inline-end:25.5rem; } }
 .snippet { margin:0; padding:var(--space-4); overflow-x:auto; background:var(--surface-2); border:0.0625rem solid var(--line); border-radius:var(--radius-control); font-size:0.875rem; }
 .howto { border-bottom:0.0625rem solid var(--line); }
 .howto summary { font-weight:600; }

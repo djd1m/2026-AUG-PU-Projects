@@ -83,3 +83,19 @@ export async function sweepVisitorText(pool: Pool, batch: number): Promise<{ que
   [batch, VISITOR_HISTORY_TTL_MINUTES]);
   return { questionTexts: texts.rowCount ?? 0, histories: histories.rowCount ?? 0 };
 }
+
+export const IDLE_VISITOR_SESSION_HOURS = 24;
+// Сторож (carry_over фичи 12): строка visitor_session старше суток, у которой нет истории, нет событий роста и нет
+// записей журнала вопросов, — след одного запроса конфигурации, хранить его незачем (152-ФЗ: префикс IP и origin).
+// Сессии с записями журнала НЕ удаляются: question_log.visitor_session_id — ON DELETE SET NULL, и такой вопрос выпал бы
+// из сводки «ответил / не знал» (она считает только вопросы с сессией). Токен удалённой сессии остаётся годным по
+// подписи — openVisitorSession создаст строку заново.
+export async function sweepIdleVisitorSessions(pool: Pool, batch: number): Promise<number> {
+  const deleted = await pool.query(`DELETE FROM visitor_session WHERE id IN (
+      SELECT s.id FROM visitor_session s
+      WHERE s.created_at < now() - make_interval(hours => $2) AND s.history = '[]'::jsonb AND s.history_at IS NULL
+        AND NOT EXISTS (SELECT 1 FROM growth_event g WHERE g.visitor_session_id = s.id)
+        AND NOT EXISTS (SELECT 1 FROM question_log q WHERE q.visitor_session_id = s.id)
+      ORDER BY s.created_at LIMIT $1)`, [batch, IDLE_VISITOR_SESSION_HOURS]);
+  return deleted.rowCount ?? 0;
+}

@@ -44,6 +44,8 @@ export interface PreviewDependencies {
   answer: (botId: string, browserSession: string, request: VisitorRequest) => Promise<AnswerResult>;
   appendTurn: (previewId: string, turn: HistoryTurn) => Promise<void>;
   shareCtaShown: (botId: string) => Promise<boolean>;
+  // FR-GROWTH-001: нажатие «Поделиться ссылкой на бота» под первым ответом (фича public-page-and-summary).
+  shareCtaClick: (botId: string) => Promise<boolean>;
   authenticate: (token: string) => Promise<{ account_id: string } | null>;
   claim: (input: { tokenHash: string; accountId: string; indexJobId?: string }) => Promise<ClaimOutcome>;
   log?: (line: string) => void;
@@ -241,5 +243,26 @@ export function createRegistrationClaim(deps: Pick<PreviewDependencies, 'secret'
     if (!account) return null;
     const outcome = await deps.claim({ tokenHash: tokenHash(deps.secret, 'preview', token), accountId: account.account_id });
     return { status: outcome.status, clearCookie: outcome.status === 'claimed' || outcome.status === 'expired' || outcome.status === 'not_found' };
+  };
+}
+
+// POST /api/preview/{index_job_id}/share — нажатие «Поделиться ссылкой на бота» (FR-GROWTH-001, public-page-and-summary).
+// Те же ворота, что у вопроса: лимит → Origin → cookie ЭТОГО браузера. Событие пишется не чаще раза в сутки на бота и
+// только если CTA показывался (recordShareCtaClick). Опубликовать страницу может только владелец с аккаунтом — экран
+// после 204 ведёт на регистрацию (A-N6-038 (5)).
+export function createPreviewShareHandler(deps: PreviewDependencies) {
+  const log = deps.log ?? ((line: string) => console.error(line));
+  return async (request: Request, indexJobId: string): Promise<Response> => {
+    try {
+      const entry = await guard(request, deps);
+      if (entry instanceof Response) return entry;
+      const found = await access(request, deps, indexJobId);
+      if (found instanceof Response) return found;
+      try { await deps.shareCtaClick(found.botId); }
+      catch { log('Предпросмотр: событие share_cta_click не записано'); }
+      return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
+    } catch {
+      return unavailable();
+    }
   };
 }

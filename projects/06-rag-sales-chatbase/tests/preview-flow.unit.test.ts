@@ -1,7 +1,7 @@
 // preview-flow без БД: порядок операций маршрутов (лимит двери → Origin → тело → CheckAddress ДО квоты и постановки),
 // закрытый набор ключей тела, cookie без токена в адресе, подсказки и история. Боевой SQL — preview-flow.integration.
 import { describe, expect, it } from 'vitest';
-import { createPreviewAskHandler, createPreviewCreateHandler, AddressRefusal, type PreviewDependencies } from '../apps/web/src/server/preview-handler';
+import { createPreviewAskHandler, createPreviewCreateHandler, createPreviewShareHandler, AddressRefusal, type PreviewDependencies } from '../apps/web/src/server/preview-handler';
 import { normalizeSiteUrl, tokenHash, draftName } from '../apps/web/src/server/preview-session';
 import { readHistory, suggestQuestions } from '../packages/db/src/previews';
 
@@ -20,7 +20,7 @@ function fakeDeps(overrides: Partial<PreviewDependencies> = {}) {
     readAccess: async () => ({ previewId: 'p', botId: '22222222-2222-4222-8222-222222222222', browserSession: 'b'.repeat(64), history: [], expired: false, claimed: false }),
     readJob: async () => null, readSite: async () => null, answersLeft: async () => 10,
     answer: async (botId) => { calls.push(`answer:${botId}`); return { status: 'unknown', reason: 'below_threshold', message: 'Не нашёл', contact: null }; },
-    appendTurn: async () => {}, shareCtaShown: async () => false,
+    appendTurn: async () => {}, shareCtaShown: async () => false, shareCtaClick: async () => false,
     authenticate: async () => null, claim: async () => ({ status: 'not_found' }),
     log: () => {}, ...overrides,
   };
@@ -89,6 +89,24 @@ describe('вопрос предпросмотра: бот и история — 
     const { deps, calls } = fakeDeps();
     expect((await createPreviewAskHandler(deps)(ask({ question: 'Q' }, ''), id)).status).toBe(404);
     expect(calls).toEqual(['limit']);
+  });
+  // Фича public-page-and-summary: «Поделиться ссылкой на бота» (FR-GROWTH-001) — те же ворота, что у вопроса.
+  it('клик «Поделиться»: лимит → Origin → cookie ЭТОГО браузера → событие по боту из строки предпросмотра; 204', async () => {
+    const clicked: string[] = [];
+    const { deps, calls } = fakeDeps({ shareCtaClick: async (botId) => { clicked.push(botId); return true; } });
+    const r = await createPreviewShareHandler(deps)(ask({}), id);
+    expect(r.status).toBe(204);
+    expect(calls).toEqual(['limit']);
+    expect(clicked).toEqual(['22222222-2222-4222-8222-222222222222']);
+    const limited = fakeDeps({ allowMutation: async () => false, shareCtaClick: async () => { throw new Error('не должен вызываться'); } });
+    expect((await createPreviewShareHandler(limited.deps)(ask({}), id)).status).toBe(429);
+    const foreign = fakeDeps({ shareCtaClick: async () => { throw new Error('не должен вызываться'); } });
+    expect((await createPreviewShareHandler(foreign.deps)(ask({}, ''), id)).status).toBe(404);
+    const evil = new Request(`${ORIGIN}/api/preview/x/share`, { method: 'POST', headers: { 'x-forwarded-for': '93.184.216.9', origin: 'https://evil.example', cookie: `__Host-n6_preview=${'t'.repeat(43)}` } });
+    expect((await createPreviewShareHandler(foreign.deps)(evil, id)).status).toBe(403);
+    // Сбой записи события не отнимает у владельца переход дальше.
+    const broken = fakeDeps({ shareCtaClick: async () => { throw new Error('БД недоступна'); } });
+    expect((await createPreviewShareHandler(broken.deps)(ask({}), id)).status).toBe(204);
   });
 });
 

@@ -9,9 +9,11 @@ export function badgeRequired(planFromDatabase: unknown): boolean {
 
 // из N1: projects/01-testimonials-senja/apps/web/src/lib/badge.ts (buildBadgeUrl) — адаптировано: канон §7
 // `/?from=<домен хозяина>&utm_source=badge`; домен — hostname origin, ПРОШЕДШЕГО CheckOrigin (не ввод клиента).
-export function badgeHref(publicOrigin: string, hostOrigin: string): string {
+// На демо-странице (origin = N6_PUBLIC_ORIGIN) хозяин — мы сами: from = b/<slug> (public-page-and-summary, A-N6-038 (3)).
+export function badgeHref(publicOrigin: string, hostOrigin: string, publicSlug: string | null = null): string {
   const url = new URL('/', new URL(publicOrigin).origin);
-  url.searchParams.set('from', new URL(hostOrigin).hostname);
+  const own = new URL(hostOrigin).origin === url.origin;
+  url.searchParams.set('from', own && publicSlug ? `b/${publicSlug}` : new URL(hostOrigin).hostname);
   url.searchParams.set('utm_source', 'badge');
   return url.href;
 }

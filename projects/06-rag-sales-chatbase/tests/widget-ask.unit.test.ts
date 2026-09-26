@@ -21,7 +21,7 @@ const IP = '203.0.113.9';
 const VS = issueVisitorToken(SECRET, { botId: BOT_ID, origin: HOST, ipPrefix: '203.0.113.0/24' });
 const CONTACT = '+7 900 000-00-00';
 const row = (over: Partial<WidgetBotRow> = {}): WidgetBotRow => ({ botId: BOT_ID, status: 'active', companyName: 'Пекарня «Колос»', greeting: '',
-  contact: CONTACT, publicEnabled: false, plan: 'free', accountStatus: 'active', origins: [HOST], answersVerified: true, ...over });
+  contact: CONTACT, publicEnabled: false, plan: 'free', accountStatus: 'active', origins: [HOST], answersVerified: true, publicSlug: null, ...over });
 const chip = { chunkId: randomUUID(), title: 'Цены', url: 'https://kolos.example/ceny', excerpt: 'Доставка от 350 ₽' };
 const acao = (r: Response) => (r.headers.get('access-control-allow-origin')?.split(', ') ?? []);
 

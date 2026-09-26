@@ -6,17 +6,14 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { dataOf, errorOf, send } from '../../../../lib/api-client';
 import { AddSource, BotForm, OwnerChat, SourceList, type FieldErrors, type OwnerMessage, type SourceItemView } from '../../CabinetViews';
+import { MonthBanner, PublishBlock, SummaryBlock, VerifyBlock, type PublishView, type SummaryView } from './BotExtrasViews';
 
 const REFRESH_MS = 3000;
 export interface BotScreenProps { botId: string; companyName: string; contact: string; greeting: string; sources: SourceItemView[] }
 // visitor-ask-and-limits: отметка «Я проверил ответы бота» (A-N6-035) и ответы бота в текущем месяце против предела плана
 // (баннер исчерпания, FR-TARIFF-003, SC-US-007-2).
-export interface BotScreenState { answersVerified: boolean; monthAnswers: { used: number; limit: number } }
-
-export const VERIFY_RISK = 'Бот отвечает только по вашим материалам и к каждому ответу прикладывает фрагмент-источник. Но ссылка на фрагмент '
-  + 'не доказывает, что текст ответа с ним совпадает: модель может добавить от себя — например, скидку или срок, которых в '
-  + 'материалах нет. Задайте боту в чате выше вопросы, которые задают ваши клиенты, особенно о ценах, сроках и акциях. Пока '
-  + 'отметки нет, посетители сайта видят «Бот ещё настраивается» и ваш контакт.';
+// public-page-and-summary: сводка за 7 дней (FR-BOT-004) и демо-страница (FR-GROWTH-005) — разметка в BotExtrasViews.
+export interface BotScreenState { answersVerified: boolean; monthAnswers: { used: number; limit: number }; summary: SummaryView | null; publicPage: PublishView }
 
 export function BotScreen(p: BotScreenProps & BotScreenState) {
   const router = useRouter();
@@ -104,15 +101,25 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
       setVerifyError(errorOf(body)?.message ?? 'Не удалось сохранить отметку. Повторите');
     } catch { setVerifyError('Нет связи с сервером. Повторите'); } finally { setVerifying(false); }
   };
-  const exhausted = p.monthAnswers.used >= p.monthAnswers.limit;
+  const [page, setPage] = useState<PublishView>(p.publicPage);
+  const [publishing, setPublishing] = useState(false);
+  const [publishError, setPublishError] = useState('');
+  const publish = async (next: { enabled: boolean; indexable: boolean }) => {
+    setPublishing(true); setPublishError('');
+    try {
+      const { status, body } = await send(`/api/bots/${p.botId}/publish`, 'POST', next);
+      const data = dataOf<{ url: string; slug: string; enabled: boolean; indexable: boolean }>(body);
+      if (status === 200 && data) { setPage({ slug: data.slug, enabled: data.enabled, indexable: data.indexable, url: data.url }); return; }
+      setPublishError(errorOf(body)?.message ?? 'Не удалось сохранить. Повторите');
+    } catch { setPublishError('Нет связи с сервером. Повторите'); } finally { setPublishing(false); }
+  };
   return <BotLayout {...p} ready={p.sources.some((s) => s.job?.state === 'done')}
-    banner={exhausted ? <p role="alert" className="notice danger-notice cabinet-notice">Месячный лимит ответов исчерпан ({p.monthAnswers.used} из {p.monthAnswers.limit}): до 1-го числа посетители видят отказ с вашим контактом. Тестовые вопросы в кабинете расходуют тот же лимит. <a href="/pricing">Тарифы</a></p> : null}
-    verify={<section className="card stack" aria-labelledby="verify-title"><h2 id="verify-title">Ответы на сайте</h2>
-      <p>{VERIFY_RISK}</p>
-      <p role="status" className={verified ? 'notice' : 'notice danger-notice'}>{verified ? 'Отмечено: посетители видят ответы бота.' : 'Не отмечено: посетители видят «Бот ещё настраивается».'}</p>
-      {verifyError && <p role="alert" className="field-error">{verifyError}</p>}
-      <p><button type="button" className={verified ? 'button secondary' : 'button'} disabled={verifying} onClick={() => { void toggleVerified(); }}>
-        {verified ? 'Снять отметку' : 'Я проверил ответы бота'}</button></p></section>}
+    banner={<MonthBanner used={p.monthAnswers.used} limit={p.monthAnswers.limit} />}
+    summary={<SummaryBlock summary={p.summary} />}
+    verify={<VerifyBlock verified={verified} busy={verifying} error={verifyError} onToggle={() => { void toggleVerified(); }} />}
+    publish={<PublishBlock page={page} busy={publishing} error={publishError}
+      onPublish={(enabled) => { void publish({ enabled, indexable: page.indexable }); }}
+      onIndexable={(indexable) => { void publish({ enabled: page.enabled, indexable }); }} />}
     sourcesBlock={<><SourceList sources={p.sources} retrying={retrying} errors={sourceErrors} onRetry={(id) => { void retry(id); }} />
       <AddSource url={url} busy={adding} errors={sourceErrors} onUrl={setUrl} onSite={() => { void addSite(); }} onPdf={(f) => { void addPdf(f); }} /></>}
     chat={<OwnerChat companyName={p.companyName} messages={messages} draft={draft} busy={asking} error={chatError}
@@ -122,7 +129,7 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
         submitLabel="Сохранить настройки" contactRequired onChange={(f, v) => setSettings((s) => ({ ...s, [f]: v }))} onSubmit={() => { void save(); }} /></>} />;
 }
 
-export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: ReactNode; chat: ReactNode; settings: ReactNode; banner?: ReactNode; verify?: ReactNode }) {
+export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: ReactNode; chat: ReactNode; settings: ReactNode; banner?: ReactNode; verify?: ReactNode; summary?: ReactNode; publish?: ReactNode }) {
   return <>
     <div className="cabinet-head"><h1>{p.companyName}</h1>
       <p className="cluster"><a className="button" href={`/dashboard/bots/${p.botId}/install`}>Установка на сайт</a>
@@ -133,7 +140,9 @@ export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: Re
       <section className="stack" aria-labelledby="sources-title"><h2 id="sources-title">Источники</h2>{p.sourcesBlock}</section>
       <section className="stack" aria-labelledby="chat-title"><h2 id="chat-title">Задать вопрос</h2>{p.chat}</section>
     </div>
+    {p.summary}
     {p.verify}
+    {p.publish}
     <section className="card stack bot-settings" aria-labelledby="settings-title"><h2 id="settings-title">Настройки бота</h2>{p.settings}</section>
   </>;
 }

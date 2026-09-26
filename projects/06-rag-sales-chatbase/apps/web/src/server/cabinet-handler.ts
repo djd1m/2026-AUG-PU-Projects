@@ -8,7 +8,8 @@
 // из сессии → ядро answerQuestion (квота ДО эмбеддинга, порог ДО модели, проверка цитат ПОСЛЕ).
 // Чужой, несуществующий, удалённый бот и нет сессии на маршруте бота — ОДИН ответ 404 (канон: «Чужой ресурс — 404»).
 import type { AnswerResult, VisitorRequest } from '@n6/rag';
-import type { AccountBotList, AddOriginResult, BotSettingsPatch, CreateBotInput, CreateBotResult, CreateSiteSourceResult, RetrySourceResult } from '@n6/db';
+import type { AccountBotList, AddOriginResult, BotSettingsPatch, BotSummary, CreateBotInput, CreateBotResult, CreateSiteSourceResult, PublishResult,
+  RetrySourceResult } from '@n6/db';
 import { parseAllowedOrigin, parseCompanyName, parseContact, parseGreeting } from '@n6/rag/bot-settings';
 import { readSessionCookie } from './auth-handler';
 import { clientIp } from './ip';
@@ -39,6 +40,9 @@ export interface CabinetDependencies {
   answer: (botId: string, accountId: string, request: VisitorRequest) => Promise<AnswerResult>;
   // A-N6-035: отметка «Я проверил ответы бота» (visitor-ask-and-limits). Чужой — null.
   setVerified: (botId: string, accountId: string, verified: boolean) => Promise<{ answers_verified: boolean } | { kind: 'indexing' } | null>;
+  // Демо-страница /b/{slug} и сводка за 7 дней (фича public-page-and-summary). Чужой — null.
+  publish: (botId: string, accountId: string, input: { enabled: boolean; indexable: boolean }) => Promise<PublishResult>;
+  summary: (botId: string, accountId: string) => Promise<BotSummary | null>;
   log?: (line: string) => void;
 }
 
@@ -252,5 +256,33 @@ export function createBotVerifyHandler(deps: CabinetDependencies) {
     if (!saved) return notFound();
     if ('kind' in saved) return fail(409, 'indexing', 'Дождитесь окончания загрузки материалов и проверьте ответы по ним');
     return json({ data: saved });
+  });
+}
+
+// POST /api/bots/{bot_id}/publish { enabled, indexable } — PublishPublicPage (FR-GROWTH-005, SC-US-013-1/3). Порядок входа —
+// как у остальных мутаций кабинета; значения строго boolean (строка «true» — отказ, а не «включить»).
+export function createBotPublishHandler(deps: CabinetDependencies) {
+  return (request: Request, botId: string) => run(logOf(deps), 'публикация демо-страницы', async () => {
+    const entry = await guardMutation(request, deps, notFound);
+    if (entry instanceof Response) return entry;
+    if (!UUID.test(botId)) return notFound();
+    const input = await body(request, ['enabled', 'indexable']);
+    if (input instanceof Response) return input;
+    if (typeof input.enabled !== 'boolean' || typeof input.indexable !== 'boolean') return fail(400, 'invalid', 'Ожидается { enabled: true | false, indexable: true | false }');
+    const saved = await deps.publish(botId, entry.accountId, { enabled: input.enabled, indexable: input.indexable });
+    if (!saved) return notFound();
+    if (saved.kind === 'contact_required') return fail(409, 'contact_required', 'Укажите контакт для «не знаю» в настройках — без него бот не отвечает и страницу публиковать нечем');
+    return json({ data: { url: new URL(`/b/${saved.slug}`, deps.publicOrigin).href, slug: saved.slug, enabled: saved.enabled, indexable: saved.indexable } });
+  });
+}
+
+// GET /api/bots/{bot_id}/summary — BotSummary (FR-BOT-004, SC-US-010-1/2). Нет сессии, чужой бот — 404.
+export function createBotSummaryHandler(deps: CabinetDependencies) {
+  return (request: Request, botId: string) => run(logOf(deps), 'сводка бота', async () => {
+    const token = readSessionCookie(request);
+    const session = token ? await deps.authenticate(token) : null;
+    if (!session || !UUID.test(botId)) return notFound();
+    const summary = await deps.summary(botId, session.account_id);
+    return summary ? json({ data: summary }) : notFound();
   });
 }

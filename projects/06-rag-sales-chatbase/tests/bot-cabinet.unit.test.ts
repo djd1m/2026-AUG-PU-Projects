@@ -8,7 +8,7 @@ import path from 'node:path';
 import { installSnippet, parseAllowedOrigin, parseCompanyName, parseContact, parseGreeting, readContact } from '../packages/rag/src/bot-settings';
 import { ribbonOf, type RibbonJob } from '../apps/web/src/lib/source-ribbon';
 import { readWidgetBundleFile } from '../apps/web/src/server/widget-bundle';
-import { createBotCreateHandler, createBotVerifyHandler, createOwnerAskHandler, type CabinetDependencies } from '../apps/web/src/server/cabinet-handler';
+import { createBotCreateHandler, createBotPublishHandler, createBotSummaryHandler, createBotVerifyHandler, createOwnerAskHandler, type CabinetDependencies } from '../apps/web/src/server/cabinet-handler';
 
 const ORIGIN = 'https://sufler.test.invalid';
 const KEY = 'AbCdEfGhIjKlMnOpQrStUv';
@@ -130,7 +130,7 @@ describe('порядок входа маршрутов кабинета', () => 
       allowMutation: async () => { calls.push('limit'); return true; },
       listBots: touch('list'), createBot: touch('create'), newPublicKey: () => KEY, updateSettings: touch('update'), addOrigin: touch('origin'),
       checkAddress: touch('check'), ownsBot: touch('owns'), createSite: touch('site'), findJob: touch('find'), retry: touch('retry'),
-      enqueue: touch('enqueue'), answer: touch('answer'), setVerified: touch('verify'), log: () => {}, ...over,
+      enqueue: touch('enqueue'), answer: touch('answer'), setVerified: touch('verify'), publish: touch('publish'), summary: touch('summary'), log: () => {}, ...over,
     };
   }
   const request = (headers: Record<string, string>, body: unknown = {}) => new Request(`${ORIGIN}/api/bots`, { method: 'POST',
@@ -178,5 +178,39 @@ describe('порядок входа маршрутов кабинета', () => 
     expect((await run(null)).status).toBe(404);
     const busy = await run({ kind: 'indexing' });
     expect([busy.status, ((await busy.json()) as { error: { code: string } }).error.code]).toEqual([409, 'indexing']);
+  });
+  // Фича public-page-and-summary: публикация демо-страницы (AC-10) и сводка (FR-BOT-004).
+  it('публикация: чужой Origin — 403 до записи; не-boolean и лишнее поле — 400 до записи; плохой id — 404', async () => {
+    const calls: string[] = [];
+    expect((await createBotPublishHandler(deps(calls))(request({ origin: 'https://evil.example' }, { enabled: true, indexable: false }), BOT)).status).toBe(403);
+    for (const body of [{ enabled: 'true', indexable: false }, { enabled: true }, { enabled: true, indexable: 0 }, { enabled: true, indexable: false, slug: 'x' }]) {
+      expect((await createBotPublishHandler(deps(calls))(request({ origin: ORIGIN }, body), BOT)).status, JSON.stringify(body)).toBe(400);
+    }
+    expect((await createBotPublishHandler(deps(calls))(request({ origin: ORIGIN }, { enabled: true, indexable: false }), 'x')).status).toBe(404);
+    expect(calls).not.toContain('publish');
+  });
+  it('публикация: запись с аккаунтом сессии, адрес страницы от N6_PUBLIC_ORIGIN; чужой — 404; без контакта — 409', async () => {
+    const seen: unknown[] = [];
+    const run = (result: Awaited<ReturnType<CabinetDependencies['publish']>>) => createBotPublishHandler(deps([], {
+      publish: async (...args) => { seen.push(args); return result; } }))(request({ origin: ORIGIN }, { enabled: true, indexable: false }), BOT);
+    const ok = await run({ kind: 'saved', slug: 'kolos-ab12', enabled: true, indexable: false });
+    expect([ok.status, await ok.json()]).toEqual([200, { data: { url: `${ORIGIN}/b/kolos-ab12`, slug: 'kolos-ab12', enabled: true, indexable: false } }]);
+    expect(seen[0]).toEqual([BOT, '11111111-1111-4111-8111-111111111111', { enabled: true, indexable: false }]);
+    expect((await run(null)).status).toBe(404);
+    const bare = await run({ kind: 'contact_required' });
+    expect([bare.status, ((await bare.json()) as { error: { code: string } }).error.code]).toEqual([409, 'contact_required']);
+  });
+  it('сводка: без сессии и с плохим id — 404 без чтения; чужой — 404; своя — данные', async () => {
+    const calls: string[] = [];
+    const get = (cookie: boolean, id = BOT, over: Partial<CabinetDependencies> = {}) => createBotSummaryHandler(deps(calls, {
+      authenticate: async () => (cookie ? { account_id: '11111111-1111-4111-8111-111111111111' } : null), ...over }))(
+      new Request(`${ORIGIN}/api/bots/${id}/summary`, { headers: cookie ? { cookie: `__Host-n6_session=${'A'.repeat(43)}` } : {} }), id);
+    expect((await get(false)).status).toBe(404);
+    expect((await get(true, 'x')).status).toBe(404);
+    expect(calls).not.toContain('summary');
+    expect((await get(true, BOT, { summary: async () => null })).status).toBe(404);
+    const data = { answered: 40, unknown: 6, refused_limit: 1, last_unknown: [] };
+    const ok = await get(true, BOT, { summary: async () => data });
+    expect([ok.status, await ok.json()]).toEqual([200, { data }]);
   });
 });

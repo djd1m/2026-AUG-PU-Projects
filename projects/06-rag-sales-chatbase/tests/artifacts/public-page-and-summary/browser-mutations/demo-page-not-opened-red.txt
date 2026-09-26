@@ -1,0 +1,106 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/public-page.test.ts (20 tests | 17 failed) 183912ms
+   × chromium > SC-US-013-1: без входа — имя компании, окно чата открыто сразу без кражи фокуса; вопрос → ответ с источником; ссылки ведут на /?from=b/{slug} 10330ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   ✓ chromium > SC-US-013-3 (второй рубеж): бот без публикации — config 403, на своём origin виджет не появляется  555ms
+   × chromium > dark 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом 10141ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × chromium > light 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом 10124ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × chromium > 320: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10177ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × chromium > 360: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10118ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × chromium > 768: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10115ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × chromium > 1024: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10115ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × chromium > 1440: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10103ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × firefox > SC-US-013-1: без входа — имя компании, окно чата открыто сразу без кражи фокуса; вопрос → ответ с источником; ссылки ведут на /?from=b/{slug} 12031ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   ✓ firefox > SC-US-013-3 (второй рубеж): бот без публикации — config 403, на своём origin виджет не появляется  933ms
+   × webkit > SC-US-013-1: без входа — имя компании, окно чата открыто сразу без кражи фокуса; вопрос → ответ с источником; ссылки ведут на /?from=b/{slug} 10639ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   ✓ webkit > SC-US-013-3 (второй рубеж): бот без публикации — config 403, на своём origin виджет не появляется  996ms
+   × webkit > dark 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом 10542ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × webkit > light 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом 10519ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × webkit > 320: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10496ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × webkit > 360: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10510ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × webkit > 768: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10689ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × webkit > 1024: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10540ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+   × webkit > 1440: без горизонтального скролла, цели ≥ 44; окно чата в первом экране 10526ms
+     → page.waitForFunction: Timeout 10000ms exceeded.
+
+ Test Files  1 failed (1)
+      Tests  17 failed | 3 passed (20)
+   Start at  17:12:32
+   Duration  185.98s (transform 655ms, setup 0ms, collect 1.59s, tests 183.91s, environment 0ms, prepare 150ms)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/public-page.test.ts > chromium > SC-US-013-1: без входа — имя компании, окно чата открыто сразу без кражи фокуса; вопрос → ответ с источником; ссылки ведут на /?from=b/{slug}
+ FAIL  tests/browser/public-page.test.ts > firefox > SC-US-013-1: без входа — имя компании, окно чата открыто сразу без кражи фокуса; вопрос → ответ с источником; ссылки ведут на /?from=b/{slug}
+ FAIL  tests/browser/public-page.test.ts > webkit > SC-US-013-1: без входа — имя компании, окно чата открыто сразу без кражи фокуса; вопрос → ответ с источником; ссылки ведут на /?from=b/{slug}
+TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.
+ ❯ panelOpen tests/browser/public-page.test.ts:21:40
+     19| const errors = (found: { severity: string; rule: string; axeRule?: str…
+     20|   found.filter((f) => f.severity === 'error').map((f) => `${f.rule}${f…
+     21| const panelOpen = (page: Page) => page.waitForFunction(() => document.…
+       |                                        ^
+     22|   && document.querySelector('n6-sufler')?.shadowRoot?.querySelector('.…
+     23| 
+ ❯ tests/browser/public-page.test.ts:45:13
+ ❯ open tests/browser/public-page.test.ts:38:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  tests/browser/public-page.test.ts > chromium > dark 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом
+ FAIL  tests/browser/public-page.test.ts > chromium > light 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом
+ FAIL  tests/browser/public-page.test.ts > webkit > dark 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом
+ FAIL  tests/browser/public-page.test.ts > webkit > light 390: R1/R2/R5 и axe (контраст AA) страницы с открытым чатом
+TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.
+ ❯ panelOpen tests/browser/public-page.test.ts:21:40
+     19| const errors = (found: { severity: string; rule: string; axeRule?: str…
+     20|   found.filter((f) => f.severity === 'error').map((f) => `${f.rule}${f…
+     21| const panelOpen = (page: Page) => page.waitForFunction(() => document.…
+       |                                        ^
+     22|   && document.querySelector('n6-sufler')?.shadowRoot?.querySelector('.…
+     23| 
+ ❯ tests/browser/public-page.test.ts:73:17
+ ❯ open tests/browser/public-page.test.ts:38:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  tests/browser/public-page.test.ts > chromium > 320: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > chromium > 360: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > chromium > 768: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > chromium > 1024: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > chromium > 1440: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > webkit > 320: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > webkit > 360: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > webkit > 768: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > webkit > 1024: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+ FAIL  tests/browser/public-page.test.ts > webkit > 1440: без горизонтального скролла, цели ≥ 44; окно чата в первом экране
+TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.
+ ❯ panelOpen tests/browser/public-page.test.ts:21:40
+     19| const errors = (found: { severity: string; rule: string; axeRule?: str…
+     20|   found.filter((f) => f.severity === 'error').map((f) => `${f.rule}${f…
+     21| const panelOpen = (page: Page) => page.waitForFunction(() => document.…
+       |                                        ^
+     22|   && document.querySelector('n6-sufler')?.shadowRoot?.querySelector('.…
+     23| 
+ ❯ tests/browser/public-page.test.ts:81:17
+ ❯ open tests/browser/public-page.test.ts:38:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+

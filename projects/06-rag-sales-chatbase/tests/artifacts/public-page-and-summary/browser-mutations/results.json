@@ -1,0 +1,28 @@
+[
+  {
+    "id": "demo-page-same-origin",
+    "title": "GET /w/v1/config с демо-страницы без Origin не признаётся своим origin (Sec-Fetch-Site не читается) — чата нет",
+    "red": {
+      "code": 1,
+      "summary": "17 failed | 3 passed (20)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "20 passed (20)"
+    },
+    "passed": true
+  },
+  {
+    "id": "demo-page-not-opened",
+    "title": "data-open не открывает окно чата на демо-странице — чат не в первом экране",
+    "red": {
+      "code": 1,
+      "summary": "17 failed | 3 passed (20)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "20 passed (20)"
+    },
+    "passed": true
+  }
+]

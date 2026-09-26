@@ -12,8 +12,8 @@ import { createSourceJobTx, indexJobView, isUuid, type IndexJobRow, type IndexJo
 import { loadAnswerBot, type LoadedAnswerBot } from './answers.js';
 import { transaction } from './quota.js';
 
-const OWNED = `b.id = $1 AND b.account_id = $2 AND b.status = 'active' AND a.status = 'active'`;
-const pair = (botId: unknown, accountId: unknown) => isUuid(botId) && isUuid(accountId);
+export const OWNED = `b.id = $1 AND b.account_id = $2 AND b.status = 'active' AND a.status = 'active'`;
+export const pair = (botId: unknown, accountId: unknown) => isUuid(botId) && isUuid(accountId);
 
 // Предел ботов плана (канон §7: free/nobadge 1, studio 10) — под блокировкой строки аккаунта: CreateBot и
 // ClaimPreview одного аккаунта сериализуются, два одновременных сохранения не превышают предел
@@ -82,13 +82,16 @@ export interface BotCabinet {
   // Ответов бота в текущем месяце МСК (quota_counter bot_month_answers; месяц — по часам БД). Предел — окружение
   // (QUOTA_BOT_MONTH_*), его сравнивает экран: баннер исчерпания (FR-TARIFF-003, SC-US-007-2).
   month_answers_used: number;
+  // Демо-страница /b/{slug} (фича public-page-and-summary): слаг выдаётся при первой публикации и не меняется.
+  public_page: { slug: string | null; enabled: boolean; indexable: boolean };
 }
 // Экран бота и экран установки: настройки, домены и источники с последней задачей. Чужой — null.
 export async function readBotCabinet(pool: Pool, botId: string, accountId: string, now = new Date()): Promise<BotCabinet | null> {
   if (!pair(botId, accountId)) return null;
   const bot = (await pool.query<{ id: string; company_name: string; contact: string | null; greeting: string; public_key: string; plan: unknown;
-    verified: boolean; month_used: number }>(
+    verified: boolean; month_used: number; public_slug: string | null; public_enabled: boolean; public_indexable: boolean }>(
     `SELECT b.id, b.company_name, b.contact, b.greeting, b.public_key, a.plan, b.answers_verified_at IS NOT NULL AS verified,
+       b.public_slug, b.public_enabled, b.public_indexable,
        COALESCE((SELECT q.used FROM quota_counter q WHERE q.scope = 'bot_month_answers' AND q.scope_key = b.id::text
          AND q.period = to_char(now() AT TIME ZONE 'Europe/Moscow', 'YYYY-MM')), 0) AS month_used
      FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED}`,
@@ -103,6 +106,7 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
   return {
     bot_id: bot.id, company_name: bot.company_name, contact: bot.contact, greeting: bot.greeting, public_key: bot.public_key, plan: readAccountPlan(bot.plan),
     origins, answers_verified: bot.verified === true, month_answers_used: Number(bot.month_used),
+    public_page: { slug: bot.public_slug, enabled: bot.public_enabled === true, indexable: bot.public_indexable === true },
     sources: sources.map((row) => ({
       source_id: row.source_id, kind: row.kind === 'pdf' ? 'pdf' : 'site',
       title: row.kind === 'pdf' ? (row.file_name ?? 'PDF') : (row.root_url ?? 'Сайт'),

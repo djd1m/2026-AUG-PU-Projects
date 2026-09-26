@@ -63,7 +63,7 @@ export function createWidgetConfigHandler(deps: WidgetDependencies) {
     const key = new URL(request.url).searchParams.get('bot') ?? '';
     const bot = usableBot(await deps.loadBot(key));
     if (!bot) return notFound();
-    const origin = checkOrigin(requestOrigin(request.headers), bot.row, deps.publicOrigin);
+    const origin = checkOrigin(requestOrigin(request.headers, deps.publicOrigin), bot.row, deps.publicOrigin);
     if (!origin) return refused();
     const required = badgeRequired(bot.row.plan);
     await deps.recordInstall({ botId: bot.row.botId, origin, event: 'first_config' });
@@ -72,7 +72,7 @@ export function createWidgetConfigHandler(deps: WidgetDependencies) {
       new URL(request.url).searchParams.get('vs'));
     return reply(200, { data: {
       company_name: bot.row.companyName, greeting: bot.row.greeting, contact: bot.contact,
-      badge_required: required, badge_href: required ? badgeHref(deps.publicOrigin, origin) : null, visitor_session: token,
+      badge_required: required, badge_href: required ? badgeHref(deps.publicOrigin, origin, bot.row.publicSlug) : null, visitor_session: token,
     } }, origin);
   });
 }
@@ -103,7 +103,7 @@ export function createWidgetEventHandler(deps: WidgetDependencies) {
     const body = read.body;
     const bot = usableBot(await deps.loadBot(body.bot as string));
     if (!bot) return notFound();
-    const origin = checkOrigin(requestOrigin(request.headers), bot.row, deps.publicOrigin);
+    const origin = checkOrigin(requestOrigin(request.headers, deps.publicOrigin), bot.row, deps.publicOrigin);
     if (!origin) return refused();
     const extra = Object.keys(body).find((k) => !['bot', 'visitor_session', 'type'].includes(k));
     if (extra) return fail(400, 'unexpected_field', `Поле «${extra.slice(0, 40)}» не принимается`, origin);

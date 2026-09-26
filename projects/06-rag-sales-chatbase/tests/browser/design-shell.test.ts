@@ -24,6 +24,7 @@ const ARTIFACTS = 'tests/artifacts/design-shell/browser';
 // Те же обёртки, что у page.tsx каждого маршрута (layout.tsx: <html lang data-theme>, viewport без запрета зума).
 const PAGES: Record<string, (theme: Theme) => ReactElement> = {
   landing: theme => createElement(Landing, { theme }),
+  'landing-arrival': theme => createElement(Landing, { theme, arrival: 'Бот как на stomatologia-ulybka-na-arbate.ru — для вашего сайта' }),
   pricing: theme => createElement(Pricing, { theme }),
   login: theme => createElement(Fragment, null, createElement(SiteHeader, { theme }),
     createElement('main', { className: 'center container' }, createElement(AuthForm, {}))),
@@ -49,7 +50,7 @@ beforeAll(async () => {
   try { await preflight(['chromium', 'webkit']); }
   catch (error) { throw new Error(`НЕ ВЫПОЛНЕНО: ${String(error)}`); }
   server = createServer((req, res) => {
-    const match = /^\/(landing|pricing|login|cabinet|states)-(dark|light)\.html$/.exec(req.url ?? '');
+    const match = /^\/(landing-arrival|landing|pricing|login|cabinet|states)-(dark|light)\.html$/.exec(req.url ?? '');
     if (!match) { res.writeHead(404).end(); return; }
     res.setHeader('content-type', 'text/html; charset=utf-8'); res.end(html(match[1]!, match[2] as Theme));
   });
@@ -97,7 +98,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
         await page.screenshot({ path: `${stem}.png`, fullPage: false });
       }));
 
-    for (const name of ['landing', 'pricing', 'login', 'cabinet', 'states']) {
+    for (const name of ['landing', 'landing-arrival', 'pricing', 'login', 'cabinet', 'states']) {
       it(`${name} ${theme} 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов`, () => open(name, theme, { width: 390, height: 844 }, false, async page => {
         expect(errors(await domRules(page, ['R1', 'R2', 'R5']))).toEqual([]);
         expect(errors(await axeRule(page))).toEqual([]);
@@ -106,7 +107,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     }
   }
   // R1 на крайних ширинах и брейкпоинтах FR-LOOK-014 (≈400/736/1112 + 360); скриншоты — улики, не ассерт.
-  for (const width of [320, 360, 414, 768, 1024, 1440]) for (const name of ['landing', 'pricing', 'login', 'cabinet']) {
+  for (const width of [320, 360, 414, 768, 1024, 1440]) for (const name of ['landing', 'landing-arrival', 'pricing', 'login', 'cabinet']) {
     it(`${name} ${width}: без горизонтального скролла, цели ≥ 44`, () => open(name, 'dark', { width, height: width === 1440 ? 900 : 844 }, false, async page => {
       expect(errors(await domRules(page, ['R1', 'R2']))).toEqual([]);
       if (width === 320 || width === 1440) {

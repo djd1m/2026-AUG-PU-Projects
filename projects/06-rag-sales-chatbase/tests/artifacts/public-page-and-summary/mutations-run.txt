@@ -1,0 +1,51 @@
+ Network n6-test_default Creating 
+ Network n6-test_default Creating 
+ Network n6-test_default Created 
+ Network n6-test_default Created 
+ Container n6-test-redis-1 Creating 
+ Container n6-test-db-1 Creating 
+ Container n6-test-db-1 Created 
+ Container n6-test-redis-1 Created 
+ Container n6-test-db-1 Starting 
+ Container n6-test-redis-1 Starting 
+ Container n6-test-db-1 Started 
+ Container n6-test-redis-1 Started 
+ Image n6-sufler-test:foundation Building 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-test-run-07cca4f5c4e3 Creating 
+ Container n6-test-test-run-07cca4f5c4e3 Created 
+summary-counts-preview: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+page-view-no-dedup: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+share-without-shown: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+page-ignores-publication: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+publish-without-contact: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+arrival-overwrite: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+metrics-zero-not-null: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+sweep-drops-logged: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+same-origin-any-site: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+publish-bool-coerce: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+arrival-on-login: дефект возвращён → 1 failed | 52 passed (53) (код 1); код восстановлен → 53 passed (53) (код 0)
+mut exit=0

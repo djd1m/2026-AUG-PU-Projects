@@ -89,6 +89,13 @@ export function PreviewScreen({ jobId, signedIn }: { jobId: string; signedIn: bo
     } catch { setError('Нет связи с сервером. Повторите'); } finally { setSaving(false); }
   }, [jobId, router]);
 
+  // «Поделиться ссылкой на бота» (FR-GROWTH-001): нажатие записывается, затем бот сохраняется в аккаунт — ссылку на
+  // демо-страницу выдаёт кабинет после публикации (A-N6-038 (5)). Сбой записи клика сохранение не отменяет.
+  const share = useCallback(async () => {
+    await fetch(`/api/preview/${encodeURIComponent(jobId)}/share`, { method: 'POST' }).catch(() => undefined);
+    if (signedIn) await save(); else router.push('/login?mode=register&from=preview');
+  }, [jobId, router, save, signedIn]);
+
   if (gone) {
     return <section className="preview-status stack" aria-labelledby="preview-title">
       <h1 id="preview-title" className="page-title">Предпросмотр недоступен</h1>
@@ -99,5 +106,5 @@ export function PreviewScreen({ jobId, signedIn }: { jobId: string; signedIn: bo
   if (!view) return <p role="status" className="muted">Загружаем состояние задачи…</p>;
   if (view.state !== 'done' || !view.site) return <PreviewProgress host={view.site?.host ?? ''} view={view} />;
   return <PreviewChat site={view.site} messages={messages} questionsLeft={left} draft={draft} busy={busy} error={error}
-    signedIn={signedIn} saving={saving} onDraft={setDraft} onAsk={(q) => { void ask(q); }} onSave={() => { void save(); }} />;
+    signedIn={signedIn} saving={saving} onDraft={setDraft} onAsk={(q) => { void ask(q); }} onSave={() => { void save(); }} onShare={() => { void share(); }} />;
 }

@@ -7,6 +7,8 @@
 //
 // Установка: <script src="<N6_PUBLIC_ORIGIN>/w/widget.<hash>.js" data-bot="<public_key>" async></script>
 // Необязательный data-theme="light|dark" на теге; иначе — prefers-color-scheme посетителя (FR-WIDGET-004).
+// Необязательный data-open="true" — окно чата открыто сразу (демо-страница /b/{slug}, public-page-and-summary); фокус при
+// этом НЕ переводится в поле ввода: страница только что загрузилась, и кража фокуса мешает чтению и экранным читалкам.
 import { fetchConfig } from './api';
 import { mountBubble } from './chat-window';
 import { readSession, storeSession } from './session';
@@ -17,13 +19,13 @@ export const HOST_TAG = 'n6-sufler';
 
 function warn(message: string): void { console.warn(`[sufler-widget] ${message}`); }
 
-export function readTag(script: HTMLScriptElement): { base: string; bot: string; theme: 'light' | 'dark' | null } | null {
+export function readTag(script: HTMLScriptElement): { base: string; bot: string; theme: 'light' | 'dark' | null; open: boolean } | null {
   const bot = script.getAttribute('data-bot');
   if (!bot || !PUBLIC_KEY.test(bot)) { warn('атрибут data-bot отсутствует или непригоден — виджет не показан'); return null; }
   let base: string;
   try { base = new URL(script.src).origin; } catch { warn('адрес скрипта не разбирается — виджет не показан'); return null; }
   const theme = script.getAttribute('data-theme');
-  return { base, bot, theme: theme === 'light' || theme === 'dark' ? theme : null };
+  return { base, bot, theme: theme === 'light' || theme === 'dark' ? theme : null, open: script.getAttribute('data-open') === 'true' };
 }
 
 async function boot(script: HTMLScriptElement): Promise<void> {
@@ -39,7 +41,7 @@ async function boot(script: HTMLScriptElement): Promise<void> {
   if (tag.theme) host.setAttribute('data-theme', tag.theme);
   const root = host.attachShadow({ mode: 'open' });
   if (!adoptStyles(root)) { warn('браузер без adoptedStyleSheets — виджет не показан (инлайновые стили запрещены CSP хозяина)'); return; }
-  mountBubble(root, config, { base: tag.base, bot: tag.bot, visitorSession: config.visitor_session });
+  mountBubble(root, config, { base: tag.base, bot: tag.bot, visitorSession: config.visitor_session }, { openAtStart: tag.open });
   document.body.appendChild(host);
 }
 

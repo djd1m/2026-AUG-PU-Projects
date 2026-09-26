@@ -21,6 +21,10 @@ import { createWidgetBundleHandler, readWidgetBundle } from '../../apps/web/src/
 import { createWidgetAskHandler, type WidgetAskDependencies } from '../../apps/web/src/server/widget-ask-handler';
 import { answerQuestion, type AnswerResult, type HistoryTurn } from '../../packages/rag/src/index';
 import { answerHarness, fakeAnswerGateway, MODELS } from '../fixtures/fake-answer-gateway';
+import { readFileSync } from 'node:fs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { PublicPageView } from '../../apps/web/src/app/b/[slug]/PublicPageView';
 
 export const WIDGET_PORT = 18411;
 export const WIDGET = `http://127.0.0.1:${WIDGET_PORT}`;
@@ -34,12 +38,17 @@ export const ANSWER = 'Доставка по Москве — от 350 ₽.';
 export const VISITOR_LIMIT = 3;   // предел ответов на сессию в оснастке (канон — 20; здесь меньше, чтобы упереться в браузере)
 export const CONTACT = 'info@kolos.ru';
 
+// Фича public-page-and-summary: бот с ОПУБЛИКОВАННОЙ демо-страницей /b/{PUBLIC_SLUG} на «нашем» origin WIDGET (свой origin
+// пропускается CheckOrigin только при public_enabled) и без единого домена хозяина.
+export const KEY_PUBLIC = 'PubBotKey0123456789abc';
+export const PUBLIC_SLUG = 'pekarnya-kolos-ab12';
 const BOT_IDS: Record<string, string> = { [KEY_FREE]: '11111111-1111-4111-8111-111111111111', [KEY_PAID]: '22222222-2222-4222-8222-222222222222',
-  [KEY_UNVERIFIED]: '33333333-3333-4333-8333-333333333333' };
+  [KEY_UNVERIFIED]: '33333333-3333-4333-8333-333333333333', [KEY_PUBLIC]: '77777777-7777-4777-8777-777777777777' };
 const bot = (key: string, plan: string, answersVerified = true): WidgetBotRow => ({ botId: BOT_IDS[key]!,
   status: 'active', companyName: 'Пекарня «Колос»', greeting: 'Здравствуйте! Спросите про доставку и цены.', contact: CONTACT, publicEnabled: false, plan,
-  accountStatus: 'active', origins: [HOST], answersVerified });
-export const BOTS: Record<string, WidgetBotRow> = { [KEY_FREE]: bot(KEY_FREE, 'free'), [KEY_PAID]: bot(KEY_PAID, 'nobadge'), [KEY_UNVERIFIED]: bot(KEY_UNVERIFIED, 'free', false) };
+  accountStatus: 'active', origins: [HOST], answersVerified, publicSlug: null });
+export const BOTS: Record<string, WidgetBotRow> = { [KEY_FREE]: bot(KEY_FREE, 'free'), [KEY_PAID]: bot(KEY_PAID, 'nobadge'), [KEY_UNVERIFIED]: bot(KEY_UNVERIFIED, 'free', false),
+  [KEY_PUBLIC]: { ...bot(KEY_PUBLIC, 'free'), publicEnabled: true, origins: [], publicSlug: PUBLIC_SLUG } };
 
 export interface Logged { method: string; path: string; origin: string | null; status: number; acao: string[]; body?: string }
 export interface Harness {
@@ -88,6 +97,22 @@ async function send(res: ServerResponse, response: Response): Promise<void> {
   response.headers.forEach((value, name) => res.setHeader(name, value));
   res.end(Buffer.from(await response.arrayBuffer()));
 }
+// Демо-страница на «нашем» origin: НАСТОЯЩАЯ разметка PublicPageView с НАСТОЯЩИМ globals.css и тем же тегом виджета, что
+// ставит app/b/[slug]/page.tsx (data-open). `unpublished-kolos` — оболочка страницы бота БЕЗ публикации: в продукте
+// такой страницы нет (404), здесь проверяется второй рубеж — виджет на своём origin без public_enabled не показывается.
+const CSS = readFileSync('apps/web/src/app/globals.css', 'utf8');
+const PAGE_KEYS: Record<string, string> = { [PUBLIC_SLUG]: KEY_PUBLIC, 'unpublished-kolos': KEY_FREE };
+function publicPage(slug: string, bundleFile: string, theme: 'dark' | 'light'): Response {
+  const key = PAGE_KEYS[slug];
+  if (!key) return new Response('Not found', { status: 404 });
+  const markup = renderToStaticMarkup(createElement(PublicPageView, { theme, slug, companyName: 'Пекарня «Колос»', greeting: 'Здравствуйте! Спросите про доставку и цены.' }));
+  const html = `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex, nofollow">
+<title>Пекарня «Колос» — чат с ИИ-помощником</title><style>${CSS}</style></head><body>${markup}
+<script src="/w/${bundleFile}" data-bot="${key}" data-open="true" async></script></body></html>`;
+  return new Response(html, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } });
+}
+
 function listen(server: Server, port: number): Promise<void> {
   return new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', () => resolve()); });
 }
@@ -140,6 +165,7 @@ export async function startHarness(): Promise<Harness> {
       else if (path === '/w/v1/event') response = await event(request);
       else if (path === '/w/v1/ask') response = await ask(request);
       else if (path.startsWith('/w/')) response = await bundleHandler(request, path.slice(3));
+      else if (path.startsWith('/b/')) response = publicPage(path.slice(3), bundle.file, new URL(request.url).searchParams.get('theme') === 'light' ? 'light' : 'dark');
       else response = new Response('Not found', { status: 404 });
       const body = path === '/w/v1/ask' && request.method === 'POST' ? await response.clone().text() : undefined;
       log.push({ method: request.method, path, origin: request.headers.get('origin'), status: response.status,

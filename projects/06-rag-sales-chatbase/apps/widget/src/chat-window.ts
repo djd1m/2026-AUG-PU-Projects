@@ -73,7 +73,7 @@ export function renderReply(result: AskResult, contact: string): HTMLLIElement {
   return item;
 }
 
-export function mountBubble(root: ShadowRoot, config: WidgetConfig, ctx: WidgetContext): HTMLButtonElement {
+export function mountBubble(root: ShadowRoot, config: WidgetConfig, ctx: WidgetContext, options: { openAtStart?: boolean } = {}): HTMLButtonElement {
   const shell = el('div', 'n6');
   const bubble = el('button', 'bubble');
   bubble.type = 'button';
@@ -85,12 +85,12 @@ export function mountBubble(root: ShadowRoot, config: WidgetConfig, ctx: WidgetC
 
   let panel: HTMLElement | null = null;
   let input: HTMLInputElement | null = null;
-  const open = () => {
+  const open = (focus = true) => {
     panel ??= buildPanel(root, shell, config, ctx, close);
     panel.hidden = false;
     bubble.setAttribute('aria-expanded', 'true');
     input = panel.querySelector('input');
-    input?.focus();
+    if (focus) input?.focus();
   };
   const close = () => {
     if (!panel) return;
@@ -99,6 +99,7 @@ export function mountBubble(root: ShadowRoot, config: WidgetConfig, ctx: WidgetC
     bubble.focus();
   };
   bubble.addEventListener('click', () => (panel && !panel.hidden ? close() : open()));
+  if (options.openAtStart) open(false);
   return bubble;
 }
 

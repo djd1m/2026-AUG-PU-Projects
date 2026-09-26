@@ -19,7 +19,7 @@ const PREFIX = '203.0.113.0/24';
 const VS = issueVisitorToken(SECRET, { botId: BOT_ID, origin: HOST, ipPrefix: PREFIX });
 const VS_ID = VS.split('.')[0]!;
 const row = (over: Partial<WidgetBotRow> = {}): WidgetBotRow => ({ botId: BOT_ID, status: 'active', companyName: 'Пекарня «Колос»',
-  greeting: 'Здравствуйте!', contact: '+7 900 000-00-00', publicEnabled: false, plan: 'free', accountStatus: 'active', origins: [HOST], answersVerified: true, ...over });
+  greeting: 'Здравствуйте!', contact: '+7 900 000-00-00', publicEnabled: false, plan: 'free', accountStatus: 'active', origins: [HOST], answersVerified: true, publicSlug: null, ...over });
 
 function harness(bot: WidgetBotRow | null = row()) {
   const installs: Array<{ origin: string; event: string }> = [];

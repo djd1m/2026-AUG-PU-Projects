@@ -24,7 +24,7 @@ const SITE = { host: 'stomatologia-ulybka.ru', title: 'Стоматология 
   suggestions: ['Сколько стоят ваши услуги?', 'Как записаться?', 'Как с вами связаться?'] };
 const noop = () => {};
 const chat = (messages: ChatMessage[]) => createElement(PreviewChat, { site: SITE, messages, questionsLeft: 7, draft: '', busy: false, error: '',
-  signedIn: false, saving: false, onDraft: noop, onAsk: noop, onSave: noop });
+  signedIn: false, saving: false, onDraft: noop, onAsk: noop, onSave: noop, onShare: noop });
 const MESSAGES: ChatMessage[] = [
   { kind: 'question', text: 'Сколько стоит чистка зубов?' },
   { kind: 'answered', text: 'Профессиональная гигиена — 4 500 ₽, приём длится около часа.', firstAnswer: true,
@@ -120,6 +120,9 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     expect(await page.locator('.source-quote a').getAttribute('rel')).toContain('noopener');
     expect(await page.locator('.source-quote a').getAttribute('href')).toBe('https://stomatologia-ulybka.ru/ceny');
     expect(await page.locator('.aha').count()).toBe(1);
+    // FR-GROWTH-001: оба действия CTA (фича public-page-and-summary добавила «Поделиться ссылкой на бота»).
+    expect(await page.locator('.aha').getByRole('button', { name: 'Поделиться ссылкой на бота' }).count()).toBe(1);
+    expect(await page.locator('.aha').getByRole('link', { name: 'Сохранить бота и поставить на сайт' }).count()).toBe(1);
     expect(await page.locator('.powered').textContent()).toBe('Работает на Суфлёре');
   }));
 });

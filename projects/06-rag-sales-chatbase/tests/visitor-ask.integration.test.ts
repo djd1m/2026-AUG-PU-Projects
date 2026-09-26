@@ -288,6 +288,26 @@ describe.skipIf(!databaseUrl)('POST /w/v1/ask на настоящем Postgres +
     for (const vs of visitors) expect(await used('visitor_answers', idOf(vs))).toBeLessThanOrEqual(4);
   });
 
+  it('фича 13, AC-13 (FR-GROWTH-005 @security): вопросы с ДЕМО-СТРАНИЦЫ (свой origin) идут через ту же квоту — после 60-го с одного /24 отказ 429, модель не зовётся, установки нет', async () => {
+    const w = wire();
+    const s = await seed({ plan: 'nobadge', publicEnabled: true, origins: [] });
+    const ip = (i: number) => `100.64.21.${i + 1}`;
+    const visitors = await Promise.all(Array.from({ length: 20 }, (_, i) => w.token(s.key, PUBLIC, ip(i))));
+    const results = await Promise.all(visitors.flatMap((vs, i) => Array.from({ length: 4 }, (_, k) =>
+      w.ask(s.key, { visitor_session: vs, question: `Доставка ${i}-${k}?` }, PUBLIC, ip(i)))));
+    expect(results.filter((r) => r.status === 200)).toHaveLength(60);
+    const refused = results.filter((r) => r.status === 429);
+    expect(refused).toHaveLength(20);
+    expect(refused.every((r) => r.body.error?.contact === CONTACT && acao(r.r)[0] === PUBLIC)).toBe(true);
+    expect(w.h.gateway.chats).toHaveLength(60);
+    expect(await used('ip_answers', '100.64.21.0/24')).toBe(60);
+    expect((await pool.query('SELECT count(*)::int AS n FROM widget_install WHERE bot_id = $1', [s.bot])).rows[0].n).toBe(0);
+    // Снятая публикация — свой origin больше не пропускается: 403 без ACAO, без списания.
+    await pool.query('UPDATE bot SET public_enabled = false WHERE id = $1', [s.bot]);
+    const off = await w.ask(s.key, { visitor_session: visitors[0]!, question: 'Доставка?' }, PUBLIC, ip(0));
+    expect([off.status, acao(off.r)]).toEqual([403, []]);
+  });
+
   it('общий суточный предел global_answers (конкурентно): при остатке 7 из разных /24 и ботов — ровно 7 ответов', async () => {
     const base = loadCeilings(environment());
     const already = await used('global_answers', 'all');

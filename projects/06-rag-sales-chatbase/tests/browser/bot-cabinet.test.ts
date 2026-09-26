@@ -14,6 +14,7 @@ import { preflight } from '../../scripts/responsive/input.mjs';
 import { AddSource, BotForm, BotListSection, OwnerChat, SourceList, type BotListView, type OwnerMessage, type SourceItemView } from '../../apps/web/src/app/dashboard/CabinetViews';
 import { InstallView, type InstallViewProps } from '../../apps/web/src/app/dashboard/InstallViews';
 import { BotLayout } from '../../apps/web/src/app/dashboard/bots/[botId]/BotScreen';
+import { MonthBanner, PublishBlock, SummaryBlock, VerifyBlock } from '../../apps/web/src/app/dashboard/bots/[botId]/BotExtrasViews';
 import { SiteHeader } from '../../apps/web/src/app/SiteHeader';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: () => {}, replace: () => {}, refresh: () => {} }) }));
 
@@ -66,6 +67,25 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
     sourcesBlock: createElement(SourceList, { sources: [], retrying: null, errors: {}, onRetry: noop }),
     chat: createElement(OwnerChat, { companyName: 'Новый бот', messages: [], draft: '', busy: false, error: '', ready: false, onDraft: noop, onAsk: noop }),
     settings: form() })),
+  // Фича public-page-and-summary (+ carry_over фичи 12): сводка, отметка «проверено», демо-страница, баннер месяца.
+  extras: main(createElement(BotLayout, { botId: BOT, companyName: 'Стоматология «Улыбка»', contact: '+7 900 000-00-00', greeting: '', sources: [], ready: true,
+    sourcesBlock: createElement(SourceList, { sources: [], retrying: null, errors: {}, onRetry: noop }),
+    chat: createElement(OwnerChat, { companyName: 'Стоматология «Улыбка»', messages: [], draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
+    settings: form(), banner: createElement(MonthBanner, { used: 300, limit: 300 }),
+    summary: createElement(SummaryBlock, { summary: { answered: 40, unknown: 6, refused_limit: 2, last_unknown: [
+      { text: 'Есть ли парковка у клиники на Арбате и сколько она стоит для пациентов в выходные дни?', asked_at: '2026-09-25T09:15:00.000Z' },
+      { text: 'Делаете ли вы имплантацию под общим наркозом?', asked_at: '2026-09-24T18:02:00.000Z' }] } }),
+    verify: createElement(VerifyBlock, { verified: false, busy: false, error: '', onToggle: noop }),
+    publish: createElement(PublishBlock, { page: { slug: 'stomatologiya-ulybka-ab12', enabled: true, indexable: false,
+      url: `${ORIGIN}/b/stomatologiya-ulybka-ab12` }, busy: false, error: '', onPublish: noop, onIndexable: noop }) })),
+  'extras-empty': main(createElement(BotLayout, { botId: BOT, companyName: 'Новый бот', contact: '', greeting: '', sources: [], ready: false,
+    sourcesBlock: createElement(SourceList, { sources: [], retrying: null, errors: {}, onRetry: noop }),
+    chat: createElement(OwnerChat, { companyName: 'Новый бот', messages: [], draft: '', busy: false, error: '', ready: false, onDraft: noop, onAsk: noop }),
+    settings: form(), banner: createElement(MonthBanner, { used: 3, limit: 300 }),
+    summary: createElement(SummaryBlock, { summary: { answered: 0, unknown: 0, refused_limit: 0, last_unknown: [] } }),
+    verify: createElement(VerifyBlock, { verified: true, busy: false, error: 'Дождитесь окончания загрузки материалов и проверьте ответы по ним', onToggle: noop }),
+    publish: createElement(PublishBlock, { page: { slug: null, enabled: false, indexable: false, url: null }, busy: false,
+      error: 'Укажите контакт для «не знаю» в настройках — без него бот не отвечает и страницу публиковать нечем', onPublish: noop, onIndexable: noop }) })),
   'install-contact': main(install({ errors: { contact: 'Не похоже на контакт. Почта (info@example.ru), телефон (+7 900 000-00-00) или ссылка https://…' } })),
   'install-missing': main(install({ snippet: { kind: 'bundle_missing', directives: DIRECTIVES }, contact: '+7 900 000-00-00' })),
   'install-ready': main(install({ snippet: { kind: 'ready', directives: DIRECTIVES, tag: `<script src="${ORIGIN}/w/widget.0a1b2c3d.js" data-bot="AbCdEfGhIjKlMnOpQrStUv" async></script>` },
@@ -115,7 +135,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
       expect(errors(await textZoomRule(page))).toEqual([]);
     }));
   }
-  for (const width of [320, 360, 414, 768, 1024, 1440]) for (const name of ['list', 'bot', 'install-ready']) {
+  for (const width of [320, 360, 414, 768, 1024, 1440]) for (const name of ['list', 'bot', 'install-ready', 'extras']) {
     it(`${name} ${width}: без горизонтального скролла, цели ≥ 44`, () => open(name, 'dark', { width, height: width === 1440 ? 900 : 844 }, async page => {
       expect(errors(await domRules(page, ['R1', 'R2']))).toEqual([]);
       if (width === 320 || width === 1440) {
@@ -147,6 +167,27 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     expect(await page.getByRole('button', { name: 'Скопировать код' }).count()).toBe(1);
     expect(await page.locator('.csp-list li').allTextContents()).toEqual(DIRECTIVES);
     expect(await page.locator('.origin-list li').allTextContents()).toContain('https://stomatologia-ulybka.ru');
+  }));
+  it('SC-US-010-1, SC-US-013, carry_over 12: сводка числами без процентов, вопросы «не знаю» и «Добавить материалы» к источникам; ссылка на страницу; баннер называет тестовый чат', () => open('extras', 'dark', { width: 390, height: 844 }, async page => {
+    const summary = page.locator('section[aria-labelledby="summary-title"]');
+    expect(await summary.locator('.summary-counts li').allTextContents()).toEqual(['40 ответил', '6 не знал', '2 отказов по лимиту']);
+    expect(await summary.textContent()).not.toContain('%');
+    expect(await summary.locator('.question-list li').count()).toBe(2);
+    expect(await summary.getByRole('link', { name: 'Добавить материалы' }).getAttribute('href')).toBe('#sources-title');
+    expect(await page.locator('#sources-title').count()).toBe(1);
+    expect(await page.getByRole('link', { name: `${ORIGIN}/b/stomatologiya-ulybka-ab12` }).count()).toBe(1);
+    expect(await page.getByRole('button', { name: 'Снять публикацию' }).count()).toBe(1);
+    expect(await page.getByRole('checkbox', { name: 'Разрешить поисковикам показывать страницу' }).isChecked()).toBe(false);
+    expect(await page.getByRole('button', { name: 'Я проверил ответы бота' }).count()).toBe(1);
+    expect(await page.getByRole('alert').first().textContent()).toContain('Тестовые вопросы в кабинете расходуют тот же лимит');
+  }));
+  it('SC-US-010-2: пусто — «Вопросов ещё не было», без нулей и процентов; не опубликовано — «Опубликовать страницу»; баннера нет до предела', () => open('extras-empty', 'light', { width: 390, height: 844 }, async page => {
+    const summary = page.locator('section[aria-labelledby="summary-title"]');
+    expect(await summary.textContent()).toContain('Вопросов ещё не было');
+    expect(await summary.locator('.summary-counts').count()).toBe(0);
+    expect(await page.getByRole('button', { name: 'Опубликовать страницу' }).count()).toBe(1);
+    expect(await page.getByRole('button', { name: 'Снять отметку' }).count()).toBe(1);
+    expect(await page.textContent('main')).not.toContain('Месячный лимит ответов исчерпан');
   }));
   it('виджет не собран — кода нет, честное уведомление', () => open('install-missing', 'light', { width: 390, height: 844 }, async page => {
     expect(await page.locator('pre.snippet').count()).toBe(0);

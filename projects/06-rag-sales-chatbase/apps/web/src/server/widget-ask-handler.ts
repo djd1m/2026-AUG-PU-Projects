@@ -45,7 +45,7 @@ export function createWidgetAskHandler(deps: WidgetAskDependencies) {
     const bot = usableBot(await deps.loadBot(new URL(request.url).searchParams.get('bot') ?? ''));
     if (!bot) return notFound();
     // SC-US-008-1: чужой origin — 403 без ACAO, тело не читается, квота не списывается, модель не зовётся.
-    const origin = checkOrigin(requestOrigin(request.headers), bot.row, deps.publicOrigin);
+    const origin = checkOrigin(requestOrigin(request.headers, deps.publicOrigin), bot.row, deps.publicOrigin);
     if (!origin) {
       try { await deps.logRefusedOrigin(bot.row.botId); } catch { log('Виджет: исход refused_origin не записан'); }
       return refused();
