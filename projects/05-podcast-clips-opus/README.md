@@ -78,7 +78,7 @@ bash ../../scripts/check-port-conflicts.sh .         # порты этой ма�
 
 ```bash
 cp .env.example .env        # заполнить секреты (openssl rand -hex 24); потолки и N5_PUBLIC_ORIGIN дефолтов НЕ имеют
-docker compose --project-directory . --env-file .env --profile test run --rm --build test   # 904 теста на реальных PostgreSQL, Redis, MinIO
+docker compose --project-directory . --env-file .env --profile test run --rm --build test   # 941 тест на реальных PostgreSQL, Redis, MinIO
 docker compose --project-directory . --env-file .env --profile test --profile edge up -d --build
 ```
 
@@ -118,7 +118,7 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 ├── apps/web/              # Next.js: экраны, tRPC, сессии, квоты, подпись ссылок S3
 ├── apps/worker/           # один образ на три обработчика: stt, select, render (+ модель детектора лиц)
 ├── packages/              # db (миграции), shared (перечисления, геометрия метки, таймкоды), s3, queue
-├── tests/                 # 103 файла, 904 теста
+├── tests/                 # 107 файлов, 941 тест
 ├── scripts/               # проверки стыков, мутационные испытания стражей, переключение домена
 ├── proxy/Caddyfile
 └── docs/
@@ -137,6 +137,6 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 | Phase 2 — Validation | ✅ 21.09.2026, вердикт 🟡 CAVEATS (46 находок, блокеров не осталось) |
 | Phase 3 — Toolkit | ✅ 21.09.2026 |
 | Phase 4 — Finalize | ✅ |
-| Реализация | ✅ 12 фич MVP + 15 после живого прогона (кадр, субтитры, таймкоды, музыка, библиотека, пэк-шот, заголовок) + справедливость партнёрки + уплотнение пауз + смена музыки у клипа + прибор мобильной вёрстки + исправления мобильной вёрстки + тёмная тема + карточка клипа + призыв в конце клипа (27a), все `done`; 904 теста зелёные; прогон с нуля пройден (24.09.2026) |
+| Реализация | ✅ 12 фич MVP + 15 после живого прогона (кадр, субтитры, таймкоды, музыка, библиотека, пэк-шот, заголовок) + справедливость партнёрки + уплотнение пауз + смена музыки у клипа + прибор мобильной вёрстки + исправления мобильной вёрстки + тёмная тема + карточка клипа + призыв в конце клипа (надпись в кадре и кнопка на /c/), все `done`; 941 тест зелёные; прогон с нуля пройден (24.09.2026) |
 | Живой прогон | ✅ запись 88,4 мин → 7 клипов за 12 мин 39 с (23.09.2026) |
 | Выпуск на короткий домен | ✅ `clipmkr.ru` с 24.09.2026, стенд собран из `main` |

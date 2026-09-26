@@ -829,10 +829,10 @@
     {
       "id": "clip-cta",
       "number": 27,
-      "title": "Призыв в конце клипа (27a: выбор и кнопка на /c/)",
-      "description": "OWN-018, ADR-017, FR-RESULT-006, A-2509-04. 27a done: выбор при загрузке/на экране записи, video.setCta, кнопка на /c/. 27b (надпись в кадре + пересборка всех клипов записи) — в очереди.",
+      "title": "Призыв в конце клипа: выбор, кнопка на /c/, надпись в кадре, пересборка",
+      "description": "OWN-018, ADR-017, FR-RESULT-006, A-2509-04. 27a — выбор при загрузке/на экране записи, video.setCta, кнопка на /c/; 27b — надпись в кадре (cta-overlay, fail-closed), пакетная пересборка клипов записи.",
       "priority": "post-mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "clip-card"
@@ -850,7 +850,8 @@
         "packages/db/migrations/020_clip_cta.sql",
         "apps/web/src/server/video-cta.ts",
         "apps/web/src/app/videos/CtaFields.tsx",
-        "tests/clip-cta.test.ts"
+        "tests/clip-cta.test.ts",
+        "apps/worker/src/render/cta-overlay.ts"
       ]
     }
   ]
