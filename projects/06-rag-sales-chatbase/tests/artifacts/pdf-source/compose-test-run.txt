@@ -1,0 +1,269 @@
+ Network n6-test_default Creating 
+ Network n6-test_default Created 
+ Container n6-test-db-1 Creating 
+ Container n6-test-redis-1 Creating 
+ Container n6-test-redis-1 Created 
+ Container n6-test-db-1 Created 
+ Container n6-test-db-1 Starting 
+ Container n6-test-redis-1 Starting 
+ Container n6-test-redis-1 Started 
+ Container n6-test-db-1 Started 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 671B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.88kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 1.26kB done
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 64.08MB 0.5s done
+#6 DONE 0.5s
+
+#7 [deps 2/9] WORKDIR /app
+#7 CACHED
+
+#8 [deps 3/9] COPY package.json package-lock.json ./
+#8 DONE 0.4s
+
+#9 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#9 DONE 0.1s
+
+#10 [deps 5/9] COPY apps/worker/package.json ./apps/worker/
+#10 DONE 0.2s
+
+#11 [deps 6/9] COPY packages/db/package.json ./packages/db/
+#11 DONE 0.1s
+
+#12 [deps 7/9] COPY packages/rag/package.json ./packages/rag/
+#12 DONE 0.1s
+
+#13 [deps 8/9] COPY packages/queue/package.json ./packages/queue/
+#13 DONE 0.1s
+
+#14 [deps 9/9] RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
+#14 3.069 npm warn deprecated cron-parser@4.9.0: v4 is no longer maintained, upgrade to v5
+#14 136.3 
+#14 136.3 added 125 packages, and audited 131 packages in 2m
+#14 136.3 
+#14 136.3 27 packages are looking for funding
+#14 136.3   run `npm fund` for details
+#14 136.3 
+#14 136.3 4 vulnerabilities (3 moderate, 1 high)
+#14 136.3 
+#14 136.3 To address all issues (including breaking changes), run:
+#14 136.3   npm audit fix --force
+#14 136.3 
+#14 136.3 Run `npm audit` for details.
+#14 136.3 npm notice
+#14 136.3 npm notice New major version of npm available! 10.9.8 -> 12.1.0
+#14 136.3 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+#14 136.3 npm notice To update run: npm install -g npm@12.1.0
+#14 136.3 npm notice
+#14 DONE 136.5s
+
+#15 [build 1/2] COPY . .
+#15 DONE 0.8s
+
+#16 [build 2/2] RUN npm run build
+#16 0.542 
+#16 0.542 > n6-sufler@0.1.0 build
+#16 0.542 > npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#16 0.542 
+#16 0.753 
+#16 0.753 > @n6/rag@0.1.0 build
+#16 0.753 > tsc -p tsconfig.json
+#16 0.753 
+#16 3.668 
+#16 3.668 > @n6/db@0.1.0 build
+#16 3.668 > tsc -p tsconfig.json
+#16 3.668 
+#16 7.108 
+#16 7.108 > @n6/queue@0.1.0 build
+#16 7.108 > tsc -p tsconfig.json
+#16 7.108 
+#16 9.878 
+#16 9.878 > @n6/worker@0.1.0 build
+#16 9.878 > tsc -p tsconfig.json && node -e "require('node:fs').copyFileSync('src/pdf/extract-child.mjs', 'dist/pdf/extract-child.mjs')"
+#16 9.878 
+#16 12.91 
+#16 12.91 > @n6/web@0.1.0 build
+#16 12.91 > next build && tsc -p tsconfig.preflight.json
+#16 12.91 
+#16 14.47 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#16 14.47 This information is used to shape Next.js' roadmap and prioritize features.
+#16 14.47 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#16 14.47 https://nextjs.org/telemetry
+#16 14.47 
+#16 14.60    ▲ Next.js 15.5.25
+#16 14.60    - Experiments (use with caution):
+#16 14.60      · cpus: 2
+#16 14.60 
+#16 14.73    Creating an optimized production build ...
+#16 26.36  ✓ Compiled successfully in 8.2s
+#16 26.37    Linting and checking validity of types ...
+#16 30.76    Collecting page data ...
+#16 32.87    Generating static pages (0/5) ...
+#16 33.85    Generating static pages (1/5) 
+#16 33.85    Generating static pages (2/5) 
+#16 33.85    Generating static pages (3/5) 
+#16 33.85  ✓ Generating static pages (5/5)
+#16 35.69    Finalizing page optimization ...
+#16 35.69    Collecting build traces ...
+#16 46.71 
+#16 46.71 Route (app)                                  Size  First Load JS
+#16 46.71 ┌ ƒ /api/auth/login                         139 B         102 kB
+#16 46.71 ├ ƒ /api/auth/logout                        139 B         102 kB
+#16 46.71 ├ ƒ /api/auth/register                      139 B         102 kB
+#16 46.71 ├ ƒ /api/bots/[botId]/sources               139 B         102 kB
+#16 46.71 ├ ƒ /api/index-jobs/[id]                    139 B         102 kB
+#16 46.71 └ ƒ /health                                 139 B         102 kB
+#16 46.71 + First Load JS shared by all              101 kB
+#16 46.71   ├ chunks/87c73c54-24122e7b92478d00.js   54.2 kB
+#16 46.71   ├ chunks/956-915b2f7c381780d8.js        45.6 kB
+#16 46.71   └ other shared chunks (total)           1.59 kB
+#16 46.71 
+#16 46.71 Route (pages)                                Size  First Load JS
+#16 46.71 ─ ○ /404                                    180 B         107 kB
+#16 46.71 + First Load JS shared by all              107 kB
+#16 46.71   ├ chunks/framework-9d5fabc6d68642b8.js  68.7 kB
+#16 46.71   ├ chunks/main-e7f3731ffdf0a93c.js       36.9 kB
+#16 46.71   └ other shared chunks (total)           1.66 kB
+#16 46.71 
+#16 46.71 ○  (Static)   prerendered as static content
+#16 46.71 ƒ  (Dynamic)  server-rendered on demand
+#16 46.71 
+#16 DONE 49.4s
+
+#17 exporting to image
+#17 exporting layers
+#17 exporting layers 48.6s done
+#17 exporting manifest sha256:ec755498ca1b238378774db3a1afc236ffc330697467cc9f92338e8fd129f3eb 0.0s done
+#17 exporting config sha256:e384380ff4be474eb8a02fac2aa88812f3e5cd3e52b381476e9ddd60cef4235a 0.0s done
+#17 exporting attestation manifest sha256:68e3d8ddfdcf9d7254eb43b93882682ec08eb19a08a88fad13304eaf62b58241 0.0s done
+#17 exporting manifest list sha256:b3fcb0b14f5208ac44f822893cf95aadc717744ce2ee0976183994c8e6e16da4 0.0s done
+#17 naming to docker.io/library/n6-sufler-test:foundation done
+#17 unpacking to docker.io/library/n6-sufler-test:foundation
+#17 unpacking to docker.io/library/n6-sufler-test:foundation 9.2s done
+#17 DONE 57.9s
+
+#18 resolving provenance for metadata file
+#18 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-test-run-c4541f8b3ca9 Creating 
+ Container n6-test-test-run-c4541f8b3ca9 Created 
+
+> n6-sufler@0.1.0 test
+> node scripts/test.mjs --run
+
+
+ RUN  v3.2.7 /app
+
+ ✓ tests/index-job.fence.test.ts (12 tests) 604ms
+ ✓ tests/pdf-boundary.test.ts (26 tests) 201ms
+ ✓ tests/pdf-job.integration.test.ts (13 tests) 3587ms
+   ✓ PDF в задаче индексации на настоящем Postgres > SC-US-004-1: 12 страниц → done, страницы «прайс.pdf#с. N» с content_hash, прогресс 12 из 12, файл удалён  585ms
+   ✓ PDF в задаче индексации на настоящем Postgres > SC-US-004-2 скан без текстового слоя → failed(() => (0,__vite_ssr_import_15__.scanPdf)(10, 0)), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  446ms
+   ✓ PDF в задаче индексации на настоящем Postgres > шифрованный → failed(() => buildPdf([{ text: PRICE_LINES }], { encrypt: true })), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  388ms
+   ✓ PDF в задаче индексации на настоящем Postgres > битый → failed(() => Buffer.from("%PDF-1.7\nэто не PDF: ни объектов, ни xref, ни trailer\n", "utf8")), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  379ms
+   ✓ PDF в задаче индексации на настоящем Postgres > 101 страница → failed(() => (0,__vite_ssr_import_15__.multiPagePdf)(101)), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  399ms
+   ✓ PDF в задаче индексации на настоящем Postgres > фенс перехвачен во время разбора → stale, файл НЕ удалён (он нужен новой попытке), страниц не записано  566ms
+   ✓ PDF в задаче индексации на настоящем Postgres > маршрут целиком на настоящей БД: 202 → строка задачи ЕСТЬ и файл под её id ЕСТЬ; повтор — тот же id  528ms
+ ✓ tests/quota.concurrency.test.ts (11 tests) 1316ms
+   ✓ Квота на настоящем Postgres: два оператора, откат всех scope, конкурентность > прогон 6, добросовестный NAT: 60 разных посетителей за одним префиксом одновременно → 60 без ложных отказов, 61-й — ip_answers  356ms
+ ✓ tests/crawl.test.ts (17 tests) 1781ms
+   ✓ Обход > не text/html пропускается без чтения тела; не-2xx — http_error; зависшая страница — timeout  308ms
+   ✓ Обход > корень не отвечает → unreachable  609ms
+   ✓ Обход > вежливость: между началами любых запросов — не меньше паузы (1 поток)  602ms
+ ✓ tests/database.integration.test.ts (10 tests) 1382ms
+   ✓ PostgreSQL + pgvector: миграции, ограничения, сессии > 12 конкурентных регистраций оставляют один аккаунт и одну сессию; cookie дубля не авторизует  334ms
+   ✓ PostgreSQL + pgvector: миграции, ограничения, сессии > вход: верный пароль даёт сессию, неверный и erasing — нет  321ms
+ ✓ tests/ssrf.test.ts (78 tests) 150ms
+ ✓ tests/pdf-extract.test.ts (23 tests) 19373ms
+   ✓ ExtractPdf: обычные документы > SC-US-004-1: текстовый PDF с кириллицей → текст страницы  590ms
+   ✓ ExtractPdf: обычные документы > многостраничный (12 страниц) → по тексту на страницу в порядке документа  510ms
+   ✓ ExtractPdf: обычные документы > ровно 100 страниц — предел включительно  658ms
+   ✓ ExtractPdf: честные отказы > SC-US-004-2: скан без текстового слоя → no_text_layer, а не пустой успех  387ms
+   ✓ ExtractPdf: честные отказы > граница 90 %: 9 из 10 страниц без текста — отказ; 8 из 10 — успех  1117ms
+   ✓ ExtractPdf: честные отказы > шифрованный PDF с паролем → pdf_encrypted (для пользователя no_text_layer: текст недоступен)  351ms
+   ✓ ExtractPdf: честные отказы > битый PDF (мусор после %PDF-) → not_pdf  347ms
+   ✓ ExtractPdf: честные отказы > битый PDF (обрезанный файл) → not_pdf  349ms
+   ✓ ExtractPdf: честные отказы > битый PDF (цикл в дереве страниц) → not_pdf  344ms
+   ✓ ExtractPdf: честные отказы > 101 страница → too_large, число страниц — до извлечения текста  386ms
+   ✓ ExtractPdf: честные отказы > текст сверх потолка извлечения (≈ 8 млн символов) → too_large  2936ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > бомба распаковки (400 КБ → 400 МБ) — убит по резидентной памяти при настоящих пределах  3931ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > экспоненциальный разворот форм (2^40 вызовов, 7 КБ) — убит по таймауту  3017ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > глубокая вложенность массивов (500 000 уровней) → отказ в пределах таймаута  375ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > цепочка из 20 000 вложенных форм → отказ в пределах таймаута  780ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > 200 000 объектов при одной пустой странице → отказ в пределах таймаута  906ms
+   ✓ Дочерний процесс: пределы исполняет родитель > зависший разбор → SIGKILL по таймауту, отказ pdf_timeout, а не ожидание  1509ms
+   ✓ Дочерний процесс: пределы исполняет родитель > документ с пустыми страницами и одной текстовой — страницы без текста не выдуманы  507ms
+stderr | tests/crawl-job.integration.test.ts > Краулер в задаче индексации на настоящем Postgres > источник PDF не уходит в краулер: до фичи pdf-source — failed(internal), а не «готово»
+worker-index: обработчик источника не подключён — задача закрыта internal
+
+ ✓ tests/crawl-job.integration.test.ts (7 tests) 904ms
+   ✓ Краулер в задаче индексации на настоящем Postgres > бюджет страниц: free — 50, предпросмотр — 20 из задачи, nobadge — все 55  547ms
+ ✓ tests/config.test.ts (192 tests) 17281ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов  309ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов  307ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов  317ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов  334ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов  302ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов  352ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов  337ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов  324ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов  329ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3016ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без OPENROUTER_API_KEY: код 1 и имя переменной  322ms
+ ✓ tests/pdf-multipart.test.ts (43 tests) 84ms
+stderr | tests/auth.test.ts > Аутентификация > Отказ Redis закрывает вход до bcrypt/БД
+Авторизация: запрос не завершён; вход временно недоступен offline
+
+ ✓ tests/auth.test.ts (10 tests) 922ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  623ms
+ ✓ tests/crawl-pathological.test.ts (15 tests) 807ms
+   ✓ MEDIUM-2: сжатый ответ вопреки Accept-Encoding: identity > Content-Encoding: gzip → пропуск encoding, тело не читается и не распаковывается  358ms
+ ✓ tests/index-job.unit.test.ts (15 tests) 26ms
+ ✓ tests/openrouter.test.ts (15 tests) 35ms
+ ✓ tests/spend.test.ts (8 tests) 86ms
+ ✓ tests/robots.test.ts (10 tests) 375ms
+   ✓ robots.txt в обходе > robots.txt не отвечает (таймаут) → unreachable  306ms
+ ✓ tests/quota-keys.test.ts (8 tests) 16ms
+ ✓ tests/probes.test.ts (6 tests) 10449ms
+   ✓ EmbedProbe при старте worker-index > шлюз отвечает 1536 — процесс живёт; запрос с dimensions 1536; attempt → outcome success в журнале  3023ms
+   ✓ EmbedProbe при старте worker-index > длина вектора 1535 — код 1, dimension_mismatch в журнале  326ms
+   ✓ EmbedProbe при старте worker-index > шлюз 500 — код 1; попытка учтена  308ms
+ ✓ tests/enums.test.ts (23 tests) 16ms
+ ✓ tests/proxy-rate.test.ts (8 tests) 29ms
+ ✓ tests/compose.test.ts (16 tests) 12ms
+ ✓ tests/index-queue.integration.test.ts (1 test) 42ms
+ ✓ tests/redis.integration.test.ts (1 test) 29ms
+stderr | tests/health.test.ts > health: 200 при БД с pgvector, 503 без расширения и при отказе БД
+Проверка здоровья: сервис недоступен pgvector не установлен
+
+stderr | tests/health.test.ts > health: 200 при БД с pgvector, 503 без расширения и при отказе БД
+Проверка здоровья: сервис недоступен offline
+
+ ✓ tests/health.test.ts (1 test) 9ms
+
+ Test Files  25 passed (25)
+      Tests  569 passed (569)
+   Start at  03:46:35
+   Duration  70.86s (transform 1.13s, setup 0ms, collect 3.34s, tests 59.52s, environment 9ms, prepare 2.75s)
+

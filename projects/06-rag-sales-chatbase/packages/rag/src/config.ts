@@ -3,6 +3,7 @@
 // модели из закрытого набора и попарная проверка «персональный ≤ общего»; S3, водяной знак и
 // N5_TRUSTED_PROXY_HOPS убраны (у N6 их нет: дверь заменяет XFF одним адресом клиента).
 import { ANSWER_MODELS, EMBED_MODELS } from './constants.js';
+import { isAbsolute, normalize } from 'node:path';
 import { validateSpendPath } from './spend.js';
 
 // Порядок и имена — канон §7 «Перечень переменных (14)»; tests/config.test.ts сверяет этот список
@@ -143,6 +144,15 @@ export function loadModelConfig(env: Environment) {
 export function loadSpendLog(env: Environment): string {
   return validateSpendPath(required(env, 'N6_SPEND_LOG', 'без журнала попыток платный вызов нельзя учесть — вызовы не выполняются'));
 }
+// Том сырых PDF (ADR-018): общий у web (пишет) и worker-index (читает и удаляет). Без значения по
+// умолчанию: дефолт в каталог контейнера вне тома молча развёл бы запись и чтение по разным дискам.
+export function loadUploadDir(env: Environment): string {
+  const value = required(env, 'N6_UPLOAD_DIR', 'без тома uploads загруженный PDF некуда положить и нечем прочитать');
+  if (!isAbsolute(value) || value !== value.trim() || /[\r\n\0]/.test(value) || normalize(value) !== value || value.endsWith('/')) {
+    throw new Error('N6_UPLOAD_DIR непригодна: нужен абсолютный нормализованный путь к каталогу тома uploads без завершающего «/»');
+  }
+  return value;
+}
 export function loadWebConfig(env: Environment) {
   const ceilings = loadCeilings(env);
   const models = loadModelConfig(env);
@@ -153,7 +163,8 @@ export function loadWebConfig(env: Environment) {
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодна: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, ceilings, models, publicOrigin, sessionSecret, spendLog });
+  const uploadDir = loadUploadDir(env);
+  return Object.freeze({ ...connections, ceilings, models, publicOrigin, sessionSecret, spendLog, uploadDir });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: worker-index не получает SESSION_SECRET.
@@ -162,6 +173,7 @@ export function loadWorkerConfig(env: Environment) {
   const models = loadModelConfig(env);
   const publicOrigin = loadPublicOrigin(env);
   const spendLog = loadSpendLog(env);
-  return Object.freeze({ ...loadConnectionConfig(env), ceilings, models, publicOrigin, spendLog, role: 'worker-index' as const });
+  const uploadDir = loadUploadDir(env);
+  return Object.freeze({ ...loadConnectionConfig(env), ceilings, models, publicOrigin, spendLog, uploadDir, role: 'worker-index' as const });
 }
 export type WorkerConfig = ReturnType<typeof loadWorkerConfig>;

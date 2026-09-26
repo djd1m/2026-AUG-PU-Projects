@@ -1,6 +1,7 @@
 // из N5: projects/05-podcast-clips-opus/apps/web/src/server/runtime.ts — конфиг @n6/rag, глобальный кеш n6Runtime
 import { loadWebConfig } from '@n6/rag';
 import { createPool } from '@n6/db';
+import { createIndexQueue, type IndexQueue } from '@n6/queue';
 import Redis from 'ioredis';
 import { readEnvironment } from './environment';
 import { AuthService } from './auth';
@@ -20,4 +21,9 @@ function createRuntime() {
 const runtimeGlobal = globalThis as typeof globalThis & { n6Runtime?: ReturnType<typeof createRuntime> };
 export function getRuntime() {
   return runtimeGlobal.n6Runtime ??= createRuntime();
+}
+// Очередь индексации — лениво: нужна только маршрутам создания источника (pdf-source), не входу и /health.
+const queueGlobal = globalThis as typeof globalThis & { n6IndexQueue?: IndexQueue };
+export function getIndexQueue(): IndexQueue {
+  return queueGlobal.n6IndexQueue ??= createIndexQueue(getRuntime().config);
 }

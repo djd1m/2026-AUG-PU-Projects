@@ -14,7 +14,10 @@ COPY apps/worker/package.json ./apps/worker/
 COPY packages/db/package.json ./packages/db/
 COPY packages/rag/package.json ./packages/rag/
 COPY packages/queue/package.json ./packages/queue/
-RUN npm ci
+# pdf-source: pdfjs-dist тянет необязательный нативный @napi-rs/canvas (≈ 30 МБ) — он нужен только для
+# отрисовки, а разбор PDF извлекает текст. Нативная поверхность на враждебном вводе не нужна: пакет
+# удаляется из дерева, дочерний процесс разбора его загрузку ещё и запрещает (extract-child.mjs).
+RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
 
 # ── build: один раз для всех рантайм-целей (rag → db → queue → worker → web) ──
 FROM deps AS build

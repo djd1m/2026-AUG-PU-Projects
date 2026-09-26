@@ -11,6 +11,7 @@ export function environment(): NodeJS.ProcessEnv {
     ANSWER_MODEL: 'anthropic/claude-haiku-4.5', EMBED_MODEL: 'openai/text-embedding-3-small',
     // Каталог журнала — свой на каждый вызов фикстуры: пробы старта считают попытки за сутки по файлу.
     N6_SPEND_LOG: path.join(tmpdir(), `n6-spend-${randomBytes(6).toString('hex')}`, 'model-spend.jsonl'),
+    N6_UPLOAD_DIR: path.join(tmpdir(), `n6-uploads-${randomBytes(6).toString('hex')}`),
     QUOTA_VISITOR_ANSWERS: '20', QUOTA_IP_ANSWERS: '60', QUOTA_BOT_DAY_FREE: '50', QUOTA_BOT_DAY_PAID: '300',
     QUOTA_BOT_MONTH_FREE: '300', QUOTA_BOT_MONTH_PAID: '3000', QUOTA_GLOBAL_ANSWERS: '3000',
     QUOTA_PREVIEW_SESSION_CREATE: '1', QUOTA_PREVIEW_SESSION_ANSWERS: '10', QUOTA_IP_PREVIEWS: '3',

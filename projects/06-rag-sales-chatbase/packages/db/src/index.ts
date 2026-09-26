@@ -5,3 +5,4 @@ export { createPool } from './pool.js';
 export * from './quota.js';
 export * from './ceilings.js';
 export * from './index-jobs.js';
+export * from './pdf-sources.js';

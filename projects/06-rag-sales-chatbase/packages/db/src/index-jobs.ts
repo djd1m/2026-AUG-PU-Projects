@@ -28,6 +28,9 @@ export class StaleAttemptError extends Error {
 export interface CreateSourceJobInput {
   botId: string; kind: 'site' | 'pdf'; rootUrl?: string; fileName?: string; idempotencyKey: string;
   budget?: { pageBudget: number; embedBudget: number };
+  // Идентификатор задачи, выбранный вызывающим ДО вставки (pdf-source: файл в томе пишется под этим
+  // именем ДО коммита — «строка задачи есть ⇒ файл есть»). Не задан — выбирает БД.
+  indexJobId?: string;
 }
 export interface CreatedJob { indexJobId: string; sourceId: string; created: boolean }
 
@@ -37,6 +40,7 @@ export interface CreatedJob { indexJobId: string; sourceId: string; created: boo
 export async function createSourceJobTx(tx: PoolClient, input: CreateSourceJobInput, now = new Date()): Promise<CreatedJob> {
   if (!isUuid(input.botId)) throw new Error('Непригодный bot_id');
   if (!isUuid(input.idempotencyKey)) throw new Error('Idempotency-Key обязан быть UUID');
+  if (input.indexJobId !== undefined && !isUuid(input.indexJobId)) throw new Error('Непригодный index_job_id');
   if ((input.kind === 'site') === !input.rootUrl || (input.kind === 'pdf') === !input.fileName) throw new Error('Источник: site требует url, pdf — имя файла');
   const budget = input.budget;
   if (budget && ![budget.pageBudget, budget.embedBudget].every((n) => Number.isSafeInteger(n) && n > 0)) throw new Error('Непригодный бюджет задачи');
@@ -44,9 +48,9 @@ export async function createSourceJobTx(tx: PoolClient, input: CreateSourceJobIn
   const source = await tx.query<{ id: string }>(`INSERT INTO source (bot_id, kind, root_url, file_name, created_at)
     VALUES ($1, $2, $3, $4, $5) RETURNING id`, [input.botId, input.kind, input.rootUrl ?? null, input.fileName ?? null, now]);
   const sourceId = source.rows[0]!.id;
-  const job = await tx.query<{ id: string }>(`INSERT INTO index_job (bot_id, source_id, idempotency_key, page_budget, embed_budget, created_at, updated_at)
-    VALUES ($1, $2, $3, $4, $5, $6, $6) ON CONFLICT (bot_id, idempotency_key) DO NOTHING RETURNING id`,
-  [input.botId, sourceId, input.idempotencyKey, budget?.pageBudget ?? null, budget?.embedBudget ?? null, now]);
+  const job = await tx.query<{ id: string }>(`INSERT INTO index_job (id, bot_id, source_id, idempotency_key, page_budget, embed_budget, created_at, updated_at)
+    VALUES (COALESCE($7::uuid, gen_random_uuid()), $1, $2, $3, $4, $5, $6, $6) ON CONFLICT (bot_id, idempotency_key) DO NOTHING RETURNING id`,
+  [input.botId, sourceId, input.idempotencyKey, budget?.pageBudget ?? null, budget?.embedBudget ?? null, now, input.indexJobId ?? null]);
   if (job.rowCount) {
     await tx.query('RELEASE SAVEPOINT create_source_job');
     return { indexJobId: job.rows[0]!.id, sourceId, created: true };
