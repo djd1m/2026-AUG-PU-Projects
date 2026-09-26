@@ -13,6 +13,8 @@ export const failureMessages = {
   refused_global_llm: quotaMessages.global_llm,
   stalled: 'Обработка перестала отвечать.', render_failed: 'Не удалось собрать клипы.',
 } satisfies Record<VideoFailureReason, string>;
+/** Стадия ленты экрана записи (фича 29): закрытый набор из четырёх. */
+export type RibbonStage = 'upload' | 'transcribe' | 'select' | 'render';
 export interface VideoScreen {
   video_id: string; status: VideoStatus; created_at: string; updated_at: string;
   duration_seconds: number | null; user_state: 'выполняется' | 'успех' | 'отказ';
@@ -20,6 +22,8 @@ export interface VideoScreen {
   no_response: boolean; failure_reason: string | null; next_action: 'retry' | 'upload' | 'tomorrow' | null;
   retry_after: string | null; poll_after_seconds: 5;
   cta_kind: CtaKind; cta_url: string | null;
+  /** Только при `отказ`: стадия, на которой задача упала (A-2609-01); иначе null. */
+  failed_stage: RibbonStage | null;
 }
 const explanation = z.string().trim().min(1);
 export const scoreSchema = z.object({

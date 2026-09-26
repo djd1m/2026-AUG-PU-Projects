@@ -2,11 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { Pool } from 'pg';
-import { presentVideo, presentClip, type VideoRow, type ClipRow, ScreenService } from '../apps/web/src/server/screen';
+import { presentVideo, presentClip, failedStageOf, type VideoRow, type ClipRow, ScreenService } from '../apps/web/src/server/screen';
+import { ribbonOf } from '../apps/web/src/lib/progress-ribbon';
 import { ProgressPanel } from '../apps/web/src/app/videos/[videoId]/VideoDetail';
 import { ClipCard } from '../apps/web/src/app/clips/ClipCard';
 import { createClipFileHandler } from '../apps/web/src/server/clip-file';
-import { VIDEO_FAILURE_REASON } from '../packages/shared/src/enums';
+import { VIDEO_FAILURE_REASON, VIDEO_STATUS } from '../packages/shared/src/enums';
 import { appRouter } from '../apps/web/src/server/trpc';
 import { startClipDownload } from '../apps/web/src/app/clips/useClipDownload';
 import * as rpcClient from '../apps/web/src/lib/rpc';
@@ -68,6 +69,71 @@ describe('экран прогресса и оценки', () => {
     const expired = presentClip(clip, { plan: 'free', finished_at }, now);
     expect(expired.available).toBe(false); expect(expired.expires_at).not.toBeNull();
     expect(presentClip(clip, { plan: 'paid', finished_at }, now).available).toBe(true);
+  });
+});
+// Фича 29 progress-ribbon: лента стадий. Заголовки describe/it — цели мутаций scripts/test-progress-mutations.mjs.
+const views = (row: VideoRow) => ribbonOf(presentVideo(row, now)).steps.map(step => step.view);
+const text = (html: string) => html.replace(/<[^>]+>/g, '');
+describe('лента стадий экрана записи', () => {
+  it('лента: каждый статус канона даёт свою стадию и вид', () => {
+    const expected: Record<string, string[]> = {
+      uploading: ['running', 'pending', 'pending', 'pending'], queued: ['running', 'pending', 'pending', 'pending'],
+      transcribing: ['done', 'running', 'pending', 'pending'], selecting: ['done', 'done', 'running', 'pending'],
+      rendering: ['done', 'done', 'done', 'running'], done: ['done', 'done', 'done', 'done'],
+      failed: ['failed', 'pending', 'pending', 'pending'],
+    };
+    for (const status of VIDEO_STATUS) expect(views({ ...video, status }), status).toEqual(expected[status]);
+    expect(ribbonOf(presentVideo(video, now)).steps.map(step => step.label)).toEqual(['Загрузка', 'Расшифровка', 'Выбор', 'Монтаж']);
+    // «N из M» — только у идущего Монтажа.
+    expect(ribbonOf(presentVideo(video, now)).steps.map(step => step.detail)).toEqual([null, null, null, '1 из 2']);
+    expect(ribbonOf(presentVideo({ ...video, status: 'selecting' }, now)).steps.every(step => step.detail === null)).toBe(true);
+    const html = markup(video);
+    expect(html).toContain('<ol class="progress-ribbon" aria-label="Этапы обработки">');
+    expect(html.match(/aria-current="step"/g)).toHaveLength(1);
+    expect(html).toMatch(/aria-current="step"[^>]*>.*?Монтаж.*?1 из 2.*? — идёт/);
+    for (const state of ['сделано', 'идёт']) expect(html).toContain(` — ${state}`);
+    // Место на диске кончилось: задача жива, стадия та же, текст говорит, чего ждём.
+    const waiting = presentVideo({ ...video, wait_reason: 'no_disk' }, now);
+    expect(ribbonOf(waiting).steps[3]!.view).toBe('running'); expect(markup({ ...video, wait_reason: 'no_disk' })).toContain('Ждём свободного места');
+  });
+  it('лента: молчание пять минут — «нет ответа», а не «идёт»', () => {
+    const stale = { ...video, updated_at: new Date(now.getTime() - 300001) };
+    expect(views(stale)).toEqual(['done', 'done', 'done', 'silent']);
+    const html = markup(stale);
+    expect(html).toContain('data-view="silent"'); expect(html).not.toContain('data-view="running"');
+    expect(html).toContain(' — нет ответа'); expect(html).not.toContain(' — идёт');
+    // Граница: ровно 5 минут — ещё «идёт».
+    expect(views({ ...video, updated_at: new Date(now.getTime() - 300000) })).toEqual(['done', 'done', 'done', 'running']);
+    // Локальные часы экрана (сеть пропала) дают тот же вид.
+    expect(ribbonOf({ ...presentVideo(video, now), no_response: true }).steps[3]!.view).toBe('silent');
+  });
+  it('лента: стадия отказа — из последней попытки', () => {
+    const failed = { ...video, status: 'failed' as const, failure_reason: 'stalled' as const };
+    expect(views(failed)).toEqual(['failed', 'pending', 'pending', 'pending']);
+    expect(views({ ...failed, last_stage: 'stt', last_stage_status: 'failed' })).toEqual(['done', 'failed', 'pending', 'pending']);
+    expect(views({ ...failed, last_stage: 'select', last_stage_status: 'failed' })).toEqual(['done', 'done', 'failed', 'pending']);
+    expect(views({ ...failed, last_stage: 'render', last_stage_status: 'running' })).toEqual(['done', 'done', 'done', 'failed']);
+    // Успешная последняя попытка: отказ случился на СЛЕДУЮЩЕЙ стадии до её первой попытки.
+    expect(failedStageOf({ last_stage: 'stt', last_stage_status: 'succeeded' })).toBe('select');
+    expect(failedStageOf({ last_stage: 'select', last_stage_status: 'succeeded' })).toBe('render');
+    // Не из закрытого набора / нет попыток — «Загрузка».
+    for (const last_stage of [null, undefined, '', 'STT', 'probe']) expect(failedStageOf({ last_stage, last_stage_status: 'failed' })).toBe('upload');
+    expect(presentVideo({ ...video, last_stage: 'stt', last_stage_status: 'failed' }, now).failed_stage).toBeNull();
+    const html = markup({ ...failed, last_stage: 'select', last_stage_status: 'failed' });
+    expect(html).toMatch(/data-view="failed" aria-current="step">.*?Выбор.*? — отказ/);
+    expect(html).toContain('Обработка перестала отвечать.'); expect(html).toContain('Повторить');
+  });
+  it('лента: готово — одна строка «Клипы готовы · N из M»', () => {
+    const html = markup({ ...video, status: 'done', clips_done: 3, clips_total: 4 });
+    expect(html).not.toContain('<ol'); expect(html).not.toContain('<progress'); expect(html).not.toContain('<h2');
+    expect(text(html)).toContain('Клипы готовы · 3 из 4'); expect(html).toContain('status-panel success compact');
+  });
+  it('лента: SQL берёт стадию последней попытки без пересборок', async () => {
+    const query = vi.fn().mockResolvedValue({ rows: [{ ...video, status: 'failed', failure_reason: 'stalled', last_stage: 'select', last_stage_status: 'failed' }] });
+    const screen = await new ScreenService({ query } as unknown as Pool, () => now).get('owner', id);
+    expect(screen.failed_stage).toBe('select');
+    const sql = String(query.mock.calls[0]?.[0]).replace(/\s+/g, ' ');
+    expect(sql).toContain('LEFT JOIN LATERAL (SELECT j.stage, j.status FROM job_attempt j WHERE j.video_id=v.id AND NOT j.rerender ORDER BY j.fence DESC LIMIT 1) last ON true');
   });
 });
 describe('авторизованный redirect файла и превью', () => {

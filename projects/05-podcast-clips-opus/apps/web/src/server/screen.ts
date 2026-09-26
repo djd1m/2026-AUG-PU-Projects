@@ -1,8 +1,9 @@
 import type { Pool } from '@clipmaker/db';
 import { FILE_FAILURES } from '@clipmaker/db';
-import type { VideoStatus, VideoFailureReason, ClipStatus } from '@clipmaker/shared/enums';
+import type { VideoStatus, VideoFailureReason, ClipStatus, JobStage } from '@clipmaker/shared/enums';
+import { JOB_STAGE, readEnum } from '@clipmaker/shared/enums';
 import { moscowDay, quotaResetAt } from '@clipmaker/shared/upload';
-import { failureMessages, scoreSchema, type VideoScreen, type ClipScreen } from '../lib/screen-contract';
+import { failureMessages, scoreSchema, type VideoScreen, type ClipScreen, type RibbonStage } from '../lib/screen-contract';
 import { UploadError } from './upload-contract';
 import { assertRetryable } from './video-retry';
 import { readStoredCta } from '@clipmaker/shared/cta';
@@ -12,6 +13,18 @@ export interface VideoRow {
   duration_seconds: string | null; stage_progress: number | null; clips_done: number | null; clips_total: number | null;
   failure_reason: VideoFailureReason | null; object_key: string | null; actual_bytes: string | null;
   plan: string; wait_reason: string | null; cta_kind?: string | null; cta_url?: string | null;
+  /** Стадия и статус последней попытки обработки (наибольший `fence`, без пересборок) — для ленты (A-2609-01). */
+  last_stage?: string | null; last_stage_status?: string | null;
+}
+const NEXT_STAGE: Record<JobStage, RibbonStage> = { stt: 'select', select: 'render', render: 'render' };
+const JOB_RIBBON: Record<JobStage, RibbonStage> = { stt: 'transcribe', select: 'select', render: 'render' };
+/** Где упала задача. Попытки нет или стадия не из закрытого набора — «Загрузка» (отказ до первой попытки).
+ *  Последняя попытка УСПЕШНА — отказ случился на СЛЕДУЮЩЕЙ стадии до её первой попытки (например,
+ *  лимит LLM при повторе после готовой расшифровки): показывать его на успешной стадии было бы неправдой. */
+export function failedStageOf(row: Pick<VideoRow, 'last_stage' | 'last_stage_status'>): RibbonStage {
+  const stage = readEnum(JOB_STAGE, row.last_stage);
+  if (!stage) return 'upload';
+  return row.last_stage_status === 'succeeded' ? NEXT_STAGE[stage] : JOB_RIBBON[stage];
 }
 export function presentVideo(row: VideoRow, now = new Date()): VideoScreen {
   const state = row.status === 'done' ? 'успех' : row.status === 'failed' ? 'отказ' : 'выполняется';
@@ -34,11 +47,15 @@ export function presentVideo(row: VideoRow, now = new Date()): VideoScreen {
     stage_label: noResponse ? 'Нет ответа от обработки, проверяем' : row.wait_reason === 'no_disk' && state === 'выполняется' ? 'Ждём свободного места' : stages[row.status],
     stage_progress: row.stage_progress, clips_done: row.clips_done ?? 0, clips_total: row.clips_total ?? 0,
     no_response: noResponse, failure_reason: row.failure_reason ? failureMessages[row.failure_reason] : null, next_action: nextAction,
-    retry_after: row.failure_reason?.startsWith('refused_') ? quotaResetAt(row.updated_at) : null, poll_after_seconds: 5 };
+    retry_after: row.failure_reason?.startsWith('refused_') ? quotaResetAt(row.updated_at) : null, poll_after_seconds: 5,
+    failed_stage: state === 'отказ' ? failedStageOf(row) : null };
 }
 const videoSelect = `SELECT v.*, a.plan, (SELECT j.wait_reason FROM job_attempt j
-  WHERE j.video_id=v.id AND j.status='deferred' ORDER BY j.fence DESC LIMIT 1) AS wait_reason
-  FROM video v JOIN account a ON a.id=v.account_id WHERE v.account_id=$1 AND a.status='active' AND v.deleted_at IS NULL`;
+  WHERE j.video_id=v.id AND j.status='deferred' ORDER BY j.fence DESC LIMIT 1) AS wait_reason,
+  last.stage AS last_stage, last.status AS last_stage_status
+  FROM video v JOIN account a ON a.id=v.account_id
+  LEFT JOIN LATERAL (SELECT j.stage, j.status FROM job_attempt j WHERE j.video_id=v.id AND NOT j.rerender
+    ORDER BY j.fence DESC LIMIT 1) last ON true WHERE v.account_id=$1 AND a.status='active' AND v.deleted_at IS NULL`;
 const notFound = () => new UploadError('not_found', 'Запись не найдена', 404);
 export class ScreenService {
   constructor(private readonly pool: Pool, private readonly clock = () => new Date()) {}

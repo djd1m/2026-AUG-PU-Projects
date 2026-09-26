@@ -9,10 +9,15 @@ try {
   for (const name of ['apps', 'packages', 'tests']) cpSync(name, join(directory, name), {
     recursive: true, filter: path => !/(^|\/)(node_modules|dist|\.next|artifacts)(\/|$)/.test(path),
   });
-  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts']) cpSync(name, join(directory, name));
+  // vitest.config.ts подключает репортёр из scripts/ — без него прогон падает ДО тестов, и red=green=1 ничего не доказывает.
+  for (const name of ['package.json', 'tsconfig.base.json', 'vitest.config.ts', 'scripts/test-skip-reporter.ts']) { mkdirSync(join(directory, name, '..'), { recursive: true }); cpSync(name, join(directory, name)); }
   symlinkSync(join(project, 'node_modules'), join(directory, 'node_modules'), 'dir');
   const mutations = [
-    ['distinct-states', 'apps/web/src/app/videos/[videoId]/VideoDetail.tsx', "failure ? 'failure' : success", "failure ? 'running' : success", 'три состояния различимы'],
+    // Фича 29: вид состояний переехал в ленту (apps/web/src/lib/progress-ribbon.ts) — якорь перенесён туда.
+    ['distinct-states', 'apps/web/src/lib/progress-ribbon.ts', "failure ? 'failure' : success", "failure ? 'running' : success", 'три состояния различимы'],
+    ['ribbon-silence', 'apps/web/src/lib/progress-ribbon.ts', "tone === 'silent' ? 'silent' : 'running'", "'running'", 'лента: молчание пять минут'],
+    ['ribbon-failed-stage', 'apps/web/src/server/screen.ts', "state === 'отказ' ? failedStageOf(row) : null", "null", 'лента: стадия отказа'],
+    ['ribbon-collapse', 'apps/web/src/app/videos/[videoId]/VideoDetail.tsx', 'if (success) return', 'if (false) return', 'лента: готово — одна строка'],
     ['silence', 'apps/web/src/server/screen.ts', "state === 'выполняется' && now.getTime() - row.updated_at.getTime() > 300_000", 'false', 'молчание после пяти минут'],
     ['foreign-404', 'apps/web/src/server/clip-file.ts', 'if (!row) return missing();', 'if (!row) return new Response("Forbidden", { status: 403 });', 'чужой и отсутствующий'],
     ['unfinished-404', 'apps/web/src/server/clip-file.ts', "if (row.status !== 'done') return missing();", '/* mutant: unfinished file accepted */', 'клип не done'],

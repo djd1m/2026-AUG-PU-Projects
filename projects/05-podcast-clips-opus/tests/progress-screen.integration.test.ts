@@ -32,6 +32,26 @@ describe.skipIf(!dbUrl)('PostgreSQL: экраны и доступ к клипа�
     const clips = (await screen.clips(owner, video)).clips;
     expect(clips.map(c => c.available)).toEqual([true, false]); expect(clips[0]?.explanations?.completeness).toBe('Закончено');
   });
+  it('лента (фича 29): стадия отказа — из последней попытки по fence на настоящем PostgreSQL', async () => {
+    const screen = new ScreenService(pool);
+    const failedVideo = async (attempts: [string, string][]) => {
+      const id = randomUUID();
+      await pool.query(`INSERT INTO video(id,account_id,idempotency_key,source,declared_bytes,actual_bytes,object_key,status,failure_reason)
+        VALUES($1,$2,$3,'upload',100,100,'source','failed','stalled')`, [id, stranger, randomUUID()]);
+      for (const [index, [stage, status]] of attempts.entries()) await pool.query(`INSERT INTO job_attempt
+        (video_id,stage,attempt_no,fence,status,unit,unit_count,started_at) VALUES($1,$2,1,$3,$4,'none',0,now())`, [id, stage, index + 1, status]);
+      return (await screen.get(stranger, id)).failed_stage;
+    };
+    expect(await failedVideo([])).toBe('upload');
+    expect(await failedVideo([['stt', 'failed']])).toBe('transcribe');
+    expect(await failedVideo([['stt', 'succeeded'], ['select', 'failed']])).toBe('select');
+    // Лимит LLM при повторе: расшифровка готова, попытки выбора нет — отказ на «Выборе», не на «Расшифровке».
+    expect(await failedVideo([['stt', 'succeeded']])).toBe('select');
+    // Порядок — по fence, не по порядку вставки/стадии: последняя попытка stt (fence 3) важнее select (fence 2).
+    expect(await failedVideo([['stt', 'failed'], ['select', 'failed'], ['stt', 'running']])).toBe('transcribe');
+    const listed = (await screen.list(stranger, {})).videos;
+    expect(listed.every(v => v.user_state === 'отказ' && v.failed_stage !== null)).toBe(true);
+  });
   it('одинаковый 404 чужому и отсутствующему, недоделанный 404, соседний 302', async () => {
     const sign = vi.fn().mockResolvedValue('https://storage.example/signed');
     const auth = { authenticate: vi.fn().mockResolvedValue({ account_id: owner }) };

@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /tmp/n5-progress-mutations-7sGjkn
+
+ ❯ tests/progress-screen.test.ts (18 tests | 1 failed | 17 skipped) 19ms
+   ↓ экран прогресса и оценки > три состояния различимы в HTML и тексте
+   ↓ экран прогресса и оценки > молчание после пяти минут не показывается как идёт
+   ↓ экран прогресса и оценки > все причины имеют человеческий текст; незаконный retry скрыт
+   ↓ экран прогресса и оценки > пустое объяснение оценки отвергается, null score не становится нулём
+   ↓ экран прогресса и оценки > срок бесплатного файла считается с первого дня, истёкший нельзя скачать
+   ↓ лента стадий экрана записи > лента: каждый статус канона даёт свою стадию и вид
+   ↓ лента стадий экрана записи > лента: молчание пять минут — «нет ответа», а не «идёт»
+   ↓ лента стадий экрана записи > лента: стадия отказа — из последней попытки
+   ↓ лента стадий экрана записи > лента: готово — одна строка «Клипы готовы · N из M»
+   ↓ лента стадий экрана записи > лента: SQL берёт стадию последней попытки без пересборок
+   × авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии 17ms
+     → expected 403 to be 404 // Object.is equality
+   ↓ авторизованный redirect файла и превью > клип не done даёт 404, соседний готовый отдаётся
+   ↓ авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+   ↓ tRPC read contract > GET video.get passes canonical input and ownership into service; result wrapper matches client
+   ↓ чтения 120/мин отдельно от 30 мутаций
+   ↓ скачивание: UTF-8 имя в подписанном Content-Disposition, TTL 900
+   ↓ файл открывается сразу, даже если запись события не отвечает
+   ↓ actual clip duration is numeric in screen and used by ClipCard; null falls back
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 skipped (18)
+   Start at  02:16:17
+   Duration  1.18s (transform 486ms, setup 0ms, collect 896ms, tests 19ms, environment 0ms, prepare 92ms)
+
+
+WARNING: ПРОПУЩЕНО 17 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-progress-mutations-7sGjkn/tests/progress-screen.test.ts: 17 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/progress-screen.test.ts > авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии
+AssertionError: expected 403 to be 404 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 404[39m
+[31m+ 403[39m
+
+ ❯ tests/progress-screen.test.ts:152:28
+    150|     const f = fixture([]); const handler = createClipFileHandler({ ...…
+    151|     const foreign = await handler(f.request, id), absent = await handl…
+    152|     expect(foreign.status).toBe(404); expect(absent.status).toBe(404);…
+       |                            ^
+    153|     expect(f.query.mock.calls[0]?.[0]).toContain('v.account_id=$2'); e…
+    154|     expect(f.sign).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

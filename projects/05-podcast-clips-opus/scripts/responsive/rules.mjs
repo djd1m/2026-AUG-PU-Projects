@@ -170,6 +170,9 @@ export const FIRST_SCREEN_VIEWPORTS = [{ w: 390, h: 844 }, { w: 375, h: 667 }, {
 export const FIRST_SCREEN_ACTIONS = [
   { pattern: /^\/$/, selector: ['.landing-cta', '.landing-demo video'] },
   { pattern: /^\/c\/[\w-]+$/, selector: '.cta' },
+  // Фича 29 (FR-GROWTH-001): экран записи — панель «Скачать · Ссылка · Гостю» первой карточки. Маршрут под входом:
+  // прогон R9 обязан нести storageState, иначе проверит форму входа. Фикстура — только ГОТОВОЕ состояние записи.
+  { pattern: /^\/dashboard\/videos\/[\w-]+$/, selector: '.clip-card:first-of-type .clip-actions' },
 ];
 export function firstScreenSelector(route) {
   return FIRST_SCREEN_ACTIONS.find(action => action.pattern.test(route))?.selector ?? null;

@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /tmp/n5-progress-mutations-7sGjkn
+
+ ✓ tests/progress-screen.test.ts (18 tests | 17 skipped) 15ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 17 skipped (18)
+   Start at  02:16:02
+   Duration  1.19s (transform 584ms, setup 0ms, collect 940ms, tests 15ms, environment 0ms, prepare 74ms)
+
+
+WARNING: ПРОПУЩЕНО 17 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-progress-mutations-7sGjkn/tests/progress-screen.test.ts: 17 skipped

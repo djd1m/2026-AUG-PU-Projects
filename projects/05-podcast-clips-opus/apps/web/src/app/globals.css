@@ -52,7 +52,7 @@ em { font-style:normal; color:var(--green); }
 .success { background:var(--success-bg); border-color:var(--success-line); color:var(--success-fg); }
 .failure { background:var(--failure-bg); border-color:var(--failure-line); color:var(--failure-fg); }
 .silent { background:var(--silent-bg); border-color:var(--silent-line); color:var(--silent-fg); }
-.detail-header > a { font-size:0.875rem; }
+.detail-top > a { font-size:0.875rem; }
 .detail-header .eyebrow { margin-top:1.875rem; }
 .status-panel { display:flex; gap:1.125rem; padding:1.5rem; border-width:0.0625rem; border-style:solid; border-radius:0.8125rem; margin:1.75rem 0 2.25rem; }
 .status-panel h2 { font-size:1.3125rem; margin-bottom:0.5rem; }
@@ -86,7 +86,7 @@ dd { margin:0.1875rem 0 0; color:var(--muted); overflow-wrap:anywhere; }
 
 h1,h2,h3,p,label,button,a,input,select,textarea,.intro { overflow-wrap:anywhere; hyphens:none; }
 .navigation { min-height:var(--nav-h); padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) 1rem max(1rem,env(safe-area-inset-left)); flex-wrap:wrap; }
-.navigation a,.detail-header > a { display:inline-flex; align-items:center; min-height:2.75rem; }
+.navigation a,.detail-top > a { display:inline-flex; align-items:center; min-height:2.75rem; }
 .navigation > span { display:none; }
 .brand { font-size:1.25rem; }
 .container { width:100%; padding:1.5rem max(1rem,env(safe-area-inset-right)) max(4.5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); }
@@ -142,8 +142,9 @@ button,.button { min-width:2.75rem; }
   .clip-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
-/* ≤359 px: brand + «Мои записи» + theme toggle fit one row (no wrap at 320). */
-@media(max-width:22.49rem) { .brand { font-size:1.125rem; gap:var(--space-2); } }
+/* ≤360 px ВКЛЮЧИТЕЛЬНО: brand + «Мои записи» + theme toggle в одну строку. 22.49rem (=359.84 px) не срабатывал ровно
+   на 360 — шапка переносилась в две строки (+62 px) и съедала первый экран 360×740 (фича 29, находка проверки плана). */
+@media(max-width:22.5rem) { .brand { font-size:1.125rem; gap:var(--space-2); } }
 /* Clip card (feature 26): lays out by ITS OWN width, not the window — narrow in a 3-column grid at 1024, wide on a phone. */
 .clip-card { container-type:inline-size; }
 .score-badge { position:absolute; z-index:1; inset-block-start:var(--space-3); inset-inline-start:var(--space-3); min-width:2.75rem; padding:.125rem var(--space-2); border-radius:.5rem; background:var(--score-bg); color:var(--score-fg); font-size:1.25rem; font-weight:750; line-height:1.4; text-align:center; pointer-events:none; }
@@ -184,3 +185,37 @@ button,.button { min-width:2.75rem; }
   .landing-demo { margin-top:var(--space-6); }
   .landing-demo video { width:clamp(8rem,11vw,10rem); }
 }
+/* Фича 29 progress-ribbon: лента стадий «Загрузка → Расшифровка → Выбор → Монтаж» и первый экран экрана записи.
+   Состояние стадии — знаком и скрытым текстом, не только цветом; цвета — токены панели (currentColor / --muted). */
+.visually-hidden { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); border:0; }
+.detail-top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:0 var(--space-4); }
+.video-meta summary { font-size:0.875rem; color:var(--muted); }
+.video-meta[open] { flex-basis:100%; }
+.video-meta .video-id { margin:0; }
+.status-panel { display:block; }
+.status-panel > * + * { margin-top:var(--space-3); }
+.status-panel h2 { margin-bottom:0; }
+.status-panel p { margin-bottom:0; }
+.progress-ribbon { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--space-2); font-size:0.8125rem; }
+.progress-ribbon li { display:inline-flex; align-items:center; gap:var(--space-1); min-width:0; }
+.progress-ribbon li + li::before { content:"→" / ""; margin-inline-end:var(--space-1); color:var(--muted); }
+.progress-ribbon li[data-view=pending] { color:var(--muted); }
+.progress-ribbon li[aria-current=step] { font-weight:700; }
+.progress-ribbon .step-detail { font-variant-numeric:tabular-nums; }
+.step-mark { display:inline-grid; place-items:center; width:1.375rem; height:1.375rem; border:0.0625rem solid currentColor; border-radius:50%; font-size:0.75rem; font-weight:800; line-height:1; flex-shrink:0; }
+.status-panel.compact { padding:var(--space-2) var(--space-4); }
+.status-panel.compact p { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2); font-size:0.9375rem; }
+/* progress-ribbon:first-screen:start — телефон: панель действий первой карточки в первом экране 390×844/375×667/360×740
+   (FR-GROWTH-001). Бюджет и числа — docs/features/progress-ribbon/07_code_report.md. */
+@media(width < 600px) {
+  .detail-header .eyebrow { margin-top:var(--space-2); margin-bottom:var(--space-1); }
+  .detail-header h1 { font-size:1.5rem; letter-spacing:-0.03em; margin-bottom:0; }
+  .detail-header + .status-panel { margin-top:var(--space-4); margin-bottom:0; }
+  .status-panel + .clips-section,.status-panel + .notice { margin-top:var(--space-4); }
+  .clips-section .section-heading { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:0 var(--space-3); margin-bottom:var(--space-3); }
+  .clips-section .section-heading h2 { font-size:1.25rem; margin-bottom:0; }
+  /* Кадр во всю ширину карточки (фон media-bg), видео по центру: иначе max-height сужает сам блок 9:16 к левому краю. */
+  .clip-preview { width:100%; }
+  .clip-preview,.clip-preview video { max-height:32svh; }
+}
+/* progress-ribbon:first-screen:end */

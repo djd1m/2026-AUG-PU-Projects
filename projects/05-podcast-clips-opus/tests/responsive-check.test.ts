@@ -174,3 +174,15 @@ it('R9: explicit route and viewport coverage', () => {
   for (const route of ['/c/', '/g/x', '/dashboard']) expect(firstScreenSelector(route)).toBeNull();
   expect(FIRST_SCREEN_VIEWPORTS).toEqual([{ w: 390, h: 844 }, { w: 375, h: 667 }, { w: 360, h: 740 }]);
 });
+it('R9 экран записи (фича 29): панель действий первой карточки; прогон первого экрана несёт вход', async () => {
+  const id = '8f0c2a4e-1b2c-4d5e-8f90-123456789abc';
+  expect(firstScreenSelectors(`/dashboard/videos/${id}`)).toEqual(['.clip-card:first-of-type .clip-actions']);
+  for (const route of ['/dashboard/videos/', `/dashboard/videos/${id}/x`, `/videos/${id}`, `/dashboard/videos/${id}?a=1`]) expect(firstScreenSelector(route)).toBeNull();
+  // Страж по исходнику: цикл FIRST_SCREEN_VIEWPORTS создаёт контекст СО storageState для /dashboard —
+  // без него R9 экрана записи проверил бы форму входа (или упал бы на ней), а не экран записи.
+  const { readFile } = await import('node:fs/promises');
+  const source = await readFile('scripts/check-responsive.mjs', 'utf8');
+  const loop = source.slice(source.indexOf('for (const { w, h } of FIRST_SCREEN_VIEWPORTS)'));
+  const creation = loop.slice(0, loop.indexOf('try {'));
+  expect(creation).toMatch(/themedContext\(browser, \{[^;]*route\.startsWith\('\/dashboard'\) \? \{ storageState \} : \{\}/);
+});

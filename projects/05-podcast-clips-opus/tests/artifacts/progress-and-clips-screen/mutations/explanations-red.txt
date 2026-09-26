@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 /tmp/n5-progress-mutations-7sGjkn
+
+ ❯ tests/progress-screen.test.ts (18 tests | 1 failed | 17 skipped) 14ms
+   ↓ экран прогресса и оценки > три состояния различимы в HTML и тексте
+   ↓ экран прогресса и оценки > молчание после пяти минут не показывается как идёт
+   ↓ экран прогресса и оценки > все причины имеют человеческий текст; незаконный retry скрыт
+   × экран прогресса и оценки > пустое объяснение оценки отвергается, null score не становится нулём 13ms
+     → expected [Function] to throw an error
+   ↓ экран прогресса и оценки > срок бесплатного файла считается с первого дня, истёкший нельзя скачать
+   ↓ лента стадий экрана записи > лента: каждый статус канона даёт свою стадию и вид
+   ↓ лента стадий экрана записи > лента: молчание пять минут — «нет ответа», а не «идёт»
+   ↓ лента стадий экрана записи > лента: стадия отказа — из последней попытки
+   ↓ лента стадий экрана записи > лента: готово — одна строка «Клипы готовы · N из M»
+   ↓ лента стадий экрана записи > лента: SQL берёт стадию последней попытки без пересборок
+   ↓ авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии
+   ↓ авторизованный redirect файла и превью > клип не done даёт 404, соседний готовый отдаётся
+   ↓ авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+   ↓ tRPC read contract > GET video.get passes canonical input and ownership into service; result wrapper matches client
+   ↓ чтения 120/мин отдельно от 30 мутаций
+   ↓ скачивание: UTF-8 имя в подписанном Content-Disposition, TTL 900
+   ↓ файл открывается сразу, даже если запись события не отвечает
+   ↓ actual clip duration is numeric in screen and used by ClipCard; null falls back
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 skipped (18)
+   Start at  02:16:25
+   Duration  1.51s (transform 848ms, setup 0ms, collect 1.25s, tests 14ms, environment 0ms, prepare 75ms)
+
+
+WARNING: ПРОПУЩЕНО 17 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-progress-mutations-7sGjkn/tests/progress-screen.test.ts: 17 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/progress-screen.test.ts > экран прогресса и оценки > пустое объяснение оценки отвергается, null score не становится нулём
+AssertionError: expected [Function] to throw an error
+ ❯ tests/progress-screen.test.ts:59:113
+     57|   it('пустое объяснение оценки отвергается, null score не становится н…
+     58|     for (const field of ['explain_hook', 'explain_completeness', 'expl…
+     59|       for (const value of ['', '   ', null]) expect(() => presentClip(…
+       |                                                                                                                 ^
+     60|     }
+     61|     expect(presentClip({ ...clip, score: null }, video, now)).not.toHa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

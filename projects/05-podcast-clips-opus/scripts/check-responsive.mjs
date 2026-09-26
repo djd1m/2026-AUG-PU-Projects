@@ -113,7 +113,9 @@ export async function main(args, { launchOptions = {} } = {}) {
               if (!selectors.length) continue;
               const scenario = `first-screen-${w}x${h}`;
               const meta = { engine, theme, scenario, route, width: w, height: h };
-              const context = await themedContext(browser, { viewport: { width: w, height: h }, isMobile: true, hasTouch: true }, theme, options.base);
+              // Экран записи — под входом (фича 29): без storageState прогон упёрся бы в форму входа.
+              const context = await themedContext(browser, { viewport: { width: w, height: h }, isMobile: true, hasTouch: true,
+                ...(route.startsWith('/dashboard') ? { storageState } : {}) }, theme, options.base);
               try {
                 const page = await context.newPage();
                 await navigate(page, options.base + route);

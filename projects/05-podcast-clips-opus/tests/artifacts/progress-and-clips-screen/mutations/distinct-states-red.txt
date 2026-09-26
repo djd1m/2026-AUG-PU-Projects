@@ -1,0 +1,51 @@
+
+ RUN  v3.2.7 /tmp/n5-progress-mutations-7sGjkn
+
+ ❯ tests/progress-screen.test.ts (18 tests | 1 failed | 17 skipped) 28ms
+   × экран прогресса и оценки > три состояния различимы в HTML и тексте 26ms
+     → expected '<section class="status-panel running"…' to contain 'data-state="failure"'
+   ↓ экран прогресса и оценки > молчание после пяти минут не показывается как идёт
+   ↓ экран прогресса и оценки > все причины имеют человеческий текст; незаконный retry скрыт
+   ↓ экран прогресса и оценки > пустое объяснение оценки отвергается, null score не становится нулём
+   ↓ экран прогресса и оценки > срок бесплатного файла считается с первого дня, истёкший нельзя скачать
+   ↓ лента стадий экрана записи > лента: каждый статус канона даёт свою стадию и вид
+   ↓ лента стадий экрана записи > лента: молчание пять минут — «нет ответа», а не «идёт»
+   ↓ лента стадий экрана записи > лента: стадия отказа — из последней попытки
+   ↓ лента стадий экрана записи > лента: готово — одна строка «Клипы готовы · N из M»
+   ↓ лента стадий экрана записи > лента: SQL берёт стадию последней попытки без пересборок
+   ↓ авторизованный redirect файла и превью > чужой и отсутствующий клип дают один 404, не 403; фильтр по владельцу из сессии
+   ↓ авторизованный redirect файла и превью > клип не done даёт 404, соседний готовый отдаётся
+   ↓ авторизованный redirect файла и превью > нет сессии / плохой id / истечение / нет ключа — без подписи; ошибка хранилища видима
+   ↓ tRPC read contract > GET video.get passes canonical input and ownership into service; result wrapper matches client
+   ↓ чтения 120/мин отдельно от 30 мутаций
+   ↓ скачивание: UTF-8 имя в подписанном Content-Disposition, TTL 900
+   ↓ файл открывается сразу, даже если запись события не отвечает
+   ↓ actual clip duration is numeric in screen and used by ClipCard; null falls back
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 skipped (18)
+   Start at  02:16:00
+   Duration  1.32s (transform 562ms, setup 0ms, collect 1.03s, tests 28ms, environment 0ms, prepare 85ms)
+
+
+WARNING: ПРОПУЩЕНО 17 тестов; отсутствуют DATABASE_URL, REDIS_URL, S3_ENDPOINT. Это НЕ успешная полная проверка.
+  /tmp/n5-progress-mutations-7sGjkn/tests/progress-screen.test.ts: 17 skipped
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/progress-screen.test.ts > экран прогресса и оценки > три состояния различимы в HTML и тексте
+AssertionError: expected '<section class="status-panel running"…' to contain 'data-state="failure"'
+
+Expected: [32m"data-state="failure""[39m
+Received: [31m"<section class="status-panel running" role="status" aria-live="polite" data-state="running"><h2>Выполняется</h2><ol class="progress-ribbon" aria-label="Этапы обработки"><li data-view="running" aria-current="step"><span class="step-mark" aria-hidden="true">◷</span><span class="step-label">Загрузка</span><span class="visually-hidden"> — идёт</span></li><li data-view="pending"><span class="step-mark" aria-hidden="true">○</span><span class="step-label">Расшифровка</span><span class="visually-hidden"> — впереди</span></li><li data-view="pending"><span class="step-mark" aria-hidden="true">○</span><span class="step-label">Выбор</span><span class="visually-hidden"> — впереди</span></li><li data-view="pending"><span class="step-mark" aria-hidden="true">○</span><span class="step-label">Монтаж</span><span class="visually-hidden"> — впереди</span></li></ol><p>Обработка не завершена</p><progress aria-label="Прогресс этапа" max="100" value="40"></progress><button>Повторить</button></section>"[39m
+
+ ❯ tests/progress-screen.test.ts:34:20
+     32|     expect(running).toContain('data-state="running"'); expect(running)…
+     33|     expect(success).toContain('data-state="success"'); expect(success)…
+     34|     expect(failed).toContain('data-state="failure"'); expect(failed).t…
+       |                    ^
+     35|     expect(failed).toContain('Повторить'); expect(failed).not.toContai…
+     36|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
