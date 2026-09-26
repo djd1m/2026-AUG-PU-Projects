@@ -1,0 +1,10 @@
+# Стенд проверки N6 на этой машине (A-N6-037): дверь proxy дополнительно входит во внешнюю сеть общего TLS-прокси
+# ai-hub-tls-proxy (/home/dz-projects-2026/edge), который отдаёт https://n6.194.85.249.105.sslip.io → n6-sufler-proxy-1:80.
+# Основной docker-compose.yml не меняется: на другом сервере сеть другая (docs/BACKLOG.md §1).
+#   docker compose -f docker-compose.yml -f compose.stand.yml --env-file /home/dz-projects-2026/.n6-stand/stand.env up -d --build
+services:
+  proxy:
+    networks: [default, talk-ai-public]
+networks:
+  talk-ai-public:
+    external: true
