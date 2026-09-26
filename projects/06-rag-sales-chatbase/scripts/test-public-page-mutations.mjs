@@ -25,6 +25,8 @@ const once = (from, to) => (source) => {
   if (a < 0 || source.indexOf(from, a + 1) >= 0) return null;
   return source.slice(0, a) + to + source.slice(a + from.length);
 };
+const chain = (...steps) => (source) => steps.reduce((text, step) => (text === null ? null : step(text)), source);
+// Защита от той же ошибки в будущем: две правки одного файла в одной мутации запрещены — только chain().
 const summary = 'packages/db/src/summary.ts', page = 'packages/db/src/public-page.ts', growth = 'packages/db/src/growth.ts', visitor = 'packages/db/src/visitor.ts',
   origin = 'apps/web/src/server/check-origin.ts', cabinet = 'apps/web/src/server/cabinet-handler.ts', auth = 'apps/web/src/server/auth-handler.ts';
 const mutations = [
@@ -50,6 +52,17 @@ const mutations = [
     edits: [{ file: cabinet, apply: once("if (typeof input.enabled !== 'boolean' || typeof input.indexable !== 'boolean')", 'if (input.enabled === undefined || input.indexable === undefined)') }] },
   { id: 'arrival-on-login', title: 'приход пишется и при входе, а не только при регистрации',
     edits: [{ file: auth, apply: once("if (action === 'register' && deps.recordArrival)", 'if (deps.recordArrival)') }] },
+  // Ревью фичи 13 (08_review.md): находки 1 и 2.
+  { id: 'sweep-by-created', title: 'уборка по времени создания, а не последнего обращения — сессия исчезает посреди ответа (находка 1)',
+    // Обе правки одного файла — ОДНОЙ цепочкой: две отдельные правки читали бы исходник независимо, и вторая запись
+    // затёрла бы первую (так эта мутация в первом прогоне «прошла» — мутировал только внешний WHERE).
+    edits: [{ file: visitor, apply: chain(
+      once("      WHERE s.last_seen_at < now() - make_interval(hours => $2) AND s.history = '[]'::jsonb",
+        "      WHERE s.created_at < now() - make_interval(hours => $2) AND s.history = '[]'::jsonb"),
+      once('DELETE FROM visitor_session d WHERE d.last_seen_at < now()', 'DELETE FROM visitor_session d WHERE d.created_at < now()')) }] },
+  { id: 'conv-mixed-channels', title: 'conv% смешивает каналы: приход с демо-страницы в числителе (находка 2)',
+    edits: [{ file: growth, apply: once("(SELECT count(*)::int FROM a WHERE NOT demo AND activated) AS arrivals_badge_activated",
+      '(SELECT count(*)::int FROM a WHERE activated) AS arrivals_badge_activated') }] },
 ];
 const results = [];
 try {
@@ -75,6 +88,8 @@ try {
     return { code: result.error ? null : result.status, summary: summaryLine, skipped: /skipped/.test(summaryLine) };
   };
   for (const mutation of mutations) {
+    const files = mutation.edits.map((e) => e.file);
+    if (new Set(files).size !== files.length) throw new Error(`Две правки одного файла в мутации ${mutation.id}: вторая затрёт первую — сведите их chain()`);
     const originals = mutation.edits.map(({ file, apply }) => {
       const path = join(directory, file), source = readFileSync(path, 'utf8');
       const mutated = apply(source);

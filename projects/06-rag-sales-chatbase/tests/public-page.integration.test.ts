@@ -4,7 +4,7 @@
 // метрики i и conv% (null при нулевом знаменателе), уборка пустых сессий посетителей (carry_over фичи 12).
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { createPool, growthMetrics, loadPublicPage, publishPublicPage, readBotCabinet, readBotSummary, recordArrival, recordPublicPageView,
+import { createPool, growthMetrics, loadPublicPage, openVisitorSession, publishPublicPage, readBotCabinet, readBotSummary, recordArrival, recordPublicPageView,
   recordShareCtaClick, sweepIdleVisitorSessions, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
@@ -136,9 +136,10 @@ describe.skipIf(!databaseUrl)('демо-страница, сводка и соб
     await expect(pool.query(`UPDATE account SET came_from = 'Not A Domain' WHERE id = $1`, [s.account])).rejects.toThrow();
   });
 
-  it('AC-9: i и conv% — null при нулевом знаменателе; при данных — числа', async () => {
+  it('AC-9: i и conv% — null при нулевом знаменателе; при данных — числа; каналы бейджа и демо-страницы не смешиваются', async () => {
+    const PUBLIC_HOST = 'sufler.test.invalid';
     // Изолированная схема: считаются только строки этого набора; предыдущие тесты событий бейджа не писали.
-    const empty = await growthMetrics(pool, 7);
+    const empty = await growthMetrics(pool, 7, PUBLIC_HOST);
     expect(empty.badge_impressions).toBe(0);
     expect([empty.i_per_1000, empty.conv_percent]).toEqual([null, null]);
     const s = await seed();
@@ -146,29 +147,45 @@ describe.skipIf(!databaseUrl)('демо-страница, сводка и соб
     for (let i = 0; i < 2000; i += 500) {
       await pool.query(`INSERT INTO growth_event (type, bot_id, dedup_key) SELECT 'badge_impression', $1, 'imp:' || g FROM generate_series($2::int, $3::int) g`, [s.bot, i, i + 499]);
     }
-    for (let i = 0; i < 6; i++) await pool.query(`INSERT INTO growth_event (type, bot_id, visitor_session_id, dedup_key) VALUES ('badge_click', $1, $2, $3)`, [s.bot, vs, `clk:${i}`]);
+    for (let i = 0; i < 6; i++) await pool.query(`INSERT INTO growth_event (type, bot_id, visitor_session_id, from_domain, dedup_key) VALUES ('badge_click', $1, $2, 'shop.example', $3)`, [s.bot, vs, `clk:${i}`]);
+    // Клик по бейджу НА ДЕМО-СТРАНИЦЕ — другой канал: в i входит, в знаменатель conv% — нет.
+    await pool.query(`INSERT INTO growth_event (type, bot_id, visitor_session_id, from_domain, dedup_key) VALUES ('badge_click', $1, $2, $3, 'clk:demo')`, [s.bot, vs, PUBLIC_HOST]);
     const arrived = await seed();
     await recordArrival(pool, arrived.account, 'shop.example');
     await pool.query(`INSERT INTO growth_event (type, bot_id, account_id, dedup_key) VALUES ('first_answer', $1, $2, $3)`, [arrived.bot, arrived.account, `first_answer:${arrived.bot}`]);
-    const m = await growthMetrics(pool, 7);
-    expect([m.badge_impressions, m.badge_clicks, m.i_per_1000]).toEqual([2000, 6, 3]);
+    // Сценарий ревьюера: две регистрации с демо-страницы с первым ответом — прежняя формула давала conv% > 100 %.
+    for (let i = 0; i < 2; i++) {
+      const demo = await seed();
+      await recordArrival(pool, demo.account, 'b/kolos-ab12');
+      await pool.query(`INSERT INTO growth_event (type, bot_id, account_id, dedup_key) VALUES ('first_answer', $1, $2, $3)`, [demo.bot, demo.account, `first_answer:${demo.bot}`]);
+    }
+    const m = await growthMetrics(pool, 7, PUBLIC_HOST);
+    expect([m.badge_impressions, m.badge_clicks, m.badge_clicks_on_sites, m.i_per_1000]).toEqual([2000, 7, 6, 3.5]);
     // Аккаунт из теста AC-8 тоже пришёл по бейджу, но без first_answer: считаем прирост от исходного снимка.
-    expect([m.arrivals - empty.arrivals, m.arrivals_activated - empty.arrivals_activated, m.conv_percent]).toEqual([1, 1, 16.7]);
-    await expect(growthMetrics(pool, 0)).rejects.toThrow();
+    expect([m.arrivals_badge - empty.arrivals_badge, m.arrivals_badge_activated - empty.arrivals_badge_activated, m.conv_percent]).toEqual([1, 1, 16.7]);
+    expect([m.arrivals_demo - empty.arrivals_demo, m.arrivals_demo_activated - empty.arrivals_demo_activated]).toEqual([2, 2]);
+    await expect(growthMetrics(pool, 0, PUBLIC_HOST)).rejects.toThrow();
+    await expect(growthMetrics(pool, 7, 'Evil Host')).rejects.toThrow();
   });
 
-  it('AC-12: сторож удаляет пустые сессии старше суток; с журналом, событием, историей или свежие — остаются', async () => {
+  it('AC-12: сторож удаляет пустые сессии без обращений больше суток; с журналом, событием, историей, свежие и ТРОНУТЫЕ вопросом — остаются', async () => {
     const s = await seed();
-    const old = async () => { const id = await session(s.bot); await pool.query(`UPDATE visitor_session SET created_at = now() - interval '25 hours' WHERE id = $1`, [id]); return id; };
+    const old = async () => { const id = await session(s.bot); await pool.query(`UPDATE visitor_session SET created_at = now() - interval '25 hours',
+      last_seen_at = now() - interval '25 hours' WHERE id = $1`, [id]); return id; };
     const idle = await old(), withLog = await old(), withEvent = await old(), withHistory = await old(), fresh = await session(s.bot);
+    // Ревью фичи 13, находка 1: вопрос по старому токену (openVisitorSession) обновляет last_seen_at ДО вызова модели —
+    // сторож не удаляет сессию посреди ответа, и запись журнала после оплаченного вызова не падает по внешнему ключу.
+    const touched = await old();
+    expect(await openVisitorSession(pool, { id: touched, botId: s.bot, origin: 'https://shop.example', ipPrefix: '198.51.100.0/24' })).not.toBeNull();
     await log(s.bot, withLog, 'answered');
     await pool.query(`INSERT INTO growth_event (type, bot_id, visitor_session_id, dedup_key) VALUES ('badge_impression', $1, $2, $3)`, [s.bot, withEvent, `imp:${randomUUID()}`]);
     await pool.query(`UPDATE visitor_session SET history = jsonb_build_array(jsonb_build_object('question', 'q', 'answer', 'a', 'at', now())), history_at = now() WHERE id = $1`, [withHistory]);
     expect(await sweepIdleVisitorSessions(pool, 1000)).toBeGreaterThanOrEqual(1);
     const left = (await pool.query<{ id: string }>('SELECT id FROM visitor_session WHERE bot_id = $1', [s.bot])).rows.map((r) => r.id).sort();
-    expect(left).toEqual([withLog, withEvent, withHistory, fresh].sort());
+    expect(left).toEqual([withLog, withEvent, withHistory, fresh, touched].sort());
+    await log(s.bot, touched, 'answered');
     expect(left).not.toContain(idle);
     // Вопрос с сессией остался в сводке.
-    expect((await readBotSummary(pool, s.bot, s.account))!.answered).toBe(1);
+    expect((await readBotSummary(pool, s.bot, s.account))!.answered).toBe(2);
   });
 });

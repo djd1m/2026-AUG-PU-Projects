@@ -659,7 +659,7 @@
       "title": "Демо-страница /b/{slug}, сводка «ответил / не знал», события роста",
       "description": "PublishPublicPage: /b/{slug} без входа, SSR, чат + бейдж, noindex по умолчанию, снятие публикации → 404; вопросы с N6_PUBLIC_ORIGIN не считаются установкой; BotSummary за 7 дней: answered / unknown / refused_limit и последние 20 вопросов без ответа с «Добавить материалы», «вопросов ещё не было» вместо 0 %; RecordGrowthEvent (dedup_key): badge_impression, badge_click, share_cta_*, widget_install, first_answer, public_page_view; вход по бейджу /?from= — атрибуция домена для i и conv%.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "visitor-ask-and-limits"
@@ -695,7 +695,8 @@
         "tests/summary.test.ts"
       ],
       "notes": "Рассылка сводки в Telegram (ADR-015, донор N2) — НЕ в неделю; первая фича, которая её тронет, называет ADR-015 в квитанции (перенос L1 Phase 2).",
-      "carry_over": " | bot-cabinet (A-N6-033 (1)): вопросы тестового чата владельца в question_log НЕ пишутся (сводка — только посетители), но списывают bot_day/bot_month/global_answers — баннер исчерпания месяца обязан это называть. | visitor-ask-and-limits (A-N6-035): баннер исчерпания месяца и блок «Я проверил ответы бота» в кабинете НЕ прогнаны прибором адаптивности и браузером; отметка «проверено» не снимается при новом источнике; строки visitor_session без событий не удаляются; сводка «ответил / не знал» читает question_log (visitor_session_id заполнен, refused_origin — отдельный исход, в сводку не входит); не закрыто — калибровка 20 + 20 и решение владельца по ADR-003."
+      "carry_over": " | bot-cabinet (A-N6-033 (1)): вопросы тестового чата владельца в question_log НЕ пишутся (сводка — только посетители), но списывают bot_day/bot_month/global_answers — баннер исчерпания месяца обязан это называть. | visitor-ask-and-limits (A-N6-035): баннер исчерпания месяца и блок «Я проверил ответы бота» в кабинете НЕ прогнаны прибором адаптивности и браузером; отметка «проверено» не снимается при новом источнике; строки visitor_session без событий не удаляются; сводка «ответил / не знал» читает question_log (visitor_session_id заполнен, refused_origin — отдельный исход, в сводку не входит); не закрыто — калибровка 20 + 20 и решение владельца по ADR-003.",
+      "completion": "docs/features/public-page-and-summary/05_completion.md"
     },
     {
       "id": "tariffs-and-interest",

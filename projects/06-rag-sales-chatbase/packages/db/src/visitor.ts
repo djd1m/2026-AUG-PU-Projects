@@ -38,8 +38,9 @@ function readHistory(value: unknown): HistoryTurn[] {
 export function openVisitorSession(pool: Pool, input: { id: string; botId: string; origin: string; ipPrefix: string }): Promise<VisitorSessionState | null> {
   if (!isUuid(input.id) || !isUuid(input.botId)) return Promise.resolve(null);
   return transaction(pool, async (tx) => {
-    await tx.query(`INSERT INTO visitor_session (id, bot_id, ip_prefix, origin) VALUES ($1, $2, $3::cidr, $4) ON CONFLICT (id) DO NOTHING`,
-      [input.id, input.botId, input.ipPrefix, input.origin]);
+    // Обращение обновляет last_seen_at ДО вызова модели: сторож (sweepIdleVisitorSessions) не удалит сессию посреди ответа.
+    await tx.query(`INSERT INTO visitor_session (id, bot_id, ip_prefix, origin) VALUES ($1, $2, $3::cidr, $4)
+      ON CONFLICT (id) DO UPDATE SET last_seen_at = now()`, [input.id, input.botId, input.ipPrefix, input.origin]);
     const row = (await tx.query<{ bot_id: string; origin: string; history: unknown; badge: boolean }>(
       `SELECT s.bot_id, s.origin, ${freshTurns('s.history')} AS history,
          EXISTS (SELECT 1 FROM growth_event g WHERE g.visitor_session_id = s.id AND g.type = 'badge_impression') AS badge
@@ -90,12 +91,15 @@ export const IDLE_VISITOR_SESSION_HOURS = 24;
 // Сессии с записями журнала НЕ удаляются: question_log.visitor_session_id — ON DELETE SET NULL, и такой вопрос выпал бы
 // из сводки «ответил / не знал» (она считает только вопросы с сессией). Токен удалённой сессии остаётся годным по
 // подписи — openVisitorSession создаст строку заново.
+// Возраст — по last_seen_at (последнее обращение), а не по created_at: вопрос по старому токену обновляет его ДО вызова
+// модели, и сессия не исчезает посреди ответа (ревью фичи 13, находка 1). Условие возраста повторено во внешнем WHERE:
+// строку, которую конкурентное обращение обновило после выбора id, Postgres перепроверит по новой версии и не удалит.
 export async function sweepIdleVisitorSessions(pool: Pool, batch: number): Promise<number> {
-  const deleted = await pool.query(`DELETE FROM visitor_session WHERE id IN (
+  const deleted = await pool.query(`DELETE FROM visitor_session d WHERE d.last_seen_at < now() - make_interval(hours => $2) AND d.id IN (
       SELECT s.id FROM visitor_session s
-      WHERE s.created_at < now() - make_interval(hours => $2) AND s.history = '[]'::jsonb AND s.history_at IS NULL
+      WHERE s.last_seen_at < now() - make_interval(hours => $2) AND s.history = '[]'::jsonb AND s.history_at IS NULL
         AND NOT EXISTS (SELECT 1 FROM growth_event g WHERE g.visitor_session_id = s.id)
         AND NOT EXISTS (SELECT 1 FROM question_log q WHERE q.visitor_session_id = s.id)
-      ORDER BY s.created_at LIMIT $1)`, [batch, IDLE_VISITOR_SESSION_HOURS]);
+      ORDER BY s.last_seen_at LIMIT $1)`, [batch, IDLE_VISITOR_SESSION_HOURS]);
   return deleted.rowCount ?? 0;
 }

@@ -9,8 +9,11 @@ ALTER TABLE account ADD COLUMN came_from text CONSTRAINT account_came_from_form 
 -- 2. Метрики роста (i, conv%, просмотры демо-страницы) читают события по типу за период.
 CREATE INDEX growth_event_type_created ON growth_event (type, created_at);
 
--- 3. Сторож удаляет сессии посетителей без событий, без истории и без записей журнала (carry_over фичи 12).
-CREATE INDEX visitor_session_created ON visitor_session (created_at);
+-- 3. Сторож удаляет сессии посетителей без событий, без истории и без записей журнала (carry_over фичи 12) — по времени
+--    ПОСЛЕДНЕГО обращения, а не создания: вопрос по старому токену обновляет last_seen_at до вызова модели, и сторож не
+--    удалит сессию посреди ответа (иначе запись журнала упала бы по внешнему ключу после оплаченного вызова; ревью фичи 13).
+ALTER TABLE visitor_session ADD COLUMN last_seen_at timestamptz NOT NULL DEFAULT now();
+CREATE INDEX visitor_session_last_seen ON visitor_session (last_seen_at);
 -- Проверка «у сессии нет записей журнала» и ON DELETE SET NULL при удалении сессии читают question_log по сессии —
 -- без индекса оба прохода читали бы журнал целиком на каждую строку.
 CREATE INDEX question_log_visitor_session ON question_log (visitor_session_id) WHERE visitor_session_id IS NOT NULL;

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { PreviewChat, PreviewProgress, type ChatMessage, type PreviewJobView, type PreviewSiteView } from '../PreviewViews';
 
 const POLL_MS = 2000;
+const SHARE_TIMEOUT_MS = 2000;   // запись клика «Поделиться» — метрика, дольше её не ждём
 interface ReadData extends PreviewJobView { site?: PreviewSiteView | null; questions_left?: number }
 function errorOf(body: unknown): { code: string; message: string } | null {
   if (typeof body !== 'object' || body === null || !('error' in body)) return null;
@@ -90,9 +91,14 @@ export function PreviewScreen({ jobId, signedIn }: { jobId: string; signedIn: bo
   }, [jobId, router]);
 
   // «Поделиться ссылкой на бота» (FR-GROWTH-001): нажатие записывается, затем бот сохраняется в аккаунт — ссылку на
-  // демо-страницу выдаёт кабинет после публикации (A-N6-038 (5)). Сбой записи клика сохранение не отменяет.
+  // демо-страницу выдаёт кабинет после публикации (A-N6-038 (5)). Кнопка гаснет сразу; запись клика — метрика, её ждём
+  // не дольше SHARE_TIMEOUT_MS: зависший запрос не задерживает переход (ревью фичи 13, находка 3).
   const share = useCallback(async () => {
-    await fetch(`/api/preview/${encodeURIComponent(jobId)}/share`, { method: 'POST' }).catch(() => undefined);
+    setSaving(true);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), SHARE_TIMEOUT_MS);
+    await fetch(`/api/preview/${encodeURIComponent(jobId)}/share`, { method: 'POST', signal: controller.signal }).catch(() => undefined);
+    clearTimeout(timer);
     if (signedIn) await save(); else router.push('/login?mode=register&from=preview');
   }, [jobId, router, save, signedIn]);
 

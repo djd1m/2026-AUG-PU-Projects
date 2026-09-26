@@ -97,6 +97,27 @@ describe('источник запроса виджета с демо-стран�
   });
 });
 
+// Ревью фичи 13, находка 4: браузерный набор рендерит демо-страницу оснасткой, а не маршрутом Next — связь настоящего
+// page.tsx с проверенными частями стережётся по исходнику (комментарии вырезаются: смотрим на код).
+describe('стражи по исходнику: настоящая /b/{slug} и кнопка «Поделиться»', () => {
+  const code = (path: string) => readFileSync(path, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+  it('page.tsx: 404 через notFound, метаданные из publicPageMetadata, тег виджета с data-bot и data-open, просмотр пишется', () => {
+    const page = code('apps/web/src/app/b/[slug]/page.tsx');
+    expect(page).toMatch(/if \(!page\) notFound\(\);/);
+    expect(page).toMatch(/return publicPageMetadata\(await load\(/);
+    expect(page).toMatch(/<script src=\{`\/w\/\$\{bundle\}`\} data-bot=\{page\.publicKey\} data-open="true" async \/>/);
+    expect(page).toMatch(/recordPublicPageView\(/);
+  });
+  it('PreviewScreen: «Поделиться» гасит кнопку сразу и ждёт запись клика не дольше таймаута', () => {
+    const screen = code('apps/web/src/app/preview/[jobId]/PreviewScreen.tsx');
+    const share = screen.slice(screen.indexOf('const share = useCallback'), screen.indexOf('if (gone)'));
+    expect(share.indexOf('setSaving(true)')).toBeGreaterThan(-1);
+    expect(share.indexOf('setSaving(true)')).toBeLessThan(share.indexOf('await fetch('));
+    expect(share).toMatch(/setTimeout\(\(\) => controller\.abort\(\), SHARE_TIMEOUT_MS\)/);
+    expect(share).toMatch(/signal: controller\.signal/);
+  });
+});
+
 describe('ссылка бейджа на демо-странице (A-N6-038 (3))', () => {
   it('свой origin и слаг — from=b/<slug>; чужой origin — домен хозяина; свой без слага — домен', () => {
     expect(badgeHref(PUBLIC, PUBLIC, 'kolos-ab12')).toBe(`${PUBLIC}/?from=b%2Fkolos-ab12&utm_source=badge`);
