@@ -112,7 +112,8 @@ services:
     image: n6-sufler-worker:${IMAGE_TAG:-dev}
     environment:
       <<: [*app-env, *model-env, *quota-env]
-      N6_INDEX_CONCURRENCY: "2"
+      # параллельность задач индексации — 1, константа кода apps/worker/src/index.ts (вежливость краулера);
+      # прежняя N6_INDEX_CONCURRENCY: "2" кодом не читалась (honest-configuration CFG-I5) и снята (source-lifecycle)
     volumes:
       - uploads:/work/uploads
       - model-spend:/work/spend

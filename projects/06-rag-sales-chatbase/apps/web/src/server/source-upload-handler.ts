@@ -10,7 +10,7 @@
 import { randomUUID } from 'node:crypto';
 import { open, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
-import { isPdfMagic, PDF_MAX_BYTES, type AccountPlan } from '@n6/rag';
+import { INDEX_STARTS_PER_BOT_DAY, isPdfMagic, PDF_MAX_BYTES, type AccountPlan } from '@n6/rag';
 import type { CreatePdfSourceInput, CreatePdfSourceResult, OwnedBot } from '@n6/db';
 import { readSessionCookie } from './auth-handler';
 import { clientIp } from './ip';
@@ -41,6 +41,9 @@ const fail = (status: number, code: string, message: string) => json({ error: { 
 const accepted = (indexJobId: string) => json({ data: { index_job_id: indexJobId } }, 202);
 const notFound = () => fail(404, 'not_found', 'Бот не найден');
 const tooLarge = () => fail(413, 'too_large', 'Файл больше 10 МБ — это предел загрузки PDF');
+// source-lifecycle: суточный предел запусков индексации бота (INDEX_STARTS_PER_BOT_DAY), отказы считаются.
+export const dailyLimit = (limit: number) =>
+  fail(429, 'index_starts', `Сегодня у этого бота уже ${limit} запусков индексации — это предел на сутки. Новые загрузки и обновления — завтра`);
 const planLimit = (plan: AccountPlan, limit: number) =>
   fail(403, 'plan_limit', `На плане ${PLAN_NAME[plan]} — не больше ${limit} PDF на бота. Удалите ненужный PDF или смените план`);
 
@@ -91,6 +94,7 @@ export function createSourceUploadHandler(deps: SourceUploadDependencies) {
       const declared = Number(declaredRaw);
       if (declared > MAX_UPLOAD_BODY_BYTES) return tooLarge(); // отказ ДО приёма тела (SC-US-004-3)
       if (bot.pdfCount >= deps.pdfLimit(bot.plan)) return planLimit(bot.plan, deps.pdfLimit(bot.plan)); // тоже до приёма
+      if (bot.startsToday >= INDEX_STARTS_PER_BOT_DAY) return dailyLimit(INDEX_STARTS_PER_BOT_DAY); // и предел запусков — до приёма
       const body = await readBounded(request, declared);
       if (body === 'too_large') return tooLarge();
       if (body === 'short') return fail(400, 'invalid', 'Тело запроса оборвано: принято меньше заявленного');
@@ -116,6 +120,7 @@ export function createSourceUploadHandler(deps: SourceUploadDependencies) {
         written = null;
         if (result.kind === 'existing') return accepted(result.indexJobId);
         if (result.kind === 'plan_limit') return planLimit(result.plan, result.limit);
+        if (result.kind === 'daily_limit') return dailyLimit(result.limit);
         return notFound();
       }
       written = null; // файл принадлежит задаче: удаляет воркер после done/failed (ADR-018)

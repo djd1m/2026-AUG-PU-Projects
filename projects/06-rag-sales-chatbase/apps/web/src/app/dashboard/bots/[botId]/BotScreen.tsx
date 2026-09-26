@@ -27,7 +27,8 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
   const [url, setUrl] = useState('');
   const [adding, setAdding] = useState(false);
   const [sourceErrors, setSourceErrors] = useState<FieldErrors>({});
-  const [retrying, setRetrying] = useState<string | null>(null);
+  const [busySource, setBusySource] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState<string | null>(null);
   const addSite = async () => {
     setAdding(true); setSourceErrors({});
     try {
@@ -47,13 +48,22 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
       setSourceErrors({ pdf: errorOf(await response.json().catch(() => null))?.message ?? 'Не удалось загрузить PDF. Повторите' });
     } catch { setSourceErrors({ pdf: 'Нет связи с сервером. Повторите' }); } finally { setAdding(false); }
   };
-  const retry = async (sourceId: string) => {
-    setRetrying(sourceId); setSourceErrors({});
+  // «Повторить»/«Обновить» — одна ручка (та же задача, новая серия); «Удалить» — после подтверждения.
+  const reindex = async (sourceId: string) => {
+    setBusySource(sourceId); setSourceErrors({});
     try {
       const { status, body } = await send(`/api/sources/${sourceId}/reindex`, 'POST', {});
       if (status === 202) { router.refresh(); return; }
-      setSourceErrors({ [sourceId]: errorOf(body)?.message ?? 'Не удалось повторить. Попробуйте ещё раз' });
-    } catch { setSourceErrors({ [sourceId]: 'Нет связи с сервером. Повторите' }); } finally { setRetrying(null); }
+      setSourceErrors({ [sourceId]: errorOf(body)?.message ?? 'Не удалось поставить в очередь. Попробуйте ещё раз' });
+    } catch { setSourceErrors({ [sourceId]: 'Нет связи с сервером. Повторите' }); } finally { setBusySource(null); }
+  };
+  const removeSource = async (sourceId: string) => {
+    setBusySource(sourceId); setSourceErrors({});
+    try {
+      const { status, body } = await send(`/api/sources/${sourceId}`, 'DELETE');
+      if (status === 204 || status === 404) { setConfirming(null); router.refresh(); return; }
+      setSourceErrors({ [sourceId]: errorOf(body)?.message ?? 'Не удалось удалить. Попробуйте ещё раз' });
+    } catch { setSourceErrors({ [sourceId]: 'Нет связи с сервером. Повторите' }); } finally { setBusySource(null); }
   };
 
   const [messages, setMessages] = useState<OwnerMessage[]>([]);
@@ -120,7 +130,8 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
     publish={<PublishBlock page={page} busy={publishing} error={publishError}
       onPublish={(enabled) => { void publish({ enabled, indexable: page.indexable }); }}
       onIndexable={(indexable) => { void publish({ enabled: page.enabled, indexable }); }} />}
-    sourcesBlock={<><SourceList sources={p.sources} retrying={retrying} errors={sourceErrors} onRetry={(id) => { void retry(id); }} />
+    sourcesBlock={<><SourceList sources={p.sources} busy={busySource} confirming={confirming} errors={sourceErrors}
+        onReindex={(id) => { void reindex(id); }} onConfirm={setConfirming} onDelete={(id) => { void removeSource(id); }} />
       <AddSource url={url} busy={adding} errors={sourceErrors} onUrl={setUrl} onSite={() => { void addSite(); }} onPdf={(f) => { void addPdf(f); }} /></>}
     chat={<OwnerChat companyName={p.companyName} messages={messages} draft={draft} busy={asking} error={chatError}
       ready={p.sources.some((s) => s.job?.state === 'done')} onDraft={setDraft} onAsk={() => { void ask(); }} />}

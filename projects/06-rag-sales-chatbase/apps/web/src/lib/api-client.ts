@@ -9,7 +9,10 @@ export function errorOf(body: unknown): ApiError | null {
   return typeof code === 'string' && typeof message === 'string' ? { code, message, ...(typeof field === 'string' ? { field } : {}) } : null;
 }
 export const dataOf = <T,>(body: unknown): T | null => (typeof body === 'object' && body !== null && 'data' in body ? (body as { data: T }).data : null);
-export async function send(url: string, method: 'POST' | 'PATCH', payload: unknown, headers: Record<string, string> = {}): Promise<{ status: number; body: unknown }> {
-  const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(payload) });
+// DELETE идёт без тела (источник: DELETE /api/sources/{id}); ответ 204 без тела читается как body = null.
+export async function send(url: string, method: 'POST' | 'PATCH' | 'DELETE', payload?: unknown, headers: Record<string, string> = {}): Promise<{ status: number; body: unknown }> {
+  const response = await fetch(url, payload === undefined
+    ? { method, headers }
+    : { method, headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(payload) });
   return { status: response.status, body: await response.json().catch(() => null) };
 }

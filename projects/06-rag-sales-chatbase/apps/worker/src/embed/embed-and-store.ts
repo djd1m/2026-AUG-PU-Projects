@@ -6,10 +6,11 @@
 // Запись фрагментов (п.4) — packages/db/src/chunks.ts, writeIndexedPage, в транзакции СТРАНИЦЫ; здесь только
 // векторы: сетевой вызов не держит соединение пула.
 import { randomUUID } from 'node:crypto';
-import { chargeQuota, indexEmbedCharges, previewEmbedCharges, touchAndChargeJobBudgetTx, transaction, type Lease, type Pool } from '@n6/db';
+import { chargeQuota, chargeSeriesBudgetTx, indexEmbedCharges, previewEmbedCharges, touchAndChargeJobBudgetTx, transaction, type Lease, type Pool } from '@n6/db';
 import {
   EMBED_BATCH_MAX, EMBED_RETRIES, GatewayResponseError, RetryableCallError, embeddingInput, estimateTokens, isEmbeddingOfDimension,
-  meteredCall, type Ceilings, type ChargeDecision, type Chunk, type OpenRouter, type SpendRecorder,
+  meteredCall, readAccountPlan, SOURCE_EMBED_BUDGET_BY_PLAN, type AccountPlan, type Ceilings, type ChargeDecision, type Chunk, type OpenRouter,
+  type SpendRecorder,
 } from '@n6/rag';
 import { StepFailure } from '../run-index-job';
 
@@ -18,7 +19,7 @@ export interface EmbedderOptions {
   retryPauseMs?: number; log?: (line: string) => void;
 }
 export interface Embedder { embed(lease: Lease, chunks: readonly Chunk[]): Promise<number[][]> }
-type Payer = { kind: 'preview' } | { kind: 'account'; accountId: string };
+type Payer = { kind: 'preview' } | { kind: 'account'; accountId: string; plan: AccountPlan };
 
 export function createEmbedder(options: EmbedderOptions): Embedder {
   const { pool } = options;
@@ -28,10 +29,12 @@ export function createEmbedder(options: EmbedderOptions): Embedder {
   // Бот без аккаунта и без бюджета — не «бесплатно», а internal (fail-closed).
   async function payerOf(lease: Lease): Promise<Payer> {
     if (lease.embedBudget !== null) return { kind: 'preview' };
-    const row = await pool.query<{ account_id: string | null }>('SELECT account_id FROM bot WHERE id = $1', [lease.botId]);
+    const row = await pool.query<{ account_id: string | null; plan: unknown }>(`SELECT b.account_id, a.plan FROM bot b LEFT JOIN account a ON a.id = b.account_id
+      WHERE b.id = $1`, [lease.botId]);
     const accountId = row.rows[0]?.account_id;
     if (!accountId) { log(`worker-index: задача ${lease.indexJobId}: у бота нет аккаунта и у задачи нет бюджета — эмбеддинги не оплачиваются`); throw new StepFailure('internal'); }
-    return { kind: 'account', accountId };
+    // Неизвестный план — free: самый строгий бюджет серии (fail-closed).
+    return { kind: 'account', accountId, plan: readAccountPlan(row.rows[0]?.plan) };
   }
 
   // Одна короткая транзакция на попытку: фенс (опоздавшая попытка не платит) → бюджет задачи → quota_counter.
@@ -40,6 +43,9 @@ export function createEmbedder(options: EmbedderOptions): Embedder {
     await tx.query('SAVEPOINT embed_charge');
     const job = await touchAndChargeJobBudgetTx(tx, lease, tokens);
     let refused: string | null = job.granted ? null : 'index_job.embed_budget';
+    // source-lifecycle: бюджет серии одного источника — до квоты аккаунта; отказ откатывает всё списание попытки.
+    if (!refused && payer.kind === 'account'
+      && !(await chargeSeriesBudgetTx(tx, lease, tokens, SOURCE_EMBED_BUDGET_BY_PLAN[payer.plan]))) refused = 'index_job.series_embed_budget';
     if (!refused) {
       const now = (await tx.query<{ now: Date }>('SELECT now() AS now')).rows[0]!.now;
       const charges = payer.kind === 'preview' ? previewEmbedCharges(options.ceilings, { tokens, now })

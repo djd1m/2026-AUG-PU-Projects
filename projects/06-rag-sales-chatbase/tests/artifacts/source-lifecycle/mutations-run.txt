@@ -1,0 +1,38 @@
+ Container n6-test-f16-db-1 Running 
+ Container n6-test-f16-redis-1 Running 
+ Image n6-sufler-test:foundation Building 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-f16-db-1 Waiting 
+ Container n6-test-f16-redis-1 Waiting 
+ Container n6-test-f16-db-1 Healthy 
+ Container n6-test-f16-redis-1 Healthy 
+ Container n6-test-f16-test-run-d3dd480975b6 Creating 
+ Container n6-test-f16-test-run-d3dd480975b6 Created 
+unchanged-reembedded: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+prune-without-complete-crawl: дефект возвращён → 2 failed | 49 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+starts-not-counted: дефект возвращён → 2 failed | 49 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+starts-without-bot-lock: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+second-series-while-running: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+series-budget-not-charged: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+series-budget-not-reset: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+soft-delete: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+cap-after-embed: дефект возвращён → 1 failed | 50 passed (51) (код 1); код восстановлен → 51 passed (51) (код 0)
+mut exit=0

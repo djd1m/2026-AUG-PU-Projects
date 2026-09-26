@@ -132,6 +132,8 @@ tbody tr:last-child > * { border-bottom:0; }
 .preview-status { max-width:44rem; }
 .preview-status .url-form { margin-top:0; }
 .danger-notice { border-left-color:var(--danger); }
+/* source-lifecycle: «Удалить» рядом с «Отменой» — в одну линию, без верхнего отступа одиночной .danger */
+.cluster > .danger { margin-top:0; }
 .cabinet-notice { margin-bottom:var(--space-6); }
 .progress { height:0.75rem; background:var(--surface-2); border:0.0625rem solid var(--line); border-radius:var(--radius-pill); overflow:hidden; }
 .progress span { display:block; height:100%; background:var(--accent); }

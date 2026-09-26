@@ -15,7 +15,7 @@ import { loadCeilings } from '../packages/rag/src/index';
 import { installSnippet } from '../packages/rag/src/bot-settings';
 import { createCabinetDependencies } from '../apps/web/src/server/cabinet-deps';
 import { createBotCreateHandler, createBotPatchHandler, createBotsListHandler, createOriginAddHandler, createOwnerAskHandler,
-  createSiteSourceHandler, createSourceRetryHandler } from '../apps/web/src/server/cabinet-handler';
+  createSiteSourceHandler, createSourceReindexHandler } from '../apps/web/src/server/cabinet-handler';
 import { createSourceUploadHandler } from '../apps/web/src/server/source-upload-handler';
 import { createIndexJobReadHandler } from '../apps/web/src/server/index-job-handler';
 import { AuthService } from '../apps/web/src/server/auth';
@@ -65,7 +65,7 @@ describe.skipIf(!databaseUrl)('bot-cabinet на настоящем Postgres + pg
     const out = async (response: Response) => ({ status: response.status, body: await response.json() as Json });
     const handlers = {
       list: createBotsListHandler(deps), create: createBotCreateHandler(deps), patch: createBotPatchHandler(deps), origin: createOriginAddHandler(deps),
-      site: createSiteSourceHandler(deps), retry: createSourceRetryHandler(deps), ask: createOwnerAskHandler(deps),
+      site: createSiteSourceHandler(deps), retry: createSourceReindexHandler(deps), ask: createOwnerAskHandler(deps),
       pdf: createSourceUploadHandler({ publicOrigin: ORIGIN, uploadDir: mkdtempSync(path.join(tmpdir(), 'n6-cab-up-')), authenticate: (t) => auth.authenticate(t),
         allowMutation: async () => true, readOwnedBot: (b, a) => readOwnedBotForPdf(pool, b, a), pdfLimit: pdfLimitFor,
         findJob: (b, k) => findJobByIdempotencyKey(pool, b, k), createPdfSource: (i) => createPdfSource(pool, i), enqueue: async () => {} }),
@@ -205,7 +205,7 @@ describe.skipIf(!databaseUrl)('bot-cabinet на настоящем Postgres + pg
     expect(cabinet!.sources[0]).toMatchObject({ kind: 'site', title: 'https://kolos.example/', job: { index_job_id: jobId, state: 'running', queued: true } });
   });
 
-  it('«Повторить»: отказавший сайт — тот же index_job_id, фенс +1, queued; готовый — 409; PDF после отказа — 409 «загрузите заново»', async () => {
+  it('«Повторить»/«Обновить»: отказавший сайт — тот же index_job_id, фенс +1, queued; идущая задача — тот же id без второй постановки; готовый — новая серия; PDF — 409 «загрузите заново»', async () => {
     const w = wire();
     const a = await account(w, 'nobadge');
     const id = await bot(w, a.token);
@@ -215,9 +215,14 @@ describe.skipIf(!databaseUrl)('bot-cabinet на настоящем Postgres + pg
     expect(w.enqueued).toEqual([{ index_job_id: failed.job, generation: 2 }]);
     expect((await pool.query('SELECT status, failure_reason, current_fence FROM index_job WHERE id = $1', [failed.job])).rows[0])
       .toEqual({ status: 'queued', failure_reason: null, current_fence: '2' });
-    expect((await w.retry(a.token, failed.source)).status).toBe(409);            // уже queued
+    // уже queued: повтор ПРОДОЛЖАЕТ ту же задачу (long-running-job), второй серии и второй постановки нет
+    expect(await w.retry(a.token, failed.source)).toEqual({ status: 202, body: { data: { index_job_id: failed.job } } });
+    expect(w.enqueued).toHaveLength(1);
+    expect((await pool.query('SELECT current_fence FROM index_job WHERE id = $1', [failed.job])).rows[0].current_fence).toBe('2');
+    // готовый сайт (source-lifecycle, FR-INDEX-004): «Обновить» — та же задача, новая серия
     const done = await indexed(id, 'done');
-    expect((await w.retry(a.token, done.source)).body.error!.code).toBe('not_failed');
+    expect(await w.retry(a.token, done.source)).toEqual({ status: 202, body: { data: { index_job_id: done.job } } });
+    expect((await pool.query('SELECT status FROM index_job WHERE id = $1', [done.job])).rows[0].status).toBe('queued');
     const pdf = await indexed(id, 'failed', 'pdf');
     expect((await w.retry(a.token, pdf.source)).body.error!.code).toBe('reupload');
   });

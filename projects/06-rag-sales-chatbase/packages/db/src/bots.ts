@@ -6,11 +6,12 @@
 // аккаунт активен. Чужой, черновик, удалённый и несуществующий бот — один и тот же null → 404 (канон: «Чужой
 // ресурс — 404»). bot_id приходит из адреса, account_id — ТОЛЬКО из сессии.
 import type { Pool, PoolClient } from 'pg';
-import { BOTS_BY_PLAN, readAccountPlan, readAccountStatus, type AccountPlan } from '@n6/rag';
+import { BOTS_BY_PLAN, INDEX_STARTS_PER_BOT_DAY, readAccountPlan, readAccountStatus, type AccountPlan } from '@n6/rag';
 import { ORIGINS_PER_BOT, readContact } from '@n6/rag/bot-settings';
 import { createSourceJobTx, indexJobView, isUuid, type IndexJobRow, type IndexJobView } from './index-jobs.js';
 import { loadAnswerBot, type LoadedAnswerBot } from './answers.js';
 import { transaction } from './quota.js';
+import { recordIndexStartTx } from './sources.js';
 
 export const OWNED = `b.id = $1 AND b.account_id = $2 AND b.status = 'active' AND a.status = 'active'`;
 export const pair = (botId: unknown, accountId: unknown) => isUuid(botId) && isUuid(accountId);
@@ -71,6 +72,8 @@ export async function listBots(pool: Pool, accountId: string): Promise<AccountBo
 
 export interface CabinetSource {
   source_id: string; kind: 'site' | 'pdf'; title: string;
+  // Страниц, прочитанных не целиком по пределу CHUNKS_PER_PAGE_MAX (source-lifecycle); 0 — все целиком.
+  pages_truncated: number;
   // Последняя задача источника; queued отличается от running только здесь (IndexJobView их не различает).
   job: (IndexJobView & { queued: boolean }) | null;
 }
@@ -98,9 +101,10 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
     [botId, accountId])).rows[0];
   if (!bot) return null;
   const origins = (await pool.query<{ origin: string }>('SELECT origin FROM allowed_origin WHERE bot_id = $1 ORDER BY created_at, origin', [botId])).rows.map((r) => r.origin);
-  const sources = (await pool.query<IndexJobRow & { source_id: string; kind: string; root_url: string | null; file_name: string | null; job_id: string | null }>(
+  const sources = (await pool.query<IndexJobRow & { source_id: string; kind: string; root_url: string | null; file_name: string | null; job_id: string | null;
+    truncated: number }>(
     `SELECT s.id AS source_id, s.kind, s.root_url, s.file_name, j.id AS job_id, j.id, j.status, j.failure_reason, j.pages_done, j.pages_total,
-       j.chunks_done, j.updated_at
+       j.chunks_done, j.updated_at, (SELECT count(*)::int FROM page p WHERE p.source_id = s.id AND p.chunks_dropped > 0) AS truncated
      FROM source s LEFT JOIN LATERAL (SELECT * FROM index_job WHERE source_id = s.id ORDER BY created_at DESC, id LIMIT 1) j ON true
      WHERE s.bot_id = $1 ORDER BY s.created_at, s.id`, [botId])).rows;
   return {
@@ -110,6 +114,7 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
     sources: sources.map((row) => ({
       source_id: row.source_id, kind: row.kind === 'pdf' ? 'pdf' : 'site',
       title: row.kind === 'pdf' ? (row.file_name ?? 'PDF') : (row.root_url ?? 'Сайт'),
+      pages_truncated: Number(row.truncated) || 0,
       job: row.job_id ? { ...indexJobView(row, now), queued: row.status === 'queued' } : null,
     })),
   };
@@ -164,7 +169,7 @@ export function addAllowedOrigin(pool: Pool, botId: string, accountId: string, o
   });
 }
 
-export type CreateSiteSourceResult = { kind: 'created' | 'existing'; indexJobId: string } | { kind: 'not_found' };
+export type CreateSiteSourceResult = { kind: 'created' | 'existing'; indexJobId: string } | { kind: 'not_found' } | { kind: 'daily_limit'; limit: number };
 // CreateSource для сайта (Pseudocode п.1, 4): адрес уже прошёл CheckAddress в web; источник и задача — одной
 // транзакцией под блокировкой строки бота; повтор с тем же Idempotency-Key — та же задача. Предел страниц плана
 // применяет воркер при обходе (site-processor.ts, PAGES_BY_PLAN).
@@ -173,37 +178,17 @@ export function createSiteSource(pool: Pool, input: { accountId: string; botId: 
   return transaction(pool, async (tx) => {
     const bot = await tx.query(`SELECT b.id FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED} FOR UPDATE OF b`, [input.botId, input.accountId]);
     if (!bot.rowCount) return { kind: 'not_found' } as const;
+    // Повтор с тем же Idempotency-Key — та же задача и НЕ новый запуск (предел не тратится).
+    const existing = await tx.query<{ id: string }>('SELECT id FROM index_job WHERE bot_id = $1 AND idempotency_key = $2', [input.botId, input.idempotencyKey]);
+    if (existing.rowCount) return { kind: 'existing', indexJobId: existing.rows[0]!.id } as const;
+    // source-lifecycle: суточный предел запусков бота (под той же блокировкой строки бота).
+    if (!(await recordIndexStartTx(tx, input.botId, 'site'))) return { kind: 'daily_limit', limit: INDEX_STARTS_PER_BOT_DAY } as const;
     const created = await createSourceJobTx(tx, { botId: input.botId, kind: 'site', rootUrl: input.rootUrl, idempotencyKey: input.idempotencyKey });
     return { kind: created.created ? 'created' : 'existing', indexJobId: created.indexJobId } as const;
   });
 }
 
-export type RetrySourceResult =
-  | { kind: 'queued'; message: { index_job_id: string; generation: number } }
-  | { kind: 'not_failed' } | { kind: 'pdf_reupload' } | null;
-// «Повторить» (FR-INDEX-003, ADR-009) — POST /api/sources/{source_id}/reindex для ОТКАЗАВШЕЙ задачи: тот же
-// index_job_id, новая серия, фенс +1 (опоздавший держатель прежней серии не допишет). PDF после отказа удалён
-// с тома (ADR-018) — повторять нечего, нужна новая загрузка. Переиндексация готового источника — FR-INDEX-004
-// (фича source-lifecycle), здесь отказ not_failed.
-export function retrySource(pool: Pool, sourceId: string, accountId: string, now = new Date()): Promise<RetrySourceResult> {
-  if (!pair(sourceId, accountId)) return Promise.resolve(null);
-  return transaction(pool, async (tx) => {
-    const source = (await tx.query<{ kind: string; bot_id: string }>('SELECT kind, bot_id FROM source WHERE id = $1', [sourceId])).rows[0];
-    if (!source) return null;
-    const bot = await tx.query(`SELECT b.id FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED} FOR UPDATE OF b`, [source.bot_id, accountId]);
-    if (!bot.rowCount) return null;
-    const job = (await tx.query<{ id: string; status: string }>(`SELECT id, status FROM index_job WHERE source_id = $1
-      ORDER BY created_at DESC, id LIMIT 1 FOR UPDATE`, [sourceId])).rows[0];
-    if (!job) return null;
-    if (job.status !== 'failed') return { kind: 'not_failed' } as const;
-    if (source.kind === 'pdf') return { kind: 'pdf_reupload' } as const;
-    const updated = (await tx.query<{ current_fence: string }>(`UPDATE index_job SET status = 'queued', failure_reason = NULL,
-      current_fence = current_fence + 1, updated_at = $2 WHERE id = $1 AND status = 'failed' RETURNING current_fence`, [job.id, now])).rows[0];
-    if (!updated) return { kind: 'not_failed' } as const;
-    await tx.query(`UPDATE source SET status = 'pending' WHERE id = $1`, [sourceId]);
-    return { kind: 'queued', message: { index_job_id: job.id, generation: Number(updated.current_fence) } } as const;
-  });
-}
+// «Повторить» и «Обновить» источника — reindexSource (sources.ts, фича source-lifecycle).
 
 export async function ownsBot(pool: Pool, botId: string, accountId: string): Promise<boolean> {
   if (!pair(botId, accountId)) return false;

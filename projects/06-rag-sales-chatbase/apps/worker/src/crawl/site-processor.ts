@@ -6,13 +6,18 @@
 // держит соединение пула) → writeIndexedPage: строка page и её фрагменты в ОДНОЙ транзакции с фенсом.
 // Страница «без изменений» (известный content_hash) не эмбеддится заново — у неё фрагменты уже есть,
 // потому что хэш и фрагменты записываются только вместе.
-import { recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
+import { capPageChunks, pruneUnseenPages, recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
 import { chunkDocument, readAccountPlan } from '@n6/rag';
 import type { Embedder } from '../embed/embed-and-store';
 import { StepFailure, type SourceProcessor } from '../run-index-job';
-import { CrawlFailure, crawlSite, type CrawlOptions } from './crawl-site';
+import { CrawlFailure, crawlSite, type CrawlOptions, type SkipReason } from './crawl-site';
 import { PAGES_BY_PLAN } from './limits';
 import type { NetOptions } from './safe-get';
+
+// Пропуски, после которых «не увидели» ≠ «страницы нет»: сеть, таймаут, 5xx/4xx сайта. При любом из них обход
+// не считается полным, и исчезнувшие страницы НЕ удаляются (source-lifecycle). Остальные причины детерминированы:
+// страница запрещена robots, noindex, пуста, ушла за сайт — её прежние фрагменты удалять правильно.
+export const TRANSIENT_SKIPS: readonly SkipReason[] = ['robots_unreachable', 'unreachable', 'timeout', 'too_many_redirects', 'http_error'];
 
 export interface SiteProcessorOptions {
   pool: Pool; userAgent: string; embedder: Embedder; net?: NetOptions;
@@ -36,6 +41,9 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
     // фрагменты — от числа уже записанных у источника.
     await transaction(pool, (tx) => resetAttemptCountersTx(tx, lease, null));
     let chunksWritten = 0;
+    let transient = 0;
+    const seenUrls = new Set<string>();
+    const seenHashes = new Set<string>();
     let result;
     try {
       result = await crawlSite({
@@ -43,13 +51,18 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
         knownHashes: new Set(known.rows.map((r) => r.content_hash)),
         onVisit: async (visit, progress) => {
           if (visit.kind === 'page') {
-            const chunks = chunkDocument({ title: visit.page.title, blocks: visit.page.blocks });
+            seenUrls.add(visit.page.url);
+            // Предел фрагментов страницы — ДО эмбеддинга: лишнее не оплачивается и не держит транзакцию страницы.
+            const { kept: chunks, dropped } = capPageChunks(chunkDocument({ title: visit.page.title, blocks: visit.page.blocks }));
+            if (dropped) log(`worker-index: задача ${lease.indexJobId}: страница прочитана не целиком — отброшено фрагментов ${dropped}`);
             const vectors = await options.embedder.embed(lease, chunks);
-            const written = await writeIndexedPage(pool, lease, { urlOrPage: visit.page.url, title: visit.page.title, contentHash: visit.page.contentHash },
+            const written = await writeIndexedPage(pool, lease, { urlOrPage: visit.page.url, title: visit.page.title, contentHash: visit.page.contentHash, chunksDropped: dropped },
               chunks.map((c, i) => ({ ...c, embedding: vectors[i]! })), { pagesTotal: progress.pagesTotal });
             chunksWritten += written.inserted;
             return;
           }
+          if (visit.kind === 'unchanged') seenHashes.add(visit.contentHash);
+          if (visit.kind === 'skipped' && TRANSIENT_SKIPS.includes(visit.reason)) transient += 1;
           await transaction(pool, async (tx) => {
             await recordProgressTx(tx, lease, { pagesDone: visit.kind === 'skipped' ? 0 : 1, pagesTotal: progress.pagesTotal });
             if (visit.kind === 'skipped') await tx.query('UPDATE source SET pages_skipped = pages_skipped + 1 WHERE id = $1', [lease.sourceId]);
@@ -63,9 +76,13 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
       }
       throw error;
     }
+    // Исчезнувшие страницы — только после ПОЛНОГО обхода без временных пропусков (иначе «не увидели» ≠ «нет»).
+    let pruned = { pages: 0, chunks: 0 };
+    if (result.stoppedBy === 'exhausted' && transient === 0) pruned = await pruneUnseenPages(pool, lease, [...seenUrls], [...seenHashes]);
     // В журнал — только счётчики: ни тел страниц, ни их текста, ни адресов.
     const skipped = Object.entries(result.skipped).map(([reason, n]) => `${reason}=${n}`).join(', ') || 'нет';
     log(`worker-index: обход задачи ${lease.indexJobId}: прочитано ${result.pagesRead}, без изменений ${result.pagesUnchanged}, `
-      + `фрагментов ${chunksWritten}; пропущено: ${skipped}; запросов ${result.requests}; остановка: ${result.stoppedBy}`);
+      + `фрагментов ${chunksWritten}; пропущено: ${skipped}; запросов ${result.requests}; остановка: ${result.stoppedBy}; `
+      + `удалено исчезнувших страниц ${pruned.pages} (фрагментов ${pruned.chunks})`);
   };
 }

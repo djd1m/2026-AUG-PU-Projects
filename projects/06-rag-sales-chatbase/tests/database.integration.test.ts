@@ -34,16 +34,21 @@ describe.skipIf(!databaseUrl)('PostgreSQL + pgvector: миграции, огра
       [account, status, randomBytes(16).toString('base64url').slice(0, 22), 'Компания'])).rows[0].id as string;
   }
   it('миграция идемпотентна; 23 сущности канона §4 (19 + 4 оплаты, миграция 006); у quota_counter нет колонки предела', async () => {
-    const result = await pool.query('SELECT tablename FROM pg_tables WHERE schemaname = $1 AND tablename <> $2', [schema, '_schema_migration']);
+    // Служебные журналы — не сущности канона: _schema_migration и index_start (журнал запусков индексации для суточного
+    // предела, source-lifecycle, A-N6-050). Список служебных — закрытый, любая новая таблица сдвинет счёт и уронит тест.
+    const result = await pool.query('SELECT tablename FROM pg_tables WHERE schemaname = $1 AND tablename <> ALL($2::text[])', [schema, ['_schema_migration', 'index_start']]);
     expect(result.rowCount).toBe(23);
+    expect((await pool.query("SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = 'index_start'", [schema])).rowCount).toBe(1);
     const columns = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_schema=$1 AND table_name='quota_counter'", [schema]);
     expect(columns.rows.map((r: { column_name: string }) => r.column_name)).not.toContain('limit');
   });
-  it('ADR-001: pgvector ≥ 0.8, HNSW cosine на chunk.embedding с m=16, ef_construction=64', async () => {
+  it('ADR-001: pgvector ≥ 0.8; A-N6-051 (source-lifecycle): индекса HNSW на chunk.embedding НЕТ — поиск точным перебором внутри бота, вставка не платит за граф', async () => {
     const ext = await pool.query("SELECT extversion FROM pg_extension WHERE extname='vector'");
     expect(ext.rows[0].extversion).toMatch(/^0\.(8|9)\.|^[1-9]\./);
-    const index = await pool.query("SELECT indexdef FROM pg_indexes WHERE schemaname=$1 AND indexname='chunk_embedding_hnsw'", [schema]);
-    expect(index.rows[0].indexdef).toMatch(/USING hnsw \(embedding vector_cosine_ops\) WITH \(m='?16'?, ef_construction='?64'?\)/);
+    const index = await pool.query("SELECT indexname FROM pg_indexes WHERE schemaname=$1 AND tablename='chunk' AND indexdef ILIKE '%USING hnsw%'", [schema]);
+    expect(index.rows).toEqual([]);
+    // индекс по bot_id, на котором держится точный перебор, — на месте
+    expect((await pool.query("SELECT 1 FROM pg_indexes WHERE schemaname=$1 AND indexname='chunk_bot'", [schema])).rowCount).toBe(1);
   });
   it('ADR-001 Confirmation: вектор 1536 вставляется и ищется; 1535 отвергнут; HNSW на vector(3072) падает', async () => {
     const botId = await bot();

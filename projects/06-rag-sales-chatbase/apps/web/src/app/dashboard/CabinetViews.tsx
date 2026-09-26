@@ -9,7 +9,8 @@ export interface BotListItemView {
   bot_id: string; company_name: string; contact_set: boolean; sources: number; sources_ready: number; sources_failed: number; origins: number;
 }
 export interface BotListView { plan: 'free' | 'nobadge' | 'studio'; limit: number; bots: BotListItemView[] }
-export interface SourceItemView { source_id: string; kind: 'site' | 'pdf'; title: string; job: (RibbonJob & { index_job_id: string }) | null }
+// pages_truncated — страниц, прочитанных не целиком по пределу фрагментов (source-lifecycle); нет поля — 0.
+export interface SourceItemView { source_id: string; kind: 'site' | 'pdf'; title: string; job: (RibbonJob & { index_job_id: string }) | null; pages_truncated?: number }
 export interface FieldErrors { [field: string]: string | undefined }
 
 // Причины канона §4 (index_job.failure_reason) → текст владельцу в кабинете. Неизвестная — как internal.
@@ -97,19 +98,40 @@ export function SourceRibbon({ job, kind }: { job: RibbonJob | null; kind: 'site
   </ol>;
 }
 
-export function SourceList(p: { sources: SourceItemView[]; retrying: string | null; errors: FieldErrors; onRetry: (sourceId: string) => void }) {
+// Источники бота (bot-cabinet + source-lifecycle): лента стадий; «Повторить» отказавший сайт, «Обновить» готовый
+// (та же задача, неизменные страницы не перечитываются), «Удалить» любой — в два шага: вопрос с последствием,
+// затем «Удалить» или «Отмена». busy — источник, по которому идёт запрос (кнопки гаснут, третьей копии нет).
+export interface SourceListProps {
+  sources: SourceItemView[]; busy: string | null; confirming: string | null; errors: FieldErrors;
+  onReindex: (sourceId: string) => void; onConfirm: (sourceId: string | null) => void; onDelete: (sourceId: string) => void;
+}
+export function SourceList(p: SourceListProps) {
   if (!p.sources.length) return <p className="empty">Источников пока нет. Добавьте адрес сайта или PDF — бот будет отвечать по ним.</p>;
   return <ul className="source-list" aria-label="Источники">{p.sources.map((s) => {
-    const failed = s.job?.state === 'failed';
+    const state = s.job?.state;
+    const failed = state === 'failed';
+    const busy = p.busy === s.source_id;
+    const truncated = s.pages_truncated ?? 0;
     return <li key={s.source_id} className="card source-item stack">
       <p className="source-title"><span className="source-kind">{s.kind === 'pdf' ? 'PDF' : 'Сайт'}</span> <strong>{s.title}</strong></p>
       <SourceRibbon job={s.job} kind={s.kind} />
-      {s.job?.state === 'no_response' && <p role="status" className="notice">Больше 5 минут не было новостей от задачи — это не «ещё читаем». Сторож закроет её с причиной, если она остановилась.</p>}
+      {state === 'no_response' && <p role="status" className="notice">Больше 5 минут не было новостей от задачи — это не «ещё читаем». Сторож закроет её с причиной, если она остановилась.</p>}
       {failed && <p className="notice danger-notice"><span role="alert">{cabinetReason(s.job?.reason)}.</span></p>}
-      {failed && (s.kind === 'site'
-        ? <p><button type="button" className="secondary" disabled={p.retrying === s.source_id} onClick={() => p.onRetry(s.source_id)}>
-            {p.retrying === s.source_id ? 'Ставим в очередь…' : 'Повторить'}</button></p>
-        : <p className="muted">Файл после отказа удалён — загрузите исправленный PDF ниже.</p>)}
+      {failed && s.kind === 'pdf' && <p className="muted">Файл после отказа удалён — загрузите исправленный PDF ниже.</p>}
+      {truncated > 0 && <p className="muted">{truncated === 1 ? '1 страница прочитана' : `${truncated} страниц прочитаны`} не целиком: на странице больше текста, чем бот берёт с одной страницы.</p>}
+      {p.confirming === s.source_id
+        ? <div className="stack notice danger-notice" role="group" aria-label={`Удаление источника ${s.title}`}>
+            <p>Удалить источник? Бот сразу перестанет отвечать по его страницам. Вернуть можно только добавив его заново.</p>
+            <p className="cluster">
+              <button type="button" className="danger" disabled={busy} onClick={() => p.onDelete(s.source_id)}>{busy ? 'Удаляем…' : 'Удалить'}</button>
+              <button type="button" className="secondary" disabled={busy} onClick={() => p.onConfirm(null)}>Отмена</button>
+            </p>
+          </div>
+        : <p className="cluster">
+            {s.kind === 'site' && (failed || state === 'done') && <button type="button" className="secondary" disabled={busy} onClick={() => p.onReindex(s.source_id)}>
+              {busy ? 'Ставим в очередь…' : failed ? 'Повторить' : 'Обновить'}</button>}
+            <button type="button" className="secondary" disabled={busy} onClick={() => p.onConfirm(s.source_id)}>Удалить</button>
+          </p>}
       {p.errors[s.source_id] && <p role="alert" className="field-error">{p.errors[s.source_id]}</p>}
     </li>;
   })}</ul>;

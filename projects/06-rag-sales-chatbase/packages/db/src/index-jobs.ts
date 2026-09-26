@@ -98,8 +98,10 @@ export async function leaseIndexJob(pool: Pool, message: IndexMessageLike, now =
     await tx.query(`UPDATE job_attempt SET status = 'failed', finished_at = $2 WHERE index_job_id = $1 AND status = 'running'`, [message.index_job_id, now]);
     await tx.query(`INSERT INTO job_attempt (index_job_id, fence, series_no, status, started_at, created_at)
       VALUES ($1, $2, $3, 'running', $4, $4)`, [message.index_job_id, fence, seriesNo, now]);
-    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, updated_at = $3 WHERE id = $1`,
-      [message.index_job_id, fence, now]);
+    // Новая серия (из queued) — бюджет токенов серии источника с нуля (source-lifecycle); автоповтор той же серии — нет.
+    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, updated_at = $3,
+      series_embed_used = CASE WHEN $4::boolean THEN 0 ELSE series_embed_used END WHERE id = $1`,
+      [message.index_job_id, fence, now, status === 'queued']);
     await tx.query(`UPDATE source SET status = 'indexing' WHERE id = $1`, [row.source_id]);
     return { indexJobId: message.index_job_id, botId: row.bot_id, sourceId: row.source_id, fence, seriesNo, attemptNo,
       pageBudget: row.page_budget, embedBudget: row.embed_budget };

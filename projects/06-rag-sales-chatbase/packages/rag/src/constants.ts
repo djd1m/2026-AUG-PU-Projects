@@ -52,6 +52,16 @@ export const CHUNK_OVERLAP_TOKENS = 80;
 export const CONTEXT_PATH_SEPARATOR = ' › ';
 export const CONTEXT_HEADING_MAX_CHARS = 120;        // один заголовок в пути; путь не раздувает вход эмбеддинга
 export const EMBED_BATCH_MAX = 64;                   // EmbedAndStore п.1: пачки по ≤ 64 фрагмента
+// source-lifecycle (фича 16, канон §7 дополнен; числа — код, не окружение, CFG-I8):
+// фрагментов на одну страницу/лист PDF — больше не эмбеддится и не пишется (page.chunks_dropped); ≈ 150 000 токенов,
+// транзакция страницы не держит соединение пула десятки секунд (перенос ревью chunk-embed MEDIUM)
+export const CHUNKS_PER_PAGE_MAX = 300;
+// токенов эмбеддингов на СЕРИЮ одного источника (index_job.series_embed_used): один источник не съедает суточный
+// предел аккаунта (перенос chunk-embed); по плану — платный план читает до 300 страниц (PAGES_BY_PLAN)
+export const SOURCE_EMBED_BUDGET_BY_PLAN = Object.freeze({ free: 500_000, nobadge: 1_000_000, studio: 1_000_000 } as const);
+// запусков индексации на бота в сутки МСК (index_start): создание сайта/PDF, «Повторить», «Обновить»; отказавшие
+// СЧИТАЮТСЯ — единственный воркер платформы не занимается бесконечными отказами (перенос pdf-source MEDIUM-1)
+export const INDEX_STARTS_PER_BOT_DAY = 20;
 export const EMBED_RETRIES = 2;                      // EmbedAndStore п.2: 2 повтора при 429/5xx, каждый — новое списание
 export const SEARCH_TOP_K = 4;                       // канон §7: top_k = 4
 

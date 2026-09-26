@@ -10,6 +10,7 @@ export * from './chunks.js';
 export * from './answers.js';
 export * from './previews.js';
 export * from './bots.js';
+export * from './sources.js';
 export * from './widget.js';
 export * from './visitor.js';
 export * from './public-page.js';
