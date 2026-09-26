@@ -15,7 +15,7 @@
 **Механизм исключения:** уникальный-индекс
 **Порядок событий:** перестановочен
 
-Маршрут — `POST <N6_PUBLIC_ORIGIN>/api/webhooks/yookassa` (стенд: `https://n6.194.85.249.105.sslip.io/api/webhooks/yookassa`),
+Маршрут — `POST <N6_PUBLIC_ORIGIN>/api/webhooks/yookassa` (стенд: `https://sufler.aicoding.space/api/webhooks/yookassa`),
 события `payment.succeeded` и `refund.succeeded`; при `N6_PAYMENTS_MODE=off` маршрут отвечает 404.
 
 Статус «НЕ ВЫПОЛНЕНА» относится к повторной доставке **настоящим магазином ЮKassa**: своего тестового магазина у N6 нет (у
