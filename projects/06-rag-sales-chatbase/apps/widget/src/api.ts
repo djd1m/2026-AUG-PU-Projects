@@ -1,12 +1,15 @@
 // из N1: projects/01-testimonials-senja/apps/widget/src/api.ts (+ types.ts) — адаптировано: один сетевой вызов
 // конфигурации заменён тремя маршрутами канона §5 (`GET /w/v1/config?bot=`, `POST /w/v1/event`, `POST /w/v1/ask`);
 // `data-api-base` донора убран — API живёт на origin самого скрипта; таймаут 300 мс донора поднят до 5 с (чужая
-// сеть посетителя); ответ — обёртка N6 `{ data }` | `{ error }`.
+// сеть посетителя); ответ — обёртка N6 `{ data }` | `{ error }`. Вопрос (фича visitor-ask-and-limits): бот — в адресе
+// (`/w/v1/ask?bot=`), тело — ровно `{ visitor_session, question }`: истории виджет не шлёт, она хранится на сервере.
 //
 // ВСЕ запросы — `credentials: 'omit'` (FR-WIDGET-002): cookie хозяина и наши к серверу не едут, поэтому сервер
 // вправе отвечать точным origin без Allow-Credentials, а джокер `*` запрещён отдельно (ADR-005).
 // Любой сбой сети или формы ответа сводится к ОДНОМУ безопасному исходу: null / { kind: 'error' } — исключение на
 // странице хозяина недопустимо (Pseudocode «Виджет» п.2).
+
+import { TOKEN } from './session';
 
 export interface WidgetConfig {
   company_name: string;
@@ -14,12 +17,14 @@ export interface WidgetConfig {
   contact: string;
   badge_required: boolean;
   badge_href: string | null;
+  visitor_session: string;   // токен сессии посетителя, выданный сервером
 }
 export interface SourceView { title: string; url: string | null; excerpt: string }
 export type AskResult =
   | { kind: 'answered'; text: string; source: SourceView | null }
   | { kind: 'unknown'; text: string }
   | { kind: 'limit'; text: string }
+  | { kind: 'expired' }      // 409 session_expired: токен не годен (другой /24) — взять новый через config и повторить
   | { kind: 'error' };
 
 const CONFIG_TIMEOUT_MS = 5000;
@@ -46,7 +51,8 @@ export function parseConfig(value: unknown): WidgetConfig | null {
   if (!company || greeting === null || !contact || typeof d.badge_required !== 'boolean') return null;
   const href = safeHref(d.badge_href);
   if (d.badge_required && !href) return null;
-  return { company_name: company, greeting, contact, badge_required: d.badge_required, badge_href: href };
+  if (typeof d.visitor_session !== 'string' || !TOKEN.test(d.visitor_session)) return null;
+  return { company_name: company, greeting, contact, badge_required: d.badge_required, badge_href: href, visitor_session: d.visitor_session };
 }
 
 async function withTimeout<T>(ms: number, run: (signal: AbortSignal) => Promise<T>): Promise<T> {
@@ -55,22 +61,24 @@ async function withTimeout<T>(ms: number, run: (signal: AbortSignal) => Promise<
   try { return await run(controller.signal); } finally { clearTimeout(timer); }
 }
 
-export async function fetchConfig(base: string, bot: string): Promise<WidgetConfig | null> {
+export async function fetchConfig(base: string, bot: string, session: string | null): Promise<WidgetConfig | null> {
   try {
     return await withTimeout(CONFIG_TIMEOUT_MS, async (signal) => {
-      const response = await fetch(`${base}/w/v1/config?bot=${encodeURIComponent(bot)}`, { credentials: 'omit', mode: 'cors', signal });
+      const vs = session ? `&vs=${encodeURIComponent(session)}` : '';
+      const response = await fetch(`${base}/w/v1/config?bot=${encodeURIComponent(bot)}${vs}`, { credentials: 'omit', mode: 'cors', signal });
       return response.ok ? parseConfig(await response.json()) : null;
     });
   } catch { return null; }
 }
 
-// Событие бейджа: keepalive — клик уходит, даже если посетитель сразу покидает страницу. Аналитика не критична:
-// ошибки глотаются (показ и клик считает сервер с дедупликацией на сутки).
-export function sendEvent(base: string, body: { bot: string; visitor_session: string; type: 'badge_impression' | 'badge_click' }): void {
+// Событие бейджа: keepalive — клик уходит, даже если посетитель сразу покидает страницу. Ошибки глотаются (показ и клик
+// считает сервер с дедупликацией на сутки). Промис показа ждёт вопрос: на плане с бейджем сервер принимает вопрос только
+// от сессии, которой показ записан (ADR-004).
+export function sendEvent(base: string, body: { bot: string; visitor_session: string; type: 'badge_impression' | 'badge_click' }): Promise<void> {
   try {
-    void fetch(`${base}/w/v1/event`, { method: 'POST', credentials: 'omit', mode: 'cors', keepalive: true,
-      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => undefined);
-  } catch { /* fetch недоступен — событие не отправлено, виджет работает */ }
+    return fetch(`${base}/w/v1/event`, { method: 'POST', credentials: 'omit', mode: 'cors', keepalive: true,
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(() => undefined, () => undefined);
+  } catch { return Promise.resolve(); /* fetch недоступен — событие не отправлено, виджет работает */ }
 }
 
 function parseSource(value: unknown): SourceView | null {
@@ -82,9 +90,10 @@ function parseSource(value: unknown): SourceView | null {
 }
 
 // Контракт ответа (Pseudocode «API Contracts», форма N6): 200 { data: { status: answered, text, source } |
-// { status: unknown, text, contact } }, 429 { error: { code: limit, message } }. Маршрут — фича visitor-ask-and-limits.
+// { status: unknown, text, contact } }, 429 { error: { code: limit, message, contact } }, 409 { error: { code: session_expired } }.
 export function parseAsk(status: number, value: unknown): AskResult {
   if (typeof value !== 'object' || value === null) return { kind: 'error' };
+  if (status === 409) return (value as { error?: { code?: unknown } }).error?.code === 'session_expired' ? { kind: 'expired' } : { kind: 'error' };
   if (status === 429) {
     const message = str((value as { error?: { message?: unknown } }).error?.message, 500);
     return { kind: 'limit', text: message ?? 'Лимит вопросов на сегодня исчерпан.' };
@@ -98,10 +107,10 @@ export function parseAsk(status: number, value: unknown): AskResult {
   return { kind: 'error' };
 }
 
-export async function ask(base: string, body: { bot: string; visitor_session: string; question: string }): Promise<AskResult> {
+export async function ask(base: string, bot: string, body: { visitor_session: string; question: string }): Promise<AskResult> {
   try {
     return await withTimeout(ASK_TIMEOUT_MS, async (signal) => {
-      const response = await fetch(`${base}/w/v1/ask`, { method: 'POST', credentials: 'omit', mode: 'cors', signal,
+      const response = await fetch(`${base}/w/v1/ask?bot=${encodeURIComponent(bot)}`, { method: 'POST', credentials: 'omit', mode: 'cors', signal,
         headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       let json: unknown = null;
       try { json = await response.json(); } catch { json = null; }

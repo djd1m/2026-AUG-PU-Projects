@@ -62,6 +62,8 @@
 2. [`docs/canon.md`](docs/canon.md) → [`docs/Specification.md`](docs/Specification.md) → [`docs/Architecture.md`](docs/Architecture.md).
 3. [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) и [`.claude/feature-roadmap.json`](.claude/feature-roadmap.json) — первая фича `foundation`.
 
+**Что осталось сделать — [`docs/BACKLOG.md`](docs/BACKLOG.md)** (фичи 13–17, решения владельца, перенос на другой сервер).
+
 ## Статус
 
 | Этап | Статус |

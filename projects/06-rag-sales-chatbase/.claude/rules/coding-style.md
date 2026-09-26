@@ -42,6 +42,13 @@ npm workspaces: `apps/web` (Next.js 15 App Router, route handlers), `apps/worker
   через `createEmbedder` (meteredCall: квота + журнал на КАЖДУЮ попытку), вне транзакции.
 - Квота — только через `packages/db/src/quota.ts` (два оператора, откат всех scope); прямой `UPDATE
   quota_counter` вне модуля — запрещён.
+- Платный вызов модели — ТОЛЬКО через `meteredCall` (`packages/rag/src/spend.ts`): клиент OpenRouter
+  (`createOpenRouter().complete/embed`, `packages/rag/src/openrouter.ts`) зовётся лишь внутри `run:` вызова
+  `meteredCall` — квота и строка `attempt` с `fsync` ДО запроса. Прямой вызов клиента вне `run:` — оплата без учёта
+  и без предела (ревью quota-and-spend L-1). Страж — `tests/widget-ask.unit.test.ts` «клиент OpenRouter … только
+  внутри run: meteredCall».
+- Период квоты (сутки/месяц МСК) — только из `SELECT now()` БД в транзакции списания, не из `new Date()` процесса:
+  `web` и `worker-index` — разные часы (ревью quota-and-spend M2). Страж — тот же файл.
 - Миграции только добавляющие в неделю (откат приложения без отката схемы, Completion).
 
 ## Закрытые перечисления и fail-closed

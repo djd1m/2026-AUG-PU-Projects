@@ -1,0 +1,134 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/widget-embed.test.ts (33 tests | 6 failed) 30882ms
+   ✓ chromium > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 275ms
+   × chromium > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось 207ms
+     → expected { method: 'GET', …(4) } to match object { …(3) }
+(2 matching properties omitted from actual)
+   ✓ chromium > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  312ms
+   ✓ chromium > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)  311ms
+   ✓ chromium > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  573ms
+   ✓ chromium > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка  546ms
+   ✓ chromium > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом  731ms
+   ✓ chromium > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана  369ms
+   × chromium > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана 165ms
+     → expected [ 'ответ 409', 'ответ 400' ] to deeply equal [ Array(2) ]
+   ✓ chromium > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1203ms
+   ✓ chromium > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  303ms
+   ✓ firefox > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений  2006ms
+   × firefox > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось 684ms
+     → expected { method: 'GET', …(4) } to match object { …(3) }
+(2 matching properties omitted from actual)
+   ✓ firefox > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  728ms
+   ✓ firefox > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)  585ms
+   ✓ firefox > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  906ms
+   ✓ firefox > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка  1102ms
+   ✓ firefox > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом  1308ms
+   ✓ firefox > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана  1028ms
+   × firefox > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана 412ms
+     → expected [ 'ответ 409', 'ответ 400' ] to deeply equal [ Array(2) ]
+   ✓ firefox > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1744ms
+   ✓ firefox > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  861ms
+   ✓ webkit > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений  2240ms
+   × webkit > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось 364ms
+     → expected { method: 'GET', …(4) } to match object { …(3) }
+(2 matching properties omitted from actual)
+   ✓ webkit > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  675ms
+   ✓ webkit > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)  647ms
+   ✓ webkit > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  894ms
+   ✓ webkit > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка  1235ms
+   ✓ webkit > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом  1575ms
+   ✓ webkit > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана  883ms
+   × webkit > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана 411ms
+     → expected [ 'ответ 409', 'ответ 400' ] to deeply equal [ Array(2) ]
+   ✓ webkit > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1833ms
+   ✓ webkit > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  659ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 27 passed (33)
+   Start at  09:34:44
+   Duration  32.79s (transform 712ms, setup 0ms, collect 1.61s, tests 30.88s, environment 0ms, prepare 113ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось
+ FAIL  tests/browser/widget-embed.test.ts > firefox > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось
+ FAIL  tests/browser/widget-embed.test.ts > webkit > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось
+AssertionError: expected { method: 'GET', …(4) } to match object { …(3) }
+(2 matching properties omitted from actual)
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "acao": [],[39m
+[31m+   "acao": [[39m
+[31m+     "http://127.0.0.1:8098",[39m
+[31m+   ],[39m
+[2m    "origin": "http://127.0.0.1:8098",[22m
+[32m-   "status": 403,[39m
+[31m+   "status": 200,[39m
+[2m  }[22m
+
+ ❯ tests/browser/widget-embed.test.ts:65:66
+     63|     open(`${STRANGER}/host.html?bot=${KEY_FREE}`, async (page) => {
+     64|       await expect.poll(() => harness.log.filter((l) => l.path === '/w…
+     65|       expect(harness.log.find((l) => l.path === '/w/v1/config')).toMat…
+       |                                                                  ^
+     66|       await page.waitForTimeout(300);
+     67|       expect(await page.evaluate(() => document.querySelectorAll('n6-s…
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана
+AssertionError: expected [ 'ответ 409', 'ответ 400' ] to deeply equal [ Array(2) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "отказ TypeError",[39m
+[32m-   "отказ TypeError",[39m
+[31m+   "ответ 409",[39m
+[31m+   "ответ 400",[39m
+[2m  ][22m
+
+ ❯ tests/browser/widget-embed.test.ts:214:23
+    212|           .then((r) => `ответ ${r.status}`, (e: Error) => `отказ ${e.n…
+    213|       ]), `${WIDGET}/w/v1/ask?bot=${KEY_FREE}`);
+    214|       expect(results).toEqual(['отказ TypeError', 'отказ TypeError']);
+       |                       ^
+    215|       const asks = harness.log.filter((l) => l.path === '/w/v1/ask');
+    216|       expect(asks.length).toBeGreaterThan(0);
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > firefox > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана
+ FAIL  tests/browser/widget-embed.test.ts > webkit > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана
+AssertionError: expected [ 'ответ 409', 'ответ 400' ] to deeply equal [ Array(2) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "отказ TypeError",[39m
+[32m-   "отказ TypeError",[39m
+[31m+   "ответ 409",[39m
+[31m+   "ответ 400",[39m
+[2m  ][22m
+
+ ❯ tests/browser/widget-embed.test.ts:214:23
+    212|           .then((r) => `ответ ${r.status}`, (e: Error) => `отказ ${e.n…
+    213|       ]), `${WIDGET}/w/v1/ask?bot=${KEY_FREE}`);
+    214|       expect(results).toEqual(['отказ TypeError', 'отказ TypeError']);
+       |                       ^
+    215|       const asks = harness.log.filter((l) => l.path === '/w/v1/ask');
+    216|       expect(asks.length).toBeGreaterThan(0);
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+

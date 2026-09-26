@@ -9,7 +9,7 @@
 // Необязательный data-theme="light|dark" на теге; иначе — prefers-color-scheme посетителя (FR-WIDGET-004).
 import { fetchConfig } from './api';
 import { mountBubble } from './chat-window';
-import { visitorSession } from './session';
+import { readSession, storeSession } from './session';
 import { adoptStyles } from './styles';
 
 const PUBLIC_KEY = /^[A-Za-z0-9_-]{22}$/;
@@ -29,8 +29,9 @@ export function readTag(script: HTMLScriptElement): { base: string; bot: string;
 async function boot(script: HTMLScriptElement): Promise<void> {
   const tag = readTag(script);
   if (!tag) return;
-  const config = await fetchConfig(tag.base, tag.bot);
+  const config = await fetchConfig(tag.base, tag.bot, readSession(tag.bot));
   if (!config) return;   // 403/404/сеть/форма — ничего не рисуем и не бросаем на странице хозяина
+  storeSession(tag.bot, config.visitor_session);
   if (!document.body) await new Promise<void>((resolve) => document.addEventListener('DOMContentLoaded', () => resolve(), { once: true }));
   if (document.querySelector(`${HOST_TAG}[data-bot="${tag.bot}"]`)) return;   // тег вставлен дважды — один виджет
   const host = document.createElement(HOST_TAG);
@@ -38,7 +39,7 @@ async function boot(script: HTMLScriptElement): Promise<void> {
   if (tag.theme) host.setAttribute('data-theme', tag.theme);
   const root = host.attachShadow({ mode: 'open' });
   if (!adoptStyles(root)) { warn('браузер без adoptedStyleSheets — виджет не показан (инлайновые стили запрещены CSP хозяина)'); return; }
-  mountBubble(root, config, { base: tag.base, bot: tag.bot, visitorSession: visitorSession(tag.bot) });
+  mountBubble(root, config, { base: tag.base, bot: tag.bot, visitorSession: config.visitor_session });
   document.body.appendChild(host);
 }
 

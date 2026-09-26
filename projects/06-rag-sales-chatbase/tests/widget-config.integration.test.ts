@@ -39,8 +39,12 @@ describe.skipIf(!databaseUrl)('виджет: конфигурация, уста�
     for (const origin of over.origins ?? [HOST]) await pool.query('INSERT INTO allowed_origin (bot_id, origin) VALUES ($1, $2)', [bot, origin]);
     return { account, bot, key };
   }
-  const deps = () => createWidgetDependencies({ pool, publicOrigin: PUBLIC, allowMutation: async () => true, log: () => {} });
-  const config = (key: string, origin: string | null) => createWidgetConfigHandler(deps())(new Request(`${PUBLIC}/w/v1/config?bot=${key}`, { headers: origin ? { origin } : {} }));
+  const secret = randomBytes(32).toString('hex');
+  const deps = () => createWidgetDependencies({ pool, publicOrigin: PUBLIC, secret, allowMutation: async () => true, log: () => {} });
+  const config = (key: string, origin: string | null) => createWidgetConfigHandler(deps())(new Request(`${PUBLIC}/w/v1/config?bot=${key}`,
+    { headers: { 'x-forwarded-for': '198.51.100.23', ...(origin ? { origin } : {}) } }));
+  // Токен сессии посетителя — только из config (visitor-token.ts), как его получает виджет.
+  const token = async (key: string, origin: string) => ((await (await config(key, origin)).json()) as { data: { visitor_session: string } }).data.visitor_session;
   const event = (key: string, origin: string, vs: string, type: string) => createWidgetEventHandler(deps())(new Request(`${PUBLIC}/w/v1/event`, {
     method: 'POST', headers: { origin, 'content-type': 'application/json', 'x-forwarded-for': '198.51.100.23' }, body: JSON.stringify({ bot: key, visitor_session: vs, type }) }));
   const installs = async (bot: string) => (await pool.query<{ origin: string; first_answer_at: Date | null }>('SELECT origin, first_answer_at FROM widget_install WHERE bot_id = $1', [bot])).rows;
@@ -118,17 +122,19 @@ describe.skipIf(!databaseUrl)('виджет: конфигурация, уста�
   it('события бейджа: показ один раз на сессию в сутки, клик отдельно; сессия чужого бота — 400; неразрешённый origin — 403', async () => {
     const s = await seed();
     const other = await seed();
-    const vs = crypto.randomUUID();
+    const vs = await token(s.key, HOST);
+    const id = vs.split('.')[0]!;
     expect((await event(s.key, HOST, vs, 'badge_impression')).status).toBe(204);
     expect((await event(s.key, HOST, vs, 'badge_impression')).status).toBe(204);
     expect((await event(s.key, HOST, vs, 'badge_click')).status).toBe(204);
     const rows = (await pool.query<{ type: string; n: number }>(`SELECT type, count(*)::int AS n FROM growth_event WHERE bot_id = $1 GROUP BY type ORDER BY type`, [s.bot])).rows;
     expect(rows).toEqual([{ type: 'badge_click', n: 1 }, { type: 'badge_impression', n: 1 }]);
-    const session = (await pool.query<{ ip_prefix: string; origin: string }>('SELECT ip_prefix::text, origin FROM visitor_session WHERE id = $1', [vs])).rows[0];
+    const session = (await pool.query<{ ip_prefix: string; origin: string }>('SELECT ip_prefix::text, origin FROM visitor_session WHERE id = $1', [id])).rows[0];
     expect(session).toEqual({ ip_prefix: '198.51.100.0/24', origin: HOST });
-    const foreign = await event(other.key, HOST, vs, 'badge_impression');
-    expect(foreign.status).toBe(400);
-    expect((await event(s.key, 'https://evil.example', crypto.randomUUID(), 'badge_click')).status).toBe(403);
+    // Токен бота s не годится для бота other; голый UUID, придуманный клиентом, — тоже.
+    expect((await event(other.key, HOST, vs, 'badge_impression')).status).toBe(400);
+    expect((await event(s.key, HOST, crypto.randomUUID(), 'badge_impression')).status).toBe(400);
+    expect((await event(s.key, 'https://evil.example', vs, 'badge_click')).status).toBe(403);
   });
 
   it('предполётный запрос: origin из списка любого бота — 204; неизвестный — 403', async () => {

@@ -19,17 +19,20 @@ const MSK_DAY = `to_char((now() AT TIME ZONE 'Europe/Moscow')::date, 'YYYY-MM-DD
 export interface WidgetBotRow {
   botId: string; status: unknown; companyName: string; greeting: string; contact: unknown; publicEnabled: boolean;
   plan: unknown; accountStatus: unknown; origins: string[];
+  // A-N6-035: отметка владельца «Я проверил ответы бота». false — ответ модели посетителю не показывается.
+  answersVerified: boolean;
 }
 export async function loadWidgetBot(pool: Pool, publicKey: string): Promise<WidgetBotRow | null> {
   if (!PUBLIC_KEY.test(publicKey)) return null;
   const row = (await pool.query<{ id: string; status: unknown; company_name: string; greeting: string; contact: unknown; public_enabled: boolean;
-    plan: unknown; account_status: unknown; origins: string[] }>(
+    plan: unknown; account_status: unknown; origins: string[]; verified: boolean }>(
     `SELECT b.id, b.status, b.company_name, b.greeting, b.contact, b.public_enabled, a.plan, a.status AS account_status,
+       b.answers_verified_at IS NOT NULL AS verified,
        ARRAY(SELECT o.origin FROM allowed_origin o WHERE o.bot_id = b.id ORDER BY o.origin) AS origins
      FROM bot b LEFT JOIN account a ON a.id = b.account_id WHERE b.public_key = $1`, [publicKey])).rows[0];
   if (!row) return null;
   return { botId: row.id, status: row.status, companyName: row.company_name, greeting: row.greeting, contact: row.contact,
-    publicEnabled: row.public_enabled, plan: row.plan, accountStatus: row.account_status, origins: row.origins };
+    publicEnabled: row.public_enabled, plan: row.plan, accountStatus: row.account_status, origins: row.origins, answersVerified: row.verified === true };
 }
 
 // OPTIONS не несёт бота (он в теле POST): предполётный ответ разрешён только origin, который стоит в списке

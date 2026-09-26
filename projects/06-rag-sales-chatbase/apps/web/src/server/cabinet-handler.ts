@@ -37,6 +37,8 @@ export interface CabinetDependencies {
   enqueue: (message: { index_job_id: string; generation: number }) => Promise<void>;
   // Ядро ответа в режиме owner: бот — только по сессии владельца; чужой → { status: 'not_found' }.
   answer: (botId: string, accountId: string, request: VisitorRequest) => Promise<AnswerResult>;
+  // A-N6-035: отметка «Я проверил ответы бота» (visitor-ask-and-limits). Чужой — null.
+  setVerified: (botId: string, accountId: string, verified: boolean) => Promise<{ answers_verified: boolean } | null>;
   log?: (line: string) => void;
 }
 
@@ -232,5 +234,21 @@ export function createOwnerAskHandler(deps: CabinetDependencies) {
       case 'invalid': return fail(400, result.reason === 'unexpected_field' ? 'unexpected_field' : 'invalid', 'Вопрос пустой или длиннее 500 символов');
       default: return notFound();
     }
+  });
+}
+
+// POST /api/bots/{bot_id}/verify { verified: boolean } — отметка владельца «Я проверил ответы бота» (A-N6-035). Пока её
+// нет, посетитель виджета вместо ответа модели видит «Бот ещё настраивается» и контакт. Значение — строго boolean:
+// строка «true» или число — отказ, а не догадка (fail-closed).
+export function createBotVerifyHandler(deps: CabinetDependencies) {
+  return (request: Request, botId: string) => run(logOf(deps), 'отметка проверки ответов', async () => {
+    const entry = await guardMutation(request, deps, notFound);
+    if (entry instanceof Response) return entry;
+    if (!UUID.test(botId)) return notFound();
+    const input = await body(request, ['verified']);
+    if (input instanceof Response) return input;
+    if (typeof input.verified !== 'boolean') return fail(400, 'invalid', 'Ожидается { verified: true | false }');
+    const saved = await deps.setVerified(botId, entry.accountId, input.verified);
+    return saved ? json({ data: saved }) : notFound();
   });
 }

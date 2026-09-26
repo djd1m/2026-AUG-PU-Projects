@@ -11,3 +11,4 @@ export * from './answers.js';
 export * from './previews.js';
 export * from './bots.js';
 export * from './widget.js';
+export * from './visitor.js';

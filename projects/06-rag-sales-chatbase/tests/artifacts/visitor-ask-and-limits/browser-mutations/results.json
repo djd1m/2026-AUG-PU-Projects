@@ -1,0 +1,41 @@
+[
+  {
+    "id": "origin-outside-allowlist",
+    "title": "CheckOrigin принимает любой origin — чужая страница 8098 получает виджет",
+    "red": {
+      "code": 1,
+      "summary": "6 failed | 27 passed (33)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "33 passed (33)"
+    },
+    "passed": true
+  },
+  {
+    "id": "cors-wildcard",
+    "title": "CORS отвечает `*` вместо origin хозяина",
+    "red": {
+      "code": 1,
+      "summary": "6 failed | 27 passed (33)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "33 passed (33)"
+    },
+    "passed": true
+  },
+  {
+    "id": "unverified-shown",
+    "title": "ответ модели показан посетителю бота без отметки «Я проверил ответы бота» (A-N6-035)",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 30 passed (33)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "33 passed (33)"
+    },
+    "passed": true
+  }
+]

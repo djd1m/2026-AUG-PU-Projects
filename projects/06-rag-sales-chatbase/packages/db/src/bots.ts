@@ -77,12 +77,21 @@ export interface CabinetSource {
 export interface BotCabinet {
   bot_id: string; company_name: string; contact: string | null; greeting: string; public_key: string; plan: AccountPlan;
   origins: string[]; sources: CabinetSource[];
+  // A-N6-035: владелец отметил «Я проверил ответы бота» — только тогда посетитель виджета видит ответ модели.
+  answers_verified: boolean;
+  // Ответов бота в текущем месяце МСК (quota_counter bot_month_answers; месяц — по часам БД). Предел — окружение
+  // (QUOTA_BOT_MONTH_*), его сравнивает экран: баннер исчерпания (FR-TARIFF-003, SC-US-007-2).
+  month_answers_used: number;
 }
 // Экран бота и экран установки: настройки, домены и источники с последней задачей. Чужой — null.
 export async function readBotCabinet(pool: Pool, botId: string, accountId: string, now = new Date()): Promise<BotCabinet | null> {
   if (!pair(botId, accountId)) return null;
-  const bot = (await pool.query<{ id: string; company_name: string; contact: string | null; greeting: string; public_key: string; plan: unknown }>(
-    `SELECT b.id, b.company_name, b.contact, b.greeting, b.public_key, a.plan FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED}`,
+  const bot = (await pool.query<{ id: string; company_name: string; contact: string | null; greeting: string; public_key: string; plan: unknown;
+    verified: boolean; month_used: number }>(
+    `SELECT b.id, b.company_name, b.contact, b.greeting, b.public_key, a.plan, b.answers_verified_at IS NOT NULL AS verified,
+       COALESCE((SELECT q.used FROM quota_counter q WHERE q.scope = 'bot_month_answers' AND q.scope_key = b.id::text
+         AND q.period = to_char(now() AT TIME ZONE 'Europe/Moscow', 'YYYY-MM')), 0) AS month_used
+     FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED}`,
     [botId, accountId])).rows[0];
   if (!bot) return null;
   const origins = (await pool.query<{ origin: string }>('SELECT origin FROM allowed_origin WHERE bot_id = $1 ORDER BY created_at, origin', [botId])).rows.map((r) => r.origin);
@@ -93,7 +102,7 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
      WHERE s.bot_id = $1 ORDER BY s.created_at, s.id`, [botId])).rows;
   return {
     bot_id: bot.id, company_name: bot.company_name, contact: bot.contact, greeting: bot.greeting, public_key: bot.public_key, plan: readAccountPlan(bot.plan),
-    origins,
+    origins, answers_verified: bot.verified === true, month_answers_used: Number(bot.month_used),
     sources: sources.map((row) => ({
       source_id: row.source_id, kind: row.kind === 'pdf' ? 'pdf' : 'site',
       title: row.kind === 'pdf' ? (row.file_name ?? 'PDF') : (row.root_url ?? 'Сайт'),
@@ -112,6 +121,14 @@ Promise<{ company_name: string; contact: string | null; greeting: string } | nul
     FROM account a WHERE a.id = b.account_id AND ${OWNED} RETURNING b.company_name, b.contact, b.greeting`,
   [botId, accountId, patch.companyName ?? null, patch.contact ?? null, patch.greeting ?? null])).rows[0];
   return row ?? null;
+}
+
+// A-N6-035: отметка «Я проверил ответы бота» ставится и снимается только владельцем (OWNED). Чужой — null.
+export async function setAnswersVerified(pool: Pool, botId: string, accountId: string, verified: boolean): Promise<{ answers_verified: boolean } | null> {
+  if (!pair(botId, accountId)) return null;
+  const row = (await pool.query<{ verified: boolean }>(`UPDATE bot b SET answers_verified_at = CASE WHEN $3::boolean THEN now() ELSE NULL END
+    FROM account a WHERE a.id = b.account_id AND ${OWNED} RETURNING b.answers_verified_at IS NOT NULL AS verified`, [botId, accountId, verified])).rows[0];
+  return row ? { answers_verified: row.verified } : null;
 }
 
 export type AddOriginResult = { kind: 'added' | 'exists'; origin: string } | { kind: 'limit'; limit: number } | null;

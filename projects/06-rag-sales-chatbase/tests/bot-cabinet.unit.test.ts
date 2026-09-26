@@ -130,7 +130,7 @@ describe('порядок входа маршрутов кабинета', () => 
       allowMutation: async () => { calls.push('limit'); return true; },
       listBots: touch('list'), createBot: touch('create'), newPublicKey: () => KEY, updateSettings: touch('update'), addOrigin: touch('origin'),
       checkAddress: touch('check'), ownsBot: touch('owns'), createSite: touch('site'), findJob: touch('find'), retry: touch('retry'),
-      enqueue: touch('enqueue'), answer: touch('answer'), log: () => {}, ...over,
+      enqueue: touch('enqueue'), answer: touch('answer'), setVerified: touch('verify'), log: () => {}, ...over,
     };
   }
   const request = (headers: Record<string, string>, body: unknown = {}) => new Request(`${ORIGIN}/api/bots`, { method: 'POST',

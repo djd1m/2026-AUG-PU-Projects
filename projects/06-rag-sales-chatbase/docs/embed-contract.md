@@ -43,8 +43,11 @@ content-box !important; font-size: 30px !important }`, `div { position: relative
 `http://127.0.0.1:8099/host.html` (в списке бота) и `http://127.0.0.1:8098/host.html` (НЕ в списке), тег —
 ровно выданный `installSnippet`, CSP — ровно опубликованные `cspDirectives` + `'self'` для скрипта хозяина,
 `default-src 'none'; style-src 'self'`; враждебный CSS (`* { font-size: 30px !important; box-sizing: content-box
-!important }`, `button { width: 300px !important }`, `[hidden] { display: block !important }` и др.). Маршрута
-`/w/v1/ask` ещё нет (фича 12) — его место в оснастке занимает заглушка с настоящим CheckOrigin.
+!important }`, `button { width: 300px !important }`, `[hidden] { display: block !important }` и др.). С фичи
+`visitor-ask-and-limits` (26.09) `/w/v1/ask` в оснастке — НАСТОЯЩИЙ обработчик `createWidgetAskHandler` и НАСТОЯЩЕЕ
+ядро `answerQuestion` с настоящим клиентом OpenRouter поверх подменного fetch (фейковая модель; живая модель не
+вызывается): вопрос из окна виджета на :8099 получает ответ с плашкой источника, предел сессии — 429 с контактом,
+бот без отметки «проверено» — «Бот ещё настраивается» без вызова модели, POST со страницы :8098 — 403 без ACAO.
 Оснастка: `tests/browser/widget-harness.ts`, набор: `tests/browser/widget-embed.test.ts`,
 запуск `bash scripts/check-responsive.sh --test tests/browser/widget-embed.test.ts`.
 
@@ -54,6 +57,8 @@ content-box !important; font-size: 30px !important }`, `div { position: relative
 | протечка-стилей (оснастка) | пузырь 56×56 в 16 px от угла, окно 360 px, шрифт 16/15 px вопреки `30px !important`; стиль заголовка и кнопки хозяина не изменились; ни одного `<style>`/`<link>` в документе хозяина | скриншоты `tests/artifacts/widget-runtime-and-badge/browser/*-hostile-open.png` |
 | политика-безопасности (оснастка) | 0 событий `securitypolicyviolation`, 0 ошибок консоли под CSP без `unsafe-inline`; мутация «style-атрибут на узле хозяина» краснеет набор | `tests/artifacts/widget-runtime-and-badge/browser-mutations/` |
 
-Для закрытия строк таблицы выше (фича `visitor-ask-and-limits`): та же страница `host.html` на :8099, но тег и
-директивы — по адресу, который ВЫДАЛО развёртывание (`N6_PUBLIC_ORIGIN` стенда), и вопрос с ответом через
-настоящий `POST /w/v1/ask`.
+Для закрытия строк таблицы выше: та же страница `host.html` на :8099, но тег и директивы — по адресу, который
+ВЫДАЛО развёртывание (`N6_PUBLIC_ORIGIN` стенда), и вопрос с ответом через `POST /w/v1/ask` РАЗВЁРНУТОГО `web` за
+`proxy`. Фича `visitor-ask-and-limits` маршрут написала и проверила оснасткой, но стенд НЕ поднимала: старт `web`
+делает пробный вызов настоящей модели (`answerProbe`), а в этом прогоне продуктовые модели — только фейки. Поэтому
+статус остаётся `НЕ ВЫПОЛНЕНА / not-deployed` — строки таблицы закрывает первый выпуск на стенд.

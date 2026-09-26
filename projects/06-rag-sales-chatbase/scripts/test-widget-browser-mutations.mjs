@@ -6,16 +6,18 @@
 // В отличие от scripts/test-widget-mutations.mjs правит файлы НА МЕСТЕ (контейнер монтирует каталог проекта) и
 // восстанавливает их в finally; после прогона проверяется, что исходники совпали с исходными байт в байт.
 // Запуск с хоста: node scripts/test-widget-browser-mutations.mjs
+// visitor-ask-and-limits: + мутация «ответ непроверенного бота показан» (A-N6-035); выбор мутаций и каталог квитанций —
+// N6_BROWSER_MUTATIONS_ONLY=<id,id> и N6_BROWSER_MUTATIONS_OUT=<каталог> (по умолчанию — все и каталог фичи 11).
 // Коды: 0 — каждый дефект пойман и восстановление зелёное; 1 — дефект прошёл или восстановление красное;
 // 2 — проверка НЕ ВЫПОЛНЕНА (нет Docker/браузера, бандл не собрался).
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-const output = resolve('tests/artifacts/widget-runtime-and-badge/browser-mutations');
+const output = resolve(process.env.N6_BROWSER_MUTATIONS_OUT || 'tests/artifacts/widget-runtime-and-badge/browser-mutations');
 mkdirSync(output, { recursive: true });
 const once = (from, to) => (source) => (source.indexOf(from) < 0 || source.indexOf(from, source.indexOf(from) + 1) >= 0 ? null : source.replace(from, to));
-const mutations = [
+const all = [
   { id: 'badge-hidden-by-client', title: 'бейдж скрывается клиентом: наблюдатель не восстанавливает удалённый/скрытый бейдж (ADR-004)',
     file: 'apps/widget/src/badge.ts', apply: once('  const tick = () => { checkAndRestore(root, slot, options, log); };', '  const tick = () => { void log; };') },
   { id: 'inline-style', title: 'style-атрибут на узле хозяина — CSP хозяина без unsafe-inline (FR-WIDGET-003)',
@@ -24,7 +26,12 @@ const mutations = [
     file: 'apps/web/src/server/check-origin.ts', apply: once('return bot.origins.includes(origin) ? origin : null;', 'return origin;') },
   { id: 'cors-wildcard', title: 'CORS отвечает `*` вместо origin хозяина',
     file: 'apps/web/src/server/check-origin.ts', apply: once("return { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' };", "return { 'Access-Control-Allow-Origin': '*', Vary: 'Origin' };") },
+  { id: 'unverified-shown', title: 'ответ модели показан посетителю бота без отметки «Я проверил ответы бота» (A-N6-035)',
+    file: 'apps/web/src/server/widget-ask-handler.ts', apply: once('if (!bot.row.answersVerified) {', 'if (bot.row.answersVerified === null) {') },
 ];
+const only = (process.env.N6_BROWSER_MUTATIONS_ONLY ?? '').split(',').filter(Boolean);
+const mutations = only.length ? all.filter((m) => only.includes(m.id)) : all;
+if (only.length && mutations.length !== only.length) { console.error(`Неизвестная мутация в N6_BROWSER_MUTATIONS_ONLY: ${only.join(',')}`); process.exit(2); }
 
 const build = () => spawnSync(process.execPath, ['apps/widget/scripts/build.mjs'], { encoding: 'utf8' });
 function browserRun(id, phase) {

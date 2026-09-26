@@ -37,7 +37,8 @@ export function chargeAnswerQuota(pool: Pool, ceilings: Ceilings, input: AnswerQ
 
 // Журнал вопроса: текст — только у unknown и со сроком 14 дней (152-ФЗ; CHECK question_text_only_unknown —
 // вторая линия). У answered — только id процитированных фрагментов.
-export async function recordQuestion(pool: Pool, entry: QuestionLogEntry & { visitorSessionId: string | null }): Promise<void> {
+// refused_origin пишет маршрут виджета (отказ CheckOrigin, visitor-ask-and-limits) — всегда без текста.
+export async function recordQuestion(pool: Pool, entry: Omit<QuestionLogEntry, 'outcome'> & { outcome: QuestionLogEntry['outcome'] | 'refused_origin'; visitorSessionId: string | null }): Promise<void> {
   if (entry.text !== null && entry.outcome !== 'unknown') throw new Error('Текст вопроса хранится только у исхода unknown (152-ФЗ)');
   await pool.query(`INSERT INTO question_log (bot_id, visitor_session_id, outcome, text, text_expires_at, cited_chunk_ids)
     VALUES ($1, $2, $3, $4, CASE WHEN $4::text IS NULL THEN NULL ELSE now() + make_interval(days => $5) END, $6::uuid[])`,

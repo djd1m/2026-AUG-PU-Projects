@@ -10,7 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { mkdirSync } from 'node:fs';
 import { chromium, firefox, webkit, type Browser, type BrowserContext, type Page } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
-import { CONTACT, HOST, KEY_FREE, KEY_PAID, STRANGER, WIDGET, startHarness, type Harness } from './widget-harness';
+import { ANSWER, CONTACT, HOST, KEY_FREE, KEY_PAID, KEY_UNVERIFIED, STRANGER, VISITOR_LIMIT, WIDGET, startHarness, type Harness } from './widget-harness';
 
 const ARTIFACTS = 'tests/artifacts/widget-runtime-and-badge/browser';
 mkdirSync(ARTIFACTS, { recursive: true });
@@ -132,7 +132,9 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await waitWidget(page);
       await openPanel(page);
       const evil = '<img src=x onerror="window.__xss=1"><script>window.__xss=2</script>';
-      harness.askReply = { status: 200, body: { data: { status: 'answered', text: evil, source: { title: '<b>Цены</b>', url: 'javascript:alert(1)', excerpt: evil } } } };
+      const chip = (title: string, url: string, excerpt: string) => ({ chunkId: '44444444-4444-4444-8444-444444444444', title, url, excerpt });
+      const evilChip = chip('<b>Цены</b>', 'javascript:alert(1)', evil);
+      harness.askOverride = { status: 'answered', text: evil, sources: [evilChip], sourceChip: evilChip };
       await page.locator('n6-sufler .input').fill('Сколько стоит доставка?');
       await page.locator('n6-sufler .send').click();
       await expect.poll(() => page.locator('n6-sufler .msg.bot').count()).toBe(2);
@@ -142,18 +144,78 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           text: last.firstChild!.textContent, xss: (window as unknown as { __xss?: number }).__xss ?? null };
       });
       expect(out).toEqual({ imgs: 0, links: 0, summary: 'Источник: <b>Цены</b> ↗', text: evil, xss: null });
-      harness.askReply = { status: 200, body: { data: { status: 'answered', text: 'Доставка от 350 ₽.', source: { title: 'Цены', url: 'https://kolos.example/ceny', excerpt: 'Доставка от 350 ₽' } } } };
+      const fine = chip('Цены', 'https://kolos.example/ceny', 'Доставка от 350 ₽');
+      harness.askOverride = { status: 'answered', text: 'Доставка от 350 ₽.', sources: [fine], sourceChip: fine };
       await page.locator('n6-sufler .input').fill('А самовывоз?');
       await page.locator('n6-sufler .send').click();
       await expect.poll(() => page.locator('n6-sufler .msg.bot').count()).toBe(3);
       expect(await page.locator('n6-sufler .msg.bot >> nth=2').locator('a').getAttribute('href')).toBe('https://kolos.example/ceny');
-      harness.askReply = { status: 429, body: { error: { code: 'limit', message: `Лимит вопросов на сегодня исчерпан. Напишите: ${CONTACT}` } } };
+      harness.askOverride = { status: 'refused', reason: 'limit', scope: 'visitor_answers', message: `Лимит вопросов на сегодня исчерпан. Напишите: ${CONTACT}`, contact: CONTACT };
       await page.locator('n6-sufler .input').fill('Ещё вопрос');
       await page.locator('n6-sufler .send').click();
       await expect.poll(() => page.locator('n6-sufler .msg.bot >> nth=3').textContent()).toContain(CONTACT);
+      harness.askOverride = null;
       expect(await cspLog(page)).toBe('');
-      // 429 — ожидаемый ответ заглушки выше; браузер пишет его в консоль как «Failed to load resource».
+      // 429 — ожидаемый ответ выше; браузер пишет его в консоль как «Failed to load resource».
       expect(problems.filter((p) => !/status of 429/.test(p))).toEqual([]);
+    }));
+
+  // visitor-ask-and-limits: НАСТОЯЩИЙ маршрут /w/v1/ask и НАСТОЯЩЕЕ ядро ответа с фейковой моделью, на чужом origin.
+  const ask = async (page: Page, question: string, nth: number) => {
+    await page.locator('n6-sufler .input').fill(question);
+    await page.locator('n6-sufler .send').click();
+    await expect.poll(() => page.locator('n6-sufler .msg.bot').count(), { timeout: 10000 }).toBe(nth + 1);
+    return inShadow(page, (() => { const all = document.querySelector('n6-sufler')!.shadowRoot!.querySelectorAll('.msg.bot'); const last = all[all.length - 1]!;
+      return { text: last.firstChild?.textContent ?? '', link: last.querySelector('a')?.getAttribute('href') ?? null, summary: last.querySelector('summary')?.textContent ?? null }; }) as never) as
+      Promise<{ text: string; link: string | null; summary: string | null }>;
+  };
+  it('вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом', () =>
+    open(`${HOST}/host.html?bot=${KEY_FREE}`, async (page, _c, problems) => {
+      harness.resetQuota();
+      const before = harness.modelCalls();
+      await waitWidget(page);
+      await openPanel(page);
+      const first = await ask(page, 'Сколько стоит доставка?', 1);
+      expect(first).toEqual({ text: ANSWER, link: 'https://kolos.example/ceny', summary: 'Источник: Цены ↗' });
+      const asks = harness.log.filter((l) => l.path === '/w/v1/ask');
+      expect(asks.map((l) => [l.method, l.origin, l.status, l.acao])).toEqual([['OPTIONS', HOST, 204, [HOST]], ['POST', HOST, 200, [HOST]]]);
+      // Показ бейджа записан раньше вопроса (сервер иначе ответил бы 409 badge_required).
+      const order = harness.log.map((l) => `${l.method} ${l.path}`);
+      expect(order.indexOf('POST /w/v1/event')).toBeLessThan(order.indexOf('POST /w/v1/ask'));
+      for (let i = 2; i <= VISITOR_LIMIT; i++) expect((await ask(page, `Вопрос ${i} про доставку`, i)).text).toBe(ANSWER);
+      const refused = await ask(page, 'Ещё про доставку', VISITOR_LIMIT + 1);
+      expect(refused.text).toBe(`Лимит вопросов на сегодня исчерпан. Напишите: ${CONTACT}`);
+      expect(harness.modelCalls() - before).toBe(VISITOR_LIMIT);
+      expect(harness.log.filter((l) => l.path === '/w/v1/ask' && l.method === 'POST').map((l) => l.status)).toEqual([...Array(VISITOR_LIMIT).fill(200), 429]);
+      expect(await cspLog(page)).toBe('');
+      expect(problems.filter((p) => !/status of 429/.test(p))).toEqual([]);
+    }));
+
+  it('A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана', () =>
+    open(`${HOST}/host.html?bot=${KEY_UNVERIFIED}`, async (page, _c, problems) => {
+      const before = harness.modelCalls();
+      await waitWidget(page);
+      await openPanel(page);
+      const reply = await ask(page, 'Сколько стоит доставка?', 1);
+      expect(reply.text).toBe(`Бот ещё настраивается и пока не отвечает на вопросы. Напишите: ${CONTACT}`);
+      expect(harness.modelCalls()).toBe(before);
+      expect(problems).toEqual([]);
+    }));
+
+  it('перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана', () =>
+    open(`${STRANGER}/host.html?bot=${KEY_FREE}`, async (page) => {
+      const before = harness.modelCalls();
+      const results = await page.evaluate(async (url) => Promise.all([
+        fetch(url, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ visitor_session: 'x', question: 'цены' }) })
+          .then((r) => `ответ ${r.status}`, (e: Error) => `отказ ${e.name}`),
+        fetch(url, { method: 'POST', credentials: 'omit', body: JSON.stringify({ visitor_session: 'x', question: 'цены' }) })
+          .then((r) => `ответ ${r.status}`, (e: Error) => `отказ ${e.name}`),
+      ]), `${WIDGET}/w/v1/ask?bot=${KEY_FREE}`);
+      expect(results).toEqual(['отказ TypeError', 'отказ TypeError']);
+      const asks = harness.log.filter((l) => l.path === '/w/v1/ask');
+      expect(asks.length).toBeGreaterThan(0);
+      for (const l of asks) { expect(l.status).toBe(403); expect(l.acao).toEqual([]); }
+      expect(harness.modelCalls()).toBe(before);
     }));
 
   it('доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений', () =>

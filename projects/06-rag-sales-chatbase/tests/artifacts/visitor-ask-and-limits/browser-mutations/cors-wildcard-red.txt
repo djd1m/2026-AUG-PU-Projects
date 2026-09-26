@@ -1,0 +1,149 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/widget-embed.test.ts (33 tests | 6 failed) 32167ms
+   × chromium > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 193ms
+     → expected [ [ 'http://127.0.0.1:8099', …(2) ] ] to deeply equal [ [ 'http://127.0.0.1:8099', …(2) ] ]
+   ✓ chromium > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось  478ms
+   ✓ chromium > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  366ms
+   ✓ chromium > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)  498ms
+   ✓ chromium > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  693ms
+   ✓ chromium > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка  541ms
+   × chromium > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом 490ms
+     → expected [ [ 'OPTIONS', …(3) ], …(1) ] to deeply equal [ [ 'OPTIONS', …(3) ], …(1) ]
+   ✓ chromium > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана  347ms
+   ✓ chromium > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана 124ms
+   ✓ chromium > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1055ms
+   ✓ chromium > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  328ms
+   × firefox > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 1738ms
+     → expected [ [ 'http://127.0.0.1:8099', …(2) ] ] to deeply equal [ [ 'http://127.0.0.1:8099', …(2) ] ]
+   ✓ firefox > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось  929ms
+   ✓ firefox > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  610ms
+   ✓ firefox > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)  769ms
+   ✓ firefox > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  952ms
+   ✓ firefox > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка  1429ms
+   × firefox > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом 810ms
+     → expected [ [ 'OPTIONS', …(3) ], …(1) ] to deeply equal [ [ 'OPTIONS', …(3) ], …(1) ]
+   ✓ firefox > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана  765ms
+   ✓ firefox > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана  462ms
+   ✓ firefox > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1904ms
+   ✓ firefox > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  633ms
+   × webkit > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 416ms
+     → expected [ [ 'http://127.0.0.1:8099', …(2) ] ] to deeply equal [ [ 'http://127.0.0.1:8099', …(2) ] ]
+   ✓ webkit > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось  629ms
+   ✓ webkit > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  2089ms
+   ✓ webkit > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)  1259ms
+   ✓ webkit > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  965ms
+   ✓ webkit > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка  3123ms
+   × webkit > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом 954ms
+     → expected [ [ 'OPTIONS', …(3) ], …(1) ] to deeply equal [ [ 'OPTIONS', …(3) ], …(1) ]
+   ✓ webkit > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана  843ms
+   ✓ webkit > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана  301ms
+   ✓ webkit > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1633ms
+   ✓ webkit > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  727ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 27 passed (33)
+   Start at  09:35:52
+   Duration  33.73s (transform 534ms, setup 0ms, collect 1.30s, tests 32.17s, environment 0ms, prepare 89ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений
+ FAIL  tests/browser/widget-embed.test.ts > webkit > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений
+AssertionError: expected [ [ 'http://127.0.0.1:8099', …(2) ] ] to deeply equal [ [ 'http://127.0.0.1:8099', …(2) ] ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    [[22m
+[2m      "http://127.0.0.1:8099",[22m
+[2m      200,[22m
+[2m      [[22m
+[32m-       "http://127.0.0.1:8099",[39m
+[31m+       "*",[39m
+[2m      ],[22m
+[2m    ],[22m
+[2m  ][22m
+
+ ❯ tests/browser/widget-embed.test.ts:53:64
+     51|       await waitWidget(page);
+     52|       const configs = harness.log.filter((l) => l.path === '/w/v1/conf…
+     53|       expect(configs.map((l) => [l.origin, l.status, l.acao])).toEqual…
+       |                                                                ^
+     54|       await openPanel(page);
+     55|       await page.waitForFunction(() => document.getElementById('csp-lo…
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом
+ FAIL  tests/browser/widget-embed.test.ts > firefox > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом
+ FAIL  tests/browser/widget-embed.test.ts > webkit > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом
+AssertionError: expected [ [ 'OPTIONS', …(3) ], …(1) ] to deeply equal [ [ 'OPTIONS', …(3) ], …(1) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -2,17 +2,17 @@[39m
+[2m    [[22m
+[2m      "OPTIONS",[22m
+[2m      "http://127.0.0.1:8099",[22m
+[2m      204,[22m
+[2m      [[22m
+[32m-       "http://127.0.0.1:8099",[39m
+[31m+       "*",[39m
+[2m      ],[22m
+[2m    ],[22m
+[2m    [[22m
+[2m      "POST",[22m
+[2m      "http://127.0.0.1:8099",[22m
+[2m      200,[22m
+[2m      [[22m
+[32m-       "http://127.0.0.1:8099",[39m
+[31m+       "*",[39m
+[2m      ],[22m
+[2m    ],[22m
+[2m  ][22m
+
+ ❯ tests/browser/widget-embed.test.ts:181:71
+    179|       expect(first).toEqual({ text: ANSWER, link: 'https://kolos.examp…
+    180|       const asks = harness.log.filter((l) => l.path === '/w/v1/ask');
+    181|       expect(asks.map((l) => [l.method, l.origin, l.status, l.acao])).…
+       |                                                                       ^
+    182|       // Показ бейджа записан раньше вопроса (сервер иначе ответил бы …
+    183|       const order = harness.log.map((l) => `${l.method} ${l.path}`);
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > firefox > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений
+AssertionError: expected [ [ 'http://127.0.0.1:8099', …(2) ] ] to deeply equal [ [ 'http://127.0.0.1:8099', …(2) ] ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    [[22m
+[2m      "http://127.0.0.1:8099",[22m
+[2m      200,[22m
+[2m      [[22m
+[32m-       "http://127.0.0.1:8099",[39m
+[31m+       "*",[39m
+[2m      ],[22m
+[2m    ],[22m
+[2m  ][22m
+
+ ❯ tests/browser/widget-embed.test.ts:53:64
+     51|       await waitWidget(page);
+     52|       const configs = harness.log.filter((l) => l.path === '/w/v1/conf…
+     53|       expect(configs.map((l) => [l.origin, l.status, l.acao])).toEqual…
+       |                                                                ^
+     54|       await openPanel(page);
+     55|       await page.waitForFunction(() => document.getElementById('csp-lo…
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+

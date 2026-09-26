@@ -2,13 +2,14 @@
 // (канон §6), шаги WatchdogTick N6: (1) running без updated_at 5 мин → failed(stalled) с подъёмом фенса;
 // (2) предел задачи 15 мин от начала серии → failed(stalled) (A-N6-025); (3) queued без движения 2 мин →
 // повторная доставка той же идентичности (BullMQ не дублирует живое задание); (4) draft старше 24 ч → удалить.
-// FOR UPDATE SKIP LOCKED и пачки — из N5; startWatchdog — без изменений. Шаги 4–5 Pseudocode
-// (текст question_log, стирание аккаунтов) — фичи visitor-ask-and-limits и account-erasure.
-import { closeFailedTx, transaction, type Pool } from '@n6/db';
+// FOR UPDATE SKIP LOCKED и пачки — из N5; startWatchdog — без изменений. Шаг 5 Pseudocode (152-ФЗ): текст вопроса
+// «не знаю» старше 14 дней и история посетителя старше 30 минут стираются (visitor-ask-and-limits, sweepVisitorText);
+// стирание аккаунтов — фича account-erasure.
+import { closeFailedTx, sweepVisitorText, transaction, type Pool } from '@n6/db';
 import { DRAFT_TTL_MS, JOB_DEADLINE_MS, REDELIVER_QUEUED_AFTER_MS, STALLED_AFTER_MS, WATCHDOG_BATCH, WATCHDOG_INTERVAL_MS,
   type IndexMessage } from '@n6/queue';
 
-export interface WatchdogResult { stalled: number; overdue: number; redelivered: number; draftsDeleted: number }
+export interface WatchdogResult { stalled: number; overdue: number; redelivered: number; draftsDeleted: number; questionTexts: number; histories: number }
 
 async function closeWhere(pool: Pool, select: string, params: unknown[], now: Date): Promise<number> {
   return transaction(pool, async (tx) => {
@@ -41,7 +42,9 @@ export async function watchdogTick(pool: Pool, enqueue: (message: IndexMessage) 
     // Предпросмотр без claim живёт 24 ч (канон §7); каскад удаляет источники, задачи, фрагменты, preview.
     const drafts = await pool.query(`DELETE FROM bot WHERE id IN (SELECT id FROM bot WHERE status = 'draft' AND created_at < $1
       ORDER BY created_at LIMIT $2)`, [new Date(now.getTime() - DRAFT_TTL_MS), batch]);
-    return { stalled, overdue, redelivered, draftsDeleted: drafts.rowCount ?? 0 };
+    step = 'персональные данные посетителей';
+    const swept = await sweepVisitorText(pool, batch);
+    return { stalled, overdue, redelivered, draftsDeleted: drafts.rowCount ?? 0, ...swept };
   } catch (error) {
     console.error(`Сторож: шаг «${step}» не завершён`);
     throw error;

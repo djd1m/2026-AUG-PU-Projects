@@ -66,7 +66,8 @@ describe('потолок бандла 45 КБ gzip', () => {
 });
 
 describe('разбор ответов сервера (fail-closed)', () => {
-  const config = { company_name: 'Колос', greeting: '', contact: 'info@kolos.ru', badge_required: true, badge_href: 'https://sufler.example/?from=a&utm_source=badge' };
+  const config = { company_name: 'Колос', greeting: '', contact: 'info@kolos.ru', badge_required: true, badge_href: 'https://sufler.example/?from=a&utm_source=badge',
+    visitor_session: `3f2c1a9e-5b7d-4c8e-9f10-2a3b4c5d6e7f.${'A'.repeat(43)}` };
   it('ссылка — только http(s)', () => {
     for (const bad of ['javascript:alert(1)', 'data:text/html,x', 'vbscript:x', '//evil.example', '', null, 42]) expect(safeHref(bad), String(bad)).toBeNull();
     expect(safeHref('https://a.example/x')).toBe('https://a.example/x');
@@ -77,6 +78,10 @@ describe('разбор ответов сервера (fail-closed)', () => {
     expect(parseConfig({ data: { ...config, badge_href: 'javascript:alert(1)' } })).toBeNull();
     expect(parseConfig({ data: { ...config, badge_required: false, badge_href: null } })).toMatchObject({ badge_required: false, badge_href: null });
     expect(parseConfig({ data: { ...config, contact: '' } })).toBeNull();
+    // visitor-ask-and-limits: без токена сессии, выданного сервером, конфигурации нет (голый UUID — не токен).
+    for (const visitor_session of [undefined, '', '3f2c1a9e-5b7d-4c8e-9f10-2a3b4c5d6e7f', 7]) {
+      expect(parseConfig({ data: { ...config, visitor_session } }), String(visitor_session)).toBeNull();
+    }
     expect(parseConfig(null)).toBeNull();
   });
   it('ответ на вопрос: answered/unknown/лимит/ошибка; ссылка источника javascript: отбрасывается', () => {
@@ -85,6 +90,8 @@ describe('разбор ответов сервера (fail-closed)', () => {
     expect(parseAsk(200, { data: { status: 'unknown', text: 'Не знаю. Напишите: x' } })).toEqual({ kind: 'unknown', text: 'Не знаю. Напишите: x' });
     expect(parseAsk(429, { error: { code: 'limit', message: 'Лимит' } })).toEqual({ kind: 'limit', text: 'Лимит' });
     expect(parseAsk(404, { error: {} })).toEqual({ kind: 'error' });
+    expect(parseAsk(409, { error: { code: 'session_expired' } })).toEqual({ kind: 'expired' });
+    expect(parseAsk(409, { error: { code: 'badge_required' } })).toEqual({ kind: 'error' });
     expect(parseAsk(200, { data: { status: 'answered' } })).toEqual({ kind: 'error' });
   });
   it('классификация видимости бейджа (перенос N1): удалён / скрыт напрямую / нулевой размер / виден', () => {

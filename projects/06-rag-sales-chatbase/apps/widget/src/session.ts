@@ -1,29 +1,22 @@
-// Идентификатор сессии посетителя (Pseudocode «visitor_session»: «id живёт в sessionStorage виджета»). Написано
-// заново (у донора N1 сессии посетителя нет — виджет отзывов ничего не спрашивал; ADR-016).
+// Токен сессии посетителя (фича visitor-ask-and-limits; Pseudocode «visitor_session»: «id живёт в sessionStorage виджета»).
+// Написано заново (у донора N1 сессии посетителя нет; ADR-016).
 //
-// UUID v4 из crypto.getRandomValues, а не randomUUID: последний есть только в «безопасном контексте», а сайт
-// хозяина бывает и по http://. sessionStorage может бросать (запрет хранилища, песочница) — тогда id живёт в
-// памяти страницы; это лишь снижает точность дедупликации показов, не ломает виджет. Сервер НЕ доверяет id
-// вслепую: сессия привязывается к боту и origin при первой записи, чужая — 400 (packages/db/src/widget.ts).
+// Токен ВЫДАЁТ СЕРВЕР в ответе GET /w/v1/config (id + подпись по боту, origin и префиксу /24 — apps/web/src/server/
+// visitor-token.ts): id, придуманный виджетом, был бы ключом квоты, выбранным клиентом. Cookie третьей стороны на чужом
+// сайте может не работать, поэтому токен хранится в sessionStorage и уходит в config (?vs=) — сервер продолжает прежнюю
+// сессию, если токен годен, иначе выдаёт новый. sessionStorage может бросать (запрет хранилища, песочница) — тогда
+// токен живёт в памяти страницы: виджет работает, сессия просто короче.
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+export const TOKEN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.[A-Za-z0-9_-]{43}$/;
+const key = (bot: string) => `n6-vs:${bot}`;
 
-export function randomUuid(): string {
-  const b = new Uint8Array(16);
-  crypto.getRandomValues(b);
-  b[6] = (b[6]! & 0x0f) | 0x40;
-  b[8] = (b[8]! & 0x3f) | 0x80;
-  const hex = Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+export function readSession(bot: string): string | null {
+  try {
+    const stored = sessionStorage.getItem(key(bot));
+    return stored && TOKEN.test(stored) ? stored : null;
+  } catch { return null; }
 }
 
-export function visitorSession(bot: string): string {
-  const key = `n6-vs:${bot}`;
-  try {
-    const stored = sessionStorage.getItem(key);
-    if (stored && UUID.test(stored)) return stored;
-    const id = randomUuid();
-    sessionStorage.setItem(key, id);
-    return id;
-  } catch { return randomUuid(); }
+export function storeSession(bot: string, token: string): void {
+  try { sessionStorage.setItem(key(bot), token); } catch { /* хранилище запрещено — токен живёт в памяти окна */ }
 }

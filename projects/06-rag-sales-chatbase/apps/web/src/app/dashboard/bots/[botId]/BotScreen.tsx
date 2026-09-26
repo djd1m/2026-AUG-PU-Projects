@@ -9,8 +9,16 @@ import { AddSource, BotForm, OwnerChat, SourceList, type FieldErrors, type Owner
 
 const REFRESH_MS = 3000;
 export interface BotScreenProps { botId: string; companyName: string; contact: string; greeting: string; sources: SourceItemView[] }
+// visitor-ask-and-limits: отметка «Я проверил ответы бота» (A-N6-035) и ответы бота в текущем месяце против предела плана
+// (баннер исчерпания, FR-TARIFF-003, SC-US-007-2).
+export interface BotScreenState { answersVerified: boolean; monthAnswers: { used: number; limit: number } }
 
-export function BotScreen(p: BotScreenProps) {
+export const VERIFY_RISK = 'Бот отвечает только по вашим материалам и к каждому ответу прикладывает фрагмент-источник. Но ссылка на фрагмент '
+  + 'не доказывает, что текст ответа с ним совпадает: модель может добавить от себя — например, скидку или срок, которых в '
+  + 'материалах нет. Задайте боту в чате выше вопросы, которые задают ваши клиенты, особенно о ценах, сроках и акциях. Пока '
+  + 'отметки нет, посетители сайта видят «Бот ещё настраивается» и ваш контакт.';
+
+export function BotScreen(p: BotScreenProps & BotScreenState) {
   const router = useRouter();
   const active = p.sources.some((s) => s.job && (s.job.state === 'running' || s.job.state === 'no_response'));
   useEffect(() => {
@@ -84,7 +92,27 @@ export function BotScreen(p: BotScreenProps) {
       setSettingsErrors(error?.field ? { [error.field]: error.message } : { form: error?.message ?? 'Не удалось сохранить. Повторите' });
     } catch { setSettingsErrors({ form: 'Нет связи с сервером. Повторите' }); } finally { setSaving(false); }
   };
+  const [verified, setVerified] = useState(p.answersVerified);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState('');
+  const toggleVerified = async () => {
+    setVerifying(true); setVerifyError('');
+    try {
+      const { status, body } = await send(`/api/bots/${p.botId}/verify`, 'POST', { verified: !verified });
+      const data = dataOf<{ answers_verified: boolean }>(body);
+      if (status === 200 && data) { setVerified(data.answers_verified); return; }
+      setVerifyError(errorOf(body)?.message ?? 'Не удалось сохранить отметку. Повторите');
+    } catch { setVerifyError('Нет связи с сервером. Повторите'); } finally { setVerifying(false); }
+  };
+  const exhausted = p.monthAnswers.used >= p.monthAnswers.limit;
   return <BotLayout {...p} ready={p.sources.some((s) => s.job?.state === 'done')}
+    banner={exhausted ? <p role="alert" className="notice danger-notice cabinet-notice">Месячный лимит ответов исчерпан ({p.monthAnswers.used} из {p.monthAnswers.limit}): до 1-го числа посетители видят отказ с вашим контактом. Тестовые вопросы в кабинете расходуют тот же лимит. <a href="/pricing">Тарифы</a></p> : null}
+    verify={<section className="card stack" aria-labelledby="verify-title"><h2 id="verify-title">Ответы на сайте</h2>
+      <p>{VERIFY_RISK}</p>
+      <p role="status" className={verified ? 'notice' : 'notice danger-notice'}>{verified ? 'Отмечено: посетители видят ответы бота.' : 'Не отмечено: посетители видят «Бот ещё настраивается».'}</p>
+      {verifyError && <p role="alert" className="field-error">{verifyError}</p>}
+      <p><button type="button" className={verified ? 'button secondary' : 'button'} disabled={verifying} onClick={() => { void toggleVerified(); }}>
+        {verified ? 'Снять отметку' : 'Я проверил ответы бота'}</button></p></section>}
     sourcesBlock={<><SourceList sources={p.sources} retrying={retrying} errors={sourceErrors} onRetry={(id) => { void retry(id); }} />
       <AddSource url={url} busy={adding} errors={sourceErrors} onUrl={setUrl} onSite={() => { void addSite(); }} onPdf={(f) => { void addPdf(f); }} /></>}
     chat={<OwnerChat companyName={p.companyName} messages={messages} draft={draft} busy={asking} error={chatError}
@@ -94,16 +122,18 @@ export function BotScreen(p: BotScreenProps) {
         submitLabel="Сохранить настройки" contactRequired onChange={(f, v) => setSettings((s) => ({ ...s, [f]: v }))} onSubmit={() => { void save(); }} /></>} />;
 }
 
-export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: ReactNode; chat: ReactNode; settings: ReactNode }) {
+export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: ReactNode; chat: ReactNode; settings: ReactNode; banner?: ReactNode; verify?: ReactNode }) {
   return <>
     <div className="cabinet-head"><h1>{p.companyName}</h1>
       <p className="cluster"><a className="button" href={`/dashboard/bots/${p.botId}/install`}>Установка на сайт</a>
         <a className="button secondary" href="/dashboard">Все боты</a></p></div>
+    {p.banner}
     {!p.contact && <p role="status" className="notice cabinet-notice">Укажите контакт для «не знаю» в настройках — без него бот не выдаёт код установки и не отвечает на сайте.</p>}
     <div className="bot-grid">
       <section className="stack" aria-labelledby="sources-title"><h2 id="sources-title">Источники</h2>{p.sourcesBlock}</section>
       <section className="stack" aria-labelledby="chat-title"><h2 id="chat-title">Задать вопрос</h2>{p.chat}</section>
     </div>
+    {p.verify}
     <section className="card stack bot-settings" aria-labelledby="settings-title"><h2 id="settings-title">Настройки бота</h2>{p.settings}</section>
   </>;
 }

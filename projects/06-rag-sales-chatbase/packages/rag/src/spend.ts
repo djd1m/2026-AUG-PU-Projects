@@ -2,7 +2,7 @@
 // (open 'a' 0o600 → writeFile → sync). Адаптировано: вызовы N6 (Pseudocode RecordModelSpend), общий
 // журнал /work/spend/model-spend.jsonl у web и worker-index, и meteredCall — порядок «квота → attempt →
 // вызов → outcome» на КАЖДУЮ попытку (model-call-cost п.4: счёт по попыткам, повтор списывает заново).
-import { mkdirSync, openSync, writeSync, closeSync, readFileSync } from 'node:fs';
+import { mkdirSync, openSync, writeSync, closeSync } from 'node:fs';
 import { open } from 'node:fs/promises';
 import { dirname, isAbsolute, join } from 'node:path';
 
@@ -90,15 +90,25 @@ async function writeOutcome<T>(call: MeteredCall<T>, attempt: number, result: Sp
 
 // Пробы старта — «свой-код»: их предел — число проб в сутки на вид, а не quota_counter (контракт,
 // строка проба-старта). Перезапуск по кругу (restart: unless-stopped) иначе платил бы без конца.
+//
+// Счёт — АТОМАРНЫЙ между процессами (ревью quota-and-spend M1): проба занимает слот — файл
+// probe-<вид>-<сутки>.<n>, созданный с O_CREAT|O_EXCL ('wx'). Ядро создаёт файл ровно одному процессу; второй
+// получает EEXIST и пробует следующий слот. Прежняя форма «дописать строку, потом прочитать весь файл» — два
+// системных вызова: одновременные старты web и worker-index видели чужие строки и отказывали раньше предела
+// (или, при другом порядке, неверно считали свой номер).
 export const PROBE_DAILY_LIMIT = 24;
 export function reserveProbe(spendPath: string, kind: 'answer' | 'embed', day: string): number {
-  const file = join(dirname(validateSpendPath(spendPath)), `probe-${kind}-${day}.log`);
-  // O_APPEND одной короткой строкой атомарен между процессами; счёт — после своей записи.
-  const fd = openSync(file, 'a', 0o600);
-  try { writeSync(fd, `${new Date().toISOString()} ${process.pid}\n`); } finally { closeSync(fd); }
-  const used = readFileSync(file, 'utf8').split('\n').filter(Boolean).length;
-  if (used > PROBE_DAILY_LIMIT) {
-    throw new Error(`проба ${kind} исчерпала ${PROBE_DAILY_LIMIT} попыток за ${day}: перезапуск по кругу оплачивал бы вызовы без предела — старт отклонён`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error('Сутки пробы непригодны: нужен YYYY-MM-DD');
+  const dir = dirname(validateSpendPath(spendPath));
+  for (let slot = 1; slot <= PROBE_DAILY_LIMIT; slot++) {
+    let fd: number;
+    try { fd = openSync(join(dir, `probe-${kind}-${day}.${slot}`), 'wx', 0o600); }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'EEXIST') continue;
+      throw error;
+    }
+    try { writeSync(fd, `${new Date().toISOString()} ${process.pid}\n`); } finally { closeSync(fd); }
+    return slot;
   }
-  return used;
+  throw new Error(`проба ${kind} исчерпала ${PROBE_DAILY_LIMIT} попыток за ${day}: перезапуск по кругу оплачивал бы вызовы без предела — старт отклонён`);
 }

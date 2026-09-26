@@ -6,16 +6,21 @@
 //    /w/v1/config, /w/v1/event, OPTIONS и маршрута бандла из apps/web/src/server — хранилище подменено словарём
 //    (SQL проверяет tests/widget-config.integration.test.ts на настоящем Postgres). X-Forwarded-For дописывается
 //    здесь так же, как его пишет дверь (proxy/Caddyfile: header_up X-Forwarded-For {client_ip}).
-//  - /w/v1/ask — ЗАГЛУШКА фичи visitor-ask-and-limits (маршрута ещё нет): отвечает заранее заданным ответом, но
-//    с НАСТОЯЩИМ CheckOrigin и corsHeaders — ею проверяется только рендер ответа в виджете (NFR-SEC-002).
+//  - /w/v1/ask — НАСТОЯЩИЙ обработчик createWidgetAskHandler (фича visitor-ask-and-limits) и НАСТОЯЩЕЕ ядро answerQuestion
+//    с настоящим клиентом OpenRouter поверх подменного fetch (фейковая модель, fake-answer-gateway): порядок CheckOrigin →
+//    токен → бейдж показан → отметка «проверено» → квота → эмбеддинг → порог → модель → проверка цитат. Подменены только
+//    хранилища (сессии, квота — словари; SQL — tests/visitor-ask.integration.test.ts) и поиск (один фрагмент прайса).
+//    askOverride — готовый AnswerResult вместо ядра: им проверяется рендер враждебного ответа (NFR-SEC-002).
 //  - хозяйские страницы HOST (в списке бота) и STRANGER (не в списке): тег — ровно тот, что выдаёт кабинет
 //    (installSnippet), CSP — ровно директивы экрана установки (cspDirectives) + 'self' для своего скрипта хозяина.
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { cspDirectives, installSnippet } from '../../packages/rag/src/bot-settings';
 import type { WidgetBotRow } from '../../packages/db/src/widget';
-import { checkOrigin, corsHeaders, PREFLIGHT_HEADERS, requestOrigin } from '../../apps/web/src/server/check-origin';
-import { createWidgetConfigHandler, createWidgetEventHandler, createWidgetPreflightHandler, usableBot, type WidgetDependencies } from '../../apps/web/src/server/widget-handler';
+import { createWidgetConfigHandler, createWidgetEventHandler, createWidgetPreflightHandler } from '../../apps/web/src/server/widget-handler';
 import { createWidgetBundleHandler, readWidgetBundle } from '../../apps/web/src/server/widget-bundle';
+import { createWidgetAskHandler, type WidgetAskDependencies } from '../../apps/web/src/server/widget-ask-handler';
+import { answerQuestion, type AnswerResult, type HistoryTurn } from '../../packages/rag/src/index';
+import { answerHarness, fakeAnswerGateway, MODELS } from '../fixtures/fake-answer-gateway';
 
 export const WIDGET_PORT = 18411;
 export const WIDGET = `http://127.0.0.1:${WIDGET_PORT}`;
@@ -23,15 +28,24 @@ export const HOST = 'http://127.0.0.1:8099';
 export const STRANGER = 'http://127.0.0.1:8098';
 export const KEY_FREE = 'FreeBotKey0123456789ab';
 export const KEY_PAID = 'PaidBotKey0123456789ab';
+export const KEY_UNVERIFIED = 'NewBotKey0123456789abc';   // владелец ещё не отметил «Я проверил ответы бота» (A-N6-035)
+export const PRICE = 'Доставка по Москве — от 350 ₽, самовывоз со склада бесплатно.';
+export const ANSWER = 'Доставка по Москве — от 350 ₽.';
+export const VISITOR_LIMIT = 3;   // предел ответов на сессию в оснастке (канон — 20; здесь меньше, чтобы упереться в браузере)
 export const CONTACT = 'info@kolos.ru';
 
-const bot = (key: string, plan: string): WidgetBotRow => ({ botId: key === KEY_FREE ? '11111111-1111-4111-8111-111111111111' : '22222222-2222-4222-8222-222222222222',
+const BOT_IDS: Record<string, string> = { [KEY_FREE]: '11111111-1111-4111-8111-111111111111', [KEY_PAID]: '22222222-2222-4222-8222-222222222222',
+  [KEY_UNVERIFIED]: '33333333-3333-4333-8333-333333333333' };
+const bot = (key: string, plan: string, answersVerified = true): WidgetBotRow => ({ botId: BOT_IDS[key]!,
   status: 'active', companyName: 'Пекарня «Колос»', greeting: 'Здравствуйте! Спросите про доставку и цены.', contact: CONTACT, publicEnabled: false, plan,
-  accountStatus: 'active', origins: [HOST] });
-export const BOTS: Record<string, WidgetBotRow> = { [KEY_FREE]: bot(KEY_FREE, 'free'), [KEY_PAID]: bot(KEY_PAID, 'nobadge') };
+  accountStatus: 'active', origins: [HOST], answersVerified });
+export const BOTS: Record<string, WidgetBotRow> = { [KEY_FREE]: bot(KEY_FREE, 'free'), [KEY_PAID]: bot(KEY_PAID, 'nobadge'), [KEY_UNVERIFIED]: bot(KEY_UNVERIFIED, 'free', false) };
 
-export interface Logged { method: string; path: string; origin: string | null; status: number; acao: string[] }
-export interface Harness { log: Logged[]; events: Array<{ type: string; origin: string }>; askReply: { status: number; body: unknown }; bundleFile: string; close(): Promise<void> }
+export interface Logged { method: string; path: string; origin: string | null; status: number; acao: string[]; body?: string }
+export interface Harness {
+  log: Logged[]; events: Array<{ type: string; origin: string }>; askOverride: AnswerResult | null; bundleFile: string;
+  modelCalls: () => number; resetQuota: () => void; close(): Promise<void>;
+}
 
 const HOSTILE_CSS = `html{font-size:40px!important}
 *{box-sizing:content-box!important;font-size:30px!important;line-height:3!important;letter-spacing:4px!important;color:#c00!important}
@@ -83,38 +97,53 @@ export async function startHarness(): Promise<Harness> {
   if (!bundle) throw new Error('НЕ ВЫПОЛНЕНО: бандл не собран (node apps/widget/scripts/build.mjs)');
   const log: Logged[] = [];
   const events: Harness['events'] = [];
-  const harness: Harness = { log, events, askReply: { status: 200, body: {} }, bundleFile: bundle.file, close: async () => {} };
-  const deps: WidgetDependencies = {
-    publicOrigin: WIDGET, allowMutation: async () => true, log: () => {},
+  // Фейковая модель: цитирует F1, если прайс в контексте; эмбеддинги — детерминированные. Живой OpenRouter не вызывается.
+  const model = answerHarness(fakeAnswerGateway((call) => ({ status: 'answered', text: ANSWER,
+    citations: [call.messages[1]!.content.includes('<материал id="F1"') ? 'F1' : 'F9'] })));
+  const shown = new Set<string>();                      // сессии с записанным показом бейджа
+  const histories = new Map<string, HistoryTurn[]>();   // серверная история (≤ 2 хода)
+  const used = new Map<string, number>();               // квота visitor_answers оснастки
+  const harness: Harness = { log, events, askOverride: null, bundleFile: bundle.file, close: async () => {},
+    modelCalls: () => model.gateway.chats.length, resetQuota: () => used.clear() };
+  const deps: WidgetAskDependencies = {
+    publicOrigin: WIDGET, secret: 'harness-secret-0123456789abcdef0123456789abcdef', allowMutation: async () => true, log: () => {},
     loadBot: async (key) => BOTS[key] ?? null,
     originAllowedAnywhere: async (origin) => Object.values(BOTS).some((b) => b.origins.includes(origin)),
     recordInstall: async () => 'recorded',
-    recordBadgeEvent: async (input) => { events.push({ type: input.type, origin: input.origin }); return 'recorded'; },
+    recordBadgeEvent: async (input) => { events.push({ type: input.type, origin: input.origin }); if (input.type === 'badge_impression') shown.add(input.visitorSession); return 'recorded'; },
+    openSession: async ({ id }) => ({ history: histories.get(id) ?? [], badgeShown: shown.has(id) }),
+    appendTurn: async (id, turn) => { histories.set(id, [...(histories.get(id) ?? []), turn].slice(-2)); },
+    recordFirstAnswer: async () => true, logRefusedOrigin: async () => {},
+    answer: async ({ bot: found, visitorSession, request }) => harness.askOverride ?? answerQuestion({
+      client: model.client, models: MODELS, spend: model.spend,
+      chargeQuota: async () => {
+        const n = used.get(visitorSession) ?? 0;
+        if (n >= VISITOR_LIMIT) return { granted: false, scope: 'visitor_answers' };
+        used.set(visitorSession, n + 1);
+        return { granted: true };
+      },
+      search: async (botId) => [{ chunkId: '44444444-4444-4444-8444-444444444444', botId, pageId: '55555555-5555-4555-8555-555555555555',
+        sourceId: '66666666-6666-4666-8666-666666666666', urlOrPage: 'https://kolos.example/ceny', pageTitle: 'Цены', contextPath: 'Цены', text: PRICE, similarity: 0.83 }],
+      logQuestion: async () => {},
+    }, { id: found.row.botId, status: found.row.status, companyName: found.row.companyName, contact: found.contact }, 'widget', request),
   };
   const config = createWidgetConfigHandler(deps), event = createWidgetEventHandler(deps), preflight = createWidgetPreflightHandler(deps);
+  const ask = createWidgetAskHandler(deps);
   const bundleHandler = createWidgetBundleHandler(async () => bundle);
-  const ask = async (request: Request): Promise<Response> => {
-    const body = await request.json() as { bot?: string };
-    const found = usableBot(BOTS[body.bot ?? ''] ?? null);
-    const origin = found ? checkOrigin(requestOrigin(request.headers), found.row, WIDGET) : null;
-    if (!origin) return new Response(null, { status: 403 });
-    return new Response(JSON.stringify(harness.askReply.body), { status: harness.askReply.status, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } });
-  };
   const widget = createServer((req, res) => {
     void (async () => {
       const request = await toRequest(req);
       const path = new URL(request.url).pathname;
       let response: Response;
-      if (request.method === 'OPTIONS') response = path === '/w/v1/ask'
-        ? (requestOrigin(request.headers) === HOST ? new Response(null, { status: 204, headers: { ...corsHeaders(HOST), ...PREFLIGHT_HEADERS } }) : new Response(null, { status: 403 }))
-        : await preflight(request);
+      if (request.method === 'OPTIONS') response = await preflight(request);
       else if (path === '/w/v1/config') response = await config(request);
       else if (path === '/w/v1/event') response = await event(request);
       else if (path === '/w/v1/ask') response = await ask(request);
       else if (path.startsWith('/w/')) response = await bundleHandler(request, path.slice(3));
       else response = new Response('Not found', { status: 404 });
+      const body = path === '/w/v1/ask' && request.method === 'POST' ? await response.clone().text() : undefined;
       log.push({ method: request.method, path, origin: request.headers.get('origin'), status: response.status,
-        acao: response.headers.get('access-control-allow-origin')?.split(', ') ?? [] });
+        acao: response.headers.get('access-control-allow-origin')?.split(', ') ?? [], ...(body === undefined ? {} : { body }) });
       await send(res, response);
     })().catch(() => { res.statusCode = 500; res.end(); });
   });

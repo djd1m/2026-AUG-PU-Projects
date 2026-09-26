@@ -1,0 +1,175 @@
+ Container n6-test-db-1 Running 
+ Container n6-test-redis-1 Running 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 671B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 4.29kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 1.44kB done
+#4 DONE 0.0s
+
+#5 [deps  1/10] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 105.00kB 0.1s done
+#6 DONE 0.1s
+
+#7 [deps  9/10] COPY packages/queue/package.json ./packages/queue/
+#7 CACHED
+
+#8 [deps  3/10] COPY package.json package-lock.json ./
+#8 CACHED
+
+#9 [deps  6/10] COPY apps/worker/package.json ./apps/worker/
+#9 CACHED
+
+#10 [deps  2/10] WORKDIR /app
+#10 CACHED
+
+#11 [deps  4/10] COPY apps/web/package.json ./apps/web/
+#11 CACHED
+
+#12 [deps  8/10] COPY packages/rag/package.json ./packages/rag/
+#12 CACHED
+
+#13 [deps  5/10] COPY apps/widget/package.json ./apps/widget/
+#13 CACHED
+
+#14 [deps  7/10] COPY packages/db/package.json ./packages/db/
+#14 CACHED
+
+#15 [deps 10/10] RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
+#15 CACHED
+
+#16 [build 1/2] COPY . .
+#16 DONE 1.3s
+
+#17 [build 2/2] RUN npm run build
+#17 0.443 
+#17 0.443 > n6-sufler@0.1.0 build
+#17 0.443 > npm run build --workspace=apps/widget && npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#17 0.443 
+#17 0.644 
+#17 0.644 > @n6/widget@0.1.0 build
+#17 0.644 > node scripts/build.mjs
+#17 0.644 
+#17 0.754 [widget] widget.e3bc9a0778cf6e82.js: raw=14.43 КБ, gzip=5.61 КБ, потолок 45.00 КБ
+#17 0.985 
+#17 0.985 > @n6/rag@0.1.0 build
+#17 0.985 > tsc -p tsconfig.json
+#17 0.985 
+#17 3.763 
+#17 3.763 > @n6/db@0.1.0 build
+#17 3.763 > tsc -p tsconfig.json
+#17 3.763 
+#17 6.443 
+#17 6.443 > @n6/queue@0.1.0 build
+#17 6.443 > tsc -p tsconfig.json
+#17 6.443 
+#17 8.514 
+#17 8.514 > @n6/worker@0.1.0 build
+#17 8.514 > tsc -p tsconfig.json && node -e "require('node:fs').copyFileSync('src/pdf/extract-child.mjs', 'dist/pdf/extract-child.mjs')"
+#17 8.514 
+#17 11.76 
+#17 11.76 > @n6/web@0.1.0 build
+#17 11.76 > next build && tsc -p tsconfig.preflight.json
+#17 11.76 
+#17 13.20 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#17 13.20 This information is used to shape Next.js' roadmap and prioritize features.
+#17 13.20 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#17 13.20 https://nextjs.org/telemetry
+#17 13.20 
+#17 13.34    ▲ Next.js 15.5.25
+#17 13.34    - Experiments (use with caution):
+#17 13.34      · cpus: 2
+#17 13.34 
+#17 13.48    Creating an optimized production build ...
+#17 32.10  ✓ Compiled successfully in 14.6s
+#17 32.11    Linting and checking validity of types ...
+#17 39.62    Collecting page data ...
+#17 42.98    Generating static pages (0/5) ...
+#17 43.85    Generating static pages (1/5) 
+#17 43.85    Generating static pages (2/5) 
+#17 43.85    Generating static pages (3/5) 
+#17 43.85  ✓ Generating static pages (5/5)
+#17 44.92    Finalizing page optimization ...
+#17 44.92    Collecting build traces ...
+#17 55.93 
+#17 55.94 Route (app)                                 Size  First Load JS
+#17 55.94 ┌ ƒ /                                      651 B         103 kB
+#17 55.94 ├ ƒ /_not-found                            988 B         104 kB
+#17 55.94 ├ ƒ /api/auth/login                        169 B         103 kB
+#17 55.94 ├ ƒ /api/auth/logout                       169 B         103 kB
+#17 55.94 ├ ƒ /api/auth/register                     169 B         103 kB
+#17 55.94 ├ ƒ /api/bots                              169 B         103 kB
+#17 55.94 ├ ƒ /api/bots/[botId]                      169 B         103 kB
+#17 55.94 ├ ƒ /api/bots/[botId]/ask                  169 B         103 kB
+#17 55.94 ├ ƒ /api/bots/[botId]/origins              169 B         103 kB
+#17 55.94 ├ ƒ /api/bots/[botId]/sources              169 B         103 kB
+#17 55.94 ├ ƒ /api/bots/[botId]/verify               169 B         103 kB
+#17 55.94 ├ ƒ /api/index-jobs/[id]                   169 B         103 kB
+#17 55.94 ├ ƒ /api/preview                           169 B         103 kB
+#17 55.94 ├ ƒ /api/preview/[id]                      169 B         103 kB
+#17 55.94 ├ ƒ /api/preview/[id]/ask                  169 B         103 kB
+#17 55.94 ├ ƒ /api/preview/[id]/claim                169 B         103 kB
+#17 55.94 ├ ƒ /api/sources/[sourceId]/reindex        169 B         103 kB
+#17 55.94 ├ ƒ /dashboard                             804 B         108 kB
+#17 55.94 ├ ƒ /dashboard/bots/[botId]                 3 kB         111 kB
+#17 55.94 ├ ƒ /dashboard/bots/[botId]/install      2.76 kB         110 kB
+#17 55.94 ├ ƒ /health                                169 B         103 kB
+#17 55.94 ├ ƒ /login                               1.67 kB         104 kB
+#17 55.94 ├ ƒ /preview                             1.83 kB         104 kB
+#17 55.94 ├ ƒ /preview/[jobId]                     4.83 kB         107 kB
+#17 55.94 ├ ƒ /pricing                               651 B         103 kB
+#17 55.94 ├ ƒ /w/[file]                              169 B         103 kB
+#17 55.94 ├ ƒ /w/v1/ask                              169 B         103 kB
+#17 55.94 ├ ƒ /w/v1/config                           169 B         103 kB
+#17 55.94 └ ƒ /w/v1/event                            169 B         103 kB
+#17 55.94 + First Load JS shared by all             103 kB
+#17 55.94   ├ chunks/18-2c82660ce7c4918d.js        46.4 kB
+#17 55.94   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+#17 55.94   └ other shared chunks (total)          1.92 kB
+#17 55.94 
+#17 55.94 
+#17 55.94 ƒ  (Dynamic)  server-rendered on demand
+#17 55.94 
+#17 DONE 57.9s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 4.0s done
+#18 exporting manifest sha256:2f119de1fa350cc359f7f938addedb7bd8c833edd5bdc4a37762777832d08c35 0.0s done
+#18 exporting config sha256:69968e20d703eb8b15403b465845be58f869908b868a1338741e10b2050d2d08 0.0s done
+#18 exporting attestation manifest sha256:0a36716809c6842d8aefb8357e1c13e2d38e0bd581d243d5fa054cdc667ad9dd 0.0s done
+#18 exporting manifest list sha256:4d7049e6b42e4ba818933c4def363c89bd8b513bb1993f4ba62871f851f5dc13 0.0s done
+#18 naming to docker.io/library/n6-sufler-test:foundation done
+#18 unpacking to docker.io/library/n6-sufler-test:foundation
+#18 unpacking to docker.io/library/n6-sufler-test:foundation 1.6s done
+#18 DONE 5.7s
+
+#19 resolving provenance for metadata file
+#19 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-test-run-cc20a94ed979 Creating 
+ Container n6-test-test-run-cc20a94ed979 Created 
+visitor-limit-removed: дефект возвращён → 6 failed | 58 passed (64) (код 1); код восстановлен → 64 passed (64) (код 0)
+history-from-client: дефект возвращён → 2 failed | 62 passed (64) (код 1); код восстановлен → 64 passed (64) (код 0)
+cors-wildcard: дефект возвращён → 11 failed | 53 passed (64) (код 1); код восстановлен → 64 passed (64) (код 0)
+unverified-shown: дефект возвращён → 3 failed | 61 passed (64) (код 1); код восстановлен → 64 passed (64) (код 0)
+charge-on-success: дефект возвращён → 8 failed | 56 passed (64) (код 1); код восстановлен → 64 passed (64) (код 0)
+probe-read-then-write: дефект возвращён → 1 failed | 63 passed (64) (код 1); код восстановлен → 64 passed (64) (код 0)
+exit=0
