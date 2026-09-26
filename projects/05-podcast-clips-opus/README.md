@@ -94,6 +94,7 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 |---|---|
 | [`docs/REPRODUCE.md`](docs/REPRODUCE.md) | **как поднять заново в другом окружении**; расхождения реализации с замыслом |
 | [`docs/pipeline-walkthrough.md`](docs/pipeline-walkthrough.md) | конвейер по шагам: акторы, инструменты, ресурсы, модели |
+| [`docs/BACKLOG.md`](docs/BACKLOG.md) | **что осталось сделать** и что перенести вручную при переезде на другой сервер |
 | [`docs/features/README.md`](docs/features/README.md) | 29 фич и где лежит доказательство каждой |
 | [`CLAUDE.md`](CLAUDE.md) | контекст проекта, статус, ключевые инварианты, порядок чтения |
 | [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) | цикл разработки, стражи, проверка на стенде |
