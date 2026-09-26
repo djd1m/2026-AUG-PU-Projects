@@ -1,10 +1,10 @@
 {
   "name": "n6-sufler", "version": "0.1.0", "private": true,
-  "//": "из N5: projects/05-podcast-clips-opus/package.json — workspaces и скрипты; сборка без packages/shared, s3, widget (виджет — фича widget-runtime-and-badge)",
+  "//": "из N5: projects/05-podcast-clips-opus/package.json — workspaces и скрипты; сборка без packages/shared и s3; виджет (apps/widget, фича widget-runtime-and-badge) собирается ПЕРВЫМ — его манифест читает web",
   "engines": { "node": ">=22 <23" },
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web",
+    "build": "npm run build --workspace=apps/widget && npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web",
     "typecheck": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json",
     "lint": "node scripts/lint.mjs",
     "test": "node scripts/test.mjs",

@@ -1,0 +1,13 @@
+{
+  "//": "из N1: projects/01-testimonials-senja/apps/widget/package.json — vanilla TypeScript без React-рантайма; esbuild той же версии, что уже в lock (через vite), jsdom не берём: DOM-тесты донора идут в НАСТОЯЩЕМ браузере (tests/browser/widget-embed.test.ts)",
+  "name": "@n6/widget",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

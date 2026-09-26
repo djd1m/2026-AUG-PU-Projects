@@ -3,6 +3,8 @@ node_modules
 **/node_modules
 .next
 dist
+# бандл виджета собирается ВНУТРИ образа (npm run build); хостовая сборка в контекст не едет
+apps/web/widget-bundle
 coverage
 .git
 .env

@@ -12,7 +12,9 @@
 **Причина:** not-deployed
 
 Виджет — ПРОДУКТ целиком: он живёт на сайте клиента, и все три класса отказа проявляются только там.
-Кода ещё нет (Phase 1), поэтому проверка честно НЕ ВЫПОЛНЕНА. `https://suffler.example` —
+Код виджета есть с фичи `widget-runtime-and-badge` (26.09), стенда — нет, поэтому проверка по ВЫДАННОМУ
+развёртыванием адресу честно НЕ ВЫПОЛНЕНА (`not-deployed`); предстендовая оснастка — ниже, она не заменяет
+строки таблицы. `https://suffler.example` —
 заполнитель: боевой origin выдаёт развёртывание (`N6_PUBLIC_ORIGIN`), и при проверке берётся ВЫДАННЫЙ
 адрес, а не известный заранее.
 
@@ -22,7 +24,7 @@
 |---|---|---|---|---|
 | перекрёстный-запрос | НЕ ПРОВЕРЕН | окно открылось, ответа нет; в консоли клиента `blocked by CORS policy`, в нашем журнале запрос отвечен | `Access-Control-Allow-Origin` = origin хозяина из `allowed_origin` бота, `Vary: Origin`, `OPTIONS` → 204 с `Allow-Methods: GET, POST` и `Allow-Headers: Content-Type`; `credentials: 'omit'`; заголовок ставит только `web`, Caddy — нет (двойной ACAO ломал N1) | — |
 | протечка-стилей | НЕ ПРОВЕРЕН | пузырь смещён или окно «разъехалось» только на сайте клиента; или наши стили задели страницу хозяина | открытый Shadow DOM, `all: initial` на корне, свои `px`, `adoptedStyleSheets`; ни одного глобального селектора | — |
-| политика-безопасности | НЕ ПРОВЕРЕН | виджет не появляется вообще; `Refused to load … Content Security Policy` | нет инлайновых скриптов и style-атрибутов в документе хозяина; хозяин разрешает `script-src <origin>`, `connect-src <origin>`, `img-src <origin> data:` (публикуется на экране установки, FR-WIDGET-003) | — |
+| политика-безопасности | НЕ ПРОВЕРЕН | виджет не появляется вообще; `Refused to load … Content Security Policy` | нет инлайновых скриптов и style-атрибутов в документе хозяина; стили — только `adoptedStyleSheets` в теневом корне; хозяин разрешает `script-src <origin>`, `connect-src <origin>`, `img-src <origin> data:` (публикуется на экране установки, FR-WIDGET-003) | — |
 
 ## Оснастка, которой будет закрыта проверка (Completion, шаг E2E)
 
@@ -32,3 +34,26 @@ connect-src <origin>; img-src <origin> data:; style-src 'self'` и несёт в
 content-box !important; font-size: 30px !important }`, `div { position: relative; z-index: 1 }`,
 `img { width: 100% }`). Проверка — Playwright: пузырь виден, вопрос получает ответ с плашкой,
 в консоли 0 ошибок CSP/CORS; отдельно — домен вне списка получает 403 без ACAO.
+
+## Предстендовая оснастка (фича `widget-runtime-and-badge`, 26.09.2026) — НЕ квитанция стенда
+
+Что это доказывает и чего нет. Настоящий собранный бандл и НАСТОЯЩИЕ обработчики `/w/v1/config`,
+`/w/v1/event`, `OPTIONS` и `GET /w/[file]` (хранилище подменено словарём; SQL — `tests/widget-config.integration.test.ts`
+на настоящем Postgres) подняты на `http://127.0.0.1:18411` ВНУТРИ контейнера Playwright; хозяйская страница —
+`http://127.0.0.1:8099/host.html` (в списке бота) и `http://127.0.0.1:8098/host.html` (НЕ в списке), тег —
+ровно выданный `installSnippet`, CSP — ровно опубликованные `cspDirectives` + `'self'` для скрипта хозяина,
+`default-src 'none'; style-src 'self'`; враждебный CSS (`* { font-size: 30px !important; box-sizing: content-box
+!important }`, `button { width: 300px !important }`, `[hidden] { display: block !important }` и др.). Маршрута
+`/w/v1/ask` ещё нет (фича 12) — его место в оснастке занимает заглушка с настоящим CheckOrigin.
+Оснастка: `tests/browser/widget-harness.ts`, набор: `tests/browser/widget-embed.test.ts`,
+запуск `bash scripts/check-responsive.sh --test tests/browser/widget-embed.test.ts`.
+
+| Класс (не строка контракта) | Результат оснастки (Chromium, Firefox, WebKit) | Доказательство |
+|---|---|---|
+| перекрёстный-запрос (оснастка) | `config` 200 с ACAO ровно `http://127.0.0.1:8099`, `event` через предполётный — 204 с тем же ACAO; страница 8098 — `config` 403 без ACAO, в документе хозяина ничего | http://127.0.0.1:8099/host.html, http://127.0.0.1:8098/host.html — `tests/artifacts/widget-runtime-and-badge/browser-run.txt` |
+| протечка-стилей (оснастка) | пузырь 56×56 в 16 px от угла, окно 360 px, шрифт 16/15 px вопреки `30px !important`; стиль заголовка и кнопки хозяина не изменились; ни одного `<style>`/`<link>` в документе хозяина | скриншоты `tests/artifacts/widget-runtime-and-badge/browser/*-hostile-open.png` |
+| политика-безопасности (оснастка) | 0 событий `securitypolicyviolation`, 0 ошибок консоли под CSP без `unsafe-inline`; мутация «style-атрибут на узле хозяина» краснеет набор | `tests/artifacts/widget-runtime-and-badge/browser-mutations/` |
+
+Для закрытия строк таблицы выше (фича `visitor-ask-and-limits`): та же страница `host.html` на :8099, но тег и
+директивы — по адресу, который ВЫДАЛО развёртывание (`N6_PUBLIC_ORIGIN` стенда), и вопрос с ответом через
+настоящий `POST /w/v1/ask`.

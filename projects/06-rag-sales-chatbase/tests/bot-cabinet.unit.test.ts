@@ -85,8 +85,8 @@ describe('InstallSnippet', () => {
   it('манифест сборки: { file } читается; нет файла, мусор, чужое имя — null', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'n6-manifest-'));
     expect(await readWidgetBundleFile(dir)).toBeNull();
-    mkdirSync(path.join(dir, 'apps/web/public/w'), { recursive: true });
-    const manifest = path.join(dir, 'apps/web/public/w/manifest.json');
+    mkdirSync(path.join(dir, 'apps/web/widget-bundle'), { recursive: true });
+    const manifest = path.join(dir, 'apps/web/widget-bundle/manifest.json');
     writeFileSync(manifest, '{ мусор');
     expect(await readWidgetBundleFile(dir)).toBeNull();
     writeFileSync(manifest, JSON.stringify({ file: '../../etc/passwd' }));

@@ -1,0 +1,3 @@
+// из N1: projects/01-testimonials-senja/apps/widget/tsconfig.json — база N6, DOM, без эмиссии (сборку делает esbuild)
+{ "extends": "../../tsconfig.base.json", "compilerOptions": { "module": "ESNext", "moduleResolution": "Bundler", "noEmit": true, "declaration": false,
+  "lib": ["ES2022", "DOM", "DOM.Iterable"] }, "include": ["src/**/*.ts"] }

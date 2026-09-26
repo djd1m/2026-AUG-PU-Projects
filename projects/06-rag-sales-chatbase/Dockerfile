@@ -3,13 +3,15 @@
 # из N5: projects/05-podcast-clips-opus/Dockerfile — цели web/worker/test; добавлена цель migrate;
 # без ffmpeg/OpenCV (у N6 нет медиа) и без браузера в worker (ADR-007).
 # Цели: web (Next.js), worker (worker-index), migrate (одноразовые миграции), test (раннер с dev-зависимостями).
-# Workspace apps/widget появится со своей фичей — тогда же его манифест сюда; packages/queue — с index-job-core.
+# apps/widget (фича widget-runtime-and-badge): бандл собирается на этапе build ПЕРВЫМ и едет в образ web
+# каталогом apps/web/widget-bundle (раздаёт маршрут GET /w/[file], A-N6-034).
 
 # ── deps: манифесты ВСЕХ workspace, иначе npm ci падает «Exit handler never called» ──
 FROM node:22.22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/web/package.json ./apps/web/
+COPY apps/widget/package.json ./apps/widget/
 COPY apps/worker/package.json ./apps/worker/
 COPY packages/db/package.json ./packages/db/
 COPY packages/rag/package.json ./packages/rag/
@@ -19,7 +21,7 @@ COPY packages/queue/package.json ./packages/queue/
 # удаляется из дерева, дочерний процесс разбора его загрузку ещё и запрещает (extract-child.mjs).
 RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
 
-# ── build: один раз для всех рантайм-целей (rag → db → queue → worker → web) ──
+# ── build: один раз для всех рантайм-целей (widget → rag → db → queue → worker → web) ──
 FROM deps AS build
 COPY . .
 RUN npm run build
@@ -32,6 +34,8 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/apps/web/.next ./apps/web/.next
 COPY --from=build /app/apps/web/package.json ./apps/web/package.json
+# бандл виджета и его манифест: без них код установки честно говорит «виджет ещё не собран», а /w/widget.*.js — 404
+COPY --from=build /app/apps/web/widget-bundle ./apps/web/widget-bundle
 COPY --from=build /app/packages ./packages
 EXPOSE 3000
 # CMD ссылается на файлы, а не на `npm start` в корне (грабля клона N5); exec — сигналы доходят до next

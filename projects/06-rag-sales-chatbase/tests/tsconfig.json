@@ -2,6 +2,6 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "allowJs": true, "checkJs": false, "jsx": "react-jsx",
-    "paths": { "playwright": ["../scripts/responsive/node_modules/playwright"] } },
+    "paths": { "playwright": ["../scripts/responsive/node_modules/playwright"], "@axe-core/playwright": ["../scripts/responsive/node_modules/@axe-core/playwright"] } },
   "include": ["**/*.ts", "../vitest.config.ts"]
 }

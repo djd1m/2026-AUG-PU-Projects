@@ -1,0 +1,54 @@
+[
+  {
+    "id": "badge-hidden-by-client",
+    "title": "бейдж скрывается клиентом: наблюдатель не восстанавливает удалённый/скрытый бейдж (ADR-004)",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 21 passed (24)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "24 passed (24)"
+    },
+    "passed": true
+  },
+  {
+    "id": "inline-style",
+    "title": "style-атрибут на узле хозяина — CSP хозяина без unsafe-inline (FR-WIDGET-003)",
+    "red": {
+      "code": 1,
+      "summary": "9 failed | 15 passed (24)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "24 passed (24)"
+    },
+    "passed": true
+  },
+  {
+    "id": "origin-outside-allowlist",
+    "title": "CheckOrigin принимает любой origin — чужая страница 8098 получает виджет",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 21 passed (24)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "24 passed (24)"
+    },
+    "passed": true
+  },
+  {
+    "id": "cors-wildcard",
+    "title": "CORS отвечает `*` вместо origin хозяина",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 21 passed (24)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "24 passed (24)"
+    },
+    "passed": true
+  }
+]

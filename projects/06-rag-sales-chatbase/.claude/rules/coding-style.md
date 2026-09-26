@@ -9,7 +9,7 @@ Contracts», канон §4–§7, корневое [`compose-hygiene.md`](../..
 
 npm workspaces: `apps/web` (Next.js 15 App Router, route handlers), `apps/worker` (BullMQ:
 краулер, PDF, чанкинг, эмбеддинги, сторож), `apps/widget` (IIFE-бандл, esbuild, без фреймворка —
-собирается в `apps/web/public/w/`), `packages/db` (пул `pg`, миграции SQL, `quota.ts`),
+собирается в `apps/web/widget-bundle/`, раздаёт маршрут `GET /w/[file]` — A-N6-034), `packages/db` (пул `pg`, миграции SQL, `quota.ts`),
 `packages/rag` (чанкинг, промпт, `ValidateModelAnswer`, клиент OpenRouter), `packages/queue`
 (BullMQ + fence, донор N5). Пакет одного назначения; `apps/*` не импортируют друг друга.
 
