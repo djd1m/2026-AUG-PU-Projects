@@ -17,7 +17,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 **Статус на 25.09.2026: фича `foundation` реализована** (монорепо, миграция 001 с pgvector, отказ
 старта по 14 `QUOTA_*`, вход/выход, `/health`; образы собраны, тесты зелёные в образе на настоящих
 Postgres+pgvector и Redis) — квитанция [`docs/features/foundation/05_completion.md`](docs/features/foundation/05_completion.md).
-Затем `quota-and-spend` и `index-job-core` (очередь `packages/queue`, фенс попыток, сторож, `GET /api/index-jobs/{id}`; квитанция [`docs/features/index-job-core/05_completion.md`](docs/features/index-job-core/05_completion.md)). Стек целиком (`docker compose up`) ещё не поднимался; краулера, виджета и RAG ещё нет.
+Затем `quota-and-spend` и `index-job-core` (очередь `packages/queue`, фенс попыток, сторож, `GET /api/index-jobs/{id}`; квитанция [`docs/features/index-job-core/05_completion.md`](docs/features/index-job-core/05_completion.md)). Затем `crawler` (`apps/worker/src/crawl/`: CheckAddress после DNS и на каждом перенаправлении, соединение по проверенному IP, robots.txt, обход внутри задачи; квитанция [`docs/features/crawler/05_completion.md`](docs/features/crawler/05_completion.md)). Стек целиком (`docker compose up`) ещё не поднимался; фрагментов/эмбеддингов, PDF, виджета и RAG ещё нет.
 
 Что перенесено из отчёта валидации ([`docs/validation-report.md`](docs/validation-report.md), вердикт
 🟡 CAVEATS) и в каком состоянии:

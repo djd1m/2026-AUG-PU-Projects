@@ -4,10 +4,10 @@
 // (своя схема на прогон; он — из N5 tests/database.integration.test.ts).
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { createPool, type Pool } from '../packages/db/src/index';
+import { createPool, transaction, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import {
-  completeIndexJob, createSourceJob, failIndexJob, leaseIndexJob, readIndexJob, recordProgress, retryAutomatically,
+  closeFailedTx, completeIndexJob, createSourceJob, failIndexJob, leaseIndexJob, readIndexJob, recordProgress, retryAutomatically,
   retryIndexJob, StaleAttemptError,
 } from '../packages/db/src/index-jobs';
 import { runIndexJob, StepFailure } from '../apps/worker/src/run-index-job';
@@ -193,5 +193,19 @@ describe.skipIf(!databaseUrl)('Задача индексации на насто
     expect(sent).toEqual([{ index_job_id: flaky.indexJobId, generation: 1 }]);
     expect(await runIndexJob(deps(async () => { throw new Error('неожиданное'); }), sent[0]!)).toBe('failed');
     expect((await job(flaky.indexJobId)).failure_reason).toBe('internal');
+  });
+
+  it('carry_over ревью: closeFailedTx не переводит done/failed в failed и не трогает фенс — 0 строк = no-op', async () => {
+    const done = await newJob(), failed = await newJob();
+    const a = (await leaseIndexJob(pool, { index_job_id: done.indexJobId, generation: 0 }))!;
+    await completeIndexJob(pool, a);
+    const b = (await leaseIndexJob(pool, { index_job_id: failed.indexJobId, generation: 0 }))!;
+    await failIndexJob(pool, b, 'no_text');
+    for (const id of [done.indexJobId, failed.indexJobId]) await transaction(pool, (tx) => closeFailedTx(tx, id, 'stalled', new Date()));
+    const d = await job(done.indexJobId), f = await job(failed.indexJobId);
+    expect([d.status, d.failure_reason, Number(d.current_fence)]).toEqual(['done', null, 1]);
+    expect([f.status, f.failure_reason, Number(f.current_fence)]).toEqual(['failed', 'no_text', 1]);
+    expect((await pool.query('SELECT status FROM source WHERE id = $1', [done.sourceId])).rows[0].status).toBe('ready');
+    expect(await attempts(done.indexJobId)).toEqual([{ fence: 1, series_no: 1, status: 'done' }]);
   });
 });

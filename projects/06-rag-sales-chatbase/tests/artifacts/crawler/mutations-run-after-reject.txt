@@ -1,0 +1,25 @@
+ Container n6-test-redis-1 Running 
+ Container n6-test-db-1 Running 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-test-run-c29a1448cae0 Creating 
+ Container n6-test-test-run-c29a1448cae0 Created 
+redirect-unchecked: дефект возвращён → 11 failed | 116 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+robots-ignored: дефект возвращён → 8 failed | 119 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+size-limit-removed: дефект возвращён → 2 failed | 125 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+check-before-dns-only: дефект возвращён → 6 failed | 121 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+first-address-only: дефект возвращён → 1 failed | 126 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+robots-regex-backtracking: дефект возвращён → 3 failed | 124 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+extract-tolower-per-tag: дефект возвращён → 2 failed | 125 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+unterminated-tag-rescan: дефект возвращён → 4 failed | 123 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+downgrade-allowed: дефект возвращён → 1 failed | 126 passed (127) (код 1); код восстановлен → 127 passed (127) (код 0)
+crawler_exit=0
+progress-without-fence: дефект возвращён → 2 failed | 48 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+lease-ignores-generation: дефект возвращён → 1 failed | 49 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+attempt-status-out-of-set: дефект возвращён → 2 failed | 48 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+unknown-status-reads-running: дефект возвращён → 7 failed | 43 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+close-failed-ignores-status: дефект возвращён → 1 failed | 49 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+silence-reads-running: дефект возвращён → 2 failed | 48 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+indexjob_exit=0

@@ -38,6 +38,10 @@ const mutations = [
       "export const JOB_ATTEMPT_STATUS = ['running', 'deferred', 'done', 'failed'] as const;") },
   { id: 'unknown-status-reads-running', title: 'неизвестный статус задачи читается как running, а не failed', file: enums,
     apply: span("read(INDEX_JOB_STATUS, value, 'failed')", "read(INDEX_JOB_STATUS, value, 'failed')", "read(INDEX_JOB_STATUS, value, 'running')") },
+  { id: 'close-failed-ignores-status', title: 'closeFailedTx без условия статуса: done переводится в failed (carry_over ревью index-job-core)', file: jobs,
+    apply: span(" WHERE id = $1 AND status IN ('queued', 'running') RETURNING source_id`, [id, reason, now]);\n  if (!job.rowCount) return;",
+      " WHERE id = $1 AND status IN ('queued', 'running') RETURNING source_id`, [id, reason, now]);\n  if (!job.rowCount) return;",
+      " WHERE id = $1 RETURNING source_id`, [id, reason, now]);\n  if (!job.rowCount) return;") },
   { id: 'silence-reads-running', title: 'молчание > 5 мин читается как «выполняется» (нет состояния no_response)', file: jobs,
     apply: span("  if (!(silentFor <= INDEX_JOB_STALLED_AFTER_MS))", "state: 'no_response' };", "  void silentFor;") },
 ];

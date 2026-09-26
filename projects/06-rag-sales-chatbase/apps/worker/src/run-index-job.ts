@@ -1,6 +1,6 @@
 // RunIndexJob (Pseudocode) — написано заново по образцу обработчиков N5 apps/worker/src/workers/*.ts
-// (аренда → работа → закрытие по фенсу; устаревшая попытка молча выходит). Обработчики источников
-// (CrawlSite, ExtractPdf, ChunkDocument, EmbedAndStore) приходят с фичами crawler, pdf-source, chunk-embed.
+// (аренда → работа → закрытие по фенсу; устаревшая попытка молча выходит). Обработчик «сайт» (CrawlSite) —
+// фича crawler (crawl/site-processor.ts); ExtractPdf, ChunkDocument, EmbedAndStore — pdf-source, chunk-embed.
 import { completeIndexJob, failIndexJob, leaseIndexJob, retryAutomatically, StaleAttemptError, type Lease, type Pool } from '@n6/db';
 import type { IndexJobFailureReason } from '@n6/rag';
 import type { IndexMessage } from '@n6/queue';
@@ -42,6 +42,16 @@ export async function runIndexJob(deps: RunDependencies, message: IndexMessage):
 
 // Пока обработчиков источников нет, задача честно закрывается internal, а не висит «выполняется».
 export const noProcessorYet: SourceProcessor = async () => {
-  console.error('worker-index: обработчик источника ещё не подключён (фичи crawler / pdf-source) — задача закрыта internal');
+  console.error('worker-index: обработчик PDF ещё не подключён (фича pdf-source) — задача закрыта internal');
   throw new StepFailure('internal');
 };
+
+// Выбор обработчика по виду источника (source.kind). Неизвестный вид — internal, а не «успех без работы».
+export function processByKind(pool: Pool, processors: Record<'site' | 'pdf', SourceProcessor>): SourceProcessor {
+  return async (lease) => {
+    const source = await pool.query<{ kind: string }>('SELECT kind FROM source WHERE id = $1', [lease.sourceId]);
+    const kind = source.rows[0]?.kind;
+    if (kind !== 'site' && kind !== 'pdf') throw new StepFailure('internal');
+    await processors[kind](lease);
+  };
+}

@@ -104,11 +104,14 @@ export async function leaseIndexJob(pool: Pool, message: IndexMessageLike, now =
 
 // Закрытие отказом с подъёмом фенса: опоздавший держатель ничего не допишет. Вызывающий держит строку
 // (аренда здесь, сторож — apps/worker/src/watchdog.ts под FOR UPDATE SKIP LOCKED).
+// Условие статуса — В САМОЙ функции, а не только у вызывающих (ревью index-job-core, MEDIUM): завершённая
+// задача (done/failed) не переводится в failed; 0 строк — уже закрыта, ничего не делать.
 export async function closeFailedTx(tx: PoolClient, id: string, reason: IndexJobFailureReason, now: Date): Promise<void> {
   const job = await tx.query<{ source_id: string }>(`UPDATE index_job SET status = 'failed', failure_reason = $2,
-    current_fence = current_fence + 1, updated_at = $3 WHERE id = $1 RETURNING source_id`, [id, reason, now]);
+    current_fence = current_fence + 1, updated_at = $3 WHERE id = $1 AND status IN ('queued', 'running') RETURNING source_id`, [id, reason, now]);
+  if (!job.rowCount) return;
   await tx.query(`UPDATE job_attempt SET status = 'failed', finished_at = $2 WHERE index_job_id = $1 AND status = 'running'`, [id, now]);
-  if (job.rowCount) await tx.query(`UPDATE source SET status = 'failed' WHERE id = $1`, [job.rows[0]!.source_id]);
+  await tx.query(`UPDATE source SET status = 'failed' WHERE id = $1`, [job.rows[0]!.source_id]);
 }
 
 export interface Progress { pagesDone?: number; chunksDone?: number; pagesTotal?: number }
