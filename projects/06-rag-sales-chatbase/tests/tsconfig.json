@@ -1,6 +1,7 @@
-// из N5: projects/05-podcast-clips-opus/tests/tsconfig.json — без изменений
+// из N5: projects/05-podcast-clips-opus/tests/tsconfig.json — + paths: playwright из пакета прибора scripts/responsive (design-shell)
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "allowJs": true, "checkJs": false, "jsx": "react-jsx" },
+  "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "allowJs": true, "checkJs": false, "jsx": "react-jsx",
+    "paths": { "playwright": ["../scripts/responsive/node_modules/playwright"] } },
   "include": ["**/*.ts", "../vitest.config.ts"]
 }

@@ -1,0 +1,14 @@
+css-R1-url-form: УБИТА; код 1; Tests  10 failed | 74 passed (84)
+ожидался красный: /landing (dark|light) 390: R1/
+   × chromium > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 99ms
+   × chromium > landing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 98ms
+   × chromium > landing 320: без горизонтального скролла, цели ≥ 44 73ms
+   × chromium > landing 360: без горизонтального скролла, цели ≥ 44 79ms
+   × chromium > landing 414: без горизонтального скролла, цели ≥ 44 91ms
+   × webkit > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 425ms
+   × webkit > landing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 419ms
+   × webkit > landing 320: без горизонтального скролла, цели ≥ 44 456ms
+   × webkit > landing 360: без горизонтального скролла, цели ≥ 44 458ms
+   × webkit > landing 414: без горизонтального скролла, цели ≥ 44 473ms
+ FAIL  tests/browser/design-shell.test.ts > chromium > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов
+ FAIL  tests/browser/design-shell.test.ts > webkit > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов

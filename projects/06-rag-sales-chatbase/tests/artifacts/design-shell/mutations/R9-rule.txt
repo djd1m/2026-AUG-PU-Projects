@@ -1,0 +1,14 @@
+R9-rule: УБИТА; код 1; Tests  8 failed | 38 passed (46)
+ожидался красный: /R9 below/
+   × chromium > R9 below 390 137ms
+   × chromium > R9 below 360 96ms
+   × chromium > R9 visibility and first visible match (fallback=false) 136ms
+   × chromium > R9 visibility and first visible match (fallback=true) 133ms
+   × webkit > R9 below 390 262ms
+   × webkit > R9 below 360 308ms
+   × webkit > R9 visibility and first visible match (fallback=false) 343ms
+   × webkit > R9 visibility and first visible match (fallback=true) 367ms
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R9 below 390
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R9 below 390
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R9 below 360
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R9 below 360

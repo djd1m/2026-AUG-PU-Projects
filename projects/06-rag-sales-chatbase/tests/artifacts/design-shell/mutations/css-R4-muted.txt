@@ -1,0 +1,14 @@
+css-R4-muted: УБИТА; код 1; Tests  8 failed | 76 passed (84)
+ожидался красный: /dark 390: R1\/R2\/R5, axe/
+   × chromium > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 1471ms
+   × chromium > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 1465ms
+   × chromium > cabinet dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 1048ms
+   × chromium > states dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 1115ms
+   × webkit > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 2401ms
+   × webkit > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 2111ms
+   × webkit > cabinet dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 1566ms
+   × webkit > states dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов 1647ms
+ FAIL  tests/browser/design-shell.test.ts > chromium > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов
+ FAIL  tests/browser/design-shell.test.ts > webkit > landing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов
+ FAIL  tests/browser/design-shell.test.ts > chromium > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов
+ FAIL  tests/browser/design-shell.test.ts > webkit > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов

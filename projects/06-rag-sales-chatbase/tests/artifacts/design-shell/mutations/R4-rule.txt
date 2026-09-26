@@ -1,0 +1,10 @@
+R4-rule: УБИТА; код 1; Tests  4 failed | 42 passed (46)
+ожидался красный: /R4: контраст/
+   × chromium > R4: контраст 642ms
+   × chromium > R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто 627ms
+   × webkit > R4: контраст 824ms
+   × webkit > R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто 841ms
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R4: контраст
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R4: контраст
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R4 тёмная: серый текст на чёрном — отказ; исправленный цвет — чисто

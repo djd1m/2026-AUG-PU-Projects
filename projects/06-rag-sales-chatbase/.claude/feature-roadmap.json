@@ -390,7 +390,7 @@
       "title": "Дизайн-токены, тема, лендинг и тарифы, прибор адаптивности",
       "description": "globals.css на токенах N5 с нейтральной палитрой (FR-LOOK-008), Onest через next/font, шкала 4 px, пара кнопок 48 px; тема: кабинет тёмный по умолчанию, cookie n6_theme (всё, кроме ровно light, — тёмная); лендинг по порядку FR-LOOK-012 с ОДНИМ полем URL и одним призывом (FR-LOOK-001, 006, 007); страница тарифов (FR-LOOK-002, 013) с видимой строкой снятия бейджа; перенос прибора check-responsive из N5 на маршруты N6. Без маршрута предпросмотра: форма ведёт в preview-flow.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "foundation"
@@ -585,7 +585,8 @@
         "apps/web/src/app/w/v1/config/route.ts",
         "apps/web/src/lib/badge-required.ts",
         "tests/badge-required.test.ts"
-      ]
+      ],
+      "carry_over": " | Ревью design-shell: MEDIUM — в Specification у FR-LOOK-012 отметить расхождение: секция доверия НЕ обещает «данные в РФ» (A-N6-031 п.5, 152-ФЗ открыт) — трассировка FR→код."
     },
     {
       "id": "visitor-ask-and-limits",
@@ -733,7 +734,8 @@
         "apps/web/src/app/api/interest/route.ts",
         "scripts/ops-set-plan.mjs",
         "tests/no-webhook-routes.test.ts"
-      ]
+      ],
+      "carry_over": " | Ревью design-shell: MEDIUM — пометку «цены предварительные» поставить рядом с цифрами цены (Pricing.tsx:16)."
     },
     {
       "id": "partner-and-studio",

@@ -1,0 +1,6 @@
+R1-rule: УБИТА; код 1; Tests  2 failed | 44 passed (46)
+ожидался красный: /R1: внедрённый дефект/
+   × chromium > R1: внедрённый дефект 68ms
+   × webkit > R1: внедрённый дефект 265ms
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R1: внедрённый дефект
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R1: внедрённый дефект

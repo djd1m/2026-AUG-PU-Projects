@@ -1,0 +1,14 @@
+R5-rule: УБИТА; код 1; Tests  6 failed | 40 passed (46)
+ожидался красный: /R5: внедрённый дефект/
+   × chromium > R5: внедрённый дефект 77ms
+   × chromium > details: закрытые цели исключены, открытые проверяются (fallback=false) 198ms
+   × chromium > details: закрытые цели исключены, открытые проверяются (fallback=true) 220ms
+   × webkit > R5: внедрённый дефект 265ms
+   × webkit > details: закрытые цели исключены, открытые проверяются (fallback=false) 328ms
+   × webkit > details: закрытые цели исключены, открытые проверяются (fallback=true) 334ms
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R5: внедрённый дефект
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R5: внедрённый дефект
+ FAIL  tests/browser/responsive-check.test.ts > chromium > details: закрытые цели исключены, открытые проверяются (fallback=false)
+ FAIL  tests/browser/responsive-check.test.ts > chromium > details: закрытые цели исключены, открытые проверяются (fallback=true)
+ FAIL  tests/browser/responsive-check.test.ts > webkit > details: закрытые цели исключены, открытые проверяются (fallback=false)
+ FAIL  tests/browser/responsive-check.test.ts > webkit > details: закрытые цели исключены, открытые проверяются (fallback=true)

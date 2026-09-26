@@ -1,0 +1,6 @@
+R8-rule: УБИТА; код 1; Tests  2 failed | 44 passed (46)
+ожидался красный: /R8: px не растёт/
+   × chromium > R8: px не растёт 116ms
+   × webkit > R8: px не растёт 331ms
+ FAIL  tests/browser/responsive-check.test.ts > chromium > R8: px не растёт
+ FAIL  tests/browser/responsive-check.test.ts > webkit > R8: px не растёт

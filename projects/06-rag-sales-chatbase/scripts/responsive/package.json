@@ -1,0 +1,9 @@
+{
+  "name": "n6-responsive-check",
+  "private": true,
+  "//": "Зависимости прибора адаптивности ОТДЕЛЬНО от монорепо: ADR-007 (страж tests/ssrf.test.ts) запрещает playwright в корне и в apps/worker — корневые node_modules уезжают в образы. Ставится только для прибора: npm ci --prefix scripts/responsive. Версия playwright = образ mcr.microsoft.com/playwright:v1.60.0-noble (scripts/check-responsive.sh).",
+  "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
+    "playwright": "1.60.0"
+  }
+}
