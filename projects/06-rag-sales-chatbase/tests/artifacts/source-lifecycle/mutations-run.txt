@@ -1,0 +1,44 @@
+ Container n6-test-f16-db-1 Running 
+ Container n6-test-f16-redis-1 Running 
+ Image n6-sufler-test:foundation Building 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-f16-redis-1 Waiting 
+ Container n6-test-f16-db-1 Waiting 
+ Container n6-test-f16-redis-1 Healthy 
+ Container n6-test-f16-db-1 Healthy 
+ Container n6-test-f16-test-run-f6f732ba1191 Creating 
+ Container n6-test-f16-test-run-f6f732ba1191 Created 
+unchanged-reembedded: дефект возвращён → 2 failed | 55 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+prune-without-complete-crawl: дефект возвращён → 3 failed | 54 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+discovery-incomplete-ignored: дефект возвращён → 2 failed | 55 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+gone-as-transient: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+moved-url-kept: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+lock-order-bot-first: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+preview-budget-kept: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+retry-by-id-unlimited: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+starts-not-counted: дефект возвращён → 3 failed | 54 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+starts-without-bot-lock: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+second-series-while-running: дефект возвращён → 3 failed | 54 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+series-budget-not-charged: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+series-budget-not-reset: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+soft-delete: дефект возвращён → 2 failed | 55 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+cap-after-embed: дефект возвращён → 1 failed | 56 passed (57) (код 1); код восстановлен → 57 passed (57) (код 0)
+mut exit=0

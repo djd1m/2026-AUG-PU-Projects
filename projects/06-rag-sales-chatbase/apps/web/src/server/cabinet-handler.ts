@@ -9,7 +9,7 @@
 // Чужой, несуществующий, удалённый бот и нет сессии на маршруте бота — ОДИН ответ 404 (канон: «Чужой ресурс — 404»).
 import type { AnswerResult, VisitorRequest } from '@n6/rag';
 import type { AccountBotList, AddOriginResult, BotSettingsPatch, BotSummary, CreateBotInput, CreateBotResult, CreateSiteSourceResult, PublishResult,
-  RetrySourceResult } from '@n6/db';
+  ReindexSourceResult } from '@n6/db';
 import { parseAllowedOrigin, parseCompanyName, parseContact, parseGreeting } from '@n6/rag/bot-settings';
 import { readSessionCookie } from './auth-handler';
 import { clientIp } from './ip';
@@ -34,7 +34,8 @@ export interface CabinetDependencies {
   ownsBot: (botId: string, accountId: string) => Promise<boolean>;
   createSite: (input: { accountId: string; botId: string; rootUrl: string; idempotencyKey: string }) => Promise<CreateSiteSourceResult>;
   findJob: (botId: string, idempotencyKey: string) => Promise<string | null>;
-  retry: (sourceId: string, accountId: string) => Promise<RetrySourceResult>;
+  reindex: (sourceId: string, accountId: string) => Promise<ReindexSourceResult>;
+  deleteSource: (sourceId: string, accountId: string) => Promise<{ deleted: true; chunks: number } | null>;
   enqueue: (message: { index_job_id: string; generation: number }) => Promise<void>;
   // Ядро ответа в режиме owner: бот — только по сессии владельца; чужой → { status: 'not_found' }.
   answer: (botId: string, accountId: string, request: VisitorRequest) => Promise<AnswerResult>;
@@ -51,6 +52,8 @@ const fail = (status: number, code: string, message: string) => json({ error: { 
 const notFound = () => fail(404, 'not_found', 'Бот не найден');
 const unavailable = () => fail(503, 'unavailable', 'Кабинет временно недоступен. Повторите через минуту');
 const PLAN_NAME = { free: 'free', nobadge: 'nobadge', studio: 'studio' } as const;
+const indexStartsLimit = (limit: number) =>
+  fail(429, 'index_starts', `Сегодня у этого бота уже ${limit} запусков индексации — это предел на сутки. Новые источники и обновления — завтра`);
 export const botsLimitMessage = (plan: keyof typeof PLAN_NAME, limit: number) =>
   `Предел плана ${PLAN_NAME[plan]}: не больше ${limit} ${limit === 1 ? 'бота' : 'ботов'} на аккаунт. Чтобы добавить ещё, смените план на странице «Тарифы»`;
 
@@ -192,6 +195,7 @@ export function createSiteSourceHandler(deps: CabinetDependencies) {
     }
     const result = await deps.createSite({ accountId: entry.accountId, botId, rootUrl: checked.url.href, idempotencyKey });
     if (result.kind === 'not_found') return notFound();
+    if (result.kind === 'daily_limit') return indexStartsLimit(result.limit);
     if (result.kind === 'created') {
       // Очередь — ПОСЛЕ коммита. Сбой транспорта не теряет задачу: она queued, сторож доставит её снова.
       try { await deps.enqueue({ index_job_id: result.indexJobId, generation: 0 }); }
@@ -202,18 +206,34 @@ export function createSiteSourceHandler(deps: CabinetDependencies) {
 }
 
 // POST /api/sources/{source_id}/reindex — «Повторить» отказавшую задачу (FR-INDEX-003): тот же index_job_id.
-export function createSourceRetryHandler(deps: CabinetDependencies) {
-  return (request: Request, sourceId: string) => run(logOf(deps), 'повтор задачи', async () => {
+// «Обновить» готовый сайт и «Повторить» отказавший (FR-INDEX-004, FR-INDEX-003, ADR-009): та же задача, новая серия;
+// идущая задача — тот же index_job_id без второй серии; PDF — новая загрузка; предел запусков на сутки — 429.
+export function createSourceReindexHandler(deps: CabinetDependencies) {
+  return (request: Request, sourceId: string) => run(logOf(deps), 'обновление источника', async () => {
     const entry = await guardMutation(request, deps, () => fail(404, 'not_found', 'Источник не найден'));
     if (entry instanceof Response) return entry;
     if (!UUID.test(sourceId)) return fail(404, 'not_found', 'Источник не найден');
-    const result = await deps.retry(sourceId, entry.accountId);
+    const result = await deps.reindex(sourceId, entry.accountId);
     if (!result) return fail(404, 'not_found', 'Источник не найден');
-    if (result.kind === 'not_failed') return fail(409, 'not_failed', 'Повторить можно только задачу, закончившуюся отказом. Переиндексация готового источника появится позже');
-    if (result.kind === 'pdf_reupload') return fail(409, 'reupload', 'Файл PDF удаляется после отказа — загрузите его заново');
+    if (result.kind === 'running') return json({ data: { index_job_id: result.indexJobId } }, 202);
+    if (result.kind === 'pdf_reupload') return fail(409, 'reupload', 'Файл PDF удаляется после индексации — чтобы обновить, загрузите его заново');
+    if (result.kind === 'daily_limit') return indexStartsLimit(result.limit);
     try { await deps.enqueue(result.message); }
-    catch { logOf(deps)('Кабинет: транспорт заданий недоступен — повтор останется queued до доставки сторожем'); }
+    catch { logOf(deps)('Кабинет: транспорт заданий недоступен — обновление останется queued до доставки сторожем'); }
     return json({ data: { index_job_id: result.message.index_job_id } }, 202);
+  });
+}
+
+// DELETE /api/sources/{id} (DeleteSource): источник, его страницы и фрагменты — одной транзакцией; бот перестаёт
+// ссылаться на них сразу (SC-US-014-2). Чужой и несуществующий — одинаковый 404. Тела у запроса нет.
+export function createSourceDeleteHandler(deps: CabinetDependencies) {
+  return (request: Request, sourceId: string) => run(logOf(deps), 'удаление источника', async () => {
+    const entry = await guardMutation(request, deps, () => fail(404, 'not_found', 'Источник не найден'));
+    if (entry instanceof Response) return entry;
+    if (!UUID.test(sourceId)) return fail(404, 'not_found', 'Источник не найден');
+    const result = await deps.deleteSource(sourceId, entry.accountId);
+    if (!result) return fail(404, 'not_found', 'Источник не найден');
+    return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
   });
 }
 

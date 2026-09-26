@@ -7,6 +7,7 @@
 import type { Pool, PoolClient } from 'pg';
 import { readFailureReason, readIndexJobStatus, type IndexJobFailureReason } from '@n6/rag';
 import { transaction } from './quota.js';
+import { recordIndexStartTx } from './sources.js';
 
 // Числа канона §7 «Задача индексации». Дублируют @n6/queue намеренно НЕ импортом: db не зависит от
 // транспорта. tests/index-job.fence.test.ts сверяет обе копии — одно число, два места, один страж.
@@ -98,8 +99,10 @@ export async function leaseIndexJob(pool: Pool, message: IndexMessageLike, now =
     await tx.query(`UPDATE job_attempt SET status = 'failed', finished_at = $2 WHERE index_job_id = $1 AND status = 'running'`, [message.index_job_id, now]);
     await tx.query(`INSERT INTO job_attempt (index_job_id, fence, series_no, status, started_at, created_at)
       VALUES ($1, $2, $3, 'running', $4, $4)`, [message.index_job_id, fence, seriesNo, now]);
-    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, updated_at = $3 WHERE id = $1`,
-      [message.index_job_id, fence, now]);
+    // Новая серия (из queued) — бюджет токенов серии источника с нуля (source-lifecycle); автоповтор той же серии — нет.
+    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, updated_at = $3,
+      series_embed_used = CASE WHEN $4::boolean THEN 0 ELSE series_embed_used END WHERE id = $1`,
+      [message.index_job_id, fence, now, status === 'queued']);
     await tx.query(`UPDATE source SET status = 'indexing' WHERE id = $1`, [row.source_id]);
     return { indexJobId: message.index_job_id, botId: row.bot_id, sourceId: row.source_id, fence, seriesNo, attemptNo,
       pageBudget: row.page_budget, embedBudget: row.embed_budget };
@@ -177,14 +180,22 @@ Promise<{ retry: true; message: IndexMessageLike } | { retry: false }> {
 }
 
 // «Повторить» (FR-INDEX-003): тот же index_job_id, новая серия; фенс поднимается, чтобы опоздавший держатель
-// прежней серии не дописал. Только отказавшая задача и только владелец бота; иначе null (404).
+// прежней серии не дописал. Только отказавшая задача и только владелец бота; иначе null (404). source-lifecycle
+// (ревью Codex находка 6): запуск тратит суточный предел бота (отказы считаются) — исчерпан → тоже null; порядок
+// блокировок «задача → бот», как у воркера и у sources.ts. Кабинет зовёт reindexSource; эта функция — для тестов
+// и операторских сценариев по id задачи.
 export async function retryIndexJob(pool: Pool, indexJobId: string, accountId: string, now = new Date()): Promise<IndexMessageLike | null> {
   if (!isUuid(indexJobId) || !isUuid(accountId)) return null;
-  const result = await pool.query<{ current_fence: string }>(`UPDATE index_job j SET status = 'queued', failure_reason = NULL,
-    current_fence = j.current_fence + 1, updated_at = $3
-    FROM bot b WHERE j.id = $1 AND b.id = j.bot_id AND b.account_id = $2 AND b.status <> 'deleted' AND j.status = 'failed'
-    RETURNING j.current_fence`, [indexJobId, accountId, now]);
-  return result.rowCount ? { index_job_id: indexJobId, generation: Number(result.rows[0]!.current_fence) } : null;
+  return transaction(pool, async (tx) => {
+    const job = (await tx.query<{ bot_id: string }>(`SELECT j.bot_id FROM index_job j JOIN bot b ON b.id = j.bot_id
+      WHERE j.id = $1 AND b.account_id = $2 AND b.status <> 'deleted' AND j.status = 'failed' FOR UPDATE OF j`, [indexJobId, accountId])).rows[0];
+    if (!job) return null;
+    await tx.query('SELECT id FROM bot WHERE id = $1 FOR UPDATE', [job.bot_id]);
+    if (!(await recordIndexStartTx(tx, job.bot_id, 'retry'))) return null;
+    const result = await tx.query<{ current_fence: string }>(`UPDATE index_job SET status = 'queued', failure_reason = NULL,
+      current_fence = current_fence + 1, updated_at = $2 WHERE id = $1 AND status = 'failed' RETURNING current_fence`, [indexJobId, now]);
+    return result.rowCount ? { index_job_id: indexJobId, generation: Number(result.rows[0]!.current_fence) } : null;
+  });
 }
 
 // ReadIndexJob. Три состояния плюс «нет ответа»: молчание — НЕ «выполняется» (long-running-job).

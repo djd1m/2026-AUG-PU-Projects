@@ -7,7 +7,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { PDF_MAX_BYTES, PDFS_BY_PLAN } from '../packages/rag/src/constants';
+import { INDEX_STARTS_PER_BOT_DAY, PDF_MAX_BYTES, PDFS_BY_PLAN } from '../packages/rag/src/constants';
 import type { AccountPlan } from '../packages/rag/src/enums';
 import type { CreatePdfSourceInput, CreatePdfSourceResult } from '../packages/db/src/pdf-sources';
 import { createSourceUploadHandler, MAX_UPLOAD_BODY_BYTES, type SourceUploadDependencies } from '../apps/web/src/server/source-upload-handler';
@@ -46,12 +46,12 @@ function request(body: Buffer, headers: Record<string, string | null> = {}, cont
 let dir: string;
 let calls: string[];
 let created: CreatePdfSourceInput[];
-function deps(overrides: Partial<SourceUploadDependencies> = {}, plan: AccountPlan = 'free', pdfCount = 0): SourceUploadDependencies {
+function deps(overrides: Partial<SourceUploadDependencies> = {}, plan: AccountPlan = 'free', pdfCount = 0, startsToday = 0): SourceUploadDependencies {
   return {
     publicOrigin: ORIGIN, uploadDir: dir, log: () => {},
     authenticate: vi.fn(async (token: string) => (token === TOKEN ? { account_id: ACCOUNT } : null)),
     allowMutation: vi.fn(async () => { calls.push('limit'); return true; }),
-    readOwnedBot: vi.fn(async (botId: string, accountId: string) => { calls.push('bot'); return botId === BOT && accountId === ACCOUNT ? { plan, pdfCount } : null; }),
+    readOwnedBot: vi.fn(async (botId: string, accountId: string) => { calls.push('bot'); return botId === BOT && accountId === ACCOUNT ? { plan, pdfCount, startsToday } : null; }),
     pdfLimit: (p: AccountPlan) => PDFS_BY_PLAN[p],
     findJob: vi.fn(async () => { calls.push('find'); return null; }),
     createPdfSource: vi.fn(async (input: CreatePdfSourceInput): Promise<CreatePdfSourceResult> => {
@@ -149,6 +149,21 @@ describe('Загрузка PDF: отказы и их порядок', () => {
     expect(body).toContain('free');
     expect(body).toContain('3 PDF');
     expect(read.pulled).toBe(0);
+  });
+  it('source-lifecycle: суточный предел запусков исчерпан → 429 index_starts ДО приёма тела; 19 запусков — принят', async () => {
+    const { req, read } = request(multipart(normalPdf()));
+    const response = await createSourceUploadHandler(deps({}, 'nobadge', 0, INDEX_STARTS_PER_BOT_DAY))(req, BOT);
+    expect(response.status).toBe(429);
+    expect(JSON.stringify(await response.json())).toContain('index_starts');
+    expect(read.pulled).toBe(0);
+    expect(calls).not.toContain('create');
+    expect((await createSourceUploadHandler(deps({}, 'nobadge', 0, INDEX_STARTS_PER_BOT_DAY - 1))(request(multipart(normalPdf())).req, BOT)).status).toBe(202);
+  });
+  it('предел запусков исчерпан параллельно (атомарно в транзакции) → 429, принятый файл удалён', async () => {
+    const d = deps({ createPdfSource: async () => ({ kind: 'daily_limit', limit: INDEX_STARTS_PER_BOT_DAY }) });
+    const response = await createSourceUploadHandler(d)(request(multipart(normalPdf())).req, BOT);
+    expect(response.status).toBe(429);
+    expect(files()).toEqual([]);
   });
   it('на nobadge 4-й PDF принят, 11-й — нет (предел 10)', async () => {
     expect((await createSourceUploadHandler(deps({}, 'nobadge', 3))(request(multipart(normalPdf())).req, BOT)).status).toBe(202);

@@ -128,22 +128,20 @@ describe.skipIf(!databaseUrl)('chunk-embed на настоящем Postgres + pg
         expect((await searchChunks(forced as unknown as Pool, b.botId, q, 4)).every((h) => b.ids.includes(h.chunkId))).toBe(true);
       } finally { await forced.end(); }
     });
-    it('цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW', async () => {
+    it('цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки без HNSW (A-N6-051)', async () => {
       const c = await seed([far(3)], 'цель');
       const ref = (await pool.query('SELECT source_id, page_id FROM chunk WHERE bot_id = $1', [c.botId])).rows[0];
       const noise = (client: { query: Pool['query'] }, from: number, count: number) => client.query(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding)
         SELECT $1, $2, $3, g.n, 'шум', 'шум', 10, (SELECT array_agg(random() - 0.5)::real[] FROM generate_series(1, 1536) d WHERE g.n > 0)::vector
         FROM generate_series($4::int, $4::int + $5::int - 1) AS g(n)`, [c.botId, ref.source_id, ref.page_id, from, count]);
-      // Замер: вставка с поддержкой индекса HNSW (случайные векторы — худший случай для графа).
+      // Замер: вставка БЕЗ индекса HNSW (снят миграцией 008, A-N6-051; прежний замер с индексом — ≈ 2,8 мс/фрагмент).
       let started = performance.now();
       for (const from of [1, 51]) await noise(pool, from, 50);
-      console.log(`hnsw-insert: ${((performance.now() - started) / 100).toFixed(1)} мс на фрагмент (100 случайных векторов)`);
-      // Перебор не зависит от HNSW; чтобы засеять 5000 строк за секунды, индекс снимается ВНУТРИ транзакции
-      // этого соединения и возвращается откатом.
+      console.log(`insert-no-hnsw: ${((performance.now() - started) / 100).toFixed(1)} мс на фрагмент (100 случайных векторов)`);
+      // 5000 строк засеваются в транзакции этого соединения и убираются откатом.
       const client = await pool.connect();
       try {
         await client.query('BEGIN');
-        await client.query('DROP INDEX chunk_embedding_hnsw');
         await noise(client, 101, 4900);
         const scoped = { query: client.query.bind(client) } as unknown as Pool;
         started = performance.now();

@@ -18,7 +18,7 @@ export class CrawlFailure extends Error {
   constructor(readonly reason: CrawlFailureReason) { super(`Обход сайта отказал: ${reason}`); this.name = 'CrawlFailure'; }
 }
 export type SkipReason = 'robots' | 'robots_unreachable' | 'blocked_address' | 'unreachable' | 'timeout' | 'too_many_redirects'
-  | 'off_site' | 'downgrade' | 'http_error' | 'not_html' | 'too_large' | 'encoding' | 'noindex' | 'empty' | 'duplicate';
+  | 'off_site' | 'downgrade' | 'http_error' | 'gone' | 'not_html' | 'too_large' | 'encoding' | 'noindex' | 'empty' | 'duplicate';
 export interface CrawledPage {
   url: string; title: string; headings: Array<{ level: number; text: string }>; blocks: Block[]; text: string; contentHash: string;
 }
@@ -27,6 +27,9 @@ export interface CrawlProgress { pagesDone: number; pagesTotal: number }
 export type StopReason = 'exhausted' | 'page_budget' | 'request_cap' | 'time_budget';
 export interface CrawlResult {
   pagesRead: number; pagesUnchanged: number; skipped: Partial<Record<SkipReason, number>>; requests: number; stoppedBy: StopReason;
+  // Обнаружение страниц могло быть неполным (source-lifecycle, ревью Codex находка 2): sitemap не прочитан по сбою сети
+  // или 5xx/429, либо очередь упёрлась в CRAWL_QUEUE_MAX и ссылки отброшены. Тогда «не увидели» ≠ «страницы нет».
+  discoveryIncomplete: boolean;
 }
 export interface CrawlOptions {
   rootUrl: string; pageBudget: number; userAgent: string;
@@ -99,9 +102,12 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
   // 2. Очередь: корень + sitemap.xml того же хоста. Сбой sitemap не отказ: он необязателен.
   const queue: string[] = [root.href];
   const seen = new Set<string>(queue);
+  let discoveryIncomplete = false;
   const enqueue = (href: string, base: URL) => {
     const link = normalizeLink(href, base, hosts);
-    if (link && !seen.has(link) && queue.length < CRAWL_QUEUE_MAX) { seen.add(link); queue.push(link); }
+    if (!link || seen.has(link)) return;
+    if (queue.length >= CRAWL_QUEUE_MAX) { discoveryIncomplete = true; return; }
+    seen.add(link); queue.push(link);
   };
   if (isAllowed(rootRobots.robots, '/sitemap.xml')) {
     try {
@@ -110,8 +116,11 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
         wantBody: (status, type) => status >= 200 && status < 300 && /xml/.test(type),
       });
       if (sitemap.body) for (const loc of sitemapLocations(sitemap.body.toString('utf8'))) if (!/\.xml(\.gz)?$/i.test(loc)) enqueue(loc, root);
+      // 404 — у сайта нет sitemap (детерминированно); 5xx и 429 — временный сбой: обнаружение неполное.
+      if (sitemap.status >= 500 || sitemap.status === 429) discoveryIncomplete = true;
     } catch (error) {
       if (!(error instanceof AddressRefused || error instanceof FetchFailed)) throw error;
+      if (error instanceof FetchFailed) discoveryIncomplete = true;
     }
   }
 
@@ -166,7 +175,9 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
     const finalRobots = robotsCache.get(final.origin);
     const reason: SkipReason | null =
       finalRobots && finalRobots !== 'unreachable' && !isAllowed(finalRobots, final.pathname + final.search) ? 'robots'
-        : result.status < 200 || result.status >= 300 ? 'http_error'
+        // 404/410 — страницы нет (детерминированно, её прежние фрагменты убираются); прочие не-2xx — временный сбой
+        : result.status === 404 || result.status === 410 ? 'gone'
+          : result.status < 200 || result.status >= 300 ? 'http_error'
           : !isHtml(result.contentType) ? 'not_html'
             : result.tooLarge ? 'too_large'
               : result.encoded || !result.body ? 'encoding' : null;
@@ -190,5 +201,5 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
   }
   // 5. Ни одной страницы с текстом — отказ, а не «готово, 0 страниц» (SC-US-001-3).
   if (pagesRead + pagesUnchanged === 0) throw new CrawlFailure(rootNetworkFailure ? 'unreachable' : 'no_text');
-  return { pagesRead, pagesUnchanged, skipped, requests, stoppedBy };
+  return { pagesRead, pagesUnchanged, skipped, requests, stoppedBy, discoveryIncomplete };
 }

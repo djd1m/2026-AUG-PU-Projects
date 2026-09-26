@@ -129,7 +129,7 @@ describe('порядок входа маршрутов кабинета', () => 
       publicOrigin: ORIGIN, authenticate: async () => { calls.push('auth'); return { account_id: '11111111-1111-4111-8111-111111111111' }; },
       allowMutation: async () => { calls.push('limit'); return true; },
       listBots: touch('list'), createBot: touch('create'), newPublicKey: () => KEY, updateSettings: touch('update'), addOrigin: touch('origin'),
-      checkAddress: touch('check'), ownsBot: touch('owns'), createSite: touch('site'), findJob: touch('find'), retry: touch('retry'),
+      checkAddress: touch('check'), ownsBot: touch('owns'), createSite: touch('site'), findJob: touch('find'), reindex: touch('reindex'), deleteSource: touch('delete-source'),
       enqueue: touch('enqueue'), answer: touch('answer'), setVerified: touch('verify'), publish: touch('publish'), summary: touch('summary'), log: () => {}, ...over,
     };
   }

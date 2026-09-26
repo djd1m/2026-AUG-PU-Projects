@@ -34,7 +34,12 @@ describe('CHECK миграции = перечисления канона §4', (
   });
   it('ровно 23 сущности канона §4 по ВСЕМ миграциям (19 + 4 оплаты, A-N6-040) и 10 scope', () => {
     const all = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort().map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
-    const tables = [...all.matchAll(/^CREATE TABLE (\w+)/gm)].map((m) => m[1]);
+    // Служебные журналы — не сущности канона (закрытый список): index_start — журнал запусков индексации для суточного
+    // предела (source-lifecycle, A-N6-050). Любая другая новая таблица сдвинет список и уронит тест.
+    const SERVICE = ['index_start'];
+    const all_tables = [...all.matchAll(/^CREATE TABLE (\w+)/gm)].map((m) => m[1]!);
+    expect(SERVICE.every((t) => all_tables.includes(t))).toBe(true);
+    const tables = all_tables.filter((t) => !SERVICE.includes(t));
     expect(tables.sort()).toEqual(['account', 'allowed_origin', 'attribution', 'bot', 'chunk', 'growth_event', 'index_job', 'job_attempt',
       'operator_action', 'page', 'partner_code', 'payment', 'payment_event', 'payment_intent', 'preview', 'pro_interest', 'question_log',
       'quota_counter', 'session', 'source', 'studio_invite', 'visitor_session', 'widget_install']);

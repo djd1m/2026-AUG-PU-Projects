@@ -32,7 +32,7 @@ const LIST: BotListView = { plan: 'studio', limit: 10, bots: [
 ] };
 const job = (over: Partial<NonNullable<SourceItemView['job']>>) => ({ index_job_id: BOT, state: 'running' as const, queued: false, pages_done: 0, pages_total: null, chunks_done: 0, ...over });
 const SOURCES: SourceItemView[] = [
-  { source_id: 's1', kind: 'site', title: 'https://stomatologia-ulybka.ru/', job: job({ state: 'done', pages_done: 48, pages_total: 48, chunks_done: 212 }) },
+  { source_id: 's1', kind: 'site', title: 'https://stomatologia-ulybka.ru/', job: job({ state: 'done', pages_done: 48, pages_total: 48, chunks_done: 212 }), pages_truncated: 3 },
   { source_id: 's2', kind: 'site', title: 'https://stomatologia-ulybka.ru/ceny-i-uslugi-dlya-detey-i-vzroslyh', job: job({ pages_done: 7, pages_total: 50, chunks_done: 31 }) },
   { source_id: 's3', kind: 'pdf', title: 'прайс-2026.pdf', job: job({ queued: true }) },
   { source_id: 's4', kind: 'site', title: 'https://old.stomatologia-ulybka.ru/', job: job({ state: 'no_response', pages_done: 2 }) },
@@ -48,6 +48,8 @@ const MESSAGES: OwnerMessage[] = [
   { kind: 'question', text: 'А в субботу работаете?' },
   { kind: 'refused', text: 'Исчерпан предел «ответов бота в сутки» — тестовые вопросы расходуют тот же лимит, что и вопросы посетителей' },
 ];
+// source-lifecycle: список источников — «Обновить»/«Повторить»/«Удалить» и подтверждение удаления в два шага.
+const LIST_HANDLERS = { busy: null, confirming: null, errors: {}, onReindex: noop, onConfirm: noop, onDelete: noop };
 const install = (over: Partial<InstallViewProps>): ReactElement => createElement(InstallView, { botId: BOT, companyName: 'Стоматология «Улыбка»',
   snippet: { kind: 'contact_required' }, origins: [], contact: '', domain: '', errors: {}, busy: false, copied: false,
   onContact: noop, onSaveContact: noop, onDomain: noop, onAddDomain: noop, onCopy: noop, ...over });
@@ -59,17 +61,22 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
     busy: false, submitLabel: 'Создать бота', contactRequired: false, onChange: noop, onSubmit: noop }) })),
   limit: main(createElement(BotListSection, { list: { plan: 'free', limit: 1, bots: [LIST.bots[0]!] }, create: null })),
   bot: main(createElement(BotLayout, { botId: BOT, companyName: 'Стоматология «Улыбка»', contact: '', greeting: '', sources: SOURCES, ready: true,
-    sourcesBlock: createElement(Fragment, null, createElement(SourceList, { sources: SOURCES, retrying: null, errors: {}, onRetry: noop }),
+    sourcesBlock: createElement(Fragment, null, createElement(SourceList, { ...LIST_HANDLERS, sources: SOURCES }),
       createElement(AddSource, { url: '', busy: false, errors: { url: 'Этот адрес ведёт во внутреннюю или служебную сеть — такие адреса мы не читаем' }, onUrl: noop, onSite: noop, onPdf: noop })),
     chat: createElement(OwnerChat, { companyName: 'Стоматология «Улыбка»', messages: MESSAGES, draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
     settings: form({ contact: 'Укажите контакт: почта (info@example.ru), телефон (+7 900 000-00-00) или ссылка https://…' }) })),
   empty: main(createElement(BotLayout, { botId: BOT, companyName: 'Новый бот', contact: '+7 900 000-00-00', greeting: '', sources: [], ready: false,
-    sourcesBlock: createElement(SourceList, { sources: [], retrying: null, errors: {}, onRetry: noop }),
+    sourcesBlock: createElement(SourceList, { ...LIST_HANDLERS, sources: [] }),
     chat: createElement(OwnerChat, { companyName: 'Новый бот', messages: [], draft: '', busy: false, error: '', ready: false, onDraft: noop, onAsk: noop }),
+    settings: form() })),
+  'bot-confirm': main(createElement(BotLayout, { botId: BOT, companyName: 'Стоматология «Улыбка»', contact: '+7 900 000-00-00', greeting: '', sources: SOURCES, ready: true,
+    sourcesBlock: createElement(SourceList, { ...LIST_HANDLERS, sources: SOURCES, confirming: 's1',
+      errors: { s5: 'Сегодня у этого бота уже 20 запусков индексации — это предел на сутки. Новые источники и обновления — завтра' } }),
+    chat: createElement(OwnerChat, { companyName: 'Стоматология «Улыбка»', messages: [], draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
     settings: form() })),
   // Фича public-page-and-summary (+ carry_over фичи 12): сводка, отметка «проверено», демо-страница, баннер месяца.
   extras: main(createElement(BotLayout, { botId: BOT, companyName: 'Стоматология «Улыбка»', contact: '+7 900 000-00-00', greeting: '', sources: [], ready: true,
-    sourcesBlock: createElement(SourceList, { sources: [], retrying: null, errors: {}, onRetry: noop }),
+    sourcesBlock: createElement(SourceList, { ...LIST_HANDLERS, sources: [] }),
     chat: createElement(OwnerChat, { companyName: 'Стоматология «Улыбка»', messages: [], draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
     settings: form(), banner: createElement(MonthBanner, { used: 300, limit: 300 }),
     summary: createElement(SummaryBlock, { summary: { answered: 40, unknown: 6, refused_limit: 2, last_unknown: [
@@ -79,7 +86,7 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
     publish: createElement(PublishBlock, { page: { slug: 'stomatologiya-ulybka-ab12', enabled: true, indexable: false,
       url: `${ORIGIN}/b/stomatologiya-ulybka-ab12` }, busy: false, error: '', onPublish: noop, onIndexable: noop }) })),
   'extras-empty': main(createElement(BotLayout, { botId: BOT, companyName: 'Новый бот', contact: '', greeting: '', sources: [], ready: false,
-    sourcesBlock: createElement(SourceList, { sources: [], retrying: null, errors: {}, onRetry: noop }),
+    sourcesBlock: createElement(SourceList, { ...LIST_HANDLERS, sources: [] }),
     chat: createElement(OwnerChat, { companyName: 'Новый бот', messages: [], draft: '', busy: false, error: '', ready: false, onDraft: noop, onAsk: noop }),
     settings: form(), banner: createElement(MonthBanner, { used: 3, limit: 300 }),
     summary: createElement(SummaryBlock, { summary: { answered: 0, unknown: 0, refused_limit: 0, last_unknown: [] } }),
@@ -144,6 +151,24 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
       }
     }));
   }
+  it('source-lifecycle: «Обновить» только у готового сайта, «Повторить» — у отказавшего, «Удалить» — у каждого источника; обрезанные страницы названы', () => open('bot', 'dark', { width: 390, height: 844 }, async page => {
+    expect(await page.getByRole('button', { name: 'Обновить' }).count()).toBe(1);
+    expect(await page.getByRole('button', { name: 'Повторить' }).count()).toBe(1);
+    expect(await page.getByRole('button', { name: 'Удалить' }).count()).toBe(6);
+    expect(await page.locator('li.source-item').first().textContent()).toContain('3 страниц прочитаны не целиком');
+    expect(await page.locator('.source-list').getByRole('group').count()).toBe(0);
+  }));
+  it('source-lifecycle: подтверждение удаления — вопрос с последствием, «Удалить» и «Отмена» только у выбранного; ошибка предела запусков — у своего источника', () => open('bot-confirm', 'light', { width: 390, height: 844 }, async page => {
+    const group = page.getByRole('group', { name: 'Удаление источника https://stomatologia-ulybka.ru/' });
+    expect(await group.count()).toBe(1);
+    expect(await group.textContent()).toContain('Бот сразу перестанет отвечать по его страницам');
+    expect(await group.getByRole('button', { name: 'Удалить' }).count()).toBe(1);
+    expect(await group.getByRole('button', { name: 'Отмена' }).count()).toBe(1);
+    expect(await page.getByRole('button', { name: 'Обновить' }).count()).toBe(0);
+    expect(await page.getByRole('button', { name: 'Удалить' }).count()).toBe(6);
+    const s5 = page.locator('li.source-item').nth(4);
+    expect(await s5.getByRole('alert').last().textContent()).toContain('20 запусков индексации');
+  }));
   it('экран бота: три состояния задачи различимы текстом ленты; «Повторить» только у отказавшего сайта', () => open('bot', 'light', { width: 390, height: 844 }, async page => {
     const text = (await page.textContent('main')) ?? '';
     expect(text).toContain('Чтение идёт · 7 из 50 страниц');

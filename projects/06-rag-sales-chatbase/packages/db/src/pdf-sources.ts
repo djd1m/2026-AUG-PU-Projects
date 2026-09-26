@@ -4,11 +4,14 @@
 // остатке 1 не дают четвёртый PDF на free (shared-resource-verification: считать-потом-писать без
 // блокировки проходит последовательный тест и падает на параллельном).
 import type { Pool } from 'pg';
-import { PDFS_BY_PLAN, readAccountPlan, type AccountPlan } from '@n6/rag';
+import { INDEX_STARTS_PER_BOT_DAY, PDFS_BY_PLAN, readAccountPlan, type AccountPlan } from '@n6/rag';
 import { transaction } from './quota.js';
 import { createSourceJobTx, isUuid } from './index-jobs.js';
+import { OWNED } from './bots.js';
+import { indexStartsToday, recordIndexStartTx } from './sources.js';
 
-export interface OwnedBot { plan: AccountPlan; pdfCount: number }
+// startsToday — запуски индексации бота за сутки МСК (source-lifecycle): дешёвый отказ ДО приёма тела.
+export interface OwnedBot { plan: AccountPlan; pdfCount: number; startsToday: number }
 // PDF, занимающие место по плану: всё, кроме отказавших (отказ не индексирован и не отвечает).
 const COUNT_PDFS = `SELECT count(*)::int AS n FROM source WHERE bot_id = $1 AND kind = 'pdf' AND status <> 'failed'`;
 
@@ -16,11 +19,11 @@ const COUNT_PDFS = `SELECT count(*)::int AS n FROM source WHERE bot_id = $1 AND 
 // Чужой, черновик, удалённый и несуществующий бот — одинаково null (канон: «Чужой ресурс — 404»).
 export async function readOwnedBotForPdf(pool: Pool, botId: string, accountId: string): Promise<OwnedBot | null> {
   if (!isUuid(botId) || !isUuid(accountId)) return null;
-  const bot = await pool.query<{ plan: unknown }>(`SELECT a.plan FROM bot b JOIN account a ON a.id = b.account_id
-    WHERE b.id = $1 AND b.account_id = $2 AND b.status = 'active' AND a.status = 'active'`, [botId, accountId]);
+  // Условие владения — ОБЩЕЕ OWNED из bots.ts (ревью bot-cabinet LOW: копия литерала расходилась бы молча).
+  const bot = await pool.query<{ plan: unknown }>(`SELECT a.plan FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED}`, [botId, accountId]);
   if (!bot.rowCount) return null;
   const count = await pool.query<{ n: number }>(COUNT_PDFS, [botId]);
-  return { plan: readAccountPlan(bot.rows[0]!.plan), pdfCount: count.rows[0]!.n };
+  return { plan: readAccountPlan(bot.rows[0]!.plan), pdfCount: count.rows[0]!.n, startsToday: await indexStartsToday(pool, botId) };
 }
 
 export async function findJobByIdempotencyKey(pool: Pool, botId: string, idempotencyKey: string): Promise<string | null> {
@@ -33,6 +36,7 @@ export interface CreatePdfSourceInput { accountId: string; botId: string; fileNa
 export type CreatePdfSourceResult =
   | { kind: 'created' | 'existing'; indexJobId: string }
   | { kind: 'plan_limit'; plan: AccountPlan; limit: number }
+  | { kind: 'daily_limit'; limit: number }
   | { kind: 'not_found' };
 
 export function pdfLimitFor(plan: AccountPlan): number {
@@ -44,8 +48,8 @@ export async function createPdfSource(pool: Pool, input: CreatePdfSourceInput, n
   return transaction(pool, async (tx) => {
     // Блокировка строки бота сериализует создание источников ЭТОГО бота; держится только на время
     // коротких операторов ниже — тело файла к этому моменту уже принято и записано (не под блокировкой).
-    const bot = await tx.query<{ plan: unknown }>(`SELECT a.plan FROM bot b JOIN account a ON a.id = b.account_id
-      WHERE b.id = $1 AND b.account_id = $2 AND b.status = 'active' AND a.status = 'active' FOR UPDATE OF b`, [input.botId, input.accountId]);
+    const bot = await tx.query<{ plan: unknown }>(`SELECT a.plan FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED} FOR UPDATE OF b`,
+      [input.botId, input.accountId]);
     if (!bot.rowCount) return { kind: 'not_found' } as const;
     // Повтор с тем же ключом — та же задача, даже если предел уже исчерпан ЕЮ ЖЕ.
     const existing = await tx.query<{ id: string }>('SELECT id FROM index_job WHERE bot_id = $1 AND idempotency_key = $2',
@@ -55,6 +59,8 @@ export async function createPdfSource(pool: Pool, input: CreatePdfSourceInput, n
     const limit = pdfLimitFor(plan);
     const count = await tx.query<{ n: number }>(COUNT_PDFS, [input.botId]);
     if (count.rows[0]!.n >= limit) return { kind: 'plan_limit', plan, limit } as const;
+    // source-lifecycle: отказавший PDF тоже тратит запуск — он занимал единственный воркер (ревью pdf-source MEDIUM-1).
+    if (!(await recordIndexStartTx(tx, input.botId, 'pdf'))) return { kind: 'daily_limit', limit: INDEX_STARTS_PER_BOT_DAY } as const;
     const created = await createSourceJobTx(tx, { botId: input.botId, kind: 'pdf', fileName: input.fileName,
       idempotencyKey: input.idempotencyKey, indexJobId: input.indexJobId }, now);
     return { kind: created.created ? 'created' : 'existing', indexJobId: created.indexJobId } as const;

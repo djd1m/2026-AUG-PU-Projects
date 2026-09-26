@@ -1,0 +1,40 @@
+
+> n6-sufler@0.1.0 typecheck
+> npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json
+
+
+> @n6/rag@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @n6/db@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @n6/queue@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @n6/web@0.1.0 typecheck
+> tsc --noEmit
+
+
+> @n6/widget@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @n6/worker@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @n6/db@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @n6/queue@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @n6/rag@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+

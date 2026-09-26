@@ -7,7 +7,7 @@
 // Файл из тома удаляет RunIndexJob (onSettled) после done И failed.
 import { createHash } from 'node:crypto';
 import { lstat, readFile } from 'node:fs/promises';
-import { recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
+import { capPageChunks, recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
 import { chunkDocument, isPdfMagic, PDF_MAX_BYTES, plainTextBlocks } from '@n6/rag';
 import type { Embedder } from '../embed/embed-and-store';
 import { StepFailure, type SourceProcessor } from '../run-index-job';
@@ -71,9 +71,10 @@ export function createPdfProcessor(options: PdfProcessorOptions): SourceProcesso
       seen.add(hash);
       if (kind === 'page') {
         const title = `${fileName}, с. ${index + 1}`;
-        const chunks = chunkDocument({ title, blocks: plainTextBlocks(pageText) });
+        // Предел фрагментов листа — ДО эмбеддинга (source-lifecycle): лишнее не оплачивается.
+        const { kept: chunks, dropped } = capPageChunks(chunkDocument({ title, blocks: plainTextBlocks(pageText) }));
         const vectors = await options.embedder.embed(lease, chunks);
-        chunksWritten += (await writeIndexedPage(pool, lease, { urlOrPage: label, title, contentHash: hash },
+        chunksWritten += (await writeIndexedPage(pool, lease, { urlOrPage: label, title, contentHash: hash, chunksDropped: dropped },
           chunks.map((c, i) => ({ ...c, embedding: vectors[i]! })))).inserted;
       } else {
         await transaction(pool, async (tx) => {

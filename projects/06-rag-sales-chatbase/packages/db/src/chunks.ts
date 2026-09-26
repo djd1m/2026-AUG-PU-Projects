@@ -8,11 +8,12 @@
 // ИНВАРИАНТ ПОИСКА: WHERE c.bot_id = $1 в ТОМ ЖЕ SQL, ДО ORDER BY … LIMIT (не фильтр после LIMIT), и точный
 // перебор внутри бота (A-N6-028): чужой вектор не возвращается, свой — не теряется.
 import type { Pool, PoolClient } from 'pg';
-import { CHUNK_MAX_TOKENS, EMBED_BATCH_MAX, SEARCH_TOP_K, isEmbeddingOfDimension, type SearchHit } from '@n6/rag';
+import { CHUNK_MAX_TOKENS, CHUNKS_PER_PAGE_MAX, EMBED_BATCH_MAX, SEARCH_TOP_K, isEmbeddingOfDimension, type SearchHit } from '@n6/rag';
 import { isUuid, recordProgressTx, StaleAttemptError, type Lease } from './index-jobs.js';
 import { transaction } from './quota.js';
 
-export interface PageRecord { urlOrPage: string; title: string; contentHash: string }
+// chunksDropped — сколько фрагментов страницы не записано из-за предела CHUNKS_PER_PAGE_MAX (source-lifecycle).
+export interface PageRecord { urlOrPage: string; title: string; contentHash: string; chunksDropped?: number }
 export interface ChunkRecord { ordinal: number; contextPath: string; text: string; tokenCount: number; embedding: readonly number[] }
 export interface WrittenPage { pageId: string; inserted: number; deleted: number }
 type AttemptRef = Pick<Lease, 'indexJobId' | 'fence' | 'botId' | 'sourceId'>;
@@ -33,9 +34,12 @@ function validateChunks(chunks: readonly ChunkRecord[]): void {
 // с чужим фенсом получает 0 строк и откат до того, как тронет page/chunk.
 export async function upsertPageTx(tx: PoolClient, lease: AttemptRef, page: PageRecord, progress: { pagesTotal?: number } = {}): Promise<string> {
   await recordProgressTx(tx, lease, { pagesDone: 1, pagesTotal: progress.pagesTotal });
-  const row = await tx.query<{ id: string }>(`INSERT INTO page (source_id, bot_id, url_or_page, title, content_hash) VALUES ($1, $2, $3, $4, $5)
-    ON CONFLICT (source_id, url_or_page) DO UPDATE SET title = EXCLUDED.title, content_hash = EXCLUDED.content_hash, skipped_reason = NULL
-    RETURNING id`, [lease.sourceId, lease.botId, page.urlOrPage, page.title.slice(0, 500), page.contentHash]);
+  const dropped = page.chunksDropped ?? 0;
+  if (!Number.isSafeInteger(dropped) || dropped < 0) throw new Error('Непригодное число отброшенных фрагментов');
+  const row = await tx.query<{ id: string }>(`INSERT INTO page (source_id, bot_id, url_or_page, title, content_hash, chunks_dropped) VALUES ($1, $2, $3, $4, $5, $6)
+    ON CONFLICT (source_id, url_or_page) DO UPDATE SET title = EXCLUDED.title, content_hash = EXCLUDED.content_hash, skipped_reason = NULL,
+      chunks_dropped = EXCLUDED.chunks_dropped
+    RETURNING id`, [lease.sourceId, lease.botId, page.urlOrPage, page.title.slice(0, 500), page.contentHash, dropped]);
   return row.rows[0]!.id;
 }
 
@@ -43,6 +47,7 @@ export async function upsertPageTx(tx: PoolClient, lease: AttemptRef, page: Page
 // UNIQUE (page_id, ordinal) — второй рубеж.
 export async function replaceChunksTx(tx: PoolClient, lease: AttemptRef, pageId: string, chunks: readonly ChunkRecord[]): Promise<{ inserted: number; deleted: number }> {
   validateChunks(chunks);
+  if (chunks.length > CHUNKS_PER_PAGE_MAX) throw new Error(`Страница: больше ${CHUNKS_PER_PAGE_MAX} фрагментов — предел применяется ДО эмбеддинга (capPageChunks)`);
   const deleted = (await tx.query('DELETE FROM chunk WHERE page_id = $1 AND bot_id = $2', [pageId, lease.botId])).rowCount ?? 0;
   for (let from = 0; from < chunks.length; from += EMBED_BATCH_MAX) {
     const batch = chunks.slice(from, from + EMBED_BATCH_MAX);
@@ -70,6 +75,32 @@ export async function writeIndexedPage(pool: Pool, lease: AttemptRef, page: Page
   });
 }
 
+// Предел фрагментов страницы (source-lifecycle, перенос ревью chunk-embed MEDIUM): лишние НЕ эмбеддятся (не оплачиваются)
+// и не пишутся; число отброшенных уходит в page.chunks_dropped. Применяется вызывающим ДО EmbedAndStore.
+export function capPageChunks<T>(chunks: readonly T[]): { kept: T[]; dropped: number } {
+  return { kept: chunks.slice(0, CHUNKS_PER_PAGE_MAX), dropped: Math.max(0, chunks.length - CHUNKS_PER_PAGE_MAX) };
+}
+
+// Уборка исчезнувших страниц в конце ПОЛНОГО обхода сайта (source-lifecycle, US-014 «чтобы бот не отвечал устаревшим»):
+// страница источника, которой не было среди прочитанных (по адресу) и неизменных (по content_hash), удаляется вместе с
+// фрагментами (каскад) в транзакции с проверкой фенса ПЕРВЫМ; chunks_done уменьшается на удалённые фрагменты.
+// Решение «обход полный» принимает вызывающий (site-processor): бюджет, время и временные пропуски — не полный.
+export async function pruneUnseenPages(pool: Pool, lease: AttemptRef, seenUrls: readonly string[], seenHashes: readonly string[]): Promise<{ pages: number; chunks: number }> {
+  return transaction(pool, async (tx) => {
+    await recordProgressTx(tx, lease, {});
+    const gone = await tx.query<{ id: string }>(`SELECT id FROM page WHERE source_id = $1 AND bot_id = $2
+      AND NOT (url_or_page = ANY($3::text[])) AND NOT (content_hash = ANY($4::text[]))`, [lease.sourceId, lease.botId, [...seenUrls], [...seenHashes]]);
+    if (!gone.rowCount) return { pages: 0, chunks: 0 };
+    const ids = gone.rows.map((r) => r.id);
+    const chunks = (await tx.query<{ n: number }>('SELECT count(*)::int AS n FROM chunk WHERE page_id = ANY($1::uuid[])', [ids])).rows[0]!.n;
+    await tx.query('DELETE FROM page WHERE id = ANY($1::uuid[]) AND source_id = $2', [ids, lease.sourceId]);
+    const job = await tx.query(`UPDATE index_job SET chunks_done = GREATEST(0, chunks_done - $3), updated_at = now()
+      WHERE id = $1 AND current_fence = $2 AND status = 'running'`, [lease.indexJobId, lease.fence, chunks]);
+    if (!job.rowCount) throw new StaleAttemptError(lease.indexJobId, lease.fence);
+    return { pages: ids.length, chunks };
+  });
+}
+
 // Начало попытки: страницы пересчитываются заново, фрагменты — от числа уже записанных у источника.
 export async function resetAttemptCountersTx(tx: PoolClient, lease: AttemptRef, pagesTotal: number | null): Promise<void> {
   const reset = await tx.query(`UPDATE index_job SET pages_done = 0, pages_total = $3, updated_at = now(),
@@ -91,6 +122,16 @@ export async function touchAndChargeJobBudgetTx(tx: PoolClient, lease: Pick<Leas
   const charged = await tx.query(`UPDATE index_job SET embed_used = embed_used + $2
     WHERE id = $1 AND embed_used::bigint + $2 <= embed_budget RETURNING embed_used`, [lease.indexJobId, tokens]);
   return { budgeted: true, granted: Boolean(charged.rowCount) };
+}
+
+// Бюджет токенов СЕРИИ источника (source-lifecycle, перенос ревью chunk-embed): тем же атомарным оператором
+// «UPDATE … WHERE used + n <= предел RETURNING»; пустой RETURNING — отказ. Для задач аккаунта (не предпросмотра);
+// предел — SOURCE_EMBED_BUDGET_BY_PLAN по плану владельца, счётчик серии сбрасывает leaseIndexJob.
+export async function chargeSeriesBudgetTx(tx: PoolClient, lease: Pick<Lease, 'indexJobId' | 'fence'>, tokens: number, limit: number): Promise<boolean> {
+  if (!Number.isSafeInteger(tokens) || tokens <= 0 || !Number.isSafeInteger(limit) || limit <= 0) throw new Error('Непригодное списание бюджета серии');
+  const charged = await tx.query(`UPDATE index_job SET series_embed_used = series_embed_used + $3
+    WHERE id = $1 AND current_fence = $2 AND series_embed_used::bigint + $3 <= $4 RETURNING series_embed_used`, [lease.indexJobId, lease.fence, tokens, limit]);
+  return Boolean(charged.rowCount);
 }
 
 // Строка поиска несёт bot_id: ядро ответа (packages/rag/src/search.ts, ownHit) проверяет принадлежность второй линией.

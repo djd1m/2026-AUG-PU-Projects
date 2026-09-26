@@ -117,12 +117,13 @@ describe('Обход', () => {
     site = await startFakeSite({ ...noRobots, '/': article('Главная', ['/big']), '/big': declared });
     expect((await crawl(site, { maxBytes: 64 * 1024 })).skipped).toEqual({ too_large: 1 });
   });
-  it('не text/html пропускается без чтения тела; не-2xx — http_error; зависшая страница — timeout', async () => {
+  it('не text/html пропускается без чтения тела; 404 — gone (страницы нет), 5xx — http_error (временный сбой); зависшая страница — timeout', async () => {
     const hang: Handler = () => {};
-    site = await startFakeSite({ ...noRobots, '/': article('Главная', ['/json', '/missing', '/slow']),
-      '/json': text('{"a":1}', 'application/json'), '/slow': hang });
+    site = await startFakeSite({ ...noRobots, '/': article('Главная', ['/json', '/missing', '/broken', '/slow']),
+      '/json': text('{"a":1}', 'application/json'), '/broken': text('сбой', 'text/html', 503), '/slow': hang });
     const result = await crawl(site, { timeoutMs: 300 });
-    expect(result.skipped).toEqual({ not_html: 1, http_error: 1, timeout: 1 });
+    expect(result.skipped).toEqual({ not_html: 1, gone: 1, http_error: 1, timeout: 1 });
+    expect(result.discoveryIncomplete).toBe(false);
   });
   it('SC-US-001-3: пустая оболочка SPA → no_text, а не «готово, 0 страниц»', async () => {
     site = await startFakeSite({ ...noRobots, '/': html('<html><head><title>App</title></head><body><div id="root"></div><script src="/a.js"></script></body></html>') });
