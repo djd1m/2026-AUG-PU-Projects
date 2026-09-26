@@ -1,0 +1,62 @@
+[
+  {
+    "id": "bot-filter-removed",
+    "title": "поиск без фильтра bot_id: ближайшие фрагменты ЧУЖОГО бота попадают в ответ (NFR-SEC-001)",
+    "red": {
+      "code": 1,
+      "summary": "2 failed | 67 passed (69)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "69 passed (69)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "chunks-outside-page-tx",
+    "title": "фрагменты пишутся отдельной транзакцией после страницы: сбой записи оставляет страницу с хэшем без фрагментов",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 68 passed (69)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "69 passed (69)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "retry-not-charged",
+    "title": "повтор пачки после 429/5xx не списывает квоту (счёт по успехам/первой попытке, model-call-cost п.4)",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 66 passed (69)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "69 passed (69)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "vector-3072-accepted",
+    "title": "проверка длины вектора снята: 3072 принимается как 1536 (ADR-001)",
+    "red": {
+      "code": 1,
+      "summary": "4 failed | 65 passed (69)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "69 passed (69)",
+      "skipped": false
+    },
+    "passed": true
+  }
+]

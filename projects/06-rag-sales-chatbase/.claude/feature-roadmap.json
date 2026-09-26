@@ -332,7 +332,7 @@
       "title": "Ответ по фрагментам с источником, «не знаю», изоляция ботов, калибровка порога",
       "description": "AnswerQuestion (ядро, без маршрута виджета): квота → эмбеддинг вопроса → поиск WHERE bot_id = $1 ORDER BY embedding <=> $2 LIMIT 4 → порог 0.40 ДО модели → промпт (системные правила отдельно, фрагменты в <материал id=F…> как данные, 2 хода истории) → Haiku 4.5 json_schema → ValidateModelAnswer (8 форм мусора, цитата вне меток → unknown) → лог (текст только у unknown). Недоступность модели → «не знаю» с пометкой. Тест изоляции двух ботов с одинаковым прайсом (SC-SEC-001), вредоносная страница, набор калибровки 20 + 20 → docs/measurements/threshold-calibration.md. Тир XL: главный инвариант продукта и платный вызов.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "chunk-embed"
@@ -471,7 +471,8 @@
         "apps/web/src/app/api/preview/[token]/claim/route.ts",
         "apps/web/src/app/preview/[jobId]/page.tsx",
         "tests/preview-quota.test.ts"
-      ]
+      ],
+      "carry_over": "rag-answer (A-N6-029): ответ предпросмотра — answerQuestion(mode 'preview') с ботом-черновиком из loadAnswerBot по токену предпросмотра; квота — chargeAnswerQuota(mode 'preview') (2 scope, :answers)."
     },
     {
       "id": "bot-cabinet",
@@ -646,7 +647,7 @@
         "tests/visitor-quota.concurrency.test.ts",
         "tests/e2e/host-8099/host.html"
       ],
-      "carry_over": "Ревью quota-and-spend: M1 — reserveProbe (spend.ts:94-104) «записать, потом прочитать» → перенести на атомарный quota_counter или flock + конкурентный тест; M2 — период квоты от SELECT now() БД, а не часов процесса; L — правило «openrouter.ts только через meteredCall» в coding-style.md. Закрыть ДО реального трафика."
+      "carry_over": "Ревью quota-and-spend: M1 — reserveProbe (spend.ts:94-104) «записать, потом прочитать» → перенести на атомарный quota_counter или flock + конкурентный тест; M2 — период квоты от SELECT now() БД, а не часов процесса; L — правило «openrouter.ts только через meteredCall» в coding-style.md. Закрыть ДО реального трафика. | rag-answer (A-N6-029): ядро answerQuestion готово без маршрута — маршрут берёт бота ТОЛЬКО через loadAnswerBot по public_key/Origin, проверенным сервером, тело разбирает parseVisitorRequest (bot_id в теле — invalid); квота — chargeAnswerQuota(mode 'widget') ПОСЛЕ CheckOrigin; RecordWidgetInstall(first_answer) и RecordGrowthEvent(first_answer) — здесь, не в ядре; статусы ядра → HTTP: refused → 429 с контактом, not_found → 404, invalid → 422, unknown/answered → 200. Калибровка порога 20 + 20 (docs/measurements/threshold-calibration.md, НЕ ИЗМЕРЕНО) — до выпуска. | Ревью rag-answer: MEDIUM — history[].answer от клиента не принимать (хранить ходы на сервере по сессии посетителя) + тест поддельного хода; HIGH (A-N6-030) — до открытия маршрута наружу: тест «валидная цитата + выдуманный текст» как явный known-gap и калибровка 20+20 на живой модели; решение владельца по ADR-003."
     },
     {
       "id": "public-page-and-summary",

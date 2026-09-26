@@ -37,3 +37,13 @@ export const SEARCH_TOP_K = 4;                       // канон §7: top_k = 
 export function isEmbeddingOfDimension(vector: unknown): vector is number[] {
   return Array.isArray(vector) && vector.length === EMBED_DIMENSIONS && vector.every((x) => typeof x === 'number' && Number.isFinite(x));
 }
+
+// Ответ по фрагментам — канон §7 «Поиск и ответ», FR-ANSWER-001…003, Pseudocode AnswerQuestion /
+// ValidateModelAnswer. Порог — ЧИСЛО В КОДЕ, не окружение (FR-ANSWER-001): гипотеза A-N6-013 до калибровки
+// 20 + 20 (docs/measurements/threshold-calibration.md). Сравнение «≥»: ровно 0.40 проходит.
+export const MIN_SIMILARITY = 0.40;
+export const QUESTION_MAX_CHARS = 500;               // символы (кодовые точки), FR-ANSWER-001
+export const HISTORY_TURNS = 2;                      // 2 предыдущих хода (вопрос + ответ)
+export const ANSWER_TEXT_MAX_CHARS = 1200;           // ValidateModelAnswer п.4: текст обрезается до 1200
+export const SOURCE_EXCERPT_MAX_CHARS = 160;         // FR-ANSWER-002: первые ≤ 160 символов фрагмента в плашке
+export const QUESTION_TEXT_TTL_DAYS = 14;            // 152-ФЗ: текст вопроса — только у unknown и 14 дней

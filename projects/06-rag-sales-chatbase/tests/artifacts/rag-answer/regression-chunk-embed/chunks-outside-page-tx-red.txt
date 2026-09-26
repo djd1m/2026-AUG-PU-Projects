@@ -1,0 +1,84 @@
+
+ RUN  v3.2.7 /tmp/n6-chunk-embed-mutations-omONfN
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+hnsw-insert: 3.0 мс на фрагмент (100 случайных векторов)
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+search-exact 5001 фрагментов одного бота: 32 мс
+
+ ❯ tests/chunk-embed.integration.test.ts (15 tests | 1 failed) 3945ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > SC-US-004-1: страницы PDF → фрагменты с контекстом «прайс.pdf, с. N», поиск возвращает источник; квота = оценка по попыткам 105ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > план по умолчанию: бот A получает только свои 3 фрагмента, бот B — только свои 8ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются  419ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW  1763ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > непригодный bot_id и вектор не 1536 — отказ до запроса 2ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Два прогона одной задачи → одна копия фрагментов > одновременная двойная доставка сообщения: один done, второй skipped 75ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Два прогона одной задачи → одна копия фрагментов > вторая попытка перехватила фенс, пока первая ждала шлюз: первая stale и ничего не дописала 114ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Два прогона одной задачи → одна копия фрагментов > повторная доставка после done — skipped, фрагменты не тронуты 111ms
+   × chunk-embed на настоящем Postgres + pgvector > сбой записи фрагментов откатывает страницу: «Повторить» эмбеддит её заново, а не пропускает как известную 89ms
+     → expected 1 to be +0 // Object.is equality
+   ✓ chunk-embed на настоящем Postgres + pgvector > Квота и бюджет ДО вызова (FR-LIMIT-003) > предел аккаунта исчерпан → failed(quota_refused), шлюз не вызван, попытки не записаны 24ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Квота и бюджет ДО вызова (FR-LIMIT-003) > предпросмотр: бюджет задачи + global_embed_tokens; аккаунт не списывается; сверх бюджета — отказ с откатом global 119ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Квота и бюджет ДО вызова (FR-LIMIT-003) > две задачи одного аккаунта одновременно у потолка: списано ≤ предела и ровно сумма разрешённых попыток 75ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Размерность 1536 (ADR-001) и отказы поставщика > вектор 3072 от клиента → failed(internal), outcome dimension_mismatch, сигнал оператору, ни страницы, ни фрагмента 27ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Размерность 1536 (ADR-001) и отказы поставщика > вектор 3072 от шлюза через настоящий клиент → тот же отказ 28ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Размерность 1536 (ADR-001) и отказы поставщика > отказ 400 (ключ, модель) — не повторяется: failed(embedding_unavailable) с первой попытки, одна попытка списана 26ms
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > русский текст абзацами с заголовками — < 3 с, инварианты фрагментов соблюдены
+chunk-time русский текст абзацами с заголовками: 145 мс, фрагментов 2317
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > одно слово без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time одно слово без пробелов: 195 мс, фрагментов 2000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены
+chunk-time один абзац слов без точек: 386 мс, фрагментов 2009
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены
+chunk-time один абзац из крошечных предложений: 633 мс, фрагментов 3175
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > точки без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time точки без пробелов: 208 мс, фрагментов 4000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > 100 000 заголовков — < 3 с, инварианты фрагментов соблюдены
+chunk-time 100 000 заголовков: 161 мс, фрагментов 50000
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > PDF: 2 млн символов строками — < 3 с, инварианты фрагментов соблюдены
+chunk-time PDF: 2 млн символов строками: 155 мс, фрагментов 1923
+
+stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > эмодзи без пробелов — < 3 с, инварианты фрагментов соблюдены
+chunk-time эмодзи без пробелов: 173 мс, фрагментов 4000
+
+ ✓ tests/chunk.test.ts (28 tests) 2185ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены  387ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены  634ms
+ ✓ tests/resume.test.ts (3 tests) 698ms
+ ✓ tests/spend.test.ts (8 tests) 57ms
+ ✓ tests/openrouter.test.ts (15 tests) 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > сбой записи фрагментов откатывает страницу: «Повторить» эмбеддит её заново, а не пропускает как известную
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/chunk-embed.integration.test.ts:228:120
+    226|       }, { index_job_id: job.indexJobId, generation });
+    227|       expect(await run(failing, 0)).toBe('failed');
+    228|       expect((await pool.query('SELECT count(*)::int AS n FROM page WH…
+       |                                                                                                                        ^
+    229|       const callsBefore = t.gateway.calls.length;
+    230|       const message = (await retryIndexJob(pool, job.indexJobId, owner…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 68 passed (69)
+   Start at  06:06:06
+   Duration  9.41s (transform 542ms, setup 0ms, collect 931ms, tests 6.92s, environment 1ms, prepare 534ms)
+

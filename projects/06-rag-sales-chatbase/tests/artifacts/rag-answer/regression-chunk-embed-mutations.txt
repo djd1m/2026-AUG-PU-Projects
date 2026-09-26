@@ -1,0 +1,13 @@
+ Container n6-test-db-1 Running 
+ Container n6-test-redis-1 Running 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-test-run-38be7c62fee6 Creating 
+ Container n6-test-test-run-38be7c62fee6 Created 
+bot-filter-removed: дефект возвращён → 2 failed | 67 passed (69) (код 1); код восстановлен → 69 passed (69) (код 0)
+chunks-outside-page-tx: дефект возвращён → 1 failed | 68 passed (69) (код 1); код восстановлен → 69 passed (69) (код 0)
+retry-not-charged: дефект возвращён → 3 failed | 66 passed (69) (код 1); код восстановлен → 69 passed (69) (код 0)
+vector-3072-accepted: дефект возвращён → 4 failed | 65 passed (69) (код 1); код восстановлен → 69 passed (69) (код 0)
+exit=0

@@ -1,0 +1,21 @@
+
+ RUN  v3.2.7 /tmp/n6-rag-answer-mutations-jonNdG
+
+ ✓ tests/bot-isolation.test.ts (6 tests) 373ms
+ ✓ tests/rag-answer.test.ts (33 tests) 433ms
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+hnsw-insert: 2.7 мс на фрагмент (100 случайных векторов)
+
+stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW
+search-exact 5001 фрагментов одного бота: 32 мс
+
+ ✓ tests/chunk-embed.integration.test.ts (15 tests) 3637ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются  342ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки в HNSW  1655ms
+ ✓ tests/validate-model-answer.test.ts (23 tests) 10ms
+
+ Test Files  4 passed (4)
+      Tests  77 passed (77)
+   Start at  06:05:01
+   Duration  6.67s (transform 526ms, setup 0ms, collect 978ms, tests 4.45s, environment 2ms, prepare 432ms)
+

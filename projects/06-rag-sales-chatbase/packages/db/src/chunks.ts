@@ -8,7 +8,7 @@
 // ИНВАРИАНТ ПОИСКА: WHERE c.bot_id = $1 в ТОМ ЖЕ SQL, ДО ORDER BY … LIMIT (не фильтр после LIMIT), и точный
 // перебор внутри бота (A-N6-028): чужой вектор не возвращается, свой — не теряется.
 import type { Pool, PoolClient } from 'pg';
-import { CHUNK_MAX_TOKENS, EMBED_BATCH_MAX, SEARCH_TOP_K, isEmbeddingOfDimension } from '@n6/rag';
+import { CHUNK_MAX_TOKENS, EMBED_BATCH_MAX, SEARCH_TOP_K, isEmbeddingOfDimension, type SearchHit } from '@n6/rag';
 import { isUuid, recordProgressTx, StaleAttemptError, type Lease } from './index-jobs.js';
 import { transaction } from './quota.js';
 
@@ -93,8 +93,9 @@ export async function touchAndChargeJobBudgetTx(tx: PoolClient, lease: Pick<Leas
   return { budgeted: true, granted: Boolean(charged.rowCount) };
 }
 
-export interface ChunkHit {
-  chunkId: string; pageId: string; sourceId: string; urlOrPage: string; pageTitle: string; contextPath: string; text: string; similarity: number;
+// Строка поиска несёт bot_id: ядро ответа (packages/rag/src/search.ts, ownHit) проверяет принадлежность второй линией.
+export interface ChunkHit extends SearchHit {
+  chunkId: string; botId: string; pageId: string; sourceId: string; urlOrPage: string; pageTitle: string; contextPath: string; text: string; similarity: number;
 }
 // Один текст запроса на всё: тест изоляции выполняет EXPLAIN именно его, а не похожего SQL.
 // ТОЧНЫЙ перебор фрагментов ОДНОГО бота (A-N6-028), а не HNSW с фильтром: прогон в образе показал, что путь
@@ -105,7 +106,7 @@ export interface ChunkHit {
 export const SEARCH_CHUNKS_SQL = `WITH own AS MATERIALIZED (
          SELECT c.id, c.embedding <=> $2::vector AS distance FROM chunk c WHERE c.bot_id = $1
        ), nearest AS (SELECT id, distance FROM own ORDER BY distance, id LIMIT $3)
-       SELECT c.id, c.page_id, c.source_id, p.url_or_page, p.title, c.context_path, c.text, n.distance
+       SELECT c.id, c.bot_id, c.page_id, c.source_id, p.url_or_page, p.title, c.context_path, c.text, n.distance
        FROM nearest n JOIN chunk c ON c.id = n.id AND c.bot_id = $1 JOIN page p ON p.id = c.page_id
        ORDER BY n.distance, c.id`;
 // Поиск ближайших фрагментов ОДНОГО бота. Порог min_similarity применяет вызывающий (rag-answer).
@@ -113,8 +114,8 @@ export async function searchChunks(pool: Pool, botId: string, embedding: readonl
   if (!isUuid(botId)) throw new Error('Непригодный bot_id поиска');
   if (!isEmbeddingOfDimension(embedding)) throw new Error('Вектор вопроса не 1536 конечных чисел');
   if (!Number.isSafeInteger(topK) || topK < 1 || topK > 20) throw new Error('Непригодный top_k');
-  const result = await pool.query<{ id: string; page_id: string; source_id: string; url_or_page: string; title: string; context_path: string; text: string; distance: number }>(
+  const result = await pool.query<{ id: string; bot_id: string; page_id: string; source_id: string; url_or_page: string; title: string; context_path: string; text: string; distance: number }>(
     SEARCH_CHUNKS_SQL, [botId, vectorLiteral(embedding), topK]);
-  return result.rows.map((r) => ({ chunkId: r.id, pageId: r.page_id, sourceId: r.source_id, urlOrPage: r.url_or_page, pageTitle: r.title,
+  return result.rows.map((r) => ({ chunkId: r.id, botId: r.bot_id, pageId: r.page_id, sourceId: r.source_id, urlOrPage: r.url_or_page, pageTitle: r.title,
     contextPath: r.context_path, text: r.text, similarity: 1 - Number(r.distance) }));
 }
