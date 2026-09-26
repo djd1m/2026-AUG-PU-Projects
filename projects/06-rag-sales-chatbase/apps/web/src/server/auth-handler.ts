@@ -12,8 +12,10 @@ const inputSchema = z.object({
 }).strict();
 export const COOKIE_NAME = '__Host-n6_session';
 const MAX_BODY_BYTES = 4096;
-function json(body: object, status = 200, cookie?: string): Response {
-  return Response.json(body, { status, headers: { 'Cache-Control': 'no-store', ...(cookie ? { 'Set-Cookie': cookie } : {}) } });
+function json(body: object, status = 200, cookies: string | string[] = []): Response {
+  const headers = new Headers({ 'Cache-Control': 'no-store' });
+  for (const value of typeof cookies === 'string' ? [cookies] : cookies) headers.append('Set-Cookie', value);
+  return Response.json(body, { status, headers });
 }
 const fail = (status: number, code: string, message: string) => json({ error: { code, message } }, status);
 function cookie(token: string, ttl = SESSION_TTL_SECONDS): string {
@@ -28,7 +30,11 @@ export interface HandlerDependencies {
   auth: AuthService;
   publicOrigin: string;
   allowMutation: (ip: string, account?: string) => Promise<boolean>;
+  // ClaimPreview при регистрации и входе (Pseudocode AuthRegisterAndLogin п.5, фича preview-flow): cookie
+  // предпросмотра есть → бот сохраняется в аккаунт. null — сохранять нечего.
+  claimPreview?: (request: Request, sessionToken: string) => Promise<{ status: string; clearCookie: boolean } | null>;
 }
+const CLEAR_PREVIEW_COOKIE = '__Host-n6_preview=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
 export function createAuthHandler(action: 'login' | 'register' | 'logout', deps: HandlerDependencies) {
   return async (request: Request): Promise<Response> => {
     try {
@@ -66,7 +72,16 @@ export function createAuthHandler(action: 'login' | 'register' | 'logout', deps:
       const { email, password } = parsed.data;
       const token = await deps.auth[action](email, password, ipPrefix(ip));
       if (!token) return json(LOGIN_FAILURE, 401);
-      return json({ data: { ok: true } }, 200, cookie(token));
+      const cookies = [cookie(token)];
+      let preview: string | undefined;
+      if (deps.claimPreview) {
+        // Сбой сохранения предпросмотра вход и регистрацию НЕ валит (SC-US-003-2): экран предложит повторить.
+        try {
+          const claimed = await deps.claimPreview(request, token);
+          if (claimed) { preview = claimed.status; if (claimed.clearCookie) cookies.push(CLEAR_PREVIEW_COOKIE); }
+        } catch { preview = 'unavailable'; console.error('Авторизация: предпросмотр не сохранён — вход выполнен без него'); }
+      }
+      return json({ data: { ok: true, ...(preview ? { preview } : {}) } }, 200, cookies);
     } catch (error) {
       console.error('Авторизация: запрос не завершён; вход временно недоступен', error instanceof Error ? error.message : '');
       return fail(503, 'unavailable', 'Вход временно недоступен. Повторите позже');

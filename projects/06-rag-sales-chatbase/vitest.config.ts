@@ -4,11 +4,13 @@ import { configDefaults, defineConfig } from 'vitest/config';
 import path from 'node:path';
 export default defineConfig({
   esbuild: { jsx: 'automatic' },
-  resolve: { alias: {
-    '@n6/rag': path.resolve('packages/rag/src/index.ts'),
-    '@n6/db': path.resolve('packages/db/src/index.ts'),
-    '@n6/queue': path.resolve('packages/queue/src/index.ts'),
-  } },
+  // Массив, а не объект: строковый псевдоним '@n6/rag' съел бы и подпуть '@n6/rag/check-address' (preview-flow).
+  resolve: { alias: [
+    { find: /^@n6\/rag\/check-address$/, replacement: path.resolve('packages/rag/src/check-address.ts') },
+    { find: /^@n6\/rag$/, replacement: path.resolve('packages/rag/src/index.ts') },
+    { find: /^@n6\/db$/, replacement: path.resolve('packages/db/src/index.ts') },
+    { find: /^@n6\/queue$/, replacement: path.resolve('packages/queue/src/index.ts') },
+  ] },
   test: { exclude: [...configDefaults.exclude, 'tests/browser/**'], reporters: ['default', './scripts/test-skip-reporter.ts'], include: ['tests/**/*.test.ts'],
     testTimeout: 20000, hookTimeout: 20000, pool: 'forks', maxWorkers: 2, fileParallelism: false },
 });

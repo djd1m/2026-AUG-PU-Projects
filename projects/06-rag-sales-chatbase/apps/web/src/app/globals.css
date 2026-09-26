@@ -122,6 +122,49 @@ tbody tr:last-child > * { border-bottom:0; }
 .cabinet-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-3); margin-bottom:var(--space-6); }
 .cabinet-head h1 { font-size:clamp(1.75rem,4vw,2.5rem); margin:0; }
 
+/* ── предпросмотр (preview-flow, CJM H «Чтение сайта» → «Предпросмотр на ВАШЕМ сайте») ── */
+.page-title { font-size:clamp(1.75rem,4vw,2.5rem); margin:0; }
+.preview-status { max-width:44rem; }
+.preview-status .url-form { margin-top:0; }
+.danger-notice { border-left-color:var(--danger); }
+.cabinet-notice { margin-bottom:var(--space-6); }
+.progress { height:0.75rem; background:var(--surface-2); border:0.0625rem solid var(--line); border-radius:var(--radius-pill); overflow:hidden; }
+.progress span { display:block; height:100%; background:var(--accent); }
+.preview-head { margin-bottom:var(--space-4); }
+.preview-head .muted { margin:var(--space-2) 0 0; }
+.preview-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--space-4); align-items:start; }
+.chat-window { display:flex; flex-direction:column; gap:var(--space-3); min-width:0; padding:var(--space-4); background:var(--surface); border:0.0625rem solid var(--line); border-radius:var(--radius-large); box-shadow:0 0.75rem 2rem var(--shadow); }
+.chat-title { margin:0; padding-bottom:var(--space-2); border-bottom:0.0625rem solid var(--line); }
+.chat-log { list-style:none; margin:0; padding:0; display:grid; gap:var(--space-3); }
+.chat-question { justify-self:end; max-width:85%; padding:var(--space-2) var(--space-4); background:var(--btn-bg); color:var(--btn-fg); border-radius:var(--radius-card); }
+.chat-answer-group { display:grid; gap:var(--space-2); }
+.chat-answer { padding:var(--space-3) var(--space-4); background:var(--surface-2); border-radius:var(--radius-card); }
+.chat-refused { border-left:0.1875rem solid var(--danger); }
+.chat-refused a { display:inline-flex; align-items:center; min-height:2.75rem; font-weight:600; }
+.source-quote { font-size:0.875rem; color:var(--muted); padding:var(--space-2) var(--space-3); border:0.0625rem solid var(--line); border-radius:var(--radius-control); }
+.source-quote summary strong { color:var(--ink); }
+.source-quote blockquote { margin:var(--space-2) 0; padding-left:var(--space-3); border-left:0.1875rem solid var(--line); color:var(--ink); }
+.source-quote a { display:inline-flex; align-items:center; min-height:2.75rem; }
+.aha { padding:var(--space-4); background:var(--notice-bg); border:0.0625rem solid var(--notice-line); border-radius:var(--radius-card); }
+.aha p { margin:0; }
+.aha .button, .aha button { width:100%; }
+.suggestions { display:grid; gap:var(--space-2); }
+.suggestions button { width:100%; justify-content:flex-start; text-align:left; font-weight:500; }
+.chat-form { display:flex; flex-direction:column; gap:var(--space-2); }
+.chat-form input:not([type=checkbox]):not([type=radio]):not([type=file]) { margin:0; }
+.chat-form button { width:100%; }
+.chat-error { color:var(--danger); margin:0; }
+.chat-foot { margin:0; }
+.powered { display:inline-flex; align-items:center; min-height:2.75rem; font-weight:600; color:var(--ink); }
+.site-mock { min-width:0; padding:var(--space-4); background:var(--surface-2); border:0.0625rem solid var(--line); border-radius:var(--radius-card); }
+.site-mock p { margin:0 0 var(--space-2); }
+.mock-bar { font-size:0.8125rem; color:var(--muted); }
+.mock-title { font-size:0.875rem; color:var(--muted); }
+.mock-h1 { font-size:1.375rem; font-weight:500; letter-spacing:-0.02em; }
+.mock-lines { display:grid; gap:var(--space-2); }
+.mock-lines span { display:block; height:0.5rem; background:var(--line); border-radius:var(--radius-pill); }
+.mock-lines span:last-child { width:60%; }
+
 /* ── брейкпоинты ≈ 400 / 736 / 1112 (FR-LOOK-014); база — телефон, одна колонка ── */
 @media(max-width:22.5rem) { .brand { font-size:1.125rem; } .navigation { font-size:0.875rem; } }
 @media(min-width:25rem) { .auth-card { padding:var(--space-8); } }
@@ -133,6 +176,10 @@ tbody tr:last-child > * { border-bottom:0; }
   .steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .plans { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .card { padding:var(--space-6); }
+  .chat-form { flex-direction:row; }
+  .chat-form button { width:auto; flex:none; }
+  .aha .button, .aha button { width:auto; }
 }
+@media(min-width:69.5rem) { .preview-grid { grid-template-columns:minmax(0,1fr) minmax(0,26rem); } .site-mock { order:-1; min-height:24rem; } }
 @media(min-width:69.5rem) { .steps { grid-template-columns:repeat(4,minmax(0,1fr)); } .section { padding-block:var(--space-16); } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }

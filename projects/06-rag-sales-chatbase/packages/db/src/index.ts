@@ -8,3 +8,4 @@ export * from './index-jobs.js';
 export * from './pdf-sources.js';
 export * from './chunks.js';
 export * from './answers.js';
+export * from './previews.js';

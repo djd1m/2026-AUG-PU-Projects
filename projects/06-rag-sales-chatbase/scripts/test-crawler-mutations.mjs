@@ -27,7 +27,7 @@ const span = (start, end, replacement) => (source) => {
 // Несколько замен в одном файле: каждая обязана сработать (иначе мутация не применена — это отказ, не «зелёное»).
 const all = (...steps) => (source) => steps.reduce((text, step) => (text === null ? null : step(text)), source);
 const once = (from, to) => span(from, from, to);
-const extract = 'apps/worker/src/crawl/extract-text.ts', get = 'apps/worker/src/crawl/safe-get.ts', check = 'apps/worker/src/crawl/check-address.ts', robots = 'apps/worker/src/crawl/robots.ts';
+const extract = 'apps/worker/src/crawl/extract-text.ts', get = 'apps/worker/src/crawl/safe-get.ts', check = 'packages/rag/src/check-address.ts', robots = 'apps/worker/src/crawl/robots.ts';
 const mutations = [
   { id: 'redirect-unchecked', title: 'проверка адреса только у первого запроса: Location перенаправления не проверяется', file: get,
     apply: once('const checked = await checkAddress(url, resolve);',

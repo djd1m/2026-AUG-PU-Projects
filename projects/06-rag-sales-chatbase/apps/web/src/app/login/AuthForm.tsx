@@ -1,5 +1,5 @@
 'use client';
-// из N5: projects/05-podcast-clips-opus/apps/web/src/app/AuthForm.tsx (коммит 90fe80a) — адаптировано: без кода партнёра
+// из N5: projects/05-podcast-clips-opus/apps/web/src/app/AuthForm.tsx (коммит 90fe80a) — адаптировано: итог сохранения предпросмотра (preview-flow), без кода партнёра
 // (фича partner-and-studio) и без tRPC; ответы API N6 — { data } | { error: { code, message } } (foundation, auth-handler).
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,7 @@ export function AuthForm({ initialMode = 'login' }: { initialMode?: 'login' | 'r
         body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) });
       const body: unknown = await response.json().catch(() => null);
       if (!response.ok) throw new Error(errorMessage(body) ?? 'Не удалось войти. Повторите позже');
-      router.push('/dashboard'); router.refresh();
+      router.push(afterLogin(body)); router.refresh();
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Нет связи с сервером'); } finally { setBusy(false); }
   }}><h1>{register ? 'Создать аккаунт' : 'Войти в Суфлёр'}</h1>
     <label>Почта<input id="auth-email" name="email" type="email" autoComplete="email" required /></label>
@@ -23,6 +23,14 @@ export function AuthForm({ initialMode = 'login' }: { initialMode?: 'login' | 'r
     <button type="button" className="text-button" disabled={busy} onClick={() => { setRegister(!register); setError(''); }}>
       {register ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}</button>
     {error && <p role="alert">{error}</p>}</form>;
+}
+// preview-flow: сервер сохранил (или не смог сохранить) бот предпросмотра по cookie — кабинет показывает итог.
+const PREVIEW_OUTCOMES: Readonly<Record<string, string>> = { claimed: '?saved=1', already_claimed: '?saved=1', expired: '?preview=expired',
+  not_found: '?preview=expired', plan_limit: '?preview=plan_limit', unavailable: '?preview=unavailable' };
+function afterLogin(body: unknown): string {
+  const data = typeof body === 'object' && body !== null && 'data' in body ? (body as { data: { preview?: unknown } }).data : null;
+  const outcome = data && typeof data.preview === 'string' ? PREVIEW_OUTCOMES[data.preview] : undefined;
+  return `/dashboard${outcome ?? ''}`;
 }
 // Текст отказа берётся только из закрытой формы ответа; любое другое тело — общий текст, а не сырой JSON.
 function errorMessage(body: unknown): string | null {

@@ -1,6 +1,6 @@
 // ReadIndexJob → GET /api/index-jobs/{index_job_id} (Pseudocode «API Contracts»). Написано заново: у N5
 // состояние видео читалось через tRPC. Форма ответа — { data } | { error } как у auth-handler N6.
-// Доступ: сессия владельца; cookie предпросмотра — фича preview-flow (resolvePreviewBot пока null).
+// Доступ: сессия владельца или cookie предпросмотра (preview-flow: resolvePreviewBot — бот черновика по токену).
 // Чужая и несуществующая задача — ОДИН ответ 404 (канон: «Чужой ресурс — 404»).
 import type { IndexJobAccess, IndexJobView } from '@n6/db';
 import { readSessionCookie } from './auth-handler';

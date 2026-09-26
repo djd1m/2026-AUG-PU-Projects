@@ -172,6 +172,8 @@ export const FIRST_SCREEN_VIEWPORTS = [{ w: 390, h: 844 }, { w: 375, h: 667 }, {
 // «/b/{slug}» → окно чата — добавить с фичей public-page-and-summary.
 export const FIRST_SCREEN_ACTIONS = [
   { pattern: /^\/$/, selector: ['#site-url', '.url-form button[type=submit]'] },
+  // «/preview/{index_job_id}» в состоянии «готово» (preview-flow, момент ценности FR-GROWTH-001): поле вопроса — в первом экране.
+  { pattern: /^\/preview\/[^/]+$/, selector: ['#preview-question'] },
 ];
 export function firstScreenSelector(route) {
   return FIRST_SCREEN_ACTIONS.find(action => action.pattern.test(route))?.selector ?? null;

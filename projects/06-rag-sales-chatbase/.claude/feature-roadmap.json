@@ -433,7 +433,7 @@
       "title": "Предпросмотр до регистрации и сохранение бота",
       "description": "POST /api/preview: CheckAddress → квота [(preview_session, <сессия>:create, 1), (ip_previews, префикс, 1), (global_previews, previews, 1)] → bot draft + source + preview (24 ч) + index_job (page_budget 20, embed_budget 40 000) в одной транзакции → 202 { index_job_id } + HttpOnly-cookie; экран «Читаем сайт: k из ≤ 20» (role=progressbar); макет страницы (title, H1, фавикон — ADR-007); POST /api/preview/{token}/ask — квота [(preview_session, <сессия>:answers, 1), (global_previews, preview_answers, 1)] → AnswerQuestion; развёрнутая цитата владельцу; CTA под первым answered (FR-GROWTH-001); ClaimPreview при регистрации: одноразовый UPDATE … WHERE claimed_at IS NULL AND expires_at > now, чужой → 404, свой повторно → 409, истёкший → «создайте заново». Мутация: создание списывает :answers → тест «создание + 10 ответов» краснеет на 10-м.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "rag-answer",
@@ -514,7 +514,8 @@
         "apps/web/src/app/api/bots/[botId]/origins/route.ts",
         "apps/web/src/app/dashboard/bots/[botId]/install/page.tsx",
         "tests/install-snippet.test.ts"
-      ]
+      ],
+      "carry_over": " | Ревью preview-flow: MEDIUM — конкурентный тест claim (Promise.all: один предпросмотр двумя аккаунтами → ровно один; два предпросмотра одним аккаунтом на пределе плана → ровно один) + мутация без FOR UPDATE; LOW — тест «/ask сразу после claim → 404»; уточнить формулировку A-N6-032(3) про Idempotency-Key."
     },
     {
       "id": "widget-runtime-and-badge",
