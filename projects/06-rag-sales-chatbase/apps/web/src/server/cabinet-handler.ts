@@ -55,8 +55,9 @@ export const botsLimitMessage = (plan: keyof typeof PLAN_NAME, limit: number) =>
   `Предел плана ${PLAN_NAME[plan]}: не больше ${limit} ${limit === 1 ? 'бота' : 'ботов'} на аккаунт. Чтобы добавить ещё, смените план на странице «Тарифы»`;
 
 type Entry = { accountId: string } | Response;
-// Вход мутации кабинета: лимит двери (по аккаунту, если сессия есть) → Origin → сессия.
-async function guardMutation(request: Request, deps: CabinetDependencies, noSession: () => Response): Promise<Entry> {
+// Вход мутации кабинета: лимит двери (по аккаунту, если сессия есть) → Origin → сессия. Экспортирован для маршрутов
+// оплаты и интереса (tariffs-and-interest): один порядок входа на все мутации владельца.
+export async function guardMutation(request: Request, deps: Pick<CabinetDependencies, 'authenticate' | 'allowMutation' | 'publicOrigin'>, noSession: () => Response): Promise<Entry> {
   const token = readSessionCookie(request);
   const session = token ? await deps.authenticate(token) : null;
   if (!await deps.allowMutation(clientIp(request.headers), session?.account_id)) return fail(429, 'limit', 'Слишком много запросов. Повторите через минуту');
@@ -64,7 +65,7 @@ async function guardMutation(request: Request, deps: CabinetDependencies, noSess
   return session ? { accountId: session.account_id } : noSession();
 }
 const unauthorized = () => fail(401, 'unauthorized', 'Войдите, чтобы открыть кабинет');
-async function body(request: Request, keys: readonly string[]): Promise<Record<string, unknown> | Response> {
+export async function body(request: Request, keys: readonly string[]): Promise<Record<string, unknown> | Response> {
   const read = await readJsonBody(request, MAX_BODY_BYTES);
   if (!read.ok) return read.code === 'too_large' ? fail(413, 'too_large', 'Тело запроса слишком велико') : fail(400, 'invalid', 'Ожидается JSON');
   if (!isPlainObject(read.body)) return fail(400, 'invalid', 'Ожидается JSON-объект');

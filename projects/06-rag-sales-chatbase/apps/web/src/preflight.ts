@@ -4,9 +4,12 @@
 import { loadWebConfig } from '@n6/rag';
 import { readEnvironment } from './server/environment';
 import { answerProbe } from './answer-probe';
+import { assertPaymentsEnv } from './server/payments/config';
 
 async function preflight(): Promise<void> {
   const config = loadWebConfig(readEnvironment());
+  // Режим оплаты — ДО пробы модели: пустой/неизвестный режим или live без магазина валят старт с именем переменной.
+  assertPaymentsEnv(readEnvironment());
   await answerProbe(config.models, config.spendLog);
 }
 preflight().catch((error: unknown) => {

@@ -26,5 +26,10 @@ export function readEnvironment() {
     QUOTA_GLOBAL_PREVIEW_ANSWERS: process.env.QUOTA_GLOBAL_PREVIEW_ANSWERS,
     QUOTA_ACCOUNT_EMBED: process.env.QUOTA_ACCOUNT_EMBED,
     QUOTA_GLOBAL_EMBED: process.env.QUOTA_GLOBAL_EMBED,
+    // Оплата (фича tariffs-and-interest, A-N6-040): не задан режим → off; магазин ЮKassa нужен только при live.
+    N6_PAYMENTS_MODE: process.env.N6_PAYMENTS_MODE,
+    YOOKASSA_SHOP_ID: process.env.YOOKASSA_SHOP_ID,
+    YOOKASSA_SECRET_KEY: process.env.YOOKASSA_SECRET_KEY,
+    YOOKASSA_TEST_MODE: process.env.YOOKASSA_TEST_MODE,
   };
 }

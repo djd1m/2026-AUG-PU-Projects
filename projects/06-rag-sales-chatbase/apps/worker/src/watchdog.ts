@@ -5,12 +5,13 @@
 // FOR UPDATE SKIP LOCKED и пачки — из N5; startWatchdog — без изменений. Шаг 5 Pseudocode (152-ФЗ): текст вопроса
 // «не знаю» старше 14 дней и история посетителя старше 30 минут стираются (visitor-ask-and-limits, sweepVisitorText);
 // сессии посетителей без событий и журнала старше суток удаляются (public-page-and-summary, sweepIdleVisitorSessions);
-// стирание аккаунтов — фича account-erasure.
-import { closeFailedTx, sweepIdleVisitorSessions, sweepVisitorText, transaction, type Pool } from '@n6/db';
+// оплаченный план с истёкшим сроком возвращается на free — бейдж снова виден (tariffs-and-interest, expirePaidPlans; план
+// оператора не истекает); стирание аккаунтов — фича account-erasure.
+import { closeFailedTx, expirePaidPlans, sweepIdleVisitorSessions, sweepVisitorText, transaction, type Pool } from '@n6/db';
 import { DRAFT_TTL_MS, JOB_DEADLINE_MS, REDELIVER_QUEUED_AFTER_MS, STALLED_AFTER_MS, WATCHDOG_BATCH, WATCHDOG_INTERVAL_MS,
   type IndexMessage } from '@n6/queue';
 
-export interface WatchdogResult { stalled: number; overdue: number; redelivered: number; draftsDeleted: number; questionTexts: number; histories: number; idleSessions: number }
+export interface WatchdogResult { stalled: number; overdue: number; redelivered: number; draftsDeleted: number; questionTexts: number; histories: number; idleSessions: number; paidPlansExpired: number }
 
 async function closeWhere(pool: Pool, select: string, params: unknown[], now: Date): Promise<number> {
   return transaction(pool, async (tx) => {
@@ -47,7 +48,9 @@ export async function watchdogTick(pool: Pool, enqueue: (message: IndexMessage) 
     const swept = await sweepVisitorText(pool, batch);
     step = 'пустые сессии посетителей';
     const idleSessions = await sweepIdleVisitorSessions(pool, batch);
-    return { stalled, overdue, redelivered, draftsDeleted: drafts.rowCount ?? 0, ...swept, idleSessions };
+    step = 'истёкшие оплаченные планы';
+    const paidPlansExpired = await expirePaidPlans(pool, batch);
+    return { stalled, overdue, redelivered, draftsDeleted: drafts.rowCount ?? 0, ...swept, idleSessions, paidPlansExpired };
   } catch (error) {
     console.error(`Сторож: шаг «${step}» не завершён`);
     throw error;

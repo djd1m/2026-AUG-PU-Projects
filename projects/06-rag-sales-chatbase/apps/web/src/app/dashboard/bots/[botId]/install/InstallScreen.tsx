@@ -9,7 +9,7 @@ import { errorOf, send } from '../../../../../lib/api-client';
 import type { FieldErrors } from '../../../CabinetViews';
 import { InstallView } from '../../../InstallViews';
 
-export function InstallScreen(p: { botId: string; companyName: string; snippet: InstallSnippet; origins: string[] }) {
+export function InstallScreen(p: { botId: string; companyName: string; snippet: InstallSnippet; origins: string[]; plan?: string }) {
   const router = useRouter();
   const [contact, setContact] = useState('');
   const [domain, setDomain] = useState('');

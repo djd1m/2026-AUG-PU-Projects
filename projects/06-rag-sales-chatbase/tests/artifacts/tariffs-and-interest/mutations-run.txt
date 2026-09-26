@@ -1,0 +1,48 @@
+ Network n6-test_default Creating 
+ Network n6-test_default Creating 
+ Network n6-test_default Created 
+ Network n6-test_default Created 
+ Container n6-test-redis-1 Creating 
+ Container n6-test-db-1 Creating 
+ Container n6-test-db-1 Created 
+ Container n6-test-redis-1 Created 
+ Container n6-test-redis-1 Starting 
+ Container n6-test-db-1 Starting 
+ Container n6-test-redis-1 Started 
+ Container n6-test-db-1 Started 
+ Image n6-sufler-test:foundation Building 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-test-run-14202d5f97df Creating 
+ Container n6-test-test-run-14202d5f97df Created 
+event-key-ignored: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+extend-from-now: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+plan-without-rank: дефект возвращён → 2 failed | 26 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+origin-unchecked: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+mismatch-grants-plan: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+fake-in-production: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+extra-plan-writer: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+open-redirect: дефект возвращён → 1 failed | 27 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+unavailable-as-value: дефект возвращён → 2 failed | 26 passed (28) (код 1); код восстановлен → 28 passed (28) (код 0)
+mut exit=0

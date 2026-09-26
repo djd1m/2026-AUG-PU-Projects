@@ -1,0 +1,67 @@
+
+ RUN  v3.2.7 /w
+
+ ✓ tests/browser/billing.test.ts (68 tests) 79326ms
+   ✓ chromium > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1790ms
+   ✓ chromium > pay dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1069ms
+   ✓ chromium > pay-current dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1075ms
+   ✓ chromium > interest dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1081ms
+   ✓ chromium > return-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1190ms
+   ✓ chromium > return-succeeded dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1048ms
+   ✓ chromium > return-failed dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1041ms
+   ✓ chromium > return-unconfirmed dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  989ms
+   ✓ chromium > return-not_found dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1047ms
+   ✓ chromium > pricing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1415ms
+   ✓ chromium > pay light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1031ms
+   ✓ chromium > pay-current light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1003ms
+   ✓ chromium > interest light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1084ms
+   ✓ chromium > return-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  915ms
+   ✓ chromium > return-succeeded light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  932ms
+   ✓ chromium > return-failed light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  910ms
+   ✓ chromium > return-unconfirmed light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  990ms
+   ✓ chromium > return-not_found light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  970ms
+   ✓ chromium > AC-9: пять состояний возврата различимы (data-state и заголовок у каждого свой)  758ms
+   ✓ chromium > AC-2 интерактив: «Оплатить» → POST /api/checkout с планом и ключом → переход на confirmation_url; кнопка гаснет, ключ один на экран  407ms
+   ✓ chromium > payments_off от сервера → экран интереса без перезагрузки; «Сообщите мне» пишет заявку  359ms
+   ✓ chromium > AC-9 интерактив: возврат опрашивает по идентификатору; pending → succeeded показывает «включён» и срок  4231ms
+   ✓ chromium > возврат: платёж отменён → «Оплата не прошла»; чужое намерение (404) → «Оплата не найдена»; сбой опроса — не отказ  4266ms
+   ✓ webkit > pricing dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2295ms
+   ✓ webkit > pay dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1639ms
+   ✓ webkit > pay-current dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1504ms
+   ✓ webkit > interest dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1499ms
+   ✓ webkit > return-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1453ms
+   ✓ webkit > return-succeeded dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1682ms
+   ✓ webkit > return-failed dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1352ms
+   ✓ webkit > return-unconfirmed dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1327ms
+   ✓ webkit > return-not_found dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1742ms
+   ✓ webkit > pricing light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2829ms
+   ✓ webkit > pay light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1888ms
+   ✓ webkit > pay-current light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1793ms
+   ✓ webkit > interest light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1841ms
+   ✓ webkit > return-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1579ms
+   ✓ webkit > return-succeeded light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1479ms
+   ✓ webkit > return-failed light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1559ms
+   ✓ webkit > return-unconfirmed light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1421ms
+   ✓ webkit > return-not_found light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1366ms
+   ✓ webkit > pay 320: без горизонтального скролла, цели ≥ 44  554ms
+   ✓ webkit > interest 320: без горизонтального скролла, цели ≥ 44  552ms
+   ✓ webkit > return-succeeded 320: без горизонтального скролла, цели ≥ 44  546ms
+   ✓ webkit > pay 768: без горизонтального скролла, цели ≥ 44  472ms
+   ✓ webkit > interest 768: без горизонтального скролла, цели ≥ 44  505ms
+   ✓ webkit > return-succeeded 768: без горизонтального скролла, цели ≥ 44  502ms
+   ✓ webkit > pay 1440: без горизонтального скролла, цели ≥ 44  577ms
+   ✓ webkit > interest 1440: без горизонтального скролла, цели ≥ 44  514ms
+   ✓ webkit > return-succeeded 1440: без горизонтального скролла, цели ≥ 44  536ms
+   ✓ webkit > SC-US-011-1: экран интереса — «Оплата скоро — сообщим», ни одного платёжного поля и кнопки оплаты  560ms
+   ✓ webkit > тарифы: «цена предварительная» у каждой платной цены, кнопки ведут на /upgrade  699ms
+   ✓ webkit > AC-9: пять состояний возврата различимы (data-state и заголовок у каждого свой)  2501ms
+   ✓ webkit > AC-2 интерактив: «Оплатить» → POST /api/checkout с планом и ключом → переход на confirmation_url; кнопка гаснет, ключ один на экран  803ms
+   ✓ webkit > payments_off от сервера → экран интереса без перезагрузки; «Сообщите мне» пишет заявку  794ms
+   ✓ webkit > AC-9 интерактив: возврат опрашивает по идентификатору; pending → succeeded показывает «включён» и срок  2455ms
+   ✓ webkit > возврат: платёж отменён → «Оплата не прошла»; чужое намерение (404) → «Оплата не найдена»; сбой опроса — не отказ  2555ms
+
+ Test Files  1 passed (1)
+      Tests  68 passed (68)
+   Start at  19:44:13
+   Duration  80.96s (transform 395ms, setup 0ms, collect 1.16s, tests 79.33s, environment 0ms, prepare 140ms)
+

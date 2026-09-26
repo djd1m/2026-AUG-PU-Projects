@@ -16,6 +16,25 @@ export const PDF_NO_TEXT_SHARE = 0.9;                // ≥ 90 % таких ст
 export const PDFS_BY_PLAN = Object.freeze({ free: 3, nobadge: 10, studio: 10 } as const);
 // Канон §7 «Планы»: ботов на аккаунт (ClaimPreview п.3 — проверка предела плана при сохранении черновика).
 export const BOTS_BY_PLAN = Object.freeze({ free: 1, nobadge: 1, studio: 10 } as const);
+// Канон §7 «Планы»: страниц на бота (бюджет обхода источника). Общая для worker-index (обход) и web (страница тарифов):
+// одно число — одно место (перенесено сюда из apps/worker/src/crawl/limits.ts фичей tariffs-and-interest).
+export const PAGES_BY_PLAN = Object.freeze({ free: 50, nobadge: 300, studio: 300 } as const);
+// Цены платных планов, копейки (канон §7 «Планы», гипотеза A-N6-004; подтверждено владельцем 26.09, A-N6-040).
+// Деньги — целое число копеек ВЕЗДЕ (донор N4 provider.ts); строка «990 ₽» собирается из числа, а не хранится рядом.
+export const PLAN_PRICE_MINOR = Object.freeze({ nobadge: 99_000, studio: 490_000 } as const);
+export type PaidPlan = keyof typeof PLAN_PRICE_MINOR;
+export const PAID_PLANS = ['nobadge', 'studio'] as const satisfies readonly PaidPlan[];
+// Оплата разовая на 30 дней без автопродления (решение владельца 26.09, A-N6-040).
+export const PAID_PLAN_DAYS = 30;
+// Старшинство планов: оплата и оператор выдают СТАРШИЙ из действующего и нового (студия поверх «Без бейджа» — без
+// пересчёта остатка, решение владельца 26.09).
+export const PLAN_RANK = Object.freeze({ free: 0, nobadge: 1, studio: 2 } as const);
+export const isPaidPlan = (value: unknown): value is PaidPlan => value === 'nobadge' || value === 'studio';
+// «990 ₽», «4 900 ₽»: неразрывный пробел между разрядами и перед знаком рубля.
+export function formatRubles(minor: number): string {
+  if (!Number.isSafeInteger(minor) || minor < 0 || minor % 100 !== 0) throw new Error('Цена плана обязана быть целым числом рублей в копейках');
+  return `${String(minor / 100).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')}\u00a0₽`;
+}
 // Предпросмотр (канон §7, FR-PREVIEW-001): живёт 24 ч до сохранения; cookie — на тот же срок.
 export const PREVIEW_TTL_HOURS = 24;
 const PDF_MAGIC = [0x25, 0x50, 0x44, 0x46, 0x2d];    // «%PDF-»: тип по первым байтам, не по расширению

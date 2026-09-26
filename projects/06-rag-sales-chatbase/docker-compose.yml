@@ -76,6 +76,13 @@ services:
     environment:
       <<: [*app-env, *model-env, *quota-env]
       SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан — openssl rand -hex 32}
+      # Оплата ЮKassa (tariffs-and-interest, A-N6-040): не задан режим → off (экран интереса, денег не принимаем) — самое
+      # строгое, а не «примем». live без магазина, пустой или неизвестный режим — отказ старта в preflight web с именем
+      # переменной. Секрет магазина — только web (secrets-management).
+      N6_PAYMENTS_MODE: ${N6_PAYMENTS_MODE:-off}
+      YOOKASSA_SHOP_ID: ${YOOKASSA_SHOP_ID:-}
+      YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY:-}
+      YOOKASSA_TEST_MODE: ${YOOKASSA_TEST_MODE:-}
     # порта на хосте НЕТ: единственная дверь — proxy
     volumes:
       - uploads:/work/uploads

@@ -72,12 +72,15 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 Сущности (логическая модель — Pseudocode, физическая — Architecture): `account`, `session`,
 `bot`, `allowed_origin`, `source`, `page`, `chunk`, `index_job`, `job_attempt`, `preview`,
 `visitor_session`, `question_log`, `widget_install`, `quota_counter`, `growth_event`,
-`partner_code`, `attribution`, `studio_invite`, `pro_interest`.
+`partner_code`, `attribution`, `studio_invite`, `pro_interest`; с 26.09 (живая оплата ЮKassa, решение владельца,
+A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`, `payment`, `operator_action`. Итого **23**.
 
 | Поле | Значения (закрыто) | Чтение неизвестного значения |
 |---|---|---|
 | `account.plan` | `free` · `nobadge` · `studio` | `free` (бейдж обязателен) |
 | `account.status` | `active` · `erasing` · `deleted` | `deleted` (доступа нет) |
+| `account.plan_source` | `none` · `payment` · `operator` | истекает ТОЛЬКО `payment` (A-N6-040) |
+| `payment_intent.status` | `created` · `succeeded` · `canceled` | «выполняется» на экране возврата |
 | `bot.status` | `draft` · `active` · `deleted` | `deleted` (виджет не отвечает) |
 | `source.kind` | `site` · `pdf` | отказ |
 | `source.status` | `pending` · `indexing` · `ready` · `failed` | `failed` |
@@ -97,7 +100,8 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 `POST /api/sources/{source_id}/reindex`, `GET /api/index-jobs/{index_job_id}`,
 `POST /api/bots/{bot_id}/origins`, `GET /api/bots/{bot_id}/summary`,
 `POST /api/bots/{bot_id}/publish`, `POST /api/studio/invites`, `POST /api/invites/{token}/accept`,
-`POST /api/interest`.
+`POST /api/interest`, `POST /api/checkout`, `GET /api/checkout/{intent_id}` (A-N6-040).
+Оплата (без cookie, ЕДИНСТВЕННЫЙ вебхук): `POST /api/webhooks/yookassa`.
 Предпросмотр (без входа): `POST /api/preview`, `GET /api/preview/{preview_token}`,
 `POST /api/preview/{preview_token}/ask`, `POST /api/preview/{preview_token}/claim`.
 Виджет (чужой origin): `GET /w/v1/config?bot={public_key}`, `POST /w/v1/ask`,

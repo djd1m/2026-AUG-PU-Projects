@@ -25,7 +25,7 @@ const ARTIFACTS = 'tests/artifacts/design-shell/browser';
 const PAGES: Record<string, (theme: Theme) => ReactElement> = {
   landing: theme => createElement(Landing, { theme }),
   'landing-arrival': theme => createElement(Landing, { theme, arrival: 'Бот как на stomatologia-ulybka-na-arbate.ru — для вашего сайта' }),
-  pricing: theme => createElement(Pricing, { theme }),
+  pricing: theme => createElement(Pricing, { theme, answers: { free: { day: 50, month: 300 }, paid: { day: 300, month: 3000 } } }),
   login: theme => createElement(Fragment, null, createElement(SiteHeader, { theme }),
     createElement('main', { className: 'center container' }, createElement(AuthForm, {}))),
   cabinet: theme => createElement(Fragment, null, createElement(SiteHeader, { theme, home: '/dashboard' }, createElement(LogoutButton)),

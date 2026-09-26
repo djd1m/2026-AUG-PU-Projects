@@ -1,7 +1,7 @@
 // Закрытость перечислений держит БД: CHECK миграции обязан совпадать с единственным источником в коде
 // (coding-style «SQL»). Образец идеи — N5 tests/enums.test.ts.
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import * as enums from '../packages/rag/src/enums';
 
 const sql = readFileSync('packages/db/migrations/001_init.sql', 'utf8');
@@ -32,11 +32,12 @@ describe('CHECK миграции = перечисления канона §4', (
     if (!check) throw new Error('CHECK статуса job_attempt не найден — проверка НЕ ВЫПОЛНЕНА');
     expect([...check.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.JOB_ATTEMPT_STATUS]);
   });
-  it('ровно 19 сущностей канона и 10 scope', () => {
-    const tables = [...sql.matchAll(/^CREATE TABLE (\w+)/gm)].map((m) => m[1]);
+  it('ровно 23 сущности канона §4 по ВСЕМ миграциям (19 + 4 оплаты, A-N6-040) и 10 scope', () => {
+    const all = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort().map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
+    const tables = [...all.matchAll(/^CREATE TABLE (\w+)/gm)].map((m) => m[1]);
     expect(tables.sort()).toEqual(['account', 'allowed_origin', 'attribution', 'bot', 'chunk', 'growth_event', 'index_job', 'job_attempt',
-      'page', 'partner_code', 'preview', 'pro_interest', 'question_log', 'quota_counter', 'session', 'source', 'studio_invite',
-      'visitor_session', 'widget_install']);
+      'operator_action', 'page', 'partner_code', 'payment', 'payment_event', 'payment_intent', 'preview', 'pro_interest', 'question_log',
+      'quota_counter', 'session', 'source', 'studio_invite', 'visitor_session', 'widget_install']);
     expect(enums.QUOTA_SCOPE).toHaveLength(10);
   });
 });

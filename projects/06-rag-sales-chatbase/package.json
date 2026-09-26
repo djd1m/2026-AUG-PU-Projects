@@ -8,7 +8,8 @@
     "typecheck": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run typecheck --workspaces --if-present && tsc --noEmit -p tests/tsconfig.json",
     "lint": "node scripts/lint.mjs",
     "test": "node scripts/test.mjs",
-    "db:migrate": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && node packages/db/dist/migrate.js"
+    "db:migrate": "npm run build --workspace=packages/rag && npm run build --workspace=packages/db && node packages/db/dist/migrate.js",
+    "ops:set-plan": "node packages/db/dist/ops-set-plan.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2", "@types/node": "^22.0.0", "@types/pg": "^8.11.0",

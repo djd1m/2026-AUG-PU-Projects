@@ -102,6 +102,11 @@ em { font-style:normal; }
 .plan h2 { font-size:1.375rem; margin:0; }
 .plan .price { font-size:2rem; font-weight:500; letter-spacing:-0.02em; margin:0; }
 .plan .price small { font-size:1rem; color:var(--muted); font-weight:400; }
+.plan .price-note { margin:0; font-size:0.875rem; color:var(--muted); }
+/* оформление и возврат с формы оплаты (tariffs-and-interest): одна колонка ≤ 32rem, состояния — разные блоки */
+.upgrade { width:100%; max-width:32rem; }
+.upgrade .price { font-size:2rem; font-weight:500; margin:0; }
+.upgrade .button { width:100%; }
 .plan ul { margin:0; padding-left:var(--space-5); display:grid; gap:var(--space-1); }
 .plan .button { margin-top:auto; width:100%; }
 .plan.featured { border-color:var(--ink); border-width:0.125rem; }

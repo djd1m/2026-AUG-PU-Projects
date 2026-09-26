@@ -13,5 +13,5 @@ export default async function InstallPage({ params }: { params: Promise<{ botId:
   const bot = accountId ? await readBotCabinet(pool, (await params).botId, accountId) : null;
   if (!bot) notFound();
   const snippet = installSnippet({ contact: bot.contact, publicKey: bot.public_key, publicOrigin: config.publicOrigin, bundleFile: await readWidgetBundleFile() });
-  return <InstallScreen botId={bot.bot_id} companyName={bot.company_name} snippet={snippet} origins={bot.origins} />;
+  return <InstallScreen botId={bot.bot_id} companyName={bot.company_name} snippet={snippet} origins={bot.origins} plan={bot.plan} />;
 }

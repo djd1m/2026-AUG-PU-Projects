@@ -6,6 +6,8 @@ import type { InstallSnippet } from '@n6/rag/bot-settings';
 import { Field, type FieldErrors } from './CabinetViews';
 
 export interface InstallViewProps {
+  // План владельца (tariffs-and-interest): на free — строка «Убрать бейдж» → /upgrade?plan=nobadge. Нет — строки нет.
+  plan?: string;
   botId: string; companyName: string; snippet: InstallSnippet; origins: string[];
   contact: string; domain: string; errors: FieldErrors; busy: boolean; copied: boolean;
   onContact: (value: string) => void; onSaveContact: () => void; onDomain: (value: string) => void; onAddDomain: () => void; onCopy: () => void;
@@ -75,6 +77,7 @@ export function InstallView(p: InstallViewProps) {
       <details className="howto"><summary>Tilda</summary><p>Настройки сайта → Ещё → «HTML-код для вставки внутрь body» → вставьте строку и опубликуйте все страницы.</p></details>
       <details className="howto"><summary>WordPress</summary><p>Внешний вид → Редактор тем → footer.php, перед <code>&lt;/body&gt;</code>; или плагин вставки кода в подвал.</p></details>
       <details className="howto"><summary>Обычный HTML</summary><p>Добавьте строку в шаблон перед <code>&lt;/body&gt;</code>. Атрибут <code>async</code> не задерживает загрузку страницы.</p></details>
+      {p.plan === 'free' && <p className="notice badge-upsell">На бесплатном плане рядом с чатом видна подпись «Работает на Суфлёре». <a href="/upgrade?plan=nobadge">Убрать бейдж</a></p>}
     </section>
     <Domains {...p} />
     <Directives directives={p.snippet.directives} /></>;

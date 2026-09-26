@@ -7,7 +7,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { THEME_COLOR, themeCookie, themeFromCookie } from '../apps/web/src/lib/theme';
 import { ThemeToggle } from '../apps/web/src/app/ThemeToggle';
 import { Landing } from '../apps/web/src/app/Landing';
-import { Pricing, PLANS } from '../apps/web/src/app/pricing/Pricing';
+import { Pricing, plansFor } from '../apps/web/src/app/pricing/Pricing';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: () => {}, refresh: () => {} }) }));
 
 describe('themeFromCookie — тёмная, кроме ровно одной пары n6_theme=light (fail-closed)', () => {
@@ -93,9 +93,16 @@ describe('каркас design-shell — разметка', () => {
     expect(landing).toContain('Суфлёр');
   });
   it('тарифы: три плана канона, видимая строка снятия бейджа у «Без бейджа», FAQ «что считается ответом» (FR-TARIFF-002)', () => {
-    const html = renderToStaticMarkup(createElement(Pricing, { theme: 'light' }));
-    expect(PLANS.map(p => p.id)).toEqual(['free', 'nobadge', 'studio']);
-    expect(PLANS.map(p => p.price)).toEqual(['0 ₽', '990 ₽', '4 900 ₽']);
+    const answers = { free: { day: 50, month: 300 }, paid: { day: 300, month: 3000 } };
+    const html = renderToStaticMarkup(createElement(Pricing, { theme: 'light', answers }));
+    const plans = plansFor(answers);
+    expect(plans.map(p => p.id)).toEqual(['free', 'nobadge', 'studio']);
+    // Цены — из PLAN_PRICE_MINOR (копейки), разряды и знак рубля — через неразрывный пробел.
+    expect(plans.map(p => p.price)).toEqual(['0\u00a0₽', '990\u00a0₽', '4\u00a0900\u00a0₽']);
+    // tariffs-and-interest AC-13 + перенос ревью design-shell: «цена предварительная» у КАЖДОЙ платной цены.
+    expect(html.match(/class="price-note"/g)).toHaveLength(2);
+    expect(html).toContain('href="/upgrade?plan=nobadge"');
+    expect(html).toContain('href="/upgrade?plan=studio"');
     const nobadge = html.slice(html.indexOf('id="plan-nobadge"'), html.indexOf('id="plan-studio"'));
     expect(nobadge).toContain('class="badge-row"');
     expect(nobadge).toContain('Работает на Суфлёре');
