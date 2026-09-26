@@ -170,7 +170,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
   }));
   it('A-N6-052: усечённый бюджетом источник — «сделано» с пометкой «Прочитано N…», у сайта подсказка «Обновить дочитает», у PDF нет; у обычного готового пометки нет', () => open('bot-truncated', 'dark', { width: 390, height: 844 }, async page => {
     const items = page.locator('li.source-item');
-    expect(await items.nth(0).locator('.truncation-notice').textContent()).toBe('Прочитано 21 страница: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному. «Обновить» дочитает остальное — прочитанные страницы заново не оплачиваются.');
+    expect(await items.nth(0).locator('.truncation-notice').textContent()).toBe('Прочитано 21 страница: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному. «Обновить» продолжит чтение в пределах страниц тарифа — прочитанные страницы заново не оплачиваются.');
     expect(await items.nth(1).locator('.truncation-notice').textContent()).toBe('Прочитано 12 стр. PDF: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному.');
     expect(await items.nth(2).locator('.truncation-notice').count()).toBe(0);
     expect(await items.nth(0).locator('.truncation-notice').getAttribute('role')).toBe('status');

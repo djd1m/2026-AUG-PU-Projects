@@ -118,7 +118,7 @@ export function SourceList(p: SourceListProps) {
       {state === 'no_response' && <p role="status" className="notice">Больше 5 минут не было новостей от задачи — это не «ещё читаем». Сторож закроет её с причиной, если она остановилась.</p>}
       {failed && <p className="notice danger-notice"><span role="alert">{cabinetReason(s.job?.reason)}.</span></p>}
       {failed && s.kind === 'pdf' && <p className="muted">Файл после отказа удалён — загрузите исправленный PDF ниже.</p>}
-      {state === 'done' && s.job?.truncated && <p role="status" className="notice truncation-notice">Прочитано {s.job.pages_done} {s.kind === 'pdf' ? 'стр. PDF' : pagesWord(s.job.pages_done)}: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному.{s.kind === 'site' ? ' «Обновить» дочитает остальное — прочитанные страницы заново не оплачиваются.' : ''}</p>}
+      {state === 'done' && s.job?.truncated && <p role="status" className="notice truncation-notice">Прочитано {s.job.pages_done} {s.kind === 'pdf' ? 'стр. PDF' : pagesWord(s.job.pages_done)}: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному.{s.kind === 'site' ? ' «Обновить» продолжит чтение в пределах страниц тарифа — прочитанные страницы заново не оплачиваются.' : ''}</p>}
       {truncated > 0 && <p className="muted">{truncated === 1 ? '1 страница прочитана' : `${truncated} страниц прочитаны`} не целиком: на странице больше текста, чем бот берёт с одной страницы.</p>}
       {p.confirming === s.source_id
         ? <div className="stack notice danger-notice" role="group" aria-label={`Удаление источника ${s.title}`}>

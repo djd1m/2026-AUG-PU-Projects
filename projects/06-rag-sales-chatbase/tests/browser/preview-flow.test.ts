@@ -121,7 +121,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
   it('A-N6-052: усечённый предпросмотр — готово с пометкой «Прочитано 10 страниц…», чат доступен; не прогресс и не отказ', () => open('truncated', 'dark', { width: 390, height: 844 }, false, async page => {
     const notice = page.locator('.truncation-notice');
     expect(await notice.getAttribute('role')).toBe('status');
-    expect(await notice.textContent()).toBe('Прочитано 10 страниц — дальше закончился бюджет предпросмотра. Бот отвечает по прочитанному; после регистрации — весь сайт.');
+    expect(await notice.textContent()).toBe('Прочитано 10 страниц — дальше закончился бюджет предпросмотра. Бот отвечает по прочитанному; сохраните бота, чтобы дочитать сайт в пределах тарифа.');
     expect(await page.locator('#preview-question').isEnabled()).toBe(true);
     expect(await page.locator('[role=progressbar]').count()).toBe(0);
     expect(await page.locator('[role=alert]').count()).toBe(0);

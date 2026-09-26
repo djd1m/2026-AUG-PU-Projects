@@ -78,8 +78,9 @@ export function createPdfProcessor(options: PdfProcessorOptions): SourceProcesso
         try {
           vectors = await options.embedder.embed(lease, chunks);
         } catch (error) {
-          // Собственный бюджет серии исчерпан (A-N6-052): разбор останавливается, лист не пишется, прочитанные листы
-          // остаются — done с пометкой. Ни одного прочитанного листа — отказ quota_refused, а не пустой done.
+          // Собственный бюджет исчерпан (A-N6-052): останавливается ИНДЕКСАЦИЯ листов (разбор документа к этому моменту уже
+          // выполнен целиком — дочерний процесс с пределами 30 с и 100 листов), лист не пишется, записанные листы
+          // остаются — done с пометкой. Ни одного записанного листа — отказ quota_refused, а не пустой done.
           if (!(error instanceof EmbedBudgetExhausted)) throw error;
           if (read + unchanged === 0) return fail(lease, 'pdf_budget_before_first_page', 'quota_refused');
           truncated = error.truncation;
