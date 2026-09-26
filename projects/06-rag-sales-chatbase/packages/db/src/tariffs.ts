@@ -37,7 +37,7 @@ export function setPlanByOperator(pool: Pool, input: { email: string; plan: stri
   if (reason.length < 3 || reason.length > 500) return Promise.resolve({ kind: 'invalid', field: 'reason' });
   const plan = input.plan;
   return transaction(pool, async (tx) => {
-    const account = (await tx.query<{ id: string; plan: string }>(`SELECT id, plan FROM account WHERE email = lower(btrim($1)) AND status = 'active' FOR UPDATE`,
+    const account = (await tx.query<{ id: string; plan: string }>(`SELECT id, plan FROM account WHERE email = lower(btrim($1)) AND status = 'active' FOR NO KEY UPDATE`,
       [input.email])).rows[0];
     if (!account) return { kind: 'not_found' } as const;
     // Снятие плана (free) стирает и оплаченный остаток: иначе следующая оплата продлила бы срок, снятый после возврата

@@ -33,11 +33,11 @@ describe.skipIf(!databaseUrl)('PostgreSQL + pgvector: миграции, огра
     return (await pool.query('INSERT INTO bot(account_id,status,public_key,company_name) VALUES ($1,$2,$3,$4) RETURNING id',
       [account, status, randomBytes(16).toString('base64url').slice(0, 22), 'Компания'])).rows[0].id as string;
   }
-  it('миграция идемпотентна; 23 сущности канона §4 (19 + 4 оплаты, миграция 006); у quota_counter нет колонки предела', async () => {
+  it('миграция идемпотентна; 27 сущностей канона §4 (19 + 4 оплаты, миграция 006 + 4 партнёрки, миграция 007); у quota_counter нет колонки предела', async () => {
     // Служебные журналы — не сущности канона: _schema_migration и index_start (журнал запусков индексации для суточного
     // предела, source-lifecycle, A-N6-050). Список служебных — закрытый, любая новая таблица сдвинет счёт и уронит тест.
     const result = await pool.query('SELECT tablename FROM pg_tables WHERE schemaname = $1 AND tablename <> ALL($2::text[])', [schema, ['_schema_migration', 'index_start']]);
-    expect(result.rowCount).toBe(23);
+    expect(result.rowCount).toBe(27);
     expect((await pool.query("SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = 'index_start'", [schema])).rowCount).toBe(1);
     const columns = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_schema=$1 AND table_name='quota_counter'", [schema]);
     expect(columns.rows.map((r: { column_name: string }) => r.column_name)).not.toContain('limit');

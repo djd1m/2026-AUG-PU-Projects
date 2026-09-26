@@ -10,9 +10,12 @@ export const SESSION_TTL_SECONDS = SESSION_TTL_DAYS * 24 * 60 * 60;
 export const LOGIN_FAILURE = { error: { code: 'invalid', message: 'Неверная почта или пароль' } } as const;
 export interface AccountCredentials { id: string; password_hash: string; status: unknown }
 export interface SessionInput { hash: string; ipPrefix: string; expiresAt: Date }
+// Код партнёра при регистрации (partner-and-studio): explicit — из поля формы, cookie — из подписанной cookie /r/{code}.
+export interface PartnerInput { explicit: string | null; cookie: string | null }
 export interface AuthStore {
   findAccount(email: string): Promise<AccountCredentials | null>;
-  register(email: string, passwordHash: string, session: SessionInput): Promise<void>;
+  // 'invalid_code' — явный код неверен или заморожен: аккаунт НЕ создан (FR-PARTNER-001); иначе — успех.
+  register(email: string, passwordHash: string, session: SessionInput, partner?: PartnerInput): Promise<void | 'ok' | 'invalid_code'>;
   createSession(account: AccountCredentials, session: SessionInput): Promise<boolean>;
   revoke(hash: string): Promise<void>;
   findSession(hash: string): Promise<{ account_id: string } | null>;
@@ -26,11 +29,17 @@ export class AuthService {
       expiresAt: new Date(Date.now() + SESSION_TTL_SECONDS * 1000) } };
   }
   async register(email: string, password: string, ipPrefix: string): Promise<string> {
+    const token = await this.registerWithCode(email, password, ipPrefix);
+    if (token === null) throw new Error('Регистрация без кода партнёра не может отклонить код');
+    return token;
+  }
+  // Регистрация с кодом партнёра (partner-and-studio): null — явный код неверен или заморожен (ошибка поля, аккаунт не создан).
+  async registerWithCode(email: string, password: string, ipPrefix: string, partner?: PartnerInput): Promise<string | null> {
     const passwordHash = await bcrypt.hash(password, BCRYPT_COST);
     const session = this.session(ipPrefix);
     // Хэш готов ДО короткой атомарной записи. Для занятого адреса cookie — случайная пустышка.
-    await this.store.register(email, passwordHash, session.record);
-    return session.token;
+    const result = await this.store.register(email, passwordHash, session.record, partner);
+    return result === 'invalid_code' ? null : session.token;
   }
   async login(email: string, password: string, ipPrefix: string): Promise<string | null> {
     const account = await this.store.findAccount(email); // pool.query отпускает соединение до bcrypt.

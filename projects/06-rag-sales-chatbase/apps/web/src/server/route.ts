@@ -6,6 +6,7 @@ import { allowMutation } from './rate-limit';
 import { claimPreview, recordArrival } from '@n6/db';
 import { createRegistrationClaim } from './preview-handler';
 import { readArrivalCookie } from '../lib/arrival';
+import { readReferral } from '../lib/partner-referral';
 
 // Приход: аккаунт — ТОЛЬКО из только что выданной сессии, значение — из cookie прихода, проверенное по закрытой форме.
 export function createArrivalRecorder(deps: { authenticate: (token: string) => Promise<{ account_id: string } | null>;
@@ -28,6 +29,7 @@ export function authRoute(action: 'login' | 'register' | 'logout') {
       record: (accountId, from) => recordArrival(runtime.pool, accountId, from) }) : undefined;
     return createAuthHandler(action, { auth: runtime.auth, publicOrigin: runtime.config.publicOrigin,
       allowMutation: (ip, account) => allowMutation(runtime.redis, ip, runtime.config.sessionSecret, account), claimPreview: claim,
-      recordArrival: arrival })(request);
+      recordArrival: arrival,
+      referralCode: action === 'register' ? (req) => readReferral(req.headers.get('cookie'), runtime.config.sessionSecret) : undefined })(request);
   };
 }

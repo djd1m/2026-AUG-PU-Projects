@@ -1,6 +1,7 @@
 // из N5: projects/05-podcast-clips-opus/apps/web/src/server/auth-store.ts — колонка session.token_hash (Pseudocode), префикс /24 или /48
 import type { Pool } from 'pg';
-import type { AccountCredentials, AuthStore, SessionInput } from './auth';
+import { registerAccount } from '@n6/db';
+import type { AccountCredentials, AuthStore, PartnerInput, SessionInput } from './auth';
 
 export class PgAuthStore implements AuthStore {
   constructor(private readonly pool: Pool) {}
@@ -9,14 +10,10 @@ export class PgAuthStore implements AuthStore {
       'SELECT id, password_hash, status FROM account WHERE email = $1', [email]);
     return result.rows[0] ?? null;
   }
-  async register(email: string, passwordHash: string, session: SessionInput): Promise<void> {
-    // Один оператор атомарно создаёт аккаунт и сессию; конфликт email не входит в существующий аккаунт.
-    await this.pool.query(`WITH registered AS (
-      INSERT INTO account (email, password_hash, plan, status) VALUES ($1, $2, 'free', 'active')
-      ON CONFLICT (email) DO NOTHING RETURNING id
-    ) INSERT INTO session (account_id, token_hash, ip_prefix, expires_at)
-      SELECT id, $3, $4::cidr, $5 FROM registered`,
-    [email, passwordHash, session.hash, session.ipPrefix, session.expiresAt]);
+  // Одна транзакция: аккаунт → сессия → ApplyPartnerCode (partner-and-studio, packages/db/src/partners.ts). Конфликт email
+  // не входит в существующий аккаунт и не выдаёт его занятость; явный неверный код — 'invalid_code', аккаунта нет.
+  async register(email: string, passwordHash: string, session: SessionInput, partner?: PartnerInput): Promise<'ok' | 'invalid_code'> {
+    return registerAccount(this.pool, { email, passwordHash, session, partner });
   }
   async createSession(account: AccountCredentials, session: SessionInput): Promise<boolean> {
     // Повторная проверка под блокировкой сериализуется с началом удаления аккаунта.

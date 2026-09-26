@@ -755,7 +755,7 @@
       "title": "Коды партнёров, анти-фрод, кабинет студии и перенос бота клиенту",
       "description": "ApplyPartnerCode: /r/{code} ставит HMAC-подписанную cookie на 30 дней, поле кода при регистрации, приглашение студии — третий источник; сила invite > code > cookie; атрибуция pending до назначения плана; анти-фрод — всплеск регистраций по коду замораживает код с записью в аудит; seeding-коды групп seed-net / seed-studio-<имя> / seed-dogfood (partner_code.group); StudioInvite: одноразовая ссылка на 7 дней (хэш токена), принятие → клиент владелец бота, студия видит сводку только для чтения, атрибуция invite; 410 для истёкшего.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "tariffs-and-interest"
@@ -810,7 +810,8 @@
         "apps/web/src/app/api/invites/[token]/accept/route.ts",
         "tests/attribution.test.ts"
       ],
-      "carry_over": " | bot-cabinet (A-N6-033 (6)): предел ботов плана считает и bot.studio_account_id (lockAccountBots) — перенос бота клиенту обязан проверять предел клиента под той же блокировкой."
+      "carry_over": " | bot-cabinet (A-N6-033 (6)): предел ботов плана считает и bot.studio_account_id (lockAccountBots) — перенос бота клиенту обязан проверять предел клиента под той же блокировкой.",
+      "completion": "docs/features/partner-and-studio/05_completion.md"
     },
     {
       "id": "source-lifecycle",
