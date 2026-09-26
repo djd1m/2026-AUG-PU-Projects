@@ -165,12 +165,19 @@ export function lintCSS(source, filename) {
 }
 
 export const FIRST_SCREEN_VIEWPORTS = [{ w: 390, h: 844 }, { w: 375, h: 667 }, { w: 360, h: 740 }];
+// selector: string | string[] — каждый элемент проверяется ОТДЕЛЬНО (своя находка R9 на каждый).
+// «/» (фича 28): основное действие «Попробовать бесплатно» И демо-клип — оба в первом экране.
 export const FIRST_SCREEN_ACTIONS = [
-  { pattern: /^\/$/, selector: 'form.auth-card button:not([type=button])' },
+  { pattern: /^\/$/, selector: ['.landing-cta', '.landing-demo video'] },
   { pattern: /^\/c\/[\w-]+$/, selector: '.cta' },
 ];
 export function firstScreenSelector(route) {
   return FIRST_SCREEN_ACTIONS.find(action => action.pattern.test(route))?.selector ?? null;
+}
+/** Все селекторы R9 маршрута списком; [] — маршрут без проверки первого экрана. */
+export function firstScreenSelectors(route) {
+  const selector = firstScreenSelector(route);
+  return selector === null ? [] : Array.isArray(selector) ? [...selector] : [selector];
 }
 // Run immediately after navigation/preconditions, before anything can scroll the page.
 export async function firstScreenRule(page, selector) {

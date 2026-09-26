@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
@@ -6,6 +6,17 @@ import { resolve } from 'node:path';
 import { domRules, axeRule, textZoomRule, firstScreenRule } from '../../scripts/responsive/rules.mjs';
 import { preflight } from '../../scripts/responsive/input.mjs';
 import { chromium, webkit, type Browser, type Page } from 'playwright';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { firstScreenSelectors } from '../../scripts/responsive/rules.mjs';
+import { Landing } from '../../apps/web/src/app/Landing';
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: () => {}, refresh: () => {} }) }));
+// Фича 28: НАСТОЯЩАЯ разметка лендинга (компонент Landing из page.tsx) с НАСТОЯЩИМ globals.css, в обеих темах.
+const landing = (theme: 'dark' | 'light') => `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>КлипМейкер</title>
+<style>${readFileSync('apps/web/src/app/globals.css', 'utf8')}</style></head><body>${renderToStaticMarkup(createElement(Landing, { theme }))}</body></html>`;
+const LANDING_ARTIFACTS = 'tests/artifacts/landing-demo/browser';
 let server: Server;
 let base: string;
 beforeAll(async () => {
@@ -14,6 +25,8 @@ beforeAll(async () => {
   catch (error) { throw new Error(`НЕ ВЫПОЛНЕНО: ${String(error)}`); }
   server = createServer(async (req, res) => {
     const name = (req.url ?? '').slice(1);
+    const theme = /^landing-(dark|light)\.html$/.exec(name)?.[1] as 'dark' | 'light' | undefined;
+    if (theme) { res.setHeader('content-type', 'text/html; charset=utf-8'); res.end(landing(theme)); return; }
     if (!/^[a-z0-9-]+\.html$/.test(name)) { res.writeHead(404).end(); return; }
     try { res.setHeader('content-type', 'text/html; charset=utf-8'); res.end(await readFile(resolve('tests/fixtures/responsive', name))); }
     catch { res.writeHead(404).end(); }
@@ -72,6 +85,48 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) describe(name
       expect((await domRules(page, ['R1', 'R2', 'R5'])).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
       expect((await axeRule(page)).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
     }));
+  }
+  // Фича 28 landing-demo: на телефоне в первом экране ОБА — демо-клип и «Попробовать бесплатно» (R9 на каждый селектор).
+  for (const theme of ['dark', 'light'] as const) {
+    for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }, { width: 360, height: 740 }]) {
+      it(`R9 / landing-${theme} ${viewport.width}x${viewport.height}: демо и действие в первом экране`, () => fixture(`landing-${theme}`, async page => {
+        const selectors = firstScreenSelectors('/');
+        expect(selectors).toEqual(['.landing-cta', '.landing-demo video']);
+        // Все селекторы до утверждения: красное называет КАЖДЫЙ ушедший за сгиб элемент, а не первый.
+        const findings: { selector: string; message: string }[] = [];
+        for (const selector of selectors) findings.push(...await firstScreenRule(page, selector));
+        const lost = findings.map(f => `${f.selector}: ${f.message}`);
+        expect(lost, `R9 за сгибом: ${JSON.stringify(lost)}`).toEqual([]);
+        const geometry = await page.evaluate(() => {
+          const box = (selector: string) => { const r = document.querySelector(selector)!.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; };
+          return { h1: box('.landing h1'), video: box('.landing-demo video'), caption: box('.landing-demo figcaption'), cta: box('.landing-cta'), innerHeight };
+        });
+        // Постер 9:16 ЦЕЛИКОМ (решение фичи 28), а не половина.
+        expect(geometry.video.bottom).toBeLessThanOrEqual(viewport.height);
+        expect(Math.abs(geometry.video.height - geometry.video.width * 16 / 9)).toBeLessThanOrEqual(2); // округление до px
+        mkdirSync(LANDING_ARTIFACTS, { recursive: true });
+        const stem = `${LANDING_ARTIFACTS}/${name}-${theme}-first-screen-${viewport.width}x${viewport.height}`;
+        writeFileSync(`${stem}.json`, JSON.stringify(geometry, null, 2) + '\n');
+        await page.screenshot({ path: `${stem}.png`, fullPage: false });
+      }, viewport));
+    }
+    it(`/ landing-${theme}: R1/R2/R5 и axe без отказов; видео с playsinline`, () => fixture(`landing-${theme}`, async page => {
+      // R5 прибора первым: без playsinline красное даёт именно правило прибора, а не проверка атрибута ниже.
+      expect((await domRules(page, ['R1', 'R2', 'R5'])).filter((f: { severity: string }) => f.severity === 'error')
+        .map((f: { rule: string; message: string }) => `${f.rule}: ${f.message}`)).toEqual([]);
+      expect(await page.locator('.landing-demo video').evaluate(el => el.hasAttribute('playsinline') && el.getAttribute('preload') === 'none' && el.hasAttribute('controls'))).toBe(true);
+      expect((await axeRule(page)).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
+      expect((await textZoomRule(page)).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
+    }));
+  }
+  for (const viewport of [{ width: 320, height: 568 }, { width: 1440, height: 900 }]) {
+    it(`/ landing ${viewport.width}: без горизонтального скролла; на ≥ 600 кнопка скрыта, форма видна`, () => fixture('landing-dark', async page => {
+      expect((await domRules(page, ['R1'])).filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);
+      const cta = await page.locator('.landing-cta').isVisible(), form = await page.locator('form#auth').isVisible();
+      expect({ cta, form }).toEqual({ cta: viewport.width < 600, form: true });
+      mkdirSync(LANDING_ARTIFACTS, { recursive: true });
+      await page.screenshot({ path: `${LANDING_ARTIFACTS}/${name}-dark-width-${viewport.width}.png`, fullPage: false });
+    }, viewport));
   }
   it('чистая страница: все отказы отсутствуют', () => fixture('clean', async page => {
     expect([...await domRules(page), ...await axeRule(page), ...await textZoomRule(page)].filter((f: { severity: string }) => f.severity === 'error')).toEqual([]);

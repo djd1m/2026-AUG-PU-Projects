@@ -5,6 +5,7 @@ import { createElement } from 'react';
 import type { Pool } from 'pg';
 import { ErasureService } from '../apps/web/src/server/erasure';
 import { eraseAccount, retentionTick } from '../apps/web/src/server/retention';
+import { SHOWCASE_CLIP_IDS } from '../packages/shared/src/showcase';
 import { signErasureReceipt, readErasureReceipt } from '../apps/web/src/server/erasure-receipt';
 import { AccountDeletion } from '../apps/web/src/app/dashboard/AccountDeletion';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
@@ -62,7 +63,7 @@ describe('retention and erasure guards', () => {
     });
     await retentionTick(f.pool, f.storage, new Date('2026-09-24T12:00:00Z'));
     expect(f.storage.eraseClipPrefix.mock.calls).toEqual(['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]));
-    expect(f.query).toHaveBeenCalledWith(expect.stringContaining("a.plan <> 'paid'"), [new Date('2026-09-21T12:00:00Z'), 100]);
+    expect(f.query).toHaveBeenCalledWith(expect.stringContaining("a.plan <> 'paid'"), [new Date('2026-09-21T12:00:00Z'), 100, SHOWCASE_CLIP_IDS]);
     expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(true);
   });
   it('expiry does not overwrite explicit revocation', async () => {

@@ -1,12 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { rpc } from '../lib/rpc';
 export function AuthForm() {
   const [register, setRegister] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const router = useRouter();
   const [signedIn, setSignedIn] = useState(false);
-  return <form className="auth-card" onSubmit={async e => {
+  const email = useRef<HTMLInputElement>(null);
+  // Пришли по ссылке …/#auth (кнопка «Попробовать бесплатно» или внешняя ссылка): фокус в поле почты.
+  useEffect(() => {
+    const focus = () => { if (location.hash === '#auth') email.current?.focus(); };
+    focus(); addEventListener('hashchange', focus);
+    return () => removeEventListener('hashchange', focus);
+  }, []);
+  return <form id="auth" className="auth-card" onSubmit={async e => {
     e.preventDefault(); if (busy) return; setBusy(true); setError('');
     const form = new FormData(e.currentTarget);
     try {
@@ -20,7 +27,7 @@ export function AuthForm() {
       await rpc('code.apply', explicit ? { code: explicit } : {}, true);
       router.push('/dashboard'); router.refresh();
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Нет связи с сервером'); } finally { setBusy(false); }
-  }}><h2>{register ? 'Создать аккаунт' : 'Войти в КлипМейкер'}</h2><label>Почта<input name="email" type="email" autoComplete="email" required /></label>
+  }}><h2>{register ? 'Создать аккаунт' : 'Войти в КлипМейкер'}</h2><label>Почта<input ref={email} id="auth-email" name="email" type="email" autoComplete="email" required /></label>
     <label>Пароль<input name="password" type="password" minLength={8} autoComplete={register ? 'new-password' : 'current-password'} required /></label>
     <label>Код партнёра, если есть<input name="partner_code" autoComplete="off" maxLength={12} /></label>
     <button disabled={busy}>{busy ? 'Подождите…' : register ? 'Создать аккаунт' : 'Войти →'}</button>

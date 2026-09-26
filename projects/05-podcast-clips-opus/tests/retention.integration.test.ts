@@ -8,6 +8,7 @@ import { ErasureService } from '../apps/web/src/server/erasure';
 import { retentionTick, ERASURE_QUIET_MS, type RetentionStorage } from '../apps/web/src/server/retention';
 import { loadS3Config } from '../packages/shared/src/config';
 import * as s3 from '../packages/s3/src';
+import { SHOWCASE_CLIP_IDS } from '../packages/shared/src/showcase';
 const url = process.env.DATABASE_URL, endpoint = process.env.S3_ENDPOINT;
 const now = new Date('2026-09-24T12:00:00Z');
 describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
@@ -21,12 +22,12 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
   });
   beforeEach(async () => { await pool.query('TRUNCATE account,quota_counter CASCADE'); });
   afterAll(async () => { if (pool) { await pool.query(`DROP SCHEMA ${schema} CASCADE`); await pool.end(); } });
-  async function fixture(plan = 'free', finished = new Date(now.getTime() - 4 * 86400_000)) {
+  async function fixture(plan = 'free', finished = new Date(now.getTime() - 4 * 86400_000), clipId: string = randomUUID()) {
     const account = (await pool.query("INSERT INTO account(email,password_hash,plan) VALUES($1,'private',$2) RETURNING id", [`${randomUUID()}@test.invalid`, plan])).rows[0].id as string;
     const video = (await pool.query(`INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status,finished_at)
       VALUES($1,$2,'upload',100,'done',$3) RETURNING id`, [account, randomUUID(), finished])).rows[0].id as string;
-    const clip = (await pool.query(`INSERT INTO clip(video_id,"index",start_seconds,end_seconds,title,status,watermarked)
-      VALUES($1,1,0,20,'Private title','done',true) RETURNING id`, [video])).rows[0].id as string;
+    const clip = (await pool.query(`INSERT INTO clip(id,video_id,"index",start_seconds,end_seconds,title,status,watermarked)
+      VALUES($2,$1,1,0,20,'Private title','done',true) RETURNING id`, [video, clipId])).rows[0].id as string;
     const keys = [`videos/${account}/${video}/source.mp4`, `clips/${plan}/${video}/${clip}.mp4`, `thumbs/${video}/${clip}.jpg`];
     await pool.query('UPDATE video SET object_key=$2 WHERE id=$1', [video, keys[0]]);
     await pool.query('UPDATE clip SET object_key=$2,thumbnail_key=$3 WHERE id=$1', [clip, keys[1], keys[2]]);
@@ -113,6 +114,23 @@ describe.skipIf(!url)('retention PostgreSQL and MinIO', () => {
     expect((await pool.query('SELECT revoked_at FROM guest_pack WHERE id=$1', [free.pack])).rows[0].revoked_at).toBeNull();
     expect((await pool.query("SELECT count(*)::int n FROM video WHERE failure_reason='refused_user_uploads'")).rows[0].n).toBe(1);
     expect((await pool.query("SELECT indexdef FROM pg_indexes WHERE schemaname=$1 AND indexname='video_refused_upload_retention'", [schema])).rows[0].indexdef).toContain('created_at');
+  });
+  it('ADR-018 showcase clip survives free retention; a neighbour with the same age and plan is erased', async () => {
+    const showcase = await fixture('free', new Date(now.getTime() - 4 * 86400_000), SHOWCASE_CLIP_IDS[0]!);
+    const neighbour = await fixture('free', new Date(now.getTime() - 4 * 86400_000));
+    const storage = memoryStorage(); await retentionTick(pool, storage, now, 100);
+    const erased = (storage.eraseClipPrefix as ReturnType<typeof vi.fn>).mock.calls.map(call => String(call[0]));
+    expect(erased.some(prefix => prefix.includes(showcase.clip))).toBe(false);
+    expect(erased).toContain(`clips/free/${neighbour.video}/${neighbour.clip}`);
+    expect((await pool.query('SELECT object_key,thumbnail_key,expires_at FROM clip WHERE id=$1', [showcase.clip])).rows[0])
+      .toEqual({ object_key: showcase.keys[1], thumbnail_key: showcase.keys[2], expires_at: null });
+    expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [neighbour.clip])).rows[0].object_key).toBeNull();
+  });
+  it('ADR-018 account erasure still erases a showcase clip: the right to delete outranks the showcase', async () => {
+    const showcase = await fixture('free', new Date(now.getTime() - 4 * 86400_000), SHOWCASE_CLIP_IDS[0]!);
+    await new ErasureService(pool, () => now).request(showcase.account, { confirm: true });
+    await retentionTick(pool, memoryStorage(), new Date(now.getTime() + ERASURE_QUIET_MS));
+    expect((await pool.query('SELECT id FROM clip WHERE id=$1', [showcase.clip])).rowCount).toBe(0);
   });
   it.skipIf(!endpoint)('MinIO HEAD confirms all account objects absent; revoked guests precede first deletion', async () => {
     const f = await fixture();

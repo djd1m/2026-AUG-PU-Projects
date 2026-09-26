@@ -2,7 +2,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs, loadFixture, preflight, exitCode } from './responsive/input.mjs';
-import { domRules, textZoomRule, axeRule, lintCSS, FIRST_SCREEN_VIEWPORTS, firstScreenSelector, firstScreenRule } from './responsive/rules.mjs';
+import { domRules, textZoomRule, axeRule, lintCSS, FIRST_SCREEN_VIEWPORTS, firstScreenSelectors, firstScreenRule } from './responsive/rules.mjs';
 
 export function scenarios(engine, devices, widths) {
   const names = engine === 'webkit' ? ['iPhone 13', 'iPhone SE'] : ['Pixel 7'];
@@ -109,8 +109,8 @@ export async function main(args, { launchOptions = {} } = {}) {
           }
           for (const { w, h } of FIRST_SCREEN_VIEWPORTS) {
             for (const route of fixture.routes) {
-              const selector = firstScreenSelector(route);
-              if (!selector) continue;
+              const selectors = firstScreenSelectors(route);
+              if (!selectors.length) continue;
               const scenario = `first-screen-${w}x${h}`;
               const meta = { engine, theme, scenario, route, width: w, height: h };
               const context = await themedContext(browser, { viewport: { width: w, height: h }, isMobile: true, hasTouch: true }, theme, options.base);
@@ -119,7 +119,9 @@ export async function main(args, { launchOptions = {} } = {}) {
                 await navigate(page, options.base + route);
                 await routePreconditions(page, route);
                 await themePrecondition(page, theme);
-                const findings = await firstScreenRule(page, selector);
+                // Каждый селектор — отдельная проверка до любой прокрутки: одна не подменяет другую.
+                const findings = [];
+                for (const selector of selectors) findings.push(...await firstScreenRule(page, selector));
                 const screenshot = `${engine}-${theme}-${scenario}-${report.pages.length}.png`;
                 await page.screenshot({ path: resolve(options.out, screenshot), fullPage: false });
                 report.findings.push(...findings.map(f => ({ ...meta, ...f })));

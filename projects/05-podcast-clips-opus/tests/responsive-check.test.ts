@@ -3,7 +3,7 @@ import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs, validateFixture, exitCode } from '../scripts/responsive/input.mjs';
-import { lintCSS, firstScreenSelector, FIRST_SCREEN_VIEWPORTS } from '../scripts/responsive/rules.mjs';
+import { lintCSS, firstScreenSelector, firstScreenSelectors, FIRST_SCREEN_VIEWPORTS } from '../scripts/responsive/rules.mjs';
 import { login, main, summary, themedContext, themePrecondition, THEMES } from '../scripts/check-responsive.mjs';
 
 const fixture = { origin: 'http://localhost', email: 'fixture@example.test', password: 'never-log-this-password', video_id: 'video-1', short_code: 'short-1', clip_ids: ['clip-1'], screens: { guest: '/g/guest-1' } };
@@ -166,7 +166,10 @@ it('вход: максимум один повтор после 429, storageStat
 });
 
 it('R9: explicit route and viewport coverage', () => {
-  expect(firstScreenSelector('/')).toBe('form.auth-card button:not([type=button])');
+  expect(firstScreenSelector('/')).toEqual(['.landing-cta', '.landing-demo video']);
+  expect(firstScreenSelectors('/')).toEqual(['.landing-cta', '.landing-demo video']);
+  expect(firstScreenSelectors('/c/abc')).toEqual(['.cta']);
+  expect(firstScreenSelectors('/dashboard')).toEqual([]);
   expect(firstScreenSelector('/c/abc')).toBe('.cta');
   for (const route of ['/c/', '/g/x', '/dashboard']) expect(firstScreenSelector(route)).toBeNull();
   expect(FIRST_SCREEN_VIEWPORTS).toEqual([{ w: 390, h: 844 }, { w: 375, h: 667 }, { w: 360, h: 740 }]);

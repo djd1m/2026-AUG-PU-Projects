@@ -1,0 +1,92 @@
+[
+  {
+    "id": "set-membership",
+    "red": {
+      "id": "set-membership",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "set-membership",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "retention-exclusion",
+    "red": {
+      "id": "retention-exclusion",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "retention-exclusion",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "preview-showcase",
+    "red": {
+      "id": "preview-showcase",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "preview-showcase",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "playsinline",
+    "red": {
+      "id": "playsinline",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 4
+    },
+    "green": {
+      "id": "playsinline",
+      "phase": "green",
+      "exit": 0,
+      "passed": 4,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "demo-below-fold",
+    "red": {
+      "id": "demo-below-fold",
+      "phase": "red",
+      "exit": 1,
+      "passed": 4,
+      "failed": 8
+    },
+    "green": {
+      "id": "demo-below-fold",
+      "phase": "green",
+      "exit": 0,
+      "passed": 12,
+      "failed": 0
+    },
+    "status": "killed"
+  }
+]

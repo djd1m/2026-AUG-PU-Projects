@@ -170,3 +170,17 @@ button,.button { min-width:2.75rem; }
 .cta-panel h2 { font-size:1.3125rem; margin-bottom:var(--space-2); }
 .cta-panel button { margin-top:var(--space-2); }
 @media (min-width:601px) { .cta-panel { padding:var(--space-6); } }
+/* Демо-клип лендинга (фича 28, FR-LOOK-011): телефон — заголовок → демо → «Попробовать бесплатно» в первом экране
+   (R9 на 390×844/375×667/360×740); ширина видео clamp(7rem,38vw,9.5rem) — постер 9:16 целиком. Десктоп — демо в левой
+   колонке под текстом, форма справа, кнопка скрыта (форма и так видна). Только токены темы. */
+.landing-demo { display:flex; gap:var(--space-4); align-items:flex-end; margin:0; min-width:0; }
+.landing-demo video { flex:none; display:block; width:clamp(7rem,38vw,9.5rem); height:auto; aspect-ratio:9/16; object-fit:contain; background:var(--media-bg); color:var(--media-fg); border-radius:0.75rem; }
+.landing-demo figcaption { display:grid; gap:var(--space-1); min-width:0; font-size:0.9375rem; overflow-wrap:anywhere; }
+.landing-demo figcaption strong { font-weight:650; }
+.landing-demo figcaption a { display:inline-flex; align-items:center; min-height:2.75rem; color:var(--green); font-weight:650; }
+.landing-cta { width:100%; }
+@media(min-width:600px) {
+  .landing-cta { display:none; }
+  .landing-demo { margin-top:var(--space-6); }
+  .landing-demo video { width:clamp(8rem,11vw,10rem); }
+}

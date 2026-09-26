@@ -80,7 +80,8 @@ const clip = await db.clip.findUnique({ where: { id } });
 if (!clip) return notFound();
 const allowed =
   (session && clip.video.accountId === session.accountId) ||
-  (guestCode && await guestPackGrants(guestCode, clip.id));      // РОВНО два пути, третьего нет
+  (guestCode && await guestPackGrants(guestCode, clip.id));      // два пути здесь; третий — витрина (ADR-018,
+                                                                  // showcase-file.ts, закрытый набор в коде), четвёртого нет
 if (!allowed) return notFound();                                  // не 403: он подтвердил бы существование
 if (clip.status !== 'done') return notFound();                    // файла ещё нет
 if (clip.expiresAt && clip.expiresAt < new Date()) return notFound();  // срок истёк, объект удалён
