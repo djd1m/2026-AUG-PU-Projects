@@ -853,6 +853,32 @@
         "tests/clip-cta.test.ts",
         "apps/worker/src/render/cta-overlay.ts"
       ]
+    },
+    {
+      "id": "landing-demo",
+      "number": 28,
+      "title": "Лендинг с демо-клипом витрины",
+      "description": "FR-LOOK-007/011, OWN-016, ADR-018, шаг 5 плана mobile-ui. SHOWCASE_CLIPS в коде (CTDUUG), /api/showcase/{code}/file|thumbnail (302 на подпись), витрина исключена из ретенции, первый экран: демо + «Попробовать бесплатно».",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "clip-cta"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-LOOK-007",
+        "FR-LOOK-011"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-018"
+      ],
+      "expected_files": [
+        "packages/shared/src/showcase.ts",
+        "apps/web/src/app/Landing.tsx",
+        "apps/web/src/server/retention.ts"
+      ]
     }
   ]
 }

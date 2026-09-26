@@ -38,6 +38,7 @@
 | 25 | `dark-theme` | Тёмная тема по умолчанию, светлая по выбору; прибор в двух темах | post-mvp | [05_completion.md](dark-theme/05_completion.md) |
 | 26 | `clip-card` | Карточка клипа: плашка оценки, объяснения раскрытием, «Скачать · Ссылка · Гостю» | post-mvp | [05_completion.md](clip-card/05_completion.md) |
 | 27 | `clip-cta` | Призыв в конце клипа: выбор, кнопка «Смотреть полный выпуск» на /c/, надпись в кадре, пересборка | post-mvp | [05_completion.md](clip-cta/05_completion.md) |
+| 28 | `landing-demo` | Лендинг с демо-клипом витрины (CTDUUG), третий путь к файлу только для витрины | post-mvp | [05_completion.md](landing-demo/05_completion.md) |
 
 ## Сквозные документы, без которых фичи не читаются
 
