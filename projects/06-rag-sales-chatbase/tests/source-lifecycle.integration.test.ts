@@ -246,6 +246,95 @@ describe.skipIf(!databaseUrl)('Жизненный цикл источника н
     expect(await count('SELECT embed_used AS n FROM index_job WHERE id = $1', [preview.indexJobId])).toBeGreaterThan(0);
   });
 
+  it('ревью находка 1: удаление и «Обновить» параллельно с записью страницы воркером — без взаимной блокировки (порядок «задача → бот»)', async () => {
+    for (const action of ['delete', 'reindex'] as const) {
+      const j = await siteJob();
+      await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [j.botId]);   // триггер снятия отметки тоже берёт строку бота
+      const lease = (await leaseIndexJob(pool, { index_job_id: j.indexJobId, generation: 0 }))!;
+      const worker = await pool.connect();
+      try {
+        await worker.query('BEGIN');
+        // как recordProgressTx: воркер держит строку задачи с проверкой фенса
+        expect((await worker.query(`UPDATE index_job SET pages_done = pages_done + 1 WHERE id = $1 AND current_fence = $2 AND status = 'running'`,
+          [j.indexJobId, lease.fence])).rowCount).toBe(1);
+        const other = action === 'delete' ? deleteSource(pool, j.sourceId, j.owner) : reindexSource(pool, j.sourceId, j.owner);
+        await new Promise((r) => setTimeout(r, 300));                                            // вторая сторона уже ждёт
+        // запись страницы: внешние ключи page → source/bot и триггер chunk → bot берут строку бота
+        const page = (await worker.query<{ id: string }>(`INSERT INTO page (source_id, bot_id, url_or_page, title, content_hash) VALUES ($1, $2, 'http://site.example/', 'Г', $3) RETURNING id`,
+          [j.sourceId, j.botId, 'e'.repeat(64)])).rows[0]!.id;
+        await worker.query(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding) VALUES ($1, $2, $3, 0, '', 'т', 1, $4::vector)`,
+          [j.botId, j.sourceId, page, `[${vectorFor('т').join(',')}]`]);
+        await worker.query('COMMIT');
+        const result = await other;
+        if (action === 'delete') {
+          expect(result).toMatchObject({ deleted: true });
+          expect(await count('SELECT count(*)::int AS n FROM chunk WHERE bot_id = $1', [j.botId])).toBe(0);
+        } else {
+          expect(result).toEqual({ kind: 'running', indexJobId: j.indexJobId });
+        }
+      } finally { worker.release(); }
+    }
+  });
+
+  it('ревью находки 2, 5: сбой sitemap — обнаружение неполное, страницы только из sitemap не удаляются; ссылка на 404 — страницы нет, удаляется', async () => {
+    const w = wire();
+    const j = await siteJob();
+    const routes: Record<string, Handler> = { ...noRobots, '/': article('Главная', ['/a', '/gone']), '/a': article('Раздел А'), '/gone': article('Исчезнет'),
+      '/sitemap.xml': text('<urlset><url><loc>http://site.example/only-sitemap</loc></url></urlset>', 'application/xml'), '/only-sitemap': article('Только из карты') };
+    site = await startFakeSite(routes);
+    expect(await w.run(site, j.indexJobId, 0)).toBe('done');
+    expect(await pageUrls(j.sourceId)).toContain('http://site.example/only-sitemap');
+    routes['/sitemap.xml'] = fail500;                                            // карта сайта временно недоступна
+    routes['/gone'] = text('нет', 'text/html', 404);                             // а эту страницу удалили
+    const r1 = await reindexSource(pool, j.sourceId, j.owner);
+    if (r1?.kind !== 'queued') throw new Error('ожидалась постановка');
+    expect(await w.run(site, j.indexJobId, r1.message.generation)).toBe('done');
+    expect(await pageUrls(j.sourceId)).toContain('http://site.example/only-sitemap');
+    expect(await pageUrls(j.sourceId)).toContain('http://site.example/gone');     // обход неполный — ничего не удалено
+    routes['/sitemap.xml'] = text('<urlset><url><loc>http://site.example/only-sitemap</loc></url></urlset>', 'application/xml');
+    const r2 = await reindexSource(pool, j.sourceId, j.owner);
+    if (r2?.kind !== 'queued') throw new Error('ожидалась постановка');
+    expect(await w.run(site, j.indexJobId, r2.message.generation)).toBe('done');
+    expect(await pageUrls(j.sourceId)).toEqual(['http://site.example/', 'http://site.example/a', 'http://site.example/only-sitemap']);
+  });
+
+  it('ревью находка 4: неизменная страница переехала на новый адрес — адрес актуализирован, без переэмбеддинга', async () => {
+    const w = wire();
+    const j = await siteJob();
+    const routes: Record<string, Handler> = { ...noRobots, '/': article('Главная', ['/old']), '/old': article('Прайс', [], 'Доставка 350 рублей.') };
+    site = await startFakeSite(routes);
+    expect(await w.run(site, j.indexJobId, 0)).toBe('done');
+    const calls = w.gateway.calls.length;
+    Object.assign(routes, { '/': article('Главная', ['/new']), '/new': article('Прайс', [], 'Доставка 350 рублей.'), '/old': text('нет', 'text/html', 404) });
+    const r = await reindexSource(pool, j.sourceId, j.owner);
+    if (r?.kind !== 'queued') throw new Error('ожидалась постановка');
+    expect(await w.run(site, j.indexJobId, r.message.generation)).toBe('done');
+    expect(await pageUrls(j.sourceId)).toEqual(['http://site.example/', 'http://site.example/new']);
+    expect(w.gateway.calls.length).toBe(calls);
+  });
+
+  it('ревью находка 3: «Обновить» сохранённого предпросмотра снимает бюджеты предпросмотра — дальше платит аккаунт', async () => {
+    const owner = await account();
+    const botId = await bot(owner);
+    const job = await createSourceJob(pool, { botId, kind: 'site', rootUrl: 'http://p.example/', idempotencyKey: randomUUID(), budget: { pageBudget: 20, embedBudget: 40_000 } });
+    await pool.query(`UPDATE index_job SET status = 'done', embed_used = 39_000 WHERE id = $1`, [job.indexJobId]);
+    const r = await reindexSource(pool, job.sourceId, owner);
+    expect(r).toMatchObject({ kind: 'queued' });
+    expect((await pool.query('SELECT page_budget, embed_budget, embed_used, series_embed_used FROM index_job WHERE id = $1', [job.indexJobId])).rows[0])
+      .toEqual({ page_budget: null, embed_budget: null, embed_used: 0, series_embed_used: 0 });
+  });
+
+  it('ревью находка 6: «Повторить» по id задачи тратит суточный запуск; предел исчерпан — null и задача остаётся failed', async () => {
+    const j = await siteJob();
+    await pool.query(`UPDATE index_job SET status = 'failed', failure_reason = 'unreachable' WHERE id = $1`, [j.indexJobId]);
+    await pool.query(`INSERT INTO index_start (bot_id, kind) SELECT $1, 'site' FROM generate_series(1, $2::int)`, [j.botId, INDEX_STARTS_PER_BOT_DAY]);
+    expect(await retryIndexJob(pool, j.indexJobId, j.owner)).toBeNull();
+    expect((await pool.query('SELECT status FROM index_job WHERE id = $1', [j.indexJobId])).rows[0].status).toBe('failed');
+    await pool.query('DELETE FROM index_start WHERE bot_id = $1', [j.botId]);
+    expect(await retryIndexJob(pool, j.indexJobId, j.owner)).toMatchObject({ index_job_id: j.indexJobId });
+    expect(await indexStartsToday(pool, j.botId)).toBe(1);
+  });
+
   it('предел фрагментов страницы: capPageChunks отбрасывает сверх 300; запись > 300 — отказ; chunks_dropped хранится у страницы', async () => {
     const many = Array.from({ length: CHUNKS_PER_PAGE_MAX + 7 }, (_, i) => i);
     expect(capPageChunks(many)).toEqual({ kept: many.slice(0, CHUNKS_PER_PAGE_MAX), dropped: 7 });

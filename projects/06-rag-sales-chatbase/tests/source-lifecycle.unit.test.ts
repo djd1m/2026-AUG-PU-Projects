@@ -81,9 +81,15 @@ describe('стражи по исходнику (source-lifecycle)', () => {
       expect(code, name).toMatch(/chunksDropped: dropped/);
     }
   });
-  it('уборка исчезнувших страниц — только при полном обходе без временных пропусков; http_error и сеть — временные', () => {
-    expect(site).toMatch(/if \(result\.stoppedBy === 'exhausted' && transient === 0\) pruned = await pruneUnseenPages\(/);
+  it('уборка исчезнувших страниц — только при полном обходе без временных пропусков и при полном обнаружении; http_error и сеть — временные', () => {
+    expect(site).toMatch(/if \(result\.stoppedBy === 'exhausted' && transient === 0 && !result\.discoveryIncomplete\) pruned = await pruneUnseenPages\(/);
     expect(site.match(/pruneUnseenPages\(/g)).toHaveLength(1); // единственный вызов (в импорте скобки нет)
     expect([...TRANSIENT_SKIPS].sort()).toEqual(['http_error', 'robots_unreachable', 'timeout', 'too_many_redirects', 'unreachable']);
+  });
+  it('кабинет: отметка «проверено» следует за сервером после обновления; 404 удаления — не успех (ревью находки 7, 8)', () => {
+    const screen = readFileSync('apps/web/src/app/dashboard/bots/[botId]/BotScreen.tsx', 'utf8');
+    expect(screen).toMatch(/useEffect\(\(\) => \{ setVerified\(p\.answersVerified\); \}, \[p\.answersVerified\]\)/);
+    expect(screen).not.toMatch(/status === 204 \|\| status === 404/);
+    expect(screen).toMatch(/if \(status === 404\) \{ setConfirming\(null\); setSourceErrors/);
   });
 });

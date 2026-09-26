@@ -1,5 +1,5 @@
- Container n6-test-f16-redis-1 Running 
  Container n6-test-f16-db-1 Running 
+ Container n6-test-f16-redis-1 Running 
  Image n6-sufler-test:foundation Building 
 
 
@@ -24,8 +24,8 @@
  Container n6-test-f16-redis-1 Waiting 
  Container n6-test-f16-redis-1 Healthy 
  Container n6-test-f16-db-1 Healthy 
- Container n6-test-f16-test-run-d7f95924aac4 Creating 
- Container n6-test-f16-test-run-d7f95924aac4 Created 
+ Container n6-test-f16-test-run-af243e930c25 Creating 
+ Container n6-test-f16-test-run-af243e930c25 Created 
 
 > n6-sufler@0.1.0 lint
 > node scripts/lint.mjs
@@ -38,165 +38,164 @@
 
  RUN  v3.2.7 /app
 
- ✓ tests/visitor-ask.integration.test.ts (17 tests) 4205ms
-   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > SC-US-007-1 и счёт по ПОПЫТКАМ: отказ шлюза списанное не возвращает; 21-й вопрос — 429 с контактом, модель не вызвана, refused_limit  690ms
-   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > SC-US-007-3 (конкурентно): 20 одновременных вопросов ОДНОГО посетителя при остатке 1 — ровно 1 ответ и 1 вызов модели, 19 × 429 с контактом  651ms
-   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > testing.md п.6 (конкурентно): разные посетители за ОДНИМ /24 — ровно 60 ответов (ip_answers), добросовестные до предела без ложных отказов  806ms
-   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > фича 13, AC-13 (FR-GROWTH-005 @security): вопросы с ДЕМО-СТРАНИЦЫ (свой origin) идут через ту же квоту — после 60-го с одного /24 отказ 429, модель не зовётся, установки нет  664ms
- ✓ tests/preview-flow.integration.test.ts (17 tests) 2901ms
-   ✓ preview-flow на настоящем Postgres + pgvector > SC-US-002-3: создание не тратит ответы — 10 ответов проходят, 11-й — 429 с предложением зарегистрироваться  365ms
-   ✓ preview-flow на настоящем Postgres + pgvector > claim одновременно: ОДИН предпросмотр двумя аккаунтами → ровно один claimed, второй 404; владелец бота — победивший  605ms
-   ✓ preview-flow на настоящем Postgres + pgvector > claim одновременно: ЧЕТЫРЕ предпросмотра одним аккаунтом free → ровно один claimed, три plan_limit, ботов у аккаунта 1  420ms
- ✓ tests/billing.integration.test.ts (17 tests) 1111ms
- ✓ tests/bot-cabinet.integration.test.ts (9 tests) 1763ms
-   ✓ bot-cabinet на настоящем Postgres + pgvector > CreateBot одновременно: 6 создания на free одним аккаунтом → ровно 1 бот, 5 × 403 (блокировка строки аккаунта)  352ms
+ ✓ tests/visitor-ask.integration.test.ts (17 tests) 4188ms
+   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > SC-US-007-1 и счёт по ПОПЫТКАМ: отказ шлюза списанное не возвращает; 21-й вопрос — 429 с контактом, модель не вызвана, refused_limit  625ms
+   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > SC-US-007-3 (конкурентно): 20 одновременных вопросов ОДНОГО посетителя при остатке 1 — ровно 1 ответ и 1 вызов модели, 19 × 429 с контактом  728ms
+   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > testing.md п.6 (конкурентно): разные посетители за ОДНИМ /24 — ровно 60 ответов (ip_answers), добросовестные до предела без ложных отказов  892ms
+   ✓ POST /w/v1/ask на настоящем Postgres + pgvector > фича 13, AC-13 (FR-GROWTH-005 @security): вопросы с ДЕМО-СТРАНИЦЫ (свой origin) идут через ту же квоту — после 60-го с одного /24 отказ 429, модель не зовётся, установки нет  637ms
+ ✓ tests/source-lifecycle.integration.test.ts (14 tests) 2526ms
+   ✓ Жизненный цикл источника на настоящем Postgres + pgvector > SC-US-014-1: «Обновить» — та же задача, новая серия, переэмбеддятся ровно 3 изменённые страницы из 5; без изменений — ни одного вызова; новые фрагменты снимают отметку «проверено»  349ms
+   ✓ Жизненный цикл источника на настоящем Postgres + pgvector > ревью находка 1: удаление и «Обновить» параллельно с записью страницы воркером — без взаимной блокировки (порядок «задача → бот»)  641ms
+ ✓ tests/preview-flow.integration.test.ts (17 tests) 2603ms
+   ✓ preview-flow на настоящем Postgres + pgvector > SC-US-002-3: создание не тратит ответы — 10 ответов проходят, 11-й — 429 с предложением зарегистрироваться  314ms
+   ✓ preview-flow на настоящем Postgres + pgvector > claim одновременно: ОДИН предпросмотр двумя аккаунтами → ровно один claimed, второй 404; владелец бота — победивший  489ms
+   ✓ preview-flow на настоящем Postgres + pgvector > claim одновременно: ЧЕТЫРЕ предпросмотра одним аккаунтом free → ровно один claimed, три plan_limit, ботов у аккаунта 1  427ms
+ ✓ tests/billing.integration.test.ts (17 tests) 898ms
+ ✓ tests/bot-cabinet.integration.test.ts (9 tests) 1850ms
 stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки без HNSW (A-N6-051)
 insert-no-hnsw: 0.4 мс на фрагмент (100 случайных векторов)
 
 stdout | tests/chunk-embed.integration.test.ts > chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки без HNSW (A-N6-051)
-search-exact 5001 фрагментов одного бота: 35 мс
+search-exact 5001 фрагментов одного бота: 34 мс
 
- ✓ tests/chunk-embed.integration.test.ts (15 tests) 3594ms
-   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются  351ms
-   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки без HNSW (A-N6-051)  1666ms
- ✓ tests/source-lifecycle.integration.test.ts (9 tests) 1903ms
-   ✓ Жизненный цикл источника на настоящем Postgres + pgvector > SC-US-014-1: «Обновить» — та же задача, новая серия, переэмбеддятся ровно 3 изменённые страницы из 5; без изменений — ни одного вызова; новые фрагменты снимают отметку «проверено»  439ms
-   ✓ Жизненный цикл источника на настоящем Postgres + pgvector > предел фрагментов страницы: capPageChunks отбрасывает сверх 300; запись > 300 — отказ; chunks_dropped хранится у страницы  381ms
- ✓ tests/rag-answer.test.ts (33 tests) 466ms
- ✓ tests/widget-ask.unit.test.ts (15 tests) 179ms
- ✓ tests/bot-cabinet.unit.test.ts (22 tests) 81ms
- ✓ tests/widget-handler.unit.test.ts (17 tests) 94ms
- ✓ tests/public-page.integration.test.ts (10 tests) 722ms
- ✓ tests/index-job.fence.test.ts (12 tests) 809ms
- ✓ tests/pdf-boundary.test.ts (28 tests) 225ms
- ✓ tests/pdf-job.integration.test.ts (13 tests) 4759ms
-   ✓ PDF в задаче индексации на настоящем Postgres > SC-US-004-1: 12 страниц → done, страницы «прайс.pdf#с. N» с content_hash, прогресс 12 из 12, файл удалён  980ms
-   ✓ PDF в задаче индексации на настоящем Postgres > SC-US-004-2 скан без текстового слоя → failed(() => (0,__vite_ssr_import_16__.scanPdf)(10, 0)), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  538ms
-   ✓ PDF в задаче индексации на настоящем Postgres > шифрованный → failed(() => buildPdf([{ text: PRICE_LINES }], { encrypt: true })), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  459ms
-   ✓ PDF в задаче индексации на настоящем Postgres > битый → failed(() => Buffer.from("%PDF-1.7\nэто не PDF: ни объектов, ни xref, ни trailer\n", "utf8")), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  455ms
-   ✓ PDF в задаче индексации на настоящем Postgres > 101 страница → failed(() => (0,__vite_ssr_import_16__.multiPagePdf)(101)), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  485ms
-   ✓ PDF в задаче индексации на настоящем Postgres > фенс перехвачен во время разбора → stale, файл НЕ удалён (он нужен новой попытке), страниц не записано  651ms
-   ✓ PDF в задаче индексации на настоящем Postgres > маршрут целиком на настоящей БД: 202 → строка задачи ЕСТЬ и файл под её id ЕСТЬ; повтор — тот же id  710ms
- ✓ tests/billing.unit.test.ts (19 tests) 56ms
- ✓ tests/quota.concurrency.test.ts (11 tests) 1628ms
-   ✓ Квота на настоящем Postgres: два оператора, откат всех scope, конкурентность > прогон 6, добросовестный NAT: 60 разных посетителей за одним префиксом одновременно → 60 без ложных отказов, 61-й — ip_answers  398ms
- ✓ tests/crawl.test.ts (17 tests) 1861ms
-   ✓ Обход > не text/html пропускается без чтения тела; не-2xx — http_error; зависшая страница — timeout  310ms
-   ✓ Обход > корень не отвечает → unreachable  616ms
-   ✓ Обход > вежливость: между началами любых запросов — не меньше паузы (1 поток)  606ms
- ✓ tests/database.integration.test.ts (10 tests) 1568ms
- ✓ tests/widget-config.integration.test.ts (8 tests) 633ms
- ✓ tests/bot-isolation.test.ts (6 tests) 572ms
- ✓ tests/ssrf.test.ts (78 tests) 190ms
+ ✓ tests/chunk-embed.integration.test.ts (15 tests) 3775ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > планировщику закрыт упорядоченный обход HNSW даже при запрете перебора: свои не теряются, чужие не просачиваются  442ms
+   ✓ chunk-embed на настоящем Postgres + pgvector > Изоляция арендатора (NFR-SEC-001): ближайшие векторы чужого бота не возвращаются > цена точного перебора: 5000 фрагментов одного бота — поиск < 500 мс, верный ближайший первым; замер вставки без HNSW (A-N6-051)  1695ms
+ ✓ tests/rag-answer.test.ts (33 tests) 544ms
+ ✓ tests/widget-ask.unit.test.ts (15 tests) 167ms
+ ✓ tests/bot-cabinet.unit.test.ts (22 tests) 63ms
+ ✓ tests/widget-handler.unit.test.ts (17 tests) 78ms
+ ✓ tests/public-page.integration.test.ts (10 tests) 567ms
+ ✓ tests/index-job.fence.test.ts (12 tests) 589ms
+ ✓ tests/pdf-boundary.test.ts (28 tests) 193ms
+ ✓ tests/pdf-job.integration.test.ts (13 tests) 4754ms
+   ✓ PDF в задаче индексации на настоящем Postgres > SC-US-004-1: 12 страниц → done, страницы «прайс.pdf#с. N» с content_hash, прогресс 12 из 12, файл удалён  1012ms
+   ✓ PDF в задаче индексации на настоящем Postgres > SC-US-004-2 скан без текстового слоя → failed(() => (0,__vite_ssr_import_16__.scanPdf)(10, 0)), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  521ms
+   ✓ PDF в задаче индексации на настоящем Postgres > шифрованный → failed(() => buildPdf([{ text: PRICE_LINES }], { encrypt: true })), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  457ms
+   ✓ PDF в задаче индексации на настоящем Postgres > битый → failed(() => Buffer.from("%PDF-1.7\nэто не PDF: ни объектов, ни xref, ни trailer\n", "utf8")), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  490ms
+   ✓ PDF в задаче индексации на настоящем Postgres > 101 страница → failed(() => (0,__vite_ssr_import_16__.multiPagePdf)(101)), различимо по id; файл удалён ПОСЛЕ ОТКАЗА (ADR-018)  519ms
+   ✓ PDF в задаче индексации на настоящем Postgres > фенс перехвачен во время разбора → stale, файл НЕ удалён (он нужен новой попытке), страниц не записано  562ms
+   ✓ PDF в задаче индексации на настоящем Postgres > маршрут целиком на настоящей БД: 202 → строка задачи ЕСТЬ и файл под её id ЕСТЬ; повтор — тот же id  774ms
+ ✓ tests/billing.unit.test.ts (19 tests) 63ms
+ ✓ tests/quota.concurrency.test.ts (11 tests) 1741ms
+   ✓ Квота на настоящем Postgres: два оператора, откат всех scope, конкурентность > прогон 6, добросовестный NAT: 60 разных посетителей за одним префиксом одновременно → 60 без ложных отказов, 61-й — ip_answers  471ms
+   ✓ Квота на настоящем Postgres: два оператора, откат всех scope, конкурентность > предел бота по плану: free — 50 в сутки; «NOBADGE» читается как free  330ms
+ ✓ tests/crawl.test.ts (17 tests) 1842ms
+   ✓ Обход > не text/html пропускается без чтения тела; 404 — gone (страницы нет), 5xx — http_error (временный сбой); зависшая страница — timeout  314ms
+   ✓ Обход > корень не отвечает → unreachable  612ms
+   ✓ Обход > вежливость: между началами любых запросов — не меньше паузы (1 поток)  607ms
+ ✓ tests/database.integration.test.ts (10 tests) 1360ms
+ ✓ tests/widget-config.integration.test.ts (8 tests) 499ms
+ ✓ tests/bot-isolation.test.ts (6 tests) 561ms
+ ✓ tests/ssrf.test.ts (78 tests) 155ms
 stderr | tests/public-page.unit.test.ts > приход по бейджу / демо-странице (FR-GROWTH-003/006) > обработчик авторизации зовёт запись прихода только при регистрации; её сбой регистрацию не валит
 Авторизация: приход по бейджу не записан — регистрация выполнена без него
 
- ✓ tests/public-page.unit.test.ts (11 tests) 30ms
- ✓ tests/preview-flow.unit.test.ts (12 tests) 37ms
- ✓ tests/widget-source.test.ts (22 tests) 34ms
- ✓ tests/pdf-extract.test.ts (23 tests) 22976ms
-   ✓ ExtractPdf: обычные документы > SC-US-004-1: текстовый PDF с кириллицей → текст страницы  528ms
-   ✓ ExtractPdf: обычные документы > многостраничный (12 страниц) → по тексту на страницу в порядке документа  674ms
-   ✓ ExtractPdf: обычные документы > ровно 100 страниц — предел включительно  808ms
-   ✓ ExtractPdf: честные отказы > SC-US-004-2: скан без текстового слоя → no_text_layer, а не пустой успех  460ms
-   ✓ ExtractPdf: честные отказы > граница 90 %: 9 из 10 страниц без текста — отказ; 8 из 10 — успех  1151ms
-   ✓ ExtractPdf: честные отказы > шифрованный PDF с паролем → pdf_encrypted (для пользователя no_text_layer: текст недоступен)  475ms
-   ✓ ExtractPdf: честные отказы > битый PDF (мусор после %PDF-) → not_pdf  427ms
-   ✓ ExtractPdf: честные отказы > битый PDF (обрезанный файл) → not_pdf  422ms
-   ✓ ExtractPdf: честные отказы > битый PDF (цикл в дереве страниц) → not_pdf  446ms
-   ✓ ExtractPdf: честные отказы > 101 страница → too_large, число страниц — до извлечения текста  469ms
-   ✓ ExtractPdf: честные отказы > текст сверх потолка извлечения (≈ 8 млн символов) → too_large  3255ms
-   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > бомба распаковки (400 КБ → 400 МБ) — убит по резидентной памяти при настоящих пределах  5621ms
-   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > экспоненциальный разворот форм (2^40 вызовов, 7 КБ) — убит по таймауту  3042ms
-   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > глубокая вложенность массивов (500 000 уровней) → отказ в пределах таймаута  483ms
-   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > цепочка из 20 000 вложенных форм → отказ в пределах таймаута  980ms
-   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > 200 000 объектов при одной пустой странице → отказ в пределах таймаута  1122ms
-   ✓ Дочерний процесс: пределы исполняет родитель > зависший разбор → SIGKILL по таймауту, отказ pdf_timeout, а не ожидание  1521ms
-   ✓ Дочерний процесс: пределы исполняет родитель > документ с пустыми страницами и одной текстовой — страницы без текста не выдуманы  553ms
- ✓ tests/resume.test.ts (3 tests) 1070ms
-   ✓ Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-1: шлюз недоступен → 2 повтора на пачку, серия из 2 попыток → failed(embedding_unavailable); каждая попытка списана  311ms
-   ✓ Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-2: после отказа «Повторить» эмбеддит только оставшиеся страницы сайта (3 из 5 уже есть → 2)  401ms
+ ✓ tests/public-page.unit.test.ts (11 tests) 47ms
+ ✓ tests/preview-flow.unit.test.ts (12 tests) 39ms
+ ✓ tests/widget-source.test.ts (22 tests) 35ms
+ ✓ tests/pdf-extract.test.ts (23 tests) 21797ms
+   ✓ ExtractPdf: обычные документы > SC-US-004-1: текстовый PDF с кириллицей → текст страницы  564ms
+   ✓ ExtractPdf: обычные документы > многостраничный (12 страниц) → по тексту на страницу в порядке документа  590ms
+   ✓ ExtractPdf: обычные документы > ровно 100 страниц — предел включительно  703ms
+   ✓ ExtractPdf: честные отказы > SC-US-004-2: скан без текстового слоя → no_text_layer, а не пустой успех  563ms
+   ✓ ExtractPdf: честные отказы > граница 90 %: 9 из 10 страниц без текста — отказ; 8 из 10 — успех  1191ms
+   ✓ ExtractPdf: честные отказы > шифрованный PDF с паролем → pdf_encrypted (для пользователя no_text_layer: текст недоступен)  484ms
+   ✓ ExtractPdf: честные отказы > битый PDF (мусор после %PDF-) → not_pdf  519ms
+   ✓ ExtractPdf: честные отказы > битый PDF (обрезанный файл) → not_pdf  455ms
+   ✓ ExtractPdf: честные отказы > битый PDF (цикл в дереве страниц) → not_pdf  420ms
+   ✓ ExtractPdf: честные отказы > 101 страница → too_large, число страниц — до извлечения текста  436ms
+   ✓ ExtractPdf: честные отказы > текст сверх потолка извлечения (≈ 8 млн символов) → too_large  3370ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > бомба распаковки (400 КБ → 400 МБ) — убит по резидентной памяти при настоящих пределах  4509ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > экспоненциальный разворот форм (2^40 вызовов, 7 КБ) — убит по таймауту  3027ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > глубокая вложенность массивов (500 000 уровней) → отказ в пределах таймаута  473ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > цепочка из 20 000 вложенных форм → отказ в пределах таймаута  927ms
+   ✓ ExtractPdf: патологический вход укладывается в таймаут и завершается отказом > 200 000 объектов при одной пустой странице → отказ в пределах таймаута  1031ms
+   ✓ Дочерний процесс: пределы исполняет родитель > зависший разбор → SIGKILL по таймауту, отказ pdf_timeout, а не ожидание  1513ms
+   ✓ Дочерний процесс: пределы исполняет родитель > документ с пустыми страницами и одной текстовой — страницы без текста не выдуманы  572ms
+ ✓ tests/resume.test.ts (3 tests) 916ms
+   ✓ Отказ шлюза эмбеддингов и продолжение по content_hash > SC-US-016-2: после отказа «Повторить» эмбеддит только оставшиеся страницы сайта (3 из 5 уже есть → 2)  326ms
 stderr | tests/crawl-job.integration.test.ts > Краулер в задаче индексации на настоящем Postgres > источник PDF не уходит в краулер: до фичи pdf-source — failed(internal), а не «готово»
 worker-index: обработчик источника не подключён — задача закрыта internal
 
- ✓ tests/crawl-job.integration.test.ts (7 tests) 3917ms
-   ✓ Краулер в задаче индексации на настоящем Postgres > бюджет страниц: free — 50, предпросмотр — 20 из задачи, nobadge — все 55  3123ms
+ ✓ tests/crawl-job.integration.test.ts (7 tests) 3680ms
+   ✓ Краулер в задаче индексации на настоящем Postgres > бюджет страниц: free — 50, предпросмотр — 20 из задачи, nobadge — все 55  3058ms
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > русский текст абзацами с заголовками — < 3 с, инварианты фрагментов соблюдены
-chunk-time русский текст абзацами с заголовками: 241 мс, фрагментов 2317
+chunk-time русский текст абзацами с заголовками: 178 мс, фрагментов 2317
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > одно слово без пробелов — < 3 с, инварианты фрагментов соблюдены
-chunk-time одно слово без пробелов: 243 мс, фрагментов 2000
+chunk-time одно слово без пробелов: 231 мс, фрагментов 2000
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены
-chunk-time один абзац слов без точек: 333 мс, фрагментов 2009
+chunk-time один абзац слов без точек: 338 мс, фрагментов 2009
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены
-chunk-time один абзац из крошечных предложений: 691 мс, фрагментов 3175
+chunk-time один абзац из крошечных предложений: 747 мс, фрагментов 3175
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > точки без пробелов — < 3 с, инварианты фрагментов соблюдены
-chunk-time точки без пробелов: 266 мс, фрагментов 4000
+chunk-time точки без пробелов: 247 мс, фрагментов 4000
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > 100 000 заголовков — < 3 с, инварианты фрагментов соблюдены
-chunk-time 100 000 заголовков: 173 мс, фрагментов 50000
+chunk-time 100 000 заголовков: 182 мс, фрагментов 50000
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > PDF: 2 млн символов строками — < 3 с, инварианты фрагментов соблюдены
-chunk-time PDF: 2 млн символов строками: 202 мс, фрагментов 1923
+chunk-time PDF: 2 млн символов строками: 181 мс, фрагментов 1923
 
 stdout | tests/chunk.test.ts > Время ChunkDocument на 2 млн символов (линейность) > эмодзи без пробелов — < 3 с, инварианты фрагментов соблюдены
-chunk-time эмодзи без пробелов: 179 мс, фрагментов 4000
+chunk-time эмодзи без пробелов: 182 мс, фрагментов 4000
 
- ✓ tests/chunk.test.ts (28 tests) 2508ms
-   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены  334ms
-   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены  692ms
- ✓ tests/config.test.ts (192 tests) 23536ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_VISITOR_ANSWERS: код 1, имя переменной и незащищённый вызов  406ms
+ ✓ tests/chunk.test.ts (28 tests) 2429ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац слов без точек — < 3 с, инварианты фрагментов соблюдены  339ms
+   ✓ Время ChunkDocument на 2 млн символов (линейность) > один абзац из крошечных предложений — < 3 с, инварианты фрагментов соблюдены  749ms
+ ✓ tests/config.test.ts (192 tests) 22338ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_VISITOR_ANSWERS: код 1, имя переменной и незащищённый вызов  404ms
    ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_ANSWERS: код 1, имя переменной и незащищённый вызов  381ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов  387ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов  437ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов  393ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_PAID: код 1, имя переменной и незащищённый вызов  380ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов  390ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_CREATE: код 1, имя переменной и незащищённый вызов  407ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов  361ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов  381ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов  458ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов  425ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_ACCOUNT_EMBED: код 1, имя переменной и незащищённый вызов  411ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов  393ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3032ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без ANSWER_MODEL: код 1 и имя переменной  436ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без EMBED_MODEL: код 1 и имя переменной  411ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без OPENROUTER_API_KEY: код 1 и имя переменной  450ms
-   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без N6_PUBLIC_ORIGIN: код 1 и имя переменной  378ms
- ✓ tests/theme.test.ts (29 tests) 28ms
- ✓ tests/pdf-multipart.test.ts (43 tests) 148ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_FREE: код 1, имя переменной и незащищённый вызов  452ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_DAY_PAID: код 1, имя переменной и незащищённый вызов  421ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_FREE: код 1, имя переменной и незащищённый вызов  437ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_BOT_MONTH_PAID: код 1, имя переменной и незащищённый вызов  619ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_ANSWERS: код 1, имя переменной и незащищённый вызов  574ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_CREATE: код 1, имя переменной и незащищённый вызов  529ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_PREVIEW_SESSION_ANSWERS: код 1, имя переменной и незащищённый вызов  457ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_IP_PREVIEWS: код 1, имя переменной и незащищённый вызов  537ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEWS: код 1, имя переменной и незащищённый вызов  517ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_PREVIEW_ANSWERS: код 1, имя переменной и незащищённый вызов  483ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_ACCOUNT_EMBED: код 1, имя переменной и незащищённый вызов  478ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без QUOTA_GLOBAL_EMBED: код 1, имя переменной и незащищённый вызов  513ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index: положительный контроль — с полной конфигурацией процесс не отказывает  3021ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без ANSWER_MODEL: код 1 и имя переменной  472ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без EMBED_MODEL: код 1 и имя переменной  456ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без OPENROUTER_API_KEY: код 1 и имя переменной  473ms
+   ✓ Отказ старта: 14 прогонов web + 14 прогонов worker-index > worker-index без N6_PUBLIC_ORIGIN: код 1 и имя переменной  424ms
+ ✓ tests/theme.test.ts (29 tests) 42ms
+ ✓ tests/source-lifecycle.unit.test.ts (6 tests) 39ms
+ ✓ tests/pdf-multipart.test.ts (43 tests) 145ms
 stderr | tests/auth.test.ts > Аутентификация > Отказ Redis закрывает вход до bcrypt/БД
 Авторизация: запрос не завершён; вход временно недоступен offline
 
- ✓ tests/auth.test.ts (10 tests) 986ms
-   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  670ms
- ✓ tests/source-lifecycle.unit.test.ts (5 tests) 23ms
- ✓ tests/crawl-pathological.test.ts (15 tests) 982ms
-   ✓ MEDIUM-2: сжатый ответ вопреки Accept-Encoding: identity > Content-Encoding: gzip → пропуск encoding, тело не читается и не распаковывается  362ms
- ✓ tests/index-job.unit.test.ts (15 tests) 33ms
- ✓ tests/openrouter.test.ts (15 tests) 48ms
- ✓ tests/spend.test.ts (8 tests) 106ms
- ✓ tests/robots.test.ts (10 tests) 433ms
-   ✓ robots.txt в обходе > robots.txt не отвечает (таймаут) → unreachable  304ms
- ✓ tests/quota-keys.test.ts (8 tests) 19ms
- ✓ tests/enums.test.ts (23 tests) 22ms
- ✓ tests/proxy-rate.test.ts (9 tests) 45ms
- ✓ tests/probes.test.ts (6 tests) 19513ms
-   ✓ EmbedProbe при старте worker-index > шлюз отвечает 1536 — процесс живёт; запрос с dimensions 1536; attempt → outcome success в журнале  3032ms
-   ✓ EmbedProbe при старте worker-index > длина вектора 1535 — код 1, dimension_mismatch в журнале  426ms
-   ✓ EmbedProbe при старте worker-index > шлюз 500 — код 1; попытка учтена  454ms
- ✓ tests/probe.concurrency.test.ts (1 test) 5387ms
-   ✓ reserveProbe между процессами > 48 процессов одновременно — ровно 24 слотов с разными номерами, остальные — отказ с объяснением  5259ms
- ✓ tests/validate-model-answer.test.ts (23 tests) 16ms
- ✓ tests/compose.test.ts (16 tests) 20ms
- ✓ tests/badge-required.test.ts (3 tests) 12ms
- ✓ tests/index-queue.integration.test.ts (1 test) 68ms
- ✓ tests/redis.integration.test.ts (1 test) 35ms
+ ✓ tests/auth.test.ts (10 tests) 1046ms
+   ✓ Аутентификация > Нет адреса / неверный пароль / erasing: одинаковые текст и статус, сопоставимое время  719ms
+ ✓ tests/crawl-pathological.test.ts (15 tests) 877ms
+   ✓ MEDIUM-2: сжатый ответ вопреки Accept-Encoding: identity > Content-Encoding: gzip → пропуск encoding, тело не читается и не распаковывается  363ms
+ ✓ tests/index-job.unit.test.ts (15 tests) 35ms
+ ✓ tests/openrouter.test.ts (15 tests) 57ms
+ ✓ tests/spend.test.ts (8 tests) 131ms
+ ✓ tests/robots.test.ts (10 tests) 416ms
+   ✓ robots.txt в обходе > robots.txt не отвечает (таймаут) → unreachable  303ms
+ ✓ tests/quota-keys.test.ts (8 tests) 26ms
+ ✓ tests/enums.test.ts (23 tests) 23ms
+ ✓ tests/proxy-rate.test.ts (9 tests) 42ms
+ ✓ tests/probes.test.ts (6 tests) 20864ms
+   ✓ EmbedProbe при старте worker-index > шлюз отвечает 1536 — процесс живёт; запрос с dimensions 1536; attempt → outcome success в журнале  3033ms
+   ✓ EmbedProbe при старте worker-index > длина вектора 1535 — код 1, dimension_mismatch в журнале  451ms
+   ✓ EmbedProbe при старте worker-index > шлюз 500 — код 1; попытка учтена  556ms
+ ✓ tests/probe.concurrency.test.ts (1 test) 5270ms
+   ✓ reserveProbe между процессами > 48 процессов одновременно — ровно 24 слотов с разными номерами, остальные — отказ с объяснением  5176ms
+ ✓ tests/validate-model-answer.test.ts (23 tests) 19ms
+ ✓ tests/compose.test.ts (16 tests) 26ms
+ ✓ tests/badge-required.test.ts (3 tests) 15ms
+ ✓ tests/index-queue.integration.test.ts (1 test) 53ms
+ ✓ tests/redis.integration.test.ts (1 test) 38ms
 stderr | tests/health.test.ts > health: 200 при БД с pgvector, 503 без расширения и при отказе БД
 Проверка здоровья: сервис недоступен pgvector не установлен
 
@@ -206,7 +205,7 @@ stderr | tests/health.test.ts > health: 200 при БД с pgvector, 503 без 
  ✓ tests/health.test.ts (1 test) 18ms
 
  Test Files  49 passed (49)
-      Tests  923 passed (923)
-   Start at  00:42:39
-   Duration  144.89s (transform 2.34s, setup 0ms, collect 11.60s, tests 111.37s, environment 24ms, prepare 6.97s)
+      Tests  929 passed (929)
+   Start at  00:58:32
+   Duration  140.60s (transform 2.12s, setup 0ms, collect 10.11s, tests 109.48s, environment 24ms, prepare 6.71s)
 

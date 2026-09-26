@@ -818,7 +818,7 @@
       "title": "Обновление и удаление источника",
       "description": "POST /api/sources/{id}/reindex — переиндексация той же задачей: переэмбеддятся только страницы с изменённым content_hash; DeleteSource: в одной транзакции поднять fence активной задачи и удалить фрагменты/страницы источника; следующий ответ не ссылается на его фрагменты.",
       "priority": "should",
-      "status": "planned",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "chunk-embed",

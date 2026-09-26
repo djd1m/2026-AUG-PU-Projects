@@ -61,7 +61,9 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
     setBusySource(sourceId); setSourceErrors({});
     try {
       const { status, body } = await send(`/api/sources/${sourceId}`, 'DELETE');
-      if (status === 204 || status === 404) { setConfirming(null); router.refresh(); return; }
+      if (status === 204) { setConfirming(null); router.refresh(); return; }
+      // 404 — не «удалено»: так же отвечают на истёкшую сессию (ревью Codex фичи 16, находка 8). Сообщить и обновить список.
+      if (status === 404) { setConfirming(null); setSourceErrors({ [sourceId]: 'Источник не найден или сессия истекла — обновите страницу и войдите снова' }); router.refresh(); return; }
       setSourceErrors({ [sourceId]: errorOf(body)?.message ?? 'Не удалось удалить. Попробуйте ещё раз' });
     } catch { setSourceErrors({ [sourceId]: 'Нет связи с сервером. Повторите' }); } finally { setBusySource(null); }
   };
@@ -100,6 +102,10 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
     } catch { setSettingsErrors({ form: 'Нет связи с сервером. Повторите' }); } finally { setSaving(false); }
   };
   const [verified, setVerified] = useState(p.answersVerified);
+  // Отметку снимает и сервер (новые фрагменты после «Обновить», миграция 004): после router.refresh() состояние
+  // обязано следовать за props, иначе кабинет показывает «проверено», а посетитель уже видит «настраивается»
+  // (ревью Codex фичи 16, находка 7).
+  useEffect(() => { setVerified(p.answersVerified); }, [p.answersVerified]);
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState('');
   const toggleVerified = async () => {

@@ -26,12 +26,25 @@ const once = (from, to) => (source) => {
   return source.slice(0, a) + to + source.slice(a + from.length);
 };
 const siteProc = 'apps/worker/src/crawl/site-processor.ts', sources = 'packages/db/src/sources.ts', bots = 'packages/db/src/bots.ts',
-  embed = 'apps/worker/src/embed/embed-and-store.ts', jobs = 'packages/db/src/index-jobs.ts';
+  embed = 'apps/worker/src/embed/embed-and-store.ts', jobs = 'packages/db/src/index-jobs.ts', crawl = 'apps/worker/src/crawl/crawl-site.ts';
 const mutations = [
   { id: 'unchanged-reembedded', title: '«Обновить» перечитывает и переэмбеддит неизменные страницы (content_hash не передаётся обходу) — SC-US-014-1',
     edits: [{ file: siteProc, apply: once('knownHashes: new Set(known.rows.map((r) => r.content_hash)),', 'knownHashes: new Set<string>(),') }] },
   { id: 'prune-without-complete-crawl', title: 'исчезнувшие страницы удаляются и после неполного обхода (временный сбой = «страницы нет»)',
-    edits: [{ file: siteProc, apply: once("if (result.stoppedBy === 'exhausted' && transient === 0) pruned", 'if (result.stoppedBy) pruned') }] },
+    edits: [{ file: siteProc, apply: once("if (result.stoppedBy === 'exhausted' && transient === 0 && !result.discoveryIncomplete) pruned", 'if (result.stoppedBy) pruned') }] },
+  { id: 'discovery-incomplete-ignored', title: 'сбой sitemap не мешает уборке: страницы, найденные только по карте сайта, удаляются (ревью находка 2)',
+    edits: [{ file: siteProc, apply: once(' && !result.discoveryIncomplete) pruned', ') pruned') }] },
+  { id: 'gone-as-transient', title: '404/410 читаются как временный сбой: удалённая страница с фрагментами остаётся навсегда (ревью находка 5)',
+    edits: [{ file: crawl, apply: once("        : result.status === 404 || result.status === 410 ? 'gone'\n", '') }] },
+  { id: 'moved-url-kept', title: 'переехавшая неизменная страница сохраняет старый адрес — бот ссылается на недоступный (ревью находка 4)',
+    edits: [{ file: siteProc, apply: once("if (visit.kind === 'unchanged') await tx.query(`UPDATE page SET url_or_page = $3", "if (visit.kind === 'unchanged' && false) await tx.query(`UPDATE page SET url_or_page = $3") }] },
+  { id: 'lock-order-bot-first', title: 'удаление берёт строку бота ДО задач источника — взаимная блокировка с воркером (ревью находка 1)',
+    edits: [{ file: sources, apply: once("    await tx.query('SELECT id FROM index_job WHERE source_id = $1 ORDER BY id FOR UPDATE', [sourceId]);",
+      "    if (!(await lockOwnedBot(tx, source.bot_id, accountId))) return null;\n    await tx.query('SELECT id FROM index_job WHERE source_id = $1 ORDER BY id FOR UPDATE', [sourceId]);") }] },
+  { id: 'preview-budget-kept', title: '«Обновить» сохранённого предпросмотра оставляет его бюджеты — задача навсегда предпросмотр (ревью находка 3)',
+    edits: [{ file: sources, apply: once('      page_budget = NULL, embed_budget = NULL, embed_used = 0, updated_at = $2', '      updated_at = $2') }] },
+  { id: 'retry-by-id-unlimited', title: '«Повторить» по id задачи не тратит запуск — обход суточного предела (ревью находка 6)',
+    edits: [{ file: jobs, apply: once("    if (!(await recordIndexStartTx(tx, job.bot_id, 'retry'))) return null;\n", '') }] },
   { id: 'starts-not-counted', title: 'предел запусков не считается: recordIndexStartTx всегда разрешает',
     edits: [{ file: sources, apply: once('  if (await indexStartsToday(tx, botId) >= INDEX_STARTS_PER_BOT_DAY) return false;\n', '') }] },
   { id: 'starts-without-bot-lock', title: 'создание сайта считает запуски без блокировки строки бота («прочитать, потом записать» под гонкой)',

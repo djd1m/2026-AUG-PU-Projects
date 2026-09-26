@@ -14,9 +14,10 @@ import { CrawlFailure, crawlSite, type CrawlOptions, type SkipReason } from './c
 import { PAGES_BY_PLAN } from './limits';
 import type { NetOptions } from './safe-get';
 
-// Пропуски, после которых «не увидели» ≠ «страницы нет»: сеть, таймаут, 5xx/4xx сайта. При любом из них обход
-// не считается полным, и исчезнувшие страницы НЕ удаляются (source-lifecycle). Остальные причины детерминированы:
-// страница запрещена robots, noindex, пуста, ушла за сайт — её прежние фрагменты удалять правильно.
+// Пропуски, после которых «не увидели» ≠ «страницы нет»: сеть, таймаут, не-2xx сайта (кроме 404/410 — это `gone`).
+// При любом из них, а также при неполном обнаружении (sitemap не прочитан, очередь переполнена) обход не считается
+// полным, и исчезнувшие страницы НЕ удаляются (source-lifecycle). Остальные причины детерминированы: страница
+// удалена (404/410), запрещена robots, noindex, пуста, ушла за сайт — её прежние фрагменты удалять правильно.
 export const TRANSIENT_SKIPS: readonly SkipReason[] = ['robots_unreachable', 'unreachable', 'timeout', 'too_many_redirects', 'http_error'];
 
 export interface SiteProcessorOptions {
@@ -61,10 +62,15 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
             chunksWritten += written.inserted;
             return;
           }
-          if (visit.kind === 'unchanged') seenHashes.add(visit.contentHash);
+          if (visit.kind === 'unchanged') { seenHashes.add(visit.contentHash); seenUrls.add(visit.url); }
           if (visit.kind === 'skipped' && TRANSIENT_SKIPS.includes(visit.reason)) transient += 1;
           await transaction(pool, async (tx) => {
             await recordProgressTx(tx, lease, { pagesDone: visit.kind === 'skipped' ? 0 : 1, pagesTotal: progress.pagesTotal });
+            // Неизменное содержимое переехало на другой адрес (ревью Codex находка 4): адрес страницы актуализируется —
+            // иначе бот ссылается на старый, уже недоступный. Строка с новым адресом уже есть — не трогаем (UNIQUE).
+            if (visit.kind === 'unchanged') await tx.query(`UPDATE page SET url_or_page = $3 WHERE id = (SELECT id FROM page
+              WHERE source_id = $1 AND content_hash = $2 AND url_or_page <> $3 ORDER BY id LIMIT 1)
+              AND NOT EXISTS (SELECT 1 FROM page WHERE source_id = $1 AND url_or_page = $3)`, [lease.sourceId, visit.contentHash, visit.url]);
             if (visit.kind === 'skipped') await tx.query('UPDATE source SET pages_skipped = pages_skipped + 1 WHERE id = $1', [lease.sourceId]);
           });
         },
@@ -78,7 +84,7 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
     }
     // Исчезнувшие страницы — только после ПОЛНОГО обхода без временных пропусков (иначе «не увидели» ≠ «нет»).
     let pruned = { pages: 0, chunks: 0 };
-    if (result.stoppedBy === 'exhausted' && transient === 0) pruned = await pruneUnseenPages(pool, lease, [...seenUrls], [...seenHashes]);
+    if (result.stoppedBy === 'exhausted' && transient === 0 && !result.discoveryIncomplete) pruned = await pruneUnseenPages(pool, lease, [...seenUrls], [...seenHashes]);
     // В журнал — только счётчики: ни тел страниц, ни их текста, ни адресов.
     const skipped = Object.entries(result.skipped).map(([reason, n]) => `${reason}=${n}`).join(', ') || 'нет';
     log(`worker-index: обход задачи ${lease.indexJobId}: прочитано ${result.pagesRead}, без изменений ${result.pagesUnchanged}, `
