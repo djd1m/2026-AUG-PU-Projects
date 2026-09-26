@@ -25,9 +25,11 @@ export type AskResult =
   | { kind: 'unknown'; text: string }
   | { kind: 'limit'; text: string }
   | { kind: 'expired' }      // 409 session_expired: токен не годен (другой /24) — взять новый через config и повторить
+  | { kind: 'badge' }        // 409 badge_required: сервер не видит показа бейджа — отправить показ заново и повторить
   | { kind: 'error' };
 
 const CONFIG_TIMEOUT_MS = 5000;
+const EVENT_TIMEOUT_MS = 5000;
 const ASK_TIMEOUT_MS = 30000;
 const str = (v: unknown, max: number): string | null => (typeof v === 'string' && v.length <= max ? v : null);
 
@@ -71,14 +73,15 @@ export async function fetchConfig(base: string, bot: string, session: string | n
   } catch { return null; }
 }
 
-// Событие бейджа: keepalive — клик уходит, даже если посетитель сразу покидает страницу. Ошибки глотаются (показ и клик
-// считает сервер с дедупликацией на сутки). Промис показа ждёт вопрос: на плане с бейджем сервер принимает вопрос только
-// от сессии, которой показ записан (ADR-004).
-export function sendEvent(base: string, body: { bot: string; visitor_session: string; type: 'badge_impression' | 'badge_click' }): Promise<void> {
+// Событие бейджа: keepalive — клик уходит, даже если посетитель сразу покидает страницу. Исключений нет: результат —
+// true, только если сервер ПРИНЯЛ событие (2xx), иначе false (сеть, 5xx, таймаут 5 с). Показ и клик сервер считает с
+// дедупликацией на сутки, поэтому повтор показа безопасен. На плане с бейджем сервер принимает вопрос только от сессии,
+// которой показ записан (ADR-004): недоставленный показ вопрос отправляет заново (askWithRecovery, ревью фичи 12, находка 4).
+export async function sendEvent(base: string, body: { bot: string; visitor_session: string; type: 'badge_impression' | 'badge_click' }): Promise<boolean> {
   try {
-    return fetch(`${base}/w/v1/event`, { method: 'POST', credentials: 'omit', mode: 'cors', keepalive: true,
-      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(() => undefined, () => undefined);
-  } catch { return Promise.resolve(); /* fetch недоступен — событие не отправлено, виджет работает */ }
+    return await withTimeout(EVENT_TIMEOUT_MS, async (signal) => (await fetch(`${base}/w/v1/event`, { method: 'POST', credentials: 'omit', mode: 'cors',
+      keepalive: true, signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).ok);
+  } catch { return false; /* сеть, таймаут или fetch недоступен — событие не доставлено, виджет работает */ }
 }
 
 function parseSource(value: unknown): SourceView | null {
@@ -93,7 +96,10 @@ function parseSource(value: unknown): SourceView | null {
 // { status: unknown, text, contact } }, 429 { error: { code: limit, message, contact } }, 409 { error: { code: session_expired } }.
 export function parseAsk(status: number, value: unknown): AskResult {
   if (typeof value !== 'object' || value === null) return { kind: 'error' };
-  if (status === 409) return (value as { error?: { code?: unknown } }).error?.code === 'session_expired' ? { kind: 'expired' } : { kind: 'error' };
+  if (status === 409) {
+    const code = (value as { error?: { code?: unknown } }).error?.code;
+    return code === 'session_expired' ? { kind: 'expired' } : code === 'badge_required' ? { kind: 'badge' } : { kind: 'error' };
+  }
   if (status === 429) {
     const message = str((value as { error?: { message?: unknown } }).error?.message, 500);
     return { kind: 'limit', text: message ?? 'Лимит вопросов на сегодня исчерпан.' };
@@ -105,6 +111,28 @@ export function parseAsk(status: number, value: unknown): AskResult {
   if (data.status === 'answered' && text) return { kind: 'answered', text, source: parseSource(data.source) };
   if (data.status === 'unknown' && text) return { kind: 'unknown', text };
   return { kind: 'error' };
+}
+
+// Вопрос с восстановлением, не больше ОДНОГО повтора вопроса. showAgain — отправить показ бейджа заново (null — плана с
+// бейджем нет). Показ не доставлен → отправить заново до вопроса (решает всё равно сервер); 409 badge_required → показ
+// заново и повтор, недоставленный показ — ошибка; 409 session_expired → новый токен (renew), показ для него и повтор.
+export interface AskSteps {
+  shown: () => Promise<boolean>; showAgain: (() => Promise<boolean>) | null;
+  ask: () => Promise<AskResult>; renew: () => Promise<boolean>;
+}
+export async function askWithRecovery(steps: AskSteps): Promise<AskResult> {
+  if (steps.showAgain && !(await steps.shown())) await steps.showAgain();
+  const first = await steps.ask();
+  if (first.kind === 'expired') {
+    if (!(await steps.renew())) return { kind: 'error' };
+    if (steps.showAgain) await steps.showAgain();
+    return steps.ask();
+  }
+  if (first.kind === 'badge') {
+    if (!steps.showAgain || !(await steps.showAgain())) return { kind: 'error' };
+    return steps.ask();
+  }
+  return first;
 }
 
 export async function ask(base: string, bot: string, body: { visitor_session: string; question: string }): Promise<AskResult> {

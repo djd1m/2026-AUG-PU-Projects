@@ -193,6 +193,11 @@ PLAN → VALIDATE → IMPLEMENT → REVIEW (`../../.claude/rules/feature-lifecyc
 необратимое (деньги, внешние действия, удаление чужого) — только с владельцем. Телеметрия
 p-replicator для `/feature`/`/go`/`/run` — с первой стадии, недоступные счётчики — `null` с причиной.
 
+**26.09.2026 владелец вернул Codex для ревью:** модель `gpt-6-astra` с усилием **medium** (не high). Первое ревью —
+фича 12 ([`08_review.md`](docs/features/visitor-ask-and-limits/08_review.md)). Вызов — `codex exec -s read-only` с
+`</dev/null`, постановка в файле (`../../.claude/rules/codex-invocation-local.md`). UI и виджет проверяются в
+контейнере Playwright (`scripts/check-responsive.sh --test tests/browser`).
+
 ## Parallel execution strategy
 
 Каждый пишущий агент — изолированный worktree и непересекающийся набор файлов; интеграция только по

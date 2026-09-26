@@ -1,0 +1,51 @@
+ Container n6-test-db-1 Creating 
+ Container n6-test-redis-1 Creating 
+ Container n6-test-db-1 Created 
+ Container n6-test-redis-1 Created 
+ Container n6-test-db-1 Starting 
+ Container n6-test-redis-1 Starting 
+ Container n6-test-db-1 Started 
+ Container n6-test-redis-1 Started 
+ Image n6-sufler-test:foundation Building 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-db-1 Waiting 
+ Container n6-test-redis-1 Waiting 
+ Container n6-test-redis-1 Healthy 
+ Container n6-test-db-1 Healthy 
+ Container n6-test-test-run-d48e113dd15d Creating 
+ Container n6-test-test-run-d48e113dd15d Created 
+visitor-limit-removed: дефект возвращён → 6 failed | 103 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+history-from-client: дефект возвращён → 2 failed | 107 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+cors-wildcard: дефект возвращён → 12 failed | 97 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+unverified-shown: дефект возвращён → 4 failed | 105 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+charge-on-success: дефект возвращён → 8 failed | 101 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+probe-read-then-write: дефект возвращён → 1 failed | 108 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+verified-kept-on-new-chunk: дефект возвращён → 1 failed | 108 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+verify-during-indexing: дефект возвращён → 1 failed | 108 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+history-age-whole: дефект возвращён → 4 failed | 105 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+badge-no-recovery: дефект возвращён → 1 failed | 108 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+unmetered-call: дефект возвращён → 1 failed | 108 passed (109) (код 1); код восстановлен → 109 passed (109) (код 0)
+mut exit=0
+cors-wildcard: дефект возвращён → 7 failed | 43 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+origin-outside-allowlist: дефект возвращён → 7 failed | 43 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+badge-normalized: дефект возвращён → 2 failed | 48 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+inline-style: дефект возвращён → 1 failed | 49 passed (50) (код 1); код восстановлен → 50 passed (50) (код 0)
+widget-mut exit=0

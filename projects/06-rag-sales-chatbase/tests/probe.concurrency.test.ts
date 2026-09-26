@@ -25,10 +25,16 @@ wait();`;
 function child(journal: string, start: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const p = spawn(process.execPath, ['-e', CHILD, bundle, journal, String(start)], { stdio: ['ignore', 'pipe', 'pipe'] });
-    let out = '';
+    let out = '', err = '';
     p.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    p.stderr.on('data', (d: Buffer) => { err += d.toString(); });
     p.on('error', reject);
-    p.on('exit', () => resolve(out.trim()));
+    // 'close', а не 'exit': 'exit' приходит раньше, чем дочитаны stdout/stderr, и тогда вывод процесса теряется.
+    // Процесс без распознанного вывода — 'error' с кодом выхода и stderr, а не молча пропавший результат.
+    p.on('close', (code, signal) => {
+      const text = out.trim();
+      resolve(/^(slot \d+|refused|error .*)$/s.test(text) ? text : `error без вывода: код ${code} сигнал ${signal} stderr ${err.trim().slice(0, 300)}`);
+    });
   });
 }
 

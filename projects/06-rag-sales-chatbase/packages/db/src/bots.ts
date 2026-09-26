@@ -124,11 +124,23 @@ Promise<{ company_name: string; contact: string | null; greeting: string } | nul
 }
 
 // A-N6-035: отметка «Я проверил ответы бота» ставится и снимается только владельцем (OWNED). Чужой — null.
-export async function setAnswersVerified(pool: Pool, botId: string, accountId: string, verified: boolean): Promise<{ answers_verified: boolean } | null> {
-  if (!pair(botId, accountId)) return null;
-  const row = (await pool.query<{ verified: boolean }>(`UPDATE bot b SET answers_verified_at = CASE WHEN $3::boolean THEN now() ELSE NULL END
-    FROM account a WHERE a.id = b.account_id AND ${OWNED} RETURNING b.answers_verified_at IS NOT NULL AS verified`, [botId, accountId, verified])).rows[0];
-  return row ? { answers_verified: row.verified } : null;
+// Поставить отметку нельзя, пока у бота есть задача индексации queued/running ('indexing'): владелец проверил бы
+// ответы по материалу, который ещё дописывается. Снимается отметка базой при любом новом фрагменте
+// (миграция 004, ревью фичи 12, находка 1).
+export type SetAnswersVerifiedResult = { answers_verified: boolean } | { kind: 'indexing' } | null;
+export function setAnswersVerified(pool: Pool, botId: string, accountId: string, verified: boolean): Promise<SetAnswersVerifiedResult> {
+  if (!pair(botId, accountId)) return Promise.resolve(null);
+  return transaction(pool, async (tx) => {
+    const bot = await tx.query(`SELECT b.id FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED} FOR UPDATE OF b`, [botId, accountId]);
+    if (!bot.rowCount) return null;
+    if (verified) {
+      const busy = await tx.query(`SELECT 1 FROM index_job WHERE bot_id = $1 AND status IN ('queued', 'running') LIMIT 1`, [botId]);
+      if (busy.rowCount) return { kind: 'indexing' } as const;
+    }
+    const row = (await tx.query<{ verified: boolean }>(`UPDATE bot SET answers_verified_at = CASE WHEN $2::boolean THEN now() ELSE NULL END
+      WHERE id = $1 RETURNING answers_verified_at IS NOT NULL AS verified`, [botId, verified])).rows[0]!;
+    return { answers_verified: row.verified };
+  });
 }
 
 export type AddOriginResult = { kind: 'added' | 'exists'; origin: string } | { kind: 'limit'; limit: number } | null;

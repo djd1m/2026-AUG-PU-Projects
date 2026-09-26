@@ -8,7 +8,7 @@
 //  - ни одного style-атрибута и <style> (CSP хозяина без unsafe-inline); иконки — SVG через createElementNS;
 //  - обработчики — на узлах внутри корня, не на window/document хозяина; Esc — на окне.
 
-import { ask, fetchConfig, sendEvent, type AskResult, type WidgetConfig } from './api';
+import { ask, askWithRecovery, fetchConfig, sendEvent, type AskResult, type WidgetConfig } from './api';
 import { storeSession } from './session';
 import { badgeIntact, renderBadge, startBadgeWatch, type BadgeOptions } from './badge';
 
@@ -69,7 +69,7 @@ export function renderReply(result: AskResult, contact: string): HTMLLIElement {
     }
     return item;
   }
-  item.textContent = result.kind === 'error' || result.kind === 'expired' ? `Не получилось получить ответ. Напишите: ${contact}` : result.text;
+  item.textContent = result.kind === 'error' || result.kind === 'expired' || result.kind === 'badge' ? `Не получилось получить ответ. Напишите: ${contact}` : result.text;
   return item;
 }
 
@@ -149,25 +149,27 @@ function buildPanel(root: ShadowRoot, shell: HTMLElement, config: WidgetConfig, 
     ? { href: config.badge_href, onClick: () => sendEvent(ctx.base, { bot: ctx.bot, visitor_session: ctx.visitorSession, type: 'badge_click' }) }
     : null;
   // Показ бейджа записывается сервером ДО первого вопроса: вопрос ждёт этот промис (ADR-004 на сервере).
-  let shown: Promise<void> = Promise.resolve();
-  const impression = () => { shown = sendEvent(ctx.base, { bot: ctx.bot, visitor_session: ctx.visitorSession, type: 'badge_impression' }); };
+  let shown: Promise<boolean> = Promise.resolve(true);
+  const impression = (): Promise<boolean> => { shown = sendEvent(ctx.base, { bot: ctx.bot, visitor_session: ctx.visitorSession, type: 'badge_impression' }); return shown; };
   if (badge) {
     renderBadge(slot, true, badge);
     startBadgeWatch(root, slot, badge);
     impression();
   }
-  // Вопрос: история — на сервере. 409 session_expired (сменился /24) — новый токен через config и ОДИН повтор.
-  const askOnce = async (question: string): Promise<AskResult> => {
-    await shown;
-    const first = await ask(ctx.base, ctx.bot, { visitor_session: ctx.visitorSession, question });
-    if (first.kind !== 'expired') return first;
-    const fresh = await fetchConfig(ctx.base, ctx.bot, null);
-    if (!fresh) return { kind: 'error' };
-    ctx.visitorSession = fresh.visitor_session;
-    storeSession(ctx.bot, fresh.visitor_session);
-    if (badge) { impression(); await shown; }
-    return ask(ctx.base, ctx.bot, { visitor_session: ctx.visitorSession, question });
-  };
+  // Вопрос: история — на сервере. Восстановление (недоставленный показ, 409 badge_required, 409 session_expired) и ОДИН
+  // повтор — askWithRecovery.
+  const askOnce = (question: string): Promise<AskResult> => askWithRecovery({
+    shown: () => shown,
+    showAgain: badge ? impression : null,
+    ask: () => ask(ctx.base, ctx.bot, { visitor_session: ctx.visitorSession, question }),
+    renew: async () => {
+      const fresh = await fetchConfig(ctx.base, ctx.bot, null);
+      if (!fresh) return false;
+      ctx.visitorSession = fresh.visitor_session;
+      storeSession(ctx.bot, fresh.visitor_session);
+      return true;
+    },
+  });
 
   panel.addEventListener('keydown', (event) => { if (event.key === 'Escape') { event.stopPropagation(); close(); } });
   let busy = false;

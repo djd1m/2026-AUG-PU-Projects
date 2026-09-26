@@ -172,24 +172,46 @@ function sources(): Array<{ file: string; code: string }> {
   for (const root of ROOTS) walk(root);
   return out;
 }
+// Вызовы клиента модели и признак «внутри run: meteredCall(»: позиция вызова лежит между `run:` и закрывающей скобкой
+// ОДНОГО из вызовов meteredCall( (скобки считаются по балансу; строки в этих файлах скобок-ловушек не несут).
+function clientCalls(code: string): { text: string; metered: boolean }[] {
+  const spans: { runAt: number; end: number }[] = [];
+  const open = /\bmeteredCall\s*(?:<[^>]*>)?\s*\(/g;
+  for (let m = open.exec(code); m; m = open.exec(code)) {
+    let depth = 0, end = code.length;
+    for (let i = m.index + m[0].length - 1; i < code.length; i++) {
+      if (code[i] === '(') depth++;
+      else if (code[i] === ')' && --depth === 0) { end = i; break; }
+    }
+    const runAt = code.slice(m.index, end).search(/\brun\s*:/);
+    if (runAt >= 0) spans.push({ runAt: m.index + runAt, end });
+  }
+  const out: { text: string; metered: boolean }[] = [];
+  const re = /\bclient\.(complete|embed)\s*\(/g;
+  for (let m = re.exec(code); m; m = re.exec(code)) out.push({ text: m[0], metered: spans.some((s) => m!.index > s.runAt && m!.index < s.end) });
+  return out;
+}
 describe('стражи по исходнику', () => {
-  it('ревью quota-and-spend L-1: клиент OpenRouter (.complete / .embed) вызывается ТОЛЬКО внутри run: meteredCall', () => {
+  it('ревью quota-and-spend L-1 (+ ревью фичи 12, находка 5): клиент OpenRouter (.complete / .embed) вызывается ТОЛЬКО ВНУТРИ скобок meteredCall( после run:', () => {
     const offenders: string[] = [];
     let seen = 0;
     for (const { file, code } of sources()) {
       if (file.endsWith('openrouter.ts')) continue;
-      const re = /\b(client|deps\.client)\.(complete|embed)\s*\(/g;
-      for (let m = re.exec(code); m; m = re.exec(code)) {
-        seen++;
-        // Ближайший meteredCall( выше по тексту должен открывать вызов, в чьём run: стоит этот вызов клиента.
-        const before = code.slice(0, m.index);
-        const call = before.lastIndexOf('meteredCall(');
-        const run = before.lastIndexOf('run:');
-        if (call < 0 || run < call || before.slice(call).split('meteredCall(').length > 2) offenders.push(`${file}: ${m[0]}`);
-      }
+      const found = clientCalls(code);
+      seen += found.length;
+      for (const call of found) if (!call.metered) offenders.push(`${file}: ${call.text}`);
     }
     expect(seen).toBeGreaterThanOrEqual(4);   // страж видит вызовы: ответ, эмбеддинг вопроса, эмбеддинги индексации, пробы
     expect(offenders).toEqual([]);
+  });
+  it('страж L-1 умеет падать: вызов клиента вне meteredCall рядом с настоящим meteredCall — нарушение', () => {
+    const metered = `const r = await meteredCall({ charges, run: () => deps.client.complete({ messages }) });`;
+    expect(clientCalls(metered).map((c) => c.metered)).toEqual([true]);
+    // Сценарий ревьюера: отдельная функция после meteredCall — прежний страж её пропускал.
+    expect(clientCalls(`${metered}\nfunction unmetered(client) { return client.complete({}); }`).map((c) => c.metered)).toEqual([true, false]);
+    expect(clientCalls(`const v = await options.client.embed({ texts });`).map((c) => c.metered)).toEqual([false]);
+    // Вызов до run: внутри тех же скобок — тоже вне учёта (charges считаются до run).
+    expect(clientCalls(`meteredCall({ charges: await client.embed({}), run: () => 1 })`).map((c) => c.metered)).toEqual([false]);
   });
   it('ревью quota-and-spend M2: построители списаний получают now ТОЛЬКО из SELECT now() БД, не из часов процесса', () => {
     const offenders: string[] = [];

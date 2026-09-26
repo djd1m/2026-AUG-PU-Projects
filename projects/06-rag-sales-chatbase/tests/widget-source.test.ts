@@ -9,7 +9,7 @@ import { readdirSync, readFileSync, writeFileSync, mkdtempSync, existsSync } fro
 import { randomBytes } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { parseAsk, parseConfig, safeHref } from '../apps/widget/src/api';
+import { askWithRecovery, parseAsk, parseConfig, safeHref, type AskResult } from '../apps/widget/src/api';
 import { classifyBadgeVisibility } from '../apps/widget/src/badge';
 import { BUDGET_BYTES, checkBundleSize } from '../apps/widget/scripts/check-bundle-size.mjs';
 
@@ -91,8 +91,30 @@ describe('разбор ответов сервера (fail-closed)', () => {
     expect(parseAsk(429, { error: { code: 'limit', message: 'Лимит' } })).toEqual({ kind: 'limit', text: 'Лимит' });
     expect(parseAsk(404, { error: {} })).toEqual({ kind: 'error' });
     expect(parseAsk(409, { error: { code: 'session_expired' } })).toEqual({ kind: 'expired' });
-    expect(parseAsk(409, { error: { code: 'badge_required' } })).toEqual({ kind: 'error' });
+    expect(parseAsk(409, { error: { code: 'badge_required' } })).toEqual({ kind: 'badge' });
+    expect(parseAsk(409, { error: { code: 'other' } })).toEqual({ kind: 'error' });
     expect(parseAsk(200, { data: { status: 'answered' } })).toEqual({ kind: 'error' });
+  });
+  it('ревью фичи 12 (находка 4): недоставленный показ бейджа отправляется заново; 409 badge_required — показ и ОДИН повтор; не больше одного повтора', async () => {
+    const run = async (answers: AskResult[], shows: boolean[], opts: { firstShown?: boolean; badge?: boolean; renew?: boolean } = {}) => {
+      const log: string[] = [];
+      const result = await askWithRecovery({
+        shown: async () => opts.firstShown ?? true,
+        showAgain: opts.badge === false ? null : async () => { log.push('show'); return shows.shift() ?? false; },
+        ask: async () => { log.push('ask'); return answers.shift() ?? { kind: 'error' }; },
+        renew: async () => { log.push('renew'); return opts.renew ?? true; },
+      });
+      return { result, log };
+    };
+    const ok: AskResult = { kind: 'unknown', text: 'x' };
+    expect(await run([ok], [])).toEqual({ result: ok, log: ['ask'] });
+    expect(await run([ok], [true], { firstShown: false })).toEqual({ result: ok, log: ['show', 'ask'] });
+    expect(await run([{ kind: 'badge' }, ok], [true])).toEqual({ result: ok, log: ['ask', 'show', 'ask'] });
+    expect(await run([{ kind: 'badge' }, ok], [false])).toEqual({ result: { kind: 'error' }, log: ['ask', 'show'] });
+    expect(await run([{ kind: 'badge' }, { kind: 'badge' }, ok], [true, true])).toEqual({ result: { kind: 'badge' }, log: ['ask', 'show', 'ask'] });
+    expect(await run([{ kind: 'badge' }, ok], [], { badge: false })).toEqual({ result: { kind: 'error' }, log: ['ask'] });
+    expect(await run([{ kind: 'expired' }, ok], [true])).toEqual({ result: ok, log: ['ask', 'renew', 'show', 'ask'] });
+    expect(await run([{ kind: 'expired' }, ok], [], { renew: false })).toEqual({ result: { kind: 'error' }, log: ['ask', 'renew'] });
   });
   it('классификация видимости бейджа (перенос N1): удалён / скрыт напрямую / нулевой размер / виден', () => {
     const base = { display: 'inline-flex', visibility: 'visible', opacity: '1', hidden: false, offsetWidth: 90, offsetHeight: 20 };

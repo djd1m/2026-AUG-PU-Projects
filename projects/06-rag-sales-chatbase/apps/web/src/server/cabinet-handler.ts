@@ -38,7 +38,7 @@ export interface CabinetDependencies {
   // Ядро ответа в режиме owner: бот — только по сессии владельца; чужой → { status: 'not_found' }.
   answer: (botId: string, accountId: string, request: VisitorRequest) => Promise<AnswerResult>;
   // A-N6-035: отметка «Я проверил ответы бота» (visitor-ask-and-limits). Чужой — null.
-  setVerified: (botId: string, accountId: string, verified: boolean) => Promise<{ answers_verified: boolean } | null>;
+  setVerified: (botId: string, accountId: string, verified: boolean) => Promise<{ answers_verified: boolean } | { kind: 'indexing' } | null>;
   log?: (line: string) => void;
 }
 
@@ -249,6 +249,8 @@ export function createBotVerifyHandler(deps: CabinetDependencies) {
     if (input instanceof Response) return input;
     if (typeof input.verified !== 'boolean') return fail(400, 'invalid', 'Ожидается { verified: true | false }');
     const saved = await deps.setVerified(botId, entry.accountId, input.verified);
-    return saved ? json({ data: saved }) : notFound();
+    if (!saved) return notFound();
+    if ('kind' in saved) return fail(409, 'indexing', 'Дождитесь окончания загрузки материалов и проверьте ответы по ним');
+    return json({ data: saved });
   });
 }

@@ -5,7 +5,7 @@
 // счёт по ПОПЫТКАМ; 152-ФЗ (текст только у unknown, сторож стирает текст и историю).
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createHash, randomBytes } from 'node:crypto';
-import { createPool, readBotCabinet, sweepVisitorText, type Pool } from '../packages/db/src/index';
+import { createPool, readBotCabinet, setAnswersVerified, sweepVisitorText, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { loadCeilings, moscowMonth, type Ceilings } from '../packages/rag/src/index';
 import { createWidgetAskDependencies } from '../apps/web/src/server/widget-ask-deps';
@@ -73,17 +73,24 @@ describe.skipIf(!databaseUrl)('POST /w/v1/ask на настоящем Postgres +
     const account = (await pool.query<{ id: string }>(`INSERT INTO account (email, password_hash, plan) VALUES ($1, 'x', $2) RETURNING id`,
       [`v${randomBytes(6).toString('hex')}@example.ru`, over.plan ?? 'free'])).rows[0]!.id;
     const key = randomBytes(16).toString('base64url');
-    const bot = (await pool.query<{ id: string }>(`INSERT INTO bot (account_id, status, public_key, company_name, contact, public_enabled, answers_verified_at)
-      VALUES ($1, 'active', $2, 'Пекарня «Колос»', $3, $4, CASE WHEN $5::boolean THEN now() END) RETURNING id`,
-    [account, key, CONTACT, over.publicEnabled ?? false, over.verified ?? true])).rows[0]!.id;
+    const bot = (await pool.query<{ id: string }>(`INSERT INTO bot (account_id, status, public_key, company_name, contact, public_enabled)
+      VALUES ($1, 'active', $2, 'Пекарня «Колос»', $3, $4) RETURNING id`,
+    [account, key, CONTACT, over.publicEnabled ?? false])).rows[0]!.id;
     for (const origin of over.origins ?? [HOST]) await pool.query('INSERT INTO allowed_origin (bot_id, origin) VALUES ($1, $2)', [bot, origin]);
     const source = (await pool.query<{ id: string }>(`INSERT INTO source (bot_id, kind, root_url, status) VALUES ($1, 'site', 'https://kolos.example/', 'ready') RETURNING id`, [bot])).rows[0]!.id;
     const page = (await pool.query<{ id: string }>(`INSERT INTO page (source_id, bot_id, url_or_page, title, content_hash) VALUES ($1, $2, 'https://kolos.example/ceny', 'Цены', $3) RETURNING id`,
       [source, bot, createHash('sha256').update(PRICE + bot).digest('hex')])).rows[0]!.id;
     const chunk = (await pool.query<{ id: string }>(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding)
       VALUES ($1, $2, $3, 0, 'Цены', $4, 20, $5::vector) RETURNING id`, [bot, source, page, PRICE, `[${vectorFor(PRICE).join(',')}]`])).rows[0]!.id;
-    return { account, bot, key, chunk };
+    // Отметка — ПОСЛЕ фрагментов: новый фрагмент снимает её триггером (миграция 004), как в жизни.
+    if (over.verified ?? true) await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [bot]);
+    return { account, bot, key, chunk, source, page };
   }
+  // Состарить ходы истории на minutes: все или только первый (самый старый). history_at — время самого старого хода.
+  const age = (id: string, minutes: number, which: 'all' | 'first') => pool.query(`UPDATE visitor_session SET
+      history = (SELECT jsonb_agg(CASE WHEN $3 = 'all' OR e.ord = 1 THEN jsonb_set(e.t, '{at}', to_jsonb((e.t->>'at')::timestamptz - make_interval(mins => $2)))
+        ELSE e.t END ORDER BY e.ord) FROM jsonb_array_elements(history) WITH ORDINALITY AS e(t, ord)),
+      history_at = history_at - make_interval(mins => $2) WHERE id = $1`, [id, minutes, which]);
   const used = async (scope: string, scopeKey: string) => Number((await pool.query<{ used: number }>(
     'SELECT COALESCE(sum(used), 0)::int AS used FROM quota_counter WHERE scope = $1 AND scope_key = $2', [scope, scopeKey])).rows[0]!.used);
   const idOf = (token: string) => token.split('.')[0]!;
@@ -166,9 +173,47 @@ describe.skipIf(!databaseUrl)('POST /w/v1/ask на настоящем Postgres +
     // Ходов хранится ≤ 2; история старше 30 минут не читается.
     const stored = (await pool.query<{ n: number }>('SELECT jsonb_array_length(history) AS n FROM visitor_session WHERE id = $1', [idOf(vs)])).rows[0]!.n;
     expect(stored).toBe(2);
-    await pool.query(`UPDATE visitor_session SET history_at = now() - interval '31 minutes' WHERE id = $1`, [idOf(vs)]);
+    await age(idOf(vs), 31, 'all');
     await w.ask(s.key, { visitor_session: vs, question: 'Доставка ночью?' });
     expect(w.h.gateway.chats[2]!.messages[1]!.content).not.toContain('Сколько стоит доставка?');
+  });
+
+  it('ревью фичи 12 (находка 2): возраст — ПО ХОДУ: просроченный первый ход не идёт в промпт, свежий второй идёт; при записи старый ход выбрасывается', async () => {
+    const w = wire();
+    const s = await seed();
+    const vs = await w.visitor(s.key);
+    await w.ask(s.key, { visitor_session: vs, question: 'Сколько стоит доставка?' });
+    await w.ask(s.key, { visitor_session: vs, question: 'А доставка в выходные?' });
+    await age(idOf(vs), 31, 'first');
+    await w.ask(s.key, { visitor_session: vs, question: 'Доставка ночью?' });
+    const prompt = w.h.gateway.chats[2]!.messages[1]!.content;
+    expect(prompt).not.toContain('Сколько стоит доставка?');
+    expect(prompt).toContain('А доставка в выходные?');
+    const row = (await pool.query<{ qs: string[]; oldest_is_second: boolean }>(`SELECT ARRAY(SELECT e->>'question' FROM jsonb_array_elements(history) e) AS qs,
+      history_at = (history->0->>'at')::timestamptz AS oldest_is_second FROM visitor_session WHERE id = $1`, [idOf(vs)])).rows[0]!;
+    expect(row).toEqual({ qs: ['А доставка в выходные?', 'Доставка ночью?'], oldest_is_second: true });
+  });
+
+  it('ревью фичи 12 (находка 1): новый фрагмент бота снимает отметку «проверено»; поставить отметку во время индексации — отказ', async () => {
+    const w = wire();
+    const s = await seed();
+    const vs = await w.visitor(s.key);
+    expect((await w.ask(s.key, { visitor_session: vs, question: 'Сколько стоит доставка?' })).body.data).toMatchObject({ status: 'answered' });
+    await pool.query(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding)
+      VALUES ($1, $2, $3, 1, 'Акции', 'Новая акция: скидка 10% по средам.', 12, $4::vector)`, [s.bot, s.source, s.page, `[${vectorFor('акция').join(',')}]`]);
+    expect((await readBotCabinet(pool, s.bot, s.account))!.answers_verified).toBe(false);
+    const again = await w.ask(s.key, { visitor_session: vs, question: 'Сколько стоит доставка?' });
+    expect(again.body.data).toMatchObject({ status: 'unknown', reason: 'not_verified' });
+    // Чужой бот не затронут.
+    const other = await seed();
+    expect((await readBotCabinet(pool, other.bot, other.account))!.answers_verified).toBe(true);
+    // Индексация идёт — отметку не поставить; снять можно; после окончания — ставится.
+    await pool.query(`INSERT INTO index_job (bot_id, source_id, idempotency_key, status) VALUES ($1, $2, gen_random_uuid(), 'running')`, [s.bot, s.source]);
+    expect(await setAnswersVerified(pool, s.bot, s.account, true)).toEqual({ kind: 'indexing' });
+    expect(await setAnswersVerified(pool, s.bot, s.account, false)).toEqual({ answers_verified: false });
+    await pool.query(`UPDATE index_job SET status = 'done' WHERE bot_id = $1`, [s.bot]);
+    expect(await setAnswersVerified(pool, s.bot, s.account, true)).toEqual({ answers_verified: true });
+    expect(await setAnswersVerified(pool, s.bot, other.account, true)).toBeNull();
   });
 
   it('A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» + контакт; ни эмбеддинга, ни модели, ни списания; после отметки — ответ', async () => {
@@ -288,11 +333,27 @@ describe.skipIf(!databaseUrl)('POST /w/v1/ask на настоящем Postgres +
     await w.ask(s.key, { visitor_session: vs, question: 'Есть ли вакансии?' });
     await w.ask(s.key, { visitor_session: vs, question: 'Сколько стоит доставка?' });
     await pool.query(`UPDATE question_log SET text_expires_at = now() - interval '1 second' WHERE bot_id = $1 AND text IS NOT NULL`, [s.bot]);
-    await pool.query(`UPDATE visitor_session SET history_at = now() - interval '31 minutes' WHERE id = $1`, [idOf(vs)]);
+    await age(idOf(vs), 31, 'all');
     const swept = await sweepVisitorText(pool, 100);
     expect(swept.questionTexts).toBeGreaterThanOrEqual(1);
     expect(swept.histories).toBeGreaterThanOrEqual(1);
     expect((await pool.query('SELECT count(*)::int AS n FROM question_log WHERE bot_id = $1 AND text IS NOT NULL', [s.bot])).rows[0].n).toBe(0);
     expect((await pool.query('SELECT history, history_at FROM visitor_session WHERE id = $1', [idOf(vs)])).rows[0]).toEqual({ history: [], history_at: null });
+  });
+
+  it('ревью фичи 12 (находки 2, 3): сторож стирает ТОЛЬКО просроченный ход, свежий остаётся; свежую историю не трогает', async () => {
+    const w = wire();
+    const s = await seed();
+    const vs = await w.visitor(s.key);
+    await w.ask(s.key, { visitor_session: vs, question: 'Сколько стоит доставка?' });
+    await w.ask(s.key, { visitor_session: vs, question: 'А доставка в выходные?' });
+    const fresh = await w.visitor(s.key, HOST, '198.51.100.77');
+    await w.ask(s.key, { visitor_session: fresh, question: 'Самовывоз или доставка?' });
+    await age(idOf(vs), 31, 'first');
+    await sweepVisitorText(pool, 100);
+    const row = (await pool.query<{ qs: string[]; dated: boolean }>(`SELECT ARRAY(SELECT e->>'question' FROM jsonb_array_elements(history) e) AS qs,
+      history_at = (history->0->>'at')::timestamptz AS dated FROM visitor_session WHERE id = $1`, [idOf(vs)])).rows[0]!;
+    expect(row).toEqual({ qs: ['А доставка в выходные?'], dated: true });
+    expect((await pool.query<{ n: number }>('SELECT jsonb_array_length(history) AS n FROM visitor_session WHERE id = $1', [idOf(fresh)])).rows[0]!.n).toBe(1);
   });
 });

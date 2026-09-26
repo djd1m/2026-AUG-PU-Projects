@@ -1,7 +1,9 @@
 // из N6 scripts/test-widget-mutations.mjs — та же схема «копия проекта → дефект → красный прогон → восстановление → зелёный».
 // Мутации стражей фичи visitor-ask-and-limits (постановка координатора): снят предел на посетителя (visitor_answers);
 // история принимается от клиента; CORS отвечает `*`; ответ непроверенного бота показывается (A-N6-035); счёт по УСПЕХАМ
-// (квота списывается после вызова); + ревью quota-and-spend M1: счётчик проб «дописать, потом прочитать».
+// (квота списывается после вызова); + ревью quota-and-spend M1: счётчик проб «дописать, потом прочитать»;
+// + независимое ревью фичи 12 (08_review.md): отметка не снимается новым фрагментом, отметка ставится во время
+// индексации, возраст истории — целиком, виджет не восстанавливает показ бейджа, вызов модели вне meteredCall.
 // Наборы visitor-ask.integration и quota.concurrency ходят в НАСТОЯЩИЙ Postgres + pgvector: запускать в образе
 //   docker compose -f compose.test.yml --project-directory . --env-file <вне репо> run --rm --build test \
 //     sh -c 'node scripts/test-db.mjs && node scripts/test-visitor-ask-mutations.mjs'
@@ -19,7 +21,7 @@ if (!process.env.DATABASE_URL) {
 const project = process.cwd(), directory = mkdtempSync(join(tmpdir(), 'n6-ask-mutations-'));
 const output = resolve('tests/artifacts/visitor-ask-and-limits/mutations'); mkdirSync(output, { recursive: true });
 const TESTS = ['tests/widget-ask.unit.test.ts', 'tests/widget-handler.unit.test.ts', 'tests/visitor-ask.integration.test.ts', 'tests/quota.concurrency.test.ts',
-  'tests/spend.test.ts', 'tests/probe.concurrency.test.ts'];
+  'tests/spend.test.ts', 'tests/probe.concurrency.test.ts', 'tests/widget-source.test.ts', 'tests/bot-cabinet.unit.test.ts'];
 const span = (start, end, replacement) => (source) => {
   const a = source.indexOf(start), b = source.indexOf(end, a);
   if (a < 0 || b < 0 || source.indexOf(start, a + 1) >= 0 || source.indexOf(end, b + 1) >= 0) return null;
@@ -28,7 +30,8 @@ const span = (start, end, replacement) => (source) => {
 const once = (from, to) => span(from, from, to);
 const chain = (...steps) => (source) => steps.reduce((text, step) => (text === null ? null : step(text)), source);
 const ceilings = 'packages/db/src/ceilings.ts', ask = 'apps/web/src/server/widget-ask-handler.ts', cors = 'apps/web/src/server/check-origin.ts',
-  spend = 'packages/rag/src/spend.ts';
+  spend = 'packages/rag/src/spend.ts', reset = 'packages/db/migrations/004_verified_reset.sql', bots = 'packages/db/src/bots.ts',
+  visitor = 'packages/db/src/visitor.ts', widgetApi = 'apps/widget/src/api.ts', answer = 'packages/rag/src/answer.ts';
 const mutations = [
   { id: 'visitor-limit-removed', title: 'снят предел на посетителя: visitorAnswerCharges не списывает visitor_answers (FR-LIMIT-001, SC-US-007-1/3)',
     edits: [{ file: ceilings, apply: once("    { scope: 'visitor_answers', scopeKey: uuid(input.visitorSession, 'сессия посетителя'), period: day, n: 1, limit: ceiling(ceilings, 'visitor_answers') },\n", '') }] },
@@ -60,6 +63,16 @@ const mutations = [
         '  if (used <= PROBE_DAILY_LIMIT) return used;',
         '  throw new Error(`проба ${kind} исчерпала',
       ].join('\n'))) }] },
+  { id: 'verified-kept-on-new-chunk', title: 'новый фрагмент НЕ снимает отметку «проверено» (ревью фичи 12, находка 1, high)',
+    edits: [{ file: reset, apply: span('CREATE TRIGGER chunk_resets_verified', 'EXECUTE FUNCTION bot_reset_verified_on_chunk();', '') }] },
+  { id: 'verify-during-indexing', title: 'отметка ставится, пока идёт индексация (ревью фичи 12, находка 1)',
+    edits: [{ file: bots, apply: once("      if (busy.rowCount) return { kind: 'indexing' } as const;\n", '') }] },
+  { id: 'history-age-whole', title: 'возраст истории не по ходу: просроченный ход читается и не стирается (ревью фичи 12, находки 2, 3)',
+    edits: [{ file: visitor, apply: once("THEN (e.t->>'at')::timestamptz > now() - make_interval(mins => ${VISITOR_HISTORY_TTL_MINUTES}) ELSE false END", 'THEN true ELSE false END') }] },
+  { id: 'badge-no-recovery', title: 'виджет не восстанавливает показ бейджа на 409 badge_required (ревью фичи 12, находка 4)',
+    edits: [{ file: widgetApi, apply: span("  if (first.kind === 'badge') {", '    return steps.ask();\n  }\n  return first;', '  return first;') }] },
+  { id: 'unmetered-call', title: 'вызов клиента модели вне meteredCall рядом с настоящим (ревью фичи 12, находка 5)',
+    edits: [{ file: answer, apply: (source) => `${source}\nexport function unmetered(client: { complete: (a: object) => unknown }) { return client.complete({}); }\n` }] },
 ];
 // Убитый по таймауту тест оставляет дочерний процесс разбора сиротой — прибрать его, не трогая чужое.
 const reap = () => {

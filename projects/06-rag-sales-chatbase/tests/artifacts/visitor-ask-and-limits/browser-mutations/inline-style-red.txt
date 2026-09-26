@@ -1,0 +1,173 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/widget-embed.test.ts (33 tests | 15 failed) 40065ms
+   × chromium > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 416ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   ✓ chromium > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось  465ms
+   ✓ chromium > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  491ms
+   × chromium > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity) 531ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   ✓ chromium > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  714ms
+   × chromium > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка 579ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   × chromium > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом 803ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   × chromium > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана 516ms
+     → expected [ Array(1) ] to deeply equal []
+   ✓ chromium > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана 223ms
+   ✓ chromium > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1357ms
+   ✓ chromium > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  382ms
+   × firefox > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 3091ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   ✓ firefox > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось  806ms
+   ✓ firefox > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  844ms
+   × firefox > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity) 748ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   ✓ firefox > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  1271ms
+   × firefox > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка 1252ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   × firefox > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом 1395ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   × firefox > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана 1030ms
+     → expected [ Array(1) ] to deeply equal []
+   ✓ firefox > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана  594ms
+   ✓ firefox > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  1922ms
+   ✓ firefox > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  790ms
+   × webkit > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений 2844ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   ✓ webkit > перекрёстный-запрос: страница ВНЕ списка бота (8098) — config 403 без ACAO, в документе хозяина ничего не появилось  920ms
+   ✓ webkit > протечка-стилей: пузырь 56 px в 16 px от угла вопреки враждебному CSS; окно 360 px, шрифт свой; хозяин не задет  1317ms
+   × webkit > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity) 1007ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   ✓ webkit > бейдж на nobadge: сервер сказал false — бейджа нет и показ не отправлен  1247ms
+   × webkit > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка 1465ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   × webkit > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом 1566ms
+     → expected 'style-src-attr inline\n' to be '' // Object.is equality
+   × webkit > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана 1374ms
+     → expected [ Array(1) ] to deeply equal []
+   ✓ webkit > перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана  510ms
+   ✓ webkit > доступность: диалог, aria-live, Esc закрывает и возвращает фокус пузырю, цели ≥ 44, предупреждение о данных; axe без серьёзных нарушений  2252ms
+   ✓ webkit > ≤ 400 px: окно на весь экран; тема хозяина data-theme="dark" — тёмная палитра  951ms
+
+ Test Files  1 failed (1)
+      Tests  15 failed | 18 passed (33)
+   Start at  15:57:23
+   Duration  42.34s (transform 692ms, setup 0ms, collect 1.80s, tests 40.07s, environment 0ms, prepare 130ms)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений
+ FAIL  tests/browser/widget-embed.test.ts > firefox > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений
+ FAIL  tests/browser/widget-embed.test.ts > webkit > перекрёстный-запрос + политика-безопасности: на 8099 виджет загружен под строгим CSP, ACAO = ровно origin хозяина, 0 нарушений
+AssertionError: expected 'style-src-attr inline\n' to be '' // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[31m+ style-src-attr inline[39m
+[31m+[39m
+
+ ❯ tests/browser/widget-embed.test.ts:58:34
+     56|       await expect.poll(() => harness.log.filter((l) => l.path === '/w…
+     57|       expect(harness.log.filter((l) => l.acao.some((a) => a !== HOST))…
+     58|       expect(await cspLog(page)).toBe('');
+       |                                  ^
+     59|       expect(problems).toEqual([]);
+     60|     }));
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)
+ FAIL  tests/browser/widget-embed.test.ts > firefox > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)
+ FAIL  tests/browser/widget-embed.test.ts > webkit > бейдж на free: виден, ведёт на лендинг с from=домен хозяина; удаление, display:none и чужой лист стилей в корне — восстанавливаются (N1 badge-integrity)
+AssertionError: expected 'style-src-attr inline\n' to be '' // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[31m+ style-src-attr inline[39m
+[31m+[39m
+
+ ❯ tests/browser/widget-embed.test.ts:117:34
+    115|       // Граница изоляции донора (isolation.test): document.querySelec…
+    116|       expect(await page.evaluate(() => document.querySelector('.n6-bad…
+    117|       expect(await cspLog(page)).toBe('');
+       |                                  ^
+    118|       expect(problems).toEqual([]);
+    119|     }));
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка
+ FAIL  tests/browser/widget-embed.test.ts > firefox > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка
+ FAIL  tests/browser/widget-embed.test.ts > webkit > ответ рендерится ТЕКСТОМ (N1 xss): разметка модели не исполняется, javascript: ссылка отброшена, https — ссылка
+AssertionError: expected 'style-src-attr inline\n' to be '' // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[31m+ style-src-attr inline[39m
+[31m+[39m
+
+ ❯ tests/browser/widget-embed.test.ts:158:34
+    156|       await expect.poll(() => page.locator('n6-sufler .msg.bot >> nth=…
+    157|       harness.askOverride = null;
+    158|       expect(await cspLog(page)).toBe('');
+       |                                  ^
+    159|       // 429 — ожидаемый ответ выше; браузер пишет его в консоль как «…
+    160|       expect(problems.filter((p) => !/status of 429/.test(p))).toEqual…
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом
+ FAIL  tests/browser/widget-embed.test.ts > firefox > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом
+ FAIL  tests/browser/widget-embed.test.ts > webkit > вопрос → ответ с источником по настоящему маршруту (фейковая модель): предполётный 204, ровно один ACAO хозяина, показ бейджа ДО вопроса; предел сессии — 429 с контактом
+AssertionError: expected 'style-src-attr inline\n' to be '' // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[31m+ style-src-attr inline[39m
+[31m+[39m
+
+ ❯ tests/browser/widget-embed.test.ts:190:34
+    188|       expect(harness.modelCalls() - before).toBe(VISITOR_LIMIT);
+    189|       expect(harness.log.filter((l) => l.path === '/w/v1/ask' && l.met…
+    190|       expect(await cspLog(page)).toBe('');
+       |                                  ^
+    191|       expect(problems.filter((p) => !/status of 429/.test(p))).toEqual…
+    192|     }));
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/browser/widget-embed.test.ts > chromium > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана
+ FAIL  tests/browser/widget-embed.test.ts > firefox > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана
+ FAIL  tests/browser/widget-embed.test.ts > webkit > A-N6-035: бот без отметки «проверено» — «Бот ещё настраивается» и контакт, модель НЕ вызвана
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "console: Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-+0DQgGA8d0sP6DPDwyD3559xDQhZluLSviT0CUqvOdk='), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. The action has been blocked.",[39m
+[31m+ ][39m
+
+ ❯ tests/browser/widget-embed.test.ts:202:24
+    200|       expect(reply.text).toBe(`Бот ещё настраивается и пока не отвечае…
+    201|       expect(harness.modelCalls()).toBe(before);
+    202|       expect(problems).toEqual([]);
+       |                        ^
+    203|     }));
+    204| 
+ ❯ open tests/browser/widget-embed.test.ts:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+

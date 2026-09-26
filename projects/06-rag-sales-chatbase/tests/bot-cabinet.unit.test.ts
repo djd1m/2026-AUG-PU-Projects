@@ -8,7 +8,7 @@ import path from 'node:path';
 import { installSnippet, parseAllowedOrigin, parseCompanyName, parseContact, parseGreeting, readContact } from '../packages/rag/src/bot-settings';
 import { ribbonOf, type RibbonJob } from '../apps/web/src/lib/source-ribbon';
 import { readWidgetBundleFile } from '../apps/web/src/server/widget-bundle';
-import { createBotCreateHandler, createOwnerAskHandler, type CabinetDependencies } from '../apps/web/src/server/cabinet-handler';
+import { createBotCreateHandler, createBotVerifyHandler, createOwnerAskHandler, type CabinetDependencies } from '../apps/web/src/server/cabinet-handler';
 
 const ORIGIN = 'https://sufler.test.invalid';
 const KEY = 'AbCdEfGhIjKlMnOpQrStUv';
@@ -156,5 +156,27 @@ describe('порядок входа маршрутов кабинета', () => 
       expect(r.status).toBe(400);
       expect(calls).not.toContain('answer');
     }
+  });
+  // Ревью фичи 12: обработчик отметки «проверено» (A-N6-035) — вход, строгий boolean, чужой бот, отказ во время индексации.
+  const BOT = '33333333-3333-4333-8333-333333333333';
+  it('отметка «проверено»: чужой Origin — 403 до записи; не boolean и лишнее поле — 400 до записи; плохой id — 404', async () => {
+    const calls: string[] = [];
+    expect((await createBotVerifyHandler(deps(calls))(request({ origin: 'https://evil.example' }, { verified: true }), BOT)).status).toBe(403);
+    for (const body of [{ verified: 'true' }, { verified: 1 }, {}, { verified: true, bot_id: BOT }]) {
+      expect((await createBotVerifyHandler(deps(calls))(request({ origin: ORIGIN }, body), BOT)).status, JSON.stringify(body)).toBe(400);
+    }
+    expect((await createBotVerifyHandler(deps(calls))(request({ origin: ORIGIN }, { verified: true }), 'not-a-uuid')).status).toBe(404);
+    expect(calls).not.toContain('verify');
+  });
+  it('отметка «проверено»: запись с аккаунтом сессии; чужой бот — 404; идёт индексация — 409 indexing', async () => {
+    const seen: unknown[] = [];
+    const run = (result: Awaited<ReturnType<CabinetDependencies['setVerified']>>) => createBotVerifyHandler(deps([], {
+      setVerified: async (...args) => { seen.push(args); return result; } }))(request({ origin: ORIGIN }, { verified: true }), BOT);
+    const ok = await run({ answers_verified: true });
+    expect([ok.status, await ok.json()]).toEqual([200, { data: { answers_verified: true } }]);
+    expect(seen[0]).toEqual([BOT, '11111111-1111-4111-8111-111111111111', true]);
+    expect((await run(null)).status).toBe(404);
+    const busy = await run({ kind: 'indexing' });
+    expect([busy.status, ((await busy.json()) as { error: { code: string } }).error.code]).toEqual([409, 'indexing']);
   });
 });
