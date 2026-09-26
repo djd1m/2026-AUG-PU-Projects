@@ -12,7 +12,8 @@ import { UploadError } from '../apps/web/src/server/upload-contract';
 import { presentVideo, type VideoRow } from '../apps/web/src/server/screen';
 import { loadLimits } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
-// Фича 27a clip-cta (ADR-017, FR-RESULT-006): вид и адрес призыва, video.setCta без пересборки, кнопка на /c/.
+// Фича 27 clip-cta (ADR-017, FR-RESULT-006): вид и адрес призыва, video.setCta, кнопка на /c/. Пиксели и пересборка (27b) —
+// tests/clip-cta-render.test.ts, tests/cta-media.test.ts, tests/clip-cta-rerender.integration.test.ts.
 const YT = 'https://www.youtube.com/watch?v=ukZyNkgqVho';
 
 describe('разбор адреса призыва', () => {
@@ -115,38 +116,18 @@ describe('video.create с призывом', () => {
   });
 });
 
-describe('video.setCta — только сохраняет, без пересборки', () => {
+describe('video.setCta — разбор до БД (поведение с базой — tests/clip-cta-rerender.integration.test.ts)', () => {
   const video = randomUUID();
-  const service = (rowCount: number) => {
-    const query = vi.fn(async () => ({ rowCount, rows: [] }));
-    return { query, cta: new VideoCtaService({ query } as never) };
+  const service = () => {
+    const connect = vi.fn(async () => { throw new Error('БД не должна вызываться'); });
+    return { connect, cta: new VideoCtaService({ connect, query: connect } as never, loadLimits(environment()), async () => {}) };
   };
-  it('сохраняет нормализованный адрес одним UPDATE по владельцу, не трогая updated_at и квоту', async () => {
-    const { query, cta } = service(1);
-    await expect(cta.setCta('account', { video_id: video, cta_kind: 'watch_full', cta_url: YT })).resolves
-      .toEqual({ video_id: video, cta_kind: 'watch_full', cta_url: YT });
-    expect(query).toHaveBeenCalledOnce();
-    const [sql, params] = query.mock.calls[0] as unknown as [string, unknown[]];
-    expect(sql).toMatch(/UPDATE video v SET cta_kind=\$3,cta_url=\$4/);
-    expect(sql).toContain('v.account_id=$2'); expect(sql).toContain('deleted_at IS NULL');
-    expect(sql).not.toMatch(/updated_at|quota|job_attempt|render_version/);
-    expect(params).toEqual([video, 'account', 'watch_full', YT]);
-  });
-  it('снятие призыва — none и NULL', async () => {
-    const { query, cta } = service(1);
-    await cta.setCta('account', { video_id: video, cta_kind: 'none', cta_url: null });
-    expect((query.mock.calls[0] as unknown as [string, unknown[]])[1]).toEqual([video, 'account', 'none', null]);
-  });
-  it('чужая и несуществующая запись — одинаковый 404', async () => {
-    const { cta } = service(0);
-    await expect(cta.setCta('stranger', { video_id: video, cta_kind: 'none' })).rejects.toMatchObject({ status: 404, message: 'Запись не найдена' });
-  });
   it('непригодное — 422 без обращения к БД', async () => {
     for (const input of [{ video_id: video, cta_kind: 'watch_full', cta_url: 'http://x.example/' }, { video_id: video, cta_kind: 'nope' },
       { video_id: 'not-uuid', cta_kind: 'none' }, { video_id: video, cta_kind: 'none', extra: 1 }, { video_id: video, cta_kind: 'subscribe', cta_url: '' }]) {
-      const { query, cta } = service(1);
+      const { connect, cta } = service();
       await expect(cta.setCta('account', input)).rejects.toMatchObject({ status: 422 });
-      expect(query).not.toHaveBeenCalled();
+      expect(connect).not.toHaveBeenCalled();
     }
   });
   it('tRPC: 404/422 сохраняют коды, неизвестная ошибка — 500 без подробностей', async () => {
@@ -154,6 +135,8 @@ describe('video.setCta — только сохраняет, без пересб�
       video: { create: async () => { throw new Error('no'); } }, cta: { setCta } });
     await expect(caller(async () => { throw new UploadError('not_found', 'Запись не найдена', 404); }).video.setCta({})).rejects.toMatchObject({ code: 'NOT_FOUND' });
     await expect(caller(async () => { throw new UploadError('invalid', 'Разрешены только ссылки https://', 422); }).video.setCta({})).rejects.toMatchObject({ code: 'UNPROCESSABLE_CONTENT', message: 'Разрешены только ссылки https://' });
+    await expect(caller(async () => { throw new UploadError('conflict', 'Клипы записи ещё собираются', 409); }).video.setCta({})).rejects.toMatchObject({ code: 'CONFLICT' });
+    await expect(caller(async () => { throw new UploadError('refused', 'Пересборки на сегодня исчерпаны', 429); }).video.setCta({})).rejects.toMatchObject({ code: 'TOO_MANY_REQUESTS', message: 'Пересборки на сегодня исчерпаны' });
     await expect(caller(async () => { throw new Error('db down'); }).video.setCta({})).rejects.toMatchObject({ code: 'INTERNAL_SERVER_ERROR', message: 'Не удалось сохранить призыв. Повторите позже' });
     await expect(appRouter.createCaller({ account: 'a', idempotencyKey: null, requestId: 'r', video: { create: async () => { throw new Error('no'); } } })
       .video.setCta({})).rejects.toMatchObject({ code: 'INTERNAL_SERVER_ERROR' });

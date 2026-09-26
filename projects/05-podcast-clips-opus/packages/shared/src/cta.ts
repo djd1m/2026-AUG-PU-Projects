@@ -9,6 +9,14 @@ export const CTA_CHOICE_LABELS = {
 export const CTA_BUTTON_LABELS = {
   watch_full: 'Смотреть полный выпуск →', subscribe: 'Подписаться →', open_link: 'Перейти по ссылке →',
 } as const satisfies Record<Exclude<CtaKind, 'none'>, string>;
+// Надпись В КАДРЕ (27b): короткая, адрес в пиксели не идёт — путь зрителя: метка → /c/КОД → кнопка.
+export const CTA_FRAME_LABELS = {
+  watch_full: 'Полный выпуск — по ссылке', subscribe: 'Подписывайтесь — ссылка ниже', open_link: 'Подробнее — по ссылке',
+} as const satisfies Record<Exclude<CtaKind, 'none'>, string>;
+/** Меняются ли ПИКСЕЛИ клипа при смене призыва: только вид (адрес в кадр не вшивается). */
+export function ctaPixelsChange(from: unknown, to: unknown): boolean {
+  return readCtaKind(from) !== readCtaKind(to);
+}
 export const CTA_CHOICES = CTA_KIND.map(kind => ({ kind, label: CTA_CHOICE_LABELS[kind] }));
 
 export class CtaError extends Error {

@@ -5,11 +5,13 @@ import { getRuntime } from './runtime';
 import { startWatchdog, watchdogTick } from './watchdog';
 import { ClipMusicService } from './clip-music';
 import { VideoRetryService } from './video-retry';
+import { VideoCtaService } from './video-cta';
 function createQueueRuntime() {
   const runtime = getRuntime();
   const transport = createQueues(runtime.config);
   return { ...transport,
     music: new ClipMusicService(runtime.pool, runtime.config.limits, job => transport.enqueue(job)),
+    cta: new VideoCtaService(runtime.pool, runtime.config.limits, job => transport.enqueue(job)),
     retry: new VideoRetryService(runtime.pool, runtime.config.limits, job => transport.enqueue(job)),
     async enqueueInitial(videoId: string) {
       const attempt = await ensureInitialAttempt(runtime.pool, videoId);

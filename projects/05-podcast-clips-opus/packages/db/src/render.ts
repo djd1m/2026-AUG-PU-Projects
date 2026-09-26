@@ -5,7 +5,7 @@ import { parseTranscript } from '@clipmaker/shared/transcript';
 export interface RenderInput {
   music_track_id: string | null; render_version: number;
   compact: boolean; loudness_median_db: string | null; cut_plan: [number, number][] | null;
-  object_key: string; actual_bytes: string; duration_seconds: string; music: boolean; teaser: boolean; title: string; plan: unknown;
+  object_key: string; actual_bytes: string; duration_seconds: string; music: boolean; teaser: boolean; title: string; plan: unknown; cta_kind: string | null;
   index: number; start_seconds: string; end_seconds: string; code: string; words: unknown; language: string; segments: unknown;
 }
 // Lock video first, as retry/watchdog do. Never compare the video fence for sibling clips.
@@ -22,7 +22,7 @@ export async function lockRender(tx: PoolClient, attempt: Attempt): Promise<bool
 export async function getRenderInput(pool: Pool, attempt: Attempt) {
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
-    const result = await tx.query<RenderInput>(`SELECT c.music_track_id,c.render_version,v.object_key,v.actual_bytes,v.duration_seconds,v.music,v.teaser,v.compact,v.loudness_median_db,c.cut_plan,c.title,a.plan,
+    const result = await tx.query<RenderInput>(`SELECT c.music_track_id,c.render_version,v.object_key,v.actual_bytes,v.duration_seconds,v.music,v.teaser,v.cta_kind,v.compact,v.loudness_median_db,c.cut_plan,c.title,a.plan,
       c.index,c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
       JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       JOIN clip_link l ON l.clip_id=c.id JOIN transcript t ON t.video_id=v.id WHERE c.id=$1`, [attempt.clip_id]);

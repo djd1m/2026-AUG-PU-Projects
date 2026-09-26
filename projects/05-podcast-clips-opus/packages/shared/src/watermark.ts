@@ -15,6 +15,11 @@ export function measureText(text: string, fontSize: number): number {
   }, 0);
 }
 function watermarkFontSize(height: number): number { return Math.ceil(height * 73 / 1920); }
+/** Верх плашки метки: зависит только от высоты кадра (кегль и отступы), не от адреса и кода. */
+export function watermarkPlateTop(height: number): number {
+  const fontSize = watermarkFontSize(height);
+  return height - Math.ceil(height * 0.12) - (2 * 16 + Math.ceil(fontSize * 1.15));
+}
 export function watermarkGeometry(width: number, height: number, origin: string, code: string) {
   const url = new URL(origin);
   if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash ||

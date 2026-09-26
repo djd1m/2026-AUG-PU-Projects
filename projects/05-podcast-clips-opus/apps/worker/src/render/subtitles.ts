@@ -21,6 +21,8 @@ export const SUBTITLE_OUTLINE = 5;
 /** Лёгкая тень: обводка спасает на пёстром фоне, тень добавляет отрыв от светлого. */
 export const SUBTITLE_SHADOW = 1;
 export const SUBTITLE_WRAP_CHARS = 24;
+/** Нижний край текста субтитров — на столько пикселей выше низа кадра (ASS MarginV, Alignment 2). */
+export const SUBTITLE_MARGIN_V = 500;
 /** Сколько держать подпись после конца слова, если следующее не началось. */
 export const SUBTITLE_HOLD_SECONDS = 1;
 export type SubtitleSegment = TranscriptWord;
@@ -105,7 +107,7 @@ WrapStyle: 2
 ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Liberation Sans Narrow,${SUBTITLE_FONT_SIZE},&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,${SUBTITLE_OUTLINE},${SUBTITLE_SHADOW},2,54,54,500,1
+Style: Default,Liberation Sans Narrow,${SUBTITLE_FONT_SIZE},&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,${SUBTITLE_OUTLINE},${SUBTITLE_SHADOW},2,54,54,${SUBTITLE_MARGIN_V},1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 ${events.join('\n')}

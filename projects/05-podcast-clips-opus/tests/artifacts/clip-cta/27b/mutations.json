@@ -1,0 +1,74 @@
+[
+  {
+    "id": "geometry-fail-closed",
+    "red": {
+      "id": "geometry-fail-closed",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "geometry-fail-closed",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "none-renders",
+    "red": {
+      "id": "none-renders",
+      "phase": "red",
+      "exit": 1,
+      "passed": 1,
+      "failed": 6
+    },
+    "green": {
+      "id": "none-renders",
+      "phase": "green",
+      "exit": 0,
+      "passed": 7,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "filter-dropped",
+    "red": {
+      "id": "filter-dropped",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "filter-dropped",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "worker-kind",
+    "red": {
+      "id": "worker-kind",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "worker-kind",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  }
+]

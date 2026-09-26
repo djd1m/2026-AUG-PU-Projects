@@ -1,5 +1,6 @@
 import { buildCompactionGraph, mapTime, planDuration, type Segment } from './compaction.js';
 import { prepareTeaser } from './teaser.js';
+import { prepareCta } from './cta-overlay.js';
 import { preparePackshot, buildFlashFilter } from './packshot.js';
 // Adapted from jan-clone buildFilterChain/renderClip. Filter ordering is a security invariant.
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
@@ -18,7 +19,7 @@ import { prepareMusic, buildMusicAudioGraph, selectTrack, resolveMusicTrack, STI
 export { buildMusicAudioGraph } from './music.js';
 export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   watermark: boolean, origin: string, code: string, source?: SourceDimensions,
-  plan?: FramingPositions, follow?: FollowSegment[], flash?: string, teaser?: string): string {
+  plan?: FramingPositions, follow?: FollowSegment[], flash?: string, teaser?: string, cta?: string): string {
   const filters: string[] = [];
   const { width, height } = FORMAT_DIMENSIONS[format];
   // Следование за лицом важнее неподвижного плана: оно и есть неподвижный план, когда лицо одно.
@@ -27,6 +28,8 @@ export function buildFilterChain(format: ClipFormat, assFilePath: string | null,
   if (assFilePath !== null) filters.push(`ass='${escapeFFmpegPath(assFilePath)}':fontsdir='${escapeFFmpegPath(SUBTITLE_FONTS)}'`);
   if (teaser) filters.push(teaser);
   if (flash) filters.push(flash);
+  // Призыв ПОСЛЕ вспышки (не засвечивается) и ДО метки (метка всегда поверх).
+  if (cta) filters.push(cta);
   if (watermark) filters.push(buildWatermarkDrawtext(width, height, origin, code));
   return filters.join(',');
 }
@@ -35,6 +38,8 @@ export interface RenderOptions {
   cutPlan?: Segment[];
   inputPath: string; outputPath: string; startTime: number; endTime: number;
   format: ClipFormat; words: TranscriptWord[]; watermark: boolean; origin: string; code: string; signal?: AbortSignal; music?: boolean; clipIndex?: number; teaser?: boolean; title?: string;
+  /** Вид призыва из базы (ADR-017, 27b); читается fail-closed, адрес в кадр не идёт. */
+  cta?: string | null;
 }
 export async function renderClip(options: RenderOptions): Promise<RenderOutcome> {
   const sourceDuration = options.endTime - options.startTime;
@@ -58,6 +63,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       console.info(JSON.stringify({ event: 'music_track_fallback' }));
     }
     const teaser = options.teaser ? await prepareTeaser(options.title ?? '', width, temp) : null;
+    const cta = prepareCta(options.cta, width, height, duration, !!teaser);
     const trackIndex = typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined;
     const track = options.musicTrackId == null
       ? (options.music ? selectTrack(trackIndex) : null)
@@ -85,7 +91,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       }
     }
     const vf = buildFilterChain(options.format, ass, options.watermark, options.origin, options.code,
-      video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined, teaser?.filter);
+      video ?? undefined, plan, follow, packshot ? buildFlashFilter(packshot.t0_ms) : undefined, teaser?.filter, cta?.filter);
     const source = video === null ? `color=c=0x181818:s=${width}x${height}:r=25:d=${duration},` : cuts ? '[vc]' : `[0:${video.index}]`;
     const compactionGraph = cuts ? buildCompactionGraph(cuts, options.startTime, video?.index ?? null) + ';' : '';
     await execFFmpeg(['-y', '-protocol_whitelist', 'file', '-ss', String(options.startTime), '-t', String(sourceDuration),
@@ -95,7 +101,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       '-t', String(duration), '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
       '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k',
       '-ar', '44100', '-ac', '2', '-movflags', '+faststart', options.outputPath], FFMPEG_TIMEOUT_MS, options.signal);
-    return { music_skip_reason: musicSkipReason, duration_seconds: await probeDuration(options.outputPath, options.signal), teaser: teaser?.result ?? null, music: music ? { track: music.track, gain_db: music.gain_db } : null,
+    return { music_skip_reason: musicSkipReason, duration_seconds: await probeDuration(options.outputPath, options.signal), teaser: teaser?.result ?? null, ...(cta ? { cta: cta.result } : {}), music: music ? { track: music.track, gain_db: music.gain_db } : null,
       packshot: packshot ? { stinger: packshot.stinger, gain_db: packshot.gain_db } : null };
   } finally { await rm(temp, { recursive: true, force: true }); }
 }

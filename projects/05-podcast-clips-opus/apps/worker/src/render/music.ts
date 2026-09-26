@@ -59,7 +59,7 @@ export const STINGERS = [{ id: 'kenney-explosion-crunch-002',
   path: resolve('apps/worker/assets/sfx/kenney-explosion-crunch-002.ogg') }] as const;
 export interface MusicMix { track: string; gain_db: number }
 export type MusicSkipReason = 'speech_too_quiet' | 'track_too_quiet' | 'gain_out_of_range' | 'measure_failed';
-export interface RenderOutcome { music_skip_reason?: MusicSkipReason | null; duration_seconds: number; teaser?: import('./teaser.js').TeaserResult | null; music: MusicMix | null; packshot: PackshotMix | null }
+export interface RenderOutcome { music_skip_reason?: MusicSkipReason | null; duration_seconds: number; teaser?: import('./teaser.js').TeaserResult | null; cta?: import('./cta-overlay.js').CtaResult | null; music: MusicMix | null; packshot: PackshotMix | null }
 export function buildMusicAudioGraph(gainDb: number, duration: number, packshot?: PreparedPackshot | null, speechLabel = '[0:a:0]'): string {
   return speechLabel + 'aformat=sample_rates=44100:channel_layouts=stereo[speech];'
     + `[1:a:0]atrim=0:${duration},asetpts=PTS-STARTPTS,volume=${gainDb}dB,`

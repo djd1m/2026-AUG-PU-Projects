@@ -110,7 +110,8 @@ partner: t.router({
     return { data: await ctx.cta.setCta(ctx.account, input), meta: { request_id: ctx.requestId } };
   } catch (cause) {
     const status = cause instanceof UploadError ? cause.status : 503;
-    throw new TRPCError({ code: status === 404 ? 'NOT_FOUND' : status === 422 ? 'UNPROCESSABLE_CONTENT' : 'INTERNAL_SERVER_ERROR',
+    throw new TRPCError({ code: status === 404 ? 'NOT_FOUND' : status === 422 ? 'UNPROCESSABLE_CONTENT'
+      : status === 409 ? 'CONFLICT' : status === 429 ? 'TOO_MANY_REQUESTS' : 'INTERNAL_SERVER_ERROR',
       message: cause instanceof UploadError ? cause.message : 'Не удалось сохранить призыв. Повторите позже', cause });
   }
 }) }), clip: t.router({

@@ -22,6 +22,10 @@ export function CtaFields({ id, kind, url, disabled, onKind, onUrl }: { id: stri
       <small className="muted">Кнопка с этой ссылкой появится на странице клипа; домен увидит зритель.</small></>}
   </div>;
 }
+export function ctaSavedMessage(kind: CtaKind, rerendering: number): string {
+  const page = kind === 'none' ? 'Призыв убран со страниц клипов.' : 'Сохранено. Кнопка уже на страницах клипов.';
+  return rerendering > 0 ? `${page} Пересобираем клипов: ${rerendering} — в видео изменение появится после сборки.` : page;
+}
 export function VideoCtaForm({ videoId, initialKind, initialUrl }: { videoId: string; initialKind: CtaKind; initialUrl: string | null }) {
   const [kind, setKind] = useState<CtaKind>(initialKind), [url, setUrl] = useState(initialUrl ?? '');
   const [saved, setSaved] = useState({ kind: initialKind, url: initialUrl ?? '' });
@@ -32,15 +36,16 @@ export function VideoCtaForm({ videoId, initialKind, initialUrl }: { videoId: st
     if (problem) { setError(problem); setMessage(''); return; }
     setBusy(true); setError(''); setMessage('');
     try {
-      const result = await rpc<{ cta_kind: CtaKind; cta_url: string | null }>('video.setCta',
+      const result = await rpc<{ cta_kind: CtaKind; cta_url: string | null; rerendering?: number }>('video.setCta',
         { video_id: videoId, cta_kind: kind, cta_url: kind === 'none' ? null : url.trim() }, true);
       setKind(result.cta_kind); setUrl(result.cta_url ?? ''); setSaved({ kind: result.cta_kind, url: result.cta_url ?? '' });
-      setMessage(result.cta_kind === 'none' ? 'Призыв убран со страниц клипов.' : 'Сохранено. Кнопка уже на страницах клипов.');
+      setMessage(ctaSavedMessage(result.cta_kind, result.rerendering ?? 0));
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Не удалось сохранить призыв'); }
     finally { setBusy(false); }
   }
   return <section className="cta-panel" aria-labelledby="cta-heading"><h2 id="cta-heading">Призыв в конце</h2>
-    <p className="muted">Главная кнопка на странице клипа по короткой ссылке. В видео надпись пока не добавляется.</p>
+    <p className="muted">Главная кнопка на странице клипа по короткой ссылке и короткая надпись в последние 2,5 с видео, над адресом.
+      Смена вида пересобирает все готовые клипы записи — по одной пересборке на клип из суточного лимита; смена только ссылки — без пересборки.</p>
     <form onSubmit={event => { event.preventDefault(); void save(); }}>
       <CtaFields id="video-cta" kind={kind} url={url} disabled={busy} onKind={next => { setKind(next); setError(''); setMessage(''); }}
         onUrl={next => { setUrl(next); setError(''); setMessage(''); }} />

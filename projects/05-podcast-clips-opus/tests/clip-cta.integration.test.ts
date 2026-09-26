@@ -59,7 +59,7 @@ describe.skipIf(!dbUrl)('clip-cta in real PostgreSQL', () => {
   it('video.setCta: владелец меняет и снимает; чужой — 404 и строка не тронута; updated_at и квота не меняются', async () => {
     const owner = await account(), stranger = await account(), id = await video(owner);
     const before = (await pool.query('SELECT updated_at FROM video WHERE id=$1', [id])).rows[0].updated_at as Date;
-    const cta = new VideoCtaService(pool);
+    const cta = new VideoCtaService(pool, loadLimits(environment()), async () => {});
     await expect(cta.setCta(stranger, { video_id: id, cta_kind: 'open_link', cta_url: 'https://evil.example/' })).rejects.toMatchObject({ status: 404 });
     await expect(cta.setCta(owner, { video_id: randomUUID(), cta_kind: 'none' })).rejects.toMatchObject({ status: 404 });
     expect((await pool.query('SELECT cta_kind FROM video WHERE id=$1', [id])).rows[0].cta_kind).toBe('none');
@@ -78,7 +78,7 @@ describe.skipIf(!dbUrl)('clip-cta in real PostgreSQL', () => {
 
   it('/c/{code} читает призыв записи из базы и показывает кнопку автора', async () => {
     const owner = await account(), id = await video(owner);
-    await new VideoCtaService(pool).setCta(owner, { video_id: id, cta_kind: 'watch_full', cta_url: YT });
+    await new VideoCtaService(pool, loadLimits(environment()), async () => {}).setCta(owner, { video_id: id, cta_kind: 'watch_full', cta_url: YT });
     const clip = (await pool.query(`INSERT INTO clip(video_id,"index",start_seconds,end_seconds,title,status,watermarked)
       VALUES ($1,1,0,20,'Клип','done',true) RETURNING id`, [id])).rows[0].id;
     await pool.query("INSERT INTO clip_link(clip_id,code) VALUES ($1,'CTDUUG')", [clip]);
