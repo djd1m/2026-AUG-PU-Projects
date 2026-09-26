@@ -36,7 +36,15 @@
 		}
 	}
 
-	@reads method GET HEAD OPTIONS
+	# Чтения страниц и API — под пределом. НЕ считается неизменяемая статика с хэшем в имени: сборка Next
+	# (/_next/static/*) и бандл виджета (/w/widget.<хэш>.js). Холодная загрузка страницы — 9 запросов, из них 8
+	# статика (замер на стенде 26.09, A-N6-039): с ней в пределе 120/мин офис за одним NAT получал 429 уже на
+	# ~13 открытиях страниц в минуту — предел наказывал добросовестных (shared-resource-verification п.4).
+	# Статику отдаёт web из файлов сборки, платных вызовов за ней нет.
+	@reads {
+		method GET HEAD OPTIONS
+		not path /_next/static/* /w/widget.*.js
+	}
 	rate_limit @reads {
 		zone door_read {
 			key {client_ip}

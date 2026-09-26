@@ -48,6 +48,13 @@ describe('Дверь (proxy/Caddyfile) — числа и заголовки', ()
     expect(caddy).toMatch(/zone door_read \{\s*key \{client_ip\}\s*events 120\s*window 1m/);
     expect(caddy).toContain('header_up X-Forwarded-For {client_ip}');
   });
+  it('A-N6-039: предел чтений не считает неизменяемую статику (/_next/static, бандл виджета); мутации — любой метод, кроме чтения, без исключений по пути', () => {
+    expect(caddy).toMatch(/@reads \{\s*method GET HEAD OPTIONS\s*not path \/_next\/static\/\* \/w\/widget\.\*\.js\s*\}/);
+    expect(caddy).toMatch(/@mutations not method GET HEAD OPTIONS\n/);
+    // Исключение не должно расползтись на страницы и API: других `not path` в двери нет.
+    const active = caddy.split('\n').filter((l) => !l.trim().startsWith('#')).join('\n');
+    expect(active.match(/not path/g)).toHaveLength(1);
+  });
   it('дверь НЕ ставит CORS: ровно один ACAO ставит только web (ADR-005)', () => {
     const active = caddy.split('\n').filter((l) => !l.trim().startsWith('#')).join('\n');
     expect(active).not.toMatch(/Access-Control-Allow-Origin/i);
