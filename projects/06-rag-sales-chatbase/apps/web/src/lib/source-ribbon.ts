@@ -21,7 +21,13 @@ export const STEP_STATE_TEXT: Record<StepView, string> = {
 export interface RibbonJob {
   state: 'running' | 'done' | 'failed' | 'no_response'; queued: boolean;
   pages_done: number; pages_total: number | null; chunks_done: number; reason?: string;
+  // budget-truncation (A-N6-052): у done — чем усечена задача; null/нет поля — не усечена.
+  truncated?: string | null;
 }
+// Форма слова «страница» после числа (1 страница, 3 страницы, 11 страниц).
+export const pagesWord = (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 'страница'
+  : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'страницы' : 'страниц');
+
 // Причины, случающиеся ДО первого фрагмента (чтение источника), и ПОСЛЕ (эмбеддинги). Неизвестная — по прогрессу.
 const READ_REASONS = new Set(['robots_disallowed', 'unreachable', 'blocked_address', 'no_text', 'not_pdf', 'too_large', 'no_text_layer']);
 const INDEX_REASONS = new Set(['quota_refused', 'embedding_unavailable']);

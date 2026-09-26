@@ -8,8 +8,8 @@
 import { createHash } from 'node:crypto';
 import { lstat, readFile } from 'node:fs/promises';
 import { capPageChunks, recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
-import { chunkDocument, isPdfMagic, PDF_MAX_BYTES, plainTextBlocks } from '@n6/rag';
-import type { Embedder } from '../embed/embed-and-store';
+import { chunkDocument, isPdfMagic, PDF_MAX_BYTES, plainTextBlocks, type IndexJobTruncation } from '@n6/rag';
+import { EmbedBudgetExhausted, type Embedder } from '../embed/embed-and-store';
 import { StepFailure, type SourceProcessor } from '../run-index-job';
 import { extractPdf, isPageWithoutText, PdfFailure, type ExtractOptions, type PdfText } from './extract-pdf';
 import { uploadPath } from './uploads';
@@ -63,6 +63,7 @@ export function createPdfProcessor(options: PdfProcessorOptions): SourceProcesso
     await transaction(pool, (tx) => resetAttemptCountersTx(tx, lease, text.numPages));
     const seen = new Set<string>();
     let read = 0, unchanged = 0, empty = 0, duplicate = 0, chunksWritten = 0;
+    let truncated: IndexJobTruncation | null = null;
     for (let index = 0; index < text.pages.length; index++) {
       const pageText = text.pages[index]!;
       const label = pageLabel(fileName, index + 1);
@@ -73,7 +74,17 @@ export function createPdfProcessor(options: PdfProcessorOptions): SourceProcesso
         const title = `${fileName}, с. ${index + 1}`;
         // Предел фрагментов листа — ДО эмбеддинга (source-lifecycle): лишнее не оплачивается.
         const { kept: chunks, dropped } = capPageChunks(chunkDocument({ title, blocks: plainTextBlocks(pageText) }));
-        const vectors = await options.embedder.embed(lease, chunks);
+        let vectors: number[][];
+        try {
+          vectors = await options.embedder.embed(lease, chunks);
+        } catch (error) {
+          // Собственный бюджет серии исчерпан (A-N6-052): разбор останавливается, лист не пишется, прочитанные листы
+          // остаются — done с пометкой. Ни одного прочитанного листа — отказ quota_refused, а не пустой done.
+          if (!(error instanceof EmbedBudgetExhausted)) throw error;
+          if (read + unchanged === 0) return fail(lease, 'pdf_budget_before_first_page', 'quota_refused');
+          truncated = error.truncation;
+          break;
+        }
         chunksWritten += (await writeIndexedPage(pool, lease, { urlOrPage: label, title, contentHash: hash, chunksDropped: dropped },
           chunks.map((c, i) => ({ ...c, embedding: vectors[i]! })))).inserted;
       } else {
@@ -86,6 +97,8 @@ export function createPdfProcessor(options: PdfProcessorOptions): SourceProcesso
     }
     // В журнал — только счётчики: ни текста, ни имени файла.
     log(`worker-index: PDF задачи ${lease.indexJobId}: страниц ${text.numPages}, прочитано ${read}, без изменений ${unchanged}, `
-      + `без текста ${empty}, дублей ${duplicate}, фрагментов ${chunksWritten}; разбор ${Date.now() - startedAt} мс`);
+      + `без текста ${empty}, дублей ${duplicate}, фрагментов ${chunksWritten}; разбор ${Date.now() - startedAt} мс`
+      + `${truncated ? `; усечено бюджетом ${truncated}` : ''}`);
+    return { truncated };
   };
 }

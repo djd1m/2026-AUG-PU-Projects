@@ -39,6 +39,12 @@ const SOURCES: SourceItemView[] = [
   { source_id: 's5', kind: 'site', title: 'https://blog.stomatologia-ulybka.ru/', job: job({ state: 'failed', reason: 'robots_disallowed' }) },
   { source_id: 's6', kind: 'pdf', title: 'скан-договора.pdf', job: job({ state: 'failed', reason: 'no_text_layer' }) },
 ];
+// budget-truncation (A-N6-052): готовые источники, усечённые бюджетом серии, и обычный готовый — для сравнения.
+const TRUNCATED: SourceItemView[] = [
+  { source_id: 't1', kind: 'site', title: 'https://aicoding.space/', job: job({ state: 'done', pages_done: 21, pages_total: 21, chunks_done: 300, truncated: 'series_embed_budget' }) },
+  { source_id: 't2', kind: 'pdf', title: 'каталог-2026.pdf', job: job({ state: 'done', pages_done: 12, pages_total: 80, chunks_done: 96, truncated: 'series_embed_budget' }) },
+  { source_id: 't3', kind: 'site', title: 'https://stomatologia-ulybka.ru/', job: job({ state: 'done', pages_done: 48, pages_total: 48, chunks_done: 212 }) },
+];
 const MESSAGES: OwnerMessage[] = [
   { kind: 'question', text: 'Сколько стоит чистка зубов?' },
   { kind: 'answered', text: 'Профессиональная гигиена — 4 500 ₽.', source: { title: 'Цены на услуги', url: 'https://stomatologia-ulybka.ru/ceny',
@@ -65,6 +71,10 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
       createElement(AddSource, { url: '', busy: false, errors: { url: 'Этот адрес ведёт во внутреннюю или служебную сеть — такие адреса мы не читаем' }, onUrl: noop, onSite: noop, onPdf: noop })),
     chat: createElement(OwnerChat, { companyName: 'Стоматология «Улыбка»', messages: MESSAGES, draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
     settings: form({ contact: 'Укажите контакт: почта (info@example.ru), телефон (+7 900 000-00-00) или ссылка https://…' }) })),
+  'bot-truncated': main(createElement(BotLayout, { botId: BOT, companyName: 'Стоматология «Улыбка»', contact: '+7 900 000-00-00', greeting: '', sources: TRUNCATED, ready: true,
+    sourcesBlock: createElement(SourceList, { ...LIST_HANDLERS, sources: TRUNCATED }),
+    chat: createElement(OwnerChat, { companyName: 'Стоматология «Улыбка»', messages: [], draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
+    settings: form() })),
   empty: main(createElement(BotLayout, { botId: BOT, companyName: 'Новый бот', contact: '+7 900 000-00-00', greeting: '', sources: [], ready: false,
     sourcesBlock: createElement(SourceList, { ...LIST_HANDLERS, sources: [] }),
     chat: createElement(OwnerChat, { companyName: 'Новый бот', messages: [], draft: '', busy: false, error: '', ready: false, onDraft: noop, onAsk: noop }),
@@ -157,6 +167,17 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     expect(await page.getByRole('button', { name: 'Удалить' }).count()).toBe(6);
     expect(await page.locator('li.source-item').first().textContent()).toContain('3 страниц прочитаны не целиком');
     expect(await page.locator('.source-list').getByRole('group').count()).toBe(0);
+  }));
+  it('A-N6-052: усечённый бюджетом источник — «сделано» с пометкой «Прочитано N…», у сайта подсказка «Обновить дочитает», у PDF нет; у обычного готового пометки нет', () => open('bot-truncated', 'dark', { width: 390, height: 844 }, async page => {
+    const items = page.locator('li.source-item');
+    expect(await items.nth(0).locator('.truncation-notice').textContent()).toBe('Прочитано 21 страница: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному. «Обновить» дочитает остальное — прочитанные страницы заново не оплачиваются.');
+    expect(await items.nth(1).locator('.truncation-notice').textContent()).toBe('Прочитано 12 стр. PDF: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному.');
+    expect(await items.nth(2).locator('.truncation-notice').count()).toBe(0);
+    expect(await items.nth(0).locator('.truncation-notice').getAttribute('role')).toBe('status');
+    // Готово, а не отказ и не «идёт»: лента в тоне успеха, «Обновить» у сайта доступна.
+    expect(await items.nth(0).locator('ol.ribbon').getAttribute('class')).toContain('tone-success');
+    expect(await items.nth(0).getByRole('button', { name: 'Обновить' }).count()).toBe(1);
+    expect(await page.locator('.source-list [role=alert]').count()).toBe(0);
   }));
   it('source-lifecycle: подтверждение удаления — вопрос с последствием, «Удалить» и «Отмена» только у выбранного; ошибка предела запусков — у своего источника', () => open('bot-confirm', 'light', { width: 390, height: 844 }, async page => {
     const group = page.getByRole('group', { name: 'Удаление источника https://stomatologia-ulybka.ru/' });

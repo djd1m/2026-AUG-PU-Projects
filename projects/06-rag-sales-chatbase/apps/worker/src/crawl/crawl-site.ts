@@ -13,7 +13,7 @@ import {
 import { fetchRobots, isAllowed, type Robots } from './robots';
 import { FetchFailed, Pacer, safeGet, type GetOptions, type NetOptions } from './safe-get';
 
-export type CrawlFailureReason = 'robots_disallowed' | 'unreachable' | 'blocked_address' | 'no_text';
+export type CrawlFailureReason = 'robots_disallowed' | 'unreachable' | 'blocked_address' | 'no_text' | 'quota_refused';
 export class CrawlFailure extends Error {
   constructor(readonly reason: CrawlFailureReason) { super(`Обход сайта отказал: ${reason}`); this.name = 'CrawlFailure'; }
 }
@@ -24,7 +24,12 @@ export interface CrawledPage {
 }
 export type Visit = { kind: 'page'; page: CrawledPage } | { kind: 'unchanged'; url: string; contentHash: string } | { kind: 'skipped'; reason: SkipReason };
 export interface CrawlProgress { pagesDone: number; pagesTotal: number }
-export type StopReason = 'exhausted' | 'page_budget' | 'request_cap' | 'time_budget';
+export type StopReason = 'exhausted' | 'page_budget' | 'request_cap' | 'time_budget' | 'embed_budget';
+// budget-truncation (A-N6-052): обработчик страницы сообщает, что собственный бюджет задачи исчерпан — обход
+// останавливается, а страница, на которой это случилось, НЕ засчитывается прочитанной (её фрагменты не записаны).
+export class StopCrawl extends Error {
+  constructor(readonly reason: 'embed_budget') { super(`Обход остановлен: ${reason}`); this.name = 'StopCrawl'; }
+}
 export interface CrawlResult {
   pagesRead: number; pagesUnchanged: number; skipped: Partial<Record<SkipReason, number>>; requests: number; stoppedBy: StopReason;
   // Обнаружение страниц могло быть неполным (source-lifecycle, ревью Codex находка 2): sitemap не прочитан по сбою сети
@@ -197,9 +202,19 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
       continue;
     }
     pagesRead++;
-    await report({ kind: 'page', page: { url: final.href, title: page.title, headings: page.headings, blocks: page.blocks, text: page.text, contentHash: hash } });
+    try {
+      await report({ kind: 'page', page: { url: final.href, title: page.title, headings: page.headings, blocks: page.blocks, text: page.text, contentHash: hash } });
+    } catch (error) {
+      if (!(error instanceof StopCrawl)) throw error;
+      pagesRead--;
+      stoppedBy = error.reason;
+      break;
+    }
   }
-  // 5. Ни одной страницы с текстом — отказ, а не «готово, 0 страниц» (SC-US-001-3).
-  if (pagesRead + pagesUnchanged === 0) throw new CrawlFailure(rootNetworkFailure ? 'unreachable' : 'no_text');
+  // 5. Ни одной страницы с текстом — отказ, а не «готово, 0 страниц» (SC-US-001-3). Бюджет кончился раньше первой
+  // записанной страницы — тоже отказ (quota_refused), а не пустой done.
+  if (pagesRead + pagesUnchanged === 0) {
+    throw new CrawlFailure(stoppedBy === 'embed_budget' ? 'quota_refused' : rootNetworkFailure ? 'unreachable' : 'no_text');
+  }
   return { pagesRead, pagesUnchanged, skipped, requests, stoppedBy, discoveryIncomplete };
 }

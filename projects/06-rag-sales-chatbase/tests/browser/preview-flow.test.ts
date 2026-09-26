@@ -23,8 +23,8 @@ const job = (over: Partial<PreviewJobView>): PreviewJobView => ({ index_job_id: 
 const SITE = { host: 'stomatologia-ulybka.ru', title: 'Стоматология «Улыбка» — лечение и гигиена', h1: 'Лечим зубы без боли с 2009 года',
   suggestions: ['Сколько стоят ваши услуги?', 'Как записаться?', 'Как с вами связаться?'] };
 const noop = () => {};
-const chat = (messages: ChatMessage[]) => createElement(PreviewChat, { site: SITE, messages, questionsLeft: 7, draft: '', busy: false, error: '',
-  signedIn: false, saving: false, onDraft: noop, onAsk: noop, onSave: noop, onShare: noop });
+const chat = (messages: ChatMessage[], truncatedPages: number | null = null) => createElement(PreviewChat, { site: SITE, messages, questionsLeft: 7, draft: '', busy: false, error: '',
+  signedIn: false, saving: false, truncatedPages, onDraft: noop, onAsk: noop, onSave: noop, onShare: noop });
 const MESSAGES: ChatMessage[] = [
   { kind: 'question', text: 'Сколько стоит чистка зубов?' },
   { kind: 'answered', text: 'Профессиональная гигиена — 4 500 ₽, приём длится около часа.', firstAnswer: true,
@@ -43,6 +43,8 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
   failed: main(createElement(PreviewProgress, { host: 'stomatologia-ulybka.ru', view: job({ state: 'failed', reason: 'robots_disallowed' }) })),
   empty: main(chat([])),
   chat: main(chat(MESSAGES)),
+  // budget-truncation (A-N6-052): готовый предпросмотр, усечённый бюджетом после 10 страниц (дефект стенда 26.09).
+  truncated: main(chat([], 10)),
 };
 const html = (name: string, theme: Theme) => `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Суфлёр — предпросмотр</title>
@@ -54,8 +56,9 @@ beforeAll(async () => {
   try { await preflight(['chromium', 'webkit']); }
   catch (error) { throw new Error(`НЕ ВЫПОЛНЕНО: ${String(error)}`); }
   server = createServer((req, res) => {
-    const match = /^\/(start|progress|silent|failed|empty|chat)-(dark|light)\.html$/.exec(req.url ?? '');
-    if (!match) { res.writeHead(404).end(); return; }
+    // Имена — из реестра PAGES: новая страница не может выпасть из сервера (и из прогона правил ниже) молча.
+    const match = /^\/([a-z-]+)-(dark|light)\.html$/.exec(req.url ?? '');
+    if (!match || !Object.hasOwn(PAGES, match[1]!)) { res.writeHead(404).end(); return; }
     res.setHeader('content-type', 'text/html; charset=utf-8'); res.end(html(match[1]!, match[2] as Theme));
   });
   await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
@@ -92,7 +95,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
         mkdirSync(ARTIFACTS, { recursive: true });
         await page.screenshot({ path: `${ARTIFACTS}/${engineName}-${theme}-first-screen-${w}x${h}.png`, fullPage: false });
       }));
-    for (const name of ['start', 'progress', 'silent', 'failed', 'empty', 'chat']) {
+    for (const name of Object.keys(PAGES)) {
       it(`${name} ${theme} 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов`, () => open(name, theme, { width: 390, height: 844 }, false, async page => {
         expect(errors(await domRules(page, ['R1', 'R2', 'R5']))).toEqual([]);
         expect(errors(await axeRule(page))).toEqual([]);
@@ -100,7 +103,7 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
       }));
     }
   }
-  for (const width of [320, 360, 414, 768, 1024, 1440]) for (const name of ['progress', 'chat']) {
+  for (const width of [320, 360, 414, 768, 1024, 1440]) for (const name of ['progress', 'chat', 'truncated']) {
     it(`${name} ${width}: без горизонтального скролла, цели ≥ 44`, () => open(name, 'dark', { width, height: width === 1440 ? 900 : 844 }, false, async page => {
       expect(errors(await domRules(page, ['R1', 'R2']))).toEqual([]);
       if (width === 320 || width === 1440) {
@@ -114,6 +117,18 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     expect(await bar.getAttribute('aria-valuenow')).toBe('7');
     expect(await bar.getAttribute('aria-valuemax')).toBe('20');
     expect(await page.textContent('main')).toContain('Читаем сайт: 7 из ≤ 20 страниц');
+  }));
+  it('A-N6-052: усечённый предпросмотр — готово с пометкой «Прочитано 10 страниц…», чат доступен; не прогресс и не отказ', () => open('truncated', 'dark', { width: 390, height: 844 }, false, async page => {
+    const notice = page.locator('.truncation-notice');
+    expect(await notice.getAttribute('role')).toBe('status');
+    expect(await notice.textContent()).toBe('Прочитано 10 страниц — дальше закончился бюджет предпросмотра. Бот отвечает по прочитанному; после регистрации — весь сайт.');
+    expect(await page.locator('#preview-question').isEnabled()).toBe(true);
+    expect(await page.locator('[role=progressbar]').count()).toBe(0);
+    expect(await page.locator('[role=alert]').count()).toBe(0);
+    expect(await page.locator('.suggestions button').count()).toBe(3);
+  }));
+  it('A-N6-052: без усечения пометки нет', () => open('empty', 'dark', { width: 390, height: 844 }, false, async page => {
+    expect(await page.locator('.truncation-notice').count()).toBe(0);
   }));
   it('чат: развёрнутая цитата, ссылка на страницу с rel=noopener nofollow, CTA ровно одна, бейдж «Работает на Суфлёре»', () => open('chat', 'dark', { width: 390, height: 844 }, false, async page => {
     expect(await page.locator('details.source-quote[open]').count()).toBe(1);

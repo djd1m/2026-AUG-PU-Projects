@@ -13,7 +13,8 @@ import { capPageChunks, searchChunks, writeIndexedPage } from '../packages/db/sr
 import { createPdfSource, readOwnedBotForPdf } from '../packages/db/src/pdf-sources';
 import { deleteSource, indexStartsToday, reindexSource } from '../packages/db/src/sources';
 import { CHUNKS_PER_PAGE_MAX, INDEX_STARTS_PER_BOT_DAY, SOURCE_EMBED_BUDGET_BY_PLAN } from '../packages/rag/src/constants';
-import { noProcessorYet, processByKind, runIndexJob, StepFailure } from '../apps/worker/src/run-index-job';
+import { noProcessorYet, processByKind, runIndexJob } from '../apps/worker/src/run-index-job';
+import { EmbedBudgetExhausted } from '../apps/worker/src/embed/embed-and-store';
 import { createSiteProcessor } from '../apps/worker/src/crawl/site-processor';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { article, text, startFakeSite, type FakeSite, type Handler } from './fixtures/fake-site';
@@ -210,15 +211,15 @@ describe.skipIf(!databaseUrl)('Жизненный цикл источника н
     expect(await reindexSource(pool, pdf.sourceId, j.owner)).toEqual({ kind: 'pdf_reupload' });
   });
 
-  it('бюджет серии источника: сверх предела плана — quota_refused; новая серия (из queued) начинает с нуля; предпросмотр счётчик серии не трогает', async () => {
+  it('бюджет серии источника: сверх предела плана — усечение EmbedBudgetExhausted (A-N6-052), не вызов шлюза; новая серия (из queued) начинает с нуля; предпросмотр счётчик серии не трогает', async () => {
     const w = wire();
     const j = await siteJob();
     const lease = (await leaseIndexJob(pool, { index_job_id: j.indexJobId, generation: 0 }))!;
     const limit = SOURCE_EMBED_BUDGET_BY_PLAN.free;
     await pool.query('UPDATE index_job SET series_embed_used = $2 WHERE id = $1', [j.indexJobId, limit - 1]);
     const chunk = { ordinal: 0, contextPath: 'П', text: 'Достаточно длинный текст фрагмента для оценки токенов', tokenCount: 20 };
-    await expect(w.embedder.embed(lease, [chunk])).rejects.toMatchObject({ reason: 'quota_refused' });
-    await expect(w.embedder.embed(lease, [chunk])).rejects.toBeInstanceOf(StepFailure);
+    await expect(w.embedder.embed(lease, [chunk])).rejects.toMatchObject({ truncation: 'series_embed_budget' });
+    await expect(w.embedder.embed(lease, [chunk])).rejects.toBeInstanceOf(EmbedBudgetExhausted);
     expect(w.gateway.calls).toHaveLength(0);                                            // отказ ДО вызова шлюза
     // новая серия: «Повторить» после отказа — счётчик серии с нуля
     await pool.query(`UPDATE index_job SET status = 'failed', failure_reason = 'quota_refused' WHERE id = $1`, [j.indexJobId]);
