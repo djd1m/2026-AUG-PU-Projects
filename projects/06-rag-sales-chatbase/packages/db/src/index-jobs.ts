@@ -5,7 +5,7 @@
 // ReadIndexJob с состоянием «нет ответа», «Повторить» — новая серия того же index_job_id (ADR-009).
 // Каждая запись результата — WHERE id = $1 AND current_fence = $2: 0 строк = попытка устарела, откат.
 import type { Pool, PoolClient } from 'pg';
-import { readFailureReason, readIndexJobStatus, type IndexJobFailureReason } from '@n6/rag';
+import { readFailureReason, readIndexJobStatus, readIndexJobTruncation, type IndexJobFailureReason, type IndexJobTruncation } from '@n6/rag';
 import { transaction } from './quota.js';
 import { recordIndexStartTx } from './sources.js';
 
@@ -100,7 +100,7 @@ export async function leaseIndexJob(pool: Pool, message: IndexMessageLike, now =
     await tx.query(`INSERT INTO job_attempt (index_job_id, fence, series_no, status, started_at, created_at)
       VALUES ($1, $2, $3, 'running', $4, $4)`, [message.index_job_id, fence, seriesNo, now]);
     // Новая серия (из queued) — бюджет токенов серии источника с нуля (source-lifecycle); автоповтор той же серии — нет.
-    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, updated_at = $3,
+    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, truncated_by = NULL, updated_at = $3,
       series_embed_used = CASE WHEN $4::boolean THEN 0 ELSE series_embed_used END WHERE id = $1`,
       [message.index_job_id, fence, now, status === 'queued']);
     await tx.query(`UPDATE source SET status = 'indexing' WHERE id = $1`, [row.source_id]);
@@ -138,10 +138,12 @@ export const recordProgress = (pool: Pool, lease: Pick<Lease, 'indexJobId' | 'fe
   transaction(pool, (tx) => recordProgressTx(tx, lease, delta, now));
 
 // RunIndexJob п.5: успех. Фенс проверяется ПЕРВЫМ оператором; 0 строк — откат всей транзакции.
-export async function completeIndexJob(pool: Pool, lease: Pick<Lease, 'indexJobId' | 'fence'>, now = new Date()): Promise<void> {
+// truncated — задача остановлена исчерпанием собственного бюджета (budget-truncation, A-N6-052): готово с прочитанным.
+export async function completeIndexJob(pool: Pool, lease: Pick<Lease, 'indexJobId' | 'fence'>, now = new Date(),
+  truncated: IndexJobTruncation | null = null): Promise<void> {
   await transaction(pool, async (tx) => {
-    const job = await tx.query<{ source_id: string; pages_done: number }>(`UPDATE index_job SET status = 'done', updated_at = $3
-      WHERE id = $1 AND current_fence = $2 AND status = 'running' RETURNING source_id, pages_done`, [lease.indexJobId, lease.fence, now]);
+    const job = await tx.query<{ source_id: string; pages_done: number }>(`UPDATE index_job SET status = 'done', updated_at = $3, truncated_by = $4
+      WHERE id = $1 AND current_fence = $2 AND status = 'running' RETURNING source_id, pages_done`, [lease.indexJobId, lease.fence, now, truncated]);
     if (!job.rowCount) throw new StaleAttemptError(lease.indexJobId, lease.fence);
     await tx.query(`UPDATE job_attempt SET status = 'done', finished_at = $3 WHERE index_job_id = $1 AND fence = $2`, [lease.indexJobId, lease.fence, now]);
     await tx.query(`UPDATE source SET status = 'ready', pages_indexed = $2 WHERE id = $1`, [job.rows[0]!.source_id, job.rows[0]!.pages_done]);
@@ -203,14 +205,17 @@ export type IndexJobState = 'running' | 'done' | 'failed' | 'no_response';
 export interface IndexJobView {
   index_job_id: string; state: IndexJobState; pages_done: number; pages_total: number | null; chunks_done: number;
   reason?: IndexJobFailureReason;
+  // Только у done: чем усечена задача (A-N6-052); null — прочитано всё, что позволил обход.
+  truncated?: IndexJobTruncation | 'unknown' | null;
 }
 export interface IndexJobRow {
   id: string; status: unknown; failure_reason: unknown; pages_done: number; pages_total: number | null; chunks_done: number; updated_at: Date;
+  truncated_by?: unknown;
 }
 export function indexJobView(row: IndexJobRow, now = new Date()): IndexJobView {
   const base = { index_job_id: row.id, pages_done: row.pages_done, pages_total: row.pages_total, chunks_done: row.chunks_done };
   const status = readIndexJobStatus(row.status);
-  if (status === 'done') return { ...base, state: 'done' };
+  if (status === 'done') return { ...base, state: 'done', truncated: readIndexJobTruncation(row.truncated_by) };
   if (status === 'failed') return { ...base, state: 'failed', reason: row.status === 'failed' ? readFailureReason(row.failure_reason) : 'internal' };
   const silentFor = now.getTime() - row.updated_at.getTime();
   if (!(silentFor <= INDEX_JOB_STALLED_AFTER_MS)) return { ...base, state: 'no_response' }; // NaN (нет отметки) — тоже «нет ответа»
@@ -224,8 +229,8 @@ export async function readIndexJob(pool: Pool, indexJobId: string, access: Index
   if (!isUuid(indexJobId)) return null;
   const accountId = 'accountId' in access ? access.accountId : null, previewBotId = 'previewBotId' in access ? access.previewBotId : null;
   if (!isUuid(accountId ?? previewBotId)) return null;
-  const result = await pool.query<IndexJobRow>(`SELECT j.id, j.status, j.failure_reason, j.pages_done, j.pages_total, j.chunks_done, j.updated_at
-    FROM index_job j JOIN bot b ON b.id = j.bot_id
+  const result = await pool.query<IndexJobRow>(`SELECT j.id, j.status, j.failure_reason, j.pages_done, j.pages_total, j.chunks_done, j.updated_at,
+    j.truncated_by FROM index_job j JOIN bot b ON b.id = j.bot_id
     WHERE j.id = $1 AND b.status <> 'deleted' AND (b.account_id = $2::uuid OR (b.status = 'draft' AND b.id = $3::uuid))`,
   [indexJobId, accountId, previewBotId]);
   return result.rowCount ? indexJobView(result.rows[0]!, now) : null;

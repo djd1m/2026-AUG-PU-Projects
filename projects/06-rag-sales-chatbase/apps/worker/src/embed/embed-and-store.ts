@@ -6,11 +6,11 @@
 // Запись фрагментов (п.4) — packages/db/src/chunks.ts, writeIndexedPage, в транзакции СТРАНИЦЫ; здесь только
 // векторы: сетевой вызов не держит соединение пула.
 import { randomUUID } from 'node:crypto';
-import { chargeQuota, chargeSeriesBudgetTx, indexEmbedCharges, previewEmbedCharges, touchAndChargeJobBudgetTx, transaction, type Lease, type Pool } from '@n6/db';
+import { chargeQuota, chargeSeriesBudgetTx, indexEmbedCharges, previewEmbedCharges, readEmbedBudgetRemaining, touchAndChargeJobBudgetTx, transaction, type Lease, type Pool } from '@n6/db';
 import {
   EMBED_BATCH_MAX, EMBED_RETRIES, GatewayResponseError, RetryableCallError, embeddingInput, estimateTokens, isEmbeddingOfDimension,
-  meteredCall, readAccountPlan, SOURCE_EMBED_BUDGET_BY_PLAN, type AccountPlan, type Ceilings, type ChargeDecision, type Chunk, type OpenRouter,
-  type SpendRecorder,
+  meteredCall, readAccountPlan, SOURCE_EMBED_BUDGET_BY_PLAN, type AccountPlan, type Ceilings, type ChargeDecision, type Chunk, type IndexJobTruncation,
+  type OpenRouter, type SpendRecorder,
 } from '@n6/rag';
 import { StepFailure } from '../run-index-job';
 
@@ -19,6 +19,16 @@ export interface EmbedderOptions {
   retryPauseMs?: number; log?: (line: string) => void;
 }
 export interface Embedder { embed(lease: Lease, chunks: readonly Chunk[]): Promise<number[][]> }
+
+// budget-truncation (A-N6-052): исчерпан СОБСТВЕННЫЙ бюджет задачи — предпросмотра или серии источника. Это не отказ
+// задачи: обработчик останавливает обход, прочитанное остаётся, задача — done с пометкой. Страница, на которой бюджет
+// кончился, не записывается ни одним фрагментом. Внешние потолки (account/global) — StepFailure('quota_refused').
+export class EmbedBudgetExhausted extends Error {
+  constructor(readonly truncation: IndexJobTruncation) { super(`Исчерпан собственный бюджет задачи: ${truncation}`); this.name = 'EmbedBudgetExhausted'; }
+}
+const OWN_BUDGET: Readonly<Record<string, IndexJobTruncation>> = {
+  'index_job.embed_budget': 'embed_budget', 'index_job.series_embed_budget': 'series_embed_budget',
+};
 type Payer = { kind: 'preview' } | { kind: 'account'; accountId: string; plan: AccountPlan };
 
 export function createEmbedder(options: EmbedderOptions): Embedder {
@@ -96,7 +106,9 @@ export function createEmbedder(options: EmbedderOptions): Embedder {
       throw error; // StaleAttemptError и дефекты — как есть
     }
     if (result.status === 'refused') {
-      log(`worker-index: задача ${lease.indexJobId}: эмбеддинги отклонены пределом ${result.scope.split(':')[0]}`);
+      const own = OWN_BUDGET[result.scope];
+      log(`worker-index: задача ${lease.indexJobId}: эмбеддинги отклонены пределом ${result.scope.split(':')[0]}${own ? ' — усечение, не отказ' : ''}`);
+      if (own) throw new EmbedBudgetExhausted(own);
       throw new StepFailure('quota_refused');
     }
     return result.value;
@@ -106,6 +118,12 @@ export function createEmbedder(options: EmbedderOptions): Embedder {
     async embed(lease, chunks) {
       if (!chunks.length) return [];
       const payer = await payerOf(lease);
+      // Страница целиком не влезает в остаток собственного бюджета — не платим за её первые пачки, которые всё равно
+      // не будут записаны (фрагменты страницы пишутся все или ни одного). Оценка та же, что у списания.
+      const pageTokens = chunks.reduce((n, chunk) => n + estimateTokens(embeddingInput(chunk)), 0);
+      const remaining = await readEmbedBudgetRemaining(pool, lease, payer.kind === 'account' ? SOURCE_EMBED_BUDGET_BY_PLAN[payer.plan] : null);
+      if (remaining.job !== null && pageTokens > remaining.job) throw new EmbedBudgetExhausted('embed_budget');
+      if (remaining.series !== null && pageTokens > remaining.series) throw new EmbedBudgetExhausted('series_embed_budget');
       const vectors: number[][] = [];
       for (let from = 0; from < chunks.length; from += EMBED_BATCH_MAX) {
         vectors.push(...await embedBatch(lease, payer, chunks.slice(from, from + EMBED_BATCH_MAX)));

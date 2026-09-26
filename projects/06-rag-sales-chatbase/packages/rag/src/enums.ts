@@ -13,6 +13,9 @@ export const INDEX_JOB_STATUS = ['queued', 'running', 'done', 'failed'] as const
 export const JOB_ATTEMPT_STATUS = ['running', 'done', 'failed'] as const;
 export const INDEX_JOB_FAILURE_REASON = ['robots_disallowed', 'unreachable', 'blocked_address', 'no_text', 'not_pdf',
   'too_large', 'no_text_layer', 'quota_refused', 'embedding_unavailable', 'stalled', 'internal'] as const;
+// index_job.truncated_by (budget-truncation, A-N6-052, миграция 009): задача done, но остановлена исчерпанием
+// СОБСТВЕННОГО бюджета эмбеддингов — предпросмотра (embed_budget) или серии источника (series_embed_budget).
+export const INDEX_JOB_TRUNCATION = ['embed_budget', 'series_embed_budget'] as const;
 export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin'] as const;
 export const QUOTA_SCOPE = ['visitor_answers', 'ip_answers', 'bot_day_answers', 'bot_month_answers', 'global_answers',
   'preview_session', 'ip_previews', 'global_previews', 'account_embed_tokens', 'global_embed_tokens'] as const;
@@ -28,6 +31,7 @@ export type IndexJobStatus = typeof INDEX_JOB_STATUS[number];
 export type JobAttemptStatus = typeof JOB_ATTEMPT_STATUS[number];
 export type IndexJobFailureReason = typeof INDEX_JOB_FAILURE_REASON[number];
 export type QuotaScope = typeof QUOTA_SCOPE[number];
+export type IndexJobTruncation = typeof INDEX_JOB_TRUNCATION[number];
 
 // Строгое сравнение без trim/toLowerCase (ADR-004): нормализация превращает опечатку в снятый бейдж.
 function read<T extends readonly string[]>(values: T, value: unknown, strictest: T[number]): T[number] {
@@ -39,3 +43,8 @@ export const readBotStatus = (value: unknown): BotStatus => read(BOT_STATUS, val
 export const readIndexJobStatus = (value: unknown): IndexJobStatus => read(INDEX_JOB_STATUS, value, 'failed');
 export const readJobAttemptStatus = (value: unknown): JobAttemptStatus => read(JOB_ATTEMPT_STATUS, value, 'failed');
 export const readFailureReason = (value: unknown): IndexJobFailureReason => read(INDEX_JOB_FAILURE_REASON, value, 'internal');
+// Пометка усечения: NULL — задача не усекалась бюджетом. Непустое, но неизвестное значение — 'unknown' (прочитано
+// НЕ целиком, чем — неизвестно), а не null: «готово целиком» было бы самым разрешающим прочтением.
+export const readIndexJobTruncation = (value: unknown): IndexJobTruncation | 'unknown' | null =>
+  value === null || value === undefined ? null
+    : typeof value === 'string' && (INDEX_JOB_TRUNCATION as readonly string[]).includes(value) ? value as IndexJobTruncation : 'unknown';

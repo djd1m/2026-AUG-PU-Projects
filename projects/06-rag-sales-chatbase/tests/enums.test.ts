@@ -59,3 +59,21 @@ describe('Неизвестное читается как самое строго
     expect(enums.readFailureReason('timeout')).toBe('internal');
   });
 });
+// budget-truncation (A-N6-052): пометка усечения задачи — закрытый набор в коде и тот же CHECK в миграции 009.
+describe('index_job.truncated_by', () => {
+  it('CHECK миграции 009 = INDEX_JOB_TRUNCATION', () => {
+    const m009 = readFileSync('packages/db/migrations/009_budget_truncation.sql', 'utf8');
+    const match = /CHECK \(truncated_by IN \(([^)]*)\)\)/.exec(m009);
+    if (!match) throw new Error('CHECK truncated_by не найден — проверка НЕ ВЫПОЛНЕНА');
+    expect([...match[1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.INDEX_JOB_TRUNCATION]);
+  });
+  it('NULL — не усечена; известное — как есть; непустое неизвестное — unknown, а не «прочитано целиком»', () => {
+    expect(enums.readIndexJobTruncation(null)).toBeNull();
+    expect(enums.readIndexJobTruncation(undefined)).toBeNull();
+    expect(enums.readIndexJobTruncation('embed_budget')).toBe('embed_budget');
+    expect(enums.readIndexJobTruncation('series_embed_budget')).toBe('series_embed_budget');
+    for (const bad of ['', 'EMBED_BUDGET', ' embed_budget', 'budget', 0, 1, true, {}, ['embed_budget']]) {
+      expect(enums.readIndexJobTruncation(bad), JSON.stringify(bad)).toBe('unknown');
+    }
+  });
+});

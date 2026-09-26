@@ -7,10 +7,10 @@
 // Страница «без изменений» (известный content_hash) не эмбеддится заново — у неё фрагменты уже есть,
 // потому что хэш и фрагменты записываются только вместе.
 import { capPageChunks, pruneUnseenPages, recordProgressTx, resetAttemptCountersTx, transaction, writeIndexedPage, type Lease, type Pool } from '@n6/db';
-import { chunkDocument, readAccountPlan } from '@n6/rag';
-import type { Embedder } from '../embed/embed-and-store';
+import { chunkDocument, readAccountPlan, type IndexJobTruncation } from '@n6/rag';
+import { EmbedBudgetExhausted, type Embedder } from '../embed/embed-and-store';
 import { StepFailure, type SourceProcessor } from '../run-index-job';
-import { CrawlFailure, crawlSite, type CrawlOptions, type SkipReason } from './crawl-site';
+import { CrawlFailure, crawlSite, StopCrawl, type CrawlOptions, type SkipReason } from './crawl-site';
 import { PAGES_BY_PLAN } from './limits';
 import type { NetOptions } from './safe-get';
 
@@ -43,6 +43,7 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
     await transaction(pool, (tx) => resetAttemptCountersTx(tx, lease, null));
     let chunksWritten = 0;
     let transient = 0;
+    let truncated: IndexJobTruncation | null = null;
     const seenUrls = new Set<string>();
     const seenHashes = new Set<string>();
     let result;
@@ -56,7 +57,16 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
             // Предел фрагментов страницы — ДО эмбеддинга: лишнее не оплачивается и не держит транзакцию страницы.
             const { kept: chunks, dropped } = capPageChunks(chunkDocument({ title: visit.page.title, blocks: visit.page.blocks }));
             if (dropped) log(`worker-index: задача ${lease.indexJobId}: страница прочитана не целиком — отброшено фрагментов ${dropped}`);
-            const vectors = await options.embedder.embed(lease, chunks);
+            let vectors: number[][];
+            try {
+              vectors = await options.embedder.embed(lease, chunks);
+            } catch (error) {
+              // Собственный бюджет задачи исчерпан (A-N6-052): обход останавливается, страница не пишется, прочитанное
+              // остаётся — задача done с пометкой, а не failed целиком.
+              if (!(error instanceof EmbedBudgetExhausted)) throw error;
+              truncated = error.truncation;
+              throw new StopCrawl('embed_budget');
+            }
             const written = await writeIndexedPage(pool, lease, { urlOrPage: visit.page.url, title: visit.page.title, contentHash: visit.page.contentHash, chunksDropped: dropped },
               chunks.map((c, i) => ({ ...c, embedding: vectors[i]! })), { pagesTotal: progress.pagesTotal });
             chunksWritten += written.inserted;
@@ -89,6 +99,7 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
     const skipped = Object.entries(result.skipped).map(([reason, n]) => `${reason}=${n}`).join(', ') || 'нет';
     log(`worker-index: обход задачи ${lease.indexJobId}: прочитано ${result.pagesRead}, без изменений ${result.pagesUnchanged}, `
       + `фрагментов ${chunksWritten}; пропущено: ${skipped}; запросов ${result.requests}; остановка: ${result.stoppedBy}; `
-      + `удалено исчезнувших страниц ${pruned.pages} (фрагментов ${pruned.chunks})`);
+      + `удалено исчезнувших страниц ${pruned.pages} (фрагментов ${pruned.chunks})${truncated ? `; усечено бюджетом ${truncated}` : ''}`);
+    return { truncated };
   };
 }

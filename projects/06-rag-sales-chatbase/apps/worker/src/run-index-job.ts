@@ -4,14 +4,17 @@
 // EmbedAndStore — chunk-embed. onSettled — «finally» задачи: вызывается после done И после failed (ADR-018:
 // сырой PDF удаляется в обоих случаях), но НЕ после stale (файл нужен новой попытке) и НЕ перед автоповтором.
 import { completeIndexJob, failIndexJob, leaseIndexJob, retryAutomatically, StaleAttemptError, type Lease, type Pool } from '@n6/db';
-import type { IndexJobFailureReason } from '@n6/rag';
+import type { IndexJobFailureReason, IndexJobTruncation } from '@n6/rag';
 import type { IndexMessage } from '@n6/queue';
 
 // Отказ шага с причиной из закрытого списка. retryable — сбой, который может пройти сам (5xx шлюза, сеть).
 export class StepFailure extends Error {
   constructor(readonly reason: IndexJobFailureReason, readonly retryable = false) { super(`Шаг индексации отказал: ${reason}`); this.name = 'StepFailure'; }
 }
-export type SourceProcessor = (lease: Lease) => Promise<void>;
+// Исход обработчика: truncated — обход остановлен исчерпанием собственного бюджета задачи (A-N6-052), задача done
+// с пометкой. Отсутствие исхода — прочитано всё, что позволил обход.
+export interface ProcessOutcome { truncated: IndexJobTruncation | null }
+export type SourceProcessor = (lease: Lease) => Promise<ProcessOutcome | void>;
 export type RunOutcome = 'skipped' | 'done' | 'failed' | 'retry' | 'stale';
 export interface RunDependencies {
   pool: Pool; enqueue: (message: IndexMessage) => Promise<void>; process: SourceProcessor;
@@ -28,8 +31,8 @@ export async function runIndexJob(deps: RunDependencies, message: IndexMessage):
   const lease = await leaseIndexJob(deps.pool, message);
   if (!lease) return 'skipped'; // устаревшее сообщение, завершённая или удалённая задача
   try {
-    await deps.process(lease);
-    await completeIndexJob(deps.pool, lease);
+    const outcome = await deps.process(lease);
+    await completeIndexJob(deps.pool, lease, new Date(), outcome ? outcome.truncated : null);
     return await settle(deps, lease, 'done');
   } catch (error) {
     if (error instanceof StaleAttemptError) return 'stale';
@@ -64,6 +67,7 @@ export function processByKind(pool: Pool, processors: Record<'site' | 'pdf', Sou
     const source = await pool.query<{ kind: string }>('SELECT kind FROM source WHERE id = $1', [lease.sourceId]);
     const kind = source.rows[0]?.kind;
     if (kind !== 'site' && kind !== 'pdf') throw new StepFailure('internal');
-    await processors[kind](lease);
+    // Исход обработчика (пометка усечения, A-N6-052) обязан дойти до completeIndexJob — не проглатывать.
+    return processors[kind](lease);
   };
 }

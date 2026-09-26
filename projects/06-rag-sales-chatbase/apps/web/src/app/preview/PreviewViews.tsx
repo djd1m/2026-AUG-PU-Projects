@@ -3,8 +3,16 @@
 // состояние и опрос — PreviewScreen. Написано заново (ADR-016); классы и токены — design-shell (globals.css).
 // Три состояния задачи различимы на экране (long-running-job): прогресс «k из ≤ 20» · окно чата · причина отказа;
 // четвёртое — «нет ответа», а не вечный прогресс.
+import { pagesWord } from '../../lib/source-ribbon';
+
 export type JobState = 'running' | 'done' | 'failed' | 'no_response';
-export interface PreviewJobView { index_job_id: string; state: JobState; pages_done: number; pages_total: number | null; page_budget: number; chunks_done: number; reason?: string }
+export interface PreviewJobView { index_job_id: string; state: JobState; pages_done: number; pages_total: number | null; page_budget: number; chunks_done: number; reason?: string;
+  // budget-truncation (A-N6-052): у готовой задачи — чем она усечена; null/нет поля — прочитано всё, что позволил обход.
+  truncated?: string | null }
+// Пометка усечённого предпросмотра: готово с прочитанным, это не «ещё читаем» и не отказ (три состояния различимы).
+export function truncationNotice(pagesDone: number): string {
+  return `Прочитано ${pagesDone} ${pagesWord(pagesDone)} — дальше закончился бюджет предпросмотра. Бот отвечает по прочитанному; сохраните бота, чтобы дочитать сайт в пределах тарифа.`;
+}
 export interface PreviewSiteView { host: string; title: string; h1: string; suggestions: string[] }
 export interface SourceView { title: string; url: string | null; excerpt: string }
 export type ChatMessage =
@@ -19,7 +27,10 @@ const REASONS: Readonly<Record<string, { title: string; hint: string }>> = {
   unreachable: { title: 'Сайт не открылся', hint: 'Проверьте адрес: сайт должен открываться без входа по паролю.' },
   blocked_address: { title: 'Этот адрес мы не читаем', hint: 'Адрес ведёт во внутреннюю или служебную сеть. Укажите публичный адрес сайта.' },
   no_text: { title: 'На сайте не нашлось текста', hint: 'Похоже, страницы собираются скриптами в браузере. Загрузите материалы в PDF после сохранения.' },
-  quota_refused: { title: 'Бюджет предпросмотра исчерпан', hint: 'Предпросмотр читает до 20 страниц. Зарегистрируйтесь, чтобы прочитать сайт целиком.' },
+  // Две причины под одним кодом (ревью budget-truncation, находка 2): первая же страница больше бюджета предпросмотра
+  // ИЛИ исчерпан суточный лимит сервиса. Текст честен для обеих и не обещает того, что регистрация не снимет.
+  // Бюджет, исчерпанный ПОСЛЕ прочитанных страниц, — не отказ, а готовый предпросмотр с пометкой (A-N6-052).
+  quota_refused: { title: 'Не хватило лимита на обработку текста', hint: 'Первая страница оказалась больше бюджета бесплатного предпросмотра, либо на сегодня исчерпан лимит сервиса. Попробуйте адрес конкретной страницы — например, с ценами — или повторите позже.' },
   embedding_unavailable: { title: 'Сервис обработки текста временно недоступен', hint: 'Попробуйте через несколько минут.' },
   stalled: { title: 'Чтение сайта прервалось', hint: 'Задача не отвечала больше 5 минут. Попробуйте ещё раз.' },
   internal: { title: 'Не удалось прочитать сайт', hint: 'Попробуйте ещё раз или укажите другой адрес.' },
@@ -93,6 +104,8 @@ function Message({ message, signedIn, onSave, onShare, saving }: { message: Chat
 export interface PreviewChatProps {
   site: PreviewSiteView; messages: ChatMessage[]; questionsLeft: number | null; draft: string; busy: boolean; error: string;
   signedIn: boolean; saving: boolean;
+  // Число прочитанных страниц, если предпросмотр усечён бюджетом (A-N6-052); null — не усечён.
+  truncatedPages?: number | null;
   onDraft: (value: string) => void; onAsk: (question: string) => void; onSave: () => void; onShare?: () => void;
 }
 export function PreviewChat(p: PreviewChatProps) {
@@ -101,6 +114,7 @@ export function PreviewChat(p: PreviewChatProps) {
     <div className="preview-head">
       <h1 id="preview-title" className="page-title">Спросите бота, как спросил бы клиент</h1>
       <p className="muted">Так бот будет выглядеть на {host}. Ответы — только по прочитанным страницам.</p>
+      {typeof p.truncatedPages === 'number' && <p role="status" className="notice truncation-notice">{truncationNotice(p.truncatedPages)}</p>}
     </div>
     <div className="preview-grid">
       <div className="chat-window" role="group" aria-label={`Бот сайта ${host}`}>

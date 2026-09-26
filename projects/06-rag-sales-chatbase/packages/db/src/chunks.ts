@@ -124,6 +124,21 @@ export async function touchAndChargeJobBudgetTx(tx: PoolClient, lease: Pick<Leas
   return { budgeted: true, granted: Boolean(charged.rowCount) };
 }
 
+// budget-truncation (A-N6-052): остаток собственных бюджетов задачи ДО эмбеддинга страницы — чтобы страницу, не
+// влезающую в бюджет целиком, не оплачивать вовсе. Читает единственный писатель задачи (лиз под фенсом), поэтому
+// «прочитать, потом списать» здесь безопасно; сами списания по-прежнему атомарны (touchAndChargeJobBudgetTx,
+// chargeSeriesBudgetTx) и остаются последней линией. null — у задачи нет такого бюджета.
+export async function readEmbedBudgetRemaining(pool: Pool, lease: Pick<Lease, 'indexJobId' | 'fence'>, seriesLimit: number | null):
+  Promise<{ job: number | null; series: number | null }> {
+  const row = (await pool.query<{ embed_budget: number | null; embed_used: number; series_embed_used: string }>(`SELECT embed_budget, embed_used,
+    series_embed_used FROM index_job WHERE id = $1 AND current_fence = $2 AND status = 'running'`, [lease.indexJobId, lease.fence])).rows[0];
+  if (!row) throw new StaleAttemptError(lease.indexJobId, lease.fence);
+  return {
+    job: row.embed_budget === null ? null : Math.max(0, Number(row.embed_budget) - Number(row.embed_used)),
+    series: seriesLimit === null ? null : Math.max(0, seriesLimit - Number(row.series_embed_used)),
+  };
+}
+
 // Бюджет токенов СЕРИИ источника (source-lifecycle, перенос ревью chunk-embed): тем же атомарным оператором
 // «UPDATE … WHERE used + n <= предел RETURNING»; пустой RETURNING — отказ. Для задач аккаунта (не предпросмотра);
 // предел — SOURCE_EMBED_BUDGET_BY_PLAN по плану владельца, счётчик серии сбрасывает leaseIndexJob.

@@ -246,7 +246,7 @@ describe.skipIf(!databaseUrl)('chunk-embed на настоящем Postgres + pg
       expect(t.spend()).toEqual([]);
       expect(await counter('account_embed_tokens', owner)).toBe(0);
     });
-    it('предпросмотр: бюджет задачи + global_embed_tokens; аккаунт не списывается; сверх бюджета — отказ с откатом global', async () => {
+    it('предпросмотр: бюджет задачи + global_embed_tokens; аккаунт не списывается; сверх бюджета — усечение (A-N6-052): лист, не влезший в остаток, не оплачен', async () => {
       const ok = await pdfJob(null, { pageBudget: 20, embedBudget: 40_000 });
       const t = testEmbedder(pool);
       const g0 = await counter('global_embed_tokens', 'all');
@@ -258,11 +258,37 @@ describe.skipIf(!databaseUrl)('chunk-embed на настоящем Postgres + pg
 
       const tight = await pdfJob(null, { pageBudget: 20, embedBudget: pageTokens(PAGES[0]!, 1) + 1 });
       const g1 = await counter('global_embed_tokens', 'all');
-      expect(await runPdf(t.embedder, tight.indexJobId)).toBe('failed');
-      expect((await pool.query('SELECT failure_reason, embed_used FROM index_job WHERE id = $1', [tight.indexJobId])).rows[0])
-        .toEqual({ failure_reason: 'quota_refused', embed_used: pageTokens(PAGES[0]!, 1) });
+      const calls1 = t.gateway.calls.length;
+      expect(await runPdf(t.embedder, tight.indexJobId)).toBe('done');
+      expect((await pool.query('SELECT status, failure_reason, truncated_by, pages_done, embed_used FROM index_job WHERE id = $1', [tight.indexJobId])).rows[0])
+        .toEqual({ status: 'done', failure_reason: null, truncated_by: 'embed_budget', pages_done: 1, embed_used: pageTokens(PAGES[0]!, 1) });
       expect(await counter('global_embed_tokens', 'all') - g1).toBe(pageTokens(PAGES[0]!, 1));
-      expect((await chunksOf(tight.sourceId)).map((r) => r.text)).toEqual([PAGES[0]]); // уже вставленные фрагменты сохраняются
+      expect(t.gateway.calls.length - calls1).toBe(1);                                   // второй лист до шлюза не дошёл
+      expect((await chunksOf(tight.sourceId)).map((r) => r.text)).toEqual([PAGES[0]]); // прочитанный лист — бот отвечает по нему
+      // Бюджет меньше первого листа — отказ, а не пустой done (SC-US-001-3).
+      const none = await pdfJob(null, { pageBudget: 20, embedBudget: 1 });
+      const calls2 = t.gateway.calls.length;
+      expect(await runPdf(t.embedder, none.indexJobId)).toBe('failed');
+      expect((await pool.query('SELECT failure_reason, truncated_by FROM index_job WHERE id = $1', [none.indexJobId])).rows[0])
+        .toEqual({ failure_reason: 'quota_refused', truncated_by: null });
+      expect(t.gateway.calls.length - calls2).toBe(0);
+      expect(await chunksOf(none.sourceId)).toEqual([]);
+    });
+    it('A-N6-052: длинный лист (больше одной пачки) не влезает в остаток бюджета — не оплачивается ни одна его пачка, а не только последняя', async () => {
+      // ~80 фрагментов по ~500 токенов: две пачки по ≤ 64. Остаток бюджета хватает на первую пачку, но не на лист целиком —
+      // без проверки остатка ДО эмбеддинга листа первая пачка была бы оплачена и выброшена (фрагменты листа — все или ни одного).
+      const paragraph = (i: number) => `Раздел ${i}. ${'Подробное описание условий доставки, оплаты и гарантии для раздела каталога. '.repeat(40)}`;
+      const long = Array.from({ length: 80 }, (_, i) => paragraph(i)).join('\n\n');
+      const longTokens = pageTokens(long, 2);
+      const longChunks = chunkDocument({ title: 'прайс.pdf, с. 2', blocks: plainTextBlocks(long) }).length;
+      expect(longChunks).toBeGreaterThan(64);
+      const job = await pdfJob(null, { pageBudget: 20, embedBudget: pageTokens(PAGES[0]!, 1) + Math.floor(longTokens * 0.9) });
+      const t = testEmbedder(pool);
+      expect(await runPdf(t.embedder, job.indexJobId, 0, [PAGES[0]!, long])).toBe('done');
+      expect((await pool.query('SELECT truncated_by, pages_done, embed_used FROM index_job WHERE id = $1', [job.indexJobId])).rows[0])
+        .toEqual({ truncated_by: 'embed_budget', pages_done: 1, embed_used: pageTokens(PAGES[0]!, 1) });
+      expect(t.gateway.calls).toHaveLength(1);                                           // только первый лист
+      expect(t.spend().filter((e) => e.phase === 'attempt')).toHaveLength(1);
     });
     it('две задачи одного аккаунта одновременно у потолка: списано ≤ предела и ровно сумма разрешённых попыток', async () => {
       const owner = await account();
