@@ -7,7 +7,7 @@
 //
 // ЕДИНСТВЕННОЕ место, где пишется commission_entry (страж tests/partners.unit.test.ts, мутация unmetered-commission).
 import { COMMISSION_HOLD_DAYS, COMMISSION_WINDOW_MONTHS, PAYOUT_MINIMUM_MINOR, accrualAmountMinor, commissionBaseMinor,
-  nextPayoutDate, previewFromTotals, type PayoutDetails, type PayoutPreview } from '@n6/rag';
+  payoutDateFor, previewFromTotals, type PayoutDetails, type PayoutPreview } from '@n6/rag';
 import type { Pool, PoolClient } from 'pg';
 import { isUuid } from './index-jobs.js';
 import { transaction } from './quota.js';
@@ -28,9 +28,11 @@ export async function accrueCommissionTx(tx: PoolClient, input: AccrueInput): Pr
   if (partner.owner_account_id === null) return { kind: 'skipped', reason: 'no_partner' };     // seed-код без владельца — платить некому
   // Самореферал — ПОВТОРНО: при атрибуции за него ничего не платили, деньги делают попытку осмысленной.
   if (partner.owner_account_id === input.accountId) return { kind: 'skipped', reason: 'self_referral' };
+  // Начало окна — ПЕРВАЯ оплата клиента в ЛЮБОМ статусе (ревью фичи 15, находка 1): возврат или разбор первой оплаты не
+  // сдвигает начало 12 месяцев (решение владельца: «12 месяцев с первой оплаты»).
   const first = (await tx.query<{ first: Date | null; in_window: boolean }>(`SELECT min(paid_at) AS first,
       $2::timestamptz < min(paid_at) + make_interval(months => $3) AS in_window
-    FROM payment WHERE account_id = $1 AND status = 'succeeded' AND needs_review = false`,
+    FROM payment WHERE account_id = $1`,
   [input.accountId, input.paidAt, COMMISSION_WINDOW_MONTHS])).rows[0];
   if (!first?.first || first.in_window !== true) return { kind: 'skipped', reason: 'window_expired' };
   const base = commissionBaseMinor(input.amountMinor, input.feeMinor);
@@ -137,8 +139,9 @@ export async function readPartnerCabinet(pool: Pool, accountId: string, now = ne
       (SELECT count(DISTINCT wi.bot_id)::int FROM widget_install wi JOIN bot b ON b.id = wi.bot_id
         WHERE b.account_id IN (SELECT account_id FROM attribution WHERE partner_code_id = ANY($1::uuid[]) AND status <> 'rejected')) AS installs
     FROM attribution at WHERE at.partner_code_id = ANY($1::uuid[])`, [ids])).rows[0]!;
-  const payoutDate = nextPayoutDate(now);
-  const sums = await totals(pool, accountId, payoutDate);
+  const payoutDate = payoutDateFor(now);
+  // В день выплаты доступное — на ТЕКУЩИЙ момент (зрелое к нему), иначе — на дату ближайшей выплаты.
+  const sums = await totals(pool, accountId, payoutDate.getTime() < now.getTime() ? now : payoutDate);
   const preview: PayoutPreview = previewFromTotals(sums.total, sums.available, payoutDate);
   const entries = (await pool.query<{ kind: PartnerEntryView['kind']; amount_minor: string; created_at: Date; available_at: Date }>(
     `SELECT kind, amount_minor, created_at, available_at FROM commission_entry WHERE partner_account_id = $1 ORDER BY created_at DESC, id LIMIT 20`,

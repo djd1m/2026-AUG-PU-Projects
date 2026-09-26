@@ -8,7 +8,7 @@
 //   npm run ops:partner -- due          # к выплате на ближайшее 5-е: почта, телефон СБП, банк, сумма (CSV в stdout)
 //   npm run ops:partner -- export       # все движения денег партнёров (CSV в stdout), без данных плательщиков
 // Коды: 0 — выполнено; 1 — отказ (аргументы, не найдено, правило денег, БД).
-import { DEFAULT_COMMISSION_RATE_BP, nextPayoutDate, previewFromTotals } from '@n6/rag';
+import { DEFAULT_COMMISSION_RATE_BP, payoutDateFor, previewFromTotals } from '@n6/rag';
 import type { Pool } from 'pg';
 import { recordPartnerPayout, type RecordPayoutResult } from './commission.js';
 import { PARTNER_CODE_FORM } from './partners.js';
@@ -94,13 +94,14 @@ export function rublesCell(minor: number): string {
 }
 const dateCell = (value: Date) => new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric' }).format(value);
 
-// К выплате на ближайшее 5-е: зрелое ≥ минимума (решение владельца 26.09). Телефон — полностью: оператор платит по нему.
+// К выплате: зрелое на ТЕКУЩИЙ момент и ≥ минимума (решение владельца 26.09) — ровно то, что примет команда payout; дата —
+// сегодняшнее 5-е или ближайшее (ревью фичи 15, находка 3). Телефон — полностью: оператор платит по нему.
 export async function payoutsDueCsv(pool: Pool, now = new Date()): Promise<string> {
-  const payoutDate = nextPayoutDate(now);
+  const payoutDate = payoutDateFor(now);
   const rows = (await pool.query<{ email: string; phone: string | null; bank: string | null; total: string; available: string }>(`SELECT a.email, d.phone, d.bank,
       sum(e.amount_minor)::bigint AS total, COALESCE(sum(e.amount_minor) FILTER (WHERE e.amount_minor < 0 OR e.available_at <= $1), 0)::bigint AS available
     FROM commission_entry e JOIN account a ON a.id = e.partner_account_id LEFT JOIN partner_payout_details d ON d.account_id = a.id
-    GROUP BY a.email, d.phone, d.bank ORDER BY a.email`, [payoutDate])).rows;
+    GROUP BY a.email, d.phone, d.bank ORDER BY a.email`, [now])).rows;
   const lines = ['почта;телефон СБП;банк;к выплате, ₽;дата выплаты'];
   for (const row of rows) {
     const due = previewFromTotals(Number(row.total), Number(row.available), payoutDate).dueMinor;

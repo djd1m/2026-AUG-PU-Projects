@@ -19,7 +19,8 @@ export const inviteTokenHash = (token: string) => createHash('sha256').update(to
 
 type Db = Pool | PoolClient;
 async function lockAccountRows(tx: PoolClient, ids: string[]): Promise<void> {
-  await tx.query('SELECT id FROM account WHERE id = ANY($1::uuid[]) ORDER BY id FOR UPDATE', [ids]);
+  // FOR NO KEY UPDATE: как lockAccountBots — не блокирует проверки внешних ключей (запись комиссии в оплате), цикла нет.
+  await tx.query('SELECT id FROM account WHERE id = ANY($1::uuid[]) ORDER BY id FOR NO KEY UPDATE', [ids]);
 }
 
 // Код студии для атрибуции invite: первый код, которым владеет студия; нет — выдаётся `studio-<6 символов>` (FR-GROWTH-004:
@@ -123,7 +124,7 @@ export interface StudioBotView { bot_id: string; company_name: string; transferr
 export interface StudioCabinet {
   plan: string; code: string | null;
   bots: StudioBotView[];
-  cohort: { invites_accepted: number; installs_30d: number; answers_30d: number; conversions: number } | null;
+  cohort: { invites_accepted: number; installs_30d: number; answers_30d: number; conversions: number } | null;   // все — за 30 дней
 }
 // Кабинет студии (FR-GROWTH-004): свои боты и переданные клиентам — ТОЛЬКО числа (тексты вопросов посетителей клиента
 // студии не показываются: бот уже принадлежит клиенту, A-N6-045). Когорта по коду студии за 30 дней; нет ни одной
@@ -132,7 +133,7 @@ export async function readStudioCabinet(pool: Pool, accountId: string): Promise<
   if (!isUuid(accountId)) return null;
   const account = (await pool.query<{ plan: string }>(`SELECT plan FROM account WHERE id = $1 AND status = 'active'`, [accountId])).rows[0];
   if (!account) return null;
-  const code = (await pool.query<{ id: string; code: string }>(`SELECT id, code FROM partner_code WHERE owner_account_id = $1 ORDER BY created_at, code LIMIT 1`,
+  const code = (await pool.query<{ code: string }>(`SELECT code FROM partner_code WHERE owner_account_id = $1 ORDER BY created_at, code LIMIT 1`,
     [accountId])).rows[0] ?? null;
   const bots = (await pool.query<{ id: string; company_name: string; transferred: boolean; answered: number; unknown: number; installs: number }>(
     `SELECT b.id, b.company_name, b.studio_account_id = $1 AS transferred,
@@ -142,12 +143,19 @@ export async function readStudioCabinet(pool: Pool, accountId: string): Promise<
      FROM bot b WHERE (b.account_id = $1 OR b.studio_account_id = $1) AND b.status = 'active' ORDER BY b.created_at, b.id`, [accountId])).rows;
   let cohort: StudioCabinet['cohort'] = null;
   if (code) {
-    const row = (await pool.query<{ accepted: number; installs: number; answers: number; conversions: number }>(`SELECT
+    // Одна группа и один период (ревью фичи 15, находка 4): клиенты — аккаунты, закреплённые за ЛЮБЫМ кодом студии (invite, код,
+    // cookie; не rejected); все четыре числа — за 30 дней; «оплатили» — по реальным платежам, а не по статусу атрибуции.
+    const row = (await pool.query<{ accepted: number; installs: number; answers: number; conversions: number }>(`WITH clients AS (
+        SELECT at.account_id FROM attribution at JOIN partner_code pc ON pc.id = at.partner_code_id
+        WHERE pc.owner_account_id = $1 AND at.status <> 'rejected')
+      SELECT
         (SELECT count(*)::int FROM studio_invite WHERE studio_account_id = $1 AND accepted_at > now() - interval '30 days') AS accepted,
-        (SELECT count(*)::int FROM widget_install w JOIN bot b ON b.id = w.bot_id WHERE b.studio_account_id = $1 AND w.first_config_at > now() - interval '30 days') AS installs,
-        (SELECT count(*)::int FROM question_log q JOIN bot b ON b.id = q.bot_id WHERE b.studio_account_id = $1 AND q.outcome = 'answered'
-           AND q.visitor_session_id IS NOT NULL AND q.created_at > now() - interval '30 days') AS answers,
-        (SELECT count(*)::int FROM attribution WHERE partner_code_id = $2 AND status = 'converted') AS conversions`, [accountId, code.id])).rows[0]!;
+        (SELECT count(*)::int FROM widget_install w JOIN bot b ON b.id = w.bot_id
+          WHERE b.account_id IN (SELECT account_id FROM clients) AND w.first_config_at > now() - interval '30 days') AS installs,
+        (SELECT count(*)::int FROM question_log q JOIN bot b ON b.id = q.bot_id WHERE b.account_id IN (SELECT account_id FROM clients)
+          AND q.outcome = 'answered' AND q.visitor_session_id IS NOT NULL AND q.created_at > now() - interval '30 days') AS answers,
+        (SELECT count(DISTINCT p.account_id)::int FROM payment p WHERE p.account_id IN (SELECT account_id FROM clients)
+          AND p.status = 'succeeded' AND NOT p.needs_review AND p.paid_at > now() - interval '30 days') AS conversions`, [accountId])).rows[0]!;
     if (row.accepted + row.installs + row.answers + row.conversions > 0) {
       cohort = { invites_accepted: row.accepted, installs_30d: row.installs, answers_30d: row.answers, conversions: row.conversions };
     }

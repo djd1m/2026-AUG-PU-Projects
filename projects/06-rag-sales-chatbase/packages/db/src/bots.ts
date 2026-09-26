@@ -21,7 +21,10 @@ export const pair = (botId: unknown, accountId: unknown) => isUuid(botId) && isU
 // падает на параллельном). Боты, где аккаунт — студия клиента, считаются тоже (Pseudocode CreateBot п.1).
 export interface AccountBots { plan: AccountPlan; limit: number; count: number }
 export async function lockAccountBots(tx: PoolClient, accountId: string): Promise<AccountBots | null> {
-  const account = (await tx.query<{ plan: unknown; status: unknown }>('SELECT plan, status FROM account WHERE id = $1 FOR UPDATE', [accountId])).rows[0];
+  // FOR NO KEY UPDATE, а не FOR UPDATE (ревью фичи 15, находка 2): взаимоисключение CreateBot / ClaimPreview / приёма
+  // приглашения сохраняется, а проверка внешних ключей (FOR KEY SHARE) — например, запись комиссии партнёра в транзакции
+  // оплаты — этой строкой не блокируется, и цикла «оплата ↔ оплата» или «приём ↔ оплата» нет.
+  const account = (await tx.query<{ plan: unknown; status: unknown }>('SELECT plan, status FROM account WHERE id = $1 FOR NO KEY UPDATE', [accountId])).rows[0];
   if (!account || readAccountStatus(account.status) !== 'active') return null;
   const plan = readAccountPlan(account.plan);
   const count = (await tx.query<{ n: number }>(`SELECT count(*)::int AS n FROM bot

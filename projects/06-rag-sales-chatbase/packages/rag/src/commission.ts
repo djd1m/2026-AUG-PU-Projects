@@ -75,6 +75,17 @@ export function nextPayoutDate(at: Date): Date {
   return new Date(Date.UTC(local.getUTCFullYear(), local.getUTCMonth() + 1, PAYOUT_DAY_OF_MONTH) - moscowOffsetMs);
 }
 
+/**
+ * Дата выплаты, к которой относится момент `at`: весь день 5-го числа по Москве — СЕГОДНЯШНЯЯ выплата (с 00:00 до 24:00),
+ * иначе ближайшее следующее 5-е (ревью фичи 15, находка 3: утром 5-го nextPayoutDate уже отдавал следующий месяц).
+ */
+export function payoutDateFor(at: Date): Date {
+  const moscowOffsetMs = 3 * 60 * 60 * 1000;
+  const local = new Date(at.getTime() + moscowOffsetMs);
+  if (local.getUTCDate() === PAYOUT_DAY_OF_MONTH) return new Date(Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), PAYOUT_DAY_OF_MONTH) - moscowOffsetMs);
+  return nextPayoutDate(at);
+}
+
 export interface PayoutPreview {
   /** Попадёт в ближайшую выплату 5-го: зрелое на эту дату и не меньше минимума; иначе 0. */
   readonly dueMinor: number;
@@ -87,7 +98,7 @@ export interface PayoutPreview {
 
 /** Обе суммы показываются ЗАРАНЕЕ: перенос, обнаруженный по факту, читается как пропавшие деньги (N4 ADR-014). */
 export function previewNextPayout(entries: readonly CommissionEntry[], at: Date): PayoutPreview {
-  const payoutDate = nextPayoutDate(at);
+  const payoutDate = payoutDateFor(at);
   return previewFromTotals(balanceMinor(entries), availableForPayoutMinor(entries, payoutDate), payoutDate);
 }
 /** То же по суммам (кабинет считает их в SQL): total — баланс, availableMinor — доступное на дату выплаты. */

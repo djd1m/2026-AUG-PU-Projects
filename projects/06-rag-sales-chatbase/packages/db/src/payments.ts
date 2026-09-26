@@ -108,7 +108,7 @@ export function applyVerifiedPayment(pool: Pool, input: { provider: PaymentProvi
 
 async function grantPaidPlan(tx: PoolClient, accountId: string, paid: PaidPlan): Promise<{ plan: string; paidUntil: string }> {
   const row = (await tx.query<{ plan: string; plan_source: string; plan_paid_until: Date | null; now: Date }>(`SELECT plan, plan_source, plan_paid_until, now() AS now
-    FROM account WHERE id = $1 FOR UPDATE`, [accountId])).rows[0];
+    FROM account WHERE id = $1 FOR NO KEY UPDATE`, [accountId])).rows[0];   // не блокирует FK-проверку комиссии (ревью фичи 15, находка 2)
   if (!row) throw new Error('Аккаунт намерения не найден: оплата не применяется, транзакция откатывается');
   const current = readAccountPlan(row.plan);
   // Действующий план: оплаченный — пока не истёк; назначенный оператором или до миграции 006 — бессрочно.
@@ -154,7 +154,7 @@ async function paymentRowId(tx: PoolClient, provider: PaymentProviderName, provi
 // Сторож: истёкший ОПЛАЧЕННЫЙ план → free (бейдж возвращается). План оператора и назначенный до 006 не истекают.
 export async function expirePaidPlans(pool: Pool, batch: number): Promise<number> {
   const expired = await pool.query(`UPDATE account SET plan = 'free', plan_source = 'none' WHERE id IN (
-      SELECT id FROM account WHERE plan_source = 'payment' AND plan_paid_until <= now() ORDER BY plan_paid_until LIMIT $1 FOR UPDATE SKIP LOCKED)
+      SELECT id FROM account WHERE plan_source = 'payment' AND plan_paid_until <= now() ORDER BY plan_paid_until LIMIT $1 FOR NO KEY UPDATE SKIP LOCKED)
     AND plan_source = 'payment' AND plan_paid_until <= now()`, [batch]);
   return expired.rowCount ?? 0;
 }

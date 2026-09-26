@@ -3,9 +3,10 @@
 // (ошибка поля, вход поле не принимает), порядок входа маршрутов партнёра и студии, команды оператора, стражи по исходнику
 // (AC-16: деньги партнёра пишет только commission.ts и только из транзакции платежа).
 import { describe, expect, it, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { COMMISSION_HOLD_DAYS, PAYOUT_MINIMUM_MINOR, accrualAmountMinor, availableForPayoutMinor, commissionBaseMinor, formatRub, maturesAt,
-  nextPayoutDate, previewNextPayout, withinCommissionWindow, type CommissionEntry } from '../packages/rag/src/commission';
+  nextPayoutDate, payoutDateFor, previewNextPayout, withinCommissionWindow, type CommissionEntry } from '../packages/rag/src/commission';
 import { looksLikeCardNumber, normalizePhone, validatePayoutDetails } from '../packages/rag/src/payout-details';
 import { normalizePartnerCode } from '../packages/db/src/partners';
 import { csvText, parseOpsArgs, parseRubles, rublesCell } from '../packages/db/src/ops-partners';
@@ -51,6 +52,13 @@ describe('арифметика комиссии (N4 — перенесено; ч
     expect([enough.dueMinor, enough.deferredMinor]).toEqual([PAYOUT_MINIMUM_MINOR, 7_000]);
     const debt = previewNextPayout([entry('accrual', 19_107, old), entry('payout', -19_107, old), entry('clawback', -19_107, old)], new Date('2026-09-26T00:00:00Z'));
     expect([debt.dueMinor, debt.debtMinor]).toEqual([0, 19_107]);
+  });
+  it('ревью фичи 15 (находка 3): весь день 5-го по Москве — СЕГОДНЯШНЯЯ выплата, а не следующий месяц', () => {
+    for (const at of ['2026-10-04T21:00:00Z', '2026-10-05T08:00:00Z', '2026-10-05T20:59:59Z']) {
+      expect(payoutDateFor(new Date(at)).toISOString(), at).toBe('2026-10-04T21:00:00.000Z');
+    }
+    expect(payoutDateFor(new Date('2026-10-05T21:00:00Z')).toISOString()).toBe('2026-11-04T21:00:00.000Z');
+    expect(payoutDateFor(new Date('2026-10-04T20:59:59Z')).toISOString()).toBe('2026-10-04T21:00:00.000Z');
   });
   it('окно 12 месяцев с первой оплаты — граница не включается', () => {
     const first = new Date('2026-01-31T00:00:00Z');
@@ -194,35 +202,66 @@ describe('команды оператора', () => {
   });
 });
 
-// AC-16: деньги партнёра пишет ТОЛЬКО commission.ts; начисление и сторно зовутся ТОЛЬКО из транзакций платежа.
+// AC-16: деньги партнёра пишет ТОЛЬКО commission.ts; начисление и сторно зовутся ТОЛЬКО внутри колбэка транзакции платежа
+// (ревью фичи 15, находка 5: страж обходит ВСЕ исходники, а не список файлов, и проверяет вложенность, а не соседство строк).
+export function sourceFiles(roots: readonly string[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  const walk = (dir: string) => {
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      if (['node_modules', 'dist', '.next', 'artifacts', 'widget-bundle'].includes(item.name)) continue;
+      const file = path.join(dir, item.name);
+      if (item.isDirectory()) walk(file);
+      else if (/\.(ts|tsx|mjs)$/.test(item.name) && !item.name.endsWith('.d.ts')) out[file] = readFileSync(file, 'utf8');
+    }
+  };
+  for (const root of roots) walk(root);
+  return out;
+}
 export function commissionWriters(files: Record<string, string>): string[] {
   return Object.entries(files).filter(([, code]) => /INSERT\s+INTO\s+commission_entry/i.test(code)).map(([file]) => file);
 }
-export function callSites(code: string, fn: string): string[] {
-  const owners: string[] = [];
-  const re = new RegExp(`\\b${fn}\\s*\\(`, 'g');
-  for (let m = re.exec(code); m; m = re.exec(code)) {
-    const before = code.slice(0, m.index);
-    const fnDecl = [...before.matchAll(/export\s+(?:async\s+)?function\s+(\w+)/g)].pop();
-    owners.push(fnDecl?.[1] ?? '<модуль>');
+// Конец блока по балансу фигурных скобок от открывающей (строки и комментарии этих модулей скобок-ловушек не несут).
+function blockEnd(code: string, open: number): number {
+  let depth = 0;
+  for (let i = open; i < code.length; i++) {
+    if (code[i] === '{') depth++;
+    else if (code[i] === '}' && --depth === 0) return i;
   }
-  return owners;
+  return code.length;
+}
+export interface CallSite { owner: string; inTx: boolean }
+export function callSites(code: string, fn: string): CallSite[] {
+  const spans: Array<{ owner: string; start: number; end: number }> = [];
+  const tx = /transaction\(pool, async \(tx\) => \{/g;
+  for (let m = tx.exec(code); m; m = tx.exec(code)) {
+    const owner = [...code.slice(0, m.index).matchAll(/export\s+(?:async\s+)?function\s+(\w+)/g)].pop()?.[1] ?? '<модуль>';
+    spans.push({ owner, start: m.index, end: blockEnd(code, m.index + m[0].length - 1) });
+  }
+  const out: CallSite[] = [];
+  const re = new RegExp(`\\b${fn}\\s*\\(\\s*(\\w+)`, 'g');
+  for (let m = re.exec(code); m; m = re.exec(code)) {
+    if (/function\s+$/.test(code.slice(Math.max(0, m.index - 20), m.index))) continue;   // объявление, а не вызов
+    const at = m.index;
+    const span = spans.find((s) => at > s.start && at < s.end);
+    out.push({ owner: span?.owner ?? '<вне транзакции>', inTx: !!span && m[1] === 'tx' });
+  }
+  return out;
 }
 describe('стражи по исходнику (AC-16)', () => {
-  const read = (p: string) => readFileSync(p, 'utf8');
-  it('INSERT INTO commission_entry — только в packages/db/src/commission.ts', () => {
-    const files = Object.fromEntries(['packages/db/src/commission.ts', 'packages/db/src/payments.ts', 'packages/db/src/partners.ts', 'packages/db/src/studio.ts',
-      'packages/db/src/ops-partners.ts', 'packages/db/src/tariffs.ts'].map((p) => [p, read(p)]));
-    expect(commissionWriters(files)).toEqual(['packages/db/src/commission.ts']);
+  const files = sourceFiles(['apps', 'packages']);
+  it('INSERT INTO commission_entry — во ВСЁМ исходнике только packages/db/src/commission.ts', () => {
+    expect(commissionWriters(files)).toEqual([path.join('packages', 'db', 'src', 'commission.ts')]);
     expect(commissionWriters({ 'x.ts': 'await tx.query(`INSERT INTO commission_entry (kind) VALUES ($1)`)' })).toEqual(['x.ts']);   // страж умеет падать
   });
-  it('accrueCommissionTx — только в applyVerifiedPayment; clawbackCommissionTx — только в recordVerifiedRefund', () => {
-    const payments = read('packages/db/src/payments.ts');
-    expect(callSites(payments, 'accrueCommissionTx')).toEqual(['applyVerifiedPayment']);
-    expect(callSites(payments, 'clawbackCommissionTx')).toEqual(['recordVerifiedRefund']);
-    for (const p of ['packages/db/src/partners.ts', 'packages/db/src/studio.ts', 'packages/db/src/ops-partners.ts', 'packages/db/src/tariffs.ts']) {
-      expect(callSites(read(p), 'accrueCommissionTx'), p).toEqual([]);
-    }
-    expect(callSites('export function evil() { accrueCommissionTx(tx, x); }', 'accrueCommissionTx')).toEqual(['evil']);   // страж умеет падать
+  it('accrueCommissionTx — только внутри транзакции applyVerifiedPayment; clawbackCommissionTx — только внутри recordVerifiedRefund; с tx', () => {
+    const all = (fn: string) => Object.entries(files).flatMap(([file, code]) => callSites(code, fn).map((c) => ({ file, ...c })));
+    const payments = path.join('packages', 'db', 'src', 'payments.ts');
+    expect(all('accrueCommissionTx')).toEqual([{ file: payments, owner: 'applyVerifiedPayment', inTx: true }]);
+    expect(all('clawbackCommissionTx')).toEqual([{ file: payments, owner: 'recordVerifiedRefund', inTx: true }]);
+    // Страж умеет падать: вызов после колбэка транзакции, вызов с пулом, вызов в чужой функции.
+    const after = 'export function applyVerifiedPayment(pool) { return transaction(pool, async (tx) => { return 1; }).then(() => accrueCommissionTx(pool, x)); }';
+    expect(callSites(after, 'accrueCommissionTx')).toEqual([{ owner: '<вне транзакции>', inTx: false }]);
+    const other = 'export function evil(pool) { return transaction(pool, async (tx) => { await accrueCommissionTx(tx, x); }); }';
+    expect(callSites(other, 'accrueCommissionTx')).toEqual([{ owner: 'evil', inTx: true }]);
   });
 });

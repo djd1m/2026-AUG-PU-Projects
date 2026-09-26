@@ -48,6 +48,12 @@ const mutations = [
     edits: [{ file: commission, apply: once('if (input.amountMinor > available) return', 'if (input.amountMinor < 0) return') }] },
   { id: 'referral-unsigned', title: 'cookie реферала принимается без проверки подписи (AC-1)',
     edits: [{ file: referral, apply: once('if (!timingSafeEqual(expected, Buffer.from(match[3]!, \'hex\'))) return null;', 'void expected;') }] },
+  { id: 'payer-for-update', title: 'оплата снова запирает аккаунт FOR UPDATE — взаимные партнёры в deadlock (ревью фичи 15, находка 2)',
+    edits: [{ file: payments, apply: once('FROM account WHERE id = $1 FOR NO KEY UPDATE`', 'FROM account WHERE id = $1 FOR UPDATE`') }] },
+  { id: 'window-excludes-refunded', title: 'начало окна 12 месяцев — только по невозвращённым оплатам (ревью фичи 15, находка 1)',
+    edits: [{ file: commission, apply: once('    FROM payment WHERE account_id = $1`,', "    FROM payment WHERE account_id = $1 AND status = 'succeeded' AND needs_review = false`,") }] },
+  { id: 'payout-day-next-month', title: 'в день выплаты дата — уже следующий месяц (ревью фичи 15, находка 3)',
+    edits: [{ file: 'packages/rag/src/commission.ts', apply: once('  if (local.getUTCDate() === PAYOUT_DAY_OF_MONTH) return', '  if (local.getUTCDate() === -1) return') }] },
   { id: 'invite-reusable', title: 'приглашение принимается повторно (одноразовость, AC-6)',
     edits: [{ file: studio, apply: once("if (invite.accepted) return { kind: 'used' } as const;", '') }] },
 ];

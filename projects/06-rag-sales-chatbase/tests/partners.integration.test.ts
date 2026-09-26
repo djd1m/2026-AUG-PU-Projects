@@ -8,10 +8,15 @@ import { acceptStudioInvite, applyPartnerCodeTx, applyVerifiedPayment, createBot
   readPartnerCabinet, readStudioCabinet, recordPartnerPayout, recordVerifiedRefund, registerAccount, savePayoutDetails, transaction,
   type AttributionSource, type Pool } from '../packages/db/src/index';
 import { issuePartnerCode, unfreezePartnerCode } from '../packages/db/src/ops-partners';
+import type { PartnerCabinet, StudioCabinet } from '../packages/db/src/index';
+import { createPartnerDependencies } from '../apps/web/src/server/partner-runtime';
+import { createAcceptInviteHandler, createInviteHandler, createPartnerSummaryHandler, createPayoutDetailsHandler,
+  createStudioSummaryHandler } from '../apps/web/src/server/partner-handler';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 
 const databaseUrl = process.env.DATABASE_URL;
+const PUBLIC = 'https://sufler.test.invalid';
 const DAY = 86_400_000;
 const P1 = '198.51.100.0/24', P2 = '203.0.113.0/24', P3 = '192.0.2.0/24';
 
@@ -333,5 +338,63 @@ describe.skipIf(!databaseUrl)('партнёры и студии на насто�
     expect(await issuePartnerCode(pool, { code: `x-${suffix}`, group: 'SEED', by: 'оператор', reason: 'неверно' })).toEqual({ kind: 'invalid', field: 'group' });
     expect(await issuePartnerCode(pool, { code: `y-${suffix}`, group: 'partner', owner: 'nobody@example.ru', by: 'о', reason: 'нет владельца' })).toEqual({ kind: 'owner_not_found' });
     expect((await readPartnerCabinet(pool, await account()))).toBeNull();
+  });
+
+  it('ревью фичи 15 (находка 1): возврат ПЕРВОЙ оплаты не сдвигает начало окна 12 месяцев', async () => {
+    const a = await attributed();
+    const first = await pay(a.client, { paidAt: new Date(Date.now() - 400 * DAY).toISOString() });
+    await refund(first.payment);
+    await pay(a.client);
+    expect((await entries(a.partner)).map((e) => e.kind)).toEqual(['accrual', 'clawback']);   // вторая оплата — через 13 месяцев после первой
+  });
+
+  it('ревью фичи 15 (находка 2) конкурентно: взаимные партнёры платят одновременно; приём приглашения одновременно с оплатой клиента — без deadlock', async () => {
+    for (let round = 0; round < 8; round++) {
+      const a = await account(), b = await account();
+      const codeA = await code(a), codeB = await code(b);
+      expect(await apply(a, codeB, 'code', `10.${round}.1.0/24`)).toBe('applied');
+      expect(await apply(b, codeA, 'code', `10.${round}.2.0/24`)).toBe('applied');
+      const results = await Promise.allSettled([pay(a), pay(b)]);
+      expect(results.map((r) => r.status), `раунд ${round}`).toEqual(['fulfilled', 'fulfilled']);
+      expect((await entries(a)).length + (await entries(b)).length, `раунд ${round}`).toBe(2);
+    }
+    for (let round = 0; round < 5; round++) {
+      const { studio, bot } = await studioWithBot();
+      const invite = await createStudioInvite(pool, { studioAccountId: studio, botId: bot, email: 'c@example.ru' });
+      if (invite.kind !== 'created') throw new Error('ожидалось приглашение');
+      const client = await account('studio');                                   // предел 10 — приём не упирается в план
+      const studioCode = (await pool.query<{ code: string }>('SELECT code FROM partner_code WHERE owner_account_id = $1', [studio])).rows[0]!.code;
+      expect(await apply(client, studioCode, 'cookie', `10.9.${round}.0/24`)).toBe('applied');
+      const results = await Promise.allSettled([acceptStudioInvite(pool, { token: invite.token, clientAccountId: client, ipPrefix: P2 }), pay(client)]);
+      expect(results.map((r) => r.status), `раунд ${round}`).toEqual(['fulfilled', 'fulfilled']);
+    }
+  });
+
+  it('маршруты по боевой связке createPartnerDependencies: «Передать клиенту» → приём → 409; сводки студии и партнёра; реквизиты', async () => {
+    const sessions = new Map<string, string>();
+    const session = (id: string) => { const t = randomBytes(32).toString('base64url'); sessions.set(t, id); return t; };
+    const deps = createPartnerDependencies({ pool, publicOrigin: PUBLIC, allowMutation: async () => true, log: () => {},
+      authenticate: async (token) => (sessions.has(token) ? { account_id: sessions.get(token)! } : null) });
+    const post = (token: string, body: unknown) => new Request(`${PUBLIC}/api/x`, { method: 'POST', body: JSON.stringify(body),
+      headers: { origin: PUBLIC, cookie: `__Host-n6_session=${token}`, 'content-type': 'application/json', 'x-forwarded-for': '198.51.100.7' } });
+    const get = (token: string) => new Request(`${PUBLIC}/api/x`, { headers: { cookie: `__Host-n6_session=${token}` } });
+    const { studio, bot } = await studioWithBot();
+    const studioToken = session(studio);
+    const created = await createInviteHandler(deps)(post(studioToken, { email: 'Client@Example.ru' }), bot);
+    expect(created.status).toBe(201);
+    const url = ((await created.json()) as { data: { url: string } }).data.url;
+    expect(url).toMatch(new RegExp(`^${PUBLIC}/invite/[A-Za-z0-9_-]{43}$`));
+    const token = url.slice(url.lastIndexOf('/') + 1);
+    const clientToken = session(await account());
+    expect((await createAcceptInviteHandler(deps)(post(clientToken, {}), token)).status).toBe(200);
+    expect((await createAcceptInviteHandler(deps)(post(session(await account()), {}), token)).status).toBe(409);
+    const studioSummary = (await (await createStudioSummaryHandler(deps)(get(studioToken))).json()) as { data: StudioCabinet };
+    expect(studioSummary.data.bots.find((b) => b.bot_id === bot)).toMatchObject({ transferred: true });
+    const partner = await createPartnerSummaryHandler(deps)(get(studioToken));
+    expect(partner.status).toBe(200);
+    expect(((await partner.json()) as { data: PartnerCabinet }).data.codes[0]!.code).toMatch(/^studio-[a-z0-9]{6}$/);
+    expect((await createPayoutDetailsHandler(deps)(post(studioToken, { method: 'sbp', phone: '4111 1111 1111 1111' }))).status).toBe(422);
+    expect((await createPayoutDetailsHandler(deps)(post(studioToken, { method: 'sbp', phone: '8 900 000-00-00' }))).status).toBe(200);
+    expect((await createPartnerSummaryHandler(deps)(get(session(await account())))).status).toBe(404);
   });
 });
