@@ -73,7 +73,12 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 `bot`, `allowed_origin`, `source`, `page`, `chunk`, `index_job`, `job_attempt`, `preview`,
 `visitor_session`, `question_log`, `widget_install`, `quota_counter`, `growth_event`,
 `partner_code`, `attribution`, `studio_invite`, `pro_interest`; с 26.09 (живая оплата ЮKassa, решение владельца,
-A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`, `payment`, `operator_action`. Итого **23**.
+A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`, `payment`, `operator_action`; с 26.09 (партнёры и студии,
+комиссии и выплаты, решение владельца, A-N6-043, миграция 007) — ещё 4: `partner_code_use`, `commission_entry`,
+`partner_payout_details`, `partner_audit`. Итого **27**. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
+`accrual | clawback | payout`; `partner_code.frozen_reason` ∈ `antifraud_ip_burst | operator`; `partner_code_use.source` =
+`attribution.source` ∈ `code | invite | cookie`; `partner_audit.kind` ∈ `frozen_antifraud | unfrozen | code_issued |
+payout_recorded | accrual_skipped_fee_unknown`.
 
 | Поле | Значения (закрыто) | Чтение неизвестного значения |
 |---|---|---|

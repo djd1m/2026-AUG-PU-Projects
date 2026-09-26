@@ -63,7 +63,7 @@ describe('приход по бейджу / демо-странице (FR-GROWTH-
     expect(recorded).toEqual([[ACCOUNT, 'shop.example']]);
   });
   it('обработчик авторизации зовёт запись прихода только при регистрации; её сбой регистрацию не валит', async () => {
-    const auth = { register: async () => 'T', login: async () => 'T', logout: async () => {}, authenticate: async () => null } as unknown as AuthService;
+    const auth = { register: async () => 'T', registerWithCode: async () => 'T', login: async () => 'T', logout: async () => {}, authenticate: async () => null } as unknown as AuthService;
     const calls: string[] = [];
     const run = (action: 'login' | 'register', fail = false) => createAuthHandler(action, { auth, publicOrigin: PUBLIC, allowMutation: async () => true,
       recordArrival: async () => { calls.push(action); if (fail) throw new Error('БД недоступна'); } })(new Request(`${PUBLIC}/api/auth/${action}`, {

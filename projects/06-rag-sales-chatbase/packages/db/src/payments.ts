@@ -7,6 +7,7 @@
 // сюда приходит только перезапрошенный у ЮKassa платёж. Внутри транзакции нет сетевых вызовов.
 import { PAID_PLAN_DAYS, PLAN_RANK, isPaidPlan, readAccountPlan, type PaidPlan } from '@n6/rag';
 import type { Pool, PoolClient } from 'pg';
+import { accrueCommissionTx, clawbackCommissionTx } from './commission.js';
 import { isUuid } from './index-jobs.js';
 import { transaction } from './quota.js';
 
@@ -98,6 +99,9 @@ export function applyVerifiedPayment(pool: Pool, input: { provider: PaymentProvi
     const updated = await grantPaidPlan(tx, intent.account_id, intent.plan);
     // Атрибуция конвертируется ОПЛАТОЙ (A-N6-015: «появляется свой магазин — план назначает оплата»).
     await tx.query(`UPDATE attribution SET status = 'converted' WHERE account_id = $1 AND status = 'pending'`, [intent.account_id]);
+    // Комиссия партнёру — В ТОЙ ЖЕ транзакции (partner-and-studio, A-N6-043): платёж и обязательство одним коммитом.
+    await accrueCommissionTx(tx, { paymentId: await paymentRowId(tx, input.provider, payment.id), accountId: intent.account_id,
+      amountMinor: payment.amountMinor, feeMinor: payment.feeMinor, paidAt });
     return { applied: true, plan: updated.plan, paidUntil: updated.paidUntil } as const;
   });
 }
@@ -135,8 +139,16 @@ export function recordVerifiedRefund(pool: Pool, input: { provider: PaymentProvi
       ON CONFLICT (provider, provider_payment_id) DO UPDATE SET status = 'refunded', needs_review = true, review_reason = 'refund'`,
     [intent ? payment.orderId : null, intent?.account_id ?? null, input.provider, payment.id, intent && isPaidPlan(intent.plan) ? intent.plan : null,
       payment.amountMinor, payment.feeMinor, payment.paidAt ?? new Date().toISOString()]);
+    // Сторно комиссии этого платежа — той же транзакцией (partner-and-studio): возврат раньше оплаты начисления не имеет.
+    await clawbackCommissionTx(tx, await paymentRowId(tx, input.provider, payment.id));
     return { applied: false, reason: 'refund_recorded' } as const;
   });
+}
+
+async function paymentRowId(tx: PoolClient, provider: PaymentProviderName, providerPaymentId: string): Promise<string> {
+  const row = (await tx.query<{ id: string }>('SELECT id FROM payment WHERE provider = $1 AND provider_payment_id = $2', [provider, providerPaymentId])).rows[0];
+  if (!row) throw new Error('Строка платежа не найдена после записи: транзакция откатывается');
+  return row.id;
 }
 
 // Сторож: истёкший ОПЛАЧЕННЫЙ план → free (бейдж возвращается). План оператора и назначенный до 006 не истекают.

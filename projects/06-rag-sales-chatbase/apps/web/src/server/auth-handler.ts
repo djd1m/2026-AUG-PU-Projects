@@ -5,11 +5,15 @@ import { z } from 'zod';
 import { type AuthService, LOGIN_FAILURE, SESSION_TTL_SECONDS } from './auth';
 import { clientIp, ipPrefix } from './ip';
 
-const inputSchema = z.object({
+const credentials = {
   email: z.string().trim().email().max(254).transform((v) => v.toLowerCase()),
   password: z.string().min(8).refine((v) => Buffer.byteLength(v, 'utf8') <= 72,
     'Пароль превышает безопасную длину bcrypt'),
-}).strict();
+};
+const inputSchema = z.object(credentials).strict();
+// Регистрация принимает код партнёра (partner-and-studio, FR-PARTNER-001): пустая строка — «кода нет», форма кода проверяется
+// хранилищем (неверный — ошибка поля, без отката к cookie). Вход поле кода не принимает.
+const registerSchema = z.object({ ...credentials, partner_code: z.string().max(60).optional() }).strict();
 export const COOKIE_NAME = '__Host-n6_session';
 const MAX_BODY_BYTES = 4096;
 function json(body: object, status = 200, cookies: string | string[] = []): Response {
@@ -36,7 +40,11 @@ export interface HandlerDependencies {
   // Приход по бейджу / демо-странице (фича public-page-and-summary, FR-GROWTH-006): только при РЕГИСТРАЦИИ — cookie
   // прихода пишется в новый аккаунт один раз. Сбой записи регистрацию не валит (метрика, а не доступ).
   recordArrival?: (request: Request, sessionToken: string) => Promise<void>;
+  // Код из подписанной cookie /r/{code} (partner-and-studio): подпись и срок проверены, иначе null.
+  referralCode?: (request: Request) => string | null;
 }
+const CLEAR_REFERRAL_COOKIE = '__Host-n6_ref=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
+const INVALID_CODE = { error: { code: 'invalid_partner_code', message: 'Код партнёра не найден или не действует. Проверьте код или оставьте поле пустым', field: 'partner_code' } };
 const CLEAR_PREVIEW_COOKIE = '__Host-n6_preview=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
 export function createAuthHandler(action: 'login' | 'register' | 'logout', deps: HandlerDependencies) {
   return async (request: Request): Promise<Response> => {
@@ -70,12 +78,19 @@ export function createAuthHandler(action: 'login' | 'register' | 'logout', deps:
       let body: unknown;
       try { body = JSON.parse(Buffer.concat(chunks).toString('utf8')); }
       catch { return fail(422, 'invalid', 'Непригодный JSON'); }
-      const parsed = inputSchema.safeParse(body);
+      const parsed = (action === 'register' ? registerSchema : inputSchema).safeParse(body);
       if (!parsed.success) return fail(422, 'invalid', 'Укажите корректную почту и пароль от 8 символов до 72 байт');
       const { email, password } = parsed.data;
-      const token = await deps.auth[action](email, password, ipPrefix(ip));
-      if (!token) return json(LOGIN_FAILURE, 401);
+      const rawCode = action === 'register' ? (parsed.data as { partner_code?: string }).partner_code : undefined;
+      const explicit = rawCode?.trim() || null;
+      const referral = action === 'register' ? deps.referralCode?.(request) ?? null : null;
+      const token = action === 'register'
+        ? await deps.auth.registerWithCode(email, password, ipPrefix(ip), { explicit, cookie: referral })
+        : await deps.auth.login(email, password, ipPrefix(ip));
+      // Регистрация отвечает null только на явный неверный код: ошибка поля, аккаунта нет, к cookie не откатываемся.
+      if (!token) return action === 'register' ? json(INVALID_CODE, 422) : json(LOGIN_FAILURE, 401);
       const cookies = [cookie(token)];
+      if (action === 'register' && referral) cookies.push(CLEAR_REFERRAL_COOKIE);
       let preview: string | undefined;
       if (deps.claimPreview) {
         // Сбой сохранения предпросмотра вход и регистрацию НЕ валит (SC-US-003-2): экран предложит повторить.

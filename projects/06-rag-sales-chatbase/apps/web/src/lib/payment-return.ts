@@ -34,7 +34,8 @@ export function decideReturnState(snapshot: CheckoutSnapshot | null | 'not_found
 }
 
 // Адрес возврата после входа: ТОЛЬКО оформление платного плана; любой другой next игнорируется (открытый редирект).
-const NEXT_ALLOWED = /^\/upgrade\?plan=(nobadge|studio)$/;
+// + приём приглашения студии (partner-and-studio): ровно `/invite/<токен 43 символа>`, без запроса и фрагмента.
+const NEXT_ALLOWED = /^(\/upgrade\?plan=(nobadge|studio)|\/invite\/[A-Za-z0-9_-]{43})$/;
 export function safeNextPath(value: unknown): string | null {
   return typeof value === 'string' && NEXT_ALLOWED.test(value) ? value : null;
 }
