@@ -879,6 +879,29 @@
         "apps/web/src/app/Landing.tsx",
         "apps/web/src/server/retention.ts"
       ]
+    },
+    {
+      "id": "progress-ribbon",
+      "number": 29,
+      "title": "Лента стадий и первый экран экрана записи",
+      "description": "Шаг 6 плана mobile-ui, FR-GROWTH-001 (закрыт), A-2609-01. Лента из 4 стадий, три состояния + «нет ответа», панель действий первой карточки в первом экране телефона.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "medium",
+      "depends_on": [
+        "landing-demo"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-GROWTH-001",
+        "FR-RESULT-001"
+      ],
+      "sc_ids": [],
+      "adr_ids": [],
+      "expected_files": [
+        "apps/web/src/lib/progress-ribbon.ts",
+        "apps/web/src/app/videos/[videoId]/VideoDetail.tsx"
+      ]
     }
   ]
 }
