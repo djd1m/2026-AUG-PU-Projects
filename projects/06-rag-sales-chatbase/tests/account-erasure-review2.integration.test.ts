@@ -14,6 +14,7 @@ import { acceptStudioInvite, applyVerifiedPayment, createPaymentIntent, createPo
   recordPartnerPayout, recordVerifiedRefund, requestErasure, savePayoutDetails, setPlanByOperator, writeOffErasedPartnerDebt, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { erasureTick } from '../apps/worker/src/erase-accounts';
+import { unfreezePartnerCode } from '../packages/db/src/ops-partners';
 import { runIsolatedSteps } from '../apps/worker/src/watchdog-steps';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 
@@ -386,4 +387,37 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
     }
     expect([await status(client.id), await status(studio.id)]).toEqual(['erasing', 'deleted']);
   });
+
+  it('восьмое ревью, находка 1: метка выплаты стёртого партнёра хранится только отпечатком; повтор с той же меткой узнаётся', async () => {
+    const partner = await partnerWith(300_000);
+    const pay = (key: string, minor = 120_000) => recordPartnerPayout(pool, { email: partner.mail, amountMinor: minor, key, operator: 'оператор', reason: 'месячная выплата' });
+    expect(await pay('Иван Петров, карта 2200')).toMatchObject({ kind: 'recorded' });
+    await eraseNow(partner.id);
+    const erasedMail = `deleted:${partner.id}`;
+    const payErased = (key: string) => recordPartnerPayout(pool, { email: erasedMail, amountMinor: 50_000, key, operator: 'оператор', reason: 'долг' });
+    expect(await payErased('Мария Сидорова +79001234567')).toMatchObject({ kind: 'recorded' });
+    expect(await payErased('Мария Сидорова +79001234567')).toMatchObject({ kind: 'duplicate' });
+    const keys = (await q<{ payout_key: string }>(`SELECT payout_key FROM commission_entry WHERE partner_account_id = $1 AND kind = 'payout'`, [partner.id])).map((r) => r.payout_key);
+    expect(keys).toHaveLength(2);
+    expect(keys.every((k) => /^erased:[0-9a-f]{32}$/.test(k))).toBe(true);
+  });
+
+  it('восьмое ревью, находка 2: код стираемого или стёртого владельца не размораживается', async () => {
+    for (const erase of [false, true]) {
+      const owner = await account();
+      const code = `c${randomBytes(5).toString('hex')}`;
+      const id = (await q<{ id: string }>(`INSERT INTO partner_code (code, owner_account_id, "group", frozen, frozen_at, frozen_reason) VALUES ($1, $2, 'partner', true, now(), 'antifraud_ip_burst') RETURNING id`, [code, owner.id]))[0]!.id;
+      await requestErasure(pool, owner.id);
+      if (erase) { await age(owner.id); expect(await eraseAccount(pool, owner.id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' }); }
+      // После надгробия код переименован в erased-<хэш>: разморозка — по ТЕКУЩЕМУ имени, которое оператор видит в выгрузке.
+      const current = (await q<{ code: string }>('SELECT code FROM partner_code WHERE id = $1', [id]))[0]!.code;
+      expect(await unfreezePartnerCode(pool, { code: current, by: 'оператор', reason: 'проверено' }), erase ? 'deleted' : 'erasing').toEqual({ kind: 'owner_erased' });
+      expect(await one('SELECT count(*) FROM partner_code WHERE id = $1 AND frozen', [id])).toBe(1);
+    }
+    // Контроль: у живого владельца разморозка работает (тест не зеленеет на всегда-отказе).
+    const live = await account(); const code = `c${randomBytes(5).toString('hex')}`;
+    await pool.query(`INSERT INTO partner_code (code, owner_account_id, "group", frozen, frozen_at, frozen_reason) VALUES ($1, $2, 'partner', true, now(), 'antifraud_ip_burst')`, [code, live.id]);
+    expect(await unfreezePartnerCode(pool, { code, by: 'оператор', reason: 'проверено' })).toEqual({ kind: 'unfrozen' });
+  });
+
 });

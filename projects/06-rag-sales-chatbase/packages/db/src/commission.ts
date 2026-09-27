@@ -134,7 +134,7 @@ export function recordPartnerPayout(pool: Pool, input: { email: string; amountMi
     if (fresh?.status !== 'active' && fresh?.status !== 'erasing' && fresh?.status !== 'deleted') return { kind: 'not_found' } as const;
     const erased = fresh.status === 'deleted';
     const prior = (await tx.query<{ amount_minor: string }>(`SELECT amount_minor FROM commission_entry
-      WHERE partner_account_id = $1 AND kind = 'payout' AND payout_key = $2`, [account.id, input.key])).rows[0];
+      WHERE partner_account_id = $1 AND kind = 'payout' AND payout_key IN ($2, 'erased:' || md5($2))`, [account.id, input.key])).rows[0];
     const now = new Date();
     if (prior) {
       if (-Number(prior.amount_minor) !== input.amountMinor) return { kind: 'key_conflict' } as const;

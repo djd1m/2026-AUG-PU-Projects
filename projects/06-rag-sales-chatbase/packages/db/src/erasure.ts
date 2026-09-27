@@ -202,6 +202,10 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
   // Причина назначения плана оператором — тоже свободный текст (седьмое ревью, находка 1). Строки, вставленные после
   // запроса удаления, обезличивает триггер базы (миграция 010, раздел 7); эти записаны, пока аккаунт был активен.
   await tx.query(`UPDATE operator_action SET reason = '${ERASED_REASON}' WHERE account_id = $1`, [accountId]);
+  // Метка выплаты — свободный текст оператора (восьмое ревью, находка 1): остаётся только отпечаток; новые метки после
+  // запроса удаления переписывает триггер (миграция 010, раздел 8).
+  await tx.query(`UPDATE commission_entry SET payout_key = 'erased:' || md5(payout_key)
+    WHERE partner_account_id = $1 AND payout_key IS NOT NULL AND payout_key NOT LIKE 'erased:%'`, [accountId]);
   await tx.query('UPDATE account SET came_from = NULL, signup_ip_prefix = NULL WHERE id = $1', [accountId]);
   return true;
 }

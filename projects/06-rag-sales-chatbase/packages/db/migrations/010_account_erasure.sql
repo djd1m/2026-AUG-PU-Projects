@@ -87,3 +87,18 @@ BEGIN
 END $$;
 CREATE TRIGGER operator_action_erased_reason BEFORE INSERT ON operator_action
   FOR EACH ROW EXECUTE FUNCTION erased_reason_operator_action();
+
+-- 8. Метка выплаты (`commission_entry.payout_key`) — тоже свободный текст оператора до 100 символов (восьмое ревью, находка 1).
+--    У стираемого или стёртого партнёра она хранится только отпечатком `erased:<md5>`: детерминированным, поэтому повтор
+--    выплаты с той же меткой по-прежнему узнаётся (commission.ts ищет и исходную метку, и её отпечаток), а уникальный индекс
+--    выплаты работает. Старые метки переписывает проход стирания (erasure.ts), новые — этот триггер.
+CREATE FUNCTION erased_payout_key() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.payout_key IS NOT NULL AND NEW.payout_key NOT LIKE 'erased:%' AND EXISTS (SELECT 1 FROM account a
+      WHERE a.id = NEW.partner_account_id AND a.status IN ('erasing', 'deleted')) THEN
+    NEW.payout_key := 'erased:' || md5(NEW.payout_key);
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER commission_entry_erased_payout_key BEFORE INSERT ON commission_entry
+  FOR EACH ROW EXECUTE FUNCTION erased_payout_key();
