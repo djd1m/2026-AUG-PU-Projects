@@ -1,0 +1,54 @@
+ Container n6-test-f17d-db-1 Running 
+ Container n6-test-f17d-redis-1 Running 
+ Container n6-test-f17d-db-1 Waiting 
+ Container n6-test-f17d-redis-1 Waiting 
+ Container n6-test-f17d-redis-1 Healthy 
+ Container n6-test-f17d-db-1 Healthy 
+ Container n6-test-f17d-test-run-e3849869d6e4 Creating 
+ Container n6-test-f17d-test-run-e3849869d6e4 Created 
+bots-alive-after-request: дефект возвращён → 4 failed | 41 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+second-deleted-path: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+growth-not-anonymized: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+no-payout-wait: дефект возвращён → 3 failed | 42 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+payment-grants-erasing: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+studio-drags-client-bots: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+no-quiet-hour: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+files-after-rows: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+partial-payout-stops-wait: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+erasure-burns-hold: дефект возвращён → 4 failed | 41 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+preview-debt-drops-hold: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+erased-payout-needs-details: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+write-off-live-account: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+late-webhook-lost: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+orphan-not-recorded: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+orphan-not-erased: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+audit-reason-kept: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+code-group-kept: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+invites-lock-unordered: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+finalize-without-payout-lock: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+dedup-key-kept: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+invites-to-email-kept: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+waiting-keeps-front: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+clawback-no-lock: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+accepted-invite-email-kept: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+finalize-no-invite-cleanup: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+invite-no-addressee-lock: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+invite-locks-unordered: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+watchdog-chained: дефект возвращён → 1 failed | 44 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+operator-action-reason-kept: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+erased-audit-trigger-dropped: дефект возвращён → 3 failed | 42 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+erased-operator-trigger-dropped: дефект возвращён → 2 failed | 43 passed (45) (код 1); код восстановлен → 45 passed (45) (код 0)
+file:///app/scripts/test-account-erasure-mutations.mjs:153
+      if (mutated === null || mutated === source) throw new Error(`Якорь мутации не уникален или не найден: ${mutation.id} (${file})`);
+                                                        ^
+
+Error: Якорь мутации не уникален или не найден: request-locks-bot-before-invite (packages/db/src/erasure.ts)
+    at file:///app/scripts/test-account-erasure-mutations.mjs:153:57
+    at Array.map (<anonymous>)
+    at file:///app/scripts/test-account-erasure-mutations.mjs:150:38
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.22.3
+

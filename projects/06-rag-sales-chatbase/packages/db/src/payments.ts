@@ -54,7 +54,7 @@ export async function readPaymentIntent(pool: Pool, intentId: string, accountId:
 export interface VerifiedPayment { id: string; orderId: string | null; amountMinor: number; feeMinor: number | null; paidAt: string | null }
 export type ApplyPaymentOutcome =
   | { applied: true; plan: string; paidUntil: string }
-  | { applied: false; reason: 'duplicate' | 'amount_mismatch' | 'unknown_intent' | 'refunded' | 'refund_recorded' };
+  | { applied: false; reason: 'duplicate' | 'amount_mismatch' | 'unknown_intent' | 'refunded' | 'refund_recorded' | 'account_erasing' };
 
 // Ключ повторности (incoming-webhooks): ПОЛЕ — событие + object.id у ЮKassa; МЕСТО — payment_event; МЕХАНИЗМ — уникальный
 // индекс, конфликт вставки И ЕСТЬ «уже обработано» (две одновременные доставки не проходят обе).
@@ -93,6 +93,11 @@ export function applyVerifiedPayment(pool: Pool, input: { provider: PaymentProvi
     if (!intent || !isPaidPlan(intent.plan)) { await record(null, null, 'unknown_intent'); return { applied: false, reason: 'unknown_intent' } as const; }
     // Сумма ≠ цене намерения: платёж принят, план НЕ выдан — разбирает оператор (решение владельца 26.09).
     if (payment.amountMinor !== intent.price_minor) { await record(intent.account_id, intent.plan, 'amount_mismatch'); return { applied: false, reason: 'amount_mismatch' } as const; }
+    // Аккаунт уже удаляется (account-erasure, A-N6-054, ответ владельца 1): деньги реальны — платёж записан на разбор, план
+    // НЕ выдаётся, комиссия НЕ начисляется, вернуть — оператор по заявке. Статус читается под той же блокировкой строки, что
+    // у выдачи плана (намерение → аккаунт — порядок стирания тот же), поэтому запрос удаления и оплата сериализуются.
+    const owner = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1 FOR NO KEY UPDATE', [intent.account_id])).rows[0];
+    if (owner?.status !== 'active') { await record(intent.account_id, intent.plan, 'account_erasing'); return { applied: false, reason: 'account_erasing' } as const; }
     await record(intent.account_id, intent.plan, null);
     // «Успех» на экране возврата — только когда план ВЫДАН (несовпадение суммы оставляет намерение created → «не подтверждено»).
     await tx.query(`UPDATE payment_intent SET status = 'succeeded' WHERE id = $1`, [payment.orderId]);

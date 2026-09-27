@@ -50,6 +50,11 @@ export type CreateInviteResult =
 export function createStudioInvite(pool: Pool, input: { studioAccountId: string; botId: string; email: string }): Promise<CreateInviteResult> {
   if (!isUuid(input.studioAccountId) || !isUuid(input.botId)) return Promise.resolve({ kind: 'not_found' });
   return transaction(pool, async (tx) => {
+    // Студия И адресат (аккаунт с этой почтой, если есть) — ОДНИМ запросом в порядке id, как приём приглашения
+    // (lockAccountRows): встречные «студия A приглашает B» и «B приглашает A» не образуют цикла (третье ревью, находка 3).
+    // Адресат держится до записи приглашения: завершение его стирания держит ту же строку и очищает приглашения на его
+    // почту — приглашение либо закоммичено раньше и попадает в очистку, либо ждёт надгробия (повторное ревью, находка 3).
+    await tx.query('SELECT id FROM account WHERE id = $1 OR lower(email) = lower($2) ORDER BY id FOR NO KEY UPDATE', [input.studioAccountId, input.email]);
     const studio = await lockAccountBots(tx, input.studioAccountId);
     if (!studio) return { kind: 'not_found' } as const;
     const bot = (await tx.query<{ studio_account_id: string | null; contact: string | null }>(`SELECT studio_account_id, contact FROM bot

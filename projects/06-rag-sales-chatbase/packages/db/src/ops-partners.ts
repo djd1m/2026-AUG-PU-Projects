@@ -64,7 +64,7 @@ export function issuePartnerCode(pool: Pool, input: { code: string; group: strin
   });
 }
 
-export type UnfreezeResult = { kind: 'unfrozen' | 'not_frozen' | 'not_found' } | { kind: 'invalid'; field: string };
+export type UnfreezeResult = { kind: 'unfrozen' | 'not_frozen' | 'not_found' | 'owner_erased' } | { kind: 'invalid'; field: string };
 // Разморозка «до ручной проверки» (FR-PARTNER-003): только оператором, с журналом. Засчитанные до заморозки — не трогаются.
 export function unfreezePartnerCode(pool: Pool, input: { code: string; by?: string; reason?: string }): Promise<UnfreezeResult> {
   if (!operatorOk(input.by, input.reason)) return Promise.resolve({ kind: 'invalid', field: 'by/reason' });
@@ -72,6 +72,11 @@ export function unfreezePartnerCode(pool: Pool, input: { code: string; by?: stri
     const code = (await tx.query<{ id: string; frozen: boolean }>('SELECT id, frozen FROM partner_code WHERE code = $1', [input.code])).rows[0];
     if (!code) return { kind: 'not_found' } as const;
     await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_code:${code.id}`]);
+    // Код стираемого или стёртого владельца не размораживается (восьмое ревью, находка 2): иначе по нему снова пошли бы
+    // применения и начисления удалённому. Статус читается под строкой владельца — стирание меняет его под той же блокировкой.
+    const owner = (await tx.query<{ status: string }>(`SELECT a.status FROM partner_code c JOIN account a ON a.id = c.owner_account_id
+      WHERE c.id = $1 FOR SHARE OF a`, [code.id])).rows[0];
+    if (owner && (owner.status === 'erasing' || owner.status === 'deleted')) return { kind: 'owner_erased' } as const;
     const updated = await tx.query(`UPDATE partner_code SET frozen = false, frozen_at = NULL, frozen_reason = NULL WHERE id = $1 AND frozen`, [code.id]);
     if (updated.rowCount !== 1) return { kind: 'not_frozen' } as const;
     await tx.query(`INSERT INTO partner_audit (partner_code_id, kind, operator, reason) VALUES ($1, 'unfrozen', $2, $3)`, [code.id, input.by!.trim(), input.reason!.trim()]);
@@ -115,15 +120,15 @@ export async function commissionExportCsv(pool: Pool): Promise<string> {
   const rows = (await pool.query<{ email: string; code: string | null; kind: string; amount_minor: string; created_at: Date; available_at: Date }>(
     `SELECT a.email, pc.code, e.kind, e.amount_minor, e.created_at, e.available_at FROM commission_entry e
      JOIN account a ON a.id = e.partner_account_id LEFT JOIN partner_code pc ON pc.id = e.partner_code_id ORDER BY e.created_at, e.id`)).rows;
-  const kinds: Record<string, string> = { accrual: 'начисление', clawback: 'сторно', payout: 'выплата' };
+  const kinds: Record<string, string> = { accrual: 'начисление', clawback: 'сторно', payout: 'выплата', write_off: 'долг удалённому списан оператором' };
   const lines = ['партнёр;код;движение;сумма, ₽;дата;доступно с'];
   for (const r of rows) lines.push([csvText(r.email), csvText(r.code), kinds[r.kind] ?? r.kind, rublesCell(Number(r.amount_minor)), dateCell(r.created_at), dateCell(r.available_at)].join(';'));
   return `${CSV_BOM}${lines.join('\r\n')}\r\n`;
 }
 
 const PAYOUT_TEXT: Record<Exclude<RecordPayoutResult['kind'], 'recorded' | 'duplicate'>, string> = {
-  not_found: 'Активный аккаунт партнёра с такой почтой не найден', no_details: 'У партнёра нет реквизитов СБП: выплату не записать',
-  key_conflict: 'Этот ключ выплаты уже использован с ДРУГОЙ суммой', below_minimum: 'Сумма меньше минимальной выплаты 1 000 ₽',
+  not_found: 'Аккаунт партнёра с такой почтой не найден (удалённому — почта deleted:<id> из ops:erasure owed)', no_details: 'У партнёра нет реквизитов СБП: выплату не записать',
+  key_conflict: 'Этот ключ выплаты уже использован с ДРУГОЙ суммой', reserved_key: 'Ключ выплаты не может начинаться с «erased:» — префикс зарезервирован', below_minimum: 'Сумма меньше минимальной выплаты 1 000 ₽',
   exceeds_available: 'Сумма больше доступного к выплате',
 };
 export async function runOps(pool: Pool, args: OpsArgs, out: (line: string) => void): Promise<boolean> {
@@ -135,7 +140,7 @@ export async function runOps(pool: Pool, args: OpsArgs, out: (line: string) => v
   }
   if (args.command === 'unfreeze' && args.positional.length === 1) {
     const r = await unfreezePartnerCode(pool, { code: args.positional[0]!, by: f['--by'], reason: f['--reason'] });
-    out(r.kind === 'unfrozen' ? 'Код разморожен (журнал partner_audit)' : r.kind === 'invalid' ? `Неверное значение «${r.field}»` : r.kind === 'not_frozen' ? 'Код не заморожен' : 'Код не найден');
+    out(r.kind === 'unfrozen' ? 'Код разморожен (журнал partner_audit)' : r.kind === 'invalid' ? `Неверное значение «${r.field}»` : r.kind === 'not_frozen' ? 'Код не заморожен' : r.kind === 'owner_erased' ? 'Владелец кода удаляется или удалён — код не размораживается' : 'Код не найден');
     return r.kind === 'unfrozen';
   }
   if (args.command === 'payout' && args.positional.length === 1) {

@@ -1,0 +1,210 @@
+ Container n6-test-f17-db-1 Running 
+ Container n6-test-f17-redis-1 Running 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 759B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 4.29kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 1.44kB done
+#4 DONE 0.0s
+
+#5 [deps  1/10] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 93.61kB 0.1s done
+#6 DONE 0.1s
+
+#7 [deps  4/10] COPY apps/web/package.json ./apps/web/
+#7 CACHED
+
+#8 [deps  6/10] COPY apps/worker/package.json ./apps/worker/
+#8 CACHED
+
+#9 [deps  8/10] COPY packages/rag/package.json ./packages/rag/
+#9 CACHED
+
+#10 [deps  9/10] COPY packages/queue/package.json ./packages/queue/
+#10 CACHED
+
+#11 [deps  2/10] WORKDIR /app
+#11 CACHED
+
+#12 [deps  3/10] COPY package.json package-lock.json ./
+#12 CACHED
+
+#13 [deps  5/10] COPY apps/widget/package.json ./apps/widget/
+#13 CACHED
+
+#14 [deps  7/10] COPY packages/db/package.json ./packages/db/
+#14 CACHED
+
+#15 [deps 10/10] RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
+#15 CACHED
+
+#16 [build 1/2] COPY . .
+#16 DONE 0.4s
+
+#17 [build 2/2] RUN npm run build
+#17 0.780 
+#17 0.780 > n6-sufler@0.1.0 build
+#17 0.780 > npm run build --workspace=apps/widget && npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#17 0.780 
+#17 1.096 
+#17 1.096 > @n6/widget@0.1.0 build
+#17 1.096 > node scripts/build.mjs
+#17 1.096 
+#17 1.326 [widget] widget.3085a96053d22f8c.js: raw=14.79 КБ, gzip=5.77 КБ, потолок 45.00 КБ
+#17 1.704 
+#17 1.704 > @n6/rag@0.1.0 build
+#17 1.704 > tsc -p tsconfig.json
+#17 1.704 
+#17 5.320 
+#17 5.320 > @n6/db@0.1.0 build
+#17 5.320 > tsc -p tsconfig.json
+#17 5.320 
+#17 10.35 
+#17 10.35 > @n6/queue@0.1.0 build
+#17 10.35 > tsc -p tsconfig.json
+#17 10.35 
+#17 13.76 
+#17 13.76 > @n6/worker@0.1.0 build
+#17 13.76 > tsc -p tsconfig.json && node -e "require('node:fs').copyFileSync('src/pdf/extract-child.mjs', 'dist/pdf/extract-child.mjs')"
+#17 13.76 
+#17 18.01 
+#17 18.01 > @n6/web@0.1.0 build
+#17 18.01 > next build && tsc -p tsconfig.preflight.json
+#17 18.01 
+#17 19.77 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#17 19.77 This information is used to shape Next.js' roadmap and prioritize features.
+#17 19.77 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#17 19.77 https://nextjs.org/telemetry
+#17 19.77 
+#17 19.99    ▲ Next.js 15.5.25
+#17 19.99    - Experiments (use with caution):
+#17 19.99      · cpus: 2
+#17 19.99 
+#17 20.18    Creating an optimized production build ...
+#17 50.18  ✓ Compiled successfully in 23.8s
+#17 50.19    Linting and checking validity of types ...
+#17 61.19    Collecting page data ...
+#17 65.33    Generating static pages (0/5) ...
+#17 66.61    Generating static pages (1/5) 
+#17 66.61    Generating static pages (2/5) 
+#17 66.61    Generating static pages (3/5) 
+#17 66.61  ✓ Generating static pages (5/5)
+#17 68.19    Finalizing page optimization ...
+#17 68.19    Collecting build traces ...
+#17 82.29 
+#17 82.31 Route (app)                                  Size  First Load JS
+#17 82.31 ┌ ƒ /                                       662 B         103 kB
+#17 82.31 ├ ƒ /_not-found                             989 B         104 kB
+#17 82.31 ├ ƒ /account/erased                         662 B         103 kB
+#17 82.31 ├ ƒ /api/account                            221 B         103 kB
+#17 82.31 ├ ƒ /api/auth/login                         221 B         103 kB
+#17 82.31 ├ ƒ /api/auth/logout                        221 B         103 kB
+#17 82.31 ├ ƒ /api/auth/register                      221 B         103 kB
+#17 82.31 ├ ƒ /api/bots                               221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]                       221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/ask                   221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/invite                221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/origins               221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/publish               221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/question-log/erase    221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/sources               221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/summary               221 B         103 kB
+#17 82.31 ├ ƒ /api/bots/[botId]/verify                221 B         103 kB
+#17 82.31 ├ ƒ /api/checkout                           221 B         103 kB
+#17 82.31 ├ ƒ /api/checkout/[intentId]                221 B         103 kB
+#17 82.31 ├ ƒ /api/index-jobs/[id]                    221 B         103 kB
+#17 82.31 ├ ƒ /api/interest                           221 B         103 kB
+#17 82.31 ├ ƒ /api/invites/[token]/accept             221 B         103 kB
+#17 82.31 ├ ƒ /api/partner/payout-details             221 B         103 kB
+#17 82.31 ├ ƒ /api/partner/summary                    221 B         103 kB
+#17 82.31 ├ ƒ /api/preview                            221 B         103 kB
+#17 82.31 ├ ƒ /api/preview/[id]                       221 B         103 kB
+#17 82.31 ├ ƒ /api/preview/[id]/ask                   221 B         103 kB
+#17 82.31 ├ ƒ /api/preview/[id]/claim                 221 B         103 kB
+#17 82.31 ├ ƒ /api/preview/[id]/share                 221 B         103 kB
+#17 82.31 ├ ƒ /api/sources/[sourceId]                 221 B         103 kB
+#17 82.31 ├ ƒ /api/sources/[sourceId]/reindex         221 B         103 kB
+#17 82.31 ├ ƒ /api/studio/summary                     221 B         103 kB
+#17 82.31 ├ ƒ /api/webhooks/yookassa                  221 B         103 kB
+#17 82.31 ├ ƒ /b/[slug]                               662 B         103 kB
+#17 82.31 ├ ƒ /dashboard                              805 B         109 kB
+#17 82.31 ├ ƒ /dashboard/account                    2.44 kB         105 kB
+#17 82.31 ├ ƒ /dashboard/bots/[botId]               4.85 kB         113 kB
+#17 82.31 ├ ƒ /dashboard/bots/[botId]/install       2.89 kB         111 kB
+#17 82.31 ├ ƒ /dashboard/partner                    3.33 kB         106 kB
+#17 82.31 ├ ƒ /dashboard/studio                     2.43 kB         105 kB
+#17 82.31 ├ ƒ /health                                 221 B         103 kB
+#17 82.31 ├ ƒ /invite/[token]                       2.25 kB         105 kB
+#17 82.31 ├ ƒ /login                                2.12 kB         105 kB
+#17 82.31 ├ ƒ /preview                              1.83 kB         104 kB
+#17 82.31 ├ ƒ /preview/[jobId]                      5.81 kB         108 kB
+#17 82.31 ├ ƒ /pricing                                662 B         103 kB
+#17 82.31 ├ ƒ /r/[code]                               221 B         103 kB
+#17 82.31 ├ ƒ /upgrade                              2.54 kB         105 kB
+#17 82.31 ├ ƒ /upgrade/return                       2.35 kB         105 kB
+#17 82.31 ├ ƒ /w/[file]                               221 B         103 kB
+#17 82.31 ├ ƒ /w/v1/ask                               221 B         103 kB
+#17 82.31 ├ ƒ /w/v1/config                            221 B         103 kB
+#17 82.31 └ ƒ /w/v1/event                             221 B         103 kB
+#17 82.31 + First Load JS shared by all              103 kB
+#17 82.31   ├ chunks/18-2c82660ce7c4918d.js         46.4 kB
+#17 82.31   ├ chunks/87c73c54-24122e7b92478d00.js   54.2 kB
+#17 82.31   └ other shared chunks (total)           1.93 kB
+#17 82.31 
+#17 82.31 
+#17 82.31 ƒ Middleware                              34.5 kB
+#17 82.31 
+#17 82.31 ƒ  (Dynamic)  server-rendered on demand
+#17 82.31 
+#17 DONE 86.4s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 4.3s done
+#18 exporting manifest sha256:5e3a673b10df384cd6c4369a9dd963e475c6da6288c2cc0ea6020643f02e97d1 0.0s done
+#18 exporting config sha256:33d2e7ca5af9257268c7d3ddcc100fdcb0218c0324da9d13d0dd4d66da15dca1 0.0s done
+#18 exporting attestation manifest sha256:9659c4727e4009acef3913074320a6b0ba5f54c0cfdf7097bdee86838cc510f5 0.0s done
+#18 exporting manifest list sha256:ee52f47067d2efd17b8363c451d54cc7a4bbfc31d42b6c5dcb9662db5c062f0f
+#18 exporting manifest list sha256:ee52f47067d2efd17b8363c451d54cc7a4bbfc31d42b6c5dcb9662db5c062f0f 0.0s done
+#18 naming to docker.io/library/n6-sufler-test:foundation done
+#18 unpacking to docker.io/library/n6-sufler-test:foundation
+#18 unpacking to docker.io/library/n6-sufler-test:foundation 1.4s done
+#18 DONE 5.9s
+
+#19 resolving provenance for metadata file
+#19 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-f17-db-1 Waiting 
+ Container n6-test-f17-redis-1 Waiting 
+ Container n6-test-f17-db-1 Healthy 
+ Container n6-test-f17-redis-1 Healthy 
+ Container n6-test-f17-test-run-a5bc2afabd64 Creating 
+ Container n6-test-f17-test-run-a5bc2afabd64 Created 
+bots-alive-after-request: дефект возвращён → 3 failed | 20 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+second-deleted-path: дефект возвращён → 2 failed | 21 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+growth-not-anonymized: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+no-payout-wait: дефект возвращён → 3 failed | 20 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+payment-grants-erasing: дефект возвращён → 2 failed | 21 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+studio-drags-client-bots: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+no-quiet-hour: дефект возвращён → 2 failed | 21 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+files-after-rows: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+owed-burned: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+partial-payout-stops-wait: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+finalize-without-payout-lock: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+dedup-key-kept: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+invites-to-email-kept: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+waiting-keeps-front: дефект возвращён → 1 failed | 22 passed (23) (код 1); код восстановлен → 23 passed (23) (код 0)
+exit=0

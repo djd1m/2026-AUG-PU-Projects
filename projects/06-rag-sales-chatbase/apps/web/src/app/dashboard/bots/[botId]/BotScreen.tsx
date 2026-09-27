@@ -129,9 +129,22 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
       setPublishError(errorOf(body)?.message ?? 'Не удалось сохранить. Повторите');
     } catch { setPublishError('Нет связи с сервером. Повторите'); } finally { setPublishing(false); }
   };
+  // Стирание журнала вопросов (account-erasure, FR-AUTH-002): подтверждение в два шага, затем сводка перечитывается.
+  const [eraseLog, setEraseLog] = useState({ confirming: false, busy: false, error: '', done: false });
+  const eraseQuestionLog = async () => {
+    setEraseLog({ confirming: true, busy: true, error: '', done: false });
+    try {
+      const { status, body } = await send(`/api/bots/${p.botId}/question-log/erase`, 'POST', { confirm: true });
+      if (status === 200 && dataOf(body)) { setEraseLog({ confirming: false, busy: false, error: '', done: true }); router.refresh(); return; }
+      setEraseLog({ confirming: true, busy: false, error: errorOf(body)?.message ?? 'Не удалось стереть журнал. Повторите', done: false });
+    } catch { setEraseLog({ confirming: true, busy: false, error: 'Нет связи с сервером. Повторите', done: false }); }
+  };
   return <BotLayout {...p} ready={p.sources.some((s) => s.job?.state === 'done')}
     banner={<MonthBanner used={p.monthAnswers.used} limit={p.monthAnswers.limit} />}
-    summary={<SummaryBlock summary={p.summary} />}
+    summary={<SummaryBlock summary={p.summary} erase={{ ...eraseLog,
+      onAsk: () => setEraseLog({ confirming: true, busy: false, error: '', done: false }),
+      onConfirm: () => { void eraseQuestionLog(); },
+      onCancel: () => setEraseLog({ confirming: false, busy: false, error: '', done: false }) }} />}
     verify={<VerifyBlock verified={verified} busy={verifying} error={verifyError} onToggle={() => { void toggleVerified(); }} />}
     publish={<PublishBlock page={page} busy={publishing} error={publishError}
       onPublish={(enabled) => { void publish({ enabled, indexable: page.indexable }); }}

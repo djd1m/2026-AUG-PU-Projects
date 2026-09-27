@@ -6,7 +6,7 @@
 // СУММОЙ в SQL (у донора — по последним 200 записям, при долгой истории неверно).
 //
 // ЕДИНСТВЕННОЕ место, где пишется commission_entry (страж tests/partners.unit.test.ts, мутация unmetered-commission).
-import { COMMISSION_HOLD_DAYS, COMMISSION_WINDOW_MONTHS, PAYOUT_MINIMUM_MINOR, accrualAmountMinor, commissionBaseMinor,
+import { COMMISSION_HOLD_DAYS, COMMISSION_WINDOW_MONTHS, ERASE_DEADLINE_HOURS, PAYOUT_MINIMUM_MINOR, accrualAmountMinor, commissionBaseMinor,
   payoutDateFor, previewFromTotals, type PayoutDetails, type PayoutPreview } from '@n6/rag';
 import type { Pool, PoolClient } from 'pg';
 import { isUuid } from './index-jobs.js';
@@ -21,9 +21,14 @@ export interface AccrueInput { paymentId: string; accountId: string; amountMinor
 // Начисление ВНУТРИ транзакции applyVerifiedPayment (после ключа повторности и блокировки платежа): платёж и обязательство
 // перед партнёром ложатся одним коммитом. Сетевых вызовов нет.
 export async function accrueCommissionTx(tx: PoolClient, input: AccrueInput): Promise<AccrueResult> {
+  // partner_deleted — тоже, если оплата СОВЕРШЕНА раньше запроса удаления партнёра (шестое ревью account-erasure, находка
+  // 1): комиссия за оплату до удаления — обязательство сервиса (долг, A-N6-061), и её судьба не зависит от того, успел ли
+  // вебхук прийти до requestErasure. Оплата после запроса удаления партнёра комиссии не даёт (ответ владельца 4).
   const partner = (await tx.query<{ partner_code_id: string; owner_account_id: string | null; commission_rate_bp: number }>(
     `SELECT a.partner_code_id, pc.owner_account_id, pc.commission_rate_bp FROM attribution a JOIN partner_code pc ON pc.id = a.partner_code_id
-     WHERE a.account_id = $1 AND a.status IN ('pending', 'converted')`, [input.accountId])).rows[0];
+     WHERE a.account_id = $1 AND (a.status IN ('pending', 'converted') OR (a.status = 'partner_deleted' AND $2::timestamptz <
+       (SELECT COALESCE(o.erase_requested_at, o.erase_deadline - make_interval(hours => ${ERASE_DEADLINE_HOURS})) FROM account o WHERE o.id = pc.owner_account_id)))`,
+  [input.accountId, input.paidAt])).rows[0];
   if (!partner) return { kind: 'skipped', reason: 'no_attribution' };
   if (partner.owner_account_id === null) return { kind: 'skipped', reason: 'no_partner' };     // seed-код без владельца — платить некому
   // Самореферал — ПОВТОРНО: при атрибуции за него ничего не платили, деньги делают попытку осмысленной.
@@ -54,10 +59,16 @@ export async function accrueCommissionTx(tx: PoolClient, input: AccrueInput): Pr
 export type ClawbackResult = { kind: 'clawed_back'; amountMinor: number } | { kind: 'skipped'; reason: 'no_accrual' | 'already_clawed_back' };
 // Сторно — КОМПЕНСИРУЮЩАЯ запись на −начисление (не пересчёт от суммы возврата), доступна сразу: долг уменьшает доступное
 // немедленно. После выплаты баланс уходит в минус и гасится будущими начислениями, не взыскивается (решение владельца 26.09).
+// Удаление партнёра сторно НЕ меняет: при стирании ничего не сгорает (решение владельца 27.09, A-N6-061), поэтому сторно
+// всегда на всё начисление, и итог учёта не зависит от порядка «возврат ↔ стирание ↔ выплата». Замок партнёра — тот же,
+// что у выплаты и завершения стирания.
 export async function clawbackCommissionTx(tx: PoolClient, paymentId: string): Promise<ClawbackResult> {
+  const found = (await tx.query<{ partner_account_id: string }>(
+    `SELECT partner_account_id FROM commission_entry WHERE payment_id = $1 AND kind = 'accrual'`, [paymentId])).rows[0];
+  if (!found) return { kind: 'skipped', reason: 'no_accrual' };
+  await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${found.partner_account_id}`]);
   const accrual = (await tx.query<{ partner_account_id: string; partner_code_id: string | null; amount_minor: string }>(
-    `SELECT partner_account_id, partner_code_id, amount_minor FROM commission_entry WHERE payment_id = $1 AND kind = 'accrual'`, [paymentId])).rows[0];
-  if (!accrual) return { kind: 'skipped', reason: 'no_accrual' };
+    `SELECT partner_account_id, partner_code_id, amount_minor FROM commission_entry WHERE payment_id = $1 AND kind = 'accrual'`, [paymentId])).rows[0]!;
   const amount = -Number(accrual.amount_minor);
   const inserted = await tx.query(`INSERT INTO commission_entry (partner_account_id, partner_code_id, payment_id, kind, amount_minor, available_at)
     VALUES ($1, $2, $3, 'clawback', $4, now()) ON CONFLICT DO NOTHING RETURNING id`,
@@ -65,8 +76,36 @@ export async function clawbackCommissionTx(tx: PoolClient, paymentId: string): P
   return inserted.rowCount === 1 ? { kind: 'clawed_back', amountMinor: amount } : { kind: 'skipped', reason: 'already_clawed_back' };
 }
 
+// Деньги партнёра для стирания аккаунта на момент `at` — ТЕМ ЖЕ расчётом, что у живого партнёра (partnerTotals): баланс и
+// доступное (зрелые начисления + все отрицательные записи). entries — есть ли у аккаунта учёт вообще.
+export async function partnerErasureMoney(db: Pool | PoolClient, accountId: string, at: Date): Promise<{ entries: number; total: number; available: number }> {
+  const entries = (await db.query<{ n: number }>('SELECT count(*)::int AS n FROM commission_entry WHERE partner_account_id = $1', [accountId])).rows[0]!.n;
+  return { entries, ...(await partnerTotals(db, accountId, at)) };
+}
+
+export type WriteOffResult = { kind: 'written_off'; amountMinor: number } | { kind: 'not_found' | 'nothing_owed' | 'invalid' };
+// Списание долга удалённому партнёру — ТОЛЬКО явной командой оператора с причиной (решение владельца 27.09, A-N6-061):
+// компенсирующая запись write_off на −баланс и строка partner_audit debt_written_off (кто, зачем, сколько). Живому
+// аккаунту долг не списывается (not_found); баланс ≤ 0 — списывать нечего. Под замком партнёра: выплата и сторно не
+// пересекаются с расчётом суммы.
+export function writeOffErasedPartnerDebt(pool: Pool, input: { accountId: string; operator: string; reason: string }): Promise<WriteOffResult> {
+  if (!isUuid(input.accountId) || !input.operator.trim() || !input.reason.trim()) return Promise.resolve({ kind: 'invalid' });
+  return transaction(pool, async (tx) => {
+    await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${input.accountId}`]);
+    const account = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [input.accountId])).rows[0];
+    if (account?.status !== 'deleted') return { kind: 'not_found' } as const;
+    const { total } = await partnerTotals(tx, input.accountId, new Date());
+    if (total <= 0) return { kind: 'nothing_owed' } as const;
+    await tx.query(`INSERT INTO commission_entry (partner_account_id, kind, amount_minor, available_at) VALUES ($1, 'write_off', $2, now())`,
+      [input.accountId, -total]);
+    await tx.query(`INSERT INTO partner_audit (account_id, kind, operator, reason, amount_minor) VALUES ($1, 'debt_written_off', $2, $3, $4)`,
+      [input.accountId, input.operator.trim(), input.reason.trim(), total]);
+    return { kind: 'written_off', amountMinor: total } as const;
+  });
+}
+
 // Суммы партнёра на момент `at`: баланс и доступное (зрелые начисления + все отрицательные записи).
-async function totals(db: Pool | PoolClient, accountId: string, at: Date): Promise<{ total: number; available: number }> {
+export async function partnerTotals(db: Pool | PoolClient, accountId: string, at: Date): Promise<{ total: number; available: number }> {
   const row = (await db.query<{ total: string; available: string }>(`SELECT COALESCE(sum(amount_minor), 0)::bigint AS total,
       COALESCE(sum(amount_minor) FILTER (WHERE amount_minor < 0 OR available_at <= $2), 0)::bigint AS available
     FROM commission_entry WHERE partner_account_id = $1`, [accountId, at])).rows[0]!;
@@ -75,33 +114,48 @@ async function totals(db: Pool | PoolClient, accountId: string, at: Date): Promi
 
 export type RecordPayoutResult =
   | { kind: 'recorded' | 'duplicate'; amountMinor: number; balanceAfterMinor: number }
-  | { kind: 'not_found' | 'no_details' | 'key_conflict' }
+  | { kind: 'not_found' | 'no_details' | 'key_conflict' | 'reserved_key' }
   | { kind: 'below_minimum'; minimumMinor: number }
   | { kind: 'exceeds_available'; availableMinor: number };
 // Выплата оператором (решение владельца 26.09: вручную по СБП 5-го, минимум 1 000 ₽). Под блокировкой партнёра: две
 // одновременные записи не превышают доступное. Повтор с тем же ключом — одна запись (частичный уникальный индекс).
 export function recordPartnerPayout(pool: Pool, input: { email: string; amountMinor: number; key: string; operator: string; reason: string }): Promise<RecordPayoutResult> {
+  // Префикс `erased:` зарезервирован за отпечатками меток стёртых партнёров (миграция 010, раздел 8): метка оператора с ним
+  // выглядела бы как отпечаток — оставалась бы буквальной при стирании и путалась бы с отпечатком другой метки (узкое ревью
+  // коммита восьмого круга, находки P1/P2). Отказ — до чтения базы.
+  if (input.key.trim().toLowerCase().startsWith('erased:')) return Promise.resolve({ kind: 'reserved_key' } as const);
   return transaction(pool, async (tx) => {
-    const account = (await tx.query<{ id: string }>(`SELECT id FROM account WHERE email = $1 AND status = 'active'`, [input.email.trim().toLowerCase()])).rows[0];
+    // erasing — тоже: партнёру, удаляющему аккаунт, оператор выплачивает доступное ≥ минимума ДО срока стирания
+    // (account-erasure, ответ владельца 2); почта в статусе erasing ещё настоящая. deleted — выплата долга удалённому
+    // по обезличенной почте deleted:<id> (A-N6-061): реквизиты стёрты (оператор связался по обращению человека), минимум
+    // не действует — это окончательный расчёт, а не ежемесячная выплата.
+    const account = (await tx.query<{ id: string }>(`SELECT id FROM account WHERE email = $1 AND status IN ('active', 'erasing', 'deleted')`, [input.email.trim().toLowerCase()])).rows[0];
     if (!account) return { kind: 'not_found' } as const;
     await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${account.id}`]);
+    // Тот же замок берёт завершение стирания (erasure.ts finalizeErasureTx): пока ждали, аккаунт мог стать deleted,
+    // остаток — сгореть, реквизиты — стереться. Состояние перечитывается ПОСЛЕ замка (ревью account-erasure H2).
+    const fresh = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [account.id])).rows[0];
+    if (fresh?.status !== 'active' && fresh?.status !== 'erasing' && fresh?.status !== 'deleted') return { kind: 'not_found' } as const;
+    const erased = fresh.status === 'deleted';
     const prior = (await tx.query<{ amount_minor: string }>(`SELECT amount_minor FROM commission_entry
-      WHERE partner_account_id = $1 AND kind = 'payout' AND payout_key = $2`, [account.id, input.key])).rows[0];
+      WHERE partner_account_id = $1 AND kind = 'payout' AND payout_key IN ($2, 'erased:' || md5($2))`, [account.id, input.key])).rows[0];
     const now = new Date();
     if (prior) {
       if (-Number(prior.amount_minor) !== input.amountMinor) return { kind: 'key_conflict' } as const;
-      return { kind: 'duplicate', amountMinor: input.amountMinor, balanceAfterMinor: (await totals(tx, account.id, now)).total } as const;
+      return { kind: 'duplicate', amountMinor: input.amountMinor, balanceAfterMinor: (await partnerTotals(tx, account.id, now)).total } as const;
     }
-    const details = await tx.query('SELECT 1 FROM partner_payout_details WHERE account_id = $1', [account.id]);
-    if (!details.rowCount) return { kind: 'no_details' } as const;
-    if (input.amountMinor < PAYOUT_MINIMUM_MINOR) return { kind: 'below_minimum', minimumMinor: PAYOUT_MINIMUM_MINOR } as const;
-    const { available } = await totals(tx, account.id, now);
+    if (!erased) {
+      const details = await tx.query('SELECT 1 FROM partner_payout_details WHERE account_id = $1', [account.id]);
+      if (!details.rowCount) return { kind: 'no_details' } as const;
+      if (input.amountMinor < PAYOUT_MINIMUM_MINOR) return { kind: 'below_minimum', minimumMinor: PAYOUT_MINIMUM_MINOR } as const;
+    }
+    const { available } = await partnerTotals(tx, account.id, now);
     if (input.amountMinor > available) return { kind: 'exceeds_available', availableMinor: Math.max(0, available) } as const;
     await tx.query(`INSERT INTO commission_entry (partner_account_id, kind, amount_minor, available_at, payout_key) VALUES ($1, 'payout', $2, now(), $3)`,
       [account.id, -input.amountMinor, input.key]);
     await tx.query(`INSERT INTO partner_audit (account_id, kind, operator, reason, amount_minor) VALUES ($1, 'payout_recorded', $2, $3, $4)`,
       [account.id, input.operator, input.reason, input.amountMinor]);
-    return { kind: 'recorded', amountMinor: input.amountMinor, balanceAfterMinor: (await totals(tx, account.id, now)).total } as const;
+    return { kind: 'recorded', amountMinor: input.amountMinor, balanceAfterMinor: (await partnerTotals(tx, account.id, now)).total } as const;
   });
 }
 
@@ -116,7 +170,7 @@ export async function savePayoutDetails(pool: Pool, accountId: string, details: 
 
 export interface PartnerCodeView { code: string; group: string; frozen: boolean; rate_bp: number }
 export interface PartnerCohort { registrations: number; rejected: number; installs: number; conversions: number }
-export interface PartnerEntryView { kind: 'accrual' | 'clawback' | 'payout'; amount_minor: number; created_at: string; available_at: string }
+export interface PartnerEntryView { kind: 'accrual' | 'clawback' | 'payout' | 'write_off'; amount_minor: number; created_at: string; available_at: string }
 export interface PartnerCabinet {
   codes: PartnerCodeView[]; cohort: PartnerCohort;
   money: { total_minor: number; due_minor: number; deferred_minor: number; debt_minor: number; payout_date: string; minimum_minor: number };
@@ -141,7 +195,7 @@ export async function readPartnerCabinet(pool: Pool, accountId: string, now = ne
     FROM attribution at WHERE at.partner_code_id = ANY($1::uuid[])`, [ids])).rows[0]!;
   const payoutDate = payoutDateFor(now);
   // В день выплаты доступное — на ТЕКУЩИЙ момент (зрелое к нему), иначе — на дату ближайшей выплаты.
-  const sums = await totals(pool, accountId, payoutDate.getTime() < now.getTime() ? now : payoutDate);
+  const sums = await partnerTotals(pool, accountId, payoutDate.getTime() < now.getTime() ? now : payoutDate);
   const preview: PayoutPreview = previewFromTotals(sums.total, sums.available, payoutDate);
   const entries = (await pool.query<{ kind: PartnerEntryView['kind']; amount_minor: string; created_at: Date; available_at: Date }>(
     `SELECT kind, amount_minor, created_at, available_at FROM commission_entry WHERE partner_account_id = $1 ORDER BY created_at DESC, id LIMIT 20`,

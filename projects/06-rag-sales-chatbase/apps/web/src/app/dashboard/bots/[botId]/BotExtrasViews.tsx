@@ -11,8 +11,23 @@ export const VERIFY_RISK = 'Бот отвечает только по вашим
 export interface SummaryView { answered: number; unknown: number; refused_limit: number; last_unknown: { text: string; asked_at: string }[] }
 const dateTime = (iso: string) => new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
 
+// Стирание журнала вопросов бота владельцем (account-erasure, FR-AUTH-002, вторая фраза) — подтверждение в два шага,
+// как у удаления источника (фича 16).
+export interface EraseLogView { confirming: boolean; busy: boolean; error: string; done: boolean; onAsk: () => void; onConfirm: () => void; onCancel: () => void }
+function EraseLog({ erase }: { erase: EraseLogView }) {
+  return <div className="stack">
+    {erase.done && <p role="status" className="notice">Журнал вопросов стёрт: тексты вопросов и история диалогов этого бота удалены.</p>}
+    {erase.error && <p role="alert" className="field-error">{erase.error}</p>}
+    {erase.confirming
+      ? <><p className="notice danger-notice">Тексты вопросов и история диалогов этого бота удалятся без возможности восстановить.</p>
+        <p className="cluster"><button type="button" className="button danger" disabled={erase.busy} onClick={erase.onConfirm}>{erase.busy ? 'Стираю…' : 'Стереть журнал'}</button>
+          <button type="button" className="button secondary" disabled={erase.busy} onClick={erase.onCancel}>Отмена</button></p></>
+      : <p><button type="button" className="button secondary" onClick={erase.onAsk}>Стереть журнал вопросов</button></p>}
+  </div>;
+}
+
 // Сводка: без процентов вовсе — «ответил / не знал / отказов» числами; пусто — «вопросов ещё не было» (CFG-I7).
-export function SummaryBlock({ summary }: { summary: SummaryView | null }) {
+export function SummaryBlock({ summary, erase }: { summary: SummaryView | null; erase?: EraseLogView }) {
   return <section className="card stack bot-extra" aria-labelledby="summary-title"><h2 id="summary-title">Вопросы посетителей за 7 дней</h2>
     {!summary ? <p role="status" className="notice danger-notice">Сводка временно недоступна. Обновите страницу позже.</p>
       : summary.answered + summary.unknown + summary.refused_limit === 0
@@ -32,6 +47,7 @@ export function SummaryBlock({ summary }: { summary: SummaryView | null }) {
             <p><a className="button secondary" href="#sources-title">Добавить материалы</a></p>
           </div>}
         </>}
+    {summary && erase && <EraseLog erase={erase} />}
   </section>;
 }
 

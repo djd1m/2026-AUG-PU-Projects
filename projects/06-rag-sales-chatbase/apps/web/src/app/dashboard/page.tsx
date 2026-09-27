@@ -21,9 +21,11 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const banner = notice && <p role="status" className="notice cabinet-notice">{notice}</p>;
   // Партнёрка и студия (partner-and-studio): ссылки, а не пункты шапки — шапка на 320 px не вмещает больше. Класс кнопки —
   // цель 44×44 (прибор адаптивности R2 на стенде поймал ссылку высотой 25 px).
-  const more = <nav aria-label="Партнёрство" className="cluster">
+  // Удаление аккаунта (account-erasure, FR-AUTH-002) — здесь же, тем же классом кнопки.
+  const more = <nav aria-label="Аккаунт" className="cluster">
     <a className="button secondary" href="/dashboard/partner">Партнёрская программа</a>
-    {list?.plan === 'studio' && <a className="button secondary" href="/dashboard/studio">Кабинет студии</a>}</nav>;
+    {list?.plan === 'studio' && <a className="button secondary" href="/dashboard/studio">Кабинет студии</a>}
+    <a className="button secondary" href="/dashboard/account">Удалить аккаунт</a></nav>;
   // Пустота показывается пустотой (CFG-I7), но только когда ботов действительно нет.
   if (!list || !list.bots.length) {
     return <>{banner}<CabinetEmpty />
