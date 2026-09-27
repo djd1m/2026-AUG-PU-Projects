@@ -1,6 +1,6 @@
 # Architecture — N6 «Суфлёр», CJM H (временно)
 
-**Версия:** 0.1 · **Дата:** 2026-09-25 · **Канон:** [`canon.md`](canon.md) · **Решения:** [`ADR.md`](ADR.md)
+**Версия:** 1.0 «как построено» · **Дата:** 2026-09-27 (первая редакция 0.1 — 2026-09-25) · **Канон:** [`canon.md`](canon.md) · **Решения:** [`ADR.md`](ADR.md)
 · **Диаграммы C4:** [`C4_Diagrams.md`](C4_Diagrams.md).
 
 ## Architecture Overview
@@ -12,6 +12,11 @@ npm workspaces, шесть сервисов Docker Compose на одной VPS (
 AI-интеграция продукта — HTTP-вызовы шлюза OpenRouter из `web` и `worker-index`; MCP-серверы — для
 агентов разработки (Phase 3), продукт их не требует.
 
+**Что добавилось к редакции 0.1 (фичи 12–17 и исправления стенда, 26–27.09):** живая оплата ЮKassa (A-N6-040),
+партнёрский учёт с комиссиями и выплатами (A-N6-043), удаление аккаунта со сторожем стирания (A-N6-054…065),
+жизненный цикл источника и усечение по бюджету (A-N6-050…052), снятие HNSW (A-N6-051), статика вне предела двери
+(A-N6-039), стенд на общем прокси машины с доменом `sufler.aicoding.space` (A-N6-037, A-N6-042).
+
 ```mermaid
 flowchart LR
   subgraph Client
@@ -21,8 +26,8 @@ flowchart LR
     HOST --> WID
   end
   subgraph Edge
-    TLS[Общий TLS-прокси машины]
-    PX[proxy: Caddy 2.8<br/>лимит частоты, XFF]
+    TLS[ai-hub-tls-proxy: Caddy 2.10<br/>sufler.aicoding.space, TLS]
+    PX[proxy: Caddy 2.8 + ratelimit<br/>30/120 в мин, XFF, статика вне предела]
   end
   subgraph API
     WEB[web: Next.js 15<br/>кабинет, /api, /w/v1, /b]
@@ -48,20 +53,23 @@ flowchart LR
   WRK -- HTTP GET, robots.txt --> INET[Сайты клиентов]
   WEB --> SP
   WRK --> SP
+  YK[ЮKassa: платежи]
+  WEB -- создание и перезапрос платежа --> YK
+  YK -- уведомление /api/webhooks/yookassa --> TLS
 ```
 
 ## Component Breakdown
 
 | Сервис compose | Образ / сборка | Ответственность | Порты |
 |---|---|---|---|
-| `proxy` | `caddy:2.8-alpine` | единственная дверь; лимит частоты 30 мутаций / 120 чтений в минуту на IP (плагин caddy-ratelimit, донор N4), `X-Forwarded-For` заменяется `{client_ip}`; кэш `immutable` для `/w/widget.*.js`; НЕ ставит CORS-заголовки | `"${HTTP_PORT:-8086}:80"` только к общему TLS-прокси |
-| `web` | `apps/web` (Next.js 15, Node 22) | кабинет, API, предпросмотр, `/w/v1/*` для виджета, `/b/{slug}`, `/r/{code}`, раздача бандла; ответы RAG (эмбеддинг вопроса, поиск, модель, проверка цитат) | нет |
-| `worker-index` | `apps/worker` | задачи индексации BullMQ: `CrawlSite`, `ExtractPdf`, `ChunkDocument`, `EmbedAndStore`; сторож раз в минуту | нет |
-| `db` | `pgvector/pgvector:0.8.6-pg16` | все данные, вектора `vector(1536)` с HNSW | нет (`expose` не требуется) |
+| `proxy` | `proxy/Dockerfile` (xcaddy: Caddy 2.8 + `caddy-ratelimit`, образ `caddy:2.8-n6-ratelimit-<tag>`; модуль проверяется на сборке) | единственная дверь; лимит частоты 30 мутаций / 120 чтений в минуту на `{client_ip}` (донор N4), неизменяемая статика `/_next/static/*` и `/w/widget.*.js` вне предела чтений (A-N6-039); `X-Forwarded-For` ЗАМЕНЯЕТСЯ `{client_ip}`; кэш бандла ставит `web` (A-N6-034); НЕ ставит CORS и CSP | `"127.0.0.1:${N6_HTTP_PORT:-8086}:80"` — только к общему TLS-прокси; на стенде ещё сеть `talk-ai-public` (`compose.stand.yml`) |
+| `web` | `apps/web` (Next.js 15, Node 22) | кабинет, API, предпросмотр, `/w/v1/*` для виджета, `/b/{slug}`, `/r/{code}`, `/invite/{token}`, раздача бандла; ответы RAG (эмбеддинг вопроса, поиск, модель, проверка цитат); оплата (`/api/checkout`, вебхук ЮKassa); партнёрка и студии; запрос удаления аккаунта; команды оператора `ops:*` | нет |
+| `worker-index` | `apps/worker` | задачи индексации BullMQ: `CrawlSite`, `ExtractPdf`, `ChunkDocument`, `EmbedAndStore`; сторож раз в минуту: `stalled`, истечение оплаченных планов, стирание текста «не знаю» и истории, уборка тома `uploads`, стирание аккаунтов (`erasureTick`) — шаги изолированы (`watchdog-steps.ts`): сбой одного не останавливает остальные | нет |
+| `db` | `pgvector/pgvector:0.8.6-pg16` | все данные, вектора `vector(1536)`; HNSW снят (A-N6-051), поиск — точный перебор внутри бота | нет (`expose` не требуется) |
 | `redis` | `redis:7.4-alpine` | транспорт очереди; AOF, `noeviction`, пароль `${REDIS_PASSWORD:?}` | нет |
 | `migrate` | `apps/web` (скрипт) | миграции SQL до старта `web`/`worker-index` (`service_completed_successfully`) | нет |
 
-Пакеты монорепо: `apps/web`, `apps/worker`, `apps/widget` (бандл, сборка в `apps/web/public/w/`),
+Пакеты монорепо: `apps/web`, `apps/worker`, `apps/widget` (бандл, сборка в `apps/web/widget-bundle/`, раздаёт `GET /w/[file]`),
 `packages/db` (пул, миграции, `quota.ts`), `packages/rag` (чанкинг, промпт, `ValidateModelAnswer`,
 клиент OpenRouter), `packages/queue` (BullMQ + fence, донор N5). Каждый сервис — `restart:
 unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; дополнительный compose-файл
@@ -74,11 +82,12 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 | Frontend | Next.js 15 (App Router), дизайн-токены N5, шрифт Onest | донор N5 живёт на проде; тёмная тема и прибор адаптивности готовы (ADR-012) |
 | Widget | TypeScript → один IIFE-бандл (esbuild), Shadow DOM, ≤ 45 КБ gzip | донор N1 `apps/widget` (ADR-013); без фреймворка — бюджет бандла |
 | Backend | Node 22, Next.js route handlers, `pg` без ORM, zod | как N5; SQL нужен явный для pgvector и атомарных квот |
-| Database | PostgreSQL 16 + pgvector 0.8.6, HNSW `vector_cosine_ops` | вектора в НАШЕМ Postgres (постановка); ≤ 2000 измерений (ADR-001) |
+| Database | PostgreSQL 16 + pgvector 0.8.6; поиск — точный перебор `vector_cosine_ops` внутри бота (HNSW снят, A-N6-028/051) | вектора в НАШЕМ Postgres (постановка); ≤ 2000 измерений (ADR-001) |
 | Cache/Queue | Redis 7.4 + BullMQ | донор N5 `packages/queue` с фенсом попыток (ADR-009) |
 | AI | OpenRouter: `anthropic/claude-haiku-4.5` (ответы), `openai/text-embedding-3-small` (1536) | один шлюз, работающий из РФ-контура у N5 (ADR-002, ADR-011) |
 | Parsing | undici (HTTP), собственный разбор robots.txt, `linkedom` + извлечение основного текста, `pdfjs-dist` | без браузера (ADR-010); PDF в процессе воркера |
-| Infrastructure | Docker Compose, Caddy, VPS | Architecture Constraints |
+| Payments | ЮKassa: провайдер, сети в коде, фейк — перенос из N4 (`apps/web/src/server/payments/*`); вебхук — форма N1 | решение владельца «оплату через ЮKassa взять из предыдущих проектов» (A-N6-040, ADR-019) |
+| Infrastructure | Docker Compose, Caddy, VPS; стенд — за общим TLS-прокси машины `ai-hub-tls-proxy` | Architecture Constraints; ADR-023 |
 
 ## External Dependencies
 
@@ -98,13 +107,52 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 | отвечает на запросы с этой VPS (РФ-контур) | OpenRouter, проба с ключом | проверено 2026-09-25 · проба с ключом 21:19Z (A-N6-019): `POST https://openrouter.ai/api/v1/embeddings`, `openai/text-embedding-3-small`, `dimensions:1536` → HTTP 200, 1536 измерений, 6 токенов, $0.00000012 (ключ стенда N5, временный); ранее без ключа — HTTP 401 (сеть доступна) | CONFIRMED | FR-INDEX-002, FR-ANSWER-002 — сеть подтверждена; СВОЙ ключ N6 проверяет `EmbedProbe` при первом старте (Completion, шаг 3) |
 | индексирует `vector` до 2000 измерений HNSW | pgvector (библиотека в нашем образе, не сервис) | [github.com/pgvector/pgvector](https://github.com/pgvector/pgvector) · проверено 2026-09-25 · «Supported types are: `vector` - up to 2,000 dimensions» | CONFIRMED | FR-INDEX-002, ADR-001 |
 | доставляет оповещение мониторинга оператору | Telegram Bot API `sendMessage` (как у N5) | не проверялось в этой фазе: это операционный канал, не функция продукта | UNCONFIRMED | Completion «Monitoring» (оповещения) — до подтверждения мониторинг читается вручную раз в сутки |
-| принимает платежи и шлёт уведомления | ЮKassa | не проверялось в этой фазе: оплата — спящий код (A-N6-011), собственного тестового магазина N6 нет | UNCONFIRMED | FR-TARIFF-002 (оплата) — отложено, в неделю только экран интереса |
+| принимает платежи и шлёт уведомления | ЮKassa: `POST /v3/payments`, `GET /v3/payments/{id}`, уведомления `payment.succeeded` / `refund.succeeded` на `https://sufler.aicoding.space/api/webhooks/yookassa` | код — перенос провайдера N4, проверенного тестовой оплатой на магазине N4 16–17.09 (reuse-inventory §2); у N6 СВОЕГО магазина нет — живой платёж не проводился (27.09) | UNCONFIRMED | FR-TARIFF-002 — работает в режиме `N6_PAYMENTS_MODE=off` (экран интереса); `live` включается ключами магазина (`scripts/stand-set-yookassa.sh`) |
 
 Строка сетевой доступности — `CONFIRMED` по пробе A-N6-019 (обновлено после Phase 2, находка M1):
 шлюз отвечает с этой VPS на ключ, но ключ был ЧУЖОЙ (стенд N5). «Сеть доступна» доказано, «ключ N6
 работает» — ещё нет; поэтому требования этой строки в Phase 3 входят вместе с пробой при старте `worker-index` (`EmbedProbe`: один эмбеддинг «проба», проверка длины 1536 — иначе
 процесс не стартует). N5 на этой же машине ходит к OpenRouter за chat/completions в проде
 (reuse-inventory §6) — косвенный, не прямой довод.
+
+## Payments, Partners and Erasure (добавлено 27.09)
+
+**Платёжный контур (ADR-019, A-N6-040).** `POST /api/checkout` → строка `payment_intent` ДО обращения к провайдеру →
+создание платежа ВНЕ транзакции → `201 { intent_id, redirect_url }` → форма ЮKassa → `/upgrade/return` опрашивает
+`GET /api/checkout/{intent_id}` (пять различимых состояний). Уведомление `POST /api/webhooks/yookassa`: сырые байты ≤ 64 КиБ →
+подлинность ВНЕ транзакции (адрес отправителя из XFF, записанного дверью, ∈ сети ЮKassa в коде; ПЕРЕЗАПРОС платежа;
+сверка магазина, режима, суммы, статуса) → транзакция: `INSERT payment_event (provider, event_key) ON CONFLICT DO NOTHING`
+(пусто — дубль, 200) → план и срок (`GREATEST(срок, now()) + 30 дней`, старший план) → `payment` (UNIQUE
+`provider_payment_id`) → атрибуция `converted` → начисление партнёру. Недоступность ЮKassa — исключение: 503 без единой
+записи, повтор проходит полным путём. Режим `N6_PAYMENTS_MODE`: `off` (по умолчанию, вебхук 404, экран интереса) ·
+`fake` (тесты; в production — отказ старта) · `live`.
+
+**Партнёрский учёт (ADR-020, A-N6-043).** Журнал `commission_entry` (`accrual | clawback | payout | write_off`), а не
+счётчик баланса: начисление — внутри транзакции оплаты (20 % от полученного после удержания ЮKassa, 12 месяцев с первой
+оплаты, холд 30 дней), сторно — внутри транзакции возврата (всегда на всё начисление), выплата — командой оператора
+`ops:partner payout` (минимум 1 000 ₽, не больше созревшего, идемпотентна по метке). Баланс и «доступно» — одна функция
+`partnerTotals` для живого и удалённого партнёра. Код партнёра (`/r/{code}` → подписанная cookie 30 дней), приглашение
+студии (`/invite/{token}`, 7 дней, одноразовое, передача бота клиенту под той же блокировкой, что предел ботов).
+Блокировки строк аккаунта — `FOR NO KEY UPDATE` (A-N6-048: `FOR UPDATE` давал взаимную блокировку с внешним ключом
+журнала).
+
+**Стирание аккаунта (ADR-021, A-N6-054…065).** `DELETE /api/account` (повторный ввод пароля вне транзакции) — одной
+транзакцией: `account.status = 'erasing'`, срок 72 ч, сессии удалены, боты `deleted` (виджеты отвечают сразу 404/403),
+приглашения аннулированы, коды заморожены. Сторож (`erasureTick`, ≤ 50 аккаунтов за проход, после часового тихого
+периода): файлы PDF → строки данных → обезличивание записей оплат, начислений, выплат (хранятся 5 лет, 402-ФЗ) и
+журналов → надгробие `deleted` ПОСЛЕДНИМ (почта `deleted:<id>`). Свободный текст оператора (причины в `partner_audit`,
+`operator_action`) у стираемого/стёртого аккаунта обезличивают ТРИГГЕРЫ БД на вставку (миграция 010, разделы 7–8) и
+проход стирания для старых строк; метка выплаты хранится только отпечатком `erased:<md5>` (префикс `erased:`
+зарезервирован, `reserved_key`). Деньги партнёра при удалении НЕ сгорают — невыплаченное остаётся долгом
+(`ops:erasure owed`), списание только `ops:erasure write-off` (решение владельца A-N6-061). Отмены нет.
+
+**Жизненный цикл источника (ADR-022, A-N6-050…052).** «Обновить» и «Повторить» — та же задача (`index_job_id`), новая
+серия с фенсом; неизменные страницы по `content_hash` не переэмбеддятся; исчезнувшие удаляются только после ПОЛНОГО обхода
+(сбой sitemap или переполненная очередь — не удаляют). Предел запусков — 20 на бота в сутки (журнал `index_start`,
+отказы считаются); бюджет серии источника 500 000 / 1 000 000 токенов; ≤ 300 фрагментов на страницу. Исчерпание
+СОБСТВЕННОГО бюджета задачи или серии — усечение: `done` с `index_job.truncated_by` и честной пометкой «Прочитано N
+страниц»; ноль страниц и внешние потолки — отказ `quota_refused`. Удаление источника — одной транзакцией со страницами,
+фрагментами и задачами; порядок блокировок «задачи → бот» (без взаимной блокировки с воркером).
 
 ## Data Architecture
 
@@ -134,6 +182,14 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 - Лимиты потолков — НЕ колонки: параметры из окружения (канон §6). Сырой PDF — том `uploads`
   (не объектное хранилище, ADR-018), удаляется после индексации.
 - Резервная копия: `pg_dump` раз в сутки в том `backups`, хранение 7 дней (Completion).
+- **Таблицы после фич 12–17 (миграции 003–010):** оплата — `payment_intent`, `payment_event` (UNIQUE provider+event),
+  `payment` (UNIQUE provider_payment_id), `operator_action`; партнёрка — `partner_code_use`, `commission_entry`
+  (UNIQUE платёж+вид для начисления и сторно; UNIQUE партнёр+метка для выплаты), `partner_payout_details`, `partner_audit`;
+  служебные — `index_start` (008), `erasure_audit`, `upload_orphan` (010). `account` получил `plan_source`,
+  `plan_paid_until`, `erase_requested_at`, `erase_deadline`; `index_job` — `truncated_by` (009); `bot` —
+  `answers_verified_at` (003; снимается триггером на вставку фрагментов, 004). Всего 30 таблиц + `_schema_migration`.
+- Все миграции — только добавляющие; раннер (`packages/db/src/migrate.ts`) применяет недостающие по имени в порядке
+  сортировки (на стенде 007 применилась после уже применённой 008 — допустимо, миграции независимы).
 
 ## Security Architecture
 
@@ -152,7 +208,12 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
   IndexedDB» пайплайна к нему не применяется: ключ принадлежит нам, а не пользователю).
 - **Хранилища:** `db` и `redis` без `ports:` (docker-ports Правило №0); `web` не публикуется мимо
   `proxy` (deployment-seams: иначе XFF от клиента обходит лимиты).
-- **152-ФЗ:** текст вопросов только у `unknown`, 14 дней; IP — префикс; удаление аккаунта ≤ 72 ч.
+- **152-ФЗ:** текст вопросов только у `unknown`, 14 дней; IP — префикс; удаление аккаунта ≤ 72 ч (сторож, надгробие,
+  триггеры обезличивания свободного текста — раздел «Payments, Partners and Erasure»).
+- **Оплата:** подлинность уведомления ЮKassa (не подписано) = сеть отправителя из кода + перезапрос платежа + сверка;
+  подлинность ДО записи ключа повторности; недоступность провайдера — исключение (урок N1, security-operation-order).
+- **Контракты проверены по выданному адресу стенда (27.09):** `embed-contract.md` и `long-job-contract.md` — проверки
+  дают 0; `webhook-contract.md` — честный код 2 (проверка пакета требует подписи, ЮKassa не подписывает).
 
 ## Scalability Considerations
 
@@ -166,6 +227,17 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 - **Горизонтально (v1):** `web` масштабируется репликами (состояние в Postgres/Redis); квоты атомарны в
   БД, поэтому корректны на нескольких репликах. При росте векторов — `halfvec(1536)` (вдвое меньше,
   HNSW до 4000) без смены модели.
+
+## Stand on this machine (добавлено 27.09, ADR-023)
+
+Стенд `https://sufler.aicoding.space` (A-N6-042) — тот же `docker-compose.yml` плюс надстройка `compose.stand.yml`: дверь
+входит в сеть `talk-ai-public` общего TLS-прокси машины `ai-hub-tls-proxy` (`/home/dz-projects-2026/edge`, Caddy 2.10,
+держит 80/443 для N1–N5). Блок сайта `sufler.aicoding.space, n6.194.85.249.105.sslip.io { encode gzip zstd; header
+X-Robots-Tag "noindex, nofollow"; reverse_proxy n6-sufler-proxy-1:80 }` вносит владелец (правка общего прокси —
+чужой ресурс; файл смонтирован по inode — править на месте, не переименованием). Env стенда — вне git
+(`/home/dz-projects-2026/.n6-stand/stand.env`, 600), потолки глобальных scope занижены. Запись A в DNS зоны
+`aicoding.space` (Yandex Cloud) — `194.85.249.105`; первые минуты после создания часть резолверов отдаёт
+закэшированный отказ (SOA minimum 900 с).
 
 ## Reconciliation with Pseudocode
 
@@ -181,3 +253,7 @@ unless-stopped`, healthcheck, `depends_on: condition: service_healthy`; допо
 | `quota_counter.scope` (preview_session) | один scope — два предела, общий счётчик | после Phase 2 (H1): `CreatePreview` и ответы предпросмотра списывали ОДНУ пару `(preview_session, сессия)` — создание съедало 1 из 10 ответов, SC-US-002-3 давал 9. Разведено на `scope_key = '<сессия>:create'` (1/сутки) и `'<сессия>:answers'` (10/сутки), у каждого своя переменная; у `global_previews` так же две переменные (`QUOTA_GLOBAL_PREVIEWS` / `QUOTA_GLOBAL_PREVIEW_ANSWERS`) — одно имя не держит два числа. Scope — 10, переменных — 14 (A-N6-020) |
 | `question_log.text` | смена типа | логически «только у unknown» — физически `text NULL` + `CHECK (outcome = 'unknown' OR text IS NULL)`, чтобы инвариант держала БД |
 | `bot.account_id` | смена типа | у `draft` владельца нет — колонка `NULL`-допустима, `CHECK (status = 'draft' OR account_id IS NOT NULL)` |
+| `chunk.embedding` индекс | снят | HNSW терял свои фрагменты под фильтром (A-N6-028) и стоил ≈ 2,8 мс на вставку фрагмента — снят миграцией 008 (A-N6-051) |
+| `index_job` | новая колонка | `truncated_by` — усечение по бюджету задачи или серии вместо отказа (миграция 009, A-N6-052) |
+| `commission_entry.payout_key` | обезличивание | у стираемого/стёртого партнёра — только `erased:<md5>` (триггер миграции 010 + проход стирания); префикс `erased:` зарезервирован |
+| `partner_audit.reason`, `operator_action.reason` | обезличивание | триггеры `BEFORE INSERT` миграции 010 заменяют свободный текст у `erasing`/`deleted` аккаунта |

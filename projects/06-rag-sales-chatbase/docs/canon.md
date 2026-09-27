@@ -5,9 +5,15 @@
 Дата заморозки: 2026-09-25. Владелец канона — координатор Phase 1 (агент, автономный режим,
 A-N6-012). Изменение канона = новая редакция с датой и перечнем затронутых документов.
 
+**Редакция 2026-09-27 «как построено»** (после фич 1–17, исправлений стенда и A-N6-001…065): канон сверен с кодом —
+миграциями 001–010, деревом маршрутов `apps/web/src/app`, `docker-compose.yml`, `.env.example`, константами
+`packages/rag/src/{constants,commission}.ts`. Где канон и код расходились, исправлен канон; расхождения перечислены в
+конце этого файла («Сверка с кодом 27.09»).
+
 ## 1. Продукт и границы
 
-- **Имя:** «Суфлёр» (рабочее, A-N6-003; доступность имени и домена не проверялась).
+- **Имя:** «Суфлёр» (рабочее, A-N6-003; товарный знак не проверялся). **Адрес стенда:** `https://sufler.aicoding.space`
+  (решение владельца A-N6-042; старое имя `n6.194.85.249.105.sslip.io` оставлено в прокси).
   **Клиент:** веб-приложение (Next.js) на своём домене + встраиваемый виджет (отдельный бандл) на
   ЧУЖИХ сайтах. **Контур:** Россия/СНГ, интерфейс и ответы на русском (PD-GEO-001).
 - **CJM:** H = ядро A (badge) + демо-страница из C + партнёрский минимум из B —
@@ -75,11 +81,14 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 `partner_code`, `attribution`, `studio_invite`, `pro_interest`; с 26.09 (живая оплата ЮKassa, решение владельца,
 A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`, `payment`, `operator_action`; с 26.09 (партнёры и студии,
 комиссии и выплаты, решение владельца, A-N6-043, миграция 007) — ещё 4: `partner_code_use`, `commission_entry`,
-`partner_payout_details`, `partner_audit`. Итого **27**. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
+`partner_payout_details`, `partner_audit`. Итого **27**. Служебные журналы (НЕ сущности канона, закрытый список, сверяется
+`tests/enums.test.ts` и `tests/database.integration.test.ts`): `index_start` (запуски индексации для суточного предела,
+миграция 008, A-N6-050), `erasure_audit` (журнал стирания без ПДн, миграция 010), `upload_orphan` (файл PDF удалённого
+источника до стирания, миграция 010); плюс `_schema_migration` раннера миграций. Всего таблиц в схеме — 30 + `_schema_migration`. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
 `accrual | clawback | payout | write_off` (`write_off` — списание долга удалённому партнёру ТОЛЬКО командой оператора, A-N6-061; при удалении ничего не сгорает); `partner_code.frozen_reason` ∈
 `antifraud_ip_burst | operator | owner_erased`; `partner_code_use.source` =
 `attribution.source` ∈ `code | invite | cookie`; `partner_audit.kind` ∈ `frozen_antifraud | unfrozen | code_issued |
-payout_recorded | accrual_skipped_fee_unknown`.
+payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (последнее — миграция 010, A-N6-061).
 
 | Поле | Значения (закрыто) | Чтение неизвестного значения |
 |---|---|---|
@@ -97,35 +106,65 @@ payout_recorded | accrual_skipped_fee_unknown`.
 | `growth_event.type` | `badge_impression` · `badge_click` · `share_cta_shown` · `share_cta_click` · `widget_install` · `first_answer` · `public_page_view` · `invite_sent` · `invite_accepted` · `interest` | не записывается |
 | `attribution.source` | `code` · `invite` · `cookie` | `cookie` (самый слабый) |
 | `attribution.status` | `pending` · `converted` · `rejected` · `partner_deleted` (A-N6-054) | `rejected` |
+| `payment.status` | `succeeded` · `refunded` | — (пишет только вебхук) |
+| `payment.review_reason` | `amount_mismatch` · `refund` · `unknown_intent` · `account_erasing` | `needs_review = (review_reason IS NOT NULL)` — план не выдаётся |
+| `payment_event.provider` | `yookassa` · `fake` (`fake` в production — отказ старта) | отказ |
+| `operator_action.action` | `set_plan` | отказ |
+| `pro_interest.origin_screen` | `pricing` · `upgrade` · `install` · `cabinet` | отказ |
+| `index_job.truncated_by` | `embed_budget` · `series_embed_budget` · `NULL` (не усечена) | — (A-N6-052) |
+| `index_start.kind` | `site` · `pdf` · `retry` · `reindex` | отказ |
+| `job_attempt.status` | `running` · `done` · `failed` | `failed` |
+| `erasure_audit.event` | `requested` · `waiting_payout` · `payout_owed` · `erased` · `failed` · `overdue` | — (журнал, без ПДн) |
 
-## 5. Маршруты (имена, не форма — форма в Pseudocode «API Contracts»)
+## 5. Маршруты (имена, не форма — форма в Pseudocode «API Contracts»; сверено с `apps/web/src/app` 27.09)
 
-Кабинет: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`,
-`DELETE /api/account`, `GET|POST /api/bots`, `PATCH /api/bots/{bot_id}`,
-`POST /api/bots/{bot_id}/sources`, `DELETE /api/sources/{source_id}`,
-`POST /api/sources/{source_id}/reindex`, `GET /api/index-jobs/{index_job_id}`,
-`POST /api/bots/{bot_id}/origins`, `GET /api/bots/{bot_id}/summary`,
-`POST /api/bots/{bot_id}/publish`, `POST /api/studio/invites`, `POST /api/invites/{token}/accept`,
-`POST /api/interest`, `POST /api/checkout`, `GET /api/checkout/{intent_id}` (A-N6-040).
-Оплата (без cookie, ЕДИНСТВЕННЫЙ вебхук): `POST /api/webhooks/yookassa`.
-Предпросмотр (без входа): `POST /api/preview`, `GET /api/preview/{preview_token}`,
-`POST /api/preview/{preview_token}/ask`, `POST /api/preview/{preview_token}/claim`.
-Виджет (чужой origin): `GET /w/v1/config?bot={public_key}`, `POST /w/v1/ask`,
-`POST /w/v1/event`, бандл `GET /w/widget.<hash>.js`.
-Публичные страницы: `/b/{slug}` (демо-страница), `/r/{code}` (код партнёра), `/?from={domain}`
-(вход по бейджу).
+Вход и аккаунт: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`,
+`DELETE /api/account` (`{ confirm: true, password }` → `202 { accepted, erase_deadline }`, A-N6-054).
+Боты: `GET|POST /api/bots`, `PATCH /api/bots/{bot_id}`, `POST /api/bots/{bot_id}/sources` (JSON сайта или multipart PDF,
+`Idempotency-Key`), `POST /api/bots/{bot_id}/origins`, `POST /api/bots/{bot_id}/ask` (тестовый чат владельца),
+`POST /api/bots/{bot_id}/verify` (отметка «проверено», A-N6-035), `POST /api/bots/{bot_id}/publish` (демо-страница),
+`GET /api/bots/{bot_id}/summary`, `POST /api/bots/{bot_id}/question-log/erase` (стирание журнала вопросов бота, FR-AUTH-002),
+`POST /api/bots/{bot_id}/invite` (приглашение «Передать клиенту», фича 15).
+Источники и задачи: `DELETE /api/sources/{source_id}`, `POST /api/sources/{source_id}/reindex` («Обновить» / «Повторить»,
+та же задача), `GET /api/index-jobs/{index_job_id}`.
+Оплата (A-N6-040): `POST /api/interest`, `POST /api/checkout`, `GET /api/checkout/{intent_id}`; ЕДИНСТВЕННЫЙ вебхук —
+`POST /api/webhooks/yookassa` (без cookie; при `N6_PAYMENTS_MODE=off` — `404`).
+Партнёры и студии: `GET /api/partner/summary`, `POST /api/partner/payout-details`, `GET /api/studio/summary`,
+`POST /api/invites/{token}/accept`.
+Предпросмотр (без входа; идентификатор — `index_job_id`): `POST /api/preview`, `GET /api/preview/{index_job_id}`,
+`POST /api/preview/{index_job_id}/ask`, `POST /api/preview/{index_job_id}/claim`, `POST /api/preview/{index_job_id}/share`.
+Виджет (чужой origin): `GET /w/v1/config?bot={public_key}`, `POST /w/v1/ask?bot={public_key}`, `POST /w/v1/event`,
+`OPTIONS` для них; бандл `GET /w/widget.<hash>.js` (маршрут `/w/[file]`, старый хэш получает текущий бандл, A-N6-034).
+Публичные: `/b/{slug}` (демо-страница), `/r/{code}` (код партнёра → cookie, 302), `/invite/{token}` (приём
+приглашения), `/?from={domain}` (вход по бейджу), `/health`.
+Экраны: `/`, `/pricing`, `/login`, `/preview`, `/preview/{index_job_id}`, `/upgrade`, `/upgrade/return`, `/dashboard`,
+`/dashboard/bots/{bot_id}`, `/dashboard/bots/{bot_id}/install`, `/dashboard/partner`, `/dashboard/studio`,
+`/dashboard/account` (удаление), `/account/erased` (квитанция удаления).
+Команды оператора (в контейнере `web`): `npm run ops:set-plan`, `npm run ops:partner -- issue|unfreeze|payout|due|export`,
+`npm run ops:erasure -- list|overdue|owed|write-off`.
 
 ## 6. Сервисы compose (ровно 6) и окружение
 
-`proxy` (Caddy 2.8, единственная дверь, `${HTTP_PORT:-8086}` на хосте только за общим TLS-прокси),
-`web` (Next.js 15: кабинет, API, публичные страницы, раздача бандла виджета), `worker-index`
-(краулер + PDF + чанкинг + эмбеддинги; BullMQ), `db` (`pgvector/pgvector:0.8.6-pg16`, без `ports:`),
-`redis` (`redis:7.4-alpine`, без `ports:`, AOF, `noeviction`), `migrate` (одноразовый, миграции).
-Бандл виджета собирается на этапе сборки образа `web` (`apps/widget` → `apps/web/public/w/`).
+`proxy` (Caddy 2.8 + `caddy-ratelimit`, единственная дверь, `127.0.0.1:${N6_HTTP_PORT:-8086}` на хосте — только к общему
+TLS-прокси), `web` (Next.js 15: кабинет, API, публичные страницы, раздача бандла виджета), `worker-index` (краулер + PDF +
+чанкинг + эмбеддинги + сторож; BullMQ), `db` (`pgvector/pgvector:0.8.6-pg16`, без `ports:`), `redis` (`redis:7.4-alpine`,
+без `ports:`, AOF, `noeviction`), `migrate` (одноразовый, миграции). Бандл виджета собирается на этапе сборки образа
+`web` (`apps/widget` → `apps/web/widget-bundle/`, НЕ `public/`; раздаёт маршрут `GET /w/[file]`, A-N6-034).
 
-Переменные БЕЗ значения по умолчанию (`${VAR:?}`): `N6_PUBLIC_ORIGIN`, `DATABASE_URL`,
-`REDIS_PASSWORD`, `OPENROUTER_API_KEY`, `SESSION_SECRET`, `ANSWER_MODEL`, `EMBED_MODEL`, все
-четырнадцать переменных потолков §7 (`QUOTA_*`; scope — 10, переменных — 14).
+**Стенд этой машины** (A-N6-037, A-N6-042): надстройка `compose.stand.yml` добавляет двери сеть `talk-ai-public` общего
+TLS-прокси `ai-hub-tls-proxy` (`/home/dz-projects-2026/edge`, Caddy 2.10, 80/443); блок сайта
+`sufler.aicoding.space, n6.194.85.249.105.sslip.io { reverse_proxy n6-sufler-proxy-1:80 }`; env стенда — вне git
+(`/home/dz-projects-2026/.n6-stand/stand.env`, 600). Основной `docker-compose.yml` от стенда не зависит.
+
+Переменные БЕЗ значения по умолчанию (`${VAR:?}`, отказ старта): `N6_PUBLIC_ORIGIN`, `N6_DB_PASSWORD` (из него compose
+собирает `DATABASE_URL`), `REDIS_PASSWORD` (→ `REDIS_URL`), `OPENROUTER_API_KEY`, `SESSION_SECRET`, `ANSWER_MODEL`,
+`EMBED_MODEL`, все четырнадцать переменных потолков §7 (`QUOTA_*`; scope — 10, переменных — 14).
+Оплата (только `web`): `N6_PAYMENTS_MODE` ∈ `off | fake | live` — не задана → `off` (экран интереса), явно пустая или
+неизвестная → отказ старта, `fake` при `NODE_ENV=production` → отказ; `YOOKASSA_SHOP_ID` (десятичный),
+`YOOKASSA_SECRET_KEY`, `YOOKASSA_TEST_MODE` (строго `true|false`) — обязательны только при `live`
+(`apps/web/src/server/payments/config.ts`; ввод на стенде — `scripts/stand-set-yookassa.sh`).
+Со значением по умолчанию (не секреты, правятся под машину): `N6_COMPOSE_PROJECT` (`n6-sufler`), `N6_HTTP_PORT` (`8086`),
+`IMAGE_TAG` (`dev`). `N6_INDEX_CONCURRENCY` снята (фича 16: код её не читал).
 
 ## 7. Числа (единый источник)
 
@@ -138,6 +177,14 @@ payout_recorded | accrual_skipped_fee_unknown`.
 приписан контекст «заголовок страницы › цепочка заголовков»; `top_k = 4`; порог косинусного
 сходства `min_similarity = 0.40` (гипотеза, калибруется на наборе 20 + 20 вопросов, §Refinement);
 история диалога в контексте — 2 предыдущих хода; ответ ≤ 400 токенов.
+
+**Оплата (решения владельца 26.09, A-N6-040):** разовая оплата на **30 дней** без автопродления (`PAID_PLAN_DAYS`);
+цены в копейках — `nobadge` **99 000**, `studio` **490 000** (`PLAN_PRICE_MINOR`, «цены предварительные» рядом с каждой
+ценой); план = старший из оплаченных, срок = `GREATEST(срок, now()) + 30 дней`; сумма ≠ цене намерения — платёж на
+разбор оператору, план не выдаётся; возврат — вручную оператором; истёкший оплаченный план сторож возвращает в `free`,
+план оператора не истекает. Подлинность уведомления: адрес отправителя (XFF, записанный дверью) ∈ сети ЮKassa из кода
+(`apps/web/src/server/payments/origin.ts`) + перезапрос платежа у ЮKassa + сверка (магазин, режим, сумма, статус).
+Ключ повторности — `(provider, event:object.id)` с уникальным индексом.
 
 **Партнёры и студии (решение владельца 26.09, A-N6-043):** комиссия **2000 б.п. = 20 %** от суммы после удержания ЮKassa,
 **12 месяцев** с первой оплаты клиента, округление вниз; холд **30 дней**; выплата **5-го** числа по Москве по СБП, минимум
@@ -207,5 +254,27 @@ self-referral — владелец кода с того же префикса з
 квитанция `__Host-n6_erasure` — **7 дней**; записи оплат, начислений и выплат — **5 лет** обезличенными (402-ФЗ).
 Отмены нет. Оператор: `npm run ops:erasure -- list | overdue | owed`.
 
+**Дверь (`proxy/Caddyfile`):** 30 мутаций и 120 чтений в минуту на `{client_ip}` ДО тела; неизменяемая статика
+(`/_next/static/*`, `/w/widget.*.js`) вне предела чтений (A-N6-039: холодная загрузка страницы — 9 запросов, 8 из них
+статика; офис за NAT получал 429); `X-Forwarded-For` ЗАМЕНЯЕТСЯ `{client_ip}`; CORS и CSP дверь не ставит.
+
 **Задача индексации:** предельное время 15 мин; таймаут посредника 60 с; не более 2 автоматических
 попыток шага; сторож — раз в минуту, `stalled` после 5 мин без обновления.
+
+## Сверка с кодом 27.09 (что было в каноне неверно и исправлено)
+
+| Место | Было | Стало (факт кода) |
+|---|---|---|
+| §4 таблицы | 27 сущностей + `index_start` | + `erasure_audit`, `upload_orphan` (миграция 010) — служебные |
+| §4 `partner_audit.kind` | без `debt_written_off` | с `debt_written_off` (миграция 010) |
+| §4 перечисления | не описаны `payment.*`, `operator_action.action`, `pro_interest.origin_screen`, `index_job.truncated_by`, `index_start.kind`, `job_attempt.status`, `erasure_audit.event` | описаны по CHECK миграций |
+| §5 | `POST /api/studio/invites` | `POST /api/bots/{bot_id}/invite` |
+| §5 | `/api/preview/{preview_token}` | `/api/preview/{index_job_id}` (+ `/share`) |
+| §5 | нет `/api/bots/{id}/ask`, `/verify`, `/question-log/erase`, `/api/partner/*`, `/api/studio/summary`, `/health`, экранов | добавлены |
+| §5 | `POST /w/v1/ask` | `POST /w/v1/ask?bot={public_key}` (бот в адресе, CheckOrigin до тела, A-N6-035) |
+| §6 | `${HTTP_PORT:-8086}` | `127.0.0.1:${N6_HTTP_PORT:-8086}` |
+| §6 | бандл → `apps/web/public/w/` | `apps/web/widget-bundle/` (A-N6-034) |
+| §6 | `DATABASE_URL` как переменная окружения | `N6_DB_PASSWORD`; `DATABASE_URL` собирает compose |
+| §6 | переменных оплаты нет | `N6_PAYMENTS_MODE`, `YOOKASSA_*` |
+| §3 FR-INDEX-002 | «эмбеддинги 1536 … и HNSW» | индекс HNSW снят миграцией 008 (A-N6-051): поиск — точный перебор внутри бота (A-N6-028); заголовок FR правит владелец Specification |
+
