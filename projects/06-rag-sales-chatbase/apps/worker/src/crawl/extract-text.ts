@@ -96,6 +96,14 @@ export function extractPage(html: string): ExtractedPage {
   let buffer = '';
   let skipDepth = 0, mainDepth = 0;
   let heading: { level: Block['level']; text: string } | null = null;
+  // Граница соседних элементов (дефект стенда 26.09, «целиком5 курсов health-advisorПодготовка»): карточки и строки
+  // собираются из соседних <span>/<a>, разделённых только CSS (flex/grid), без пробела в разметке. Открывающий тег
+  // СРАЗУ после закрывающего, без текста между ними, — граница двух элементов: ставится пробел. Слово, разрезанное
+  // строчным тегом (<b>при</b>мер, при<b>мер</b>), остаётся целым: рядом с тегом там текст, а не другой тег.
+  // Теги без собственного текста (<wbr>, <img>, <script>, <style>, пропускаемые nav/svg…) границей не считаются и флаг не
+  // сбрасывают: <b>при</b><wbr>мер — «пример» (ревью Codex, находка 1). Текст, пустой после расшифровки (&shy;),
+  // флаг тоже не сбрасывает: <span>А</span>&shy;<span>Б</span> — «А Б».
+  let afterClosingTag = false;
   const flush = () => {
     const text = squash(buffer);
     buffer = '';
@@ -108,9 +116,16 @@ export function extractPage(html: string): ExtractedPage {
     if (token.kind === 'skip') continue;
     if (token.kind === 'text') {
       if (skipDepth === 0) { if (heading) heading.text += token.text; else buffer += token.text; }
+      if (decodeEntities(token.text) !== '') afterClosingTag = false;
       continue;
     }
     const { closing, name, attrs } = token;
+    const carriesText = !RAW.has(name) && name !== 'title' && !VOID.has(name) && !SKIP.has(name);
+    if (closing) afterClosingTag = true;
+    else if (carriesText) {
+      if (afterClosingTag && skipDepth === 0) { if (heading) heading.text += ' '; else buffer += ' '; }
+      afterClosingTag = false;
+    }
     if (!closing && (RAW.has(name) || name === 'title')) {
       // Поиск закрывающего тега без копии документа: регистронезависимый регэксп с lastIndex — O(хвоста),
       // а не html.toLowerCase() на каждый тег (O(документ × теги), ревью crawler BLOCKER-2).
