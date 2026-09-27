@@ -74,6 +74,16 @@ const INVITES_TO_ACCOUNT_EMAIL = `DELETE FROM studio_invite WHERE accepted_by IS
 // Почта удаляемого — из ВСЕХ приглашений, где она осталась (повторное ревью, находка 2): непринятые удаляются, а
 // принятые — в том числе принятые ДРУГИМ аккаунтом (приём не сверяет почту) и принятые самим удаляемым — обезличиваются:
 // строка нужна студии и принявшему (владение ботом), почта — нет.
+// Все приглашения, которых касается аккаунт (свои как студии, на его ботов, принятые им, на его почту), — под
+// блокировкой ОДНИМ запросом в порядке id ДО любых удалений (шестое ревью, находка 4): две студии, удаляющиеся
+// одновременно с встречными приглашениями A→B и B→A, иначе запирали их в разном порядке и получали взаимную блокировку.
+async function lockInvitesOfAccountTx(tx: PoolClient, accountId: string): Promise<void> {
+  await tx.query(`SELECT i.id FROM studio_invite i WHERE i.studio_account_id = $1 OR i.accepted_by = $1
+      OR i.bot_id IN (SELECT id FROM bot WHERE account_id = $1)
+      OR lower(i.email) = (SELECT lower(email) FROM account WHERE id = $1)
+    ORDER BY i.id FOR UPDATE OF i`, [accountId]);
+}
+
 async function clearInvitesOfAccountTx(tx: PoolClient, accountId: string): Promise<void> {
   await tx.query(INVITES_TO_ACCOUNT_EMAIL, [accountId]);
   await tx.query(`UPDATE studio_invite SET email = 'erased:' || id::text
@@ -100,6 +110,7 @@ export function requestErasure(pool: Pool, accountId: string): Promise<RequestEr
     }
     await tx.query(`UPDATE bot SET status = 'deleted', public_enabled = false WHERE account_id = $1 AND status <> 'deleted'`, [accountId]);
     await tx.query('DELETE FROM session WHERE account_id = $1', [accountId]);
+    await lockInvitesOfAccountTx(tx, accountId);
     await tx.query('DELETE FROM studio_invite WHERE studio_account_id = $1 AND accepted_by IS NULL', [accountId]);
     await tx.query(INVITES_TO_ACCOUNT_EMAIL, [accountId]);
     await tx.query(`UPDATE partner_code SET frozen = true, frozen_at = COALESCE(frozen_at, now()),
@@ -119,8 +130,15 @@ export function requestErasure(pool: Pool, accountId: string): Promise<RequestEr
 // объекты — раньше отметки deleted; после удаления строк задач по имени файла их уже не найти).
 export async function erasureUploadJobIds(pool: Pool, accountId: string): Promise<string[]> {
   if (!isUuid(accountId)) return [];
-  return (await pool.query<{ id: string }>(`SELECT j.id FROM index_job j JOIN bot b ON b.id = j.bot_id WHERE b.account_id = $1`, [accountId]))
+  // Плюс файлы уже удалённых источников аккаунта (upload_orphan, шестое ревью, находка 2).
+  return (await pool.query<{ id: string }>(`SELECT j.id FROM index_job j JOIN bot b ON b.id = j.bot_id WHERE b.account_id = $1
+    UNION SELECT index_job_id FROM upload_orphan WHERE account_id = $1`, [accountId]))
     .rows.map((r) => r.id);
+}
+// Файлы сирот аккаунта удалены (сторож вызывает ПОСЛЕ успешного удаления каждого файла) — строки больше не нужны.
+export async function forgetUploadOrphans(pool: Pool, indexJobIds: readonly string[]): Promise<void> {
+  const ids = indexJobIds.filter(isUuid);
+  if (ids.length) await pool.query('DELETE FROM upload_orphan WHERE index_job_id = ANY($1::uuid[])', [ids]);
 }
 
 export type EraseAccountResult = { kind: 'erased' } | { kind: 'waiting_payout'; payoutMinor: number } | { kind: 'skipped' };
@@ -149,6 +167,7 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
   await tx.query('DELETE FROM payment_intent WHERE account_id = $1', [accountId]);
   const account = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1 FOR NO KEY UPDATE', [accountId])).rows[0];
   if (account?.status !== 'erasing') return false;
+  await lockInvitesOfAccountTx(tx, accountId);
   const bots = (await tx.query<{ id: string }>('SELECT id FROM bot WHERE account_id = $1', [accountId])).rows.map((r) => r.id);
   const sessions = bots.length
     ? (await tx.query<{ id: string }>('SELECT id FROM visitor_session WHERE bot_id = ANY($1::uuid[])', [bots])).rows.map((r) => r.id) : [];
@@ -170,7 +189,10 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
   for (const table of ['session', 'pro_interest', 'attribution', 'partner_code_use']) {
     await tx.query(`DELETE FROM ${table} WHERE account_id = $1`, [accountId]);
   }
-  await tx.query('UPDATE partner_audit SET ip_prefix = NULL WHERE account_id = $1', [accountId]);
+  // Свободный текст оператора (причина) мог содержать имя или почту (шестое ревью, находка 3) — и в строках аккаунта, и в
+  // строках его кодов; IP — тоже. Суммы, вид события и оператор остаются (учёт денег, 402-ФЗ).
+  await tx.query(`UPDATE partner_audit SET ip_prefix = NULL, reason = CASE WHEN reason IS NULL THEN NULL ELSE 'обезличено при удалении аккаунта' END
+    WHERE account_id = $1 OR partner_code_id IN (SELECT id FROM partner_code WHERE owner_account_id = $1)`, [accountId]);
   await tx.query('UPDATE account SET came_from = NULL, signup_ip_prefix = NULL WHERE id = $1', [accountId]);
   return true;
 }
@@ -179,6 +201,11 @@ async function finalizeErasureTx(tx: PoolClient, accountId: string, now: Date): 
   const account = (await tx.query<{ status: string; erase_deadline: Date }>(`SELECT status, erase_deadline
     FROM account WHERE id = $1 FOR NO KEY UPDATE`, [accountId])).rows[0];
   if (account?.status !== 'erasing') return { kind: 'skipped' };
+  // Файлы удалённых источников ещё в томе — надгробие не ставится (шестое ревью, находка 2): сторож удаляет файл и лишь
+  // затем строку upload_orphan; исключение — неудачная попытка, повтор следующим проходом.
+  if ((await tx.query('SELECT 1 FROM upload_orphan WHERE account_id = $1 LIMIT 1', [accountId])).rowCount) {
+    throw new Error('Стирание аккаунта: в томе остались файлы удалённых источников — завершение откладывается');
+  }
   // Та же блокировка, что у recordPartnerPayout (ревью H2): выплата и завершение не читают баланс одновременно —
   // иначе выплата по старому балансу ложится поверх стирания реквизитов. Порядок: account → замок
   // выплаты; выплата строку account не блокирует, цикла нет.
@@ -205,13 +232,22 @@ async function finalizeErasureTx(tx: PoolClient, accountId: string, now: Date): 
     }
   }
   await tx.query('DELETE FROM partner_payout_details WHERE account_id = $1', [accountId]);
+  // Выплата, записанная, пока стирание ждало, добавила строку журнала с причиной — обезличивается и она.
+  await tx.query(`UPDATE partner_audit SET ip_prefix = NULL, reason = CASE WHEN reason IS NULL THEN NULL ELSE 'обезличено при удалении аккаунта' END
+    WHERE account_id = $1 OR partner_code_id IN (SELECT id FROM partner_code WHERE owner_account_id = $1)`, [accountId]);
+  await lockInvitesOfAccountTx(tx, accountId);
   // Приглашения на почту удаляемого — ещё раз, в транзакции надгробия под блокировкой строки аккаунта (повторное ревью,
   // находка 3): студия могла записать приглашение между проходом стирания строк и завершением. Создание приглашения
   // берёт строку адресата FOR SHARE (studio.ts createStudioInvite), поэтому оно либо закоммичено до этой очистки и
   // найдено ею, либо ждёт надгробия — и тогда почта аккаунта уже deleted:<id>, привязки к стёртому человеку нет.
   await clearInvitesOfAccountTx(tx, accountId);
   // Текст кода мог быть именем человека: код остаётся (на него ссылаются атрибуции клиентов), текст обезличивается.
-  await tx.query(`UPDATE partner_code SET code = 'erased-' || substr(md5(id::text), 1, 24) WHERE owner_account_id = $1`, [accountId]);
+  // Группа `seed-…` — свободный хвост, туда кладут имя студии (шестое ревью, находка 3): известные классы остаются для
+  // когорт, остальное обезличивается с сохранением класса.
+  await tx.query(`UPDATE partner_code SET code = 'erased-' || substr(md5(id::text), 1, 24),
+      "group" = CASE WHEN "group" IN ('studio', 'partner', 'seed-net', 'seed-dogfood') THEN "group"
+        WHEN "group" LIKE 'seed-studio-%' THEN 'seed-studio-erased' ELSE 'seed-erased' END
+    WHERE owner_account_id = $1`, [accountId]);
   await tx.query(`UPDATE account SET status = 'deleted', email = 'deleted:' || id::text, password_hash = '', plan = 'free', plan_source = 'none',
     plan_paid_until = NULL, partner_code_id = NULL, came_from = NULL, signup_ip_prefix = NULL, erase_attempted_at = NULL WHERE id = $1`, [accountId]);
   await tx.query(`INSERT INTO erasure_audit (account_id, event) VALUES ($1, 'erased')`, [accountId]);

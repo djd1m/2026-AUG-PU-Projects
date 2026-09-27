@@ -34,7 +34,7 @@ const REGISTRY: Record<string, 'erase' | 'keep' | 'unrelated'> = {
   job_attempt: 'erase', preview: 'erase', visitor_session: 'erase', question_log: 'erase', widget_install: 'erase', quota_counter: 'erase',
   growth_event: 'keep', attribution: 'erase', studio_invite: 'erase', pro_interest: 'erase', payment_intent: 'erase', payment_event: 'unrelated',
   payment: 'keep', operator_action: 'keep', partner_code: 'keep', partner_code_use: 'erase', commission_entry: 'keep', partner_payout_details: 'erase',
-  partner_audit: 'keep', index_start: 'erase', erasure_audit: 'keep', _schema_migration: 'unrelated',
+  partner_audit: 'keep', index_start: 'erase', erasure_audit: 'keep', upload_orphan: 'erase', _schema_migration: 'unrelated',
 };
 
 describe.skipIf(!databaseUrl)('удаление аккаунта на настоящем Postgres', () => {
@@ -181,6 +181,7 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
       ['chunk', 'SELECT count(*) FROM chunk WHERE bot_id = $1', [b.id]], ['index_job', 'SELECT count(*) FROM index_job WHERE id = $1', [b.job]],
       ['question_log', 'SELECT count(*) FROM question_log WHERE bot_id = $1', [b.id]], ['visitor_session', 'SELECT count(*) FROM visitor_session WHERE id = $1', [b.visitor]],
       ['quota_counter', 'SELECT count(*) FROM quota_counter WHERE scope_key = ANY($1::text[])', [[a.id, b.id, b.visitor]]],
+      ['upload_orphan', 'SELECT count(*) FROM upload_orphan WHERE account_id = $1', [a.id]],
       ['session', 'SELECT count(*) FROM session WHERE account_id = $1', [a.id]], ['pro_interest', 'SELECT count(*) FROM pro_interest WHERE account_id = $1', [a.id]],
       ['growth_event (связи)', 'SELECT count(*) FROM growth_event WHERE account_id = $1 OR bot_id = $2 OR visitor_session_id = $3', [a.id, b.id, b.visitor]],
     ] as const) expect(await one(sql, [...params]), table).toBe(0);
@@ -335,9 +336,11 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
         recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `race-${round}`, operator: 'op', reason: 'гонка' }),
         eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))]);
       expect(erased).toEqual({ kind: 'erased' });
-      const owed = await one(`SELECT count(*) FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id]);
+      // Итог — по живому балансу и списку долгов, а не по исторической записи payout_owed (шестое ревью, находка 5):
+      // выплата, взявшая замок после завершения, законно гасит уже записанный долг.
+      const owed = (await listOwedPayouts(pool)).find((r) => r.account_id === partner.id)?.owed_minor ?? 0;
       if (paid.kind === 'recorded') expect([owed, await balance(partner.id)]).toEqual([0, 0]);
-      else expect([paid.kind, owed, await balance(partner.id)]).toEqual(['not_found', 1, 200_000]);
+      else expect([paid.kind, owed, await balance(partner.id)]).toEqual(['not_found', 200_000, 200_000]);
     }
   }, 60_000);
 

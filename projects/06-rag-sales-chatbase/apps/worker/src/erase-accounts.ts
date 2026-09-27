@@ -4,7 +4,7 @@
 // advisory-блокировка на весь проход (реплики воркера не стирают один аккаунт вдвоём); наблюдение просрочки ДО попыток;
 // сбой одного аккаунта не останавливает остальных и сдвигает его в конец очереди (erase_attempted_at).
 import { ERASURE_BATCH } from '@n6/rag';
-import { eraseAccount, erasureUploadJobIds, listErasableAccounts, markErasureAttemptFailed, observeErasureOverdue, type Pool } from '@n6/db';
+import { eraseAccount, erasureUploadJobIds, forgetUploadOrphans, listErasableAccounts, markErasureAttemptFailed, observeErasureOverdue, type Pool } from '@n6/db';
 import { removeUpload } from './pdf/uploads';
 
 export const ERASURE_LOCK_KEY = 60_921_017;
@@ -25,7 +25,9 @@ export async function erasureTick(pool: Pool, uploadDir: string, now = new Date(
       for (const accountId of await listErasableAccounts(pool, now, batch)) {
         try {
           // Внешние объекты — ДО строк и ДО отметки deleted (N4 RV-02): после удаления задач имён файлов не найти.
-          for (const job of await erasureUploadJobIds(pool, accountId)) await deps.removeUpload(uploadDir, job);
+          const jobs = await erasureUploadJobIds(pool, accountId);
+          for (const job of jobs) await deps.removeUpload(uploadDir, job);
+          await forgetUploadOrphans(pool, jobs);   // файлы удалены (ENOENT — тоже) — связь сирот больше не нужна
           const outcome = await eraseAccount(pool, accountId, now);
           if (outcome.kind === 'erased') result.erased++;
           else if (outcome.kind === 'waiting_payout') result.waitingPayout++;

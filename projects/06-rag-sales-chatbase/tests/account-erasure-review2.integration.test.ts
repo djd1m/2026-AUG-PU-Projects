@@ -7,8 +7,11 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import bcrypt from 'bcrypt';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { acceptStudioInvite, createPool, createStudioInvite, eraseAccount, listOwedPayouts, recordPartnerPayout, recordVerifiedRefund, requestErasure,
-  savePayoutDetails, writeOffErasedPartnerDebt, type Pool } from '../packages/db/src/index';
+import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { acceptStudioInvite, applyVerifiedPayment, createPaymentIntent, createPool, createStudioInvite, deleteSource, eraseAccount, listOwedPayouts,
+  recordPartnerPayout, recordVerifiedRefund, requestErasure, savePayoutDetails, writeOffErasedPartnerDebt, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { erasureTick } from '../apps/worker/src/erase-accounts';
 import { runIsolatedSteps } from '../apps/worker/src/watchdog-steps';
@@ -222,6 +225,89 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
     expect(result.failed).toEqual(['уборка тома uploads']);
     expect(await status(a.id)).toBe('deleted');
   });
+
+  // Шестое ревью Codex (27.09, оценка D): находки 1–4.
+  it('шестое ревью, находка 1: оплата клиента ДО удаления партнёра даёт комиссию, даже если вебхук пришёл после запроса удаления; после — нет', async () => {
+    const partner = await account();
+    const code = `c${randomBytes(4).toString('hex')}`;
+    const codeId = (await q<{ id: string }>(`INSERT INTO partner_code (code, owner_account_id, "group") VALUES ($1, $2, 'partner') RETURNING id`, [code, partner.id]))[0]!.id;
+    const client = await account();
+    await pool.query(`INSERT INTO attribution (account_id, partner_code_id, source) VALUES ($1, $2, 'code')`, [client.id, codeId]);
+    const payAt = async (paidAt: Date) => {
+      const intent = await createPaymentIntent(pool, { accountId: client.id, plan: 'nobadge', priceMinor: 99_000, idempotencyKey: randomUUID() });
+      if (intent.kind === 'conflict') throw new Error('намерение');
+      const pid = randomUUID();
+      return applyVerifiedPayment(pool, { provider: 'fake', eventKey: `payment.succeeded:${pid}`, payloadSha256: '0'.repeat(64),
+        payment: { id: pid, orderId: intent.intent.id, amountMinor: 99_000, feeMinor: 3_465, paidAt: paidAt.toISOString() } });
+    };
+    await requestErasure(pool, partner.id);                                    // атрибуция клиента уже partner_deleted
+    await payAt(new Date(Date.now() - HOUR));                                 // оплачено ДО запроса — вебхук поздний
+    const accruals = () => one(`SELECT count(*) FROM commission_entry WHERE partner_account_id = $1 AND kind = 'accrual'`, [partner.id]);
+    expect(await accruals()).toBe(1);
+    await payAt(new Date(Date.now() + 60_000));                               // оплачено ПОСЛЕ запроса — комиссии нет
+    expect(await accruals()).toBe(1);
+  });
+
+  it('шестое ревью, находка 2: PDF удалённого источника, который уборка тома не смогла стереть, стирается вместе с аккаунтом', async () => {
+    const owner = await account();
+    const b = await bot(owner.id);
+    const source = (await q<{ id: string }>(`INSERT INTO source (bot_id, kind, file_name, status) VALUES ($1, 'pdf', 'прайс.pdf', 'indexing') RETURNING id`, [b.id]))[0]!.id;
+    const job = (await q<{ id: string }>(`INSERT INTO index_job (bot_id, source_id, idempotency_key, status) VALUES ($1, $2, gen_random_uuid(), 'queued') RETURNING id`,
+      [b.id, source]))[0]!.id;
+    const dir = mkdtempSync(join(tmpdir(), 'n6-orphan-'));
+    writeFileSync(join(dir, job), '%PDF-1.4 x');
+    expect(await deleteSource(pool, source, owner.id)).toMatchObject({ deleted: true });
+    expect(await one('SELECT count(*) FROM index_job WHERE id = $1', [job])).toBe(0);            // связь через задачу потеряна
+    expect(await one('SELECT count(*) FROM upload_orphan WHERE index_job_id = $1', [job])).toBe(1);
+    await requestErasure(pool, owner.id);
+    await age(owner.id);
+    await erasureTick(pool, dir, new Date(), 500, { removeUpload: (d, id) => import('../apps/worker/src/pdf/uploads').then((m) => m.removeUpload(d, id)), log: () => {} });
+    expect(existsSync(join(dir, job)), 'файл удалённого источника остался в томе').toBe(false);
+    expect(await status(owner.id)).toBe('deleted');
+    expect(await one('SELECT count(*) FROM upload_orphan WHERE account_id = $1', [owner.id])).toBe(0);
+  });
+
+  it('шестое ревью, находка 2: пока сирота не удалена, надгробие не ставится', async () => {
+    const owner = await account();
+    await requestErasure(pool, owner.id);
+    await age(owner.id);
+    await pool.query('INSERT INTO upload_orphan (index_job_id, account_id) VALUES (gen_random_uuid(), $1)', [owner.id]);
+    await expect(eraseAccount(pool, owner.id, new Date())).rejects.toThrow(/файлы удалённых источников/);
+    expect(await status(owner.id)).toBe('erasing');
+  });
+
+  it('шестое ревью, находка 3: имя в группе кода и причина в журнале партнёра обезличиваются', async () => {
+    const partner = await account('studio');
+    const codeId = (await q<{ id: string }>(`INSERT INTO partner_code (code, owner_account_id, "group") VALUES ($1, $2, 'seed-studio-ivan-petrov') RETURNING id`,
+      [`c${randomBytes(4).toString('hex')}`, partner.id]))[0]!.id;
+    await pool.query(`INSERT INTO partner_audit (partner_code_id, account_id, kind, operator, reason) VALUES ($1, NULL, 'code_issued', 'op', $2)`,
+      [codeId, `выдан ${partner.mail}`]);
+    await pool.query(`INSERT INTO partner_audit (account_id, kind, operator, reason, amount_minor) VALUES ($1, 'payout_recorded', 'op', $2, 100000)`,
+      [partner.id, `перевод Ивану Петрову ${partner.mail}`]);
+    await requestErasure(pool, partner.id);
+    await age(partner.id);
+    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
+    expect((await q<{ group: string }>('SELECT "group" FROM partner_code WHERE id = $1', [codeId]))[0]!.group).toBe('seed-studio-erased');
+    const leftovers = await q<{ reason: string | null }>(`SELECT reason FROM partner_audit WHERE account_id = $1 OR partner_code_id = $2`, [partner.id, codeId]);
+    expect(leftovers.length).toBe(2);
+    expect(leftovers.every((r) => r.reason === 'обезличено при удалении аккаунта'), JSON.stringify(leftovers)).toBe(true);
+    expect(await one('SELECT count(*) FROM partner_audit WHERE amount_minor = 100000 AND account_id = $1', [partner.id])).toBe(1);   // сумма осталась
+  });
+
+  it('шестое ревью, находка 4: две студии со встречными приглашениями удаляются одновременно — без взаимной блокировки', async () => {
+    for (let round = 0; round < 8; round++) {
+      const a = await account('studio'), b = await account('studio');
+      const botA = await bot(a.id), botB = await bot(b.id);
+      expect((await createStudioInvite(pool, { studioAccountId: a.id, botId: botA.id, email: b.mail })).kind).toBe('created');
+      expect((await createStudioInvite(pool, { studioAccountId: b.id, botId: botB.id, email: a.mail })).kind).toBe('created');
+      const results = await Promise.all([requestErasure(pool, a.id), requestErasure(pool, b.id)]);
+      expect(results.map((r) => r.kind), `раунд ${round}`).toEqual(['accepted', 'accepted']);
+      await Promise.all([age(a.id), age(b.id)]);
+      const erased = await Promise.all([eraseAccount(pool, a.id), eraseAccount(pool, b.id)]);
+      expect(erased, `раунд ${round}`).toEqual([{ kind: 'erased' }, { kind: 'erased' }]);
+      expect([await invitesTo(a.mail), await invitesTo(b.mail)]).toEqual([0, 0]);
+    }
+  }, 60_000);
 
   it('проверка фикстуры: приглашение без стирания остаётся (иначе тесты находок 2–3 зеленели бы на пустоте)', async () => {
     const addressee = await account(), studio = await account('studio');

@@ -6,7 +6,7 @@
 // СУММОЙ в SQL (у донора — по последним 200 записям, при долгой истории неверно).
 //
 // ЕДИНСТВЕННОЕ место, где пишется commission_entry (страж tests/partners.unit.test.ts, мутация unmetered-commission).
-import { COMMISSION_HOLD_DAYS, COMMISSION_WINDOW_MONTHS, PAYOUT_MINIMUM_MINOR, accrualAmountMinor, commissionBaseMinor,
+import { COMMISSION_HOLD_DAYS, COMMISSION_WINDOW_MONTHS, ERASE_DEADLINE_HOURS, PAYOUT_MINIMUM_MINOR, accrualAmountMinor, commissionBaseMinor,
   payoutDateFor, previewFromTotals, type PayoutDetails, type PayoutPreview } from '@n6/rag';
 import type { Pool, PoolClient } from 'pg';
 import { isUuid } from './index-jobs.js';
@@ -21,9 +21,14 @@ export interface AccrueInput { paymentId: string; accountId: string; amountMinor
 // Начисление ВНУТРИ транзакции applyVerifiedPayment (после ключа повторности и блокировки платежа): платёж и обязательство
 // перед партнёром ложатся одним коммитом. Сетевых вызовов нет.
 export async function accrueCommissionTx(tx: PoolClient, input: AccrueInput): Promise<AccrueResult> {
+  // partner_deleted — тоже, если оплата СОВЕРШЕНА раньше запроса удаления партнёра (шестое ревью account-erasure, находка
+  // 1): комиссия за оплату до удаления — обязательство сервиса (долг, A-N6-061), и её судьба не зависит от того, успел ли
+  // вебхук прийти до requestErasure. Оплата после запроса удаления партнёра комиссии не даёт (ответ владельца 4).
   const partner = (await tx.query<{ partner_code_id: string; owner_account_id: string | null; commission_rate_bp: number }>(
     `SELECT a.partner_code_id, pc.owner_account_id, pc.commission_rate_bp FROM attribution a JOIN partner_code pc ON pc.id = a.partner_code_id
-     WHERE a.account_id = $1 AND a.status IN ('pending', 'converted')`, [input.accountId])).rows[0];
+     WHERE a.account_id = $1 AND (a.status IN ('pending', 'converted') OR (a.status = 'partner_deleted' AND $2::timestamptz <
+       (SELECT COALESCE(o.erase_requested_at, o.erase_deadline - make_interval(hours => ${ERASE_DEADLINE_HOURS})) FROM account o WHERE o.id = pc.owner_account_id)))`,
+  [input.accountId, input.paidAt])).rows[0];
   if (!partner) return { kind: 'skipped', reason: 'no_attribution' };
   if (partner.owner_account_id === null) return { kind: 'skipped', reason: 'no_partner' };     // seed-код без владельца — платить некому
   // Самореферал — ПОВТОРНО: при атрибуции за него ничего не платили, деньги делают попытку осмысленной.

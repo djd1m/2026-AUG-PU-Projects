@@ -104,6 +104,11 @@ export function deleteSource(pool: Pool, sourceId: string, accountId: string): P
       WHERE source_id = $1 AND status IN ('queued', 'running')`, [sourceId]);
     if (!(await lockOwnedBot(tx, source.bot_id, accountId))) return null;
     const chunks = (await tx.query<{ n: number }>('SELECT count(*)::int AS n FROM chunk WHERE source_id = $1', [sourceId])).rows[0]!.n;
+    // Задачи PDF уходят каскадом, а их сырой файл может остаться в томе (задача не дошла до done/failed): связь файла с
+    // аккаунтом сохраняется в upload_orphan до удаления файла (шестое ревью account-erasure, находка 2).
+    await tx.query(`INSERT INTO upload_orphan (index_job_id, account_id)
+      SELECT j.id, $3::uuid FROM index_job j JOIN source s ON s.id = j.source_id WHERE j.source_id = $1 AND s.bot_id = $2 AND s.kind = 'pdf'
+      ON CONFLICT DO NOTHING`, [sourceId, source.bot_id, accountId]);
     const removed = await tx.query('DELETE FROM source WHERE id = $1 AND bot_id = $2', [sourceId, source.bot_id]);
     return removed.rowCount ? { deleted: true, chunks } as const : null;
   });

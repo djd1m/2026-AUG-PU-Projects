@@ -41,6 +41,16 @@ ALTER TABLE partner_audit DROP CONSTRAINT partner_audit_kind_check;
 ALTER TABLE partner_audit ADD CONSTRAINT partner_audit_kind_check
   CHECK (kind IN ('frozen_antifraud', 'unfrozen', 'code_issued', 'payout_recorded', 'accrual_skipped_fee_unknown', 'debt_written_off'));
 
+-- 5а. Сырые PDF удалённых источников (шестое ревью, находка 2): deleteSource снимает задачи каскадом, и файл в томе
+--     uploads/<index_job_id> теряет связь с аккаунтом — если общая уборка тома падает, стирание аккаунта его не нашло бы.
+--     Служебная таблица (не сущность канона) держит связь до удаления файла: уборка и стирание удаляют файл, затем строку;
+--     завершение стирания не наступает, пока у аккаунта есть такие строки.
+CREATE TABLE upload_orphan (
+  index_job_id uuid PRIMARY KEY, account_id uuid NOT NULL REFERENCES account(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX upload_orphan_account ON upload_orphan (account_id);
+
 -- 6. Журнал стирания — служебный, БЕЗ персональных данных: только надгробный id, событие, сумма и время.
 CREATE TABLE erasure_audit (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(),

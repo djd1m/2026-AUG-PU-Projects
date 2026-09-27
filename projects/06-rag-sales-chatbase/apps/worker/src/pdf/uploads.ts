@@ -40,9 +40,13 @@ export async function sweepUploads(pool: Pool, dir: string, now = new Date(), mi
   const alive = await pool.query<{ id: string }>(`SELECT id::text FROM index_job WHERE id = ANY($1::uuid[]) AND status IN ('queued', 'running')`, [candidates]);
   const keep = new Set(alive.rows.map((r) => r.id));
   let removed = 0;
+  const gone: string[] = [];
   for (const id of candidates) {
     if (keep.has(id)) continue;
     if (await removeUpload(dir, id)) removed++;
+    gone.push(id);
   }
+  // Файл удалён — связь сироты с аккаунтом больше не нужна (upload_orphan, account-erasure, шестое ревью, находка 2).
+  if (gone.length) await pool.query('DELETE FROM upload_orphan WHERE index_job_id = ANY($1::uuid[])', [gone]);
   return removed;
 }
