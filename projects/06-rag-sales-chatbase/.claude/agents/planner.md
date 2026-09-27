@@ -76,7 +76,7 @@ model: sonnet
   откатывает все. Ответ посетителю — 5 scope; предпросмотр создание — `preview_session:create`,
   `ip_previews`, `global_previews:previews`; ответ предпросмотра — `preview_session:answers`,
   `global_previews:preview_answers`; индексация — `account_embed_tokens` + `global_embed_tokens`
-  (предпросмотр — бюджет задачи 40 000 + `global_embed_tokens`). Числа — только из канона §7.
+  (предпросмотр — бюджет задачи 120 000 + `global_embed_tokens`). Числа — только из канона §7.
 - **`CheckOrigin` ДО квоты:** запрос с чужого origin не списывает ничего и получает `403` без ACAO.
 - **Изоляция ботов в том же SQL**, что поиск.
 - **Задача индексации:** идентификатор до работы, fence на каждую запись, продолжение по

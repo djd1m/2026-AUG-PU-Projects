@@ -181,7 +181,7 @@ self-referral — владелец кода с того же префикса з
 | `account_embed_tokens` | `account_id` | 2 000 000 токенов/сутки | `QUOTA_ACCOUNT_EMBED` |
 | `global_embed_tokens` | `all` | 20 000 000 токенов/сутки | `QUOTA_GLOBAL_EMBED` |
 
-Предпросмотр: ≤ 20 страниц, ≤ 40 000 токенов эмбеддингов (константы кода в `index_job.page_budget`/`embed_budget`, не `quota_counter`; эмбеддинги предпросмотра дополнительно списывают `global_embed_tokens`), живёт 24 ч до сохранения. Исчерпание бюджета задачи (40 000) или серии источника после прочитанной страницы — усечение: `done` с `index_job.truncated_by` (`embed_budget` | `series_embed_budget`), а не отказ; ноль страниц — отказ `quota_refused` (A-N6-052).
+Предпросмотр: ≤ 20 страниц, ≤ 120 000 токенов эмбеддингов (решение владельца 27.09, A-N6-053; было 40 000) (константы кода в `index_job.page_budget`/`embed_budget`, не `quota_counter`; эмбеддинги предпросмотра дополнительно списывают `global_embed_tokens`), живёт 24 ч до сохранения. Исчерпание бюджета задачи (120 000) или серии источника после прочитанной страницы — усечение: `done` с `index_job.truncated_by` (`embed_budget` | `series_embed_budget`), а не отказ; ноль страниц — отказ `quota_refused` (A-N6-052).
 
 Перечень переменных (14): `QUOTA_VISITOR_ANSWERS`=20, `QUOTA_IP_ANSWERS`=60, `QUOTA_BOT_DAY_FREE`=50, `QUOTA_BOT_DAY_PAID`=300, `QUOTA_BOT_MONTH_FREE`=300, `QUOTA_BOT_MONTH_PAID`=3000, `QUOTA_GLOBAL_ANSWERS`=3000, `QUOTA_PREVIEW_SESSION_CREATE`=1, `QUOTA_PREVIEW_SESSION_ANSWERS`=10, `QUOTA_IP_PREVIEWS`=3, `QUOTA_GLOBAL_PREVIEWS`=200, `QUOTA_GLOBAL_PREVIEW_ANSWERS`=1000, `QUOTA_ACCOUNT_EMBED`=2000000, `QUOTA_GLOBAL_EMBED`=20000000. Проверка старта — 14 отдельных прогонов, по одному на ИМЯ переменной, не на scope.
 

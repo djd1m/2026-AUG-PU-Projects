@@ -25,7 +25,7 @@ chunk          { id: UUID, bot_id, source_id, page_id, ordinal: int, context_pat
                  embedding: vector(1536), created_at: Timestamp }
 index_job      { id: UUID, bot_id, source_id, idempotency_key: UUID, status: queued|running|done|failed, current_fence: bigint,
                  failure_reason?, pages_total?: int, pages_done: int, chunks_done: int,
-                 page_budget?: int, embed_budget?: int, embed_used: int (бюджет задачи предпросмотра: 20 / 40 000; NULL у обычной), updated_at, created_at: Timestamp }
+                 page_budget?: int, embed_budget?: int, embed_used: int (бюджет задачи предпросмотра: 20 / 120 000; NULL у обычной), updated_at, created_at: Timestamp }
 job_attempt    { id: UUID, index_job_id, fence: bigint, series_no: int, started_at, finished_at?, status, created_at: Timestamp }
 preview        { id: UUID, token_hash, bot_id, browser_session, ip_prefix, expires_at, claimed_at?, created_at: Timestamp }
 visitor_session{ id: UUID, bot_id, ip_prefix, origin, created_at: Timestamp }       -- id живёт в sessionStorage виджета
@@ -144,7 +144,7 @@ OUTPUT: `preview_token` (cookie) + `index_job_id`, либо отказ.
 STEPS:
 1. `CheckAddress(URL)`; IF отказ THEN RETURN его.
 2. Транзакция: `CheckAndConsumeQuota([(preview_session, сессия:create, 1), (ip_previews, ip_prefix, 1), (global_previews, previews, 1)])` — счётчик ОТВЕТОВ предпросмотра (`сессия:answers`) создание НЕ трогает (A-N6-020); IF refused THEN RETURN refuse(limit_preview).
-3. Создать `bot(status=draft, account_id=NULL)`, `source(kind=site)`, `preview(expires_at = now + 24 ч)`, `index_job(queued, page_budget=20, embed_budget=40 000)` — в ТОЙ ЖЕ транзакции; поставить задачу в очередь ПОСЛЕ коммита.
+3. Создать `bot(status=draft, account_id=NULL)`, `source(kind=site)`, `preview(expires_at = now + 24 ч)`, `index_job(queued, page_budget=20, embed_budget=120 000)` — в ТОЙ ЖЕ транзакции; поставить задачу в очередь ПОСЛЕ коммита.
 4. RETURN 202 { index_job_id } — до первой загрузки страницы.
 COMPLEXITY: O(1).
 
@@ -222,7 +222,7 @@ REALISES: SC-US-016-1
 INPUT: фрагменты страницы, задача, attempt fence.
 OUTPUT: строки `chunk` с `embedding vector(1536)` либо отказ задачи.
 STEPS:
-1. Пачки по ≤ 64 фрагмента. Для пачки: оценка токенов; `CheckAndConsumeQuota([(account_embed_tokens, account, n), (global_embed_tokens, all, n)])` (для предпросмотра — вместо `account_embed_tokens` проверка `index_job.embed_used + n <= embed_budget` (40 000) тем же `UPDATE … RETURNING`, плюс `global_embed_tokens`; `preview_session` здесь не списывается); IF refused THEN RETURN fail(quota_refused). Исключение (A-N6-052): отказ СОБСТВЕННОГО бюджета задачи (`embed_budget`) или серии источника — УСЕЧЕНИЕ: страница, не влезшая в остаток (проверка остатка ДО её первой пачки), не оплачивается и не пишется, обход останавливается, задача `done` с `truncated_by`; ноль записанных страниц — `fail(quota_refused)`.
+1. Пачки по ≤ 64 фрагмента. Для пачки: оценка токенов; `CheckAndConsumeQuota([(account_embed_tokens, account, n), (global_embed_tokens, all, n)])` (для предпросмотра — вместо `account_embed_tokens` проверка `index_job.embed_used + n <= embed_budget` (120 000) тем же `UPDATE … RETURNING`, плюс `global_embed_tokens`; `preview_session` здесь не списывается); IF refused THEN RETURN fail(quota_refused). Исключение (A-N6-052): отказ СОБСТВЕННОГО бюджета задачи (`embed_budget`) или серии источника — УСЕЧЕНИЕ: страница, не влезшая в остаток (проверка остатка ДО её первой пачки), не оплачивается и не пишется, обход останавливается, задача `done` с `truncated_by`; ноль записанных страниц — `fail(quota_refused)`.
 2. `RecordModelSpend(attempt)`; POST `/api/v1/embeddings` OpenRouter, модель `EMBED_MODEL`; таймаут 30 с; 2 повтора с паузой при 429/5xx, каждый — новая попытка и новое списание.
 3. IF шлюз недоступен после повторов THEN RETURN fail(embedding_unavailable). IF длина любого вектора ≠ 1536 THEN RETURN fail(internal) и сигнал оператору.
 4. Транзакция: удалить прежние фрагменты этой страницы; вставить новые; `UPDATE index_job SET chunks_done = chunks_done + k, updated_at = now WHERE id = :job AND current_fence = :fence`; IF 0 строк THEN откат (попытка устарела).

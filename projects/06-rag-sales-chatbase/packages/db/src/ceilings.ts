@@ -85,7 +85,7 @@ export function indexEmbedCharges(ceilings: Ceilings, input: { accountId: string
     { scope: 'global_embed_tokens', scopeKey: GLOBAL_KEY, period: day, n: input.tokens, limit: ceiling(ceilings, 'global_embed_tokens') },
   ];
 }
-// Эмбеддинги предпросмотра: бюджет задачи (index_job.embed_budget, 40 000) проверяет index-job-core;
+// Эмбеддинги предпросмотра: бюджет задачи (index_job.embed_budget, 120 000) проверяет index-job-core;
 // здесь — общий суточный global_embed_tokens (канон §7).
 export function previewEmbedCharges(ceilings: Ceilings, input: { tokens: number; now: Date }): QuotaCharge[] {
   return [{ scope: 'global_embed_tokens', scopeKey: GLOBAL_KEY, period: moscowDay(input.now), n: input.tokens, limit: ceiling(ceilings, 'global_embed_tokens') }];

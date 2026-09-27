@@ -36,7 +36,7 @@ describe('Числа канона §7 «Задача индексации» — 
     expect(INDEX_JOB_STALLED_AFTER_MS).toBe(STALLED_AFTER_MS);
     expect(INDEX_JOB_MAX_AUTOMATIC_ATTEMPTS).toBe(MAX_AUTOMATIC_ATTEMPTS);
     expect([STALLED_AFTER_MS, JOB_DEADLINE_MS, WATCHDOG_INTERVAL_MS, MAX_AUTOMATIC_ATTEMPTS]).toEqual([300_000, 900_000, 60_000, 2]);
-    expect(PREVIEW_JOB_BUDGET).toEqual({ pageBudget: 20, embedBudget: 40_000 });
+    expect(PREVIEW_JOB_BUDGET).toEqual({ pageBudget: 20, embedBudget: 120_000 });
   });
 });
 

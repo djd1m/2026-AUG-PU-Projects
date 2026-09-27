@@ -65,7 +65,7 @@ export type ReindexSourceResult =
 // Задача ещё идёт — тот же index_job_id без второй серии и без траты запуска (повтор ПРОДОЛЖАЕТ, а не начинает
 // заново). PDF удалён с тома после done и failed (ADR-018) — нужна новая загрузка. Чужой и несуществующий — null.
 // Сохранённый предпросмотр (ревью Codex находка 3): бот уже владельца, поэтому бюджеты предпросмотра задачи
-// (page_budget 20, embed_budget 40 000 и накопленный embed_used) снимаются — дальше платит аккаунт с бюджетом серии.
+// (page_budget 20, embed_budget 120 000 и накопленный embed_used) снимаются — дальше платит аккаунт с бюджетом серии.
 export function reindexSource(pool: Pool, sourceId: string, accountId: string, now = new Date()): Promise<ReindexSourceResult> {
   if (!pair(sourceId, accountId)) return Promise.resolve(null);
   return transaction(pool, async (tx) => {
