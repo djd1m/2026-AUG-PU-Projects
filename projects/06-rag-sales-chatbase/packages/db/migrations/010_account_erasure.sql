@@ -60,3 +60,30 @@ CREATE TABLE erasure_audit (
 );
 CREATE INDEX erasure_audit_account ON erasure_audit (account_id, created_at);
 CREATE UNIQUE INDEX erasure_audit_overdue_once ON erasure_audit (account_id) WHERE event = 'overdue';
+
+-- 7. Свободный текст оператора (причина) о стираемом или стёртом аккаунте не появляется НИКОГДА (седьмое ревью, находки
+--    1–2): выплата или списание долга удалённому партнёру, назначение плана, выдача и разморозка кода — любая строка
+--    журнала, вставленная, пока аккаунт `erasing` или `deleted`, получает обезличенную причину. Страж на уровне базы:
+--    новый путь записи в журнал не может забыть обезличивание. Строки, записанные РАНЬШЕ (аккаунт был active),
+--    обезличивает проход стирания (packages/db/src/erasure.ts, ERASED_REASON — та же строка). Оператор (кто действовал) —
+--    сотрудник сервиса, не данные клиента, и остаётся.
+CREATE FUNCTION erased_reason_partner_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.reason IS NOT NULL AND EXISTS (SELECT 1 FROM account a WHERE a.status IN ('erasing', 'deleted')
+      AND (a.id = NEW.account_id OR a.id = (SELECT c.owner_account_id FROM partner_code c WHERE c.id = NEW.partner_code_id))) THEN
+    NEW.reason := 'обезличено при удалении аккаунта';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER partner_audit_erased_reason BEFORE INSERT ON partner_audit
+  FOR EACH ROW EXECUTE FUNCTION erased_reason_partner_audit();
+
+CREATE FUNCTION erased_reason_operator_action() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM account a WHERE a.id = NEW.account_id AND a.status IN ('erasing', 'deleted')) THEN
+    NEW.reason := 'обезличено при удалении аккаунта';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER operator_action_erased_reason BEFORE INSERT ON operator_action
+  FOR EACH ROW EXECUTE FUNCTION erased_reason_operator_action();

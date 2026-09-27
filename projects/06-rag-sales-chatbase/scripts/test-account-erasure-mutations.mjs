@@ -26,7 +26,8 @@ const span = (start, end, replacement) => (source) => {
 };
 const once = (from, to) => span(from, from, to);
 const erasure = 'packages/db/src/erasure.ts', payments = 'packages/db/src/payments.ts', growth = 'packages/db/src/growth.ts', tick = 'apps/worker/src/erase-accounts.ts',
-  commission = 'packages/db/src/commission.ts', studio = 'packages/db/src/studio.ts', workerIndex = 'apps/worker/src/index.ts';
+  commission = 'packages/db/src/commission.ts', studio = 'packages/db/src/studio.ts', workerIndex = 'apps/worker/src/index.ts',
+  migration010 = 'packages/db/migrations/010_account_erasure.sql';
 // Тело функции (от строки объявления до первого `\n}\n` после неё) заменяется: якорь начала обязан быть уникальным.
 const bodyOf = (signature, replacement) => (source) => {
   const a = source.indexOf(signature);
@@ -108,7 +109,25 @@ const mutations = [
   { id: 'watchdog-chained', title: 'уборка тома и стирание — одна цепочка await: сбой уборки обрывает стирание (повторное ревью, находка 4)',
     edits: [{ file: workerIndex, apply: span('  const stopWatchdog = startWatchdog(() => runIsolatedSteps([', '  ]));',
       '  const stopWatchdog = startWatchdog(async () => {\n    await watchdogTick(pool, queue.enqueue);\n    await sweepUploads(pool, config.uploadDir);\n    await erasureTick(pool, config.uploadDir);\n    void runIsolatedSteps;\n  });') }] },
+  // Седьмое ревью Codex (27.09): находки 1–3.
+  { id: 'operator-action-reason-kept', title: 'причина назначения плана оператором (operator_action) остаётся после стирания (седьмое ревью, находка 1)',
+    edits: [{ file: erasure, apply: once("  await tx.query(`UPDATE operator_action SET reason = '${ERASED_REASON}' WHERE account_id = $1`, [accountId]);\n", '') }] },
+  { id: 'erased-audit-trigger-dropped', title: 'журнал партнёра принимает свободную причину о стёртом аккаунте — нет триггера (седьмое ревью, находка 2)',
+    edits: [{ file: migration010, apply: span('CREATE TRIGGER partner_audit_erased_reason', 'EXECUTE FUNCTION erased_reason_partner_audit();', '') }] },
+  { id: 'erased-operator-trigger-dropped', title: 'журнал оператора принимает свободную причину о стёртом аккаунте — нет триггера (седьмое ревью, находка 2)',
+    edits: [{ file: migration010, apply: span('CREATE TRIGGER operator_action_erased_reason', 'EXECUTE FUNCTION erased_reason_operator_action();', '') }] },
+  { id: 'request-locks-bot-before-invite', title: 'запрос удаления запирает бота раньше приглашений — цикл с стиранием студии (седьмое ревью, находка 3)',
+    edits: [{ file: erasure, apply: (source) => {
+      const moved = once('    await lockInvitesOfAccountTx(tx, accountId);\n    const jobs = ', '    const jobs = ')(source);
+      return moved && once("    await tx.query('DELETE FROM session WHERE account_id = $1', [accountId]);\n    await tx.query('DELETE FROM studio_invite WHERE studio_account_id = $1 AND accepted_by IS NULL', [accountId]);",
+        "    await tx.query('DELETE FROM session WHERE account_id = $1', [accountId]);\n    await lockInvitesOfAccountTx(tx, accountId);\n    await tx.query('DELETE FROM studio_invite WHERE studio_account_id = $1 AND accepted_by IS NULL', [accountId]);")(moved);
+    } }] },
 ];
+// Выбор части мутаций: N6_ERASURE_MUTATIONS_ONLY=<id,id> (неизвестный id — отказ, а не пустой зелёный прогон).
+const only = process.env.N6_ERASURE_MUTATIONS_ONLY?.split(',').map((s) => s.trim()).filter(Boolean) ?? null;
+const unknown = only?.filter((id) => !mutations.some((m) => m.id === id)) ?? [];
+if (unknown.length) { console.error(`Неизвестные мутации: ${unknown.join(', ')} — прогон НЕ ВЫПОЛНЕН`); process.exit(2); }
+const selected = only ? mutations.filter((m) => only.includes(m.id)) : mutations;
 const results = [];
 try {
   for (const name of ['apps', 'packages', 'tests', 'scripts', 'docs']) cpSync(name, join(directory, name), {
@@ -132,7 +151,7 @@ try {
     const summary = /^\s+Tests\s{2}(.+)$/m.exec(log)?.[1]?.trim() ?? 'нет итога';
     return { code: result.error ? null : result.status, summary, skipped: /skipped/.test(summary) };
   };
-  for (const mutation of mutations) {
+  for (const mutation of selected) {
     const originals = mutation.edits.map(({ file, apply }) => {
       const path = join(directory, file), source = readFileSync(path, 'utf8');
       const mutated = apply(source);
@@ -148,6 +167,6 @@ try {
     results.push({ id: mutation.id, title: mutation.title, red, green, passed });
     console.log(`${mutation.id}: дефект возвращён → ${red.summary} (код ${red.code}); код восстановлен → ${green.summary} (код ${green.code})`);
   }
-  writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
-  if (results.length !== mutations.length || results.some((r) => !r.passed)) process.exitCode = 1;
+  writeFileSync(join(output, only ? `results-${only.join('+')}.json` : 'results.json'), JSON.stringify(results, null, 2) + '\n');
+  if (results.length !== selected.length || results.some((r) => !r.passed)) process.exitCode = 1;
 } finally { rmSync(directory, { recursive: true, force: true }); }

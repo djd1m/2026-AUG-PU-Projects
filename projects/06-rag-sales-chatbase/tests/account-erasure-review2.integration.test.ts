@@ -11,7 +11,7 @@ import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { acceptStudioInvite, applyVerifiedPayment, createPaymentIntent, createPool, createStudioInvite, deleteSource, eraseAccount, listOwedPayouts,
-  recordPartnerPayout, recordVerifiedRefund, requestErasure, savePayoutDetails, writeOffErasedPartnerDebt, type Pool } from '../packages/db/src/index';
+  recordPartnerPayout, recordVerifiedRefund, requestErasure, savePayoutDetails, setPlanByOperator, writeOffErasedPartnerDebt, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { erasureTick } from '../apps/worker/src/erase-accounts';
 import { runIsolatedSteps } from '../apps/worker/src/watchdog-steps';
@@ -149,13 +149,14 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
     const live = await partnerWith(200_000);
     expect(await writeOffErasedPartnerDebt(pool, { accountId: live.id, operator: 'op', reason: 'нет' })).toEqual({ kind: 'not_found' });
     expect(await balance(partner.id)).toBe(180_000);                // без команды ничего не списано
-    expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: 'партнёр отказался' }))
+    expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: 'Иван Петров ivan@example.com отказался' }))
       .toEqual({ kind: 'written_off', amountMinor: 180_000 });
     expect(await balance(partner.id)).toBe(0);
     expect(await owedOf(partner.id)).toBeNull();
+    // Седьмое ревью, находка 2: причина оператора о СТЁРТОМ аккаунте не сохраняется свободным текстом (триггер миграции 010).
     expect((await q<{ kind: string; operator: string; reason: string; amount_minor: string }>(`SELECT kind, operator, reason, amount_minor FROM partner_audit
       WHERE account_id = $1 AND kind = 'debt_written_off'`, [partner.id])).map((r) => [r.operator, r.reason, Number(r.amount_minor)]))
-      .toEqual([['op', 'партнёр отказался', 180_000]]);
+      .toEqual([['op', 'обезличено при удалении аккаунта', 180_000]]);
     expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: 'ещё' })).toEqual({ kind: 'nothing_owed' });
   });
 
@@ -314,5 +315,75 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
     const own = await bot(studio.id);
     expect((await createStudioInvite(pool, { studioAccountId: studio.id, botId: own.id, email: addressee.mail })).kind).toBe('created');
     expect(await invitesTo(addressee.mail)).toBe(1);
+  });
+
+  // ── Седьмое ревью (27.09, D): свободный текст оператора и порядок блокировок ─────────────────────────────────────────
+  const PII = 'для Ивана Петрова, ivan@example.com, +7 900 111-22-33';
+  const reasonsOf = async (id: string) => (await q<{ reason: string | null }>(`SELECT reason FROM operator_action WHERE account_id = $1
+    UNION ALL SELECT reason FROM partner_audit WHERE account_id = $1`, [id])).map((r) => r.reason);
+
+  it('седьмое ревью, находка 1: причина назначения плана оператором (operator_action) обезличивается при стирании', async () => {
+    const acc = await account();
+    expect((await setPlanByOperator(pool, { email: acc.mail, plan: 'nobadge', operator: 'op', reason: PII })).kind).toBe('updated');
+    expect(await reasonsOf(acc.id)).toEqual([PII]);                 // живой аккаунт — причина как есть
+    await eraseNow(acc.id);
+    expect(await reasonsOf(acc.id)).toEqual(['обезличено при удалении аккаунта']);
+    expect(await one(`SELECT count(*) FROM operator_action WHERE reason LIKE '%ivan%' OR reason LIKE '%Петров%'`)).toBe(0);
+  });
+
+  it('седьмое ревью, находка 2: выплата и списание ПОСЛЕ стирания, запись журнала во время erasing — причина никогда не свободный текст', async () => {
+    const partner = await partnerWith(200_000);
+    await requestErasure(pool, partner.id);
+    // erasing: журнал оператора по стираемому (любой путь записи, включая будущие) — обезличенный триггером базы
+    await pool.query(`INSERT INTO operator_action (operator, reason, account_id, action, plan_before, plan_after)
+      VALUES ('op', $2, $1, 'set_plan', 'free', 'free')`, [partner.id, PII]);
+    await age(partner.id);
+    expect(await eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' });
+    expect(await recordPartnerPayout(pool, { email: `deleted:${partner.id}`, amountMinor: 50_000, key: `p7-${partner.id}`, operator: 'op', reason: PII }))
+      .toMatchObject({ kind: 'recorded' });
+    expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: PII })).toMatchObject({ kind: 'written_off' });
+    // Любой будущий путь записи в журнал оператора о СТЁРТОМ аккаунте (прямой INSERT — его модель) тоже не несёт текста.
+    await pool.query(`INSERT INTO operator_action (operator, reason, account_id, action, plan_before, plan_after)
+      VALUES ('op', $2, $1, 'set_plan', 'free', 'free')`, [partner.id, PII]);
+    await pool.query(`INSERT INTO partner_audit (account_id, kind, operator, reason) VALUES ($1, 'payout_recorded', 'op', $2)`, [partner.id, PII]);
+    const reasons = await reasonsOf(partner.id);
+    expect(reasons.length).toBeGreaterThanOrEqual(5);
+    expect(reasons.every((r) => r === null || r === 'обезличено при удалении аккаунта'), JSON.stringify(reasons)).toBe(true);
+  });
+
+  it('седьмое ревью, находка 3: удаление клиента ↔ стирание студии, передавшей ему бота, — единый порядок «приглашение → бот», без взаимной блокировки (барьер)', async () => {
+    const studio = await account('studio'), client = await account();
+    const own = await bot(studio.id);
+    const invite = await createStudioInvite(pool, { studioAccountId: studio.id, botId: own.id, email: client.mail });
+    if (invite.kind !== 'created') throw new Error(invite.kind);
+    expect((await acceptStudioInvite(pool, { token: invite.token, clientAccountId: client.id, ipPrefix: '203.0.113.0/24' })).kind).toBe('accepted');
+    await requestErasure(pool, studio.id);
+    await age(studio.id);
+    // Барьер: отдельное соединение держит строку переданного бота. Удаление клиента встаёт в очередь первым, стирание
+    // студии — вторым; затем барьер снимается. При обратном порядке блокировок у одного из путей Postgres находит цикл
+    // (40P01) детерминированно — очередь к строке бота FIFO.
+    const holder = await pool.connect();
+    const holderPid = Number((await holder.query<{ pid: number }>('SELECT pg_backend_pid() AS pid')).rows[0]!.pid);
+    // Ждущие ИМЕННО за барьером — напрямую или через одного посредника (соседние наборы тестов в той же БД не считаются).
+    const waiting = () => one(`WITH d AS (SELECT pid FROM pg_stat_activity WHERE $1 = ANY(pg_blocking_pids(pid)))
+      SELECT count(*) FROM pg_stat_activity WHERE pid IN (SELECT pid FROM d)
+        OR pg_blocking_pids(pid) && ARRAY(SELECT pid FROM d)`, [holderPid]);
+    const until = async (n: number) => { for (let i = 0; i < 200 && (await waiting()) < n; i++) await new Promise((r) => setTimeout(r, 25)); };
+    try {
+      await holder.query('BEGIN');
+      await holder.query('SELECT 1 FROM bot WHERE id = $1 FOR UPDATE', [own.id]);
+      const clientErase = requestErasure(pool, client.id);
+      await until(1);
+      const studioErase = eraseAccount(pool, studio.id, new Date(Date.now() + 67 * HOUR));
+      await until(2);
+      expect(await waiting()).toBeGreaterThanOrEqual(2);
+      await holder.query('COMMIT');
+      const results = await Promise.allSettled([clientErase, studioErase]);
+      expect(results.map((r) => (r.status === 'rejected' ? String((r.reason as { code?: string }).code ?? r.reason) : 'ok'))).toEqual(['ok', 'ok']);
+    } finally {
+      await holder.query('ROLLBACK').catch(() => undefined);
+      holder.release();
+    }
+    expect([await status(client.id), await status(studio.id)]).toEqual(['erasing', 'deleted']);
   });
 });

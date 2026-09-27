@@ -29,6 +29,9 @@ import { eraseSourceTx } from './sources.js';
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
+// Причина в журналах (partner_audit, operator_action) у стираемого/стёртого аккаунта — ровно эта строка; та же — в
+// триггерах миграции 010 (раздел 7). Страж по исходнику сверяет обе.
+export const ERASED_REASON = 'обезличено при удалении аккаунта';
 
 // Деньги партнёра при удалении (A-N6-061): к выплате до срока — доступное (зрелое + все отрицательные записи), если оно
 // ≥ минимума и реквизиты сохранены; всё остальное из положительного баланса — долг сервиса. НИЧЕГО не сгорает, поэтому
@@ -102,6 +105,10 @@ export function requestErasure(pool: Pool, accountId: string): Promise<RequestEr
     if (!account) return { kind: 'not_found' } as const;
     if (account.status === 'erasing') return { kind: 'already' } as const;
     if (account.status !== 'active') return { kind: 'not_found' } as const;
+    // Приглашения — ДО ботов (седьмое ревью, находка 3): единый порядок «приглашение → бот» во всех путях — стирание
+    // строк студии (eraseAccountRowsTx), приём приглашения (studio.ts). Иначе удаление клиента (бот → приглашение) и
+    // стирание студии, передавшей ему бота (приглашение → бот), запирали друг друга.
+    await lockInvitesOfAccountTx(tx, accountId);
     const jobs = (await tx.query<{ id: string }>(`SELECT j.id FROM index_job j JOIN bot b ON b.id = j.bot_id WHERE b.account_id = $1
       ORDER BY j.id FOR UPDATE OF j`, [accountId])).rows.map((r) => r.id);
     if (jobs.length) {
@@ -110,7 +117,6 @@ export function requestErasure(pool: Pool, accountId: string): Promise<RequestEr
     }
     await tx.query(`UPDATE bot SET status = 'deleted', public_enabled = false WHERE account_id = $1 AND status <> 'deleted'`, [accountId]);
     await tx.query('DELETE FROM session WHERE account_id = $1', [accountId]);
-    await lockInvitesOfAccountTx(tx, accountId);
     await tx.query('DELETE FROM studio_invite WHERE studio_account_id = $1 AND accepted_by IS NULL', [accountId]);
     await tx.query(INVITES_TO_ACCOUNT_EMAIL, [accountId]);
     await tx.query(`UPDATE partner_code SET frozen = true, frozen_at = COALESCE(frozen_at, now()),
@@ -193,6 +199,9 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
   // строках его кодов; IP — тоже. Суммы, вид события и оператор остаются (учёт денег, 402-ФЗ).
   await tx.query(`UPDATE partner_audit SET ip_prefix = NULL, reason = CASE WHEN reason IS NULL THEN NULL ELSE 'обезличено при удалении аккаунта' END
     WHERE account_id = $1 OR partner_code_id IN (SELECT id FROM partner_code WHERE owner_account_id = $1)`, [accountId]);
+  // Причина назначения плана оператором — тоже свободный текст (седьмое ревью, находка 1). Строки, вставленные после
+  // запроса удаления, обезличивает триггер базы (миграция 010, раздел 7); эти записаны, пока аккаунт был активен.
+  await tx.query(`UPDATE operator_action SET reason = '${ERASED_REASON}' WHERE account_id = $1`, [accountId]);
   await tx.query('UPDATE account SET came_from = NULL, signup_ip_prefix = NULL WHERE id = $1', [accountId]);
   return true;
 }

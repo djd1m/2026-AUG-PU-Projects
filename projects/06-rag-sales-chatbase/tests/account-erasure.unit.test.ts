@@ -171,3 +171,21 @@ describe('стражи по исходнику (AC-14)', () => {
       "await transaction(pool, async () => null); return transaction(pool, async (tx) => {\n    const account = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1 FOR NO KEY UPDATE'"))).toBe(false);
   });
 });
+
+// Седьмое ревью (27.09), находка 2: свободный текст оператора о стираемом/стёртом аккаунте не появляется никогда — страж
+// базы (два триггера BEFORE INSERT) и одна строка обезличивания у триггеров и прохода стирания.
+describe('страж по исходнику: причина оператора о стёртом аккаунте', () => {
+  const migration = readFileSync('packages/db/migrations/010_account_erasure.sql', 'utf8');
+  const erasure = readFileSync('packages/db/src/erasure.ts', 'utf8');
+  it('оба журнала (partner_audit, operator_action) — под триггером BEFORE INSERT, строка — ERASED_REASON', () => {
+    const marker = /export const ERASED_REASON = '([^']+)'/.exec(erasure)?.[1];
+    expect(marker).toBeTruthy();
+    for (const table of ['partner_audit', 'operator_action']) {
+      expect(migration, table).toMatch(new RegExp(`CREATE TRIGGER \\w+ BEFORE INSERT ON ${table}\\s+FOR EACH ROW EXECUTE FUNCTION erased_reason_${table}\\(\\);`));
+      const body = new RegExp(`CREATE FUNCTION erased_reason_${table}\\(\\)[\\s\\S]*?END \\$\\$;`).exec(migration)?.[0] ?? '';
+      expect(body, table).toContain(`NEW.reason := '${marker}'`);
+      expect(body, table).toContain("status IN ('erasing', 'deleted')");
+    }
+    expect(erasure).toContain("UPDATE operator_action SET reason = '${ERASED_REASON}' WHERE account_id = $1");
+  });
+});
