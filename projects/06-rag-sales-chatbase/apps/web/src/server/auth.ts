@@ -5,7 +5,8 @@ import { readAccountStatus, SESSION_TTL_DAYS } from '@n6/rag';
 
 export const BCRYPT_COST = 10;
 // Фиктивный bcrypt-хэш не является секретом или паролем аккаунта; стоимость совпадает с регистрацией.
-const DUMMY_HASH = '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
+// Экспортирован для проверки пароля при удалении аккаунта (account-erasure): то же равное время.
+export const DUMMY_HASH = '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
 export const SESSION_TTL_SECONDS = SESSION_TTL_DAYS * 24 * 60 * 60;
 export const LOGIN_FAILURE = { error: { code: 'invalid', message: 'Неверная почта или пароль' } } as const;
 export interface AccountCredentials { id: string; password_hash: string; status: unknown }

@@ -80,3 +80,12 @@ export const HISTORY_TURNS = 2;                      // 2 предыдущих �
 export const ANSWER_TEXT_MAX_CHARS = 1200;           // ValidateModelAnswer п.4: текст обрезается до 1200
 export const SOURCE_EXCERPT_MAX_CHARS = 160;         // FR-ANSWER-002: первые ≤ 160 символов фрагмента в плашке
 export const QUESTION_TEXT_TTL_DAYS = 14;            // 152-ФЗ: текст вопроса — только у unknown и 14 дней
+
+// Удаление аккаунта — канон §7 «Удаление аккаунта», FR-AUTH-002, NFR-SEC-003; решения владельца A-N6-054.
+// Срок ≤ 72 ч; сессии и виджеты гаснут сразу; физическое стирание — первый проход сторожа после тихого часа (задачи,
+// начатые до запроса, успевают упереться в фенс). Партнёру с доступным ≥ минимума выплаты оператор платит, пока до
+// срока остаётся больше запаса; дальше остаток сгорает и стирание завершается в срок.
+export const ERASE_DEADLINE_HOURS = 72;
+export const ERASURE_QUIET_MS = 60 * 60 * 1000;
+export const ERASURE_PAYOUT_MARGIN_HOURS = 6;
+export const ERASURE_BATCH = 50;                     // аккаунтов за проход сторожа; остальные — следующим проходом

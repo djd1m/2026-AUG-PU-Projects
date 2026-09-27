@@ -22,7 +22,8 @@ export const QUOTA_SCOPE = ['visitor_answers', 'ip_answers', 'bot_day_answers', 
 export const GROWTH_EVENT_TYPE = ['badge_impression', 'badge_click', 'share_cta_shown', 'share_cta_click', 'widget_install',
   'first_answer', 'public_page_view', 'invite_sent', 'invite_accepted', 'interest'] as const;
 export const ATTRIBUTION_SOURCE = ['code', 'invite', 'cookie'] as const;
-export const ATTRIBUTION_STATUS = ['pending', 'converted', 'rejected'] as const;
+// partner_deleted (account-erasure, миграция 010): партнёр удалил аккаунт — клиент больше не приносит комиссию (A-N6-054, ответ 4).
+export const ATTRIBUTION_STATUS = ['pending', 'converted', 'rejected', 'partner_deleted'] as const;
 
 export type AccountPlan = typeof ACCOUNT_PLAN[number];
 export type AccountStatus = typeof ACCOUNT_STATUS[number];

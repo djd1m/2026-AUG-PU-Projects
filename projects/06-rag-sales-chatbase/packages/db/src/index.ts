@@ -21,3 +21,4 @@ export * from './tariffs.js';
 export * from './partners.js';
 export * from './commission.js';
 export * from './studio.js';
+export * from './erasure.js';

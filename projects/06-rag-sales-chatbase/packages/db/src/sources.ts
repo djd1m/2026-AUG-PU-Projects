@@ -108,3 +108,17 @@ export function deleteSource(pool: Pool, sourceId: string, accountId: string): P
     return removed.rowCount ? { deleted: true, chunks } as const : null;
   });
 }
+
+// Удаление источника при СТИРАНИИ аккаунта (account-erasure): тот же порядок блокировок, что у deleteSource, — задачи
+// источника под FOR UPDATE и фенс +1 у активных, затем строка бота, затем источник (страницы, фрагменты, задачи уходят
+// каскадом той же транзакцией). Владение через OWNED здесь НЕ проверяется: аккаунт уже erasing, а его боты deleted —
+// id бота вызывающий взял из ботов стираемого аккаунта. Возвращает число снятых фрагментов.
+export async function eraseSourceTx(tx: PoolClient, sourceId: string, botId: string): Promise<number> {
+  await tx.query('SELECT id FROM index_job WHERE source_id = $1 ORDER BY id FOR UPDATE', [sourceId]);
+  await tx.query(`UPDATE index_job SET current_fence = current_fence + 1, updated_at = now()
+    WHERE source_id = $1 AND status IN ('queued', 'running')`, [sourceId]);
+  await tx.query('SELECT id FROM bot WHERE id = $1 FOR UPDATE', [botId]);
+  const chunks = (await tx.query<{ n: number }>('SELECT count(*)::int AS n FROM chunk WHERE source_id = $1', [sourceId])).rows[0]!.n;
+  await tx.query('DELETE FROM source WHERE id = $1 AND bot_id = $2', [sourceId, botId]);
+  return chunks;
+}

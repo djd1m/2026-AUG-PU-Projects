@@ -19,6 +19,7 @@ import { createPdfProcessor } from './pdf/pdf-processor';
 import { createEmbedder } from './embed/embed-and-store';
 import { removeUpload, sweepUploads } from './pdf/uploads';
 import { startWatchdog, watchdogTick } from './watchdog';
+import { erasureTick } from './erase-accounts';
 
 export const HEARTBEAT_FILE = '/tmp/n6-worker-heartbeat';
 export const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -48,6 +49,8 @@ async function main(): Promise<void> {
   const stopWatchdog = startWatchdog(async () => {
     await watchdogTick(pool, queue.enqueue);
     await sweepUploads(pool, config.uploadDir);
+    // Удаление аккаунтов (account-erasure): после тихого часа, ≤ 72 ч от запроса; проход под advisory-блокировкой.
+    await erasureTick(pool, config.uploadDir);
   });
   const beat = () => writeFileSync(HEARTBEAT_FILE, String(Date.now()));
   beat();

@@ -19,9 +19,17 @@ describe('CHECK миграции = перечисления канона §4', (
   it.each(cases)('%s', (column, values) => { expect(checkValues(column)).toEqual([...values]); });
   it('статусы: account, bot, source, index_job, attribution', () => {
     const statuses = [...sql.matchAll(/status text NOT NULL[^,]*CHECK \(status IN \(([^)]*)\)\)/g)].map((m) => [...m[1]!.matchAll(/'([^']+)'/g)].map((x) => x[1]));
-    for (const values of [enums.ACCOUNT_STATUS, enums.BOT_STATUS, enums.SOURCE_STATUS, enums.INDEX_JOB_STATUS, enums.ATTRIBUTION_STATUS]) {
+    for (const values of [enums.ACCOUNT_STATUS, enums.BOT_STATUS, enums.SOURCE_STATUS, enums.INDEX_JOB_STATUS]) {
       expect(statuses).toContainEqual([...values]);
     }
+  });
+  // account-erasure: статус атрибуции расширен миграцией 010 (partner_deleted) — действует ПОСЛЕДНЯЯ замена ограничения.
+  it('статус attribution: последнее attribution_status_check миграций = ATTRIBUTION_STATUS', () => {
+    const migrations = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort()
+      .map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
+    const all = [...migrations.matchAll(/CONSTRAINT attribution_status_check CHECK \(status IN \(([^)]*)\)\)/g)];
+    if (!all.length) throw new Error('attribution_status_check не найден — проверка НЕ ВЫПОЛНЕНА');
+    expect([...all.at(-1)![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.ATTRIBUTION_STATUS]);
   });
   // carry_over ревью foundation M1: статус попытки объявлен в коде и совпадает с CHECK таблицы job_attempt
   // (сверка по ТЕЛУ таблицы, а не «где-нибудь в файле»: набор running/done/failed есть и у других таблиц).
@@ -36,7 +44,8 @@ describe('CHECK миграции = перечисления канона §4', (
     const all = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort().map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
     // Служебные журналы — не сущности канона (закрытый список): index_start — журнал запусков индексации для суточного
     // предела (source-lifecycle, A-N6-050). Любая другая новая таблица сдвинет список и уронит тест.
-    const SERVICE = ['index_start'];
+    // erasure_audit — журнал стирания аккаунтов без ПДн (account-erasure, миграция 010).
+    const SERVICE = ['index_start', 'erasure_audit'];
     const all_tables = [...all.matchAll(/^CREATE TABLE (\w+)/gm)].map((m) => m[1]!);
     expect(SERVICE.every((t) => all_tables.includes(t))).toBe(true);
     const tables = all_tables.filter((t) => !SERVICE.includes(t));

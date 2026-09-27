@@ -65,6 +65,16 @@ export async function clawbackCommissionTx(tx: PoolClient, paymentId: string): P
   return inserted.rowCount === 1 ? { kind: 'clawed_back', amountMinor: amount } : { kind: 'skipped', reason: 'already_clawed_back' };
 }
 
+// Сгоревший остаток партнёра, удаляющего аккаунт (account-erasure, решение владельца A-N6-054, ответ 2): компенсирующая
+// запись forfeit на −остаток, одна на партнёра (частичный уникальный индекс миграции 010). Зовёт ТОЛЬКО стирание
+// аккаунта внутри своей транзакции. false — остатка нет или запись уже была.
+export async function forfeitCommissionTx(tx: PoolClient, partnerAccountId: string, totalMinor: number): Promise<boolean> {
+  if (!(totalMinor > 0)) return false;
+  const inserted = await tx.query(`INSERT INTO commission_entry (partner_account_id, kind, amount_minor, available_at) VALUES ($1, 'forfeit', $2, now())
+    ON CONFLICT DO NOTHING RETURNING id`, [partnerAccountId, -totalMinor]);
+  return inserted.rowCount === 1;
+}
+
 // Суммы партнёра на момент `at`: баланс и доступное (зрелые начисления + все отрицательные записи).
 async function totals(db: Pool | PoolClient, accountId: string, at: Date): Promise<{ total: number; available: number }> {
   const row = (await db.query<{ total: string; available: string }>(`SELECT COALESCE(sum(amount_minor), 0)::bigint AS total,
@@ -82,7 +92,9 @@ export type RecordPayoutResult =
 // одновременные записи не превышают доступное. Повтор с тем же ключом — одна запись (частичный уникальный индекс).
 export function recordPartnerPayout(pool: Pool, input: { email: string; amountMinor: number; key: string; operator: string; reason: string }): Promise<RecordPayoutResult> {
   return transaction(pool, async (tx) => {
-    const account = (await tx.query<{ id: string }>(`SELECT id FROM account WHERE email = $1 AND status = 'active'`, [input.email.trim().toLowerCase()])).rows[0];
+    // erasing — тоже: партнёру, удаляющему аккаунт, оператор выплачивает доступное ≥ минимума ДО срока стирания
+    // (account-erasure, ответ владельца 2); почта в статусе erasing ещё настоящая, после deleted — нет.
+    const account = (await tx.query<{ id: string }>(`SELECT id FROM account WHERE email = $1 AND status IN ('active', 'erasing')`, [input.email.trim().toLowerCase()])).rows[0];
     if (!account) return { kind: 'not_found' } as const;
     await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${account.id}`]);
     const prior = (await tx.query<{ amount_minor: string }>(`SELECT amount_minor FROM commission_entry

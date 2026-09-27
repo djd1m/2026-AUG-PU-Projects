@@ -115,7 +115,7 @@ export async function commissionExportCsv(pool: Pool): Promise<string> {
   const rows = (await pool.query<{ email: string; code: string | null; kind: string; amount_minor: string; created_at: Date; available_at: Date }>(
     `SELECT a.email, pc.code, e.kind, e.amount_minor, e.created_at, e.available_at FROM commission_entry e
      JOIN account a ON a.id = e.partner_account_id LEFT JOIN partner_code pc ON pc.id = e.partner_code_id ORDER BY e.created_at, e.id`)).rows;
-  const kinds: Record<string, string> = { accrual: 'начисление', clawback: 'сторно', payout: 'выплата' };
+  const kinds: Record<string, string> = { accrual: 'начисление', clawback: 'сторно', payout: 'выплата', forfeit: 'сгорело при удалении аккаунта' };
   const lines = ['партнёр;код;движение;сумма, ₽;дата;доступно с'];
   for (const r of rows) lines.push([csvText(r.email), csvText(r.code), kinds[r.kind] ?? r.kind, rublesCell(Number(r.amount_minor)), dateCell(r.created_at), dateCell(r.available_at)].join(';'));
   return `${CSV_BOM}${lines.join('\r\n')}\r\n`;
