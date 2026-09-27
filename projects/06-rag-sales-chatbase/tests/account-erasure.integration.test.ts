@@ -215,7 +215,7 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     expect(await one(`SELECT count(*) FROM erasure_audit WHERE account_id = $1 AND event = 'overdue'`, [a.id])).toBe(1);
   });
 
-  it('AC-10: деньги — оплата удаляемому аккаунту на разбор без плана; клиенты партнёра partner_deleted без комиссии; доступное ≥ 1 000 ₽ ждёт выплату, остаток сгорает', async () => {
+  it('AC-10: деньги — оплата удаляемому аккаунту на разбор без плана; клиенты партнёра partner_deleted без комиссии; доступное ≥ 1 000 ₽ ждёт выплату, холд НЕ сгорает — долг сервиса (A-N6-061)', async () => {
     const partner = await account();
     const code = `c${randomBytes(4).toString('hex')}`;
     const codeId = (await q<{ id: string }>(`INSERT INTO partner_code (code, owner_account_id, "group") VALUES ($1, $2, 'partner') RETURNING id`, [code, partner.id]))[0]!.id;
@@ -228,7 +228,7 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     await pool.query(`UPDATE commission_entry SET amount_minor = 30000 WHERE partner_account_id = $1 AND available_at > now()`, [partner.id]);
     expect(await savePayoutDetails(pool, partner.id, { method: 'sbp', phone: '+79000000000', bank: null })).toBe(true);
     const preview = await readErasurePreview(pool, partner.id);
-    expect(preview?.partner).toEqual({ payoutMinor: 150_000, burnMinor: 30_000, hasDetails: true });
+    expect(preview?.partner).toEqual({ payoutMinor: 150_000, debtMinor: 30_000, hasDetails: true });
     await requestErasure(pool, partner.id);
     expect(await one(`SELECT count(*) FROM partner_code WHERE id = $1 AND frozen AND frozen_reason = 'owner_erased'`, [codeId])).toBe(1);
     expect((await q<{ status: string }>('SELECT status FROM attribution WHERE account_id = $1', [client.id]))[0]!.status).toBe('partner_deleted');
@@ -241,10 +241,13 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 150_000, key: 'erase-1', operator: 'op', reason: 'выплата перед удалением' }))
       .toMatchObject({ kind: 'recorded' });
     expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
-    const money = (await q<{ kind: string; amount_minor: string }>(`SELECT kind, amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind IN ('payout', 'forfeit') ORDER BY kind`, [partner.id]))
+    const money = (await q<{ kind: string; amount_minor: string }>(`SELECT kind, amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind <> 'accrual' ORDER BY kind`, [partner.id]))
       .map((r) => [r.kind, Number(r.amount_minor)]);
-    expect(money).toEqual([['forfeit', -30_000], ['payout', -150_000]]);
-    expect(await one('SELECT COALESCE(sum(amount_minor), 0) FROM commission_entry WHERE partner_account_id = $1', [partner.id])).toBe(0);
+    expect(money).toEqual([['payout', -150_000]]);                     // ничего не сгорело — ни одной записи списания
+    expect(await one('SELECT COALESCE(sum(amount_minor), 0) FROM commission_entry WHERE partner_account_id = $1', [partner.id])).toBe(30_000);
+    expect(await one(`SELECT amount_minor FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(30_000);
+    expect((await listOwedPayouts(pool)).find((r) => r.account_id === partner.id)).toMatchObject({ owed_minor: 30_000, available_minor: 0,
+      payout_email: `deleted:${partner.id}` });
     expect(await one('SELECT count(*) FROM partner_payout_details WHERE account_id = $1', [partner.id])).toBe(0);
     expect((await q<{ code: string }>('SELECT code FROM partner_code WHERE id = $1', [codeId]))[0]!.code).toMatch(/^erased-[0-9a-f]{24}$/);
     // Оплата клиентом, который сам удаляется: деньги на разбор, план не выдан, комиссии нет.
@@ -273,16 +276,16 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     await age(partner.id);
     expect(await eraseAccount(pool, partner.id)).toMatchObject({ kind: 'waiting_payout' });
     expect(await eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' });
-    expect(await one(`SELECT count(*) FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(0);
+    expect(await one(`SELECT count(*) FROM commission_entry WHERE partner_account_id = $1 AND kind <> 'accrual'`, [partner.id])).toBe(0);
     expect(await balance(partner.id)).toBe(200_000);
     expect(await one(`SELECT amount_minor FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(200_000);
-    expect((await listOwedPayouts(pool)).find((r) => r.account_id === partner.id)).toMatchObject({ owed_minor: 200_000, balance_minor: 200_000 });
+    expect((await listOwedPayouts(pool)).find((r) => r.account_id === partner.id)).toMatchObject({ owed_minor: 200_000, available_minor: 200_000 });
     expect(await one('SELECT count(*) FROM partner_payout_details WHERE account_id = $1', [partner.id])).toBe(0);
     expect(await one('SELECT count(*) FROM payment WHERE account_id = $1', [partner.id])).toBe(1);
     expect(await one(`SELECT count(*) FROM account WHERE id = $1 AND email LIKE 'deleted:%'`, [partner.id])).toBe(1);
   });
 
-  it('AC-10: частичная выплата — остаток ≥ 1 000 ₽ ждёт дальше, остаток ниже минимума сгорает; ожидающий уходит в конец очереди (ревью H1, M5)', async () => {
+  it('AC-10: частичная выплата — остаток ≥ 1 000 ₽ ждёт дальше, остаток ниже минимума — долг, не сгорает (A-N6-061); ожидающий уходит в конец очереди (ревью H1, M5)', async () => {
     const partner = await partnerWith(250_000);
     await requestErasure(pool, partner.id);
     await age(partner.id);
@@ -297,9 +300,9 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'waiting_payout', payoutMinor: 150_000 });
     expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 100_000, key: 'part-2', operator: 'op', reason: 'часть' })).toMatchObject({ kind: 'recorded' });
     expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
-    expect(await one(`SELECT amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(-50_000);
-    expect(await balance(partner.id)).toBe(0);
-    expect(await one(`SELECT count(*) FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(0);
+    expect(await one(`SELECT count(*) FROM commission_entry WHERE partner_account_id = $1 AND kind NOT IN ('accrual', 'payout')`, [partner.id])).toBe(0);
+    expect(await balance(partner.id)).toBe(50_000);
+    expect(await one(`SELECT amount_minor FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(50_000);
   });
 
   it('ревью H2 детерминированно: пока замок выплаты занят, завершение стирания ЖДЁТ; выплата, стоявшая первой, проходит, долга нет', async () => {

@@ -1,13 +1,14 @@
 // account-erasure: находки ПОВТОРНОГО ревью Codex (27.09, оценка D) на НАСТОЯЩЕМ Postgres 16 + pgvector — отдельный файл
-// (основной набор у предела 500 строк). 1: сторно сгоревшего начисления не вычитает второй раз и не трогает долг
-// payout_owed; сторно ждёт замок партнёра. 2: почта стираемого исчезает и из приглашения, принятого другим аккаунтом.
+// (основной набор у предела 500 строк). 1: деньги удалённого партнёра НЕ сгорают (A-N6-061, заменило сгорание после
+// пятого ревью) — итог не зависит от порядка событий, долг выплачивается или списывается только оператором; сторно ждёт
+// замок партнёра. 2: почта стираемого исчезает и из приглашения, принятого другим аккаунтом.
 // 3: приглашение, записанное между транзакцией строк и надгробием, очищается завершением; создание приглашения ждёт
 // строку адресата. 4: сбой уборки тома не останавливает стирание в том же проходе сторожа.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import bcrypt from 'bcrypt';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { acceptStudioInvite, createPool, createStudioInvite, eraseAccount, listOwedPayouts, recordPartnerPayout, recordVerifiedRefund, requestErasure,
-  savePayoutDetails, type Pool } from '../packages/db/src/index';
+  savePayoutDetails, writeOffErasedPartnerDebt, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { erasureTick } from '../apps/worker/src/erase-accounts';
 import { runIsolatedSteps } from '../apps/worker/src/watchdog-steps';
@@ -64,33 +65,24 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
   const age = (id: string) => pool.query(`UPDATE account SET erase_requested_at = erase_requested_at - interval '2 hours' WHERE id = $1`, [id]);
   const invitesTo = (mail: string) => one('SELECT count(*) FROM studio_invite WHERE lower(email) = lower($1)', [mail]);
 
-  it('находка 1: сторно СГОРЕВШЕГО начисления не уменьшает баланс и долг payout_owed; сторно доступного — уменьшает', async () => {
+  // Решение владельца 27.09 «Ничего не сжигать, всё — долг» (A-N6-061) заменило сгорание: при стирании учёт не меняется,
+  // баланс — одним расчётом у живого и удалённого, поэтому итог НЕ зависит от порядка событий (пятое ревью, находки 1–2).
+  const kindsOf = async (id: string) => (await q<{ kind: string }>(`SELECT DISTINCT kind FROM commission_entry WHERE partner_account_id = $1 ORDER BY kind`, [id])).map((r) => r.kind);
+  const owedOf = async (id: string) => (await listOwedPayouts(pool)).find((r) => r.account_id === id) ?? null;
+  const eraseNow = async (id: string) => { await requestErasure(pool, id); await age(id);
+    expect(await eraseAccount(pool, id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' }); };
+
+  it('A-N6-061: при стирании ничего не сгорает — холд и доступное без выплаты остаются долгом; сторно после стирания — на всё начисление', async () => {
     const partner = await partnerWith(200_000);
-    const burnt = await accrual(partner.id, 50_000, 30);             // холд — сгорит при завершении
-    await requestErasure(pool, partner.id);
-    await age(partner.id);
-    expect(await eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' });
-    expect(await one(`SELECT amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(-50_000);
-    expect(await balance(partner.id)).toBe(200_000);
-    await refund(burnt);                                            // сценарий ревьюера: возврат платежа сгоревшего начисления
-    expect([await clawbacks(partner.id), await balance(partner.id)]).toEqual([0, 200_000]);
-    expect((await listOwedPayouts(pool)).find((r) => r.account_id === partner.id)).toMatchObject({ owed_minor: 200_000, balance_minor: 200_000 });
-    await refund(partner.payment);                                  // возврат платежа, из которого долг, — законно уменьшает
-    expect([await clawbacks(partner.id), await balance(partner.id)]).toEqual([1, 0]);
+    const hold = await accrual(partner.id, 50_000, 30);
+    await eraseNow(partner.id);
+    expect(await kindsOf(partner.id)).toEqual(['accrual']);
+    expect(await balance(partner.id)).toBe(250_000);
+    expect(await owedOf(partner.id)).toMatchObject({ owed_minor: 250_000, available_minor: 200_000, payout_email: `deleted:${partner.id}` });
+    await refund(hold);                                             // сторно холда удалённого — обычное, на всё начисление
+    expect([await clawbacks(partner.id), await balance(partner.id)]).toEqual([1, 200_000]);
+    expect(await owedOf(partner.id)).toMatchObject({ owed_minor: 200_000 });
   });
-
-  it('находка 1: сгорел весь остаток (реквизитов нет) — сторно после надгробия баланс в минус не уводит', async () => {
-    const partner = await account();
-    const mature = await accrual(partner.id, 30_000, -40);
-    await accrual(partner.id, 20_000, 30);
-    await requestErasure(pool, partner.id);
-    await age(partner.id);
-    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
-    expect(await balance(partner.id)).toBe(0);
-    await refund(mature);
-    expect([await clawbacks(partner.id), await balance(partner.id)]).toEqual([0, 0]);
-  });
-
   it('находка 1: сторно ждёт замок партнёра — тот же, что у завершения стирания и выплаты', async () => {
     const partner = await partnerWith(200_000);
     const holder = await pool.connect();
@@ -107,72 +99,61 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
     expect(await balance(partner.id)).toBe(0);
   });
 
-  it('третье ревью, находка 1: итог не зависит от порядка «возврат холда ↔ стирание» — долг и баланс одинаковы', async () => {
-    const outcome = async (refundFirst: boolean) => {
-      const partner = await partnerWith(250_000);
-      const hold = await accrual(partner.id, 50_000, 30);
-      if (refundFirst) await refund(hold);
-      await requestErasure(pool, partner.id);
-      await age(partner.id);
-      expect(await eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' });
-      if (!refundFirst) await refund(hold);
-      const owed = (await listOwedPayouts(pool)).find((r) => r.account_id === partner.id);
-      return { owed: owed?.owed_minor ?? null, balance: await balance(partner.id) };
-    };
-    const before = await outcome(true), after = await outcome(false);
-    expect(before).toEqual({ owed: 250_000, balance: 250_000 });
-    expect(after).toEqual(before);
-  });
-
-  it('третье ревью, находка 2: сгорел только холд — сторно УЖЕ ВЫПЛАЧЕННОГО начисления после надгробия записывается', async () => {
-    const partner = await partnerWith(200_000);
-    expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `paid-${partner.id}`, operator: 'op', reason: 'выплата' }))
-      .toMatchObject({ kind: 'recorded' });
-    await accrual(partner.id, 50_000, 30);
-    await requestErasure(pool, partner.id);
-    await age(partner.id);
-    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
-    expect(await one(`SELECT amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(-50_000);
-    await refund(partner.payment);
-    expect(await one(`SELECT amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind = 'clawback'`, [partner.id])).toBe(-200_000);
-    expect(await balance(partner.id)).toBe(-200_000);
-  });
-
-  it('четвёртое ревью, находка 1: выплата, холд и возврат выплаченного — итог не зависит от порядка «возврат ↔ стирание»', async () => {
+  it('пятое ревью, находка 1: нулевой и отрицательный баланс — итог одинаков при любом порядке «возврат ↔ стирание», долга нет', async () => {
     const outcome = async (refundFirst: boolean) => {
       const partner = await partnerWith(200_000);
-      expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `p4-${partner.id}`, operator: 'op', reason: 'выплата' }))
+      expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `z-${partner.id}`, operator: 'op', reason: 'выплата' }))
         .toMatchObject({ kind: 'recorded' });
-      await accrual(partner.id, 300_000, 30);                       // холд
-      if (refundFirst) await refund(partner.payment);
-      await requestErasure(pool, partner.id);
-      await age(partner.id);
-      expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
+      await accrual(partner.id, 50_000, 30);                        // холд
+      if (refundFirst) await refund(partner.payment);               // выплаченное сторнировано — баланс уходит в минус
+      await eraseNow(partner.id);
       if (!refundFirst) await refund(partner.payment);
-      return { balance: await balance(partner.id), clawbacks: await clawbacks(partner.id) };
+      return { balance: await balance(partner.id), kinds: await kindsOf(partner.id), owed: await owedOf(partner.id) };
     };
     const before = await outcome(true), after = await outcome(false);
-    expect(before).toEqual({ balance: -200_000, clawbacks: 1 });
+    expect(before).toEqual({ balance: -150_000, kinds: ['accrual', 'clawback', 'payout'], owed: null });
     expect(after).toEqual(before);
   });
 
-  it('четвёртое ревью, находка 2: сгорает начисление, созревшее ПОСЛЕДНИМ, а не записанное последним; сторно выплаченного записывается', async () => {
-    const partner = await account();
-    await savePayoutDetails(pool, partner.id, { method: 'sbp', phone: '+79000000001', bank: null });
-    const lateMature = await accrual(partner.id, 200_000, -1);      // записано первым, созрело вчера
-    const earlyMature = await accrual(partner.id, 200_000, -40);    // задержанный вебхук: записано позже, созрело давно
-    expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `p5-${partner.id}`, operator: 'op', reason: 'выплата' }))
-      .toMatchObject({ kind: 'recorded' });
-    await pool.query('DELETE FROM partner_payout_details WHERE account_id = $1', [partner.id]);   // реквизитов нет — остаток сгорает
-    await requestErasure(pool, partner.id);
-    await age(partner.id);
-    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
-    const forfeited = async (providerId: string) => one(`SELECT c.forfeited_minor FROM commission_entry c JOIN payment p ON p.id = c.payment_id
-      WHERE p.provider_payment_id = $1 AND c.kind = 'accrual'`, [providerId]);
-    expect([await forfeited(lateMature), await forfeited(earlyMature)]).toEqual([200_000, 0]);
-    await refund(earlyMature);                                      // возврат выплаченного — сторно на всю сумму
-    expect(await clawbacks(partner.id)).toBe(1);
-    expect(await balance(partner.id)).toBe(-200_000);
+  it('пятое ревью, находка 2: поздний вебхук после выплаты — итог одинаков, записан он до или после стирания', async () => {
+    const outcome = async (lateBeforeErase: boolean) => {
+      const partner = await partnerWith(200_000);
+      expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `l-${partner.id}`, operator: 'op', reason: 'выплата' }))
+        .toMatchObject({ kind: 'recorded' });
+      await pool.query('DELETE FROM partner_payout_details WHERE account_id = $1', [partner.id]);   // без реквизитов — выплата не ждёт
+      if (lateBeforeErase) await accrual(partner.id, 100_000, -40);   // задержанный вебхук со старой датой оплаты
+      await eraseNow(partner.id);
+      if (!lateBeforeErase) await accrual(partner.id, 100_000, -40);
+      const owed = await owedOf(partner.id);
+      return { balance: await balance(partner.id), owed: owed?.owed_minor ?? null, available: owed?.available_minor ?? null };
+    };
+    const before = await outcome(true), after = await outcome(false);
+    expect(before).toEqual({ balance: 100_000, owed: 100_000, available: 100_000 });
+    expect(after).toEqual(before);
+  });
+
+  it('A-N6-061: долг удалённому — выплата по обезличенной почте без реквизитов и минимума, не больше созревшего; списание — только оператором с причиной', async () => {
+    const partner = await partnerWith(200_000);
+    await accrual(partner.id, 30_000, 30);                          // холд — ещё не созрел
+    await eraseNow(partner.id);
+    const email = `deleted:${partner.id}`;
+    expect(await recordPartnerPayout(pool, { email, amountMinor: 250_000, key: `d1-${partner.id}`, operator: 'op', reason: 'долг' }))
+      .toMatchObject({ kind: 'exceeds_available' });
+    expect(await recordPartnerPayout(pool, { email, amountMinor: 50_000, key: `d2-${partner.id}`, operator: 'op', reason: 'долг' }))
+      .toMatchObject({ kind: 'recorded', balanceAfterMinor: 180_000 });   // 500 ₽ — ниже минимума, но это окончательный расчёт
+    expect(await owedOf(partner.id)).toMatchObject({ owed_minor: 180_000, available_minor: 150_000 });
+    expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: '' })).toEqual({ kind: 'invalid' });
+    const live = await partnerWith(200_000);
+    expect(await writeOffErasedPartnerDebt(pool, { accountId: live.id, operator: 'op', reason: 'нет' })).toEqual({ kind: 'not_found' });
+    expect(await balance(partner.id)).toBe(180_000);                // без команды ничего не списано
+    expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: 'партнёр отказался' }))
+      .toEqual({ kind: 'written_off', amountMinor: 180_000 });
+    expect(await balance(partner.id)).toBe(0);
+    expect(await owedOf(partner.id)).toBeNull();
+    expect((await q<{ kind: string; operator: string; reason: string; amount_minor: string }>(`SELECT kind, operator, reason, amount_minor FROM partner_audit
+      WHERE account_id = $1 AND kind = 'debt_written_off'`, [partner.id])).map((r) => [r.operator, r.reason, Number(r.amount_minor)]))
+      .toEqual([['op', 'партнёр отказался', 180_000]]);
+    expect(await writeOffErasedPartnerDebt(pool, { accountId: partner.id, operator: 'op', reason: 'ещё' })).toEqual({ kind: 'nothing_owed' });
   });
 
   it('третье ревью, находка 3: две студии одновременно приглашают друг друга — без взаимной блокировки', async () => {

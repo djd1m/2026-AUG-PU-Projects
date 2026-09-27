@@ -22,7 +22,7 @@ vi.mock('next/navigation', () => ({ useRouter: () => ({ push: () => {}, replace:
 type Theme = 'dark' | 'light';
 const CSS = readFileSync('apps/web/src/app/globals.css', 'utf8');
 const ARTIFACTS = 'tests/artifacts/account-erasure/browser';
-const FULL: ErasurePreview = { bots: 3, clientBots: 2, paidDaysLeft: 17, partner: { payoutMinor: 150_000, burnMinor: 30_000, hasDetails: true } };
+const FULL: ErasurePreview = { bots: 3, clientBots: 2, paidDaysLeft: 17, partner: { payoutMinor: 150_000, debtMinor: 30_000, hasDetails: true } };
 const PLAIN: ErasurePreview = { bots: 0, clientBots: 0, paidDaysLeft: null, partner: null };
 const SUMMARY = { answered: 12, unknown: 3, refused_limit: 0, last_unknown: [{ text: 'Есть ли доставка в область?', asked_at: '2026-09-26T09:00:00.000Z' }] };
 const erase = (over: Partial<EraseLogView>): EraseLogView => ({ confirming: false, busy: false, error: '', done: false, onAsk: () => {}, onConfirm: () => {}, onCancel: () => {}, ...over });
@@ -110,13 +110,14 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
       if (width === 320) { mkdirSync(ARTIFACTS, { recursive: true }); await page.screenshot({ path: `${ARTIFACTS}/${engineName}-${name}-320.png`, fullPage: true }); }
     }));
   }
-  it('AC-13: последствия перечислены ДО подтверждения — боты, боты у клиентов, сгорающие дни, к выплате и сгорит, хранение оплат', () => open('account-full', 'light', { width: 390, height: 844 }, async page => {
+  it('AC-13: последствия перечислены ДО подтверждения — боты, боты у клиентов, сгорающие дни, к выплате и долг сервиса (ничего не сгорает), хранение оплат', () => open('account-full', 'light', { width: 390, height: 844 }, async page => {
     const items = await page.locator('ul[aria-label="Что произойдёт"] li').allTextContents();
     expect(items.join('\n')).toMatch(/ботов \(3\)/);
     expect(items.join('\n')).toMatch(/клиентам \(2\)/);
     expect(items.join('\n')).toMatch(/дни плана \(17\) сгорят/);
     expect(items.join('\n')).toMatch(/К выплате 1\s500\s₽/);
-    expect(items.join('\n')).toMatch(/Сгорит 300\s₽/);
+    expect(items.join('\n')).toMatch(/останется за вами как долг сервиса: 300\s₽, выплату запросите в поддержке/);
+    expect(items.join('\n')).not.toMatch(/Сгорит/);   // деньги партнёра не сгорают (A-N6-061)
     expect(items.join('\n')).toContain('хранятся 5 лет');
     expect(await page.getByRole('button', { name: 'Удалить аккаунт навсегда' }).count()).toBe(1);
     expect(await page.getByLabel('Пароль от аккаунта').getAttribute('type')).toBe('password');

@@ -13,15 +13,16 @@
 //   создание бота тоже берут account первым; воркер держит задачу, затем бота — цикла нет.
 // - стирание: намерения оплаты (DELETE) → account → остальное. Оплата берёт намерение (FOR UPDATE), затем account —
 //   порядок тот же; источники — по одному, «задачи → бот», как deleteSource фичи 16.
-// Решения владельца (A-N6-054): оплаченный остаток сгорает (возврат по заявке вручную); доступное партнёра ≥ 1 000 ₽
-// оператор выплачивает до срока по реквизитам СБП, холд и меньшие суммы сгорают (запись forfeit), реквизиты стираются;
-// не выплаченное к запасу доступное ≥ 1 000 ₽ не сгорает, а остаётся долгом payout_owed (A-N6-056, ревью H1);
+// Решения владельца (A-N6-054, A-N6-061): оплаченный остаток сгорает (возврат по заявке вручную); деньги партнёра НЕ
+// сгорают (27.09, «Ничего не сжигать, всё — долг»): доступное ≥ 1 000 ₽ оператор выплачивает до срока по реквизитам СБП,
+// реквизиты стираются в срок, весь невыплаченный баланс (включая дозревающий холд и будущие сторно) — долг сервиса,
+// списать который может только оператор явной командой (ops:erasure write-off);
 // записи оплат, начислений и выплат остаются 5 лет обезличенными — они ссылаются на надгробную строку account без почты;
 // переданные клиентам боты студии остаются у клиентов; отменить удаление нельзя.
 import { ERASE_DEADLINE_HOURS, ERASURE_PAYOUT_MARGIN_HOURS, ERASURE_QUIET_MS, PAYOUT_MINIMUM_MINOR } from '@n6/rag';
 import type { Pool, PoolClient } from 'pg';
 import { OWNED } from './bots.js';
-import { forfeitCommissionTx, partnerErasureMoney } from './commission.js';
+import { partnerErasureMoney, partnerTotals } from './commission.js';
 import { isUuid } from './index-jobs.js';
 import { transaction } from './quota.js';
 import { eraseSourceTx } from './sources.js';
@@ -29,23 +30,20 @@ import { eraseSourceTx } from './sources.js';
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 
-// Деньги партнёра при удалении (ответ владельца 2): к выплате — всё, что не холд (баланс − несгоревший холд без сторно),
-// если это ≥ минимума и реквизиты сохранены; холд и то, что к выплате не подошло, сгорает. Одна формула у экрана
-// удаления и у завершения (третье ревью, находка 1: результат не зависит от порядка «возврат ↔ стирание»).
-// Холд сгорает ВЕСЬ, даже если вне холда долг от сторно (четвёртое ревью, находка 1): долг гасится только будущими
-// начислениями, а холд удалённого партнёра будущим начислением уже не станет. Иначе возврат выплаченного ДО стирания
-// «съедал» бы холд (итог 0), а ПОСЛЕ — оставлял долг (итог −сторно): результат зависел бы от порядка событий.
-function erasurePayout(money: { total: number; hold: number }, hasDetails: boolean): { payable: number; burn: number } {
-  const outside = money.total - money.hold;
-  const payable = hasDetails && outside >= PAYOUT_MINIMUM_MINOR ? outside : 0;
-  return { payable, burn: money.hold + Math.max(0, outside - payable) };
+// Деньги партнёра при удалении (A-N6-061): к выплате до срока — доступное (зрелое + все отрицательные записи), если оно
+// ≥ минимума и реквизиты сохранены; всё остальное из положительного баланса — долг сервиса. НИЧЕГО не сгорает, поэтому
+// итог не зависит от порядка событий: поздний вебхук, сторно или выплата лишь меняют баланс, который считается одним кодом
+// (partnerTotals) у живого и удалённого партнёра. Одна формула у экрана удаления и у завершения.
+function erasurePayout(money: { total: number; available: number }, hasDetails: boolean): { payable: number; debt: number } {
+  const payable = hasDetails && money.available >= PAYOUT_MINIMUM_MINOR ? Math.min(money.available, money.total) : 0;
+  return { payable, debt: Math.max(0, money.total - payable) };
 }
 
 export interface ErasurePreview {
   bots: number;                  // боты аккаунта (включая полученные от студии) — будут удалены
   clientBots: number;            // боты, которые аккаунт-студия передал клиентам, — останутся у клиентов
   paidDaysLeft: number | null;   // оплаченные дни плана, которые сгорят; null — оплаченного остатка нет
-  partner: { payoutMinor: number; burnMinor: number; hasDetails: boolean } | null;  // null — не партнёр
+  partner: { payoutMinor: number; debtMinor: number; hasDetails: boolean } | null;  // null — не партнёр; debtMinor — останется долгом сервиса
 }
 // Последствия удаления для экрана подтверждения (AC-13): перечислены ДО подтверждения. Не активный — null.
 export async function readErasurePreview(pool: Pool, accountId: string, now = new Date()): Promise<ErasurePreview | null> {
@@ -63,8 +61,8 @@ export async function readErasurePreview(pool: Pool, accountId: string, now = ne
   let partner: ErasurePreview['partner'] = null;
   if (money.entries > 0) {
     const hasDetails = Boolean((await pool.query('SELECT 1 FROM partner_payout_details WHERE account_id = $1', [accountId])).rowCount);
-    const { payable, burn } = erasurePayout(money, hasDetails);
-    partner = { payoutMinor: payable, burnMinor: burn, hasDetails };
+    const { payable, debt } = erasurePayout(money, hasDetails);
+    partner = { payoutMinor: payable, debtMinor: debt, hasDetails };
   }
   return { bots: bots.own, clientBots: bots.clients, paidDaysLeft, partner };
 }
@@ -182,14 +180,14 @@ async function finalizeErasureTx(tx: PoolClient, accountId: string, now: Date): 
     FROM account WHERE id = $1 FOR NO KEY UPDATE`, [accountId])).rows[0];
   if (account?.status !== 'erasing') return { kind: 'skipped' };
   // Та же блокировка, что у recordPartnerPayout (ревью H2): выплата и завершение не читают баланс одновременно —
-  // иначе выплата по старому балансу ложится поверх forfeit, а реквизиты уже стёрты. Порядок: account → замок
+  // иначе выплата по старому балансу ложится поверх стирания реквизитов. Порядок: account → замок
   // выплаты; выплата строку account не блокирует, цикла нет.
   await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${accountId}`]);
   const money = await partnerErasureMoney(tx, accountId, now);
-  if (money.total > 0) {
+  if (money.entries > 0) {
     const hasDetails = Boolean((await tx.query('SELECT 1 FROM partner_payout_details WHERE account_id = $1', [accountId])).rowCount);
-    // К выплате — всё, кроме холда, если ≥ минимума при реквизитах (ответ владельца 2), в том числе остаток после частичной выплаты.
-    const { payable, burn } = erasurePayout(money, hasDetails);
+    // К выплате — доступное ≥ минимума при реквизитах (ответ владельца 2), в том числе остаток после частичной выплаты.
+    const { payable } = erasurePayout(money, hasDetails);
     const beforeMargin = now.getTime() < account.erase_deadline.getTime() - ERASURE_PAYOUT_MARGIN_HOURS * HOUR_MS;
     if (payable > 0 && beforeMargin) {
       await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor)
@@ -199,15 +197,11 @@ async function finalizeErasureTx(tx: PoolClient, accountId: string, now: Date): 
       await tx.query('UPDATE account SET erase_attempted_at = $2 WHERE id = $1', [accountId, now]);
       return { kind: 'waiting_payout', payoutMinor: payable };
     }
-    // Сгорает ТОЛЬКО то, что владелец назвал сгорающим: холд и доступное ниже минимума или без реквизитов — явной
-    // записью forfeit (commission_entry пишет только commission.ts, страж фичи 15). Доступное ≥ минимума, не
-    // выплаченное к запасу до срока, НЕ сгорает (ревью H1): стирание завершается в срок, а сумма остаётся долгом в
-    // учёте надгробной строки и сигналом payout_owed оператору (ops:erasure owed).
-    if (burn > 0 && await forfeitCommissionTx(tx, accountId, burn, now)) {
-      await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor) VALUES ($1, 'forfeited', $2)`, [accountId, burn]);
-    }
-    if (payable > 0) {
-      await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor) VALUES ($1, 'payout_owed', $2)`, [accountId, payable]);
+    // Ничего не сгорает (A-N6-061): учёт надгробной строки остаётся как есть, положительный баланс — долг сервиса.
+    // payout_owed — сигнал оператору со снимком суммы на момент стирания; текущий долг считается живым расчётом
+    // (listOwedPayouts), а не этим снимком.
+    if (money.total > 0) {
+      await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor) VALUES ($1, 'payout_owed', $2)`, [accountId, money.total]);
     }
   }
   await tx.query('DELETE FROM partner_payout_details WHERE account_id = $1', [accountId]);
@@ -262,14 +256,22 @@ export async function listErasingAccounts(pool: Pool, now = new Date()): Promise
   return out;
 }
 
-export interface OwedRow { account_id: string; owed_minor: number; balance_minor: number; erased_at: string }
-// Долги партнёрам, не выплаченные к сроку стирания (payout_owed): сумма на момент завершения и текущий баланс учёта —
-// оператор закрывает долг вручную (реквизиты стёрты, связь — по обращению человека).
-export async function listOwedPayouts(pool: Pool): Promise<OwedRow[]> {
-  return (await pool.query<{ account_id: string; owed_minor: string; balance_minor: string; created_at: Date }>(`SELECT e.account_id, e.amount_minor AS owed_minor,
-      (SELECT COALESCE(sum(amount_minor), 0) FROM commission_entry c WHERE c.partner_account_id = e.account_id) AS balance_minor, e.created_at
-    FROM erasure_audit e WHERE e.event = 'payout_owed' AND e.account_id IS NOT NULL ORDER BY e.created_at, e.account_id`)).rows
-    .map((r) => ({ account_id: r.account_id, owed_minor: Number(r.owed_minor), balance_minor: Number(r.balance_minor), erased_at: r.created_at.toISOString() }));
+export interface OwedRow { account_id: string; payout_email: string; owed_minor: number; available_minor: number; erased_at: string | null }
+// Долги удалённым партнёрам (A-N6-061): стёртые аккаунты с ПОЛОЖИТЕЛЬНЫМ балансом учёта сейчас — тем же расчётом (partnerTotals),
+// что у живого партнёра, поэтому поздний вебхук, сторно, выплата и списание отражаются сразу и в любом порядке.
+// payout_email — обезличенная почта deleted:<id> для команды выплаты; available — сколько из долга уже созрело.
+export async function listOwedPayouts(pool: Pool, now = new Date()): Promise<OwedRow[]> {
+  const rows = (await pool.query<{ id: string; email: string; erased_at: Date | null }>(`SELECT a.id, a.email,
+      (SELECT max(e.created_at) FROM erasure_audit e WHERE e.account_id = a.id AND e.event = 'erased') AS erased_at
+    FROM account a WHERE a.status = 'deleted' AND EXISTS (SELECT 1 FROM commission_entry c WHERE c.partner_account_id = a.id)
+    ORDER BY a.id`)).rows;
+  const out: OwedRow[] = [];
+  for (const row of rows) {
+    const { total, available } = await partnerTotals(pool, row.id, now);
+    if (total > 0) out.push({ account_id: row.id, payout_email: row.email, owed_minor: total, available_minor: Math.max(0, Math.min(available, total)),
+      erased_at: row.erased_at ? row.erased_at.toISOString() : null });
+  }
+  return out;
 }
 
 // FR-AUTH-002, вторая фраза: владелец бота стирает журнал вопросов своего бота отдельно, без удаления аккаунта.

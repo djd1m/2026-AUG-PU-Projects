@@ -76,7 +76,7 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`, `payment`, `operator_action`; с 26.09 (партнёры и студии,
 комиссии и выплаты, решение владельца, A-N6-043, миграция 007) — ещё 4: `partner_code_use`, `commission_entry`,
 `partner_payout_details`, `partner_audit`. Итого **27**. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
-`accrual | clawback | payout | forfeit` (`forfeit` — сгорание при удалении аккаунта, A-N6-059); `partner_code.frozen_reason` ∈
+`accrual | clawback | payout | write_off` (`write_off` — списание долга удалённому партнёру ТОЛЬКО командой оператора, A-N6-061; при удалении ничего не сгорает); `partner_code.frozen_reason` ∈
 `antifraud_ip_burst | operator | owner_erased`; `partner_code_use.source` =
 `attribution.source` ∈ `code | invite | cookie`; `partner_audit.kind` ∈ `frozen_antifraud | unfrozen | code_issued |
 payout_recorded | accrual_skipped_fee_unknown`.
@@ -203,7 +203,7 @@ self-referral — владелец кода с того же префикса з
 **Удаление аккаунта (фича `account-erasure`, решения владельца A-N6-054, константы `packages/rag/src/constants.ts`):**
 срок стирания — **72 ч** от запроса (`ERASE_DEADLINE_HOURS`); тихий час до первой попытки — **1 ч** (`ERASURE_QUIET_MS`);
 ожидание выплаты партнёру доступного ≥ **1 000 ₽** — до **6 ч** до срока (`ERASURE_PAYOUT_MARGIN_HOURS`), не выплаченное
-к запасу остаётся долгом `payout_owed`, а не сгорает (A-N6-056); аккаунтов за проход сторожа — **50** (`ERASURE_BATCH`);
+к запасу остаётся долгом, а не сгорает (A-N6-056); НИЧЕГО из денег партнёра при удалении не сгорает — холд и суммы < 1 000 ₽ тоже долг, списание только `ops:erasure write-off` (A-N6-061); аккаунтов за проход сторожа — **50** (`ERASURE_BATCH`);
 квитанция `__Host-n6_erasure` — **7 дней**; записи оплат, начислений и выплат — **5 лет** обезличенными (402-ФЗ).
 Отмены нет. Оператор: `npm run ops:erasure -- list | overdue | owed`.
 

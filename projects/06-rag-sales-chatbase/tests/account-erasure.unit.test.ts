@@ -97,11 +97,12 @@ describe('ops:erasure', () => {
     expect(line).toContain('ПРОСРОЧЕНО');
     expect(line).toContain('ждёт выплату 1500,00 ₽');
   });
-  it('owed — долг партнёру, не выплаченный к сроку: пусто — явное «нет», строка — долг и баланс учёта', () => {
-    expect(owedLines([])).toEqual(['Невыплаченных долгов партнёрам нет']);
-    const [line] = owedLines([{ account_id: ACCOUNT, owed_minor: 200_000, balance_minor: 200_000, erased_at: '2026-09-30T00:00:00.000Z' }]);
-    expect(line).toContain('долг на момент стирания 2000,00 ₽');
-    expect(line).toContain('баланс учёта сейчас 2000,00 ₽');
+  it('owed — долг удалённому партнёру (A-N6-061): пусто — явное «нет», строка — почта для выплаты, долг и созревшее', () => {
+    expect(owedLines([])).toEqual(['Долгов удалённым партнёрам нет']);
+    const [line] = owedLines([{ account_id: ACCOUNT, payout_email: `deleted:${ACCOUNT}`, owed_minor: 250_000, available_minor: 200_000, erased_at: '2026-09-30T00:00:00.000Z' }]);
+    expect(line).toContain(`deleted:${ACCOUNT}`);
+    expect(line).toContain('долг 2500,00 ₽');
+    expect(line).toContain('из них созрело 2000,00 ₽');
   });
 });
 

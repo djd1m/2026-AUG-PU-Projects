@@ -2,7 +2,7 @@
 // Экран удаления аккаунта (фича account-erasure; FR-AUTH-002, AC-13; решения владельца A-N6-054). Донор — N5
 // projects/05-podcast-clips-opus/apps/web/src/app/dashboard/AccountDeletion.tsx — АДАПТИРОВАНО: примитивы N6 (.card,
 // .notice, .check, .danger), повторный ввод пароля, последствия перечислены ДО подтверждения: боты и виджеты, боты у
-// клиентов студии, сгорающие оплаченные дни, деньги партнёра (к выплате и сгорит), хранение записей оплат 5 лет.
+// клиентов студии, сгорающие оплаченные дни, деньги партнёра (к выплате и долг сервиса — ничего не сгорает, A-N6-061), хранение записей оплат 5 лет.
 import { useState } from 'react';
 import type { ErasurePreview } from '@n6/db';
 import { formatRub } from '@n6/rag/commission';
@@ -17,7 +17,7 @@ export function Consequences({ preview }: { preview: ErasurePreview }) {
   if (preview.paidDaysLeft !== null) items.push(`Оплаченные дни плана (${preview.paidDaysLeft}) сгорят. Вернуть деньги можно по заявке в поддержку.`);
   if (preview.partner) {
     if (preview.partner.payoutMinor > 0) items.push(`К выплате ${formatRub(preview.partner.payoutMinor)} — переведём по реквизитам СБП до завершения удаления.`);
-    if (preview.partner.burnMinor > 0) items.push(`Сгорит ${formatRub(preview.partner.burnMinor)} начислений: в холде, меньше 1 000 ₽ или без реквизитов СБП.`);
+    if (preview.partner.debtMinor > 0) items.push(`Невыплаченное останется за вами как долг сервиса: ${formatRub(preview.partner.debtMinor)}, выплату запросите в поддержке.`);
   }
   items.push('Записи об оплатах и выплатах хранятся 5 лет без вашей почты — этого требует закон о бухгалтерском учёте.');
   return <ul className="stack" aria-label="Что произойдёт">{items.map((text) => <li key={text}>{text}</li>)}</ul>;

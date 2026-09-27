@@ -25,28 +25,27 @@ ALTER TABLE partner_code ADD CONSTRAINT partner_code_frozen_reason_check CHECK (
 ALTER TABLE payment DROP CONSTRAINT payment_review_reason_check;
 ALTER TABLE payment ADD CONSTRAINT payment_review_reason_check CHECK (review_reason IN ('amount_mismatch', 'refund', 'unknown_intent', 'account_erasing'));
 
--- 5. Сгоревшее при удалении партнёра (ответ владельца 2): холд и доступное меньше 1 000 ₽ — компенсирующая запись
---    forfeit, чтобы баланс надгробной строки был нулём ЯВНО, а не «забыт». Записи денег хранятся 5 лет (ответ 3, 402-ФЗ).
+-- 5. Деньги удалённого партнёра (решение владельца 27.09 «Ничего не сжигать, всё — долг», A-N6-061; заменяет прежнее
+--    сгорание холда и сумм < 1 000 ₽). При стирании ничего не списывается: записи начислений остаются обезличенными (5 лет,
+--    ответ 3, 402-ФЗ), холд дозревает, сторно работает как обычно, невыплаченный баланс — долг сервиса. Списать долг может
+--    ТОЛЬКО оператор явной командой с причиной (ops:erasure write-off) — компенсирующая запись write_off и строка
+--    partner_audit debt_written_off. Выплата удалённому — обычная выплата по обезличенной почте deleted:<id>.
 ALTER TABLE commission_entry DROP CONSTRAINT commission_entry_kind_check;
-ALTER TABLE commission_entry ADD CONSTRAINT commission_entry_kind_check CHECK (kind IN ('accrual', 'clawback', 'payout', 'forfeit'));
+ALTER TABLE commission_entry ADD CONSTRAINT commission_entry_kind_check CHECK (kind IN ('accrual', 'clawback', 'payout', 'write_off'));
 ALTER TABLE commission_entry DROP CONSTRAINT commission_sign;
 ALTER TABLE commission_entry ADD CONSTRAINT commission_sign
-  CHECK ((kind = 'accrual' AND amount_minor > 0) OR (kind IN ('clawback', 'payout', 'forfeit') AND amount_minor < 0));
+  CHECK ((kind = 'accrual' AND amount_minor > 0) OR (kind IN ('clawback', 'payout', 'write_off') AND amount_minor < 0));
 ALTER TABLE commission_entry DROP CONSTRAINT commission_payment_iff_not_payout;
-ALTER TABLE commission_entry ADD CONSTRAINT commission_payment_iff_not_payout CHECK ((kind IN ('payout', 'forfeit')) = (payment_id IS NULL));
-CREATE UNIQUE INDEX commission_forfeit_once ON commission_entry (partner_account_id) WHERE kind = 'forfeit';
--- СКОЛЬКО сгорело из каждого начисления (повторное ревью, находка 1; третье ревью, находки 1–2): сумма forfeit
--- распределяется по конкретным начислениям, а сторно вычитает только НЕСГОРЕВШУЮ часть начисления — ни двойного
--- вычитания сгоревшего, ни потери сторно уже выплаченного. Сумма forfeited_minor по партнёру = −forfeit.
-ALTER TABLE commission_entry ADD COLUMN forfeited_minor bigint NOT NULL DEFAULT 0;
-ALTER TABLE commission_entry ADD CONSTRAINT commission_forfeited_share
-  CHECK (forfeited_minor >= 0 AND (forfeited_minor = 0 OR (kind = 'accrual' AND forfeited_minor <= amount_minor)));
+ALTER TABLE commission_entry ADD CONSTRAINT commission_payment_iff_not_payout CHECK ((kind IN ('payout', 'write_off')) = (payment_id IS NULL));
+ALTER TABLE partner_audit DROP CONSTRAINT partner_audit_kind_check;
+ALTER TABLE partner_audit ADD CONSTRAINT partner_audit_kind_check
+  CHECK (kind IN ('frozen_antifraud', 'unfrozen', 'code_issued', 'payout_recorded', 'accrual_skipped_fee_unknown', 'debt_written_off'));
 
 -- 6. Журнал стирания — служебный, БЕЗ персональных данных: только надгробный id, событие, сумма и время.
 CREATE TABLE erasure_audit (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(),
   account_id uuid REFERENCES account(id) ON DELETE SET NULL,
-  event text NOT NULL CHECK (event IN ('requested', 'waiting_payout', 'forfeited', 'payout_owed', 'erased', 'failed', 'overdue')),
+  event text NOT NULL CHECK (event IN ('requested', 'waiting_payout', 'payout_owed', 'erased', 'failed', 'overdue')),
   amount_minor bigint
 );
 CREATE INDEX erasure_audit_account ON erasure_audit (account_id, created_at);
