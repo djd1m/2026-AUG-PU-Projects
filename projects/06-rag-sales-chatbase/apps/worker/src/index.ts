@@ -20,6 +20,7 @@ import { createEmbedder } from './embed/embed-and-store';
 import { removeUpload, sweepUploads } from './pdf/uploads';
 import { startWatchdog, watchdogTick } from './watchdog';
 import { erasureTick } from './erase-accounts';
+import { runIsolatedSteps } from './watchdog-steps';
 
 export const HEARTBEAT_FILE = '/tmp/n6-worker-heartbeat';
 export const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -46,12 +47,13 @@ async function main(): Promise<void> {
   const worker = new Worker<IndexMessage>(INDEX_QUEUE, async (job) => runIndexJob(deps, job.data),
     { connection: getRedisConnection(config, true), concurrency: 1 });
   worker.on('error', () => console.error('Транспорт заданий индексации недоступен'));
-  const stopWatchdog = startWatchdog(async () => {
-    await watchdogTick(pool, queue.enqueue);
-    await sweepUploads(pool, config.uploadDir);
+  const stopWatchdog = startWatchdog(() => runIsolatedSteps([
+    { name: 'задачи индексации', run: () => watchdogTick(pool, queue.enqueue) },
+    { name: 'уборка тома uploads', run: () => sweepUploads(pool, config.uploadDir) },
     // Удаление аккаунтов (account-erasure): после тихого часа, ≤ 72 ч от запроса; проход под advisory-блокировкой.
-    await erasureTick(pool, config.uploadDir);
-  });
+    // Отдельный шаг: сбой уборки файлов не останавливает стирание и наблюдение просрочки (повторное ревью, находка 4).
+    { name: 'стирание аккаунтов', run: () => erasureTick(pool, config.uploadDir) },
+  ]));
   const beat = () => writeFileSync(HEARTBEAT_FILE, String(Date.now()));
   beat();
   const timer = setInterval(beat, HEARTBEAT_INTERVAL_MS);

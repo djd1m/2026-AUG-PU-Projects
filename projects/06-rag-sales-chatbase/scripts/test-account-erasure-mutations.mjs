@@ -18,14 +18,23 @@ if (!process.env.DATABASE_URL) {
 }
 const project = process.cwd(), directory = mkdtempSync(join(tmpdir(), 'n6-erasure-mutations-'));
 const output = resolve('tests/artifacts/account-erasure/mutations'); mkdirSync(output, { recursive: true });
-const TESTS = ['tests/account-erasure.integration.test.ts', 'tests/account-erasure.unit.test.ts'];
+const TESTS = ['tests/account-erasure.integration.test.ts', 'tests/account-erasure-review2.integration.test.ts', 'tests/account-erasure.unit.test.ts'];
 const span = (start, end, replacement) => (source) => {
   const a = source.indexOf(start), b = source.indexOf(end, a);
   if (a < 0 || b < 0 || source.indexOf(start, a + 1) >= 0 || source.indexOf(end, b + 1) >= 0) return null;
   return source.slice(0, a) + replacement + source.slice(b + end.length);
 };
 const once = (from, to) => span(from, from, to);
-const erasure = 'packages/db/src/erasure.ts', payments = 'packages/db/src/payments.ts', growth = 'packages/db/src/growth.ts', tick = 'apps/worker/src/erase-accounts.ts';
+const erasure = 'packages/db/src/erasure.ts', payments = 'packages/db/src/payments.ts', growth = 'packages/db/src/growth.ts', tick = 'apps/worker/src/erase-accounts.ts',
+  commission = 'packages/db/src/commission.ts', studio = 'packages/db/src/studio.ts', workerIndex = 'apps/worker/src/index.ts';
+// Тело функции (от строки объявления до первого `\n}\n` после неё) заменяется: якорь начала обязан быть уникальным.
+const bodyOf = (signature, replacement) => (source) => {
+  const a = source.indexOf(signature);
+  if (a < 0 || source.indexOf(signature, a + 1) >= 0) return null;
+  const b = source.indexOf('\n}\n', a);
+  if (b < 0) return null;
+  return source.slice(0, a + signature.length) + '\n' + replacement + source.slice(b);
+};
 const mutations = [
   { id: 'bots-alive-after-request', title: 'запрос удаления не гасит ботов в той же транзакции — виджеты отвечают после удаления (AC-2, AC-3, security.md)',
     edits: [{ file: erasure, apply: once("    await tx.query(`UPDATE bot SET status = 'deleted', public_enabled = false WHERE account_id = $1 AND status <> 'deleted'`, [accountId]);\n", '') }] },
@@ -47,7 +56,11 @@ const mutations = [
       'const jobs = await erasureUploadJobIds(pool, accountId);\n          const outcome = await eraseAccount(pool, accountId, now);\n          for (const job of jobs) await deps.removeUpload(uploadDir, job);') }] },
   // Находки ревью Codex (docs/features/account-erasure/08_review.md): каждая закреплена тестом, тест — мутацией.
   { id: 'owed-burned', title: 'доступное ≥ 1 000 ₽, не выплаченное к сроку, сгорает вместо долга (ревью H1)',
-    edits: [{ file: erasure, apply: once('const burn = money.total - payable;', 'const burn = money.total;') }] },
+    edits: [{ file: erasure, apply: once('return { payable, burn: money.hold + Math.max(0, outside - payable) };', 'return { payable, burn: money.hold + Math.max(0, outside) };') }] },
+  { id: 'hold-offsets-debt', title: 'долг от сторно гасится холдом при стирании — итог зависит от порядка «возврат ↔ стирание» (четвёртое ревью, находка 1)',
+    edits: [{ file: erasure, apply: once('return { payable, burn: money.hold + Math.max(0, outside - payable) };', 'return { payable, burn: Math.max(0, money.total - payable) };') }] },
+  { id: 'burn-order-created', title: 'сгорание распределяется по порядку записи, а не созревания — сгоревшим становится выплаченное (четвёртое ревью, находка 2)',
+    edits: [{ file: commission, apply: once('ORDER BY (a.available_at > $2) DESC, a.available_at DESC, a.created_at DESC, a.id DESC', 'ORDER BY (a.available_at > $2) DESC, a.created_at DESC, a.id DESC') }] },
   { id: 'partial-payout-stops-wait', title: 'после частичной выплаты остаток ≥ 1 000 ₽ больше не ждёт (ревью H1)',
     edits: [{ file: erasure, apply: once('if (payable > 0 && beforeMargin) {',
       "if (payable > 0 && beforeMargin && !(await tx.query(`SELECT 1 FROM commission_entry WHERE partner_account_id = $1 AND kind = 'payout'`, [accountId])).rowCount) {") }] },
@@ -58,11 +71,32 @@ const mutations = [
     ] },
   { id: 'dedup-key-kept', title: 'dedup_key событий роста с origin, IP и id остаётся после стирания (ревью H3)',
     edits: [{ file: erasure, apply: once(",\n      dedup_key = 'erased:' || id::text", '') }] },
-  { id: 'invites-to-email-kept', title: 'приглашение живой студии на почту стёртого клиента остаётся (ревью H4)',
-    edits: [{ file: erasure, apply: span('const INVITES_TO_ACCOUNT_EMAIL = `DELETE FROM studio_invite', '(SELECT lower(email) FROM account WHERE id = $1)`;',
-      'const INVITES_TO_ACCOUNT_EMAIL = `SELECT $1::uuid`;') }] },
+  { id: 'invites-to-email-kept', title: 'приглашения на почту стёртого клиента не чистятся вовсе (ревью H4; с повторного ревью — вся очистка)',
+    edits: [{ file: erasure, apply: bodyOf('async function clearInvitesOfAccountTx(tx: PoolClient, accountId: string): Promise<void> {', '  void tx; void accountId;') }] },
   { id: 'waiting-keeps-front', title: 'ожидающий выплату остаётся в голове очереди сторожа (ревью M5)',
     edits: [{ file: erasure, apply: once("      await tx.query('UPDATE account SET erase_attempted_at = $2 WHERE id = $1', [accountId, now]);\n", '') }] },
+  // Повторное ревью Codex (27.09), находки 1–4.
+  { id: 'clawback-burnt', title: 'сторно сгоревшего начисления второй раз уменьшает баланс и долг (повторное ревью, находка 1)',
+    edits: [{ file: commission, apply: once('  const unburnt = Number(accrual.amount_minor) - Number(accrual.forfeited_minor);', '  const unburnt = Number(accrual.amount_minor);') }] },
+  { id: 'forfeit-unmarked', title: 'сгорание не отмечено на конкретных начислениях (повторное ревью, находка 1)',
+    edits: [{ file: commission, apply: once("    await tx.query('UPDATE commission_entry SET forfeited_minor = forfeited_minor + $2 WHERE id = $1', [accrual.id, take]);\n", '') }] },
+  { id: 'clawback-no-lock', title: 'сторно не берёт замок партнёра — читает метку сгорания мимо завершения стирания (повторное ревью, находка 1)',
+    edits: [{ file: commission, apply: once("  await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${found.partner_account_id}`]);\n", '') }] },
+  { id: 'accepted-invite-email-kept', title: 'почта стёртого остаётся в приглашении, принятом другим аккаунтом (повторное ревью, находка 2)',
+    edits: [{ file: erasure, apply: once("  await tx.query(`UPDATE studio_invite SET email = 'erased:' || id::text\n    WHERE email NOT LIKE 'erased:%' AND (accepted_by = $1 OR lower(email) = (SELECT lower(email) FROM account WHERE id = $1))`, [accountId]);\n", '') }] },
+  { id: 'finalize-no-invite-cleanup', title: 'завершение стирания не повторяет очистку приглашений (повторное ревью, находка 3)',
+    edits: [{ file: erasure, apply: once('  await clearInvitesOfAccountTx(tx, accountId);\n  // Текст кода мог быть', '  // Текст кода мог быть') }] },
+  { id: 'invite-no-addressee-lock', title: 'создание приглашения не ждёт строку адресата, которую держит стирание (повторное ревью, находка 3)',
+    edits: [{ file: studio, apply: once('WHERE id = $1 OR lower(email) = lower($2) ORDER BY id FOR NO KEY UPDATE', 'WHERE id = $1 OR $2::text IS NULL ORDER BY id FOR NO KEY UPDATE') }] },
+  { id: 'hold-counts-clawed', title: 'холд включает уже сторнированное незрелое начисление — итог зависит от порядка «возврат ↔ стирание» (третье ревью, находка 1)',
+    edits: [{ file: commission, apply: once("FILTER (WHERE a.kind = 'accrual' AND a.available_at > $2\n        AND NOT EXISTS (SELECT 1 FROM commission_entry c WHERE c.payment_id = a.payment_id AND c.kind = 'clawback')), 0)::bigint AS hold",
+      "FILTER (WHERE a.kind = 'accrual' AND a.available_at > $2), 0)::bigint AS hold") }] },
+  { id: 'invite-locks-unordered', title: 'студия и адресат блокируются не в порядке id — встречные приглашения двух студий дают взаимную блокировку (третье ревью, находка 3)',
+    edits: [{ file: studio, apply: once("    await tx.query('SELECT id FROM account WHERE id = $1 OR lower(email) = lower($2) ORDER BY id FOR NO KEY UPDATE', [input.studioAccountId, input.email]);\n    const studio = await lockAccountBots(tx, input.studioAccountId);",
+      "    const studio = await lockAccountBots(tx, input.studioAccountId);\n    await tx.query('SELECT pg_sleep(0.3)');\n    await tx.query('SELECT id FROM account WHERE lower(email) = lower($1) FOR NO KEY UPDATE', [input.email]);") }] },
+  { id: 'watchdog-chained', title: 'уборка тома и стирание — одна цепочка await: сбой уборки обрывает стирание (повторное ревью, находка 4)',
+    edits: [{ file: workerIndex, apply: span('  const stopWatchdog = startWatchdog(() => runIsolatedSteps([', '  ]));',
+      '  const stopWatchdog = startWatchdog(async () => {\n    await watchdogTick(pool, queue.enqueue);\n    await sweepUploads(pool, config.uploadDir);\n    await erasureTick(pool, config.uploadDir);\n    void runIsolatedSteps;\n  });') }] },
 ];
 const results = [];
 try {

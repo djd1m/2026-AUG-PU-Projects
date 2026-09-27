@@ -35,6 +35,12 @@ ALTER TABLE commission_entry ADD CONSTRAINT commission_sign
 ALTER TABLE commission_entry DROP CONSTRAINT commission_payment_iff_not_payout;
 ALTER TABLE commission_entry ADD CONSTRAINT commission_payment_iff_not_payout CHECK ((kind IN ('payout', 'forfeit')) = (payment_id IS NULL));
 CREATE UNIQUE INDEX commission_forfeit_once ON commission_entry (partner_account_id) WHERE kind = 'forfeit';
+-- СКОЛЬКО сгорело из каждого начисления (повторное ревью, находка 1; третье ревью, находки 1–2): сумма forfeit
+-- распределяется по конкретным начислениям, а сторно вычитает только НЕСГОРЕВШУЮ часть начисления — ни двойного
+-- вычитания сгоревшего, ни потери сторно уже выплаченного. Сумма forfeited_minor по партнёру = −forfeit.
+ALTER TABLE commission_entry ADD COLUMN forfeited_minor bigint NOT NULL DEFAULT 0;
+ALTER TABLE commission_entry ADD CONSTRAINT commission_forfeited_share
+  CHECK (forfeited_minor >= 0 AND (forfeited_minor = 0 OR (kind = 'accrual' AND forfeited_minor <= amount_minor)));
 
 -- 6. Журнал стирания — служебный, БЕЗ персональных данных: только надгробный id, событие, сумма и время.
 CREATE TABLE erasure_audit (

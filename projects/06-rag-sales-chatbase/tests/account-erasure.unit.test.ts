@@ -7,6 +7,7 @@ import path from 'node:path';
 import { createAccountDeleteHandler, createQuestionLogEraseHandler, type AccountDependencies } from '../apps/web/src/server/account-handler';
 import { erasureCookie, readErasureReceipt, readReceiptCookie, signErasureReceipt } from '../apps/web/src/server/erasure-receipt';
 import { erasureLines, owedLines } from '../packages/db/src/ops-erasure';
+import { runIsolatedSteps } from '../apps/worker/src/watchdog-steps';
 
 const ORIGIN = 'https://sufler.test.invalid';
 const ACCOUNT = '11111111-1111-4111-8111-111111111111';
@@ -127,6 +128,34 @@ export function requestErasureAtomic(code: string): boolean {
   return /return transaction\(pool/.test(body) && /UPDATE bot SET status = 'deleted'/.test(body) && /status = 'erasing'/.test(body)
     && (body.match(/transaction\(/g) ?? []).length === 1;
 }
+// Проход сторожа воркера (повторное ревью, находка 4): стирание аккаунтов — ОТДЕЛЬНЫЙ шаг runIsolatedSteps, а не звено
+// общей цепочки await после уборки тома: сбой sweepUploads не должен обрывать erasureTick.
+export function erasureStepIsolated(code: string): boolean {
+  const call = code.indexOf('runIsolatedSteps([');
+  if (call < 0) return false;
+  const steps = code.slice(call, code.indexOf(']))', call));
+  return /run:\s*\(\)\s*=>\s*sweepUploads\(/.test(steps) && /run:\s*\(\)\s*=>\s*erasureTick\(/.test(steps) && !/await\s+(sweepUploads|erasureTick)\(/.test(code);
+}
+describe('проход сторожа воркера (повторное ревью, находка 4)', () => {
+  it('сбой шага не обрывает следующие: уборка тома упала — стирание всё равно выполнено, сбой назван', async () => {
+    const ran: string[] = [], lines: string[] = [];
+    const result = await runIsolatedSteps([
+      { name: 'a', run: async () => { ran.push('a'); } },
+      { name: 'уборка тома uploads', run: async () => { throw Object.assign(new Error('EACCES: permission denied, unlink'), { code: 'EACCES' }); } },
+      { name: 'стирание аккаунтов', run: async () => { ran.push('erase'); } },
+    ], (line) => lines.push(line));
+    expect(ran).toEqual(['a', 'erase']);
+    expect(result.failed).toEqual(['уборка тома uploads']);
+    expect(lines.join('\n')).toContain('уборка тома uploads');
+  });
+  it('страж: в воркере стирание — отдельный шаг; умеет падать на прежней цепочке await', () => {
+    const worker = readFileSync('apps/worker/src/index.ts', 'utf8');
+    expect(erasureStepIsolated(worker)).toBe(true);
+    const chained = "startWatchdog(async () => {\n    await watchdogTick(pool, queue.enqueue);\n    await sweepUploads(pool, config.uploadDir);\n    await erasureTick(pool, config.uploadDir);\n  });";
+    expect(erasureStepIsolated(chained)).toBe(false);
+  });
+});
+
 describe('стражи по исходнику (AC-14)', () => {
   const erasure = readFileSync('packages/db/src/erasure.ts', 'utf8');
   it('единственный путь к erasing/deleted — packages/db/src/erasure.ts', () => {

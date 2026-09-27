@@ -18,7 +18,9 @@ beforeAll(() => {
     const result = subprocess(['node_modules/typescript/bin/tsc', '-p', project], process.env, 60000);
     expect(result.status, result.output).toBe(0);
   }
-});
+  // Пять сборок tsc — ≈ 20 с на загруженной машине (замер 27.09: 19 977 мс при load average 4,7): предел хука по
+  // умолчанию 20 000 мс срабатывал раньше сборки, и файл падал таймаутом, а не проверкой.
+}, 120_000);
 function run(entry: string[], mode: string, timeout = 3000) {
   const env = environment();
   const log = path.join(mkdtempSync(path.join(tmpdir(), 'n6-gw-')), 'requests.jsonl');

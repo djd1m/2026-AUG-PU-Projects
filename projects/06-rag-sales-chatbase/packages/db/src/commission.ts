@@ -51,28 +51,66 @@ export async function accrueCommissionTx(tx: PoolClient, input: AccrueInput): Pr
   return { kind: 'accrued', partnerAccountId: partner.owner_account_id, amountMinor };
 }
 
-export type ClawbackResult = { kind: 'clawed_back'; amountMinor: number } | { kind: 'skipped'; reason: 'no_accrual' | 'already_clawed_back' };
+export type ClawbackResult = { kind: 'clawed_back'; amountMinor: number } | { kind: 'skipped'; reason: 'no_accrual' | 'already_clawed_back' | 'forfeited' };
 // Сторно — КОМПЕНСИРУЮЩАЯ запись на −начисление (не пересчёт от суммы возврата), доступна сразу: долг уменьшает доступное
 // немедленно. После выплаты баланс уходит в минус и гасится будущими начислениями, не взыскивается (решение владельца 26.09).
+// Из начисления, часть которого СГОРЕЛА при удалении партнёра (forfeited_minor), сторнируется только несгоревшая часть:
+// сгоревшая уже списана записью forfeit (повторное ревью account-erasure, находка 1; третье ревью, находка 2). Сгорело
+// всё — сторно нет. Сумма читается ПОСЛЕ замка партнёра — того же, что берут выплата и завершение стирания.
 export async function clawbackCommissionTx(tx: PoolClient, paymentId: string): Promise<ClawbackResult> {
-  const accrual = (await tx.query<{ partner_account_id: string; partner_code_id: string | null; amount_minor: string }>(
-    `SELECT partner_account_id, partner_code_id, amount_minor FROM commission_entry WHERE payment_id = $1 AND kind = 'accrual'`, [paymentId])).rows[0];
-  if (!accrual) return { kind: 'skipped', reason: 'no_accrual' };
-  const amount = -Number(accrual.amount_minor);
+  const found = (await tx.query<{ partner_account_id: string }>(
+    `SELECT partner_account_id FROM commission_entry WHERE payment_id = $1 AND kind = 'accrual'`, [paymentId])).rows[0];
+  if (!found) return { kind: 'skipped', reason: 'no_accrual' };
+  await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${found.partner_account_id}`]);
+  const accrual = (await tx.query<{ partner_account_id: string; partner_code_id: string | null; amount_minor: string; forfeited_minor: string }>(
+    `SELECT partner_account_id, partner_code_id, amount_minor, forfeited_minor FROM commission_entry
+     WHERE payment_id = $1 AND kind = 'accrual'`, [paymentId])).rows[0]!;
+  const unburnt = Number(accrual.amount_minor) - Number(accrual.forfeited_minor);
+  if (unburnt <= 0) return { kind: 'skipped', reason: 'forfeited' };
+  const amount = -unburnt;
   const inserted = await tx.query(`INSERT INTO commission_entry (partner_account_id, partner_code_id, payment_id, kind, amount_minor, available_at)
     VALUES ($1, $2, $3, 'clawback', $4, now()) ON CONFLICT DO NOTHING RETURNING id`,
   [accrual.partner_account_id, accrual.partner_code_id, paymentId, amount]);
   return inserted.rowCount === 1 ? { kind: 'clawed_back', amountMinor: amount } : { kind: 'skipped', reason: 'already_clawed_back' };
 }
 
+// Деньги партнёра для стирания аккаунта на момент `at`: баланс и ХОЛД — несгоревший остаток незрелых начислений, по
+// которым НЕТ сторно (третье ревью, находка 1: сторнированное незрелое начисление в холд не входит — иначе сгорание
+// считало бы его второй раз и зависело бы от порядка «возврат ↔ стирание»). Всё, что не холд, — к выплате.
+export async function partnerErasureMoney(db: Pool | PoolClient, accountId: string, at: Date): Promise<{ entries: number; total: number; hold: number }> {
+  const row = (await db.query<{ n: number; total: string; hold: string }>(`SELECT count(*)::int AS n, COALESCE(sum(a.amount_minor), 0)::bigint AS total,
+      COALESCE(sum(a.amount_minor - a.forfeited_minor) FILTER (WHERE a.kind = 'accrual' AND a.available_at > $2
+        AND NOT EXISTS (SELECT 1 FROM commission_entry c WHERE c.payment_id = a.payment_id AND c.kind = 'clawback')), 0)::bigint AS hold
+    FROM commission_entry a WHERE a.partner_account_id = $1`, [accountId, at])).rows[0]!;
+  return { entries: row.n, total: Number(row.total), hold: Number(row.hold) };
+}
+
 // Сгоревший остаток партнёра, удаляющего аккаунт (account-erasure, решение владельца A-N6-054, ответ 2): компенсирующая
-// запись forfeit на −остаток, одна на партнёра (частичный уникальный индекс миграции 010). Зовёт ТОЛЬКО стирание
-// аккаунта внутри своей транзакции. false — остатка нет или запись уже была.
-export async function forfeitCommissionTx(tx: PoolClient, partnerAccountId: string, totalMinor: number): Promise<boolean> {
-  if (!(totalMinor > 0)) return false;
+// запись forfeit на −burn, одна на партнёра (частичный уникальный индекс миграции 010), и распределение burn по
+// КОНКРЕТНЫМ несторнированным начислениям (forfeited_minor): сначала холд (незрелые на `at`), затем зрелые — от позднее
+// СОЗРЕВШИХ к ранним (четвёртое ревью, находка 2): выплата могла взять только уже доступные деньги, поэтому выплаченными
+// считаются созревшие первыми, а неоплаченным — созревшее последним; порядок записи (created_at) тут ничего не значит —
+// задержанный вебхук со старой датой оплаты созревает раньше записанного до него начисления. Сумма распределённого обязана
+// равняться burn, иначе исключение и откат завершения. Зовёт ТОЛЬКО стирание аккаунта внутри своей транзакции под замком
+// партнёра. false — сгорать нечему или запись уже была.
+export async function forfeitCommissionTx(tx: PoolClient, partnerAccountId: string, burnMinor: number, at: Date): Promise<boolean> {
+  if (!(burnMinor > 0)) return false;
   const inserted = await tx.query(`INSERT INTO commission_entry (partner_account_id, kind, amount_minor, available_at) VALUES ($1, 'forfeit', $2, now())
-    ON CONFLICT DO NOTHING RETURNING id`, [partnerAccountId, -totalMinor]);
-  return inserted.rowCount === 1;
+    ON CONFLICT DO NOTHING RETURNING id`, [partnerAccountId, -burnMinor]);
+  if (inserted.rowCount !== 1) return false;
+  const accruals = (await tx.query<{ id: string; left: string }>(`SELECT a.id, (a.amount_minor - a.forfeited_minor) AS left FROM commission_entry a
+    WHERE a.partner_account_id = $1 AND a.kind = 'accrual' AND a.amount_minor > a.forfeited_minor
+      AND NOT EXISTS (SELECT 1 FROM commission_entry c WHERE c.payment_id = a.payment_id AND c.kind = 'clawback')
+    ORDER BY (a.available_at > $2) DESC, a.available_at DESC, a.created_at DESC, a.id DESC FOR UPDATE OF a`, [partnerAccountId, at])).rows;
+  let left = burnMinor;
+  for (const accrual of accruals) {
+    if (left === 0) break;
+    const take = Math.min(left, Number(accrual.left));
+    await tx.query('UPDATE commission_entry SET forfeited_minor = forfeited_minor + $2 WHERE id = $1', [accrual.id, take]);
+    left -= take;
+  }
+  if (left !== 0) throw new Error('Сгорание партнёра не распределилось по начислениям: учёт не сходится — завершение стирания откатывается');
+  return true;
 }
 
 // Суммы партнёра на момент `at`: баланс и доступное (зрелые начисления + все отрицательные записи).
