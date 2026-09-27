@@ -858,7 +858,7 @@
       "title": "Удаление аккаунта и данных посетителей (152-ФЗ)",
       "description": "DELETE /api/account с confirm: одна транзакция — status erasing, erase_deadline now + 72 ч, все сессии отозваны, все боты deleted (виджеты сразу 403); WatchdogTick стирает фрагменты, страницы, источники, журналы вопросов, установки, боты, обезличивает growth_event, затем status deleted; question_log.text у unknown — очистка после 14 дней; PDF-тома пусты.",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "complexity": "medium",
       "depends_on": [
         "partner-and-studio",
@@ -891,10 +891,12 @@
       ],
       "expected_files": [
         "apps/web/src/app/api/account/route.ts",
-        "apps/worker/src/erase-account.ts",
-        "tests/erasure.test.ts"
+        "apps/worker/src/erase-accounts.ts",
+        "packages/db/src/erasure.ts",
+        "tests/account-erasure.integration.test.ts"
       ],
-      "notes": "Зависит от source-lifecycle (should) только ради переиспользования DeleteSource; если source-lifecycle отложена, удаление пишет стирание источников само."
+      "notes": "Зависит от source-lifecycle (should) только ради переиспользования DeleteSource; если source-lifecycle отложена, удаление пишет стирание источников само. Сделано: eraseSourceTx (тот же порядок блокировок, что deleteSource). Решения A-N6-054…059; A-N6-056 (долг payout_owed вместо сгорания) ждёт подтверждения владельца.",
+      "completion": "docs/features/account-erasure/05_completion.md"
     }
   ]
 }

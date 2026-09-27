@@ -97,6 +97,10 @@ export function recordPartnerPayout(pool: Pool, input: { email: string; amountMi
     const account = (await tx.query<{ id: string }>(`SELECT id FROM account WHERE email = $1 AND status IN ('active', 'erasing')`, [input.email.trim().toLowerCase()])).rows[0];
     if (!account) return { kind: 'not_found' } as const;
     await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${account.id}`]);
+    // Тот же замок берёт завершение стирания (erasure.ts finalizeErasureTx): пока ждали, аккаунт мог стать deleted,
+    // остаток — сгореть, реквизиты — стереться. Состояние перечитывается ПОСЛЕ замка (ревью account-erasure H2).
+    const fresh = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [account.id])).rows[0];
+    if (fresh?.status !== 'active' && fresh?.status !== 'erasing') return { kind: 'not_found' } as const;
     const prior = (await tx.query<{ amount_minor: string }>(`SELECT amount_minor FROM commission_entry
       WHERE partner_account_id = $1 AND kind = 'payout' AND payout_key = $2`, [account.id, input.key])).rows[0];
     const now = new Date();

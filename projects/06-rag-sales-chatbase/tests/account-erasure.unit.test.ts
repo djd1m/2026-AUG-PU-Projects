@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { createAccountDeleteHandler, createQuestionLogEraseHandler, type AccountDependencies } from '../apps/web/src/server/account-handler';
 import { erasureCookie, readErasureReceipt, readReceiptCookie, signErasureReceipt } from '../apps/web/src/server/erasure-receipt';
-import { erasureLines } from '../packages/db/src/ops-erasure';
+import { erasureLines, owedLines } from '../packages/db/src/ops-erasure';
 
 const ORIGIN = 'https://sufler.test.invalid';
 const ACCOUNT = '11111111-1111-4111-8111-111111111111';
@@ -95,6 +95,12 @@ describe('ops:erasure', () => {
     const [line] = erasureLines([{ account_id: ACCOUNT, email: 'a@b.ru', requested_at: '2026-09-27T00:00:00.000Z', deadline: '2026-09-30T00:00:00.000Z', overdue: true, waiting_payout_minor: 150_000 }]);
     expect(line).toContain('ПРОСРОЧЕНО');
     expect(line).toContain('ждёт выплату 1500,00 ₽');
+  });
+  it('owed — долг партнёру, не выплаченный к сроку: пусто — явное «нет», строка — долг и баланс учёта', () => {
+    expect(owedLines([])).toEqual(['Невыплаченных долгов партнёрам нет']);
+    const [line] = owedLines([{ account_id: ACCOUNT, owed_minor: 200_000, balance_minor: 200_000, erased_at: '2026-09-30T00:00:00.000Z' }]);
+    expect(line).toContain('долг на момент стирания 2000,00 ₽');
+    expect(line).toContain('баланс учёта сейчас 2000,00 ₽');
   });
 });
 

@@ -40,7 +40,7 @@ CREATE UNIQUE INDEX commission_forfeit_once ON commission_entry (partner_account
 CREATE TABLE erasure_audit (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(), created_at timestamptz NOT NULL DEFAULT now(),
   account_id uuid REFERENCES account(id) ON DELETE SET NULL,
-  event text NOT NULL CHECK (event IN ('requested', 'waiting_payout', 'forfeited', 'erased', 'failed', 'overdue')),
+  event text NOT NULL CHECK (event IN ('requested', 'waiting_payout', 'forfeited', 'payout_owed', 'erased', 'failed', 'overdue')),
   amount_minor bigint
 );
 CREATE INDEX erasure_audit_account ON erasure_audit (account_id, created_at);

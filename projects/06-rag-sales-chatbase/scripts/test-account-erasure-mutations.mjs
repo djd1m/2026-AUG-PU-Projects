@@ -34,7 +34,7 @@ const mutations = [
   { id: 'growth-not-anonymized', title: 'события роста остаются связанными с человеком, ботом и доменом (AC-7, 152-ФЗ)',
     edits: [{ file: erasure, apply: span('  await tx.query(`UPDATE growth_event SET account_id = NULL', '[accountId, bots, sessions]);', '') }] },
   { id: 'no-payout-wait', title: 'доступное партнёра ≥ 1 000 ₽ сгорает сразу, выплата до срока не ждётся (AC-10, ответ владельца 2)',
-    edits: [{ file: erasure, apply: once('if (hasDetails && !paidSince && money.available >= PAYOUT_MINIMUM_MINOR && beforeMargin) {', 'if (false) {') }] },
+    edits: [{ file: erasure, apply: once('if (payable > 0 && beforeMargin) {', 'if (false) {') }] },
   { id: 'payment-grants-erasing', title: 'оплата удаляемому аккаунту выдаёт план и начисляет комиссию (AC-10, ответ владельца 1)',
     edits: [{ file: payments, apply: once("    if (owner?.status !== 'active') { await record(intent.account_id, intent.plan, 'account_erasing'); return { applied: false, reason: 'account_erasing' } as const; }\n", '') }] },
   { id: 'studio-drags-client-bots', title: 'удаление студии удаляет ботов, переданных клиентам (AC-11, ответ владельца 4)',
@@ -45,6 +45,24 @@ const mutations = [
     edits: [{ file: tick, apply: span('          for (const job of await erasureUploadJobIds(pool, accountId)) await deps.removeUpload(uploadDir, job);',
       'const outcome = await eraseAccount(pool, accountId, now);',
       'const jobs = await erasureUploadJobIds(pool, accountId);\n          const outcome = await eraseAccount(pool, accountId, now);\n          for (const job of jobs) await deps.removeUpload(uploadDir, job);') }] },
+  // Находки ревью Codex (docs/features/account-erasure/08_review.md): каждая закреплена тестом, тест — мутацией.
+  { id: 'owed-burned', title: 'доступное ≥ 1 000 ₽, не выплаченное к сроку, сгорает вместо долга (ревью H1)',
+    edits: [{ file: erasure, apply: once('const burn = money.total - payable;', 'const burn = money.total;') }] },
+  { id: 'partial-payout-stops-wait', title: 'после частичной выплаты остаток ≥ 1 000 ₽ больше не ждёт (ревью H1)',
+    edits: [{ file: erasure, apply: once('if (payable > 0 && beforeMargin) {',
+      "if (payable > 0 && beforeMargin && !(await tx.query(`SELECT 1 FROM commission_entry WHERE partner_account_id = $1 AND kind = 'payout'`, [accountId])).rowCount) {") }] },
+  { id: 'finalize-without-payout-lock', title: 'завершение стирания не берёт замок выплаты, выплата не перечитывает статус (ревью H2)',
+    edits: [
+      { file: erasure, apply: once("  await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${accountId}`]);\n", '') },
+      { file: 'packages/db/src/commission.ts', apply: once("    if (fresh?.status !== 'active' && fresh?.status !== 'erasing') return { kind: 'not_found' } as const;\n", '') },
+    ] },
+  { id: 'dedup-key-kept', title: 'dedup_key событий роста с origin, IP и id остаётся после стирания (ревью H3)',
+    edits: [{ file: erasure, apply: once(",\n      dedup_key = 'erased:' || id::text", '') }] },
+  { id: 'invites-to-email-kept', title: 'приглашение живой студии на почту стёртого клиента остаётся (ревью H4)',
+    edits: [{ file: erasure, apply: span('const INVITES_TO_ACCOUNT_EMAIL = `DELETE FROM studio_invite', '(SELECT lower(email) FROM account WHERE id = $1)`;',
+      'const INVITES_TO_ACCOUNT_EMAIL = `SELECT $1::uuid`;') }] },
+  { id: 'waiting-keeps-front', title: 'ожидающий выплату остаётся в голове очереди сторожа (ревью M5)',
+    edits: [{ file: erasure, apply: once("      await tx.query('UPDATE account SET erase_attempted_at = $2 WHERE id = $1', [accountId, now]);\n", '') }] },
 ];
 const results = [];
 try {

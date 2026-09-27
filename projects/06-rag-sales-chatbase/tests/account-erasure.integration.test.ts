@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import bcrypt from 'bcrypt';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { acceptStudioInvite, applyVerifiedPayment, createPaymentIntent, createPool, createStudioInvite, eraseAccount, eraseBotQuestionLog,
-  listErasableAccounts, observeErasureOverdue, readErasurePreview, recordPartnerPayout, reindexSource, requestErasure, savePayoutDetails, type Pool } from '../packages/db/src/index';
+  listErasableAccounts, listOwedPayouts, observeErasureOverdue, readErasurePreview, recordPartnerPayout, reindexSource, requestErasure, savePayoutDetails, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { createAccountDependencies } from '../apps/web/src/server/account-runtime';
 import { createAccountDeleteHandler } from '../apps/web/src/server/account-handler';
@@ -168,6 +168,9 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     const b = await bot(a.id);
     await pool.query(`INSERT INTO pro_interest (account_id, plan_wanted, origin_screen) VALUES ($1, 'nobadge', 'pricing')`, [a.id]);
     await pool.query(`INSERT INTO quota_counter (scope, scope_key, period, used) VALUES ('account_embed_tokens', $1, '2026-09-27', 10)`, [a.id]);
+    // Ключи дедупликации реальных форм (ревью H3): origin установки, префикс IP показа страницы, id бота.
+    await pool.query(`INSERT INTO growth_event (type, bot_id, account_id, from_domain, dedup_key) VALUES ('widget_install', $1, $2, 'shop.example', $3),
+      ('public_page_view', $1, $2, NULL, $4)`, [b.id, a.id, `${b.id}:${HOST}`, `${b.id}:203.0.113.0/24`]);
     await requestErasure(pool, a.id);
     expect(await listErasableAccounts(pool, new Date(), 500)).not.toContain(a.id);   // тихий час не прошёл — сторож не берёт
     await age(a.id);
@@ -181,7 +184,10 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
       ['session', 'SELECT count(*) FROM session WHERE account_id = $1', [a.id]], ['pro_interest', 'SELECT count(*) FROM pro_interest WHERE account_id = $1', [a.id]],
       ['growth_event (связи)', 'SELECT count(*) FROM growth_event WHERE account_id = $1 OR bot_id = $2 OR visitor_session_id = $3', [a.id, b.id, b.visitor]],
     ] as const) expect(await one(sql, [...params]), table).toBe(0);
-    expect(await one(`SELECT count(*) FROM growth_event WHERE dedup_key = $1 AND from_domain IS NULL`, [`first_answer:${b.id}`])).toBe(1);   // агрегат остался
+    expect(await one(`SELECT count(*) FROM growth_event WHERE dedup_key LIKE '%' || $1 || '%' OR dedup_key LIKE '%' || $2 || '%' OR dedup_key LIKE '%shop.example%'
+      OR dedup_key LIKE '%203.0.113.%' OR dedup_key LIKE '%' || $3 || '%'`, [a.id, b.id, b.visitor]), 'dedup_key с ПДн').toBe(0);
+    expect(await one(`SELECT count(*) FROM growth_event WHERE type IN ('first_answer', 'widget_install', 'public_page_view')
+      AND dedup_key = 'erased:' || id::text AND from_domain IS NULL`)).toBeGreaterThanOrEqual(3);   // агрегаты остались
     const tomb = (await q<Record<string, unknown>>(`SELECT status, email, password_hash, plan, came_from, signup_ip_prefix FROM account WHERE id = $1`, [a.id]))[0];
     expect(tomb).toEqual({ status: 'deleted', email: `deleted:${a.id}`, password_hash: '', plan: 'free', came_from: null, signup_ip_prefix: null });
     expect(await eraseAccount(pool, a.id)).toEqual({ kind: 'skipped' });           // идемпотентно
@@ -249,21 +255,88 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     expect((await q<{ plan: string }>('SELECT plan FROM account WHERE id = $1', [payer.id]))[0]!.plan).toBe('free');
   });
 
-  it('AC-10: без выплаты к запасу до срока — всё доступное сгорает и стирание завершается в срок; платежи остаются обезличенными', async () => {
+  // Партнёр с доступным `minor` (зрелое начисление по оплате) и реквизитами СБП.
+  async function partnerWith(minor: number) {
     const partner = await account();
     await pool.query(`WITH p AS (INSERT INTO payment (provider, provider_payment_id, amount_minor, paid_at, account_id)
         VALUES ('fake', $2, 99000, now(), $1) RETURNING id)
       INSERT INTO commission_entry (partner_account_id, kind, amount_minor, available_at, payment_id)
-      SELECT $1, 'accrual', 200000, now() - interval '40 days', p.id FROM p`, [partner.id, randomUUID()]);
+      SELECT $1, 'accrual', $3, now() - interval '40 days', p.id FROM p`, [partner.id, randomUUID(), minor]);
     await savePayoutDetails(pool, partner.id, { method: 'sbp', phone: '+79000000001', bank: null });
+    return partner;
+  }
+  const balance = (id: string) => one('SELECT COALESCE(sum(amount_minor), 0) FROM commission_entry WHERE partner_account_id = $1', [id]);
+
+  it('AC-10: доступное ≥ 1 000 ₽, не выплаченное к запасу, НЕ сгорает — стирание в срок, сумма остаётся долгом payout_owed (ревью H1)', async () => {
+    const partner = await partnerWith(200_000);
     await requestErasure(pool, partner.id);
     await age(partner.id);
     expect(await eraseAccount(pool, partner.id)).toMatchObject({ kind: 'waiting_payout' });
     expect(await eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))).toEqual({ kind: 'erased' });
-    expect(await one(`SELECT amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(-200_000);
+    expect(await one(`SELECT count(*) FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(0);
+    expect(await balance(partner.id)).toBe(200_000);
+    expect(await one(`SELECT amount_minor FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(200_000);
+    expect((await listOwedPayouts(pool)).find((r) => r.account_id === partner.id)).toMatchObject({ owed_minor: 200_000, balance_minor: 200_000 });
+    expect(await one('SELECT count(*) FROM partner_payout_details WHERE account_id = $1', [partner.id])).toBe(0);
     expect(await one('SELECT count(*) FROM payment WHERE account_id = $1', [partner.id])).toBe(1);
     expect(await one(`SELECT count(*) FROM account WHERE id = $1 AND email LIKE 'deleted:%'`, [partner.id])).toBe(1);
   });
+
+  it('AC-10: частичная выплата — остаток ≥ 1 000 ₽ ждёт дальше, остаток ниже минимума сгорает; ожидающий уходит в конец очереди (ревью H1, M5)', async () => {
+    const partner = await partnerWith(250_000);
+    await requestErasure(pool, partner.id);
+    await age(partner.id);
+    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'waiting_payout', payoutMinor: 250_000 });
+    const fresh = await account();
+    await requestErasure(pool, fresh.id);
+    await age(fresh.id);
+    const queue = await listErasableAccounts(pool, new Date(), 500);
+    expect(queue.indexOf(fresh.id)).toBeLessThan(queue.indexOf(partner.id));     // не пробовавшийся — раньше ожидающего
+    await eraseAccount(pool, fresh.id);
+    expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 100_000, key: 'part-1', operator: 'op', reason: 'часть' })).toMatchObject({ kind: 'recorded' });
+    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'waiting_payout', payoutMinor: 150_000 });
+    expect(await recordPartnerPayout(pool, { email: partner.mail, amountMinor: 100_000, key: 'part-2', operator: 'op', reason: 'часть' })).toMatchObject({ kind: 'recorded' });
+    expect(await eraseAccount(pool, partner.id)).toEqual({ kind: 'erased' });
+    expect(await one(`SELECT amount_minor FROM commission_entry WHERE partner_account_id = $1 AND kind = 'forfeit'`, [partner.id])).toBe(-50_000);
+    expect(await balance(partner.id)).toBe(0);
+    expect(await one(`SELECT count(*) FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(0);
+  });
+
+  it('ревью H2 детерминированно: пока замок выплаты занят, завершение стирания ЖДЁТ; выплата, стоявшая первой, проходит, долга нет', async () => {
+    const partner = await partnerWith(200_000);
+    await requestErasure(pool, partner.id);
+    await age(partner.id);
+    const holder = await pool.connect();
+    try {
+      await holder.query('BEGIN');
+      await holder.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${partner.id}`]);
+      const paying = recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: 'held', operator: 'op', reason: 'замок' });
+      await new Promise((r) => setTimeout(r, 200));
+      const erasing = eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR));
+      await new Promise((r) => setTimeout(r, 1_500));   // без замка стирание партнёра без ботов успевает до конца
+      expect(await status(partner.id), 'завершение не дождалось замка выплаты').toBe('erasing');
+      await holder.query('COMMIT');
+      expect(await paying).toMatchObject({ kind: 'recorded' });
+      expect(await erasing).toEqual({ kind: 'erased' });
+    } finally { holder.release(); }
+    expect(await balance(partner.id)).toBe(0);
+    expect(await one(`SELECT count(*) FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id])).toBe(0);
+  });
+
+  it('AC-6: выплата ↔ завершение стирания у запаса — одна блокировка: не бывает и выплаты, и долга, баланс не уходит в минус (ревью H2)', async () => {
+    for (let round = 0; round < 8; round++) {
+      const partner = await partnerWith(200_000);
+      await requestErasure(pool, partner.id);
+      await age(partner.id);
+      const [paid, erased] = await Promise.all([
+        recordPartnerPayout(pool, { email: partner.mail, amountMinor: 200_000, key: `race-${round}`, operator: 'op', reason: 'гонка' }),
+        eraseAccount(pool, partner.id, new Date(Date.now() + 67 * HOUR))]);
+      expect(erased).toEqual({ kind: 'erased' });
+      const owed = await one(`SELECT count(*) FROM erasure_audit WHERE account_id = $1 AND event = 'payout_owed'`, [partner.id]);
+      if (paid.kind === 'recorded') expect([owed, await balance(partner.id)]).toEqual([0, 0]);
+      else expect([paid.kind, owed, await balance(partner.id)]).toEqual(['not_found', 1, 200_000]);
+    }
+  }, 60_000);
 
   it('AC-11: удаление студии не трогает ботов клиентов (снимается только чтение), приглашения аннулируются; удаление клиента удаляет и полученных ботов', async () => {
     const studio = await account('studio'), client = await account();
@@ -279,10 +352,18 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
       .toEqual({ account_id: client.id, status: 'active', studio_account_id: null });
     expect(await one('SELECT count(*) FROM bot WHERE id = $1', [own.id])).toBe(0);
     const clientSecond = await bot(client.id);
+    // Непринятое приглашение ЖИВОЙ студии на почту клиента (ревью H4): бот студии, каскад его не найдёт — почта клиента
+    // обязана исчезнуть при стирании клиента. Регистр почты в приглашении — другой.
+    const other = await account('studio');
+    const otherBot = await bot(other.id);
+    await pool.query(`INSERT INTO studio_invite (bot_id, studio_account_id, token_hash, email, expires_at) VALUES ($1, $2, $3, $4, now() + interval '7 days')`,
+      [otherBot.id, other.id, hex64(randomUUID()), client.mail.toUpperCase()]);
     await requestErasure(pool, client.id);
     await age(client.id);
     await eraseAccount(pool, client.id);
     expect(await one('SELECT count(*) FROM bot WHERE id = ANY($1::uuid[])', [[given.id, clientSecond.id]])).toBe(0);
+    expect(await one('SELECT count(*) FROM studio_invite WHERE lower(email) = $1', [client.mail])).toBe(0);
+    expect(await one('SELECT count(*) FROM bot WHERE id = $1', [otherBot.id])).toBe(1);   // бот живой студии цел
   });
 
   it('AC-12: журнал вопросов бота стирает владелец; чужой — null; тексты и история посетителей удалены', async () => {

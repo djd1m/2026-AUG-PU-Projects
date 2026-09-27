@@ -76,7 +76,8 @@ FR-TARIFF-003 пределы плана · FR-LIMIT-001 потолки отве�
 A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`, `payment`, `operator_action`; с 26.09 (партнёры и студии,
 комиссии и выплаты, решение владельца, A-N6-043, миграция 007) — ещё 4: `partner_code_use`, `commission_entry`,
 `partner_payout_details`, `partner_audit`. Итого **27**. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
-`accrual | clawback | payout`; `partner_code.frozen_reason` ∈ `antifraud_ip_burst | operator`; `partner_code_use.source` =
+`accrual | clawback | payout | forfeit` (`forfeit` — сгорание при удалении аккаунта, A-N6-059); `partner_code.frozen_reason` ∈
+`antifraud_ip_burst | operator | owner_erased`; `partner_code_use.source` =
 `attribution.source` ∈ `code | invite | cookie`; `partner_audit.kind` ∈ `frozen_antifraud | unfrozen | code_issued |
 payout_recorded | accrual_skipped_fee_unknown`.
 
@@ -95,7 +96,7 @@ payout_recorded | accrual_skipped_fee_unknown`.
 | `quota_counter.scope` | 10 значений, §7 | отказ списания |
 | `growth_event.type` | `badge_impression` · `badge_click` · `share_cta_shown` · `share_cta_click` · `widget_install` · `first_answer` · `public_page_view` · `invite_sent` · `invite_accepted` · `interest` | не записывается |
 | `attribution.source` | `code` · `invite` · `cookie` | `cookie` (самый слабый) |
-| `attribution.status` | `pending` · `converted` · `rejected` | `rejected` |
+| `attribution.status` | `pending` · `converted` · `rejected` · `partner_deleted` (A-N6-054) | `rejected` |
 
 ## 5. Маршруты (имена, не форма — форма в Pseudocode «API Contracts»)
 
@@ -198,6 +199,13 @@ self-referral — владелец кода с того же префикса з
 **Сроки жизни:** сессия 7 дней; приглашение студии 7 дней, одноразовое; `question_log.text`
 хранится только у `unknown`, 14 дней; сырой PDF удаляется после индексации; удаление аккаунта —
 ≤ 72 ч.
+
+**Удаление аккаунта (фича `account-erasure`, решения владельца A-N6-054, константы `packages/rag/src/constants.ts`):**
+срок стирания — **72 ч** от запроса (`ERASE_DEADLINE_HOURS`); тихий час до первой попытки — **1 ч** (`ERASURE_QUIET_MS`);
+ожидание выплаты партнёру доступного ≥ **1 000 ₽** — до **6 ч** до срока (`ERASURE_PAYOUT_MARGIN_HOURS`), не выплаченное
+к запасу остаётся долгом `payout_owed`, а не сгорает (A-N6-056); аккаунтов за проход сторожа — **50** (`ERASURE_BATCH`);
+квитанция `__Host-n6_erasure` — **7 дней**; записи оплат, начислений и выплат — **5 лет** обезличенными (402-ФЗ).
+Отмены нет. Оператор: `npm run ops:erasure -- list | overdue | owed`.
 
 **Задача индексации:** предельное время 15 мин; таймаут посредника 60 с; не более 2 автоматических
 попыток шага; сторож — раз в минуту, `stalled` после 5 мин без обновления.

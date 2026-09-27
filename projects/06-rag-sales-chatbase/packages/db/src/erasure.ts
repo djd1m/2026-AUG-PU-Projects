@@ -15,6 +15,7 @@
 //   порядок тот же; источники — по одному, «задачи → бот», как deleteSource фичи 16.
 // Решения владельца (A-N6-054): оплаченный остаток сгорает (возврат по заявке вручную); доступное партнёра ≥ 1 000 ₽
 // оператор выплачивает до срока по реквизитам СБП, холд и меньшие суммы сгорают (запись forfeit), реквизиты стираются;
+// не выплаченное к запасу доступное ≥ 1 000 ₽ не сгорает, а остаётся долгом payout_owed (A-N6-056, ревью H1);
 // записи оплат, начислений и выплат остаются 5 лет обезличенными — они ссылаются на надгробную строку account без почты;
 // переданные клиентам боты студии остаются у клиентов; отменить удаление нельзя.
 import { ERASE_DEADLINE_HOURS, ERASURE_PAYOUT_MARGIN_HOURS, ERASURE_QUIET_MS, PAYOUT_MINIMUM_MINOR } from '@n6/rag';
@@ -65,6 +66,11 @@ export async function readErasurePreview(pool: Pool, accountId: string, now = ne
   return { bots: bots.own, clientBots: bots.clients, paidDaysLeft, partner };
 }
 
+// Непринятые приглашения НА почту аккаунта от чужих студий (ревью H4): бот принадлежит студии, поэтому каскад бота их
+// не находит, а почта в них — ПДн клиента. Вызывается, пока почта аккаунта ещё настоящая (до надгробия).
+const INVITES_TO_ACCOUNT_EMAIL = `DELETE FROM studio_invite WHERE accepted_by IS NULL
+  AND lower(email) = (SELECT lower(email) FROM account WHERE id = $1)`;
+
 export type RequestErasureResult = { kind: 'accepted'; eraseDeadline: string } | { kind: 'already' } | { kind: 'not_found' };
 // RequestErasure: ОДНА транзакция (security.md «удаление аккаунта ↔ виджеты»): erasing + срок 72 ч, задачи индексации
 // ботов — фенс (оплаченная работа не продолжается), все боты аккаунта deleted (виджеты отвечают 403 с этого коммита),
@@ -86,6 +92,7 @@ export function requestErasure(pool: Pool, accountId: string): Promise<RequestEr
     await tx.query(`UPDATE bot SET status = 'deleted', public_enabled = false WHERE account_id = $1 AND status <> 'deleted'`, [accountId]);
     await tx.query('DELETE FROM session WHERE account_id = $1', [accountId]);
     await tx.query('DELETE FROM studio_invite WHERE studio_account_id = $1 AND accepted_by IS NULL', [accountId]);
+    await tx.query(INVITES_TO_ACCOUNT_EMAIL, [accountId]);
     await tx.query(`UPDATE partner_code SET frozen = true, frozen_at = COALESCE(frozen_at, now()),
       frozen_reason = CASE WHEN frozen THEN frozen_reason ELSE 'owner_erased' END WHERE owner_account_id = $1`, [accountId]);
     await tx.query(`UPDATE attribution SET status = 'partner_deleted', reject_reason = NULL
@@ -110,8 +117,8 @@ export async function erasureUploadJobIds(pool: Pool, accountId: string): Promis
 export type EraseAccountResult = { kind: 'erased' } | { kind: 'waiting_payout'; payoutMinor: number } | { kind: 'skipped' };
 // EraseAccount — один аккаунт, идемпотентно (повтор находит пустоту): источники по одному → строки ботов и аккаунта →
 // деньги партнёра → надгробная строка deleted ПОСЛЕДНЕЙ. Сбой на любом шаге оставляет erasing — повтор следующим
-// проходом. Выплата партнёру (ответ владельца 2): пока до срока больше запаса и оператор ещё не выплатил доступное
-// ≥ минимума по сохранённым реквизитам — всё, кроме денег партнёра, уже стёрто, а завершение ждёт выплату.
+// проходом. Выплата партнёру (ответ владельца 2): пока до срока больше запаса и доступное ≥ минимума при сохранённых
+// реквизитах — всё, кроме денег партнёра, уже стёрто, а завершение ждёт выплату.
 export async function eraseAccount(pool: Pool, accountId: string, now = new Date()): Promise<EraseAccountResult> {
   if (!isUuid(accountId)) return { kind: 'skipped' };
   const status = (await pool.query<{ status: string }>('SELECT status FROM account WHERE id = $1', [accountId])).rows[0]?.status;
@@ -134,7 +141,10 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
   const sessions = bots.length
     ? (await tx.query<{ id: string }>('SELECT id FROM visitor_session WHERE bot_id = ANY($1::uuid[])', [bots])).rows.map((r) => r.id) : [];
   // События роста — агрегаты остаются, связи с человеком, ботом, посетителем и доменом стираются (N5 retention.ts).
-  await tx.query(`UPDATE growth_event SET account_id = NULL, bot_id = NULL, visitor_session_id = NULL, from_domain = NULL
+  // dedup_key тоже: в нём origin установки, префикс IP показа страницы, идентификаторы бота и сессии (ревью H3);
+  // замена — id события, уникальный сам по себе, пара (type, dedup_key) остаётся уникальной.
+  await tx.query(`UPDATE growth_event SET account_id = NULL, bot_id = NULL, visitor_session_id = NULL, from_domain = NULL,
+      dedup_key = 'erased:' || id::text
     WHERE account_id = $1 OR bot_id = ANY($2::uuid[]) OR visitor_session_id = ANY($3::uuid[])`, [accountId, bots, sessions]);
   await tx.query('DELETE FROM quota_counter WHERE scope_key = ANY($1::text[])', [[accountId, ...bots, ...sessions]]);
   // Боты аккаунта (свои и полученные от студии): каскадом — домены, источники, страницы, фрагменты, задачи, журнал
@@ -144,6 +154,7 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
   await tx.query('UPDATE bot SET studio_account_id = NULL WHERE studio_account_id = $1', [accountId]);
   await tx.query('DELETE FROM studio_invite WHERE studio_account_id = $1', [accountId]);
   await tx.query('UPDATE studio_invite SET accepted_by = NULL, accepted_at = NULL WHERE accepted_by = $1', [accountId]);
+  await tx.query(INVITES_TO_ACCOUNT_EMAIL, [accountId]);
   for (const table of ['session', 'pro_interest', 'attribution', 'partner_code_use']) {
     await tx.query(`DELETE FROM ${table} WHERE account_id = $1`, [accountId]);
   }
@@ -153,25 +164,37 @@ async function eraseAccountRowsTx(tx: PoolClient, accountId: string): Promise<bo
 }
 
 async function finalizeErasureTx(tx: PoolClient, accountId: string, now: Date): Promise<EraseAccountResult> {
-  const account = (await tx.query<{ status: string; erase_requested_at: Date; erase_deadline: Date }>(`SELECT status, ${REQUESTED_AT} AS erase_requested_at, erase_deadline
+  const account = (await tx.query<{ status: string; erase_deadline: Date }>(`SELECT status, erase_deadline
     FROM account WHERE id = $1 FOR NO KEY UPDATE`, [accountId])).rows[0];
   if (account?.status !== 'erasing') return { kind: 'skipped' };
+  // Та же блокировка, что у recordPartnerPayout (ревью H2): выплата и завершение не читают баланс одновременно —
+  // иначе выплата по старому балансу ложится поверх forfeit, а реквизиты уже стёрты. Порядок: account → замок
+  // выплаты; выплата строку account не блокирует, цикла нет.
+  await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`partner_payout:${accountId}`]);
   const money = await partnerTotals(tx, accountId, now);
   if (money.total > 0) {
     const hasDetails = Boolean((await tx.query('SELECT 1 FROM partner_payout_details WHERE account_id = $1', [accountId])).rowCount);
-    const paidSince = Boolean((await tx.query(`SELECT 1 FROM commission_entry WHERE partner_account_id = $1 AND kind = 'payout' AND created_at >= $2`,
-      [accountId, account.erase_requested_at])).rowCount);
+    // К выплате — доступное ≥ минимума при реквизитах (ответ владельца 2), в том числе остаток после частичной выплаты.
+    const payable = hasDetails && money.available >= PAYOUT_MINIMUM_MINOR ? money.available : 0;
     const beforeMargin = now.getTime() < account.erase_deadline.getTime() - ERASURE_PAYOUT_MARGIN_HOURS * HOUR_MS;
-    if (hasDetails && !paidSince && money.available >= PAYOUT_MINIMUM_MINOR && beforeMargin) {
+    if (payable > 0 && beforeMargin) {
       await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor)
-        SELECT $1, 'waiting_payout', $2 WHERE NOT EXISTS (SELECT 1 FROM erasure_audit WHERE account_id = $1 AND event = 'waiting_payout')`,
-      [accountId, money.available]);
-      return { kind: 'waiting_payout', payoutMinor: money.available };
+        SELECT $1, 'waiting_payout', $2 WHERE NOT EXISTS (SELECT 1 FROM erasure_audit WHERE account_id = $1 AND event = 'waiting_payout' AND amount_minor = $2)`,
+      [accountId, payable]);
+      // Ожидающий уходит в конец очереди (ревью M5): 50 ожидающих не занимают каждый проход сторожа.
+      await tx.query('UPDATE account SET erase_attempted_at = $2 WHERE id = $1', [accountId, now]);
+      return { kind: 'waiting_payout', payoutMinor: payable };
     }
-    // Остаток сгорает явной записью: баланс надгробной строки — ноль, а не «забыт» (ответ владельца 2). Запись
-    // commission_entry — только в commission.ts (страж фичи 15, AC-16).
-    if (await forfeitCommissionTx(tx, accountId, money.total)) {
-      await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor) VALUES ($1, 'forfeited', $2)`, [accountId, money.total]);
+    // Сгорает ТОЛЬКО то, что владелец назвал сгорающим: холд и доступное ниже минимума или без реквизитов — явной
+    // записью forfeit (commission_entry пишет только commission.ts, страж фичи 15). Доступное ≥ минимума, не
+    // выплаченное к запасу до срока, НЕ сгорает (ревью H1): стирание завершается в срок, а сумма остаётся долгом в
+    // учёте надгробной строки и сигналом payout_owed оператору (ops:erasure owed).
+    const burn = money.total - payable;
+    if (burn > 0 && await forfeitCommissionTx(tx, accountId, burn)) {
+      await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor) VALUES ($1, 'forfeited', $2)`, [accountId, burn]);
+    }
+    if (payable > 0) {
+      await tx.query(`INSERT INTO erasure_audit (account_id, event, amount_minor) VALUES ($1, 'payout_owed', $2)`, [accountId, payable]);
     }
   }
   await tx.query('DELETE FROM partner_payout_details WHERE account_id = $1', [accountId]);
@@ -219,6 +242,16 @@ export async function listErasingAccounts(pool: Pool, now = new Date()): Promise
       overdue: row.erase_deadline < now, waiting_payout_minor: waiting ? Number(waiting.amount_minor) : null });
   }
   return out;
+}
+
+export interface OwedRow { account_id: string; owed_minor: number; balance_minor: number; erased_at: string }
+// Долги партнёрам, не выплаченные к сроку стирания (payout_owed): сумма на момент завершения и текущий баланс учёта —
+// оператор закрывает долг вручную (реквизиты стёрты, связь — по обращению человека).
+export async function listOwedPayouts(pool: Pool): Promise<OwedRow[]> {
+  return (await pool.query<{ account_id: string; owed_minor: string; balance_minor: string; created_at: Date }>(`SELECT e.account_id, e.amount_minor AS owed_minor,
+      (SELECT COALESCE(sum(amount_minor), 0) FROM commission_entry c WHERE c.partner_account_id = e.account_id) AS balance_minor, e.created_at
+    FROM erasure_audit e WHERE e.event = 'payout_owed' AND e.account_id IS NOT NULL ORDER BY e.created_at, e.account_id`)).rows
+    .map((r) => ({ account_id: r.account_id, owed_minor: Number(r.owed_minor), balance_minor: Number(r.balance_minor), erased_at: r.created_at.toISOString() }));
 }
 
 // FR-AUTH-002, вторая фраза: владелец бота стирает журнал вопросов своего бота отдельно, без удаления аккаунта.
