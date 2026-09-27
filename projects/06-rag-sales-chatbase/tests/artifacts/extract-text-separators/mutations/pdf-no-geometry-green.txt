@@ -1,0 +1,15 @@
+
+ RUN  v3.2.7 /tmp/n6-extract-mutations-lnLySx
+
+ ✓ tests/extract-text-separators.test.ts (11 tests) 456ms
+   ✓ PDF настоящим pdfjs (AC-7): дочерний процесс разбора > два фрагмента на одной строке через зазор — слова разделены; слово из двух кусков без зазора — целое  433ms
+ ✓ tests/crawl.test.ts (17 tests) 1909ms
+   ✓ Обход > не text/html пропускается без чтения тела; 404 — gone (страницы нет), 5xx — http_error (временный сбой); зависшая страница — timeout  314ms
+   ✓ Обход > корень не отвечает → unreachable  612ms
+   ✓ Обход > вежливость: между началами любых запросов — не меньше паузы (1 поток)  609ms
+
+ Test Files  2 passed (2)
+      Tests  28 passed (28)
+   Start at  09:29:02
+   Duration  4.06s (transform 469ms, setup 0ms, collect 818ms, tests 2.36s, environment 1ms, prepare 284ms)
+

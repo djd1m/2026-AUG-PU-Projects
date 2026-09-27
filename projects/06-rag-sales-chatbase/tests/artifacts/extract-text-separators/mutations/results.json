@@ -1,0 +1,54 @@
+[
+  {
+    "id": "boundary-removed",
+    "title": "пробел на границе соседних элементов снят — «целиком5 курсов» (дефект стенда возвращён)",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 25 passed (28)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "28 passed (28)"
+    },
+    "passed": true
+  },
+  {
+    "id": "space-inside-word",
+    "title": "пробел у ЛЮБОГО открывающего тега — слово, разрезанное тегом, рвётся («при мер»)",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 27 passed (28)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "28 passed (28)"
+    },
+    "passed": true
+  },
+  {
+    "id": "pdf-no-geometry",
+    "title": "склейка элементов PDF без геометрии (прежний код) — «Стрижка1500»",
+    "red": {
+      "code": 1,
+      "summary": "2 failed | 26 passed (28)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "28 passed (28)"
+    },
+    "passed": true
+  },
+  {
+    "id": "build-not-copying",
+    "title": "сборка воркера не копирует page-text.mjs рядом с extract-child.mjs",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 27 passed (28)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "28 passed (28)"
+    },
+    "passed": true
+  }
+]

@@ -8,6 +8,8 @@
 import Module from 'node:module';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
+// Склейка текста страницы — чистый модуль (проверяется тестом); сборка копирует его рядом (apps/worker/package.json).
+import { pageText } from './page-text.mjs';
 
 // Нативный @napi-rs/canvas (необязательная зависимость pdfjs) нужен только для отрисовки. Его загрузка —
 // лишняя нативная поверхность на враждебном вводе, поэтому она запрещена здесь явно, даже если пакет
@@ -40,17 +42,6 @@ async function readInput() {
     chunks.push(chunk);
   }
   return new Uint8Array(Buffer.concat(chunks, size));
-}
-
-// Текст страницы: элементы pdfjs + переводы строк; пробельные серии схлопываются. Регэкспы — одиночные
-// классы символов с квантификатором, без вложенности: линейны.
-function pageText(items) {
-  let text = '';
-  for (const item of items) {
-    if (typeof item.str === 'string') text += item.str;
-    if (item.hasEOL) text += '\n';
-  }
-  return text.replace(/[ \t \f\v]+/g, ' ').replace(/ ?\n ?/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
 function classify(error) {
