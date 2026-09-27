@@ -420,4 +420,15 @@ describe.skipIf(!databaseUrl)('удаление аккаунта: повторн
     expect(await unfreezePartnerCode(pool, { code, by: 'оператор', reason: 'проверено' })).toEqual({ kind: 'unfrozen' });
   });
 
+
+  it('узкое ревью коммита восьмого круга: префикс erased: зарезервирован — метка оператора с ним отклоняется у живого и стёртого партнёра', async () => {
+    const partner = await partnerWith(300_000);
+    const pay = (email: string, key: string) => recordPartnerPayout(pool, { email, amountMinor: 110_000, key, operator: 'оператор', reason: 'выплата' });
+    for (const key of ['erased:Иван Петров +79001234567', 'ERASED:' + 'a'.repeat(32), ' erased:x']) expect(await pay(partner.mail, key), key).toEqual({ kind: 'reserved_key' });
+    expect(await one(`SELECT count(*) FROM commission_entry WHERE partner_account_id = $1 AND kind = 'payout'`, [partner.id])).toBe(0);
+    expect(await pay(partner.mail, 'сентябрь-2026')).toMatchObject({ kind: 'recorded' });
+    await eraseNow(partner.id);
+    expect(await recordPartnerPayout(pool, { email: `deleted:${partner.id}`, amountMinor: 10_000, key: 'erased:Мария', operator: 'оператор', reason: 'долг' })).toEqual({ kind: 'reserved_key' });
+  });
+
 });

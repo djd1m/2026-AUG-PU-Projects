@@ -128,7 +128,7 @@ export async function commissionExportCsv(pool: Pool): Promise<string> {
 
 const PAYOUT_TEXT: Record<Exclude<RecordPayoutResult['kind'], 'recorded' | 'duplicate'>, string> = {
   not_found: 'Аккаунт партнёра с такой почтой не найден (удалённому — почта deleted:<id> из ops:erasure owed)', no_details: 'У партнёра нет реквизитов СБП: выплату не записать',
-  key_conflict: 'Этот ключ выплаты уже использован с ДРУГОЙ суммой', below_minimum: 'Сумма меньше минимальной выплаты 1 000 ₽',
+  key_conflict: 'Этот ключ выплаты уже использован с ДРУГОЙ суммой', reserved_key: 'Ключ выплаты не может начинаться с «erased:» — префикс зарезервирован', below_minimum: 'Сумма меньше минимальной выплаты 1 000 ₽',
   exceeds_available: 'Сумма больше доступного к выплате',
 };
 export async function runOps(pool: Pool, args: OpsArgs, out: (line: string) => void): Promise<boolean> {

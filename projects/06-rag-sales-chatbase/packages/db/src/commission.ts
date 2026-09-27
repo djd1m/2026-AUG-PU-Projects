@@ -114,12 +114,16 @@ export async function partnerTotals(db: Pool | PoolClient, accountId: string, at
 
 export type RecordPayoutResult =
   | { kind: 'recorded' | 'duplicate'; amountMinor: number; balanceAfterMinor: number }
-  | { kind: 'not_found' | 'no_details' | 'key_conflict' }
+  | { kind: 'not_found' | 'no_details' | 'key_conflict' | 'reserved_key' }
   | { kind: 'below_minimum'; minimumMinor: number }
   | { kind: 'exceeds_available'; availableMinor: number };
 // Выплата оператором (решение владельца 26.09: вручную по СБП 5-го, минимум 1 000 ₽). Под блокировкой партнёра: две
 // одновременные записи не превышают доступное. Повтор с тем же ключом — одна запись (частичный уникальный индекс).
 export function recordPartnerPayout(pool: Pool, input: { email: string; amountMinor: number; key: string; operator: string; reason: string }): Promise<RecordPayoutResult> {
+  // Префикс `erased:` зарезервирован за отпечатками меток стёртых партнёров (миграция 010, раздел 8): метка оператора с ним
+  // выглядела бы как отпечаток — оставалась бы буквальной при стирании и путалась бы с отпечатком другой метки (узкое ревью
+  // коммита восьмого круга, находки P1/P2). Отказ — до чтения базы.
+  if (input.key.trim().toLowerCase().startsWith('erased:')) return Promise.resolve({ kind: 'reserved_key' } as const);
   return transaction(pool, async (tx) => {
     // erasing — тоже: партнёру, удаляющему аккаунт, оператор выплачивает доступное ≥ минимума ДО срока стирания
     // (account-erasure, ответ владельца 2); почта в статусе erasing ещё настоящая. deleted — выплата долга удалённому
