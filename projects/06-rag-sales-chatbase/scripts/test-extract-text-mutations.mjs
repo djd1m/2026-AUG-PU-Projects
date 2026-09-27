@@ -1,8 +1,8 @@
 // из N6 scripts/test-visitor-ask-mutations.mjs — та же схема «копия проекта → дефект → красный прогон → восстановление →
 // зелёный», без БД (извлечение текста — чистые функции и дочерний процесс PDF).
 // Мутации стражей extract-text-separators: снят пробел на границе соседних элементов (дефект стенда возвращён); пробел
-// у ЛЮБОГО открывающего тега (перелечивание: «при мер»); склейка PDF без геометрии (прежний код); сборка воркера не
-// копирует page-text.mjs (в образе каждый PDF упал бы ERR_MODULE_NOT_FOUND).
+// у ЛЮБОГО открывающего тега (перелечивание: «при мер»); граница и у тегов без текста; &shy; сбрасывает границу;
+// нормализация PDF теряет NBSP; сборка воркера не копирует page-text.mjs (в образе каждый PDF упал бы ERR_MODULE_NOT_FOUND).
 //   node scripts/test-extract-text-mutations.mjs   (из каталога проекта, нужны node_modules)
 // Коды: 0 — каждый дефект пойман и восстановление зелёное; 1 — дефект прошёл незамеченным или восстановление красное;
 // 2 — проверка НЕ ВЫПОЛНЕНА (нет vitest).
@@ -21,11 +21,15 @@ const once = (from, to) => (source) => (source.indexOf(from) < 0 || source.index
 const extract = 'apps/worker/src/crawl/extract-text.ts', pdf = 'apps/worker/src/pdf/page-text.mjs', worker = 'apps/worker/package.json';
 const mutations = [
   { id: 'boundary-removed', title: 'пробел на границе соседних элементов снят — «целиком5 курсов» (дефект стенда возвращён)',
-    file: extract, apply: once("    if (!closing && afterClosingTag && skipDepth === 0) { if (heading) heading.text += ' '; else buffer += ' '; }\n", '') },
+    file: extract, apply: once("      if (afterClosingTag && skipDepth === 0) { if (heading) heading.text += ' '; else buffer += ' '; }\n", '') },
   { id: 'space-inside-word', title: 'пробел у ЛЮБОГО открывающего тега — слово, разрезанное тегом, рвётся («при мер»)',
-    file: extract, apply: once('if (!closing && afterClosingTag && skipDepth === 0) {', 'if (!closing && skipDepth === 0) {') },
-  { id: 'pdf-no-geometry', title: 'склейка элементов PDF без геометрии (прежний код) — «Стрижка1500»',
-    file: pdf, apply: once('    if (previous && !previous.eol && previous.g && g) {', '    if (false) {') },
+    file: extract, apply: once('      if (afterClosingTag && skipDepth === 0) {', '      if (skipDepth === 0) {') },
+  { id: 'boundary-on-void', title: 'граница и у тегов без текста (<wbr>, <img>, <script>) — «при мер» (ревью, находка 1)',
+    file: extract, apply: once("const carriesText = !RAW.has(name) && name !== 'title' && !VOID.has(name) && !SKIP.has(name);", 'const carriesText = true;') },
+  { id: 'shy-resets-boundary', title: 'пустой после расшифровки текст (&shy;) сбрасывает границу — «АБ» (ревью)',
+    file: extract, apply: once("if (decodeEntities(token.text) !== '') afterClosingTag = false;", 'afterClosingTag = false;') },
+  { id: 'pdf-nbsp-lost', title: 'нормализация PDF теряет неразрывный пробел (ревью, находка 7)',
+    file: pdf, apply: (source) => (source.includes('\u00a0') ? source.replace('\u00a0', '') : null) },
   { id: 'build-not-copying', title: 'сборка воркера не копирует page-text.mjs рядом с extract-child.mjs',
     file: worker, apply: once("['extract-child.mjs', 'page-text.mjs']", "['extract-child.mjs']") },
 ];

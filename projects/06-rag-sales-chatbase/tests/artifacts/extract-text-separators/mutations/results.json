@@ -4,11 +4,11 @@
     "title": "пробел на границе соседних элементов снят — «целиком5 курсов» (дефект стенда возвращён)",
     "red": {
       "code": 1,
-      "summary": "3 failed | 25 passed (28)"
+      "summary": "4 failed | 23 passed (27)"
     },
     "green": {
       "code": 0,
-      "summary": "28 passed (28)"
+      "summary": "27 passed (27)"
     },
     "passed": true
   },
@@ -17,24 +17,50 @@
     "title": "пробел у ЛЮБОГО открывающего тега — слово, разрезанное тегом, рвётся («при мер»)",
     "red": {
       "code": 1,
-      "summary": "1 failed | 27 passed (28)"
+      "summary": "1 failed | 26 passed (27)"
     },
     "green": {
       "code": 0,
-      "summary": "28 passed (28)"
+      "summary": "27 passed (27)"
     },
     "passed": true
   },
   {
-    "id": "pdf-no-geometry",
-    "title": "склейка элементов PDF без геометрии (прежний код) — «Стрижка1500»",
+    "id": "boundary-on-void",
+    "title": "граница и у тегов без текста (<wbr>, <img>, <script>) — «при мер» (ревью, находка 1)",
     "red": {
       "code": 1,
-      "summary": "2 failed | 26 passed (28)"
+      "summary": "1 failed | 26 passed (27)"
     },
     "green": {
       "code": 0,
-      "summary": "28 passed (28)"
+      "summary": "27 passed (27)"
+    },
+    "passed": true
+  },
+  {
+    "id": "shy-resets-boundary",
+    "title": "пустой после расшифровки текст (&shy;) сбрасывает границу — «АБ» (ревью)",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 26 passed (27)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "27 passed (27)"
+    },
+    "passed": true
+  },
+  {
+    "id": "pdf-nbsp-lost",
+    "title": "нормализация PDF теряет неразрывный пробел (ревью, находка 7)",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 26 passed (27)"
+    },
+    "green": {
+      "code": 0,
+      "summary": "27 passed (27)"
     },
     "passed": true
   },
@@ -43,11 +69,11 @@
     "title": "сборка воркера не копирует page-text.mjs рядом с extract-child.mjs",
     "red": {
       "code": 1,
-      "summary": "1 failed | 27 passed (28)"
+      "summary": "1 failed | 26 passed (27)"
     },
     "green": {
       "code": 0,
-      "summary": "28 passed (28)"
+      "summary": "27 passed (27)"
     },
     "passed": true
   }

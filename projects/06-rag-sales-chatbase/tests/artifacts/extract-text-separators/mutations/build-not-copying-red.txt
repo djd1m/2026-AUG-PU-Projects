@@ -1,22 +1,21 @@
 
- RUN  v3.2.7 /tmp/n6-extract-mutations-lnLySx
+ RUN  v3.2.7 /tmp/n6-extract-mutations-B7w6b6
 
- ✓ tests/crawl.test.ts (17 tests) 1853ms
+ ✓ tests/crawl.test.ts (17 tests) 1838ms
    ✓ Обход > не text/html пропускается без чтения тела; 404 — gone (страницы нет), 5xx — http_error (временный сбой); зависшая страница — timeout  314ms
-   ✓ Обход > корень не отвечает → unreachable  619ms
+   ✓ Обход > корень не отвечает → unreachable  615ms
    ✓ Обход > вежливость: между началами любых запросов — не меньше паузы (1 поток)  606ms
- ❯ tests/extract-text-separators.test.ts (11 tests | 1 failed) 533ms
-   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-1: разметка aicoding.space /courses/ — «целиком 5 курсов», «health-advisor Подготовка» 5ms
-   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-2: карточки <a><span/><span/></a><a> — слова разделены 1ms
+ ❯ tests/extract-text-separators.test.ts (10 tests | 1 failed) 504ms
+   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-1: разметка aicoding.space /courses/ — «целиком 5 курсов», «health-advisor Подготовка» 8ms
+   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-2: карточки <a><span/><span/></a><a> — слова разделены 2ms
    ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-3: слово, разрезанное строчным тегом, — без лишних пробелов 1ms
    ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-4: списки, <br>, таблицы — отдельные блоки, как прежде 2ms
-   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-5: заголовок из соседних элементов — «Шаг 1», и граница не переходит между заголовком и текстом 1ms
-   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > пробел на границе не удваивается и не появляется на краях блока 1ms
-   ✓ PDF: разделитель между элементами — из геометрии > AC-6: зазор на строке — пробел; стык без зазора — без пробела 1ms
-   ✓ PDF: разделитель между элементами — из геометрии > AC-6: смена строки без hasEOL — перевод строки; hasEOL сохраняется; пустые элементы не дают пробелов 1ms
-   ✓ PDF: разделитель между элементами — из геометрии > AC-6: элемент уже несёт пробел — второго нет; элемент без геометрии склеивается как прежде 1ms
-   ✓ PDF настоящим pdfjs (AC-7): дочерний процесс разбора > два фрагмента на одной строке через зазор — слова разделены; слово из двух кусков без зазора — целое  495ms
-   × Страж сборки (AC-8): каждый относительный импорт дочернего процесса PDF копируется сборкой воркера > extract-child.mjs → dist/pdf: копирует build из apps/worker/package.json 22ms
+   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > AC-5: заголовок из соседних элементов — «Шаг 1», и граница не переходит между заголовком и текстом 0ms
+   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > пробел на границе не удваивается и не появляется на краях блока 0ms
+   ✓ HTML: граница соседних элементов — пробел, слово, разрезанное тегом, — целое > ревью (находка 1): теги без собственного текста — не граница; мягкий перенос между соседями — граница остаётся 1ms
+   ✓ PDF: склейка прежняя — разделители расставляет pdfjs (ревью, находки 2–5, 7) > элементы склеиваются как есть; hasEOL — перевод строки; неразрывный пробел схлопывается, как прежде 1ms
+   ✓ PDF настоящим pdfjs (AC-7): дочерний процесс разбора > два фрагмента на одной строке через зазор — слова разделены; слово из двух кусков без зазора — целое  463ms
+   × Страж сборки (AC-8): каждый относительный импорт дочернего процесса PDF копируется сборкой воркера > extract-child.mjs → dist/pdf: копирует build из apps/worker/package.json 23ms
      → page-text.mjs: expected 'tsc -p tsconfig.json && node -e "for …' to contain '\'page-text.mjs\''
 
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
@@ -27,19 +26,19 @@ AssertionError: page-text.mjs: expected 'tsc -p tsconfig.json && node -e "for �
 Expected: "'page-text.mjs'"
 Received: "tsc -p tsconfig.json && node -e "for (const f of ['extract-child.mjs']) require('node:fs').copyFileSync('src/pdf/' + f, 'dist/pdf/' + f)""
 
- ❯ tests/extract-text-separators.test.ts:96:79
-     94|     expect(imports).toContain('page-text.mjs');
-     95|     const build = JSON.parse(readFileSync('apps/worker/package.json', …
-     96|     for (const file of ['extract-child.mjs', ...imports]) expect(build…
+ ❯ tests/extract-text-separators.test.ts:95:79
+     93|     expect(imports).toContain('page-text.mjs');
+     94|     const build = JSON.parse(readFileSync('apps/worker/package.json', …
+     95|     for (const file of ['extract-child.mjs', ...imports]) expect(build…
        |                                                                               ^
-     97|   });
-     98| });
+     96|   });
+     97| });
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
 
 
  Test Files  1 failed | 1 passed (2)
-      Tests  1 failed | 27 passed (28)
-   Start at  09:29:07
-   Duration  3.82s (transform 445ms, setup 0ms, collect 745ms, tests 2.39s, environment 1ms, prepare 206ms)
+      Tests  1 failed | 26 passed (27)
+   Start at  09:53:20
+   Duration  3.81s (transform 471ms, setup 0ms, collect 741ms, tests 2.34s, environment 1ms, prepare 202ms)
 

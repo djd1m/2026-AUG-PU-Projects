@@ -52,29 +52,27 @@ describe('HTML: граница соседних элементов — проб�
     expect(text('<p><span>А</span></p><p><span>Б</span></p>')).toBe('А\nБ');
     expect(text('<div><span></span><span>Текст</span></div>')).toBe('Текст');
   });
-});
-
-// Элемент pdfjs: str, transform [a, b, c, d, e(x), f(y)], width (в единицах страницы), hasEOL.
-const item = (str: string, x: number, y: number, width: number, size = 10, hasEOL = false) =>
-  ({ str, transform: [size, 0, 0, size, x, y], width, height: size, hasEOL });
-
-describe('PDF: разделитель между элементами — из геометрии', () => {
-  it('AC-6: зазор на строке — пробел; стык без зазора — без пробела', () => {
-    expect(pageText([item('Стрижка', 50, 700, 40), item('1500', 120, 700, 20)])).toBe('Стрижка 1500');
-    expect(pageText([item('При', 50, 700, 15), item('мер', 65, 700, 15)])).toBe('Пример');
-    expect(pageText([item('При', 50, 700, 15), item('мер', 64.8, 700, 15)])).toBe('Пример');
-  });
-  it('AC-6: смена строки без hasEOL — перевод строки; hasEOL сохраняется; пустые элементы не дают пробелов', () => {
-    expect(pageText([item('Москва', 50, 700, 30), item('Тверская', 50, 686, 40)])).toBe('Москва\nТверская');
-    expect(pageText([item('Москва', 50, 700, 30, 10, true), item('Тверская', 50, 686, 40)])).toBe('Москва\nТверская');
-    expect(pageText([item('А', 50, 700, 5), item('', 60, 700, 0), item('Б', 90, 700, 5)])).toBe('А Б');
-  });
-  it('AC-6: элемент уже несёт пробел — второго нет; элемент без геометрии склеивается как прежде', () => {
-    expect(pageText([item('Цена: ', 50, 700, 30), item('350', 90, 700, 15)])).toBe('Цена: 350');
-    expect(pageText([{ str: 'А' }, { str: 'Б' }])).toBe('АБ');
+  it('ревью (находка 1): теги без собственного текста — не граница; мягкий перенос между соседями — граница остаётся', () => {
+    expect(text('<p><b>при</b><wbr>мер</p>')).toBe('пример');
+    expect(text('<p><b>при</b><img src="x.png" alt="">мер</p>')).toBe('пример');
+    expect(text('<p><b>при</b><script>var x = 1;</script>мер</p>')).toBe('пример');
+    expect(text('<p><b>при</b><!-- c -->мер</p>')).toBe('пример');
+    expect(text('<p><span>А</span>&shy;<span>Б</span></p>')).toBe('А Б');
+    // Пропускаемый элемент (nav) закрывает блок, как и прежде: слова разделены переводом строки, а не склеены.
+    expect(text('<div><span>Цена</span><nav>меню</nav><span>350 ₽</span></div>')).toBe('Цена\n350 ₽');
   });
 });
 
+describe('PDF: склейка прежняя — разделители расставляет pdfjs (ревью, находки 2–5, 7)', () => {
+  it('элементы склеиваются как есть; hasEOL — перевод строки; неразрывный пробел схлопывается, как прежде', () => {
+    expect(pageText([{ str: 'Стрижка ' }, { str: '1500', hasEOL: true }, { str: 'Москва' }])).toBe('Стрижка 1500\nМосква');
+    expect(pageText([{ str: 'А\u00a0\u00a0Б' }])).toBe('А Б');
+    expect(pageText([{ str: 'При' }, { str: 'мер' }])).toBe('Пример');
+  });
+});
+
+// Регрессионная, не различающая: pdfjs сам вставляет пробел по зазору и перевод строки по смене строки, поэтому этот
+// документ разделён и прежним кодом. Страж того, что поведение pdfjs, на которое мы опираемся, не изменилось.
 describe('PDF настоящим pdfjs (AC-7): дочерний процесс разбора', () => {
   it('два фрагмента на одной строке через зазор — слова разделены; слово из двух кусков без зазора — целое', async () => {
     const raw = `BT /F1 12 Tf 72 720 Td ${pdfString('Стрижка')} Tj ET BT /F1 12 Tf 300 720 Td ${pdfString('1500')} Tj ET `
@@ -90,7 +88,8 @@ describe('PDF настоящим pdfjs (AC-7): дочерний процесс �
 describe('Страж сборки (AC-8): каждый относительный импорт дочернего процесса PDF копируется сборкой воркера', () => {
   it('extract-child.mjs → dist/pdf: копирует build из apps/worker/package.json', () => {
     const child = readFileSync('apps/worker/src/pdf/extract-child.mjs', 'utf8');
-    const imports = [...child.matchAll(/from\s+'\.\/([\w.-]+\.mjs)'/g)].map((m) => m[1]!);
+    // Любая форма относительного импорта: from '…'/"…", import '…', import('…') (ревью, находка 6).
+    const imports = [...child.matchAll(/(?:from|import)\s*\(?\s*['"]\.\/([\w.-]+)['"]/g)].map((m) => m[1]!);
     expect(imports).toContain('page-text.mjs');
     const build = JSON.parse(readFileSync('apps/worker/package.json', 'utf8')).scripts.build as string;
     for (const file of ['extract-child.mjs', ...imports]) expect(build, file).toContain(`'${file}'`);
