@@ -4,12 +4,23 @@
 Проверка: `node ../../.claude/hooks/check-embed-contract.cjs .` · Решение: ADR-005.
 
 **Встраиваемый виджет:** да
-**Origin виджета:** https://suffler.example
-**Origin хозяйской страницы:** http://localhost:8099
+**Origin виджета:** https://sufler.aicoding.space
+**Origin хозяйской страницы:** http://stand.example:8099
 **Учётные данные:** нет
-**Разрешённые origin:** список `allowed_origin` каждого бота (точное совпадение origin; джокера `*` нет); для стенда — http://localhost:8099
-**Проверка на чужой странице:** НЕ ВЫПОЛНЕНА
-**Причина:** not-deployed
+**Разрешённые origin:** http://stand.example:8099
+**Проверка на чужой странице:** ВЫПОЛНЕНА
+**Причина:** —
+
+**Квитанция стенда (27.09.2026, координатор).** Хозяйская страница — внутри контейнера Playwright по HTTP на `http://stand.example:8099`
+(имя → 127.0.0.1 в контейнере, порт на хост не публикуется), тег — ровно `installSnippet` для демо-бота служебного аккаунта,
+`Content-Security-Policy: default-src 'none'; script-src https://sufler.aicoding.space; connect-src https://sufler.aicoding.space;
+img-src https://sufler.aicoding.space data:; style-src 'self'`, враждебный CSS (`* { font-size: 30px !important; box-sizing: content-box !important }`,
+`button { width: 300px !important }` и др.). Итог в трёх движках: `config` 200, `event` 204, `ask` 200 — ACAO ровно
+`http://stand.example:8099`; ответ НАСТОЯЩЕЙ модели по info.cern.ch с плашкой источника; пузырь 56×56 в 16 px от угла, шрифт поля 16 px
+вопреки `30px !important`; заголовок и кнопка хозяина сохранили свои стили; в документе хозяина — только его собственный `<link>`.
+Страница `http://stand.example:8098` (не в списке): `config` 403 без ACAO, виджета нет. Нарушений CSP от виджета — 0: в WebKit
+нарушение `style-src-elem inline` воспроизводится ТОЛЬКО снимком экрана Playwright (он встраивает стиль скрытия курсора) — до снимка
+0, после — 1, отдельно проверено; в Firefox — `favicon.ico` самой хозяйской страницы (`img-src`), не виджет.
 
 Виджет — ПРОДУКТ целиком: он живёт на сайте клиента, и все три класса отказа проявляются только там.
 Код виджета есть с фичи `widget-runtime-and-badge` (26.09), стенда — нет, поэтому проверка по ВЫДАННОМУ
@@ -22,9 +33,9 @@
 
 | Класс | Статус | Признак у клиента | Лечение | Доказательство |
 |---|---|---|---|---|
-| перекрёстный-запрос | НЕ ПРОВЕРЕН | окно открылось, ответа нет; в консоли клиента `blocked by CORS policy`, в нашем журнале запрос отвечен | `Access-Control-Allow-Origin` = origin хозяина из `allowed_origin` бота, `Vary: Origin`, `OPTIONS` → 204 с `Allow-Methods: GET, POST` и `Allow-Headers: Content-Type`; `credentials: 'omit'`; заголовок ставит только `web`, Caddy — нет (двойной ACAO ломал N1) | — |
-| протечка-стилей | НЕ ПРОВЕРЕН | пузырь смещён или окно «разъехалось» только на сайте клиента; или наши стили задели страницу хозяина | открытый Shadow DOM, `all: initial` на корне, свои `px`, `adoptedStyleSheets`; ни одного глобального селектора | — |
-| политика-безопасности | НЕ ПРОВЕРЕН | виджет не появляется вообще; `Refused to load … Content Security Policy` | нет инлайновых скриптов и style-атрибутов в документе хозяина; стили — только `adoptedStyleSheets` в теневом корне; хозяин разрешает `script-src <origin>`, `connect-src <origin>`, `img-src <origin> data:` (публикуется на экране установки, FR-WIDGET-003) | — |
+| перекрёстный-запрос | ПРОВЕРЕН | окно открылось, ответа нет; в консоли клиента `blocked by CORS policy`, в нашем журнале запрос отвечен | `Access-Control-Allow-Origin` = origin хозяина из `allowed_origin` бота, `Vary: Origin`, `OPTIONS` → 204 с `Allow-Methods: GET, POST` и `Allow-Headers: Content-Type`; `credentials: 'omit'`; заголовок ставит только `web`, Caddy — нет (двойной ACAO ломал N1) | http://stand.example:8099/ → выданный адрес https://sufler.aicoding.space, 2026-09-27, Chromium + Firefox + WebKit — `tests/artifacts/embed-contract-stand/` |
+| протечка-стилей | ПРОВЕРЕН | пузырь смещён или окно «разъехалось» только на сайте клиента; или наши стили задели страницу хозяина | открытый Shadow DOM, `all: initial` на корне, свои `px`, `adoptedStyleSheets`; ни одного глобального селектора | http://stand.example:8099/ → выданный адрес https://sufler.aicoding.space, 2026-09-27, Chromium + Firefox + WebKit — `tests/artifacts/embed-contract-stand/` |
+| политика-безопасности | ПРОВЕРЕН | виджет не появляется вообще; `Refused to load … Content Security Policy` | нет инлайновых скриптов и style-атрибутов в документе хозяина; стили — только `adoptedStyleSheets` в теневом корне; хозяин разрешает `script-src <origin>`, `connect-src <origin>`, `img-src <origin> data:` (публикуется на экране установки, FR-WIDGET-003) | http://stand.example:8099/ → выданный адрес https://sufler.aicoding.space, 2026-09-27, Chromium + Firefox + WebKit — `tests/artifacts/embed-contract-stand/` |
 
 ## Оснастка, которой будет закрыта проверка (Completion, шаг E2E)
 

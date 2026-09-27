@@ -1,0 +1,136 @@
+[
+ {
+  "name": "chromium",
+  "origin": "http://stand.example:8099",
+  "widget": 1,
+  "bubble": {
+   "w": 56,
+   "h": 56,
+   "right": 16,
+   "bottom": 16
+  },
+  "inputFont": "16px",
+  "answer": [
+   "What is the World Wide Web project?",
+   "The World Wide Web (W3) — это инициатива по предоставлению универсального доступа к большому количеству документов через гипермедиа. Проект объединяет методы информационного поиска и гипертекста для создания мощной глоба"
+  ],
+  "sourceChip": 1,
+  "hostTitleColor": "rgb(200, 0, 0)",
+  "hostBtnWidth": 316,
+  "styleNodesInHost": 1,
+  "api": [
+   "GET /w/widget.3085a96053d22f8c.js 200 acao=-",
+   "GET /w/v1/config 200 acao=http://stand.example:8099",
+   "POST /w/v1/event 204 acao=http://stand.example:8099",
+   "POST /w/v1/ask 200 acao=http://stand.example:8099"
+  ],
+  "csp": [],
+  "errors": []
+ },
+ {
+  "name": "chromium",
+  "origin": "http://stand.example:8098",
+  "widget": 0,
+  "api": [
+   "GET /w/widget.3085a96053d22f8c.js 200 acao=-"
+  ],
+  "csp": [],
+  "errors": [
+   "Access to fetch at 'https://sufler.aicoding.space/w/v1/config?bot=t24Z2UX-0J3SVFY15bW54A' from origin 'http://stand.example:8098' has been b",
+   "Failed to load resource: net::ERR_FAILED"
+  ]
+ },
+ {
+  "name": "firefox",
+  "origin": "http://stand.example:8099",
+  "widget": 1,
+  "bubble": {
+   "w": 56,
+   "h": 56,
+   "right": 16,
+   "bottom": 16
+  },
+  "inputFont": "16px",
+  "answer": [
+   "What is the World Wide Web project?",
+   "The World Wide Web (W3) — это инициатива по предоставлению универсального доступа к большому количеству документов через гипермедиа. Проект объединяет методы информационного поиска и гипертекста для создания мощной глоба"
+  ],
+  "sourceChip": 1,
+  "hostTitleColor": "rgb(200, 0, 0)",
+  "hostBtnWidth": 312,
+  "styleNodesInHost": 1,
+  "api": [
+   "GET /w/widget.3085a96053d22f8c.js 200 acao=-",
+   "GET /w/v1/config 200 acao=http://stand.example:8099",
+   "POST /w/v1/event 204 acao=http://stand.example:8099",
+   "POST /w/v1/ask 200 acao=http://stand.example:8099"
+  ],
+  "csp": [
+   "img-src http://stand.example:8099/favicon.ico"
+  ],
+  "errors": [
+   "[JavaScript Error: \"Content-Security-Policy: The page’s settings blocked the loading of a resource (img-src) at http://stand.example:8099/fa"
+  ]
+ },
+ {
+  "name": "firefox",
+  "origin": "http://stand.example:8098",
+  "widget": 0,
+  "api": [
+   "GET /w/widget.3085a96053d22f8c.js 200 acao=-",
+   "GET /w/v1/config 403 acao=-"
+  ],
+  "csp": [
+   "img-src http://stand.example:8098/favicon.ico"
+  ],
+  "errors": [
+   "[JavaScript Error: \"Content-Security-Policy: The page’s settings blocked the loading of a resource (img-src) at http://stand.example:8098/fa",
+   "[JavaScript Error: \"Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://sufler.aicoding.sp"
+  ]
+ },
+ {
+  "name": "webkit",
+  "origin": "http://stand.example:8099",
+  "widget": 1,
+  "bubble": {
+   "w": 56,
+   "h": 56,
+   "right": 16,
+   "bottom": 16
+  },
+  "inputFont": "16px",
+  "answer": [
+   "What is the World Wide Web project?",
+   "The World Wide Web (W3) — это инициатива по предоставлению универсального доступа к большому количеству документов через гипермедиа. Проект объединяет методы информационного поиска и гипертекста для создания мощной глоба"
+  ],
+  "sourceChip": 1,
+  "hostTitleColor": "rgb(200, 0, 0)",
+  "hostBtnWidth": 316,
+  "styleNodesInHost": 1,
+  "api": [
+   "GET /w/widget.3085a96053d22f8c.js 200 acao=-",
+   "GET /w/v1/config 200 acao=http://stand.example:8099",
+   "POST /w/v1/event 204 acao=http://stand.example:8099",
+   "POST /w/v1/ask 200 acao=http://stand.example:8099"
+  ],
+  "csp": [
+   "style-src-elem inline"
+  ],
+  "errors": [
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Secu"
+  ]
+ },
+ {
+  "name": "webkit",
+  "origin": "http://stand.example:8098",
+  "widget": 0,
+  "api": [
+   "GET /w/widget.3085a96053d22f8c.js 200 acao=-"
+  ],
+  "csp": [],
+  "errors": [
+   "Origin http://stand.example:8098 is not allowed by Access-Control-Allow-Origin. Status code: 403",
+   "Failed to load resource: Origin http://stand.example:8098 is not allowed by Access-Control-Allow-Origin. Status code: 403"
+  ]
+ }
+]
