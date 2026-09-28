@@ -1,5 +1,6 @@
 // CrawlSite (Pseudocode, FR-SOURCE-001/002, NFR-SEC-004, ADR-010) — написано заново (ADR-016).
-// Порядок — это защита: форма URL → robots.txt корня (через CheckAddress) → sitemap.xml → страницы FIFO.
+// Порядок — это защита: форма URL → robots.txt корня (через CheckAddress) → sitemap.xml → страницы по кругу между
+// разделами сайта (frontier.ts, crawl-coverage A-N6-070; раньше — FIFO, и при пределе тарифа один раздел вытеснял прочие).
 // Только хост введённого URL и его www.-вариант; один поток; пауза между ЛЮБЫМИ запросами; бюджет страниц,
 // потолок запросов и бюджет времени. Каждая посещённая единица сообщается вызывающему (onVisit) — он же
 // пишет прогресс «N из M» с проверкой фенса; StaleAttemptError из onVisit останавливает обход немедленно.
@@ -10,6 +11,7 @@ import {
   CRAWL_MAX_PAGE_BYTES, CRAWL_MAX_REDIRECTS, CRAWL_MAX_URL_LENGTH, CRAWL_MIN_TEXT_CHARS, CRAWL_PAGE_TIMEOUT_MS, CRAWL_PAUSE_MS,
   CRAWL_QUEUE_MAX, CRAWL_TIME_BUDGET_MS, SITEMAP_MAX_BYTES, requestCap,
 } from './limits';
+import { displayPath, Frontier, UNREAD_SAMPLE_MAX } from './frontier';
 import { fetchRobots, isAllowed, type Robots } from './robots';
 import { FetchFailed, Pacer, safeGet, type GetOptions, type NetOptions } from './safe-get';
 
@@ -35,6 +37,11 @@ export interface CrawlResult {
   // Обнаружение страниц могло быть неполным (source-lifecycle, ревью Codex находка 2): sitemap не прочитан по сбою сети
   // или 5xx/429, либо очередь упёрлась в CRAWL_QUEUE_MAX и ссылки отброшены. Тогда «не увидели» ≠ «страницы нет».
   discoveryIncomplete: boolean;
+  // crawl-coverage (A-N6-070): известных адресов страниц на момент остановки — прочитанные плюс оставшиеся в очереди
+  // (нижняя граница: ссылки непрочитанных страниц не собраны). При полном обходе равно прочитанным.
+  pagesKnown: number;
+  // До 5 непрочитанных адресов (только путь, без параметров) — по одному из разных разделов; при полном обходе пусто.
+  unreadSample: string[];
 }
 export interface CrawlOptions {
   rootUrl: string; pageBudget: number; userAgent: string;
@@ -65,9 +72,20 @@ export function normalizeLink(href: string, base: URL, hosts: ReadonlySet<string
   return url.href;
 }
 
-function sitemapLocations(xml: string): string[] {
-  return [...xml.matchAll(/<loc>\s*(?:<!\[CDATA\[)?\s*([^<\]\s]+)\s*(?:\]\]>)?\s*<\/loc>/gi)]
-    .map((m) => m[1]!.replace(/&amp;/g, '&'));
+const LOC = /<loc>\s*(?:<!\[CDATA\[)?\s*([^<\]\s]+)\s*(?:\]\]>)?\s*<\/loc>/i;
+const LASTMOD = /<lastmod>\s*([^<\s]+)\s*<\/lastmod>/i;
+// Адреса sitemap с датой изменения (lastmod, W3C Datetime); непригодная дата — null (адрес идёт после датированных).
+export function sitemapEntries(xml: string): Array<{ loc: string; lastmod: number | null }> {
+  const blocks = [...xml.matchAll(/<url(?:\s[^>]*)?>([\s\S]*?)<\/url>/gi)].map((m) => m[1]!);
+  // Без обёрток <url> (нестрогая карта) — только адреса, как раньше.
+  const parts = blocks.length ? blocks : [...xml.matchAll(new RegExp(LOC.source, 'gi'))].map((m) => m[0]);
+  return parts.flatMap((part) => {
+    const loc = LOC.exec(part)?.[1];
+    if (!loc) return [];
+    const raw = LASTMOD.exec(part)?.[1];
+    const time = raw && /^\d{4}-\d{2}(-\d{2})?/.test(raw) ? Date.parse(raw) : NaN;
+    return [{ loc: loc.replace(/&amp;/g, '&'), lastmod: Number.isFinite(time) ? time : null }];
+  });
 }
 
 export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
@@ -105,14 +123,15 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
   };
 
   // 2. Очередь: корень + sitemap.xml того же хоста. Сбой sitemap не отказ: он необязателен.
-  const queue: string[] = [root.href];
-  const seen = new Set<string>(queue);
+  const queue = new Frontier();
+  queue.push(root.href);
+  const seen = new Set<string>([root.href]);
   let discoveryIncomplete = false;
-  const enqueue = (href: string, base: URL) => {
+  const enqueue = (href: string, base: URL, lastmod: number | null = null) => {
     const link = normalizeLink(href, base, hosts);
     if (!link || seen.has(link)) return;
     if (queue.length >= CRAWL_QUEUE_MAX) { discoveryIncomplete = true; return; }
-    seen.add(link); queue.push(link);
+    seen.add(link); queue.push(link, lastmod);
   };
   if (isAllowed(rootRobots.robots, '/sitemap.xml')) {
     try {
@@ -120,7 +139,7 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
         ...common, accept: 'application/xml,text/xml;q=0.9', maxBytes: SITEMAP_MAX_BYTES, maxRedirects: CRAWL_MAX_REDIRECTS,
         wantBody: (status, type) => status >= 200 && status < 300 && /xml/.test(type),
       });
-      if (sitemap.body) for (const loc of sitemapLocations(sitemap.body.toString('utf8'))) if (!/\.xml(\.gz)?$/i.test(loc)) enqueue(loc, root);
+      if (sitemap.body) for (const { loc, lastmod } of sitemapEntries(sitemap.body.toString('utf8'))) if (!/\.xml(\.gz)?$/i.test(loc)) enqueue(loc, root, lastmod);
       // 404 — у сайта нет sitemap (детерминированно); 5xx и 429 — временный сбой: обнаружение неполное.
       if (sitemap.status >= 500 || sitemap.status === 429) discoveryIncomplete = true;
     } catch (error) {
@@ -129,7 +148,7 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
     }
   }
 
-  // 3. Страницы FIFO до бюджета.
+  // 3. Страницы по кругу между разделами до бюджета.
   let pagesRead = 0, pagesUnchanged = 0, rootNetworkFailure = false;
   // Одинаковое содержимое под разными адресами (www., «/index.html», параметры) — одна страница.
   const hashesThisCrawl = new Set<string>();
@@ -137,6 +156,8 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
   const cap = requestCap(budget);
   const timeBudget = options.timeBudgetMs ?? CRAWL_TIME_BUDGET_MS;
   let stoppedBy: StopReason = 'exhausted';
+  // Страница, на которой обработчик остановил обход (embed_budget): она не прочитана, но уже снята с очереди.
+  let unreadStop: string | null = null;
   const pageOptions: GetOptions = {
     ...common, accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1', maxBytes, maxRedirects: CRAWL_MAX_REDIRECTS,
     wantBody: (status, type) => status >= 200 && status < 300 && isHtml(type),
@@ -208,6 +229,7 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
       if (!(error instanceof StopCrawl)) throw error;
       pagesRead--;
       stoppedBy = error.reason;
+      unreadStop = final.href;
       break;
     }
   }
@@ -216,5 +238,9 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
   if (pagesRead + pagesUnchanged === 0) {
     throw new CrawlFailure(stoppedBy === 'embed_budget' ? 'quota_refused' : rootNetworkFailure ? 'unreachable' : 'no_text');
   }
-  return { pagesRead, pagesUnchanged, skipped, requests, stoppedBy, discoveryIncomplete };
+  const unread = [...(unreadStop ? [unreadStop] : []), ...queue.sample(UNREAD_SAMPLE_MAX)].slice(0, UNREAD_SAMPLE_MAX);
+  return {
+    pagesRead, pagesUnchanged, skipped, requests, stoppedBy, discoveryIncomplete,
+    pagesKnown: pagesRead + pagesUnchanged + queue.length + (unreadStop ? 1 : 0), unreadSample: unread.map(displayPath),
+  };
 }

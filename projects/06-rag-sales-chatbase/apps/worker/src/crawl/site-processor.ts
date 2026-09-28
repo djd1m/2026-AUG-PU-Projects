@@ -95,11 +95,17 @@ export function createSiteProcessor(options: SiteProcessorOptions): SourceProces
     // Исчезнувшие страницы — только после ПОЛНОГО обхода без временных пропусков (иначе «не увидели» ≠ «нет»).
     let pruned = { pages: 0, chunks: 0 };
     if (result.stoppedBy === 'exhausted' && transient === 0 && !result.discoveryIncomplete) pruned = await pruneUnseenPages(pool, lease, [...seenUrls], [...seenHashes]);
+    // crawl-coverage (A-N6-070): обход остановлен пределом страниц или потолком запросов/времени — задача done с пометкой,
+    // pages_total = известные адреса, а не прочитанные («50 из 50» выдавал усечённый обход за полный). Бюджет эмбеддингов
+    // (truncated) главнее: он и остановил обход.
+    if (!truncated && result.stoppedBy === 'page_budget') truncated = 'page_budget';
+    if (!truncated && (result.stoppedBy === 'request_cap' || result.stoppedBy === 'time_budget')) truncated = 'crawl_limit';
+    const coverage = result.stoppedBy === 'exhausted' ? null : { pagesKnown: result.pagesKnown, unreadSample: result.unreadSample };
     // В журнал — только счётчики: ни тел страниц, ни их текста, ни адресов.
     const skipped = Object.entries(result.skipped).map(([reason, n]) => `${reason}=${n}`).join(', ') || 'нет';
     log(`worker-index: обход задачи ${lease.indexJobId}: прочитано ${result.pagesRead}, без изменений ${result.pagesUnchanged}, `
-      + `фрагментов ${chunksWritten}; пропущено: ${skipped}; запросов ${result.requests}; остановка: ${result.stoppedBy}; `
+      + `фрагментов ${chunksWritten}; известно адресов ${result.pagesKnown}; пропущено: ${skipped}; запросов ${result.requests}; остановка: ${result.stoppedBy}; `
       + `удалено исчезнувших страниц ${pruned.pages} (фрагментов ${pruned.chunks})${truncated ? `; усечено бюджетом ${truncated}` : ''}`);
-    return { truncated };
+    return { truncated, coverage };
   };
 }

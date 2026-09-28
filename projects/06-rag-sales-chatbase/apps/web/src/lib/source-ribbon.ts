@@ -23,6 +23,8 @@ export interface RibbonJob {
   pages_done: number; pages_total: number | null; chunks_done: number; reason?: string;
   // budget-truncation (A-N6-052): у done — чем усечена задача; null/нет поля — не усечена.
   truncated?: string | null;
+  // crawl-coverage (A-N6-070): у усечённой done — до 5 непрочитанных адресов (пути); pages_total тогда — известные адреса.
+  unread?: string[];
 }
 // Форма слова «страница» после числа (1 страница, 3 страницы, 11 страниц).
 export const pagesWord = (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 'страница'

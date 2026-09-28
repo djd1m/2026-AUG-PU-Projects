@@ -107,7 +107,7 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
   const sources = (await pool.query<IndexJobRow & { source_id: string; kind: string; root_url: string | null; file_name: string | null; job_id: string | null;
     truncated: number }>(
     `SELECT s.id AS source_id, s.kind, s.root_url, s.file_name, j.id AS job_id, j.id, j.status, j.failure_reason, j.pages_done, j.pages_total,
-       j.chunks_done, j.updated_at, j.truncated_by, (SELECT count(*)::int FROM page p WHERE p.source_id = s.id AND p.chunks_dropped > 0) AS truncated
+       j.chunks_done, j.updated_at, j.truncated_by, j.unread_sample, (SELECT count(*)::int FROM page p WHERE p.source_id = s.id AND p.chunks_dropped > 0) AS truncated
      FROM source s LEFT JOIN LATERAL (SELECT * FROM index_job WHERE source_id = s.id ORDER BY created_at DESC, id LIMIT 1) j ON true
      WHERE s.bot_id = $1 ORDER BY s.created_at, s.id`, [botId])).rows;
   return {

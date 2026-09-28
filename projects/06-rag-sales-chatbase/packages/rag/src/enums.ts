@@ -15,7 +15,9 @@ export const INDEX_JOB_FAILURE_REASON = ['robots_disallowed', 'unreachable', 'bl
   'too_large', 'no_text_layer', 'quota_refused', 'embedding_unavailable', 'stalled', 'internal'] as const;
 // index_job.truncated_by (budget-truncation, A-N6-052, миграция 009): задача done, но остановлена исчерпанием
 // СОБСТВЕННОГО бюджета эмбеддингов — предпросмотра (embed_budget) или серии источника (series_embed_budget).
-export const INDEX_JOB_TRUNCATION = ['embed_budget', 'series_embed_budget'] as const;
+// crawl-coverage (A-N6-070): page_budget — обход упёрся в предел страниц (тариф или предпросмотр); crawl_limit — в потолок
+// запросов или времени обхода. Обе — done с прочитанным, pages_total = известные адреса.
+export const INDEX_JOB_TRUNCATION = ['embed_budget', 'series_embed_budget', 'page_budget', 'crawl_limit'] as const;
 export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin'] as const;
 export const QUOTA_SCOPE = ['visitor_answers', 'ip_answers', 'bot_day_answers', 'bot_month_answers', 'global_answers',
   'preview_session', 'ip_previews', 'global_previews', 'account_embed_tokens', 'global_embed_tokens'] as const;

@@ -100,7 +100,7 @@ export async function leaseIndexJob(pool: Pool, message: IndexMessageLike, now =
     await tx.query(`INSERT INTO job_attempt (index_job_id, fence, series_no, status, started_at, created_at)
       VALUES ($1, $2, $3, 'running', $4, $4)`, [message.index_job_id, fence, seriesNo, now]);
     // Новая серия (из queued) — бюджет токенов серии источника с нуля (source-lifecycle); автоповтор той же серии — нет.
-    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, truncated_by = NULL, updated_at = $3,
+    await tx.query(`UPDATE index_job SET status = 'running', current_fence = $2, failure_reason = NULL, truncated_by = NULL, unread_sample = NULL, updated_at = $3,
       series_embed_used = CASE WHEN $4::boolean THEN 0 ELSE series_embed_used END WHERE id = $1`,
       [message.index_job_id, fence, now, status === 'queued']);
     await tx.query(`UPDATE source SET status = 'indexing' WHERE id = $1`, [row.source_id]);
@@ -138,12 +138,20 @@ export const recordProgress = (pool: Pool, lease: Pick<Lease, 'indexJobId' | 'fe
   transaction(pool, (tx) => recordProgressTx(tx, lease, delta, now));
 
 // RunIndexJob п.5: успех. Фенс проверяется ПЕРВЫМ оператором; 0 строк — откат всей транзакции.
-// truncated — задача остановлена исчерпанием собственного бюджета (budget-truncation, A-N6-052): готово с прочитанным.
+// truncated — задача остановлена исчерпанием собственного бюджета (budget-truncation, A-N6-052) или пределом обхода
+// (crawl-coverage, A-N6-070): готово с прочитанным. coverage — сколько адресов известно и какие не прочитаны: pages_total
+// становится числом ИЗВЕСТНЫХ адресов (не меньше прочитанных), а не прочитанных — иначе «50 из 50» выдаёт усечённый
+// обход за полный.
+export interface IndexCoverage { pagesKnown: number; unreadSample: string[] }
 export async function completeIndexJob(pool: Pool, lease: Pick<Lease, 'indexJobId' | 'fence'>, now = new Date(),
-  truncated: IndexJobTruncation | null = null): Promise<void> {
+  truncated: IndexJobTruncation | null = null, coverage: IndexCoverage | null = null): Promise<void> {
+  if (coverage && !(Number.isSafeInteger(coverage.pagesKnown) && coverage.pagesKnown >= 0)) throw new Error('Непригодное число известных страниц');
+  const sample = truncated && coverage?.unreadSample.length ? coverage.unreadSample.slice(0, 5).map((p) => p.slice(0, 200)) : null;
   await transaction(pool, async (tx) => {
-    const job = await tx.query<{ source_id: string; pages_done: number }>(`UPDATE index_job SET status = 'done', updated_at = $3, truncated_by = $4
-      WHERE id = $1 AND current_fence = $2 AND status = 'running' RETURNING source_id, pages_done`, [lease.indexJobId, lease.fence, now, truncated]);
+    const job = await tx.query<{ source_id: string; pages_done: number }>(`UPDATE index_job SET status = 'done', updated_at = $3, truncated_by = $4,
+      pages_total = CASE WHEN $5::int IS NULL THEN pages_total ELSE GREATEST($5::int, pages_done) END, unread_sample = $6::text[]
+      WHERE id = $1 AND current_fence = $2 AND status = 'running' RETURNING source_id, pages_done`,
+    [lease.indexJobId, lease.fence, now, truncated, coverage ? coverage.pagesKnown : null, sample]);
     if (!job.rowCount) throw new StaleAttemptError(lease.indexJobId, lease.fence);
     await tx.query(`UPDATE job_attempt SET status = 'done', finished_at = $3 WHERE index_job_id = $1 AND fence = $2`, [lease.indexJobId, lease.fence, now]);
     await tx.query(`UPDATE source SET status = 'ready', pages_indexed = $2 WHERE id = $1`, [job.rows[0]!.source_id, job.rows[0]!.pages_done]);
@@ -205,17 +213,24 @@ export type IndexJobState = 'running' | 'done' | 'failed' | 'no_response';
 export interface IndexJobView {
   index_job_id: string; state: IndexJobState; pages_done: number; pages_total: number | null; chunks_done: number;
   reason?: IndexJobFailureReason;
-  // Только у done: чем усечена задача (A-N6-052); null — прочитано всё, что позволил обход.
+  // Только у done: чем усечена задача (A-N6-052, A-N6-070); null — прочитано всё, что позволил обход.
   truncated?: IndexJobTruncation | 'unknown' | null;
+  // Только у усечённой done: до 5 непрочитанных адресов (пути) — владелец видит, чего бот не знает (A-N6-070).
+  unread?: string[];
 }
 export interface IndexJobRow {
   id: string; status: unknown; failure_reason: unknown; pages_done: number; pages_total: number | null; chunks_done: number; updated_at: Date;
   truncated_by?: unknown;
+  unread_sample?: unknown;
 }
 export function indexJobView(row: IndexJobRow, now = new Date()): IndexJobView {
   const base = { index_job_id: row.id, pages_done: row.pages_done, pages_total: row.pages_total, chunks_done: row.chunks_done };
   const status = readIndexJobStatus(row.status);
-  if (status === 'done') return { ...base, state: 'done', truncated: readIndexJobTruncation(row.truncated_by) };
+  if (status === 'done') {
+    const truncated = readIndexJobTruncation(row.truncated_by);
+    const unread = Array.isArray(row.unread_sample) ? row.unread_sample.filter((p): p is string => typeof p === 'string').slice(0, 5) : [];
+    return { ...base, state: 'done', truncated, ...(truncated && unread.length ? { unread } : {}) };
+  }
   if (status === 'failed') return { ...base, state: 'failed', reason: row.status === 'failed' ? readFailureReason(row.failure_reason) : 'internal' };
   const silentFor = now.getTime() - row.updated_at.getTime();
   if (!(silentFor <= INDEX_JOB_STALLED_AFTER_MS)) return { ...base, state: 'no_response' }; // NaN (нет отметки) — тоже «нет ответа»
@@ -230,7 +245,7 @@ export async function readIndexJob(pool: Pool, indexJobId: string, access: Index
   const accountId = 'accountId' in access ? access.accountId : null, previewBotId = 'previewBotId' in access ? access.previewBotId : null;
   if (!isUuid(accountId ?? previewBotId)) return null;
   const result = await pool.query<IndexJobRow>(`SELECT j.id, j.status, j.failure_reason, j.pages_done, j.pages_total, j.chunks_done, j.updated_at,
-    j.truncated_by FROM index_job j JOIN bot b ON b.id = j.bot_id
+    j.truncated_by, j.unread_sample FROM index_job j JOIN bot b ON b.id = j.bot_id
     WHERE j.id = $1 AND b.status <> 'deleted' AND (b.account_id = $2::uuid OR (b.status = 'draft' AND b.id = $3::uuid))`,
   [indexJobId, accountId, previewBotId]);
   return result.rowCount ? indexJobView(result.rows[0]!, now) : null;
