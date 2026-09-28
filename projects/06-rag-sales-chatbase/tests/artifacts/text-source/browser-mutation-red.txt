@@ -1,0 +1,48 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/text-source.test.ts (12 tests | 2 failed) 28122ms
+   × chromium > AddSource: третий вариант «Текстовый файл по адресу» с подсказкой про llms-full.txt; поле и кнопка ≥ 44×44 524ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ chromium > лента источника text: вид «Текстовый файл», «Обновить»/«Удалить» как у сайта, отказы про файл, пометка предела по разделам  871ms
+   ✓ chromium > dark 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  2351ms
+   ✓ chromium > dark 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  2110ms
+   ✓ chromium > light 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  2224ms
+   ✓ chromium > light 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  1795ms
+   × webkit > AddSource: третий вариант «Текстовый файл по адресу» с подсказкой про llms-full.txt; поле и кнопка ≥ 44×44 1004ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ webkit > лента источника text: вид «Текстовый файл», «Обновить»/«Удалить» как у сайта, отказы про файл, пометка предела по разделам  1361ms
+   ✓ webkit > dark 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  3667ms
+   ✓ webkit > dark 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  3134ms
+   ✓ webkit > light 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  3299ms
+   ✓ webkit > light 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  2661ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/text-source.test.ts > chromium > AddSource: третий вариант «Текстовый файл по адресу» с подсказкой про llms-full.txt; поле и кнопка ≥ 44×44
+ FAIL  tests/browser/text-source.test.ts > webkit > AddSource: третий вариант «Текстовый файл по адресу» с подсказкой про llms-full.txt; поле и кнопка ≥ 44×44
+AssertionError: expected +0 to be 1 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ tests/browser/text-source.test.ts:72:32
+     70|   it('AddSource: третий вариант «Текстовый файл по адресу» с подсказко…
+     71|     const form = p.locator('.add-source form.text-source-form');
+     72|     expect(await form.count()).toBe(1);
+       |                                ^
+     73|     expect(await form.locator('label[for=source-text]').textContent())…
+     74|     const hint = await form.locator('#source-text-hint').textContent();
+ ❯ open tests/browser/text-source.test.ts:68:90
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  16:41:09
+   Duration  30.01s (transform 423ms, setup 0ms, collect 1.22s, tests 28.12s, environment 2ms, prepare 173ms)
+

@@ -43,6 +43,7 @@ export function splitTextFile(input: string): SplitResult {
   const lines = input.replace(/^﻿/, '').split(/\r\n|\r|\n/);
   const sections: TextSection[] = [];
   const used = new Set<string>();
+  const nextSuffix = new Map<string, number>();   // ревью круг 2: перебор суффикса продолжается, а не начинается с 1 (O(n), не O(n²))
   let emptySections = 0;
   let h1: string | null = null;
   let current: { anchor: string | null; title: string; blocks: ChunkBlock[] } = { anchor: null, title: '', blocks: [] };
@@ -53,7 +54,9 @@ export function splitTextFile(input: string): SplitResult {
   const uniqueAnchor = (heading: string): string => {
     const base = slugify(heading) || `razdel-${sections.length + emptySections + 1}`;
     let candidate = base;
-    for (let n = 1; used.has(candidate); n++) candidate = `${base}-${n}`;
+    let n = nextSuffix.get(base) ?? 1;
+    while (used.has(candidate)) candidate = `${base}-${n++}`;
+    nextSuffix.set(base, n);
     used.add(candidate);
     return candidate;
   };

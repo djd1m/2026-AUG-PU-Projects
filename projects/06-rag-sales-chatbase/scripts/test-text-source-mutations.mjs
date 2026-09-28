@@ -39,7 +39,9 @@ const mutations = [
     edits: [{ file: fetchText, apply: once('    if (!isAllowed(await robotsFor(u.origin), u.pathname + u.search)) { robotsRefusedHop = true; return false; }\n', '') }] },
   // Ревью Codex, круг 1.
   { id: 'anchor-collision', title: 'якорь не резервируется целиком — «A», «A», «A-1» дают два раздела на одном адресе',
-    edits: [{ file: 'apps/worker/src/text/split-text.ts', apply: once('    for (let n = 1; used.has(candidate); n++) candidate = `${base}-${n}`;', '    if (used.has(candidate)) candidate = `${base}-1`;') }] },
+    edits: [{ file: 'apps/worker/src/text/split-text.ts', apply: once('    while (used.has(candidate)) candidate = `${base}-${n++}`;', '    if (used.has(candidate)) candidate = `${base}-1`;') }] },
+  { id: 'anchor-quadratic', title: 'суффикс якоря снова перебирается с 1 — 20 000 одинаковых заголовков разбираются десятки секунд',
+    edits: [{ file: 'apps/worker/src/text/split-text.ts', apply: once('    let n = nextSuffix.get(base) ?? 1;', '    let n = 1;') }] },
   { id: 'html-fragment-accepted', title: 'HTML-фрагмент без doctype (<div>) под text/plain читается как текст',
     edits: [{ file: fetchText, apply: once('[a-z][a-z0-9-]*(\\s|>|\\/>))/i', '(html|head|body)(\\s|>))/i') }] },
   { id: 'reembed-unchanged', title: '«Обновить» не сравнивает раздел по хэшу — неизменный файл эмбеддится заново',

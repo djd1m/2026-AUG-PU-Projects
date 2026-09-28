@@ -92,6 +92,12 @@ describe('разбор файла на разделы (AC-1)', () => {
     const { sections } = splitTextFile('## A\nодин\n## A\nдва\n## A-1\nтри\n## A-1\nчетыре');
     expect(sections.map((s) => s.anchor)).toEqual(['a', 'a-1', 'a-1-1', 'a-1-2']);
   });
+  it('ревью круг 2: 20 000 одинаковых заголовков разбираются линейно (< 3 с), якоря уникальны', () => {
+    const started = Date.now();
+    const { sections } = splitTextFile('## A\nproduct price 500\n'.repeat(20000));
+    expect(Date.now() - started).toBeLessThan(3000);
+    expect(new Set(sections.map((s) => s.anchor)).size).toBe(20000);
+  });
   it('llms.txt: разделы ## со списком ссылок, ссылки — текстом (по ним не ходим)', () => {
     const { sections } = splitTextFile('# Сайт\n\n> Описание\n\n## Курсы\n\n- [Промпты](https://s.example/p): основы\n- [Агенты](https://s.example/a)\n');
     expect(sections.map((s) => s.title)).toEqual(['Сайт', 'Сайт › Курсы']);
