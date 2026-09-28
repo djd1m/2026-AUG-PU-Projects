@@ -26,7 +26,7 @@ export class ClipMusicService {
         throw new UploadError('conflict', 'Клип ещё собирается', 409);
       }
       const now = this.clock();
-      const expires = clipExpiry(clip.expires_at, video.plan, video.retention_from);
+      const expires = clipExpiry({ clipId: clip.id, expiresAt: clip.expires_at, plan: video.plan, retentionFrom: video.retention_from });
       if (!clip.object_key || (expires && expires <= now)) throw new UploadError('conflict', 'Срок хранения клипа истёк', 409);
       const target = effectiveMusic(input.track, video.music, clip.index);
       const rendered = clip.rendered_music_track_id ?? effectiveMusic(clip.music_track_id, video.music, clip.index);

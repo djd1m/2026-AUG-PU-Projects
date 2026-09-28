@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
-import { effectivePlanSql, retentionFromSql, type Pool } from '@clipmaker/db';
+import { clipAliveSql, effectivePlanSql, retentionFromSql, type Pool } from '@clipmaker/db';
 import { moscowDay } from '@clipmaker/shared/upload';
 import { GUEST_CONSENT_TEXT, GUEST_CONSENT_VERSION, type GuestPackSummary } from '../lib/guest-contract';
 import { UploadError } from './upload-contract';
@@ -41,7 +41,7 @@ export class GuestPackService {
       const clips = await tx.query(`SELECT c.id FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
         WHERE c.video_id=$1 AND c.id=ANY($2::uuid[]) AND c.status='done' AND c.object_key IS NOT NULL
         AND (c.expires_at IS NULL OR c.expires_at>$3)
-        AND (${effectivePlanSql('a', '$3')}='paid' OR ${retentionFromSql('v', 'a')} IS NULL OR ${retentionFromSql('v', 'a')}+interval '72 hours'>$3) FOR SHARE OF c`, [data.video_id, ids, now]);
+        AND ${clipAliveSql('c', 'v', 'a', '$3')} FOR SHARE OF c`, [data.video_id, ids, now]);
       if (clips.rowCount !== ids.length) throw new UploadError('invalid', 'Выберите доступные клипы из этой записи', 422);
       const pack = (await tx.query<Pack>(`INSERT INTO guest_pack
         (video_id,account_id,code,guest_name,consent_confirmed,consent_version,consent_text_hash,consent_at)

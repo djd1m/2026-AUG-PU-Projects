@@ -2,12 +2,12 @@
 // Запуск: node tests/run-landing-demo-mutations.mjs [id…]. Виды: unit — где угодно; db — только при DATABASE_URL (образ test);
 // browser — только на хосте с Docker (контейнер Playwright через scripts/check-responsive.sh --test). Иначе строка
 // «not_run» с причиной, а не зелёное.
-import { readFileSync, writeFileSync, mkdirSync, existsSync, openSync, closeSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, openSync, closeSync, rmSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 const root = 'tests/artifacts/landing-demo/mutations';
 mkdirSync(root, { recursive: true });
 const shared = 'packages/shared/src/showcase.ts', handler = 'apps/web/src/server/showcase-file.ts';
-const retention = 'apps/web/src/server/retention.ts', shortLink = 'apps/web/src/server/short-link.ts';
+const plan = 'packages/db/src/plan.ts', tariff = 'packages/shared/src/tariff.ts';
 const demo = 'apps/web/src/app/LandingDemo.tsx', css = 'apps/web/src/app/globals.css';
 const unit = 'tests/landing-demo.test.ts', db = 'tests/landing-demo.integration.test.ts', retentionDb = 'tests/retention.integration.test.ts';
 const browser = 'tests/browser/responsive-check.test.ts';
@@ -17,10 +17,12 @@ const cases = [
   ['set-membership-db', 'db', shared, 'return SHOWCASE_CLIPS.find(clip => clip.code === code) ?? null;', 'return SHOWCASE_CLIPS[0] ?? null;', db, 'того же формата'],
   ['link-code-db', 'db', handler, 'l.clip_id=c.id AND l.code=$2 AND l.revoked_at IS NULL', 'l.clip_id=c.id AND $2::text IS NOT NULL AND l.revoked_at IS NULL', db, 'ДРУГОМУ клипу'],
   ['done-only-db', 'db', handler, "WHERE c.id=$1 AND c.status='done' AND", 'WHERE c.id=$1 AND', db, 'не done'],
-  // Параметр $3 остаётся (иначе красное дал бы сбой привязки параметров, а не стёртая витрина) — выключается само исключение.
-  ['retention-exclusion', 'unit', retention, 'AND NOT (c.id = ANY($3::uuid[]))', 'AND NOT (c.id = ANY($3::uuid[]) AND false)', unit, 'исключает SHOWCASE_CLIP_IDS'],
-  ['retention-exclusion-db', 'db', retention, 'AND NOT (c.id = ANY($3::uuid[]))', 'AND NOT (c.id = ANY($3::uuid[]) AND false)', retentionDb, 'showcase clip survives'],
-  ['preview-showcase', 'unit', shortLink, ' && !isShowcaseClip(link.clip_id)', '', unit, '«ready»'],
+  ['explicit-expiry-db', 'db', handler, 'AND (c.expires_at IS NULL OR c.expires_at > now())', '', db, 'явный expires_at витрины'],
+  // 28.09.2026: исключение витрины переехало в ОДИН предикат срока (clipAliveSql в plan.ts, clipExpiry в tariff.ts) —
+  // якоря перенесены туда; ретенция и /c/ теперь зависят от них, а не от своих копий правила.
+  ['retention-exclusion', 'unit', plan, "+ (showcase.length ? ` OR ${clip}.id IN (${showcase.join(',')})` : '')", "+ ''", unit, 'исключает SHOWCASE_CLIP_IDS'],
+  ['retention-exclusion-db', 'db', plan, "+ (showcase.length ? ` OR ${clip}.id IN (${showcase.join(',')})` : '')", "+ ''", retentionDb, 'showcase clip survives'],
+  ['preview-showcase', 'unit', tariff, " || isShowcaseClip(clip.clipId)) return null;", ') return null;', unit, '«ready»'],
   ['playsinline', 'browser', demo, '<video controls playsInline preload="none"', '<video controls preload="none"', browser, 'видео с playsinline'],
   ['demo-below-fold', 'browser', css, 'width:clamp(7rem,38vw,9.5rem); height:auto;', 'width:clamp(16rem,80vw,22rem); height:auto;', browser, 'демо и действие в первом экране'],
 ];
@@ -37,6 +39,9 @@ for (const [id, kind, file, original, mutation, test, pattern] of cases) {
     const path = `${root}/${id}-${phase}.json`;
     const fd = openSync(`${root}/${id}-${phase}.log`, 'w');
     const args = ['run', test, '-t', pattern, '--reporter=json', `--outputFile=${path}`];
+    // Отчёт прошлого прогона удаляется ДО запуска: иначе запуск, упавший до тестов, прочитал бы старый JSON с упавшим
+    // тестом и выдал бы ложное «killed» (ревью Codex 28.09, находка 3).
+    rmSync(path, { force: true });
     let child;
     try {
       child = kind === 'browser'

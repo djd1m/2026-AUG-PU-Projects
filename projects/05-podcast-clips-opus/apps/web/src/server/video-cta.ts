@@ -44,7 +44,7 @@ export class VideoCtaService {
         `SELECT id,"index",music_track_id,expires_at FROM clip WHERE video_id=$1 AND status='done' AND object_key IS NOT NULL
         ORDER BY "index" FOR UPDATE`, [videoId])).rows.filter(clip => {
         // Истёкший клип не пересобирается: его файл уже удалён или вот-вот будет удалён очисткой.
-        const expires = clipExpiry(clip.expires_at, video.plan, video.retention_from);
+        const expires = clipExpiry({ clipId: clip.id, expiresAt: clip.expires_at, plan: video.plan, retentionFrom: video.retention_from });
         return !expires || expires > now;
       });
       await save();

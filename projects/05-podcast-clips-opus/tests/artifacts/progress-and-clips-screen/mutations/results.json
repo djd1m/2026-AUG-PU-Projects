@@ -1,50 +1,114 @@
 [
   {
     "id": "distinct-states",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "ribbon-silence",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "ribbon-failed-stage",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "ribbon-collapse",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "silence",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "foreign-404",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "unfinished-404",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   },
   {
     "id": "explanations",
-    "red": 1,
-    "green": 0,
+    "red": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "green": {
+      "exit": 0,
+      "failed": 0,
+      "passed": 1
+    },
     "passed": true
   }
 ]

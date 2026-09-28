@@ -1,5 +1,4 @@
-import { effectivePlanSql, transaction, type Pool } from '@clipmaker/db';
-import { SHOWCASE_CLIP_IDS } from '@clipmaker/shared/showcase';
+import { clipAliveSql, transaction, type Pool } from '@clipmaker/db';
 export interface RetentionStorage { delete(key: string): Promise<void>; erasePrefix(prefix: string): Promise<void>; eraseClipPrefix(prefix: string): Promise<void> }
 export const RETENTION_INTERVAL_MS = 3600_000;
 // One hour lets already-issued part URLs and bounded in-flight storage writes settle.
@@ -89,14 +88,26 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
     await step('очистка клипов', async () => {
       const clips = await pool.query<{ id: string; video_id: string; object_key: string | null; thumbnail_key: string | null }>(`SELECT c.id,c.object_key,c.thumbnail_key,c.video_id FROM clip c
         JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
-        WHERE c.status='done' AND a.status='active' AND ${effectivePlanSql('a', '$4')} <> 'paid' AND v.status IN ('done','failed')
-        AND GREATEST(v.finished_at, a.plan_paid_until) <= $1 AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
-        AND NOT (c.id = ANY($3::uuid[]))
-        ORDER BY v.finished_at LIMIT $2`, [new Date(now.getTime() - 3 * 86400_000), batch, SHOWCASE_CLIP_IDS, now]);
+        WHERE c.status='done' AND a.status='active' AND v.status IN ('done','failed')
+        AND NOT ${clipAliveSql('c', 'v', 'a', '$2')} AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
+        ORDER BY v.finished_at LIMIT $1`, [batch, now]);
       backlog ||= clips.rows.length === batch;
-      for (const clip of clips.rows) await step('удаление клипа', async () => {
+      const erase = async (clip: { id: string; video_id: string }) => {
         for (const prefix of ['clips/free', 'clips/paid', 'thumbs']) await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);
-        await pool.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
+      };
+      for (const clip of clips.rows) await step('удаление клипа', async () => {
+        await erase(clip);
+        // Порядок блокировок как у рендера: video, затем clip. Пересборка, поставленная до истечения срока, после
+        // очистки недействительна: попытка закрывается здесь, а lockRender у пересборки требует живой object_key —
+        // иначе отложенный воркер собрал бы и опубликовал уже стёртый клип (ревью Codex 28.09, находка 2).
+        await transaction(pool, async client => {
+          await client.query('SELECT id FROM video WHERE id=$1 FOR UPDATE', [clip.video_id]);
+          await client.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
+          await client.query(`UPDATE job_attempt SET status='failed',failure_reason='stale_attempt_result',finished_at=$2
+            WHERE clip_id=$1 AND rerender AND status IN ('running','deferred')`, [clip.id, now]);
+        });
+        // Второй проход: объект, опубликованный пересборкой между первым проходом и транзакцией, не остаётся сиротой.
+        await erase(clip);
       });
     });
     if (errors) throw new Error(`Очистка: не завершено операций ${errors}; повтор на следующем проходе`);

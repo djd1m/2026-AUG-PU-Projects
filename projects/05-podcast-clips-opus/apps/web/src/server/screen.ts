@@ -1,5 +1,5 @@
 import type { Pool } from '@clipmaker/db';
-import { FILE_FAILURES, effectivePlanSql, retentionFromSql } from '@clipmaker/db';
+import { FILE_FAILURES, clipAliveSql, effectivePlanSql, retentionFromSql } from '@clipmaker/db';
 import { clipExpiry } from '@clipmaker/shared/tariff';
 import type { VideoStatus, VideoFailureReason, ClipStatus, JobStage } from '@clipmaker/shared/enums';
 import { JOB_STAGE, readEnum } from '@clipmaker/shared/enums';
@@ -90,7 +90,7 @@ export class ScreenService {
       SELECT 'download',$1,c.id,$3::date FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       WHERE c.id=$2 AND v.account_id=$1 AND a.status='active' AND v.deleted_at IS NULL
       AND c.status='done' AND c.object_key IS NOT NULL AND (c.expires_at IS NULL OR c.expires_at>now())
-      AND (${effectivePlanSql('a')}='paid' OR ${retentionFromSql('v', 'a')} IS NULL OR ${retentionFromSql('v', 'a')} + interval '72 hours'>now()) RETURNING id`, [account, id, moscowDay(this.clock())]);
+      AND ${clipAliveSql('c', 'v', 'a')} RETURNING id`, [account, id, moscowDay(this.clock())]);
     if (!result.rowCount) throw notFound();
     return { recorded: true };
   }
@@ -105,7 +105,8 @@ export interface ClipRow {
   explain_hook: string | null; explain_completeness: string | null; explain_length: string | null;
 }
 export function presentClip(row: ClipRow, video: Pick<VideoRow, 'plan' | 'finished_at' | 'retention_from'>, now: Date): ClipScreen {
-  const expires = clipExpiry(row.expires_at, video.plan, video.retention_from === undefined ? video.finished_at : video.retention_from);
+  const expires = clipExpiry({ clipId: row.id, expiresAt: row.expires_at, plan: video.plan,
+    retentionFrom: video.retention_from === undefined ? video.finished_at : video.retention_from });
   const score = row.score === null ? {} : scoreSchema.parse({ score: row.score,
     components: { hook: row.score_hook, completeness: row.score_completeness, length: row.score_length },
     explanations: { hook: row.explain_hook, completeness: row.explain_completeness, length: row.explain_length } });

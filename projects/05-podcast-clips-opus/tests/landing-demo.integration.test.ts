@@ -51,6 +51,16 @@ describe.skipIf(!dbUrl)('PostgreSQL showcase route', () => {
     await pool.query("UPDATE clip SET status='rendering' WHERE id=$1", [SHOWCASE.clipId]);
     expect((await handler()(request(), SHOWCASE.code)).status).toBe(404);
   });
+  // Ревью Codex 28.09, находка 1: явный срок витрины соблюдается и маршрутом витрины, как на /c/ — подписи нет.
+  it('явный expires_at витрины истёк → 404 файла и превью; ещё не истёк → 302', async () => {
+    await pool.query("UPDATE clip SET expires_at=now() + interval '1 hour' WHERE id=$1", [SHOWCASE.clipId]);
+    expect((await handler()(request(), SHOWCASE.code)).status).toBe(302);
+    sign.mockClear();
+    await pool.query("UPDATE clip SET expires_at=now() - interval '1 minute' WHERE id=$1", [SHOWCASE.clipId]);
+    expect((await handler()(request(), SHOWCASE.code)).status).toBe(404);
+    expect((await handler('thumbnail')(request(), SHOWCASE.code)).status).toBe(404);
+    expect(sign).not.toHaveBeenCalled();
+  });
   it('объект стёрт → 404 (файл), превью отдельно', async () => {
     await pool.query('UPDATE clip SET object_key=NULL WHERE id=$1', [SHOWCASE.clipId]);
     expect((await handler()(request(), SHOWCASE.code)).status).toBe(404);

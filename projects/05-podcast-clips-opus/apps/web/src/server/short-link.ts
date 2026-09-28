@@ -1,8 +1,7 @@
 import { effectivePlanSql, retentionFromSql, type Pool } from '@clipmaker/db';
-import { FREE_RETENTION_MS } from '@clipmaker/shared/tariff';
+import { clipExpiry } from '@clipmaker/shared/tariff';
 import { moscowDay } from '@clipmaker/shared/upload';
 import { UploadError } from './upload-contract';
-import { isShowcaseClip } from '@clipmaker/shared/showcase';
 
 export interface ShortLink {
   id: string; code: string; clip_id?: string; partner_code?: string | null; partner_code_id?: string | null; account_id: string; title: string; status: string;
@@ -57,10 +56,8 @@ export class ShortLinkService {
 }
 
 export function previewState(link: ShortLink, now: Date): 'ready' | 'expired' | 'unavailable' {
-  // Витрина (ADR-018): срок бесплатного тарифа к клипу витрины не применяется — ретенция его не стирает,
-  // и «Открыть клип» с лендинга не должен вести на «срок истёк». Явный expires_at соблюдается всегда.
-  const expires = link.expires_at ?? (link.plan !== 'paid' && link.retention_from && !isShowcaseClip(link.clip_id)
-    ? new Date(link.retention_from.getTime() + FREE_RETENTION_MS) : null);
+  // Витрина (ADR-018) — внутри clipExpiry: срок бесплатного тарифа к ней не применяется, явный expires_at — всегда.
+  const expires = clipExpiry({ clipId: link.clip_id, expiresAt: link.expires_at, plan: link.plan, retentionFrom: link.retention_from });
   if (expires && expires <= now) return 'expired';
   return link.status === 'done' && link.thumbnail_key ? 'ready' : 'unavailable';
 }

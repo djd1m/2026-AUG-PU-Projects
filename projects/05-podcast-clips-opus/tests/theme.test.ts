@@ -41,7 +41,9 @@ function block(css: string, selector: RegExp, where: string): Tokens {
 const DARK = /:root\s*\{([^}]*)\}/, LIGHT = /:root\[data-theme=light\]\s*\{([^}]*)\}/;
 const globals = readFileSync('apps/web/src/app/globals.css', 'utf8');
 const ssr = ['apps/web/src/server/short-link-handler.ts', 'apps/web/src/server/guest-page.ts'];
-const COLOR = /#[0-9a-fA-F]{3,8}\b|\bwhite\b|\bblack\b|rgba?\(|%23/;
+// Дефис — не граница цвета: `white-space`, `black-list` — свойства и имена, не цвета (ревью Opus 28.09, находка 4:
+// прежнее `\bwhite\b` читало `white-space` как цвет и вынудило убрать `white-space:nowrap` из `.visually-hidden`).
+const COLOR = /#[0-9a-fA-F]{3,8}\b|(?<![-\w])(?:white|black)(?![-\w])|rgba?\(|%23/;
 
 describe('colour tokens — one source of values', () => {
   const dark = block(globals, DARK, 'globals dark'), light = block(globals, LIGHT, 'globals light');
@@ -53,6 +55,13 @@ describe('colour tokens — one source of values', () => {
     expect(globals).toMatch(/:root\s*\{\s*color-scheme:dark;/);
     expect(globals).toMatch(/:root\[data-theme=light\]\s*\{\s*color-scheme:light;/);
     expect(globals).not.toContain('prefers-color-scheme');
+  });
+  it('colour guard: catches colour names and literals, not properties that merely contain them', () => {
+    for (const line of ['color:white;', 'background: black', 'border:1px solid #fff', 'fill:rgba(0,0,0,.5)', 'url("data:image/svg+xml,%23")'])
+      expect(COLOR.test(line), line).toBe(true);
+    for (const line of ['white-space:nowrap;', '.blackout { display:none }', 'color:var(--ink);', 'whitespace'])
+      expect(COLOR.test(line), line).toBe(false);
+    expect(globals).toMatch(/\.visually-hidden \{[^}]*white-space:nowrap;/);
   });
   it('no colour literal outside the token blocks (globals.css and SSR <style>)', () => {
     const rest = globals.replace(DARK, '').replace(LIGHT, '');

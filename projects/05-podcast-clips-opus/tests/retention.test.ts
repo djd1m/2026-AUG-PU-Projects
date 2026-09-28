@@ -5,7 +5,7 @@ import { createElement } from 'react';
 import type { Pool } from 'pg';
 import { ErasureService } from '../apps/web/src/server/erasure';
 import { eraseAccount, retentionTick } from '../apps/web/src/server/retention';
-import { SHOWCASE_CLIP_IDS } from '../packages/shared/src/showcase';
+import { clipAliveSql } from '../packages/db/src/plan';
 import { signErasureReceipt, readErasureReceipt } from '../apps/web/src/server/erasure-receipt';
 import { AccountDeletion } from '../apps/web/src/app/dashboard/AccountDeletion';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
@@ -62,12 +62,16 @@ describe('retention and erasure guards', () => {
       return { rows: [], rowCount: 0 };
     });
     await retentionTick(f.pool, f.storage, new Date('2026-09-24T12:00:00Z'));
-    expect(f.storage.eraseClipPrefix.mock.calls).toEqual(['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]));
-    // Фича 30: действующий план (истёкший оплаченный — free) и срок от конца оплаты; момент прохода — параметр $4.
-    expect(f.query).toHaveBeenCalledWith(expect.stringContaining("plan_paid_until > $4)) THEN 'paid' ELSE 'free' END) <> 'paid'"),
-      [new Date('2026-09-21T12:00:00Z'), 100, SHOWCASE_CLIP_IDS, new Date('2026-09-24T12:00:00Z')]);
-    expect(f.query).toHaveBeenCalledWith(expect.stringContaining('GREATEST(v.finished_at, a.plan_paid_until) <= $1'), expect.anything());
+    // Два прохода стирания: до транзакции и после неё (объект, опубликованный пересборкой в промежутке, не сирота).
+    const pass = ['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]);
+    expect(f.storage.eraseClipPrefix.mock.calls).toEqual([...pass, ...pass]);
+    // Срок — ОДИН предикат clipAliveSql (действующий план, срок от конца оплаты, витрина); момент прохода — $2.
+    expect(f.query).toHaveBeenCalledWith(expect.stringContaining(`AND NOT ${clipAliveSql('c', 'v', 'a', '$2')}`),
+      [100, new Date('2026-09-24T12:00:00Z')]);
     expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(true);
+    // Пересборка стёртого клипа закрывается в той же транзакции (ревью Codex 28.09, находка 2).
+    expect(f.commands.some(s => s.startsWith("UPDATE job_attempt SET status='failed',failure_reason='stale_attempt_result'")
+      && s.includes('rerender'))).toBe(true);
   });
   it('expiry does not overwrite explicit revocation', async () => {
     const f = fixture(); await retentionTick(f.pool, f.storage);

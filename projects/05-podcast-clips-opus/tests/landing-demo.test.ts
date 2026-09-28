@@ -8,6 +8,8 @@ import { SHOWCASE_CLIPS, SHOWCASE_CLIP_IDS, findShowcase, isShowcaseClip, showca
 import { createShowcaseFileHandler } from '../apps/web/src/server/showcase-file';
 import { retentionTick } from '../apps/web/src/server/retention';
 import { previewState, type ShortLink } from '../apps/web/src/server/short-link';
+import { clipAliveSql } from '../packages/db/src/plan';
+import { clipExpiry } from '../packages/shared/src/tariff';
 import { createS3Client, generateDownloadUrl } from '../packages/s3/src';
 import { loadWebConfig } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
@@ -119,7 +121,7 @@ describe('маршрут витрины /api/showcase/{code}/file|thumbnail — 
 });
 
 describe('ретенция и /c/ не хоронят клип витрины', () => {
-  it('очистка клипов исключает SHOWCASE_CLIP_IDS параметром запроса', async () => {
+  it('очистка клипов исключает SHOWCASE_CLIP_IDS в общем предикате срока', async () => {
     const calls: [string, unknown[] | undefined][] = [];
     const query = vi.fn(async (sql: string, params?: unknown[]) => {
       calls.push([sql, params]);
@@ -129,9 +131,17 @@ describe('ретенция и /c/ не хоронят клип витрины', 
     });
     const pool = { query, connect: async () => ({ query, release: vi.fn() }) } as unknown as Parameters<typeof retentionTick>[0];
     await retentionTick(pool, { delete: vi.fn(), erasePrefix: vi.fn(), eraseClipPrefix: vi.fn() }, new Date('2026-09-27T12:00:00Z'));
-    const clips = calls.find(([sql]) => sql.includes('FROM clip c') && sql.includes("<> 'paid'") && sql.includes('plan_paid_until'));
-    expect(clips?.[0]).toContain('AND NOT (c.id = ANY($3::uuid[]))');
-    expect(clips?.[1]?.[2]).toEqual(SHOWCASE_CLIP_IDS);
+    const clips = calls.find(([sql]) => sql.includes('FROM clip c') && sql.includes('AND NOT (') && sql.includes('plan_paid_until'));
+    expect(clips?.[0]).toContain(`AND NOT ${clipAliveSql('c', 'v', 'a', '$2')}`);
+    for (const id of SHOWCASE_CLIP_IDS) expect(clipAliveSql('c', 'v', 'a', '$2')).toContain(`c.id IN ('${id}'::uuid)`);
+  });
+  it('срок витрины одинаков в TS и SQL: clipExpiry без срока бесплатного тарифа, явный expires_at — всегда', () => {
+    const from = new Date('2026-09-20T00:00:00Z');
+    expect(clipExpiry({ clipId: SHOWCASE.clipId, expiresAt: null, plan: 'free', retentionFrom: from })).toBeNull();
+    expect(clipExpiry({ clipId: '11111111-1111-4111-8111-111111111111', expiresAt: null, plan: 'free', retentionFrom: from })?.toISOString())
+      .toBe('2026-09-23T00:00:00.000Z');
+    const explicit = new Date('2026-09-21T00:00:00Z');
+    expect(clipExpiry({ clipId: SHOWCASE.clipId, expiresAt: explicit, plan: 'free', retentionFrom: from })).toBe(explicit);
   });
   const link: ShortLink = { id: 'l', code: 'CTDUUG', clip_id: SHOWCASE.clipId, account_id: 'a', title: 't', status: 'done',
     thumbnail_key: 'thumbs/v/c.jpg', expires_at: null, retention_from: new Date('2026-09-24T10:24:31Z'), plan: 'free' };

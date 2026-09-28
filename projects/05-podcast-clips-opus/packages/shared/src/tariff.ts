@@ -3,6 +3,7 @@
 // Цена и срок — КОНСТАНТЫ КОДА, не окружения: цена, приехавшая пустой или с опечаткой, стала бы чужими деньгами
 // (fail-closed-defaults, правило 3). Режим оплаты — окружение, но только выбор из закрытого набора (CFG-I8).
 import type { Environment } from './config.js';
+import { isShowcaseClip } from './showcase.js';
 
 export const PAID_PRICE_MINOR = 99_000;
 export const PAID_PLAN_DAYS = 30;
@@ -28,15 +29,24 @@ export function effectivePlan(plan: unknown, source: unknown, paidUntil: Date | 
   return Number.isFinite(until) && until > now.getTime() ? 'paid' : 'free';
 }
 
-/** Срок хранения клипа бесплатного тарифа — 72 ч (FR-TARIFF-003). */
+/** Срок хранения клипа бесплатного тарифа — 72 ч (FR-TARIFF-003). Единственное место числа: SQL-зеркало — `clipAliveSql` (@clipmaker/db). */
 export const FREE_RETENTION_MS = 3 * 86_400_000;
+export interface ClipExpiryInput {
+  /** clip.id — по нему витрина лендинга (ADR-018) исключается из срока бесплатного тарифа. */
+  clipId: unknown; expiresAt: Date | null | undefined; plan: unknown; retentionFrom: Date | null | undefined;
+}
 /**
- * Срок клипа: явный `expires_at`, иначе у не-`paid` — 72 ч от `retention_from` (готовность записи, но не раньше конца
- * оплаченного срока, AC-12; SQL — `retentionFromSql`). План — ДЕЙСТВУЮЩИЙ (`effectivePlanSql`), сравнение на равенство.
+ * Срок клипа — ЕДИНСТВЕННОЕ правило для экрана, /c/, файла, смены музыки и призыва (ретенция — `clipAliveSql`):
+ *   явный `expires_at` соблюдается всегда (и у витрины);
+ *   иначе у не-`paid` — 72 ч от `retention_from` (готовность записи, но не раньше конца оплаченного срока, AC-12);
+ *   клип витрины (`SHOWCASE_CLIPS`) срока бесплатного тарифа не имеет: ретенция его не стирает, и чтения не
+ *   объявляют его истёкшим — иначе смена призыва/музыки у записи витрины молча не пересобирала бы клип лендинга.
+ * План — ДЕЙСТВУЮЩИЙ (`effectivePlanSql`), сравнение на равенство: всё, что не ровно `paid`, — срок есть.
  */
-export function clipExpiry(expiresAt: Date | null | undefined, plan: unknown, retentionFrom: Date | null | undefined): Date | null {
-  if (expiresAt) return expiresAt;
-  return plan !== 'paid' && retentionFrom ? new Date(retentionFrom.getTime() + FREE_RETENTION_MS) : null;
+export function clipExpiry(clip: ClipExpiryInput): Date | null {
+  if (clip.expiresAt) return clip.expiresAt;
+  if (clip.plan === 'paid' || !clip.retentionFrom || isShowcaseClip(clip.clipId)) return null;
+  return new Date(clip.retentionFrom.getTime() + FREE_RETENTION_MS);
 }
 
 export const PAYMENTS_MODES =['off', 'fake', 'live'] as const;

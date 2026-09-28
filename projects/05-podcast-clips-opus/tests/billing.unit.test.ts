@@ -3,6 +3,7 @@
 // оператора (AC-13), сеть ЮKassa (AC-5), порядок входа маршрутов оплаты (AC-1, AC-5, AC-6), надпись призыва у paid
 // (находка 1 ревью фич 25–29), экраны при выключенной и включённой оплате.
 import { describe, expect, it, vi } from 'vitest';
+import { readFileSync, readdirSync } from 'node:fs';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { loadLimits, loadWebConfig } from '../packages/shared/src/config';
@@ -87,11 +88,33 @@ describe('цена и действующий план (OWN-019, AC-11)', () => {
   });
   it('срок хранения: от готовности, но не раньше конца оплаты; явный expires_at сильнее', () => {
     const finished = new Date('2026-09-01T00:00:00Z');
-    expect(clipExpiry(null, 'free', finished)?.toISOString()).toBe('2026-09-04T00:00:00.000Z');
-    expect(clipExpiry(null, 'paid', finished)).toBeNull();
-    expect(clipExpiry(null, 'free', null)).toBeNull();
+    const clipId = '11111111-1111-4111-8111-111111111111';
+    const expiry = (expiresAt: Date | null, plan: unknown, retentionFrom: Date | null) => clipExpiry({ clipId, expiresAt, plan, retentionFrom });
+    expect(expiry(null, 'free', finished)?.toISOString()).toBe('2026-09-04T00:00:00.000Z');
+    expect(expiry(null, 'paid', finished)).toBeNull();
+    expect(expiry(null, 'free', null)).toBeNull();
+    for (const bad of [null, undefined, '', 'PAID', ' paid', 'premium', 0, true]) expect(expiry(null, bad, finished), String(bad)).not.toBeNull();
     const explicit = new Date('2026-09-02T00:00:00Z');
-    expect(clipExpiry(explicit, 'paid', finished)).toBe(explicit);
+    expect(expiry(explicit, 'paid', finished)).toBe(explicit);
+  });
+  // BACKLOG §5а (ревью Opus 28.09, находка 2): правило «бесплатный клип = retention_from + 3 сут, витрина — без срока»
+  // жило в шести местах, исключение витрины — в двух. Теперь число и исключение — ровно в tariff.ts (TS) и plan.ts (SQL).
+  it('срок бесплатного клипа и исключение витрины записаны ровно в одном месте на язык', () => {
+    const files: string[] = [];
+    const walk = (dir: string) => { for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const path = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) { if (!/^(node_modules|dist|\.next)$/.test(entry.name)) walk(path); }
+      else if (/\.tsx?$/.test(entry.name)) files.push(path);
+    } };
+    for (const root of ['apps/web/src', 'apps/worker/src', 'packages/db/src', 'packages/shared/src', 'packages/queue/src', 'packages/s3/src']) walk(root);
+    expect(files.length).toBeGreaterThan(50);
+    const offenders = (pattern: RegExp) => files.filter(file => pattern.test(readFileSync(file, 'utf8'))).sort();
+    // Формула срока: 3 суток любым написанием — только определение константы (72 ч удаления аккаунта — другое правило, erasure.ts).
+    expect(offenders(/\b3\s*\*\s*86_?400(_?000)?\b|'72 hours'|interval '3 days?'|\b259_?200(_?000)?\b/))
+      .toEqual(['packages/shared/src/tariff.ts']);
+    expect(offenders(/FREE_RETENTION_MS/)).toEqual(['packages/db/src/plan.ts', 'packages/shared/src/tariff.ts']);
+    // Исключение витрины из срока: TS — clipExpiry, SQL — clipAliveSql. Никаких собственных копий в чтениях и ретенции.
+    expect(offenders(/isShowcaseClip\(|SHOWCASE_CLIP_IDS/)).toEqual(['packages/db/src/plan.ts', 'packages/shared/src/showcase.ts', 'packages/shared/src/tariff.ts']);
   });
 });
 
