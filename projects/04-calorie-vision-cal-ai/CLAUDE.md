@@ -16,7 +16,7 @@ p-replicator, прежде чем реализовывать что-либо з�
 Все одиннадцать фич роадмапа `done` (`.claude/feature-roadmap.json`: 11 из 11, сверено 28.09.2026), плюс партнёрская схема доведена до конца (пять пробелов из
 `docs/operations/partner-journey.md`). Живой путь пройден целиком: ссылка блогера → распознавание →
 регистрация → оплата картой через ЮKassa (тестовый магазин) → подписка → начисление комиссии
-партнёру → его кабинет. 526 юнит-тестов и стражей (28.09) и интеграционные на настоящем PostgreSQL зелёные.
+партнёру → его кабинет. 539 юнит-тестов и стражей (28.09) и интеграционные на настоящем PostgreSQL зелёные.
 
 Что НЕ живое и почему: приём НАСТОЯЩИХ денег (магазин ЮKassa в тестовом режиме, `YOOKASSA_TEST_MODE=true`),
 автоматическая отправка выплат партнёрам (нужен отдельный договор на выплаты и ИП — DEC-A-062),
@@ -82,13 +82,18 @@ USDA FoodData Central (CC0) + ручная RU-курация 100–300 блюд 
 Монорепо заведено (npm workspaces), команды проверены прогоном:
 
 ```bash
-npm test          # unit + стражи: 526 из 526 в 73 файлах на 28.09.2026
+npm test          # unit + стражи: 539 из 539 в 74 файлах на 28.09.2026
 npm run lint
 npm run build      # по каждому workspace: web, api, recognizer
 npm run import:fdc # разовый импорт USDA FoodData Central, не сервис compose
 
-# интеграционные — на НАСТОЯЩЕМ PostgreSQL, профиль `test` compose:
-docker compose --project-directory . --profile test run --rm test
+# интеграционные — на НАСТОЯЩЕМ PostgreSQL в ОТДЕЛЬНОМ compose-проекте, НЕ в стенде `n4-tarelka`
+# (скрипт базы без `-p` или с `-p n4-tarelka` отказывает кодом 2). Подсеть — свободная на машине.
+export N4_PRIVATE_SUBNET=10.86.0.0/24
+docker compose --project-directory . -p n4-test up -d --wait db
+bash scripts/create-test-database.sh -p n4-test
+docker compose --project-directory . -p n4-test --profile test run --rm test npm run test:integration
+docker compose --project-directory . -p n4-test down -v
 ```
 
 `docker compose up` — только после проверок:

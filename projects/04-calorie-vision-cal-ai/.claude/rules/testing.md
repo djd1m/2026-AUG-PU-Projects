@@ -7,9 +7,11 @@
 [`shared-resource-verification.md`](../../../../.claude/rules/shared-resource-verification.md),
 [`cost-of-detection-ladder.md`](../../../../.claude/rules/cost-of-detection-ladder.md).
 
-Раннер — vitest. На 17.09.2026: **526 юнит-тестов и стражей в 73 файлах** (28.09; было 516 в 72 на 17.09), интеграционные — на НАСТОЯЩЕМ
+Раннер — vitest. На 17.09.2026: **539 юнит-тестов и стражей в 74 файлах** (28.09; было 516 в 72 на 17.09), интеграционные — на НАСТОЯЩЕМ
 PostgreSQL в профиле `test` compose (отдельная база `n4_test`, DEC-A-056: боевая база защищена
-стражем по закрытому списку имён внутри `tests/helpers/db.ts`).
+стражем по закрытому списку имён внутри `tests/helpers/db.ts`). Прогон — только в ОТДЕЛЬНОМ
+compose-проекте (`-p n4-test`): `scripts/create-test-database.sh` без явного имени проекта или с
+именем стенда `n4-tarelka` отказывает кодом 2 (страж `tests/guard/create-test-database-project.test.ts`).
 
 ## Слой выбирается по природе признака, а не по удобству
 
