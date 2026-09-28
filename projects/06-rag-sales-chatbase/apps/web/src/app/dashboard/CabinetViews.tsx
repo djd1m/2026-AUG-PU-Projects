@@ -3,15 +3,17 @@
 // состояние и запросы — BotListScreen / BotScreen. Написано заново (ADR-016); классы и токены — design-shell и
 // preview-flow (globals.css). Лента стадий — адаптация N5 (lib/source-ribbon.ts).
 import type { ReactNode } from 'react';
+import { TEXT_MAX_BYTES } from '@n6/rag/constants';
 import { ribbonOf, STEP_STATE_TEXT, type RibbonJob } from '../../lib/source-ribbon';
 import { SourceTruncationNotice } from './SourceTruncationNotice';
+import { TextSourceAdder } from './TextSourceAdder';
 
 export interface BotListItemView {
   bot_id: string; company_name: string; contact_set: boolean; sources: number; sources_ready: number; sources_failed: number; origins: number;
 }
 export interface BotListView { plan: 'free' | 'nobadge' | 'studio'; limit: number; bots: BotListItemView[] }
 // pages_truncated — страниц, прочитанных не целиком по пределу фрагментов (source-lifecycle); нет поля — 0.
-export interface SourceItemView { source_id: string; kind: 'site' | 'pdf'; title: string; job: (RibbonJob & { index_job_id: string }) | null; pages_truncated?: number }
+export interface SourceItemView { source_id: string; kind: 'site' | 'pdf' | 'text'; title: string; job: (RibbonJob & { index_job_id: string }) | null; pages_truncated?: number }
 export interface FieldErrors { [field: string]: string | undefined }
 
 // Причины канона §4 (index_job.failure_reason) → текст владельцу в кабинете. Неизвестная — как internal.
@@ -28,7 +30,17 @@ const REASONS: Readonly<Record<string, string>> = {
   stalled: 'Задача не отвечала больше 5 минут и закрыта',
   internal: 'Внутренняя ошибка при чтении источника',
 };
-export const cabinetReason = (reason: string | undefined) => REASONS[reason ?? 'internal'] ?? REASONS.internal!;
+// text-source (A-N6-080): у текстового файла те же причины звучат про файл; not_text бывает только у него.
+const TEXT_REASONS: Readonly<Record<string, string>> = {
+  robots_disallowed: 'Сайт запрещает роботам читать этот файл (robots.txt)',
+  unreachable: 'Файл не открылся: адрес не отвечает или отдаёт ошибку. Проверьте адрес в браузере',
+  no_text: 'В файле почти нет текста',
+  too_large: `Файл больше ${Math.round(TEXT_MAX_BYTES / 1024 / 1024)} МБ — такие не читаем. Укажите файл поменьше (например, llms.txt вместо llms-full.txt)`,
+  not_text: 'По адресу не текстовый файл, а страница сайта или двоичный файл. Нужен .txt или .md — например, /llms-full.txt',
+};
+export const cabinetReason = (reason: string | undefined, kind?: SourceItemView['kind']) =>
+  (kind === 'text' ? TEXT_REASONS[reason ?? ''] : undefined) ?? REASONS[reason ?? 'internal'] ?? REASONS.internal!;
+const KIND_TITLE: Readonly<Record<SourceItemView['kind'], string>> = { site: 'Сайт', pdf: 'PDF', text: 'Текстовый файл' };
 const PLAN_TITLE: Readonly<Record<BotListView['plan'], string>> = { free: 'Бесплатный', nobadge: 'Без бейджа', studio: 'Студия' };
 
 export function Field(p: { id: string; label: string; hint?: string; error?: string; children: ReactNode }) {
@@ -89,7 +101,7 @@ export function BotListSection({ list, create }: { list: BotListView; create: Re
   </>;
 }
 
-export function SourceRibbon({ job, kind }: { job: RibbonJob | null; kind: 'site' | 'pdf' }) {
+export function SourceRibbon({ job, kind }: { job: RibbonJob | null; kind: SourceItemView['kind'] }) {
   const ribbon = ribbonOf(job, kind);
   return <ol className={`ribbon tone-${ribbon.tone}`} aria-label="Ход индексации">
     {ribbon.steps.map((step) => <li key={step.key} className={`ribbon-step is-${step.view}`}>
@@ -114,10 +126,10 @@ export function SourceList(p: SourceListProps) {
     const busy = p.busy === s.source_id;
     const truncated = s.pages_truncated ?? 0;
     return <li key={s.source_id} className="card source-item stack">
-      <p className="source-title"><span className="source-kind">{s.kind === 'pdf' ? 'PDF' : 'Сайт'}</span> <strong>{s.title}</strong></p>
+      <p className="source-title"><span className="source-kind">{KIND_TITLE[s.kind]}</span> <strong>{s.title}</strong></p>
       <SourceRibbon job={s.job} kind={s.kind} />
       {state === 'no_response' && <p role="status" className="notice">Больше 5 минут не было новостей от задачи — это не «ещё читаем». Сторож закроет её с причиной, если она остановилась.</p>}
-      {failed && <p className="notice danger-notice"><span role="alert">{cabinetReason(s.job?.reason)}.</span></p>}
+      {failed && <p className="notice danger-notice"><span role="alert">{cabinetReason(s.job?.reason, s.kind)}.</span></p>}
       {failed && s.kind === 'pdf' && <p className="muted">Файл после отказа удалён — загрузите исправленный PDF ниже.</p>}
       {state === 'done' && s.job?.truncated && <SourceTruncationNotice job={s.job} kind={s.kind} />}
       {truncated > 0 && <p className="muted">{truncated === 1 ? '1 страница прочитана' : `${truncated} страниц прочитаны`} не целиком: на странице больше текста, чем бот берёт с одной страницы.</p>}
@@ -130,7 +142,7 @@ export function SourceList(p: SourceListProps) {
             </p>
           </div>
         : <p className="cluster">
-            {s.kind === 'site' && (failed || state === 'done') && <button type="button" className="secondary" disabled={busy} onClick={() => p.onReindex(s.source_id)}>
+            {s.kind !== 'pdf' && (failed || state === 'done') && <button type="button" className="secondary" disabled={busy} onClick={() => p.onReindex(s.source_id)}>
               {busy ? 'Ставим в очередь…' : failed ? 'Повторить' : 'Обновить'}</button>}
             <button type="button" className="secondary" disabled={busy} onClick={() => p.onConfirm(s.source_id)}>Удалить</button>
           </p>}
@@ -139,7 +151,8 @@ export function SourceList(p: SourceListProps) {
   })}</ul>;
 }
 
-export function AddSource(p: { url: string; busy: boolean; errors: FieldErrors; onUrl: (value: string) => void; onSite: () => void; onPdf: (file: File | null) => void }) {
+// botId задан — третий вариант «Текстовый файл по адресу» со своим состоянием (TextSourceAdder, text-source A-N6-080).
+export function AddSource(p: { url: string; busy: boolean; errors: FieldErrors; onUrl: (value: string) => void; onSite: () => void; onPdf: (file: File | null) => void; botId?: string }) {
   return <div className="stack add-source">
     <form className="stack" noValidate onSubmit={(e) => { e.preventDefault(); p.onSite(); }}>
       <Field id="source-url" label="Адрес сайта" hint="Прочитаем страницы этого сайта: robots.txt, по одной странице в секунду" error={p.errors.url}>
@@ -152,7 +165,23 @@ export function AddSource(p: { url: string; busy: boolean; errors: FieldErrors; 
       <input id="source-pdf" name="file" type="file" accept="application/pdf,.pdf" className="file-input" disabled={p.busy}
         aria-describedby={describedBy('source-pdf', true, p.errors.pdf)} onChange={(e) => p.onPdf(e.target.files?.[0] ?? null)} />
     </Field>
+    {p.botId && <TextSourceAdder botId={p.botId} />}
   </div>;
+}
+
+// Третий вид источника (text-source, FR-SOURCE-005): текстовый файл по адресу. Только разметка по пропсам — её же рендерит
+// браузерный набор (tests/browser/text-source.test.ts); состояние и запрос — TextSourceAdder.
+export function TextSourceForm(p: { url: string; busy: boolean; error?: string; onUrl: (value: string) => void; onSubmit: () => void }) {
+  const mb = Math.round(TEXT_MAX_BYTES / 1024 / 1024);
+  return <form className="stack text-source-form" noValidate onSubmit={(e) => { e.preventDefault(); p.onSubmit(); }}>
+    <Field id="source-text" label="Текстовый файл по адресу"
+      hint={`Если на сайте есть llms-full.txt или llms.txt — укажите его: весь текст сайта одним файлом, без обхода страниц. Подойдёт и .txt или .md до ${mb} МБ; каждый раздел файла (заголовок # или ##) считается страницей тарифа`}
+      error={p.error}>
+      <input id="source-text" name="text_url" type="url" inputMode="url" autoComplete="off" placeholder="example.ru/llms-full.txt" value={p.url}
+        aria-invalid={Boolean(p.error)} aria-describedby={describedBy('source-text', true, p.error)} onChange={(e) => p.onUrl(e.target.value)} />
+    </Field>
+    <p><button type="submit" disabled={p.busy}>{p.busy ? 'Добавляем…' : 'Добавить файл'}</button></p>
+  </form>;
 }
 
 export interface SourceChipView { title: string; url: string | null; excerpt: string }

@@ -97,10 +97,10 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 | `account.plan_source` | `none` · `payment` · `operator` | истекает ТОЛЬКО `payment` (A-N6-040) |
 | `payment_intent.status` | `created` · `succeeded` · `canceled` | «выполняется» на экране возврата |
 | `bot.status` | `draft` · `active` · `deleted` | `deleted` (виджет не отвечает) |
-| `source.kind` | `site` · `pdf` | отказ |
+| `source.kind` | `site` · `pdf` · `text` (текстовый файл по адресу, миграция 015, A-N6-080) | отказ |
 | `source.status` | `pending` · `indexing` · `ready` · `failed` | `failed` |
 | `index_job.status` | `queued` · `running` · `done` · `failed` | `failed` |
-| `index_job.failure_reason` | `robots_disallowed` · `unreachable` · `blocked_address` · `no_text` · `not_pdf` · `too_large` · `no_text_layer` · `quota_refused` · `embedding_unavailable` · `stalled` · `internal` | `internal` |
+| `index_job.failure_reason` | `robots_disallowed` · `unreachable` · `blocked_address` · `no_text` · `not_pdf` · `too_large` · `no_text_layer` · `quota_refused` · `embedding_unavailable` · `stalled` · `internal` · `not_text` (по адресу файла не текст; миграция 015, A-N6-080) | `internal` |
 | `question_log.outcome` | `answered` · `unknown` · `refused_limit` · `refused_origin` · `not_verified` (ворота A-N6-035, без текста и без квоты; миграция 011, A-N6-066) · `small_talk` (A-N6-074, миграция 013: светская реплика — шаблон без модели и списания, без текста) | `unknown` |
 | `bot.answers_verified_reset_reason` | `new_material` (отметку «проверено» сняла база — новый фрагмент; миграция 011, A-N6-066) | экран: «отметка снята» без причины |
 | `quota_counter.scope` | 10 значений, §7 | отказ списания |
@@ -113,7 +113,7 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 | `operator_action.action` | `set_plan` | отказ |
 | `pro_interest.origin_screen` | `pricing` · `upgrade` · `install` · `cabinet` | отказ |
 | `index_job.truncated_by` | `embed_budget` · `series_embed_budget` · `page_budget` · `crawl_limit` · `NULL` (не усечена) | — (A-N6-052, A-N6-070; миграция 012) |
-| `index_start.kind` | `site` · `pdf` · `retry` · `reindex` | отказ |
+| `index_start.kind` | `site` · `pdf` · `text` · `retry` · `reindex` | отказ |
 | `job_attempt.status` | `running` · `done` · `failed` | `failed` |
 | `erasure_audit.event` | `requested` · `waiting_payout` · `payout_owed` · `erased` · `failed` · `overdue` | — (журнал, без ПДн) |
 
@@ -121,8 +121,8 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 
 Вход и аккаунт: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`,
 `DELETE /api/account` (`{ confirm: true, password }` → `202 { accepted, erase_deadline }`, A-N6-054).
-Боты: `GET|POST /api/bots`, `PATCH /api/bots/{bot_id}`, `POST /api/bots/{bot_id}/sources` (JSON сайта или multipart PDF,
-`Idempotency-Key`), `POST /api/bots/{bot_id}/origins`, `POST /api/bots/{bot_id}/ask` (тестовый чат владельца),
+Боты: `GET|POST /api/bots`, `PATCH /api/bots/{bot_id}`, `POST /api/bots/{bot_id}/sources` (JSON сайта `{ url }`, JSON текстового файла `{ url, kind: 'text' }` — A-N6-080,
+или multipart PDF, `Idempotency-Key`), `POST /api/bots/{bot_id}/origins`, `POST /api/bots/{bot_id}/ask` (тестовый чат владельца),
 `POST /api/bots/{bot_id}/verify` (отметка «проверено», A-N6-035), `POST /api/bots/{bot_id}/publish` (демо-страница),
 `GET /api/bots/{bot_id}/summary`, `POST /api/bots/{bot_id}/question-log/erase` (стирание журнала вопросов бота, FR-AUTH-002),
 `POST /api/bots/{bot_id}/invite` (приглашение «Передать клиенту», фича 15).
@@ -197,6 +197,11 @@ self-referral — владелец кода с того же префикса з
 страницы, пауза 1000 мс, 1 поток на сайт, таймаут страницы 15 с, потолок страницы 2 МБ, только
 `text/html`; запрет адресов частных сетей (SSRF). PDF: ≤ 10 МБ, ≤ 100 страниц, только с текстовым
 слоем.
+
+**Текстовый файл по адресу (фича `text-source`, A-N6-080):** `llms.txt`, `llms-full.txt`, `.txt`, `.md`; все проверки
+краулера (форма, `CheckAddress` после DNS и на каждом перенаправлении, robots.txt до файла и на каждом шаге, пауза 1000 мс,
+таймаут 15 с); потолок **2 МиБ** (`TEXT_MAX_BYTES`, по заявленному и принятому, больше — `too_large`); тип только
+`text/plain` · `text/markdown` (иначе `not_text`); раздел `#`/`##` — «страница» в пределе страниц плана (50 / 300).
 
 **Жизненный цикл источника (фича `source-lifecycle`, числа — константы кода `packages/rag/src/constants.ts`, не
 окружение):** запусков индексации на бота в сутки МСК — **20** (`INDEX_STARTS_PER_BOT_DAY`: создание сайта или PDF,

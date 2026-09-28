@@ -39,7 +39,8 @@ export interface GetOptions {
   // Читать ли тело: решается по статусу и Content-Type ДО чтения (не-HTML не скачивается).
   wantBody: (status: number, contentType: string) => boolean;
   // Каждый шаг перенаправления обязан остаться в пределах (хост сайта); иначе off_site без соединения.
-  inScope?: (url: URL) => boolean;
+  // Может быть асинхронной (text-source: robots.txt origin'а шага читается ДО запроса, ревью Codex круг 1).
+  inScope?: (url: URL) => boolean | Promise<boolean>;
 }
 export interface GetResult {
   url: URL; status: number; contentType: string; body: Buffer | null; tooLarge: boolean; encoded: boolean; redirects: number;
@@ -106,7 +107,7 @@ export async function safeGet(start: string | URL, options: GetOptions): Promise
   for (let hop = 0; ; hop++) {
     // Сначала политика адреса (запрещённая цель называется blocked_address, а не off_site), затем пределы сайта.
     const checked = await checkAddress(url, resolve);
-    if (options.inScope && !options.inScope(checked.url)) throw new FetchFailed('off_site');
+    if (options.inScope && !(await options.inScope(checked.url))) throw new FetchFailed('off_site');
     await options.pacer.wait();
     const once = await requestOnce(checked, options);
     if (once.location !== undefined) {

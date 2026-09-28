@@ -1,0 +1,15 @@
+Статические правила: ошибок нет
+ Test Files  64 passed (64)
+      Tests  1130 passed (1130)
+tests=0
+ssrf-check-removed: дефект возвращён → 13 failed | 50 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+size-limit-removed: дефект возвращён → 2 failed | 61 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+type-check-removed: дефект возвращён → 1 failed | 62 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+robots-hop-unchecked: дефект возвращён → 2 failed | 61 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+anchor-collision: дефект возвращён → 2 failed | 61 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+anchor-quadratic: дефект возвращён → 1 failed | 62 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+html-fragment-accepted: дефект возвращён → 1 failed | 62 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+reembed-unchanged: дефект возвращён → 1 failed | 62 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+page-budget-removed: дефект возвращён → 1 failed | 62 passed (63) (код 1); код восстановлен → 63 passed (63) (код 0)
+mut=0
+exit=0

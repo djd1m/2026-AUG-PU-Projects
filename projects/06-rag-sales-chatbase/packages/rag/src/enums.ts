@@ -5,14 +5,16 @@
 export const ACCOUNT_PLAN = ['free', 'nobadge', 'studio'] as const;
 export const ACCOUNT_STATUS = ['active', 'erasing', 'deleted'] as const;
 export const BOT_STATUS = ['draft', 'active', 'deleted'] as const;
-export const SOURCE_KIND = ['site', 'pdf'] as const;
+// text (text-source, A-N6-080, миграция 015): текстовый файл по адресу (llms.txt, .md) — ДОПИСАН к набору 001.
+export const SOURCE_KIND = ['site', 'pdf', 'text'] as const;
 export const SOURCE_STATUS = ['pending', 'indexing', 'ready', 'failed'] as const;
 export const INDEX_JOB_STATUS = ['queued', 'running', 'done', 'failed'] as const;
 // job_attempt.status (A-N6-023; канон §4 набор не задаёт): попытка либо идёт, либо закрыта одним из двух исходов.
 // Отложенного «deferred» N5 здесь НЕТ: у N6 нет отложенных стадий — повтор есть новая попытка с новым fence.
 export const JOB_ATTEMPT_STATUS = ['running', 'done', 'failed'] as const;
 export const INDEX_JOB_FAILURE_REASON = ['robots_disallowed', 'unreachable', 'blocked_address', 'no_text', 'not_pdf',
-  'too_large', 'no_text_layer', 'quota_refused', 'embedding_unavailable', 'stalled', 'internal'] as const;
+  'too_large', 'no_text_layer', 'quota_refused', 'embedding_unavailable', 'stalled', 'internal', 'not_text'] as const;
+// not_text (text-source, миграция 015): ответ по адресу текстового файла — не текст (HTML, двоичный, непригодная кодировка).
 // index_job.truncated_by (budget-truncation, A-N6-052, миграция 009): задача done, но остановлена исчерпанием
 // СОБСТВЕННОГО бюджета эмбеддингов — предпросмотра (embed_budget) или серии источника (series_embed_budget).
 // crawl-coverage (A-N6-070): page_budget — обход упёрся в предел страниц (тариф или предпросмотр); crawl_limit — в потолок
@@ -33,6 +35,7 @@ export const ATTRIBUTION_STATUS = ['pending', 'converted', 'rejected', 'partner_
 export type AccountPlan = typeof ACCOUNT_PLAN[number];
 export type AccountStatus = typeof ACCOUNT_STATUS[number];
 export type BotStatus = typeof BOT_STATUS[number];
+export type SourceKind = typeof SOURCE_KIND[number];
 export type IndexJobStatus = typeof INDEX_JOB_STATUS[number];
 export type JobAttemptStatus = typeof JOB_ATTEMPT_STATUS[number];
 export type IndexJobFailureReason = typeof INDEX_JOB_FAILURE_REASON[number];

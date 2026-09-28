@@ -16,6 +16,7 @@ import { processByKind, runIndexJob } from './run-index-job';
 import { createSiteProcessor } from './crawl/site-processor';
 import { userAgentFor } from './crawl/limits';
 import { createPdfProcessor } from './pdf/pdf-processor';
+import { createTextProcessor } from './text/text-processor';
 import { createEmbedder } from './embed/embed-and-store';
 import { removeUpload, sweepUploads } from './pdf/uploads';
 import { startWatchdog, watchdogTick } from './watchdog';
@@ -42,7 +43,9 @@ async function main(): Promise<void> {
     spend: spendRecorder(config.spendLog), embedModel: config.models.embedModel });
   const site = createSiteProcessor({ pool, userAgent: userAgentFor(config.publicOrigin), embedder });
   const pdf = createPdfProcessor({ pool, uploadDir: config.uploadDir, embedder });
-  const deps = { pool, enqueue: queue.enqueue, process: processByKind(pool, { site, pdf }),
+  // Текстовый файл по адресу (text-source, A-N6-080): те же проверки адреса, что у краулера, и тот же User-Agent.
+  const text = createTextProcessor({ pool, userAgent: userAgentFor(config.publicOrigin), embedder });
+  const deps = { pool, enqueue: queue.enqueue, process: processByKind(pool, { site, pdf, text }),
     onSettled: async (lease: { indexJobId: string }) => { await removeUpload(config.uploadDir, lease.indexJobId); } };
   const worker = new Worker<IndexMessage>(INDEX_QUEUE, async (job) => runIndexJob(deps, job.data),
     { connection: getRedisConnection(config, true), concurrency: 1 });

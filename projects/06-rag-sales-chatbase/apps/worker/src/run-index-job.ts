@@ -63,10 +63,12 @@ export const noProcessorYet: SourceProcessor = async () => {
 };
 
 // Выбор обработчика по виду источника (source.kind). Неизвестный вид — internal, а не «успех без работы».
-export function processByKind(pool: Pool, processors: Record<'site' | 'pdf', SourceProcessor>): SourceProcessor {
+// text (text-source, A-N6-080): обработчик не передан (прежние вызовы и тесты) — тоже internal, а не молчаливый успех.
+export function processByKind(pool: Pool, processors: Record<'site' | 'pdf', SourceProcessor> & { text?: SourceProcessor }): SourceProcessor {
   return async (lease) => {
     const source = await pool.query<{ kind: string }>('SELECT kind FROM source WHERE id = $1', [lease.sourceId]);
     const kind = source.rows[0]?.kind;
+    if (kind === 'text') return (processors.text ?? noProcessorYet)(lease);
     if (kind !== 'site' && kind !== 'pdf') throw new StepFailure('internal');
     // Исход обработчика (пометка усечения, A-N6-052) обязан дойти до completeIndexJob — не проглатывать.
     return processors[kind](lease);

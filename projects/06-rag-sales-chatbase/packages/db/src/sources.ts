@@ -18,7 +18,7 @@ import { OWNED } from './bots.js';
 import { isUuid } from './index-jobs.js';
 import { transaction } from './quota.js';
 
-export type IndexStartKind = 'site' | 'pdf' | 'retry' | 'reindex';
+export type IndexStartKind = 'site' | 'pdf' | 'text' | 'retry' | 'reindex';
 // Начало суток МСК — по часам БД, а не процесса (web и worker-index — разные часы, ревью quota-and-spend M2).
 const MSK_DAY_START = `(date_trunc('day', now() AT TIME ZONE 'Europe/Moscow') AT TIME ZONE 'Europe/Moscow')`;
 

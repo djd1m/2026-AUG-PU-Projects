@@ -11,8 +11,23 @@ function pageLimitText(pagesDone: number): string {
   return `предел страниц этого чтения — ${pagesDone}. «Обновить» дочитает сайт в пределах страниц тарифа`;
 }
 
-export function SourceTruncationNotice({ job, kind }: { job: RibbonJob; kind: 'site' | 'pdf' }) {
+// Форма слова «раздел» после числа (1 раздел, 3 раздела, 11 разделов) — у текстового файла (text-source, A-N6-080).
+const sectionsWord = (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 'раздел'
+  : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'раздела' : 'разделов');
+
+export function SourceTruncationNotice({ job, kind }: { job: RibbonJob; kind: 'site' | 'pdf' | 'text' }) {
   const done = job.pages_done;
+  // Текстовый файл: разделы файла сосчитаны точно (весь файл прочитан одним запросом), поэтому «из N», а не «из ≥ N».
+  if (kind === 'text' && job.truncated === 'page_budget') {
+    const total = job.pages_total !== null && job.pages_total > done ? ` из ${job.pages_total}` : '';
+    const unread = job.unread?.length ? job.unread : [];
+    return <p role="status" className="notice truncation-notice coverage-notice">
+      Прочитано {done} {sectionsWord(done)} файла{total} — {pageLimitText(done)}; раздел файла (заголовок # или ##) считается страницей.
+      Бот не знает того, что есть только в непрочитанных разделах.
+      {unread.length > 0 && <> Не прочитаны, например: {unread.map((path, i) => <span key={path}>{i ? ', ' : ''}<code className="unread-path">{path}</code></span>)}
+        {job.pages_total !== null && job.pages_total - done > unread.length ? ' и другие' : ''}.</>}
+    </p>;
+  }
   if (job.truncated === 'page_budget' || job.truncated === 'crawl_limit') {
     const known = job.pages_total !== null && job.pages_total > done ? ` из ≥ ${job.pages_total} известных` : '';
     const why = job.truncated === 'page_budget' ? pageLimitText(done)
@@ -24,5 +39,6 @@ export function SourceTruncationNotice({ job, kind }: { job: RibbonJob; kind: 's
         {job.pages_total !== null && job.pages_total - done > unread.length ? ' и другие' : ''}.</>}
     </p>;
   }
-  return <p role="status" className="notice truncation-notice">Прочитано {done} {kind === 'pdf' ? 'стр. PDF' : pagesWord(done)}: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному.{kind === 'site' ? ' «Обновить» продолжит чтение в пределах страниц тарифа — прочитанные страницы заново не оплачиваются.' : ''}</p>;
+  const unit = kind === 'pdf' ? 'стр. PDF' : kind === 'text' ? `${sectionsWord(done)} файла` : pagesWord(done);
+  return <p role="status" className="notice truncation-notice">Прочитано {done} {unit}: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному.{kind !== 'pdf' ? ' «Обновить» продолжит чтение в пределах страниц тарифа — прочитанные страницы заново не оплачиваются.' : ''}</p>;
 }
