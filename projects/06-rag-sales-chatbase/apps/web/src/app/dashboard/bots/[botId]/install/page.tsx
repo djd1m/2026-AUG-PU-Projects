@@ -13,5 +13,8 @@ export default async function InstallPage({ params }: { params: Promise<{ botId:
   const bot = accountId ? await readBotCabinet(pool, (await params).botId, accountId) : null;
   if (!bot) notFound();
   const snippet = installSnippet({ contact: bot.contact, publicKey: bot.public_key, publicOrigin: config.publicOrigin, bundleFile: await readWidgetBundleFile() });
-  return <InstallScreen botId={bot.bot_id} companyName={bot.company_name} snippet={snippet} origins={bot.origins} plan={bot.plan} />;
+  // gate-onboarding (A-N6-066): состояние ворот A-N6-035 — баннер ДО кода, пока посетители видят заглушку.
+  const gate = { verified: bot.answers_verified, ready: bot.sources.some((s) => s.job?.state === 'done'),
+    resetAt: bot.verified_reset?.at ?? null, stubVisitors: bot.stub_visitors_7d };
+  return <InstallScreen botId={bot.bot_id} companyName={bot.company_name} snippet={snippet} origins={bot.origins} plan={bot.plan} gate={gate} />;
 }

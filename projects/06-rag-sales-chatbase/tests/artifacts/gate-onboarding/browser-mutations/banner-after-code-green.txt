@@ -1,0 +1,60 @@
+
+ RUN  v3.2.7 /w
+
+ ✓ tests/browser/gate-onboarding.test.ts (50 tests) 71430ms
+   ✓ chromium > install-gate dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2543ms
+   ✓ chromium > install-gate-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1828ms
+   ✓ chromium > install-verified dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2010ms
+   ✓ chromium > bot-gate-reset dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2097ms
+   ✓ chromium > bot-gate-error dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2050ms
+   ✓ chromium > install-gate light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1964ms
+   ✓ chromium > install-gate-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1657ms
+   ✓ chromium > install-verified light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1776ms
+   ✓ chromium > bot-gate-reset light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1869ms
+   ✓ chromium > bot-gate-error light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1788ms
+   ✓ chromium > install-gate 320: без горизонтального скролла, цели ≥ 44  330ms
+   ✓ chromium > bot-gate-reset 320: без горизонтального скролла, цели ≥ 44  312ms
+   ✓ chromium > install-gate 360: без горизонтального скролла, цели ≥ 44  464ms
+   ✓ chromium > bot-gate-reset 360: без горизонтального скролла, цели ≥ 44  447ms
+   ✓ chromium > install-gate 414: без горизонтального скролла, цели ≥ 44  381ms
+   ✓ chromium > bot-gate-reset 414: без горизонтального скролла, цели ≥ 44  435ms
+   ✓ chromium > install-gate 768: без горизонтального скролла, цели ≥ 44  393ms
+   ✓ chromium > bot-gate-reset 768: без горизонтального скролла, цели ≥ 44  379ms
+   ✓ chromium > install-gate 1440: без горизонтального скролла, цели ≥ 44  610ms
+   ✓ chromium > bot-gate-reset 1440: без горизонтального скролла, цели ≥ 44  614ms
+   ✓ chromium > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней  353ms
+   ✓ chromium > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт»  496ms
+   ✓ chromium > отметка стоит — баннера нет, код на месте  310ms
+   ✓ chromium > AC-3/8/6: экран бота — баннер первым после заголовка, «отметка снята … материалы обновились»; сводка — строка заглушек, не «вопросов ещё не было»  479ms
+   ✓ webkit > install-gate dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2832ms
+   ✓ webkit > install-gate-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2290ms
+   ✓ webkit > install-verified dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2446ms
+   ✓ webkit > bot-gate-reset dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2947ms
+   ✓ webkit > bot-gate-error dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2829ms
+   ✓ webkit > install-gate light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2564ms
+   ✓ webkit > install-gate-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2451ms
+   ✓ webkit > install-verified light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2635ms
+   ✓ webkit > bot-gate-reset light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2791ms
+   ✓ webkit > bot-gate-error light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2851ms
+   ✓ webkit > install-gate 320: без горизонтального скролла, цели ≥ 44  978ms
+   ✓ webkit > bot-gate-reset 320: без горизонтального скролла, цели ≥ 44  933ms
+   ✓ webkit > install-gate 360: без горизонтального скролла, цели ≥ 44  1023ms
+   ✓ webkit > bot-gate-reset 360: без горизонтального скролла, цели ≥ 44  1145ms
+   ✓ webkit > install-gate 414: без горизонтального скролла, цели ≥ 44  884ms
+   ✓ webkit > bot-gate-reset 414: без горизонтального скролла, цели ≥ 44  941ms
+   ✓ webkit > install-gate 768: без горизонтального скролла, цели ≥ 44  909ms
+   ✓ webkit > bot-gate-reset 768: без горизонтального скролла, цели ≥ 44  969ms
+   ✓ webkit > install-gate 1440: без горизонтального скролла, цели ≥ 44  1217ms
+   ✓ webkit > bot-gate-reset 1440: без горизонтального скролла, цели ≥ 44  1349ms
+   ✓ webkit > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней  906ms
+   ✓ webkit > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт»  782ms
+   ✓ webkit > отметка стоит — баннера нет, код на месте  596ms
+   ✓ webkit > AC-3/8/6: экран бота — баннер первым после заголовка, «отметка снята … материалы обновились»; сводка — строка заглушек, не «вопросов ещё не было»  851ms
+   ✓ webkit > ошибка отметки из баннера — в баннере (role=alert), а не в блоке «Ответы на сайте»  797ms
+
+ Test Files  1 passed (1)
+      Tests  50 passed (50)
+   Start at  14:15:46
+   Duration  73.55s (transform 661ms, setup 0ms, collect 1.52s, tests 71.43s, environment 0ms, prepare 175ms)
+
+exit=0

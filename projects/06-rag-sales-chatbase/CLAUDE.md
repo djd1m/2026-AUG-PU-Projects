@@ -215,7 +215,7 @@ PLAN → VALIDATE → IMPLEMENT → REVIEW (`../../.claude/rules/feature-lifecyc
   классификатором среды как внедрённая инструкция).
 - **UI и виджет** проверяются в контейнере Playwright (`bash scripts/check-responsive.sh --test tests/browser`), а по стенду —
   прибором адаптивности с фикстурой (`--base https://sufler.aicoding.space --fixture .responsive-artifacts/ui-fixture.json`).
-- Решения без владельца — `docs/decisions-autonomous.md` (следующий — A-N6-066); необратимое и деньги — только с владельцем.
+- Решения без владельца — `docs/decisions-autonomous.md` (следующий — A-N6-075); необратимое и деньги — только с владельцем.
   Агент не копирует чужие ключи и не правит общий прокси машины — это делает владелец командой, которую готовит агент.
 
 ## Parallel execution strategy

@@ -1,0 +1,87 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/gate-onboarding.test.ts (50 tests | 2 failed) 67104ms
+   ✓ chromium > install-gate dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2163ms
+   ✓ chromium > install-gate-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1912ms
+   ✓ chromium > install-verified dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1943ms
+   ✓ chromium > bot-gate-reset dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1721ms
+   ✓ chromium > bot-gate-error dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1514ms
+   ✓ chromium > install-gate light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1372ms
+   ✓ chromium > install-gate-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1343ms
+   ✓ chromium > install-verified light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1519ms
+   ✓ chromium > bot-gate-reset light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1659ms
+   ✓ chromium > bot-gate-error light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1761ms
+   ✓ chromium > install-gate 320: без горизонтального скролла, цели ≥ 44  414ms
+   ✓ chromium > bot-gate-reset 320: без горизонтального скролла, цели ≥ 44  388ms
+   ✓ chromium > install-gate 360: без горизонтального скролла, цели ≥ 44  675ms
+   ✓ chromium > bot-gate-reset 360: без горизонтального скролла, цели ≥ 44  704ms
+   ✓ chromium > install-gate 414: без горизонтального скролла, цели ≥ 44  404ms
+   ✓ chromium > bot-gate-reset 414: без горизонтального скролла, цели ≥ 44 291ms
+   ✓ chromium > install-gate 768: без горизонтального скролла, цели ≥ 44  427ms
+   ✓ chromium > bot-gate-reset 768: без горизонтального скролла, цели ≥ 44  375ms
+   ✓ chromium > install-gate 1440: без горизонтального скролла, цели ≥ 44  746ms
+   ✓ chromium > bot-gate-reset 1440: без горизонтального скролла, цели ≥ 44  650ms
+   ✓ chromium > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней  330ms
+   × chromium > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт» 232ms
+     → expected 1 to be +0 // Object.is equality
+   ✓ chromium > отметка стоит — баннера нет, код на месте 222ms
+   ✓ chromium > AC-3/8/6: экран бота — баннер первым после заголовка, «отметка снята … материалы обновились»; сводка — строка заглушек, не «вопросов ещё не было»  352ms
+   ✓ chromium > ошибка отметки из баннера — в баннере (role=alert), а не в блоке «Ответы на сайте»  385ms
+   ✓ webkit > install-gate dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2885ms
+   ✓ webkit > install-gate-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2223ms
+   ✓ webkit > install-verified dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2615ms
+   ✓ webkit > bot-gate-reset dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2729ms
+   ✓ webkit > bot-gate-error dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2898ms
+   ✓ webkit > install-gate light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2671ms
+   ✓ webkit > install-gate-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2295ms
+   ✓ webkit > install-verified light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2378ms
+   ✓ webkit > bot-gate-reset light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2883ms
+   ✓ webkit > bot-gate-error light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2811ms
+   ✓ webkit > install-gate 320: без горизонтального скролла, цели ≥ 44  865ms
+   ✓ webkit > bot-gate-reset 320: без горизонтального скролла, цели ≥ 44  924ms
+   ✓ webkit > install-gate 360: без горизонтального скролла, цели ≥ 44  921ms
+   ✓ webkit > bot-gate-reset 360: без горизонтального скролла, цели ≥ 44  1098ms
+   ✓ webkit > install-gate 414: без горизонтального скролла, цели ≥ 44  801ms
+   ✓ webkit > bot-gate-reset 414: без горизонтального скролла, цели ≥ 44  790ms
+   ✓ webkit > install-gate 768: без горизонтального скролла, цели ≥ 44  897ms
+   ✓ webkit > bot-gate-reset 768: без горизонтального скролла, цели ≥ 44  1095ms
+   ✓ webkit > install-gate 1440: без горизонтального скролла, цели ≥ 44  1107ms
+   ✓ webkit > bot-gate-reset 1440: без горизонтального скролла, цели ≥ 44  1503ms
+   ✓ webkit > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней  872ms
+   × webkit > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт» 951ms
+     → expected 1 to be +0 // Object.is equality
+   ✓ webkit > отметка стоит — баннера нет, код на месте  876ms
+   ✓ webkit > AC-3/8/6: экран бота — баннер первым после заголовка, «отметка снята … материалы обновились»; сводка — строка заглушек, не «вопросов ещё не было»  857ms
+   ✓ webkit > ошибка отметки из баннера — в баннере (role=alert), а не в блоке «Ответы на сайте»  747ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт»
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт»
+AssertionError: expected 1 to be +0 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 1[39m
+
+ ❯ tests/browser/gate-onboarding.test.ts:128:52
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 48 passed (50)
+   Start at  14:17:02
+    126|     const banner = page.locator('section.gate-banner');
+    127|     expect(await banner.count()).toBe(1);
+    128|     expect(await banner.locator('button').count()).toBe(0);
+       |                                                    ^
+    129|     expect(await banner.textContent()).toContain('Дождитесь, пока исто…
+    130|     expect(await banner.textContent()).not.toContain('За 7 дней');
+ ❯ open tests/browser/gate-onboarding.test.ts:90:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+   Duration  68.77s (transform 407ms, setup 0ms, collect 1.17s, tests 67.10s, environment 0ms, prepare 149ms)
+
+exit=1

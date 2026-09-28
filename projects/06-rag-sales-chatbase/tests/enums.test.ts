@@ -39,6 +39,16 @@ describe('CHECK миграции = перечисления канона §4', (
     if (!all.length) throw new Error('attribution_status_check не найден — проверка НЕ ВЫПОЛНЕНА');
     expect([...all.at(-1)![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.ATTRIBUTION_STATUS]);
   });
+  // gate-onboarding (миграция 011, A-N6-066): исход not_verified — действует ПОСЛЕДНЯЯ замена question_log_outcome_check;
+  // первое определение — inline CHECK в 001 (имя по умолчанию), оно обязано быть подмножеством действующего.
+  it('question_log.outcome: последнее question_log_outcome_check миграций = QUESTION_OUTCOME', () => {
+    const migrations = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort()
+      .map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
+    const all = [...migrations.matchAll(/CONSTRAINT question_log_outcome_check\s+CHECK \(outcome IN \(([^)]*)\)\)/g)];
+    if (!all.length) throw new Error('question_log_outcome_check не найден — проверка НЕ ВЫПОЛНЕНА');
+    expect([...all.at(-1)![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.QUESTION_OUTCOME]);
+    expect(enums.QUESTION_OUTCOME).toEqual(expect.arrayContaining(checkValues('outcome')));
+  });
   // carry_over ревью foundation M1: статус попытки объявлен в коде и совпадает с CHECK таблицы job_attempt
   // (сверка по ТЕЛУ таблицы, а не «где-нибудь в файле»: набор running/done/failed есть и у других таблиц).
   it('job_attempt.status = JOB_ATTEMPT_STATUS', () => {

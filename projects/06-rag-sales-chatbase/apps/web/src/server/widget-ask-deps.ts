@@ -36,5 +36,6 @@ export function createWidgetAskDependencies(w: WidgetAskWiring): WidgetAskDepend
     appendTurn: (sessionId, turn) => appendVisitorTurn(pool, sessionId, turn),
     recordFirstAnswer: (input) => recordFirstAnswer(pool, input),
     logRefusedOrigin: (botId) => recordQuestion(pool, { botId, outcome: 'refused_origin', text: null, citedChunkIds: [], visitorSessionId: null }),
+    logNotVerified: (botId, visitorSessionId) => recordQuestion(pool, { botId, outcome: 'not_verified', text: null, citedChunkIds: [], visitorSessionId }),
   };
 }

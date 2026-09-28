@@ -3,12 +3,15 @@
 // рендерит браузерный набор прибора (tests/browser/bot-cabinet.test.ts); состояние и запросы — BotScreen.
 // Фича public-page-and-summary; отметка и баннер перенесены сюда из BotScreen (фича 12) без изменения текста.
 
+import { stubVisitorsLine } from '../../GateBanner';
+
 export const VERIFY_RISK = 'Бот отвечает только по вашим материалам и к каждому ответу прикладывает фрагмент-источник. Но ссылка на фрагмент '
   + 'не доказывает, что текст ответа с ним совпадает: модель может добавить от себя — например, скидку или срок, которых в '
   + 'материалах нет. Задайте боту в чате выше вопросы, которые задают ваши клиенты, особенно о ценах, сроках и акциях. Пока '
   + 'отметки нет, посетители сайта видят «Бот ещё настраивается» и ваш контакт.';
 
-export interface SummaryView { answered: number; unknown: number; refused_limit: number; last_unknown: { text: string; asked_at: string }[] }
+// not_verified_visitors (gate-onboarding, A-N6-066): посетители, получившие заглушку ворот A-N6-035, — отдельной строкой.
+export interface SummaryView { answered: number; unknown: number; refused_limit: number; not_verified_visitors: number; last_unknown: { text: string; asked_at: string }[] }
 const dateTime = (iso: string) => new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
 
 // Стирание журнала вопросов бота владельцем (account-erasure, FR-AUTH-002, вторая фраза) — подтверждение в два шага,
@@ -30,7 +33,7 @@ function EraseLog({ erase }: { erase: EraseLogView }) {
 export function SummaryBlock({ summary, erase }: { summary: SummaryView | null; erase?: EraseLogView }) {
   return <section className="card stack bot-extra" aria-labelledby="summary-title"><h2 id="summary-title">Вопросы посетителей за 7 дней</h2>
     {!summary ? <p role="status" className="notice danger-notice">Сводка временно недоступна. Обновите страницу позже.</p>
-      : summary.answered + summary.unknown + summary.refused_limit === 0
+      : summary.answered + summary.unknown + summary.refused_limit + summary.not_verified_visitors === 0
         ? <p className="empty">Вопросов ещё не было. Они появятся здесь, когда посетители сайта или демо-страницы начнут спрашивать бота.</p>
         : <>
           <ul className="summary-counts" aria-label="Итоги за 7 дней">
@@ -38,6 +41,8 @@ export function SummaryBlock({ summary, erase }: { summary: SummaryView | null; 
             <li><strong>{summary.unknown}</strong> <span>не знал</span></li>
             <li><strong>{summary.refused_limit}</strong> <span>отказов по лимиту</span></li>
           </ul>
+          {summary.not_verified_visitors > 0 && <p className="notice danger-notice stub-count">{stubVisitorsLine(summary.not_verified_visitors)} — ответов
+            они не увидели: нет отметки «Я проверил ответы бота».</p>}
           {summary.last_unknown.length > 0 && <div className="stack">
             <h3>Вопросы, на которые бот не знал ответа</h3>
             <p className="muted">Добавьте страницу или PDF с ответом — бот начнёт отвечать на такие вопросы.</p>

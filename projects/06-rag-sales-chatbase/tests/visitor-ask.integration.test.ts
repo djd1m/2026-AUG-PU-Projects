@@ -83,7 +83,7 @@ describe.skipIf(!databaseUrl)('POST /w/v1/ask на настоящем Postgres +
     const chunk = (await pool.query<{ id: string }>(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding)
       VALUES ($1, $2, $3, 0, 'Цены', $4, 20, $5::vector) RETURNING id`, [bot, source, page, PRICE, `[${vectorFor(PRICE).join(',')}]`])).rows[0]!.id;
     // Отметка — ПОСЛЕ фрагментов: новый фрагмент снимает её триггером (миграция 004), как в жизни.
-    if (over.verified ?? true) await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [bot]);
+    if (over.verified ?? true) await pool.query('UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL WHERE id = $1', [bot]);
     return { account, bot, key, chunk, source, page };
   }
   // Состарить ходы истории на minutes: все или только первый (самый старый). history_at — время самого старого хода.
@@ -225,7 +225,7 @@ describe.skipIf(!databaseUrl)('POST /w/v1/ask на настоящем Postgres +
     expect(body.data).toMatchObject({ status: 'unknown', reason: 'not_verified', text: `Бот ещё настраивается и пока не отвечает на вопросы. Напишите: ${CONTACT}` });
     expect([w.h.gateway.embeds.length, w.h.gateway.chats.length]).toEqual([0, 0]);
     expect(await used('visitor_answers', idOf(vs))).toBe(0);
-    await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [s.bot]);
+    await pool.query('UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL WHERE id = $1', [s.bot]);
     expect((await w.ask(s.key, { visitor_session: vs, question: 'Сколько стоит доставка?' })).body.data).toMatchObject({ status: 'answered' });
   });
 

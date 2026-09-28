@@ -72,7 +72,7 @@ describe.skipIf(!databaseUrl)('Жизненный цикл источника н
     site = await startFakeSite(routes);
     expect(await w.run(site, j.indexJobId, 0)).toBe('done');
     expect(await pageUrls(j.sourceId)).toHaveLength(5);
-    await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [j.botId]);
+    await pool.query('UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL WHERE id = $1', [j.botId]);
     const before = w.gateway.calls.length;
     Object.assign(routes, fivePages({ '/a': 'Новая цена 990 рублей.', '/b': 'Доставка теперь бесплатно.', '/c': 'Открылся второй зал.' }));
 
@@ -89,7 +89,7 @@ describe.skipIf(!databaseUrl)('Жизненный цикл источника н
     expect((await pool.query('SELECT answers_verified_at FROM bot WHERE id = $1', [j.botId])).rows[0].answers_verified_at).toBeNull();
 
     // Ничего не изменилось: вызовов шлюза нет, отметка не снимается (A-N6-036: снимает только НОВЫЙ фрагмент).
-    await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [j.botId]);
+    await pool.query('UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL WHERE id = $1', [j.botId]);
     const quiet = w.gateway.calls.length;
     const third = await reindexSource(pool, j.sourceId, j.owner);
     if (third?.kind !== 'queued') throw new Error('ожидалась постановка');
@@ -250,7 +250,7 @@ describe.skipIf(!databaseUrl)('Жизненный цикл источника н
   it('ревью находка 1: удаление и «Обновить» параллельно с записью страницы воркером — без взаимной блокировки (порядок «задача → бот»)', async () => {
     for (const action of ['delete', 'reindex'] as const) {
       const j = await siteJob();
-      await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [j.botId]);   // триггер снятия отметки тоже берёт строку бота
+      await pool.query('UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL WHERE id = $1', [j.botId]);   // триггер снятия отметки тоже берёт строку бота
       const lease = (await leaseIndexJob(pool, { index_job_id: j.indexJobId, generation: 0 }))!;
       const worker = await pool.connect();
       try {

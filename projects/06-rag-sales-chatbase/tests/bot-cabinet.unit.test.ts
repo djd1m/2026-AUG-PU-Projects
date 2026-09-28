@@ -209,7 +209,7 @@ describe('порядок входа маршрутов кабинета', () => 
     expect((await get(true, 'x')).status).toBe(404);
     expect(calls).not.toContain('summary');
     expect((await get(true, BOT, { summary: async () => null })).status).toBe(404);
-    const data = { answered: 40, unknown: 6, refused_limit: 1, last_unknown: [] };
+    const data = { answered: 40, unknown: 6, refused_limit: 1, not_verified_visitors: 0, last_unknown: [] };
     const ok = await get(true, BOT, { summary: async () => data });
     expect([ok.status, await ok.json()]).toEqual([200, { data }]);
   });

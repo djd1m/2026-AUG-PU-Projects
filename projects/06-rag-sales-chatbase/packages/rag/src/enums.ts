@@ -18,8 +18,10 @@ export const INDEX_JOB_FAILURE_REASON = ['robots_disallowed', 'unreachable', 'bl
 // crawl-coverage (A-N6-070): page_budget — обход упёрся в предел страниц (тариф или предпросмотр); crawl_limit — в потолок
 // запросов или времени обхода. Обе — done с прочитанным, pages_total = известные адреса.
 export const INDEX_JOB_TRUNCATION = ['embed_budget', 'series_embed_budget', 'page_budget', 'crawl_limit'] as const;
+// not_verified (gate-onboarding, миграция 011, A-N6-066): вопрос посетителя отбит воротами «Я проверил ответы бота» —
+// пишет маршрут виджета, без текста, без квоты и без модели. Действующий CHECK — последнее question_log_outcome_check миграций.
 // small_talk (small-talk, A-N6-074, миграция 013): светская реплика — шаблон без модели, эмбеддинга и списания, без текста.
-export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin', 'small_talk'] as const;
+export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin', 'not_verified', 'small_talk'] as const;
 export const QUOTA_SCOPE = ['visitor_answers', 'ip_answers', 'bot_day_answers', 'bot_month_answers', 'global_answers',
   'preview_session', 'ip_previews', 'global_previews', 'account_embed_tokens', 'global_embed_tokens'] as const;
 export const GROWTH_EVENT_TYPE = ['badge_impression', 'badge_click', 'share_cta_shown', 'share_cta_click', 'widget_install',

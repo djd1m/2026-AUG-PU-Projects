@@ -139,7 +139,7 @@ export async function startHarness(): Promise<Harness> {
     recordBadgeEvent: async (input) => { events.push({ type: input.type, origin: input.origin }); if (input.type === 'badge_impression') shown.add(input.visitorSession); return 'recorded'; },
     openSession: async ({ id }) => ({ history: histories.get(id) ?? [], badgeShown: shown.has(id) }),
     appendTurn: async (id, turn) => { histories.set(id, [...(histories.get(id) ?? []), turn].slice(-2)); },
-    recordFirstAnswer: async () => true, logRefusedOrigin: async () => {},
+    recordFirstAnswer: async () => true, logRefusedOrigin: async () => {}, logNotVerified: async () => {},
     answer: async ({ bot: found, visitorSession, request }) => harness.askOverride ?? answerQuestion({
       client: model.client, models: MODELS, spend: model.spend,
       chargeQuota: async () => {
