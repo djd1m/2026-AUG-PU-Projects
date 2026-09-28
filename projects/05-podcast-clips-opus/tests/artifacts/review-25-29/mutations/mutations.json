@@ -126,6 +126,42 @@
     "status": "killed"
   },
   {
+    "id": "retention-keys-after-erase",
+    "red": {
+      "id": "retention-keys-after-erase",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "retention-keys-after-erase",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "retention-keys-after-erase-db",
+    "red": {
+      "id": "retention-keys-after-erase-db",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "retention-keys-after-erase-db",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
     "id": "showcase-explicit-expiry-db",
     "red": {
       "id": "showcase-explicit-expiry-db",

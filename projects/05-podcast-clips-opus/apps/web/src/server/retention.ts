@@ -92,22 +92,21 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
         AND NOT ${clipAliveSql('c', 'v', 'a', '$2')} AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
         ORDER BY v.finished_at LIMIT $1`, [batch, now]);
       backlog ||= clips.rows.length === batch;
-      const erase = async (clip: { id: string; video_id: string }) => {
-        for (const prefix of ['clips/free', 'clips/paid', 'thumbs']) await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);
-      };
+      // Порядок — три шага (ревью Codex 28.09: круг 1, находка 2; круг 2, находка 1):
+      //   1) закрыть активные пересборки клипа (video FOR UPDATE, как у рендера и setCta/setMusic). lockRender требует
+      //      АКТИВНУЮ попытку: закрытая больше не примет результат — ни до стирания, ни после; её отвергнутую версию
+      //      publishRenderResult удаляет сам. Новую пересборку истёкшего клипа setCta/setMusic не поставят (clipExpiry);
+      //   2) стереть объекты по префиксу клипа;
+      //   3) и ТОЛЬКО ПОСЛЕ успешного стирания обнулить ключи: при отказе хранилища ключи остаются, и следующий проход
+      //      выберет клип снова — повтор не теряется.
       for (const clip of clips.rows) await step('удаление клипа', async () => {
-        await erase(clip);
-        // Порядок блокировок как у рендера: video, затем clip. Пересборка, поставленная до истечения срока, после
-        // очистки недействительна: попытка закрывается здесь, а lockRender у пересборки требует живой object_key —
-        // иначе отложенный воркер собрал бы и опубликовал уже стёртый клип (ревью Codex 28.09, находка 2).
         await transaction(pool, async client => {
           await client.query('SELECT id FROM video WHERE id=$1 FOR UPDATE', [clip.video_id]);
-          await client.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
           await client.query(`UPDATE job_attempt SET status='failed',failure_reason='stale_attempt_result',finished_at=$2
             WHERE clip_id=$1 AND rerender AND status IN ('running','deferred')`, [clip.id, now]);
         });
-        // Второй проход: объект, опубликованный пересборкой между первым проходом и транзакцией, не остаётся сиротой.
-        await erase(clip);
+        for (const prefix of ['clips/free', 'clips/paid', 'thumbs']) await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);
+        await pool.query('UPDATE clip SET object_key=NULL,thumbnail_key=NULL,expires_at=COALESCE(expires_at,$2) WHERE id=$1', [clip.id, now]);
       });
     });
     if (errors) throw new Error(`Очистка: не завершено операций ${errors}; повтор на следующем проходе`);

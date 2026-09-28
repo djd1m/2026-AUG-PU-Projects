@@ -18,6 +18,11 @@ const cases = [
   ['single-place', 'unit', clipFile, 'const expires = clipExpiry(', 'const legacy = 3 * 86400_000; void legacy;\n      const expires = clipExpiry(', 'tests/billing.unit.test.ts', 'ровно в одном месте'],
   ['setcta-expiry-db', 'db', cta, 'return !expires || expires > now;', 'return true || expires;', 'tests/clip-cta-rerender.integration.test.ts', 'срок бесплатного клипа в setCta'],
   ['retention-cancels-rerender-db', 'db', retention, "failure_reason='stale_attempt_result',finished_at=$2\n            WHERE clip_id=$1 AND rerender", "failure_reason='stale_attempt_result',finished_at=$2\n            WHERE clip_id=$1 AND rerender AND false", 'tests/clip-cta-rerender.integration.test.ts', 'очистка после постановки пересборки'],
+  // Круг 2: отказ хранилища глотается → ключи обнуляются без стирания, повтор потерян.
+  ['retention-keys-after-erase', 'unit', retention, "await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);",
+    "await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`).catch(() => {});", 'tests/retention.test.ts', 'next pass retries'],
+  ['retention-keys-after-erase-db', 'db', retention, "await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);",
+    "await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`).catch(() => {});", 'tests/clip-cta-rerender.integration.test.ts', 'отказ хранилища при очистке'],
   ['showcase-explicit-expiry-db', 'db', showcase, 'AND (c.expires_at IS NULL OR c.expires_at > now())', '', 'tests/landing-demo.integration.test.ts', 'явный expires_at витрины'],
   ['colour-guard-boundary', 'unit', theme, '(?<![-\\w])(?:white|black)(?![-\\w])', '\\bwhite\\b|\\bblack\\b', theme, 'colour guard'],
   ['visually-hidden-nowrap', 'unit', css, 'clip-path:inset(50%); white-space:nowrap; border:0;', 'clip-path:inset(50%); border:0;', theme, 'colour guard'],

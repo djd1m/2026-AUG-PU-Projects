@@ -203,7 +203,7 @@ describe.skipIf(!url)('video.setCta: пересборка клипов запи�
     await retentionTick(pool, storage, new Date(now.getTime() + 2 * DAY));
     expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0].object_key).toBeNull();
     expect((await attempts(f.video))[0]).toMatchObject({ status: 'failed', failure_reason: 'stale_attempt_result' });
-    expect(storage.eraseClipPrefix).toHaveBeenCalledTimes(6);
+    expect(storage.eraseClipPrefix).toHaveBeenCalledTimes(3);
     await expect(getRenderInput(pool, job!)).resolves.toBeNull();
     const publish = vi.fn(async () => 1), remove = vi.fn(async () => {});
     await expect(publishRenderResult(pool, job!, { object_key: `clips/free/${f.video}/${f.clips[0]}-v2.mp4`,
@@ -212,5 +212,24 @@ describe.skipIf(!url)('video.setCta: пересборка клипов запи�
     expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0].object_key).toBeNull();
     // Попытка закрыта — загруженная версия не защищена «активной» пересборкой и удаляется как сирота.
     expect(remove).toHaveBeenCalledWith(`clips/free/${f.video}/${f.clips[0]}-v2.mp4`);
+  });
+
+  // Ревью Codex 28.09, круг 2, находка 1: отказ хранилища не теряет повтор очистки — пересборка уже закрыта, ключи
+  // остаются, и следующий проход стирает и обнуляет.
+  it('отказ хранилища при очистке: пересборка закрыта, ключи сохранены, следующий проход дочищает', async () => {
+    const f = await fixture(1);
+    await pool.query('UPDATE video SET finished_at=$2 WHERE id=$1', [f.video, new Date(now.getTime() - 2 * DAY)]);
+    await setWatch(f);
+    const failing = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}),
+      eraseClipPrefix: vi.fn(async () => { throw new Error('storage unavailable'); }) };
+    const later = new Date(now.getTime() + 2 * DAY);
+    await expect(retentionTick(pool, failing, later)).rejects.toThrow('повтор на следующем проходе');
+    expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0].object_key).not.toBeNull();
+    expect((await attempts(f.video))[0]).toMatchObject({ status: 'failed', failure_reason: 'stale_attempt_result' });
+    const ok = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}), eraseClipPrefix: vi.fn(async () => {}) };
+    await retentionTick(pool, ok, new Date(later.getTime() + 3600_000));
+    expect(ok.eraseClipPrefix).toHaveBeenCalledTimes(3);
+    expect((await pool.query('SELECT object_key,thumbnail_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0])
+      .toEqual({ object_key: null, thumbnail_key: null });
   });
 });

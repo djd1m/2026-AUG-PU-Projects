@@ -62,9 +62,11 @@ describe('retention and erasure guards', () => {
       return { rows: [], rowCount: 0 };
     });
     await retentionTick(f.pool, f.storage, new Date('2026-09-24T12:00:00Z'));
-    // Два прохода стирания: до транзакции и после неё (объект, опубликованный пересборкой в промежутке, не сирота).
-    const pass = ['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]);
-    expect(f.storage.eraseClipPrefix.mock.calls).toEqual([...pass, ...pass]);
+    expect(f.storage.eraseClipPrefix.mock.calls).toEqual(['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]));
+    // Порядок: закрыть пересборки → стереть объекты → обнулить ключи.
+    const cancel = f.commands.findIndex(s => s.startsWith("UPDATE job_attempt SET status='failed',failure_reason='stale_attempt_result'"));
+    const clear = f.commands.findIndex(s => s.startsWith('UPDATE clip SET object_key=NULL'));
+    expect(cancel).toBeGreaterThan(-1); expect(clear).toBeGreaterThan(cancel);
     // Срок — ОДИН предикат clipAliveSql (действующий план, срок от конца оплаты, витрина); момент прохода — $2.
     expect(f.query).toHaveBeenCalledWith(expect.stringContaining(`AND NOT ${clipAliveSql('c', 'v', 'a', '$2')}`),
       [100, new Date('2026-09-24T12:00:00Z')]);
@@ -72,6 +74,24 @@ describe('retention and erasure guards', () => {
     // Пересборка стёртого клипа закрывается в той же транзакции (ревью Codex 28.09, находка 2).
     expect(f.commands.some(s => s.startsWith("UPDATE job_attempt SET status='failed',failure_reason='stale_attempt_result'")
       && s.includes('rerender'))).toBe(true);
+  });
+  // Ревью Codex 28.09, круг 2, находка 1: отказ хранилища при стирании клипа не должен терять повтор — ключи не
+  // обнуляются, проход завершается ошибкой, следующий проход выбирает клип снова (выборка — по непустым ключам).
+  it('storage failure while erasing a clip keeps its keys so the next pass retries', async () => {
+    const f = fixture();
+    f.query.mockImplementation(async sql => {
+      f.commands.push(sql);
+      if (sql.includes('SELECT count(*) FROM account')) return { rows: [{ count: '0' }], rowCount: 1 };
+      if (sql.includes('pg_try_advisory_lock')) return { rows: [{ locked: true }], rowCount: 1 };
+      if (sql.startsWith('SELECT c.id,c.object_key')) return { rows: [{ id: account, video_id: 'video', object_key: 'clip', thumbnail_key: 'thumb' }], rowCount: 1 };
+      return { rows: [], rowCount: 0 };
+    });
+    f.storage.eraseClipPrefix.mockRejectedValueOnce(new Error('storage unavailable'));
+    await expect(retentionTick(f.pool, f.storage, new Date('2026-09-24T12:00:00Z'))).rejects.toThrow('повтор на следующем проходе');
+    expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(false);
+    f.commands.length = 0;
+    await retentionTick(f.pool, f.storage, new Date('2026-09-24T13:00:00Z'));
+    expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(true);
   });
   it('expiry does not overwrite explicit revocation', async () => {
     const f = fixture(); await retentionTick(f.pool, f.storage);

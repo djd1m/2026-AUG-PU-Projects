@@ -93,6 +93,8 @@ describe('WD-001: watchdog failure diagnostics', () => {
     expect(log).toHaveBeenCalledWith('Очистка: стирание аккаунта; повтор на следующем проходе', accountError);
     expect(f.query).toHaveBeenCalledWith('UPDATE account SET updated_at=$2 WHERE id=$1', ['account', now]);
     expect(f.query).toHaveBeenCalledWith('SELECT pg_advisory_unlock(50921012)');
-    expect(f.release).toHaveBeenCalledOnce();
+    // Два соединения, оба возвращены: аренда блокировки ретенции и транзакция закрытия пересборок клипа (она идёт ДО
+    // стирания объектов с 28.09 — ревью Codex фич 25–29, круг 2). Утечка дала бы меньше вызовов, чем соединений.
+    expect(f.release).toHaveBeenCalledTimes(2);
   });
 });
