@@ -174,3 +174,5 @@ agent-payments 58, db 18 — **1018 passed, 3 skipped, 0 failed**; `npm run type
 
 **При выкладке:** пересобрать и пересоздать `web` (код в `apps/web`, изменён `docker-compose.yml` —
 `stop_grace_period`); `worker`, `transcribe`, миграции — не затронуты.
+
+**Стенд 28.09 (координатор):** выложено ~21:00 UTC — `docker compose -f docker-compose.yml -f compose.bridge-release.yml up -d --build web` (так поднят стенд на момент выкладки); `/`, `/login`, `/forgot` — 200, `Ready in 705ms`. Замер времени ответа на живом стенде не выполнялся (форма не отправлялась — письмо ушло бы реальному адресу).

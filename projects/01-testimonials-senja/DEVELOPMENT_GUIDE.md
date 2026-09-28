@@ -138,6 +138,13 @@ docker compose -f docker-compose.yml -f compose.demo.yml up -d --build
 docker compose -f docker-compose.yml -f compose.demo.yml up -d web
 ```
 
+> **Уточнение 28.09.2026 (по меткам контейнеров).** Стенд на этот день поднят с оверрайдом
+> `compose.bridge-release.yml` (выпуск моста F4: `image:` у `web`/`worker` закреплены именами тегов, например
+> `proofwall-web:login-navigation-20260909`), а не `compose.demo.yml`. `up -d --build web` с этим оверрайдом
+> СОБИРАЕТ новый образ под тем же закреплённым тегом и перезаписывает его (так и выложена правка FR-015
+> 28.09 ~21:00 UTC). Для выкладки с сохранением истории образов — задать новый тег в оверрайде перед сборкой.
+
+
 `docker-compose.prod.yml` и CI-конвейер «build → registry → pull по SSH», описанные в
 `docs/Architecture.md` §8, **не созданы** (сверено по файлам 2026-09-28): в проекте есть только
 `docker-compose.yml` (образы собираются на машине из `build:`) и оверрайд `compose.demo.yml`,
