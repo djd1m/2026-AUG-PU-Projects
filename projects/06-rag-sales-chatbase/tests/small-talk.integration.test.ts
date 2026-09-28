@@ -4,9 +4,9 @@
 // с контактом. Итоговый CHECK question_log.outcome после миграций = QUESTION_OUTCOME кода.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createHash, randomBytes } from 'node:crypto';
-import { createPool, readBotPageTitles, type Pool } from '../packages/db/src/index';
+import { createPool, PAGE_TITLES_LIMIT, readBotPageTitles, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
-import { loadCeilings, QUESTION_OUTCOME } from '../packages/rag/src/index';
+import { chunkDocument, loadCeilings, QUESTION_OUTCOME, type ChunkBlock } from '../packages/rag/src/index';
 import { createWidgetAskDependencies } from '../apps/web/src/server/widget-ask-deps';
 import { createWidgetAskHandler } from '../apps/web/src/server/widget-ask-handler';
 import { createWidgetConfigHandler, createWidgetEventHandler } from '../apps/web/src/server/widget-handler';
@@ -156,30 +156,39 @@ describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настояще�
   });
 
   // A-N6-076 (дефект стенда 28.09): темой приветствия стал адрес `http://info.cern.ch` — у страницы <title> совпадал с адресом.
-  it('темы — заголовок первого раздела или страницы, но не адрес, не пустое и не «404»; чужой бот и пропущенная страница не видны', async () => {
+  // Пути фрагментов строит НАСТОЯЩИЙ chunkDocument (ревью круга 1: формат пути задаёт производитель, а не тест).
+  it('темы — годный заголовок страницы, иначе её первый раздел; не адрес, не пустое, не «404»; пустые страницы не съедают LIMIT; чужой бот не виден', async () => {
     const w = wire();
+    const text = (t: string): ChunkBlock => ({ kind: 'text', text: t });
+    const h = (level: number, t: string): ChunkBlock => ({ kind: 'heading', level, text: t });
+    const page = (url: string, title: string, blocks?: ChunkBlock[]): SeedPage =>
+      ({ url, title, paths: blocks ? chunkDocument({ title, blocks }).map((c) => c.contextPath) : undefined });
     await seed([{ url: 'https://other.example/', title: 'Чужая тема' }, { url: 'https://other.example/b', title: 'Ещё чужая' }]);
-    const s = await seed([
-      { url: 'http://kolos.example/', title: 'http://kolos.example', paths: ['http://kolos.example', 'http://kolos.example › Свежий хлеб каждый день'] },
-      { url: 'http://kolos.example/empty', title: '', paths: ['Раздел без заголовка страницы'] },
+    const empties = Array.from({ length: PAGE_TITLES_LIMIT + 1 }, (_, i): SeedPage => ({ url: `http://kolos.example/e${i}`, title: '', paths: [] }));
+    const s = await seed([...empties,
+      page('http://kolos.example/', 'http://kolos.example', [text('Вводный абзац.'), h(1, 'Свежий хлеб каждый день'), text('Печём с утра.')]),
+      page('http://kolos.example/empty', '', [h(1, 'Раздел без заголовка страницы'), h(2, 'Подраздел'), text('Текст.')]),
       { url: 'http://kolos.example/404', title: '404' },
       { url: 'http://kolos.example/secret', title: 'Секретный раздел', skipped: 'no_text' },
-      { url: 'http://kolos.example/dostavka', title: 'Доставка | Колос', paths: ['Доставка | Колос › Доставка и оплата › Сроки'] },
+      page('http://kolos.example/dostavka', 'Доставка | Колос', [h(1, 'Доставка и оплата'), h(2, 'Сроки'), text('Два дня.')]),
       { url: 'http://kolos.example/ceny', title: 'Цены' },
     ]);
     expect(await readBotPageTitles(pool, s.bot)).toEqual([
-      { title: 'http://kolos.example', heading: 'Свежий хлеб каждый день' }, { title: '', heading: null }, { title: '404', heading: null },
-      { title: 'Доставка | Колос', heading: 'Доставка и оплата' }, { title: 'Цены', heading: null },
+      { title: 'http://kolos.example', path: 'http://kolos.example › Свежий хлеб каждый день' },
+      { title: '', path: 'Раздел без заголовка страницы › Подраздел' }, { title: '404', path: null },
+      { title: 'Доставка | Колос', path: 'Доставка | Колос › Доставка и оплата › Сроки' }, { title: 'Цены', path: null },
     ]);
     const vs = await w.visitor(s.key);
     const r = await w.ask(s.key, vs, 'Привет!');
     expect(r.body.data).toEqual({ status: 'unknown', reason: 'small_talk', contact: CONTACT,
-      text: 'Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Свежий хлеб каждый день, Доставка и оплата, Цены.' });
+      text: 'Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Свежий хлеб каждый день, Раздел без заголовка страницы, Доставка.' });
   });
 
   it('сайт, у которого единственная страница — адрес (info.cern.ch): приветствие без списка тем, а не «о темах: http://…»', async () => {
     const w = wire();
-    const s = await seed([{ url: 'http://info.cern.ch/', title: 'http://info.cern.ch', paths: ['http://info.cern.ch › http://info.cern.ch - home of the first website'] }]);
+    const s = await seed([{ url: 'http://info.cern.ch/', title: 'http://info.cern.ch',
+      paths: chunkDocument({ title: 'http://info.cern.ch', blocks: [{ kind: 'heading', level: 1, text: 'http://info.cern.ch - home of the first website' },
+        { kind: 'text', text: 'http://info.cern.ch - home of the first website' }] }).map((c) => c.contextPath) }]);
     const vs = await w.visitor(s.key);
     const text = (await w.ask(s.key, vs, 'привет')).body.data?.text ?? '';
     expect(text).toBe('Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Задайте вопрос о том, что есть на сайте компании.');

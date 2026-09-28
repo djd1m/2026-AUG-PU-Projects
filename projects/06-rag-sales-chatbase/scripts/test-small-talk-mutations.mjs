@@ -31,9 +31,9 @@ const mutations = [
     apply: once("outcome: 'small_talk', text: null", "outcome: 'small_talk', text: question") },
   // A-N6-076: темы приветствия (дефект стенда 28.09 — адрес `http://info.cern.ch` в «спросите о темах»).
   { id: 'address-as-topic', title: 'фильтр адресов снят: заголовок-адрес становится темой приветствия', file: 'packages/rag/src/small-talk.ts',
-    apply: once(' || URL_LIKE.test(text)) continue;', ') continue;') },
-  { id: 'heading-ignored', title: 'заголовок первого раздела не читается: тема берётся только из <title> страницы', file: 'packages/rag/src/small-talk.ts',
-    apply: once('[page.heading, page.title]', '[page.title]') },
+    apply: once(" || URL_LIKE.test(text.replace(WRAPPERS, ''))) return false;", ') return false;') },
+  { id: 'heading-ignored', title: 'раздел не читается: заголовок-адрес страницы не подменяется её первым разделом', file: 'packages/rag/src/small-talk.ts',
+    apply: once('[page.title, pageHeading(page.title, page.path)]', '[page.title]') },
 ];
 const results = [];
 let exitCode = 0;

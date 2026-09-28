@@ -38,17 +38,19 @@ export function chargeAnswerQuota(pool: Pool, ceilings: Ceilings, input: AnswerQ
 // Заголовки страниц бота для примеров тем в шаблоне светской беседы (small-talk, A-N6-074). Только ЭТОТ бот
 // (bot_id в том же SQL), только прочитанные страницы (без skipped_reason), в порядке обхода: первые страницы сайта —
 // главная и её разделы. 30 строк хватает на 3 темы после отбрасывания пустых, общих и повторов (topicsFromTitles).
-// A-N6-076: у каждой страницы ещё и заголовок её первого раздела — второй элемент context_path («страница › h1 › …»)
-// первого по порядку фрагмента, у которого раздел есть; он предпочтительнее заголовка страницы, который бывает адресом
-// (`<title>http://info.cern.ch</title>`) или пуст. Страница без заголовка остаётся: у неё может быть раздел.
+// A-N6-076: у каждой страницы ещё и context_path первого по порядку фрагмента, чей путь не равен заголовку страницы
+// (фрагмент внутри раздела); первый раздел из него выделяет pageHeading в @n6/rag — он подменяет негодный заголовок
+// страницы (адрес `<title>http://info.cern.ch</title>`, пустой). Страница без заголовка И без раздела отсеивается ДО
+// LIMIT, чтобы пустые страницы не съедали 30 строк.
 export const PAGE_TITLES_LIMIT = 30;
 export async function readBotPageTitles(pool: Pool, botId: string): Promise<PageTopicSource[]> {
   if (!isUuid(botId)) return [];
-  const rows = (await pool.query<{ title: string; heading: string | null }>(`SELECT p.title,
-      (SELECT split_part(c.context_path, ' › ', 2) FROM chunk c WHERE c.page_id = p.id AND c.bot_id = $1
-        AND strpos(c.context_path, ' › ') > 0 ORDER BY c.ordinal LIMIT 1) AS heading
-    FROM page p WHERE p.bot_id = $1 AND p.skipped_reason IS NULL ORDER BY p.created_at, p.id LIMIT $2`, [botId, PAGE_TITLES_LIMIT])).rows;
-  return rows.map((row) => ({ title: row.title, heading: row.heading }));
+  const rows = (await pool.query<{ title: string; path: string | null }>(`SELECT p.title, h.path FROM page p
+    LEFT JOIN LATERAL (SELECT c.context_path AS path FROM chunk c WHERE c.page_id = p.id AND c.bot_id = $1
+      AND c.context_path <> '' AND c.context_path <> p.title ORDER BY c.ordinal LIMIT 1) h ON true
+    WHERE p.bot_id = $1 AND p.skipped_reason IS NULL AND (p.title <> '' OR h.path IS NOT NULL)
+    ORDER BY p.created_at, p.id LIMIT $2`, [botId, PAGE_TITLES_LIMIT])).rows;
+  return rows.map((row) => ({ title: row.title, path: row.path }));
 }
 
 // Журнал вопроса: текст — только у unknown и со сроком 14 дней (152-ФЗ; CHECK question_text_only_unknown —
