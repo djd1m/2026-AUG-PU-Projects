@@ -2,6 +2,8 @@
 
 Status: planned; implementation and acceptance pending. Do not mark live provider delivery/consent from contract tests.
 
+2026-09-28: план доведения готов, ждёт утверждения владельца — [01_plan.md](01_plan.md). Уточнение статуса: реализация прервана на контрольной точке `444d3123` (не выложена, обязательные ворота не пройдены), а не «не начиналась».
+
 ## Deployment Plan
 
 Before deployment: source-bound full tests/build/review/pipeline gates and actual browser A–D; check occupied ports/owners and DB no-port internal-network policy. Configure `.runtime/access.json`600 with explicit disabled providers until dedicated keys ready. Additive migration and backend first, A–D sequentially, public smoke and configured status. Existing accounts retain login until actual mail readiness and operator enables sticky verification policy. No actual credentials copied from donors.
