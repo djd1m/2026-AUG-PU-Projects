@@ -26,7 +26,48 @@ export const LIMIT_PLACE = 100;
 /** Пространство имён локов этой фичи — чтобы не столкнуться с чужими в той же базе. */
 const LOCK_NS = 42_002;
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ОЧЕРЕДЬ ПО КЛЮЧУ — В ПАМЯТИ, ДО ВЗЯТИЯ СОЕДИНЕНИЯ (2026-09-28).
+//
+// Один TRY-лок давал ЛОЖНЫЕ отказы: два одновременных гостя одной точки сталкивались на
+// ключе `private_place|<place>` и второй получал 429, хотя потолок точки (100) не исчерпан;
+// двадцать одновременных с одного адреса проходили не «ровно 10», а сколько повезёт. Пока
+// адрес гостя не доезжал до intake (все шли одним ключом), это было не видно.
+//
+// Ждущий лок в БД вернул бы исчерпание пула. Поэтому ждут здесь: промис-цепочка на ключ,
+// соединение пула берётся ТОЛЬКО когда подошла очередь. Ожидающий держит сокет и память, а
+// не соединение — число занятых соединений не растёт с числом ожидающих (C-2). Очередь
+// ограничена (MAX_WAITERS_PER_KEY): сверх предела — отказ сразу, как было с занятым локом.
+// TRY-лок в БД остаётся — он сериализует РАЗНЫЕ процессы (реплики), которые эта очередь
+// не видит.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const MAX_WAITERS_PER_KEY = 64;
+const tails = new Map<string, Promise<void>>();
+const waiting = new Map<string, number>();
+
+function serialized<T>(k: string, fn: () => Promise<T>): Promise<T> | null {
+  const n = waiting.get(k) ?? 0;
+  if (n >= MAX_WAITERS_PER_KEY) return null;
+  waiting.set(k, n + 1);
+  const prev = tails.get(k) ?? Promise.resolve();
+  let release!: () => void;
+  const mine = new Promise<void>((r) => { release = r; });
+  tails.set(k, prev.then(() => mine));
+  return prev.then(fn).finally(() => {
+    release();
+    const m = (waiting.get(k) ?? 1) - 1;
+    // Никто не встал после нас — хвост цепочки наш, ключ удаляется: словарь не растёт.
+    if (m === 0) { waiting.delete(k); tails.delete(k); } else waiting.set(k, m);
+  });
+}
+
 export async function consume(scope: string, key: string, limitN: number): Promise<boolean> {
+  const queued = serialized(`${scope}|${key}`, () => consumeOnce(scope, key, limitN));
+  return queued === null ? false : queued;
+}
+
+async function consumeOnce(scope: string, key: string, limitN: number): Promise<boolean> {
   const client = await pool.connect();
   try {
     await client.query('begin');

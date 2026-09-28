@@ -17,6 +17,7 @@
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { isIP } from 'node:net';
 import { pool } from './db.js';
 import { CoarseBarrier } from './barrier.js';
 import { consume, LIMIT_IP_PLACE, LIMIT_PLACE, SCOPE_IP_PLACE, SCOPE_PLACE } from './limit.js';
@@ -32,10 +33,38 @@ function json(res: ServerResponse, code: number, body: unknown): void {
   res.end(JSON.stringify(body));
 }
 
-function clientIp(req: IncomingMessage): string {
-  const xff = req.headers['x-forwarded-for'];
-  const raw = Array.isArray(xff) ? xff[0] : xff;
-  return raw?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
+/** Адрес ГОСТЯ — ключ грубого барьера и порога «10 с адреса на точку».
+ *
+ *  ГРАНИЦА ДОВЕРИЯ. Единственный законный вызывающий — контейнер guest: он определяет адрес
+ *  гостя по доверенному прокси (apps/guest/src/client-ip.ts) и передаёт его в X-Guest-IP.
+ *  Заголовку можно верить ровно потому, что intake НЕ опубликован на хост и НЕ состоит в
+ *  общей сети прокси talk-ai-public (docker-compose.yml: только `expose`, сеть default) —
+ *  до него дотягиваются лишь контейнеры этого compose-проекта. Опубликуй intake или включи
+ *  его в сеть прокси — и любой снаружи выберет себе ключ лимита сам. Это условие несущее.
+ *
+ *  X-Forwarded-For здесь НЕ читается: его ставит прокси для guest, а не для intake, и в этом
+ *  контейнере он может прийти только от клиента. Нет заголовка или в нём не адрес — ключом
+ *  становится адрес сокета: ОДИН ключ на всех таких вызывающих, строже, а не шире. */
+function guestIp(req: IncomingMessage): string {
+  const h = req.headers['x-guest-ip'];
+  return canonIp(Array.isArray(h) ? h[0] : h) ?? req.socket.remoteAddress ?? 'unknown';
+}
+
+/** КОПИЯ apps/guest/src/client-ip.ts canonIp (образы собираются раздельно, общего пакета
+ *  у guest и intake нет). Одинаковость стережёт таблица в seam-guest-ip.test.ts. */
+export function canonIp(a: string | undefined): string | undefined {
+  if (!a) return undefined;
+  // Скобки снимаются только ПАРОЙ: `[192.0.2.1` и `192.0.2.1]` — не адрес.
+  const s = a.trim().replace(/^\[(.*)\]$/, '$1');
+  const kind = isIP(s);
+  if (kind === 4) return s;
+  if (kind !== 6) return undefined;
+  let h: string;
+  try { h = new URL(`http://[${s}]/`).hostname.slice(1, -1); } catch { return undefined; }
+  const m = /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/.exec(h);
+  if (!m) return h;
+  const hi = parseInt(m[1]!, 16), lo = parseInt(m[2]!, 16);
+  return `${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`;
 }
 
 /** Чтение с ДВУМЯ пределами: по объёму и по времени. Время читает клиент, значит верхняя
@@ -69,7 +98,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   if (ORIGIN && req.headers.origin !== ORIGIN) return json(res, 403, { error: 'forbidden' });
 
   // ── ШАГ 2. Грубый барьер. НИ ОДНОГО обращения к БД — ни на отказе, ни на пропуске.
-  const ip = clientIp(req);
+  const ip = guestIp(req);
   if (!barrier.allow(ip)) {
     // Без счётчика и времени сброса в ответе: различимость — оракул перечисления.
     return json(res, 429, { error: 'too_many_requests' });

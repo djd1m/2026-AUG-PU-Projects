@@ -17,6 +17,7 @@ import { buildDoors, notFoundHtml, privateFormHtml, privateSentHtml, template,
   type LinkRow, type PlaceRow } from './render.js';
 import { isPlatform, resolvePlatformUrl } from './resolve.js';
 import { recordGuestEvent } from './journal.js';
+import { clientIp } from './client-ip.js';
 
 const BASE_URL = requireBaseUrl();
 
@@ -64,14 +65,6 @@ async function selectPlace(slug: string): Promise<PlaceRow | null> {
   return rows[0] ?? null;
 }
 
-function clientIp(req: IncomingMessage): string {
-  // За прокси берётся ПЕРВЫЙ элемент: последний дописывает сам прокси, и код, доверяющий
-  // ему, при прямом доступе получил бы значение от клиента.
-  const xff = req.headers['x-forwarded-for'];
-  const raw = Array.isArray(xff) ? xff[0] : xff;
-  return raw?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
-}
-
 export const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   void handle(req, res).catch(() => {
     res.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' });
@@ -100,7 +93,7 @@ function readForm(req: IncomingMessage): Promise<URLSearchParams | null> {
 
 /** Внешний вызов ВНЕ транзакции — её здесь и нет: у рендера нет прав на запись.
  *  Таймаут обязателен: время ответа соседнего контейнера нам не принадлежит. */
-async function postToIntake(slug: string, form: URLSearchParams): Promise<{ ok: boolean; status: number; message: string }> {
+async function postToIntake(slug: string, form: URLSearchParams, guestIp: string): Promise<{ ok: boolean; status: number; message: string }> {
   const ratingRaw = form.get('rating');
   const payload = {
     slug,
@@ -111,7 +104,10 @@ async function postToIntake(slug: string, form: URLSearchParams): Promise<{ ok: 
   try {
     const r = await fetch(`${INTAKE_URL}/api/feedback/private`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', origin: BASE_URL },
+      // X-Guest-IP — адрес ГОСТЯ, ключ лимита «10 с адреса на точку». Без него intake видит
+      // адрес сокета, то есть этого контейнера, и считает всех гостей за одного (исправлено
+      // 2026-09-28). Заголовок собирается здесь заново: пришедший от клиента не пробрасывается.
+      headers: { 'content-type': 'application/json', origin: BASE_URL, 'x-guest-ip': guestIp },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(8_000),
     });
@@ -135,7 +131,9 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
   if (seg[0] === 'r' && seg[1] && seg.length === 2) {
     const { html: body, place } = await renderChoicePage(seg[1]);
-    if (place) recordGuestEvent(place.id, 'scan', null, clientIp(req), String(req.headers['user-agent'] ?? ''));
+    // Журнал — «отправил и забыл»: ответ не ждёт даже резолва адреса прокси.
+    const ua = String(req.headers['user-agent'] ?? '');
+    if (place) void clientIp(req).then((ip) => recordGuestEvent(place.id, 'scan', null, ip, ua));
     res.writeHead(place ? 200 : 404, html);
     res.end(body);
     return;
@@ -155,9 +153,10 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
       // ОТПРАВКА ИДЁТ В КОНТЕЙНЕР ПРИЁМА, а не пишется здесь. У роли рендера нет и не
       // может быть права записи в приватные обращения — граница проходит по контейнеру,
       // и обойти её изнутри этого процесса физически нечем.
-      const r = await postToIntake(seg[1], form);
+      const ip = await clientIp(req);
+      const r = await postToIntake(seg[1], form, ip);
       if (r.ok) {
-        recordGuestEvent(place.id, 'private_door_click', null, clientIp(req), String(req.headers['user-agent'] ?? ''));
+        recordGuestEvent(place.id, 'private_door_click', null, ip, String(req.headers['user-agent'] ?? ''));
         res.writeHead(200, html); res.end(privateSentHtml(place.name, seg[1], BASE_URL)); return;
       }
       res.writeHead(r.status, html);
@@ -174,7 +173,9 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const url = await resolvePlatformUrl(seg[1], seg[2]);
     if (!url) { res.writeHead(404, html); res.end(notFoundHtml()); return; }
     const place = await selectPlace(seg[1]);
-    if (place) recordGuestEvent(place.id, 'public_door_click', seg[2], clientIp(req), String(req.headers['user-agent'] ?? ''));
+    const ua = String(req.headers['user-agent'] ?? '');
+    const platform = seg[2];
+    if (place) void clientIp(req).then((ip) => recordGuestEvent(place.id, 'public_door_click', platform, ip, ua));
     // Location зависит ТОЛЬКО от пары (slug, platform). Аналитика выше — «отправил и
     // забыл»: её отказ не меняет ни Location, ни код ответа.
     res.writeHead(302, { location: url, 'cache-control': 'no-store' });
