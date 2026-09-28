@@ -51,12 +51,12 @@ describe('порядок операций — это защита', () => {
   });
 
   it('слишком большое тело отвергается ДО разбора', async () => {
-    const r = await post('x'.repeat(20_000), { 'x-forwarded-for': ip() });
+    const r = await post('x'.repeat(20_000), { 'x-guest-ip': ip() });
     expect(r.status).toBe(413);
   });
 
   it('несуществующая точка — 404, и лимит на неё не тратится', async () => {
-    const r = await post({ slug: 'нет-такой', body: 'текст' }, { 'x-forwarded-for': ip() });
+    const r = await post({ slug: 'нет-такой', body: 'текст' }, { 'x-guest-ip': ip() });
     expect(r.status).toBe(404);
   });
 });
@@ -87,7 +87,7 @@ describe('валидация: неопознанное — отказ, а не �
 
   it('текст сохраняется ПОБАЙТОВО: приём не санирует', async () => {
     const evil = '<script>alert(1)</script> & "кавычки"';
-    const r = await post({ slug: SLUG, body: evil }, { 'x-forwarded-for': ip() });
+    const r = await post({ slug: SLUG, body: evil }, { 'x-guest-ip': ip() });
     expect(r.status).toBe(201);
     const { rows } = await pgAdmin.query<{ body: string }>(
       'select body from private_feedback order by created_at desc limit 1');
@@ -101,7 +101,7 @@ describe('лимит: КОНКУРЕНТНО, а не последователь
     const addr = ip();
     const rs = await Promise.all(
       Array.from({ length: 20 }, () => post({ slug: SLUG, body: 'параллельный текст' },
-        { 'x-forwarded-for': addr })));
+        { 'x-guest-ip': addr })));
     const created = rs.filter((r) => r.status === 201).length;
     // Последовательный тест зеленеет и при раздельных COUNT+INSERT — то есть НЕ различает
     // дефект, при котором сто параллельных запросов все видят count=0 и все проходят.
@@ -110,7 +110,7 @@ describe('лимит: КОНКУРЕНТНО, а не последователь
   }, 30_000);
 
   it('другой адрес не наказан за соседа', async () => {
-    const r = await post({ slug: SLUG, body: 'другой гость' }, { 'x-forwarded-for': ip() });
+    const r = await post({ slug: SLUG, body: 'другой гость' }, { 'x-guest-ip': ip() });
     expect([201, 429]).toContain(r.status);   // 429 только если исчерпан потолок точки
   });
 });
