@@ -186,7 +186,7 @@ INPUT: source (root_url), бюджет страниц, множество уже
 OUTPUT: поток страниц {url, title, headings, text, content_hash} либо отказ задачи.
 STEPS:
 1. Получить `robots.txt` (через `CheckAddress`); IF корень запрещён для нашего UA THEN RETURN fail(robots_disallowed). IF недоступен 4xx THEN считать «всё разрешено»; 5xx/таймаут THEN fail(unreachable).
-2. Очередь URL = [root] + ссылки из `sitemap.xml` того же хоста; FIFO; посещённые — нормализованный URL без фрагмента.
+2. Очередь URL = [root] + ссылки из `sitemap.xml` того же хоста; порядок — по кругу между разделами (первый сегмент пути), внутри раздела свежие по `lastmod` раньше (crawl-coverage, A-N6-070; было FIFO); посещённые — нормализованный URL без фрагмента. Остановка пределом страниц или потолком обхода — `done` с `truncated_by ∈ {page_budget, crawl_limit}`, `pages_total` = известные адреса, до 5 непрочитанных путей в `unread_sample`.
 3. WHILE очередь не пуста AND страниц < бюджета: взять URL; IF запрещён robots THEN пропустить с причиной; `CheckAddress`; GET с таймаутом 15 с, потолок 2 МБ; IF не `text/html` THEN пропустить; извлечь основной текст и заголовки (Readability-подобно), ссылки того же хоста — в очередь; пауза 1000 мс.
 4. IF текста < 200 символов THEN пропустить (`empty`). IF `content_hash` уже известен THEN пометить «без изменений» и НЕ отдавать дальше (продолжение без повторного эмбеддинга).
 5. IF по итогу 0 страниц с текстом THEN RETURN fail(no_text).
