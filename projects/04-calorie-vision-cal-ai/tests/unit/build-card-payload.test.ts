@@ -185,5 +185,10 @@ describe('AC-15 на выходе НАСТОЯЩЕГО рендера: renderCar
     const allowed = new Set<string>(shared.ALLOWED_SHARE_CARD_FIELDS);
     expect([...readKeys].filter((k) => !allowed.has(k))).toEqual([]);
     expect(readKeys.has(EXTRA_FIELD)).toBe(false);
+    // Выходной артефакт: ни имя, ни значение лишнего поля не попали в байты JPEG (метаданные,
+    // комментарии). Нарисованный пикселями текст байтами не ловится — его исключает слежение за
+    // чтением выше: поле, которое рендер не прочитал, нарисовать нечем.
+    expect(jpeg.includes(EXTRA_FIELD)).toBe(false);
+    expect(jpeg.includes(String(EXTRA_VALUE))).toBe(false);
   });
 });
