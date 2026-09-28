@@ -35,6 +35,10 @@ services:
       - PGPOOL_MAX
       - PGPOOL_CONNECTION_TIMEOUT_MS
       - INTAKE_URL=http://intake:3000
+      # Имя общего TLS-прокси в сети talk-ai-public: только от него guest читает X-Forwarded-For
+      # (последний элемент) — адрес гостя, ключ лимита «10 с адреса на точку». Сосед по общей
+      # сети с тем же заголовком получает ключ по СВОЕМУ адресу. Не резолвится — guest не стартует.
+      - TRUSTED_PROXY_HOST=${TRUSTED_PROXY_HOST:-ai-hub-tls-proxy}
     expose: ["3000"]
     networks: [default, talk-ai-public]
     depends_on:
