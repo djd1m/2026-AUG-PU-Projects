@@ -1,0 +1,36 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20260928T-payments",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "payments",
+  "pipeline": "plan-checkpoint-implement-review",
+  "tier": "XL",
+  "risk_flags": ["деньги", "входящий вебхук", "миграция схемы", "публичный маршрут"],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": ["один исполнитель на реализацию (задача получена от координатора целиком); ревью — другое семейство"],
+  "baseline_revision": "bf69e0f3",
+  "final_revision": "0ed619a9 + коммит документов",
+  "started_at": null,
+  "started_at_reason": "запись начата после реализации: время начала исполнителя хостом не выдано",
+  "ended_at": "2026-09-28T12:46:13Z",
+  "status": "completed",
+  "agents": [
+    { "role": "implementer", "model": "claude-opus-5-5", "model_confirmed_by": "идентификатор модели в системных метаданных сессии", "tokens": null, "tokens_reason": "хост не выдаёт счётчики", "cost_usd": null },
+    { "role": "reviewer", "model": "gpt-6-astra", "reasoning_effort": "medium", "model_confirmed_by": "строки model:/reasoning effort: журналов codex exec (3 вызова)", "rounds": 3, "tokens": null, "tokens_reason": "журнал codex exec не сохранён целиком; счётчики не извлекались", "cost_usd": null }
+  ],
+  "review": { "grades": ["B", "B", "B"], "findings": { "blocker": 0, "high": 0, "medium": 7, "low": 0 }, "fixed": 7, "re_reviewed_fix_rounds": 2, "unreviewed_fix_round": 1 },
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 18,
+    "ac_total": 18,
+    "tests": { "full_suite": "1034/1034", "browser": "182/182", "mutations": "22/22" },
+    "not_proven": ["живой магазин ЮKassa", "адрес источника за двумя прокси стенда", "клик оплаты и опрос в живом браузере", "скрипт стенда на настоящем стенде"]
+  },
+  "acceptance_evidence": [
+    "docs/features/payments/05_completion.md",
+    "docs/features/payments/07_code_report.md",
+    "docs/features/payments/08_review.md",
+    "tests/artifacts/payments/"
+  ]
+}

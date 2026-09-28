@@ -1,17 +1,17 @@
-Включение оплаты ЮKassa на стенде N5. Env: /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/stand/stand.env
+Включение оплаты ЮKassa на стенде N5. Env: <путь>
 
-Записано: N5_PAYMENTS_MODE=live, YOOKASSA_SHOP_ID=123456, YOOKASSA_TEST_MODE=true, YOOKASSA_SECRET_KEY=<скрыт>. Копия: /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/stand/stand.env.bak-yookassa-20260928-114607
+Записано: N5_PAYMENTS_MODE=live, YOOKASSA_SHOP_ID=123456, YOOKASSA_TEST_MODE=true, YOOKASSA_SECRET_KEY=<скрыт>. Копия: <путь>
 Перезапуск пропущен (--no-restart).
 исход «верный ввод»: код 0
 N5_PAYMENTS_MODE=live строк: 1; YOOKASSA_SECRET_KEY строк: 1
-Включение оплаты ЮKassa на стенде N5. Env: /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/stand/stand.env
+Включение оплаты ЮKassa на стенде N5. Env: <путь>
 
 Отказ: для YOOKASSA_TEST_MODE=true ключ ЮKassa должен начинаться с test_
 исход «боевой ключ при тестовом магазине»: код 1
-Включение оплаты ЮKassa на стенде N5. Env: /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/stand/stand.env
+Включение оплаты ЮKassa на стенде N5. Env: <путь>
 Отказ: shopId должен состоять только из цифр
 исход «shopId не цифры»: код 1
-НЕ ВЫПОЛНЕНО: в /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/stand/nopaid.env нет N5_LIMIT_PAID_USER_MINUTES (OWN-019: 270). Добавьте строку и выкатите код фичи 30 до включения оплаты
+НЕ ВЫПОЛНЕНО: в <путь> нет N5_LIMIT_PAID_USER_MINUTES (OWN-019: 270). Добавьте строку и выкатите код фичи 30 до включения оплаты
 исход «нет потолка минут paid»: код 2
-НЕ ВЫПОЛНЕНО: env стенда не найден или не доступен на запись: /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/stand/absent.env
+НЕ ВЫПОЛНЕНО: env стенда не найден или не доступен на запись: <путь>
 исход «env нет»: код 2
