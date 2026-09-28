@@ -63,7 +63,7 @@ const BROWSER = [
   // Ревью круга 1: оптимистическое «поставлена» на экране установки перекрывает снятие отметки сервером.
   { id: 'install-sticky', title: 'экран установки: после отметки в вкладке серверное снятие не показывает баннер',
     edits: [{ file: 'apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen.tsx',
-      apply: once('  useEffect(() => { if (!gate.verified) setJustVerified(false); }, [gate.verified]);\n', '') }] },
+      apply: once('optimistic !== null && optimistic === gate ? true : gate.verified', 'optimistic !== null ? true : gate.verified') }] },
 ];
 const mutations = browser ? BROWSER : IMAGE;
 const results = [];

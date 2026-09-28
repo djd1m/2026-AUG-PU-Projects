@@ -193,13 +193,33 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
       await page.locator('section.gate-banner').getByRole('button', { name: 'Я проверил ответы бота' }).dblclick();
       await expect.poll(() => page.locator('.gate-done').count()).toBe(1);
       expect(bodies.every((b) => (b as { verified: boolean }).verified === true), JSON.stringify(bodies)).toBe(true);
-      // router.refresh приносит verified: true, затем новые материалы снимают отметку — следующий refresh приносит false.
-      await page.evaluate(() => (window as unknown as { __setGate: (g: unknown) => void }).__setGate({ verified: true, ready: true, resetAt: null, stubVisitors: 0 }));
-      await page.evaluate(() => (window as unknown as { __setGate: (g: unknown) => void }).__setGate({ verified: false, ready: true, resetAt: '2026-09-28T11:00:00.000Z', stubVisitors: 0 }));
+      const setGate = (g: unknown) => page.evaluate((v) => (window as unknown as { __setGate: (g: unknown) => void }).__setGate(v), g);
+      // Сервер подтвердил (refresh принёс verified: true) — строка «поставлена» остаётся.
+      await setGate({ verified: true, ready: true, resetAt: null, stubVisitors: 0 });
+      await expect.poll(() => page.locator('.gate-done').count()).toBe(1);
+      // Затем новые материалы сняли отметку — следующий refresh приносит false: баннер с кнопкой.
+      await setGate({ verified: false, ready: true, resetAt: '2026-09-28T11:00:00.000Z', stubVisitors: 0 });
       await expect.poll(() => page.locator('section.gate-banner').count()).toBe(1);
       expect(await page.locator('.gate-done').count()).toBe(0);
       expect(await page.locator('section.gate-banner').getByRole('button', { name: 'Я проверил ответы бота' }).count()).toBe(1);
       expect(pageErrors).toEqual([]);
+    } finally { await context.close(); }
+  });
+  it('ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден', async () => {
+    bodies = []; delayMs = 0;
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    try {
+      const page = await context.newPage();
+      await page.goto(`${base}/live-install.html`);
+      await page.waitForFunction(() => {
+        const button = document.querySelector('section.gate-banner button');
+        return !!button && Object.keys(button).some((k) => k.startsWith('__reactProps'));
+      });
+      await page.locator('section.gate-banner').getByRole('button', { name: 'Я проверил ответы бота' }).click();
+      await expect.poll(() => page.locator('.gate-done').count()).toBe(1);
+      await page.evaluate(() => (window as unknown as { __setGate: (g: unknown) => void }).__setGate({ verified: false, ready: true, resetAt: null, stubVisitors: 3 }));
+      await expect.poll(() => page.locator('section.gate-banner').count()).toBe(1);
+      expect(await page.locator('.gate-done').count()).toBe(0);
     } finally { await context.close(); }
   });
   it('AC-9: строка «снята когда и кем» и история отметки раскрытием', () => live('unverified', async (page) => {
