@@ -2,7 +2,7 @@
 // Контейнер «Установка»: сохранение контакта (PATCH), добавление домена (POST origins), копирование кода.
 // Код установки строит СЕРВЕР (installSnippet): после сохранения контакта страница перечитывается, а не
 // «открывает» код у себя — иначе запрет «без контакта кода нет» обходился бы в браузере.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { InstallSnippet } from '@n6/rag/bot-settings';
 import { errorOf, send } from '../../../../../lib/api-client';
@@ -24,6 +24,9 @@ export function InstallScreen({ gate, ...p }: { botId: string; companyName: stri
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState('');
   const [justVerified, setJustVerified] = useState(false);
+  // Ревью круга 1: сервер снял отметку (новые материалы) после установки в этой вкладке — оптимистическое «поставлена» уходит,
+  // баннер снова предупреждает. Срабатывает только на СМЕНЕ серверного значения, не на нажатии.
+  useEffect(() => { if (!gate.verified) setJustVerified(false); }, [gate.verified]);
   const verify = async () => {
     if (verifying) return;
     setVerifying(true); setVerifyError('');

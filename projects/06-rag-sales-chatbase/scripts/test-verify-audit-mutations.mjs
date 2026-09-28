@@ -43,6 +43,9 @@ const IMAGE = [
     edits: [{ file: m014, apply: once("  ELSIF NEW.answers_verified_reset_reason = 'new_material' THEN\n    INSERT INTO bot_verification_event (bot_id, kind, actor) VALUES (NEW.id, 'unset_new_material', 'system');\n", '') }] },
   { id: 'set-moves-date', title: 'повторное «Я проверил» сдвигает дату «стоит с» (AC-8)',
     edits: [{ file: bots, apply: once('THEN COALESCE(answers_verified_at, now()) ELSE NULL END', 'THEN now() ELSE NULL END') }] },
+  // Ревью круга 1: порядок журнала по времени начала транзакции — позднее снятие прячется за установкой.
+  { id: 'events-by-time', title: 'журнал упорядочен по created_at (начало транзакции), а не по переходам — «снята» прячется за «поставлена»',
+    edits: [{ file: bots, apply: once('ORDER BY id DESC LIMIT $2', 'ORDER BY created_at DESC, id DESC LIMIT $2') }] },
 ];
 const BROWSER = [
   { id: 'no-confirmation', title: '«Снять отметку» снимает сразу, без подтверждения (AC-2/4)',
@@ -57,6 +60,10 @@ const BROWSER = [
     edits: [{ file: block, apply: once("if (event.key === 'Escape' && !p.busy)", "if (event.key === 'Escape' && false)") }] },
   { id: 'banner-vanishes', title: 'баннер после отметки исчезает — второй клик попадает в соседний блок (AC-11)',
     edits: [{ file: 'apps/web/src/app/dashboard/GateBanner.tsx', apply: once('return p.justVerified ? <p', 'return false ? <p') }] },
+  // Ревью круга 1: оптимистическое «поставлена» на экране установки перекрывает снятие отметки сервером.
+  { id: 'install-sticky', title: 'экран установки: после отметки в вкладке серверное снятие не показывает баннер',
+    edits: [{ file: 'apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen.tsx',
+      apply: once('  useEffect(() => { if (!gate.verified) setJustVerified(false); }, [gate.verified]);\n', '') }] },
 ];
 const mutations = browser ? BROWSER : IMAGE;
 const results = [];

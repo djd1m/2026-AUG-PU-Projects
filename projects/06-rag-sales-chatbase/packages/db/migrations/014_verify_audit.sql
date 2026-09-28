@@ -13,7 +13,8 @@ CREATE TABLE bot_verification_event (
   -- снимает «система» ровно тогда, когда причина — новые материалы; остальное — действие владельца
   CONSTRAINT bot_verification_event_actor_kind CHECK ((kind = 'unset_new_material') = (actor = 'system'))
 );
-CREATE INDEX bot_verification_event_bot ON bot_verification_event (bot_id, created_at DESC, id DESC);
+-- Порядок переходов — id (переходы одного бота сериализованы строкой бота); created_at = now() начала транзакции, как у пометки 011.
+CREATE INDEX bot_verification_event_bot ON bot_verification_event (bot_id, id DESC);
 
 -- Событие — на ПЕРЕХОДЕ «стоит ↔ не стоит», в той же транзакции, что изменение (это тот же оператор UPDATE). Повторная
 -- установка уже стоящей отметки (прежнее приложение сдвигает дату) событием не является.

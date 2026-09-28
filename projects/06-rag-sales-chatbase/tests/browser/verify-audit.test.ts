@@ -15,6 +15,7 @@ import { domRules, axeRule, textZoomRule } from '../../scripts/responsive/rules.
 import { preflight } from '../../scripts/responsive/input.mjs';
 import { BotScreen, type BotScreenProps, type BotScreenState } from '../../apps/web/src/app/dashboard/bots/[botId]/BotScreen';
 import { VERIFIED_DONE } from '../../apps/web/src/app/dashboard/GateBanner';
+import { InstallScreen } from '../../apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen';
 import { UNSET_WARNING } from '../../apps/web/src/app/dashboard/bots/[botId]/VerifyBlock';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: () => {}, replace: () => {}, refresh: () => {} }) }));
 
@@ -35,9 +36,16 @@ const props = (verified: boolean): BotScreenProps & BotScreenState => ({
 const doc = (body: string, theme: Theme, script: string) => `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Суфлёр — бот</title>
 <style>${CSS}</style></head><body>${body}${script}</body></html>`;
-const ENTRY = `import { hydrateRoot } from 'react-dom/client'; import { createElement } from 'react';
+// Экран установки — в обёртке, которая по window.__setGate меняет серверное состояние отметки (как router.refresh у Next).
+const ENTRY = `import { hydrateRoot } from 'react-dom/client'; import { createElement, useState } from 'react';
 import { BotScreen } from './apps/web/src/app/dashboard/bots/[botId]/BotScreen';
-hydrateRoot(document.getElementById('root'), createElement(BotScreen, window.__PROPS));`;
+import { InstallScreen } from './apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen';
+function Install(p) { const [gate, setGate] = useState(p.gate); window.__setGate = setGate; return createElement(InstallScreen, { ...p, gate }); }
+const root = document.getElementById('root');
+hydrateRoot(root, window.__INSTALL ? createElement(Install, window.__PROPS) : createElement(BotScreen, window.__PROPS));`;
+const INSTALL = { botId: BOT, companyName: 'AI Coding Space', origins: ['https://aicoding.space'], plan: 'free',
+  snippet: { kind: 'ready' as const, directives: ['script-src https://sufler.example'], tag: '<script src="https://sufler.example/w/widget.0a1b2c3d.js" data-bot="AbCdEfGhIjKlMnOpQrStUv" async></script>' },
+  gate: { verified: false, ready: true, resetAt: null, stubVisitors: 3 } };
 
 let bundle = '';
 // Тела запросов отметки и управление ответом: задержка (мс) — чтобы проверить нажатие во время запроса.
@@ -61,6 +69,11 @@ beforeAll(async () => {
         res.setHeader('content-type', 'text/html; charset=utf-8');
         return res.end(doc(`<main class="center container"><div id="root">${renderToString(createElement(BotScreen, p))}</div></main>`, live[2] as Theme,
           `<script>window.__PROPS=${JSON.stringify(p)}</script><script src="/bundle.js"></script>`));
+      }
+      if (url.pathname === '/live-install.html') {
+        res.setHeader('content-type', 'text/html; charset=utf-8');
+        return res.end(doc(`<main class="center container"><div id="root">${renderToString(createElement(InstallScreen, INSTALL))}</div></main>`, 'dark',
+          `<script>window.__INSTALL=true;window.__PROPS=${JSON.stringify(INSTALL).replace(/</g, '\\u003c')}</script><script src="/bundle.js"></script>`));
       }
       if (req.method === 'POST' && url.pathname === `/api/bots/${BOT}/verify`) {
         const chunks: Buffer[] = []; for await (const c of req) chunks.push(c as Buffer);
@@ -165,6 +178,30 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
     expect(await banner.count()).toBe(0);
     expect(bodies.every((b) => (b as { verified: boolean }).verified === true), JSON.stringify(bodies)).toBe(true);
   }));
+  it('ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден', async () => {
+    bodies = []; delayMs = 0;
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    try {
+      const page = await context.newPage();
+      const pageErrors: string[] = [];
+      page.on('pageerror', (e) => pageErrors.push(e.message));
+      await page.goto(`${base}/live-install.html`);
+      await page.waitForFunction(() => {
+        const button = document.querySelector('section.gate-banner button');
+        return !!button && Object.keys(button).some((k) => k.startsWith('__reactProps'));
+      }, undefined, { timeout: 10000 }).catch((error: unknown) => { throw new Error(`гидрация не завершилась: ${String(error)}; ошибки страницы: ${pageErrors.join(' | ')}`); });
+      await page.locator('section.gate-banner').getByRole('button', { name: 'Я проверил ответы бота' }).dblclick();
+      await expect.poll(() => page.locator('.gate-done').count()).toBe(1);
+      expect(bodies.every((b) => (b as { verified: boolean }).verified === true), JSON.stringify(bodies)).toBe(true);
+      // router.refresh приносит verified: true, затем новые материалы снимают отметку — следующий refresh приносит false.
+      await page.evaluate(() => (window as unknown as { __setGate: (g: unknown) => void }).__setGate({ verified: true, ready: true, resetAt: null, stubVisitors: 0 }));
+      await page.evaluate(() => (window as unknown as { __setGate: (g: unknown) => void }).__setGate({ verified: false, ready: true, resetAt: '2026-09-28T11:00:00.000Z', stubVisitors: 0 }));
+      await expect.poll(() => page.locator('section.gate-banner').count()).toBe(1);
+      expect(await page.locator('.gate-done').count()).toBe(0);
+      expect(await page.locator('section.gate-banner').getByRole('button', { name: 'Я проверил ответы бота' }).count()).toBe(1);
+      expect(pageErrors).toEqual([]);
+    } finally { await context.close(); }
+  });
   it('AC-9: строка «снята когда и кем» и история отметки раскрытием', () => live('unverified', async (page) => {
     expect(await status(page).textContent()).toMatch(/Снята 28 сентября.*13:46 владельцем\./);
     const history = block(page).locator('details.verify-history');

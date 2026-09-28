@@ -129,8 +129,10 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
      FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED}`,
     [botId, accountId, STUB_WINDOW_DAYS])).rows[0];
   if (!bot) return null;
+  // Порядок переходов — по id, а не по created_at (ревью круга 1): now() — время НАЧАЛА транзакции, а переходы одного бота
+  // сериализованы блокировкой его строки, так что позже изменивший отметку получает больший id, даже начав раньше.
   const events = (await pool.query<{ kind: unknown; created_at: Date }>(`SELECT kind, created_at FROM bot_verification_event WHERE bot_id = $1
-    ORDER BY created_at DESC, id DESC LIMIT $2`, [botId, VERIFICATION_EVENTS_SHOWN])).rows;
+    ORDER BY id DESC LIMIT $2`, [botId, VERIFICATION_EVENTS_SHOWN])).rows;
   const origins = (await pool.query<{ origin: string }>('SELECT origin FROM allowed_origin WHERE bot_id = $1 ORDER BY created_at, origin', [botId])).rows.map((r) => r.origin);
   const sources = (await pool.query<IndexJobRow & { source_id: string; kind: string; root_url: string | null; file_name: string | null; job_id: string | null;
     truncated: number }>(

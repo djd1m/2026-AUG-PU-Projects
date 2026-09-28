@@ -93,9 +93,30 @@ describe.skipIf(!databaseUrl)('verify-audit на настоящем Postgres + p
     expect(await events(s.bot)).toEqual(['set/owner', 'unset_owner/owner']);
   });
 
+  // Ревью круга 1: now() — время НАЧАЛА транзакции. Транзакция, начавшаяся раньше, но снявшая отметку позже установки, обязана
+  // оказаться в журнале ПОСЛЕДНЕЙ — порядок по id (переходы одного бота сериализованы его строкой), не по created_at.
+  it('порядок переходов: раньше начатая транзакция, снявшая отметку позже, — последнее событие; строка «снята владельцем»', async () => {
+    const s = await seed();
+    const c = await pool.connect();
+    try {
+      await c.query('BEGIN');
+      await c.query('SELECT now()');   // время транзакции зафиксировано здесь
+      await new Promise((r) => setTimeout(r, 30));
+      await setAnswersVerified(pool, s.bot, s.account, true);   // другая транзакция — позже началась, раньше закончилась
+      await c.query('UPDATE bot SET answers_verified_at = NULL WHERE id = $1', [s.bot]);
+      await c.query('COMMIT');
+    } catch (error) { await c.query('ROLLBACK').catch(() => {}); throw error; } finally { c.release(); }
+    const created = (await pool.query<{ kind: string; created_at: Date }>('SELECT kind, created_at FROM bot_verification_event WHERE bot_id = $1 ORDER BY id', [s.bot])).rows;
+    expect(created.map((r) => r.kind)).toEqual(['set', 'unset_owner']);
+    expect(created[1]!.created_at.getTime()).toBeLessThan(created[0]!.created_at.getTime());   // по времени — «раньше», по факту — позже
+    const cab = (await readBotCabinet(pool, s.bot, s.account))!;
+    expect(cab.answers_verified).toBe(false);
+    expect(cab.verification_events.map((e) => e.kind)).toEqual(['unset_owner', 'set']);
+  });
+
   it('закрытые наборы и пары: неизвестный вид, неизвестный актёр и «система сняла вручную» отвергаются базой; последних событий — не больше 5', async () => {
     const s = await seed();
-    await expect(pool.query(`INSERT INTO bot_verification_event (bot_id, kind, actor) VALUES ($1, 'unset_source_added', 'system')`, [s.bot])).rejects.toThrow(/kind_check/);
+    await expect(pool.query(`INSERT INTO bot_verification_event (bot_id, kind, actor) VALUES ($1, 'unset_source_added', 'owner')`, [s.bot])).rejects.toThrow(/kind_check/);   // пара kind↔actor проверяется раньше по имени — вид отдельно
     await expect(pool.query(`INSERT INTO bot_verification_event (bot_id, kind, actor) VALUES ($1, 'set', 'operator')`, [s.bot])).rejects.toThrow(/actor_check/);
     await expect(pool.query(`INSERT INTO bot_verification_event (bot_id, kind, actor) VALUES ($1, 'unset_owner', 'system')`, [s.bot])).rejects.toThrow(/actor_kind/);
     for (let i = 0; i < 4; i += 1) {
