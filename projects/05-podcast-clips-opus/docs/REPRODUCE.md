@@ -166,6 +166,21 @@ Redis 7 и MinIO. Тесты в интернет не ходят: поставщ
 Пропущенный тест — не зелёный: в тестовом профиле включён приёмочный режим, и любой пропуск валит
 прогон с названием причины.
 
+**Рантайм-образы без dev-зависимостей (с 28.09.2026).** `web` и `worker` берут `node_modules` из стадии
+`prod-deps` (`npm prune --omit=dev`), тестовая цель — из `build` со всеми dev-зависимостями. После сборки
+рантайм-образов:
+
+```bash
+docker compose --project-directory . --env-file .env build web worker-stt
+node scripts/check-image-dev-deps.mjs <проект>-web <проект>-worker-stt
+# 0 — dev-пакетов нет; 1 — найдены (названы); 2 — проверка НЕ выполнена (нет образа, нет node, пустой node_modules)
+```
+
+Скрипты оператора внутри образа `web` (миграции, `partner-code-unblock.mjs`, `acceptance-upload.mjs`) зависят только
+от prod-пакетов и встроенных модулей Node; прибор вёрстки идёт в отдельном образе Playwright. **`npm run db:migrate`
+внутри рантайм-образа не работает** (он сначала зовёт `tsc`) — миграции только как в шаге 5:
+`node packages/db/dist/migrate.js`.
+
 ---
 
 ## 5. Первый запуск стенда
