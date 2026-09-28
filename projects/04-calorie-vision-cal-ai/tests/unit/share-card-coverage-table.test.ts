@@ -56,13 +56,21 @@ function parseCoverageRows(doc: string): Row[] {
   const nextSection = after.search(/\n## /);
   const section = nextSection === -1 ? after : after.slice(0, nextSection);
 
+  // Таблица — непрерывный блок от строки заголовка до первой пустой строки. КАЖДАЯ строка блока
+  // разбирается: отступ перед `|` (Codex, круг 1) и отсутствие ведущего `|` (Codex, круг 2) —
+  // допустимая форма строки Markdown-таблицы, и ни то ни другое не выводит строку из проверки.
+  const lines = section.split('\n');
+  const headerIdx = lines.findIndex((l) => /^\s*\|?\s*Criterion\s*\|/.test(l));
+  if (headerIdx === -1) throw new Error('заголовок таблицы «Criterion» не найден — проверка НЕ выполнена');
+  const blockEnd = lines.findIndex((l, i) => i > headerIdx && l.trim() === '');
+  const block = lines.slice(headerIdx + 1, blockEnd === -1 ? undefined : blockEnd);
+
   const rows: Row[] = [];
   let lastCriterion = '';
-  for (const rawLine of section.split('\n')) {
-    // Отступ перед `|` не выводит строку из проверки: Markdown рисует её той же строкой таблицы
-    // (находка ревью Codex, круг 1: строка-продолжение с пробелом молча пропускалась).
-    const line = rawLine.trimStart();
-    if (!line.startsWith('|') || /^\|\s*-/.test(line) || line.startsWith('| Criterion')) continue;
+  for (const rawLine of block) {
+    const trimmed = rawLine.trimStart();
+    const line = trimmed.startsWith('|') ? trimmed : `| ${trimmed}`;
+    if (/^\|\s*:?-/.test(line)) continue; // разделитель заголовка
     const cells = line.split(' | ').map((c) => c.replace(/^\|\s*/, '').replace(/\s*\|$/, ''));
     if (cells.length < 4) throw new Error(`строка таблицы не разобрана: ${line}`);
     const criterion = cells[0]!.trim() || lastCriterion;
@@ -160,6 +168,19 @@ describe('RV-06: таблица покрытия 05_completion.md фактиче
     expect(doc.includes(real)).toBe(true);
     const mutated = doc.replace(real, ' | | + контракт чисел | `tests/unit/does-not-exist.test.ts` |');
     expect(coverageViolations(mutated)).toContain('AC-1: файла нет — tests/unit/does-not-exist.test.ts');
+  });
+
+  it('ИСПЫТАНИЕ 6 (обход ревью Codex, круг 2): строка таблицы БЕЗ ведущего `|` не выпадает из проверки', () => {
+    const doc = readFileSync(COMPLETION_FILE, 'utf8');
+    const anchor = '| AC-2 |';
+    expect(doc.includes(anchor)).toBe(true);
+    const mutated = doc.replace(
+      anchor,
+      'AC-1 | дополнительное покрытие | `tests/unit/does-not-exist.test.ts` | `несуществующий заголовок` |\n| AC-2 |',
+    );
+    const violations = coverageViolations(mutated);
+    expect(violations).toContain('AC-1: файла нет — tests/unit/does-not-exist.test.ts');
+    expect(violations).toContain('AC-1: заголовок не найден дословно — несуществующий заголовок');
   });
 
   it('ИСПЫТАНИЕ 3: пропавший раздел — отказ (исключение), а не «нарушений нет»', () => {
