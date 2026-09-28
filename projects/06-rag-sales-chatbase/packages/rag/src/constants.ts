@@ -13,6 +13,10 @@ export const PDF_MAX_BYTES = 10 * 1024 * 1024;       // по Content-Length И �
 export const PDF_MAX_PAGES = 100;                    // число страниц — из документа, ДО извлечения текста
 export const PDF_MIN_PAGE_TEXT_CHARS = 20;           // ExtractPdf п.2: меньше — страница без текстового слоя
 export const PDF_NO_TEXT_SHARE = 0.9;                // ≥ 90 % таких страниц → no_text_layer (скан)
+// Текстовый файл по адресу (text-source, A-N6-080): потолок тела — как у HTML-страницы краулера (2 МиБ, канон §7), по
+// заявленному Content-Length И по фактически принятым байтам; больше — отказ too_large. Раздел файла (# / ##) — «страница»
+// в пределе страниц тарифа (PAGES_BY_PLAN).
+export const TEXT_MAX_BYTES = 2 * 1024 * 1024;
 export const PDFS_BY_PLAN = Object.freeze({ free: 3, nobadge: 10, studio: 10 } as const);
 // Канон §7 «Планы»: ботов на аккаунт (ClaimPreview п.3 — проверка предела плана при сохранении черновика).
 export const BOTS_BY_PLAN = Object.freeze({ free: 1, nobadge: 1, studio: 10 } as const);

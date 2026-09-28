@@ -32,7 +32,8 @@ export interface CabinetDependencies {
   checkAddress: (url: string) => Promise<{ url: URL }>;
   // Владение проверяется ДО CheckAddress (чужому боту — 404 без DNS-запроса) и ещё раз в транзакции создания.
   ownsBot: (botId: string, accountId: string) => Promise<boolean>;
-  createSite: (input: { accountId: string; botId: string; rootUrl: string; idempotencyKey: string }) => Promise<CreateSiteSourceResult>;
+  // kind 'text' — текстовый файл по адресу (text-source, A-N6-080); без kind — сайт, как раньше.
+  createSite: (input: { accountId: string; botId: string; rootUrl: string; idempotencyKey: string; kind?: 'site' | 'text' }) => Promise<CreateSiteSourceResult>;
   findJob: (botId: string, idempotencyKey: string) => Promise<string | null>;
   reindex: (sourceId: string, accountId: string) => Promise<ReindexSourceResult>;
   deleteSource: (sourceId: string, accountId: string) => Promise<{ deleted: true; chunks: number } | null>;
@@ -171,8 +172,11 @@ export function createOriginAddHandler(deps: CabinetDependencies) {
 
 // POST /api/bots/{bot_id}/sources с JSON { url } — CreateSource для сайта (FR-SOURCE-001). PDF (multipart) —
 // source-upload-handler (pdf-source); маршрут выбирает обработчик по Content-Type.
+// text-source (FR-SOURCE-005, A-N6-080): JSON { url, kind: 'text' } — текстовый файл по адресу (llms.txt, .md); та же
+// граница адреса (CheckAddress в web ДО записи), тот же ключ повторности и предел запусков. kind — закрытый набор.
+const JSON_SOURCE_KINDS = ['site', 'text'] as const;
 export function createSiteSourceHandler(deps: CabinetDependencies) {
-  return (request: Request, botId: string) => run(logOf(deps), 'добавление сайта', async () => {
+  return (request: Request, botId: string) => run(logOf(deps), 'добавление источника по адресу', async () => {
     const entry = await guardMutation(request, deps, notFound);
     if (entry instanceof Response) return entry;
     if (!UUID.test(botId) || !await deps.ownsBot(botId, entry.accountId)) return notFound();
@@ -180,10 +184,15 @@ export function createSiteSourceHandler(deps: CabinetDependencies) {
     if (!UUID.test(idempotencyKey)) return fail(400, 'invalid', 'Заголовок Idempotency-Key обязан быть UUID');
     const existing = await deps.findJob(botId, idempotencyKey);
     if (existing) return json({ data: { index_job_id: existing } }, 202);
-    const input = await body(request, ['url']);
+    const input = await body(request, ['url', 'kind']);
     if (input instanceof Response) return input;
+    const kind = input.kind === undefined ? 'site' : (JSON_SOURCE_KINDS as readonly unknown[]).includes(input.kind) ? input.kind as typeof JSON_SOURCE_KINDS[number] : null;
+    if (!kind) return json({ error: { code: 'invalid', message: 'Вид источника — сайт или текстовый файл', field: 'kind' } }, 400);
     const siteUrl = normalizeSiteUrl(input.url);
-    if (!siteUrl) return json({ error: { code: 'invalid', message: 'Укажите адрес сайта, например example.ru', field: 'url' } }, 400);
+    if (!siteUrl) {
+      const message = kind === 'text' ? 'Укажите адрес файла, например example.ru/llms-full.txt' : 'Укажите адрес сайта, например example.ru';
+      return json({ error: { code: 'invalid', message, field: 'url' } }, 400);
+    }
     // SSRF: адрес внутренней сети — отказ ДО записи и ДО постановки (ADR-010; краулер проверит снова).
     let checked;
     try { checked = await deps.checkAddress(siteUrl); }
@@ -193,7 +202,8 @@ export function createSiteSourceHandler(deps: CabinetDependencies) {
         ? fail(422, 'blocked_address', 'Этот адрес ведёт во внутреннюю или служебную сеть — такие адреса мы не читаем')
         : fail(422, 'unreachable', 'Сайт с таким адресом не найден. Проверьте написание');
     }
-    const result = await deps.createSite({ accountId: entry.accountId, botId, rootUrl: checked.url.href, idempotencyKey });
+    if (kind === 'text') checked.url.hash = '';
+    const result = await deps.createSite({ accountId: entry.accountId, botId, rootUrl: checked.url.href, idempotencyKey, ...(kind === 'text' ? { kind } : {}) });
     if (result.kind === 'not_found') return notFound();
     if (result.kind === 'daily_limit') return indexStartsLimit(result.limit);
     if (result.kind === 'created') {

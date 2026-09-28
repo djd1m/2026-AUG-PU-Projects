@@ -156,7 +156,7 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
       onIndexable={(indexable) => { void publish({ enabled: page.enabled, indexable }); }} />}
     sourcesBlock={<><SourceList sources={p.sources} busy={busySource} confirming={confirming} errors={sourceErrors}
         onReindex={(id) => { void reindex(id); }} onConfirm={setConfirming} onDelete={(id) => { void removeSource(id); }} />
-      <AddSource url={url} busy={adding} errors={sourceErrors} onUrl={setUrl} onSite={() => { void addSite(); }} onPdf={(f) => { void addPdf(f); }} /></>}
+      <AddSource url={url} busy={adding} errors={sourceErrors} onUrl={setUrl} onSite={() => { void addSite(); }} onPdf={(f) => { void addPdf(f); }} botId={p.botId} /></>}
     chat={<OwnerChat companyName={p.companyName} messages={messages} draft={draft} busy={asking} error={chatError}
       ready={p.sources.some((s) => s.job?.state === 'done')} onDraft={setDraft} onAsk={() => { void ask(); }} />}
     settings={<>{saved && <p role="status" className="notice">Настройки сохранены</p>}

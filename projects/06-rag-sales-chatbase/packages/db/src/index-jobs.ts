@@ -27,7 +27,7 @@ export class StaleAttemptError extends Error {
 }
 
 export interface CreateSourceJobInput {
-  botId: string; kind: 'site' | 'pdf'; rootUrl?: string; fileName?: string; idempotencyKey: string;
+  botId: string; kind: 'site' | 'pdf' | 'text'; rootUrl?: string; fileName?: string; idempotencyKey: string;
   budget?: { pageBudget: number; embedBudget: number };
   // Идентификатор задачи, выбранный вызывающим ДО вставки (pdf-source: файл в томе пишется под этим
   // именем ДО коммита — «строка задачи есть ⇒ файл есть»). Не задан — выбирает БД.
@@ -42,7 +42,9 @@ export async function createSourceJobTx(tx: PoolClient, input: CreateSourceJobIn
   if (!isUuid(input.botId)) throw new Error('Непригодный bot_id');
   if (!isUuid(input.idempotencyKey)) throw new Error('Idempotency-Key обязан быть UUID');
   if (input.indexJobId !== undefined && !isUuid(input.indexJobId)) throw new Error('Непригодный index_job_id');
-  if ((input.kind === 'site') === !input.rootUrl || (input.kind === 'pdf') === !input.fileName) throw new Error('Источник: site требует url, pdf — имя файла');
+  // text (text-source, A-N6-080): адрес файла живёт в root_url, как корень сайта.
+  const byUrl = input.kind === 'site' || input.kind === 'text';
+  if (byUrl === !input.rootUrl || (input.kind === 'pdf') === !input.fileName) throw new Error('Источник: site и text требуют url, pdf — имя файла');
   const budget = input.budget;
   if (budget && ![budget.pageBudget, budget.embedBudget].every((n) => Number.isSafeInteger(n) && n > 0)) throw new Error('Непригодный бюджет задачи');
   await tx.query('SAVEPOINT create_source_job');

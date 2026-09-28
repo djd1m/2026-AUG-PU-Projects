@@ -74,7 +74,7 @@ export async function listBots(pool: Pool, accountId: string): Promise<AccountBo
 }
 
 export interface CabinetSource {
-  source_id: string; kind: 'site' | 'pdf'; title: string;
+  source_id: string; kind: 'site' | 'pdf' | 'text'; title: string;
   // Страниц, прочитанных не целиком по пределу CHUNKS_PER_PAGE_MAX (source-lifecycle); 0 — все целиком.
   pages_truncated: number;
   // Последняя задача источника; queued отличается от running только здесь (IndexJobView их не различает).
@@ -132,8 +132,8 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
     stub_visitors_7d: Number(bot.stub_visitors) || 0, month_answers_used: Number(bot.month_used),
     public_page: { slug: bot.public_slug, enabled: bot.public_enabled === true, indexable: bot.public_indexable === true },
     sources: sources.map((row) => ({
-      source_id: row.source_id, kind: row.kind === 'pdf' ? 'pdf' : 'site',
-      title: row.kind === 'pdf' ? (row.file_name ?? 'PDF') : (row.root_url ?? 'Сайт'),
+      source_id: row.source_id, kind: row.kind === 'pdf' ? 'pdf' : row.kind === 'text' ? 'text' : 'site',
+      title: row.kind === 'pdf' ? (row.file_name ?? 'PDF') : (row.root_url ?? (row.kind === 'text' ? 'Текстовый файл' : 'Сайт')),
       pages_truncated: Number(row.truncated) || 0,
       job: row.job_id ? { ...indexJobView(row, now), queued: row.status === 'queued' } : null,
     })),
@@ -195,7 +195,9 @@ export type CreateSiteSourceResult = { kind: 'created' | 'existing'; indexJobId:
 // CreateSource для сайта (Pseudocode п.1, 4): адрес уже прошёл CheckAddress в web; источник и задача — одной
 // транзакцией под блокировкой строки бота; повтор с тем же Idempotency-Key — та же задача. Предел страниц плана
 // применяет воркер при обходе (site-processor.ts, PAGES_BY_PLAN).
-export function createSiteSource(pool: Pool, input: { accountId: string; botId: string; rootUrl: string; idempotencyKey: string }): Promise<CreateSiteSourceResult> {
+// text-source (A-N6-080): тот же путь для текстового файла по адресу (kind: 'text') — адрес уже прошёл CheckAddress в web.
+export function createSiteSource(pool: Pool, input: { accountId: string; botId: string; rootUrl: string; idempotencyKey: string; kind?: 'site' | 'text' }): Promise<CreateSiteSourceResult> {
+  const kind = input.kind ?? 'site';
   if (!pair(input.botId, input.accountId)) return Promise.resolve({ kind: 'not_found' });
   return transaction(pool, async (tx) => {
     const bot = await tx.query(`SELECT b.id FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED} FOR UPDATE OF b`, [input.botId, input.accountId]);
@@ -204,8 +206,8 @@ export function createSiteSource(pool: Pool, input: { accountId: string; botId: 
     const existing = await tx.query<{ id: string }>('SELECT id FROM index_job WHERE bot_id = $1 AND idempotency_key = $2', [input.botId, input.idempotencyKey]);
     if (existing.rowCount) return { kind: 'existing', indexJobId: existing.rows[0]!.id } as const;
     // source-lifecycle: суточный предел запусков бота (под той же блокировкой строки бота).
-    if (!(await recordIndexStartTx(tx, input.botId, 'site'))) return { kind: 'daily_limit', limit: INDEX_STARTS_PER_BOT_DAY } as const;
-    const created = await createSourceJobTx(tx, { botId: input.botId, kind: 'site', rootUrl: input.rootUrl, idempotencyKey: input.idempotencyKey });
+    if (!(await recordIndexStartTx(tx, input.botId, kind))) return { kind: 'daily_limit', limit: INDEX_STARTS_PER_BOT_DAY } as const;
+    const created = await createSourceJobTx(tx, { botId: input.botId, kind, rootUrl: input.rootUrl, idempotencyKey: input.idempotencyKey });
     return { kind: created.created ? 'created' : 'existing', indexJobId: created.indexJobId } as const;
   });
 }

@@ -31,10 +31,11 @@ export const pagesWord = (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 'ст�
   : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'страницы' : 'страниц');
 
 // Причины, случающиеся ДО первого фрагмента (чтение источника), и ПОСЛЕ (эмбеддинги). Неизвестная — по прогрессу.
-const READ_REASONS = new Set(['robots_disallowed', 'unreachable', 'blocked_address', 'no_text', 'not_pdf', 'too_large', 'no_text_layer']);
+const READ_REASONS = new Set(['robots_disallowed', 'unreachable', 'blocked_address', 'no_text', 'not_pdf', 'too_large', 'no_text_layer', 'not_text']);
 const INDEX_REASONS = new Set(['quota_refused', 'embedding_unavailable']);
 
-export function ribbonOf(job: RibbonJob | null, kind: 'site' | 'pdf'): Ribbon {
+// text (text-source, A-N6-080): «страница» текстового файла — раздел (# или ##).
+export function ribbonOf(job: RibbonJob | null, kind: 'site' | 'pdf' | 'text'): Ribbon {
   // Источник без задачи — непоследовательное состояние: не «идёт», а «нет ответа».
   if (!job) return { tone: 'silent', steps: SOURCE_STAGES.map((s, i) => ({ ...s, view: i === 0 ? 'silent' : 'pending', detail: null })) };
   const success = job.state === 'done', failure = job.state === 'failed';
@@ -45,7 +46,7 @@ export function ribbonOf(job: RibbonJob | null, kind: 'site' | 'pdf'): Ribbon {
     : job.queued ? 'queue' : progressed;
   const currentIndex = current === null ? SOURCE_STAGES.length : SOURCE_STAGES.findIndex((s) => s.key === current);
   const currentView: StepView = tone === 'failure' ? 'failed' : tone === 'silent' ? 'silent' : 'running';
-  const pages = kind === 'pdf' ? 'стр. PDF' : 'страниц';
+  const pages = kind === 'pdf' ? 'стр. PDF' : kind === 'text' ? 'разделов файла' : 'страниц';
   // Пока задача жива и страниц прочитано меньше известного итога, «Чтение» не «сделано», даже если фрагменты уже идут.
   const readingOn = !success && !failure && current === 'index' && !(job.pages_total !== null && job.pages_done >= job.pages_total);
   return { tone, steps: SOURCE_STAGES.map((stage, index) => {

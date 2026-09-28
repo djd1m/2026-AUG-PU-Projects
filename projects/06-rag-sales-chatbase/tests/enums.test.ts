@@ -11,12 +11,23 @@ function checkValues(column: string): string[] {
   return [...match[1]!.matchAll(/'([^']+)'/g)].map((m) => m[1]!);
 }
 const cases: Array<[string, readonly string[]]> = [
-  ['plan', enums.ACCOUNT_PLAN], ['kind', enums.SOURCE_KIND],
+  ['plan', enums.ACCOUNT_PLAN],
   ['scope', enums.QUOTA_SCOPE], ['type', enums.GROWTH_EVENT_TYPE], ['source', enums.ATTRIBUTION_SOURCE],
-  ['failure_reason', enums.INDEX_JOB_FAILURE_REASON],
 ];
+// text-source (A-N6-080, миграция 015): значения, ДОПИСАННЫЕ к текущему ARRAY[…] ограничения DO-блоком с перечнем
+// (таблица, ограничение, значение). Итоговый CHECK настоящей БД сверяет tests/text-source.integration.test.ts.
+function appendedBy015(constraint: string): string[] {
+  const all = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort().map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
+  return [...all.matchAll(new RegExp(`\\('\\w+', '${constraint}', '([a-z_]+)'\\)`, 'g'))].map((m) => m[1]!);
+}
 describe('CHECK миграции = перечисления канона §4', () => {
   it.each(cases)('%s', (column, values) => { expect(checkValues(column)).toEqual([...values]); });
+  it('source.kind и index_job.failure_reason: CHECK 001 + дописанные миграцией 015 = канон', () => {
+    expect(appendedBy015('source_kind_check')).toEqual(['text']);
+    expect(appendedBy015('index_job_failure_reason_check')).toEqual(['not_text']);
+    expect([...checkValues('kind'), ...appendedBy015('source_kind_check')].sort()).toEqual([...enums.SOURCE_KIND].sort());
+    expect([...checkValues('failure_reason'), ...appendedBy015('index_job_failure_reason_check')].sort()).toEqual([...enums.INDEX_JOB_FAILURE_REASON].sort());
+  });
   // small-talk (A-N6-074): исход расширяется ДОБАВЛЯЮЩИМИ миграциями (013 дописывает 'small_talk' к текущему набору, не
   // перечисляя его). Здесь — 001 + добавленные значения; итоговый CHECK настоящей БД сверяет tests/small-talk.integration.test.ts.
   it('outcome: CHECK 001 + значения добавляющих миграций = QUESTION_OUTCOME', () => {
