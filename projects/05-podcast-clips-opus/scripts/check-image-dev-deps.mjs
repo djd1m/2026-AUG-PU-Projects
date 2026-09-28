@@ -6,13 +6,14 @@
 //
 //   node scripts/check-image-dev-deps.mjs <образ> [<образ> ...]
 //
-// Обход — ВСЕ каталоги node_modules под /app (корень, workspace, вложенные), а не только корневые пути lockfile
-// (ревью Codex, круг 1: dev-пакет в apps/web/node_modules иначе не виден). Пакет считается dev, если lockfile помечает
-// dev ИМЕННО этот путь, либо пути в lockfile нет, а имя встречается в lockfile только как dev.
+// Обход — всё дерево /app (корень, workspace, вложенные, скрытые `.next`, каталоги внутри пакетов), а не только
+// корневые пути lockfile (ревью Codex, круги 1–2). Пакет — dev, если lockfile помечает dev ИМЕННО этот путь, либо
+// пути в lockfile нет, а пара имя@версия встречается в lockfile только как dev. Пакет вне lockfile — неполнота (код 2).
 //
 // Коды возврата (guard-must-be-able-to-fail): 0 — каждый образ проверен, dev-пакетов нет, все prod-пакеты на месте;
 // 1 — в образе НАЙДЕН dev-пакет или НЕ ХВАТАЕТ prod-пакета (названы образ и пути); 2 — проверка НЕ ВЫПОЛНЕНА: нет
-// аргументов, нет docker, образа или node в нём, в lockfile нет dev-записей, в /app нет ни одного пакета.
+// аргументов, нет docker, образа или node в нём, в lockfile нет dev-записей, в /app нет пакетов, ошибка чтения дерева,
+// пакет, которого нет в lockfile ни по пути, ни по имени@версии. Доказанный дефект (1) важнее неполноты (2).
 import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
@@ -29,37 +30,48 @@ const entries = Object.entries(lock.packages ?? {}).filter(([path]) => /(^|\/)no
 const nameOf = path => path.slice(path.lastIndexOf('node_modules/') + 'node_modules/'.length);
 // `devOptional` (нужен и dev, и опционально prod) не считается dev: npm prune --omit=dev вправе его оставить.
 const devPaths = new Set(entries.filter(([, meta]) => meta.dev === true).map(([path]) => path));
-const nonDevNames = new Set(entries.filter(([, meta]) => meta.dev !== true).map(([path]) => nameOf(path)));
-const devOnlyNames = new Set([...devPaths].map(nameOf).filter(name => !nonDevNames.has(name)));
 // Обязательные prod-пакеты: не dev, не optional (платформенные сборки ставятся не все), не ссылки workspace.
 const prod = entries.filter(([, meta]) => !meta.dev && !meta.devOptional && !meta.optional && !meta.link).map(([path]) => path);
 if (devPaths.size === 0) notRun('в package-lock.json нет ни одной записи dev: true — сверять не с чем');
 if (prod.length === 0) notRun('в package-lock.json нет prod-записей для положительного контроля');
 
-// Внутри образа — только node и fs: печатает JSON со ВСЕМИ путями пакетов под /app/**/node_modules.
-const probe = `const fs=require('fs'),p=require('path');const out=[];
-function pkgs(dir,rel){let names;try{names=fs.readdirSync(dir)}catch{return}
-for(const n of names){if(n.startsWith('.'))continue;const full=p.join(dir,n);
-if(n.startsWith('@')){for(const s of (()=>{try{return fs.readdirSync(full)}catch{return[]}})())visit(p.join(full,s),rel+'/'+n+'/'+s);}
-else visit(full,rel+'/'+n);}}
-function visit(full,rel){let st;try{st=fs.lstatSync(full)}catch{return}out.push(rel.replace(/^\\//,''));
-if(st.isDirectory()&&!st.isSymbolicLink())pkgs(p.join(full,'node_modules'),rel+'/node_modules');}
-function walk(dir,rel){let names;try{names=fs.readdirSync(dir,{withFileTypes:true})}catch{return}
-for(const d of names){if(!d.isDirectory()||d.isSymbolicLink())continue;
-if(d.name==='node_modules')pkgs(p.join(dir,d.name),rel+'/node_modules');
-else if(!d.name.startsWith('.'))walk(p.join(dir,d.name),rel+'/'+d.name);}}
-walk('/app','');process.stdout.write(JSON.stringify(out));`;
+// Внутри образа — только node и fs. Обходит ВСЁ дерево /app, включая скрытые каталоги (`.next`) и каталоги внутри
+// пакетов (`next/vendor/node_modules`) — ревью Codex, круг 2. Каждый элемент каталога с именем node_modules — пакет:
+// путь, имя и версия из его package.json. Любая ошибка чтения, кроме «такого пути нет», — в errors (→ код 2).
+const probe = `const fs=require('fs'),p=require('path');const pkgs=[],errors=[];
+const soft=e=>e&&(e.code==='ENOENT'||e.code==='ENOTDIR');
+function ls(dir){try{return fs.readdirSync(dir,{withFileTypes:true})}catch(e){if(!soft(e))errors.push(dir+': '+e.code);return[]}}
+function meta(dir){try{const j=JSON.parse(fs.readFileSync(p.join(dir,'package.json'),'utf8'));return{name:j.name,version:j.version}}
+catch(e){if(!soft(e))errors.push(dir+'/package.json: '+(e.code||e.message));return{}}}
+function add(full,rel,d){pkgs.push({path:rel,link:d.isSymbolicLink(),...(d.isSymbolicLink()?{}:meta(full))});}
+function walk(dir,rel){for(const d of ls(dir)){if(d.isSymbolicLink()||!d.isDirectory())continue;
+const full=p.join(dir,d.name),r=rel?rel+'/'+d.name:d.name;
+if(d.name==='node_modules'){for(const e of ls(full)){if(e.name.startsWith('.'))continue;const f=p.join(full,e.name),er=r+'/'+e.name;
+if(e.name.startsWith('@')&&e.isDirectory()&&!e.isSymbolicLink()){for(const s of ls(f))add(p.join(f,s.name),er+'/'+s.name,s)}else add(f,er,e)}}
+walk(full,r);}}
+walk('/app','');process.stdout.write(JSON.stringify({pkgs,errors}));`;
 let failed = false;
 for (const image of images) {
   const run = spawnSync('docker', ['run', '--rm', '--network', 'none', '--entrypoint', 'node', image, '-e', probe],
     { encoding: 'utf8', timeout: 180_000, maxBuffer: 64 * 1024 * 1024 });
   if (run.error) notRun(`docker не запустился для ${image}: ${run.error.message}`);
   if (run.status !== 0) notRun(`образ ${image} не проверен (код ${run.status}): ${run.stderr.trim().slice(0, 400)}`);
-  let found;
-  try { found = JSON.parse(run.stdout); } catch { notRun(`образ ${image}: ответ пробы не разобран: ${run.stdout.slice(0, 200)}`); }
+  let result;
+  try { result = JSON.parse(run.stdout); } catch { notRun(`образ ${image}: ответ пробы не разобран: ${run.stdout.slice(0, 200)}`); }
+  const found = result?.pkgs;
   if (!Array.isArray(found) || found.length === 0) notRun(`образ ${image}: под /app нет ни одного пакета node_modules`);
-  const present = new Set(found);
-  const dev = found.filter(path => devPaths.has(path) || (!(path in lock.packages) && devOnlyNames.has(nameOf(path))));
+  const present = new Set(found.map(pkg => pkg.path));
+  const dev = [], unknown = [];
+  for (const pkg of found) {
+    if (pkg.link) continue;                       // ссылка workspace: цель обходится как обычный каталог
+    const known = lock.packages[pkg.path];
+    if (known) { if (known.dev === true) dev.push(pkg.path); continue; }
+    // Пути нет в lockfile: сверяем ИМЯ И ВЕРСИЮ (одно имя бывает и dev, и prod разных версий — postcss).
+    const same = entries.filter(([path, meta]) => nameOf(path) === pkg.name && meta.version === pkg.version);
+    if (same.some(([, meta]) => meta.dev !== true)) continue;
+    if (same.length > 0) dev.push(`${pkg.path} (${pkg.name}@${pkg.version})`);
+    else unknown.push(`${pkg.path} (${pkg.name ?? '?'}@${pkg.version ?? '?'})`);
+  }
   const missing = prod.filter(path => !present.has(path));
   if (dev.length > 0) {
     failed = true;
@@ -68,6 +80,11 @@ for (const image of images) {
   if (missing.length > 0) {
     failed = true;
     console.error(`❌ ${image}: нет ${missing.length} prod-пакетов из ${prod.length}, напр. ${missing.slice(0, 8).join(', ')}`);
+  }
+  if (!failed && (result.errors.length > 0 || unknown.length > 0)) {
+    // Доказанный дефект важнее неполноты (1 бьёт 2), но неполнота не бывает «чисто».
+    notRun(`образ ${image}: обход неполон — ошибок чтения ${result.errors.length} (${result.errors.slice(0, 3).join('; ')}), `
+      + `пакетов вне lockfile ${unknown.length} (${unknown.slice(0, 5).join(', ')})`);
   }
   if (dev.length === 0 && missing.length === 0) {
     console.log(`✅ ${image}: пакетов под /app ${found.length}; dev-пакетов 0 (по ${devPaths.size} записям dev: true); prod-пакетов на месте ${prod.length} из ${prod.length}`);
