@@ -54,7 +54,8 @@ function guestIp(req: IncomingMessage): string {
  *  у guest и intake нет). Одинаковость стережёт таблица в seam-guest-ip.test.ts. */
 export function canonIp(a: string | undefined): string | undefined {
   if (!a) return undefined;
-  const s = a.trim().replace(/^\[|\]$/g, '');
+  // Скобки снимаются только ПАРОЙ: `[192.0.2.1` и `192.0.2.1]` — не адрес.
+  const s = a.trim().replace(/^\[(.*)\]$/, '$1');
   const kind = isIP(s);
   if (kind === 4) return s;
   if (kind !== 6) return undefined;

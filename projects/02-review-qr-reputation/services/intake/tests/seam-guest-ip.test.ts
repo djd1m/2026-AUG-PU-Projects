@@ -158,6 +158,7 @@ describe('pickClientIp: чистая функция, по одному изме�
       ['::ffff:c000:201', '192.0.2.1'],
       [' 192.0.2.1 ', '192.0.2.1'],
       ['192.0.2.1', '192.0.2.1'],
+      ['[192.0.2.1', undefined], ['192.0.2.1]', undefined],
       ['1.2.3', undefined], ['мусор', undefined], ['', undefined], ['fe80::1%eth0', undefined],
     ];
     for (const [input, want] of table) {
