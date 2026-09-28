@@ -161,41 +161,64 @@ describe.skipIf(!databaseUrl)('gate-onboarding на настоящем Postgres 
       .rejects.toThrow(/bot_verified_reset_reason_check/);
   });
 
-  // Ревью круга 1: гонка триггера снятия и действия владельца на ОДНОЙ строке бота — двумя соединениями, порядок задан
-  // блокировкой строки. Итог в обоих порядках: побеждает последний, «проверено» и «снята» вместе не бывают (CHECK).
+  // Ревью кругов 1–2: гонка триггера снятия и действия владельца на ОДНОЙ строке бота — двумя соединениями. Второй
+  // запрос ОБЯЗАН быть замечен ждущим на блокировке держателя (pg_blocking_pids), а не «не успел за 300 мс»: иначе тест
+  // прошёл бы последовательно. Итог в обоих порядках: побеждает последний, «проверено» и «снята» вместе не бывают.
   it('AC-8/9 конкурентно: вставка фрагмента и отметка владельца сериализуются строкой бота; оба порядка дают согласованный итог', async () => {
-    const pending = <T,>(promise: Promise<T>) => { let done = false; void promise.finally(() => { done = true; }); return () => done; };
     const state = async (bot: string) => (await pool.query('SELECT answers_verified_at IS NOT NULL AS v, answers_verified_reset_at IS NOT NULL AS r, answers_verified_reset_reason AS why FROM bot WHERE id = $1', [bot])).rows[0];
-    // Порядок 1: индексация (фрагмент) держит строку бота → владелец ставит отметку ПОСЛЕ неё.
+    // Ждать, пока кто-то встанет в очередь за блокировкой соединения holder; не дождались за 5 с — провал, а не «прошло».
+    const waitBlocked = async (holderPid: number) => {
+      for (let i = 0; i < 100; i += 1) {
+        const n = Number((await pool.query('SELECT count(*)::int AS n FROM pg_stat_activity WHERE $1 = ANY(pg_blocking_pids(pid))', [holderPid])).rows[0].n);
+        if (n > 0) return;
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      throw new Error('второй запрос так и не встал в ожидание блокировки — конкурентность НЕ проверена');
+    };
+    const hold = async <T,>(first: string, params: unknown[], second: () => Promise<T>): Promise<T> => {
+      const c = await pool.connect();
+      let open = false;
+      try {
+        await c.query('BEGIN'); open = true;
+        await c.query(first, params);
+        const pid = Number((await c.query('SELECT pg_backend_pid() AS pid')).rows[0].pid);
+        const waiting = second();
+        waiting.catch(() => {});
+        await waitBlocked(pid);
+        await c.query('COMMIT'); open = false;
+        return await waiting;
+      } finally {
+        if (open) await c.query('ROLLBACK').catch(() => {});
+        c.release();
+      }
+    };
+    // Порядок 1: индексация (фрагмент) держит строку бота → отметка владельца ждёт её и ставится ПОСЛЕ.
     const s = await seed(true);
-    const a = await pool.connect();
-    try {
-      await a.query('BEGIN');
-      await a.query(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding)
-        VALUES ($1, $2, $3, 5, 'Акции', 'Новое.', 2, $4::vector)`, [s.bot, s.source, s.page, `[${vectorFor('новое').join(',')}]`]);
-      const verify = setAnswersVerified(pool, s.bot, s.account, true);
-      const done = pending(verify);
-      await new Promise((r) => setTimeout(r, 300));
-      expect(done()).toBe(false);                       // ждёт строку бота
-      await a.query('COMMIT');
-      expect(await verify).toEqual({ answers_verified: true });
-    } finally { a.release(); }
+    expect(await hold(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding)
+      VALUES ($1, $2, $3, 5, 'Акции', 'Новое.', 2, $4::vector)`, [s.bot, s.source, s.page, `[${vectorFor('новое').join(',')}]`],
+    () => setAnswersVerified(pool, s.bot, s.account, true))).toEqual({ answers_verified: true });
     expect(await state(s.bot)).toEqual({ v: true, r: false, why: null });
-    // Порядок 2: отметка владельца держит строку → фрагмент приходит ПОСЛЕ и снимает её с пометкой.
-    const b = await pool.connect();
-    try {
-      await b.query('BEGIN');
-      await b.query(`UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL WHERE id = $1`, [s.bot]);
-      const insert = addChunk(s, 6);
-      const done = pending(insert);
-      await new Promise((r) => setTimeout(r, 300));
-      expect(done()).toBe(false);                       // триггер ждёт строку бота
-      await b.query('COMMIT');
-      await insert;
-    } finally { b.release(); }
+    // Порядок 2: отметка (SQL прежнего приложения — только answers_verified_at) держит строку → фрагмент ждёт и снимает её.
+    await hold('UPDATE bot SET answers_verified_at = CASE WHEN true THEN now() ELSE NULL END WHERE id = $1', [s.bot], () => addChunk(s, 6));
     expect(await state(s.bot)).toEqual({ v: false, r: true, why: 'new_material' });
-    // Инвариант держит база: «проверено» вместе с пометкой снятия записать нельзя.
-    await expect(pool.query(`UPDATE bot SET answers_verified_at = now() WHERE id = $1`, [s.bot])).rejects.toThrow(/bot_verified_or_reset/);
+  });
+
+  it('ревью круга 2: схема 011 + SQL ПРЕЖНЕГО приложения — отметка после снятия ставится и стирает пометку; «проверено» + «снята» в базе невозможны', async () => {
+    const s = await seed(true);
+    await addChunk(s, 1);
+    expect((await readBotCabinet(pool, s.bot, s.account))!.verified_reset).not.toBeNull();
+    // Ровно запрос setAnswersVerified из bf7ab6d0 (до этой фичи): колонок пометки он не знает.
+    await pool.query(`UPDATE bot SET answers_verified_at = CASE WHEN $2::boolean THEN now() ELSE NULL END WHERE id = $1`, [s.bot, true]);
+    const row = (await pool.query('SELECT answers_verified_at IS NOT NULL AS v, answers_verified_reset_at, answers_verified_reset_reason FROM bot WHERE id = $1', [s.bot])).rows[0];
+    expect([row.v, row.answers_verified_reset_at, row.answers_verified_reset_reason]).toEqual([true, null, null]);
+    // Даже явная попытка записать оба состояния сразу даёт «проверено» без пометки (BEFORE-триггер), а CHECK — вторая линия.
+    await pool.query(`UPDATE bot SET answers_verified_at = now(), answers_verified_reset_at = now(), answers_verified_reset_reason = 'new_material' WHERE id = $1`, [s.bot]);
+    expect((await readBotCabinet(pool, s.bot, s.account))!.verified_reset).toBeNull();
+    await pool.query('ALTER TABLE bot DISABLE TRIGGER bot_verified_clears_reset');
+    try {
+      await expect(pool.query(`UPDATE bot SET answers_verified_reset_at = now(), answers_verified_reset_reason = 'new_material' WHERE id = $1`, [s.bot]))
+        .rejects.toThrow(/bot_verified_or_reset/);
+    } finally { await pool.query('ALTER TABLE bot ENABLE TRIGGER bot_verified_clears_reset'); }
   });
 
   it('AC-4: тестовый чат владельца отвечает и без отметки «проверено» (он и есть способ проверить); в журнал не пишется', async () => {

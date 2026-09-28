@@ -41,6 +41,9 @@ const mutations = [
     edits: [{ file: ask, apply: once("      if (!parseVisitorRequest({ question: body.question, history: [] }).ok) return fail(422, 'invalid_question', 'Вопрос пустой или длиннее 500 символов', origin);\n", '') }] },
   { id: 'verified-or-reset-dropped', title: 'база допускает «проверено» вместе с пометкой «снята» (гонка триггера и владельца)',
     edits: [{ file: m011, apply: once('ALTER TABLE bot ADD CONSTRAINT bot_verified_or_reset CHECK (answers_verified_at IS NULL OR answers_verified_reset_at IS NULL);\n', '') }] },
+  // Ревью круга 2: без BEFORE-триггера отметка ПРЕЖНЕГО приложения после снятия упирается в CHECK — бот закрыт при откате.
+  { id: 'old-app-blocked', title: 'нет BEFORE-триггера: SQL прежнего setAnswersVerified после снятия отметки нарушает CHECK (совместимость отката)',
+    edits: [{ file: m011, apply: once('CREATE TRIGGER bot_verified_clears_reset BEFORE INSERT OR UPDATE ON bot FOR EACH ROW EXECUTE FUNCTION bot_verified_clears_reset();\n', '') }] },
   { id: 'reset-not-cleared', title: 'действие владельца с отметкой не стирает пометку о снятии — баннер показывает старую дату (AC-9)',
     edits: [{ file: bots, apply: once(',\n        answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL\n', '\n') }] },
 ];
