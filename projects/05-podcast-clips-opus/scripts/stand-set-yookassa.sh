@@ -86,8 +86,12 @@ rollback() {
     sleep 5
   done
   [[ "$back_state" == healthy ]] || unconfirmed "web после отката не здоров (состояние: ${back_state:-нет})"
-  [[ "$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$back_id" | grep -c '^N5_PAYMENTS_MODE=live$')" -eq 0 ]] \
-    || unconfirmed "в web после отката всё ещё N5_PAYMENTS_MODE=live"
+  # Чтение окружения — отдельным шагом с проверкой кода: пустой вывод упавшего inspect не должен читаться как «не live»
+  # (ревью фичи 30, круг 3, находка 1).
+  local back_env
+  back_env="$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$back_id" 2>/dev/null)" && [[ -n "$back_env" ]] \
+    || unconfirmed "окружение web после отката не прочитано — режим оплаты неизвестен"
+  if grep -qx 'N5_PAYMENTS_MODE=live' <<<"$back_env"; then unconfirmed "в web после отката всё ещё N5_PAYMENTS_MODE=live"; fi
   echo "Env возвращён из копии; web пересоздан, здоров, оплата в нём не live — откат подтверждён." >&2
   exit 1
 }
@@ -102,9 +106,10 @@ for _ in $(seq 1 24); do
   sleep 5
 done
 [[ "$state" == healthy ]] || rollback "web не поднялся (состояние: ${state:-нет}). Последние строки журнала:" "$NEW_ID"
-# Новая конфигурация действительно применена: режим внутри НОВОГО контейнера — live.
-[[ "$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NEW_ID" | grep -c '^N5_PAYMENTS_MODE=live$')" -eq 1 ]] \
-  || rollback "в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена" "$NEW_ID"
+# Новая конфигурация действительно применена: режим внутри НОВОГО контейнера — live (окружение прочитано успешно).
+NEW_ENV="$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NEW_ID" 2>/dev/null)" && [[ -n "$NEW_ENV" ]] \
+  || rollback "окружение нового web не прочитано — применение конфигурации не подтверждено" "$NEW_ID"
+grep -qx 'N5_PAYMENTS_MODE=live' <<<"$NEW_ENV" || rollback "в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена" "$NEW_ID"
 echo "Готово: web здоров, оплата включена."
 echo "В кабинете ЮKassa укажите адрес уведомлений: ${ORIGIN}/api/webhooks/yookassa"
 echo "События: payment.succeeded и refund.succeeded."

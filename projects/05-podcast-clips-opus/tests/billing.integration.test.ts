@@ -69,6 +69,17 @@ describe.skipIf(!databaseUrl)('оплата ЮKassa на настоящем Post
   const count = async (sql: string, params: unknown[] = []) => Number((await pool.query<{ n: number }>(sql, params)).rows[0]!.n);
   const key = () => randomBytes(12).toString('base64url');
   const days = (b: { plan_paid_until: Date | null; now: Date }) => Math.round((b.plan_paid_until!.getTime() - b.now.getTime()) / DAY);
+  // Дождаться, пока доставка ДЕЙСТВИТЕЛЬНО встанет в очередь за блокировкой (а не «через 400 мс»): тогда чередование
+  // гонки задано, а не угадано. Не дождались за 10 с — тест падает, а не проходит мимо.
+  async function waitForLockWaiter() {
+    for (let i = 0; i < 200; i++) {
+      const n = Number((await pool.query<{ n: number }>(`SELECT count(*)::int AS n FROM pg_stat_activity
+        WHERE datname = current_database() AND wait_event_type = 'Lock' AND pid <> pg_backend_pid()`)).rows[0]!.n);
+      if (n > 0) return;
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    throw new Error('доставка так и не встала за блокировкой — чередование гонки не достигнуто');
+  }
   // Оформить и «оплатить» у подменной ЮKassa: id платежа у провайдера и id намерения.
   async function paid(a: { token: string }, w = wire()) {
     const r = await w.checkout(a.token, { idempotency_key: key() });
@@ -249,7 +260,7 @@ describe.skipIf(!databaseUrl)('оплата ЮKassa на настоящем Post
       await holder.query(`INSERT INTO payment (intent_id, account_id, provider, provider_payment_id, amount_minor, status, needs_review, review_reason, paid_at)
         VALUES ($1, $2, 'yookassa', $3, 99000, 'refunded', true, 'refund', now())`, [intent, a.id, paymentId]);
       pay = w.notify(yk.notification(paymentId));
-      await new Promise(resolve => setTimeout(resolve, 400));
+      await waitForLockWaiter();
       await holder.query('COMMIT');
     } catch (error) { await holder.query('ROLLBACK'); throw error; } finally { holder.release(); }
     expect((await pay!).body.data).toEqual({ applied: false, reason: 'refunded' });
@@ -294,7 +305,7 @@ describe.skipIf(!databaseUrl)('оплата ЮKassa на настоящем Post
         await holder.query('BEGIN');
         await holder.query(`SELECT id FROM account WHERE id = $1 AND status = 'erasing' FOR UPDATE`, [accountId]);
         pending = delivery();
-        await new Promise(resolve => setTimeout(resolve, 400));
+        await waitForLockWaiter();
         await holder.query('UPDATE payment SET account_id = NULL, intent_id = NULL WHERE account_id = $1', [accountId]);
         await holder.query('DELETE FROM payment_intent WHERE account_id = $1', [accountId]);
         await holder.query(`UPDATE account SET status = 'deleted' WHERE id = $1`, [accountId]);

@@ -1,0 +1,56 @@
+ Container n5-test-pay-db-1 Running 
+ Container n5-test-pay-minio-1 Running 
+ Container n5-test-pay-redis-1 Running 
+ Container n5-test-pay-redis-1 Waiting 
+ Container n5-test-pay-minio-1 Waiting 
+ Container n5-test-pay-db-1 Waiting 
+ Container n5-test-pay-minio-1 Healthy 
+ Container n5-test-pay-db-1 Healthy 
+ Container n5-test-pay-redis-1 Healthy 
+ Container n5-test-pay-test-run-03beeba88c15 Creating 
+ Container n5-test-pay-test-run-03beeba88c15 Created 
+{"id":"no-requery","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"no-requery","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"key-before-auth","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"key-before-auth","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"unavailable-as-value","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"unavailable-as-value","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"no-advisory-lock","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"no-advisory-lock","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"now-plus-30","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"now-plus-30","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"fake-in-production","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"fake-in-production","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"compose-colon-off","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"compose-colon-off","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"no-poll-deadline","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"no-poll-deadline","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"fourth-plan-writer","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"fourth-plan-writer","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"no-origin-check","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"no-origin-check","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"plan-ignores-expiry","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"plan-ignores-expiry","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"retention-from-finish","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"retention-from-finish","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"paid-cta-link-text","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"paid-cta-link-text","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"paid-minutes-ignored","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"paid-minutes-ignored","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"paid-above-global","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"paid-above-global","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"operator-keeps-remainder","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"operator-keeps-remainder","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"erasing-gets-plan","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"erasing-gets-plan","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"amount-mismatch-grants","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"amount-mismatch-grants","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"guest-download-all-offer","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"guest-download-all-offer","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"quota-plan-lock","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"quota-plan-lock","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"intent-before-account","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"intent-before-account","phase":"green","exit":0,"passed":1,"failed":0}
+{"id":"return-next-lost","phase":"red","exit":1,"passed":0,"failed":1}
+{"id":"return-next-lost","phase":"green","exit":0,"passed":1,"failed":0}
+{"summary":["no-requery:killed","key-before-auth:killed","unavailable-as-value:killed","no-advisory-lock:killed","now-plus-30:killed","fake-in-production:killed","compose-colon-off:killed","no-poll-deadline:killed","fourth-plan-writer:killed","no-origin-check:killed","plan-ignores-expiry:killed","retention-from-finish:killed","paid-cta-link-text:killed","paid-minutes-ignored:killed","paid-above-global:killed","operator-keeps-remainder:killed","erasing-gets-plan:killed","amount-mismatch-grants:killed","guest-download-all-offer:killed","quota-plan-lock:killed","intent-before-account:killed","return-next-lost:killed"]}

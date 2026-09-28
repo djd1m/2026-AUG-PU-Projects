@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Подменный docker для проверки ветки перезапуска и отката stand-set-yookassa.sh (стенд не трогается).
-# SHIM_MODE: same-id | up-fails | not-live | ok | rollback-up-fails | rollback-still-live
+# SHIM_MODE: same-id | up-fails | not-live | ok | rollback-up-fails | rollback-still-live | rollback-env-unreadable | enable-env-unreadable
 # ups — число УСПЕШНЫХ пересозданий (id контейнера = id-<ups>), tries — число всех вызовов up.
 D=/tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/shim
 n=$(cat "$D/ups" 2>/dev/null || echo 0)
@@ -20,6 +20,8 @@ case "$args" in
     case "$SHIM_MODE:$id" in
       ok:id-1) echo N5_PAYMENTS_MODE=live ;;
       rollback-still-live:id-2) echo N5_PAYMENTS_MODE=live ;;
+      rollback-env-unreadable:id-2) exit 1 ;;
+      enable-env-unreadable:id-1) exit 1 ;;
       *) echo N5_PAYMENTS_MODE=off ;;
     esac ;;
   logs*) echo "журнал подменного web" ;;
