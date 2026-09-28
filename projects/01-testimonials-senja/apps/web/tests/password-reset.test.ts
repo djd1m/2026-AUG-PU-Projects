@@ -28,7 +28,7 @@ const {
   issueResetToken, resetPassword, hashResetToken,
   RESET_PAIR_SCOPE, RESET_IP_SCOPE, RESET_PAIR_THRESHOLD, RESET_WINDOW, RESET_TTL_MS,
 } = await import('../src/lib/password-reset');
-const { resetEmail, mailConfigured } = await import('../src/lib/email');
+const { resetEmail, mailConfigured, EmailProviderError } = await import('../src/lib/email');
 const { handleForgot } = await import('../src/app/api/auth/forgot/route');
 const { POST: resetRoute } = await import('../src/app/api/auth/reset/route');
 
@@ -208,18 +208,23 @@ describe('AC-015.9 — в БД лежит ХЕШ, а не токен', () => {
 
 describe('AC-015.10 / AC-015.16 — ответ один, письмо по делу', () => {
   const URL_ = 'https://proofwall.test/api/auth/forgot';
+  // Письмо уходит ПОСЛЕ ответа (правка 28.09): отложенные задачи копятся здесь, и тест
+  // дожидается их явно — иначе «писем ноль» проверялось бы до того, как письмо успело уйти.
+  const pending: Promise<unknown>[] = [];
+  const settle = () => Promise.allSettled(pending.splice(0));
   const post = (email: string, sender: (m: { to: string }) => Promise<void>) =>
     handleForgot(new Request(URL_, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-forwarded-for': `14.0.${seq % 250}.${(seq += 1) % 250}` },
       body: JSON.stringify({ email }),
-    }), sender);
+    }), sender, (task) => { pending.push(task()); });
 
   it('несуществующий адрес: 200, тот же текст, писем НОЛЬ', async () => {
     const o = await makeOwner();
     const sent: { to: string }[] = [];
     const okRes = await post(o.email, async (m) => { sent.push(m); });
     const noRes = await post(`нет-такого-${RUN}@example.com`, async (m) => { sent.push(m); });
+    await settle();
 
     expect(okRes.status).toBe(200);
     expect(noRes.status).toBe(200);
@@ -234,10 +239,140 @@ describe('AC-015.10 / AC-015.16 — ответ один, письмо по де�
     const o = await makeOwner();
     const res = await post(o.email, async () => { throw new Error('провайдер недоступен'); });
     expect(res.status, 'отказ почты изменил ответ').toBe(200);
+    await settle();
     // Падает при R9: пробрасывать ошибку наружу.
     const rows = await tokenRows(o.accountId);
     expect(rows.length, 'токен откатился при отказе почты').toBe(1);
     expect(rows[0]!.used_at, 'токен погашен при отказе почты').toBeNull();
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+describe('NFR-015.3 [правка 28.09] — время ответа не выдаёт, есть ли адрес', () => {
+  // Находка 28.09: письмо ждалось ВНУТРИ ответа (fetch к провайдеру до 8 с) только когда
+  // токен выпущен, то есть только для существующего адреса. Тело и код ответа совпадали,
+  // а секундомер отличал «адрес есть» от «адреса нет». Провайдер здесь медленный НАРОЧНО:
+  // в жизни его время нам не принадлежит, и достаточно одной медленной секунды у Resend.
+  const SLOW_MS = 1_500;
+  const URL_ = 'https://proofwall.test/api/auth/forgot';
+  const request = (email: string) => new Request(URL_, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': `15.0.${seq % 250}.${(seq += 1) % 250}` },
+    body: JSON.stringify({ email }),
+  });
+  /** Отложенные задачи копятся здесь; тест дожидается их явно, как это делал бы after().
+   *  defer НАРОЧНО возвращает промис задачи (after() возвращает void): мутация «await defer(…)»
+   *  тогда ждёт отправку и краснеет, а не проходит молча на undefined (ревью Codex, круг 1). */
+  const background = () => {
+    const tasks: Promise<unknown>[] = [];
+    return {
+      defer: ((task: () => Promise<void>) => { const p = task(); tasks.push(p); return p; }) as
+        (task: () => Promise<void>) => void,
+      settle: () => Promise.allSettled(tasks),
+    };
+  };
+  /** Время до ОТВЕТА, а не до конца работы. Потолок — чтобы висящий провайдер не вешал набор. */
+  const timed = async (p: Promise<Response>, capMs: number) => {
+    const t0 = performance.now();
+    const res = await Promise.race([p, new Promise<null>((r) => setTimeout(() => r(null), capMs))]);
+    return { res, ms: performance.now() - t0 };
+  };
+
+  it('ПОРЯДОК: ответ получен, пока отправка ещё заблокирована', async () => {
+    // Главный страж — не секундомер, а порядок событий: он не зависит от скорости CI.
+    const o = await makeOwner();
+    const bg = background();
+    let release!: () => void;
+    const gate = new Promise<void>((r) => { release = r; });
+    const events: string[] = [];
+    const gated = async () => { events.push('send-start'); await gate; events.push('send-done'); };
+    const res = await timed(handleForgot(request(o.email), gated, bg.defer), 5_000);
+    events.push('response');
+    expect(res.res, 'ответ ждал заблокированную отправку').not.toBeNull();
+    expect(res.res!.status).toBe(200);
+    expect(events, 'отправка завершилась раньше ответа').toEqual(['send-start', 'response']);
+    release();
+    await bg.settle();
+    expect(events).toEqual(['send-start', 'response', 'send-done']);
+  });
+
+  it('медленный провайдер: ответ существующему адресу не дольше, чем несуществующему', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    const sent: string[] = [];
+    const slow = async (m: { to: string }) => {
+      await new Promise((r) => setTimeout(r, SLOW_MS));
+      sent.push(m.to);
+    };
+    const real = await timed(handleForgot(request(o.email), slow, bg.defer), SLOW_MS * 3);
+    const fake = await timed(
+      handleForgot(request(`нет-такого-${RUN}-t@example.com`), slow, bg.defer), SLOW_MS * 3);
+
+    expect(real.res?.status).toBe(200);
+    expect(fake.res?.status).toBe(200);
+    // Падает при мутации «вернуть await отправки в ответ»: real.ms ≈ SLOW_MS.
+    // Порог — половина задержки провайдера: секундомер здесь доказательство самого дефекта,
+    // а не главный страж (тот — тест ПОРЯДКА выше). На перегруженном CI он МОЖЕТ покраснеть
+    // без регрессии — тогда верить тесту порядка и перезапустить, а не поднимать порог.
+    expect(real.ms, `существующий ${real.ms.toFixed(0)} мс, несуществующий ${fake.ms.toFixed(0)} мс`)
+      .toBeLessThan(SLOW_MS / 2);
+    expect(Math.abs(real.ms - fake.ms)).toBeLessThan(SLOW_MS / 2);
+
+    // Письмо при этом НЕ потеряно — оно ушло после ответа.
+    await bg.settle();
+    expect(sent).toEqual([o.email]);
+  });
+
+  it('провайдер, который НЕ отвечает никогда: ответ всё равно приходит', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    const never = () => new Promise<void>(() => {});
+    const { res, ms } = await timed(handleForgot(request(o.email), never, bg.defer), 2_000);
+    expect(res, `ответа нет за ${ms.toFixed(0)} мс — ответ ждёт провайдера`).not.toBeNull();
+    expect(res!.status).toBe(200);
+  });
+
+  it('отказ провайдера: одна повторная попытка в фоне, исход в журнале без адреса и токена', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    let calls = 0;
+    // Текст исключения НАРОЧНО несёт адрес и ссылку: журнал обязан писать категорию, а не
+    // err.message — сообщение чужого отправителя однажды их и понесёт (ревью Codex, круг 1).
+    const flaky = async (m: { to: string; text: string }) => {
+      calls += 1;
+      if (calls === 1) throw new Error(`отказ для ${m.to}: ${m.text}`);
+    };
+    const logs: unknown[][] = [];
+    const orig = { error: console.error, info: console.info };
+    console.error = (...a: unknown[]) => { logs.push(a); };
+    console.info = (...a: unknown[]) => { logs.push(a); };
+    try {
+      const res = await handleForgot(request(o.email), flaky, bg.defer);
+      expect(res.status).toBe(200);
+      await bg.settle();
+    } finally {
+      console.error = orig.error;
+      console.info = orig.info;
+    }
+    expect(calls, 'повтор не выполнен').toBe(2);
+    const text = JSON.stringify(logs);
+    expect(text).toContain('reset_email_sent');
+    expect(text).not.toContain(o.email);
+    expect(text).not.toMatch(/token=|reset#|\/reset\//);
+  });
+
+  it('отказ «не пройдёт никогда» (4xx кроме 429) не повторяется', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    let calls = 0;
+    const rejecting = async () => { calls += 1; throw new EmailProviderError(422); };
+    const orig = console.error;
+    console.error = () => {};
+    try {
+      await handleForgot(request(o.email), rejecting, bg.defer);
+      await bg.settle();
+    } finally { console.error = orig; }
+    expect(calls, '422 повторён — повтор не отличает постоянный отказ').toBe(1);
   });
 });
 
@@ -333,15 +468,20 @@ describe('AC-015.15 — отправка письма ВНЕ транзакци�
     }
   });
 
-  it('СТРАЖ: в маршруте отправка стоит ПОСЛЕ withService', () => {
+  it('СТРАЖ: в маршруте отправка стоит ПОСЛЕ withService и только внутри defer', () => {
     const code = read('app/api/auth/forgot/route.ts');
     const tx = code.indexOf('await withService(');
-    const send = code.indexOf('await sendEmail(');
+    const send = code.indexOf('sendWithRetry(sendEmail');
     expect(tx).toBeGreaterThan(-1);
     expect(send).toBeGreaterThan(-1);
     // Падает при R8: занести отправку внутрь транзакции.
     expect(tx, 'письмо отправляется внутри транзакции — соединение пула ждёт чужой сервис')
       .toBeLessThan(send);
+    // Правка 28.09: отправка — внутри отложенной задачи, а не в теле ответа. Поведение
+    // закрывает тест «медленный провайдер»; этот страж называет место.
+    expect(code, 'отправка вне defer — ответ снова ждёт провайдера').toMatch(
+      /defer\(async \(\) => \{ await sendWithRetry\(sendEmail,/);
+    expect(code).not.toMatch(/await sendEmail\(/);
   });
 });
 
