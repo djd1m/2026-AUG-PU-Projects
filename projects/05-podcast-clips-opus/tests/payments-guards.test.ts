@@ -74,6 +74,12 @@ describe('порядок операций вебхука (security-operation-ord
     }
     expect(db).toMatch(/GREATEST\(COALESCE\(plan_paid_until, now\(\)\), now\(\)\) \+ make_interval\(days => \$2\)/);
   });
+  it('списание минут читает план БЕЗ блокировки строки аккаунта (ревью, круг 1, находка 2: probe держит video, удаление — account → video)', () => {
+    const quota = readFileSync('packages/db/src/quota.ts', 'utf8');
+    const read = quota.slice(quota.indexOf("scope === 'user_minutes' && (await tx.query"), quota.indexOf('const args = [scope'));
+    expect(read).toContain('effectivePlanSql');
+    expect(read).not.toMatch(/FOR\s+(SHARE|UPDATE|NO\s+KEY|KEY)/i);
+  });
   it('недоступность ЮKassa — исключение, а не возвращаемое значение (урок N1)', () => {
     const code = readFileSync('apps/web/src/server/payments/yookassa.ts', 'utf8');
     expect(code).toMatch(/if \(!response\.ok\) throw new PaymentProviderUnavailable/);
@@ -105,6 +111,10 @@ describe('гостевая страница при включённой опла
     const on = await page(true), off = await page();
     expect(on).toContain('href="/upgrade?from=guest_page"'); expect(on).not.toContain('pro-interest');
     expect(on).toContain("getElementById('download-all')");
+    // Ревью, круг 1, находка 1: массовое скачивание берёт только ссылки клипов, а не ссылку тарифа с тем же классом.
+    expect(on).toContain("querySelectorAll('.clips a[download]')");
+    expect(on).not.toContain("querySelectorAll('a.download')");
+    expect(on.match(/<a class="download" href="\/upgrade/g)).toHaveLength(1);
     expect(off).toContain('id="pro-interest"'); expect(off).not.toContain('/upgrade');
   });
 });

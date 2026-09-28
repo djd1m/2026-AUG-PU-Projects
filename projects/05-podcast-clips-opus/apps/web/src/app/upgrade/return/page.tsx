@@ -13,9 +13,11 @@ const INTENT_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 export default async function UpgradeReturnPage({ searchParams }: { searchParams: Promise<{ intent?: string }> }) {
   const { auth, payments } = getRuntime();
   if (!payments) notFound();
-  const intent = (await searchParams).intent;
+  const raw = (await searchParams).intent;
+  const intent = typeof raw === 'string' && INTENT_ID.test(raw) ? raw.toLowerCase() : null;
   const token = (await cookies()).get('__Host-n5_session')?.value;
-  if (!token || !await auth.authenticate(token)) redirect('/#auth');
+  // Без сессии — на вход С ВОЗВРАТОМ сюда же: иначе оплативший человек теряет экран подтверждения своего платежа.
+  if (!token || !await auth.authenticate(token)) redirect(intent ? `/?next=${encodeURIComponent(`/upgrade/return?intent=${intent}`)}#auth` : '/#auth');
   return <><nav className="navigation"><Link className="brand" href="/dashboard"><span>◧</span> КлипМейкер</Link><Link href="/dashboard">Мои записи</Link><ThemeToggle initial={await requestTheme()} /></nav>
-    <main className="container"><ReturnScreen intentId={typeof intent === 'string' && INTENT_ID.test(intent) ? intent : 'unknown'} /></main></>;
+    <main className="container"><ReturnScreen intentId={intent ?? 'unknown'} /></main></>;
 }

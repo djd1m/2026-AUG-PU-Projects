@@ -40,6 +40,10 @@ const cases = [
   ['operator-keeps-remainder', 'packages/db/src/ops-set-plan.ts', "plan_paid_until = CASE WHEN $2 = 'free' THEN NULL ELSE plan_paid_until END", 'plan_paid_until = plan_paid_until', paid, 'AC-13 оператор'],
   ['erasing-gets-plan', db, "    if (owner?.status !== 'active') {", '    if (false) {', billing, 'AC-9 оплата'],
   ['amount-mismatch-grants', db, '    if (payment.amountMinor !== intent.price_minor) {', '    if (false) {', billing, 'AC-8 сумма'],
+  // Ревью, круг 1: находки 1–3
+  ['guest-download-all-offer', 'apps/web/src/server/guest-page.ts', "querySelectorAll('.clips a[download]')", "querySelectorAll('a.download')", guards, 'гостевая страница при включённой'],
+  ['quota-plan-lock', 'packages/db/src/quota.ts', 'AS plan FROM account a WHERE a.id::text = $1`', 'AS plan FROM account a WHERE a.id::text = $1 FOR SHARE`', guards, 'списание минут читает план'],
+  ['return-next-lost', 'apps/web/src/lib/payment-return.ts', '|\\/return\\?intent=', '|\\/nowhere\\?intent=', unit, 'next — только'],
 ];
 const selected = process.argv.slice(2), results = [];
 if (selected.some(id => !cases.some(c => c[0] === id))) throw new Error('Неизвестная мутация');

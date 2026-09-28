@@ -65,23 +65,30 @@ echo "Записано: N5_PAYMENTS_MODE=live, YOOKASSA_SHOP_ID=$SHOP_ID, YOOKAS
 [[ $RESTART -eq 1 ]] || { echo "Перезапуск пропущен (--no-restart)."; exit 0; }
 
 COMPOSE=(docker compose --project-directory . --env-file "$ENV_FILE")
-WEB="${N5_COMPOSE_PROJECT:-n5-clipmaker}-web-1"
-echo "Перезапуск web…"
-"${COMPOSE[@]}" up -d --no-deps --force-recreate web >/dev/null 2>&1
-state=""
-for _ in $(seq 1 24); do
-  state="$(docker inspect -f '{{.State.Health.Status}}' "$WEB" 2>/dev/null)"
-  [[ "$state" == healthy ]] && break
-  sleep 5
-done
-if [[ "$state" != healthy ]]; then
-  echo "web не поднялся (состояние: ${state:-нет}). Последние строки журнала:" >&2
-  docker logs --tail 15 "$WEB" 2>&1 | grep -v -i 'secret' >&2
+# Контейнер web берётся у ТОГО ЖЕ compose-проекта (не по имени): здоровье старого контейнера — не доказательство.
+OLD_ID="$("${COMPOSE[@]}" ps -q web 2>/dev/null)"
+rollback() {
+  echo "$1" >&2
+  [[ -n "${2:-}" ]] && docker logs --tail 15 "$2" 2>&1 | grep -v -i 'secret' >&2
   cat "$BACKUP" > "$ENV_FILE"
   "${COMPOSE[@]}" up -d --no-deps --force-recreate web >/dev/null 2>&1
   echo "Env возвращён из копии, web перезапущен с прежними настройками (оплата выключена)." >&2
   exit 1
-fi
+}
+echo "Перезапуск web…"
+"${COMPOSE[@]}" up -d --no-deps --force-recreate web >/dev/null 2>&1 || rollback "docker compose up не выполнился (код $?) — web не пересоздан"
+NEW_ID="$("${COMPOSE[@]}" ps -q web 2>/dev/null)"
+[[ -n "$NEW_ID" && "$NEW_ID" != "$OLD_ID" ]] || rollback "web не пересоздан: контейнер тот же или отсутствует"
+state=""
+for _ in $(seq 1 24); do
+  state="$(docker inspect -f '{{.State.Health.Status}}' "$NEW_ID" 2>/dev/null)"
+  [[ "$state" == healthy ]] && break
+  sleep 5
+done
+[[ "$state" == healthy ]] || rollback "web не поднялся (состояние: ${state:-нет}). Последние строки журнала:" "$NEW_ID"
+# Новая конфигурация действительно применена: режим внутри НОВОГО контейнера — live.
+[[ "$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NEW_ID" | grep -c '^N5_PAYMENTS_MODE=live$')" -eq 1 ]] \
+  || rollback "в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена" "$NEW_ID"
 echo "Готово: web здоров, оплата включена."
 echo "В кабинете ЮKassa укажите адрес уведомлений: ${ORIGIN}/api/webhooks/yookassa"
 echo "События: payment.succeeded и refund.succeeded."

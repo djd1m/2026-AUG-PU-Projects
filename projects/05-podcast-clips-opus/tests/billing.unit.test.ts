@@ -137,6 +137,12 @@ describe('экран возврата: шесть различимых сост�
 describe('адрес после входа, команда оператора, сеть ЮKassa', () => {
   it('next — только /upgrade?from=<закрытый набор>', () => {
     for (const from of ['clip_card', 'partner_dashboard', 'guest_page']) expect(safeNextPath(`/upgrade?from=${from}`)).toBe(`/upgrade?from=${from}`);
+    // Ревью, круг 1, находка 3: экран возврата с формы оплаты переживает вход.
+    const back = '/upgrade/return?intent=0f8fad5b-d9cb-469f-a165-70867728950e';
+    expect(safeNextPath(back)).toBe(back);
+    for (const bad of [`${back}&x=1`, '/upgrade/return?intent=unknown', '/upgrade/return?intent=0f8fad5b-d9cb-469f-a165-70867728950e#x', '/upgrade/return']) {
+      expect(safeNextPath(bad), bad).toBeNull();
+    }
     for (const bad of ['https://evil.example/upgrade?from=clip_card', '//evil.example', '/upgrade?from=pricing', '/upgrade?from=clip_card&x=1', '/dashboard', '', null, ['/upgrade?from=clip_card']]) {
       expect(safeNextPath(bad), JSON.stringify(bad)).toBeNull();
     }

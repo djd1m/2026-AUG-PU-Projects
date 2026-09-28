@@ -228,6 +228,11 @@ describe.skipIf(!databaseUrl)('оплата ЮKassa на настоящем Post
     const r2 = yk.refund(p2.paymentId);
     await Promise.all([...Array.from({ length: 10 }, () => w.notify(yk.notification(p2.paymentId))), ...Array.from({ length: 10 }, () => w.notify(yk.refundNotification(r2)))]);
     expect((await pool.query('SELECT status, needs_review FROM payment WHERE provider_payment_id = $1', [p2.paymentId])).rows).toEqual([{ status: 'refunded', needs_review: true }]);
+    // Итоговый тариф зависит от того, кто успел первым (контракт, «перестановочен»): paid — только если оплата применилась
+    // ДО возврата, и тогда платёж всё равно помечен на разбор; срок — ровно одна оплата, не две.
+    const b2 = await billing(b.id);
+    expect(['paid', 'free']).toContain(b2.plan);
+    if (b2.plan === 'paid') expect(days(b2)).toBe(30); else expect(b2.plan_paid_until).toBeNull();
     expect(await count(`SELECT count(*)::int AS n FROM payment_event WHERE provider_event_id IN ($1, $2)`, [`payment_succeeded:${p2.paymentId}`, `refund_succeeded:${r2}`])).toBe(2);
   });
 

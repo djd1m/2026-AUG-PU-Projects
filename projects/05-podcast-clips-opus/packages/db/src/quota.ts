@@ -31,10 +31,12 @@ export async function checkAndConsumeQuota(tx: PoolClient, limits: Limits, accou
   for (const scope of scopes[reason]) {
     const key = scope.startsWith('global_') ? 'all' : account;
     // OWN-019: у действующего тарифа paid свой потолок минут. План читается из БАЗЫ в этой же транзакции (как метка,
-    // ADR-004), строка аккаунта — FOR SHARE: одновременная оплата/истечение ждут конца списания, а не меняют план посреди
-    // него. Предел по-прежнему параметр окружения $5, не колонка (V2-R03).
+    // ADR-004) обычным чтением БЕЗ блокировки строки: вызывающий (acceptProbe) уже держит video, а удаление аккаунта
+    // блокирует account → video — FOR SHARE здесь дал бы взаимоблокировку (ревью фичи 30, круг 1, находка 2).
+    // Одновременная оплата даёт в худшем случае потолок free (строже); истечение — окно одной транзакции.
+    // Предел по-прежнему параметр окружения $5, не колонка (V2-R03).
     const limit = scope === 'user_minutes' && (await tx.query<{ plan: string }>(
-      `SELECT ${effectivePlanSql('a')} AS plan FROM account a WHERE a.id::text = $1 FOR SHARE`, [account])).rows[0]?.plan === 'paid'
+      `SELECT ${effectivePlanSql('a')} AS plan FROM account a WHERE a.id::text = $1`, [account])).rows[0]?.plan === 'paid'
       ? limits.N5_LIMIT_PAID_USER_MINUTES : limits[limitNames[scope]];
     const args = [scope, key, moscowDay(now), n, limit];
     await tx.query(`INSERT INTO quota_counter (scope, scope_key, day, used) VALUES ($1, $2, $3, 0)

@@ -38,8 +38,9 @@ export type UpgradeFrom = typeof UPGRADE_FROM[number];
 export const readUpgradeFrom = (value: unknown): UpgradeFrom | null =>
   typeof value === 'string' && (UPGRADE_FROM as readonly string[]).includes(value) ? value as UpgradeFrom : null;
 
-// Адрес возврата после входа: ТОЛЬКО оформление тарифа; любой другой next игнорируется (открытый редирект).
-const NEXT_ALLOWED = /^\/upgrade\?from=(clip_card|partner_dashboard|guest_page)$/;
+// Адрес возврата после входа: ТОЛЬКО оформление тарифа и экран возврата с формы оплаты (сессия могла истечь, пока
+// человек платил — ревью фичи 30, круг 1, находка 3); любой другой next игнорируется (открытый редирект).
+const NEXT_ALLOWED = /^\/upgrade(\?from=(clip_card|partner_dashboard|guest_page)|\/return\?intent=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
 export function safeNextPath(value: unknown): string | null {
   return typeof value === 'string' && NEXT_ALLOWED.test(value) ? value : null;
 }

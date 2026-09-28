@@ -322,5 +322,59 @@
       "failed": 0
     },
     "status": "killed"
+  },
+  {
+    "id": "guest-download-all-offer",
+    "red": {
+      "id": "guest-download-all-offer",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "guest-download-all-offer",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "quota-plan-lock",
+    "red": {
+      "id": "quota-plan-lock",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "quota-plan-lock",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "return-next-lost",
+    "red": {
+      "id": "return-next-lost",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "return-next-lost",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
   }
 ]

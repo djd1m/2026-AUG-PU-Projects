@@ -66,7 +66,7 @@ status.textContent='Спасибо, ваш интерес записан.';
 }catch(error){status.textContent=error.message;this.disabled=false;}});`}
 document.getElementById('download-all').addEventListener('click',async function(){
 this.disabled=true;const status=document.getElementById('download-status');let count=0;
-try{for(const link of document.querySelectorAll('a.download')){status.textContent='Скачиваем клип '+(count+1);
+try{for(const link of document.querySelectorAll('.clips a[download]')){status.textContent='Скачиваем клип '+(count+1);
 const response=await fetch(link.href,{cache:'no-store'});if(!response.ok)throw new Error('Файл недоступен');
 const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='clip-'+(++count)+'.mp4';
 document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
