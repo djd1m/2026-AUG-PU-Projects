@@ -43,6 +43,9 @@ const cases = [
   // Ревью, круг 1: находки 1–3
   ['guest-download-all-offer', 'apps/web/src/server/guest-page.ts', "querySelectorAll('.clips a[download]')", "querySelectorAll('a.download')", guards, 'гостевая страница при включённой'],
   ['quota-plan-lock', 'packages/db/src/quota.ts', 'AS plan FROM account a WHERE a.id::text = $1`', 'AS plan FROM account a WHERE a.id::text = $1 FOR SHARE`', guards, 'списание минут читает план'],
+  // Ревью, круг 2, находка 1: намерение раньше аккаунта — взаимоблокировка со стиранием
+  ['intent-before-account', db, "('SELECT account_id FROM payment_intent WHERE id = $1', [payment.orderId])).rows[0]\n      : undefined;\n    // Платёж без",
+    "('SELECT account_id FROM payment_intent WHERE id = $1 FOR UPDATE', [payment.orderId])).rows[0]\n      : undefined;\n    // Платёж без", billing, 'AC-9 гонка'],
   ['return-next-lost', 'apps/web/src/lib/payment-return.ts', '|\\/return\\?intent=', '|\\/nowhere\\?intent=', unit, 'next — только'],
 ];
 const selected = process.argv.slice(2), results = [];

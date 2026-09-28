@@ -360,6 +360,24 @@
     "status": "killed"
   },
   {
+    "id": "intent-before-account",
+    "red": {
+      "id": "intent-before-account",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "intent-before-account",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
     "id": "return-next-lost",
     "red": {
       "id": "return-next-lost",

@@ -283,6 +283,40 @@ describe.skipIf(!databaseUrl)('оплата ЮKassa на настоящем Post
       .toEqual({ review_reason: 'account_erasing', account_id: a.id });
   });
 
+  it('AC-9 гонка со стиранием аккаунта: оплата и возврат ждут аккаунт (порядок account → payment_intent), взаимоблокировки нет', async () => {
+    const w = wire();
+    // Как retention.eraseAccount: аккаунт FOR UPDATE → удаление намерений → статус deleted, одним коммитом.
+    async function eraseWhile(accountId: string, delivery: () => Promise<{ status: number; body: Json }>) {
+      await pool.query(`UPDATE account SET status = 'erasing', deletion_requested_at = now(), erase_deadline = now() + interval '72 hours' WHERE id = $1`, [accountId]);
+      const holder = await pool.connect();
+      let pending: Promise<{ status: number; body: Json }> | undefined;
+      try {
+        await holder.query('BEGIN');
+        await holder.query(`SELECT id FROM account WHERE id = $1 AND status = 'erasing' FOR UPDATE`, [accountId]);
+        pending = delivery();
+        await new Promise(resolve => setTimeout(resolve, 400));
+        await holder.query('UPDATE payment SET account_id = NULL, intent_id = NULL WHERE account_id = $1', [accountId]);
+        await holder.query('DELETE FROM payment_intent WHERE account_id = $1', [accountId]);
+        await holder.query(`UPDATE account SET status = 'deleted' WHERE id = $1`, [accountId]);
+        await holder.query('COMMIT');
+      } catch (error) { await holder.query('ROLLBACK'); throw error; } finally { holder.release(); }
+      return pending!;
+    }
+    const a = await account();
+    const pay = await paid(a, w);
+    const paidOut = await eraseWhile(a.id, () => w.notify(yk.notification(pay.paymentId)));
+    expect([paidOut.status, paidOut.body.data]).toEqual([200, { applied: false, reason: 'account_erasing' }]);
+    expect((await pool.query('SELECT review_reason, intent_id, account_id FROM payment WHERE provider_payment_id = $1', [pay.paymentId])).rows[0])
+      .toEqual({ review_reason: 'account_erasing', intent_id: null, account_id: null });
+    const b = await account();
+    const refunded = await paid(b, w);
+    const refundId = yk.refund(refunded.paymentId);
+    const refundOut = await eraseWhile(b.id, () => w.notify(yk.refundNotification(refundId)));
+    expect([refundOut.status, refundOut.body.data]).toEqual([200, { applied: false, reason: 'refund_recorded' }]);
+    expect((await pool.query('SELECT status, intent_id, account_id FROM payment WHERE provider_payment_id = $1', [refunded.paymentId])).rows[0])
+      .toEqual({ status: 'refunded', intent_id: null, account_id: null });
+  });
+
   it('отказ у провайдера: платёж отменён → опрос экрана возврата отвечает canceled; повтор оформления после суток — тот же платёж', async () => {
     const w = wire();
     const a = await account();

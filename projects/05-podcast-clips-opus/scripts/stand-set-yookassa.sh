@@ -12,7 +12,8 @@
 # с test_, боевой — с live_; несовпадение с режимом — отказ. Если в env нет N5_LIMIT_PAID_USER_MINUTES (потолок минут
 # тарифа paid, OWN-019), скрипт отказывается: без него стенд не поднимется вовсе (${…:?} в compose), и это решение
 # владельца, а не скрипта.
-# Коды: 0 — записано (и web здоров); 1 — ввод отклонён или web не поднялся (env возвращён из копии); 2 — не выполнено.
+# Коды: 0 — записано (и web здоров); 1 — ввод отклонён или web не поднялся, env возвращён из копии И откат подтверждён
+# (новый контейнер web здоров, режим оплаты в нём не live); 2 — не выполнено ЛИБО откат НЕ подтверждён (смотреть руками).
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 2
 
@@ -67,12 +68,27 @@ echo "Записано: N5_PAYMENTS_MODE=live, YOOKASSA_SHOP_ID=$SHOP_ID, YOOKAS
 COMPOSE=(docker compose --project-directory . --env-file "$ENV_FILE")
 # Контейнер web берётся у ТОГО ЖЕ compose-проекта (не по имени): здоровье старого контейнера — не доказательство.
 OLD_ID="$("${COMPOSE[@]}" ps -q web 2>/dev/null)"
+# Откат подтверждается так же строго, как включение (ревью фичи 30, круг 2, находка 2): env совпал с копией, compose up
+# выполнился, контейнер пересоздан, здоров и режим в нём не live. Иначе — «откат НЕ подтверждён», код 2, без заверений.
+unconfirmed() { echo "ОТКАТ НЕ ПОДТВЕРЖДЁН: $1. Проверьте руками: docker compose --project-directory . --env-file $ENV_FILE ps web; копия env — $BACKUP" >&2; exit 2; }
 rollback() {
   echo "$1" >&2
   [[ -n "${2:-}" ]] && docker logs --tail 15 "$2" 2>&1 | grep -v -i 'secret' >&2
-  cat "$BACKUP" > "$ENV_FILE"
-  "${COMPOSE[@]}" up -d --no-deps --force-recreate web >/dev/null 2>&1
-  echo "Env возвращён из копии, web перезапущен с прежними настройками (оплата выключена)." >&2
+  local failed_id back_id back_state=""
+  failed_id="$("${COMPOSE[@]}" ps -q web 2>/dev/null)"
+  cat "$BACKUP" > "$ENV_FILE" && cmp -s "$BACKUP" "$ENV_FILE" || unconfirmed "env не восстановлен из копии"
+  "${COMPOSE[@]}" up -d --no-deps --force-recreate web >/dev/null 2>&1 || unconfirmed "docker compose up при откате вернул ошибку"
+  back_id="$("${COMPOSE[@]}" ps -q web 2>/dev/null)"
+  [[ -n "$back_id" && "$back_id" != "$failed_id" ]] || unconfirmed "web при откате не пересоздан"
+  for _ in $(seq 1 24); do
+    back_state="$(docker inspect -f '{{.State.Health.Status}}' "$back_id" 2>/dev/null)"
+    [[ "$back_state" == healthy ]] && break
+    sleep 5
+  done
+  [[ "$back_state" == healthy ]] || unconfirmed "web после отката не здоров (состояние: ${back_state:-нет})"
+  [[ "$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$back_id" | grep -c '^N5_PAYMENTS_MODE=live$')" -eq 0 ]] \
+    || unconfirmed "в web после отката всё ещё N5_PAYMENTS_MODE=live"
+  echo "Env возвращён из копии; web пересоздан, здоров, оплата в нём не live — откат подтверждён." >&2
   exit 1
 }
 echo "Перезапуск web…"

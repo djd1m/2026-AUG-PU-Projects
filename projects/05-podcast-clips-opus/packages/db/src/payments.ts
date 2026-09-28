@@ -85,23 +85,29 @@ export function applyVerifiedPayment(pool: Pool, input: PaymentEvent): Promise<A
       [input.provider, payment.id])).rows[0];
     if (prior?.status === 'refunded') return { applied: false, reason: 'refunded' } as const;
     const paidAt = payment.paidAt ?? new Date().toISOString();
-    const intent = isUuid(payment.orderId)
-      ? (await tx.query<{ account_id: string; price_minor: number }>(`SELECT account_id, price_minor FROM payment_intent
-          WHERE id = $1 FOR UPDATE`, [payment.orderId])).rows[0]
-      : undefined;
-    const record = (accountId: string | null, review: string | null) => tx.query(`INSERT INTO payment
+    const record = (intentId: string | null, accountId: string | null, review: string | null) => tx.query(`INSERT INTO payment
         (intent_id, account_id, provider, provider_payment_id, amount_minor, fee_minor, needs_review, review_reason, paid_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (provider, provider_payment_id) DO NOTHING`,
-    [intent ? payment.orderId : null, accountId, input.provider, payment.id, payment.amountMinor, payment.feeMinor, review !== null, review, paidAt]);
+    [intentId, accountId, input.provider, payment.id, payment.amountMinor, payment.feeMinor, review !== null, review, paidAt]);
+    // ПОРЯДОК БЛОКИРОВОК account → payment_intent — тот же, что у стирания аккаунта (retention.eraseAccount: account FOR
+    // UPDATE → DELETE payment_intent) и у запроса удаления. Обратный порядок давал взаимоблокировку (ревью фичи 30, круг 2,
+    // находка 1). Владелец намерения читается без блокировки, затем блокируется аккаунт, затем намерение перечитывается.
+    const owned = isUuid(payment.orderId)
+      ? (await tx.query<{ account_id: string }>('SELECT account_id FROM payment_intent WHERE id = $1', [payment.orderId])).rows[0]
+      : undefined;
     // Платёж без нашего намерения: деньги реальны — записываются на разбор, план не выдаётся никому.
-    if (!intent) { await record(null, 'unknown_intent'); return { applied: false, reason: 'unknown_intent' } as const; }
+    if (!owned) { await record(null, null, 'unknown_intent'); return { applied: false, reason: 'unknown_intent' } as const; }
+    const owner = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1 FOR NO KEY UPDATE', [owned.account_id])).rows[0];
+    const intent = (await tx.query<{ account_id: string; price_minor: number }>(`SELECT account_id, price_minor FROM payment_intent
+      WHERE id = $1 FOR UPDATE`, [payment.orderId])).rows[0];
+    // Намерение исчезло, пока ждали аккаунт: его стёрло удаление аккаунта — деньги на разбор, план не выдаётся.
+    if (!intent) { await record(null, null, 'account_erasing'); return { applied: false, reason: 'account_erasing' } as const; }
     // Сумма ≠ цене намерения: платёж принят, план НЕ выдан — разбирает оператор (OWN-019 п.3).
-    if (payment.amountMinor !== intent.price_minor) { await record(intent.account_id, 'amount_mismatch'); return { applied: false, reason: 'amount_mismatch' } as const; }
+    if (payment.amountMinor !== intent.price_minor) { await record(payment.orderId, intent.account_id, 'amount_mismatch'); return { applied: false, reason: 'amount_mismatch' } as const; }
     // Аккаунт уже стирается (FR-AUTH-003, AC-9): деньги реальны — платёж записан на разбор, план НЕ выдаётся. Статус
-    // читается под блокировкой строки аккаунта — запрос удаления (UPDATE account … erasing) и оплата сериализуются.
-    const owner = (await tx.query<{ status: string }>('SELECT status FROM account WHERE id = $1 FOR NO KEY UPDATE', [intent.account_id])).rows[0];
-    if (owner?.status !== 'active') { await record(intent.account_id, 'account_erasing'); return { applied: false, reason: 'account_erasing' } as const; }
-    await record(intent.account_id, null);
+    // прочитан под блокировкой строки аккаунта — запрос удаления (UPDATE account … erasing) и оплата сериализуются.
+    if (owner?.status !== 'active') { await record(payment.orderId, intent.account_id, 'account_erasing'); return { applied: false, reason: 'account_erasing' } as const; }
+    await record(payment.orderId, intent.account_id, null);
     // «Успех» на экране возврата — только когда план ВЫДАН (несовпадение суммы оставляет намерение created).
     await tx.query(`UPDATE payment_intent SET status = 'succeeded' WHERE id = $1`, [payment.orderId]);
     const paidUntil = await grantPaidPlan(tx, intent.account_id);
@@ -128,8 +134,14 @@ export function recordVerifiedRefund(pool: Pool, input: PaymentEvent): Promise<A
   return transaction(pool, async (tx) => {
     if (!await claimEvent(tx, input.provider, input.eventKey, input.payloadSha256)) return { applied: false, reason: 'duplicate' } as const;
     await lockPayment(tx, input.provider, payment.id);
-    const intent = isUuid(payment.orderId)
+    const owned = isUuid(payment.orderId)
       ? (await tx.query<{ account_id: string }>('SELECT account_id FROM payment_intent WHERE id = $1', [payment.orderId])).rows[0]
+      : undefined;
+    // Тот же порядок account → payment_intent, что у оплаты и стирания (ревью, круг 2, находка 1): иначе FK-проверка
+    // вставки платежа держит намерение и ждёт аккаунт, а стирание — наоборот. Намерение перечитывается после блокировки.
+    if (owned) await tx.query('SELECT 1 FROM account WHERE id = $1 FOR NO KEY UPDATE', [owned.account_id]);
+    const intent = owned
+      ? (await tx.query<{ account_id: string }>('SELECT account_id FROM payment_intent WHERE id = $1 FOR KEY SHARE', [payment.orderId])).rows[0]
       : undefined;
     await tx.query(`INSERT INTO payment (intent_id, account_id, provider, provider_payment_id, amount_minor, fee_minor, status, needs_review, review_reason, paid_at)
       VALUES ($1, $2, $3, $4, $5, $6, 'refunded', true, 'refund', $7)
