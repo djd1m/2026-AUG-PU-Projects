@@ -39,6 +39,10 @@ services:
       context: .                        # корень монорепо: package-lock.json только здесь
       dockerfile: apps/web/Dockerfile
     restart: unless-stopped
+    # FR-015 (правка 28.09): письмо восстановления уходит ПОСЛЕ ответа (after() из Next) —
+    # до двух попыток по 8 с с паузой 2 с, то есть до ~18 с. Стандартные 10 с до SIGKILL
+    # обрывали бы его при каждом деплое; 30 с дают Next дождаться отложенных задач.
+    stop_grace_period: 30s
     networks:
       - default
       - talk-ai-public

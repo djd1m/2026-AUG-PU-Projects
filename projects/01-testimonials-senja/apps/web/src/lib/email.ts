@@ -88,6 +88,16 @@ export class EmailProviderError extends Error {
   }
 }
 
+/** Причина отказа для журнала — КАТЕГОРИЯ из закрытого набора, не err.message: текст
+ *  исключения чужого отправителя однажды понесёт адрес или ссылку, а журнал переживает всё. */
+function failureCategory(err: unknown): string {
+  if (err instanceof EmailProviderError) return `provider_${err.status}`;
+  if (err instanceof Error && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
+    return 'timeout';
+  }
+  return 'network_or_unknown';
+}
+
 /** Повторять имеет смысл только то, что может пройти позже. Сеть и таймаут — да. */
 function retryable(err: unknown): boolean {
   if (!(err instanceof EmailProviderError)) return true;
@@ -152,7 +162,7 @@ export async function sendWithRetry(
       console.info(`${label}_sent`, { attempt });
       return true;
     } catch (err) {
-      const reason = err instanceof Error ? err.message : 'unknown';
+      const reason = failureCategory(err);
       if (attempt === EMAIL_ATTEMPTS || !retryable(err)) {
         console.error(`${label}_failed`, { attempt, reason });
         return false;

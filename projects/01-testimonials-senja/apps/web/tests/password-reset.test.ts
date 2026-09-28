@@ -260,11 +260,14 @@ describe('NFR-015.3 [правка 28.09] — время ответа не выд
     headers: { 'content-type': 'application/json', 'x-forwarded-for': `15.0.${seq % 250}.${(seq += 1) % 250}` },
     body: JSON.stringify({ email }),
   });
-  /** Отложенные задачи копятся здесь; тест дожидается их явно, как это делал бы after(). */
+  /** Отложенные задачи копятся здесь; тест дожидается их явно, как это делал бы after().
+   *  defer НАРОЧНО возвращает промис задачи (after() возвращает void): мутация «await defer(…)»
+   *  тогда ждёт отправку и краснеет, а не проходит молча на undefined (ревью Codex, круг 1). */
   const background = () => {
     const tasks: Promise<unknown>[] = [];
     return {
-      defer: (task: () => Promise<void>) => { tasks.push(task()); },
+      defer: ((task: () => Promise<void>) => { const p = task(); tasks.push(p); return p; }) as
+        (task: () => Promise<void>) => void,
       settle: () => Promise.allSettled(tasks),
     };
   };
@@ -274,6 +277,24 @@ describe('NFR-015.3 [правка 28.09] — время ответа не выд
     const res = await Promise.race([p, new Promise<null>((r) => setTimeout(() => r(null), capMs))]);
     return { res, ms: performance.now() - t0 };
   };
+
+  it('ПОРЯДОК: ответ получен, пока отправка ещё заблокирована', async () => {
+    // Главный страж — не секундомер, а порядок событий: он не зависит от скорости CI.
+    const o = await makeOwner();
+    const bg = background();
+    let release!: () => void;
+    const gate = new Promise<void>((r) => { release = r; });
+    const events: string[] = [];
+    const gated = async () => { events.push('send-start'); await gate; events.push('send-done'); };
+    const res = await timed(handleForgot(request(o.email), gated, bg.defer), 5_000);
+    events.push('response');
+    expect(res.res, 'ответ ждал заблокированную отправку').not.toBeNull();
+    expect(res.res!.status).toBe(200);
+    expect(events, 'отправка завершилась раньше ответа').toEqual(['send-start', 'response']);
+    release();
+    await bg.settle();
+    expect(events).toEqual(['send-start', 'response', 'send-done']);
+  });
 
   it('медленный провайдер: ответ существующему адресу не дольше, чем несуществующему', async () => {
     const o = await makeOwner();
@@ -290,9 +311,11 @@ describe('NFR-015.3 [правка 28.09] — время ответа не выд
     expect(real.res?.status).toBe(200);
     expect(fake.res?.status).toBe(200);
     // Падает при мутации «вернуть await отправки в ответ»: real.ms ≈ SLOW_MS.
+    // Порог — половина задержки провайдера: секундомер здесь доказательство самого дефекта,
+    // а не главный страж (тот — тест ПОРЯДОКА выше), и не должен краснеть от медленного CI.
     expect(real.ms, `существующий ${real.ms.toFixed(0)} мс, несуществующий ${fake.ms.toFixed(0)} мс`)
-      .toBeLessThan(SLOW_MS / 3);
-    expect(Math.abs(real.ms - fake.ms)).toBeLessThan(SLOW_MS / 3);
+      .toBeLessThan(SLOW_MS / 2);
+    expect(Math.abs(real.ms - fake.ms)).toBeLessThan(SLOW_MS / 2);
 
     // Письмо при этом НЕ потеряно — оно ушло после ответа.
     await bg.settle();
@@ -312,7 +335,12 @@ describe('NFR-015.3 [правка 28.09] — время ответа не выд
     const o = await makeOwner();
     const bg = background();
     let calls = 0;
-    const flaky = async () => { calls += 1; if (calls === 1) throw new Error('провайдер ответил 503'); };
+    // Текст исключения НАРОЧНО несёт адрес и ссылку: журнал обязан писать категорию, а не
+    // err.message — сообщение чужого отправителя однажды их и понесёт (ревью Codex, круг 1).
+    const flaky = async (m: { to: string; text: string }) => {
+      calls += 1;
+      if (calls === 1) throw new Error(`отказ для ${m.to}: ${m.text}`);
+    };
     const logs: unknown[][] = [];
     const orig = { error: console.error, info: console.info };
     console.error = (...a: unknown[]) => { logs.push(a); };
