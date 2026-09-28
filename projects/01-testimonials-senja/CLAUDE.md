@@ -153,7 +153,9 @@ PRD §8 + Architecture §11: цена платного тарифа (Q1), лим
 - `.claude/rules/security.md` — XSS, мульти-арендность, подпись вебхука, rate limiting, FTC-граница
 - `.claude/rules/coding-style.md` — монорепо, канонические имена, ограничение виджета
 - `.claude/rules/testing.md` — порядок по риску, тестирование виджета на чужом домене, гонки
-- `.claude/feature-roadmap.json` — 12 фич MVP, порядок по риску/зависимостям, не по номеру FR
+- `.claude/feature-roadmap.json` — 25 записей (было 12 фич MVP на Phase 3): 20 `done`,
+  4 `blocked` — решения владельца DEC-001…004, 1 `planned` — FR-015 (восстановление пароля);
+  порядок по риску/зависимостям, не по номеру FR. Источник чисел — сам roadmap, сверено 2026-09-28
 - `DEVELOPMENT_GUIDE.md` — окружение, запуск, проверка, деплой
 
 Общие скиллы и команды пайплайна (`/feature`, `/plan`, `/go`, `/run`, `/myinsights`,

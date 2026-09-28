@@ -131,18 +131,28 @@ Growth-события, обязательные с первого релиза (
 ## 5. Деплой на VPS
 
 ```bash
-# CI (GitHub Actions): build образов → миграции packages/db → по SSH на VPS:
-docker compose -f docker-compose.prod.yml pull
-docker compose -f docker-compose.prod.yml up -d
+# Фактический способ (стенд за уже работающим на машине прокси, как в docs/yookassa-setup.md):
+bash ../../scripts/check-port-conflicts.sh .      # до любого up
+docker compose -f docker-compose.yml -f compose.demo.yml up -d --build
+# точечный перезапуск одного сервиса:
+docker compose -f docker-compose.yml -f compose.demo.yml up -d web
 ```
 
+`docker-compose.prod.yml` и CI-конвейер «build → registry → pull по SSH», описанные в
+`docs/Architecture.md` §8, **не созданы** (сверено по файлам 2026-09-28): в проекте есть только
+`docker-compose.yml` (образы собираются на машине из `build:`) и оверрайд `compose.demo.yml`,
+который выключает собственный Caddy — 80/443 на машине держит чужой прокси — и включает `web`
+во внешнюю сеть прокси без публикации портов. Обычный `docker compose up` без оверрайда поднимет
+свой Caddy и упрётся в занятые 80/443.
+
 - Домен должен резолвиться на VPS **до** первого деплоя — иначе первая ACME-попытка Caddy
-  (ADR-007) провалится и уйдёт в backoff до следующей проверки DNS.
+  (ADR-007) провалится и уйдёт в backoff до следующей проверки DNS. С `compose.demo.yml` собственный
+  Caddy выключен и сертификат выпускает уже работающий на машине прокси — правило то же.
 - Smoke-проверка после `up -d`, до объявления деплоя успешным: `curl -I
   https://<домен>/api/widget/config` должен отдать `200` с валидной TLS-цепочкой.
-- Откат — предыдущий tag образа из registry, `docker compose up -d` с прошлым тегом. Данные не
+- Откат — registry нет, поэтому пересборка с предыдущего коммита тем же `up -d --build`. Данные не
   откатываются вместе с образом.
-- Секреты — через CI secrets в `.env` на сервере, никогда не коммитятся.
+- Секреты — в `.env` на сервере (CI secrets появятся вместе с CI), никогда не коммитятся.
 - Бэкапы (Architecture §7): `pg_dump` по расписанию для Postgres, `mc mirror` для `minio_data`,
   синхронизировать по времени — рассинхрон создаёт «битые» ссылки `video_object_key` после restore.
   `caddy_data` не бэкапить — переиздаётся автоматически.
