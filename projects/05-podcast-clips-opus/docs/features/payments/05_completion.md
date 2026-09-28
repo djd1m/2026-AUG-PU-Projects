@@ -103,3 +103,16 @@ bash scripts/stand-set-yookassa.sh    # включить live: shopId, ключ 
 Профиль `compact-quality-first-v2`, один исполнитель (Claude Opus 5.5) + независимый ревьюер Codex `gpt-6-astra` (medium,
 подтверждено строками `model:`/`reasoning effort:` журналов). Запись — `docs/telemetry/p-replicator/20260928T-payments/run.json`.
 Токены и стоимость исполнителя и ревьюера — `null`: хост счётчиков не выдаёт.
+
+## Выкладка на стенд (координатор, 28.09.2026, после слияния `d7b92a47`)
+
+Стенд `https://clipmkr.ru`: в `.env.n5-demo` добавлена `N5_LIMIT_PAID_USER_MINUTES=270`; образы web / worker-stt / worker-llm /
+worker-video пересобраны; миграция `021_payments.sql` применена новым образом ДО перезапуска (`run --rm --no-deps web
+node packages/db/dist/migrate.js`); `up -d` четырёх сервисов; `/health` 200, лендинг 200 в Chromium и WebKit на 360 и 1280 без
+горизонтальной прокрутки; `POST /api/checkout` → 404 и `/upgrade` → 404 (оплата `off`, как задумано, AC-1).
+
+Попутно найден и исправлен дефект стенда, не связанный с фичей: `S3_PUBLIC_ENDPOINT` в env указывал на хост прежнего сервера
+(`s3-n5.212.192.0.33.sslip.io`, TLS-ошибка) — миниатюра витринного клипа на лендинге не загружалась; переведён на
+`s3-n5.194.85.249.105.sslip.io`, после перезапуска web у лендинга 0 неудачных запросов. Живая оплата на стенде не включалась
+(магазина нет).
+
