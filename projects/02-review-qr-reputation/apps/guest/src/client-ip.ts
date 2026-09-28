@@ -23,12 +23,24 @@ import { isIP } from 'node:net';
 import { lookup } from 'node:dns/promises';
 import type { IncomingMessage } from 'node:http';
 
-function norm(a: string | undefined): string | undefined {
+/** КАНОНИЧЕСКАЯ запись адреса: у одного адреса — один ключ. `2001:db8::1` и
+ *  `2001:0db8:0:0:0:0:0:1`, `::ffff:192.0.2.1` и `::ffff:c000:201` — один адрес; без
+ *  канонизации это разные ключи лимита. IPv6 нормализует WHATWG URL (нули сжаты, нижний
+ *  регистр, встроенный IPv4 — в hex), IPv4-mapped сводится к IPv4. Всё, что не адрес, —
+ *  undefined. КОПИЯ живёт в services/intake/src/server.ts (другой контейнер, другой образ);
+ *  расхождение ловит таблица в seam-guest-ip.test.ts. */
+export function canonIp(a: string | undefined): string | undefined {
   if (!a) return undefined;
-  const s = a.trim().replace(/^\[|\]$/g, '').toLowerCase();
-  const v4 = s.startsWith('::ffff:') ? s.slice(7) : s;
-  if (isIP(v4) === 4) return v4;
-  return isIP(s) ? s : undefined;
+  const s = a.trim().replace(/^\[|\]$/g, '');
+  const kind = isIP(s);
+  if (kind === 4) return s;
+  if (kind !== 6) return undefined;
+  let h: string;
+  try { h = new URL(`http://[${s}]/`).hostname.slice(1, -1); } catch { return undefined; }
+  const m = /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/.exec(h);
+  if (!m) return h;
+  const hi = parseInt(m[1]!, 16), lo = parseInt(m[2]!, 16);
+  return `${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`;
 }
 
 /** Чистая функция: пир, заголовок, множество адресов прокси → адрес гостя. */
@@ -37,11 +49,11 @@ export function pickClientIp(
   xff: string | string[] | undefined,
   trusted: ReadonlySet<string>,
 ): string {
-  const p = norm(peer);
+  const p = canonIp(peer);
   if (!p) return 'unknown';
   if (!trusted.has(p) || xff === undefined) return p;
   const chain = (Array.isArray(xff) ? xff.join(',') : xff).split(',');
-  return norm(chain[chain.length - 1]) ?? p;
+  return canonIp(chain[chain.length - 1]) ?? p;
 }
 
 /** Имя прокси без права на дефолт в проде: без него адрес гостя не отличить от адреса
@@ -57,21 +69,36 @@ function proxyHost(): string | undefined {
 }
 
 const HOST = proxyHost();
-const TTL_MS = 30_000;   // адрес прокси меняется при его пересоздании
+const TTL_MS = 30_000;          // адрес прокси меняется при его пересоздании
+const LOOKUP_DEADLINE_MS = 1_000;
 let trusted: ReadonlySet<string> = new Set();
 let resolvedAt = 0;
+let inflight: Promise<ReadonlySet<string>> | null = null;
 
-async function trustedProxies(): Promise<ReadonlySet<string>> {
-  if (!HOST || Date.now() - resolvedAt < TTL_MS) return trusted;
+/** Множество адресов прокси. Отказ DNS или дедлайн — ПУСТОЕ множество, а не прежнее:
+ *  прежний адрес прокси мог достаться чужому контейнеру сети, и сохранённое доверие
+ *  отдало бы ему право выбирать ключ заголовком. Пустое — строже: ключ = адрес пира.
+ *  Остаточное окно: переиспользование адреса прокси чужим контейнером внутри TTL (30 с). */
+export async function refresh(host: string): Promise<ReadonlySet<string>> {
   try {
-    const rs = await lookup(HOST, { all: true });
-    trusted = new Set(rs.map((r) => norm(r.address)).filter((x): x is string => !!x));
+    const rs = await Promise.race([
+      lookup(host, { all: true }),
+      new Promise<never>((_, rej) => setTimeout(() => rej(new Error('lookup deadline')), LOOKUP_DEADLINE_MS).unref()),
+    ]);
+    trusted = new Set(rs.map((r) => canonIp(r.address)).filter((x): x is string => !!x));
   } catch (e) {
-    // Прежнее множество сохраняется; пустое — строже, не шире (см. шапку).
-    console.error('trusted_proxy_lookup_failed', { host: HOST, reason: (e as Error).message });
+    trusted = new Set();
+    console.error('trusted_proxy_lookup_failed', { host, reason: (e as Error).message });
   }
   resolvedAt = Date.now();
   return trusted;
+}
+
+async function trustedProxies(): Promise<ReadonlySet<string>> {
+  if (!HOST || Date.now() - resolvedAt < TTL_MS) return trusted;
+  // Одновременные запросы после истечения TTL ждут ОДИН резолв, а не порождают свой каждый.
+  inflight ??= refresh(HOST).finally(() => { inflight = null; });
+  return inflight;
 }
 
 /** Проверка при старте в проде: имя прокси обязано резолвиться. Иначе каждый гость
@@ -84,5 +111,9 @@ export async function assertProxyResolvable(): Promise<void> {
 }
 
 export async function clientIp(req: IncomingMessage): Promise<string> {
-  return pickClientIp(req.socket.remoteAddress, req.headers['x-forwarded-for'], await trustedProxies());
+  // Пир и заголовок читаются СИНХРОННО, до ожидания: вызов «отправил и забыл» может
+  // завершиться после ответа, когда сокет уже закрыт.
+  const peer = req.socket.remoteAddress;
+  const xff = req.headers['x-forwarded-for'];
+  return pickClientIp(peer, xff, await trustedProxies());
 }

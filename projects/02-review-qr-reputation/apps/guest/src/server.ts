@@ -131,7 +131,9 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
   if (seg[0] === 'r' && seg[1] && seg.length === 2) {
     const { html: body, place } = await renderChoicePage(seg[1]);
-    if (place) recordGuestEvent(place.id, 'scan', null, await clientIp(req), String(req.headers['user-agent'] ?? ''));
+    // Журнал — «отправил и забыл»: ответ не ждёт даже резолва адреса прокси.
+    const ua = String(req.headers['user-agent'] ?? '');
+    if (place) void clientIp(req).then((ip) => recordGuestEvent(place.id, 'scan', null, ip, ua));
     res.writeHead(place ? 200 : 404, html);
     res.end(body);
     return;
@@ -171,7 +173,9 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const url = await resolvePlatformUrl(seg[1], seg[2]);
     if (!url) { res.writeHead(404, html); res.end(notFoundHtml()); return; }
     const place = await selectPlace(seg[1]);
-    if (place) recordGuestEvent(place.id, 'public_door_click', seg[2], await clientIp(req), String(req.headers['user-agent'] ?? ''));
+    const ua = String(req.headers['user-agent'] ?? '');
+    const platform = seg[2];
+    if (place) void clientIp(req).then((ip) => recordGuestEvent(place.id, 'public_door_click', platform, ip, ua));
     // Location зависит ТОЛЬКО от пары (slug, platform). Аналитика выше — «отправил и
     // забыл»: её отказ не меняет ни Location, ни код ответа.
     res.writeHead(302, { location: url, 'cache-control': 'no-store' });
