@@ -28,7 +28,7 @@ const {
   issueResetToken, resetPassword, hashResetToken,
   RESET_PAIR_SCOPE, RESET_IP_SCOPE, RESET_PAIR_THRESHOLD, RESET_WINDOW, RESET_TTL_MS,
 } = await import('../src/lib/password-reset');
-const { resetEmail, mailConfigured } = await import('../src/lib/email');
+const { resetEmail, mailConfigured, EmailProviderError } = await import('../src/lib/email');
 const { handleForgot } = await import('../src/app/api/auth/forgot/route');
 const { POST: resetRoute } = await import('../src/app/api/auth/reset/route');
 
@@ -208,18 +208,23 @@ describe('AC-015.9 — в БД лежит ХЕШ, а не токен', () => {
 
 describe('AC-015.10 / AC-015.16 — ответ один, письмо по делу', () => {
   const URL_ = 'https://proofwall.test/api/auth/forgot';
+  // Письмо уходит ПОСЛЕ ответа (правка 28.09): отложенные задачи копятся здесь, и тест
+  // дожидается их явно — иначе «писем ноль» проверялось бы до того, как письмо успело уйти.
+  const pending: Promise<unknown>[] = [];
+  const settle = () => Promise.allSettled(pending.splice(0));
   const post = (email: string, sender: (m: { to: string }) => Promise<void>) =>
     handleForgot(new Request(URL_, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-forwarded-for': `14.0.${seq % 250}.${(seq += 1) % 250}` },
       body: JSON.stringify({ email }),
-    }), sender);
+    }), sender, (task) => { pending.push(task()); });
 
   it('несуществующий адрес: 200, тот же текст, писем НОЛЬ', async () => {
     const o = await makeOwner();
     const sent: { to: string }[] = [];
     const okRes = await post(o.email, async (m) => { sent.push(m); });
     const noRes = await post(`нет-такого-${RUN}@example.com`, async (m) => { sent.push(m); });
+    await settle();
 
     expect(okRes.status).toBe(200);
     expect(noRes.status).toBe(200);
@@ -234,6 +239,7 @@ describe('AC-015.10 / AC-015.16 — ответ один, письмо по де�
     const o = await makeOwner();
     const res = await post(o.email, async () => { throw new Error('провайдер недоступен'); });
     expect(res.status, 'отказ почты изменил ответ').toBe(200);
+    await settle();
     // Падает при R9: пробрасывать ошибку наружу.
     const rows = await tokenRows(o.accountId);
     expect(rows.length, 'токен откатился при отказе почты').toBe(1);
@@ -324,6 +330,20 @@ describe('NFR-015.3 [правка 28.09] — время ответа не выд
     expect(text).toContain('reset_email_sent');
     expect(text).not.toContain(o.email);
     expect(text).not.toMatch(/token=|reset#|\/reset\//);
+  });
+
+  it('отказ «не пройдёт никогда» (4xx кроме 429) не повторяется', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    let calls = 0;
+    const rejecting = async () => { calls += 1; throw new EmailProviderError(422); };
+    const orig = console.error;
+    console.error = () => {};
+    try {
+      await handleForgot(request(o.email), rejecting, bg.defer);
+      await bg.settle();
+    } finally { console.error = orig; }
+    expect(calls, '422 повторён — повтор не отличает постоянный отказ').toBe(1);
   });
 });
 
@@ -419,15 +439,20 @@ describe('AC-015.15 — отправка письма ВНЕ транзакци�
     }
   });
 
-  it('СТРАЖ: в маршруте отправка стоит ПОСЛЕ withService', () => {
+  it('СТРАЖ: в маршруте отправка стоит ПОСЛЕ withService и только внутри defer', () => {
     const code = read('app/api/auth/forgot/route.ts');
     const tx = code.indexOf('await withService(');
-    const send = code.indexOf('await sendEmail(');
+    const send = code.indexOf('sendWithRetry(sendEmail');
     expect(tx).toBeGreaterThan(-1);
     expect(send).toBeGreaterThan(-1);
     // Падает при R8: занести отправку внутрь транзакции.
     expect(tx, 'письмо отправляется внутри транзакции — соединение пула ждёт чужой сервис')
       .toBeLessThan(send);
+    // Правка 28.09: отправка — внутри отложенной задачи, а не в теле ответа. Поведение
+    // закрывает тест «медленный провайдер»; этот страж называет место.
+    expect(code, 'отправка вне defer — ответ снова ждёт провайдера').toMatch(
+      /defer\(async \(\) => \{ await sendWithRetry\(sendEmail,/);
+    expect(code).not.toMatch(/await sendEmail\(/);
   });
 });
 
