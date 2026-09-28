@@ -110,6 +110,7 @@ bash scripts/stand-set-yookassa.sh                                              
 | Файл | О чём |
 |---|---|
 | [`docs/REPRODUCE.md`](docs/REPRODUCE.md) | **как повторить проект с нуля на новой машине** |
+| [`docs/pipeline-walkthrough.md`](docs/pipeline-walkthrough.md) | **как устроен конвейер** от адреса сайта до ответа посетителю: модели, шаги, порядок операций, деньги — снято со стенда 28.09 |
 | [`docs/BACKLOG.md`](docs/BACKLOG.md) | **что осталось сделать**, решения владельца, принятый риск, что перенести при переезде |
 | [`docs/Refinement.md`](docs/Refinement.md) | edge cases и **25 граблей** реализации и стенда: симптом, причина, лечение, где закреплено |
 | [`docs/features/`](docs/features/) | 22 папки фич и исправлений: план, квитанция, отчёт о коде, ревью Codex дословно |
