@@ -177,7 +177,9 @@ node scripts/check-image-dev-deps.mjs <проект>-web <проект>-worker-s
 ```
 
 Скрипты оператора внутри образа `web` (миграции, `partner-code-unblock.mjs`, `acceptance-upload.mjs`) зависят только
-от prod-пакетов и встроенных модулей Node; прибор вёрстки идёт в отдельном образе Playwright.
+от prod-пакетов и встроенных модулей Node; прибор вёрстки идёт в отдельном образе Playwright. **`npm run db:migrate`
+внутри рантайм-образа не работает** (он сначала зовёт `tsc`) — миграции только как в шаге 5:
+`node packages/db/dist/migrate.js`.
 
 ---
 
