@@ -26,15 +26,25 @@ try {
   for (const [id, file, before, after, title] of mutations) {
     const path = join(directory, file), source = readFileSync(path, 'utf8');
     if (source.split(before).length !== 2) throw new Error(`Mutation anchor not unique: ${id}`);
+    // Критерий «убита» — УПАВШИЙ ТЕСТ, а не код возврата: падение запуска (сломанный импорт, нет репортёра) тоже даёт 1
+    // и засчитывалось бы как убитая мутация (ревью Opus 28.09, находка 5). Отчёт — свежий файл этого запуска.
     const run = phase => {
-      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', 'tests/progress-screen.test.ts', '-t', title],
+      const report = join(directory, `report-${id}-${phase}.json`);
+      rmSync(report, { force: true });
+      const result = spawnSync(process.execPath, [join(project, 'node_modules/vitest/vitest.mjs'), 'run', 'tests/progress-screen.test.ts', '-t', title,
+        '--reporter=json', `--outputFile=${report}`],
         { cwd: directory, encoding: 'utf8', timeout: 60000, env: { ...process.env, DATABASE_URL: '', REDIS_URL: '' } });
-      writeFileSync(join(output, `${id}-${phase}.txt`), `${result.stdout ?? ''}${result.stderr ?? ''}`);
-      return result.status;
+      let json = null;
+      try { json = JSON.parse(readFileSync(report, 'utf8')); } catch { /* запуск не дошёл до тестов — ниже launch_failed */ }
+      const measured = json ? { exit: result.status, failed: json.numFailedTests, passed: json.numPassedTests } : { exit: result.status, launch_failed: true };
+      writeFileSync(join(output, `${id}-${phase}.txt`), JSON.stringify(measured) + '\n' + `${result.stdout ?? ''}${result.stderr ?? ''}`);
+      return measured;
     };
     writeFileSync(path, source.replace(before, after)); const red = run('red');
     writeFileSync(path, source); const green = run('green');
-    results.push({ id, red, green, passed: red === 1 && green === 0 }); console.log(`${id}: red=${red}, green=${green}`);
+    const passed = !red.launch_failed && !green.launch_failed && red.exit === 1 && red.failed > 0
+      && green.exit === 0 && green.failed === 0 && green.passed > 0;
+    results.push({ id, red, green, passed }); console.log(`${id}: red=${JSON.stringify(red)}, green=${JSON.stringify(green)}`);
   }
   writeFileSync(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
   if (results.some(r => !r.passed)) process.exitCode = 1;

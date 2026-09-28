@@ -1,7 +1,7 @@
 // Фича 27b clip-cta: каждый страж обязан показать красное на внедрённом дефекте и зелёное после восстановления.
 // Запуск: node tests/run-clip-cta-27b-mutations.mjs [id…]. Интеграционные — только при DATABASE_URL, медиа — только при
 // ffmpeg ≥ 6 (оба условия выполняются в образе test); иначе строка «not_run» с причиной, а не зелёное.
-import { readFileSync, writeFileSync, mkdirSync, existsSync, openSync, closeSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, openSync, closeSync, rmSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 const root = 'tests/artifacts/clip-cta/27b';
 mkdirSync(root, { recursive: true });
@@ -34,6 +34,7 @@ for (const [id, file, original, mutation, test, pattern] of cases) {
   const run = phase => {
     const path = `${root}/${id}-${phase}.json`;
     const fd = openSync(`${root}/${id}-${phase}.log`, 'w');
+    rmSync(path, { force: true }); // старый отчёт не подтверждает новый запуск (ревью Codex 28.09, находка 3)
     let child;
     try { child = spawnSync(process.execPath, ['node_modules/vitest/vitest.mjs', 'run', test, '-t', pattern, '--reporter=json', `--outputFile=${path}`],
       { stdio: ['ignore', fd, fd], timeout: 300000 }); }

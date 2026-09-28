@@ -2,7 +2,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { randomUUID, randomBytes } from 'node:crypto';
 import { createPool, type Pool, type Attempt } from '../packages/db/src';
 import { migrate } from '../packages/db/src/migrate';
-import { getRenderInput, retryRender } from '../packages/db/src/render';
+import { getRenderInput, publishRenderResult, retryRender } from '../packages/db/src/render';
+import { retentionTick } from '../apps/web/src/server/retention';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { loadLimits } from '../packages/shared/src/config';
 import { MUSIC_CATALOG } from '../packages/shared/src/music-catalog';
@@ -172,5 +173,63 @@ describe.skipIf(!url)('video.setCta: пересборка клипов запи�
     expect(used).toBe((batchOk ? 6 : 0) + singlesOk);
     expect(used).toBeLessThanOrEqual(20);
     expect((await attempts(batch.video)).length).toBe(batchOk ? 6 : 0);
+  });
+
+  // BACKLOG §5а (ревью Opus 28.09, находка 3): ветка «срок = finished_at + 3 сут» в setCta была без теста — регресс,
+  // пересобирающий стёртые клипы за квоту, прошёл бы зелёным. Граница с обеих сторон: минута до и секунда после.
+  const DAY = 86_400_000;
+  it.each([
+    ['секунда после 3 суток — клипы истекли: призыв сохранён, пересборки и списания нет', 3 * DAY + 1000, 0],
+    ['минута до 3 суток — клипы живы: пересборка обоих за квоту', 3 * DAY - 60_000, 2],
+  ])('срок бесплатного клипа в setCta: %s', async (_title, age, rerendering) => {
+    const f = await fixture(2);
+    await pool.query('UPDATE video SET finished_at=$2 WHERE id=$1', [f.video, new Date(now.getTime() - age)]);
+    await expect(setWatch(f)).resolves.toMatchObject({ rerendering });
+    expect(await charge()).toBe(rerendering);
+    expect(await attempts(f.video)).toHaveLength(rerendering);
+    expect(await versions(f.video)).toEqual(rerendering ? [2, 2] : [1, 1]);
+    expect(await stored(f.video)).toEqual({ cta_kind: 'watch_full', cta_url: YT });
+  });
+
+  // Ревью Codex 28.09, находка 2: пересборка, поставленная до истечения срока, не должна пережить очистку клипа —
+  // иначе отложенный воркер собрал бы и опубликовал стёртый клип, а квота уже списана.
+  it('очистка после постановки пересборки: попытка закрыта, воркер получает stale и ничего не публикует', async () => {
+    const f = await fixture(1);
+    await pool.query('UPDATE video SET finished_at=$2 WHERE id=$1', [f.video, new Date(now.getTime() - 2 * DAY)]);
+    await setWatch(f);
+    const [job] = await attempts(f.video);
+    expect(job).toMatchObject({ rerender: true, status: 'running' });
+    const storage = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}), eraseClipPrefix: vi.fn(async () => {}) };
+    await retentionTick(pool, storage, new Date(now.getTime() + 2 * DAY));
+    expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0].object_key).toBeNull();
+    expect((await attempts(f.video))[0]).toMatchObject({ status: 'failed', failure_reason: 'stale_attempt_result' });
+    expect(storage.eraseClipPrefix).toHaveBeenCalledTimes(3);
+    await expect(getRenderInput(pool, job!)).resolves.toBeNull();
+    const publish = vi.fn(async () => 1), remove = vi.fn(async () => {});
+    await expect(publishRenderResult(pool, job!, { object_key: `clips/free/${f.video}/${f.clips[0]}-v2.mp4`,
+      thumbnail_key: `thumbs/${f.video}/${f.clips[0]}-v2.jpg`, bytes: 1, watermarked: true, duration_seconds: 20 }, publish, remove))
+      .resolves.toBe(false);
+    expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0].object_key).toBeNull();
+    // Попытка закрыта — загруженная версия не защищена «активной» пересборкой и удаляется как сирота.
+    expect(remove).toHaveBeenCalledWith(`clips/free/${f.video}/${f.clips[0]}-v2.mp4`);
+  });
+
+  // Ревью Codex 28.09, круг 2, находка 1: отказ хранилища не теряет повтор очистки — пересборка уже закрыта, ключи
+  // остаются, и следующий проход стирает и обнуляет.
+  it('отказ хранилища при очистке: пересборка закрыта, ключи сохранены, следующий проход дочищает', async () => {
+    const f = await fixture(1);
+    await pool.query('UPDATE video SET finished_at=$2 WHERE id=$1', [f.video, new Date(now.getTime() - 2 * DAY)]);
+    await setWatch(f);
+    const failing = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}),
+      eraseClipPrefix: vi.fn(async () => { throw new Error('storage unavailable'); }) };
+    const later = new Date(now.getTime() + 2 * DAY);
+    await expect(retentionTick(pool, failing, later)).rejects.toThrow('повтор на следующем проходе');
+    expect((await pool.query('SELECT object_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0].object_key).not.toBeNull();
+    expect((await attempts(f.video))[0]).toMatchObject({ status: 'failed', failure_reason: 'stale_attempt_result' });
+    const ok = { delete: vi.fn(async () => {}), erasePrefix: vi.fn(async () => {}), eraseClipPrefix: vi.fn(async () => {}) };
+    await retentionTick(pool, ok, new Date(later.getTime() + 3600_000));
+    expect(ok.eraseClipPrefix).toHaveBeenCalledTimes(3);
+    expect((await pool.query('SELECT object_key,thumbnail_key FROM clip WHERE id=$1', [f.clips[0]])).rows[0])
+      .toEqual({ object_key: null, thumbnail_key: null });
   });
 });

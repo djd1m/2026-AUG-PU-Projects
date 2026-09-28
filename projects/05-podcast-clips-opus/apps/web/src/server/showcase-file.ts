@@ -5,7 +5,8 @@ import { clientIp } from './ip';
 // ТРЕТИЙ путь к файлу клипа (ADR-018, .claude/rules/security.md «Доступ к файлу клипа»): витрина лендинга.
 // Граница: только клипы из закрытого набора SHOWCASE_CLIPS в коде; только чтение (GET); без сессии и без
 // сведений о владельце; ни списков, ни мутаций. Код того же формата вне набора — 404, как и клип не `done`,
-// без объекта, стёртый аккаунт, удалённая запись или отозванная короткая ссылка.
+// без объекта, стёртый аккаунт, удалённая запись, отозванная короткая ссылка или истёкший ЯВНЫЙ `expires_at`
+// (срок бесплатного тарифа к витрине не применяется — clipExpiry, — а явный срок соблюдается всегда, как на /c/).
 // Отдача — 302 на подписанную ссылку ≤ 900 с (как путь владельца в clip-file.ts), байты через web НЕ идут.
 export interface ShowcaseFileDependencies {
   allowRead: (ip: string) => Promise<boolean>;
@@ -27,6 +28,7 @@ export function createShowcaseFileHandler(deps: ShowcaseFileDependencies, kind: 
       const row = (await deps.pool.query<{ object_key: string | null; thumbnail_key: string | null }>(
         `SELECT c.object_key,c.thumbnail_key FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
          WHERE c.id=$1 AND c.status='done' AND v.deleted_at IS NULL AND a.status='active'
+         AND (c.expires_at IS NULL OR c.expires_at > now())
          AND EXISTS (SELECT 1 FROM clip_link l WHERE l.clip_id=c.id AND l.code=$2 AND l.revoked_at IS NULL)`,
         [showcase.clipId, showcase.code])).rows[0];
       const key = kind === 'file' ? row?.object_key : row?.thumbnail_key;

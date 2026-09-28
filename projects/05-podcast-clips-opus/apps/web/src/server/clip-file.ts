@@ -38,7 +38,7 @@ export function createClipFileHandler(deps: ClipFileDependencies, kind: 'file' |
              AND p.revoked_at IS NULL AND p.sent_at IS NOT NULL AND p.expires_at>$4)))`, [id, session?.account_id ?? null, code, now])).rows[0];
       if (!row) return missing();
       if (row.status !== 'done') return missing();
-      const expires = clipExpiry(row.expires_at, row.plan, row.retention_from);
+      const expires = clipExpiry({ clipId: id, expiresAt: row.expires_at, plan: row.plan, retentionFrom: row.retention_from });
       if (expires && expires <= now) return missing();
       const key = kind === 'file' ? row.object_key : row.thumbnail_key;
       if (!key) return missing();

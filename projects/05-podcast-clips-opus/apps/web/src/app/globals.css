@@ -187,7 +187,7 @@ button,.button { min-width:2.75rem; }
 }
 /* Фича 29 progress-ribbon: лента стадий «Загрузка → Расшифровка → Выбор → Монтаж» и первый экран экрана записи.
    Состояние стадии — знаком и скрытым текстом, не только цветом; цвета — токены панели (currentColor / --muted). */
-.visually-hidden { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); border:0; }
+.visually-hidden { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 .detail-top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:0 var(--space-4); }
 .video-meta summary { font-size:0.875rem; color:var(--muted); }
 .video-meta[open] { flex-basis:100%; }
