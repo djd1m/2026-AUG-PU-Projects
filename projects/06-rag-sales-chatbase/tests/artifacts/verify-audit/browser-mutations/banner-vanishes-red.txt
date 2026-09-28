@@ -1,0 +1,168 @@
+
+ RUN  v3.2.7 /tmp/n6-verify-audit-mutations-JHagf7
+
+ ❯ tests/browser/verify-audit.test.ts (30 tests | 8 failed) 99462ms
+   ✓ chromium > AC-3: двойное нажатие «Я проверил ответы бота» — отметка стоит, ни одного запроса снятия; подтверждение не раскрыто без второго явного шага  924ms
+   ✓ chromium > AC-3: нажатие во время запроса — кнопка занята, второй запрос не уходит  776ms
+   ✓ chromium > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается  416ms
+   ✓ chromium > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос  494ms
+   ✓ chromium > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено»  402ms
+   × chromium > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия 30004ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден 1344ms
+     → Matcher did not succeed in time.
+   × chromium > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден 1319ms
+     → Matcher did not succeed in time.
+   × chromium > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается 5311ms
+     → Matcher did not succeed in time.
+   ✓ chromium > AC-9: строка «снята когда и кем» и история отметки раскрытием 299ms
+   ✓ chromium > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  1733ms
+   ✓ chromium > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  1579ms
+   ✓ chromium > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  468ms
+   ✓ chromium > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  390ms
+   ✓ chromium > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  364ms
+   ✓ webkit > AC-3: двойное нажатие «Я проверил ответы бота» — отметка стоит, ни одного запроса снятия; подтверждение не раскрыто без второго явного шага  1062ms
+   ✓ webkit > AC-3: нажатие во время запроса — кнопка занята, второй запрос не уходит  1089ms
+   ✓ webkit > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается  782ms
+   ✓ webkit > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос  863ms
+   ✓ webkit > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено»  898ms
+   × webkit > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия 30003ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден 1735ms
+     → Matcher did not succeed in time.
+   × webkit > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден 1732ms
+     → Matcher did not succeed in time.
+   × webkit > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается 5618ms
+     → Matcher did not succeed in time.
+   ✓ webkit > AC-9: строка «снята когда и кем» и история отметки раскрытием  751ms
+   ✓ webkit > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  2792ms
+   ✓ webkit > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  2521ms
+   ✓ webkit > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  860ms
+   ✓ webkit > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  840ms
+   ✓ webkit > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  980ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/verify-audit.test.ts:173:3
+    171|     expect(await block(page).getByRole('button', { name: 'Я проверил о…
+    172|   }));
+    173|   it('AC-11: отметка из баннера — баннер сменяется строкой «Отметка по…
+       |   ^
+    174|     const banner = page.locator('section.gate-banner');
+    175|     await banner.getByRole('button', { name: 'Я проверил ответы бота' …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:194:67
+    192|       }, undefined, { timeout: 10000 }).catch((error: unknown) => { th…
+    193|       await page.locator('section.gate-banner').getByRole('button', { …
+    194|       await expect.poll(() => page.locator('.gate-done').count()).toBe…
+       |                                                                   ^
+    195|       expect(bodies.every((b) => (b as { verified: boolean }).verified…
+    196|       const setGate = (g: unknown) => page.evaluate((v) => (window as …
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:219:67
+    217|       });
+    218|       await page.locator('section.gate-banner').getByRole('button', { …
+    219|       await expect.poll(() => page.locator('.gate-done').count()).toBe…
+       |                                                                   ^
+    220|       await page.evaluate(() => (window as unknown as { __setGate: (g:…
+    221|       await expect.poll(() => page.locator('section.gate-banner').coun…
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается
+ FAIL  tests/browser/verify-audit.test.ts > webkit > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:238:86
+    236|       // refresh от параллельного действия (добавили домен) приносит н…
+    237|       await page.evaluate(() => (window as unknown as { __setGate: (g:…
+    238|       await expect.poll(() => page.locator('.gate-done').count(), { ti…
+       |                                                                                      ^
+    239|       expect(await page.getByRole('button', { name: 'Я проверил ответы…
+    240|       expect(bodies).toEqual([{ verified: true }]);
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > webkit > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:194:67
+    192|       }, undefined, { timeout: 10000 }).catch((error: unknown) => { th…
+    193|       await page.locator('section.gate-banner').getByRole('button', { …
+    194|       await expect.poll(() => page.locator('.gate-done').count()).toBe…
+       |                                                                   ^
+    195|       expect(bodies.every((b) => (b as { verified: boolean }).verified…
+    196|       const setGate = (g: unknown) => page.evaluate((v) => (window as …
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > webkit > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:219:67
+    217|       });
+    218|       await page.locator('section.gate-banner').getByRole('button', { …
+    219|       await expect.poll(() => page.locator('.gate-done').count()).toBe…
+       |                                                                   ^
+    220|       await page.evaluate(() => (window as unknown as { __setGate: (g:…
+    221|       await expect.poll(() => page.locator('section.gate-banner').coun…
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 22 passed (30)
+   Start at  17:10:02
+   Duration  100.89s (transform 363ms, setup 0ms, collect 1.01s, tests 99.46s, environment 0ms, prepare 129ms)
+
