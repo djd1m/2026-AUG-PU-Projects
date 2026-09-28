@@ -9,12 +9,12 @@
 | `packages/rag/src/enums.ts`, `index.ts` | `QUESTION_OUTCOME` + `small_talk`; экспорт модуля |
 | `packages/db/src/answers.ts` | `readBotPageTitles` — заголовки прочитанных страниц ЭТОГО бота в порядке обхода, ≤ 30 |
 | `packages/db/migrations/013_small_talk.sql` (новый) | ДОБАВЛЯЕТ `small_talk` к текущему `question_log_outcome_check` (DO-блок по `pg_get_constraintdef`; неожиданная форма — отказ миграции) |
-| `apps/web/src/server/widget-ask-handler.ts` | одна ветка `case 'small_talk'` → `200 { status: small_talk, text }`; без хода истории и установки. Ворота `not_verified` не тронуты |
+| `apps/web/src/server/widget-ask-handler.ts` | одна ветка `case 'small_talk'` → `200 { status: unknown, reason: small_talk, text, contact }` (совместимо с кэшированным бандлом — ревью круг 1); без хода истории и установки. Ворота `not_verified` не тронуты |
 | `apps/web/src/server/{cabinet,preview}-handler.ts` | ветка `small_talk` в ответе маршрута (экраны кабинета и предпросмотра показывают `text` любого не-answered статуса — правок UI не нужно) |
 | `apps/web/src/server/{widget-ask,cabinet,preview}-deps.ts` | `pageTitles: readBotPageTitles` |
-| `apps/widget/src/api.ts` | `parseAsk`: `small_talk` → сообщение бота без источника |
-| `tests/small-talk.test.ts` (новый) | таблица 71 реплики (6 намерений + ловушки), темы, шаблоны, ядро: 0 эмбеддингов / моделей / списаний |
-| `tests/small-talk.integration.test.ts` (новый) | Postgres: `/w/v1/ask` «привет» → шаблон с темами; «Спасибо!»; «погода» → «не знаю» по сайту; ловушка; CHECK = `QUESTION_OUTCOME` |
+| `apps/widget/src/api.ts` | `parseAsk`: `unknown` + `reason: small_talk` → `kind: small_talk` (сообщение бота без источника) |
+| `tests/small-talk.test.ts` (новый) | таблица ≥ 73 реплик (6 намерений, ≥ 25 ловушек), темы, шаблоны, ядро: 0 эмбеддингов / моделей / списаний |
+| `tests/small-talk.integration.test.ts` (новый) | Postgres: `/w/v1/ask` «привет» → шаблон с темами; «Спасибо!»; «погода» → «не знаю» по сайту; ловушка; CHECK = `QUESTION_OUTCOME`; ответ разбирается прежним (`bf7ab6d0`) и новым `parseAsk` |
 | `tests/browser/widget-embed.test.ts`, `widget-harness.ts` | чужой origin 8099: «Привет!» и «Спасибо!» видны в окне; счётчики эмбеддингов и списаний оснастки |
 | `tests/enums.test.ts` | outcome: CHECK 001 + значения добавляющих миграций = `QUESTION_OUTCOME` |
 | `tests/{rag-answer,widget-ask.unit,bot-isolation,bot-cabinet.integration,preview-flow.integration}.test.ts`, `tests/browser/{preview-flow,bot-cabinet}.test.ts` | новый текст «не знаю»; зависимость `pageTitles` |
