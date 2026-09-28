@@ -45,6 +45,13 @@ const mutations = [
     edits: [{ file: sources, apply: once('truncated_by = NULL, unread_sample = NULL,', 'truncated_by = NULL,') }] },
   { id: 'sample-with-query', title: 'в примеры непрочитанного попадают параметры запроса (метки, почта)',
     edits: [{ file: frontier, apply: once('  const path = new URL(href).pathname;\n  let shown', '  const u = new URL(href), path = u.pathname + u.search;\n  let shown') }] },
+  // Ревью Codex, круг 1.
+  { id: 'root-not-pinned', title: 'корень не закреплён первым — датированный адрес его раздела из sitemap читается раньше',
+    edits: [{ file: crawl, apply: once('  queue.push(root.href, null, true);', '  queue.push(root.href);') }] },
+  { id: 'redirect-target-stays', title: 'цель перенаправления остаётся в очереди — числится непрочитанной и запрашивается дважды',
+    edits: [{ file: crawl, apply: once('    if (final.href !== href) queue.remove(final.href);\n', '') }] },
+  { id: 'control-chars-decoded', title: 'NUL и управляющие символы пути декодируются в пример — PostgreSQL отвергает запись',
+    edits: [{ file: frontier, apply: once("  shown = shown.replace(/[\\p{Cc}\\p{Cf}]/gu, (c) => encodeURIComponent(c));\n", '') }] },
 ];
 // Убитый по таймауту тест оставляет дочерний процесс разбора сиротой — прибрать его, не трогая чужое.
 const reap = () => {

@@ -112,6 +112,6 @@ export function PreviewScreen({ jobId, signedIn }: { jobId: string; signedIn: bo
   if (!view) return <p role="status" className="muted">Загружаем состояние задачи…</p>;
   if (view.state !== 'done' || !view.site) return <PreviewProgress host={view.site?.host ?? ''} view={view} />;
   return <PreviewChat site={view.site} messages={messages} questionsLeft={left} draft={draft} busy={busy} error={error}
-    truncatedPages={view.truncated ? view.pages_done : null}
+    truncatedPages={view.truncated ? view.pages_done : null} truncatedBy={view.truncated ?? null}
     signedIn={signedIn} saving={saving} onDraft={setDraft} onAsk={(q) => { void ask(q); }} onSave={() => { void save(); }} onShare={() => { void share(); }} />;
 }

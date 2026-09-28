@@ -69,6 +69,21 @@ describe.skipIf(!databaseUrl)('crawl-coverage на настоящем Postgres +
     expect(await job(created.indexJobId)).toMatchObject({ status: 'queued', truncated_by: null, unread_sample: null });
   });
 
+  it('ревью круг 1: потолок времени обхода через всю цепочку — done, crawl_limit, известные больше прочитанных, примеры записаны', async () => {
+    const owner = await account();
+    const created = await createSourceJob(pool, { botId: await bot(owner), kind: 'site', rootUrl: 'http://site.example/', idempotencyKey: randomUUID() });
+    const outcome = await runIndexJob({ pool, enqueue: async () => {}, process: processByKind(pool, { site: createSiteProcessor({ pool, userAgent: 'SuflerBot/0.1',
+      embedder: testEmbedder(pool).embedder, net: big.net, crawl: { pauseMs: 30, timeoutMs: 2000, timeBudgetMs: 400 }, log: () => {} }), pdf: noProcessorYet }) },
+    { index_job_id: created.indexJobId, generation: 0 });
+    expect(outcome).toBe('done');
+    const row = await job(created.indexJobId);
+    expect(row).toMatchObject({ status: 'done', truncated_by: 'crawl_limit' });
+    expect(row.pages_done).toBeGreaterThan(0);
+    expect(row.pages_done).toBeLessThan(50);
+    expect(row.pages_total!).toBeGreaterThan(row.pages_done);
+    expect(row.unread_sample).toHaveLength(5);
+  });
+
   it('сайт меньше предела: done без пометки, pages_total = прочитанным, примеров нет', async () => {
     const owner = await account();
     const created = await createSourceJob(pool, { botId: await bot(owner), kind: 'site', rootUrl: 'http://site.example/', idempotencyKey: randomUUID() });

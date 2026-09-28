@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { crawlSite, sitemapEntries, type Visit } from '../apps/worker/src/crawl/crawl-site';
 import { displayPath, Frontier, sectionOf } from '../apps/worker/src/crawl/frontier';
 import { PAGES_BY_PLAN } from '../apps/worker/src/crawl/limits';
-import { article, startFakeSite, text, type FakeSite, type Handler } from './fixtures/fake-site';
+import { article, redirect, startFakeSite, text, type FakeSite, type Handler } from './fixtures/fake-site';
 import { BLOG_PATHS, COURSE_PATHS, OTHER_PATHS, sectionedSite } from './fixtures/sectioned-site';
 
 const UA = 'SuflerBot/0.1 (+https://sufler.example/bot)';
@@ -58,6 +58,23 @@ describe('Порядок обхода при пределе страниц', () 
     expect(result.unreadSample).toEqual(['/a/2', '/b/1', '/c/1', '/b/2']);
     expect(result.unreadSample.join(' ')).not.toMatch(/utm|email|@/);
   });
+  it('ревью круг 1: корень — первым даже при датированном адресе своего раздела в sitemap (бюджет 1)', async () => {
+    site = await startFakeSite({ '/robots.txt': text('', 'text/plain', 404), '/': article('Главная'), '/price.php': article('Цены'),
+      '/sitemap.xml': text('<urlset><url><loc>http://site.example/price.php</loc><lastmod>2026-09-27</lastmod></url></urlset>', 'application/xml') });
+    const visits: Visit[] = [];
+    const result = await crawl(site, 1, visits);
+    expect(readPaths(visits)).toEqual(['/']);
+    expect(result).toMatchObject({ stoppedBy: 'page_budget', pagesKnown: 2, unreadSample: ['/price.php'] });
+  });
+  it('ревью круг 1: цель перенаправления корня, уже стоящая в очереди из sitemap, не числится непрочитанной и не запрашивается дважды', async () => {
+    site = await startFakeSite({ '/robots.txt': text('', 'text/plain', 404), '/': redirect('/home/'), '/home/': article('Главная'),
+      '/sitemap.xml': text('<urlset><url><loc>http://site.example/home/</loc></url></urlset>', 'application/xml') });
+    const visits: Visit[] = [];
+    const result = await crawl(site, 1, visits);
+    expect(readPaths(visits)).toEqual(['/home/']);
+    expect(result).toMatchObject({ stoppedBy: 'exhausted', pagesKnown: 1, unreadSample: [] });
+    expect(site.requests.filter((r) => r.path === '/home/')).toHaveLength(1);
+  });
 });
 
 describe('Разделы, sitemap и адреса для показа', () => {
@@ -84,5 +101,7 @@ describe('Разделы, sitemap и адреса для показа', () => {
   it('displayPath: кириллица декодирована, параметры отброшены, длина ≤ 200', () => {
     expect(displayPath('https://s.ru/%D0%BA%D1%83%D1%80%D1%81%D1%8B/?utm_source=x')).toBe('/курсы/');
     expect(displayPath(`https://s.ru/${'a'.repeat(400)}`)).toHaveLength(200);
+    // Ревью круг 1 (high): NUL, перевод строки и смена направления текста остаются закодированными — PostgreSQL отвергает NUL.
+    expect(displayPath('https://s.ru/a%00b%0Ac%E2%80%AEd/%D0%B1%D0%BB%D0%BE%D0%B3')).toBe('/a%00b%0Ac%E2%80%AEd/блог');
   });
 });

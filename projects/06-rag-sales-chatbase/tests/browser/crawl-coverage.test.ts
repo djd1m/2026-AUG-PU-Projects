@@ -12,6 +12,7 @@ import { domRules, axeRule, textZoomRule } from '../../scripts/responsive/rules.
 import { preflight } from '../../scripts/responsive/input.mjs';
 import { SourceList, type SourceItemView } from '../../apps/web/src/app/dashboard/CabinetViews';
 import { SiteHeader } from '../../apps/web/src/app/SiteHeader';
+import { truncationNotice } from '../../apps/web/src/app/preview/PreviewViews';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: () => {}, replace: () => {}, refresh: () => {} }) }));
 
 type Theme = 'dark' | 'light';
@@ -53,6 +54,12 @@ afterAll(async () => { if (server) await new Promise<void>((resolve, reject) => 
 
 const errors = (found: { severity: string; rule: string; axeRule?: string; selector: string; message: string }[]) =>
   found.filter(f => f.severity === 'error').map(f => `${f.rule}${f.axeRule ? '/' + f.axeRule : ''} ${f.selector}: ${f.message}`);
+
+// Ревью круг 1: предпросмотр, остановленный потолком времени/запросов, не называет это бюджетом предпросмотра.
+it('предпросмотр: crawl_limit — свой текст; прочие пометки — бюджет предпросмотра', () => {
+  expect(truncationNotice(7, 'crawl_limit')).toBe('Прочитано 7 страниц — обход остановлен пределом времени или запросов к сайту (бережём ваш сайт от нагрузки). Бот отвечает по прочитанному.');
+  for (const reason of ['page_budget', 'embed_budget', null, undefined]) expect(truncationNotice(20, reason)).toContain('закончился бюджет предпросмотра');
+});
 
 for (const [engineName, engine] of Object.entries({ chromium, webkit })) describe(engineName, () => {
   let browser: Browser;

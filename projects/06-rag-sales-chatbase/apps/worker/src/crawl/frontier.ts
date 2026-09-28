@@ -13,7 +13,9 @@ export function sectionOf(href: string): string {
   return segments.length === 1 && !path.endsWith('/') && /\.[a-z0-9]+$/.test(first) ? '' : first;
 }
 
-interface Entry { href: string; lastmod: number | null }
+// pinned — стартовый адрес: первым в своём разделе независимо от lastmod соседей (ревью Codex, круг 1: датированный
+// «/price.php» из sitemap вставал перед корнем, и при бюджете 1 корень оставался непрочитанным).
+interface Entry { href: string; lastmod: number | null; pinned?: boolean }
 
 export class Frontier {
   private readonly sections = new Map<string, Entry[]>();
@@ -24,14 +26,14 @@ export class Frontier {
   get length(): number { return this.count; }
 
   // lastmod — время из sitemap (мс) либо null. Свежие раньше; без даты — после датированных, в порядке прихода.
-  push(href: string, lastmod: number | null = null): void {
+  push(href: string, lastmod: number | null = null, pinned = false): void {
     const key = sectionOf(href);
     let list = this.sections.get(key);
     if (!list) { list = []; this.sections.set(key, list); this.order.push(key); }
-    const entry = { href, lastmod: Number.isFinite(lastmod) ? lastmod : null };
+    const entry: Entry = { href, lastmod: Number.isFinite(lastmod) ? lastmod : null, pinned };
     if (entry.lastmod === null) list.push(entry);
     else {
-      const at = list.findIndex((e) => e.lastmod === null || e.lastmod < entry.lastmod!);
+      const at = list.findIndex((e) => !e.pinned && (e.lastmod === null || e.lastmod < entry.lastmod!));
       if (at === -1) list.push(entry); else list.splice(at, 0, entry);
     }
     this.count++;
@@ -49,6 +51,17 @@ export class Frontier {
       return list.shift()!.href;
     }
     return undefined;
+  }
+
+  // Адрес уже прочитан под другим именем (цель перенаправления) — убрать из очереди, иначе он числится непрочитанным
+  // и будет запрошен второй раз (ревью Codex, круг 1).
+  remove(href: string): boolean {
+    const list = this.sections.get(sectionOf(href));
+    const at = list ? list.findIndex((e) => e.href === href) : -1;
+    if (at < 0) return false;
+    list!.splice(at, 1);
+    this.count--;
+    return true;
   }
 
   // До n НЕпрочитанных адресов — по кругу между разделами (разные разделы видны первыми), в порядке очереди.
@@ -70,5 +83,8 @@ export function displayPath(href: string): string {
   const path = new URL(href).pathname;
   let shown = path;
   try { shown = decodeURIComponent(path); } catch { /* непригодная кодировка — как есть */ }
+  // Управляющие и форматирующие символы (NUL — PostgreSQL отвергает его в text; переводы строк; смена направления текста)
+  // остаются закодированными (ревью Codex, круг 1, high: «%00» валил завершение задачи).
+  shown = shown.replace(/[\p{Cc}\p{Cf}]/gu, (c) => encodeURIComponent(c));
   return shown.length > UNREAD_PATH_MAX_CHARS ? `${shown.slice(0, UNREAD_PATH_MAX_CHARS - 1)}…` : shown;
 }

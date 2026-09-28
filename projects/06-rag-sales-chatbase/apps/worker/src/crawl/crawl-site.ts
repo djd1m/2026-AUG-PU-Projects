@@ -124,7 +124,7 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
 
   // 2. Очередь: корень + sitemap.xml того же хоста. Сбой sitemap не отказ: он необязателен.
   const queue = new Frontier();
-  queue.push(root.href);
+  queue.push(root.href, null, true);
   const seen = new Set<string>([root.href]);
   let discoveryIncomplete = false;
   const enqueue = (href: string, base: URL, lastmod: number | null = null) => {
@@ -197,6 +197,7 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
     }
     const final = result.url;
     seen.add(final.href);
+    if (final.href !== href) queue.remove(final.href);
     // Перенаправление привело на путь, запрещённый robots: содержимое не используется.
     const finalRobots = robotsCache.get(final.origin);
     const reason: SkipReason | null =
