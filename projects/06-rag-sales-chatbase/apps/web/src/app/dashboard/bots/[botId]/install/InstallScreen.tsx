@@ -23,11 +23,13 @@ export function InstallScreen({ gate, ...p }: { botId: string; companyName: stri
   // после успеха страница перечитывается сервером — баннер исчезает по данным БД, а не по состоянию браузера.
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState('');
+  const [justVerified, setJustVerified] = useState(false);
   const verify = async () => {
+    if (verifying) return;
     setVerifying(true); setVerifyError('');
     const outcome = await requestVerify(p.botId, true);
     setVerifying(false);
-    if (outcome.ok) router.refresh(); else setVerifyError(outcome.message);
+    if (outcome.ok) { setJustVerified(outcome.verified); router.refresh(); } else setVerifyError(outcome.message);
   };
   const call = async (url: string, method: 'POST' | 'PATCH', payload: unknown, fieldName: string, done: () => void) => {
     setBusy(true); setErrors({});
@@ -37,7 +39,7 @@ export function InstallScreen({ gate, ...p }: { botId: string; companyName: stri
       setErrors({ [fieldName]: errorOf(body)?.message ?? 'Не удалось сохранить. Повторите' });
     } catch { setErrors({ [fieldName]: 'Нет связи с сервером. Повторите' }); } finally { setBusy(false); }
   };
-  return <InstallView {...p} gate={{ ...gate, chatHref: `/dashboard/bots/${p.botId}#chat-title`, busy: verifying, error: verifyError, onVerify: () => { void verify(); } }}
+  return <InstallView {...p} gate={{ ...gate, verified: gate.verified || justVerified, justVerified, chatHref: `/dashboard/bots/${p.botId}#chat-title`, busy: verifying, error: verifyError, onVerify: () => { void verify(); } }}
     contact={contact} domain={domain} errors={errors} busy={busy} copied={copied}
     onContact={setContact} onDomain={setDomain}
     onSaveContact={() => { void call(`/api/bots/${p.botId}`, 'PATCH', { contact }, 'contact', () => setContact('')); }}

@@ -34,7 +34,7 @@ const REGISTRY: Record<string, 'erase' | 'keep' | 'unrelated'> = {
   job_attempt: 'erase', preview: 'erase', visitor_session: 'erase', question_log: 'erase', widget_install: 'erase', quota_counter: 'erase',
   growth_event: 'keep', attribution: 'erase', studio_invite: 'erase', pro_interest: 'erase', payment_intent: 'erase', payment_event: 'unrelated',
   payment: 'keep', operator_action: 'keep', partner_code: 'keep', partner_code_use: 'erase', commission_entry: 'keep', partner_payout_details: 'erase',
-  partner_audit: 'keep', index_start: 'erase', erasure_audit: 'keep', upload_orphan: 'erase', _schema_migration: 'unrelated',
+  partner_audit: 'keep', index_start: 'erase', erasure_audit: 'keep', upload_orphan: 'erase', bot_verification_event: 'erase', _schema_migration: 'unrelated',
 };
 
 describe.skipIf(!databaseUrl)('удаление аккаунта на настоящем Postgres', () => {
@@ -171,6 +171,9 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
     // Ключи дедупликации реальных форм (ревью H3): origin установки, префикс IP показа страницы, id бота.
     await pool.query(`INSERT INTO growth_event (type, bot_id, account_id, from_domain, dedup_key) VALUES ('widget_install', $1, $2, 'shop.example', $3),
       ('public_page_view', $1, $2, NULL, $4)`, [b.id, a.id, `${b.id}:${HOST}`, `${b.id}:203.0.113.0/24`]);
+    // verify-audit (миграция 014): событие журнала отметки у бота — уходит каскадом вместе с ботом.
+    await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [b.id]);
+    expect(await one('SELECT count(*) FROM bot_verification_event WHERE bot_id = $1', [b.id])).toBe(1);
     await requestErasure(pool, a.id);
     expect(await listErasableAccounts(pool, new Date(), 500)).not.toContain(a.id);   // тихий час не прошёл — сторож не берёт
     await age(a.id);
@@ -182,6 +185,7 @@ describe.skipIf(!databaseUrl)('удаление аккаунта на насто
       ['question_log', 'SELECT count(*) FROM question_log WHERE bot_id = $1', [b.id]], ['visitor_session', 'SELECT count(*) FROM visitor_session WHERE id = $1', [b.visitor]],
       ['quota_counter', 'SELECT count(*) FROM quota_counter WHERE scope_key = ANY($1::text[])', [[a.id, b.id, b.visitor]]],
       ['upload_orphan', 'SELECT count(*) FROM upload_orphan WHERE account_id = $1', [a.id]],
+      ['bot_verification_event', 'SELECT count(*) FROM bot_verification_event WHERE bot_id = $1', [b.id]],
       ['session', 'SELECT count(*) FROM session WHERE account_id = $1', [a.id]], ['pro_interest', 'SELECT count(*) FROM pro_interest WHERE account_id = $1', [a.id]],
       ['growth_event (связи)', 'SELECT count(*) FROM growth_event WHERE account_id = $1 OR bot_id = $2 OR visitor_session_id = $3', [a.id, b.id, b.visitor]],
     ] as const) expect(await one(sql, [...params]), table).toBe(0);

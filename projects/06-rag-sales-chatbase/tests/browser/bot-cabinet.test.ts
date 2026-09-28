@@ -92,7 +92,7 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
     summary: createElement(SummaryBlock, { summary: { answered: 40, unknown: 6, refused_limit: 2, not_verified_visitors: 0, last_unknown: [
       { text: 'Есть ли парковка у клиники на Арбате и сколько она стоит для пациентов в выходные дни?', asked_at: '2026-09-25T09:15:00.000Z' },
       { text: 'Делаете ли вы имплантацию под общим наркозом?', asked_at: '2026-09-24T18:02:00.000Z' }] } }),
-    verify: createElement(VerifyBlock, { verified: false, busy: false, error: '', onToggle: noop }),
+    verify: createElement(VerifyBlock, { verified: false, busy: false, error: '', verifiedAt: null, events: [], onSet: noop, onUnset: noop }),
     publish: createElement(PublishBlock, { page: { slug: 'stomatologiya-ulybka-ab12', enabled: true, indexable: false,
       url: `${ORIGIN}/b/stomatologiya-ulybka-ab12` }, busy: false, error: '', onPublish: noop, onIndexable: noop }) })),
   'extras-empty': main(createElement(BotLayout, { botId: BOT, companyName: 'Новый бот', contact: '', greeting: '', sources: [], ready: false,
@@ -100,7 +100,7 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
     chat: createElement(OwnerChat, { companyName: 'Новый бот', messages: [], draft: '', busy: false, error: '', ready: false, onDraft: noop, onAsk: noop }),
     settings: form(), banner: createElement(MonthBanner, { used: 3, limit: 300 }),
     summary: createElement(SummaryBlock, { summary: { answered: 0, unknown: 0, refused_limit: 0, not_verified_visitors: 0, last_unknown: [] } }),
-    verify: createElement(VerifyBlock, { verified: true, busy: false, error: 'Дождитесь окончания загрузки материалов и проверьте ответы по ним', onToggle: noop }),
+    verify: createElement(VerifyBlock, { verified: true, busy: false, error: 'Дождитесь окончания загрузки материалов и проверьте ответы по ним', verifiedAt: null, events: [], onSet: noop, onUnset: noop }),
     publish: createElement(PublishBlock, { page: { slug: null, enabled: false, indexable: false, url: null }, busy: false,
       error: 'Укажите контакт для «не знаю» в настройках — без него бот не отвечает и страницу публиковать нечем', onPublish: noop, onIndexable: noop }) })),
   'install-contact': main(install({ errors: { contact: 'Не похоже на контакт. Почта (info@example.ru), телефон (+7 900 000-00-00) или ссылка https://…' } })),

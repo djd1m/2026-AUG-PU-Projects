@@ -38,7 +38,7 @@ const bot = (banner: GateBannerView, summary = { answered: 0, unknown: 0, refuse
     sourcesBlock: createElement(SourceList, { busy: null, confirming: null, errors: {}, onReindex: noop, onConfirm: noop, onDelete: noop, sources: DONE }),
     chat: createElement(OwnerChat, { companyName: 'AI Coding Space', messages: [], draft: '', busy: false, error: '', ready: true, onDraft: noop, onAsk: noop }),
     summary: createElement(SummaryBlock, { summary }),
-    verify: createElement(VerifyBlock, { verified: banner.verified, busy: false, error: '', onToggle: noop }),
+    verify: createElement(VerifyBlock, { verified: banner.verified, busy: false, error: '', verifiedAt: null, events: [], onSet: noop, onUnset: noop }),
     settings: createElement(BotForm, { idPrefix: 'bot', name: 'AI Coding Space', contact: '+7 900 000-00-00', greeting: '', errors: {}, busy: false,
       submitLabel: 'Сохранить настройки', contactRequired: true, onChange: noop, onSubmit: noop }) });
 const main = (child: ReactElement) => (theme: Theme) => createElement(Fragment, null, createElement(SiteHeader, { theme }),
