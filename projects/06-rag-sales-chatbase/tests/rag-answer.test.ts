@@ -25,7 +25,7 @@ function setup(options: { hits?: SearchHit[]; reply?: (c: ChatCall) => ModelRepl
     client: h.client, models: MODELS, spend: h.spend,
     chargeQuota: async () => { charges++; return options.quota ?? { granted: true }; },
     search: async (botId) => { searched.push(botId); return options.hits ?? [PRICE]; },
-    logQuestion: async (entry) => { log.push(entry); },
+    logQuestion: async (entry) => { log.push(entry); }, pageTitles: async () => [],
     answerTimeoutMs: options.timeoutMs, signal: (line) => signals.push(line),
   };
   return { deps, h, log, searched, signals, charges: () => charges,
@@ -84,7 +84,7 @@ describe('Барьер ДО модели: порог min_similarity (SC-US-002-2
     const t = setup({ hits: [hit('Самовывоз со склада', 0.39), hit('Гарантия', 0.12)] });
     const r = await t.ask('Есть ли у вас филиал в Казани?');
     expect(r).toMatchObject({ status: 'unknown', reason: 'below_threshold', contact: bot.contact });
-    if (r.status === 'unknown') expect(r.message).toBe(`Не нашёл этого в материалах компании. Напишите: ${bot.contact}`);
+    if (r.status === 'unknown') expect(r.message).toBe(`Я отвечаю только по материалам сайта компании Пекарня «Колос» и не нашёл там ответа на этот вопрос. Напишите: ${bot.contact}`);
     expect(t.h.gateway.chats).toHaveLength(0);
     expect(t.h.gateway.embeds).toHaveLength(1);
     expect(t.log).toEqual([{ botId: BOT, outcome: 'unknown', text: 'Есть ли у вас филиал в Казани?', citedChunkIds: [] }]);
@@ -100,13 +100,13 @@ describe('Барьер ДО модели: порог min_similarity (SC-US-002-2
     const edge = hit('ровно порог', 0.4), below = hit('чуть ниже', 0.3999);
     const many = [0.9, 0.8, 0.7, 0.6, 0.5].map((s) => hit(`фрагмент ${s}`, s));
     const t = setup({ hits: [below, edge, ...many] });
-    await t.ask('Вопрос');
+    await t.ask('Вопрос о ценах');   // одно слово «Вопрос» — светская реплика help (A-N6-074)
     const user = t.h.gateway.chats[0]!.messages[1]!.content;
     expect(user).not.toContain('чуть ниже');
     expect(user).not.toContain('ровно порог');   // пятый по сходству: top_k = 4
     expect(user.match(/<материал id="F\d"/g)).toEqual(['<материал id="F1"', '<материал id="F2"', '<материал id="F3"', '<материал id="F4"']);
     const t2 = setup({ hits: [below, edge] });
-    await t2.ask('Вопрос');
+    await t2.ask('Вопрос о ценах');
     expect(t2.h.gateway.chats[0]!.messages[1]!.content).toContain('ровно порог');
     expect(t2.h.gateway.chats[0]!.messages[1]!.content).not.toContain('чуть ниже');
   });
@@ -268,6 +268,6 @@ describe('Отказы: лимит, таймаут, поставщик, длин
   it('без контакта у бота «не знаю» не выдумывает контакт', async () => {
     const t = setup({ hits: [] });
     const r = await t.ask('Доставка?', [], { ...bot, contact: '  ' });
-    expect(r).toMatchObject({ status: 'unknown', contact: null, message: 'Не нашёл этого в материалах компании.' });
+    expect(r).toMatchObject({ status: 'unknown', contact: null, message: 'Я отвечаю только по материалам сайта компании Пекарня «Колос» и не нашёл там ответа на этот вопрос.' });
   });
 });

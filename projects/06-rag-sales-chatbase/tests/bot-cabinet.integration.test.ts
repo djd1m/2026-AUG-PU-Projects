@@ -236,7 +236,7 @@ describe.skipIf(!databaseUrl)('bot-cabinet на настоящем Postgres + pg
     expect(r.status).toBe(200);
     expect(r.body.data).toMatchObject({ status: 'answered', text: 'Доставка по Москве — от 350 ₽.', source: { title: 'Цены', url: 'https://kolos.example/ceny' } });
     const unknown = await w.ask(a.token, id, { question: 'Есть ли парковка у магазина?' });
-    expect(unknown.body.data).toMatchObject({ status: 'unknown', text: 'Не нашёл этого в материалах компании. Напишите: +7 900 000-00-00' });
+    expect(unknown.body.data).toMatchObject({ status: 'unknown', text: 'Я отвечаю только по материалам сайта компании Пекарня «Колос» и не нашёл там ответа на этот вопрос. Напишите: +7 900 000-00-00' });
     expect(w.h.gateway.chats).toHaveLength(1);
     expect(w.h.spendEvents().filter((e) => e.phase === 'attempt').map((e) => e.call).sort()).toEqual(['answer_owner', 'embed_question', 'embed_question']);
     expect(await count(`SELECT COALESCE(sum(used), 0)::int AS n FROM quota_counter WHERE scope = 'bot_day_answers' AND scope_key = $1`, [id])).toBe(2);

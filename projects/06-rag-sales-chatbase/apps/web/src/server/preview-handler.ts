@@ -191,6 +191,8 @@ export function createPreviewAskHandler(deps: PreviewDependencies) {
           const chip = ({ title, url, excerpt }: { title: string; url: string | null; excerpt: string }) => ({ title, url, excerpt });
           return json({ data: { status: 'answered', text: result.text, source: chip(result.sourceChip), sources: result.sources.map(chip), first_answer: firstAnswer } });
         }
+        // A-N6-074: светская реплика — шаблон без модели; не тратит 10 ответов предпросмотра и не пишет ход истории.
+        case 'small_talk': return json({ data: { status: 'small_talk', text: result.text } });
         case 'unknown': return json({ data: { status: 'unknown', text: result.message, contact: result.contact } });
         case 'refused': return fail(429, 'limit_preview', PREVIEW_LIMIT_MESSAGE);
         case 'invalid': return fail(400, result.reason === 'unexpected_field' ? 'unexpected_field' : 'invalid',

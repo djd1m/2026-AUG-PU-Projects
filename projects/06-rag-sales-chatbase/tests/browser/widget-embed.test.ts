@@ -202,6 +202,21 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       expect(problems).toEqual([]);
     }));
 
+  // small-talk (A-N6-074): на чужом origin «привет» — вежливый шаблон в окне; ни эмбеддинга, ни модели, ни списания.
+  it('светская беседа: «Привет!» — приветствие бота с темами сайта в окне, 0 эмбеддингов, 0 моделей, 0 списаний; «Спасибо!» — «Пожалуйста!»', () =>
+    open(`${HOST}/host.html?bot=${KEY_FREE}`, async (page, _c, problems) => {
+      const [models, embeds, charges] = [harness.modelCalls(), harness.embedCalls(), harness.quotaCharges()];
+      await waitWidget(page);
+      await openPanel(page);
+      const hello = await ask(page, 'Привет!', 1);
+      expect(hello).toEqual({ text: 'Здравствуйте! Я бот компании Пекарня «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Цены, Доставка.',
+        link: null, summary: null });
+      expect((await ask(page, 'Спасибо!', 2)).text).toBe('Пожалуйста! Если появятся ещё вопросы — спрашивайте.');
+      expect([harness.modelCalls(), harness.embedCalls(), harness.quotaCharges()]).toEqual([models, embeds, charges]);
+      expect(await cspLog(page)).toBe('');
+      expect(problems).toEqual([]);
+    }));
+
   it('перекрёстный-запрос: POST /w/v1/ask со страницы ВНЕ списка (8098) — 403 без ACAO, браузер ответ не отдаёт, модель не вызвана', () =>
     open(`${STRANGER}/host.html?bot=${KEY_FREE}`, async (page) => {
       const before = harness.modelCalls();

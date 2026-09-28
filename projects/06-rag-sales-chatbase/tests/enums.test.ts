@@ -11,12 +11,20 @@ function checkValues(column: string): string[] {
   return [...match[1]!.matchAll(/'([^']+)'/g)].map((m) => m[1]!);
 }
 const cases: Array<[string, readonly string[]]> = [
-  ['plan', enums.ACCOUNT_PLAN], ['kind', enums.SOURCE_KIND], ['outcome', enums.QUESTION_OUTCOME],
+  ['plan', enums.ACCOUNT_PLAN], ['kind', enums.SOURCE_KIND],
   ['scope', enums.QUOTA_SCOPE], ['type', enums.GROWTH_EVENT_TYPE], ['source', enums.ATTRIBUTION_SOURCE],
   ['failure_reason', enums.INDEX_JOB_FAILURE_REASON],
 ];
 describe('CHECK миграции = перечисления канона §4', () => {
   it.each(cases)('%s', (column, values) => { expect(checkValues(column)).toEqual([...values]); });
+  // small-talk (A-N6-074): исход расширяется ДОБАВЛЯЮЩИМИ миграциями (013 дописывает 'small_talk' к текущему набору, не
+  // перечисляя его). Здесь — 001 + добавленные значения; итоговый CHECK настоящей БД сверяет tests/small-talk.integration.test.ts.
+  it('outcome: CHECK 001 + значения добавляющих миграций = QUESTION_OUTCOME', () => {
+    const added = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort()
+      .flatMap((f) => [...readFileSync(`packages/db/migrations/${f}`, 'utf8').matchAll(/ARRAY\[''([a-z_]+)''::text, /g)].map((m) => m[1]!));
+    expect(added).toContain('small_talk');
+    expect([...checkValues('outcome'), ...added].sort()).toEqual([...enums.QUESTION_OUTCOME].sort());
+  });
   it('статусы: account, bot, source, index_job, attribution', () => {
     const statuses = [...sql.matchAll(/status text NOT NULL[^,]*CHECK \(status IN \(([^)]*)\)\)/g)].map((m) => [...m[1]!.matchAll(/'([^']+)'/g)].map((x) => x[1]));
     for (const values of [enums.ACCOUNT_STATUS, enums.BOT_STATUS, enums.SOURCE_STATUS, enums.INDEX_JOB_STATUS]) {

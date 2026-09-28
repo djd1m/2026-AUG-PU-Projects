@@ -23,6 +23,7 @@ export interface SourceView { title: string; url: string | null; excerpt: string
 export type AskResult =
   | { kind: 'answered'; text: string; source: SourceView | null }
   | { kind: 'unknown'; text: string }
+  | { kind: 'small_talk'; text: string }   // A-N6-074: вежливый шаблон на «привет»/«спасибо» — без источника
   | { kind: 'limit'; text: string }
   | { kind: 'expired' }      // 409 session_expired: токен не годен (другой /24) — взять новый через config и повторить
   | { kind: 'badge' }        // 409 badge_required: сервер не видит показа бейджа — отправить показ заново и повторить
@@ -109,6 +110,8 @@ export function parseAsk(status: number, value: unknown): AskResult {
   if (!data) return { kind: 'error' };
   const text = str(data.text, 4000);
   if (data.status === 'answered' && text) return { kind: 'answered', text, source: parseSource(data.source) };
+  // A-N6-074: светская реплика приходит как unknown + reason small_talk (совместимо с прежним бандлом, ревью круг 1).
+  if (data.status === 'unknown' && data.reason === 'small_talk' && text) return { kind: 'small_talk', text };
   if (data.status === 'unknown' && text) return { kind: 'unknown', text };
   return { kind: 'error' };
 }

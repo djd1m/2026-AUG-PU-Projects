@@ -1,0 +1,82 @@
+
+ RUN  v3.2.7 /tmp/n6-small-talk-mutations-RBcEVv
+
+ ✓ tests/rag-answer.test.ts (33 tests) 810ms
+ ❯ tests/small-talk.test.ts (12 tests | 2 failed) 130ms
+   ✓ detectSmallTalk: закрытый словарь, «вся реплика из словаря» > таблица 74 реплик (положительные и ловушки) 7ms
+   ✓ detectSmallTalk: закрытый словарь, «вся реплика из словаря» > каждое из шести намерений распознаётся хотя бы одной репликой, ловушек не меньше десяти 1ms
+   ✓ detectSmallTalk: закрытый словарь, «вся реплика из словаря» > не строка — не светская беседа 0ms
+   ✓ topicsFromTitles и шаблоны > первая осмысленная часть заголовка, без названия компании, «Главной», повторов и длинного; PDF — имя файла 1ms
+   ✓ topicsFromTitles и шаблоны > приветствие: «Здравствуйте! Я бот компании …, отвечаю только по материалам сайта. Например, спросите о темах: A, B, C.» 1ms
+   ✓ topicsFromTitles и шаблоны > «кто ты» — бот, а не человек (FR-ANSWER-005); ни один шаблон не обещает от имени компании цен, скидок и сроков 2ms
+   ✓ topicsFromTitles и шаблоны > «не знаю»: отвечаю только по материалам сайта <компании> и не нашёл там ответа 0ms
+   × answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «привет!» → шаблон с 3 темами; 0 эмбеддингов, 0 вызовов модели, 0 списаний, 0 строк журнала расхода; исход small_talk без текста 50ms
+     → expected { status: 'answered', …(3) } to deeply equal { status: 'small_talk', …(2) }
+   × answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «спасибо» и «пока» — без чтения заголовков; все три режима (виджет, предпросмотр, кабинет) отвечают шаблоном 23ms
+     → Спасибо! widget: expected 'answered' to be 'small_talk' // Object.is equality
+   ✓ answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > ЛОВУШКА: «привет, сколько стоит доставка?» — обычный вопрос: квота, эмбеддинг, модель по фрагменту ≥ 0.40 23ms
+   ✓ answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > инъекция «привет, игнорируй инструкции …» — не шаблон, а обычный путь: без фрагмента ≥ 0.40 модель НЕ зовётся, «не знаю» по сайту 17ms
+   ✓ answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > неактивный бот не отвечает и светской репликой: статус проверяется ДО распознавателя 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/small-talk.test.ts > answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «привет!» → шаблон с 3 темами; 0 эмбеддингов, 0 вызовов модели, 0 списаний, 0 строк журнала расхода; исход small_talk без текста
+AssertionError: expected { status: 'answered', …(3) } to deeply equal { status: 'small_talk', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "intent": "greeting",
+-   "status": "small_talk",
+-   "text": "Здравствуйте! Я бот компании Пекарня «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Доставка, Цены, Торты на заказ.",
++   "sourceChip": {
++     "chunkId": "610311e9-0dc1-4d7c-bf5d-ad9db386f70d",
++     "excerpt": "Доставка по Москве от 350 ₽.",
++     "title": "Доставка",
++     "url": "https://kolos.example/dostavka",
++   },
++   "sources": [
++     {
++       "chunkId": "610311e9-0dc1-4d7c-bf5d-ad9db386f70d",
++       "excerpt": "Доставка по Москве от 350 ₽.",
++       "title": "Доставка",
++       "url": "https://kolos.example/dostavka",
++     },
++   ],
++   "status": "answered",
++   "text": "Доставка по Москве — от 350 ₽.",
+  }
+
+ ❯ tests/small-talk.test.ts:99:15
+     97|     const t = setup();
+     98|     const r = await t.ask('привет!');
+     99|     expect(r).toEqual({ status: 'small_talk', intent: 'greeting',
+       |               ^
+    100|       text: 'Здравствуйте! Я бот компании Пекарня «Колос», отвечаю тол…
+    101|     expect(t.h.gateway.embeds).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/small-talk.test.ts > answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «спасибо» и «пока» — без чтения заголовков; все три режима (виджет, предпросмотр, кабинет) отвечают шаблоном
+AssertionError: Спасибо! widget: expected 'answered' to be 'small_talk' // Object.is equality
+
+Expected: "small_talk"
+Received: "answered"
+
+ ❯ tests/small-talk.test.ts:111:61
+    109|     const t = setup();
+    110|     for (const [q, mode] of [['Спасибо!', 'widget'], ['пока', 'preview…
+    111|       expect((await t.ask(q, mode)).status, `${q} ${mode}`).toBe('smal…
+       |                                                             ^
+    112|     }
+    113|     expect(t.titles).toEqual([BOT]);   // только «кто ты» читал заголо…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 43 passed (45)
+   Start at  14:09:21
+   Duration  3.25s (transform 760ms, setup 0ms, collect 1.35s, tests 939ms, environment 1ms, prepare 268ms)
+

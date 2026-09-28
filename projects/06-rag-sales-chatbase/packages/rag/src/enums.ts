@@ -16,7 +16,8 @@ export const INDEX_JOB_FAILURE_REASON = ['robots_disallowed', 'unreachable', 'bl
 // index_job.truncated_by (budget-truncation, A-N6-052, миграция 009): задача done, но остановлена исчерпанием
 // СОБСТВЕННОГО бюджета эмбеддингов — предпросмотра (embed_budget) или серии источника (series_embed_budget).
 export const INDEX_JOB_TRUNCATION = ['embed_budget', 'series_embed_budget'] as const;
-export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin'] as const;
+// small_talk (small-talk, A-N6-074, миграция 013): светская реплика — шаблон без модели, эмбеддинга и списания, без текста.
+export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin', 'small_talk'] as const;
 export const QUOTA_SCOPE = ['visitor_answers', 'ip_answers', 'bot_day_answers', 'bot_month_answers', 'global_answers',
   'preview_session', 'ip_previews', 'global_previews', 'account_embed_tokens', 'global_embed_tokens'] as const;
 export const GROWTH_EVENT_TYPE = ['badge_impression', 'badge_click', 'share_cta_shown', 'share_cta_click', 'widget_install',

@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 import { AddressRefused, checkAddress, systemResolver, type Resolver } from '@n6/rag/check-address';
 import { answerQuestion, type Ceilings, type OpenRouter, type SpendRecorder } from '@n6/rag';
 import { addAllowedOrigin, chargeAnswerQuota, createBot, createSiteSource, findJobByIdempotencyKey, listBots, loadOwnedAnswerBot, ownsBot, publishPublicPage,
-  readBotSummary, reindexSource, deleteSource, searchChunks, setAnswersVerified, updateBotSettings, type Pool } from '@n6/db';
+  readBotPageTitles, readBotSummary, reindexSource, deleteSource, searchChunks, setAnswersVerified, updateBotSettings, type Pool } from '@n6/db';
 import type { CabinetDependencies } from './cabinet-handler';
 import { AddressRefusal } from './preview-handler';
 
@@ -55,6 +55,7 @@ export function createCabinetDependencies(w: CabinetWiring): CabinetDependencies
         search: (id, embedding) => searchChunks(pool, id, embedding),
         // Вопросы владельца — не вопросы посетителей: в question_log (сводка «ответил / не знал», 152-ФЗ) не пишутся.
         logQuestion: async () => {},
+        pageTitles: (id) => readBotPageTitles(pool, id),
       }, bot, 'owner', request);
     },
   };

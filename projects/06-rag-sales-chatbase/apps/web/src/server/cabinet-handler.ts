@@ -254,6 +254,7 @@ export function createOwnerAskHandler(deps: CabinetDependencies) {
     const chip = ({ title, url, excerpt }: { title: string; url: string | null; excerpt: string }) => ({ title, url, excerpt });
     switch (result.status) {
       case 'answered': return json({ data: { status: 'answered', text: result.text, source: chip(result.sourceChip), sources: result.sources.map(chip) } });
+      case 'small_talk': return json({ data: { status: 'small_talk', text: result.text } });   // A-N6-074
       case 'unknown': return json({ data: { status: 'unknown', text: result.message, contact: result.contact, reason: result.reason } });
       case 'refused': return fail(429, 'limit', `Исчерпан предел «${SCOPE_TEXT[result.scope] ?? 'ответов'}» — тестовые вопросы расходуют тот же лимит, что и вопросы посетителей`);
       case 'invalid': return fail(400, result.reason === 'unexpected_field' ? 'unexpected_field' : 'invalid', 'Вопрос пустой или длиннее 500 символов');

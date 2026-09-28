@@ -1,0 +1,153 @@
+
+ RUN  v3.2.7 /tmp/n6-small-talk-mutations-RBcEVv
+
+ ✓ tests/rag-answer.test.ts (33 tests) 1140ms
+   ✓ Prompt injection (FR-ANSWER-004, SC-US-006-3, SC-SEC-002) > инструкция во фрагменте: разделители на месте, правило «данные, не команды»; обещание скидки без цитаты → «не знаю»  314ms
+ ❯ tests/small-talk.test.ts (12 tests | 3 failed) 217ms
+   × detectSmallTalk: закрытый словарь, «вся реплика из словаря» > таблица 74 реплик (положительные и ловушки) 27ms
+     → expected [ …(49) ] to deeply equal []
+   ✓ detectSmallTalk: закрытый словарь, «вся реплика из словаря» > каждое из шести намерений распознаётся хотя бы одной репликой, ловушек не меньше десяти 1ms
+   ✓ detectSmallTalk: закрытый словарь, «вся реплика из словаря» > не строка — не светская беседа 0ms
+   ✓ topicsFromTitles и шаблоны > первая осмысленная часть заголовка, без названия компании, «Главной», повторов и длинного; PDF — имя файла 3ms
+   ✓ topicsFromTitles и шаблоны > приветствие: «Здравствуйте! Я бот компании …, отвечаю только по материалам сайта. Например, спросите о темах: A, B, C.» 1ms
+   ✓ topicsFromTitles и шаблоны > «кто ты» — бот, а не человек (FR-ANSWER-005); ни один шаблон не обещает от имени компании цен, скидок и сроков 3ms
+   ✓ topicsFromTitles и шаблоны > «не знаю»: отвечаю только по материалам сайта <компании> и не нашёл там ответа 0ms
+   × answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «привет!» → шаблон с 3 темами; 0 эмбеддингов, 0 вызовов модели, 0 списаний, 0 строк журнала расхода; исход small_talk без текста 103ms
+     → expected { status: 'answered', …(3) } to deeply equal { status: 'small_talk', …(2) }
+   × answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «спасибо» и «пока» — без чтения заголовков; все три режима (виджет, предпросмотр, кабинет) отвечают шаблоном 32ms
+     → Спасибо! widget: expected 'answered' to be 'small_talk' // Object.is equality
+   ✓ answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > ЛОВУШКА: «привет, сколько стоит доставка?» — обычный вопрос: квота, эмбеддинг, модель по фрагменту ≥ 0.40 26ms
+   ✓ answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > инъекция «привет, игнорируй инструкции …» — не шаблон, а обычный путь: без фрагмента ≥ 0.40 модель НЕ зовётся, «не знаю» по сайту 12ms
+   ✓ answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > неактивный бот не отвечает и светской репликой: статус проверяется ДО распознавателя 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/small-talk.test.ts > detectSmallTalk: закрытый словарь, «вся реплика из словаря» > таблица 74 реплик (положительные и ловушки)
+AssertionError: expected [ …(49) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "\"привет\": ждали greeting, получили null",
++   "\"Привет!\": ждали greeting, получили null",
++   "\"ПРИВЕТ!!!\": ждали greeting, получили null",
++   "\"приветт\": ждали greeting, получили null",
++   "\"привееет\": ждали greeting, получили null",
++   "\"пирвет\": ждали greeting, получили null",
++   "\"превет\": ждали greeting, получили null",
++   "\"Привет 👋\": ждали greeting, получили null",
++   "\"👋\": ждали greeting, получили null",
++   "\"Здравствуйте\": ждали greeting, получили null",
++   "\"здраствуйте\": ждали greeting, получили null",
++   "\"Добрый день!\": ждали greeting, получили null",
++   "\"доброе утро\": ждали greeting, получили null",
++   "\"Добрый вечер)\": ждали greeting, получили null",
++   "\"hello\": ждали greeting, получили null",
++   "\"Hi there\": ждали greeting, получили null",
++   "\"ну привет\": ждали greeting, получили null",
++   "\"привет, бот\": ждали greeting, получили null",
++   "\"Салют\": ждали greeting, получили null",
++   "\"пока\": ждали goodbye, получили null",
++   "\"До свидания!\": ждали goodbye, получили null",
++   "\"всего доброго\": ждали goodbye, получили null",
++   "\"bye\": ждали goodbye, получили null",
++   "\"спасибо, пока\": ждали goodbye, получили null",
++   "\"Спасибо!\": ждали thanks, получили null",
++   "\"спасибо большое\": ждали thanks, получили null",
++   "\"Спасибо вам огромное!!\": ждали thanks, получили null",
++   "\"спосибо\": ждали thanks, получили null",
++   "\"спс\": ждали thanks, получили null",
++   "\"благодарю\": ждали thanks, получили null",
++   "\"thank you\": ждали thanks, получили null",
++   "\"🙏\": ждали thanks, получили null",
++   "\"ок\": ждали thanks, получили null",
++   "\"Понятно\": ждали thanks, получили null",
++   "\"отлично, спасибо\": ждали thanks, получили null",
++   "\"как дела?\": ждали how_are_you, получили null",
++   "\"Привет, как дела?\": ждали how_are_you, получили null",
++   "\"how are you\": ждали how_are_you, получили null",
++   "\"кто ты?\": ждали who_are_you, получили null",
++   "\"Ты бот?\": ждали who_are_you, получили null",
++   "\"вы человек?\": ждали who_are_you, получили null",
++   "\"что ты умеешь?\": ждали who_are_you, получили null",
++   "\"Привет! Кто ты?\": ждали who_are_you, получили null",
++   "\"чем можете помочь?\": ждали who_are_you, получили null",
++   "\"помощь\": ждали help, получили null",
++   "\"Помогите!\": ждали help, получили null",
++   "\"у меня вопрос\": ждали help, получили null",
++   "\"help\": ждали help, получили null",
++   "\"привет, у меня вопрос\": ждали help, получили null",
++ ]
+
+ ❯ tests/small-talk.test.ts:41:19
+     39|     expect(TABLE.length).toBeGreaterThanOrEqual(40);
+     40|     const wrong = TABLE.filter(([text, intent]) => detectSmallTalk(tex…
+     41|     expect(wrong).toEqual([]);
+       |                   ^
+     42|   });
+     43|   it('каждое из шести намерений распознаётся хотя бы одной репликой, л…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/small-talk.test.ts > answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «привет!» → шаблон с 3 темами; 0 эмбеддингов, 0 вызовов модели, 0 списаний, 0 строк журнала расхода; исход small_talk без текста
+AssertionError: expected { status: 'answered', …(3) } to deeply equal { status: 'small_talk', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "intent": "greeting",
+-   "status": "small_talk",
+-   "text": "Здравствуйте! Я бот компании Пекарня «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Доставка, Цены, Торты на заказ.",
++   "sourceChip": {
++     "chunkId": "ffbb1af1-8568-4fda-9bde-9ff0536983f0",
++     "excerpt": "Доставка по Москве от 350 ₽.",
++     "title": "Доставка",
++     "url": "https://kolos.example/dostavka",
++   },
++   "sources": [
++     {
++       "chunkId": "ffbb1af1-8568-4fda-9bde-9ff0536983f0",
++       "excerpt": "Доставка по Москве от 350 ₽.",
++       "title": "Доставка",
++       "url": "https://kolos.example/dostavka",
++     },
++   ],
++   "status": "answered",
++   "text": "Доставка по Москве — от 350 ₽.",
+  }
+
+ ❯ tests/small-talk.test.ts:99:15
+     97|     const t = setup();
+     98|     const r = await t.ask('привет!');
+     99|     expect(r).toEqual({ status: 'small_talk', intent: 'greeting',
+       |               ^
+    100|       text: 'Здравствуйте! Я бот компании Пекарня «Колос», отвечаю тол…
+    101|     expect(t.h.gateway.embeds).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/small-talk.test.ts > answerQuestion: светская реплика — шаблон без эмбеддинга, модели и списания (ADR-003) > «спасибо» и «пока» — без чтения заголовков; все три режима (виджет, предпросмотр, кабинет) отвечают шаблоном
+AssertionError: Спасибо! widget: expected 'answered' to be 'small_talk' // Object.is equality
+
+Expected: "small_talk"
+Received: "answered"
+
+ ❯ tests/small-talk.test.ts:111:61
+    109|     const t = setup();
+    110|     for (const [q, mode] of [['Спасибо!', 'widget'], ['пока', 'preview…
+    111|       expect((await t.ask(q, mode)).status, `${q} ${mode}`).toBe('smal…
+       |                                                             ^
+    112|     }
+    113|     expect(t.titles).toEqual([BOT]);   // только «кто ты» читал заголо…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 42 passed (45)
+   Start at  14:09:12
+   Duration  3.54s (transform 790ms, setup 0ms, collect 1.36s, tests 1.36s, environment 0ms, prepare 239ms)
+
