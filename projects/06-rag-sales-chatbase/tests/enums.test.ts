@@ -44,9 +44,13 @@ describe('CHECK миграции = перечисления канона §4', (
   it('question_log.outcome: последнее question_log_outcome_check миграций = QUESTION_OUTCOME', () => {
     const migrations = readdirSync('packages/db/migrations').filter((f) => f.endsWith('.sql')).sort()
       .map((f) => readFileSync(`packages/db/migrations/${f}`, 'utf8')).join('\n');
-    const all = [...migrations.matchAll(/CONSTRAINT question_log_outcome_check\s+CHECK \(outcome IN \(([^)]*)\)\)/g)];
-    if (!all.length) throw new Error('question_log_outcome_check не найден — проверка НЕ ВЫПОЛНЕНА');
-    expect([...all.at(-1)![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.QUESTION_OUTCOME]);
+    // Форма 1 — литеральный список (001): база набора. Форма 2 — DO-блок «добавить значение к текущему ARRAY[…]»
+    // (011 not_verified, 013 small_talk): параллельные фичи только дописывают, порядок применения не важен.
+    const literal = [...migrations.matchAll(/CONSTRAINT question_log_outcome_check\s+CHECK \(outcome IN \(([^)]*)\)\)/g)];
+    const base = literal.length ? [...literal.at(-1)![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1]) : checkValues('outcome');
+    const appended = [...migrations.matchAll(/replace\(def, 'ARRAY\[', 'ARRAY\[''([a-z_]+)''::text, '\)/g)].map((m) => m[1]);
+    if (!base.length) throw new Error('question_log_outcome_check не найден — проверка НЕ ВЫПОЛНЕНА');
+    expect([...base, ...appended].sort()).toEqual([...enums.QUESTION_OUTCOME].sort());
     expect(enums.QUESTION_OUTCOME).toEqual(expect.arrayContaining(checkValues('outcome')));
   });
   // carry_over ревью foundation M1: статус попытки объявлен в коде и совпадает с CHECK таблицы job_attempt

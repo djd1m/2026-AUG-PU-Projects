@@ -5,9 +5,21 @@
 --    (152-ФЗ: CHECK question_text_only_unknown из 001 остаётся в силе), без списания квоты и без вызова модели.
 --    Без этой строки сводка показывала «вопросов ещё не было», пока посетители упирались в заглушку.
 --    Имя ограничения — то, что 001 получила по умолчанию; tests/enums.test.ts сверяет ПОСЛЕДНЕЕ его определение.
-ALTER TABLE question_log DROP CONSTRAINT question_log_outcome_check;
-ALTER TABLE question_log ADD CONSTRAINT question_log_outcome_check
-  CHECK (outcome IN ('answered', 'unknown', 'refused_limit', 'refused_origin', 'not_verified'));
+--    Значение только ДОБАВЛЯЕТСЯ к текущему набору (та же форма, что у 013 small_talk): на стенде 013 применена РАНЬШЕ 011
+--    (слияние параллельных фич), и перечисление набора целиком здесь стёрло бы small_talk. Координатор, 28.09.
+DO $$
+DECLARE def text;
+BEGIN
+  SELECT pg_get_constraintdef(c.oid) INTO def FROM pg_constraint c
+   WHERE c.conrelid = 'question_log'::regclass AND c.conname = 'question_log_outcome_check';
+  IF def IS NULL OR position('ARRAY[' in def) = 0 THEN
+    RAISE EXCEPTION 'question_log_outcome_check не найден или неожиданной формы (%): миграция 011 не применена', def;
+  END IF;
+  IF position('''not_verified''' in def) > 0 THEN RETURN; END IF;
+  ALTER TABLE question_log DROP CONSTRAINT question_log_outcome_check;
+  EXECUTE 'ALTER TABLE question_log ADD CONSTRAINT question_log_outcome_check '
+    || replace(def, 'ARRAY[', 'ARRAY[''not_verified''::text, ');
+END $$;
 
 -- 2. Пометка «отметку сняла база»: когда и почему. Причина — закрытый набор (сейчас одна: новый фрагмент бота).
 --    Стирается любым действием владельца с отметкой (setAnswersVerified): пометка описывает ТЕКУЩЕЕ снятое состояние.
