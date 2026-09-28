@@ -107,7 +107,8 @@
     `COPY`, dev в `apps/web/node_modules`, в `.next/node_modules`, в `next/vendor/node_modules`, dev-версия `postcss` рядом с
     prod-версией, пропавший prod-пакет) — каждый красный, пакет вне lockfile — код 2. Ошибка чтения дерева (код 2) мутацией
     не испытана: проба идёт от root, права её не воспроизводят. Полный набор 1048/1048; `web` на исправленном образе — `/health` 200 и `/` 200, три воркера без
-    перезапусков. Ревью Codex `gpt-6-astra` medium — `docs/reviews/2026-09-28-tails-codex.md`. Остаток веса — не dev:
+    перезапусков. Ревью Codex `gpt-6-astra` medium — B / B / узкое B, blocker и high нет, находки исправлены
+    (`docs/reviews/2026-09-28-tails-codex.md`); итог стража — по каждому образу отдельно. Остаток веса — не dev:
     `@next/swc-linux-x64-gnu` и `-musl` по 137 МБ (опциональные, ставятся обе), `.next` 139 МБ; не трогалось.
     Следствие: `npm run db:migrate` (вызывает `tsc`) внутри рантайм-образа больше не работает — документированный путь
     `node packages/db/dist/migrate.js` (REPRODUCE §5) не затронут.
