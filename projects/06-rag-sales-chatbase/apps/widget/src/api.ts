@@ -110,8 +110,9 @@ export function parseAsk(status: number, value: unknown): AskResult {
   if (!data) return { kind: 'error' };
   const text = str(data.text, 4000);
   if (data.status === 'answered' && text) return { kind: 'answered', text, source: parseSource(data.source) };
+  // A-N6-074: светская реплика приходит как unknown + reason small_talk (совместимо с прежним бандлом, ревью круг 1).
+  if (data.status === 'unknown' && data.reason === 'small_talk' && text) return { kind: 'small_talk', text };
   if (data.status === 'unknown' && text) return { kind: 'unknown', text };
-  if (data.status === 'small_talk' && text) return { kind: 'small_talk', text };
   return { kind: 'error' };
 }
 

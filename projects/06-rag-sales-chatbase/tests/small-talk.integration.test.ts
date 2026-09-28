@@ -10,6 +10,7 @@ import { loadCeilings, QUESTION_OUTCOME } from '../packages/rag/src/index';
 import { createWidgetAskDependencies } from '../apps/web/src/server/widget-ask-deps';
 import { createWidgetAskHandler } from '../apps/web/src/server/widget-ask-handler';
 import { createWidgetConfigHandler, createWidgetEventHandler } from '../apps/web/src/server/widget-handler';
+import { parseAsk } from '../apps/widget/src/api';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
 import { environment } from './fixtures/environment';
 import { vectorFor } from './fixtures/fake-embeddings';
@@ -21,6 +22,17 @@ const HOST = 'https://shop.example';
 const CONTACT = '+7 900 000-00-00';
 const PRICE = 'Прайс: доставка по Москве от 350 ₽, самовывоз со склада бесплатно.';
 type Json = { data?: { status?: string; text?: string; contact?: string; reason?: string } };
+// Разбор ответа ПРЕЖНЕГО бандла виджета (apps/widget/src/api.ts на bf7ab6d0, ветка 200 дословно): он остаётся в кэше
+// посетителей, пока не истечёт; новый ответ сервера обязан быть ему понятен.
+function parseAskBeforeSmallTalk(status: number, value: unknown): { kind: string; text?: string } {
+  if (typeof value !== 'object' || value === null || status !== 200) return { kind: 'error' };
+  const data = (value as { data?: Record<string, unknown> }).data;
+  if (!data) return { kind: 'error' };
+  const text = typeof data.text === 'string' && data.text.length <= 4000 ? data.text : null;
+  if (data.status === 'answered' && text) return { kind: 'answered', text };
+  if (data.status === 'unknown' && text) return { kind: 'unknown', text };
+  return { kind: 'error' };
+}
 
 describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настоящем Postgres', () => {
   let pool: Pool;
@@ -88,8 +100,11 @@ describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настояще�
     const r = await w.ask(s.key, vs, 'привет!');
     expect(r.status).toBe(200);
     expect(r.acao).toBe(HOST);
-    expect(r.body.data).toEqual({ status: 'small_talk',
-      text: 'Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Цены, Доставка и оплата, Торты.' });
+    const HELLO = 'Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Цены, Доставка и оплата, Торты.';
+    expect(r.body.data).toEqual({ status: 'unknown', reason: 'small_talk', contact: CONTACT, text: HELLO });
+    // Ревью круг 1: бандл виджета у посетителей кэширован (immutable) — ПРЕЖНИЙ разбор ответа обязан показать шаблон.
+    expect(parseAskBeforeSmallTalk(r.status, r.body)).toEqual({ kind: 'unknown', text: HELLO });
+    expect(parseAsk(r.status, r.body)).toEqual({ kind: 'small_talk', text: HELLO });
     expect(w.h.gateway.embeds).toHaveLength(0);
     expect(w.h.gateway.chats).toHaveLength(0);
     expect(w.h.spendEvents()).toEqual([]);
@@ -105,7 +120,8 @@ describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настояще�
     const w = wire();
     const s = await seed();
     const vs = await w.visitor(s.key);
-    expect((await w.ask(s.key, vs, 'Спасибо!')).body.data).toEqual({ status: 'small_talk', text: 'Пожалуйста! Если появятся ещё вопросы — спрашивайте.' });
+    expect((await w.ask(s.key, vs, 'Спасибо!')).body.data).toEqual({ status: 'unknown', reason: 'small_talk', contact: CONTACT,
+      text: 'Пожалуйста! Если появятся ещё вопросы — спрашивайте.' });
     const off = await w.ask(s.key, vs, 'Какая погода в Москве?');
     expect(off.body.data).toMatchObject({ status: 'unknown', reason: 'below_threshold', contact: CONTACT,
       text: `Я отвечаю только по материалам сайта компании «Колос» и не нашёл там ответа на этот вопрос. Напишите: ${CONTACT}` });

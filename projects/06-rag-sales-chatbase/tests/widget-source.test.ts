@@ -88,6 +88,7 @@ describe('разбор ответов сервера (fail-closed)', () => {
     expect(parseAsk(200, { data: { status: 'answered', text: 'Да', source: { title: 'Цены', url: 'javascript:alert(1)', excerpt: 'x' } } }))
       .toEqual({ kind: 'answered', text: 'Да', source: { title: 'Цены', url: null, excerpt: 'x' } });
     expect(parseAsk(200, { data: { status: 'unknown', text: 'Не знаю. Напишите: x' } })).toEqual({ kind: 'unknown', text: 'Не знаю. Напишите: x' });
+    expect(parseAsk(200, { data: { status: 'unknown', reason: 'small_talk', text: 'Здравствуйте!' } })).toEqual({ kind: 'small_talk', text: 'Здравствуйте!' });
     expect(parseAsk(429, { error: { code: 'limit', message: 'Лимит' } })).toEqual({ kind: 'limit', text: 'Лимит' });
     expect(parseAsk(404, { error: {} })).toEqual({ kind: 'error' });
     expect(parseAsk(409, { error: { code: 'session_expired' } })).toEqual({ kind: 'expired' });
