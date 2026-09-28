@@ -88,6 +88,10 @@ describe('разбор файла на разделы (AC-1)', () => {
     expect(a[0]!.contentHash).toBe(b[0]!.contentHash);
     expect(a[1]!.contentHash).not.toBe(b[1]!.contentHash);
   });
+  it('ревью круг 1: якорь резервируется целиком — «A», «A», «A-1» дают три разных адреса', () => {
+    const { sections } = splitTextFile('## A\nодин\n## A\nдва\n## A-1\nтри\n## A-1\nчетыре');
+    expect(sections.map((s) => s.anchor)).toEqual(['a', 'a-1', 'a-1-1', 'a-1-2']);
+  });
   it('llms.txt: разделы ## со списком ссылок, ссылки — текстом (по ним не ходим)', () => {
     const { sections } = splitTextFile('# Сайт\n\n> Описание\n\n## Курсы\n\n- [Промпты](https://s.example/p): основы\n- [Агенты](https://s.example/a)\n');
     expect(sections.map((s) => s.title)).toEqual(['Сайт', 'Сайт › Курсы']);
@@ -98,7 +102,9 @@ describe('разбор файла на разделы (AC-1)', () => {
 
 describe('тип содержимого (AC-3)', () => {
   it('HTML-разметка в начале — не текст; Markdown с тегом в середине — текст', () => {
-    for (const body of ['<!DOCTYPE html><html>', '  <html lang="ru">', '<!-- x --><head>', '<body>привет']) expect(looksLikeHtml(body), body).toBe(true);
+    for (const body of ['<!DOCTYPE html><html>', '  <html lang="ru">', '<!-- x --><head>', '<body>привет', '<div>длинный текст</div>',
+      `${' '.repeat(3000)}<html>`, '<?xml version="1.0"?><html>', '<p align="center">логотип</p>\n# README']) expect(looksLikeHtml(body), body.trim().slice(0, 20)).toBe(true);
+    for (const body of ['# Заголовок', 'Цена < 500 ₽', '<3 любим клиентов', '> цитата']) expect(looksLikeHtml(body), body).toBe(false);
     expect(looksLikeHtml('# Заголовок\nтекст <b>жирный</b>')).toBe(false);
   });
   it('кодировка: utf-8 и windows-1251 — текст; неизвестная, битый utf-8 и NUL — not_text', () => {
@@ -157,6 +163,13 @@ describe('загрузка файла: граница чужого адреса 
     expect(site.requests.map((r) => r.path)).not.toContain('/private/full.txt');   // запрещённый путь не запрошен
     expect(await reason(get('http://site.example/away.txt'))).toBe('unreachable');
     expect(site.requests.map((r) => r.host)).not.toContain('other.example');
+  });
+  it('ревью круг 1: перенаправление на www.-вариант с запретом в ЕГО robots.txt — robots_disallowed, запрещённый файл не запрошен', async () => {
+    const robots: Handler = (q, r) => { r.writeHead(200, { 'content-type': 'text/plain' });
+      r.end(String(q.headers.host).startsWith('www.') ? 'User-agent: *\nDisallow: /private' : 'User-agent: *\nAllow: /'); };
+    site = await startFakeSite({ '/robots.txt': robots, '/llms-full.txt': redirect('http://www.site.example/private.txt'), '/private.txt': md('# x\nтекст') });
+    expect(await reason(get(FILE))).toBe('robots_disallowed');
+    expect(site.requests.map((r) => `${r.host}${r.path}`)).toEqual(['site.example/robots.txt', 'site.example/llms-full.txt', 'www.site.example/robots.txt']);
   });
   it('HTML вместо текста (text/html) → not_text без чтения тела; text/plain с HTML внутри → not_text; json → not_text', async () => {
     site = await startFakeSite({ ...noRobots, '/llms-full.txt': html('<!doctype html><html><body>' + 'страница '.repeat(1000) + '</body></html>'),

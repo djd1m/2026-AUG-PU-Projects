@@ -897,6 +897,56 @@
       ],
       "notes": "Зависит от source-lifecycle (should) только ради переиспользования DeleteSource; если source-lifecycle отложена, удаление пишет стирание источников само. Сделано: eraseSourceTx (тот же порядок блокировок, что deleteSource). Решения A-N6-054…059; A-N6-056 (долг payout_owed вместо сгорания) ждёт подтверждения владельца.",
       "completion": "docs/features/account-erasure/05_completion.md"
+    },
+    {
+      "id": "text-source",
+      "number": 18,
+      "title": "Текстовый файл по адресу (llms.txt, llms-full.txt, .txt, .md)",
+      "description": "Третий вид источника по решению владельца 28.09: POST /api/bots/{id}/sources JSON { url, kind: 'text' }; воркер — CheckAddress после DNS и на каждом перенаправлении, robots.txt до файла и на каждом шаге, ≤ 2 МиБ, только text/plain|markdown (иначе not_text); разделы # / ## — «страницы» в пределе тарифа (page_budget), неизменный раздел не эмбеддится; миграция 015 дописывает значения к CHECK.",
+      "priority": "should",
+      "status": "done",
+      "complexity": "high",
+      "depends_on": [
+        "crawler",
+        "chunk-embed",
+        "source-lifecycle",
+        "crawl-coverage"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-SOURCE-005",
+        "FR-SOURCE-002",
+        "NFR-SEC-004"
+      ],
+      "sc_ids": [],
+      "adr_ids": [
+        "ADR-010"
+      ],
+      "reuse": [
+        {
+          "adr": "ADR-016",
+          "block": "проверки чужого адреса и robots.txt",
+          "source": "apps/worker/src/crawl/safe-get.ts, robots.ts, packages/rag/src/check-address.ts (N6)",
+          "take": "перенесено: вызовом, без копии"
+        },
+        {
+          "adr": "ADR-016",
+          "block": "обработчик источника с фенсом и усечением",
+          "source": "apps/worker/src/pdf/pdf-processor.ts, crawl/site-processor.ts (N6)",
+          "take": "адаптировано: раздел файла вместо листа PDF, page_budget как crawl-coverage"
+        }
+      ],
+      "expected_files": [
+        "packages/db/migrations/015_text_source.sql",
+        "apps/worker/src/text/fetch-text.ts",
+        "apps/worker/src/text/split-text.ts",
+        "apps/worker/src/text/text-processor.ts",
+        "apps/web/src/app/dashboard/TextSourceAdder.tsx",
+        "tests/text-source.test.ts",
+        "tests/text-source.integration.test.ts",
+        "tests/browser/text-source.test.ts"
+      ],
+      "decision": "A-N6-080"
     }
   ]
 }

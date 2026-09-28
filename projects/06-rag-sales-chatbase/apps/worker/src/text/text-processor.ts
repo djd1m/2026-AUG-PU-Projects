@@ -100,10 +100,12 @@ export function createTextProcessor(options: TextProcessorOptions): SourceProces
     const unreadFrom = stoppedAt >= 0 ? stoppedAt : reading.length;
     const coverage = truncated ? { pagesKnown: sections.length,
       unreadSample: sections.slice(unreadFrom, unreadFrom + UNREAD_SAMPLE_MAX).map((s) => sectionDisplay(fileUrl, s.anchor)) } : null;
-    // Размер и sha256 последнего прочитанного файла — под фенсом: опоздавшая попытка не перепишет.
-    await pool.query(`UPDATE source SET content_bytes = $3, content_sha256 = $4 WHERE id = $1
-      AND EXISTS (SELECT 1 FROM index_job WHERE id = $2 AND current_fence = $5 AND status = 'running')`,
-    [lease.sourceId, lease.indexJobId, file.bytes, file.sha256, lease.fence]);
+    // Размер и sha256 последнего прочитанного файла — под фенсом: прогресс с фенсом (он же блокировка строки задачи) ПЕРВЫМ
+    // в той же транзакции, как у страниц; опоздавшая попытка получает StaleAttemptError и откат (ревью Codex круг 1).
+    await transaction(pool, async (tx) => {
+      await recordProgressTx(tx, lease, {});
+      await tx.query('UPDATE source SET content_bytes = $2, content_sha256 = $3 WHERE id = $1', [lease.sourceId, file.bytes, file.sha256]);
+    });
     // В журнал — только счётчики: ни текста, ни адреса файла.
     log(`worker-index: текстовый файл задачи ${lease.indexJobId}: ${file.bytes} байт, разделов ${sections.length} (без текста ${emptySections}), `
       + `прочитано ${read}, без изменений ${unchanged}, дублей ${duplicate}, фрагментов ${chunksWritten}, запросов ${file.requests}; `

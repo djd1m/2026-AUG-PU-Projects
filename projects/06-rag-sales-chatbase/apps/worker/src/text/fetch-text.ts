@@ -27,9 +27,13 @@ export interface FetchedText { url: URL; text: string; bytes: number; sha256: st
 // Принимаемые типы: обычный текст и Markdown. Всё прочее, включая HTML, — не текст.
 export const isTextType = (contentType: string) => /^text\/(plain|markdown|x-markdown)(\s*;|$)/.test(contentType);
 const HTML_TYPE = /^(text\/html|application\/xhtml\+xml)(\s*;|$)/;
-// Начало документа — HTML-разметка (частый случай: сайт отдаёт страницу-заглушку 200 с text/plain или без типа).
+// Документ НАЧИНАЕТСЯ с HTML-разметки — это HTML (частый случай: сайт отдаёт страницу-заглушку 200 с text/plain). Ведущие
+// пробелы и комментарии пропускаются целиком, без окна (ревью Codex круг 1: 2048 пробелов уводили разметку за окно);
+// любой открывающий тег, doctype или <?xml в начале — не текст. Цена: Markdown, начинающийся с HTML-тега (README с
+// <p align="center">), тоже отказ not_text — fail-closed, в тексте отказа сказано, какой файл нужен.
 export function looksLikeHtml(text: string): boolean {
-  return /^\s*(<!--[\s\S]*?-->\s*)*<(!doctype\s+html|html[\s>]|head[\s>]|body[\s>])/i.test(text.slice(0, 2048));
+  const start = text.replace(/^(\s|<!--[\s\S]*?-->)+/, '').slice(0, 64);
+  return /^<(!doctype[\s>]|\?xml[\s?]|[a-z][a-z0-9-]*(\s|>|\/>))/i.test(start);
 }
 const CHARSETS: Readonly<Record<string, string>> = { 'utf-8': 'utf-8', utf8: 'utf-8', 'us-ascii': 'utf-8', 'windows-1251': 'windows-1251', 'cp1251': 'windows-1251', 'koi8-r': 'koi8-r' };
 export function decodeText(body: Buffer, contentType: string): string {
@@ -55,31 +59,35 @@ export async function fetchTextFile(options: FetchTextOptions): Promise<FetchedT
   let requests = 0;
   const pacerBase = new Pacer(options.pauseMs ?? CRAWL_PAUSE_MS, options.sleep, options.clock);
   const pacer = { wait: async () => { requests++; await pacerBase.wait(); } };
-  // Запреты robots.txt проверяются на КАЖДОМ шаге перенаправления ДО запроса (не после, как у краулера): перенаправление на
-  // запрещённый путь того же origin'а не запрашивается вовсе. Другой origin (www.-вариант) — после, по его robots.txt.
-  let robots: Robots | null = null;
-  let robotsRefusedHop = false;
-  const common = { userAgent: options.userAgent, timeoutMs: options.timeoutMs ?? CRAWL_PAGE_TIMEOUT_MS, pacer, net: options.net,
-    inScope: (u: URL) => {
-      if (!((u.protocol === 'http:' || u.protocol === 'https:') && hosts.has(u.hostname.toLowerCase()))) return false;
-      if (robots && u.origin === url.origin && !isAllowed(robots, u.pathname + u.search)) { robotsRefusedHop = true; return false; }
-      return true;
-    } };
+  const hostOk = (u: URL) => (u.protocol === 'http:' || u.protocol === 'https:') && hosts.has(u.hostname.toLowerCase());
+  const common = { userAgent: options.userAgent, timeoutMs: options.timeoutMs ?? CRAWL_PAGE_TIMEOUT_MS, pacer, net: options.net, inScope: hostOk };
   const maxBytes = options.maxBytes ?? TEXT_MAX_BYTES;
 
   // 1. robots.txt ДО файла. Отказ адреса или недоступность — отказ (читать, не зная запретов сайта, нельзя).
+  const robotsCache = new Map<string, Robots>();
   const robotsFor = async (origin: string) => {
+    const cached = robotsCache.get(origin);
+    if (cached) return cached;
     const outcome = await fetchRobots(origin, common);
     if (outcome.kind === 'refused') throw new TextFetchFailure(outcome.reason, 'robots');
+    robotsCache.set(origin, outcome.robots);
     return outcome.robots;
   };
-  robots = await robotsFor(url.origin);
-  if (!isAllowed(robots, url.pathname + url.search)) throw new TextFetchFailure('robots_disallowed', 'robots');
+  if (!isAllowed(await robotsFor(url.origin), url.pathname + url.search)) throw new TextFetchFailure('robots_disallowed', 'robots');
+  // Запреты robots.txt — на КАЖДОМ шаге перенаправления ДО запроса (строже краулера): robots.txt origin'а шага (включая
+  // www.-вариант и промежуточные) читается до того, как шаг запрошен; запрещённый путь не запрашивается вовсе (ревью Codex
+  // круг 1: www.-вариант проверялся только после загрузки).
+  let robotsRefusedHop = false;
+  const fileScope = async (u: URL) => {
+    if (!hostOk(u)) return false;
+    if (!isAllowed(await robotsFor(u.origin), u.pathname + u.search)) { robotsRefusedHop = true; return false; }
+    return true;
+  };
 
   // 2. Сам файл. Тело читается только у 2xx с текстовым типом; HTML и прочее — без чтения тела.
   let result;
   try {
-    result = await safeGet(url, { ...common, accept: 'text/plain,text/markdown;q=0.9,*/*;q=0.1', maxBytes, maxRedirects: CRAWL_MAX_REDIRECTS,
+    result = await safeGet(url, { ...common, inScope: fileScope, accept: 'text/plain,text/markdown;q=0.9,*/*;q=0.1', maxBytes, maxRedirects: CRAWL_MAX_REDIRECTS,
       wantBody: (status, type) => status >= 200 && status < 300 && isTextType(type) });
   } catch (error) {
     if (error instanceof AddressRefused) throw new TextFetchFailure(error.reason, 'address');
@@ -87,12 +95,7 @@ export async function fetchTextFile(options: FetchTextOptions): Promise<FetchedT
     if (error instanceof FetchFailed) throw new TextFetchFailure('unreachable', error.reason);
     throw error;
   }
-  // Перенаправление привело на другой путь или на www.-вариант: запреты robots цели действуют так же.
-  const final = result.url;
-  if (final.href !== url.href) {
-    const finalRobots = final.origin === url.origin ? robots! : await robotsFor(final.origin);
-    if (!isAllowed(finalRobots, final.pathname + final.search)) throw new TextFetchFailure('robots_disallowed', 'robots_redirect');
-  }
+  const final = result.url;   // каждый шаг, включая последний, уже прошёл fileScope: адрес, хост и robots.txt его origin'а
   if (result.status < 200 || result.status >= 300) throw new TextFetchFailure('unreachable', `http_${result.status}`);
   if (HTML_TYPE.test(result.contentType)) throw new TextFetchFailure('not_text', 'html_type');
   if (!isTextType(result.contentType)) throw new TextFetchFailure('not_text', `type:${result.contentType.split(';')[0]!.slice(0, 40) || 'none'}`);

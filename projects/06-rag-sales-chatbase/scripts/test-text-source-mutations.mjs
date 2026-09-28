@@ -36,7 +36,12 @@ const mutations = [
       once("  if (!isTextType(result.contentType)) throw new TextFetchFailure('not_text', `type:${result.contentType.split(';')[0]!.slice(0, 40) || 'none'}`);\n", ''),
       once('status < 300 && isTextType(type) });', 'status < 300 });')) }] },
   { id: 'robots-hop-unchecked', title: 'robots.txt не проверяется на шаге перенаправления — запрещённый путь запрашивается',
-    edits: [{ file: fetchText, apply: once('      if (robots && u.origin === url.origin && !isAllowed(robots, u.pathname + u.search)) { robotsRefusedHop = true; return false; }\n', '') }] },
+    edits: [{ file: fetchText, apply: once('    if (!isAllowed(await robotsFor(u.origin), u.pathname + u.search)) { robotsRefusedHop = true; return false; }\n', '') }] },
+  // Ревью Codex, круг 1.
+  { id: 'anchor-collision', title: 'якорь не резервируется целиком — «A», «A», «A-1» дают два раздела на одном адресе',
+    edits: [{ file: 'apps/worker/src/text/split-text.ts', apply: once('    for (let n = 1; used.has(candidate); n++) candidate = `${base}-${n}`;', '    if (used.has(candidate)) candidate = `${base}-1`;') }] },
+  { id: 'html-fragment-accepted', title: 'HTML-фрагмент без doctype (<div>) под text/plain читается как текст',
+    edits: [{ file: fetchText, apply: once('[a-z][a-z0-9-]*(\\s|>|\\/>))/i', '(html|head|body)(\\s|>))/i') }] },
   { id: 'reembed-unchanged', title: '«Обновить» не сравнивает раздел по хэшу — неизменный файл эмбеддится заново',
     edits: [{ file: processor, apply: once('known.has(`${label}\\u0000${section.contentHash}`)', 'false') }] },
   { id: 'page-budget-removed', title: 'предел страниц тарифа не применяется к разделам файла — 55 из 55 на free',

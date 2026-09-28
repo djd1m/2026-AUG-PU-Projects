@@ -42,17 +42,20 @@ const cap = (text: string, max: number) => Array.from(text).slice(0, max).join('
 export function splitTextFile(input: string): SplitResult {
   const lines = input.replace(/^﻿/, '').split(/\r\n|\r|\n/);
   const sections: TextSection[] = [];
-  const used = new Map<string, number>();
+  const used = new Set<string>();
   let emptySections = 0;
   let h1: string | null = null;
   let current: { anchor: string | null; title: string; blocks: ChunkBlock[] } = { anchor: null, title: '', blocks: [] };
   let fence: string | null = null;
 
+  // Якорь резервируется целиком: «A», «A», «A-1» дают a, a-1, a-1-1 — не два раздела на одном адресе (ревью Codex круг 1:
+  // writeIndexedPage обновляет строку по (source_id, url_or_page), и второй раздел молча затирал бы первый).
   const uniqueAnchor = (heading: string): string => {
     const base = slugify(heading) || `razdel-${sections.length + emptySections + 1}`;
-    const seen = used.get(base);
-    used.set(base, (seen ?? -1) + 1);
-    return seen === undefined ? base : `${base}-${seen + 1}`;
+    let candidate = base;
+    for (let n = 1; used.has(candidate); n++) candidate = `${base}-${n}`;
+    used.add(candidate);
+    return candidate;
   };
   const flush = () => {
     const hasText = current.blocks.some((b) => b.kind === 'text' && b.text.length > 0);
