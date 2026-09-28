@@ -146,4 +146,33 @@ describe('pickClientIp: чистая функция, по одному изме�
     expect(pickClientIp('172.18.0.9', '192.0.2.1', new Set()), 'прокси не резолвится — строже').toBe('172.18.0.9');
     expect(pickClientIp(undefined, '192.0.2.1', P)).toBe('unknown');
   });
+
+  it('один адрес — один ключ: канонизация, и копии в guest и intake не разошлись', async () => {
+    const g = (await import('../../../apps/guest/src/client-ip.js')).canonIp;
+    const i = intake.canonIp;
+    const table: Array<[string, string | undefined]> = [
+      ['2001:0db8:0:0:0:0:0:1', '2001:db8::1'],
+      ['2001:DB8::1', '2001:db8::1'],
+      ['[2001:db8::1]', '2001:db8::1'],
+      ['::ffff:192.0.2.1', '192.0.2.1'],
+      ['::ffff:c000:201', '192.0.2.1'],
+      [' 192.0.2.1 ', '192.0.2.1'],
+      ['192.0.2.1', '192.0.2.1'],
+      ['1.2.3', undefined], ['мусор', undefined], ['', undefined], ['fe80::1%eth0', undefined],
+    ];
+    for (const [input, want] of table) {
+      expect(g(input), `guest: ${input}`).toBe(want);
+      expect(i(input), `intake: ${input}`).toBe(want);
+    }
+  });
+});
+
+describe('доверие к прокси снимается при отказе DNS (строже, а не шире)', () => {
+  it('резолв не удался — множество прокси ПУСТОЕ, а не прежнее', async () => {
+    const { refresh, pickClientIp } = await import('../../../apps/guest/src/client-ip.js');
+    expect([...(await refresh('127.0.0.1'))]).toEqual(['127.0.0.1']);
+    const after = await refresh('no-such-proxy.invalid');
+    expect(after.size, 'прежний адрес прокси остался доверенным после отказа DNS').toBe(0);
+    expect(pickClientIp('127.0.0.1', '192.0.2.1', after)).toBe('127.0.0.1');
+  });
 });
