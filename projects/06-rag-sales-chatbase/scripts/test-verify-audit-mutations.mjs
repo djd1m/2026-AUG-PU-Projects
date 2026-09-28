@@ -64,6 +64,10 @@ const BROWSER = [
   { id: 'install-sticky', title: 'экран установки: после отметки в вкладке серверное снятие не показывает баннер',
     edits: [{ file: 'apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen.tsx',
       apply: once('optimistic !== null && optimistic === gate ? true : gate.verified', 'optimistic !== null ? true : gate.verified') }] },
+  // Узкое ревью: оптимистическая отметка привязана к gate из замыкания нажатия — смена данных во время POST возвращает кнопку.
+  { id: 'install-closure-gate', title: 'экран установки: отметка привязана к устаревшему gate — кнопка снова активна до следующего refresh',
+    edits: [{ file: 'apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen.tsx',
+      apply: once('setOptimistic(outcome.verified ? currentGate.current : null);', 'setOptimistic(outcome.verified ? gate : null);') }] },
 ];
 const mutations = browser ? BROWSER : IMAGE;
 const results = [];

@@ -2,7 +2,7 @@
 // Контейнер «Установка»: сохранение контакта (PATCH), добавление домена (POST origins), копирование кода.
 // Код установки строит СЕРВЕР (installSnippet): после сохранения контакта страница перечитывается, а не
 // «открывает» код у себя — иначе запрет «без контакта кода нет» обходился бы в браузере.
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { InstallSnippet } from '@n6/rag/bot-settings';
 import { errorOf, send } from '../../../../../lib/api-client';
@@ -29,12 +29,16 @@ export function InstallScreen({ gate, ...p }: { botId: string; companyName: stri
   const [optimistic, setOptimistic] = useState<InstallGateState | null>(null);
   const shownVerified = optimistic !== null && optimistic === gate ? true : gate.verified;
   const justVerified = optimistic !== null && shownVerified;
+  // Узкое ревью: gate мог смениться ВО ВРЕМЯ POST (refresh от добавления домена) — привязываться к актуальному объекту на момент
+  // успеха, а не к объекту из замыкания нажатия (иначе кнопка снова активна до следующего refresh).
+  const currentGate = useRef(gate);
+  currentGate.current = gate;
   const verify = async () => {
     if (verifying) return;
     setVerifying(true); setVerifyError('');
     const outcome = await requestVerify(p.botId, true);
     setVerifying(false);
-    if (outcome.ok) { setOptimistic(outcome.verified ? gate : null); router.refresh(); } else setVerifyError(outcome.message);
+    if (outcome.ok) { setOptimistic(outcome.verified ? currentGate.current : null); router.refresh(); } else setVerifyError(outcome.message);
   };
   const call = async (url: string, method: 'POST' | 'PATCH', payload: unknown, fieldName: string, done: () => void) => {
     setBusy(true); setErrors({});

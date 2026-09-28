@@ -222,6 +222,24 @@ for (const [engineName, engine] of Object.entries({ chromium, webkit })) describ
       expect(await page.locator('.gate-done').count()).toBe(0);
     } finally { await context.close(); }
   });
+  it('узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается', async () => {
+    bodies = []; delayMs = 600;
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    try {
+      const page = await context.newPage();
+      await page.goto(`${base}/live-install.html`);
+      await page.waitForFunction(() => {
+        const button = document.querySelector('section.gate-banner button');
+        return !!button && Object.keys(button).some((k) => k.startsWith('__reactProps'));
+      });
+      await page.locator('section.gate-banner').getByRole('button', { name: 'Я проверил ответы бота' }).click();
+      // refresh от параллельного действия (добавили домен) приносит новый объект gate, пока POST ещё идёт
+      await page.evaluate(() => (window as unknown as { __setGate: (g: unknown) => void }).__setGate({ verified: false, ready: true, resetAt: null, stubVisitors: 4 }));
+      await expect.poll(() => page.locator('.gate-done').count(), { timeout: 5000 }).toBe(1);
+      expect(await page.getByRole('button', { name: 'Я проверил ответы бота' }).count()).toBe(0);
+      expect(bodies).toEqual([{ verified: true }]);
+    } finally { await context.close(); }
+  });
   it('AC-9: строка «снята когда и кем» и история отметки раскрытием', () => live('unverified', async (page) => {
     expect(await status(page).textContent()).toMatch(/Снята 28 сентября.*13:46 владельцем\./);
     const history = block(page).locator('details.verify-history');
