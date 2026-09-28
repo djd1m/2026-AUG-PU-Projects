@@ -1,5 +1,6 @@
 import type { Pool } from '@clipmaker/db';
-import { FILE_FAILURES } from '@clipmaker/db';
+import { FILE_FAILURES, effectivePlanSql, retentionFromSql } from '@clipmaker/db';
+import { clipExpiry } from '@clipmaker/shared/tariff';
 import type { VideoStatus, VideoFailureReason, ClipStatus, JobStage } from '@clipmaker/shared/enums';
 import { JOB_STAGE, readEnum } from '@clipmaker/shared/enums';
 import { moscowDay, quotaResetAt } from '@clipmaker/shared/upload';
@@ -13,6 +14,8 @@ export interface VideoRow {
   duration_seconds: string | null; stage_progress: number | null; clips_done: number | null; clips_total: number | null;
   failure_reason: VideoFailureReason | null; object_key: string | null; actual_bytes: string | null;
   plan: string; wait_reason: string | null; cta_kind?: string | null; cta_url?: string | null;
+  /** От чего считается срок хранения (фича 30, AC-12): готовность, но не раньше конца оплаты. Не прочитан — готовность. */
+  retention_from?: Date | null;
   /** Стадия и статус последней попытки обработки (наибольший `fence`, без пересборок) — для ленты (A-2609-01). */
   last_stage?: string | null; last_stage_status?: string | null;
 }
@@ -50,7 +53,7 @@ export function presentVideo(row: VideoRow, now = new Date()): VideoScreen {
     retry_after: row.failure_reason?.startsWith('refused_') ? quotaResetAt(row.updated_at) : null, poll_after_seconds: 5,
     failed_stage: state === 'отказ' ? failedStageOf(row) : null };
 }
-const videoSelect = `SELECT v.*, a.plan, (SELECT j.wait_reason FROM job_attempt j
+const videoSelect = `SELECT v.*, ${effectivePlanSql('a')} AS plan, ${retentionFromSql('v', 'a')} AS retention_from, (SELECT j.wait_reason FROM job_attempt j
   WHERE j.video_id=v.id AND j.status='deferred' ORDER BY j.fence DESC LIMIT 1) AS wait_reason,
   last.stage AS last_stage, last.status AS last_stage_status
   FROM video v JOIN account a ON a.id=v.account_id
@@ -87,7 +90,7 @@ export class ScreenService {
       SELECT 'download',$1,c.id,$3::date FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       WHERE c.id=$2 AND v.account_id=$1 AND a.status='active' AND v.deleted_at IS NULL
       AND c.status='done' AND c.object_key IS NOT NULL AND (c.expires_at IS NULL OR c.expires_at>now())
-      AND (a.plan='paid' OR v.finished_at IS NULL OR v.finished_at + interval '72 hours'>now()) RETURNING id`, [account, id, moscowDay(this.clock())]);
+      AND (${effectivePlanSql('a')}='paid' OR ${retentionFromSql('v', 'a')} IS NULL OR ${retentionFromSql('v', 'a')} + interval '72 hours'>now()) RETURNING id`, [account, id, moscowDay(this.clock())]);
     if (!result.rowCount) throw notFound();
     return { recorded: true };
   }
@@ -101,8 +104,8 @@ export interface ClipRow {
   score: number | null; score_hook: number | null; score_completeness: number | null; score_length: number | null;
   explain_hook: string | null; explain_completeness: string | null; explain_length: string | null;
 }
-export function presentClip(row: ClipRow, video: Pick<VideoRow, 'plan' | 'finished_at'>, now: Date): ClipScreen {
-  const expires = row.expires_at ?? (video.plan !== 'paid' && video.finished_at ? new Date(video.finished_at.getTime() + 3 * 86400_000) : null);
+export function presentClip(row: ClipRow, video: Pick<VideoRow, 'plan' | 'finished_at' | 'retention_from'>, now: Date): ClipScreen {
+  const expires = clipExpiry(row.expires_at, video.plan, video.retention_from === undefined ? video.finished_at : video.retention_from);
   const score = row.score === null ? {} : scoreSchema.parse({ score: row.score,
     components: { hook: row.score_hook, completeness: row.score_completeness, length: row.score_length },
     explanations: { hook: row.explain_hook, completeness: row.explain_completeness, length: row.explain_length } });

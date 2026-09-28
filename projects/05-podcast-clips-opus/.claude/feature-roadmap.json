@@ -902,6 +902,42 @@
         "apps/web/src/lib/progress-ribbon.ts",
         "apps/web/src/app/videos/[videoId]/VideoDetail.tsx"
       ]
+    },
+    {
+      "id": "payments",
+      "number": 30,
+      "title": "Оплата ЮKassa: тариф Pro 990 ₽ за 30 дней",
+      "description": "OWN-019, ADR-019. Тракт ЮKassa перенесён из N6; режим N5_PAYMENTS_MODE off|fake|live (стенд — off до магазина); действующий план одним SQL-выражением; потолок минут paid 270; оператор ops:set-plan; надпись призыва paid без отсылки к ссылке.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "complex",
+      "depends_on": [
+        "limits-ui-and-pro-interest",
+        "clip-cta"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-TARIFF-001",
+        "FR-TARIFF-002",
+        "FR-TARIFF-003",
+        "FR-GROWTH-003",
+        "FR-LIMIT-001"
+      ],
+      "sc_ids": [
+        "SC-US-012-1",
+        "SC-US-012-2"
+      ],
+      "adr_ids": [
+        "ADR-005",
+        "ADR-019"
+      ],
+      "expected_files": [
+        "packages/db/migrations/021_payments.sql",
+        "packages/db/src/payments.ts",
+        "apps/web/src/server/billing-handler.ts",
+        "apps/web/src/app/api/webhooks/yookassa/route.ts",
+        "apps/web/src/app/upgrade/page.tsx"
+      ]
     }
   ]
 }

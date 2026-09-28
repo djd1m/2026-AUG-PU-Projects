@@ -1,4 +1,5 @@
 import { THEME_COLOR, themeFromCookie, type Theme } from '../lib/theme';
+import { PAID_PLAN_DAYS, PAID_PLAN_TITLE, PAID_PRICE_MINOR, formatRubles } from '@clipmaker/shared/tariff';
 import { pluralRu } from '../lib/plural-ru';
 import { randomBytes } from 'node:crypto';
 import { referralCookie } from '../lib/partner-referral';
@@ -12,13 +13,18 @@ interface Dependencies {
   referralSecret: string;
   guests: Pick<GuestPackService, 'find' | 'recordOpen'>; auth: Pick<AuthService, 'authenticate'>;
   trustedProxyHops: number; allowRead: (ip: string, account?: string) => Promise<boolean>;
+  /** Фича 30 (ADR-019): тариф Pro продаётся — вместо кнопки интереса ссылка на /upgrade. Не передан — как раньше. */
+  paymentsOn?: boolean;
 }
+// Блок тарифа при включённом режиме: ссылка без скрипта (вход и экран тарифа — на /upgrade).
+const PRO_OFFER = `<section aria-label="Тариф Pro"><p>Клипы без метки и хранение без срока — тариф ${PAID_PLAN_TITLE}, ${formatRubles(PAID_PRICE_MINOR)} за ${PAID_PLAN_DAYS} дней.</p>
+<a class="download" href="/upgrade?from=guest_page">Оформить ${PAID_PLAN_TITLE}</a></section>`;
 // Colour tokens duplicated from apps/web/src/app/globals.css (values must match: tests/theme.test.ts).
 const THEME_TOKENS = ':root{color-scheme:dark;--paper:#0e1311;--surface:#1a211d;--ink:#eef2ec;--green:#8fd4a4;--btn-bg:#dcefd9;--btn-fg:#0f1a14;--media-bg:#060807;--media-fg:#d5ddd6;--focus:#f2b552;}:root[data-theme=light]{color-scheme:light;--paper:#f7f8f3;--surface:#ffffff;--ink:#202a27;--green:#305d45;--btn-bg:#305d45;--btn-fg:#ffffff;--media-bg:#1d2822;--media-fg:#e2e7db;--focus:#9c5e0a;}';
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[c]!);
-function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string, theme: Theme) {
+function landing(pack: Awaited<ReturnType<GuestPackService['find']>>, nonce: string, theme: Theme, paymentsOn: boolean) {
   return `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${theme}"><meta name="theme-color" content="${THEME_COLOR[theme]}"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow"><title>Ваши клипы — КлипМейкер</title>
 <style>${THEME_TOKENS}*{box-sizing:border-box}html{background:var(--paper)}body{margin:0;background:var(--paper);color:var(--ink);font:1.125rem/1.6 system-ui,sans-serif}
@@ -46,21 +52,21 @@ video{max-height:min(70svh,31.25rem);object-fit:contain}
 <a class="download" href="${base}/file?${query}&amp;download=1" download>Скачать</a>`
       : '<p>Срок хранения клипа истёк или файл пока недоступен.</p>'}</article>`;
   }).join('')}</div><footer><a href="/">Сделать свои клипы</a>
-<section aria-label="Интерес к тарифу"><p>Сейчас доступен только бесплатный тариф.</p>
+${paymentsOn ? PRO_OFFER : `<section aria-label="Интерес к тарифу"><p>Сейчас доступен только бесплатный тариф.</p>
 <p>Нужны больше минут или клипы без метки? Отметьте интерес — это поможет нам оценить спрос.</p>
 <button id="pro-interest">Нужен тариф побольше</button><p id="interest-status" role="status"></p>
-<a id="interest-login" href="/" hidden>Войти в аккаунт</a></section>
+<a id="interest-login" href="/" hidden>Войти в аккаунт</a></section>`}
 <p>Чтобы отозвать публикацию, свяжитесь с ведущим, который прислал эту ссылку: он может закрыть доступ к пакету.</p></footer>
-<script nonce="${nonce}">document.getElementById('pro-interest').addEventListener('click',async function(){
+<script nonce="${nonce}">${paymentsOn ? '' : `document.getElementById('pro-interest').addEventListener('click',async function(){
 this.disabled=true;const status=document.getElementById('interest-status');status.textContent='Записываем…';
 try{const response=await fetch('/api/trpc/interest.create',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({source_screen:'guest_page'})});
 if(response.status===401){document.getElementById('interest-login').hidden=false;throw new Error('Войдите в аккаунт, затем вернитесь сюда и отметьте интерес.');}
 if(!response.ok)throw new Error('Не удалось записать интерес. Повторите позже');
 status.textContent='Спасибо, ваш интерес записан.';
-}catch(error){status.textContent=error.message;this.disabled=false;}});
+}catch(error){status.textContent=error.message;this.disabled=false;}});`}
 document.getElementById('download-all').addEventListener('click',async function(){
 this.disabled=true;const status=document.getElementById('download-status');let count=0;
-try{for(const link of document.querySelectorAll('a.download')){status.textContent='Скачиваем клип '+(count+1);
+try{for(const link of document.querySelectorAll('.clips a[download]')){status.textContent='Скачиваем клип '+(count+1);
 const response=await fetch(link.href,{cache:'no-store'});if(!response.ok)throw new Error('Файл недоступен');
 const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='clip-'+(++count)+'.mp4';
 document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
@@ -80,7 +86,7 @@ export function createGuestPageHandler(deps: Dependencies) {
       const pack = await deps.guests.find(code);
       await deps.guests.recordOpen(pack, session?.account_id ?? null, ipPrefix(ip));
       const referral = referralCookie(request.headers.get('cookie') ?? '', pack.partner_code, 'guest_link', session?.account_id === pack.account_id, deps.referralSecret);
-      return new Response(landing(pack, nonce, themeFromCookie(request.headers.get('cookie') ?? undefined)), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8',
+      return new Response(landing(pack, nonce, themeFromCookie(request.headers.get('cookie') ?? undefined), deps.paymentsOn === true), { headers: { ...headers, ...(referral ? { 'Set-Cookie': referral } : {}), 'Content-Type': 'text/html; charset=utf-8',
         'Content-Security-Policy': `default-src 'none'; img-src 'self'; media-src 'self'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'` } });
     } catch (error) {
       if (error instanceof UploadError && error.status === 404) return new Response('Ссылка не найдена', { status: 404, headers });

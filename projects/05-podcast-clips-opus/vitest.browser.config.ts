@@ -6,6 +6,7 @@ export default defineConfig({ esbuild: { jsx: 'automatic' },
   resolve: { alias: { '@clipmaker/shared/showcase': path.resolve('packages/shared/src/showcase.ts'),
     '@clipmaker/shared/enums': path.resolve('packages/shared/src/enums.ts'),
     '@clipmaker/shared/cta': path.resolve('packages/shared/src/cta.ts'),
+    '@clipmaker/shared/tariff': path.resolve('packages/shared/src/tariff.ts'),
     '@clipmaker/shared/music-catalog': path.resolve('packages/shared/src/music-catalog.ts') } },
   test: { include: ['tests/browser/**/*.test.ts'],
   testTimeout: 30000, hookTimeout: 30000, fileParallelism: false, maxWorkers: 1 } });

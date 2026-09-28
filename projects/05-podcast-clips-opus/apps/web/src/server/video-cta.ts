@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { transaction, leaseAttemptTx, checkAndConsumeQuota, type Attempt, type Pool } from '@clipmaker/db';
+import { transaction, leaseAttemptTx, checkAndConsumeQuota, effectivePlanSql, retentionFromSql, type Attempt, type Pool } from '@clipmaker/db';
+import { clipExpiry } from '@clipmaker/shared/tariff';
 import type { Limits } from '@clipmaker/shared/config';
 import { CTA_KIND } from '@clipmaker/shared/enums';
 import { effectiveMusic } from '@clipmaker/shared/music-catalog';
@@ -15,7 +16,6 @@ import { UploadError, quotaError } from './upload-contract';
 export const setCtaSchema = z.object({ video_id: z.string().uuid(), cta_kind: z.enum(CTA_KIND),
   cta_url: z.string().max(CTA_URL_MAX + 1).nullable().optional() }).strict();
 export interface CtaResult { video_id: string; cta_kind: CtaTarget['kind']; cta_url: string | null; rerendering: number }
-const FREE_RETENTION_MS = 3 * 86400_000;
 export class VideoCtaService {
   constructor(private readonly pool: Pool, private readonly limits: Limits,
     private readonly enqueue: (attempt: Attempt) => Promise<void>, private readonly clock = () => new Date()) {}
@@ -28,8 +28,8 @@ export class VideoCtaService {
     const videoId = parsed.data.video_id;
     const jobs = await transaction(this.pool, async tx => {
       // Тот же порядок блокировок, что у рендера, повтора, сторожа и смены музыки: сначала video.
-      const video = (await tx.query<{ cta_kind: string; music: boolean; finished_at: Date | null; plan: unknown }>(
-        `SELECT v.cta_kind,v.music,v.finished_at,a.plan FROM video v JOIN account a ON a.id=v.account_id
+      const video = (await tx.query<{ cta_kind: string; music: boolean; retention_from: Date | null; plan: unknown }>(
+        `SELECT v.cta_kind,v.music,${retentionFromSql('v', 'a')} AS retention_from,${effectivePlanSql('a')} AS plan FROM video v JOIN account a ON a.id=v.account_id
         WHERE v.id=$1 AND v.account_id=$2 AND v.deleted_at IS NULL AND a.status='active' FOR UPDATE OF v`, [videoId, account])).rows[0];
       // Чужая и несуществующая запись неразличимы: одинаковый 404.
       if (!video) throw new UploadError('not_found', 'Запись не найдена', 404);
@@ -44,8 +44,7 @@ export class VideoCtaService {
         `SELECT id,"index",music_track_id,expires_at FROM clip WHERE video_id=$1 AND status='done' AND object_key IS NOT NULL
         ORDER BY "index" FOR UPDATE`, [videoId])).rows.filter(clip => {
         // Истёкший клип не пересобирается: его файл уже удалён или вот-вот будет удалён очисткой.
-        const expires = clip.expires_at ?? (video.plan !== 'paid' && video.finished_at
-          ? new Date(video.finished_at.getTime() + FREE_RETENTION_MS) : null);
+        const expires = clipExpiry(clip.expires_at, video.plan, video.retention_from);
         return !expires || expires > now;
       });
       await save();

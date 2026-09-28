@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
-import type { Pool } from '@clipmaker/db';
+import { effectivePlanSql, retentionFromSql, type Pool } from '@clipmaker/db';
 import { moscowDay } from '@clipmaker/shared/upload';
 import { GUEST_CONSENT_TEXT, GUEST_CONSENT_VERSION, type GuestPackSummary } from '../lib/guest-contract';
 import { UploadError } from './upload-contract';
@@ -15,9 +15,9 @@ const missing = () => new UploadError('not_found', 'Ссылка не найде
 interface Pack {
   id: string; code: string; account_id: string; guest_name: string; video_id: string;
   sent_at: Date | null; expires_at: Date | null; revoked_at: Date | null;
-  plan: string; finished_at: Date | null; partner_code?: string;
+  plan: string; finished_at: Date | null; retention_from: Date | null; partner_code?: string;
 }
-const selectPack = `SELECT p.*,a.plan,v.finished_at,pc.code AS partner_code FROM guest_pack p LEFT JOIN partner_code pc ON pc.id=p.host_partner_code_id
+const selectPack = `SELECT p.*,${effectivePlanSql('a')} AS plan,v.finished_at,${retentionFromSql('v', 'a')} AS retention_from,pc.code AS partner_code FROM guest_pack p LEFT JOIN partner_code pc ON pc.id=p.host_partner_code_id
   JOIN video v ON v.id=p.video_id AND v.account_id=p.account_id JOIN account a ON a.id=p.account_id
   WHERE v.deleted_at IS NULL AND a.status='active'`;
 function summary(p: Pack): GuestPackSummary {
@@ -41,7 +41,7 @@ export class GuestPackService {
       const clips = await tx.query(`SELECT c.id FROM clip c JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
         WHERE c.video_id=$1 AND c.id=ANY($2::uuid[]) AND c.status='done' AND c.object_key IS NOT NULL
         AND (c.expires_at IS NULL OR c.expires_at>$3)
-        AND (a.plan='paid' OR v.finished_at IS NULL OR v.finished_at+interval '72 hours'>$3) FOR SHARE OF c`, [data.video_id, ids, now]);
+        AND (${effectivePlanSql('a', '$3')}='paid' OR ${retentionFromSql('v', 'a')} IS NULL OR ${retentionFromSql('v', 'a')}+interval '72 hours'>$3) FOR SHARE OF c`, [data.video_id, ids, now]);
       if (clips.rowCount !== ids.length) throw new UploadError('invalid', 'Выберите доступные клипы из этой записи', 422);
       const pack = (await tx.query<Pack>(`INSERT INTO guest_pack
         (video_id,account_id,code,guest_name,consent_confirmed,consent_version,consent_text_hash,consent_at)

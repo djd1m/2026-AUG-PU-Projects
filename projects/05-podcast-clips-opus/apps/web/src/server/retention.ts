@@ -1,4 +1,4 @@
-import { transaction, type Pool } from '@clipmaker/db';
+import { effectivePlanSql, transaction, type Pool } from '@clipmaker/db';
 import { SHOWCASE_CLIP_IDS } from '@clipmaker/shared/showcase';
 export interface RetentionStorage { delete(key: string): Promise<void>; erasePrefix(prefix: string): Promise<void>; eraseClipPrefix(prefix: string): Promise<void> }
 export const RETENTION_INTERVAL_MS = 3600_000;
@@ -29,6 +29,10 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
     await tx.query('DELETE FROM transcript WHERE video_id IN (SELECT id FROM video WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM video WHERE account_id=$1', [account]);
     for (const table of ['session', 'pro_interest']) await tx.query(`DELETE FROM ${table} WHERE account_id=$1`, [account]);
+    // Фича 30: деньги остаются в учёте (payment), но без связи с человеком; намерения — его данные, стираются.
+    await tx.query('UPDATE payment SET account_id=NULL,intent_id=NULL WHERE account_id=$1', [account]);
+    await tx.query('UPDATE operator_action SET account_id=NULL WHERE account_id=$1', [account]);
+    await tx.query('DELETE FROM payment_intent WHERE account_id=$1', [account]);
     await tx.query(`UPDATE attribution SET status='partner_deleted',partner_code_id=NULL,reject_reason=NULL
       WHERE account_id<>$1 AND partner_code_id IN
       (SELECT pc.id FROM partner_code pc JOIN partner p ON p.id=pc.partner_id WHERE p.account_id=$1)`, [account]);
@@ -85,10 +89,10 @@ export async function retentionTick(pool: Pool, storage: RetentionStorage, now =
     await step('очистка клипов', async () => {
       const clips = await pool.query<{ id: string; video_id: string; object_key: string | null; thumbnail_key: string | null }>(`SELECT c.id,c.object_key,c.thumbnail_key,c.video_id FROM clip c
         JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
-        WHERE c.status='done' AND a.status='active' AND a.plan <> 'paid' AND v.status IN ('done','failed')
-        AND v.finished_at <= $1 AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
+        WHERE c.status='done' AND a.status='active' AND ${effectivePlanSql('a', '$4')} <> 'paid' AND v.status IN ('done','failed')
+        AND GREATEST(v.finished_at, a.plan_paid_until) <= $1 AND (c.object_key IS NOT NULL OR c.thumbnail_key IS NOT NULL)
         AND NOT (c.id = ANY($3::uuid[]))
-        ORDER BY v.finished_at LIMIT $2`, [new Date(now.getTime() - 3 * 86400_000), batch, SHOWCASE_CLIP_IDS]);
+        ORDER BY v.finished_at LIMIT $2`, [new Date(now.getTime() - 3 * 86400_000), batch, SHOWCASE_CLIP_IDS, now]);
       backlog ||= clips.rows.length === batch;
       for (const clip of clips.rows) await step('удаление клипа', async () => {
         for (const prefix of ['clips/free', 'clips/paid', 'thumbs']) await storage.eraseClipPrefix(`${prefix}/${clip.video_id}/${clip.id}`);

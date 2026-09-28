@@ -13,6 +13,7 @@ x-app-env: &app-env
 x-quota-env: &quota-env
   N5_LIMIT_USER_RERENDERS: ${N5_LIMIT_USER_RERENDERS:?смена музыки останется без потолка перерендеров}
   N5_LIMIT_USER_MINUTES: ${N5_LIMIT_USER_MINUTES:?потолок минут на аккаунт не задан — вызов Whisper не ограничен}
+  N5_LIMIT_PAID_USER_MINUTES: ${N5_LIMIT_PAID_USER_MINUTES:?потолок минут тарифа paid не задан (OWN-019 — 270) — вызов Whisper платного аккаунта не ограничен}
   N5_LIMIT_USER_UPLOADS: ${N5_LIMIT_USER_UPLOADS:?потолок загрузок на аккаунт не задан}
   N5_LIMIT_USER_UPLOAD_REFUNDS: ${N5_LIMIT_USER_UPLOAD_REFUNDS:?потолок возвратов слота не задан}
   N5_LIMIT_USER_LLM: ${N5_LIMIT_USER_LLM:?потолок вызовов LLM на аккаунт не задан}
@@ -41,6 +42,13 @@ services:
       UV_THREADPOOL_SIZE: "8"
       N5_TRUSTED_PROXY_HOPS: ${N5_TRUSTED_PROXY_HOPS:-2}
       SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан}
+      # Оплата ЮKassa (фича 30, ADR-019). Дефис БЕЗ двоеточия: не задана → off (экран интереса); явно ПУСТАЯ строка
+      # доезжает до web и валит старт (honest-configuration CFG-I2), а не превращается в off молча.
+      N5_PAYMENTS_MODE: ${N5_PAYMENTS_MODE-off}
+      # Ключи магазина нужны только при live; web сам откажет стартовать, если при live их нет.
+      YOOKASSA_SHOP_ID: ${YOOKASSA_SHOP_ID-}
+      YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY-}
+      YOOKASSA_TEST_MODE: ${YOOKASSA_TEST_MODE-}
     # порта на хосте НЕТ: единственная дверь — proxy; публикация рядом с прокси обходит лимит частоты
     depends_on:
       db:

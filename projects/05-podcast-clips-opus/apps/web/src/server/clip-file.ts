@@ -1,6 +1,7 @@
 import { clientIp } from './ip';
 import { z } from 'zod';
-import type { Pool } from '@clipmaker/db';
+import { effectivePlanSql, retentionFromSql, type Pool } from '@clipmaker/db';
+import { clipExpiry } from '@clipmaker/shared/tariff';
 import { readSessionCookie } from './auth-handler';
 import type { AuthService } from './auth';
 import { guestFileTicket, validGuestFileTicket } from './guest-file';
@@ -27,8 +28,8 @@ export function createClipFileHandler(deps: ClipFileDependencies, kind: 'file' |
       if ((!session && !code) || !z.string().uuid().safeParse(id).success) return missing();
       if (code !== null && !/^[A-Za-z0-9_-]{32}$/.test(code)) return missing();
       const now = (deps.clock ?? (() => new Date()))();
-      const row = (await deps.pool.query<{ status: string; object_key: string | null; thumbnail_key: string | null; title: string; expires_at: Date | null; finished_at: Date | null; plan: string }>(
-        `SELECT c.status,c.object_key,c.thumbnail_key,c.title,c.expires_at,v.finished_at,a.plan FROM clip c
+      const row = (await deps.pool.query<{ status: string; object_key: string | null; thumbnail_key: string | null; title: string; expires_at: Date | null; retention_from: Date | null; plan: string }>(
+        `SELECT c.status,c.object_key,c.thumbnail_key,c.title,c.expires_at,${retentionFromSql('v', 'a')} AS retention_from,${effectivePlanSql('a')} AS plan FROM clip c
          JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
          WHERE c.id=$1 AND v.deleted_at IS NULL AND a.status='active' AND (
            ($3::text IS NULL AND v.account_id=$2) OR
@@ -37,7 +38,7 @@ export function createClipFileHandler(deps: ClipFileDependencies, kind: 'file' |
              AND p.revoked_at IS NULL AND p.sent_at IS NOT NULL AND p.expires_at>$4)))`, [id, session?.account_id ?? null, code, now])).rows[0];
       if (!row) return missing();
       if (row.status !== 'done') return missing();
-      const expires = row.expires_at ?? (row.plan !== 'paid' && row.finished_at ? new Date(row.finished_at.getTime() + 3 * 86400_000) : null);
+      const expires = clipExpiry(row.expires_at, row.plan, row.retention_from);
       if (expires && expires <= now) return missing();
       const key = kind === 'file' ? row.object_key : row.thumbnail_key;
       if (!key) return missing();

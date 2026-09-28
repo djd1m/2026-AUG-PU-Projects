@@ -7,7 +7,7 @@ import { UploadError } from '../apps/web/src/server/upload-contract';
 import { appRouter } from '../apps/web/src/server/trpc';
 const now = new Date('2026-09-22T21:00:00.000Z');
 const row: ShortLink = { id: 'link', code: '23456789AB', account_id: 'owner', title: 'Момент <script>alert(1)</script>',
-  status: 'done', thumbnail_key: 'private/thumb', expires_at: null, finished_at: now, plan: 'free' };
+  status: 'done', thumbnail_key: 'private/thumb', expires_at: null, retention_from: now, plan: 'free' };
 const request = () => new Request('https://app.example/c/23456789AB', { headers: { 'x-forwarded-for': '192.0.2.99, 127.0.0.1' } });
 function setup(overrides: Partial<ShortLink> = {}) {
   const links = { find: vi.fn().mockResolvedValue({ ...row, ...overrides }), recordView: vi.fn().mockResolvedValue(undefined) };
@@ -32,7 +32,7 @@ it('anonymous landing returns escaped preview and CTA, no redirect, no cache, mo
 });
 it.each([
   { expires_at: new Date('2026-09-20'), thumbnail_key: null },
-  { finished_at: new Date('2026-09-19T21:00:00Z') },
+  { retention_from: new Date('2026-09-19T21:00:00Z') },
 ])('expired landing survives file removal or 72-hour boundary', async overrides => {
   const deps = setup(overrides); const response = await deps.handle(request(), row.code);
   expect(response.status).toBe(200); expect(await response.text()).toContain('Срок хранения клипа истёк');

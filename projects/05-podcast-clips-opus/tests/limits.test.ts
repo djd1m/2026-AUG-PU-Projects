@@ -1,8 +1,7 @@
 import { expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import type { Pool } from 'pg';
 import { loadLimits } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
@@ -62,17 +61,13 @@ it('interest UI offers no deadline, paid launch promise or payment form', () => 
   const guest = readFileSync('apps/web/src/server/guest-page.ts', 'utf8');
   expect(guest).toContain("source_screen:'guest_page'");
   expect(guest).toContain('Сейчас доступен только бесплатный тариф');
-  expect(guest).not.toMatch(/скоро|запустим|откроется|оплат|checkout|payment/i);
+  // Фича 30: в файле теперь есть и режим с тарифом (paymentsOn); страж смотрит на блок интереса режима off.
+  const offBlock = guest.slice(guest.indexOf('<section aria-label="Интерес к тарифу">'), guest.indexOf('Войти в аккаунт</a></section>'));
+  expect(offBlock).toContain('Нужен тариф побольше');
+  expect(offBlock).not.toMatch(/скоро|запустим|откроется|оплат|checkout|payment/i);
 });
-it('ADR-005 production route registry contains no payment or webhook handler', () => {
-  function routes(dir: string): string[] {
-    return readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? routes(join(dir, entry.name))
-      : /^(route|page)\.(ts|tsx|js|jsx)$/.test(entry.name) ? [join(dir, entry.name)] : []);
-  }
-  expect(routes('apps/web/src/app').filter(path => /yookassa|webhooks|payments|checkout|billing/i.test(path))).toEqual([]);
-  const config = readFileSync('apps/web/next.config.ts', 'utf8');
-  expect(config).not.toMatch(/yookassa|webhooks|checkout/i);
-});
+// ADR-005 «маршрутов оплаты нет» заменён фичей 30 (ADR-019): страж AC-16 — tests/payments-guards.test.ts
+// («ровно один вебхук и два маршрута оформления; план меняют ровно три пути»).
 it('invalid interest input is rejected before a database connection', async () => {
   const connect = vi.fn(); const service = new InterestService({ connect } as unknown as Pool);
   for (const input of [{ source_screen: 'other' }, { source_screen: 'clip_card', account_id: 'foreign' },

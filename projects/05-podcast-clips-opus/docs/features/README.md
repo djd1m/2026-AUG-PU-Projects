@@ -40,6 +40,7 @@
 | 27 | `clip-cta` | Призыв в конце клипа: выбор, кнопка «Смотреть полный выпуск» на /c/, надпись в кадре, пересборка | post-mvp | [05_completion.md](clip-cta/05_completion.md) |
 | 28 | `landing-demo` | Лендинг с демо-клипом витрины (CTDUUG), третий путь к файлу только для витрины | post-mvp | [05_completion.md](landing-demo/05_completion.md) |
 | 29 | `progress-ribbon` | Лента стадий и первый экран экрана записи (FR-GROWTH-001 закрыт) | post-mvp | [05_completion.md](progress-ribbon/05_completion.md) |
+| 30 | `payments` | Оплата ЮKassa: тариф Pro 990 ₽ / 30 дней, режим off·fake·live, тракт из N6 (ADR-019, OWN-019) | post-mvp | [05_completion.md](payments/05_completion.md) |
 
 ## Сквозные документы, без которых фичи не читаются
 

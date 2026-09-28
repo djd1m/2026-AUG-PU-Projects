@@ -7,8 +7,8 @@ import type { ClipScreen } from '../../lib/screen-contract';
 import { useClipDownload } from './useClipDownload';
 /** `onSendToGuest` is passed only while the guest form is on screen (consent text hash present); without it «Гостю» is disabled.
  *  The card never creates a guest pack: consent is given only in the form (ADR-008). */
-export function ClipCard({ clip, onMusicQueued, onSendToGuest }: {
-  clip: ClipScreen; onMusicQueued?: (track: string) => void; onSendToGuest?: (clipId: string) => void;
+export function ClipCard({ clip, onMusicQueued, onSendToGuest, paymentsOn = false }: {
+  clip: ClipScreen; onMusicQueued?: (track: string) => void; onSendToGuest?: (clipId: string) => void; paymentsOn?: boolean;
 }) {
   const { download, downloadingId, error } = useClipDownload();
   const [copying, setCopying] = useState(false);
@@ -55,5 +55,5 @@ export function ClipCard({ clip, onMusicQueued, onSendToGuest }: {
       {clip.expires_at && <p className="muted">{expired ? 'Файл больше недоступен' : `Хранится до ${new Date(clip.expires_at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })} МСК`}</p>}
       {clip.rerender_failure && !clip.rerendering && <p role="alert">Не удалось пересобрать клип. Предыдущий файл сохранён. Попробуйте ещё раз.</p>}
       <ClipMusicChoice clip={clip} onQueued={onMusicQueued} />
-      {clip.watermarked && <ProInterest source="clip_card" />}</div></article>;
+      {clip.watermarked && <ProInterest source="clip_card" paymentsOn={paymentsOn} />}</div></article>;
 }

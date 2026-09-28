@@ -1,0 +1,23 @@
+режим same-id: код 2; env после: N5_PAYMENTS_MODE=live строк 0
+web не пересоздан: контейнер тот же или отсутствует
+ОТКАТ НЕ ПОДТВЕРЖДЁН: web при откате не пересоздан. Проверьте руками: docker compose --project-directory . --env-file <путь> ps web; копия env — <путь>
+режим up-fails: код 1; env после: N5_PAYMENTS_MODE=live строк 0
+docker compose up не выполнился (код 3) — web не пересоздан
+Env возвращён из копии; web пересоздан, здоров, оплата в нём не live — откат подтверждён.
+режим not-live: код 1; env после: N5_PAYMENTS_MODE=live строк 0
+в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена
+Env возвращён из копии; web пересоздан, здоров, оплата в нём не live — откат подтверждён.
+режим ok: код 0; env после: N5_PAYMENTS_MODE=live строк 1
+Готово: web здоров, оплата включена.
+режим rollback-up-fails: код 2; env после: N5_PAYMENTS_MODE=live строк 0
+в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена
+ОТКАТ НЕ ПОДТВЕРЖДЁН: docker compose up при откате вернул ошибку. Проверьте руками: docker compose --project-directory . --env-file <путь> ps web; копия env — <путь>
+режим rollback-still-live: код 2; env после: N5_PAYMENTS_MODE=live строк 0
+в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена
+ОТКАТ НЕ ПОДТВЕРЖДЁН: в web после отката всё ещё N5_PAYMENTS_MODE=live. Проверьте руками: docker compose --project-directory . --env-file <путь> ps web; копия env — <путь>
+режим rollback-env-unreadable: код 2; env после: N5_PAYMENTS_MODE=live строк 0
+в новом контейнере web N5_PAYMENTS_MODE не live — конфигурация не применена
+ОТКАТ НЕ ПОДТВЕРЖДЁН: окружение web после отката не прочитано — режим оплаты неизвестен. Проверьте руками: docker compose --project-directory . --env-file <путь> ps web; копия env — <путь>
+режим enable-env-unreadable: код 1; env после: N5_PAYMENTS_MODE=live строк 0
+окружение нового web не прочитано — применение конфигурации не подтверждено
+Env возвращён из копии; web пересоздан, здоров, оплата в нём не live — откат подтверждён.

@@ -2,7 +2,7 @@
 // адрес автора в кадр не вшивается (метка → /c/КОД → кнопка). Геометрия fail-closed по образцу layoutTeaser:
 // надпись живёт в полосе МЕЖДУ низом субтитров и верхом плашки метки; не поместилась даже минимальным
 // кеглем — клип собирается БЕЗ надписи с записью в журнал, а не с наложением на субтитры или метку.
-import { CTA_FRAME_LABELS } from '@clipmaker/shared/cta';
+import { ctaFrameLabel } from '@clipmaker/shared/cta';
 import { readCtaKind } from '@clipmaker/shared/enums';
 import { measureText, watermarkPlateTop, WatermarkGeometryError } from '@clipmaker/shared/watermark';
 import { FONT_FILE, WATERMARK_OPACITY } from './watermark.js';
@@ -25,7 +25,7 @@ export const CTA_VERSION = 'v1';
 export interface CtaZone { top: number; bottom: number }
 export interface CtaLayout { text: string; fontSize: number; x: number; y: number; plateWidth: number; plateHeight: number; textWidth: number }
 export interface CtaResult { kind: string; text: string; font_size: number; start_seconds: number }
-export type CtaSkipReason = 'no_room' | 'glyph_missing' | 'window_empty';
+export type CtaSkipReason = 'no_room' | 'glyph_missing' | 'window_empty' | 'paid_no_link';
 
 /** Полоса между субтитрами и меткой. Позиция одна и для бесплатных, и для платных клипов (без метки). */
 export function ctaZone(height: number): CtaZone {
@@ -59,9 +59,10 @@ export function buildCtaFilter(layout: CtaLayout, start: number): string {
       `fontsize=${layout.fontSize}:fontcolor=white:x=${layout.x + CTA_PADDING_X}:y=${textY + layout.fontSize}-ascent:${enable}`,
   ].join(',');
 }
-/** Вид читается fail-closed: неизвестное → none → надписи нет. Отказ разметки — журнал, клип без надписи. */
+/** Вид читается fail-closed: неизвестное → none → надписи нет. Отказ разметки — журнал, клип без надписи.
+ *  `watermark` обязателен (фича 30): текст надписи зависит от того, есть ли в кадре метка с /c/КОД. */
 export function prepareCta(kind: unknown, width: number, height: number, duration: number, teaser: boolean,
-  onSkip?: (reason: CtaSkipReason) => void): { result: CtaResult; filter: string } | null {
+  watermark: boolean, onSkip?: (reason: CtaSkipReason) => void): { result: CtaResult; filter: string } | null {
   const safe = readCtaKind(kind);
   if (safe === 'none') return null;
   const skip = (reason: CtaSkipReason) => {
@@ -71,7 +72,8 @@ export function prepareCta(kind: unknown, width: number, height: number, duratio
   };
   const start = ctaWindowStart(duration, teaser);
   if (!Number.isFinite(start) || start >= duration) return skip('window_empty');
-  const text = CTA_FRAME_LABELS[safe];
+  const text = ctaFrameLabel(safe, watermark);
+  if (text === null) return skip('paid_no_link');
   let layout: CtaLayout | null;
   try { layout = layoutCta(text, width, ctaZone(height)); }
   catch (error) { if (error instanceof WatermarkGeometryError) return skip('glyph_missing'); throw error; }
