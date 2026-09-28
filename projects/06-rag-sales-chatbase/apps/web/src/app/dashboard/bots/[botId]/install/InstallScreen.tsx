@@ -5,7 +5,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { InstallSnippet } from '@n6/rag/bot-settings';
-import { dataOf, errorOf, send } from '../../../../../lib/api-client';
+import { errorOf, send } from '../../../../../lib/api-client';
+import { requestVerify } from '../../../../../lib/verify-request';
 import type { FieldErrors } from '../../../CabinetViews';
 import { InstallView } from '../../../InstallViews';
 
@@ -24,11 +25,9 @@ export function InstallScreen({ gate, ...p }: { botId: string; companyName: stri
   const [verifyError, setVerifyError] = useState('');
   const verify = async () => {
     setVerifying(true); setVerifyError('');
-    try {
-      const { status, body } = await send(`/api/bots/${p.botId}/verify`, 'POST', { verified: true });
-      if (status === 200 && dataOf(body)) { router.refresh(); return; }
-      setVerifyError(errorOf(body)?.message ?? 'Не удалось сохранить отметку. Повторите');
-    } catch { setVerifyError('Нет связи с сервером. Повторите'); } finally { setVerifying(false); }
+    const outcome = await requestVerify(p.botId, true);
+    setVerifying(false);
+    if (outcome.ok) router.refresh(); else setVerifyError(outcome.message);
   };
   const call = async (url: string, method: 'POST' | 'PATCH', payload: unknown, fieldName: string, done: () => void) => {
     setBusy(true); setErrors({});

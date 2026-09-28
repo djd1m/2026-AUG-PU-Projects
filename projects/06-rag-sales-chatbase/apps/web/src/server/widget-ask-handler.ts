@@ -13,7 +13,7 @@
 //   ядро answerQuestion (5 scope квоты одной транзакцией ДО эмбеддинга, порог ДО модели, проверка цитат ПОСЛЕ) →
 //   answered: ход истории, RecordWidgetInstall(first_answer), RecordGrowthEvent(first_answer).
 // Ровно ОДИН Access-Control-Allow-Origin ставит только web (corsHeaders), Caddy его не трогает; без Allow-Credentials.
-import type { AnswerResult, HistoryTurn, VisitorRequest } from '@n6/rag';
+import { parseVisitorRequest, type AnswerResult, type HistoryTurn, type VisitorRequest } from '@n6/rag';
 import type { VisitorSessionState } from '@n6/db';
 import { badgeRequired } from '../lib/badge-required';
 import { checkOrigin, requestOrigin } from './check-origin';
@@ -74,6 +74,9 @@ export function createWidgetAskHandler(deps: WidgetAskDependencies) {
     // не зовётся вовсе (платить за ответ, который не покажут, незачем). Заглушка ЗАПИСЫВАЕТСЯ (gate-onboarding): иначе
     // владелец видит «вопросов ещё не было», пока посетители упираются в «настраивается» (инцидент стенда 28.09).
     if (!bot.row.answersVerified) {
+      // Ревью gate-onboarding (круг 1): вопрос проверяется ТЕМ ЖЕ разбором, что и в ядре, ДО записи — пустой и длиннее 500
+      // символов не засоряет журнал и не считается посетителем с заглушкой; ответ — тот же 422, что даёт ядро.
+      if (!parseVisitorRequest({ question: body.question, history: [] }).ok) return fail(422, 'invalid_question', 'Вопрос пустой или длиннее 500 символов', origin);
       try { await deps.logNotVerified(bot.row.botId, sessionId); } catch { log('Виджет: исход not_verified не записан'); }
       return reply(200, { data: { status: 'unknown', reason: 'not_verified', text: withContact(NOT_VERIFIED_MESSAGE, bot.contact), contact: bot.contact } }, origin);
     }

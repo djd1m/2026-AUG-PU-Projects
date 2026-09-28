@@ -5,6 +5,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { dataOf, errorOf, send } from '../../../../lib/api-client';
+import { requestVerify } from '../../../../lib/verify-request';
 import { AddSource, BotForm, OwnerChat, SourceList, type FieldErrors, type OwnerMessage, type SourceItemView } from '../../CabinetViews';
 import { GateBanner } from '../../GateBanner';
 import { MonthBanner, PublishBlock, SummaryBlock, VerifyBlock, type PublishView, type SummaryView } from './BotExtrasViews';
@@ -114,12 +115,9 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
   const [verifyFrom, setVerifyFrom] = useState<'banner' | 'block'>('block');
   const toggleVerified = async (from: 'banner' | 'block') => {
     setVerifying(true); setVerifyError(''); setVerifyFrom(from);
-    try {
-      const { status, body } = await send(`/api/bots/${p.botId}/verify`, 'POST', { verified: !verified });
-      const data = dataOf<{ answers_verified: boolean }>(body);
-      if (status === 200 && data) { setVerified(data.answers_verified); router.refresh(); return; }
-      setVerifyError(errorOf(body)?.message ?? 'Не удалось сохранить отметку. Повторите');
-    } catch { setVerifyError('Нет связи с сервером. Повторите'); } finally { setVerifying(false); }
+    const outcome = await requestVerify(p.botId, !verified);
+    setVerifying(false);
+    if (outcome.ok) { setVerified(outcome.verified); router.refresh(); } else setVerifyError(outcome.message);
   };
   const [page, setPage] = useState<PublishView>(p.publicPage);
   const [publishing, setPublishing] = useState(false);

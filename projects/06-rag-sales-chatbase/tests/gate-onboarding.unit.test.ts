@@ -10,6 +10,7 @@ import { createWidgetAskHandler, type WidgetAskDependencies } from '../apps/web/
 import { issueVisitorToken } from '../apps/web/src/server/visitor-token';
 import { GateBanner, GATE_STUB_WARNING, stubVisitorsLine, visitorsWord } from '../apps/web/src/app/dashboard/GateBanner';
 import { SummaryBlock } from '../apps/web/src/app/dashboard/bots/[botId]/BotExtrasViews';
+import { requestVerify } from '../apps/web/src/lib/verify-request';
 
 const PUBLIC = 'https://sufler.example', HOST = 'https://aicoding.example', KEY = 'AbCdEfGhIjKlMnOpQrStUv';
 const SECRET = 'unit-secret-0123456789abcdef0123456789abcdef';
@@ -29,8 +30,8 @@ function harness(verified: boolean, logFails = false) {
     appendTurn: async () => {}, recordFirstAnswer: async () => true, logRefusedOrigin: async () => { calls.push('refused_origin'); },
     logNotVerified: async (botId, session) => { calls.push('not_verified'); if (logFails) throw new Error('db down'); logged.push([botId, session]); },
   };
-  const ask = () => createWidgetAskHandler(deps)(new Request(`${PUBLIC}/w/v1/ask?bot=${KEY}`, { method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.9', origin: HOST }, body: JSON.stringify({ visitor_session: VS, question: 'цены?' }) }));
+  const ask = (question = 'цены?') => createWidgetAskHandler(deps)(new Request(`${PUBLIC}/w/v1/ask?bot=${KEY}`, { method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.9', origin: HOST }, body: JSON.stringify({ visitor_session: VS, question }) }));
   return { calls, logged, lines, ask };
 }
 
@@ -48,6 +49,17 @@ describe('маршрут виджета: заглушка ворот запис�
     expect(r.status).toBe(200);
     expect(((await r.json()) as { data: { reason: string; contact: string } }).data).toMatchObject({ reason: 'not_verified', contact: '+7 900 000-00-00' });
     expect(h.lines).toContain('Виджет: исход not_verified не записан');
+  });
+  it('ревью круга 1: пустой, пробельный и длиннее 500 символов вопрос — 422 как у ядра, заглушка НЕ пишется', async () => {
+    for (const question of ['', '   ', 'в'.repeat(501)]) {
+      const h = harness(false);
+      const r = await h.ask(question);
+      expect([r.status, ((await r.json()) as { error: { code: string } }).error.code], JSON.stringify(question.slice(0, 5))).toEqual([422, 'invalid_question']);
+      expect(h.calls).toEqual([]);
+    }
+    const ok = harness(false);
+    expect((await ok.ask('в'.repeat(500))).status).toBe(200);
+    expect(ok.calls).toEqual(['not_verified']);
   });
   it('с отметкой — not_verified не пишется, отвечает ядро', async () => {
     const h = harness(true);
@@ -88,6 +100,30 @@ describe('разметка', () => {
     expect(html).not.toContain('Вопросов ещё не было');
     expect(html).toContain('5 посетителей получили заглушку «Бот ещё настраивается»');
     expect(html).toMatch(/<\/ul><p[^>]*stub-count/);
+  });
+});
+
+describe('requestVerify — общий путь отметки из экрана бота и экрана установки (ревью круга 1)', () => {
+  const sender = (status: number, body: unknown, calls: unknown[] = []) => (async (...args: unknown[]) => { calls.push(args); return { status, body }; }) as never;
+  it('200 с булевым answers_verified — успех; запрос — POST /api/bots/{id}/verify { verified }', async () => {
+    const calls: unknown[] = [];
+    expect(await requestVerify(BOT_ID, true, sender(200, { data: { answers_verified: true } }, calls))).toEqual({ ok: true, verified: true });
+    expect(calls).toEqual([[`/api/bots/${BOT_ID}/verify`, 'POST', { verified: true }]]);
+  });
+  it('409 indexing — текст сервера; 200 без данных или с не-булевым — ошибка, а не «отметка стоит»; сеть — «нет связи»', async () => {
+    expect(await requestVerify(BOT_ID, true, sender(409, { error: { code: 'indexing', message: 'Дождитесь окончания загрузки материалов' } })))
+      .toEqual({ ok: false, message: 'Дождитесь окончания загрузки материалов' });
+    for (const body of [null, {}, { data: {} }, { data: { answers_verified: 'true' } }]) {
+      expect(await requestVerify(BOT_ID, true, sender(200, body)), JSON.stringify(body)).toEqual({ ok: false, message: 'Не удалось сохранить отметку. Повторите' });
+    }
+    expect(await requestVerify(BOT_ID, true, (async () => { throw new TypeError('fetch failed'); }) as never)).toEqual({ ok: false, message: 'Нет связи с сервером. Повторите' });
+  });
+  it('страж: оба экрана ставят отметку только через requestVerify, прямого POST …/verify в экранах нет', () => {
+    for (const file of ['apps/web/src/app/dashboard/bots/[botId]/BotScreen.tsx', 'apps/web/src/app/dashboard/bots/[botId]/install/InstallScreen.tsx']) {
+      const code = readFileSync(file, 'utf8');
+      expect(code, file).toMatch(/requestVerify\(p\.botId/);
+      expect(code, file).not.toMatch(/\/verify`/);
+    }
   });
 });
 

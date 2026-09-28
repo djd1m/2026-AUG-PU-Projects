@@ -16,6 +16,10 @@ ALTER TABLE bot ADD COLUMN answers_verified_reset_reason text
   CONSTRAINT bot_verified_reset_reason_check CHECK (answers_verified_reset_reason IN ('new_material'));
 ALTER TABLE bot ADD CONSTRAINT bot_verified_reset_pair
   CHECK ((answers_verified_reset_at IS NULL) = (answers_verified_reset_reason IS NULL));
+-- Ревью круга 1 (конкурентность): «отметка стоит» и «отметку сняла база» взаимоисключающи — держит БАЗА, а не порядок
+-- операций в коде. Любая гонка триггера с setAnswersVerified, дающая оба сразу, падает на вставке, а не показывает
+-- владельцу «проверено» вместе с «материалы обновились».
+ALTER TABLE bot ADD CONSTRAINT bot_verified_or_reset CHECK (answers_verified_at IS NULL OR answers_verified_reset_at IS NULL);
 
 -- 3. Триггер 004 (A-N6-036) снимал отметку молча — теперь оставляет пометку. Строку бота трогает, как и прежде, только
 --    когда отметка ещё стоит: пачка фрагментов уже снятого бота пометку не переписывает (дата — первое снятие).

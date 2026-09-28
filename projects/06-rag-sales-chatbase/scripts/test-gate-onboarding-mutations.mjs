@@ -1,7 +1,7 @@
 // из N6 scripts/test-public-page-mutations.mjs — та же схема «копия проекта → дефект → красный прогон → восстановление → зелёный».
 // Мутации стражей gate-onboarding (A-N6-066): заглушка ворот A-N6-035 не записывается (инцидент стенда 28.09); сводка
 // считает заглушки как «не знал»; сводка считает вопросы, а не посетителей; триггер снимает отметку молча (без пометки);
-// действие владельца не стирает пометку о снятии.
+// действие владельца не стирает пометку о снятии; (круг 1) заглушка для невалидного вопроса; база допускает «проверено»+«снята».
 // Интеграционные наборы ходят в НАСТОЯЩИЙ Postgres + pgvector: запускать в образе
 //   docker compose -f compose.test.yml --project-directory . --env-file <вне репо> run --rm --build test \
 //     sh -c 'node scripts/test-db.mjs && node scripts/test-gate-onboarding-mutations.mjs'
@@ -36,6 +36,11 @@ const mutations = [
     edits: [{ file: summary, apply: once('count(DISTINCT visitor_session_id) FILTER', 'count(visitor_session_id) FILTER') }] },
   { id: 'reset-silent', title: 'триггер снимает отметку молча, без пометки «когда и почему» (AC-8)',
     edits: [{ file: m011, apply: once("UPDATE bot SET answers_verified_at = NULL, answers_verified_reset_at = now(), answers_verified_reset_reason = 'new_material'", 'UPDATE bot SET answers_verified_at = NULL') }] },
+  // Ревью круга 1: вопрос не проверяется до записи заглушки; «проверено» и «снята» одновременно допускаются базой.
+  { id: 'stub-logs-invalid', title: 'заглушка пишется и для пустого/длинного вопроса — журнал засоряется, счёт посетителей завышен',
+    edits: [{ file: ask, apply: once("      if (!parseVisitorRequest({ question: body.question, history: [] }).ok) return fail(422, 'invalid_question', 'Вопрос пустой или длиннее 500 символов', origin);\n", '') }] },
+  { id: 'verified-or-reset-dropped', title: 'база допускает «проверено» вместе с пометкой «снята» (гонка триггера и владельца)',
+    edits: [{ file: m011, apply: once('ALTER TABLE bot ADD CONSTRAINT bot_verified_or_reset CHECK (answers_verified_at IS NULL OR answers_verified_reset_at IS NULL);\n', '') }] },
   { id: 'reset-not-cleared', title: 'действие владельца с отметкой не стирает пометку о снятии — баннер показывает старую дату (AC-9)',
     edits: [{ file: bots, apply: once(',\n        answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL\n', '\n') }] },
 ];
