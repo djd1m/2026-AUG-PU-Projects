@@ -16,7 +16,7 @@ import { readBotStatus } from './enums.js';
 import { ANSWER_TIMEOUT_MS, GatewayResponseError, type OpenRouter } from './openrouter.js';
 import { buildAnswerPrompt, type HistoryTurn } from './prompt.js';
 import { ownHit, selectRelevant, type SearchHit } from './search.js';
-import { companyLabel, detectSmallTalk, intentNeedsTopics, smallTalkReply, topicsFromTitles, type SmallTalkIntent } from './small-talk.js';
+import { companyLabel, detectSmallTalk, intentNeedsTopics, smallTalkReply, topicsFromTitles, type PageTopicSource, type SmallTalkIntent } from './small-talk.js';
 import { meteredCall, RetryableCallError, type ChargeDecision, type SpendRecorder } from './spend.js';
 import { validateModelAnswer } from './validate-model-answer.js';
 
@@ -38,8 +38,9 @@ export interface AnswerDeps {
   // Поиск ВНУТРИ бота — searchChunks (packages/db/src/chunks.ts, A-N6-028).
   search: (botId: string, embedding: number[]) => Promise<SearchHit[]>;
   logQuestion: (entry: QuestionLogEntry) => Promise<void>;
-  // Заголовки страниц ЭТОГО бота — примеры тем в шаблоне светской беседы (readBotPageTitles в @n6/db).
-  pageTitles: (botId: string) => Promise<string[]>;
+  // Заголовки страниц ЭТОГО бота (страница и её первый раздел) — примеры тем в шаблоне светской беседы
+  // (readBotPageTitles в @n6/db; отбор содержательных — topicsFromTitles, A-N6-076).
+  pageTitles: (botId: string) => Promise<ReadonlyArray<string | PageTopicSource>>;
   answerTimeoutMs?: number;
   signal?: (line: string) => void;       // сигнал оператору (чужой фрагмент из поиска)
 }
