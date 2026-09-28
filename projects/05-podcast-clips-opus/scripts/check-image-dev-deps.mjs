@@ -50,16 +50,19 @@ if(d.name==='node_modules'){for(const e of ls(full)){if(e.name.startsWith('.'))c
 if(e.name.startsWith('@')&&e.isDirectory()&&!e.isSymbolicLink()){for(const s of ls(f))add(p.join(f,s.name),er+'/'+s.name,s)}else add(f,er,e)}}
 walk(full,r);}}
 walk('/app','');process.stdout.write(JSON.stringify({pkgs,errors}));`;
-let failed = false;
+// Итог по КАЖДОМУ образу отдельно (ревью Codex, круг 3): неполнота одного образа не прячется за дефектом другого и
+// не получает ✅. Общий код: 1, если хоть в одном образе доказан дефект; иначе 2, если хоть один не проверен целиком.
+let defect = false, incomplete = false;
+const skip = (image, message) => { incomplete = true; console.error(`❌ ${image}: проверка НЕ ВЫПОЛНЕНА — ${message}`); };
 for (const image of images) {
   const run = spawnSync('docker', ['run', '--rm', '--network', 'none', '--entrypoint', 'node', image, '-e', probe],
     { encoding: 'utf8', timeout: 180_000, maxBuffer: 64 * 1024 * 1024 });
-  if (run.error) notRun(`docker не запустился для ${image}: ${run.error.message}`);
-  if (run.status !== 0) notRun(`образ ${image} не проверен (код ${run.status}): ${run.stderr.trim().slice(0, 400)}`);
+  if (run.error) { skip(image, `docker не запустился: ${run.error.message}`); continue; }
+  if (run.status !== 0) { skip(image, `код ${run.status}: ${run.stderr.trim().slice(0, 400)}`); continue; }
   let result;
-  try { result = JSON.parse(run.stdout); } catch { notRun(`образ ${image}: ответ пробы не разобран: ${run.stdout.slice(0, 200)}`); }
+  try { result = JSON.parse(run.stdout); } catch { skip(image, `ответ пробы не разобран: ${run.stdout.slice(0, 200)}`); continue; }
   const found = result?.pkgs;
-  if (!Array.isArray(found) || found.length === 0) notRun(`образ ${image}: под /app нет ни одного пакета node_modules`);
+  if (!Array.isArray(found) || found.length === 0) { skip(image, 'под /app нет ни одного пакета node_modules'); continue; }
   const present = new Set(found.map(pkg => pkg.path));
   const dev = [], unknown = [];
   for (const pkg of found) {
@@ -73,21 +76,22 @@ for (const image of images) {
     else unknown.push(`${pkg.path} (${pkg.name ?? '?'}@${pkg.version ?? '?'})`);
   }
   const missing = prod.filter(path => !present.has(path));
+  const errors = Array.isArray(result.errors) ? result.errors : ['проба не вернула список ошибок'];
   if (dev.length > 0) {
-    failed = true;
+    defect = true;
     console.error(`❌ ${image}: ${dev.length} dev-пакетов в рантайм-образе, напр. ${dev.slice(0, 8).join(', ')}`);
   }
   if (missing.length > 0) {
-    failed = true;
+    defect = true;
     console.error(`❌ ${image}: нет ${missing.length} prod-пакетов из ${prod.length}, напр. ${missing.slice(0, 8).join(', ')}`);
   }
-  if (!failed && (result.errors.length > 0 || unknown.length > 0)) {
-    // Доказанный дефект важнее неполноты (1 бьёт 2), но неполнота не бывает «чисто».
-    notRun(`образ ${image}: обход неполон — ошибок чтения ${result.errors.length} (${result.errors.slice(0, 3).join('; ')}), `
+  if (errors.length > 0 || unknown.length > 0) {
+    skip(image, `обход неполон — ошибок чтения ${errors.length} (${errors.slice(0, 3).join('; ')}), `
       + `пакетов вне lockfile ${unknown.length} (${unknown.slice(0, 5).join(', ')})`);
+    continue;
   }
   if (dev.length === 0 && missing.length === 0) {
     console.log(`✅ ${image}: пакетов под /app ${found.length}; dev-пакетов 0 (по ${devPaths.size} записям dev: true); prod-пакетов на месте ${prod.length} из ${prod.length}`);
   }
 }
-process.exit(failed ? 1 : 0);
+process.exit(defect ? 1 : incomplete ? 2 : 0);
