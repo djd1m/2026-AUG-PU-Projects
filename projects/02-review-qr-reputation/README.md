@@ -162,7 +162,7 @@ docker compose up -d --build
    ([`Refinement.md:311`](docs/Refinement.md)); в коде взято 2000 до замера
    (`services/notifier/src/format.ts:10`). Отправка в коде сейчас реализована только для Telegram.
 5. **Строки роста «Партнёрка» и «Блогеры»** — «заполняется» (таблица выше).
-6. ✅ **Исправлено, ветка `worktree-agent-ac42582832d8f5df6`, на стенд не выложено** (нужно
+6. ✅ **Исправлено и выложено на стенд 28.09** (слияние `c70afb53`; было нужно
    пересобрать `guest` и `intake`): адрес гостя едет в `intake` заголовком `X-Guest-IP`, `guest`
    верит `X-Forwarded-For` только от прокси — [`guest-ip-forwarding/`](docs/features/guest-ip-forwarding/05_completion.md).
    Было: **лимит 10 в час считает всех гостей за одного — подтверждено по коду.** Источник — «Риски на сцене» ([`demo-script.md:283`](docs/demo-script.md), `:351`).
