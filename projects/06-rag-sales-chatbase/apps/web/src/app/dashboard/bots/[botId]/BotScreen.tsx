@@ -5,10 +5,11 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { dataOf, errorOf, send } from '../../../../lib/api-client';
-import { requestVerify } from '../../../../lib/verify-request';
+import { requestUnverify, requestVerify } from '../../../../lib/verify-request';
 import { AddSource, BotForm, OwnerChat, SourceList, type FieldErrors, type OwnerMessage, type SourceItemView } from '../../CabinetViews';
 import { GateBanner } from '../../GateBanner';
-import { MonthBanner, PublishBlock, SummaryBlock, VerifyBlock, type PublishView, type SummaryView } from './BotExtrasViews';
+import { MonthBanner, PublishBlock, SummaryBlock, type PublishView, type SummaryView } from './BotExtrasViews';
+import { VerifyBlock, type VerificationEventView } from './VerifyBlock';
 
 const REFRESH_MS = 3000;
 export interface BotScreenProps { botId: string; companyName: string; contact: string; greeting: string; sources: SourceItemView[] }
@@ -16,7 +17,8 @@ export interface BotScreenProps { botId: string; companyName: string; contact: s
 // (баннер исчерпания, FR-TARIFF-003, SC-US-007-2).
 // public-page-and-summary: сводка за 7 дней (FR-BOT-004) и демо-страница (FR-GROWTH-005) — разметка в BotExtrasViews.
 // gate-onboarding (A-N6-066): отметку сняла база (дата) и число посетителей с заглушкой «настраивается» за 7 дней.
-export interface BotScreenState { answersVerified: boolean; gate: { resetAt: string | null; stubVisitors: number }; monthAnswers: { used: number; limit: number }; summary: SummaryView | null; publicPage: PublishView }
+// verify-audit (A-N6-077): дата установки стоящей отметки и последние события журнала отметки.
+export interface BotScreenState { answersVerified: boolean; verification: { verifiedAt: string | null; events: VerificationEventView[] }; gate: { resetAt: string | null; stubVisitors: number }; monthAnswers: { used: number; limit: number }; summary: SummaryView | null; publicPage: PublishView }
 
 export function BotScreen(p: BotScreenProps & BotScreenState) {
   const router = useRouter();
@@ -113,9 +115,21 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
   const [verifyError, setVerifyError] = useState('');
   // Ошибку показывает тот блок, чьей кнопкой нажали (баннер ворот или блок «Ответы на сайте») — не оба сразу.
   const [verifyFrom, setVerifyFrom] = useState<'banner' | 'block'>('block');
-  const toggleVerified = async (from: 'banner' | 'block') => {
+  // Баннер после отметки из него сменяется строкой «Отметка поставлена», а не исчезает (AC-11 verify-audit).
+  const [justVerified, setJustVerified] = useState(false);
+  // verify-audit (A-N6-077): установка и снятие — РАЗНЫЕ действия. Установка — одним нажатием и только true (второе нажатие
+  // двойного клика отметку не снимет); снятие — только кнопкой «Снять» подтверждения в VerifyBlock.
+  const markVerified = async (from: 'banner' | 'block') => {
+    if (verifying) return;
     setVerifying(true); setVerifyError(''); setVerifyFrom(from);
-    const outcome = await requestVerify(p.botId, !verified);
+    const outcome = await requestVerify(p.botId, true);
+    setVerifying(false);
+    if (outcome.ok) { setVerified(outcome.verified); setJustVerified(from === 'banner' && outcome.verified); router.refresh(); } else setVerifyError(outcome.message);
+  };
+  const unmarkVerified = async () => {
+    if (verifying) return;
+    setVerifying(true); setVerifyError(''); setVerifyFrom('block'); setJustVerified(false);
+    const outcome = await requestUnverify(p.botId);
     setVerifying(false);
     if (outcome.ok) { setVerified(outcome.verified); router.refresh(); } else setVerifyError(outcome.message);
   };
@@ -143,14 +157,16 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
   };
   const ready = p.sources.some((s) => s.job?.state === 'done');
   return <BotLayout {...p} ready={ready}
-    gate={<GateBanner verified={verified} ready={ready} resetAt={p.gate.resetAt} stubVisitors={p.gate.stubVisitors} chatHref="#chat-title"
-      busy={verifying} error={verifyFrom === 'banner' ? verifyError : ''} onVerify={() => { void toggleVerified('banner'); }} />}
+    gate={<GateBanner verified={verified} justVerified={justVerified} ready={ready} resetAt={p.gate.resetAt} stubVisitors={p.gate.stubVisitors} chatHref="#chat-title"
+      busy={verifying} error={verifyFrom === 'banner' ? verifyError : ''} onVerify={() => { void markVerified('banner'); }} />}
     banner={<MonthBanner used={p.monthAnswers.used} limit={p.monthAnswers.limit} />}
     summary={<SummaryBlock summary={p.summary} erase={{ ...eraseLog,
       onAsk: () => setEraseLog({ confirming: true, busy: false, error: '', done: false }),
       onConfirm: () => { void eraseQuestionLog(); },
       onCancel: () => setEraseLog({ confirming: false, busy: false, error: '', done: false }) }} />}
-    verify={<VerifyBlock verified={verified} busy={verifying} error={verifyFrom === 'block' ? verifyError : ''} onToggle={() => { void toggleVerified('block'); }} />}
+    verify={<VerifyBlock verified={verified} busy={verifying} error={verifyFrom === 'block' ? verifyError : ''}
+      verifiedAt={p.verification.verifiedAt} events={p.verification.events}
+      onSet={() => { void markVerified('block'); }} onUnset={() => { void unmarkVerified(); }} />}
     publish={<PublishBlock page={page} busy={publishing} error={publishError}
       onPublish={(enabled) => { void publish({ enabled, indexable: page.indexable }); }}
       onIndexable={(indexable) => { void publish({ enabled: page.enabled, indexable }); }} />}

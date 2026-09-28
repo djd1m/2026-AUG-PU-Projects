@@ -78,7 +78,9 @@ describe('CHECK миграции = перечисления канона §4', (
     // Служебные журналы — не сущности канона (закрытый список): index_start — журнал запусков индексации для суточного
     // предела (source-lifecycle, A-N6-050). Любая другая новая таблица сдвинет список и уронит тест.
     // erasure_audit — журнал стирания аккаунтов без ПДн (account-erasure, миграция 010).
-    const SERVICE = ['index_start', 'erasure_audit', 'upload_orphan'];   // upload_orphan — файл удалённого источника до стирания (шестое ревью)
+    const SERVICE = ['index_start', 'erasure_audit', 'upload_orphan', 'bot_verification_event'];
+    // upload_orphan — файл удалённого источника до стирания (шестое ревью); bot_verification_event — журнал отметки «проверено»
+    // без ПДн (verify-audit, миграция 014, A-N6-077).
     const all_tables = [...all.matchAll(/^CREATE TABLE (\w+)/gm)].map((m) => m[1]!);
     expect(SERVICE.every((t) => all_tables.includes(t))).toBe(true);
     const tables = all_tables.filter((t) => !SERVICE.includes(t));

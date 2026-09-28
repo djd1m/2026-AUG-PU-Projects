@@ -84,7 +84,7 @@ A-N6-040, миграция 006) — ещё 4: `payment_intent`, `payment_event`,
 `partner_payout_details`, `partner_audit`. Итого **27**. Служебные журналы (НЕ сущности канона, закрытый список, сверяется
 `tests/enums.test.ts` и `tests/database.integration.test.ts`): `index_start` (запуски индексации для суточного предела,
 миграция 008, A-N6-050), `erasure_audit` (журнал стирания без ПДн, миграция 010), `upload_orphan` (файл PDF удалённого
-источника до стирания, миграция 010); плюс `_schema_migration` раннера миграций. Всего таблиц в схеме — 30 + `_schema_migration`. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
+источника до стирания, миграция 010), `bot_verification_event` (журнал отметки «проверено» без ПДн, миграция 014, A-N6-077); плюс `_schema_migration` раннера миграций. Всего таблиц в схеме — 31 + `_schema_migration`. Закрытые перечисления партнёрки: `commission_entry.kind` ∈
 `accrual | clawback | payout | write_off` (`write_off` — списание долга удалённому партнёру ТОЛЬКО командой оператора, A-N6-061; при удалении ничего не сгорает); `partner_code.frozen_reason` ∈
 `antifraud_ip_burst | operator | owner_erased`; `partner_code_use.source` =
 `attribution.source` ∈ `code | invite | cookie`; `partner_audit.kind` ∈ `frozen_antifraud | unfrozen | code_issued |
@@ -103,6 +103,7 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 | `index_job.failure_reason` | `robots_disallowed` · `unreachable` · `blocked_address` · `no_text` · `not_pdf` · `too_large` · `no_text_layer` · `quota_refused` · `embedding_unavailable` · `stalled` · `internal` · `not_text` (по адресу файла не текст; миграция 015, A-N6-080) | `internal` |
 | `question_log.outcome` | `answered` · `unknown` · `refused_limit` · `refused_origin` · `not_verified` (ворота A-N6-035, без текста и без квоты; миграция 011, A-N6-066) · `small_talk` (A-N6-074, миграция 013: светская реплика — шаблон без модели и списания, без текста) | `unknown` |
 | `bot.answers_verified_reset_reason` | `new_material` (отметку «проверено» сняла база — новый фрагмент; миграция 011, A-N6-066) | экран: «отметка снята» без причины |
+| `bot_verification_event.kind` / `.actor` | `set` · `unset_owner` · `unset_new_material` / `owner` · `system` (`system` ⇔ `unset_new_material`; пишет триггер на переходе отметки, миграция 014, A-N6-077) | не показывается (не выдумываем, кто снял) |
 | `quota_counter.scope` | 10 значений, §7 | отказ списания |
 | `growth_event.type` | `badge_impression` · `badge_click` · `share_cta_shown` · `share_cta_click` · `widget_install` · `first_answer` · `public_page_view` · `invite_sent` · `invite_accepted` · `interest` | не записывается |
 | `attribution.source` | `code` · `invite` · `cookie` | `cookie` (самый слабый) |
@@ -123,7 +124,7 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 `DELETE /api/account` (`{ confirm: true, password }` → `202 { accepted, erase_deadline }`, A-N6-054).
 Боты: `GET|POST /api/bots`, `PATCH /api/bots/{bot_id}`, `POST /api/bots/{bot_id}/sources` (JSON сайта `{ url }`, JSON текстового файла `{ url, kind: 'text' }` — A-N6-080,
 или multipart PDF, `Idempotency-Key`), `POST /api/bots/{bot_id}/origins`, `POST /api/bots/{bot_id}/ask` (тестовый чат владельца),
-`POST /api/bots/{bot_id}/verify` (отметка «проверено», A-N6-035), `POST /api/bots/{bot_id}/publish` (демо-страница),
+`POST /api/bots/{bot_id}/verify` (отметка «проверено», A-N6-035; снятие — только с `{ confirm: true }`, A-N6-077), `POST /api/bots/{bot_id}/publish` (демо-страница),
 `GET /api/bots/{bot_id}/summary`, `POST /api/bots/{bot_id}/question-log/erase` (стирание журнала вопросов бота, FR-AUTH-002),
 `POST /api/bots/{bot_id}/invite` (приглашение «Передать клиенту», фича 15).
 Источники и задачи: `DELETE /api/sources/{source_id}`, `POST /api/sources/{source_id}/reindex` («Обновить» / «Повторить»,

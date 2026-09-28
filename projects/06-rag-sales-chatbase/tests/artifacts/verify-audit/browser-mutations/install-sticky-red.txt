@@ -1,0 +1,89 @@
+
+ RUN  v3.2.7 /tmp/n6-verify-audit-mutations-JHagf7
+
+ ❯ tests/browser/verify-audit.test.ts (30 tests | 4 failed) 32415ms
+   ✓ chromium > AC-3: двойное нажатие «Я проверил ответы бота» — отметка стоит, ни одного запроса снятия; подтверждение не раскрыто без второго явного шага  849ms
+   ✓ chromium > AC-3: нажатие во время запроса — кнопка занята, второй запрос не уходит  831ms
+   ✓ chromium > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается  386ms
+   ✓ chromium > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос  348ms
+   ✓ chromium > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено»  390ms
+   ✓ chromium > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия  736ms
+   × chromium > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден 1420ms
+     → Matcher did not succeed in time.
+   × chromium > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден 1413ms
+     → Matcher did not succeed in time.
+   ✓ chromium > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается  917ms
+   ✓ chromium > AC-9: строка «снята когда и кем» и история отметки раскрытием  343ms
+   ✓ chromium > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  1862ms
+   ✓ chromium > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  1678ms
+   ✓ chromium > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  522ms
+   ✓ chromium > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  370ms
+   ✓ chromium > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  344ms
+   ✓ webkit > AC-3: двойное нажатие «Я проверил ответы бота» — отметка стоит, ни одного запроса снятия; подтверждение не раскрыто без второго явного шага  1039ms
+   ✓ webkit > AC-3: нажатие во время запроса — кнопка занята, второй запрос не уходит  1273ms
+   ✓ webkit > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается  876ms
+   ✓ webkit > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос  877ms
+   ✓ webkit > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено»  919ms
+   ✓ webkit > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия  1212ms
+   × webkit > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден 1712ms
+     → Matcher did not succeed in time.
+   × webkit > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден 1628ms
+     → Matcher did not succeed in time.
+   ✓ webkit > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается  1251ms
+   ✓ webkit > AC-9: строка «снята когда и кем» и история отметки раскрытием  800ms
+   ✓ webkit > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  2461ms
+   ✓ webkit > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8  2344ms
+   ✓ webkit > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  884ms
+   ✓ webkit > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  787ms
+   ✓ webkit > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)  873ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден
+ FAIL  tests/browser/verify-audit.test.ts > webkit > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:202:76
+    200|       // Затем новые материалы сняли отметку — следующий refresh прино…
+    201|       await setGate({ verified: false, ready: true, resetAt: '2026-09-…
+    202|       await expect.poll(() => page.locator('section.gate-banner').coun…
+       |                                                                            ^
+    203|       expect(await page.locator('.gate-done').count()).toBe(0);
+    204|       expect(await page.locator('section.gate-banner').getByRole('butt…
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден
+ FAIL  tests/browser/verify-audit.test.ts > webkit > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден
+Error: Matcher did not succeed in time.
+ ❯ tests/browser/verify-audit.test.ts:221:76
+    219|       await expect.poll(() => page.locator('.gate-done').count()).toBe…
+    220|       await page.evaluate(() => (window as unknown as { __setGate: (g:…
+    221|       await expect.poll(() => page.locator('section.gate-banner').coun…
+       |                                                                            ^
+    222|       expect(await page.locator('.gate-done').count()).toBe(0);
+    223|     } finally { await context.close(); }
+
+Caused by: AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 26 passed (30)
+   Start at  17:12:15
+   Duration  34.00s (transform 449ms, setup 0ms, collect 1.20s, tests 32.42s, environment 0ms, prepare 109ms)
+

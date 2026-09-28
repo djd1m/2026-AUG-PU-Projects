@@ -36,7 +36,7 @@ describe.skipIf(!databaseUrl)('PostgreSQL + pgvector: миграции, огра
   it('миграция идемпотентна; 27 сущностей канона §4 (19 + 4 оплаты, миграция 006 + 4 партнёрки, миграция 007); у quota_counter нет колонки предела', async () => {
     // Служебные журналы — не сущности канона: _schema_migration и index_start (журнал запусков индексации для суточного
     // предела, source-lifecycle, A-N6-050). Список служебных — закрытый, любая новая таблица сдвинет счёт и уронит тест.
-    const result = await pool.query('SELECT tablename FROM pg_tables WHERE schemaname = $1 AND tablename <> ALL($2::text[])', [schema, ['_schema_migration', 'index_start', 'erasure_audit', 'upload_orphan']]);
+    const result = await pool.query('SELECT tablename FROM pg_tables WHERE schemaname = $1 AND tablename <> ALL($2::text[])', [schema, ['_schema_migration', 'index_start', 'erasure_audit', 'upload_orphan', 'bot_verification_event']]);
     expect(result.rowCount).toBe(27);
     expect((await pool.query("SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = 'index_start'", [schema])).rowCount).toBe(1);
     // account-erasure (миграция 010): журнал стирания и связь сирот тома uploads с аккаунтом — служебные, без ПДн.

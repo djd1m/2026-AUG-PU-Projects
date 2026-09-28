@@ -89,6 +89,10 @@ export interface BotCabinet {
   // владелец с тех пор сам ставил/снимал отметку. Число посетителей с заглушкой «настраивается» за 7 дней (различные сессии).
   verified_reset: { at: string; reason: VerifiedResetReason } | null;
   stub_visitors_7d: number;
+  // verify-audit (A-N6-077): с какого момента стоит отметка (null — не стоит) и последние события журнала отметки (новые первыми,
+  // не больше VERIFICATION_EVENTS_SHOWN). Журнал ведёт база (миграция 014) — любой путь записи отметки попадает в него.
+  verified_at: string | null;
+  verification_events: VerificationEvent[];
   // Ответов бота в текущем месяце МСК (quota_counter bot_month_answers; месяц — по часам БД). Предел — окружение
   // (QUOTA_BOT_MONTH_*), его сравнивает экран: баннер исчерпания (FR-TARIFF-003, SC-US-007-2).
   month_answers_used: number;
@@ -101,16 +105,23 @@ export const VERIFIED_RESET_REASON = ['new_material'] as const;
 export type VerifiedResetReason = typeof VERIFIED_RESET_REASON[number] | 'unknown';
 const readResetReason = (value: unknown): VerifiedResetReason =>
   typeof value === 'string' && (VERIFIED_RESET_REASON as readonly string[]).includes(value) ? value as VerifiedResetReason : 'unknown';
+// Журнал отметки (миграция 014): закрытый набор; неизвестное значение строкой не показывается (не выдумываем, кто снял).
+export const VERIFICATION_EVENT_KIND = ['set', 'unset_owner', 'unset_new_material'] as const;
+export type VerificationEventKind = typeof VERIFICATION_EVENT_KIND[number];
+export interface VerificationEvent { kind: VerificationEventKind; at: string }
+export const VERIFICATION_EVENTS_SHOWN = 5;
+const isEventKind = (value: unknown): value is VerificationEventKind =>
+  typeof value === 'string' && (VERIFICATION_EVENT_KIND as readonly string[]).includes(value);
 // Окно счёта заглушек в баннере — то же, что у сводки (SUMMARY_DAYS в summary.ts; импорт оттуда дал бы цикл модулей).
 const STUB_WINDOW_DAYS = 7;
 // Экран бота и экран установки: настройки, домены и источники с последней задачей. Чужой — null.
 export async function readBotCabinet(pool: Pool, botId: string, accountId: string, now = new Date()): Promise<BotCabinet | null> {
   if (!pair(botId, accountId)) return null;
   const bot = (await pool.query<{ id: string; company_name: string; contact: string | null; greeting: string; public_key: string; plan: unknown;
-    verified: boolean; month_used: number; public_slug: string | null; public_enabled: boolean; public_indexable: boolean;
+    verified: boolean; verified_at: Date | null; month_used: number; public_slug: string | null; public_enabled: boolean; public_indexable: boolean;
     reset_at: Date | null; reset_reason: string | null; stub_visitors: number }>(
     `SELECT b.id, b.company_name, b.contact, b.greeting, b.public_key, a.plan, b.answers_verified_at IS NOT NULL AS verified,
-       b.public_slug, b.public_enabled, b.public_indexable, b.answers_verified_reset_at AS reset_at, b.answers_verified_reset_reason AS reset_reason,
+       b.answers_verified_at AS verified_at, b.public_slug, b.public_enabled, b.public_indexable, b.answers_verified_reset_at AS reset_at, b.answers_verified_reset_reason AS reset_reason,
        (SELECT count(DISTINCT q.visitor_session_id)::int FROM question_log q WHERE q.bot_id = b.id AND q.outcome = 'not_verified'
          AND q.visitor_session_id IS NOT NULL AND q.created_at > now() - make_interval(days => $3)) AS stub_visitors,
        COALESCE((SELECT q.used FROM quota_counter q WHERE q.scope = 'bot_month_answers' AND q.scope_key = b.id::text
@@ -118,6 +129,10 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
      FROM bot b JOIN account a ON a.id = b.account_id WHERE ${OWNED}`,
     [botId, accountId, STUB_WINDOW_DAYS])).rows[0];
   if (!bot) return null;
+  // Порядок переходов — по id, а не по created_at (ревью круга 1): now() — время НАЧАЛА транзакции, а переходы одного бота
+  // сериализованы блокировкой его строки, так что позже изменивший отметку получает больший id, даже начав раньше.
+  const events = (await pool.query<{ kind: unknown; created_at: Date }>(`SELECT kind, created_at FROM bot_verification_event WHERE bot_id = $1
+    ORDER BY id DESC LIMIT $2`, [botId, VERIFICATION_EVENTS_SHOWN])).rows;
   const origins = (await pool.query<{ origin: string }>('SELECT origin FROM allowed_origin WHERE bot_id = $1 ORDER BY created_at, origin', [botId])).rows.map((r) => r.origin);
   const sources = (await pool.query<IndexJobRow & { source_id: string; kind: string; root_url: string | null; file_name: string | null; job_id: string | null;
     truncated: number }>(
@@ -129,7 +144,9 @@ export async function readBotCabinet(pool: Pool, botId: string, accountId: strin
     bot_id: bot.id, company_name: bot.company_name, contact: bot.contact, greeting: bot.greeting, public_key: bot.public_key, plan: readAccountPlan(bot.plan),
     origins, answers_verified: bot.verified === true,
     verified_reset: bot.verified !== true && bot.reset_at ? { at: bot.reset_at.toISOString(), reason: readResetReason(bot.reset_reason) } : null,
-    stub_visitors_7d: Number(bot.stub_visitors) || 0, month_answers_used: Number(bot.month_used),
+    stub_visitors_7d: Number(bot.stub_visitors) || 0,
+    verified_at: bot.verified === true && bot.verified_at ? bot.verified_at.toISOString() : null,
+    verification_events: events.filter((e) => isEventKind(e.kind)).map((e) => ({ kind: e.kind as VerificationEventKind, at: e.created_at.toISOString() })), month_answers_used: Number(bot.month_used),
     public_page: { slug: bot.public_slug, enabled: bot.public_enabled === true, indexable: bot.public_indexable === true },
     sources: sources.map((row) => ({
       source_id: row.source_id, kind: row.kind === 'pdf' ? 'pdf' : row.kind === 'text' ? 'text' : 'site',
@@ -157,6 +174,8 @@ Promise<{ company_name: string; contact: string | null; greeting: string } | nul
 // ответы по материалу, который ещё дописывается. Снимается отметка базой при любом новом фрагменте
 // (миграция 004, ревью фичи 12, находка 1) и оставляет пометку «когда и почему» (миграция 011); любое действие владельца
 // с отметкой пометку стирает — она описывает только снятие базой, иначе ручное «Снять отметку» показало бы старую дату.
+// verify-audit (A-N6-077): повторная установка стоящей отметки дату не сдвигает (COALESCE) — «стоит с» есть дата установки;
+// событие журнала пишет триггер миграции 014 на переходе, в этой же транзакции. Подтверждение снятия требует маршрут.
 export type SetAnswersVerifiedResult = { answers_verified: boolean } | { kind: 'indexing' } | null;
 export function setAnswersVerified(pool: Pool, botId: string, accountId: string, verified: boolean): Promise<SetAnswersVerifiedResult> {
   if (!pair(botId, accountId)) return Promise.resolve(null);
@@ -167,7 +186,7 @@ export function setAnswersVerified(pool: Pool, botId: string, accountId: string,
       const busy = await tx.query(`SELECT 1 FROM index_job WHERE bot_id = $1 AND status IN ('queued', 'running') LIMIT 1`, [botId]);
       if (busy.rowCount) return { kind: 'indexing' } as const;
     }
-    const row = (await tx.query<{ verified: boolean }>(`UPDATE bot SET answers_verified_at = CASE WHEN $2::boolean THEN now() ELSE NULL END,
+    const row = (await tx.query<{ verified: boolean }>(`UPDATE bot SET answers_verified_at = CASE WHEN $2::boolean THEN COALESCE(answers_verified_at, now()) ELSE NULL END,
         answers_verified_reset_at = NULL, answers_verified_reset_reason = NULL
       WHERE id = $1 RETURNING answers_verified_at IS NOT NULL AS verified`, [botId, verified])).rows[0]!;
     return { answers_verified: row.verified };

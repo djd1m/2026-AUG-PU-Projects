@@ -19,7 +19,12 @@ export interface GateBannerView {
   busy: boolean;
   error: string;
   onVerify: () => void;
+  // verify-audit (A-N6-077): отметку только что поставили ЭТОЙ кнопкой. Баннер не исчезает, а сменяется строкой того же места —
+  // иначе второй клик двойного нажатия попал бы в то, что под баннером (например, «Обновить» источника, которое снова
+  // сняло бы отметку новыми фрагментами).
+  justVerified?: boolean;
 }
+export const VERIFIED_DONE = 'Отметка поставлена: посетители видят ответы бота. Снять её можно в блоке «Ответы на сайте» на экране бота.';
 
 const day = (iso: string) => new Date(iso).toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long' });
 
@@ -34,7 +39,7 @@ export function visitorsWord(n: number): string {
 export const stubVisitorsLine = (n: number) => `${n} ${visitorsWord(n)} ${n % 10 === 1 && n % 100 !== 11 ? 'получил' : 'получили'} заглушку «Бот ещё настраивается»`;
 
 export function GateBanner(p: GateBannerView) {
-  if (p.verified) return null;
+  if (p.verified) return p.justVerified ? <p role="status" className="notice cabinet-notice gate-done">{VERIFIED_DONE}</p> : null;
   return <section className="notice danger-notice cabinet-notice stack gate-banner" aria-labelledby="gate-title">
     <h2 id="gate-title" className="gate-title">Бот пока не отвечает посетителям</h2>
     {p.resetAt && <p className="gate-reset"><strong>Отметка снята {day(p.resetAt)}: материалы обновились — проверьте ответы заново.</strong></p>}

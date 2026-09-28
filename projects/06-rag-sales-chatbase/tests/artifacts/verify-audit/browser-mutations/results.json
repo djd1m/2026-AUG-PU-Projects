@@ -1,0 +1,92 @@
+[
+  {
+    "id": "no-confirmation",
+    "title": "«Снять отметку» снимает сразу, без подтверждения (AC-2/4)",
+    "red": {
+      "code": 1,
+      "summary": "12 failed | 18 passed (30)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "30 passed (30)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "toggle-returns",
+    "title": "кнопка блока снова переключатель: «Я проверил» при стоящей отметке шлёт снятие (механизм инцидента, AC-3)",
+    "red": {
+      "code": 1,
+      "summary": "16 failed | 14 passed (30)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "30 passed (30)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "escape-ignored",
+    "title": "Escape не закрывает подтверждение и не возвращает фокус (AC-4)",
+    "red": {
+      "code": 1,
+      "summary": "2 failed | 28 passed (30)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "30 passed (30)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "banner-vanishes",
+    "title": "баннер после отметки исчезает — второй клик попадает в соседний блок (AC-11)",
+    "red": {
+      "code": 1,
+      "summary": "8 failed | 22 passed (30)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "30 passed (30)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "install-sticky",
+    "title": "экран установки: после отметки в вкладке серверное снятие не показывает баннер",
+    "red": {
+      "code": 1,
+      "summary": "4 failed | 26 passed (30)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "30 passed (30)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "install-closure-gate",
+    "title": "экран установки: отметка привязана к устаревшему gate — кнопка снова активна до следующего refresh",
+    "red": {
+      "code": 1,
+      "summary": "2 failed | 28 passed (30)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "30 passed (30)",
+      "skipped": false
+    },
+    "passed": true
+  }
+]

@@ -1,0 +1,151 @@
+
+ RUN  v3.2.7 /tmp/n6-verify-audit-mutations-JHagf7
+
+ ❯ tests/browser/verify-audit.test.ts (30 tests | 16 failed) 492138ms
+   ✓ chromium > AC-3: двойное нажатие «Я проверил ответы бота» — отметка стоит, ни одного запроса снятия; подтверждение не раскрыто без второго явного шага  786ms
+   ✓ chromium > AC-3: нажатие во время запроса — кнопка занята, второй запрос не уходит  880ms
+   × chromium > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается 30005ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос 30003ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено» 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ chromium > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия  701ms
+   ✓ chromium > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден  341ms
+   ✓ chromium > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден 272ms
+   ✓ chromium > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается  868ms
+   ✓ chromium > AC-9: строка «снята когда и кем» и история отметки раскрытием 292ms
+   × chromium > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8 30003ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто) 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто) 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто) 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > AC-3: двойное нажатие «Я проверил ответы бота» — отметка стоит, ни одного запроса снятия; подтверждение не раскрыто без второго явного шага  1135ms
+   ✓ webkit > AC-3: нажатие во время запроса — кнопка занята, второй запрос не уходит  1252ms
+   × webkit > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено» 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > AC-11: отметка из баннера — баннер сменяется строкой «Отметка поставлена», двойное нажатие не шлёт снятия  1050ms
+   ✓ webkit > ревью круга 1: экран установки — после отметки «поставлена»; сервер снял отметку (новые материалы) — баннер с кнопкой снова виден  741ms
+   ✓ webkit > ревью круга 2: после отметки первый же refresh приносит false (сняли другой вкладкой) — «поставлена» не залипает, баннер виден  692ms
+   ✓ webkit > узкое ревью: серверные данные сменились ВО ВРЕМЯ запроса отметки — после успеха «поставлена», кнопка не возвращается  1242ms
+   ✓ webkit > AC-9: строка «снята когда и кем» и история отметки раскрытием  703ms
+   × webkit > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто) 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто) 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто) 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтверждение, фокус на «Отмена»; Escape закрывает, фокус возвращается
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/verify-audit.test.ts:140:3
+    138|     expect(bodies).toEqual([{ verified: true }]);
+    139|   }));
+    140|   it('AC-2/4: «Снять отметку» ничего не отправляет — раскрывает подтве…
+       |   ^
+    141|     const trigger = block(page).getByRole('button', { name: 'Снять отм…
+    142|     expect(await trigger.getAttribute('aria-expanded')).toBe('false');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-4: «Отмена» закрывает подтверждение без запроса; повторное нажатие «Снять отметку» при раскрытом — не запрос
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/verify-audit.test.ts:155:3
+    153|     expect(await status(page).textContent()).toContain('Отмечено');
+    154|   }));
+    155|   it('AC-4: «Отмена» закрывает подтверждение без запроса; повторное на…
+       |   ^
+    156|     const trigger = block(page).getByRole('button', { name: 'Снять отм…
+    157|     await trigger.dblclick();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено»
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-2: снятие — только «Снять» в подтверждении: один запрос { verified: false, confirm: true }, затем «Не отмечено»
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/verify-audit.test.ts:165:3
+    163|     expect(await status(page).textContent()).toContain('Отмечено');
+    164|   }));
+    165|   it('AC-2: снятие — только «Снять» в подтверждении: один запрос { ver…
+       |   ^
+    166|     await block(page).getByRole('button', { name: 'Снять отметку' }).c…
+    167|     await page.getByRole('alertdialog').getByRole('button', { name: 'С…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-5 dark 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-5 light 390: блок с раскрытым подтверждением — R1/R2/R5, axe (AA), R8
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/verify-audit.test.ts:254:5
+    252|   }));
+    253|   for (const theme of ['dark', 'light'] as const) {
+    254|     it(`AC-5 ${theme} 390: блок с раскрытым подтверждением — R1/R2/R5,…
+       |     ^
+    255|       await block(page).getByRole('button', { name: 'Снять отметку' })…
+    256|       await block(page).locator('summary').click();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)
+ FAIL  tests/browser/verify-audit.test.ts > chromium > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-5 320: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-5 768: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)
+ FAIL  tests/browser/verify-audit.test.ts > webkit > AC-5 1440: без горизонтального скролла, цели ≥ 44 (подтверждение раскрыто)
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/verify-audit.test.ts:263:5
+    261|   }
+    262|   for (const width of [320, 768, 1440]) {
+    263|     it(`AC-5 ${width}: без горизонтального скролла, цели ≥ 44 (подтвер…
+       |     ^
+    264|       await block(page).getByRole('button', { name: 'Снять отметку' })…
+    265|       expect(errors(await domRules(page, ['R1', 'R2']))).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed | 14 passed (30)
+   Start at  17:00:14
+   Duration  493.59s (transform 401ms, setup 0ms, collect 1.09s, tests 492.14s, environment 0ms, prepare 106ms)
+

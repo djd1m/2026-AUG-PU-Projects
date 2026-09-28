@@ -5,10 +5,8 @@
 
 import { stubVisitorsLine } from '../../GateBanner';
 
-export const VERIFY_RISK = 'Бот отвечает только по вашим материалам и к каждому ответу прикладывает фрагмент-источник. Но ссылка на фрагмент '
-  + 'не доказывает, что текст ответа с ним совпадает: модель может добавить от себя — например, скидку или срок, которых в '
-  + 'материалах нет. Задайте боту в чате выше вопросы, которые задают ваши клиенты, особенно о ценах, сроках и акциях. Пока '
-  + 'отметки нет, посетители сайта видят «Бот ещё настраивается» и ваш контакт.';
+// Блок «Ответы на сайте» вынесен в VerifyBlock.tsx (verify-audit, A-N6-077): у него своё состояние подтверждения снятия.
+export { VERIFY_RISK, VerifyBlock } from './VerifyBlock';
 
 // not_verified_visitors (gate-onboarding, A-N6-066): посетители, получившие заглушку ворот A-N6-035, — отдельной строкой.
 export interface SummaryView { answered: number; unknown: number; refused_limit: number; not_verified_visitors: number; last_unknown: { text: string; asked_at: string }[] }
@@ -73,15 +71,6 @@ export function PublishBlock(p: { page: PublishView; busy: boolean; error: strin
     <p><button type="button" className={p.page.enabled ? 'button secondary' : 'button'} disabled={p.busy} onClick={() => p.onPublish(!p.page.enabled)}>
       {p.busy ? 'Сохраняем…' : p.page.enabled ? 'Снять публикацию' : 'Опубликовать страницу'}</button></p>
   </section>;
-}
-
-export function VerifyBlock(p: { verified: boolean; busy: boolean; error: string; onToggle: () => void }) {
-  return <section className="card stack bot-extra" aria-labelledby="verify-title"><h2 id="verify-title">Ответы на сайте</h2>
-    <p>{VERIFY_RISK}</p>
-    <p role="status" className={p.verified ? 'notice' : 'notice danger-notice'}>{p.verified ? 'Отмечено: посетители видят ответы бота.' : 'Не отмечено: посетители видят «Бот ещё настраивается».'}</p>
-    {p.error && <p role="alert" className="field-error">{p.error}</p>}
-    <p><button type="button" className={p.verified ? 'button secondary' : 'button'} disabled={p.busy} onClick={p.onToggle}>
-      {p.verified ? 'Снять отметку' : 'Я проверил ответы бота'}</button></p></section>;
 }
 
 // Баннер исчерпания месяца называет, что тестовый чат владельца расходует тот же лимит (carry_over A-N6-033).

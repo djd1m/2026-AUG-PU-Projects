@@ -138,6 +138,10 @@ tbody tr:last-child > * { border-bottom:0; }
 /* gate-onboarding (A-N6-066): баннер ворот A-N6-035 — заголовок не крупнее h3, чтобы не спорить с h1 экрана */
 .gate-banner .gate-title { font-size:1.25rem; line-height:1.35; margin:0; }
 .gate-banner p { margin-bottom:0; }
+/* verify-audit (A-N6-077): строка «стоит с / снята» и подтверждение снятия отметки — под кнопкой, не на её месте */
+.verify-since { display:block; margin-top:var(--space-2); }
+.verify-confirm p { margin:0; }
+.verify-history ol { margin-top:var(--space-2); }
 .progress { height:0.75rem; background:var(--surface-2); border:0.0625rem solid var(--line); border-radius:var(--radius-pill); overflow:hidden; }
 .progress span { display:block; height:100%; background:var(--accent); }
 .preview-head { margin-bottom:var(--space-4); }

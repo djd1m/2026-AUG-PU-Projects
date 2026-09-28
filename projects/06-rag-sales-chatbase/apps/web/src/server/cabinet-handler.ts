@@ -276,14 +276,21 @@ export function createOwnerAskHandler(deps: CabinetDependencies) {
 // POST /api/bots/{bot_id}/verify { verified: boolean } — отметка владельца «Я проверил ответы бота» (A-N6-035). Пока её
 // нет, посетитель виджета вместо ответа модели видит «Бот ещё настраивается» и контакт. Значение — строго boolean:
 // строка «true» или число — отказ, а не догадка (fail-closed).
+// verify-audit (A-N6-077, инцидент 28.09: второе нажатие кнопки-переключателя молча сняло отметку): снятие — только с
+// { confirm: true }, который шлёт кнопка «Снять» подтверждения. Без него — 400 confirm_required и отметка не меняется: так
+// же отказывает вкладка с прежним бандлом, где кнопка шлёт { verified: !verified }. Установке подтверждение не нужно.
 export function createBotVerifyHandler(deps: CabinetDependencies) {
   return (request: Request, botId: string) => run(logOf(deps), 'отметка проверки ответов', async () => {
     const entry = await guardMutation(request, deps, notFound);
     if (entry instanceof Response) return entry;
     if (!UUID.test(botId)) return notFound();
-    const input = await body(request, ['verified']);
+    const input = await body(request, ['verified', 'confirm']);
     if (input instanceof Response) return input;
     if (typeof input.verified !== 'boolean') return fail(400, 'invalid', 'Ожидается { verified: true | false }');
+    if (input.confirm !== undefined && typeof input.confirm !== 'boolean') return fail(400, 'invalid', 'Ожидается { confirm: true }');
+    if (!input.verified && input.confirm !== true) {
+      return fail(400, 'confirm_required', 'Снять отметку можно только после подтверждения: посетители перестанут получать ответы бота');
+    }
     const saved = await deps.setVerified(botId, entry.accountId, input.verified);
     if (!saved) return notFound();
     if ('kind' in saved) return fail(409, 'indexing', 'Дождитесь окончания загрузки материалов и проверьте ответы по ним');
