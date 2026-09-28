@@ -63,6 +63,7 @@ describe.skipIf(!databaseUrl)('rag-answer на настоящем Postgres + pgv
         chargeQuota: () => chargeAnswerQuota(pool, ceilings, { mode: 'widget', botId: loaded.id, plan: loaded.plan, visitorSession: bot.visitorSession, ipPrefix: '203.0.113.0/24' }),
         search: (botId, embedding) => searchChunks(pool, botId, embedding),
         logQuestion: (entry) => recordQuestion(pool, { ...entry, visitorSessionId: bot.visitorSession }),
+        pageTitles: async () => [],
       };
       return answerQuestion(deps, loaded, 'widget', { question, history: [] });
     };

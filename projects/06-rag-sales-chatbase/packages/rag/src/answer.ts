@@ -7,6 +7,7 @@
 //   квота (все scope одной транзакцией) → attempt(fsync) → эмбеддинг вопроса → поиск ВНУТРИ бота →
 //   свои фрагменты ≥ 0.40, иначе «не знаю» БЕЗ модели → промпт (данные в разделителях) → attempt(fsync) →
 //   модель (JSON-схема, temperature 0, max_tokens 400, таймаут) → ValidateModelAnswer → показ только с источником.
+// Светская реплика (A-N6-074) распознаётся ДО квоты: шаблон кода без эмбеддинга, модели и списания (small-talk.ts).
 // Квота списывается ОДИН раз на вопрос и покрывает эмбеддинг вопроса и ответ (контракт стоимости); отказ
 // модели списанное не возвращает. Повторов нет: один ответ = одна попытка модели.
 import { randomUUID } from 'node:crypto';
@@ -15,6 +16,7 @@ import { readBotStatus } from './enums.js';
 import { ANSWER_TIMEOUT_MS, GatewayResponseError, type OpenRouter } from './openrouter.js';
 import { buildAnswerPrompt, type HistoryTurn } from './prompt.js';
 import { ownHit, selectRelevant, type SearchHit } from './search.js';
+import { companyLabel, detectSmallTalk, intentNeedsTopics, smallTalkReply, topicsFromTitles, type SmallTalkIntent } from './small-talk.js';
 import { meteredCall, RetryableCallError, type ChargeDecision, type SpendRecorder } from './spend.js';
 import { validateModelAnswer } from './validate-model-answer.js';
 
@@ -25,7 +27,7 @@ export interface AnswerBot { id: string; status: unknown; companyName: string; c
 // owner — тестовый чат владельца в кабинете (bot-cabinet, FR-BOT-001): активный бот, бот — из сессии владельца.
 export type AnswerMode = 'widget' | 'preview' | 'owner';
 export interface VisitorRequest { question: string; history: HistoryTurn[] }
-export type QuestionOutcome = 'answered' | 'unknown' | 'refused_limit';
+export type QuestionOutcome = 'answered' | 'unknown' | 'refused_limit' | 'small_talk';
 export interface QuestionLogEntry { botId: string; outcome: QuestionOutcome; text: string | null; citedChunkIds: string[] }
 export interface AnswerDeps {
   client: Pick<OpenRouter, 'complete' | 'embed'>;
@@ -36,6 +38,8 @@ export interface AnswerDeps {
   // Поиск ВНУТРИ бота — searchChunks (packages/db/src/chunks.ts, A-N6-028).
   search: (botId: string, embedding: number[]) => Promise<SearchHit[]>;
   logQuestion: (entry: QuestionLogEntry) => Promise<void>;
+  // Заголовки страниц ЭТОГО бота — примеры тем в шаблоне светской беседы (readBotPageTitles в @n6/db).
+  pageTitles: (botId: string) => Promise<string[]>;
   answerTimeoutMs?: number;
   signal?: (line: string) => void;       // сигнал оператору (чужой фрагмент из поиска)
 }
@@ -43,12 +47,16 @@ export interface SourceChip { chunkId: string; title: string; url: string | null
 export type UnknownReason = 'below_threshold' | 'not_found' | 'invalid_answer' | 'service_unavailable';
 export type AnswerResult =
   | { status: 'answered'; text: string; sources: SourceChip[]; sourceChip: SourceChip }
+  | { status: 'small_talk'; intent: SmallTalkIntent; text: string }
   | { status: 'unknown'; reason: UnknownReason; message: string; contact: string | null }
   | { status: 'refused'; reason: 'limit'; scope: string; message: string; contact: string | null }
   | { status: 'invalid'; reason: 'question' | 'history' | 'unexpected_field' }
   | { status: 'not_found' };
 
-export const UNKNOWN_MESSAGE = 'Не нашёл этого в материалах компании.';
+// A-N6-074 (решение владельца 28.09): «не знаю» объясняет, что бот отвечает ТОЛЬКО по материалам сайта компании.
+export function unknownMessage(companyName: string): string {
+  return `Я отвечаю только по материалам сайта ${companyLabel(companyName)} и не нашёл там ответа на этот вопрос.`;
+}
 export const UNAVAILABLE_MESSAGE = 'Сервис ответов временно недоступен — не могу ответить сейчас.';
 export const LIMIT_MESSAGE = 'Лимит вопросов на сегодня исчерпан.';
 const withContact = (message: string, contact: string | null) => (contact ? `${message} Напишите: ${contact}` : message);
@@ -106,8 +114,17 @@ export async function answerQuestion(deps: AnswerDeps, bot: AnswerBot, mode: Ans
   const unknown = async (reason: UnknownReason, keepText: boolean): Promise<AnswerResult> => {
     // 152-ФЗ: текст вопроса — только у unknown; сбой сервиса — не «чего нет в материалах», текст не храним.
     await deps.logQuestion({ botId: bot.id, outcome: 'unknown', text: keepText ? question : null, citedChunkIds: [] });
-    return { status: 'unknown', reason, message: withContact(reason === 'service_unavailable' ? UNAVAILABLE_MESSAGE : UNKNOWN_MESSAGE, contact), contact };
+    return { status: 'unknown', reason, message: withContact(reason === 'service_unavailable' ? UNAVAILABLE_MESSAGE : unknownMessage(bot.companyName), contact), contact };
   };
+
+  // 0. Светская реплика — шаблон ДО квоты: ни эмбеддинга, ни модели, ни списания (A-N6-074). Слово вне закрытого
+  // словаря делает реплику вопросом, и она идёт обычным путём ниже.
+  const intent = detectSmallTalk(question);
+  if (intent) {
+    const topics = intentNeedsTopics(intent) ? topicsFromTitles(await deps.pageTitles(bot.id), bot.companyName) : [];
+    await deps.logQuestion({ botId: bot.id, outcome: 'small_talk', text: null, citedChunkIds: [] });
+    return { status: 'small_talk', intent, text: smallTalkReply(intent, { companyName: bot.companyName, topics }) };
+  }
 
   // 1. Квота → attempt → эмбеддинг вопроса. Отказ квоты — ни одного вызова.
   let embedded;

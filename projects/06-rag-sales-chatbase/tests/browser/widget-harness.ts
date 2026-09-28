@@ -53,7 +53,7 @@ export const BOTS: Record<string, WidgetBotRow> = { [KEY_FREE]: bot(KEY_FREE, 'f
 export interface Logged { method: string; path: string; origin: string | null; status: number; acao: string[]; body?: string }
 export interface Harness {
   log: Logged[]; events: Array<{ type: string; origin: string }>; askOverride: AnswerResult | null; bundleFile: string;
-  modelCalls: () => number; resetQuota: () => void; close(): Promise<void>;
+  modelCalls: () => number; embedCalls: () => number; quotaCharges: () => number; resetQuota: () => void; close(): Promise<void>;
 }
 
 const HOSTILE_CSS = `html{font-size:40px!important}
@@ -129,7 +129,8 @@ export async function startHarness(): Promise<Harness> {
   const histories = new Map<string, HistoryTurn[]>();   // серверная история (≤ 2 хода)
   const used = new Map<string, number>();               // квота visitor_answers оснастки
   const harness: Harness = { log, events, askOverride: null, bundleFile: bundle.file, close: async () => {},
-    modelCalls: () => model.gateway.chats.length, resetQuota: () => used.clear() };
+    modelCalls: () => model.gateway.chats.length, embedCalls: () => model.gateway.embeds.length,
+    quotaCharges: () => [...used.values()].reduce((a, b) => a + b, 0), resetQuota: () => used.clear() };
   const deps: WidgetAskDependencies = {
     publicOrigin: WIDGET, secret: 'harness-secret-0123456789abcdef0123456789abcdef', allowMutation: async () => true, log: () => {},
     loadBot: async (key) => BOTS[key] ?? null,
@@ -149,7 +150,7 @@ export async function startHarness(): Promise<Harness> {
       },
       search: async (botId) => [{ chunkId: '44444444-4444-4444-8444-444444444444', botId, pageId: '55555555-5555-4555-8555-555555555555',
         sourceId: '66666666-6666-4666-8666-666666666666', urlOrPage: 'https://kolos.example/ceny', pageTitle: 'Цены', contextPath: 'Цены', text: PRICE, similarity: 0.83 }],
-      logQuestion: async () => {},
+      logQuestion: async () => {}, pageTitles: async () => ['Цены | Пекарня «Колос»', 'Доставка', 'Контакты'],
     }, { id: found.row.botId, status: found.row.status, companyName: found.row.companyName, contact: found.contact }, 'widget', request),
   };
   const config = createWidgetConfigHandler(deps), event = createWidgetEventHandler(deps), preflight = createWidgetPreflightHandler(deps);

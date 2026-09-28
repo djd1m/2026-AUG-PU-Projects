@@ -85,6 +85,8 @@ export function createWidgetAskHandler(deps: WidgetAskDependencies) {
         catch { log('Виджет: событие first_answer не записано'); }
         return reply(200, { data: { status: 'answered', text: result.text, source: chip(result.sourceChip), sources: result.sources.map(chip) } }, origin);
       }
+      // A-N6-074: светская реплика — шаблон без модели и списания; не ответ по материалам, поэтому ни хода истории, ни установки.
+      case 'small_talk': return reply(200, { data: { status: 'small_talk', text: result.text } }, origin);
       case 'unknown': return reply(200, { data: { status: 'unknown', reason: result.reason, text: result.message, contact: result.contact } }, origin);
       // FR-LIMIT-001: отказ, не деградация — с контактом компании; исход refused_limit записало ядро.
       case 'refused': return reply(429, { error: { code: 'limit', message: result.message, contact: result.contact } }, origin);

@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 import { AddressRefused, checkAddress, systemResolver, type Resolver } from '@n6/rag/check-address';
 import { answerQuestion, type Ceilings, type OpenRouter, type SpendRecorder } from '@n6/rag';
 import { appendPreviewTurn, chargeAnswerQuota, claimPreview, createPreview, findPreviewRepeat, isUniqueViolation, loadAnswerBot, previewAnswersUsed,
-  readIndexJob, readPreviewAccess, readPreviewSite, recordQuestion, recordShareCtaClick, recordShareCtaShown, searchChunks, type Pool } from '@n6/db';
+  readIndexJob, readBotPageTitles, readPreviewAccess, readPreviewSite, recordQuestion, recordShareCtaClick, recordShareCtaShown, searchChunks, type Pool } from '@n6/db';
 import { AddressRefusal, type PreviewDependencies } from './preview-handler';
 
 export interface PreviewWiring {
@@ -55,6 +55,7 @@ export function createPreviewDependencies(w: PreviewWiring): PreviewDependencies
         chargeQuota: () => chargeAnswerQuota(pool, ceilings, { mode: 'preview', browserSession }),
         search: (id, embedding) => searchChunks(pool, id, embedding),
         logQuestion: (entry) => recordQuestion(pool, { ...entry, visitorSessionId: null }),
+        pageTitles: (id) => readBotPageTitles(pool, id),
       }, bot, 'preview', request);
     },
     appendTurn: (previewId, turn) => appendPreviewTurn(pool, previewId, turn),

@@ -2,7 +2,7 @@
 // (tests/visitor-ask.integration.test.ts, браузерная оснастка): тест подменяет только сеть (шлюз модели) и ограничитель
 // двери — квота 5 scope, сессия, история, установка и журнал вопросов идут по НАСТОЯЩЕМУ коду.
 import { answerQuestion, type Ceilings, type OpenRouter, type SpendRecorder } from '@n6/rag';
-import { appendVisitorTurn, chargeAnswerQuota, openVisitorSession, recordFirstAnswer, recordQuestion, searchChunks, type Pool } from '@n6/db';
+import { appendVisitorTurn, chargeAnswerQuota, openVisitorSession, readBotPageTitles, recordFirstAnswer, recordQuestion, searchChunks, type Pool } from '@n6/db';
 import type { WidgetAskDependencies } from './widget-ask-handler';
 import { createWidgetDependencies } from './widget-deps';
 
@@ -31,7 +31,8 @@ export function createWidgetAskDependencies(w: WidgetAskWiring): WidgetAskDepend
       search: (id, embedding) => searchChunks(pool, id, embedding),
       // 152-ФЗ: текст вопроса — только у unknown (14 дней), у answered — id цитат; сессия — для сводки владельца.
       logQuestion: (entry) => recordQuestion(pool, { ...entry, visitorSessionId: visitorSession }),
-    }, { id: bot.row.botId, status: bot.row.status, companyName: bot.row.companyName, contact: bot.contact }, 'widget', request),
+      pageTitles: (id) => readBotPageTitles(pool, id),
+    },{ id: bot.row.botId, status: bot.row.status, companyName: bot.row.companyName, contact: bot.contact }, 'widget', request),
     appendTurn: (sessionId, turn) => appendVisitorTurn(pool, sessionId, turn),
     recordFirstAnswer: (input) => recordFirstAnswer(pool, input),
     logRefusedOrigin: (botId) => recordQuestion(pool, { botId, outcome: 'refused_origin', text: null, citedChunkIds: [], visitorSessionId: null }),

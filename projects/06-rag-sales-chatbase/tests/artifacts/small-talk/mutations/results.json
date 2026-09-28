@@ -1,0 +1,77 @@
+[
+  {
+    "id": "recognizer-disabled",
+    "title": "распознаватель выключен: «привет» идёт обычным путём (квота, эмбеддинг, «не знаю»)",
+    "red": {
+      "code": 1,
+      "summary": "3 failed | 42 passed (45)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "45 passed (45)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "model-on-small-talk",
+    "title": "ядро не смотрит на распознаватель: светская реплика уходит в квоту, эмбеддинг и модель (ADR-003)",
+    "red": {
+      "code": 1,
+      "summary": "2 failed | 43 passed (45)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "45 passed (45)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "charge-before-template",
+    "title": "списание квоты перед шаблоном: светская реплика тратит visitor_answers",
+    "red": {
+      "code": 1,
+      "summary": "2 failed | 43 passed (45)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "45 passed (45)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "trap-swallowed",
+    "title": "постороннее слово пропускается: «привет, сколько стоит доставка?» получает шаблон вместо ответа",
+    "red": {
+      "code": 1,
+      "summary": "4 failed | 41 passed (45)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "45 passed (45)",
+      "skipped": false
+    },
+    "passed": true
+  },
+  {
+    "id": "text-logged",
+    "title": "текст светской реплики пишется в журнал (152-ФЗ: текст только у unknown)",
+    "red": {
+      "code": 1,
+      "summary": "1 failed | 44 passed (45)",
+      "skipped": false
+    },
+    "green": {
+      "code": 0,
+      "summary": "45 passed (45)",
+      "skipped": false
+    },
+    "passed": true
+  }
+]

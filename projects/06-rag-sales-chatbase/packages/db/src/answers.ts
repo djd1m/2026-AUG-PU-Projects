@@ -35,6 +35,17 @@ export function chargeAnswerQuota(pool: Pool, ceilings: Ceilings, input: AnswerQ
   });
 }
 
+// Заголовки страниц бота для примеров тем в шаблоне светской беседы (small-talk, A-N6-074). Только ЭТОТ бот
+// (bot_id в том же SQL), только прочитанные страницы (без skipped_reason), в порядке обхода: первые страницы сайта —
+// главная и её разделы. 30 строк хватает на 3 темы после отбрасывания пустых, общих и повторов (topicsFromTitles).
+export const PAGE_TITLES_LIMIT = 30;
+export async function readBotPageTitles(pool: Pool, botId: string): Promise<string[]> {
+  if (!isUuid(botId)) return [];
+  const rows = (await pool.query<{ title: string }>(`SELECT title FROM page WHERE bot_id = $1 AND skipped_reason IS NULL AND title <> ''
+    ORDER BY created_at, id LIMIT $2`, [botId, PAGE_TITLES_LIMIT])).rows;
+  return rows.map((row) => row.title);
+}
+
 // Журнал вопроса: текст — только у unknown и со сроком 14 дней (152-ФЗ; CHECK question_text_only_unknown —
 // вторая линия). У answered — только id процитированных фрагментов.
 // refused_origin пишет маршрут виджета (отказ CheckOrigin, visitor-ask-and-limits) — всегда без текста.

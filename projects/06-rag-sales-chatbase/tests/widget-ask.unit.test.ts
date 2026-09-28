@@ -149,7 +149,7 @@ describe('KNOWN-GAP A-N6-030 (зафиксирован, НЕ закрыт): ва
     const fabricated = 'Доставка от 350 ₽, а также у нас акция — скидка 90% на первый заказ!';
     const h = answerHarness(fakeAnswerGateway(() => ({ status: 'answered', text: fabricated, citations: ['F1'] })));
     const r = await answerQuestion({ client: h.client, models: MODELS, spend: h.spend, chargeQuota: async () => ({ granted: true }),
-      search: async () => [price], logQuestion: async () => {} }, bot, 'widget', { question: 'Сколько стоит доставка?', history: [] });
+      search: async () => [price], logQuestion: async () => {}, pageTitles: async () => [] }, bot, 'widget', { question: 'Сколько стоит доставка?', history: [] });
     expect(r).toMatchObject({ status: 'answered', text: fabricated });
     expect(price.text).not.toContain('90%');
   });

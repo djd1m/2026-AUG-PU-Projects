@@ -217,7 +217,7 @@ describe.skipIf(!databaseUrl)('preview-flow на настоящем Postgres + p
     const w = wire(), b = new Browser(freshIp());
     const id = await ready(w, b);
     const unknown = await (await w.ask(b, id, { question: 'Есть ли у вас парковка для грузовиков?' })).json() as { data: Record<string, unknown> };
-    expect(unknown.data).toMatchObject({ status: 'unknown', text: 'Не нашёл этого в материалах компании.' });
+    expect(unknown.data).toMatchObject({ status: 'unknown', text: expect.stringMatching(/^Я отвечаю только по материалам сайта компании «[^»]+» и не нашёл там ответа на этот вопрос.$/) });
     expect(w.h.gateway.chats).toHaveLength(0);
     const first = await (await w.ask(b, id, { question: QUESTION })).json() as { data: Record<string, unknown> };
     expect(first.data).toEqual({ status: 'answered', text: ANSWER, first_answer: true,
