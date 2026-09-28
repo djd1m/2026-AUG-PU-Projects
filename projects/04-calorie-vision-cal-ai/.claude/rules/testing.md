@@ -7,7 +7,7 @@
 [`shared-resource-verification.md`](../../../../.claude/rules/shared-resource-verification.md),
 [`cost-of-detection-ladder.md`](../../../../.claude/rules/cost-of-detection-ladder.md).
 
-Раннер — vitest. На 17.09.2026: **516 юнит-тестов и стражей в 72 файлах**, интеграционные — на НАСТОЯЩЕМ
+Раннер — vitest. На 17.09.2026: **526 юнит-тестов и стражей в 73 файлах** (28.09; было 516 в 72 на 17.09), интеграционные — на НАСТОЯЩЕМ
 PostgreSQL в профиле `test` compose (отдельная база `n4_test`, DEC-A-056: боевая база защищена
 стражем по закрытому списку имён внутри `tests/helpers/db.ts`).
 
