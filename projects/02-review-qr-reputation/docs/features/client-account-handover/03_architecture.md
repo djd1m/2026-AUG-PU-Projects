@@ -29,7 +29,7 @@ SELECT id FROM accounts WHERE parent_account_id = current_setting('app.current_a
 Тот же приём, которым в этом продукте закрыт гейтинг: не «проверить в коде», а **отнять право**.
 
 ```sql
--- Миграция 012
+-- Миграция 013 (была 012; номер 012 занят 012_bind_token_burn.sql — перенумеровано 28.09.2026)
 REVOKE UPDATE ON accounts FROM app_owner;
 GRANT  UPDATE (name) ON accounts TO app_owner;      -- ровно одна колонка
 
