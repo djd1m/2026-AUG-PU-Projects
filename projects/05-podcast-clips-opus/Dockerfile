@@ -14,6 +14,15 @@ COPY packages/s3/package.json ./packages/s3/
 COPY packages/queue/package.json ./packages/queue/
 RUN npm ci
 
+# ── prod-deps: те же node_modules БЕЗ devDependencies — только они едут в рантайм-образы ──
+# Раньше web и worker копировали node_modules из `build`, и в каждый рантайм уезжали typescript, vitest,
+# playwright, esbuild/rollup (BACKLOG §5 п. 17). Сборке dev-зависимости нужны (tsc, next build), рантайму —
+# нет. Стадия строится от `deps` (только манифесты и lockfile), поэтому кэшируется по lockfile и не зависит
+# от исходников. Страж: tests/image-dev-deps.test.ts (по Dockerfile) и scripts/check-image-dev-deps.mjs
+# (по собранному образу).
+FROM deps AS prod-deps
+RUN npm prune --omit=dev
+
 # ── build: один раз для обеих рантайм-целей ──
 FROM deps AS build
 COPY . .
@@ -23,7 +32,7 @@ RUN npm run build
 FROM node:22.22-alpine AS web
 WORKDIR /app
 ENV NODE_ENV=production TZ=Europe/Moscow
-COPY --from=build /app/node_modules ./node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/apps/web/.next ./apps/web/.next
 COPY --from=build /app/apps/web/public ./apps/web/public
@@ -44,7 +53,7 @@ RUN apk add --no-cache ffmpeg python3 py3-opencv py3-numpy \
  && ffmpeg -version && ffprobe -version \
  && python3 -c "import cv2; assert hasattr(cv2, 'FaceDetectorYN'), 'OpenCV без YuNet'; print(cv2.__version__)"
 ENV NODE_ENV=production TZ=Europe/Moscow
-COPY --from=build /app/node_modules ./node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/apps/worker/assets ./apps/worker/assets
 COPY --from=build /app/apps/worker/dist ./dist/apps/worker
