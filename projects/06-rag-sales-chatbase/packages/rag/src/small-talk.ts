@@ -109,27 +109,69 @@ export function detectSmallTalk(text: string): SmallTalkIntent | null {
   return PRIORITY.find((intent) => found.has(intent)) ?? null;
 }
 
-// Темы — из заголовков страниц бота: первая осмысленная часть заголовка («Доставка | Пекарня» → «Доставка»), без
-// названия компании и «Главной», PDF — имя файла без «.pdf, с. N». Длинное (> 40) и пустое отбрасывается, повтор — тоже.
-const GENERIC = new Set(['главная', 'главная страница', 'home', 'homepage', 'index', 'начало', 'о нас', 'about', 'контакты']);
-export function topicsFromTitles(titles: readonly string[], companyName: string): string[] {
-  const company = companyName.trim().toLowerCase();
+// Темы — из заголовков страниц бота (A-N6-074); отбор — A-N6-076 (дефект стенда 28.09: темой стал адрес `http://info.cern.ch`,
+// заголовок страницы совпадал с её адресом). Тема — только СОДЕРЖАТЕЛЬНЫЙ заголовок. У страницы два кандидата: заголовок
+// её первого раздела (`heading` — второй элемент context_path первого фрагмента с разделом, обычно h1) и заголовок
+// страницы; первый годный побеждает, из одной страницы — одна тема. Из кандидата берётся первая осмысленная часть
+// («Доставка | Пекарня» → «Доставка»), PDF — имя файла без «.pdf, с. N». Отбрасываются: пустое; адрес (схема, «www.»,
+// домен с путём); короче 3 символов или без двух букв подряд («404», «2024», «—»); служебное (закрытый набор GENERIC) и
+// название компании; повтор без учёта регистра, «ё» и знаков. Длинное обрезается по границе слова до 40 символов с «…»;
+// одно слово длиннее 40 (слаг, хэш) — не тема. Меньше SMALL_TALK_MIN_TOPICS годных — шаблон без списка тем.
+export interface PageTopicSource { title: string; heading?: string | null }
+export const SMALL_TALK_MIN_TOPICS = 2;
+// Ключ сравнения: регистр, «ё», любые знаки и пробелы сведены — «Доставка!» и «доставка» одна тема.
+function topicKey(text: string): string {
+  return text.toLowerCase().replace(/ё/g, 'е').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+}
+const GENERIC = new Set([
+  'главная', 'главная страница', 'на главную', 'домашняя страница', 'начало', 'index', 'home', 'homepage', 'home page', 'main page',
+  'о нас', 'о компании', 'about', 'about us', 'контакты', 'контакт', 'contacts', 'contact', 'contact us', 'обратная связь',
+  '404', 'страница не найдена', 'не найдено', 'ошибка', 'not found', 'page not found', 'error', 'untitled', 'без названия',
+  'без заголовка', 'новая страница', 'new page', 'document', 'документ', 'loading', 'загрузка', 'вход', 'войти', 'login',
+  'log in', 'sign in', 'регистрация', 'sign up', 'поиск', 'search', 'корзина', 'cart', 'карта сайта', 'sitemap',
+  'политика конфиденциальности', 'privacy policy', 'cookie', 'cookies', 'меню', 'menu',
+].map(topicKey));
+// Адрес: схема («http://», «ftp://»), «www.», «mailto:», либо домен (метки через точки, зона из букв) с портом и путём.
+const URL_LIKE = /^(?:[a-z][a-z0-9+.-]*:\/\/|www\.|mailto:)|^[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)*\.\p{L}{2,}(?::\d+)?(?:[/?#]\S*)?$/iu;
+const TRAILING = /[\s,.;:!?—–\-|·•(«"]+$/u;
+function clipTopic(topic: string): string | null {
+  const chars = Array.from(topic);
+  if (chars.length <= TOPIC_MAX_CHARS) return topic;
+  const head = chars.slice(0, TOPIC_MAX_CHARS).join('');
+  const cut = head.lastIndexOf(' ');
+  // Висящий короткий союз или предлог («… по Москве и…») срезается вместе со знаками.
+  const clipped = cut > 0 ? head.slice(0, cut).replace(/(?:\s+\p{L}{1,2})+$/u, '').replace(TRAILING, '') : '';
+  return Array.from(clipped).length >= 3 ? `${clipped}…` : null;
+}
+function topicOf(raw: unknown, company: string): string | null {
+  if (typeof raw !== 'string') return null;
+  const cleaned = raw.replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\.pdf(,\s*с\.\s*\d+)?$/i, '').trim();
+  for (const part of cleaned.split(/\s+[|—–\-·:•]\s+|\s*[|•]\s*/)) {
+    const text = part.replace(/\s+/g, ' ').trim();
+    const key = topicKey(text);
+    if (Array.from(text).length < 3 || !/\p{L}{2}/u.test(text) || URL_LIKE.test(text)) continue;
+    if (GENERIC.has(key) || (company && (key === company || company.includes(key)))) continue;
+    const topic = clipTopic(text);
+    if (topic) return topic;
+  }
+  return null;
+}
+export function topicsFromTitles(pages: ReadonlyArray<string | PageTopicSource>, companyName: string): string[] {
+  const company = topicKey(typeof companyName === 'string' ? companyName : '');
   const topics: string[] = [];
   const seen = new Set<string>();
-  for (const raw of titles) {
-    if (typeof raw !== 'string') continue;
-    const cleaned = raw.replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\.pdf(,\s*с\.\s*\d+)?$/i, '').trim();
-    for (const part of cleaned.split(/\s+[|—–\-·:•]\s+|\s*[|•]\s*/)) {
-      const topic = part.replace(/\s+/g, ' ').trim();
-      const key = topic.toLowerCase();
-      if (Array.from(topic).length < 3 || Array.from(topic).length > TOPIC_MAX_CHARS) continue;
-      if (GENERIC.has(key) || key === company || (company && company.includes(key))) continue;
+  for (const page of Array.isArray(pages) ? pages : []) {
+    const candidates: unknown[] = typeof page === 'string' ? [page] : page && typeof page === 'object' ? [page.heading, page.title] : [];
+    for (const candidate of candidates) {
+      const topic = topicOf(candidate, company);
+      if (!topic) continue;
+      const key = topicKey(topic);
       if (!seen.has(key)) { seen.add(key); topics.push(topic); }
-      break;   // из одного заголовка — одна тема
+      break;   // из одной страницы — одна тема: годный, но повторный кандидат не уступает место второму
     }
     if (topics.length >= SMALL_TALK_TOPICS) break;
   }
-  return topics;
+  return topics.length >= SMALL_TALK_MIN_TOPICS ? topics : [];
 }
 
 // «компании «Колос»»; название со своими кавычками — как есть («компании Пекарня «Колос»»), пустое — «компании».

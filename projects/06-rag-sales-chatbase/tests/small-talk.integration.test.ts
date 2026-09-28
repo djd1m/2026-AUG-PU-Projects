@@ -4,7 +4,7 @@
 // с контактом. Итоговый CHECK question_log.outcome после миграций = QUESTION_OUTCOME кода.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createHash, randomBytes } from 'node:crypto';
-import { createPool, type Pool } from '../packages/db/src/index';
+import { createPool, readBotPageTitles, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { loadCeilings, QUESTION_OUTCOME } from '../packages/rag/src/index';
 import { createWidgetAskDependencies } from '../apps/web/src/server/widget-ask-deps';
@@ -70,7 +70,13 @@ describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настояще�
       },
     };
   }
-  async function seed() {
+  // Порядок обхода: главная, затем разделы; пропущенная страница в темы не попадает. paths — context_path фрагментов по
+  // порядку (по умолчанию один фрагмент с путём = заголовок страницы, как у страницы без разделов).
+  type SeedPage = { url: string; title: string; skipped?: string | null; paths?: string[] };
+  const KOLOS: SeedPage[] = [{ url: 'https://kolos.example/', title: 'Главная | Колос' }, { url: 'https://kolos.example/ceny', title: 'Цены — Колос' },
+    { url: 'https://kolos.example/secret', title: 'Черновик', skipped: 'no_text' }, { url: 'https://kolos.example/dostavka', title: 'Доставка и оплата' },
+    { url: 'https://kolos.example/torty', title: 'Торты' }];
+  async function seed(pages: SeedPage[] = KOLOS) {
     const account = (await pool.query<{ id: string }>(`INSERT INTO account (email, password_hash, plan) VALUES ($1, 'x', 'free') RETURNING id`,
       [`s${randomBytes(6).toString('hex')}@example.ru`])).rows[0]!.id;
     const key = randomBytes(16).toString('base64url');
@@ -78,13 +84,13 @@ describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настояще�
       VALUES ($1, 'active', $2, 'Колос', $3) RETURNING id`, [account, key, CONTACT])).rows[0]!.id;
     await pool.query('INSERT INTO allowed_origin (bot_id, origin) VALUES ($1, $2)', [bot, HOST]);
     const source = (await pool.query<{ id: string }>(`INSERT INTO source (bot_id, kind, root_url, status) VALUES ($1, 'site', 'https://kolos.example/', 'ready') RETURNING id`, [bot])).rows[0]!.id;
-    // Порядок обхода: главная, затем разделы; пропущенная страница в темы не попадает.
-    for (const [url, title, skipped] of [['https://kolos.example/', 'Главная | Колос', null], ['https://kolos.example/ceny', 'Цены — Колос', null],
-      ['https://kolos.example/secret', 'Черновик', 'no_text'], ['https://kolos.example/dostavka', 'Доставка и оплата', null], ['https://kolos.example/torty', 'Торты', null]] as const) {
+    for (const { url, title, skipped = null, paths = [title] } of pages) {
       const page = (await pool.query<{ id: string }>(`INSERT INTO page (source_id, bot_id, url_or_page, title, content_hash, skipped_reason) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
         [source, bot, url, title, createHash('sha256').update(url + bot).digest('hex'), skipped])).rows[0]!.id;
-      if (!skipped) await pool.query(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding) VALUES ($1, $2, $3, 0, $4, $5, 20, $6::vector)`,
-        [bot, source, page, title, PRICE, `[${vectorFor(PRICE).join(',')}]`]);
+      if (!skipped) {
+        for (const [ordinal, path] of paths.entries()) await pool.query(`INSERT INTO chunk (bot_id, source_id, page_id, ordinal, context_path, text, token_count, embedding) VALUES ($1, $2, $3, $4, $5, $6, 20, $7::vector)`,
+          [bot, source, page, ordinal, path, PRICE, `[${vectorFor(PRICE).join(',')}]`]);
+      }
       await pool.query('SELECT pg_sleep(0.01)');   // created_at различим — порядок обхода детерминирован
     }
     await pool.query('UPDATE bot SET answers_verified_at = now() WHERE id = $1', [bot]);
@@ -147,5 +153,37 @@ describe.skipIf(!databaseUrl)('small-talk: POST /w/v1/ask на настояще�
     const s = await seed();
     await expect(pool.query(`INSERT INTO question_log (bot_id, outcome, text, text_expires_at) VALUES ($1, 'small_talk', 'привет', now())`, [s.bot])).rejects.toThrow(/question_text_only_unknown/);
     await expect(pool.query(`INSERT INTO question_log (bot_id, outcome) VALUES ($1, 'smalltalk')`, [s.bot])).rejects.toThrow(/question_log_outcome_check/);
+  });
+
+  // A-N6-076 (дефект стенда 28.09): темой приветствия стал адрес `http://info.cern.ch` — у страницы <title> совпадал с адресом.
+  it('темы — заголовок первого раздела или страницы, но не адрес, не пустое и не «404»; чужой бот и пропущенная страница не видны', async () => {
+    const w = wire();
+    await seed([{ url: 'https://other.example/', title: 'Чужая тема' }, { url: 'https://other.example/b', title: 'Ещё чужая' }]);
+    const s = await seed([
+      { url: 'http://kolos.example/', title: 'http://kolos.example', paths: ['http://kolos.example', 'http://kolos.example › Свежий хлеб каждый день'] },
+      { url: 'http://kolos.example/empty', title: '', paths: ['Раздел без заголовка страницы'] },
+      { url: 'http://kolos.example/404', title: '404' },
+      { url: 'http://kolos.example/secret', title: 'Секретный раздел', skipped: 'no_text' },
+      { url: 'http://kolos.example/dostavka', title: 'Доставка | Колос', paths: ['Доставка | Колос › Доставка и оплата › Сроки'] },
+      { url: 'http://kolos.example/ceny', title: 'Цены' },
+    ]);
+    expect(await readBotPageTitles(pool, s.bot)).toEqual([
+      { title: 'http://kolos.example', heading: 'Свежий хлеб каждый день' }, { title: '', heading: null }, { title: '404', heading: null },
+      { title: 'Доставка | Колос', heading: 'Доставка и оплата' }, { title: 'Цены', heading: null },
+    ]);
+    const vs = await w.visitor(s.key);
+    const r = await w.ask(s.key, vs, 'Привет!');
+    expect(r.body.data).toEqual({ status: 'unknown', reason: 'small_talk', contact: CONTACT,
+      text: 'Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Например, спросите о темах: Свежий хлеб каждый день, Доставка и оплата, Цены.' });
+  });
+
+  it('сайт, у которого единственная страница — адрес (info.cern.ch): приветствие без списка тем, а не «о темах: http://…»', async () => {
+    const w = wire();
+    const s = await seed([{ url: 'http://info.cern.ch/', title: 'http://info.cern.ch', paths: ['http://info.cern.ch › http://info.cern.ch - home of the first website'] }]);
+    const vs = await w.visitor(s.key);
+    const text = (await w.ask(s.key, vs, 'привет')).body.data?.text ?? '';
+    expect(text).toBe('Здравствуйте! Я бот компании «Колос», отвечаю только по материалам сайта. Задайте вопрос о том, что есть на сайте компании.');
+    expect(text).not.toMatch(/http|info\.cern/);
+    expect(w.h.gateway.embeds.length + w.h.gateway.chats.length).toBe(0);
   });
 });

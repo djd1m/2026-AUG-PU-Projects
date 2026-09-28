@@ -1,7 +1,7 @@
 // из N6 scripts/test-rag-answer-mutations.mjs — та же схема «копия проекта → дефект → красный прогон → восстановление →
 // зелёный». Мутации стражей фичи small-talk (A-N6-074): распознаватель выключен; ядро не смотрит на распознаватель (светская
 // реплика уходит в квоту, эмбеддинг и модель); списание перед шаблоном; ловушка «привет, <вопрос>» съедена шаблоном; текст
-// светской реплики в журнале (152-ФЗ).
+// светской реплики в журнале (152-ФЗ); A-N6-076 — адрес страницы в темах приветствия, заголовок раздела не читается.
 // Наборы — без БД (ядро с подменным шлюзом): node scripts/test-small-talk-mutations.mjs (в образе стека n6-test или в
 // контейнере Playwright). Коды: 0 — каждый дефект пойман и восстановление зелёное; 1 — дефект прошёл незамеченным или
 // восстановление красное; 2 — проверка НЕ ВЫПОЛНЕНА (якорь мутации не найден).
@@ -12,7 +12,7 @@ import { spawnSync } from 'node:child_process';
 
 const project = process.cwd(), directory = mkdtempSync(join(tmpdir(), 'n6-small-talk-mutations-'));
 const output = resolve('tests/artifacts/small-talk/mutations'); mkdirSync(output, { recursive: true });
-const TESTS = ['tests/small-talk.test.ts', 'tests/rag-answer.test.ts'];
+const TESTS = ['tests/small-talk.test.ts', 'tests/small-talk-topics.test.ts', 'tests/rag-answer.test.ts'];
 const once = (from, to) => (source) => {
   const a = source.indexOf(from);
   if (a < 0 || source.indexOf(from, a + 1) >= 0) return null;
@@ -29,6 +29,11 @@ const mutations = [
     apply: once('    return null;   // постороннее слово', '    i++; continue;   // постороннее слово') },
   { id: 'text-logged', title: 'текст светской реплики пишется в журнал (152-ФЗ: текст только у unknown)', file: 'packages/rag/src/answer.ts',
     apply: once("outcome: 'small_talk', text: null", "outcome: 'small_talk', text: question") },
+  // A-N6-076: темы приветствия (дефект стенда 28.09 — адрес `http://info.cern.ch` в «спросите о темах»).
+  { id: 'address-as-topic', title: 'фильтр адресов снят: заголовок-адрес становится темой приветствия', file: 'packages/rag/src/small-talk.ts',
+    apply: once(' || URL_LIKE.test(text)) continue;', ') continue;') },
+  { id: 'heading-ignored', title: 'заголовок первого раздела не читается: тема берётся только из <title> страницы', file: 'packages/rag/src/small-talk.ts',
+    apply: once('[page.heading, page.title]', '[page.title]') },
 ];
 const results = [];
 let exitCode = 0;
