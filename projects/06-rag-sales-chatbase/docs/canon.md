@@ -111,7 +111,7 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 | `payment_event.provider` | `yookassa` · `fake` (`fake` в production — отказ старта) | отказ |
 | `operator_action.action` | `set_plan` | отказ |
 | `pro_interest.origin_screen` | `pricing` · `upgrade` · `install` · `cabinet` | отказ |
-| `index_job.truncated_by` | `embed_budget` · `series_embed_budget` · `NULL` (не усечена) | — (A-N6-052) |
+| `index_job.truncated_by` | `embed_budget` · `series_embed_budget` · `page_budget` · `crawl_limit` · `NULL` (не усечена) | — (A-N6-052, A-N6-070; миграция 012) |
 | `index_start.kind` | `site` · `pdf` · `retry` · `reindex` | отказ |
 | `job_attempt.status` | `running` · `done` · `failed` | `failed` |
 | `erasure_audit.event` | `requested` · `waiting_payout` · `payout_owed` · `erased` · `failed` · `overdue` | — (журнал, без ПДн) |

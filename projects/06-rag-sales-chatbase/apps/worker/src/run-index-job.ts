@@ -3,7 +3,7 @@
 // фича crawler (crawl/site-processor.ts); ExtractPdf — pdf-source (pdf/pdf-processor.ts); ChunkDocument,
 // EmbedAndStore — chunk-embed. onSettled — «finally» задачи: вызывается после done И после failed (ADR-018:
 // сырой PDF удаляется в обоих случаях), но НЕ после stale (файл нужен новой попытке) и НЕ перед автоповтором.
-import { completeIndexJob, failIndexJob, leaseIndexJob, retryAutomatically, StaleAttemptError, type Lease, type Pool } from '@n6/db';
+import { completeIndexJob, failIndexJob, leaseIndexJob, retryAutomatically, StaleAttemptError, type IndexCoverage, type Lease, type Pool } from '@n6/db';
 import type { IndexJobFailureReason, IndexJobTruncation } from '@n6/rag';
 import type { IndexMessage } from '@n6/queue';
 
@@ -13,7 +13,8 @@ export class StepFailure extends Error {
 }
 // Исход обработчика: truncated — обход остановлен исчерпанием собственного бюджета задачи (A-N6-052), задача done
 // с пометкой. Отсутствие исхода — прочитано всё, что позволил обход.
-export interface ProcessOutcome { truncated: IndexJobTruncation | null }
+// coverage — известные и непрочитанные адреса при остановленном обходе (crawl-coverage, A-N6-070).
+export interface ProcessOutcome { truncated: IndexJobTruncation | null; coverage?: IndexCoverage | null }
 export type SourceProcessor = (lease: Lease) => Promise<ProcessOutcome | void>;
 export type RunOutcome = 'skipped' | 'done' | 'failed' | 'retry' | 'stale';
 export interface RunDependencies {
@@ -32,7 +33,7 @@ export async function runIndexJob(deps: RunDependencies, message: IndexMessage):
   if (!lease) return 'skipped'; // устаревшее сообщение, завершённая или удалённая задача
   try {
     const outcome = await deps.process(lease);
-    await completeIndexJob(deps.pool, lease, new Date(), outcome ? outcome.truncated : null);
+    await completeIndexJob(deps.pool, lease, new Date(), outcome ? outcome.truncated : null, outcome?.coverage ?? null);
     return await settle(deps, lease, 'done');
   } catch (error) {
     if (error instanceof StaleAttemptError) return 'stale';

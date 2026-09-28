@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/crawl-coverage.test.ts (11 tests | 2 failed) 21228ms
+   ✓ предпросмотр: crawl_limit — свой текст; прочие пометки — бюджет предпросмотра 2ms
+   × chromium > A-N6-070: предел free — «Прочитано 50 страниц из ≥ 58 известных — предел тарифа…», примеры непрочитанного; не «50 из 50» 396ms
+     → expected 'Прочитано 50 страниц: закончился бюдж…' to be 'Прочитано 50 страниц из ≥ 58 известны…' // Object.is equality
+   ✓ chromium > dark 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  1979ms
+   ✓ chromium > dark 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  1746ms
+   ✓ chromium > light 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  1805ms
+   ✓ chromium > light 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  1711ms
+   × webkit > A-N6-070: предел free — «Прочитано 50 страниц из ≥ 58 известных — предел тарифа…», примеры непрочитанного; не «50 из 50» 909ms
+     → expected 'Прочитано 50 страниц: закончился бюдж…' to be 'Прочитано 50 страниц из ≥ 58 известны…' // Object.is equality
+   ✓ webkit > dark 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  2566ms
+   ✓ webkit > dark 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  2242ms
+   ✓ webkit > light 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  2670ms
+   ✓ webkit > light 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  2665ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/crawl-coverage.test.ts > chromium > A-N6-070: предел free — «Прочитано 50 страниц из ≥ 58 известных — предел тарифа…», примеры непрочитанного; не «50 из 50»
+ FAIL  tests/browser/crawl-coverage.test.ts > webkit > A-N6-070: предел free — «Прочитано 50 страниц из ≥ 58 известных — предел тарифа…», примеры непрочитанного; не «50 из 50»
+AssertionError: expected 'Прочитано 50 страниц: закончился бюдж…' to be 'Прочитано 50 страниц из ≥ 58 известны…' // Object.is equality
+
+Expected: [32m"Прочитано 50 страниц[7m из ≥ 58 известных — предел тарифа «Бесплатный» — 50 страниц (платные тарифы — до 300). Бот не знает того, что есть только на непрочитанных страницах. Не[27m прочитаны[7m, например: /courses/course-36/, /courses/course-37/, /courses/очень-длинный-адрес-курса-про-агентов-и-автоматизацию-разработки-с-нуля/, /courses/course-39/, /courses/ и другие[27m."[39m
+Received: [31m"Прочитано 50 страниц[7m: закончился бюджет обработки текста для этого источника. Бот отвечает по прочитанному. «Обновить» продолжит чтение в пределах страниц тарифа —[27m прочитан[7mн[27mы[7mе страницы заново не оплачиваются[27m."[39m
+
+ ❯ tests/browser/crawl-coverage.test.ts:76:39
+     74|     const first = items.nth(0).locator('.truncation-notice');
+     75|     expect(await first.getAttribute('role')).toBe('status');
+     76|     expect(await first.textContent()).toBe('Прочитано 50 страниц из ≥ …
+       |                                       ^
+     77|       + `Бот не знает того, что есть только на непрочитанных страницах…
+     78|     expect(await items.nth(0).locator('code.unread-path').count()).toB…
+ ❯ open tests/browser/crawl-coverage.test.ts:70:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  14:21:44
+   Duration  22.88s (transform 339ms, setup 0ms, collect 1.03s, tests 21.23s, environment 0ms, prepare 171ms)
+
+exit=1

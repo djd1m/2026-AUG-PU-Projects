@@ -10,7 +10,9 @@ export interface PreviewJobView { index_job_id: string; state: JobState; pages_d
   // budget-truncation (A-N6-052): у готовой задачи — чем она усечена; null/нет поля — прочитано всё, что позволил обход.
   truncated?: string | null }
 // Пометка усечённого предпросмотра: готово с прочитанным, это не «ещё читаем» и не отказ (три состояния различимы).
-export function truncationNotice(pagesDone: number): string {
+export function truncationNotice(pagesDone: number, reason?: string | null): string {
+  // crawl-coverage (ревью Codex, круг 1): остановка потолком времени/запросов обхода — не бюджет предпросмотра.
+  if (reason === 'crawl_limit') return `Прочитано ${pagesDone} ${pagesWord(pagesDone)} — обход остановлен пределом времени или запросов к сайту (бережём ваш сайт от нагрузки). Бот отвечает по прочитанному.`;
   return `Прочитано ${pagesDone} ${pagesWord(pagesDone)} — дальше закончился бюджет предпросмотра. Бот отвечает по прочитанному; сохраните бота, чтобы дочитать сайт в пределах тарифа.`;
 }
 export interface PreviewSiteView { host: string; title: string; h1: string; suggestions: string[] }
@@ -106,6 +108,8 @@ export interface PreviewChatProps {
   signedIn: boolean; saving: boolean;
   // Число прочитанных страниц, если предпросмотр усечён бюджетом (A-N6-052); null — не усечён.
   truncatedPages?: number | null;
+  // Чем усечён (crawl-coverage): crawl_limit показывается своим текстом; прочее — бюджет предпросмотра.
+  truncatedBy?: string | null;
   onDraft: (value: string) => void; onAsk: (question: string) => void; onSave: () => void; onShare?: () => void;
 }
 export function PreviewChat(p: PreviewChatProps) {
@@ -114,7 +118,7 @@ export function PreviewChat(p: PreviewChatProps) {
     <div className="preview-head">
       <h1 id="preview-title" className="page-title">Спросите бота, как спросил бы клиент</h1>
       <p className="muted">Так бот будет выглядеть на {host}. Ответы — только по прочитанным страницам.</p>
-      {typeof p.truncatedPages === 'number' && <p role="status" className="notice truncation-notice">{truncationNotice(p.truncatedPages)}</p>}
+      {typeof p.truncatedPages === 'number' && <p role="status" className="notice truncation-notice">{truncationNotice(p.truncatedPages, p.truncatedBy)}</p>}
     </div>
     <div className="preview-grid">
       <div className="chat-window" role="group" aria-label={`Бот сайта ${host}`}>

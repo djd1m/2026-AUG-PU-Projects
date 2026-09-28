@@ -76,13 +76,19 @@ describe('Неизвестное читается как самое строго
     expect(enums.readFailureReason('timeout')).toBe('internal');
   });
 });
-// budget-truncation (A-N6-052): пометка усечения задачи — закрытый набор в коде и тот же CHECK в миграции 009.
+// budget-truncation (A-N6-052) и crawl-coverage (A-N6-070): пометка усечения задачи — закрытый набор в коде и тот же CHECK
+// в ПОСЛЕДНЕЙ миграции, которая его задаёт (009 → 012): старый CHECK без новых значений отверг бы запись done.
 describe('index_job.truncated_by', () => {
-  it('CHECK миграции 009 = INDEX_JOB_TRUNCATION', () => {
-    const m009 = readFileSync('packages/db/migrations/009_budget_truncation.sql', 'utf8');
-    const match = /CHECK \(truncated_by IN \(([^)]*)\)\)/.exec(m009);
-    if (!match) throw new Error('CHECK truncated_by не найден — проверка НЕ ВЫПОЛНЕНА');
-    expect([...match[1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual([...enums.INDEX_JOB_TRUNCATION]);
+  it('последний CHECK truncated_by в миграциях = INDEX_JOB_TRUNCATION; 009 — подмножество (значения не удалялись)', () => {
+    const lists = ['009_budget_truncation.sql', '012_crawl_coverage.sql'].map((file) => {
+      const match = /CHECK \(truncated_by IN \(([^)]*)\)\)/.exec(readFileSync(`packages/db/migrations/${file}`, 'utf8'));
+      if (!match) throw new Error(`CHECK truncated_by в ${file} не найден — проверка НЕ ВЫПОЛНЕНА`);
+      return [...match[1]!.matchAll(/'([^']+)'/g)].map((m) => m[1]);
+    });
+    expect(lists[1]).toEqual([...enums.INDEX_JOB_TRUNCATION]);
+    for (const old of lists[0]!) expect(lists[1]).toContain(old);
+    expect(enums.readIndexJobTruncation('page_budget')).toBe('page_budget');
+    expect(enums.readIndexJobTruncation('crawl_limit')).toBe('crawl_limit');
   });
   it('NULL — не усечена; известное — как есть; непустое неизвестное — unknown, а не «прочитано целиком»', () => {
     expect(enums.readIndexJobTruncation(null)).toBeNull();

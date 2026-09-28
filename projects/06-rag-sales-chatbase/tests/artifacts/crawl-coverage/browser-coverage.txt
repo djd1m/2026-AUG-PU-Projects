@@ -1,0 +1,21 @@
+
+ RUN  v3.2.7 /w
+
+ ✓ tests/browser/crawl-coverage.test.ts (10 tests) 22037ms
+   ✓ chromium > A-N6-070: предел free — «Прочитано 50 страниц из ≥ 58 известных — предел тарифа…», примеры непрочитанного; не «50 из 50»  385ms
+   ✓ chromium > dark 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  1943ms
+   ✓ chromium > dark 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  1435ms
+   ✓ chromium > light 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  1848ms
+   ✓ chromium > light 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  1519ms
+   ✓ webkit > A-N6-070: предел free — «Прочитано 50 страниц из ≥ 58 известных — предел тарифа…», примеры непрочитанного; не «50 из 50»  683ms
+   ✓ webkit > dark 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  2814ms
+   ✓ webkit > dark 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  2364ms
+   ✓ webkit > light 320: R1/R2/R5, axe (контраст AA) и R8 без отказов  2523ms
+   ✓ webkit > light 390: R1/R2/R5, axe (контраст AA) и R8 без отказов  2763ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  13:57:42
+   Duration  23.73s (transform 425ms, setup 0ms, collect 1.15s, tests 22.04s, environment 0ms, prepare 167ms)
+
+exit=0

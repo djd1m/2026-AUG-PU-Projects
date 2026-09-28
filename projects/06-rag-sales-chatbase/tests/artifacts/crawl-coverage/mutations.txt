@@ -1,0 +1,205 @@
+ Container n6-test-cap-redis-1 Running 
+ Container n6-test-cap-db-1 Running 
+ Image n6-sufler-test:foundation Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 759B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 4.29kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-alpine
+#3 DONE 0.5s
+
+#4 [deps  1/10] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#4 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.2s done
+#4 DONE 0.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 1.44kB done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 16.89MB 0.6s done
+#6 DONE 0.7s
+
+#7 [deps 10/10] RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
+#7 CACHED
+
+#8 [deps  7/10] COPY packages/db/package.json ./packages/db/
+#8 CACHED
+
+#9 [deps  8/10] COPY packages/rag/package.json ./packages/rag/
+#9 CACHED
+
+#10 [deps  2/10] WORKDIR /app
+#10 CACHED
+
+#11 [deps  3/10] COPY package.json package-lock.json ./
+#11 CACHED
+
+#12 [deps  4/10] COPY apps/web/package.json ./apps/web/
+#12 CACHED
+
+#13 [deps  9/10] COPY packages/queue/package.json ./packages/queue/
+#13 CACHED
+
+#14 [deps  6/10] COPY apps/worker/package.json ./apps/worker/
+#14 CACHED
+
+#15 [deps 10/10] RUN npm ci && rm -rf node_modules/@napi-rs/canvas node_modules/@napi-rs/canvas-*
+#15 CACHED
+
+#16 [deps  5/10] COPY apps/widget/package.json ./apps/widget/
+#16 CACHED
+
+#17 [build 1/2] COPY . .
+#17 DONE 0.7s
+
+#18 [build 2/2] RUN npm run build
+#18 0.869 
+#18 0.869 > n6-sufler@0.1.0 build
+#18 0.869 > npm run build --workspace=apps/widget && npm run build --workspace=packages/rag && npm run build --workspace=packages/db && npm run build --workspace=packages/queue && npm run build --workspace=apps/worker && npm run build --workspace=apps/web
+#18 0.869 
+#18 1.459 
+#18 1.459 > @n6/widget@0.1.0 build
+#18 1.459 > node scripts/build.mjs
+#18 1.459 
+#18 1.817 [widget] widget.3085a96053d22f8c.js: raw=14.79 КБ, gzip=5.77 КБ, потолок 45.00 КБ
+#18 2.333 
+#18 2.333 > @n6/rag@0.1.0 build
+#18 2.333 > tsc -p tsconfig.json
+#18 2.333 
+#18 9.911 
+#18 9.911 > @n6/db@0.1.0 build
+#18 9.911 > tsc -p tsconfig.json
+#18 9.911 
+#18 19.44 
+#18 19.44 > @n6/queue@0.1.0 build
+#18 19.44 > tsc -p tsconfig.json
+#18 19.44 
+#18 24.70 
+#18 24.70 > @n6/worker@0.1.0 build
+#18 24.70 > tsc -p tsconfig.json && node -e "for (const f of ['extract-child.mjs', 'page-text.mjs']) require('node:fs').copyFileSync('src/pdf/' + f, 'dist/pdf/' + f)"
+#18 24.70 
+#18 33.00 
+#18 33.00 > @n6/web@0.1.0 build
+#18 33.00 > next build && tsc -p tsconfig.preflight.json
+#18 33.00 
+#18 35.08 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#18 35.08 This information is used to shape Next.js' roadmap and prioritize features.
+#18 35.08 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#18 35.08 https://nextjs.org/telemetry
+#18 35.08 
+#18 35.29    ▲ Next.js 15.5.25
+#18 35.29    - Experiments (use with caution):
+#18 35.29      · cpus: 2
+#18 35.29 
+#18 35.54    Creating an optimized production build ...
+#18 83.77  ✓ Compiled successfully in 41s
+#18 83.78    Linting and checking validity of types ...
+#18 98.12    Collecting page data ...
+#18 103.6    Generating static pages (0/5) ...
+#18 105.3    Generating static pages (1/5) 
+#18 105.3    Generating static pages (2/5) 
+#18 105.3    Generating static pages (3/5) 
+#18 105.3  ✓ Generating static pages (5/5)
+#18 106.8    Finalizing page optimization ...
+#18 106.8    Collecting build traces ...
+#18 124.3 
+#18 124.3 Route (app)                                  Size  First Load JS
+#18 124.3 ┌ ƒ /                                       662 B         103 kB
+#18 124.3 ├ ƒ /_not-found                             989 B         104 kB
+#18 124.3 ├ ƒ /account/erased                         662 B         103 kB
+#18 124.3 ├ ƒ /api/account                            221 B         103 kB
+#18 124.3 ├ ƒ /api/auth/login                         221 B         103 kB
+#18 124.3 ├ ƒ /api/auth/logout                        221 B         103 kB
+#18 124.3 ├ ƒ /api/auth/register                      221 B         103 kB
+#18 124.3 ├ ƒ /api/bots                               221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]                       221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/ask                   221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/invite                221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/origins               221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/publish               221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/question-log/erase    221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/sources               221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/summary               221 B         103 kB
+#18 124.3 ├ ƒ /api/bots/[botId]/verify                221 B         103 kB
+#18 124.3 ├ ƒ /api/checkout                           221 B         103 kB
+#18 124.3 ├ ƒ /api/checkout/[intentId]                221 B         103 kB
+#18 124.3 ├ ƒ /api/index-jobs/[id]                    221 B         103 kB
+#18 124.3 ├ ƒ /api/interest                           221 B         103 kB
+#18 124.3 ├ ƒ /api/invites/[token]/accept             221 B         103 kB
+#18 124.3 ├ ƒ /api/partner/payout-details             221 B         103 kB
+#18 124.3 ├ ƒ /api/partner/summary                    221 B         103 kB
+#18 124.3 ├ ƒ /api/preview                            221 B         103 kB
+#18 124.3 ├ ƒ /api/preview/[id]                       221 B         103 kB
+#18 124.3 ├ ƒ /api/preview/[id]/ask                   221 B         103 kB
+#18 124.3 ├ ƒ /api/preview/[id]/claim                 221 B         103 kB
+#18 124.3 ├ ƒ /api/preview/[id]/share                 221 B         103 kB
+#18 124.3 ├ ƒ /api/sources/[sourceId]                 221 B         103 kB
+#18 124.3 ├ ƒ /api/sources/[sourceId]/reindex         221 B         103 kB
+#18 124.3 ├ ƒ /api/studio/summary                     221 B         103 kB
+#18 124.3 ├ ƒ /api/webhooks/yookassa                  221 B         103 kB
+#18 124.3 ├ ƒ /b/[slug]                               662 B         103 kB
+#18 124.3 ├ ƒ /dashboard                              806 B         109 kB
+#18 124.3 ├ ƒ /dashboard/account                    2.44 kB         105 kB
+#18 124.3 ├ ƒ /dashboard/bots/[botId]               4.85 kB         113 kB
+#18 124.3 ├ ƒ /dashboard/bots/[botId]/install       2.89 kB         111 kB
+#18 124.3 ├ ƒ /dashboard/partner                    3.33 kB         106 kB
+#18 124.3 ├ ƒ /dashboard/studio                     2.43 kB         105 kB
+#18 124.3 ├ ƒ /health                                 221 B         103 kB
+#18 124.3 ├ ƒ /invite/[token]                       2.25 kB         105 kB
+#18 124.3 ├ ƒ /login                                2.12 kB         105 kB
+#18 124.3 ├ ƒ /preview                              1.83 kB         104 kB
+#18 124.3 ├ ƒ /preview/[jobId]                      5.81 kB         108 kB
+#18 124.3 ├ ƒ /pricing                                662 B         103 kB
+#18 124.3 ├ ƒ /r/[code]                               221 B         103 kB
+#18 124.3 ├ ƒ /upgrade                              2.54 kB         105 kB
+#18 124.3 ├ ƒ /upgrade/return                       2.35 kB         105 kB
+#18 124.3 ├ ƒ /w/[file]                               221 B         103 kB
+#18 124.3 ├ ƒ /w/v1/ask                               221 B         103 kB
+#18 124.3 ├ ƒ /w/v1/config                            221 B         103 kB
+#18 124.3 └ ƒ /w/v1/event                             221 B         103 kB
+#18 124.3 + First Load JS shared by all              103 kB
+#18 124.3   ├ chunks/18-2c82660ce7c4918d.js         46.4 kB
+#18 124.3   ├ chunks/87c73c54-24122e7b92478d00.js   54.2 kB
+#18 124.3   └ other shared chunks (total)           1.93 kB
+#18 124.3 
+#18 124.3 
+#18 124.3 ƒ Middleware                              34.5 kB
+#18 124.3 
+#18 124.3 ƒ  (Dynamic)  server-rendered on demand
+#18 124.3 
+#18 DONE 127.9s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 5.4s done
+#19 exporting manifest sha256:50a7df3c3599b908cf88296bcf61777a040a44f30771c6fc528c9e683c4fc20c 0.0s done
+#19 exporting config sha256:8ef3b4191405fb04a0f3546ebe1d78c72c42b3a9ff1089708583c05a2e651ef5 0.1s done
+#19 exporting attestation manifest sha256:94000d6cfa30da401cf246fb74bb9c392002654fc182cbaa238a2a17aff2390f 0.1s done
+#19 exporting manifest list sha256:8d1b13787e5e818e771c34525380f23e2ceef19580b8b66f3c119325d100db3c
+#19 exporting manifest list sha256:8d1b13787e5e818e771c34525380f23e2ceef19580b8b66f3c119325d100db3c 0.0s done
+#19 naming to docker.io/library/n6-sufler-test:foundation done
+#19 unpacking to docker.io/library/n6-sufler-test:foundation
+#19 unpacking to docker.io/library/n6-sufler-test:foundation 2.8s done
+#19 DONE 8.6s
+
+#20 resolving provenance for metadata file
+#20 DONE 0.0s
+ Image n6-sufler-test:foundation Built 
+ Container n6-test-cap-redis-1 Waiting 
+ Container n6-test-cap-db-1 Waiting 
+ Container n6-test-cap-redis-1 Healthy 
+ Container n6-test-cap-db-1 Healthy 
+ Container n6-test-cap-test-run-3106ca5ce00b Creating 
+ Container n6-test-cap-test-run-3106ca5ce00b Created 
+fifo-order: дефект возвращён → 5 failed | 67 passed (72) (код 1); код восстановлен → 72 passed (72) (код 0)
+lastmod-ignored: дефект возвращён → 1 failed | 71 passed (72) (код 1); код восстановлен → 72 passed (72) (код 0)
+fifty-of-fifty: дефект возвращён → 1 failed | 71 passed (72) (код 1); код восстановлен → 72 passed (72) (код 0)
+total-equals-read: дефект возвращён → 1 failed | 71 passed (72) (код 1); код восстановлен → 72 passed (72) (код 0)
+reindex-keeps-unread: дефект возвращён → 2 failed | 70 passed (72) (код 1); код восстановлен → 72 passed (72) (код 0)
+sample-with-query: дефект возвращён → 2 failed | 70 passed (72) (код 1); код восстановлен → 72 passed (72) (код 0)
+mutations exit=0

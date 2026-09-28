@@ -80,7 +80,7 @@ export function reindexSource(pool: Pool, sourceId: string, accountId: string, n
     if (!(await recordIndexStartTx(tx, source.bot_id, job.status === 'failed' ? 'retry' : 'reindex'))) {
       return { kind: 'daily_limit', limit: INDEX_STARTS_PER_BOT_DAY } as const;
     }
-    const updated = (await tx.query<{ current_fence: string }>(`UPDATE index_job SET status = 'queued', failure_reason = NULL, truncated_by = NULL,
+    const updated = (await tx.query<{ current_fence: string }>(`UPDATE index_job SET status = 'queued', failure_reason = NULL, truncated_by = NULL, unread_sample = NULL,
       current_fence = current_fence + 1, pages_done = 0, pages_total = NULL, series_embed_used = 0,
       page_budget = NULL, embed_budget = NULL, embed_used = 0, updated_at = $2
       WHERE id = $1 AND status IN ('done', 'failed') RETURNING current_fence`, [job.id, now])).rows[0]!;
