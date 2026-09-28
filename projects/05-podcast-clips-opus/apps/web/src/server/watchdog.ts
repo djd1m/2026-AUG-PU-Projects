@@ -1,6 +1,6 @@
 import { retentionTick, RETENTION_INTERVAL_MS, type RetentionStorage } from './retention';
 const retentionLastRun = new WeakMap<Pool, number>();
-import { transaction, ensureInitialAttempt, type Attempt, type Pool } from '@clipmaker/db';
+import { transaction, ensureInitialAttempt, expirePaidPlans, type Attempt, type Pool } from '@clipmaker/db';
 import { DEFER_DELAY_MS, STALLED_AFTER_MS, WATCHDOG_INTERVAL_MS } from '@clipmaker/queue';
 // Per-process cursor keeps retained jobs from starving attempts beyond the batch boundary.
 const recoveryCursor = new WeakMap<Pool, string>();
@@ -64,6 +64,10 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
     const delay = job.status === 'deferred' ? Math.max(0, job.updated_at.getTime() + DEFER_DELAY_MS - now.getTime()) : 0;
     try { await enqueue(job, delay); published++; } catch (error) { console.error('Сторож: транспорт заданий недоступен', error); }
   }
+  step = 'истечение оплаченных тарифов';
+  // Фича 30 (AC-12): истёкший ОПЛАЧЕННЫЙ тариф → free. Чтения уже считают его free по сроку (effectivePlanSql);
+  // сторож лишь приводит строку в соответствие. Тариф оператора не истекает.
+  await expirePaidPlans(pool, batch);
   if (storage && now.getTime() - (retentionLastRun.get(pool) ?? -Infinity) >= RETENTION_INTERVAL_MS) {
     step = 'retention';
     const result = await retentionTick(pool, storage, now, batch);

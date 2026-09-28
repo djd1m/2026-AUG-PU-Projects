@@ -63,7 +63,10 @@ describe('retention and erasure guards', () => {
     });
     await retentionTick(f.pool, f.storage, new Date('2026-09-24T12:00:00Z'));
     expect(f.storage.eraseClipPrefix.mock.calls).toEqual(['clips/free', 'clips/paid', 'thumbs'].map(prefix => [`${prefix}/video/${account}`]));
-    expect(f.query).toHaveBeenCalledWith(expect.stringContaining("a.plan <> 'paid'"), [new Date('2026-09-21T12:00:00Z'), 100, SHOWCASE_CLIP_IDS]);
+    // Фича 30: действующий план (истёкший оплаченный — free) и срок от конца оплаты; момент прохода — параметр $4.
+    expect(f.query).toHaveBeenCalledWith(expect.stringContaining("plan_paid_until > $4)) THEN 'paid' ELSE 'free' END) <> 'paid'"),
+      [new Date('2026-09-21T12:00:00Z'), 100, SHOWCASE_CLIP_IDS, new Date('2026-09-24T12:00:00Z')]);
+    expect(f.query).toHaveBeenCalledWith(expect.stringContaining('GREATEST(v.finished_at, a.plan_paid_until) <= $1'), expect.anything());
     expect(f.commands.some(s => s.startsWith('UPDATE clip SET object_key=NULL'))).toBe(true);
   });
   it('expiry does not overwrite explicit revocation', async () => {

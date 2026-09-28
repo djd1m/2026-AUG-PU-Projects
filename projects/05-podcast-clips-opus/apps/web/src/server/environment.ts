@@ -12,6 +12,7 @@ export function readEnvironment() {
     N5_TRUSTED_PROXY_HOPS: process.env.N5_TRUSTED_PROXY_HOPS,
     N5_LIMIT_USER_RERENDERS: process.env.N5_LIMIT_USER_RERENDERS,
     N5_LIMIT_USER_MINUTES: process.env.N5_LIMIT_USER_MINUTES,
+    N5_LIMIT_PAID_USER_MINUTES: process.env.N5_LIMIT_PAID_USER_MINUTES,
     N5_LIMIT_USER_UPLOADS: process.env.N5_LIMIT_USER_UPLOADS,
     N5_LIMIT_USER_UPLOAD_REFUNDS: process.env.N5_LIMIT_USER_UPLOAD_REFUNDS,
     N5_LIMIT_USER_LLM: process.env.N5_LIMIT_USER_LLM,
@@ -22,5 +23,10 @@ export function readEnvironment() {
     DATABASE_URL: process.env.DATABASE_URL,
     REDIS_URL: process.env.REDIS_URL,
     SESSION_SECRET: process.env.SESSION_SECRET,
+    // Оплата ЮKassa (фича 30): режим и ключи магазина читает только web.
+    N5_PAYMENTS_MODE: process.env.N5_PAYMENTS_MODE,
+    YOOKASSA_SHOP_ID: process.env.YOOKASSA_SHOP_ID,
+    YOOKASSA_SECRET_KEY: process.env.YOOKASSA_SECRET_KEY,
+    YOOKASSA_TEST_MODE: process.env.YOOKASSA_TEST_MODE,
   };
 }

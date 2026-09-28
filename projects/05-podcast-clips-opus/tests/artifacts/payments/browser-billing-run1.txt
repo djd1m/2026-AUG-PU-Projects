@@ -1,0 +1,119 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/billing.test.ts (48 tests | 8 failed) 56082ms
+   × экраны оплаты chromium > upgrade dark 320: без горизонтального скролла, цели 44, axe без отказов 392ms
+     → expected [ Array(1) ] to deeply equal []
+   × экраны оплаты chromium > upgrade light 320: без горизонтального скролла, цели 44, axe без отказов 125ms
+     → expected [ Array(1) ] to deeply equal []
+   × экраны оплаты chromium > upgrade-paid dark 320: без горизонтального скролла, цели 44, axe без отказов 191ms
+     → expected [ Array(1) ] to deeply equal []
+   × экраны оплаты chromium > upgrade-paid light 320: без горизонтального скролла, цели 44, axe без отказов 143ms
+     → expected [ Array(1) ] to deeply equal []
+   ✓ экраны оплаты chromium > card-on dark 320: без горизонтального скролла, цели 44, axe без отказов  1218ms
+   ✓ экраны оплаты chromium > card-on light 320: без горизонтального скролла, цели 44, axe без отказов  1205ms
+   ✓ экраны оплаты chromium > card-off dark 320: без горизонтального скролла, цели 44, axe без отказов  1098ms
+   ✓ экраны оплаты chromium > card-off light 320: без горизонтального скролла, цели 44, axe без отказов  1074ms
+   ✓ экраны оплаты chromium > return-waiting dark 320: без горизонтального скролла, цели 44, axe без отказов  842ms
+   ✓ экраны оплаты chromium > return-waiting light 320: без горизонтального скролла, цели 44, axe без отказов  799ms
+   ✓ экраны оплаты chromium > return-succeeded dark 320: без горизонтального скролла, цели 44, axe без отказов  754ms
+   ✓ экраны оплаты chromium > return-succeeded light 320: без горизонтального скролла, цели 44, axe без отказов  783ms
+   ✓ экраны оплаты chromium > return-paid_inactive dark 320: без горизонтального скролла, цели 44, axe без отказов  859ms
+   ✓ экраны оплаты chromium > return-paid_inactive light 320: без горизонтального скролла, цели 44, axe без отказов  888ms
+   ✓ экраны оплаты chromium > return-failed dark 320: без горизонтального скролла, цели 44, axe без отказов  901ms
+   ✓ экраны оплаты chromium > return-failed light 320: без горизонтального скролла, цели 44, axe без отказов  825ms
+   ✓ экраны оплаты chromium > return-unconfirmed dark 320: без горизонтального скролла, цели 44, axe без отказов  809ms
+   ✓ экраны оплаты chromium > return-unconfirmed light 320: без горизонтального скролла, цели 44, axe без отказов  900ms
+   ✓ экраны оплаты chromium > return-not_found dark 320: без горизонтального скролла, цели 44, axe без отказов  876ms
+   ✓ экраны оплаты chromium > return-not_found light 320: без горизонтального скролла, цели 44, axe без отказов  818ms
+   ✓ экраны оплаты chromium > экран возврата: шесть состояний различимы — шесть разных data-state и шесть разных заголовков  907ms
+   ✓ экраны оплаты chromium > карточка: при включённой оплате — видимая ссылка «Оформить Pro» на /upgrade, при выключенной — прежняя кнопка интереса  343ms
+   ✓ экраны оплаты chromium > экран тарифа: цена, срок, что входит, кнопка оплаты; при действующем тарифе — дата окончания 243ms
+   ✓ экраны оплаты chromium > 1440: экран тарифа и возврата без горизонтального скролла; скриншоты десктопа  403ms
+   × экраны оплаты webkit > upgrade dark 320: без горизонтального скролла, цели 44, axe без отказов 1125ms
+     → expected [ Array(1) ] to deeply equal []
+   × экраны оплаты webkit > upgrade light 320: без горизонтального скролла, цели 44, axe без отказов 474ms
+     → expected [ Array(1) ] to deeply equal []
+   × экраны оплаты webkit > upgrade-paid dark 320: без горизонтального скролла, цели 44, axe без отказов 469ms
+     → expected [ Array(1) ] to deeply equal []
+   × экраны оплаты webkit > upgrade-paid light 320: без горизонтального скролла, цели 44, axe без отказов 482ms
+     → expected [ Array(1) ] to deeply equal []
+   ✓ экраны оплаты webkit > card-on dark 320: без горизонтального скролла, цели 44, axe без отказов  2154ms
+   ✓ экраны оплаты webkit > card-on light 320: без горизонтального скролла, цели 44, axe без отказов  1861ms
+   ✓ экраны оплаты webkit > card-off dark 320: без горизонтального скролла, цели 44, axe без отказов  1823ms
+   ✓ экраны оплаты webkit > card-off light 320: без горизонтального скролла, цели 44, axe без отказов  1940ms
+   ✓ экраны оплаты webkit > return-waiting dark 320: без горизонтального скролла, цели 44, axe без отказов  1435ms
+   ✓ экраны оплаты webkit > return-waiting light 320: без горизонтального скролла, цели 44, axe без отказов  1540ms
+   ✓ экраны оплаты webkit > return-succeeded dark 320: без горизонтального скролла, цели 44, axe без отказов  1878ms
+   ✓ экраны оплаты webkit > return-succeeded light 320: без горизонтального скролла, цели 44, axe без отказов  1450ms
+   ✓ экраны оплаты webkit > return-paid_inactive dark 320: без горизонтального скролла, цели 44, axe без отказов  1800ms
+   ✓ экраны оплаты webkit > return-paid_inactive light 320: без горизонтального скролла, цели 44, axe без отказов  1390ms
+   ✓ экраны оплаты webkit > return-failed dark 320: без горизонтального скролла, цели 44, axe без отказов  1570ms
+   ✓ экраны оплаты webkit > return-failed light 320: без горизонтального скролла, цели 44, axe без отказов  1444ms
+   ✓ экраны оплаты webkit > return-unconfirmed dark 320: без горизонтального скролла, цели 44, axe без отказов  1467ms
+   ✓ экраны оплаты webkit > return-unconfirmed light 320: без горизонтального скролла, цели 44, axe без отказов  1502ms
+   ✓ экраны оплаты webkit > return-not_found dark 320: без горизонтального скролла, цели 44, axe без отказов  1480ms
+   ✓ экраны оплаты webkit > return-not_found light 320: без горизонтального скролла, цели 44, axe без отказов  1292ms
+   ✓ экраны оплаты webkit > экран возврата: шесть состояний различимы — шесть разных data-state и шесть разных заголовков  3064ms
+   ✓ экраны оплаты webkit > карточка: при включённой оплате — видимая ссылка «Оформить Pro» на /upgrade, при выключенной — прежняя кнопка интереса  1566ms
+   ✓ экраны оплаты webkit > экран тарифа: цена, срок, что входит, кнопка оплаты; при действующем тарифе — дата окончания  1027ms
+   ✓ экраны оплаты webkit > 1440: экран тарифа и возврата без горизонтального скролла; скриншоты десктопа  1034ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/billing.test.ts > экраны оплаты chromium > upgrade dark 320: без горизонтального скролла, цели 44, axe без отказов
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "R2 html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > p:nth-of-type(4) > a:nth-of-type(1): Основная цель меньше 44×44",[39m
+[31m+ ][39m
+
+ ❯ tests/browser/billing.test.ts:77:61
+
+     75|   for (const screen of SCREEN_NAMES) for (const theme of ['dark', 'lig…
+     76|     it(`${screen} ${theme} 320: без горизонтального скролла, цели 44, …
+     77|       expect(errors(await domRules(p, ['R1', 'R2', 'R5']))).toEqual([]…
+       |                                                             ^
+     78|       expect(errors(await axeRule(p))).toEqual([]);
+     79|       if (theme === 'dark' && name === 'webkit') { mkdirSync(SCREENS, …
+ ❯ open tests/browser/billing.test.ts:72:84
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/browser/billing.test.ts > экраны оплаты chromium > upgrade light 320: без горизонтального скролла, цели 44, axe без отказов
+ FAIL  tests/browser/billing.test.ts > экраны оплаты chromium > upgrade-paid dark 320: без горизонтального скролла, цели 44, axe без отказов
+ FAIL  tests/browser/billing.test.ts > экраны оплаты chromium > upgrade-paid light 320: без горизонтального скролла, цели 44, axe без отказов
+ FAIL  tests/browser/billing.test.ts > экраны оплаты webkit > upgrade dark 320: без горизонтального скролла, цели 44, axe без отказов
+ FAIL  tests/browser/billing.test.ts > экраны оплаты webkit > upgrade light 320: без горизонтального скролла, цели 44, axe без отказов
+ FAIL  tests/browser/billing.test.ts > экраны оплаты webkit > upgrade-paid dark 320: без горизонтального скролла, цели 44, axe без отказов
+ FAIL  tests/browser/billing.test.ts > экраны оплаты webkit > upgrade-paid light 320: без горизонтального скролла, цели 44, axe без отказов
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "R2 html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > p:nth-of-type(4) > a:nth-of-type(1): Основная цель меньше 44×44",[39m
+[31m+ ][39m
+
+ ❯ tests/browser/billing.test.ts:77:61
+     75|   for (const screen of SCREEN_NAMES) for (const theme of ['dark', 'lig…
+     76|     it(`${screen} ${theme} 320: без горизонтального скролла, цели 44, …
+     77|       expect(errors(await domRules(p, ['R1', 'R2', 'R5']))).toEqual([]…
+       |                                                             ^
+     78|       expect(errors(await axeRule(p))).toEqual([]);
+     79|       if (theme === 'dark' && name === 'webkit') { mkdirSync(SCREENS, …
+ ❯ open tests/browser/billing.test.ts:72:84
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 40 passed (48)
+   Start at  11:25:28
+   Duration  57.47s (transform 307ms, setup 0ms, collect 953ms, tests 56.08s, environment 0ms, prepare 157ms)
+

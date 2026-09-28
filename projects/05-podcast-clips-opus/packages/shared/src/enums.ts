@@ -37,6 +37,15 @@ export type SourceScreen = typeof SOURCE_SCREEN[number];
 // Призыв к действию в конце клипа (ADR-017, FR-RESULT-006). Надписи — только из кода, не свободный текст.
 export const CTA_KIND = ['none', 'watch_full', 'subscribe', 'open_link'] as const;
 export type CtaKind = typeof CTA_KIND[number];
+// Оплата ЮKassa (фича 30, ADR-019, миграция 021).
+export const PLAN_SOURCE = ['none', 'payment', 'operator'] as const;
+export type PlanSource = typeof PLAN_SOURCE[number];
+export const PAYMENT_INTENT_STATUS = ['created', 'succeeded', 'canceled'] as const;
+export const PAYMENT_PROVIDER = ['yookassa', 'fake'] as const;
+export type PaymentProviderName = typeof PAYMENT_PROVIDER[number];
+export const PAYMENT_STATUS = ['succeeded', 'refunded'] as const;
+export const PAYMENT_REVIEW_REASON = ['amount_mismatch', 'refund', 'unknown_intent', 'account_erasing'] as const;
+export const OPERATOR_ACTION = ['set_plan'] as const;
 
 export function isEnumValue<T extends string>(values: readonly T[], value: unknown): value is T {
   return typeof value === 'string' && values.includes(value as T);
@@ -67,4 +76,8 @@ export const SQL_ENUMS = {
   'attribution.status': ATTRIBUTION_STATUS, 'partner_code.status': PARTNER_CODE_STATUS,
   'quota_counter.scope': QUOTA_SCOPE, 'pro_interest.source_screen': SOURCE_SCREEN,
   'video.cta_kind': CTA_KIND,
+  'account.plan_source': PLAN_SOURCE, 'payment_intent.status': PAYMENT_INTENT_STATUS,
+  'payment_event.provider': PAYMENT_PROVIDER, 'payment.provider': PAYMENT_PROVIDER, 'payment.status': PAYMENT_STATUS,
+  'payment.review_reason': PAYMENT_REVIEW_REASON, 'operator_action.action': OPERATOR_ACTION,
+  'operator_action.plan_before': ACCOUNT_PLAN, 'operator_action.plan_after': ACCOUNT_PLAN,
 } as const;

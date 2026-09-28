@@ -17,9 +17,9 @@ it.skipIf(!supported)('надпись призыва: финальное окн�
   const origin = 'https://clipmkr.ru', code = 'WWWWWW', duration = 4;
   const mean = (b: Buffer) => { expect(b.length).toBeGreaterThan(0); return b.reduce((s, v) => s + v, 0) / b.length; };
   try {
-    const on = prepareCta('watch_full', 1080, 1920, duration, false)!;
+    const on = prepareCta('watch_full', 1080, 1920, duration, false, true)!;
     expect(on.result.start_seconds).toBe(1.5);
-    const none = prepareCta('none', 1080, 1920, duration, false);
+    const none = prepareCta('none', 1080, 1920, duration, false, true);
     const variants: Record<string, string | undefined> = {
       off: undefined, none: none?.filter, on: on.filter,
       plate: on.filter.split(',drawtext=')[0], // та же плашка без текста — доказывает, что текст отрисован

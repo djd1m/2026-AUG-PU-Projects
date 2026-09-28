@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { MUSIC_CATALOG, effectiveMusic } from '@clipmaker/shared/music-catalog';
 import type { Limits } from '@clipmaker/shared/config';
-import { transaction, leaseAttemptTx, checkAndConsumeQuota, type Attempt, type Pool } from '@clipmaker/db';
+import { transaction, leaseAttemptTx, checkAndConsumeQuota, effectivePlanSql, retentionFromSql, type Attempt, type Pool } from '@clipmaker/db';
+import { clipExpiry } from '@clipmaker/shared/tariff';
 import { UploadError, quotaError } from './upload-contract';
 export const setMusicSchema = z.object({ clip_id: z.string().uuid(), track: z.string().refine(
   value => value === 'auto' || value === 'none' || MUSIC_CATALOG.some(track => track.id === value), 'Неизвестный трек') }).strict();
@@ -14,7 +15,7 @@ export class ClipMusicService {
     const input = parsed.data;
     const job = await transaction(this.pool, async tx => {
       // Same lock order as render/retry/watchdog: video before clip.
-      const video = (await tx.query(`SELECT v.*,a.plan FROM video v JOIN account a ON a.id=v.account_id
+      const video = (await tx.query(`SELECT v.*,${effectivePlanSql('a')} AS plan,${retentionFromSql('v', 'a')} AS retention_from FROM video v JOIN account a ON a.id=v.account_id
         JOIN clip c ON c.video_id=v.id WHERE c.id=$1 AND v.account_id=$2
         AND v.deleted_at IS NULL AND a.status='active' FOR UPDATE OF v`, [input.clip_id, account])).rows[0];
       if (!video) throw new UploadError('not_found', 'Клип не найден', 404);
@@ -25,8 +26,7 @@ export class ClipMusicService {
         throw new UploadError('conflict', 'Клип ещё собирается', 409);
       }
       const now = this.clock();
-      const expires = clip.expires_at ?? (video.plan !== 'paid' && video.finished_at
-        ? new Date(video.finished_at.getTime() + 3 * 86400_000) : null);
+      const expires = clipExpiry(clip.expires_at, video.plan, video.retention_from);
       if (!clip.object_key || (expires && expires <= now)) throw new UploadError('conflict', 'Срок хранения клипа истёк', 409);
       const target = effectiveMusic(input.track, video.music, clip.index);
       const rendered = clip.rendered_music_track_id ?? effectiveMusic(clip.music_track_id, video.music, clip.index);

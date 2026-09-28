@@ -152,7 +152,7 @@ describe('video.setCta — разбор до БД (поведение с баз�
 
 const now = new Date('2026-09-25T12:00:00.000Z');
 const link: ShortLink = { id: 'link', code: 'CTDUUG', account_id: 'owner', title: 'Момент <b>выпуска</b>', status: 'done',
-  thumbnail_key: null, expires_at: null, finished_at: now, plan: 'free' };
+  thumbnail_key: null, expires_at: null, retention_from: now, plan: 'free' };
 export async function landingHtml(overrides: Partial<ShortLink> = {}, cookie = '') {
   const handle = createShortLinkHandler({ referralSecret: 'test-secret', trustedProxyHops: 1, clock: () => now,
     links: { find: vi.fn().mockResolvedValue({ ...link, ...overrides }), recordView: vi.fn().mockResolvedValue(undefined) },

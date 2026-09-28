@@ -1,6 +1,7 @@
 import { assertWatermarkFits } from './watermark.js';
+import { loadPaymentsConfig } from './tariff.js';
 export const LIMIT_NAMES = [
-  'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
+  'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_PAID_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
   'N5_LIMIT_USER_RERENDERS', 'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
 ] as const;
 export type LimitName = typeof LIMIT_NAMES[number];
@@ -10,6 +11,8 @@ export type ServiceRole = 'web' | 'worker-stt' | 'worker-llm' | 'worker-video';
 const consequences: Record<LimitName, string> = {
   N5_LIMIT_USER_RERENDERS: 'смена музыки останется без потолка перерендеров',
   N5_LIMIT_USER_MINUTES: 'вызов Whisper на аккаунт останется без потолка платных минут',
+  // OWN-019: у тарифа paid свой дневной потолок минут (270 = три записи по 90 мин). Потолок, а не «без ограничений».
+  N5_LIMIT_PAID_USER_MINUTES: 'вызов Whisper аккаунта с тарифом paid останется без потолка платных минут',
   N5_LIMIT_USER_UPLOADS: 'выдача загрузки и последующая обработка останутся без суточного потолка',
   N5_LIMIT_USER_UPLOAD_REFUNDS: 'возврат слота позволит безгранично вызывать скачивание и ffprobe',
   N5_LIMIT_USER_LLM: 'вызов LLM одного аккаунта сможет израсходовать общий бюджет',
@@ -31,7 +34,12 @@ export function loadLimits(env: Environment): Limits {
     }
     return [name, n];
   });
-  return Object.freeze(Object.fromEntries(entries)) as Limits;
+  const limits = Object.freeze(Object.fromEntries(entries)) as Limits;
+  // model-call-cost п.1: персональный потолок НЕ БОЛЬШЕ суточного, иначе он не сработает никогда (OWN-019).
+  if (limits.N5_LIMIT_PAID_USER_MINUTES > limits.N5_LIMIT_GLOBAL_MINUTES) {
+    throw new Error('N5_LIMIT_PAID_USER_MINUTES непригодно: потолок минут тарифа paid больше суточного N5_LIMIT_GLOBAL_MINUTES — персональный предел не связал бы ни одного вызова');
+  }
+  return limits;
 }
 function url(env: Environment, name: string, protocols: string[], consequence: string): string {
   const value = required(env, name, consequence);
@@ -79,7 +87,7 @@ export function loadWebConfig(env: Environment) {
   }
   return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret,
     s3: Object.freeze({ ...loadS3Config(env), publicEndpoint: loadS3PublicEndpoint(env) }),
-    trustedProxyHops: loadTrustedProxyHops(env) });
+    trustedProxyHops: loadTrustedProxyHops(env), payments: loadPaymentsConfig(env) });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
 // Разделение соответствует compose: воркерам не передаётся SESSION_SECRET.

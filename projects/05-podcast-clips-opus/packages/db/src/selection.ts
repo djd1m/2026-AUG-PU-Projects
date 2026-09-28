@@ -6,9 +6,10 @@ import { validateFragments, type Fragment } from '@clipmaker/shared/fragments';
 import { parseTranscript, TranscriptError, type TranscriptResult } from '@clipmaker/shared/transcript';
 import { transaction, checkAndConsumeQuota } from './quota.js';
 import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
+import { effectivePlanSql } from './plan.js';
 interface Current { account_id: string; plan: string; duration_seconds: string; unit_count: number; llm_dispatched: boolean; started_at: Date }
 async function lockCurrent(tx: PoolClient, attempt: Attempt): Promise<Current | undefined> {
-  const result = await tx.query<Current>(`SELECT v.account_id,a.plan,v.duration_seconds,j.unit_count,j.llm_dispatched,j.started_at
+  const result = await tx.query<Current>(`SELECT v.account_id,${effectivePlanSql('a')} AS plan,v.duration_seconds,j.unit_count,j.llm_dispatched,j.started_at
     FROM video v JOIN account a ON a.id=v.account_id JOIN job_attempt j ON j.video_id=v.id AND j.fence=$2
     WHERE v.id=$1 AND v.fence=$2 AND v.status='selecting' AND v.deleted_at IS NULL AND a.status='active'
       AND j.stage='select' AND j.status='running' FOR UPDATE OF v`, [attempt.video_id, attempt.fence]);

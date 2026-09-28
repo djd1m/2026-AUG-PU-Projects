@@ -1,0 +1,326 @@
+[
+  {
+    "id": "no-requery",
+    "red": {
+      "id": "no-requery",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "no-requery",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "key-before-auth",
+    "red": {
+      "id": "key-before-auth",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "key-before-auth",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "unavailable-as-value",
+    "red": {
+      "id": "unavailable-as-value",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "unavailable-as-value",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "no-advisory-lock",
+    "red": {
+      "id": "no-advisory-lock",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "no-advisory-lock",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "now-plus-30",
+    "red": {
+      "id": "now-plus-30",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "now-plus-30",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "fake-in-production",
+    "red": {
+      "id": "fake-in-production",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "fake-in-production",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "compose-colon-off",
+    "red": {
+      "id": "compose-colon-off",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "compose-colon-off",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "no-poll-deadline",
+    "red": {
+      "id": "no-poll-deadline",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "no-poll-deadline",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "fourth-plan-writer",
+    "red": {
+      "id": "fourth-plan-writer",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "fourth-plan-writer",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "no-origin-check",
+    "red": {
+      "id": "no-origin-check",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "no-origin-check",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "plan-ignores-expiry",
+    "red": {
+      "id": "plan-ignores-expiry",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "plan-ignores-expiry",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "retention-from-finish",
+    "red": {
+      "id": "retention-from-finish",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "retention-from-finish",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "paid-cta-link-text",
+    "red": {
+      "id": "paid-cta-link-text",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "paid-cta-link-text",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "paid-minutes-ignored",
+    "red": {
+      "id": "paid-minutes-ignored",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "paid-minutes-ignored",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "paid-above-global",
+    "red": {
+      "id": "paid-above-global",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "paid-above-global",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "operator-keeps-remainder",
+    "red": {
+      "id": "operator-keeps-remainder",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "operator-keeps-remainder",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "erasing-gets-plan",
+    "red": {
+      "id": "erasing-gets-plan",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "erasing-gets-plan",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  },
+  {
+    "id": "amount-mismatch-grants",
+    "red": {
+      "id": "amount-mismatch-grants",
+      "phase": "red",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    "green": {
+      "id": "amount-mismatch-grants",
+      "phase": "green",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0
+    },
+    "status": "killed"
+  }
+]

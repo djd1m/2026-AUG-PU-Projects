@@ -2,6 +2,7 @@ import type { Pool, PoolClient } from 'pg';
 import type { Limits, LimitName } from '@clipmaker/shared/config';
 import type { QuotaScope, VideoFailureReason } from '@clipmaker/shared/enums';
 import { moscowDay } from '@clipmaker/shared/upload';
+import { effectivePlanSql } from './plan.js';
 
 export async function transaction<T>(pool: Pool, work: (tx: PoolClient) => Promise<T>): Promise<T> {
   const tx = await pool.connect();
@@ -29,7 +30,13 @@ export async function checkAndConsumeQuota(tx: PoolClient, limits: Limits, accou
   await tx.query('SAVEPOINT quota_charge');
   for (const scope of scopes[reason]) {
     const key = scope.startsWith('global_') ? 'all' : account;
-    const args = [scope, key, moscowDay(now), n, limits[limitNames[scope]]];
+    // OWN-019: у действующего тарифа paid свой потолок минут. План читается из БАЗЫ в этой же транзакции (как метка,
+    // ADR-004), строка аккаунта — FOR SHARE: одновременная оплата/истечение ждут конца списания, а не меняют план посреди
+    // него. Предел по-прежнему параметр окружения $5, не колонка (V2-R03).
+    const limit = scope === 'user_minutes' && (await tx.query<{ plan: string }>(
+      `SELECT ${effectivePlanSql('a')} AS plan FROM account a WHERE a.id::text = $1 FOR SHARE`, [account])).rows[0]?.plan === 'paid'
+      ? limits.N5_LIMIT_PAID_USER_MINUTES : limits[limitNames[scope]];
+    const args = [scope, key, moscowDay(now), n, limit];
     await tx.query(`INSERT INTO quota_counter (scope, scope_key, day, used) VALUES ($1, $2, $3, 0)
       ON CONFLICT (scope, scope_key, day) DO NOTHING`, args.slice(0, 3));
     const result = await tx.query(`UPDATE quota_counter SET used = used + $4

@@ -13,6 +13,16 @@ export const CTA_BUTTON_LABELS = {
 export const CTA_FRAME_LABELS = {
   watch_full: 'Полный выпуск — по ссылке', subscribe: 'Подписывайтесь — ссылка ниже', open_link: 'Подробнее — по ссылке',
 } as const satisfies Record<Exclude<CtaKind, 'none'>, string>;
+// Надпись В КАДРЕ клипа тарифа paid (фича 30, находка 1 ревью фич 25–29): у платного клипа НЕТ метки с /c/КОД, поэтому
+// отсылка «по ссылке» / «ссылка ниже» указывала бы на то, чего в кадре нет — в пикселях и навсегда. Текст без отсылки к
+// ссылке; «Перейти по ссылке» без ссылки смысла не имеет — у paid надпись НЕ рисуется (null).
+export const CTA_FRAME_LABELS_PAID = {
+  watch_full: 'Смотрите полный выпуск', subscribe: 'Подписывайтесь на автора', open_link: null,
+} as const satisfies Record<Exclude<CtaKind, 'none'>, string | null>;
+/** Текст надписи в кадре: у клипа с меткой — путь «метка → /c/КОД», без метки — словарь paid. null — не рисовать. */
+export function ctaFrameLabel(kind: Exclude<CtaKind, 'none'>, watermark: boolean): string | null {
+  return watermark ? CTA_FRAME_LABELS[kind] : CTA_FRAME_LABELS_PAID[kind];
+}
 /** Меняются ли ПИКСЕЛИ клипа при смене призыва: только вид (адрес в кадр не вшивается). */
 export function ctaPixelsChange(from: unknown, to: unknown): boolean {
   return readCtaKind(from) !== readCtaKind(to);

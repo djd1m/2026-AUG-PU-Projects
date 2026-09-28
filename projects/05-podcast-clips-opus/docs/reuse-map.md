@@ -122,6 +122,22 @@ ORM здесь не помогает, а прячет; переносимые к
 файл. Цена решения: `Architecture.md` называет Prisma источником типов — строка будет исправлена в
 следующем раунде правки архитектуры, а не оставлена расходиться молча.
 
+## Фича 30 `payments` — донор N6 (не январский клон)
+
+В январском клоне кода оплаты для N5 не нашлось (ADR-005, дополнение 28.09.2026); донор — N6
+`projects/06-rag-sales-chatbase` (сам взят из N4). Построчный ответ по единицам U1–U10 плана — в
+`docs/features/payments/07_code_report.md`, раздел «Переиспользование».
+
+| Источник (N6) | Цель (N5) | Вердикт |
+|---|---|---|
+| `apps/web/src/server/payments/{provider,yookassa,fake,origin,cidr-match}.ts` | те же пути | перенесено без изменений логики |
+| `apps/web/src/server/payments/config.ts` | `packages/shared/src/tariff.ts` (`loadPaymentsConfig`) + `payments/config.ts` | адаптировано: `N5_PAYMENTS_MODE`, проверка в `loadWebConfig`/preflight |
+| `packages/db/src/payments.ts`, `migrations/006_tariffs_payments.sql` | `packages/db/src/payments.ts`, `021_payments.sql` | адаптировано: один тариф, без комиссий и `attribution converted` |
+| `packages/db/src/tariffs.ts` (`setPlanByOperator`), `ops-set-plan` | `packages/db/src/ops-set-plan.ts` | адаптировано: `free/paid`, атрибуция не меняется |
+| `apps/web/src/server/billing-{handler,deps,runtime}.ts`, `app/api/checkout/*`, `app/api/webhooks/yookassa` | те же пути | адаптировано: обвязка N5, 404 при off, сеть ЮKassa в обработчике |
+| `app/upgrade/*`, `lib/payment-return.ts` | те же пути | адаптировано: тексты и классы N5, `from` вместо `plan` |
+| `scripts/stand-set-yookassa.sh`, `tests/fixtures/fake-yookassa-server.ts`, `tests/billing.*` | те же пути (тесты разделены на billing/paid-plan/guards) | адаптировано / перенесено (фикстура) |
+
 ## Что эта карта НЕ утверждает
 
 Она утверждает, что фрагмент СУЩЕСТВУЕТ и подходит по назначению. Она не утверждает, что он

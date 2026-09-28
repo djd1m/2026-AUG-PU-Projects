@@ -129,12 +129,12 @@ describe('ретенция и /c/ не хоронят клип витрины', 
     });
     const pool = { query, connect: async () => ({ query, release: vi.fn() }) } as unknown as Parameters<typeof retentionTick>[0];
     await retentionTick(pool, { delete: vi.fn(), erasePrefix: vi.fn(), eraseClipPrefix: vi.fn() }, new Date('2026-09-27T12:00:00Z'));
-    const clips = calls.find(([sql]) => sql.includes('FROM clip c') && sql.includes("a.plan <> 'paid'"));
+    const clips = calls.find(([sql]) => sql.includes('FROM clip c') && sql.includes("<> 'paid'") && sql.includes('plan_paid_until'));
     expect(clips?.[0]).toContain('AND NOT (c.id = ANY($3::uuid[]))');
     expect(clips?.[1]?.[2]).toEqual(SHOWCASE_CLIP_IDS);
   });
   const link: ShortLink = { id: 'l', code: 'CTDUUG', clip_id: SHOWCASE.clipId, account_id: 'a', title: 't', status: 'done',
-    thumbnail_key: 'thumbs/v/c.jpg', expires_at: null, finished_at: new Date('2026-09-24T10:24:31Z'), plan: 'free' };
+    thumbnail_key: 'thumbs/v/c.jpg', expires_at: null, retention_from: new Date('2026-09-24T10:24:31Z'), plan: 'free' };
   const later = new Date('2026-09-30T00:00:00Z');
   it('/c/ клипа витрины после 3 суток бесплатного тарифа — «ready», соседний клип той же записи — «expired»', () => {
     expect(previewState(link, later)).toBe('ready');

@@ -63,7 +63,7 @@ export async function renderClip(options: RenderOptions): Promise<RenderOutcome>
       console.info(JSON.stringify({ event: 'music_track_fallback' }));
     }
     const teaser = options.teaser ? await prepareTeaser(options.title ?? '', width, temp) : null;
-    const cta = prepareCta(options.cta, width, height, duration, !!teaser);
+    const cta = prepareCta(options.cta, width, height, duration, !!teaser, options.watermark);
     const trackIndex = typeof options.clipIndex === 'number' ? options.clipIndex - 1 : undefined;
     const track = options.musicTrackId == null
       ? (options.music ? selectTrack(trackIndex) : null)

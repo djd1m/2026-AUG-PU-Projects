@@ -8,6 +8,7 @@
     "lint": "node scripts/lint.mjs",
     "test": "node scripts/test.mjs",
     "test:responsive": "bash scripts/check-responsive.sh --test",
+    "ops:set-plan": "node packages/db/dist/ops-set-plan.js",
     "db:migrate": "npm run build --workspace=packages/db && node packages/db/dist/migrate.js"
   },
   "devDependencies": {

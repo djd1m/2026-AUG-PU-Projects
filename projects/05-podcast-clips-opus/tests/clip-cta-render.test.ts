@@ -40,7 +40,7 @@ describe('геометрия надписи призыва', () => {
   });
   it('непомещение — клип без надписи и запись в журнал, не падение рендера', () => {
     const log = vi.spyOn(console, 'info').mockImplementation(() => {}), reasons: string[] = [];
-    expect(prepareCta('subscribe', 400, H, 20, false, reason => reasons.push(reason))).toBeNull();
+    expect(prepareCta('subscribe', 400, H, 20, false, true, reason => reasons.push(reason))).toBeNull();
     expect(reasons).toEqual(['no_room']);
     expect(log).toHaveBeenCalledWith(JSON.stringify({ event: 'cta_skipped', kind: 'subscribe', reason: 'no_room' }));
   });
@@ -52,16 +52,16 @@ describe('окно показа и закрытый набор', () => {
     expect(ctaWindowStart(20, false)).toBe(17.5); expect(ctaWindowStart(20, true)).toBe(17.5);
     expect(ctaWindowStart(4, true)).toBe(2.5); expect(ctaWindowStart(2, false)).toBe(0);
     const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-    expect(prepareCta('watch_full', W, H, 2.5, true)).toBeNull();
+    expect(prepareCta('watch_full', W, H, 2.5, true, true)).toBeNull();
     expect(log).toHaveBeenCalledWith(expect.stringContaining('window_empty'));
   });
   it.each([['none'], [undefined], [null], ['bogus'], ['WATCH_FULL'], [42]])('%s — надписи нет и журнал молчит', kind => {
     const log = vi.spyOn(console, 'info').mockImplementation(() => {});
-    expect(prepareCta(kind, W, H, 20, false)).toBeNull();
+    expect(prepareCta(kind, W, H, 20, false, true)).toBeNull();
     expect(log).not.toHaveBeenCalled();
   });
   it('текст — только из словаря, адреса в фильтре нет', () => {
-    const prepared = prepareCta('watch_full', W, H, 30, true)!;
+    const prepared = prepareCta('watch_full', W, H, 30, true, true)!;
     expect(prepared.result).toEqual({ kind: 'watch_full', text: 'Полный выпуск — по ссылке', font_size: 72, start_seconds: 27.5 });
     expect(prepared.filter).toContain("drawtext=text='Полный выпуск — по ссылке':expansion=none");
     expect(prepared.filter.match(/enable='gte\(t,27\.5\)'/g)).toHaveLength(2);
@@ -80,7 +80,7 @@ describe('окно показа и закрытый набор', () => {
 
 describe('цепочка фильтров', () => {
   it('порядок: вспышка → призыв → метка; без призыва цепочка побайтово прежняя', () => {
-    const flash = buildFlashFilter(19200), cta = prepareCta('open_link', W, H, 20, false)!.filter;
+    const flash = buildFlashFilter(19200), cta = prepareCta('open_link', W, H, 20, false, true)!.filter;
     const chain = buildFilterChain('portrait', null, true, ORIGIN, CODE, undefined, undefined, undefined, flash, undefined, cta);
     expect(chain.indexOf(flash)).toBeLessThan(chain.indexOf(cta));
     expect(chain.indexOf(cta)).toBeLessThan(chain.indexOf('drawbox=x=54'));
