@@ -241,6 +241,92 @@ describe('AC-015.10 / AC-015.16 — ответ один, письмо по де�
   });
 });
 
+// ═════════════════════════════════════════════════════════════════════════════
+describe('NFR-015.3 [правка 28.09] — время ответа не выдаёт, есть ли адрес', () => {
+  // Находка 28.09: письмо ждалось ВНУТРИ ответа (fetch к провайдеру до 8 с) только когда
+  // токен выпущен, то есть только для существующего адреса. Тело и код ответа совпадали,
+  // а секундомер отличал «адрес есть» от «адреса нет». Провайдер здесь медленный НАРОЧНО:
+  // в жизни его время нам не принадлежит, и достаточно одной медленной секунды у Resend.
+  const SLOW_MS = 1_500;
+  const URL_ = 'https://proofwall.test/api/auth/forgot';
+  const request = (email: string) => new Request(URL_, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': `15.0.${seq % 250}.${(seq += 1) % 250}` },
+    body: JSON.stringify({ email }),
+  });
+  /** Отложенные задачи копятся здесь; тест дожидается их явно, как это делал бы after(). */
+  const background = () => {
+    const tasks: Promise<unknown>[] = [];
+    return {
+      defer: (task: () => Promise<void>) => { tasks.push(task()); },
+      settle: () => Promise.allSettled(tasks),
+    };
+  };
+  /** Время до ОТВЕТА, а не до конца работы. Потолок — чтобы висящий провайдер не вешал набор. */
+  const timed = async (p: Promise<Response>, capMs: number) => {
+    const t0 = performance.now();
+    const res = await Promise.race([p, new Promise<null>((r) => setTimeout(() => r(null), capMs))]);
+    return { res, ms: performance.now() - t0 };
+  };
+
+  it('медленный провайдер: ответ существующему адресу не дольше, чем несуществующему', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    const sent: string[] = [];
+    const slow = async (m: { to: string }) => {
+      await new Promise((r) => setTimeout(r, SLOW_MS));
+      sent.push(m.to);
+    };
+    const real = await timed(handleForgot(request(o.email), slow, bg.defer), SLOW_MS * 3);
+    const fake = await timed(
+      handleForgot(request(`нет-такого-${RUN}-t@example.com`), slow, bg.defer), SLOW_MS * 3);
+
+    expect(real.res?.status).toBe(200);
+    expect(fake.res?.status).toBe(200);
+    // Падает при мутации «вернуть await отправки в ответ»: real.ms ≈ SLOW_MS.
+    expect(real.ms, `существующий ${real.ms.toFixed(0)} мс, несуществующий ${fake.ms.toFixed(0)} мс`)
+      .toBeLessThan(SLOW_MS / 3);
+    expect(Math.abs(real.ms - fake.ms)).toBeLessThan(SLOW_MS / 3);
+
+    // Письмо при этом НЕ потеряно — оно ушло после ответа.
+    await bg.settle();
+    expect(sent).toEqual([o.email]);
+  });
+
+  it('провайдер, который НЕ отвечает никогда: ответ всё равно приходит', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    const never = () => new Promise<void>(() => {});
+    const { res, ms } = await timed(handleForgot(request(o.email), never, bg.defer), 2_000);
+    expect(res, `ответа нет за ${ms.toFixed(0)} мс — ответ ждёт провайдера`).not.toBeNull();
+    expect(res!.status).toBe(200);
+  });
+
+  it('отказ провайдера: одна повторная попытка в фоне, исход в журнале без адреса и токена', async () => {
+    const o = await makeOwner();
+    const bg = background();
+    let calls = 0;
+    const flaky = async () => { calls += 1; if (calls === 1) throw new Error('провайдер ответил 503'); };
+    const logs: unknown[][] = [];
+    const orig = { error: console.error, info: console.info };
+    console.error = (...a: unknown[]) => { logs.push(a); };
+    console.info = (...a: unknown[]) => { logs.push(a); };
+    try {
+      const res = await handleForgot(request(o.email), flaky, bg.defer);
+      expect(res.status).toBe(200);
+      await bg.settle();
+    } finally {
+      console.error = orig.error;
+      console.info = orig.info;
+    }
+    expect(calls, 'повтор не выполнен').toBe(2);
+    const text = JSON.stringify(logs);
+    expect(text).toContain('reset_email_sent');
+    expect(text).not.toContain(o.email);
+    expect(text).not.toMatch(/token=|reset#|\/reset\//);
+  });
+});
+
 describe('AC-015.11 / AC-015.12 / AC-015.13 — лимит парным ключом', () => {
   it('одна попытка = +1 по паре и +1 по IP', async () => {
     const o = await makeOwner();
