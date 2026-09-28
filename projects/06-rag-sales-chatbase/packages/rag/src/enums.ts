@@ -16,7 +16,9 @@ export const INDEX_JOB_FAILURE_REASON = ['robots_disallowed', 'unreachable', 'bl
 // index_job.truncated_by (budget-truncation, A-N6-052, миграция 009): задача done, но остановлена исчерпанием
 // СОБСТВЕННОГО бюджета эмбеддингов — предпросмотра (embed_budget) или серии источника (series_embed_budget).
 export const INDEX_JOB_TRUNCATION = ['embed_budget', 'series_embed_budget'] as const;
-export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin'] as const;
+// not_verified (gate-onboarding, миграция 011, A-N6-066): вопрос посетителя отбит воротами «Я проверил ответы бота» —
+// пишет маршрут виджета, без текста, без квоты и без модели. Действующий CHECK — последнее question_log_outcome_check миграций.
+export const QUESTION_OUTCOME = ['answered', 'unknown', 'refused_limit', 'refused_origin', 'not_verified'] as const;
 export const QUOTA_SCOPE = ['visitor_answers', 'ip_answers', 'bot_day_answers', 'bot_month_answers', 'global_answers',
   'preview_session', 'ip_previews', 'global_previews', 'account_embed_tokens', 'global_embed_tokens'] as const;
 export const GROWTH_EVENT_TYPE = ['badge_impression', 'badge_click', 'share_cta_shown', 'share_cta_click', 'widget_install',

@@ -8,7 +8,8 @@
 //   тело ≤ 4 КиБ, ЗАКРЫТЫЙ набор { visitor_session, question } (history/bot_id и любой другой ключ — 422: ходы
 //   ассистента от клиента не принимаются вовсе, история — на сервере) → токен сессии (подпись по боту, origin и /24;
 //   чужой — 409, виджет берёт новый) → бейдж показан этой сессии, если план его требует (ADR-004; иначе 409) →
-//   отметка владельца «проверено» (A-N6-035; нет — «Бот ещё настраивается» + контакт, БЕЗ модели и без списания) →
+//   отметка владельца «проверено» (A-N6-035; нет — исход not_verified в журнал и «Бот ещё настраивается» + контакт, БЕЗ
+//   модели и без списания) →
 //   ядро answerQuestion (5 scope квоты одной транзакцией ДО эмбеддинга, порог ДО модели, проверка цитат ПОСЛЕ) →
 //   answered: ход истории, RecordWidgetInstall(first_answer), RecordGrowthEvent(first_answer).
 // Ровно ОДИН Access-Control-Allow-Origin ставит только web (corsHeaders), Caddy его не трогает; без Allow-Credentials.
@@ -29,6 +30,9 @@ export interface WidgetAskDependencies extends WidgetDependencies {
   recordFirstAnswer: (input: { botId: string; visitorSessionId: string; origin: string }) => Promise<boolean>;
   // security.md «Чужой сайт»: отказ по origin — исход refused_origin в журнале, БЕЗ текста вопроса (тело не читается).
   logRefusedOrigin: (botId: string) => Promise<void>;
+  // gate-onboarding (A-N6-066): ответ ворот A-N6-035 — исход not_verified в журнале, БЕЗ текста вопроса, с сессией (для
+  // сводки владельца «N посетителей получили заглушку»). Квота не списывается, модель не зовётся.
+  logNotVerified: (botId: string, visitorSessionId: string) => Promise<void>;
 }
 
 const MAX_ASK_BYTES = 4096;
@@ -67,8 +71,10 @@ export function createWidgetAskHandler(deps: WidgetAskDependencies) {
     // ADR-004 на сервере: на плане с бейджем вопрос принимается только от сессии, которой бейдж был показан.
     if (badgeRequired(bot.row.plan) && !session.badgeShown) return fail(409, 'badge_required', 'Виджет показан без бейджа', origin);
     // A-N6-035: пока владелец не отметил «Я проверил ответы бота», ответ модели посетителю не показывается — и модель
-    // не зовётся вовсе (платить за ответ, который не покажут, незачем).
+    // не зовётся вовсе (платить за ответ, который не покажут, незачем). Заглушка ЗАПИСЫВАЕТСЯ (gate-onboarding): иначе
+    // владелец видит «вопросов ещё не было», пока посетители упираются в «настраивается» (инцидент стенда 28.09).
     if (!bot.row.answersVerified) {
+      try { await deps.logNotVerified(bot.row.botId, sessionId); } catch { log('Виджет: исход not_verified не записан'); }
       return reply(200, { data: { status: 'unknown', reason: 'not_verified', text: withContact(NOT_VERIFIED_MESSAGE, bot.contact), contact: bot.contact } }, origin);
     }
 

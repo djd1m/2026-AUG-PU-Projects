@@ -121,7 +121,7 @@ describe.skipIf(!databaseUrl)('демо-страница, сводка и соб
 
   it('SC-US-010-2: вопросов не было — нули и пустой список (экран пишет «вопросов ещё не было», процентов нет)', async () => {
     const s = await seed();
-    expect(await readBotSummary(pool, s.bot, s.account)).toEqual({ answered: 0, unknown: 0, refused_limit: 0, last_unknown: [] });
+    expect(await readBotSummary(pool, s.bot, s.account)).toEqual({ answered: 0, unknown: 0, refused_limit: 0, not_verified_visitors: 0, last_unknown: [] });
   });
 
   it('AC-8: приход по бейджу пишется в аккаунт один раз; мусорная форма не пишется', async () => {

@@ -17,7 +17,7 @@ export default async function BotPage({ params }: { params: Promise<{ botId: str
   const summary = await readBotSummary(pool, bot.bot_id, accountId).catch(() => null);
   const page = bot.public_page;
   return <BotScreen botId={bot.bot_id} companyName={bot.company_name} contact={bot.contact ?? ''} greeting={bot.greeting}
-    answersVerified={bot.answers_verified} monthAnswers={{ used: bot.month_answers_used, limit }} summary={summary}
+    answersVerified={bot.answers_verified} gate={{ resetAt: bot.verified_reset?.at ?? null, stubVisitors: bot.stub_visitors_7d }} monthAnswers={{ used: bot.month_answers_used, limit }} summary={summary}
     publicPage={{ ...page, url: page.slug ? new URL(`/b/${page.slug}`, config.publicOrigin).href : null }}
     sources={bot.sources.map((s) => ({ source_id: s.source_id, kind: s.kind, title: s.title, job: s.job, pages_truncated: s.pages_truncated }))} />;
 }

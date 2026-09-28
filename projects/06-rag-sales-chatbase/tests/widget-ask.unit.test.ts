@@ -41,6 +41,7 @@ function harness(bot: WidgetBotRow | null = row(), result: AnswerResult = { stat
     appendTurn: async () => { calls.push('turn'); },
     recordFirstAnswer: async () => { calls.push('first_answer'); return true; },
     logRefusedOrigin: async () => { calls.push('refused_origin'); },
+    logNotVerified: async () => { calls.push('not_verified'); },
   };
   const ask = (body: unknown, origin: string | null = HOST, key = KEY) => createWidgetAskHandler(deps)(new Request(`${PUBLIC}/w/v1/ask?bot=${key}`, {
     method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': IP, ...(origin ? { origin } : {}) },
@@ -113,7 +114,7 @@ describe('POST /w/v1/ask: порядок и граница', () => {
     const r = await h.ask({ visitor_session: VS, question: 'Сколько стоит доставка?' });
     expect(r.status).toBe(200);
     expect((await json(r)).data).toEqual({ status: 'unknown', reason: 'not_verified', text: `Бот ещё настраивается и пока не отвечает на вопросы. Напишите: ${CONTACT}`, contact: CONTACT });
-    expect(h.calls).toEqual(['door', 'bot', 'session']);
+    expect(h.calls).toEqual(['door', 'bot', 'session', 'not_verified']);
   });
   it('статусы ядра → HTTP: refused → 429 с контактом и ACAO; unknown → 200 с контактом; invalid → 422; not_found → 404', async () => {
     const limit = await harness(row(), { status: 'refused', reason: 'limit', scope: 'visitor_answers', message: `Лимит вопросов на сегодня исчерпан. Напишите: ${CONTACT}`, contact: CONTACT })

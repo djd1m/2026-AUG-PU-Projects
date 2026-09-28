@@ -1,0 +1,142 @@
+
+ RUN  v3.2.7 /w
+
+ ❯ tests/browser/gate-onboarding.test.ts (50 tests | 14 failed) 425393ms
+   ✓ chromium > install-gate dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1860ms
+   ✓ chromium > install-gate-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1435ms
+   ✓ chromium > install-verified dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1456ms
+   ✓ chromium > bot-gate-reset dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1780ms
+   ✓ chromium > bot-gate-error dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1864ms
+   ✓ chromium > install-gate light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1335ms
+   ✓ chromium > install-gate-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1297ms
+   ✓ chromium > install-verified light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1316ms
+   ✓ chromium > bot-gate-reset light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1607ms
+   ✓ chromium > bot-gate-error light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  1635ms
+   × chromium > install-gate 320: без горизонтального скролла, цели ≥ 44 30005ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ chromium > bot-gate-reset 320: без горизонтального скролла, цели ≥ 44  341ms
+   × chromium > install-gate 360: без горизонтального скролла, цели ≥ 44 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ chromium > bot-gate-reset 360: без горизонтального скролла, цели ≥ 44  593ms
+   × chromium > install-gate 414: без горизонтального скролла, цели ≥ 44 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ chromium > bot-gate-reset 414: без горизонтального скролла, цели ≥ 44  361ms
+   × chromium > install-gate 768: без горизонтального скролла, цели ≥ 44 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ chromium > bot-gate-reset 768: без горизонтального скролла, цели ≥ 44 246ms
+   × chromium > install-gate 1440: без горизонтального скролла, цели ≥ 44 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ chromium > bot-gate-reset 1440: без горизонтального скролла, цели ≥ 44  800ms
+   × chromium > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × chromium > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт» 228ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ chromium > отметка стоит — баннера нет, код на месте 279ms
+   ✓ chromium > AC-3/8/6: экран бота — баннер первым после заголовка, «отметка снята … материалы обновились»; сводка — строка заглушек, не «вопросов ещё не было» 280ms
+   ✓ chromium > ошибка отметки из баннера — в баннере (role=alert), а не в блоке «Ответы на сайте» 235ms
+   ✓ webkit > install-gate dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3145ms
+   ✓ webkit > install-gate-waiting dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2802ms
+   ✓ webkit > install-verified dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3203ms
+   ✓ webkit > bot-gate-reset dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3599ms
+   ✓ webkit > bot-gate-error dark 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3509ms
+   ✓ webkit > install-gate light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  2755ms
+   ✓ webkit > install-gate-waiting light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3151ms
+   ✓ webkit > install-verified light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3522ms
+   ✓ webkit > bot-gate-reset light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3298ms
+   ✓ webkit > bot-gate-error light 390: R1/R2/R5, axe (R4, контраст AA) и R8 без отказов  3241ms
+   × webkit > install-gate 320: без горизонтального скролла, цели ≥ 44 30003ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > bot-gate-reset 320: без горизонтального скролла, цели ≥ 44  1223ms
+   × webkit > install-gate 360: без горизонтального скролла, цели ≥ 44 30002ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > bot-gate-reset 360: без горизонтального скролла, цели ≥ 44  1546ms
+   × webkit > install-gate 414: без горизонтального скролла, цели ≥ 44 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > bot-gate-reset 414: без горизонтального скролла, цели ≥ 44  1248ms
+   × webkit > install-gate 768: без горизонтального скролла, цели ≥ 44 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > bot-gate-reset 768: без горизонтального скролла, цели ≥ 44  1250ms
+   × webkit > install-gate 1440: без горизонтального скролла, цели ≥ 44 30003ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ webkit > bot-gate-reset 1440: без горизонтального скролла, цели ≥ 44  1656ms
+   × webkit > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней 30001ms
+     → Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × webkit > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт» 860ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ webkit > отметка стоит — баннера нет, код на месте  1097ms
+   ✓ webkit > AC-3/8/6: экран бота — баннер первым после заголовка, «отметка снята … материалы обновились»; сводка — строка заглушек, не «вопросов ещё не было»  1437ms
+   ✓ webkit > ошибка отметки из баннера — в баннере (role=alert), а не в блоке «Ответы на сайте»  1181ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > install-gate 320: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > install-gate 360: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > install-gate 414: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > install-gate 768: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > install-gate 1440: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > install-gate 320: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > install-gate 360: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > install-gate 414: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > install-gate 768: без горизонтального скролла, цели ≥ 44
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > install-gate 1440: без горизонтального скролла, цели ≥ 44
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/gate-onboarding.test.ts:101:5
+     99|   }
+    100|   for (const width of [320, 360, 414, 768, 1440]) for (const name of […
+    101|     it(`${name} ${width}: без горизонтального скролла, цели ≥ 44`, () …
+       |     ^
+    102|       expect(errors(await domRules(page, ['R1', 'R2']))).toEqual([]);
+    103|       const button = page.locator('.gate-banner button');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > AC-1/2: установка без отметки — баннер ДО кода, текст заглушки, кнопка и ссылка на тестовый чат, число посетителей за 7 дней
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/browser/gate-onboarding.test.ts:112:3
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  tests/browser/gate-onboarding.test.ts > chromium > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт»
+ FAIL  tests/browser/gate-onboarding.test.ts > webkit > AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; баннер и в варианте «нужен контакт»
+AssertionError: expected +0 to be 1 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ tests/browser/gate-onboarding.test.ts:127:34
+    125|   it('AC-2: материалов ещё нет — баннер без кнопки, с «дождитесь»; бан…
+    126|     const banner = page.locator('section.gate-banner');
+    127|     expect(await banner.count()).toBe(1);
+       |                                  ^
+    128|     expect(await banner.locator('button').count()).toBe(0);
+    129|     expect(await banner.textContent()).toContain('Дождитесь, пока исто…
+ ❯ open tests/browser/gate-onboarding.test.ts:90:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 36 passed (50)
+   Start at  14:08:37
+   Duration  427.03s (transform 462ms, setup 0ms, collect 1.16s, tests 425.39s, environment 0ms, prepare 166ms)
+
+exit=1

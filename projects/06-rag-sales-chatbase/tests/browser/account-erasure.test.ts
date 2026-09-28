@@ -24,7 +24,7 @@ const CSS = readFileSync('apps/web/src/app/globals.css', 'utf8');
 const ARTIFACTS = 'tests/artifacts/account-erasure/browser';
 const FULL: ErasurePreview = { bots: 3, clientBots: 2, paidDaysLeft: 17, partner: { payoutMinor: 150_000, debtMinor: 30_000, hasDetails: true } };
 const PLAIN: ErasurePreview = { bots: 0, clientBots: 0, paidDaysLeft: null, partner: null };
-const SUMMARY = { answered: 12, unknown: 3, refused_limit: 0, last_unknown: [{ text: 'Есть ли доставка в область?', asked_at: '2026-09-26T09:00:00.000Z' }] };
+const SUMMARY = { answered: 12, unknown: 3, refused_limit: 0, not_verified_visitors: 0, last_unknown: [{ text: 'Есть ли доставка в область?', asked_at: '2026-09-26T09:00:00.000Z' }] };
 const erase = (over: Partial<EraseLogView>): EraseLogView => ({ confirming: false, busy: false, error: '', done: false, onAsk: () => {}, onConfirm: () => {}, onCancel: () => {}, ...over });
 
 const main = (child: ReactElement) => (theme: Theme) => createElement(Fragment, null, createElement(SiteHeader, { theme }),
@@ -38,7 +38,7 @@ const PAGES: Record<string, (theme: Theme) => ReactElement> = {
   'erased-none': main(createElement(ErasureStatus, { state: null })),
   'log-ask': main(createElement(SummaryBlock, { summary: SUMMARY, erase: erase({}) })),
   'log-confirm': main(createElement(SummaryBlock, { summary: SUMMARY, erase: erase({ confirming: true }) })),
-  'log-done': main(createElement(SummaryBlock, { summary: { answered: 0, unknown: 0, refused_limit: 0, last_unknown: [] }, erase: erase({ done: true }) })),
+  'log-done': main(createElement(SummaryBlock, { summary: { answered: 0, unknown: 0, refused_limit: 0, not_verified_visitors: 0, last_unknown: [] }, erase: erase({ done: true }) })),
 };
 const NAMES = Object.keys(PAGES);
 const doc = (body: string, theme: Theme, script = '') => `<!doctype html><html lang="ru" data-theme="${theme}"><head><meta charset="utf-8">

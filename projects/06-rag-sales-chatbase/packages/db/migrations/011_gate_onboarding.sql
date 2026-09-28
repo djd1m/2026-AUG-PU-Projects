@@ -1,0 +1,27 @@
+-- gate-onboarding (инцидент стенда 28.09, A-N6-066): ворота A-N6-035 видны владельцу. Только расширяющая миграция —
+-- прежнее приложение работает на новой схеме (нового исхода не пишет, новых колонок не читает).
+--
+-- 1. Исход not_verified: вопрос посетителя, отбитый воротами «Я проверил ответы бота», пишется в журнал — БЕЗ текста
+--    (152-ФЗ: CHECK question_text_only_unknown из 001 остаётся в силе), без списания квоты и без вызова модели.
+--    Без этой строки сводка показывала «вопросов ещё не было», пока посетители упирались в заглушку.
+--    Имя ограничения — то, что 001 получила по умолчанию; tests/enums.test.ts сверяет ПОСЛЕДНЕЕ его определение.
+ALTER TABLE question_log DROP CONSTRAINT question_log_outcome_check;
+ALTER TABLE question_log ADD CONSTRAINT question_log_outcome_check
+  CHECK (outcome IN ('answered', 'unknown', 'refused_limit', 'refused_origin', 'not_verified'));
+
+-- 2. Пометка «отметку сняла база»: когда и почему. Причина — закрытый набор (сейчас одна: новый фрагмент бота).
+--    Стирается любым действием владельца с отметкой (setAnswersVerified): пометка описывает ТЕКУЩЕЕ снятое состояние.
+ALTER TABLE bot ADD COLUMN answers_verified_reset_at timestamptz;
+ALTER TABLE bot ADD COLUMN answers_verified_reset_reason text
+  CONSTRAINT bot_verified_reset_reason_check CHECK (answers_verified_reset_reason IN ('new_material'));
+ALTER TABLE bot ADD CONSTRAINT bot_verified_reset_pair
+  CHECK ((answers_verified_reset_at IS NULL) = (answers_verified_reset_reason IS NULL));
+
+-- 3. Триггер 004 (A-N6-036) снимал отметку молча — теперь оставляет пометку. Строку бота трогает, как и прежде, только
+--    когда отметка ещё стоит: пачка фрагментов уже снятого бота пометку не переписывает (дата — первое снятие).
+CREATE OR REPLACE FUNCTION bot_reset_verified_on_chunk() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  UPDATE bot SET answers_verified_at = NULL, answers_verified_reset_at = now(), answers_verified_reset_reason = 'new_material'
+   WHERE answers_verified_at IS NOT NULL AND id IN (SELECT DISTINCT bot_id FROM new_chunks);
+  RETURN NULL;
+END $$;

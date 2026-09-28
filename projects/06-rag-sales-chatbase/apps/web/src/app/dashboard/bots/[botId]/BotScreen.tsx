@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { dataOf, errorOf, send } from '../../../../lib/api-client';
 import { AddSource, BotForm, OwnerChat, SourceList, type FieldErrors, type OwnerMessage, type SourceItemView } from '../../CabinetViews';
+import { GateBanner } from '../../GateBanner';
 import { MonthBanner, PublishBlock, SummaryBlock, VerifyBlock, type PublishView, type SummaryView } from './BotExtrasViews';
 
 const REFRESH_MS = 3000;
@@ -13,7 +14,8 @@ export interface BotScreenProps { botId: string; companyName: string; contact: s
 // visitor-ask-and-limits: отметка «Я проверил ответы бота» (A-N6-035) и ответы бота в текущем месяце против предела плана
 // (баннер исчерпания, FR-TARIFF-003, SC-US-007-2).
 // public-page-and-summary: сводка за 7 дней (FR-BOT-004) и демо-страница (FR-GROWTH-005) — разметка в BotExtrasViews.
-export interface BotScreenState { answersVerified: boolean; monthAnswers: { used: number; limit: number }; summary: SummaryView | null; publicPage: PublishView }
+// gate-onboarding (A-N6-066): отметку сняла база (дата) и число посетителей с заглушкой «настраивается» за 7 дней.
+export interface BotScreenState { answersVerified: boolean; gate: { resetAt: string | null; stubVisitors: number }; monthAnswers: { used: number; limit: number }; summary: SummaryView | null; publicPage: PublishView }
 
 export function BotScreen(p: BotScreenProps & BotScreenState) {
   const router = useRouter();
@@ -108,12 +110,14 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
   useEffect(() => { setVerified(p.answersVerified); }, [p.answersVerified]);
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState('');
-  const toggleVerified = async () => {
-    setVerifying(true); setVerifyError('');
+  // Ошибку показывает тот блок, чьей кнопкой нажали (баннер ворот или блок «Ответы на сайте») — не оба сразу.
+  const [verifyFrom, setVerifyFrom] = useState<'banner' | 'block'>('block');
+  const toggleVerified = async (from: 'banner' | 'block') => {
+    setVerifying(true); setVerifyError(''); setVerifyFrom(from);
     try {
       const { status, body } = await send(`/api/bots/${p.botId}/verify`, 'POST', { verified: !verified });
       const data = dataOf<{ answers_verified: boolean }>(body);
-      if (status === 200 && data) { setVerified(data.answers_verified); return; }
+      if (status === 200 && data) { setVerified(data.answers_verified); router.refresh(); return; }
       setVerifyError(errorOf(body)?.message ?? 'Не удалось сохранить отметку. Повторите');
     } catch { setVerifyError('Нет связи с сервером. Повторите'); } finally { setVerifying(false); }
   };
@@ -139,13 +143,16 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
       setEraseLog({ confirming: true, busy: false, error: errorOf(body)?.message ?? 'Не удалось стереть журнал. Повторите', done: false });
     } catch { setEraseLog({ confirming: true, busy: false, error: 'Нет связи с сервером. Повторите', done: false }); }
   };
-  return <BotLayout {...p} ready={p.sources.some((s) => s.job?.state === 'done')}
+  const ready = p.sources.some((s) => s.job?.state === 'done');
+  return <BotLayout {...p} ready={ready}
+    gate={<GateBanner verified={verified} ready={ready} resetAt={p.gate.resetAt} stubVisitors={p.gate.stubVisitors} chatHref="#chat-title"
+      busy={verifying} error={verifyFrom === 'banner' ? verifyError : ''} onVerify={() => { void toggleVerified('banner'); }} />}
     banner={<MonthBanner used={p.monthAnswers.used} limit={p.monthAnswers.limit} />}
     summary={<SummaryBlock summary={p.summary} erase={{ ...eraseLog,
       onAsk: () => setEraseLog({ confirming: true, busy: false, error: '', done: false }),
       onConfirm: () => { void eraseQuestionLog(); },
       onCancel: () => setEraseLog({ confirming: false, busy: false, error: '', done: false }) }} />}
-    verify={<VerifyBlock verified={verified} busy={verifying} error={verifyError} onToggle={() => { void toggleVerified(); }} />}
+    verify={<VerifyBlock verified={verified} busy={verifying} error={verifyFrom === 'block' ? verifyError : ''} onToggle={() => { void toggleVerified('block'); }} />}
     publish={<PublishBlock page={page} busy={publishing} error={publishError}
       onPublish={(enabled) => { void publish({ enabled, indexable: page.indexable }); }}
       onIndexable={(indexable) => { void publish({ enabled: page.enabled, indexable }); }} />}
@@ -159,11 +166,12 @@ export function BotScreen(p: BotScreenProps & BotScreenState) {
         submitLabel="Сохранить настройки" contactRequired onChange={(f, v) => setSettings((s) => ({ ...s, [f]: v }))} onSubmit={() => { void save(); }} /></>} />;
 }
 
-export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: ReactNode; chat: ReactNode; settings: ReactNode; banner?: ReactNode; verify?: ReactNode; summary?: ReactNode; publish?: ReactNode }) {
+export function BotLayout(p: BotScreenProps & { ready: boolean; sourcesBlock: ReactNode; chat: ReactNode; settings: ReactNode; banner?: ReactNode; gate?: ReactNode; verify?: ReactNode; summary?: ReactNode; publish?: ReactNode }) {
   return <>
     <div className="cabinet-head"><h1>{p.companyName}</h1>
       <p className="cluster"><a className="button" href={`/dashboard/bots/${p.botId}/install`}>Установка на сайт</a>
         <a className="button secondary" href="/dashboard">Все боты</a></p></div>
+    {p.gate}
     {p.banner}
     {!p.contact && <p role="status" className="notice cabinet-notice">Укажите контакт для «не знаю» в настройках — без него бот не выдаёт код установки и не отвечает на сайте.</p>}
     <div className="bot-grid">

@@ -4,10 +4,13 @@
 // тег на несуществующий файл владелец вставил бы на сайт, и на сайте не появилось бы ничего), код готов.
 import type { InstallSnippet } from '@n6/rag/bot-settings';
 import { Field, type FieldErrors } from './CabinetViews';
+import { GateBanner, type GateBannerView } from './GateBanner';
 
 export interface InstallViewProps {
   // План владельца (tariffs-and-interest): на free — строка «Убрать бейдж» → /upgrade?plan=nobadge. Нет — строки нет.
   plan?: string;
+  // gate-onboarding (A-N6-066): баннер ворот A-N6-035 — ДО кода установки; нет — баннера нет (прежние вызовы).
+  gate?: GateBannerView;
   botId: string; companyName: string; snippet: InstallSnippet; origins: string[];
   contact: string; domain: string; errors: FieldErrors; busy: boolean; copied: boolean;
   onContact: (value: string) => void; onSaveContact: () => void; onDomain: (value: string) => void; onAddDomain: () => void; onCopy: () => void;
@@ -40,8 +43,9 @@ function Directives({ directives }: { directives: string[] }) {
 }
 
 export function InstallView(p: InstallViewProps) {
-  const head = <div className="cabinet-head"><h1>Установка на сайт</h1>
-    <p className="muted plan-line"><a href={`/dashboard/bots/${p.botId}`}>← {p.companyName}</a></p></div>;
+  const head = <><div className="cabinet-head"><h1>Установка на сайт</h1>
+    <p className="muted plan-line"><a href={`/dashboard/bots/${p.botId}`}>← {p.companyName}</a></p></div>
+    {p.gate && <GateBanner {...p.gate} />}</>;
   if (p.snippet.kind === 'contact_required') {
     return <>{head}
       <section className="card stack" aria-labelledby="contact-title">

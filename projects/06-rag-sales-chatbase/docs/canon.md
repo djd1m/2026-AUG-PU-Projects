@@ -101,7 +101,8 @@ payout_recorded | accrual_skipped_fee_unknown | debt_written_off` (послед�
 | `source.status` | `pending` · `indexing` · `ready` · `failed` | `failed` |
 | `index_job.status` | `queued` · `running` · `done` · `failed` | `failed` |
 | `index_job.failure_reason` | `robots_disallowed` · `unreachable` · `blocked_address` · `no_text` · `not_pdf` · `too_large` · `no_text_layer` · `quota_refused` · `embedding_unavailable` · `stalled` · `internal` | `internal` |
-| `question_log.outcome` | `answered` · `unknown` · `refused_limit` · `refused_origin` | `unknown` |
+| `question_log.outcome` | `answered` · `unknown` · `refused_limit` · `refused_origin` · `not_verified` (ворота A-N6-035, без текста и без квоты; миграция 011, A-N6-066) | `unknown` |
+| `bot.answers_verified_reset_reason` | `new_material` (отметку «проверено» сняла база — новый фрагмент; миграция 011, A-N6-066) | экран: «отметка снята» без причины |
 | `quota_counter.scope` | 10 значений, §7 | отказ списания |
 | `growth_event.type` | `badge_impression` · `badge_click` · `share_cta_shown` · `share_cta_click` · `widget_install` · `first_answer` · `public_page_view` · `invite_sent` · `invite_accepted` · `interest` | не записывается |
 | `attribution.source` | `code` · `invite` · `cookie` | `cookie` (самый слабый) |
