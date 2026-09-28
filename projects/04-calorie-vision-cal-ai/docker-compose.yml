@@ -279,6 +279,9 @@ services:
       retries: 20
 
   # ─── Разовый прогон проверок против настоящего PostgreSQL. Не сервис продукта ───
+  # Запускать ТОЛЬКО в отдельном compose-проекте (`-p n4-test`), не в стенде `n4-tarelka`:
+  #   bash scripts/create-test-database.sh -p n4-test   # без -p — отказ, код 2
+  #   docker compose --project-directory . -p n4-test --profile test run --rm test npm run test:integration
   test:
     image: node:22.22.0-bookworm-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94
     profiles: [test]

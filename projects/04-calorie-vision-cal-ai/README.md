@@ -72,7 +72,7 @@ Caddy (единственная публичная дверь). Модель —
 `/r/DEMOBLOG` → распознавание → регистрация → оплата тестовой картой (1000 ₽, удержание 42,70 ₽)
 → подписка `active` → начисление партнёру 478,65 ₽ → кабинет партнёра. Обе роли играл владелец.
 
-**Проверки:** 526 unit-тестов и стражей (28.09), 344 интеграционных на настоящем PostgreSQL (на 17.09.2026,
+**Проверки:** 539 unit-тестов и стражей в 74 файлах (28.09), 344 интеграционных на настоящем PostgreSQL (на 17.09.2026,
 [`partner-notifications-and-payouts/05_completion.md`](docs/features/partner-notifications-and-payouts/05_completion.md)).
 У каждой фичи — квитанция `docs/features/<slug>/05_completion.md`: что проверено и чем, что фича
 НЕ доказывает, какие стражи испытаны внедрённым дефектом.
@@ -90,8 +90,15 @@ bash ../../scripts/check-port-conflicts.sh .      # свободны ли выб
 bash scripts/check-env-wiring.sh                  # каждая читаемая кодом переменная доезжает до сервиса
 
 npm test                                          # unit + стражи
-docker compose --project-directory . --profile test run --rm test   # интеграционные на PostgreSQL
 npm run import:fdc                                # разовый импорт USDA (docs/operations/import-fdc.md)
+
+# интеграционные — на НАСТОЯЩЕМ PostgreSQL в ОТДЕЛЬНОМ compose-проекте, НЕ в стенде `n4-tarelka`
+# (скрипт базы без `-p` или с `-p n4-tarelka` отказывает кодом 2). Подсеть — свободная на машине.
+export N4_PRIVATE_SUBNET=10.86.0.0/24
+docker compose --project-directory . -p n4-test up -d --wait db
+bash scripts/create-test-database.sh -p n4-test
+docker compose --project-directory . -p n4-test --profile test run --rm test npm run test:integration
+docker compose --project-directory . -p n4-test down -v
 ```
 
 Compose запускать **с `--project-directory .`** из каталога проекта. Наружу стек смотрит одним
@@ -168,7 +175,7 @@ DEC-A-063).
 
 ## Что осталось
 
-- **`scripts/create-test-database.sh` зовёт `docker compose exec db` без имени проекта** — при пустом окружении команда попадёт в стенд `n4-tarelka`, а не в тестовый стек; добавить обязательный `-p`/проверку проекта (находка 28.09 при прогоне RV-04/06, `docs/features/share-card-and-growth-events/09_review_codex_rv.md`).
+- ~~**`scripts/create-test-database.sh` зовёт `docker compose exec db` без имени проекта** — при пустом окружении команда попадёт в стенд `n4-tarelka`, а не в тестовый стек; добавить обязательный `-p`/проверку проекта (находка 28.09 при прогоне RV-04/06, `docs/features/share-card-and-growth-events/09_review_codex_rv.md`).~~ Закрыто 28.09 (`dfdf5582`, `7ce07ec2`, `d70b2d89`): без `-p`/`COMPOSE_PROJECT_NAME` или с именем стенда — отказ кодом 2 до вызова docker; страж `tests/guard/create-test-database-project.test.ts` испытан мутациями; ревью Codex — оценка A ([`docs/reviews/2026-09-28-test-db-guard-codex.md`](docs/reviews/2026-09-28-test-db-guard-codex.md)).
 
 **Деньги и подписка**
 - Фискальный чек 54-ФЗ провайдеру не передаётся — нужен до первого живого платежа физлицу
