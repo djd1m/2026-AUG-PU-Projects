@@ -17,7 +17,7 @@ import path from 'node:path';
 const BASE = 'https://tarelka.aicoding.space';          // адрес, ВЫДАННЫЙ развёртыванием
 const OUT = process.env.OUT_DIR ?? '/assets';
 const STATE_FILE = path.join(OUT, '.state-n4.json');
-const PHOTO_MAIN = path.join(OUT, 'photos', 'salmon-nicoise.jpg');     // CC0, Daderot, Wikimedia Commons
+const PHOTO_MAIN = path.join(OUT, 'photos', 'red-apple-plate.jpg');     // CC0, Fructibus, Wikimedia Commons
 const PHOTO_PREP = path.join(OUT, 'photos', 'pancakes-berries.jpg');   // CC0, Daderot, Wikimedia Commons
 const FAKE_CAM = path.join(OUT, '.raw-cam', 'plate.mjpeg');            // тот же CC0-кадр как «видоискатель»
 const STEPS = new Set((process.env.STEPS ?? 'prep,mobile,desktop,card').split(',').map((s) => s.trim()).filter(Boolean));
@@ -33,7 +33,7 @@ const LAYOUTS = {
 
 const log = { started: new Date().toISOString(), base: BASE, steps: [...STEPS], events: [],
   paid: { scans_this_run: 0, scans_intercepted: 0 }, files: [], failures: [], photos: {
-    main: { file: 'photos/salmon-nicoise.jpg', source: 'https://commons.wikimedia.org/wiki/File:Salmon_nicoise_salad_-_London,_UK.jpg', license: 'CC0 1.0', author: 'Daderot' },
+    main: { file: 'photos/red-apple-plate.jpg', source: 'https://commons.wikimedia.org/wiki/File:Red_apple_on_a_plate_2017_A.jpg', license: 'CC0 1.0', author: 'Fructibus' },
     prep: { file: 'photos/pancakes-berries.jpg', source: 'https://commons.wikimedia.org/wiki/File:Pancakes_with_berries,_plus_avocado_-_London,_UK.jpg', license: 'CC0 1.0', author: 'Daderot' } } };
 const t0 = Date.now();
 const note = (event, extra = {}) => { const e = { t_s: +((Date.now() - t0) / 1000).toFixed(1), event, ...extra }; log.events.push(e); console.log(JSON.stringify(e)); };
@@ -150,13 +150,27 @@ async function waitResult(page, ms = SCAN_WAIT_MS) {
   const deadline = Date.now() + ms;
   while (Date.now() < deadline) {
     if (await page.locator('.result__tiles').first().isVisible().catch(() => false)) return { state: 'done' };
-    const status = (await page.locator('.result__status').first().innerText().catch(() => '')).trim();
+    const status = (await page.locator('.result__status').first().innerText({ timeout: 200 }).catch(() => '')).trim();
     if (status && !/распознаётся|загрузка/.test(status)) return { state: 'failed', reason: status.slice(0, 300) };
-    const notice = (await page.locator('.viewfinder__notice[role=alert]').innerText().catch(() => '')).trim();
+    const notice = (await page.locator('.viewfinder__notice[role=alert]').innerText({ timeout: 200 }).catch(() => '')).trim();
     if (notice) return { state: 'refused', reason: notice.slice(0, 300) };
     await sleep(400);
   }
   return { state: 'timeout' };
+}
+
+// Здравость чисел (решение координатора): в кадр неверные числа не берём. Для каждой сопоставленной позиции —
+// запись USDA из ожидаемого набора и ккал/100 г в здравом окне; иначе шаги после capture НЕ снимаются.
+const SANE = [{ re: /^apples?\b/i, lo: 45, hi: 65 }, { re: /^bananas?\b/i, lo: 80, hi: 100 }];
+async function checkSanity(page) {
+  const body = await page.evaluate(async (id) => (await fetch(`/api/v1/scans/${id}`, { credentials: 'same-origin' })).json(), state.scanId);
+  const items = (body?.data?.items ?? []).map((i) => ({ label_ru: i.label_ru, mass_g: i.mass_g, kcal: i.kcal, unmatched: i.unmatched,
+    name_en: i.source_snapshot?.name_en ?? null, source_id: i.source_snapshot?.source_id ?? null, kcal_per_100g: i.source_snapshot?.kcal_per_100g ?? null }));
+  const bad = items.filter((i) => i.name_en !== null && !SANE.some((r) => r.re.test(i.name_en) && i.kcal_per_100g >= r.lo && i.kcal_per_100g <= r.hi));
+  const matched = items.filter((i) => i.name_en !== null).length;
+  const verdict = { items, kcal_total: body?.data?.kcal_total ?? null, matched, bad, ok: matched > 0 && bad.length === 0 };
+  state.sanity = verdict; note('sanity', verdict);
+  return verdict;
 }
 
 async function readTiles(page) {
@@ -213,7 +227,7 @@ async function capture(c, { intercept }) {
     note('capture.loaded', { layout: c.name, camera: await page.locator('.viewfinder__video').evaluate((v) => v.readyState).catch(() => null) });
     if (!c.L.isMobile) await page.mouse.move(c.L.viewport.width * 0.6, c.L.viewport.height * 0.5, { steps: 20 });
     await sleep(2200);
-    if (!intercept) { spendScan('mobile: салат нисуаз'); await saveState(); }
+    if (!intercept) { spendScan('mobile: яблоко'); await saveState(); }
     await pickPhoto(page, c, PHOTO_MAIN);
     await page.waitForURL(/\/result\//, { timeout: 30_000 });
     const sentAt = Date.now();
@@ -332,11 +346,16 @@ async function main() {
       }
       const c = await newContext(browser, 'mobile', { storageState: state.storage });
       if (!state.scanId) await capture(c, { intercept: false }); else note('capture.mobile.skipped', { reason: 'скан уже есть', scanId: state.scanId });
-      if (state.scanId) { await result(c, { delta: +50 }); await share(c); await diary(c); }
+      if (state.scanId) {
+        const probe = await c.ctx.newPage(); await gotoReady(probe, `${BASE}/result/${state.scanId}`);
+        const sane = await checkSanity(probe); await probe.close(); await saveState();
+        if (!sane.ok) throw new Error(`числа не прошли проверку здравости — сцены 3–4 не снимаются: ${JSON.stringify(sane.bad.length ? sane.bad : sane.items)}`);
+        await result(c, { delta: +50 }); await share(c); await diary(c);
+      }
       state.storage = await c.ctx.storageState(); await saveState();
       await c.ctx.close();
     }
-    if (STEPS.has('desktop') && state.scanId) {
+    if (STEPS.has('desktop') && state.scanId && state.sanity?.ok) {
       const c = await newContext(browser, 'desktop', { storageState: state.storage });
       await capture(c, { intercept: true });
       await result(c, { delta: -50 }); await share(c); await diary(c);
