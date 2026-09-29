@@ -4,8 +4,16 @@
 // Требования: у каждого файла записи есть событие `video.start` {file, layout, t_s} и `video.saved` {file, ok};
 // каждое событие с полем `file` (кроме start/saved) несёт `t_file_s` = t_s − t_s(video.start того же файла) ± 0,2 с
 // и лежит внутри [start, saved]; файл из журнала существует в каталоге записей (если он передан).
-// Коды: 0 — журнал пригоден для монтажа · 1 — дефект назван · 2 — проверка НЕ выполнена (нет файла, не JSON, нет events).
+// 1.2 (сквозной прогон N3, замечания 5 и 9):
+//  - с каталогом записей — длительность КАЖДОГО файла по ffprobe (хост или образ promo-render): последнее событие файла
+//    не позже конца файла + 0,05 с. У N3 desktop `end` t_file_s 68,89 при файле 68,56 с — часы журнала впереди файла
+//    ≥ 0,33 с, прежние ворота давали 0, а gate-config.sh потом 1 («to за концом файла»). Печатается смещение.
+//  - `api.demo_sessions` (если журнал его ведёт) ≤ числа сохранённых файлов: один демосеанс на раскладку; в
+//    `api.non_2xx` не больше одного 429 — после первого отказа скрипт обязан остановиться.
+// Коды: 0 — журнал пригоден для монтажа · 1 — дефект назван · 2 — проверка НЕ выполнена (нет файла, не JSON, нет events,
+//       длительность файла не измерена).
 import { existsSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 
 const [logPath, recDir] = process.argv.slice(2);
@@ -38,5 +46,35 @@ for (const e of log.events) {
 }
 const tagged = log.events.filter((e) => e.file && e.event !== 'video.start' && e.event !== 'video.saved').length;
 if (tagged === 0) defect('ни одно событие действия не привязано к файлу (поле file) — монтажу не из чего брать from/to');
+// Демосеансы: один на раскладку, остановка на первом 429.
+const api = log.api;
+if (api && typeof api.demo_sessions === 'number') {
+  if (api.demo_sessions > saved.size) defect(`api.demo_sessions=${api.demo_sessions} при ${saved.size} файлах — больше одного демосеанса на раскладку`);
+  const r429 = (api.non_2xx ?? []).filter((x) => x.status === 429).length;
+  if (r429 > 1) defect(`в api.non_2xx ${r429} ответов 429 — после первого отказа скрипт продолжал`);
+  console.log(`ℹ️ демосеансов ${api.demo_sessions}, команд API ${api.commands ?? '?'}, не-2xx ${(api.non_2xx ?? []).length}`);
+} else console.log('ℹ️ журнал не ведёт api.demo_sessions — если у продукта есть демосеансы, их расход не учтён (модуль 03 п. 6а)');
+// Длительность файла против последнего события (только с каталогом записей).
+function duration(dir, file) {
+  const args = ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0'];
+  let r = spawnSync('ffprobe', [...args, path.join(dir, file)], { encoding: 'utf8' });
+  if (r.error) {
+    const proj = path.basename(path.resolve(dir)).replace(/[^a-z0-9-]/g, '') || 'x';
+    r = spawnSync('docker', ['run', '--rm', '--name', `promo-${proj}-logprobe-${process.pid}`, '--network', 'none', '--cpus=1', '--memory=512m',
+      '-v', `${path.resolve(dir)}:/a:ro`, 'promo-render:2026-09-29', 'ffprobe', ...args, `/a/${file}`], { encoding: 'utf8' });
+  }
+  const d = parseFloat((r.stdout ?? '').trim());
+  return r.status === 0 && Number.isFinite(d) ? d : null;
+}
+if (recDir) for (const file of saved.keys()) {
+  if (!existsSync(path.join(recDir, file))) continue; // уже названо выше
+  const d = duration(recDir, file);
+  if (d === null) fail2(`${file}: длительность не измерена (нет ffprobe на хосте и образа promo-render)`);
+  const last = Math.max(...log.events.filter((e) => e.file === file && typeof e.t_file_s === 'number').map((e) => e.t_file_s));
+  if (!Number.isFinite(last)) continue;
+  const lead = last - d;
+  if (lead > 0.05) defect(`${file}: последнее событие t_file_s=${last} за концом файла ${d.toFixed(2)} с — часы журнала впереди файла ≥ ${lead.toFixed(2)} с; from/to сдвигать на −${lead.toFixed(2)} (записать в README) или исправить video.start`);
+  else console.log(`ℹ️ ${file}: ${d.toFixed(2)} с, последнее событие ${last} с (${lead > 0 ? `впереди на ${lead.toFixed(2)} с — в допуске 0,05 с` : `запас ${(-lead).toFixed(2)} с`})`);
+}
 console.log(bad ? '❌ журнал записи: ДЕФЕКТ' : `✅ журнал записи: ${saved.size} файлов, ${tagged} событий с t_file_s`);
 process.exit(bad);

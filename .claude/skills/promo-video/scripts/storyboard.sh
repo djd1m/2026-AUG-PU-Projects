@@ -3,8 +3,12 @@
 # и куска покадрово, ±5 кадров (лист 11×1). Стыки — строки BOUNDARY из config-inspect.tsv (gate-config.sh).
 #   bash .claude/skills/promo-video/scripts/storyboard.sh <proj> <каталог mp4> <config-inspect.tsv> [каталог листов]
 # Листы по умолчанию — /home/dz-projects-2026/.promo-assets/<proj>/out/final/proof/ (устойчивый путь, не scratchpad).
-# Пишет index.tsv (лист → формат → вид → интервал → sha256 mp4) и заготовку verdict.tsv с исходом «?» по каждому листу:
-# её заполняет исполнитель, проверяет gate-verdict.sh. Коды: 0 — листы сделаны · 2 — НЕ выполнено (нет входа/образа).
+# Пишет index.tsv (лист → формат → вид → интервал → sha256 mp4) и verdict.tsv (лист, исход, дефект, демо-пометка,
+# sha256 mp4, что видно): её заполняет исполнитель, проверяет gate-verdict.sh.
+# 1.2 (сквозной прогон N3, замечание 12): при пересборке исход листа ПЕРЕНОСИТСЯ из прежнего verdict.tsv, только если
+# лист того же имени и интервала снят с mp4 с тем же sha256 (формат не изменился между рендерами — у N3 16:9 и 1:1
+# побайтно совпали в трёх рендерах); иначе «?». Прежде старый verdict.tsv сохранялся целиком — исходы листов
+# изменённого 9:16 молча переживали перерендер. Коды: 0 — листы сделаны · 2 — НЕ выполнено (нет входа/образа).
 set -uo pipefail
 PROJ=${1:-}; MP4=${2:-}; INSPECT=${3:-}
 [[ "$PROJ" =~ ^[a-z0-9-]+$ ]] || { echo "❌ proj «$PROJ» — НЕ выполнено" >&2; exit 2; }
@@ -32,6 +36,9 @@ timeout 1200 docker run --rm --name "$NAME" --cpus=2.5 --memory=2g --network non
   while read -r f kind n t; do
     ffmpeg -nostdin -loglevel error -y -i /m/$f.mp4 -vf "select=between(n\,$n\,$((n+10))),scale=320:-2,tile=11x1" -frames:v 1 -fps_mode passthrough /p/sheets/$f-boundary-$t.png
   done < /p/jobs.txt' || { echo "❌ контейнер раскадровки упал — НЕ выполнено" >&2; exit 2; }
+# Прежние индекс и вердикт — для переноса исходов неизменённых листов.
+OLDI=$(mktemp); OLDV=$(mktemp); trap 'rm -f "$OLDI" "$OLDV"' EXIT
+[ -s "$PROOF/index.tsv" ] && cp "$PROOF/index.tsv" "$OLDI"; [ -s "$PROOF/verdict.tsv" ] && cp "$PROOF/verdict.tsv" "$OLDV"
 {
   printf 'лист\tформат\tвид\tинтервал_с\tsha256_mp4\n'
   for f in 16x9 9x16 1x1; do
@@ -43,8 +50,18 @@ timeout 1200 docker run --rm --name "$NAME" --cpus=2.5 --memory=2g --network non
 missing=0
 while IFS=$'\t' read -r sheet _; do [ "$sheet" = лист ] || [ -s "$PROOF/$sheet" ] || { echo "❌ лист $sheet не создан" >&2; missing=1; }; done < "$PROOF/index.tsv"
 [ $missing = 0 ] || exit 2
-[ -e "$PROOF/verdict.tsv" ] || {
-  printf '# лист\tисход (принят|отклонён)\tдефект (нет|цена|бренд|ip|ключ|титр-обрезан|элемент-обрезан|демо-пометка-пропала|другое:<что>)\tдемо-пометка (видна|не видна|нет-демо-данных)\tчто видно\n' > "$PROOF/verdict.tsv"
-  tail -n +2 "$PROOF/index.tsv" | cut -f1 | sed 's/$/\t?\t?\t?\t/' >> "$PROOF/verdict.tsv"; }
-echo "✅ листы: $(($(wc -l < "$PROOF/index.tsv") - 1)) в $PROOF/sheets; индекс $PROOF/index.tsv; заполнить $PROOF/verdict.tsv"
+# Новый verdict.tsv: перенос исхода только при том же листе, интервале и sha256 mp4; прежний формат (без sha) берёт sha
+# из прежнего index.tsv — по нему лист и смотрели.
+awk -F'\t' -v OFS='\t' '
+  FILENAME == ARGV[1] { if (FNR > 1) { oi[$1] = $4 "|" $5 }; next }
+  FILENAME == ARGV[2] { if ($1 ~ /^#/ || $1 == "") next
+                        if ($5 ~ /^[0-9a-f]{64}$/) { osha[$1] = $5; what[$1] = $6 } else { osha[$1] = ""; what[$1] = $5 }
+                        ov[$1] = $2 OFS $3 OFS $4; next }
+  FNR == 1 { print "# лист", "исход (принят|отклонён)", "дефект (нет|цена|бренд|ip|ключ|титр-обрезан|элемент-обрезан|демо-пометка-пропала|другое:<что>)", "демо-пометка (видна|не видна|нет-демо-данных)", "sha256_mp4", "что видно"; next }
+  { s = $1; k = $4 "|" $5; vs = (s in osha && osha[s] != "") ? osha[s] : substr(oi[s], index(oi[s], "|") + 1)
+    if ((s in ov) && oi[s] == k && vs == $5 && ov[s] !~ /^\?/) { print s, ov[s], $5, what[s]; kept++ }
+    else { print s, "?", "?", "?", $5, ""; reset++ } }
+  END { printf "перенесено исходов %d, к просмотру (?) %d\n", kept, reset > "/dev/stderr" }
+' "$OLDI" "$OLDV" "$PROOF/index.tsv" > "$PROOF/verdict.tsv.new" && mv "$PROOF/verdict.tsv.new" "$PROOF/verdict.tsv" || exit 2
+echo "✅ листы: $(($(wc -l < "$PROOF/index.tsv") - 1)) в $PROOF/sheets; индекс $PROOF/index.tsv; заполнить «?» в $PROOF/verdict.tsv"
 echo "сторож: bash $(dirname "$0")/gate-watchdog.sh $NAME \"$T0\""

@@ -7,6 +7,9 @@
 #   bash .claude/skills/promo-video/scripts/gate-verdict.sh <proof-dir> <каталог mp4> <config-inspect.tsv> <captions-proof.tsv> [каталог записей] [demo-intervals.tsv]
 #   demo-intervals.tsv — секунды ГОТОВОГО ролика, где в кадре вымышленные данные (строки «6-17»); на каждом листе,
 #   задевающем такой интервал, демо-пометка обязана быть «видна» (во всех трёх форматах), «нет-демо-данных» там — отказ.
+# 1.2 (сквозной прогон N3, замечание 12): verdict.tsv несёт sha256 mp4, по которому вынесен исход (столбец 5, пишет
+#   storyboard.sh); ≠ sha листа в index.tsv — отказ (исход с другого рендера); столбца нет (формат до 1.2) — НЕ выполнено:
+#   пересобрать раскадровку, исходы неизменённых листов storyboard.sh перенесёт сам.
 # Коды: 0 — всё принято · 1 — отказ назван · 2 — проверка НЕ выполнена (нет файлов, пропуски «?», неизвестные значения).
 # Что видно на листе, решает глаз (слой 4); этот страж только не даёт выдать непросмотренное или отклонённое за «готово».
 set -uo pipefail
@@ -19,10 +22,11 @@ bad=0; undone=0
 declare -A SHA
 for f in 16x9 9x16 1x1; do [ -s "$MP4/$f.mp4" ] || { echo "❌ нет $MP4/$f.mp4 — НЕ выполнено" >&2; exit 2; }; SHA[$f]=$(sha256sum "$MP4/$f.mp4" | cut -c1-64); done
 # 1. Листы.
-declare -A V_OUT V_DEF V_DEMO
-while IFS=$'\t' read -r sheet out def demo _; do
+declare -A V_OUT V_DEF V_DEMO V_SHA
+while IFS=$'\t' read -r sheet out def demo vsha _; do
   [[ "$sheet" == \#* || -z "$sheet" ]] && continue
   V_OUT[$sheet]=$out; V_DEF[$sheet]=$def; V_DEMO[$sheet]=$demo
+  [[ "$vsha" =~ ^[0-9a-f]{64}$ ]] && V_SHA[$sheet]=$vsha || V_SHA[$sheet]=""
 done < "$P/verdict.tsv"
 rows=0
 while IFS=$'\t' read -r sheet fmt kind interval sha; do
@@ -33,6 +37,9 @@ while IFS=$'\t' read -r sheet fmt kind interval sha; do
   case "$out" in принят|отклонён) ;; *) echo "❌ $sheet ($fmt $interval): исход «$out» — лист не просмотрен" >&2; undone=1; continue ;; esac
   case "$def" in нет|цена|бренд|ip|ключ|титр-обрезан|элемент-обрезан|демо-пометка-пропала|другое:?*) ;; *) echo "❌ $sheet: дефект «$def» не из списка" >&2; undone=1; continue ;; esac
   case "$demo" in видна|"не видна"|нет-демо-данных) ;; *) echo "❌ $sheet: демо-пометка «$demo» не из списка" >&2; undone=1; continue ;; esac
+  vsha=${V_SHA[$sheet]:-}
+  [ -n "$vsha" ] || { echo "❌ $sheet: в verdict.tsv нет sha256 mp4 (формат до 1.2) — пересобрать раскадровку storyboard.sh" >&2; undone=1; continue; }
+  [ "$vsha" = "$sha" ] || { echo "❌ $sheet: исход вынесен по mp4 ${vsha:0:12}…, лист снят с ${sha:0:12}… — просмотреть заново"; bad=1; }
   [ "$out" = принят ] && [ "$def" = нет ] && [ "$demo" != "не видна" ] || { echo "❌ $sheet ($fmt $interval): исход $out, дефект $def, демо-пометка $demo"; bad=1; }
   [ "$out" = принят ] && [ "$def" != нет ] && { echo "❌ $sheet: «принят» при дефекте «$def» — противоречие"; bad=1; }
   if in_demo "$interval" && [ "$demo" != видна ]; then echo "❌ $sheet ($fmt $interval): интервал с вымышленными данными, а демо-пометка «$demo»"; bad=1; fi
