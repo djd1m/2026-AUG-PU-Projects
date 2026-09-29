@@ -29,14 +29,18 @@ export type Segment = {
 /** Одна запись экрана и её нарезка. `size` — пиксели файла (ffprobe), нужны для кадрирования. */
 export type Track = {file: string; size: [number, number]; segments: Segment[]};
 
-export type TitleScene = {
+/** Необязательная постоянная плашка внизу кадра на всю длительность сцены (например, «Отзывы демонстрационные»):
+ *  все три формата, шрифт проекта, цвет ink на paper (контраст проверяется ≥ 4,5:1). */
+type WithFootnote = {footnote?: string};
+
+export type TitleScene = WithFootnote & {
   type: 'title';
   seconds: number;
   /** Строки заголовка; accent — цвет акцента. */
   lines: {text: string; accent?: boolean}[];
 };
 
-export type ScreenScene = {
+export type ScreenScene = WithFootnote & {
   type: 'screen';
   seconds: number;
   /** Дорожки по имени (обычно desktop и mobile — у них разные тайминги). */
@@ -47,7 +51,12 @@ export type ScreenScene = {
   note?: string;
 };
 
-export type OutroScene = {type: 'outro'; seconds: number};
+export type OutroScene = WithFootnote & {
+  type: 'outro';
+  seconds: number;
+  /** Цвет названия продукта в финале (#rrggbb, контраст к paper ≥ 4,5:1); нет — accent. */
+  titleColor?: string;
+};
 
 export type Scene = TitleScene | ScreenScene | OutroScene;
 
@@ -69,6 +78,20 @@ export type ProjectConfig = {
 };
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
+/** Контраст WCAG 2.x двух цветов #rrggbb. */
+export function contrast(a: string, b: string): number {
+  const lum = (hex: string) => {
+    const [r, g, bl] = [1, 3, 5].map((i) => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
+  return (x + 0.05) / (y + 0.05);
+}
+export const MIN_CONTRAST = 4.5;
+
 const isFrameAligned = (sec: number) => Math.abs(sec * FPS - Math.round(sec * FPS)) < 1e-6;
 
 export function validateProject(p: ProjectConfig): void {
@@ -92,6 +115,16 @@ export function validateProject(p: ProjectConfig): void {
   p.scenes.forEach((s, i) => {
     const at = `сцена ${i + 1}`;
     if (!(s.seconds > 0) || !isFrameAligned(s.seconds)) err(`${at}: seconds=${s.seconds} не кратно 1/${FPS} с`);
+    if (s.footnote !== undefined) {
+      if (typeof s.footnote !== 'string' || !s.footnote.trim()) err(`${at}: footnote задан, но пуст`);
+      const k = contrast(p.tokens.ink, p.tokens.paper);
+      if (k < MIN_CONTRAST) err(`${at}: footnote ink/paper — контраст ${k.toFixed(2)}:1 < ${MIN_CONTRAST}:1`);
+    }
+    if (s.type === 'outro' && s.titleColor !== undefined) {
+      if (!HEX.test(s.titleColor)) err(`${at}: titleColor «${s.titleColor}» не #rrggbb`);
+      const k = contrast(s.titleColor, p.tokens.paper);
+      if (k < MIN_CONTRAST) err(`${at}: titleColor ${s.titleColor} на paper ${p.tokens.paper} — контраст ${k.toFixed(2)}:1 < ${MIN_CONTRAST}:1`);
+    }
     if (s.type === 'title') {
       if (!s.lines?.length || s.lines.some((l) => !l.text.trim())) err(`${at}: пустой заголовок`);
     } else if (s.type === 'screen') {
