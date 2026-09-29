@@ -1,0 +1,13 @@
+{
+  "name": "promo-capture-n5",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Запись экранов N5 «КлипМейкер» для серии промо-роликов (promo/SERIES.md)",
+  "scripts": {
+    "record": "node record-n5.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}
