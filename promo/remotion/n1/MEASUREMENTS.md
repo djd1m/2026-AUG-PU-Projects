@@ -1,5 +1,72 @@
 # Замеры — N1 «Proofwall» на общем шаблоне
 
+## Круг правок 2 (2026-09-29 12:14–14:27 UTC) — ДЕЙСТВУЮЩИЕ файлы `promo/dist/n1/`
+
+Правки: (1) находка Codex №4 — шаблон `9a61bd49`: сноска «Отзывы демонстрационные» теперь строка ВНУТРИ полосы титра у
+внешнего края кадра (9:16 и 1:1 — справа вверху, 16:9 — справа внизу), запись не перекрывает по построению: кнопка
+«Отправить отзыв» и заголовок «Оставьте отзыв» открыты во всех трёх форматах (контрольные кадры 440/500/560 и листы
+раскадровки 9x16-2, 1x1-1); (2) по раскадровке найдено и убрано: бейдж тарифа «Бесплатный» и срезанный заголовок
+«primer-coffee» в сцене 2 — окно 16:9 y 240–720, 1:1 y 240–954, 9:16 — кусок `links-mobile` 3,0–5,5 с
+(`forbidden-zones.tsv`; `gate-config.sh`: прежние окна → 1 с названной зоной, текущие → 0).
+Квитанция `…/n1/out/final/logs/receipt-round2.txt` (`rev=9a61bd49`, `dirty_files=14` — документы и конфиг круга, хеш
+конфига ниже), result=green.
+
+| Шаг | Wall, с | user + sys, с | Пик памяти, байт | host_load1 | watchdog |
+|---|---|---|---|---|---|
+| bundle | 18,9 | 22,9 + 2,4 | 837 922 816 | 5,45 | clean |
+| 16x9 | 387,9 | 527,6 + 282,8 | 2 758 279 168 | 5,71 | clean |
+| 9x16 | 287,0 | 425,1 + 208,7 | 2 697 007 104 | 13,75 | clean |
+| 1x1 | 331,3 | 442,2 + 250,5 | 3 071 152 128 | 6,47 | clean |
+| 16x9-repeat | 375,6 | 524,3 + 277,7 | 2 945 658 880 | 3,91 | clean — **совпал побайтно** |
+
+```text
+61cce73a0a2596f1ead411a09ec8effa3c455cadbcc2ee9c46c094d4ba7880bc  16x9.mp4 (= 16x9-repeat.mp4)
+eb0a37a80301c185fd3fca7f29ba130d28c9044b9b48d88d8866ae3baabb7bef  9x16.mp4
+fb4a3f7ce714ec0085804850eb1a8d81dcd258de82349d299ca8ae84b667ba15  1x1.mp4
+9ceaea504985e54e7d3fc3939ad49f0e805a8bfd027877a1e3d6f1a057e6bbaa  project.config.ts
+e529051ab7c4bbbc8ed9727b64ad79d35a0fd0e3a5084cbcc485dd4c7e0d33b6  forbidden-zones.tsv
+2a2e568e4e5f80fd9fbf101d613e69c828a03e9eae78d038af4da34807d264d3  demo-intervals.tsv
+baf2851474262da6fe54f53693c81077fd27db144aa4fca4861ff469f4ba6b0f  form-desktop.webm
+2b678033a077ac1955993b80c66abf2d9ad3ddedfd729bc8659cc327f7cd5827  form-mobile.webm
+670b9013563558e257ba757a28d49e0d3adb5f36a7832174b32095e6edbbdbc3  links-desktop.webm
+31978e538b10fbb9f4d12caeb20bda2a7b8c70eeea39b5cddc0bc3278132b228  links-mobile.webm
+4dfd746a4d76a1f42842b034aaecabee476ee8961b8163e4bfabb95ed9802456  moderate-desktop.webm
+3b1e3d07c19af23d5c68d6cc38f74c7846b2ba30c65c20a0c9c5c3ac6f95a3d9  moderate-mobile.webm
+8f58d36f8ad0d5afd70d3f8dd8ae313d55201c3968f7c825f17f10c270ca9853  site-desktop.webm
+5da493b097144bb835d2aeb5958e16108931c0789ef0a1ab4df3a887dae44da5  site-mobile.webm
+ba6f23da4e49fe724ec330c61953152a05aefc0acfae29f136392e0190909831  snippet-desktop.webm
+321649214bfb825899f812711a7973d66d56fcb698d308ea1e20ada951e1d841  snippet-mobile.webm
+3167266c2b0c4f43ddd15c7b951860d64ec6eb199c67a9f458f2b75c187d6de4  wall-desktop.webm
+9c40b0c017b17f84aa18ed3f18962a9d72fc86a90b342d7295dc9e4e422801c4  wall-empty-desktop.webm
+0aec0d9d5e1649818c338b773ca15e6dd663ef7b84958358d0823aef3deac194  wall-empty-mobile.webm
+958a285943305b7c10fcf60f6726027f44e339ef4db158deb9f9b5b868f51af8  wall-mobile.webm
+8fd8eec4435425b6650f1f4e14416e0d4071d5fa6220554f7ad40f9ceb848954  образ promo-render:/usr/local/share/fonts/Onest-Regular.ttf
+10f7ea99a1bb175a3c41c0d9c7322290b823cce5b5b6c5b9c8c570798536ec04  образ promo-render:/usr/local/share/fonts/Onest-SemiBold.ttf
+63ae70738724297b5e843f13e0cc5b2865e8375a3fcc63ab2c753af718b18c49  образ promo-render:/usr/local/share/fonts/Onest-Bold.ttf
+шаблон 9a61bd49: shared/src/Promo.tsx 97c9b3a5…12fdb31d, shared/src/project.ts 1663eb69…44284f7d
+```
+
+### Окончательная проверка (модуль 07)
+
+Листы: `/home/dz-projects-2026/.promo-assets/n1/out/final/proof/` (48: на формат 4 листа шага 0,25 с + 12 стыков ±5
+кадров; монтажи стыков — `proof/montage/`). Интервалы: 0–12, 12–24, 24–36, 36–45 с; стыки 7 · 9,5 · 12 · 14,5 · 16,5 ·
+18 · 20,5 · 23,5 · 30 · 34,6 · 37 · 39 с. Демо-интервал 9,5–39 с (`demo-intervals.tsv`).
+
+| Ворота | Код | Итог |
+|---|---|---|
+| `gate-config.sh` (+ 2 зоны тарифа) | 0 | |
+| `render.sh` REPRO=1 | 0 | |
+| `gate-receipt.sh` | 0 | |
+| `gate-media.sh` | 0 | 1350 декодированных кадров, 0 аудио |
+| `storyboard.sh` | 0 | 48 листов |
+| `gate-verdict.sh` (+ `captions-proof.tsv` 6 титров, `demo-intervals.tsv`) | **2** | все 36 стыков и листы 16x9-1, 9x16-1/2, 1x1-1 — `принят`, сноска `видна`; **не досмотрены на этом рендере (бюджет):** 16x9-2/3/4, 9x16-3/4, 1x1-2/3/4 — `?`. Эти интервалы просмотрены на рендере 13:11 (до сдвига окна сцены 2; вне 7–9,5 с конфиг тот же), но sha256 другой — не засчитано. Отказов нет |
+| сторож (`promo-n1-storyboard`) | 0 | для `promo-n1-media` — 2 (нет строк журнала после короткой операции) |
+
+Оставлено (не исправляется кадрированием): 9:16 сцена 4 — тег `<script>` уходит за правый край блока кода в самой
+mobile-записи; нужна пересъёмка.
+
+---
+
 ## Круг правок 1 (2026-09-29 10:32–10:56 UTC) — ДЕЙСТВУЮЩИЕ файлы `promo/dist/n1/`
 
 Правки (DEC-S-02): постоянная плашка «Отзывы демонстрационные» (поле шаблона `footnote`) на пяти сценах с отзывами;
