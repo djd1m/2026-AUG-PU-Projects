@@ -91,19 +91,31 @@ const Outro: React.FC<{scene: OutroScene; frames: number}> = ({scene, frames}) =
   );
 };
 
-const Caption: React.FC<{text: string; format: Format}> = ({text, format}) => {
+/** Строка сноски экранной сцены живёт ВНУТРИ полосы титра, у внешнего края кадра (9:16 и 1:1 — верх, 16:9 — низ):
+ *  запись она не перекрывает по построению, титр сдвигается к записи на высоту строки сноски.
+ *  Без сноски полоса титра — ровно прежняя (N2/N4/N5 рендерятся пиксель в пиксель как до правки). */
+const footnoteBand = (width: number, height: number) => {
+  const unit = Math.min(width, height);
+  const fontSize = Math.round(unit * 0.028);
+  const line = Math.round(fontSize * 1.25);
+  const edge = Math.round(unit * 0.01);
+  return {fontSize, line, edge, right: Math.round(unit * 0.02), reserve: edge + line};
+};
+
+const Caption: React.FC<{text: string; format: Format; withFootnote: boolean}> = ({text, format, withFootnote}) => {
   const {width, height} = useVideoConfig();
   const g = geometry(format, width, height);
   const unit = Math.min(width, height);
   const border = `4px solid ${T.accent}`;
+  const reserve = withFootnote ? footnoteBand(width, height).reserve : 0;
   return (
     <div
       style={{
         position: 'absolute',
         left: 0,
         right: 0,
-        top: g.captionTop ? 0 : height - g.captionH,
-        height: g.captionH,
+        top: g.captionTop ? reserve : height - g.captionH,
+        height: g.captionH - reserve,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -163,7 +175,7 @@ const Screen: React.FC<{scene: ScreenScene; format: Format; frames: number}> = (
                 style={{position: 'absolute', ...box}}
               />
             </div>
-            <Caption text={s.caption} format={format} />
+            <Caption text={s.caption} format={format} withFootnote={Boolean(scene.footnote)} />
           </Sequence>
         );
       })}
@@ -171,24 +183,50 @@ const Screen: React.FC<{scene: ScreenScene; format: Format; frames: number}> = (
   );
 };
 
-/** Постоянная плашка внизу кадра на всю сцену: ink на сплошном paper (контраст проверен в validateProject).
- *  16:9 экранной сцены — над полосой титра (титр внизу); иначе — у нижнего края кадра. */
-const Footnote: React.FC<{text: string; format: Format; aboveCaption: boolean; frames: number}> = ({
+/** Постоянная сноска на всю сцену: ink на paper (контраст проверен в validateProject), без прозрачности.
+ *  Экранная сцена — строка в полосе титра у внешнего края кадра (footnoteBand): интерфейс записи не перекрывается ни
+ *  в одном формате (круг правок 2, находка Codex №4 — прежняя плашка над записью закрывала кнопку N1).
+ *  Сцена-заголовок и финал записи не имеют — плашка у нижнего правого края кадра, как прежде. */
+const Footnote: React.FC<{text: string; format: Format; inCaptionBand: boolean; frames: number}> = ({
   text,
   format,
-  aboveCaption,
+  inCaptionBand,
   frames,
 }) => {
   const {width, height} = useVideoConfig();
   const unit = Math.min(width, height);
   const g = geometry(format, width, height);
+  const opacity = useFade(frames);
+  if (inCaptionBand) {
+    const b = footnoteBand(width, height);
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          right: b.right,
+          ...(g.captionTop ? {top: b.edge} : {bottom: b.edge}),
+          height: b.line,
+          maxWidth: width - 2 * b.right,
+          color: T.ink,
+          fontFamily: FAMILY,
+          fontWeight: 600,
+          fontSize: b.fontSize,
+          lineHeight: `${b.line}px`,
+          whiteSpace: 'nowrap',
+          opacity,
+        }}
+      >
+        {text}
+      </div>
+    );
+  }
   const margin = Math.round(unit * 0.02);
   return (
     <div
       style={{
         position: 'absolute',
         right: margin,
-        bottom: (aboveCaption ? g.captionH : 0) + margin,
+        bottom: margin,
         maxWidth: width - 2 * margin,
         padding: `${Math.round(unit * 0.008)}px ${Math.round(unit * 0.016)}px`,
         borderRadius: Math.round(unit * 0.01),
@@ -199,7 +237,7 @@ const Footnote: React.FC<{text: string; format: Format; aboveCaption: boolean; f
         fontSize: Math.round(unit * 0.03),
         lineHeight: 1.25,
         whiteSpace: 'nowrap',
-        opacity: useFade(frames),
+        opacity,
       }}
     >
       {text}
@@ -221,7 +259,7 @@ export const Promo: React.FC<PromoProps> = ({format}) => {
             {sc.type === 'screen' && <Screen scene={sc} format={format} frames={frames} />}
             {sc.type === 'outro' && <Outro scene={sc} frames={frames} />}
             {sc.footnote && (
-              <Footnote text={sc.footnote} format={format} aboveCaption={sc.type === 'screen' && format === 'wide'} frames={frames} />
+              <Footnote text={sc.footnote} format={format} inCaptionBand={sc.type === 'screen'} frames={frames} />
             )}
           </Sequence>
         );

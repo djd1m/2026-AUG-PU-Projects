@@ -29,8 +29,10 @@ export type Segment = {
 /** Одна запись экрана и её нарезка. `size` — пиксели файла (ffprobe), нужны для кадрирования. */
 export type Track = {file: string; size: [number, number]; segments: Segment[]};
 
-/** Необязательная постоянная плашка внизу кадра на всю длительность сцены (например, «Отзывы демонстрационные»):
- *  все три формата, шрифт проекта, цвет ink на paper (контраст проверяется ≥ 4,5:1). */
+/** Необязательная постоянная сноска на всю длительность сцены (например, «Отзывы демонстрационные»): все три формата,
+ *  шрифт проекта, цвет ink на paper (контраст проверяется ≥ 4,5:1), одна строка ≤ FOOTNOTE_MAX знаков. На экранной
+ *  сцене — строка внутри полосы титра у внешнего края кадра, запись не перекрывает; на заголовке и финале — у нижнего
+ *  правого края. */
 type WithFootnote = {footnote?: string};
 
 export type TitleScene = WithFootnote & {
@@ -78,12 +80,13 @@ export type ProjectConfig = {
 };
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
-/** Контраст WCAG 2.x двух цветов #rrggbb. */
+/** Контраст WCAG 2.x двух цветов #rrggbb (порог линеаризации 0.04045 — актуальное определение W3C; для 8-битных
+ *  каналов результат тот же, что с прежним 0.03928: между порогами нет значения n/255). */
 export function contrast(a: string, b: string): number {
   const lum = (hex: string) => {
     const [r, g, bl] = [1, 3, 5].map((i) => {
       const c = parseInt(hex.slice(i, i + 2), 16) / 255;
-      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
     });
     return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
   };
@@ -91,6 +94,8 @@ export function contrast(a: string, b: string): number {
   return (x + 0.05) / (y + 0.05);
 }
 export const MIN_CONTRAST = 4.5;
+/** Сноска — одна строка в полосе титра: при 2,8 % короткой стороны 40 знаков Onest ≈ 620 px из 1080. */
+export const FOOTNOTE_MAX = 40;
 
 const isFrameAligned = (sec: number) => Math.abs(sec * FPS - Math.round(sec * FPS)) < 1e-6;
 
@@ -117,6 +122,7 @@ export function validateProject(p: ProjectConfig): void {
     if (!(s.seconds > 0) || !isFrameAligned(s.seconds)) err(`${at}: seconds=${s.seconds} не кратно 1/${FPS} с`);
     if (s.footnote !== undefined) {
       if (typeof s.footnote !== 'string' || !s.footnote.trim()) err(`${at}: footnote задан, но пуст`);
+      if ([...s.footnote].length > FOOTNOTE_MAX) err(`${at}: footnote длиннее ${FOOTNOTE_MAX} знаков — в 9:16 не встанет в одну строку`);
       const k = contrast(p.tokens.ink, p.tokens.paper);
       if (k < MIN_CONTRAST) err(`${at}: footnote ink/paper — контраст ${k.toFixed(2)}:1 < ${MIN_CONTRAST}:1`);
     }
