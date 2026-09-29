@@ -170,14 +170,14 @@
   {
     "name_ru": "грудка куриная",
     "food_item_source_id": "171077",
-    "expect_en": "Chicken; breast",
+    "expect_en": "Chicken; breast; skinless",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
   {
     "name_ru": "курица отварная",
-    "food_item_source_id": "171478",
-    "expect_en": "Chicken; stewed",
+    "food_item_source_id": "171451",
+    "expect_en": "Chicken; meat only; stewed",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -289,14 +289,14 @@
   {
     "name_ru": "соль поваренная",
     "food_item_source_id": "173468",
-    "expect_en": "Salt",
+    "expect_en": "Salt, table",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
   {
     "name_ru": "соль",
     "food_item_source_id": "173468",
-    "expect_en": "Salt",
+    "expect_en": "Salt, table",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -373,14 +373,14 @@
   {
     "name_ru": "лосось отварной",
     "food_item_source_id": "175168",
-    "expect_en": "Fish, salmon; cooked",
+    "expect_en": "Fish, salmon, Atlantic; cooked",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
   {
     "name_ru": "семга запеченная",
     "food_item_source_id": "175168",
-    "expect_en": "Fish, salmon; cooked",
+    "expect_en": "Fish, salmon, Atlantic; cooked",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -457,7 +457,7 @@
   {
     "name_ru": "йогурт",
     "food_item_source_id": "171284",
-    "expect_en": "Yogurt",
+    "expect_en": "Yogurt; plain",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -492,14 +492,14 @@
   {
     "name_ru": "кабачок свежий",
     "food_item_source_id": "169291",
-    "expect_en": "zucchini; raw",
+    "expect_en": "Squash, summer, zucchini; raw",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
   {
     "name_ru": "кабачок",
     "food_item_source_id": "169291",
-    "expect_en": "zucchini",
+    "expect_en": "Squash, summer, zucchini",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -555,14 +555,14 @@
   {
     "name_ru": "овсянка вареная",
     "food_item_source_id": "173905",
-    "expect_en": "oats; cooked",
+    "expect_en": "Cereals, oats; cooked",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
   {
     "name_ru": "овсяная каша",
     "food_item_source_id": "173905",
-    "expect_en": "oats; cooked",
+    "expect_en": "Cereals, oats; cooked",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -583,7 +583,7 @@
   {
     "name_ru": "сельдь отварная",
     "food_item_source_id": "175117",
-    "expect_en": "herring; cooked",
+    "expect_en": "Fish, herring; cooked",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -632,7 +632,7 @@
   {
     "name_ru": "геркулес отварной",
     "food_item_source_id": "173905",
-    "expect_en": "oats; cooked",
+    "expect_en": "Cereals, oats; cooked",
     "curated_by": "nutritionist-ru-01",
     "curated_at": "2026-09-12T00:00:00.000Z"
   },
@@ -827,7 +827,7 @@
     "recipe_parts": [
       {
         "food_item_source_id": "169291",
-        "expect_en": "zucchini",
+        "expect_en": "Squash, summer, zucchini",
         "share": 0.3
       },
       {
@@ -898,8 +898,8 @@
   },
   {
     "name_ru": "куриная грудка",
-    "food_item_source_id": "171474",
-    "expect_en": "Chicken; breast",
+    "food_item_source_id": "171077",
+    "expect_en": "Chicken; breast; skinless",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
@@ -912,57 +912,57 @@
   },
   {
     "name_ru": "лосось",
-    "food_item_source_id": "173689",
-    "expect_en": "salmon",
+    "food_item_source_id": "175167",
+    "expect_en": "Fish, salmon, Atlantic; raw",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "сёмга",
-    "food_item_source_id": "173689",
-    "expect_en": "salmon",
+    "food_item_source_id": "175167",
+    "expect_en": "Fish, salmon, Atlantic; raw",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "форель",
     "food_item_source_id": "175153",
-    "expect_en": "trout",
+    "expect_en": "Fish, trout",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "треска",
     "food_item_source_id": "171955",
-    "expect_en": "cod",
+    "expect_en": "Fish, cod",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "тунец",
     "food_item_source_id": "173706",
-    "expect_en": "tuna",
+    "expect_en": "Fish, tuna",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "сельдь",
     "food_item_source_id": "173669",
-    "expect_en": "herring",
+    "expect_en": "Fish, herring",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "креветки",
     "food_item_source_id": "175179",
-    "expect_en": "shrimp",
+    "expect_en": "Crustaceans, shrimp",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
   {
     "name_ru": "кальмар",
     "food_item_source_id": "174223",
-    "expect_en": "squid",
+    "expect_en": "Mollusks, squid",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },
@@ -1214,7 +1214,7 @@
   {
     "name_ru": "миндаль",
     "food_item_source_id": "170567",
-    "expect_en": "almonds",
+    "expect_en": "Nuts, almonds",
     "curated_by": "coordinator-ru-02",
     "curated_at": "2026-09-13T19:30:00.000Z"
   },

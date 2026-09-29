@@ -35,13 +35,19 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/** Каждое слово `expect_en` (через `;`) обязано стоять в `name_en` ЦЕЛЫМ словом: «Egg» ≠ «Eggplant». */
+/**
+ * Каждое слово `expect_en` (через `;`) обязано стоять в `name_en` ЦЕЛЫМ словом: «Egg» ≠ «Eggplant».
+ * ПЕРВОЕ слово — продукт, и оно обязано НАЧИНАТЬ `name_en`: иначе «Salt» совпало бы с «Potatoes,
+ * boiled, … without salt», а «Yogurt» — с глазурью «… yogurt coating» (ревью Codex, круг 1).
+ */
 function keywordMismatch(expectEn: string | undefined, nameEn: string | undefined): string | null {
   if (expectEn === undefined || expectEn.trim() === '') return 'expect_en пуст — без ожидания страж не страж';
   if (nameEn === undefined) return 'id нет в фикстуре FDC';
   const keywords = expectEn.split(';').map((k) => k.trim()).filter((k) => k.length > 0);
   if (keywords.length === 0) return 'expect_en без слов';
-  for (const keyword of keywords) {
+  const [head, ...rest] = keywords;
+  if (!new RegExp(`^${escapeRegExp(head as string)}(?![A-Za-z])`, 'i').test(nameEn)) return `«${nameEn}» не начинается с «${head}»`;
+  for (const keyword of rest) {
     const re = new RegExp(`(?<![A-Za-z])${escapeRegExp(keyword)}(?![A-Za-z])`, 'i');
     if (!re.test(nameEn)) return `«${nameEn}» не содержит «${keyword}»`;
   }
@@ -104,6 +110,15 @@ describe('seed food_synonym ↔ USDA FDC (DEC-A-064)', () => {
     expect(keywordMismatch('Honey', undefined)).not.toBeNull();
     expect(keywordMismatch('Egg', 'Eggplant, raw')).not.toBeNull(); // целым словом, не подстрокой
     expect(keywordMismatch('Egg; hard-boiled', 'Egg, whole, cooked, hard-boiled')).toBeNull();
+    // Продукт — ПЕРВОЕ слово названия, а не любое: соль ≠ «картофель … без соли».
+    expect(keywordMismatch('Salt, table', 'Potatoes, boiled, cooked without skin, flesh, without salt')).not.toBeNull();
+    expect(keywordMismatch('Salt', 'Potatoes, boiled, cooked without skin, flesh, without salt')).not.toBeNull();
+    expect(keywordMismatch('Yogurt', 'Candies, yogurt covered')).not.toBeNull();
+  });
+
+  it('ИСПЫТАНИЕ: «соль» → 170440 (картофель … without salt) красит страж', () => {
+    const mutated = SEED_ROWS.map((row) => (row.name_ru === 'соль' ? { ...row, food_item_source_id: '170440' } : row));
+    expect(seedMismatches(mutated, names)).toEqual([expect.stringMatching(/^соль \[170440\].*не начинается с «Salt, table»/)]);
   });
 
   it('ИСПЫТАНИЕ: дубль name_ru_normalized («мёд» рядом с «мед») находится', () => {
