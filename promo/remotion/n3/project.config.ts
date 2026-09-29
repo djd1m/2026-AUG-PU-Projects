@@ -57,7 +57,9 @@ const config: ProjectConfig = {
           size: [780, 1688],
           segments: [
             {from: 16.0, to: 19.3, seconds: 4, caption: CAP2a}, // ставка 20 → ввод «25» (19,16)
-            {from: 19.3, to: 24.2, seconds: 6, caption: CAP2b}, // «Опубликована версия 3» (20,72)
+            // Круг правок 1 (раскадровка 9:16): с 23,2 с страница прокручивается к верху и показывает служебные полосы —
+            // конец куска 24,2 → 23,1 (замедление ×0,63).
+            {from: 19.3, to: 23.1, seconds: 6, caption: CAP2b}, // «Опубликована версия 3» (20,72)
           ],
         },
       },
@@ -98,7 +100,9 @@ const config: ProjectConfig = {
       seconds: 9,
       tracks: {
         desktop: {file: 'a-tour-desktop.webm', size: [1920, 1080], segments: [{from: 26.9, to: 35.9, seconds: 9, caption: CAP4, crop: both(INVITE)}]},
-        mobile: {file: 'a-tour-mobile.webm', size: [780, 1688], segments: [{from: 24.8, to: 31.4, seconds: 9, caption: CAP4}]},
+        // Круг правок 1 (раскадровка 9:16): после invite.end (30,33) страница прокручивается к верху с полосами — конец 31,4 → 30,2;
+        // круг правок 2: на 24,76–24,84 с у верхнего края ещё низ тёмной полосы — начало 24,8 → 25,0.
+        mobile: {file: 'a-tour-mobile.webm', size: [780, 1688], segments: [{from: 25.0, to: 30.2, seconds: 9, caption: CAP4}]},
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
       footnote: DEMO,
