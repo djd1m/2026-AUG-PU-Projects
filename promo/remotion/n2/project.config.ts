@@ -10,6 +10,9 @@
 import type {Crop, ProjectConfig} from '../shared/src/project';
 
 const CAP2a = 'Заведите точку, вставьте ссылки на карточки.';
+// Круг правок 2 (находка Codex №3): в 9:16 создания точки нет — mobile-запись начинается с готовой карточки
+// (в журнале записи у mobile нет событий owner.place_created / owner.links_saved), поэтому у mobile-дорожки свой титр.
+const CAP2a_TALL = 'Точка заведена — ссылки на карточки на месте.';
 const CAP2b = 'QR и макеты для печати — готовы.';
 // Круг правок 1 (DEC-S-01): было «Гость сканирует QR и видит три равные двери.» — сканирование не снято
 // (гостевая страница открыта по адресу, без камеры).
@@ -56,17 +59,17 @@ const config: ProjectConfig = {
           size: [1920, 1080],
           segments: [
             {from: 4.5, to: 9.3, seconds: 2.5, caption: CAP2a, crop: {wide: FORM_WIDE, square: FORM_SQUARE}}, // ввод названия, «Создать»
-            {from: 9.5, to: 11, seconds: 1, caption: CAP2a, crop: {wide: CARD_WIDE, square: CARD_SQUARE}}, // карточка /r/pekarnya-na-rechnoy
+            {from: 9.8, to: 11, seconds: 1, caption: CAP2a, crop: {wide: CARD_WIDE, square: CARD_SQUARE}}, // карточка /r/pekarnya-na-rechnoy; круг правок 2: с 9,8 с (было 9,5 — первый кадр куска ещё показывал «План: Free» и цену, раскадровка стыка 8,5 с)
           ],
         },
         mobile: {
           file: 'owner-place-mobile.webm',
           size: [780, 1688],
-          segments: [{from: 0, to: 2, seconds: 3.5, caption: CAP2a, crop: {tall: MOB_TOP}}],
+          segments: [{from: 0, to: 2, seconds: 3.5, caption: CAP2a_TALL, crop: {tall: MOB_TOP}}],
         },
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
-      note: 'В 9:16 кадра создания точки нет (mobile-записи создания нет, а desktop в 9:16 показывает цену): там сразу карточка точки со ссылками.',
+      note: 'В 9:16 кадра создания точки нет (mobile-записи создания нет, а desktop в 9:16 показывает цену): там сразу карточка точки со ссылками — и титр mobile-дорожки говорит о готовой точке (круг правок 2).',
     },
     {
       type: 'screen',
@@ -80,7 +83,7 @@ const config: ProjectConfig = {
         mobile: {
           file: 'owner-place-mobile.webm',
           size: [780, 1688],
-          segments: [{from: 2, to: 8.8, seconds: 3.5, caption: CAP2a, crop: {tall: MOB_SCROLLED}}],
+          segments: [{from: 2, to: 5.4, seconds: 3.5, caption: CAP2a_TALL, crop: {tall: MOB_SCROLLED}}], // круг правок 2: до 5,4 с — с 5,5 с «План: Free» входит в окно (forbidden-zones.tsv)
         },
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
@@ -152,7 +155,7 @@ const config: ProjectConfig = {
           segments: [
             {from: 3, to: 6.5, seconds: 2.5, caption: CAP4,
               crop: {wide: {x: 600, y: 140, w: 720, h: 400}, square: {x: 600, y: 47, w: 720, h: 504}}}, // окно 47–551, блок цены с 553,
-            {from: 7, to: 14, seconds: 3.5, caption: CAP4,
+            {from: 7.4, to: 14, seconds: 3.5, caption: CAP4, // круг правок 2: с 7,4 с (было 7 — до 7,2 с кабинет с «План: Free» у нижнего края окна)
               crop: {wide: {x: 600, y: 100, w: 720, h: 500}, square: {x: 600, y: 100, w: 720, h: 500}}},
           ],
         },

@@ -23,7 +23,10 @@ const FORM_LOW = both({x: 700, y: 420, w: 520, h: 560}); // отзыв, фото
 const FORM_DONE = both({x: 700, y: 60, w: 520, h: 500}); // «Спасибо! Отзыв отправлен.»
 
 const scene2Desktop: Segment[] = [
-  {from: 0.9, to: 6.3, seconds: 2.5, caption: CAP2a, crop: both({x: 440, y: 300, w: 1040, h: 250})}, // «Форма сбора», ссылка выделяется
+  // Круг правок 2: окно начинается ниже бейджа тарифа «Бесплатный» (x 1372–1470, y 170–200 — forbidden-zones.tsv):
+  // заголовок «primer-coffee» (y 190–238) тоже вне окна — раскадровка показала его срезанным краем: 16:9 окно y 240–720,
+  // 1:1 — своё кадрирование, окно y 240–954 (строки ссылок x 450–1470 целиком, «Пароль» с y 958 — вне окна).
+  {from: 0.9, to: 6.3, seconds: 2.5, caption: CAP2a, crop: {wide: {x: 440, y: 355, w: 1040, h: 250}, square: {x: 450, y: 400, w: 1020, h: 394}}}, // «Форма сбора», ссылка выделяется
   {from: 1.3, to: 12.7, seconds: 2.5, caption: CAP2a, crop: FORM_TOP}, // имя и роль печатаются
   {from: 12.7, to: 21.0, seconds: 2.5, caption: CAP2b, crop: FORM_MID}, // текст отзыва
   {from: 21.0, to: 28.1, seconds: 2, caption: CAP2b, crop: FORM_LOW}, // фото 24,2 → «Отправить» 27,9
@@ -67,7 +70,8 @@ const config: ProjectConfig = {
       seconds: 2.5,
       tracks: {
         desktop: {file: 'links-desktop.webm', size: [1920, 1080], segments: [scene2Desktop[0]]},
-        mobile: {file: 'links-mobile.webm', size: [780, 1688], segments: [{from: 0.8, to: 4.5, seconds: 2.5, caption: CAP2a}]},
+        // круг правок 2: с 3,0 с страница прокручена, бейджа тарифа «Бесплатный» (до ≈2,9 с вверху) в кадре нет
+        mobile: {file: 'links-mobile.webm', size: [780, 1688], segments: [{from: 3.0, to: 5.5, seconds: 2.5, caption: CAP2a}]},
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
     },
