@@ -137,3 +137,91 @@ describe('loadFoodSynonyms + coverage (AC-source-and-correct-4/5)', () => {
     expect(result.rejected[0]?.reason).toMatch(/share_sum_invalid/);
   }, 30_000);
 });
+
+// DEC-A-064 (2026-09-29): seed на стенде был применён ДВАЖДЫ и дал дубли `name_ru` — загрузка
+// только дописывала. Теперь она заменяет строки тех же `curated_by`. Проверяется на настоящей
+// базе: удаление и вставка под блокировкой — свойство транзакции, мок его не имеет.
+describe('loadFoodSynonyms идемпотентна (DEC-A-064)', () => {
+  const DUPLICATES_SQL = `SELECT name_ru_normalized, count(*)::int AS n FROM food_synonym GROUP BY name_ru_normalized HAVING count(*) > 1`;
+
+  it('повторный запуск не создаёт дублей: 153 строки, вторая загрузка заменяет 153', async () => {
+    const pool = await migratedPool('n4-tests-seed-idempotent-1');
+    await truncateAll(pool);
+    await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
+
+    const first = await loadFoodSynonyms(pool, SEED_ROWS);
+    const second = await loadFoodSynonyms(pool, SEED_ROWS);
+    expect(first).toMatchObject({ inserted: 153, replaced: 0, rejected: [] });
+    expect(second).toMatchObject({ inserted: 153, replaced: 153, rejected: [] });
+
+    const count = await pool.query('SELECT count(*)::int AS n FROM food_synonym');
+    expect(count.rows[0]?.n).toBe(153);
+    expect((await pool.query(DUPLICATES_SQL)).rows).toEqual([]);
+  }, 30_000);
+
+  it('состояние стенда 29.09 (seed применён дважды прежним кодом) лечится одним запуском', async () => {
+    const pool = await migratedPool('n4-tests-seed-idempotent-2');
+    await truncateAll(pool);
+    await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
+    await loadFoodSynonyms(pool, SEED_ROWS);
+    // Прежний код дописывал: воспроизводим второй проход копией строк мимо загрузчика.
+    await pool.query(`INSERT INTO food_synonym (name_ru, name_ru_normalized, food_item_id, recipe_parts, curated_by, curated_at)
+                      SELECT name_ru, name_ru_normalized, food_item_id, recipe_parts, curated_by, curated_at FROM food_synonym`);
+    expect((await pool.query(DUPLICATES_SQL)).rows.length).toBeGreaterThan(0);
+
+    const result = await loadFoodSynonyms(pool, SEED_ROWS);
+    expect(result).toMatchObject({ inserted: 153, replaced: 306, rejected: [] });
+    expect((await pool.query(DUPLICATES_SQL)).rows).toEqual([]);
+  }, 30_000);
+
+  it('строки ДРУГИХ кураторов не трогаются; отвергнутая загрузка не удаляет прежние строки', async () => {
+    const pool = await migratedPool('n4-tests-seed-idempotent-3');
+    await truncateAll(pool);
+    await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
+    await loadFoodSynonyms(pool, SEED_ROWS);
+    const anyFoodItem = await pool.query<{ id: string }>('SELECT id FROM food_item LIMIT 1');
+    await pool.query(
+      `INSERT INTO food_synonym (name_ru, name_ru_normalized, food_item_id, curated_by) VALUES ('ручная запись', 'ручная запись', $1, 'operator-manual')`,
+      [anyFoodItem.rows[0]?.id],
+    );
+
+    // Загрузка с одной неразрешимой строкой ОТКАТЫВАЕТСЯ целиком — вместе с DELETE.
+    const broken: SeedSynonymRow[] = [...SEED_ROWS, { name_ru: 'несуществующее', food_item_source_id: '1', curated_by: SEED_ROWS[0]?.curated_by ?? 'x' }];
+    const rejected = await loadFoodSynonyms(pool, broken);
+    expect(rejected.inserted).toBe(0);
+    expect(rejected.replaced).toBe(0);
+    expect(rejected.rejected[0]?.reason).toMatch(/unresolved_fdc_id/);
+
+    const count = await pool.query('SELECT count(*)::int AS n FROM food_synonym');
+    expect(count.rows[0]?.n).toBe(154); // 153 seed + 1 ручная — ни одна не потеряна
+
+    await loadFoodSynonyms(pool, SEED_ROWS);
+    const manual = await pool.query(`SELECT count(*)::int AS n FROM food_synonym WHERE curated_by = 'operator-manual'`);
+    expect(manual.rows[0]?.n).toBe(1);
+  }, 30_000);
+
+  it('КОНКУРЕНТНО: три одновременных запуска дают ровно 153 строки без дублей', async () => {
+    const pool = await migratedPool('n4-tests-seed-idempotent-4');
+    await truncateAll(pool);
+    await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
+
+    const results = await Promise.all([1, 2, 3].map(() => loadFoodSynonyms(pool, SEED_ROWS)));
+    for (const result of results) expect(result.rejected).toEqual([]);
+
+    const count = await pool.query('SELECT count(*)::int AS n FROM food_synonym');
+    expect(count.rows[0]?.n).toBe(153);
+    expect((await pool.query(DUPLICATES_SQL)).rows).toEqual([]);
+  }, 60_000);
+
+  it('дубль name_ru_normalized внутри файла отвергается ДО транзакции', async () => {
+    const pool = await migratedPool('n4-tests-seed-idempotent-5');
+    await truncateAll(pool);
+    await importFdcDump(pool, FIXTURE_DIR, '2026-04-01');
+    const withDuplicate: SeedSynonymRow[] = [...SEED_ROWS, { name_ru: 'Мёд', food_item_source_id: '169640', curated_by: 'test' }];
+    const result = await loadFoodSynonyms(pool, withDuplicate);
+    expect(result.inserted).toBe(0);
+    expect(result.rejected).toEqual([{ nameRu: 'мед', reason: 'duplicate_name_ru_normalized' }]);
+    const count = await pool.query('SELECT count(*)::int AS n FROM food_synonym');
+    expect(count.rows[0]?.n).toBe(0);
+  }, 30_000);
+});
