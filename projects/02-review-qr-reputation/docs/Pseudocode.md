@@ -16,6 +16,7 @@
 > | **этот** | FR-005, FR-006, FR-007, FR-008, FR-012 — гостевая поверхность и доставка | `app_render`, `app_intake`, `app_notify` |
 > | [`Pseudocode-OWNER.md`](Pseudocode-OWNER.md) | FR-001…FR-004, FR-009…FR-013 — онбординг, тарифы, оплата, дашборд | `app_owner` под RLS |
 > | [`Pseudocode-GROWTH.md`](Pseudocode-GROWTH.md) | FR-GROWTH-001…004 | `app_owner` |
+> | [`Pseudocode-OPS.md`](Pseudocode-OPS.md) | §9–§11: как реализованы адрес гостя, приём и доставка — сверено с кодом 29.09 | `app_render`, `app_intake`, `app_notify` |
 >
 > Порядок разделов — **по риску**, а не по номеру: несущий инвариант первым.
 
@@ -242,7 +243,7 @@ function handlePrivateFeedback(req) -> Response:
   #    базе, которую он защищает, есть усилитель атаки: поток становится бесплатным для
   #    атакующего и платным для нас, а хранилище общее с гостевой страницей, приёмом и оплатой
   #    ([`shared-resource-verification`](../../../.claude/rules/shared-resource-verification.md)).
-  ip = extractClientIP(req)
+  ip = guestIp(req)          # X-Guest-IP от guest; XFF здесь НЕ читается — Pseudocode-OPS §9
   if not coarseBarrier.allow(ip, window = 1 hour, limit = 200):
     coarseBarrier.rejected += 1            # счётчик В ПАМЯТИ, не строка в БД
     return HTTP 429                        # без счётчика в теле — anti-enumeration
@@ -347,7 +348,6 @@ every 60 seconds:
 > Счётчик в памяти не переживает рестарт и умножается на число экземпляров, то есть обещанное число
 > перестаёт быть числом. **Две ступени намеренно устроены по-разному:** барьер платит точностью,
 > пороги платят обращением к БД — но только за запросы, барьер уже переживших.
-
 
 ```
 function rateLimitConsume(scope, key, window, limit) -> ALLOWED | EXCEEDED:

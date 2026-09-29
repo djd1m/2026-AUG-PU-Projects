@@ -38,7 +38,8 @@
 ### 7.1 Доставка
 
 `services/notifier` опрашивает `notifications(status='pending')`, отправляет в Telegram или MAX по
-`channel_bindings`, обновляет статус. Ретраи с экспоненциальной задержкой, предел — 6 попыток, после
+`channel_bindings`, обновляет статус. **Как реализовано:** только Telegram, 5 попыток с шагом опроса ≈ 5 с, без
+экспоненты и без `audit_log` ([`Pseudocode-OPS.md`](Pseudocode-OPS.md) §11). По плану Phase 1 — ретраи с экспоненциальной задержкой, предел 6 попыток, после
 — `failed` и запись в `audit_log`. Владелец отвечает гостю из мессенджера, если тот оставил контакт.
 
 ### 7.1.1 Что уходит в push и что происходит с длинным текстом (FR-007)
@@ -124,54 +125,52 @@
 барьер выглядит оптимизацией, а не условием безопасности соседнего права.
 
 Единый механизм `rate_limit_events`: спам приватными сообщениями, перебор по
-`/api/feedback/private`, аномалия сканов точки. Клиентский IP — **предпоследний элемент**
-`X-Forwarded-For`, что корректно **только** за нашим Caddy и работает лишь потому, что `intake` не
-опубликован на хост (§9): опубликованный рядом сервис дал бы обойти прокси и обнулить лимит сменой
+`/api/feedback/private`. **Как реализовано (28.09):** клиентский IP определяет `guest` — **последний**
+элемент `X-Forwarded-For` и только от адреса `TRUSTED_PROXY_HOST` — и передаёт в `intake` заголовком
+`X-Guest-IP` (NFR-SEC-005, [`Pseudocode-OPS.md`](Pseudocode-OPS.md) §9); это корректно, лишь пока `intake`
+не опубликован и не в сети прокси (§9): опубликованный рядом сервис дал бы обойти прокси и обнулить лимит сменой
 заголовка — дефект проекта 01 ([`deployment-seams`](../../../.claude/rules/deployment-seams.md)).
 Тест — **конкурентный**: 20 одновременных запросов по одному ключу, число занятых соединений пула
 не растёт с числом ожидающих.
 
-## 9. Docker Compose и деплой
+## 9. Docker Compose и деплой — как устроено на стенде (сверено 29.09.2026)
 
-```yaml
-name: reviewqr                       # без name соседний стек вытесняет этот (compose-hygiene §1)
-services:
-  postgres:                          # ports: НЕТ И НЕ ПОЯВИТСЯ — Правило №0 (docker-ports.md)
-    image: postgres:16.4-alpine      # явный тег: latest ломает воспроизводимость
-    environment: [POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD]
-    volumes: [postgres_data:/var/lib/postgresql/data]
-    healthcheck: {test: ["CMD-SHELL","pg_isready -U $$POSTGRES_USER"], interval: 5s, retries: 5}
+> Первая редакция раздела (Phase 1) описывала свой `caddy` в compose с `ports: 80/443`,
+> `docker-compose.prod.yml`, переменную `DEVICE_HASH_SECRET`, маршрут `/api/feedback/private` → `intake`
+> на прокси и CLI `selftest-role.js`. **Ничего из этого в коде нет**: свой Caddy убран при выкладке
+> (`ef776561`) — 80/443 держит общий прокси машины, — остальное не было создано. Ниже — действующий
+> [`docker-compose.yml`](../docker-compose.yml); команды подъёма — [`REPRODUCE.md`](REPRODUCE.md).
 
-  # у каждого свой DATABASE_URL_* со своей ролью
-  web:      {build: ./apps/web,          environment: [DATABASE_URL_OWNER,  BASE_URL, SESSION_SECRET, YOOKASSA_*]}
-  guest:    {build: ./apps/guest,        environment: [DATABASE_URL_RENDER, BASE_URL, DEVICE_HASH_SECRET]}
-  intake:   {build: ./services/intake,   environment: [DATABASE_URL_INTAKE, DEVICE_HASH_SECRET]}
-  notifier: {build: ./services/notifier, environment: [DATABASE_URL_NOTIFY, TELEGRAM_BOT_TOKEN, MAX_BOT_TOKEN]}
+| Сервис | Образ / сборка | Роль СУБД | Сети | Переменные (compose передаёт ТОЛЬКО эти) |
+|---|---|---|---|---|
+| `postgres` | `postgres:16.4-alpine`, том `pgdata`, healthcheck `pg_isready` | суперроль `POSTGRES_USER` | `default` | `POSTGRES_USER`, `POSTGRES_PASSWORD` (обязательна, `:?`), `POSTGRES_DB` |
+| `guest` | `apps/guest/Dockerfile` | `app_render` | `default`, `talk-ai-public` | `DATABASE_URL_RENDER`, `BASE_URL`, `PGPOOL_*`, `INTAKE_URL=http://intake:3000`, `TRUSTED_PROXY_HOST` (по умолчанию `ai-hub-tls-proxy`) |
+| `intake` | `services/intake/Dockerfile` | `app_intake` | **только** `default` | `DATABASE_URL_INTAKE`, `BASE_URL`, `PGPOOL_*` |
+| `notifier` | `services/notifier/Dockerfile` | `app_notify` | `default` | `DATABASE_URL_NOTIFY`, `GUEST_INTERNAL_URL=http://guest:3000`, `TELEGRAM_BOT_TOKEN`, `PGPOOL_*` |
+| `web` | `apps/web/Dockerfile` | `app_owner` под RLS | `default`, `talk-ai-public` | `DATABASE_URL_OWNER`, `BASE_URL`, `GUEST_INTERNAL_URL`, `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY`, `PRICE_POINT_RUB`, `TELEGRAM_BOT_USERNAME`, `PGPOOL_*` |
 
-  caddy:                               # единственная дверь; хостовые порты только через переменные
-    image: caddy:2.8-alpine
-    ports: ["${HTTP_PORT:-80}:80", "${HTTPS_PORT:-443}:443"]
-    volumes: [./Caddyfile:/etc/caddy/Caddyfile, caddy_data:/data]
-volumes: {postgres_data: , caddy_data: }
-```
+`name: reviewqr` объявлен; у всех `restart: unless-stopped` и `depends_on: postgres: service_healthy`;
+**`ports:` нет ни у одного сервиса** — у `guest`, `intake`, `web` только `expose: ["3000"]`. Образы
+собираются из корня монорепо (`node:22-alpine`, `NODE_ENV=production`, запуск `tsx <файл>`).
+Сеть `talk-ai-public` — внешняя (`external: true`): её создаёт общий прокси машины, без неё `up` не
+пройдёт.
 
-Опущены ради места, но обязательны у **всех** сервисов: `restart: unless-stopped` и
-`depends_on: {condition: service_healthy}` — `service_started` значит «процесс запущен», а не «готов».
+**Маршрутизация — в Caddyfile общего прокси, не в проекте** (блок `reviewqr.aicoding.space`):
+`/internal/*` → `404` до проксирования; `/r`, `/r/*`, `/go/*` → `reviewqr-guest-1:3000`; всё
+остальное → `reviewqr-web-1:3000`; `Cache-Control: no-store`. `POST /api/feedback/private` снаружи
+**не существует**: форму гостя принимает `guest` (`POST /r/:slug/private`) и сам зовёт `intake`
+внутри сети (Pseudocode-OPS §9). **Ошибка маршрутизации отменяет всю конструкцию** (страница выбора
+под `app_owner`) — поэтому маршрут пишется полным именем контейнера.
 
-**Четыре разные строки подключения — не украшение, а условие §3.1:** своя роль и свой пароль в
-каждой, суперроли нет ни у кого. `web`, `guest`, `intake`, `notifier` **не публикуются на хост
-вовсе** — единственная дверь Caddy, иначе граница доверия к прокси обходится вместе с лимитом
-частоты (§7.2). Маршрутизация: `/r/*` и `/go/*` → `guest`, `/api/feedback/private` → `intake`,
-остальное → `web`. **Ошибка маршрутизации отменяет всю конструкцию** (страница выбора под
-`app_owner` читает приватные обращения), поэтому её проверяет T3b, а не глаза.
+**Чего compose НЕ делает и что делается руками** (подробно — [`REPRODUCE.md`](REPRODUCE.md)):
+миграции (`npm run migrate` с `DATABASE_URL_MIGRATE` — этой переменной нет ни в compose, ни в
+`.env.example`); пароли четырёх ролей (миграции создают роли `LOGIN` **без пароля**, строки
+подключения в `.env.example` несут `PASS`); бэкап. `SESSION_SECRET` лежит в `.env`, но compose **не
+передаёт** его в `guest`, где он нужен для `device_hash` ([`Refinement.md`](Refinement.md) §9, G-13).
+`MAX_BOT_TOKEN`, `HTTP_PORT`, `HTTPS_PORT` в `.env.example` ничем не читаются.
 
-**Самопроверка роли — команда контейнера, а не роут.** `docker compose exec guest node
-selftest-role.js` пытается `SELECT 1 FROM private_feedback LIMIT 1` и требует **ошибку прав**;
-успех или «ноль строк» — красный. CLI, а не HTTP-путь: список публичных путей от неё не растёт.
-
-Деплой: CI → образы → миграции `packages/db` → `docker compose -f docker-compose.prod.yml up -d` по
-SSH. Перед **любым** `up` — `check-ports.cjs` и `check-port-conflicts.sh`: эта машина держит `80`,
-`443`, `8080` занятыми. Бэкап — `pg_dump` по расписанию вне compose.
+Перед **любым** `up` — `node ../../.claude/hooks/check-ports.cjs .` и
+`bash ../../scripts/check-port-conflicts.sh .`: эта машина держит `80`, `443`, `8080` занятыми.
 
 ## 10. Оплата
 

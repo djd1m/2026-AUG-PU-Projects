@@ -14,19 +14,30 @@
 
 ## 4. Онбординг (FR-001…FR-004)
 
-### 4.1 Регистрация и точка — уникальность ограничением БД, а не проверкой перед вставкой
+### 4.1 Регистрация и точка — адрес из названия, уникальность ограничением БД
+
+> **Сверено с кодом 29.09.2026** (`apps/web/src/slug.ts`, `apps/web/src/places.ts`, миграция
+> `010_slug_check.sql`; фича `1d66ec4e`). Первая редакция принимала слаг от владельца
+> (`^[a-z0-9-]{3,40}$`, «занято» в лицо) — **поле адреса убрано**: ссылку сканируют, а не набирают
+> ([`research/slug-constraints-ux.md`](research/slug-constraints-ux.md)). Требование — FR-PLACE-001
+> в [`Specification-OWNER.md`](Specification-OWNER.md).
 
 ```
-function createPlace(account_id, slug, name, address) -> Place | Error:
-  if not matches(slug, "^[a-z0-9-]{3,40}$"): return Error("slug: 3-40, a-z 0-9 дефис")
-  if slug in RESERVED_SLUGS: return Error("slug занят")   # api, go, r, admin, static, health
-  try:
-    INSERT INTO places(id, account_id, slug, name, address, branding_required, created_at)
-      VALUES (uuidV4(), account_id, slug, name, address, TRUE, now())     # badge TRUE по умолчанию
-  catch UniqueViolation on places_slug_key: return Error("slug занят")
-  # Проверка занятости в интерфейсе (FR-001) — ПОДСКАЗКА, а не решение: между её ответом и
-  # сабмитом слаг может занять кто угодно. Решает ограничение БД, потому что оно атомарно.
-  return place
+function createPlace(account_id, name) -> Place | Error:          # POST /places, роль app_owner
+  if trim(name) == "" or len(name) > 200: return Error("название: 1–200 символов")
+  withAccount(account_id):                         # set_config app.current_account_id → RLS
+    for attempt in 0..3:
+      slug = translit(name)                        # кириллица → латиница, «не то» → дефис,
+                                                   # ≤ 24 символа, края без дефиса
+      if attempt > 0 or len(slug) < 3 or slug in RESERVED:     # api admin internal static assets
+        slug = (slug ? slug[0:19] + "-" : "p-") + randomHex(4) # r go v login register logout
+                                                   # dashboard places private; хвост СЛУЧАЙНЫЙ,
+                                                   # а не «-2»: не подсказывает перебор соседей
+      if not SLUG_RE.test(slug): continue          # ^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$
+      SAVEPOINT create_place                       # ошибка ограничения отравляет транзакцию
+      try: INSERT INTO places(account_id, slug, name) ... RETURNING id; return place
+      catch UniqueViolation: ROLLBACK TO SAVEPOINT create_place   # коллизия — молча, новый хвост
+    return Error("не удалось подобрать адрес — попробуйте ещё раз")    # 4 неудачи подряд
 ```
 
 **До заполнения ссылок площадок `/r/<slug>` отдаёт «точка настраивается», а не 404 и не пустую
@@ -79,38 +90,69 @@ function savePlatformLinks(place_id, inputs, actor):
 возможных. Сообщение «домен не принадлежит площадке» без этого объяснения читается как придирка,
 и владелец будет искать, как её обойти.
 
-### 4.3 Мессенджер (FR-003) и печатный макет (FR-004)
+> **Как реализовано (сверено с `apps/web/src/places.ts` 29.09.2026) — отличия от алгоритма выше:**
+> хосты — регэкспы `yandex.(ru|com)`, `ya.ru` и `2gis.(ru|com)` с поддоменами по границе метки;
+> **путь не проверяется** (площадки меняют пути без предупреждения); только `https:`;
+> `link_kind` всегда `card`; сохранение — `UPSERT` по одной площадке, пустое поле пропускается,
+> первая непригодная ссылка даёт `422`, но **уже сохранённая до неё площадка остаётся**
+> (не «ни одна не изменяется»); событий `onboarding_links_*` и строки `audit_log` в коде нет.
+> После сохранения кабинет просит `guest` сбросить кэш точки (`POST /internal/invalidate/<slug>`,
+> [`Pseudocode-GROWTH.md`](Pseudocode-GROWTH.md) §3.1).
+
+### 4.3 Мессенджер (FR-003, FR-BIND-001…003) и печатный макет (FR-004)
+
+> **Сверено с кодом 29.09.2026:** `apps/web/src/server.ts` (маршруты `/places/:id/bind`, `/places/:id/qr`),
+> `apps/web/src/pages.ts` (`bindStartPage`, `bindPage`, `botDeepLink`, `qrPage`), `apps/web/src/qr.ts`,
+> `services/notifier/src/binder.ts`, миграции `009_binding_grants.sql`, `012_bind_token_burn.sql`.
+> Реализован **только Telegram**; MAX — нет (`MAX_BOT_TOKEN` в `.env.example` ничем не читается).
+> Первая редакция (одноразовость флагом `bound_at IS NULL`, обнуление привязки при выдаче токена,
+> PDF-макет) заменена: фиксы `27ee2e6b`, `637c3a75`, `16bdcb75`, `d2420ffb`.
 
 ```
-function bindChannel(place_id, channel) -> deep_link:
-  token = randomToken(32)
-  INSERT INTO channel_bindings(place_id, channel, bind_token_hash, bound_at)
-    VALUES (place_id, channel, hash(token), NULL)        # bound_at NULL = ещё не подтверждено
-  return deepLinkFor(channel, token)
+# ── кабинет (apps/web, app_owner под RLS)
+GET  /places/:id/bind   -> bindStartPage(place, bound = exists chat_id)    # БЕЗВРЕДНЫЙ показ:
+                                                   # предзагрузка ссылок браузером/мессенджером
+                                                   # не должна перевыпускать токен
+POST /places/:id/bind   (Origin == BASE_URL, иначе 403):
+  token = base64url(randomBytes(24))               # показывается ОДИН раз, в БД — только sha256
+  UPSERT channel_bindings(place_id, 'telegram', bind_token_hash = sha256(token), chat_id NULL,
+         bound_at NULL) ON CONFLICT (place_id, channel) DO UPDATE SET bind_token_hash = excluded
+                                                   # chat_id/bound_at НЕ трогаются: действующая
+                                                   # доставка живёт до УСПЕХА нового /start
+  deep = TELEGRAM_BOT_USERNAME ? "https://t.me/<bot>?start=<token>" : ""   # botDeepLink — ОДНО
+  return bindPage(deep, qrSvg(deep), "tg://resolve?domain=<bot>&start=<token>",   # место сборки
+                  webTelegramLink, "/start <token>" текстом)   # три обходных пути мимо t.me
 
-function onBotStart(channel, chat_id, token):
-  b = findBindingByTokenHash(hash(token))
-  if b is null or b.bound_at is not null: return         # одноразовость: повтор не связывает
-  UPDATE channel_bindings SET chat_id = chat_id WHERE id = b.id
-  if not sendToMessenger(channel, chat_id, "Канал подключён.", timeout = 5 s): return
-  UPDATE channel_bindings SET bound_at = now() WHERE id = b.id   # ПОДТВЕРЖДАЕТ ДОСТАВЛЕННОЕ
-  emitAnalytics("onboarding_channel_bound", { place_id: b.place_id })   # СООБЩЕНИЕ (FR-003),
-                                                                        # а не запись в БД
-function buildPrintLayout(place, template) -> Pdf:
-  assertBaseUrlConfigured()                              # §5.3 — БЕЗ дефолта в проде
-  if not isAbsolute(BASE_URL) or not (BASE_URL startsWith "https://"):
-    throw Error("BASE_URL обязан быть абсолютным https: он уходит В ПЕЧАТЬ")
-  qr = renderQr(BASE_URL + "/r/" + place.slug)     # QR ведёт на НАШ домен: целевые ссылки
-                                                   # площадок меняются на сервере без перепечатки
-  assert template in CARRY_AWAY_TEMPLATES or template == "table_tent"
-  # Сценарий «общий планшет / стойка со сканом» НЕ ПОДДЕРЖИВАЕТСЯ: макета для него нет вовсе.
-  # Не «не рекомендуется» — отсутствует в продукте (04b §0.4.1).
-  warn = (template == "table_tent") ? WIFI_WARNING : null   # безопасен, пока гость сканирует
-                                                            # СВОИМ телефоном на СВОЕЙ сети
-  # NFR-LEGAL-001: ни подсказок содержания отзыва, ни упоминания вознаграждения,
-  # ни блока «свободный Wi-Fi + QR отзыва» одним куском.
-  return compose(qr, place.name, warn, badge = place.branding_required ? SERVICE_LOGO : null)
+# ── нотифаер (services/notifier, app_notify), каждый тик ≈ 5 с, до доставки
+function pollBindings():
+  if TELEGRAM_BOT_TOKEN == "": return 0            # бот не заведён — привязка спит
+  updates = GET api.telegram.org/bot<token>/getUpdates?offset=<offset>&timeout=0 (8 с)
+  on network error: return 0                       # offset не сдвинут — ничего не потеряно
+  for u in updates:
+    offset = max(offset, u.update_id + 1)
+    m = match(u.message.text, "^/start[ =]([A-Za-z0-9_-]{16,64})$")
+    if not m:
+      if text startsWith "/start": log bind_start_without_token; reply "откройте по ССЫЛКЕ из кабинета"
+      else if text: log tg_message_ignored
+      continue
+    rows = UPDATE channel_bindings SET chat_id = chat, bound_at = now(),
+              bind_token_hash = randomBytes(32)    # СЖИГАНИЕ хеша = одноразовость, атомарно:
+            WHERE bind_token_hash = sha256(m[1]) AND channel = 'telegram' RETURNING place_id
+    if rows: reply "Готово…"                       # подтверждение доставленным сообщением
+    else:    log bind_token_unknown(hash[0:8]); reply "Ссылка устарела…"
+
+# ── QR и макеты (GET /places/:id/qr, только своя точка — чужая неотличима от несуществующей: 404)
+href = BASE_URL + "/r/" + place.slug               # QR ведёт на НАШ домен (ADR-001)
+svg  = QRCode.toString(href, svg, errorCorrection "M", margin 4, dark #00132e)
+qrPage: «Подвал счёта», «Оборот визитки», «Наклейка на упаковку» (уносимые — первыми),
+        затем «Тейбл-тент» с предупреждением про гостевой Wi-Fi и общий планшет; печать — print()
+        # NFR-LEGAL-001: ни подсказок содержания, ни вознаграждения — стережёт http.test.ts
 ```
+
+**Не реализовано из первой редакции:** проверка «`BASE_URL` — абсолютный `https`» перед
+построением QR (кабинет берёт `BASE_URL` с дефолтом `http://localhost:3000`, см.
+[`Refinement.md`](Refinement.md) §9, G-12); бренд-логотип сервиса на макете бесплатной точки —
+на макетах его нет, бренд-строка живёт только на гостевой странице.
 
 ---
 
@@ -166,6 +208,20 @@ function ipInAnyCidr(ip, cidrs) -> bool:
   return false
 ```
 
+> **Как реализовано (сверено с `apps/web/src/payment.ts`, `apps/web/src/server.ts` 29.09.2026):**
+> вебхук — `POST /webhooks/yookassa` (вне сессии и Origin), тело до 64 КБ; адрес источника —
+> **последний** элемент `X-Forwarded-For` (дописан общим Caddy), сеть — `YOOKASSA_NETWORKS` в коде,
+> **включая IPv6 `2a02:5180::/32`** (без неё оплата по IPv6 не применялась бы никогда, фикс `dfb6497e`).
+> Принимаются `payment.succeeded` и `payment.canceled`; перезапрос `GET /v3/payments/{id}`: `404` —
+> подделка, `200` без записи; статус не совпал с заявленным — `200` без записи; сбой — `500`.
+> `succeeded`: `checkout_sessions → completed`, подписка `point` на 30 дней (повтор оплаты продлевает
+> `current_period_end + 30 days`), `branding_required = false` у **всех** точек аккаунта, комиссия
+> партнёру по `pending`-атрибуции (`on conflict (payment_event_id) do nothing`). `canceled` помечает
+> только незавершённый checkout (`expired`) и не затирает тариф. `auditLog` в коде нет.
+> Создание платежа — `POST /billing/checkout`: цена `PRICE_POINT_RUB` (нет → 990, мусор → отказ),
+> `Idempotence-Key` = UUID, `return_url = BASE_URL/dashboard?paid=1`; причина отказа пишется в лог
+> `checkout_failed` (фикс `db10f349`). Полный план и DoD — [`features/payment/`](features/payment/01_specification.md).
+
 **Дефект, который этот порядок предотвращает, — реальный: найден в проекте 01 и стоил бы денег.**
 Если заявку на `event_id` поставить раньше подлинности, а недоступность провайдера **вернуть
 значением** из колбэка транзакции, то транзакция коммитится вместе с заявкой; роут отдаёт 500;
@@ -196,6 +252,12 @@ function activePlacesThisWeek() -> int:                    # МЕТРИКА НЕ
   # на guest_events, поэтому «эта строка уже была» ему недоступно — и это часть защиты ([main](Pseudocode.md) §1.4).
 ```
 
+> **Как реализовано (сверено с `apps/web/src/places.ts`, `pages.ts` 29.09.2026):** кабинет показывает
+> по каждой точке две плашки — «сканы» (`count(distinct device_hash)` по `kind='scan'` **за всё
+> время**, не за неделю) и «обращения» (число `private_feedback`) — и список обращений на
+> `/places/:id`. Долей дверей, пояснения о модерации, `activePlacesThisWeek` и недельной сводки в
+> мессенджер **в коде нет**: метрика недели снимается запросом к БД вручную.
+
 **Оговорка «с уникального устройства» несущая, а не украшение:** без неё владелец, показывающий QR
 сотрудникам, создаёт активность на пустом месте, и метрика начинает врать в приятную сторону.
 
@@ -212,6 +274,12 @@ function assertBaseUrlConfigured():
                что уходит В ПЕЧАТЬ: с дефолтом все они повели бы на localhost — навсегда,
                потому что носители не перепечатать.")
 ```
+
+> **Как реализовано (сверено с кодом 29.09.2026) — защита есть только у `guest`:**
+> `apps/guest/src/server.ts` `requireBaseUrl()` роняет старт в `NODE_ENV=production` без `BASE_URL`.
+> У `web` — **тихий дефолт** `http://localhost:3000` (`apps/web/src/server.ts:17`), у `intake` пустой
+> `BASE_URL` **отключает** проверку Origin (`services/intake/src/server.ts`: `if (ORIGIN && …)`).
+> На стенде переменная задана, поэтому дефект не проявлен; в коде он есть — [`Refinement.md`](Refinement.md) §9, G-12.
 
 Сообщение объясняет **цену**, а не факт: «BASE_URL не задан» читается как придирка, и защиту снимут.
 
