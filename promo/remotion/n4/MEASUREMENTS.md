@@ -1,5 +1,60 @@
 # Замеры — N4 «Тарелка» на общем шаблоне
 
+## Круг правок 2 (2026-09-29 12:49–14:08 UTC) — перерендер на новом шаблоне, файлы НЕ изменились
+
+Шаблон `9a61bd49` (сноска `footnote` перенесена в полосу титра, порог WCAG 0.04045). У N4 сносок нет, поэтому раскладка
+прежняя до пикселя — и sha256 это подтверждает: все три mp4 **побайтно равны** файлам фазы 2 в `promo/dist/n4/`
+(`46939c7f…`, `df020bdd…`, `2471107d…`). `promo/dist/n4/` не менялся. Конфиг N4 не менялся.
+Квитанция: `/home/dz-projects-2026/.promo-assets/n4/out/final/logs/receipt-round2.txt` (`rev=9a61bd49`, `dirty_files=13` —
+документы других проектов круга, не N4), result=green.
+
+| Шаг | Wall, с | user + sys, с | Пик памяти, байт | host_load1 | watchdog |
+|---|---|---|---|---|---|
+| bundle | 22,5 | 25,6 + 2,8 | 822 484 992 | 6,94 | clean |
+| 16x9 | 240,9 | 315,0 + 178,6 | 2 719 477 760 | 4,58 | clean |
+| 9x16 | 241,2 | 350,9 + 177,8 | 2 737 643 520 | 8,91 | clean |
+| 1x1 | 194,8 | 274,0 + 155,7 | 3 080 097 792 | 5,72 | clean |
+| 16x9-repeat | 253,3 | 329,3 + 189,1 | 2 725 572 608 | 13,91 | clean — **совпал побайтно** |
+
+Привязка к исходникам (sha256; шрифты — из `public/fonts/` проекта):
+
+```text
+46939c7f082c5c10ac87bedacbd95f610101ecd9496b7e7e8faf7674aefc6d5d  16x9.mp4 (= 16x9-repeat.mp4)
+df020bdd10129895b4bd7cfabe852d524b76869bddc3e03d5073ccd0af90d5b4  9x16.mp4
+2471107def05a87aeebab418b6062e0d11b88337cb7a9b2549c62ab8bcf78612  1x1.mp4
+4798812e9eb0ca55b91e714d26b995a0e311fc0e71c9425575b6a8630bff03af  promo/remotion/n4/project.config.ts
+9207ac348c44449f2345f8025f814d044a669ea8045010fc3c61efaaa2b4fc45  capture-mobile.webm
+352244263bff92eb4be6c69e7a8660a2c37414c519f9b3ad0db4e18fd2b85bde  result-mobile.webm
+08b8ba2d65a7b0d30df562b6b81e3a6cf96143dbbe5dbf1c4b6d98b5ed64513f  share-mobile.webm
+6b989c9737edfe35d783f97cf55c733437ca9ab350a9e437e5f9eb7cb88f0e72  public/fonts/Onest-wght.ttf
+d6d6d4ddcadd086333fb0950b10b9934707603ea07d141f2de07f77717580192  public/fonts/Unbounded-wght.ttf
+шаблон 9a61bd49: shared/src/Promo.tsx 97c9b3a5…12fdb31d, shared/src/project.ts 1663eb69…44284f7d
+```
+
+### Окончательная проверка (навык `promo-video`, модуль 07)
+
+Листы: `/home/dz-projects-2026/.promo-assets/n4/out/final/proof/` — `sheets/` (36 листов: по 12 на формат — 4 листа шага
+0,25 с + 8 стыков покадрово ±5 кадров), `index.tsv` (sha256 mp4 = текущим), `verdict.tsv`, `config-inspect.tsv`;
+монтажи стыков для просмотра — `proof/montage/`. Проверенные интервалы (каждый формат): 0–12, 12–24, 24–36, 36–45 с;
+стыки 7,0 · 10,5 · 17,0 · 21,0 · 25,5 · 30,0 · 33,5 · 39,0 с (кадры t×30 ± 5).
+
+| Ворота | Код | Итог |
+|---|---|---|
+| `gate-config.sh n4` | 0 | титры ≤ 2 строк, сегменты в файлах, Σ 45 с; запретных зон нет (кадрирование ради запрета не применялось) |
+| `REPRO=1 render.sh n4` | 0 | три формата + повтор |
+| `gate-receipt.sh` | 0 | все операции с wall/user/sys/memory.peak/host_load1/watchdog |
+| `gate-media.sh` | 0 | 1350 декодированных кадров, 0 аудиопотоков, размеры по формату |
+| `storyboard.sh` | 0 | 36 листов |
+| `gate-verdict.sh` (+ `captions-proof.tsv`, 7 титров) | 0 | все листы `принят`/`нет`, все титры доказаны кадром |
+| `gate-watchdog.sh promo-n4-storyboard` | 0 | сторож не трогал; для `promo-n4-media` — 2 (после 20-секундной операции в журнале сторожа ещё не было строк — обход не доказан, контейнер отработал штатно) |
+| grep переопределений флагов | 1 | чисто |
+
+Замечено и оставлено (решения владельца, не дефекты по критериям модуля 07): титул сцены 1 — три блока (в 9:16 восемь
+строк; стилистика — DEC-S-01, ждёт слова владельца); на стыке 33,5 с один кадр карточки сторис с ещё не загруженной
+картинкой — состояние продукта в самой записи `share-mobile`, не монтаж.
+
+---
+
 Одна команда `REPRO=1 bash promo/remotion/shared/render.sh n4`, все флаги — только в `shared/render.sh`.
 Квитанция: `/home/dz-projects-2026/.promo-assets/n4/out/final/logs/receipt-final.txt` (копия `receipt.txt`), журналы
 операций — там же (вне git).
