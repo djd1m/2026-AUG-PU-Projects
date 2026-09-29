@@ -9,6 +9,8 @@
 | N4 «Тарелка» | `n4/16x9.mp4` | `n4/9x16.mp4` | `n4/1x1.mp4` | `promo/remotion/n4/` |
 | N5 «КлипМейкер» | `n5/16x9.mp4` | `n5/9x16.mp4` | `n5/1x1.mp4` | `promo/remotion/n5/` |
 | N1 «Proofwall» | `n1/16x9.mp4` | `n1/9x16.mp4` | `n1/1x1.mp4` | `promo/remotion/n1/` |
+| N2 «ReviewQR» | `n2/16x9.mp4` | `n2/9x16.mp4` | `n2/1x1.mp4` | `promo/remotion/n2/` |
+| N3 «Круг» | — | — | — | отложен: стенд недоступен (`promo/SERIES.md`, журнал) |
 
 Воспроизвести: `REPRO=1 bash promo/remotion/shared/render.sh <proj>` в образе `promo-render:2026-09-29`
 (`promo/render-image/`); записи экранов — вне git (`/home/dz-projects-2026/.promo-assets/<proj>/`), команда повтора —
