@@ -1,44 +1,43 @@
-# Ролик N6 «Суфлёр» на Remotion — исполнитель пилота
+# Ролик N6 «Суфлёр» — на общем шаблоне серии
 
-Постановка — [`../../EXECUTOR-BRIEF.md`](../../EXECUTOR-BRIEF.md), протокол — [`../../PILOT-N6.md`](../../PILOT-N6.md).
-Замеры — [`MEASUREMENTS.md`](MEASUREMENTS.md), журнал попыток — [`ITERATIONS.md`](ITERATIONS.md).
-
-**Лицензия Remotion:** Company License требуется, если владелец — компания от 4 человек; пилот считает по худшему сценарию.
+Шаблон и порядок работы — [`../shared/README.md`](../shared/README.md); правила серии — [`../../SERIES.md`](../../SERIES.md).
+Сценарий для правки — [`SCENARIO.md`](SCENARIO.md), замеры — [`MEASUREMENTS.md`](MEASUREMENTS.md), попытки — [`ITERATIONS.md`](ITERATIONS.md).
+История пилота (сравнение с HyperFrames, прежние замеры) — `promo/RESULT.md` и эта папка в ревизии `8a9dc756`.
 
 ## Воспроизвести одной командой
 
 ```bash
-bash promo/remotion/n6/render.sh          # REPRO=1 — ещё раз 16:9 для сверки sha256
+REPRO=1 bash promo/remotion/shared/render.sh n6
 ```
 
-Скрипт с хоста только запускает контейнеры `promo-render:2026-09-29` (без портов): при отсутствии
-`node_modules` — `npm ci` c сетью (`--network bridge`), затем каждый формат — отдельный контейнер
-`--network none --memory=4g --cpus=2.5` под `flock /home/dz-projects-2026/.promo-assets/render.lock`.
-`--cpus=2.5` — поправка протокола: хостовый `crypto-miner-watchdog.sh` перезапускает контейнер с CPU > 300 %; под 2,9 он однажды намерил 301 %.
-Флаги рендера: `--codec=h264 --pixel-format=yuv420p --color-space=bt709 --crf=20 --concurrency=2
---offthreadvideo-cache-size-in-bytes=536870912` (без `bt709` получается `yuvj420p`, без предела кэша — OOM в 4 ГБ).
-Результат: `/home/dz-projects-2026/.promo-assets/n6/out/remotion/{16x9,9x16,1x1}.mp4`, журналы — `logs/`.
-Контрольные кадры для просмотра: `bash scripts/in-container.sh stills <id> /out/stills <кадр…>` в том же контейнере.
+Результат: `/home/dz-projects-2026/.promo-assets/n6/out/final/{16x9,9x16,1x1,16x9-repeat}.mp4`, журналы и квитанция —
+`out/final/logs/` (вне git).
 
-## Устройство
+## Что в папке
 
 | Файл | Что |
 |---|---|
-| `src/Root.tsx` | три `<Composition>` (`n6-16x9` 1920×1080, `n6-9x16` 1080×1920, `n6-1x1` 1080×1080) над ОДНИМ компонентом `<Promo layout>` — без копипасты сцен |
-| `src/timeline.ts` | сцены (0–5–15–30–38–45 с, 1350 кадров при 30 fps), куски записей с ускорением и кадрированием по раскладке; проверки сумм кадров при загрузке (не сошлось — рендер падает, а не обрезает) |
-| `src/Promo.tsx` | титульные сцены, сцены с записями (`<OffthreadVideo>` прямо из `.webm`, `trimBefore` + `playbackRate`), полоса титра |
-| `public/fonts/` | Onest Regular/SemiBold/Bold из образа (OFL, лицензия рядом), подключение `@remotion/fonts` `loadFont` — при ошибке загрузки рендер падает, а не подменяет шрифт |
-| `public/rec` | симлинк на `/assets` (записи монтируются только для чтения; в git — только ссылка) |
-| `scripts/in-container.sh` | один рендер/кадр внутри образа; время — bash `time`, память — `/sys/fs/cgroup/memory.peak` |
-| `install.sh` | `npm ci` внутри образа, время и размер `node_modules` |
+| `project.config.ts` | всё, что отличает N6: токены, шрифт, 5 сцен, тексты титров, куски записей и кадрирование |
+| `public/rec → /assets` | записи монтируются только для чтения |
+| `public/fonts → /usr/local/share/fonts` | Onest из образа `promo-render` (OFL; сборка — `promo/render-image/fonts/`) |
 
-- **Браузер:** Chromium из образа — `--browser-executable=/ms-playwright/chromium_headless_shell-1223/chrome-headless-shell-linux64/chrome-headless-shell`
-  (документированный флаг CLI). Remotion свой Chrome Headless Shell не скачивал: рендер работает с `--network none`.
-- **`--no-sandbox` под root:** ничего делать не пришлось — `@remotion/renderer` 4.0.529 всегда передаёт
-  `--no-sandbox --disable-setuid-sandbox` (`node_modules/@remotion/renderer/dist/open-browser.js`); отдельной опции нет и не нужна.
-- **Видео:** `.webm` (VP8) читаются `<OffthreadVideo>` напрямую, перекодировка в mp4 не понадобилась.
-- **Музыка:** нет (ролик без звука; аудиодорожки в mp4 нет) — осознанно, CC0-трек не подбирался.
-- **Сцена 4:** экрана установки нет (нужен вход) — в кадре окно чата предпросмотра с бейджем «Работает на Суфлёре»
-  (`widget-*.webm`), а НЕ строка `<script>`; титр «Одна строка кода — и бот на вашем сайте.» оставлен по постановке.
-- **Сцена 3:** титр «Чего нет на сайте — не выдумывает.» без слова «контакт» (у бота предпросмотра контакт не задан).
-- 16:9 и 1:1 собраны из desktop-записей (кадрирование `cover` + приближение к окну чата), 9:16 — из mobile-записей (`contain`).
+## Записи (сняты этапом capture 29.09 04:22–04:29 UTC, `promo/capture/README.md`)
+
+Адрес — выданный развёртыванием `https://sufler.aicoding.space`, тёмная тема. Новых записей и платных вызовов в фазе 1 нет
+(в пилоте: 1 предпросмотр + 4 ответа модели).
+
+| Сцена | Файл desktop (16:9, 1:1) | Файл mobile (9:16) | Куски записи → секунды ролика |
+|---|---|---|---|
+| 2 | `preview-desktop.webm` | `preview-mobile.webm` | desktop 2,5–8 с → 3,67 с; 8–38,5 с → 6,33 с · mobile 1,5–6,8 → 3,53; 6,8–29,5 → 6,47 |
+| 3 | `chat-desktop.webm` | `chat-mobile.webm` | 3–9 с → 3 с; 9–15 → 6; 45–50 → 2,5; 50–53,5 → 3,5 |
+| 4 | `widget-desktop.webm` | `widget-mobile.webm` | 0–12 с → 8 с · mobile 0–10,8 → 8 |
+
+## Компоновка (изменения против пилота)
+
+- **9:16 — записи целиком** (`contain`, без зума): полоса титра сверху 15 %, mobile-запись 780×1688 вписана по высоте;
+  окно чата не обрезается кадрированием ролика (верх страницы в самой записи прокручен — это съёмка, не монтаж).
+- **16:9** — чат целиком по высоте (прямоугольник x 380–1540: макет сайта + окно бота), без прежнего зума ×1,3,
+  который срезал окно сверху.
+- **Сцена 4** — зум на окно чата с бейджем «Работает на Суфлёре»: 16:9 — макет страницы и окно рядом, 1:1 — только окно.
+  Титр «Одна строка кода — и бот на вашем сайте.» оставлен; расхождение с кадром — в `SCENARIO.md`.
+- 1:1 — кадрирование по куску: верх окна чата для первого вопроса, низ (ответ «не нашёл») для второго.

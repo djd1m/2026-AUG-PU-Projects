@@ -57,7 +57,8 @@ run() { # <имя-суффикс> <журнал> <в-блокировке 0|1> -
   local hits; hits=$(awk -v s="$t0" -v n="'$name'" 'substr($0,2,19) >= s && index($0, n)' "$WATCHDOG_LOG")
   if [ -n "$hits" ]; then echo "❌ сторож трогал $name:"$'\n'"$hits" >&2; echo "watchdog $name: HIT" >> "$RECEIPT"; FAIL=1; fi
   if [ $rc != 0 ]; then echo "❌ $name: код $rc, журнал $log" >&2; tail -15 "$log" >&2; FAIL=1; return 1; fi
-  echo "$name $(grep -E '^(TIME|MEMPEAK)' "$log" | tr '\n' ' ') watchdog=clean" | tee -a "$RECEIPT"
+  # load хоста (1 мин) в конце операции: соседние контейнеры меняют время рендера — без этой строки замеры несравнимы.
+  echo "$name $(grep -E '^(TIME|MEMPEAK)' "$log" | tr '\n' ' ') watchdog=clean host_load1=$(cut -d' ' -f1 /proc/loadavg)" | tee -a "$RECEIPT"
 }
 
 # 1. Установка — один package.json/lockfile на серию; сеть только здесь, без блокировки.
