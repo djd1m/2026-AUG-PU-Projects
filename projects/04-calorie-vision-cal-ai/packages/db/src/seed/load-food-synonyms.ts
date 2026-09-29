@@ -16,6 +16,8 @@ export interface SeedRejection {
 
 export interface SeedLoadResult {
   readonly inserted: number;
+  /** Сколько строк ПРЕЖНЕЙ загрузки тех же кураторов заменено (идемпотентность, DEC-A-064). */
+  readonly replaced: number;
   readonly rejected: readonly SeedRejection[];
 }
 
@@ -35,15 +37,43 @@ const INSERT_SYNONYM = `
   VALUES ($1, $2, $3, $4::jsonb, $5, now())
 `;
 
+// Идемпотентность (DEC-A-064, 2026-09-29): seed, применённый на стенде ДВАЖДЫ, дал дубли
+// `name_ru` — прежняя загрузка только дописывала. Теперь загрузка ЗАМЕНЯЕТ строки тех же
+// `curated_by`, что несёт файл: удалить и вставить в одной транзакции, под блокировкой
+// таблицы, чтобы два одновременных запуска не удалили друг у друга и не вставили дважды.
+// Строки других кураторов (ручная курация, тесты) не трогаются.
+const LOCK_SYNONYMS = 'LOCK TABLE food_synonym IN SHARE ROW EXCLUSIVE MODE';
+const DELETE_PREVIOUS = 'DELETE FROM food_synonym WHERE curated_by = ANY($1::text[])';
+
+/** Дубли `name_ru_normalized` внутри самого файла — отказ: поиск вернул бы две записи на одно слово. */
+export function findDuplicateNormalizedNames(rows: readonly SeedSynonymRow[]): string[] {
+  const seen = new Map<string, number>();
+  for (const row of rows) {
+    const key = normalizeRuName(row.name_ru);
+    seen.set(key, (seen.get(key) ?? 0) + 1);
+  }
+  return [...seen.entries()].filter(([, count]) => count > 1).map(([key]) => key);
+}
+
 /**
  * Загружает seed ЦЕЛИКОМ в ОДНОЙ транзакции: строка, отвергнутая на шаге 1.1/1.2/1.3,
  * откатывает всё — частичная курация хуже отсутствующей, потому что выглядит полной.
  */
 export async function loadFoodSynonyms(pool: DbPool, rows: readonly SeedSynonymRow[]): Promise<SeedLoadResult> {
   const rejected: SeedRejection[] = [];
+  let replaced = 0;
+
+  for (const duplicate of findDuplicateNormalizedNames(rows)) {
+    rejected.push({ nameRu: duplicate, reason: 'duplicate_name_ru_normalized' });
+  }
+  if (rejected.length > 0) return { inserted: 0, replaced: 0, rejected };
 
   const inserted = await withTransaction(pool, async (client) => {
     let count = 0;
+    await client.query(LOCK_SYNONYMS);
+    const curators = [...new Set(rows.map((row) => row.curated_by))];
+    const deleted = await client.query(DELETE_PREVIOUS, [curators]);
+    replaced = deleted.rowCount ?? 0;
     for (const row of rows) {
       const hasDirect = row.food_item_source_id !== undefined;
       const hasRecipe = row.recipe_parts !== undefined;
@@ -101,11 +131,14 @@ export async function loadFoodSynonyms(pool: DbPool, rows: readonly SeedSynonymR
     }
     return count;
   }).catch((error) => {
-    if (error instanceof SeedRejectedError) return 0;
+    if (error instanceof SeedRejectedError) {
+      replaced = 0; // откат: прежние строки на месте
+      return 0;
+    }
     throw error;
   });
 
-  return { inserted, rejected };
+  return { inserted, replaced, rejected };
 }
 
 class SeedRejectedError extends Error {

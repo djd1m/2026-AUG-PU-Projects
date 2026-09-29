@@ -61,6 +61,12 @@ export type FoodMatchResult =
 export interface SeedSynonymRow {
   readonly name_ru: string;
   readonly food_item_source_id?: string;
-  readonly recipe_parts?: ReadonlyArray<{ readonly food_item_source_id: string; readonly share: number }>;
+  /**
+   * Ожидаемые английские слова в `food_item.name_en` (через `;`, каждое — целым словом).
+   * Загрузка его не читает: это вход стража `tests/unit/food-synonym-seed.test.ts`, который
+   * ловит сдвинутый FDC id (DEC-A-064: «яйцо вареное» указывало на «Butter, salted»).
+   */
+  readonly expect_en?: string;
+  readonly recipe_parts?: ReadonlyArray<{ readonly food_item_source_id: string; readonly share: number; readonly expect_en?: string }>;
   readonly curated_by: string;
 }

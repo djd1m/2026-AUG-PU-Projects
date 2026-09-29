@@ -27,7 +27,7 @@ async function main(): Promise<void> {
       process.exitCode = 1;
       return;
     }
-    console.log(`seed применён: ${result.inserted} строк food_synonym`);
+    console.log(`seed применён: ${result.inserted} строк food_synonym (заменено прежних строк тех же кураторов: ${result.replaced})`);
   } finally {
     await pool.end();
   }
