@@ -40,6 +40,9 @@
 запускают с хоста, а не через `docker compose run`. Без хостового Node эти проверки не выполнить: проверка,
 которая не запустилась, — не «чисто» (код 2 у `check-ports.cjs`).
 
+**AWS CLI отдельно ставить не нужно:** §5 (lifecycle бакета) запускает его контейнером
+`amazon/aws-cli:2.17.0` (проверено `docker pull`), поэтому достаточно Docker.
+
 ### Внешние учётные записи
 
 | Что | Зачем | Где взять |
@@ -247,7 +250,9 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 | Versioning | выключено (не включалось или `Suspended`) | иначе удаление создаёт версии и хранение продолжает тарифицироваться |
 
 Одинаковый способ для MinIO и Cloud.ru (`PutBucketLifecycleConfiguration`; поддерживает `Expiration` и
-`AbortIncompleteMultipartUpload`, `Transition` не поддерживается) — AWS CLI с адресом хранилища:
+`AbortIncompleteMultipartUpload`, `Transition` не поддерживается) — AWS CLI из контейнера с закреплённым тегом
+`amazon/aws-cli:2.17.0`. Запускать из каталога проекта, где лежит `.env` (переменные `S3_*` берутся из него,
+ключи переименовываются в `AWS_*` явно):
 
 ```bash
 cat > lifecycle.json <<'JSON'
@@ -257,12 +262,29 @@ cat > lifecycle.json <<'JSON'
  {"ID":"expire-free","Status":"Enabled","Filter":{"Prefix":"clips/free/"},
   "Expiration":{"Days":7}}]}
 JSON
-aws --endpoint-url "$S3_ENDPOINT" s3api put-bucket-lifecycle-configuration \
-  --bucket "$S3_BUCKET" --lifecycle-configuration file://lifecycle.json
+set -a; . ./.env; set +a
+
+# Cloud.ru: S3_ENDPOINT из .env (https://s3.cloud.ru), сеть проекта не нужна
+NET=""
+# Встроенный MinIO (профиль test): контейнер идёт в сеть compose-проекта. Сеть по умолчанию называется
+# <name>_default, где name — `name:` из docker-compose.yml (${N5_COMPOSE_PROJECT:-n5-clipmaker}); сверить: docker network ls
+# NET="--network ${N5_COMPOSE_PROJECT:-n5-clipmaker}_default"; S3_ENDPOINT=http://minio:9000
+
+aws() { docker run --rm $NET \
+  -e AWS_ACCESS_KEY_ID="$S3_ACCESS_KEY" -e AWS_SECRET_ACCESS_KEY="$S3_SECRET_KEY" \
+  -e AWS_DEFAULT_REGION="$S3_REGION" \
+  -v "$PWD/lifecycle.json:/aws/lifecycle.json:ro" \
+  amazon/aws-cli:2.17.0 --endpoint-url "$S3_ENDPOINT" "$@"; }
+
+aws s3api put-bucket-lifecycle-configuration --bucket "$S3_BUCKET" \
+  --lifecycle-configuration file:///aws/lifecycle.json
 # проверка: оба правила Enabled, у expire-free префикс clips/free/ (а не clips/), versioning пуст или Suspended
-aws --endpoint-url "$S3_ENDPOINT" s3api get-bucket-lifecycle-configuration --bucket "$S3_BUCKET"
-aws --endpoint-url "$S3_ENDPOINT" s3api get-bucket-versioning --bucket "$S3_BUCKET"
+aws s3api get-bucket-lifecycle-configuration --bucket "$S3_BUCKET"
+aws s3api get-bucket-versioning --bucket "$S3_BUCKET"
 ```
+
+Для MinIO раскомментировать две строки `NET=…; S3_ENDPOINT=…` (контейнер AWS CLI должен видеть имя `minio`);
+для Cloud.ru оставить как есть. Ключи MinIO в `.env` — те же `S3_ACCESS_KEY`/`S3_SECRET_KEY`.
 
 (Для встроенного MinIO допустим и `mc ilm rule add --expire-days 7 --prefix clips/free/ local/<S3_BUCKET>`, но
 правило прерывания незавершённых загрузок через `mc` ставится не во всех версиях — надёжнее JSON выше. Эти команды
@@ -516,11 +538,19 @@ R9 — основное действие на первом экране без �
   **В новом окружении клип витрины другой, и до замены демо-маршрут `/api/showcase/CTDUUG/…` вернёт 404**
   (в наборе — идентификаторы старого стенда). Согласованная пара на свежей БД, когда есть хотя бы один готовый клип
   со ссылкой (запрос только на чтение):
-  `docker compose … exec db psql -U <пользователь> -d <база> -c "SELECT l.code, c.id AS clip_id, ROUND(v.duration_seconds/60.0) AS source_minutes, (SELECT COUNT(*) FROM clip d WHERE d.video_id=v.id AND d.status='done') AS clip_count FROM clip_link l JOIN clip c ON c.id=l.clip_id JOIN video v ON v.id=c.video_id WHERE c.status='done' AND l.revoked_at IS NULL ORDER BY c.created_at DESC LIMIT 5"`
-  (схема — `packages/db/migrations/001_init.sql`, `revoked_at` — миграция 009; если запрос не прошёл, сверить имена
+  ```bash
+  set -a; . ./.env; set +a
+  docker compose --project-directory . --env-file .env exec -T db psql -U n5 -d n5 -c "SELECT l.code, c.id AS clip_id, ROUND(v.duration_seconds/60.0) AS source_minutes, (SELECT COUNT(*) FROM clip d WHERE d.video_id=v.id AND d.status='done') AS clip_count FROM clip_link l JOIN clip c ON c.id=l.clip_id JOIN video v ON v.id=c.video_id WHERE c.status='done' AND l.revoked_at IS NULL ORDER BY c.created_at DESC LIMIT 5"
+  ```
+  (пользователь и база БД — `n5`/`n5`, зашиты в `docker-compose.yml` `POSTGRES_USER`/`POSTGRES_DB`; пароль
+  `N5_DB_APP_PASSWORD` из `.env` compose подставляет сам, `exec` внутри контейнера пароля не спрашивает; при
+  профилях `edge`/`test` добавить `--profile …`, как при запуске стека) (схема — `packages/db/migrations/001_init.sql`, `revoked_at` — миграция 009; если запрос не прошёл, сверить имена
   колонок с миграциями). Код и id ОБЯЗАНЫ быть из одной строки. Вписать в `packages/shared/src/showcase.ts`
   (`code`, `clipId`, `sourceMinutes`, `clipCount`) и **пересобрать образы** (`web` всегда; воркеры — `packages/shared`
-  общий), иначе правка не подействует. При пустом наборе демо не рисуется. Разметка лендинга — компонент `apps/web/src/app/Landing.tsx` (его же рендерит браузерный набор
+  общий), иначе правка не подействует. При пустом наборе демо не рисуется.
+  **Проверка после пересборки и перезапуска:**
+  `for p in file thumbnail; do curl -s -o /dev/null -w "$p %{http_code}\n" https://<домен>/api/showcase/<code>/$p; done`
+  → обе строки `302` (`404` — код не из набора или пара не совпала; `file` = `curl -s -o /dev/null -w '%{http_code}' https://<домен>/api/showcase/<code>/file`). Разметка лендинга — компонент `apps/web/src/app/Landing.tsx` (его же рендерит браузерный набор
   прибора); `<video controls playsinline preload="none">`, ширина `clamp(7rem,38vw,9.5rem)` — постер 9:16 целиком
   в первом экране 375×667.
 - **призыв в конце клипа (фича 27a, ADR-017, FR-RESULT-006):** при загрузке и на экране записи — вид призыва из
