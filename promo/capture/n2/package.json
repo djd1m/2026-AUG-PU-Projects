@@ -1,0 +1,13 @@
+{
+  "name": "promo-capture-n2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Запись экранов N2 «ReviewQR» для промо-ролика серии (promo/SERIES.md)",
+  "scripts": {
+    "record": "node record-n2.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}
