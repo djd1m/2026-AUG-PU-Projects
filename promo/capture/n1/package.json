@@ -1,0 +1,13 @@
+{
+  "name": "promo-capture-n1",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Запись экранов N1 «Proofwall» для промо-ролика серии (promo/SERIES.md)",
+  "scripts": {
+    "record": "node record-n1.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}
