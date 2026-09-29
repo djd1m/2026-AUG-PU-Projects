@@ -77,13 +77,13 @@ const Title: React.FC<{scene: TitleScene; frames: number}> = ({scene, frames}) =
   </TitleCard>
 );
 
-const Outro: React.FC<{scene: OutroScene; frames: number}> = ({frames}) => {
+const Outro: React.FC<{scene: OutroScene; frames: number}> = ({scene, frames}) => {
   const {width, height} = useVideoConfig();
   const unit = Math.min(width, height);
   return (
     <TitleCard frames={frames}>
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: unit * 0.04}}>
-        <div style={{fontWeight: 700, fontSize: unit * 0.14, color: T.accent}}>{project.name}</div>
+        <div style={{fontWeight: 700, fontSize: unit * 0.14, color: scene.titleColor ?? T.accent}}>{project.name}</div>
         <div style={{fontWeight: 400, fontSize: unit * 0.055}}>{project.tagline}</div>
         <div style={{fontWeight: 600, fontSize: unit * 0.05, opacity: 0.85}}>{project.url}</div>
       </div>
@@ -171,6 +171,42 @@ const Screen: React.FC<{scene: ScreenScene; format: Format; frames: number}> = (
   );
 };
 
+/** Постоянная плашка внизу кадра на всю сцену: ink на сплошном paper (контраст проверен в validateProject).
+ *  16:9 экранной сцены — над полосой титра (титр внизу); иначе — у нижнего края кадра. */
+const Footnote: React.FC<{text: string; format: Format; aboveCaption: boolean; frames: number}> = ({
+  text,
+  format,
+  aboveCaption,
+  frames,
+}) => {
+  const {width, height} = useVideoConfig();
+  const unit = Math.min(width, height);
+  const g = geometry(format, width, height);
+  const margin = Math.round(unit * 0.02);
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        right: margin,
+        bottom: (aboveCaption ? g.captionH : 0) + margin,
+        maxWidth: width - 2 * margin,
+        padding: `${Math.round(unit * 0.008)}px ${Math.round(unit * 0.016)}px`,
+        borderRadius: Math.round(unit * 0.01),
+        background: T.paper,
+        color: T.ink,
+        fontFamily: FAMILY,
+        fontWeight: 600,
+        fontSize: Math.round(unit * 0.03),
+        lineHeight: 1.25,
+        whiteSpace: 'nowrap',
+        opacity: useFade(frames),
+      }}
+    >
+      {text}
+    </div>
+  );
+};
+
 export type PromoProps = {format: Format};
 
 export const Promo: React.FC<PromoProps> = ({format}) => {
@@ -184,6 +220,9 @@ export const Promo: React.FC<PromoProps> = ({format}) => {
             {sc.type === 'title' && <Title scene={sc} frames={frames} />}
             {sc.type === 'screen' && <Screen scene={sc} format={format} frames={frames} />}
             {sc.type === 'outro' && <Outro scene={sc} frames={frames} />}
+            {sc.footnote && (
+              <Footnote text={sc.footnote} format={format} aboveCaption={sc.type === 'screen' && format === 'wide'} frames={frames} />
+            )}
           </Sequence>
         );
       })}

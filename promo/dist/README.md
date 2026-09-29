@@ -15,3 +15,8 @@
 Воспроизвести: `REPRO=1 bash promo/remotion/shared/render.sh <proj>` в образе `promo-render:2026-09-29`
 (`promo/render-image/`); записи экранов — вне git (`/home/dz-projects-2026/.promo-assets/<proj>/`), команда повтора —
 `promo/capture/<proj>/README.md`. Sha256 файлов — в `promo/remotion/<proj>/MEASUREMENTS.md`.
+
+**Круг правок 1 (29.09, после проверки Codex `VERIFY-SERIES-CODEX.md`):** N1, N2, N5, N6 перерендерены — титры без
+неснятых действий, постоянная пометка «Отзывы демонстрационные» у N1, контраст финала N1 14,38 : 1, каркас «распространение»
+у N2, объяснение оценки N5 целиком; каждый файл просмотрен раскадровкой fps=2, sha256 — в `MEASUREMENTS.md` (раздел
+«Круг правок 1»). N4 в этот круг не входил.

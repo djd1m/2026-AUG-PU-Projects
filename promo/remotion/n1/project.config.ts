@@ -9,9 +9,9 @@ const CAP2b = 'Отзыв за минуту — без регистрации.';
 const CAP3a = 'На стену попадает только то, что вы одобрили.';
 const CAP3b = 'Нажали «Опубликовать» — отзыв уже на стене.';
 const CAP4 = 'Одна строка кода — и отзывы на вашем сайте.';
-// Шаблон не умеет постоянную сноску (SCENARIO: «пример: вымышленная кофейня и отзывы») — вместо неё отдельный титр
-// на кадре с подвалом страницы «Вымышленный сайт для демонстрации виджета · пример».
-const CAP4note = 'Кофейня и отзывы в ролике — вымышленный пример.';
+// Круг правок 1 (DEC-S-02): постоянная плашка шаблона `footnote` на КАЖДОЙ сцене, где видны отзывы (форма с текстом
+// отзыва, модерация, стена, блок кода с отзывами ниже, сайт кофейни) — вместо титра на последние 2 с сцены 4.
+const DEMO = 'Отзывы демонстрационные';
 
 // Одинаковое кадрирование для 16:9 и 1:1 (обе области шире записи по высоте — crop виден целиком в обеих).
 const both = (c: Crop) => ({wide: c, square: c});
@@ -88,6 +88,7 @@ const config: ProjectConfig = {
         },
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
+      footnote: DEMO,
       note: 'Кнопка выбора фото в headless Chromium подписана по-английски («Choose File») — в кадре до 24,2 с записи.',
     },
     {
@@ -112,6 +113,7 @@ const config: ProjectConfig = {
         },
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
+      footnote: DEMO,
     },
     {
       type: 'screen',
@@ -125,6 +127,7 @@ const config: ProjectConfig = {
         tall: {track: 'mobile'},
         square: {track: 'desktop', crop: {x: 600, y: 50, w: 720, h: 880}},
       },
+      footnote: DEMO,
     },
     {
       type: 'screen',
@@ -138,6 +141,7 @@ const config: ProjectConfig = {
         tall: {track: 'mobile'},
         square: {track: 'desktop', crop: {x: 440, y: 190, w: 1040, h: 150}},
       },
+      footnote: DEMO, // ниже блока кода в кадре — очередь «Отзывы» с демонстрационными карточками
     },
     {
       type: 'screen',
@@ -148,7 +152,7 @@ const config: ProjectConfig = {
           size: [1920, 1080],
           segments: [
             {from: 7.1, to: 9.5, seconds: 2.4, caption: CAP4},
-            {from: 9.5, to: 11.5, seconds: 2, caption: CAP4note},
+            {from: 9.5, to: 11.5, seconds: 2, caption: CAP4},
           ],
         },
         mobile: {
@@ -156,19 +160,22 @@ const config: ProjectConfig = {
           size: [780, 1688],
           segments: [
             {from: 5.6, to: 10.0, seconds: 2.4, caption: CAP4},
-            {from: 10.0, to: 15.1, seconds: 2, caption: CAP4note},
+            {from: 10.0, to: 15.1, seconds: 2, caption: CAP4},
           ],
         },
       },
       use: {
-        // «Что говорят гости» + виджет с пятью отзывами + «Powered by Proofwall» + подвал «…· пример»
+        // «Что говорят гости» + виджет с пятью отзывами + «Powered by Proofwall» + подвал «…· пример».
+        // Карточки виджета — x 115–1805: в 1:1 тот же прямоугольник, что в 16:9, иначе правый край карточек срезан.
         wide: {track: 'desktop', crop: {x: 100, y: 280, w: 1720, h: 780}},
         tall: {track: 'mobile'},
-        square: {track: 'desktop', crop: {x: 100, y: 280, w: 1100, h: 780}},
+        square: {track: 'desktop', crop: {x: 100, y: 280, w: 1720, h: 780}},
       },
+      footnote: DEMO,
       note: 'Страница кофейни поднята внутри контейнера записи (http://127.0.0.1:8099) — чужой origin, но не сайт клиента.',
     },
-    {type: 'outro', seconds: 6},
+    // Название в финале — --accent-tint #eee0ff продукта: 14,38:1 к фону #1e0a3c (акцент #6701ef давал 2,43:1).
+    {type: 'outro', seconds: 6, titleColor: '#eee0ff'},
   ],
 };
 
