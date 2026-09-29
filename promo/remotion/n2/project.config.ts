@@ -11,7 +11,9 @@ import type {Crop, ProjectConfig} from '../shared/src/project';
 
 const CAP2a = 'Заведите точку, вставьте ссылки на карточки.';
 const CAP2b = 'QR и макеты для печати — готовы.';
-const CAP3a = 'Гость сканирует QR и видит три равные двери.';
+// Круг правок 1 (DEC-S-01): было «Гость сканирует QR и видит три равные двери.» — сканирование не снято
+// (гостевая страница открыта по адресу, без камеры).
+const CAP3a = 'По QR — три способа оставить отзыв.';
 const CAP3b = 'Довольный гость выбирает Карты.';
 const CAP3c = 'Недовольный — пишет владельцу напрямую.';
 const CAP4 = 'Жалоба приходит вам — не в публичный разнос.';
@@ -44,7 +46,7 @@ const config: ProjectConfig = {
   allowTallCrop: true, // только кабинет (цена); гостевые и QR в 9:16 — запись целиком
   scenes: [
     {type: 'title', seconds: 6, lines: [{text: 'Недовольный гость пишет на Картах.'}, {text: 'Довольный — молчит.', accent: true}]},
-    // Сцена 2 разбита на три по файлам записи (одна дорожка = один файл).
+    // Сцена 2 разбита на две по файлам записи (одна дорожка = один файл); QR и макеты — сцена 4 (круг правок 1).
     {
       type: 'screen',
       seconds: 3.5,
@@ -83,19 +85,6 @@ const config: ProjectConfig = {
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
     },
-    {
-      type: 'screen',
-      seconds: 4,
-      tracks: {
-        // страница QR с 3,5 с (до этого — кабинет с ценой); mobile обрезает макеты справа — во всех форматах desktop
-        desktop: {file: 'owner-qr-desktop.webm', size: [1920, 1080], segments: [{from: 4, to: 17.5, seconds: 4, caption: CAP2b}]},
-      },
-      use: {
-        wide: {track: 'desktop', crop: {x: 590, y: 240, w: 740, h: 470}},
-        tall: {track: 'desktop', crop: {x: 590, y: 0, w: 740, h: 1080}}, // колонка страницы во всю высоту записи
-        square: {track: 'desktop', crop: {x: 600, y: 240, w: 720, h: 470}},
-      },
-    },
     // Сцена 3: гость. Главная раскладка — mobile (9:16 целиком, 1:1 — кадрирование); 16:9 — desktop-страница.
     {
       type: 'screen',
@@ -133,7 +122,7 @@ const config: ProjectConfig = {
           size: [1920, 1080],
           segments: [
             {from: 3.5, to: 20.5, seconds: 6, caption: CAP3c}, // «Написать напрямую» → текст → оценка → отправка
-            {from: 20.5, to: 22.5, seconds: 1, caption: CAP3c}, // «Отправлено», хвост вырезан
+            {from: 20.5, to: 22.5, seconds: 1, caption: CAP3c}, // «Отправлено» с 20,5 с (кадры, круг правок 1), хвост вырезан
           ],
         },
         mobile: {
@@ -152,10 +141,10 @@ const config: ProjectConfig = {
         square: {track: 'mobile'},
       },
     },
-    // Сцена 4: кабинет → чип «обращения: 3» → список. Кабинет прокручен с ≈3 с (карточка y 140–535, цена с y 553).
+    // Сцена 3б (круг правок 1; была сценой 4): кабинет → чип «обращения: 3» → список. Кабинет прокручен с ≈3 с (карточка y 140–535, цена с y 553).
     {
       type: 'screen',
-      seconds: 8,
+      seconds: 6,
       tracks: {
         desktop: {
           file: 'inbox-desktop.webm',
@@ -163,7 +152,7 @@ const config: ProjectConfig = {
           segments: [
             {from: 3, to: 6.5, seconds: 2.5, caption: CAP4,
               crop: {wide: {x: 600, y: 140, w: 720, h: 400}, square: {x: 600, y: 47, w: 720, h: 504}}}, // окно 47–551, блок цены с 553,
-            {from: 7, to: 14, seconds: 5.5, caption: CAP4,
+            {from: 7, to: 14, seconds: 3.5, caption: CAP4,
               crop: {wide: {x: 600, y: 100, w: 720, h: 500}, square: {x: 600, y: 100, w: 720, h: 500}}},
           ],
         },
@@ -173,12 +162,28 @@ const config: ProjectConfig = {
           segments: [
             // кабинет прокручен с ≈2,5 с: карточка y 140–1160, «План: Free» с y≈1272, кнопка цены с y≈1520
             {from: 3, to: 5.4, seconds: 2.5, caption: CAP4, crop: {tall: {x: 0, y: 140, w: 780, h: 1020}}},
-            {from: 5.6, to: 13, seconds: 5.5, caption: CAP4}, // список обращений, запись целиком
+            {from: 5.6, to: 13, seconds: 3.5, caption: CAP4}, // список обращений, запись целиком
           ],
         },
       },
       use: {wide: {track: 'desktop'}, tall: {track: 'mobile'}, square: {track: 'desktop'}},
       note: 'Титр молчит о Telegram: привязка не снималась (личный чат владельца), доставка видна только в кабинете.',
+    },
+    // Сцена 4 «распространение» (круг правок 1): QR и макеты для печати — то, что уходит к гостям.
+    {
+      type: 'screen',
+      seconds: 6,
+      tracks: {
+        // страница QR с 3,5 с (до этого — кабинет с ценой); mobile обрезает макеты справа — во всех форматах desktop
+        desktop: {file: 'owner-qr-desktop.webm', size: [1920, 1080], segments: [{from: 4, to: 17.5, seconds: 6, caption: CAP2b}]},
+      },
+      use: {
+        wide: {track: 'desktop', crop: {x: 590, y: 240, w: 740, h: 470}},
+        // 9:16 — КАДРИРОВАНО (allowTallCrop): видна колонка страницы x 590–1330 из 1920, во всю высоту записи;
+        // mobile-запись QR обрезает макеты справа, поэтому desktop. Вне кадра — пустые поля страницы.
+        tall: {track: 'desktop', crop: {x: 590, y: 0, w: 740, h: 1080}},
+        square: {track: 'desktop', crop: {x: 600, y: 240, w: 720, h: 470}},
+      },
     },
     {type: 'outro', seconds: 6},
   ],
