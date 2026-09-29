@@ -4,7 +4,7 @@
 
 На 9 сентября: общее ядро и все четыре варианта A/B/C/D работают в Docker/PostgreSQL и прошли приёмку F1. Общий UI E2E: **49/49**, PostgreSQL-тесты: **47/47**. [Как открыть стенды и провести демонстрацию](docs/demos/index.md) — инструкции A–D в Markdown и HTML. Данные и платежи синтетические; реальные провайдеры и MCP/A2A wire остаются следующим этапом.
 
-[Открыть публичный каталог A–D](https://n3-a.194.85.249.105.sslip.io/demos/index.html) — без SSH.
+[Открыть публичный каталог A–D](https://reward.aicoding.space/demos/index.html) — без SSH. Варианты: [A](https://reward.aicoding.space/) · [B](https://b.reward.aicoding.space/) · [C](https://c.reward.aicoding.space/) · [D](https://d.reward.aicoding.space/) (A также на `a.reward.aicoding.space`). Новый домен работает **после выкладки образов `bridge-901f0a6`** (DNS и прокси уже настроены, решение — [ADR-003](docs/ADR.md)); до неё API отвечает с него `403 ORIGIN_DENIED`. Запасной адрес: [каталог на sslip.io](https://n3-a.194.85.249.105.sslip.io/demos/index.html).
 
 ## Простыми словами
 

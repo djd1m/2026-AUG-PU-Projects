@@ -66,6 +66,22 @@ A2A message/send:
 
 Проверки: `npm run build`; `docker compose -f docker-compose.test.yml run --rm --no-deps backend npm test`; `node scripts/run-public-e2e.mjs`; `node --test tests/e2e/account.mjs`; `node --test tests/e2e/public-agent.mjs`; `node scripts/check-deployment.mjs`. Browser-наборы используют локальный Firefox WebDriver и выполняются последовательно. Test PostgreSQL не публикует порты. Последние результаты и точные версии: [F2 completion](features/f2-commercial/05_completion.md).
 
+## Выкладка на reward.aicoding.space (ADR-003, 29.09.2026)
+
+Адреса: каталог и A — https://reward.aicoding.space/demos/index.html и https://reward.aicoding.space/ (алиас `a.reward.aicoding.space`), B/C/D — `https://{b,c,d}.reward.aicoding.space/`, запасной — `https://n3-{a,b,c,d}.194.85.249.105.sslip.io/`. Образы `n3-api:bridge-901f0a6` и `n3-{a,b,c,d}:bridge-901f0a6` собраны от коммита `901f0a6` ветки `n3/reward-domain` (релизная линия `acf124e`, без незавершённой F3); метки прописаны в `compose.bridge-release.yml`. Сборку из main не выполнять.
+
+Перед выкладкой: `bash scripts/check-port-conflicts.sh projects/03-affiliate-rewardful` из корня репозитория (порты 13030–13034 заняты самим работающим стендом — это ожидаемо, `up` пересоздаёт те же контейнеры). Затем по одной команде из папки N3, API первым (список origin проверяет именно он):
+
+```bash
+docker compose -f docker-compose.yml -f compose.bridge-release.yml up -d --no-build --no-deps --wait api
+docker compose -f variants/a-merchant/docker-compose.yml -f variants/a-merchant/compose.bridge-release.yml up -d --no-build --wait
+docker compose -f variants/b-customer/docker-compose.yml -f variants/b-customer/compose.bridge-release.yml up -d --no-build --wait
+docker compose -f variants/c-partner/docker-compose.yml -f variants/c-partner/compose.bridge-release.yml up -d --no-build --wait
+docker compose -f variants/d-agent/docker-compose.yml -f variants/d-agent/compose.bridge-release.yml up -d --no-build --wait
+```
+
+Проверка после: `curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: https://reward.aicoding.space' https://reward.aicoding.space/api/command` → `204` (до выкладки `403`); тот же запрос с `Origin: https://evil.reward.aicoding.space` → `403`. Откат — вернуть в пяти `compose.bridge-release.yml` метку `bridge-acf124e` и повторить те же команды (схема БД не менялась).
+
 ## F3 — подключение рабочей реферальной воронки
 
 Подробный рецепт: [интеграция SaaS](integrations/referral-funnel.md). Владелец публикует cash-условия, задаёт HTTPS-страницы регистрации и возврата на одном origin, выдаёт отдельный серверный ключ. Ключ действует 90 дней, в БД хранится хеш; ротация, отзыв и смена пароля прекращают его действие. Это не агентный ключ MCP/A2A.
