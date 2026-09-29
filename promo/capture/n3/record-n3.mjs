@@ -261,8 +261,11 @@ async function tour(browser, name) {
     await pause(500, 800);
     await press(page, c, page.locator('#registry-sent'));
     await page.getByText(/Отмечено оператором/).first().waitFor({ state: 'visible', timeout: 20_000 });
-    await page.getByText(/Отмечено оператором/).first().scrollIntoViewIfNeeded();
     mark('sent.saved');
+    // Прогон desktop 19:07 кончался на scrollIntoViewIfNeeded: блок «Отмечено оператором» оставался у нижнего края.
+    // С 19:10 (mobile) — плавно к блоку, чтобы факт отправки был в кадре целиком.
+    await scrollTo(page, 'Отмечено оператором', 1500, c.L.isMobile ? 120 : 360).catch(() => {});
+    mark('sent.fact_in_view');
     await guard(page, c, file, 'sent.saved');
     await sleep(3000);
     mark('end');
