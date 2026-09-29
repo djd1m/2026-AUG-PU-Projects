@@ -1,0 +1,13 @@
+{
+  "name": "promo-capture-n4",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Запись экранов N4 «Тарелка» для промо-ролика серии (promo/SERIES.md)",
+  "scripts": {
+    "record": "node record-n4.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}
