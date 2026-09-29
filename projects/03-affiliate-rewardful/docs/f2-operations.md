@@ -1,6 +1,6 @@
 # Реальные аккаунты, ЮKassa и агенты — N3 F2
 
-Рабочий кабинет доступен на `/account` каждого варианта A–D. Например: https://n3-a.212.192.0.33.sslip.io/account . Корневые страницы вариантов остаются явно синтетическими демонстрациями. Кабинет использует отдельные реальные организации без демоплатежей. Вход на каждом домене отдельный, аккаунт и членства общие. Cookie host-only, HttpOnly, Secure, SameSite=Lax; пароль Argon2id. Смена пароля завершает все сеансы и отзывает агентные credentials.
+Рабочий кабинет доступен на `/account` каждого варианта A–D. Например: https://n3-a.194.85.249.105.sslip.io/account . Корневые страницы вариантов остаются явно синтетическими демонстрациями. Кабинет использует отдельные реальные организации без демоплатежей. Вход на каждом домене отдельный, аккаунт и членства общие. Cookie host-only, HttpOnly, Secure, SameSite=Lax; пароль Argon2id. Смена пароля завершает все сеансы и отзывает агентные credentials.
 
 ## Как проверить кабинет
 
@@ -26,13 +26,13 @@
   "shopId": "ID_МАГАЗИНА",
   "secretKey": "СЕКРЕТ_ОТДЕЛЬНОГО_МАГАЗИНА_N3",
   "testMode": true,
-  "returnUrl": "https://n3-a.212.192.0.33.sslip.io/account"
+  "returnUrl": "https://n3-a.194.85.249.105.sslip.io/account"
 }
 ```
 
 Это шаблон, не работающие credentials. Файл подаётся API через Docker secret и читается до сброса root. После проверки портов пересоздайте только API: `docker compose up -d --force-recreate --wait api`. API по-прежнему loopback, БД без host ports и только в internal-сети backend/database. Секреты не выводить через `docker inspect ... Env` и не коммитить.
 
-В кабинете ЮKassa настройте `payment.succeeded` и `refund.succeeded` на https://n3-a.212.192.0.33.sslip.io/api/webhooks/yookassa . Native webhook не содержит HMAC-подписи: подлинность проверяется отдельным authenticated GET к фиксированному HTTPS API ЮKassa. Проверяются ID, shop, test/live, RUB, amount, paid/status и provider timestamp. Tenant/получатель/ставка берутся из сохранённой заявки N3. Metadata провайдера служит только ключом поиска.
+В кабинете ЮKassa настройте `payment.succeeded` и `refund.succeeded` на https://n3-a.194.85.249.105.sslip.io/api/webhooks/yookassa . Native webhook не содержит HMAC-подписи: подлинность проверяется отдельным authenticated GET к фиксированному HTTPS API ЮKassa. Проверяются ID, shop, test/live, RUB, amount, paid/status и provider timestamp. Tenant/получатель/ставка берутся из сохранённой заявки N3. Metadata провайдера служит только ключом поиска.
 
 Создание заказа принимает сумму от авторизованного владельца организации, не от анонимного покупателя. Ключ повтора N3 сохраняет UUID заказа; этот UUID неизменен в Idempotence-Key ЮKassa. Внешние вызовы не удерживают SQL-транзакцию. После23 часов неподтверждённый create блокируется до ручной сверки, поскольку провайдер хранит ключ24 часа. Повтор после смены shop/test-mode отклоняется до нового финансового вызова. Не создавайте новую заявку для обхода неопределённого результата старой.
 
@@ -44,7 +44,7 @@
 
 ## Подключение MCP / A2A
 
-MCP: `https://n3-d.212.192.0.33.sslip.io/mcp`, Streamable HTTP, protocol2025-11-25, stateless JSON responses. A2A Agent Card: `https://n3-d.212.192.0.33.sslip.io/.well-known/agent-card.json`; JSON-RPC endpoint `/a2a`, version0.3.0. Те же маршруты проксируются каждым frontend; Agent Card без Origin указывает канонический D.
+MCP: `https://n3-d.194.85.249.105.sslip.io/mcp`, Streamable HTTP, protocol2025-11-25, stateless JSON responses. A2A Agent Card: `https://n3-d.194.85.249.105.sslip.io/.well-known/agent-card.json`; JSON-RPC endpoint `/a2a`, version0.3.0. Те же маршруты проксируются каждым frontend; Agent Card без Origin указывает канонический D.
 
 Добавьте `Authorization: Bearer <выданный_агентный_ключ>` в настройки клиента. Это отдельный от cookie ключ, в БД только SHA256; срок максимумчас, разрешения определяются ролью и grant. Ручная выдача bearer поддержана; OAuth discovery/SSO не заявляются. MCP проверен официальным SDK Client1.30.0. A2A проверен JSON-RPC HTTP-клиентом и общим PostgreSQL-приложением; отдельный официальный A2A SDK не использовался.
 

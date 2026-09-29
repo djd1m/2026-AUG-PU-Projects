@@ -1,6 +1,6 @@
 # Публичные стенды N3
 
-A–D: `https://n3-{a,b,c,d}.212.192.0.33.sslip.io/`. Каталог и инструкции: `/demos/index.html` на A, `/demo.html` на каждом варианте. Временные имена sslip.io разрешаются в212.192.0.33; Caddy получил валидные сертификаты Let's Encrypt. SSH не нужен.
+A–D: `https://n3-{a,b,c,d}.194.85.249.105.sslip.io/`. Каталог и инструкции: `/demos/index.html` на A, `/demo.html` на каждом варианте. Временные имена sslip.io разрешаются в194.85.249.105; Caddy получил валидные сертификаты Let's Encrypt. SSH не нужен.
 
 На этом VPS существующий ai-hub-tls-proxy владеет80/443. Фрагмент Caddyfile в этой папке добавлен к `/home/dz-projects-2026/dz-harness-hub/.dz/deploy/ai-hub/Caddyfile`; существующие маршруты сохранены байт-в-байт. Резервная копия: соседний `Caddyfile.before-n3-20260909T083804Z`. Frontend Compose сохраняет подключение к talk-ai-public и n3-frontend. Caddy использует полные уникальные имена контейнеров. API не присоединён к talk-ai-public и опубликован только на127.0.0.1:13030. PostgreSQL не имеет hostports и находится только в internal n3-database вместе с API.
 

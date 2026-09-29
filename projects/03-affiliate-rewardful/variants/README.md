@@ -4,10 +4,10 @@
 
 | Вариант | PRD | Демонстрация | Публичный UI |
 |---|---|---|---|
-| A — владелец | [PRD](a-merchant/docs/PRD.md) | [MD](a-merchant/docs/demo.md) · [HTML](a-merchant/docs/demo.html) | https://n3-a.212.192.0.33.sslip.io/ |
-| B — клиент | [PRD](b-customer/docs/PRD.md) | [MD](b-customer/docs/demo.md) · [HTML](b-customer/docs/demo.html) | https://n3-b.212.192.0.33.sslip.io/ |
-| C — партнёр | [PRD](c-partner/docs/PRD.md) | [MD](c-partner/docs/demo.md) · [HTML](c-partner/docs/demo.html) | https://n3-c.212.192.0.33.sslip.io/ |
-| D — личный агент | [PRD](d-agent/docs/PRD.md) | [MD](d-agent/docs/demo.md) · [HTML](d-agent/docs/demo.html) | https://n3-d.212.192.0.33.sslip.io/ |
+| A — владелец | [PRD](a-merchant/docs/PRD.md) | [MD](a-merchant/docs/demo.md) · [HTML](a-merchant/docs/demo.html) | https://n3-a.194.85.249.105.sslip.io/ |
+| B — клиент | [PRD](b-customer/docs/PRD.md) | [MD](b-customer/docs/demo.md) · [HTML](b-customer/docs/demo.html) | https://n3-b.194.85.249.105.sslip.io/ |
+| C — партнёр | [PRD](c-partner/docs/PRD.md) | [MD](c-partner/docs/demo.md) · [HTML](c-partner/docs/demo.html) | https://n3-c.194.85.249.105.sslip.io/ |
+| D — личный агент | [PRD](d-agent/docs/PRD.md) | [MD](d-agent/docs/demo.md) · [HTML](d-agent/docs/demo.html) | https://n3-d.194.85.249.105.sslip.io/ |
 
 [Открытие стендов и порядок показа](../docs/demos/index.md) · [Общий PRD](../shared/docs/PRD.md) · [Архитектура](../docs/variant-architecture.md).
 

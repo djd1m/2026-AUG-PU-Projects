@@ -87,9 +87,9 @@ sequenceDiagram
 
 ## Адреса и минимальные запросы
 
-- MCP: `https://n3-d.212.192.0.33.sslip.io/mcp`
-- A2A: `https://n3-d.212.192.0.33.sslip.io/a2a`
-- Discovery: `https://n3-d.212.192.0.33.sslip.io/.well-known/agent-card.json`
+- MCP: `https://n3-d.194.85.249.105.sslip.io/mcp`
+- A2A: `https://n3-d.194.85.249.105.sslip.io/a2a`
+- Discovery: `https://n3-d.194.85.249.105.sslip.io/.well-known/agent-card.json`
 
 MCP использует официальный `@modelcontextprotocol/sdk` 1.30.0,
 Streamable HTTP, stateless JSON responses. Проверено согласование версии

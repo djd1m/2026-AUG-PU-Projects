@@ -4,7 +4,7 @@
 
 [PRD](docs/PRD.md) · [Исходный CJM](prototype/index.html) · [Приёмка и тесты](../../docs/features/b-customer/05_completion.md).
 
-Публичный UI: https://n3-b.212.192.0.33.sslip.io/ — без SSH. [Сценарий демонстрации](https://n3-b.212.192.0.33.sslip.io/demo.html). [Лаборатория встраивания](https://n3-a.212.192.0.33.sslip.io/_fixtures/embed-host.html).
+Публичный UI: https://n3-b.194.85.249.105.sslip.io/ — без SSH. [Сценарий демонстрации](https://n3-b.194.85.249.105.sslip.io/demo.html). [Лаборатория встраивания](https://n3-a.194.85.249.105.sslip.io/_fixtures/embed-host.html).
 
 Сначала запустите общий backend из корня проекта, затем `docker compose -f variants/b-customer/docker-compose.yml up -d --build --wait`. Перед запуском обязательна проверка свободных портов корневым скриптом. БД без опубликованных портов и доступна только backend; frontend подключён к отдельной сети.
 

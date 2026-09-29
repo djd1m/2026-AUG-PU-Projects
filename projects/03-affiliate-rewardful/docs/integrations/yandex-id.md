@@ -34,10 +34,10 @@ Yandex ID подтверждает внешний identity `(provider, external_
 Добавьте **каждый адрес отдельной строкой**:
 
 ```text
-https://n3-a.212.192.0.33.sslip.io/api/account/yandex/callback
-https://n3-b.212.192.0.33.sslip.io/api/account/yandex/callback
-https://n3-c.212.192.0.33.sslip.io/api/account/yandex/callback
-https://n3-d.212.192.0.33.sslip.io/api/account/yandex/callback
+https://n3-a.194.85.249.105.sslip.io/api/account/yandex/callback
+https://n3-b.194.85.249.105.sslip.io/api/account/yandex/callback
+https://n3-c.194.85.249.105.sslip.io/api/account/yandex/callback
+https://n3-d.194.85.249.105.sslip.io/api/account/yandex/callback
 ```
 
 Не используйте wildcard, HTTP, общий callback другого проекта, IP вместо hostname, лишний slash или callback только варианта A. Yandex сопоставляет scheme, host, port и path. N3 дополнительно сохраняет origin, сравнивает callback Host и возвращает пользователя только на allowlisted saved origin `/account`; Host не становится произвольным redirect destination.

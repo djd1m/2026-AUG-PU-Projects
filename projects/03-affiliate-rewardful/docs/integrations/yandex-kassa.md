@@ -23,7 +23,7 @@
 
 1. Создайте отдельный тестовый/боевой магазин ЮKassa.
 2. Настройте `.runtime/yookassa.json` по [основной инструкции](yookassa.md).
-3. Включите только `payment.succeeded` и `refund.succeeded` на `https://n3-a.212.192.0.33.sslip.io/api/webhooks/yookassa`.
+3. Включите только `payment.succeeded` и `refund.succeeded` на `https://n3-a.194.85.249.105.sslip.io/api/webhooks/yookassa`.
 4. Проверьте authenticated read-back и дедупликацию.
 5. Не добавляйте параметры `transfers`, payout credentials или старые Yandex.Checkout SDK: текущий адаптер их не обрабатывает.
 

@@ -31,7 +31,7 @@ PostgreSQL находится в отдельной `internal: true` Docker-се
 
 ## Режим и безопасность
 
-Публичный доступ A–D добавлен 2026-09-09 по явному поручению владельца: существующий Caddy80/443 проксирует четыре точных HTTPS-имени n3-{a,b,c,d}.212.192.0.33.sslip.io в уникальные frontend-контейнеры. Только frontends дополнительно подключены к сети talk-ai-public; API остаётся в n3-frontend/n3-database, БД — только в n3-database без host ports. Host-порты API/UI остаются loopback. Матрица shared/contracts/deployment.mjs задаёт точные origin для CORS/CSP, iframe и D→A; wildcard и произвольный Host не дают прав. [Конфигурация и операции](../config/public-web/README.md).
+Публичный доступ A–D добавлен 2026-09-09 по явному поручению владельца: существующий Caddy80/443 проксирует четыре точных HTTPS-имени n3-{a,b,c,d}.194.85.249.105.sslip.io в уникальные frontend-контейнеры. Только frontends дополнительно подключены к сети talk-ai-public; API остаётся в n3-frontend/n3-database, БД — только в n3-database без host ports. Host-порты API/UI остаются loopback. Матрица shared/contracts/deployment.mjs задаёт точные origin для CORS/CSP, iframe и D→A; wildcard и произвольный Host не дают прав. [Конфигурация и операции](../config/public-web/README.md).
 
 F1 — явно помеченный synthetic demo, ephemeral identity authority bootstrap, отдельный tenant на независимый сеанс. Production mode запрещён до отдельного пилота. Opaque session tokens хранятся hashed; grant ограничен actor/scope/expiry и не включает approve/pay/send. Artifact handoff сохраняет тот же tenant/id/revision/hash. UI выбор роли не заменяет server membership.
 

@@ -25,7 +25,7 @@ Runtime contract:
 | P1 worker | Actual worker entrypoint | Own P1 database/storage config and bridge config; same P1 preload; no N3 SQL credentials |
 | Host | `node scripts/run-proofwall-e2e.mjs` | `BRIDGE_BOOTSTRAP_FILE`; `BRIDGE_EVIDENCE_DIR`; synthetic provider/mail credentials; trusted `BRIDGE_FIREFOX_PROFILE` and `BRIDGE_FIREFOX_PROFILE_ROOT`; host TLS/CA/socket paths |
 
-Both product backends use `NODE_OPTIONS=--import=/bridge/preload.mjs`, with `BRIDGE_ROLE=p1` or `n3`. Mount this helper directory read-only at `/bridge`. Set `BRIDGE_CA`, `BRIDGE_TLS_KEY`, `BRIDGE_TLS_CERT` to explicit paths; only public CA is shared between products. Worker only needs CA, not an ingress private key. Host provider certificate covers `api.resend.com`, `api.yookassa.ru`, `yoomoney.ru`; P1 certificate covers `proofwall.aicoding.space`; N3 certificate covers `n3-a.212.192.0.33.sslip.io`.
+Both product backends use `NODE_OPTIONS=--import=/bridge/preload.mjs`, with `BRIDGE_ROLE=p1` or `n3`. Mount this helper directory read-only at `/bridge`. Set `BRIDGE_CA`, `BRIDGE_TLS_KEY`, `BRIDGE_TLS_CERT` to explicit paths; only public CA is shared between products. Worker only needs CA, not an ingress private key. Host provider certificate covers `api.resend.com`, `api.yookassa.ru`, `yoomoney.ru`; P1 certificate covers `proofwall.aicoding.space`; N3 certificate covers `n3-a.194.85.249.105.sslip.io`.
 
 Set container `BRIDGE_SOCKET_ROOT=/bridge-sockets`; host must use a short path, e.g. a `/tmp` symlink to the root-owned runtime directory (Unix socket path limit). Socket groups each contain `https.sock`:
 
