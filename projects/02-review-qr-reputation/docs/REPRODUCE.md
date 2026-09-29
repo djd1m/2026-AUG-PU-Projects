@@ -34,7 +34,7 @@
 
 | Что | Зачем | Кто делает |
 |---|---|---|
-| Linux, Docker с compose v2, `bash`, `openssl`, `curl`. **Node 22 на хосте** — только для двух проверок репозитория из §5 (`node ../../.claude/hooks/check-ports.cjs`); установка, тесты и сборка идут в `node:22-alpine` и хостового Node/npm не требуют | сборка, тесты, запуск | — |
+| Linux, Docker с compose v2, `bash`, `openssl`, `curl`. **Node 22 на хосте** — только для проверки `check-ports.cjs` из §5 (`node ../../.claude/hooks/check-ports.cjs`; `check-port-conflicts.sh` — bash); установка, тесты и сборка идут в `node:22-alpine` и хостового Node/npm не требуют | сборка, тесты, запуск | — |
 | Общий TLS-прокси машины: Caddy в контейнере `ai-hub-tls-proxy`, внешняя сеть `talk-ai-public` | TLS, домен, маршрутизация guest/web, закрытие `/internal/*` | владелец машины |
 | Домен и запись A на IP машины | `BASE_URL` — из него собирается каждый QR | владелец (DNS) |
 | Telegram-бот (создаётся у @BotFather) | `TELEGRAM_BOT_TOKEN` (нотифаер), `TELEGRAM_BOT_USERNAME` (кабинет) | владелец вписывает в env сам |
