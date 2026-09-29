@@ -240,3 +240,22 @@ codex exec --skip-git-repo-check -m gpt-6-astra -c model_reasoning_effort="mediu
 **References:** `projects/06-rag-sales-chatbase/docs/features/tariffs-and-interest/01_plan.md`
 
 ---
+## 2026-09-29 — «Сайт не открывается, а соседний на том же сервере открывается» — виноват не прокси
+
+**Tags:** network-diagnosis, vpn-split-tunnel, isp-block, caddy-edge
+
+**Problem:**
+`clipmkr.ru` с компьютера владельца давал `ERR_CONNECTION_CLOSED`, а `sufler.aicoding.space` на том же сервере и прокси
+открывался. Первая гипотеза владельца — настройки прокси. С сервера, из внешнего фетчера и с телефона сайт открывался.
+
+**Solution:**
+Разделять по одному признаку за шаг: (1) второе имя на тот же контейнер (`clipmaker.aicoding.space`) открылось → прокси
+исправен, режется имя; (2) `curl -v` показал источник `10.6.7.1` → VPN-туннель с раздельной маршрутизацией, `.ru` идёт
+напрямую; (3) без VPN TCP к 194.85.249.105 не устанавливается вовсе, `tracert` умирает за роутером, контрольный
+`tracert 1.1.1.1` проходит, пробный пакет с сервера до клиента доходит → исходящий фильтр на адрес хостинга на роутере
+или первом узле провайдера (Teleport Telecom). На сервере запись `tcpdump 'host <ip>'` с `-l`/текстом (файл `-w`
+буферизуется и при малом трафике выглядит пустым). Прокси-конфиг Caddy ни разу не был причиной.
+
+**References:** `/home/dz-projects-2026/edge/Caddyfile` (блоки `clipmkr.ru`, `clipmaker.aicoding.space`); чат владельца 29.09
+
+---
