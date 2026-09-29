@@ -511,7 +511,8 @@ Architecture, без потери принятых продуктовых и ADR
 
 ```
 01-testimonials-senja/
-├── apps/web/              # Next.js 15 (App Router): 12 страниц, 28 маршрутов API (список — 12.3)
+├── apps/web/              # Next.js 15 (App Router): 12 страниц, 28 маршрутов API (список — 12.3);
+│                          #   дизайн-система — src/app/globals.css (токены + классы, FR-DESIGN-001)
 ├── apps/widget/           # vanilla TS + esbuild, Shadow DOM, бюджет 30 KB gzip
 ├── services/transcribe/   # единственная точка к OpenAI STT, POST /transcribe, порт 7331
 ├── services/worker/       # 4 цикла: транскрипция, очистка, outbox N3, сверка агентных платежей
@@ -569,11 +570,11 @@ Architecture, без потери принятых продуктовых и ADR
 | Сервис | Переменные | Кто задаёт значение |
 |---|---|---|
 | `postgres` | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | оператор, `openssl rand -hex 24` |
-| `minio` | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD` | оператор |
+| `minio` | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD` — они же `S3_ACCESS_KEY`/`S3_SECRET_KEY` у `web` и `worker` (отдельного пользователя MinIO нет); бакеты создаются вручную `mc mb` | оператор |
 | `web` | `DATABASE_URL`, `PGPOOL_MAX`, `PGPOOL_CONNECTION_TIMEOUT_MS`, `SESSION_SECRET`, `BASE_URL`, `APP_DOMAIN`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_PHOTO_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `VIDEO_INTAKE_ENABLED`, `RESEND_API_KEY`, `MAIL_FROM`, `YANDEX_CLIENT_ID`, `YANDEX_CLIENT_SECRET`, `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY`, `PAYMENTS_STUB`, `PAID_TIER_PRICE_RUB`, `N3_BRIDGE_ENABLED`, `N3_BASE_URL`, `N3_TENANT_ID`, `N3_CONNECTOR_KEY` | оператор; ключи Resend, Яндекса, ЮKassa, N3 — владелец |
 | `worker` | `DATABASE_URL`, `PGPOOL_*`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_PHOTO_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `N3_*` (мост); `WORKER_POLL_INTERVAL_MS`/`WORKER_CLEANUP_INTERVAL_MS` в compose не проброшены — действуют дефолты кода 5 с / 1 ч | оператор |
 | `transcribe` | `OPENAI_API_KEY`, `OPENAI_TRANSCRIBE_MODEL` | владелец (ключ OpenAI) |
-| `caddy` (свой, если нет общего прокси) | `HTTP_PORT`, `HTTPS_PORT` (публикация); `Caddyfile` читает `{$APP_DOMAIN}` и `{$ACME_EMAIL}`, но **блока `environment` у `caddy` в compose нет** — на стенде свой caddy выключен и этот путь не проверялся | оператор |
+| `caddy` (свой, если нет общего прокси) | `HTTP_PORT`, `HTTPS_PORT` (публикация); `Caddyfile` читает `{$APP_DOMAIN}` и `{$ACME_EMAIL}`, но **блока `environment` у `caddy` в compose нет**, а `web` требует внешнюю сеть `talk-ai-public` — без правки compose этот путь не запускается; записан как пробел ([REPRODUCE §1](REPRODUCE.md#1-что-нужно-заранее)) | оператор |
 | оверрайд агентных платежей | `AGENT_PAYMENTS_ENABLED`, `AGENT_GATEWAY_SECRET`, `AGENT_PAYMENTS_AUDIENCE`, `AGENT_YOOKASSA_TEST_SHOP_ID`, `AGENT_YOOKASSA_TEST_SECRET_KEY`, `AGENT_RECONCILE_URL`, `AGENT_PUBLIC_ORIGIN`, `AGENT_GATEWAY_PORT` | владелец (ключи TEST-магазина) |
 
 Правила: `BASE_URL` в проде без дефолта — старт падает (`lib/urls.ts`); `PGPOOL_*` с мусором роняют
@@ -591,7 +592,7 @@ Architecture, без потери принятых продуктовых и ADR
 | `compose.bridge-test.yml` | `proofwall-bridge-test` | изолированный прогон `npm test` в контейнере, env `.secrets/bridge-test.env` |
 | `compose.bridge-e2e.yml` | `proofwall-n3-e2e` | кросс-проектный E2E моста с N3 (TLS, Unix-сокеты, имитация провайдеров) |
 | `compose.agent-payments.yml` | оверрайд | добавляет шлюз `agent-api` (профиль `agent-payments`, `127.0.0.1:${AGENT_GATEWAY_PORT:-13041}`) и переменные AGENT_* |
-| `compose.agent-pilot.yml` | `proofwall-agent-pilot` | независимый TEST-пилот: свои postgres/minio/web/worker/agent-api, env `.secrets/agent-pilot/*.env`, портов нет |
+| `compose.agent-pilot.yml` | `proofwall-agent-pilot` | независимый TEST-пилот: свои postgres/minio/web/worker/agent-api, env `.secrets/agent-pilot/*.env`, портов нет; `build:` нет — готовые образы с тегами коммитов `186f8b3`/`3828a74`, с нуля не воспроизводится ([REPRODUCE §10.1](REPRODUCE.md#pilot)) |
 
 ### 12.6 Внешние зависимости после MVP
 
