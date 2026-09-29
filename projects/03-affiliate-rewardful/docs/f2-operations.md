@@ -82,6 +82,12 @@ docker compose -f variants/d-agent/docker-compose.yml -f variants/d-agent/compos
 
 Проверка после: `curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: https://reward.aicoding.space' https://reward.aicoding.space/api/command` → `204` (до выкладки `403`); тот же запрос с `Origin: https://evil.reward.aicoding.space` → `403`. Откат — вернуть в пяти `compose.bridge-release.yml` метку `bridge-acf124e` и повторить те же команды (схема БД не менялась).
 
+### Лимит демосеансов `N3_MAX_DEMO_RUNS` (29.09.2026)
+
+`N3_MAX_DEMO_RUNS` — сколько независимых fixture-демосеансов (строк `tenants` с `mode='fixture'`) может существовать одновременно; при достижении `POST /api/demo` отвечает `429 DEMO_LIMIT`. Сеанс живёт 24 ч, но строка организации остаётся — лимит считает накопленные демо, а не активные. Разбор (`apps/api/demo-limit.mjs`): переменная **не задана** → 200, как было; задана — только целое `1…10000` без знака, пробелов, ведущих нулей и экспоненты, иначе API **не стартует** и называет значение (пустая строка — отказ, а не «200 по умолчанию»). Действующее значение печатается в журнале: `N3 API ready (maxDemoRuns=N)`.
+
+На стенде — `400` (решение владельца 29.09, ADR-003), задано явно в `environment` сервиса `api` в `compose.bridge-release.yml`. Образ `n3-api:bridge-38bed68` собран от коммита `38bed68` ветки `n3/reward-domain` (= `901f0a6` + эта переменная) через `git archive` и `DOCKER_BUILDKIT=0 docker build --cpu-quota 150000 --memory 1g -f apps/api/Dockerfile`; фронтенды остаются `bridge-901f0a6`. Выкладка — только первая команда из списка выше (`… up -d --no-build --no-deps --wait api`); проверка — `docker logs n3-shared-api-1 | grep maxDemoRuns` → `maxDemoRuns=400` и прежний `OPTIONS` → `204`. Откат — метка `bridge-901f0a6` и удалить `environment` из overlay API (старый образ переменную игнорирует, лимит снова 200). `server.mjs` в main этой правки не содержит — выпуск из main обязан её перенести вместе с `deployment.mjs`.
+
 ## F3 — подключение рабочей реферальной воронки
 
 Подробный рецепт: [интеграция SaaS](integrations/referral-funnel.md). Владелец публикует cash-условия, задаёт HTTPS-страницы регистрации и возврата на одном origin, выдаёт отдельный серверный ключ. Ключ действует 90 дней, в БД хранится хеш; ротация, отзыв и смена пароля прекращают его действие. Это не агентный ключ MCP/A2A.

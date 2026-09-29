@@ -1,4 +1,7 @@
 name: n3-shared
 services:
   api:
-    image: n3-api:bridge-901f0a6
+    image: n3-api:bridge-38bed68
+    environment:
+      # Лимит одновременно существующих демосеансов; решение владельца 29.09 (ADR-003).
+      N3_MAX_DEMO_RUNS: "400"
