@@ -133,13 +133,16 @@ const config: ProjectConfig = {
           size: [780, 1688],
           segments: [
             {from: 2.5, to: 19, seconds: 3.5, caption: CAP3c, crop: {square: {x: 0, y: 60, w: 780, h: 800}}}, // форма, ввод текста
-            {from: 19, to: 26, seconds: 2.5, caption: CAP3c, crop: {square: {x: 0, y: 540, w: 780, h: 800}}}, // оценка 2, контакт, отправка
-            {from: 26, to: 28, seconds: 1, caption: CAP3c, crop: {square: {x: 0, y: 0, w: 780, h: 600}}}, // «Отправлено», хвост вырезан
+            // круг 2C: было y 540–1340 — верхний край резал поле «Что случилось» с первой строкой текста; y 470–1340 — поле целиком
+            {from: 19, to: 26, seconds: 2.5, caption: CAP3c, crop: {square: {x: 0, y: 470, w: 780, h: 870}}}, // оценка 2, контакт, отправка
+            // круг 2C: с 26,16 (было 26) — до 26,15 с записи ещё форма, и окно 1:1 y 0–600 резало поле «Что случилось» 2–3 кадра (стык 26 с)
+            {from: 26.16, to: 28, seconds: 1, caption: CAP3c, crop: {square: {x: 0, y: 0, w: 780, h: 600}}}, // «Отправлено», хвост вырезан
           ],
         },
       },
       use: {
-        wide: {track: 'desktop', crop: {x: 720, y: 20, w: 480, h: 620}},
+        // круг 2C: было h 620 (окно y 20–640) — кнопка «Отправить владельцу» (y 594–644) резалась нижним краем; карточка до y 668
+        wide: {track: 'desktop', crop: {x: 720, y: 20, w: 480, h: 670}},
         tall: {track: 'mobile'},
         square: {track: 'mobile'},
       },
@@ -181,7 +184,8 @@ const config: ProjectConfig = {
         desktop: {file: 'owner-qr-desktop.webm', size: [1920, 1080], segments: [{from: 4, to: 17.5, seconds: 6, caption: CAP2b}]},
       },
       use: {
-        wide: {track: 'desktop', crop: {x: 590, y: 240, w: 740, h: 470}},
+        // круг 2C: было y 240–710 — в конце прокрутки (17,4 с) плашка «Тейбл-тент — с оговоркой» (y 624–720) резалась краем
+        wide: {track: 'desktop', crop: {x: 590, y: 220, w: 740, h: 510}},
         // 9:16 — КАДРИРОВАНО (allowTallCrop): видна колонка страницы x 590–1330 из 1920, во всю высоту записи;
         // mobile-запись QR обрезает макеты справа, поэтому desktop. Вне кадра — пустые поля страницы.
         tall: {track: 'desktop', crop: {x: 590, y: 0, w: 740, h: 1080}},
