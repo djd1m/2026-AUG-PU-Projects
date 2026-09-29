@@ -1,0 +1,13 @@
+{
+  "name": "promo-capture-n6",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Запись экранов N6 «Суфлёр» для пилота промо-ролика (promo/PILOT-N6.md)",
+  "scripts": {
+    "record": "node record-n6.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}
