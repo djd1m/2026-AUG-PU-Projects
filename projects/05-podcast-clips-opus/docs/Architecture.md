@@ -63,6 +63,10 @@ flowchart LR
 | Сторож | `web` (cron внутри процесса) | раз в минуту: `queued` без задания → поставить; `updated_at` > 30 мин при активном статусе → `failed(stalled)`; клипы free старше 3 дней → удалить объекты; гостевые страницы старше 14 дней → закрыть | не чинит данные вручную |
 | Прокси | `proxy` | TLS, HSTS, лимит частоты ДО тела запроса (30/мин мутирующие, 120/мин чтение на IP), окно простоя 60 с, `X-Forwarded-For` | не публикует ничего, кроме себя |
 
+> **Как собрано (аудит 29.09.2026):** таблица выше — замысел. TLS делает внешний прокси, лимит частоты живёт в `web` на
+> Redis, процедур 17, распознавание и выделение идут через OpenRouter, у рендера шесть слоёв фильтров. Все расхождения и
+> компоненты фич 13–30 — раздел «Дополнение 29.09.2026» в конце файла.
+
 ## Technology Stack
 
 | Layer | Technology | Rationale |
@@ -226,3 +230,60 @@ TelegramLogin, ProbeSource, RevokeOrExpireGuestPack, ComputeWatermarkGeometry и
 исправлено в обоих документах, а не только здесь. Канон §4 перечисляет сущности и их закрытые
 перечисления, но не полный список полей; добавленные поля не создают новых сущностей и новых
 перечислений вне названных выше.
+
+---
+
+## Дополнение 29.09.2026 — как собрано: компоненты фич 13–30 и расхождения с кодом
+
+Текст выше — архитектура замысла (Phase 1–2, 21.09). Здесь — то, что добавилось в коде после первого живого прогона
+(фичи 13–30), и места, где основной текст разошёлся с кодом. При расхождении прав код и этот раздел.
+
+### Расхождения основного текста с кодом (исправлено в пользу кода)
+
+| Где выше | Написано | Как собрано | Источник |
+|---|---|---|---|
+| Component Breakdown, «Прокси» | TLS, лимит частоты ДО тела в Caddy | TLS делает ВНЕШНИЙ прокси машины (или свой Caddy с доменом, `REPRODUCE.md` шаг 7); `proxy` слушает HTTP на `127.0.0.1:${N5_EDGE_PORT}`, ставит заголовки и доверяет `X-Forwarded-For` частных сетей. Лимит частоты — в `web` на Redis (`apps/web/src/server/rate-limit.ts`), адрес клиента — `clientIp` по `N5_TRUSTED_PROXY_HOPS` | `proxy/Caddyfile`, `CLAUDE.md` |
+| Component Breakdown, «Экраны и API» | 15 процедур tRPC | 17: + `clip.setMusic` (ADR-016), `video.setCta` (ADR-017) | ADR-016/017 |
+| Component Breakdown, «Транскрипция» | `whisper-1`, чанки ≤ 25 МБ по паузам | `openai/whisper-large-v3` через OpenRouter (исполнитель Together), куски 180 с с перекрытием 2 с; погрешность таймкодов поджимается (ADR-010) | DEC-A-022, `REPRODUCE.md` §9 |
+| Component Breakdown, «Выделение» | Sonnet 5 напрямую (Messages API) | `anthropic/claude-sonnet-5` через тот же шлюз OpenRouter, модели уходят сегменты, не слова; таймаут 240 с | FR-SELECT-004/005 |
+| Component Breakdown, «Рендер» | `scale→crop 9:16→ASS→drawtext` | кадр по лицу (YuNet) → субтитры → заголовок → вспышка → призыв → метка; музыка и удар — входы `amix`; при уплотнении пауз — план резов и перенос времени (`mapTime`) | ADR-009, 011–015, 017 |
+| Component Breakdown, «Сторож» | клипы free старше 3 дней | срок — `clipExpiry`/`clipAliveSql` (одно место), клипы витрины и действующего `paid` не стираются; + истечение оплаченного плана `expirePaidPlans` | ADR-018/019, ревью 28.09 |
+| Security Architecture | путей к файлу клипа два | три: + витрина лендинга только для `SHOWCASE_CLIPS` (ADR-018) | ADR-018 |
+| Security Architecture / ADR-005 | маршрута вебхука нет | один вебхук `/api/webhooks/yookassa`, существует только при `N5_PAYMENTS_MODE ∈ {fake, live}` | ADR-019 |
+
+### Компоненты фич 13–30
+
+Номер строки — номер фичи в `docs/features/README.md`; на него ссылается таблица «Состав фич» в `REPRODUCE.md`.
+
+| № | Фича | Контейнер | Код (главное) | Данные |
+|---|---|---|---|---|
+| 13 | `transcript-tolerance` | `worker-stt` | поджатие таймкодов в модуле транскрипции `apps/worker` | события журнала, схемы нет |
+| 14 | `framing` | `worker-video` | детектор YuNet (python3 + OpenCV 4.12 в образе воркера, модель 228 КБ), план кадра → выражение `crop` | — (миграция 013 — геометрия метки, не эта фича) |
+| 15 | `subtitles-and-glossary` | `worker-*` | ASS-субтитры, словарь `N5_GLOSSARY` | — |
+| 16 | `music-bed` | `worker-video` | каталог `MUSIC_TRACKS` (sha256 в коде), замер `ebur128`, `amix normalize=0` | миграция 014 `video.music` |
+| 17 | `pack-shot` | `worker-video` | каталог `STINGERS`, наложение последних 0,8 с | — |
+| 18 | `music-library` | `worker-video` | 9 прослушанных треков, выбор по номеру клипа | — |
+| 19 | `teaser-headline` | `worker-video` | `drawtext textfile=`, разметка `measureText` | миграция 015 `video.teaser` |
+| 20 | `partner-fairness` | `web`, скрипт оператора | `packages/db/scripts/partner-code-unblock.mjs` | миграция 016: `partner_code.unblocked_at/unblock_reason`, `attribution.partner_code_id` NULL + `partner_deleted` |
+| 21 | `pause-compaction` | `worker-video` | план резов, `xfade`/`acrossfade` 0,08 с, `mapTime` | миграция 017: `video.compact`, `video.loudness_median_db`, `clip.cut_plan`, `clip.duration_seconds` |
+| 22 | `clip-music-choice` | `web` (`clip-music.ts`), `worker-video` | процедура `clip.setMusic`, пересборка `done → done` | миграция 018: `clip.music_track_id`, `rendered_music_track_id`, `render_version`, `job_attempt.rerender`, седьмой scope `user_rerenders`; миграция 019 `clip.music_skip_reason` |
+| 23 | `responsive-check` | вне продукта: контейнер Playwright | `scripts/check-responsive.sh`, `scripts/responsive/rules.mjs`, `tests/browser/**`, `vitest.browser.config.ts` | — |
+| 24 | `mobile-audit-fixes` | `web` | `globals.css`, `apps/web/src/lib/plural-ru.ts` | — |
+| 25 | `dark-theme` | `web` | `apps/web/src/lib/theme.ts`, `theme-server.ts`, `ThemeToggle.tsx`; корневой layout `force-dynamic` | cookie `n5_theme` |
+| 26 | `clip-card` | `web` | карточка клипа экрана записи, контейнерные запросы | — |
+| 27 | `clip-cta` | `web` (`video-cta.ts`, `/c/`), `worker-video` (`apps/worker/src/render/cta-overlay.ts`) | `packages/shared/src/cta.ts`, процедура `video.setCta` | миграция 020: `video.cta_kind`, `video.cta_url` + CHECK пары |
+| 28 | `landing-demo` | `web` | `apps/web/src/server/showcase-file.ts`, `packages/shared/src/showcase.ts`, `Landing.tsx`, `LandingDemo.tsx` | набор витрины — в коде, не в БД |
+| 29 | `progress-ribbon` | `web` | `apps/web/src/lib/progress-ribbon.ts`, экран записи | поле экрана `failed_stage` (вычисляется) |
+| 30 | `payments` | `web` (+ план в воркерах через `effectivePlanSql`) | `apps/web/src/server/billing-*.ts`, `apps/web/src/server/payments/` (провайдер, адаптер ЮKassa, фейк, сети ЮKassa), маршруты `/api/checkout`, `/api/checkout/[intentId]`, `/api/webhooks/yookassa`, страницы `/upgrade`, `/upgrade/return`; `packages/db/src/plan.ts`, `packages/db/src/ops-set-plan.ts` | миграция 021: `account.plan_paid_until`, `plan_source`; таблицы `payment_intent`, `payment_event` (ключ повторности UNIQUE), `payment`, `operator_action` |
+
+### Сквозные изменения (без своей фичи)
+
+- **Срок клипа в одном месте** (ревью фич 25–29, 28.09): `clipExpiry` (`packages/shared/src/tariff.ts`) и SQL-зеркало
+  `clipAliveSql` (`packages/db/src/plan.ts`); их используют экран, `/c/`, файл клипа, смена музыки и призыва, гостевая
+  страница и ретенция. Воркеры делят эти пакеты — при изменении пересобирать и образ воркера.
+- **Образы без dev-пакетов** (28.09): `Dockerfile` — стадии `deps` → `prod-deps` (`npm prune --omit=dev`) и `build`;
+  цели `web` и `worker` берут `node_modules` из `prod-deps`, цель `test` — из `build`. Страж по Dockerfile —
+  `tests/image-dev-deps.test.ts`, по собранному образу — `scripts/check-image-dev-deps.mjs` (0/1/2).
+- **Переменные** (итог): восемь потолков `N5_LIMIT_*` (восьмой `N5_LIMIT_PAID_USER_MINUTES` — `web`, `worker-stt`,
+  `worker-llm`), `N5_PAYMENTS_MODE` и `YOOKASSA_*` — только `web`. Распределение — `.claude/rules/secrets-management.md`
+  проекта; полнота — `scripts/check-env-wiring.sh`.
