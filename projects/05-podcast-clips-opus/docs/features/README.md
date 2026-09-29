@@ -31,7 +31,7 @@ SPARC-документах и какими тестами закреплена �
 | 15 | `subtitles-and-glossary` | Субтитры без мигания, крупнее, английские термины латиницей | post-mvp | [05_completion.md](subtitles-and-glossary/05_completion.md) |
 | 16 | `music-bed` | Фоновая CC0-музыка по галочке, уровень из речи клипа | post-mvp | [05_completion.md](music-bed/05_completion.md) |
 | 17 | `pack-shot` | Финальный акцент: CC0-удар и вспышка наложением | post-mvp | [05_completion.md](pack-shot/05_completion.md) |
-| 18 | `music-library` | 11 CC0-треков, выбор по номеру клипа | post-mvp | [05_completion.md](music-library/05_completion.md) |
+| 18 | `music-library` | 9 CC0-треков, выбор по номеру клипа | post-mvp | [05_completion.md](music-library/05_completion.md) |
 | 19 | `teaser-headline` | Заголовок клипа крупно в первые 2,5 с | post-mvp | [05_completion.md](teaser-headline/05_completion.md) |
 | 20 | `partner-fairness` | Блокировка по людям, разблокировка, обезличивание атрибуций | post-mvp | [05_completion.md](partner-fairness/05_completion.md) |
 | 21 | `pause-compaction` | Уплотнение пауз | post-mvp | [05_completion.md](pause-compaction/05_completion.md) |

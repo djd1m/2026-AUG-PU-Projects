@@ -33,8 +33,12 @@
 | Диск | **от 100 ГБ SSD** | перед скачиванием записи резервируется её **тройной** объём; предельная загрузка 2 ГБ требует 6 ГБ свободных. Образы с OpenCV весят ~1,5 ГБ, и каждая пересборка оставляет слои — чистить `scripts/cleanup-our-docker.sh` |
 | ОС | Linux с Docker 24+ и Compose v2 | всё крутится в контейнерах |
 
-Node на хосте нужен только для локального запуска тестов без Docker: **Node 22** (`engines` в
-`package.json`: `>=22 <23`).
+**Node.js и npm на хосте обязательны**, а не «только для тестов»: нужен **Node 22** (`engines` в `package.json`:
+`>=22 <23`; образы — `node:22.22-alpine`) вместе с npm. Хостовые `node`/`npm` вызывают шаги: §4 —
+`node scripts/check-image-dev-deps.mjs`; §7 — `node ../../.claude/hooks/check-ports.cjs .`; §8а —
+`npm run test:responsive`; сюда же относятся `npm run ops:set-plan` и `node packages/db/scripts/*.mjs`, если их
+запускают с хоста, а не через `docker compose run`. Без хостового Node эти проверки не выполнить: проверка,
+которая не запустилась, — не «чисто» (код 2 у `check-ports.cjs`).
 
 ### Внешние учётные записи
 
@@ -230,6 +234,39 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 загрузка «работала сама». **В Cloud.ru это не так**: на бакете нужно задать правило CORS, разрешающее
 `PUT` и `GET` с вашего домена и отдающее заголовок `ETag` — без `ETag` многочастная загрузка не
 соберётся.
+
+**Lifecycle бакета и версионирование (контракт: `docs/Architecture.md:139-143`, `docs/Completion.md:19-23`).** Создание
+бакета и CORS — не вся настройка хранилища. Проект НЕ содержит скрипта, который ставит lifecycle: правило применяется
+руками, а код загрузки его не требует (`packages/s3/src/multipart.ts:12-14` — поддержка lifecycle не условие
+загрузки), поэтому пропуск не виден ни в одном тесте приложения. Нужны три свойства:
+
+| Свойство | Значение | Почему |
+|---|---|---|
+| `AbortIncompleteMultipartUpload` | `DaysAfterInitiation=1`, на весь бакет | брошенные многочастные загрузки иначе тарифицируются вечно |
+| `Expiration` | `Days=7`, ТОЛЬКО префикс `clips/free/` | страховка удаления приложением (free — 3 дня); на `clips/` целиком снесла бы и `clips/paid/` (V2-R24) |
+| Versioning | выключено (не включалось или `Suspended`) | иначе удаление создаёт версии и хранение продолжает тарифицироваться |
+
+Одинаковый способ для MinIO и Cloud.ru (`PutBucketLifecycleConfiguration`; поддерживает `Expiration` и
+`AbortIncompleteMultipartUpload`, `Transition` не поддерживается) — AWS CLI с адресом хранилища:
+
+```bash
+cat > lifecycle.json <<'JSON'
+{"Rules":[
+ {"ID":"abort-incomplete","Status":"Enabled","Filter":{"Prefix":""},
+  "AbortIncompleteMultipartUpload":{"DaysAfterInitiation":1}},
+ {"ID":"expire-free","Status":"Enabled","Filter":{"Prefix":"clips/free/"},
+  "Expiration":{"Days":7}}]}
+JSON
+aws --endpoint-url "$S3_ENDPOINT" s3api put-bucket-lifecycle-configuration \
+  --bucket "$S3_BUCKET" --lifecycle-configuration file://lifecycle.json
+# проверка: оба правила Enabled, у expire-free префикс clips/free/ (а не clips/), versioning пуст или Suspended
+aws --endpoint-url "$S3_ENDPOINT" s3api get-bucket-lifecycle-configuration --bucket "$S3_BUCKET"
+aws --endpoint-url "$S3_ENDPOINT" s3api get-bucket-versioning --bucket "$S3_BUCKET"
+```
+
+(Для встроенного MinIO допустим и `mc ilm rule add --expire-days 7 --prefix clips/free/ local/<S3_BUCKET>`, но
+правило прерывания незавершённых загрузок через `mc` ставится не во всех версиях — надёжнее JSON выше. Эти команды
+в проекте автоматически не прогонялись: вывод `get-…` — единственное доказательство.)
 
 ### Проверка шага
 
@@ -476,9 +513,14 @@ R9 — основное действие на первом экране без �
   `packages/shared/src/showcase.ts` (код `/c/`, `clip.id`, минуты записи, число клипов — из базы стенда). Файл и
   постер — ТОЛЬКО `GET /api/showcase/{code}/file|thumbnail` (членство до базы, 302 на подпись ≤ 900 с). Ретенция
   бесплатного тарифа клипы набора не стирает, `/c/` не объявляет их истёкшими; удаление аккаунта стирает.
-  **В новом окружении клип витрины другой:** заменить запись набора на свой клип (`clip_link.code` и `clip.id` из
-  своей базы, числа подписи — из `video.duration_seconds` и числа клипов `done`); при пустом наборе демо не
-  рисуется. Разметка лендинга — компонент `apps/web/src/app/Landing.tsx` (его же рендерит браузерный набор
+  **В новом окружении клип витрины другой, и до замены демо-маршрут `/api/showcase/CTDUUG/…` вернёт 404**
+  (в наборе — идентификаторы старого стенда). Согласованная пара на свежей БД, когда есть хотя бы один готовый клип
+  со ссылкой (запрос только на чтение):
+  `docker compose … exec db psql -U <пользователь> -d <база> -c "SELECT l.code, c.id AS clip_id, ROUND(v.duration_seconds/60.0) AS source_minutes, (SELECT COUNT(*) FROM clip d WHERE d.video_id=v.id AND d.status='done') AS clip_count FROM clip_link l JOIN clip c ON c.id=l.clip_id JOIN video v ON v.id=c.video_id WHERE c.status='done' AND l.revoked_at IS NULL ORDER BY c.created_at DESC LIMIT 5"`
+  (схема — `packages/db/migrations/001_init.sql`, `revoked_at` — миграция 009; если запрос не прошёл, сверить имена
+  колонок с миграциями). Код и id ОБЯЗАНЫ быть из одной строки. Вписать в `packages/shared/src/showcase.ts`
+  (`code`, `clipId`, `sourceMinutes`, `clipCount`) и **пересобрать образы** (`web` всегда; воркеры — `packages/shared`
+  общий), иначе правка не подействует. При пустом наборе демо не рисуется. Разметка лендинга — компонент `apps/web/src/app/Landing.tsx` (его же рендерит браузерный набор
   прибора); `<video controls playsinline preload="none">`, ширина `clamp(7rem,38vw,9.5rem)` — постер 9:16 целиком
   в первом экране 375×667.
 - **призыв в конце клипа (фича 27a, ADR-017, FR-RESULT-006):** при загрузке и на экране записи — вид призыва из
@@ -573,7 +615,7 @@ docker compose --project-directory . --env-file .env exec -T db psql -U n5 -d n5
 | Проверка файла | `worker-stt` | `ffprobe`, тип по магическим байтам, 2–90 мин, резерв диска ×3 |
 | Расшифровка | `worker-stt` | `openai/whisper-large-v3` через OpenRouter, исполнитель закреплён за **Together**; куски 180 с с перекрытием 2 с |
 | Выбор фрагментов | `worker-llm` | `anthropic/claude-sonnet-5` через OpenRouter, исполнитель Anthropic / Claude Platform on AWS; модели уходят **сегменты**, не слова |
-| Кадр, субтитры, метка | `worker-video` | ffmpeg 8.1 + libass + OpenCV 4.12 (детектор лиц YuNet, модель 228 КБ в образе) |
+| Кадр, субтитры, метка | `worker-video` | ffmpeg (из Alpine, версия не закреплена; на стенде 8.1) + libass + OpenCV 4.12 (детектор лиц YuNet, модель 228 КБ в образе) |
 
 **Локальных моделей нет.** Весь вывод моделей идёт наружу, через два адреса одного шлюза OpenRouter.
 
@@ -588,14 +630,14 @@ SPARC-документы писались до кода и не переписы
 |---|---|---|
 | OpenAI `whisper-1`, ключ `OPENAI_API_KEY` | `openai/whisper-large-v3` через OpenRouter у Together | DEC-A-022; один шлюз, закреплённый исполнитель |
 | Claude Sonnet 5 через Messages API, `ANTHROPIC_API_KEY` | `anthropic/claude-sonnet-5` через OpenRouter | тот же ключ; исполнитель закреплён, `require_parameters` |
-| ffmpeg 7 | ffmpeg 8.1.2 (из Alpine) | версия пакета в образе |
+| ffmpeg 7 | ffmpeg из Alpine: `apk add --no-cache ffmpeg` БЕЗ закрепления версии (`Dockerfile:52`, `:66`), база `node:22.22-alpine`. «8.1.2» и «8.1» в §9 — версия, оказавшаяся на стенде, а не гарантия: чистая сборка берёт то, что лежит в репозитории этой Alpine (комментарий `Dockerfile:45` «ffmpeg 7» устарел). Сверять `ffmpeg -version` в собранном образе | версия пакета зависит от Alpine базового образа |
 | Центральная обрезка 9:16 | кадр следует за лицом (ADR-009) | центр показывал стену между двумя участниками |
 | Метка в две строки, код 10 знаков | одна строка, код 6 знаков, домен `clipmkr.ru` | OWN-007, SL-001…008 |
 | Строгая проверка таймкодов | поджатие с журналом, отказ только при их отсутствии (ADR-010) | строгость отвергала настоящие записи |
 | Модели — весь транскрипт со словами | только сегменты | 1128 КБ против 115 КБ; границы к словам двигает наш код |
 | Субтитры 68 px, перенос 32 знака | 86 px, перенос 24, обводка 5, тень 1 | просьба владельца; перенос измерен отрисовкой |
 | — | словарь терминов для субтитров | распознаватель пишет английские названия кириллицей |
-| — | фоновая CC0-музыка по галочке (ADR-011), колонка `video.music`; 11 треков, выбор по номеру клипа | просьба владельца; уровень вычисляется из речи клипа |
+| — | фоновая CC0-музыка по галочке (ADR-011), колонка `video.music`; 9 треков, выбор по номеру клипа | просьба владельца; уровень вычисляется из речи клипа |
 | — | пэк-шот наложением: CC0-удар и вспышка той же галочкой (ADR-012) | просьба владельца; вставка кадров ломает шкалу времени |
 | — | заголовок клипа крупно в первые 2,5 с, своя галочка (ADR-013) | автономное решение 24.09 |
 | — | уплотнение пауз по огибающей, своя галочка (ADR-015) | просьба владельца; K выбран по образцам |
@@ -680,7 +722,7 @@ FR-TARIFF-001…003), — `docs/Specification-addendum.md` (сама специ�
 
 ## 13. Состав фич и где описаны
 
-Все 30 фич `done` (`.claude/feature-roadmap.json`), на стенде `https://clipmkr.ru` с 28.09.2026. «Источник» — постановка и
+Все 30 фич имеют `status: done` в `.claude/feature-roadmap.json` (опора — статусы фич; паспорт в шапке файла, стр. 14, им противоречит и как доказательство не используется), на стенде `https://clipmkr.ru` с 28.09.2026. «Источник» — постановка и
 решение; «Pseudocode/Architecture/Refinement (доп.)» — разделы-дополнения «фичи 13–30» в конце этих файлов (для фич 1–12 —
 основной текст). Тесты — главные файлы `tests/`; мутации — `tests/run-*-mutations.mjs` и `scripts/test-*-mutations.mjs`;
 квитанция каждой фичи — `docs/features/<slug>/` (указатель — `docs/features/README.md`).
