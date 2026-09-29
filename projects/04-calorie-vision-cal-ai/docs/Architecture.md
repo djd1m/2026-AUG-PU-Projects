@@ -299,3 +299,89 @@ hour per IP address», та же страница), и зависимость р
 Порядок операций из алгоритмов совпал с разделом Security Architecture и правку не потребовал:
 ограничение частоты до валидации, квота после валидации и до вызова модели, согласие до первой
 записи дневника, свежесть `auth_date` после проверки подписи.
+
+## Состояние на 29.09.2026: что добавилось после Phase 1 (по факту кода и стенда)
+
+Разделы выше — план 12.09 (статус «ни один сервис не развёрнут» устарел). Требования —
+`Specification.md` §10, алгоритмы — `Pseudocode.md` «Алгоритмы, добавленные после Phase 1»,
+повторение с нуля — [`REPRODUCE.md`](REPRODUCE.md).
+
+### Сервисы и сети (`docker-compose.yml`)
+
+Сервисов канона по-прежнему шесть, плюс два служебных: `storage-init` (одноразовый: бакет, пользователь
+приложения, политика) и `test` (профиль `test`, образ `node:22.22.0-bookworm-slim`, монтирует каталог
+проекта). Профили: `app`/`dev` — без двери, `edge` — с дверью `proxy`, `test` — тестовый.
+
+| Сеть | Тип | Кто в ней | Зачем |
+|---|---|---|---|
+| `private` | `internal: true`, подсеть `${N4_PRIVATE_SUBNET:-10.85.0.0/24}` | все | `db` и `storage` видны только по имени; **выхода в интернет нет** — поэтому `npm ci` в сервисе `test` падает (`EAI_AGAIN`) |
+| `egress` | bridge, `${N4_EGRESS_SUBNET:-10.83.0.0/24}` | `api`, `recognizer`, `web`, `proxy` | исходящие вызовы: модель, ЮKassa, Bot API |
+| `public-edge` | внешняя `talk-ai-public` | `proxy` | сеть общего TLS-прокси машины (`ai-hub-tls-proxy`) |
+
+Единственная публикация — `127.0.0.1:${N4_EDGE_PORT:-4180}:80` у `proxy`. Дверь доверяет
+`X-Forwarded-For` только от `172.21.0.0/16` (сеть общего прокси) и ЗАМЕНЯЕТ его адресом клиента
+(`3e5073bb`) — на этом стоят и ограничение частоты по `{client_ip}`, и проверка сетей ЮKassa в
+вебхуке (`67510f0c`). Домен `tarelka.aicoding.space` (и запасной `n4.194.85.249.105.sslip.io`)
+проксирует общий Caddy машины на `n4-tarelka-proxy-1:80`; блок — `ops/ai-hub-caddy-block.txt`
+(в файле ещё старый адрес `212.192.0.33`, действующий блок — в `/home/dz-projects-2026/edge/Caddyfile`).
+
+**Фоновые циклы живут в процессе `api`**, а не в `recognizer`: продления подписки
+(`apps/api/src/renewals/loop.ts` — ключи провайдера есть только у `api`) и ежечасная уборка
+бесхозных объектов бакета (`apps/api/src/photo/purge-orphans.ts`, DEC-A-063). Миграции отдельным
+сервисом не применяются: `npm run migrate` запускается вручную (одноразовым контейнером `test` с
+адресом нужной базы, см. `REPRODUCE.md`).
+
+### Маршруты (поправка к канону §5, `decisions-owner.md`)
+
+К 13 маршрутам канона и `/health` добавлены (сверено с `apps/api/src/routes/*` 29.09):
+
+| Группа | Маршруты | Фича / решение |
+|---|---|---|
+| Подписка | `GET /api/v1/subscription`, `POST /api/v1/subscription/checkout`, `POST /api/v1/subscription/cancel` | `subscription-and-commission` |
+| Вебхук | `POST /api/v1/webhooks/payments/{provider}` | то же |
+| Вход по почте | `POST /api/v1/auth/{register,login,logout}`, `GET /api/v1/auth/me` (`POST /auth/device` — прежний, канон) | OWN-012 |
+| Кабинет партнёра | `GET /api/v1/partner/earnings`, `GET /api/v1/partner/earnings/export`, `GET|PUT /api/v1/partner/payout-details`, `GET /api/v1/partner/invites/{token}`, `POST /api/v1/partner/enroll` | партнёрские фичи 16–17.09 |
+| Кабинет владельца | `GET /api/v1/admin/overview`, `POST /api/v1/admin/payouts`, `POST /api/v1/admin/partners`, `POST /api/v1/admin/partners/{partnerId}/invites`, `GET /api/v1/admin/export/{commissions,payout-register}` | то же; посторонним `404` |
+| Уведомления | `GET /api/v1/notifications`, `POST /api/v1/notifications/read` | `partner-notifications-and-payouts` |
+| Фото результата | `GET /api/v1/scans/{id}/photo` | DEC-A-050 |
+| Внутренние (не через дверь) | `GET /internal/share-cards/{cardId}`, `/image` | `share-card-and-growth-events` |
+
+Страницы `web`: `/`, `/result/{id}`, `/diary`, `/consent`, `/settings`, `/pro`, `/pro/return`,
+`/r/{code}`, `/invite/{token}`, `/cabinet`; публичная карточка `/c/{card_id}`.
+
+### Данные: миграции после Phase 1
+
+| Миграция | Что добавляет |
+|---|---|
+| `007_share_card_and_growth_events.sql` | колонки карточки и событий роста |
+| `009_source_and_correct.sql` | колонки `recognition` для источника и правок (номер 008 пропущен намеренно, DEC-A-039) |
+| `010_subscription_and_commission.sql` | `subscription` (4 статуса, одна активная на аккаунт, аренда продления), `payment_intent`, `payment_event` (`UNIQUE (provider, provider_event_id)`), `payment`, `commission_entry` (`accrual`/`clawback`/`payout`, частичные уникальные индексы) |
+| `011_email_identity.sql` | `account.telegram_user_id` необязателен, почта и хеш пароля (`account_email_active_unique`), `partner_invite` |
+| `012_notifications.sql` | `notification` (`commission_accrued`, `commission_clawed_back`, `payout_recorded`), индекс непрочитанных |
+| `013_payout_details.sql` | реквизиты выплаты в `partner` (`payout_method`: `sbp` / `other`) |
+
+Сущностей сверх 14 канона стало 21 (подписка, намерение, событие, платёж, леджер, приглашение,
+уведомление). Страж закрытого списка таблиц — `tests/integration/migrations.test.ts`.
+
+**Данные о питании** не создаются миграциями: `food_item` наполняет `npm run import:fdc` из дампа
+USDA (SR Legacy 2018-04 + Foundation 2026-04-30 → 7 928 строк), `food_synonym` —
+`npm run seed:food-synonyms` (153 строки). Точная процедура — `REPRODUCE.md`, раздел «Данные о питании».
+
+### Внешние зависимости, появившиеся после плана
+
+| Способность | Поставщик | Где в коде | Состояние |
+|---|---|---|---|
+| распознавание фото (основной вызов и эскалация) | OpenRouter: `google/gemini-2.5-flash-lite`, `google/gemini-2.5-flash` | `apps/recognizer/src/provider/openrouter.ts` | включено на стенде (`N4_MODEL_PROVIDER=openrouter`); Anthropic-адаптер `live.ts` остаётся, ключа на машине нет |
+| приём оплаты, перезапрос статуса, автоплатёж | ЮKassa API | `apps/api/src/payments/yookassa.ts`, сети — `origin.ts` | тестовый магазин (`YOOKASSA_TEST_MODE=true`); CloudPayments не подключён (OWN-010) |
+| доставка уведомления партнёру | Telegram Bot API `sendMessage` | `apps/api/src/notifications/notify.ts` | живьём не проверена: ни один партнёр не связал Telegram |
+| дамп базы продуктов | USDA FoodData Central, CSV-архивы `fdc.nal.usda.gov/fdc-datasets/` | `scripts/import-fdc.ts` | разовая задача оператора, не сервис |
+
+### Переменные окружения, добавленные после плана
+
+`api`: `N4_SUBSCRIPTION_PRICE_MINOR`, `N4_SUBSCRIPTION_PERIOD_DAYS`, `N4_COMMISSION_HOLD_DAYS`,
+`N4_SCAN_LIMIT_PRO`, `N4_PAYMENTS_MODE` (`fake|live`) — обязательны; `N4_PAYMENTS_PROVIDER`
+(`yookassa`), `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY`, `YOOKASSA_TEST_MODE` — обязательны при
+`live`. `web`: цена, `N4_SCAN_LIMIT_USER`, `N4_SCAN_LIMIT_PRO`, `N4_PAYMENTS_MODE`,
+`TELEGRAM_BOT_USERNAME`. `recognizer`: `OPENROUTER_API_KEY` при `openrouter`. **Расхождение:**
+`.env.example` (29.09) не содержит переменных подписки и платежей — их список берётся из
+`docker-compose.yml` (там все объявлены `${VAR:?…}`), см. `REPRODUCE.md`.
