@@ -21,4 +21,3 @@
 **Нет. Оценка D.** Блокеры P1 не позволяют воспроизвести заявленный набор возможностей на чистой машине без самостоятельного восстановления недостающих операций.
 
 Проверено read-only на `HEAD f53f9468`; механический страж и E2E не повторялись по брифу. Профиль — `compact-quality-first-v2`, стадия VALIDATE; запрошенная модель — `gpt-5.6-sol/high`, фактическая модель, fallback, длительность, usage и стоимость хостом не подтверждены. [Телеметрия прогона](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/01-testimonials-senja/docs/telemetry/p-replicator/20260929T182617Z-docs-rebuild-01-e22b/run.json:1) остаётся `running`, без `final_revision`, и её baseline предшествует проверенному HEAD.
-Failed to write last message file "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/01-testimonials-senja/docs/reviews/rebuild-docs-codex.md": No such file or directory (os error 2)
