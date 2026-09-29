@@ -1,5 +1,64 @@
 # Замеры — N2 «ReviewQR» на общем шаблоне (фаза 2 серии)
 
+## Круг правок 2 (2026-09-29 12:53–14:12 UTC) — ДЕЙСТВУЮЩИЕ файлы `promo/dist/n2/`
+
+Правки: (1) находка Codex №3 — у mobile-дорожки сцены 2 свой титр «Точка заведена — ссылки на карточки на месте.»
+(9:16 показывает готовую карточку; создания в mobile-записи нет); (2) по раскадровке **первого** прогона этого круга
+найдены кадры с тарифом/ценой, которые прежний просмотр fps=2 пропустил: 9:16 кусок `owner-place-mobile` 2–8,8 с
+показывал «План: Free» у нижнего края (→ 2–5,4 с); первый кадр куска `owner-create-desktop` 9,5 с ещё показывал форму с
+блоком цены (→ 9,8 с); `inbox-desktop` 7–7,2 с — кабинет с «План: Free» (→ 7,4 с). Все блоки цены/тарифа записаны
+зонами `forbidden-zones.tsv`; `gate-config.sh` испытан: прежние значения → 1 с названной зоной, текущие → 0.
+Шаблон `9a61bd49`. Квитанция `…/n2/out/final/logs/receipt-round2.txt` (`dirty_files=13` — документы круга; конфиг —
+хеш ниже), result=green.
+
+| Шаг | Wall, с | user + sys, с | Пик памяти, байт | host_load1 | watchdog |
+|---|---|---|---|---|---|
+| bundle | 19,4 | 23,7 + 2,5 | 813 547 520 | 6,70 | clean |
+| 16x9 | 320,4 | 436,8 + 237,5 | 2 717 474 816 | 6,04 | clean |
+| 9x16 | 279,5 | 405,5 + 202,6 | 2 658 430 976 | 10,57 | clean |
+| 1x1 | 246,7 | 341,4 + 192,1 | 3 037 556 736 | 7,29 | clean |
+| 16x9-repeat | 347,0 | 452,8 + 252,4 | 2 706 198 528 | 10,18 | clean — **совпал побайтно** |
+
+```text
+62cb2c392f7e29fdcc0bb3a33f34d09ea2d0febf0b5c7216547d3eee3460ce4b  16x9.mp4 (= 16x9-repeat.mp4)
+74703e55a04acabb99a5baf47dbc3d7f73af2e1bd3cbc482f7f1417f22679405  9x16.mp4
+56b2766c27502c9ee4f774f19f48d5c47838e4dae4f3df6cfd4e3917b3c44626  1x1.mp4
+cbdec8810cd38d81eb18ab4c6d5d98cec9aad444c1ee8ce2658b5fda7cf77033  project.config.ts
+a961fd5fa61a88ba76df403986b02f7e22638cf5ad554dde774a1950e694c474  forbidden-zones.tsv
+d90f11f43d860801c1a6b8aec97910d204e4b4968402c0fe6cca7183e47d8411  guest-choice-desktop.webm
+b7601cb5863f575e381823a13818ecf869b4e56491e802987aad3b5ad4e41c80  guest-choice-mobile.webm
+be16f22d407280190d4aa23c8e054e50764a9de4e03851c444177a9aa72b1ec7  guest-private-desktop.webm
+80cae61a10dc34070f15c8f9e96893096d75e9edb1534d8a8f0540b9d87e6cd4  guest-private-mobile.webm
+354262578b1bcf2dda9b96d05766b34419fbe81c972648e7f165e5d3c713ef9f  inbox-desktop.webm
+2e08b646d21e24716fe6513b843d150a92469a991051997490a20f882bd19b3b  inbox-mobile.webm
+c535a9ebd35ff54c29409613593de4043925a50e35ad21e03baa644ba676e8c5  owner-create-desktop.webm
+9aa5e2448933c1de4bfaed0f93fcaf88a61488509cea731687476d44da6d4137  owner-place-desktop.webm
+0c22cc2db12eaea441738815224ba23730350930dbbc7af7b30eeab78884fe87  owner-place-mobile.webm
+1c7bb72c7494adabb321e32c5e56586ea54f9fefbb5b7bd813b796db55489322  owner-qr-desktop.webm
+8fd8eec4435425b6650f1f4e14416e0d4071d5fa6220554f7ad40f9ceb848954  образ promo-render:/usr/local/share/fonts/Onest-Regular.ttf
+10f7ea99a1bb175a3c41c0d9c7322290b823cce5b5b6c5b9c8c570798536ec04  образ promo-render:/usr/local/share/fonts/Onest-SemiBold.ttf
+63ae70738724297b5e843f13e0cc5b2865e8375a3fcc63ab2c753af718b18c49  образ promo-render:/usr/local/share/fonts/Onest-Bold.ttf
+шаблон 9a61bd49: shared/src/Promo.tsx 97c9b3a5…12fdb31d, shared/src/project.ts 1663eb69…44284f7d
+```
+
+### Окончательная проверка (модуль 07)
+
+Листы: `/home/dz-projects-2026/.promo-assets/n2/out/final/proof/` (46: 4 листа шага 0,25 с + стыки ±5 кадров на формат;
+монтажи стыков — `proof/montage/`). Интервалы: 0–12, 12–24, 24–36, 36–45 с; стыки 6 · 8,5 · 9,5 · 13 · 17 · 20 ·
+(23,5) · 26 · 27 · 29,5 · 33 · 39 с.
+
+| Ворота | Код | Итог |
+|---|---|---|
+| `gate-config.sh` (+ `forbidden-zones.tsv`, 10 зон) | 0 | окна кабинета не задевают цену/тариф |
+| `render.sh` REPRO=1 | 0 | |
+| `gate-receipt.sh` | 0 | |
+| `gate-media.sh` | 0 | 1350 декодированных кадров, 0 аудио |
+| `storyboard.sh` | 0 | 46 листов |
+| `gate-verdict.sh` (+ `captions-proof.tsv`, 7 титров) | **2** | все стыки (монтажи) и листы шага 16x9-1/3, 9x16-1/2/3, 1x1-1/2/3 — `принят`; **не досмотрены (бюджет):** 16x9-2, 16x9-4, 9x16-4, 1x1-4 — `?`. Отказов нет, но вердикт «готово» ворота не дают |
+| сторож (`promo-n2-storyboard`) | 0 | для `promo-n2-media` — 2 (журнал без строк после короткой операции) |
+
+---
+
 ## Круг правок 1 (2026-09-29 10:59–11:37 UTC) — ДЕЙСТВУЮЩИЕ файлы `promo/dist/n2/`
 
 Правки (DEC-S-01, DEC-S-03): титр «Гость сканирует QR и видит три равные двери.» → «По QR — три способа оставить отзыв.»
