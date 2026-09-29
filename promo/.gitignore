@@ -2,3 +2,6 @@
 *.mp4
 capture/node_modules/
 capture/*/node_modules/
+
+# Готовые ролики серии — единственные mp4 в git (≈2–4 МБ каждый), см. promo/dist/README.md
+!dist/**/*.mp4
