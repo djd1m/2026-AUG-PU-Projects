@@ -333,6 +333,177 @@ Feature: FTC compliance boundary for AI
 
 ---
 
+## Требования §6 (после MVP) — трассировка к автотестам
+
+> Источник — `Specification.md` §6 «Сверка с кодом». В отличие от разделов выше, эти сценарии
+> НЕ перенесены из Gherkin спецификации (там только текстовые AC): они записаны по критериям
+> приёмки §6. Строка «Тест» названа только там, где файл существует и проверяет требование;
+> «Автотеста нет» — честное «названо, не покрыто».
+
+### FR-009 — вход по email и паролю
+```gherkin
+Scenario: неверные данные неразличимы
+  Given несуществующий email и существующий email с неверным паролем
+  When оба входа отправлены на POST /api/auth/login
+  Then оба ответа — побайтово одинаковый 401, argon2 считается в обоих случаях
+Scenario: лимит неудач
+  When с пары email+IP пришло 6 неудачных входов за час
+  Then шестой получает 429 без цифр в теле, успешный вход счётчик не увеличивает
+```
+Тест: `apps/web/tests/login.test.ts`, `apps/web/tests/login-route.test.ts`
+
+### FR-010 — смена пароля с завершением всех сессий
+```gherkin
+Scenario: успешная смена отзывает все сессии
+  Given вошедший владелец с двумя сессиями
+  When он меняет пароль, указав верный текущий
+  Then отозваны обе сессии, новая cookie выдана в том же ответе
+Scenario: неверный текущий пароль
+  Then 401 {error:'неверный текущий пароль'}, как и при отсутствии сессии
+```
+Тест: `apps/web/tests/password-change.test.ts`, `apps/web/tests/password-change-route.test.ts`, `apps/web/tests/password-change-argon2.test.ts`
+
+### FR-011 — кабинет партнёра
+```gherkin
+Scenario: публичный код не даёт доступа
+  When партнёр предъявляет публичный код вместо dashboard_token
+  Then 401 {error:'ключ доступа не подошёл'} без cookie
+Scenario: конверсия при нуле регистраций
+  Then показывается пустота, а не «0%»
+```
+Тест: `apps/web/tests/partner-dashboard.test.ts`, `apps/web/tests/partner.test.ts`
+
+### FR-012 — повтор транскрипции при сбое STT
+```gherkin
+Scenario: три попытки с растущей задержкой
+  Given отзыв с видео и STT, который падает
+  When воркер обрабатывает строку три раза
+  Then задержки 60 с и 120 с, после третьей неудачи статус failed
+Scenario: строка со сроком в будущем не выбирается
+```
+Тест: `services/worker/tests/transcribe-retry.test.ts`, `services/worker/tests/transcribe-job.test.ts`, `services/worker/tests/transcribe-job.unit.test.ts`
+
+### FR-013 — определение «внешнего домена»
+```gherkin
+Scenario: свой домен и поддомен не засчитываются, чужой засчитывается
+  Given APP_DOMAIN = proofwall.example
+  Then app.proofwall.example и localhost — свои, notproofwall.example — внешний
+```
+Тест: `apps/web/tests/widget-install.test.ts`. Случай `::1` тестом не покрыт (названо в §6).
+
+### FR-014 — импорт отзывов из CSV
+```gherkin
+Scenario: повтор того же файла
+  When один и тот же CSV записан дважды в режиме commit
+  Then второй раз вставлено 0 строк; preview не пишет ничего
+Scenario: 501 строка
+  Then отказ целиком
+```
+Тест: `apps/web/tests/csv-import.test.ts`, `apps/web/tests/csv-import-route.test.ts`
+
+### FR-015 — восстановление пароля по email
+```gherkin
+Scenario: ответ не выдаёт существование адреса
+  When forgot вызван для существующего и несуществующего адреса
+  Then оба ответа 200 с одним текстом
+Scenario: токен одноразовый и живёт 1 час; reset отзывает все сессии
+```
+Тест: `apps/web/tests/password-reset.test.ts`. Живая отправка через Resend не проверялась (§6).
+
+### FR-016 — вход через Yandex ID
+```gherkin
+Scenario: занятый адрес не связывается автоматически
+  Given учётка с этим email уже существует
+  When приходит коллбэк Яндекса с тем же адресом
+  Then отказ password_account_exists, сессия не выдаётся
+Scenario: state и PKCE S256 проверяются до сетевых вызовов
+```
+Тест: `apps/web/tests/sso.test.ts`, `apps/web/tests/sso-transport.test.ts`. Живым Yandex ID путь не проходили.
+
+### FR-PAY-001 — платный тариф 990 ₽ за 30 дней
+```gherkin
+Scenario: недоступность провайдера откатывает заявку события
+  When вебхук пришёл, а перезапрос статуса у ЮKassa упал
+  Then ответ 500, event_id не занят, повтор проходит полный путь
+Scenario: досрочное продление не сжигает остаток срока
+Scenario: адрес вне 7 сетей ЮKassa → 400
+```
+Тест: `apps/web/tests/payment.test.ts`, `apps/web/tests/tariff.test.ts`, `apps/web/tests/ip-range.test.ts`
+
+### FR-INTAKE-001 — фото к текстовому отзыву
+```gherkin
+Scenario: SVG и подмена типа отвергаются
+  When загружен файл с заявленным image/png, но иной сигнатурой, либо SVG, либо более 5 МБ
+  Then отказ до списания квоты формы
+```
+Тест: `apps/web/tests/photo.test.ts`, `apps/widget/tests/photo.test.ts`
+
+### FR-INTAKE-002 — приём видео выключен по умолчанию
+```gherkin
+Scenario Outline: только строгое true включает приём
+  Given VIDEO_INTAKE_ENABLED = "<значение>"
+  Then приём видео <итог>
+  Examples: пусто, True, 1, yes, " true" → выключен; true → включён
+Scenario: выключено → 403 до чтения файла
+```
+Тест: `apps/web/tests/video-intake-switch.test.ts`
+
+### FR-SPEND-001 — потолок расхода на внешнюю модель
+Сценарии S-1…S-11 описаны в `features/model-spend-ceiling/`; в коде требование не реализовано.
+Автотеста нет (названо, не покрыто). Защита расхода до реализации — FR-INTAKE-002.
+
+### FR-PROOF-001 — отзыв с внешней площадки
+```gherkin
+Scenario: нужен первоисточник или снимок
+  When отзыв отправлен без ссылки и без снимка
+  Then 422; ссылка только https; evilyandex.ru не определяется как Яндекс
+Scenario: отзыв создаётся pending с source='platform'
+```
+Тест: `apps/web/tests/platform-proof.test.ts`
+
+### FR-DEMO-001 — демо-отзывы помечены в данных и на экране
+```gherkin
+Scenario: плашка привязана к данным, а не к слагу
+  Given на стене есть отзыв с source='demo'
+  Then над отзывами плашка role="note" «Демонстрация…»
+```
+Тест: `apps/web/tests/wall.test.ts` (блок «Демонстрационные отзывы помечены»)
+
+### FR-SLUG-001 — слаг из русского названия и из ссылки
+```gherkin
+Scenario: кириллица и ссылка
+  Then название транслитерируется; из ссылки берутся главная метка хоста и последний сегмент пути;
+  явно введённый слаг не трогается; итог соответствует ^[a-z0-9-]{3,40}$
+```
+Тест: `apps/web/tests/slug-source.test.ts`, `apps/web/tests/slug.test.ts`
+
+### FR-DASH-001 — `/dashboard` без слага
+```gherkin
+Scenario: без сессии
+  When открыт /dashboard
+  Then редирект на /login?next=/dashboard
+Scenario: один проект → его кабинет; ноль → «Создать проект»; несколько → список
+```
+Автотеста нет (названо, не покрыто; в §6 «Тестов нет»).
+
+### FR-N3-001 — мост покупок в партнёрскую платформу N3
+```gherkin
+Scenario: мост выключен по умолчанию и отказывает при PAYMENTS_STUB=true
+Scenario: переполнение очереди outbox откатывает и тариф, и заявку вебхука
+Scenario: возврат создаёт manual_review, paid_until не пересчитывается
+```
+Тест: `apps/web/tests/n3-billing.test.ts`, `apps/web/tests/n3-checkout.test.ts`, `apps/web/tests/n3-payment.test.ts`, `apps/web/tests/n3-proof.test.ts`, `services/worker/tests/n3-outbox.test.ts`, `services/worker/tests/n3-client.test.ts`. Реальная TEST-покупка и возврат не проверены (§6).
+
+### FR-AGENT-001 — агентные покупки (MCP / A2A), TEST-пилот
+```gherkin
+Scenario: боевые ключи ЮKassa отклоняются до сетевого вызова (нужен префикс test_)
+Scenario: отзыв ключа или поручения → 401
+Scenario: оплата подтверждается только вебхуком или сверкой воркера
+```
+Тест: `apps/web/tests/agent-payments-host.test.ts`, `apps/web/tests/agent-payments-security.test.ts`, `apps/web/tests/agent-payments-cancellation.test.ts`, `apps/web/tests/agent-payments-compatibility.test.ts`, `packages/agent-payments/test/provider.test.mjs`, `services/agent-api/tests/gateway.test.mjs`, `services/worker/tests/agent-payments-poll.test.ts`
+
+---
+
 ## Вне MVP-недели
 
 Финальный гейт (`07-final-gate.md` §3) установил: сценарий №4 FR-NFR-SEC-002 описывает функцию
