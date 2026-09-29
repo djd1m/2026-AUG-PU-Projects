@@ -1,6 +1,10 @@
 # Specification — Proofwall
 
 > SPARC Phase: **Specification**. Источник: [`PRD.md`](PRD.md), pre-filled context из `discovery/`. Growth-механики заданы здесь как FR, а не описаны прозой в PRD — см. §2.
+>
+> **Сверка 29.09.2026:** всё, что сделано после MVP (FR-009…FR-016, оплата со сроком, площадки,
+> мост N3, агентные покупки и др.), — [§6 «Требования после MVP»](#post-mvp); повторить проект с
+> нуля — [`REPRODUCE.md`](REPRODUCE.md).
 
 ## 1. Функциональные требования MVP
 
@@ -293,10 +297,13 @@ Feature: Affiliate attribution through paid conversion
     Then повторное начисление не происходит
 
   @FR-GROWTH-002 @growth @security
-  Scenario: Вебхук с неверной подписью отклоняется
-    Given платёжный провайдер подписывает вебхуки HMAC-подписью
-    When приходит вебхук оплаты с отсутствующей или неверной подписью
-    Then запрос отклоняется до обработки бизнес-логики платежа
+  Scenario: Вебхук не из сетей ЮKassa отклоняется
+    # Факт 29.09 (код): ЮKassa уведомления НЕ подписывает (D-009, коммит b1ccb57b) — HMAC-сценарий
+    # прежней редакции снят. Подлинность: адрес источника из списка сетей ЮKassa, зашитого в код
+    # (apps/web/src/lib/payment.ts, YOOKASSA_NETWORKS), И перезапрос статуса платежа у провайдера.
+    Given уведомление приходит с адреса вне опубликованных сетей ЮKassa
+    When обрабатывается вебхук оплаты
+    Then запрос отклоняется кодом 400 до записи event id и до бизнес-логики платежа
     And комиссия партнёру не начисляется, тариф проекта не меняется
     And попытка записывается в audit log с причиной "invalid_signature"
 ```
@@ -604,3 +611,284 @@ Feature: FTC compliance boundary for AI
 | FR-GROWTH-005 | `@FR-GROWTH-005` ×3 | страницы выше порога |
 | FR-NFR-SEC-001 | `@FR-NFR-SEC-001` ×2 | — (isolation gate) |
 | FR-NFR-SEC-002 | `@FR-NFR-SEC-002` ×4 | — (compliance gate) |
+
+---
+
+<a id="post-mvp"></a>
+## 6. Требования после MVP — по факту кода (сверено 29.09.2026)
+
+Раздел добавлен задним числом, чтобы проект можно было повторить с нуля по документам
+([`REPRODUCE.md`](REPRODUCE.md)). Каждое требование ниже описывает то, что **есть в коде и тестах**;
+подробные SPARC-планы, ревизии и мутации — в папке фичи (ссылка «Полный план»). Где план фичи
+расходится с кодом, здесь записан КОД, а расхождение названо строкой «Расхождение с планом».
+Номера FR-009…FR-016 — из `.claude/feature-roadmap.json`; фичи без номера в roadmap получили
+идентификаторы вида `FR-<ОБЛАСТЬ>-nnn`.
+
+Общий для неаутентифицированных маршрутов входа примитив: тело читается ВНЕ транзакции с
+пределом **4096 байт по фактически прочитанным байтам** (`apps/web/src/lib/request-body.ts`), иначе `413`.
+
+<a id="fr-009"></a>
+### FR-009: Вход по email и паролю
+
+**Полный план:** [`features/fr-009-login/`](features/fr-009-login/01_specification.md) (ревизия 5, решение D-010).
+**Код:** `POST /api/auth/login` (`apps/web/src/app/api/auth/login/route.ts`, `lib/login.ts`), страница `/login`.
+
+**Acceptance Criteria:**
+- Успешный вход ставит httpOnly-cookie `pw_session` на 30 дней; значение cookie не встречается в теле ответа
+- Неверный пароль, несуществующий email, пустой и нестроковый пароль — побайтово одинаковый `401`;
+  argon2 вычисляется всегда (для несуществующего — против заглушечного хеша); медианы времени отличаются < 4 раз
+- Лимиты: пара `email+IP` — 5 неудач в час, IP — 30 в час; успешный вход счётчики не увеличивает;
+  тугой счётчик сериализован `pg_try_advisory_xact_lock` (занят → `429`, без очереди); тело `429` без цифр
+- Пароль > 200 символов → `401` на входе и `400` на регистрации; нижняя граница — 8
+- Пул БД: `PGPOOL_MAX=30`, `PGPOOL_CONNECTION_TIMEOUT_MS=5000`; пустое/нечисловое значение роняет старт
+- Браузер после входа — `?next=` (только относительный путь, `//…` отвергается) либо кабинет
+  первого проекта по `created_at`; `/dashboard/<slug>` без сессии → `/login?next=…`
+- Главная `/` содержит ссылку «Войти» (коммит `9044f32e`)
+
+**Принятые риски:** параллельная пачка с одного IP проходит ≈60 argon2/час, а не 30 (измерено);
+регистрация раскрывает существование адреса открытым `409`.
+
+<a id="fr-010"></a>
+### FR-010: Смена пароля с завершением всех сессий
+
+**Полный план:** [`features/fr-010-password-change/`](features/fr-010-password-change/01_specification.md).
+**Код:** `POST /api/auth/password` (`lib/password-change.ts`), форма `dashboard/[slug]/change-password.tsx`.
+
+**Acceptance Criteria:**
+- Неверный текущий пароль и отсутствие сессии → одинаковый `401 {error:'неверный текущий пароль'}`
+- Новый пароль вне 8…200 или равный текущему → `400`
+- Лимиты: пара аккаунт+IP 5/час, IP 30/час, **успешных смен 10/час на аккаунт** (появилось по ревью);
+  try-лок занят или `lock_timeout` (55P03) → `409`
+- После `200` отозваны ВСЕ сессии аккаунта, включая текущую; новая cookie — в том же ответе
+- Замена хеша — сравнение-и-замена `update … where id=$ and password_hash=$` (без `FOR UPDATE`:
+  тот блокировал вход); учётка из SSO (`password_hash IS NULL`) → отказ, не `500`
+
+<a id="fr-011"></a>
+### FR-011: Кабинет партнёра
+
+**Полный план:** [`features/fr-011-partner-dashboard/`](features/fr-011-partner-dashboard/01_specification.md). Закрывает GAP Pseudocode «аутентификация партнёра».
+**Код:** `/partner` (форма токена), `POST /api/partner/session`, `/partner/dashboard`; `lib/partner-auth.ts`, `lib/partner.ts`; миграция `012_partner_dashboard_token.sql`.
+
+**Acceptance Criteria:**
+- Вход по секретному `dashboard_token` (32 байта base64url), в БД — только sha256; публичный
+  партнёрский код доступа НЕ даёт (`401`)
+- Любой отказ — один и тот же `401 {error:'ключ доступа не подошёл'}` без cookie
+- Неудачи: 30 в час с IP → `429`; **успехи тоже учитываются** — 200 в час на партнёра
+- Cookie `pw_partner`: httpOnly, secure, sameSite=lax, path `/partner`, 30 дней; статус
+  `active` проверяется при каждом показе — отзыв и ротация действуют сразу
+- Кабинет показывает когорту (регистрации, оплаты, конверсию, начисления); конверсия при нуле регистраций — пусто, не `0%`
+
+**Расхождение с планом:** план (NFR-011.4) — «пишется только неудача»; код пишет и успех (scope
+`partner_dashboard_success`). Выдать токен партнёру нечем: маршрута и скрипта выдачи нет,
+`issuePartnerCode`/`rotateDashboardToken` вызываются только из тестов (находка ревью M-5 открыта).
+
+<a id="fr-012"></a>
+### FR-012: Повтор транскрипции при сбое STT
+
+**Полный план:** [`features/fr-012-transcribe-retry/`](features/fr-012-transcribe-retry/01_specification.md). Закрывает GAP Pseudocode «политика повтора».
+**Код:** `services/worker/src/transcribe-job.ts`; миграция `011_transcript_retry.sql` (`transcript_attempts`, `transcript_next_attempt_at`).
+
+**Acceptance Criteria:**
+- До 3 попыток (`MAX_ATTEMPTS=3`), задержка `60 с · 2^(n−1)`; после третьей неудачи — `failed`
+- Строка со сроком в будущем не выбирается: условие в самом `SELECT … FOR UPDATE SKIP LOCKED`
+- Срок считается от `clock_timestamp()`, а не `now()` (вызов STT длится минуты)
+- Ошибка не из STT тоже учитывается как попытка (отдельной транзакцией) — «ядовитая» строка не
+  блокирует очередь; соединение после неудачного отката уничтожается, а не возвращается в пул
+- В очередь попадают только отзывы с `video_object_key IS NOT NULL` (коммит `38035fac`)
+
+**Отложено владельцу:** попытка не учитывается, если воркер убит во время вызова (H-2); сетевой вызов внутри транзакции (M-3).
+
+<a id="fr-013"></a>
+### FR-013: Определение «внешнего домена»
+
+**Полный план:** [`plans/fr-013-external-domain.md`](plans/fr-013-external-domain.md). Закрывает GAP Pseudocode «точное определение внешнего домена».
+**Код:** `apps/web/src/lib/widget-install.ts` (`normalizeDomain`, `isOwnDomain`), вызов из `GET /api/widget/config`.
+
+**Acceptance Criteria:**
+- Своими (установка НЕ засчитывается, событий нет) считаются `APP_DOMAIN`, любой его поддомен
+  (`x === own || x.endsWith('.' + own)`) и семейство localhost; `notproofwall.example` — внешний
+- Нормализация: нижний регистр, без порта и пути, без `www.`; строки `null`/`undefined` отбрасываются
+- `APP_DOMAIN` пуст → берётся хост `BASE_URL`; нет обоих → своим остаётся только localhost
+- Превью-домены (`*.vercel.app` и подобные) засчитываются — вопрос владельцу
+
+**Расхождение с планом:** запасной вариант через `BASE_URL` и хост `0.0.0.0` в плане не названы;
+`::1` в плане заявлен, но в коде не срабатывает (`new URL('https://::1')` бросает) — тестом не покрыто.
+
+<a id="fr-014"></a>
+### FR-014: Импорт отзывов из CSV
+
+**Полный план:** [`features/fr-014-csv-import/`](features/fr-014-csv-import/01_specification.md).
+**Код:** `POST /api/import` (`mode: preview|commit`), `lib/csv-import.ts`, форма `dashboard/[slug]/import-form.tsx`; миграция `013_import.sql` (`source`, `import_fingerprint`, уникальный индекс).
+
+**Acceptance Criteria:**
+- Без сессии `401` ДО чтения тела; тело ≤ 3 МиБ, иначе `413`; не больше 500 строк, иначе отказ целиком
+- 20 импортов в час на владельца (включая preview) — проверка и запись ДО разбора → `429`
+- Строки проверяются той же функцией, что форма (имя 2–80, текст ≤ 2000, роль ≤ 120); отклонённые — с номером строки
+- `preview` ничего не пишет; `commit` пишет `pending`, `source='import'`; повтор того же файла — 0 вставок
+  (отпечаток `sha256(trim(name) \0 trim(text))`, `on conflict do nothing`)
+- Не-UTF-8 → отказ; BOM срезается; разделитель `;` или `,` по первой строке
+
+**Расхождение с планом:** в спецификации фичи нет AC-014.16…18 (лимит частоты, предел роли,
+порядок аутентификации) — они есть только в тестах; комментарий маршрута называет предел 2 МиБ, код — 3 МиБ.
+
+<a id="fr-015"></a>
+### FR-015: Восстановление пароля по email
+
+**Полный план:** [`features/fr-015-password-reset/`](features/fr-015-password-reset/01_specification.md); правка 28.09 «время ответа» — [`05_completion.md`](features/fr-015-password-reset/05_completion.md), ревью [`08_review_codex_timing.md`](features/fr-015-password-reset/08_review_codex_timing.md).
+**Код:** `POST /api/auth/forgot`, `POST /api/auth/reset`, страницы `/forgot`, `/reset?token=`; `lib/password-reset.ts`, `lib/email.ts` (Resend); миграция `014_password_reset.sql`.
+
+**Acceptance Criteria:**
+- `forgot` всегда `200` с одним текстом для существующего и несуществующего адреса; исключения — `413`, `400`, `429`
+- **Почта не настроена (`RESEND_API_KEY`/`MAIL_FROM` пусты) → `503` ДО выпуска токена**, страница `/forgot` не показывает форму (коммит `21f8f148`)
+- Токен 32 байта base64url, в БД sha256, живёт 1 час, одноразовый; новый выпуск гасит прежний (один живой токен на аккаунт — частичный уникальный индекс)
+- Лимиты: пара email+IP 5/час, IP 30/час; пишется каждая попытка
+- `reset` не выдаёт сессию и отзывает все сессии; плохой/истёкший/использованный токен — один текст `400`
+- **Письмо уходит ПОСЛЕ ответа** (`after()` из `next/server`): время ответа не выдаёт существование
+  адреса (после правки ≈7 мс против ≈5 мс по медиане); повтор отправки 1 раз через 2 с только на
+  сеть/таймаут/5xx/429, один `Idempotency-Key`; журнал без адреса и ссылки; `stop_grace_period: 30s` у `web`
+
+**Статус:** в roadmap `planned` сознательно — живая отправка через Resend не проверялась, на стенде ключ пуст и `/forgot` отвечает `503`.
+**Расхождение с планом:** NFR-015.7/AC-015.17 плана («ключа нет → ответ тот же») — код отвечает `503`.
+
+<a id="fr-016"></a>
+### FR-016: Вход через Yandex ID
+
+**Полный план:** [`features/fr-016-yandex-id/`](features/fr-016-yandex-id/01_specification.md).
+**Код:** `GET /api/auth/yandex/start`, `GET /api/auth/yandex/callback`; `lib/sso.ts`, `lib/sso-account.ts`; миграция `015_sso.sql` (`sso_identities`, `accounts.password_hash` nullable).
+
+**Acceptance Criteria:**
+- Без `YANDEX_CLIENT_ID`/`YANDEX_CLIENT_SECRET` → `503` на `start`
+- OAuth с PKCE S256; `state` и verifier — в HMAC-подписанной cookie `pw_sso_state` на 10 минут
+- Вызовы к Яндексу с таймаутом 8000 мс, вне транзакции; коллбэков 30 в час с IP
+- Учётка ищется по `(provider, external_id)`; новая — без пароля; **адрес уже занят (с паролем или без) → отказ `password_account_exists`**, автосвязывания по email нет
+- Учётка без пароля не входит паролем и не меняет пароль (отказ, не `500`)
+
+**Расхождение с планом:** план (AC-016.5) — «адрес есть, пароля нет → впускаем и привязываем»; код
+и тест отказывают при любой занятой почте. FR-016.4 (привязка из кабинета) и FR-016.5 (кнопка на
+главной) не реализованы — кнопка Яндекса только на `/login`. Живым Yandex ID путь не проходили.
+
+<a id="fr-pay-001"></a>
+### FR-PAY-001: Платный тариф со сроком — 990 ₽ за 30 дней
+
+**Источник:** [`features/paid-tier-checkout/`](features/paid-tier-checkout/01-plan.md), [`yookassa-setup.md`](yookassa-setup.md), коммиты `c1166fb9`, `05017667`, `229e7eef`, `0cc4fea4`, `339e6886`. Уточняет FR-007/FR-008.
+**Код:** `POST /api/checkout`, `POST /api/webhooks/payment`, `dashboard/[slug]/billing-block.tsx`; `lib/payment.ts`, `lib/tariff.ts`, `lib/ip-range.ts`; миграция `018_paid_until.sql` (`projects.paid_until`, `checkout_sessions.idempotence_key`).
+
+**Acceptance Criteria:**
+- Цена — `PAID_TIER_PRICE_RUB` (по умолчанию 990), период 30 дней; badge снимается только при
+  `tier='paid'` И `paid_until` в будущем, мусорная дата = нет оплаты (fail-closed)
+- Продление считается от большего из «сейчас» и `paid_until` — досрочная оплата не сжигает остаток
+- Вебхук: адрес источника из 7 сетей ЮKassa, зашитых в код (иначе `400`) → заявка `event_id`
+  (`on conflict do nothing`) → перезапрос статуса у ЮKassa (таймаут 10 с)
+- **Недоступность провайдера — исключение**: транзакция откатывается вместе с заявкой `event_id`, ответ `500`, повтор уведомления проходит полный путь (коммит `05017667`)
+- `payment.canceled` помечает сессию `expired` и снимает удержание
+- Без ключей и без `PAYMENTS_STUB=true` → `501`; прочие ошибки провайдера → `502`
+
+**Не реализовано:** автопродление, возвраты, фоновое истечение срока (проверяется при чтении).
+Человеческий checkout без агентного модуля воркером не сверяется.
+**Расхождение документов:** цена DEC-001 — `.env.example` и код: «закрыт 02.09, 990 ₽»; roadmap и
+`yookassa-setup.md`: `blocked`. Сторону выбирает владелец.
+
+<a id="fr-intake-001"></a>
+### FR-INTAKE-001: Фото к текстовому отзыву
+
+**Источник:** коммит `7539dc56` (расширение FR-002). **Код:** `lib/photo.ts`, `GET /api/photo/[...key]`, `lib/storage.ts`.
+
+**Acceptance Criteria:**
+- Фото необязательно; только JPEG/PNG/WebP (SVG запрещён), тип по сигнатуре совпадает с заявленным, ≤ 5 МБ
+- Проверка ДО списания квоты формы; сбой хранилища после списания — квота возвращается, `503`
+- В `photo_url` — путь нашего маршрута `/api/photo/<uuid>/<uuid>.<ext>`, не ссылка на S3; отдача с
+  `nosniff`, `CSP default-src 'none'; sandbox`, `immutable`; бакет `S3_PHOTO_BUCKET`
+
+<a id="fr-intake-002"></a>
+### FR-INTAKE-002: Приём видео выключен по умолчанию
+
+**Источник:** коммит `39c43fdd`; связан с [`features/model-spend-ceiling/`](features/model-spend-ceiling/01_specification.md).
+**Код:** `lib/video.ts` (`videoIntakeEnabled`), `api/testimonials/video/route.ts`, `f/[slug]/intake-tabs.tsx`.
+
+**Acceptance Criteria:**
+- Приём видео включает только строгое `VIDEO_INTAKE_ENABLED=true`; пусто, `True`, `1`, `yes`, `' true'` — выключено
+- Выключено → `403` ДО чтения файла; форма получает `videoEnabled=false`
+
+<a id="fr-spend-001"></a>
+### FR-SPEND-001: Потолок расхода на внешнюю модель — ТОЛЬКО ПЛАН
+
+**Источник:** [`features/model-spend-ceiling/`](features/model-spend-ceiling/01_specification.md), коммит `0745a05e`.
+**В коде не реализовано** (нет `DAILY_MODEL_CALLS`/`USER_MODEL_CALLS`, миграций, тестов S-1…S-11);
+ждёт решений DEC-SPEND-1…3. До тех пор защита расхода на STT — FR-INTAKE-002
+(видео выключено), обрезка звука до 120 с и `MAX_ATTEMPTS=3`.
+
+<a id="fr-proof-001"></a>
+### FR-PROOF-001: Отзыв с внешней площадки
+
+**Источник:** [`features/platform-proof/`](features/platform-proof/01_specification.md), коммиты `6af219fa`, `22eb9ed3`, `6a990fa7`, `f0a50a99`.
+**Код:** `POST /api/testimonials/platform`, `lib/platform-proof.ts`, `dashboard/[slug]/platform-form.tsx`; миграция `017_platform_proof.sql`.
+
+**Acceptance Criteria:**
+- Без сессии `401` до чтения тела; нужна ссылка на первоисточник ИЛИ снимок (иначе `422`, то же — CHECK в СУБД)
+- Ссылка только `https`; площадка — `yandex_maps|twogis|otzovik|flamp|other`, определяется по хосту
+  с проверкой суффикса через точку (`evilyandex.ru` — не Яндекс); снимок ≤ 5 МБ по сигнатуре
+- Отзыв создаётся `pending` с `source='platform'` и проходит обычную модерацию; карточка модерации
+  показывает снимок и первоисточник
+- На стене и в виджете — пометка площадки и ссылка `rel="nofollow noopener noreferrer"`
+
+**Расхождение с планом:** PROOF-3 — «неизвестный хост → отказ»; код принимает любой https-хост как `other`.
+Имя и текст необязательны при наличии снимка. DoD не закрыт, DEC-PROOF-1…2 ждут владельца.
+
+<a id="fr-demo-001"></a>
+### FR-DEMO-001: Демо-отзывы, помеченные в данных и на экране
+
+**Источник:** коммит `6ff4075b`; миграция `016_demo_source.sql` (`source='demo'`).
+**Acceptance Criteria:** если на стене есть хотя бы один демо-отзыв, над отзывами плашка `role="note"`
+«Демонстрация…» — привязана к данным, а не к слагу (`apps/web/tests/wall.test.ts`). Прогонный лист — [`demo-script.md`](demo-script.md).
+
+<a id="fr-slug-001"></a>
+### FR-SLUG-001: Слаг из русского названия и из вставленной ссылки
+
+**Источник:** коммиты `19e17040`, `d75cde86`. **Код:** `apps/web/src/lib/slug.ts` (`slugSourceFromName`).
+**Acceptance Criteria:** кириллица транслитерируется; из ссылки берётся главная метка хоста и
+последний сегмент пути (схема и зона в слаг не попадают); явно введённый слаг не транслитерируется;
+итог — по правилу FR-001 (`^[a-z0-9-]{3,40}$`).
+
+<a id="fr-dash-001"></a>
+### FR-DASH-001: `/dashboard` без слага
+
+**Источник:** коммит `e7aebed1`. **Код:** `apps/web/src/app/dashboard/page.tsx`.
+**Acceptance Criteria:** без сессии → `/login?next=/dashboard`; один проект → его кабинет; ноль —
+карточка «Создать проект»; несколько — список. Тестов нет.
+
+<a id="fr-n3-001"></a>
+### FR-N3-001: Мост оплаченных покупок в партнёрскую платформу N3
+
+**Источник:** [`features/n3-affiliate-bridge/`](features/n3-affiliate-bridge/01_specification.md), [`n3-integration-architecture.md`](n3-integration-architecture.md); миграция `019_n3_bridge.sql`.
+**Код:** `GET /n3/start`, `/n3/verify`, `/api/n3/{proof,status,program}`; `lib/n3-*.ts`; воркер `services/worker/src/n3-outbox.ts`; ручная сверка `scripts/reconcile-n3-payment.ts`.
+
+**Acceptance Criteria:**
+- Выключено по умолчанию (`N3_BRIDGE_ENABLED=false`); при `PAYMENTS_STUB=true` мост отказывает
+- Реферальная ссылка ставит cookie `n3_ref_<tenant>` (HttpOnly, Secure, Lax); почта покупателя
+  подтверждается одноразовым токеном (24 ч; писем 5/час на аккаунт, 30/час на IP, пауза 60 с)
+- Покупка — ровно 99000 коп. RUB в TEST-режиме, заказ N3 и платёж ЮKassa связаны ключом intent
+- События `signup`, `payment.succeeded`, `refund.succeeded` доставляются через outbox (опрос 5 с,
+  до 10 заданий, аренда 60 с, повтор `min(3600, 60·2^min(6,n−1))` с, очередь ≤ 10 000);
+  переполнение откатывает и тариф, и заявку вебхука
+- Возврат создаёт `manual_review`, `paid_until` не пересчитывает
+
+**Не подтверждено:** реальное письмо и реальная TEST-покупка/возврат в E2E моста (там — имитация
+Resend и ЮKassa). Цена моста 990 зашита и не следует за `PAID_TIER_PRICE_RUB`.
+
+<a id="fr-agent-001"></a>
+### FR-AGENT-001: Агентные покупки (MCP / A2A), TEST-пилот
+
+**Источник:** [`features/agent-purchase/`](features/agent-purchase/01_specification.md), [пилот](features/agent-purchase/public-pilot.md); миграция `020_agent_payments_host.sql` и схема `agent_payments` (`scripts/migrate-agent-payments.mjs`).
+**Код:** `packages/agent-payments`, шлюз `services/agent-api` (`/mcp`, `/a2a`, `/.well-known/agent-card.json`, `/health`), `apps/web/src/app/agent-payments/page.tsx`, `api/agent-payments/{commands,human,webhook,reconcile}`, воркер `agent-payments-poll.ts`.
+
+**Acceptance Criteria:**
+- Модуль выключен по умолчанию (`AGENT_PAYMENTS_ENABLED` — только строгое `true`); шлюз не имеет доступа к БД и ключам ЮKassa
+- Ссылка подключения живёт 10 минут; ключ агента — 24 часа, показывается человеку один раз
+- Цена 99000 коп. RUB, продукт `proofwall-paid-30-days`; котировка живёт 5 минут; продление — в последние 3 дня срока
+- Первая покупка — только с подтверждением человека на странице ЮKassa; продление — по поручению
+  (≤ 90 дней, лимит 99000 коп. за платёж/период/всего) по сохранённому способу оплаты
+- Боевые ключи ЮKassa отклоняются до сетевого вызова (требуется префикс `test_`)
+- Оплата подтверждается только вебхуком или сверкой воркера (раз в 30 с) через API ЮKassa; отзыв ключа или поручения → `401`
+
+**Статус:** только TEST-пилот (`compose.agent-pilot.yml`), в прод не выпущено; ключ 24 ч не
+продлевается поручением — автоматической ежемесячной оплаты фактически нет.
