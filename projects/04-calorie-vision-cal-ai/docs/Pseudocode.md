@@ -456,3 +456,117 @@ none
 ничего не написал», но не ловит алгоритм, который сценарий упомянул и реализует неверно. Тот ли
 порог 15%, достижимы ли 6 с p95 на выбранной модели, хватит ли 100 курированных русских блюд —
 вопросы слоя 3–4, и они остаются за ревью и за живым прогоном.
+
+## Алгоритмы, добавленные после Phase 1 (по факту кода, 29.09.2026)
+
+Требования — `Specification.md` §10. Подробные алгоритмы фичи подписки —
+[`features/subscription-and-commission/02_pseudocode.md`](features/subscription-and-commission/02_pseudocode.md)
+(где план и код разошлись, прав код: порядок шагов вебхука и место цикла продлений исправлены при
+реализации, см. `05_completion.md` фичи). Ниже — сжатая форма, сверенная с исходниками.
+
+### Algorithm: Checkout
+REQUIREMENT: FR-SUB-001 · код: `apps/api/src/routes/subscription.ts`
+1. Сессия без аккаунта → `401 account_required`. Активная подписка → `409 already_subscribed`.
+2. `payment_intent` вставляется с `UNIQUE (account_id, idempotency_key)` — повтор с тем же ключом
+   возвращает ТО ЖЕ намерение; идентификатор существует ДО обращения к провайдеру.
+3. Провайдер (`fake` или ЮKassa) создаёт платёж с `return_url = APP_ORIGIN + /pro/return`; клиент
+   уходит по адресу формы. Результат оплаты приходит ТОЛЬКО вебхуком, не ответом на этот вызов.
+
+### Algorithm: HandlePaymentWebhook
+REQUIREMENT: FR-PAY-001, FR-COM-001 · код: `apps/api/src/routes/payments-webhook.ts`
+1. `provider` из пути ≠ включённый → `404`. Тело пусто → `400`. Тело принимается СЫРЫМИ байтами.
+2. **Подлинность — ПЕРВОЙ и ВНЕ транзакции:** адрес источника (из `X-Forwarded-For`, заменённого
+   дверью) ∈ сети ЮKassa в коде, иначе отказ; перезапрос объекта у провайдера по API; сверка
+   заявленного объекта с перезапрошенным. Недоступность провайдера — исключение → `5xx`, в базе
+   ничего нет, провайдер повторит полным путём.
+3. Транзакция: `INSERT payment_event (provider, provider_event_id = kind:objectId, payload_sha256)
+   ON CONFLICT DO NOTHING`; конфликт → `200 duplicate`, ничего не начисляется.
+4. `payment.succeeded`: `payment_intent → succeeded`; подписка `active`,
+   `current_period_end = GREATEST(current_period_end, now()) + N4_SUBSCRIPTION_PERIOD_DAYS` (только
+   удлиняет — перестановочно); `payment` с `gross`, `fee` (из события), `net = gross − fee`, целые
+   копейки, `ON CONFLICT (provider, provider_payment_id) DO NOTHING`. Сумма ≠ `price_minor`
+   намерения или удержание не названо → `needs_review = true`, начисления нет. Иначе
+   `AccrueCommission` и строка `notification` партнёру.
+5. `refund.succeeded`: подписка прекращается; `ClawbackCommission`.
+6. Коммит; затем, ВНЕ транзакции, `DeliverNotification` (отказ доставки не откатывает деньги).
+
+### Algorithm: AccrueCommission / ClawbackCommission
+REQUIREMENT: FR-COM-001, ADR-011…014 · код: `apps/api/src/commission/accrue.ts`
+1. Партнёр — `subscription.commission_partner_id` (зафиксирован первой оплатой), иначе — самая ранняя
+   `attribution.status = activated` сессий аккаунта, и он тут же фиксируется. Нет партнёра,
+   самореферал (проверяется повторно), `net ≤ 0` → начисления нет.
+2. `amount = floor(net × commission_rate_bp / 10000)` (`packages/shared/src/domain/commission.ts`);
+   `available_at = paid_at + holdDays`.
+   `UNIQUE (payment_id) WHERE kind='accrual'` — второе начисление по тому же платежу невозможно.
+3. Возврат: запись `kind='clawback'` со знаком минус от того же начисления; `UNIQUE … WHERE
+   kind='clawback'`. Записи леджера не обновляются и не удаляются.
+
+### Algorithm: RenewDueSubscriptions
+REQUIREMENT: FR-SUB-001 · код: `apps/api/src/renewals/{loop,renew}.ts` (процесс `api`)
+1. Цикл в `api` (ключи провайдера только там). Выборка `status IN (active, past_due)`, срок истёк,
+   `failed_renewals < 3`, аренда свободна; захват `leased_until`, `lease_owner`, `lease_fence + 1`.
+2. Инициировать автоплатёж с ключом идемпотентности периода (из `lease_fence`); результат — вебхуком.
+3. Отказ провайдера: `failed_renewals + 1`; `≥ 3` → `expired`, иначе `past_due`; запись условна на
+   `lease_fence` (устаревший держатель не пишет).
+
+### Algorithm: PreviewNextPayout
+REQUIREMENT: FR-COM-001 (OWN-011) · код: `packages/shared` (`previewNextPayout`, `balanceMinor`),
+маршруты `apps/api/src/routes/earnings.ts`, `payout-details.ts`
+1. Дата выплаты — ближайшее 5-е число. В неё входят начисления с `available_at ≤ дата`; остальные
+   показываются суммой «перенесено на следующее 5-е».
+2. Баланс = Σ записей леджера (accrual + clawback + payout); хранимого поля баланса нет.
+3. `POST /api/v1/admin/payouts` пишет `kind='payout'` с `UNIQUE (partner_id, payout_key)`.
+
+### Algorithm: EmailRegisterAndLogin
+REQUIREMENT: FR-AUTH-004 · код: `apps/api/src/routes/auth-email.ts`, `auth/password.ts`
+1. Ограничитель частоты (до разбора тела) → валидация почты и пароля → scrypt.
+2. Регистрация: уникальная активная почта (`account_email_active_unique`), хеш
+   `$scrypt$n=32768,r=8,p=1$<соль>$<хеш>`. Вход: несуществующая почта считает KDF против заглушки.
+3. Успех → `LinkSessionToAccount` (тот же код, что у Telegram): сессия устройства привязывается,
+   анонимные данные переезжают. Роль владельца — почта ∈ `OWNER_EMAILS` (в коде).
+
+### Algorithm: ApplyCodeFromLink
+REQUIREMENT: FR-PARTNER-004 · код: `apps/web/app/r/[code]/page.tsx`, `apps/api/src/routes/codes.ts`
+1. Открытие `/r/{КОД}` → `POST /api/v1/codes/apply` с `source = deeplink`; поле на `/pro` — `explicit`.
+2. Сервер нормализует код к верхнему регистру и проверяет формат; дальше — `ApplyPartnerCode`
+   (три исхода ADR-008). `409` несёт `same_code` = совпадает ли закреплённый код с присланным.
+3. Экран показывает один из четырёх текстов по исходу; пустого состояния нет.
+
+### Algorithm: AdminCreatePartnerAndInvite
+REQUIREMENT: FR-PARTNER-005 · код: `apps/api/src/routes/admin-partners.ts`, `partner-invites.ts`
+1. Не владелец → `404`. Партнёр и `partner_code` — одной транзакцией.
+2. Приглашение: 32 случайных байта, в базе `sha256`, срок 7 суток. Принятие —
+   `SELECT … FOR UPDATE` на приглашении; уже принято или истекло → `410`.
+
+### Algorithm: NotifyPartner / DeliverNotification
+REQUIREMENT: FR-PARTNER-006 · код: `apps/api/src/notifications/notify.ts`
+1. `notifyPartner` — `INSERT notification` в транзакции денег.
+2. После коммита `deliverNotification`: нет связанного Telegram → причина `telegram_not_linked`;
+   отказ Bot API → `delivery_error`. Исключение наружу НЕ выходит.
+
+### Algorithm: SavePayoutDetailsAndExport
+REQUIREMENT: FR-PARTNER-007 · код: `apps/api/src/payouts/payout-details.ts`, `export/csv.ts`
+1. Реквизиты: каждое поле проверяется на похожесть на номер карты — отказ; телефон — маской.
+2. CSV: `;`, BOM, дробная часть через запятую, CRLF, кавычки по RFC 4180.
+
+### Algorithm: SeedFoodSynonyms
+REQUIREMENT: FR-SOURCE-004 · код: `packages/db/src/seed/load-food-synonyms.ts`
+1. Прочитать JSON; дубль `name_ru_normalized` в файле → отказ целиком.
+2. Транзакция: `LOCK TABLE food_synonym IN SHARE ROW EXCLUSIVE MODE`; разрешить каждый `fdc_id` в
+   `food_item.id` (нет → `unresolved_fdc_id`, откат); `DELETE … WHERE curated_by = ANY(кураторы файла)`;
+   вставить строки. Повторный запуск даёт тот же результат.
+
+### Algorithm: ImportFdcDump
+REQUIREMENT: FR-SOURCE-002, ADR-005 · код: `scripts/import-fdc.ts`
+1. Вход — КАТАЛОГ с `food.csv`, `food_nutrient.csv`, `nutrient.csv`, `food_portion.csv` и обязательный
+   `--snapshot-date YYYY-MM-DD` (нет или не дата → отказ без частичного импорта).
+2. Идентификаторы нутриентов по `nutrient.csv` (энергия, белок, жир, углеводы); запись без любого
+   из четырёх чисел на 100 г отвергается с причиной `missing_nutrient:<имя>`.
+3. Порция — первая `gram_weight` записи, округлённая до целого (DEC-A-047).
+4. `INSERT … ON CONFLICT (source, source_id) DO UPDATE` пачками по 1000: `id` существующих строк не
+   меняется. Итог: принято, отвергнуто, строк в таблице.
+
+### Algorithm: PurgeOrphanObjects
+REQUIREMENT: NFR-OPS-002 · код: `apps/api/src/photo/purge-orphans.ts` (раз в час из `api`)
+1. Для каждого объекта бакета: форма ключа не фото → НЕ трогать; моложе порога → не трогать.
+2. Ключ найден в `photo` ИЛИ в `share_card` → не трогать; иначе удалить. Итог — `purge_orphans_done`.

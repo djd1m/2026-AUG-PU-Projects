@@ -56,8 +56,10 @@ Phase 3, коммит `fix(source-and-correct): триграммный поис�
 ```bash
 # из каталога проекта, после foundation и scan-pipeline
 npm run migrate                       # применить миграцию этой фичи
-npm run seed:synonyms                 # загрузить 100 позиций RU-курации
-npm run import:fdc -- --dir ./dumps --snapshot-date 2026-04-01   # дампы скачивает ОПЕРАТОР
+npm run import:fdc -- ./dumps --snapshot-date 2026-04-01   # дампы скачивает ОПЕРАТОР; каталог — позиционный аргумент
+npm run seed:food-synonyms            # RU-курация; только ПОСЛЕ импорта (ссылается на fdc_id)
+# исправлено 29.09 по коду: было `seed:synonyms` (такого скрипта нет) и `--dir` (флага нет — каталог
+# брался как первый аргумент без `--`), и seed стоял до импорта, где он отказывает unresolved_fdc_id
 npm test                              # unit + integration + contract + concurrency
 npm run test:performance              # 300 000 строк, отдельной командой
 npm run lint && npm run build
