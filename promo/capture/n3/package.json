@@ -1,0 +1,13 @@
+{
+  "name": "promo-capture-n3",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Запись экранов N3 «Круг» для промо-ролика серии (promo/SERIES.md)",
+  "scripts": {
+    "record": "node record-n3.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}
