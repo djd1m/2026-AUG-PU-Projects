@@ -31,18 +31,22 @@
 ## 2. Монорепо: разбиение на пакеты
 
 ```
-reviewqr/
+02-review-qr-reputation/          # КАК В КОДЕ на 29.09.2026 (план Phase 1 — ниже)
 ├── apps/
-│   ├── web/            # Next.js: лендинг, кабинет владельца, онбординг, оплата, все owner-API
-│   └── guest/          # ТОЛЬКО GET /r/:slug и GET /go/:slug/:platform. Роль СУБД: app_render
+│   ├── web/            # node:http без фреймворка: лендинг, кабинет, QR, привязка бота, оплата. app_owner
+│   └── guest/          # GET /r/:slug, GET|POST /r/:slug/private, GET /go/:slug/:platform,
+│                       #   внутренний POST /internal/invalidate/:slug. Роль СУБД: app_render
 ├── services/
-│   ├── intake/         # ТОЛЬКО POST /api/feedback/private. Роль СУБД: app_intake
-│   └── notifier/       # Доставка в Telegram/MAX, ретраи. Роль СУБД: app_notify
-├── packages/           # db (миграции, роли, ГРАНТЫ, RLS) · shared-types · ui (кабинет, НЕ guest)
-├── scripts/            # Стражи T1…T12 (§11)
-├── docker-compose.yml
-└── docker-compose.prod.yml
+│   ├── intake/         # ТОЛЬКО POST /api/feedback/private (зовёт guest). Роль СУБД: app_intake
+│   └── notifier/       # Telegram: доставка, привязка, истечение подписки. Роль СУБД: app_notify
+├── packages/db/        # миграции 001–012 и раннер (Architecture-DATA §8)
+├── scripts/            # test-all.sh (все наборы под своими ролями), check-db-grants.sh (T3)
+└── docker-compose.yml  # единственный compose; прокси — общий, вне проекта (Architecture-OPS §9)
 ```
+
+> **План Phase 1, не реализованный:** `apps/web` на Next.js, `packages/shared-types` и `packages/ui`,
+> `docker-compose.prod.yml`, стражи T1…T12 скриптами в `scripts/` (в коде T1, T2, T3, T3c — `check-db-grants.sh`;
+> T4, T4b, T5, T6, T12 — `apps/guest/tests/purity.test.ts`; прочие — свойствами тестов без номера или не реализованы). Остальное устройство совпадает с планом.
 
 > ⚠️ **Не путать с командой `/go` конвейера p-replicator** (`.claude/commands/go.md`,
 > маршрутизатор реализации фич). Здесь и далее `/go/:slug/:platform` — **HTTP-маршрут

@@ -131,6 +131,44 @@ function brandingImpression(place_id): emitAnalytics("branding_impression", { pl
 вызывается по истечении периода, гостевой LRU истекает по TTL 60 c. Успешная оплата снимает её
 в тот же срок и тем же механизмом — один путь в обе стороны, а не два.
 
+### 3.1 Как реализовано: кэш страницы выбора, внутренний канал и истечение (сверено с кодом 29.09.2026)
+
+Источники: `apps/guest/src/server.ts` (`renderChoicePage`, `invalidateChoicePage`, маршрут
+`POST /internal/invalidate/:slug`), `apps/web/src/server.ts` (`invalidateGuestCache`, `invalidateSlug`),
+`services/notifier/src/expire.ts`, `services/notifier/src/main.ts`; тесты `payment.test.ts` P-5/P-6,
+`expire.test.ts` P-9. Требования — FR-CACHE-001, FR-EXPIRE-001 в [`Specification-OWNER.md`](Specification-OWNER.md).
+
+```
+# guest: кэш в памяти процесса, ключ — ровно slug, TTL 60 с (страховка, если канал ниже отказал)
+renderChoicePage(slug):
+  place = SELECT id, slug, name, branding_required FROM places WHERE slug=$1 AND archived_at IS NULL
+  if place is null: return 404 notFoundHtml
+  if cache[slug] fresh (< 60 с): return cache[slug]
+  html = template(place.name, buildDoors(slug, links, BASE_URL), place.branding_required)
+  cache[slug] = html
+
+# ВНУТРЕННИЙ канал web/notifier → guest. Снаружи пути нет: общий Caddy отвечает 404 на /internal/*
+# ДО проксирования (блок reviewqr.aicoding.space в Caddyfile машины). Изнутри compose-сети открыт.
+POST /internal/invalidate/:slug  ->  cache.delete(slug); 204
+
+# web: после сохранения ссылок площадок и после вебхука оплаты (ПОСЛЕ COMMIT)
+fetch(GUEST_INTERNAL_URL + "/internal/invalidate/" + slug, POST, таймаут 2–3 с)
+  on error: log guest_invalidate_failed / invalidate_failed      # кэш добьёт TTL 60 с
+
+# notifier: раз в час внутри цикла опроса (NOTIFY_INTERVAL_MS, по умолчанию 5 с)
+expireSubscriptions():
+  transaction:
+    ids   = UPDATE subscriptions SET status='expired'
+              WHERE status='active' AND current_period_end < now() RETURNING account_id
+    slugs = UPDATE places SET branding_required = true WHERE account_id = ANY(ids) RETURNING slug
+  for slug in slugs: POST /internal/invalidate/<slug>            # ПОСЛЕ COMMIT; отказ — в лог
+```
+
+**Отличия от текста выше:** функции `recomputeBrandingRequired` и события `branding_impression`
+в коде нет — оплата ставит `branding_required=false` всем точкам аккаунта, истечение возвращает
+`true`; срок возврата бренд-строки — до часа (период проверки истечения) плюс ≤ 60 с кэша, а не
+«не позднее 60 секунд». Бренд-строки на печатных макетах нет (см. [`Pseudocode-OWNER.md`](Pseudocode-OWNER.md) §4.3).
+
 ---
 
 ## 4. FR-GROWTH-004 — персональные коды и защита от накрутки

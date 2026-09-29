@@ -173,3 +173,33 @@ GRANT INSERT                                      ON analytics_events  TO app_in
 
 `connectionTimeoutMillis` обязателен: `pg.Pool` без него ждёт **бесконечно**, и недоступность БД
 превращается из отказа в зависание — то есть в отказ, который никто не заметит.
+
+## 8. Как реализовано — миграции, роли и пулы (сверено с кодом 29.09.2026)
+
+Схема живёт в `packages/db/migrations/` и применяется раннером `packages/db/src/migrate.ts`
+(NFR-OPS-002 в [`Specification-NFR.md`](Specification-NFR.md)); журнал — таблица `schema_migrations`
+(`filename`, `checksum` = первые 16 hex sha256 файла, `applied_at`).
+
+| Файл | Что | Появился |
+|---|---|---|
+| `001_types` … `004_billing_partners` | перечисления, аккаунты/точки/ссылки, `guest_events` и `private_feedback`, тарифы/оплата/партнёры | Phase 1 → код |
+| `005_roles_grants` | четыре роли `LOGIN` (идемпотентно, **без пароля**) и матрица прав по одному `GRANT` в строке | Phase 1 → код |
+| `006_notify_grants` | права `app_notify`, пропущенные в исходной матрице | доставка |
+| `007_rls_owner` | RLS для `app_owner` по `app.current_account_id` | владельческий тракт |
+| `008_guest_policies` | политики `USING (true)` для гостевых ролей: `ENABLE ROW LEVEL SECURITY` без политики запрещает всем (`3b375189`) | фикс |
+| `009_binding_grants` | колоночные права `app_notify` на `channel_bindings` для завершения привязки | привязка Telegram |
+| `010_slug_check` | `ck_places_slug_shape` (3–40, края без дефиса) и `ck_places_slug_reserved` | адрес из названия |
+| `011_payment_grants` | права `app_owner` на `checkout_sessions`, `webhook_events`, `partners` и тракт истечения | оплата |
+| `012_bind_token_burn` | `GRANT UPDATE (bind_token_hash) ON channel_bindings TO app_notify` — одноразовость сжиганием хеша | фикс привязки |
+
+**Пароли ролей в миграциях не задаются** — это шаг развёртывания (`ALTER ROLE … PASSWORD`,
+[`REPRODUCE.md`](REPRODUCE.md) §6). В тестах роли ходят без пароля (`POSTGRES_HOST_AUTH_METHOD=trust`
+одноразовой базы). Как пароли заданы на текущем стенде, в репозитории не записано.
+
+**Пулы в коде проще таблицы §7:** у всех четырёх сервисов одни и те же переменные `PGPOOL_MAX`
+(по умолчанию 10) и `PGPOOL_CONNECTION_TIMEOUT_MS` (по умолчанию 2000); мусор или `0` — отказ старта.
+`statement_timeout` и `idleTimeoutMillis` в коде **не заданы**.
+
+**`device_hash`** считается в `apps/guest/src/journal.ts`: `HMAC-SHA256(key = SESSION_SECRET|неделя
+ISO, msg = place_id|ip|ua)`, первые 16 байт. Переменная называется `SESSION_SECRET`, а не
+`DEVICE_HASH_SECRET` (§5). Compose её в `guest` не передаёт — ключ пуст ([`Refinement.md`](Refinement.md) §9, G-13).
