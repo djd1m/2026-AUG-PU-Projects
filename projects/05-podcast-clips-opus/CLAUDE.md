@@ -13,11 +13,11 @@ p-replicator, прежде чем реализовывать что-либо з�
 СНГ, интерфейс русский; публикует пользователь сам в VK Клипы, Telegram, Rutube, Дзен. Клон
 референса Opus Clip; CJM — вариант **D** (путь A целиком плюс блок «клипы для гостя», OWN-001).
 
-**Статус на 25.09.2026: MVP собран и работает на живом стенде.** Все двенадцать фич MVP сделаны,
+**Статус на 28.09.2026: MVP собран и работает на живом стенде `https://clipmkr.ru`.** Все двенадцать фич MVP сделаны,
 плюс три фичи, появившиеся после первого живого прогона: кадр по лицу (ADR-009), субтитры и словарь
 терминов (FR-RENDER-005/006), устойчивость к погрешности таймкодов (ADR-010). Затем 24.09 — фоновая
 CC0-музыка по галочке и библиотека из 11 треков (ADR-011), пэк-шот наложением (ADR-012), заголовок
-в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008), карточка клипа с панелью «Скачать · Ссылка · Гостю» (FR-RESULT-002). Всего **29 фич** (последние — призыв в конце клипа, ADR-017, и лендинг с демо-клипом витрины, ADR-018), тесты — **975 из 975** (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
+в начале клипа (ADR-013). Затем RT-002/RT-009 (ADR-014), уплотнение пауз (ADR-015), каталог музыки из 9 треков, прослушанных владельцем. Затем смена музыки у готового клипа (ADR-016). Затем прибор мобильной вёрстки (NFR-UI-001) и исправления по нему (прибор на стенде — код 0), тёмная тема по умолчанию (FR-LOOK-008), карточка клипа с панелью «Скачать · Ссылка · Гостю» (FR-RESULT-002). Всего **30 фич** (последние — призыв в конце клипа, ADR-017, лендинг с демо-клипом витрины, ADR-018, лента стадий и оплата ЮKassa, ADR-019), тесты на 28.09.2026 — **1048 из 1048** в 114 файлах (+ браузерные тесты прибора в контейнере Playwright) на настоящих PostgreSQL 16, Redis 7
 и MinIO. Живой прогон записи 88,4 мин: 7 клипов за 12 мин 39 с. **Прогон `REPRODUCE.md` с нуля
 (свежий клон, изолированный стек) прошёл 24.09** — `docs/measurements/2026-09-24-reproduce-from-scratch.md`.
 
@@ -25,8 +25,12 @@ CC0-музыка по галочке и библиотека из 11 треко�
 
 **Что осталось сделать и что переносится вручную при переезде — [`docs/BACKLOG.md`](docs/BACKLOG.md).**
 
-**Повторить проект в другом окружении — [`docs/REPRODUCE.md`](docs/REPRODUCE.md).** Он же перечисляет,
-где реализация отошла от SPARC-документов и почему; при расхождении прав он, а не Phase 1–2.
+**Повторить проект в другом окружении — [`docs/REPRODUCE.md`](docs/REPRODUCE.md)** (актуализирован аудитом 29.09.2026: переменные
+оплаты и восьмой потолок, 22 миграции, имена стенда и статус домена `clipmkr.ru` `UNVERIFIED`, шаг 8б «Оплата», таблица §13
+«Состав фич и где описаны» — каждая из 30 фич со ссылками на Specification/addendum, Pseudocode, Architecture, Refinement,
+тесты и стенд). Он же перечисляет, где реализация отошла от SPARC-документов и почему; при расхождении прав он, а не
+Phase 1–2. Фичи 13–30 описаны дополнениями в конце `Pseudocode.md`, `Architecture.md`, `Refinement.md`, `Completion.md`;
+проверка комплекта — `node ../../scripts/check-rebuild-docs.mjs projects/05-podcast-clips-opus` из корня репозитория (0/1/2).
 
 Что перенесено сюда из §7 отчёта валидации (21.09.2026) и что из этого закрыто:
 
@@ -57,9 +61,9 @@ CC0-музыка по галочке и библиотека из 11 треко�
    growth-требований, 15 look-требований, 6 NFR, 14 историй и 35 критериев `SC-US-nnn-k`.
 2. **Architecture** ([`docs/Architecture.md`](docs/Architecture.md)) — устройство: 7 сервисов
    compose, отображение 15 сущностей на хранилища, 17 внешних зависимостей, безопасность.
-3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — семнадцать решений (ADR-001…017), у каждого Confirmation —
+3. **ADR** ([`docs/ADR.md`](docs/ADR.md)) — девятнадцать решений (ADR-001…019), у каждого Confirmation —
    проверка, обязанная упасть при нарушении решения.
-4. **Pseudocode** ([`docs/Pseudocode.md`](docs/Pseudocode.md)) — 34 алгоритма, контракты маршрутов,
+4. **Pseudocode** ([`docs/Pseudocode.md`](docs/Pseudocode.md)) — 34 алгоритма MVP (+ дополнение «алгоритмы фич 13–30» в конце), контракты маршрутов,
    переходы состояний, стратегия ошибок.
 5. **Refinement** ([`docs/Refinement.md`](docs/Refinement.md)) — edge cases, слои проверок, пять
    обязательных конкурентных прогонов, 12 стражей ADR и 13 тестов «сначала красное».
@@ -71,8 +75,8 @@ CC0-музыка по галочке и библиотека из 11 треко�
 [`docs/webhook-contract.md`](docs/webhook-contract.md),
 [`docs/embed-contract.md`](docs/embed-contract.md). Вердикт фазы и оставшиеся оговорки —
 [`docs/validation-report.md`](docs/validation-report.md). Решения без владельца и способ их отката —
-[`docs/decisions-autonomous.md`](docs/decisions-autonomous.md) (DEC-A-001…016);
-решения владельца — [`docs/decisions-owner.md`](docs/decisions-owner.md) (OWN-001…005).
+[`docs/decisions-autonomous.md`](docs/decisions-autonomous.md) (DEC-A-001…022 и автономные A-ДДММ-nn);
+решения владельца — [`docs/decisions-owner.md`](docs/decisions-owner.md) (OWN-001…019).
 
 Источник имён и чисел — [`docs/canon.md`](docs/canon.md), заморожен 2026-09-21 и размножен один раз
 на Phase 2 (DEC-A-010): любой документ и любой код ссылаются на эти идентификаторы, не изобретают
@@ -109,7 +113,9 @@ Storage** (S3, `ru-central-1`, OWN-004). Модели — через ОДИН ш
 - **Семь scope квоты, и каждый нужен:** `user_minutes` (90), `user_uploads` (2),
   `user_upload_refunds` (2), `user_llm` (2), `global_minutes` (600), `global_llm` (20) и с 25.09.2026
   `user_rerenders` (20, смены музыки у готового клипа, OWN-015). Пользовательских текстов меньше —
-  у `user_upload_refunds` своего текста нет намеренно. Отсутствие ЛЮБОЙ из семи переменных `N5_LIMIT_*`
+  у `user_upload_refunds` своего текста нет намеренно. С 28.09.2026 переменных восемь: `N5_LIMIT_PAID_USER_MINUTES` (270, ≤ глобального) — не новый scope, а предел
+  `user_minutes` для аккаунта с действующим `paid` (`packages/db/src/quota.ts`).
+  Отсутствие ЛЮБОЙ из восьми переменных `N5_LIMIT_*`
   валит старт; проверяется отдельным прогоном на каждую, не одним (V3-R02).
 - **Слот `user_uploads` возвращается при отказе по СВОЙСТВАМ файла** (`too_large`, `not_media`,
   `no_audio`, `too_short`, `too_long`, `probe_timeout`) в той же транзакции, что пишет `failed`, и
@@ -129,7 +135,7 @@ Storage** (S3, `ru-central-1`, OWN-004). Модели — через ОДИН ш
   «разумным» дефолтом, уезжает в чужую ленту навсегда и правится только повторным рендером.
 - **Согласие гостя фиксируется ведущим ДО создания гостевой страницы (ADR-008).** `guest.create` без
   подтверждённого согласия — `422`, `guest_pack` не создан. Это правовая граница, а не форма.
-- **Порядок операций — это и есть защита.** Лимит частоты в Caddy ДО тела; Zod ДО заявки
+- **Порядок операций — это и есть защита.** Лимит частоты ДО тела (как собрано — в `web` на Redis, `rate-limit.ts`, а не в Caddy); Zod ДО заявки
   `Idempotency-Key`; квота `user_uploads` ДО выдачи подписанных ссылок; минуты ДО первого вызова
   Whisper; резерв диска ДО скачивания; согласие ДО `guest_pack`. bcrypt считается ВНЕ транзакции БД.
 - **Три состояния долгой задачи, не два.** `выполняется` · `успех` · `отказ`, и каждое выглядит
@@ -235,9 +241,9 @@ bash scripts/cleanup-our-docker.sh                      # чистка СВОИ�
 порядке зависимостей: `foundation` → `upload-and-quota` → `queue-and-probe` → `transcription` →
 `selection-and-score` → `render-and-watermark` → `progress-and-clips-screen` → `short-link` →
 `guest-pack` → `partner-codes-and-dashboard` → `limits-ui-and-pro-interest` →
-`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс семнадцать после живого прогона:
+`retention-and-erasure`. **Все двенадцать `done`** (24.09.2026), плюс восемнадцать после живого прогона:
 `transcript-tolerance`, `framing`, `subtitles-and-glossary`, `music-bed`, `pack-shot`,
-`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`, `clip-card`, `clip-cta`, `landing-demo`, `progress-ribbon`. Указатель с доказательствами — `docs/features/README.md`.
+`music-library`, `teaser-headline`, `partner-fairness`, `pause-compaction`, `clip-music-choice`, `responsive-check`, `mobile-audit-fixes`, `dark-theme`, `clip-card`, `clip-cta`, `landing-demo`, `progress-ribbon`, `payments`. Указатель с доказательствами — `docs/features/README.md`.
 
 Поле `complexity` — пакетная схема `simple|medium|complex` (S/M/L); тира XL в ней нет вовсе, поэтому
 `upload-and-quota` и `render-and-watermark` записаны `complex`, хотя по
