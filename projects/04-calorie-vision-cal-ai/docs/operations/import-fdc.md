@@ -63,9 +63,17 @@ DATABASE_URL=postgres://n4_migrate:***@localhost:5432/n4 npm run seed:food-synon
 
 | Набор | URL (заполняет оператор) | SHA-256 (заполняет оператор) | Дата публикации |
 |---|---|---|---|
-| Foundation Foods | — | — | — |
-| SR Legacy | — | — | — |
-| FNDDS 2021-2023 | — | — | — |
+| Foundation Foods | `https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_foundation_food_csv_2026-04-30.zip` | `70457ee9d9342f43bda2010318c85f04210c689fdeb9cd2da4c513b0e8dbc655` | 2026-04-30 |
+| SR Legacy | `https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip` | `b80817294b8850530aaedf2e515c02593b1824f763a0ff356e5c2081643e6fd0` | 2018-04 |
+| FNDDS 2021-2023 | не загружался (DEC-A-048) | — | — |
+
+**Запись оператора 29.09.2026 (сверка задним числом).** На стенд 13.09 залиты ДВА набора выше
+(архивы в `/home/dz-projects-2026/usda/`, перенесены вместе с машиной при миграции сервера); каталог
+`merged/` = заголовок и строки SR Legacy + строки Foundation без заголовка, `nutrient.csv` из SR
+Legacy (сверено побайтно). Итог импорта: принято 7 928, отвергнуто 87 855. Какой `--snapshot-date`
+передан 13.09, не записано. Полная процедура с командами — [`../REPRODUCE.md`](../REPRODUCE.md),
+раздел «Данные о питании». Команда раздела 2 выше приведена с `DATABASE_URL` на хосте — у `db` нет
+публикации порта, поэтому на деле импорт запускается одноразовым контейнером `test` (там же).
 
 ## Тесты не ходят в интернет
 
