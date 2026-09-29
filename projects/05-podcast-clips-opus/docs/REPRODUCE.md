@@ -1,6 +1,7 @@
 # Как поднять «КлипМейкер» заново в другом окружении
 
-Документ описывает продукт **таким, каким он собран и проверен на 24.09.2026**, а не таким, каким
+Документ описывает продукт **таким, каким он собран и проверен на 28.09.2026** (30 фич, аудит документации 29.09.2026),
+а не таким, каким
 он был задуман. Там, где SPARC-документы Phase 0–2 (`PRD.md`, `Specification.md`, `Architecture.md`,
 `Final_Summary.md` и другие) расходятся с этим файлом, **прав этот файл** — расхождения перечислены в
 разделе «Что изменилось относительно замысла».
@@ -54,7 +55,7 @@ cd <репозиторий>/projects/05-podcast-clips-opus
 ```
 
 Проверка: в каталоге есть `docker-compose.yml`, `Dockerfile`, `.env.example`, `packages/db/migrations/`
-(19 файлов: номер 003 встречается дважды; последний `018_clip_music.sql`).
+(22 файла: номер 003 встречается дважды; последний `021_payments.sql`).
 
 ---
 
@@ -105,23 +106,35 @@ openssl rand -hex 24   # по одному вызову на каждое зна
 | `N5_GLOSSARY` | необязательно. Пусто — встроенный словарь терминов для субтитров. Пополнение: `услышано=правильно;…` |
 | `N5_COMPOSE_PROJECT` | имя стека, по умолчанию `n5-clipmaker` |
 
-### Потолки расхода — все семь обязательны
+### Потолки расхода — все восемь обязательны
 
-Отсутствие **любой** валит старт и называет именно её. Значения стенда:
+Отсутствие **любой** валит старт и называет именно её (у восьмой — ещё и compose: `${…:?}`). Значения стенда:
 
 ```
+N5_LIMIT_PAID_USER_MINUTES=270   # минут на аккаунт тарифа paid в сутки (с 28.09, OWN-019); ≤ N5_LIMIT_GLOBAL_MINUTES
 N5_LIMIT_USER_MINUTES=900        # минут распознавания на аккаунт в сутки
 N5_LIMIT_USER_UPLOADS=6          # загрузок на аккаунт в сутки
 N5_LIMIT_USER_UPLOAD_REFUNDS=2   # возвратов слота при негодном файле
 N5_LIMIT_USER_LLM=6              # вызовов модели выделения на аккаунт в сутки
 N5_LIMIT_GLOBAL_MINUTES=2000     # минут на всех в сутки
 N5_LIMIT_GLOBAL_LLM=20           # вызовов модели на всех в сутки
-N5_LIMIT_USER_RERENDERS=20       # смен музыки у готовых клипов на аккаунт в сутки (с 25.09)
+N5_LIMIT_USER_RERENDERS=20       # пересборок готовых клипов на аккаунт в сутки: смена музыки (с 25.09) и смена вида призыва (с 26.09, по одной на клип)
 ```
 
 В каноне заложены 90 / 2 / 2 / 2 / 600 / 20. На стенде подняты, потому что квота списывается
 **авансом за всю запись**: одна неудачная попытка на 88-минутной записи съедает 89 минут квоты,
-хотя поставщику уходит три. При отладке потолок выгорает быстрее денег.
+хотя поставщику уходит три. При отладке потолок выгорает быстрее денег. Потолок `paid` (270, OWN-019)
+на стенде ниже бесплатного (900) — это следствие поднятого для отладки бесплатного, а не замысел; единственное
+проверяемое условие — `N5_LIMIT_PAID_USER_MINUTES ≤ N5_LIMIT_GLOBAL_MINUTES`, иначе отказ старта.
+
+### Оплата ЮKassa — по умолчанию выключена (фича 30, ADR-019)
+
+| Переменная | Значение |
+|---|---|
+| `N5_PAYMENTS_MODE` | **не задавать** → `off`: «снять метку» ведёт на экран интереса, все маршруты оплаты отвечают 404 (compose: `${N5_PAYMENTS_MODE-off}`). `fake` — только тесты и разработка (в production отказ старта); `live` — настоящий магазин. Пустое или неизвестное значение — отказ старта |
+| `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY`, `YOOKASSA_TEST_MODE` | только `web` и только при `live` (иначе отказ старта с именем переменной). Значения — из кабинета магазина ЮKassa владельца; вписывает владелец скриптом `scripts/stand-set-yookassa.sh` (ключ вводится без эха) |
+
+Порядок включения — шаг 8б.
 
 ### Хранилище
 
@@ -189,7 +202,7 @@ node scripts/check-image-dev-deps.mjs <проект>-web <проект>-worker-s
 # 1. хранилища
 docker compose --project-directory . --env-file .env --profile test up -d db redis minio
 
-# 2. миграции (19 файлов, идемпотентны)
+# 2. миграции (22 файла, идемпотентны)
 docker compose --project-directory . --env-file .env run --rm --entrypoint sh web \
   -c "node packages/db/dist/migrate.js"
 
@@ -205,6 +218,13 @@ docker compose --project-directory . --env-file .env --profile test --profile ed
 **Миграции применять до запуска приложения.** 22.09.2026 на стенде обнаружилось, что восемь из
 двенадцати миграций так и не были применены: приложение поднялось, а падало на первом же запросе к
 новым таблицам.
+
+**Обновление уже работающего стенда** (так выкладывались фичи 25–30, 26–28.09): пересобрать образы, применить миграции
+НОВЫМ образом до перезапуска (`docker compose … run --rm --no-deps web node packages/db/dist/migrate.js`), затем
+`up -d` изменённых сервисов. `web` пересобирать всегда; воркеры — если менялись `apps/worker`, `packages/shared` или
+`packages/db` (общий код срока клипа и плана — `packages/shared/src/tariff.ts`, `packages/db/src/plan.ts`). После
+переезда на другой сервер первым делом сверить `S3_PUBLIC_ENDPOINT`: 28.09 он указывал на имя прежнего сервера, и
+миниатюра витрины на лендинге молча не грузилась (TLS-ошибка в браузере, `/health` при этом 200).
 
 **CORS на бакете.** MinIO по умолчанию принимает запросы с любого источника, поэтому на стенде
 загрузка «работала сама». **В Cloud.ru это не так**: на бакете нужно задать правило CORS, разрешающее
@@ -261,6 +281,19 @@ docker compose --project-directory . --env-file .env run --rm --entrypoint node 
 времени уже вшит в пиксели опубликованных клипов. Подтвердить в первый же день:
 `whois ваш.домен | grep state`.
 
+### Имена исходного стенда (состояние на 29.09.2026)
+
+| Имя | Что это | Статус |
+|---|---|---|
+| `clipmkr.ru` | **основной адрес**: `N5_PUBLIC_ORIGIN=https://clipmkr.ru`, вшит в метку каждого бесплатного клипа; `www.clipmkr.ru` — редирект 308 на него | **работает, но у регистратора `UNVERIFIED`** (whois 23.09: `REGISTERED, DELEGATED, UNVERIFIED`, REG.RU). Без подтверждения данных владельцем делегирование снимут ≈ 23.10.2026 — и адрес в пикселях уже опубликованных клипов перестанет вести куда-либо. Пункт «Срочное» в `BACKLOG.md` §3 и `decisions-pending.md`; перепроверка whois 28.09 с этой машины не выполнена (порт 43 закрыт) |
+| `clipmaker.aicoding.space` | **второе имя того же стенда** на общем TLS-прокси машины (тот же `reverse_proxy n5-clipmaker-proxy-1:80`) | отвечает, но **в `N5_PUBLIC_ORIGIN` непригоден**: метка шириной 1190 px не помещается, старт отказал бы (таблица выше) |
+| `n5.194.85.249.105.sslip.io` | третье имя того же стенда (sslip.io по IP машины), для доступа без DNS | служебное |
+| `s3-n5.194.85.249.105.sslip.io` | публичный адрес встроенного MinIO — значение `S3_PUBLIC_ENDPOINT` стенда | с 28.09 (до переезда было имя прежнего IP `212.192.0.33` — см. шаг 5) |
+
+Конфиг общего прокси — `/home/dz-projects-2026/edge/Caddyfile` на машине стенда (вне репозитория, правится только
+дозаписью — шаг 7). В новом окружении все имена свои; сохраняется только правило: в `N5_PUBLIC_ORIGIN` — короткое имя,
+прошедшее preflight, остальные имена — вторичные входы на тот же `proxy`.
+
 ---
 
 ## 7. Выход наружу
@@ -285,9 +318,14 @@ docker compose --project-directory . --env-file .env run --rm --entrypoint node 
 
 ```
 s3.ваш.домен {
+	request_body {
+		max_size 2100MB
+	}
 	reverse_proxy n5-clipmaker-minio-1:9000
 }
 ```
+
+Предел тела — как на исходном стенде: загрузка идёт частями до 2 ГБ суммарно, тело не буферизуется.
 
 Для Cloud.ru этого не нужно: у него свой публичный адрес.
 
@@ -409,8 +447,8 @@ bash scripts/check-responsive.sh --base https://ваш.домен \
 # 0 — чисто; 1 — нарушения (report.json, summary.md, скриншоты); 2 — проверка НЕ выполнена
 ```
 
-Ожидаемый итог на 25.09.2026 (после фичи 24 `mobile-audit-fixes`): **код 0**, 97 проходов страниц
-(85 основных + 12 сценариев `first-screen-WxH`), нарушений нет; остаются предупреждения axe moderate
+Ожидаемый итог на 26.09.2026 (после фичи 29 `progress-ribbon`, обе темы, R9 экрана записи со входом): **код 0**,
+206 проходов (после фичи 24 в одной теме было 97: 85 основных + 12 сценариев `first-screen-WxH`), нарушений нет; остаются предупреждения axe moderate
 (`video-caption`, `landmark-unique`, `page-has-heading-one` на кабинете) — не отказ. Правила R1–R9:
 R9 — основное действие на первом экране без прокрутки (390×844, 375×667, 360×740): на `/` (с фичи 28) ОБА —
 кнопка «Попробовать бесплатно» `.landing-cta` и демо-видео `.landing-demo video`; `.cta` на `/c/{code}`
@@ -489,6 +527,40 @@ docker compose --project-directory . --env-file .env --profile test run --rm tes
   sh -c "node scripts/test-db.mjs && env -u N5_ACCEPTANCE node scripts/test-partner-mutations.mjs"
 ```
 
+**Сменить план аккаунта вручную** (ADR-019, третий и последний путь смены плана; пишет журнал `operator_action`):
+
+```bash
+docker compose --project-directory . --env-file .env exec web \
+  npm run ops:set-plan -- <почта> free|paid --by <кто> --reason "<зачем>"
+```
+
+---
+
+## 8б. Оплата ЮKassa (фича 30) — включает владелец, когда есть магазин
+
+Без магазина ничего делать не нужно: `N5_PAYMENTS_MODE` не задан → `off`, продукт ведёт себя как до фичи 30. Так стенд и
+работает с 28.09.2026 (проверено после выкладки: `POST /api/checkout` → 404, `/upgrade` → 404).
+
+1. `N5_LIMIT_PAID_USER_MINUTES` в `.env` (шаг 3) — без неё `scripts/check-env-complete.sh` даёт 1, compose отказывает.
+2. Завести магазин ЮKassa (сначала тестовый) → `bash scripts/stand-set-yookassa.sh` (вписывает режим `live` и ключи,
+   ключ без эха, откат — с подтверждением).
+3. В кабинете магазина: адрес уведомлений `https://ваш.домен/api/webhooks/yookassa`, события `payment.succeeded`,
+   `refund.succeeded`.
+4. Тестовая оплата → повторная доставка из кабинета → в журнале `web` проверить адрес источника: вебхук принимает
+   только адреса сетей ЮKassa (список в коде), адрес берётся из `X-Forwarded-For` с учётом `N5_TRUSTED_PROXY_HOPS`.
+   Неверное число прокси = все уведомления получают 400 (громко; ЮKassa повторяет, деньги не теряются).
+5. Строку «Проверка повторной доставкой» в `docs/webhook-contract.md` перевести в проверенную.
+
+Платежи на разбор (возврат, сумма ≠ цене, чужой платёж, стирающийся аккаунт) — `needs_review`:
+
+```bash
+docker compose --project-directory . --env-file .env exec -T db psql -U n5 -d n5 -c \
+  "SELECT provider_payment_id, amount_minor, status, review_reason, created_at FROM payment WHERE needs_review ORDER BY created_at DESC"
+```
+
+Устройство тракта (порядок вебхука, действующий план, три пути смены плана) — `docs/Pseudocode.md`, дополнение;
+квитанция и «Что НЕ доказано» — `docs/features/payments/05_completion.md`.
+
 ---
 
 ## 9. Как устроен конвейер
@@ -533,9 +605,16 @@ SPARC-документы писались до кода и не переписы
 | Доступ к файлу клипа — ровно два пути (Pseudocode §IssueSignedObjectUrl) | три: + витрина лендинга только для `SHOWCASE_CLIPS` | ADR-018 |
 | Таймаут выделения 120 с | 240 с | запись 88 мин не укладывалась |
 | Потолки 90 / 2 / 2 / 2 / 600 / 20 | на стенде 900 / 6 / 2 / 6 / 2000 / 20 | аванс квоты за всю запись; см. шаг 3 |
+| Оплаты в неделе нет, маршрут вебхука не зарегистрирован (ADR-005) | оплата ЮKassa 990 ₽ / 30 дней, режим `off\|fake\|live`, тракт из N6; при `off` все маршруты оплаты — 404 (ADR-019) | решение владельца OWN-019 |
+| План — колонка `account.plan` | действующий план — одно SQL-выражение `effectivePlanSql`: истёкший оплаченный читается как `free` ДО прохода сторожа; план меняют ровно три пути (вебхук, сторож, оператор) | ADR-019 |
+| Срок клипа free считается в каждом месте | одна функция `clipExpiry` (`packages/shared/src/tariff.ts`) и её SQL-зеркало `clipAliveSql` (`packages/db/src/plan.ts`), страж «ровно в одном месте» | ревью фич 25–29, 28.09 |
+| Рантайм-образы из стадии сборки | `web` и `worker` берут `node_modules` из стадии `prod-deps` (без dev-пакетов); `npm run db:migrate` в них не работает | BACKLOG §5 п. 17, 28.09 |
 
-Новые требования, возникшие при реализации (FR-RENDER-004…010, FR-TRANSCRIBE-003, FR-SELECT-003…005, FR-RESULT-004, NFR-CFG-001), — `docs/Specification-addendum.md` (сама спецификация
-заморожена по контрольной сумме).
+Новые требования, возникшие при реализации (FR-RENDER-004…010, FR-TRANSCRIBE-003, FR-SELECT-003…005, FR-RESULT-004…006,
+FR-PARTNER-004/005, NFR-CFG-001, NFR-UI-001, дополнения к FR-LOOK-007/008/011, FR-RESULT-002, FR-GROWTH-001 и
+FR-TARIFF-001…003), — `docs/Specification-addendum.md` (сама спецификация заморожена по контрольной сумме). Алгоритмы,
+компоненты, грабли и эксплуатация фич 13–30 — дополнения в конце `Pseudocode.md`, `Architecture.md`, `Refinement.md`,
+`Completion.md`.
 
 ---
 
@@ -554,6 +633,12 @@ SPARC-документы писались до кода и не переписы
   участникам (в исходной записи звук сведён: каналы совпадают с точностью 0,0 дБ).
 - **База персональных данных вне РФ** на исходном стенде (OWN-006). Перенос в российскую юрисдикцию
   обязателен до первого реального пользователя.
+- **Оплата не проверена живым магазином** (фича 30): настоящий адаптер проверен против подменного сервера ЮKassa;
+  повторная доставка из кабинета, формат настоящих уведомлений и адрес источника за двумя прокси — нет.
+- **Отвергнутая публикация пересборки при отказе хранилища остаётся сиротой** в приватном бакете (принятый риск ревью
+  Codex 28.09, `BACKLOG.md` §5 п. 21).
+- Остальное непроверенное (встроенные браузеры Telegram/VK, настоящий iPhone, надпись призыва глазами человека) —
+  `BACKLOG.md` §4.
 
 ---
 
@@ -584,3 +669,56 @@ SPARC-документы писались до кода и не переписы
 | «Поставщик выделения не завершил запрос» на длинной записи | таймаут 120 с при ответе модели ≈ 1:45–2:00 | 240 с (FR-SELECT-005); повтор со стадии выделения минут не тратит |
 | Тестовый стек под тем же именем проекта, что и стенд | в тестовом env нет `N5_COMPOSE_PROJECT` | безопасно, только пока пароли в тестовом и боевом env совпадают — иначе `run` пересоздаст БД стенда; сверять хешами до запуска |
 | Домен через месяц перестал разрешаться | `.RU` в состоянии `UNVERIFIED` | подтвердить данные у регистратора |
+| Стенд после переезда: миниатюра витрины на лендинге не грузится, `/health` 200 | `S3_PUBLIC_ENDPOINT` указывает на имя прежнего сервера | сверять этот адрес первым после переезда (шаг 5) |
+| `docker compose up` отказывает: `N5_LIMIT_PAID_USER_MINUTES` | с фичи 30 восьмой потолок обязателен и в compose (`${…:?}`) | добавить в `.env` до выкладки (шаг 3) |
+| `npm run db:migrate` в рантайм-образе: `tsc: not found` | с 28.09 образы без dev-пакетов, а скрипт сначала компилирует | миграции только `node packages/db/dist/migrate.js` (шаг 5) |
+| Мутационный раннер «убил» мутацию, которой нет | раннер читал отчёт прошлого прогона | отчёт удаляется до запуска; «убита» — только при упавшем тесте в свежем отчёте (ревью 28.09) |
+| Страж цвета темы ругается на `white-space` | граница слова `\b` считает дефис границей | граница `(?<![-\w])…(?![-\w])` (`tests/theme.test.ts`) |
+| Смена призыва/музыки у клипа витрины «ничего не пересобрала» | срок free считался в шести местах, исключение витрины — в двух | одна функция `clipExpiry` + SQL-зеркало `clipAliveSql` (ревью 28.09) |
+
+---
+
+## 13. Состав фич и где описаны
+
+Все 30 фич `done` (`.claude/feature-roadmap.json`), на стенде `https://clipmkr.ru` с 28.09.2026. «Источник» — постановка и
+решение; «Pseudocode/Architecture/Refinement (доп.)» — разделы-дополнения «фичи 13–30» в конце этих файлов (для фич 1–12 —
+основной текст). Тесты — главные файлы `tests/`; мутации — `tests/run-*-mutations.mjs` и `scripts/test-*-mutations.mjs`;
+квитанция каждой фичи — `docs/features/<slug>/` (указатель — `docs/features/README.md`).
+
+| Фича | Источник | Specification | Pseudocode | Architecture | Refinement | Тесты | На стенде |
+|---|---|---|---|---|---|---|---|
+| `foundation` | roadmap MVP, ADR-001/002 | FR-AUTH-001, NFR-SEC-001, NFR-OPS-001 | AuthRegisterAndLogin, DeleteAccount | Component Breakdown, Security Architecture | Edge Cases Matrix | `auth`, `config`, `health`, `wiring`, `enums`, `database.integration` | да, с 22.09 |
+| `upload-and-quota` | roadmap MVP, ADR-002/006, DEC-A-014/015 | FR-INGEST-001/002, FR-LIMIT-001/003 | CheckAndConsumeQuota, CreateVideo, CompleteUpload | Data Architecture | Edge Cases Matrix; конкурентные прогоны 1–2 | `upload*`, `upload-fix*`, `s3`, `ip-prefix` | да |
+| `queue-and-probe` | roadmap MVP, ADR-001/006 | FR-INGEST-002, FR-RESULT-001 | LeaseAttempt, ProbeSource, WatchdogTick | Component Breakdown (`worker-stt`) | конкурентный прогон 3 | `queue-probe*`, `queue-redis.integration`, `watchdog-diagnostics` | да |
+| `transcription` | roadmap MVP, ADR-003, DEC-A-022 | FR-TRANSCRIBE-001/002 | ExtractAndChunkAudio, Transcribe, RecordModelSpend | External Dependencies | Edge Cases Matrix | `transcription*`, `model-spend` | да |
+| `selection-and-score` | roadmap MVP | FR-SELECT-001/002; доп. FR-SELECT-003…005 | SelectFragments, ScoreClip | External Dependencies | Edge Cases Matrix | `selection*` | да |
+| `render-and-watermark` | roadmap MVP, ADR-004 | FR-RENDER-001…003, FR-TARIFF-001 | BuildSubtitles, ComputeWatermarkGeometry, WatermarkRequired, RenderClip | Component Breakdown (`worker-video`) | стражи ADR-004 | `render*`, `watermark-startup`, `preflight` | да |
+| `progress-and-clips-screen` | roadmap MVP, `long-job-contract.md` | FR-RESULT-001/002; доп. FR-RESULT-004 | ReadVideoProgress, ListClipsForScreen, IssueSignedObjectUrl, RetryVideo | Component Breakdown (`web`) | Edge Cases Matrix | `progress-screen*`, `limits-retry` | да |
+| `short-link` | roadmap MVP, ADR-004 | FR-LINK-001, FR-GROWTH-003 | CreateClipLink, RecordLinkView | Data Architecture | конкурентный прогон 4 | `short-link*`, `growth-day`, `growth-prefix` | да |
+| `guest-pack` | roadmap MVP, ADR-008 | FR-GUEST-001…003 | CreateGuestPack, OpenGuestPack, RevokeOrExpireGuestPack | Security Architecture | конкурентный прогон 5 | `guest-pack`, `guest-pack.integration` | да |
+| `partner-codes-and-dashboard` | roadmap MVP, ADR-007 | FR-PARTNER-001…003, FR-GROWTH-002/004 | ApplyPartnerCode, AntiFraudCodeBurst, PartnerDashboard | Data Architecture | стражи ADR-007 | `partner`, `partner.integration`, `partner-route` | да |
+| `limits-ui-and-pro-interest` | roadmap MVP, ADR-005 | FR-LIMIT-002, FR-TARIFF-002 | CreateProInterest, RetryVideo | Component Breakdown (`web`) | Edge Cases Matrix | `limits*`, `interest-route` | да |
+| `retention-and-erasure` | roadmap MVP | FR-TARIFF-003, FR-AUTH-003 | PurgeExpiredClips, DeleteAccount | Data Architecture | Edge Cases Matrix; доп. «ретенция» | `retention*` | да |
+| `transcript-tolerance` | живой прогон 23.09, ADR-010 | доп. FR-TRANSCRIBE-003 | доп. ClampTranscriptTiming | доп. строка 13 | доп. | `transcription-word-order`, `transcription-merge`, `live-findings` | да, с 23.09 |
+| `framing` | живой прогон 23.09, ADR-009 | доп. FR-RENDER-004 | доп. PlanFaceFraming | доп. строка 14 | доп. | `framing`, `framing-media` | да |
+| `subtitles-and-glossary` | живой прогон 23.09, OWN | доп. FR-RENDER-005/006 | доп. BuildSubtitles (уточнение) | доп. строка 15 | доп. | `render`, `render-audio`, `transcription` (словарь), `wiring` | да |
+| `music-bed` | OWN-009, ADR-011 | доп. FR-RENDER-007 | доп. MixMusicBed | доп. строка 16 | доп. | `music*`, `render-worker` | да, с 24.09 |
+| `pack-shot` | OWN-010, ADR-012 | доп. FR-RENDER-008 | доп. OverlayPackShot | доп. строка 17 | доп. | `pack-shot*` | да |
+| `music-library` | A-2409-01, OWN-013/014, ADR-011 (расширение) | доп. FR-RENDER-007 | доп. PickMusicTrack | доп. строка 18 | доп. | `music`, `pack-shot` | да |
+| `teaser-headline` | A-2409-04/05, ADR-013 | доп. FR-RENDER-009 | доп. DrawTeaserHeadline | доп. строка 19 | доп. | `teaser*` | да |
+| `partner-fairness` | RT-002/RT-009, ADR-014 | доп. FR-PARTNER-004/005 | доп. AntiFraudCodeBurst (различные аккаунты), UnblockPartnerCode | доп. строка 20 | доп. | `partner*`, `partner-unblock` | да |
+| `pause-compaction` | OWN-012, ADR-015 | доп. FR-RENDER-010 | доп. CompactPauses | доп. строка 21 | доп. | `compaction*` | да |
+| `clip-music-choice` | OWN-015, ADR-016 | доп. FR-RESULT-005 | доп. RerenderClip | доп. строка 22 | доп. | `clip-music-choice*`, `clip-music-review-fixes` | да, с 25.09 |
+| `responsive-check` | OWN-016 | доп. NFR-UI-001 | доп. CheckResponsive (прибор) | доп. строка 23 | доп. | `responsive-check`, `browser/responsive-check` | прибор по стенду — код 0 |
+| `mobile-audit-fixes` | OWN-016 | доп. NFR-UI-001 (R9) | — (вёрстка) | доп. строка 24 | доп. | `plural-ru`, `browser/responsive-check` | да |
+| `dark-theme` | A-2509-03 | FR-LOOK-008; доп. NFR-UI-001 | доп. ThemeFromCookie | доп. строка 25 | доп. | `theme` | да |
+| `clip-card` | OWN-016 | FR-RESULT-002; доп. NFR-UI-001 | ListClipsForScreen (уточнение в доп.) | доп. строка 26 | доп. | `clip-card` | да |
+| `clip-cta` | OWN-018, ADR-017 | доп. FR-RESULT-006 | доп. SetCta, DrawCtaOverlay | доп. строка 27 | доп. | `clip-cta*`, `cta-media` | да, 27a — 25.09, 27b — 26.09 |
+| `landing-demo` | OWN-016, ADR-018 | FR-LOOK-007/011; доп. | доп. ServeShowcaseFile | доп. строка 28 | доп. | `landing-demo*`, `retention.integration` | да, с 26.09 (витрина `CTDUUG`) |
+| `progress-ribbon` | A-2609-01 | FR-GROWTH-001; доп. | доп. ProgressRibbonStages | доп. строка 29 | доп. | `progress-screen`, `browser/video-screen` | да, с 26.09 |
+| `payments` | OWN-019, ADR-019 | FR-TARIFF-001…003; доп. | доп. CreateCheckout, HandleYookassaWebhook, EffectivePlan | доп. строка 30 | доп. | `billing*`, `paid-plan.integration`, `payments-guards`, `browser/billing` | код да (28.09), оплата `off` — магазина нет |
+
+Изменения без своей фичи, но с поведением, которое надо повторить: ревью фич 25–29 Codex (28.09, `reviews/2026-09-28-review-25-29-codex.md` —
+`clipExpiry`, витрина соблюдает явный срок, ретенция закрывает пересборку до стирания) и «хвосты» 28.09
+(`reviews/2026-09-28-tails-codex.md` — стадия `prod-deps`, страж `scripts/check-image-dev-deps.mjs`). Оба описаны в
+дополнениях `Specification-addendum.md`, `Pseudocode.md`, `Refinement.md`, `Completion.md`.

@@ -759,3 +759,57 @@ Scenario: повторный запрос на удаление во время 
   Then действие не создаёт вторую параллельную процедуру удаления
   And итоговый срок завершения остаётся 72 часа от ПЕРВОГО запроса, а не продлевается
 ```
+
+---
+
+## Трассировка FR → сценарии (дополнение 29.09.2026)
+
+Сценарии выше сгруппированы по историям `US-nnn`, а не по FR, поэтому часть идентификаторов `FR-…` из
+`Specification.md` в этом файле раньше не называлась. Таблица ниже НЕ добавляет сценариев и не меняет привязку к ревизии
+спецификации: она выведена механически из строк `REQUIREMENT:` и `REALISES:` алгоритмов `Pseudocode.md` (основной текст,
+34 алгоритма) и дополнена автотестами фичи. Прочерк в столбце сценариев — сценария приёмки у требования НЕТ, и это
+сказано прямо, а не спрятано.
+
+| FR | Алгоритм (`Pseudocode.md`) | Сценарии этого файла | Автотесты (`tests/`) |
+|---|---|---|---|
+| FR-GUEST-001 | CreateGuestPack | SC-US-006-1, SC-US-006-2 | `guest-pack`, `guest-pack.integration` |
+| FR-GUEST-002 | OpenGuestPack | SC-US-007-1, SC-US-007-2, SC-US-008-1 | `guest-pack.integration` |
+| FR-GUEST-003 | RevokeOrExpireGuestPack | SC-US-006-3, SC-US-007-3 | `guest-pack.integration`, `retention.integration` |
+| FR-INGEST-001 | CreateVideo, CompleteUpload | SC-US-001-1, SC-US-001-2, SC-US-011-1 | `upload*`, `upload-fix*` |
+| FR-INGEST-002 | CompleteUpload, ProbeSource | SC-US-011-1 | `upload`, `queue-probe*` |
+| FR-INGEST-003 | IngestFromUrl | — (не реализовано: `UNCONFIRMED`, `BACKLOG.md` §2) | — |
+| FR-LIMIT-001 | CheckAndConsumeQuota, ProbeSource | SC-US-011-1, SC-US-011-2, SC-US-011-3, SC-US-013-2 | `limits*`, `upload.integration` (конкурентные) |
+| FR-LINK-001 | CreateClipLink, RecordLinkView | SC-US-008-2, SC-US-009-1, SC-US-009-2 | `short-link*` |
+| FR-PARTNER-001 | ApplyPartnerCode | SC-US-008-1, SC-US-010-2 | `partner*` |
+| FR-PARTNER-002 | PartnerDashboard | SC-US-010-1 | `partner.integration`, `partner-route` |
+| FR-RENDER-001 | BuildSubtitles, RenderClip | SC-US-005-1, SC-US-005-2 | `render*` |
+| FR-RENDER-002 | ComputeWatermarkGeometry | SC-US-005-2 | `render`, `watermark-startup`, `preflight` |
+| FR-RESULT-001 | ReadVideoProgress, WatchdogTick, RetryVideo | SC-US-001-2, SC-US-002-1, SC-US-002-2, SC-US-002-3 | `progress-screen*`, `limits-retry` |
+| FR-RESULT-003 | SendClipToTelegram | — (не реализовано: `Should`, `BACKLOG.md` §2) | — |
+| FR-SELECT-001 | SelectFragments | SC-US-003-1, SC-US-003-2, SC-US-003-3 | `selection*` |
+| FR-SELECT-002 | ScoreClip | SC-US-004-1, SC-US-004-2 | `selection`, `clip-card` |
+| FR-TARIFF-001 | WatermarkRequired | SC-US-007-2 | `render`, `billing.unit`, `paid-plan.integration` |
+| FR-TARIFF-002 | CreateProInterest | SC-US-012-1 | `limits`, `interest-route`, `billing.unit` (режим off) |
+| FR-TRANSCRIBE-001 | Transcribe | — (сценария US нет) | `transcription*` |
+| FR-TRANSCRIBE-002 | ExtractAndChunkAudio | — (сценария US нет) | `transcription`, `transcription-merge` |
+
+Требования облика `FR-LOOK-nnn` (таблица «Look-требования» спецификации) сценариев Gherkin не имеют ни одного. Их
+состояние на 29.09.2026:
+
+| FR | Решение в спецификации | Состояние и чем проверяется |
+|---|---|---|
+| FR-LOOK-001 | Принято | частично — первый экран лендинга переделан фичей 28 (`Specification-addendum.md`, FR-LOOK-007/011); построчно не сверялось; сценария нет |
+| FR-LOOK-002 | Принято | не реализовано: отдельной страницы тарифов нет (при оплате `off` `/upgrade` — 404); сценария нет |
+| FR-LOOK-003 | Отклонён | — |
+| FR-LOOK-004 | Отклонён | — |
+| FR-LOOK-005 | Отклонён | — |
+| FR-LOOK-006 | Принято | не реализовано в виде «лендинг → тарифы → вход» (страницы тарифов нет); сценария нет |
+| FR-LOOK-007 | Принято | реализовано иначе — расхождение записано в `Specification-addendum.md`; прибор R9 (`tests/browser/responsive-check.test.ts`) |
+| FR-LOOK-008 | Принято | реализовано (фича 25): `tests/theme.test.ts`, прибор в двух темах |
+| FR-LOOK-009 | Принято | не сверялось в этом аудите; сценария нет |
+| FR-LOOK-010 | Принято | не сверялось в этом аудите; сценария нет |
+| FR-LOOK-011 | Принято | частично (фича 28, `Specification-addendum.md`); прибор R9 |
+| FR-LOOK-012 | Принято | не сверялось в этом аудите; сценария нет |
+| FR-LOOK-013 | Принято | мобильная раскладка принимается прибором (NFR-UI-001, фичи 23–24); шаг сетки и брейкпоинты не сверялись |
+| FR-LOOK-014 | Принято | не реализовано: раздела тарифов на лендинге нет — вне объёма фичи 30 (`features/payments/05_completion.md`) |
+| FR-LOOK-015 | Принято | реализовано: оценка объяснена тремя компонентами на бесплатном тарифе (`selection`, `clip-card`); SC-US-004-1/2 |
