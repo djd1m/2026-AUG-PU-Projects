@@ -10,7 +10,7 @@
 | N5 «КлипМейкер» | `n5/16x9.mp4` | `n5/9x16.mp4` | `n5/1x1.mp4` | `promo/remotion/n5/` |
 | N1 «Proofwall» | `n1/16x9.mp4` | `n1/9x16.mp4` | `n1/1x1.mp4` | `promo/remotion/n1/` |
 | N2 «ReviewQR» | `n2/16x9.mp4` | `n2/9x16.mp4` | `n2/1x1.mp4` | `promo/remotion/n2/` |
-| N3 «Круг» (вариант A) | `n3/16x9.mp4` | `n3/9x16.mp4` | `n3/1x1.mp4` | `promo/remotion/n3/` — 29.09 20:22 UTC, `reward.aicoding.space`; sha256 `8e986bc0…` · `9502f145…` · `508ae996…`; все ворота навыка 0 (verdict 36 листов); проверка Codex НЕ выполнялась |
+| N3 «Круг» (вариант A) | `n3/16x9.mp4` | `n3/9x16.mp4` | `n3/1x1.mp4` | `promo/remotion/n3/` — 29.09 20:22 UTC, `reward.aicoding.space`; sha256 `8722b448…` · `542ddf42…` · `e4058a1c…` (после поправок Codex 29.09); все ворота навыка 0 (verdict 36 листов); проверка Codex НЕ выполнялась |
 
 Воспроизвести: `REPRO=1 bash promo/remotion/shared/render.sh <proj>` в образе `promo-render:2026-09-29`
 (`promo/render-image/`); записи экранов — вне git (`/home/dz-projects-2026/.promo-assets/<proj>/`), команда повтора —
