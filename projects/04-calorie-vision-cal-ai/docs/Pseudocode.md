@@ -483,9 +483,13 @@ REQUIREMENT: FR-PAY-001, FR-COM-001 · код: `apps/api/src/routes/payments-web
    ON CONFLICT DO NOTHING`; конфликт → `200 duplicate`, ничего не начисляется.
 4. `payment.succeeded`: `payment_intent → succeeded`; подписка `active`,
    `current_period_end = GREATEST(current_period_end, now()) + N4_SUBSCRIPTION_PERIOD_DAYS` (только
-   удлиняет — перестановочно); `payment` с `gross`, `fee` (из события), `net = gross − fee`, целые
-   копейки, `ON CONFLICT (provider, provider_payment_id) DO NOTHING`. Сумма ≠ `price_minor`
-   намерения или удержание не названо → `needs_review = true`, начисления нет. Иначе
+   удлиняет — перестановочно); `payment` с `gross`, `fee`, `net = gross − fee`, целые копейки,
+   `ON CONFLICT (provider, provider_payment_id) DO NOTHING`. `gross` и `fee` берутся из ПЕРЕЗАПРОШЕННОГО
+   на шаге 2 платежа (`GET /payments/{id}` API ЮKassa): `fee = amount − income_amount` ответа API, не
+   из тела уведомления — неподписанное событие не влияет на `net` и комиссию; сверка события с API
+   (`samePaymentClaim`) удержание не сравнивает, его просто не читают из события
+   (`apps/api/src/payments/yookassa.ts:162,264`, `apps/api/src/routes/payments-webhook.ts:171`). Сумма ≠ `price_minor` намерения или `income_amount` в ответе API нет
+   → `needs_review = true`, начисления нет. Иначе
    `AccrueCommission` и строка `notification` партнёру.
 5. `refund.succeeded`: подписка прекращается; `ClawbackCommission`.
 6. Коммит; затем, ВНЕ транзакции, `DeliverNotification` (отказ доставки не откатывает деньги).

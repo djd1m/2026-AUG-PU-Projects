@@ -353,6 +353,11 @@ hour per IP address», та же страница), и зависимость р
 
 | Миграция | Что добавляет |
 |---|---|
+| `002_failure_reason_timeout.sql` | значения `timeout` и `normalize` в `recognition_failure_reason` (DEC-A-018) |
+| `003_consent_and_telegram_auth.sql` | согласие для анонимной сессии и слот повтора `initData` в `account`/`device_session`; уникальность `telegram_user_id` без стёртых аккаунтов — новых таблиц нет |
+| `004_telegram_login_replay.sql` | таблица `telegram_login_replay` — история использованных подписей `initData` (RV-consent-and-telegram-auth-03) |
+| `005_replay_by_telegram_user.sql` | `telegram_login_replay.telegram_user_id` и уникальность `(telegram_user_id, hash)` — повтор не проходит после стирания аккаунта |
+| `006_diary_entry_recognition_unique.sql` | `UNIQUE (recognition_id)` у `diary_entry` — одна запись дневника на скан |
 | `007_share_card_and_growth_events.sql` | колонки карточки и событий роста |
 | `009_source_and_correct.sql` | колонки `recognition` для источника и правок (номер 008 пропущен намеренно, DEC-A-039) |
 | `010_subscription_and_commission.sql` | `subscription` (4 статуса, одна активная на аккаунт, аренда продления), `payment_intent`, `payment_event` (`UNIQUE (provider, provider_event_id)`), `payment`, `commission_entry` (`accrual`/`clawback`/`payout`, частичные уникальные индексы) |
@@ -360,8 +365,10 @@ hour per IP address», та же страница), и зависимость р
 | `012_notifications.sql` | `notification` (`commission_accrued`, `commission_clawed_back`, `payout_recorded`), индекс непрочитанных |
 | `013_payout_details.sql` | реквизиты выплаты в `partner` (`payout_method`: `sbp` / `other`) |
 
-Сущностей сверх 14 канона стало 21 (подписка, намерение, событие, платёж, леджер, приглашение,
-уведомление). Страж закрытого списка таблиц — `tests/integration/migrations.test.ts`.
+Таблиц предметной области — 22: 14 канона + `telegram_login_replay` (004) + пять таблиц подписки
+(010: `subscription`, `payment_intent`, `payment_event`, `payment`, `commission_entry`) + `partner_invite`
+(011) + `notification` (012); плюс служебная `schema_migration` — всего 23 таблицы в `public`. Страж
+закрытого списка — `tests/integration/migrations.test.ts` (сверено 29.09 с `packages/db/migrations/*`).
 
 **Данные о питании** не создаются миграциями: `food_item` наполняет `npm run import:fdc` из дампа
 USDA (SR Legacy 2018-04 + Foundation 2026-04-30 → 7 928 строк), `food_synonym` —
