@@ -3,6 +3,9 @@
 > SPARC Phase: **Pseudocode**. Источник: [`Specification.md`](Specification.md), [`PRD.md`](PRD.md). Алгоритмы для каждого FR. Стек (Architecture Constraints p-replicator): монорепо-монолит, Docker Compose, **PostgreSQL в контейнере**, MCP-серверы; Next.js + отдельный бандл виджета.
 >
 > **Итерация 1 после валидации Phase 2:** правки C-1, C-2, W-5, W-8, W-9 (см. Refinement.md), W-10. Имена — по [`Architecture.md`](Architecture.md); отдельного раздела «Канонические имена» там пока нет, использованы имена из основного текста (§3, §4.2, §5). **Итерация 2:** rate-limit сведён к одному помощнику (Architecture §3.4, W-1), добавлен §7.3 (FR-008).
+>
+> **Сверка 29.09.2026:** §7.2–7.3 приведены к коду (ЮKassa без подписи, срок `paid_until`);
+> алгоритмы фич после MVP — [§12](#post-mvp).
 
 ---
 ## 1. Приём отзыва: текст (FR-002) и видео (FR-003)
@@ -367,24 +370,21 @@ function onSignup(request):
     createAttributionRecord(account_id = newAccount.id, partner_id = attribution.partner_id,
                              source = attribution.source, status = "pending")  # НЕ начисляем на регистрации
 function onPaymentWebhook(raw_body, headers):
-  # ШАГ 1 — подпись, ДО всего остального (FR-GROWTH-002 @security).
-  # Порядок принципиален: если сначала записать event.id, а подпись проверить после,
-  # злоумышленник шлёт поддельный вебхук с угаданным id → мы его записываем →
-  # настоящий вебхук отбрасывается как дубль. Комиссия не начисляется никогда.
-  # Считаем HMAC от СЫРОГО тела: любая пере-сериализация JSON ломает подпись.
-  expected = hmacSha256(raw_body, env.PAYMENT_WEBHOOK_SECRET)
-  if not constantTimeEquals(expected, headers.signature):   # не ==, защита от timing-атаки
-    auditLog("webhook_signature_invalid", { ip: request.ip })
-    return HTTP 400                                 # НЕ 200: провайдер должен увидеть отказ
-  if isReplayTooOld(headers.timestamp, max_age = 5 minutes):
-    auditLog("webhook_timestamp_stale", { ip: request.ip })
-    return HTTP 400                                 # защита от повтора старого валидного тела
-
-  event = parseJson(raw_body)                       # парсим ТОЛЬКО после проверки подписи
-
-  if webhookEventStore.exists(event.id):           # идемпотентность по event id (@security)
-    return HTTP 200                                 # уже обработан — тихий no-op
-  webhookEventStore.record(event.id)
+  # ФАКТ 29.09 (код apps/web/src/app/api/webhooks/payment/route.ts, D-009, коммиты b1ccb57b, 05017667):
+  # ЮKassa уведомления НЕ подписывает — HMAC и PAYMENT_WEBHOOK_SECRET прежней редакции удалены.
+  # ШАГ 1 — адрес источника, ДО записи event id: чужой адрес не может занять идентификатор.
+  if not ipInAnyCidr(clientIp(request), YOOKASSA_NETWORKS):  # 7 сетей, зашиты в код (lib/payment.ts)
+    auditLog("webhook_source_rejected", { ip }); return HTTP 400
+  event = parseJson(raw_body)
+  event_id = event.event + ":" + event.object.id
+  # (ветки агентных покупок и моста N3 разбираются здесь же, до обычной — FR-AGENT-001, FR-N3-001)
+  withService(tx):
+    if not claimWebhookEvent(tx, "yookassa", event_id):   # insert … on conflict do nothing
+      return HTTP 200                                        # дубль — тихий no-op
+    # ШАГ 2 — подлинность: перезапрос статуса у ЮKassa (таймаут 10 с).
+    # Недоступность — ИСКЛЮЧЕНИЕ ProviderUnavailable, не значение: транзакция откатывается
+    # ВМЕСТЕ с заявкой event id, ответ 500, повтор уведомления проходит полный путь.
+    payment = fetchRemotePayment(event.object.id)            # throws ProviderUnavailable
   if event.type != "payment_succeeded":
     return HTTP 200
   attribution = getPendingAttribution(event.account_id)
@@ -417,12 +417,17 @@ function initiateCheckout(project_id, actor):   # actor — app_authenticated в
   session = yookassa.createPayment(project_id)  # провайдер выбран: ЮKassa, decisions/D-009
   createCheckoutSession(project_id, session.id, status = "pending")
   return HTTP 200 { redirect_url: session.redirect_url }
-function applyTariffUpgrade(raw_body):  # вызывается ПОСЛЕ onPaymentWebhook (§7.2, не меняется), если тот вернул 200
-  event = parseJson(raw_body)
-  if event.type == "payment_succeeded" and event.checkout_session_id is not empty:
-    cs = getCheckoutSessionByProviderId(event.checkout_session_id)
-    if cs is not null:
-      setProjectTier(cs.project_id, "paid"); updateCheckoutSession(cs.id, { status: "completed" })  # идемпотентно: paid→paid — no-op
+function applyTariffUpgrade(tx, payment):  # ФАКТ 29.09: та же транзакция, что onPaymentWebhook; lib/payment.ts
+  if payment.status == "canceled": markCheckoutExpired(payment.id); return   # удержание снимается
+  if payment.status != "succeeded": return
+  cs = select cs.*, p.paid_until from checkout_sessions cs join projects p …
+        where cs.provider_session_id = payment.id FOR UPDATE OF p, cs
+  if cs is null: return "unknown_session"          # не ошибка: магазин может быть общим
+  if cs.status == "completed": return             # повтор — no-op
+  # FR-PAY-001: срок, а не вечный paid. extendPaidUntil (lib/tariff.ts) — от БОЛЬШЕГО из
+  # now и paid_until + 30 дней; считается в коде рядом с правилом badge, не в SQL.
+  update projects set tier = 'paid', paid_until = extendPaidUntil(cs.paid_until) where id = cs.project_id
+  updateCheckoutSession(cs.id, { status: "completed" }); auditLog("tariff_upgraded")
 ```
 
 ---
@@ -561,7 +566,198 @@ function getPartnerCohortDashboard(partner_code):
 ---
 ## Открытые вопросы
 
-- [GAP: точное определение "внешнего домена" — allowlist поддоменов клиента или просто `!= OUR_APP_DOMAIN`; влияет на §4 при staging/preview-доменах владельца]
-- [GAP: политика повторной попытки транскрипции при `SttApiError` — одна попытка или retry с backoff; §1.1 сейчас ставит `transcript_status: 'failed'` без ретрая, но статус позволяет вернуть строку в очередь]
+- [ЗАКРЫТО FR-013 — §12.5] [GAP: точное определение "внешнего домена" — allowlist поддоменов клиента или просто `!= OUR_APP_DOMAIN`; влияет на §4 при staging/preview-доменах владельца]
+- [ЗАКРЫТО FR-012 — §12.4] [GAP: политика повторной попытки транскрипции при `SttApiError` — одна попытка или retry с backoff; §1.1 сейчас ставит `transcript_status: 'failed'` без ретрая, но статус позволяет вернуть строку в очередь]
 - Ставка комиссии по умолчанию (`partner.rate`) — **30 %**, как у référence-продукта (Senja). Верхнего предела нет; для сравнения, Trustmary ограничивает выплату €1500. Решение владельца продукта 2026-08-26.
-- [GAP: способ аутентификации партнёра для доступа к своему когортному дашборду (§10) — не описан в PRD/Specification]
+- [ЗАКРЫТО FR-011 — §12.3] [GAP: способ аутентификации партнёра для доступа к своему когортному дашборду (§10) — не описан в PRD/Specification]
+
+---
+
+<a id="post-mvp"></a>
+## 12. Алгоритмы после MVP — по факту кода (сверено 29.09.2026)
+
+Требования — [Specification §6](Specification.md#post-mvp). Здесь — порядок шагов, как он стоит
+в коде; подробные псевдокоды с ревизиями — `features/<slug>/02_pseudocode.md`. Порядок операций —
+часть защиты (лимит до argon2, адрес до записи `event_id`, сеть вне транзакции).
+
+<a id="alg-fr-009"></a>
+### 12.1 FR-009 `login` (`apps/web/src/lib/login.ts`)
+```
+function login(request):
+  body = readBodyAtMost(request, 4096)                 # ВНЕ транзакции: клиент не держит соединение пула
+  email = normalizeEmail(body.email); password = isString(body.password) ? body.password : ""
+  withService(tx):
+    set local lock_timeout = '250ms'
+    if not pg_try_advisory_xact_lock(90009, hashtext(hashKey(email, ip))): return 429   # try, без очереди
+    if exceeded('login_ip', ip, 30/час) or exceeded('login_pair', email+ip, 5/час): return 429
+    row = select id, password_hash from accounts where email = $email
+    ok = verifyPassword(row?.password_hash ?? dummyHash(), len(password) <= 200 ? password : "")  # argon2 ВСЕГДА
+    if not (row and ok and len(password) <= 200):
+      record('login_ip'); record('login_pair'); return 401 SAME_BODY
+    session = createSession(tx, row.id)                 # единственный insert into sessions в проекте
+    return 200 { projects: listProjectsForAccount(row.id) } + Set-Cookie pw_session (httpOnly, 30 дней)
+# клиент: redirect → safeNextPath(?next) ИЛИ /dashboard/<первый по created_at>
+```
+
+<a id="alg-fr-010"></a>
+### 12.2 FR-010 `changePassword` (`lib/password-change.ts`)
+```
+body = readBodyAtMost(4096); account = currentAccountId() or 401; validNewPassword(next) or 400
+withAccount(tx):  lock_timeout 250 мс, statement_timeout 10 с
+  try-lock(90010, account+ip) or 409
+  limits: pwchange_ip 30/ч, pwchange_pair 5/ч, pwchange_success 10/ч  → 429
+  hash = select password_hash; if hash is null → отказ (учётка SSO)
+  if not verifyPassword(hash, current): record ×2; return 401
+  newHash = hashPassword(next)                          # только ПОСЛЕ verify
+  update accounts set password_hash=newHash where id=$ and password_hash=hash   # CAS; 0 строк → 401
+  update sessions set revoked_at=now() where account_id=$ and revoked_at is null  # ВСЕ, включая текущую
+  record success; return 200 + createSession(...)
+```
+
+<a id="alg-fr-011"></a>
+### 12.3 FR-011 кабинет партнёра (`lib/partner-auth.ts`)
+```
+POST /api/partner/session: token = readBodyAtMost(4096).token (не строка → "")
+  withService: resolvePartner(tx, token, ip)
+    if exceeded('partner_token_ip', ip, 30/ч): tooMany
+    id = select id from partner_codes where dashboard_token_hash = sha256(token) and status='active'
+    if none: record ip; return 401 'ключ доступа не подошёл'
+    if exceeded('partner_dashboard_success', id, 200/ч): tooMany; record success
+  Set-Cookie pw_partner (path /partner, 30 дней) ; body {ok:true}
+/partner/dashboard: ОДНА транзакция — resolvePartner(cookie) → getPartnerCohortDashboardById; иначе redirect /partner
+```
+
+<a id="alg-fr-012"></a>
+### 12.4 FR-012 повтор транскрипции (`services/worker/src/transcribe-job.ts`)
+```
+BEGIN
+row = select … from testimonials where transcript_status='pending' and video_object_key is not null
+        and (transcript_next_attempt_at is null or transcript_next_attempt_at <= now())
+      for update skip locked limit 1
+if none: COMMIT; sleep WORKER_POLL_INTERVAL_MS (5000)
+try: text = transcribe(presignedUrl(row)); update … transcript=text, status='completed'; COMMIT
+catch SttApiError:
+  n = attempts+1; if n < 3: set attempts=n, next_attempt_at = clock_timestamp() + 60s·2^(n−1)
+                  else: status='failed'; COMMIT
+catch other: ROLLBACK; BEGIN; (то же учётное обновление); COMMIT; rethrow
+finally: если откат не удался — release(poisoned) уничтожает соединение
+```
+
+<a id="alg-fr-013"></a>
+### 12.5 FR-013 внешний домен (`lib/widget-install.ts`)
+```
+domain = normalizeDomain(Origin ?? Referer ?? param)     # lower, без порта/пути/www., "null"→null
+own = host(APP_DOMAIN) ?? host(BASE_URL)
+if domain is null or domain in LOCAL_HOSTS or domain endsWith '.localhost'
+   or (own and (domain == own or domain endsWith '.' + own)): return   # ни записи, ни событий
+insert into widget_installs … on conflict (project_id, domain) do nothing returning id
+if inserted: emitEvents(['widget_installed','invite_shown']) одной вставкой else update last_seen_at
+```
+
+<a id="alg-fr-014"></a>
+### 12.6 FR-014 импорт CSV (`api/import/route.ts`, `lib/csv-import.ts`)
+```
+account = currentAccountId() or 401                    # ДО чтения тела
+body = readBodyAtMost(3 МиБ) or 413                     # {slug, csv, mode, mapping}; project_id из тела не читается
+withService: check+record 'csv_import' (account, 20/ч) or 429   # ДО разбора, на каждую попытку
+rows = parseCsv(csv)  # U+FFFD → отказ; BOM срезать; ; или , по 1-й строке; стоп на 501-й записи → отказ
+each row: validateTextSubmission (как форма), отклонённые с line = index+2
+if mode == preview: return {accepted, rejected, sample(5)}      # без записи
+withAccount: project = by slug and account_id and not deactivated or 404
+  each accepted: insert … status 'pending', source 'import', import_fingerprint = sha256(trim(name)\0trim(text))
+                 on conflict (project_id, import_fingerprint) do nothing
+return {inserted, skipped, rejected}
+```
+
+<a id="alg-fr-015"></a>
+### 12.7 FR-015 восстановление пароля (`api/auth/forgot`, `lib/password-reset.ts`, `lib/email.ts`)
+```
+forgot:
+  body = readBodyAtMost(4096)
+  if not mailConfigured(): return 503                    # ДО выпуска токена (21f8f148)
+  result = withService(issueResetToken):                 # try-lock 90015; лимиты pair 5/ч, ip 30/ч — запись КАЖДОЙ попытки
+     account = by email; if none: return {issued:false}
+     update password_reset_tokens set used_at=now() where account_id=$ and used_at is null
+     insert token_hash = sha256(token), expires_at = now()+1h   # 23505 → ответ как обычно
+  if result.tooMany: return 429
+  if result.issued: defer(() => sendWithRetry(link))     # after(): ПОСЛЕ ответа, без await
+  return 200 SENT                                        # одинаково для любого адреса
+sendWithRetry: 2 попытки (пауза 2 с) только на сеть/таймаут 8 с/5xx/429; один Idempotency-Key;
+  журнал reset_email_sent|_retry|_failed с категорией, без адреса и ссылки
+reset: validNewPassword → withService: update … set used_at=now() where token_hash=$ and used_at is null
+       and expires_at > now() returning account_id (иначе 400) → argon2 → update accounts → revoke all sessions
+       (сессия НЕ выдаётся)
+```
+
+<a id="alg-fr-016"></a>
+### 12.8 FR-016 Yandex ID (`api/auth/yandex/*`, `lib/sso.ts`, `lib/sso-account.ts`)
+```
+start: нет YANDEX_CLIENT_ID/SECRET → 503; state, PKCE verifier → HMAC-cookie pw_sso_state (10 мин); 302 oauth.yandex.ru
+callback:
+  ?error → /login?sso=cancelled
+  limit ip 30/ч (запись каждого вызова, отдельная транзакция, ДО сети)
+  cookie/state не совпали → clearState; /login?sso=invalid_state
+  clearState; token = exchangeCode(code, verifier); profile = fetchProfile(token)   # 8 с каждый, ВНЕ транзакции
+  withService(resolveSsoAccount):
+    by (yandex, external_id) → вход
+    email занят → 'password_account_exists' (автосвязывания нет)
+    иначе insert accounts (password_hash null) + sso_identities (on conflict → перечитать и проверить)
+  createSession; 302 /dashboard/<первый slug> или /
+```
+
+<a id="alg-fr-pay-001"></a>
+### 12.9 FR-PAY-001 checkout (`api/checkout/route.ts`)
+```
+account = currentAccountId() or 401; project = владельца по slug
+price = PAID_TIER_PRICE_RUB ?? 990
+if PAYMENTS_STUB == 'true': redirect = stub; elif нет YOOKASSA_*: 501
+payment = yookassa.createPayment(price, Idempotence-Key = randomUUID() на попытку, timeout 10 с)  # иначе 502
+insert checkout_sessions(project, payment.id, 'pending', idempotence_key)
+return { redirect_url: payment.confirmation_url }
+# вебхук — §7.2/§7.3 выше (адрес → event id → перезапрос → extendPaidUntil)
+```
+
+<a id="alg-fr-intake"></a>
+### 12.10 FR-INTAKE-001/002 фото и выключатель видео
+```
+text submit: validatePhoto(file) ДО квоты (сигнатура JPEG/PNG/WebP, ≤ 5 МБ) → квота формы →
+  uploadPhoto(S3_PHOTO_BUCKET) — сбой: revoke квоты, 503 → photo_url = '/api/photo/<uuid>/<uuid>.<ext>'
+GET /api/photo/[...key]: ключ по регэкспу → тип заново по содержимому → nosniff, CSP sandbox, immutable
+video submit: if VIDEO_INTAKE_ENABLED !== 'true': 403   # ДО arrayBuffer()
+```
+
+<a id="alg-fr-proof-001"></a>
+### 12.11 FR-PROOF-001 отзыв с площадки (`api/testimonials/platform/route.ts`)
+```
+account or 401 (до тела) → multipart → platform = body.platform ?? detectPlatform(url)
+url: только https, хост по суффиксу через точку; неизвестный → 'other'
+нет ни url, ни снимка → 422; снимок: validatePhoto (≤ 5 МБ)
+withService: project by slug+account, not deactivated or 404 → upload screenshot → insert status 'pending', source 'platform' → 201
+```
+
+<a id="alg-fr-n3-001"></a>
+### 12.12 FR-N3-001 мост в N3
+```
+/n3/start?token: проверка → cookie n3_ref_<tenant> → 302 /
+register: n3_signup_contexts; подтверждение почты: одноразовый токен (24 ч) → proof + outbox 'signup' одной транзакцией
+worker n3-outbox: раз в 5 с до 10 заданий, 4 параллельно, аренда 60 с → N3 (https, 8 с, ≤ 1 MiB, redirect:error)
+  успех 'signup' → bound_at; неудача → next = min(3600, 60·2^min(6,n−1)) с
+checkout с привязкой: intent (нет bound_at → 409/503) → external-order N3 (99000 RUB test) → платёж ЮKassa (ключ = intent.id)
+webhook bridgeNotification: GET payment (+ GET refund) → одна транзакция: outbox + claim event + тариф + completed;
+  refund → manual_review; очередь > 10 000 → откат всего (повтор возможен)
+пропущено уведомление → оператор: scripts/reconcile-n3-payment.ts <paymentId>
+```
+
+<a id="alg-fr-agent-001"></a>
+### 12.13 FR-AGENT-001 агентная покупка
+```
+агент → gateway (MCP /mcp | A2A /a2a) → web /api/agent-payments/commands (секрет шлюза)
+1 buyer_link_start → approvalUrl + pollToken (ссылка 10 мин)
+2 человек: вход → подтверждение почты → pairing_approve → ключ агента (24 ч, показан один раз)
+3 offer_get (котировка 5 мин) → order_create(quoteId, requestKey) → payment_execute
+4 нет поручения → nextAction human_approval (A2A input-required) → человек order_approve → hosted ЮKassa TEST
+5 подтверждение ТОЛЬКО вебхуком /api/agent-payments/webhook или сверкой воркера (раз в 30 с) → fulfillment
+  одной транзакцией (тариф, журнал, outbox)
+6 mandate_create (≤ 90 дней, ≤ 99000 коп.) → в последние 3 дня срока payment_execute(mandateId) по сохранённому методу
+7 grant_revoke / mandate_revoke → следующий запрос агента 401; неизвестный исход не пересоздаётся — его сверяет воркер
+```

@@ -1,6 +1,7 @@
 # Architecture — Proofwall
 
 > SPARC Phase: **Architecture**. Источники: [`PRD.md`](PRD.md), [`Specification.md`](Specification.md).
+> **Сверка 29.09.2026:** фактическое дерево, миграции 009–020, маршруты, переменные и файлы compose после MVP — [§12](#post-mvp).
 > Architecture Constraints пайплайна (не обсуждаются в этом документе, только выражаются):
 > pattern = Distributed Monolith (Monorepo), containers = Docker + Docker Compose,
 > infrastructure = VPS (AdminVPS/HOSTKEY), deploy = Docker Compose direct deploy,
@@ -53,6 +54,10 @@ proofwall/
 ├── docker-compose.yml
 └── docker-compose.prod.yml
 ```
+
+> **Факт 29.09.2026:** `packages/shared-types`, `packages/ui` и `docker-compose.prod.yml` не
+> созданы; есть `packages/db`, `packages/agent-payments`, `services/agent-api`, оверрайды
+> `compose.*.yml` — фактическое дерево в [§12](#post-mvp).
 
 **Почему `apps/widget` отдельно от `apps/web`:** NFR требует ≤30 KB gzip и отсутствие блокировки
 рендера хоста (FR-NFR-PERF-001); Next.js chunk неизбежно тянет фреймворк-рантайм. Виджет —
@@ -318,6 +323,11 @@ partner_code) без изменения схемы под каждое ново�
 Все сервисы — наши; managed-зависимостей больше нет. Одна команда `docker compose up` поднимает
 полный стек.
 
+> **Сверка 29.09.2026.** Блок ниже — проектная редакция Phase 1. Истина — файл
+> [`../docker-compose.yml`](../docker-compose.yml); отличия (у всех сервисов `restart: unless-stopped`,
+> `web` не публикуется и входит во внешнюю сеть прокси `talk-ai-public`, `stop_grace_period: 30s`,
+> сети `database`/`storage` internal, healthcheck у `transcribe`) и оверрайды стенда — [§12](#post-mvp).
+
 ```yaml
 services:
   postgres:
@@ -359,8 +369,9 @@ services:
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
       - TRANSCRIBE_SERVICE_URL=http://transcribe:7331
-      - PAYMENT_WEBHOOK_SECRET   # FR-008: onPaymentWebhook/applyTariffUpgrade исполняются в apps/web (§3.5)
-    ports: ["3000:3000"]
+      # ФАКТ 29.09: PAYMENT_WEBHOOK_SECRET удалён (ЮKassa не подписывает, D-009); полный список
+      # переменных web — §12.4; BASE_URL без дефолта в проде (lib/urls.ts, f64a9843), PGPOOL_* (D-010)
+    expose: ["3000"]   # ФАКТ: НЕ публикуется — публикация позволяла обойти лимит сменой X-Forwarded-For (cf7e3ede)
     depends_on:
       postgres:
         condition: service_healthy
@@ -423,8 +434,12 @@ started (нет healthcheck на этой неделе) → `web`/`worker` → `
   «битые» ссылки после restore.
 - `caddy_data` бэкапить не обязательно — переиздаётся автоматически (Let's Encrypt, см. ADR-007).
 
-`widget.js` собирается в CI и копируется в `apps/web/public/widget.js` на этапе билда — отдельного
-контейнера для виджета не заводим, раздаёт его `web`/`caddy`.
+`widget.js` собирается и копируется в `apps/web/public` на этапе билда — отдельного
+контейнера для виджета не заводим, раздаёт его `web`/`caddy`. **Факт 29.09:** имя с content-hash
+(`widget.<hash>.js`) плюс `widget-manifest.json`; `npm run build:widget` (`apps/widget/scripts/build.mjs`
+→ `scripts/copy-widget-to-public.mjs`), бюджет 30 KB gzip — сборка падает выше
+(`apps/widget/scripts/check-bundle-size.mjs`); сниппет берёт имя из манифеста (`lib/urls.ts`).
+CORS `/api/widget/*` ставит ПРИЛОЖЕНИЕ, прокси — нет (два заголовка ломают браузерный CORS).
 
 ## 8. Деплой на VPS
 
@@ -483,3 +498,107 @@ Architecture, без потери принятых продуктовых и ADR
 - ~~Выбор платёжного провайдера~~ — **ЗАКРЫТ 2026-08-26**: ЮKassa, `decisions/D-009`. Последствие для ADR-006: провайдер не подписывает уведомления, поэтому HMAC-проверка удалена, а подлинность собирается из двух независимых проверок (сеть источника + перезапрос статуса через API).
 - `[GAP: TTL сессии владельца и политика ротации/revoke-all не зафиксированы в исходных документах — реализовать разумный дефолт (§3.2)]`
 - `[GAP: политика бэкапов Postgres/MinIO (частота, retention, offsite-копия) не зафиксирована в исходных документах — реализовать разумный дефолт (ежедневный `pg_dump` + `mc mirror`), уточнить при росте нагрузки]`
+
+---
+
+<a id="post-mvp"></a>
+## 12. Фактическая архитектура после MVP (сверено с кодом 29.09.2026)
+
+Требования — [Specification §6](Specification.md#post-mvp), алгоритмы — [Pseudocode §12](Pseudocode.md#post-mvp),
+повторение с нуля — [`REPRODUCE.md`](REPRODUCE.md).
+
+### 12.1 Дерево монорепо
+
+```
+01-testimonials-senja/
+├── apps/web/              # Next.js 15 (App Router): 12 страниц, 28 маршрутов API (список — 12.3)
+├── apps/widget/           # vanilla TS + esbuild, Shadow DOM, бюджет 30 KB gzip
+├── services/transcribe/   # единственная точка к OpenAI STT, POST /transcribe, порт 7331
+├── services/worker/       # 4 цикла: транскрипция, очистка, outbox N3, сверка агентных платежей
+├── services/agent-api/    # шлюз MCP / A2A агентных покупок (без доступа к БД и ЮKassa)
+├── packages/db/           # 20 SQL-миграций, роли app_authenticated / app_service, RLS, раннер
+├── packages/agent-payments/  # переносимое ядро агентных платежей (@course/agent-payments)
+├── docker-compose.yml     # основной стек: postgres, minio, web, worker, transcribe, caddy
+├── compose.*.yml          # оверрайды — 12.5
+├── scripts/               # проверки портов, сборки compose, проброса env, CJM; reconcile-n3-payment.ts
+└── tests/                 # E2E агентных покупок (agent-payments-e2e) и пилота (agent-payments-pilot)
+```
+
+### 12.2 Миграции и данные после MVP
+
+| Миграция | Что добавляет | Фича |
+|---|---|---|
+| `009_partner_owner.sql` | `partner_codes` ↔ аккаунт владельца (детект self-referral) | FR-GROWTH-002 |
+| `010_commission_default.sql` | ставка партнёра по умолчанию 0.30 | FR-GROWTH-002 |
+| `011_transcript_retry.sql` | `testimonials.transcript_attempts`, `transcript_next_attempt_at` | [FR-012](Specification.md#fr-012) |
+| `012_partner_dashboard_token.sql` | `partner_codes.dashboard_token_hash` + уникальный индекс | [FR-011](Specification.md#fr-011) |
+| `013_import.sql` | `testimonials.source`, `import_fingerprint`, уникальный `(project_id, import_fingerprint)` | [FR-014](Specification.md#fr-014) |
+| `014_password_reset.sql` | `password_reset_tokens` (sha256, `expires_at`, `used_at`; один живой на аккаунт) | [FR-015](Specification.md#fr-015) |
+| `015_sso.sql` | `sso_identities (provider, external_id)`; `accounts.password_hash` nullable | [FR-016](Specification.md#fr-016) |
+| `016_demo_source.sql` | `source` += `demo` | [FR-DEMO-001](Specification.md#fr-demo-001) |
+| `017_platform_proof.sql` | `source_url`, `source_platform`, `screenshot_object_key`; `source` += `platform`; CHECK «есть доказательство» | [FR-PROOF-001](Specification.md#fr-proof-001) |
+| `018_paid_until.sql` | `projects.paid_until`, `checkout_sessions.idempotence_key` | [FR-PAY-001](Specification.md#fr-pay-001) |
+| `019_n3_bridge.sql` | `n3_signup_contexts`, `n3_email_tokens`, `n3_email_proofs`, `n3_checkout_intents`, `n3_bridge_outbox`, `n3_refund_reviews` (RLS, только `app_service`) | [FR-N3-001](Specification.md#fr-n3-001) |
+| `020_agent_payments_host.sql` | `agent_payment_{pairings,email_tokens,email_proofs,orders,human_checkouts,refund_reviews}` | [FR-AGENT-001](Specification.md#fr-agent-001) |
+
+Отдельно от раннера `packages/db`: схема `agent_payments` ядра (заказы, поручения, бюджеты, попытки,
+журнал) — `node scripts/migrate-agent-payments.mjs` с `DATABASE_URL`, только если модуль включают.
+
+Новые `scope` единого счётчика `rate_limit_events` (§3.4): `login_pair`, `login_ip`, `pwchange_pair`,
+`pwchange_ip`, `pwchange_success`, `partner_token_ip`, `partner_dashboard_success`, `csv_import`,
+а также счётчики FR-015/FR-016/моста N3 в их модулях.
+
+### 12.3 Маршруты `apps/web` после MVP
+
+| Маршрут | Файл | Фича |
+|---|---|---|
+| `POST /api/auth/login`, `/login` | `app/api/auth/login/route.ts`, `app/login/` | FR-009 |
+| `POST /api/auth/password` | `app/api/auth/password/route.ts` | FR-010 |
+| `POST /api/auth/forgot`, `POST /api/auth/reset`, `/forgot`, `/reset` | `app/api/auth/{forgot,reset}/`, `app/{forgot,reset}/` | FR-015 |
+| `GET /api/auth/yandex/{start,callback}` | `app/api/auth/yandex/` | FR-016 |
+| `/partner`, `/partner/dashboard`, `POST /api/partner/session` | `app/partner/`, `app/api/partner/session/` | FR-011 |
+| `POST /api/import` | `app/api/import/route.ts` | FR-014 |
+| `POST /api/testimonials/platform` | `app/api/testimonials/platform/route.ts` | FR-PROOF-001 |
+| `GET /api/photo/[...key]` | `app/api/photo/[...key]/route.ts` | FR-INTAKE-001 |
+| `/dashboard` | `app/dashboard/page.tsx` | FR-DASH-001 |
+| `/n3/start`, `/n3/verify`, `/api/n3/{proof,status,program}` | `app/n3/`, `app/api/n3/` | FR-N3-001 |
+| `/agent-payments`, `/api/agent-payments/{commands,human,webhook,reconcile}` | `app/agent-payments/`, `app/api/agent-payments/` | FR-AGENT-001 |
+
+### 12.4 Переменные окружения (только имена; значения — `.env` стенда вне git)
+
+| Сервис | Переменные | Кто задаёт значение |
+|---|---|---|
+| `postgres` | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | оператор, `openssl rand -hex 24` |
+| `minio` | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD` | оператор |
+| `web` | `DATABASE_URL`, `PGPOOL_MAX`, `PGPOOL_CONNECTION_TIMEOUT_MS`, `SESSION_SECRET`, `BASE_URL`, `APP_DOMAIN`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_PHOTO_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `VIDEO_INTAKE_ENABLED`, `RESEND_API_KEY`, `MAIL_FROM`, `YANDEX_CLIENT_ID`, `YANDEX_CLIENT_SECRET`, `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY`, `PAYMENTS_STUB`, `PAID_TIER_PRICE_RUB`, `N3_BRIDGE_ENABLED`, `N3_BASE_URL`, `N3_TENANT_ID`, `N3_CONNECTOR_KEY` | оператор; ключи Resend, Яндекса, ЮKassa, N3 — владелец |
+| `worker` | `DATABASE_URL`, `PGPOOL_*`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_PHOTO_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `N3_*` (мост); `WORKER_POLL_INTERVAL_MS`/`WORKER_CLEANUP_INTERVAL_MS` в compose не проброшены — действуют дефолты кода 5 с / 1 ч | оператор |
+| `transcribe` | `OPENAI_API_KEY`, `OPENAI_TRANSCRIBE_MODEL` | владелец (ключ OpenAI) |
+| `caddy` (свой, если нет общего прокси) | `HTTP_PORT`, `HTTPS_PORT` (публикация); `Caddyfile` читает `{$APP_DOMAIN}` и `{$ACME_EMAIL}`, но **блока `environment` у `caddy` в compose нет** — на стенде свой caddy выключен и этот путь не проверялся | оператор |
+| оверрайд агентных платежей | `AGENT_PAYMENTS_ENABLED`, `AGENT_GATEWAY_SECRET`, `AGENT_PAYMENTS_AUDIENCE`, `AGENT_YOOKASSA_TEST_SHOP_ID`, `AGENT_YOOKASSA_TEST_SECRET_KEY`, `AGENT_RECONCILE_URL`, `AGENT_PUBLIC_ORIGIN`, `AGENT_GATEWAY_PORT` | владелец (ключи TEST-магазина) |
+
+Правила: `BASE_URL` в проде без дефолта — старт падает (`lib/urls.ts`); `PGPOOL_*` с мусором роняют
+старт (`packages/db/src/index.ts`); `VIDEO_INTAKE_ENABLED`, `N3_BRIDGE_ENABLED`, `AGENT_PAYMENTS_ENABLED`
+включаются только строгим `true`.
+
+### 12.5 Файлы compose и что каждый делает
+
+| Файл | Проект compose | Назначение |
+|---|---|---|
+| `docker-compose.yml` | `01-testimonials-senja` | основной стек; `web` в сетях `default`, `talk-ai-public` (внешняя, общий прокси), `database`, `storage` (обе internal); у хранилищ публикаций нет |
+| `compose.demo.yml` | тот же | выключает свой `caddy` профилем — 80/443 держит общий прокси машины |
+| `compose.bridge-release.yml` | тот же | закрепляет теги образов `web`/`worker` выпуска моста (стенд 28.09 поднят с ним) |
+| `compose.test.yml` | `proofwall-test` | Postgres 16 и MinIO для тестов с хоста, публикация только `127.0.0.1`, tmpfs |
+| `compose.bridge-test.yml` | `proofwall-bridge-test` | изолированный прогон `npm test` в контейнере, env `.secrets/bridge-test.env` |
+| `compose.bridge-e2e.yml` | `proofwall-n3-e2e` | кросс-проектный E2E моста с N3 (TLS, Unix-сокеты, имитация провайдеров) |
+| `compose.agent-payments.yml` | оверрайд | добавляет шлюз `agent-api` (профиль `agent-payments`, `127.0.0.1:${AGENT_GATEWAY_PORT:-13041}`) и переменные AGENT_* |
+| `compose.agent-pilot.yml` | `proofwall-agent-pilot` | независимый TEST-пилот: свои postgres/minio/web/worker/agent-api, env `.secrets/agent-pilot/*.env`, портов нет |
+
+### 12.6 Внешние зависимости после MVP
+
+| Зависимость | Где вызывается | Таймаут | Статус проверки |
+|---|---|---|---|
+| ЮKassa API (платёж, статус) | `lib/payment.ts`, `lib/n3-payment.ts`, `packages/agent-payments` | 10 с | TEST-магазин: создание платежа — да; вебхук → `paid_until` на основном стенде — не подтверждён |
+| Resend (письма восстановления) | `lib/email.ts` | 8 с | живая отправка не проверялась; на стенде ключ пуст → `/forgot` 503 |
+| Yandex ID OAuth | `lib/sso.ts` | 8 с | живым путём не проходили |
+| N3 (партнёрская платформа проекта 03) | `services/worker/src/n3-client.ts` | 8 с | стенд A–D 49/49; реальная TEST-покупка/возврат — противоречие документов (Refinement §6) |
+| OpenAI STT | `services/transcribe` | — | цепочка видео проверена 02.09; приём видео выключен |
