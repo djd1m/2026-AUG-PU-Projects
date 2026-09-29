@@ -729,3 +729,277 @@ Scenario: Подделанная подпись initData даёт 401 без с�
   When запрос приходит на вход
   Then возвращается 401, аккаунт не создан, сессия не выдана
 ```
+
+## Трассировка требований §10 и Look-строк (добавлено 29.09.2026)
+
+Сценарии по критериям приёмки `Specification.md` §10 и §4. Строка «Тест» названа только там, где
+файл существует и проверяет требование; иначе — «Автотеста нет» (это пробел покрытия, а не
+подтверждение). Подробные `AC-n` — в `docs/features/<slug>/01_specification.md`.
+
+### FR-SUB-001 · FR-SUB-1 — подписка Pro
+
+```gherkin
+@FR-SUB-001 @FR-SUB-1 @error-handling
+Scenario: Оплата без входа отклоняется
+  Given анонимная сессия устройства
+  When вызывается POST /api/v1/subscription/checkout
+  Then ответ 401 account_required, подписка не создана
+
+@FR-SUB-001 @edge-case
+Scenario: Неизвестное состояние подписки читается как expired
+  Given у аккаунта статус вне набора active | past_due | canceled | expired
+  When вычисляется тариф
+  Then тариф free, потолок бесплатный
+```
+
+Тест: `tests/integration/payments-webhook.test.ts` (checkout, тариф после оплаты),
+`tests/integration/subscription-tier.test.ts`, `tests/unit/pro-return.test.ts` (три состояния
+`/pro/return`), `tests/integration/pro-screen-honest.test.tsx`, `tests/unit/renewal-loop.test.ts`,
+`tests/concurrency/renewal-lease.test.ts`. Отдельного теста «checkout без входа → 401» и стража
+«ни бот, ни Mini App не содержат ссылки на оплату» (AC-15) не найдено — Автотеста нет.
+
+### FR-LIM-1 — потолок Pro
+
+```gherkin
+@FR-LIM-1 @happy-path
+Scenario: Активная подписка повышает потолок сканов
+  Given у аккаунта активная подписка с неистёкшим периодом
+  When считаются пределы сканов
+  Then действует N4_SCAN_LIMIT_PRO, глобальный и эскалационный пределы не меняются
+```
+
+Тест: `tests/unit/subscription-effective-limits.test.ts`, `tests/integration/subscription-tier.test.ts`,
+`tests/unit/config.test.ts` (отсутствие переменных потолка валит старт; отдельного прогона именно
+для `N4_SCAN_LIMIT_PRO` не подтверждено).
+
+### FR-PAY-001 · FR-PAY-1 · FR-PAY-5 — вебхук оплаты
+
+```gherkin
+@FR-PAY-001 @security
+Scenario: Событие повторно доставлено — одно начисление
+  Given платёж уже обработан
+  When то же событие приходит второй раз
+  Then ответ 200, платёж и начисление не удваиваются
+
+@FR-PAY-001 @edge-case
+Scenario: Провайдер недоступен при перезапросе
+  When перезапрос статуса падает
+  Then 503 ретраибельный, ключ повторности не занят, повтор идёт полным путём
+
+@FR-PAY-1 @security
+Scenario: Подлинность по адресу источника и перезапросу
+  Given запрос не из закрытого списка сетей
+  When приходит уведомление
+  Then оно отвергается до любой записи
+
+@FR-PAY-5 @edge-case
+Scenario: Деньги — целые копейки, net = gross − fee
+  When принимается платёж с удержанием провайдера
+  Then gross, fee, net хранятся раздельно; без удержания или при сумме не равной цене — needs_review без начисления
+```
+
+Тест: `tests/integration/payments-webhook.test.ts`, `tests/concurrency/payments-webhook-parallel.test.ts`,
+`tests/unit/payments-origin.test.ts`, `tests/unit/payments-webhook-source-ip-guard.test.ts`,
+`tests/unit/payments-yookassa.test.ts`, `tests/unit/payments-mode.test.ts`. Ветка `needs_review`
+отдельным тестом не подтверждена — Автотеста нет.
+
+### FR-COM-001 · FR-COM-1 · FR-CAB-1 — комиссия и кабинеты
+
+```gherkin
+@FR-COM-001 @FR-COM-1 @happy-path
+Scenario: Начисление 50 % от полученного, возврат — минус-запись
+  Given у плательщика активированная атрибуция
+  When платёж подтверждён, затем возвращён
+  Then начислено 50 % от net, затем компенсирующая запись, баланс обнулён
+
+@FR-COM-001 @edge-case
+Scenario: Выплата сверх доступного отвергается
+  When владелец отмечает выплату больше доступной суммы
+  Then отказ с названной доступной суммой; обычному аккаунту кабинет владельца отвечает 404
+
+@FR-CAB-1 @security
+Scenario: Кабинет партнёра не раскрывает плательщика
+  When партнёр читает список
+  Then в записях нет аккаунта и платежа; не-партнёр получает 403
+```
+
+Тест: `tests/integration/payments-webhook.test.ts`, `tests/integration/cabinets.test.ts`,
+`tests/unit/source/commission.test.ts`.
+
+### FR-AUTH-004 — вход по почте и паролю
+
+```gherkin
+@FR-AUTH-004 @security
+Scenario: Неверный пароль и несуществующая почта неразличимы
+  When вход с неверным паролем и вход с несуществующей почтой
+  Then оба — один и тот же 401
+
+@FR-AUTH-004 @happy-path
+Scenario: Вход связывает анонимную сессию с аккаунтом
+  Given анонимный дневник
+  When регистрация или вход
+  Then дневник переехал на аккаунт
+```
+
+Тест: `tests/integration/auth-email.test.ts`, `tests/unit/auth-password.test.ts`.
+
+### FR-PARTNER-004 · FR-PL-1 · FR-PL-8 — ссылка блогера и промокод
+
+```gherkin
+@FR-PARTNER-004 @FR-PL-8 @edge-case
+Scenario: Код нормализуется, повтор той же ссылкой отличим от чужого кода
+  When код вводится в нижнем регистре с пробелами; затем повторно применяется тот же код
+  Then формат ^[A-Z0-9]{4,12}$ на сервере; 409 с same_code, чужой код наружу не отдаётся
+
+@FR-PL-1 @happy-path
+Scenario: Страница /r/{КОД} применяет код при открытии
+  When посетитель открывает ссылку
+  Then код применён с источником deeplink, экран показывает один из четырёх различных исходов
+```
+
+Тест: `tests/integration/partner/apply-code.test.ts`, `tests/integration/partner/normalize-code.test.ts`,
+`tests/unit/apply-code-request.test.ts`, `tests/unit/partner/normalize-code.test.ts`. Рендер
+страницы `/r/{КОД}` целиком (FR-PL-1) — Автотеста нет; проверены запрос и тексты исходов.
+
+### FR-PARTNER-005 · FR-PL-7 · FR-PL-9 — заведение партнёра и приглашение
+
+```gherkin
+@FR-PARTNER-005 @happy-path
+Scenario: Владелец создаёт приглашение, вошедший принимает
+  Given владелец по закрытому списку почт
+  When создаёт приглашение и аккаунт принимает ссылку
+  Then аккаунт — партнёр; повторное принятие 410, чужой аккаунт 409
+
+@FR-PL-9 @security
+Scenario: Посторонний получает 404
+  When обычный аккаунт вызывает маршрут владельца
+  Then 404
+```
+
+Тест: `tests/integration/auth-email.test.ts` (приглашение, принятие, 404 не владельцу),
+`tests/integration/cabinets.test.ts` (404 кабинета владельца). Создание партнёра и кода одной
+транзакцией (`POST /admin/partners`, FR-PL-7) и одновременное принятие двух приглашений —
+Автотеста нет.
+
+### FR-PARTNER-006 — уведомления партнёру
+
+```gherkin
+@FR-PARTNER-006 @edge-case
+Scenario: Отказ доставки в Telegram не откатывает начисление
+  When Telegram отвечает отказом
+  Then причина записана в delivery_error, уведомление осталось непрочитанным и видимым
+```
+
+Тест: `tests/integration/notifications.test.ts`, `tests/unit/notifications-text.test.ts`.
+
+### FR-PARTNER-007 — реквизиты выплаты и выгрузки
+
+```gherkin
+@FR-PARTNER-007 @security
+Scenario: Номер карты отвергается в любом поле
+  When партнёр вносит номер карты, в том числе в примечание
+  Then отказ; телефон СБП показывается маской
+
+@FR-PARTNER-007 @edge-case
+Scenario: CSV открывается в русском Excel
+  Then разделитель «;», BOM, запятая в сумме, CRLF
+```
+
+Тест: `tests/unit/payout-details.test.ts`, `tests/unit/export-csv.test.ts`,
+`tests/integration/notifications.test.ts`, `tests/integration/cabinets.test.ts` (выгрузки).
+
+### FR-SHARE-002 — карточка «поделиться» с составом блюда
+
+```gherkin
+@FR-SHARE-002 @happy-path
+Scenario: Имя блюда собирается из состава, бейдж читаем на любом фото
+  When строится карточка
+  Then имя из items, контраст текста не ниже WCAG AA, слово целиком внутри пилюли
+```
+
+Тест: `tests/unit/compose-dish-name.test.ts`, `tests/unit/share-card-badge-contrast.test.ts`,
+`tests/unit/share-card-text-fits.test.ts`, `tests/unit/share-card-field-set-guard.test.ts`,
+`tests/unit/render-card-image.test.ts`, `tests/unit/render-card-image-pixels.test.ts`.
+
+### FR-RECOGNIZE-003 — поставщик модели из закрытого набора
+
+```gherkin
+@FR-RECOGNIZE-003 @error-handling
+Scenario: Неизвестный поставщик или live без ключа валит старт
+  When N4_MODEL_PROVIDER вне fake | live | openrouter, либо live без ключа
+  Then старт отказывает с названной причиной
+```
+
+Тест: `tests/unit/provider-openrouter.test.ts`, `tests/integration/provider-adapter.test.ts`,
+`tests/unit/config.test.ts` (режим fake без ключа законен).
+
+### FR-CAPTURE-003 — кнопка съёмки и фото на экране результата
+
+```gherkin
+@FR-CAPTURE-003 @happy-path
+Scenario: Экран результата показывает кадр владельцу
+  When владелец открывает /result/{id}
+  Then кадр отдан через GET /api/v1/scans/{id}/photo; чужому — отказ; после purge photo_url = null
+```
+
+Тест: `tests/integration/routes/scans.test.ts`, `tests/integration/web-result-screen.test.tsx`,
+`tests/unit/capture-upload.test.ts`. Поведение кнопки съёмки (кадр при живой камере, иначе выбор
+файла) — Автотеста нет.
+
+### FR-SOURCE-004 — русские синонимы указывают на верные записи USDA
+
+```gherkin
+@FR-SOURCE-004 @edge-case
+Scenario: Ожидаемое имя записи различает соседей и ловит подмену
+  When «яйцо вареное» указывает на 173410 (Butter, salted)
+  Then страж красный; дубль name_ru_normalized находится
+```
+
+Тест: `tests/unit/food-synonym-seed.test.ts`, `tests/integration/source/seed-synonyms.test.ts`.
+
+### FR-LOOK-002 … FR-LOOK-011 — облик и путь публичного входа
+
+```gherkin
+@FR-LOOK-002 @FR-LOOK-005
+Scenario: Публичный вход — три экрана
+  Then лендинг → вопросы и ответы → установка PWA / Telegram Mini App, полей формы 0
+```
+
+FR-LOOK-002, FR-LOOK-005: в `apps/web/app` нет ни страницы вопросов и ответов, ни лендинга; корень
+отдаёт камеру. Автотеста нет; требование принято, реализация не подтверждена.
+
+FR-LOOK-003, FR-LOOK-004: отклонены в `Specification.md` §4 с причиной (блог, пресс-раздел с
+формой); сценария нет намеренно.
+
+```gherkin
+@FR-LOOK-008 @FR-LOOK-009 @FR-LOOK-010 @FR-LOOK-011
+Scenario: Облик соответствует таблице
+  Then одна гротескная семья и 8–9 ступеней кегля; монохромная база и один тёмный блок;
+       чип доказательства над заголовком; шаг 4 px, доминанты 16/24, один брейкпоинт ≈768 px
+```
+
+FR-LOOK-008, FR-LOOK-009, FR-LOOK-010, FR-LOOK-011: значения закреплены комментариями в
+`apps/web/app/globals.css` (009, 011) и приняты глазом; Автотеста нет. Приёмка облика — вручную.
+
+### FR-LOOK-001 · FR-LOOK-006 · FR-LOOK-007 · FR-LOOK-012 — публичный вход, камера, результат, источник числа
+
+```gherkin
+@FR-LOOK-006 @happy-path
+Scenario: Первый экран продукта — камера с одной строкой режимов
+  When открывается корень приложения
+  Then видоискатель и две подписи режимов, форм нет
+
+@FR-LOOK-007 @happy-path
+Scenario: Экран результата показывает кадр только когда он есть
+  When photo_url задан — кадр показан; когда null — блока кадра нет вовсе, пустой рамки нет
+
+@FR-LOOK-012 @happy-path
+Scenario: Результат показывает источник числа
+  Then имя базы, идентификатор записи, порция, дата снимка и цитата USDA; у составного блюда источник каждой части
+```
+
+Тест: FR-LOOK-006 — `tests/integration/web-shell.test.tsx`; FR-LOOK-007 и FR-LOOK-012 —
+`tests/integration/web-result-screen.test.tsx`, `tests/integration/routes/scans.test.ts`. Остальные
+части FR-LOOK-007 (степпер порции, четыре плитки, кнопка исправления рядом с подтверждением) и
+лендинг FR-LOOK-001 (один экран, ноль полей, единственный призыв) — Автотеста нет; лендинга в
+`apps/web/app` нет.
