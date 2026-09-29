@@ -145,7 +145,17 @@ const config: ProjectConfig = {
       seconds: 4.6,
       tracks: {
         desktop: {file: 'snippet-desktop.webm', size: [1920, 1080], segments: [{from: 3.7, to: 9.4, seconds: 4.6, caption: CAP4}]},
-        mobile: {file: 'snippet-mobile.webm', size: [780, 1688], segments: [{from: 3.4, to: 7.7, seconds: 4.6, caption: CAP4}]},
+        // Круг правок 2D: mobile-запись снята заново — тег <script> длиннее поля кода (732 px при 310 px видимых), поле
+        // плавно прокручивается по горизонтали до `data-slug="primer-coffee" async></script>` (журнал: hscroll 5,7–8,4 с,
+        // выделение 10,1 с). Первый кусок — начало строки и прокрутка (×1,29), второй — хвост тега и выделение (×2,2).
+        mobile: {
+          file: 'snippet-mobile.webm',
+          size: [780, 1688],
+          segments: [
+            {from: 4.9, to: 8.5, seconds: 2.8, caption: CAP4},
+            {from: 8.5, to: 12.4, seconds: 1.8, caption: CAP4},
+          ],
+        },
       },
       use: {
         wide: {track: 'desktop', crop: {x: 440, y: 190, w: 1040, h: 150}}, // «Виджет на свой сайт» + тег <script>
