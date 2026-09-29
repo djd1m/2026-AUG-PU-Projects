@@ -34,7 +34,7 @@
 
 | Что | Зачем | Кто делает |
 |---|---|---|
-| Linux, Docker с compose v2, `bash`, `openssl`, `curl`. Node на хосте **не нужен** — всё в `node:22-alpine` | сборка, тесты, запуск | — |
+| Linux, Docker с compose v2, `bash`, `openssl`, `curl`. **Node 22 на хосте** — только для двух проверок репозитория из §5 (`node ../../.claude/hooks/check-ports.cjs`); установка, тесты и сборка идут в `node:22-alpine` и хостового Node/npm не требуют | сборка, тесты, запуск | — |
 | Общий TLS-прокси машины: Caddy в контейнере `ai-hub-tls-proxy`, внешняя сеть `talk-ai-public` | TLS, домен, маршрутизация guest/web, закрытие `/internal/*` | владелец машины |
 | Домен и запись A на IP машины | `BASE_URL` — из него собирается каждый QR | владелец (DNS) |
 | Telegram-бот (создаётся у @BotFather) | `TELEGRAM_BOT_TOKEN` (нотифаер), `TELEGRAM_BOT_USERNAME` (кабинет) | владелец вписывает в env сам |
@@ -58,7 +58,7 @@ docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD:/app" -w /app n
 ## 3. Тесты — до всякого запуска стенда
 
 ```bash
-npm test                     # = bash scripts/test-all.sh
+bash scripts/test-all.sh     # только docker; `npm test` — тот же скрипт, но требует host npm
 ```
 
 Что делает (NFR-OPS-003 в [`Specification-NFR.md`](Specification-NFR.md)):
@@ -72,18 +72,10 @@ npm test                     # = bash scripts/test-all.sh
 - Ожидаемо на 28.09: `✅ пройдено 111 из 111` (наборы: `purity` 9 · `http` 12 · `owner` 23 ·
   `payment` 16 · `intake` 16 · `seam-guest-ip` 8 · `binder` 10 · `expire` 2 · `notifier` 15).
 - Голый `npm run test:one` (vitest на всё сразу) падает «правами» **по построению** — не дефект (G-06).
-- `KEEP_DB=1 npm test` оставляет базу для разбора (уборка — §11).
+- `KEEP_DB=1 bash scripts/test-all.sh` оставляет базу для разбора (уборка — §11).
 
-**Страж матрицы прав T1–T3c** (`npm run guards` = `bash scripts/check-db-grants.sh`) нуждается в
-`psql` и `DATABASE_URL_SUPER`. На машине без `psql` — в контейнере Postgres в сети стенда
-(выведено из кода, на этой машине этой командой не прогонялось):
-
-```bash
-set -a; . ./.env; set +a
-docker run --rm --network reviewqr_default -v "$PWD:/app" -w /app \
-  -e DATABASE_URL_SUPER="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB" \
-  postgres:16.4-alpine bash scripts/check-db-grants.sh     # 0 матрица цела · 1 нарушена · 2 не выполнена
-```
+**Страж матрицы прав T1–T3c** (`scripts/check-db-grants.sh`) здесь НЕ запускается: ему нужны `.env`,
+сеть стенда и мигрированная база с паролями ролей — он выполняется в §6, шаг 3б.
 
 ## 4. Env стенда — вне git, права 600
 
@@ -102,7 +94,7 @@ umask 077; cp .env.example .env; chmod 600 .env
 | `DATABASE_URL_RENDER`, `_INTAKE`, `_NOTIFY`, `_OWNER` | `postgres://app_<роль>:<пароль>@postgres:5432/reviewqr`; пароль каждой роли — `openssl rand -hex 24`, тот же, что в §6 шаг 3 | guest, intake, notifier, web |
 | `PGPOOL_MAX`, `PGPOOL_CONNECTION_TIMEOUT_MS` | `10`, `2000` (мусор или `0` — отказ старта) | все четыре сервиса |
 | `BASE_URL` | `https://<домен>` без слеша. **Обязателен**: у `guest` без него отказ старта, у `web` — тихий `localhost` в каждом QR, у `intake` — снятая проверка Origin (G-12) | guest, intake, web |
-| `SESSION_SECRET` | `openssl rand -hex 32` (≥ 16 символов). ⚠️ compose его в `guest` **не передаёт** (G-13) | `apps/guest/src/journal.ts` |
+| `SESSION_SECRET` | `openssl rand -hex 32` (≥ 16 символов). ⚠️ по текущему compose до `guest` **не доезжает** — защита `device_hash` НЕ воспроизводится (G-13); правка — §6, шаг 0 | `apps/guest/src/journal.ts` |
 | `TRUSTED_PROXY_HOST` | пусто → `ai-hub-tls-proxy`; на другой машине — имя контейнера её прокси в `talk-ai-public` | guest |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_BOT_USERNAME` | у @BotFather; **вписывает владелец** | notifier; web |
 | `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY` | кабинет ЮKassa; **вписывает владелец** | web |
@@ -127,6 +119,14 @@ bash ../../scripts/check-port-conflicts.sh .        # занятость пор�
 set -a; . ./.env; set +a
 docker network inspect talk-ai-public >/dev/null     # сеть общего прокси обязана существовать
 
+# 0) G-13: по текущему docker-compose.yml `SESSION_SECRET` в `guest` НЕ передаётся, и `device_hash`
+#    считается с ПУСТЫМ ключом HMAC (journal.ts) — задуманная защита не воспроизводится. Исполнитель
+#    вносит ОДНУ строку в docker-compose.yml, в `services.guest.environment`, после `- BASE_URL`:
+#        - SESSION_SECRET
+#    (в этом репозитории compose не правился — это правка кода, вне области документации).
+grep -A12 '^  guest:' docker-compose.yml | grep -q -- '- SESSION_SECRET' \
+  || echo 'G-13 открыт: SESSION_SECRET не передан в guest'
+
 # 1) только база
 docker compose up -d postgres && docker compose ps postgres        # healthy
 
@@ -141,6 +141,13 @@ for r in render intake notify owner; do
   v=$(eval echo "\$DATABASE_URL_$(echo $r | tr a-z A-Z)"); pw=${v#*://app_$r:}; pw=${pw%%@*}
   printf "ALTER ROLE app_%s PASSWORD '%s';\n" "$r" "$pw"
 done | docker compose exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1
+
+# 3б) страж прав T1–T3c — ПОСЛЕ миграций и паролей, ДО запуска сервисов (нужны схема, роли и сеть).
+#     Без psql на хосте — в контейнере Postgres в сети стенда.
+docker run --rm --network reviewqr_default -v "$PWD:/app" -w /app \
+  -e DATABASE_URL_SUPER="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB" \
+  postgres:16.4-alpine bash scripts/check-db-grants.sh     # 0 матрица цела · 1 нарушена · 2 не выполнена
+#     Не 0 — сервисы не запускать.
 
 # 4) сервисы
 docker compose up -d --build
