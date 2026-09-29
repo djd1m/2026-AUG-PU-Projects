@@ -107,7 +107,7 @@ tick():
   for j in jobs:
     if j.chat_id is null: status='failed', last_error='channel_not_bound'; continue
     text = "Новое сообщение — <точка>" [+ "Оценка: N из 5"] [+ "Контакт: …"] + "\n\n" + body
-           # предел канала: telegram 4096, max 2000; не влезло → обрезка + "[показано не полностью]"
+           # предел канала: telegram 4096, max 2000 (за вычетом конверта и запаса 40); не влезло → обрезка + "[показано не полностью]"
     r = POST api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/sendMessage (таймаут 8 с)
     ok → status='sent', sent_at=now() · 5xx/сеть → status='pending' (повтор на следующем тике)
     4xx → status='failed' (бот заблокирован, chat_id неверен — повтор не поможет)
