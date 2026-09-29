@@ -7,6 +7,7 @@
 |---|---|---|---|---|
 | N6 «Суфлёр» | `n6/16x9.mp4` | `n6/9x16.mp4` | `n6/1x1.mp4` | `promo/remotion/n6/` |
 | N4 «Тарелка» | `n4/16x9.mp4` | `n4/9x16.mp4` | `n4/1x1.mp4` | `promo/remotion/n4/` |
+| N5 «КлипМейкер» | `n5/16x9.mp4` | `n5/9x16.mp4` | `n5/1x1.mp4` | `promo/remotion/n5/` |
 
 Воспроизвести: `REPRO=1 bash promo/remotion/shared/render.sh <proj>` в образе `promo-render:2026-09-29`
 (`promo/render-image/`); записи экранов — вне git (`/home/dz-projects-2026/.promo-assets/<proj>/`), команда повтора —
