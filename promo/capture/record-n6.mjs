@@ -9,10 +9,13 @@
 //   • /claim, /share и вход владельца — не вызываются вовсе (запрещены route-блокировкой).
 // Состояние (cookie предпросмотра) сохраняется в $OUT_DIR/.state-n6.json, чтобы перезапустить шаги chat/widget
 // без нового предпросмотра: STEPS=chat,widget node record-n6.mjs.
+// Круг правок 2 (сцена 4): STEPS=fixture,install,embed — учётка-фикстура, экран установки, виджет на чужой странице
+// (record-n6-distribution.mjs). Платных вызовов 0: вопрос виджета /w/v1/ask заблокирован маршрутом во всех шагах.
 import { chromium } from 'playwright';
 import { startHiDpiRecording } from './hidpi-recorder.mjs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { round2, serveShop } from './record-n6-distribution.mjs';
 
 const BASE = 'https://sufler.aicoding.space';          // адрес, ВЫДАННЫЙ развёртыванием
 const SITE = 'https://aicoding.space';                 // сайт владельца, по которому собирается предпросмотр
@@ -35,7 +38,16 @@ const LAYOUTS = {
 const log = { started: new Date().toISOString(), base: BASE, site: SITE, steps: [...STEPS], events: [],
   paid: { preview_creates: 0, preview_creates_intercepted: 0, asks: 0 }, answers: [], files: [], failures: [] };
 const t0 = Date.now();
-const note = (event, extra = {}) => { const e = { t_s: +((Date.now() - t0) / 1000).toFixed(1), event, ...extra }; log.events.push(e); console.log(JSON.stringify(e)); };
+// Модуль 03 п. 5 навыка promo-video: у каждого файла — video.start; события внутри файла несут t_file_s (секунды ВНУТРИ
+// записи — ими монтаж задаёт from/to), а не только часы прогона t_s.
+const starts = new Map();
+const now = () => +((Date.now() - t0) / 1000).toFixed(2);
+const videoStart = (file, layout) => { const t_s = now(); starts.set(file, t_s); log.events.push({ t_s, event: 'video.start', file, layout }); console.log(JSON.stringify({ t_s, event: 'video.start', file })); };
+const note = (event, extra = {}) => {
+  const e = { t_s: now(), event, ...extra };
+  if (extra.file && starts.has(extra.file) && event !== 'video.saved') e.t_file_s = +(e.t_s - starts.get(extra.file)).toFixed(2);
+  log.events.push(e); console.log(JSON.stringify(e));
+};
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const pause = (a = 300, b = 800) => new Promise((r) => setTimeout(r, rnd(a, b)));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -57,7 +69,7 @@ const CURSOR_SCRIPT = () => {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install); else install();
 };
 
-async function newContext(browser, name, storageState) {
+async function newContext(browser, name, storageState, { allowAuth = false } = {}) {
   const L = LAYOUTS[name];
   const ctx = await browser.newContext({
     viewport: L.viewport, deviceScaleFactor: L.deviceScaleFactor, isMobile: L.isMobile, hasTouch: L.hasTouch,
@@ -68,7 +80,14 @@ async function newContext(browser, name, storageState) {
   });
   if (!L.isMobile) await ctx.addInitScript(CURSOR_SCRIPT);
   // Страховка: ни сохранения бота, ни «поделиться», ни входа — эти запросы на стенд не уходят.
-  await ctx.route(/\/api\/preview\/[^/]+\/(claim|share)$|\/api\/auth\//, (route) => { note('blocked', { url: route.request().url() }); return route.abort(); });
+  // Круг правок 2: шаг fixture — единственный, кому разрешены /api/auth/register|login (учётка-фикстура по SERIES.md).
+  await ctx.route(allowAuth ? /\/api\/preview\/[^/]+\/(claim|share)$/ : /\/api\/preview\/[^/]+\/(claim|share)$|\/api\/auth\//,
+    (route) => { note('blocked', { url: route.request().url() }); return route.abort(); });
+  // Платные вызовы кабинета и виджета не делаем вовсе: вопрос виджета, пробный чат кабинета, новый источник.
+  await ctx.route(/\/w\/v1\/ask|\/api\/bots\/[^/]+\/(ask|chat|sources|reindex)/, (route) => {
+    if (route.request().method() === 'GET') return route.continue();
+    note('blocked', { url: route.request().url() }); return route.abort();
+  });
   ctx.on('request', (req) => {
     const u = req.url();
     if (req.method() === 'POST' && /\/api\/preview$/.test(u)) note('request.preview_create', { layout: name });
@@ -82,9 +101,11 @@ async function recorded(c, file, fn) {
   const page = await c.ctx.newPage();
   const target = path.join(OUT, file);
   const hidpi = c.L.isMobile ? await startHiDpiRecording(page, target, c.L.video) : null;
+  videoStart(file, c.name);
   const started = Date.now();
   let ok = true;
-  try { await fn(page); }
+  const ev = (event, extra = {}) => note(event, { file, layout: c.name, ...extra });
+  try { await fn(page, ev); }
   catch (error) { ok = false; log.failures.push({ file, error: String(error?.message ?? error).slice(0, 400) }); note('step.failed', { file, error: String(error?.message ?? error).slice(0, 200) }); }
   const recorder = hidpi ? await hidpi.stop() : null;
   const video = page.video();
@@ -312,9 +333,13 @@ async function widget(c, jobId) {
   });
 }
 
+
+const { FIXTURE_STATE, SHOP, fixture, install, embed } = round2({ BASE, OUT, log, note, newContext, recorded, press, sleep, scrollToEl, gotoReady });
+
 async function main() {
   await mkdir(path.join(OUT, '.raw'), { recursive: true });
-  const browser = await chromium.launch();
+  // shop.example → 127.0.0.1: страница чужого origin живёт в этом же контейнере (serveShop).
+  const browser = await chromium.launch({ args: ['--host-resolver-rules=MAP shop.example 127.0.0.1'] });
   note('browser', { version: browser.version() });
   let state = null;
   try { state = JSON.parse(await readFile(STATE_FILE, 'utf8')); } catch { /* нет прошлого состояния */ }
@@ -353,6 +378,20 @@ async function main() {
         await (step === 'chat' ? chat(c, jobId) : widget(c, jobId));
         await c.ctx.close();
       }
+    }
+    let fx = null;
+    try { fx = JSON.parse(await readFile(FIXTURE_STATE, 'utf8')); } catch { /* фикстуры ещё нет */ }
+    if (STEPS.has('fixture')) fx = await fixture(browser, state, fx);
+    if ((STEPS.has('install') || STEPS.has('embed')) && !fx) throw new Error('нет .state-n6-fixture.json — сначала STEPS=fixture');
+    if (STEPS.has('install')) {
+      for (const name of ['desktop', 'mobile']) { const c = await newContext(browser, name, fx.storage); await install(c, fx); await c.ctx.close(); }
+    }
+    if (STEPS.has('embed')) {
+      const server = await serveShop(fx.tag, { base: BASE, url: SHOP, onListen: (e) => note('shop.listening', e) });
+      try {
+        // Посетитель чужого сайта — без cookie кабинета и предпросмотра.
+        for (const name of ['desktop', 'mobile']) { const c = await newContext(browser, name); await embed(c); await c.ctx.close(); }
+      } finally { server.close(); }
     }
   } finally {
     await browser.close();
