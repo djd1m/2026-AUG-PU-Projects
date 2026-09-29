@@ -23,6 +23,9 @@ const OUT = process.env.OUT_DIR ?? '/assets';
 const STATE_FILE = path.join(OUT, '.state-n1.json');
 const FIXTURE_FILE = path.join(OUT, '.fixture.env');
 const STEPS = new Set((process.env.STEPS ?? 'setup,wallempty,links,seed,form,moderate,approveall,wall,snippet,site').split(',').map((s) => s.trim()).filter(Boolean));
+// ONLY=mobile|desktop — снять шаг только в одной раскладке (круг правок 2D: пересъёмка сцены 4 только mobile).
+const ONLY = process.env.ONLY ? new Set(process.env.ONLY.split(',').map((s) => s.trim())) : null;
+const layoutsFor = () => ['desktop', 'mobile'].filter((n) => !ONLY || ONLY.has(n));
 const MAX_SUBMITS = 2;
 const SITE_PORT = 8099;
 
@@ -57,9 +60,15 @@ const pause = (a = 300, b = 800) => new Promise((r) => setTimeout(r, rnd(a, b)))
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Отметка внутри ФАЙЛА записи: секунды от начала записи текущей страницы (для монтажа).
+// Круг правок 2D: `t_file_s` = t_s − t_s(video.start) того же файла (ворота навыка gate-log.mjs), clip_s оставлен для
+// совместимости со старыми журналами.
 let clipStart = 0;
 let clipFile = '';
-const mark = (event, extra = {}) => note(event, { file: clipFile, clip_s: +((Date.now() - clipStart) / 1000).toFixed(1), ...extra });
+let clipStartT = 0;
+const mark = (event, extra = {}) => {
+  const t_s = +((Date.now() - t0) / 1000).toFixed(1);
+  note(event, { file: clipFile, clip_s: +((Date.now() - clipStart) / 1000).toFixed(1), t_file_s: +(t_s - clipStartT).toFixed(1), ...extra });
+};
 
 const CURSOR_SCRIPT = () => {
   const install = () => {
@@ -126,6 +135,8 @@ async function recorded(c, file, fn) {
   const hidpi = c.L.isMobile ? await startHiDpiRecording(page, target, c.L.video) : null;
   const started = Date.now();
   clipStart = started; clipFile = file;
+  clipStartT = +((started - t0) / 1000).toFixed(1);
+  log.events.push({ t_s: clipStartT, event: 'video.start', file, layout: c.name });
   let ok = true;
   try { await fn(page); }
   catch (error) { ok = false; log.failures.push({ file, error: String(error?.message ?? error).slice(0, 400) }); note('step.failed', { file, error: String(error?.message ?? error).slice(0, 200) }); }
@@ -400,6 +411,23 @@ async function snippet(c, st) {
     const pre = page.locator('pre.snippet');
     code = (await pre.innerText()).trim();
     await press(page, c, pre, { click: false });
+    if (c.L.isMobile) {
+      // Круг правок 2D: на 390 px тег <script … data-slug="…"> длиннее блока кода. Продукт не меняется — блок
+      // прокручивается по горизонтали, как пальцем у пользователя: плавно до конца строки, пауза, чтобы зритель
+      // прочитал хвост тега (data-slug, async, </script>).
+      const geo = await pre.evaluate((el) => ({ scrollWidth: el.scrollWidth, clientWidth: el.clientWidth, overflowX: getComputedStyle(el).overflowX }));
+      mark('snippet.geometry', geo);
+      await sleep(700);
+      mark('snippet.hscroll_start');
+      await pre.evaluate((el, duration) => new Promise((resolve) => {
+        const target = el.scrollWidth - el.clientWidth; const t0 = performance.now();
+        const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+        const step = (now) => { const k = Math.min(1, (now - t0) / duration); el.scrollLeft = target * ease(k); if (k < 1) requestAnimationFrame(step); else resolve(); };
+        requestAnimationFrame(step);
+      }), 2600);
+      mark('snippet.hscroll_end', { scrollLeft: await pre.evaluate((el) => el.scrollLeft) });
+      await sleep(1600);
+    }
     await page.evaluate(() => { const el = document.querySelector('pre.snippet code'); if (el) { const r = document.createRange(); r.selectNodeContents(el); getSelection()?.removeAllRanges(); getSelection()?.addRange(r); } });
     mark('snippet.selected');
     await sleep(2600);
@@ -460,7 +488,7 @@ async function main() {
     await each('wall', (c) => wall(c, st));
     let code = st.snippet ?? null;
     if (STEPS.has('snippet')) {
-      for (const name of ['desktop', 'mobile']) { const c = await newContext(browser, name, st.storage); const got = await snippet(c, st); code = got ?? code; await c.ctx.close(); }
+      for (const name of layoutsFor()) { const c = await newContext(browser, name, st.storage); const got = await snippet(c, st); code = got ?? code; await c.ctx.close(); }
       st.snippet = code; await saveState(st);
     }
     if (STEPS.has('site')) {
