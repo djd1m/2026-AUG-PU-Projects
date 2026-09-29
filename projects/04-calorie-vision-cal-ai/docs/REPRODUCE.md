@@ -109,7 +109,7 @@ wc -l merged/*.csv   # 95785 food · 814595 food_nutrient · 25401 food_portion 
 сети нет, и `npm ci` внутри него падает `EAI_AGAIN` / «Exit handler never called» (G-15).
 
 ```bash
-DC="docker compose --project-directory . -p <проект>"      # стенд: -p n4-tarelka; репетиция: -p n4-repro
+DC="docker compose --project-directory . -p <проект>"      # стенд: -p "${N4_COMPOSE_PROJECT:-n4-tarelka}"; репетиция: -p n4-repro
 # DATABASE_URL сервиса test указывает на n4_test; для стенда подставить базу n4 (как при перезаливке 29.09):
 TO_N4='DATABASE_URL="${DATABASE_URL%/n4_test}/n4"'
 $DC --profile test run --rm --no-deps -T -v ~/usda/merged:/fdc:ro test \
@@ -122,7 +122,7 @@ $DC --profile test run --rm --no-deps -T test sh -c "$TO_N4 npm run seed:food-sy
 
 - `--snapshot-date` — дата ПУБЛИКАЦИИ набора, не сегодняшняя; без неё импорт отказывает. Какая дата
   была передана 13.09 на стенде, нигде не записано — проверить владельцу:
-  `docker exec n4-tarelka-db-1 psql -U n4_admin -d n4 -tAc "SELECT DISTINCT import_snapshot_date FROM food_item"`.
+  `docker exec "${N4_COMPOSE_PROJECT:-n4-tarelka}-db-1" psql -U n4_admin -d n4 -tAc "SELECT DISTINCT import_snapshot_date FROM food_item"`.
   Для повторения берите 2026-04-30 (выпуск Foundation).
 - Из 95 783 записей принимаются 7 928: у остальных нет калорийности (DEC-A-048). На стенде 29.09 в
   `food_item` 7 928 строк.
@@ -159,7 +159,7 @@ docker run --rm --network bridge -e HOME=/tmp -v "$PWD:/workspace" -w /workspace
 ```
 
 **Интеграционные** — настоящие PostgreSQL 16 и MinIO в ОТДЕЛЬНОМ compose-проекте, никогда не в
-`n4-tarelka` (тесты делают `TRUNCATE`, G-08). Env — одноразовый, вне репозитория. Compose требует ВСЕ
+проекте стенда `${N4_COMPOSE_PROJECT:-n4-tarelka}` (тесты делают `TRUNCATE`, G-08). Env — одноразовый, вне репозитория. Compose требует ВСЕ
 переменные `${VAR:?}` файла, даже для профиля `test` (G-23), поэтому в тестовом env есть и токен бота,
 и пороги двери — фиктивные:
 
@@ -176,7 +176,7 @@ set -a; . "$E"; set +a
 export N4_PRIVATE_SUBNET=10.86.0.0/24 N4_EGRESS_SUBNET=10.87.0.0/24   # свободные на машине: ip route | grep '^10\.'
 DC="docker compose --project-directory . -p n4-repro"
 $DC up -d --wait db storage
-bash scripts/create-test-database.sh -p n4-repro       # без -p или с -p n4-tarelka — код 2, docker не вызывается
+bash scripts/create-test-database.sh -p n4-repro       # без -p или с -p n4-tarelka — код 2, docker не вызывается (G-26)
 $DC --profile test run --rm -T test npm run test:integration
 $DC --profile test down -v
 ```
@@ -225,7 +225,7 @@ umask 077; cp .env.example .env
 
 Потолки расходов модели: 20 попыток на пользователя в сутки, 3000 в сутки на всех, 600 эскалаций;
 любой незаданный — отказ старта `api`/`recognizer` (ADR-007). Расход — консоль OpenRouter и
-`docker logs n4-tarelka-recognizer-1 | node scripts/telemetry/model-calls.cjs - <YYYY-MM-DD>`.
+`docker logs "${N4_COMPOSE_PROJECT:-n4-tarelka}-recognizer-1" | node scripts/telemetry/model-calls.cjs - <YYYY-MM-DD>`.
 
 ```bash
 # 2) проверки портов ДО up (правило репозитория). COMPOSE_PROFILES=edge — иначе дверь не попадёт в проверку
@@ -237,26 +237,50 @@ node ../../.claude/hooks/check-ports.cjs .     # 0
 Обе проверки НЕ распознают `proxy` как reverse-proxy (образ собирается из `proxy/Dockerfile`), и
 проверка «приложение не опубликовано рядом с прокси» для N4 не выполняется — её держит сам compose:
 у `web` и `api` нет `ports:` (G-24). На машине, где стенд уже поднят, `check-port-conflicts` сообщит
-«4180 занят `n4-tarelka-proxy-1`» — это своя дверь.
+«`${N4_EDGE_PORT:-4180}` занят `${N4_COMPOSE_PROJECT:-n4-tarelka}-proxy-1`» — это своя дверь.
 
 ```bash
 # 3) образы и хранилища
 docker compose --project-directory . --profile edge build
 docker compose --project-directory . up -d --wait db storage
-# 4) миграции 001–013, затем данные (шаг 3.3 с -p n4-tarelka)
-docker compose --project-directory . -p n4-tarelka --profile test run --rm --no-deps -T test \
+# 4) миграции 001–013, затем данные (шаг 3.3 с тем же -p)
+docker compose --project-directory . -p "${N4_COMPOSE_PROJECT:-n4-tarelka}" --profile test run --rm --no-deps -T test \
   sh -c 'DATABASE_URL="${DATABASE_URL%/n4_test}/n4" npm run migrate'
-# 5) почта владельца — закрытый список В КОДЕ (не env): вписать и пересобрать api
+# 5) почта владельца — закрытый список В КОДЕ (не env). СНАЧАЛА опустошить список (G-25: иначе
+#    прежний адрес из репозитория остаётся владельцем), затем вписать свой и пересобрать api
+sed -i 's|^export const OWNER_EMAILS: readonly string\[\] = \[.*\];$|export const OWNER_EMAILS: readonly string[] = [];|' \
+  apps/api/src/routes/admin.ts
+grep -c 'OWNER_EMAILS: readonly string\[\] = \[\];' apps/api/src/routes/admin.ts   # 1 — иначе стоп
 bash scripts/set-owner-email.sh
+grep -n 'OWNER_EMAILS: readonly' apps/api/src/routes/admin.ts   # ровно ОДИН адрес — ваш
 # 6) подъём
 docker compose --project-directory . --profile edge up -d
 docker compose --project-directory . --profile edge ps -a
 # ожидаемо: db, storage, api, web, proxy — healthy; recognizer — Up; storage-init — Exited (0)
-curl -s http://127.0.0.1:4180/health            # {"data":{"status":"ok","db":"ok"}}
+curl -s "http://127.0.0.1:${N4_EDGE_PORT:-4180}/health"   # {"data":{"status":"ok","db":"ok"}}
 ```
 
 Шаги 3–6 восстановлены по коду и квитанциям; одной последовательностью на чистой машине не
 прогонялись. Сервиса миграций в compose нет — `npm run migrate` вручную при каждой новой миграции.
+Имя compose-проекта и порт двери все команды берут из тех же `N4_COMPOSE_PROJECT` и `N4_EDGE_PORT`,
+что `docker-compose.yml` (`name:` и `ports:` двери), — поэтому env экспортирован в шаге 2 и должен
+оставаться экспортированным в той же оболочке.
+
+**Владелец: без опустошения списка стенд воспроизводится с дефектом безопасности (G-25).**
+В репозитории `apps/api/src/routes/admin.ts:23` (`OWNER_EMAILS`) уже содержит адрес ПРЕЖНЕГО владельца
+стенда, а `scripts/set-owner-email.sh:15` заменяет список, только когда он пуст (`= [];`); иначе ветка
+`scripts/set-owner-email.sh:20` ДОПИСЫВАЕТ новый адрес в начало, не удаляя прежний. На независимом
+стенде без шага `sed` выше прежний адрес сохраняет права владельца: кабинет (выручка, реквизиты
+партнёров, реестр выплат, заведение партнёров) откроется тому, кто зарегистрируется этим адресом.
+Адрес здесь намеренно не повторяется — он в файле. Проверка: `grep -n` в конце шага 5 показывает
+ровно один адрес, и он ваш.
+
+Правка кода для исполнителя (в документации НЕ внесена): в `apps/api/src/routes/admin.ts:23` поставлять
+пустой список — `export const OWNER_EMAILS: readonly string[] = [];` (пусто законно и значит «кабинет
+закрыт всем», комментарий `apps/api/src/routes/admin.ts:18`); в `scripts/set-owner-email.sh:20` заменить
+дописывание заменой всего списка —
+`sed -i "s|OWNER_EMAILS: readonly string\[\] = \[.*\];|OWNER_EMAILS: readonly string[] = ['$EMAIL'];|" "$FILE"`
+(второй владелец — отдельным явным действием, не побочным эффектом скрипта).
 
 ## 7. Домен и общий прокси (делает владелец)
 
@@ -264,11 +288,14 @@ curl -s http://127.0.0.1:4180/health            # {"data":{"status":"ok","db":"o
 2. Блок в Caddyfile общего прокси — правка НА МЕСТЕ, без смены inode (G-03), затем `validate` и `reload`:
    ```bash
    F=/home/dz-projects-2026/edge/Caddyfile; cp -p $F $F.bak-n4
-   printf '\n<имя> {\n\tencode gzip zstd\n\theader X-Robots-Tag "noindex, nofollow"\n\treverse_proxy n4-tarelka-proxy-1:80\n}\n' >> $F
+   P="${N4_COMPOSE_PROJECT:-n4-tarelka}"   # контейнер двери называется <проект>-proxy-1
+   printf '\n<имя> {\n\tencode gzip zstd\n\theader X-Robots-Tag "noindex, nofollow"\n\treverse_proxy %s-proxy-1:80\n}\n' "$P" >> $F
    docker exec ai-hub-tls-proxy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile \
      && docker exec ai-hub-tls-proxy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
    ```
-   Действующий блок 29.09: `tarelka.aicoding.space, n4.194.85.249.105.sslip.io { … reverse_proxy n4-tarelka-proxy-1:80 }`.
+   Действующий блок 29.09 (проект по умолчанию): `tarelka.aicoding.space, n4.194.85.249.105.sslip.io { … reverse_proxy n4-tarelka-proxy-1:80 }`.
+   При другом `N4_COMPOSE_PROJECT` цель блока — `${N4_COMPOSE_PROJECT:-n4-tarelka}-proxy-1:80`; сеть общего
+   прокси (`talk-ai-public`, `docker-compose.yml`) от имени проекта не зависит.
    `ops/ai-hub-caddy-block.txt` в репозитории — старый вариант с адресом `212.192.0.33`.
 3. Дверь доверяет `X-Forwarded-For` только от `172.21.0.0/16` (сеть общего прокси, `Caddyfile`). Другая
    подсеть сети прокси — поправить `trusted_proxies`, иначе лимит частоты станет общим на всех (G-04),

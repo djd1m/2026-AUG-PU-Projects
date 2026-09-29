@@ -73,7 +73,7 @@ CREATE TABLE payment (
   provider_payment_id text NOT NULL,
   gross_minor         integer NOT NULL CHECK (gross_minor >= 0),
   fee_minor           integer NOT NULL CHECK (fee_minor >= 0),
-  net_minor           integer NOT NULL,          -- из события провайдера, НЕ вычисляется нами
+  net_minor           integer NOT NULL,          -- amount − fee; fee = amount − income_amount из ОТВЕТА API (перезапрос), не из события
   status              payment_status NOT NULL,
   needs_review        boolean NOT NULL DEFAULT false,
   paid_at             timestamptz NOT NULL,
