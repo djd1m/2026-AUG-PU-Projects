@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- ИСХОДНИК ОДИН: build.mjs подставляет {{W}}, {{H}}, {{FORMAT}}, {{SRC}} и пишет 16x9.html, 9x16.html, 1x1.html -->
+<html lang="ru" data-format="{{FORMAT}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width={{W}}, height={{H}}" />
+    <script src="vendor/gsap.min.js"></script>
+    <link rel="stylesheet" href="src/scene.css" />
+    <style>
+      html, body { width: {{W}}px; height: {{H}}px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45"
+         data-width="{{W}}" data-height="{{H}}">
+
+      <!-- Сцена 1 · 0–5 с · заголовок -->
+      <section id="s1" class="clip card" data-start="0" data-duration="5" data-track-index="0">
+        <div class="mark">Суфлёр</div>
+        <h1 class="headline">Посетители спрашивают&nbsp;—<br />сайт молчит.</h1>
+      </section>
+
+      <!-- Сцена 2 · 5–15 с · предпросмотр: ввод адреса → ход индексации → готовый чат -->
+      <div class="cam" id="cam-p1" data-src="{{SRC}}"><video class="clip" id="v-p1" data-start="5" data-duration="4" data-media-start="{{P1}}" src="media/preview-{{SRC}}.webm" muted playsinline data-track-index="1"></video></div>
+      <div class="cam" id="cam-p2" data-src="{{SRC}}"><video class="clip" id="v-p2" data-start="9" data-duration="3" data-media-start="{{P2}}" src="media/preview-{{SRC}}.webm" muted playsinline data-track-index="1"></video></div>
+      <div class="cam" id="cam-p3" data-src="{{SRC}}"><video class="clip" id="v-p3" data-start="12" data-duration="3" data-media-start="{{P3}}" src="media/preview-{{SRC}}.webm" muted playsinline data-track-index="1"></video></div>
+
+      <!-- Сцена 3 · 15–30 с · чат: ответ с источником; «не нашёл» -->
+      <div class="cam" id="cam-c1" data-src="{{SRC}}"><video class="clip" id="v-c1" data-start="15" data-duration="8" data-media-start="6" src="media/chat-{{SRC}}.webm" muted playsinline data-track-index="1"></video></div>
+      <div class="cam" id="cam-c2" data-src="{{SRC}}"><video class="clip" id="v-c2" data-start="23" data-duration="7" data-media-start="46" src="media/chat-{{SRC}}.webm" muted playsinline data-track-index="1"></video></div>
+
+      <!-- Сцена 4 · 30–38 с · окно чата предпросмотра с бейджем (экран установки не снят) -->
+      <div class="cam" id="cam-w1" data-src="{{SRC}}"><video class="clip" id="v-w1" data-start="30" data-duration="8" data-media-start="{{W1}}" src="media/widget-{{SRC}}.webm" muted playsinline data-track-index="1"></video></div>
+
+      <!-- Субтитры -->
+      <div class="sub clip" id="t2" data-start="5" data-duration="10" data-track-index="2"><span>Вставьте адрес сайта. Через минуту бот отвечает по вашим материалам.</span></div>
+      <div class="sub clip" id="t3a" data-start="15" data-duration="8" data-track-index="2"><span>Каждый ответ&nbsp;— с источником.</span></div>
+      <div class="sub clip" id="t3b" data-start="23" data-duration="7" data-track-index="2"><span>Чего нет на сайте&nbsp;— не выдумывает.</span></div>
+      <div class="sub clip" id="t4" data-start="30" data-duration="8" data-track-index="2"><span>Одна строка кода&nbsp;— и&nbsp;бот на вашем сайте.</span></div>
+
+      <!-- Сцена 5 · 38–45 с · финал -->
+      <section id="s5" class="clip card" data-start="38" data-duration="7" data-track-index="0">
+        <div class="brand">Суфлёр</div>
+        <p class="claim">Отвечает только по вашим материалам.</p>
+        <p class="url">sufler.aicoding.space</p>
+      </section>
+    </div>
+    <script src="src/scene.js"></script>
+  </body>
+</html>
