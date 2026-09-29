@@ -72,6 +72,24 @@ function seedMismatches(rows: readonly SeedSynonymRow[], names: ReadonlyMap<stri
   return problems;
 }
 
+/**
+ * Различающая сила ожидания (ревью Codex, круг 2): `expect_en` обязан выделять из фикстуры РОВНО
+ * свой id. Иначе ожидание слишком общее — «Chicken; stewed» пропустило бы и грудку, и всю курицу,
+ * «Pasta» — и сухие, и варёные макароны, и замена id на соседа осталась бы зелёной.
+ */
+function ambiguousExpectations(rows: readonly SeedSynonymRow[], names: ReadonlyMap<string, string>): string[] {
+  const problems: string[] = [];
+  const check = (label: string, id: string | undefined, expectEn: string | undefined): void => {
+    const matching = [...names].filter(([, nameEn]) => keywordMismatch(expectEn, nameEn) === null).map(([fdcId]) => fdcId);
+    if (matching.length !== 1 || matching[0] !== id) problems.push(`${label} [${id}] «${expectEn}» → ${matching.map((m) => `${m} ${names.get(m)}`).join(' | ') || 'ничего'}`);
+  };
+  for (const row of rows) {
+    if (row.recipe_parts !== undefined) row.recipe_parts.forEach((part, index) => check(`${row.name_ru} ч.${index + 1}`, part.food_item_source_id, part.expect_en));
+    else check(row.name_ru, row.food_item_source_id, row.expect_en);
+  }
+  return problems;
+}
+
 describe('seed food_synonym ↔ USDA FDC (DEC-A-064)', () => {
   const names = readFoodNames(FIXTURE_FOOD);
 
@@ -87,6 +105,10 @@ describe('seed food_synonym ↔ USDA FDC (DEC-A-064)', () => {
 
   it('КАЖДЫЙ food_item_source_id указывает на позицию с ожидаемым name_en', () => {
     expect(seedMismatches(SEED_ROWS, names)).toEqual([]);
+  });
+
+  it('КАЖДЫЙ expect_en выделяет в фикстуре ровно свой id — ожидание различает соседей', () => {
+    expect(ambiguousExpectations(SEED_ROWS, names)).toEqual([]);
   });
 
   it('в seed нет дублей name_ru_normalized — поиск вернул бы две записи на одно слово', () => {
@@ -114,6 +136,13 @@ describe('seed food_synonym ↔ USDA FDC (DEC-A-064)', () => {
     expect(keywordMismatch('Salt, table', 'Potatoes, boiled, cooked without skin, flesh, without salt')).not.toBeNull();
     expect(keywordMismatch('Salt', 'Potatoes, boiled, cooked without skin, flesh, without salt')).not.toBeNull();
     expect(keywordMismatch('Yogurt', 'Candies, yogurt covered')).not.toBeNull();
+  });
+
+  it('ИСПЫТАНИЕ: общее ожидание («Chicken») и подмена на соседа (грудка вместо курицы) — красные', () => {
+    const vague = SEED_ROWS.map((row) => (row.name_ru === 'курица отварная' ? { ...row, expect_en: 'Chicken; stewed' } : row));
+    expect(ambiguousExpectations(vague, names)).toEqual([expect.stringMatching(/^курица отварная \[171451\].*171478/)]);
+    const neighbour = SEED_ROWS.map((row) => (row.name_ru === 'курица отварная' ? { ...row, food_item_source_id: '171478' } : row));
+    expect(seedMismatches(neighbour, names)).toHaveLength(1);
   });
 
   it('ИСПЫТАНИЕ: «соль» → 170440 (картофель … without salt) красит страж', () => {
