@@ -20,4 +20,4 @@ export {
   type SearchMode,
   type SearchFoodCandidatesInput,
 } from './queries/food-search.js';
-export { loadFoodSynonyms, type SeedLoadResult, type SeedRejection } from './seed/load-food-synonyms.js';
+export { loadFoodSynonyms, findDuplicateNormalizedNames, type SeedLoadResult, type SeedRejection } from './seed/load-food-synonyms.js';
