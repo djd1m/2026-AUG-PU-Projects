@@ -174,15 +174,19 @@ umask 077; mkdir -p ~/.n4-test; E=~/.n4-test/test.env
     N4_SUBSCRIPTION_PERIOD_DAYS=30 N4_COMMISSION_HOLD_DAYS=14 N4_SCAN_LIMIT_PRO=100 N4_PAYMENTS_MODE=fake; } > "$E"
 set -a; . "$E"; set +a
 export N4_PRIVATE_SUBNET=10.86.0.0/24 N4_EGRESS_SUBNET=10.87.0.0/24   # свободные на машине: ip route | grep '^10\.'
-DC="docker compose --project-directory . -p n4-repro"
+# имя тестового проекта — случайное и заведомо не равное имени стенда: ниже `down -v` удалит его тома,
+# а страж create-test-database.sh узнаёт только буквальное n4-tarelka (G-26)
+TP="n4-test-$(openssl rand -hex 3)"
+[ "$TP" != "${N4_COMPOSE_PROJECT:-n4-tarelka}" ] || { echo "имя совпало со стендом — стоп"; exit 1; }
+DC="docker compose --project-directory . -p $TP"
 $DC up -d --wait db storage
-bash scripts/create-test-database.sh -p n4-repro       # без -p или с -p n4-tarelka — код 2, docker не вызывается (G-26)
+bash scripts/create-test-database.sh -p "$TP"          # без -p или с -p n4-tarelka — код 2, docker не вызывается (G-26)
 $DC --profile test run --rm -T test npm run test:integration
 $DC --profile test down -v
 ```
 
 Ожидаемо на 29.09: `Test Files 76 passed (76)`, `Tests 349 passed (349)`; после `down -v` не остаётся
-ни контейнеров, ни томов, ни сетей `n4-repro`. Подсети по умолчанию `10.85/10.83` заняты стендом —
+ни контейнеров, ни томов, ни сетей `$TP`. Подсети по умолчанию `10.85/10.83` заняты стендом —
 у параллельного прогона свои (`.env.example`, раздел о подсетях).
 
 **Перед передачей результата** — ещё `bash scripts/check-env-wiring.sh` (0 — все читаемые кодом
@@ -253,6 +257,8 @@ sed -i 's|^export const OWNER_EMAILS: readonly string\[\] = \[.*\];$|export cons
 grep -c 'OWNER_EMAILS: readonly string\[\] = \[\];' apps/api/src/routes/admin.ts   # 1 — иначе стоп
 bash scripts/set-owner-email.sh
 grep -n 'OWNER_EMAILS: readonly' apps/api/src/routes/admin.ts   # ровно ОДИН адрес — ваш
+# образ api собран на шаге 3 ДО правки списка — без пересборки в нём останется прежний адрес
+docker compose --project-directory . --profile edge build api
 # 6) подъём
 docker compose --project-directory . --profile edge up -d
 docker compose --project-directory . --profile edge ps -a
@@ -335,7 +341,7 @@ node ../../.claude/hooks/check-embed-contract.cjs .  # 2 — виджета не
 ## 11. Уборка
 
 ```bash
-docker compose --project-directory . -p n4-repro --profile test down -v   # тестовые стеки
+docker compose --project-directory . -p "$TP" --profile test down -v   # тестовые стеки (TP — случайное имя из шага тестов; никогда не имя стенда)
 git worktree list; git worktree remove <влитое дерево>
 # снять стенд (данные останутся в томах; с -v — вместе с базой продуктов и фото):
 docker compose --project-directory . --profile edge down
