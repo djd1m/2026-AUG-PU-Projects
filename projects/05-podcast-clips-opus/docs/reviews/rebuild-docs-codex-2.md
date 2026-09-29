@@ -1,0 +1,24 @@
+## Закрытие прежних находок
+
+| Находка | Статус | Довод |
+|---|---|---|
+| Host Node не указан в prerequisites | **Закрыта** | [REPRODUCE.md:36](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:36) теперь требует Node 22 и перечисляет host-команды. |
+| Lifecycle и versioning S3 | **Частично** | [REPRODUCE.md:238](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:238) правильно переносит контракт из [Architecture.md:139](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/Architecture.md:139), но новые команды не исполнимы с описанным окружением — см. находку 1. |
+| Замена витринного клипа | **Частично** | [REPRODUCE.md:516](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:516) даёт корректный SQL и требует пересборку; пара соответствует контракту [showcase.ts:9](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/packages/shared/src/showcase.ts:9). Однако команда и проверка результата неполны — см. находку 2. |
+| Противоречивый паспорт roadmap | **Закрыта** | [REPRODUCE.md:725](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:725) явно исключает устаревший паспорт из доказательств; фактически все 30 записей имеют `status: done`. |
+| 11 вместо 9 музыкальных треков | **Закрыта** | Исправлены [REPRODUCE.md:640](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:640), [Specification-addendum.md:150](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/Specification-addendum.md:150) и [features/README.md:34](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/features/README.md:34) → код содержит 9 элементов в [music-catalog.ts:1](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/packages/shared/src/music-catalog.ts:1), тест требует 9 в [music.test.ts:36](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/tests/music.test.ts:36). |
+| ffmpeg 8.1.2 представлен как гарантия сборки | **Закрыта** | [REPRODUCE.md:633](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:633) теперь честно описывает незакреплённый пакет → [Dockerfile:52](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/Dockerfile:52) действительно использует `apk add ffmpeg` без версии. |
+
+## Оставшиеся находки
+
+1. **P2 — lifecycle-команды не воспроизводимы.** [REPRODUCE.md:250](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:250) требует AWS CLI, но не включает его в prerequisites; `.env` автоматически не экспортирует `S3_ENDPOINT`/`S3_BUCKET`, а AWS CLI ожидает `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`, тогда как проект задаёт `S3_ACCESS_KEY`/`S3_SECRET_KEY` в [docker-compose.yml:24](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docker-compose.yml:24). Для MinIO указанный `S3_ENDPOINT=http://minio:9000` доступен только внутри compose-сети. Нужна готовая команда с явным окружением либо запуск из контейнера с подходящим клиентом.
+
+2. **P3 — инструкция замены витрины не доведена до проверяемой команды.** [REPRODUCE.md:519](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/REPRODUCE.md:519) содержит литеральное `docker compose …` и shell-метасимволы `<пользователь>`/`<база>`, а после пересборки не требует проверить `/api/showcase/{code}/file|thumbnail` на ожидаемый `302`. SQL верен, но шаг нельзя выполнить копированием и нельзя доказать завершённым.
+
+## Вердикт
+
+**Готово к «сборке с нуля»: да с поправками.** Новых противоречий с кодом не найдено; внесены две эксплуатационные ошибки выше.
+
+Проверки: `check-rebuild-docs.mjs` — **0, R1–R5 пройдены**; `git diff --check` — **0**. E2E не применим к этому docs-only review. Проверена ревизия `66f87707a5f1b20b804055d74b9645c448b9105f` против `9d7e5ad5`.
+
+Профиль: `compact-quality-first-v2`, стадия VALIDATE. Запрошено `gpt-5.6-sol medium`; фактическая модель, длительность и usage текущего исполнителя средой не раскрыты. Телеметрия: [20260929T182617Z-docs-rebuild-05-ff2c](/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/05-podcast-clips-opus/docs/telemetry/p-replicator/20260929T182617Z-docs-rebuild-05-ff2c/) — существующая, незавершённая; текущий проход не записан из-за read-only режима.
