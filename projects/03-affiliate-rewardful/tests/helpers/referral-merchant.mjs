@@ -9,7 +9,7 @@ import { createFrontendServer } from '../../apps/frontend/server.mjs';
 import { createReferralMerchantClient,referralTokenFromCookie } from '../../shared/integrations/merchant-client.mjs';
 import { referralPaymentFixture } from './referral-payment-fixture.mjs';
 
-const origins=['a','b','c','d'].map(v=>`https://n3-${v}.212.192.0.33.sslip.io`);
+const origins=['a','b','c','d'].map(v=>`https://n3-${v}.194.85.249.105.sslip.io`);
 const variants=['a-merchant','b-customer','c-partner','d-agent'];
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
 function html(res,body) {res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});res.end(`<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Изолированный SaaS-магазин</title><style>body{max-width:640px;margin:40px auto;padding:20px;font:18px system-ui}label,input,button{display:block;margin:12px 0;max-width:100%;box-sizing:border-box}input,button{padding:12px}p{overflow-wrap:anywhere}</style><h1>Изолированный SaaS-магазин</h1><p>Тест API провайдера и почты. Реальные деньги и письма не отправляются.</p>${body}</html>`);}

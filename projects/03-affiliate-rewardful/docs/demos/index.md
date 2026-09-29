@@ -8,12 +8,12 @@
 
 | Вариант | Для кого и какой вопрос | Интерфейс | Инструкция |
 |---|---|---|---|
-| A | Владелец: правила, начисления, реестр, ручная отправка | [Открыть A](https://n3-a.194.85.249.105.sslip.io/) | [Markdown](../../variants/a-merchant/docs/demo.md) · [HTML](https://n3-a.194.85.249.105.sslip.io/demo.html) |
-| B | Клиент: момент предложения, бонус и собственный счёт | [Открыть B](https://n3-b.194.85.249.105.sslip.io/) | [Markdown](../../variants/b-customer/docs/demo.md) · [HTML](https://n3-b.194.85.249.105.sslip.io/demo.html) |
-| C | Партнёр: условия, личная ссылка, история и payout status | [Открыть C](https://n3-c.194.85.249.105.sslip.io/) | [Markdown](../../variants/c-partner/docs/demo.md) · [HTML](https://n3-c.194.85.249.105.sslip.io/demo.html) |
-| D | Агент: ограниченная делегация, задачи и проверяемый артефакт | [Открыть D](https://n3-d.194.85.249.105.sslip.io/) | [Markdown](../../variants/d-agent/docs/demo.md) · [HTML](https://n3-d.194.85.249.105.sslip.io/demo.html) |
+| A | Владелец: правила, начисления, реестр, ручная отправка | [Открыть A](https://reward.aicoding.space/) | [Markdown](../../variants/a-merchant/docs/demo.md) · [HTML](https://reward.aicoding.space/demo.html) |
+| B | Клиент: момент предложения, бонус и собственный счёт | [Открыть B](https://b.reward.aicoding.space/) | [Markdown](../../variants/b-customer/docs/demo.md) · [HTML](https://b.reward.aicoding.space/demo.html) |
+| C | Партнёр: условия, личная ссылка, история и payout status | [Открыть C](https://c.reward.aicoding.space/) | [Markdown](../../variants/c-partner/docs/demo.md) · [HTML](https://c.reward.aicoding.space/demo.html) |
+| D | Агент: ограниченная делегация, задачи и проверяемый артефакт | [Открыть D](https://d.reward.aicoding.space/) | [Markdown](../../variants/d-agent/docs/demo.md) · [HTML](https://d.reward.aicoding.space/demo.html) |
 
-Эта страница без SSH доступна и как [живой HTML-индекс](https://n3-a.194.85.249.105.sslip.io/demos/index.html).
+Эта страница без SSH доступна и как [живой HTML-индекс](https://reward.aicoding.space/demos/index.html).
 
 ## Повторяемый показ
 

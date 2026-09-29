@@ -7,7 +7,7 @@ import { createHttpServer } from '../apps/api/http.mjs';
 import { createAgentHandler } from '../shared/agents/index.mjs';
 
 test('real cookie HTTP protects CSRF, keeps tokens out of responses, and connects scoped MCP/A2A to PostgreSQL',async t=>{
-  const f=await fixture(t),origin='https://n3-d.212.192.0.33.sslip.io';
+  const f=await fixture(t),origin='https://d.reward.aicoding.space';
   const server=createHttpServer(f.app,{mode:'hybrid',agentHandler:createAgentHandler({...f.app,origin})});server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
   const base=`http://127.0.0.1:${server.address().port}`;
   let cookie;

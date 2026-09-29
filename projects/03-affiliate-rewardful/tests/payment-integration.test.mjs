@@ -6,7 +6,7 @@ import { fixture,code } from './helpers/core-fixture.mjs';
 const pass='Commercial integration password 57!';
 async function setup(t) {
   let clock=Date.now(),calls=[]; const faults={dropCreateResponse:false}; const payments=new Map(),refunds=new Map();
-  const config={enabled:false,shopId:'123456',secretKey:'dedicated-test-key-never-production',testMode:true,returnUrl:'https://n3-a.212.192.0.33.sslip.io/account'};
+  const config={enabled:false,shopId:'123456',secretKey:'dedicated-test-key-never-production',testMode:true,returnUrl:'https://n3-a.194.85.249.105.sslip.io/account'};
   const fetchImpl=async(url,options)=>{
     calls.push({url,method:options.method,key:options.headers['idempotence-key']});
     if (options.method==='POST') {

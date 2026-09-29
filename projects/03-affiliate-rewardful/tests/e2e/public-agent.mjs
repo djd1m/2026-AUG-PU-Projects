@@ -6,7 +6,7 @@ import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 
 test('public HTTPS official MCP Client and A2A share durable authorized state',async()=>{
- const origin='https://n3-d.212.192.0.33.sslip.io';let cookie;
+ const origin='https://d.reward.aicoding.space';let cookie;
  const api=async(path,data)=>{
   const r=await fetch(origin+'/api/account/'+path,{method:data===undefined?'GET':'POST',headers:{Origin:origin,'Content-Type':'application/json',...(cookie?{Cookie:cookie}:{})},...(data===undefined?{}:{body:JSON.stringify(data)})});
   const body=await r.json();assert.equal(r.status,200,body.error?.code);if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return body.data;

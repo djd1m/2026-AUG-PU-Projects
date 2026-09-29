@@ -9,7 +9,7 @@ import { createHttpServer } from '../apps/api/http.mjs';
 import { createFrontendServer } from '../apps/frontend/server.mjs';
 import { connect } from '../shared/client/api.mjs';
 
-const publicA='https://n3-a.212.192.0.33.sslip.io';
+const publicA='https://reward.aicoding.space';
 test('public origins are exact HTTPS identities and reject lookalikes', async()=>{
   const server=createHttpServer({});server.listen(0,'127.0.0.1');await once(server,'listening');
   const target=`http://127.0.0.1:${server.address().port}/api/command`;
@@ -21,8 +21,47 @@ test('public origins are exact HTTPS identities and reject lookalikes', async()=
     }
     for(const origin of [publicA+'.attacker.example',publicA+':444',publicA.replace('https:','http:'),'https://attacker.example']) {
       assert.equal(apiOrigins.has(origin),false);assert.throws(()=>variantOrigin('A',origin));
-      const response=await fetch(target,{method:'OPTIONS',headers:{Origin:origin,Host:'n3-a.212.192.0.33.sslip.io','X-Forwarded-Host':'n3-a.212.192.0.33.sslip.io'}});
+      const response=await fetch(target,{method:'OPTIONS',headers:{Origin:origin,Host:'reward.aicoding.space','X-Forwarded-Host':'reward.aicoding.space'}});
       assert.equal(response.status,403);assert.equal(response.headers.get('Access-Control-Allow-Origin'),null);
+    }
+  } finally {server.closeAllConnections();await new Promise(r=>server.close(r));}
+});
+
+// Owner decision 2026-09-29: the stand moves to reward.aicoding.space. The list stays explicit:
+// the bare domain is A (demo catalog), letter subdomains are A–D, and the current server's sslip
+// address is the fallback. The dead 212.192.0.33 server and any other subdomain are refused.
+const publicDomain={
+  A:['https://reward.aicoding.space','https://a.reward.aicoding.space','https://n3-a.194.85.249.105.sslip.io'],
+  B:['https://b.reward.aicoding.space','https://n3-b.194.85.249.105.sslip.io'],
+  C:['https://c.reward.aicoding.space','https://n3-c.194.85.249.105.sslip.io'],
+  D:['https://d.reward.aicoding.space','https://n3-d.194.85.249.105.sslip.io'],
+};
+test('reward.aicoding.space origins map to their own variant and nothing else',async()=>{
+  const server=createHttpServer({});server.listen(0,'127.0.0.1');await once(server,'listening');
+  const target=`http://127.0.0.1:${server.address().port}/api/command`;
+  try {
+    for(const [variant,expected] of Object.entries(publicDomain)) {
+      assert.deepEqual(originsFor(variant).filter(o=>o.startsWith('https:')),expected);
+      for(const origin of expected) {
+        assert.ok(apiOrigins.has(origin),origin);assert.equal(variantOrigin(variant,origin),origin);
+        const response=await fetch(target,{method:'OPTIONS',headers:{Origin:origin}});
+        assert.equal(response.status,204,origin);assert.equal(response.headers.get('Access-Control-Allow-Origin'),origin);
+        for(const other of Object.keys(publicDomain).filter(v=>v!==variant)) {
+          assert.ok(!originsFor(other).includes(origin),`${origin} leaked into ${other}`);
+          assert.notEqual(variantOrigin(other,origin),origin);
+        }
+      }
+    }
+    assert.equal(variantOrigin('B','https://reward.aicoding.space'),'https://b.reward.aicoding.space');
+    assert.equal(variantOrigin('A','https://d.reward.aicoding.space'),'https://reward.aicoding.space');
+    assert.equal(variantOrigin('B','https://n3-a.194.85.249.105.sslip.io'),'https://n3-b.194.85.249.105.sslip.io');
+    for(const origin of ['https://evil.reward.aicoding.space','https://e.reward.aicoding.space','https://www.reward.aicoding.space',
+      'https://a.b.reward.aicoding.space','https://reward.aicoding.space.attacker.example','http://reward.aicoding.space',
+      'https://reward.aicoding.space:444','https://aicoding.space','https://n3-a.212.192.0.33.sslip.io','https://n3-d.212.192.0.33.sslip.io']) {
+      assert.equal(apiOrigins.has(origin),false,origin);assert.throws(()=>variantOrigin('A',origin),origin);
+      for(const variant of Object.keys(publicDomain))assert.ok(!originsFor(variant).includes(origin),origin);
+      const response=await fetch(target,{method:'OPTIONS',headers:{Origin:origin,Host:'reward.aicoding.space','X-Forwarded-Host':'reward.aicoding.space'}});
+      assert.equal(response.status,403,origin);assert.equal(response.headers.get('Access-Control-Allow-Origin'),null);
     }
   } finally {server.closeAllConnections();await new Promise(r=>server.close(r));}
 });

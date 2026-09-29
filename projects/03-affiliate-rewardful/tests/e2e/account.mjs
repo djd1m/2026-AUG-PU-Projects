@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {open,until,fill,click,js,wd,element,screenshot,noOverflow} from '../helpers/browser.mjs';
-const origins=['a','b','c','d'].map(v=>`https://n3-${v}.212.192.0.33.sslip.io`);
+const origins=['a','b','c','d'].map(v=>`https://${v}.reward.aicoding.space`);
 const evidence=new URL('../../.runtime/f2-browser/',import.meta.url).pathname;
 const password=`E2e-${randomUUID()}-!`,ownerEmail=`owner-${randomUUID()}@example.test`,partnerEmail=`partner-${randomUUID()}@example.test`;
 async function register(email,name) {await fill('#email',email);await fill('#password',password);await fill('#name',name);await click('#register');await until('return !document.querySelector("#workspace").hidden && document.querySelector("#notice").textContent.includes("созданы")');}

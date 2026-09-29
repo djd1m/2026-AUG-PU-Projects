@@ -12,7 +12,7 @@ let driver,sessionId,started=false,driverOutput='';
 await mkdir(directory,{recursive:true});
 try {
   for(const port of [13143,13144,4571])await free(port);
-  execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',directory+'/key.pem','-out',directory+'/cert.pem','-days','2','-subj','/CN=merchant.example','-addext','subjectAltName=DNS:merchant.example,DNS:*.212.192.0.33.sslip.io'],{stdio:'ignore'});
+  execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',directory+'/key.pem','-out',directory+'/cert.pem','-days','2','-subj','/CN=merchant.example','-addext','subjectAltName=DNS:merchant.example,DNS:*.194.85.249.105.sslip.io'],{stdio:'ignore'});
   execFileSync('docker',['compose','-f','docker-compose.test.yml','run','--rm','--no-deps','-d','--name',container,
     '-p','127.0.0.1:13143:13143','-p','127.0.0.1:13144:13144','backend','node','tests/helpers/referral-merchant.mjs'],{stdio:'pipe'});started=true;
   execFileSync('docker',['network','connect','n3-frontend',container],{stdio:'pipe'});
