@@ -1,0 +1,60 @@
+/* Токены N6: фон #0d0f12, текст #eef1f4, акцент #5fd0d8. Шрифт Onest (OFL) — локальные TTF из образа; CSS вставляется в index.html, пути от корня проекта. */
+@font-face { font-family: "Onest"; src: url("fonts/Onest-Regular.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "Onest"; src: url("fonts/Onest-Medium.ttf") format("truetype"); font-weight: 500; }
+@font-face { font-family: "Onest"; src: url("fonts/Onest-SemiBold.ttf") format("truetype"); font-weight: 600; }
+@font-face { font-family: "Onest"; src: url("fonts/Onest-Bold.ttf") format("truetype"); font-weight: 700; }
+
+:root { --paper: #0d0f12; --ink: #eef1f4; --accent: #5fd0d8; --muted: #9aa4ae; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { overflow: hidden; background: var(--paper); color: var(--ink);
+  font-family: "Onest", sans-serif; -webkit-font-smoothing: antialiased; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--paper); }
+
+/* Карточки сцен 1 и 5 */
+.card { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+  padding: 0 8%; gap: 0.5em; background: radial-gradient(120% 90% at 20% 10%, #13232a 0%, var(--paper) 60%); }
+.mark { color: var(--accent); font-weight: 600; letter-spacing: 0.02em; }
+.headline { font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; }
+.brand { font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.brand::before { content: ""; display: block; width: 1.1em; height: 0.12em; background: var(--accent);
+  margin-bottom: 0.45em; border-radius: 0.06em; }
+.claim { font-weight: 500; line-height: 1.2; }
+.url { color: var(--accent); font-weight: 600; }
+
+/* «Камера» над записью: обёртка без data-* (её трансформирует GSAP), видео внутри — клип со временем */
+.cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+.cam[data-src="desktop"] { width: 1920px; height: 1080px; }
+.cam[data-src="mobile"] { width: 780px; height: 1688px; }
+.cam video { display: block; width: 100%; height: 100%; border-radius: 6px; }
+
+/* Субтитры: полоса снизу поверх затемнения */
+.sub { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: flex-end;
+  justify-content: center; text-align: center; padding: 0 6% 5%; z-index: 5;
+  background: linear-gradient(to top, rgba(13, 15, 18, 0.96) 55%, rgba(13, 15, 18, 0)); }
+.sub span { font-weight: 600; line-height: 1.2; text-wrap: balance; max-width: 100%; }
+
+/* Размеры по формату */
+[data-format="16x9"] .mark { font-size: 44px; }
+[data-format="16x9"] .headline { font-size: 104px; }
+[data-format="16x9"] .brand { font-size: 150px; }
+[data-format="16x9"] .claim { font-size: 60px; }
+[data-format="16x9"] .url { font-size: 48px; }
+[data-format="16x9"] .sub { height: 250px; }
+[data-format="16x9"] .sub span { font-size: 54px; }
+
+[data-format="1x1"] .mark { font-size: 36px; }
+[data-format="1x1"] .headline { font-size: 80px; }
+[data-format="1x1"] .brand { font-size: 128px; }
+[data-format="1x1"] .claim { font-size: 50px; }
+[data-format="1x1"] .url { font-size: 40px; }
+[data-format="1x1"] .sub { height: 280px; }
+[data-format="1x1"] .sub span { font-size: 48px; }
+
+[data-format="9x16"] .card { padding: 0 9%; }
+[data-format="9x16"] .mark { font-size: 44px; }
+[data-format="9x16"] .headline { font-size: 96px; }
+[data-format="9x16"] .brand { font-size: 150px; }
+[data-format="9x16"] .claim { font-size: 62px; }
+[data-format="9x16"] .url { font-size: 46px; }
+[data-format="9x16"] .sub { height: 460px; padding-bottom: 12%; }
+[data-format="9x16"] .sub span { font-size: 60px; }
