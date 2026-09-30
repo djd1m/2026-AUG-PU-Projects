@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ConfigError, enforceBootConfig } from '@n6b/db';
+import { assertUrlSafePassword, checkConfig, ConfigError, enforceBootConfig, pgUrl } from '@n6b/db';
 import { loadWebConfig, WEB_REQUIRED } from '@/server/config';
 
 // Pseudocode «Boot config check», шаг 1 — закрытый список ровно этих 13 имён.
@@ -132,5 +132,32 @@ describe('Boot config check web (FR-n6b-16, NFR-n6b-3)', () => {
     expect(lines.join('\n')).toContain('LIMIT_ANSWER_BOT_DAY');
     expect(lines.join('\n')).not.toContain('not-a-number-VALUE');
     expect(lines.join('\n')).not.toContain(env.SESSION_SECRET!);
+  });
+});
+
+describe('R-2: URL-кодирование паролей в DATABASE_URL_* (08_review.md)', () => {
+  const PASSWORD = 'a@b/c#d%e:f';
+  const SPEC = [{ name: 'DATABASE_URL_SERVICE', kind: 'pg-url' as const, user: 'n6b_app_service', consequence: 'c' }];
+
+  it('pgUrl кодирует пароль со спецсимволами: проверка принимает строку, хост и пароль не искажены', () => {
+    const url = pgUrl({ user: 'n6b_app_service', password: PASSWORD, host: 'db', database: 'n6b' });
+    const parsed = new URL(checkConfig(SPEC, [], { DATABASE_URL_SERVICE: url }, true).DATABASE_URL_SERVICE as string);
+    expect(parsed.hostname).toBe('db');
+    expect(decodeURIComponent(parsed.password)).toBe(PASSWORD);
+  });
+
+  it('кривая %-последовательность → ConfigError с именем переменной, а не URIError; пароль не печатается', () => {
+    let error: unknown;
+    try {
+      checkConfig(SPEC, [], { DATABASE_URL_SERVICE: 'postgresql://n6b_app_service:d%e:f@db:5432/n6b' }, true);
+    } catch (e) { error = e; }
+    expect(error).toBeInstanceOf(ConfigError);
+    expect((error as ConfigError).variable).toBe('DATABASE_URL_SERVICE');
+    expect((error as Error).message).not.toContain('d%e');
+  });
+
+  it('migrate отказывает паролю роли, который compose подставит в URL без кодирования', () => {
+    expect(() => assertUrlSafePassword('N6B_DB_SERVICE_PASSWORD', PASSWORD)).toThrow(ConfigError);
+    expect(() => assertUrlSafePassword('N6B_DB_SERVICE_PASSWORD', 'ab12'.repeat(12))).not.toThrow();
   });
 });

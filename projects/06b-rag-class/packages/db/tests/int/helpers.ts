@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import pg from 'pg';
+import { pgUrl } from '../../src/boot-config';
 
 export interface TestEnv {
   ownerUrl: string;
@@ -17,12 +18,9 @@ export function env(): TestEnv {
     throw new Error('TEST_DATABASE_URL_OWNER, TEST_TENANT_PASSWORD и TEST_SERVICE_PASSWORD не заданы: '
       + 'интеграционная проверка НЕ выполнена (запуск — compose.test.yml, DEVELOPMENT_GUIDE.md §5)');
   }
-  const as = (user: string, password: string) => {
-    const url = new URL(ownerUrl);
-    url.username = user;
-    url.password = password;
-    return url.toString();
-  };
+  const owner = new URL(ownerUrl);
+  const as = (user: string, password: string) => pgUrl({ user, password, host: owner.hostname,
+    port: Number(owner.port || 5432), database: decodeURIComponent(owner.pathname.slice(1)) });
   return { ownerUrl, tenantPassword, servicePassword,
     tenantUrl: as('n6b_app_tenant', tenantPassword), serviceUrl: as('n6b_app_service', servicePassword) };
 }

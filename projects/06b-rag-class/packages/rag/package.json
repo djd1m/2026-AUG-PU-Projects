@@ -2,6 +2,20 @@
   "name": "@n6b/rag",
   "private": true,
   "version": "0.1.0",
-  "description": "Нарезка, поиск, промпт, проверка цитат, «не знаю». Реализуется фичами chunk-embed и rag-answer-sandbox; в foundation — только манифест workspace.",
-  "type": "module"
+  "description": "Порт провайдера модели, единая дверь платных вызовов (paid-call), отказы по пределам; далее — нарезка, поиск, промпт, проверка цитат (фичи chunk-embed, rag-answer-sandbox).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@n6b/db": "0.1.0"
+  }
 }

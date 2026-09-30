@@ -13,6 +13,7 @@ import { AuthService, type PasswordHasher } from './auth';
 import { createAuthHandler } from './auth-handler';
 import { PgAuthStore } from './auth-store';
 import { loadWebConfig, type WebConfig } from './config';
+import { createPaidRuntime, type PaidRuntime } from './paid';
 
 const hasher: PasswordHasher = {
   hash: (password, cost) => bcrypt.hash(password, cost),
@@ -24,6 +25,8 @@ interface WebRuntime {
   readonly tenantPool: Pool;
   readonly servicePool: Pool;
   readonly auth: AuthService;
+  /** Единственная дверь к платным вызовам процесса web: резерв → журнал → провайдер live (spend-ceilings). */
+  readonly paid: PaidRuntime;
 }
 
 let state: WebRuntime | undefined;
@@ -34,7 +37,8 @@ export function getRuntime(): WebRuntime {
     const tenantPool = createPool(config.DATABASE_URL_TENANT, 'DATABASE_URL_TENANT');
     const servicePool = createPool(config.DATABASE_URL_SERVICE, 'DATABASE_URL_SERVICE');
     state = { config, tenantPool, servicePool,
-      auth: new AuthService(new PgAuthStore(servicePool), hasher, config.SESSION_SECRET) };
+      auth: new AuthService(new PgAuthStore(servicePool), hasher, config.SESSION_SECRET),
+      paid: createPaidRuntime(config, servicePool) };
   }
   return state;
 }

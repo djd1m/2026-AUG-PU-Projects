@@ -9,7 +9,7 @@
 |---|---|---|
 | Монорепо npm workspaces (ADR-001) | `package.json` (5 workspace), `tsconfig*.json`, `vitest*.config.ts` | `docker build` трёх целей Dockerfile — OK (`tests/artifacts/foundation/docker-build.txt`) |
 | 16 сущностей + pgvector (ADR-002) | `packages/db/migrations/001_init.sql` | int: все 16 таблиц, pgvector 0.8.x, HNSW `vector_cosine_ops`, размерность 1536 обязательна |
-| Роли, RLS по `account_id` (NFR-n6b-3) | `002_rls.sql`, `packages/db/src/tenant.ts` | int `rls.test.ts`: 21 тест, под ролью `n6b_app` |
+| Роли, RLS по `account_id` (NFR-n6b-3) | `002_rls.sql`, `packages/db/src/tenant.ts` | две роли входа (`n6b_app_tenant` → `n6b_tenant`, `n6b_app_service` → `n6b_service`, ответ на F-3); четыре файла int: `rls.test.ts`, `rls-catalog.test.ts`, `roles.test.ts`, `tenant-fk.test.ts` (R-1 узкой перепроверки) |
 | Атомарные квоты | `packages/db/src/quota.ts` | int: 50 параллельных при пределе 3 → ровно 3; откат всех ключей попытки |
 | Boot config check (FR-n6b-16, SC-US-016-2) | `packages/db/src/boot-config.ts`, `apps/web/src/server/config.ts`, `apps/web/src/instrumentation.ts`, `services/worker/src/{config,main}.ts` | unit 63 + 3 (процесс воркера); образ web без окружения → exit 1 «OPENROUTER_API_KEY не задан: …» |
 | Регистрация/вход/выход (FR-n6b-1, SC-US-001-1…4) | `apps/web/src/server/{auth,auth-store,auth-handler,ip,runtime}.ts`, `app/api/auth/*` | unit 13 + int 9 на реальном bcrypt 12 и `quota_counter`; образ web: регистрация → 201 и cookie |

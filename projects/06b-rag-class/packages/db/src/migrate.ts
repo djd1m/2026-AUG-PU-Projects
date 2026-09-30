@@ -8,6 +8,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
+import { assertUrlSafePassword } from './boot-config.js';
 
 const MIGRATIONS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'migrations');
 const LOCK_KEY = 6_020_930; // произвольная константа advisory-блокировки миграций N6b
@@ -28,6 +29,8 @@ export async function migrate({ ownerUrl, tenantPassword, servicePassword, log =
   if (!servicePassword) {
     throw new Error('N6B_DB_SERVICE_PASSWORD не задан: вход, квоты и воркер (n6b_app_service) не смогут подключиться');
   }
+  assertUrlSafePassword('N6B_DB_TENANT_PASSWORD', tenantPassword);
+  assertUrlSafePassword('N6B_DB_SERVICE_PASSWORD', servicePassword);
   const client = new pg.Client({ connectionString: ownerUrl });
   await client.connect();
   const applied: string[] = [];
