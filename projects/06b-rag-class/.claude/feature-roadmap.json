@@ -75,7 +75,7 @@
       "name": "Потолки расходов, журнал вызовов модели, порт провайдера OpenRouter с закреплённым исполнителем",
       "description": "quota_counter и reserve_quota одной инструкцией на ключ, все ключи попытки в одной транзакции, сутки по МСК; ключи answer:visitor/bot/global, answer:sandbox:account/global, embed:account/global; model_call_log START до вызова и ровно один OUTCOME; порт провайдера (fake/live) с дедлайном, без скрытых повторов, provider {order:[\"openai\"], allow_fallbacks:false} в обоих вызовах, отказ исполнителя → 503. Деньги: тир XL — остановка на плане у владельца.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "XL",
       "depends_on": [
@@ -122,7 +122,7 @@
       "name": "Источник и задача индексации: ручка до работы, аренда с fence, три состояния",
       "description": "POST источника → 202 {job_id} до работы; частичный unique живой задачи источника (идемпотентный ключ); воркер SKIP LOCKED + leased_until + lease_fence, ≤3 захвата, уборщик; потолок 15 мин от run_started_at; экран «выполняется N из M» / «готово» / «ошибка + Повторить»; docs/long-job-contract.md с квитанцией.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
