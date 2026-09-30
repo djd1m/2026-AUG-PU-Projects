@@ -37,7 +37,7 @@ flowchart LR
   subgraph Data["Данные"]
     DB[(Postgres 16 + pgvector 0.8.6<br/>без публикации порта)]
   end
-  OAI[[OpenAI API<br/>v1/embeddings · v1/chat/completions]]
+  OAI[[OpenRouter API<br/>/api/v1/embeddings · /api/v1/chat/completions]]
   SITE[[Сайт владельца<br/>robots.txt, sitemap, страницы]]
   OWN --> PX --> WEB
   HOST --> PX
@@ -85,11 +85,11 @@ Every capability this product needs from someone else's service. One row per cap
 
 | Capability needed | Provider / API | Evidence | Verdict | Requirements relying on it |
 |---|---|---|---|---|
-| Векторизация текста в вектор длины 1536 | OpenAI API, `POST v1/embeddings`, модель `text-embedding-3-small` | https://developers.openai.com/api/docs/guides/embeddings · checked 2026-09-30 · «By default, the length of the embedding vector is 1536 for text-embedding-3-small» | CONFIRMED | FR-n6b-4, FR-n6b-5, FR-n6b-16 |
-| Модель эмбеддингов обслуживается эндпоинтом эмбеддингов, цена $0.02 за 1M токенов | OpenAI API, `text-embedding-3-small` | https://developers.openai.com/api/docs/models/text-embedding-3-small · checked 2026-09-30 · «Embeddings Per 1M tokens ∙ Batch API price Cost $0.02» | CONFIRMED | FR-n6b-16 |
-| Генерация ответа по переданным фрагментам | OpenAI API, `POST v1/chat/completions`, модель `gpt-4.1-mini` | https://developers.openai.com/api/docs/models/gpt-4.1-mini · checked 2026-09-30 · «Chat Completions v1/chat/completions» | CONFIRMED | FR-n6b-5, FR-n6b-6 |
-| Ответ модели в заданной JSON-схеме (`answer`, `cited_ids`, `unknown`) | OpenAI API, `gpt-4.1-mini` | https://developers.openai.com/api/docs/models/gpt-4.1-mini · checked 2026-09-30 · «Structured outputs Supported» | CONFIRMED | FR-n6b-5, FR-n6b-6 |
-| Цена генерации для потолков: вход/выход за 1M токенов | OpenAI API, `gpt-4.1-mini` | https://developers.openai.com/api/docs/models/gpt-4.1-mini · checked 2026-09-30 · «Input $0.40 Cached input $0.10 Output $1.60» | CONFIRMED | FR-n6b-16 |
+| Векторизация текста в вектор длины 1536 | OpenRouter API, `POST https://openrouter.ai/api/v1/embeddings`, модель `openai/text-embedding-3-small`, поле `dimensions` | https://openrouter.ai/docs/api-reference/embeddings/create-embeddings · checked 2026-09-30 · «--url https://openrouter.ai/api/v1/embeddings … "dimensions": 1536 … "model": "openai/text-embedding-3-small"» | CONFIRMED | FR-n6b-4, FR-n6b-5, FR-n6b-16 |
+| Модель эмбеддингов есть в каталоге шлюза, цена $0.02 за 1M токенов | OpenRouter API, `GET https://openrouter.ai/api/v1/embeddings/models`, `openai/text-embedding-3-small` | https://openrouter.ai/api/v1/embeddings/models · checked 2026-09-30 · «openai/text-embedding-3-small … pricing: prompt 0.00000002, completion 0; context_length 8192» | CONFIRMED | FR-n6b-16 |
+| Генерация ответа по переданным фрагментам; формат поля `model` для OpenAI-моделей — `openai/<имя>` | OpenRouter API, `POST https://openrouter.ai/api/v1/chat/completions`, модель `openai/gpt-4.1-mini` | https://openrouter.ai/docs/quickstart · checked 2026-09-30 · «curl https://openrouter.ai/api/v1/chat/completions -H "Authorization: Bearer $OPENROUTER_API_KEY»; https://openrouter.ai/docs/guides/overview/models · «id … Unique model identifier used in API requests (e.g., "google/gemini-2.5-pro-preview")»; https://openrouter.ai/api/v1/models · «id: openai/gpt-4.1-mini» | CONFIRMED | FR-n6b-5, FR-n6b-6 |
+| Ответ модели в заданной JSON-схеме (`answer`, `cited_ids`, `unknown`) | OpenRouter API, `response_format: json_schema`, `openai/gpt-4.1-mini` | https://openrouter.ai/docs/api-reference/overview · checked 2026-09-30 · «{ type: 'json_schema', json_schema: { ... } } : Strict schema mode - the model will return JSON matching your exact schema»; https://openrouter.ai/api/v1/models · `openai/gpt-4.1-mini` supported_parameters содержит `structured_outputs`, `response_format` | CONFIRMED | FR-n6b-5, FR-n6b-6 |
+| Цена генерации для потолков: вход/выход за 1M токенов | OpenRouter API, `openai/gpt-4.1-mini` | https://openrouter.ai/api/v1/models · checked 2026-09-30 · «pricing: prompt 0.0000004, completion 0.0000016» (= $0.40 / $1.60 за 1M; совпадает с прайсом производителя, `Research_Findings.md` T6) | CONFIRMED | FR-n6b-16 |
 | Поиск ближайших векторов HNSW по косинусному расстоянию с фильтром | pgvector 0.8.6 (расширение в нашем контейнере) | https://raw.githubusercontent.com/pgvector/pgvector/master/README.md · checked 2026-09-30 · «CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)» | CONFIRMED | FR-n6b-5, NFR-n6b-1 |
 | Итеративный скан HNSW, добирающий top-5 при фильтре `bot_id` (нужна версия pgvector ≥ 0.8) | pgvector 0.8.6 (расширение в нашем контейнере) | https://raw.githubusercontent.com/pgvector/pgvector/master/README.md · checked 2026-09-30 · «SET hnsw.iterative_scan = strict_order;» | CONFIRMED | FR-n6b-5, FR-n6b-6 |
 
@@ -142,7 +142,7 @@ Every capability this product needs from someone else's service. One row per cap
 - **Авторизация:** RLS по `account_id` через роль приложения и `SET LOCAL app.account_ids` в транзакции; студия видит дочерние
   аккаунты только при `studio_access=true`; подаккаунт создаётся с `studio_access=true` явно, у обычного аккаунта `false`
   (DEFAULT false в схеме). Оператор — по списку id в таблице `operator` (пусто = никто).
-- **Публичные ручки входа:** регистрация и вход — 10 попыток/час на адрес (`quota_counter`, ключ `auth:addr:<hmac>:<час>`).
+- **Публичные ручки входа:** регистрация и вход — 10 попыток/час на адрес (IPv6 — на префикс /64; `quota_counter`, ключ `auth:addr:<hmac>:<час>`).
 - **Публичные ручки:** `/api/widget/*` — origin из списка бота; `/b/*`, `/r/b/*` — без сессии; все публичные ответы без
   `credentials`, CORS не ставит `*`.
 - **Модель и данные:** инструкция модели отделена от фрагментов; фрагменты — данные; ответ выводится как текст; ссылки из БД.
