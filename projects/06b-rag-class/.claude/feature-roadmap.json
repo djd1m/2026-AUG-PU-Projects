@@ -122,7 +122,7 @@
       "name": "Источник и задача индексации: ручка до работы, аренда с fence, три состояния",
       "description": "POST источника → 202 {job_id} до работы; частичный unique живой задачи источника (идемпотентный ключ); воркер SKIP LOCKED + leased_until + lease_fence, ≤3 захвата, уборщик; потолок 15 мин от run_started_at; экран «выполняется N из M» / «готово» / «ошибка + Повторить»; docs/long-job-contract.md с квитанцией.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -161,7 +161,7 @@
       "name": "Нарезка и эмбеддинги в pgvector с кэшем по хэшу",
       "description": "Chunk and embed: ≈500 токенов (js-tiktoken), text_sha256 — повтор не платит за неизменённое; embeddings через порт (исполнитель закреплён), пределы embed:* ДО вызова; HNSW vector_cosine_ops, изоляция ботов итеративным сканом.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
