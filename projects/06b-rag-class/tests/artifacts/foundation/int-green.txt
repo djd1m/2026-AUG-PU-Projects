@@ -1,0 +1,22 @@
+
+ RUN  v3.2.7 /app
+
+ ✓ apps/web/tests/int/auth.int.test.ts (9 tests) 10807ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-1: аккаунт плана free и сессия; в БД — HMAC токена, не токен; срок 7 дней  469ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-2: неверный пароль и чужой e-mail — одинаковый ответ; для чужого сверяется фиктивный хэш  917ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-3: kind=studio → аккаунт studio; неизвестный kind → owner  630ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > повтор e-mail в другом регистре → 409, второй аккаунт и сессия не созданы  595ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: 11-я попытка с адреса за час → 429, bcrypt не вызван, аккаунт не создан  2234ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: IPv6 — разные адреса одной /64 делят счётчик, соседняя /64 — нет  3490ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > конкурентно: 20 одновременных попыток с одного адреса при пределе 10 → ровно 10 дошли до bcrypt  1815ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > IP не хранится: ключ счётчика — HMAC адреса  323ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > выход удаляет сессию из БД  325ms
+ ✓ packages/db/tests/int/rls.test.ts (21 tests) 526ms
+ ✓ packages/db/tests/int/quota.test.ts (5 tests) 367ms
+
+ Test Files  3 passed (3)
+      Tests  35 passed (35)
+   Start at  19:01:57
+   Duration  14.61s (transform 412ms, setup 0ms, collect 680ms, tests 11.70s, environment 1ms, prepare 468ms)
+
+int-exit=0
