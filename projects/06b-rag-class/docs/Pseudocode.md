@@ -45,6 +45,7 @@ BadgeEvent   { id: UUID, bot_id: UUID, kind: Enum{impression, click, tamper}, vi
 GrowthEvent  { id: UUID, account_id: UUID, kind: Enum{first_cited_answer, badge_removal_intent}, created_at: Timestamp }
 HandoverToken{ id: UUID, account_id: UUID /* подаккаунт */, token_hash: Text, expires_at: Timestamp,
                used_at: Timestamp?, created_at: Timestamp }
+Operator     { id: UUID, account_id: UUID(unique), created_at: Timestamp } /* пусто = доступа к /admin нет ни у кого */
 ```
 
 ## Core Algorithms
@@ -294,7 +295,7 @@ REALISES: SC-US-015-3
 INPUT: оператор
 OUTPUT: панель метрик
 STEPS:
-1. IF account.id ∉ OPERATOR_ACCOUNT_IDS (список в БД, пустой = доступа нет) THEN 404.
+1. IF account.id ∉ SELECT account_id FROM operator (пустая таблица = доступа нет ни у кого) THEN 404.
 2. domains ← count(DISTINCT origin_host FROM widget_install); impressions, clicks ← count по badge_event;
    signups_ref ← count(account WHERE referred_by_bot_id ≠ null).
 3. conv ← IF clicks = 0 THEN «нет данных» ELSE signups_ref / clicks; K ← IF signups_ref < 30 THEN «n < 30, не считается».

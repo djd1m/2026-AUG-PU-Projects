@@ -71,6 +71,7 @@ $0.02 за 1M токенов; pgvector хранит `vector` до 2000 изме�
 | T8 | robots.txt недоступен из-за ошибок сервера/сети → считать полным запретом | «If the robots.txt file is unreachable due to server or network errors, this means the robots.txt file is undefined and the crawler MUST assume complete disallow» | https://www.rfc-editor.org/rfc/rfc9309.txt (sha `f633915d…`) | `FETCH` |
 | T9 | robots.txt «Unavailable» (4xx) → разрешено всё | «then the crawler MAY access any resources on the server» | тот же RFC | `FETCH` |
 | T10 | Лимит разбора robots.txt ≥ 500 KiB | «The parsing limit MUST be at least 500 kibibytes» | тот же RFC | `FETCH` |
+| T12 | Фильтр `WHERE` при HNSW применяется после сканирования индекса; для большего числа строк — итеративный скан | «SET hnsw.iterative_scan = strict_order;» | README pgvector (sha `54cb3a5f…`) | `FETCH` |
 | T11 | Образ `pgvector/pgvector` публикует закреплённые теги вида `0.8.6-pg16` | список тегов API Docker Hub содержит `0.8.6-pg16` | https://hub.docker.com/v2/repositories/pgvector/pgvector/tags?page_size=30 (sha `3819bba9…`) | `FETCH` |
 
 **Вывод по генерации (T6 vs T7).** Для ответа по найденным фрагментам рассуждение не нужно, а его токены оплачиваются как
