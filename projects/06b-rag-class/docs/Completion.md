@@ -55,7 +55,7 @@
 | Error rate | > 1% | Slack | канал в MVP — журнал; Slack не подключён |
 | CPU usage | > 80% | Email | `docker stats`, вручную; почты нет |
 | Ответ посетителю p95 | > 6 с | `/admin/metrics` | NFR-n6b-1 |
-| Отказы модели (`model_call_log.state=failed`) | > 5% за час | `/admin/metrics` | причина «сервис ответа недоступен» |
+| Отказы модели (`model_call_log.state=failed`) | > 5% за час | `/admin/metrics` | причина «сервис ответа временно недоступен» |
 | Расход на сутки (попытки, токены) | ≥ 80% любого глобального предела | `/admin/metrics` + https://openrouter.ai/activity | ADR-010 |
 | Задачи `failed` | > 20% за сутки | `/admin/metrics` | разбор причин |
 | Доля `outcome=limited` среди вопросов виджета и демо | > 5 % за сутки при ≥ 100 вопросах | `/admin/metrics` | реакция: переход с единицы /24 на сессионную единицу посетителя новым ADR (ADR-010, M-4) |
