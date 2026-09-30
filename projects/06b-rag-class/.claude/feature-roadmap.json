@@ -1,0 +1,662 @@
+{
+  "version": "1.0",
+  "project": "N6b «RAG-бот для сайта» — бот по страницам и PDF владельца со ссылкой на источник и честным «не знаю»",
+  "generated_from": [
+    "docs/PRD.md",
+    "docs/Specification.md",
+    "docs/Pseudocode.md",
+    "docs/Architecture.md",
+    "docs/ADR.md",
+    "docs/Refinement.md",
+    "docs/Completion.md",
+    "docs/discovery/reuse-inventory.md"
+  ],
+  "notes": {
+    "state": "Реализация не начиналась: package.json, миграций и тестов нет. Скелеты Фазы 4 (docker-compose.yml, Dockerfile, .env.example, .dockerignore) не собираются до фичи foundation — это названный пробел, а не зелёная сборка.",
+    "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
+    "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
+    "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
+    "priority": "Must → mvp, Should → high (PRD §7.1). badge-referral несёт US-010 (Should) вместе с US-011 (Must) и помечен mvp.",
+    "validation_caveats": "Вердикт Фазы 2 — 🟡 CAVEATS 88/100 (итерация 3). N3-1…N3-3 внесены после валидации; отчёт привязан к прежней ревизии Specification. Открыто у владельца: подтверждение OpenRouter (OWN-06B-007), числа песочницы 100/2000 и входа 10/час, допущение OWN-06B-005."
+  },
+  "features": [
+    {
+      "id": "foundation",
+      "number": 1,
+      "name": "Монорепо, схема БД с RLS, отказ старта без конфигурации, регистрация и вход",
+      "description": "npm workspaces (apps/web, apps/widget, services/worker, packages/db, packages/rag); миграции всех 16 сущностей Pseudocode → Data Structures с pgvector, ролями и RLS по account_id; Boot config check (13 переменных, закрытый список, EXIT 1 с именем); регистрация и вход (bcrypt 12, фиктивный хэш, сессия HMAC, 10 попыток/час на адрес, IPv6 /64); GET /api/health; scripts/check-env-wiring.sh.",
+      "priority": "mvp",
+      "status": "next",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [],
+      "blockers": [],
+      "us_ids": [
+        "US-001",
+        "US-016"
+      ],
+      "fr_ids": [
+        "FR-n6b-1",
+        "FR-n6b-16",
+        "NFR-n6b-3",
+        "NFR-n6b-5"
+      ],
+      "sc_ids": [
+        "SC-US-001-1",
+        "SC-US-001-2",
+        "SC-US-001-3",
+        "SC-US-001-4",
+        "SC-US-016-2"
+      ],
+      "adr_ids": [
+        "ADR-001",
+        "ADR-014"
+      ],
+      "reuse": [
+        "N5#24 auth bcrypt + фиктивный хэш — projects/05-podcast-clips-opus/apps/web/src/server/auth*.ts",
+        "N1#6 сессия HMAC, fail-closed SESSION_SECRET — projects/01-testimonials-senja/apps/web/src/lib/session.ts",
+        "N1#9 RLS-транзакция SET LOCAL — projects/01-testimonials-senja/packages/db/migrations/{002_roles,007_rls}.sql",
+        "N1/N4/N5#10 стражи стыков — check-env-wiring (N5 .mjs), check-compose-buildable.sh",
+        "N5#22 compose-каркас — projects/05-podcast-clips-opus/docker-compose.yml"
+      ],
+      "expected_files": [
+        "package.json",
+        "packages/db/migrations/001_init.sql",
+        "packages/db/migrations/002_rls.sql",
+        "apps/web/src/server/config.ts",
+        "apps/web/src/server/auth.ts",
+        "apps/web/src/app/api/health/route.ts",
+        "scripts/check-env-wiring.sh"
+      ]
+    },
+    {
+      "id": "spend-ceilings",
+      "number": 2,
+      "name": "Потолки расходов, журнал вызовов модели, порт провайдера OpenRouter с закреплённым исполнителем",
+      "description": "quota_counter и reserve_quota одной инструкцией на ключ, все ключи попытки в одной транзакции, сутки по МСК; ключи answer:visitor/bot/global, answer:sandbox:account/global, embed:account/global; model_call_log START до вызова и ровно один OUTCOME; порт провайдера (fake/live) с дедлайном, без скрытых повторов, provider {order:[\"openai\"], allow_fallbacks:false} в обоих вызовах, отказ исполнителя → 503. Деньги: тир XL — остановка на плане у владельца.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "XL",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-016",
+        "US-005"
+      ],
+      "fr_ids": [
+        "FR-n6b-16",
+        "FR-n6b-5"
+      ],
+      "sc_ids": [
+        "SC-US-016-1",
+        "SC-US-016-3",
+        "SC-US-016-4",
+        "SC-US-005-4"
+      ],
+      "adr_ids": [
+        "ADR-004",
+        "ADR-010",
+        "ADR-011"
+      ],
+      "reuse": [
+        "N4#14 атомарные квоты — projects/04-calorie-vision-cal-ai/apps/api/src/quota/*, packages/db/src/quota.ts",
+        "N4#15 журнал вызовов модели — projects/04-calorie-vision-cal-ai/apps/recognizer/src/observability/model-call-log.ts",
+        "N4#16 порт провайдера fake/live/OpenRouter — projects/04-calorie-vision-cal-ai/apps/recognizer/src/provider/*",
+        "N5#19 потолки по контракту — projects/05-podcast-clips-opus/packages/db/src/quota.ts, apps/worker/src/llm/spend.ts",
+        "N5#20 ключ посетителя HMAC /24·/64 — projects/05-podcast-clips-opus/apps/web/src/server/ip.ts"
+      ],
+      "expected_files": [
+        "packages/db/src/quota.ts",
+        "packages/rag/src/provider/port.ts",
+        "packages/rag/src/provider/openrouter.ts",
+        "packages/rag/src/provider/fake.ts",
+        "packages/db/src/model-call-log.ts"
+      ]
+    },
+    {
+      "id": "index-jobs",
+      "number": 3,
+      "name": "Источник и задача индексации: ручка до работы, аренда с fence, три состояния",
+      "description": "POST источника → 202 {job_id} до работы; частичный unique живой задачи источника (идемпотентный ключ); воркер SKIP LOCKED + leased_until + lease_fence, ≤3 захвата, уборщик; потолок 15 мин от run_started_at; экран «выполняется N из M» / «готово» / «ошибка + Повторить»; docs/long-job-contract.md с квитанцией.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-004"
+      ],
+      "fr_ids": [
+        "FR-n6b-4"
+      ],
+      "sc_ids": [
+        "SC-US-004-1",
+        "SC-US-004-2",
+        "SC-US-004-3",
+        "SC-US-004-4"
+      ],
+      "adr_ids": [
+        "ADR-005"
+      ],
+      "reuse": [
+        "N4#13 аренда + fence + уборщик — projects/04-calorie-vision-cal-ai/apps/recognizer/src/{lease.ts,recognize/sweep-stuck-scans.ts}",
+        "N1#7 воркер SKIP LOCKED без Redis — projects/01-testimonials-senja/services/worker/"
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/bots/[id]/sources/route.ts",
+        "apps/web/src/app/api/jobs/[id]/route.ts",
+        "services/worker/src/lease.ts",
+        "services/worker/src/sweeper.ts"
+      ]
+    },
+    {
+      "id": "chunk-embed",
+      "number": 4,
+      "name": "Нарезка и эмбеддинги в pgvector с кэшем по хэшу",
+      "description": "Chunk and embed: ≈500 токенов (js-tiktoken), text_sha256 — повтор не платит за неизменённое; embeddings через порт (исполнитель закреплён), пределы embed:* ДО вызова; HNSW vector_cosine_ops, изоляция ботов итеративным сканом.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "spend-ceilings",
+        "index-jobs"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-017"
+      ],
+      "fr_ids": [
+        "FR-n6b-4",
+        "FR-n6b-16",
+        "FR-n6b-17"
+      ],
+      "sc_ids": [
+        "SC-US-017-2"
+      ],
+      "adr_ids": [
+        "ADR-002",
+        "ADR-004"
+      ],
+      "reuse": [
+        "писать с нуля — pgvector и эмбеддинги в N1–N5 отсутствуют (reuse-inventory, «Чего нет»)",
+        "N4#16 порт провайдера — нужен новый метод embed"
+      ],
+      "expected_files": [
+        "packages/rag/src/chunk.ts",
+        "services/worker/src/embed.ts",
+        "packages/db/migrations/003_hnsw.sql"
+      ]
+    },
+    {
+      "id": "crawl-site",
+      "number": 5,
+      "name": "Обход сайта: RFC 9309, sitemap, тот же хост, SSRF-фильтр, 100 страниц на Free",
+      "description": "Crawl site: robots.txt (503 → полный запрет), sitemap, только тот же хост, блочное извлечение cheerio, seen пополняется при взятии URL, «обойдено 100 из ≥101»; SSRF: DNS до запроса, запрет частных/loopback/metadata, повтор проверки на редиректах, порты 80/443.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "chunk-embed"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-002"
+      ],
+      "fr_ids": [
+        "FR-n6b-2"
+      ],
+      "sc_ids": [
+        "SC-US-002-1",
+        "SC-US-002-2",
+        "SC-US-002-3"
+      ],
+      "adr_ids": [
+        "ADR-013"
+      ],
+      "reuse": [
+        "писать с нуля — обходчик и robots/sitemap в N1–N5 отсутствуют"
+      ],
+      "expected_files": [
+        "services/worker/src/crawl/robots.ts",
+        "services/worker/src/crawl/ssrf.ts",
+        "services/worker/src/crawl/crawl.ts"
+      ]
+    },
+    {
+      "id": "pdf-source",
+      "number": 6,
+      "name": "PDF-источник: загрузка ≤10 МБ в Postgres, извлечение текста постранично",
+      "description": "Приём PDF (сигнатура %PDF, > 10 МБ → 413), source_file.bytes bytea, Extract PDF через pdfjs-dist постранично, скан без текста → задача failed с причиной; ссылка «файл, стр. N».",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "chunk-embed"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-003"
+      ],
+      "fr_ids": [
+        "FR-n6b-3"
+      ],
+      "sc_ids": [
+        "SC-US-003-1",
+        "SC-US-003-2",
+        "SC-US-003-3"
+      ],
+      "adr_ids": [
+        "ADR-012"
+      ],
+      "reuse": [
+        "N5#23 проверка типа по magic bytes — projects/05-podcast-clips-opus/apps/web/src/server/upload-*.ts (S3 не нужен)",
+        "извлечение текста PDF — писать с нуля"
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/bots/[id]/sources/pdf/route.ts",
+        "services/worker/src/pdf/extract.ts"
+      ]
+    },
+    {
+      "id": "rag-answer-sandbox",
+      "number": 7,
+      "name": "RAG-ответ со ссылкой и «не знаю + контакт» в песочнице",
+      "description": "Answer question: валидация ≤500 → пределы ДО платного вызова → эмбеддинг вопроса → top-5 → порог MIN_SIMILARITY (ниже — «не знаю» без генерации) → gpt-4.1-mini JSON {answer, cited_ids, unknown} → cited_ids ⊆ выдачи → ссылки только из БД, URL из текста вырезаются; CTA в момент первого ответа со ссылкой (FR-GROWTH-001).",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "chunk-embed"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-005",
+        "US-006"
+      ],
+      "fr_ids": [
+        "FR-n6b-5",
+        "FR-n6b-6"
+      ],
+      "sc_ids": [
+        "SC-US-005-1",
+        "SC-US-005-2",
+        "SC-US-005-3",
+        "SC-US-006-1",
+        "SC-US-006-2"
+      ],
+      "adr_ids": [
+        "ADR-003",
+        "ADR-004"
+      ],
+      "reuse": [
+        "писать с нуля — RAG-ответ и «не знаю + контакт» в N1–N5 отсутствуют",
+        "N4#16 порт провайдера — схема vision → текст с цитатами"
+      ],
+      "expected_files": [
+        "packages/rag/src/answer.ts",
+        "packages/rag/src/prompt.ts",
+        "packages/rag/src/citations.ts",
+        "apps/web/src/app/api/bots/[id]/ask/route.ts"
+      ]
+    },
+    {
+      "id": "publish-bot",
+      "number": 8,
+      "name": "Публикация бота: контакт, разрешённые origin, код вставки",
+      "description": "Publish bot: контакт e-mail / E.164 / https обязателен (иначе 422), нормализация origin, пустой список = закрыто, по умолчанию предлагается origin сайта-источника; выдача <script src=PUBLIC_BASE_URL/w.js data-bot async>.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "medium",
+      "tier": "M",
+      "depends_on": [
+        "rag-answer-sandbox"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-006",
+        "US-007"
+      ],
+      "fr_ids": [
+        "FR-n6b-6",
+        "FR-n6b-7"
+      ],
+      "sc_ids": [
+        "SC-US-006-3",
+        "SC-US-007-2"
+      ],
+      "adr_ids": [
+        "ADR-007"
+      ],
+      "reuse": [
+        "N1#4 normalizeDomain — projects/01-testimonials-senja/apps/web/src/lib/widget-install.ts"
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/bots/[id]/publish/route.ts",
+        "apps/web/src/server/origin.ts"
+      ]
+    },
+    {
+      "id": "widget",
+      "number": 9,
+      "name": "Виджет w.js на чужом сайте: CORS по списку, Shadow DOM, уведомление 152-ФЗ, бейдж",
+      "description": "Бандл ≤30 KB gzip без инлайновых script/style (adoptedStyleSheets); Widget ask gate (Origin из списка, иначе 403 без CORS; OPTIONS 204; ключ посетителя); Widget config (privacy_notice до первого вопроса, badge_required решает сервер, plan_of fail-closed), самовосстановление бейджа; docs/embed-contract.md — проверка на ЧУЖОМ origin под ограничительным CSP и враждебным CSS.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "publish-bot"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-007",
+        "US-008",
+        "US-009"
+      ],
+      "fr_ids": [
+        "FR-n6b-7",
+        "FR-n6b-8",
+        "FR-n6b-9"
+      ],
+      "sc_ids": [
+        "SC-US-007-1",
+        "SC-US-007-3",
+        "SC-US-008-1",
+        "SC-US-008-2",
+        "SC-US-008-3",
+        "SC-US-008-4",
+        "SC-US-009-1",
+        "SC-US-009-2",
+        "SC-US-009-3"
+      ],
+      "adr_ids": [
+        "ADR-006",
+        "ADR-007"
+      ],
+      "reuse": [
+        "N1#1 виджет Shadow DOM + esbuild ≤30 KB — projects/01-testimonials-senja/apps/widget/",
+        "N1#2 бейдж на клиенте, MutationObserver — projects/01-testimonials-senja/apps/widget/src/badge.ts",
+        "N1#3 бейдж решает сервер, tariff fail-closed — projects/01-testimonials-senja/apps/web/src/lib/{badge,widget-config,tariff}.ts",
+        "N2#12 ступенчатый лимитер — projects/02-review-qr-reputation/services/intake/src/{limit,barrier}.ts"
+      ],
+      "expected_files": [
+        "apps/widget/src/index.ts",
+        "apps/widget/src/badge.ts",
+        "apps/web/src/app/api/widget/ask/route.ts",
+        "apps/web/src/app/api/widget/config/route.ts",
+        "apps/web/src/server/plan.ts",
+        "docs/embed-contract.md"
+      ]
+    },
+    {
+      "id": "badge-referral",
+      "number": 10,
+      "name": "Намерение снять бейдж, клик бейджа, лендинг и атрибуция регистрации",
+      "description": "Кнопка «убрать бейдж» пишет growth_event(badge_removal_intent) раз в сутки, бейдж не меняется; GET /r/b/{public_id} → badge_event(click) уникально за сутки → 302 /?ref&utm_source=badge; cookie n6b_ref 30 дней первым касанием; referred_by_bot_id при регистрации, самореферал внутри семьи студии не засчитывается.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "widget"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-010",
+        "US-011"
+      ],
+      "fr_ids": [
+        "FR-n6b-10",
+        "FR-n6b-11"
+      ],
+      "sc_ids": [
+        "SC-US-010-1",
+        "SC-US-011-1",
+        "SC-US-011-2"
+      ],
+      "adr_ids": [
+        "ADR-006"
+      ],
+      "reuse": [
+        "N1#3 ручка badge-click — projects/01-testimonials-senja/apps/web/src/app/api/widget/badge-click/route.ts",
+        "N5#25 атрибуция по cookie — projects/05-podcast-clips-opus/apps/web/src/server/{partner,partner-code}.ts"
+      ],
+      "expected_files": [
+        "apps/web/src/app/r/b/[publicId]/route.ts",
+        "apps/web/src/app/page.tsx",
+        "apps/web/src/server/referral.ts"
+      ]
+    },
+    {
+      "id": "weekly-metric",
+      "number": 11,
+      "name": "Метрика недели: внешние виджеты (бот × хост) и панель оператора",
+      "description": "widget_install: config_seen_at при загрузке конфига, first_question_at только после вопроса с того же origin; metric_host() одна для origin и страницы (снимает www.); excluded() — наш хост, localhost, IP, частные, превью-домены (закрытый список, OWN-06B-005); /admin/metrics только для таблицы operator; перепроверка страницы оператором через SSRF-фильтр.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "widget"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-015"
+      ],
+      "fr_ids": [
+        "FR-n6b-15"
+      ],
+      "sc_ids": [
+        "SC-US-015-1",
+        "SC-US-015-2",
+        "SC-US-015-3",
+        "SC-US-015-4",
+        "SC-US-015-5"
+      ],
+      "adr_ids": [
+        "ADR-007"
+      ],
+      "reuse": [
+        "N1#4 учёт установок ON CONFLICT DO NOTHING — projects/01-testimonials-senja/apps/web/src/lib/widget-install.ts, packages/db/migrations/004_growth.sql"
+      ],
+      "expected_files": [
+        "apps/web/src/server/metric-host.ts",
+        "apps/web/src/app/admin/metrics/page.tsx",
+        "apps/web/src/server/widget-install.ts"
+      ]
+    },
+    {
+      "id": "demo-page",
+      "number": 12,
+      "name": "Публичная демо-страница сохранённого бота /b/{slug}",
+      "description": "GET /b/{slug} только при published AND demo_enabled (иначе 404), X-Robots-Tag noindex, no-store, frame-ancestors 'none' + X-Frame-Options DENY; POST /api/demo/{slug}/ask только application/json и Origin = наш origin, иначе 403 до квоты; те же пределы посетителя, widget_install не пишется.",
+      "priority": "high",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "publish-bot"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-012"
+      ],
+      "fr_ids": [
+        "FR-n6b-12"
+      ],
+      "sc_ids": [
+        "SC-US-012-1",
+        "SC-US-012-2",
+        "SC-US-012-3",
+        "SC-US-012-4",
+        "SC-US-012-5"
+      ],
+      "adr_ids": [
+        "ADR-009"
+      ],
+      "reuse": [
+        "N5/N2#26 публичные страницы без входа — projects/05-podcast-clips-opus/apps/web/src/app/{c/[code],g/[guest_code]}/route.ts, projects/02-review-qr-reputation/apps/guest/src/*"
+      ],
+      "expected_files": [
+        "apps/web/src/app/b/[slug]/page.tsx",
+        "apps/web/src/app/api/demo/[slug]/ask/route.ts"
+      ]
+    },
+    {
+      "id": "studio-subaccounts",
+      "number": 13,
+      "name": "Подаккаунты клиентов студии",
+      "description": "Studio sub-account: до 5 подаккаунтов на студию (FOR NO KEY UPDATE строки студии), один уровень (триггер), studio_access=true у подаккаунта явно, RLS видит дочерние только при studio_access.",
+      "priority": "high",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "L",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-013"
+      ],
+      "fr_ids": [
+        "FR-n6b-13"
+      ],
+      "sc_ids": [
+        "SC-US-013-1",
+        "SC-US-013-2",
+        "SC-US-013-3"
+      ],
+      "adr_ids": [
+        "ADR-008"
+      ],
+      "reuse": [
+        "N2#11 parent_account_id + триггер «один уровень» + RLS — projects/02-review-qr-reputation/packages/db/migrations/{002_core,007_rls_owner}.sql"
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/studio/clients/route.ts",
+        "packages/db/migrations/004_studio.sql"
+      ]
+    },
+    {
+      "id": "handover",
+      "number": 14,
+      "name": "Передача аккаунта клиенту студии",
+      "description": "Handover to client: одноразовый токен (хэш), приём задаёт e-mail и пароль, занятый e-mail → 409 без расхода токена, keep_studio_access решает клиент; боты, public_id и код вставки не меняются. Смена границы владения и RLS — тир XL, остановка на плане.",
+      "priority": "high",
+      "status": "blocked",
+      "complexity": "complex",
+      "tier": "XL",
+      "depends_on": [
+        "studio-subaccounts"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-014"
+      ],
+      "fr_ids": [
+        "FR-n6b-14"
+      ],
+      "sc_ids": [
+        "SC-US-014-1",
+        "SC-US-014-2",
+        "SC-US-014-3",
+        "SC-US-014-4"
+      ],
+      "adr_ids": [
+        "ADR-008"
+      ],
+      "reuse": [
+        "N2#11 план передачи (тир XL, кода нет) — projects/02-review-qr-reputation/docs/features/client-account-handover/"
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/studio/clients/[id]/handover/route.ts",
+        "apps/web/src/app/handover/[token]/page.tsx"
+      ]
+    },
+    {
+      "id": "source-management",
+      "number": 15,
+      "name": "Управление источниками и сроки хранения",
+      "description": "Удаление источника каскадом (при живой задаче 409), уборщик question_log 30 дней и quota_counter, счётчик «не знаю» за 7 дней на экране бота — только числа.",
+      "priority": "high",
+      "status": "blocked",
+      "complexity": "medium",
+      "tier": "M",
+      "depends_on": [
+        "crawl-site",
+        "pdf-source"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-017"
+      ],
+      "fr_ids": [
+        "FR-n6b-17",
+        "NFR-n6b-4"
+      ],
+      "sc_ids": [
+        "SC-US-017-1",
+        "SC-US-017-3"
+      ],
+      "adr_ids": [
+        "ADR-005"
+      ],
+      "reuse": [
+        "N1#5 очистка воркером — projects/01-testimonials-senja/services/worker/src/cleanup-job.ts"
+      ],
+      "expected_files": [
+        "apps/web/src/app/api/sources/[id]/route.ts",
+        "services/worker/src/retention.ts"
+      ]
+    },
+    {
+      "id": "release-gate",
+      "number": 16,
+      "name": "Ворота выпуска: калибровка «не знаю», сквозной CJM и виджет на чужом origin на стенде",
+      "description": "Калибровка 30 вопросов на живой gpt-4.1-mini (10/10 «не знаю», ≥17/20 со ссылкой) → docs/calibration-report.md; scripts/check-cjm.sh по выданному адресу https://n6b.194.85.249.105.sslip.io; квитанции контрактов embed / long-job / model-cost; аккаунты проверок is_test. Подъём стенда — остановка у владельца.",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "medium",
+      "tier": "M",
+      "depends_on": [
+        "widget",
+        "weekly-metric",
+        "badge-referral",
+        "demo-page"
+      ],
+      "blockers": [],
+      "us_ids": [
+        "US-006"
+      ],
+      "fr_ids": [
+        "FR-n6b-6",
+        "NFR-n6b-1"
+      ],
+      "sc_ids": [
+        "SC-US-006-4"
+      ],
+      "adr_ids": [
+        "ADR-003",
+        "ADR-014"
+      ],
+      "reuse": [
+        "N1#10 check-cjm.sh (привязан к ручкам N1, переписать под N6b) — projects/01-testimonials-senja/scripts/check-cjm.sh"
+      ],
+      "expected_files": [
+        "docs/calibration-report.md",
+        "scripts/check-cjm.sh",
+        "tests/calibration/questions.json"
+      ]
+    }
+  ]
+}
