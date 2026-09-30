@@ -17,7 +17,7 @@
   "scripts": {
     "build": "npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web",
     "typecheck": "tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web",
-    "pretest": "npm run build --workspace @n6b/db",
+    "pretest": "npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag",
     "test": "vitest run --config vitest.config.ts",
     "test:int": "vitest run --config vitest.int.config.ts"
   },
