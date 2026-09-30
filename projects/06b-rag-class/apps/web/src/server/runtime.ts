@@ -13,6 +13,7 @@ import { AuthService, type PasswordHasher } from './auth';
 import { createAuthHandler } from './auth-handler';
 import { PgAuthStore } from './auth-store';
 import { loadWebConfig, type WebConfig } from './config';
+import { createJobHandler, createRetryHandler, createSourceHandler } from './jobs-handler';
 import { createPaidRuntime, type PaidRuntime } from './paid';
 
 const hasher: PasswordHasher = {
@@ -41,6 +42,18 @@ export function getRuntime(): WebRuntime {
       paid: createPaidRuntime(config, servicePool) };
   }
   return state;
+}
+
+/** Ручки источника и задачи индексации: сессия — служебный пул, данные — пул кабинета под RLS. */
+export function jobsRoute(kind: 'source' | 'job' | 'retry') {
+  return async (request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> => {
+    const { config, tenantPool, auth } = getRuntime();
+    const deps = { authenticate: (token: string) => auth.authenticate(token), tenantPool,
+      publicBaseUrl: config.PUBLIC_BASE_URL };
+    const handler = kind === 'source' ? createSourceHandler(deps) : kind === 'job' ? createJobHandler(deps)
+      : createRetryHandler(deps);
+    return handler(request, (await context.params).id);
+  };
 }
 
 export function authRoute(action: 'register' | 'login' | 'logout') {

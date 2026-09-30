@@ -8,3 +8,4 @@ export * from './model-call-log.js';
 export * from './spend-today.js';
 export * from './client-address.js';
 export * from './boot-config.js';
+export * from './jobs.js';

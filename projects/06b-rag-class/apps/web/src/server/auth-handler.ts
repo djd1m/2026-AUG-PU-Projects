@@ -56,7 +56,7 @@ export function authQuotaKey(visitorSecret: string, ip: string, limit: number, a
   return { scope: `auth:addr:${addrHash(visitorSecret, ip)}:${moscowHour(at)}`, limit };
 }
 
-async function readJson(request: Request): Promise<unknown | 'too-large' | 'invalid'> {
+export async function readJson(request: Request): Promise<unknown | 'too-large' | 'invalid'> {
   if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return 'invalid';
   const reader = request.body?.getReader();
   if (!reader) return 'invalid';
