@@ -1,0 +1,21 @@
+# Шаг 0 фичи chunk-embed — хвост index-jobs R-1 (08_review.md «Узкая перепроверка»): rls-catalog.test.ts видит поколоночный INSERT.
+# Стек: compose.test.yml, -p n6b-f04, раннер n6b-f04-runner:local, свежая БД (down -v) перед каждой мутацией.
+# Мутант монтируется поверх исходника только на время прогона (docker run -v …:ro), рабочее дерево не менялось.
+# 2026-09-30, ревизия 37cb1dcf + правка шага 0.
+
+BASE | packages/db/tests/int/rls-catalog.test.ts                    | exit=0 | Tests  9 passed (9)
+M0a  | тест: tenantInsert снова через has_table_privilege            | exit=1 | Tests  1 failed | 8 passed (9) | × «вставка проверяется и на поколоночном праве: index_job в перечне»
+M0b  | 005: без BEFORE-триггера + политика index_job WITH CHECK (true) | exit=1 | Tests  1 failed | 8 passed (9) | × «запись: вставка строки с account_id B отвергается…»
+M0c  | 005 + политика document WITH CHECK (true) (табличный INSERT)  | exit=1 | Tests  1 failed | 8 passed (9) | × «запись: вставка строки с account_id B отвергается…»
+M0d  | тест: FK_FIRST пуст (23503 триггера index_job не засчитан)     | exit=1 | Tests  1 failed | 8 passed (9) | × «запись: вставка строки с account_id B отвергается…»
+
+Итог: 4/4 мутации красные.
+
+Первая попытка M0b/M0c дала exit=0: БД тестового стека пережила прошлый прогон, мутированная миграция не применялась
+(schema_migrations). После `down -v` перед каждой мутацией — красные. Урок записан в сценарий прогона мутаций.
+
+Примечание к M0b: образец вставки — строка САМОГО B, поэтому составной FK её не отвергает; при снятых триггере и
+WITH CHECK вставку в аккаунт B останавливает только уникальный индекс живой задачи B (23505), и страж фиксирует это
+как «не RLS» → красный. 23503 засчитывается только для index_job и только с именем index_job_source_fk (FK_FIRST).
+Вне области R-1: tenantUpdate по-прежнему has_table_privilege — поколоночного UPDATE у кабинета нет (005 отозвал UPDATE
+index_job целиком); появится — та же правка.

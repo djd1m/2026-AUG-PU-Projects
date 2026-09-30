@@ -6,6 +6,9 @@ import { ownerPool, seedTenant, type Tenant, tenantPool } from './helpers';
 // 08_review.md F-2: изоляция арендаторов на КАЖДОЙ таблице с account_id. Перечень берётся из pg_catalog, а не
 // списком руками: новая таблица с account_id без политики, без FORCE или без строк в seedTenant роняет этот тест.
 // Мутация (tests/artifacts/foundation/fix-mutations.txt): USING (true) на source_file и question_log → красный.
+// index-jobs 08_review.md R-1: право вставки считается и ПОКОЛОНОЧНОЕ (has_any_column_privilege): после 005 у index_job
+// только GRANT INSERT (source_id, account_id), и has_table_privilege выбрасывал таблицу из проверки молча. Вставка идёт
+// только разрешёнными колонками (has_column_privilege). Мутации — tests/artifacts/chunk-embed/step0-mutations.txt.
 
 interface TableInfo {
   relname: string;
@@ -36,7 +39,7 @@ beforeAll(async () => {
              OR has_any_column_privilege('n6b_tenant', c.oid, 'INSERT')
              OR has_any_column_privilege('n6b_tenant', c.oid, 'UPDATE')
              OR has_table_privilege('n6b_tenant', c.oid, 'DELETE')) AS "tenantAny",
-           has_table_privilege('n6b_tenant', c.oid, 'INSERT') AS "tenantInsert",
+           has_any_column_privilege('n6b_tenant', c.oid, 'INSERT') AS "tenantInsert",
            has_table_privilege('n6b_tenant', c.oid, 'UPDATE') AS "tenantUpdate",
            has_table_privilege('n6b_tenant', c.oid, 'DELETE') AS "tenantDelete",
            (SELECT count(*)::int FROM pg_policy p
@@ -50,6 +53,12 @@ beforeAll(async () => {
 afterAll(async () => { await owner.end(); await tenant.end(); });
 
 const cabinet = () => tables.filter((t) => t.tenantAny);
+/**
+ * Таблицы, где чужую вставку раньше WITH CHECK отвергает BEFORE INSERT-триггер с кодом 23503 (закрытый список, с именем
+ * ограничения): 005 — index_job_source_check, источник должен быть виден вставляющему и с тем же account_id. Для прочих
+ * таблиц 23503 НЕ засчитывается: без политики WITH CHECK составной FK тоже дал бы 23503, и страж позеленел бы на дыре.
+ */
+const FK_FIRST: Readonly<Record<string, string>> = { index_job: 'index_job_source_fk' };
 
 describe('RLS по перечню из pg_catalog (F-2)', () => {
   it('перечень не пуст и содержит известные таблицы кабинета (страж запроса к каталогу)', () => {
@@ -70,7 +79,7 @@ describe('RLS по перечню из pg_catalog (F-2)', () => {
     const r = await owner.query<{ relname: string }>(`
       SELECT c.relname FROM pg_class c
       WHERE c.relnamespace = 'public'::regnamespace AND c.relkind IN ('r', 'p') AND c.relname <> 'account'
-        AND (has_any_column_privilege('n6b_tenant', c.oid, 'SELECT') OR has_table_privilege('n6b_tenant', c.oid, 'INSERT'))
+        AND (has_any_column_privilege('n6b_tenant', c.oid, 'SELECT') OR has_any_column_privilege('n6b_tenant', c.oid, 'INSERT'))
         AND NOT EXISTS (SELECT 1 FROM pg_attribute x WHERE x.attrelid = c.oid AND x.attname = 'account_id'
                         AND NOT x.attisdropped)`);
     expect(r.rows.map((x) => x.relname)).toEqual([]);
@@ -89,15 +98,28 @@ describe('RLS по перечню из pg_catalog (F-2)', () => {
     expect(leaks).toEqual([]);
   });
 
-  it('запись: вставка строки с account_id B отвергается WITH CHECK на каждой таблице с INSERT', async () => {
+  it('вставка проверяется и на поколоночном праве: index_job в перечне (R-1, страж на выпадение таблицы)', () => {
+    expect(cabinet().filter((x) => x.tenantInsert).map((x) => x.relname)).toContain('index_job');
+  });
+
+  it('запись: вставка строки с account_id B отвергается на каждой таблице с INSERT (табличным или поколоночным)', async () => {
     const accepted: string[] = [];
     for (const t of cabinet().filter((x) => x.tenantInsert)) {
+      const cols = (await owner.query<{ attname: string }>(
+        `SELECT a.attname FROM pg_attribute a WHERE a.attrelid = $1::regclass AND a.attnum > 0 AND NOT a.attisdropped
+           AND has_column_privilege('n6b_tenant', a.attrelid, a.attname, 'INSERT') ORDER BY a.attnum`, [t.relname]))
+        .rows.map((r) => r.attname);
+      if (!cols.includes(t.key)) { accepted.push(`${t.relname}: кабинет вставляет без ${t.key} — изоляцию не проверить`); continue; }
+      // Образец — строка САМОГО B (ссылки на родителей B целы): составной FK вставку не отвергнет, отвергать обязана
+      // политика. Образец из строк A с подменой account_id прятал бы снятую WITH CHECK за 23503 внешнего ключа.
       const row = (await owner.query<{ r: Record<string, unknown> }>(
-        `SELECT row_to_json(x) AS r FROM ${t.relname} x WHERE ${t.key} = $1 LIMIT 1`, [a.accountId])).rows[0]!.r;
-      const forged = { ...row, id: randomUUID(), [t.key]: b.accountId };
+        `SELECT row_to_json(x) AS r FROM ${t.relname} x WHERE ${t.key} = $1 LIMIT 1`, [b.accountId])).rows[0]!.r;
+      const forged = { ...row, id: randomUUID() };
+      const list = cols.map((c) => `"${c}"`).join(', ');
       const outcome = await withTenant(tenant, a.accountId, (c) => c.query(
-        `INSERT INTO ${t.relname} SELECT * FROM json_populate_record(NULL::${t.relname}, $1)`, [JSON.stringify(forged)]))
-        .then(() => 'accepted', (e: Error) => e.message);
+        `INSERT INTO ${t.relname} (${list}) SELECT ${list} FROM json_populate_record(NULL::${t.relname}, $1)`,
+        [JSON.stringify(forged)])).then(() => 'accepted', (e: Error & { code?: string; constraint?: string }) =>
+        (FK_FIRST[t.relname] && e.code === '23503' && e.constraint === FK_FIRST[t.relname] ? 'row-level security (FK_FIRST)' : e.message));
       if (!/row-level security/.test(outcome)) accepted.push(`${t.relname}: ${outcome}`);
     }
     expect(accepted).toEqual([]);
