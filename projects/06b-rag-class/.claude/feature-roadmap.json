@@ -26,7 +26,7 @@
       "name": "Монорепо, схема БД с RLS, отказ старта без конфигурации, регистрация и вход",
       "description": "npm workspaces (apps/web, apps/widget, services/worker, packages/db, packages/rag); миграции всех 16 сущностей Pseudocode → Data Structures с pgvector, ролями и RLS по account_id; Boot config check (13 переменных, закрытый список, EXIT 1 с именем); регистрация и вход (bcrypt 12, фиктивный хэш, сессия HMAC, 10 попыток/час на адрес, IPv6 /64); GET /api/health; scripts/check-env-wiring.sh.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [],
@@ -75,7 +75,7 @@
       "name": "Потолки расходов, журнал вызовов модели, порт провайдера OpenRouter с закреплённым исполнителем",
       "description": "quota_counter и reserve_quota одной инструкцией на ключ, все ключи попытки в одной транзакции, сутки по МСК; ключи answer:visitor/bot/global, answer:sandbox:account/global, embed:account/global; model_call_log START до вызова и ровно один OUTCOME; порт провайдера (fake/live) с дедлайном, без скрытых повторов, provider {order:[\"openai\"], allow_fallbacks:false} в обоих вызовах, отказ исполнителя → 503. Деньги: тир XL — остановка на плане у владельца.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "XL",
       "depends_on": [
