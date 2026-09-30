@@ -39,10 +39,19 @@ function ipv6Groups(ip: string): number[] {
   return groups.map((g) => Number.parseInt(g, 16));
 }
 
-/** Префикс адреса: IPv4 — первые v4Bits бит (32 или 24), IPv6 — всегда /64; ::ffff:a.b.c.d читается как IPv4. */
+/**
+ * Префикс адреса: IPv4 — первые v4Bits бит (32 или 24), IPv6 — всегда /64. IPv4-mapped IPv6 (::ffff:0:0/96) в ЛЮБОЙ
+ * записи — `::ffff:1.2.3.4`, `::ffff:102:304`, `0:0:0:0:0:ffff:0102:0304` — читается как IPv4: иначе все такие адреса
+ * попадают в один /64 `0:0:0:0::/64` и делят ключ посетителя (08_review.md F-6).
+ */
 export function addrPrefix(ip: string, v4Bits: 32 | 24): string {
   let value = ip.toLowerCase();
-  if (value.startsWith('::ffff:') && isIP(value.slice(7)) === 4) value = value.slice(7);
+  if (isIP(value) === 6) {
+    const g = ipv6Groups(value);
+    if (g.length === 8 && g.slice(0, 5).every((x) => x === 0) && g[5] === 0xffff) {
+      value = [g[6]! >> 8, g[6]! & 0xff, g[7]! >> 8, g[7]! & 0xff].join('.');
+    }
+  }
   if (isIP(value) === 4) {
     if (v4Bits === 32) return value;
     return `${value.split('.').slice(0, 3).join('.')}.0/24`;
