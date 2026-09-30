@@ -21,7 +21,8 @@ Bot          { id: UUID, account_id: UUID, public_id: Text(unique, 12 симв.)
                first_cited_answer_at: Timestamp?, created_at: Timestamp }
 Source       { id: UUID, bot_id: UUID, account_id: UUID, kind: Enum{site, pdf}, url: Text?, file_name: Text?,
                created_at: Timestamp }
-SourceFile   { id: UUID, source_id: UUID, bytes: Bytes(≤10 МБ), sha256: Text, pages: Int?, created_at: Timestamp }
+SourceFile   { id: UUID, source_id: UUID, account_id: UUID /* для RLS; = account_id источника (составной FK) */,
+               bytes: Bytes(≤10 МБ), sha256: Text, pages: Int?, created_at: Timestamp }
 Document     { id: UUID, source_id: UUID, account_id: UUID, locator_url: Text? /* страница сайта */,
                locator_page: Int? /* страница PDF */, title: Text, text: Text, content_sha256: Text,
                created_at: Timestamp }

@@ -10,7 +10,9 @@
 | `OPENROUTER_API_KEY` | web, worker (порт провайдера `live`) | отказ старта: «ответы и индексация невозможны» |
 | `SESSION_SECRET` | web | отказ старта: сессии нельзя подписать |
 | `VISITOR_SECRET` | web | отказ старта: ключ посетителя для пределов нельзя построить |
-| `POSTGRES_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_OWNER` | db, web, worker, migrate | compose не собирается (`${VAR:?}`) |
+| `POSTGRES_PASSWORD`, `DATABASE_URL_OWNER` | db, migrate | compose не собирается (`${VAR:?}`) |
+| `N6B_DB_TENANT_PASSWORD` → `DATABASE_URL_TENANT` | migrate, web (кабинет) | compose не собирается; web — отказ старта |
+| `N6B_DB_SERVICE_PASSWORD` → `DATABASE_URL_SERVICE` | migrate, web (вход, квоты), worker | compose не собирается; отказ старта |
 
 ## Правила
 
@@ -20,7 +22,8 @@
 3. Никаких дефолтов для секретов и для `PUBLIC_BASE_URL` в коде и в compose: `${VAR:?}` в compose, EXIT 1 в Boot config check.
 4. Ключ не уходит в браузер: `w.js`, страницы и ответы API не содержат ни ключа, ни его префикса; клиентский код не
    обращается к `openrouter.ai`.
-5. Тестовый стек (`name: n6b-test`) — пароли `${TEST_DB_PASSWORD:?}`, без значений по умолчанию; адаптер модели `fake`.
+5. Тестовый стек (`compose.test.yml`, `name: n6b-test`) — пароли `${TEST_DB_PASSWORD:?}`, `${TEST_TENANT_PASSWORD:?}`,
+   `${TEST_SERVICE_PASSWORD:?}` без значений по умолчанию (`openssl rand -hex 24` в env-файле вне репозитория); модель `fake`.
 6. Ротация: смена ключа — правка `.env` + `docker compose up -d web worker`; утечка — отзыв ключа в кабинете OpenRouter
    немедленно, затем ротация; расход смотреть на https://openrouter.ai/activity и в `/admin/metrics`.
 7. `pg_dump` — файлы вне репозитория (`*.dump` в `.gitignore`).

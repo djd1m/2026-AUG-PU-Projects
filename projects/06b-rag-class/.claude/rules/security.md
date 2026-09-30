@@ -13,7 +13,13 @@ Security Hardening, ADR-003/006/007/009/010/011/013. Каждое правило
 
 ## Авторизация (NFR-n6b-3)
 
-- RLS по `account_id`: роль приложения + `SET LOCAL app.account_ids` в транзакции; чужой `bot_id`/`job_id` → 404, не 403.
+- RLS по `account_id`: роль `n6b_tenant` + `set_config('app.account_id', <id из сессии>, true)` в транзакции; видимые
+  аккаунты вычисляет `n6b_account_ids()` в БД; чужой `bot_id`/`job_id` → 404, не 403.
+- Две роли входа, два пула: кабинет — `n6b_app_tenant` (только `n6b_tenant`, `DATABASE_URL_TENANT`), служебные пути —
+  `n6b_app_service` (только `n6b_service` BYPASSRLS, `DATABASE_URL_SERVICE`). Перепутанные строки — отказ старта (имя
+  пользователя сверяется). Проверка: `packages/db/tests/int/roles.test.ts` (SET ROLE n6b_service из кабинета → отказ).
+- `account_id` дочерней строки = `account_id` родителя: составные FK; проверка — `tenant-fk.test.ts`. Изоляция на КАЖДОЙ
+  таблице с `account_id` из `pg_catalog` — `rls-catalog.test.ts`. `account.password_hash` кабинету не выдан (колоночный грант).
 - Студия видит подаккаунт только при `studio_access=true` (у подаккаунта явно, `DEFAULT false`).
 - Оператор — строки таблицы `operator`; пустая таблица = доступа к `/admin/metrics` нет ни у кого.
 
