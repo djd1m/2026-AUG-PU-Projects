@@ -11,12 +11,12 @@ flowchart TB
   operator([Оператор N6b])
   n6b[[N6b — RAG-бот для сайта]]
   site[(Сайт владельца<br/>страницы, robots.txt, sitemap)]
-  openai[[OpenAI API<br/>эмбеддинги и генерация]]
+  openrouter[[OpenRouter API (шлюз к OpenAI)<br/>эмбеддинги и генерация]]
   owner -- "регистрирует бота, даёт URL и PDF, вставляет script" --> n6b
   visitor -- "задаёт вопрос в виджете / на демо" --> n6b
   operator -- "метрика недели, пределы, план" --> n6b
   n6b -- "обходит по RFC 9309" --> site
-  n6b -- "v1/embeddings, v1/chat/completions" --> openai
+  n6b -- "v1/embeddings, v1/chat/completions" --> openrouter
 ```
 
 ## Level 2 — Containers
@@ -33,7 +33,7 @@ flowchart TB
     MIG[migrate — one-shot]
     DB[(Postgres 16 + pgvector<br/>ADR-002, без портов)]
   end
-  OAI[[OpenAI API]]
+  OAI[[OpenRouter API]]
   SITE[(Сайт владельца)]
   W -- "HTTPS POST /api/widget/ask (CORS, без credentials)" --> PX
   PX --> WEB

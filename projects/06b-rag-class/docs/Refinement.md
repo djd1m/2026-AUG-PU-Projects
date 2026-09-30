@@ -15,8 +15,8 @@
 | Concurrent access | два воркера берут одну задачу | обрабатывает один; второй по fence бросает работу | SKIP LOCKED + fence (ADR-005) |
 | Concurrent access | двойной клик «добавить источник» | один `job_id` | частичный уникальный индекс живой задачи |
 | Concurrent access | 6-й подаккаунт двумя запросами одновременно | создаётся ровно 5 | `FOR NO KEY UPDATE` строки студии |
-| Network failure | OpenAI 5xx/таймаут при ответе | 503 «сервис ответа недоступен», попытка засчитана | дедлайн 20 с, без скрытых повторов |
-| Network failure | OpenAI недоступен при индексации | задача `failed`, «Повторить» продолжает с места | кэш по `text_sha256` |
+| Network failure | OpenRouter 5xx/таймаут при ответе | 503 «сервис ответа недоступен», попытка засчитана | дедлайн 20 с, без скрытых повторов |
+| Network failure | OpenRouter недоступен при индексации | задача `failed`, «Повторить» продолжает с места | кэш по `text_sha256` |
 | Network failure | эмбеддинг вопроса посетителя упал | 503 «сервис ответа недоступен», попытка засчитана (V-2) | Answer question шаг 3, дедлайн 10 с |
 | Time | задача упала вчера по суточному пределу индексации, «Повторить» сегодня | продолжает с места, не падает по потолку 15 мин (V-4) | потолок от `run_started_at`, сброс при retry |
 | Concurrent access | 2000 ответов песочницы за сутки у всех аккаунтов, новый аккаунт спрашивает | 429, платных вызовов нет (V-3) | ключ `answer:sandbox:global` в той же транзакции |
@@ -33,6 +33,7 @@
 | Config | `LIMIT_ANSWER_VISITOR_DAY` не задан или `0` | сервис не стартует, имя переменной в журнале | Boot config check |
 | Config | `PUBLIC_BASE_URL='/'` или `http://localhost` в проде | сервис не стартует | Boot config check |
 | Metric | вопрос с `http://localhost:8099`, `http://127.0.0.1`, `https://x.vercel.app` | ответ есть, `widget_install` не создаётся | excluded(), закрытый список превью-доменов (OWN-06B-005) |
+| Metric | origin `https://www.shop.example` в конфиге и в вопросе | одна строка `shop.example` с `first_question_at`: `metric_host()` зовётся и там, и там | единая нормализация хоста, SC-US-015-5 |
 | Metric | тот же хост у двух ботов | 2 строки `widget_install`, метрика считает 2 виджета | единица «бот × хост», FR-n6b-15 |
 | Metric | `curl -H 'Origin: https://shop.example'` без загрузки `w.js` | ответ есть, виджет не засчитан (V-6) | нет строки с `config_seen_at`; в отчёт — только `page_verified_at` |
 | Metric | E2E-прогон на стенде с `shop.example` | не засчитан | аккаунт `is_test` |
@@ -89,8 +90,9 @@ Feature: Ответ со ссылкой на источник
 - Rate limiting: квоты посетителя/бота/глобальные на ответы и два ключа песочницы (ADR-010); регистрация и вход — 10
   попыток/час на адрес (`LIMIT_AUTH_ADDR_HOUR`, FR-n6b-1, алгоритм Register and login шаг 0).
 - Audit logs: смена плана и `badge_removal` оператором; передача аккаунта; публикация бота.
-- Заголовки кабинета: CSP без `unsafe-inline`, `X-Frame-Options: DENY`; публичные страницы `no-store`.
-- Секреты: `OPENAI_API_KEY`, `SESSION_SECRET`, `VISITOR_SECRET` — только окружение; ключ никогда не уходит в браузер (ADR-011).
+- Заголовки кабинета: CSP без `unsafe-inline`, `X-Frame-Options: DENY`; публичные страницы `no-store`. Демо-страница `/b/*`
+  дополнительно: `Content-Security-Policy: frame-ancestors 'none'` + `X-Frame-Options: DENY` (SC-US-012-4).
+- Секреты: `OPENROUTER_API_KEY`, `SESSION_SECRET`, `VISITOR_SECRET` — только окружение; ключ никогда не уходит в браузер (ADR-011).
 
 ## Accessibility
 

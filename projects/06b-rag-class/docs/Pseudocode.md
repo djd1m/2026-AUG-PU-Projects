@@ -61,8 +61,8 @@ REALISES: SC-US-001-1, SC-US-001-2, SC-US-001-3, SC-US-001-4
 INPUT: email, password, kind?, ip (последний элемент X-Forwarded-For)
 OUTPUT: session cookie | error
 STEPS:
-0. reserve_quota('auth:addr:'+HMAC(VISITOR_SECRET, ip)+':'+час(МСК), 1, LIMIT_AUTH_ADDR_HOUR) — атомарно, ДО bcrypt и
-   записи аккаунта, общий ключ для регистрации и входа; отказ → RETURN 429 «слишком много попыток, повторите через час».
+0. reserve_quota('auth:addr:'+HMAC(VISITOR_SECRET, addr_key(ip))+':'+час(МСК), 1, LIMIT_AUTH_ADDR_HOUR) — атомарно, ДО bcrypt и
+   записи аккаунта, общий ключ для регистрации и входа; addr_key(ip) — IPv4: адрес целиком, IPv6: префикс /64 (смена адреса внутри /64 счётчик не обнуляет); отказ → RETURN 429 «слишком много попыток, повторите через час».
 1. email ← lower(trim(email)); IF password.length < 10 THEN RETURN 422.
 2. Register: IF kind ∉ {owner, studio} THEN kind ← owner. INSERT account(plan='free') ON CONFLICT(email) → RETURN 409.
 3. Login: acc ← SELECT по email; hash ← acc?.password_hash ?? DUMMY_HASH; ok ← bcrypt.compare(password, hash).
@@ -209,7 +209,7 @@ COMPLEXITY: O(log n) поиск HNSW + 2 внешних вызова
 REQUIREMENT: `FR-n6b-7`
 REQUIREMENT: `FR-n6b-8`
 REQUIREMENT: `FR-n6b-15`
-REALISES: SC-US-007-3, SC-US-008-1, SC-US-008-3, SC-US-015-1, SC-US-015-2, SC-US-015-4
+REALISES: SC-US-007-3, SC-US-008-1, SC-US-008-3, SC-US-015-1, SC-US-015-2, SC-US-015-4, SC-US-015-5
 INPUT: HTTP request (Origin, X-Forwarded-For от прокси, body {bot: public_id, question})
 OUTPUT: CORS response + Answer question result | 403/404
 STEPS:
@@ -221,7 +221,7 @@ STEPS:
 6. res ← Answer question(bot, question, widget, visitor_key).
 7. IF res.outcome ∈ {answered, below_threshold, model_unknown, invalid_citation} (вопрос прошёл валидацию и получил ответ;
    422/429/503 не считаются) THEN UPDATE widget_install SET first_question_at=now WHERE bot_id=bot AND
-   origin_host=host(origin) AND config_seen_at IS NOT NULL AND first_question_at IS NULL. Строки нет (конфиг с этого
+   origin_host=metric_host(origin) AND config_seen_at IS NOT NULL AND first_question_at IS NULL. Строки нет (конфиг с этого
    origin не загружался — поддельный Origin вне браузера) → ничего не создаётся.
 8. RETURN res с Access-Control-Allow-Origin=origin (без credentials).
 COMPLEXITY: O(1) + Answer question
@@ -230,16 +230,17 @@ COMPLEXITY: O(1) + Answer question
 
 REQUIREMENT: `FR-n6b-9`
 REQUIREMENT: `FR-n6b-10`
-REALISES: SC-US-009-1, SC-US-009-2, SC-US-009-3, SC-US-010-1, SC-US-007-1, SC-US-008-4, SC-US-015-1, SC-US-015-2
+REALISES: SC-US-009-1, SC-US-009-2, SC-US-009-3, SC-US-010-1, SC-US-007-1, SC-US-008-4, SC-US-015-1, SC-US-015-2, SC-US-015-5
 INPUT: bot public_id, origin, page (location.href страницы хозяина)
 OUTPUT: {badge_required, badge_url, privacy_notice, theme}
 STEPS:
-0. Origin-проверка как Widget ask gate шаги 1–3 (иначе 403/404). host ← lower(origin.host без «www.»);
+0. Origin-проверка как Widget ask gate шаги 1–3 (иначе 403/404). host ← metric_host(origin) — ЕДИНСТВЕННАЯ функция нормализации хоста метрики: нижний регистр, без ведущего «www.»
+   (её же зовёт Widget ask gate, шаг 7; второй копии нормализации нет, N-2);
    IF NOT excluded(host) AND NOT test_or_operator(bot.account) THEN INSERT widget_install(bot_id, origin_host=host,
    page_url=page (хост page обязан = host), config_seen_at=now) ON CONFLICT (bot_id, origin_host) DO NOTHING.
    excluded: наш хост из PUBLIC_BASE_URL, localhost, IP-литерал, *.local, частные адреса, превью-домены хостингов —
    закрытый список в коде (*.vercel.app, *.netlify.app, *.github.io, *.tilda.ws, *.pages.dev …; OWN-06B-005).
-0'. privacy_notice ← константа кода «Вопросы обрабатывает внешняя модель (OpenAI). Не сообщайте персональные данные»;
+0'. privacy_notice ← константа кода «Вопросы обрабатывает внешняя модель через OpenRouter (OpenAI). Не сообщайте персональные данные»;
    виджет показывает её над полем ввода до первого вопроса; без полученного конфига поле неактивно (OWN-06B-002).
 1. plan ← plan_of(account.plan): IF value ∈ {'free','start','studio'} (точное совпадение) THEN value ELSE 'free'.
 2. badge_required ← NOT (plan ∈ {'start','studio'} AND account.badge_removal = 'active').
@@ -268,12 +269,13 @@ COMPLEXITY: O(1)
 ### Algorithm: Demo page
 
 REQUIREMENT: `FR-n6b-12`
-REALISES: SC-US-012-1, SC-US-012-2, SC-US-008-4
+REALISES: SC-US-012-1, SC-US-012-2, SC-US-012-4, SC-US-008-4
 INPUT: GET /b/{slug} | POST /api/demo/{slug}/ask {question}
 OUTPUT: HTML страницы с чатом | ответ | 404
 STEPS:
 1. bot ← SELECT WHERE demo_slug=slug AND published AND demo_enabled; IF null THEN RETURN 404 (для обеих ручек).
-2. GET: RETURN страницу с X-Robots-Tag: noindex, Cache-Control: no-store и privacy_notice над полем ввода.
+2. GET: RETURN страницу с X-Robots-Tag: noindex, Cache-Control: no-store, Content-Security-Policy: frame-ancestors 'none',
+   X-Frame-Options: DENY и privacy_notice над полем ввода (демо не встраивается во фрейм чужого сайта, SC-US-012-4).
 3. POST ask: своя ручка на нашем origin — без CORS и без проверки allowed_origins (наш origin в списке бота не стоит);
    visitor_key ← как Widget ask gate шаг 5; RETURN Answer question(bot, question, demo, visitor_key) — те же пределы;
    widget_install не пишется.
@@ -347,7 +349,7 @@ REALISES: SC-US-016-2
 INPUT: окружение процесса
 OUTPUT: старт | выход с кодом 1 и названной переменной
 STEPS:
-1. FOR v IN [OPENAI_API_KEY, SESSION_SECRET, VISITOR_SECRET, PUBLIC_BASE_URL, MIN_SIMILARITY, LIMIT_ANSWER_VISITOR_DAY,
+1. FOR v IN [OPENROUTER_API_KEY, SESSION_SECRET, VISITOR_SECRET, PUBLIC_BASE_URL, MIN_SIMILARITY, LIMIT_ANSWER_VISITOR_DAY,
    LIMIT_ANSWER_BOT_DAY, LIMIT_ANSWER_GLOBAL_DAY, LIMIT_SANDBOX_ACCOUNT_DAY, LIMIT_SANDBOX_GLOBAL_DAY,
    LIMIT_EMBED_TOKENS_ACCOUNT_DAY, LIMIT_EMBED_TOKENS_GLOBAL_DAY, LIMIT_AUTH_ADDR_HOUR] — закрытый список в коде; каждая
    переменная читается решением (тест-страж: у каждой есть reserve_quota с её значением, иначе CFG-I5):
@@ -429,7 +431,7 @@ stateDiagram-v2
 
 ## Scenario Coverage
 
-Scenarios in Specification.md: 55  ·  claimed by an algorithm: 53
+Scenarios in Specification.md: 57  ·  claimed by an algorithm: 55
 
 Not claimed by any algorithm:
 | Scenario | Reason |
@@ -443,7 +445,7 @@ Claimed by an algorithm but absent from Specification.md:
 | none | none |
 
 Сверено скриптом по двум файлам (множество `[SC-…]` в Specification против строк `REALISES:` здесь), 2026-09-30, после
-правок итерации 1. SC-US-008-2 (изоляция стилей) реализуется разметкой виджета — Shadow DOM и `all: initial` на корне,
+правок итерации 1 и пересчитано после правок итерации 2 (добавлены SC-US-012-4, SC-US-015-5). SC-US-008-2 (изоляция стилей) реализуется разметкой виджета — Shadow DOM и `all: initial` на корне,
 процедуры нет. SC-US-006-4 — ворота выпуска (калибровка на живой модели), а не алгоритм продукта: проверяется прогоном
 набора и артефактом `docs/calibration-report.md` (`Refinement.md`, `Completion.md`).
 Требования `NFR-n6b-1`, `NFR-n6b-2`, `NFR-n6b-5`, `NFR-n6b-6` — нефункциональные: проверяются замером и тестами
