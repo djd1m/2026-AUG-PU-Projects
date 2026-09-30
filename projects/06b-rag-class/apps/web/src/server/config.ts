@@ -40,15 +40,7 @@ export const WEB_PAIRS: readonly PairRule[] = [
 
 /** Переменные, проверяемые при старте, чьё решение реализует названная фича дорожной карты. */
 export const PENDING_DECISIONS: Readonly<Record<string, string>> = {
-  OPENROUTER_API_KEY: 'rag-answer-sandbox',
   MIN_SIMILARITY: 'rag-answer-sandbox',
-  LIMIT_ANSWER_VISITOR_DAY: 'spend-ceilings',
-  LIMIT_ANSWER_BOT_DAY: 'spend-ceilings',
-  LIMIT_ANSWER_GLOBAL_DAY: 'spend-ceilings',
-  LIMIT_SANDBOX_ACCOUNT_DAY: 'spend-ceilings',
-  LIMIT_SANDBOX_GLOBAL_DAY: 'spend-ceilings',
-  LIMIT_EMBED_TOKENS_ACCOUNT_DAY: 'spend-ceilings',
-  LIMIT_EMBED_TOKENS_GLOBAL_DAY: 'spend-ceilings',
 };
 
 export interface WebConfig {
@@ -58,6 +50,14 @@ export interface WebConfig {
   readonly VISITOR_SECRET: string;
   readonly PUBLIC_BASE_URL: string;
   readonly LIMIT_AUTH_ADDR_HOUR: number;
+  readonly OPENROUTER_API_KEY: string;
+  readonly LIMIT_ANSWER_VISITOR_DAY: number;
+  readonly LIMIT_ANSWER_BOT_DAY: number;
+  readonly LIMIT_ANSWER_GLOBAL_DAY: number;
+  readonly LIMIT_SANDBOX_ACCOUNT_DAY: number;
+  readonly LIMIT_SANDBOX_GLOBAL_DAY: number;
+  readonly LIMIT_EMBED_TOKENS_ACCOUNT_DAY: number;
+  readonly LIMIT_EMBED_TOKENS_GLOBAL_DAY: number;
   readonly production: boolean;
   readonly all: ConfigValues;
 }
@@ -73,6 +73,14 @@ export function loadWebConfig(env: Readonly<Record<string, string | undefined>> 
     VISITOR_SECRET: all.VISITOR_SECRET as string,
     PUBLIC_BASE_URL: all.PUBLIC_BASE_URL as string,
     LIMIT_AUTH_ADDR_HOUR: all.LIMIT_AUTH_ADDR_HOUR as number,
+    OPENROUTER_API_KEY: all.OPENROUTER_API_KEY as string,
+    LIMIT_ANSWER_VISITOR_DAY: all.LIMIT_ANSWER_VISITOR_DAY as number,
+    LIMIT_ANSWER_BOT_DAY: all.LIMIT_ANSWER_BOT_DAY as number,
+    LIMIT_ANSWER_GLOBAL_DAY: all.LIMIT_ANSWER_GLOBAL_DAY as number,
+    LIMIT_SANDBOX_ACCOUNT_DAY: all.LIMIT_SANDBOX_ACCOUNT_DAY as number,
+    LIMIT_SANDBOX_GLOBAL_DAY: all.LIMIT_SANDBOX_GLOBAL_DAY as number,
+    LIMIT_EMBED_TOKENS_ACCOUNT_DAY: all.LIMIT_EMBED_TOKENS_ACCOUNT_DAY as number,
+    LIMIT_EMBED_TOKENS_GLOBAL_DAY: all.LIMIT_EMBED_TOKENS_GLOBAL_DAY as number,
     production,
     all,
   };

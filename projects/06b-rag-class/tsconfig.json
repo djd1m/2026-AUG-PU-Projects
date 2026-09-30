@@ -9,6 +9,8 @@
   "include": [
     "packages/db/src",
     "packages/db/tests",
+    "packages/rag/src",
+    "packages/rag/tests",
     "services/worker/src",
     "services/worker/tests",
     "vitest.config.ts",
