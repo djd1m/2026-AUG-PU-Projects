@@ -31,6 +31,24 @@ describe('захват: SKIP LOCKED и не более трёх захватов
     expect(rows.rows[0].n).toBe(10);
   });
 
+  it('SKIP LOCKED: строку, заблокированную чужой транзакцией, захват пропускает сразу, а не ждёт', async () => {
+    const { jobIds: [locked, free] } = await seedJobs(owner, 2);
+    const holder = await owner.connect();
+    try {
+      await holder.query('BEGIN');
+      await holder.query('SELECT id FROM index_job WHERE id = $1 FOR UPDATE', [locked]);
+      const t0 = Date.now();
+      const got = await Promise.race([acquireLease(workerA),
+        new Promise<'waited'>((r) => setTimeout(() => r('waited'), 2000))]);
+      expect(got).not.toBe('waited');
+      expect((got as LeasedJob).id).toBe(free);
+      expect(Date.now() - t0).toBeLessThan(2000);
+    } finally {
+      await holder.query('ROLLBACK');
+      holder.release();
+    }
+  });
+
   it('живую аренду второй воркер не забирает; истёкшую — забирает с fence+1, run_started_at прежний', async () => {
     const { jobIds: [id] } = await seedJobs(owner, 1);
     const a = (await acquireLease(workerA))!;

@@ -50,13 +50,18 @@ describe('POST источника → 202 {job_id} до работы (SC-US-002-
   it('конкурентно: 20 одновременных POST одного источника (с разными #фрагментами) → один источник, одна задача, один job_id', async () => {
     const { accountId, botId } = await seedBot(owner);
     const token = login(accountId);
-    const all = await Promise.all(Array.from({ length: 20 }, (_, i) =>
-      postSource(post(token, { url: `https://Example.ru/price#p${i}` }), botId).then(read)));
-    expect(all.every((r) => r.status === 202)).toBe(true);
-    expect(new Set(all.map((r) => r.body.data!.job_id)).size).toBe(1);
+    // Пул прогрет: 10 соединений открыты заранее, иначе установка соединений разводит запросы во времени и гонки нет
+    // (проверено мутацией «прочитать, потом вставить» — на холодном пуле она зеленела).
+    await Promise.all(Array.from({ length: 10 }, () => cabinet.query('SELECT pg_sleep(0.05)')));
+    for (const page of ['price', 'delivery', 'contacts']) {
+      const all = await Promise.all(Array.from({ length: 20 }, (_, i) =>
+        postSource(post(token, { url: `https://Example.ru/${page}#p${i}` }), botId).then(read)));
+      expect(all.map((r) => r.status), page).toEqual(Array(20).fill(202));
+      expect(new Set(all.map((r) => r.body.data!.job_id)).size).toBe(1);
+    }
     const counts = (await owner.query(`SELECT (SELECT count(*)::int FROM source WHERE bot_id = $1) AS sources,
       (SELECT count(*)::int FROM index_job j JOIN source s ON s.id = j.source_id WHERE s.bot_id = $1) AS jobs`, [botId])).rows[0];
-    expect(counts).toEqual({ sources: 1, jobs: 1 });
+    expect(counts).toEqual({ sources: 3, jobs: 3 });
   });
 
   it('повтор после завершения задачи ставит новую задачу того же источника (живой нет — ключ свободен)', async () => {
