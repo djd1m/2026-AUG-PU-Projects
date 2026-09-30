@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"]
+  },
+  "include": [
+    "packages/db/src",
+    "packages/db/tests",
+    "services/worker/src",
+    "services/worker/tests",
+    "vitest.config.ts",
+    "vitest.int.config.ts"
+  ]
+}

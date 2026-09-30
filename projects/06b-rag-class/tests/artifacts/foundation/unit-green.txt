@@ -1,0 +1,25 @@
+typecheck-exit=0
+
+ RUN  v3.2.7 /app
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+health: проверка не прошла: Error
+
+ ✓ apps/web/tests/unit/auth-handler.test.ts (14 tests) 410ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 40ms
+ ✓ apps/web/tests/unit/config.test.ts (63 tests) 33ms
+ ✓ services/worker/tests/unit/boot.test.ts (3 tests) 1598ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной  535ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается  522ms
+   ✓ worker: отказ старта без конфигурации > персональный предел больше общего → exit 1  534ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (15 tests) 33ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 26ms
+
+ Test Files  6 passed (6)
+      Tests  119 passed (119)
+   Start at  19:01:43
+   Duration  6.02s (transform 556ms, setup 0ms, collect 1.05s, tests 2.14s, environment 7ms, prepare 916ms)
+

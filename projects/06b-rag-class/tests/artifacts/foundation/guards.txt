@@ -1,0 +1,15 @@
+== check-ports.cjs .
+✅ каталог /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/agent-a3850e1ddb1642170/projects/06b-rag-class/docker-compose.yml проверен в заявленной области: из 4 сервисов распознано хранилищ 1, reverse-proxy 0; НЕ распознаны и не проверялись: migrate, web, worker
+exit=0
+== check-env-wiring.sh
+Потерь нет. Проверено чтений: web=16, worker=6, migrate=2. Явные исключения: NEXT_RUNTIME, NEXT_PHASE
+exit=0
+== check-port-conflicts.sh
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 3106 свободен
+exit=0
+== secrets grep
+projects/06b-rag-class/.claude/rules/secrets-management.md:31:git grep -nE 'sk-or-|OPENROUTER_API_KEY=.+' -- . ':!*.example'   # пусто
+grep-exit=0 (1 = пусто)
