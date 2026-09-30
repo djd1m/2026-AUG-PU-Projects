@@ -81,6 +81,31 @@ describe('захват: SKIP LOCKED и не более трёх захватов
     expect(await sweepStuckJobs(workerA)).toEqual([]);
     expect((await jobRow(owner, live!)).state).toBe('running');
   });
+
+  // F-1 (08_review.md): вторая половина условия уборщика ИСТИННА, живая аренда — единственное, что его останавливает.
+  it('живая аренда третьего захвата (attempts = 3) не закрывается; исполнитель пишет свой исход', async () => {
+    const { jobIds: [id] } = await seedJobs(owner, 1);
+    let third: LeasedJob | null = null;
+    for (let i = 1; i <= JOB_MAX_ATTEMPTS; i += 1) {
+      third = await acquireLease(workerA);
+      if (i < JOB_MAX_ATTEMPTS) await expireLease(owner, id!);
+    }
+    expect(third).toMatchObject({ id, attempts: 3 });
+    expect(await sweepStuckJobs(workerA)).toEqual([]);
+    expect(await jobRow(owner, id!)).toMatchObject({ state: 'running', attempts: 3, error: null });
+    expect(await finishJob(workerA, third!, { state: 'succeeded', note: 'третий захват' })).toBe('written');
+    expect(await jobRow(owner, id!)).toMatchObject({ state: 'succeeded', note: 'третий захват' });
+  });
+
+  it('живая аренда после потолка (run_started_at − 20 мин) — не уборщику: её закрывает контрольная точка исполнителя', async () => {
+    const { jobIds: [id] } = await seedJobs(owner, 1);
+    const job = (await acquireLease(workerA))!;
+    await owner.query("UPDATE index_job SET run_started_at = now() - interval '20 minutes' WHERE id = $1", [id]);
+    expect(await sweepStuckJobs(workerA)).toEqual([]);
+    expect((await jobRow(owner, id!)).state).toBe('running');
+    // Pseudocode «Worker lease loop» шаг 8: уборщик — только истёкшая аренда; потолок живой задачи видит её же продление.
+    expect(await checkpointLease(workerA, job)).toBe('over-ceiling');
+  });
 });
 
 describe('fence: воркер с просроченной арендой не пишет', () => {
