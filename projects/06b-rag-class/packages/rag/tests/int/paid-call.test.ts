@@ -5,7 +5,7 @@ import { answerKeys, type CallOwner, finishCall, type Limits, visitorKey, withSe
 import { env, isoDay, ownerPool, runDate, seedTenant, servicePool } from '../../../db/tests/int/helpers';
 import { FakeProvider, type FakeOutcome } from '../../src/provider/fake';
 import { ModelCallFailed } from '../../src/provider/port';
-import { type AnswerChannel, PaidGateway, type PaidCallDeps } from '../../src/paid-call';
+import { type AnswerChannel, constructGateway, type PaidCallDeps, type PaidGateway } from '../../src/paid-call';
 
 // spend-ceilings на настоящем Postgres (01_plan.md §3, §9): атомарность резерва ДО платного вызова, счёт по попыткам,
 // конкурентность. Модель — только fake. Каждый тест берёт свои сутки (now) или свои ключи: общие ключи
@@ -30,7 +30,7 @@ function freshDay(): { now: () => Date; day: string } {
 }
 
 const door = (provider: PaidCallDeps['provider'], now: () => Date, pool = app) =>
-  new PaidGateway({ pool, provider, now, limits: LIMITS, visitorSecret: SECRET });
+  constructGateway({ pool, provider, now, limits: LIMITS, visitorSecret: SECRET });
 const visitor = (ip: string, botId: string): AnswerChannel => ({ kind: 'visitor', ip, botId });
 const sandbox = (accountId: string): AnswerChannel => ({ kind: 'sandbox', accountId });
 /** Ключи, которые дверь построит сама, — только чтобы назвать строки quota_counter в проверках. */
@@ -246,16 +246,16 @@ describe('дверь сама выводит набор ключей из вид
   it('F-1: канал visitor без VISITOR_SECRET у двери → отказ, а не ключ без посетителя', async () => {
     const t = await seedTenant(owner);
     const fake = new FakeProvider();
-    const gw = new PaidGateway({ pool: app, provider: fake, limits: LIMITS, now: freshDay().now });
+    const gw = constructGateway({ pool: app, provider: fake, limits: LIMITS, now: freshDay().now });
     await expect(gw.beginAnswer(visitor('203.0.113.9', t.botId), t)).rejects.toThrow(/VISITOR_SECRET/);
     expect(fake.total).toBe(0);
   });
 
   it('F-1: пределы двери проверяются при создании — больше int4 или персональный > общего → ConfigError', () => {
     const fake = new FakeProvider();
-    expect(() => new PaidGateway({ pool: app, provider: fake, limits: { ...LIMITS, answerGlobalDay: 3_000_000_000 } }))
+    expect(() => constructGateway({ pool: app, provider: fake, limits: { ...LIMITS, answerGlobalDay: 3_000_000_000 } }))
       .toThrow(/LIMIT_ANSWER_GLOBAL_DAY/);
-    expect(() => new PaidGateway({ pool: app, provider: fake, limits: { ...LIMITS, sandboxAccountDay: 5000 } }))
+    expect(() => constructGateway({ pool: app, provider: fake, limits: { ...LIMITS, sandboxAccountDay: 5000 } }))
       .toThrow(/LIMIT_SANDBOX_ACCOUNT_DAY/);
   });
 

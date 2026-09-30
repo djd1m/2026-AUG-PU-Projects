@@ -64,7 +64,8 @@ export function providerConstructionViolations(files: Files): string[] {
   const adapterSpecifier = /(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*|\bimport\s+)['"`][^'"`]*provider\/(?:openrouter|fake)(?:\.[cm]?[jt]s)?['"`]/;
   for (const [file, raw] of Object.entries(files)) {
     const text = stripComments(raw);
-    if (file !== FACTORY && qualifiedNew.test(text)) {
+    // paid-call.ts строит дверь сам (constructGateway с ключом модуля, index-jobs F-2) — это не вторая дверь.
+    if (file !== FACTORY && file !== PAID_CALL && qualifiedNew.test(text)) {
       out.push(`${file}: провайдер или дверь создаются вне фабрики live.ts`);
     }
     if (file !== FACTORY && file !== RAG_INDEX && !file.startsWith(PROVIDER_DIR) && adapterSpecifier.test(text)) {
@@ -88,8 +89,9 @@ export function providerConstructionViolations(files: Files): string[] {
  * старт процесса. Новое место создания двери (воркер chunk-embed) добавляется в список осознанно.
  */
 export const GATEWAY_SITES = ['apps/web/src/server/paid.ts', 'services/worker/src/paid.ts'];
+// live.ts проверяет окружение процесса сам (index-jobs F-2): фабрика не принимает конфигурацию извне.
 export const CONFIG_SITES = ['packages/db/src/boot-config.ts', 'packages/db/src/ops-cli.ts', 'apps/web/src/server/config.ts',
-  'services/worker/src/config.ts'];
+  'services/worker/src/config.ts', FACTORY];
 export function gatewaySiteViolations(files: Files): string[] {
   const out: string[] = [];
   for (const [file, raw] of Object.entries(files)) {
@@ -145,7 +147,7 @@ export function paidCallOrderViolations(text: string): string[] {
   // F-1: набор ключей сверяется с обязательным для вида вызова ДО резерва, и отказ — исключение.
   const checked = /const violation = keySetViolation\(kind, keys, this\.#deps\.limits\);\s*if \(violation\) throw [^;]+;\s*const day = /;
   if (!checked.test(text)) out.push('набор ключей не сверяется keySetViolation до резерва');
-  if (!/constructor\(deps: PaidCallDeps\) \{\s*assertLimits\(deps\.limits\);/.test(text)) out.push('пределы двери не проверяются при создании');
+  if (!/constructor\(key: typeof GATEWAY_KEY, deps: PaidCallDeps\) \{\s*if \(key !== GATEWAY_KEY\) throw [^;]+;\s*assertLimits\(deps\.limits\);/.test(text)) out.push('пределы двери не проверяются при создании');
   if (/withService\([^)]*\)[\s\S]{0,200}invoke\(/.test(text.replace(/\/\/.*$/gm, ''))) {
     out.push('вызов провайдера внутри транзакции');
   }
@@ -224,8 +226,7 @@ describe('стражи умеют падать (guard-must-be-able-to-fail)', ()
     }
     expect(gatewaySiteViolations({ 'apps/web/src/server/paid.ts': 'createLiveGateway({ limits: { a: 1 }, pool })' }))
       .not.toEqual([]);
-    expect(gatewaySiteViolations({ 'apps/web/src/server/paid.ts': 'createLiveGateway({ config: config.all, pool })' }))
-      .toEqual([]);
+    expect(gatewaySiteViolations({ 'apps/web/src/server/paid.ts': 'createLiveGateway({ pool })' })).toEqual([]);
   });
   it('S-6 ловит импорт fake', () => {
     expect(fakeImportViolations({ 'apps/web/src/server/x.ts': "import { FakeProvider } from '@n6b/rag/src/provider/fake'" }))

@@ -61,7 +61,9 @@ describe('составные внешние ключи арендатора (F-1
       [`INSERT INTO chunk (document_id, bot_id, account_id, ord, text, text_sha256, tokens, embedding)
         VALUES ($1, $2, $3, 6, 't', 'h6', 1, $4)`, [t.documentId, o.botId, t.accountId, vector(5)]] },
     { link: 'index_job.source_id', fk: 'index_job_source_fk', sql: (t, o) =>
-      ["INSERT INTO index_job (source_id, account_id, state) VALUES ($1, $2, 'succeeded')", [o.sourceId, t.accountId]] },
+      // Кабинет вставляет только (source_id, account_id) (005, F-7); у своего источника уже есть живая задача — ON CONFLICT.
+      [`INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+        ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING`, [o.sourceId, t.accountId]] },
     { link: 'question_log.bot_id', fk: 'question_log_bot_fk', sql: (t, o) =>
       [`INSERT INTO question_log (bot_id, account_id, channel, question, outcome)
         VALUES ($1, $2, 'widget', 'q', 'answered')`, [o.botId, t.accountId]] },

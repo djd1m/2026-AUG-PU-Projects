@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { normalizeSiteUrl, type Pool } from '@n6b/db';
 import { createJobHandler, createRetryHandler, createSourceHandler, type JobsDeps } from '@/server/jobs-handler';
-import { type JobPayload, jobScreen } from '@/lib/job-view';
+import { type JobPayload, jobScreen, plural } from '@/lib/job-view';
 
 // Ручки задачи до базы данных: порядок отказов (Origin → сессия → идентификатор → тело) и то, что ни один отказ не
 // доходит до пула. Пул-ловушка бросает на любом обращении: отказ, дошедший до БД, — красный тест.
@@ -80,6 +80,28 @@ describe('экран задачи: три состояния различимы 
       expect(s.kind, String(state)).toBe('failed');
       expect(s.live).toBe(false);
       expect(s.action).toBeNull();
+    }
+  });
+});
+
+describe('склонение на экране «Готово» (08_review.md F-6)', () => {
+  it('0, 1, 2, 5, 11, 21, 22, 25, 111 — форма слова по-русски', () => {
+    const forms: Record<number, string> = { 0: 'страниц', 1: 'страница', 2: 'страницы', 5: 'страниц', 11: 'страниц',
+      21: 'страница', 22: 'страницы', 25: 'страниц', 111: 'страниц', 12: 'страниц', 14: 'страниц', 104: 'страницы' };
+    for (const [n, word] of Object.entries(forms)) {
+      expect(plural(Number(n), 'страница', 'страницы', 'страниц'), n).toBe(word);
+    }
+  });
+  it('заголовок «Готово» согласован: 2 страницы, 1 фрагмент; 21 страница, 22 фрагмента', () => {
+    const base: JobPayload = { job_id: 'j', state: 'succeeded', progress_done: 2, progress_total: 2, fragments: 1,
+      error: null, note: null };
+    expect(jobScreen(base).title).toBe('Готово: 2 страницы, 1 фрагмент');
+    expect(jobScreen({ ...base, progress_done: 21, fragments: 22 }).title).toBe('Готово: 21 страница, 22 фрагмента');
+    expect(jobScreen({ ...base, progress_done: 0, fragments: 0 }).title).toBe('Готово: 0 страниц, 0 фрагментов');
+  });
+  it('нецелое или отрицательное число — отказ, а не правдоподобная форма', () => {
+    for (const bad of [-1, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => plural(bad, 'a', 'b', 'c'), String(bad)).toThrow(/склонение/);
     }
   });
 });

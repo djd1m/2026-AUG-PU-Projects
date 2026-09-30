@@ -123,19 +123,14 @@ export type RetryResult = 'retried' | 'not-found' | 'not-failed' | 'source-busy'
  * сбрасываются (новый запуск — новый отсчёт потолка), progress_done сохраняется: повтор продолжает, а не начинает заново.
  * Живую или готовую задачу повторить нельзя (409). Если у источника уже есть другая живая задача — тоже 409.
  */
-export async function retryJob(pool: Pool, accountId: string, jobId: string): Promise<RetryResult> {
-  try {
-    return await withTenant(pool, accountId, async (c) => {
-      const upd = await c.query(`UPDATE index_job SET state = 'queued', attempts = 0, error = NULL, note = NULL,
-        run_started_at = NULL, leased_until = NULL, finished_at = NULL WHERE id = $1 AND state = 'failed'`, [jobId]);
-      if (upd.rowCount === 1) return 'retried';
-      const cur = await c.query('SELECT 1 FROM index_job WHERE id = $1', [jobId]);
-      return cur.rowCount === 1 ? 'not-failed' : 'not-found';
-    });
-  } catch (error) {
-    if ((error as { code?: string; constraint?: string }).constraint === 'index_job_live_source_key') return 'source-busy';
-    throw error;
-  }
+export function retryJob(pool: Pool, accountId: string, jobId: string): Promise<RetryResult> {
+  // Кабинет не имеет UPDATE на index_job (005_index_job_cabinet_grants.sql, 08_review.md F-7): переход failed → queued
+  // делает функция n6b_retry_job, и только его. Ответ функции — закрытое множество; иное — исключение (CFG-I3).
+  return withTenant(pool, accountId, async (c) => {
+    const r = (await c.query<{ r: string }>('SELECT n6b_retry_job($1) AS r', [jobId])).rows[0]?.r;
+    if (r === 'retried' || r === 'not-found' || r === 'not-failed' || r === 'source-busy') return r;
+    throw new Error(`n6b_retry_job вернула нераспознанный ответ: ${String(r)}`);
+  });
 }
 
 export interface CabinetSource {
