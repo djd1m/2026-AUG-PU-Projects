@@ -1,0 +1,18 @@
+index-jobs, 2026-09-30, перед первым docker-вызовом.
+
+$ bash scripts/check-port-conflicts.sh projects/06b-rag-class        (из корня репозитория)
+== БД и хранилища не смотрят в интернет ==
+  ❌ не удалось прочитать конфиг (projects/06b-rag-class/docker-compose.yml) — проверка на публикацию БД НЕ выполнена
+== За reverse-proxy приложение не публикуется ==
+  ❌ конфиг не прочитан — проверка «только прокси наружу» НЕ выполнена
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 3106 свободен
+exit=1
+
+Причина: в worktree нет .env рабочего стека (${VAR:?} в docker-compose.yml) — честный отказ, а не «чисто».
+Рабочий стек не поднимался (стенд не поднимать). Поднимался только тестовый стек compose.test.yml под -p n6b-f03;
+он портов не публикует:
+
+$ docker compose -p n6b-f03 --env-file <вне репозитория> -f compose.test.yml -f <override: image n6b-f03-runner:local> config \
+    | grep -cE '^ +(published|host_ip):'
+0

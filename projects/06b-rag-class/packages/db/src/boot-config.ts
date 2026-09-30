@@ -33,6 +33,17 @@ export const LIMIT_MAX = 2_147_483_647;
 
 export type ConfigValues = Readonly<Record<string, string | number>>;
 
+/**
+ * Значения, прошедшие checkConfig (08_review.md spend-ceilings R-1). Метка — объект в закрытом множестве модуля, а не поле:
+ * литерал `{ LIMIT_…: 2147483647 }` или копия через spread проверенными не становятся. Фабрика живой двери берёт пределы
+ * только отсюда, поэтому выдуманные потолки в неё не подставить.
+ */
+const VERIFIED = new WeakSet<object>();
+
+export function isVerifiedConfig(values: unknown): values is ConfigValues {
+  return typeof values === 'object' && values !== null && VERIFIED.has(values);
+}
+
 function decodeUrlPart(part: string): string | null {
   try { return decodeURIComponent(part); } catch { return null; }
 }
@@ -133,7 +144,9 @@ export function checkConfig(specs: readonly VarSpec[], pairs: readonly PairRule[
       throw new ConfigError(personal, `${personal} (${p}) больше ${total} (${t}): персональный предел не сработает никогда`);
     }
   }
-  return values;
+  const verified = Object.freeze(values);
+  VERIFIED.add(verified);
+  return verified;
 }
 
 /** Отказ старта: печатает имя переменной и последствие (значение не печатается никогда) и завершает процесс с 1. */

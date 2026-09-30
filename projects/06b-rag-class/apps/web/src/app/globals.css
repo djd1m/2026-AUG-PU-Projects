@@ -45,3 +45,14 @@ button:disabled { opacity: 0.6; cursor: progress; }
 .auth-error { color: var(--danger); margin: 0; }
 .cabinet { max-width: 720px; }
 .cabinet-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space); }
+/* Источники и задачи индексации: три состояния различимы и текстом, и цветом рамки. */
+.bot-card { border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space); margin-top: var(--space); }
+.source-row { border-top: 1px solid var(--border); padding-top: calc(var(--space) / 2); margin-top: calc(var(--space) / 2); }
+.source-locator { overflow-wrap: anywhere; color: var(--muted); }
+.job { border-left: 4px solid var(--border); padding-left: calc(var(--space) / 2); }
+.job-running { border-left-color: var(--accent); }
+.job-succeeded { border-left-color: var(--fg); }
+.job-failed { border-left-color: var(--danger); }
+.job-detail { color: var(--muted); }
+.add-source { display: flex; flex-wrap: wrap; gap: calc(var(--space) / 2); margin-top: var(--space); }
+.add-source input { flex: 1 1 240px; min-width: 0; }
