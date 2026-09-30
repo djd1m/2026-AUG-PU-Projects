@@ -40,10 +40,14 @@ export function sessionCookie(token: string, production: boolean, maxAge = SESSI
   return `${SESSION_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${production ? '; Secure' : ''}`;
 }
 
+/** Токен сессии — 32 случайных байта в base64url (43 символа); всё прочее не токен и в БД не ищется. */
+export function sessionTokenOrNull(value: string | undefined): string | null {
+  return value && /^[A-Za-z0-9_-]{43}$/.test(value) ? value : null;
+}
+
 export function readSessionCookie(request: Request): string | null {
-  const token = request.headers.get('cookie')?.split(';').map((s) => s.trim())
-    .find((s) => s.startsWith(`${SESSION_COOKIE}=`))?.slice(SESSION_COOKIE.length + 1);
-  return token && /^[A-Za-z0-9_-]{43}$/.test(token) ? token : null;
+  return sessionTokenOrNull(request.headers.get('cookie')?.split(';').map((s) => s.trim())
+    .find((s) => s.startsWith(`${SESSION_COOKIE}=`))?.slice(SESSION_COOKIE.length + 1));
 }
 
 /** Ключ почасового предела входа: HMAC адреса (IPv4 целиком, IPv6 /64) + час по Москве. */

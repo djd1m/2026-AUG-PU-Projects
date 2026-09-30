@@ -1,10 +1,10 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { moscowDay, moscowHour, QuotaRefused, reserveQuota, reserveQuotaNow } from '../../src/quota';
 import { withService } from '../../src/tenant';
-import { appPool, ownerPool, uniq } from './helpers';
+import { servicePool, ownerPool, uniq } from './helpers';
 
 const owner = ownerPool();
-const app = appPool(10);
+const app = servicePool(10);
 afterAll(async () => { await owner.end(); await app.end(); });
 
 const used = async (scope: string) =>

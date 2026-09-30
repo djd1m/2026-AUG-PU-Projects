@@ -5,6 +5,6 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export const GET = createHealthHandler(async () => {
-  const { pool } = getRuntime(); // ConfigError здесь → 503
-  await pool.query('SELECT 1');
+  const { tenantPool, servicePool } = getRuntime(); // ConfigError здесь → 503
+  await Promise.all([tenantPool.query('SELECT 1'), servicePool.query('SELECT 1')]); // обе роли входа живы
 });

@@ -1,0 +1,47 @@
+/* Токены — фолбэк-палитра (облик источника не снят, docs/source-product-profile.md). */
+:root {
+  --bg: #ffffff;
+  --fg: #1c1f24;
+  --muted: #5b6270;
+  --accent: #1f5fbf;
+  --accent-fg: #ffffff;
+  --danger: #b3261e;
+  --border: #d5d9e0;
+  --radius: 8px;
+  --space: 16px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --fg: #e8eaee;
+    --muted: #a3a9b5;
+    --accent: #6ea0ff;
+    --accent-fg: #0b1020;
+    --danger: #ff8a80;
+    --border: #353a44;
+  }
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 var(--font); }
+main { max-width: 480px; margin: 0 auto; padding: calc(var(--space) * 2) var(--space); }
+a { color: var(--accent); }
+
+.auth-form { display: grid; gap: var(--space); margin: var(--space) 0; }
+.auth-form label { display: grid; gap: 4px; }
+.auth-form input[type="email"], .auth-form input[type="password"] {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg); color: var(--fg); font: inherit;
+}
+.auth-form fieldset { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; }
+.auth-form .choice { display: flex; gap: 8px; align-items: center; }
+button {
+  padding: 10px 16px; border: 0; border-radius: var(--radius); background: var(--accent); color: var(--accent-fg);
+  font: inherit; cursor: pointer;
+}
+button:disabled { opacity: 0.6; cursor: progress; }
+.auth-error { color: var(--danger); margin: 0; }
+.cabinet { max-width: 720px; }
+.cabinet-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space); }

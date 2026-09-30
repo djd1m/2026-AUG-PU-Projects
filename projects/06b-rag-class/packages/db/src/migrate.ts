@@ -1,7 +1,8 @@
 // Раннер миграций (перенос N1 packages/db/src/migrate.ts, адаптирован): применяет migrations/*.sql по имени, каждую
 // в своей транзакции, под advisory-блокировкой (два одновременных migrate не применяют одну миграцию дважды).
-// В конце ставит пароль роли приложения n6b_app из N6B_DB_APP_PASSWORD — пароль не печатается и не попадает в журнал.
-// Запуск: DATABASE_URL_OWNER=… N6B_DB_APP_PASSWORD=… node packages/db/dist/migrate.js
+// В конце ставит пароли двух пользователей входа (002_rls.sql): n6b_app_tenant (кабинет) из N6B_DB_TENANT_PASSWORD и
+// n6b_app_service (вход, квоты, воркер) из N6B_DB_SERVICE_PASSWORD — пароли не печатаются и не попадают в журнал.
+// Запуск: DATABASE_URL_OWNER=… N6B_DB_TENANT_PASSWORD=… N6B_DB_SERVICE_PASSWORD=… node packages/db/dist/migrate.js
 
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -13,13 +14,20 @@ const LOCK_KEY = 6_020_930; // произвольная константа advis
 
 export interface MigrateOptions {
   ownerUrl: string;
-  appPassword: string;
+  tenantPassword: string;
+  servicePassword: string;
   log?: (line: string) => void;
 }
 
-export async function migrate({ ownerUrl, appPassword, log = console.log }: MigrateOptions): Promise<string[]> {
+export const LOGIN_ROLES = { tenant: 'n6b_app_tenant', service: 'n6b_app_service' } as const;
+
+export async function migrate({ ownerUrl, tenantPassword, servicePassword, log = console.log }: MigrateOptions):
+  Promise<string[]> {
   if (!ownerUrl) throw new Error('DATABASE_URL_OWNER не задан: миграции некуда применять');
-  if (!appPassword) throw new Error('N6B_DB_APP_PASSWORD не задан: роль приложения n6b_app не сможет подключиться');
+  if (!tenantPassword) throw new Error('N6B_DB_TENANT_PASSWORD не задан: кабинет (n6b_app_tenant) не сможет подключиться');
+  if (!servicePassword) {
+    throw new Error('N6B_DB_SERVICE_PASSWORD не задан: вход, квоты и воркер (n6b_app_service) не смогут подключиться');
+  }
   const client = new pg.Client({ connectionString: ownerUrl });
   await client.connect();
   const applied: string[] = [];
@@ -47,10 +55,12 @@ export async function migrate({ ownerUrl, appPassword, log = console.log }: Migr
       log(`apply ${file}`);
     }
     // ALTER ROLE не принимает bind-параметры: литерал экранирует сама БД через format(%L).
-    const { rows } = await client.query<{ sql: string }>(
-      "SELECT format('ALTER ROLE n6b_app WITH LOGIN PASSWORD %L', $1::text) AS sql", [appPassword]);
-    await client.query(rows[0]!.sql);
-    log(`миграции: применено ${applied.length}, всего ${files.length}; роль n6b_app обновлена`);
+    for (const [role, password] of [[LOGIN_ROLES.tenant, tenantPassword], [LOGIN_ROLES.service, servicePassword]]) {
+      const { rows } = await client.query<{ sql: string }>(
+        "SELECT format('ALTER ROLE %I WITH LOGIN PASSWORD %L', $1::text, $2::text) AS sql", [role, password]);
+      await client.query(rows[0]!.sql);
+    }
+    log(`миграции: применено ${applied.length}, всего ${files.length}; роли ${Object.values(LOGIN_ROLES).join(', ')} обновлены`);
     return applied;
   } finally {
     await client.query('SELECT pg_advisory_unlock($1)', [LOCK_KEY]).catch(() => undefined);
@@ -60,7 +70,8 @@ export async function migrate({ ownerUrl, appPassword, log = console.log }: Migr
 
 const isEntry = process.argv[1] !== undefined && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isEntry) {
-  migrate({ ownerUrl: process.env.DATABASE_URL_OWNER ?? '', appPassword: process.env.N6B_DB_APP_PASSWORD ?? '' })
+  migrate({ ownerUrl: process.env.DATABASE_URL_OWNER ?? '', tenantPassword: process.env.N6B_DB_TENANT_PASSWORD ?? '',
+    servicePassword: process.env.N6B_DB_SERVICE_PASSWORD ?? '' })
     .catch((error: unknown) => {
       console.error(`migrate: ${(error as Error).message}`);
       process.exitCode = 1;

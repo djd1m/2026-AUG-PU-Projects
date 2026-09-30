@@ -45,9 +45,27 @@ source-management.
 
 ## 5. Тесты
 
-`npm test` (unit + contract на адаптере `fake`) · `npm run test:int` (compose `name: n6b-test`) · `npm run test:e2e`
-(Playwright по адресу стенда, виджет на ЧУЖОМ origin). Каждый SC-US — тест с идентификатором в имени. Правило:
-`.claude/rules/testing.md`.
+`npm test` (unit + contract на адаптере `fake`; `pretest` сам собирает `@n6b/db`) · `npm run test:int` (интеграция,
+только против БД тестового стека ниже) · `npm run test:e2e` (Playwright по адресу стенда, виджет на ЧУЖОМ origin). Каждый
+SC-US — тест с идентификатором в имени. Правило: `.claude/rules/testing.md`.
+
+**Полный прогон всех наборов (typecheck + unit + integration) — одной командой в контейнере.** Стек `compose.test.yml`
+(`name: n6b-test`): Postgres + pgvector без `ports:` во внутренней сети, данные в tmpfs, раннер собирается из
+`tests/compose/Dockerfile`. Пароли — случайные, в env-файле ВНЕ репозитория; без них compose не стартует (`${VAR:?}`).
+
+```bash
+cd projects/06b-rag-class
+ENV_FILE="$(mktemp)"; chmod 600 "$ENV_FILE"
+printf 'TEST_DB_PASSWORD=%s\nTEST_TENANT_PASSWORD=%s\nTEST_SERVICE_PASSWORD=%s\n' \
+  "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" > "$ENV_FILE"
+docker compose --env-file "$ENV_FILE" -f compose.test.yml config | grep -cE '^ +(published|host_ip):'   # 0 — стек ничего не публикует
+docker compose --env-file "$ENV_FILE" -f compose.test.yml run --rm --build tests; echo "exit=$?"
+docker compose --env-file "$ENV_FILE" -f compose.test.yml down -v; rm -f "$ENV_FILE"
+```
+
+Портов тестовый стек не публикует, поэтому `check-port-conflicts.sh` (он читает `docker-compose.yml`) здесь не нужен —
+вместо него строка `config | grep` выше. Код возврата `run` — код прогона: 0 только если прошли все три набора. Без БД `npm run test:int` падает с «интеграционная
+проверка НЕ выполнена», а не пропускается.
 
 ## 6. Локальный стек и стенд
 

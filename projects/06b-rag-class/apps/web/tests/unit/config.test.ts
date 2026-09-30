@@ -12,7 +12,8 @@ const PSEUDOCODE_13 = [
 export function validEnv(): Record<string, string> {
   return {
     NODE_ENV: 'production',
-    DATABASE_URL: 'postgresql://n6b_app:x@db:5432/n6b',
+    DATABASE_URL_TENANT: 'postgresql://n6b_app_tenant:x@db:5432/n6b',
+    DATABASE_URL_SERVICE: 'postgresql://n6b_app_service:y@db:5432/n6b',
     OPENROUTER_API_KEY: 'sk-or-test-placeholder',
     SESSION_SECRET: 's'.repeat(48),
     VISITOR_SECRET: 'v'.repeat(48),
@@ -100,10 +101,26 @@ describe('Boot config check web (FR-n6b-16, NFR-n6b-3)', () => {
     expect(failure({ ...validEnv(), [name]: 'short-secret' }).variable).toBe(name);
   });
 
-  it('DATABASE_URL отсутствует → отказ с именем', () => {
+  it.each(['DATABASE_URL_TENANT', 'DATABASE_URL_SERVICE'])('%s отсутствует → отказ с именем', (name) => {
     const env = validEnv();
-    delete env.DATABASE_URL;
-    expect(failure(env).variable).toBe('DATABASE_URL');
+    delete env[name];
+    expect(failure(env).variable).toBe(name);
+  });
+
+  it('F-3: строки подключения перепутаны местами → отказ (кабинет не входит служебной ролью)', () => {
+    const env = validEnv();
+    const swapped = { ...env, DATABASE_URL_TENANT: env.DATABASE_URL_SERVICE!, DATABASE_URL_SERVICE: env.DATABASE_URL_TENANT! };
+    const error = failure(swapped);
+    expect(error.variable).toBe('DATABASE_URL_TENANT');
+    expect(error.message).toContain('n6b_app_tenant');
+    expect(error.message).not.toContain(':y@');
+  });
+
+  it('F-3: строка подключения без пароля или не postgresql:// → отказ', () => {
+    expect(failure({ ...validEnv(), DATABASE_URL_TENANT: 'postgresql://n6b_app_tenant@db:5432/n6b' }).variable)
+      .toBe('DATABASE_URL_TENANT');
+    expect(failure({ ...validEnv(), DATABASE_URL_SERVICE: 'mysql://n6b_app_service:y@db/n6b' }).variable)
+      .toBe('DATABASE_URL_SERVICE');
   });
 
   it('SC-US-016-2: enforceBootConfig завершает процесс кодом 1 и не печатает значения', () => {

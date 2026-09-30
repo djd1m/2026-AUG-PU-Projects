@@ -135,13 +135,22 @@ Every capability this product needs from someone else's service. One row per cap
 | Operator | `operator` | `unique(account_id)`; запись только миграцией/CLI оператора | чтение сервисной ролью |
 
 Связи: account 1—N bot 1—N source 1—N document 1—N chunk; source 1—N index_job; account(студия) 1—N account(подаккаунт).
-`account_id` денормализован в source/document/chunk/job/log для RLS одним предикатом (урок N1 #9: `SET LOCAL` в транзакции).
+`account_id` денормализован в source/source_file/document/chunk/job/log для RLS одним предикатом (урок N1 #9: `SET LOCAL` в
+транзакции). Совпадение `account_id` с родителем держат **составные FK** `(parent_id, account_id) → parent(id, account_id)`
+(у `bot`, `source`, `document` — `UNIQUE (id, account_id)`): проверка FK идёт в обход RLS, и одиночный `bot_id → bot(id)`
+позволил бы арендатору сослаться на чужой объект (08_review.md F-1 фичи foundation).
 
 ## Security Architecture
 
 - **Аутентификация:** e-mail + пароль (bcrypt cost 12, фиктивный хэш при отсутствии аккаунта), cookie сессии httpOnly,
   Secure, SameSite=Lax, в БД — HMAC токена. `SESSION_SECRET` отсутствует → отказ старта.
-- **Авторизация:** RLS по `account_id` через роль приложения и `SET LOCAL app.account_ids` в транзакции; студия видит дочерние
+- **Роли БД:** два пользователя входа с отдельными пулами. Кабинет — `n6b_app_tenant` (член только `n6b_tenant`,
+  строка `DATABASE_URL_TENANT`); вход/регистрация, квоты, публичные ручки, воркер, оператор — `n6b_app_service` (член только
+  `n6b_service` с BYPASSRLS, строка `DATABASE_URL_SERVICE`). Из транзакции кабинета `SET ROLE n6b_service` невозможен, поэтому
+  внедрение SQL в запрос кабинета не читает чужих арендаторов. Колонка `account.password_hash` кабинету не выдана.
+- **Авторизация:** RLS по `account_id` через роль `n6b_tenant` и `set_config('app.account_id', <id сессии>, true)` в
+  транзакции; список видимых аккаунтов (свой + подаккаунты с `studio_access`) вычисляет функция БД `n6b_account_ids()`,
+  приложение его не передаёт; студия видит дочерние
   аккаунты только при `studio_access=true`; подаккаунт создаётся с `studio_access=true` явно, у обычного аккаунта `false`
   (DEFAULT false в схеме). Оператор — по списку id в таблице `operator` (пусто = никто).
 - **Публичные ручки входа:** регистрация и вход — 10 попыток/час на адрес (IPv6 — на префикс /64; `quota_counter`, ключ `auth:addr:<hmac>:<час>`).

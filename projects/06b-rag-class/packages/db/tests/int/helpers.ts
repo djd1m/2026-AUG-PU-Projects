@@ -1,24 +1,44 @@
 import { randomBytes } from 'node:crypto';
 import pg from 'pg';
 
-export function env(): { ownerUrl: string; appPassword: string; appUrl: string } {
+export interface TestEnv {
+  ownerUrl: string;
+  tenantPassword: string;
+  servicePassword: string;
+  tenantUrl: string;
+  serviceUrl: string;
+}
+
+export function env(): TestEnv {
   const ownerUrl = process.env.TEST_DATABASE_URL_OWNER ?? '';
-  const appPassword = process.env.TEST_APP_PASSWORD ?? '';
-  if (!ownerUrl || !appPassword) {
-    throw new Error('TEST_DATABASE_URL_OWNER и TEST_APP_PASSWORD не заданы: интеграционная проверка НЕ выполнена');
+  const tenantPassword = process.env.TEST_TENANT_PASSWORD ?? '';
+  const servicePassword = process.env.TEST_SERVICE_PASSWORD ?? '';
+  if (!ownerUrl || !tenantPassword || !servicePassword) {
+    throw new Error('TEST_DATABASE_URL_OWNER, TEST_TENANT_PASSWORD и TEST_SERVICE_PASSWORD не заданы: '
+      + 'интеграционная проверка НЕ выполнена (запуск — compose.test.yml, DEVELOPMENT_GUIDE.md §5)');
   }
-  const url = new URL(ownerUrl);
-  url.username = 'n6b_app';
-  url.password = appPassword;
-  return { ownerUrl, appPassword, appUrl: url.toString() };
+  const as = (user: string, password: string) => {
+    const url = new URL(ownerUrl);
+    url.username = user;
+    url.password = password;
+    return url.toString();
+  };
+  return { ownerUrl, tenantPassword, servicePassword,
+    tenantUrl: as('n6b_app_tenant', tenantPassword), serviceUrl: as('n6b_app_service', servicePassword) };
 }
 
 export function ownerPool(): pg.Pool {
   return new pg.Pool({ connectionString: env().ownerUrl, max: 4 });
 }
 
-export function appPool(max = 10): pg.Pool {
-  return new pg.Pool({ connectionString: env().appUrl, max, connectionTimeoutMillis: 5000 });
+/** Пул кабинета: пользователь n6b_app_tenant, член только n6b_tenant (как DATABASE_URL_TENANT в проде). */
+export function tenantPool(max = 10): pg.Pool {
+  return new pg.Pool({ connectionString: env().tenantUrl, max, connectionTimeoutMillis: 5000 });
+}
+
+/** Служебный пул: пользователь n6b_app_service, член только n6b_service (как DATABASE_URL_SERVICE). */
+export function servicePool(max = 10): pg.Pool {
+  return new pg.Pool({ connectionString: env().serviceUrl, max, connectionTimeoutMillis: 5000 });
 }
 
 export function uniq(prefix: string): string {
@@ -65,5 +85,14 @@ export async function seedTenant(owner: pg.Pool, opts: { kind?: 'owner' | 'studi
      VALUES ($1, $2, $3, 0, 'text', 'h', 1, $4) RETURNING id`, [documentId, botId, accountId, vector()]);
   const job = await owner.query<{ id: string }>(
     `INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) RETURNING id`, [sourceId, accountId]);
+  // Строка в КАЖДОЙ таблице кабинета: страж rls-catalog.test.ts требует, чтобы A видел свои строки (иначе проверка
+  // изоляции на пустой таблице зеленела бы сама собой).
+  await owner.query(`INSERT INTO source_file (source_id, account_id, bytes, sha256) VALUES ($1, $2, '\\x00', 'h')`,
+    [sourceId, accountId]);
+  await owner.query(`INSERT INTO question_log (bot_id, account_id, channel, question, outcome)
+     VALUES ($1, $2, 'sandbox', 'вопрос посетителя', 'answered')`, [botId, accountId]);
+  await owner.query(`INSERT INTO growth_event (account_id, kind) VALUES ($1, 'first_cited_answer')`, [accountId]);
+  await owner.query(`INSERT INTO handover_token (account_id, token_hash, expires_at)
+     VALUES ($1, $2, now() + interval '1 day')`, [accountId, randomBytes(16).toString('hex')]);
   return { accountId, botId, sourceId, documentId, chunkId: chunk.rows[0]!.id, jobId: job.rows[0]!.id };
 }

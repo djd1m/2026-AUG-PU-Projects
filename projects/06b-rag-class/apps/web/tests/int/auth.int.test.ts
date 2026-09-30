@@ -5,13 +5,13 @@ import { reserveQuotaNow } from '@n6b/db';
 import { AuthService, DUMMY_HASH, type PasswordHasher } from '@/server/auth';
 import { createAuthHandler, readSessionCookie } from '@/server/auth-handler';
 import { PgAuthStore } from '@/server/auth-store';
-import { appPool, ownerPool, uniq } from '../../../../packages/db/tests/int/helpers';
+import { servicePool, ownerPool, uniq } from '../../../../packages/db/tests/int/helpers';
 
-// FR-n6b-1 на настоящей БД, настоящем bcrypt (cost 12) и настоящем счётчике quota_counter под ролью n6b_app.
+// FR-n6b-1 на настоящей БД, настоящем bcrypt (cost 12) и настоящем счётчике quota_counter под служебным пользователем n6b_app_service.
 const BASE = 'https://n6b.example.test';
 const SESSION_SECRET = 's'.repeat(48);
 const owner = ownerPool();
-const app = appPool(10);
+const app = servicePool(10);
 afterAll(async () => { await owner.end(); await app.end(); });
 
 const calls: string[] = [];

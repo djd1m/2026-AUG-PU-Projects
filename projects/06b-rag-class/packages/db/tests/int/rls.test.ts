@@ -1,15 +1,17 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { withService, withTenant } from '../../src/tenant';
-import { appPool, ownerPool, seedTenant, type Tenant, vector } from './helpers';
+import { ownerPool, seedTenant, servicePool, type Tenant, tenantPool, vector } from './helpers';
 
-// NFR-n6b-3: RLS по account_id. Проверяется под ролью приложения n6b_app (как в проде), не под владельцем БД.
+// NFR-n6b-3: RLS по account_id. Проверяется под пользователями входа n6b_app_tenant / n6b_app_service (как в проде),
+// не под владельцем БД. Полный перечень таблиц с account_id — rls-catalog.test.ts (из pg_catalog, не списком руками).
 const TENANT_TABLES = ['bot', 'source', 'source_file', 'document', 'chunk', 'index_job', 'question_log',
   'growth_event', 'handover_token'];
 const ALL_TABLES = ['account', 'session', ...TENANT_TABLES, 'model_call_log', 'quota_counter', 'widget_install',
   'badge_event', 'operator'];
 
 const owner = ownerPool();
-const app = appPool();
+const tenant = tenantPool();
+const svc = servicePool();
 let a: Tenant;
 let b: Tenant;
 
@@ -17,10 +19,10 @@ beforeAll(async () => {
   a = await seedTenant(owner);
   b = await seedTenant(owner);
 });
-afterAll(async () => { await owner.end(); await app.end(); });
+afterAll(async () => { await owner.end(); await tenant.end(); await svc.end(); });
 
 const count = (table: string, accountId: string, as: string) =>
-  withTenant(app, as, async (c) => Number((await c.query(
+  withTenant(tenant, as, async (c) => Number((await c.query(
     `SELECT count(*)::int AS n FROM ${table} WHERE account_id = $1`, [accountId])).rows[0].n));
 
 describe('схема и pgvector (ADR-002)', () => {
@@ -54,32 +56,27 @@ describe('схема и pgvector (ADR-002)', () => {
   });
 });
 
-describe('RLS: изоляция арендаторов под ролью n6b_app', () => {
-  it.each(['bot', 'source', 'document', 'chunk', 'index_job'])('%s: A видит свои строки и не видит строк B', async (t) => {
-    expect(await count(t, a.accountId, a.accountId)).toBeGreaterThan(0);
-    expect(await count(t, b.accountId, a.accountId)).toBe(0);
-  });
-
+describe('RLS: изоляция арендаторов под пользователем кабинета n6b_app_tenant', () => {
   it('SELECT без фильтра возвращает только строки своего аккаунта', async () => {
-    const ids = await withTenant(app, a.accountId, async (c) =>
+    const ids = await withTenant(tenant, a.accountId, async (c) =>
       (await c.query<{ account_id: string }>('SELECT DISTINCT account_id FROM bot')).rows.map((r) => r.account_id));
     expect(ids).toEqual([a.accountId]);
   });
 
   it('чужой bot_id по прямому id не находится (→ 404 в API, существование не раскрыто)', async () => {
-    const rows = await withTenant(app, a.accountId, async (c) =>
+    const rows = await withTenant(tenant, a.accountId, async (c) =>
       (await c.query('SELECT id FROM bot WHERE id = $1', [b.botId])).rows);
     expect(rows).toEqual([]);
   });
 
   it('запись строки с чужим account_id отвергается WITH CHECK', async () => {
-    await expect(withTenant(app, a.accountId, (c) => c.query(
+    await expect(withTenant(tenant, a.accountId, (c) => c.query(
       `INSERT INTO bot (account_id, public_id, name) VALUES ($1, 'AAAAAAAAAAAA', 'x')`, [b.accountId])))
       .rejects.toThrow(/row-level security/);
   });
 
   it('UPDATE и DELETE чужих строк не затрагивают ни одной строки', async () => {
-    const touched = await withTenant(app, a.accountId, async (c) => {
+    const touched = await withTenant(tenant, a.accountId, async (c) => {
       const u = await c.query("UPDATE bot SET name = 'pwned' WHERE id = $1", [b.botId]);
       const d = await c.query('DELETE FROM chunk WHERE id = $1', [b.chunkId]);
       return (u.rowCount ?? 0) + (d.rowCount ?? 0);
@@ -89,7 +86,7 @@ describe('RLS: изоляция арендаторов под ролью n6b_app
   });
 
   it('роль кабинета без контекста аккаунта не видит ничего', async () => {
-    const client = await app.connect();
+    const client = await tenant.connect();
     try {
       await client.query('BEGIN');
       await client.query('SET LOCAL ROLE n6b_tenant');
@@ -102,30 +99,32 @@ describe('RLS: изоляция арендаторов под ролью n6b_app
     }
   });
 
-  it('n6b_app без SET ROLE не читает таблиц (NOINHERIT, fail-closed)', async () => {
-    // Схема public закрыта для PUBLIC: n6b_app без SET ROLE не видит даже имён таблиц.
-    await expect(app.query('SELECT count(*) FROM public.bot')).rejects.toThrow(/permission denied/);
-    await expect(app.query('SELECT count(*) FROM public.account')).rejects.toThrow(/permission denied/);
-    const priv = await owner.query<{ bot: boolean; usage: boolean; bypass: boolean; inherit: boolean }>(
-      `SELECT has_table_privilege('n6b_app', 'public.bot', 'SELECT') AS bot,
-              has_schema_privilege('n6b_app', 'public', 'USAGE') AS usage,
-              rolbypassrls AS bypass, rolinherit AS inherit FROM pg_roles WHERE rolname = 'n6b_app'`);
-    expect(priv.rows[0]).toEqual({ bot: false, usage: false, bypass: false, inherit: false });
-  });
+  it.each(['n6b_app_tenant', 'n6b_app_service'])('%s без SET ROLE не читает таблиц (NOINHERIT, fail-closed)',
+    async (role) => {
+      // Схема public закрыта для PUBLIC: пользователь входа без SET ROLE не видит даже имён таблиц.
+      const pool = role === 'n6b_app_tenant' ? tenant : svc;
+      await expect(pool.query('SELECT count(*) FROM public.bot')).rejects.toThrow(/permission denied/);
+      await expect(pool.query('SELECT count(*) FROM public.account')).rejects.toThrow(/permission denied/);
+      const priv = await owner.query<{ bot: boolean; usage: boolean; bypass: boolean; inherit: boolean }>(
+        `SELECT has_table_privilege($1, 'public.bot', 'SELECT') AS bot,
+                has_schema_privilege($1, 'public', 'USAGE') AS usage,
+                rolbypassrls AS bypass, rolinherit AS inherit FROM pg_roles WHERE rolname = $1`, [role]);
+      expect(priv.rows[0]).toEqual({ bot: false, usage: false, bypass: false, inherit: false });
+    });
 
   it('кабинету не выданы session, quota_counter, model_call_log, operator', async () => {
     for (const t of ['session', 'quota_counter', 'model_call_log', 'operator']) {
-      await expect(withTenant(app, a.accountId, (c) => c.query(`SELECT 1 FROM ${t} LIMIT 1`)), t)
+      await expect(withTenant(tenant, a.accountId, (c) => c.query(`SELECT 1 FROM ${t} LIMIT 1`)), t)
         .rejects.toThrow(/permission denied/);
     }
   });
 
   it('контекст SET LOCAL не переживает транзакцию (соединение пула не уносит арендатора)', async () => {
-    const single = appPool(1);
+    const single = tenantPool(1);
     try {
       await withTenant(single, a.accountId, (c) => c.query('SELECT 1'));
-      const leaked = await withService(single, async (c) =>
-        (await c.query<{ v: string | null }>("SELECT current_setting('app.account_id', true) AS v")).rows[0]!.v);
+      const leaked = (await single.query<{ v: string | null }>(
+        "SELECT current_setting('app.account_id', true) AS v")).rows[0]!.v;
       expect(leaked ?? '').toBe('');
     } finally {
       await single.end();
@@ -133,7 +132,7 @@ describe('RLS: изоляция арендаторов под ролью n6b_app
   });
 
   it('account: кабинет видит только свою строку', async () => {
-    const rows = await withTenant(app, a.accountId, async (c) => (await c.query('SELECT id FROM account')).rows);
+    const rows = await withTenant(tenant, a.accountId, async (c) => (await c.query('SELECT id FROM account')).rows);
     expect(rows.map((r) => r.id)).toEqual([a.accountId]);
   });
 
@@ -147,7 +146,7 @@ describe('RLS: изоляция арендаторов под ролью n6b_app
   });
 
   it('непригодный uuid контекста — ошибка, а не «видно всё»', async () => {
-    const client = await app.connect();
+    const client = await tenant.connect();
     try {
       await client.query('BEGIN');
       await client.query('SET LOCAL ROLE n6b_tenant');
@@ -160,7 +159,7 @@ describe('RLS: изоляция арендаторов под ролью n6b_app
   });
 
   it('сервисная роль видит все строки — изоляция на её путях только явным WHERE (зафиксировано)', async () => {
-    const n = await withService(app, async (c) => Number((await c.query(
+    const n = await withService(svc, async (c) => Number((await c.query(
       'SELECT count(DISTINCT account_id)::int AS n FROM chunk WHERE account_id = ANY($1)', [[a.accountId, b.accountId]]))
       .rows[0].n));
     expect(n).toBe(2);

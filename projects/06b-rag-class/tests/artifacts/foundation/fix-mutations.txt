@@ -1,0 +1,58 @@
+# Мутации ответа на находки валидации foundation (F-1…F-6). Каждая — на свежей БД compose.test.yml (down -v между
+# прогонами); дефектный файл подменён монтированием в контейнер раннера. После — базовый прогон зелёный (fix-green.txt).
+# M1 F-1: source_file_source_fk → одиночный FK (source_id) REFERENCES source(id)
+# M2 F-2: политики source_file и question_log → USING (true) WITH CHECK (true)
+# M3 F-3: GRANT n6b_service TO n6b_app_tenant
+# M4 F-4: GRANT SELECT ON account TO n6b_tenant (все колонки)
+# M5 F-6: из pendingViolations убрана проверка status === 'done'
+# M6 F-6: в дорожной карте spend-ceilings.status = done при непрочитанных LIMIT_*
+# M7 F-3: в boot-config убрана сверка пользователя строки подключения
+# M8 F-3: из environment web убран DATABASE_URL_TENANT, из worker — DATABASE_URL_SERVICE
+
+=== M1-F1 (packages/db/migrations/001_init.sql)
+   × составные внешние ключи арендатора (F-1) > каталог: каждая ссылка дочерней таблицы с account_id на родителя с account_id включает пару account_id 25ms
+   × составные внешние ключи арендатора (F-1) > кабинет A: 'source_file.source_id' со ссылкой на объект B → отказ 'source_file_source_fk' 13ms
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+=== M2-F2 (packages/db/migrations/002_rls.sql)
+   × RLS по перечню из pg_catalog (F-2) > чтение: на каждой таблице кабинета A видит свои строки и ни одной строки B 79ms
+   × RLS по перечню из pg_catalog (F-2) > запись: вставка строки с account_id B отвергается WITH CHECK на каждой таблице с INSERT 64ms
+   × RLS по перечню из pg_catalog (F-2) > изменение и удаление строк B не затрагивают ни одной строки; перенос своей строки к B отвергается 48ms
+ Test Files  1 failed (1)
+      Tests  3 failed | 5 passed (8)
+=== M3-F3 (packages/db/migrations/002_rls.sql)
+   × две роли входа (F-3) > членство: n6b_tenant ← только n6b_app_tenant, n6b_service ← только n6b_app_service 20ms
+   × две роли входа (F-3) > из транзакции кабинета SET ROLE n6b_service → отказ 28ms
+   × две роли входа (F-3) > внедрённый SQL в кабинете не читает хэш пароля и строки другого арендатора 9ms
+   × две роли входа (F-3) > пул кабинета не может открыть служебную транзакцию (withService на n6b_app_tenant → отказ) 8ms
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+=== M4-F4 (packages/db/migrations/002_rls.sql)
+   × колонка password_hash закрыта для кабинета (F-4) > каталог: у n6b_tenant нет права SELECT на account.password_hash 15ms
+   × колонка password_hash закрыта для кабинета (F-4) > кабинет: SELECT password_hash и SELECT * из account → отказ 26ms
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+=== M5-F6 (apps/web/tests/unit/config-wiring.test.ts)
+   × CFG-I5: каждая переменная старта читается решением > F-6: страж падает — фича закрыта, имя не читается 13ms
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+=== M6-F6 (.claude/feature-roadmap.json)
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_ANSWER_VISITOR_DAY: читается решением или названа незакрытая фича, которая его подключит 16ms
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_ANSWER_BOT_DAY: читается решением или названа незакрытая фича, которая его подключит 4ms
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_ANSWER_GLOBAL_DAY: читается решением или названа незакрытая фича, которая его подключит 5ms
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_SANDBOX_ACCOUNT_DAY: читается решением или названа незакрытая фича, которая его подключит 4ms
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_SANDBOX_GLOBAL_DAY: читается решением или названа незакрытая фича, которая его подключит 5ms
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_EMBED_TOKENS_ACCOUNT_DAY: читается решением или названа незакрытая фича, которая его подключит 5ms
+   × CFG-I5: каждая переменная старта читается решением > LIMIT_EMBED_TOKENS_GLOBAL_DAY: читается решением или названа незакрытая фича, которая его подключит 4ms
+ Test Files  1 failed (1)
+      Tests  7 failed | 11 passed (18)
+=== M7-F3 (packages/db/src/boot-config.ts)
+   × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3: строки подключения перепутаны местами → отказ (кабинет не входит служебной ролью) 8ms
+   × worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается 525ms
+ Test Files  2 failed (2)
+      Tests  2 failed | 68 passed (70)
+=== done
+=== M8-F3 (scripts/check-env-wiring.mjs по docker compose config с плейсхолдерами .env.example)
+Не проброшены переменные: web: DATABASE_URL_TENANT · worker: DATABASE_URL_SERVICE
+env-wiring-exit=1
+=== база: check-env-wiring.mjs → «Потерь нет. Проверено чтений: web=17, worker=6, migrate=3», exit 0
