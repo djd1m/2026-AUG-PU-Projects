@@ -29,7 +29,8 @@ let ipCounter = 0;
 const freshIp = () => `198.51.100.${(ipCounter += 1)}`;
 function req(body: object, ip: string): Request {
   return new Request(`${BASE}/api/auth/x`, { method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-forwarded-for': `10.0.0.1, ${ip}` }, body: JSON.stringify(body) });
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': `10.0.0.1, ${ip}`, origin: BASE },
+    body: JSON.stringify(body) });
 }
 const tokenOf = (res: Response) =>
   readSessionCookie(new Request(BASE, { headers: { cookie: (res.headers.get('set-cookie') ?? '').split(';')[0]! } }));
@@ -133,7 +134,7 @@ describe('регистрация и вход на Postgres (FR-n6b-1)', () => {
     const email = `${uniq('out')}@example.test`;
     const token = tokenOf(await register(req({ email, password: 'correct horse 1' }, freshIp())))!;
     const res = await createAuthHandler('logout', deps)(new Request(`${BASE}/api/auth/logout`, { method: 'POST',
-      headers: { cookie: `n6b_session=${token}` } }));
+      headers: { cookie: `n6b_session=${token}`, origin: BASE } }));
     expect(res.status).toBe(200);
     expect(await auth.authenticate(token)).toBeNull();
   });

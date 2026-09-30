@@ -54,7 +54,7 @@ function setup(limit = 10) {
 
 function req(body: unknown, headers: Record<string, string> = {}): Request {
   return new Request(`${BASE}/api/auth/x`, { method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.7', ...headers },
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.7', origin: BASE, ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body) });
 }
 
@@ -94,7 +94,7 @@ describe('регистрация и вход — порядок проверок
     expect(res.status).toBe(200);
     const token = readSessionCookie(new Request(BASE, { headers: { cookie: (res.headers.get('set-cookie') ?? '').split(';')[0]! } }));
     expect(token).not.toBeNull();
-    const out = await t.logout(new Request(BASE, { method: 'POST', headers: { cookie: `n6b_session=${token}` } }));
+    const out = await t.logout(new Request(BASE, { method: 'POST', headers: { cookie: `n6b_session=${token}`, origin: BASE } }));
     expect(out.status).toBe(200);
     expect(out.headers.get('set-cookie')).toContain('Max-Age=0');
   });
@@ -124,6 +124,19 @@ describe('регистрация и вход — порядок проверок
     expect(t.reserve).not.toHaveBeenCalled();
   });
 
+  it.each(['register', 'login', 'logout'] as const)('R-3: %s без заголовка Origin → 403 до предела и до выхода',
+    async (action) => {
+      const t = setup();
+      const plain = new Request(`${BASE}/api/auth/${action}`, { method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.7', cookie: `n6b_session=${'a'.repeat(43)}` },
+        body: JSON.stringify({ email: 'a@example.test', password: 'correct horse 1' }) });
+      const res = await { register: t.register, login: t.login, logout: t.logout }[action](plain);
+      expect(res.status).toBe(403);
+      expect((await res.json()).error.code).toBe('forbidden_origin');
+      expect(t.reserve).not.toHaveBeenCalled();
+      expect(res.headers.get('set-cookie')).toBeNull();
+    });
+
   it.each([
     [{ email: 'a@example.test', password: 'short' }, 422],
     [{ email: 'not-an-email', password: 'correct horse 1' }, 422],
@@ -142,7 +155,8 @@ describe('регистрация и вход — порядок проверок
   it('нет X-Forwarded-For → 503 и ни одной попытки bcrypt', async () => {
     const t = setup();
     const res = await t.login(new Request(`${BASE}/api/auth/login`, { method: 'POST',
-      headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: 'a@example.test', password: 'x'.repeat(12) }) }));
+      headers: { 'content-type': 'application/json', origin: BASE },
+      body: JSON.stringify({ email: 'a@example.test', password: 'x'.repeat(12) }) }));
     expect(res.status).toBe(503);
     expect(t.calls).toEqual([]);
   });

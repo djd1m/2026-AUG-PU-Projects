@@ -1,6 +1,7 @@
 // HTTP-ручки POST /api/auth/{register,login,logout} — перенос N5 apps/web/src/server/auth-handler.ts (#24),
 // адаптирован под Pseudocode «Register and login» и API Contracts N6b. Порядок (security-operation-order.md):
-//   1) Origin ≠ наш → 403 (чужая страница не сжигает счётчик посетителя и не входит от его имени);
+//   1) Origin ≠ наш ИЛИ Origin отсутствует → 403 (чужая страница не сжигает счётчик посетителя и не входит от его
+//      имени; браузер шлёт Origin на каждый POST fetch, поэтому его отсутствие — не браузер нашей формы, 08_review.md);
 //   2) предел попыток на адрес — атомарно, отдельной закоммиченной транзакцией, ДО разбора тела, bcrypt и записи
 //      аккаунта; общий ключ регистрации и входа; попытка засчитывается при любом дальнейшем исходе (SC-US-001-4);
 //   3) разбор и валидация тела; 4) bcrypt и запись.
@@ -76,7 +77,7 @@ export function createAuthHandler(action: 'register' | 'login' | 'logout', deps:
   return async (request: Request): Promise<Response> => {
     try {
       const origin = request.headers.get('origin');
-      if (origin !== null && origin !== ownOrigin) return fail(403, 'forbidden_origin', 'Источник запроса не разрешён');
+      if (origin !== ownOrigin) return fail(403, 'forbidden_origin', 'Источник запроса не разрешён');
 
       if (action === 'logout') {
         const token = readSessionCookie(request);
