@@ -1,0 +1,66 @@
+index-jobs — правки по независимой валидации (08_review.md F-1, F-2, F-5, F-6, F-7). 2026-09-30.
+Полный прогон DEVELOPMENT_GUIDE.md §5 (typecheck + unit + integration): docker compose -p n6b-f03fix -f compose.test.yml
++ override (image n6b-f03fix-runner:local), свежая БД (tmpfs, down -v перед прогоном), cpus: 2, портов не публикуется
+(config | grep -cE '^ +(published|host_ip):' → 0). Пароли — env-файл в scratchpad, удалён. Модель не вызывалась.
+Итог: exit=0; unit 247/247 (13 файлов; было 242); integration 127/127 (11 файлов; было 120).
+npm run build (db, rag, worker, web — Next.js) в том же раннере: exit 0.
+check-port-conflicts.sh projects/06b-rag-class (из корня): exit 1 «конфиг нечитаем» — в worktree нет .env (как у исполнителя
+и валидатора); порт 3106 свободен.
+node .claude/hooks/check-job-contract.cjs projects/06b-rag-class → exit 0.
+
+Мутации (копия файла с одной заменой, смонтирована поверх исходника; для миграции — свежая БД через down -v):
+| # | Файл | Мутация | Набор | Итог |
+|---|---|---|---|---|
+| V4 | worker sweeper.ts | leased_until < now() → < now() + interval '1 hour' (уборщик закрывает живые аренды) | INT services/worker/tests/int | 2 failed / 15 passed: «живая аренда третьего захвата…», «живая аренда после потолка…» (до правки: 23/23 зелёный) |
+| F2a | rag index.ts | PaidGateway экспортирован значением | typecheck + UNIT rag | tsc exit 2 (TS2578 unused @ts-expect-error, live-factory.types.ts:14); 1 failed «вход пакета не отдаёт…» |
+| F2b | rag live.ts | проверка лишних полей опций снята | UNIT rag | 1 failed / 76 passed: «поле config, limits или ключ в опциях → ConfigError» |
+| F2c | rag live.ts | кэш снят (окружение читается на каждом вызове) | UNIT rag | 1 failed / 76 passed: «исход кэшируется…» |
+| F2d | rag paid-call.ts | проверка ключа конструктора снята | UNIT rag | 2 failed / 75 passed: «конструктор двери без ключа…», «порядок paid-call…» |
+| F2e | rag live.ts | в опции фабрики добавлены config?/limits? | typecheck | tsc exit 2: TS2578 live-factory.types.ts:9 и :11 |
+| F6 | web job-view.ts | правило 11–14 снято из plural | UNIT jobs-handler | 2 failed / 9 passed (11 → «страница», 312 → «фрагмента») |
+| F7a | migration 005 | REVOKE UPDATE / колоночный INSERT сняты | INT index-job-grants | 3 failed / 2 passed |
+| F7b | migration 005 | BEFORE INSERT триггер снят | INT index-job-grants + tenant-fk | 2 failed / 20 passed: «живая / A: 23505:index_job_live_source_key вместо 23503», tenant-fk index_job (ON CONFLICT проглотил чужой) |
+| F7c | migration 005 | в n6b_retry_job снят фильтр account_id | INT index-job-grants | 1 failed / 4 passed: чужая упавшая → 'retried' вместо 'not-found' |
+Все 10 — красные; исходники восстановлены (прогон выше — на неизменённом дереве).
+
+Вывод прогона (строки итогов по файлам):
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+> n6b-rag-class@0.1.0 pretest
+> npm run build --workspace @n6b/db
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+> n6b-rag-class@0.1.0 test
+> vitest run --config vitest.config.ts
+ ✓ packages/rag/tests/unit/guards.test.ts (16 tests) 27ms
+ ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (39 tests) 58ms
+ ✓ apps/web/tests/unit/config.test.ts (78 tests) 34ms
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests) 342ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 27ms
+ ✓ packages/rag/tests/unit/provider.test.ts (16 tests) 36ms
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 15ms
+ ✓ packages/rag/tests/unit/live-factory.test.ts (6 tests) 360ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (18 tests) 39ms
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 16ms
+ ✓ services/worker/tests/unit/boot.test.ts (5 tests) 1841ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 19ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 14ms
+ Test Files  13 passed (13)
+      Tests  247 passed (247)
+> n6b-rag-class@0.1.0 test:int
+> vitest run --config vitest.int.config.ts
+ ✓ packages/rag/tests/int/paid-call.test.ts (19 tests) 3446ms
+ ✓ services/worker/tests/int/lease.int.test.ts (17 tests) 568ms
+ ✓ apps/web/tests/int/jobs.int.test.ts (8 tests) 463ms
+ ✓ packages/db/tests/int/rls.test.ts (17 tests) 276ms
+ ✓ packages/db/tests/int/spend-ops.test.ts (13 tests) 199ms
+ ✓ apps/web/tests/int/auth.int.test.ts (9 tests) 8863ms
+ ✓ packages/db/tests/int/rls-catalog.test.ts (8 tests) 235ms
+ ✓ packages/db/tests/int/tenant-fk.test.ts (17 tests) 203ms
+ ✓ packages/db/tests/int/index-job-grants.test.ts (5 tests) 141ms
+ ✓ packages/db/tests/int/roles.test.ts (9 tests) 125ms
+ ✓ packages/db/tests/int/quota.test.ts (5 tests) 187ms
+ Test Files  11 passed (11)
+      Tests  127 passed (127)
