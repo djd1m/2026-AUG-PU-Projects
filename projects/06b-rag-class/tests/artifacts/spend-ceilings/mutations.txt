@@ -1,0 +1,38 @@
+# Мутации стражей spend-ceilings (guard-must-be-able-to-fail): дефект внесён → красный → откат (git checkout).
+# Чистый фон: unit 189 passed; int (paid-call + quota + spend-ops) 32 passed.
+# int — compose -p n6b-f02, свежая БД на каждую мутацию, исходники смонтированы read-only. Ревизия d803d7d5 / fa43a9b0.
+
+## Integration (Postgres)
+M-1   SELECT used → проверка → UPSERT без условия          Tests 4 failed | 16 passed (20)  T-5a, T-5b, T-5c, quota «50 при пределе 3»
+M-2   WHERE used + n <= limit → WHERE $4 > 0               Tests 7 failed (20)               SC-US-016-1, T-4, T-5a…c, quota ×2
+M-3   отдельная транзакция на каждый ключ                  Tests 2 failed | 18 passed (20)  T-4, T-5b
+M-4   вызов провайдера ДО резерва                          Tests ≥10 failed (15)            SC-US-016-1, T-4, T-8 ×5, T-9, T-5a, T-5b
+M-5   возврат резерва при отказе провайдера                Tests 4 failed | 11 passed (15)  T-8 (timeout, unavailable, error-in-200, schema)
+M-6   отказ ключа — штатный return, а не исключение        Tests 7 failed | 13 passed (20)  SC-US-016-1, T-4, T-5a…c, quota ×2
+M-11  sandboxKeys не берёт answer:sandbox:global           Tests 5 failed | 10 passed (15)  T-8 ×4, T-5b (SC-US-016-4)
+M-13  порядок ключей обратный у половины вызывающих        Tests 1 failed | 14 passed (15)  T-5d (deadlock detected) — мутация оснастки
+T-6   вызов провайдера внутри транзакции резерва           Tests 3 failed | 12 passed (15)  T-6, T-5c, T-10
+T-10  исход без условия state='started'                    Tests 1 failed | 14 passed (15)  T-10
+R-1   сброс без записи в quota_reset_log                   Tests 1 failed | 11 passed (12)  сброс ключа песочницы
+R-2   закрытый список форм ключа снят                      Tests 12 passed (12)  ← СТРАЖ НЕ УПАЛ: отказ приходил от «счётчика нет»
+      после правки теста (строка с ключом существует)      Tests 5 failed | 7 passed (12)   коммит fa43a9b0
+T-13  нет строки счётчика → 0 вместо null                  Tests 1 failed | 11 passed (12)  T-13
+
+## Unit
+M-7   allow_fallbacks: true                                Tests 3 failed | 46 passed (49)  T-11, S-7
+M-7b  provider убран из тела эмбеддингов                   Tests 2 failed | 47 passed (49)  T-11, S-7
+M-8   повторный fetch при 5xx                              Tests 3 failed | 46 passed (49)  T-12, S-5
+M-9   сутки по UTC                                         Tests 1 failed | 48 passed (49)  T-2
+M-10a limitsFrom принимает 0                               Tests 7 failed | 42 passed (49)  T-1 (7 переменных)
+M-10b Boot config принимает '' и 0 в LIMIT_*               Tests 1 failed | 125 passed (126) web/worker boot
+M-10c персональный > общего пропускается                   Tests 1 failed | 48 passed (49)  T-1 пары
+M-12  ключ часа без даты                                   Tests 1 failed | 48 passed (49)  T-2 «тот же час завтра»
+M-14  START отдельной транзакцией после COMMIT резерва     Tests 1 failed | 10 passed (11)  страж порядка paid-call (T-9 эту мутацию НЕ ловит: START всё равно до вызова)
+S-9   маршрут apps/web зовёт provider.answer напрямую      Tests 1 failed | 10 passed (11)
+S-6   FakeProvider экспортирован из @n6b/rag               Tests 1 failed | 10 passed (11)
+S-10  вторая копия ON CONFLICT (scope, day) в пакете rag   Tests 1 failed | 10 passed (11)
+S-7   (до правки) replace('allow_fallbacks: false') внутри теста стража оставался зелёным: страж читал комментарий
+      шапки openrouter.ts. После вырезания комментариев — 11 passed, мутация красная.
+OWN-06B-009 общий предел отдаёт свой текст              Tests 1 failed | 21 passed (22)
+Origin    запрос без Origin пропускается                   Tests 3 failed | 14 passed (17)  R-3 ×3 ручки
+R-2(fnd)  decodeURIComponent без try                       Tests 1 failed | 68 passed (69)  «кривая %-последовательность → ConfigError»

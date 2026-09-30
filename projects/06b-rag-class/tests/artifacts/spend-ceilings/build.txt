@@ -1,0 +1,15 @@
+npm run build (db → rag → worker → web), локально, ревизия d803d7d5
+ ✓ Compiled successfully in 11.4s
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      160 B         106 kB
+├ ○ /_not-found                            988 B         104 kB
+├ ƒ /api/auth/login                        133 B         103 kB
+├ ƒ /api/auth/logout                       133 B         103 kB
+├ ƒ /api/auth/register                     133 B         103 kB
+├ ƒ /api/health                            133 B         103 kB
+├ ƒ /cabinet                               559 B         103 kB
+├ ○ /login                               1.36 kB         107 kB
+└ ○ /register                            1.36 kB         107 kB
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+exit=0
