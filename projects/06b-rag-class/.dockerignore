@@ -1,0 +1,18 @@
+# обязателен при COPY . . (compose-hygiene.md, правило 5): в образ не едут зависимости хоста, секреты и тулкит
+node_modules
+**/node_modules
+.next
+**/.next
+dist
+**/dist
+coverage
+test-results
+playwright-report
+tests
+.env
+.env.*
+*.dump
+*.log
+.git
+.claude
+docs

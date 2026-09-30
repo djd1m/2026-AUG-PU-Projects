@@ -1,0 +1,132 @@
+# N6b «RAG-бот для сайта» — Docker Compose (скелет Фазы 4 /replicate; план — docs/Architecture.md → Docker Compose).
+# Хранилище НЕ публикует портов (Правило №0, docker-ports.md). Хостовый порт — только ${VAR:-default} и только на петле.
+# Секреты, пределы и внешний адрес — ${VAR:?…} без значений по умолчанию: забытая переменная валит `config`, а не
+# поднимает тихо неверный стек. Вход снаружи — только через существующий TLS-прокси машины (внешняя сеть, OWN-06B-006).
+# СКЕЛЕТ: образы не собираются, пока нет package.json и workspace-манифестов (фича foundation). Это названный пробел.
+name: n6b
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-db-env: &db-env
+  DATABASE_URL: postgresql://n6b_app:${N6B_DB_APP_PASSWORD:?пароль роли приложения не задан — RLS-роль не подключится}@db:5432/n6b
+  TZ: Europe/Moscow
+
+x-model-env: &model-env
+  OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — ответы и индексация невозможны}
+  LIMIT_EMBED_TOKENS_ACCOUNT_DAY: ${LIMIT_EMBED_TOKENS_ACCOUNT_DAY:?потолок токенов эмбеддингов на аккаунт не задан — индексация без предела}
+  LIMIT_EMBED_TOKENS_GLOBAL_DAY: ${LIMIT_EMBED_TOKENS_GLOBAL_DAY:?суточный потолок токенов эмбеддингов не задан — индексация без предела}
+
+x-answer-env: &answer-env
+  MIN_SIMILARITY: ${MIN_SIMILARITY:?порог сходства не задан — граница «не знаю» не определена}
+  LIMIT_ANSWER_VISITOR_DAY: ${LIMIT_ANSWER_VISITOR_DAY:?потолок ответов на посетителя не задан — посторонний выставит счёт}
+  LIMIT_ANSWER_BOT_DAY: ${LIMIT_ANSWER_BOT_DAY:?потолок ответов на бота не задан}
+  LIMIT_ANSWER_GLOBAL_DAY: ${LIMIT_ANSWER_GLOBAL_DAY:?суточный потолок ответов не задан}
+  LIMIT_SANDBOX_ACCOUNT_DAY: ${LIMIT_SANDBOX_ACCOUNT_DAY:?потолок песочницы на аккаунт не задан}
+  LIMIT_SANDBOX_GLOBAL_DAY: ${LIMIT_SANDBOX_GLOBAL_DAY:?суточный потолок песочницы не задан}
+  LIMIT_AUTH_ADDR_HOUR: ${LIMIT_AUTH_ADDR_HOUR:?предел попыток входа на адрес не задан — перебор пароля не ограничен}
+
+services:
+  db:
+    image: pgvector/pgvector:0.8.6-pg16
+    environment:
+      POSTGRES_DB: n6b
+      POSTGRES_USER: n6b_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?пароль владельца БД не задан}
+      TZ: Europe/Moscow
+    volumes:
+      - n6b-db:/var/lib/postgresql/data
+    networks: [internal]
+    # никакого ports: — соседи ходят на db:5432 по сети compose (Правило №0)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n6b_owner -d n6b"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging: *logging
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    image: n6b-migrate:${N6B_MIGRATE_TAG:-dev}
+    environment:
+      DATABASE_URL_OWNER: postgresql://n6b_owner:${POSTGRES_PASSWORD:?пароль владельца БД не задан}@db:5432/n6b
+      N6B_DB_APP_PASSWORD: ${N6B_DB_APP_PASSWORD:?пароль роли приложения не задан}
+      TZ: Europe/Moscow
+    networks: [internal]
+    depends_on:
+      db:
+        condition: service_healthy
+    # one-shot: unless-stopped зациклил бы завершившуюся миграцию; web и worker ждут service_completed_successfully
+    restart: "no"
+    logging: *logging
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    image: n6b-web:${N6B_WEB_TAG:-dev}
+    environment:
+      <<: [*db-env, *model-env, *answer-env]
+      NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан}
+      VISITOR_SECRET: ${VISITOR_SECRET:?секрет ключа посетителя не задан — пределы на посетителя не построить}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?внешний адрес не задан — от него строятся код вставки, ссылка бейджа и origin демо}
+    # отладка только с самой машины; снаружи дверь одна — TLS-прокси (иначе X-Forwarded-For перестаёт быть доверенным)
+    ports:
+      - "127.0.0.1:${N6B_WEB_PORT:-3106}:3000"
+    networks: [internal, egress, proxy]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging: *logging
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    image: n6b-worker:${N6B_WORKER_TAG:-dev}
+    environment:
+      <<: [*db-env, *model-env]
+      NODE_ENV: production
+      N6B_WORKER_PULSE: /tmp/n6b-worker.pulse
+    networks: [internal, egress]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "find /tmp/n6b-worker.pulse -mmin -2 | grep -q ."]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    logging: *logging
+
+networks:
+  internal:
+    internal: true          # db недостижима из интернета и сама в него не ходит
+  egress: {}                # исходящий интернет: OpenRouter (web, worker) и сайты владельцев (worker)
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:?внешняя сеть TLS-прокси не задана — ожидается talk-ai-public (OWN-06B-006)}
+
+volumes:
+  n6b-db: {}
