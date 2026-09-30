@@ -91,6 +91,7 @@ Every capability this product needs from someone else's service. One row per cap
 | Ответ модели в заданной JSON-схеме (`answer`, `cited_ids`, `unknown`) | OpenAI API, `gpt-4.1-mini` | https://developers.openai.com/api/docs/models/gpt-4.1-mini · checked 2026-09-30 · «Structured outputs Supported» | CONFIRMED | FR-n6b-5, FR-n6b-6 |
 | Цена генерации для потолков: вход/выход за 1M токенов | OpenAI API, `gpt-4.1-mini` | https://developers.openai.com/api/docs/models/gpt-4.1-mini · checked 2026-09-30 · «Input $0.40 Cached input $0.10 Output $1.60» | CONFIRMED | FR-n6b-16 |
 | Поиск ближайших векторов HNSW по косинусному расстоянию с фильтром | pgvector 0.8.6 (расширение в нашем контейнере) | https://raw.githubusercontent.com/pgvector/pgvector/master/README.md · checked 2026-09-30 · «CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)» | CONFIRMED | FR-n6b-5, NFR-n6b-1 |
+| Итеративный скан HNSW, добирающий top-5 при фильтре `bot_id` (нужна версия pgvector ≥ 0.8) | pgvector 0.8.6 (расширение в нашем контейнере) | https://raw.githubusercontent.com/pgvector/pgvector/master/README.md · checked 2026-09-30 · «SET hnsw.iterative_scan = strict_order;» | CONFIRMED | FR-n6b-5, FR-n6b-6 |
 
 Не зависимость, а вход: сайт владельца (robots.txt, sitemap.xml, страницы) — его ответы обрабатываются по RFC 9309 и
 отказывают задачу с причиной, а не «пропускаются». Метрики продукта берутся из нашей БД — внешнего API метрик нет.
@@ -116,17 +117,17 @@ Every capability this product needs from someone else's service. One row per cap
 
 | Сущность | Таблица | Ключевые ограничения и индексы | RLS |
 |---|---|---|---|
-| Account | `account` | `unique(lower(email)) WHERE email IS NOT NULL`; `parent_account_id` FK → account, триггер «один уровень»; `plan text` (толкование в коде) | своя строка или дочерняя для студии |
+| Account | `account` | `unique(lower(email)) WHERE email IS NOT NULL`; `parent_account_id` FK → account, триггер «один уровень»; `plan text` (толкование в коде); `studio_access bool DEFAULT false`; `is_test bool DEFAULT false` (только CLI оператора) | своя строка или дочерняя для студии |
 | Session | `session` | `unique(token_hash)`, индекс `expires_at` | нет доступа из приложения кроме своих |
 | Bot | `bot` | `unique(public_id)`, `unique(demo_slug)`, `allowed_origins text[]` | по `account_id` |
 | Source / SourceFile | `source`, `source_file` | `source_file.bytes bytea`, CHECK размер ≤ 10 МБ | по `account_id` |
 | Document | `document` | `unique(source_id, locator_url)`, `unique(source_id, locator_page)` | по `account_id` |
 | Chunk | `chunk` | `embedding vector(1536)`; HNSW `vector_cosine_ops` (m=16, ef_construction=64); btree `bot_id`; `unique(document_id, text_sha256)` | по `account_id` |
-| IndexJob | `index_job` | частичный `unique(source_id) WHERE state IN ('queued','running')` — идемпотентный ключ | по `account_id` |
+| IndexJob | `index_job` | частичный `unique(source_id) WHERE state IN ('queued','running')` — идемпотентный ключ; `run_started_at` — отсчёт потолка 15 мин | по `account_id` |
 | QuestionLog | `question_log` | индекс `created_at` (уборка 30 дней) | по `account_id` |
 | ModelCallLog | `model_call_log` | индекс `(kind, created_at)` | только оператор |
 | QuotaCounter | `quota_counter` | `unique(scope, day)`; инкремент `INSERT … ON CONFLICT DO UPDATE SET used = used + n WHERE used + n <= limit RETURNING` | сервисная роль |
-| WidgetInstall | `widget_install` | `unique(bot_id, origin_host)` | сервисная роль |
+| WidgetInstall | `widget_install` | `unique(bot_id, origin_host)`; `config_seen_at NOT NULL`, `first_question_at`, `page_url`, `page_verified_at` (метрика недели — FR-n6b-15) | сервисная роль |
 | BadgeEvent | `badge_event` | `unique(bot_id, kind, visitor_key, day)` для click | сервисная роль |
 | GrowthEvent / HandoverToken | `growth_event`, `handover_token` | `unique(token_hash)` | по `account_id` |
 | Operator | `operator` | `unique(account_id)`; запись только миграцией/CLI оператора | чтение сервисной ролью |
@@ -139,7 +140,9 @@ Every capability this product needs from someone else's service. One row per cap
 - **Аутентификация:** e-mail + пароль (bcrypt cost 12, фиктивный хэш при отсутствии аккаунта), cookie сессии httpOnly,
   Secure, SameSite=Lax, в БД — HMAC токена. `SESSION_SECRET` отсутствует → отказ старта.
 - **Авторизация:** RLS по `account_id` через роль приложения и `SET LOCAL app.account_ids` в транзакции; студия видит дочерние
-  аккаунты только при `studio_access=true`. Оператор — по списку id в таблице `operator` (пусто = никто).
+  аккаунты только при `studio_access=true`; подаккаунт создаётся с `studio_access=true` явно, у обычного аккаунта `false`
+  (DEFAULT false в схеме). Оператор — по списку id в таблице `operator` (пусто = никто).
+- **Публичные ручки входа:** регистрация и вход — 10 попыток/час на адрес (`quota_counter`, ключ `auth:addr:<hmac>:<час>`).
 - **Публичные ручки:** `/api/widget/*` — origin из списка бота; `/b/*`, `/r/b/*` — без сессии; все публичные ответы без
   `credentials`, CORS не ставит `*`.
 - **Модель и данные:** инструкция модели отделена от фрагментов; фрагменты — данные; ответ выводится как текст; ссылки из БД.
@@ -169,6 +172,9 @@ Every capability this product needs from someone else's service. One row per cap
 | Document.text | отсутствующая колонка | алгоритм «Chunk and embed» читает `doc.text` — поле добавлено в Data Structures и в таблицу `document` |
 | IndexJob.state | несовпадение набора значений | в хранилище 4 значения (`queued`, `running`, `succeeded`, `failed`), пользователю 3 состояния: `queued` и `running` показываются одним «выполняется» — согласовано в обоих документах |
 | Bot.allowed_origins | смена типа | список → `text[]` нормализованных origin; пустой массив = закрыто |
+| IndexJob.run_started_at, IndexJob.note | отсутствующая колонка | добавлены по валидации (H-1, H-2): отсчёт потолка задачи от текущего запуска; текст «обойдено N из ≥N+1» |
+| WidgetInstall.config_seen_at, page_url, page_verified_at | отсутствующая колонка | добавлены по валидации (H-3): единое определение метрики недели |
+| Account.is_test, Account.studio_access | nullability / значение по умолчанию | `DEFAULT false`; подаккаунт вставляется с `studio_access=true` явно (M-2) |
 
 Сверены сущности: Account, Session, Bot, Source, SourceFile, Document, Chunk, IndexJob, QuestionLog, ModelCallLog,
 QuotaCounter, WidgetInstall, BadgeEvent, GrowthEvent, HandoverToken, Operator; алгоритмы: Register and login, Create source and enqueue
