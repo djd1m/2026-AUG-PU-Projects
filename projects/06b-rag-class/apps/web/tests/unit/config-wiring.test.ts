@@ -23,19 +23,38 @@ function readByDecision(name: string): boolean {
   return sources(WEB_SRC).some((file) => pattern.test(readFileSync(file, 'utf8')));
 }
 
-describe('CFG-I5: каждая переменная старта читается решением', () => {
-  const roadmapIds = new Set((JSON.parse(readFileSync(ROADMAP, 'utf8')) as { features: { id: string }[] })
-    .features.map((f) => f.id));
+interface RoadmapFeature { id: string; status?: string }
 
-  it.each(WEB_REQUIRED.map((v) => v.name))('%s: читается решением или названа фича, которая его подключит', (name) => {
-    const pending = PENDING_DECISIONS[name];
-    if (pending === undefined) {
-      expect(readByDecision(name), `${name} проверяется при старте, но ни одно решение его не читает`).toBe(true);
-    } else {
-      expect(roadmapIds.has(pending), `${name}: фича ${pending} не существует в дорожной карте`).toBe(true);
-      expect(readByDecision(name), `${name} уже читается решением — удалите его из PENDING_DECISIONS`).toBe(false);
+/**
+ * Нарушения списка ожидания (08_review.md F-6). Имя в PENDING_DECISIONS законно, только пока его фича существует и
+ * НЕ закрыта; закрытая фича с непрочитанным именем — это молча нарушенный CFG-I5, а прочитанное имя в списке — ложь списка.
+ */
+export function pendingViolations(pending: Readonly<Record<string, string>>, features: readonly RoadmapFeature[],
+  isRead: (name: string) => boolean): string[] {
+  const byId = new Map(features.map((f) => [f.id, f]));
+  const violations: string[] = [];
+  for (const [name, featureId] of Object.entries(pending)) {
+    const feature = byId.get(featureId);
+    if (!feature) violations.push(`${name}: фича ${featureId} не существует в дорожной карте`);
+    else if (feature.status === 'done') {
+      violations.push(`${name}: фича ${featureId} закрыта (done), а имя всё ещё в ожидании — подключите решение`);
     }
-  });
+    if (isRead(name)) violations.push(`${name} уже читается решением — удалите его из PENDING_DECISIONS`);
+  }
+  return violations;
+}
+
+describe('CFG-I5: каждая переменная старта читается решением', () => {
+  const features = (JSON.parse(readFileSync(ROADMAP, 'utf8')) as { features: RoadmapFeature[] }).features;
+
+  it.each(WEB_REQUIRED.map((v) => v.name))('%s: читается решением или названа незакрытая фича, которая его подключит',
+    (name) => {
+      if (PENDING_DECISIONS[name] === undefined) {
+        expect(readByDecision(name), `${name} проверяется при старте, но ни одно решение его не читает`).toBe(true);
+      } else {
+        expect(pendingViolations({ [name]: PENDING_DECISIONS[name]! }, features, readByDecision)).toEqual([]);
+      }
+    });
 
   it('в PENDING_DECISIONS нет имён вне закрытого списка', () => {
     const names = new Set(WEB_REQUIRED.map((v) => v.name));
@@ -44,5 +63,23 @@ describe('CFG-I5: каждая переменная старта читаетс�
 
   it('предел входа подключён: LIMIT_AUTH_ADDR_HOUR не в списке ожидания', () => {
     expect(PENDING_DECISIONS.LIMIT_AUTH_ADDR_HOUR).toBeUndefined();
+  });
+
+  // Страж обязан уметь падать (guard-must-be-able-to-fail): каждый прогон подаёт ему заведомо плохой вход.
+  it('F-6: страж падает — фича закрыта, имя не читается', () => {
+    expect(pendingViolations({ LIMIT_X: 'spend-ceilings' }, [{ id: 'spend-ceilings', status: 'done' }], () => false))
+      .toEqual([expect.stringContaining('закрыта (done)')]);
+  });
+
+  it('F-6: страж падает — имя уже читается, но осталось в ожидании; и фича не существует', () => {
+    expect(pendingViolations({ LIMIT_X: 'spend-ceilings' }, [{ id: 'spend-ceilings', status: 'blocked' }], () => true))
+      .toEqual([expect.stringContaining('уже читается')]);
+    expect(pendingViolations({ LIMIT_X: 'nope' }, [], () => false))
+      .toEqual([expect.stringContaining('не существует')]);
+  });
+
+  it('F-6: страж молчит на корректном входе — фича не закрыта, имя не читается', () => {
+    expect(pendingViolations({ LIMIT_X: 'spend-ceilings' }, [{ id: 'spend-ceilings', status: 'next' }], () => false))
+      .toEqual([]);
   });
 });
