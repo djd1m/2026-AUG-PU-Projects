@@ -15,7 +15,12 @@
 - [ ] `bash scripts/check-env-wiring.sh` → 0 (каждый `process.env.X` web/worker есть в `environment:` compose)
 - [ ] `node .claude/hooks/check-model-cost.cjs .` → 0; `check-job-contract.cjs` и `check-embed-contract.cjs` → 0 после проверок на стенде
 - [ ] Ключи из N6 подставлены в `.env` стенда, не выводились в сессию, журнал, коммит (условие владельца №2)
-- [ ] Все пределы `LIMIT_*`, `MIN_SIMILARITY`, `PUBLIC_BASE_URL`, `PROXY_NETWORK` заданы (иначе сервис не стартует — так и задумано)
+- [ ] Все пределы `LIMIT_*` (включая `LIMIT_SANDBOX_GLOBAL_DAY` и `LIMIT_AUTH_ADDR_HOUR`), `MIN_SIMILARITY`, `PUBLIC_BASE_URL`,
+  `PROXY_NETWORK` заданы (иначе сервис не стартует — так и задумано); `PROXY_NETWORK=talk-ai-public` (OWN-06B-006)
+- [ ] **Ворота выпуска «не знаю» (SC-US-006-4, V-7):** калибровка на 30 вопросах живой `gpt-4.1-mini` прошла (10/10 «не
+  знаю», ≥ 17/20 со ссылкой), `docs/calibration-report.md` закоммичен. Не прошла — стенд посетителям не открывается
+- [ ] Аккаунты E2E и проверок стенда помечены `is_test` через CLI оператора (иначе они попадут в метрику недели)
+- [ ] Уведомление о внешней модели видно в виджете и на демо до первого вопроса (SC-US-008-4, OWN-06B-002)
 
 ### Deployment Sequence
 
@@ -53,7 +58,9 @@
 | Отказы модели (`model_call_log.state=failed`) | > 5% за час | `/admin/metrics` | причина «сервис ответа недоступен» |
 | Расход на сутки (попытки, токены) | ≥ 80% любого глобального предела | `/admin/metrics` + https://platform.openai.com/usage | ADR-010 |
 | Задачи `failed` | > 20% за сутки | `/admin/metrics` | разбор причин |
-| Внешние домены с ≥1 вопросом | цель 15 за неделю | `/admin/metrics` | PD-METRIC-001 |
+| Доля `outcome=limited` среди вопросов виджета и демо | > 5 % за сутки при ≥ 100 вопросах | `/admin/metrics` | реакция: переход с единицы /24 на сессионную единицу посетителя новым ADR (ADR-010, M-4) |
+| Доля «не знаю» среди вопросов посетителей | рост > 2× к результату калибровки | `/admin/metrics` | реакция: повторить калибровку SC-US-006-4 |
+| Внешние виджеты с ≥1 вопросом (FR-n6b-15) | цель 15 за неделю | `/admin/metrics` после «перепроверить страницы» | PD-METRIC-001; в отчёт — только строки с `page_verified_at` |
 
 ## Logging
 
@@ -76,5 +83,5 @@
 
 ## Трассировка
 
-PD-METRIC-001 → Monitoring (внешние домены) · PD-INSIGHT-003 → Monitoring (расход) · ADR-005 → Rollback (повтор задач
+PD-METRIC-001 → Monitoring (внешние виджеты) · PD-INSIGHT-003 → Monitoring (расход) · ADR-005 → Rollback (повтор задач
 продолжает) · ADR-010 → Pre-Deployment (пределы) · ADR-014 → Deployment Step 2 (маршрут через существующий прокси).
