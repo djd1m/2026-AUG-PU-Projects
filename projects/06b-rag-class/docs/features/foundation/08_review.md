@@ -126,3 +126,60 @@ typecheck 0 · unit **134 passed** · integration **65 passed** (`tests/artifact
 **Не сделано и оговорки.** 403 `forbidden_origin` у `/api/auth/*` в таблицу API Contracts не внесён (предложение
 валидатора вне списка F-n). Экраны проверены unit-тестом и сборкой, не кликом в браузере. Пулов web теперь два (до 2×10
 соединений, `runtime.ts`); при `max_connections` 100 запас есть.
+
+## Узкая перепроверка
+
+**Дата:** 2026-09-30 · **Ревизия:** `25a6b715` (`feature/06b-rag-class`) · **Валидатор:** Claude Opus 5.5, новый агент без
+контекста исполнителя и первого валидатора. Проход один, узкий. Область: `git diff 382e0c55..25a6b715 -- projects/06b-rag-class`.
+Задача прохода — ответить на два вопроса: закрыта ли каждая F-n по существу и не сломали ли правки соседнее. Код не исправлялся.
+
+**Среда.** Копия `git archive 25a6b715` в scratchpad. Стек `compose.test.yml` поднят под именем проекта `-p n6b-test-narrow`,
+чтобы не пересечься с чужим `n6b-test`. У обоих контейнеров `cpus: 2`. Пароли — `openssl rand -hex 24` в env-файле scratchpad,
+не печатались и удалены после прогона. Сценарии отказа воспроизведены через `psql` внутри контейнера БД под настоящими
+пользователями входа `n6b_app_tenant` и `n6b_app_service` с парольной аутентификацией по TCP. Контейнеры, сеть и образ
+`n6b-test-runner:local` после прогона удалены (`down -v --rmi local`).
+
+### Прогоны
+
+| Проверка | Команда | Результат |
+|---|---|---|
+| Порты до запуска | `bash scripts/check-port-conflicts.sh <копия>` (из корня; `.env` — плейсхолдеры по `.env.example`) | 0: хранилище не публикуется, 3106 свободен. На рабочем дереве без `.env` — честный отказ «конфиг нечитаем», код 1 |
+| Правило №0 | `node .claude/hooks/check-ports.cjs <копия>` | 0: хранилищ 1, нарушений нет |
+| Тестовый стек ничего не публикует | `docker compose … -f compose.test.yml config \| grep -cE '^ +(published\|host_ip):'` | `0` |
+| Полный прогон §5 | `docker compose … -f compose.test.yml run --rm --build tests` | **exit 0**: typecheck 0, `pretest` собрал `@n6b/db`, unit **134/134** (7 файлов), integration **65/65** (6 файлов). Миграции применены к пустой БД |
+| Проброс переменных | `check-env-wiring.mjs` в образе раннера с `--network none` против `docker compose config --format json` (плейсхолдеры `.env.example`) | 0: «Потерь нет», web=17, worker=6, migrate=3 |
+| `.env.example` ↔ compose | сравнение имён `${VAR…}` в `docker-compose.yml` с именами в `.env.example` | расхождений нет. В `.env.example` лишние только `TEST_*` — они для `compose.test.yml`, это законно |
+
+### F-n → закрыто или нет
+
+| # | Вердикт | Доказательство |
+|---|---|---|
+| F-1 | **закрыто** | Исходный сценарий под `n6b_app_tenant` → `SET LOCAL ROLE n6b_tenant`, контекст A. `INSERT source(bot_id = бот B, account_id = A)` → `violates foreign key constraint "source_bot_fk"`. То же для `source_file` на источник B (`source_file_source_fk`) и `question_log` на бота B (`question_log_bot_fk`). `UPDATE` своего источника на бота B → `source_bot_fk`. Контроль: вставка на своего бота проходит. Служебный путь под `n6b_app_service` (BYPASSRLS): `source` → `source_bot_fk`; `chunk` документа A с `bot_id` B (исходный сценарий утечки фрагментов в поиск B) → `chunk_bot_fk`; `model_call_log(bot B, account A)` → `model_call_log_bot_account_fk`; контроль с ботом A проходит. **Мутация V2-M1:** `chunk_bot_fk` сделан одиночным `(bot_id) → bot(id)` → `tenant-fk.test.ts` **3 failed** (каталожный страж и оба кейса `chunk.bot_id`). Откат → 65/65 |
+| F-2 | **закрыто** | `rls-catalog.test.ts` (8) зелёный в полном прогоне. Перечень таблиц строится из `pg_catalog`, `seedTenant` сидирует все 9 таблиц кабинета. Мутацию исполнителя M2 (3 failed) не повторял — в узкий проход она не входила |
+| F-3 | **закрыто** | В `pg_roles`: `n6b_app_tenant` и `n6b_app_service` — LOGIN, NOINHERIT, NOBYPASSRLS. Членство: `n6b_tenant ← n6b_app_tenant`, `n6b_service ← n6b_app_service`, других нет. Из сессии `n6b_app_tenant`: `SET LOCAL ROLE n6b_service` → `permission denied to set role "n6b_service"`; то же для `n6b_app_service` и `n6b_owner`. Исходный сценарий (чтение `password_hash` B) → `permission denied for table account`. `CREATE TABLE public.x` → `permission denied for schema public`. `SELECT FROM session` из кабинета → отказ. Обратное направление: из `n6b_app_service` `SET ROLE n6b_tenant` → отказ. Конфигурация: вид `pg-url` сверяет пользователя, строки web и worker ведут на своих пользователей. **Мутация V2-M2:** `GRANT n6b_service TO n6b_app_tenant` → `roles.test.ts` **4 failed**. Откат → 65/65 |
+| F-4 | **закрыто** | Под `n6b_tenant` в контексте A: `SELECT * FROM account` → `permission denied for table account`; `SELECT email, plan FROM account` → одна строка, своя (`a@x.test\|free`) |
+| F-5 | **закрыто** | Команда `DEVELOPMENT_GUIDE.md` §5 выполнена дословно, только с другим `-p`: exit 0, стек ничего не публикует, `name: n6b-test`, сеть `internal: true`, пароли `${VAR:?}` |
+| F-6 | **закрыто** | `config-wiring.test.ts` (18) зелёный. `pendingViolations` падает на `status: 'done'` (строки 39–40), синтетический кейс на строке 70 |
+| F-7 | **закрыто** | В журнале полного прогона `npm test` сначала выполнил `pretest` → `build --workspace @n6b/db` на дереве без `dist` |
+| F-8 | **закрыто** (одна пропущенная строка, ниже R-1) | Pseudocode `SourceFile.account_id` («составной FK») на месте. В Architecture, `security.md` и `secrets-management.md` нет ни `app.account_ids`, ни `n6b_app`, ни одиночного `DATABASE_URL` |
+| F-9 | **закрыто** | `/login`, `/register`, `/cabinet` прочитаны построчно. Переход после успеха идёт на константу (`/cabinet`, `/login`), параметров `next` и `redirect` нет — открытого редиректа нет. Формы шлют `fetch` того же origin с JSON, поэтому проверка `Origin` → 403 и `SameSite=Lax` остаются в силе. На экран выводится только текст `error.message`, а сервер отдаёт фиксированные строки (`auth-handler.ts:102–114`; 503 журналирует только `error.name`). Кабинет проверяет сессию служебным пулом, а e-mail читает пулом кабинета под RLS и без `password_hash`. Кликом в браузере не проверялось — это E2E |
+
+### Регрессии и остатки
+
+| # | Сила | Где | Сценарий | Минимальная правка |
+|---|---|---|---|---|
+| R-1 | low | `docs/features/foundation/05_completion.md:12` | В строке по-прежнему «`rls.test.ts`: 21 тест, под ролью `n6b_app`». Роли больше нет, в файле 17 тестов, часть проверок уехала в `rls-catalog`, `roles` и `tenant-fk`. Следующий исполнитель пойдёт искать `n6b_app` | Поправить строку: две роли входа, четыре файла int |
+| R-2 | low | `docker-compose.yml` (`DATABASE_URL_TENANT` и `_SERVICE` собираются из паролей без URL-кодирования); `packages/db/src/boot-config.ts:71` | `migrate` ставит пароль как есть, а в строку подключения он попадает без кодирования. Если в пароле есть `@ / # % :`, web не стартует (отказ `pg-url` или ошибка аутентификации). На `%` с неверной последовательностью `decodeURIComponent` бросает `URIError` вместо `ConfigError`. Отказ громкий, значение не печатается, поэтому сила low | В `.env.example` у `N6B_DB_*_PASSWORD` написать «только `openssl rand -hex 24`» и/или обернуть `decodeURIComponent` в `try` → `bad('имя пользователя не декодируется')` |
+
+Блокеров, high и medium нет. Миграции применяются к пустой БД, все наборы зелёные. Compose, `.env.example` и `check-env-wiring`
+согласованы. Новых дыр на экранах /login и /register не нашёл: CSRF/Origin, утечки текста ошибок и открытого редиректа нет.
+
+**Вне области, одной строкой.** (а) Составной FK держит `account_id`, но не держит равенство `chunk.bot_id` боту источника
+документа. Внутри одного аккаунта фрагмент можно пометить другим своим ботом; к межарендаторной утечке это не ведёт — решать
+в `index-jobs`. (б) `auth-handler.ts:79` пропускает запрос без заголовка `Origin`. Это было до диффа.
+
+### Вердикт узкого прохода: ПРИНЯТО
+
+Все девять находок F-1…F-9 закрыты по существу. Исходные сценарии отказа F-1, F-3 и F-4 воспроизведены: теперь они дают отказ
+с именем ограничения или привилегии. Две собственные мутации дали красное (3 и 4 failed), после отката снова 65/65. R-1 и R-2 —
+low и не блокируют. Их можно закрыть попутной правкой в следующей фиче.
