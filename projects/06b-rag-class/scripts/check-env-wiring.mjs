@@ -12,6 +12,13 @@ export const EXCEPTIONS = {
   NEXT_RUNTIME: 'Next.js устанавливает среду выполнения',
   NEXT_PHASE: 'Next.js устанавливает фазу сборки',
 };
+/**
+ * Исключения ОДНОГО сервиса (chunk-embed): packages/rag/src/live.ts читает VISITOR_SECRET, только если он задан, — канал
+ * visitor есть у web, воркеру не нужен. Список закрытый, с причиной; web это исключение не получает.
+ */
+export const SERVICE_EXCEPTIONS = {
+  worker: { VISITOR_SECRET: 'live.ts читает его только если задан: канала visitor у воркера нет' },
+};
 export const ROOTS = {
   web: ['apps/web/src'],
   worker: ['services/worker/src'],
@@ -30,6 +37,7 @@ function resolveImport(file, name, root) {
   let base;
   if (name.startsWith('.')) base = path.resolve(path.dirname(file), name);
   else if (name === '@n6b/db') base = path.join(root, 'packages/db/src/index');
+  else if (name === '@n6b/rag') base = path.join(root, 'packages/rag/src/index');
   else if (name.startsWith('@n6b/')) throw new Error(`workspace-импорт ${name} не описан в стражe`);
   else if (name.startsWith('@/')) base = path.join(root, 'apps/web/src', name.slice(2));
   else return null;
@@ -54,8 +62,9 @@ export function collectEnvironment(entries, root) {
         let name;
         if (ts.isPropertyAccessExpression(parent) && parent.expression === node) name = parent.name.text;
         else if (ts.isElementAccessExpression(parent) && ts.isStringLiteral(parent.argumentExpression)) name = parent.argumentExpression.text;
-        // единственная законная передача целиком — значение по умолчанию параметра env закрытого списка
-        else if (!ts.isParameter(parent)) {
+        // законная передача целиком — значение по умолчанию параметра env закрытого списка либо `const env = process.env`
+        // (live.ts): чтения дальше идут как env.X и собираются правилом ниже
+        else if (!ts.isParameter(parent) && !(ts.isVariableDeclaration(parent) && parent.name.getText(tree) === 'env')) {
           throw new Error(`динамическое чтение process.env не проверяется: ${path.relative(root, file)}`);
         }
         if (name !== undefined) {
@@ -99,7 +108,8 @@ export function checkWiring(compose, root) {
     const names = [...collectEnvironment(entries, root)].sort();
     report[service] = names.length;
     for (const name of names) {
-      if (!(name in EXCEPTIONS) && (environment[name] === undefined || environment[name] === null)) {
+      if (!(name in EXCEPTIONS) && !(name in (SERVICE_EXCEPTIONS[service] ?? {}))
+        && (environment[name] === undefined || environment[name] === null)) {
         missing.push(`${service}: ${name}`);
       }
     }
