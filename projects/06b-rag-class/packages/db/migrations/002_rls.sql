@@ -1,28 +1,35 @@
--- 002_rls.sql — роли, гранты и RLS по account_id (NFR-n6b-3). Перенос N1 #9 (002_roles + 007_rls), адаптирован:
---   * n6b_app     — LOGIN (пароль ставит migrate.ts из N6B_DB_APP_PASSWORD), NOINHERIT: сама по себе прав на таблицы НЕ
---                   имеет. Любой запрос без SET LOCAL ROLE → permission denied (fail-closed, а не «всё видно»).
+-- 002_rls.sql — роли, гранты и RLS по account_id (NFR-n6b-3). Перенос N1 #9 (002_roles + 007_rls), адаптирован.
+-- Групповые роли (NOLOGIN) — носители прав:
 --   * n6b_tenant  — кабинет: RLS-политики фильтруют строки по n6b_account_ids().
---   * n6b_service — BYPASSRLS: вход/регистрация, квоты, публичные ручки, воркер. Изоляция на этих путях — явным WHERE
---                   в коде, RLS её НЕ подстрахует (урок N1: так и записано, чтобы никто не думал иначе).
+--   * n6b_service — BYPASSRLS: вход/регистрация, квоты, публичные ручки, воркер, оператор. Изоляция на этих путях —
+--                   явным WHERE в коде, RLS её НЕ подстрахует (урок N1: так и записано, чтобы никто не думал иначе).
+-- Пользователи входа (LOGIN, NOINHERIT — без SET LOCAL ROLE прав на таблицы нет; пароли ставит migrate.ts):
+--   * n6b_app_tenant  — член ТОЛЬКО n6b_tenant: пул кабинета. SET ROLE n6b_service из его транзакции → отказ, поэтому
+--                       внедрение SQL в запрос кабинета не превращается в чтение всех арендаторов (08_review.md F-3).
+--   * n6b_app_service — член ТОЛЬКО n6b_service: служебный пул web (вход, квоты) и воркер.
 -- Контекст: set_config('app.account_id', $1, true) — только в транзакции (SET LOCAL). Список видимых аккаунтов (свой +
 -- подаккаунты студии с studio_access=true) вычисляет БД, а не приложение.
 
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'n6b_app') THEN
-    CREATE ROLE n6b_app NOLOGIN NOINHERIT;
-  END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'n6b_tenant') THEN
     CREATE ROLE n6b_tenant NOLOGIN NOBYPASSRLS;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'n6b_service') THEN
     CREATE ROLE n6b_service NOLOGIN BYPASSRLS;
   END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'n6b_app_tenant') THEN
+    CREATE ROLE n6b_app_tenant NOLOGIN NOINHERIT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'n6b_app_service') THEN
+    CREATE ROLE n6b_app_service NOLOGIN NOINHERIT;
+  END IF;
 END $$;
 
-ALTER ROLE n6b_app NOINHERIT NOBYPASSRLS;
-GRANT n6b_tenant TO n6b_app;
-GRANT n6b_service TO n6b_app;
+ALTER ROLE n6b_app_tenant NOINHERIT NOBYPASSRLS;
+ALTER ROLE n6b_app_service NOINHERIT NOBYPASSRLS;
+GRANT n6b_tenant TO n6b_app_tenant;
+GRANT n6b_service TO n6b_app_service;
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO n6b_tenant, n6b_service;
@@ -41,7 +48,9 @@ REVOKE ALL ON FUNCTION n6b_account_ids() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION n6b_account_ids() TO n6b_tenant;
 
 -- ── Гранты кабинета (n6b_tenant) — только то, что кабинет читает и пишет ──
-GRANT SELECT ON account TO n6b_tenant;
+-- account — по колонкам: password_hash кабинету не выдаётся (08_review.md F-4), SELECT * из кабинета — отказ.
+GRANT SELECT (id, email, kind, plan, badge_removal, parent_account_id, studio_access, is_test, referred_by_bot_id,
+              created_at) ON account TO n6b_tenant;
 GRANT SELECT, INSERT, UPDATE, DELETE ON bot, source, source_file, document, chunk, index_job TO n6b_tenant;
 GRANT SELECT, INSERT ON question_log, growth_event, handover_token TO n6b_tenant;
 -- session, quota_counter, model_call_log, widget_install, badge_event, operator — кабинету не выдаются.

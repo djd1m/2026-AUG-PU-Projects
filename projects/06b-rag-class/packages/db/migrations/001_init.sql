@@ -1,6 +1,9 @@
 -- 001_init.sql — 16 сущностей docs/Pseudocode.md → Data Structures, физика — docs/Architecture.md → Data Architecture.
 -- Закрытые множества в CHECK совпадают с packages/db/src/enums.ts (страж enums-vs-migrations.test.ts).
 -- account_id денормализован в дочерних таблицах, чтобы RLS (002_rls.sql) держалась одним предикатом.
+-- Согласованность account_id с родителем держат СОСТАВНЫЕ внешние ключи (parent_id, account_id) → parent (id, account_id):
+-- проверка FK идёт в обход RLS, и одиночный bot_id → bot(id) позволил бы арендатору A сослаться на объект B,
+-- пройдя WITH CHECK своим account_id (08_review.md F-1). Страж: packages/db/tests/int/tenant-fk.test.ts.
 
 CREATE EXTENSION IF NOT EXISTS vector;
 
@@ -63,37 +66,41 @@ CREATE TABLE bot (
   created_at            timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT bot_public_id_key UNIQUE (public_id),
   CONSTRAINT bot_demo_slug_key UNIQUE (demo_slug),
-  CONSTRAINT bot_published_needs_contact CHECK (NOT published OR (contact IS NOT NULL AND contact <> ''))
+  CONSTRAINT bot_published_needs_contact CHECK (NOT published OR (contact IS NOT NULL AND contact <> '')),
+  CONSTRAINT bot_id_account_key UNIQUE (id, account_id) -- цель составных FK дочерних таблиц
 );
 CREATE INDEX bot_account_idx ON bot (account_id);
 ALTER TABLE account ADD CONSTRAINT account_referred_by_bot_fk FOREIGN KEY (referred_by_bot_id) REFERENCES bot(id);
 
 CREATE TABLE source (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  bot_id      uuid NOT NULL REFERENCES bot(id),
+  bot_id      uuid NOT NULL,
   account_id  uuid NOT NULL REFERENCES account(id),
   kind        text NOT NULL CONSTRAINT source_kind_check CHECK (kind IN ('site', 'pdf')),
   url         text,
   file_name   text,
   created_at  timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT source_locator CHECK ((kind = 'site' AND url IS NOT NULL) OR (kind = 'pdf' AND file_name IS NOT NULL))
+  CONSTRAINT source_locator CHECK ((kind = 'site' AND url IS NOT NULL) OR (kind = 'pdf' AND file_name IS NOT NULL)),
+  CONSTRAINT source_id_account_key UNIQUE (id, account_id),
+  CONSTRAINT source_bot_fk FOREIGN KEY (bot_id, account_id) REFERENCES bot (id, account_id)
 );
 CREATE INDEX source_bot_idx ON source (bot_id);
 
 CREATE TABLE source_file (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  source_id   uuid NOT NULL REFERENCES source(id),
+  source_id   uuid NOT NULL,
   account_id  uuid NOT NULL REFERENCES account(id), -- денормализация для RLS (Architecture: SourceFile по account_id)
   bytes       bytea NOT NULL CONSTRAINT source_file_size CHECK (octet_length(bytes) <= 10485760),
   sha256      text NOT NULL,
   pages       integer CHECK (pages IS NULL OR pages >= 0),
-  created_at  timestamptz NOT NULL DEFAULT now()
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT source_file_source_fk FOREIGN KEY (source_id, account_id) REFERENCES source (id, account_id)
 );
 CREATE INDEX source_file_source_idx ON source_file (source_id);
 
 CREATE TABLE document (
   id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  source_id       uuid NOT NULL REFERENCES source(id),
+  source_id       uuid NOT NULL,
   account_id      uuid NOT NULL REFERENCES account(id),
   locator_url     text,
   locator_page    integer CHECK (locator_page IS NULL OR locator_page >= 1),
@@ -103,13 +110,15 @@ CREATE TABLE document (
   created_at      timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT document_locator CHECK (locator_url IS NOT NULL OR locator_page IS NOT NULL),
   CONSTRAINT document_source_url_key UNIQUE (source_id, locator_url),
-  CONSTRAINT document_source_page_key UNIQUE (source_id, locator_page)
+  CONSTRAINT document_source_page_key UNIQUE (source_id, locator_page),
+  CONSTRAINT document_id_account_key UNIQUE (id, account_id),
+  CONSTRAINT document_source_fk FOREIGN KEY (source_id, account_id) REFERENCES source (id, account_id)
 );
 
 CREATE TABLE chunk (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  document_id  uuid NOT NULL REFERENCES document(id),
-  bot_id       uuid NOT NULL REFERENCES bot(id),
+  document_id  uuid NOT NULL,
+  bot_id       uuid NOT NULL,
   account_id   uuid NOT NULL REFERENCES account(id),
   ord          integer NOT NULL CHECK (ord >= 0),
   text         text NOT NULL,
@@ -117,14 +126,16 @@ CREATE TABLE chunk (
   tokens       integer NOT NULL CHECK (tokens > 0),
   embedding    vector(1536) NOT NULL,
   created_at   timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT chunk_document_text_key UNIQUE (document_id, text_sha256)
+  CONSTRAINT chunk_document_text_key UNIQUE (document_id, text_sha256),
+  CONSTRAINT chunk_document_fk FOREIGN KEY (document_id, account_id) REFERENCES document (id, account_id),
+  CONSTRAINT chunk_bot_fk FOREIGN KEY (bot_id, account_id) REFERENCES bot (id, account_id)
 );
 CREATE INDEX chunk_bot_idx ON chunk (bot_id);
 CREATE INDEX chunk_embedding_hnsw ON chunk USING hnsw (embedding vector_cosine_ops) WITH (m = 16, ef_construction = 64);
 
 CREATE TABLE index_job (
   id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  source_id       uuid NOT NULL REFERENCES source(id),
+  source_id       uuid NOT NULL,
   account_id      uuid NOT NULL REFERENCES account(id),
   state           text NOT NULL DEFAULT 'queued'
                   CONSTRAINT index_job_state_check CHECK (state IN ('queued', 'running', 'succeeded', 'failed')),
@@ -137,7 +148,8 @@ CREATE TABLE index_job (
   lease_fence     integer NOT NULL DEFAULT 0,
   run_started_at  timestamptz,
   created_at      timestamptz NOT NULL DEFAULT now(),
-  finished_at     timestamptz
+  finished_at     timestamptz,
+  CONSTRAINT index_job_source_fk FOREIGN KEY (source_id, account_id) REFERENCES source (id, account_id)
 );
 -- Идемпотентный ключ: одна живая задача на источник (long-running-job.md).
 CREATE UNIQUE INDEX index_job_live_source_key ON index_job (source_id) WHERE state IN ('queued', 'running');
@@ -145,7 +157,7 @@ CREATE INDEX index_job_queue_idx ON index_job (state, leased_until) WHERE state 
 
 CREATE TABLE question_log (
   id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  bot_id           uuid NOT NULL REFERENCES bot(id),
+  bot_id           uuid NOT NULL,
   account_id       uuid NOT NULL REFERENCES account(id),
   channel          text NOT NULL CONSTRAINT question_log_channel_check CHECK (channel IN ('sandbox', 'widget', 'demo')),
   visitor_key      text,
@@ -154,7 +166,8 @@ CREATE TABLE question_log (
   outcome          text NOT NULL CONSTRAINT question_log_outcome_check
                    CHECK (outcome IN ('answered', 'below_threshold', 'model_unknown', 'invalid_citation', 'limited', 'error')),
   cited_chunk_ids  uuid[] NOT NULL DEFAULT '{}',
-  created_at       timestamptz NOT NULL DEFAULT now()
+  created_at       timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT question_log_bot_fk FOREIGN KEY (bot_id, account_id) REFERENCES bot (id, account_id)
 );
 CREATE INDEX question_log_created_idx ON question_log (created_at);
 CREATE INDEX question_log_bot_idx ON question_log (bot_id, created_at);
@@ -167,7 +180,10 @@ CREATE TABLE model_call_log (
   state       text NOT NULL CONSTRAINT model_call_log_state_check CHECK (state IN ('started', 'succeeded', 'failed')),
   tokens_in   integer CHECK (tokens_in IS NULL OR tokens_in >= 0),
   tokens_out  integer CHECK (tokens_out IS NULL OR tokens_out >= 0),
-  created_at  timestamptz NOT NULL DEFAULT now()
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  -- вызов без бота (account_id и bot_id пусты) законен; вызов бота обязан нести account_id этого бота
+  CONSTRAINT model_call_log_bot_needs_account CHECK (bot_id IS NULL OR account_id IS NOT NULL),
+  CONSTRAINT model_call_log_bot_account_fk FOREIGN KEY (bot_id, account_id) REFERENCES bot (id, account_id)
 );
 CREATE INDEX model_call_log_kind_created_idx ON model_call_log (kind, created_at);
 

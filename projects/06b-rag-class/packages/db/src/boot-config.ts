@@ -3,13 +3,15 @@
 // worker: services/worker/src/config.ts). Закрытый список в коде, окружение его не расширяет (CFG-I8).
 // Отсутствие и '' различаются в сообщении, но оба — отказ (CFG-I1, CFG-I2). Дефолтов нет намеренно.
 
-export type VarKind = 'secret' | 'limit' | 'ratio' | 'base-url';
+export type VarKind = 'secret' | 'limit' | 'ratio' | 'base-url' | 'pg-url';
 
 export interface VarSpec {
   readonly name: string;
   readonly kind: VarKind;
   /** Внешнее последствие отсутствия — попадает в сообщение отказа. */
   readonly consequence: string;
+  /** Только для 'pg-url': пользователь входа, которым ОБЯЗАНА быть строка подключения (роли не перепутать местами). */
+  readonly user?: string;
 }
 
 /** Персональный предел не может быть больше общего — иначе он не сработает никогда (model-call-cost.md). */
@@ -58,6 +60,16 @@ function parseOne(spec: VarSpec, raw: string, production: boolean): string | num
         throw bad('должен быть origin без пути, запроса и учётных данных');
       }
       return url.origin;
+    }
+    case 'pg-url': {
+      let url: URL;
+      try { url = new URL(raw); } catch { throw bad('не URL подключения'); }
+      if (url.protocol !== 'postgresql:' && url.protocol !== 'postgres:') throw bad('не postgresql://-адрес');
+      if (!url.hostname || !url.password) throw bad('без хоста или пароля');
+      // Кабинет обязан входить ролью без доступа к n6b_service (08_review.md F-3): перепутанные строки подключения
+      // молча вернули бы BYPASSRLS в каждый запрос кабинета. Сверяется имя пользователя, пароль не печатается.
+      if (!spec.user || decodeURIComponent(url.username) !== spec.user) throw bad(`должен входить пользователем ${spec.user ?? '?'}`);
+      return raw;
     }
   }
 }

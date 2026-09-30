@@ -21,9 +21,14 @@ export const WEB_REQUIRED: readonly VarSpec[] = [
   { name: 'LIMIT_AUTH_ADDR_HOUR', kind: 'limit', consequence: 'перебор пароля не ограничен' },
 ];
 
-/** Не входит в 13 переменных Pseudocode, но без неё процесс не может ответить ни на один запрос. */
+/**
+ * Не входят в 13 переменных Pseudocode, но без них процесс не может ответить ни на один запрос. Две строки — два
+ * пользователя входа (002_rls.sql, 08_review.md F-3): кабинет не может стать n6b_service даже внедрённым SQL.
+ */
 export const WEB_CONNECTION: readonly VarSpec[] = [
-  { name: 'DATABASE_URL', kind: 'secret', consequence: 'приложение не может обратиться к БД' },
+  { name: 'DATABASE_URL_TENANT', kind: 'pg-url', user: 'n6b_app_tenant', consequence: 'кабинет не может обратиться к БД' },
+  { name: 'DATABASE_URL_SERVICE', kind: 'pg-url', user: 'n6b_app_service',
+    consequence: 'вход, регистрация и пределы попыток не могут обратиться к БД' },
 ];
 
 export const WEB_PAIRS: readonly PairRule[] = [
@@ -47,6 +52,8 @@ export const PENDING_DECISIONS: Readonly<Record<string, string>> = {
 };
 
 export interface WebConfig {
+  readonly DATABASE_URL_TENANT: string;
+  readonly DATABASE_URL_SERVICE: string;
   readonly SESSION_SECRET: string;
   readonly VISITOR_SECRET: string;
   readonly PUBLIC_BASE_URL: string;
@@ -58,8 +65,10 @@ export interface WebConfig {
 export function loadWebConfig(env: Readonly<Record<string, string | undefined>> = process.env): WebConfig {
   const production = env.NODE_ENV === 'production';
   const all = checkConfig(WEB_REQUIRED, WEB_PAIRS, env, production);
-  checkConfig(WEB_CONNECTION, [], env, production);
+  const connection = checkConfig(WEB_CONNECTION, [], env, production);
   return {
+    DATABASE_URL_TENANT: connection.DATABASE_URL_TENANT as string,
+    DATABASE_URL_SERVICE: connection.DATABASE_URL_SERVICE as string,
     SESSION_SECRET: all.SESSION_SECRET as string,
     VISITOR_SECRET: all.VISITOR_SECRET as string,
     PUBLIC_BASE_URL: all.PUBLIC_BASE_URL as string,

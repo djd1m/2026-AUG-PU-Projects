@@ -1,10 +1,10 @@
-// Boot config check процесса worker: его подмножество переменных (compose: x-model-env + DATABASE_URL).
+// Boot config check процесса worker: его подмножество переменных (compose: x-model-env + DATABASE_URL_SERVICE).
 // Решения, читающие пределы эмбеддингов, реализует фича chunk-embed/spend-ceilings.
 
 import { checkConfig, type ConfigValues, type PairRule, type VarSpec } from '@n6b/db';
 
 export const WORKER_REQUIRED: readonly VarSpec[] = [
-  { name: 'DATABASE_URL', kind: 'secret', consequence: 'воркер не может брать задачи из БД' },
+  { name: 'DATABASE_URL_SERVICE', kind: 'pg-url', user: 'n6b_app_service', consequence: 'воркер не может брать задачи из БД' },
   { name: 'OPENROUTER_API_KEY', kind: 'secret', consequence: 'эмбеддинги индексации невозможны' },
   { name: 'LIMIT_EMBED_TOKENS_ACCOUNT_DAY', kind: 'limit', consequence: 'индексация аккаунта без предела токенов' },
   { name: 'LIMIT_EMBED_TOKENS_GLOBAL_DAY', kind: 'limit', consequence: 'индексация без общего потолка токенов' },

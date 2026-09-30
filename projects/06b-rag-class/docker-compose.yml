@@ -11,8 +11,10 @@ x-logging: &logging
     max-size: "10m"
     max-file: "3"
 
-x-db-env: &db-env
-  DATABASE_URL: postgresql://n6b_app:${N6B_DB_APP_PASSWORD:?пароль роли приложения не задан — RLS-роль не подключится}@db:5432/n6b
+# Два пользователя входа (002_rls.sql, 08_review.md F-3): кабинет — n6b_app_tenant (только RLS-роль), служебные пути —
+# n6b_app_service (BYPASSRLS через SET LOCAL ROLE). web получает обе строки, воркер — только служебную.
+x-db-service-env: &db-service-env
+  DATABASE_URL_SERVICE: postgresql://n6b_app_service:${N6B_DB_SERVICE_PASSWORD:?пароль служебной роли не задан — вход и воркер не подключатся}@db:5432/n6b
   TZ: Europe/Moscow
 
 x-model-env: &model-env
@@ -57,7 +59,8 @@ services:
     image: n6b-migrate:${N6B_MIGRATE_TAG:-dev}
     environment:
       DATABASE_URL_OWNER: postgresql://n6b_owner:${POSTGRES_PASSWORD:?пароль владельца БД не задан}@db:5432/n6b
-      N6B_DB_APP_PASSWORD: ${N6B_DB_APP_PASSWORD:?пароль роли приложения не задан}
+      N6B_DB_TENANT_PASSWORD: ${N6B_DB_TENANT_PASSWORD:?пароль роли кабинета не задан}
+      N6B_DB_SERVICE_PASSWORD: ${N6B_DB_SERVICE_PASSWORD:?пароль служебной роли не задан}
       TZ: Europe/Moscow
     networks: [internal]
     depends_on:
@@ -74,7 +77,8 @@ services:
       target: web
     image: n6b-web:${N6B_WEB_TAG:-dev}
     environment:
-      <<: [*db-env, *model-env, *answer-env]
+      <<: [*db-service-env, *model-env, *answer-env]
+      DATABASE_URL_TENANT: postgresql://n6b_app_tenant:${N6B_DB_TENANT_PASSWORD:?пароль роли кабинета не задан — кабинет не подключится}@db:5432/n6b
       NODE_ENV: production
       SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан}
       VISITOR_SECRET: ${VISITOR_SECRET:?секрет ключа посетителя не задан — пределы на посетителя не построить}
@@ -103,7 +107,7 @@ services:
       target: worker
     image: n6b-worker:${N6B_WORKER_TAG:-dev}
     environment:
-      <<: [*db-env, *model-env]
+      <<: [*db-service-env, *model-env]
       NODE_ENV: production
       N6B_WORKER_PULSE: /tmp/n6b-worker.pulse
     networks: [internal, egress]

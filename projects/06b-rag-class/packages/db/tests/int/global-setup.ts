@@ -4,9 +4,9 @@ import { migrate } from '../../src/migrate';
 import { env } from './helpers';
 
 export default async function setup(): Promise<void> {
-  const { ownerUrl, appPassword } = env();
-  await migrate({ ownerUrl, appPassword, log: () => undefined });
+  const { ownerUrl, tenantPassword, servicePassword } = env();
+  await migrate({ ownerUrl, tenantPassword, servicePassword, log: () => undefined });
   // Повторный прогон обязан быть идемпотентным: ни одной новой миграции.
-  const again = await migrate({ ownerUrl, appPassword, log: () => undefined });
+  const again = await migrate({ ownerUrl, tenantPassword, servicePassword, log: () => undefined });
   if (again.length !== 0) throw new Error(`повторный migrate применил ${again.join(', ')}`);
 }
