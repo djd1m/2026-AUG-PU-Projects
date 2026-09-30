@@ -123,6 +123,21 @@ describe('Boot config check web (FR-n6b-16, NFR-n6b-3)', () => {
       .toBe('DATABASE_URL_SERVICE');
   });
 
+  it.each(PSEUDOCODE_13.filter((n) => n.startsWith('LIMIT_')))(
+    'F-3 (08_review.md): %s больше int4 → отказ при старте с именем, а не 503 при первом запросе', (name) => {
+      for (const raw of ['2147483648', '3000000000', '9007199254740991']) {
+        // Пары «персональный ≤ общего» держим верными, чтобы отказ пришёл именно от границы int4.
+        const env = { ...validEnv(), LIMIT_ANSWER_BOT_DAY: '2147483647', LIMIT_ANSWER_GLOBAL_DAY: '2147483647',
+          LIMIT_SANDBOX_GLOBAL_DAY: '2147483647', LIMIT_EMBED_TOKENS_GLOBAL_DAY: '2147483647', [name]: raw };
+        const error = failure(env);
+        expect(error.variable, `${name}=${raw}`).toBe(name);
+        expect(error.message).toMatch(/int4/);
+      }
+      const edge = { ...validEnv(), LIMIT_ANSWER_BOT_DAY: '2147483647', LIMIT_ANSWER_GLOBAL_DAY: '2147483647',
+        LIMIT_SANDBOX_GLOBAL_DAY: '2147483647', LIMIT_EMBED_TOKENS_GLOBAL_DAY: '2147483647', [name]: '2147483647' };
+      expect(() => loadWebConfig(edge), `${name}=2147483647 — граница включена`).not.toThrow();
+    });
+
   it('SC-US-016-2: enforceBootConfig завершает процесс кодом 1 и не печатает значения', () => {
     const exit = vi.fn((code: number) => { throw new Error(`exit ${code}`); }) as unknown as (code: number) => never;
     const lines: string[] = [];

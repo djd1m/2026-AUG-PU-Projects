@@ -40,6 +40,12 @@ describe('worker: отказ старта без конфигурации', () =
     expect(r.stderr).toContain('LIMIT_EMBED_TOKENS_ACCOUNT_DAY');
   });
 
+  it('F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте', () => {
+    const r = run({ ...VALID, LIMIT_EMBED_TOKENS_ACCOUNT_DAY: '2147483648', LIMIT_EMBED_TOKENS_GLOBAL_DAY: '3000000000' });
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('LIMIT_EMBED_TOKENS_ACCOUNT_DAY больше 2147483647');
+  });
+
   it('F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается', () => {
     const r = run({ ...VALID, DATABASE_URL_SERVICE: 'postgresql://n6b_app_tenant:secretpw@db:5432/n6b' });
     expect(r.status).toBe(1);
