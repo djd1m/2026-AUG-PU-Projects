@@ -300,7 +300,7 @@ Scenario: Регистрация создаёт free-аккаунт и сесс�
 Scenario: Провайдер эмбеддингов недоступен при вопросе посетителя
   Given адаптер fake отвечает ошибкой на embeddings(question)
   When посетитель задаёт вопрос в виджете
-  Then ответ 503 "сервис ответа недоступен", а не 500 и не бесконечная загрузка
+  Then ответ 503 "сервис ответа временно недоступен", а не 500 и не бесконечная загрузка
   And попытка засчитана в пределы, model_call_log.state = "failed"
 
 @security @V-3 @B-1
@@ -371,6 +371,26 @@ Scenario: Демо-страница не встраивается во фрей�
   When GET "/b/pekarnya-olgi"
   Then в ответе есть "Content-Security-Policy: frame-ancestors 'none'" и "X-Frame-Options: DENY"
   And страница на "http://localhost:8099" с iframe на "/b/pekarnya-olgi" не отображает фрейм, вопрос из него не уходит
+```
+
+## Дополнения по итерации 3 (правки N3-2, N3-3)
+
+```gherkin
+@security @N3-2
+Scenario: Исполнитель модели закреплён, отказ OpenAI не уводит запрос к Azure (SC-US-005-4)
+  Given адаптер live настроен на OpenRouter, а шлюз не может обслужить openai/gpt-4.1-mini исполнителем OpenAI
+  When посетитель задаёт вопрос в виджете
+  Then тела запросов к "/api/v1/embeddings" и "/api/v1/chat/completions" содержат provider {"order": ["openai"], "allow_fallbacks": false}
+  And посетитель получает 503 "сервис ответа временно недоступен", попытка засчитана в пределы
+  And запроса без поля provider или с другим исполнителем нет
+
+@security @N3-3
+Scenario: Чужая страница не списывает квоту демо «простым» запросом (SC-US-012-5)
+  Given опубликованный бот с демо "pekarnya-olgi" и счётчик 'answer:bot' за сутки = 7
+  When страница "http://localhost:8099" шлёт POST "/api/demo/pekarnya-olgi/ask" с Content-Type "text/plain"
+  And вне браузера приходит тот же запрос с Content-Type "application/json" и "Origin: http://localhost:8099"
+  Then оба ответа 403, модель не вызывается
+  And счётчик 'answer:bot' за сутки по-прежнему = 7
 ```
 
 ## Связь сценариев валидатора с требованиями (Фаза 1, итерация 1)
