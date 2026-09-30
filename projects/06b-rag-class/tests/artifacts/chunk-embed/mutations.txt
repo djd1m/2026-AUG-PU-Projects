@@ -1,0 +1,33 @@
+# Мутации фичи chunk-embed. Стек compose.test.yml, -p n6b-f04, раннер n6b-f04-runner:local, свежая БД (down -v) перед каждой.
+# Мутант монтируется поверх исходника только на время прогона (docker run -v …:ro); рабочее дерево не менялось.
+# 2026-09-30, ревизия 8f244c15 (+729407b0 для MW2). Формат: метка | итог vitest | упавшие тесты.
+#
+# MC1 chunk.ts: предел части target+60            MC2 chunk.ts: перекрытие всегда пусто
+# MC3 chunk.ts: дубли частей не схлопываются       ME1 embed.ts: уже записанные хэши не пропускаются
+# ME2 embed.ts: резерв = ⌈длина/4⌉ без tiktoken    ME3 embed.ts: вставка без holdLease (fence)
+# ME4 embed.ts: устаревшие части не удаляются       MR1 index-runner.ts: QuotaRefused не переводится в отказ «предел»
+# MR2 index-runner.ts: нет извлечения → «готово»   MS1 search.ts: без SET LOCAL hnsw.iterative_scan
+# MS2 search.ts: WHERE (bot_id = $1 OR true)
+
+MC1 | exit=1 | Tests  4 failed | 6 passed (10) | × русский ≤500; × английский ≤500; × граница 500/501; × сплошная строка
+MC2 | exit=1 | Tests  1 failed | 9 passed (10) | × перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов
+MC3 | exit=1 | Tests  1 failed | 9 passed (10) | × повторяющиеся абзацы внутри документа схлопываются
+ME1 | exit=1 | Tests  2 failed | 9 passed (11) | × SC-US-017-2: переобход без изменений → 0 эмбеддингов и 0 списаний; × частичный прогон: повтор платит только за остаток
+ME2 | exit=1 | Tests  2 failed | 9 passed (11) | × первый прогон: резерв = точная оценка; × резерв = точная оценка js-tiktoken (русский текст)
+ME3 | exit=1 | Tests  1 failed | 10 passed (11) | × fence: аренду забрали во время вызова модели → ни одной строки chunk
+ME4 | exit=1 | Tests  1 failed | 10 passed (11) | × SC-US-017-2: изменённый абзац → только новые части, устаревшие удалены
+MR1 | exit=1 | Tests  3 failed | 8 passed (11) | × embed:account исчерпан; × частичный прогон; × embed:global исчерпан
+MR2 | exit=1 | Tests  1 failed | 10 passed (11) | × извлечение не подключено → честный отказ
+MS1 | exit=1 | Tests  1 failed | 4 passed (5)   | × ADR-002: top-5 бота B: ровно 5 своих, ни одного чужого (без скана — пусто)
+MS2 | exit=1 | Tests  1 failed | 4 passed (5)   | × ADR-002: top-5 бота B: ровно 5 своих, ни одного чужого
+MW1 | main.ts + config.ts: без пределов ответа в конфиге и без двери при старте (npm test -- boot.test.ts)
+    | exit=1 | Tests  2 failed | 5 passed (7) | × без любого из пределов двери воркер не стартует; × персональный > общего → exit 1 при старте
+MW2a | compose: у worker снят LIMIT_SANDBOX_GLOBAL_DAY → scripts/check-env-wiring.mjs | exit=1 | «Не проброшены: worker: LIMIT_SANDBOX_GLOBAL_DAY»
+MW2b | check-env-wiring.mjs: снято исключение VISITOR_SECRET воркера               | exit=1 | «Не проброшены: worker: VISITOR_SECRET»
+BASE wiring | exit=0 | «Потерь нет. Проверено чтений: web=17, worker=12, migrate=3» (до правки стража: exit=2 «@n6b/rag не описан»)
+
+Стражи S-17/S-18 (packages/rag/tests/unit/guards-index.test.ts) несут плохие входы в самом тесте: 8 случаев, все — нарушение.
+
+Итог: 14/14 мутаций красные (11 прогоном наборов, MW1 процессом воркера, MW2a/b стражем проброса).
+Вне мутаций: тест «два батча на остатке» опирается на атомарность резерва двери spend-ceilings; её мутации —
+tests/artifacts/spend-ceilings/, дверь здесь не менялась.

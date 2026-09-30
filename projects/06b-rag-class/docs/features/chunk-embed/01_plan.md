@@ -1,0 +1,46 @@
+# Фича 4 · chunk-embed — план
+
+**Дата:** 2026-09-30 · **База:** `37cb1dcf` (+ шаг 0 `128f73d7`) · **Тир:** L (роутер: новый внешний вызов, деньги через
+существующую дверь) · **Требования:** FR-n6b-4, FR-n6b-16, FR-n6b-17, SC-US-017-2, SC-US-004-3 · **ADR:** ADR-002, ADR-004 ·
+**Алгоритм:** Pseudocode «Chunk and embed» шаги 1–7, «Answer question» шаг 4, «Worker lease loop» шаги 5–6.
+
+## 1. Что строим
+
+| Единица | Файл | Содержание |
+|---|---|---|
+| Нарезка | `packages/rag/src/chunk.ts` | `countTokens` (js-tiktoken, `cl100k_base`, Architecture «Tokens»); `splitIntoChunks(text)` — части ≤ 500 токенов по границам абзацев, длинный абзац → предложения → слова → символы; перекрытие — хвост предыдущей части ≤ 80 токенов целыми единицами; `sha256` каждой части; дубли внутри документа схлопываются |
+| Поиск | `packages/rag/src/search.ts` | `searchChunks(pool, botId, vector, k=5)`: одна служебная транзакция, `SET LOCAL hnsw.iterative_scan = strict_order`, `hnsw.ef_search = 64`, `WHERE bot_id = $1 ORDER BY embedding <=> $2 LIMIT k`, `sim = 1 − расстояние`. Изоляция бота — только `WHERE` (роль `n6b_service` BYPASSRLS). Берёт фича 7 |
+| Шаг индексации | `services/worker/src/embed.ts` | `chunkAndEmbedSource(ctx, deps)`: документы источника → части → существующие `text_sha256` пропускаются → батчи ≤ 100 частей → `ctx.checkpoint()` → `gateway.embedIndexBatch(accountId, {accountId, botId}, texts, tokens)` с точной оценкой (`max(Σ tiktoken, ⌈Σ длин/4⌉)`) → запись `chunk` под fence задачи → удаление частей документа, чьих хэшей больше нет |
+| Исполнитель задачи | `services/worker/src/index-runner.ts` | `createIndexRunner({pool, gateway, extractors})`: извлечение по типу источника (фичи 5–6; нет — честный отказ «не подключена»), затем шаг индексации. Исходы: предел → `failed` «Исчерпан суточный предел индексации… продолжение завтра», провайдер → `failed` «Сервис эмбеддингов временно недоступен…» |
+| Дверь воркера | `services/worker/src/paid.ts` | единственное место `createLiveGateway({pool, log})` в воркере (S-12 его уже называет) |
+| Конфигурация | `services/worker/src/config.ts`, `docker-compose.yml` | воркер требует ПОЛНУЮ связку двери: ключ + все 7 `LIMIT_*` (фабрика `limitsFrom` иначе отказывает); без неё — exit 1 с именем при старте, а не падение первой задачи |
+
+Миграция не нужна: `chunk` с `vector(1536)`, `unique(document_id, text_sha256)` и HNSW `vector_cosine_ops` (m=16,
+ef_construction=64) уже в `001_init.sql`.
+
+## 2. Решения
+
+1. **Оценка токенов батча — сверху.** Резерв = `max(Σ tiktoken(часть), ⌈Σ длин / 4⌉)`: дверь отвергает оценку ниже
+   нижней границы, а английский текст с длинными словами даёт меньше токенов, чем длина/4. Переплата резерва ≤ разницы.
+2. **Повтор не платит.** Существующие `(document_id, text_sha256)` читаются до батча; `INSERT … ON CONFLICT DO NOTHING`
+   страхует гонку. Повтор документа → 0 вызовов, 0 резерва.
+3. **Запись под fence.** Вставка частей идёт в транзакции, которая сначала берёт `FOR SHARE` на строке задачи с тем же
+   `lease_fence` и `state='running'`; чужой захват → `JobLeaseLost`, запись не делается.
+4. **Батч ≤ 100 частей** (Pseudocode шаг 3). Порядок: контрольная точка → резерв+вызов → запись → контрольная точка.
+5. **Потолок сканирования.** `strict_order` с умолчанием `hnsw.max_scan_tuples = 20000`: при > 20 000 чужих ближе
+   фрагментов top-K может прийти неполным — записано в границах, предел MVP 200 000 фрагментов на всю БД.
+
+## 3. Проверки (AC → тест)
+
+| AC | Тест |
+|---|---|
+| нарезка ≤ 500 токенов, рус/англ, граница 500/501, перекрытие | unit `packages/rag/tests/unit/chunk.test.ts` |
+| SC-US-017-2 повтор → 0 эмбеддингов, 0 списаний | int `services/worker/tests/int/chunk-embed.int.test.ts` |
+| изменённый документ: эмбеддятся только новые части, старые удалены | int, там же |
+| `embed:account` / `embed:global` исчерпаны → отказ ДО вызова, задача `failed` с текстом, повтор продолжает | int, там же |
+| конкурентно: два батча одного аккаунта на остатке → не выше предела, один вызов | int, там же |
+| ADR-002: top-5 бота B без фрагментов A при 10 000 более близких чужих | int `packages/rag/tests/int/search.test.ts` |
+| воркер без полной связки пределов не стартует | unit `services/worker/tests/unit/boot.test.ts` |
+| стражи по исходнику: дверь воркера только в `paid.ts`, поиск с `bot_id` и итеративным сканом | unit `guards.test.ts` |
+
+Каждый страж — мутация с числами в `tests/artifacts/chunk-embed/mutations.txt`. Полный прогон §5 — `-p n6b-f04`.

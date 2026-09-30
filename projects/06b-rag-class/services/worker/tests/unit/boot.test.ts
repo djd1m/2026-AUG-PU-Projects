@@ -18,6 +18,12 @@ const VALID = {
   OPENROUTER_API_KEY: 'sk-or-test-placeholder',
   LIMIT_EMBED_TOKENS_ACCOUNT_DAY: '2000000',
   LIMIT_EMBED_TOKENS_GLOBAL_DAY: '20000000',
+  // chunk-embed: дверь воркера собирается только из полной связки пределов (createLiveGateway → limitsFrom).
+  LIMIT_ANSWER_VISITOR_DAY: '30',
+  LIMIT_ANSWER_BOT_DAY: '300',
+  LIMIT_ANSWER_GLOBAL_DAY: '3000',
+  LIMIT_SANDBOX_ACCOUNT_DAY: '100',
+  LIMIT_SANDBOX_GLOBAL_DAY: '2000',
 };
 
 describe('worker: отказ старта без конфигурации', () => {
@@ -51,5 +57,23 @@ describe('worker: отказ старта без конфигурации', () =
     expect(r.status).toBe(1);
     expect(r.stderr).toContain('DATABASE_URL_SERVICE');
     expect(r.stderr).not.toContain('secretpw');
+  });
+
+  it('chunk-embed: без любого из пределов двери (не эмбеддингов) воркер не стартует — exit 1 с именем', () => {
+    for (const name of ['LIMIT_ANSWER_VISITOR_DAY', 'LIMIT_ANSWER_BOT_DAY', 'LIMIT_ANSWER_GLOBAL_DAY',
+      'LIMIT_SANDBOX_ACCOUNT_DAY', 'LIMIT_SANDBOX_GLOBAL_DAY']) {
+      const env: Record<string, string> = { ...VALID };
+      delete env[name];
+      const r = run(env);
+      expect(r.status, name).toBe(1);
+      expect(r.stderr, name).toContain(`${name} не задан`);
+      expect(r.stderr).not.toContain('sk-or-test-placeholder');
+    }
+  });
+
+  it('chunk-embed: пределы двери с персональным больше общего → exit 1 при старте, а не на первой задаче', () => {
+    const r = run({ ...VALID, LIMIT_SANDBOX_ACCOUNT_DAY: '5000' });
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('LIMIT_SANDBOX_ACCOUNT_DAY');
   });
 });

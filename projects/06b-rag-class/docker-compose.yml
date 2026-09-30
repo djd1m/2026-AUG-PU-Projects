@@ -22,13 +22,17 @@ x-model-env: &model-env
   LIMIT_EMBED_TOKENS_ACCOUNT_DAY: ${LIMIT_EMBED_TOKENS_ACCOUNT_DAY:?потолок токенов эмбеддингов на аккаунт не задан — индексация без предела}
   LIMIT_EMBED_TOKENS_GLOBAL_DAY: ${LIMIT_EMBED_TOKENS_GLOBAL_DAY:?суточный потолок токенов эмбеддингов не задан — индексация без предела}
 
-x-answer-env: &answer-env
-  MIN_SIMILARITY: ${MIN_SIMILARITY:?порог сходства не задан — граница «не знаю» не определена}
+# Пределы, без которых не собирается платная дверь (createLiveGateway → limitsFrom требует все семь): web и worker.
+x-door-limits: &door-limits
   LIMIT_ANSWER_VISITOR_DAY: ${LIMIT_ANSWER_VISITOR_DAY:?потолок ответов на посетителя не задан — посторонний выставит счёт}
   LIMIT_ANSWER_BOT_DAY: ${LIMIT_ANSWER_BOT_DAY:?потолок ответов на бота не задан}
   LIMIT_ANSWER_GLOBAL_DAY: ${LIMIT_ANSWER_GLOBAL_DAY:?суточный потолок ответов не задан}
   LIMIT_SANDBOX_ACCOUNT_DAY: ${LIMIT_SANDBOX_ACCOUNT_DAY:?потолок песочницы на аккаунт не задан}
   LIMIT_SANDBOX_GLOBAL_DAY: ${LIMIT_SANDBOX_GLOBAL_DAY:?суточный потолок песочницы не задан}
+
+x-answer-env: &answer-env
+  <<: *door-limits
+  MIN_SIMILARITY: ${MIN_SIMILARITY:?порог сходства не задан — граница «не знаю» не определена}
   LIMIT_AUTH_ADDR_HOUR: ${LIMIT_AUTH_ADDR_HOUR:?предел попыток входа на адрес не задан — перебор пароля не ограничен}
 
 services:
@@ -107,7 +111,7 @@ services:
       target: worker
     image: n6b-worker:${N6B_WORKER_TAG:-dev}
     environment:
-      <<: [*db-service-env, *model-env]
+      <<: [*db-service-env, *model-env, *door-limits]
       NODE_ENV: production
       N6B_WORKER_PULSE: /tmp/n6b-worker.pulse
     networks: [internal, egress]

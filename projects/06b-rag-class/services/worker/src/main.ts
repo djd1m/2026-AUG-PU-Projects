@@ -1,17 +1,20 @@
-// Точка входа воркера: проверка конфигурации при старте (exit 1 с именем переменной), цикл аренды задач индексации
-// (loop.ts) и файл-пульс для healthcheck compose. Исполнитель источников — заглушка с честным отказом до фич crawl-site,
-// pdf-source и chunk-embed: задача получает «ошибка + Повторить» с причиной, а не вечное «выполняется» и не «готово».
+// Точка входа воркера: проверка конфигурации при старте (exit 1 с именем переменной), платная дверь (paid.ts; без полной
+// связки пределов — exit 1), цикл аренды задач индексации (loop.ts) и файл-пульс для healthcheck compose. Исполнитель —
+// createIndexRunner: извлечение по типу источника (фичи crawl-site, pdf-source; пока не подключено — честный отказ
+// «ошибка + Повторить»), затем «нарезать и эмбеддить» (chunk-embed).
 
 import { writeFileSync } from 'node:fs';
 import { createPool, enforceBootConfig } from '@n6b/db';
 import { loadWorkerConfig } from './config.js';
+import { createIndexRunner } from './index-runner.js';
 import { startWorker } from './loop.js';
-import { dispatchRunner } from './runner.js';
+import { createWorkerGateway } from './paid.js';
 
 const config = enforceBootConfig(() => loadWorkerConfig());
 const pool = createPool(config.DATABASE_URL_SERVICE as string, 'DATABASE_URL_SERVICE');
-const worker = startWorker({ pool, runner: dispatchRunner({}) });
-console.log('worker: конфигурация принята; аренда задач запущена (исполнители источников не подключены — честный отказ)');
+const gateway = enforceBootConfig(() => createWorkerGateway(pool));
+const worker = startWorker({ pool, runner: createIndexRunner({ pool, gateway, extractors: {} }) });
+console.log('worker: конфигурация и платная дверь приняты; аренда задач запущена (извлечение источников не подключено — честный отказ)');
 
 const pulse = process.env.N6B_WORKER_PULSE;
 let beat: NodeJS.Timeout | undefined;

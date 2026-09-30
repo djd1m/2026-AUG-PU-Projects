@@ -1,0 +1,24 @@
+# Полный прогон DEVELOPMENT_GUIDE.md §5 — фича chunk-embed, 2026-09-30.
+# compose -p n6b-f04 (compose.test.yml + override: образ n6b-f04-runner:local), cpus: 2, свежая БД в tmpfs (down -v до и после),
+# пароли — случайные (openssl rand -hex 24) в env-файле scratchpad, удалён после прогона. Модель — fake, реальных вызовов нет.
+
+config | grep -cE '^ +(published|host_ip):'  → 0   (тестовый стек ничего не публикует)
+run --rm tests (npm run typecheck && npm test && npm run test:int) → exit=0
+  typecheck                → 0 ошибок
+  unit (vitest.config)     → Test Files 15 passed (15) · Tests 264 passed (264)
+  int  (vitest.int.config) → Test Files 13 passed (13) · Tests 144 passed (144)
+npm run build (db, rag, worker, web — Next.js) → exit=0, «Compiled successfully»
+
+Новые наборы фичи: packages/rag/tests/unit/chunk.test.ts (10), guards-index.test.ts (5), services/worker/tests/unit/boot.test.ts
+(+2, всего 7), packages/rag/tests/int/search.test.ts (5), services/worker/tests/int/chunk-embed.int.test.ts (11),
+packages/db/tests/int/rls-catalog.test.ts (+1, всего 9).
+
+Первый полный прогон (до правки теста плана) — exit=1: 143/144 int, упал «план через HNSW» — планировщик взял btree bot_id
+при 3 000 строк бота. Тест переведён на принудительный путь HNSW (enable_sort=off в пуле теста), см. 05_completion.md п. 4a.
+
+Прочие ворота:
+  scripts/check-env-wiring (разбор в раннере, конфиг с плейсхолдерами) → 0 «Потерь нет: web=17, worker=12, migrate=3»
+  node ../../.claude/hooks/check-model-cost.cjs .  → 0
+  node ../../.claude/hooks/check-job-contract.cjs . → 0
+  bash scripts/check-port-conflicts.sh projects/06b-rag-class (из корня) → 1 «конфиг нечитаем»: в worktree нет .env
+    (как у index-jobs); порт 3106 свободен.
