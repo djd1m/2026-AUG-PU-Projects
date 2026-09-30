@@ -38,7 +38,11 @@ describe('reset-quota: один названный ключ, журнал в т�
     ['шаблон', 'answer:%'], ['звёздочка', 'answer:*'], ['пусто', ''], ['неизвестная форма', 'test:anything'],
     ['пробел в конце', 'answer:global '],
   ])('отказ на ключе вне закрытого списка (%s) — ничего не меняется', async (_, scope) => {
-    await expect(resetQuota(app, { scope, day: '2031-02-02', operator: 'ops' })).rejects.toBeInstanceOf(ResetRefused);
+    // Строка с таким ключом СУЩЕСТВУЕТ: отказ обязан прийти от проверки формы, а не от «сбрасывать нечего».
+    if (scope) await preset(scope, '2031-02-02', 5);
+    await expect(resetQuota(app, { scope, day: '2031-02-02', operator: 'ops' }))
+      .rejects.toThrow(/не из закрытого списка форм/);
+    if (scope) expect(await usedOf(scope, '2031-02-02')).toBe(5);
   });
 
   it('отказ без оператора и на несуществующем счётчике; журнал не пишется', async () => {
