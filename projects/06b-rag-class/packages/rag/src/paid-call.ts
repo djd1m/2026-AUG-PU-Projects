@@ -8,7 +8,10 @@
 // Набор ключей дверь выводит САМА из вида вызова (08_review.md F-1): вызывающий называет канал и владельца, а не ключи
 // и не пределы. Общий потолок вида (answer:global, answer:sandbox:global, embed:global) не пропустить и не подменить;
 // перед резервом набор ещё раз сверяется keySetViolation. n батча не ниже ⌈Σ длин / 4⌉.
-// Создаётся дверь только фабрикой createLiveGateway (live.ts) — страж S-11 (08_review.md F-2).
+// Создаётся дверь только фабрикой createLiveGateway (live.ts) — страж S-11 (08_review.md F-2). По устройству (index-jobs
+// 08_review.md F-2): конструктор требует ключ GATEWAY_KEY, который не покидает этот модуль; вход пакета отдаёт PaidGateway
+// только ТИПОМ, а constructGateway — не отдаёт вовсе. Снаружи пакета дверь не построить ни `new`, ни Reflect.construct,
+// ни через `gateway.constructor`: без ключа — исключение до проверки пределов.
 
 import {
   answerKeys, assertLimits, type CallOwner, embedKeys, finishCall, keySetViolation, type Limits, type Pool,
@@ -50,10 +53,18 @@ export interface AnswerAttempt {
   generate(messages: readonly ChatMessage[]): Promise<AnswerResult>;
 }
 
+const GATEWAY_KEY: unique symbol = Symbol('PaidGateway: создаётся только внутри пакета rag');
+
+/** Внутренняя сборка двери (фабрика live.ts и тесты пакета по пути). Из входа пакета не экспортируется. */
+export function constructGateway(deps: PaidCallDeps): PaidGateway {
+  return new PaidGateway(GATEWAY_KEY, deps);
+}
+
 export class PaidGateway {
   readonly #deps: PaidCallDeps;
 
-  constructor(deps: PaidCallDeps) {
+  constructor(key: typeof GATEWAY_KEY, deps: PaidCallDeps) {
+    if (key !== GATEWAY_KEY) throw new Error('PaidGateway не создаётся снаружи пакета rag: только фабрикой живой двери');
     assertLimits(deps.limits);
     this.#deps = deps;
   }
