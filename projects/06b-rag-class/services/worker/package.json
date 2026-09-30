@@ -1,0 +1,14 @@
+{
+  "name": "@n6b/worker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Воркер задач индексации. В foundation — только проверка конфигурации при старте и файл-пульс; аренда задач — фича index-jobs.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@n6b/db": "0.1.0"
+  }
+}
