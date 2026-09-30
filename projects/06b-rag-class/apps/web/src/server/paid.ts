@@ -28,7 +28,9 @@ export interface PaidRuntime {
 
 export function createPaidRuntime(config: WebConfig, servicePool: Pool): PaidRuntime {
   const limits = webLimits(config);
-  const gateway = createLiveGateway({ apiKey: config.OPENROUTER_API_KEY, pool: servicePool, limits,
-    visitorSecret: config.VISITOR_SECRET, log: (line) => console.warn(line) });
+  // Дверь сама берёт пределы, ключ модели и VISITOR_SECRET из проверенной конфигурации (R-1): числа сюда не передаются.
+  // Ключ модели читается решением здесь же (CFG-I5): без него дверь не создаётся.
+  if (!config.OPENROUTER_API_KEY) throw new Error('OPENROUTER_API_KEY не задан: вызовы модели невозможны');
+  const gateway = createLiveGateway({ config: config.all, pool: servicePool, log: (line) => console.warn(line) });
   return { limits, gateway };
 }

@@ -1,0 +1,22 @@
+Шаг 0 фичи index-jobs — хвосты spend-ceilings R-1, R-2 (docs/features/spend-ceilings/08_review.md, «Узкая перепроверка»)
+Прогон: compose -p n6b-f03, раннер n6b-f03-runner:local, 2026-09-30. Мутация — копия файла с заменой, смонтированная поверх
+исходника в раннере; исходник в репозитории не менялся. Команда: npx vitest run --config vitest.config.ts packages/rag/tests/unit
+
+Зелёный до мутаций: typecheck 0; unit packages/rag + apps/web — 9 файлов, 206/206.
+
+M-R1a packages/rag/src/live.ts: проверка isVerifiedConfig снята (if (false))
+  → Tests 1 failed | 74 passed (75): «литерал, копия через spread и подменённые пределы — отказ ConfigError»
+M-R1b packages/db/src/boot-config.ts: checkConfig не заносит результат в множество проверенных (VERIFIED.add удалён)
+  → Tests 2 failed | 73 passed (75): «проверенная конфигурация принимается…», «поле limits … не принимается»
+M-R1c packages/db/src/boot-config.ts: результат checkConfig не замораживается
+  → Tests 2 failed | 73 passed (75): «…и она заморожена», «проверенная конфигурация неизменяема»
+M-R1d packages/rag/src/live.ts: проверка поля limits снята
+  → Tests 1 failed | 74 passed (75): «поле limits рядом с конфигурацией не принимается»
+M-R2a packages/rag/tests/unit/guards.test.ts: регэксп S-11 возвращён к new\s+(?:OpenRouterProvider|PaidGateway)\s*\(
+  → Tests 1 failed | 74 passed (75): «R-2: S-11 ловит квалифицированное имя и адаптер по относительному пути»
+M-R2b packages/rag/tests/unit/guards.test.ts: правило спецификатора provider/(openrouter|fake) снято
+  → Tests 1 failed | 74 passed (75): тот же тест R-2
+M-S12 packages/rag/tests/unit/guards.test.ts: правило «checkConfig только в модулях конфигурации» снято
+  → Tests 1 failed | 74 passed (75): «S-12 ловит вторую дверь, checkConfig вне конфигурации и пределы числами (R-1)»
+
+Все 7 мутаций красные.

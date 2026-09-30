@@ -58,10 +58,17 @@ export function providerCallViolations(files: Files): string[] {
  */
 export function providerConstructionViolations(files: Files): string[] {
   const out: string[] = [];
+  // R-2 (spend-ceilings 08_review.md): квалифицированное имя `new R.PaidGateway(` и адаптер по относительному пути
+  // (`…/provider/openrouter.js`, затем имя класса, склеенное в рантайме). Путь к адаптеру — только в фабрике и входе пакета.
+  const qualifiedNew = /new\s+[\w$.]*\b(?:OpenRouterProvider|PaidGateway)\s*\(/;
+  const adapterSpecifier = /(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*|\bimport\s+)['"`][^'"`]*provider\/(?:openrouter|fake)(?:\.[cm]?[jt]s)?['"`]/;
   for (const [file, raw] of Object.entries(files)) {
     const text = stripComments(raw);
-    if (file !== FACTORY && /new\s+(?:OpenRouterProvider|PaidGateway)\s*\(/.test(text)) {
+    if (file !== FACTORY && qualifiedNew.test(text)) {
       out.push(`${file}: провайдер или дверь создаются вне фабрики live.ts`);
+    }
+    if (file !== FACTORY && file !== RAG_INDEX && !file.startsWith(PROVIDER_DIR) && adapterSpecifier.test(text)) {
+      out.push(`${file}: адаптер провайдера импортируется по пути вне фабрики и входа пакета`);
     }
     if (file !== FACTORY && file !== LIVE && /\bOpenRouterProvider\b/.test(text)) {
       out.push(`${file}: OpenRouterProvider вне адаптера и фабрики`);
@@ -69,6 +76,32 @@ export function providerConstructionViolations(files: Files): string[] {
     if (file !== LIVE && /openrouter\.ai|\bOPENROUTER_BASE\b/i.test(text)) out.push(`${file}: адрес провайдера вне адаптера`);
     if (!file.startsWith('packages/rag/src/') && /\bModelProvider\b/.test(text)) {
       out.push(`${file}: тип провайдера вне пакета rag`);
+    }
+  }
+  return out;
+}
+
+/**
+ * S-12 (spend-ceilings 08_review.md R-1): фабрика живой двери зовётся только в названных местах создания двери, и
+ * checkConfig — только в модулях конфигурации процессов. Вместе с isVerifiedConfig это закрывает «вторую дверь с
+ * выдуманными пределами»: пределы приходят только из проверенной конфигурации, а проверенную конфигурацию делает только
+ * старт процесса. Новое место создания двери (воркер chunk-embed) добавляется в список осознанно.
+ */
+export const GATEWAY_SITES = ['apps/web/src/server/paid.ts', 'services/worker/src/paid.ts'];
+export const CONFIG_SITES = ['packages/db/src/boot-config.ts', 'packages/db/src/ops-cli.ts', 'apps/web/src/server/config.ts',
+  'services/worker/src/config.ts'];
+export function gatewaySiteViolations(files: Files): string[] {
+  const out: string[] = [];
+  for (const [file, raw] of Object.entries(files)) {
+    const text = stripComments(raw);
+    if (file !== FACTORY && !GATEWAY_SITES.includes(file) && /\bcreateLiveGateway\s*\(/.test(text)) {
+      out.push(`${file}: живая дверь создаётся вне названных мест`);
+    }
+    if (!CONFIG_SITES.includes(file) && /\bcheckConfig\s*\(/.test(text)) {
+      out.push(`${file}: checkConfig вне модулей конфигурации — проверенную конфигурацию можно было бы собрать из выдуманного окружения`);
+    }
+    if (/\blimits\s*:/.test(text) && /\bcreateLiveGateway\s*\(\s*\{[^}]*\blimits\s*:/.test(text)) {
+      out.push(`${file}: пределы переданы фабрике числами, а не конфигурацией`);
     }
   }
   return out;
@@ -135,6 +168,10 @@ describe('стражи по исходнику: боевое дерево чис
     expect(providerConstructionViolations(files)).toEqual([]);
   });
   it('S-6: fake не импортируется боевым кодом', () => expect(fakeImportViolations(files)).toEqual([]));
+  it('S-12: живая дверь и checkConfig — только в названных местах', () => {
+    expect(files['apps/web/src/server/paid.ts']).toBeDefined();
+    expect(gatewaySiteViolations(files)).toEqual([]);
+  });
   it('S-5/S-7: один fetch, без повторов, исполнитель закреплён константой', () =>
     expect(liveAdapterViolations(files[LIVE]!)).toEqual([]));
   it('S-10: одна реализация инкремента квоты', () => expect(quotaIncrementViolations(files)).toEqual([]));
@@ -165,6 +202,30 @@ describe('стражи умеют падать (guard-must-be-able-to-fail)', ()
     expect(providerConstructionViolations({ [RAG_INDEX]: index })).toEqual([]);
     expect(providerConstructionViolations({ [RAG_INDEX]: `${index}\nexport { OpenRouterProvider } from './provider/openrouter.js';` }))
       .not.toEqual([]);
+  });
+  it('R-2: S-11 ловит квалифицированное имя и адаптер по относительному пути', () => {
+    const route = 'apps/web/src/app/api/x/route.ts';
+    for (const bad of ["import * as R from '@n6b/rag'; new R.PaidGateway({ provider, limits })",
+      'const gw = new rag.default.PaidGateway ({})',
+      "import * as M from '../../../../packages/rag/src/provider/openrouter.js'; const P = M['OpenRouter' + 'Provider'];",
+      "const M = await import('../../packages/rag/src/provider/openrouter')",
+      "import { FakeProvider as F } from '@n6b/rag/src/provider/fake.ts'",
+      "import '../../packages/rag/src/provider/openrouter.js'"]) {
+      expect(providerConstructionViolations({ [route]: bad }), bad).not.toEqual([]);
+    }
+    // Порт провайдера по пути — не адаптер: paid-call.ts так и импортирует типы.
+    expect(providerConstructionViolations({ [route]: "import type { ChatMessage } from '../provider/port.js'" })).toEqual([]);
+  });
+  it('S-12 ловит вторую дверь, checkConfig вне конфигурации и пределы числами (R-1)', () => {
+    const worker = 'services/worker/src/embed.ts';
+    for (const bad of ['const gw = createLiveGateway({ config, pool })',
+      "const v = checkConfig(SPEC, [], { LIMIT_ANSWER_GLOBAL_DAY: '2147483647' }, true)"]) {
+      expect(gatewaySiteViolations({ [worker]: bad }), bad).not.toEqual([]);
+    }
+    expect(gatewaySiteViolations({ 'apps/web/src/server/paid.ts': 'createLiveGateway({ limits: { a: 1 }, pool })' }))
+      .not.toEqual([]);
+    expect(gatewaySiteViolations({ 'apps/web/src/server/paid.ts': 'createLiveGateway({ config: config.all, pool })' }))
+      .toEqual([]);
   });
   it('S-6 ловит импорт fake', () => {
     expect(fakeImportViolations({ 'apps/web/src/server/x.ts': "import { FakeProvider } from '@n6b/rag/src/provider/fake'" }))
