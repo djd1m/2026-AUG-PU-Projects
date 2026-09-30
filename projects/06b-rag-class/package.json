@@ -1,0 +1,29 @@
+{
+  "name": "n6b-rag-class",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "N6b «RAG-бот для сайта» — монорепо npm workspaces (ADR-001)",
+  "workspaces": [
+    "apps/web",
+    "apps/widget",
+    "services/worker",
+    "packages/db",
+    "packages/rag"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "npm run build --workspace @n6b/db && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web",
+    "typecheck": "tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web",
+    "test": "vitest run --config vitest.config.ts",
+    "test:int": "vitest run --config vitest.int.config.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.4"
+  }
+}
