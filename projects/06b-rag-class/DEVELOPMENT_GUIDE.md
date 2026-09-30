@@ -55,15 +55,16 @@ SC-US — тест с идентификатором в имени. Правил
 
 ```bash
 cd projects/06b-rag-class
-(cd ../.. && bash scripts/check-port-conflicts.sh projects/06b-rag-class)   # портов стек не публикует, проверка — правило машины
 ENV_FILE="$(mktemp)"; chmod 600 "$ENV_FILE"
 printf 'TEST_DB_PASSWORD=%s\nTEST_TENANT_PASSWORD=%s\nTEST_SERVICE_PASSWORD=%s\n' \
   "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" > "$ENV_FILE"
+docker compose --env-file "$ENV_FILE" -f compose.test.yml config | grep -cE '^ +(published|host_ip):'   # 0 — стек ничего не публикует
 docker compose --env-file "$ENV_FILE" -f compose.test.yml run --rm --build tests; echo "exit=$?"
 docker compose --env-file "$ENV_FILE" -f compose.test.yml down -v; rm -f "$ENV_FILE"
 ```
 
-Код возврата `run` — код прогона: 0 только если прошли все три набора. Без БД `npm run test:int` падает с «интеграционная
+Портов тестовый стек не публикует, поэтому `check-port-conflicts.sh` (он читает `docker-compose.yml`) здесь не нужен —
+вместо него строка `config | grep` выше. Код возврата `run` — код прогона: 0 только если прошли все три набора. Без БД `npm run test:int` падает с «интеграционная
 проверка НЕ выполнена», а не пропускается.
 
 ## 6. Локальный стек и стенд
