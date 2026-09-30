@@ -1,20 +1,23 @@
 import { randomBytes } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ownerPool, servicePool } from '../../../db/tests/int/helpers';
+import pg from 'pg';
+import { env, ownerPool, servicePool } from '../../../db/tests/int/helpers';
 import { searchChunks, vectorLiteral } from '../../src/search';
 
 // ADR-002 «Подтверждение»: top-5 бота B не содержит фрагментов бота A при 10 000 чужих фрагментов — и чужие БЛИЖЕ к
 // вопросу, чем свои. Без фильтра bot_id выдача была бы целиком из A; без итеративного скана HNSW (ef_search = 64
 // ближайших — все чужие) после фильтра выдача была бы ПУСТОЙ. Векторы строит сама БД (setseed) — 10 000 × 1536 чисел
-// не гоняются через протокол. У маленького бота планировщик законно берёт btree bot_id и точную сортировку — там
-// итеративный скан не нужен; опасен путь HNSW, поэтому свой бот здесь крупный и тест плана это фиксирует.
+// не гоняются через протокол. План зависит от статистики: при малом числе строк бота планировщик законно берёт btree
+// bot_id и точную сортировку (скан HNSW не участвует, изоляция точная). Опасен путь HNSW — его тест включает
+// принудительно: пул `hnsw` соединяется с enable_sort=off, и сортировка по расстоянию невыгодна (план проверяется).
 
 const owner = ownerPool();
 const app = servicePool(4);
-afterAll(async () => { await owner.end(); await app.end(); });
+const hnsw = new pg.Pool({ connectionString: env().serviceUrl, max: 2, options: '-c enable_sort=off' });
+afterAll(async () => { await owner.end(); await app.end(); await hnsw.end(); });
 
 const FOREIGN = 10_000;
-const OWN = 3_000; // свой бот крупный: планировщик выбирает HNSW, а не btree bot_id + сортировку (см. тест плана)
+const OWN = 50;
 let botA: string;
 let botB: string;
 let query: number[];
@@ -65,8 +68,8 @@ describe('ADR-002: поиск top-K изолирован по боту', () => {
     expect(Number(worstForeign)).toBeGreaterThan(Number(byBot[botB]!.best));
   });
 
-  it('индекс HNSW vector_cosine_ops используется запросом поиска (план)', async () => {
-    const c = await app.connect();
+  it('на пути HNSW (enable_sort=off) запрос поиска идёт через chunk_embedding_hnsw (план)', async () => {
+    const c = await hnsw.connect();
     try {
       await c.query('BEGIN');
       await c.query('SET LOCAL ROLE n6b_service');
@@ -79,14 +82,17 @@ describe('ADR-002: поиск top-K изолирован по боту', () => {
   });
 
   it('top-5 бота B: ровно 5 своих, ни одного чужого, по убыванию сходства', async () => {
-    const hits = await searchChunks(app, botB, query, 5);
+    const hits = await searchChunks(hnsw, botB, query, 5);
     expect(hits).toHaveLength(5);
     expect(hits.every((h) => h.text.startsWith('свой-'))).toBe(true);
+    const planned = await searchChunks(app, botB, query, 5); // путь по статистике (любой план) — тоже только свои
+    expect(planned).toHaveLength(5);
+    expect(planned.every((h) => h.text.startsWith('свой-'))).toBe(true);
     for (let i = 1; i < hits.length; i += 1) expect(hits[i - 1]!.sim).toBeGreaterThanOrEqual(hits[i]!.sim);
   });
 
   it('бот A получает свои (и только свои) фрагменты', async () => {
-    const hits = await searchChunks(app, botA, query, 5);
+    const hits = await searchChunks(hnsw, botA, query, 5);
     expect(hits).toHaveLength(5);
     expect(hits.every((h) => h.text.startsWith('чужой-'))).toBe(true);
   });
