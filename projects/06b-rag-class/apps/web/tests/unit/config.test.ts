@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { assertUrlSafePassword, checkConfig, ConfigError, enforceBootConfig, pgUrl } from '@n6b/db';
 import { loadWebConfig, WEB_REQUIRED } from '@/server/config';
@@ -137,6 +139,14 @@ describe('Boot config check web (FR-n6b-16, NFR-n6b-3)', () => {
         LIMIT_SANDBOX_GLOBAL_DAY: '2147483647', LIMIT_EMBED_TOKENS_GLOBAL_DAY: '2147483647', [name]: '2147483647' };
       expect(() => loadWebConfig(edge), `${name}=2147483647 — граница включена`).not.toThrow();
     });
+
+  it('F-3: loadWebConfig разбирает всю связку пределов (limitsFrom) сразу после checkConfig — при старте', () => {
+    // Слой разбора пределов дублирует parseOne намеренно; снятие любого из двух иначе не видно тестам поведения.
+    const src = readFileSync(path.resolve(__dirname, '../../src/server/config.ts'), 'utf8').replace(/^\s*\/\/.*$/gm, '');
+    expect(src).toMatch(/const all = checkConfig\(WEB_REQUIRED, WEB_PAIRS, env, production\);\s*limitsFrom\(all\);/);
+    expect('const all = checkConfig(WEB_REQUIRED, WEB_PAIRS, env, production);\n  const connection')
+      .not.toMatch(/const all = checkConfig\(WEB_REQUIRED, WEB_PAIRS, env, production\);\s*limitsFrom\(all\);/);
+  });
 
   it('SC-US-016-2: enforceBootConfig завершает процесс кодом 1 и не печатает значения', () => {
     const exit = vi.fn((code: number) => { throw new Error(`exit ${code}`); }) as unknown as (code: number) => never;
