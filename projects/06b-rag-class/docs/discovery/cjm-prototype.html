@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CJM N6b — варианты</title>
+<style>
+:root{--bg:#f8fafc;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--acc:#ea580c;--acc2:#fff7ed;--ok:#15803d;--warn:#b45309}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#111827;--ink:#e2e8f0;--muted:#94a3b8;--line:#1f2937;--acc:#fb923c;--acc2:#2a1a0e;--ok:#4ade80;--warn:#fbbf24}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header,main{max-width:980px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0 0 4px}.note{color:var(--muted);font-size:13px}
+.fallback{border:1px dashed var(--warn);color:var(--warn);padding:6px 10px;border-radius:8px;font-size:13px;margin-top:8px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:8px;cursor:pointer}
+button[aria-pressed=true]{border-color:var(--acc);background:var(--acc2);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--acc2);color:var(--acc)}
+.screens{display:flex;flex-wrap:wrap;gap:6px}
+.phone{border:1px solid var(--line);border-radius:14px;padding:14px;min-height:220px;background:var(--bg)}
+.phone h3{margin:0 0 6px;font-size:16px}.cta{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;padding:8px 12px;border-radius:8px}
+.badge{margin-top:10px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
+.bubble{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;margin:6px 0}
+.src{font-size:12px;color:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+.score{display:flex;gap:6px;align-items:center;margin:4px 0}.score input{width:60px}
+.wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<header>
+<h1>N6b · RAG-бот для сайта — 3 варианта CJM</h1>
+<div class="note">Фаза 0, модуль M2.5. Выбор делает владелец; прототип ничего не фиксирует и никуда не отправляет.</div>
+<div class="fallback">Палитра — ФОЛБЭК (отраслевая, Productivity: slate/orange): облик Chatbase НЕ ИЗМЕРЕН, причина no-browser-mcp (см. source-product-profile.md).</div>
+<nav id="tabs" aria-label="Варианты"></nav>
+</header>
+<main id="app"></main>
+<script>
+const V={
+ A:{name:"A · Бот на сайте за 10 минут",loop:"Значковая (badge)",seg:"С1 владелец малого сайта",
+  screens:[
+   ["Лендинг","«Бот отвечает по вашим документам — и показывает, откуда ответ»","Создать бота"],
+   ["Онбординг","URL сайта + PDF → «Индексация: 34 из 120 страниц» (id задачи выдан сразу)","Дальше"],
+   ["Aha","Вопрос: «Сколько стоит доставка?» → ответ со ссылкой на СВОЮ страницу /delivery","Вставить на сайт"],
+   ["Core loop","Виджет на своём домене; счётчик «вопросов: 12, из них “не знаю”: 3» → дозагрузить PDF","Добавить документ"],
+   ["Paywall","Free: бейдж обязателен, лимит ответов. «Убрать бейдж» — платная опция (на неделе: заявка)","Хочу без бейджа"],
+   ["Рост","Посетитель чужого сайта кликает «Работает на …» → лендинг с ref=bot_id","Сделать такой же"]],
+  fr:"001 CTA в момент Aha · 003 бейдж на Free · 005 демо — вторично · 004 минимум · 002 отложен",
+  risk:"Петля медленная (K встраиваемых 0.1–0.2); 15 внешних виджетов за неделю — скорее ручной посев. Вопрос 38-ФЗ по бейджу."},
+ B:{name:"B · Попробуй на своём сайте без регистрации",loop:"Content-driven (демо-страницы)",seg:"С1 + С2, недоверие к ИИ",
+  screens:[
+   ["Лендинг","Одно поле: «Введите адрес вашего сайта»","Показать моего бота"],
+   ["Онбординг","Анонимная индексация (лимит на IP/сутки) → публичная страница /d/{slug}","Открыть демо"],
+   ["Aha","На демо-странице бот отвечает по ВАШЕМУ сайту со ссылками","Поделиться демо"],
+   ["Core loop","Демо шарят в чатах → зрители вводят свой URL","Сохранить бота"],
+   ["Paywall","Сохранение = регистрация; виджет бесплатно с бейджем; больше страниц — платно","Тарифы"],
+   ["Рост","Каждая демо-страница — точка входа для следующего","Своё демо"]],
+  fr:"005 главный · 001 share-CTA на демо · 003 бейдж на демо и виджете · 004 демо как прототип для клиента студии",
+  risk:"Анонимный посторонний запускает платный краулинг и ответы; индексация чужих сайтов без согласия; демо ≠ установка."},
+ C:{name:"C · ИИ-бот для клиентов вашей студии",loop:"Поощряемая реферальная (студии)",seg:"С2 веб-студия",
+  screens:[
+   ["Лендинг","«Продавайте клиентам ИИ-бота под своим именем»","Аккаунт студии"],
+   ["Онбординг","Студия → «Новый клиент» (sub-аккаунт) → URL + PDF клиента","Собрать бота"],
+   ["Aha","Ответ со ссылкой на PDF-прайс клиента — студия показывает клиенту","Передать клиенту"],
+   ["Core loop","N клиентов в одном кабинете; бейдж «собрано студией X»","Ещё клиент"],
+   ["Paywall","Тариф «Студия» + раскрытое вознаграждение за платных клиентов (оплата вне сборки)","Условия"],
+   ["Рост","Каждый клиент студии — виджет на внешнем домене","Пригласить студию"]],
+  fr:"004 главный (sub-аккаунты + перенос) · 002 атрибуция до оплаты · 003 ко-брендинг бейджа · 001 CTA «передать»",
+  risk:"Без оплаты петля не замыкается; мало студий — мало сайтов; самый большой объём (роли, передача владения)."}
+};
+const CMP=[["Петля","Значковая","Content-driven","Реферальная (студии)"],
+ ["Совпадение с постановкой","основной loop BADGE","демо — только вторичная","FR-GROWTH-004, loop иной"],
+ ["Вклад в метрику недели","прямой","косвенный","прямой, мало студий"],
+ ["Нужна оплата для петли","нет","нет","да — вне сборки"],
+ ["Денежный риск","средний","высокий","средний"],
+ ["Объём MVP","наименьший","средний","наибольший"]];
+let cur="A";const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function tabs(){const t=document.getElementById("tabs");t.innerHTML="";[...Object.keys(V),"cmp","score"].forEach(k=>{const b=document.createElement("button");
+ b.textContent=k==="cmp"?"⚖️ Сравнение":k==="score"?"🏆 Оценка":V[k].name;b.setAttribute("aria-pressed",String(k===cur));b.onclick=()=>{cur=k;render()};t.appendChild(b)})}
+let si=0;
+function variant(k){const v=V[k],s=v.screens[si];return `<div class="card"><div class="meta"><span class="tag">loop: ${esc(v.loop)}</span><span class="tag">${esc(v.seg)}</span></div>
+ <div class="screens">${v.screens.map((x,i)=>`<button aria-pressed="${i===si}" data-i="${i}">${i+1}. ${esc(x[0])}</button>`).join("")}</div>
+ <div class="phone" style="margin-top:10px"><h3>${esc(s[0])}</h3>${si===2?`<div class="bubble">${esc(s[1])}</div><div class="src">↳ источник: фрагмент документа</div>`:`<div>${esc(s[1])}</div>`}
+ <span class="cta">${esc(s[2])}</span>${k!=="C"||si>2?`<div class="badge">Работает на ‹продукт› · бейдж Free</div>`:""}</div>
+ <p><b>FR-GROWTH:</b> ${esc(v.fr)}</p><p><b>Главный риск:</b> ${esc(v.risk)}</p></div>`}
+function cmp(){return `<div class="card wrap"><table><tr><th></th><th>A</th><th>B</th><th>C</th></tr>${CMP.map(r=>`<tr>${r.map((c,i)=>i?`<td>${esc(c)}</td>`:`<th>${esc(c)}</th>`).join("")}</tr>`).join("")}</table>
+ <p class="note">Рекомендация исполнителя (не выбор): A + демо-страница сохранённого бота из B + минимум студий из C.</p></div>`}
+const SC={};function score(){const crit=["Метрика недели","Объём за неделю","Денежный риск (выше = безопаснее)"];
+ return `<div class="card"><p class="note">Оценка 1–5, только в этом окне браузера; никуда не отправляется.</p>${Object.keys(V).map(k=>`<div><b>${esc(V[k].name)}</b>${crit.map((c,j)=>`<div class="score"><label>${esc(c)} <input type="number" min="1" max="5" data-k="${k}" data-j="${j}" value="${(SC[k]||[])[j]||""}"></label></div>`).join("")}<div class="note">Сумма: <span id="sum-${k}">${(SC[k]||[]).reduce((a,b)=>a+(+b||0),0)}</span></div></div>`).join("<hr>")}</div>`}
+function render(){tabs();const a=document.getElementById("app");a.innerHTML=cur==="cmp"?cmp():cur==="score"?score():variant(cur);
+ a.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{si=+b.dataset.i;render()});
+ a.querySelectorAll("input[data-k]").forEach(inp=>inp.oninput=()=>{const k=inp.dataset.k;SC[k]=SC[k]||[];SC[k][+inp.dataset.j]=Math.max(1,Math.min(5,+inp.value||0));document.getElementById("sum-"+k).textContent=SC[k].reduce((x,y)=>x+(+y||0),0)})}
+render();
+</script>
+</body>
+</html>
