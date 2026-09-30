@@ -1,4 +1,4 @@
-import { createHmac } from 'node:crypto';
+import { createHmac, randomInt } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { reserveQuotaNow } from '@n6b/db';
@@ -25,8 +25,12 @@ const deps = { auth, publicBaseUrl: BASE, visitorSecret: 'v'.repeat(48), authLim
 const register = createAuthHandler('register', deps);
 const login = createAuthHandler('login', deps);
 
+// Адреса — со случайной базой на прогон (spend-ceilings 08_review.md F-5): счётчик входа живёт час, и повторный прогон
+// на той же БД без `down -v` иначе упирался бы в попытки прошлого прогона с тех же адресов.
+const RUN_V4 = `172.${randomInt(16, 32)}.${randomInt(0, 256)}`;
+const RUN_V6 = randomInt(0x1000, 0x10000).toString(16);
 let ipCounter = 0;
-const freshIp = () => `198.51.100.${(ipCounter += 1)}`;
+const freshIp = () => `${RUN_V4}.${(ipCounter += 1)}`;
 function req(body: object, ip: string): Request {
   return new Request(`${BASE}/api/auth/x`, { method: 'POST',
     headers: { 'content-type': 'application/json', 'x-forwarded-for': `10.0.0.1, ${ip}`, origin: BASE },
@@ -102,13 +106,13 @@ describe('регистрация и вход на Postgres (FR-n6b-1)', () => {
   });
 
   it('SC-US-001-4: IPv6 — разные адреса одной /64 делят счётчик, соседняя /64 — нет', async () => {
-    const net = `2001:db8:${(ipCounter += 1).toString(16)}:1`;
+    const net = `2001:${RUN_V6}:${(ipCounter += 1).toString(16)}:1`;
     for (let i = 1; i <= 10; i += 1) {
       await login(req({ email: `${uniq('v6')}@example.test`, password: 'wrong password 1' }, `${net}::${i.toString(16)}`));
     }
     expect((await login(req({ email: 'a@example.test', password: 'wrong password 1' }, `${net}:ffff::99`))).status).toBe(429);
     expect((await login(req({ email: 'a@example.test', password: 'wrong password 1' },
-      `2001:db8:${ipCounter.toString(16)}:2::1`))).status).toBe(401);
+      `2001:${RUN_V6}:${ipCounter.toString(16)}:2::1`))).status).toBe(401);
   });
 
   it('конкурентно: 20 одновременных попыток с одного адреса при пределе 10 → ровно 10 дошли до bcrypt', async () => {
