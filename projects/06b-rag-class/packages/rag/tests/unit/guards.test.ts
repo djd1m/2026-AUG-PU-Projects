@@ -27,14 +27,49 @@ const sources = (): Files => Object.assign({}, ...SOURCE_DIRS.map((d) => collect
 const PAID_CALL = 'packages/rag/src/paid-call.ts';
 const PROVIDER_DIR = 'packages/rag/src/provider/';
 const LIVE = 'packages/rag/src/provider/openrouter.ts';
+const FACTORY = 'packages/rag/src/live.ts';
+const RAG_INDEX = 'packages/rag/src/index.ts';
 
-/** S-9: вызов порта (.embed( / .answer() и обращение к openrouter.ai — только в paid-call.ts и в адаптерах. */
+/**
+ * S-9: вызов метода порта — только в paid-call.ts и в адаптерах. Ловит `.answer(`, `?.answer?.(`, `['answer'](`,
+ * `answer.call(`/`.apply(`/`.bind(` и деструктуризацию `{ embed } =` (08_review.md F-2: четыре обхода валидатора).
+ * Деструктуризация `answer` не запрещена: `const { answer } = await attempt.generate(…)` — поле результата, не метод.
+ */
 export function providerCallViolations(files: Files): string[] {
   const out: string[] = [];
+  const call = /(?:\.|\?\.)\s*(?:embed|answer)\s*(?:\?\.)?\s*\(/;
+  const bracket = /\[\s*['"`](?:embed|answer)['"`]\s*\]/;
+  const indirect = /\b(?:embed|answer)\s*\.\s*(?:call|apply|bind)\s*\(/;
+  const destructure = /\{[^{}]*\bembed\b[^{}]*\}\s*=(?![=>])/;
   for (const [file, text] of Object.entries(files)) {
     if (file === PAID_CALL || file.startsWith(PROVIDER_DIR)) continue;
-    if (/\.(embed|answer)\s*\(/.test(text)) out.push(`${file}: вызов провайдера вне paid-call.ts`);
-    if (/openrouter\.ai/.test(text)) out.push(`${file}: адрес провайдера вне адаптера`);
+    if (call.test(text) || bracket.test(text) || indirect.test(text) || destructure.test(text)) {
+      out.push(`${file}: вызов провайдера вне paid-call.ts`);
+    }
+  }
+  return out;
+}
+
+/**
+ * S-11 (08_review.md F-2): провайдер недоступен в обход двери по УСТРОЙСТВУ кода. `new OpenRouterProvider(` и
+ * `new PaidGateway(` — только в фабрике live.ts; имя OpenRouterProvider — только в адаптере и фабрике (вход пакета его не
+ * экспортирует); адрес OpenRouter (литерал или OPENROUTER_BASE) — только в адаптере; `ModelProvider` вне пакета rag не
+ * нужен никому. Не видит: провайдер, собранный из `globalThis.fetch` на адрес, склеенный по частям в рантайме.
+ */
+export function providerConstructionViolations(files: Files): string[] {
+  const out: string[] = [];
+  for (const [file, raw] of Object.entries(files)) {
+    const text = stripComments(raw);
+    if (file !== FACTORY && /new\s+(?:OpenRouterProvider|PaidGateway)\s*\(/.test(text)) {
+      out.push(`${file}: провайдер или дверь создаются вне фабрики live.ts`);
+    }
+    if (file !== FACTORY && file !== LIVE && /\bOpenRouterProvider\b/.test(text)) {
+      out.push(`${file}: OpenRouterProvider вне адаптера и фабрики`);
+    }
+    if (file !== LIVE && /openrouter\.ai|\bOPENROUTER_BASE\b/i.test(text)) out.push(`${file}: адрес провайдера вне адаптера`);
+    if (!file.startsWith('packages/rag/src/') && /\bModelProvider\b/.test(text)) {
+      out.push(`${file}: тип провайдера вне пакета rag`);
+    }
   }
   return out;
 }
@@ -74,6 +109,10 @@ export function paidCallOrderViolations(text: string): string[] {
   const out: string[] = [];
   const reserve = /await reserveQuota\(c, keys, day\);\s*return startCall\(c, kind, owner\);/;
   if (!reserve.test(text)) out.push('резерв и START не в одной транзакции (reserveQuota → startCall)');
+  // F-1: набор ключей сверяется с обязательным для вида вызова ДО резерва, и отказ — исключение.
+  const checked = /const violation = keySetViolation\(kind, keys, this\.#deps\.limits\);\s*if \(violation\) throw [^;]+;\s*const day = /;
+  if (!checked.test(text)) out.push('набор ключей не сверяется keySetViolation до резерва');
+  if (!/constructor\(deps: PaidCallDeps\) \{\s*assertLimits\(deps\.limits\);/.test(text)) out.push('пределы двери не проверяются при создании');
   if (/withService\([^)]*\)[\s\S]{0,200}invoke\(/.test(text.replace(/\/\/.*$/gm, ''))) {
     out.push('вызов провайдера внутри транзакции');
   }
@@ -91,6 +130,10 @@ describe('стражи по исходнику: боевое дерево чис
   });
 
   it('S-9: провайдер зовётся только из paid-call.ts', () => expect(providerCallViolations(files)).toEqual([]));
+  it('S-11: провайдер и дверь создаются только фабрикой, адрес — только в адаптере', () => {
+    expect(files[FACTORY]).toBeDefined();
+    expect(providerConstructionViolations(files)).toEqual([]);
+  });
   it('S-6: fake не импортируется боевым кодом', () => expect(fakeImportViolations(files)).toEqual([]));
   it('S-5/S-7: один fetch, без повторов, исполнитель закреплён константой', () =>
     expect(liveAdapterViolations(files[LIVE]!)).toEqual([]));
@@ -100,10 +143,28 @@ describe('стражи по исходнику: боевое дерево чис
 });
 
 describe('стражи умеют падать (guard-must-be-able-to-fail)', () => {
-  it('S-9 ловит вызов порта и адрес провайдера в маршруте', () => {
-    expect(providerCallViolations({ 'apps/web/src/app/api/x/route.ts': 'await provider.answer(messages, s)' })).toHaveLength(1);
-    expect(providerCallViolations({ 'services/worker/src/x.ts': "fetch('https://openrouter.ai/api/v1/embeddings')" }))
-      .toHaveLength(1);
+  it('S-9 ловит вызов порта и четыре обхода валидатора (F-2)', () => {
+    const route = 'apps/web/src/app/api/x/route.ts';
+    for (const bad of ['await provider.answer(messages, s)', "await provider['answer'](m, s)",
+      'const { embed } = p; await embed.call(p, texts, s)', 'const {embed}=p;', 'await provider?.answer?.(m, s)',
+      'await p.embed (t, s)', 'const f = p.answer.bind(p)']) {
+      expect(providerCallViolations({ [route]: bad }), bad).toHaveLength(1);
+    }
+    // Чистый случай: поле результата и вызовы попытки двери — не вызов провайдера.
+    expect(providerCallViolations({ [route]: 'const { answer, cited_ids } = await attempt.generate(m); '
+      + 'await attempt.embedQuestion(q); const x = { embed: 1 }; if (a == { embed } ) {}' })).toEqual([]);
+  });
+  it('S-11 ловит провайдер и дверь вне фабрики, экспорт адаптера и адрес провайдера (F-2)', () => {
+    const route = 'apps/web/src/app/api/x/route.ts';
+    for (const bad of ['new OpenRouterProvider(k)?.answer?.(m, s)', 'const gw = new PaidGateway({ pool, provider, limits })',
+      "fetch(OPENROUTER_BASE + '/embeddings')", "fetch('https://OpenRouter.ai/api/v1/embeddings')",
+      "import { OpenRouterProvider } from '@n6b/rag'", 'const p: ModelProvider = { embed, answer }']) {
+      expect(providerConstructionViolations({ [route]: bad }), bad).not.toEqual([]);
+    }
+    const index = readFileSync(path.join(ROOT, RAG_INDEX), 'utf8');
+    expect(providerConstructionViolations({ [RAG_INDEX]: index })).toEqual([]);
+    expect(providerConstructionViolations({ [RAG_INDEX]: `${index}\nexport { OpenRouterProvider } from './provider/openrouter.js';` }))
+      .not.toEqual([]);
   });
   it('S-6 ловит импорт fake', () => {
     expect(fakeImportViolations({ 'apps/web/src/server/x.ts': "import { FakeProvider } from '@n6b/rag/src/provider/fake'" }))
@@ -121,8 +182,10 @@ describe('стражи умеют падать (guard-must-be-able-to-fail)', ()
     expect(quotaIncrementViolations({ 'packages/db/src/quota.ts': 'ON CONFLICT (scope, day)',
       'apps/web/src/server/x.ts': 'ON CONFLICT (scope, day)' })).toHaveLength(1);
   });
-  it('порядок paid-call ловит START вне транзакции резерва', () => {
+  it('порядок paid-call ловит START вне транзакции резерва, снятую сверку набора и пределов', () => {
     const good = readFileSync(path.join(ROOT, PAID_CALL), 'utf8');
     expect(paidCallOrderViolations(good.replace('return startCall(c, kind, owner);', 'return undefined;'))).not.toEqual([]);
+    expect(paidCallOrderViolations(good.replace('if (violation) throw', 'if (violation) console.warn'))).not.toEqual([]);
+    expect(paidCallOrderViolations(good.replace('assertLimits(deps.limits);', ''))).not.toEqual([]);
   });
 });

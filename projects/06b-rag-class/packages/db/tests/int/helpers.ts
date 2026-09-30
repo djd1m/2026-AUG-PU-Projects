@@ -1,4 +1,4 @@
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomInt } from 'node:crypto';
 import pg from 'pg';
 import { pgUrl } from '../../src/boot-config';
 
@@ -38,6 +38,16 @@ export function tenantPool(max = 10): pg.Pool {
 export function servicePool(max = 10): pg.Pool {
   return new pg.Pool({ connectionString: env().serviceUrl, max, connectionTimeoutMillis: 5000 });
 }
+
+/**
+ * Сутки прогона (08_review.md F-5): случайная база от 2040-01-01 на файл теста. Повторный прогон на той же БД без
+ * `down -v` берёт другие сутки и не делит счётчики общих ключей (answer:global, embed:global) с прошлым прогоном.
+ */
+const RUN_BASE_DAY = randomInt(0, 150_000);
+export function runDate(offsetDays: number, hourUtc = 9, minuteUtc = 0): Date {
+  return new Date(Date.UTC(2040, 0, 1 + RUN_BASE_DAY + offsetDays, hourUtc, minuteUtc, 0));
+}
+export const isoDay = (at: Date): string => at.toISOString().slice(0, 10);
 
 export function uniq(prefix: string): string {
   return `${prefix}-${randomBytes(4).toString('hex')}`;

@@ -1,9 +1,10 @@
 // Решения процесса web, читающие потолки расходов и ключ модели (CFG-I5: проверенная при старте переменная обязана
-// читаться решением). Пределы превращаются в ключи ТОЛЬКО через quota-keys.ts, провайдер зовётся ТОЛЬКО через PaidGateway.
-// Маршруты ответа (виджет, демо, песочница) подключают это в фичах rag-answer-sandbox, widget, demo-page.
+// читаться решением). Ключи попытки строит сама дверь PaidGateway из канала (08_review.md F-1); провайдер создаётся
+// только фабрикой createLiveGateway и наружу не выходит (F-2). Маршруты ответа (виджет, демо, песочница) подключают это в
+// фичах rag-answer-sandbox, widget, demo-page: getRuntime().paid.gateway.beginAnswer({ kind: 'visitor', ip, botId }, …).
 
-import { answerKeys, type Limits, limitsFrom, type Pool, type QuotaKey, sandboxKeys, visitorKey } from '@n6b/db';
-import { type ModelProvider, OpenRouterProvider, PaidGateway } from '@n6b/rag';
+import { type Limits, limitsFrom, type Pool } from '@n6b/db';
+import { createLiveGateway, type PaidGateway } from '@n6b/rag';
 import type { WebConfig } from './config';
 
 /** Потолки из проверенной конфигурации. limitsFrom повторно сверяет «персональный ≤ общего». */
@@ -19,28 +20,15 @@ export function webLimits(config: WebConfig): Limits {
   });
 }
 
-/** Боевой провайдер всегда `live`: селектора fake/live в окружении нет (01_plan.md §7). */
-export function liveProvider(config: WebConfig): ModelProvider {
-  return new OpenRouterProvider(config.OPENROUTER_API_KEY);
-}
-
 export interface PaidRuntime {
   readonly limits: Limits;
+  /** Единственная дверь к платным вызовам процесса web (провайдер live закреплён внутри). */
   readonly gateway: PaidGateway;
-  /** Ключи попытки ответа посетителю: HMAC префикса /24·/64 + bot_id → посетитель, бот, все. */
-  visitorAnswerKeys(ip: string, botId: string): QuotaKey[];
-  /** Ключи попытки ответа в песочнице: аккаунт, все аккаунты. */
-  sandboxAnswerKeys(accountId: string): QuotaKey[];
 }
 
-export function createPaidRuntime(config: WebConfig, servicePool: Pool,
-  provider: ModelProvider = liveProvider(config)): PaidRuntime {
+export function createPaidRuntime(config: WebConfig, servicePool: Pool): PaidRuntime {
   const limits = webLimits(config);
-  const gateway = new PaidGateway({ pool: servicePool, provider, log: (line) => console.warn(line) });
-  return {
-    limits,
-    gateway,
-    visitorAnswerKeys: (ip, botId) => answerKeys(limits, visitorKey(config.VISITOR_SECRET, ip, botId), botId),
-    sandboxAnswerKeys: (accountId) => sandboxKeys(limits, accountId),
-  };
+  const gateway = createLiveGateway({ apiKey: config.OPENROUTER_API_KEY, pool: servicePool, limits,
+    visitorSecret: config.VISITOR_SECRET, log: (line) => console.warn(line) });
+  return { limits, gateway };
 }

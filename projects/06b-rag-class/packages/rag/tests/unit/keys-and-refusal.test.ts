@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  answerKeys, ConfigError, embedKeys, isKnownScope, type Limits, LIMIT_VARIABLES, limitsFrom, moscowDay, moscowHour,
-  sandboxKeys, visitorKey,
+  answerKeys, ConfigError, embedKeys, isKnownScope, keySetViolation, type Limits, LIMIT_VARIABLES, limitsFrom, moscowDay,
+  moscowHour, type QuotaKey, sandboxKeys, visitorKey,
 } from '@n6b/db';
 import { quotaRefusal, secondsToMoscowMidnight, visitorLimitText } from '../../src/refusal';
 import { providerRefusal } from '../../src/refusal';
@@ -74,6 +74,39 @@ describe('ключи попытки: фиксированный порядок �
   });
 });
 
+describe('обязательный набор ключей по виду вызова (08_review.md F-1, keySetViolation)', () => {
+  const vkey = visitorKey(SECRET, '203.0.113.7', BOT);
+  const visitorSet = answerKeys(OWNER, vkey, BOT);
+  const sandboxSet = sandboxKeys(OWNER, ACC);
+  const embedSet = embedKeys(OWNER, ACC, 300);
+
+  it('наборы, которые строят answerKeys/sandboxKeys/embedKeys, пригодны', () => {
+    expect(keySetViolation('embed_question', visitorSet, OWNER)).toBeNull();
+    expect(keySetViolation('embed_question', sandboxSet, OWNER)).toBeNull();
+    expect(keySetViolation('embed_index', embedSet, OWNER)).toBeNull();
+  });
+
+  it.each<[string, 'embed_question' | 'embed_index', readonly QuotaKey[]]>([
+    ['произвольный ключ с огромным пределом', 'embed_question', [{ scope: 'x', limit: 1e9 }]],
+    ['пропущен answer:global', 'embed_question', visitorSet.slice(0, 2)],
+    ['пропущен answer:sandbox:global', 'embed_question', sandboxSet.slice(0, 1)],
+    ['пропущен embed:global', 'embed_index', embedSet.slice(0, 1)],
+    ['общий ключ не последним', 'embed_question', [visitorSet[2]!, visitorSet[0]!, visitorSet[1]!]],
+    ['общий ключ с подменённым пределом', 'embed_question', [...visitorSet.slice(0, 2), { scope: 'answer:global', limit: 1e9 }]],
+    ['личный ключ с подменённым пределом', 'embed_question', [{ ...sandboxSet[0]!, limit: 2000 }, sandboxSet[1]!]],
+    ['лишний неизвестный ключ', 'embed_question', [...sandboxSet, { scope: 'test:extra', limit: 5 }]],
+    ['ключ входа вместо ответа', 'embed_question', [{ scope: `auth:addr:${'a'.repeat(32)}:2026-09-30T14`, limit: 10 }]],
+    ['набор песочницы для батча', 'embed_index', sandboxSet],
+    ['набор батча для ответа', 'embed_question', embedSet],
+    ['n батча различается', 'embed_index', [embedSet[0]!, { ...embedSet[1]!, n: 1 }]],
+    ['n батча отсутствует', 'embed_index', embedSet.map(({ scope, limit }) => ({ scope, limit }))],
+    ['попытка ответа резервирует 5', 'embed_question', sandboxSet.map((k) => ({ ...k, n: 5 }))],
+    ['пустой набор', 'embed_question', []],
+  ])('%s → отказ', (_, kind, keys) => {
+    expect(keySetViolation(kind, keys, OWNER)).not.toBeNull();
+  });
+});
+
 describe('ключ посетителя (N5 #20): /24 + bot_id, IP не хранится', () => {
   it('соседи по /24 делят ключ; другой /24 или другой бот — другой ключ', () => {
     const k = visitorKey(SECRET, '203.0.113.7', BOT);
@@ -83,6 +116,18 @@ describe('ключ посетителя (N5 #20): /24 + bot_id, IP не хран
     expect(visitorKey(SECRET, '::ffff:203.0.113.9', BOT)).toBe(k);
     expect(k).toMatch(/^[0-9a-f]{32}$/);
     expect(k).not.toContain('203');
+  });
+  it('F-6 (08_review.md): IPv4-mapped IPv6 в любой записи — ключ того же IPv4 /24, не общий /64 нулей', () => {
+    const k = visitorKey(SECRET, '1.2.3.4', BOT);
+    for (const mapped of ['::ffff:1.2.3.4', '::ffff:102:304', '::FFFF:0102:0304', '0:0:0:0:0:ffff:102:304',
+      '0000:0000:0000:0000:0000:ffff:1.2.3.99']) {
+      expect(visitorKey(SECRET, mapped, BOT), mapped).toBe(k);
+    }
+    // Разные IPv4 в hex-записи — разные ключи (до правки оба падали в 0:0:0:0::/64 и делили предел 30).
+    expect(visitorKey(SECRET, '::ffff:102:304', BOT)).not.toBe(visitorKey(SECRET, '::ffff:506:708', BOT));
+    // Не-mapped соседи остаются IPv6: ::1 и ::ffff:0:102:304 (другая группа) — не IPv4.
+    expect(visitorKey(SECRET, '::1', BOT)).not.toBe(k);
+    expect(visitorKey(SECRET, '::ffff:0:102:304', BOT)).not.toBe(k);
   });
   it('IPv6: один /64 — один ключ', () => {
     expect(visitorKey(SECRET, '2001:db8:1:2::1', BOT)).toBe(visitorKey(SECRET, '2001:db8:1:2:ffff::9', BOT));
