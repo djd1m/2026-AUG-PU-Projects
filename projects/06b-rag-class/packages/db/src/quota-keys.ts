@@ -38,20 +38,23 @@ const INT4_MAX = 2_147_483_647;
  * значения в обход checkConfig.
  */
 export function limitsFrom(values: ConfigValues): Limits {
-  const read = (field: keyof Limits): number => {
+  const fields = Object.keys(LIMIT_VARIABLES) as Array<keyof Limits>;
+  return assertLimits(Object.fromEntries(fields.map((f) => [f, values[LIMIT_VARIABLES[f]]])) as unknown as Limits);
+}
+
+/**
+ * Проверка готового набора пределов: каждое поле — целое 1…2^31−1 (int4 счётчика), персональный ≤ общего. Ту же проверку
+ * проходит дверь PaidGateway при создании: пределы, собранные в обход конфигурации, не связывают ни одного вызова.
+ */
+export function assertLimits(limits: Limits): Limits {
+  const fields = Object.keys(LIMIT_VARIABLES) as Array<keyof Limits>;
+  for (const field of fields) {
     const name = LIMIT_VARIABLES[field];
-    const value = values[name];
+    const value: unknown = (limits as unknown as Record<string, unknown>)[field];
     if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 1 || value > INT4_MAX) {
       throw new ConfigError(name, `${name} не прошёл проверку конфигурации: потолок расходов не определён`);
     }
-    return value;
-  };
-  const limits: Limits = {
-    answerVisitorDay: read('answerVisitorDay'), answerBotDay: read('answerBotDay'),
-    answerGlobalDay: read('answerGlobalDay'), sandboxAccountDay: read('sandboxAccountDay'),
-    sandboxGlobalDay: read('sandboxGlobalDay'), embedTokensAccountDay: read('embedTokensAccountDay'),
-    embedTokensGlobalDay: read('embedTokensGlobalDay'),
-  };
+  }
   const pairs: Array<[keyof Limits, keyof Limits]> = [['answerVisitorDay', 'answerBotDay'],
     ['answerBotDay', 'answerGlobalDay'], ['sandboxAccountDay', 'sandboxGlobalDay'],
     ['embedTokensAccountDay', 'embedTokensGlobalDay']];
@@ -124,4 +127,56 @@ export const SCOPE_FORMS: readonly RegExp[] = [
 
 export function isKnownScope(scope: string): boolean {
   return SCOPE_FORMS.some((re) => re.test(scope));
+}
+
+/** Вид резерва платной попытки: ответ (эмбеддинг вопроса + генерация) или батч эмбеддингов индексации. */
+export type ReserveKind = 'embed_question' | 'embed_index';
+
+type Form = 'visitor' | 'bot' | 'answer-global' | 'sandbox' | 'sandbox-global' | 'embed-account' | 'embed-global';
+
+const FORM_OF: ReadonlyArray<[RegExp, Form, keyof Limits]> = [
+  [/^answer:visitor:[0-9a-f]{32}$/, 'visitor', 'answerVisitorDay'],
+  [/^answer:bot:[0-9a-f-]{36}$/, 'bot', 'answerBotDay'],
+  [/^answer:global$/, 'answer-global', 'answerGlobalDay'],
+  [/^answer:sandbox:global$/, 'sandbox-global', 'sandboxGlobalDay'],
+  [/^answer:sandbox:[0-9a-f-]{36}$/, 'sandbox', 'sandboxAccountDay'],
+  [/^embed:account:[0-9a-f-]{36}$/, 'embed-account', 'embedTokensAccountDay'],
+  [/^embed:global$/, 'embed-global', 'embedTokensGlobalDay'],
+];
+
+/** Обязательные наборы по виду вызова: последний ключ — ВСЕГДА общий потолок этого вида (08_review.md F-1). */
+const REQUIRED_SETS: Readonly<Record<ReserveKind, readonly string[]>> = {
+  embed_question: ['visitor,bot,answer-global', 'sandbox,sandbox-global'],
+  embed_index: ['embed-account,embed-global'],
+};
+
+/**
+ * Проверка набора ключей попытки ДО резерва: каждый ключ — закрытой формы, набор — ровно один из обязательных для вида
+ * вызова (с общим потолком последним), предел каждого ключа — число из конфигурации, n батча — одно на оба ключа.
+ * null — набор пригоден; строка — причина отказа (без значений ключей).
+ */
+export function keySetViolation(kind: ReserveKind, keys: readonly QuotaKey[], limits: Limits): string | null {
+  const allowed = REQUIRED_SETS[kind];
+  if (!allowed) return `неизвестный вид резерва: ${String(kind)}`;
+  if (!Array.isArray(keys) || keys.length === 0) return 'набор ключей пуст';
+  const forms: Form[] = [];
+  for (const [i, key] of keys.entries()) {
+    const hit = typeof key?.scope === 'string' && isKnownScope(key.scope)
+      ? FORM_OF.find(([re]) => re.test(key.scope)) : undefined;
+    if (!hit) return `ключ #${i + 1} вне закрытого списка форм платных вызовов`;
+    if (key.limit !== limits[hit[2]]) return `ключ #${i + 1} (${hit[1]}): предел не из конфигурации`;
+    forms.push(hit[1]);
+  }
+  if (!allowed.includes(forms.join(','))) {
+    return `набор ${forms.join(',')} не обязательный для ${kind} (ожидался ${allowed.join(' | ')})`;
+  }
+  if (kind === 'embed_index') {
+    const n = keys[0]!.n;
+    if (typeof n !== 'number' || !Number.isSafeInteger(n) || n < 1 || n > INT4_MAX || keys.some((k) => k.n !== n)) {
+      return 'оценка токенов батча непригодна или различается между ключами';
+    }
+  } else if (keys.some((k) => k.n !== undefined && k.n !== 1)) {
+    return 'попытка ответа резервирует ровно 1';
+  }
+  return null;
 }

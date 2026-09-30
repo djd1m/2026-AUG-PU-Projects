@@ -28,6 +28,8 @@ export class ConfigError extends Error {
 }
 
 export const SECRET_MIN_LENGTH = 32;
+/** Верхняя граница предела: int4 столбца quota_counter.used. */
+export const LIMIT_MAX = 2_147_483_647;
 
 export type ConfigValues = Readonly<Record<string, string | number>>;
 
@@ -67,6 +69,9 @@ function parseOne(spec: VarSpec, raw: string, production: boolean): string | num
     case 'limit': {
       // Только положительное целое без знаков, пробелов и экспоненты: Number('') === 0, Number('1e3') === 1000.
       if (!/^[1-9][0-9]*$/.test(raw) || !Number.isSafeInteger(Number(raw))) throw bad('не положительное целое');
+      // Счётчик quota_counter.used и параметр предела — int4: больший предел отказал бы первым же SQL, и процесс
+      // стартовал бы «здоровым» с непригодным пределом (08_review.md F-3).
+      if (Number(raw) > LIMIT_MAX) throw bad(`больше ${LIMIT_MAX} (верхняя граница int4 счётчика)`);
       return Number(raw);
     }
     case 'ratio': {

@@ -3,7 +3,7 @@
 // PENDING_DECISIONS с id фичи дорожной карты; страж tests/unit/config-wiring.test.ts требует удалить имя из
 // списка, как только решение его читает, и падает, если имя не читает никто и в списке его нет.
 
-import { type ConfigValues, type PairRule, type VarSpec, checkConfig } from '@n6b/db';
+import { type ConfigValues, type PairRule, type VarSpec, checkConfig, limitsFrom } from '@n6b/db';
 
 export const WEB_REQUIRED: readonly VarSpec[] = [
   { name: 'OPENROUTER_API_KEY', kind: 'secret', consequence: 'ответы и эмбеддинги вопросов невозможны' },
@@ -65,6 +65,8 @@ export interface WebConfig {
 export function loadWebConfig(env: Readonly<Record<string, string | undefined>> = process.env): WebConfig {
   const production = env.NODE_ENV === 'production';
   const all = checkConfig(WEB_REQUIRED, WEB_PAIRS, env, production);
+  // Вся связка пределов, которую потом разбирает дверь (limitsFrom), — при старте, а не при первом запросе (08_review.md F-3).
+  limitsFrom(all);
   const connection = checkConfig(WEB_CONNECTION, [], env, production);
   return {
     DATABASE_URL_TENANT: connection.DATABASE_URL_TENANT as string,

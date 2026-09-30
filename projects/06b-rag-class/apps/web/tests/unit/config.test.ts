@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { assertUrlSafePassword, checkConfig, ConfigError, enforceBootConfig, pgUrl } from '@n6b/db';
 import { loadWebConfig, WEB_REQUIRED } from '@/server/config';
@@ -121,6 +123,29 @@ describe('Boot config check web (FR-n6b-16, NFR-n6b-3)', () => {
       .toBe('DATABASE_URL_TENANT');
     expect(failure({ ...validEnv(), DATABASE_URL_SERVICE: 'mysql://n6b_app_service:y@db/n6b' }).variable)
       .toBe('DATABASE_URL_SERVICE');
+  });
+
+  it.each(PSEUDOCODE_13.filter((n) => n.startsWith('LIMIT_')))(
+    'F-3 (08_review.md): %s больше int4 → отказ при старте с именем, а не 503 при первом запросе', (name) => {
+      for (const raw of ['2147483648', '3000000000', '9007199254740991']) {
+        // Пары «персональный ≤ общего» держим верными, чтобы отказ пришёл именно от границы int4.
+        const env = { ...validEnv(), LIMIT_ANSWER_BOT_DAY: '2147483647', LIMIT_ANSWER_GLOBAL_DAY: '2147483647',
+          LIMIT_SANDBOX_GLOBAL_DAY: '2147483647', LIMIT_EMBED_TOKENS_GLOBAL_DAY: '2147483647', [name]: raw };
+        const error = failure(env);
+        expect(error.variable, `${name}=${raw}`).toBe(name);
+        expect(error.message).toMatch(/int4/);
+      }
+      const edge = { ...validEnv(), LIMIT_ANSWER_BOT_DAY: '2147483647', LIMIT_ANSWER_GLOBAL_DAY: '2147483647',
+        LIMIT_SANDBOX_GLOBAL_DAY: '2147483647', LIMIT_EMBED_TOKENS_GLOBAL_DAY: '2147483647', [name]: '2147483647' };
+      expect(() => loadWebConfig(edge), `${name}=2147483647 — граница включена`).not.toThrow();
+    });
+
+  it('F-3: loadWebConfig разбирает всю связку пределов (limitsFrom) сразу после checkConfig — при старте', () => {
+    // Слой разбора пределов дублирует parseOne намеренно; снятие любого из двух иначе не видно тестам поведения.
+    const src = readFileSync(path.resolve(__dirname, '../../src/server/config.ts'), 'utf8').replace(/^\s*\/\/.*$/gm, '');
+    expect(src).toMatch(/const all = checkConfig\(WEB_REQUIRED, WEB_PAIRS, env, production\);\s*limitsFrom\(all\);/);
+    expect('const all = checkConfig(WEB_REQUIRED, WEB_PAIRS, env, production);\n  const connection')
+      .not.toMatch(/const all = checkConfig\(WEB_REQUIRED, WEB_PAIRS, env, production\);\s*limitsFrom\(all\);/);
   });
 
   it('SC-US-016-2: enforceBootConfig завершает процесс кодом 1 и не печатает значения', () => {

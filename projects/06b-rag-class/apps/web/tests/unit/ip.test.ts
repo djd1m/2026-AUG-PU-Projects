@@ -18,6 +18,8 @@ describe('адрес клиента и ключ предела входа (FR-n6
     expect(addrKey('203.0.113.9')).toBe('203.0.113.9');
     expect(addrKey('203.0.113.9')).not.toBe(addrKey('203.0.113.10'));
     expect(addrKey('::ffff:203.0.113.9')).toBe('203.0.113.9');
+    expect(addrKey('::ffff:cb00:7109')).toBe('203.0.113.9'); // F-6: hex-запись того же IPv4
+    expect(addrKey('0:0:0:0:0:ffff:cb00:7109')).toBe('203.0.113.9');
   });
 
   it('SC-US-001-4: IPv6 — префикс /64; смена адреса внутри /64 ключ не меняет', () => {

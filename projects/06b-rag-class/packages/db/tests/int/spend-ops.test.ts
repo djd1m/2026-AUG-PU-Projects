@@ -4,10 +4,12 @@ import { recordLimited, resetQuota, ResetRefused } from '../../src/quota-admin';
 import type { Limits } from '../../src/quota-keys';
 import { spendToday } from '../../src/spend-today';
 import { withService } from '../../src/tenant';
-import { env, ownerPool, seedTenant, servicePool } from './helpers';
+import { env, isoDay, ownerPool, runDate, seedTenant, servicePool } from './helpers';
 
 // Сброс оператором с журналом (OWN-06B-010), запись отказа по пределу с каналом (OWN-06B-012), сводка расхода (01_plan.md
-// §6, T-13). Ключи — настоящих форм, сутки — свои у каждого теста, чтобы не делить счётчик с другими файлами.
+// §6, T-13). Ключи — настоящих форм, сутки — свои у каждого теста, чтобы не делить счётчик с другими файлами. База суток
+// случайна на прогон (08_review.md F-5): повтор на той же БД без `down -v` не упирается в строки прошлого прогона.
+const D = [1, 2, 3, 4, 5].map((n) => isoDay(runDate(n)));
 
 const owner = ownerPool();
 const app = servicePool(4);
@@ -25,13 +27,13 @@ describe('reset-quota: один названный ключ, журнал в т�
   it('сброс ключа песочницы: used → 0, запись кто/когда/ключ/прежнее значение', async () => {
     const t = await seedTenant(owner);
     const scope = `answer:sandbox:${t.accountId}`;
-    await preset(scope, '2031-02-01', 100);
-    const previous = await resetQuota(app, { scope, day: '2031-02-01', operator: 'ops@n6b', reason: 'демо на занятии' });
+    await preset(scope, D[0]!, 100);
+    const previous = await resetQuota(app, { scope, day: D[0]!, operator: 'ops@n6b', reason: 'демо на занятии' });
     expect(previous).toBe(100);
-    expect(await usedOf(scope, '2031-02-01')).toBe(0);
+    expect(await usedOf(scope, D[0]!)).toBe(0);
     const log = await owner.query('SELECT scope, day::text, previous_used, operator, reason FROM quota_reset_log WHERE scope = $1',
       [scope]);
-    expect(log.rows).toEqual([{ scope, day: '2031-02-01', previous_used: 100, operator: 'ops@n6b', reason: 'демо на занятии' }]);
+    expect(log.rows).toEqual([{ scope, day: D[0], previous_used: 100, operator: 'ops@n6b', reason: 'демо на занятии' }]);
   });
 
   it.each([
@@ -39,20 +41,20 @@ describe('reset-quota: один названный ключ, журнал в т�
     ['пробел в конце', 'answer:global '],
   ])('отказ на ключе вне закрытого списка (%s) — ничего не меняется', async (_, scope) => {
     // Строка с таким ключом СУЩЕСТВУЕТ: отказ обязан прийти от проверки формы, а не от «сбрасывать нечего».
-    if (scope) await preset(scope, '2031-02-02', 5);
-    await expect(resetQuota(app, { scope, day: '2031-02-02', operator: 'ops' }))
+    if (scope) await preset(scope, D[1]!, 5);
+    await expect(resetQuota(app, { scope, day: D[1]!, operator: 'ops' }))
       .rejects.toThrow(/не из закрытого списка форм/);
-    if (scope) expect(await usedOf(scope, '2031-02-02')).toBe(5);
+    if (scope) expect(await usedOf(scope, D[1]!)).toBe(5);
   });
 
   it('отказ без оператора и на несуществующем счётчике; журнал не пишется', async () => {
-    await preset('answer:global', '2031-02-03', 7);
-    await expect(resetQuota(app, { scope: 'answer:global', day: '2031-02-03', operator: '  ' }))
+    await preset('answer:global', D[2]!, 7);
+    await expect(resetQuota(app, { scope: 'answer:global', day: D[2]!, operator: '  ' }))
       .rejects.toThrow(/оператор/);
-    await expect(resetQuota(app, { scope: 'answer:global', day: '2031-02-04', operator: 'ops' }))
+    await expect(resetQuota(app, { scope: 'answer:global', day: D[3]!, operator: 'ops' }))
       .rejects.toThrow(/нечего/);
-    expect(await usedOf('answer:global', '2031-02-03')).toBe(7);
-    expect((await owner.query("SELECT 1 FROM quota_reset_log WHERE day IN ('2031-02-03', '2031-02-04')")).rowCount).toBe(0);
+    expect(await usedOf('answer:global', D[2]!)).toBe(7);
+    expect((await owner.query('SELECT 1 FROM quota_reset_log WHERE day IN ($1::date, $2::date)', [D[2], D[3]])).rowCount).toBe(0);
   });
 
   it('журнал сброса не правится и не удаляется служебной ролью', async () => {
@@ -62,13 +64,13 @@ describe('reset-quota: один названный ключ, журнал в т�
   });
 
   it('CLI: коды 0/1/2, секрет строки подключения не печатается', async () => {
-    await preset('embed:global', '2031-02-05', 42);
+    await preset('embed:global', D[4]!, 42);
     const out: string[] = [];
     const err: string[] = [];
     const run = (argv: string[], e: Record<string, string | undefined>) =>
       runOps(argv, e, (l) => out.push(l), (l) => err.push(l));
     const good = { DATABASE_URL_SERVICE: env().serviceUrl };
-    expect(await run(['reset-quota', '--scope', 'embed:global', '--day', '2031-02-05', '--operator', 'ops'], good)).toBe(0);
+    expect(await run(['reset-quota', '--scope', 'embed:global', '--day', D[4]!, '--operator', 'ops'], good)).toBe(0);
     expect(out.join('\n')).toContain('было 42');
     expect(await run(['reset-quota', '--scope', 'embed:*', '--operator', 'ops'], good)).toBe(1);
     expect(await run(['reset-quota', '--scope', 'embed:global'], good)).toBe(1);
@@ -118,5 +120,21 @@ describe('где виден расход: spendToday (01_plan.md §6)', () => {
     expect(s.attempts.answer!.succeeded).toBeGreaterThanOrEqual(1);
     expect(s.unknownOutcome).toBeGreaterThanOrEqual(1);
     expect(s.estimatedUsd).toBeGreaterThanOrEqual(0.4);
+  });
+
+  it('F-4: попытка, повисшая в 23:59 МСК, после полуночи остаётся «исход неизвестен»; старше 48 ч — нет', async () => {
+    const t = await seedTenant(owner);
+    // 23:59 МСК = 20:59Z суток runDate(40); сводка — в 00:10 МСК следующих суток (21:10Z).
+    const hung = runDate(40, 20, 59);
+    const at = runDate(40, 21, 10);
+    const old = new Date(at.getTime() - 49 * 3600_000);
+    const fresh = new Date(at.getTime() - 30_000);
+    await owner.query(`INSERT INTO model_call_log (kind, account_id, state, created_at) VALUES
+      ('answer', $1, 'started', $2), ('embed_question', $1, 'started', $3), ('answer', $1, 'started', $4)`,
+    [t.accountId, hung.toISOString(), old.toISOString(), fresh.toISOString()]);
+    const s = await spendToday(app, LIMITS, at);
+    expect(s.day).not.toBe(isoDay(hung));
+    // Ровно одна: 23:59 вчерашних суток; 49 ч назад — вне окна; 30 с назад — ещё не «неизвестен» (< 90 с).
+    expect(s.unknownOutcome).toBe(1);
   });
 });

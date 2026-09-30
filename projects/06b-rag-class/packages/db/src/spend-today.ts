@@ -10,6 +10,8 @@ import { withService } from './tenant.js';
 
 /** Самый длинный дедлайн вызова (батч индексации 30 с) + 60 с: 'started' старше — «исход неизвестен». */
 export const UNKNOWN_OUTCOME_AFTER_SECONDS = 90;
+/** «Исход неизвестен» считается за последние 48 ч от момента сводки, а не за текущие сутки МСК. */
+export const UNKNOWN_OUTCOME_WINDOW_HOURS = 48;
 export const ALERT_GLOBAL_SHARE = 0.8;
 export const ALERT_FAILED_SHARE_HOUR = 0.05;
 
@@ -30,6 +32,7 @@ export interface SpendToday {
   readonly globals: readonly GlobalUsage[];
   /** kind → state → число попыток за сутки. Пустой объект вида — попыток не было. */
   readonly attempts: Readonly<Record<string, Readonly<Record<string, number>>>>;
+  /** Попытки 'started' старше 90 с за последние 48 ч (через полночь МСК тоже). */
   readonly unknownOutcome: number;
   /** Доля failed за последний час; null — попыток за час не было (0/0 не равно 0 %). */
   readonly failedShareLastHour: number | null;
@@ -48,11 +51,13 @@ export async function spendToday(pool: Pool, limits: Limits, at: Date = new Date
     const calls = await c.query<{ kind: string; state: string; n: string; tin: string | null; tout: string | null }>(
       `SELECT kind, state, count(*) AS n, sum(tokens_in) AS tin, sum(tokens_out) AS tout FROM model_call_log
         WHERE (created_at AT TIME ZONE 'Europe/Moscow')::date = $1::date GROUP BY kind, state`, [day]);
+    // Окно «исход неизвестен» — скользящее, а не сутки МСК: попытка, повисшая в 23:59, не пропадает с панели в полночь
+    // (08_review.md F-4). Деньги по ней уже списаны, и оператор должен её видеть.
     const unknown = await c.query<{ n: string }>(
       `SELECT count(*) AS n FROM model_call_log WHERE state = 'started'
-        AND (created_at AT TIME ZONE 'Europe/Moscow')::date = $3::date
+        AND created_at >= $1::timestamptz - make_interval(hours => $3)
         AND created_at < $1::timestamptz - make_interval(secs => $2)`,
-      [at.toISOString(), UNKNOWN_OUTCOME_AFTER_SECONDS, day]);
+      [at.toISOString(), UNKNOWN_OUTCOME_AFTER_SECONDS, UNKNOWN_OUTCOME_WINDOW_HOURS]);
     const hour = await c.query<{ total: string; failed: string }>(
       `SELECT count(*) AS total, count(*) FILTER (WHERE state = 'failed') AS failed FROM model_call_log
         WHERE created_at > $1::timestamptz - interval '1 hour' AND created_at <= $1::timestamptz`, [at.toISOString()]);
