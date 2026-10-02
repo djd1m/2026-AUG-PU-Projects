@@ -1,0 +1,140 @@
+{
+  "source_revision": "db5fa90d6408d7f9e2dbc71d91d23fd7bde3b2e9",
+  "snapshot_sha256": "1ce74fa5197e2dfb2ee4e0d74500bdc4d480ad2113ce9749c40acf1db49c2118",
+  "started_at": "2026-10-02T20:16:10.473563+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 182,
+      "log": "/tmp/n8-f01-fix-runtime/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 4249,
+      "log": "/tmp/n8-f01-fix-runtime/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6472,
+      "log": "/tmp/n8-f01-fix-runtime/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 4156,
+      "log": "/tmp/n8-f01-fix-runtime/build.log"
+    },
+    {
+      "name": "harness-controls",
+      "exit_code": 0,
+      "duration_ms": 1899,
+      "log": "/tmp/n8-f01-fix-runtime/harness-controls.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 2377,
+      "log": "/tmp/n8-f01-fix-runtime/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 13301,
+      "log": "/tmp/n8-f01-fix-runtime/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 22713,
+      "log": "/tmp/n8-f01-fix-runtime/owner-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 2077,
+      "log": "/tmp/n8-f01-fix-runtime/runtime-versions.log"
+    },
+    {
+      "name": "web-start",
+      "exit_code": 0,
+      "duration_ms": 12370,
+      "log": "/tmp/n8-f01-fix-runtime/web-start.log"
+    },
+    {
+      "name": "web-health",
+      "exit_code": 7,
+      "duration_ms": 27,
+      "log": "/tmp/n8-f01-fix-runtime/web-health.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 1784,
+      "log": "/tmp/n8-f01-fix-runtime/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-02T20:17:22.089727+00:00",
+  "duration_ms": 71616,
+  "integration_tests_passed": 9,
+  "harness_tests_passed": 2,
+  "owner_mutation_result": "baseline exit0; exact targeted mutant exit1; harness exit0",
+  "acceptance": "Changed tests pass; runtime host-access failure unresolved",
+  "network_probe": {
+    "started_at": "2026-10-02T20:18:32.983479+00:00",
+    "checks": [
+      {
+        "name": "up",
+        "exit_code": 0,
+        "output": " Volume n8-f01-db5fa90d_media Creating \n Volume n8-f01-db5fa90d_media Creating \n Network n8-f01-db5fa90d_private Creating \n Volume n8-f01-db5fa90d_database Creating \n Volume n8-f01-db5fa90d_database Creating \n Network n8-f01-db5fa90d_private Creating \n Volume n8-f01-db5fa90d_media Created \n Volume n8-f01-db5fa90d_media Created \n Volume n8-f01-db5fa90d_database Created \n Volume n8-f01-db5fa90d_database Created \n Network n8-f01-db5fa90d_private Created \n Network n8-f01-db5fa90d_private Created \n Container n8-f01-db5fa90d-db-1 Creating \n Container n8-f01-db5fa90d-db-1 Created \n Container n8-f01-db5fa90d-web-1 Creating \n Container n8-f01-db5fa90d-web-1 Created \n Container n8-f01-db5fa90d-db-1 Starting \n Container n8-f01-db5fa90d-db-1 Started \n Container n8-f01-db5fa90d-db-1 Waiting \n Container n8-f01-db5fa90d-db-1 Healthy \n Container n8-f01-db5fa90d-web-1 Starting \n Container n8-f01-db5fa90d-web-1 Started \n Container n8-f01-db5fa90d-db-1 Waiting \n Container n8-f01-db5fa90d-web-1 Waiting \n Container n8-f01-db5fa90d-db-1 Healthy \n Container n8-f01-db5fa90d-web-1 Healthy \n"
+      },
+      {
+        "name": "ports",
+        "exit_code": 0,
+        "output": "{\"8080/tcp\":null}\n"
+      },
+      {
+        "name": "requested-bind",
+        "exit_code": 0,
+        "output": "{\"8080/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"18088\"}]}\n"
+      },
+      {
+        "name": "network-options",
+        "exit_code": 0,
+        "output": "{} internal=true\n"
+      },
+      {
+        "name": "host-curl",
+        "exit_code": 7,
+        "output": "curl: (7) Failed to connect to 127.0.0.1 port 18088 after 0 ms: Couldn't connect to server\n"
+      },
+      {
+        "name": "internal-fetch",
+        "exit_code": 0,
+        "output": "200\n"
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "output": " Container n8-f01-db5fa90d-web-1 Stopping \n Container n8-f01-db5fa90d-web-1 Stopped \n Container n8-f01-db5fa90d-web-1 Removing \n Container n8-f01-db5fa90d-web-1 Removed \n Container n8-f01-db5fa90d-db-1 Stopping \n Container n8-f01-db5fa90d-db-1 Stopped \n Container n8-f01-db5fa90d-db-1 Removing \n Container n8-f01-db5fa90d-db-1 Removed \n Volume n8-f01-db5fa90d_database Removing \n Volume n8-f01-db5fa90d_media Removing \n Network n8-f01-db5fa90d_private Removing \n Volume n8-f01-db5fa90d_database Removed \n Volume n8-f01-db5fa90d_media Removed \n Network n8-f01-db5fa90d_private Removed \n"
+      }
+    ],
+    "finished_at": "2026-10-02T20:18:51.812963+00:00"
+  },
+  "log_sha256": {
+    "pg-integration.log": "0c16abc722c2a17f16cc3b7a5986e22bfafda8c12d22df8fd3e44677222d576c",
+    "db-start.log": "5d08065b300d7933ede62d7bfe1506647aec04b0ce17d46c2f07c1b0c148d3b0",
+    "runtime-versions.log": "0c9f0a856a465b9b06e1650c8f25a4aeb7ef885a0d14b94e083628fe66f53796",
+    "cleanup.log": "3e9f92190482a65d62d960685f54e10f490e86cdb7c095ae8714d344b227fa85",
+    "web-start.log": "fac532d2996b4ada3500fe320c6872fcb8f2c77d59908817da5ea695dd242af0",
+    "harness-controls.log": "34b3af551337eececf6e070efaf9c98f3eda36777a94954493f4f4fe1c5b897b",
+    "origin-mutation.log": "4417f06391d642dc9a92041cf23e9987d416dd10a95578fb63386d04f78bf535",
+    "owner-mutation.log": "54fd7b2f04075ea47218730c35136dffc1f98cf6233f64960229038911a05bd4",
+    "web-health.log": "fa2fd0741e711ec9b5485864c573ccfda8ee22c14f51fcc834c89835317e498b",
+    "image-build.log": "0780d6fa7c5e5b201009d2b7a51348400a0f5c89be985253560627684fad7261",
+    "build.log": "0ff8e3fc3f595ebd3449ac52722f71e0cd22e93f701796d5e20bf35f0ec75e78",
+    "compose-config.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

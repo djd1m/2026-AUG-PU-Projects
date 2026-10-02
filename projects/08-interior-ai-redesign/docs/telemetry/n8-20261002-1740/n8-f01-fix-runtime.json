@@ -1,7 +1,7 @@
 {
   "run_id": "n8-20261002-1740",
   "work_unit_id": "n8-f01-fix",
-  "status": "running",
+  "status": "completed",
   "actual_model": "gpt-6.1-sol",
   "requested_effort": "high",
   "actual_effort": null,
@@ -17,5 +17,11 @@
     "reasoning effort: high",
     "session id: 01a0fe37-96a8-7923-b2e5-db9c0b71f9b4"
   ],
-  "dependency_setup": "Coordinator docker cp from exact tested F01 image into ignored isolated node_modules; container never started, then removed. No dependency changes."
+  "dependency_setup": "Coordinator docker cp from exact tested F01 image into ignored isolated node_modules; container never started, then removed. No dependency changes.",
+  "exit_code": 0,
+  "finished_at": "2026-10-02T20:14:23Z",
+  "receipt_sha256": "ada796e38b8106d3da3095abd23a30323f90d3c51c142447ef1c67dabd62ced0",
+  "candidate_commit": "db5fa90d",
+  "source_files_verified": 26,
+  "elapsed_wall_ms": 613000
 }
