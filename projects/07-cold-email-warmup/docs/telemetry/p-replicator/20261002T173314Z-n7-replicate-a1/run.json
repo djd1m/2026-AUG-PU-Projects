@@ -22,7 +22,7 @@
   "comparison_id": null,
   "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
   "final_revision": null,
-  "spec_sha256": null,
+  "spec_sha256": "89e2f692c087aed3c3c7bc35a39e5f349334a6e71c3ff473a7b835044094a3db",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex API multi-agent",
   "host_version": null,
@@ -30,7 +30,10 @@
   "started_at": "2026-10-02T17:33:51Z",
   "ended_at": null,
   "status": "running",
-  "acceptance_evidence": [],
+  "acceptance_evidence": [
+    "evidence/cjm-sol-receipt.md",
+    "evidence/cjm-browser-corrected/checks.json"
+  ],
   "quality": {
     "required_gates_passed": false,
     "ac_met": 0,
@@ -42,7 +45,7 @@
     "followup_status": "pending"
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 1524001,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
@@ -53,6 +56,10 @@
   "missing_data": [
     "Host usage and billing metadata unavailable",
     "Exact instruction-reading start unavailable; recording begins before product discovery",
-    "Coordinator model requested gpt-6-astra high per parent; independent host execution metadata unavailable"
-  ]
+    "Coordinator model requested gpt-6-astra high per parent; independent host execution metadata unavailable",
+    "CJM source/browser checks exist, but serialized prelaunch launch digest was not provided to worker; do not claim companion delivered validation",
+    "No Claude learned-store source was discovered; root/project recall initially returned []"
+  ],
+  "intermediate_revision": "f5930afe0f72bba143497d5a3767975be6d7aa10",
+  "current_stage": "VALIDATE pending independent Astra"
 }
