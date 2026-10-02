@@ -56,8 +56,10 @@ export function authQuotaKey(visitorSecret: string, ip: string, limit: number, a
   return { scope: `auth:addr:${addrHash(visitorSecret, ip)}:${moscowHour(at)}`, limit };
 }
 
-export async function readJson(request: Request): Promise<unknown | 'too-large' | 'invalid'> {
-  if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return 'invalid';
+export async function readJson(request: Request, options: { objectOnly?: boolean } = {}): Promise<unknown | 'too-large' | 'invalid'> {
+  const contentType = request.headers.get('content-type')?.toLowerCase();
+  if (options.objectOnly ? contentType?.split(';')[0]?.trim() !== 'application/json'
+    : !contentType?.startsWith('application/json')) return 'invalid';
   const reader = request.body?.getReader();
   if (!reader) return 'invalid';
   const chunks: Uint8Array[] = [];
@@ -69,7 +71,12 @@ export async function readJson(request: Request): Promise<unknown | 'too-large' 
     if (size > MAX_BODY_BYTES) { await reader.cancel(); return 'too-large'; }
     chunks.push(value);
   }
-  try { return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown; } catch { return 'invalid'; }
+  try {
+    const parsed: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+    // Object-only callers cannot confuse a JSON string "too-large" with the byte-limit sentinel.
+    if (options.objectOnly && (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))) return 'invalid';
+    return parsed;
+  } catch { return 'invalid'; }
 }
 
 export function createAuthHandler(action: 'register' | 'login' | 'logout', deps: AuthHandlerDeps) {

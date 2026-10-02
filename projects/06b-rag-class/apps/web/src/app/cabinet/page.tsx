@@ -3,38 +3,35 @@
 // колонку password_hash роль кабинета не видит (foundation F-4). Создание бота — следующие фичи дорожной карты.
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { type CabinetSource, listCabinetSources, withTenant } from '@n6b/db';
+import { listCabinetBots, listCabinetSources, withTenant } from '@n6b/db';
 import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
+import { publicationOrigins } from '@/server/origin';
+import { publicationEmbedCode } from '@/server/publish-handler';
 import { CreateBot } from './create-bot';
 import { AddSource } from './add-source';
 import { AddPdf } from './add-pdf';
 import { JobStatus } from './job-status';
 import { LogoutButton } from './logout-button';
 import { Sandbox } from './sandbox';
+import { PublishBot } from './publish-bot';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Кабинет — RAG-бот для сайта' };
 
-function byBot(rows: CabinetSource[]): Array<{ id: string; name: string; sources: CabinetSource[] }> {
-  const bots = new Map<string, { id: string; name: string; sources: CabinetSource[] }>();
-  for (const row of rows) {
-    const bot = bots.get(row.bot_id) ?? { id: row.bot_id, name: row.bot_name, sources: [] };
-    if (row.source_id) bot.sources.push(row);
-    bots.set(row.bot_id, bot);
-  }
-  return [...bots.values()];
-}
-
 export default async function CabinetPage() {
   const token = sessionTokenOrNull((await cookies()).get(SESSION_COOKIE)?.value);
-  const { auth, tenantPool } = getRuntime();
+  const { auth, tenantPool, config } = getRuntime();
   const accountId = token ? await auth.authenticate(token) : null;
   if (!accountId) redirect('/login');
   const account = await withTenant(tenantPool, accountId, async (c) => (await c.query<{ email: string | null; plan: string }>(
     'SELECT email, plan FROM account WHERE id = $1', [accountId])).rows[0]);
   if (!account) redirect('/login');
-  const bots = byBot(await listCabinetSources(tenantPool, accountId));
+  const [publicationBots, sources] = await Promise.all([
+    listCabinetBots(tenantPool, accountId), listCabinetSources(tenantPool, accountId),
+  ]);
+  const bots = publicationBots.map((bot) => ({ ...bot,
+    sources: sources.filter((source) => source.bot_id === bot.id && source.source_id) }));
 
   return (
     <main className="cabinet">
@@ -59,6 +56,8 @@ export default async function CabinetPage() {
           <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')}
             observedJobIds={bot.sources.flatMap((s) => s.job ? [s.job.job_id] : [])} />
           <Sandbox botId={bot.id} />
+          <PublishBot initial={{ ...bot, embed_code: publicationEmbedCode(bot, config.PUBLIC_BASE_URL) }}
+            proposedOrigins={publicationOrigins(bot)} />
         </section>
       ))}
     </main>

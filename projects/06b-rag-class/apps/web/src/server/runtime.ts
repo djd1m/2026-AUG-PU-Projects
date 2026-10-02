@@ -16,6 +16,7 @@ import { PgAuthStore } from './auth-store';
 import { loadWebConfig, type WebConfig } from './config';
 import { createJobHandler, createRetryHandler, createSourceHandler } from './jobs-handler';
 import { createPaidRuntime, type PaidRuntime } from './paid';
+import { createPublishHandler } from './publish-handler';
 
 const hasher: PasswordHasher = {
   hash: (password, cost) => bcrypt.hash(password, cost),
@@ -76,4 +77,10 @@ export function askRoute(request: Request, context: { params: Promise<{ id: stri
   return context.params.then(({ id }) => createAskHandler({ tenantPool, servicePool, gateway: paid.gateway,
     authenticate: (token) => auth.authenticate(token), publicBaseUrl: config.PUBLIC_BASE_URL,
     minSimilarity: config.MIN_SIMILARITY })(request, id));
+}
+
+export async function publishRoute(request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
+  const { config, tenantPool, auth } = getRuntime();
+  return createPublishHandler({ tenantPool, authenticate: (token) => auth.authenticate(token),
+    publicBaseUrl: config.PUBLIC_BASE_URL })(request, (await context.params).id);
 }

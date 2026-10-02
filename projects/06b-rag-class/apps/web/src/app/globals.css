@@ -66,3 +66,11 @@ button:disabled { opacity: 0.6; cursor: progress; }
 .sandbox-cta { display: flex; flex-wrap: wrap; gap: 8px; }
 .sandbox-cta p { flex-basis: 100%; }
 .sandbox-cta button:disabled { cursor: not-allowed; }
+
+.publication { margin-top: var(--space); border-top: 1px solid var(--border); padding-top: var(--space); }
+.publication form { display: grid; gap: 8px; }
+.publication input, .publication textarea { width: 100%; min-width: 0; padding: 10px;
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--fg); font: inherit; }
+.publication textarea { resize: vertical; }
+.publication p, .publication label, .publication button { overflow-wrap: anywhere; }
+.publication button:disabled { cursor: not-allowed; }
