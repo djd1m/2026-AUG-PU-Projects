@@ -35,6 +35,34 @@ if(process.argv.includes('--static'))process.exit(0);
 assert.ok(output,'Browser checks require explicit --output');await fs.mkdir(output,{recursive:true});
 const {chromium}=await import('/opt/browser/node_modules/playwright/index.mjs');
 const browser=await chromium.connect('ws://127.0.0.1:9320/');
+// Focused N7-V01/V02 copy checks; avoid rerunning unchanged heavy journey.
+if(process.argv.includes('--copy')){
+ const disclosure='В тестовой переписке другой участник увидит ваш адрес отправителя, служебные заголовки и тестовый текст в своём почтовом клиенте. Частные кампании, контакты и пароли другим участникам недоступны.';
+ const stop='Отзыв разрешения отменяет задания в очереди. Уже переданная на отправку попытка может завершиться; следующие письма будут остановлены.';
+ try{for(const source of sources){for(const width of [1440,390]){
+  const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});
+  await context.route('**/*',route=>route.abort());const page=await context.newPage();const errors=[];
+  page.on('pageerror',e=>errors.push(e.message));await page.setContent(source.html,{waitUntil:'domcontentloaded'});
+  await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.className),'skip');await page.keyboard.press('Enter');
+  await page.locator('[data-step="1"]').click();
+  assert.equal(await page.locator('#pool-disclosure').textContent(),disclosure);
+  assert.ok(await page.locator('#pool-disclosure').isVisible());assert.ok(await page.locator('#consent-stop-note').isVisible());
+  assert.ok((await page.locator('#consent-stop-note').textContent()).includes(stop));
+  assert.equal(await page.locator('#warmup-consent').isChecked(),false);assert.equal(await page.locator('#campaign-consent').isChecked(),false);
+  await page.locator('#warmup-consent').focus();await page.keyboard.press('Space');assert.equal(await page.locator('#warmup-consent').isChecked(),true);
+  assert.equal(await page.locator('#campaign-consent').isChecked(),false,'Warmup keyboard consent does not authorize campaign');
+  await page.keyboard.press('Space');assert.equal(await page.locator('#warmup-consent').isChecked(),false);
+  const consentSize=await page.evaluate(()=>({v:innerWidth,s:document.documentElement.scrollWidth}));assert.ok(consentSize.s<=consentSize.v+1);
+  await page.screenshot({path:path.join(output,source.file.replace('.html',`-${width}-consent.png`)),fullPage:true});
+  await page.locator('[data-step="4"]').click();await page.locator('summary').filter({hasText:'Правила остановки и очереди'}).click();
+  assert.ok(await page.locator('#queue-scope').isVisible());assert.ok((await page.locator('#queue-scope').textContent()).includes(stop));
+  const queueSize=await page.evaluate(()=>({v:innerWidth,s:document.documentElement.scrollWidth}));assert.ok(queueSize.s<=queueSize.v+1);
+  await page.locator('[data-step="5"]').click();assert.ok(await page.locator('#launch').isDisabled());
+  assert.deepEqual(errors,[]);log('copy-browser',`${source.file} ${width}px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors`);
+  await context.close();
+ }}}finally{await browser.close();await fs.writeFile(path.join(output,'checks.json'),JSON.stringify({finished_at:new Date().toISOString(),mode:'N7-V01/V02 focused copy',browser:'Chromium via existing Playwright 1.63.0',sources:sources.map(({file,sha256})=>({file,sha256})),results},null,2)+'\n')}
+ process.exit(0);
+}
 const ensure=async(condition,message)=>assert.ok(await condition(),message);
 async function stage(page,n){await page.locator(`[data-step="${n}"]`).click()}
 async function ready(page){
