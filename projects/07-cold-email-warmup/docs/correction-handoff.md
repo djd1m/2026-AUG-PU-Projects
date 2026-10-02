@@ -6,7 +6,7 @@ Original validation-report.md/receipt preserved unchanged; revalidation pending.
 
 | Finding | Concrete correction | Acceptance references |
 |---|---|---|
-| V01 high | AC-N7-007 explicitly corrected; direct peer headers/test body disclosed in pool consent; private data/API enumeration protected | FR-n7-004, SC-US-004-3, Architecture tenant boundary; CJM copy pending below |
+| V01 high | AC-N7-007 explicitly corrected; direct peer headers/test body disclosed in pool consent; private data/API enumeration protected | FR-n7-004, SC-US-004-3, Architecture tenant boundary; CJM copy completed; fresh receipt below |
 | V02 high | Single global advisory transaction lock(7,1) used FIRST by every eligibility/stop writer and final conditional claimed→submitting transition; commit is irreversible boundary | Safety-v1 serialization, SC-US-003-4/5 with ten stop-writer rows, dispatch algorithm |
 | V03 medium | Physical observations separate from stable optional Message-ID ledger and unique(mailbox,enrollment,reply) effect; bounded persistent high-water rescan and tail-poll gate | SC-US-006-3/4/5, Pseudocode ingestion |
 | V04 medium | Explicit safety-v1: poll30s/fresh<60s; rescan20×100/120s; retry3 total/120s; one warmup reply; atomic auth windows/KDF2/no queue; evidence7/28days | Safety policy plus concrete boundary Example rows |
@@ -59,5 +59,9 @@ Output separate `docs/validation-recheck-report.md` and unique source-bound rece
 first line `**Verdict:** ...`. Original report stays historical. If ready, coordinator
 updates canonical validation-report index to cite both rounds before Phase3.
 
-Pending: copy Sol follow-up, independent revalidation, toolkit, product implementation.
+Copy follow-up completed at worker commit `42768f0a`, integrated as `f806afc2`.
+Fresh static + Chromium1440/390 checks passed; runtime JS unchanged.
+Receipt: telemetry/p-replicator/20261002T173314Z-n7-replicate-a1/evidence/cjm-copy-sol-receipt.md.
+
+Pending: independent revalidation, toolkit, product implementation.
 Owner autonomy remains approved; no repeated plan permission requested.

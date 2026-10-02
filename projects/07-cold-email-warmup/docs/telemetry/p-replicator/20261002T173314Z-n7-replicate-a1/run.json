@@ -32,7 +32,9 @@
   "status": "running",
   "acceptance_evidence": [
     "evidence/cjm-sol-receipt.md",
-    "evidence/cjm-browser-corrected/checks.json"
+    "evidence/cjm-browser-corrected/checks.json",
+    "evidence/cjm-copy-sol-receipt.md",
+    "evidence/cjm-copy-browser/checks.json"
   ],
   "quality": {
     "required_gates_passed": false,
@@ -45,7 +47,7 @@
     "followup_status": "pending"
   },
   "metrics": {
-    "elapsed_wall_ms": 3465362,
+    "elapsed_wall_ms": 4459413,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
@@ -60,6 +62,6 @@
     "CJM source/browser checks exist, but serialized prelaunch launch digest was not provided to worker; do not claim companion delivered validation",
     "No Claude learned-store source was discovered; root/project recall initially returned []"
   ],
-  "intermediate_revision": "676adec24dc04fc84c6627415993421ac1bab5cf",
-  "current_stage": "Correction docs complete; Sol CJM copy and fresh Astra revalidation pending"
+  "intermediate_revision": "f806afc233c4a70a8b6e2dd81551d6f2d939f5f2",
+  "current_stage": "CJM correction integrated; independent six-finding revalidation pending"
 }

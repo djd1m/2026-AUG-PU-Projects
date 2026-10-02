@@ -112,7 +112,10 @@ Free report содержит badge; paid entitlement проверяется се
 limits, reply pause, complaint/suppression, escaping и mutation запуска — pass.
 54 сценария спецификации имеют алгоритмы; 12 growth BDD и явные security
 Examples сохранены. Первое независимое ревью выявило2high/4medium; исправления
-контрактов проходят отдельную проверку, старый NEEDS WORK не переписан.
+контрактов ожидают отдельную перепроверку, старый NEEDS WORK не переписан.
+Тексты согласия и границы отмены уже исправлены во всех трёх CJM; свежие
+фокусные Chromium1440/390 проверки прошли, runtime JS не менялся. Доказательства:
+`telemetry/p-replicator/20261002T173314Z-n7-replicate-a1/evidence/cjm-copy-browser/`.
 Independent specification validation, product build/integration tests и full
 application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
 а не переписан planned процесс как будто уже работающий.
