@@ -1,0 +1,38 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261002T192500Z-f01",
+  "project": "projects/07-cold-email-warmup",
+  "feature": "f01-foundation-auth",
+  "pipeline": "feature",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "policy_version": "compact-quality-first-v2",
+  "baseline_revision": "4947df93a610f98a0bae34a263ae51fa35127aee",
+  "final_revision": null,
+  "spec_sha256": "8c8603677811889b7ce9fb1498d689820bdee0fdc14276c4e0949cdd252afc23",
+  "started_at": "2026-10-02T19:23:01.853875+00:00",
+  "ended_at": null,
+  "status": "running",
+  "actual_model": null,
+  "usage": {
+    "input_tokens": 2275966,
+    "cached_input_tokens": 2159232,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 34725,
+    "reasoning_output_tokens": 7350
+  },
+  "cost": null,
+  "quality": {
+    "required_gates_passed": false
+  },
+  "missing_data": [
+    "Native coordinator model/usage unknown; child runtime collected separately"
+  ],
+  "acceptance_evidence": [
+    "sol-receipt.md",
+    "evidence/checks.json",
+    "evidence/sol-runtime.json"
+  ],
+  "intermediate_revision": "b0f4a351f87b168aa497443ae715ade005e07ab8",
+  "current_stage": "implementation integrated; independent review and auth E2E pending"
+}
