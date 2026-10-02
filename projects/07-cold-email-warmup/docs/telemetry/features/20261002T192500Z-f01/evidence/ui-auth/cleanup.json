@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-02T20:02:34.215900+00:00",
+  "contexts_bridge_sockets": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_closed": true
+  },
+  "bridge_port_free_after_cleanup": true,
+  "network_fixture": "network-fixture.json",
+  "unique_browser_fixture_directory_removed": true,
+  "accounts_created": 2,
+  "login_attempts": 2,
+  "fixtures_retained": "Two unique synthetic local accounts and durable revoked sessions/rate buckets; no truncation, no rate bypass, no external mail",
+  "product_inputs_unchanged_19_of_19": true,
+  "immutable_launch_sha256_unchanged": true,
+  "shared_browser_configuration_unchanged": true,
+  "shared_host_proxy_unchanged": true
+}

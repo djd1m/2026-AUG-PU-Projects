@@ -1,0 +1,50 @@
+[
+  {
+    "command": "bash scripts/complexity-router.sh projects/07-cold-email-warmup/scripts/ui/f01-auth.mjs",
+    "exit_code": 0,
+    "tier": "S lower bound; inherited auth risk retained",
+    "runs": 2
+  },
+  {
+    "command": "node --check projects/07-cold-email-warmup/scripts/ui/f01-auth.mjs",
+    "exit_code": 0
+  },
+  {
+    "command": "read-only preflight: source,19 SHA256,healthy containers,versions,healthz/readyz,loopback availability",
+    "exit_code": 0,
+    "evidence": "preflight.json"
+  },
+  {
+    "command": "browser AUTH E2E /inside connection",
+    "exit_code": 1,
+    "evidence": "connect-failure.json",
+    "effect": "No contexts/accounts; supplied endpoint HTTP400"
+  },
+  {
+    "command": "browser AUTH E2E root endpoint, networkidle navigation",
+    "exit_code": 1,
+    "evidence": "navigation-failure.json",
+    "effect": "No accounts; initial page/auth.js200 and anonymousme401 received; lifecycle wait timed out"
+  },
+  {
+    "command": "docker exec -e N7_UI_EVIDENCE=/opt/browser/n7-f01-ui-20261002/evidence codex-ui-playwright node /opt/browser/n7-f01-ui-20261002/f01-auth.mjs",
+    "exit_code": 0,
+    "evidence": "checks.json",
+    "effect": "Real DOM/API assertions with domcontentloaded and explicit readiness"
+  },
+  {
+    "command": "preflight guard mutation matched19->18 before browser/bridge",
+    "exit_code": 1,
+    "expected_exit": 1,
+    "verification_exit": 0,
+    "evidence": "guard-mutation.json"
+  },
+  {
+    "command": "docker network disconnect n7f01_network codex-ui-playwright (own attachment only)",
+    "exit_code": 0
+  },
+  {
+    "command": "final source/screenshot/launch/cleanup consistency guard",
+    "exit_code": 0
+  }
+]
