@@ -1,0 +1,10 @@
+Started: 2026-10-02T16:46:53Z
+RUN_ID: 20261002T164536Z-chunk-embed-fixes
+Attempt: sole-writer-correction-1
+Profile: compact-quality-first-v2; M correction; mechanical S exit 0.
+Baseline worktree: 19eedeb611eed976a1e153eecc35d233aee598e3; accepted code d3f2ad50; review/perf baseline a2665555.
+Plan and implementation ROUTE: existing chunk/cache behavior and shared worker CPU; no schema/API/provider changes. Requirements Specification FR-4/16/17 and Pseudocode Chunk and embed; Architecture Tokens/leases read.
+Budget: 25 minutes from launch, one implementation pass. No donors; N6 excluded. No subagents.
+Existing coordinator telemetry retained; run.json/events.jsonl coordinator-owned. Actual model metadata/usage unavailable to executor; requested model per coordinator record gpt-6.1-sol high, no model switch.
+Preflight: not_applicable, no deployed E2E. Independent review is coordinator-owned.
+Fresh implementation.txt absent before launch.

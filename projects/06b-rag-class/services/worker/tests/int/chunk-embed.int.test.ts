@@ -8,7 +8,7 @@ import { acquireLease } from '../../src/lease';
 import { batchTokens, chunkAndEmbedSource } from '../../src/embed';
 import { createIndexRunner, TEXT_EMBED_LIMIT, TEXT_EMBED_UNAVAILABLE } from '../../src/index-runner';
 import { runOnce } from '../../src/loop';
-import { JobLeaseLost, TEXT_NOT_CONNECTED } from '../../src/runner';
+import { JobCeilingExceeded, JobLeaseLost, TEXT_NOT_CONNECTED } from '../../src/runner';
 import { isolateQueue, jobRow, seedBot } from './helpers';
 
 // chunk-embed на настоящем Postgres + pgvector (Pseudocode «Chunk and embed»; SC-US-017-2; FR-n6b-16). Модель — только
@@ -252,6 +252,65 @@ describe('chunk-embed: нарезка → эмбеддинги через две
     const ctx = { job, signal: new AbortController().signal, progress: async () => undefined, checkpoint: async () => undefined };
     await expect(chunkAndEmbedSource(ctx, { pool: app, gateway: env.gateway })).rejects.toBeInstanceOf(JobLeaseLost);
     expect(env.provider.calls.embed).toBe(1); // вызов оплачен (счёт по попыткам), но записи нет
+    expect(await chunks(s.sourceId)).toEqual([]);
+  });
+
+
+  it('F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа', async () => {
+    const doc = Array.from({ length: 6000 }, (_, i) => `word${i}`).join(' ');
+    const s = await seedSource([doc]);
+    const env = setup();
+    await enqueue(s);
+    const job = (await acquireLease(app))!;
+    let ticks = 0;
+    let checkpoints = 0;
+    let beforePaid = 0;
+    const timer = setInterval(() => { ticks += 1; }, 5);
+    const gateway = { embedIndexBatch: async (...args: Parameters<typeof env.gateway.embedIndexBatch>) => {
+      beforePaid = checkpoints;
+      expect(ticks).toBeGreaterThan(2);
+      return env.gateway.embedIndexBatch(...args);
+    } } as typeof env.gateway;
+    const ctx = { job, signal: new AbortController().signal, progress: async () => undefined,
+      checkpoint: async () => { checkpoints += 1; } };
+    try { await chunkAndEmbedSource(ctx, { pool: app, gateway }); }
+    finally { clearInterval(timer); }
+    expect(beforePaid).toBeGreaterThan(2);
+    expect(env.provider.calls.embed).toBe(1);
+  });
+
+  for (const ErrorType of [JobCeilingExceeded, JobLeaseLost]) {
+    it(`F-2: ${ErrorType.name} после первого платного батча: следующей оплаты нет`, async () => {
+      const doc = text('Checkpoint', 40);
+      expect(splitIntoChunks(doc).length).toBeGreaterThanOrEqual(3);
+      const s = await seedSource([doc]);
+      const env = setup({ batchSize: 1 });
+      await enqueue(s);
+      const job = (await acquireLease(app))!;
+      const ctx = { job, signal: new AbortController().signal, progress: async () => undefined,
+        checkpoint: async () => { if (env.provider.calls.embed >= 1) throw new ErrorType(); } };
+      await expect(chunkAndEmbedSource(ctx, { pool: app, gateway: env.gateway, batchSize: 1 }))
+        .rejects.toBeInstanceOf(ErrorType);
+      expect(env.provider.calls.embed).toBe(1);
+      expect(await calls(s.accountId)).toEqual(['succeeded']);
+      expect(await chunks(s.sourceId)).toHaveLength(1);
+    });
+  }
+
+  it('F-4: failed между model call и write без смены fence: JobLeaseLost, частей нет', async () => {
+    const s = await seedSource([text('Closed', 6)]);
+    const env = setup();
+    await enqueue(s);
+    const job = (await acquireLease(app))!;
+    const gateway = { embedIndexBatch: async (...args: Parameters<typeof env.gateway.embedIndexBatch>) => {
+      const result = await env.gateway.embedIndexBatch(...args);
+      await owner.query("UPDATE index_job SET state = 'failed', error = 'исполнитель не отвечает', finished_at = now() WHERE id = $1", [job.id]);
+      return result;
+    } } as typeof env.gateway;
+    const ctx = { job, signal: new AbortController().signal, progress: async () => undefined, checkpoint: async () => undefined };
+    await expect(chunkAndEmbedSource(ctx, { pool: app, gateway })).rejects.toBeInstanceOf(JobLeaseLost);
+    expect(env.provider.calls.embed).toBe(1);
+    expect((await jobRow(owner, job.id)).lease_fence).toBe(job.fence);
     expect(await chunks(s.sourceId)).toEqual([]);
   });
 

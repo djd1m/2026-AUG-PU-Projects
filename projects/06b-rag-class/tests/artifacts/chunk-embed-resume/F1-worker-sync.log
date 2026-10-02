@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ services/worker/tests/int/chunk-embed.int.test.ts (15 tests | 1 failed | 14 skipped) 1726ms
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > первый прогон: части ≤ 500 токенов записаны с vector(1536), резерв = точная оценка, батчи по размеру
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > резерв = точная оценка js-tiktoken, а не ⌈длина/4⌉: русский текст не проходит под заниженным n
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > SC-US-017-2: переобход без изменений → 0 новых эмбеддингов и 0 списаний, задача «готово»
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > SC-US-017-2: изменённый абзац → эмбеддятся только новые части, устаревшие удаляются
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > FR-n6b-16: embed:account исчерпан → отказ ДО вызова, задача failed с причиной; завтра повтор продолжает
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > частичный прогон: второй батч упёрся в предел — первый сохранён; повтор платит только за остаток
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > FR-n6b-16: embed:global исчерпан → отказ до вызова даже при нетронутом пределе аккаунта
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > конкурентно: два батча одного аккаунта на остатке одного → ровно один вызов, предел не превышен
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > провайдер недоступен → failed «сервис эмбеддингов недоступен», попытка засчитана, частей нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > fence: аренду забрали во время вызова модели → ни одной строки chunk, JobLeaseLost
+   × chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа 1723ms
+     → expected 2 to be greater than 2
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobCeilingExceeded после первого платного батча: следующей оплаты нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobLeaseLost после первого платного батча: следующей оплаты нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-4: failed между model call и write без смены fence: JobLeaseLost, частей нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > извлечение для типа источника не подключено → честный отказ, эмбеддинги не зовутся
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/int/chunk-embed.int.test.ts > chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа
+AssertionError: expected 2 to be greater than 2
+ ❯ Object.embedIndexBatch services/worker/tests/int/chunk-embed.int.test.ts:271:21
+    269|     const gateway = { embedIndexBatch: async (...args: Parameters<type…
+    270|       beforePaid = checkpoints;
+    271|       expect(ticks).toBeGreaterThan(2);
+       |                     ^
+    272|       return env.gateway.embedIndexBatch(...args);
+    273|     } } as typeof env.gateway;
+ ❯ chunkAndEmbedSource services/worker/src/embed.ts:89:39
+ ❯ services/worker/tests/int/chunk-embed.int.test.ts:276:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  20:01:18
+   Duration  3.52s (transform 768ms, setup 0ms, collect 911ms, tests 1.73s, environment 0ms, prepare 137ms)

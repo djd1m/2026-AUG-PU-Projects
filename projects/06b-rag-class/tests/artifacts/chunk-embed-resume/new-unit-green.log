@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /app
+
+ ✓ packages/rag/tests/unit/chunk.test.ts (12 tests | 10 skipped) 11182ms
+   ✓ splitIntoChunks > F-3: короткие абзацы + большая единица: перекрытие сбрасывается, точный cap и покрытие  661ms
+   ✓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap  10514ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 10 skipped (12)
+   Start at  20:00:17
+   Duration  11.83s (transform 145ms, setup 0ms, collect 174ms, tests 11.18s, environment 0ms, prepare 154ms)

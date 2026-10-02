@@ -7,7 +7,7 @@
 // у которого забрали аренду, не пишет ни одной строки (JobLeaseLost).
 
 import { type Pool, type PoolClient, withService } from '@n6b/db';
-import { checkVectors, minBatchTokens, type PaidGateway, splitIntoChunks, type TextPart, vectorLiteral } from '@n6b/rag';
+import { checkVectors, minBatchTokens, type PaidGateway, splitIntoChunksAsync, type TextPart, vectorLiteral } from '@n6b/rag';
 import type { LeasedJob } from './lease.js';
 import { type JobContext, JobLeaseLost } from './runner.js';
 
@@ -74,7 +74,7 @@ export async function chunkAndEmbedSource(ctx: JobContext, deps: ChunkEmbedDeps)
   const keep = new Map<string, string[]>();
   let parts = 0;
   for (const doc of docs) {
-    const split = splitIntoChunks(doc.text);
+    const split = await splitIntoChunksAsync(doc.text, () => ctx.checkpoint());
     parts += split.length;
     keep.set(doc.id, split.map((p) => p.sha256));
     for (const p of split) if (!existing.has(`${doc.id}:${p.sha256}`)) pending.push({ ...p, documentId: doc.id });

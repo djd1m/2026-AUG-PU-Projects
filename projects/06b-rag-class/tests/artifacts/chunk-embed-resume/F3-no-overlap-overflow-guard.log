@@ -1,0 +1,44 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ packages/rag/tests/unit/chunk.test.ts (12 tests | 1 failed | 11 skipped) 773ms
+   ↓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины
+   ↓ splitIntoChunks > пустой и пробельный текст → ни одной части (нечего эмбеддить и оплачивать)
+   ↓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт
+   ↓ splitIntoChunks > английский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт
+   ↓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов
+   ↓ splitIntoChunks > граница: текст ровно 500 токенов — одна часть; 501 токен — две
+   ↓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро
+   ↓ splitIntoChunks > SC-US-017-2: тот же текст — те же хэши (кэш работает); изменённый абзац меняет только свою часть
+   ↓ splitIntoChunks > повторяющиеся абзацы внутри документа схлопываются: хэши уникальны (unique(document_id, text_sha256))
+   ↓ splitIntoChunks > NUL удаляется (Postgres text его не хранит), параметры нарезки проверяются
+   × splitIntoChunks > F-3: короткие абзацы + большая единица: перекрытие сбрасывается, точный cap и покрытие 769ms
+     → expected [ { ord: +0, …(3) }, …(3) ] to have a length of 3 but got 4
+   ↓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/chunk.test.ts > splitIntoChunks > F-3: короткие абзацы + большая единица: перекрытие сбрасывается, точный cap и покрытие
+AssertionError: expected [ { ord: +0, …(3) }, …(3) ] to have a length of 3 but got 4
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 3[39m
+[31m+ 4[39m
+
+ ❯ packages/rag/tests/unit/chunk.test.ts:120:19
+    118|     for (const p of parts) expect(countTokens(p.text)).toBeLessThanOrE…
+    119|     expect(parts.at(-1)!.text).toBe(large); // без хвоста и без лишней…
+    120|     expect(parts).toHaveLength(before.length + 1);
+       |                   ^
+    121|     for (const paragraph of short) expect(parts.some((p) => p.text.inc…
+    122|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  20:01:28
+   Duration  1.60s (transform 241ms, setup 0ms, collect 314ms, tests 773ms, environment 2ms, prepare 138ms)
