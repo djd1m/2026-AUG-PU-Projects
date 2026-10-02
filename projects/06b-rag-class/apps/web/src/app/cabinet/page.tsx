@@ -11,6 +11,7 @@ import { AddSource } from './add-source';
 import { AddPdf } from './add-pdf';
 import { JobStatus } from './job-status';
 import { LogoutButton } from './logout-button';
+import { Sandbox } from './sandbox';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Кабинет — RAG-бот для сайта' };
@@ -50,13 +51,14 @@ export default async function CabinetPage() {
           {bot.sources.map((s) => (
             <div key={s.source_id} className="source-row">
               <p className="source-locator">{s.locator}</p>
-              {s.job ? <JobStatus key={`${s.job.job_id}-${s.job.state}`} initial={s.job} />
+              {s.job ? <JobStatus botId={bot.id} key={`${s.job.job_id}-${s.job.state}`} initial={s.job} />
                 : <p className="job-detail">Задач индексации ещё не было.</p>}
             </div>
           ))}
           <AddSource botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
           <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')}
             observedJobIds={bot.sources.flatMap((s) => s.job ? [s.job.job_id] : [])} />
+          <Sandbox botId={bot.id} />
         </section>
       ))}
     </main>

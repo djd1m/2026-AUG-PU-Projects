@@ -40,7 +40,6 @@ export const WEB_PAIRS: readonly PairRule[] = [
 
 /** Переменные, проверяемые при старте, чьё решение реализует названная фича дорожной карты. */
 export const PENDING_DECISIONS: Readonly<Record<string, string>> = {
-  MIN_SIMILARITY: 'rag-answer-sandbox',
 };
 
 export interface WebConfig {
@@ -58,6 +57,7 @@ export interface WebConfig {
   readonly LIMIT_SANDBOX_GLOBAL_DAY: number;
   readonly LIMIT_EMBED_TOKENS_ACCOUNT_DAY: number;
   readonly LIMIT_EMBED_TOKENS_GLOBAL_DAY: number;
+  readonly MIN_SIMILARITY: number;
   readonly production: boolean;
   readonly all: ConfigValues;
 }
@@ -83,6 +83,7 @@ export function loadWebConfig(env: Readonly<Record<string, string | undefined>> 
     LIMIT_SANDBOX_GLOBAL_DAY: all.LIMIT_SANDBOX_GLOBAL_DAY as number,
     LIMIT_EMBED_TOKENS_ACCOUNT_DAY: all.LIMIT_EMBED_TOKENS_ACCOUNT_DAY as number,
     LIMIT_EMBED_TOKENS_GLOBAL_DAY: all.LIMIT_EMBED_TOKENS_GLOBAL_DAY as number,
+    MIN_SIMILARITY: all.MIN_SIMILARITY as number,
     production,
     all,
   };

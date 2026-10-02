@@ -9,7 +9,7 @@ import { type JobPayload, jobScreen } from '@/lib/job-view';
 
 const POLL_MS = 2000;
 
-export function JobStatus({ initial }: { initial: JobPayload }) {
+export function JobStatus({ initial, botId }: { initial: JobPayload; botId?: string }) {
   const router = useRouter();
   const [job, setJob] = useState(initial);
   const [pending, setPending] = useState(false);
@@ -44,8 +44,8 @@ export function JobStatus({ initial }: { initial: JobPayload }) {
       {screen.action?.kind === 'retry' && (
         <button type="button" onClick={retry} disabled={pending}>{screen.action.label}</button>
       )}
-      {screen.action?.kind === 'sandbox' && (
-        <button type="button" disabled title="Песочница подключается следующей фичей">{screen.action.label}</button>
+      {screen.action?.kind === 'sandbox' && botId && (
+        <a href={`#sandbox-${botId}`}>{screen.action.label}</a>
       )}
       {readError && <p className="auth-error" role="alert">{readError}</p>}
     </div>

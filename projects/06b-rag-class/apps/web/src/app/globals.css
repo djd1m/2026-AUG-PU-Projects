@@ -56,3 +56,13 @@ button:disabled { opacity: 0.6; cursor: progress; }
 .job-detail { color: var(--muted); }
 .add-source { display: flex; flex-wrap: wrap; gap: calc(var(--space) / 2); margin-top: var(--space); }
 .add-source input { flex: 1 1 240px; min-width: 0; }
+
+.sandbox { margin-top: var(--space); border-top: 1px solid var(--border); padding-top: var(--space); }
+.sandbox form { display: grid; gap: 8px; }
+.sandbox textarea { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--bg); color: var(--fg); font: inherit; resize: vertical; }
+.sandbox .answer-text { white-space: pre-wrap; }
+.sandbox p, .sandbox li { overflow-wrap: anywhere; }
+.sandbox-cta { display: flex; flex-wrap: wrap; gap: 8px; }
+.sandbox-cta p { flex-basis: 100%; }
+.sandbox-cta button:disabled { cursor: not-allowed; }

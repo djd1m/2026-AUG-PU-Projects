@@ -9,6 +9,7 @@
 
 import bcrypt from 'bcrypt';
 import { createPool, type Pool, reserveQuotaNow } from '@n6b/db';
+import { createAskHandler } from './ask-handler';
 import { AuthService, type PasswordHasher } from './auth';
 import { createAuthHandler } from './auth-handler';
 import { PgAuthStore } from './auth-store';
@@ -68,4 +69,11 @@ export function authRoute(action: 'register' | 'login' | 'logout') {
       reserve: (keys) => reserveQuotaNow(servicePool, keys),
     })(request);
   };
+}
+
+export function askRoute(request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
+  const { config, tenantPool, servicePool, auth, paid } = getRuntime();
+  return context.params.then(({ id }) => createAskHandler({ tenantPool, servicePool, gateway: paid.gateway,
+    authenticate: (token) => auth.authenticate(token), publicBaseUrl: config.PUBLIC_BASE_URL,
+    minSimilarity: config.MIN_SIMILARITY })(request, id));
 }

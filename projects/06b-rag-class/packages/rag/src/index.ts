@@ -11,3 +11,5 @@ export { CHUNK_OVERLAP_TOKENS, CHUNK_TARGET_TOKENS, countTokens, sha256, splitIn
 export { type ChunkHit, HNSW_EF_SEARCH, SEARCH_TOP_K, searchChunks, vectorLiteral } from './search.js';
 export { isPublicAddress, resolveSite, type SiteResolver, UnsafeSite, validateSite } from './site-safety.js';
 export { createSafeHttp, type SafeHttpOptions, type SiteFetch, type SiteResponse } from './safe-http.js';
+export { answerQuestion, dontKnow, type AnswerData, type AnswerDeps, type AnswerInput, type AnswerOutcome, type AnswerResponse } from './answer.js';
+export { type Citation } from './citations.js';
