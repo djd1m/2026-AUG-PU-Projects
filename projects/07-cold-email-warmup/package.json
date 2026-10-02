@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests",
     "build": "tsc -p tsconfig.build.json",
-    "test": "tsx --test --test-concurrency=1 tests/auth-unit.test.ts",
-    "test:integration": "tsx --test --test-concurrency=1 tests/auth-integration.test.ts",
+    "test": "tsx --test --test-concurrency=1 tests/*-unit.test.ts",
+    "test:integration": "tsx --test --test-concurrency=1 tests/*-integration.test.ts",
     "start": "node dist/main.js",
     "migrate": "node dist/migrate.js"
   },

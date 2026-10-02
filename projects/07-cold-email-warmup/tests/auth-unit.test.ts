@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { mkdtempSync,writeFileSync,rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { test } from 'node:test';
 import { randomBytes } from 'node:crypto';
 import { loadConfig } from '../src/config.js';
@@ -45,7 +47,10 @@ test('AC-F01-2 opaque canonical cookie and absolute7day HMAC session', () => {
   assert.match(sessionCookie('',false,true),/Max-Age=0$/);
 });
 test('AC-F01-1 safety config fails closed without external runtime key/policy', () => {
-  const env = {SAFETY_POLICY_VERSION:'n7-safety-v1',SESSION_HMAC_KEY:randomBytes(32).toString('base64'),DATABASE_URL:'postgresql://fixture',APP_ORIGIN:'http://127.0.0.1:18701'};
+  const dir=mkdtempSync(tmpdir()+'/n7-config-'); const keyfile=dir+'/keyring';
+  writeFileSync(keyfile,JSON.stringify({activeVersion:'v1',keys:{v1:randomBytes(32).toString('base64')}}),{mode:0o600});
+  const env = {CREDENTIAL_KEYRING_FILE:keyfile,MAIL_PROVIDER_ALLOWLIST:'{"smtp.example.com":30}',SAFETY_POLICY_VERSION:'n7-safety-v1',SESSION_HMAC_KEY:randomBytes(32).toString('base64'),DATABASE_URL:'postgresql://fixture',APP_ORIGIN:'http://127.0.0.1:18701'};
   assert.equal(loadConfig(env).secureCookie,false);
   for(const change of [{SAFETY_POLICY_VERSION:''},{SESSION_HMAC_KEY:''},{SESSION_HMAC_KEY:Buffer.alloc(16).toString('base64')},{APP_ORIGIN:'http://public.example'},{PORT:'0'}]) assert.throws(()=>loadConfig({...env,...change}));
+  rmSync(dir,{recursive:true});
 });

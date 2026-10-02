@@ -7,6 +7,10 @@ import { isValidPassword } from './auth/password.js';
 import { AuthService } from './auth/service.js';
 import { readToken, sessionCookie } from './auth/session.js';
 import { PgAuthStore } from './auth/store.js';
+import { MailboxStore } from './mailboxes/store.js';
+import { ConsentStore } from './consent/store.js';
+import type { Resolver } from './mailboxes/network.js';
+import type { TestAdapter } from './mailboxes/provider.js';
 import { authPage, authScript } from './web/page.js';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
@@ -28,9 +32,11 @@ async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
 function json(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, {'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(data));
 }
-export async function application(config: Config, pool: Pool) {
+export async function application(config: Config, pool: Pool, fixtures?:{resolver?:Resolver; adapter?:TestAdapter}) {
   const store = new PgAuthStore(pool); const auth = new AuthService(store, config.sessionKey);
   await auth.initialize();
+  const mailboxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.resolver,fixtures?.adapter);
+  const consents=new ConsentStore(pool,config.credentialKeyring);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
@@ -65,13 +71,30 @@ export async function application(config: Config, pool: Pool) {
           res.setHeader('Set-Cookie', sessionCookie('', config.secureCookie, true));
           return json(res, 200, {data:{loggedOut:true},meta:{}});
         }
-        if (path.startsWith('/api/mailboxes/')) {
-          const id = path.slice('/api/mailboxes/'.length);
-          if (!UUID.test(id)) throw new HttpError(400, 'invalid_input');
-          const mailbox = await store.mailbox(identity.tenant_id, id);
-          if (!mailbox) throw new HttpError(404, 'not_found');
-          if (req.method !== 'GET') throw new HttpError(405, 'method_not_allowed');
-          return json(res, 200, {data:mailbox,meta:{}});
+        if(path==='/api/mailboxes') {
+          if(req.method==='GET') return json(res,200,{data:await mailboxes.list(identity.tenant_id),meta:{}});
+          if(req.method==='POST') return json(res,201,{data:await mailboxes.save(identity.tenant_id,await body(req)),meta:{}});
+        }
+        const mailboxMatch=/^\/api\/mailboxes\/([^/]+)(?:\/(consents|verify-test))?$/.exec(path);
+        if(mailboxMatch) {
+          const id=mailboxMatch[1]!; if(!UUID.test(id)) throw new HttpError(400,'invalid_input');
+          if(mailboxMatch[2]==='consents') {
+            if(req.method==='GET') return json(res,200,{data:await consents.list(identity,id),meta:{}});
+            if(req.method==='POST') return json(res,200,{data:await consents.act(identity,id,await body(req)),meta:{}});
+          } else if(mailboxMatch[2]==='verify-test' && req.method==='POST') {
+            await body(req); return json(res,200,{data:await mailboxes.verify(identity.tenant_id,id),meta:{verificationMode:'local_test'}});
+          } else if(!mailboxMatch[2]) {
+            if(req.method==='GET') return json(res,200,{data:await mailboxes.read(identity.tenant_id,id),meta:{}});
+            if(req.method==='PUT') return json(res,200,{data:await mailboxes.save(identity.tenant_id,await body(req),id),meta:{}});
+            if(req.method==='PATCH') return json(res,200,{data:await mailboxes.change(identity.tenant_id,id,await body(req)),meta:{}});
+          }
+          throw new HttpError(405,'method_not_allowed');
+        }
+        if(path==='/api/campaigns' && req.method==='POST') return json(res,201,{data:await consents.campaign(identity,await body(req)),meta:{}});
+        const campaignMatch=/^\/api\/campaigns\/([^/]+)$/.exec(path);
+        if(campaignMatch && req.method==='PUT') {
+          if(!UUID.test(campaignMatch[1]!)) throw new HttpError(400,'invalid_input');
+          return json(res,200,{data:await consents.campaign(identity,await body(req),campaignMatch[1]),meta:{}});
         }
       }
       throw new HttpError(404, 'not_found');
@@ -83,5 +106,5 @@ export async function application(config: Config, pool: Pool) {
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store };
+  return { server, auth, store, mailboxes, consents };
 }

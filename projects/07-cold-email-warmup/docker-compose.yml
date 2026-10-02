@@ -1,4 +1,4 @@
-name: n7f01
+name: ${COMPOSE_PROJECT_NAME:-n7f02}
 services:
   db:
     image: postgres:16.10-bookworm
@@ -11,8 +11,8 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
     secrets: [db_password]
     expose: ["5432"]
-    volumes: [n7f01_pg:/var/lib/postgresql/data]
-    networks: [n7f01]
+    volumes: [n7_pg:/var/lib/postgresql/data]
+    networks: [n7]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U n7 -d n7"]
       interval: 3s
@@ -23,16 +23,18 @@ services:
     cpus: 2
     environment:
       SAFETY_POLICY_VERSION: n7-safety-v1
+      CREDENTIAL_KEYRING_FILE: /run/secrets/credential_keyring
+      MAIL_PROVIDER_ALLOWLIST: ${MAIL_PROVIDER_ALLOWLIST:?operator allowlist required}
       SESSION_HMAC_KEY_FILE: /run/secrets/session_key
       DATABASE_PASSWORD_FILE: /run/secrets/db_password
       DATABASE_USER: n7
       DATABASE_NAME: n7
       DATABASE_HOST: db
-      APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18701}
+      APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18702}
       PORT: "3000"
-    secrets: [session_key, db_password]
-    ports: ["127.0.0.1:${N7_WEB_PORT:-18701}:3000"]
-    networks: [n7f01]
+    secrets: [session_key, db_password, credential_keyring]
+    ports: ["127.0.0.1:${N7_WEB_PORT:-18702}:3000"]
+    networks: [n7]
     depends_on:
       db: {condition: service_healthy}
     healthcheck:
@@ -42,10 +44,12 @@ services:
       retries: 20
 secrets:
   session_key:
-    file: ${N7_RUNTIME_DIR:-/tmp/n7-f01-runtime}/session-key
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/session-key
+  credential_keyring:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/credential-keyring.json
   db_password:
-    file: ${N7_RUNTIME_DIR:-/tmp/n7-f01-runtime}/db-password
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/db-password
 networks:
-  n7f01: {name: n7f01_network}
+  n7: {name: "${COMPOSE_PROJECT_NAME:-n7f02}_network"}
 volumes:
-  n7f01_pg: {name: n7f01_pg}
+  n7_pg: {name: "${COMPOSE_PROJECT_NAME:-n7f02}_pg"}

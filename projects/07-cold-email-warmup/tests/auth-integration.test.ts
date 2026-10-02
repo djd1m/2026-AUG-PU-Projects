@@ -41,7 +41,7 @@ test('F01 real PostgreSQL16 HTTP identity acceptance', async t => {
       assert.ok(rows.rows.every(row=>Math.abs(row.expires_at-row.created_at-604800000)<2000));
       const hashes=await pool.query('SELECT password_hash FROM account'); assert.ok(hashes.rows.every(row=>isSupportedHash(row.password_hash)));
       assert.equal((await pool.query('SELECT count(*) FROM mailbox')).rows[0].count,'0');
-      assert.equal((await pool.query("SELECT to_regclass('public.consent') AS consent")).rows[0].consent,null);
+      assert.equal((await pool.query('SELECT count(*) FROM consent')).rows[0].count,'0');
       const tenantB=(await request('/api/auth/me','GET',cookieB)).data.data.tenant_id;
       await pool.query('INSERT INTO mailbox(id,tenant_id,label) VALUES($1,$2,$3),($4,$5,$6)',[mailboxA,tenantA,'Fixture A',randomUUID(),tenantB,'Fixture B']);
     });
