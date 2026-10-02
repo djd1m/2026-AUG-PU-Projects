@@ -1,0 +1,30 @@
+{
+  "thread_id": "01a0fe5f-1891-79a0-bee2-595a29b97382",
+  "process": {
+    "exit_code": 124,
+    "pid": 2649452,
+    "started_at": "2026-10-02T20:47:19.846554+00:00",
+    "finished_at": "2026-10-02T20:57:19.884186+00:00",
+    "elapsed_seconds": 600.0376142690657
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "host_turn_contexts": [
+    {
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "cli_usage": null,
+  "raw_total_token_usage": {
+    "input_tokens": 1441165,
+    "cached_input_tokens": 1370240,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 16911,
+    "reasoning_output_tokens": 2887,
+    "total_tokens": 1458076
+  },
+  "cost": null,
+  "cost_basis": "unavailable",
+  "completion_note": "Wrapper deadline exit124; substantive terminal file and commit existed before timeout; receipt checker exit0. No process exit0 claim."
+}
