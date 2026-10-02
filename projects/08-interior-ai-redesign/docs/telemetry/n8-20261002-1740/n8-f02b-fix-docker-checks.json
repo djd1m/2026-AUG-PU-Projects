@@ -1,0 +1,158 @@
+{
+  "source_revision": "575d822aa41fe631e7f40853e752087fda46d45a",
+  "snapshot_sha256": "0c501c67861efcf17860fa114db9577810663dbe46697a3fcee6400cff568235",
+  "started_at": "2026-10-02T22:20:23.193480+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 153,
+      "log": "/tmp/n8-f02b-fix-runtime/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 3557,
+      "log": "/tmp/n8-f02b-fix-runtime/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6431,
+      "log": "/tmp/n8-f02b-fix-runtime/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 4598,
+      "log": "/tmp/n8-f02b-fix-runtime/build.log"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 17996,
+      "log": "/tmp/n8-f02b-fix-runtime/unit.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 2584,
+      "log": "/tmp/n8-f02b-fix-runtime/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 16645,
+      "log": "/tmp/n8-f02b-fix-runtime/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 30377,
+      "log": "/tmp/n8-f02b-fix-runtime/owner-mutation.log"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 0,
+      "duration_ms": 8384,
+      "log": "/tmp/n8-f02b-fix-runtime/jobs-pg.log"
+    },
+    {
+      "name": "quality-pg",
+      "exit_code": 0,
+      "duration_ms": 3666,
+      "log": "/tmp/n8-f02b-fix-runtime/quality-pg.log"
+    },
+    {
+      "name": "fixture-mutation",
+      "exit_code": 0,
+      "duration_ms": 2910,
+      "log": "/tmp/n8-f02b-fix-runtime/fixture-mutation.log"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 0,
+      "duration_ms": 18842,
+      "log": "/tmp/n8-f02b-fix-runtime/budget-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 1746,
+      "log": "/tmp/n8-f02b-fix-runtime/runtime-versions.log"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 0,
+      "duration_ms": 13170,
+      "log": "/tmp/n8-f02b-fix-runtime/web-maintenance-start.log"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 0,
+      "duration_ms": 73,
+      "log": "/tmp/n8-f02b-fix-runtime/host-http.log"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 0,
+      "duration_ms": 60,
+      "log": "/tmp/n8-f02b-fix-runtime/service-image-ids.log"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 0,
+      "duration_ms": 2769,
+      "log": "/tmp/n8-f02b-fix-runtime/maintenance-once.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 11215,
+      "log": "/tmp/n8-f02b-fix-runtime/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-02T22:22:48.383028+00:00",
+  "duration_ms": 145190,
+  "status": "completed",
+  "verdict": "PASS scoped corrected Docker regression",
+  "host_unit_tests": 40,
+  "container_unit_tests": 27,
+  "f01_pg": 9,
+  "f02a_pg": 21,
+  "f02b_quality_pg": 7,
+  "test_count_note": "PGcounts include parent; F02b six substantive scenarios allpassed. Host40includes13Python-child Node checks notrerun inNode-onlyimage.",
+  "source_check": {
+    "source": "575d822aa41fe631e7f40853e752087fda46d45a",
+    "snapshot": "0c501c67861efcf17860fa114db9577810663dbe46697a3fcee6400cff568235",
+    "matched_files": 45,
+    "supplemental_hidden": {
+      ".env.example": "1f421f5f16f18022be135ce97e873fbc5c68ec0578820a971845ce7951ffa101",
+      ".dockerignore": "1636d5e67867fdd03a4e67d81ec076e5a2bf1db5e1cf258bad73ec8bc3d1e0ad"
+    }
+  },
+  "gpu_geometry": "notexecuted pending",
+  "usage": null,
+  "cost": null,
+  "log_sha256": {
+    "compose-config": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "image-build": "bf6e6699e973d0e910baef368ded56b09b31e470aff6df159404af673c21cb6d",
+    "db-start": "8ba0c5c6967e5cf9729230ee60dad2f753ec49c4c0e6c299b46612983f5969ae",
+    "build": "314e6d9e52ce36b67234a685c43384ef4474e98fce008397ac5b6e4d2597b3f7",
+    "unit": "d1549d62a4eaaf10b893995897d3a2b343e56db38ea90d0de66712ce85fc4f30",
+    "origin-mutation": "fbfb2f00e0913673150c41444512f725d0dc99b1b18eedbd4b701587ddbe496d",
+    "pg-integration": "972bd0d9f90f6c5eee7889a309a5af971a6748ab9471cd20db4563dc981070ca",
+    "owner-mutation": "0375964423e2515031328eafc8f27204832bcefcdb99148504078ca8184333f0",
+    "jobs-pg": "2c62dbdb35bcb54692d801a5bbb30ab2d38de55bdef6388ce69bfa844118ca38",
+    "quality-pg": "ba04438874d4a5812da4f8ce3acf4617abc417341fe14a83ad7b5bd2685ae30c",
+    "fixture-mutation": "886cb7aa37ca8bb402e2f62b25f448683f2934b80ba0034f25f657cf6ef0edc1",
+    "budget-mutation": "9045049c9c3293fed7e6028ba4c2ead44fe8cfdcc036ce906fd7b4a9c89481fa",
+    "runtime-versions": "55fc3fbcafeb68fa6dc9c94e0dacd0dfccfcddeaf2589c006ba249e5252fbae6",
+    "web-maintenance-start": "1d75dd4911dcc033ddd856dda17063c81f348d85aa92e506a90c9896c392fd7f",
+    "host-http": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+    "service-image-ids": "6ea05b956b0eae85fa4cf52e8a98744be98c2c945c30debb4050d306ad843be2",
+    "maintenance-once": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": "6068e70a7f095f71bc49690012c99d93882d0495ef0f511d824ac196c43e1a03"
+  },
+  "image_ids": "/n8-f02b-575d822a-web-1 sha256:f0998f0c24d957129596f9c386b6da05805bc3600edbad94a6f673e40683f4e7\n/n8-f02b-575d822a-maintenance-1 sha256:a6a4884c89027881675ebc772396da0fa78854cb956f08bfbd816ad34f0e3b47"
+}

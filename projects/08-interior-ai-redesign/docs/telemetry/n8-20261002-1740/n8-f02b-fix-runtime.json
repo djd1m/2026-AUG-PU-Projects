@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f02b-fix",
-  "status": "running",
+  "status": "completed",
   "source_revision": "30faa9d4172852244a14fe96e85a56c44e2ed709",
   "cli_session_id": 33061,
   "started_at": "2026-10-02T22:12:33Z",
@@ -11,5 +11,10 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f02b-fix/runtime.log host banner",
-  "budget_seconds": 900
+  "budget_seconds": 900,
+  "exit_code": 0,
+  "finished_at": "2026-10-02T22:19:14Z",
+  "wrapper_elapsed_ms": 401000,
+  "product_revision": "575d822aa41fe631e7f40853e752087fda46d45a",
+  "author_clock_record": "docs/features/f02b/fix-attempt.json"
 }
