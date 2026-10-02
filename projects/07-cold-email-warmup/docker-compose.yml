@@ -2,6 +2,8 @@ name: n7f01
 services:
   db:
     image: postgres:16.10-bookworm
+    # SQL errors can contain supplied secrets; application emits typed errors only.
+    command: ["postgres", "-c", "log_min_messages=fatal", "-c", "log_min_error_statement=panic"]
     cpus: 2
     environment:
       POSTGRES_USER: n7
