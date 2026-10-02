@@ -1,0 +1,274 @@
+Generic port check exit: 1
+Port18702 owner n7f02/web confirmed; loopback binding, CPU2, own network/volume, DB unexposed.
+Command: free -m
+               total        used        free      shared  buff/cache   available
+Mem:           11959        7460         440         336        4723        4499
+Swap:            511         511           0
+Exit: 0
+MemAvailable-kB: 4605960
+CPU affinity: 0,1
+Command: taskset -c 0\,1 npm run build
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+Exit: 0
+Command: env DOCKER_BUILDKIT=0 docker build --cpu-period 100000 --cpu-quota 200000 -t n7f02-web .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  281.1kB
+Step 1/12 : FROM node:22.20.0-bookworm-slim
+ ---> b21fe589dfbe
+Step 2/12 : WORKDIR /app
+ ---> Using cache
+ ---> 957acab97279
+Step 3/12 : COPY package.json package-lock.json ./
+ ---> Using cache
+ ---> 3f4c72b198cc
+Step 4/12 : RUN npm ci --no-audit --no-fund
+ ---> Using cache
+ ---> 3f2e5522dea6
+Step 5/12 : COPY tsconfig*.json eslint.config.js ./
+ ---> Using cache
+ ---> e8ac939db80f
+Step 6/12 : COPY src ./src
+ ---> 0c77f1524b22
+Step 7/12 : COPY db ./db
+ ---> ea879ffaf84a
+Step 8/12 : COPY tests ./tests
+ ---> ce5fb0cc3e18
+Step 9/12 : RUN npm run build
+ ---> Running in ebf4a89ed2fc
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+ ---> Removed intermediate container ebf4a89ed2fc
+ ---> cd2e8dfaf2ad
+Step 10/12 : USER node
+ ---> Running in 3a5249188834
+ ---> Removed intermediate container 3a5249188834
+ ---> ab87a063dd82
+Step 11/12 : EXPOSE 3000
+ ---> Running in 80b81f4fe56c
+ ---> Removed intermediate container 80b81f4fe56c
+ ---> d9e0629269cc
+Step 12/12 : CMD ["node", "dist/main.js"]
+ ---> Running in c410c5163eb0
+ ---> Removed intermediate container c410c5163eb0
+ ---> 38ba08e3e736
+Successfully built 38ba08e3e736
+Successfully tagged n7f02-web:latest
+Exit: 0
+Command: docker compose -p n7f02 up -d --no-build --wait
+ Container n7f02-db-1 Running 
+ Container n7f02-web-1 Recreate 
+ Container n7f02-web-1 Recreated 
+ Container n7f02-db-1 Waiting 
+ Container n7f02-db-1 Healthy 
+ Container n7f02-web-1 Starting 
+ Container n7f02-web-1 Started 
+ Container n7f02-web-1 Waiting 
+ Container n7f02-db-1 Waiting 
+ Container n7f02-db-1 Healthy 
+ Container n7f02-web-1 Healthy 
+Exit: 0
+Command: docker compose -p n7f02 exec -T web npm run typecheck
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+Exit: 0
+Command: docker compose -p n7f02 exec -T web npm run lint
+
+> n7-cold-email-warmup@0.1.0 lint
+> eslint src tests
+
+Exit: 0
+Command: docker compose -p n7f02 exec -T web npm test
+
+> n7-cold-email-warmup@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*-unit.test.ts
+
+TAP version 13
+# Subtest: AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+ok 1 - AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+  ---
+  duration_ms: 3.905342
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+ok 2 - AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+  ---
+  duration_ms: 1.090171
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+ok 3 - AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+  ---
+  duration_ms: 0.74725
+  type: 'test'
+  ...
+# Subtest: AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+ok 4 - AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+  ---
+  duration_ms: 2.702651
+  type: 'test'
+  ...
+# Subtest: AC-F01-1 safety config fails closed without external runtime key/policy
+ok 5 - AC-F01-1 safety config fails closed without external runtime key/policy
+  ---
+  duration_ms: 19.817997
+  type: 'test'
+  ...
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 6 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 10.669064
+  type: 'test'
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+ok 7 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 15.793305
+  type: 'test'
+  ...
+# Subtest: IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+ok 8 - IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+  ---
+  duration_ms: 113.36461
+  type: 'test'
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 9 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 4.524522
+  type: 'test'
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+ok 10 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 24.879939
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1421.871308
+Exit: 0
+Command: docker compose -p n7f02 exec -T web npm run test:integration
+
+> n7-cold-email-warmup@0.1.0 test:integration
+> tsx --test --test-concurrency=1 tests/*-integration.test.ts
+
+TAP version 13
+# Subtest: F01 real PostgreSQL16 HTTP identity acceptance
+    # Subtest: AC-F01-1 migrated readiness serves without exposing secrets
+    ok 1 - AC-F01-1 migrated readiness serves without exposing secrets
+      ---
+      duration_ms: 49.533528
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+    ok 2 - AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+      ---
+      duration_ms: 710.173553
+      type: 'test'
+      ...
+    # Subtest: AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+    ok 3 - AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+      ---
+      duration_ms: 63.704633
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+    ok 4 - AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+      ---
+      duration_ms: 702.042841
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+    ok 5 - AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+      ---
+      duration_ms: 155.727555
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+    ok 6 - AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+      ---
+      duration_ms: 4394.209419
+      type: 'test'
+      ...
+# secret_canary_scan_passed (value suppressed)
+    # Subtest: AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+    ok 7 - AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+      ---
+      duration_ms: 626.905884
+      type: 'test'
+      ...
+    1..7
+ok 1 - F01 real PostgreSQL16 HTTP identity acceptance
+  ---
+  duration_ms: 7301.809516
+  type: 'test'
+  ...
+# Subtest: F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+    # Subtest: AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+    ok 1 - AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+      ---
+      duration_ms: 907.051454
+      type: 'test'
+      ...
+    # Subtest: AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+    ok 2 - AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+      ---
+      duration_ms: 97.870505
+      type: 'test'
+      ...
+    # Subtest: AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+    ok 3 - AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+      ---
+      duration_ms: 164.041259
+      type: 'test'
+      ...
+    # Subtest: AC5 revoke queue/member atomicity, submitting preserved and real rollback
+    ok 4 - AC5 revoke queue/member atomicity, submitting preserved and real rollback
+      ---
+      duration_ms: 133.648478
+      type: 'test'
+      ...
+    # Subtest: AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+    ok 5 - AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+      ---
+      duration_ms: 555.787818
+      type: 'test'
+      ...
+    1..5
+ok 2 - F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+  ---
+  duration_ms: 2473.577343
+  type: 'test'
+  ...
+1..2
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11202.015649
+Exit: 0
+Overall exit: 0

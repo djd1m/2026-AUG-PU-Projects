@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 1 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 10.740444
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+ok 2 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 19.126297
+  ...
+# Subtest: IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+ok 3 - IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+  ---
+  duration_ms: 88.737142
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 4 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 1.499981
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+ok 5 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 29.60279
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 748.037477

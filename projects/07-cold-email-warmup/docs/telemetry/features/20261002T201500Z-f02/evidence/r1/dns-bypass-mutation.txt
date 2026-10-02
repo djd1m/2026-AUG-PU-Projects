@@ -1,0 +1,73 @@
+Mutation: dns-bypass
+Command: taskset -c 0,1 node node_modules/tsx/dist/cli.mjs --test --test-concurrency=1 tests/mailboxes-unit.test.ts
+Exit: 1
+TAP version 13
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 1 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 6.144633
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+not ok 2 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 17.655206
+  location: '/tmp/n7-f02-r1/projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts:1:2516'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/n7-f02-r1/projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts:33:160)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+not ok 3 - IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+  ---
+  duration_ms: 1.530371
+  location: '/tmp/n7-f02-r1/projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts:1:3689'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection: 2000::1'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/n7-f02-r1/projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts:52:7)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 4 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 1.656211
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+not ok 5 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 10.935124
+  location: '/tmp/n7-f02-r1/projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts:1:5950'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f02-r1/projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts:83:133)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 2
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 679.446233

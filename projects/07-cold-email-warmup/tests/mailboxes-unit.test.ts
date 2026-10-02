@@ -32,6 +32,39 @@ test('operator host normalization and conservative public address oracle',async(
   await assert.rejects(resolveEndpoint('foreign.example.com',465,allowlist,publicDns));
   for(const records of [[],[{address:'8.8.8.8',family:4},{address:'10.0.0.1',family:4}],[{address:'::ffff:8.8.8.8',family:6}],[{address:'8.8.8.8',family:6}]]) await assert.rejects(resolveEndpoint(settings.smtpHost,465,allowlist,async()=>records));
 });
+test('IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed',async()=>{
+  // Explicit RESERVED entries and gaps between ALLOCATED entries (IANA 2025-10-10).
+  const reserved=['2000::1','2001:1000::1','2001:11ff:ffff:ffff:ffff:ffff:ffff:ffff',
+    '2001:4e00::1','2001:4fff::1','2001:6000::1','2001:7fff::1','2001:c000::1',
+    '2003:4000::1','23ff:ffff::1','2420::1','25ff:ffff::1','2610:200::1',
+    '261f:ffff::1','2620:200::1','262f:ffff::1','2640::1','27ff:ffff::1',
+    '2810::1','29ff:ffff::1','2a20::1','2bff:ffff::1','2c10::1','2cff:ffff::1',
+    '2d00::1','2e00::1','3000::1','3800::1','3c00::1','3e00::1','3f00::1',
+    '3f80::1','3fc0::1','3fe0::1','3ff0::1','3ff8::1','3ffc::1','3ffe::1',
+    '3fff::1','3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'];
+  let calls=0;
+  const adapter={mode:'local_test' as const,async connect(){calls++;}};
+  for(const address of reserved) {
+    assert.equal(isPublicIp(address),false,address);
+    const unsafe={address,family:6};const publicAnswer={address:'8.8.8.8',family:4};
+    for(const records of [[unsafe],[publicAnswer,unsafe],[unsafe,publicAnswer]]) {
+      const dns=async()=>records;
+      await assert.rejects(resolveEndpoint(settings.smtpHost,587,allowlist,dns),e=>e instanceof HttpError && e.code==='unsafe_address',address);
+      await assert.rejects(verifyTest(settings,credentials,allowlist,adapter,dns),e=>e instanceof HttpError && e.code==='unsafe_address',address);
+      assert.equal(calls,0,address);
+    }
+  }
+  // Allocated boundaries include recent APNIC/RIPE allocations and narrow ARIN blocks.
+  for(const address of ['2001:200::1','2001:fff::1','2001:1200::1','2001:4dff::1',
+    '2001:5000::1','2001:5fff::1','2001:8000::1','2001:bfff::1','2003::1',
+    '2003:3fff::1','2400::1','241f:ffff::1','2600::1','260f:ffff::1',
+    '2610::1','2610:1ff::1','2620::1','2620:1ff::1','2630::1','263f:ffff::1',
+    '2800::1','280f:ffff::1','2a00::1','2a1f:ffff::1','2c00::1','2c0f:ffff::1']) {
+    assert.equal(isPublicIp(address),true,address);
+    assert.equal(await verifyTest(settings,credentials,allowlist,adapter,async()=>[{address,family:6}]),'verified_test');
+  }
+  assert.equal(calls,52);
+});
 test('save input enforces TLS ports and limits',()=>{
   const raw={...settings,...credentials,label:'Mailbox',senderAddress:'Owner@example.com',requiredTLS:true};
   assert.equal(parseMailbox(raw).dailyLimit,10);

@@ -3,6 +3,20 @@ import { isIP } from 'node:net';
 import { HttpError } from '../errors.js';
 export type Resolver = (host: string) => Promise<readonly {address:string; family:number}[]>;
 export const publicResolver: Resolver = host => lookup(host,{all:true,verbatim:true});
+// IANA IPv6 Global Unicast Address Space, updated 2025-10-10:
+// https://www.iana.org/assignments/ipv6-unicast-address-assignments
+// Unlisted space is reserved. Match ALLOCATED prefixes before special-use exclusions.
+const allocatedIpv6Prefixes: readonly (readonly [number,number])[] = [
+  [0x20010000,23], [0x20010200,23], [0x20010400,23], [0x20010600,23],
+  [0x20010800,22], [0x20010c00,23], [0x20010e00,23], [0x20011200,23],
+  [0x20011400,22], [0x20011800,23], [0x20011a00,23], [0x20011c00,22],
+  [0x20012000,19], [0x20014000,23], [0x20014200,23], [0x20014400,23],
+  [0x20014600,23], [0x20014800,23], [0x20014a00,23], [0x20014c00,23],
+  [0x20015000,20], [0x20018000,19], [0x2001a000,20], [0x2001b000,20],
+  [0x20020000,16], [0x20030000,18], [0x24000000,12], [0x24100000,12],
+  [0x26000000,12], [0x26100000,23], [0x26200000,23], [0x26300000,12],
+  [0x28000000,12], [0x2a000000,12], [0x2a100000,12], [0x2c000000,12],
+];
 export function normalizeHost(value: unknown): string {
   if (typeof value !== 'string' || value.length > 253) throw new HttpError(400,'invalid_host');
   const host = value.toLowerCase().replace(/\.$/,'');
@@ -19,8 +33,9 @@ export function isPublicIp(address: string): boolean {
   const lhs = left ? left.split(':') : []; const rhs = right ? right.split(':') : [];
   const groups = address.includes('::') ? [...lhs,...Array<string>(8-lhs.length-rhs.length).fill('0'),...rhs] : lhs;
   const [a,b] = groups.map(g=>Number.parseInt(g,16)) as [number,number];
-  // Only global unicast; exclude IETF assignments, 6to4 and documentation.
-  return a>=0x2000 && a<=0x3fff && !(a===0x2001 && (b<=0x1ff || b===0xdb8)) && a!==0x2002 && a!==0x3fff;
+  const prefix=a*0x10000+b;
+  // Only allocated global unicast; exclude IETF assignments, 6to4 and documentation.
+  return allocatedIpv6Prefixes.some(([base,bits])=>prefix>=base && prefix<base+2**(32-bits)) && !(a===0x2001 && (b<=0x1ff || b===0xdb8)) && a!==0x2002 && a!==0x3fff;
 }
 export async function deadline<T>(milliseconds: number, operation: (signal: AbortSignal)=>Promise<T>): Promise<T> {
   const controller = new AbortController(); let timer: NodeJS.Timeout | undefined;
