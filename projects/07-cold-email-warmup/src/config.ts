@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { parseKeyring, type Keyring } from './mailboxes/crypto.js';
 import { normalizeHost } from './mailboxes/network.js';
-export interface Config { databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
+export interface Config { dispatchMode:'disabled'|'local_test'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (env.SAFETY_POLICY_VERSION !== 'n7-safety-v1') throw new Error('invalid_safety_policy');
   const encoded = env.SESSION_HMAC_KEY_FILE ? readFileSync(env.SESSION_HMAC_KEY_FILE, 'utf8').trim() : env.SESSION_HMAC_KEY;
@@ -40,5 +40,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     }
     if(!providerAllowlist.size || providerAllowlist.size>100) throw new Error();
   } catch { throw new Error('invalid_provider_allowlist'); }
-  return { databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
+  const dispatchMode=env.DISPATCH_MODE ?? 'disabled';
+  if(dispatchMode!=='disabled' && dispatchMode!=='local_test') throw new Error('invalid_dispatch_mode');
+  return { dispatchMode, databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
 }

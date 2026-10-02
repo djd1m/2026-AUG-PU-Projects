@@ -13,6 +13,7 @@
     "test": "tsx --test --test-concurrency=1 tests/*-unit.test.ts",
     "test:integration": "tsx --test --test-concurrency=1 tests/*-integration.test.ts",
     "start": "node dist/main.js",
+    "dispatch:tick": "node dist/dispatch/worker.js",
     "migrate": "node dist/migrate.js"
   },
   "dependencies": {

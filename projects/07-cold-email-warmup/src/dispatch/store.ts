@@ -7,9 +7,10 @@ export class DispatchStore {
  async claim(owner=randomUUID(),now=new Date()) {
   return eligibilityTransaction(this.pool,async client=>{
    await client.query(`UPDATE send_job SET state='queued',reserved_day=NULL,lease_owner=NULL,lease_until=NULL WHERE state='claimed' AND lease_until<=$1`,[now]);
+   await client.query("UPDATE send_job SET state='cancelled',outcome='retry_exhausted' WHERE state IN ('queued','claimed') AND first_attempt_at IS NOT NULL AND ($1::timestamptz>=first_attempt_at+interval '120 seconds' OR attempt_count>=3)",[now]);
    const day=now.toISOString().slice(0,10);
    const candidates=(await client.query(`SELECT j.id,j.mailbox_id FROM send_job j JOIN mailbox m ON m.id=j.mailbox_id
-    WHERE j.state='queued' AND j.due_at<=$1 AND ${freshMailbox}
+    WHERE j.state='queued' AND (j.outcome IS NULL OR j.outcome='proved_pre_data_retry') AND j.due_at<=$1 AND ${freshMailbox}
     AND ((j.scope='pool' AND ${poolEligible} AND EXISTS(SELECT 1 FROM mailbox m WHERE m.id=j.recipient_mailbox_id AND m.tenant_id<>j.tenant_id AND ${poolEligible}))
     OR (j.scope='campaign' AND EXISTS(SELECT 1 FROM campaign c JOIN enrollment e ON e.campaign_id=c.id
       JOIN consent s ON s.campaign_id=c.id AND s.mailbox_id=j.mailbox_id WHERE c.id=j.campaign_id AND c.tenant_id=j.tenant_id AND c.state='active'

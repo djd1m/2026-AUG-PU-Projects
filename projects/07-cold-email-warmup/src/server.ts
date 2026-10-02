@@ -10,6 +10,7 @@ import { PgAuthStore } from './auth/store.js';
 import { MailboxStore } from './mailboxes/store.js';
 import { CampaignStore } from './campaigns/store.js';
 import { PoolStore } from './pool/store.js';
+import { SubmissionStore } from './dispatch/submission.js';
 import { DispatchStore } from './dispatch/store.js';
 import { ConsentStore } from './consent/store.js';
 import type { Resolver } from './mailboxes/network.js';
@@ -41,7 +42,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   const mailboxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.resolver,fixtures?.adapter);
   const consents=new ConsentStore(pool,config.credentialKeyring);
   const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
-  const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);
+  const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);const submissions=new SubmissionStore(pool,config);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
@@ -95,6 +96,12 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           }
           throw new HttpError(405,'method_not_allowed');
         }
+        if(path==='/api/dispatch/messages' && req.method==='GET') return json(res,200,{data:await submissions.messages(identity.tenant_id),meta:{mode:'local_test'}});
+        const jobMatch=/^\/api\/dispatch\/jobs\/([^/]+)$/.exec(path);
+        if(jobMatch && req.method==='GET') {
+          if(!UUID.test(jobMatch[1]!)) throw new HttpError(400,'invalid_input');
+          return json(res,200,{data:await submissions.inspect(identity.tenant_id,jobMatch[1]!),meta:{}});
+        }
         if(path==='/api/pool' && req.method==='GET') return json(res,200,{data:await cohort.aggregate(),meta:{}});
         if(path==='/api/campaigns') {
           if(req.method==='GET') return json(res,200,{data:await campaigns.list(identity.tenant_id),meta:{}});
@@ -119,5 +126,5 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch };
+  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions };
 }

@@ -22,6 +22,7 @@ services:
     build: .
     cpus: 2
     environment:
+      DISPATCH_MODE: ${N7_DISPATCH_MODE:-disabled}
       SAFETY_POLICY_VERSION: n7-safety-v1
       RECIPIENT_HASH_KEY_FILE: /run/secrets/recipient_hash_key
       CREDENTIAL_KEYRING_FILE: /run/secrets/credential_keyring
