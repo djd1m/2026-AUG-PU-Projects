@@ -51,6 +51,6 @@ test('AC-F01-1 safety config fails closed without external runtime key/policy', 
   writeFileSync(keyfile,JSON.stringify({activeVersion:'v1',keys:{v1:randomBytes(32).toString('base64')}}),{mode:0o600});
   const env = {CREDENTIAL_KEYRING_FILE:keyfile,MAIL_PROVIDER_ALLOWLIST:'{"smtp.example.com":30}',SAFETY_POLICY_VERSION:'n7-safety-v1',SESSION_HMAC_KEY:randomBytes(32).toString('base64'),DATABASE_URL:'postgresql://fixture',APP_ORIGIN:'http://127.0.0.1:18701'};
   assert.equal(loadConfig(env).secureCookie,false);
-  for(const change of [{SAFETY_POLICY_VERSION:''},{SESSION_HMAC_KEY:''},{SESSION_HMAC_KEY:Buffer.alloc(16).toString('base64')},{APP_ORIGIN:'http://public.example'},{PORT:'0'}]) assert.throws(()=>loadConfig({...env,...change}));
+  for(const change of [{SAFETY_POLICY_VERSION:''},{SESSION_HMAC_KEY:''},{SESSION_HMAC_KEY:Buffer.alloc(16).toString('base64')},{APP_ORIGIN:'http://public.example'},{PORT:'0'},{CREDENTIAL_KEYRING_FILE:''},{CREDENTIAL_KEYRING_FILE:dir+'/absent'},{MAIL_PROVIDER_ALLOWLIST:''},{MAIL_PROVIDER_ALLOWLIST:'{"smtp.example.com":31}'}]) assert.throws(()=>loadConfig({...env,...change}));
   rmSync(dir,{recursive:true});
 });
