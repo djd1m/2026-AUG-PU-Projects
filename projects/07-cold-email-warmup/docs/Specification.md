@@ -98,7 +98,11 @@ Reply event по Message-ID tenant/mailbox binding; no subject-only matching.
 IMAP reads bounded headers; body retained only if required explicitly, not default.
 Stops committed after the serialized submitting boundary affect subsequent messages only. AC-N7-006.
 
-SC-US-006-3: Given same reply returns under changed UIDVALIDITY/UID, When bounded rescan commits then crashes/restarts after a page, Then semantic effect count remains1 and no dispatch until high-water and tail poll complete.
+SC-US-006-3: Given persisted rescan cursor C/high-water H, old reply R at a new UID and unseen S,
+When page effects/cursor writes crash BEFORE COMMIT or AFTER COMMIT (explicit BDD Examples),
+Then BEFORE leaves C and no partial page effects (R=1,S=0), AFTER retains C2 and effects (R=1,S=1);
+restart resumes the same run/H from its last committed cursor, replay ends R=1,S=1,
+and dispatch remains0 until full high-water coverage plus successful same-validity tail poll.
 SC-US-006-4: Given wrong sender, foreign mailbox, unrelated References or missing Message-ID Example, When reply ingestion runs, Then only matching own recipient+References produces one semantic stop; all foreign/unrelated cases stop0.
 SC-US-006-5: Given poll age59.999s,60s or60.001s and incomplete rescan Example, When final submitting guard runs, Then only age<60s with complete poll/rescan authorizes dispatch.
 

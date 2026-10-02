@@ -226,10 +226,20 @@ Scenario Outline: SC-US-005-6
 
 ```gherkin
 @FR-n7-006 @security
-Scenario: SC-US-006-3
-  Given same reply returns under changed UIDVALIDITY/UID
-  When bounded rescan commits then crashes/restarts after a page
-  Then semantic effect count remains1 and no dispatch until high-water and tail poll complete.
+Scenario Outline: SC-US-006-3
+  Given reply R already has one semantic effect under old UIDVALIDITY
+  And a paused rescan under new UIDVALIDITY has committed cursor C and fixed high-water H
+  And the next page contains R at a new UID and a previously unseen reply S
+  When the page writes observations, reply effects and next cursor C2 in one transaction
+  And a crash occurs at <crash_boundary> before restart
+  Then durable cursor and page effects are <durable_state>
+  And restart continues the same rescan run with unchanged high-water H from <resume_cursor>
+  And after replay R has exactly1 total effect and S has exactly1 total effect
+  And transport calls remain0 until all pages through H and a successful same-validity tail poll complete
+  Examples:
+    | crash_boundary | durable_state | resume_cursor |
+    | after page writes but BEFORE transaction COMMIT | cursor C; no new page observations or effects; R remains1 and S remains0 | C; replay entire uncommitted page |
+    | AFTER page transaction COMMIT | cursor C2; page observations durable; R remains1 and S becomes1 | C2; any repeated delivery adds0 effects |
 ```
 
 ## SC-US-006-4
