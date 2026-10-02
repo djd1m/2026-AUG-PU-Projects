@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "3b84e9ef",
-    "current_revision": "83b1ef88f40c5edb000ea5753695bf65111bd62c",
-    "build_revision": "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740",
+    "current_revision": "67d2e251d145c11a68d9f05a9e9be59094716138",
+    "build_revision": null,
     "requirements": [
       {
         "root": "project",
@@ -37,25 +37,29 @@
       }
     ],
     "continuity": {
-      "expected_revision": "6b93c0e5f5befcc22500ea8b35d80c0ca13bba2a",
-      "observed_revision": "83b1ef88f40c5edb000ea5753695bf65111bd62c",
+      "expected_revision": "83b1ef88f40c5edb000ea5753695bf65111bd62c",
+      "observed_revision": "67d2e251d145c11a68d9f05a9e9be59094716138",
       "reconciliation": {
         "status": "completed",
-        "impact": "F01 candidate integrated; source-bound Docker build,12unit/8Postgres integration/audit completed; independent review two medium corrections in progress. F02 plan prepared only.",
-        "decision": "Do not accept F01 until two corrections and targeted review/runtime complete; then next/go F02.",
+        "impact": "F01 completed two code fixes plus measured Compose startup fix; all scoped tests/freshAstra reviews accepted. Prepared F02a transaction and queue unit now dispatches from accepted source.",
+        "decision": "/next f02-generation -> /go -> /feature AUTO under existing owner autonomy; substantiveXL retained; GPU remains pending.",
         "affected_checks": [
-          "F01 auth/upload runtime",
-          "orphan sweep",
-          "owner mutation"
+          "F01 corrected media/mutation",
+          "Compose hostaccess",
+          "F02 budget/credit/job concurrency"
         ],
         "rerun": [
-          "actual Docker F01 runtime"
+          "9 realPG",
+          "targetedowner/Origin mutations",
+          "actualstartup/hostbody/DBisolation",
+          "freshAstra boundedreviews"
         ],
         "pending": [
-          "sweep progress fix",
-          "mutation negative controls",
-          "fresh targeted Astra review",
-          "affected runtime rerun"
+          "F02a code",
+          "full relevant regression andbudgetmutation",
+          "independentAstra review",
+          "F02b realengine/provenance",
+          "realGPUquality"
         ]
       }
     }
