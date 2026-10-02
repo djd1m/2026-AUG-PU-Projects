@@ -1,0 +1,8 @@
+{
+  "files": 57,
+  "mismatches": [],
+  "only_changed_source": "tests/payments.integration.test.js",
+  "production_source_unchanged": true,
+  "web_image_id": "sha256:f1fcf7e3323ddfca7a9a766a7fa0cb9e071eb0d0f071c3e61144075b2050cdba",
+  "image_evidence": "docker image inspect n8-f03a-96e76172-web --format {{.Id}}; previous initial service-image-ids.log same ID"
+}

@@ -1,0 +1,49 @@
+{
+  "source_revision": "e50e6368fe71ccbb73db3bc9d648d410c98da916",
+  "snapshot_sha256": "e42f659bc6116ded50bf309d076c8eb604a1823e9a06b79dfc5fbd4a8c8a6c02",
+  "started_at": "2026-10-02T23:13:41.793258+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 163,
+      "log": "docs/features/f03a-fix/runtime/compose-config.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6466,
+      "log": "docs/features/f03a-fix/runtime/db-start.log",
+      "log_sha256": "ff103e06465f4ca8eefcfec6807d66f7576cf63c828fd6e84d2c6fcdb0fc8035"
+    },
+    {
+      "name": "payments-pg",
+      "exit_code": 0,
+      "duration_ms": 8161,
+      "log": "docs/features/f03a-fix/runtime/payments-pg.log",
+      "log_sha256": "8835fd7937e4a4a766f4b391378e6cb821ba711708dde73bb6deff4d80d59e6c"
+    },
+    {
+      "name": "image-identity",
+      "exit_code": 0,
+      "duration_ms": 410,
+      "log": "docs/features/f03a-fix/runtime/image-identity.log",
+      "log_sha256": "94c1c18fe0765a6b3502da8269753df450059e52bc6fb8661a9b2024e31b12a2"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 970,
+      "log": "docs/features/f03a-fix/runtime/cleanup.log",
+      "log_sha256": "749558fa1f84a9b2fc97fb6b1e8fb08c4128e3e88b70be320541c62c16c1ddf6"
+    }
+  ],
+  "finished_at": "2026-10-02T23:13:57.966048+00:00",
+  "duration_ms": 16173,
+  "source_after": {
+    "files": 57,
+    "mismatches": []
+  },
+  "status": "pass"
+}
