@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T213130Z-publish-bot",
+    "work_unit_id": "publish-bot-feature",
+    "current_attempt_id": "plan-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T213130Z-publish-bot/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T213130Z-publish-bot/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+    "current_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "observed_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "b469edd53426239a8310b4fd7dee31131ffa43f47be8db621883fa2c41e04073",
+    "scope": [
+      "Authenticated publication: requiredcontact, normalizedoriginlist, ownerconfirmedsourceorigin, embedcode and cabinet"
+    ],
+    "exclusions": [
+      "Actualwidget/demo runtime",
+      "Paidprovider/calibration",
+      "Schema/dependencies",
+      "N6donor"
+    ],
+    "action_limits": [
+      "Author25min/reviewer8min",
+      "CPU2 serializedDocker",
+      "NoDBpublishedports",
+      "Rootownsmanifest/integration"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "PUB-01",
+        "required": true
+      },
+      {
+        "id": "PUB-02",
+        "required": true
+      },
+      {
+        "id": "PUB-03",
+        "required": true
+      },
+      {
+        "id": "PUB-04",
+        "required": true
+      },
+      {
+        "id": "PUB-05",
+        "required": true
+      },
+      {
+        "id": "PUB-06",
+        "required": true
+      },
+      {
+        "id": "PUB-07",
+        "required": true
+      },
+      {
+        "id": "PUB-08",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Existing accepted N6b auth/RLS/cabinet/schema only; no external donor",
+        "useful_fragment": "Existing N6b interfaces only",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "No donor needed; N6 prohibited"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable accepted publication feature; numeric forecast not fabricated",
+      "scope_revision": "b469edd53426239a8310b4fd7dee31131ffa43f47be8db621883fa2c41e04073",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "98c2a5feaca4cbe07dcbb95dcbe7fc4411c9e4a6aa65d6745067e732863e713a",
+      "tier": "M",
+      "rationale": "L web/RAG boundary lowered viafresh-SPARC exception; existing paidgateway invariant unchanged; allMchecks retained",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T213130Z-publish-bot/evidence/route-plan.txt"
+      },
+      "phase": "plan",
+      "script": {
+        "input": "six planned authenticated API/RAG/UI files",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner/root authorized continuous ownroadmap MVP and nextbranchfromacceptedF06",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Preparation/implementation only; actualDockerUI readiness checked immediately beforeexecution"
+  },
+  "attempts": [
+    {
+      "id": "plan-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "publish-bot-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/publish-bot/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "PUB-01",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-02",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-03",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-04",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-05",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-06",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-07",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PUB-08",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}
