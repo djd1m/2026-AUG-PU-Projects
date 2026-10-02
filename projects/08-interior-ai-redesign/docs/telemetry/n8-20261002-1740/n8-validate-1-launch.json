@@ -1,0 +1,23 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-validate-1",
+  "attempt_id": "n8-validate-1-attempt-1",
+  "created_at": "2026-10-02T18:21:17.294225+00:00",
+  "stage": "VALIDATE",
+  "source_revision": "07d47977d516e281ad36a42e85a608fc949db974",
+  "spec_sha256": "621e460abcc760d5f537de181cd1e0a7873126d7d43f400bca6e10bdcb60025a",
+  "worktree": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-validate-1",
+  "project_root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-validate-1/projects/08-interior-ai-redesign",
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-validate-1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-validate-1-receipt.md",
+  "prelaunch_trace_state": "absent",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "budget_minutes": 12,
+  "allowed_write_paths": [
+    "projects/08-interior-ai-redesign/docs/validation-independent-1.md",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-validate-1-receipt.md"
+  ],
+  "stop_condition": "Produce source-bound verdict and receipt within budget; no product edits, no resurvey, no invented pass; concrete unresolved findings remain needs_work."
+}
