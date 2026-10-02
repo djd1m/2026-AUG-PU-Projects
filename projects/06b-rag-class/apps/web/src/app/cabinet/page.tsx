@@ -55,7 +55,8 @@ export default async function CabinetPage() {
             </div>
           ))}
           <AddSource botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
-          <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
+          <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')}
+            observedJobIds={bot.sources.flatMap((s) => s.job ? [s.job.job_id] : [])} />
         </section>
       ))}
     </main>
