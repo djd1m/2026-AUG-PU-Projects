@@ -1,0 +1,16 @@
+ Container n6b-f05-crawl-db-1 Running 
+ Container n6b-f05-crawl-db-1 Waiting 
+ Container n6b-f05-crawl-db-1 Healthy 
+ Container n6b-f05-crawl-tests-run-6331ea4e08ef Creating 
+ Container n6b-f05-crawl-tests-run-6331ea4e08ef Created 
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+packages/rag/src/safe-http.ts(30,77): error TS2353: Object literal may only specify known properties, and 'maxRedirections' does not exist in type '{ dispatcher?: Dispatcher | undefined; } & Omit<RequestOptions<null>, "origin" | "path" | "method"> & Partial<Pick<RequestOptions<null>, "method">>'.
+packages/rag/tests/unit/site-safety.test.ts(41,22): error TS18048: 'options' is possibly 'undefined'.
+packages/rag/tests/unit/site-safety.test.ts(41,30): error TS2339: Property 'lookup' does not exist on type 'BuildOptions'.
+  Property 'lookup' does not exist on type 'IpcNetConnectOpts & { allowH2?: boolean | undefined; maxCachedSessions?: number | null | undefined; socketPath?: string | null | undefined; timeout?: number | null | undefined; port?: number | undefined; keepAlive?: boolean | ... 1 more ... | undefined; keepAliveInitialDelay?: number | ... 1 more ... | undefined; ty...'.
+packages/rag/tests/unit/site-safety.test.ts(42,46): error TS7006: Parameter 'error' implicitly has an 'any' type.
+packages/rag/tests/unit/site-safety.test.ts(42,53): error TS7006: Parameter 'address' implicitly has an 'any' type.
+

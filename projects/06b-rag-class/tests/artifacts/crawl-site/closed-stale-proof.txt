@@ -1,0 +1,88 @@
+ Container n6b-f05-crawl-db-1 Running 
+ Container n6b-f05-crawl-db-1 Waiting 
+ Container n6b-f05-crawl-db-1 Healthy 
+ Container n6b-f05-crawl-lease-proof Creating 
+ Container n6b-f05-crawl-lease-proof Created 
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+МУТАЦИЯ services/worker/src/crawl/store.ts
+
+ RUN  v3.2.7 /app
+
+ ❯ services/worker/tests/int/crawl.int.test.ts (8 tests | 2 failed | 6 skipped) 163ms
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-1: sitemap первым, root затем ссылки, циклы/фрагменты не повторяются; неизменённые страницы ставят ссылки
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-2: 5xx, сеть и слишком большой robots запрещают всё; 4xx разрешает
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > Free считает 100 URL включая redirect/nonHTML, seen до HTTP, точная заметка
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > redirect: robots цели, другой host, credentials, циклы и предел 5
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > нет HTML → failed; checkpoint ceiling/lease и signal распространяются до запросов/записи
+   × guard записи document под shared lease > stale fence и closed state: stale fence не записывает документ 135ms
+     → promise resolved "undefined" instead of rejecting
+   × guard записи document под shared lease > stale fence и closed state: closed state не записывает документ 23ms
+     → promise resolved "undefined" instead of rejecting
+   ↓ guard записи document под shared lease > два конкурентных воркера: перезахват → пишет только новый fence, id сохраняется
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 skipped (8)
+   Start at  20:56:59
+   Duration  1.96s (transform 639ms, setup 0ms, collect 983ms, tests 163ms, environment 0ms, prepare 117ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/int/crawl.int.test.ts > guard записи document под shared lease > stale fence и closed state: stale fence не записывает документ
+ FAIL  services/worker/tests/int/crawl.int.test.ts > guard записи document под shared lease > stale fence и closed state: closed state не записывает документ
+AssertionError: promise resolved "undefined" instead of rejecting
+
+[32m- Expected:[39m 
+Error {
+  "message": "rejected promise",
+}
+
+[31m+ Received:[39m 
+undefined
+
+ ❯ services/worker/tests/int/crawl.int.test.ts:115:78
+    113|     if (mode === 'stale fence') await owner.query('UPDATE index_job SE…
+    114|     else await owner.query("UPDATE index_job SET state='failed' WHERE …
+    115|     await expect(saveDocument(app, ctx, 'https://fixture.test/', 't', …
+       |                                                                              ^
+    116|     expect((await documents(ctx))).toHaveLength(0);
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+exit=1
+ВОССТАНОВЛЕНИЕ services/worker/src/crawl/store.ts
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/crawl.int.test.ts (8 tests | 6 skipped) 150ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 6 skipped (8)
+   Start at  20:57:02
+   Duration  2.01s (transform 620ms, setup 0ms, collect 1.14s, tests 150ms, environment 0ms, prepare 109ms)
+
+
+exit=0
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/crawl.int.test.ts (8 tests) 2082ms
+   ✓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-1: sitemap первым, root затем ссылки, циклы/фрагменты не повторяются; неизменённые страницы ставят ссылки  1248ms
+   ✓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > Free считает 100 URL включая redirect/nonHTML, seen до HTTP, точная заметка  530ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  20:57:06
+   Duration  4.31s (transform 699ms, setup 0ms, collect 1.30s, tests 2.08s, environment 1ms, prepare 139ms)
+
+
+closed-stale-proof exit=0

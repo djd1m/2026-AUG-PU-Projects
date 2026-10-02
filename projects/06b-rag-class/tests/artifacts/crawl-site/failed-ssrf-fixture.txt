@@ -1,0 +1,211 @@
+ Container n6b-f05-crawl-db-1 Running 
+ Container n6b-f05-crawl-db-1 Waiting 
+ Container n6b-f05-crawl-db-1 Healthy 
+ Container n6b-f05-crawl-check Creating 
+ Container n6b-f05-crawl-check Created 
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> n6b-rag-class@0.1.0 pretest
+> npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag
+
+
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/rag@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> n6b-rag-class@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v3.2.7 /app
+
+ ✓ packages/rag/tests/unit/guards.test.ts (16 tests) 49ms
+ ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (39 tests) 188ms
+ ✓ apps/web/tests/unit/config.test.ts (78 tests) 62ms
+stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+health: проверка не прошла: Error
+
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests) 456ms
+   ✓ регистрация и вход — порядок проверок (Pseudocode «Register and login») > фиктивный хэш — настоящий bcrypt той же стоимости 12, что и регистрация  336ms
+ ✓ packages/rag/tests/unit/chunk.test.ts (12 tests) 16326ms
+   ✓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины  673ms
+   ✓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт  783ms
+   ✓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов  455ms
+   ✓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро  2540ms
+   ✓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap  11368ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 42ms
+ ✓ packages/rag/tests/unit/provider.test.ts (16 tests) 71ms
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 31ms
+ ✓ packages/rag/tests/unit/live-factory.test.ts (6 tests) 701ms
+ ✓ packages/rag/tests/unit/guards-index.test.ts (5 tests) 23ms
+ ❯ packages/rag/tests/unit/site-safety.test.ts (42 tests | 6 failed) 79ms
+   ✓ SC-US-002-3 SSRF > 0.0.0.0 закрыт 4ms
+   ✓ SC-US-002-3 SSRF > 10.0.0.1 закрыт 1ms
+   ✓ SC-US-002-3 SSRF > 127.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 100.64.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 169.254.169.254 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 172.16.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 192.168.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 192.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 192.0.2.1 закрыт 1ms
+   ✓ SC-US-002-3 SSRF > 192.88.99.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 198.18.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 198.51.100.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 203.0.113.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 224.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 255.255.255.255 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 168.63.129.16 закрыт 0ms
+   × SC-US-002-3 SSRF > :: закрыт 24ms
+     → expected true to be false // Object.is equality
+   × SC-US-002-3 SSRF > ::1 закрыт 1ms
+     → expected true to be false // Object.is equality
+   × SC-US-002-3 SSRF > ::ffff:127.0.0.1 закрыт 1ms
+     → expected true to be false // Object.is equality
+   × SC-US-002-3 SSRF > ::ffff:8.8.8.8 закрыт 1ms
+     → expected true to be false // Object.is equality
+   ✓ SC-US-002-3 SSRF > fc00::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > fe80::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > ff02::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 2001:db8::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 2001::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 2002:7f00:1:: закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 3fff::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > bad закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 8.8.8.8 публичный 0ms
+   ✓ SC-US-002-3 SSRF > 93.184.216.34 публичный 0ms
+   ✓ SC-US-002-3 SSRF > 2606:4700:4700::1111 публичный 0ms
+   ✓ SC-US-002-3 SSRF > 2001:4860:4860::8888 публичный 0ms
+   ✓ SC-US-002-3 SSRF > все DNS ответы должны быть безопасны; ошибка и пустой DNS закрыты 2ms
+   ✓ SC-US-002-3 SSRF > URL ftp://example.test отклонён 0ms
+   ✓ SC-US-002-3 SSRF > URL https://u:p@example.test/ отклонён 0ms
+   ✓ SC-US-002-3 SSRF > URL https://example.test:8080/ отклонён 0ms
+   ✓ SC-US-002-3 SSRF > URL http://2130706433/ отклонён 0ms
+   ✓ SC-US-002-3 SSRF > URL http://0x7f000001/ отклонён 0ms
+   × SC-US-002-3 SSRF > URL http://[::ffff:127.0.0.1]/ отклонён 7ms
+     → promise resolved "{ …(3) }" instead of rejecting
+   × реальный undici pinned transport через локальный connector, без внешней HTTP сети > IP закреплён, DNS один раз, оригинальный Host, тело загружено 18ms
+     → Invalid IP address: undefined
+   ✓ реальный undici pinned transport через локальный connector, без внешней HTTP сети > лимит полного тела и 15s hard timeout (ускоренный fixture) прерывают чтение 8ms
+   ✓ реальный undici pinned transport через локальный connector, без внешней HTTP сети > отмена ctx.signal до DNS не соединяется 2ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (18 tests) 57ms
+ ✓ services/worker/tests/unit/boot.test.ts (7 tests) 12466ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной  1292ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается  1220ms
+   ✓ worker: отказ старта без конфигурации > персональный предел больше общего → exit 1  1075ms
+   ✓ worker: отказ старта без конфигурации > F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте  1107ms
+   ✓ worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается  932ms
+   ✓ worker: отказ старта без конфигурации > chunk-embed: без любого из пределов двери (не эмбеддингов) воркер не стартует — exit 1 с именем  5656ms
+   ✓ worker: отказ старта без конфигурации > chunk-embed: пределы двери с персональным больше общего → exit 1 при старте, а не на первой задаче  1176ms
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 26ms
+ ✓ services/worker/tests/unit/crawl-rules.test.ts (4 tests) 27ms
+ ✓ apps/web/tests/unit/create-bot-ui.test.ts (4 tests) 19ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 21ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 14ms
+ ❯ apps/web/tests/unit/bots-handler.test.ts (3 tests | 1 failed) 39ms
+   ✓ создание бота: границы до БД/HTTP > Origin и сессия обязательны 9ms
+   × создание бота: границы до БД/HTTP > SC-US-002-3: literal, DNS private/mixed/failure → 422 без записи 25ms
+     → expected 503 to be 422 // Object.is equality
+   ✓ создание бота: границы до БД/HTTP > имя и URL валидируются 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/bots-handler.test.ts > создание бота: границы до БД/HTTP > SC-US-002-3: literal, DNS private/mixed/failure → 422 без записи
+AssertionError: expected 503 to be 422 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 422[39m
+[31m+ 503[39m
+
+ ❯ apps/web/tests/unit/bots-handler.test.ts:18:74
+     16|   it('SC-US-002-3: literal, DNS private/mixed/failure → 422 без записи…
+     17|     for (const site_url of ['http://127.0.0.1/', 'http://169.254.169.2…
+     18|       expect((await handler(request({ name: 'Бот', site_url }))).statu…
+       |                                                                          ^
+     19|     }
+     20|     for (const resolve of [async () => { throw new Error('dns'); },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > :: закрыт
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > ::1 закрыт
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > ::ffff:127.0.0.1 закрыт
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > ::ffff:8.8.8.8 закрыт
+AssertionError: expected true to be false // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+ ❯ packages/rag/tests/unit/site-safety.test.ts:13:101
+     11|     '192.0.0.1', '192.0.2.1', '192.88.99.1', '198.18.0.1', '198.51.100…
+     12|     '168.63.129.16', '::', '::1', '::ffff:127.0.0.1', '::ffff:8.8.8.8'…
+     13|     '2001::1', '2002:7f00:1::', '3fff::1', 'bad'])('%s закрыт', (ip) =…
+       |                                                                                                     ^
+     14|   it.each(['8.8.8.8', '93.184.216.34', '2606:4700:4700::1111', '2001:4…
+     15|     expect(isPublicAddress(ip)).toBe(true));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > URL http://[::ffff:127.0.0.1]/ отклонён
+AssertionError: promise resolved "{ …(3) }" instead of rejecting
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "address": "::ffff:7f00:1",[39m
+[31m+   "family": 6,[39m
+[31m+   "url": "http://[::ffff:7f00:1]/",[39m
+[2m  }[22m
+
+ ❯ packages/rag/tests/unit/site-safety.test.ts:24:40
+     22|   it.each(['ftp://example.test', 'https://u:p@example.test/', 'https:/…
+     23|     'http://0x7f000001/', 'http://[::ffff:127.0.0.1]/'])('URL %s откло…
+     24|     expect(validateSite(raw, publicDns)).rejects.toBeInstanceOf(Unsafe…
+       |                                        ^
+     25| });
+     26| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > реальный undici pinned transport через локальный connector, без внешней HTTP сети > IP закреплён, DNS один раз, оригинальный Host, тело загружено
+TypeError: Invalid IP address: undefined
+ ❯ packages/rag/tests/unit/site-safety.test.ts:46:9
+     44|         pinned.push(String(address));
+     45|         // Маршрутизация только тестовым connector; production lookup …
+     46|         callback(null, '127.0.0.1', 4);
+       |         ^
+     47|       });
+     48|     } });
+ ❯ lookup packages/rag/src/safe-http.ts:28:12
+ ❯ lookup packages/rag/tests/unit/site-safety.test.ts:42:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+
+ Test Files  2 failed | 17 passed (19)
+      Tests  7 failed | 312 passed (319)
+   Start at  20:49:07
+   Duration  42.98s (transform 1.41s, setup 0ms, collect 4.16s, tests 30.70s, environment 6ms, prepare 2.61s)
+
+
