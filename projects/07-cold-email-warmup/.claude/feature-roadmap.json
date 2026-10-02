@@ -8,7 +8,7 @@
       "number": 1,
       "name": "Foundation, registration and tenant sessions",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [],
       "blockers": [],
@@ -21,14 +21,15 @@
         "FR-n7-001",
         "NFR-n7-001"
       ],
-      "sprint": "local-mvp"
+      "sprint": "local-mvp",
+      "accepted_revision": "3b8763a1843da319b8114fa52e14db0385e19b35"
     },
     {
       "id": "f02-mailboxes-consent",
       "number": 2,
       "name": "Encrypted mailbox settings and separate consents",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "depends_on": [
         "f01-foundation-auth"
@@ -131,5 +132,6 @@
       ],
       "sprint": "local-mvp"
     }
-  ]
+  ],
+  "last_completed": "f01-foundation-auth"
 }

@@ -1,0 +1,24 @@
+{
+  "thread_id": "01a0fe2e-d806-70b2-b78a-1ced447124fa",
+  "actual_model_contexts": [
+    {
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "usage": {
+    "input_tokens": 1198391,
+    "cached_input_tokens": 1132160,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 16820,
+    "reasoning_output_tokens": 2634
+  },
+  "cost": null,
+  "process": {
+    "exit_code": 0,
+    "duration_seconds_process": 585.818,
+    "finished_at": "2026-10-02T20:04:23.543222+00:00"
+  },
+  "verdict": "PASS auth browser 1440/390",
+  "initial_failures": "Ambiguous caller WS path /inside and fixture networkidle wait; both preserved; product source unchanged"
+}

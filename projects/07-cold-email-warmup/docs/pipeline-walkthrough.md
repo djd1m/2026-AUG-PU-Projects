@@ -1,7 +1,8 @@
 # Как устроен конвейер N7: от ящика до остановленной цепочки
 
-Состояние 2026-10-02: **план v1 утверждён; backend ещё не реализован**. Этот
-walkthrough пока объясняет согласованный процесс по Specification/Pseudocode,
+Состояние 2026-10-02: **F01 авторизация реализована и принята; почтовые этапы ещё планируются**. Этот
+walkthrough объясняет согласованный процесс по Specification/Pseudocode; F01 уже
+подтверждён runtime, а шаги почтового конвейера ниже остаются планом,
 а не снят с работающего production-стенда. При реализации каждый этап будет
 привязан к исходнику и проверенному build. Три HTML прототипа уже имеют отдельные
 браузерные доказательства, но не подменяют сервисы ниже.
@@ -117,6 +118,7 @@ Examples сохранены. Первое независимое ревью вы
 фокусные Chromium1440/390 проверки прошли, runtime JS не менялся. Доказательства:
 `telemetry/p-replicator/20261002T173314Z-n7-replicate-a1/evidence/cjm-copy-browser/`.
 Независимая design validation закрыла все6 замечаний. Toolkit создан; vendor1.13.2
-verify составного monorepo-view прошёл с ожидаемым scaffoldhint. F01 начат; product
-build/integration tests и full application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
+verify составного monorepo-view прошёл с ожидаемым scaffoldhint. F01 принят: Node22/PG16, регистрация/сессии/tenant isolation; typecheck/lint/build,
+unit5+integration8, independent review ACCEPT и auth browser60checks на1440/390.
+Почтовой worker/полный кабинет и их full application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
 а не переписан planned процесс как будто уже работающий.

@@ -25,3 +25,10 @@ not selected. Shared source symlink target provenance in toolkit-inherited.json.
 Limits: project requires full monorepo checkout, does not claim portable isolated
 N7 clone. Domain code/tests/Compose unimplemented. Full build/security/runtime
 and fresh reviewer gates remain required. Proceed /next F01 → /go F01.
+
+## After F01 scaffold
+
+The disposable view now includes actual N7 Compose and insights carrier. Vendor
+1.13.2 verify rerun because these two previously missing artifacts changed: exit0,
+All artifacts verified. Output toolkit-vendor-verify-final.txt under replicate
+evidence. Settings/hooks remain root-only; no global or local hook registration.
