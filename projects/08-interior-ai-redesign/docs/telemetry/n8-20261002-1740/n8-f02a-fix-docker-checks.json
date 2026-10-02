@@ -1,0 +1,135 @@
+{
+  "source_revision": "c465ee7346f8528d63b63b4990b43cf36454f006",
+  "snapshot_sha256": "215646b5d9541299408119dd357d84d3df8ac96d6490daf2a20d674a2768daaa",
+  "started_at": "2026-10-02T21:26:47.464887+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 184,
+      "log": "/tmp/n8-f02a-fix-runtime/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 3737,
+      "log": "/tmp/n8-f02a-fix-runtime/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6547,
+      "log": "/tmp/n8-f02a-fix-runtime/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 4206,
+      "log": "/tmp/n8-f02a-fix-runtime/build.log"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 19859,
+      "log": "/tmp/n8-f02a-fix-runtime/unit.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 3316,
+      "log": "/tmp/n8-f02a-fix-runtime/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 16637,
+      "log": "/tmp/n8-f02a-fix-runtime/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 29189,
+      "log": "/tmp/n8-f02a-fix-runtime/owner-mutation.log"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 0,
+      "duration_ms": 8547,
+      "log": "/tmp/n8-f02a-fix-runtime/jobs-pg.log"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 0,
+      "duration_ms": 17873,
+      "log": "/tmp/n8-f02a-fix-runtime/budget-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 1611,
+      "log": "/tmp/n8-f02a-fix-runtime/runtime-versions.log"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 0,
+      "duration_ms": 13092,
+      "log": "/tmp/n8-f02a-fix-runtime/web-maintenance-start.log"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 0,
+      "duration_ms": 32,
+      "log": "/tmp/n8-f02a-fix-runtime/host-http.log"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 0,
+      "duration_ms": 47,
+      "log": "/tmp/n8-f02a-fix-runtime/service-image-ids.log"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 0,
+      "duration_ms": 2352,
+      "log": "/tmp/n8-f02a-fix-runtime/maintenance-once.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 11350,
+      "log": "/tmp/n8-f02a-fix-runtime/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-02T21:29:06.053037+00:00",
+  "duration_ms": 138588,
+  "status": "completed",
+  "verdict": "PASS scoped Docker regression",
+  "source_files_matched": 32,
+  "unit_tests": 20,
+  "f01_pg_tests": 9,
+  "f02_pg_tests": 21,
+  "gpu_geometry": "not executed; pending",
+  "browser_e2e": "not executed; F04 pending",
+  "port_preflight": "Root helper expects docker-compose.yml, N8 uses compose.yaml; helper reported missing file. Explicit ss check found host18088 unbound before web startup. DB never host-published.",
+  "usage": null,
+  "cost": null,
+  "log_sha256": {
+    "compose-config": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "image-build": "df02b7409370c49b7cdcdb7e34ac08162a7e9778361340216fb11382c93dcb4d",
+    "db-start": "02daf8ae809ae0be41211b9fe7664f45f00856c40c2d37c2d54da7f7d30ad8a6",
+    "build": "af9d449301a52fbdeb36990bbc722b90e012057572889c367428b80d02a93383",
+    "unit": "ae85fce080a1fdab0f9bd0fe2a019a358dab2d4a9830f80d8cfdbb2f0dd1d36c",
+    "origin-mutation": "db19cf59fd35d4a53e294646f2013f5802369c7d535983c6745ca0a6dcd62d81",
+    "pg-integration": "efb80333c3977a952481c0bdbc2fcbfe58b854224c6fc7b2620622c631f24582",
+    "owner-mutation": "76513e8261f994574e2244eb54cc3cbe7d9aadd341f44d6131ce4783d4792802",
+    "jobs-pg": "9d16d3349abf4b885b2acd08212c6f1a7a9fc7c8d0915658cff94a00e028b798",
+    "budget-mutation": "2c2078a1c9f664f5d877b3f554dcd2a83180ba060d52e112906583e09dcfe0f5",
+    "runtime-versions": "95502299eb5a394231374becead6fcaee1768b24bd37b143b031601064d964a0",
+    "web-maintenance-start": "c3b99b5f46bcc0a806de5b78330dfa58eca29feb62a9ecd87d6615ee3c1c1882",
+    "host-http": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+    "service-image-ids": "86d031ebabaa49f532bbdf8c6b5921a7ed3dcb90bc0ab3048b9446df5af75076",
+    "maintenance-once": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": "82850aee4dd1cbbb05e527c92a6a32798bcaf48c2a4004e522a0166639983e1f"
+  },
+  "image_ids": "/n8-f02a-c465ee73-web-1 sha256:bf864958e0431de4ae8077dff783656a84bef5280be9bfc5848aa3927d31f06b\n/n8-f02a-c465ee73-maintenance-1 sha256:ad791ed74828f492e5a2cf69c851148c2be7d23fff23def8cbed687ec9ef116c"
+}
