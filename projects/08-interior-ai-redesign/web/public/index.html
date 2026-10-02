@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoomKind — моя комната, новый характер</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body><header><a class="logo" href="/">RoomKind<span>✳</span></a><button id="logout" hidden>Выйти</button></header>
+<main><p class="eyebrow">Пространство для нового взгляда</p><h1>Моя комната,<br>новый характер.</h1>
+<p class="lead">Начните с фотографии своей комнаты. Она останется доступна только вам.</p>
+<ol class="steps"><li>1 · Войти</li><li>2 · Загрузить фото</li><li aria-disabled="true">3 · Редизайн — скоро</li></ol>
+<p id="status" role="status" aria-live="polite">Проверяем вход…</p>
+<section id="auth" hidden aria-labelledby="auth-title"><h2 id="auth-title">Ваше личное пространство</h2>
+<form id="auth-form"><label for="email">Почта</label><input id="email" type="email" autocomplete="email" maxlength="254" required>
+<label for="password">Пароль · от 12 до 128 символов</label><input id="password" type="password" autocomplete="current-password" minlength="12" maxlength="256" required>
+<div class="actions"><button type="submit" name="action" value="login">Войти</button><button type="submit" name="action" value="register" class="accent">Создать аккаунт</button></div>
+<p class="note">Новый аккаунт получает 1 пробный кредит. Генерация редизайна ещё не доступна; загрузка фото не расходует кредит.</p></form></section>
+<section id="workspace" hidden aria-labelledby="upload-title"><div class="account"><p id="account-info"></p></div>
+<h2 id="upload-title">Один кадр, несколько будущих идей</h2><p>Снимите комнату так, чтобы были видны стены, окна и дверные проёмы.</p>
+<form id="upload-form" class="upload"><label for="file">Фото комнаты · JPEG, PNG или WebP</label>
+<input id="file" type="file" accept="image/jpeg,image/png,image/webp" required><p class="note">До 10 МиБ и 20 мегапикселей. Ориентация сохраняется, EXIF удаляется.</p><button type="submit" class="accent">Сохранить личное фото ↗</button></form>
+<h2>Ваши фотографии</h2><button id="refresh" class="secondary">Обновить список</button><p id="empty">Фотографий пока нет.</p><ul id="uploads" class="photos"></ul>
+<aside><h3>Следующий шаг — стиль вашей комнаты</h3><p>Тёплый, минимализм, афробогема или игривый. Генерация, сравнение и публикация появятся в следующем этапе. Сейчас можно загрузить, открыть и удалить своё фото.</p></aside></section>
+</main><footer>RoomKind ✳ · Фото приватны по умолчанию</footer></body></html>

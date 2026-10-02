@@ -1,0 +1,72 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f01",
+  "attempt_id": "n8-f01-attempt-1",
+  "source_revision": "6b93c0e5f5befcc22500ea8b35d80c0ca13bba2a",
+  "launch_sha256": "1b92d5a50074fc281d038491c28201a2014f6a4cecd269f1189622361dad4904",
+  "started_at": "2026-10-02T19:29:44Z",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host-resolved model, usage and cost unavailable"
+  ],
+  "substantive_tier": "XL (accepted parent design/autonomy)",
+  "mechanical_route_exit": 0,
+  "stage": "candidate_handoff",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "F01 API integration is not actual browser E2E; integrated UI E2E belongs to later phase"
+  },
+  "scope": [
+    "AUTH-01\u201304",
+    "UPLOAD-01\u201302",
+    "applicable SEC-01/02"
+  ],
+  "exclusions": [
+    "jobs",
+    "payments",
+    "worker",
+    "deployment",
+    "browser E2E"
+  ],
+  "budget_minutes": 25,
+  "finished_observation_at": "2026-10-02T19:49:52.511775+00:00",
+  "elapsed_wall_ms": 1208511,
+  "active_wall_ms": null,
+  "source_snapshot_sha256": "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740",
+  "build_image": null,
+  "verdict": "candidate delivered; acceptance pending runtime checks and independent review",
+  "fallback": null,
+  "delegation_count": 0,
+  "first_pass_acceptance": null,
+  "work_companion": {
+    "record_kind": "bounded source-bound implementation handoff",
+    "stage": "implement",
+    "requirements": "docs/Specification.md AUTH/UPLOAD/applicable SEC",
+    "architecture": "docs/Architecture.md; docs/Pseudocode.md",
+    "plan": "docs/plans/f01-foundation.md",
+    "checks": "docs/features/f01/checks.json",
+    "events": "docs/features/f01/events.jsonl",
+    "launch": "docs/telemetry/n8-20261002-1740/n8-f01-launch.json",
+    "receipt": "docs/telemetry/n8-20261002-1740/n8-f01-receipt.md (launcher installs final response)",
+    "approval": "accepted autonomous bounded zero-spend scope in brief; no new approval",
+    "donors": "docs/reuse-inventory.md; auth.ts and uploads.ts inspected at3b84e9ef; adapted only",
+    "delivery_gate": "pending required runtime checks and fresh independent review; not a delivered-stage acceptance record"
+  },
+  "ac_coverage": {
+    "AUTH-01": "password/email boundaries passed; atomic trial SQL implemented; real race pending",
+    "AUTH-02": "implemented; runtime HMAC/bcrypt/dummy/session/cookie/expiry/revoke tests pending",
+    "AUTH-03": "7-case boundary suite includes Origin/body/rate; actual HTTP caps pending",
+    "AUTH-04": "owner scope implemented; real two-account/media test and owner mutation pending",
+    "UPLOAD-01": "implemented and real sharp fixtures scripted; runtime decode matrix pending",
+    "UPLOAD-02": "implemented; forced real DB failure and age/reference cleanup tests pending",
+    "SEC-01": "config boundaries passed; startup/container integration pending",
+    "SEC-02": "rate/body/UUID/capacity boundaries plus Compose static guards passed; real DB/API and audit pending",
+    "SEC-03": "Origin mutation passed; owner mutation pending; money/budget/quality mutations out of F01 scope"
+  },
+  "commit": "Not attempted: worktree git index resolves outside writable roots; coherent project candidate remains uncommitted."
+}

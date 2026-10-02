@@ -1,0 +1,135 @@
+{
+  "snapshot_sha256": "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740",
+  "checks": [
+    {
+      "name": "mechanical route",
+      "command": "bash scripts/complexity-router.sh projects/08-interior-ai-redesign/web/auth.js projects/08-interior-ai-redesign/web/media.js projects/08-interior-ai-redesign/db/001-foundation.sql",
+      "exit_code": 0,
+      "result": "mechanical S; substantive parent XL retained",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "offline lock normalization",
+      "command": "npm install --package-lock-only --ignore-scripts --offline --audit=false --cache /tmp/n8-f01/npm-cache",
+      "exit_code": 0,
+      "result": "49-package closure; host Node20 engine warning; no installation",
+      "source_binding": "final snapshot"
+    },
+    {
+      "name": "syntax build",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/check.js",
+      "exit_code": 0,
+      "result": "Node22.22.3; all JS syntax, no bundling/runtime claim",
+      "source_binding": "final snapshot"
+    },
+    {
+      "name": "boundaries",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/boundaries.test.js",
+      "exit_code": 0,
+      "result": "7 meaningful cases pass",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "Origin mutation",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/mutation.js origin",
+      "exit_code": 0,
+      "result": "targeted assertion failed under mutation, child exit1; original unchanged",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "complete unit suite attempted",
+      "command": "npm test",
+      "exit_code": 1,
+      "result": "7 boundaries pass; media suite fails loading absent bcrypt (host Node20.20.2)",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "dependency audit",
+      "command": "npm audit --omit=dev --json --fetch-retries=0 --fetch-timeout=5000 --cache /tmp/n8-f01/npm-cache",
+      "exit_code": 1,
+      "result": "EAI_AGAIN official registry; no advisory verdict",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "compose normalization",
+      "command": "docker compose config --quiet (non-secret static placeholders supplied)",
+      "exit_code": 0,
+      "result": "compose.yaml parses",
+      "source_binding": "final snapshot"
+    },
+    {
+      "name": "port conflict check corrected file input",
+      "command": "bash scripts/check-port-conflicts.sh projects/08-interior-ai-redesign/compose.yaml (non-secret static placeholders supplied)",
+      "exit_code": 0,
+      "result": "static DB unpublished / port18088 check passes; Docker running-container enumeration inaccessible so runtime completeness unproven",
+      "source_binding": "final snapshot"
+    },
+    {
+      "name": "ports policy directory check",
+      "command": "node .claude/hooks/check-ports.cjs projects/08-interior-ai-redesign/compose.yaml (non-secret static placeholders supplied)",
+      "exit_code": 0,
+      "result": "2 services, 1 storage, zero reverse proxies; configuration-only pass",
+      "source_binding": "final snapshot"
+    },
+    {
+      "name": "runtime Docker access probe",
+      "command": "docker image ls --format '{{.Repository}}:{{.Tag}}'",
+      "exit_code": 1,
+      "result": "permission denied Docker socket; no image listing/build/start",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "real PostgreSQL16 integration",
+      "command": "npm run test:integration with isolated TEST_DATABASE_URL and N8_TEST_DB_OWNERSHIP=n8-f01",
+      "exit_code": null,
+      "result": "not run: no heavy lease, Docker inaccessible, dependencies absent, dedicated DB not supplied",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "owner mutation",
+      "command": "node scripts/mutation.js owner with same isolated DB",
+      "exit_code": null,
+      "result": "not run: same runtime prerequisites; fail-closed harness rejects missing targeted assertion",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "Docker build/start",
+      "command": "docker compose up --build -d",
+      "exit_code": null,
+      "result": "not run: lease absent and Docker socket denied",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "actual browser E2E",
+      "command": null,
+      "exit_code": null,
+      "result": "not applicable to F01; integrated phase; no host browser used",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "fresh independent Astra code review",
+      "command": null,
+      "exit_code": null,
+      "result": "pending coordinator review; no delegation authorized in this unit",
+      "source_binding": "unchanged tested modules or pending runtime; exact module hashes in final manifest"
+    },
+    {
+      "name": "scope and whitespace",
+      "command": "git status --short; git diff --check",
+      "exit_code": 0,
+      "result": "Only project additions persist. Existing launch file belongs to coordinator. No shared manifests, other projects or historical telemetry modified."
+    },
+    {
+      "name": "initial port check directory input",
+      "command": "bash scripts/check-port-conflicts.sh projects/08-interior-ai-redesign",
+      "exit_code": 2,
+      "result": "expects docker-compose.yml when given directory; corrected to explicit compose.yaml; toolkit unchanged"
+    },
+    {
+      "name": "initial Origin mutation harness",
+      "command": "node scripts/mutation.js origin (captured child pipes)",
+      "exit_code": null,
+      "result": "inconclusive EPERM creating captured child pipes; outer command exit not isolated. Fixed harness to use a temporary file, then standalone rerun exit0 with targeted red assertion."
+    }
+  ]
+}
