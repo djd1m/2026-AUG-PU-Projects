@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f03b",
-  "status": "running",
+  "status": "author_completed_acceptance_pending",
   "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
   "cli_session_id": 48568,
   "started_at": "2026-10-02T23:20:52Z",
@@ -11,5 +11,13 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f03b/runtime.log host banner",
-  "budget_seconds": 1200
+  "budget_seconds": 1200,
+  "wrapper_exit_code": 0,
+  "finished_at": "2026-10-02T23:37:19Z",
+  "wrapper_duration_ms": 987000,
+  "author_observation_finished_at": "2026-10-02T23:35:57.924525Z",
+  "author_observation_duration_ms": 905925,
+  "authored_receipt_sha256": "517ecc3d23c419368e841ca0a50de00a71a06b72125f6d4190f87ce78cfc577c",
+  "wrapper_answer_sha256": "5d557b8fa4b1f8f01faf07ef9b24103e972b6ee0a5d221f70f866a4d9e231715",
+  "receipt_provenance": "Author installed original TRACE and identical feature substantive-receipt.md; wrapper subsequently installed final answer at TRACE. Original authored bytes are preserved in feature copy and raw authored-trace-before-wrapper.md; both are substantive and source-bound. The final answer embedded original receipt SHA refers to preserved feature copy, not wrapper-installed TRACE. Future wrapper preserves an existing substantive TRACE."
 }
