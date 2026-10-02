@@ -1,0 +1,32 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261002T232200Z-f04",
+  "project": "projects/07-cold-email-warmup",
+  "feature": "f04-reply-suppression",
+  "pipeline": "feature",
+  "tier": "XL",
+  "mechanical_route": {
+    "tier": "M",
+    "exit_code": 0
+  },
+  "profile": "compact-quality-first-v2",
+  "policy_version": "compact-quality-first-v2",
+  "baseline_revision": "2ff44de2",
+  "final_revision": null,
+  "spec_sha256": "6deaa2f48d531ca66b71abb9f1b90794836cc4ab80eab557076863b92de74a38",
+  "started_at": "2026-10-02T23:21:22.746199+00:00",
+  "ended_at": null,
+  "status": "in_progress",
+  "current_stage": "PLAN/VALIDATE complete; IMPLEMENT A next",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Native coordinator actual model/usage unavailable; child host proof collected per attempt."
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 0,
+    "ac_total": 12
+  }
+}

@@ -140,3 +140,7 @@ aggregate seed pool и shared quota claim. Исправлена ротация �
 ## F03: пул, цепочки и граница отправки приняты
 
 Source55fffed2: 12/12 AC, unit14/fullPG51/restoredB31, независимый Astra ACCEPT. Sol исправил найденные fresh-review гонки часов после lock и ограничение тестовых маршрутов; отдельные квитанции сохраняют bounded failure и последующую механическую проверку. Durable local_test sink и непрерывная квота готовы; реальная отправка отключена. Далее F04 отвечает за реальный durable ingestion fixture/protocol contract, семантическую дедупликацию, unsubscribe и complaints; F05/F06 ещё обязательны.
+
+## F04: приём ответов и публичные остановки
+
+Canonical FR006/007 разбиты на A durable ingestion/rescan и B unsubscribe/complaints/local poll worker, по6AC. План/алгоритм/архитектура в docs/features/f04-reply-suppression/. XL и полные проверки сохранены; отдельная модель пишет код, fresh Astra проверяет. Реальное IMAP-подключение не активируется; локальные данные помечены fixture, свежесть не выдумывается.

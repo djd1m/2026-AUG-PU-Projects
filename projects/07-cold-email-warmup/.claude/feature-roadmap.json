@@ -75,7 +75,7 @@
       "number": 4,
       "name": "IMAP replies, unsubscribe and complaints",
       "priority": "mvp",
-      "status": "pending",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f03-dispatch-pool-campaign"
@@ -89,7 +89,8 @@
         "FR-n7-006",
         "FR-n7-007"
       ],
-      "sprint": "local-mvp"
+      "sprint": "local-mvp",
+      "current_slice": "F04a bounded durable ingestion/rescan"
     },
     {
       "id": "f05-evidence-billing-growth",

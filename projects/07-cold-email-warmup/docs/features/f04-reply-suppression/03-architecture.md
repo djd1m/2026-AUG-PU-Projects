@@ -1,0 +1,7 @@
+# F04 architecture and reuse
+
+Reuse accepted N7 source2ff44de2: src/consent/transaction.ts global lock, src/dispatch/seams.ts stop writers, src/campaigns/store.ts recipient AEAD/HMAC, mailbox_poll and send_job.message_id, unsubscribe_token from db005, F01 rate/session boundaries and F02 pool withdrawal. Existing repo license/provenance inventory remains authoritative; no new unrelated donor copy. Introduce src/replies/{input,store,adapter,worker} and src/suppression/store with additive DB schema. No new framework/dependency is required for local-test pipeline.
+
+Transaction-client helper extraction is allowed solely to let page effects/cursor or token validation/stop commit together without nested transactions. Preserve existing public seam signatures and all F03 stopwriter tests. Tenant scope on every query; never trust message headers as instruction/config/authority. No body persistence, credentials remain encrypted, no runtime key output.
+
+Separate durable identities: physical observation vs valid messageID ledger vs semantic enrollment reply. Coverage and run epoch prevent stale workers overwriting reset; budgets persisted and clock sampled post-lock. Poll paused state is independent of mailbox quarantine, so completion cannot unquarantine/re-enable consent. Local-test source adapter is deliberate current scope; eventual liveIMAP requires separately authorized TLS/provider integration and complaint intake.

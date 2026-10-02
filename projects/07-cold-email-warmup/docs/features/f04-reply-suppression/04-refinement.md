@@ -1,0 +1,5 @@
+# F04 required validation
+
+A exact scenarios SC-US-006-1..5; B SC-US-007-1..5 plus existing SC-US-003-4/5 stopwriter boundary. Canonical source/algorithm/BDD already independently validated; this delta makes implementation interfaces and bounded slices concrete without weakening any case. Include BEFORE and AFTER commit crashes, missing/malformed Message-ID semantic dedup, wrongsender/foreign references, second UID reset, budget exhausted/incomplete, tailfailure, stale/future time, pool unsubscribe and operator-only complaints.
+
+One implementation≤25min→freshAstra≤8min→specificfixes only. Targeting smaller slices does not waive full suite after schema/API changes. HeavyDocker/PG under flock /tmp/codex-heavy-build.lock CPU2 RAM+disk+portpreflight, ownstacknoDBhostports; coordinate N6/N8 actualready. Browser not applicable to A/store; B HTTP backendchecks not fullUX; realbrowser F06 remainsmandatory. Everyunit unique callerlaunch/trace/statusfile and exact source/image metadata; unknownusage=null. No live external mail/charge/deploy.
