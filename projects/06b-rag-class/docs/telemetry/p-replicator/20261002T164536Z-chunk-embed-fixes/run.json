@@ -1,0 +1,53 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261002T164536Z-chunk-embed-fixes",
+  "batch_id": "20260930T170502Z-n6b-replicate-fd43",
+  "project": "projects/06b-rag-class",
+  "feature": "chunk-embed-fixes",
+  "pipeline": "/replicate resume → /run mvp → /go chunk-embed (specific review corrections)",
+  "tier": "M",
+  "risk_flags": [
+    "shared-worker-event-loop",
+    "existing-lease-and-chunk-invariants-preserved"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "gpt-6.1-sol high for bounded correction implementation; owner authorized independent Astra medium review fallback"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "a266555530b158aa3d248d3660ea3be055313436",
+  "final_revision": null,
+  "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "codex",
+  "host_version": "0.160.0 executors; coordinator 0.159.3 still running",
+  "billing_mode": "unknown",
+  "started_at": "2026-10-02T16:45:36.946353Z",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": null,
+  "quality": null,
+  "metrics": null,
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator usage and billing unavailable; child actual model and usage to be read from CLI JSON/log if exposed"
+  ],
+  "acceptance_criteria": [
+    "F-1 bounded/cooperative chunking, measured event-loop delay below 30s on validator inputs",
+    "F-2 ceiling/lease checked between paid batches, mutation fails",
+    "F-3 overlap overflow guard mutation fails",
+    "F-4 closed job cannot write without changing fence, mutation fails",
+    "Full typecheck/unit/integration/build pass; fresh independent review; commit and push"
+  ],
+  "route": {
+    "mechanical_tier": "S",
+    "exit_code": 0,
+    "substantive_tier": "M",
+    "reason": "Existing worker behavior and shared event loop affected; preserve limits, lease fences and paid gateway; no new external calls, schema, or public path"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No deployed E2E: isolated local fake-model unit/integration and build only"
+  }
+}

@@ -14,7 +14,8 @@
   "profile": "compact-quality-first-v2",
   "profile_overrides": [
     "исполнители и валидатор — Claude Opus (решение владельца 30.09: валидатор Anthropic, новый агент без контекста кодинга)",
-    "Codex — только ревью кода фич"
+    "Codex — только ревью кода фич",
+    "Owner 2026-10-02: independent fresh Astra medium validator allowed when Anthropic unavailable; Codex resumes coordinator and implementation"
   ],
   "comparison_id": "projects/06-rag-sales-chatbase",
   "baseline_revision": "e4d123189fb6946d351e803a41e4bec0f5d24227",
@@ -32,6 +33,11 @@
   "metrics": null,
   "telemetry_status": "partial",
   "missing_data": [
-    "usage Claude-агентов хост не отдаёт"
-  ]
+    "usage Claude-агентов хост не отдаёт",
+    "Codex coordinator per-attempt usage/cost unavailable; no measured counters exposed to agent"
+  ],
+  "resumed_at": "2026-10-02T16:43:29.617464Z",
+  "current_host": "codex",
+  "current_host_version": "0.159.3 (running coordinator); installed CLI 0.160.0",
+  "current_revision": "a266555530b158aa3d248d3660ea3be055313436"
 }
