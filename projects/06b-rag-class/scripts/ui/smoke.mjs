@@ -2,7 +2,7 @@ import { chromium, firefox, webkit } from 'playwright';
 
 const results = [];
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit })) {
-  const browser = await engine.launch({ headless: true });
+  const browser = await engine.connect('ws://127.0.0.1:9320/');
   try {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.setContent('<button id="next">Продолжить</button><output></output>');

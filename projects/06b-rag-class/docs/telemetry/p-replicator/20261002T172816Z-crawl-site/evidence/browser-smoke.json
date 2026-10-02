@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-02T17:38:55.083373+00:00",
+  "status": "pass",
+  "scope": "Browser infrastructure smoke only, not application E2E",
+  "source_sha256": "d312e3854130db952d7135f49b6eaa9c72d0ce16710712d14a3c448d27a8ea92",
+  "exit_code": 0,
+  "container": "codex-ui-playwright",
+  "package": "playwright@1.63.0",
+  "image_id": "sha256:946e81a797724bdd61de7999c3685af00b00eb0ae68eeb919ca74b7827d1615c",
+  "endpoint": "ws://127.0.0.1:19320/",
+  "checks": [
+    {
+      "engine": "chromium",
+      "version": "153.0.8010.12",
+      "interaction": "pass",
+      "width": 390,
+      "devtools": {
+        "protocol": "1.3",
+        "product": "HeadlessChrome/153.0.8010.12"
+      }
+    },
+    {
+      "engine": "firefox",
+      "version": "155.0",
+      "interaction": "pass",
+      "width": 390
+    },
+    {
+      "engine": "webkit",
+      "version": "26.6",
+      "interaction": "pass",
+      "width": 390
+    }
+  ],
+  "metadata": {
+    "user": "pwuser",
+    "cpus": 2,
+    "port": "127.0.0.1:19320->9320",
+    "running": true
+  }
+}
