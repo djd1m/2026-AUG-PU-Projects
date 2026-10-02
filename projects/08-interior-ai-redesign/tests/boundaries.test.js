@@ -6,7 +6,7 @@ import { readConfig } from '../web/config.js';
 import { Capacity, RateLimiter, credentials, readBody, readJson, requireOrigin, requireUuid } from '../web/boundaries.js';
 
 const errorStatus = status => error => error.status === status;
-const validEnv = () => ({NODE_ENV:'test',DATABASE_URL:`postgresql://roomkind:${randomBytes(24).toString('hex')}@localhost/roomkind`,SESSION_SECRET:randomBytes(32).toString('hex'),APP_ORIGIN:'http://127.0.0.1:18088',STORAGE_DIR:'/tmp/n8-unit-private',PROVIDER_MODE:'disabled',WORKER_MODE:'disabled'});
+const validEnv = () => ({NODE_ENV:'test',DATABASE_URL:`postgresql://roomkind:${randomBytes(24).toString('hex')}@localhost/roomkind`,SESSION_SECRET:randomBytes(32).toString('hex'),APP_ORIGIN:'http://127.0.0.1:18088',STORAGE_DIR:'/tmp/n8-unit-private',PROVIDER_MODE:'disabled',WORKER_MODE:'disabled',PLATFORM_DAILY_LIMIT:'200',ACCOUNT_DAILY_LIMIT:'20'});
 function request(bytes,headers={}) { const req = Readable.from([Buffer.from(bytes)]); req.headers=headers; return req; }
 
 test('AUTH-01 canonical email and all password edges, including Unicode',() => {

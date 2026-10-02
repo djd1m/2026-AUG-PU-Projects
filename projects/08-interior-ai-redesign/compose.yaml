@@ -31,12 +31,14 @@ services:
       STORAGE_DIR: /private
       PROVIDER_MODE: disabled
       WORKER_MODE: disabled
+      PLATFORM_DAILY_LIMIT: ${PLATFORM_DAILY_LIMIT:?set positive limit no greater than 200}
+      ACCOUNT_DAILY_LIMIT: ${ACCOUNT_DAILY_LIMIT:?set positive limit no greater than 20}
       HOST: 0.0.0.0
       PORT: 8080
     ports: ["127.0.0.1:${WEB_PORT:-18088}:8080"]
     volumes: ["media:/private"]
     networks: [private, frontend]
-    cpus: 1.0
+    cpus: 0.75
     mem_limit: 768m
     init: true
     security_opt: ["no-new-privileges:true"]
@@ -47,6 +49,30 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+  maintenance:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://roomkind:${DB_PASSWORD:?supply random hex password}@db:5432/roomkind
+      SESSION_SECRET: ${SESSION_SECRET:?supply at least 32 random bytes as hex}
+      APP_ORIGIN: ${APP_ORIGIN:-http://127.0.0.1:18088}
+      STORAGE_DIR: /private
+      PROVIDER_MODE: disabled
+      WORKER_MODE: disabled
+      PLATFORM_DAILY_LIMIT: ${PLATFORM_DAILY_LIMIT:?set positive limit no greater than 200}
+      ACCOUNT_DAILY_LIMIT: ${ACCOUNT_DAILY_LIMIT:?set positive limit no greater than 20}
+    volumes: ["media:/private"]
+    networks: [private]
+    cpus: 0.25
+    mem_limit: 256m
+    init: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    command: ["node", "scripts/maintenance.js"]
 volumes:
   database:
   media:

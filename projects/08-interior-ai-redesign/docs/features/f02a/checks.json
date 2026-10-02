@@ -1,0 +1,77 @@
+{
+  "source_revision": "67d2e251d145c11a68d9f05a9e9be59094716138",
+  "build_revision": "4ac13c0d0b854f2cb5423bd1eede26dd595dac265524c97bcdab104a5cc2c75a",
+  "node": "22.22.3",
+  "passed": [
+    {
+      "command": "node scripts/check.js",
+      "exit_code": 0,
+      "result": "ESM/static build syntax verified, including all new integration tests; final run after output atomicity test addition."
+    },
+    {
+      "command": "node --test --test-concurrency=2 tests/boundaries.test.js tests/media.test.js tests/mutation.test.js tests/jobs.test.js",
+      "exit_code": 0,
+      "result": "4 test files passed; 0 failed, 0 skipped; 12065.002997 ms reported. Real sharp/auth/upload regression included."
+    },
+    {
+      "command": "node scripts/mutation.js origin",
+      "exit_code": 0,
+      "result": "Baseline exit 0; isolated removal caused targeted assertion exit 1."
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "No whitespace errors."
+    }
+  ],
+  "historical_failures": [
+    {
+      "command": "Initial four-file light run",
+      "result": "jobs.test wrongly expected uppercase UUID normalization; mutation subprocess inherited NODE_TEST_CONTEXT under nested runner. Both corrected and affected/all lightweight files rerun green."
+    }
+  ],
+  "pending": [
+    {
+      "command": "N8_TEST_DB_OWNERSHIP=n8-f01 node tests/integration.test.js",
+      "exit_code": null,
+      "reason": "Requires coordinator heavy lease/mutex and dedicated privately supplied TEST_DATABASE_URL; F01 app/media integration was touched."
+    },
+    {
+      "command": "N8_TEST_DB_OWNERSHIP=n8-f01 node scripts/mutation.js owner",
+      "exit_code": null,
+      "reason": "Real owner negative control requires same isolated PostgreSQL16."
+    },
+    {
+      "command": "N8_TEST_DB_OWNERSHIP=n8-f02a node tests/jobs.integration.test.js",
+      "exit_code": null,
+      "reason": "18 real PostgreSQL subtests authored and syntax checked; sandbox heavy runtime unavailable/not attempted."
+    },
+    {
+      "command": "N8_TEST_DB_OWNERSHIP=n8-f02a node scripts/mutation.js budget",
+      "exit_code": null,
+      "reason": "Real green baseline plus exact tagged expected=1/actual=2 assertion pending; synthetic oracle unit pass does not prove runtime budget guard."
+    },
+    {
+      "command": "Coordinator port preflight + Compose build/migrate/startup/network/resources/maintenance recovery",
+      "exit_code": null,
+      "reason": "No heavy Docker or services started; coordinator lease/mutex and sandbox-compatible environment required."
+    },
+    {
+      "command": "Fresh independent gpt-6-astra review of frozen snapshot",
+      "exit_code": null,
+      "reason": "Brief forbids delegation inside this unit; coordinator review after candidate."
+    }
+  ],
+  "not_repeated": [
+    {
+      "command": "Dependency audit",
+      "reason": "package.json and lockfile unchanged from accepted baseline; no install/new dependencies."
+    }
+  ],
+  "out_of_scope": [
+    "F02b Python/ControlNet/inference child cancellation and actual-byte output verification",
+    "GPU geometry/performance corpus",
+    "Payments/shares/quality acceptance/publication",
+    "Full generation UI/browser acceptance/deployment"
+  ]
+}

@@ -52,3 +52,20 @@ test('SEC-03 baseline must pass before source changes; no-op and unexpected guar
     assert.equal(await readFile(join(dir,'web/media.js'),'utf8'),source);
   } finally { await rm(dir,{recursive:true,force:true}); }
 });
+
+test('SEC-03 budget oracle requires exact assertion: expected one admission, actual two',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'n8-f02a-budget-oracle-'));
+  try {
+    const source=await readFile(new URL('../web/jobs.js',import.meta.url),'utf8');
+    assert.notEqual(mutateSource(source,'budget'),source);
+    assert.throws(()=>mutateSource(mutateSource(source,'budget'),'budget'),/mutation_guard_mismatch/);
+    const probe=join(dir,'probe.cjs');
+    for(const [actual,expected,message,detected] of [[2,1,'SEC-03 budget last slot admits exactly one',true],
+      [3,1,'SEC-03 budget last slot admits exactly one',false],[2,1,'unrelated failure',false]]) {
+      await writeFile(probe,`const test=require('node:test');const assert=require('node:assert/strict');
+        test('synthetic budget oracle probe',()=>assert.equal(${actual},${expected},${JSON.stringify(message)}));`);
+      const result=runTest(dir,probe,'probe.log');assert.equal(mutationDetected('budget',result),detected);
+      if(detected) for(const bad of [{...result,status:0},{...result,signal:'SIGTERM'},{...result,error:new Error('spawn failed')}]) assert.equal(mutationDetected('budget',bad),false);
+    }
+  } finally {await rm(dir,{recursive:true,force:true});}
+});

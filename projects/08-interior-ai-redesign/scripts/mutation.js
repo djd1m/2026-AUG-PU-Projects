@@ -5,12 +5,13 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
+const BUDGET_TAG = 'SEC-03 budget last slot admits exactly one';
 const OWNER_TAG = 'SEC-03 cross-owner GET must return 404';
 export function mutateSource(source, kind) {
-  const guard = kind === 'origin' ? 'if (req.headers.origin !== origin)' : 'AND account_id=$2';
-  const replacement = kind === 'origin' ? 'if (false)' : 'AND $2::uuid IS NOT NULL';
-  const expectedCount = kind === 'origin' ? 1 : 2; // Media read and delete guards.
-  if (!['origin','owner'].includes(kind) || source.split(guard).length - 1 !== expectedCount) {
+  const guard = kind === 'budget' ? 'if (counts[0]>=config.platformDailyLimit || counts[1]>=config.accountDailyLimit)' : kind === 'origin' ? 'if (req.headers.origin !== origin)' : 'AND account_id=$2';
+  const replacement = ['origin','budget'].includes(kind) ? 'if (false)' : 'AND $2::uuid IS NOT NULL';
+  const expectedCount = kind !== 'owner' ? 1 : 2; // Media read and delete guards.
+  if (!['origin','owner','budget'].includes(kind) || source.split(guard).length - 1 !== expectedCount) {
     throw new Error('mutation_guard_mismatch');
   }
   const mutated = source.replaceAll(guard,replacement);
@@ -20,9 +21,10 @@ export function mutateSource(source, kind) {
 export function runTest(dir, file, logName, { timeout = 120000, executable = process.execPath } = {}) {
   const log = join(dir,logName); const fd = openSync(log,'w');
   let result;
+  const {NODE_TEST_CONTEXT:ignoredTestContext,...childEnv}=process.env;
   try {
     result = spawnSync(executable,['--test-reporter=tap',file],{
-      cwd:dir,stdio:['ignore',fd,fd],timeout,env:process.env
+      cwd:dir,stdio:['ignore',fd,fd],timeout,env:childEnv
     });
   } finally { closeSync(fd); }
   return { ...result, output:readFileSync(log,'utf8') };
@@ -36,14 +38,17 @@ export function mutationDetected(kind, result) {
   return blocks.some(block => {
     if (!/^\s*code: 'ERR_ASSERTION'\s*$/m.test(block)) return false;
     if (kind === 'origin') return /^\s*error: 'Missing expected exception\.'\s*$/m.test(block);
+    if (kind === 'budget') return block.split('\n').some(line=>line.trim()===BUDGET_TAG)
+      && /^\s*expected: 1\s*$/m.test(block) && /^\s*actual: 2\s*$/m.test(block)
+      && /^\s*operator: 'strictEqual'\s*$/m.test(block);
     return kind === 'owner' && block.split('\n').some(line=>line.trim()===OWNER_TAG)
       && /^\s*expected: 404\s*$/m.test(block) && /^\s*actual: 200\s*$/m.test(block)
       && /^\s*operator: 'strictEqual'\s*$/m.test(block);
   });
 }
 export async function verifyMutation(dir, kind) {
-  const file = join(dir,kind === 'origin' ? 'web/boundaries.js' : 'web/media.js');
-  const test = kind === 'origin' ? 'tests/boundaries.test.js' : 'tests/integration.test.js';
+  const file = join(dir,kind === 'origin' ? 'web/boundaries.js' : kind === 'budget' ? 'web/jobs.js' : 'web/media.js');
+  const test = kind === 'origin' ? 'tests/boundaries.test.js' : kind === 'budget' ? 'tests/jobs.integration.test.js' : 'tests/integration.test.js';
   const source = await readFile(file,'utf8');
   const mutated = mutateSource(source,kind);
   const baseline = runTest(dir,test,'baseline.log');
@@ -57,13 +62,13 @@ export async function verifyMutation(dir, kind) {
 }
 async function main() {
   const kind = process.argv[2] ?? 'origin';
-  if (!['origin','owner'].includes(kind)) throw new Error('Unknown mutation');
+  if (!['origin','owner','budget'].includes(kind)) throw new Error('Unknown mutation');
   const dir = await mkdtemp(join(tmpdir(),'n8-f01-mutation-'));
   try {
     for (const path of ['web','db','scripts','tests','package.json','package-lock.json']) {
       await cp(path,join(dir,path),{recursive:true});
     }
-    if (kind === 'owner') await symlink(resolve('node_modules'),join(dir,'node_modules'),'dir');
+    if (kind !== 'origin') await symlink(resolve('node_modules'),join(dir,'node_modules'),'dir');
     console.log(`mutation_${kind}_detected: baseline exit 0; targeted test exit ${await verifyMutation(dir,kind)}`);
   } finally { await rm(dir,{recursive:true,force:true}); }
 }

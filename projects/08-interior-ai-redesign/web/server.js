@@ -7,7 +7,7 @@ try {
   if (process.versions.node.split('.')[0] !== '22') throw new Error('Node22 required');
   const config = readConfig();
   pool = createPool(config.databaseUrl);
-  const migration = await pool.query('SELECT version FROM schema_migration WHERE version=1');
+  const migration = await pool.query('SELECT version FROM schema_migration WHERE version=2');
   if (migration.rowCount !== 1) throw new Error('Migration required');
   await prepareStorage(config.storageDir);
   const server = createApp(pool,config);

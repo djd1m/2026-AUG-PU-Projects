@@ -18,8 +18,14 @@ export function readConfig(env = process.env) {
   const webRoot = resolve(PUBLIC_ROOT, '..');
   if (storageDir === webRoot || storageDir.startsWith(webRoot + sep) || storageDir === '/') fail();
   if (env.PROVIDER_MODE !== 'disabled' || env.WORKER_MODE !== 'disabled') fail();
+  const platformDailyLimit = Number(env.PLATFORM_DAILY_LIMIT);
+  const accountDailyLimit = Number(env.ACCOUNT_DAILY_LIMIT);
+  for (const [raw,value,max] of [[env.PLATFORM_DAILY_LIMIT,platformDailyLimit,200],[env.ACCOUNT_DAILY_LIMIT,accountDailyLimit,20]]) {
+    if (!/^[1-9][0-9]*$/.test(raw ?? '') || !Number.isSafeInteger(value) || value>max) fail();
+  }
+  if (accountDailyLimit>platformDailyLimit) fail();
   const port = Number(env.PORT ?? '8080');
   if (!Number.isInteger(port) || port < 1 || port > 65535) fail();
   return { databaseUrl: env.DATABASE_URL, secret: env.SESSION_SECRET, origin: origin.origin,
-    storageDir, secureCookie: !local, port, host: env.HOST ?? '127.0.0.1' };
+    storageDir, runtime:env.NODE_ENV, platformDailyLimit, accountDailyLimit, secureCookie: !local, port, host: env.HOST ?? '127.0.0.1' };
 }

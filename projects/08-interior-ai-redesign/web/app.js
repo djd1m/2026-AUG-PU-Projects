@@ -4,12 +4,14 @@ import { join } from 'node:path';
 import { PUBLIC_ROOT } from './config.js';
 import { Capacity, HttpError, RateLimiter, credentials, readBody, readJson, requireOrigin } from './boundaries.js';
 import { cookie, createAuth } from './auth.js';
+import { createJobs } from './jobs.js';
 import { MAX_BYTES, createMedia } from './media.js';
 
 const STATIC = new Map([['/', ['index.html','text/html; charset=utf-8']],
   ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
 export function createApp(pool, config) {
-  const auth = createAuth(pool,config.secret); const media = createMedia(pool,config.storageDir);
+  const auth = createAuth(pool,config.secret); const jobs = createJobs(pool,config);
+  const media = createMedia(pool,config.storageDir,{deleteUpload:jobs.deleteUpload});
   const rates = new RateLimiter(); const authCapacity = new Capacity(4); const uploadCapacity = new Capacity(2);
   const server = createServer(async (req,res) => {
     res.setHeader('Cache-Control','private, no-store');
@@ -22,7 +24,7 @@ export function createApp(pool, config) {
     };
     try {
       const url = new URL(req.url,'http://internal'); const path = url.pathname;
-      if (url.search || /%|\\/.test(path)) throw new HttpError(400,'invalid_path');
+      if ((url.search && !(req.method==='GET' && path==='/api/jobs')) || /%|\\/.test(path)) throw new HttpError(400,'invalid_path');
       if (req.method === 'GET' && STATIC.has(path)) {
         const [file,type] = STATIC.get(path);
         res.writeHead(200,{'Content-Type':type}); res.end(await readFile(join(PUBLIC_ROOT,file))); return;
@@ -55,6 +57,16 @@ export function createApp(pool, config) {
         });
         send(201,{upload}); return;
       }
+      if (req.method === 'POST' && path === '/api/jobs') { send(202,await jobs.reserve(account.id,await readJson(req))); return; }
+      if (req.method === 'GET' && path === '/api/jobs') {
+        if ([...url.searchParams.keys()].some(k=>!['before','limit'].includes(k)) ||
+            [...url.searchParams.keys()].some(k=>url.searchParams.getAll(k).length!==1)) throw new HttpError(400,'invalid_page');
+        send(200,await jobs.list(account.id,{before:url.searchParams.get('before')??undefined,
+          limit:url.searchParams.has('limit')?Number(url.searchParams.get('limit')):50})); return;
+      }
+      const jobMatch = /^\/api\/jobs\/([^/]+)$/.exec(path);
+      if (jobMatch && req.method === 'GET') { send(200,{job:await jobs.get(account.id,jobMatch[1])}); return; }
+      if (jobMatch && req.method === 'DELETE') { await readBody(req,16384); await jobs.delete(account.id,jobMatch[1]); send(200,{ok:true}); return; }
       const match = /^\/api\/uploads\/([^/]+)$/.exec(path);
       if (match && req.method === 'GET') {
         const image = await media.read(account.id,match[1]);

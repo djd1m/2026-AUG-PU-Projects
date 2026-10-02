@@ -28,7 +28,7 @@ test('F01 real PostgreSQL16 transactions, sessions, abuse and media ownership',a
     pool=createPool(databaseUrl.href); await migrate(pool); await migrate(pool);
     dir=await mkdtemp(join(tmpdir(),'n8-f01-')); await prepareStorage(dir);
     const secret=randomBytes(32).toString('hex');
-    const config=readConfig({NODE_ENV:'test',DATABASE_URL:databaseUrl.href,SESSION_SECRET:secret,APP_ORIGIN:'http://127.0.0.1:18088',STORAGE_DIR:dir,PROVIDER_MODE:'disabled',WORKER_MODE:'disabled'});
+    const config=readConfig({NODE_ENV:'test',DATABASE_URL:databaseUrl.href,SESSION_SECRET:secret,APP_ORIGIN:'http://127.0.0.1:18088',STORAGE_DIR:dir,PROVIDER_MODE:'disabled',WORKER_MODE:'disabled',PLATFORM_DAILY_LIMIT:'200',ACCOUNT_DAILY_LIMIT:'20'});
     server=createApp(pool,config); await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
     const base=`http://127.0.0.1:${server.address().port}`;
     async function call(path,{method='GET',body,cookie,origin=config.origin,mime='application/json',headers={}}={}) {

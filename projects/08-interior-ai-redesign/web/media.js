@@ -47,7 +47,7 @@ export async function prepareStorage(dir) {
 async function removeFile(path) {
   try { await unlink(path); } catch (error) { if (error.code !== 'ENOENT') throw error; }
 }
-export function createMedia(pool, dir) {
+export function createMedia(pool, dir, {deleteUpload} = {}) {
   return {
     async save(accountId, bytes, mime) {
       const image = await normalizeImage(bytes, mime);
@@ -83,14 +83,17 @@ export function createMedia(pool, dir) {
     },
     async delete(accountId, id) {
       requireUuid(id);
+      if (deleteUpload) await deleteUpload(accountId,id);
+      else {
       const { rowCount } = await pool.query(`UPDATE upload SET deleted_at=now()
         WHERE id=$1 AND account_id=$2 AND deleted_at IS NULL`, [id, accountId]);
       if (!rowCount) throw new HttpError(404, 'not_found');
+      }
       try { await removeFile(join(dir,id)); } catch { console.error('media_cleanup_pending'); }
     }
   };
 }
-// No timer implicit in startup: run hourly via explicit operator maintenance.
+// Invoked periodically by the explicit F02 maintenance process; no implicit web timer.
 // Per-folder cursor survives separate CLI processes. Stream names, retaining at
 // most 2*scanLimit; stat/query at most scanLimit and delete at most deleteLimit.
 // Lexical batches avoid depending on readdir order or a deleted resume filename.
@@ -115,12 +118,13 @@ async function sweepBatch(folder, cursor, limit) {
   }
   return names.sort().slice(0, limit);
 }
-export async function sweepOrphans(pool, dir, now = Date.now(), { scanLimit = 10000, deleteLimit = 1000 } = {}) {
+export async function sweepOrphans(pool, dir, now = Date.now(), { scanLimit = 10000, deleteLimit = 1000, kind = 'upload' } = {}) {
   for (const [value, max] of [[scanLimit,10000],[deleteLimit,1000]]) {
     if (!Number.isSafeInteger(value) || value < 1 || value > max) throw new Error('Invalid sweep budget');
   }
+  if (!['upload','output'].includes(kind)) throw new Error('Invalid sweep registry');
   let removed = 0;
-  for (const folder of [dir,join(dir,'.tmp')]) {
+  for (const folder of kind==='output'?[join(dir,'outputs')]:[dir,join(dir,'.tmp')]) {
     const folderStat = await lstat(folder);
     if (!folderStat.isDirectory() || folderStat.isSymbolicLink()) throw new Error('Invalid private storage');
     const cursorPath = join(folder,'.sweep-cursor');
@@ -134,7 +138,9 @@ export async function sweepOrphans(pool, dir, now = Date.now(), { scanLimit = 10
       const path = join(folder,name);
       const stat = await lstat(path).catch(error => { if (error.code === 'ENOENT') return null; throw error; });
       if (!stat?.isFile() || now - stat.mtimeMs <= 3600000) continue;
-      const { rowCount } = await pool.query('SELECT id FROM upload WHERE private_key=$1 AND deleted_at IS NULL', [name]);
+      const sql=kind==='output'?'SELECT id FROM job WHERE output_key=$1 AND deleted_at IS NULL':
+        'SELECT id FROM upload WHERE private_key=$1 AND deleted_at IS NULL';
+      const { rowCount } = await pool.query(sql, [name]);
       if (!rowCount) { await removeFile(path); removed++; folderRemoved++; }
     }
     const temp = join(folder,`.sweep-cursor-${randomUUID()}`);
