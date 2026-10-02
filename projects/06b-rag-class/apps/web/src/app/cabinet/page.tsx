@@ -8,6 +8,7 @@ import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
 import { CreateBot } from './create-bot';
 import { AddSource } from './add-source';
+import { AddPdf } from './add-pdf';
 import { JobStatus } from './job-status';
 import { LogoutButton } from './logout-button';
 
@@ -54,6 +55,7 @@ export default async function CabinetPage() {
             </div>
           ))}
           <AddSource botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
+          <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
         </section>
       ))}
     </main>
