@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "n8-20261002-1740",
     "work_unit_id": "n8-coordinate",
-    "current_attempt_id": "n8-coordinate-1"
+    "current_attempt_id": "n8-coordinate-2"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "3b84e9ef",
-    "current_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
+    "current_revision": "3776b81bc60dfa7efbc627b51b1c49901aef5786",
     "build_revision": null,
     "requirements": [
       {
@@ -38,8 +38,24 @@
     ],
     "continuity": {
       "expected_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
-      "observed_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
-      "reconciliation": null
+      "observed_revision": "3776b81bc60dfa7efbc627b51b1c49901aef5786",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "Document-only findings1–6 correction and immutable validation receipt integration; source3776b81b/spec92674e25. No runtime acceptance.",
+        "decision": "Retain historical receipts, rerun affected documentary gates and obtain fresh independent semantic closure before toolkit.",
+        "affected_checks": [
+          "document gates",
+          "AC mappings",
+          "semantic validation"
+        ],
+        "rerun": [
+          "document gates",
+          "AC mappings"
+        ],
+        "pending": [
+          "semantic validation"
+        ]
+      }
     }
   },
   "prepare": {
@@ -159,6 +175,10 @@
   "attempts": [
     {
       "id": "n8-coordinate-1",
+      "status": "completed"
+    },
+    {
+      "id": "n8-coordinate-2",
       "status": "active"
     }
   ],
