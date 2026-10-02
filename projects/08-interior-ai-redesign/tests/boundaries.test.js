@@ -49,10 +49,12 @@ test('capacity rejects parallel overflow without holding a DB connection or queu
   await assert.rejects(capacity.run(() => { throw new Error('failed'); })); assert.equal(capacity.active,0);
 });
 test('SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy',() => {
-  for (const name of ['NODE_ENV','DATABASE_URL','SESSION_SECRET','APP_ORIGIN','STORAGE_DIR','PROVIDER_MODE','WORKER_MODE']) {
+  for (const name of ['NODE_ENV','DATABASE_URL','SESSION_SECRET','APP_ORIGIN','STORAGE_DIR','WORKER_MODE']) {
     const env=validEnv(); delete env[name]; assert.throws(() => readConfig(env),/Invalid server configuration/);
   }
-  for (const patch of [{SESSION_SECRET:'default'},{DATABASE_URL:'postgresql://postgres:postgres@localhost/db'},{STORAGE_DIR:'web/public'},{STORAGE_DIR:'/'},{PROVIDER_MODE:'fixture'},{WORKER_MODE:'fixture'},{APP_ORIGIN:'http://evil.test'},{APP_ORIGIN:'http://localhost/path'},{PORT:'0'}]) assert.throws(() => readConfig({...validEnv(),...patch}));
+  for (const patch of [{SESSION_SECRET:'default'},{DATABASE_URL:'postgresql://postgres:postgres@localhost/db'},{STORAGE_DIR:'web/public'},{STORAGE_DIR:'/'},{PROVIDER_MODE:'unknown'},{WORKER_MODE:'fixture'},{APP_ORIGIN:'http://evil.test'},{APP_ORIGIN:'http://localhost/path'},{PORT:'0'}]) assert.throws(() => readConfig({...validEnv(),...patch}));
+  const defaultProvider=validEnv();delete defaultProvider.PROVIDER_MODE;
+  assert.equal(readConfig(defaultProvider).providerMode,'disabled');
   assert.equal(readConfig(validEnv()).secureCookie,false);
   assert.equal(readConfig({...validEnv(),APP_ORIGIN:'https://roomkind.example',NODE_ENV:'production'}).secureCookie,true);
 });

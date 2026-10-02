@@ -103,6 +103,12 @@ export function createJobs(pool, config, {trustedClock} = {}) {
     return false;
   }
   return {
+    // Trusted settlement already owns the account lock. Never open a nested transaction.
+    async holdQueued(c,accountId) {
+      const rows=(await c.query("SELECT * FROM job WHERE account_id=$1 AND status='queued' ORDER BY id FOR UPDATE",[accountId])).rows;
+      const now=await clock(c);
+      for(const j of rows)await terminal(c,j,now,'billing_hold');
+    },
     async reserve(accountId,body) {
       requireUuid(accountId); const input=jobInput(body);
       const prior=(await pool.query('SELECT * FROM job WHERE account_id=$1 AND idempotency_key=$2',[accountId,input.key])).rows[0];

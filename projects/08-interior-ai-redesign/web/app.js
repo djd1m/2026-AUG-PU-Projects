@@ -6,14 +6,17 @@ import { Capacity, HttpError, RateLimiter, credentials, readBody, readJson, requ
 import { cookie, createAuth } from './auth.js';
 import { createJobs } from './jobs.js';
 import { MAX_BYTES, createMedia } from './media.js';
+import { createPayments } from './payments.js';
 import { createResults } from './generation.js';
 
 const STATIC = new Map([['/', ['index.html','text/html; charset=utf-8']],
   ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
-export function createApp(pool, config) {
+export function createApp(pool, config, {paymentProvider}={}) {
+  const payments=createPayments(pool,config,{provider:paymentProvider});
   const auth = createAuth(pool,config.secret); const jobs = createJobs(pool,config);
   const media = createMedia(pool,config.storageDir,{deleteUpload:jobs.deleteUpload});
   const results = createResults(pool,config.storageDir);
+  const notificationCapacity=new Capacity(4);
   const rates = new RateLimiter(); const authCapacity = new Capacity(4); const uploadCapacity = new Capacity(2);
   const server = createServer(async (req,res) => {
     res.setHeader('Cache-Control','private, no-store');
@@ -34,6 +37,7 @@ export function createApp(pool, config) {
       if (!path.startsWith('/api/')) throw new HttpError(404,'not_found');
       const ip = req.socket.remoteAddress ?? 'unknown'; // Never trust caller X-Forwarded-For.
       rates.take(`public:${ip}`,120,60000);
+      if(req.method==='POST' && path==='/api/payments/webhook') { const signal=await readJson(req); send(200,await notificationCapacity.run(()=>payments.notify(signal))); return; }
       if (!['GET','HEAD'].includes(req.method)) requireOrigin(req,config.origin);
       if (req.method === 'POST' && ['/api/register','/api/login'].includes(path)) {
         if (path === '/api/register') rates.take(`register:${ip}`,5,3600000);
@@ -48,7 +52,11 @@ export function createApp(pool, config) {
         res.setHeader('Set-Cookie',cookie('',config.secureCookie,true)); send(200,{ok:true}); return;
       }
       const account = await auth.authenticate(req);
-      if (req.method === 'GET' && path === '/api/me') { send(200,{account}); return; }
+      if (req.method === 'GET' && path === '/api/me') { send(200,{account:{...account,...await payments.account(account.id)}}); return; }
+      if(req.method==='POST' && path==='/api/payments') {send(202,{payment:await payments.create(account.id,await readJson(req))});return;}
+      if(req.method==='GET' && path==='/api/payments/config') {send(200,{provider_mode:config.providerMode??'disabled',package:'ROOM20',amount_minor:90000,currency:'RUB',credits:20});return;}
+      const paymentMatch=/^\/api\/payments\/([^/]+)$/.exec(path);
+      if(paymentMatch && req.method==='GET') {send(200,{payment:await payments.get(account.id,paymentMatch[1])});return;}
       if (req.method === 'GET' && path === '/api/uploads') { send(200,{uploads:await media.list(account.id)}); return; }
       if (req.method === 'POST' && path === '/api/uploads') {
         const upload = await uploadCapacity.run(async () => {

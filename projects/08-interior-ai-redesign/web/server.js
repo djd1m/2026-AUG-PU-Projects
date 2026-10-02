@@ -1,19 +1,22 @@
 import { readConfig } from './config.js';
 import { createPool } from './db.js';
 import { prepareStorage } from './media.js';
+import { startPaymentWorker } from '../scripts/payment-worker.js';
 import { createApp } from './app.js';
 let pool;
 try {
   if (process.versions.node.split('.')[0] !== '22') throw new Error('Node22 required');
   const config = readConfig();
   pool = createPool(config.databaseUrl);
-  const migration = await pool.query('SELECT version FROM schema_migration WHERE version=2');
+  const migration = await pool.query('SELECT version FROM schema_migration WHERE version=4');
   if (migration.rowCount !== 1) throw new Error('Migration required');
   await prepareStorage(config.storageDir);
   const server = createApp(pool,config);
   server.on('error', () => { console.error('server_failed'); process.exitCode=1; pool.end(); });
+  const stopPayments=startPaymentWorker(pool,config);
   server.listen(config.port,config.host,() => console.log('roomkind_ready'));
   for (const signal of ['SIGTERM','SIGINT']) process.once(signal,() => {
+    stopPayments();
     server.close(async () => { await pool.end(); process.exit(0); });
     setTimeout(() => process.exit(1),10000).unref();
   });

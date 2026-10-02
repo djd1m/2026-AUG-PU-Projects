@@ -17,7 +17,13 @@ export function readConfig(env = process.env) {
   const storageDir = resolve(env.STORAGE_DIR);
   const webRoot = resolve(PUBLIC_ROOT, '..');
   if (storageDir === webRoot || storageDir.startsWith(webRoot + sep) || storageDir === '/') fail();
-  if (env.PROVIDER_MODE !== 'disabled' || env.WORKER_MODE !== 'disabled') fail();
+  const providerMode=env.PROVIDER_MODE??'disabled';
+  if (!['disabled','live','fixture'].includes(providerMode) || env.WORKER_MODE !== 'disabled' ||
+      (providerMode==='fixture' && env.NODE_ENV==='production')) fail();
+  // Missing merchant keys disable the payment operation (503), not unrelated account access.
+  const shopId=env.YOOKASSA_SHOP_ID,providerSecret=env.YOOKASSA_SECRET_KEY;
+  if(providerMode==='live' && ((shopId && !/^[0-9]{1,64}$/.test(shopId)) ||
+      (providerSecret && providerSecret.length>512))) fail();
   const platformDailyLimit = Number(env.PLATFORM_DAILY_LIMIT);
   const accountDailyLimit = Number(env.ACCOUNT_DAILY_LIMIT);
   for (const [raw,value,max] of [[env.PLATFORM_DAILY_LIMIT,platformDailyLimit,200],[env.ACCOUNT_DAILY_LIMIT,accountDailyLimit,20]]) {
@@ -27,5 +33,5 @@ export function readConfig(env = process.env) {
   const port = Number(env.PORT ?? '8080');
   if (!Number.isInteger(port) || port < 1 || port > 65535) fail();
   return { databaseUrl: env.DATABASE_URL, secret: env.SESSION_SECRET, origin: origin.origin,
-    storageDir, runtime:env.NODE_ENV, platformDailyLimit, accountDailyLimit, secureCookie: !local, port, host: env.HOST ?? '127.0.0.1' };
+    storageDir, providerMode, shopId, providerSecret, runtime:env.NODE_ENV, platformDailyLimit, accountDailyLimit, secureCookie: !local, port, host: env.HOST ?? '127.0.0.1' };
 }

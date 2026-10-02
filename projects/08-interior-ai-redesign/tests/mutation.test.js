@@ -69,3 +69,19 @@ test('SEC-03 budget oracle requires exact assertion: expected one admission, act
     }
   } finally {await rm(dir,{recursive:true,force:true});}
 });
+
+
+test('PAY-02 payment mutation oracle targets only the exact merchant-binding assertion',async()=>{
+  const source=await readFile(new URL('../web/provider.js',import.meta.url),'utf8');
+  const mutated=mutateSource(source,'payment');assert.notEqual(mutated,source);
+  assert.throws(()=>mutateSource(mutated,'payment'),/mutation_guard_mismatch/);
+  const dir=await mkdtemp(join(tmpdir(),'n8-payment-oracle-'));
+  try {
+    const probe=join(dir,'probe.cjs');
+    await writeFile(probe,`const test=require('node:test'); const assert=require('node:assert/strict');
+      test('target',()=>assert.equal(false,true,'PAY-02 wrong merchant must be rejected'));`);
+    const result=runTest(dir,probe,'probe.log');assert.equal(mutationDetected('payment',result),true);
+    for(const bad of [{...result,status:0},{...result,signal:'SIGTERM'},{...result,error:new Error('timeout')},
+      {...result,output:result.output.replace('PAY-02 wrong merchant must be rejected','unrelated assertion')}])assert.equal(mutationDetected('payment',bad),false);
+  }finally {await rm(dir,{recursive:true,force:true});}
+});

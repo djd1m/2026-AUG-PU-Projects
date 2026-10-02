@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: AUTH-02 random 32-byte token, HMAC-only record and cookie flags
+ok 1 - AUTH-02 random 32-byte token, HMAC-only record and cookie flags
+  ---
+  duration_ms: 3.013601
+  type: 'test'
+  ...
+# Subtest: AUTH-01 all 128 Unicode characters affect bcrypt; dummy hash uses cost 10
+ok 2 - AUTH-01 all 128 Unicode characters affect bcrypt; dummy hash uses cost 10
+  ---
+  duration_ms: 232.667033
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 JPEG/PNG/WebP real decode, matching magic and invalid/truncated data
+ok 3 - UPLOAD-01 JPEG/PNG/WebP real decode, matching magic and invalid/truncated data
+  ---
+  duration_ms: 79.423908
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 exact byte limit and orientation normalization strips EXIF
+ok 4 - UPLOAD-01 exact byte limit and orientation normalization strips EXIF
+  ---
+  duration_ms: 38.287464
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 exact 20MP and one-row beyond for each allowed format
+ok 5 - UPLOAD-01 exact 20MP and one-row beyond for each allowed format
+  ---
+  duration_ms: 9419.918233
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9782.696682
