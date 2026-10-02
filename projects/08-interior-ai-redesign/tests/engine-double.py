@@ -15,6 +15,10 @@ for line in sys.stdin:
     if case == 'flood':
         print('x' * 20000, flush=True)
         continue
+    if case == 'stderr-flood':
+        print('x' * 70000, file=sys.stderr, flush=True)
+        time.sleep(60)
+        continue
     if case == 'invalid':
         print('{invalid}', flush=True)
         continue

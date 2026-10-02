@@ -33,7 +33,7 @@ test('F02b real PostgreSQL append-only quality and private result boundaries',as
       const f=await qualityFixture(dir,mode);const account=f.row.account_id;
       await pool.query('INSERT INTO account(id,email,password_hash) VALUES($1,$2,$3)',[account,account+'@example.test','synthetic-unused-hash']);
       await pool.query("INSERT INTO credit_ledger(id,account_id,delta,kind,reference) VALUES($1,$2,1,'purchase',$3)",[randomUUID(),account,randomUUID()]);
-      await pool.query("INSERT INTO upload(id,account_id,private_key,sha256,width,height,mime) VALUES($1,$2,$1,$3,8,8,'image/png')",[f.uploadId,account,f.row.input_sha]);
+      await pool.query("INSERT INTO upload(id,account_id,private_key,sha256,width,height,mime) VALUES($1,$2,$1,$3,8,8,'image/webp')",[f.uploadId,account,f.row.input_sha]);
       const {job_id:id}=await jobs.reserve(account,{upload_id:f.uploadId,style:'warm',idempotency_key:randomUUID()});
       const claim=await jobs.claim();assert.equal(claim.job_id,id);
       const evidence={...f.row.canonical_evidence,job_id:id};

@@ -46,8 +46,26 @@ test('F02b real subprocess bounds, cancellation, lease and cleanup',async t=>{
       const abort=new AbortController();const e=engine('hang');const pending=e.request({},{signal:abort.signal});setTimeout(()=>abort.abort(),30);
       await assert.rejects(pending,/engine_cancelled/);await e.stop();assert.equal(e.child,null);
     });
-    await t.test('invalid and oversized stdout fail bounded protocol',async()=>{
-      for(const name of ['invalid','flood'])await assert.rejects(engine(name).request({}),/engine_protocol_or_exit/);
+    await t.test('invalid and oversized stdout or stderr fail bounded protocol',async()=>{
+      for(const name of ['invalid','flood','stderr-flood'])await assert.rejects(engine(name).request({}),/engine_protocol_or_exit/);
+    });
+    await t.test('malformed response then awaited stop terminates failed child before healthy restart',async()=>{
+      const e=engine('invalid');const request=e.request({});const failedChild=e.child;
+      await assert.rejects(request,/engine_protocol_or_exit/);
+      await e.stop();
+      assert.ok(failedChild.exitCode!==null||failedChild.signalCode!==null,'stop must await failed subprocess termination');
+      e.env={...e.env,TEST_ENGINE_CASE:'success'};
+      assert.equal((await e.request({})).ok,true);await e.stop();
+    });
+    await t.test('obsolete child exit cannot reject an immediate replacement request',async()=>{
+      const e=engine('invalid');await assert.rejects(e.request({}),/engine_protocol_or_exit/);
+      e.env={...e.env,TEST_ENGINE_CASE:'success'};
+      assert.equal((await e.request({})).ok,true);await e.stop();
+    });
+    await t.test('concurrent requests still refuse engine_busy without disturbing active request',async()=>{
+      const e=engine();const pending=e.request({});
+      await assert.rejects(e.request({}),/engine_busy/);
+      assert.equal((await pending).ok,true);await e.stop();
     });
     await t.test('stale fence cleans otherwise valid result',async()=>{
       await assert.rejects(runClaim(pool,{...jobs,async complete(){return false;}},engine(),config,claim()),/stale_fence/);

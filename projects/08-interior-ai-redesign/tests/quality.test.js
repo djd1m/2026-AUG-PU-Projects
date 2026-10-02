@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import sharp from 'sharp';
 import { canonical, sha } from '../web/generation.js';
 import { createQuality, validateCorpus, validateEvidence } from '../web/quality.js';
 import { qualityFixture } from './quality-fixtures.js';
@@ -32,6 +33,19 @@ function dbFor(fixture) {
 test('F02b operator quality software validation, synthetic real-branch data',async t=>{
   const dir=await mkdtemp(join(tmpdir(),'n8-f02b-quality-'));
   try {
+    await t.test('normalized upload is actual WebP with bound hashes; output and depth stay PNG',async()=>{
+      const f=await qualityFixture(dir);
+      const input=await readFile(join(dir,f.uploadId));
+      assert.equal((await sharp(input).metadata()).format,'webp');
+      assert.equal(sha(input),f.row.input_sha);assert.equal(sha(input),f.row.upload_sha);
+      assert.equal(sha(input),f.row.canonical_evidence.input_sha);
+      assert.equal(f.report.pairs[0].input_sha,sha(input));
+      for(const folder of ['outputs','depths']) {
+        const bytes=await readFile(join(dir,folder,f.row.output_key));
+        assert.equal((await sharp(bytes).metadata()).format,'png');
+        assert.equal(sha(bytes),folder==='outputs'?f.row.output_sha:f.row.depth_sha);
+      }
+    });
     await t.test('otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job',async()=>{
       const f=await qualityFixture(dir);assert.deepEqual(validateEvidence(f.row),f.row.canonical_evidence);
       const db=dbFor(f);const q=createQuality(db,config(dir),{operatorIdentity:'test-operator'});
@@ -67,6 +81,18 @@ test('F02b operator quality software validation, synthetic real-branch data',asy
       for(const mutate of [r=>{r.synthetic=true;},r=>{r.pairs.pop();},r=>{r.pairs[0].added_openings=1;},r=>{r.pairs[0].anchor_displacements=[0.021];},r=>{r.pairs[0].config_sha='0'.repeat(64);},r=>{r.pairs[0].worker_source_revision='0'.repeat(40);}]) {
         const r=structuredClone(f.report);mutate(r);const bytes=Buffer.from(canonical(r));assert.throws(()=>validateCorpus(r,e,sha(bytes),bytes));
       }
+    });
+    await t.test('12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage',async()=>{
+      const f=await qualityFixture(dir);const e=f.row.canonical_evidence;
+      assert.equal(new Set(f.report.pairs.map(p=>p.input_sha)).size,12);
+      assert.equal(f.report.pairs.length,36);
+      validateCorpus(f.report,e,f.reportSha,f.reportBytes,'warm');
+      const report=structuredClone(f.report);
+      for(const pair of report.pairs)pair.input_sha=e.input_sha;
+      for(let i=1;i<12;i++)report.pairs.push({...report.pairs[0],room_id:'single_style_'+i,input_sha:sha('single style '+i)});
+      assert.equal(new Set(report.pairs.map(p=>p.input_sha)).size,12);
+      const bytes=Buffer.from(canonical(report));
+      assert.throws(()=>validateCorpus(report,e,sha(bytes),bytes,'warm'),/corpus_coverage_or_output/);
     });
   }finally{await rm(dir,{recursive:true,force:true});}
 });

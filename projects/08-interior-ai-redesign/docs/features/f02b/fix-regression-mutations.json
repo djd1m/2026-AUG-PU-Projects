@@ -1,0 +1,50 @@
+[
+  {
+    "name": "webp",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/quality.test.js"
+    ],
+    "mutation": "Restore only tests/quality-fixtures.js from 30faa9d4172852244a14fe96e85a56c44e2ed709 in isolated temporary copy",
+    "fixed_sha256": "6fbd7328600eecf58c2245e61e0bc5a7ce76d762ffe05837e3050f8c8d2cd135",
+    "mutated_sha256": "09ee819216596635bacb41e739bd4a9bf4d7441808b37c7bd84b3d1541aaa590",
+    "exit_code": 1,
+    "targeted_assertion": "normalized upload is actual WebP",
+    "detected": true,
+    "elapsed_ms": 421,
+    "log": "docs/features/f02b/fix-mutation-webp.log",
+    "log_sha256": "20583c6c289612813471b053224f478fd1c174606f94ed3e1e85dfadb53e0a0a"
+  },
+  {
+    "name": "coverage",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/quality.test.js"
+    ],
+    "mutation": "Restore only web/quality.js from 30faa9d4172852244a14fe96e85a56c44e2ed709 in isolated temporary copy",
+    "fixed_sha256": "539ecc9a529b4f0541c48f708f2dffb675be9e784b4edc82f2d162e248498698",
+    "mutated_sha256": "b3d9db7035c4426929d908d5aa9747351ca1e702f5ce67e155e1f0762c373119",
+    "exit_code": 1,
+    "targeted_assertion": "12 aliases of one complete input",
+    "detected": true,
+    "elapsed_ms": 418,
+    "log": "docs/features/f02b/fix-mutation-coverage.log",
+    "log_sha256": "7d0240903edc8776f43c14932ce6d6cf4a3a3b17a50dd14fdbdcc6366a52e5eb"
+  },
+  {
+    "name": "lifecycle",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/generation.test.js"
+    ],
+    "mutation": "Restore only web/generation.js from 30faa9d4172852244a14fe96e85a56c44e2ed709 in isolated temporary copy",
+    "fixed_sha256": "3927d146c0ae84b8f6def135101caaa38e989c88f2f5794ebaf1c5c4b075f7ba",
+    "mutated_sha256": "371ebc0c8dcdb72a49e4a1ea644a38099a2565fe73885341378a654ab10ca43f",
+    "exit_code": 1,
+    "targeted_assertion": "stop must await failed subprocess termination",
+    "detected": true,
+    "elapsed_ms": 1030,
+    "log": "docs/features/f02b/fix-mutation-lifecycle.log",
+    "log_sha256": "b58501861e08d0e9900aac908672f5f63f084c0e56c46265472436648c2542af"
+  }
+]

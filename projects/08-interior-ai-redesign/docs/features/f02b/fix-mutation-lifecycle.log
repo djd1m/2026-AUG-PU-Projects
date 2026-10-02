@@ -1,0 +1,116 @@
+TAP version 13
+# Subtest: F02b real subprocess bounds, cancellation, lease and cleanup
+    # Subtest: one persistent subprocess survives two requests; fixture has actual independent hashes
+    ok 1 - one persistent subprocess survives two requests; fixture has actual independent hashes
+      ---
+      duration_ms: 97.745535
+      type: 'test'
+      ...
+    # Subtest: actual bytes/hash mismatch refuses completion and removes all orphan artifacts
+    ok 2 - actual bytes/hash mismatch refuses completion and removes all orphan artifacts
+      ---
+      duration_ms: 66.580914
+      type: 'test'
+      ...
+    # Subtest: deadline kills actual subprocess; partial artifacts removed
+    ok 3 - deadline kills actual subprocess; partial artifacts removed
+      ---
+      duration_ms: 130.556597
+      type: 'test'
+      ...
+    # Subtest: lost heartbeat cancels child and fences attach
+    ok 4 - lost heartbeat cancels child and fences attach
+      ---
+      duration_ms: 27.70011
+      type: 'test'
+      ...
+    # Subtest: external cancellation kills subprocess
+    ok 5 - external cancellation kills subprocess
+      ---
+      duration_ms: 36.379273
+      type: 'test'
+      ...
+    # Subtest: invalid and oversized stdout or stderr fail bounded protocol
+    ok 6 - invalid and oversized stdout or stderr fail bounded protocol
+      ---
+      duration_ms: 153.791585
+      type: 'test'
+      ...
+    # Subtest: malformed response then awaited stop terminates failed child before healthy restart
+    not ok 7 - malformed response then awaited stop terminates failed child before healthy restart
+      ---
+      duration_ms: 56.26147
+      type: 'test'
+      location: '/tmp/n8-f02b-fix-mut-i6wlle26/tests/generation.test.js:52:13'
+      failureType: 'testCodeFailure'
+      error: 'stop must await failed subprocess termination'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-f02b-fix-mut-i6wlle26/tests/generation.test.js:56:14)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-f02b-fix-mut-i6wlle26/tests/generation.test.js:52:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: obsolete child exit cannot reject an immediate replacement request
+    not ok 8 - obsolete child exit cannot reject an immediate replacement request
+      ---
+      duration_ms: 64.981973
+      type: 'test'
+      location: '/tmp/n8-f02b-fix-mut-i6wlle26/tests/generation.test.js:60:13'
+      failureType: 'testCodeFailure'
+      error: 'engine_protocol_or_exit'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        ChildProcess.fail (file:///tmp/n8-f02b-fix-mut-i6wlle26/web/generation.js:51:80)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:293:12)
+      ...
+    # Subtest: concurrent requests still refuse engine_busy without disturbing active request
+    ok 9 - concurrent requests still refuse engine_busy without disturbing active request
+      ---
+      duration_ms: 60.013221
+      type: 'test'
+      ...
+    # Subtest: stale fence cleans otherwise valid result
+    ok 10 - stale fence cleans otherwise valid result
+      ---
+      duration_ms: 61.384752
+      type: 'test'
+      ...
+    # Subtest: symlinks and unbounded artifact bytes denied
+    ok 11 - symlinks and unbounded artifact bytes denied
+      ---
+      duration_ms: 4.300451
+      type: 'test'
+      ...
+    # Subtest: private reads enforce owner/rejection twice and exact immutable bytes
+    ok 12 - private reads enforce owner/rejection twice and exact immutable bytes
+      ---
+      duration_ms: 5.384452
+      type: 'test'
+      ...
+    1..12
+not ok 1 - F02b real subprocess bounds, cancellation, lease and cleanup
+  ---
+  duration_ms: 792.242813
+  type: 'test'
+  location: '/tmp/n8-f02b-fix-mut-i6wlle26/tests/generation.test.js:13:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 13
+# suites 0
+# pass 10
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 803.649987

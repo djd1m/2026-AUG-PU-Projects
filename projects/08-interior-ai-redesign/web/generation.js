@@ -43,21 +43,24 @@ export async function discardArtifacts(dir,key) {
 // One engine, one outstanding request. stdout is protocol-only, stderr is drained
 // with a hard total cap, never logged (libraries may include local sensitive paths).
 export class Engine {
-  constructor(command,args,env=process.env) { this.command=command;this.args=args;this.env=env;this.child=null;this.pending=null; }
+  constructor(command,args,env=process.env) { this.command=command;this.args=args;this.env=env;this.child=null;this.pending=null;this.processes=new Map(); }
   start() {
     if(this.child) return;
     const child=spawn(this.command,this.args,{env:this.env,stdio:['pipe','pipe','pipe']});
-    this.child=child;let buffer=Buffer.alloc(0),stderr=0;
-    const fail=()=>{if(this.child===child)this.child=null;this.pending?.reject(new Error('engine_protocol_or_exit'));this.pending=null;child.kill('SIGKILL');};
+    this.child=child;let buffer=Buffer.alloc(0),stderr=0,failed=false;
+    let terminated;this.processes.set(child,new Promise(resolve=>{terminated=resolve;}));
+    const fail=()=>{if(failed)return;failed=true;this.terminate(child,'engine_protocol_or_exit');};
     child.on('error',fail);child.on('exit',fail);child.stdin.on('error',fail);
+    child.once('close',()=>{fail();this.processes.delete(child);terminated();});
     child.stderr.on('data',chunk=>{stderr+=chunk.length;if(stderr>65536)fail();});
     child.stdout.on('data',chunk=>{
+      if(failed)return;
       buffer=Buffer.concat([buffer,chunk]);if(buffer.length>16384){fail();return;}
       const index=buffer.indexOf(10);if(index<0)return;
       const line=buffer.subarray(0,index);buffer=buffer.subarray(index+1);
       try {
         const result=JSON.parse(line);const p=this.pending;
-        if(!p || buffer.length || result.id!==p.id || result.version!==1 || typeof result.ok!=='boolean') throw new Error();
+        if(!p || p.child!==child || buffer.length || result.id!==p.id || result.version!==1 || typeof result.ok!=='boolean') throw new Error();
         this.pending=null;
         if(result.ok) p.resolve(result);else p.reject(new Error(/^[-a-z0-9_]{1,100}$/.test(result.error)?result.error:'engine_failed'));
       } catch {fail();}
@@ -67,19 +70,23 @@ export class Engine {
     if(this.pending)throw new Error('engine_busy');
     if(!Number.isInteger(timeoutMs)||timeoutMs<1||timeoutMs>180000)throw new Error('engine_deadline');
     if(signal?.aborted)throw new Error('engine_cancelled');
-    this.start();const id=randomUUID();const line=JSON.stringify({version:1,id,...body})+'\n';
+    this.start();const child=this.child;const id=randomUUID();const line=JSON.stringify({version:1,id,...body})+'\n';
     if(Buffer.byteLength(line)>8192){await this.stop();throw new Error('engine_request_limit');}
     let timer,abort;
     try {return await new Promise((resolve,reject)=>{
-      this.pending={id,resolve,reject};abort=()=>{this.stop();};
+      this.pending={id,child,resolve,reject};abort=()=>{this.terminate(child);};
       signal?.addEventListener('abort',abort,{once:true});timer=setTimeout(abort,timeoutMs);
-      this.child.stdin.write(line);
+      child.stdin.write(line);
     });} finally {clearTimeout(timer);signal?.removeEventListener('abort',abort);}
   }
+  terminate(child,error='engine_cancelled') {
+    if(this.child===child)this.child=null;
+    if(this.pending?.child===child){this.pending.reject(new Error(error));this.pending=null;}
+    child.kill('SIGKILL');
+    return this.processes.get(child)??Promise.resolve();
+  }
   async stop() {
-    const child=this.child;this.child=null;
-    this.pending?.reject(new Error('engine_cancelled'));this.pending=null;
-    if(child)await new Promise(resolve=>{if(child.exitCode!==null||child.signalCode!==null)return resolve();child.once('exit',resolve);child.kill('SIGKILL');});
+    await Promise.all([...this.processes.keys()].map(child=>this.terminate(child)));
   }
 }
 export async function verifyArtifacts(dir,key,inputKey,expected,configBytes) {

@@ -1,0 +1,95 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f02b-fix",
+  "attempt_id": "n8-f02b-fix-1",
+  "source_revision": "30faa9d4172852244a14fe96e85a56c44e2ed709",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "created_at": "2026-10-02T22:12:30.798754+00:00",
+  "budget_seconds": 900,
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b-fix/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-f02b-fix-receipt.md",
+  "owned_files": [
+    "web/generation.js",
+    "web/quality.js",
+    "tests/generation.test.js",
+    "tests/engine-double.py",
+    "tests/quality.test.js",
+    "tests/quality-fixtures.js",
+    "tests/quality.integration.test.js",
+    "docs/features/f02b/fix-*"
+  ],
+  "profile": "compact-quality-first-v2",
+  "stage": "INTEGRATE",
+  "tier": "XL",
+  "route_reason": "Bounded corrections to existing private-image quality and subprocess contracts; preserves prior substantive XL classification; owner-authorized plan, no new invariant/schema/provider.",
+  "actual_effort": null,
+  "cost": null,
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host-resolved model/effort, token usage, billing unavailable"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Software unit/build/mutation only; coordinator owns PostgreSQL/Docker; F04 owns browser E2E"
+  },
+  "status": "completed",
+  "recorded_at": "2026-10-02T22:16:13.313791+00:00",
+  "mechanical_route": {
+    "exit_code": 0,
+    "tier": "M",
+    "input": [
+      "web/generation.js",
+      "web/quality.js",
+      "tests/generation.test.js",
+      "tests/engine-double.py",
+      "tests/quality.test.js",
+      "tests/quality-fixtures.js"
+    ]
+  },
+  "implementation_route": {
+    "tier": "XL",
+    "reason": "Bounded corrections to existing private-image quality and subprocess contracts; preserves prior substantive XL classification; owner-authorized plan, no new invariant/schema/provider."
+  },
+  "implementation_complete": true,
+  "required_gates_passed": false,
+  "delivery_status": "pending_coordinator_quality_pg_and_independent_review",
+  "launch_sha256": "f7175d54633d25f9a41e92bc7af77cad8974e28f792314c68a7db56e22f18c59",
+  "build_revision": "0c501c67861efcf17860fa114db9577810663dbe46697a3fcee6400cff568235",
+  "build_kind": "Canonical SHA256 of JSON {files:[...]} for 45 product/test files; not a container image",
+  "build_snapshot_path": "docs/features/f02b/fix-build-snapshot.json",
+  "build_supplement_path": "docs/features/f02b/fix-build-supplement.json",
+  "build_supplement_sha256": "bf127657dbda2c7ec5bcee4244d3b60899d6ec91b4e4895a7002b3f372d60282",
+  "checks_path": "docs/features/f02b/fix-checks.json",
+  "checks_sha256": "129f48865313323f264a833377278ee44d92833d1eea1639733b4b501a3f0bbd",
+  "regression_mutations_path": "docs/features/f02b/fix-regression-mutations.json",
+  "regression_mutations_sha256": "c3f1ef911cf4fdea5181d2d6bcd412e927c69019ba2c54fdf8d256a69a7a7b85",
+  "ended_at": "2026-10-02T22:18:18.903975+00:00",
+  "elapsed_wall_ms": 348105,
+  "active_wall_ms": null,
+  "container_image_digest": null,
+  "source_files_changed": [
+    "tests/engine-double.py",
+    "tests/generation.test.js",
+    "tests/quality-fixtures.js",
+    "tests/quality.integration.test.js",
+    "tests/quality.test.js",
+    "web/generation.js",
+    "web/quality.js"
+  ],
+  "pending": [
+    "Coordinator real PostgreSQL quality suite (all six scenarios must reach assertions)",
+    "Coordinator fresh independent finding-closure review",
+    "Actual GPU geometry/performance and transitive compatibility remain separate unmeasured gates"
+  ],
+  "receipt_path": "docs/telemetry/n8-20261002-1740/n8-f02b-fix-receipt.md",
+  "receipt_installation": "Coordinator installs substantive final answer; destination remains absent here",
+  "review": "Focused author review completed; no delegation per brief",
+  "measurement_gaps": [
+    "Provider-resolved actual model/effort, usage and cost unavailable",
+    "Active vs waiting intervals not measured",
+    "Initial focused generation/quality logs overwritten by final broader checks; final logs and independent defect-reversion logs preserved",
+    "No real PostgreSQL, container or GPU execution by this worker"
+  ]
+}

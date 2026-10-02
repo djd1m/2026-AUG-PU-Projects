@@ -11,15 +11,16 @@ export async function qualityFixture(dir,mode='controlnet') {
   await prepareArtifacts(dir);
   const key=randomUUID(),jobId=randomUUID(),uploadId=randomUUID(),owner=randomUUID();
   const image=await sharp({create:{width:8,height:8,channels:3,background:'#abd'}}).png().toBuffer();
+  const inputImage=await sharp(image).webp().toBuffer();
   const models={sd:'1'.repeat(40),controlnet:'2'.repeat(40),depth:'3'.repeat(40)};
   const config={mode,seed:1,style:'warm',manifest_sha:sha('SYNTHETIC MODEL MANIFEST'),model_revisions:models,worker_source_revision:'4'.repeat(40)};
   const configBytes=Buffer.from(canonical(config));
-  const e={job_id:jobId,output_key:key,mode,input_sha:sha(image),output_sha:sha(image),depth_sha:sha(image),config_sha:sha(configBytes),
+  const e={job_id:jobId,output_key:key,mode,input_sha:sha(inputImage),output_sha:sha(image),depth_sha:sha(image),config_sha:sha(configBytes),
     model_revisions:models,seed:1,worker_source_revision:config.worker_source_revision,hardware:'SYNTHETIC SOFTWARE TEST ONLY, NO GPU',
     queue_ms:1,inference_ms:1,warm:false,artifact_key:key,manifest_sha:config.manifest_sha};
   const row={...e,canonical_evidence:e,evidence_sha:sha(canonical(e)),account_id:owner,upload_id:uploadId,status:'succeeded',quality:'unverified',
     deleted_at:null,upload_deleted:null,upload_sha:e.input_sha,input_key:uploadId,style:'warm',reserved:true};
-  await writeFile(join(dir,uploadId),image);
+  await writeFile(join(dir,uploadId),inputImage);
   for(const [folder,bytes] of [['outputs',image],['depths',image],['configs',configBytes]])await writeFile(join(dir,folder,key),bytes);
   const pairs=[];
   for(let room=0;room<12;room++)for(const style of ['warm','minimal','afrohemian'])pairs.push({

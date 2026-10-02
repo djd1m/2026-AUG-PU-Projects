@@ -30,7 +30,8 @@ export function validateCorpus(report,evidence,expectedSha,reportBytes,targetSty
     room.styles.add(pair.style);rooms.set(pair.room_id,room);
     if(pair.output_sha===evidence.output_sha&&pair.input_sha===evidence.input_sha&&pair.config_sha===evidence.config_sha&&pair.evidence_sha===sha(canonical(evidence))&&(!targetStyle||pair.style===targetStyle))matching=true;
   }
-  if([...rooms.values()].filter(r=>r.styles.size>=3).length<12||new Set([...rooms.values()].map(r=>r.input)).size<12||!matching)throw new Error('corpus_coverage_or_output');
+  const completeInputs=new Set([...rooms.values()].filter(r=>r.styles.size>=3).map(r=>r.input));
+  if(completeInputs.size<12||!matching)throw new Error('corpus_coverage_or_output');
 }
 export function validateEvidence(row) {
   const e=row.canonical_evidence;
