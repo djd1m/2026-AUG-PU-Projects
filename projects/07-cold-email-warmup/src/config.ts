@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { parseKeyring, type Keyring } from './mailboxes/crypto.js';
 import { normalizeHost } from './mailboxes/network.js';
-export interface Config { databaseUrl: string; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
+export interface Config { databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (env.SAFETY_POLICY_VERSION !== 'n7-safety-v1') throw new Error('invalid_safety_policy');
   const encoded = env.SESSION_HMAC_KEY_FILE ? readFileSync(env.SESSION_HMAC_KEY_FILE, 'utf8').trim() : env.SESSION_HMAC_KEY;
@@ -22,6 +22,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     if(!env.CREDENTIAL_KEYRING_FILE) throw new Error();
     credentialKeyring=parseKeyring(readFileSync(env.CREDENTIAL_KEYRING_FILE,'utf8'),sessionKey);
   } catch { throw new Error('invalid_credential_keyring'); }
+  let recipientHashKey:Buffer;
+  try {
+    if(!env.RECIPIENT_HASH_KEY_FILE) throw new Error();
+    const encodedHash=readFileSync(env.RECIPIENT_HASH_KEY_FILE,'utf8').trim();
+    recipientHashKey=Buffer.from(encodedHash,'base64');
+    if(recipientHashKey.length<32 || recipientHashKey.toString('base64')!==encodedHash || recipientHashKey.equals(sessionKey) || [...credentialKeyring.keys.values()].some(k=>k.equals(recipientHashKey))) throw new Error();
+  } catch {throw new Error('invalid_recipient_hash_key');}
   const providerAllowlist=new Map<string,number>();
   try {
     const raw=JSON.parse(env.MAIL_PROVIDER_ALLOWLIST ?? '') as Record<string,number>;
@@ -33,5 +40,5 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     }
     if(!providerAllowlist.size || providerAllowlist.size>100) throw new Error();
   } catch { throw new Error('invalid_provider_allowlist'); }
-  return { databaseUrl, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
+  return { databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
 }

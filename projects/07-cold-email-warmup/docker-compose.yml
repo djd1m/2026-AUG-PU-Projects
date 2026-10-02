@@ -23,6 +23,7 @@ services:
     cpus: 2
     environment:
       SAFETY_POLICY_VERSION: n7-safety-v1
+      RECIPIENT_HASH_KEY_FILE: /run/secrets/recipient_hash_key
       CREDENTIAL_KEYRING_FILE: /run/secrets/credential_keyring
       MAIL_PROVIDER_ALLOWLIST: ${MAIL_PROVIDER_ALLOWLIST:?operator allowlist required}
       SESSION_HMAC_KEY_FILE: /run/secrets/session_key
@@ -32,7 +33,7 @@ services:
       DATABASE_HOST: db
       APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18702}
       PORT: "3000"
-    secrets: [session_key, db_password, credential_keyring]
+    secrets: [session_key, db_password, credential_keyring, recipient_hash_key]
     ports: ["127.0.0.1:${N7_WEB_PORT:-18702}:3000"]
     networks: [n7]
     depends_on:
@@ -43,6 +44,8 @@ services:
       timeout: 3s
       retries: 20
 secrets:
+  recipient_hash_key:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/recipient-hash-key
   session_key:
     file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/session-key
   credential_keyring:

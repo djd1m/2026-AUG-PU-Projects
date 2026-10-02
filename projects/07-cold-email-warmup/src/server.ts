@@ -8,6 +8,9 @@ import { AuthService } from './auth/service.js';
 import { readToken, sessionCookie } from './auth/session.js';
 import { PgAuthStore } from './auth/store.js';
 import { MailboxStore } from './mailboxes/store.js';
+import { CampaignStore } from './campaigns/store.js';
+import { PoolStore } from './pool/store.js';
+import { DispatchStore } from './dispatch/store.js';
 import { ConsentStore } from './consent/store.js';
 import type { Resolver } from './mailboxes/network.js';
 import type { TestAdapter } from './mailboxes/provider.js';
@@ -37,6 +40,8 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   await auth.initialize();
   const mailboxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.resolver,fixtures?.adapter);
   const consents=new ConsentStore(pool,config.credentialKeyring);
+  const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
+  const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
@@ -90,11 +95,19 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           }
           throw new HttpError(405,'method_not_allowed');
         }
-        if(path==='/api/campaigns' && req.method==='POST') return json(res,201,{data:await consents.campaign(identity,await body(req)),meta:{}});
-        const campaignMatch=/^\/api\/campaigns\/([^/]+)$/.exec(path);
-        if(campaignMatch && req.method==='PUT') {
-          if(!UUID.test(campaignMatch[1]!)) throw new HttpError(400,'invalid_input');
-          return json(res,200,{data:await consents.campaign(identity,await body(req),campaignMatch[1]),meta:{}});
+        if(path==='/api/pool' && req.method==='GET') return json(res,200,{data:await cohort.aggregate(),meta:{}});
+        if(path==='/api/campaigns') {
+          if(req.method==='GET') return json(res,200,{data:await campaigns.list(identity.tenant_id),meta:{}});
+          if(req.method==='POST') return json(res,201,{data:await consents.campaign(identity,await body(req)),meta:{}});
+        }
+        const campaignMatch=/^\/api\/campaigns\/([^/]+)(?:\/(preview|start|pause))?$/.exec(path);
+        if(campaignMatch) {
+          const id=campaignMatch[1]!;if(!UUID.test(id)) throw new HttpError(400,'invalid_input');
+          if(!campaignMatch[2] && req.method==='GET') return json(res,200,{data:await campaigns.read(identity.tenant_id,id),meta:{}});
+          if(!campaignMatch[2] && req.method==='PUT') return json(res,200,{data:await consents.campaign(identity,await body(req),id),meta:{}});
+          if(campaignMatch[2]==='preview' && req.method==='GET') return json(res,200,{data:await campaigns.preview(identity.tenant_id,id),meta:{}});
+          if(campaignMatch[2]==='start' && req.method==='POST') return json(res,200,{data:await campaigns.start(identity,id,await body(req)),meta:{}});
+          if(campaignMatch[2]==='pause' && req.method==='POST') {await body(req);return json(res,200,{data:await campaigns.pause(identity.tenant_id,id),meta:{}});}
         }
       }
       throw new HttpError(404, 'not_found');
@@ -106,5 +119,5 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store, mailboxes, consents };
+  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch };
 }

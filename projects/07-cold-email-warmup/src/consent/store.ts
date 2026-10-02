@@ -1,18 +1,14 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
+import { isDeepStrictEqual } from 'node:util';
 import type { Pool,PoolClient } from 'pg';
 import type { Identity } from '../auth/store.js';
 import { HttpError } from '../errors.js';
 import { decryptCredentials, type Keyring } from '../mailboxes/crypto.js';
-import { boundedText,email,type MailboxInput } from '../mailboxes/input.js';
+import { type MailboxInput } from '../mailboxes/input.js';
+import { parseCampaign } from '../campaigns/input.js';
 import { eligibilityTransaction } from './transaction.js';
 export const POOL_DISCLOSURE_VERSION=1;
 export const POOL_DISCLOSURE={version:1,peerVisible:['senderAddress','routingHeaders','testBody'],headers:['From','To','Subject','Message-ID'],testBody:'This is a consented N7 warmup test message.'};
-function campaignInput(raw:Record<string,unknown>) {
-  const content=boundedText(raw.content,20000);
-  if(!Array.isArray(raw.recipients) || !raw.recipients.length || raw.recipients.length>1000) throw new HttpError(400,'invalid_recipients');
-  const recipients=[...new Set(raw.recipients.map(email))].sort();
-  return {content,recipients,fingerprint:createHash('sha256').update(JSON.stringify(recipients)).digest('hex')};
-}
 async function ownMailbox(client:PoolClient,identity:Identity,id:string) {
   const mailbox=(await client.query('SELECT * FROM mailbox WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[identity.tenant_id,id])).rows[0];
   if(!mailbox) throw new HttpError(404,'not_found'); return mailbox;
@@ -23,15 +19,16 @@ export class ConsentStore {
     return eligibilityTransaction(this.pool,async client=>{
       const prior=id?(await client.query('SELECT * FROM campaign WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[identity.tenant_id,id])).rows[0]:null;
       if(id && !prior) throw new HttpError(404,'not_found');
-      const value=campaignInput(raw); const campaign=id??randomUUID();
+      const value=parseCampaign(raw); const campaign=id??randomUUID();
       if(prior) {
-        const changed=prior.content!==value.content || prior.recipient_fingerprint!==value.fingerprint;
-        await client.query('UPDATE campaign SET content=$3,recipients=$4,recipient_fingerprint=$5,content_version=content_version+$6 WHERE tenant_id=$1 AND id=$2',[identity.tenant_id,id,value.content,JSON.stringify(value.recipients),value.fingerprint,changed?1:0]);
+        const changed=prior.content!==value.content || prior.recipient_fingerprint!==value.fingerprint || !isDeepStrictEqual(prior.steps,value.steps) || !isDeepStrictEqual(prior.personalization,value.personalization);
+        await client.query("UPDATE campaign SET content=$3,recipients=$4,recipient_fingerprint=$5,content_version=content_version+$6,steps=$7,personalization=$8,state=CASE WHEN $6=1 THEN 'draft' ELSE state END WHERE tenant_id=$1 AND id=$2",[identity.tenant_id,id,value.content,JSON.stringify(value.recipients),value.fingerprint,changed?1:0,JSON.stringify(value.steps),JSON.stringify(value.personalization)]);
         if(changed) {
+          await client.query("UPDATE enrollment SET state='cancelled' WHERE tenant_id=$1 AND campaign_id=$2 AND state='active'",[identity.tenant_id,id]);
           await client.query('UPDATE consent SET revoked_at=now() WHERE tenant_id=$1 AND campaign_id=$2 AND revoked_at IS NULL',[identity.tenant_id,id]);
           await client.query("UPDATE send_job SET state='cancelled' WHERE tenant_id=$1 AND campaign_id=$2 AND state IN ('queued','claimed')",[identity.tenant_id,id]);
         }
-      } else await client.query('INSERT INTO campaign(id,tenant_id,content,recipients,recipient_fingerprint) VALUES($1,$2,$3,$4,$5)',[campaign,identity.tenant_id,value.content,JSON.stringify(value.recipients),value.fingerprint]);
+      } else await client.query('INSERT INTO campaign(id,tenant_id,content,recipients,recipient_fingerprint,steps,personalization) VALUES($1,$2,$3,$4,$5,$6,$7)',[campaign,identity.tenant_id,value.content,JSON.stringify(value.recipients),value.fingerprint,JSON.stringify(value.steps),JSON.stringify(value.personalization)]);
       return (await client.query('SELECT * FROM campaign WHERE tenant_id=$1 AND id=$2',[identity.tenant_id,campaign])).rows[0];
     });
   }

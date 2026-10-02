@@ -13,9 +13,11 @@ export async function migrate(pool: pg.Pool) {
     if (!applied?.rowCount) await client.query(await readFile(new URL('../db/001-init.sql', import.meta.url), 'utf8'));
     const second=await client.query('SELECT version FROM schema_migration WHERE version=2');
     if(!second.rowCount) await client.query(await readFile(new URL('../db/002-mailboxes-consent.sql',import.meta.url),'utf8'));
+    const third=await client.query('SELECT version FROM schema_migration WHERE version=3');
+    if(!third.rowCount) await client.query(await readFile(new URL('../db/003-dispatch.sql',import.meta.url),'utf8'));
     await client.query('COMMIT');
   } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); }
 }
 export async function ready(pool: pg.Pool): Promise<boolean> {
-  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2)')).rowCount === 2; } catch { return false; }
+  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3)')).rowCount === 3; } catch { return false; }
 }
