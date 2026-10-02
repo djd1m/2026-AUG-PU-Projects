@@ -124,7 +124,7 @@ export async function sweepOrphans(pool, dir, now = Date.now(), { scanLimit = 10
   }
   if (!['upload','output'].includes(kind)) throw new Error('Invalid sweep registry');
   let removed = 0;
-  for (const folder of kind==='output'?[join(dir,'outputs')]:[dir,join(dir,'.tmp')]) {
+  for (const folder of kind==='output'?['outputs','depths','configs'].map(f=>join(dir,f)):[dir,join(dir,'.tmp')]) {
     const folderStat = await lstat(folder);
     if (!folderStat.isDirectory() || folderStat.isSymbolicLink()) throw new Error('Invalid private storage');
     const cursorPath = join(folder,'.sweep-cursor');

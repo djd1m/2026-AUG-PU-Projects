@@ -6,12 +6,14 @@ import { Capacity, HttpError, RateLimiter, credentials, readBody, readJson, requ
 import { cookie, createAuth } from './auth.js';
 import { createJobs } from './jobs.js';
 import { MAX_BYTES, createMedia } from './media.js';
+import { createResults } from './generation.js';
 
 const STATIC = new Map([['/', ['index.html','text/html; charset=utf-8']],
   ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
 export function createApp(pool, config) {
   const auth = createAuth(pool,config.secret); const jobs = createJobs(pool,config);
   const media = createMedia(pool,config.storageDir,{deleteUpload:jobs.deleteUpload});
+  const results = createResults(pool,config.storageDir);
   const rates = new RateLimiter(); const authCapacity = new Capacity(4); const uploadCapacity = new Capacity(2);
   const server = createServer(async (req,res) => {
     res.setHeader('Cache-Control','private, no-store');
@@ -63,6 +65,11 @@ export function createApp(pool, config) {
             [...url.searchParams.keys()].some(k=>url.searchParams.getAll(k).length!==1)) throw new HttpError(400,'invalid_page');
         send(200,await jobs.list(account.id,{before:url.searchParams.get('before')??undefined,
           limit:url.searchParams.has('limit')?Number(url.searchParams.get('limit')):50})); return;
+      }
+      const resultMatch = /^\/api\/jobs\/([^/]+)\/result$/.exec(path);
+      if(resultMatch && req.method==='GET') {
+        const image=await results.read(account.id,resultMatch[1]);
+        res.writeHead(200,{'Content-Type':image.mime,'Content-Length':image.data.length});res.end(image.data);return;
       }
       const jobMatch = /^\/api\/jobs\/([^/]+)$/.exec(path);
       if (jobMatch && req.method === 'GET') { send(200,{job:await jobs.get(account.id,jobMatch[1])}); return; }

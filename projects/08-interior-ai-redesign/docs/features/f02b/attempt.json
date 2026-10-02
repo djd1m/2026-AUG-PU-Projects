@@ -1,0 +1,53 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f02b",
+  "attempt_id": "n8-f02b-attempt-1",
+  "started_at": "2026-10-02T21:37:10.267783+00:00",
+  "recorded_at": "2026-10-02T21:38:38.640197+00:00",
+  "stage": "REVIEW",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "mechanical_route": {
+    "exit_code": 0,
+    "tier": "S",
+    "input": "generation.js quality.js 003-quality.sql worker/engine.py"
+  },
+  "route_reason": "Private images, append-only quality evidence, existing credit-release invariant; accepted F02 plan, no delegation per launch. Substantive XL overrides lower bound.",
+  "source_revision": "c345ec1ef57517acfca731b27254be5249aabd52",
+  "launch_sha256": "542328c4ab3f3b8f33ac8560633ccfc5d4be067ab20f5a11d4137c5bfd4ccb4a",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "deadline": "2026-10-02T22:02:10.267783+00:00",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "F02b software checks only; browser E2E belongs to F04. Heavy Docker/PG owned by coordinator after N7."
+  },
+  "missing_data": [
+    "Host model/effort metadata, token billing and cost unavailable"
+  ],
+  "status": "completed",
+  "review": "Focused author review only; fresh independent Astra review remains coordinator-owned, no delegation per brief.",
+  "validation_scope": "Lightweight software checks, no real PostgreSQL/container/GPU execution.",
+  "build_revision": "362e3cedb6b2b31b09d80606d51fc11d958ad14ed3c0876ecbc0ec4d2ab29413",
+  "build_kind": "canonical source snapshot, not container image",
+  "checks_path": "docs/features/f02b/checks.json",
+  "implementation_complete": true,
+  "required_gates_passed": false,
+  "delivery_status": "blocked_pending_coordinator_and_GPU_gates",
+  "ended_at": "2026-10-02T22:00:34.558299+00:00",
+  "elapsed_wall_ms": 1404290,
+  "active_wall_ms": null,
+  "verdict": "pending required coordinator gates; GPU quality/performance unknown",
+  "receipt_path": "docs/telemetry/n8-20261002-1740/n8-f02b-receipt.md",
+  "measurement_gaps": [
+    "Provider-resolved model/effort, usage and cost unavailable",
+    "Active vs waiting wall-time intervals not measured",
+    "One wrong-cwd error log overwritten; invocation exit1 preserved",
+    "No actual Docker image digest or PostgreSQL/GPU execution in this attempt"
+  ]
+}

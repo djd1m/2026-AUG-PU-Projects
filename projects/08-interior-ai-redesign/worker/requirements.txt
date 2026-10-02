@@ -1,0 +1,8 @@
+# Candidate pins observed in the approved F02b plan. GPU compatibility and
+# security advisory review PENDING; do not install/build on the coding host.
+torch==2.14.1
+transformers==5.18.0
+diffusers==0.40.0
+Pillow==12.3.0
+accelerate==1.15.0
+safetensors==0.8.0

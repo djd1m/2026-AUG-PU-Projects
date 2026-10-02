@@ -7,11 +7,12 @@ import { spawnSync } from 'node:child_process';
 
 const BUDGET_TAG = 'SEC-03 budget last slot admits exactly one';
 const OWNER_TAG = 'SEC-03 cross-owner GET must return 404';
+const FIXTURE_TAG = 'GEOM-03 fixture quality must be rejected with otherwise valid provenance';
 export function mutateSource(source, kind) {
-  const guard = kind === 'budget' ? 'if (counts[0]>=config.platformDailyLimit || counts[1]>=config.accountDailyLimit)' : kind === 'origin' ? 'if (req.headers.origin !== origin)' : 'AND account_id=$2';
-  const replacement = ['origin','budget'].includes(kind) ? 'if (false)' : 'AND $2::uuid IS NOT NULL';
+  const guard = kind === 'fixture' ? "if(mode==='fixture')" : kind === 'budget' ? 'if (counts[0]>=config.platformDailyLimit || counts[1]>=config.accountDailyLimit)' : kind === 'origin' ? 'if (req.headers.origin !== origin)' : 'AND account_id=$2';
+  const replacement = ['origin','budget','fixture'].includes(kind) ? 'if (false)' : 'AND $2::uuid IS NOT NULL';
   const expectedCount = kind !== 'owner' ? 1 : 2; // Media read and delete guards.
-  if (!['origin','owner','budget'].includes(kind) || source.split(guard).length - 1 !== expectedCount) {
+  if (!['origin','owner','budget','fixture'].includes(kind) || source.split(guard).length - 1 !== expectedCount) {
     throw new Error('mutation_guard_mismatch');
   }
   const mutated = source.replaceAll(guard,replacement);
@@ -38,6 +39,9 @@ export function mutationDetected(kind, result) {
   return blocks.some(block => {
     if (!/^\s*code: 'ERR_ASSERTION'\s*$/m.test(block)) return false;
     if (kind === 'origin') return /^\s*error: 'Missing expected exception\.'\s*$/m.test(block);
+    if (kind === 'fixture') return block.split('\n').some(line=>line.trim()===FIXTURE_TAG)
+      && /^\s*expected: true\s*$/m.test(block) && /^\s*actual: false\s*$/m.test(block)
+      && /^\s*operator: 'strictEqual'\s*$/m.test(block);
     if (kind === 'budget') return block.split('\n').some(line=>line.trim()===BUDGET_TAG)
       && /^\s*expected: 1\s*$/m.test(block) && /^\s*actual: 2\s*$/m.test(block)
       && /^\s*operator: 'strictEqual'\s*$/m.test(block);
@@ -47,8 +51,8 @@ export function mutationDetected(kind, result) {
   });
 }
 export async function verifyMutation(dir, kind) {
-  const file = join(dir,kind === 'origin' ? 'web/boundaries.js' : kind === 'budget' ? 'web/jobs.js' : 'web/media.js');
-  const test = kind === 'origin' ? 'tests/boundaries.test.js' : kind === 'budget' ? 'tests/jobs.integration.test.js' : 'tests/integration.test.js';
+  const file = join(dir,kind === 'fixture' ? 'web/quality.js' : kind === 'origin' ? 'web/boundaries.js' : kind === 'budget' ? 'web/jobs.js' : 'web/media.js');
+  const test = kind === 'fixture' ? 'tests/quality.test.js' : kind === 'origin' ? 'tests/boundaries.test.js' : kind === 'budget' ? 'tests/jobs.integration.test.js' : 'tests/integration.test.js';
   const source = await readFile(file,'utf8');
   const mutated = mutateSource(source,kind);
   const baseline = runTest(dir,test,'baseline.log');
@@ -62,7 +66,7 @@ export async function verifyMutation(dir, kind) {
 }
 async function main() {
   const kind = process.argv[2] ?? 'origin';
-  if (!['origin','owner','budget'].includes(kind)) throw new Error('Unknown mutation');
+  if (!['origin','owner','budget','fixture'].includes(kind)) throw new Error('Unknown mutation');
   const dir = await mkdtemp(join(tmpdir(),'n8-f01-mutation-'));
   try {
     for (const path of ['web','db','scripts','tests','package.json','package-lock.json']) {

@@ -6,9 +6,11 @@ import { createPool } from '../web/db.js';
 import { createJobs } from '../web/jobs.js';
 import { UUID } from '../web/boundaries.js';
 import { prepareStorage, sweepOrphans } from '../web/media.js';
+import { prepareArtifacts } from '../web/generation.js';
 
 // Output storage is disjoint from upload UUIDs: the F01 sweep only knows upload rows.
 export async function prepareOutputStorage(dir) {
+  await prepareArtifacts(dir);
   const root=join(dir,'outputs'); await mkdir(root,{recursive:true,mode:0o700});
   const stat=await lstat(root);
   if (!stat.isDirectory() || stat.isSymbolicLink()) throw new Error('Invalid output storage');
@@ -27,7 +29,12 @@ export async function cleanupDeleted(pool,dir,{limit=100}={}) {
     const path=row.type==='output'?join(dir,'outputs',row.key):join(dir,row.key);
     const table=row.type==='output'?'job':'upload'; // Closed internal enum, never request data.
     let cleaned=false;
-    try { await unlink(path); removed++; cleaned=true; }
+    try {
+      let anyRemoved=false;
+      await unlink(path).then(()=>{anyRemoved=true;}).catch(e=>{if(e.code!=='ENOENT')throw e;});
+      if(row.type==='output')for(const folder of ['depths','configs'])await unlink(join(dir,folder,row.key)).then(()=>{anyRemoved=true;}).catch(e=>{if(e.code!=='ENOENT')throw e;});
+      if(anyRemoved)removed++; cleaned=true;
+    }
     catch(error) { if (error.code==='ENOENT') cleaned=true; else console.error('media_cleanup_pending'); }
     const sql=table==='job'?'UPDATE job SET cleanup_attempted_at=clock_timestamp(),files_cleaned_at=CASE WHEN $2 THEN clock_timestamp() ELSE NULL END WHERE id=$1 AND deleted_at IS NOT NULL':
       'UPDATE upload SET cleanup_attempted_at=clock_timestamp(),files_cleaned_at=CASE WHEN $2 THEN clock_timestamp() ELSE NULL END WHERE id=$1 AND deleted_at IS NOT NULL';

@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { transaction } from './db.js';
 import { HttpError, requireUuid } from './boundaries.js';
+import { canonical, sha } from './generation.js';
 
 export const STYLES = ['warm','minimal','afrohemian','playful'];
 export function jobInput(input) {
@@ -169,17 +170,21 @@ export function createJobs(pool, config, {trustedClock} = {}) {
     },
     async complete(id,fence,output) {
       const modelRevisions=validateOutput(output,config.runtime);
+      const outputKey=output.output_key,mode=output.mode;
+      const e={...output.evidence,model_revisions:modelRevisions};
+      const canonicalEvidence=canonical({...e,job_id:id,output_key:outputKey,mode});
+      const evidenceSha=sha(canonicalEvidence); // Hash before acquiring SQL locks.
       return ownedTransaction(id,async(c,j,now)=>{
         if (!live(j,now,fence)) return false;
         const input=(await c.query('SELECT sha256,deleted_at FROM upload WHERE id=$1',[j.upload_id])).rows[0];
-        if (input.deleted_at || input.sha256!==output.evidence.input_sha) throw new Error('Output input binding mismatch');
-        const e=output.evidence;
+        if (input.deleted_at || input.sha256!==e.input_sha) throw new Error('Output input binding mismatch');
         await c.query(`INSERT INTO generation_evidence(job_id,input_sha,output_sha,depth_sha,config_sha,model_revisions,
-          seed,mode,worker_source_revision,hardware,queue_ms,inference_ms,warm,created_at)
-          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,[id,e.input_sha,e.output_sha,e.depth_sha,e.config_sha,
-          JSON.stringify(modelRevisions),e.seed,output.mode,e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now]);
+          seed,mode,worker_source_revision,hardware,queue_ms,inference_ms,warm,created_at,canonical_evidence,evidence_sha)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,[id,e.input_sha,e.output_sha,e.depth_sha,e.config_sha,
+          JSON.stringify(modelRevisions),e.seed,mode,e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now,
+          canonicalEvidence,evidenceSha]);
         await c.query(`UPDATE job SET status='succeeded',output_key=$2,mode=$3,quality='unverified',
-          finished_at=$4,lease_until=NULL WHERE id=$1`,[id,output.output_key,output.mode,now]);
+          finished_at=$4,lease_until=NULL WHERE id=$1`,[id,outputKey,mode,now]);
         return true; // Active pre-hold work may finish private; no quality/public acceptance here.
       });
     },
@@ -192,6 +197,12 @@ export function createJobs(pool, config, {trustedClock} = {}) {
           queue_deadline=$2 WHERE id=$1`,[id,bounded(now,60000,j.hard_deadline)]);
         return true;
       });
+    },
+    // Caller must hold account -> job locks. This is the same unique reserve
+    // release used by terminal/deletion paths, not a second financial adapter.
+    async releaseRejected(c,j,now) {
+      if(j.status!=='succeeded'||j.quality!=='rejected')throw new Error('Quality release requires rejected successful job');
+      await release(c,j,now);
     },
     async maintenance({limit=100}={}) {
       if (!Number.isSafeInteger(limit) || limit<1 || limit>1000) throw new Error('Invalid maintenance limit');
