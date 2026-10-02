@@ -1,0 +1,22 @@
+{
+  "work_unit_id": "n8-f01-network-review",
+  "status": "completed",
+  "actual_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "cli_session_id": 66565,
+  "started_at": "2026-10-02T20:28:39Z",
+  "metadata_lines": [
+    "model: gpt-6-astra",
+    "provider: openai",
+    "reasoning effort: high",
+    "session id: 01a0fe4d-ff83-7d12-a33a-d768c1fb04c9"
+  ],
+  "verdict": "ACCEPT exact Compose delta; coordinator supplies separate source binding",
+  "exit_code": 0,
+  "finished_at": "2026-10-02T20:30:29Z",
+  "receipt_sha256": "9b082eb9797570152ee7a2c10d8331b06248cc33c19efaedb61237f9392d9d3c",
+  "elapsed_wall_ms": 110000
+}
