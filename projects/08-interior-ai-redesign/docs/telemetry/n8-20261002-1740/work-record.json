@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "n8-20261002-1740",
+    "work_unit_id": "n8-coordinate",
+    "current_attempt_id": "n8-coordinate-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef",
+    "current_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
+      "observed_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+    "scope": [
+      "photo/style/redesign/compare/gallery/package/share"
+    ],
+    "exclusions": [
+      "furniture catalog",
+      "3D",
+      "partner payouts"
+    ],
+    "action_limits": [
+      "new external spend 0",
+      "no live charges/rental/deploy"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-CJM",
+        "required": true
+      },
+      {
+        "id": "AC-UPLOAD",
+        "required": true
+      },
+      {
+        "id": "AC-JOB",
+        "required": true
+      },
+      {
+        "id": "AC-GPU",
+        "required": true
+      },
+      {
+        "id": "AC-PAYMENT",
+        "required": true
+      },
+      {
+        "id": "AC-SHARE",
+        "required": true
+      },
+      {
+        "id": "AC-E2E",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/reuse-inventory.md"
+          }
+        },
+        "provenance": "donor files pinned at3b84e9ef with SHA256 in inventory",
+        "useful_fragment": "N5 auth/provider; N6 queue fencing/cleanup",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Generation-credit product requires different schema and transport"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable source-bound N8 GPU runs; no forecast claimed",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "GPU rental waiting",
+        "external deployment"
+      ],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "tier": "XL",
+      "rationale": "Payment/credit invariants, private image upload, public sharing, separate worker",
+      "script": {
+        "input": "explicit src/billing/webhook.ts, db/migrations/001-initial.sql, src/app/share/route.ts",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "XL local rule; owner explicitly authorized autonomy for N7+N8 after published v1",
+    "evidence": {
+      "id": "owner-autonomy-20261002",
+      "plan_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "cf3af4655ac02a81664d592ad690d2f3be776041aca762e6d91487e7e20a459c"
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Planning stage; static CJM preflights preserved in separate work unit",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "n8-coordinate-1",
+      "status": "active"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n8-coordinate",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/implementation-plan-v1.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}
