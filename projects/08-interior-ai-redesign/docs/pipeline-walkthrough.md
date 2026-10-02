@@ -1,6 +1,6 @@
 # Как устроен RoomKind: от фотографии до сравнения
 
-Статус2026-10-02: F01 (авторизация и приватные загрузки) собран и проверен в изолированном Docker с PostgreSQL16: 12 unit и 8 integration passed, npm audit — 0 уязвимостей. F01 принят после двух исправлений очистки/mutation harness и отдельного исправления Compose, каждое проверено независимой Astra; новая realPG suite —9tests, unit/harness —14. Локальный host HTTP и фактическая изоляция DB проверены. Следующие этапы ниже остаются согласованным проектным pipeline, не измеренным стендом. Формат заимствован из walkthrough N5/N6 по прямой просьбе владельца; их runtime факты сюда не переносятся.
+История F01 на 2026-10-02: F01 (авторизация и приватные загрузки) собран и проверен в изолированном Docker с PostgreSQL16: 12 unit и 8 integration passed, npm audit — 0 уязвимостей. F01 принят после двух исправлений очистки/mutation harness и отдельного исправления Compose, каждое проверено независимой Astra; новая realPG suite —9tests, unit/harness —14. Локальный host HTTP и фактическая изоляция DB проверены. Текущие программные приёмки F02 и F03a приведены ниже; реальная GPU-геометрия и итоговый app E2E ещё не пройдены. Формат заимствован из walkthrough N5/N6 по прямой просьбе владельца; их runtime факты сюда не переносятся.
 
 ## Кто выполняет работу
 Web принимает фото, хранит аккаунт/платежи и показывает результат. PostgreSQL хранит очередь и ledger кредитов. Отдельный Python GPU-worker строит depth-карту и запускает Stable Diffusion + ControlNet. Ни OpenAI image generation, ни внешний API генерации не заменяют эту цепочку. Реальная доступность CUDA на текущем host не подтверждена.
@@ -33,3 +33,9 @@ Web создаёт ROOM20:20/900RUB на сервере. YooKassa hosted checkou
 ### F02b software acceptance → F03
 
 ПервыйqualityPGостановилсянаPNGfixtureвWebPupload; независимыйAstraтакженашёлнеполныйdistinctcorpuscoverageиlate-exitгонкуengine. Solисправил6файлов;40hostunit,13generationвихчисле,27containerunit,PG9/21/7,4mutationsиstartupPASS. FreshAstraACCEPTsource575d822a. Всеошибки/неизвестныеclock/modelполяиimmutableлогиосталисьвистории. F02softwaredone, f05actualCUDA/modelsecurity/realcorpus/performanceblocked. /next→f03-payments,/go→/featureAUTO,substantiveXL,existingownerautonomy,zeroexternalspend. Планdocs/plans/f03-payments.md.
+
+### F03a принят → F03b
+
+Платёжный backend принят на `e50e6368`: серверная цена, асинхронное создание, authenticated verification, однократные начисления и постоянный hold проверены. Первый PG выявил ошибку очереди в тесте; Astra добавил замечание о проверке первой отмены после успеха. Оба сценария исправлены Sol и независимо приняты Astra. Итоговый платежный PG — 17/17 TAP, остальные обязательные build/HTTP/PG/mutation проверки пройдены. Все исходные провалы сохранены в `features/f03a/runtime-initial`.
+
+F03b продолжает утверждённый план: операторские партнёрские коды, отдельное согласие на tracking-cookie, ручной код без cookie и агрегаты первых конверсий. Реальных платежей, выплат или deployment нет.
