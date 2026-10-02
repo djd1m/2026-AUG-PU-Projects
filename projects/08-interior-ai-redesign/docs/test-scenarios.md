@@ -170,9 +170,9 @@ Then exactly1 account/trial exists;12/128 accepted and11/129 rejected
 
 @FR-auth-1 @AUTH-02
 Scenario: Session lifecycle and cookie flags
-Given valid, unknown, expired and logged-out sessions
+Given valid, unknown and logged-out sessions, token construction and explicit expiry cases immediately before and at/after created_at+7days; instrumented dummy-hash invocation for unknown email
 When login and access a private resource over configured local/nonlocal origins
-Then only valid sessions authorize; cookie flags match environment and failed login bodies are generic
+Then tokens originate from32 random bytes and only their HMAC is stored; pre-7d valid session authorizes, at/after7d and logout deny; unknown-account branch calls dummy password hash verification; cookie flags match environment and failed login bodies are generic
 
 @FR-auth-1 @AUTH-03
 Scenario: Auth abuse and origin boundaries
@@ -218,9 +218,9 @@ Then expired work is fenced/failed and process cancelled; no late success, no th
 
 @FR-redesign-1 @JOB-04
 Scenario: Retry limit and release races
-Given retry at daily limit plus concurrent failure/sweeper/delete/late completion
-When transition terminal states
-Then job fails with named reason; unique release +1 at most; output from stale fence inaccessible
+Given an existing reserve and each case: retry at daily limit, ordinary final worker failure, attempt deadline, absolute job deadline, concurrent failure/sweeper/delete/late completion; plus a separate no-reserve case
+When transition terminal states then replay failure and late completion
+Then every reserved failed job has exactly1 release(job_id) ledger entry of+1 and balance restored by1; replays add0; no-reserve case has0 releases; stale output inaccessible
 
 @FR-redesign-1 @JOB-05
 Scenario: Interrupted status recovery
@@ -248,15 +248,15 @@ Then only valid real operator review accepts bound bytes; all others refuse; rej
 
 @FR-gallery-1 @GALLERY-01
 Scenario: Gallery states and privacy
-Given owned jobs in each state and second account
+Given more than50 owned jobs spanning each state and a second account
 When list/reopen at desktop/mobile and simulate fetch error
-Then correct state/actions; unknown on failure; no cross-owner data and no indexing/cache headers
+Then each page contains at most50 owned entries with continuation for remaining jobs; correct state/actions, unknown on failure; no cross-owner data, noindex and private/no-store headers
 
 @FR-gallery-1 @GALLERY-02
 Scenario: Accessible comparison layout
 Given before/after result at1440px and390px with keyboard/reduced motion
 When navigate and change slider
-Then labels/state readable; value changes by keyboard; computed body≥16px and document width≤viewport
+Then separate before/after alt text is present, keyboard focus is visibly styled, status changes reach aria-live region; value changes by keyboard, computed body≥16px and document width≤viewport; reduced-motion preference disables nonessential animation
 
 @FR-gallery-1 @GALLERY-03
 Scenario: Delete revoke and cleanup
@@ -326,9 +326,9 @@ Then validB replacesA before freeze; later input cannot alter intent; bad codes 
 
 @FR-GROWTH-002 @ATTR-03
 Scenario: Concurrent first conversion and second purchase
-Given two differently attributed valid intents for one account and later purchase/refund
+Given cases: two differently attributed valid intents for one account; or first committed successful intent with no eligible partner followed by a partnered payment; and later purchase/refund of the first payment
 When settle concurrently then settle later/refund
-Then exactly one first marker and at most one conversion; first committed wins; no second/backfilled/promoted conversion
+Then exactly1 immutable first-paid marker remains bound to first committed success; partnered winner gets exactly1 conversion; no-partner winner gets0 even after later partnered payment and refund of the first; no backfill/reassignment/promotion
 
 @FR-GROWTH-003 @BADGE-01
 Scenario: Composite entitlement and cached hold
@@ -356,9 +356,9 @@ Then exact sums/counts of eligible first records only; repeated/refunded events 
 
 @FR-GROWTH-005 @PUBLIC-01
 Scenario: Publication consent and content boundaries
-Given accepted/unverified/fixture jobs, checked/unchecked consent, missing style/context and descriptions39/40chars
+Given accepted/unverified/fixture jobs, checked/unchecked consent, missing style; context lengths0/1/160/161 and description lengths39/40/2000/2001; independent consent on two jobs
 When publish two separate results
-Then only complete accepted real opted-in40+ result succeeds; no inherited consent or fixture SEO
+Then only complete accepted real opted-in result succeeds with context1 or160 and description40 or2000; context0/161 and description39/2001 reject; no inherited consent or fixture SEO
 
 @FR-GROWTH-005 @PUBLIC-02
 Scenario: Accepted-public XSS and privacy
@@ -406,4 +406,4 @@ Then new ticket only if both counters available; old count retained; exhaustion/
 Scenario: Measured GPU performance cohort
 Given real warm/cold/fixture samples and missing metadata
 When calculate nearest-rank p95 on valid warm cohort
-Then n≥30 real warm only with complete provenance; report queue separately; unavailable cohort remains unknown
+Then eligible cohort requires n≥30 real warm jobs with complete provenance and nearest-rank p95≤25s; valid cohort with p95>25s FAILS performance acceptance; unavailable/ineligible cohort remains UNKNOWN; report queue separately

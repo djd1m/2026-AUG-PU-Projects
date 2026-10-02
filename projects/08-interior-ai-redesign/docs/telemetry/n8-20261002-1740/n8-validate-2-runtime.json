@@ -15,5 +15,16 @@
   ],
   "raw_log_outside_git": "/tmp/n8-validate-2/runtime.log",
   "cli_session_id": 72019,
-  "status": "running"
+  "status": "completed",
+  "semantic_verdict": "NEEDS_WORK one finite scenario finding",
+  "exit_code": 0,
+  "started_at": "2026-10-02T19:05:23Z",
+  "finished_at": "2026-10-02T19:12:02Z",
+  "elapsed_wall_ms": 399000,
+  "receipt_sha256": "5d0d68d8f5aebd29a5ff3400e6f68c10294a5db0d086a3300e80b47818ecbd4b",
+  "receipt_validation": "1/1 substantive fresh regular non-symlink source/spec/launch bound terminal-completed",
+  "reviewer_clock_samples": [
+    "2026-10-02T19:05:41Z",
+    "2026-10-02T19:08:42Z"
+  ]
 }
