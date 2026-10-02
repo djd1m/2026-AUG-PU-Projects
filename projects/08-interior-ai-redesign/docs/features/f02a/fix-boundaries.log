@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: AUTH-01 canonical email and all password edges, including Unicode
+ok 1 - AUTH-01 canonical email and all password edges, including Unicode
+  ---
+  duration_ms: 3.193961
+  type: 'test'
+  ...
+# Subtest: AUTH-03 exact Origin denies missing, null, foreign, prefixes
+ok 2 - AUTH-03 exact Origin denies missing, null, foreign, prefixes
+  ---
+  duration_ms: 1.09767
+  type: 'test'
+  ...
+# Subtest: SEC-02 UUID path traversal/URL/malformed boundaries
+ok 3 - SEC-02 UUID path traversal/URL/malformed boundaries
+  ---
+  duration_ms: 2.25236
+  type: 'test'
+  ...
+# Subtest: AUTH-03 JSON 16KiB and streamed body boundaries
+ok 4 - AUTH-03 JSON 16KiB and streamed body boundaries
+  ---
+  duration_ms: 13.256285
+  type: 'test'
+  ...
+# Subtest: AUTH-03/SEC-02 exact rate edges, expiry and distinct NAT account keys
+ok 5 - AUTH-03/SEC-02 exact rate edges, expiry and distinct NAT account keys
+  ---
+  duration_ms: 1.399961
+  type: 'test'
+  ...
+# Subtest: capacity rejects parallel overflow without holding a DB connection or queuing
+ok 6 - capacity rejects parallel overflow without holding a DB connection or queuing
+  ---
+  duration_ms: 0.61939
+  type: 'test'
+  ...
+# Subtest: SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy
+ok 7 - SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy
+  ---
+  duration_ms: 4.541412
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 47.922007

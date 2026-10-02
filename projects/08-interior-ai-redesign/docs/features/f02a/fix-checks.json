@@ -1,0 +1,74 @@
+{
+  "source_revision": "d3b202404886d56ca3d46f0d8deb423d4858ed06",
+  "checks": [
+    {
+      "name": "build",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/check.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02a-fix/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T21:20:37.451419+00:00",
+      "ended_at": "2026-10-02T21:20:38.994544+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f02a/fix-build.log",
+      "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81"
+    },
+    {
+      "name": "boundaries",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/boundaries.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02a-fix/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T21:20:38.996175+00:00",
+      "ended_at": "2026-10-02T21:20:39.151897+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f02a/fix-boundaries.log",
+      "log_sha256": "0669534bf6ba8b070acd2ae3c8641cbcdaa6499790e1271244ca5272f76c299e"
+    },
+    {
+      "name": "media",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/media.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02a-fix/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T21:20:39.153010+00:00",
+      "ended_at": "2026-10-02T21:20:50.054220+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f02a/fix-media.log",
+      "log_sha256": "3d8feb2fe847597ba1ac164d261ff8d792da1b5bd3de11a46165b47782aba5c2"
+    },
+    {
+      "name": "jobs-unit",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/jobs.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02a-fix/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T21:20:50.054459+00:00",
+      "ended_at": "2026-10-02T21:20:50.262883+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f02a/fix-jobs-unit.log",
+      "log_sha256": "9c74975400681fbdbb4c78ef20107294e9e388af021371935a0c00e61ababd7f"
+    },
+    {
+      "name": "mutation-harness",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/mutation.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02a-fix/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T21:20:50.263111+00:00",
+      "ended_at": "2026-10-02T21:20:51.554712+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f02a/fix-mutation-harness.log",
+      "log_sha256": "31bc834c50dc6d6fe1ace7197cd0f6da38d238c8e1c1a376fb6d11aa00415895"
+    },
+    {
+      "name": "origin-mutation",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/mutation.js origin",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02a-fix/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T21:20:51.554946+00:00",
+      "ended_at": "2026-10-02T21:20:52.085324+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f02a/fix-origin-mutation.log",
+      "log_sha256": "28a6880ccb70819ce03bc0b6b732a8e8418c89e9af4bfae4820f1afb614aab0e"
+    }
+  ],
+  "pending": [
+    "F01 real PostgreSQL suite",
+    "F02a real PostgreSQL suite including new provenance/no-reserve cases",
+    "budget real mutation",
+    "owner real mutation",
+    "coordinator Docker regression"
+  ],
+  "lightweight_failures": [],
+  "build_revision": "215646b5d9541299408119dd357d84d3df8ac96d6490daf2a20d674a2768daaa"
+}

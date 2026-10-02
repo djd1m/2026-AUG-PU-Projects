@@ -28,7 +28,7 @@ test('F02a real PostgreSQL durable queue, budget, deadlines, fencing and owner A
     pool=createPool(db.href);await migrate(pool);await migrate(pool);
     dir=await mkdtemp(join(tmpdir(),'n8-f02a-'));await prepareStorage(dir);await prepareOutputStorage(dir);
     const jobs=(limits={})=>createJobs(pool,{...config,...limits},{trustedClock:()=>now});
-    async function reset() {await pool.query('TRUNCATE account CASCADE');now=new Date('2026-10-02T12:00:00Z');}
+    async function reset() {await pool.query('TRUNCATE account, attempt_budget CASCADE');now=new Date('2026-10-02T12:00:00Z');}
     async function owner(credits=5) {
       const id=randomUUID(),upload=randomUUID();
       await pool.query('INSERT INTO account(id,email,password_hash) VALUES($1,$2,$3)',[id,id+'@example.test','synthetic-unused-hash']);
@@ -98,6 +98,28 @@ test('F02a real PostgreSQL durable queue, budget, deadlines, fencing and owner A
       assert.equal(await releases(a.job_id),1);assert.equal((await row(a.job_id)).attempts,2);
       assert.equal(await count('SELECT count(*)::int AS n FROM generation_evidence'),0);
     });
+    await t.test('JOB-04 absent reserve cannot credit; actual reserve releases exactly once across repeated operations',async()=>{
+      for(const reserved of [false,true]) {
+        await reset();const o=await owner(),q=jobs();let id;
+        if(reserved) id=(await q.reserve(o.id,body(o))).job_id;
+        else {
+          // Inconsistent reserved=true fixture exercises the ledger guard, not an early boolean return.
+          id=randomUUID();
+          await pool.query(`INSERT INTO job(id,account_id,upload_id,style,idempotency_key,request_hash,created_at,queue_deadline,hard_deadline)
+            VALUES($1,$2,$3,'warm',$4,$5,$6,$7,$8)`,[id,o.id,o.upload,randomUUID(),'0'.repeat(64),now,
+            new Date(now.getTime()+60000),new Date(now.getTime()+360000)]);
+        }
+        assert.equal((await row(id)).reserved,true);
+        assert.equal(await count("SELECT count(*)::int AS n FROM credit_ledger WHERE kind='reserve' AND reference=$1",[id]),reserved?1:0);
+        advance(60000);
+        assert.equal((await q.get(o.id,id)).status,'failed');await q.get(o.id,id);await q.maintenance();
+        await q.deleteUpload(o.id,o.upload);
+        assert.equal(await releases(id),reserved?1:0);
+        assert.equal(await count('SELECT sum(delta)::int AS n FROM credit_ledger WHERE account_id=$1',[o.id]),5);
+        assert.equal((await row(id)).reserved,false);
+        assert.equal((await row(id)).failure_reason,'queue_expired');
+      }
+    });
     await t.test('JOB-04 retry budget exhaustion terminal release does not refund tickets',async()=>{
       for(const limits of [{accountDailyLimit:1},{platformDailyLimit:1,accountDailyLimit:1}]) {
         await reset();const o=await owner(),q=jobs(limits),a=await start(q,o);
@@ -146,6 +168,14 @@ test('F02a real PostgreSQL durable queue, budget, deadlines, fencing and owner A
       assert.equal(await q.complete(b.job_id,b.fence,fixtureOutput()),false);
       assert.equal((await row(a.job_id)).quality,'unverified');assert.equal(await releases(a.job_id),0);
       await assert.rejects(pool.query('UPDATE generation_evidence SET seed=2 WHERE job_id=$1',[a.job_id]),/immutable/);
+    });
+    await t.test('Completion persists canonical sd/controlnet/depth revisions without invoking supplied toJSON',async()=>{
+      await reset();const o=await owner(),q=jobs(),a=await start(q,o),output=fixtureOutput();
+      const expected={sd:'synthetic-sd-revision',controlnet:'synthetic-controlnet-revision',depth:'synthetic-depth-revision'};
+      output.evidence.model_revisions={...expected,toJSON(){throw new Error('Untrusted serializer executed');}};
+      assert.equal(await q.complete(a.job_id,a.fence,output),true);
+      const evidence=(await pool.query('SELECT model_revisions FROM generation_evidence WHERE job_id=$1',[a.job_id])).rows[0];
+      assert.deepEqual(evidence.model_revisions,expected);
     });
     await t.test('Atomic output attach rejects wrong input and rolls back evidence on output-key conflict',async()=>{
       await reset();const o=await owner(),q=jobs(),a=await start(q,o),wrong=fixtureOutput();wrong.evidence.input_sha='e'.repeat(64);

@@ -1,0 +1,71 @@
+{
+  "baseline": "fix-checks.json jobs-unit exit 0, same product bytes",
+  "checks": [
+    {
+      "name": "clock-runtime",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test",
+        "--test-name-pattern=Trusted clock",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "temporary isolated copy of source",
+      "started_at": "2026-10-02T21:21:33.720548+00:00",
+      "ended_at": "2026-10-02T21:21:34.057967+00:00",
+      "exit_code": 1,
+      "detected": false,
+      "mutation": {
+        "from": "config.runtime!=='test'",
+        "to": "config.runtime==='production'"
+      },
+      "source_sha256": "25396b1a26da3f5229a4e06e0e14a97d6c3a23ae6dc1e5777778141fe45f005d",
+      "mutant_sha256": "29012c1aa7826c9def604a87eff113771132068503668648efe37195e921ed0f",
+      "log": "docs/features/f02a/fix-guard-clock-runtime-initial.log",
+      "scope": "Unit guard sensitivity only, not PostgreSQL persistence evidence"
+    },
+    {
+      "name": "provenance-shape",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test",
+        "--test-name-pattern=Provenance rejects",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "temporary isolated copy of source",
+      "started_at": "2026-10-02T21:21:34.058411+00:00",
+      "ended_at": "2026-10-02T21:21:34.459747+00:00",
+      "exit_code": 1,
+      "detected": false,
+      "mutation": {
+        "from": "if (!revisions || (Object.getPrototypeOf(revisions)!==Object.prototype && Object.getPrototypeOf(revisions)!==null))",
+        "to": "if (!revisions)"
+      },
+      "source_sha256": "25396b1a26da3f5229a4e06e0e14a97d6c3a23ae6dc1e5777778141fe45f005d",
+      "mutant_sha256": "3906b7442c50844e6adcd11aa777b1b93684adfa751563282cb4d5815c9dbc59",
+      "log": "docs/features/f02a/fix-guard-provenance-shape-initial.log",
+      "scope": "Unit guard sensitivity only, not PostgreSQL persistence evidence"
+    },
+    {
+      "name": "provenance-copy",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test",
+        "--test-name-pattern=Provenance rejects",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "temporary isolated copy of source",
+      "started_at": "2026-10-02T21:21:34.460202+00:00",
+      "ended_at": "2026-10-02T21:21:34.804871+00:00",
+      "exit_code": 1,
+      "detected": false,
+      "mutation": {
+        "from": "return modelRevisions;",
+        "to": "return revisions;"
+      },
+      "source_sha256": "25396b1a26da3f5229a4e06e0e14a97d6c3a23ae6dc1e5777778141fe45f005d",
+      "mutant_sha256": "d05207b2d531d17a60785305c16bb37ab3add5c8c8ee84beb193917556c1679f",
+      "log": "docs/features/f02a/fix-guard-provenance-copy-initial.log",
+      "scope": "Unit guard sensitivity only, not PostgreSQL persistence evidence"
+    }
+  ]
+}

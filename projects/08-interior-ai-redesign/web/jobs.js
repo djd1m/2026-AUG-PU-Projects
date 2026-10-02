@@ -27,11 +27,11 @@ const bounded = (now,ms,deadline) => new Date(Math.min(now.getTime()+ms,deadline
 const live = (j,now,fence) => j.status==='running' && !j.deleted_at && j.fence===fence &&
   now<j.lease_until && now<j.attempt_deadline && now<j.hard_deadline;
 
-// Only internal callers receive this object. trustedClock is a test/controller method,
-// never an HTTP field. Production time is sampled from PostgreSQL after acquiring locks.
+// Only internal callers receive this object. trustedClock is test-only,
+// never an HTTP field. Other runtimes sample PostgreSQL time after acquiring locks.
 export function createJobs(pool, config, {trustedClock} = {}) {
   budgetLimits(config);
-  if (trustedClock && config.runtime==='production') throw new Error('Test clock denied in production');
+  if (trustedClock!==undefined && (config.runtime!=='test' || typeof trustedClock!=='function')) throw new Error('Test clock requires test runtime and a function');
   async function clock(c) {
     const now = trustedClock ? new Date(await trustedClock()) : (await c.query('SELECT clock_timestamp() AS now')).rows[0].now;
     if (!Number.isFinite(now.getTime())) throw new Error('Invalid trusted clock');
@@ -168,7 +168,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       });
     },
     async complete(id,fence,output) {
-      validateOutput(output,config.runtime);
+      const modelRevisions=validateOutput(output,config.runtime);
       return ownedTransaction(id,async(c,j,now)=>{
         if (!live(j,now,fence)) return false;
         const input=(await c.query('SELECT sha256,deleted_at FROM upload WHERE id=$1',[j.upload_id])).rows[0];
@@ -177,7 +177,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
         await c.query(`INSERT INTO generation_evidence(job_id,input_sha,output_sha,depth_sha,config_sha,model_revisions,
           seed,mode,worker_source_revision,hardware,queue_ms,inference_ms,warm,created_at)
           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,[id,e.input_sha,e.output_sha,e.depth_sha,e.config_sha,
-          JSON.stringify(e.model_revisions),e.seed,output.mode,e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now]);
+          JSON.stringify(modelRevisions),e.seed,output.mode,e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now]);
         await c.query(`UPDATE job SET status='succeeded',output_key=$2,mode=$3,quality='unverified',
           finished_at=$4,lease_until=NULL WHERE id=$1`,[id,output.output_key,output.mode,now]);
         return true; // Active pre-hold work may finish private; no quality/public acceptance here.
@@ -259,10 +259,18 @@ export function validateOutput(output,runtime) {
   const e=output?.evidence;
   if (!output || !['fixture','controlnet'].includes(output.mode) || (runtime==='production' && output.mode==='fixture')) throw new Error('Invalid output mode');
   requireUuid(output.output_key);
+  const revisions=e?.model_revisions;
+  if (!revisions || (Object.getPrototypeOf(revisions)!==Object.prototype && Object.getPrototypeOf(revisions)!==null)) throw new Error('Incomplete generation evidence');
+  const modelRevisions={};
+  for (const key of ['sd','controlnet','depth']) {
+    const value=revisions[key];
+    if (!Object.hasOwn(revisions,key) || typeof value!=='string' || !value.length || value.length>200) throw new Error('Incomplete generation evidence');
+    modelRevisions[key]=value;
+  }
   if (!e || ['input_sha','output_sha','depth_sha','config_sha'].some(k=>!/^[a-f0-9]{64}$/.test(e[k]??'')) ||
-      !e.model_revisions || ['sd','controlnet','depth'].some(k=>typeof e.model_revisions[k]!=='string' || !e.model_revisions[k].length || e.model_revisions[k].length>200) ||
       !Number.isSafeInteger(e.seed) || e.seed<0 || !Number.isSafeInteger(e.queue_ms) || e.queue_ms<0 ||
       !Number.isSafeInteger(e.inference_ms) || e.inference_ms<0 || typeof e.warm!=='boolean' ||
       typeof e.worker_source_revision!=='string' || !/^[a-f0-9]{40,64}$/.test(e.worker_source_revision) ||
       typeof e.hardware!=='string' || !e.hardware.length || e.hardware.length>500) throw new Error('Incomplete generation evidence');
+  return modelRevisions;
 }

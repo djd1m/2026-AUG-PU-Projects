@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: Provenance rejects unsupported shapes and serializes a detached canonical revision object
+not ok 1 - Provenance rejects unsupported shapes and serializes a detached canonical revision object
+  ---
+  duration_ms: 10.639754
+  type: 'test'
+  location: '/tmp/n8-f02a-fix-guards-7x79snec/tests/jobs.test.js:47:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        controlnet: 'controlnet-revision',
+        depth: 'depth-revision',
+    +   sd: 'changed-after-validation'
+    -   sd: 'sd-revision'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    sd: 'sd-revision'
+    controlnet: 'controlnet-revision'
+    depth: 'depth-revision'
+  actual:
+    sd: 'changed-after-validation'
+    controlnet: 'controlnet-revision'
+    depth: 'depth-revision'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-f02a-fix-guards-7x79snec/tests/jobs.test.js:58:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27.02621
