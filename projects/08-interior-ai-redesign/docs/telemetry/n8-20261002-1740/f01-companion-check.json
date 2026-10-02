@@ -1,0 +1,42 @@
+{
+  "prior_invocations": {
+    "first_invocation_exit": 1,
+    "first_invocation_reason": "Coordinator command typo in build digest and incorrect relative record path; not a product verdict",
+    "corrected_command": [
+      "python3",
+      ".claude/skills/project-work-companion/scripts/validate_record.py",
+      "--root",
+      "projects/08-interior-ai-redesign",
+      "--record",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/work-record.json",
+      "--expect-run-id",
+      "n8-20261002-1740",
+      "--expect-work-unit-id",
+      "n8-coordinate",
+      "--expect-source-revision",
+      "83b1ef88f40c5edb000ea5753695bf65111bd62c",
+      "--expect-build-revision",
+      "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740"
+    ],
+    "exit_code": 1,
+    "output": "invalid input: --root must be absolute\n"
+  },
+  "corrected_command": [
+    "python3",
+    ".claude/skills/project-work-companion/scripts/validate_record.py",
+    "--root",
+    "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign",
+    "--record",
+    "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/work-record.json",
+    "--expect-run-id",
+    "n8-20261002-1740",
+    "--expect-work-unit-id",
+    "n8-coordinate",
+    "--expect-source-revision",
+    "83b1ef88f40c5edb000ea5753695bf65111bd62c",
+    "--expect-build-revision",
+    "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740"
+  ],
+  "exit_code": 0,
+  "output": "record structure verified; this is not product acceptance\n"
+}

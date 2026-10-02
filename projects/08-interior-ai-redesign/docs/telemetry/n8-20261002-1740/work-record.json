@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "3b84e9ef",
-    "current_revision": "6b93c0e5f5befcc22500ea8b35d80c0ca13bba2a",
-    "build_revision": null,
+    "current_revision": "83b1ef88f40c5edb000ea5753695bf65111bd62c",
+    "build_revision": "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740",
     "requirements": [
       {
         "root": "project",
@@ -37,25 +37,26 @@
       }
     ],
     "continuity": {
-      "expected_revision": "dd143eeb6e687e235b9d5b6a67444a0b28061afe",
-      "observed_revision": "6b93c0e5f5befcc22500ea8b35d80c0ca13bba2a",
+      "expected_revision": "6b93c0e5f5befcc22500ea8b35d80c0ca13bba2a",
+      "observed_revision": "83b1ef88f40c5edb000ea5753695bf65111bd62c",
       "reconciliation": {
         "status": "completed",
-        "impact": "Design corrected/revalidated plus root final exact-line closure; N8-only toolkit and F01 scoped plan added. No runtime acceptance.",
-        "decision": "Proceed F01 under owner autonomy; preserve all prior reviews and pending GPU/runtime acceptance.",
+        "impact": "F01 candidate integrated; source-bound Docker build,12unit/8Postgres integration/audit completed; independent review two medium corrections in progress. F02 plan prepared only.",
+        "decision": "Do not accept F01 until two corrections and targeted review/runtime complete; then next/go F02.",
         "affected_checks": [
-          "document gates",
-          "AC mappings",
-          "semantic validation",
-          "toolkit"
+          "F01 auth/upload runtime",
+          "orphan sweep",
+          "owner mutation"
         ],
         "rerun": [
-          "document gates",
-          "AC mappings",
-          "semantic validation",
-          "toolkit"
+          "actual Docker F01 runtime"
         ],
-        "pending": []
+        "pending": [
+          "sweep progress fix",
+          "mutation negative controls",
+          "fresh targeted Astra review",
+          "affected runtime rerun"
+        ]
       }
     }
   },
