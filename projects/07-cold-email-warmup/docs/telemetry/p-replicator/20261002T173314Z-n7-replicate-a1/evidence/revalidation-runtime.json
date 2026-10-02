@@ -1,0 +1,27 @@
+{
+  "thread_id": "01a0fdf5-b484-7343-9c42-bb42b2fd2c9a",
+  "actual_model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "model_evidence": "host rollout turn_context",
+  "usage": {
+    "input_tokens": 972228,
+    "cached_input_tokens": 891392,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 9075,
+    "reasoning_output_tokens": 1058
+  },
+  "cost": null,
+  "duration_seconds_process": 411.647,
+  "verdict": "NEEDS_WORK",
+  "closed": [
+    "V01",
+    "V02",
+    "V04",
+    "V05",
+    "V06"
+  ],
+  "unresolved": [
+    "V03 missing crash-before-page-commit BDD"
+  ],
+  "source_revision": "b04706cae67edcdc29e1384eca20c3ca439c0981"
+}
