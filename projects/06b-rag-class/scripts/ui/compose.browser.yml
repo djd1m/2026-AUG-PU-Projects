@@ -1,0 +1,21 @@
+name: codex-ui-browser
+services:
+  browser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codex-ui-playwright:1.63.0
+    container_name: codex-ui-playwright
+    init: true
+    ports:
+      - "127.0.0.1:${UI_BROWSER_PORT:-19320}:9320"
+    cpus: 2
+    mem_limit: 3g
+    shm_size: 1g
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks: [browser]
+networks:
+  browser:
+    name: codex-ui-browser

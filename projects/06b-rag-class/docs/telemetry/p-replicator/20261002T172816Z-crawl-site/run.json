@@ -1,0 +1,53 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261002T172816Z-crawl-site",
+  "batch_id": "20260930T170502Z-n6b-replicate-fd43",
+  "project": "projects/06b-rag-class",
+  "feature": "crawl-site",
+  "pipeline": "/replicate resume → /run mvp → /next → /go crawl-site",
+  "tier": "M",
+  "risk_flags": [
+    "SSRF/DNS-pinning",
+    "web-worker-boundary",
+    "shared-job-lease"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "fresh Phase1 SPARC L→M exception; agreed existing design; Sol high bounded implementation; owner Astra medium independent review fallback"
+  ],
+  "baseline_revision": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+  "final_revision": null,
+  "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
+  "host": "codex",
+  "host_version": "0.160.0 child; coordinator process 0.159.3",
+  "billing_mode": "unknown",
+  "started_at": "2026-10-02T17:28:16.169229Z",
+  "ended_at": null,
+  "status": "running",
+  "metrics": {
+    "coordinator_usage": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator token counters and subscribed cost unavailable"
+  ],
+  "acceptance_criteria": [
+    "SSRF admission 422 and DNS pinned HTTP(S) worker connections + redirects",
+    "robots RFC9309 fail closed; sitemap same-host; bounded timeout/body/pages; no repeated loads",
+    "HTML blocks + unchanged document links; fenced writes/checkpoints; retry preserves embedding cache",
+    "Cabinet bot creation/site URL returns 202 job_id; tenant/auth/origin isolation",
+    "Full typecheck/unit/integration/build, expected-red SSRF mutation, independent review"
+  ],
+  "route": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive_tier": "M",
+    "reason": "Base L: external HTTP and web-worker crossing. Fresh full SPARC 2026-09-30 includes FR-n6b-2, Crawl site algorithm, Architecture boundaries; applying explicit L→M exception. No money/schema/data-invariant change."
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local isolated fixture tests only; no deployed E2E or release"
+  }
+}
