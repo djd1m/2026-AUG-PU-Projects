@@ -1,0 +1,29 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f01",
+  "attempt_id": "n8-f01-attempt-1",
+  "created_at": "2026-10-02T19:29:44.058654+00:00",
+  "stage": "IMPLEMENT_F01",
+  "source_revision": "6b93c0e5f5befcc22500ea8b35d80c0ca13bba2a",
+  "spec_sha256": "92674e25074fcda42c930138b7ff03f6ec1671751f802b89800604176023f499",
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f01/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-f01-receipt.md",
+  "prelaunch_trace_state": "absent",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "budget_minutes": 25,
+  "owned_paths": [
+    "projects/08-interior-ai-redesign/web/",
+    "projects/08-interior-ai-redesign/db/",
+    "projects/08-interior-ai-redesign/tests/",
+    "projects/08-interior-ai-redesign/scripts/",
+    "projects/08-interior-ai-redesign/package.json",
+    "projects/08-interior-ai-redesign/package-lock.json",
+    "projects/08-interior-ai-redesign/Dockerfile",
+    "projects/08-interior-ai-redesign/compose.yaml",
+    "projects/08-interior-ai-redesign/.env.example",
+    "projects/08-interior-ai-redesign/docs/features/f01/"
+  ],
+  "stop_condition": "Runnably implement F01 and meaningful checks, or report exact partial work/check blockers by25min; no optional polish/delegation/heavybuild without lease"
+}
