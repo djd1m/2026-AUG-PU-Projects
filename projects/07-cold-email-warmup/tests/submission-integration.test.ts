@@ -17,9 +17,9 @@ function barrier() {
  const reached=new Promise<void>(r=>{entered=r;});const resume=new Promise<void>(r=>{release=r;});
  return {reached,release,wait:async()=>{entered();await resume;}};
 }
-async function waitingForLock(pool:Pool) {
+async function waitingForLock(pool:Pool,expected=1) {
  for(let i=0;i<100;i++) {
-  if(Number((await pool.query("SELECT count(*) FROM pg_locks WHERE locktype='advisory' AND classid=7 AND objid=1 AND NOT granted")).rows[0].count)>0) return;
+  if(Number((await pool.query("SELECT count(*) FROM pg_locks WHERE locktype='advisory' AND classid=7 AND objid=1 AND NOT granted")).rows[0].count)>=expected) return;
   await new Promise(r=>setTimeout(r,5));
  }
  assert.fail('writer did not wait on actual shared advisory lock');
@@ -34,7 +34,7 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
  const input={steps:[{subject:'Hello {{firstName}}',body:'N7_PRIVATE_CANARY_B {{firstName}}',delayHours:24}],recipients:[{address:'private-b@example.test',fields:{firstName:'Ada'}}]};
  let actors:Identity[],boxes:string[],campaign:{id:string;content_version:number;recipient_fingerprint:string};
  const grant=async(i:number,scope:'pool'|'campaign')=>app.consents.act(actors[i]!,boxes[i]!,{scope,action:'grant',affirmative:true,scopeVersion:scope==='pool'?1:campaign.content_version,...(scope==='campaign'?{campaignId:campaign.id,recipientFingerprint:campaign.recipient_fingerprint}:{})});
- async function setup(scope:'campaign'|'pool'='campaign',recipients=1) {
+ async function setup(scope:'campaign'|'pool'='campaign',recipients=1,claimOffsetMs=0) {
   await pool.query('TRUNCATE tenant,auth_bucket CASCADE');calls=0;actors=[];boxes=[];now=new Date('2026-10-02T12:00:00Z');
   for(let i=0;i<3;i++) {
    const tenant=randomUUID(),account=randomUUID();await pool.query('INSERT INTO tenant(id) VALUES($1)',[tenant]);
@@ -50,7 +50,19 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
   else {
    await pool.query(`INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,due_at,payload,pair_key) VALUES($1,$2,$3,$4,'pool','queued',$5,$6,$7)`,[randomUUID(),actors[0]!.tenant_id,boxes[0],boxes[1],now,{subject:'N7 warmup',body:'This is a consented N7 warmup test message.'},[boxes[0],boxes[1]].sort().join(':')+':'+now.toISOString().slice(0,10)]);
   }
+  now=new Date(now.getTime()+claimOffsetMs);
   const job=await app.dispatch.claim(randomUUID(),now);assert.ok(job);return job;
+ }
+ async function submitAfterLockWait(jobs:{id:string;lease_owner:string}[],fresh:Date) {
+  const blocker=await pool.connect();let pending:Promise<{state:string;calls:number}>[]=[];
+  try {
+   await blocker.query('BEGIN');await blocker.query('SELECT pg_advisory_xact_lock(7,1)');
+   pending=jobs.map(job=>submit.submit(job.id,job.lease_owner));
+   await waitingForLock(pool,jobs.length);now=fresh;
+  } finally {
+   await blocker.query('COMMIT');blocker.release();
+  }
+  return Promise.all(pending);
  }
  const stopCases=['revoke','version','pause','sender_withdraw','recipient_withdraw','reply','unsubscribe','complaint','disable','limit'] as const;
  async function stop(kind:typeof stopCases[number],job:Record<string,unknown>) {
@@ -113,6 +125,7 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
     assert.equal((await request('/api/dispatch/messages')).status,401);
     assert.equal((await request(`/api/dispatch/jobs/${job.id}`,cookies[0])).status,200);
     assert.equal((await request(`/api/dispatch/jobs/${job.id}`,cookies[1])).status,404);
+    assert.equal((await request('/api/dispatch/messages',cookies[0])).status,200);
     const peerResponse=await request('/api/dispatch/messages',cookies[1]);assert.equal(peerResponse.status,200);assert.equal((await peerResponse.json()).data.length,1);
     assert.equal((await request('/api/dispatch/jobs/not-uuid',cookies[0])).status,400);
     assert.equal((await request('/api/dispatch/tick',cookies[0],'POST')).status,404);
@@ -125,6 +138,59 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
    await submit.submit(reply.id,reply.lease_owner);const replyMessage=(await pool.query('SELECT headers FROM local_test_message WHERE job_id=$1',[reply.id])).rows[0];assert.equal(replyMessage.headers.References,own[0].message_id);
    const privateJob=await setup();await submit.submit(privateJob.id,privateJob.lease_owner);
    assert.equal((await submit.messages(actors[1]!.tenant_id)).length,0);assert.match((await submit.messages(actors[0]!.tenant_id))[0].body,/N7_PRIVATE_CANARY_B Ada/);
+  });
+  await t.test('R2 B5 authenticated disabled inspection unavailable before either reader',async()=>{
+   const job=await setup();const disabled=await application({...config,dispatchMode:'disabled'},pool);
+   let reads=0;
+   disabled.submissions.inspect=async()=>{reads++;throw new Error('disabled job reader called');};
+   disabled.submissions.messages=async()=>{reads++;throw new Error('disabled message reader called');};
+   const session=newSession(config.sessionKey);
+   await pool.query('INSERT INTO session(id,account_id,token_hash,expires_at) VALUES($1,$2,$3,$4)',[randomUUID(),actors[0]!.account_id,session.digest,session.expiresAt]);
+   await new Promise<void>(r=>disabled.server.listen(0,'127.0.0.1',r));
+   const address=disabled.server.address();assert.ok(address && typeof address==='object');
+   try {
+    for(const path of [`/api/dispatch/jobs/${job.id}`,'/api/dispatch/messages']) {
+     const url:string=`http://127.0.0.1:${address.port}${path}`;
+     assert.equal((await fetch(url)).status,401);
+     const response=await fetch(url,{headers:{Cookie:`${COOKIE_NAME}=${session.token}`}});
+     assert.equal(response.status,503);assert.deepEqual(await response.json(),{error:{code:'service_unavailable',message:'service_unavailable'}});
+     assert.equal(reads,0);
+    }
+   } finally {await new Promise<void>(r=>disabled.server.close(()=>r()));}
+  });
+  await t.test('R1 post-lock clock lease45s rejects expired waiter with zero adapter calls',async()=>{
+   const job=await setup();const base=now.getTime();now=new Date(base+44999);
+   const [result]=await submitAfterLockWait([job],new Date(base+45000));
+   assert.equal(result!.calls,0);assert.equal(calls,0);
+  });
+  await t.test('R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls',async()=>{
+   const job=await setup('campaign',1,20000);const base=now.getTime()-20000;now=new Date(base+59999);
+   const [result]=await submitAfterLockWait([job],new Date(base+60000));
+   assert.equal(result!.calls,0);assert.equal(calls,0);
+  });
+  await t.test('R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls',async()=>{
+   const first=await setup();const base=now.getTime();
+   const transient=new SubmissionStore(pool,config,{clock:()=>now,adapter:{mode:'local_test',async submit(){return {kind:'pre_data_transient',proof:'no_data_submitted'};}}});
+   await transient.submit(first.id,first.lease_owner);now=new Date(base+119999);
+   await seams.recordPoll(actors[0]!.tenant_id,boxes[0]!,{completedAt:now,scanComplete:true,uidvalidity:'fixture',cursorUid:1});
+   const retry=await app.dispatch.claim(randomUUID(),now);assert.ok(retry);
+   const [result]=await submitAfterLockWait([retry],new Date(base+120000));
+   assert.equal(result!.calls,0);assert.equal(calls,0);
+  });
+  await t.test('R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations',async()=>{
+   const first=await setup('campaign',2);const second=await app.dispatch.claim(randomUUID(),now);assert.ok(second);
+   now=new Date('2026-10-02T23:59:59.999Z');
+   await eligibilityTransaction(pool,async c=>{
+    await c.query("UPDATE send_job SET lease_until=$1::timestamptz+interval '45 seconds' WHERE id=ANY($2::uuid[])",[now,[first.id,second.id]]);
+    await c.query('UPDATE mailbox SET provider_limit=1 WHERE id=$1',[boxes[0]]);
+   });
+   await seams.recordPoll(actors[0]!.tenant_id,boxes[0]!,{completedAt:now,scanComplete:true,uidvalidity:'fixture',cursorUid:1});
+   const results=await submitAfterLockWait([first,second],new Date('2026-10-03T00:00:00Z'));
+   assert.equal(results.filter(r=>r.calls===1).length,1);assert.equal(calls,1);
+   const jobs=(await pool.query('SELECT state,reserved_day::text,due_at,claim_order FROM send_job ORDER BY id')).rows;
+   assert.equal(jobs.filter(j=>j.state==='submitted' && j.reserved_day==='2026-10-03').length,1);
+   assert.equal(jobs.filter(j=>j.state==='queued' && j.reserved_day===null && j.due_at.toISOString()==='2026-10-04T00:00:00.000Z').length,1);
+   assert.ok(jobs.every(j=>j.claim_order!==null));
   });
   await t.test('B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan',async()=>{
    let job=await setup();const disabled=new SubmissionStore(pool,{...config,dispatchMode:'disabled'},{clock:()=>now,adapter});

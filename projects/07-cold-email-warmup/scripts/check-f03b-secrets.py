@@ -17,5 +17,5 @@ for name in paths:
  path=Path(name)
  if not path.is_absolute(): path=root/name
  if path.is_file(): assert not any(value in path.read_text(errors='replace') for value in values), 'Secret found in project file; contents suppressed'
-(root/'docs/telemetry/features/20261002T211800Z-f03/sol-b-secret-scan.txt').write_text('Runtime session/credential/recipient-hash/DB keys checked; no values in project tracked/untracked files or isolated n7f03b logs. Private contact/credential canaries absent from isolated service logs. No other stack inspected. Exit0.\n')
+(root/('docs/telemetry/features/20261002T211800Z-f03/'+os.environ.get('N7_EVIDENCE_PREFIX','sol-b')+'-secret-scan.txt')).write_text('Runtime session/credential/recipient-hash/DB keys checked; no values in project tracked/untracked files or isolated n7f03b logs. Private contact/credential canaries absent from isolated service logs. No other stack inspected. Exit0.\n')
 print('F03b secret/contact canary scan passed; values suppressed.')

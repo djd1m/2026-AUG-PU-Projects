@@ -16,10 +16,12 @@ export class SubmissionStore {
  constructor(readonly pool:Pool,readonly config:Config,readonly fixtures:SubmissionFixtures={}) {}
  private now() {return this.fixtures.clock?.()??new Date();}
  async submit(id:string,owner:string) {
-  await this.fixtures.beforeFinal?.();const now=this.now();
+  await this.fixtures.beforeFinal?.();
   const prepared=await eligibilityTransaction(this.pool,async client=>{
    // Operator authority is configured at process startup, never chosen by HTTP input.
    if(this.config.dispatchMode!=='local_test' || (this.fixtures.adapter && this.fixtures.adapter.mode!=='local_test')) return null;
+   // The shared lock may have waited across a deadline or UTC midnight.
+   const now=this.now();
    const day=now.toISOString().slice(0,10);
    const row=(await client.query(`UPDATE send_job j SET state='submitting',reserved_day=$4,
      attempt_count=attempt_count+1,first_attempt_at=COALESCE(first_attempt_at,$1),submitting_at=$1,outcome=NULL

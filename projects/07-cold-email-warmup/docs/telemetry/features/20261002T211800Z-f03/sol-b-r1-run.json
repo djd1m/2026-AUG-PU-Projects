@@ -1,0 +1,37 @@
+{
+  "run_id": "20261002T211800Z-f03",
+  "work_unit_id": "n7-f03b-sol-r1",
+  "attempt_id": "correct-b1",
+  "started_at": "2026-10-02T22:52:26.803663+00:00",
+  "source_revision": "e7791cc57d60737e44eb7db33b3f06371dee7425",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "route": {
+    "mechanical_exit": 1,
+    "mechanical_tier": "L",
+    "substantive": "Inherited XL safety correction: final send eligibility and test-state authority; owner approved R1/R2 only."
+  },
+  "scope": [
+    "src/dispatch/submission.ts",
+    "src/server.ts",
+    "tests/submission-integration.test.ts",
+    "necessary targeted scripts",
+    "own correction docs/evidence/receipt"
+  ],
+  "approval": "Caller grants sole coder autonomy; no new approval; no agents.",
+  "resume": "Source matches expected revision; review-b R1/R2 only; prior evidence/history preserved.",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Backend integration only; no browser/E2E claim. Actual PG/source checks mandatory."
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Actual host model/usage/cost pending parent proof."
+  ],
+  "status": "running"
+}

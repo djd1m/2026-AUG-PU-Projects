@@ -96,9 +96,13 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           }
           throw new HttpError(405,'method_not_allowed');
         }
-        if(path==='/api/dispatch/messages' && req.method==='GET') return json(res,200,{data:await submissions.messages(identity.tenant_id),meta:{mode:'local_test'}});
+        if(path==='/api/dispatch/messages' && req.method==='GET') {
+          if(config.dispatchMode!=='local_test') throw new HttpError(503,'service_unavailable');
+          return json(res,200,{data:await submissions.messages(identity.tenant_id),meta:{mode:'local_test'}});
+        }
         const jobMatch=/^\/api\/dispatch\/jobs\/([^/]+)$/.exec(path);
         if(jobMatch && req.method==='GET') {
+          if(config.dispatchMode!=='local_test') throw new HttpError(503,'service_unavailable');
           if(!UUID.test(jobMatch[1]!)) throw new HttpError(400,'invalid_input');
           return json(res,200,{data:await submissions.inspect(identity.tenant_id,jobMatch[1]!),meta:{}});
         }
