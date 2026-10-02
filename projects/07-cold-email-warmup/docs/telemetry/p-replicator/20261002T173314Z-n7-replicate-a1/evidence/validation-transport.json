@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-02T18:06:31.336727+00:00",
+  "stage": "VALIDATE",
+  "event": "transport_fallback",
+  "reason": "native spawn rejected: agent thread limit reached; N7 coordinator inactive, bounded CLI fresh Astra reviewer keeps logical active count <=4",
+  "requested_model": "gpt-6-astra",
+  "effort": "high",
+  "actual_model": null,
+  "budget_seconds": 900,
+  "brief_sha256": "d51f137be84f354d65531141029cea8b03e0ca486b2f3cfc6c2609d5d8a51e68"
+}
