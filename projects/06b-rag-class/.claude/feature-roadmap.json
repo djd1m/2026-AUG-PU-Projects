@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Реализация не начиналась: package.json, миграций и тестов нет. Скелеты Фазы 4 (docker-compose.yml, Dockerfile, .env.example, .dockerignore) не собираются до фичи foundation — это названный пробел, а не зелёная сборка.",
+    "state": "Выполнены5/16 фич: foundation, spend-ceilings, index-jobs, chunk-embed, crawl-site. Продолжение: pdf-source; остальные release gates сохраняются.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -202,7 +202,7 @@
       "name": "Обход сайта: RFC 9309, sitemap, тот же хост, SSRF-фильтр, 100 страниц на Free",
       "description": "Crawl site: robots.txt (503 → полный запрет), sitemap, только тот же хост, блочное извлечение cheerio, seen пополняется при взятии URL, «обойдено 100 из ≥101»; SSRF: DNS до запроса, запрет частных/loopback/metadata, повтор проверки на редиректах, порты 80/443. Дополнено координатором по валидации index-jobs (F-3, F-4): создание бота из кабинета — POST /api/bots + форма (US-002, SC-US-002-1), без него кабинет недостижим; отказ 422 при СОЗДАНИИ источника на адреса внутренних сетей (127.0.0.0/8, 10/8, 172.16/12, 192.168/16, 169.254/16, ::1, fc00::/7, fe80::/10) по SC-US-002-3 — в дополнение к SSRF-фильтру воркера.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -230,7 +230,8 @@
         "services/worker/src/crawl/robots.ts",
         "services/worker/src/crawl/ssrf.ts",
         "services/worker/src/crawl/crawl.ts"
-      ]
+      ],
+      "completion_revision": "ec08bcc66d243b56a8555001a2b92d4f963f4573"
     },
     {
       "id": "pdf-source",

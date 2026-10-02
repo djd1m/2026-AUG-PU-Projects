@@ -77,3 +77,12 @@ source-snapshot. Это не повторный запуск тестов. Те�
 ## Закрытие замечаний R1–R4
 
 Свежий независимый reviewer Astra medium принял исправления без новых находок: `09_correction_review.md`, исходный кандидат `e186dba9a948c3eda74ed285cdd3c11a1b80b22e`. Подтверждены 6/6 хэшей исходников; Node22 typecheck, 341 unit, 164 integration и build прошли. Итоговый test image `sha256:250d300abd51ec1b1abca410cbb4d9a08426eea08ab5c13f918c4ef05f6ad73c`. Исторические failed/interrupted попытки сохранены; новый review не меняет их статус. Native rollout подтверждает Sol6.1high для реализации и Astra medium для повторного review; отдельные usage JSON содержат доступные счётчики, cost неизвестен. UI-проверка прежнего e8e0b4ac и соответствие неизменённых web-файлов остаются у root; новая UI-приёмка этим отчётом не заявляется. Root принимает фичу и интегрирует её в основную проектную ветку.
+
+## Принятие и продолжение
+
+Принято после fresh Astra medium ACCEPT без находок, полной Node22 регрессии
+341 unit /164 integration /typecheck/build и Docker Chromium UI1440/390.
+UI наблюдался на e8e0b4ac; web/widget/db/rag/manifest/lock/Dockerfile полностью
+совпадают с исправленным candidate9a51f8d5, proof сохранён. Worker исправления
+проверены отдельно полной регрессией. Старые receipts не переписаны; strict
+companion delivered adapter не заявлен. Дорожная карта5/16, nextpdf-source.
