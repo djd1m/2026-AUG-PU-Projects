@@ -25,3 +25,7 @@ Web создаёт ROOM20:20/900RUB на сервере. YooKassa hosted checkou
 
 ## Что уже измерено
 Одна страница InteriorAI открыта Chromium1440×1000 без входа; body16px и публичная форма зафиксированы. Host probe: NVIDIA device/runtime не обнаружены. Остальные проверки перечислены в telemetry и validation report по мере исполнения; этот список не заменяет будущий app E2E.
+
+### F02a принят; F02b продолжен
+
+После первого Sol прохода независимый Astra нашёл изоляцию тестовых budgets и две внутренние boundary ошибки. Реальный PG подтвердил первую находку; все исходные неудачи сохранены. Один Sol correction исправил3файла и добавил no-reserve case. Финальный sourcec465ee73:20unit/9F01PG/21F02PG,3guardmutations,build/startup/maintenance PASS; fresh Astra ACCEPT. F02b начинает controller/SDControlNet/quality по docs/plans/f02b-inference-quality.md. F02 и MVP ещё не объявлены завершёнными; реальная GPU-геометрия unknown.

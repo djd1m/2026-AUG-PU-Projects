@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f02a-fix-review",
-  "status": "running",
+  "status": "completed",
   "source_revision": "c465ee7346f8528d63b63b4990b43cf36454f006",
   "started_at": "2026-10-02T21:28:04Z",
   "actual_model": "gpt-6-astra",
@@ -10,5 +10,11 @@
   "host_thread": "01a0fe84-639c-71a0-b13e-b25f3de30f4e",
   "usage": null,
   "cost": null,
-  "evidence": "/tmp/n8-f02a-fix-review/runtime.log host banner"
+  "evidence": "/tmp/n8-f02a-fix-review/runtime.log host banner",
+  "finished_at": "2026-10-02T21:32:12Z",
+  "exit_code": 0,
+  "code_verdict": "ACCEPT",
+  "runtime_verdict": "PASS bounded correction gates",
+  "observation_finished_at": "2026-10-02T21:31:19.602698Z",
+  "wrapper_elapsed_ms": 248000
 }
