@@ -1,9 +1,9 @@
 {
   "work_unit_id": "n8-f02a-review",
-  "status": "running",
+  "status": "completed",
   "actual_model": "gpt-6-astra",
   "requested_effort": "high",
-  "actual_effort": null,
+  "actual_effort": "high",
   "usage": null,
   "cost": null,
   "cli_session_id": 29487,
@@ -13,5 +13,12 @@
     "provider: openai",
     "reasoning effort: high",
     "session id: 01a0fe6c-a297-7401-9144-b4826d5f49c5"
-  ]
+  ],
+  "verdict": "REQUEST_CHANGES",
+  "finished_at": "2026-10-02T21:07:57Z",
+  "exit_code": 0,
+  "review_observation_at": "2026-10-02T21:06:25Z",
+  "observation_elapsed_ms": 259000,
+  "wrapper_elapsed_ms": 351000,
+  "measurement_note": "Reviewer observation precedes wrapper completion; both retained. Usage/cost unavailable."
 }
