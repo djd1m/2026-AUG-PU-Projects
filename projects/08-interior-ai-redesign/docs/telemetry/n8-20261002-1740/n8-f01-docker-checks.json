@@ -1,0 +1,90 @@
+{
+  "source_revision": "29b070be74deccb8c0bc7785a2d7bedabd47106b",
+  "snapshot_sha256": "873b4ae2d415a2736b306fd9346c6d5b3d2526d824cb3930c83fccec7afd7740",
+  "started_at": "2026-10-02T20:00:07.793900+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 238,
+      "log": "/tmp/n8-f01-runtime/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 14750,
+      "log": "/tmp/n8-f01-runtime/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6754,
+      "log": "/tmp/n8-f01-runtime/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 2890,
+      "log": "/tmp/n8-f01-runtime/build.log"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 13879,
+      "log": "/tmp/n8-f01-runtime/unit.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 2366,
+      "log": "/tmp/n8-f01-runtime/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 9213,
+      "log": "/tmp/n8-f01-runtime/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 8907,
+      "log": "/tmp/n8-f01-runtime/owner-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 1945,
+      "log": "/tmp/n8-f01-runtime/runtime-versions.log"
+    },
+    {
+      "name": "audit",
+      "exit_code": 0,
+      "duration_ms": 2130,
+      "log": "/tmp/n8-f01-runtime/audit.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 791,
+      "log": "/tmp/n8-f01-runtime/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-02T20:01:11.667080+00:00",
+  "duration_ms": 63873,
+  "unit_tests_passed": 12,
+  "integration_tests_passed": 8,
+  "audit_vulnerabilities": 0,
+  "owner_mutation_acceptance": "NOT ACCEPTED despite exit0: independent review demonstrates false-positive predicate",
+  "runtime_version_log": "v22.20.0\n10.9.3\n Container n8-f01-29b070be-web-run-71aa751252d3 Creating \n Container n8-f01-29b070be-web-run-71aa751252d3 Created \n",
+  "image": "sha256:4ce6ab77bfe5db07006d7c14776e127e4a996c40086df90b3e6f9d3d80fe7e09",
+  "product_files_reverified": true,
+  "log_sha256": {
+    "unit": "03c49a5f61ef3ba6ab02eb6bf2afb52a851f9ed41a1533fd3a9775d8b47938c1",
+    "pg-integration": "b3a4b0289d7af83d0686710b24aee8a24e21cf5e1c989f5fb01dc690ea0693f7",
+    "audit": "b1eae47318f79073485e9d39a946ee30c2c99d12d1df7f18cd4c144dbba33d77",
+    "build": "201f59be3601677b94ec5c70231f34773a1dfb0adc44f1f56263a81d7b4e222a",
+    "origin-mutation": "e7fa3b767b256962f4dab30c374fdf96e5dd099d5c4c8509df681407c7d3e4c3",
+    "owner-mutation": "16e682c00185d0120b50bafad00b38d7e7b42e1e8139a03aeadf22389971d699"
+  }
+}
