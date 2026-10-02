@@ -1,0 +1,35 @@
+{
+  "thread_id": "01a0fe7c-4c24-7562-a302-00fadf2432e7",
+  "process": {
+    "exit_code": 0,
+    "pid": 3174026,
+    "started_at": "2026-10-02T21:19:13.628302+00:00",
+    "finished_at": "2026-10-02T21:39:28.668270+00:00",
+    "elapsed_seconds": 1215.0399502300425
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "host_turn_contexts": [
+    {
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "cli_usage": {
+    "input_tokens": 2913913,
+    "cached_input_tokens": 2804736,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 35208,
+    "reasoning_output_tokens": 6988
+  },
+  "raw_total_token_usage": {
+    "input_tokens": 2913913,
+    "cached_input_tokens": 2804736,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 35208,
+    "reasoning_output_tokens": 6988,
+    "total_tokens": 2949121
+  },
+  "cost": null,
+  "cost_basis": "unavailable"
+}
