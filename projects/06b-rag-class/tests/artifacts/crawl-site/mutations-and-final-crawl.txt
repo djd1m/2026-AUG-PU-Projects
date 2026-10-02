@@ -1,0 +1,202 @@
+ Container n6b-f05-crawl-db-1 Running 
+ Container n6b-f05-crawl-db-1 Waiting 
+ Container n6b-f05-crawl-db-1 Healthy 
+ Container n6b-f05-crawl-mutations Creating 
+ Container n6b-f05-crawl-mutations Created 
+МУТАЦИЯ packages/rag/src/site-safety.ts
+
+ RUN  v3.2.7 /app
+
+ ❯ packages/rag/tests/unit/site-safety.test.ts (42 tests | 4 failed | 3 skipped) 49ms
+   ✓ SC-US-002-3 SSRF > 0.0.0.0 закрыт 2ms
+   ✓ SC-US-002-3 SSRF > 10.0.0.1 закрыт 1ms
+   ✓ SC-US-002-3 SSRF > 127.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 100.64.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 169.254.169.254 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 172.16.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 192.168.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 192.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 192.0.2.1 закрыт 1ms
+   ✓ SC-US-002-3 SSRF > 192.88.99.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 198.18.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 198.51.100.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 203.0.113.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 224.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 255.255.255.255 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 168.63.129.16 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > :: закрыт 9ms
+   ✓ SC-US-002-3 SSRF > ::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > ::ffff:127.0.0.1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > ::ffff:8.8.8.8 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > fc00::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > fe80::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > ff02::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 2001:db8::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 2001::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 2002:7f00:1:: закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 3fff::1 закрыт 0ms
+   ✓ SC-US-002-3 SSRF > bad закрыт 0ms
+   ✓ SC-US-002-3 SSRF > 8.8.8.8 публичный 0ms
+   ✓ SC-US-002-3 SSRF > 93.184.216.34 публичный 0ms
+   ✓ SC-US-002-3 SSRF > 2606:4700:4700::1111 публичный 0ms
+   ✓ SC-US-002-3 SSRF > 2001:4860:4860::8888 публичный 0ms
+   × SC-US-002-3 SSRF > все DNS ответы должны быть безопасны; ошибка и пустой DNS закрыты 20ms
+     → promise resolved "{ …(3) }" instead of rejecting
+   ✓ SC-US-002-3 SSRF > URL ftp://example.test отклонён 1ms
+   ✓ SC-US-002-3 SSRF > URL https://u:p@example.test/ отклонён 0ms
+   ✓ SC-US-002-3 SSRF > URL https://example.test:8080/ отклонён 0ms
+   × SC-US-002-3 SSRF > URL http://2130706433/ отклонён 3ms
+     → promise resolved "{ …(3) }" instead of rejecting
+   × SC-US-002-3 SSRF > URL http://0x7f000001/ отклонён 3ms
+     → promise resolved "{ …(3) }" instead of rejecting
+   × SC-US-002-3 SSRF > URL http://[::ffff:127.0.0.1]/ отклонён 2ms
+     → promise resolved "{ …(3) }" instead of rejecting
+   ↓ реальный undici pinned transport через локальный connector, без внешней HTTP сети > IP закреплён, DNS один раз, оригинальный Host, тело загружено
+   ↓ реальный undici pinned transport через локальный connector, без внешней HTTP сети > лимит полного тела и 15s hard timeout (ускоренный fixture) прерывают чтение
+   ↓ реальный undici pinned transport через локальный connector, без внешней HTTP сети > отмена ctx.signal до DNS не соединяется
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 35 passed | 3 skipped (42)
+   Start at  20:55:33
+   Duration  1.47s (transform 495ms, setup 0ms, collect 882ms, tests 49ms, environment 0ms, prepare 165ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > все DNS ответы должны быть безопасны; ошибка и пустой DNS закрыты
+AssertionError: promise resolved "{ …(3) }" instead of rejecting
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "address": "8.8.8.8",[39m
+[31m+   "family": 4,[39m
+[31m+   "url": "https://example.test/",[39m
+[2m  }[22m
+
+ ❯ packages/rag/tests/unit/site-safety.test.ts:19:67
+     17|     for (const resolver of [async () => [], async () => { throw new Er…
+     18|       async () => [{ address: '8.8.8.8', family: 4 }, { address: '10.0…
+     19|       await expect(validateSite('https://example.test/', resolver)).re…
+       |                                                                   ^
+     20|     }
+     21|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > URL http://2130706433/ отклонён
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > URL http://0x7f000001/ отклонён
+ FAIL  packages/rag/tests/unit/site-safety.test.ts > SC-US-002-3 SSRF > URL http://[::ffff:127.0.0.1]/ отклонён
+AssertionError: promise resolved "{ …(3) }" instead of rejecting
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "address": "127.0.0.1",[39m
+[31m+   "family": 4,[39m
+[31m+   "url": "http://127.0.0.1/",[39m
+[2m  }[22m
+
+ ❯ packages/rag/tests/unit/site-safety.test.ts:24:40
+     22|   it.each(['ftp://example.test', 'https://u:p@example.test/', 'https:/…
+     23|     'http://0x7f000001/', 'http://[::ffff:127.0.0.1]/'])('URL %s откло…
+     24|     expect(validateSite(raw, publicDns)).rejects.toBeInstanceOf(Unsafe…
+       |                                        ^
+     25| });
+     26| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+exit=1
+ВОССТАНОВЛЕНИЕ packages/rag/src/site-safety.ts
+
+ RUN  v3.2.7 /app
+
+ ✓ packages/rag/tests/unit/site-safety.test.ts (42 tests | 3 skipped) 26ms
+
+ Test Files  1 passed (1)
+      Tests  39 passed | 3 skipped (42)
+   Start at  20:55:36
+   Duration  1.21s (transform 409ms, setup 0ms, collect 727ms, tests 26ms, environment 0ms, prepare 132ms)
+
+
+exit=0
+МУТАЦИЯ services/worker/src/crawl/store.ts
+
+ RUN  v3.2.7 /app
+
+ ❯ services/worker/tests/int/crawl.int.test.ts (7 tests | 1 failed | 6 skipped) 140ms
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-1: sitemap первым, root затем ссылки, циклы/фрагменты не повторяются; неизменённые страницы ставят ссылки
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-2: 5xx, сеть и слишком большой robots запрещают всё; 4xx разрешает
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > Free считает 100 URL включая redirect/nonHTML, seen до HTTP, точная заметка
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > redirect: robots цели, другой host, credentials, циклы и предел 5
+   ↓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > нет HTML → failed; checkpoint ceiling/lease и signal распространяются до запросов/записи
+   × guard записи document под shared lease > stale fence и closed state не записывают документ 135ms
+     → promise resolved "undefined" instead of rejecting
+   ↓ guard записи document под shared lease > два конкурентных воркера: перезахват → пишет только новый fence, id сохраняется
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  20:55:39
+   Duration  2.15s (transform 780ms, setup 0ms, collect 1.23s, tests 140ms, environment 1ms, prepare 144ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/int/crawl.int.test.ts > guard записи document под shared lease > stale fence и closed state не записывают документ
+AssertionError: promise resolved "undefined" instead of rejecting
+
+[32m- Expected:[39m 
+Error {
+  "message": "rejected promise",
+}
+
+[31m+ Received:[39m 
+undefined
+
+ ❯ services/worker/tests/int/crawl.int.test.ts:114:78
+    112|     const ctx = await context();
+    113|     await owner.query('UPDATE index_job SET lease_fence=lease_fence+1 …
+    114|     await expect(saveDocument(app, ctx, 'https://fixture.test/', 't', …
+       |                                                                              ^
+    115|     const fence = Number((await owner.query('SELECT lease_fence FROM i…
+    116|     await owner.query("UPDATE index_job SET state='failed' WHERE id=$1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+exit=1
+ВОССТАНОВЛЕНИЕ services/worker/src/crawl/store.ts
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/crawl.int.test.ts (7 tests | 6 skipped) 137ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 6 skipped (7)
+   Start at  20:55:43
+   Duration  2.11s (transform 757ms, setup 0ms, collect 1.24s, tests 137ms, environment 0ms, prepare 125ms)
+
+
+exit=0
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/crawl.int.test.ts (7 tests) 1688ms
+   ✓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-1: sitemap первым, root затем ссылки, циклы/фрагменты не повторяются; неизменённые страницы ставят ссылки  946ms
+   ✓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > Free считает 100 URL включая redirect/nonHTML, seen до HTTP, точная заметка  546ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  20:55:46
+   Duration  3.46s (transform 616ms, setup 0ms, collect 958ms, tests 1.69s, environment 0ms, prepare 122ms)
+
+
+mutations-and-final-crawl exit=0

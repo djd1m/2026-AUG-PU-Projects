@@ -20,7 +20,7 @@ function login(accountId: string): string {
   sessions.set(token, accountId);
   return token;
 }
-const deps: JobsDeps = { tenantPool: cabinet, publicBaseUrl: BASE, log: () => undefined,
+const deps: JobsDeps = { resolver: async () => [{ address: '93.184.216.34', family: 4 }], tenantPool: cabinet, publicBaseUrl: BASE, log: () => undefined,
   authenticate: async (t) => sessions.get(t) ?? null };
 const postSource = createSourceHandler(deps);
 const getJob = createJobHandler(deps);

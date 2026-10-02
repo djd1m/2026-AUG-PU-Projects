@@ -5,6 +5,7 @@
 
 import { writeFileSync } from 'node:fs';
 import { createPool, enforceBootConfig } from '@n6b/db';
+import { createSiteExtractor } from './crawl/site.js';
 import { loadWorkerConfig } from './config.js';
 import { createIndexRunner } from './index-runner.js';
 import { startWorker } from './loop.js';
@@ -13,8 +14,13 @@ import { createWorkerGateway } from './paid.js';
 const config = enforceBootConfig(() => loadWorkerConfig());
 const pool = createPool(config.DATABASE_URL_SERVICE as string, 'DATABASE_URL_SERVICE');
 const gateway = enforceBootConfig(() => createWorkerGateway(pool));
-const worker = startWorker({ pool, runner: createIndexRunner({ pool, gateway, extractors: {} }) });
-console.log('worker: конфигурация и платная дверь приняты; аренда задач запущена (извлечение источников не подключено — честный отказ)');
+const crawl = createSiteExtractor({ pool });
+const indexing = createIndexRunner({ pool, gateway, extractors: { site: crawl.extract } });
+const worker = startWorker({ pool, runner: { run: async (ctx) => {
+  const result = await indexing.run(ctx);
+  return result.state === 'succeeded' ? { ...result, note: crawl.note(ctx) } : result;
+} } });
+console.log('worker: конфигурация и платная дверь приняты; аренда задач и обход сайта подключены');
 
 const pulse = process.env.N6B_WORKER_PULSE;
 let beat: NodeJS.Timeout | undefined;

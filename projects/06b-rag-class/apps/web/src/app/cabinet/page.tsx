@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { type CabinetSource, listCabinetSources, withTenant } from '@n6b/db';
 import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
+import { CreateBot } from './create-bot';
 import { AddSource } from './add-source';
 import { JobStatus } from './job-status';
 import { LogoutButton } from './logout-button';
@@ -40,7 +41,8 @@ export default async function CabinetPage() {
         <LogoutButton />
       </header>
       <p>Вы вошли как <strong>{account.email ?? 'подаккаунт студии'}</strong>.</p>
-      {bots.length === 0 && <p>Ботов пока нет. Создание бота появится в следующей версии кабинета.</p>}
+      <CreateBot />
+      {bots.length === 0 && <p>Ботов пока нет. Укажите имя и адрес сайта выше.</p>}
       {bots.map((bot) => (
         <section key={bot.id} className="bot-card">
           <h2>{bot.name}</h2>

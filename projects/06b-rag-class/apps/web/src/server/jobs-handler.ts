@@ -5,7 +5,8 @@
 //   3) тело и URL → 422; 4) запись под RLS (withTenant) → 202 {job_id} ДО начала работы: работу берёт воркер.
 // Ответ на создание — идентификатор, никогда не результат: работа длиннее окна прокси (60 с) по построению.
 
-import { enqueueSiteSource, normalizeSiteUrl, type Pool, readJob, retryJob } from '@n6b/db';
+import { enqueueSiteSource, normalizeSiteUrl, type Pool, readJob, retryJob, withTenant } from '@n6b/db';
+import { type SiteResolver, UnsafeSite, validateSite } from '@n6b/rag';
 import { readJson, readSessionCookie } from './auth-handler';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -14,6 +15,7 @@ export interface JobsDeps {
   readonly authenticate: (token: string) => Promise<string | null>;
   readonly tenantPool: Pool;
   readonly publicBaseUrl: string;
+  readonly resolver?: SiteResolver;
   readonly log?: (line: string) => void;
 }
 
@@ -51,6 +53,11 @@ export function createSourceHandler(deps: JobsDeps): Handler {
     const url = normalizeSiteUrl(body !== 'invalid' && typeof body === 'object' && body !== null
       ? (body as { url?: unknown }).url : undefined);
     if (!url) return fail(422, 'invalid_url', 'Укажите адрес сайта http(s):// без логина и пароля, порт 80 или 443');
+    const visible = await withTenant(deps.tenantPool, accountId, async (c) =>
+      (await c.query('SELECT 1 FROM bot WHERE id = $1', [botId])).rowCount === 1);
+    if (!visible) return NOT_FOUND();
+    try { await validateSite(url, deps.resolver); }
+    catch (error) { if (error instanceof UnsafeSite) return fail(422, 'unsafe_url', error.message); throw error; }
     const job = await enqueueSiteSource(deps.tenantPool, accountId, botId, url);
     if (!job) return NOT_FOUND();
     return json(202, { data: { job_id: job.jobId } });
