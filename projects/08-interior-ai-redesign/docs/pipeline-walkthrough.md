@@ -29,3 +29,7 @@ Web создаёт ROOM20:20/900RUB на сервере. YooKassa hosted checkou
 ### F02a принят; F02b продолжен
 
 После первого Sol прохода независимый Astra нашёл изоляцию тестовых budgets и две внутренние boundary ошибки. Реальный PG подтвердил первую находку; все исходные неудачи сохранены. Один Sol correction исправил3файла и добавил no-reserve case. Финальный sourcec465ee73:20unit/9F01PG/21F02PG,3guardmutations,build/startup/maintenance PASS; fresh Astra ACCEPT. F02b начинает controller/SDControlNet/quality по docs/plans/f02b-inference-quality.md. F02 и MVP ещё не объявлены завершёнными; реальная GPU-геометрия unknown.
+
+### F02b software acceptance → F03
+
+ПервыйqualityPGостановилсянаPNGfixtureвWebPupload; независимыйAstraтакженашёлнеполныйdistinctcorpuscoverageиlate-exitгонкуengine. Solисправил6файлов;40hostunit,13generationвихчисле,27containerunit,PG9/21/7,4mutationsиstartupPASS. FreshAstraACCEPTsource575d822a. Всеошибки/неизвестныеclock/modelполяиimmutableлогиосталисьвистории. F02softwaredone, f05actualCUDA/modelsecurity/realcorpus/performanceblocked. /next→f03-payments,/go→/featureAUTO,substantiveXL,existingownerautonomy,zeroexternalspend. Планdocs/plans/f03-payments.md.

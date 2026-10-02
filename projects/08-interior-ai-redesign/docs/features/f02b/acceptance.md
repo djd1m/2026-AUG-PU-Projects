@@ -1,0 +1,7 @@
+# F02b: software gate принят
+
+Source575d822aa41fe631e7f40853e752087fda46d45a, canonical snapshot0c501c67861efcf17860fa114db9577810663dbe46697a3fcee6400cff568235 (45файлов+2отдельныхhiddenhash). Свежий Astra ACCEPT закрывает ровно3находки; qualityPG6сценариев/7TAP включаяродительский PASS. Host40unit; Docker27unit/F01PG9/F02aPG21/F02bPG7;4guardmutations; build/start/HTTP/maintenance/cleanupPASS,145190мс.
+
+Синтетические real-branch fixtures подтверждают программные запреты/транзакции, не измереннуюгеометрию. Реальный CUDA/runtime, безопасныеIntelDPTweights, resolvedtransitivedependencies/security/compatibility,GEOM02/PERF03 остаютсявf05blocked. F02doneозначаетготовностьегоsoftwareпакетовпоутверждённомуразделению; production/MVPdeliveryнеприняты. GPUimageнестроился,весанескачивались.
+
+Sol6.1highавтор и Astrahighревью подтверждены coordinatorhostbanner. Reviewreceiptчестноуказываетnullизнутриreadonlyисполнителя; supplementнепереписываеторигинал. Usage/costnull. ПервыеqualityPGfailuresиmutationлогисохранены. Полныйdiffcheck2надвухстрокахimmutableлоговненормализован; productscopedcheck0. Evidence: telemetry/n8-f02b-fix-review-receipt.md,n8-f02b-fix-docker-checks.json;featurefix-snapshot/checks.

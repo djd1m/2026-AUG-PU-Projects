@@ -33,22 +33,24 @@
       "id": "f02-generation",
       "name": "Credit tickets durable jobs and ControlNet worker",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f01-foundation"
       ],
       "expected_files": [
         "web/jobs.js",
-        "worker/main.py"
+        "worker/engine.py",
+        "web/quality.js"
       ],
-      "blockers": []
+      "blockers": [],
+      "acceptance": "docs/features/f02b/acceptance.md; software scope only, GPU runtime in f05"
     },
     {
       "id": "f03-payments",
       "name": "Verified package and partner attribution",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f02-generation"
@@ -87,7 +89,8 @@
         "docs/gpu-acceptance.md"
       ],
       "blockers": [
-        "CUDA runtime and real corpus unavailable"
+        "CUDA runtime and real licensed corpus unavailable",
+        "Safe pinned Intel depth weights and resolved GPU dependency security/compatibility not provisioned or tested"
       ]
     },
     {
@@ -106,5 +109,6 @@
       ],
       "blockers": []
     }
-  ]
+  ],
+  "last_completed": "f02-generation"
 }

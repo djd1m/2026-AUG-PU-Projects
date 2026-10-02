@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f02b-fix-review",
-  "status": "running",
+  "status": "completed",
   "source_revision": "575d822aa41fe631e7f40853e752087fda46d45a",
   "started_at": "2026-10-02T22:21:45Z",
   "actual_model": "gpt-6-astra",
@@ -11,5 +11,12 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f02b-fix-review/runtime.log host banner",
-  "budget_seconds": 480
+  "budget_seconds": 480,
+  "verdict": "ACCEPT scopedcode and PostgreSQLqualitygate",
+  "finished_at": "2026-10-02T22:26:04Z",
+  "exit_code": 0,
+  "wrapper_elapsed_ms": 259000,
+  "review_observation_finished_at": "2026-10-02T22:25:13.823604Z",
+  "review_elapsed_ms": 210539,
+  "actual_metadata_note": "Reviewer receipt reports actualmodelnull because hostmetadata unavailable inside reviewer. Coordinator confirms Astra/high from external hostbanner; preserve both observations."
 }
