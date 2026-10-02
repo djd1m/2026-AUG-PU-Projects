@@ -12,10 +12,10 @@
   "feature": "publish-bot",
   "tier": "M",
   "started_at": "2026-10-02T21:31:30.622259+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-10-02T22:25:27.149996+00:00",
+  "status": "completed",
   "baseline_revision": "13898d855b9dcc9368042488f8f0c979ca75fa2f",
-  "final_revision": null,
+  "final_revision": "094a13c7b1653ecac853f73a8d2e20c34ab16b93",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "Owner publication write",
@@ -23,20 +23,40 @@
     "Embedcode server configuration"
   ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": 0,
-    "ac_total": 8
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "confirmed_findings_by_severity": {},
+    "ui_attempts_failed": 3,
+    "ui_attempts_passed": 1,
+    "publicrelease_clearance": false
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3236528,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 2900580,
+      "cached_input_tokens": 2654592,
+      "output_tokens": 32334,
+      "reasoning_output_tokens": 5695,
+      "total_tokens": 2932914
+    },
+    "measured_cli_usage_only_note": "2 nativeCLI stages; cached/reasoning subsets; coordinatorunknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actualmodel/usage/cost unknown",
-    "Pre-record preparation walltime unmeasured; no fabricated estimate",
-    "No finalexecution evidence yet"
+    "Pre-record preparation walltime unmeasured; no fabricated estimate"
+  ],
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261002T213130Z-publish-bot/evidence/delivery-1-receipt.md",
+    "tests/artifacts/publish-bot/tested-source-final.json",
+    "tests/artifacts/publish-bot/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261002T213130Z-publish-bot/evidence/review-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T213130Z-publish-bot/evidence/implementation-1-native-usage.json"
   ]
 }

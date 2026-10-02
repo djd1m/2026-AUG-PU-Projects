@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-10-02T22:20:14.323Z",
+  "source_revision": "094a13c7b1653ecac853f73a8d2e20c34ab16b93",
+  "source_snapshot_sha256": "29aed1eeb400118858945f24eba6662a5acb4fc62766c453b123084f06ce4784",
+  "build_image_id": "sha256:ff4d0d287194a97b2ba53df83ac94cd0af42fd3b50100063a188c38c20b71053",
+  "status": "failed",
+  "binding": "Real production web/registration/session/PATCH/Postgres. Actual PATCH responses delayed200ms only to observe pending UI; no fake handler/provider and no paid calls.",
+  "checks": [],
+  "stage": "register-1440",
+  "error": "Error: Site bot creation 422",
+  "finished_at": "2026-10-02T22:20:20.783Z"
+}

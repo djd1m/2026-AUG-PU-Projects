@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-10-02T21:46:00.626221+00:00",
+  "finished_at": "2026-10-02T21:46:05.360961+00:00",
+  "source": "apps/web/src/server/publish-handler.ts",
+  "fixed_test": "apps/web/tests/unit/publication-guard.test.ts",
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/publication-guard.test.ts"
+  ],
+  "original_sha256": "bb4e6f7a692be32295d68384fca395de6423103b82dc7bb1f83c5329d6ec9839",
+  "mutant_sha256": "8ab4422338961ff9910d20c4833d358e8470de1f3e4b128b8b3a5cbf1988d912",
+  "restored_sha256": "bb4e6f7a692be32295d68384fca395de6423103b82dc7bb1f83c5329d6ec9839",
+  "test_sha256_before": "d575a38f65a0aea7b10bf9485f2824c7da1fc93e2113e636262b5f9d5d5419c0",
+  "test_sha256_after": "d575a38f65a0aea7b10bf9485f2824c7da1fc93e2113e636262b5f9d5d5419c0",
+  "mutation": "Temporarily disable mandatory-contact branch: if (!contact) -> if (false && !contact).",
+  "red_exit": 1,
+  "restored_green_exit": 0,
+  "meaningful_red_assertion": "expected 200 to be 422",
+  "exact_restore": true,
+  "fixed_test_unchanged": true
+}
