@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: F03b isolated real PostgreSQL consent, partner registry and verified first-conversion aggregates
+    # Subtest: PARTNER-01 duplicate409 existing owner immutable binding, missing owner, inactive and self
+    ok 1 - PARTNER-01 duplicate409 existing owner immutable binding, missing owner, inactive and self
+      ---
+      duration_ms: 115.439021
+      type: 'test'
+      ...
+    # Subtest: ATTR-01 cookie consent proof, denied/blocked/tampered/cross-account, expiry and manual
+    ok 2 - ATTR-01 cookie consent proof, denied/blocked/tampered/cross-account, expiry and manual
+      ---
+      duration_ms: 286.971692
+      type: 'test'
+      ...
+    # Subtest: ATTR-02 manual override invalid input effects0 immutable snapshot and simultaneous create/deny
+    ok 3 - ATTR-02 manual override invalid input effects0 immutable snapshot and simultaneous create/deny
+      ---
+      duration_ms: 175.534133
+      type: 'test'
+      ...
+    # Subtest: PARTNER-02 two partner totals exclude replay repeat hold review refunds and inactive rows
+    not ok 4 - PARTNER-02 two partner totals exclude replay repeat hold review refunds and inactive rows
+      ---
+      duration_ms: 42.205105
+      type: 'test'
+      location: '/app/tests/attribution.integration.test.js:94:13'
+      failureType: 'testCodeFailure'
+      error: 'invalid_notification'
+      code: 'invalid_notification'
+      stack: |-
+        notification (file:///app/web/payments.js:17:126)
+        Object.notify (file:///app/web/payments.js:98:20)
+        success (file:///app/tests/attribution.integration.test.js:35:23)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (file:///app/tests/attribution.integration.test.js:95:70)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/attribution.integration.test.js:94:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: ATTR-03 differently attributed concurrent successes select exactly one permanent winner
+    not ok 5 - ATTR-03 differently attributed concurrent successes select exactly one permanent winner
+      ---
+      duration_ms: 94.270984
+      type: 'test'
+      location: '/app/tests/attribution.integration.test.js:111:13'
+      failureType: 'testCodeFailure'
+      error: 'invalid_notification'
+      code: 'invalid_notification'
+      stack: |-
+        notification (file:///app/web/payments.js:17:126)
+        Object.notify (file:///app/web/payments.js:98:20)
+        success (file:///app/tests/attribution.integration.test.js:35:23)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Promise.all (index 0)
+        async TestContext.<anonymous> (file:///app/tests/attribution.integration.test.js:113:7)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/attribution.integration.test.js:111:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: HTTP exact Origin/authenticated bounded attribution; no public mint/edit/aggregate and essential session intact
+    ok 6 - HTTP exact Origin/authenticated bounded attribution; no public mint/edit/aggregate and essential session intact
+      ---
+      duration_ms: 322.936745
+      type: 'test'
+      ...
+    1..6
+not ok 1 - F03b isolated real PostgreSQL consent, partner registry and verified first-conversion aggregates
+  ---
+  duration_ms: 1494.185253
+  type: 'test'
+  location: '/app/tests/attribution.integration.test.js:13:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 4
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1506.001098
+ Container n8-f03b-candidate-web-run-edb6300a0e0a Creating 
+ Container n8-f03b-candidate-web-run-edb6300a0e0a Created 
+

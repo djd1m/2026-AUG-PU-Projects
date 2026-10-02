@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: F02b real PostgreSQL append-only quality and private result boundaries
+    # Subtest: otherwise-valid synthetic real branch accepts; accepted review/evidence cannot update/delete; reject revokes and unique-releases
+    ok 1 - otherwise-valid synthetic real branch accepts; accepted review/evidence cannot update/delete; reject revokes and unique-releases
+      ---
+      duration_ms: 282.425181
+      type: 'test'
+      ...
+    # Subtest: GEOM-03 fixture with otherwise valid provenance/report cannot accept
+    ok 2 - GEOM-03 fixture with otherwise valid provenance/report cannot accept
+      ---
+      duration_ms: 106.004338
+      type: 'test'
+      ...
+    # Subtest: missing/mismatched report and changed output refuse with zero effects
+    ok 3 - missing/mismatched report and changed output refuse with zero effects
+      ---
+      duration_ms: 142.025631
+      type: 'test'
+      ...
+    # Subtest: concurrent accept/reject serializes; rejected never reaccepted and release is one
+    ok 4 - concurrent accept/reject serializes; rejected never reaccepted and release is one
+      ---
+      duration_ms: 119.648222
+      type: 'test'
+      ...
+    # Subtest: rejection without a reserve does not invent a release
+    ok 5 - rejection without a reserve does not invent a release
+      ---
+      duration_ms: 75.760607
+      type: 'test'
+      ...
+    # Subtest: actual HTTP result bytes private/no-store/noindex, cross-owner404, no user quality setter and deletion denial
+    ok 6 - actual HTTP result bytes private/no-store/noindex, cross-owner404, no user quality setter and deletion denial
+      ---
+      duration_ms: 214.498256
+      type: 'test'
+      ...
+    1..6
+ok 1 - F02b real PostgreSQL append-only quality and private result boundaries
+  ---
+  duration_ms: 1388.953866
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1414.851195
+ Container n8-f03b-candidate-web-run-046fccc40109 Creating 
+ Container n8-f03b-candidate-web-run-046fccc40109 Created 

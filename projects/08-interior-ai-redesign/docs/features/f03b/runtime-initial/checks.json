@@ -1,0 +1,185 @@
+{
+  "source_revision": "1a4892e91098c95d9a53538e962507756c015696",
+  "snapshot_sha256": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f",
+  "started_at": "2026-10-02T23:41:51.191272+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 148,
+      "log": "docs/features/f03b/runtime-initial/compose-config.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 3219,
+      "log": "docs/features/f03b/runtime-initial/image-build.log",
+      "log_sha256": "a62c716fa378bd9a885b918268d75c870a2b0dd9ca594048f0842b0ef0fbee46"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6366,
+      "log": "docs/features/f03b/runtime-initial/db-start.log",
+      "log_sha256": "bc2c5d2bf0be8a2d31fbf0b829d4a150d1026b668478c29154867849a18c6741"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 5247,
+      "log": "docs/features/f03b/runtime-initial/build.log",
+      "log_sha256": "7d8c58ca75ae3232b4198a5b1a829b96497c9a48adb1d584a73c0a7d04009649"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 31186,
+      "log": "docs/features/f03b/runtime-initial/unit.log",
+      "log_sha256": "35586773e235464ef703ca6377a30ac45f10659bce9b135d27245a4124db7308"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 2776,
+      "log": "docs/features/f03b/runtime-initial/origin-mutation.log",
+      "log_sha256": "a46822ab4c89402391f99ac759e3708d24899588446a6ec28dc67e1c40717a51"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 15579,
+      "log": "docs/features/f03b/runtime-initial/pg-integration.log",
+      "log_sha256": "cf0df192c027c86e49e2864ad1c3faafbc061870c3904834be9c22ca3bed0935"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 29634,
+      "log": "docs/features/f03b/runtime-initial/owner-mutation.log",
+      "log_sha256": "19f11831be7ac92ecb0db6bf399f54f00fe4c55f10ad5b1118227a4bf81eb034"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 0,
+      "duration_ms": 10199,
+      "log": "docs/features/f03b/runtime-initial/jobs-pg.log",
+      "log_sha256": "9f5433d22dcb45c48abc763a513091fc2c11c65f21f0f2e08fc5309ed36b8d65"
+    },
+    {
+      "name": "quality-pg",
+      "exit_code": 0,
+      "duration_ms": 3244,
+      "log": "docs/features/f03b/runtime-initial/quality-pg.log",
+      "log_sha256": "c84bf0bad98aaf904031f70821a05e90b947376f369295cbe08f603a401f5959"
+    },
+    {
+      "name": "payments-pg",
+      "exit_code": 0,
+      "duration_ms": 7637,
+      "log": "docs/features/f03b/runtime-initial/payments-pg.log",
+      "log_sha256": "62ddbccab6b331017b082c1dc176d4c38122dc58169ed173e98c5324cc7c13e6"
+    },
+    {
+      "name": "attribution-pg",
+      "exit_code": 1,
+      "duration_ms": 3300,
+      "log": "docs/features/f03b/runtime-initial/attribution-pg.log",
+      "log_sha256": "694f627a887b4d0cc6527d48f25d0605c9c3c3d0912f080f49a24d94e220c981"
+    },
+    {
+      "name": "payments-http",
+      "exit_code": 0,
+      "duration_ms": 12532,
+      "log": "docs/features/f03b/runtime-initial/payments-http.log",
+      "log_sha256": "2b1b86be44d7ad4ae3d054c5ecc6755b27bd28b411ebeb3a62739f3a37318abd"
+    },
+    {
+      "name": "consent-mutation",
+      "exit_code": 0,
+      "duration_ms": 2416,
+      "log": "docs/features/f03b/runtime-initial/consent-mutation.log",
+      "log_sha256": "ba460524e75839e6c48189e3ce1d4a40f561947d30ab98cefeb7765b7df26820"
+    },
+    {
+      "name": "partner-mutation",
+      "exit_code": 0,
+      "duration_ms": 2467,
+      "log": "docs/features/f03b/runtime-initial/partner-mutation.log",
+      "log_sha256": "e8921f5e1a753a97171aa8b1731c7a9913e7784d94fb9ecf0dd6892e1ea27488"
+    },
+    {
+      "name": "payment-mutation",
+      "exit_code": 0,
+      "duration_ms": 22598,
+      "log": "docs/features/f03b/runtime-initial/payment-mutation.log",
+      "log_sha256": "f75fe0a5f299861cc305ed5eeccc768ded3d4b76ebc21fbf39b958f0e32c6c33"
+    },
+    {
+      "name": "fixture-mutation",
+      "exit_code": 0,
+      "duration_ms": 2740,
+      "log": "docs/features/f03b/runtime-initial/fixture-mutation.log",
+      "log_sha256": "3953cb03174a3d131d4e8e73b3193a1507fee48bdf97fa66ee91f26578b2e0ee"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 0,
+      "duration_ms": 17143,
+      "log": "docs/features/f03b/runtime-initial/budget-mutation.log",
+      "log_sha256": "7a434fe8e0836510916f7898b265e5f62ac7f1db891f51efc9ec9a284b440c73"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 1381,
+      "log": "docs/features/f03b/runtime-initial/runtime-versions.log",
+      "log_sha256": "b01ffa68eb78522eba1fe05e0766d148b14d1ad95b225c7ecaffdbfea74574e0"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 0,
+      "duration_ms": 12926,
+      "log": "docs/features/f03b/runtime-initial/web-maintenance-start.log",
+      "log_sha256": "e9bb2909ebb8859b3ada254f292cdac110b2adb4132943d133c32694503c7e9d"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 0,
+      "duration_ms": 48,
+      "log": "docs/features/f03b/runtime-initial/host-http.log",
+      "log_sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 0,
+      "duration_ms": 45,
+      "log": "docs/features/f03b/runtime-initial/service-image-ids.log",
+      "log_sha256": "42668ff1c1eef1768a71cf0d5fcdd1dc97f49c254a7a46b916cf45f77243066d"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 0,
+      "duration_ms": 2491,
+      "log": "docs/features/f03b/runtime-initial/maintenance-once.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 11782,
+      "log": "docs/features/f03b/runtime-initial/cleanup.log",
+      "log_sha256": "4aa8a07ed0f0ddba5c17819c33886df8465b7cec7e7a14c32108f3b8c5fe04f2"
+    }
+  ],
+  "finished_at": "2026-10-02T23:45:18.308220+00:00",
+  "duration_ms": 207117,
+  "status": "failed",
+  "source_after": {
+    "files": 66,
+    "mismatches": []
+  },
+  "failed_checks": [
+    "attribution-pg"
+  ]
+}

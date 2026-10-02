@@ -1,0 +1,384 @@
+
+> roomkind-f01@0.1.0 test
+> node tests/boundaries.test.js && node tests/media.test.js
+
+TAP version 13
+# Subtest: AUTH-01 canonical email and all password edges, including Unicode
+ok 1 - AUTH-01 canonical email and all password edges, including Unicode
+  ---
+  duration_ms: 3.111181
+  type: 'test'
+  ...
+# Subtest: AUTH-03 exact Origin denies missing, null, foreign, prefixes
+ok 2 - AUTH-03 exact Origin denies missing, null, foreign, prefixes
+  ---
+  duration_ms: 66.239604
+  type: 'test'
+  ...
+# Subtest: SEC-02 UUID path traversal/URL/malformed boundaries
+ok 3 - SEC-02 UUID path traversal/URL/malformed boundaries
+  ---
+  duration_ms: 1.540171
+  type: 'test'
+  ...
+# Subtest: AUTH-03 JSON 16KiB and streamed body boundaries
+ok 4 - AUTH-03 JSON 16KiB and streamed body boundaries
+  ---
+  duration_ms: 12.815934
+  type: 'test'
+  ...
+# Subtest: AUTH-03/SEC-02 exact rate edges, expiry and distinct NAT account keys
+ok 5 - AUTH-03/SEC-02 exact rate edges, expiry and distinct NAT account keys
+  ---
+  duration_ms: 0.681021
+  type: 'test'
+  ...
+# Subtest: capacity rejects parallel overflow without holding a DB connection or queuing
+ok 6 - capacity rejects parallel overflow without holding a DB connection or queuing
+  ---
+  duration_ms: 0.62061
+  type: 'test'
+  ...
+# Subtest: SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy
+ok 7 - SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy
+  ---
+  duration_ms: 3.475671
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 103.582287
+TAP version 13
+# Subtest: AUTH-02 random 32-byte token, HMAC-only record and cookie flags
+ok 1 - AUTH-02 random 32-byte token, HMAC-only record and cookie flags
+  ---
+  duration_ms: 3.708061
+  type: 'test'
+  ...
+# Subtest: AUTH-01 all 128 Unicode characters affect bcrypt; dummy hash uses cost 10
+ok 2 - AUTH-01 all 128 Unicode characters affect bcrypt; dummy hash uses cost 10
+  ---
+  duration_ms: 320.414214
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 JPEG/PNG/WebP real decode, matching magic and invalid/truncated data
+ok 3 - UPLOAD-01 JPEG/PNG/WebP real decode, matching magic and invalid/truncated data
+  ---
+  duration_ms: 117.450542
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 exact byte limit and orientation normalization strips EXIF
+ok 4 - UPLOAD-01 exact byte limit and orientation normalization strips EXIF
+  ---
+  duration_ms: 76.464887
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 exact 20MP and one-row beyond for each allowed format
+ok 5 - UPLOAD-01 exact 20MP and one-row beyond for each allowed format
+  ---
+  duration_ms: 12632.60878
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13159.841557
+TAP version 13
+# Subtest: JOB-01 style/key/UUID boundaries and canonical body hash
+ok 1 - JOB-01 style/key/UUID boundaries and canonical body hash
+  ---
+  duration_ms: 2.863901
+  type: 'test'
+  ...
+# Subtest: PERF-01/SEC-01 required positive integer lower-only budget config
+ok 2 - PERF-01/SEC-01 required positive integer lower-only budget config
+  ---
+  duration_ms: 4.969132
+  type: 'test'
+  ...
+# Subtest: Output contract requires complete evidence and refuses production fixture
+ok 3 - Output contract requires complete evidence and refuses production fixture
+  ---
+  duration_ms: 1.53231
+  type: 'test'
+  ...
+# Subtest: Trusted clock injection is restricted to explicit test runtime
+ok 4 - Trusted clock injection is restricted to explicit test runtime
+  ---
+  duration_ms: 1.125001
+  type: 'test'
+  ...
+# Subtest: Provenance rejects unsupported shapes and serializes a detached canonical revision object
+ok 5 - Provenance rejects unsupported shapes and serializes a detached canonical revision object
+  ---
+  duration_ms: 1.7731
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66.988794
+TAP version 13
+# Subtest: SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+ok 1 - SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+  ---
+  duration_ms: 541.250603
+  type: 'test'
+  ...
+# Subtest: SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+ok 2 - SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+  ---
+  duration_ms: 155.205935
+  type: 'test'
+  ...
+# Subtest: SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+ok 3 - SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+  ---
+  duration_ms: 324.910596
+  type: 'test'
+  ...
+# Subtest: PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+ok 4 - PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+  ---
+  duration_ms: 109.98375
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1142.014098
+TAP version 13
+# Subtest: F02b operator quality software validation, synthetic real-branch data
+    # Subtest: normalized upload is actual WebP with bound hashes; output and depth stay PNG
+    ok 1 - normalized upload is actual WebP with bound hashes; output and depth stay PNG
+      ---
+      duration_ms: 79.838858
+      type: 'test'
+      ...
+    # Subtest: otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job
+    ok 2 - otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job
+      ---
+      duration_ms: 29.91257
+      type: 'test'
+      ...
+    # Subtest: GEOM-03 fixture-quality exclusion targeted assertion, otherwise-valid byte/report provenance
+    ok 3 - GEOM-03 fixture-quality exclusion targeted assertion, otherwise-valid byte/report provenance
+      ---
+      duration_ms: 42.165246
+      type: 'test'
+      ...
+    # Subtest: ordinary actor, absent report, mismatched report, changed bytes and modified immutable evidence refuse
+    ok 4 - ordinary actor, absent report, mismatched report, changed bytes and modified immutable evidence refuse
+      ---
+      duration_ms: 33.848012
+      type: 'test'
+      ...
+    # Subtest: measured corpus thresholds, coverage, source, config, report hashes and synthetic flag
+    ok 5 - measured corpus thresholds, coverage, source, config, report hashes and synthetic flag
+      ---
+      duration_ms: 63.963223
+      type: 'test'
+      ...
+    # Subtest: 12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage
+    ok 6 - 12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage
+      ---
+      duration_ms: 24.941459
+      type: 'test'
+      ...
+    1..6
+ok 1 - F02b operator quality software validation, synthetic real-branch data
+  ---
+  duration_ms: 287.572372
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 293.193955
+TAP version 13
+# Subtest: PAY-01 price/input/key and notification signals are bounded
+ok 1 - PAY-01 price/input/key and notification signals are bounded
+  ---
+  duration_ms: 3.822351
+  type: 'test'
+  ...
+# Subtest: PAY-02 provider binding guard rejects the wrong merchant
+ok 2 - PAY-02 provider binding guard rejects the wrong merchant
+  ---
+  duration_ms: 0.58033
+  type: 'test'
+  ...
+# Subtest: PAY-02 every verified payment binding field rejects independently
+ok 3 - PAY-02 every verified payment binding field rejects independently
+  ---
+  duration_ms: 0.814111
+  type: 'test'
+  ...
+# Subtest: PAY-04 exact positive minor RUB and refund bindings
+ok 4 - PAY-04 exact positive minor RUB and refund bindings
+  ---
+  duration_ms: 0.5872
+  type: 'test'
+  ...
+# Subtest: SEC-01 disabled/missing live keys refuse; fixture explicit and production forbidden
+ok 5 - SEC-01 disabled/missing live keys refuse; fixture explicit and production forbidden
+  ---
+  duration_ms: 2.613141
+  type: 'test'
+  ...
+# Subtest: PAY-01 hosted confirmation permits HTTPS credentials-free, fixture local exception only
+ok 6 - PAY-01 hosted confirmation permits HTTPS credentials-free, fixture local exception only
+  ---
+  duration_ms: 0.46387
+  type: 'test'
+  ...
+# Subtest: PAY-02 adapter fixed endpoint, auth, immutable body/key and capped/invalid injected responses
+ok 7 - PAY-02 adapter fixed endpoint, auth, immutable body/key and capped/invalid injected responses
+  ---
+  duration_ms: 34.275442
+  type: 'test'
+  ...
+# Subtest: PAY-02 timeout bounds injected slow headers and streaming body to5s
+ok 8 - PAY-02 timeout bounds injected slow headers and streaming body to5s
+  ---
+  duration_ms: 10002.176031
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10087.13825
+TAP version 13
+# Subtest: ATTR-01 default absent/false and forged consent/cookies cannot establish attribution
+ok 1 - ATTR-01 default absent/false and forged consent/cookies cannot establish attribution
+  ---
+  duration_ms: 24.277269
+  type: 'test'
+  ...
+# Subtest: ATTR-01 accepted cookie policy, first preference and fixed30d expiry; session unchanged
+ok 2 - ATTR-01 accepted cookie policy, first preference and fixed30d expiry; session unchanged
+  ---
+  duration_ms: 4.454522
+  type: 'test'
+  ...
+# Subtest: ATTR-01 denied tracking deletes preference, resets opt-in; manual then works without cookie
+ok 3 - ATTR-01 denied tracking deletes preference, resets opt-in; manual then works without cookie
+  ---
+  duration_ms: 2.394671
+  type: 'test'
+  ...
+# Subtest: ATTR-01 missing/blocked/tampered/repeated and other-account cookies never use cookie server preference
+ok 4 - ATTR-01 missing/blocked/tampered/repeated and other-account cookies never use cookie server preference
+  ---
+  duration_ms: 26.785139
+  type: 'test'
+  ...
+# Subtest: ATTR-01 consent guard: stored preference plus genuine token but no server opt-in is rejected
+ok 5 - ATTR-01 consent guard: stored preference plus genuine token but no server opt-in is rejected
+  ---
+  duration_ms: 1.860961
+  type: 'test'
+  ...
+# Subtest: ATTR-02 manual override before each new intent, old snapshot/idempotency stays immutable
+ok 6 - ATTR-02 manual override before each new intent, old snapshot/idempotency stays immutable
+  ---
+  duration_ms: 4.416822
+  type: 'test'
+  ...
+# Subtest: ATTR-02 invalid/self/inactive/ownerless codes have no preference or consent effects
+ok 7 - ATTR-02 invalid/self/inactive/ownerless codes have no preference or consent effects
+  ---
+  duration_ms: 7.098693
+  type: 'test'
+  ...
+# Subtest: ATTR-01 expiry checked during payment use; clear and malformed tokens do not retain attribution
+ok 8 - ATTR-01 expiry checked during payment use; clear and malformed tokens do not retain attribution
+  ---
+  duration_ms: 1.93547
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 101.827497
+TAP version 13
+# Subtest: PARTNER-01 operator creates opaque active codes with specified existing owner; duplicate409 and missing owner404
+ok 1 - PARTNER-01 operator creates opaque active codes with specified existing owner; duplicate409 and missing owner404
+  ---
+  duration_ms: 4.658842
+  type: 'test'
+  ...
+# Subtest: PARTNER-01 activation input validated and operator aggregate shape exposes no private metadata
+ok 2 - PARTNER-01 activation input validated and operator aggregate shape exposes no private metadata
+  ---
+  duration_ms: 4.395391
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25.045068
+TAP version 13
+# Subtest: ATTR/PARTNER API authentication Origin body bounds and absence of registry writes
+ok 1 - ATTR/PARTNER API authentication Origin body bounds and absence of registry writes
+  ---
+  duration_ms: 29.251221
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 41.055285
+ Container n8-f03b-candidate-web-run-32c24717e46b Creating 
+ Container n8-f03b-candidate-web-run-32c24717e46b Created 
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
