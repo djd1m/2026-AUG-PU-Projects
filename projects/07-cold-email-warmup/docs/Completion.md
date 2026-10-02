@@ -1,6 +1,6 @@
 # Completion / release contract
 
-Status: planning. Three CJM prototypes have separate browser evidence. Product
+Status: approved planning, correction N7-V01..06; independent revalidation pending. Three CJM prototypes have separate browser evidence. Product
 implementation, production launch, real provider integration and payment acceptance
 are not implied by documentation or successful prototype tests.
 
@@ -38,3 +38,11 @@ limitations, elapsed and available usage/cost. Unknown counters remain null.
 Seven-day target is monitored only after accepted pilot start; no background
 automation or retention claim implied. Completion means all accepted scope AC
 pass, not merely all documents exist.
+
+Local billing acceptance REQUIRES configured fake provider success: immutable
+price/attribution, canonical state fetch, duplicate/reordered event tests, one
+entitlement grant. Unavailable is a negative test only. Real provider activation
+and real money stay deferred; no paid conversion metric is inferred from fixtures.
+Privacy acceptance tests both disclosed peer headers/test body and forbidden
+private data/API access. Stop safety acceptance covers BOTH lock orderings at
+final submitting commit for every stop writer.

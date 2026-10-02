@@ -39,7 +39,10 @@ hostname, сохраняет только зашифрованный AEAD secret
 Scheduler выбирает пару из разных tenant только среди пригодных участников;
 нет пары — waiting, не synthetic progress. Seed стратегия — когорта курса,
 цель 30 eligible ящиков через семь дней pilot. Это цель, не измеренный tipping point.
-Участники видят агрегаты, не список адресов других владельцев.
+В dashboard участники видят агрегаты, не каталог адресов. При самой SMTP
+переписке получатель неизбежно увидит адрес отправителя, routing headers и тестовый
+body в своём почтовом клиенте; отдельное согласие прямо раскрывает эту передачу.
+Частные кампании, списки контактов и credentials другим участникам недоступны.
 
 ## Шаг 3. Составить цепочку
 
@@ -54,13 +57,18 @@ Worker берёт due job, одной транзакцией проверяет 
 fresh IMAP, suppression и общий warmup+campaign budget. Default 10/day на ящик,
 pilot ceiling 30/day — наши проектные потолки, не разрешение провайдера.
 Параллельные workers не обходят квоту: unique job key + atomic quota reservation.
-После commit выполняется bounded I/O, без удержания DB transaction на сеть.
+Claim сам по себе ещё не разрешает I/O. Непосредственно перед ним отдельная
+короткая транзакция получает общую с каждым stop writer блокировку и условно
+переводит claimed→submitting, заново проверяя все разрешения и состояние.
+Только commit этой операции разрешает bounded I/O, уже без DB lock.
 
 ## Шаг 5. Отправить или честно остановиться
 
 По умолчанию вызов идёт в локальный test transport. Live mode требует ещё и
 разрешения оператора/провайдера. Перед submission повторно проверяется отмена;
-затем пишется durable submitting. Каждое сообщение получает body unsubscribe
+затем атомарно фиксируется final submitting. После этого commit одна in-flight
+попытка ещё может отправиться даже если consent отозван до socket call; UI это
+показывает. До этого commit остановка гарантирует ноль вызовов. Каждое сообщение получает body unsubscribe
 и one-click headers. Подтверждённое SMTP принятие означает submitted, не доставку
 во входящие и не рост reputation.
 
@@ -70,9 +78,13 @@ pilot ceiling 30/day — наши проектные потолки, не раз
 ## Шаг 6. Найти ответ и прекратить следующие шаги
 
 IMAP worker читает bounded headers и сопоставляет sender + Message-ID references.
-Reply event и cursor записываются атомарно; повтор не дублирует событие.
+UID-observation и cursor записываются атомарно. Семантическая остановка
+unique(mailbox,enrollment,reply) сохраняет идемпотентность даже при новой
+UIDVALIDITY; физическое наблюдение может иметь новый UID без второго reply effect.
 Следующие queued steps отменяются. Сбой UIDVALIDITY требует безопасного rescan,
-stale IMAP блокирует новые campaign sends, пока состояние неизвестно.
+poll каждые30s, возраст полного успешного poll>=60s блокирует отправку.
+Rescan максимум20×100 headers и120s за попытку; неполный rescan остаётся paused,
+возобновление возможно только после полного high-water и tail poll.
 
 ## Шаг 7. Отписка и жалоба
 
@@ -89,13 +101,18 @@ complaint feed требует конкретного provider adapter, без у
 Share появляется после проверяемого улучшения и выполняется самим владельцем.
 Free report содержит badge; paid entitlement проверяется сервером. Partner cookie
 и явный код фиксируются до conversion; self-referral/replay не увеличивают счётчики.
-Для n<30 показываются raw counts. Sandbox не называется настоящей выручкой.
+Для n<30 показываются raw counts. Локальный fake adapter с отдельным durable provider state обязан успешно
+провести тестовый checkout/каноническую проверку/один grant. 503 — отрицательный
+сценарий, не готовая billing фича. Fixture100 minor RUB явно TEST; sandbox
+не называется настоящей выручкой.
 
 ## Что проверено сейчас
 
 Три самостоятельных CJM: Chromium desktop/mobile, keyboard, consent gates,
 limits, reply pause, complaint/suppression, escaping и mutation запуска — pass.
-32 сценария спецификации имеют алгоритмы; 12 growth BDD сохранены.
+54 сценария спецификации имеют алгоритмы; 12 growth BDD и явные security
+Examples сохранены. Первое независимое ревью выявило2high/4medium; исправления
+контрактов проходят отдельную проверку, старый NEEDS WORK не переписан.
 Independent specification validation, product build/integration tests и full
 application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
 а не переписан planned процесс как будто уже работающий.

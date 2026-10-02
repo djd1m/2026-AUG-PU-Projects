@@ -1,6 +1,6 @@
 # Test scenarios — planned BDD acceptance
 
-Scenarios below are requirements, not executed test receipts. Every scenario maps to Specification.md and Pseudocode.md.
+These are requirements, not execution receipts. Additional correction scenarios: [security-scenarios](tests/security-scenarios.md). Total catalog:54 named scenarios, including explicit case tables.
 
 ## SC-US-001-1
 
@@ -59,7 +59,7 @@ Scenario: SC-US-003-1
 Scenario: SC-US-003-2
   Given отзыв согласия
   When queued job проверяется
-  Then canceled; already submitted SMTP cannot be recalled and this boundary is shown explicitly.
+  Then canceled; a job whose final serialized transition to submitting already committed may still send; it cannot be recalled, even before the socket call. This boundary is shown explicitly.
 ```
 
 ## SC-US-004-1
@@ -79,7 +79,7 @@ Scenario: SC-US-004-1
 Scenario: SC-US-004-2
   Given менее 2 разных tenant eligible
   When pair scheduler
-  Then waiting и 0 exchange jobs; участникам не раскрываются чужие адреса.
+  Then waiting и 0 exchange jobs; dashboard/API не перечисляет чужие ящики.
 ```
 
 ## SC-US-005-1
@@ -96,10 +96,17 @@ Scenario: SC-US-005-1
 
 ```gherkin
 @FR-n7-005 @edge-case
-Scenario: SC-US-005-2
+Scenario Outline: SC-US-005-2
   Given missing field/header CRLF or unsafe markup
+  And concrete case <case> is selected
   When preview/start
   Then validation error и 0 message jobs; plain text + escaped preview.
+  And the precise result is <expected>
+  Examples:
+    | case | expected |
+    | missing required field | 400;0 jobs |
+    | CRLF Bcc in subject | 400;0 jobs |
+    | unsafe markup in template | 400;0 jobs |
 ```
 
 ## SC-US-005-3
@@ -129,7 +136,7 @@ Scenario: SC-US-006-1
 Scenario: SC-US-006-2
   Given IMAP cursor replay/UIDVALIDITY change
   When ingestion retries
-  Then dedup prevents duplicate events and mailbox pauses pending safe rescan; отсутствие свежего poll blocks campaign sends.
+  Then transport observations may repeat under new UIDs, but semantic reply/stop effect is unique per mailbox+enrollment; mailbox stays paused until full bounded rescan and successful tail poll; stale poll blocks sends.
 ```
 
 ## SC-US-007-1
@@ -256,9 +263,17 @@ Scenario: SC-US-011-2
 
 ```gherkin
 @FR-GROWTH-002 @growth @security
-Scenario: SC-US-011-3
+Scenario Outline: SC-US-011-3
   Given self-referral/tampered cookie/replayed callback
+  And concrete case <case> is selected
+  When attribution or payment event is processed
   Then no fraudulent attributed conversion. Explicit code wins only if valid; invalid code errors visibly, never silently falls back. ADR-004.
+  And the precise result is <expected>
+  Examples:
+    | case | expected |
+    | self-referral code | 0 attributed conversions |
+    | tampered attribution cookie | 0 fraudulent conversions |
+    | replayed successful payment event | count unchanged |
 ```
 
 ## SC-US-012-1
@@ -315,8 +330,15 @@ Scenario: SC-US-013-2
 
 ```gherkin
 @FR-GROWTH-004 @growth @security
-Scenario: SC-US-013-3
+Scenario Outline: SC-US-013-3
   Given own account/replayed event/cross-tenant access
+  And concrete case <case> is selected
   When conversion count queried
   Then fraud adds 0 and foreign details absent.
+  And the precise result is <expected>
+  Examples:
+    | case | expected |
+    | own-account referral | 0 eligible conversions |
+    | replayed provider event | count unchanged |
+    | foreign-tenant dashboard request | 404; no details |
 ```

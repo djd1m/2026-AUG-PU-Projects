@@ -1,4 +1,4 @@
-# Architecture — N7 v1
+# Architecture — N7 v1.1
 
 ## Architecture Overview
 
@@ -43,7 +43,12 @@ Provider endpoints are operator allowlisted and IP-validated/pinned at connect t
 
 Tenant predicates are mandatory on every owner query; jobs carry server-derived
 tenant. Cross-tenant pool selection happens only inside scheduler and returns
-no peer email to dashboard. Pool participation needs recipient and sender consent.
+no peer email to dashboard. Direct SMTP recipients necessarily see sender address,
+routing headers and test body in their own mail client. Versioned pool consent
+must disclose this before either direction is scheduled. Private campaign content,
+credentials, contact lists and pool enumeration stay tenant-private. Pool
+participation needs recipient and sender consent; two-tenant message fixture and
+API-denial tests establish both sides of this boundary.
 Use account-scoped transaction helpers; independent tests use two tenants.
 
 ## External Dependencies
@@ -56,7 +61,7 @@ Checked 2026-10-02; quotes are short excerpts from opened primary documentation.
 | IMAP connect/read mailbox | ImapFlow against compatible IMAP server | [Quick Start](https://imapflow.com/docs/getting-started/quick-start/): “await client.connect()” · checked 2026-10-02 | CONFIRMED | FR-n7-002, FR-n7-006 |
 | Live sending permission for a concrete mailbox/provider | Operator-selected provider | No live credentials or provider account policy checked yet | UNCONFIRMED | Live activation only, deferred out of initial local MVP acceptance |
 | Provider complaint feed | Provider-specific adapter | No concrete provider selected; manual authenticated operator intake used locally | UNCONFIRMED | Automated live provider complaint intake deferred; FR-n7-007 uses local operator path |
-| Live payment capture | Payment provider | Not invoked; sandbox adapter candidate from reuse-inventory.md; provider contract verification required before enabled sandbox | UNCONFIRMED | Live charge excluded; FR-n7-009 unavailable state accepted until sandbox contract verified |
+| Live payment capture | Payment provider | Not invoked; real provider activation needs separate contract verification | UNCONFIRMED | Live charge deferred only; local fake adapter success REQUIRED for FR-n7-009 and growth conversion |
 
 CONFIRMED library capability does not confirm a particular account's auth method,
 terms, deliverability or complaint feed. Optional live capabilities do not silently
@@ -70,7 +75,28 @@ changes; no destructive data migration in MVP. DB backup/restore instructions an
 readiness probes before deployment. Auth/consent/event audit retained without body
 or credentials. Local fake provider fixtures never appear as live observations.
 
-SMTP boundary: durable submitting record before socket call. Exactly-once SMTP
+Local fake payment adapter has independent durable fixture state, operator-only
+status simulation and canonical-state query. It is part of the product test/sandbox
+mode, never production payment evidence. Fixture team100 minor RUB/30days is
+explicitly TEST. Checkout must produce a successful verified single grant locally;
+503/unavailable alone cannot meet FR-n7-009. Live provider is independently deferred.
+
+All eligibility writers and final claimed→submitting use transaction advisory
+lock(7,1), acquired first. Final conditional transition rechecks current job/lease,
+consent/version, recipient enrollment/suppression, both pool parties, quarantine,
+fresh poll, quota date/limits and live gate in the SAME transaction. The commit
+is the irreversible boundary. Earlier committed stops guarantee zero transport;
+later stops cancel future jobs but cannot recall in-flight work before socket call.
+No lock is held across network I/O. This deliberate global MVP serialization keeps
+transactions short; optimization requires new concurrency evidence.
+
+Reply ingestion has three identities: physical UID observation, optional stable
+Message-ID ledger, authoritative unique(mailbox,enrollment,reply) effect. Only the
+last counts replies/stops, surviving UIDVALIDITY reset and missing Message-ID.
+Rescan cursor/high-water persist atomically; incomplete/budget-exhausted rescan
+never clears pause. Numerical limits are canonical Specification safety-v1.
+
+SMTP boundary: durable conditional submitting commit before socket call. Exactly-once SMTP
 delivery cannot be guaranteed; crash/timeout after submission becomes unknown_delivery.
 Safety ceiling uses attempted/submitted reservations, not only success responses.
 Replies/suppression cancel queued steps; already submitting messages cannot be recalled.

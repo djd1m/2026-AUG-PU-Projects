@@ -62,8 +62,10 @@ Docker Compose на VPS. Русский кабинет позволяет под
    не гарантия network effect. Отсутствие пула оставляет честный waiting state.
 4. **ADR-004:** payment integration сначала sandbox/fake provider. Серверные тарифы,
    immutable order snapshot, idempotency, проверка provider state и независимый
-   источник статуса; без live key/charge. При отсутствии нужного sandbox контракт
-   остаётся блокирующим для billing, а не незаметным mock production.
+   источник статуса; без live key/charge. Локальный fake adapter с независимым durable provider state обязателен: успешный
+   test checkout и единичный entitlement grant должны пройти. Его отсутствие
+   блокирует billing; unavailable — только отрицательный сценарий. Live provider
+   не нужен для local acceptance и остаётся отдельно отложенным.
 5. **ADR-005:** максимум reuse из N1–N6 по inventory; брать минимальные auth,
    session, payment, partner primitives, не копировать чужие продуктовые документы.
 
@@ -92,8 +94,8 @@ requirements-validator → cc-toolkit-generator-enhanced; project-work-companion
 | AC-N7-003 | Без отдельного pool/campaign consent число вызовов transport равно 0 |
 | AC-N7-004 | При 20 конкурентных claim и лимите 3 отправок не более 3 резервов; warmup+campaign используют общий бюджет |
 | AC-N7-005 | Все generated letters содержат unsubscribe body + List-Unsubscribe и List-Unsubscribe-Post; repeated unsubscribe идемпотентен |
-| AC-N7-006 | Reply/complaint/opt-out до dispatch отменяет его; неоднозначный SMTP timeout не приводит к слепому retry |
-| AC-N7-007 | Пул из разных tenants не раскрывает адреса/контент участникам; seed waiting и withdrawal проверены |
+| AC-N7-006 | Stop writer, выигравший общую транзакционную блокировку до final submitting commit, запрещает transport; после границы максимум одна in-flight попытка; ambiguous timeout без blind retry |
+| AC-N7-007 | Pool consent раскрывает peer sender/header/test-body visibility при прямом SMTP; чужие private campaigns/credentials и API enumeration запрещены; two-tenant fixtures, seed waiting и withdrawal проверены |
 | AC-N7-008 | Подстановка allowlisted полей, missing field блокирует запуск, preview защищён от XSS/header injection |
 | AC-N7-009 | Нет provider evidence → reputation unknown, share disabled; source/date/denominator присутствуют у наблюдения |
 | AC-N7-010 | 12 growth BDD: happy с числом, edge, security на каждый FR; self-referral/replay запрещены |
@@ -102,7 +104,16 @@ requirements-validator → cc-toolkit-generator-enhanced; project-work-companion
 
 ## Checkpoint
 
-Нужно утвердить план v1, ADR-001..005, указанные команду/модели/навыки и границы
-реализации. Основание: `.claude/rules/complexity-router.md` — «XL — /feature полным
+План v1, ADR-001..005, команда/модели/навыки и границы реализации утверждены
+в OWN-N7-002. Повторного разрешения в этих пределах не требуется. Основание: `.claude/rules/complexity-router.md` — «XL — /feature полным
 циклом + остановка на плане у владельца». Разрешение самостоятельно выбрать CJM
 использовано; оно не подменяет этот checkpoint.
+
+## Исправление v1.1 по независимой проверке
+
+N7-V01: прежняя безусловная формулировка AC-N7-007 была невыполнима для прямой
+SMTP переписки. Она исправлена явно на scoped privacy + disclosure consent,
+а не молча сужена до dashboard. Это проектное уточнение под разрешённой
+автономностью OWN-N7-002; реальная отправка и передача адресов не разрешаются.
+N7-V02..06: единая submitting boundary, stable reply effects, safety-v1 numbers,
+полные security branches и обязательный usable local payment success.

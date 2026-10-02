@@ -32,3 +32,12 @@ Live SMTP/IMAP, charges, production deploy и shared proxy changes остают�
 browser runtime создать общий Docker Playwright. Root сообщил готовый
 `codex-ui-playwright` 1.63.0; используется Playwright connect, isolated contexts.
 N7 CJM проверены этим runtime, не браузером на host. Пакет E2E — в telemetry evidence.
+
+## Исправления контракта под автономностью, 2026-10-02
+
+По независимому N7-V01 прежняя безусловная секретность peer-адресов при прямом
+SMTP была невозможна. Координатор явно исправил AC-N7-007: pool consent раскрывает
+получателю sender/header/test-body visibility, а private campaigns/credentials,
+контакты и API enumeration остаются защищены. Это уточнение проектного текста,
+не согласие владельца отправить реальные письма или раскрыть чей-либо адрес.
+N7-V02..06 исправляются в тех же границах опубликованного плана.

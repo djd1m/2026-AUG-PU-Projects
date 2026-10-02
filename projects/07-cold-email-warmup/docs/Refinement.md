@@ -42,3 +42,9 @@ E2E. Prototype CJM E2E does not establish backend acceptance.
 Independent Astra reviewer reads current spec and exact source, checks all AC
 and gives findings with reproduction and severity. One corrective pass addresses
 confirmed issues; no demanded minimum finding count or optional polish loop.
+
+Correction acceptance N7-V01..06: docs/tests/security-scenarios.md holds22 additional
+named scenarios and concrete Example rows. Test both lock orderings for every stop
+writer; first semantic reply under changed validity; full auth lifecycle and
+AEAD/AAD corruption; exact safety-v1 thresholds; local fake provider success and
+independent status verification. Neither32 traced names nor503-only billing is acceptance.
