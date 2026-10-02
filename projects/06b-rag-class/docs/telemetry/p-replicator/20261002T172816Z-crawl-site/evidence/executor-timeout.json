@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-02T18:02:25.227303+00:00",
+  "attempt_id": "implement-1",
+  "state": "interrupted",
+  "budget_seconds": 1500,
+  "thread_id": "01a0fdad-3813-7391-9d8c-52d2abaf9e87",
+  "requested_receipt_absent": true,
+  "reason": "Executor killed by 1500s timeout after assertions passed but before receipt/cleanup/commit. Coordinator finalizes source-bound regression because code changed after initial full green. No product edits planned."
+}
