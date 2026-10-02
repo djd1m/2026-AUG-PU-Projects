@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-rag-answer-sandbox/projects/06b-rag-class
+
+ ❯ packages/rag/tests/unit/answer-citations.test.ts (9 tests | 1 failed | 8 skipped) 15ms
+   × SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > citation guard rejects every ID outside the above-threshold retrieval 13ms
+     → expected null to be 'invalid_citation' // Object.is equality
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > unknown=true with no cited IDs refuses
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > unknown=false with no cited IDs refuses
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > unknown overrides valid IDs; valid IDs alone pass
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > resolves only DB locators and deduplicates; missing documents refuse
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > PDF citation has DB filename and page, never a model URL
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > removes model URLs in text, Markdown and HTML without executing markup
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > prompt keeps hostile fragments inside JSON data with one separate system instruction
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > exact no-contact hint and contact refusal
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  20:42:05
+   Duration  1.22s (transform 483ms, setup 0ms, collect 657ms, tests 15ms, environment 0ms, prepare 199ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/answer-citations.test.ts > SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > citation guard rejects every ID outside the above-threshold retrieval
+AssertionError: expected null to be 'invalid_citation' // Object.is equality
+
+- Expected: 
+"invalid_citation"
+
++ Received: 
+null
+
+ ❯ packages/rag/tests/unit/answer-citations.test.ts:17:8
+     15|     // Fixed mutation target: disable the membership guard, then this …
+     16|     expect(citationRefusal({ ...out, cited_ids: ['own-good', 'foreign-…
+     17|       .toBe('invalid_citation');
+       |        ^
+     18|   });
+     19|   it.each([true, false])('unknown=%s with no cited IDs refuses', (unkn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

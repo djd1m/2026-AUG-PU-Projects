@@ -1,0 +1,59 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-rag-answer-sandbox/projects/06b-rag-class
+
+ ❯ packages/rag/tests/unit/answer-citations.test.ts (12 tests | 2 failed | 9 skipped) 25ms
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > citation guard rejects every ID outside the above-threshold retrieval
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > unknown=true with no cited IDs refuses
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > unknown=false with no cited IDs refuses
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > unknown overrides valid IDs; valid IDs alone pass
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > resolves only DB locators and deduplicates; missing documents refuse
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > PDF citation has DB filename and page, never a model URL
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > removes model URLs in text, Markdown and HTML without executing markup
+   × SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > F07-R1 removes model-generated address //offers.example.shop/pay outside the former suffix list 19ms
+     → expected 'Доставка 2 дня //offers.example.shop/…' to be 'Доставка 2 дня' // Object.is equality
+   × SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > F07-R1 removes model-generated address offers.example.shop/pay outside the former suffix list 3ms
+     → expected 'Доставка 2 дня offers.example.shop/pay' to be 'Доставка 2 дня' // Object.is equality
+   ✓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > F07-R1 preserves ordinary answer prose and numbers 1ms
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > prompt keeps hostile fragments inside JSON data with one separate system instruction
+   ↓ SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > exact no-contact hint and contact refusal
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/answer-citations.test.ts > SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > F07-R1 removes model-generated address //offers.example.shop/pay outside the former suffix list
+AssertionError: expected 'Доставка 2 дня //offers.example.shop/…' to be 'Доставка 2 дня' // Object.is equality
+
+Expected: "Доставка 2 дня"
+Received: "Доставка 2 дня //offers.example.shop/pay"
+
+ ❯ packages/rag/tests/unit/answer-citations.test.ts:48:59
+     46|   it.each(['//offers.example.shop/pay', 'offers.example.shop/pay'])(
+     47|     'F07-R1 removes model-generated address %s outside the former suff…
+     48|       expect(stripModelUrls(`Доставка 2 дня ${address}`)).toBe('Достав…
+       |                                                           ^
+     49|     });
+     50|   it('F07-R1 preserves ordinary answer prose and numbers', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  packages/rag/tests/unit/answer-citations.test.ts > SC-US-005-1 / SC-US-006-1,2: citation guards and deterministic refusals > F07-R1 removes model-generated address offers.example.shop/pay outside the former suffix list
+AssertionError: expected 'Доставка 2 дня offers.example.shop/pay' to be 'Доставка 2 дня' // Object.is equality
+
+Expected: "Доставка 2 дня"
+Received: "Доставка 2 дня offers.example.shop/pay"
+
+ ❯ packages/rag/tests/unit/answer-citations.test.ts:48:59
+     46|   it.each(['//offers.example.shop/pay', 'offers.example.shop/pay'])(
+     47|     'F07-R1 removes model-generated address %s outside the former suff…
+     48|       expect(stripModelUrls(`Доставка 2 дня ${address}`)).toBe('Достав…
+       |                                                           ^
+     49|     });
+     50|   it('F07-R1 preserves ordinary answer prose and numbers', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed | 9 skipped (12)
+   Start at  21:01:10
+   Duration  1.47s (transform 561ms, setup 0ms, collect 709ms, tests 25ms, environment 0ms, prepare 245ms)
+

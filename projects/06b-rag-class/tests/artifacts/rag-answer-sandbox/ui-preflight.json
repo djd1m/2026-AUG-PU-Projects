@@ -1,0 +1,29 @@
+{
+  "status": "ready",
+  "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+  "build_revision": "sha256:16141faf089c07dfd0603c0a4de24937060c9a8a3b9f9b030035369635d51818",
+  "environment": "Isolated n6b-f07-ui Docker stack, no published DB ports, shared codex-ui-playwright attached to own network",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f07-ui.mjs /opt/browser/n6b-f07-fixture.json /opt/browser/n6b-f07-output",
+  "inputs": [
+    {
+      "name": "Random private fixture and deterministic real API/gateway/DB test binding",
+      "available": true
+    },
+    {
+      "name": "21 source/test bytes match implementation snapshot; full regression exit0",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Create two temporary accounts and seeded site/PDF/unknown/error bots, forward only their ask endpoints to real handler with test authentication/provider, verify citations/refusal/recovery/CTA/pending/layout",
+    "Save screenshots/report; remove own stack and private fixture"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/rag-answer-sandbox/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-02T21:24:38.909458+00:00"
+}

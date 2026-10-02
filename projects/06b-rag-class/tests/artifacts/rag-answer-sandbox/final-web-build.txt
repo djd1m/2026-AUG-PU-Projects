@@ -1,0 +1,150 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.90kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-alpine
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 361B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.1s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 11.05kB 0.0s done
+#4 DONE 0.1s
+
+#6 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#6 CACHED
+
+#7 [deps 6/9] COPY services/worker/package.json ./services/worker/
+#7 CACHED
+
+#8 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#8 CACHED
+
+#9 [deps 3/9] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
+#10 CACHED
+
+#11 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#11 CACHED
+
+#12 [deps 2/9] WORKDIR /app
+#12 CACHED
+
+#13 [deps 9/9] RUN npm ci
+#13 CACHED
+
+#14 [build 1/2] COPY . .
+#14 DONE 0.2s
+
+#15 [build 2/2] RUN npm run build
+#15 1.171 
+#15 1.171 > n6b-rag-class@0.1.0 build
+#15 1.171 > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+#15 1.171 
+#15 1.729 
+#15 1.729 > @n6b/db@0.1.0 build
+#15 1.729 > tsc -p tsconfig.build.json
+#15 1.729 
+#15 6.878 
+#15 6.878 > @n6b/rag@0.1.0 build
+#15 6.878 > tsc -p tsconfig.build.json
+#15 6.878 
+#15 13.36 
+#15 13.36 > @n6b/worker@0.1.0 build
+#15 13.36 > tsc -p tsconfig.build.json
+#15 13.36 
+#15 20.73 
+#15 20.73 > @n6b/web@0.1.0 build
+#15 20.73 > next build
+#15 20.73 
+#15 23.50 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#15 23.50 This information is used to shape Next.js' roadmap and prioritize features.
+#15 23.50 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#15 23.50 https://nextjs.org/telemetry
+#15 23.50 
+#15 23.83    ▲ Next.js 15.5.27
+#15 23.83 
+#15 24.15    Creating an optimized production build ...
+#15 58.33  ✓ Compiled successfully in 25.7s
+#15 58.35    Linting and checking validity of types ...
+#15 72.17    Collecting page data ...
+#15 81.06    Generating static pages (0/7) ...
+#15 83.60    Generating static pages (1/7) 
+#15 83.86    Generating static pages (3/7) 
+#15 83.86    Generating static pages (5/7) 
+#15 83.86  ✓ Generating static pages (7/7)
+#15 86.14    Finalizing page optimization ...
+#15 86.14    Collecting build traces ...
+#15 101.1 
+#15 101.1 Route (app)                                 Size  First Load JS
+#15 101.1 ┌ ○ /                                      161 B         106 kB
+#15 101.1 ├ ○ /_not-found                            988 B         104 kB
+#15 101.1 ├ ƒ /api/auth/login                        146 B         103 kB
+#15 101.1 ├ ƒ /api/auth/logout                       146 B         103 kB
+#15 101.1 ├ ƒ /api/auth/register                     146 B         103 kB
+#15 101.1 ├ ƒ /api/bots                              146 B         103 kB
+#15 101.1 ├ ƒ /api/bots/[id]/ask                     146 B         103 kB
+#15 101.1 ├ ƒ /api/bots/[id]/sources                 146 B         103 kB
+#15 101.1 ├ ƒ /api/health                            146 B         103 kB
+#15 101.1 ├ ƒ /api/jobs/[id]                         146 B         103 kB
+#15 101.1 ├ ƒ /api/jobs/[id]/retry                   146 B         103 kB
+#15 101.1 ├ ƒ /cabinet                             3.98 kB         107 kB
+#15 101.1 ├ ○ /login                               1.36 kB         107 kB
+#15 101.1 └ ○ /register                            1.36 kB         107 kB
+#15 101.1 + First Load JS shared by all             103 kB
+#15 101.1   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+#15 101.1   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+#15 101.1   └ other shared chunks (total)          1.92 kB
+#15 101.1 
+#15 101.1 
+#15 101.1 ○  (Static)   prerendered as static content
+#15 101.1 ƒ  (Dynamic)  server-rendered on demand
+#15 101.1 
+#15 DONE 101.3s
+
+#16 [prod-deps 1/1] RUN npm prune --omit=dev
+#16 CACHED
+
+#17 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 CACHED
+
+#18 [web 4/8] COPY --from=build /app/package.json ./package.json
+#18 CACHED
+
+#19 [web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next
+#19 DONE 0.6s
+
+#20 [web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public
+#20 DONE 0.1s
+
+#21 [web 7/8] COPY --from=build /app/apps/web/package.json ./apps/web/package.json
+#21 DONE 0.1s
+
+#22 [web 8/8] COPY --from=build /app/packages ./packages
+#22 DONE 0.1s
+
+#23 exporting to image
+#23 exporting layers
+#23 exporting layers 4.8s done
+#23 exporting manifest sha256:a729ea6c77f2348b8e24ce5de2ea729a3a885a925c906b59e8b88f7db27f7e1c 0.1s done
+#23 exporting config sha256:602bd631975c20dfe9ce4d000ef1d55546a1442e41ecffb45426bbdec929e293 0.0s done
+#23 exporting attestation manifest sha256:5fa6f89b3d77a3a5231d9bee598d4f75048d27c85113d83b8a868aa8529a1354 0.0s done
+#23 exporting manifest list sha256:16141faf089c07dfd0603c0a4de24937060c9a8a3b9f9b030035369635d51818 0.0s done
+#23 naming to docker.io/library/n6b-f07-answer-web:20261002 done
+#23 unpacking to docker.io/library/n6b-f07-answer-web:20261002
+#23 unpacking to docker.io/library/n6b-f07-answer-web:20261002 1.2s done
+#23 DONE 6.3s

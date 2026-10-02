@@ -12,10 +12,10 @@
   "feature": "rag-answer-sandbox",
   "tier": "M",
   "started_at": "2026-10-02T20:24:25Z",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-10-02T21:27:29.543314+00:00",
+  "status": "completed",
   "baseline_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-  "final_revision": null,
+  "final_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "answer model gate",
@@ -23,19 +23,42 @@
     "question log and first-answer event atomicity"
   ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": 0,
-    "ac_total": 8
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "confirmed_findings_by_severity": {
+      "P2": 1
+    },
+    "followup_status": "P2 corrected and independently accepted"
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3784543,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 4526303,
+      "cached_input_tokens": 4179328,
+      "output_tokens": 48909,
+      "reasoning_output_tokens": 10552,
+      "total_tokens": 4575212
+    },
+    "measured_cli_usage_only_note": "4 nativeCLI stages; cached/reasoning are subsets; coordinator unknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
-    "Coordinator native model/usage/cost unknown",
-    "No comparable run or final evidence yet"
+    "Coordinator actual model/usage/cost unknown",
+    "No comparable experiment/run; cost unavailable"
+  ],
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/delivery-1-receipt.md",
+    "tests/artifacts/rag-answer-sandbox/tested-source-final.json",
+    "tests/artifacts/rag-answer-sandbox/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/correction-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/correction-review-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/implementation-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/review-1-native-usage.json"
   ]
 }

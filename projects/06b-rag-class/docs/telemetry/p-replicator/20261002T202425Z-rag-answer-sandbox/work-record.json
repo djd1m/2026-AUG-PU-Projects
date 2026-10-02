@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "plan",
+  "stage": "delivered",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261002T202425Z-rag-answer-sandbox",
     "work_unit_id": "rag-answer-sandbox-feature",
-    "current_attempt_id": "prepare-plan-1"
+    "current_attempt_id": "delivery-1"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-    "current_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-    "build_revision": null,
+    "current_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+    "build_revision": "sha256:16141faf089c07dfd0603c0a4de24937060c9a8a3b9f9b030035369635d51818",
     "requirements": [
       {
         "root": "project",
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "observed_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "expected_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "observed_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
       "reconciliation": null
     }
   },
@@ -140,6 +140,20 @@
         "input": "six planned authenticated API/RAG/UI files",
         "exit_code": 0
       }
+    },
+    {
+      "scope_revision": "98c2a5feaca4cbe07dcbb95dcbe7fc4411c9e4a6aa65d6745067e732863e713a",
+      "tier": "M",
+      "rationale": "L web/RAG boundary lowered viafresh-SPARC exception; existing paidgateway invariant unchanged; allMchecks retained",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/route-implementation.txt"
+      },
+      "phase": "implementation",
+      "script": {
+        "input": "six planned authenticated API/RAG/UI files",
+        "exit_code": 0
+      }
     }
   ],
   "approval": {
@@ -148,14 +162,61 @@
     "evidence": null
   },
   "preflight": {
-    "status": "not_applicable",
-    "reason": "Planning before source/build; actualE2Epreflight later",
+    "status": "ready",
+    "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+    "build_revision": "sha256:16141faf089c07dfd0603c0a4de24937060c9a8a3b9f9b030035369635d51818",
+    "environment": "Isolated n6b-f07-ui Docker stack, no published DB ports, shared codex-ui-playwright attached to own network",
+    "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f07-ui.mjs /opt/browser/n6b-f07-fixture.json /opt/browser/n6b-f07-output",
+    "inputs": [
+      {
+        "name": "Random private fixture and deterministic real API/gateway/DB test binding",
+        "available": true
+      },
+      {
+        "name": "21 source/test bytes match implementation snapshot; full regression exit0",
+        "available": true
+      }
+    ],
+    "environment_available": true,
+    "expected_effects": [
+      "Create two temporary accounts and seeded site/PDF/unknown/error bots, forward only their ask endpoints to real handler with test authentication/provider, verify citations/refusal/recovery/CTA/pending/layout",
+      "Save screenshots/report; remove own stack and private fixture"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/rag-answer-sandbox/ui-output/report.json"
+    },
     "external_actions_executed": false,
-    "e2e_claim": null
+    "e2e_claim": null,
+    "checked_at": "2026-10-02T21:24:38.909458+00:00"
   },
   "attempts": [
     {
       "id": "prepare-plan-1",
+      "status": "completed"
+    },
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
+    },
+    {
+      "id": "correction-1",
+      "status": "completed"
+    },
+    {
+      "id": "ui-1",
+      "status": "failed"
+    },
+    {
+      "id": "ui-2",
+      "status": "completed"
+    },
+    {
+      "id": "delivery-1",
       "status": "completed"
     }
   ],
@@ -174,69 +235,111 @@
   "checks": [
     {
       "ac_id": "ANS-01",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-02",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-03",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-04",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-05",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-06",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-07",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     },
     {
       "ac_id": "ANS-08",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "saved final typecheck/unit/integration/build, actual Docker Playwright and independent review closure",
+      "exit_code": 0,
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "receipt_id": "delivery-1"
     }
   ],
-  "receipts": [],
-  "delivery": null
+  "receipts": [
+    {
+      "id": "delivery-1",
+      "work_id": "rag-answer-sandbox-feature",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/delivery-1-receipt.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/delivery-1-launch.json"
+      },
+      "sha256": "412bd49bc4aabee8a5f21e8be35fe9043fa9fbacc4579efe391773108202e0f8",
+      "launch_sha256": "fdefebfd66d7135a63accecddef6831f1e641edf69b9f52c8401dd778d369ac3"
+    }
+  ],
+  "delivery": {
+    "uri": "urn:project-work-companion:20261002T202425Z-rag-answer-sandbox:rag-answer-sandbox-feature",
+    "scope": {
+      "included": [
+        "Sandbox answer with citations, refusals, atomicfirstanswer and all8AC"
+      ],
+      "excluded": [
+        "Publication/widget/demo",
+        "Paid-provider calibration",
+        "Public deployment"
+      ]
+    },
+    "build": {
+      "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "build_revision": "sha256:16141faf089c07dfd0603c0a4de24937060c9a8a3b9f9b030035369635d51818"
+    },
+    "evidence": [
+      "delivery-1"
+    ],
+    "pending": [
+      {
+        "item": "Remaining MVP and release gates",
+        "scope": "out_of_scope",
+        "reason": "Separate roadmap stages"
+      }
+    ],
+    "e2e_claim": "pass"
+  }
 }

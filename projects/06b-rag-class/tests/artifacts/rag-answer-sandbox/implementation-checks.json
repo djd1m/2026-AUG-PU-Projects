@@ -1,0 +1,93 @@
+{
+  "source_revision": "0598b253e5415975df5e24cb5eb98230505f5347",
+  "snapshot_sha256": "a676f93f47e1ce5d69766115b487457c08bb611a4e8c09c282bec2bf2d5fc022",
+  "build_revision": null,
+  "distinct_final_focused_unit_tests": 155,
+  "full_suite_claim": false,
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "cwd": "repository root (wrong directory)",
+      "exit_code": 254,
+      "occurrences": 2,
+      "reason": "ENOENT package.json; corrected to project root"
+    },
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "cwd": "projects/06b-rag-class",
+      "exit_code": 0,
+      "evidence": "typecheck-final.txt",
+      "result": "final source and all authored TypeScript tests typechecked"
+    },
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH ./node_modules/.bin/vitest run --config vitest.config.ts packages/rag/tests/unit/answer-citations.test.ts apps/web/tests/unit/ask-handler.test.ts apps/web/tests/unit/config-wiring.test.ts packages/rag/tests/unit/guards.test.ts packages/rag/tests/unit/guards-index.test.ts",
+      "exit_code": 0,
+      "passed_tests": 64,
+      "evidence_source": "worker tool transcript, 20:40:55 UTC",
+      "note": "initial focused run, superseded ask and guards rechecked after concrete changes; other passed sources unchanged"
+    },
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH ./node_modules/.bin/vitest run --config vitest.config.ts packages/rag/tests/unit/answer-flow.test.ts apps/web/tests/unit/config.test.ts",
+      "exit_code": 0,
+      "passed_tests": 90,
+      "evidence": "focused-flow-config.txt"
+    },
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH ./node_modules/.bin/vitest run --config vitest.config.ts apps/web/tests/unit/ask-handler.test.ts",
+      "exit_code": 0,
+      "passed_tests": 16,
+      "evidence": "ask-handler-final.txt"
+    },
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH ./node_modules/.bin/vitest run --config vitest.config.ts packages/rag/tests/unit/guards.test.ts packages/rag/tests/unit/guards-index.test.ts apps/web/tests/unit/config-wiring.test.ts",
+      "exit_code": 0,
+      "passed_tests": 40,
+      "evidence": "source-guards-final.txt"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "packages/rag/tests/unit/answer-citations.test.ts",
+        "-t",
+        "citation guard rejects every ID outside the above-threshold retrieval"
+      ],
+      "exit_code": 1,
+      "expected_result": "unchanged fixed test red when production citation membership statement disabled",
+      "evidence": "citation-mutation-red.txt"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "packages/rag/tests/unit/answer-citations.test.ts",
+        "-t",
+        "citation guard rejects every ID outside the above-threshold retrieval"
+      ],
+      "exit_code": 0,
+      "expected_result": "unchanged fixed test restored green; exact source SHA256 restored",
+      "evidence": "citation-mutation-restored.txt"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "evidence": "diff-check.txt"
+    },
+    {
+      "command": "npm run test:int",
+      "exit_code": null,
+      "result": "not_run: coordinator owns DB/Docker checks; 21 new real PostgreSQL cases authored"
+    },
+    {
+      "command": "npm test (all units), npm run build, actual Docker UI 1440/390, independent Astra review",
+      "exit_code": null,
+      "result": "not_run: pending coordinator acceptance gates"
+    }
+  ]
+}
