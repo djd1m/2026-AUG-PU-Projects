@@ -1,16 +1,18 @@
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import { type SiteFetch, type SiteResponse } from '@n6b/rag';
-import { ownerPool, runDate, servicePool } from '../../../../packages/db/tests/int/helpers';
+import { type SiteFetch, type SiteResponse, UnsafeSite } from '@n6b/rag';
+import { ownerPool, runDate, servicePool, tenantPool } from '../../../../packages/db/tests/int/helpers';
 import { constructGateway } from '../../../../packages/rag/src/paid-call';
 import { FakeProvider } from '../../../../packages/rag/src/provider/fake';
 import { acquireLease } from '../../src/lease';
 import { createIndexRunner } from '../../src/index-runner';
 import { type JobContext, JobCeilingExceeded, JobLeaseLost } from '../../src/runner';
-import { crawlSite, createSiteExtractor, ROBOTS_FAILED } from '../../src/crawl/site';
+import { crawlSite, createSiteExtractor, NO_HTML, ROBOTS_FAILED } from '../../src/crawl/site';
 import { saveDocument } from '../../src/crawl/store';
-import { expireLease, isolateQueue, seedJobs } from './helpers';
-const owner = ownerPool(); const app = servicePool(8);
-afterAll(async () => { await Promise.all([owner.end(), app.end()]); });
+import { createJobHandler } from '../../../../apps/web/src/server/jobs-handler';
+import { runOnce, TEXT_INTERNAL } from '../../src/loop';
+import { expireLease, isolateQueue, jobRow, seedJobs } from './helpers';
+const owner = ownerPool(); const app = servicePool(8); const cabinet = tenantPool(4);
+afterAll(async () => { await Promise.all([owner.end(), app.end(), cabinet.end()]); });
 beforeEach(async () => { await isolateQueue(owner); });
 const response = (body: string, status = 200, type = 'text/html', location?: string): SiteResponse =>
   ({ status, headers: { 'content-type': type, ...(location ? { location } : {}) }, body });
@@ -22,18 +24,64 @@ async function context(): Promise<JobContext> {
     checkpoint: async () => {}, progress: async () => {} };
 }
 const documents = async (ctx: JobContext) => (await owner.query('SELECT id, locator_url, text, content_sha256 FROM document WHERE source_id=$1 ORDER BY locator_url', [ctx.job.sourceId])).rows;
-function fixture(pages: Record<string, SiteResponse>) {
+function fixture(pages: Record<string, SiteResponse | Error>) {
   const requests: string[] = []; let sleeps = 0;
   const fetch: SiteFetch = async (raw, signal, max) => {
     signal.throwIfAborted(); requests.push(new URL(raw).pathname);
     const result = pages[new URL(raw).pathname] ?? response('', 404);
-    if (Buffer.byteLength(result.body) > max) throw new Error('size');
+    if (result instanceof Error) throw result;
+    if (Buffer.byteLength(result.body) > max) throw new Error('Превышен предел тела страницы');
     return result;
   };
   return { pool: app, fetch, sleep: async () => { sleeps++; }, requests, sleeps: () => sleeps };
 }
 
 describe('SC-US-002 обход сайта и существующая нарезка/эмбеддинги', () => {
+  it('R2/R3 SC-US-002-1/3: oversized/private/rejected page skips to good HTML; nav/footer without sitemap', async () => {
+    const ctx = await context();
+    const f = fixture({ '/sitemap.xml': response('<urlset><url><loc>https://fixture.test/huge</loc></url><url><loc>https://fixture.test/private</loc></url><url><loc>https://fixture.test/redirect</loc></url></urlset>', 200, 'application/xml'),
+      '/huge': response('x'.repeat(2 * 1024 * 1024 + 1)),
+      '/private': new UnsafeSite(),
+      '/redirect': response('', 302, 'text/html', 'https://evil.test/'),
+      '/': response('<nav><a href="/pricing">Prices</a></nav><p>Home</p><footer><a href="/contact">Contact</a></footer>'),
+      '/pricing': response('<p>Pricing</p>'), '/contact': response('<p>Contact</p>') });
+    expect(await crawlSite(ctx, f)).toMatchObject({ loaded: 6, html: 3 });
+    expect(f.requests).toEqual(['/robots.txt', '/sitemap.xml', '/huge', '/private', '/redirect', '/', '/pricing', '/contact']);
+    expect(f.sleeps()).toBe(5);
+    expect((await documents(ctx)).map((r) => r.text)).toEqual(['Home', 'Contact', 'Pricing']);
+    const withoutSitemap = fixture({ '/': response('<nav><a href="/pricing">Prices</a></nav><p>Home</p><footer><a href="/contact">Contact</a></footer>'),
+      '/pricing': response('<p>Pricing</p>'), '/contact': response('<p>Contact</p>') });
+    expect(await crawlSite(ctx, withoutSitemap)).toMatchObject({ loaded: 3, html: 3 });
+    expect(withoutSitemap.requests).toEqual(['/robots.txt', '/sitemap.xml', '/', '/pricing', '/contact']);
+  });
+  it.each(['robots503', 'robotsNetwork', 'emptyHTML', 'arbitrary'])(
+    'R4 SC-US-002-2: runOnce persists safe reason and job API returns it: %s', async (mode) => {
+      const { accountId, jobIds } = await seedJobs(owner, 1);
+      const jobId = jobIds[0]!;
+      await owner.query("UPDATE source SET url='https://fixture.test/' WHERE id=(SELECT source_id FROM index_job WHERE id=$1)", [jobId]);
+      const f = fixture(mode === 'robots503' ? { '/robots.txt': response('', 503) }
+        : mode === 'robotsNetwork' ? { '/robots.txt': new Error('private arbitrary network detail') }
+        : mode === 'arbitrary' ? { '/': new Error(NO_HTML + ' private internal detail') }
+        : { '/': response('pdf', 200, 'application/pdf') });
+      const provider = new FakeProvider();
+      const gateway = constructGateway({ pool: app, provider, now: () => runDate(2), limits: {
+        answerVisitorDay: 30, answerBotDay: 300, answerGlobalDay: 3000, sandboxAccountDay: 100,
+        sandboxGlobalDay: 2000, embedTokensAccountDay: 2_000_000, embedTokensGlobalDay: 20_000_000 } });
+      const extractor = createSiteExtractor(f);
+      const runner = createIndexRunner({ pool: app, gateway, extractors: { site: extractor.extract } });
+      const reason = mode.startsWith('robots') ? ROBOTS_FAILED : mode === 'emptyHTML' ? NO_HTML : TEXT_INTERNAL;
+      expect(await runOnce({ pool: app, runner, log: () => {} })).toMatchObject({ kind: 'finished', jobId, write: 'written',
+        outcome: { state: 'failed', error: reason } });
+      expect(await jobRow(owner, jobId)).toMatchObject({ state: 'failed', error: reason });
+      const sessionToken = 'x'.repeat(43);
+      const handler = createJobHandler({ tenantPool: cabinet, publicBaseUrl: 'https://cabinet.test',
+        authenticate: async (token) => token === sessionToken ? accountId : null });
+      const result = await handler(new Request('https://cabinet.test/api/jobs/' + jobId,
+        { headers: { cookie: `n6b_session=${sessionToken}` } }), jobId);
+      expect(result.status).toBe(200);
+      expect(await result.json()).toMatchObject({ data: { job_id: jobId, state: 'failed', error: reason } });
+      expect(provider.calls.embed).toBe(0);
+    });
   it('SC-US-002-1: sitemap первым, root затем ссылки, циклы/фрагменты не повторяются; неизменённые страницы ставят ссылки', async () => {
     const ctx = await context();
     const f = fixture({ '/sitemap.xml': response('<urlset><url><loc>https://fixture.test/a</loc></url></urlset>', 200, 'application/xml'),
@@ -91,7 +139,7 @@ describe('SC-US-002 обход сайта и существующая нарез
     await expect(crawlSite(ctx, f)).rejects.toThrow('HTML'); expect(f.requests.filter((p) => p === '/')).toHaveLength(1);
     const chain: Record<string, SiteResponse> = {};
     for (let i = 0; i < 7; i++) chain[i ? `/r${i}` : '/'] = response('', 302, 'text/html', `/r${i + 1}`);
-    await expect(crawlSite(await context(), fixture(chain))).rejects.toThrow('редиректов');
+    await expect(crawlSite(await context(), fixture(chain))).rejects.toThrow(NO_HTML);
   });
   it('нет HTML → failed; checkpoint ceiling/lease и signal распространяются до запросов/записи', async () => {
     const ctx = await context();

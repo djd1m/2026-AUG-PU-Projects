@@ -31,20 +31,39 @@ export function parseRobots(text: string, agent = 'N6bBot'): (url: string) => bo
   const specificity = (g: Group) => Math.max(-1, ...g.agents.map((a) => a === '*' ? 0 : a && token.includes(a) ? a.length : -1));
   const best = Math.max(-1, ...groups.map(specificity));
   const rules = best < 0 ? [] : groups.filter((g) => specificity(g) === best).flatMap((g) => g.rules);
+  const compiled = rules.map((rule) => {
+    const end = rule.pattern.endsWith('$');
+    const pattern = end ? rule.pattern.slice(0, -1) : rule.pattern;
+    return { allow: rule.allow, end, parts: pattern.split('*'),
+      score: pattern.replace(/\*/g, '').replace(/%[A-F0-9]{2}/g, 'x').length };
+  });
   return (raw) => {
     const url = new URL(raw);
     const path = encoded(url.pathname + url.search);
     let length = -1;
     let allowed = true;
-    for (const rule of rules) {
-      const end = rule.pattern.endsWith('$');
-      const pattern = end ? rule.pattern.slice(0, -1) : rule.pattern;
-      const regex = new RegExp('^' + pattern.split('*').map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*') + (end ? '$' : ''));
-      const score = pattern.replace(/\*/g, '').replace(/%[A-F0-9]{2}/g, 'x').length;
-      if (regex.test(path) && (score > length || (score === length && rule.allow))) {
-        length = score; allowed = rule.allow;
+    for (const rule of compiled) {
+      if (matches(path, rule.parts, rule.end) && (rule.score > length || (rule.score === length && rule.allow))) {
+        length = rule.score; allowed = rule.allow;
       }
     }
     return allowed;
   };
+}
+
+// Each literal is searched once, with no recursive/backtracking wildcard expansion.
+// Work is bounded by O(pattern length + path length × literal count).
+function matches(path: string, parts: string[], end: boolean): boolean {
+  const first = parts[0]!;
+  if (!path.startsWith(first)) return false;
+  let cursor = first.length;
+  if (parts.length === 1) return !end || cursor === path.length;
+  for (let i = 1; i < parts.length; i++) {
+    const part = parts[i]!;
+    if (end && i === parts.length - 1) return path.endsWith(part) && path.length - part.length >= cursor;
+    const found = path.indexOf(part, cursor);
+    if (found < 0) return false;
+    cursor = found + part.length;
+  }
+  return true;
 }

@@ -1,7 +1,7 @@
 # Результат crawl-site
 
 Профиль M: свежая Фаза 1 (30.09.2026), содержательный L → M; механический ROUTE S — нижняя граница.
-Исполнитель: gpt-6.1-sol high, подтверждён CLI rollout у координатора; попытка прервана по лимиту 1500 с до коммита. Координатор gpt-6.1-sol medium завершил проверку и интеграцию. Стоимость и полный usage неизвестны (null).
+Исполнитель: gpt-6.1-sol high, подтверждён CLI rollout у координатора; попытка прервана по лимиту 1500 с до коммита. Координатор завершил проверку и интеграцию; его фактическая модель не измерена (null). Стоимость и полный usage неизвестны (null).
 RUN_ID 20261002T172816Z-crawl-site, WORK_UNIT_ID crawl-site-implementation; база eec2b434, зависимости 2e5afaa0.
 
 Реализованы POST /api/bots и форма имени/URL, атомарная постановка bot/source/job под RLS;
@@ -40,3 +40,35 @@ source-hashes.json, build-identity.txt; итоговая ревизия и дл�
 Playwright endpoint появился после исходной проверки (codex-ui-playwright, loopback :19320), однако целевой URL UI и
 согласованный путь подключения не получены; readiness blocked, browser pass не заявлен. См. playwright-readiness.json.
 Независимое Astra review выполняет следующий исполнитель; собственного review-report нет. Push/PR/deploy не выполнялись.
+
+
+## Ограниченная коррекция R1–R4, correction-1 (02.10.2026)
+
+Исправлены только worker crawl-модули и необходимые тесты: robots использует поиск литералов без
+экспоненциального backtracking; локальные ошибки размера/UnsafeSite/редиректов пропускают страницу,
+сохраняя seen/лимит/паузы и распространение lease/cancel/ceiling; nav/footer ссылки собираются до
+удаления текста; типизированные robots/no-HTML отказы extractor возвращает как failed JobOutcome.
+Произвольные внутренние исключения сохраняют общий TEXT_INTERNAL через существующий runOnce.
+Добавлен тест реального runOnce → index_job → GET job API для robots503/network/emptyHTML/internal;
+он ещё НЕ выполнен. Исходный обзор и исторические доказательства не изменены.
+
+Node20 supplemental robots: исходный дефект достиг matching и остановлен внешним deadline;
+восстановленный исходник прошёл adversarial/benign/UA/percent/UTF8 и heartbeat/timer ceiling.
+Синтаксис шести изменённых TS-файлов проверен. Это не итоговая Node22 приёмка.
+Docker socket запрещён sandbox; native node_modules пуст и offline npm ci не нашёл locked undici.
+Свежие full typecheck/unit/integration/build и persisted job/API assertions остаются у координатора.
+Новый Docker image не собран, commit/push/merge отсутствуют. Полная регрессия старой ревизии
+и прежний UI E2E не подтверждают эту коррекцию. Профиль compact-quality-first-v2, риск M;
+requested gpt-6.1-sol high, actual model/provider/effort/usage/cost = null (host metadata недоступны).
+Квитанция: docs/telemetry/p-replicator/20261002T172816Z-crawl-site/evidence/correction-1-receipt.md;
+source snapshot и логи: tests/artifacts/crawl-site-correction/. Телеметрия остаётся у координатора.
+
+
+## Сверка координатором после полной регрессии
+
+На момент чтения сохранённого лога: typecheck, 341 unit, 164 integration и
+build прошли; `full-regression-exit=0`. Шесть исходников совпадают с сохранённым
+source-snapshot. Это не повторный запуск тестов. Тестовый compose стек убран.
+Исполнитель Sol6.1high подтверждён host rollout; usage сохранён отдельно.
+Последующая native координация прервалась ошибкой фильтра контента до итоговой
+передачи. Независимое ревью исправлений ещё не выполнено; фича не принята.

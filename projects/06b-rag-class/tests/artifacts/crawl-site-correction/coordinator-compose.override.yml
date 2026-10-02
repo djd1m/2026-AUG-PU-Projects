@@ -1,0 +1,4 @@
+services:
+  tests:
+    image: n6b-f05-crawl-correction:20261002
+    command: ["sh", "-c", "npm run typecheck && npm test && npm run test:int && npm run build"]

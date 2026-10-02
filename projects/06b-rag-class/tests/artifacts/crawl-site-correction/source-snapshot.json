@@ -1,0 +1,13 @@
+{
+  "base_revision": "7cb555ce9d01792a46baff3dfcd6c16d4bb9b9da",
+  "build_image": null,
+  "node_supplemental": "v20.20.2",
+  "files": {
+    "services/worker/src/crawl/robots.ts": "820761378b4af7e55f50421cf117af975371645f7ff97e32ca63968f0aa90305",
+    "services/worker/src/crawl/html.ts": "9816a2d60f0cb2b8be5f1377bef905df76cf871b22f21ff5725b551673e25898",
+    "services/worker/src/crawl/site.ts": "33c492f0513da7514e4470cf30f3ed451945af50e1e47cda623fc6b396199721",
+    "services/worker/tests/unit/crawl-rules.test.ts": "942b35563ee2f4e0eba018be397554bd24797ed22d0dd4c86aad969458a2deb1",
+    "services/worker/tests/unit/crawl-site-correction.test.ts": "d5ea811afd2cbde40ea689576be73ea847c390c6a867929e7eb5d40287d3cbc9",
+    "services/worker/tests/int/crawl.int.test.ts": "4148c31ab43c4c10fa654ba1512b34b4d308c68f54e7ea57a3e838f00709f298"
+  }
+}

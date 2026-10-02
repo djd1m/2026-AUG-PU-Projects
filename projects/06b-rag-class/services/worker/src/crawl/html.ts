@@ -16,8 +16,9 @@ export function sitemapUrls(xml: string, base: URL): string[] {
 export function extractHtml(html: string, base: URL): { text: string; title: string; links: string[] } {
   const $ = load(html);
   const title = $('title').first().text().trim() || base.hostname;
-  $('nav,footer,script,style,noscript,template').remove();
+  $('script,style,noscript,template').remove();
   const links = $('a[href]').toArray().map((el) => siteLink($(el).attr('href')!, base)).filter((u): u is string => u !== null);
+  $('nav,footer').remove();
   $('p,div,section,article,main,h1,h2,h3,h4,h5,h6,li,br,tr,blockquote,pre').each((_i, el) => { $(el).append('\n'); });
   const text = $('body').text().split('\n').map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n');
   return { text, title, links };

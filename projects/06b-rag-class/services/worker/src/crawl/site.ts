@@ -1,6 +1,6 @@
 import { setTimeout as pause } from 'node:timers/promises';
 import { type Pool, withService } from '@n6b/db';
-import { createSafeHttp, type SiteFetch, type SiteResponse } from '@n6b/rag';
+import { createSafeHttp, UnsafeSite, type SiteFetch, type SiteResponse } from '@n6b/rag';
 import { type Extractor } from '../index-runner.js';
 import { type JobContext, JobLeaseLost, JobCeilingExceeded } from '../runner.js';
 import { extractHtml, sameHost, siteLink, sitemapUrls } from './html.js';
@@ -9,6 +9,7 @@ import { saveDocument } from './store.js';
 
 const HTML_MAX = 2 * 1024 * 1024;
 const ROBOTS_MAX = 500 * 1024;
+export const NO_HTML = 'Не найдено ни одной страницы HTML';
 export const ROBOTS_FAILED = 'robots.txt недоступен — по RFC 9309 это полный запрет';
 export interface CrawlDeps {
   pool: Pool;
@@ -17,6 +18,7 @@ export interface CrawlDeps {
 }
 interface CrawlReport { loaded: number; html: number; note: string }
 class CrawlStop extends Error {}
+class CrawlFailure extends Error {}
 
 export async function crawlSite(ctx: JobContext, deps: CrawlDeps, limit = 100): Promise<CrawlReport> {
   const root = new URL(ctx.job.url!);
@@ -62,8 +64,8 @@ export async function crawlSite(ctx: JobContext, deps: CrawlDeps, limit = 100): 
   }
   let robots;
   try { robots = await get(new URL('/robots.txt', root).href, ROBOTS_MAX, false, true); }
-  catch (error) { if (error instanceof JobLeaseLost || error instanceof JobCeilingExceeded) throw error; await checkpoint(); throw new Error(ROBOTS_FAILED); }
-  if (!robots || robots.response.status >= 500) throw new Error(ROBOTS_FAILED);
+  catch (error) { if (error instanceof JobLeaseLost || error instanceof JobCeilingExceeded) throw error; await checkpoint(); throw new CrawlFailure(ROBOTS_FAILED); }
+  if (!robots || robots.response.status >= 500) throw new CrawlFailure(ROBOTS_FAILED);
   if (robots.response.status < 400) allows = parseRobots(robots.response.body);
   const queue: string[] = [];
   try {
@@ -75,7 +77,17 @@ export async function crawlSite(ctx: JobContext, deps: CrawlDeps, limit = 100): 
     const raw = queue[cursor]!;
     if (seen.has(raw) || requested.has(raw) || !allows(raw)) continue;
     if (loaded >= limit) { truncated = true; break; }
-    const result = await get(raw, HTML_MAX, true);
+    let result;
+    try { result = await get(raw, HTML_MAX, true); }
+    catch (error) {
+      if (error instanceof JobLeaseLost || error instanceof JobCeilingExceeded) throw error;
+      await checkpoint();
+      // safe-http currently identifies its body limit with this fixed message.
+      if (!(error instanceof CrawlStop) && !(error instanceof UnsafeSite)
+        && !(error instanceof Error && error.message === 'Превышен предел тела страницы')) throw error;
+      await ctx.progress(loaded, null);
+      continue;
+    }
     if (!result) continue;
     const { response, url } = result;
     if (response.status >= 200 && response.status < 300
@@ -87,7 +99,7 @@ export async function crawlSite(ctx: JobContext, deps: CrawlDeps, limit = 100): 
     }
     await ctx.progress(loaded, null);
   }
-  if (!html) throw new Error('Не найдено ни одной страницы HTML');
+  if (!html) throw new CrawlFailure(NO_HTML);
   return { loaded, html, note: truncated ? `обойдено ${limit} из ≥${limit + 1}` : `обойдено ${loaded} из ${loaded}` };
 }
 
@@ -99,8 +111,16 @@ export function createSiteExtractor(deps: CrawlDeps): { extract: Extractor; note
       if (!row) throw new Error('Аккаунт задачи не найден');
       return row.plan === 'free' ? 100 : 1000;
     });
-    const report = await crawlSite(ctx, deps, limit);
-    notes.set(ctx, report.note);
-    return null;
+    try {
+      const report = await crawlSite(ctx, deps, limit);
+      notes.set(ctx, report.note);
+      return null;
+    } catch (error) {
+      if (!(error instanceof CrawlFailure)) throw error;
+      ctx.signal.throwIfAborted();
+      await ctx.checkpoint();
+      ctx.signal.throwIfAborted();
+      return { state: 'failed', error: error.message };
+    }
   } };
 }
