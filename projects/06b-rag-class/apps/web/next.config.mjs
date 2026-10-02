@@ -16,4 +16,11 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default async function config(phase) {
+  // Next start must not import TypeScript: production images omit devDependencies.
+  if (phase === 'phase-production-build') {
+    const { buildWidget } = await import('../../scripts/build-widget.mjs');
+    await buildWidget();
+  }
+  return nextConfig;
+}

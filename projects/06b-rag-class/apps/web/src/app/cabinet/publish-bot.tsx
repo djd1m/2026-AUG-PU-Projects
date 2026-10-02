@@ -70,8 +70,7 @@ export function PublishBot({ initial, proposedOrigins }: { initial: PublicationD
         {embedCode && <>
           <label htmlFor={`embed-${initial.id}`}>Код вставки</label>
           <textarea id={`embed-${initial.id}`} value={embedCode} readOnly rows={4} spellCheck={false} />
-          <p className="job-detail">Скопируйте код в HTML сайта. Работа виджета станет доступна после подключения
-            его следующего этапа.</p>
+          <p className="job-detail">Скопируйте код в HTML сайта на одном из разрешённых доменов.</p>
         </>}
       </div>
       <p className="job-detail">Демо-страница ещё не подключена.</p>

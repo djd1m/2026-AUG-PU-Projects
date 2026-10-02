@@ -17,6 +17,7 @@ import { loadWebConfig, type WebConfig } from './config';
 import { createJobHandler, createRetryHandler, createSourceHandler } from './jobs-handler';
 import { createPaidRuntime, type PaidRuntime } from './paid';
 import { createPublishHandler } from './publish-handler';
+import { createWidgetHandler } from './widget-handler';
 
 const hasher: PasswordHasher = {
   hash: (password, cost) => bcrypt.hash(password, cost),
@@ -83,4 +84,12 @@ export async function publishRoute(request: Request, context: { params: Promise<
   const { config, tenantPool, auth } = getRuntime();
   return createPublishHandler({ tenantPool, authenticate: (token) => auth.authenticate(token),
     publicBaseUrl: config.PUBLIC_BASE_URL })(request, (await context.params).id);
+}
+
+export function widgetRoute(kind: 'config' | 'ask' | 'event') {
+  return (request: Request): Promise<Response> => {
+    const { config, servicePool, paid } = getRuntime();
+    return createWidgetHandler(kind, { servicePool, gateway: paid.gateway, publicBaseUrl: config.PUBLIC_BASE_URL,
+      visitorSecret: config.VISITOR_SECRET, minSimilarity: config.MIN_SIMILARITY })(request);
+  };
 }
