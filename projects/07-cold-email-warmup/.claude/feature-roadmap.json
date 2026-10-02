@@ -29,7 +29,7 @@
       "number": 2,
       "name": "Encrypted mailbox settings and separate consents",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f01-foundation-auth"
@@ -43,14 +43,15 @@
         "FR-n7-002",
         "FR-n7-003"
       ],
-      "sprint": "local-mvp"
+      "sprint": "local-mvp",
+      "accepted_revision": "b8abcd53cec05dfd2cd69558f601a2d6be672154"
     },
     {
       "id": "f03-dispatch-pool-campaign",
       "number": 3,
       "name": "Seed pool, sequences and atomic dispatch",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f02-mailboxes-consent"
@@ -64,7 +65,8 @@
         "FR-n7-004",
         "FR-n7-005"
       ],
-      "sprint": "local-mvp"
+      "sprint": "local-mvp",
+      "current_slice": "F03a planning/preview/pool/claim; F03b final-submit still pending"
     },
     {
       "id": "f04-reply-suppression",
@@ -133,5 +135,5 @@
       "sprint": "local-mvp"
     }
   ],
-  "last_completed": "f01-foundation-auth"
+  "last_completed": "f02-mailboxes-consent"
 }

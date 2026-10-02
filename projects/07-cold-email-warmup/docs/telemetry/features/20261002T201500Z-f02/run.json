@@ -8,20 +8,31 @@
   "profile": "compact-quality-first-v2",
   "policy_version": "compact-quality-first-v2",
   "baseline_revision": "d47f0cadf6b5b04efc9956ad9114743087ac2fbb",
-  "final_revision": null,
+  "final_revision": "b8abcd53cec05dfd2cd69558f601a2d6be672154",
   "spec_sha256": "651a803c327b9b8282085d661ddcca68d7bba5e63fc67b5bc3c6faf0135cf76e",
   "started_at": "2026-10-02T20:16:03.551936+00:00",
-  "ended_at": null,
-  "status": "in_progress",
+  "ended_at": "2026-10-02T21:16:48.387937+00:00",
+  "status": "completed",
   "actual_model": null,
   "usage": null,
   "cost": null,
   "missing_data": [
-    "Native coordinator model and usage unavailable; child host evidence pending."
+    "Native coordinator actual model/usage unavailable.",
+    "Per-process runtime receipts measured; no deduplicated overall run usage/cost; timeout resume cumulative usage retained once."
   ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": 0,
-    "ac_total": 6
+    "required_gates_passed": true,
+    "ac_met": 6,
+    "ac_total": 6,
+    "confirmed_findings_by_severity": {
+      "P2": 1
+    },
+    "followup_status": "R1 closed by independent review"
+  },
+  "current_stage": "accepted; F03a next",
+  "metrics": {
+    "elapsed_wall_ms": 3644836,
+    "active_wall_ms": null,
+    "cost": null
   }
 }

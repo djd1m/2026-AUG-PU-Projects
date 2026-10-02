@@ -3,3 +3,4 @@
 {"at": "2026-10-02T20:45:49.045878+00:00", "stage": "review", "event": "completed", "verdict": "REQUEST_CHANGES", "findings": ["F02-R1 reserved IPv6 accepted"], "runtime": "evidence/astra-review-runtime.json"}
 {"at": "2026-10-02T20:58:46.550121+00:00", "stage": "correction", "event": "delivered_with_wrapper_timeout", "work_unit_id": "n7-f02-sol-r1", "runtime": "evidence/sol-r1-runtime.json", "receipt_check_exit_code": 0}
 {"at": "2026-10-02T21:10:43.127931+00:00", "stage": "review", "event": "delivery_failed", "runtime": "evidence/astra-r1-failed-runtime.json", "next": "fresh exact-file review, no identical silent retry"}
+{"at": "2026-10-02T21:16:48.387937+00:00", "stage": "acceptance", "event": "completed", "ac_pass": 6, "ac_total": 6, "verdict": "ACCEPT", "source_revision": "b8abcd53cec05dfd2cd69558f601a2d6be672154", "runtime": "evidence/astra-r1-final-runtime.json", "next": "f03-dispatch-pool-campaign slice a"}

@@ -112,13 +112,20 @@ Free report содержит badge; paid entitlement проверяется се
 Три самостоятельных CJM: Chromium desktop/mobile, keyboard, consent gates,
 limits, reply pause, complaint/suppression, escaping и mutation запуска — pass.
 54 сценария спецификации имеют алгоритмы; 12 growth BDD и явные security
-Examples сохранены. Первое независимое ревью выявило2high/4medium; исправления
-контрактов ожидают отдельную перепроверку, старый NEEDS WORK не переписан.
+Examples сохранены. Первое независимое ревью выявило2high/4medium; все замечания контрактов
+закрыты отдельными перепроверками, исходный NEEDS WORK сохранён в истории.
 Тексты согласия и границы отмены уже исправлены во всех трёх CJM; свежие
 фокусные Chromium1440/390 проверки прошли, runtime JS не менялся. Доказательства:
 `telemetry/p-replicator/20261002T173314Z-n7-replicate-a1/evidence/cjm-copy-browser/`.
 Независимая design validation закрыла все6 замечаний. Toolkit создан; vendor1.13.2
-verify составного monorepo-view прошёл с ожидаемым scaffoldhint. F01 принят: Node22/PG16, регистрация/сессии/tenant isolation; typecheck/lint/build,
+verify составного monorepo-view после появления реального Compose прошёл без незакрытых hints. F01 принят: Node22/PG16, регистрация/сессии/tenant isolation; typecheck/lint/build,
 unit5+integration8, independent review ACCEPT и auth browser60checks на1440/390.
 Почтовой worker/полный кабинет и их full application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
 а не переписан planned процесс как будто уже работающий.
+
+F02 принят: encrypted mailbox API, отдельные pool/campaign consents, lock-first
+writers; corrected10unit/14PG и fresh Astra R1 ACCEPT. Первое IPv6 замечание
+исправлено, неудачные попытки передачи ревью сохранены в телеметрии. Live
+соединений/писем нет. F03 выполняется двумя ограниченными частями: планирование
+и reservation, затем final submitting/local sink/outcomes. Ни claim, ни test
+verification не означают реальное отправленное письмо.
