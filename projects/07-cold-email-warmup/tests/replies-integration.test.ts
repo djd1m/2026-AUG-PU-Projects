@@ -138,6 +138,15 @@ test('F04a real PG reply matching, durable rescan, crash atomicity and stop seri
    const pending=store.page(tenant,mailbox,tail);await waiting(pool);now=new Date(base+1000);await blocker.query('COMMIT');blocker.release();assert.equal((await pending).state,'complete');
    assert.equal((await pool.query('SELECT completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0].completed_at.getTime(),now.getTime());
   });
+  await t.test('A6 header display/body/credential canaries never enter durable reply data',async()=>{
+   await setup();const run=await capture('1',1);
+   const p=page(run,1,[{...header(1),from:'N7_HEADER_CANARY_F04A <r@example.test>'}]);
+   assert.equal((await store.page(tenant,mailbox,p)).effects,1);
+   const data=(await pool.query('SELECT row_to_json(r) AS data FROM reply_observation r UNION ALL SELECT row_to_json(r) FROM reply_message r UNION ALL SELECT row_to_json(r) FROM reply_effect r')).rows;
+   for(const canary of ['N7_HEADER_CANARY_F04A','N7_BODY_CANARY_F04A','N7_CREDENTIAL_CANARY_F04A']) assert.ok(!JSON.stringify(data).includes(canary));
+   const forbidden=page((await store.status(tenant,mailbox))!,2,[header(2,1)]);Object.assign(forbidden.headers[0]!,{body:'N7_BODY_CANARY_F04A'});
+   await assert.rejects(store.page(tenant,mailbox,forbidden));assert.equal((await counts()).observations,1);
+  });
   for(const ordering of ['before','after'] as const) await t.test(`A5 production ingestion stop ${ordering} final submitting: calls ${ordering==='before'?0:1}, later0`,async()=>{
    await setup();const job=await app.dispatch.claim(randomUUID(),now);assert.ok(job);
    const index=sent.findIndex(j=>j.enrollment_id===job.enrollment_id);assert.ok(index>=0);
