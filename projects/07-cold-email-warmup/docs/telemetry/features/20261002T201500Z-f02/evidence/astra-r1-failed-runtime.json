@@ -1,0 +1,42 @@
+{
+  "attempts": [
+    {
+      "exit_code": 124,
+      "pid": 2860018,
+      "started_at": "2026-10-02T20:59:49.310762+00:00",
+      "finished_at": "2026-10-02T21:02:49.387240+00:00",
+      "elapsed_seconds": 180.07646406302229
+    },
+    {
+      "exit_code": 124,
+      "pid": 2929350,
+      "started_at": "2026-10-02T21:04:07.387340+00:00",
+      "finished_at": "2026-10-02T21:05:37.455568+00:00",
+      "elapsed_seconds": 90.06740667205304
+    }
+  ],
+  "thread_id": "01a0fe6a-885f-7d22-828b-8a0f8349f96f",
+  "delivery": "failed: no terminal file",
+  "usage": null,
+  "cost": null,
+  "reason": "First review concluded closure in commentary but omitted file before180s.90s resume yielded no model output/tool calls. Native replacement spawn rejected by thread limit. Fresh exact-file CLI replacement next; no acceptance inferred.",
+  "host_turn_contexts": [
+    {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    },
+    {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    }
+  ],
+  "cumulative_session_usage": {
+    "input_tokens": 178087,
+    "cached_input_tokens": 132736,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1930,
+    "reasoning_output_tokens": 107,
+    "total_tokens": 180017
+  },
+  "usage_note": "Single cumulative snapshot across original and resume; never add it twice."
+}
