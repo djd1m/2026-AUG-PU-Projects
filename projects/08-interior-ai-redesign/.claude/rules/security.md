@@ -1,0 +1,5 @@
+# RoomKind security
+Source: docs/Specification.md AUTH/UPLOAD/PAY/SEC/PUBLIC and Pseudocode.
+Owner-scope every private row/media; no client path/remoteURL/model repo input. Decode and re-encode10MiB/20MP images, remove EXIF; storage outside static root. Parameterize SQL, validate UUID and allowed enums. Exact Origin for user writes; verified provider webhook exemption only.
+Accounts use bcrypt and HMAC opaque sessions; rate/body limits are exact AC, not placeholders. No default secret, production fixture or public DB port. Provider GET binds merchant/order/account/amount/currency/id/status; claim dedupe only after verification. Refund hold monotonic; account serialization covers admission/start/retry/final cached export. First conversion account-unique.
+TLS/provider auth belong server adapters; never put keys into browser encryption flows. Scan pinned npm/Python dependency advisories and capture actual result. Logs opaque identifiers only, no raw uploads/credentials/request bodies. Mutation controls must detect missing owner/payment/budget/fixture-quality guards. No actual provider spend or deployment.

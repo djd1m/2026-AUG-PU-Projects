@@ -1,0 +1,110 @@
+{
+  "version": "1.0",
+  "project": "RoomKind",
+  "features": [
+    {
+      "id": "f00-cjm",
+      "name": "Three CJM journeys",
+      "priority": "mvp",
+      "status": "done",
+      "complexity": "complex",
+      "depends_on": [],
+      "expected_files": [
+        "docs/cjm/variant-a.html"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "f01-foundation",
+      "name": "Web auth and private uploads",
+      "priority": "mvp",
+      "status": "in_progress",
+      "complexity": "complex",
+      "depends_on": [
+        "f00-cjm"
+      ],
+      "expected_files": [
+        "web/server.js",
+        "db/001-foundation.sql"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "f02-generation",
+      "name": "Credit tickets durable jobs and ControlNet worker",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f01-foundation"
+      ],
+      "expected_files": [
+        "web/jobs.js",
+        "worker/main.py"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "f03-payments",
+      "name": "Verified package and partner attribution",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f02-generation"
+      ],
+      "expected_files": [
+        "web/payments.js"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "f04-product-ui",
+      "name": "Comparison gallery branded sharing and opt-in pages",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f02-generation",
+        "f03-payments"
+      ],
+      "expected_files": [
+        "web/public/app.js",
+        "web/sharing.js"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "f05-real-gpu",
+      "name": "Real geometry and performance acceptance",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "f02-generation"
+      ],
+      "expected_files": [
+        "docs/gpu-acceptance.md"
+      ],
+      "blockers": [
+        "CUDA runtime and real corpus unavailable"
+      ]
+    },
+    {
+      "id": "f06-delivery",
+      "name": "Integrated browser security and delivery evidence",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f04-product-ui",
+        "f05-real-gpu"
+      ],
+      "expected_files": [
+        "docs/README/ru.md",
+        "docs/README/en.md"
+      ],
+      "blockers": []
+    }
+  ]
+}
