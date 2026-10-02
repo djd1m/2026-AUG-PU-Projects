@@ -17,21 +17,59 @@
   ],
   "comparison_id": null,
   "baseline_revision": "a266555530b158aa3d248d3660ea3be055313436",
-  "final_revision": null,
+  "final_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "codex",
   "host_version": "0.160.0 executors; coordinator 0.159.3 still running",
   "billing_mode": "unknown",
   "started_at": "2026-10-02T16:45:36.946353Z",
-  "ended_at": null,
-  "status": "running",
-  "acceptance_evidence": null,
-  "quality": null,
-  "metrics": null,
+  "ended_at": "2026-10-02T17:22:27.403025Z",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "tests/artifacts/chunk-embed-resume/implementation.txt",
+    "docs/telemetry/p-replicator/20261002T164536Z-chunk-embed-fixes/evidence/astra-review.txt"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 5,
+    "ac_total": 5,
+    "confirmed_findings_by_severity": {
+      "blocker": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "resumed_correction_wall_seconds": 2210.456672,
+    "implementation_usage_raw": {
+      "input_tokens": 5481540,
+      "cached_input_tokens": 5328256,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 37416,
+      "reasoning_output_tokens": 16469
+    },
+    "review_usage_raw": {
+      "input_tokens": 970390,
+      "cached_input_tokens": 885376,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 7709,
+      "reasoning_output_tokens": 1392
+    },
+    "coordinator_usage": null,
+    "cost": null
+  },
   "telemetry_status": "partial",
   "missing_data": [
-    "Coordinator usage and billing unavailable; child actual model and usage to be read from CLI JSON/log if exposed"
+    "Coordinator usage/billing unavailable; child raw usage and actual models measured from CLI/rollout",
+    "Read/import/CLI update before this correction RUN_ID are outside measured correction wall-clock; original global run preserves resume timestamp",
+    "Costs not inferred from API list prices for subscribed Codex CLI",
+    "No seven-day follow-up yet; regressions and known defects missed not established"
   ],
   "acceptance_criteria": [
     "F-1 bounded/cooperative chunking, measured event-loop delay below 30s on validator inputs",

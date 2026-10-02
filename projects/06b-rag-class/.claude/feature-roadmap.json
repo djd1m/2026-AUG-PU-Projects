@@ -161,7 +161,7 @@
       "name": "Нарезка и эмбеддинги в pgvector с кэшем по хэшу",
       "description": "Chunk and embed: ≈500 токенов (js-tiktoken), text_sha256 — повтор не платит за неизменённое; embeddings через порт (исполнитель закреплён), пределы embed:* ДО вызова; HNSW vector_cosine_ops, изоляция ботов итеративным сканом.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -192,7 +192,9 @@
         "packages/rag/src/chunk.ts",
         "services/worker/src/embed.ts",
         "packages/db/migrations/003_hnsw.sql"
-      ]
+      ],
+      "completion_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "review": "docs/features/chunk-embed/08_review.md"
     },
     {
       "id": "crawl-site",
@@ -200,7 +202,7 @@
       "name": "Обход сайта: RFC 9309, sitemap, тот же хост, SSRF-фильтр, 100 страниц на Free",
       "description": "Crawl site: robots.txt (503 → полный запрет), sitemap, только тот же хост, блочное извлечение cheerio, seen пополняется при взятии URL, «обойдено 100 из ≥101»; SSRF: DNS до запроса, запрет частных/loopback/metadata, повтор проверки на редиректах, порты 80/443. Дополнено координатором по валидации index-jobs (F-3, F-4): создание бота из кабинета — POST /api/bots + форма (US-002, SC-US-002-1), без него кабинет недостижим; отказ 422 при СОЗДАНИИ источника на адреса внутренних сетей (127.0.0.0/8, 10/8, 172.16/12, 192.168/16, 169.254/16, ::1, fc00::/7, fe80::/10) по SC-US-002-3 — в дополнение к SSRF-фильтру воркера.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -236,7 +238,7 @@
       "name": "PDF-источник: загрузка ≤10 МБ в Postgres, извлечение текста постранично",
       "description": "Приём PDF (сигнатура %PDF, > 10 МБ → 413), source_file.bytes bytea, Extract PDF через pdfjs-dist постранично, скан без текста → задача failed с причиной; ссылка «файл, стр. N».",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -272,7 +274,7 @@
       "name": "RAG-ответ со ссылкой и «не знаю + контакт» в песочнице",
       "description": "Answer question: валидация ≤500 → пределы ДО платного вызова → эмбеддинг вопроса → top-5 → порог MIN_SIMILARITY (ниже — «не знаю» без генерации) → gpt-4.1-mini JSON {answer, cited_ids, unknown} → cited_ids ⊆ выдачи → ссылки только из БД, URL из текста вырезаются; CTA в момент первого ответа со ссылкой (FR-GROWTH-001).",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -518,7 +520,7 @@
       "name": "Подаккаунты клиентов студии",
       "description": "Studio sub-account: до 5 подаккаунтов на студию (FOR NO KEY UPDATE строки студии), один уровень (триггер), studio_access=true у подаккаунта явно, RLS видит дочерние только при studio_access.",
       "priority": "high",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -658,5 +660,6 @@
         "tests/calibration/questions.json"
       ]
     }
-  ]
+  ],
+  "last_completed": "chunk-embed"
 }

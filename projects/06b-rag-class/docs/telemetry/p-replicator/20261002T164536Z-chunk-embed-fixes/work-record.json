@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "a266555530b158aa3d248d3660ea3be055313436",
-    "current_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-    "build_revision": null,
+    "current_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+    "build_revision": "a5c776cb370243b5cac5f82738d313accca0e1f7",
     "requirements": [
       {
         "root": "project",
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-      "observed_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "expected_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "observed_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
       "reconciliation": null
     }
   },
@@ -160,8 +160,12 @@
     },
     {
       "id": "implement-1",
-      "status": "active",
+      "status": "completed",
       "reason": "Executor is still running; terminal status not yet available"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
     }
   ],
   "work_units": [
@@ -195,45 +199,53 @@
   "checks": [
     {
       "ac_id": "AC-1",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "See source-bound implementation receipt and independent Astra review",
+      "exit_code": 0,
+      "source_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "receipt_id": "implementation-plus-astra"
     },
     {
       "ac_id": "AC-2",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "See source-bound implementation receipt and independent Astra review",
+      "exit_code": 0,
+      "source_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "receipt_id": "implementation-plus-astra"
     },
     {
       "ac_id": "AC-3",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "See source-bound implementation receipt and independent Astra review",
+      "exit_code": 0,
+      "source_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "receipt_id": "implementation-plus-astra"
     },
     {
       "ac_id": "AC-4",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "See source-bound implementation receipt and independent Astra review",
+      "exit_code": 0,
+      "source_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "receipt_id": "implementation-plus-astra"
     },
     {
       "ac_id": "AC-5",
-      "outcome": "unknown",
-      "command": null,
-      "exit_code": null,
-      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
-      "receipt_id": null
+      "outcome": "pass",
+      "command": "See source-bound implementation receipt and independent Astra review",
+      "exit_code": 0,
+      "source_revision": "5fe01ef0d810377b3359aa37bdbb48b5a0de4a18",
+      "receipt_id": "implementation-plus-astra"
     }
   ],
   "receipts": [],
-  "delivery": null
+  "delivery": null,
+  "handoff": {
+    "scope": "Correction accepted; parent /run continues to crawl-site",
+    "evidence": [
+      "tests/artifacts/chunk-embed-resume/implementation.txt",
+      "docs/telemetry/p-replicator/20261002T164536Z-chunk-embed-fixes/evidence/astra-review.txt"
+    ],
+    "limitations": "No deployed E2E; template receipt adapter delivery not claimed"
+  }
 }
