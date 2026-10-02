@@ -1,0 +1,24 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-validate-3",
+  "actual_model": "gpt-6-astra",
+  "metadata_lines": [
+    "model: gpt-6-astra",
+    "provider: openai",
+    "reasoning effort: high",
+    "session id: 01a0fe0a-46ae-7d10-980d-14132c48b992"
+  ],
+  "usage": null,
+  "cost": null,
+  "requested_effort": "high",
+  "actual_effort": null,
+  "status": "completed",
+  "verdict": "NEEDS_WORK only LOW GALLERY-02 readable slider label regression",
+  "started_at": "2026-10-02T19:14:40Z",
+  "finished_at": "2026-10-02T19:17:35Z",
+  "elapsed_wall_ms": 175000,
+  "exit_code": 0,
+  "receipt_sha256": "4a5d442463daf5a5cabebd61b40e7570eb300e0e121356ca02e261de7181db31",
+  "receipt_validation": "1/1 fresh substantive regular non-symlink source/spec/launch matched terminal completed",
+  "raw_log_outside_git": "/tmp/n8-validate-3/runtime.log"
+}

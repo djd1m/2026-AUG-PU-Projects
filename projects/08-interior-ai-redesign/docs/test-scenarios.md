@@ -256,7 +256,7 @@ Then each page contains at most50 owned entries with continuation for remaining 
 Scenario: Accessible comparison layout
 Given before/after result at1440px and390px with keyboard/reduced motion
 When navigate and change slider
-Then separate before/after alt text is present, keyboard focus is visibly styled, status changes reach aria-live region; value changes by keyboard, computed body≥16px and document width≤viewport; reduced-motion preference disables nonessential animation
+Then slider has a readable accessible label and state remains readable; separate before/after alt text is present, keyboard focus is visibly styled, status changes reach aria-live region; value changes by keyboard, computed body≥16px and document width≤viewport; reduced-motion preference disables nonessential animation
 
 @FR-gallery-1 @GALLERY-03
 Scenario: Delete revoke and cleanup
