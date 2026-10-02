@@ -1,0 +1,19 @@
+{
+  "source_revision": "91fb4869",
+  "status": "canceled_wait_only",
+  "first_observed_wait_at": "2026-10-02T20:58:17Z",
+  "finished_at": "2026-10-02T21:01:00.718565+00:00",
+  "exact_start_at": null,
+  "docker_started": false,
+  "reason": "Root promo render holds FD9; initial lslocks withoutMODE incorrectly read waiter asholder, corrected usingWRITE* blocker/fuser. Canceled ownwaitingPID2834433 before230s commandbudgetexpired; willlaunch freshruntimeattempt afterlease release.",
+  "observed_holder_pid": 2821104,
+  "holder_script": "/tmp/promo-harness-runtime-final/render-retry-run.sh",
+  "exit_code": 143,
+  "second_attempt": {
+    "observed_at": "2026-10-02T21:02:58Z",
+    "exit_code": 75,
+    "lock_mode": "nonblocking",
+    "docker_commands_executed": false,
+    "reason": "Same rootpromo FD9 stillheld"
+  }
+}
