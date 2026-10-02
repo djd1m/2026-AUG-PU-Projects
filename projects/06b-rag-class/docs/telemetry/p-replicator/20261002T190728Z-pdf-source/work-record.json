@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T190728Z-pdf-source",
+    "work_unit_id": "pdf-source-feature",
+    "current_attempt_id": "prepare-plan-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "9a51f8d5d0721b28d7ea5770ad17762645e5b098",
+    "current_revision": "ee515a68",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "ee515a68",
+      "observed_revision": "ee515a68",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "ea4a3e739f304a3282f1ca4a0d8074ee8fc834309871a34a019d2690c256fdca",
+    "scope": [
+      "PDF upload to Postgres and local page extraction, UI and worker integration"
+    ],
+    "exclusions": [
+      "OCR",
+      "S3",
+      "N6 donor",
+      "answer generation",
+      "deployment to visitors"
+    ],
+    "action_limits": [
+      "25minute author and8minute separate review",
+      "root owns manifests/lock",
+      "no DBpublishedports",
+      "2CPU perDockercheck",
+      "no globalconfiguration"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "PDF-01",
+        "required": true
+      },
+      {
+        "id": "PDF-02",
+        "required": true
+      },
+      {
+        "id": "PDF-03",
+        "required": true
+      },
+      {
+        "id": "PDF-04",
+        "required": true
+      },
+      {
+        "id": "PDF-05",
+        "required": true
+      },
+      {
+        "id": "PDF-06",
+        "required": true
+      },
+      {
+        "id": "PDF-07",
+        "required": true
+      },
+      {
+        "id": "PDF-08",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "ADR012 and accepted N6b internal interfaces",
+        "useful_fragment": "none external; existing N6b tenant/job/fence/embed reused",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "No donor code needed; N5S3 incompatible; N6 prohibited"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable completed PDF feature; no numerical forecast requested",
+      "scope_revision": "ea4a3e739f304a3282f1ca4a0d8074ee8fc834309871a34a019d2690c256fdca",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "crawl correction not comparable"
+      ],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "ea4a3e739f304a3282f1ca4a0d8074ee8fc834309871a34a019d2690c256fdca",
+      "tier": "M",
+      "rationale": "L web-worker boundary reduced by explicit fresh-SPARC exception; all M checks retained",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/evidence/route-plan.txt"
+      },
+      "phase": "plan",
+      "script": {
+        "input": "six expected API/database/worker/UI paths",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner authorized continuous N6b MVP, M fresh-SPARC scope; root F05 accepted and authorized F06",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Planning only, no E2E source/build yet",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "prepare-plan-1",
+      "status": "active"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "pdf-source-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/pdf-source/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "PDF-01",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-02",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-03",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-04",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-05",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-06",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-07",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "PDF-08",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "ee515a68",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}
