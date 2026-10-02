@@ -1,0 +1,71 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f03a-fix",
+  "attempt_id": "n8-f03a-fix-1",
+  "source_revision": "6a0bb6945d66e0f24d47694736947b7e5bb895a2",
+  "launch_sha256": "4622ee2868d1cb6469d0054cffa0066951128ab018dc4de9a8ac25b615a2c6e2",
+  "profile": "compact-quality-first-v2",
+  "substantive_tier": "XL",
+  "mechanical_tier": "M",
+  "mechanical_route_command": "bash scripts/complexity-router.sh projects/08-interior-ai-redesign/tests/payments.integration.test.js",
+  "mechanical_route_exit_code": 0,
+  "scope": [
+    "Correct wrong queued intent in HTTP test",
+    "Fresh success-to-first-cancellation coverage"
+  ],
+  "owned_source": [
+    "tests/payments.integration.test.js"
+  ],
+  "evidence_root": "docs/features/f03a-fix",
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03a-fix/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-f03a-fix-receipt.md",
+  "trace_prelaunch_state": "absent",
+  "started_at": "2026-10-02T23:09:02Z",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "high",
+  "usage": null,
+  "cost": null,
+  "fallback": null,
+  "missing_data": [
+    "Provider-resolved metadata unavailable; model/effort host-banner-confirmed only",
+    "Usage and cost unavailable"
+  ],
+  "baseline_snapshot_sha256": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+  "baseline_file_sha256": "65eba9206f692171743114db79bbb6b9785c4b1ba7a88f0b20ca885c7f36b3e8",
+  "approval": "Owner autonomous correction authorization in brief; no repeat checkpoint",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No E2E execution authorized in correction worktree; coordinator runs actual PostgreSQL after freeze"
+  },
+  "status": "completed",
+  "stages": [
+    {
+      "stage": "IMPLEMENT",
+      "timestamp": "2026-10-02T23:10:15.425234+00:00",
+      "route": "XL preserved; two confirmed test-only corrections, production and mandatory acceptance unchanged"
+    },
+    {
+      "stage": "VERIFY",
+      "timestamp": "2026-10-02T23:10:47.170160+00:00",
+      "scope": "Node22 syntax, diff and canonical 57-file snapshot; real PG pending coordinator"
+    },
+    {
+      "stage": "HANDOFF",
+      "timestamp": "2026-10-02T23:12:37.197304+00:00",
+      "status": "completed",
+      "acceptance": "pending coordinator PostgreSQL and independent correction review"
+    }
+  ],
+  "model_evidence": "/tmp/n8-f03a-fix/runtime.log:5,9 (host banner, not independently provider-resolved)",
+  "finished_at": "2026-10-02T23:12:37.197304+00:00",
+  "elapsed_ms": 215197,
+  "verdict": "CORRECTIONS_COMPLETE_ACCEPTANCE_PENDING",
+  "build_revision": "e42f659bc6116ded50bf309d076c8eb604a1823e9a06b79dfc5fbd4a8c8a6c02",
+  "actual_image_digest": null,
+  "checks": "docs/features/f03a-fix/checks.json",
+  "pending": [
+    "Coordinator real PostgreSQL payment suite on source-identical image with updated tests bind-mounted",
+    "Focused independent correction review before F03a acceptance"
+  ]
+}

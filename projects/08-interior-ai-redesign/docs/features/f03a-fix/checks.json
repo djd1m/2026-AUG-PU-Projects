@@ -1,0 +1,32 @@
+[
+  {
+    "command": "bash scripts/complexity-router.sh projects/08-interior-ai-redesign/tests/payments.integration.test.js",
+    "exit_code": 0,
+    "result": "Mechanical M; substantive XL retained for payment verification"
+  },
+  {
+    "command": "python3 (pre-edit inline baseline verification; 57 canonical source-file hashes and absent trace checked)",
+    "exit_code": 0,
+    "result": "57/57 baseline hashes and canonical digest matched; trace absent"
+  },
+  {
+    "command": "/tmp/n6b-f06-node22/bin/node --check projects/08-interior-ai-redesign/tests/payments.integration.test.js",
+    "exit_code": 0,
+    "result": "Syntax passed"
+  },
+  {
+    "command": "git diff --check && git diff -- projects/08-interior-ai-redesign/tests/payments.integration.test.js && git status --short",
+    "exit_code": 0,
+    "result": "Whitespace passed; two bounded diff regions; only authorized paths changed"
+  },
+  {
+    "command": "/tmp/n6b-f06-node22/bin/node --version",
+    "exit_code": 0,
+    "result": "v22.22.3"
+  },
+  {
+    "command": "python3 - <<'PY'\nimport pathlib,json,hashlib,subprocess\np=pathlib.Path('projects/08-interior-ai-redesign'); d=p/'docs/features/f03a-fix'\ns=json.loads((p/'docs/features/f03a/source-snapshot.json').read_text())\nfiles=[{'path':f['path'],'sha256':hashlib.sha256((p/f['path']).read_bytes()).hexdigest()} for f in s['files']]\nchanged=[f['path'] for f,old in zip(files,s['files']) if f['sha256']!=old['sha256']]\nassert len(files)==57 and changed==['tests/payments.integration.test.js'],changed\ncanonical=json.dumps({'files':files},sort_keys=True,separators=(',',':')).encode()\nsnapshot={'source_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'baseline_snapshot_sha256':s['snapshot_sha256'],'snapshot_sha256':hashlib.sha256(canonical).hexdigest(),'hash_method':s['hash_method'],'changed_files':changed,'files':files}\nwith (d/'source-snapshot.json').open('x') as f: f.write(json.dumps(snapshot,indent=2)+'\\n')\ndiff=subprocess.check_output(['git','diff','--','projects/08-interior-ai-redesign/tests/payments.integration.test.js'])\nwith (d/'test-diff.patch').open('xb') as f:f.write(diff)\nassert subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()==['projects/08-interior-ai-redesign/tests/payments.integration.test.js']\nassert hashlib.sha256((p/'docs/features/f03a/source-snapshot.json').read_bytes()).hexdigest()==hashlib.sha256(subprocess.check_output(['git','show','HEAD:projects/08-interior-ai-redesign/docs/features/f03a/source-snapshot.json'])).hexdigest()\nprint(json.dumps({'source_files':len(files),'changed_files':changed,'unchanged_files':56,'baseline_snapshot_sha256':s['snapshot_sha256'],'updated_snapshot_sha256':snapshot['snapshot_sha256'],'changed_file_sha256':next(f['sha256'] for f in files if f['path'] in changed),'diff_sha256':hashlib.sha256(diff).hexdigest(),'immutable_original_snapshot':'unchanged'},indent=2))\nPY",
+    "exit_code": 0,
+    "stdout": "{\n  \"source_files\": 57,\n  \"changed_files\": [\n    \"tests/payments.integration.test.js\"\n  ],\n  \"unchanged_files\": 56,\n  \"baseline_snapshot_sha256\": \"787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2\",\n  \"updated_snapshot_sha256\": \"e42f659bc6116ded50bf309d076c8eb604a1823e9a06b79dfc5fbd4a8c8a6c02\",\n  \"changed_file_sha256\": \"5394ad59274c1395addbc185974cbb96e2bc6cbb4f5cd4a9f3994fc103003ae1\",\n  \"diff_sha256\": \"aa10fcfff11d0464f671723a803c0edf204bb436490862b00768552c9573bdcf\",\n  \"immutable_original_snapshot\": \"unchanged\"\n}\n"
+  }
+]
