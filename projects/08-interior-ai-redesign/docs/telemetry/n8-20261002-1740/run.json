@@ -5,7 +5,7 @@
   "batch_id": "n6b-n7-n8-20261002",
   "project": "projects/08-interior-ai-redesign",
   "feature": "replicate-mvp",
-  "pipeline": "replicate → next → go",
+  "pipeline": "replicate \u2192 next \u2192 go",
   "tier": "XL",
   "risk_flags": [
     "payments",
@@ -34,7 +34,13 @@
     "docs/telemetry/n8-20261002-1740/phase1-gates.json",
     "docs/telemetry/n8-20261002-1740/look-origin-correction.json",
     "docs/telemetry/n8-20261002-1740/n8-validate-1-receipt.md",
-    "docs/telemetry/n8-20261002-1740/docs-fix-1-gates.json"
+    "docs/telemetry/n8-20261002-1740/docs-fix-1-gates.json",
+    "docs/telemetry/n8-20261002-1740/n8-validate-2-receipt.md",
+    "docs/telemetry/n8-20261002-1740/n8-validate-3-receipt.md",
+    "docs/telemetry/n8-20261002-1740/root-label-closure.md",
+    "docs/telemetry/n8-20261002-1740/n8-f01-receipt.md",
+    "docs/telemetry/n8-20261002-1740/n8-f01-review-receipt.md",
+    "docs/telemetry/n8-20261002-1740/n8-f01-docker-checks.json"
   ],
   "quality": {
     "required_gates_passed": false,
@@ -48,10 +54,15 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "Design findings closed via independent reviews and root exact-line closure; product runtime pending"
+    "followup_status": "Design gate closed; F01 canonical Docker build,12unit/8PG integration/audit passed; two medium code findings under correction; owner mutation exit0 not accepted",
+    "open_code_findings_by_severity": {
+      "high": 0,
+      "medium": 2,
+      "low": 0
+    }
   },
   "metrics": {
-    "elapsed_wall_ms": 4744773,
+    "elapsed_wall_ms": 8935139,
     "active_wall_ms": null,
     "tokens": null,
     "cost": null
@@ -60,9 +71,16 @@
   "missing_data": [
     "Initial instruction-reading interval start unavailable; never estimated",
     "Native host per-agent usage unavailable",
-    "Actual coordinator model inherited from parent metadata reported Astra high; native execution receipt not exposed",
+    "Native coordinator actual model unknown; parent requested Astra high, but no native provider-resolved execution receipt exposed",
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "IMPLEMENT F01; toolkit ready"
+  "current_stage": "F01 concrete Sol corrections after independent Astra review; F02 plan prepared, entry gate pending",
+  "last_observed_at": "2026-10-02T20:12:23.528747+00:00",
+  "actual_models_observed": {
+    "native_coordinator": null,
+    "f01_coder": "gpt-6.1-sol",
+    "f01_reviewer": "gpt-6-astra",
+    "f01_corrector": "gpt-6.1-sol"
+  }
 }
