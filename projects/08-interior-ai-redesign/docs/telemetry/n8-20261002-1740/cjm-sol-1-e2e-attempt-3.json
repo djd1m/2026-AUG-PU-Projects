@@ -1,0 +1,6 @@
+{
+  "status": "failed",
+  "error": "locator.click: Error: strict mode violation: locator('[data-go=\"upload\"]') resolved to 2 elements:\n    1) <button class=\"accent\" data-go=\"upload\">Попробовать свою комнату ↗</button> aka getByRole('button', { name: 'Попробовать свою комнату ↗' })\n    2) <button data-go=\"upload\" class=\"secondary\">Назад</button> aka locator('#style').getByText('Назад')\n\nCall log:\n  - waiting for locator('[data-go=\"upload\"]')\n",
+  "stack": "locator.click: Error: strict mode violation: locator('[data-go=\"upload\"]') resolved to 2 elements:\n    1) <button class=\"accent\" data-go=\"upload\">Попробовать свою комнату ↗</button> aka getByRole('button', { name: 'Попробовать свою комнату ↗' })\n    2) <button data-go=\"upload\" class=\"secondary\">Назад</button> aka locator('#style').getByText('Назад')\n\nCall log:\n  - waiting for locator('[data-go=\"upload\"]')\n\n    at /opt/browser/n8-cjm-sol-1/e2e.cjs:22:45",
+  "results": []
+}

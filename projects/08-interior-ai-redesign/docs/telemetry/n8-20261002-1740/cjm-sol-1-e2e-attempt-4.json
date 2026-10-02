@@ -1,0 +1,79 @@
+{
+  "status": "failed",
+  "error": "a/390/landing overflow\n\ntrue !== false\n",
+  "stack": "AssertionError [ERR_ASSERTION]: a/390/landing overflow\n\ntrue !== false\n\n    at checkScreen (/opt/browser/n8-cjm-sol-1/e2e.cjs:17:12)\n    at async /opt/browser/n8-cjm-sol-1/e2e.cjs:20:4",
+  "results": [
+    {
+      "variant": "a",
+      "width": 1440,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "b",
+      "width": 1440,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "c",
+      "width": 1440,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    }
+  ]
+}

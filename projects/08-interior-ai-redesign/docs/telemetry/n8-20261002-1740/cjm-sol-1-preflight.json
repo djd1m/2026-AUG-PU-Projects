@@ -1,0 +1,43 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "cjm-sol-1",
+  "attempt_id": "cjm-sol-1-e2e-attempt-5",
+  "checked_at": "2026-10-02T18:03:37.055347+00:00",
+  "status": "ready",
+  "source_revision": "sha256:f0d3e13d3b98a4e37cde1d7ee4028161e6fa4ed8daf08c43bbdd40909d938044",
+  "source_baseline": "a05cfca76614346f46d0904c8d3a9692429b0a68",
+  "build_revision": "not_applicable: static standalone HTML",
+  "environment": {
+    "container": "existing codex-ui-playwright",
+    "playwright": "1.63.0",
+    "browser": "existing Chromium native Playwright WS ws://127.0.0.1:9320/",
+    "namespace": "/opt/browser/n8-cjm-sol-1",
+    "availability": "parent browser lease GO, <=3 minutes; existing files and node modules checked",
+    "runner": "root within existing container, unique namespace only"
+  },
+  "inputs": [
+    "docs/cjm/index.html",
+    "docs/cjm/variant-a.html",
+    "docs/cjm/variant-b.html",
+    "docs/cjm/variant-c.html",
+    "docs/cjm/e2e.cjs"
+  ],
+  "test_command_as_data": "docker exec --user root codex-ui-playwright node /opt/browser/n8-cjm-sol-1/e2e.cjs",
+  "expected_effects": [
+    "isolated browser contexts",
+    "local file fixture clicks",
+    "local previews and demo state only",
+    "screenshots and JSON in unique container namespace"
+  ],
+  "allowed_effects": [
+    "docker cp unique namespace",
+    "connect existing shared browser",
+    "close own contexts; no new browser/container/server",
+    "copy reports into project-local telemetry"
+  ],
+  "evidence_destination": "docs/telemetry/n8-20261002-1740/cjm-sol-1-e2e.json",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "limitations": "Static fixture only. Browser availability does not prove app pass.",
+  "reconciliation": "Desktop journeys A/B/C passed. Actual mobile overflow from rotated ::before initial containing block fixed by adding position:relative to preview. Regenerated all variants and index, recopied fixtures, guard and mutations passed. Repeat affected responsive UI journeys."
+}
