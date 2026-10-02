@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "task": "promo-video-harness extraction analysis",
+  "profile": "readonly-extraction-analysis",
+  "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "recorded_at": "2026-10-02T18:39:14.817055+00:00",
+  "status": "completed",
+  "owner_agreement": "согласен; minimal standalone direction",
+  "scope": "source analysis and plan only; no remote creation/export/release",
+  "workers": [
+    {
+      "role": "portability",
+      "requested_model": "gpt-6.1-sol",
+      "effort": "high",
+      "started_at": "2026-10-02T18:33:02.250729+00:00",
+      "source_revision": "3b84e9ef",
+      "budget_seconds": 240,
+      "scope": "readonly source analysis; no execution/extraction/publication",
+      "actual_model": "gpt-6.1-sol",
+      "usage": {
+        "input_tokens": 377088,
+        "cached_input_tokens": 313728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4467,
+        "reasoning_output_tokens": 917
+      },
+      "cost": null,
+      "exit_code": 0,
+      "duration_seconds": 156.399,
+      "thread_id": "01a0fde4-2546-7a03-9678-37b21fb6f1f6",
+      "actual_effort": "high",
+      "model_evidence": "host rollout turn_context",
+      "brief_sha256": "0648573688c78f4b41b05481dfd53f3f2016b177913604c91ee70dede3154f77",
+      "report_sha256": "924333368df3022ac79da411b1cad128f080b441ecdcb4b774a9fa459c0fc58b"
+    },
+    {
+      "role": "publication",
+      "requested_model": "gpt-6-astra",
+      "effort": "high",
+      "started_at": "2026-10-02T18:35:38.650454+00:00",
+      "source_revision": "3b84e9ef",
+      "budget_seconds": 240,
+      "scope": "readonly source analysis; no execution/extraction/publication",
+      "actual_model": "gpt-6-astra",
+      "usage": {
+        "input_tokens": 226424,
+        "cached_input_tokens": 178304,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2388,
+        "reasoning_output_tokens": 120
+      },
+      "cost": null,
+      "exit_code": 0,
+      "duration_seconds": 113.853,
+      "thread_id": "01a0fde6-885e-7071-8ed9-14ab8cbdf66c",
+      "actual_effort": "high",
+      "model_evidence": "host rollout turn_context",
+      "brief_sha256": "92bd8d04a51cb493c542b6d7e330b03ead761a80ae257135e92e7e3812db1e66",
+      "report_sha256": "c78acc7675dbe0a187f76aab80527571027816cdfb0f99fece96b0656746bcd5"
+    }
+  ],
+  "worker_wall_seconds_sum": 270.252,
+  "coordinator_duration_seconds": null,
+  "coordinator_usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Coordinator reading before worker launch and coordination duration not measured",
+    "Subscribed currency cost not exposed",
+    "No runtime/capture/render/publication checks executed"
+  ],
+  "plan": "extraction-plan.md"
+}
