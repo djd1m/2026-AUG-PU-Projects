@@ -1,0 +1,166 @@
+[
+  {
+    "path": "src/auth/password.ts",
+    "sha256": "f8b36c41d1022d2e21e6a080150f8c93f7485b2f98aa3f03771683d2a9748251"
+  },
+  {
+    "path": "src/auth/service.ts",
+    "sha256": "eee97c44ef39becf6edce05dc0df1e3d764ee05a445cb9a3b3745005ea129628"
+  },
+  {
+    "path": "src/auth/session.ts",
+    "sha256": "c5c6b26aff298e7f64b79648a72a61951a4399b3eff25a4a29b1893c1eea35a5"
+  },
+  {
+    "path": "src/auth/store.ts",
+    "sha256": "d5be57fc9270cd8e12a95015b32ce115c2cd3687fc592e4e01cc226292f7d70d"
+  },
+  {
+    "path": "src/campaigns/input.ts",
+    "sha256": "13499a78e34b58472c336b4538dba7291374759c42f7d7661357135da261b3ef"
+  },
+  {
+    "path": "src/campaigns/store.ts",
+    "sha256": "f0e54ec6ff39542eb37b0e0b60b54f3e52deee771ce2c98a9b01f66d1a015c13"
+  },
+  {
+    "path": "src/config.ts",
+    "sha256": "85891785668a527d4e14c401a2c1ae0e3e6d5033a73a959dc333f67f89953ddf"
+  },
+  {
+    "path": "src/consent/store.ts",
+    "sha256": "ff12ed19c7fdb27bc6c91f6bc3b8cf953ec8bcaf99cf8f76cbf2a22c018626f5"
+  },
+  {
+    "path": "src/consent/transaction.ts",
+    "sha256": "24e85675413e5391e75d1c3dfbc77717222439ff5870b53764f4f5aad25896b4"
+  },
+  {
+    "path": "src/db.ts",
+    "sha256": "41a46dc27f42f055994705ad9db4b5258f7c3154ac939eeaca5293e99c488b21"
+  },
+  {
+    "path": "src/dispatch/eligibility.ts",
+    "sha256": "c13b263839a44233709efda639e9a3ac2792993db8c1c3a2f5bcfaa03cc3b10d"
+  },
+  {
+    "path": "src/dispatch/seams.ts",
+    "sha256": "59adb39cc5c3d19bf9ece6a441fef2cd64d6ec580892523a4e07be4b39118dcf"
+  },
+  {
+    "path": "src/dispatch/store.ts",
+    "sha256": "caf2dc2e7938c5a0284ae24b25baa81646edd6bfded387a2c1d9d8714557b3e8"
+  },
+  {
+    "path": "src/dispatch/worker.ts",
+    "sha256": "d7ee7c1b61856fa84c8621cc2ed39cb33025af22957be58102057b2063aa774d"
+  },
+  {
+    "path": "src/errors.ts",
+    "sha256": "b2c4f5fbc7536791c64e69430426550d97ed2138a55033cfef5e1cd311fc5cd0"
+  },
+  {
+    "path": "src/mailboxes/crypto.ts",
+    "sha256": "cfcd13a73ccd7126825ef40ae7624ad7f945659a02a74a1d7cfcebcfa097f020"
+  },
+  {
+    "path": "src/mailboxes/input.ts",
+    "sha256": "127f2e4787a0afe49e2c485ae752bed05077a48b18c4912cfc9a1c4a23de91b3"
+  },
+  {
+    "path": "src/mailboxes/network.ts",
+    "sha256": "7d3346a620d53b6ca245b02b455604afc8dddd74ce0944a8e43d2d717e95abfb"
+  },
+  {
+    "path": "src/mailboxes/provider.ts",
+    "sha256": "064c9aad2964ade6913e442e67cf1d7bbb607d20297fc63d0c0a2188b7de65ac"
+  },
+  {
+    "path": "src/mailboxes/store.ts",
+    "sha256": "df68009cf1ce301f5644d38b90eeb52a5a8fcf283071eda72df00369a9a65d95"
+  },
+  {
+    "path": "src/main.ts",
+    "sha256": "ecfba84e123b44de26946d5bd21daff3f3636eb2a11030163132d6b11da1467a"
+  },
+  {
+    "path": "src/migrate.ts",
+    "sha256": "35c855b6c506aa4bf67cdf2b14413dc7d33f35ca398f4f70e172d22b018f3abb"
+  },
+  {
+    "path": "src/pool/store.ts",
+    "sha256": "a4f7b5bf5faec4df898e834f3e65225c28d106c0c1a8d617104edc7acef50f19"
+  },
+  {
+    "path": "src/server.ts",
+    "sha256": "6d4b97b74182544af4bfa37d9403df6dc23c06e710d02ecbc0672b2547119ab7"
+  },
+  {
+    "path": "src/web/page.ts",
+    "sha256": "926bd9b4ea7cf0c5e14c8141f9e47d152064472a3efa044455cf1c57a8d9120e"
+  },
+  {
+    "path": "tests/auth-integration.test.ts",
+    "sha256": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa"
+  },
+  {
+    "path": "tests/auth-unit.test.ts",
+    "sha256": "66aa360d2c4b934189a71a433c23f77f6fa131a49e0d305520e6a3cec1811453"
+  },
+  {
+    "path": "tests/dispatch-integration.test.ts",
+    "sha256": "c506937e447df38993ee85b0bc927942f13b45ed345982a5d0f2f8ed7af43646"
+  },
+  {
+    "path": "tests/dispatch-unit.test.ts",
+    "sha256": "ae4ead459e54086153e3d289c55660eb3700a22fe4906122ffdff24c1f0e98c8"
+  },
+  {
+    "path": "tests/mailboxes-integration.test.ts",
+    "sha256": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a"
+  },
+  {
+    "path": "tests/mailboxes-unit.test.ts",
+    "sha256": "22d74a6341a2125d78b10f8a3627584df1625a63d422f1a702a5536df634386b"
+  },
+  {
+    "path": "db/001-init.sql",
+    "sha256": "6c6ca7cc74530a6bee78b2c60b5f08bbb1e6cb76b47ab35ffb4aac359a7948e7"
+  },
+  {
+    "path": "db/002-mailboxes-consent.sql",
+    "sha256": "6f23a16557abfd8223de32e9c5e01442941ef2ff08bbdb89d9ae31c006680f5c"
+  },
+  {
+    "path": "db/003-dispatch.sql",
+    "sha256": "13551a8e261d141c8d8b5bf32066ef136ac6c8cdac359746f22e898df1e54cd2"
+  },
+  {
+    "path": "package.json",
+    "sha256": "f3e842221d55b6a428051239958708c309a28a5ddd00305ed155372bf61b3277"
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a"
+  },
+  {
+    "path": "Dockerfile",
+    "sha256": "f8d6728ac4337c589cf55983654e2cf51ac437ef4711e20086f12d775cc997f5"
+  },
+  {
+    "path": "docker-compose.yml",
+    "sha256": "d9cb5cc362d29f957afc2ad03318ecfc2059d6a55ca4cf895bb10d9e0554893c"
+  },
+  {
+    "path": "tsconfig.json",
+    "sha256": "0fe3705422763f10ffc11ebc6cb3712acc7159b70c51b76ee487ba5cc625de78"
+  },
+  {
+    "path": "tsconfig.build.json",
+    "sha256": "8604911ac658f73989bc22831fb4fe040b7285ea85575b3edefcc384674a6330"
+  },
+  {
+    "path": "eslint.config.js",
+    "sha256": "613fe065d6896d4a08985ac678e967ec5c4aa7e95c30f4ca69159814de59e976"
+  }
+]

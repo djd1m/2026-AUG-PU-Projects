@@ -1,0 +1,132 @@
+{
+  "run_id": "20261002T211800Z-f03",
+  "work_unit_id": "n7-f03a-sol",
+  "attempt_id": "implement-a1",
+  "started_at": "2026-10-02T21:19:23Z",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host execution/usage proof pending"
+  ],
+  "route": {
+    "mechanical_exit": 0,
+    "mechanical_tier": "S",
+    "substantive_tier": "XL",
+    "reason": "Durable consent and shared quota invariants; approved unchanged F03 plan"
+  },
+  "prepare": {
+    "source": "ada9d9b361492777ea8514487fef39546ae60024",
+    "scope": "AC-A1..A6",
+    "exclusions": [
+      "F03b transport/final transition",
+      "F04 ingest",
+      "F06 UI"
+    ],
+    "approval": "Owner explicit unchanged plan approval; no new approval",
+    "preflight": "not_applicable: implementation before runtime build",
+    "forecast": {
+      "status": "insufficient_data",
+      "duration": null,
+      "reason": "Bounded attempt, no comparable measured forecast required"
+    }
+  },
+  "events": [
+    {
+      "stage": "IMPLEMENT",
+      "at": "2026-10-02T21:20:21.992867+00:00"
+    },
+    {
+      "stage": "checks_ready",
+      "at": "2026-10-02T21:30:29.963455+00:00",
+      "heavy": "awaiting parent marker",
+      "initial_typecheck_exit": 127
+    },
+    {
+      "at": "2026-10-02T21:31:12.205771+00:00",
+      "stage": "heavy",
+      "note": "initial snapshot command wrong cwd failed; corrected before runtime tests"
+    },
+    {
+      "stage": "correction",
+      "at": "2026-10-02T21:33:05.034669+00:00",
+      "initial_heavy_exit": 1,
+      "heavy_start": "2026-10-02T21:30:54Z",
+      "heavy_release": "2026-10-02T21:32:08Z",
+      "findings": [
+        "F03 fixture clock moved backward after lease test; advance rotation fixture clock",
+        "F01 rate test crossed actual UTC-minute boundary; rerun unchanged failure only/full regression justified"
+      ],
+      "checks": "type/lint/build/unit passed; F02 PG passed; F03 4/5 subtests passed"
+    },
+    {
+      "stage": "heavy_completed",
+      "start": "2026-10-02T21:33:47Z",
+      "release": "2026-10-02T21:34:44Z",
+      "exit": 0
+    },
+    {
+      "stage": "mandatory_mutations_completed",
+      "start": "HEAVY_STARTED 2026-10-02T21:36:06Z",
+      "release": "2026-10-02T21:36:27Z",
+      "exit": 0
+    },
+    {
+      "stage": "handoff",
+      "at": "2026-10-02T21:38:23.872586+00:00"
+    }
+  ],
+  "preflight": {
+    "status": "ready",
+    "at": "2026-10-02T21:33:47.933337+00:00",
+    "source_snapshot_sha256": "e929d50be1586e77d54bf312a1323ee41befcf744af31794b6a4a0e1d479d14c",
+    "build": "pending source-bound Docker build",
+    "environment": "new isolated n7f03a network/volume; own loopback18703; runtime /tmp/n7-f03a-runtime",
+    "command": "bash scripts/check-f03a-final.sh",
+    "inputs": "synthetic contacts, direct local poll fixtures, no external transport",
+    "availability": "parent marker present, port/RAM checked by harness before containers",
+    "effects": "only owned local stack tests; no mail",
+    "evidence_root": "docs/telemetry/features/20261002T211800Z-f03",
+    "external_actions_executed": false,
+    "source_commit": "4942969a"
+  },
+  "ended_at": "2026-10-02T21:38:23.872586+00:00",
+  "status": "completed_pending_review",
+  "implementation_revision": "4942969afd095a61fe30b2fd25925f55fe1693ae",
+  "image": "sha256:cf0a7adfb9c98a273256c9526543d7e5995379eec1218f57e6e3d6c7e927535a",
+  "checks": {
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0,
+    "unit": {
+      "exit": 0,
+      "pass": 12
+    },
+    "full_pg": {
+      "exit": 0,
+      "pass": 20
+    },
+    "freshness_mutant": 1,
+    "quota_mutant": 1,
+    "consent_mutant": 1,
+    "tenant_mutant": 1,
+    "restored_pg": {
+      "exit": 0,
+      "pass": 6
+    },
+    "security_audit": {
+      "exit": 0,
+      "vulnerabilities": 0
+    },
+    "secret_scan": 0,
+    "image_source_match": 0
+  },
+  "ac_met": 6,
+  "ac_total": 6,
+  "active_wall_ms": null,
+  "elapsed_from_parent_process_start_ms": 1150244,
+  "review": "pending parent fresh independent review"
+}
