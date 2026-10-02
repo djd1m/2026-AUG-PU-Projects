@@ -1,0 +1,23 @@
+{
+  "thread_id": "01a0fe26-2dc9-7952-af12-727496219906",
+  "actual_model_contexts": [
+    {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    }
+  ],
+  "usage": {
+    "input_tokens": 853673,
+    "cached_input_tokens": 761728,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 7953,
+    "reasoning_output_tokens": 1800
+  },
+  "cost": null,
+  "process": {
+    "exit_code": 0,
+    "duration_seconds_process": 358.778,
+    "finished_at": "2026-10-02T19:51:08.546435+00:00"
+  },
+  "verdict": "ACCEPT code; mandatory auth browser E2E pending"
+}
