@@ -28,7 +28,17 @@ test('F03b isolated real PostgreSQL consent, partner registry and verified first
     const aOwner=await owner(),bOwner=await owner(),a=await partners.create(aOwner),b=await partners.create(bOwner);
     const body=(key=randomUUID(),code)=>({package:'ROOM20',idempotency_key:key,...(code?{partner_code:code}:{})});
     const cookie=r=>r.setCookie.split(';')[0];
-    async function intent(id,code,header){const r=await payments.create(id,body(randomUUID(),code),{cookieHeader:header});await payments.runOne();return row('payment_intent',r.payment_id);}
+    async function intent(id,code,header){
+      const r=await payments.create(id,body(randomUUID(),code),{cookieHeader:header});
+      for(let attempt=0;attempt<100;attempt++){
+        const progressed=await payments.runOne(),p=await row('payment_intent',r.payment_id);
+        assert.equal(p?.id,r.payment_id,'Queue helper must return the newly created intent');
+        assert.equal(p.account_id,id,'Queue helper intent must belong to the requested account');
+        if(p.provider_id)return p;
+        assert.ok(progressed,`Queue made no progress before attaching provider ID to ${r.payment_id}`);
+      }
+      assert.fail(`Queue exhausted 100 worker passes before attaching provider ID to ${r.payment_id}`);
+    }
     async function success(p) {
       const x=JSON.parse(p.provider_body),remote={id:p.provider_id,status:'succeeded',paid:true,amount:x.amount,metadata:x.metadata,recipient:{account_id:'fixture'}};
       await pool.query("UPDATE payment_fixture_object SET body=$2 WHERE kind='payment' AND id=$1",[p.provider_id,JSON.stringify(remote)]);

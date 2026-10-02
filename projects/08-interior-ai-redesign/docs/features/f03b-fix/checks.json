@@ -1,0 +1,64 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f03b-fix",
+  "source_revision": "5ab0f306172b4556c17a5e1f79f6d20f77d16e2a",
+  "build_revision": "d215096ebcc5d1a1c17bb27df348e5d5aa4148f6ebceb7023b562531e27b82bd",
+  "runtime_image_revision": null,
+  "runtime_image_reason": "No image build/run in correction worker; coordinator retains original unchanged image",
+  "product_diff_sha256": "de8223e724a3eb2da53264b1ec1374bd36d2dac7551fd39a1a8d87935ae833ba",
+  "checks": [
+    {
+      "name": "node22-version",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "pass",
+      "summary": "v22.22.3"
+    },
+    {
+      "name": "changed-test-syntax",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--check",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b-fix/projects/08-interior-ai-redesign/tests/attribution.integration.test.js"
+      ],
+      "exit_code": 0,
+      "result": "pass",
+      "summary": "No diagnostics"
+    },
+    {
+      "name": "product-diff-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "projects/08-interior-ai-redesign/tests/attribution.integration.test.js"
+      ],
+      "exit_code": 0,
+      "result": "pass",
+      "summary": "No diagnostics"
+    },
+    {
+      "name": "scope-and-assertion-preservation",
+      "exit_code": 0,
+      "result": "pass",
+      "summary": "Only intent() differs; every pending-intent setup and aggregate/replay/refund/concurrent-winner assertion unchanged"
+    },
+    {
+      "name": "canonical-snapshot",
+      "exit_code": 0,
+      "result": "pass",
+      "summary": "All 66 paths verified; exactly one source hash changed from original snapshot",
+      "snapshot_sha256": "d215096ebcc5d1a1c17bb27df348e5d5aa4148f6ebceb7023b562531e27b82bd"
+    },
+    {
+      "name": "attribution-postgresql",
+      "exit_code": null,
+      "result": "pending",
+      "summary": "Coordinator must rerun actual PG suite with unchanged runtime image and corrected test; runtime actions prohibited here"
+    }
+  ]
+}
