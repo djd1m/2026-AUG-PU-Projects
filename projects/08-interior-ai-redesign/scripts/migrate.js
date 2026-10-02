@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url';
 import { readConfig } from '../web/config.js';
 import { createPool, transaction } from '../web/db.js';
 export async function migrate(pool) {
-  const migrations = await Promise.all(['001-foundation.sql','002-generation.sql','003-quality.sql','004-payments.sql'].map(file=>readFile(new URL('../db/'+file, import.meta.url),'utf8')));
+  const migrations = await Promise.all(['001-foundation.sql','002-generation.sql','003-quality.sql','004-payments.sql','005-attribution.sql'].map(file=>readFile(new URL('../db/'+file, import.meta.url),'utf8')));
   await transaction(pool, async client => {
     await client.query("SELECT pg_advisory_xact_lock(801001)");
     await client.query('CREATE TABLE IF NOT EXISTS schema_migration(version integer PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())');

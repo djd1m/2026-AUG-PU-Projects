@@ -7,13 +7,15 @@ import { spawnSync } from 'node:child_process';
 
 const BUDGET_TAG = 'SEC-03 budget last slot admits exactly one';
 const OWNER_TAG = 'SEC-03 cross-owner GET must return 404';
+const CONSENT_TAG = 'ATTR-01 absent consent must reject genuine cookie';
+const PARTNER_TAG = 'PARTNER-01 ownerless code must reject';
 const PAYMENT_TAG = 'PAY-02 wrong merchant must be rejected';
 const FIXTURE_TAG = 'GEOM-03 fixture quality must be rejected with otherwise valid provenance';
 export function mutateSource(source, kind) {
-  const guard = kind === 'payment' ? 'p.recipient?.account_id===intent.merchant_id' : kind === 'fixture' ? "if(mode==='fixture')" : kind === 'budget' ? 'if (counts[0]>=config.platformDailyLimit || counts[1]>=config.accountDailyLimit)' : kind === 'origin' ? 'if (req.headers.origin !== origin)' : 'AND account_id=$2';
-  const replacement = kind === 'payment' ? 'true' : ['origin','budget','fixture'].includes(kind) ? 'if (false)' : 'AND $2::uuid IS NOT NULL';
+  const guard = kind === 'consent' ? 'if(consent?.opted_in!==true)return false;' : kind === 'partner' ? '!p.account_id || ' : kind === 'payment' ? 'p.recipient?.account_id===intent.merchant_id' : kind === 'fixture' ? "if(mode==='fixture')" : kind === 'budget' ? 'if (counts[0]>=config.platformDailyLimit || counts[1]>=config.accountDailyLimit)' : kind === 'origin' ? 'if (req.headers.origin !== origin)' : 'AND account_id=$2';
+  const replacement = kind === 'consent' ? '/* consent guard removed */' : kind === 'partner' ? '' : kind === 'payment' ? 'true' : ['origin','budget','fixture'].includes(kind) ? 'if (false)' : 'AND $2::uuid IS NOT NULL';
   const expectedCount = kind !== 'owner' ? 1 : 2; // Media read and delete guards.
-  if (!['origin','owner','budget','fixture','payment'].includes(kind) || source.split(guard).length - 1 !== expectedCount) {
+  if (!['origin','owner','budget','fixture','payment','consent','partner'].includes(kind) || source.split(guard).length - 1 !== expectedCount) {
     throw new Error('mutation_guard_mismatch');
   }
   const mutated = source.replaceAll(guard,replacement);
@@ -39,6 +41,11 @@ export function mutationDetected(kind, result) {
   const blocks = [...result.output.matchAll(/^[ \t]*---\r?\n([\s\S]*?)^[ \t]*\.\.\.\s*$/gm)].map(match=>match[1]);
   return blocks.some(block => {
     if (!/^\s*code: 'ERR_ASSERTION'\s*$/m.test(block)) return false;
+    if(kind==='consent')return block.split('\n').some(line=>line.trim()===CONSENT_TAG)
+      && /^\s*expected: false\s*$/m.test(block) && /^\s*actual: true\s*$/m.test(block)
+      && /^\s*operator: 'strictEqual'\s*$/m.test(block);
+    if(kind==='partner')return block.split('\n').some(line=>line.includes(PARTNER_TAG))
+      && /^\s*error: 'Missing expected rejection[^']*'\s*$/m.test(block);
     if(kind==='payment')return block.split('\n').some(line=>line.trim()===PAYMENT_TAG)
       && /^\s*expected: true\s*$/m.test(block) && /^\s*actual: false\s*$/m.test(block)
       && /^\s*operator: 'strictEqual'\s*$/m.test(block);
@@ -55,8 +62,8 @@ export function mutationDetected(kind, result) {
   });
 }
 export async function verifyMutation(dir, kind) {
-  const file = join(dir,kind === 'payment' ? 'web/provider.js' : kind === 'fixture' ? 'web/quality.js' : kind === 'origin' ? 'web/boundaries.js' : kind === 'budget' ? 'web/jobs.js' : 'web/media.js');
-  const test = kind === 'payment' ? 'tests/payments.test.js' : kind === 'fixture' ? 'tests/quality.test.js' : kind === 'origin' ? 'tests/boundaries.test.js' : kind === 'budget' ? 'tests/jobs.integration.test.js' : 'tests/integration.test.js';
+  const file = join(dir,kind === 'consent' ? 'web/attribution.js' : kind === 'partner' ? 'web/partners.js' : kind === 'payment' ? 'web/provider.js' : kind === 'fixture' ? 'web/quality.js' : kind === 'origin' ? 'web/boundaries.js' : kind === 'budget' ? 'web/jobs.js' : 'web/media.js');
+  const test = ['consent','partner'].includes(kind) ? 'tests/attribution.test.js' : kind === 'payment' ? 'tests/payments.test.js' : kind === 'fixture' ? 'tests/quality.test.js' : kind === 'origin' ? 'tests/boundaries.test.js' : kind === 'budget' ? 'tests/jobs.integration.test.js' : 'tests/integration.test.js';
   const source = await readFile(file,'utf8');
   const mutated = mutateSource(source,kind);
   const baseline = runTest(dir,test,'baseline.log');
@@ -70,7 +77,7 @@ export async function verifyMutation(dir, kind) {
 }
 async function main() {
   const kind = process.argv[2] ?? 'origin';
-  if (!['origin','owner','budget','fixture','payment'].includes(kind)) throw new Error('Unknown mutation');
+  if (!['origin','owner','budget','fixture','payment','consent','partner'].includes(kind)) throw new Error('Unknown mutation');
   const dir = await mkdtemp(join(tmpdir(),'n8-f01-mutation-'));
   try {
     for (const path of ['web','db','scripts','tests','package.json','package-lock.json']) {

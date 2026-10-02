@@ -6,12 +6,14 @@ import { Capacity, HttpError, RateLimiter, credentials, readBody, readJson, requ
 import { cookie, createAuth } from './auth.js';
 import { createJobs } from './jobs.js';
 import { MAX_BYTES, createMedia } from './media.js';
+import { createAttribution } from './attribution.js';
 import { createPayments } from './payments.js';
 import { createResults } from './generation.js';
 
 const STATIC = new Map([['/', ['index.html','text/html; charset=utf-8']],
   ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
 export function createApp(pool, config, {paymentProvider}={}) {
+  const attribution=createAttribution(pool,config);
   const payments=createPayments(pool,config,{provider:paymentProvider});
   const auth = createAuth(pool,config.secret); const jobs = createJobs(pool,config);
   const media = createMedia(pool,config.storageDir,{deleteUpload:jobs.deleteUpload});
@@ -53,7 +55,15 @@ export function createApp(pool, config, {paymentProvider}={}) {
       }
       const account = await auth.authenticate(req);
       if (req.method === 'GET' && path === '/api/me') { send(200,{account:{...account,...await payments.account(account.id)}}); return; }
-      if(req.method==='POST' && path==='/api/payments') {send(202,{payment:await payments.create(account.id,await readJson(req))});return;}
+      if(path==='/api/attribution'&&['GET','POST'].includes(req.method)) {
+        requireOrigin(req,config.origin);
+        const result=req.method==='GET'?await attribution.state(account.id,req.headers.cookie):
+          await attribution.update(account.id,await readJson(req),req.headers.cookie);
+        if(result.setCookie)res.setHeader('Set-Cookie',result.setCookie);
+        send(200,result.state);return;
+      }
+      if(req.method==='POST' && path==='/api/payments') {send(202,{payment:await payments.create(account.id,await readJson(req),
+        {cookieHeader:req.headers.cookie,clearCookie:value=>res.setHeader('Set-Cookie',value)})});return;}
       if(req.method==='GET' && path==='/api/payments/config') {send(200,{provider_mode:config.providerMode??'disabled',package:'ROOM20',amount_minor:90000,currency:'RUB',credits:20});return;}
       const paymentMatch=/^\/api\/payments\/([^/]+)$/.exec(path);
       if(paymentMatch && req.method==='GET') {send(200,{payment:await payments.get(account.id,paymentMatch[1])});return;}

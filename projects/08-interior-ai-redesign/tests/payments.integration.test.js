@@ -35,6 +35,7 @@ test('F03a real PostgreSQL verified payments, refunds, replay and billing serial
       return {id,upload};
     }
     async function partner(ownerId=null,code='partner_'+randomBytes(8).toString('hex')) {
+      ownerId??=(await owner(0)).id;
       const id=randomUUID();await pool.query('INSERT INTO partner(id,account_id,code,active) VALUES($1,$2,$3,true)',[id,ownerId,code]);return {id,code};
     }
     async function intent(o,code,key=randomUUID()) {

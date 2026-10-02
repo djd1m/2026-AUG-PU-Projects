@@ -1,6 +1,7 @@
 import { createHash,randomUUID } from 'node:crypto';
 import { transaction } from './db.js';
 import { HttpError,requireUuid } from './boundaries.js';
+import { createAttribution,trackingCookie } from './attribution.js';
 import { createJobs } from './jobs.js';
 import { createProvider,PROVIDER_ID,verify,verifyPayment,verifyRefund,confirmationUrl } from './provider.js';
 import { createFixtureProvider } from './payment-fixture.js';
@@ -19,7 +20,7 @@ export function notification(b) {
 const view=p=>({payment_id:p.id,package:p.package,amount_minor:p.amount_minor,currency:p.currency,status:p.status,
   confirmation_url:p.confirmation_url,provider_mode:p.provider_mode});
 export function createPayments(pool,config,{provider}={}) {
-  const jobs=createJobs(pool,config);let cachedProvider;
+  const attribution=createAttribution(pool,config);const jobs=createJobs(pool,config);let cachedProvider;
   function adapter() {
     if(!['live','fixture'].includes(config.providerMode))throw new HttpError(503,'payments_unavailable');
     if(config.providerMode==='fixture'&&!['test','development'].includes(config.runtime))throw new HttpError(503,'payments_unavailable');
@@ -30,31 +31,26 @@ export function createPayments(pool,config,{provider}={}) {
     const p=(await c.query('SELECT * FROM payment_intent WHERE id=$1 FOR UPDATE',[candidate.id])).rows[0];
     if(!a||!p)throw new HttpError(404,'not_found');return {a,p};
   }
-  async function partner(c,accountId,code) {
-    const q=code!==undefined ? await c.query('SELECT * FROM partner WHERE code=$1 AND active',[code]):
-      await c.query(`SELECT p.* FROM attribution a JOIN partner p ON p.id=a.partner_id
-        WHERE a.account_id=$1 AND p.active AND (a.source='code' OR (a.cookie_consent_at IS NOT NULL AND a.expires_at>clock_timestamp()))`,[accountId]);
-    const p=q.rows[0];
-    if(code!==undefined&&(!p||p.account_id===accountId))throw new HttpError(422,'invalid_partner_code');
-    return p&&p.account_id!==accountId?p.id:null;
-  }
   return {
-    async create(accountId,body) {
+    async create(accountId,body,{cookieHeader,clearCookie}={}) {
       const input=paymentInput(body);requireUuid(accountId);adapter();
       const id=randomUUID(),key=randomUUID();
       const providerBody=JSON.stringify({amount:{value:'900.00',currency:'RUB'},capture:true,
         confirmation:{type:'redirect',return_url:config.origin+'/'},description:'RoomKind ROOM20',
         metadata:{intent_id:id,account_id:accountId,package:'ROOM20'}});
-      return transaction(pool,async c=>{
+      let clear=false;const result=await transaction(pool,async c=>{
         if(!(await c.query('SELECT id FROM account WHERE id=$1 FOR UPDATE',[accountId])).rowCount)throw new HttpError(404,'not_found');
         const old=(await c.query('SELECT * FROM payment_intent WHERE account_id=$1 AND idempotency_key=$2',[accountId,input.key])).rows[0];
         if(old){if(old.request_hash!==input.hash)throw new HttpError(409,'idempotency_conflict');return view(old);}
-        const partnerId=await partner(c,accountId,input.code);
+        const selected=await attribution.resolve(c,accountId,input.code,cookieHeader);
+        const partnerId=selected.partnerId;clear=selected.clearCookie;
         const p=(await c.query(`INSERT INTO payment_intent(id,account_id,idempotency_key,request_hash,package,amount_minor,currency,
           provider_mode,merchant_id,provider_key,provider_body,partner_id) VALUES($1,$2,$3,$4,'ROOM20',90000,'RUB',$5,$6,$7,$8,$9) RETURNING *`,
         [id,accountId,input.key,input.hash,config.providerMode,config.providerMode==='fixture'?'fixture':config.shopId,key,providerBody,partnerId])).rows[0];
         return view(p);
       });
+      if(clear)clearCookie?.(trackingCookie('',config.secureCookie,true));
+      return result;
     },
     async get(accountId,id) {
       requireUuid(id);const p=(await pool.query('SELECT * FROM payment_intent WHERE id=$1 AND account_id=$2',[id,accountId])).rows[0];
@@ -134,7 +130,7 @@ export function createPayments(pool,config,{provider}={}) {
             await c.query("UPDATE payment_intent SET status='succeeded',confirmation_url=NULL WHERE id=$1",[p.id]);
             if(!a.billing_hold)await c.query('UPDATE account SET badge_free_entitlement=true WHERE id=$1',[a.id]);
             if(first&&!a.billing_hold&&p.partner_id) {
-              const eligible=(await c.query('SELECT id FROM partner WHERE id=$1 AND active AND (account_id IS NULL OR account_id<>$2)',[p.partner_id,a.id])).rowCount;
+              const eligible=(await c.query('SELECT id FROM partner WHERE id=$1 AND active AND account_id IS NOT NULL AND account_id<>$2',[p.partner_id,a.id])).rowCount;
               if(eligible){await c.query(`INSERT INTO first_conversion(account_id,payment_intent_id,partner_id,amount_minor,currency)
                 VALUES($1,$2,$3,90000,'RUB')`,[a.id,p.id,p.partner_id]);
                 await c.query(`INSERT INTO event(id,account_id,type,reference,dedupe_key) VALUES($1,$2,'paid_conversion',$3,$4)
