@@ -21,7 +21,7 @@
   "comparison_id": null,
   "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
   "final_revision": null,
-  "spec_sha256": "621e460abcc760d5f537de181cd1e0a7873126d7d43f400bca6e10bdcb60025a",
+  "spec_sha256": "92674e25074fcda42c930138b7ff03f6ec1671751f802b89800604176023f499",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex native collaboration",
   "host_version": null,
@@ -32,20 +32,26 @@
   "acceptance_evidence": [
     "docs/telemetry/n8-20261002-1740/cjm-sol-1-receipt.md",
     "docs/telemetry/n8-20261002-1740/phase1-gates.json",
-    "docs/telemetry/n8-20261002-1740/look-origin-correction.json"
+    "docs/telemetry/n8-20261002-1740/look-origin-correction.json",
+    "docs/telemetry/n8-20261002-1740/n8-validate-1-receipt.md",
+    "docs/telemetry/n8-20261002-1740/docs-fix-1-gates.json"
   ],
   "quality": {
     "required_gates_passed": false,
     "ac_met": null,
     "ac_total": null,
-    "confirmed_findings_by_severity": {},
+    "confirmed_findings_by_severity": {
+      "high": 3,
+      "medium": 2,
+      "low": 1
+    },
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
     "followup_status": "pending"
   },
   "metrics": {
-    "elapsed_wall_ms": 2636071,
+    "elapsed_wall_ms": 4744773,
     "active_wall_ms": null,
     "tokens": null,
     "cost": null
@@ -58,5 +64,5 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "VALIDATE running n8-validate-1"
+  "current_stage": "VALIDATE correction complete; revalidation pending"
 }

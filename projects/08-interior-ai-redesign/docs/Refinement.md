@@ -28,3 +28,6 @@ Boundary validation, rate limits and structured safe logs; no raw media/credenti
 
 ## Performance and Technical Debt
 Use bounded pagination, indexes on owner/status/lease and short transactions. GPU target may require tuning/resolution tradeoff after real measurement. Manual structural review protects early public examples but is not a scalable automated detector; any replacement requires new measured quality evidence. No production deployment or external spend included in current local delivery.
+
+## Independent review corrections
+The41 individually identified ACs and concrete parameter matrices in Specification/test-scenarios are the current coverage contract. Add real PostgreSQL cases for refund hold versus reservation/cached export/start, stale success after refund, first-conversion competing intents/repeat purchases, last-ticket admission, retry exhaustion, UTC rollover, queued expiry and heartbeat-resistant deadlines. Validate quality actor/output/evidence binding and XSS using an otherwise valid accepted result; rejecting fixtures alone is insufficient. No test has been executed for these new product behaviors yet.
