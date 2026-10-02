@@ -1,0 +1,158 @@
+{
+  "source_revision": "14f1771980ad37406c494b50d49e9f3426f45136",
+  "snapshot_sha256": "362e3cedb6b2b31b09d80606d51fc11d958ad14ed3c0876ecbc0ec4d2ab29413",
+  "started_at": "2026-10-02T22:04:02.997798+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 140,
+      "log": "/tmp/n8-f02b-runtime/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 3256,
+      "log": "/tmp/n8-f02b-runtime/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 7187,
+      "log": "/tmp/n8-f02b-runtime/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 4551,
+      "log": "/tmp/n8-f02b-runtime/build.log"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 20998,
+      "log": "/tmp/n8-f02b-runtime/unit.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 3592,
+      "log": "/tmp/n8-f02b-runtime/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 15858,
+      "log": "/tmp/n8-f02b-runtime/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 30385,
+      "log": "/tmp/n8-f02b-runtime/owner-mutation.log"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 0,
+      "duration_ms": 8285,
+      "log": "/tmp/n8-f02b-runtime/jobs-pg.log"
+    },
+    {
+      "name": "quality-pg",
+      "exit_code": 1,
+      "duration_ms": 2168,
+      "log": "/tmp/n8-f02b-runtime/quality-pg.log"
+    },
+    {
+      "name": "fixture-mutation",
+      "exit_code": 0,
+      "duration_ms": 2641,
+      "log": "/tmp/n8-f02b-runtime/fixture-mutation.log"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 0,
+      "duration_ms": 14127,
+      "log": "/tmp/n8-f02b-runtime/budget-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 1525,
+      "log": "/tmp/n8-f02b-runtime/runtime-versions.log"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 0,
+      "duration_ms": 12916,
+      "log": "/tmp/n8-f02b-runtime/web-maintenance-start.log"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 0,
+      "duration_ms": 21,
+      "log": "/tmp/n8-f02b-runtime/host-http.log"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 0,
+      "duration_ms": 58,
+      "log": "/tmp/n8-f02b-runtime/service-image-ids.log"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 0,
+      "duration_ms": 2639,
+      "log": "/tmp/n8-f02b-runtime/maintenance-once.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 11926,
+      "log": "/tmp/n8-f02b-runtime/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-02T22:06:25.282818+00:00",
+  "duration_ms": 142285,
+  "source_check": {
+    "source": "14f1771980ad37406c494b50d49e9f3426f45136",
+    "matched_files": 45,
+    "supplemental_hidden": {
+      ".env.example": "1f421f5f16f18022be135ce97e873fbc5c68ec0578820a971845ce7951ffa101",
+      ".dockerignore": "1636d5e67867fdd03a4e67d81ec076e5a2bf1db5e1cf258bad73ec8bc3d1e0ad"
+    },
+    "port_preflight": "ss18088 no listener",
+    "ram_available_mib": null
+  },
+  "status": "completed",
+  "verdict": "FAIL quality PG fixture upload_mime_check; other scopedchecks0",
+  "quality_pg": {
+    "pass": 0,
+    "fail": 7,
+    "note": "6subtests fail before target operations, parentincluded"
+  },
+  "gpu_geometry": "pending notexecuted",
+  "usage": null,
+  "cost": null,
+  "log_sha256": {
+    "compose-config": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "image-build": "3b61f6064b8794308796fe9af25f5e46016f0398a43e3d370211a36b325b91bf",
+    "db-start": "b20f68232fd4c631ad49c132421ce70aba446c88ae627f07a24da5c7fdc88d94",
+    "build": "3e9431f27369445adab8d37fbdc164934a2c1687bfe4202bebc534198ed95bf9",
+    "unit": "8ed8fe3250467f4fccc5d796abaa1302b7d1f20d4f2346c15d2b08636e099035",
+    "origin-mutation": "cdc6a26389d722cf29c8ebfdc6a3a2ee7514f77617f5713f18215d4c30a2ada6",
+    "pg-integration": "a48365ff0107b0f3ba17e44b5aa46eb718c6f745db14b7f900836a6d49870461",
+    "owner-mutation": "e1c308d15f4925358d0841d3fc1e7bbc358e23691689ac4c024a2f8c1050725e",
+    "jobs-pg": "82e6e063eaadef5f74f272a129a21bef2c254e7d157c671c424cbf22abb2d3e5",
+    "quality-pg": "4ebd8fb82933fbc701ca699a473074f9ee8c129ea73e750934c956deca80497f",
+    "fixture-mutation": "d8253382971fd648bdb1d9d58bce0092f6926ebb16d37c10dee26f2b873ea5bd",
+    "budget-mutation": "b890c17eddeee1470ba4038d408c28425032fc52dc14f30700a354e490d1f7e2",
+    "runtime-versions": "539f09c47fa4e0cae9963bd2e526e423d5a489ae9df38b384b681fe881eb9a02",
+    "web-maintenance-start": "99b21813b4b8c24cd5b51e4e0dbb7aea3ed245c26c1621ea5b0bccca606a2471",
+    "host-http": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+    "service-image-ids": "608aebb3ab64fe3e0b8bef3ace5a9821e55ac963c6b225c0b0f62ab160b3275a",
+    "maintenance-once": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": "c57740215bf115953e057da8b93dd52b515d7daaf5fb67c54cfdade738866f73"
+  },
+  "image_ids": "/n8-f02b-14f17719-web-1 sha256:0e775de8f7080fa4d0ee73abe259d2925bb15d024a29408c7ed3752fd4f4d828\n/n8-f02b-14f17719-maintenance-1 sha256:8564e530687881090712b9ddc4ef83365bf49fa640ca1f2214c5e5df72d006e6"
+}
