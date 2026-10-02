@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T223848Z-widget",
+    "work_unit_id": "widget-feature",
+    "current_attempt_id": "plan-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+    "current_revision": "fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+      "observed_revision": "fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+    "scope": [
+      "External widget /w.js, public Origin gates, privacy, server badge and shared install data"
+    ],
+    "exclusions": [
+      "F10 referral/click/removal-intent",
+      "F11 operator metrics UI",
+      "Schema/dependencies/global config",
+      "Paid calibration/public deployment",
+      "N6 donor"
+    ],
+    "action_limits": [
+      "Author25min/reviewer8min",
+      "CPU2 serializedDocker",
+      "NoDBpublishedports",
+      "Rootownsmanifest/integration"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "WID-01",
+        "required": true
+      },
+      {
+        "id": "WID-02",
+        "required": true
+      },
+      {
+        "id": "WID-03",
+        "required": true
+      },
+      {
+        "id": "WID-04",
+        "required": true
+      },
+      {
+        "id": "WID-05",
+        "required": true
+      },
+      {
+        "id": "WID-06",
+        "required": true
+      },
+      {
+        "id": "WID-07",
+        "required": true
+      },
+      {
+        "id": "WID-08",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Accepted N6b F07/F08 interfaces at fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+        "useful_fragment": "AnswerQuestion/PaidGateway/clientIp/visitorKey and existing tables",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "N6 prohibited; external donor not needed"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable external widget run; no numerical estimate",
+      "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+      "tier": "M",
+      "rationale": "New public paths imply L; existing full SPARC dated2026-09-30 has FR/algorithm/boundaries, explicit fresh-document exception reduces to M with all mandatory checks retained",
+      "phase": "plan",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/route-plan.txt"
+      },
+      "script": {
+        "input": "Four explicit widget/client/public API/DB module paths",
+        "exit_code": 0
+      }
+    },
+    {
+      "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+      "tier": "M",
+      "rationale": "New public paths imply L; existing full SPARC dated2026-09-30 has FR/algorithm/boundaries, explicit fresh-document exception reduces to M with all mandatory checks retained",
+      "phase": "implementation",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/route-implementation.txt"
+      },
+      "script": {
+        "input": "Four explicit widget/client/public API/DB module paths",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner/root authorized continuous ownroadmap MVP and nextbranchfromacceptedF06",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Implementation pending; actual E2E source/build preflight immediately before browser"
+  },
+  "attempts": [
+    {
+      "id": "plan-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "widget-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/widget/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}
