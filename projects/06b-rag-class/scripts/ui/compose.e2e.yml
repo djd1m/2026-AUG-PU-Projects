@@ -1,0 +1,45 @@
+name: n6b-ui-e2e
+services:
+  db:
+    image: pgvector/pgvector:0.8.6-pg16
+    environment:
+      POSTGRES_DB: n6b_ui
+      POSTGRES_USER: n6b_owner
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:?Test password required}
+    tmpfs: [/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n6b_owner -d n6b_ui"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    cpus: 2
+    networks: [ui]
+  migrate:
+    image: ${UI_MIGRATE_IMAGE:?Test migrate image required}
+    env_file: [${UI_ENV_FILE:?Private test env file required}]
+    depends_on:
+      db: {condition: service_healthy}
+    cpus: 2
+    networks: [ui]
+    restart: "no"
+  web:
+    image: ${UI_WEB_IMAGE:?Test web image required}
+    env_file: [${UI_ENV_FILE:?Private test env file required}]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    cpus: 2
+    networks: [ui]
+    restart: "no"
+  proxy:
+    image: caddy:2.10-alpine
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro"]
+    depends_on: [web]
+    cpus: 1
+    networks:
+      ui:
+        aliases: [n6b-ui.test]
+    restart: "no"
+networks:
+  ui:
+    name: n6b-ui-e2e
+    internal: true

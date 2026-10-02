@@ -38,7 +38,8 @@
     "robots RFC9309 fail closed; sitemap same-host; bounded timeout/body/pages; no repeated loads",
     "HTML blocks + unchanged document links; fenced writes/checkpoints; retry preserves embedding cache",
     "Cabinet bot creation/site URL returns 202 job_id; tenant/auth/origin isolation",
-    "Full typecheck/unit/integration/build, expected-red SSRF mutation, independent review"
+    "Full typecheck/unit/integration/build, expected-red SSRF mutation, independent review",
+    "Docker Playwright real UI E2E: registration/login, cabinet creation/rejected private URL/progress/logout, mobile+desktop, source/build bound"
   ],
   "route": {
     "mechanical_tier": "M",

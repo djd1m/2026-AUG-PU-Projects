@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T172816Z-crawl-site",
+    "work_unit_id": "crawl-site-implementation",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T172816Z-crawl-site/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T172816Z-crawl-site/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+    "current_revision": "2e5afaa0",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "2e5afaa0",
+      "observed_revision": "2e5afaa0",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+    "scope": [
+      "SSRF admission 422 and DNS pinned HTTP(S) worker connections + redirects",
+      "robots RFC9309 fail closed; sitemap same-host; bounded timeout/body/pages; no repeated loads",
+      "HTML blocks + unchanged document links; fenced writes/checkpoints; retry preserves embedding cache",
+      "Cabinet bot creation/site URL returns 202 job_id; tenant/auth/origin isolation",
+      "Full typecheck/unit/integration/build, expected-red SSRF mutation, independent review",
+      "Docker Playwright real UI E2E: registration/login, cabinet creation/rejected private URL/progress/logout, mobile+desktop, source/build bound"
+    ],
+    "exclusions": [
+      "PDF/RAG answer/later roadmap features",
+      "Deployment and live provider calls"
+    ],
+    "action_limits": [
+      "N6b isolated worktree; no N6 donor reads",
+      "No real model calls or shared proxy changes",
+      "Owner-authorized Docker browser, loopback endpoint only"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-1",
+        "required": true,
+        "description": "SSRF admission 422 and DNS pinned HTTP(S) worker connections + redirects"
+      },
+      {
+        "id": "AC-2",
+        "required": true,
+        "description": "robots RFC9309 fail closed; sitemap same-host; bounded timeout/body/pages; no repeated loads"
+      },
+      {
+        "id": "AC-3",
+        "required": true,
+        "description": "HTML blocks + unchanged document links; fenced writes/checkpoints; retry preserves embedding cache"
+      },
+      {
+        "id": "AC-4",
+        "required": true,
+        "description": "Cabinet bot creation/site URL returns 202 job_id; tenant/auth/origin isolation"
+      },
+      {
+        "id": "AC-5",
+        "required": true,
+        "description": "Full typecheck/unit/integration/build, expected-red SSRF mutation, independent review"
+      },
+      {
+        "id": "AC-6",
+        "required": true,
+        "description": "Docker Playwright real UI E2E: registration/login, cabinet creation/rejected private URL/progress/logout, mobile+desktop, source/build bound"
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+        "useful_fragment": "Existing N6b auth/jobs/lease/chunk/embed only; crawler from scratch per Architecture",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "No crawler donor in N1–N5; N6 donor excluded by owner"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable accepted crawler run; 25-minute executor budget is an attempt limit, not delivery estimate",
+      "scope_revision": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+      "tier": "M",
+      "rationale": "Base L: external HTTP and web-worker crossing. Fresh full SPARC 2026-09-30 includes FR-n6b-2, Crawl site algorithm, Architecture boundaries; applying explicit L→M exception. No money/schema/data-invariant change.",
+      "script": {
+        "input": "worker/main + crawl/crawl; rag/site-url; web/server/jobs-handler",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "eec2b434011a7029a13d36b914498ec9250aa6b8",
+      "tier": "M",
+      "rationale": "Base L: external HTTP and web-worker crossing. Fresh full SPARC 2026-09-30 includes FR-n6b-2, Crawl site algorithm, Architecture boundaries; applying explicit L→M exception. No money/schema/data-invariant change.",
+      "script": {
+        "input": "worker/main + crawl/crawl; rag/site-url; web/server/jobs-handler",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner authorized N6b continuation and browser creation; fresh SPARC L→M exception, no XL change",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Product build not ready yet. Mandatory application browser E2E will require fresh ready preflight; infrastructure smoke already separate.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "route-1",
+      "status": "completed"
+    },
+    {
+      "id": "implement-1",
+      "status": "active"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "crawl-site-implementation",
+      "paths": [
+        {
+          "root": "project",
+          "path": "packages/rag/src/site-safety.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/rag/src/safe-http.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/rag/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "services/worker/src/main.ts"
+        },
+        {
+          "root": "project",
+          "path": "services/worker/src/crawl/crawl.ts"
+        },
+        {
+          "root": "project",
+          "path": "services/worker/src/crawl/robots.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/jobs-handler.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/server/bots-handler.ts"
+        },
+        {
+          "root": "project",
+          "path": "apps/web/src/app/cabinet/create-bot.tsx"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null,
+  "handoff": null
+}
