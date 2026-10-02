@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f02a",
-  "status": "running",
+  "status": "completed",
   "source_revision": "67d2e251d145c11a68d9f05a9e9be59094716138",
   "actual_model": "gpt-6.1-sol",
   "requested_effort": "high",
@@ -16,5 +16,14 @@
     "reasoning effort: high",
     "session id: 01a0fe53-69fa-7fe0-8bab-c98e8d8f499b"
   ],
-  "dependencies": "Ignorednode_modules copied from exact accepted N8image; no newinstall/change. Temp copycontainer neverstarted andremoved."
+  "dependencies": "Ignorednode_modules copied from exact accepted N8image; no newinstall/change. Temp copycontainer neverstarted andremoved.",
+  "exit_code": 0,
+  "finished_at": "2026-10-02T20:54:05Z",
+  "receipt_sha256": "d6d1180669be535cf08fac4964d43d8f4305f9eeac259b18aa856e1c72c5051f",
+  "candidate_commit": "91fb4869",
+  "verdict": "candidate; actualPG andindependentreviewpending",
+  "source_files_verified": 32,
+  "elapsed_wall_ms": 1171000,
+  "verification_note": "Initial coordinator digest assertion used prior F01 array algorithm and failed; all32 file hashes matched. Repeated with declared F02 canonical {files:...} sorted-keys algorithm: digest4ac13c0d... verified. Immutable receipt Markdown hard breaks trigger whitespace checker; product whitespace unchanged.",
+  "unchanged_dockerignore_sha256": "1636d5e67867fdd03a4e67d81ec076e5a2bf1db5e1cf258bad73ec8bc3d1e0ad"
 }
