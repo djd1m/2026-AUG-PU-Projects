@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f02b",
-  "status": "running",
+  "status": "completed",
   "source_revision": "c345ec1ef57517acfca731b27254be5249aabd52",
   "cli_session_id": 8720,
   "started_at": "2026-10-02T21:37:12Z",
@@ -12,5 +12,19 @@
   "cost": null,
   "evidence": "/tmp/n8-f02b/runtime.log host banner",
   "budget_seconds": 1500,
-  "hard_deadline": "2026-10-02T22:02:12Z"
+  "hard_deadline": "2026-10-02T22:02:12Z",
+  "finished_at": "2026-10-02T22:00:55Z",
+  "exit_code": 0,
+  "wrapper_elapsed_ms": 1423000,
+  "author_observation_start": "2026-10-02T21:37:10.267783Z",
+  "author_observation_end": "2026-10-02T22:00:34.558299Z",
+  "author_observation_elapsed_ms": 1404290,
+  "clock_note": "Separate author clock begins1.732s before shell timestamp; preserved not normalized.",
+  "product_revision": "14f1771980ad37406c494b50d49e9f3426f45136",
+  "snapshot": "362e3cedb6b2b31b09d80606d51fc11d958ad14ed3c0876ecbc0ec4d2ab29413",
+  "receipt_payload_note": "Original final answer contains substantive summary and external link. Full referenced payload preserved verbatim at docs/features/f02b/substantive-receipt.md; canonical terminal receipt unchanged.",
+  "snapshot_supplement": {
+    ".env.example": "1f421f5f16f18022be135ce97e873fbc5c68ec0578820a971845ce7951ffa101",
+    ".dockerignore": "1636d5e67867fdd03a4e67d81ec076e5a2bf1db5e1cf258bad73ec8bc3d1e0ad"
+  }
 }
