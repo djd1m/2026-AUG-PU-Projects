@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f03a",
-  "status": "running",
+  "status": "author_completed_acceptance_pending",
   "source_revision": "2879672d8b79ce78711366986084f888b0ab1c61",
   "cli_session_id": 55218,
   "started_at": "2026-10-02T22:35:00Z",
@@ -11,5 +11,9 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f03a/runtime.log host banner",
-  "budget_seconds": 1500
+  "budget_seconds": 1500,
+  "wrapper_exit_code": 0,
+  "terminal_receipt_status": "failed",
+  "finished_at": "2026-10-02T22:55:02Z",
+  "wrapper_duration_ms": 1202000
 }

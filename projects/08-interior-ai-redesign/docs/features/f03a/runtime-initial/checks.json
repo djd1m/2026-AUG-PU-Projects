@@ -1,0 +1,164 @@
+{
+  "source_revision": "96e76172b08d63ef406d371b08f7b1e4b3af4f82",
+  "snapshot_sha256": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+  "started_at": "2026-10-02T23:03:07.318276+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 193,
+      "log": "docs/features/f03a/runtime-initial/compose-config.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 4447,
+      "log": "docs/features/f03a/runtime-initial/image-build.log",
+      "log_sha256": "a7d707a9295b4c6656d69e7c3ecff7b458ef6d44019e3141227235f8982a3f6b"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 7071,
+      "log": "docs/features/f03a/runtime-initial/db-start.log",
+      "log_sha256": "79fbe291dbf2927c9719268f70572deafdb88db1858f0473530456e119e83b98"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 5036,
+      "log": "docs/features/f03a/runtime-initial/build.log",
+      "log_sha256": "01a4abe7f785ef1b92295bcab4647f48ea3e2d9cbbf151bf6905d8370ce84c3f"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 29978,
+      "log": "docs/features/f03a/runtime-initial/unit.log",
+      "log_sha256": "0914d2dec271c3afb8873463341351a326e723be1e6814465367c0f78072c479"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 3084,
+      "log": "docs/features/f03a/runtime-initial/origin-mutation.log",
+      "log_sha256": "00c54fd165b8a5922ddac992db04e53ac1c92a5bc2cb91670eaf35059f273f8f"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 16574,
+      "log": "docs/features/f03a/runtime-initial/pg-integration.log",
+      "log_sha256": "16c7fdff2381ffbfc4d3a9044517ca0768fc126c8566890d236443b3682a1a27"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 29245,
+      "log": "docs/features/f03a/runtime-initial/owner-mutation.log",
+      "log_sha256": "2a17e021f7b0d8de496b931ae662d838860a0698f22f69a630505e82ab7242a1"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 0,
+      "duration_ms": 10929,
+      "log": "docs/features/f03a/runtime-initial/jobs-pg.log",
+      "log_sha256": "208620f865d724c7793d6dff5b48bbf6157f3311263af5ce6562ace5e281c3a6"
+    },
+    {
+      "name": "quality-pg",
+      "exit_code": 0,
+      "duration_ms": 3486,
+      "log": "docs/features/f03a/runtime-initial/quality-pg.log",
+      "log_sha256": "35ca61a4f9cf11824fb4270e4e01fe17849c0422fb3ad5048cd6841e5c0def29"
+    },
+    {
+      "name": "payments-pg",
+      "exit_code": 1,
+      "duration_ms": 8109,
+      "log": "docs/features/f03a/runtime-initial/payments-pg.log",
+      "log_sha256": "f6b997f675abf5e0eb61267a6bceb3e6f3e33f7ec7cc12f24efe6ca63d3a191c"
+    },
+    {
+      "name": "payments-http",
+      "exit_code": 0,
+      "duration_ms": 12768,
+      "log": "docs/features/f03a/runtime-initial/payments-http.log",
+      "log_sha256": "51f0330b53ca129f2b9dd0d672d74765d9de4db199f45dc412e9abf0a200af5d"
+    },
+    {
+      "name": "payment-mutation",
+      "exit_code": 0,
+      "duration_ms": 22472,
+      "log": "docs/features/f03a/runtime-initial/payment-mutation.log",
+      "log_sha256": "61e70a0f3130b330808d31b29b4b6d66766cafc0deb44ad93a5aee2e505eea93"
+    },
+    {
+      "name": "fixture-mutation",
+      "exit_code": 0,
+      "duration_ms": 2858,
+      "log": "docs/features/f03a/runtime-initial/fixture-mutation.log",
+      "log_sha256": "b5342d491dbc8d3201c759bdcf1b638d467d2d3d0e644ff9061e607f26686bbf"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 0,
+      "duration_ms": 23382,
+      "log": "docs/features/f03a/runtime-initial/budget-mutation.log",
+      "log_sha256": "1bbdabc193ed8e4162e0dbc8d269768ae54146e3237d5a7f22409a70fb6e341a"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 2505,
+      "log": "docs/features/f03a/runtime-initial/runtime-versions.log",
+      "log_sha256": "12f28bad5dc42b4618704d0716e6e70144c0ee2021a1324ee2c93c07e71a4a40"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 0,
+      "duration_ms": 13358,
+      "log": "docs/features/f03a/runtime-initial/web-maintenance-start.log",
+      "log_sha256": "79bbe00682cfdadc914e6af362982d37e70f43084c5e3ed453f6500d7d57ef03"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 0,
+      "duration_ms": 18,
+      "log": "docs/features/f03a/runtime-initial/host-http.log",
+      "log_sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 0,
+      "duration_ms": 52,
+      "log": "docs/features/f03a/runtime-initial/service-image-ids.log",
+      "log_sha256": "3441a41d25c6b6af7cfe96d8920e7617340cd7e3367f943a4b7ff85c372bc0ca"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 0,
+      "duration_ms": 2683,
+      "log": "docs/features/f03a/runtime-initial/maintenance-once.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 11794,
+      "log": "docs/features/f03a/runtime-initial/cleanup.log",
+      "log_sha256": "f2ec08fdd75ffa365b8e74c2652935cf4d511b366d8f27bd6b53ca8e820c27d6"
+    }
+  ],
+  "finished_at": "2026-10-02T23:06:37.373782+00:00",
+  "duration_ms": 210056,
+  "source_after": {
+    "files": 57,
+    "mismatches": []
+  },
+  "status": "failed",
+  "failed_checks": [
+    "payments-pg"
+  ]
+}
