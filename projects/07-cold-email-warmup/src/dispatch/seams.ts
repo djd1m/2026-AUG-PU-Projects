@@ -1,4 +1,4 @@
-import type { Pool } from 'pg';
+import type { Pool, PoolClient } from 'pg';
 import { HttpError } from '../errors.js';
 import { cancelMailbox } from '../mailboxes/store.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
@@ -14,8 +14,7 @@ export class DispatchSeams {
  }
  async stopEnrollment(tenant:string,id:string,state:'replied'|'suppressed') {
   return eligibilityTransaction(this.pool,async client=>{
-   if(!(await client.query('UPDATE enrollment SET state=$3 WHERE tenant_id=$1 AND id=$2 RETURNING id',[tenant,id,state])).rowCount) throw new HttpError(404,'not_found');
-   await client.query("UPDATE send_job SET state='cancelled' WHERE tenant_id=$1 AND enrollment_id=$2 AND state IN ('queued','claimed')",[tenant,id]);
+   await stopEnrollmentClient(client,tenant,id,state);
   });
  }
  async suppress(tenant:string,digest:string,reason:string) {
@@ -41,4 +40,10 @@ export class DispatchSeams {
   });
  }
 
+}
+
+// Caller already owns eligibilityTransaction; never open a nested transaction.
+export async function stopEnrollmentClient(client:PoolClient,tenant:string,id:string,state:'replied'|'suppressed') {
+ if(!(await client.query("UPDATE enrollment SET state=CASE WHEN state='active' THEN $3 ELSE state END WHERE tenant_id=$1 AND id=$2 RETURNING id",[tenant,id,state])).rowCount) throw new HttpError(404,'not_found');
+ await client.query("UPDATE send_job SET state='cancelled' WHERE tenant_id=$1 AND enrollment_id=$2 AND state IN ('queued','claimed')",[tenant,id]);
 }
