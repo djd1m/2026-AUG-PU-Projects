@@ -39,7 +39,7 @@ export function resolveCitations(ids: readonly string[], documents: readonly Cit
 
 /** Model text is rendered as plain React text; remove links even inside Markdown/HTML. */
 export function stripModelUrls(text: string): string {
-  return text.replace(/(?:[a-z][a-z0-9+.-]*:\/{0,2}|www\.)[^\s<>"'\[\]()]+/gi, '')
-    .replace(/\b(?:[a-z0-9-]+\.)+(?:com|org|net|ru|io|test|dev|рф)(?:\/[^\s<>"'\[\]()]*)?/gi, '')
+  return text.replace(/(?:[a-z][a-z0-9+.-]*:\/{0,2}|\/\/|www\.)[^\s<>"'\[\]()]+/gi, '')
+    .replace(/(?<![\p{L}\p{N}_-])(?:[\p{L}\p{N}-]+\.)+[\p{L}]{2,}(?![\p{L}\p{N}_-])(?::\d+)?(?:[/?#][^\s<>"'\[\]()]*)?/giu, '')
     .trim();
 }
