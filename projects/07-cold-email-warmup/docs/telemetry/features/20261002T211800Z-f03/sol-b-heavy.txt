@@ -1,0 +1,24 @@
+Local runtime key files present; values suppressed.
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 18704 свободен
+HEAVY_ACQUIRED 2026-10-02T22:23:22Z
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'n7-cold-email-warmup@0.1.0',
+npm warn EBADENGINE   required: { node: '>=22 <23' },
+npm warn EBADENGINE   current: { node: 'v20.20.2', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn deprecated eslint@9.39.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 145 packages in 4s
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+tests/submission-integration.test.ts(139,8): error TS18048: 'attempt' is possibly 'undefined'.
+HEAVY_RELEASED 2026-10-02T22:23:30Z

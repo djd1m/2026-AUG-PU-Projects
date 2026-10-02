@@ -1,0 +1,668 @@
+Local runtime key files present; values suppressed.
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 18704 свободен
+HEAVY_ACQUIRED 2026-10-02T22:23:54Z
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+
+> n7-cold-email-warmup@0.1.0 lint
+> eslint src tests
+
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  399.9kB
+Step 1/12 : FROM node:22.20.0-bookworm-slim
+ ---> b21fe589dfbe
+Step 2/12 : WORKDIR /app
+ ---> Using cache
+ ---> 957acab97279
+Step 3/12 : COPY package.json package-lock.json ./
+ ---> 4b0f2b55dc5d
+Step 4/12 : RUN npm ci --no-audit --no-fund
+ ---> Running in 2eaa250d487c
+[91mnpm warn deprecated eslint@9.39.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[0m
+added 145 packages in 5s
+[91mnpm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+[0m ---> Removed intermediate container 2eaa250d487c
+ ---> 3b6c8bb908c7
+Step 5/12 : COPY tsconfig*.json eslint.config.js ./
+ ---> 87fbea1cee5a
+Step 6/12 : COPY src ./src
+ ---> 16e88fe42879
+Step 7/12 : COPY db ./db
+ ---> 50f512783876
+Step 8/12 : COPY tests ./tests
+ ---> 601f99540d39
+Step 9/12 : RUN npm run build
+ ---> Running in 38e3e527d94f
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+ ---> Removed intermediate container 38e3e527d94f
+ ---> 00933ecf3de3
+Step 10/12 : USER node
+ ---> Running in 0bc5df88a95a
+ ---> Removed intermediate container 0bc5df88a95a
+ ---> 1d872bd5dd1b
+Step 11/12 : EXPOSE 3000
+ ---> Running in a1f203d37bad
+ ---> Removed intermediate container a1f203d37bad
+ ---> 2ae0c9a0e155
+Step 12/12 : CMD ["node", "dist/main.js"]
+ ---> Running in 45074f849bff
+ ---> Removed intermediate container 45074f849bff
+ ---> 2f83f1bf9bbc
+Successfully built 2f83f1bf9bbc
+Successfully tagged n7f03b-web:latest
+ Network n7f03b_network Creating 
+ Volume n7f03b_pg Creating 
+ Volume n7f03b_pg Creating 
+ Network n7f03b_network Creating 
+ Volume n7f03b_pg Created 
+ Volume n7f03b_pg Created 
+ Network n7f03b_network Created 
+ Network n7f03b_network Created 
+ Container n7f03b-db-1 Creating 
+ Container n7f03b-db-1 Created 
+ Container n7f03b-web-1 Creating 
+ Container n7f03b-web-1 Created 
+ Container n7f03b-db-1 Starting 
+ Container n7f03b-db-1 Started 
+ Container n7f03b-db-1 Waiting 
+ Container n7f03b-db-1 Healthy 
+ Container n7f03b-web-1 Starting 
+ Container n7f03b-web-1 Started 
+ Container n7f03b-db-1 Waiting 
+ Container n7f03b-web-1 Waiting 
+ Container n7f03b-db-1 Healthy 
+ Container n7f03b-web-1 Healthy 
+
+> n7-cold-email-warmup@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*-unit.test.ts
+
+TAP version 13
+# Subtest: AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+ok 1 - AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+  ---
+  duration_ms: 3.293512
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+ok 2 - AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+  ---
+  duration_ms: 1.892171
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+ok 3 - AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+  ---
+  duration_ms: 0.78034
+  type: 'test'
+  ...
+# Subtest: AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+ok 4 - AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+  ---
+  duration_ms: 2.320661
+  type: 'test'
+  ...
+# Subtest: AC-F01-1 safety config fails closed without external runtime key/policy
+ok 5 - AC-F01-1 safety config fails closed without external runtime key/policy
+  ---
+  duration_ms: 17.199246
+  type: 'test'
+  ...
+# Subtest: A1 canonical bounds, missing fields, source/header injection and escaped preview
+ok 6 - A1 canonical bounds, missing fields, source/header injection and escaped preview
+  ---
+  duration_ms: 5.708822
+  type: 'test'
+  ...
+# Subtest: A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest
+ok 7 - A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest
+  ---
+  duration_ms: 4.038332
+  type: 'test'
+  ...
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 8 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 6.184572
+  type: 'test'
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+ok 9 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 12.139725
+  type: 'test'
+  ...
+# Subtest: IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+ok 10 - IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+  ---
+  duration_ms: 50.892858
+  type: 'test'
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 11 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 1.12155
+  type: 'test'
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+ok 12 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 22.142318
+  type: 'test'
+  ...
+# Subtest: B3 plain local test message, random bound token, one-click and reference headers
+ok 13 - B3 plain local test message, random bound token, one-click and reference headers
+  ---
+  duration_ms: 3.559742
+  type: 'test'
+  ...
+# Subtest: B4 retry delays/max3 and exact120s ceiling
+ok 14 - B4 retry delays/max3 and exact120s ceiling
+  ---
+  duration_ms: 0.45379
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1838.395006
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> n7-cold-email-warmup@0.1.0 test:integration
+> tsx --test --test-concurrency=1 tests/*-integration.test.ts
+
+TAP version 13
+# Subtest: F01 real PostgreSQL16 HTTP identity acceptance
+    # Subtest: AC-F01-1 migrated readiness serves without exposing secrets
+    ok 1 - AC-F01-1 migrated readiness serves without exposing secrets
+      ---
+      duration_ms: 37.411423
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+    ok 2 - AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+      ---
+      duration_ms: 612.362599
+      type: 'test'
+      ...
+    # Subtest: AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+    ok 3 - AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+      ---
+      duration_ms: 46.522367
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+    ok 4 - AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+      ---
+      duration_ms: 649.619582
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+    ok 5 - AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+      ---
+      duration_ms: 155.442125
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+    ok 6 - AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+      ---
+      duration_ms: 3742.819307
+      type: 'test'
+      ...
+# secret_canary_scan_passed (value suppressed)
+    # Subtest: AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+    ok 7 - AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+      ---
+      duration_ms: 552.562927
+      type: 'test'
+      ...
+    1..7
+ok 1 - F01 real PostgreSQL16 HTTP identity acceptance
+  ---
+  duration_ms: 6254.139173
+  type: 'test'
+  ...
+# Subtest: F03a realPG campaign/pool/shared quota/lease seams without transport
+    # Subtest: A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity
+    ok 1 - A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity
+      ---
+      duration_ms: 356.814967
+      type: 'test'
+      ...
+    # Subtest: A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply
+    ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply
+      ---
+      duration_ms: 141.37908
+      type: 'test'
+      ...
+    # Subtest: A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn
+    ok 3 - A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn
+      ---
+      duration_ms: 849.284813
+      type: 'test'
+      ...
+    # Subtest: A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states
+    ok 4 - A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states
+      ---
+      duration_ms: 464.476146
+      type: 'test'
+      ...
+    # Subtest: A4/A5 common lock first, suppression seam and sender rotation
+    ok 5 - A4/A5 common lock first, suppression seam and sender rotation
+      ---
+      duration_ms: 240.363136
+      type: 'test'
+      ...
+    1..5
+ok 2 - F03a realPG campaign/pool/shared quota/lease seams without transport
+  ---
+  duration_ms: 3365.943781
+  type: 'test'
+  ...
+# Subtest: F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+    # Subtest: AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+    ok 1 - AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+      ---
+      duration_ms: 813.25256
+      type: 'test'
+      ...
+    # Subtest: AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+    ok 2 - AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+      ---
+      duration_ms: 140.94776
+      type: 'test'
+      ...
+    # Subtest: AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+    ok 3 - AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+      ---
+      duration_ms: 188.074897
+      type: 'test'
+      ...
+    # Subtest: AC5 revoke queue/member atomicity, submitting preserved and real rollback
+    ok 4 - AC5 revoke queue/member atomicity, submitting preserved and real rollback
+      ---
+      duration_ms: 109.82093
+      type: 'test'
+      ...
+    # Subtest: AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+    ok 5 - AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+      ---
+      duration_ms: 537.461122
+      type: 'test'
+      ...
+    1..5
+ok 3 - F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+  ---
+  duration_ms: 2321.684519
+  type: 'test'
+  ...
+# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes
+    # Subtest: B1/B2 SC-US-003-4 revoke
+    ok 1 - B1/B2 SC-US-003-4 revoke
+      ---
+      duration_ms: 364.581951
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 revoke
+    ok 2 - B1/B2 SC-US-003-5 revoke
+      ---
+      duration_ms: 351.602865
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 version
+    ok 3 - B1/B2 SC-US-003-4 version
+      ---
+      duration_ms: 265.776904
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 version
+    ok 4 - B1/B2 SC-US-003-5 version
+      ---
+      duration_ms: 358.571648
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 pause
+    ok 5 - B1/B2 SC-US-003-4 pause
+      ---
+      duration_ms: 298.941606
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 pause
+    ok 6 - B1/B2 SC-US-003-5 pause
+      ---
+      duration_ms: 312.785462
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 sender_withdraw
+    ok 7 - B1/B2 SC-US-003-4 sender_withdraw
+      ---
+      duration_ms: 345.873294
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 sender_withdraw
+    ok 8 - B1/B2 SC-US-003-5 sender_withdraw
+      ---
+      duration_ms: 454.554022
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw
+    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw
+      ---
+      duration_ms: 349.803474
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw
+    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw
+      ---
+      duration_ms: 408.704806
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 reply
+    ok 11 - B1/B2 SC-US-003-4 reply
+      ---
+      duration_ms: 390.932779
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 reply
+    ok 12 - B1/B2 SC-US-003-5 reply
+      ---
+      duration_ms: 277.93438
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 unsubscribe
+    ok 13 - B1/B2 SC-US-003-4 unsubscribe
+      ---
+      duration_ms: 282.03821
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 unsubscribe
+    ok 14 - B1/B2 SC-US-003-5 unsubscribe
+      ---
+      duration_ms: 311.808822
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 complaint
+    ok 15 - B1/B2 SC-US-003-4 complaint
+      ---
+      duration_ms: 305.326869
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 complaint
+    ok 16 - B1/B2 SC-US-003-5 complaint
+      ---
+      duration_ms: 318.424113
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 disable
+    ok 17 - B1/B2 SC-US-003-4 disable
+      ---
+      duration_ms: 266.228195
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 disable
+    ok 18 - B1/B2 SC-US-003-5 disable
+      ---
+      duration_ms: 305.923359
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 limit
+    ok 19 - B1/B2 SC-US-003-4 limit
+      ---
+      duration_ms: 325.473876
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 limit
+    ok 20 - B1/B2 SC-US-003-5 limit
+      ---
+      duration_ms: 358.693108
+      type: 'test'
+      ...
+    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+    ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+      ---
+      duration_ms: 757.798271
+      type: 'test'
+      ...
+    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+    ok 22 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+      ---
+      duration_ms: 2026.211133
+      type: 'test'
+      ...
+    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+    ok 23 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+      ---
+      duration_ms: 405.871975
+      type: 'test'
+      ...
+    # Subtest: B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota
+    ok 24 - B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota
+      ---
+      duration_ms: 701.026071
+      type: 'test'
+      ...
+    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+    ok 25 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+      ---
+      duration_ms: 1799.832162
+      type: 'test'
+      ...
+    1..25
+ok 4 - F03b real PG durable final authority, all stop races, sink privacy and outcomes
+  ---
+  duration_ms: 12654.208717
+  type: 'test'
+  ...
+1..4
+# tests 46
+# suites 0
+# pass 46
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26971.980488
+Final freshness mutant rejected by exact-boundary assertion.
+TAP version 13
+# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes
+    # Subtest: B1/B2 SC-US-003-4 revoke
+    ok 1 - B1/B2 SC-US-003-4 revoke
+      ---
+      duration_ms: 415.994469
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 revoke
+    ok 2 - B1/B2 SC-US-003-5 revoke
+      ---
+      duration_ms: 373.111044
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 version
+    ok 3 - B1/B2 SC-US-003-4 version
+      ---
+      duration_ms: 317.524893
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 version
+    ok 4 - B1/B2 SC-US-003-5 version
+      ---
+      duration_ms: 338.307811
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 pause
+    ok 5 - B1/B2 SC-US-003-4 pause
+      ---
+      duration_ms: 321.679605
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 pause
+    ok 6 - B1/B2 SC-US-003-5 pause
+      ---
+      duration_ms: 337.854651
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 sender_withdraw
+    ok 7 - B1/B2 SC-US-003-4 sender_withdraw
+      ---
+      duration_ms: 324.227916
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 sender_withdraw
+    ok 8 - B1/B2 SC-US-003-5 sender_withdraw
+      ---
+      duration_ms: 297.181606
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw
+    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw
+      ---
+      duration_ms: 308.49352
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw
+    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw
+      ---
+      duration_ms: 281.07476
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 reply
+    ok 11 - B1/B2 SC-US-003-4 reply
+      ---
+      duration_ms: 306.796509
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 reply
+    ok 12 - B1/B2 SC-US-003-5 reply
+      ---
+      duration_ms: 273.869008
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 unsubscribe
+    ok 13 - B1/B2 SC-US-003-4 unsubscribe
+      ---
+      duration_ms: 271.215587
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 unsubscribe
+    ok 14 - B1/B2 SC-US-003-5 unsubscribe
+      ---
+      duration_ms: 258.894272
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 complaint
+    ok 15 - B1/B2 SC-US-003-4 complaint
+      ---
+      duration_ms: 318.006263
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 complaint
+    ok 16 - B1/B2 SC-US-003-5 complaint
+      ---
+      duration_ms: 317.298533
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 disable
+    ok 17 - B1/B2 SC-US-003-4 disable
+      ---
+      duration_ms: 241.513357
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 disable
+    ok 18 - B1/B2 SC-US-003-5 disable
+      ---
+      duration_ms: 263.584664
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 limit
+    ok 19 - B1/B2 SC-US-003-4 limit
+      ---
+      duration_ms: 286.405962
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 limit
+    ok 20 - B1/B2 SC-US-003-5 limit
+      ---
+      duration_ms: 354.214167
+      type: 'test'
+      ...
+    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+    ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+      ---
+      duration_ms: 692.275437
+      type: 'test'
+      ...
+    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+    ok 22 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+      ---
+      duration_ms: 2060.164765
+      type: 'test'
+      ...
+    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+    ok 23 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+      ---
+      duration_ms: 319.556324
+      type: 'test'
+      ...
+    # Subtest: B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota
+    ok 24 - B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota
+      ---
+      duration_ms: 587.093799
+      type: 'test'
+      ...
+    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+    ok 25 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+      ---
+      duration_ms: 1690.372364
+      type: 'test'
+      ...
+    1..25
+ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes
+  ---
+  duration_ms: 11857.410913
+  type: 'test'
+  ...
+1..1
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12326.72857
+F03b secret/contact canary scan passed; values suppressed.
+found 0 vulnerabilities
+IMAGE sha256:2f83f1bf9bbc4a6aa722f5f00c0fa9f8bad7cf99d81934ffae54b93e0aebca4f
+HEAVY_RELEASED 2026-10-02T22:25:56Z
