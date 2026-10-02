@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261002T173314Z-n7-replicate-a1",
     "work_unit_id": "n7-replicate-plan",
-    "current_attempt_id": "coordinate-1"
+    "current_attempt_id": "correct-docs-1"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
-    "current_revision": "f5930afe0f72bba143497d5a3767975be6d7aa10",
+    "current_revision": "676adec24dc04fc84c6627415993421ac1bab5cf",
     "build_revision": null,
     "requirements": [
       {
@@ -38,8 +38,30 @@
     ],
     "continuity": {
       "expected_revision": "f5930afe0f72bba143497d5a3767975be6d7aa10",
-      "observed_revision": "f5930afe0f72bba143497d5a3767975be6d7aa10",
-      "reconciliation": null
+      "observed_revision": "676adec24dc04fc84c6627415993421ac1bab5cf",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "Independent review N7-V01..06 changed only documented contracts; code absent, CJM text pending",
+        "decision": "Continue under OWN-N7-002 autonomy after Sol copy and fresh revalidation",
+        "affected_checks": [
+          "spec-algorithm-bdd",
+          "docs-complete",
+          "growth-trace",
+          "external-deps",
+          "pipeline-gaps",
+          "semantic-revalidation"
+        ],
+        "rerun": [
+          "spec-algorithm-bdd",
+          "docs-complete",
+          "growth-trace",
+          "external-deps",
+          "pipeline-gaps"
+        ],
+        "pending": [
+          "semantic-revalidation"
+        ]
+      }
     }
   },
   "prepare": {
@@ -165,7 +187,7 @@
         "root": "project",
         "path": "docs/decisions-owner.md"
       },
-      "sha256": "bb258ec3d86c4affce7d04b4648bedaea8f1483410f8240d97b99927c32a1996"
+      "sha256": "3800e3324efbfafb84f14e78b2f20d8604f9fe9782e8fb08b0a51c62f4562ff0"
     }
   },
   "preflight": {
@@ -181,6 +203,10 @@
     },
     {
       "id": "cjm-sol-1",
+      "status": "completed"
+    },
+    {
+      "id": "correct-docs-1",
       "status": "completed"
     }
   ],

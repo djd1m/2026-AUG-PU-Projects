@@ -22,7 +22,7 @@
   "comparison_id": null,
   "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
   "final_revision": null,
-  "spec_sha256": "89e2f692c087aed3c3c7bc35a39e5f349334a6e71c3ff473a7b835044094a3db",
+  "spec_sha256": "01a95e9f8fb113f0be8e461fd9eccf236788bf598f8c19425d69736b1791bd5e",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex API multi-agent",
   "host_version": null,
@@ -45,7 +45,7 @@
     "followup_status": "pending"
   },
   "metrics": {
-    "elapsed_wall_ms": 1524001,
+    "elapsed_wall_ms": 3465362,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
@@ -60,6 +60,6 @@
     "CJM source/browser checks exist, but serialized prelaunch launch digest was not provided to worker; do not claim companion delivered validation",
     "No Claude learned-store source was discovered; root/project recall initially returned []"
   ],
-  "intermediate_revision": "f5930afe0f72bba143497d5a3767975be6d7aa10",
-  "current_stage": "VALIDATE pending independent Astra"
+  "intermediate_revision": "676adec24dc04fc84c6627415993421ac1bab5cf",
+  "current_stage": "Correction docs complete; Sol CJM copy and fresh Astra revalidation pending"
 }
