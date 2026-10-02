@@ -209,4 +209,3 @@ host rollout `turn_context`, а не пожеланием в промпте. С�
 exit 0. Изменения кода, реальные release gates и runtime тесты не выполнялись.
 Это согласованный план, а не сертификат готовности public-пакета.
 Машиночитаемые host-счётчики: [analysis-run.json](analysis-run.json).
-
