@@ -4,6 +4,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { mkdtemp, readdir, writeFile, utimes, symlink, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import pg from 'pg';
 import sharp from 'sharp';
 import { createPool } from '../web/db.js';
@@ -81,7 +82,7 @@ test('F01 real PostgreSQL16 transactions, sessions, abuse and media ownership',a
       const result=await call('/api/uploads',{method:'POST',body:image,mime:'image/jpeg',cookie:cookieA}); assert.equal(result.status,201); upload=result.json.upload;
       assert.equal(upload.width,6); assert.equal(upload.height,8); assert.equal(upload.private_key,undefined);
       const owner=await call('/api/uploads/'+upload.id,{cookie:cookieA}); assert.equal(owner.status,200); assert.match(owner.headers.get('cache-control'),/no-store/); assert.equal((await sharp(owner.bytes).metadata()).exif,undefined);
-      for (const method of ['GET','DELETE']) { const other=await call('/api/uploads/'+upload.id,{method,cookie:cookieB}); assert.equal(other.status,404); assert.equal(other.headers.get('content-type').startsWith('image/'),false); }
+      for (const method of ['GET','DELETE']) { const other=await call('/api/uploads/'+upload.id,{method,cookie:cookieB}); assert.equal(other.status,404,`SEC-03 cross-owner ${method} must return 404`); assert.equal(other.headers.get('content-type').startsWith('image/'),false); }
       assert.equal((await call('/api/uploads',{cookie:cookieB})).json.uploads.length,0);
       assert.equal((await call('/api/uploads/'+randomUUID(),{cookie:cookieB})).status,404);
       assert.equal((await call('/api/uploads/not-a-uuid',{cookie:cookieA})).status,400);
@@ -105,6 +106,56 @@ test('F01 real PostgreSQL16 transactions, sessions, abuse and media ownership',a
       const remaining=await readdir(dir); for (const id of [upload.id,recent,'untrusted-name',link]) assert.ok(remaining.includes(id));
       assert.equal((await call('/api/uploads/'+upload.id,{method:'DELETE',cookie:cookieA})).status,200);
       assert.equal((await call('/api/uploads/'+upload.id,{cookie:cookieA})).status,404);
+    });
+    await t.test('UPLOAD-02 bounded sweep advances past live prefix across separate processes and reaches tmp independently',async () => {
+      const sweepDir=await mkdtemp(join(tmpdir(),'n8-f01-sweep-'));
+      const oldTime=new Date(Date.now()-7200000);
+      const live=Array.from({length:5},(_,i)=>`00000000-0000-4000-8000-${String(i+1).padStart(12,'0')}`);
+      const tail=Array.from({length:3},(_,i)=>`ffffffff-ffff-4fff-8fff-${String(i+1).padStart(12,'0')}`);
+      const temp='00000000-0000-4000-8000-000000000099',recent=randomUUID(),link=randomUUID();
+      try {
+        await prepareStorage(sweepDir);
+        for(const id of live) await pool.query(`INSERT INTO upload(id,account_id,private_key,sha256,width,height,mime)
+          VALUES($1,$2,$1,$3,1,1,'image/webp')`,[id,accountA,'0'.repeat(64)]);
+        for(const id of [...live,...tail,'synthetic-not-uuid']) {
+          await writeFile(join(sweepDir,id),'synthetic sweep fixture'); await utimes(join(sweepDir,id),oldTime,oldTime);
+        }
+        for(const id of [temp,live[0]]) {
+          await writeFile(join(sweepDir,'.tmp',id),'synthetic sweep fixture'); await utimes(join(sweepDir,'.tmp',id),oldTime,oldTime);
+        }
+        await writeFile(join(sweepDir,recent),'synthetic recent fixture');
+        await symlink(join(sweepDir,live[0]),join(sweepDir,link));
+        let total=0;
+        for(let pass=0;pass<10;pass++) {
+          const result=spawnSync(process.execPath,[new URL('./sweep-pass.js',import.meta.url).pathname,sweepDir],{
+            env:{...process.env,TEST_DATABASE_URL:databaseUrl.href},encoding:'utf8',timeout:15000
+          });
+          assert.equal(result.error,undefined); assert.equal(result.signal,null); assert.equal(result.status,0,result.stderr);
+          const receipt=JSON.parse(result.stdout); assert.ok(receipt.queries<=4); assert.ok(receipt.removed<=2); total+=receipt.removed;
+          if(pass===0) {
+            assert.equal((await readdir(join(sweepDir,'.tmp'))).includes(temp),false,'tmp reached despite retained main prefix');
+            for(const id of tail) assert.ok((await readdir(sweepDir)).includes(id),'tail starts beyond main scan budget');
+          }
+        }
+        assert.equal(total,4,'repeated fresh processes remove all old unreferenced files');
+        const remaining=await readdir(sweepDir);
+        for(const id of [...live,recent,link,'synthetic-not-uuid']) assert.ok(remaining.includes(id));
+        for(const id of tail) assert.equal(remaining.includes(id),false);
+        assert.ok((await readdir(join(sweepDir,'.tmp'))).includes(live[0]));
+        // Overlapping operator calls use independent atomic cursor replacements.
+        // Losing a cursor update only repeats safe inspections; live files stay protected.
+        const concurrent='00000000-0000-4000-8000-000000000000';
+        await writeFile(join(sweepDir,concurrent),'synthetic concurrent orphan');
+        await utimes(join(sweepDir,concurrent),oldTime,oldTime);
+        await writeFile(join(sweepDir,'.sweep-cursor'),'');
+        await Promise.all([sweepOrphans(pool,sweepDir,Date.now(),{scanLimit:2,deleteLimit:1}),
+          sweepOrphans(pool,sweepDir,Date.now(),{scanLimit:2,deleteLimit:1})]);
+        assert.equal((await readdir(sweepDir)).includes(concurrent),false);
+        for(const id of live) assert.ok((await readdir(sweepDir)).includes(id));
+      } finally {
+        await pool.query('DELETE FROM upload WHERE id=ANY($1::uuid[])',[live]);
+        await rm(sweepDir,{recursive:true,force:true});
+      }
     });
     await t.test('AUTH-03 exact registration/IP and login/IP limits; SEC-02 121st API request',async () => {
       // A fresh server owns fresh limiter state, still using the actual DB/storage.

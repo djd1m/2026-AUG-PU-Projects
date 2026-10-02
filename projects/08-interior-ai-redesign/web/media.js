@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { mkdir, writeFile, rename, unlink, lstat, opendir, readFile, realpath } from 'node:fs/promises';
+import { constants } from 'node:fs';
+import { mkdir, writeFile, rename, unlink, lstat, opendir, readFile, realpath, open } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import sharp from 'sharp';
 import { HttpError, UUID, requireUuid } from './boundaries.js';
@@ -90,20 +91,57 @@ export function createMedia(pool, dir) {
   };
 }
 // No timer implicit in startup: run hourly via explicit operator maintenance.
-// Scan at most 10k entries, delete at most 1k UUID regular files, never symlinks.
-export async function sweepOrphans(pool, dir, now = Date.now()) {
-  let removed = 0; let scanned = 0;
+// Per-folder cursor survives separate CLI processes. Stream names, retaining at
+// most 2*scanLimit; stat/query at most scanLimit and delete at most deleteLimit.
+// Lexical batches avoid depending on readdir order or a deleted resume filename.
+async function readSweepCursor(path) {
+  let file;
+  try {
+    file = await open(path, constants.O_RDONLY | constants.O_NOFOLLOW);
+    const stat = await file.stat();
+    if (!stat.isFile() || stat.size > 64) throw new Error('Invalid sweep cursor');
+    const cursor = await file.readFile('utf8');
+    if (cursor !== '' && !UUID.test(cursor)) throw new Error('Invalid sweep cursor');
+    return cursor;
+  } catch (error) { if (error.code === 'ENOENT') return ''; throw error; }
+  finally { await file?.close(); }
+}
+async function sweepBatch(folder, cursor, limit) {
+  let names = [];
+  for await (const entry of await opendir(folder)) {
+    if (!UUID.test(entry.name) || entry.name <= cursor) continue;
+    names.push(entry.name);
+    if (names.length === limit * 2) names = names.sort().slice(0, limit);
+  }
+  return names.sort().slice(0, limit);
+}
+export async function sweepOrphans(pool, dir, now = Date.now(), { scanLimit = 10000, deleteLimit = 1000 } = {}) {
+  for (const [value, max] of [[scanLimit,10000],[deleteLimit,1000]]) {
+    if (!Number.isSafeInteger(value) || value < 1 || value > max) throw new Error('Invalid sweep budget');
+  }
+  let removed = 0;
   for (const folder of [dir,join(dir,'.tmp')]) {
-    const entries = await opendir(folder);
-    for await (const entry of entries) {
-      if (++scanned > 10000 || removed >= 1000) break;
-      if (!UUID.test(entry.name)) continue;
-      const path = join(folder,entry.name);
+    const folderStat = await lstat(folder);
+    if (!folderStat.isDirectory() || folderStat.isSymbolicLink()) throw new Error('Invalid private storage');
+    const cursorPath = join(folder,'.sweep-cursor');
+    let cursor = await readSweepCursor(cursorPath);
+    const names = await sweepBatch(folder,cursor,scanLimit);
+    let folderRemoved = 0;
+    if (!names.length) cursor = ''; // Next invocation starts a new cycle.
+    for (const name of names) {
+      if (folderRemoved >= deleteLimit) break;
+      cursor = name;
+      const path = join(folder,name);
       const stat = await lstat(path).catch(error => { if (error.code === 'ENOENT') return null; throw error; });
       if (!stat?.isFile() || now - stat.mtimeMs <= 3600000) continue;
-      const { rowCount } = await pool.query('SELECT id FROM upload WHERE private_key=$1 AND deleted_at IS NULL', [entry.name]);
-      if (!rowCount) { await removeFile(path); removed++; }
+      const { rowCount } = await pool.query('SELECT id FROM upload WHERE private_key=$1 AND deleted_at IS NULL', [name]);
+      if (!rowCount) { await removeFile(path); removed++; folderRemoved++; }
     }
+    const temp = join(folder,`.sweep-cursor-${randomUUID()}`);
+    try {
+      await writeFile(temp,cursor,{flag:'wx',mode:0o600});
+      await rename(temp,cursorPath);
+    } finally { await removeFile(temp); }
   }
   return removed;
 }
