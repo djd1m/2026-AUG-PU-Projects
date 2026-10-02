@@ -9,6 +9,7 @@ import type { Identity } from '../src/auth/store.js';
 import { eligibilityTransaction } from '../src/consent/transaction.js';
 import { DispatchSeams } from '../src/dispatch/seams.js';
 import { SubmissionStore } from '../src/dispatch/submission.js';
+import { newSession,COOKIE_NAME } from '../src/auth/session.js';
 import { tokenHash } from '../src/dispatch/message.js';
 import type { TestOutcome } from '../src/dispatch/adapter.js';
 function barrier() {
@@ -99,6 +100,25 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
    const token=own[0].body.split('/unsubscribe/')[1];const bound=(await pool.query('SELECT * FROM unsubscribe_token WHERE token_hash=$1',[tokenHash(token)])).rows[0];assert.equal(bound.job_id,job.id);assert.equal(bound.mailbox_id,boxes[0]);
    assert.equal((await submit.inspect(actors[0]!.tenant_id,job.id)).message_id,own[0].message_id);
    await assert.rejects(submit.inspect(actors[1]!.tenant_id,job.id));
+   assert.ok(!('tenant_id' in peer[0]) && !('recipient_tenant_id' in peer[0]));
+   await new Promise<void>(r=>app.server.listen(0,'127.0.0.1',r));
+   const address=app.server.address();assert.ok(address && typeof address==='object');const base=`http://127.0.0.1:${address.port}`;
+   const cookies:string[]=[];
+   for(const actor of actors) {
+    const session=newSession(config.sessionKey);await pool.query('INSERT INTO session(id,account_id,token_hash,expires_at) VALUES($1,$2,$3,$4)',[randomUUID(),actor.account_id,session.digest,session.expiresAt]);
+    cookies.push(`${COOKIE_NAME}=${session.token}`);
+   }
+   const request=async(path:string,cookie?:string,method='GET',origin=config.origin)=>fetch(base+path,{method,headers:{Origin:origin,'Content-Type':'application/json',...(cookie?{Cookie:cookie}:{})},...(method==='GET'?{}:{body:JSON.stringify({mode:'live',fault:'bypass'})})});
+   try {
+    assert.equal((await request('/api/dispatch/messages')).status,401);
+    assert.equal((await request(`/api/dispatch/jobs/${job.id}`,cookies[0])).status,200);
+    assert.equal((await request(`/api/dispatch/jobs/${job.id}`,cookies[1])).status,404);
+    const peerResponse=await request('/api/dispatch/messages',cookies[1]);assert.equal(peerResponse.status,200);assert.equal((await peerResponse.json()).data.length,1);
+    assert.equal((await request('/api/dispatch/jobs/not-uuid',cookies[0])).status,400);
+    assert.equal((await request('/api/dispatch/tick',cookies[0],'POST')).status,404);
+    assert.equal((await request('/api/dispatch/tick',cookies[0],'POST','http://foreign.test')).status,403);
+    assert.equal((await request('/api/dispatch/messages',cookies[0],'POST')).status,404);assert.equal(calls,1);
+   } finally {await new Promise<void>(r=>app.server.close(()=>r()));}
    // Persistence uses a second pool, not memory. Campaign private content stays owner-only.
    const second=createPool(config.databaseUrl);try {assert.equal((await new SubmissionStore(second,config).messages(actors[1]!.tenant_id)).length,1);} finally {await second.end();}
    await app.cohort.tick(now);const reply=await app.dispatch.claim(randomUUID(),now);assert.ok(reply);assert.equal(reply.kind,'reply');

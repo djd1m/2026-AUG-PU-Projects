@@ -97,6 +97,6 @@ export class SubmissionStore {
   return {...row,state:row.state==='unknown'?'unknown_delivery':row.state,boundary:'submitting commit is irreversible; submitted means accepted, not delivered'};
  }
  async messages(tenant:string) {
-  return (await this.pool.query(`SELECT * FROM local_test_message WHERE tenant_id=$1 OR (scope='pool' AND recipient_tenant_id=$1) ORDER BY accepted_at,job_id LIMIT 100`,[tenant])).rows;
+  return (await this.pool.query(`SELECT job_id,scope,message_id,sender,recipient,subject,body,headers,test_label,accepted_at FROM local_test_message WHERE tenant_id=$1 OR (scope='pool' AND recipient_tenant_id=$1) ORDER BY accepted_at,job_id LIMIT 100`,[tenant])).rows;
  }
 }
