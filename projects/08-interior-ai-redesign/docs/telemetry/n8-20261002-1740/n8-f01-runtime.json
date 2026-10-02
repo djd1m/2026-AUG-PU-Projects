@@ -7,7 +7,7 @@
   "requested_effort": "high",
   "actual_effort": null,
   "usage": null,
-  "status": "running",
+  "status": "completed",
   "metadata_lines": [
     "model: gpt-6.1-sol",
     "provider: openai",
@@ -15,5 +15,14 @@
     "session id: 01a0fe18-0dec-7551-9670-ee9b5f32cdd4"
   ],
   "raw_log_outside_git": "/tmp/n8-f01/runtime.log",
-  "cli_session_id": 36297
+  "cli_session_id": 36297,
+  "verdict": "candidate; runtime and independent review pending",
+  "started_at": "2026-10-02T19:29:44Z",
+  "finished_at": "2026-10-02T19:51:18Z",
+  "elapsed_wall_ms": 1294000,
+  "exit_code": 0,
+  "receipt_sha256": "ced0346f522c392dc9df8746723ef4ab822047297d0cc6faef7c1d643e4b0497",
+  "receipt_validation": "1/1;24/24 source file hashes match immutable snapshot",
+  "whitespace_note": "git diff --cached --check found Markdown hard-break trailing spaces in immutable receipt only; product source unaffected. Original receipt preserved byte-for-byte.",
+  "child_candidate_commit": "2e91e0b1"
 }
