@@ -20,35 +20,55 @@
   ],
   "comparison_id": null,
   "baseline_revision": "9a51f8d5d0721b28d7ea5770ad17762645e5b098",
-  "final_revision": null,
+  "final_revision": "795508ad15f8bbc0948dac4219c6d3dc0d4d1332",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex API native coordinator + bounded CLI workers",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-10-02T19:08:10.086342+00:00",
-  "ended_at": null,
-  "status": "running",
-  "acceptance_evidence": [],
+  "ended_at": "2026-10-02T20:22:12.967920+00:00",
+  "status": "completed",
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/evidence/delivery-1-receipt.md",
+    "docs/features/pdf-source/09_correction_review.md",
+    "tests/artifacts/pdf-source/final-validation.json",
+    "tests/artifacts/pdf-source/ui-output/report.json"
+  ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": 0,
+    "required_gates_passed": true,
+    "ac_met": 8,
     "ac_total": 8,
-    "confirmed_findings_by_severity": {},
+    "confirmed_findings_by_severity": {
+      "P2": 1
+    },
     "known_defects_missed": null,
-    "followup_status": "pending"
+    "followup_status": "P2 corrected and independently accepted"
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 4442882,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 3657865,
+      "cached_input_tokens": 3371520,
+      "output_tokens": 41729,
+      "reasoning_output_tokens": 7024,
+      "total_tokens": 3699594
+    },
+    "measured_cli_usage_only_note": "Stage-native measured subset; cached/reasoning are subsets, not additional billable totals; coordinator unknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "No comparable baseline or batch",
     "Native coordinator model/usage/host version unavailable",
-    "Initial readonly PDF requirement reconnaissance occurred during preceding run; separate start timestamp for that reading unavailable; no duration invented",
-    "No final revision/build/checks yet"
+    "Initial readonly PDF requirement reconnaissance occurred during preceding run; separate start timestamp for that reading unavailable; no duration invented"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/evidence/correction-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/evidence/correction-review-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/evidence/implementation-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T190728Z-pdf-source/evidence/review-1-native-usage.json"
   ]
 }

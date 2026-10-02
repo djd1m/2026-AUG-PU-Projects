@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-pdf-source/projects/06b-rag-class
+
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 27ms
+ ✓ services/worker/tests/unit/pdf-extract.test.ts (6 tests) 627ms
+   ✓ real pdfjs local bytes > 301 pages fail before writes, 300 pages are allowed and empty pages skipped  364ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 52ms
+ ✓ apps/web/tests/unit/pdf-handler.test.ts (6 tests) 217ms
+ ✓ services/worker/tests/unit/crawl-site-correction.test.ts (19 tests) 84ms
+
+ Test Files  5 passed (5)
+      Tests  51 passed (51)
+   Start at  19:30:54
+   Duration  2.08s (transform 1.82s, setup 0ms, collect 5.08s, tests 1.01s, environment 2ms, prepare 1.04s)
+
+
+Exit: 0

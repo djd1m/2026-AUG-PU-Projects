@@ -1,0 +1,50 @@
+{
+  "started_at": "2026-10-02T20:15:24.306Z",
+  "source_snapshot_sha256": "b8d3f01f1bc8856b543522ec0bdafb761afa85ee94dc36bbe1868ce9dd37cbe6",
+  "build_image_id": "sha256:92c1f98633b939717a789bc2b5fb484a1dcfe5ae7ba944aecf312c488c27d098",
+  "status": "pass",
+  "scope": "PDF upload UI and persisted queued-job visibility; worker extraction covered by real-DB integration suite",
+  "checks": [
+    {
+      "viewport": 1440,
+      "registration": "pass",
+      "idle_bot_201": "pass",
+      "invalid_magic_415": "pass",
+      "oversize_client_error": "pass",
+      "pdf_upload_202": "pass",
+      "filename_and_job_visible": "pass",
+      "busy_disabled": "pass",
+      "layout": "pass",
+      "javascript_errors": 0
+    },
+    {
+      "viewport": 390,
+      "registration": "pass",
+      "idle_bot_201": "pass",
+      "invalid_magic_415": "pass",
+      "oversize_client_error": "pass",
+      "pdf_upload_202": "pass",
+      "filename_and_job_visible": "pass",
+      "busy_disabled": "pass",
+      "layout": "pass",
+      "javascript_errors": 0
+    },
+    {
+      "viewport": 1440,
+      "terminal_job_id": "6f78d1e8-fd27-4c3f-82ab-817e623e957a",
+      "terminal_before_202_delivery": "failed",
+      "pending_disabled": "pass",
+      "terminal_first_refresh_enabled": "pass",
+      "another_upload_202": "pass"
+    },
+    {
+      "viewport": 390,
+      "terminal_job_id": "86ea3adb-4601-44b8-843c-d7e78732b148",
+      "terminal_before_202_delivery": "failed",
+      "pending_disabled": "pass",
+      "terminal_first_refresh_enabled": "pass",
+      "another_upload_202": "pass"
+    }
+  ],
+  "finished_at": "2026-10-02T20:15:42.051Z"
+}

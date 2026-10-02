@@ -1,0 +1,73 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.90kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 361B done
+#3 DONE 0.0s
+
+#4 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#4 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 10.34kB 0.0s done
+#5 DONE 0.0s
+
+#6 [build 1/2] COPY . .
+#6 CACHED
+
+#7 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
+#7 CACHED
+
+#8 [prod-deps 1/1] RUN npm prune --omit=dev
+#8 CACHED
+
+#9 [migrate 3/5] COPY --from=prod-deps /app/node_modules ./node_modules
+#9 CACHED
+
+#10 [deps 9/9] RUN npm ci
+#10 CACHED
+
+#11 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#11 CACHED
+
+#12 [deps 6/9] COPY services/worker/package.json ./services/worker/
+#12 CACHED
+
+#13 [deps 2/9] WORKDIR /app
+#13 CACHED
+
+#14 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#14 CACHED
+
+#15 [deps 3/9] COPY package.json package-lock.json ./
+#15 CACHED
+
+#16 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#16 CACHED
+
+#17 [migrate 4/5] COPY --from=build /app/package.json ./package.json
+#17 CACHED
+
+#18 [build 2/2] RUN npm run build
+#18 CACHED
+
+#19 [migrate 5/5] COPY --from=build /app/packages/db ./packages/db
+#19 DONE 1.3s
+
+#20 exporting to image
+#20 exporting layers
+#20 exporting layers 0.3s done
+#20 exporting manifest sha256:daa71f2f9bdd416665d3a004f615c40915028d7793f273ec565e5a963bd69820 0.0s done
+#20 exporting config sha256:3a60d016a646281764ee83b8f400ce351d2c8f1dd72ac999fa7ffb24774fced3 0.1s done
+#20 exporting attestation manifest sha256:324c069639e4b735de17f7fd4e638417d573a7b04a09ed82725a6994585da972 0.1s done
+#20 exporting manifest list sha256:0c9857c3ff248e0c48f2200427075c49c59de1788113305f62b591fb106ebecd 0.0s done
+#20 naming to docker.io/library/n6b-f06-pdf-migrate:20261002 done
+#20 unpacking to docker.io/library/n6b-f06-pdf-migrate:20261002 0.1s done
+#20 DONE 0.7s

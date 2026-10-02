@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены5/16 фич: foundation, spend-ceilings, index-jobs, chunk-embed, crawl-site. Продолжение: pdf-source; остальные release gates сохраняются.",
+    "state": "Выполнены6/16 фич: foundation, spend-ceilings, index-jobs, chunk-embed, crawl-site, pdf-source. Продолжение: rag-answer-sandbox; остальные release gates сохраняются.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -239,7 +239,7 @@
       "name": "PDF-источник: загрузка ≤10 МБ в Postgres, извлечение текста постранично",
       "description": "Приём PDF (сигнатура %PDF, > 10 МБ → 413), source_file.bytes bytea, Extract PDF через pdfjs-dist постранично, скан без текста → задача failed с причиной; ссылка «файл, стр. N».",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -267,7 +267,9 @@
       "expected_files": [
         "apps/web/src/app/api/bots/[id]/sources/pdf/route.ts",
         "services/worker/src/pdf/extract.ts"
-      ]
+      ],
+      "acceptance_revision": "795508ad15f8bbc0948dac4219c6d3dc0d4d1332",
+      "acceptance_evidence": "docs/features/pdf-source/05_completion.md"
     },
     {
       "id": "rag-answer-sandbox",

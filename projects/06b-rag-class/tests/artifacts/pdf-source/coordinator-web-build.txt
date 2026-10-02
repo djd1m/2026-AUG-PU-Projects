@@ -1,0 +1,188 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.90kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 361B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.1s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 10.34kB 0.0s done
+#4 DONE 0.1s
+
+#6 [deps 2/9] WORKDIR /app
+#6 CACHED
+
+#7 [deps 3/9] COPY package.json package-lock.json ./
+#7 DONE 0.1s
+
+#8 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#8 DONE 0.1s
+
+#9 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#9 DONE 0.1s
+
+#10 [deps 6/9] COPY services/worker/package.json ./services/worker/
+#10 DONE 0.1s
+
+#11 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#11 DONE 0.1s
+
+#12 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
+#12 DONE 0.1s
+
+#13 [deps 9/9] RUN npm ci
+#13 5.077 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+#13 27.28 
+#13 27.28 added 136 packages, and audited 142 packages in 26s
+#13 27.28 
+#13 27.28 44 packages are looking for funding
+#13 27.28   run `npm fund` for details
+#13 27.34 
+#13 27.34 4 vulnerabilities (3 moderate, 1 high)
+#13 27.34 
+#13 27.34 To address all issues (including breaking changes), run:
+#13 27.34   npm audit fix --force
+#13 27.34 
+#13 27.34 Run `npm audit` for details.
+#13 27.35 npm notice
+#13 27.35 npm notice New major version of npm available! 10.9.8 -> 12.2.0
+#13 27.35 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#13 27.35 npm notice To update run: npm install -g npm@12.2.0
+#13 27.35 npm notice
+#13 DONE 28.7s
+
+#14 [build 1/2] COPY . .
+#14 DONE 0.6s
+
+#15 [prod-deps 1/1] RUN npm prune --omit=dev
+#15 3.976 
+#15 3.976 up to date, audited 84 packages in 3s
+#15 3.976 
+#15 3.976 30 packages are looking for funding
+#15 3.976   run `npm fund` for details
+#15 4.084 
+#15 4.084 2 vulnerabilities (1 moderate, 1 high)
+#15 4.084 
+#15 4.084 To address all issues (including breaking changes), run:
+#15 4.084   npm audit fix --force
+#15 4.084 
+#15 4.084 Run `npm audit` for details.
+#15 DONE 4.2s
+
+#16 [build 2/2] RUN npm run build
+#16 0.716 
+#16 0.716 > n6b-rag-class@0.1.0 build
+#16 0.716 > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+#16 0.716 
+#16 1.164 
+#16 1.164 > @n6b/db@0.1.0 build
+#16 1.164 > tsc -p tsconfig.build.json
+#16 1.164 
+#16 5.984 
+#16 5.984 > @n6b/rag@0.1.0 build
+#16 5.984 > tsc -p tsconfig.build.json
+#16 5.984 
+#16 ...
+
+#17 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 ...
+
+#16 [build 2/2] RUN npm run build
+#16 12.96 
+#16 12.96 > @n6b/worker@0.1.0 build
+#16 12.96 > tsc -p tsconfig.build.json
+#16 12.96 
+#16 ...
+
+#17 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 DONE 12.0s
+
+#16 [build 2/2] RUN npm run build
+#16 20.07 
+#16 20.07 > @n6b/web@0.1.0 build
+#16 20.07 > next build
+#16 20.07 
+#16 21.59 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#16 21.59 This information is used to shape Next.js' roadmap and prioritize features.
+#16 21.59 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#16 21.59 https://nextjs.org/telemetry
+#16 21.59 
+#16 21.83    ▲ Next.js 15.5.27
+#16 21.83 
+#16 22.03    Creating an optimized production build ...
+#16 54.05  ✓ Compiled successfully in 25.5s
+#16 54.07    Linting and checking validity of types ...
+#16 66.77    Collecting page data ...
+#16 76.38    Generating static pages (0/7) ...
+#16 78.74    Generating static pages (1/7) 
+#16 79.43    Generating static pages (3/7) 
+#16 79.43    Generating static pages (5/7) 
+#16 79.43  ✓ Generating static pages (7/7)
+#16 81.00    Finalizing page optimization ...
+#16 81.00    Collecting build traces ...
+#16 96.21 
+#16 96.21 Route (app)                                 Size  First Load JS
+#16 96.21 ┌ ○ /                                      161 B         106 kB
+#16 96.21 ├ ○ /_not-found                            988 B         104 kB
+#16 96.21 ├ ƒ /api/auth/login                        142 B         103 kB
+#16 96.21 ├ ƒ /api/auth/logout                       142 B         103 kB
+#16 96.21 ├ ƒ /api/auth/register                     142 B         103 kB
+#16 96.21 ├ ƒ /api/bots                              142 B         103 kB
+#16 96.21 ├ ƒ /api/bots/[id]/sources                 142 B         103 kB
+#16 96.21 ├ ƒ /api/health                            142 B         103 kB
+#16 96.21 ├ ƒ /api/jobs/[id]                         142 B         103 kB
+#16 96.21 ├ ƒ /api/jobs/[id]/retry                   142 B         103 kB
+#16 96.21 ├ ƒ /cabinet                             3.04 kB         106 kB
+#16 96.21 ├ ○ /login                               1.36 kB         107 kB
+#16 96.21 └ ○ /register                            1.36 kB         107 kB
+#16 96.21 + First Load JS shared by all             103 kB
+#16 96.21   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+#16 96.21   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+#16 96.21   └ other shared chunks (total)          1.92 kB
+#16 96.21 
+#16 96.21 
+#16 96.21 ○  (Static)   prerendered as static content
+#16 96.21 ƒ  (Dynamic)  server-rendered on demand
+#16 96.21 
+#16 DONE 96.5s
+
+#18 [web 4/8] COPY --from=build /app/package.json ./package.json
+#18 DONE 0.4s
+
+#19 [web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next
+#19 DONE 0.6s
+
+#20 [web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public
+#20 DONE 0.1s
+
+#21 [web 7/8] COPY --from=build /app/apps/web/package.json ./apps/web/package.json
+#21 DONE 0.1s
+
+#22 [web 8/8] COPY --from=build /app/packages ./packages
+#22 DONE 0.1s
+
+#23 exporting to image
+#23 exporting layers
+#23 exporting layers 46.7s done
+#23 exporting manifest sha256:949fe11acd6a73260b6e90c12177c24f23e57cd02401c704cb1ddcb7624200c3 0.0s done
+#23 exporting config sha256:5bd591ebb3a6e7d99874235595780f479de1e7b168a7dc9325dce385dd936c57 0.0s done
+#23 exporting attestation manifest sha256:57fc0b6d3570a6311ce4877862451e32d6b5bbbe6a93d381e9ed2ce0e001d49c 0.0s done
+#23 exporting manifest list sha256:b609471d1ebf6235ef17cba0fea174765b59ff61fd14738a63f43b642db24030
+#23 exporting manifest list sha256:b609471d1ebf6235ef17cba0fea174765b59ff61fd14738a63f43b642db24030 0.0s done
+#23 naming to docker.io/library/n6b-f06-pdf-web:20261002 done
+#23 unpacking to docker.io/library/n6b-f06-pdf-web:20261002
+#23 unpacking to docker.io/library/n6b-f06-pdf-web:20261002 14.9s done
+#23 DONE 62.0s
