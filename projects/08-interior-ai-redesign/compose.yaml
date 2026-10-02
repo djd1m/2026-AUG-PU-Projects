@@ -35,7 +35,7 @@ services:
       PORT: 8080
     ports: ["127.0.0.1:${WEB_PORT:-18088}:8080"]
     volumes: ["media:/private"]
-    networks: [private]
+    networks: [private, frontend]
     cpus: 1.0
     mem_limit: 768m
     init: true
@@ -53,3 +53,5 @@ volumes:
 networks:
   private:
     internal: true
+  frontend:
+    driver: bridge
