@@ -116,6 +116,7 @@ Examples сохранены. Первое независимое ревью вы
 Тексты согласия и границы отмены уже исправлены во всех трёх CJM; свежие
 фокусные Chromium1440/390 проверки прошли, runtime JS не менялся. Доказательства:
 `telemetry/p-replicator/20261002T173314Z-n7-replicate-a1/evidence/cjm-copy-browser/`.
-Independent specification validation, product build/integration tests и full
-application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
+Независимая design validation закрыла все6 замечаний. Toolkit создан; vendor1.13.2
+verify составного monorepo-view прошёл с ожидаемым scaffoldhint. F01 начат; product
+build/integration tests и full application E2E ещё ожидаются. Здесь будут добавлены реальные source/build receipts,
 а не переписан planned процесс как будто уже работающий.
