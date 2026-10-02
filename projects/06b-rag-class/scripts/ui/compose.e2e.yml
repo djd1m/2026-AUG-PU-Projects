@@ -16,7 +16,7 @@ services:
     networks: [ui]
   migrate:
     image: ${UI_MIGRATE_IMAGE:?Test migrate image required}
-    env_file: [${UI_ENV_FILE:?Private test env file required}]
+    env_file: ["${UI_ENV_FILE:?Private test env file required}"]
     depends_on:
       db: {condition: service_healthy}
     cpus: 2
@@ -24,7 +24,7 @@ services:
     restart: "no"
   web:
     image: ${UI_WEB_IMAGE:?Test web image required}
-    env_file: [${UI_ENV_FILE:?Private test env file required}]
+    env_file: ["${UI_ENV_FILE:?Private test env file required}"]
     depends_on:
       migrate: {condition: service_completed_successfully}
     cpus: 2
