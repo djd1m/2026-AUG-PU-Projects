@@ -9,6 +9,7 @@
 // части внутри документа схлопываются в одну (иначе второй INSERT упёрся бы в уникальный ключ).
 
 import { createHash } from 'node:crypto';
+import { setImmediate } from 'node:timers/promises';
 import { Tiktoken } from 'js-tiktoken/lite';
 import cl100k from 'js-tiktoken/ranks/cl100k_base';
 
@@ -33,7 +34,7 @@ export interface TextPart {
 }
 
 /** Единица сборки: текст и разделитель ПЕРЕД ним, если единица не первая в части. */
-interface Atom { readonly text: string; readonly sep: string; readonly solo?: boolean }
+interface Atom { readonly text: string; readonly sep: string; readonly solo?: boolean; readonly tokens: number }
 
 const render = (atoms: readonly Atom[]): string => atoms.map((a, i) => (i === 0 ? a.text : a.sep + a.text)).join('');
 
@@ -42,28 +43,45 @@ const render = (atoms: readonly Atom[]): string => atoms.map((a, i) => (i === 0 
  * ≤ limit БЕЗ подсчёта: BPE на сплошной строке без пробелов квадратичен (5000 символов — десятки секунд), а такие строки
  * (base64, склеенные коды) — ровно то, что приходит со страниц. Окна не склеиваются с соседями (solo).
  */
-function byChars(text: string, limit: number): string[] {
-  const cps = Array.from(text);
+function* byChars(text: string, limit: number): Generator<Atom> {
   const size = Math.max(1, Math.floor(limit / 4));
-  const out: string[] = [];
-  for (let i = 0; i < cps.length; i += size) out.push(cps.slice(i, i + size).join(''));
-  return out;
+  let window = '';
+  let points = 0;
+  for (const cp of text) {
+    window += cp;
+    points += 1;
+    if (points < size) continue;
+    const tokens = countTokens(window);
+    if (tokens > limit) throw new Error('предел меньше числа токенов одного символа Unicode');
+    yield { text: window, sep: '', solo: true, tokens };
+    window = '';
+    points = 0;
+  }
+  if (window) yield { text: window, sep: '', solo: true, tokens: countTokens(window) };
 }
 
-const LEVELS: ReadonlyArray<{ split: (s: string) => string[]; sep: string }> = [
-  { split: (s) => s.split(/(?<=[.!?…])\s+/u), sep: ' ' }, // предложения
-  { split: (s) => s.split(/\s+/u), sep: ' ' }, // слова
-];
-
-/** Единица ≤ limit как есть; иначе — следующий уровень дробления. Первый кусок наследует разделитель единицы. */
-function explode(text: string, sep: string, limit: number, level = 0): Atom[] {
+const SEPARATORS = [/(?<=[.!?…])\s+/gu, /\s+/gu];
+// Ни одна BPE-операция не получает целый большой документ/абзац. Разбор крупных единиц ленивый.
+const BPE_WINDOW_CHARS = 4096;
+function* explode(text: string, sep: string, limit: number, level = 0): Generator<Atom> {
   const longRun = new RegExp(`\\S{${Math.floor(limit / 4) + 1},}`, 'u');
-  if (!longRun.test(text) && countTokens(text) <= limit) return [{ text, sep }];
-  const lvl = LEVELS[level];
-  if (!lvl) return byChars(text, limit).map((p, i) => ({ text: p, sep: i === 0 ? sep : '', solo: true }));
-  const pieces = lvl.split(text).filter((p) => p !== '');
-  if (pieces.length <= 1) return explode(text, sep, limit, level + 1);
-  return pieces.flatMap((p, i) => explode(p, i === 0 ? sep : lvl.sep, limit, level + 1));
+  if (text.length <= BPE_WINDOW_CHARS && !longRun.test(text)) {
+    const tokens = countTokens(text);
+    if (tokens <= limit) { yield { text, sep, tokens }; return; }
+  }
+  const separator = SEPARATORS[level];
+  if (!separator) { yield* byChars(text, limit); return; }
+  let start = 0;
+  let first = true;
+  for (const match of text.matchAll(separator)) {
+    const piece = text.slice(start, match.index);
+    if (piece) {
+      yield* explode(piece, first ? sep : ' ', limit, level + 1);
+      first = false;
+    }
+    start = match.index + match[0].length;
+  }
+  if (start < text.length) yield* explode(text.slice(start), first ? sep : ' ', limit, level + 1);
 }
 
 /**
@@ -71,11 +89,12 @@ function explode(text: string, sep: string, limit: number, level = 0): Atom[] {
  * предложения/слова и берём её конец. Хвост, равный всей части, не берётся (перекрытие повторило бы её целиком).
  */
 function overlapTail(cur: readonly Atom[], overlap: number): Atom[] {
+  if (overlap === 0) return [];
   let tail: Atom[] = [];
   for (let i = cur.length - 1; i >= 0; i -= 1) {
     const next = [cur[i]!, ...tail];
     if (countTokens(render(next)) <= overlap) { tail = next; continue; }
-    const pieces = explode(cur[i]!.text, cur[i]!.sep, overlap);
+    const pieces = [...explode(cur[i]!.text, cur[i]!.sep, overlap)];
     for (let j = pieces.length - 1; j >= 0; j -= 1) {
       const more = [pieces[j]!, ...tail];
       if (countTokens(render(more)) > overlap) break;
@@ -90,40 +109,90 @@ function overlapTail(cur: readonly Atom[], overlap: number): Atom[] {
  * Текст документа → части ≤ target токенов с перекрытием ≤ overlap. Пустой текст — пустой список. NUL удаляется
  * (Postgres text его не хранит); прочие символы не трогаются — хэш считается от того, что уйдёт в эмбеддинг.
  */
-export function splitIntoChunks(text: string, target = CHUNK_TARGET_TOKENS, overlap = CHUNK_OVERLAP_TOKENS): TextPart[] {
+function* chunkSteps(text: string, target: number, overlap: number): Generator<TextPart | undefined> {
   if (typeof text !== 'string') throw new Error('текст документа не строка: нарезка невозможна');
   if (!Number.isSafeInteger(target) || target < 1 || !Number.isSafeInteger(overlap) || overlap < 0 || overlap >= target) {
     throw new Error('параметры нарезки непригодны: нужно 0 ≤ перекрытие < предел');
   }
-  const paragraphs = text.replace(/\u0000/g, '').split(/\r?\n/).map((p) => p.trim()).filter((p) => p !== '');
-  const atoms = paragraphs.flatMap((p) => explode(p, '\n', target));
-
-  const rendered: string[] = [];
-  let cur: Atom[] = [];
-  for (const atom of atoms) {
-    if (atom.solo) { // окно сплошной строки — своя часть, без склейки и перекрытия (см. byChars)
-      if (cur.length > 0) rendered.push(render(cur));
-      rendered.push(atom.text);
-      cur = [];
-      continue;
-    }
-    if (cur.length === 0) { cur = [atom]; continue; }
-    const candidate = [...cur, atom];
-    if (countTokens(render(candidate)) <= target) { cur = candidate; continue; }
-    rendered.push(render(cur));
-    const tail = overlapTail(cur, overlap);
-    cur = [...tail, atom];
-    if (countTokens(render(cur)) > target) cur = [atom];
-  }
-  if (cur.length > 0) rendered.push(render(cur));
-
   const seen = new Set<string>();
-  const parts: TextPart[] = [];
-  for (const partText of rendered) {
-    const hash = sha256(partText);
-    if (seen.has(hash)) continue;
+  let ord = 0;
+  const part = (atoms: readonly Atom[]): TextPart | undefined => {
+    const text = render(atoms);
+    const tokens = atoms.length === 1 ? atoms[0]!.tokens : countTokens(text);
+    const hash = sha256(text);
+    if (seen.has(hash)) return undefined;
     seen.add(hash);
-    parts.push({ ord: parts.length, text: partText, tokens: countTokens(partText), sha256: hash });
+    return { ord: ord++, text, tokens, sha256: hash };
+  };
+  let cur: Atom[] = [];
+  let estimate = 0;
+  let chars = 0;
+  const estimated = (atoms: readonly Atom[]) => atoms.reduce((n, a, i) => n + a.tokens + (i ? countTokens(a.sep) : 0), 0);
+  // Сумма — только триггер точной проверки, не доказательство верхней границы BPE.
+  // При переполнении точным поиском выбираем целый префикс и сохраняем ВСЕ оставшиеся единицы.
+  function* drain(final: boolean): Generator<TextPart | undefined> {
+    while (cur.length && (final || estimate > target || chars > BPE_WINDOW_CHARS)) {
+      const exact = countTokens(render(cur));
+      if (exact <= target && chars <= BPE_WINDOW_CHARS) {
+        estimate = exact;
+        if (final) { yield part(cur); cur = []; chars = 0; }
+        break;
+      }
+      let lo = 1;
+      let hi = cur.length - 1;
+      while (lo < hi) {
+        const mid = Math.ceil((lo + hi) / 2);
+        const candidate = render(cur.slice(0, mid));
+        if (candidate.length <= BPE_WINDOW_CHARS && countTokens(candidate) <= target) lo = mid;
+        else hi = mid - 1;
+      }
+      const prefix = cur.slice(0, lo);
+      yield part(prefix);
+      const rest = cur.slice(lo);
+      const tail = overlapTail(prefix, overlap);
+      // Перекрытие не должно вытеснять большую следующую единицу (F-3).
+      cur = countTokens(render([...tail, rest[0]!])) > target ? rest : [...tail, ...rest];
+      estimate = estimated(cur);
+      chars = render(cur).length;
+    }
   }
+  for (const line of text.matchAll(/[^\r\n]+/gu)) {
+    const paragraph = line[0].replace(/\u0000/g, '').trim();
+    if (!paragraph) continue;
+    for (const atom of explode(paragraph, '\n', target)) {
+      if (atom.solo) {
+        yield* drain(true);
+        yield part([atom]);
+        estimate = 0;
+      } else {
+        chars += atom.text.length + (cur.length ? atom.sep.length : 0);
+        estimate += atom.tokens + (cur.length ? countTokens(atom.sep) : 0);
+        cur.push(atom);
+        yield* drain(false);
+      }
+      yield undefined; // контрольная граница даже внутри одного длинного абзаца
+    }
+  }
+  yield* drain(true);
+}
+
+export function splitIntoChunks(text: string, target = CHUNK_TARGET_TOKENS, overlap = CHUNK_OVERLAP_TOKENS): TextPart[] {
+  return [...chunkSteps(text, target, overlap)].filter((p): p is TextPart => p !== undefined);
+}
+
+/** Тот же детерминированный алгоритм; уступаем цикл событий и проверяем аренду в пределах документа. */
+export async function splitIntoChunksAsync(text: string, checkpoint: () => Promise<void>,
+  target = CHUNK_TARGET_TOKENS, overlap = CHUNK_OVERLAP_TOKENS): Promise<TextPart[]> {
+  const parts: TextPart[] = [];
+  let deadline = performance.now() + 10;
+  for (const p of chunkSteps(text, target, overlap)) {
+    if (p) parts.push(p);
+    if (performance.now() < deadline) continue;
+    await setImmediate();
+    await checkpoint();
+    deadline = performance.now() + 10;
+  }
+  await setImmediate();
+  await checkpoint();
   return parts;
 }

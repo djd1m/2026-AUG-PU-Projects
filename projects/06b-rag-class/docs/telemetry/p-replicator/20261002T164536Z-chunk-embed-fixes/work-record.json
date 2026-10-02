@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T164536Z-chunk-embed-fixes",
+    "work_unit_id": "go-chunk-embed-executor",
+    "current_attempt_id": "implement-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T164536Z-chunk-embed-fixes/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T164536Z-chunk-embed-fixes/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "a266555530b158aa3d248d3660ea3be055313436",
+    "current_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/features/chunk-embed/08_review.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "observed_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+    "scope": [
+      "F-1 bounded/cooperative chunking, measured event-loop delay below 30s on validator inputs",
+      "F-2 ceiling/lease checked between paid batches, mutation fails",
+      "F-3 overlap overflow guard mutation fails",
+      "F-4 closed job cannot write without changing fence, mutation fails",
+      "Full typecheck/unit/integration/build pass; fresh independent review; commit and push"
+    ],
+    "exclusions": [
+      "Next roadmap features until correction acceptance",
+      "Deployment and real provider calls"
+    ],
+    "action_limits": [
+      "Only N6b code and evidence in isolated worktree",
+      "No N6 code reuse",
+      "No unrelated containers or shared proxy changes"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-1",
+        "required": true,
+        "description": "F-1 bounded/cooperative chunking, measured event-loop delay below 30s on validator inputs"
+      },
+      {
+        "id": "AC-2",
+        "required": true,
+        "description": "F-2 ceiling/lease checked between paid batches, mutation fails"
+      },
+      {
+        "id": "AC-3",
+        "required": true,
+        "description": "F-3 overlap overflow guard mutation fails"
+      },
+      {
+        "id": "AC-4",
+        "required": true,
+        "description": "F-4 closed job cannot write without changing fence, mutation fails"
+      },
+      {
+        "id": "AC-5",
+        "required": true,
+        "description": "Full typecheck/unit/integration/build pass; fresh independent review; commit and push"
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "19eedeb611eed976a1e153eecc35d233aee598e3",
+        "useful_fragment": "Existing N6b chunking/lease implementation only",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "Bounded correction does not require a donor; N6 reuse prohibited"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable accepted correction duration available; explicit executor attempt budget is 25 minutes, not a forecast",
+      "scope_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "tier": "M",
+      "rationale": "Existing worker behavior and shared event loop affected; preserve limits, lease fences and paid gateway; no new external calls, schema, or public path",
+      "script": {
+        "input": "chunk.ts, embed.ts and their unit/integration tests",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "tier": "M",
+      "rationale": "Existing worker behavior and shared event loop affected; preserve limits, lease fences and paid gateway; no new external calls, schema, or public path",
+      "script": {
+        "input": "chunk.ts, embed.ts and their unit/integration tests",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner explicitly authorized resume, corrections, commits/push and Astra fallback; preserve source contracts and already approved feature scope",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No deployed E2E: isolated local fake-model unit/integration and build only",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "route-1",
+      "status": "completed"
+    },
+    {
+      "id": "implement-1",
+      "status": "active",
+      "reason": "Executor is still running; terminal status not yet available"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "go-chunk-embed-executor",
+      "paths": [
+        {
+          "root": "project",
+          "path": "packages/rag/src/chunk.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/rag/src/index.ts"
+        },
+        {
+          "root": "project",
+          "path": "services/worker/src/embed.ts"
+        },
+        {
+          "root": "project",
+          "path": "packages/rag/tests/unit/chunk.test.ts"
+        },
+        {
+          "root": "project",
+          "path": "services/worker/tests/int/chunk-embed.int.test.ts"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "AC-1",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-2",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-3",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-4",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "AC-5",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "19eedeb611eed976a1e153eecc35d233aee598e3",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

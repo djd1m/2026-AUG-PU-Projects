@@ -7,5 +7,5 @@ export { type AnswerAttempt, type AnswerChannel, minBatchTokens, type PaidCallDe
 export { createLiveGateway, type LiveGatewayOptions } from './live.js';
 export * from './refusal.js';
 // Нарезка и поиск (chunk-embed): нарезку зовёт воркер, поиск — ответ (rag-answer-sandbox).
-export { CHUNK_OVERLAP_TOKENS, CHUNK_TARGET_TOKENS, countTokens, sha256, splitIntoChunks, type TextPart } from './chunk.js';
+export { CHUNK_OVERLAP_TOKENS, CHUNK_TARGET_TOKENS, countTokens, sha256, splitIntoChunks, splitIntoChunksAsync, type TextPart } from './chunk.js';
 export { type ChunkHit, HNSW_EF_SEARCH, SEARCH_TOP_K, searchChunks, vectorLiteral } from './search.js';

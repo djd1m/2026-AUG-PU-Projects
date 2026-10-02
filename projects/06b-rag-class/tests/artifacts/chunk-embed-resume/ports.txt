@@ -1,0 +1,21 @@
+== БД и хранилища не смотрят в интернет ==
+  ❌ не удалось прочитать конфиг (projects/06b-rag-class/docker-compose.yml) — проверка на публикацию БД НЕ выполнена
+     Причина обычно в незаданной переменной; посмотреть: docker compose -f projects/06b-rag-class/docker-compose.yml config
+
+== За reverse-proxy приложение не публикуется ==
+  ❌ конфиг не прочитан — проверка «только прокси наружу» НЕ выполнена
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 3106 свободен
+
+Как чинить (в порядке предпочтения):
+  1. Вынести хостовые порты в .env  ->  ports: ["${WEB_PORT:-3000}:3000"]
+     и задать свободные значения в .env конкретной машины. Compose остаётся общим.
+  2. Если 80/443 заняты чужим reverse-proxy — не публиковать их из этого проекта,
+     а подключить сервис к сети существующего прокси.
+  3. Менять номер ВНУТРИ контейнера не нужно: конфликтует только хостовая часть.
+
+production-check exit=1; production env absent, including PROXY_NETWORK/POSTGRES_PASSWORD and LIMIT variables; check unavailable, not permission failure.
+actual test compose: zero published ports; cpus: {'db': 2, 'tests': 2}
+actual-test-compose exit=0
+NanoCpus=2000000000 Ports={}

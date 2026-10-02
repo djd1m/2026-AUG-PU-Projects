@@ -1,0 +1,37 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ packages/rag/tests/unit/chunk.test.ts (12 tests | 1 failed | 11 skipped) 5920ms
+   ↓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины
+   ↓ splitIntoChunks > пустой и пробельный текст → ни одной части (нечего эмбеддить и оплачивать)
+   ↓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт
+   ↓ splitIntoChunks > английский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт
+   ↓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов
+   ↓ splitIntoChunks > граница: текст ровно 500 токенов — одна часть; 501 токен — две
+   ↓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро
+   ↓ splitIntoChunks > SC-US-017-2: тот же текст — те же хэши (кэш работает); изменённый абзац меняет только свою часть
+   ↓ splitIntoChunks > повторяющиеся абзацы внутри документа схлопываются: хэши уникальны (unique(document_id, text_sha256))
+   ↓ splitIntoChunks > NUL удаляется (Postgres text его не хранит), параметры нарезки проверяются
+   ↓ splitIntoChunks > F-3: короткие абзацы + большая единица: перекрытие сбрасывается, точный cap и покрытие
+   × splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap 5917ms
+     → expected 0 to be greater than 2
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/chunk.test.ts > splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap
+AssertionError: expected 0 to be greater than 2
+ ❯ packages/rag/tests/unit/chunk.test.ts:139:19
+
+    137|     try { parts = await splitIntoChunksAsync(text, async () => { check…
+    138|     finally { clearInterval(timer); }
+    139|     expect(ticks).toBeGreaterThan(2);
+       |                   ^
+    140|     expect(checkpoints).toBeGreaterThan(2);
+    141|     expect(maxLag).toBeLessThan(1000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  20:01:09
+   Duration  6.78s (transform 265ms, setup 0ms, collect 336ms, tests 5.92s, environment 0ms, prepare 159ms)

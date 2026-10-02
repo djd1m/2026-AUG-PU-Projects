@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ services/worker/tests/int/chunk-embed.int.test.ts (15 tests | 1 failed | 14 skipped) 945ms
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > первый прогон: части ≤ 500 токенов записаны с vector(1536), резерв = точная оценка, батчи по размеру
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > резерв = точная оценка js-tiktoken, а не ⌈длина/4⌉: русский текст не проходит под заниженным n
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > SC-US-017-2: переобход без изменений → 0 новых эмбеддингов и 0 списаний, задача «готово»
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > SC-US-017-2: изменённый абзац → эмбеддятся только новые части, устаревшие удаляются
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > FR-n6b-16: embed:account исчерпан → отказ ДО вызова, задача failed с причиной; завтра повтор продолжает
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > частичный прогон: второй батч упёрся в предел — первый сохранён; повтор платит только за остаток
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > FR-n6b-16: embed:global исчерпан → отказ до вызова даже при нетронутом пределе аккаунта
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > конкурентно: два батча одного аккаунта на остатке одного → ровно один вызов, предел не превышен
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > провайдер недоступен → failed «сервис эмбеддингов недоступен», попытка засчитана, частей нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > fence: аренду забрали во время вызова модели → ни одной строки chunk, JobLeaseLost
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobCeilingExceeded после первого платного батча: следующей оплаты нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobLeaseLost после первого платного батча: следующей оплаты нет
+   × chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-4: failed между model call и write без смены fence: JobLeaseLost, частей нет 940ms
+     → promise resolved "{ documents: 1, parts: 1, …(3) }" instead of rejecting
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > извлечение для типа источника не подключено → честный отказ, эмбеддинги не зовутся
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/int/chunk-embed.int.test.ts > chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-4: failed между model call и write без смены fence: JobLeaseLost, частей нет
+AssertionError: promise resolved "{ documents: 1, parts: 1, …(3) }" instead of rejecting
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "calls": 1,[39m
+[31m+   "documents": 1,[39m
+[31m+   "embedded": 1,[39m
+[31m+   "parts": 1,[39m
+[31m+   "removed": 0,[39m
+[2m  }[22m
+
+ ❯ services/worker/tests/int/chunk-embed.int.test.ts:311:66
+    309|     } } as typeof env.gateway;
+    310|     const ctx = { job, signal: new AbortController().signal, progress:…
+    311|     await expect(chunkAndEmbedSource(ctx, { pool: app, gateway })).rej…
+       |                                                                  ^
+    312|     expect(env.provider.calls.embed).toBe(1);
+    313|     expect((await jobRow(owner, job.id)).lease_fence).toBe(job.fence);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  20:01:32
+   Duration  2.56s (transform 679ms, setup 0ms, collect 774ms, tests 945ms, environment 0ms, prepare 140ms)

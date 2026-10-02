@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.7s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 765.24kB 0.1s done
+#4 DONE 0.1s
+
+#5 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#5 CACHED
+
+#6 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#6 CACHED
+
+#7 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#7 CACHED
+
+#8 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#8 CACHED
+
+#9 [ 2/11] WORKDIR /app
+#9 CACHED
+
+#10 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#10 CACHED
+
+#11 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#11 CACHED
+
+#12 [ 3/11] RUN chown node:node /app
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 0.3s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.4s done
+#15 exporting manifest sha256:f02e1c510fced5843b689db2b3a2fc26246685592af65c5f2634218659c464ac 0.0s done
+#15 exporting config sha256:b8f9cc5fbf26bd814f3b4eaf84b80c06899160eae4d37b13849ed20c5b1dc660 0.0s done
+#15 exporting attestation manifest sha256:0c98108474bde6201d1632ee0a3618ef1e7ceb3095c633ef94bf4f2507e25f83
+#15 exporting attestation manifest sha256:0c98108474bde6201d1632ee0a3618ef1e7ceb3095c633ef94bf4f2507e25f83 0.0s done
+#15 exporting manifest list sha256:fdafd89356cde9f6c2b43cc1e1c6c5ca6946cda20c82b29c8861299c83138775 0.0s done
+#15 naming to docker.io/library/n6b-f04-resume-runner:local done
+#15 unpacking to docker.io/library/n6b-f04-resume-runner:local
+#15 unpacking to docker.io/library/n6b-f04-resume-runner:local 0.2s done
+#15 DONE 0.9s

@@ -1,5 +1,6 @@
+import { setInterval, clearInterval } from 'node:timers';
 import { describe, expect, it } from 'vitest';
-import { CHUNK_OVERLAP_TOKENS, CHUNK_TARGET_TOKENS, countTokens, sha256, splitIntoChunks } from '../../src/chunk';
+import { CHUNK_OVERLAP_TOKENS, CHUNK_TARGET_TOKENS, countTokens, sha256, splitIntoChunks, splitIntoChunksAsync } from '../../src/chunk';
 
 // Нарезка (Pseudocode «Chunk and embed» шаги 1–2, FR-n6b-4): ≤ 500 токенов cl100k_base, перекрытие ≤ 80, по абзацам.
 
@@ -107,4 +108,43 @@ describe('splitIntoChunks', () => {
     expect(() => splitIntoChunks('x', 100, 100)).toThrow(/перекрытие/);
     expect(() => splitIntoChunks(42 as unknown as string)).toThrow(/не строка/);
   });
+  it('F-3: короткие абзацы + большая единица: перекрытие сбрасывается, точный cap и покрытие', () => {
+    const short = Array.from({ length: 30 }, (_, i) => `Paragraph ${i}. ${' word'.repeat(12)}`);
+    const large = `LARGE${' atom'.repeat(479)}`;
+    expect(countTokens(large)).toBeGreaterThanOrEqual(450);
+    expect(countTokens(large)).toBeLessThanOrEqual(500);
+    const before = splitIntoChunks(short.join('\n'));
+    const parts = splitIntoChunks([...short, large].join('\n'));
+    for (const p of parts) expect(countTokens(p.text)).toBeLessThanOrEqual(500);
+    expect(parts.at(-1)!.text).toBe(large); // без хвоста и без лишней части из одного хвоста
+    expect(parts).toHaveLength(before.length + 1);
+    for (const paragraph of short) expect(parts.some((p) => p.text.includes(paragraph))).toBe(true);
+  });
+
+  it('F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap', async () => {
+    const text = Array.from({ length: 6000 }, (_, i) => `слово${i}🙂`).join(' ');
+    let ticks = 0;
+    let maxLag = 0;
+    let previous = performance.now();
+    let checkpoints = 0;
+    const timer = setInterval(() => {
+      const now = performance.now();
+      maxLag = Math.max(maxLag, now - previous);
+      previous = now;
+      ticks += 1;
+    }, 5);
+    let parts;
+    try { parts = await splitIntoChunksAsync(text, async () => { checkpoints += 1; }); }
+    finally { clearInterval(timer); }
+    expect(ticks).toBeGreaterThan(2);
+    expect(checkpoints).toBeGreaterThan(2);
+    expect(maxLag).toBeLessThan(1000);
+    expect(parts).toEqual(splitIntoChunks(text));
+    for (const p of parts) {
+      expect(countTokens(p.text)).toBeLessThanOrEqual(500);
+      expect(p.text).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u);
+    }
+    for (let i = 0; i < 6000; i += 1) expect(parts.some((p) => p.text.includes(`слово${i}🙂`))).toBe(true);
+  });
+
 });
