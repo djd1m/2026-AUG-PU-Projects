@@ -106,14 +106,25 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
    await app.campaigns.pause(actors[0]!.tenant_id,campaign.id);
    const third=(await app.mailboxes.save(actors[0]!.tenant_id,raw)).id;
    await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[third]);await poll(third,tickNow);
-   const other=await app.consents.campaign(actors[0]!,{content:'Rotate',recipients:['a@example.test','b@example.test','c@example.test','d@example.test']});
+   const other=await app.consents.campaign(actors[0]!,{content:'Rotate',recipients:['a@example.test','b@example.test','c@example.test','d@example.test','e@example.test','f@example.test','g@example.test']});
    for(const id of [boxes[0]!,third]) await app.consents.act(actors[0]!,id,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:1,campaignId:other.id,recipientFingerprint:other.recipient_fingerprint});
    await eligibilityTransaction(pool,async c=>{await c.query('INSERT INTO suppression(tenant_id,recipient_hash,reason) VALUES($1,$2,$3)',[actors[0]!.tenant_id,recipientDigest('b@example.test',config.recipientHashKey),'local fixture']);});
    await app.campaigns.start(actors[0]!,other.id,{mailboxIds:[boxes[0],third]},tickNow);
+   // Both eligible senders have three queued jobs and spare quotas. Unequal due
+   // times must not defeat rotation once both have history at the same instant.
+   await pool.query('UPDATE send_job SET due_at=$2::timestamptz-CASE WHEN mailbox_id=$3 THEN interval \'2 seconds\' ELSE interval \'1 second\' END WHERE campaign_id=$1',[other.id,tickNow,third]);
    const blocker=await pool.connect();await blocker.query('BEGIN');await blocker.query('SELECT pg_advisory_xact_lock(7,1)');let done=false;
    const pending=app.dispatch.claim(randomUUID(),tickNow).finally(()=>{done=true;});await new Promise(r=>setTimeout(r,50));assert.equal(done,false);
    assert.ok(Number((await pool.query("SELECT count(*) FROM pg_locks WHERE locktype='advisory' AND classid=7 AND objid=1 AND NOT granted")).rows[0].count)>0);
    await blocker.query('ROLLBACK');blocker.release();const rotation1=await pending;const rotation2=await app.dispatch.claim(randomUUID(),tickNow);assert.ok(rotation1 && rotation2);assert.notEqual(rotation1.mailbox_id,rotation2.mailbox_id);
+   const rotations=[rotation1,rotation2];
+   for(let i=0;i<4;i++) {
+    const claim=await app.dispatch.claim(randomUUID(),tickNow);assert.ok(claim);
+    assert.equal(claim.mailbox_id,rotations[i]!.mailbox_id,'equal-clock claims must continue alternating after both senders have history');
+    rotations.push(claim);
+   }
+   assert.equal(new Set(rotations.map(j=>j.id)).size,6);
+   assert.ok(rotations.every(j=>j.claimed_at.getTime()===tickNow.getTime() && j.lease_until.getTime()===tickNow.getTime()+45000));
    assert.equal((await pool.query('SELECT count(*) FROM send_job j JOIN enrollment e ON e.id=j.enrollment_id WHERE j.campaign_id=$1 AND e.recipient_hash=$2',[other.id,recipientDigest('b@example.test',config.recipientHashKey)])).rows[0].count,'0');
    await app.campaigns.pause(actors[0]!.tenant_id,other.id);assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE campaign_id=$1 AND state='claimed'",[other.id])).rows[0].count,'0');
    assert.equal(calls,0);

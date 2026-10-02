@@ -1,0 +1,55 @@
+{
+  "run_id": "20261002T211800Z-f03",
+  "work_unit_id": "n7-f03a-sol-r1",
+  "attempt_id": "correct-a1",
+  "source_revision": "62a4acd18529f14a274c9349147fc3e0ebb73bfa",
+  "started_at": "2026-10-02T21:53:08Z",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Actual model/effort and usage/cost pending host metadata; no self-report substitution"
+  ],
+  "scope": "Only confirmed R1, unchanged AC-A4; additive claim ordering migration, exact PG rotation regression and narrow harness/evidence",
+  "exclusions": [
+    "F03b",
+    "fresh independent review",
+    "all other product behavior"
+  ],
+  "route_plan": {
+    "mechanical_exit": 1,
+    "tier": "L lower bound; inherited XL approval retained",
+    "rationale": "Sequence/column schema change; existing serialization and quota behavior retained; full unit/PG, concurrency and mutation required"
+  },
+  "route_implement": {
+    "mechanical_exit": 1,
+    "rationale": "Same confirmed bounded R1 under explicit owner autonomy; no API/auth/crypto/network/consent change"
+  },
+  "approval": "Current user authorizes exact correction, no agents/no push",
+  "donor": "Existing check-f03a-final.sh minute-boundary harness, source baseline62a4acd; adapt without modifying donor",
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null
+  },
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Only local realPG integration; no browser/product E2E claim"
+  },
+  "ended_at": "2026-10-02T22:01:50.368754+00:00",
+  "elapsed_wall_seconds": 537.045814,
+  "active_wall_seconds": null,
+  "source_snapshot_sha256": "dedad04a44e1dd3fe7f33f6724a966464df9bbf5beff44d4b612d591bee460e5",
+  "image": "sha256:7fd30f7b180b368689e4c988b3aaa6adb9f0f48a872836341a897c38860d6d74",
+  "verdict": "PASS exact R1 correction only",
+  "quality": {
+    "required_gates_passed": true,
+    "independent_review": "pending out_of_scope",
+    "F03b": "pending out_of_scope"
+  },
+  "telemetry_status": "partial"
+}

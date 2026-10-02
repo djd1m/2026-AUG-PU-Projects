@@ -1,0 +1,117 @@
+[
+  {
+    "name": "typecheck-correction",
+    "command": [
+      "taskset",
+      "-c",
+      "0,1",
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:59:32.505996+00:00",
+    "finished_at": "2026-10-02T21:59:36.859408+00:00"
+  },
+  {
+    "name": "lint-correction",
+    "command": [
+      "taskset",
+      "-c",
+      "0,1",
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:59:36.859737+00:00",
+    "finished_at": "2026-10-02T21:59:41.256947+00:00"
+  },
+  {
+    "name": "image-build-correction",
+    "command": [
+      "docker",
+      "build",
+      "--cpu-period",
+      "100000",
+      "--cpu-quota",
+      "200000",
+      "-t",
+      "n7f03a-web",
+      "."
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:59:41.257744+00:00",
+    "finished_at": "2026-10-02T21:59:47.240187+00:00"
+  },
+  {
+    "name": "own-stack-up-correction",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "up",
+      "-d",
+      "--no-build",
+      "--wait"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:59:47.240855+00:00",
+    "finished_at": "2026-10-02T21:59:55.066387+00:00"
+  },
+  {
+    "name": "full-pg-correction",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "run",
+      "test:integration"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T22:00:00.067730+00:00",
+    "finished_at": "2026-10-02T22:00:15.558529+00:00"
+  },
+  {
+    "name": "old-order-mutation-correction",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "exec",
+      "-T",
+      "web",
+      "./node_modules/.bin/tsx",
+      "--test",
+      "tests/dispatch-integration.test.ts"
+    ],
+    "exit_code": 1,
+    "started_at": "2026-10-02T22:00:15.743880+00:00",
+    "finished_at": "2026-10-02T22:00:20.147580+00:00"
+  },
+  {
+    "name": "restored-dispatch-pg-correction",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "exec",
+      "-T",
+      "web",
+      "./node_modules/.bin/tsx",
+      "--test",
+      "tests/dispatch-integration.test.ts"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T22:00:20.310600+00:00",
+    "finished_at": "2026-10-02T22:00:24.664719+00:00"
+  }
+]

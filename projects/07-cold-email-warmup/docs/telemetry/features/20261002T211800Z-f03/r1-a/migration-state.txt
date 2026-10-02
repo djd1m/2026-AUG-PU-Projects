@@ -1,0 +1,7 @@
+docker exec n7f03a-db-1 psql -U n7 -d n7 -Atc <server_version + migration versions>
+16.10 (Debian 16.10-1.pgdg12+1)
+1
+2
+3
+4
+Exit: 0

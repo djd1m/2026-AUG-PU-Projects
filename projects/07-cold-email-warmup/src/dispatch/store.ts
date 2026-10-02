@@ -17,11 +17,11 @@ export class DispatchStore {
       AND s.scope='campaign' AND s.revoked_at IS NULL AND s.scope_version=c.content_version AND s.recipient_fingerprint=c.recipient_fingerprint
       AND NOT EXISTS(SELECT 1 FROM suppression x WHERE x.tenant_id=e.tenant_id AND x.recipient_hash=e.recipient_hash))))
     AND (SELECT count(*) FROM send_job q WHERE q.mailbox_id=m.id AND q.reserved_day=$2::date AND q.state IN ('claimed','submitting','submitted','unknown'))<LEAST(m.daily_limit,m.provider_limit,30)
-    ORDER BY (SELECT max(q.claimed_at) FROM send_job q WHERE q.mailbox_id=m.id) NULLS FIRST,j.due_at,j.id
+    ORDER BY (SELECT max(q.claim_order) FROM send_job q WHERE q.mailbox_id=m.id) NULLS FIRST,j.due_at,j.id
     FOR UPDATE OF j SKIP LOCKED LIMIT 1`,[now,day])).rows;
    const candidate=candidates[0];if(!candidate) return null;
    await client.query('SELECT id FROM mailbox WHERE id=$1 FOR UPDATE',[candidate.mailbox_id]);
-   return (await client.query(`UPDATE send_job SET state='claimed',reserved_day=$2,lease_owner=$3,lease_until=$4::timestamptz+interval '45 seconds',claimed_at=$4 WHERE id=$1 AND state='queued' RETURNING *`,[candidate.id,day,owner,now])).rows[0]??null;
+   return (await client.query(`UPDATE send_job SET state='claimed',reserved_day=$2,lease_owner=$3,lease_until=$4::timestamptz+interval '45 seconds',claimed_at=$4,claim_order=nextval('send_job_claim_order_seq') WHERE id=$1 AND state='queued' RETURNING *`,[candidate.id,day,owner,now])).rows[0]??null;
   });
  }
 }

@@ -1,0 +1,165 @@
+
+> n7-cold-email-warmup@0.1.0 test:integration
+> tsx --test --test-concurrency=1 tests/*-integration.test.ts
+
+TAP version 13
+# Subtest: F01 real PostgreSQL16 HTTP identity acceptance
+    # Subtest: AC-F01-1 migrated readiness serves without exposing secrets
+    ok 1 - AC-F01-1 migrated readiness serves without exposing secrets
+      ---
+      duration_ms: 60.711531
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+    ok 2 - AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+      ---
+      duration_ms: 629.846565
+      type: 'test'
+      ...
+    # Subtest: AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+    ok 3 - AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+      ---
+      duration_ms: 53.444949
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+    ok 4 - AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+      ---
+      duration_ms: 684.065584
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+    ok 5 - AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+      ---
+      duration_ms: 167.09097
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+    ok 6 - AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+      ---
+      duration_ms: 3682.555525
+      type: 'test'
+      ...
+# secret_canary_scan_passed (value suppressed)
+    # Subtest: AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+    ok 7 - AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+      ---
+      duration_ms: 576.892276
+      type: 'test'
+      ...
+    1..7
+ok 1 - F01 real PostgreSQL16 HTTP identity acceptance
+  ---
+  duration_ms: 6697.240141
+  type: 'test'
+  ...
+# Subtest: F03a realPG campaign/pool/shared quota/lease seams without transport
+    # Subtest: A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity
+    ok 1 - A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity
+      ---
+      duration_ms: 491.025065
+      type: 'test'
+      ...
+    # Subtest: A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply
+    ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply
+      ---
+      duration_ms: 226.751461
+      type: 'test'
+      ...
+    # Subtest: A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn
+    ok 3 - A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn
+      ---
+      duration_ms: 954.12836
+      type: 'test'
+      ...
+    # Subtest: A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states
+    ok 4 - A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states
+      ---
+      duration_ms: 465.150506
+      type: 'test'
+      ...
+    # Subtest: A4/A5 common lock first, suppression seam and sender rotation
+    not ok 5 - A4/A5 common lock first, suppression seam and sender rotation
+      ---
+      duration_ms: 243.328677
+      type: 'test'
+      location: '/app/tests/dispatch-integration.test.ts:1:10429'
+      failureType: 'testCodeFailure'
+      error: |-
+        equal-clock claims must continue alternating after both senders have history
+        + actual - expected
+        
+        + '54ec8a62-4b2c-48db-b19f-6c8e8512a15a'
+        - 'c223f91f-d103-4dda-b3d4-633b43663534'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'c223f91f-d103-4dda-b3d4-633b43663534'
+      actual: '54ec8a62-4b2c-48db-b19f-6c8e8512a15a'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/dispatch-integration.test.ts:123:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/dispatch-integration.test.ts:102:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    1..5
+not ok 2 - F03a realPG campaign/pool/shared quota/lease seams without transport
+  ---
+  duration_ms: 3580.028118
+  type: 'test'
+  location: '/app/tests/dispatch-integration.test.ts:1:493'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+    # Subtest: AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+    ok 1 - AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+      ---
+      duration_ms: 706.167712
+      type: 'test'
+      ...
+    # Subtest: AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+    ok 2 - AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+      ---
+      duration_ms: 89.902052
+      type: 'test'
+      ...
+    # Subtest: AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+    ok 3 - AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+      ---
+      duration_ms: 213.249026
+      type: 'test'
+      ...
+    # Subtest: AC5 revoke queue/member atomicity, submitting preserved and real rollback
+    ok 4 - AC5 revoke queue/member atomicity, submitting preserved and real rollback
+      ---
+      duration_ms: 130.512597
+      type: 'test'
+      ...
+    # Subtest: AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+    ok 5 - AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+      ---
+      duration_ms: 484.292823
+      type: 'test'
+      ...
+    1..5
+ok 3 - F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+  ---
+  duration_ms: 2060.323485
+  type: 'test'
+  ...
+1..3
+# tests 20
+# suites 0
+# pass 18
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14311.419849
+
+Exit: 1
