@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T202425Z-rag-answer-sandbox",
+    "work_unit_id": "rag-answer-sandbox-feature",
+    "current_attempt_id": "prepare-plan-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+    "current_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "observed_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "98c2a5feaca4cbe07dcbb95dcbe7fc4411c9e4a6aa65d6745067e732863e713a",
+    "scope": [
+      "Sandbox RAGanswer through existinggateway, verifiedcitations, refusals, firstanswer event and UI"
+    ],
+    "exclusions": [
+      "Publicwidget/demo publication",
+      "Liveprovidercalibration",
+      "N6donor",
+      "Newdependencies/schema"
+    ],
+    "action_limits": [
+      "Author25min/reviewer8min",
+      "CPU2 serializedDocker",
+      "NoDBpublishedports",
+      "Rootownsmanifest/integration"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "ANS-01",
+        "required": true
+      },
+      {
+        "id": "ANS-02",
+        "required": true
+      },
+      {
+        "id": "ANS-03",
+        "required": true
+      },
+      {
+        "id": "ANS-04",
+        "required": true
+      },
+      {
+        "id": "ANS-05",
+        "required": true
+      },
+      {
+        "id": "ANS-06",
+        "required": true
+      },
+      {
+        "id": "ANS-07",
+        "required": true
+      },
+      {
+        "id": "ANS-08",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Existing accepted N6b gateway/search/schema; no external donor",
+        "useful_fragment": "Existing N6b interfaces only",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "No donor needed; N6 prohibited"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable completed answer feature; numeric forecast not fabricated",
+      "scope_revision": "98c2a5feaca4cbe07dcbb95dcbe7fc4411c9e4a6aa65d6745067e732863e713a",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "98c2a5feaca4cbe07dcbb95dcbe7fc4411c9e4a6aa65d6745067e732863e713a",
+      "tier": "M",
+      "rationale": "L web/RAG boundary lowered viafresh-SPARC exception; existing paidgateway invariant unchanged; allMchecks retained",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/route-plan.txt"
+      },
+      "phase": "plan",
+      "script": {
+        "input": "six planned authenticated API/RAG/UI files",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner/root authorized continuous ownroadmap MVP and nextbranchfromacceptedF06",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Planning before source/build; actualE2Epreflight later",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "prepare-plan-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "rag-answer-sandbox-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/rag-answer-sandbox/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "ANS-01",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-02",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-03",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-04",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-05",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-06",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-07",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    },
+    {
+      "ac_id": "ANS-08",
+      "outcome": "unknown",
+      "command": null,
+      "exit_code": null,
+      "source_revision": "b73958285c2186551c2d8e977cda82800e87a02e",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}
