@@ -129,3 +129,10 @@ writers; corrected10unit/14PG и fresh Astra R1 ACCEPT. Первое IPv6 зам
 соединений/писем нет. F03 выполняется двумя ограниченными частями: планирование
 и reservation, затем final submitting/local sink/outcomes. Ни claim, ни test
 verification не означают реальное отправленное письмо.
+
+F03a принят: реальные campaign/preview/start/pause, encrypted enrollments,
+aggregate seed pool и shared quota claim. Исправлена ротация при равном времени
+через монотонный claim_order (migration004). Unit12/realPG20 и независимое
+закрытие R1 подтверждены. Финальная транспортная авторизация и local sink пока
+не реализованы: следующая часть F03b. Production polling пока отсутствует,
+поэтому реальные freshness guards остаются закрыты; тестовые fixtures маркированы.

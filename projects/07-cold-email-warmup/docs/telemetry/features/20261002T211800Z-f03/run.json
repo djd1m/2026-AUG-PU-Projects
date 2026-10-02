@@ -21,7 +21,13 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 0,
-    "ac_total": 12
-  }
+    "ac_met": 6,
+    "ac_total": 12,
+    "confirmed_findings_by_severity": {
+      "P2": 1
+    },
+    "followup_status": "R1 closed; F03b pending"
+  },
+  "current_stage": "F03a accepted; F03b implement next",
+  "intermediate_revision": "5a7748b36ad6efb70e2bb9fa3b94b7ae9e6769ec"
 }
