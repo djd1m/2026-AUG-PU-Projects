@@ -1,0 +1,47 @@
+{
+  "captured_at": "2026-10-02T23:13:03.440817+00:00",
+  "source_revision": "55fffed2ce51a109fe09bc645e36493f6ce3424f",
+  "copied_input_comparisons": {
+    "worktree": {
+      "checked": 46,
+      "mismatches": []
+    },
+    "eef177f1": {
+      "checked": 46,
+      "mismatches": []
+    },
+    "599bf9e8": {
+      "checked": 46,
+      "mismatches": []
+    },
+    "55fffed2ce51a109fe09bc645e36493f6ce3424f": {
+      "checked": 46,
+      "mismatches": []
+    }
+  },
+  "input_inventory_matches": true,
+  "copied_aggregate_matches": true,
+  "build_aggregate_matches": true,
+  "pre_post_inputs_equal": true,
+  "pre_post_build_equal": true,
+  "pre_post_image_equal": true,
+  "image": "sha256:bb93d01382f53a6309d3d1c81389311d9e5195ee1df5d612081cfa8d3eda68a2",
+  "container_image_matches": true,
+  "dockerfile_matches": true,
+  "launch_sha256": "4b0ec2c9b28e86e8714bb53d337a12e95bf4cfe505594eb9dd81e3a38455240e",
+  "spec_sha256": "e215f1e53e89b42dccc35e8835209cba31b055f075212b82599fa61368af42be",
+  "restored_source_hash_matches": true,
+  "runtime_executed": false,
+  "evidence_sha256": {
+    "sol-b-r1-receipt.md": "6368eac1c341356767bb8ede498bb5bd1e9f7e89623f37d36f9831c18a5d6842",
+    "coordinator-b-r1-completion.md": "a927bb0880244016055450e2aae2e727d32efc69c18d90408e483e1db7e3de8a",
+    "sol-b-r1-coordinator-completion.txt": "7e0b4d1b4b46a3096e016fbe6abf0eebfa0b0d249c23a3ae6461fe21bd1410e2",
+    "sol-b-r1-clock-mutation.txt": "15315f510e7cf1ea338b2664b4eb546b234321a42aaf07cf219dc9299fdd9e1e",
+    "sol-b-r1-heavy-attempt1.txt": "af948f8e29f3fe4dbe7dbbc4207e053e710191dfe1b1a56980e1cbc13d48932c",
+    "sol-b-r1-heavy.txt": "4db5d42002cf6f20c11ee61a90953f47d25eeac67d19fff61d037948c9ed2414",
+    "sol-b-r1-heavy-continuation.txt": "938bd29aecb01c100d6ea0132d113d2bf63d28f0bf49e32904d7e8c03341c930",
+    "sol-b-r1-restored-source.txt": "27d4d057b1dd19225e4ce9ed9424b37a6ba301aca0757af82284340bc2181edc",
+    "sol-b-r1-source-image.json": "0f46089576a46ebbabb79b44dda765818589a600378da0ded84f6b0f323a4f3a",
+    "sol-b-r1-pre-mutation-source-image.json": "1e8c2f15ac039172f8943793e97e04a4e7c6ea1b66c698f99f574a62a8e91483"
+  }
+}

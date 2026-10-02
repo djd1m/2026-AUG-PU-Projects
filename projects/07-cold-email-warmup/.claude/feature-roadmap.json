@@ -51,7 +51,7 @@
       "number": 3,
       "name": "Seed pool, sequences and atomic dispatch",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f02-mailboxes-consent"
@@ -66,15 +66,16 @@
         "FR-n7-005"
       ],
       "sprint": "local-mvp",
-      "current_slice": "F03a accepted; F03b final-submit/local sink/outcomes implementing",
-      "slice_a_accepted_revision": "5a7748b36ad6efb70e2bb9fa3b94b7ae9e6769ec"
+      "current_slice": "F03a/F03b accepted",
+      "slice_a_accepted_revision": "5a7748b36ad6efb70e2bb9fa3b94b7ae9e6769ec",
+      "accepted_revision": "55fffed2ce51a109fe09bc645e36493f6ce3424f"
     },
     {
       "id": "f04-reply-suppression",
       "number": 4,
       "name": "IMAP replies, unsubscribe and complaints",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "pending",
       "complexity": "complex",
       "depends_on": [
         "f03-dispatch-pool-campaign"
@@ -136,5 +137,5 @@
       "sprint": "local-mvp"
     }
   ],
-  "last_completed": "f02-mailboxes-consent"
+  "last_completed": "f03-dispatch-pool-campaign"
 }

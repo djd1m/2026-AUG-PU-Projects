@@ -136,3 +136,7 @@ aggregate seed pool и shared quota claim. Исправлена ротация �
 закрытие R1 подтверждены. Финальная транспортная авторизация и local sink пока
 не реализованы: следующая часть F03b. Production polling пока отсутствует,
 поэтому реальные freshness guards остаются закрыты; тестовые fixtures маркированы.
+
+## F03: пул, цепочки и граница отправки приняты
+
+Source55fffed2: 12/12 AC, unit14/fullPG51/restoredB31, независимый Astra ACCEPT. Sol исправил найденные fresh-review гонки часов после lock и ограничение тестовых маршрутов; отдельные квитанции сохраняют bounded failure и последующую механическую проверку. Durable local_test sink и непрерывная квота готовы; реальная отправка отключена. Далее F04 отвечает за реальный durable ingestion fixture/protocol contract, семантическую дедупликацию, unsubscribe и complaints; F05/F06 ещё обязательны.

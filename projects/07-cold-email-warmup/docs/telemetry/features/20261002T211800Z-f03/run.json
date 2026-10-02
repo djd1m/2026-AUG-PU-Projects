@@ -8,26 +8,28 @@
   "profile": "compact-quality-first-v2",
   "policy_version": "compact-quality-first-v2",
   "baseline_revision": "ada9d9b361492777ea8514487fef39546ae60024",
-  "final_revision": null,
+  "final_revision": "55fffed2ce51a109fe09bc645e36493f6ce3424f",
   "spec_sha256": "e215f1e53e89b42dccc35e8835209cba31b055f075212b82599fa61368af42be",
   "started_at": "2026-10-02T21:18:43.690688+00:00",
-  "ended_at": null,
-  "status": "in_progress",
+  "ended_at": "2026-10-02T23:17:28.545981+00:00",
+  "status": "completed",
   "actual_model": null,
   "usage": null,
   "cost": null,
   "missing_data": [
-    "Native coordinator model/usage unavailable; child metadata pending."
+    "Native coordinator actual model/usage and aggregate cost unavailable; measured child contexts/usage in separate runtime JSON, no estimates."
   ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": 6,
+    "required_gates_passed": true,
+    "ac_met": 12,
     "ac_total": 12,
     "confirmed_findings_by_severity": {
-      "P2": 1
+      "P1": 1,
+      "P2": 2
     },
-    "followup_status": "R1 closed; F03b pending"
+    "followup_status": "All three findings closed by fresh independent reviews; F04\u2013F06 pending"
   },
-  "current_stage": "F03a accepted; F03b implement next",
-  "intermediate_revision": "5a7748b36ad6efb70e2bb9fa3b94b7ae9e6769ec"
+  "current_stage": "F03a/F03b accepted; next F04",
+  "intermediate_revision": "5a7748b36ad6efb70e2bb9fa3b94b7ae9e6769ec",
+  "elapsed_ms": 7124855
 }
