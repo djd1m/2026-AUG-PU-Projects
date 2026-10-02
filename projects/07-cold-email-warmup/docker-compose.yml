@@ -1,0 +1,49 @@
+name: n7f01
+services:
+  db:
+    image: postgres:16.10-bookworm
+    cpus: 2
+    environment:
+      POSTGRES_USER: n7
+      POSTGRES_DB: n7
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    expose: ["5432"]
+    volumes: [n7f01_pg:/var/lib/postgresql/data]
+    networks: [n7f01]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n7 -d n7"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  web:
+    build: .
+    cpus: 2
+    environment:
+      SAFETY_POLICY_VERSION: n7-safety-v1
+      SESSION_HMAC_KEY_FILE: /run/secrets/session_key
+      DATABASE_PASSWORD_FILE: /run/secrets/db_password
+      DATABASE_USER: n7
+      DATABASE_NAME: n7
+      DATABASE_HOST: db
+      APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18701}
+      PORT: "3000"
+    secrets: [session_key, db_password]
+    ports: ["127.0.0.1:${N7_WEB_PORT:-18701}:3000"]
+    networks: [n7f01]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/readyz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+secrets:
+  session_key:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f01-runtime}/session-key
+  db_password:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f01-runtime}/db-password
+networks:
+  n7f01: {name: n7f01_network}
+volumes:
+  n7f01_pg: {name: n7f01_pg}
