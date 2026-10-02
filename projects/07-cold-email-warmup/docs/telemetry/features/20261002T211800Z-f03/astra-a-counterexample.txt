@@ -1,0 +1,30 @@
+Source: src/dispatch/store.ts:20,24
+Counterexample: equal now captured by concurrent claims; both mailboxes eligible with spare quota. First claims A/B establish same claimed_at. A has older due backlog.
+Scope: BEGIN READ ONLY, synthetic VALUES only; no product table reads/writes. This isolates the actual ordering expression, not full DispatchStore integration.
+
+BEGIN READ ONLY;
+WITH send_job(id,mailbox_id,claimed_at,due_at,state) AS (VALUES
+ ('a1','A',TIMESTAMPTZ '2026-10-02 12:00:00+00',TIMESTAMPTZ '2026-10-02 11:00:00+00','claimed'),
+ ('b1','B',TIMESTAMPTZ '2026-10-02 12:00:00+00',TIMESTAMPTZ '2026-10-02 11:01:00+00','claimed'),
+ ('a2','A',NULL::timestamptz,TIMESTAMPTZ '2026-10-02 11:00:00+00','queued'),
+ ('a3','A',NULL::timestamptz,TIMESTAMPTZ '2026-10-02 11:00:00+00','queued'),
+ ('b2','B',NULL::timestamptz,TIMESTAMPTZ '2026-10-02 11:01:00+00','queued')),
+mailbox(id) AS (VALUES ('A'),('B'))
+SELECT 'third_claim',j.id,j.mailbox_id FROM send_job j JOIN mailbox m ON m.id=j.mailbox_id WHERE j.state='queued' ORDER BY (SELECT max(q.claimed_at) FROM send_job q WHERE q.mailbox_id=m.id) NULLS FIRST,j.due_at,j.id LIMIT 1;
+WITH send_job(id,mailbox_id,claimed_at,due_at,state) AS (VALUES
+ ('a1','A',TIMESTAMPTZ '2026-10-02 12:00:00+00',TIMESTAMPTZ '2026-10-02 11:00:00+00','claimed'),
+ ('b1','B',TIMESTAMPTZ '2026-10-02 12:00:00+00',TIMESTAMPTZ '2026-10-02 11:01:00+00','claimed'),
+ ('a2','A',TIMESTAMPTZ '2026-10-02 12:00:00+00',TIMESTAMPTZ '2026-10-02 11:00:00+00','claimed'),
+ ('a3','A',NULL::timestamptz,TIMESTAMPTZ '2026-10-02 11:00:00+00','queued'),
+ ('b2','B',NULL::timestamptz,TIMESTAMPTZ '2026-10-02 11:01:00+00','queued')),
+mailbox(id) AS (VALUES ('A'),('B'))
+SELECT 'fourth_claim',j.id,j.mailbox_id FROM send_job j JOIN mailbox m ON m.id=j.mailbox_id WHERE j.state='queued' ORDER BY (SELECT max(q.claimed_at) FROM send_job q WHERE q.mailbox_id=m.id) NULLS FIRST,j.due_at,j.id LIMIT 1;
+ROLLBACK;
+
+OUTPUT
+BEGIN
+third_claim|a2|A
+fourth_claim|a3|A
+ROLLBACK
+
+Exit: 0
