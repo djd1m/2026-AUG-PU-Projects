@@ -32,7 +32,7 @@ describe('SRC-05/06 NFR-n6b-4 real retention cutoffs and locking', () => {
         FROM unnest(ARRAY['30 days 1 microsecond','30 days','29 days']) age RETURNING id`, [a.botId,a.accountId,tag]);
       questions.push(...r.rows.map((v) => v.id));
       for (const [i,scope] of scopes.entries()) await c.query(`INSERT INTO quota_counter(scope,day,used)
-        VALUES($1,(now() AT TIME ZONE 'Europe/Moscow')::date-$2,17)`, [scope,[3,2,0,0][i]]);
+        VALUES($1,(now() AT TIME ZONE 'Europe/Moscow')::date-$2::integer,17)`, [scope,[3,2,0,0][i]]);
     });
     const report = await retainRecentData(input); expect(report.skipped).toBe(false); expect(report.questions).toBeGreaterThanOrEqual(1);
     expect((await owner.query('SELECT id FROM question_log WHERE id=ANY($1::uuid[]) ORDER BY created_at', [questions])).rows.map((r) => r.id))

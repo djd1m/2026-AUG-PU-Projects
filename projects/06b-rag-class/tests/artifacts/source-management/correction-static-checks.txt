@@ -1,0 +1,6 @@
+PASS: --live-retry SQL removal reconstructs exact HEAD product code apart from two comments; post-lock guard retained.
+Original product SHA256=51875c743b7c6043cb6dc4bdaa837f6c4476520d49423c1bd8702cd567c290b6
+packages/db/src/source-management.ts lines=65
+packages/db/tests/int/source-management.test.ts lines=309
+services/worker/tests/int/retention.test.ts lines=69
+scripts/mutate-source-management-guard.mjs lines=44

@@ -1,0 +1,13 @@
+{
+  "status": "failed",
+  "unit_passed": 646,
+  "pg_passed": 308,
+  "pg_failed": 1,
+  "pg_failure": "retention fixture date-$2 inferred wrong type; exact integer cast corrected by separateSol",
+  "build": "completed successfully in rawlog",
+  "origin_mutation": "previouslypassed",
+  "pg_guard_mutation": "semanticdeleted-vsbusy RED thenrestoreGREEN",
+  "stage_exit_json": "missing: container node UID could not write host artifact directory; rawfull log preserves checks",
+  "cleanup": "ownstack/networkremoved",
+  "source_revision": "41d6dedfd027f698ae4d79aa1b61a066d22ced32"
+}

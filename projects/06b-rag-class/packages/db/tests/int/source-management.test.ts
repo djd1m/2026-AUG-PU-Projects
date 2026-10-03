@@ -83,22 +83,103 @@ describe('SRC-01/06 atomic source deletion under tenant privileges', () => {
       expect((await owner.query('SELECT state FROM index_job WHERE id=$1', [a.jobId])).rows[0].state).toBe(state);
     }
   });
+  it('F15-R1 live plus failed retry returns409 without deadlock at retry lock boundary', async () => {
+    for (const state of ['queued', 'running']) {
+      const a = await seedTenant(owner);
+      // Insert both in one statement: the forced sequential DELETE must visit L before F.
+      await owner.query('DELETE FROM index_job WHERE id=$1', [a.jobId]);
+      const failedId = randomUUID();
+      await owner.query(`INSERT INTO index_job(id,source_id,account_id,state) VALUES
+        ($1,$3,$4,$5),($2,$3,$4,'failed')`, [a.jobId,failedId,a.sourceId,a.accountId,state]);
+      expect((await owner.query(`SELECT l.ctid < f.ctid AS live_first FROM index_job l,index_job f
+        WHERE l.id=$1 AND f.id=$2`, [a.jobId,failedId])).rows[0].live_first).toBe(true);
+      const before = await snapshot(a);
+      const retry = await owner.connect();
+      let deletion: Promise<Response> | undefined;
+      let deletePid = 0; let finished = false; let retryResult = '';
+      try {
+        await retry.query('BEGIN');
+        await retry.query("SET LOCAL statement_timeout='8s'");
+        await retry.query("SELECT set_config('app.account_id',$1,true)", [a.accountId]);
+        const retryPid = (await retry.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+        // Owner-only fixture holds precisely the row lock taken by the function's initial SELECT.
+        // Tenant has no job UPDATE grant. The actual retry below still executes as n6b_tenant.
+        expect((await retry.query(`SELECT j.state FROM index_job j
+          WHERE j.id=$1 AND j.account_id=ANY(n6b_account_ids()) FOR UPDATE`, [failedId])).rows[0].state).toBe('failed');
+        await retry.query('SET LOCAL ROLE n6b_tenant');
+        const deleting = intercepted(async (sql, c) => {
+          if (sql !== 'SET LOCAL ROLE n6b_tenant') return;
+          await c.query("SET LOCAL statement_timeout='8s'");
+          await c.query('SET LOCAL enable_indexscan=off');
+          await c.query('SET LOCAL enable_bitmapscan=off');
+          await c.query('SET LOCAL max_parallel_workers_per_gather=0');
+          await c.query('SET LOCAL synchronize_seqscans=off');
+          deletePid = (await c.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+          const plan = (await c.query(`EXPLAIN (FORMAT JSON)
+            DELETE FROM index_job WHERE source_id=$1 RETURNING state`, [a.sourceId])).rows[0]['QUERY PLAN'];
+          expect(plan[0].Plan.Plans[0]['Node Type']).toBe('Seq Scan');
+        });
+        deletion = createSourceManagementHandler('delete', { tenantPool: deleting,
+          publicBaseUrl: 'https://cabinet.test', authenticate: async () => a.accountId, log: () => undefined })(
+          new Request('https://cabinet.test/api/sources/'+a.sourceId, { method: 'DELETE',
+            headers: { origin: 'https://cabinet.test', cookie: `n6b_session=${'a'.repeat(43)}` } }), a.sourceId)
+          .then((response) => { finished = true; return response; });
+        const deadline = Date.now()+5000; let waitingOnFailed = false;
+        while (!finished && Date.now()<deadline) {
+          if (deletePid) {
+            const blockers = (await owner.query('SELECT pg_blocking_pids($1) AS pids', [deletePid])).rows[0].pids as number[];
+            if (blockers.includes(retryPid)) { waitingOnFailed = true; break; }
+          }
+          await new Promise((r) => setTimeout(r,10));
+        }
+        expect(finished || waitingOnFailed, 'deletion must finish or reach the verified failed-row wait').toBe(true);
+        if (waitingOnFailed) {
+          // Prove DELETE already owns L; NOWAIT failure is local to this autocommit probe.
+          await expect(owner.query('SELECT id FROM index_job WHERE id=$1 FOR KEY SHARE NOWAIT', [a.jobId]))
+            .rejects.toMatchObject({ code: '55P03' });
+          console.log('F15-R1 verified DELETE owns L and waits on retry-held F');
+        }
+        try {
+          retryResult = (await retry.query('SELECT n6b_retry_job($1) AS result', [failedId])).rows[0].result as string;
+          await retry.query('COMMIT');
+        } catch (error) {
+          retryResult = (error as { code?: string }).code ?? 'unknown-error';
+          await retry.query('ROLLBACK');
+        }
+        const response = await deletion;
+        // Fixed oracle: either deadlock victim is a domain failure (503 or 40P01), never a pass.
+        expect({ deleteStatus: response.status, retryResult }).toEqual({ deleteStatus: 409, retryResult: 'source-busy' });
+        expect(await response.json()).toEqual({ error: { code: 'source_busy', message: 'дождитесь окончания индексации' } });
+        expect(await snapshot(a)).toEqual(before);
+        expect((await owner.query('SELECT state FROM index_job WHERE id=$1', [a.jobId])).rows[0].state).toBe(state);
+        expect((await owner.query('SELECT state FROM index_job WHERE id=$1', [failedId])).rows[0].state).toBe('failed');
+      } finally {
+        await retry.query('ROLLBACK'); retry.release();
+        if (deletion) await deletion;
+      }
+    }
+  });
   it('worker holds job FOR SHARE then saves document: source lock permits FK check, no deadlock and atomic busy', async () => {
     const a = await seedTenant(owner);
     await owner.query("UPDATE index_job SET state='running' WHERE id=$1", [a.jobId]);
     const writer = await service.connect(); let deletion: Promise<unknown> | undefined;
+    const entered = deferred(); const release = deferred();
+    const deleting = intercepted(async (sql) => {
+      if (sql.startsWith('SELECT id FROM source')) { entered.resolve(); await release.promise; }
+    });
     try {
       await writer.query('BEGIN'); await writer.query('SET LOCAL ROLE n6b_service');
       await writer.query('SELECT id FROM index_job WHERE id=$1 FOR SHARE', [a.jobId]);
-      deletion = deleteSource(tenant, a.accountId, a.sourceId);
-      await waitForLock('DELETE FROM index_job WHERE source_id%');
+      deletion = deleteSource(deleting, a.accountId, a.sourceId);
+      await entered.promise;
       await writer.query("SET LOCAL statement_timeout='3s'");
       await writer.query(`INSERT INTO document(source_id,account_id,locator_url,title,text,content_sha256)
         VALUES($1,$2,'https://example.test/worker','worker','worker text','worker hash')`, [a.sourceId,a.accountId]);
       await writer.query('COMMIT');
+      release.resolve();
       expect(await deletion).toBe('source-busy');
       expect(await snapshot(a)).toEqual({ sources: 1, files: 1, documents: 2, chunks: 1, jobs: 1 });
-    } finally { await writer.query('ROLLBACK'); writer.release(); if (deletion) await deletion; }
+    } finally { release.resolve(); await writer.query('ROLLBACK'); writer.release(); if (deletion) await deletion; }
   });
   it('failure after child deletion rolls back source, file, document, chunks and jobs', async () => {
     const a = await seedTenant(owner); await terminal(a); const before = await snapshot(a);

@@ -13,6 +13,10 @@ export async function deleteSource(pool: Pool, accountId: string, sourceId: stri
       // A stronger source lock could deadlock a worker that holds its job FOR SHARE while saving a document.
       const source = await c.query('SELECT id FROM source WHERE id = $1 FOR NO KEY UPDATE', [sourceId]);
       if (source.rowCount !== 1) return 'not-found';
+      // Reject existing live work before DELETE can wait on a failed retry while holding the live row.
+      // This read is only an early exit: a retry can race it, so the RETURNING guard remains mandatory.
+      const live = await c.query("SELECT id FROM index_job WHERE source_id = $1 AND state IN ('queued', 'running')", [sourceId]);
+      if (live.rowCount) throw new SourceBusy();
       // RETURNING sees a concurrent failed→queued retry after waiting. Throw rolls back even tentative deletes.
       const jobs = await c.query<{ state: string }>('DELETE FROM index_job WHERE source_id = $1 RETURNING state', [sourceId]);
       if (jobs.rows.some((j) => j.state === 'queued' || j.state === 'running')) throw new SourceBusy();

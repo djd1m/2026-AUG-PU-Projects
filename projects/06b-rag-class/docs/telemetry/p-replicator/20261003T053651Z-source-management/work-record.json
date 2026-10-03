@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261003T053651Z-source-management",
     "work_unit_id": "source-management-feature",
-    "current_attempt_id": "implementation-1"
+    "current_attempt_id": "full-regression-2"
   },
   "telemetry": {
     "run": {
@@ -166,6 +166,22 @@
     {
       "id": "implementation-1",
       "status": "completed"
+    },
+    {
+      "id": "full-regression-1",
+      "status": "failed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
+    },
+    {
+      "id": "correction-1",
+      "status": "completed"
+    },
+    {
+      "id": "full-regression-2",
+      "status": "active"
     }
   ],
   "work_units": [
