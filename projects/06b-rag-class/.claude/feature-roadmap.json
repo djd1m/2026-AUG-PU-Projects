@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены13/16 фич до studio-subaccounts включительно. Следующий handover с обязательствами F13 accountlock ordering/family attribution.",
+    "state": "Выполнены14/16 фич до handover включительно. Следующий source-management.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -573,7 +573,7 @@
       "name": "Передача аккаунта клиенту студии",
       "description": "Handover to client: одноразовый токен (хэш), приём задаёт e-mail и пароль, занятый e-mail → 409 без расхода токена, keep_studio_access решает клиент; боты, public_id и код вставки не меняются. Смена границы владения и RLS — тир XL, остановка на плане.",
       "priority": "high",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "XL",
       "depends_on": [
@@ -602,7 +602,9 @@
         "apps/web/src/app/api/studio/clients/[id]/handover/route.ts",
         "apps/web/src/app/handover/[token]/page.tsx"
       ],
-      "referral_integration_obligation": "Reuse resolveReferralBot in trusted creation transaction; settle and test family membership ordering vs concurrent handover, see badge-referral/08_review.md"
+      "referral_integration_obligation": "Reuse resolveReferralBot in trusted creation transaction; settle and test family membership ordering vs concurrent handover, see badge-referral/08_review.md",
+      "acceptance_revision": "edf7d770f021831d115d347e1532cea102e1c098",
+      "acceptance_evidence": "docs/features/handover/05_completion.md"
     },
     {
       "id": "source-management",
@@ -610,7 +612,7 @@
       "name": "Управление источниками и сроки хранения",
       "description": "Удаление источника каскадом (при живой задаче 409), уборщик question_log 30 дней и quota_counter, счётчик «не знаю» за 7 дней на экране бота — только числа.",
       "priority": "high",
-      "status": "blocked",
+      "status": "next",
       "complexity": "medium",
       "tier": "M",
       "depends_on": [
@@ -680,5 +682,5 @@
       ]
     }
   ],
-  "last_completed": "studio-subaccounts"
+  "last_completed": "handover"
 }

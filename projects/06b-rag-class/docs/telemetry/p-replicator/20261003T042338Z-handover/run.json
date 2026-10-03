@@ -12,26 +12,56 @@
   "feature": "handover",
   "tier": "XL ownership boundary; continuous owner authorization applies",
   "started_at": "2026-10-03T04:23:38.286004+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T05:34:06.731434+00:00",
+  "status": "completed",
   "baseline_revision": "c213679dac4e8eff62a62feae82b81e515847324",
-  "final_revision": null,
+  "final_revision": "edf7d770f021831d115d347e1532cea102e1c098",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "Atomic token use and new account credentials/session",
     "Tenant boundary preserves bot ownership/public_id",
     "F13 family attribution and deterministic account locks"
   ],
-  "quality": {},
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "source_review_defects_closed": 1,
+    "product_defects_found": 0,
+    "failed_native_terminal_handoffs": 2,
+    "ui_preflight_failures_closed": 1,
+    "publicrelease_clearance": false
+  },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 4228445,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 4682069,
+      "cached_input_tokens": 4251008,
+      "output_tokens": 66633,
+      "reasoning_output_tokens": 9051,
+      "total_tokens": 4748702
+    },
+    "measured_cli_usage_only_note": "5 cumulative native snapshots once each; plan1/review2 timedout last-exposed counters may omit unfinished generation; subtotal not exact billable cost"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actual model/usage/cost unavailable",
-    "Pre-record worktree preparation and roadmap context read unmeasured"
+    "Pre-record worktree preparation and roadmap context read unmeasured",
+    "Plan1/review2 final native receipts unavailable after timeout; saved source outputs and interruption evidence preserved"
+  ],
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261003T042338Z-handover/evidence/delivery-1-receipt.md",
+    "tests/artifacts/handover/final-checks-summary.json",
+    "tests/artifacts/handover/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261003T042338Z-handover/evidence/correction-1-native.json",
+    "docs/telemetry/p-replicator/20261003T042338Z-handover/evidence/implementation-1-native.json",
+    "docs/telemetry/p-replicator/20261003T042338Z-handover/evidence/plan-1-native.json",
+    "docs/telemetry/p-replicator/20261003T042338Z-handover/evidence/review-1-native.json",
+    "docs/telemetry/p-replicator/20261003T042338Z-handover/evidence/review-2-native.json"
   ]
 }
