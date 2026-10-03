@@ -1,0 +1,38 @@
+{
+  "kind": "replicate-send-cas",
+  "source_path": "web/provider-submissions.js",
+  "test_path": "tests/replicate-send-cas.integration.test.js",
+  "source_sha256": "f3c0330adfa05a010ac07e731ac097cc9fe9f1d36aebe79195cab94ecae84590",
+  "test_sha256": "3e7238ef1d259ea01ebf415d416fd92f76dcea58ff5201a120929b57cc6acfb3",
+  "runner_sha256": "f0354cb1a9a4db2eefe1990798da0ade8e3deaf27e218cda5f2f56a40a8763d0",
+  "started_at": "2026-10-03T14:36:36.123Z",
+  "runs": {
+    "baseline": {
+      "status": 0,
+      "signal": null,
+      "error_code": null,
+      "log_sha256": "8f0dc0f918fdf30c443a2c122d389cb8ecbc9c501fa815f5728a8c57d7cfd53e"
+    },
+    "mutant": {
+      "status": 1,
+      "signal": null,
+      "error_code": null,
+      "log_sha256": "72689b877885e4c6beb73333fb831521dd1796c6a4deff6ceda9fabb56c9217e"
+    },
+    "restored": {
+      "status": 0,
+      "signal": null,
+      "error_code": null,
+      "log_sha256": "11a68535de865caf867d9a43ed2d4c83c7957464681760b32d18c3509019398b"
+    }
+  },
+  "verdict": "detected",
+  "mutant_sha256": "a43168de591d71d7a54e860fe2a64a1dc92c3143e802183d3a7a6f9158944582",
+  "targeted_red": true,
+  "restored_source_sha256": "f3c0330adfa05a010ac07e731ac097cc9fe9f1d36aebe79195cab94ecae84590",
+  "restored_test_sha256": "3e7238ef1d259ea01ebf415d416fd92f76dcea58ff5201a120929b57cc6acfb3",
+  "restored_runner_sha256": "f0354cb1a9a4db2eefe1990798da0ade8e3deaf27e218cda5f2f56a40a8763d0",
+  "restored_green": true,
+  "identical": true,
+  "finished_at": "2026-10-03T14:36:44.086Z"
+}

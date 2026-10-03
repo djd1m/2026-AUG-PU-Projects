@@ -1,0 +1,42 @@
+{
+  "started_at": "2026-10-03T14:36:24.817979+00:00",
+  "finished_at": "2026-10-03T14:36:45.573659+00:00",
+  "elapsed_seconds": 20.755693039041944,
+  "source_revision": "346d3364e3a6814f4eca10288aa303d8accdeacb",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.6476683280197904,
+      "log": "replicate-i6a-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 6.698645630967803,
+      "log": "replicate-i6a-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.4495296370005235,
+      "log": "replicate-i6a-pg-binding.log"
+    },
+    {
+      "name": "send-cas-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 9.865745772025548,
+      "log": "replicate-i6a-pg-send-cas-pg16.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 1.0855840080184862,
+      "log": "replicate-i6a-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 0
+}
