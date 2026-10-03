@@ -12,7 +12,7 @@
   "started_at": "2026-10-03T02:41:50.928106+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "A accepted after R1 closure; B actual browser/performance next",
+  "current_stage": "B actual browser blocked by native fetch receiver; bounded correction next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -28,5 +28,6 @@
   "review_a_runtime": "astra-a-runtime.json",
   "author_a_r1_runtime": "sol-a-r1-runtime.json",
   "author_a_r1_delivery_runtime": "sol-a-r1-delivery-runtime.json",
-  "review_a_r1_attempts": "review-a-r1-attempts.json"
+  "review_a_r1_attempts": "review-a-r1-attempts.json",
+  "author_b_runtime": "sol-b-runtime.json"
 }
