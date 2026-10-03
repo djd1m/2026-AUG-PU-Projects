@@ -1,0 +1,37 @@
+{
+  "observed_at": "2026-10-03T09:31:13.030820+00:00",
+  "scope": "only four accepted disposable N7 fixture stacks, no source/screens/evidence/sharedimages removed; finalF06stand retained",
+  "disk_free_before": 1089609728,
+  "disk_free_after": 1363308544,
+  "bytes_reclaimed": 273698816,
+  "operations": [
+    {
+      "project": "n7f04a",
+      "removed_containers": 2,
+      "removed_networks": 1,
+      "test_volume": "n7f04a_pg",
+      "volume_remove_exit": 0
+    },
+    {
+      "project": "n7f04b",
+      "removed_containers": 2,
+      "removed_networks": 1,
+      "test_volume": "n7f04b_pg",
+      "volume_remove_exit": 0
+    },
+    {
+      "project": "n7f05a",
+      "removed_containers": 2,
+      "removed_networks": 1,
+      "test_volume": "n7f05a_pg",
+      "volume_remove_exit": 0
+    },
+    {
+      "project": "n7f05b",
+      "removed_containers": 2,
+      "removed_networks": 1,
+      "test_volume": "n7f05b_pg",
+      "volume_remove_exit": 0
+    }
+  ]
+}
