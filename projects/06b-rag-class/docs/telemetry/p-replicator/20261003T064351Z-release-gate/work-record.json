@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T064351Z-release-gate",
+    "work_unit_id": "release-gate-feature",
+    "current_attempt_id": "implementation-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "58b49da642298d991679241ce26c508b22392aee",
+    "current_revision": "58b49da642298d991679241ce26c508b22392aee",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "58b49da642298d991679241ce26c508b22392aee",
+      "observed_revision": "58b49da642298d991679241ce26c508b22392aee",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "a95f6eb4f0dd69aeac756d23b7da63e84343db11bfc0cd41e16bca56105a6bc2",
+    "scope": [
+      "SC0064 live30questions",
+      "Release CJM and existing contract evidence",
+      "Predeployment readiness without publicdeployment"
+    ],
+    "exclusions": [
+      "Schema/grants/dependencies unless concrete approvedneed",
+      "Publicdeployment",
+      "Donors",
+      "Transfers into existingaccounts"
+    ],
+    "action_limits": [
+      "Sol high25min offline implementation",
+      "Fresh Astra medium8min",
+      "No livecalls/secretreads/deploy by author"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "REL-01",
+        "required": true
+      },
+      {
+        "id": "REL-02",
+        "required": true
+      },
+      {
+        "id": "REL-03",
+        "required": true
+      },
+      {
+        "id": "REL-04",
+        "required": true
+      },
+      {
+        "id": "REL-05",
+        "required": true
+      },
+      {
+        "id": "REL-06",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Accepted own N6b foundation/F10/F12",
+        "useful_fragment": "Existing RLS and referral/publication/job/answer seams",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "External donors unnecessary, N6 forbidden"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable ownership-boundary feature",
+      "scope_revision": "a95f6eb4f0dd69aeac756d23b7da63e84343db11bfc0cd41e16bca56105a6bc2",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "a95f6eb4f0dd69aeac756d23b7da63e84343db11bfc0cd41e16bca56105a6bc2",
+      "tier": "M",
+      "rationale": "Release validation reuses existing paidgateway; actual livecalls/deploy separately gated, fullmandatorychecks",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/route-plan.txt"
+      },
+      "script": {
+        "input": "Explicit calibration/CJM/dataset paths",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "a95f6eb4f0dd69aeac756d23b7da63e84343db11bfc0cd41e16bca56105a6bc2",
+      "tier": "M",
+      "rationale": "Existing paidgateway validation only, live/stand gates explicit",
+      "evidence": {
+        "root": "project",
+        "path": "docs/features/release-gate/02_validation.md"
+      },
+      "script": {
+        "input": "Explicit scripts and calibrationfixture paths",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Existing authorization covers local implementation and validation preparation; actual live provider credentials and publicdeployment remain separate external gates",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Offline release-tool preparation; no livecall or E2E yet",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "release-gate-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/release-gate/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null,
+  "ownership": []
+}

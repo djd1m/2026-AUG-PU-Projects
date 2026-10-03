@@ -1,0 +1,12 @@
+Prerequisite workspace builds: npm run build --workspace @n6b/db and @n6b/rag completed exit0; unchanged full build not repeated.
+COMMAND node --import tsx scripts/calibrate.ts
+NOT_EXECUTED: explicit live/seed gate or required configuration missing/invalid. No paid call.
+EXIT 2; EXPECTED 2
+COMMAND node --import tsx scripts/check-cjm.ts
+NOT_EXECUTED: explicit issued base, grant, foreign origin, fixed source/question/evidence, owner DB and fresh report required.
+EXIT 2; EXPECTED 2
+COMMAND bash scripts/check-cjm.sh
+NOT_EXECUTED: usage: bash scripts/check-cjm.sh <explicitBaseURL>
+EXIT 2; EXPECTED 2
+COMMAND bash -n scripts/check-cjm.sh
+EXIT 0; EXPECTED 0

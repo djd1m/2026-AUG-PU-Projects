@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class
+
+stderr | packages/rag/tests/unit/release-gate.test.ts > F16 REL-02 budget and paid boundary > missing live gate and fake mode refuse before runtime
+NOT_EXECUTED: explicit live/seed gate or required configuration missing/invalid. No paid call.
+
+stderr | packages/rag/tests/unit/release-gate.test.ts > F16 REL-04 CJM offline protocol boundary > missing prerequisites exit2 without requests
+NOT_EXECUTED: explicit issued base, grant, foreign origin, fixed source/question/evidence, owner DB and fresh report required.
+
+ ✓ packages/rag/tests/unit/release-gate.test.ts (37 tests) 772ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 frozen HTML contains every exact corpus paragraph; evidence is present  672ms
+
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+   Start at  07:05:47
+   Duration  2.88s (transform 870ms, setup 0ms, collect 1.42s, tests 772ms, environment 0ms, prepare 235ms)
+
