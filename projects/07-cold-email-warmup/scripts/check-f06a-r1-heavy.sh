@@ -7,13 +7,15 @@ export N7_DISPATCH_MODE=local_test N7_POLL_MODE=local_test N7_BILLING_MODE=local
 test -s "$N7_RUNTIME_DIR/session-key"
 test -s "$N7_RUNTIME_DIR/db-password"
 cat /tmp/n7-f06a-r1-run/control.md
-bash ../../scripts/check-port-conflicts.sh .
 test "$(df -Pk . | awk 'NR==2 {print $4}')" -ge 1500000
 test "$(awk '/MemAvailable:/ {print $2}' /proc/meminfo)" -ge 2000000
 exec 9>/tmp/codex-heavy-build.lock
 flock -n 9
 trap 'date -u +"HEAVY_RELEASED %Y-%m-%dT%H:%M:%SZ" >> /tmp/n7-f06a-r1-run/progress.md; flock -u 9' EXIT
 date -u +"HEAVY_ACQUIRED %Y-%m-%dT%H:%M:%SZ" >> /tmp/n7-f06a-r1-run/progress.md
+# The already verified own web holds 18709; stop only that service before the mandatory port check.
+docker compose -p n7f06a stop web
+bash ../../scripts/check-port-conflicts.sh .
 for gate in typecheck lint build test; do
   set +e
   npm run "$gate" > "docs/telemetry/features/20261003T023900Z-f06/sol-a-r1-$gate.log" 2>&1
