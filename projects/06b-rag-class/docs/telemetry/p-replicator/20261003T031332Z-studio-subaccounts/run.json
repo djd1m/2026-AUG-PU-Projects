@@ -12,26 +12,53 @@
   "feature": "studio-subaccounts",
   "tier": "M (existing approved studio RLS matrix; no schema/grant changes)",
   "started_at": "2026-10-03T03:13:32.514385+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T04:19:50.267986+00:00",
+  "status": "completed",
   "baseline_revision": "84cd6edad498ef040794a8a95443659592927269",
-  "final_revision": null,
+  "final_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "Existing studio RLS matrix used with distinct actor/target owner",
     "Atomic five-client cap",
     "Family referral locking vs handover"
   ],
-  "quality": {},
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "source_review_defects": 0,
+    "runtime_fixture_defects": 2,
+    "actual_ui_product_defects_closed": 1,
+    "publicrelease_clearance": false
+  },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3977754,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 4333216,
+      "cached_input_tokens": 3984256,
+      "output_tokens": 51368,
+      "reasoning_output_tokens": 9228,
+      "total_tokens": 4384584
+    },
+    "measured_cli_usage_only_note": "4 final cumulative native snapshots; cached/reasoning subsets; coordinator/cost unknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actual model/usage/cost unavailable",
     "Pre-record worktree preparation and roadmap context read unmeasured"
+  ],
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/delivery-1-receipt.md",
+    "tests/artifacts/studio-subaccounts/final-checks-summary.json",
+    "tests/artifacts/studio-subaccounts/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/correction-1-native.json",
+    "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/implementation-1-native.json",
+    "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/review-1-native.json",
+    "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/review-2-native.json"
   ]
 }

@@ -1,0 +1,62 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-studio-subaccounts/projects/06b-rag-class
+
+ ✓ apps/web/tests/unit/studio-clients-ui.test.ts (2 tests) 17ms
+ ❯ apps/web/tests/unit/studio-handler.test.ts (8 tests | 2 failed) 70ms
+   × STU-01: authenticated same-origin child creation boundary > SC-US-013-1: Next bodyless POST with an empty readable stream creates a client 28ms
+     → expected 422 to be 201 // Object.is equality
+   × STU-01: authenticated same-origin child creation boundary > empty streamed POST retains origin, session and studio authority checks 4ms
+     → expected 422 to be 403 // Object.is equality
+   ✓ STU-01: authenticated same-origin child creation boundary > nonempty streamed POST is bounded by actual bytes and still requires a JSON object 13ms
+   ✓ STU-01: authenticated same-origin child creation boundary > STU-01 origin guard refuses absent/foreign/null before authentication or creation 2ms
+   ✓ STU-01: authenticated same-origin child creation boundary > missing/invalid/expired session refuses creation 2ms
+   ✓ STU-01: authenticated same-origin child creation boundary > STU-06 body authority/referral ignored; only validated cookie and authenticated actor passed 10ms
+   ✓ STU-01: authenticated same-origin child creation boundary > request bytes bounded and invalid envelopes rejected before DB 4ms
+   ✓ STU-01: authenticated same-origin child creation boundary > SC-US-013-2/3: exact cap message, forbidden and safe failure 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/studio-handler.test.ts > STU-01: authenticated same-origin child creation boundary > SC-US-013-1: Next bodyless POST with an empty readable stream creates a client
+AssertionError: expected 422 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 422
+
+ ❯ apps/web/tests/unit/studio-handler.test.ts:35:31
+     33|       expect(request.body).not.toBeNull(); expect(request.headers.get(…
+     34|       const response = await handler(request);
+     35|       expect(response.status).toBe(201);
+       |                               ^
+     36|       expect(await response.json()).toEqual({ data: { account_id: CHIL…
+     37|       expect(mocks.create).toHaveBeenLastCalledWith(pool, ACTOR, null);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  apps/web/tests/unit/studio-handler.test.ts > STU-01: authenticated same-origin child creation boundary > empty streamed POST retains origin, session and studio authority checks
+AssertionError: expected 422 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 422
+
+ ❯ apps/web/tests/unit/studio-handler.test.ts:45:54
+     43|     expect(mocks.create).not.toHaveBeenCalled();
+     44|     mocks.create.mockResolvedValue('forbidden');
+     45|     expect((await handler(streamedPost([]))).status).toBe(403);
+       |                                                      ^
+     46|   });
+     47|   it('nonempty streamed POST is bounded by actual bytes and still requ…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 8 passed (10)
+   Start at  04:03:23
+   Duration  1.50s (transform 732ms, setup 0ms, collect 1.12s, tests 87ms, environment 1ms, prepare 342ms)
+

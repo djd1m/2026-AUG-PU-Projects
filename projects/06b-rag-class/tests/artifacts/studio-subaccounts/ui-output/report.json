@@ -1,0 +1,227 @@
+{
+  "started_at": "2026-10-03T04:18:35.288Z",
+  "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+  "image": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2",
+  "source_snapshot_sha256": "dd55491ba57d829f51f15a1b2a6c6ffb2b055151d852986d54afb53327085b02",
+  "binding": "Production Next auth/cabinet/studio/bot/publication, real PostgreSQL. Disposable fixture promotes separately registered accounts to existing studio kind and observes/revokes DB rows; no intercepted product requests, no provider calls, no worker indexing claim.",
+  "checks": [
+    {
+      "width": 1440,
+      "email": "studio-ui-1440-84ebd18c-8721-4baa-8759-ac1c829746d1@example.test",
+      "actor": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+      "child": "83f67da9-6a6b-4fde-abcb-bb97743211fe",
+      "bot_id": "3da78e6d-2a53-4ed1-8bb9-eb7c4b2daa68",
+      "ordinary403": true,
+      "created201": true,
+      "bot202": true,
+      "published200": true,
+      "cap409": true,
+      "foreign404": true,
+      "revoked404": true,
+      "no_child_session": true,
+      "no_overflow": true,
+      "js_errors": [],
+      "db": {
+        "actor": {
+          "id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+          "kind": "studio",
+          "email": "studio-ui-1440-84ebd18c-8721-4baa-8759-ac1c829746d1@example.test"
+        },
+        "children": [
+          {
+            "id": "497b4637-faef-4f9b-9f86-29ced8bc5fc8",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "66acb1e8-f72a-4209-a663-f3a9baf7214b",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "83f67da9-6a6b-4fde-abcb-bb97743211fe",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "c0445411-bf70-4f05-92cf-6a9b0c157453",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "cb943803-6552-42ba-bb63-db771862a035",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          }
+        ],
+        "bots": [
+          {
+            "id": "3da78e6d-2a53-4ed1-8bb9-eb7c4b2daa68",
+            "account_id": "83f67da9-6a6b-4fde-abcb-bb97743211fe",
+            "name": "Клиентский бот 1440",
+            "published": true,
+            "contact": "client@example.test"
+          }
+        ],
+        "sources": [
+          {
+            "account_id": "83f67da9-6a6b-4fde-abcb-bb97743211fe",
+            "bot_id": "3da78e6d-2a53-4ed1-8bb9-eb7c4b2daa68",
+            "kind": "site"
+          }
+        ],
+        "jobs": [
+          {
+            "account_id": "83f67da9-6a6b-4fde-abcb-bb97743211fe",
+            "source_id": "b24a83c3-ea82-4d65-a100-d97fc0885224",
+            "state": "queued"
+          }
+        ],
+        "sessions": [
+          {
+            "account_id": "9a67ec1c-78d4-4663-a391-fd2f8144c9ef"
+          }
+        ]
+      }
+    },
+    {
+      "width": 390,
+      "email": "studio-ui-390-ed6abadf-b98e-423c-aa7c-3058070e770c@example.test",
+      "actor": "1e62375d-402c-434c-a848-919f88a73870",
+      "child": "4c761e4b-0dfc-42d0-bf65-6315b803c0df",
+      "bot_id": "a17b79e0-09c5-429e-9004-265d52a0d599",
+      "ordinary403": true,
+      "created201": true,
+      "bot202": true,
+      "published200": true,
+      "cap409": true,
+      "foreign404": true,
+      "revoked404": true,
+      "no_child_session": true,
+      "no_overflow": true,
+      "js_errors": [],
+      "db": {
+        "actor": {
+          "id": "1e62375d-402c-434c-a848-919f88a73870",
+          "kind": "studio",
+          "email": "studio-ui-390-ed6abadf-b98e-423c-aa7c-3058070e770c@example.test"
+        },
+        "children": [
+          {
+            "id": "1aca0044-d11c-4166-8a5f-90f7d46b8911",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "1e62375d-402c-434c-a848-919f88a73870",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "22e5f8df-e054-402e-9af6-4a34a494eb42",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "1e62375d-402c-434c-a848-919f88a73870",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "4c761e4b-0dfc-42d0-bf65-6315b803c0df",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "1e62375d-402c-434c-a848-919f88a73870",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "82a00aa8-3c37-4e75-afb1-652a295fcf5a",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "1e62375d-402c-434c-a848-919f88a73870",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          },
+          {
+            "id": "dcf7d7fa-af8b-464a-b98c-9df99081b908",
+            "kind": "owner",
+            "plan": "free",
+            "email": null,
+            "password_hash": null,
+            "parent_account_id": "1e62375d-402c-434c-a848-919f88a73870",
+            "studio_access": true,
+            "referred_by_bot_id": null
+          }
+        ],
+        "bots": [
+          {
+            "id": "a17b79e0-09c5-429e-9004-265d52a0d599",
+            "account_id": "4c761e4b-0dfc-42d0-bf65-6315b803c0df",
+            "name": "Клиентский бот 390",
+            "published": true,
+            "contact": "client@example.test"
+          }
+        ],
+        "sources": [
+          {
+            "account_id": "4c761e4b-0dfc-42d0-bf65-6315b803c0df",
+            "bot_id": "a17b79e0-09c5-429e-9004-265d52a0d599",
+            "kind": "site"
+          }
+        ],
+        "jobs": [
+          {
+            "account_id": "4c761e4b-0dfc-42d0-bf65-6315b803c0df",
+            "source_id": "5ffe89b3-2cfd-4cff-b29a-48b85e421ec5",
+            "state": "queued"
+          }
+        ],
+        "sessions": [
+          {
+            "account_id": "1e62375d-402c-434c-a848-919f88a73870"
+          }
+        ]
+      }
+    }
+  ],
+  "screenshots": [
+    "client-bot-1440.png",
+    "cap-1440.png",
+    "revoked-1440.png",
+    "client-bot-390.png",
+    "cap-390.png",
+    "revoked-390.png"
+  ],
+  "status": "passed",
+  "finished_at": "2026-10-03T04:18:44.272Z"
+}

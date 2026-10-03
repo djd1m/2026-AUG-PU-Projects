@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "review",
+  "stage": "delivered",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261003T031332Z-studio-subaccounts",
     "work_unit_id": "studio-subaccounts-feature",
-    "current_attempt_id": "review-2"
+    "current_attempt_id": "delivery-1"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "84cd6edad498ef040794a8a95443659592927269",
-    "current_revision": "167721347d4380c67cde360e374e3d2e13e8eb17",
-    "build_revision": "sha256:878dd06f4a402a977df08b59e129f98466a0e23bb2f18ae82b31f549df4f815e",
+    "current_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+    "build_revision": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2",
     "requirements": [
       {
         "root": "project",
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "167721347d4380c67cde360e374e3d2e13e8eb17",
-      "observed_revision": "167721347d4380c67cde360e374e3d2e13e8eb17",
+      "expected_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "observed_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
       "reconciliation": null
     }
   },
@@ -162,10 +162,37 @@
     "evidence": null
   },
   "preflight": {
-    "status": "not_applicable",
-    "reason": "ActualUI2 Newclient422 confirmed defect; narrow correction now, fresh runtime preflight later",
+    "status": "ready",
+    "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+    "build_revision": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2",
+    "environment": "Isolated n6b-f13-ui Docker network; production web/PG/Caddy; isolated fixture provisioning/DB observation only; shared browser own contexts, no published ports",
+    "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f13-ui.mjs /opt/browser/n6b-f13-fixture.json /opt/browser/n6b-f13-output-3",
+    "inputs": [
+      {
+        "name": "Exact22host and immutable runner hashes; full621unit/261PG plus type/build and capmutation0",
+        "available": true
+      },
+      {
+        "name": "Fresh Astra ACCEPT_WITH_CAVEATS, runtime gates close here; no production response mocks",
+        "available": true
+      },
+      {
+        "name": "Disposable real registered owners promoted to existing studio kind by isolated owner fixture; all product operations use actual Next routes",
+        "available": true
+      }
+    ],
+    "environment_available": true,
+    "expected_effects": [
+      "Browser1440/390 real registration/createclient/select/createbot202/publication/back/reload/sixth409/ordinary403/foreign404/revoked404; actual DB ownership and session observations, no mocks or paid calls",
+      "Screenshots and own context/stack/privateenv cleanup; sharedbrowser retained"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/studio-subaccounts/ui-output/report.json"
+    },
     "external_actions_executed": false,
-    "e2e_claim": null
+    "e2e_claim": null,
+    "checked_at": "2026-10-03T04:18:34.052523+00:00"
   },
   "attempts": [
     {
@@ -198,11 +225,19 @@
     },
     {
       "id": "review-2",
-      "status": "active"
+      "status": "completed"
     },
     {
       "id": "full-regression-2",
-      "status": "active"
+      "status": "completed"
+    },
+    {
+      "id": "ui-3",
+      "status": "completed"
+    },
+    {
+      "id": "delivery-1",
+      "status": "completed"
     }
   ],
   "work_units": [
@@ -217,8 +252,115 @@
     }
   ],
   "pause": null,
-  "checks": [],
-  "receipts": [],
-  "delivery": null,
+  "checks": [
+    {
+      "ac_id": "STU-01",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-02",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-03",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-04",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-05",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-06",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-07",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-08",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "delivery-1",
+      "work_id": "studio-subaccounts-feature",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/delivery-1-receipt.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/delivery-1-launch.json"
+      },
+      "sha256": "e0d186721564a66c61d38142f90d2d43f6d40bd3cf99ad447873d3d5e8a79140",
+      "launch_sha256": "602bd82e0d70da0ce42df5e3fb6e2cc4292e007ece07d8db3293543f640a60c8"
+    }
+  ],
+  "delivery": {
+    "uri": "urn:project-work-companion:20261003T031332Z-studio-subaccounts:studio-subaccounts-feature",
+    "scope": {
+      "included": [
+        "STU01..08 studio subaccounts with actor/owner separation"
+      ],
+      "excluded": [
+        "F14 handover",
+        "Public deployment",
+        "Live paid calibration"
+      ]
+    },
+    "build": {
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "build_revision": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2"
+    },
+    "evidence": [
+      "delivery-1"
+    ],
+    "pending": [
+      {
+        "item": "F14 lock compatibility and remainingMVP",
+        "scope": "out_of_scope",
+        "reason": "Separate authorized next roadmap stage"
+      }
+    ],
+    "e2e_claim": "pass"
+  },
   "ownership": []
 }

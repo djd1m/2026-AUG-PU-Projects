@@ -1,0 +1,8 @@
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
