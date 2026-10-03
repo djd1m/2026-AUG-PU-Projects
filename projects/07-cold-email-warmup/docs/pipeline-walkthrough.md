@@ -199,3 +199,7 @@ F06a: независимое ревью Astra (406.031с) нашло R1 — па
 ### F06b: native-отписка исправлена и принята
 
 GET подтверждения теперь получает same-origin, остальные защитные заголовки и strict present-Origin неизменны.39unit,14affectedPG, RED/GREEN и30actualChromiumchecks1440/390 прошли. Свежий Astra за176,064с принял исходники и фактические browserreceipts. Серверная one-click-отписка с capability token безOrigin осталась в принятом контракте. Полная матрица продолжается.
+
+### F06b: полная функциональная матрица и мобильный отчёт
+
+B3 занял1499,783с, процесс0; квитанцияfailed из-за подтверждённого переполнения публичного отчёта на390px во всех3движках. Desktop/mobile business, session/tenant/late response, keyboard/labels/states, referral/canonicalgrant и независимые zero-effects группы проверены.100APIreads concurrency10 p95 109,1/85,2/78,5мс, ошибок0. Продукт не менялся. Перед финальной узкой коррекцией независимый Astra проверит всю матрицу и источник доказательств.
