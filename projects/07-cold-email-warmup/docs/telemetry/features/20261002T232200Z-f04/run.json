@@ -17,7 +17,7 @@
   "started_at": "2026-10-02T23:21:22.746199+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "PLAN/VALIDATE complete; IMPLEMENT A next",
+  "current_stage": "F04a accepted; F04b IMPLEMENT next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -26,7 +26,12 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 0,
-    "ac_total": 12
-  }
+    "ac_met": 6,
+    "ac_total": 12,
+    "confirmed_findings_by_severity": {
+      "P1": 1
+    },
+    "followup_status": "P1 tail horizon closed; A accepted fresh review; B pending"
+  },
+  "intermediate_revision": "aef86f201f79605286d7a66c22d6d94228e216db"
 }

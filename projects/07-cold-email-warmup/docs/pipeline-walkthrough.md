@@ -144,3 +144,7 @@ Source55fffed2: 12/12 AC, unit14/fullPG51/restoredB31, независимый As
 ## F04: приём ответов и публичные остановки
 
 Canonical FR006/007 разбиты на A durable ingestion/rescan и B unsubscribe/complaints/local poll worker, по6AC. План/алгоритм/архитектура в docs/features/f04-reply-suppression/. XL и полные проверки сохранены; отдельная модель пишет код, fresh Astra проверяет. Реальное IMAP-подключение не активируется; локальные данные помечены fixture, свежесть не выдумывается.
+
+### F04a принят
+
+Aef86f20: отдельные физические и семантические идентичности, атомарный курсор и остановка, bounded rescan/tail. Исправлена найденная P1: хвост теперь имеет собственную неизменную границу. Unit16/PG66/restored15, fresh Astra ACCEPT. Первый reviewer не доставил receipt — неуспешная попытка сохранена; новый reviewer доставил обе записи за190.7с. Далее F04b реализует capability unsubscribe, operator complaints и durable local poll без реальной почты.
