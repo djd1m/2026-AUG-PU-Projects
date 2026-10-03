@@ -1,0 +1,82 @@
+{
+  "run_id": "20261003T064351Z-release-gate",
+  "work_unit_id": "release-gate-local-rollback",
+  "source_revision": "86d4b0ceedc348f85f3e65de2ebfb272528b1801",
+  "started_at": "2026-10-03T07:49:54.042170+00:00",
+  "operations": [
+    {
+      "name": "compose-config",
+      "started_at": "2026-10-03T07:49:54.049591+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-03T07:49:54.244062+00:00"
+    },
+    {
+      "name": "port-conflicts",
+      "started_at": "2026-10-03T07:49:54.244580+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-10-03T07:49:55.931563+00:00"
+    }
+  ],
+  "checks": {
+    "isolation_and_cpu_config": "pass; DB=.5 web=.75 worker=.75; migrate+DB=2; no ports"
+  },
+  "execute_requested": true,
+  "runtime_verdict": "not_executed",
+  "build_revision": null,
+  "disk": {
+    "available_bytes": 1127833600,
+    "required_bytes": 6442450944,
+    "stop_reserve_bytes": 536870912
+  },
+  "images": {
+    "migrate": "sha256:9f9537fcc59c647b5ea7ae1114844383e69a8a0655a2948d095e3090380bd480",
+    "db": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+    "current": {
+      "web_tag": "n6b-f15-source-management-web:corrected",
+      "web_id": "sha256:d518d2e9eacfae4b0646aa161253b9edc5a78375b9935b267cdb6d467d220b1e",
+      "worker_tag": "n6b-f16-rollback-worker:current",
+      "worker_id": null
+    },
+    "previous": {
+      "web_tag": "n6b-f14-handover-web:20261003",
+      "web_id": "sha256:3ed4f43381dc4acff4d74aba9155c187f89747d626d39f04a9018bd627cbb2d5",
+      "worker_tag": "n6b-f16-rollback-worker:previous",
+      "worker_id": null
+    }
+  },
+  "sources": {
+    "current": {
+      "revision": "b3df79f3c748c426d7eac16717008ccd121eb10e",
+      "files": {},
+      "snapshot_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    "previous": {
+      "revision": "edf7d770f021831d115d347e1532cea102e1c098",
+      "files": {},
+      "snapshot_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    }
+  },
+  "preflight": {
+    "status": "blocked",
+    "source_revision": "86d4b0ceedc348f85f3e65de2ebfb272528b1801",
+    "build_revision": null,
+    "environment": "n6b-f16-rollback-d9b90b39; isolated/no ports/private synthetic config",
+    "inputs": "exact tested own N6b F14/F15 Git sources; canonical Dockerfile target worker",
+    "command": "python3 tests/artifacts/release-gate/rollback-runner.py --execute --prefix rollback-NEW",
+    "expected_effects": "owned images and ephemeral DB/web/worker; no jobs/provider calls",
+    "evidence_root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class/tests/artifacts/release-gate",
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "reason": "disk blocker: available=1127833600 bytes; required=6442450944 bytes; shared cleanup forbidden"
+  },
+  "status": "blocked",
+  "blocker": "disk blocker: available=1127833600 bytes; required=6442450944 bytes; shared cleanup forbidden",
+  "cleanup": {
+    "owned_stack_started": false,
+    "resources_removed": true,
+    "private_directory_removed": true,
+    "shared_cleanup": false
+  },
+  "finished_at": "2026-10-03T07:49:56.674017+00:00",
+  "elapsed_seconds": 2.632
+}

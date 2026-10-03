@@ -13,7 +13,7 @@
   "tier": "M existing provider gateway and release validation; external execution separately gated",
   "started_at": "2026-10-03T06:43:51.695522+00:00",
   "ended_at": null,
-  "status": "active",
+  "status": "blocked",
   "baseline_revision": "58b49da642298d991679241ce26c508b22392aee",
   "final_revision": null,
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
@@ -23,19 +23,33 @@
     "Deployment authorization and exactstand identity"
   ],
   "quality": {
-    "local_readiness": "source reviewed,683unit composite,3newPG/types; external release gates pending"
+    "local_readiness": "source reviewed,683unit composite,3newPG/types; external release gates pending",
+    "remaining_gates": [
+      "live calibration with authorized provisioned key/budget",
+      "authorized public stand/CJM/browser/contract receipts",
+      "real previous/current web+worker rollback",
+      "NFR scale/performance"
+    ]
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 4440017,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "cost": null,
-    "native_total_tokens_last_exposed": 6059406
+    "native_total_tokens_last_exposed": 7731936
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator model/usage/cost unavailable",
     "Preparation before run not measured",
     "review2 CLI timeout before finalresponse; completed sourceassessment preserved, partial counter possible"
-  ]
+  ],
+  "checkpoint_at": "2026-10-03T07:57:51.712690+00:00",
+  "blockers": {
+    "disk_available_bytes": 1126559744,
+    "rollback_safe_headroom_bytes": 6442450944,
+    "headroom_basis": "conservative estimated guard, not measured build consumption",
+    "credentials": "No approved private key provisioning received; scoped N6/secrets prohibition honored",
+    "publicstand": "Explicit owner gate in Completion; no authorization/base provisioning received"
+  }
 }

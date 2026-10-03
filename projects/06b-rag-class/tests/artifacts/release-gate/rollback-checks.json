@@ -1,0 +1,19 @@
+{
+  "finished_at": "2026-10-03T07:52:43.448438+00:00",
+  "syntax_import_root": "pass",
+  "disk_guard_positive_negative_and_mutation": "pass",
+  "corrected_manifests_nonempty": "pass",
+  "f14_f15_migration_sql_identical": "pass",
+  "migration_files": {
+    "packages/db/migrations/001_init.sql": "5eccebe867621abdcd9118ed8e5e5ff5b71481b19788cc78581d4e5165c46fbe",
+    "packages/db/migrations/002_rls.sql": "8f20a5c6b462d0c6b349eaef42601258f4cdbc9e0c68a5eef4b911926790d402",
+    "packages/db/migrations/003_quota_reset_log.sql": "9e111cf531942b549afcbbb73fcba3f27797342c07d702799d3c8905a767548f",
+    "packages/db/migrations/004_source_site_key.sql": "810e581daa730151eba90ae9ee279a66255f53ed6ed3a32594af9237d1334bb7",
+    "packages/db/migrations/005_index_job_cabinet_grants.sql": "46beb5b5384c7e71d93298ff50b00d9093e7a88265615b8fba5acd5251954470"
+  },
+  "migration_snapshot_sha256": "58f4aba5e7217d54cf6e1f1c618296f9afa9bed0a423fcd8a75bd93fdf712597",
+  "runtime": "not_executed",
+  "runner_sha256": "69c5c96c582b56caa5502f7827cd1e2d2351c6f0813f07f005f0ffd700ee1d13",
+  "exit_code": 0,
+  "limitation": "build and runtime branches not executed; initial empty manifest probe preserved and superseded by corrected probe"
+}
