@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f04b",
-  "status": "running",
+  "status": "completed",
   "source_revision": "7f99c245a59407eb84b106414ccc0e789f689300",
   "cli_session_id": 30951,
   "started_at": "2026-10-03T00:43:39Z",
@@ -11,5 +11,14 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f04b/runtime.log host banner",
-  "budget_seconds": 1500
+  "budget_seconds": 1500,
+  "finished_at": "2026-10-03T01:03:36Z",
+  "exit_code": 0,
+  "wrapper_duration_ms": 1197000,
+  "author_observed_elapsed_ms": 1131371.103,
+  "clock_note": "Wrapper lifetime and author observation retained separately.",
+  "integrated_source": "466d1fa0a445b355834e63204392c7818248c46f",
+  "snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+  "snapshot_files_verified": 81,
+  "acceptance": "pending independent review, affected runtime, actual browser"
 }
