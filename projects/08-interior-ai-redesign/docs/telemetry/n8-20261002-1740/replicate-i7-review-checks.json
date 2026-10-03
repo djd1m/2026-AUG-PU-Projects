@@ -1,0 +1,325 @@
+{
+  "review_readonly_checks_initial_attempts": [
+    {
+      "exit_code": 1,
+      "reason": "Strict author-snapshot comparison against integrated current tree detects parent telemetry changes."
+    },
+    {
+      "exit_code": 1,
+      "reason": "Author correction integration commit also inherits parent launch telemetry; reconciled against exact author base below."
+    }
+  ],
+  "runtime_snapshot": {
+    "source": "8890e0b784abcf27f0db085e3d92134909a39219",
+    "file_count": 120,
+    "mismatches": [
+      "scripts/mutation.js",
+      "tests/mutation.test.js"
+    ],
+    "production_unchanged": true
+  },
+  "mutation_protection": {
+    "baseline": "d5628424",
+    "author_report_protected_count": 2136,
+    "current_matching_protected": 2133,
+    "parent_metadata_deltas": [
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/events.jsonl",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-regression-status.json",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/run.json"
+    ],
+    "authorized_correction": [
+      "projects/08-interior-ai-redesign/scripts/mutation.js",
+      "projects/08-interior-ai-redesign/tests/mutation.test.js"
+    ],
+    "integration_explanation": "41a82783 modifies parent run/events; c604db46 updates parent regression status. These are not author or review edits."
+  },
+  "author_snapshot_base_verified": {
+    "count": 2138,
+    "mismatches": []
+  },
+  "fixture_proof": {
+    "hashes_match": true,
+    "runs": {
+      "baseline": {
+        "status": 0,
+        "sha256": "cf1b3c6db37c2444320b9162b8cce09ab8f03c1a1bb62617c84e9fd57c8609cc",
+        "tap_pass": [
+          "7"
+        ],
+        "tap_fail": [
+          "0"
+        ]
+      },
+      "mutation": {
+        "status": 1,
+        "sha256": "2f9285105faec2adf926fe8c2cfdc94066f678e51c1543623eb1e079b67a4415",
+        "tap_pass": [
+          "5"
+        ],
+        "tap_fail": [
+          "2"
+        ]
+      },
+      "restored": {
+        "status": 0,
+        "sha256": "94380cf32ebbbb68478e7b978f24e741f42d9ebffb6d7a1e2065f861205950b2",
+        "tap_pass": [
+          "7"
+        ],
+        "tap_fail": [
+          "0"
+        ]
+      }
+    }
+  },
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "replicate-i7-pg-all-local32.log": {
+    "sha256": "cb5a9445a55ab4d9d734c0695c720e7972b1b35d276058ee8168a2ad26db8732",
+    "summary": "ns, MIME or creation time fails\n  ---\n  duration_ms: 22.524228\n  type: 'test'\n  ...\n# Subtest: unauthenticated owner response and missing owner list fail closed\nok 189 - unauthenticated owner response and missing owner list fail closed\n  ---\n  duration_ms: 19.214997\n  type: 'test'\n  ...\n1..189\n# tests 480\n# suites 0\n# pass 480\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 61846.071267\n"
+  },
+  "replicate-i7-pg-binding.log": {
+    "sha256": "ac38d26c9f3abc1aa6af09a0e9be2c4aedde285690382ba77927a80b4af9120a",
+    "summary": "{\"node\":\"v22.20.0\",\"files\":120,\"matched\":true}\n Container n8f07i7-tests-run-c7f39ee662ff Creating \n Container n8f07i7-tests-run-c7f39ee662ff Created \n"
+  },
+  "replicate-i7-owner-pg-binding.log": {
+    "sha256": "6ce9f4f98f6939035b6aa87f965962b4fd6b39b09dcd7f1429762a03e1ae9e69",
+    "summary": "{\"node\":\"v22.20.0\",\"files\":120,\"matched\":true}\n Container n8f07i7owner-tests-run-b5e3551de8cf Creating \n Container n8f07i7owner-tests-run-b5e3551de8cf Created \n"
+  },
+  "replicate-i7-pg-python5.log": {
+    "sha256": "1561ea1335e7f6b674365c52ce37055a4bd60a11eaea0a2f13e6adf48fd4836b",
+    "summary": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.165s\n\nOK\n"
+  },
+  "replicate-i7-mutation-evidence/mutation-units.log": {
+    "sha256": "226a6d7a013404caf0093b22784cf90d51ae82e5144daae36cf5292ff23595ea",
+    "summary": "duration_ms: 615.80527\n  type: 'test'\n  ...\n# Subtest: F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes\nok 10 - F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes\n  ---\n  duration_ms: 515.030204\n  type: 'test'\n  ...\n1..10\n# tests 10\n# suites 0\n# pass 10\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 2779.958842\n"
+  },
+  "pg_logs": [
+    {
+      "file": "tests/attribution.integration.test.js",
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "144515cead97cf76b85fb43fff12d1c4121e2387f4fd38744ddf9edbcfe1743c"
+    },
+    {
+      "file": "tests/integration.test.js",
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "c3965eb1309bac6edbb67a5c3b838d53d9db5e488b3914b491a71a9b2d26f193"
+    },
+    {
+      "file": "tests/jobs.integration.test.js",
+      "tests": 21,
+      "pass": 21,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "3f0f566e1fefd123713e695f4aae42dd3881c08816a742d1acbf5633e1a074e2"
+    },
+    {
+      "file": "tests/payments.integration.test.js",
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "1588e8a16c09703e33f8ccc105eb02044badfb2ce7a3fbc2fc2af8d3d889f113"
+    },
+    {
+      "file": "tests/quality.integration.test.js",
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "8f62cb3b09bbf5cc1031132fd6588e79f0f54e7961ee8e5a527bb1fd868ed411"
+    },
+    {
+      "file": "tests/replicate-cleanup.integration.test.js",
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "7c3dcaa322023c0db8e15832704bea39426abf73cef5fa484f027a5706e6fcb8"
+    },
+    {
+      "file": "tests/replicate-evidence.integration.test.js",
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "f1eafb8f4c2dfdf92e90ed0659c4a743da7ea28160ee87ee449716e695f5a1ba"
+    },
+    {
+      "file": "tests/replicate-generation.integration.test.js",
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "a4f9ff503b53c0fd8cdba8998ce4609f5cd1524742c08f88bdb122f7d8fe759e"
+    },
+    {
+      "file": "tests/replicate-lifecycle.integration.test.js",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "0cd54da16ac3416b3588b25af3d679937136de6bf13cee9f3440db0b4a3c8187"
+    },
+    {
+      "file": "tests/replicate-quality.integration.test.js",
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "e2d226aa6b7128a030d03d5007f444bdb772a200a5a394d72b095bbfa8ec99d5"
+    },
+    {
+      "file": "tests/replicate-send-cas.integration.test.js",
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "a2fdc019026e175e9ce41007092350f017fd093088c09401a7b07f7f8539ec26"
+    },
+    {
+      "file": "tests/replicate.integration.test.js",
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "516a5bdf2bcaded2cd4b636b3b375e1ded4838c8a5bfdaee09a11bdd20f66037"
+    },
+    {
+      "file": "tests/sharing.integration.test.js",
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "sha256": "b48a3782b933c94c264fde7af233a77623859fb87a0e1414551819e748b338ed"
+    }
+  ],
+  "pg_pass_total": 163,
+  "docs_snapshot": {
+    "count": 16,
+    "mismatches": [],
+    "protected_author_evidence": {
+      "count": 2059,
+      "sha256_of_sorted_path_digest_map": "9af6735e0f174056dd9147c7f80bda4acc7bc0087c963388ae7576cdfb5fab82",
+      "baseline": "git source_revision plus pre-edit hash map; every byte compared"
+    }
+  },
+  "updated_at": "2026-10-03T16:42:00.416392+00:00",
+  "reviewer_readonly_node_assertions": {
+    "command": [
+      "/tmp/n8-node22",
+      "--input-type=module",
+      "-e",
+      "\nimport assert from 'node:assert/strict';\nimport {readFileSync} from 'node:fs';\nimport {createHash} from 'node:crypto';\nimport {mutateSource,mutationDetected} from './scripts/mutation.js';\nconst sha=x=>createHash('sha256').update(x).digest('hex');\nconst dir='docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/';\nconst proof=JSON.parse(readFileSync(dir+'quality-proof.json'));\nconst source=readFileSync('web/quality.js','utf8'),oracle=readFileSync('tests/quality.test.js');\nconst mutant=mutateSource(source,'fixture');\nassert.equal(sha(source),proof.source_sha256);assert.equal(sha(oracle),proof.oracle_sha256);assert.equal(sha(mutant),proof.mutant_sha256);\nconst guards=[\"if(mode==='fixture')throw new Error('fixture_quality_forbidden');\",\"if(!supportedRealMode(mode))throw new Error('quality_mode_invalid');\"];\nassert.throws(()=>mutateSource(mutant,'fixture'),/mutation_guard_mismatch/);\nfor(const g of guards){assert.throws(()=>mutateSource(source.replace(g,''),'fixture'),/mutation_guard_mismatch/);assert.throws(()=>mutateSource(source+'\\n'+g,'fixture'),/mutation_guard_mismatch/);}\nconst fn=new Function('mode','supportedRealMode',mutant.match(/export function requireRealQuality\\(mode\\) \\{([\\s\\S]*?)\\n\\}/)[1]);\nfor(const mode of ['fixture','controlnet','replicate'])assert.doesNotThrow(()=>fn(mode,x=>['controlnet','replicate'].includes(x)));\nfor(const mode of ['invalid',undefined,null])assert.throws(()=>fn(mode,x=>['controlnet','replicate'].includes(x)),/quality_mode_invalid/);\nconst result={status:1,signal:null,error:undefined,output:readFileSync(dir+'mutation.log','utf8')};assert.equal(mutationDetected('fixture',result),true);\nfor(const replacement of [['expected: true','expected: false'],['actual: false','actual: true'],[\"operator: 'strictEqual'\",\"operator: 'deepStrictEqual'\"],['GEOM-03 fixture quality must be rejected with otherwise valid provenance','unrelated']])assert.equal(mutationDetected('fixture',{...result,output:result.output.replace(...replacement)}),false);\nconsole.log('PASS read-only: exact fixture mutant hash, source/oracle hashes, missing/duplicate/reapplication denial, other-mode rejection, raw named assertion recognition. No suite/provider/DB execution.');\n"
+    ],
+    "cwd": "/tmp/n8-replicate-i7-review/projects/08-interior-ai-redesign",
+    "exit_code": 0,
+    "log": "docs/telemetry/n8-20261002-1740/replicate-i7-review-assertions.log",
+    "sha256": "d734c541c0bd87ee7cd48e07796b1adad49ee865343d5d44053854880d309d8a",
+    "at": "2026-10-03T16:43:05.074866+00:00"
+  },
+  "i6a_existing_proof": {
+    "source_oracle_current_identical": true,
+    "raw_log_hashes_match": true,
+    "runs": {
+      "baseline": 0,
+      "mutant": 1,
+      "restored": 0
+    },
+    "runner_note": "Current runner adds fixture branch only; old CAS branch/recognizer unchanged in exact diff."
+  },
+  "docs_saved_gate_log_hashes": [
+    {
+      "name": "vendor_project_traceability",
+      "exit_code": 2,
+      "sha256": "93f6eb10df714ff9dd584278b8496341ed679b1b3a140df9d34851166815dfd1"
+    },
+    {
+      "name": "vendor_project_report_revision",
+      "exit_code": 2,
+      "sha256": "6942697ecd2c62f48c8bca40c3b4a610ff575f1d8def9b7536b501fa92ae88db"
+    },
+    {
+      "name": "vendor_project_criterion_scenarios",
+      "exit_code": 2,
+      "sha256": "f2627ca72a09920f5b8bb64fe85ec43b3edc4f72af53c8aa5d0dda9919671f28"
+    },
+    {
+      "name": "vendor_project_completion",
+      "exit_code": 2,
+      "sha256": "5cd61f506b0ce7217cff97aa606ef44dd69454a7da36b530ad004eb78660b196"
+    },
+    {
+      "name": "vendor_f07_review_contract",
+      "exit_code": 2,
+      "sha256": "107cf0e9ba4f57febbda44a7c63a2c4a975652daf54da7eb2a9b8af0784846e7"
+    },
+    {
+      "name": "vendor_f07_traceability",
+      "exit_code": 0,
+      "sha256": "c5ccc3a7f27e197ece2e8123dcb860a753ff810ba3c1b66e5a928a6459db2368"
+    },
+    {
+      "name": "vendor_f07_report_revision",
+      "exit_code": 0,
+      "sha256": "398d863e0b1da621d3652a2f4fdae34505da122070259b2d57044c4c9a328aa1"
+    },
+    {
+      "name": "vendor_f07_criterion_scenarios",
+      "exit_code": 0,
+      "sha256": "f4469a6989d4b92166a2f2a88edd9b4d515afabefc31a413375378a4390c7a98"
+    },
+    {
+      "name": "vendor_f07_completion",
+      "exit_code": 0,
+      "sha256": "ca65e556b34d3cd5394715616742235040d1c6c37cb91405b8e2872b7629fcc1"
+    }
+  ],
+  "completion_anchors": {
+    "count": 11,
+    "all_literal_titles_present": true
+  },
+  "diff_check": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "review_contract": {
+    "command": [
+      "/tmp/n8-node22",
+      "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/templates/.claude/hooks/check-review-contract.cjs",
+      "/tmp/n8-replicate-i7-review/projects/08-interior-ai-redesign",
+      "f07-replicate"
+    ],
+    "checker_sha256": "44e32ea31a4a71ceb6eccb0956006519de270eab787a79ab4884978bc04385ab",
+    "exit_code": 0,
+    "output": "PASS review-contract feature=f07-replicate AC-ids=11 rows=11\n",
+    "initial_exit_code": 0,
+    "final_report_sha256": "d55fba1ffac6b93e0486e6b2d724e488fb5183404dc565719e790ec7001ebe65",
+    "at": "2026-10-03T16:48:37.711933+00:00"
+  },
+  "review_scope_guard": {
+    "tracked_files_checked": 2157,
+    "changed_tracked_paths": [],
+    "status": "?? projects/08-interior-ai-redesign/docs/features/f07-replicate/review-report.md\n?? projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-review-assertions.log\n?? projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-review-checks.json\n?? projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-review-contract.log\n?? projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-review-launch.json\n?? projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-review-snapshot.json\n"
+  },
+  "finished_checks_at": "2026-10-03T16:48:37.890341+00:00"
+}
