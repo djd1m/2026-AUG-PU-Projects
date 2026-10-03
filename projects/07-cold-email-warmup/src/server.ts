@@ -16,6 +16,9 @@ import { ConsentStore } from './consent/store.js';
 import type { Resolver } from './mailboxes/network.js';
 import type { TestAdapter } from './mailboxes/provider.js';
 import { authPage, authScript } from './web/page.js';
+import { SuppressionStore,authenticateOperator } from './suppression/store.js';
+import { confirmationPage,unsubscribeForm } from './suppression/http.js';
+import { ReplyStore } from './replies/store.js';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
   if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json') throw new HttpError(400, 'invalid_input');
@@ -43,12 +46,33 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   const consents=new ConsentStore(pool,config.credentialKeyring);
   const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
   const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);const submissions=new SubmissionStore(pool,config);
+  const suppression=new SuppressionStore(pool,config.recipientHashKey);const replies=new ReplyStore(pool,config.credentialKeyring);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     void (async () => {
       const path = (req.url ?? '').split('?')[0]!; const unsafe = !['GET','HEAD','OPTIONS'].includes(req.method ?? '');
-      if (unsafe && req.headers.origin !== config.origin) throw new HttpError(403, 'origin_denied');
+      const publicStop=path.startsWith('/unsubscribe/') && ['GET','POST'].includes(req.method??'');
+      const operatorStop=path==='/api/complaints' && req.method==='POST';
+      if(publicStop || operatorStop) {
+        res.setHeader('Referrer-Policy','no-referrer');
+        await suppression.charge(req.socket.remoteAddress??'unknown');
+      }
+      const noOriginCapability=req.method==='POST' && publicStop && req.headers.origin===undefined;
+      const noOriginOperator=operatorStop && req.headers.origin===undefined && req.headers.cookie===undefined;
+      if (unsafe && !noOriginCapability && !noOriginOperator && req.headers.origin !== config.origin) throw new HttpError(403, 'origin_denied');
+      if(publicStop) {
+        const token=path.slice('/unsubscribe/'.length);
+        if(req.method==='GET') {
+          await suppression.confirm(token);res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(confirmationPage);return;
+        }
+        await unsubscribeForm(req);return json(res,200,{data:await suppression.unsubscribe(token),meta:{}});
+      }
+      if(operatorStop) {
+        authenticateOperator(req.headers.authorization,config.operatorTokenDigest);
+        if(req.headers.cookie!==undefined) throw new HttpError(401,'unauthorized');
+        return json(res,200,{data:await suppression.complaint(await body(req)),meta:{}});
+      }
       if (req.method === 'GET' && (path === '/healthz' || path === '/readyz')) {
         const isReady = await ready(pool); return json(res, isReady ? 200 : 503, {data:{ready:isReady},meta:{}});
       }
@@ -80,6 +104,13 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         if(path==='/api/mailboxes') {
           if(req.method==='GET') return json(res,200,{data:await mailboxes.list(identity.tenant_id),meta:{}});
           if(req.method==='POST') return json(res,201,{data:await mailboxes.save(identity.tenant_id,await body(req)),meta:{}});
+        }
+        const pollMatch=/^\/api\/mailboxes\/([^/]+)\/reply-status$/.exec(path);
+        if(pollMatch && req.method==='GET') {
+          if(!UUID.test(pollMatch[1]!)) throw new HttpError(400,'invalid_input');
+          await mailboxes.read(identity.tenant_id,pollMatch[1]!);
+          const poll=(await pool.query('SELECT scan_complete,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[pollMatch[1]])).rows[0];
+          return json(res,200,{data:{mode:config.pollMode??'disabled',scan:await replies.status(identity.tenant_id,pollMatch[1]!),lastComplete:poll?.completed_at??null,scanComplete:poll?.scan_complete??false,realVerification:'unknown'},meta:{}});
         }
         const mailboxMatch=/^\/api\/mailboxes\/([^/]+)(?:\/(consents|verify-test))?$/.exec(path);
         if(mailboxMatch) {
@@ -130,5 +161,5 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions };
+  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies };
 }

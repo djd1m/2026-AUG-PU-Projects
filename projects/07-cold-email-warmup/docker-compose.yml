@@ -22,6 +22,8 @@ services:
     build: .
     cpus: 2
     environment:
+      POLL_MODE: ${N7_POLL_MODE:-disabled}
+      OPERATOR_TOKEN_FILE: /run/secrets/operator_token
       DISPATCH_MODE: ${N7_DISPATCH_MODE:-disabled}
       SAFETY_POLICY_VERSION: n7-safety-v1
       RECIPIENT_HASH_KEY_FILE: /run/secrets/recipient_hash_key
@@ -34,7 +36,7 @@ services:
       DATABASE_HOST: db
       APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18702}
       PORT: "3000"
-    secrets: [session_key, db_password, credential_keyring, recipient_hash_key]
+    secrets: [session_key, db_password, credential_keyring, recipient_hash_key, operator_token]
     ports: ["127.0.0.1:${N7_WEB_PORT:-18702}:3000"]
     networks: [n7]
     depends_on:
@@ -45,6 +47,8 @@ services:
       timeout: 3s
       retries: 20
 secrets:
+  operator_token:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/operator-token
   recipient_hash_key:
     file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/recipient-hash-key
   session_key:

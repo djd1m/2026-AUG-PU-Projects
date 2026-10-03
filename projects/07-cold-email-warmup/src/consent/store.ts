@@ -51,7 +51,7 @@ export class ConsentStore {
         if(!mailbox.credential_envelope) throw new HttpError(409,'mailbox_unconfigured');
       }
       await client.query('UPDATE consent SET revoked_at=now() WHERE tenant_id=$1 AND mailbox_id=$2 AND scope=$3 AND campaign_id IS NOT DISTINCT FROM $4::uuid AND revoked_at IS NULL',[identity.tenant_id,id,scope,campaignId]);
-      if(scope==='pool') await client.query('DELETE FROM pool_member WHERE tenant_id=$1 AND mailbox_id=$2',[identity.tenant_id,id]);
+      if(scope==='pool') await withdrawPoolClient(client,identity.tenant_id,id);
       await client.query(`UPDATE send_job SET state='cancelled' WHERE state IN ('queued','claimed') AND
         ((tenant_id=$1 AND mailbox_id=$2 AND scope=$3 AND campaign_id IS NOT DISTINCT FROM $4::uuid) OR ($3='pool' AND scope='pool' AND recipient_mailbox_id=$2))`,[identity.tenant_id,id,scope,campaignId]);
       if(raw.action==='revoke') return {revoked:true};
@@ -70,4 +70,11 @@ export class ConsentStore {
       AND c.campaign_id IS NOT DISTINCT FROM $4::uuid AND
       ((c.scope='pool' AND c.scope_version=$5) OR (c.scope='campaign' AND c.scope_version=p.content_version AND c.recipient_fingerprint=p.recipient_fingerprint))`,[identity.tenant_id,id,scope,campaignId??null,POOL_DISCLOSURE_VERSION])).rowCount===1;
   }
+}
+
+// Trusted stop writers share the caller's eligibility transaction.
+export async function withdrawPoolClient(client:PoolClient,tenant:string,mailbox:string) {
+ await client.query("UPDATE consent SET revoked_at=now() WHERE tenant_id=$1 AND mailbox_id=$2 AND scope='pool' AND revoked_at IS NULL",[tenant,mailbox]);
+ await client.query('DELETE FROM pool_member WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox]);
+ await client.query("UPDATE send_job SET state='cancelled' WHERE scope='pool' AND state IN ('queued','claimed') AND ((tenant_id=$1 AND mailbox_id=$2) OR recipient_mailbox_id=$2)",[tenant,mailbox]);
 }
