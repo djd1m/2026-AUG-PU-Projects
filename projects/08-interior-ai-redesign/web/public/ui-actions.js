@@ -93,7 +93,7 @@ export function installActions({$,api,post,scope,status,balance,guard,getAccount
     finally {a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   });
   async function publication(job) {
-    eligible=job.mode==='controlnet'&&job.quality==='accepted'&&!getAccount()?.billing_hold;
+    eligible=['controlnet','replicate'].includes(job.mode)&&job.quality==='accepted'&&!getAccount()?.billing_hold;
     $('publication-reason').textContent=eligible?'Отдельное согласие относится только к этой работе. Сервер повторно проверит право публикации.':'Публикация недоступна: нужен проверенный реальный результат и активный аккаунт. DEMO нельзя публиковать.';
     $('publish-consent').disabled=!eligible;$('publish').disabled=!eligible||!$('publish-consent').checked;
     const value=await api(`/api/jobs/${job.job_id}/publication`);

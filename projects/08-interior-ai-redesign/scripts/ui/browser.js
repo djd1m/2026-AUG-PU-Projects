@@ -1,4 +1,4 @@
-// Run INSIDE the existing codex-ui-playwright container with project mounted.
+// Run Node client inside the owned N8 app container; connect to existing shared browser.
 // Actual app DOM/fetch. Native Web Share outcomes alone are test stubs.
 import {createRequire} from 'node:module';
 import {randomBytes} from 'node:crypto';
@@ -7,6 +7,7 @@ import {resolve} from 'node:path';
 import assert from 'node:assert/strict';
 import {ownedPool,fixtureConfig,drive} from './fixture-driver.js';
 import {extendedCases,failureScreens,paceContext} from './browser-cases.js';
+import {hostedCases} from './replicate-cases.js';
 import {createPartners} from '../../web/partners.js';
 const require=createRequire(import.meta.url);
 if(!/^1\.63\./.test(require('/opt/n8-browser-client/node_modules/playwright/package.json').version)||!/^1\.63\./.test(require('/opt/n8-browser-client/node_modules/playwright-core/package.json').version))throw new Error('existing_playwright_1_63_clients_required');
@@ -18,7 +19,7 @@ if(preflight.status!=='ready'||!preflight.source_revision||!preflight.build_revi
 const out=resolve(process.env.UI_OUTPUT??`/tmp/n8-ui-browser-${randomBytes(12).toString('hex')}`);
 await mkdir(out,{recursive:false});
 const pool=await ownedPool(),browser=await chromium.connect('ws://codex-ui-playwright:9320/');
-const results=[],contexts=[];
+const results=[],contexts=[],hostedEvidence=[];
 async function check(name,work) {await work();results.push({name,result:'pass'});}
 async function request(page,path,method='GET',body) {
   return page.evaluate(async({path,method,body})=>{
@@ -33,15 +34,24 @@ async function register(page,email,password) {
   await page.waitForFunction(()=>document.querySelector('#package-details').textContent.includes('900'));
 }
 async function reserve(page) {
+  const owner=(await request(page,'/api/me')).body.account.id;
+  const previous=await page.evaluate(owner=>JSON.parse(sessionStorage.getItem(`roomkind:job:${owner}`))?.id,owner);
   const response=page.waitForResponse(r=>r.url()===origin+'/api/jobs'&&r.request().method()==='POST');
-  await page.locator('#generate').click();const r=await response;assert.equal(r.status(),202);return (await r.json()).job_id;
+  await page.locator('#generate').click();assert.equal((await response).status(),202);
+  await page.waitForFunction(({owner,previous})=>{const value=JSON.parse(sessionStorage.getItem(`roomkind:job:${owner}`));return value?.id&&value.id!==previous;},{owner,previous});
+  return page.evaluate(owner=>JSON.parse(sessionStorage.getItem(`roomkind:job:${owner}`)).id,owner);
 }
 async function packagePurchase(page) {
+  const owner=(await request(page,'/api/me')).body.account.id;
+  const previous=await page.evaluate(owner=>JSON.parse(sessionStorage.getItem(`roomkind:payment:${owner}`))?.id,owner);
   const pending=page.waitForResponse(r=>r.url()===origin+'/api/payments'&&r.request().method()==='POST');
-  await page.locator('#buy').click();const r=await pending;assert.equal(r.status(),202);
-  const id=(await r.json()).payment.payment_id;await drive(pool,config,'payment',id);
+  await page.locator('#buy').click();assert.equal((await pending).status(),202);
+  await page.waitForFunction(({owner,previous})=>{const value=JSON.parse(sessionStorage.getItem(`roomkind:payment:${owner}`));return value?.id&&value.id!==previous;},{owner,previous});
+  const id=await page.evaluate(owner=>JSON.parse(sessionStorage.getItem(`roomkind:payment:${owner}`)).id,owner);
+  await drive(pool,config,'payment',id);
   await page.locator('#payment-resume').click();await page.waitForFunction(()=>document.querySelector('#payment-status').textContent.includes('succeeded'));return id;
 }
+
 try {
   const run=randomBytes(6).toString('hex'),password=randomBytes(24).toString('hex');
   const second=await browser.newContext({ignoreHTTPSErrors:true,viewport:{width:390,height:844}});contexts.push(second);
@@ -118,10 +128,11 @@ try {
     assert.equal((await request(page,`/api/jobs/${publicId}`)).status,404); // deletion tombstones upload and all its jobs
     await extendedCases({page,context,pool,config,check,request,reserve,width,otherEmail:`other-${run}@example.test`,password,partnerCode:partner.code});
     await failureScreens({browser,pool,config,check,request,register,packagePurchase,width,password,run});
+    hostedEvidence.push(...await hostedCases({browser,pool,config,check,request,register,packagePurchase,other,width,password,run,out}));
     await page.locator('#logout').click();await page.locator('#auth').waitFor({state:'visible'});
     assert.equal(await page.locator('#jobs img').count(),0);assert.equal(await page.locator('#before').getAttribute('src'),null);
     assert.deepEqual(errors,[]);
   }
-  await writeFile(resolve(out,'results.json'),JSON.stringify({source:preflight.source_revision,build:preflight.build_revision,results,software_fixture:true,native_outcomes:'injected API promises, not OS/social posting',geometry_pass:null},null,2));
+  await writeFile(resolve(out,'results.json'),JSON.stringify({source:preflight.source_revision,build:preflight.build_revision,results,hosted_evidence:hostedEvidence,software_fixture:true,hosted_provider_metrics:null,native_outcomes:'injected API promises, not OS/social posting',geometry_pass:null},null,2));
   console.log(JSON.stringify({result:'pass',evidence:out,checks:results.length}));
 }finally {for(const c of contexts)await c.close();await browser.close();await pool.end();}

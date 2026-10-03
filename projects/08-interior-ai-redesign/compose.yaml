@@ -38,7 +38,7 @@ services:
     ports: ["127.0.0.1:${WEB_PORT:-18088}:8080"]
     volumes: ["media:/private"]
     networks: [private, frontend]
-    cpus: 0.75
+    cpus: ${WEB_CPUS:-0.75}
     mem_limit: 768m
     init: true
     security_opt: ["no-new-privileges:true"]
@@ -73,6 +73,64 @@ services:
     security_opt: ["no-new-privileges:true"]
     cap_drop: [ALL]
     command: ["node", "scripts/maintenance.js"]
+  # Explicit profiles only; fail closed until separate mode/cleanup activation.
+  # Each adds 0.25 CPU; reduce WEB_CPUS as documented in .env.example.
+  replicate-worker:
+    profiles: [replicate-worker]
+    build: .
+    restart: "no"
+    depends_on:
+      web: {condition: service_healthy}
+    environment: &replicate-environment
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://roomkind:${DB_PASSWORD:?supply random hex password}@db:5432/roomkind
+      SESSION_SECRET: ${SESSION_SECRET:?supply at least 32 random bytes as hex}
+      APP_ORIGIN: ${APP_ORIGIN:-http://127.0.0.1:18088}
+      STORAGE_DIR: /private
+      PROVIDER_MODE: disabled
+      WORKER_MODE: ${REPLICATE_WORKER_MODE:-disabled}
+      REPLICATE_CLEANUP_ENABLED: "false"
+      PLATFORM_DAILY_LIMIT: ${PLATFORM_DAILY_LIMIT:?set positive limit no greater than 200}
+      ACCOUNT_DAILY_LIMIT: ${ACCOUNT_DAILY_LIMIT:?set positive limit no greater than 20}
+      WORKER_SOURCE_REVISION: ${WORKER_SOURCE_REVISION:-}
+      WORKER_SEED: ${WORKER_SEED:-}
+      REPLICATE_MODEL: ${REPLICATE_MODEL:-}
+      REPLICATE_VERSION: ${REPLICATE_VERSION:-}
+      REPLICATE_CONTRACT_SHA: ${REPLICATE_CONTRACT_SHA:-}
+      REPLICATE_API_TOKEN: ${REPLICATE_API_TOKEN:-}
+      REPLICATE_SPEND_BUDGET_ID: ${REPLICATE_SPEND_BUDGET_ID:-}
+      REPLICATE_AUTHORIZATION_SHA: ${REPLICATE_AUTHORIZATION_SHA:-}
+      REPLICATE_PRIVACY_ACCEPTANCE_SHA: ${REPLICATE_PRIVACY_ACCEPTANCE_SHA:-}
+      REPLICATE_LICENSE_ACCEPTANCE_SHA: ${REPLICATE_LICENSE_ACCEPTANCE_SHA:-}
+      REPLICATE_SAFETY_ACCEPTANCE_SHA: ${REPLICATE_SAFETY_ACCEPTANCE_SHA:-}
+      REPLICATE_BILLING_ACCEPTANCE_SHA: ${REPLICATE_BILLING_ACCEPTANCE_SHA:-}
+    volumes: ["media:/private"]
+    networks: [private, frontend]
+    cpus: 0.25
+    mem_limit: 512m
+    init: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    command: ["node", "scripts/worker.js", "--once"]
+  replicate-cleanup:
+    profiles: [replicate-cleanup]
+    build: .
+    restart: "no"
+    depends_on:
+      web: {condition: service_healthy}
+    environment:
+      <<: *replicate-environment
+      WORKER_MODE: disabled
+      REPLICATE_CLEANUP_ENABLED: ${REPLICATE_CLEANUP_ENABLED:-false}
+    volumes: ["media:/private"]
+    networks: [private, frontend]
+    cpus: 0.25
+    mem_limit: 256m
+    init: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    command: ["node", "scripts/maintenance.js", "--once"]
+
 volumes:
   database:
   media:

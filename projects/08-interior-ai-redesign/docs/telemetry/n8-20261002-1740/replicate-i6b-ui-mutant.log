@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: accepted controlnet and replicate each require separate consent before actual publication action
+ok 1 - accepted controlnet and replicate each require separate consent before actual publication action
+  ---
+  duration_ms: 9.526883
+  type: 'test'
+  ...
+# Subtest: unverified hosted result must never enable publication even with forged checked consent
+not ok 2 - unverified hosted result must never enable publication even with forged checked consent
+  ---
+  duration_ms: 2.421511
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-publication.test.js:21:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    HOSTED-UNVERIFIED must disable consent
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-publication.test.js:23:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+not ok 3 - fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+  ---
+  duration_ms: 1.51864
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-publication.test.js:27:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-publication.test.js:31:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 1
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 162.560838

@@ -1,0 +1,262 @@
+TAP version 13
+# Subtest: hosted config exact pins, fixed styles and nonenumerable private token
+ok 1 - hosted config exact pins, fixed styles and nonenumerable private token
+  ---
+  duration_ms: 5.139482
+  type: 'test'
+  ...
+# Subtest: missing/invalid pins, token, accepts, envelope, seed or source deny
+ok 2 - missing/invalid pins, token, accepts, envelope, seed or source deny
+  ---
+  duration_ms: 6.600332
+  type: 'test'
+  ...
+# Subtest: fixture retains wider seed and existing common validation
+ok 3 - fixture retains wider seed and existing common validation
+  ---
+  duration_ms: 1.57835
+  type: 'test'
+  ...
+# Subtest: actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+ok 4 - actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+  ---
+  duration_ms: 35.180263
+  type: 'test'
+  ...
+# Subtest: actual app: old authentication_required after logout/new login keeps new account visible
+ok 5 - actual app: old authentication_required after logout/new login keeps new account visible
+  ---
+  duration_ms: 27.679
+  type: 'test'
+  ...
+# Subtest: actual app: delayed logout blocks login until cookie-clearing response settles
+ok 6 - actual app: delayed logout blocks login until cookie-clearing response settles
+  ---
+  duration_ms: 31.653081
+  type: 'test'
+  ...
+# Subtest: actual app: earlier login completion keeps auth controls disabled until pending logout settles
+ok 7 - actual app: earlier login completion keeps auth controls disabled until pending logout settles
+  ---
+  duration_ms: 34.647453
+  type: 'test'
+  ...
+# Subtest: actual app: selection changes while reservation detail loads cannot render former selection
+ok 8 - actual app: selection changes while reservation detail loads cannot render former selection
+  ---
+  duration_ms: 27.93074
+  type: 'test'
+  ...
+# Subtest: real click barrier waits beyond hidden result through DELETE and every refresh; failures propagate and handler is restored
+ok 9 - real click barrier waits beyond hidden result through DELETE and every refresh; failures propagate and handler is restored
+  ---
+  duration_ms: 9.361563
+  type: 'test'
+  ...
+# Subtest: preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+ok 10 - preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+  ---
+  duration_ms: 6.868523
+  type: 'test'
+  ...
+# Subtest: unleased target becomes ready after preceding queue item, with no unnecessary sleep
+ok 11 - unleased target becomes ready after preceding queue item, with no unnecessary sleep
+  ---
+  duration_ms: 1.324211
+  type: 'test'
+  ...
+# Subtest: already-ready target is signaled without running an unrelated queue candidate
+ok 12 - already-ready target is signaled without running an unrelated queue candidate
+  ---
+  duration_ms: 1.57812
+  type: 'test'
+  ...
+# Subtest: missing, terminal and wrong fixture binding fail before queue or settlement
+ok 13 - missing, terminal and wrong fixture binding fail before queue or settlement
+  ---
+  duration_ms: 3.408252
+  type: 'test'
+  ...
+# Subtest: terminal transition during worker pass fails without a success signal
+ok 14 - terminal transition during worker pass fails without a success signal
+  ---
+  duration_ms: 1.85614
+  type: 'test'
+  ...
+# Subtest: not-ready target exhausts finite tries even when injected clock never advances
+ok 15 - not-ready target exhausts finite tries even when injected clock never advances
+  ---
+  duration_ms: 16.481796
+  type: 'test'
+  ...
+# Subtest: deadline stops retries and prevents signaling readiness attached too late
+ok 16 - deadline stops retries and prevents signaling readiness attached too late
+  ---
+  duration_ms: 0.70209
+  type: 'test'
+  ...
+# Subtest: deadline reached during a readiness read prevents a late success signal
+ok 17 - deadline reached during a readiness read prevents a late success signal
+  ---
+  duration_ms: 0.38884
+  type: 'test'
+  ...
+# Subtest: runtime/mode/UUID and existing dedicated ownership guards remain strict
+ok 18 - runtime/mode/UUID and existing dedicated ownership guards remain strict
+  ---
+  duration_ms: 1.54412
+  type: 'test'
+  ...
+# Subtest: query and worker failures propagate instead of reporting fixture success
+ok 19 - query and worker failures propagate instead of reporting fixture success
+  ---
+  duration_ms: 0.824261
+  type: 'test'
+  ...
+# Subtest: hosted fixture requires exact test runtime/origin/storage/caps and owned pool before SQL
+ok 20 - hosted fixture requires exact test runtime/origin/storage/caps and owned pool before SQL
+  ---
+  duration_ms: 2.312681
+  type: 'test'
+  ...
+# Subtest: mock boundaries always supply API and delivery transports, unique identities, safe counts only
+ok 21 - mock boundaries always supply API and delivery transports, unique identities, safe counts only
+  ---
+  duration_ms: 12.259034
+  type: 'test'
+  ...
+# Subtest: response gate proves send observation before release, and rejects a bounded expiry
+ok 22 - response gate proves send observation before release, and rejects a bounded expiry
+  ---
+  duration_ms: 8.378153
+  type: 'test'
+  ...
+# Subtest: actual worker config missing/disabled rejects before every mock HTTP and delivery call
+ok 23 - actual worker config missing/disabled rejects before every mock HTTP and delivery call
+  ---
+  duration_ms: 3.171881
+  type: 'test'
+  ...
+# Subtest: accepted controlnet and replicate each require separate consent before actual publication action
+ok 24 - accepted controlnet and replicate each require separate consent before actual publication action
+  ---
+  duration_ms: 6.015512
+  type: 'test'
+  ...
+# Subtest: unverified hosted result must never enable publication even with forged checked consent
+ok 25 - unverified hosted result must never enable publication even with forged checked consent
+  ---
+  duration_ms: 0.75159
+  type: 'test'
+  ...
+# Subtest: fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+ok 26 - fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+  ---
+  duration_ms: 1.896051
+  type: 'test'
+  ...
+# Subtest: uncertain response survives reload with same body/key; selection and account isolate
+ok 27 - uncertain response survives reload with same body/key; selection and account isolate
+  ---
+  duration_ms: 5.052342
+  type: 'test'
+  ...
+# Subtest: account switch aborts and rejects late former-owner image even if transport ignores abort
+ok 28 - account switch aborts and rejects late former-owner image even if transport ignores abort
+  ---
+  duration_ms: 2.303501
+  type: 'test'
+  ...
+# Subtest: native outcomes depend on promise; invocation starts immediately in user gesture
+ok 29 - native outcomes depend on promise; invocation starts immediately in user gesture
+  ---
+  duration_ms: 2.761261
+  type: 'test'
+  ...
+# Subtest: checkout rejects executable/insecure/credential URLs; fixture stays local
+ok 30 - checkout rejects executable/insecure/credential URLs; fixture stays local
+  ---
+  duration_ms: 0.7719
+  type: 'test'
+  ...
+# Subtest: late A resolution cannot bind A job to the submitted B body/key
+ok 31 - late A resolution cannot bind A job to the submitted B body/key
+  ---
+  duration_ms: 5.397212
+  type: 'test'
+  ...
+# Subtest: late authentication rejection across logout/login cannot escape to new account
+ok 32 - late authentication rejection across logout/login cannot escape to new account
+  ---
+  duration_ms: 1.05097
+  type: 'test'
+  ...
+# Subtest: evicted CDP body is never read; fresh DOM UUID binds to authenticated owner metadata
+ok 33 - evicted CDP body is never read; fresh DOM UUID binds to authenticated owner metadata
+  ---
+  duration_ms: 11.785534
+  type: 'test'
+  ...
+# Subtest: stale selected upload cannot satisfy a new successful POST
+ok 34 - stale selected upload cannot satisfy a new successful POST
+  ---
+  duration_ms: 4.619162
+  type: 'test'
+  ...
+# Subtest: existing owner UUID absent from DOM still cannot count as fresh
+ok 35 - existing owner UUID absent from DOM still cannot count as fresh
+  ---
+  duration_ms: 3.235061
+  type: 'test'
+  ...
+# Subtest: previous DOM UUID absent from owner list still cannot count as fresh
+ok 36 - previous DOM UUID absent from owner list still cannot count as fresh
+  ---
+  duration_ms: 2.527401
+  type: 'test'
+  ...
+# Subtest: non-UUID selection is rejected
+ok 37 - non-UUID selection is rejected
+  ---
+  duration_ms: 2.929981
+  type: 'test'
+  ...
+# Subtest: failed POST is rejected before DOM or metadata can imply success
+ok 38 - failed POST is rejected before DOM or metadata can imply success
+  ---
+  duration_ms: 5.726032
+  type: 'test'
+  ...
+# Subtest: new DOM UUID must match the single new owner entry
+ok 39 - new DOM UUID must match the single new owner entry
+  ---
+  duration_ms: 4.191862
+  type: 'test'
+  ...
+# Subtest: missing or ambiguous new owner metadata fails
+ok 40 - missing or ambiguous new owner metadata fails
+  ---
+  duration_ms: 8.361773
+  type: 'test'
+  ...
+# Subtest: missing dimensions, MIME or creation time fails
+ok 41 - missing dimensions, MIME or creation time fails
+  ---
+  duration_ms: 20.411637
+  type: 'test'
+  ...
+# Subtest: unauthenticated owner response and missing owner list fail closed
+ok 42 - unauthenticated owner response and missing owner list fail closed
+  ---
+  duration_ms: 10.707234
+  type: 'test'
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 696.685249

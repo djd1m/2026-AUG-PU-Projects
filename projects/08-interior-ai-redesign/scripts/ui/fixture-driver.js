@@ -10,6 +10,10 @@ import {driveFixturePayment} from './payment-ready.js';
 import {prepareArtifacts,canonical,sha,artifactRead} from '../../web/generation.js';
 import {migrate} from '../migrate.js';
 const marker='N8_F04B_OWNED_LOCAL_SOFTWARE_FIXTURE';
+const owned=new WeakSet();
+export function assertOwnedPool(pool) {
+  if(!owned.has(pool))throw new Error('dedicated_owned_fixture_required');
+}
 const source='7f99c245a59407eb84b106414ccc0e789f689300';
 export async function ownedPool(env=process.env) {
   const url=new URL(env.DATABASE_URL),schema=env.UI_SCHEMA;
@@ -21,7 +25,7 @@ export async function ownedPool(env=process.env) {
   try {
     const {rows:[v]}=await pool.query("SELECT current_setting('server_version_num')::int AS version,shobj_description(oid,'pg_database') AS marker FROM pg_database WHERE datname=current_database()");
     if(v.version<160000||v.version>=170000||v.marker!==marker)throw new Error('owned_pg16_marker_required');
-    return pool;
+    owned.add(pool);return pool;
   } catch(e){await pool.end();throw e;}
 }
 export function fixtureConfig(env=process.env) {

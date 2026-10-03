@@ -1,0 +1,13 @@
+{
+  "baseline_log": "replicate-i6b-focused-2.log",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "mutation": "accepted quality changed to anything except rejected",
+  "oracle": "HOSTED-UNVERIFIED must disable consent",
+  "production_sha256": "750bd7a95d70a5b5c97c07d2aedb060533e2df70a9c6929a19454de5604aff8b",
+  "mutant_sha256": "ca5b686b93026336be71d47606ef7ea8142740ccb9a772ae0be25e3af48baf8f",
+  "test_sha256": "0bd9e82b6b03dce015b23dfc1bfe6e01362d1ce08a22d60daf8b01cfb3f90dc6",
+  "production_unchanged": true,
+  "restored_exit": 0,
+  "restored_log": "replicate-i6b-ui-restored.log"
+}
