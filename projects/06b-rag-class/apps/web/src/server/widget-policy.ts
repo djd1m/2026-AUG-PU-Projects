@@ -2,7 +2,7 @@ import { planOf } from '@n6b/db';
 import { normalizeOrigin } from './origin';
 
 export const PRIVACY_NOTICE = 'Вопросы обрабатывает внешняя модель через OpenRouter (OpenAI). Не сообщайте персональные данные';
-export const PUBLIC_ID_RE = /^[A-Za-z0-9_-]{12}$/;
+export { PUBLIC_ID_RE } from '../lib/referral-cookie';
 
 /** Origin headers are serialized origins, unlike publication form URLs. Reject path/query/fragment. */
 export function requestOrigin(raw: string | null): string | null {

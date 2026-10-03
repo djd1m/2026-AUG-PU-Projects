@@ -1,0 +1,23 @@
+{
+  "property": "existing first-touch cookie is never overwritten or renewed",
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/referral-cookie.test.ts"
+  ],
+  "started_at": "2026-10-03T00:22:48.554319+00:00",
+  "finished_at": "2026-10-03T00:22:52.161304+00:00",
+  "source": "apps/web/src/lib/referral-cookie.ts",
+  "original_sha256": "60318ba919f27fa229f242162fad4ed4a0fb50963b5dbd1e10c7c87b52f84e6d",
+  "mutant_sha256": "5bb232c5a20d58a89e9b6a059c4a7792ffd4f81a2b164f04b5811ae4cbdc1503",
+  "restored_sha256": "60318ba919f27fa229f242162fad4ed4a0fb50963b5dbd1e10c7c87b52f84e6d",
+  "test_file": "apps/web/tests/unit/referral-cookie.test.ts",
+  "fixed_test_sha256": "4fce7bb0c96c33280336c6f977d3ec92e2cf3a7f112b860dba8238df10dea89e",
+  "red_exit": 1,
+  "green_exit": 0,
+  "exact_restore": true,
+  "red_log": "/tmp/n6b-f10-first-touch-red.log",
+  "green_log": "/tmp/n6b-f10-first-touch-green.log"
+}

@@ -33,7 +33,7 @@ export interface NewSession {
 export interface AuthStore {
   findAccount(email: string): Promise<AccountCredentials | null>;
   /** Атомарно: аккаунт + сессия. false — e-mail занят (аккаунт и сессия не созданы). */
-  register(email: string, passwordHash: string, kind: AccountKind, session: NewSession): Promise<boolean>;
+  register(email: string, passwordHash: string, kind: AccountKind, session: NewSession, referral?: string | null): Promise<boolean>;
   createSession(accountId: string, session: NewSession): Promise<void>;
   deleteSession(tokenHash: string): Promise<void>;
   findSession(tokenHash: string): Promise<{ account_id: string } | null>;
@@ -57,10 +57,10 @@ export class AuthService {
       expiresAt: new Date(Date.now() + SESSION_TTL_SECONDS * 1000) } };
   }
 
-  async register(email: string, password: string, kind: AccountKind): Promise<RegisterResult> {
+  async register(email: string, password: string, kind: AccountKind, referral: string | null = null): Promise<RegisterResult> {
     const passwordHash = await this.hasher.hash(password, BCRYPT_COST); // до короткой атомарной записи
     const session = this.newSession();
-    const created = await this.store.register(email, passwordHash, kind, session.record);
+    const created = await this.store.register(email, passwordHash, kind, session.record, referral);
     return created ? { ok: true, token: session.token } : { ok: false, reason: 'email-taken' };
   }
 

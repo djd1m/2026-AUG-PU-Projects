@@ -3,7 +3,7 @@
 // колонку password_hash роль кабинета не видит (foundation F-4). Создание бота — следующие фичи дорожной карты.
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { listCabinetBots, listCabinetSources, withTenant } from '@n6b/db';
+import { listCabinetBots, listCabinetSources, planOf, withTenant } from '@n6b/db';
 import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
 import { publicationOrigins } from '@/server/origin';
@@ -15,6 +15,7 @@ import { JobStatus } from './job-status';
 import { LogoutButton } from './logout-button';
 import { Sandbox } from './sandbox';
 import { PublishBot } from './publish-bot';
+import { BadgeRemoval } from './badge-removal';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Кабинет — RAG-бот для сайта' };
@@ -40,6 +41,7 @@ export default async function CabinetPage() {
         <LogoutButton />
       </header>
       <p>Вы вошли как <strong>{account.email ?? 'подаккаунт студии'}</strong>.</p>
+      {planOf(account.plan) === 'free' && <BadgeRemoval />}
       <CreateBot />
       {bots.length === 0 && <p>Ботов пока нет. Укажите имя и адрес сайта выше.</p>}
       {bots.map((bot) => (

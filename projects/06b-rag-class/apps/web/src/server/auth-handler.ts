@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { accountKindOf, moscowHour, type QuotaDecision, type QuotaKey } from '@n6b/db';
 import { type AuthService, SESSION_TTL_SECONDS } from './auth';
 import { addrHash, ClientAddressUnavailable, clientIp } from './ip';
+import { readReferralCookie } from '../lib/referral-cookie';
 
 export const SESSION_COOKIE = 'n6b_session';
 const MAX_BODY_BYTES = 4096;
@@ -106,7 +107,7 @@ export function createAuthHandler(action: 'register' | 'login' | 'logout', deps:
       const { email, password, kind } = parsed.data;
 
       if (action === 'register') {
-        const result = await deps.auth.register(email, password, accountKindOf(kind));
+        const result = await deps.auth.register(email, password, accountKindOf(kind), readReferralCookie(request));
         if (!result.ok) return fail(409, 'email_taken', 'Аккаунт с этим e-mail уже есть — войдите');
         return json(201, { data: { ok: true } }, sessionCookie(result.token, deps.production));
       }

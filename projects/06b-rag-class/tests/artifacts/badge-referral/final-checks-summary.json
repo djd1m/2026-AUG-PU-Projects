@@ -1,0 +1,13 @@
+{
+  "source_snapshot_sha256": "1a5bd1939c4851e85402f5a1669d35a61835c14a2f00e6d72ffb8be54f9a26a5",
+  "runner_image": "sha256:fe3e988600c58b59a9e1079e7788b0eec0e8f39603059593dc87d95386058cbc",
+  "full_regression_exit": 0,
+  "test_summaries": [
+    "Tests  532 passed (532)",
+    "Tests  225 passed (225)"
+  ],
+  "all_required_passed": true,
+  "command": "npm run typecheck && npm test && npm run test:int && npm run build",
+  "production_images": "[n6b-f10-referral-web:20261003] sha256:9bf6944d0ab3506b27e6237083e7ebf03d6bc28fb39fa64a00d257951747a3df\n[n6b-f10-referral-migrate:20261003] sha256:97855b74ba894e0a52d1d76316109e92dd7ed1b01230e119b7d1191bdb2a6956\n",
+  "checked_at": "2026-10-03T01:02:54.206014+00:00"
+}
