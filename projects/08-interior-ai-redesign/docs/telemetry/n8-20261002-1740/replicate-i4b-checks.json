@@ -1,0 +1,345 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4b",
+  "attempt_id": "replicate-i4b-1",
+  "source_revision": "4ebca31b55235076a5812894148135b6c4bd699e",
+  "started_at": "2026-10-03T12:21:51.605052Z",
+  "stage": "frozen",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "host resolved model/effort/usage unavailable",
+    "active/wait interval classification unavailable",
+    "historical per-check input hashes unavailable except explicitly captured maps and mutation; final snapshot binds current bytes"
+  ],
+  "route": {
+    "mechanical": "M",
+    "exit_code": 0,
+    "substantive": "XL",
+    "reason": "approved F07 private hosted execution and spend authority; plan retained; sole author explicit override"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "code and mocked offline boundary tests only; parent PG and I8 browser separate"
+  },
+  "scope": "exact i4b-slice-boundaries.md",
+  "exclusions": [
+    "I4c cleanup",
+    "schema/jobs/completion/I2/I3/public/quality/local generation/package/lock",
+    "external effects"
+  ],
+  "protected_previous_module_hashes": {
+    "web/media.js": "cb56df4fca0a3fe8144a413cd10ccd94186d53d2231fca8ce347eab016f60ad5",
+    "web/jobs.js": "16c8f7a47239f6eb028095deb329e78740e45c67f524adb40b79161f4b155b11",
+    "web/composite.js": "64371804a291201e5653ad360c365b4e6a574213b9c85628ea0cd7a7d33a3382",
+    "web/payments.js": "1cd6412a7e4448720fd92e752fd761b6b974b4e835fe9d2fdca33ca844b487aa",
+    "web/replicate-quality.js": "1d4f19b33c92bc0889d4984397739b4236566d1592d094087efd25b4b52cbb33",
+    "web/provider.js": "539eb4f311adb559b445f6f1f9fb5b2c962815efd1e529157a87f432f09bea09",
+    "web/generation.js": "3927d146c0ae84b8f6def135101caaa38e989c88f2f5794ebaf1c5c4b075f7ba",
+    "web/payment-fixture.js": "e37749c67b55ace79b18f78078dd1c753ab8350fb5d9565ee9987bb6a10e7077",
+    "web/quality.js": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+    "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+    "web/config.js": "451599f6fa194ea4345e9f23f537549f4e8aeff3d4ecc2482f3f1982c73fafad",
+    "web/app.js": "eff2dce109eaef87b821e2da3322356bc95e665b916f947c72524abda0fa0f1f",
+    "web/partners.js": "33d2f8fc635f181f87219be8b2ea06e60cef8f7fa6fcbf8eca6133bcd6c5575e",
+    "web/attribution.js": "eca7eb8182e9cb602c410f9203c965d2dec71bbaecba022ab2c49021f7900e85",
+    "web/replicate-evidence.js": "a75b154af512ba629e0a1fe827603e11d6ceabc16efb499e1538055634feef73",
+    "web/replicate-media.js": "55baa1f5a8686fc2256106888a4e9e82724745497f38aa741045812e2d781e94",
+    "web/auth.js": "85070f69d53add6a074ab9b81fd90d43d5707289a383332c531548a299b6b0d3",
+    "web/boundaries.js": "10f37fba266cde1ce2aae17d9bd57a0a21c61b952cf409781517f00501cc7c55",
+    "web/server.js": "c54dbe72719ff9dc7e3f5d685dcb68257fc20a1518b6632c67ec3a443061fceb",
+    "web/db.js": "b7313dbd768e51b426db8457ece9b6c2055a48145edbc826ba3fc54f47b1b842",
+    "web/sharing.js": "a85bf2b92e96b7f7ea8b66672221e068216b6107b42ecf770baf07d92653b0c3",
+    "web/public-pages.js": "49407383e405170748c293bd69efb32159379ec2d2c2dd3cef0db207ddbf0b8e",
+    "package.json": "c8fbc375bad4d45d73ccc3e83054ae01c7ee5955071aaace55c841bc115bb186",
+    "package-lock.json": "bee9eceb097e8218c1b12772e690be9d486a856c7f5fd65278e3e4741126ebd3",
+    "db/003-quality.sql": "daabc30f1c17b875050c5e89d6573dee32197b5439e4876ae68b1c936e403d87",
+    "db/001-foundation.sql": "0976a3aa1742d2cd5724b6f761e6b85747d1cf097100713290dfb8c16abf59cc",
+    "db/005-attribution.sql": "422a19029cd5580d3e3b663eb57e0173fe4a6a2a235aa67cc978f6605065aee4",
+    "db/002-generation.sql": "a724d4deb31241212abead386c0b4287cf09b7179dfbcf030236a24f9f6bba6a",
+    "db/008-replicate-evidence.sql": "aa4251b74c230f4a28c20f3cde109b4cccc0e81864392448a8c125582e75f33d",
+    "db/006-sharing.sql": "7224a4c71a281810ced5a4da8f010f981783908afffe875d5895a5401df7b6cb",
+    "db/004-payments.sql": "4d0c3f1299d75d8ae099cd09e5d7a696f29448f5e1560b96f79dc60e3befb6ae",
+    "db/007-replicate.sql": "3bce94bab8d6fd8ef9b45e810e1e26ccda8648a213665f64403501ab80b5a05f",
+    "tests/generation.test.js": "a07f333127eccf0202102543458e1381d61f88931d9e354167e28f4cc556c58e",
+    "tests/jobs.test.js": "15d261c448922da1e9cbb0b72bc63f0903c75abd564631118c363b997fe61bc3",
+    "tests/provider-submissions.test.js": "a2f44276eb51ef08dbf06a1b48ae933d701ff45d0465b2993377d8faf2e5d954"
+  },
+  "checks": [
+    {
+      "name": "initial test writes",
+      "exit_code": 1,
+      "reason": "root-relative paths in project cwd; no files written"
+    },
+    {
+      "name": "new worker/config initial",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "tests/replicate-generation.test.js",
+        "tests/replicate-worker-config.test.js"
+      ],
+      "exit_code": 1,
+      "at": "2026-10-03T12:31:04.297494+00:00",
+      "log": "replicate-i4b-local-initial.log"
+    },
+    {
+      "name": "worker/config corrected boundary setTimeout",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "tests/replicate-generation.test.js",
+        "tests/replicate-worker-config.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-local-corrected.log"
+    },
+    {
+      "name": "new units plus unchanged generation/jobs/provider",
+      "command": [
+        "/tmp/n8-node22",
+        "--import",
+        "./tests/replicate-generation-fixtures.js",
+        "--test",
+        "--test-concurrency=1",
+        "tests/replicate-generation.test.js",
+        "tests/replicate-worker-config.test.js",
+        "tests/generation.test.js",
+        "tests/jobs.test.js",
+        "tests/provider-submissions.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-local-final.log",
+      "at": "2026-10-03T12:34:25.570888+00:00",
+      "source_hashes": {
+        "web/replicate-generation.js": "34f6ba94a345615ae916ee9d434499be63a4e81c8715d2f6d2d6f4972f710661",
+        "web/replicate-worker-config.js": "209846a9ac796abf142f452890e965dee71947468d3fa01d4eca92bd07d103d4",
+        "web/provider-submissions.js": "f3c0330adfa05a010ac07e731ac097cc9fe9f1d36aebe79195cab94ecae84590",
+        "scripts/worker.js": "e03c8225e5194d0b9bb90beec07df4b44bd371a3f71e472cfd019e7585694bbf"
+      }
+    },
+    {
+      "name": "ESM static build",
+      "command": [
+        "/tmp/n8-node22",
+        "scripts/check.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-build.log",
+      "at": "2026-10-03T12:37:02.478593+00:00"
+    },
+    {
+      "name": "final affected worker config units",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "tests/replicate-generation.test.js",
+        "tests/replicate-worker-config.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-worker-final.log",
+      "at": "2026-10-03T12:37:04.798437+00:00"
+    },
+    {
+      "name": "worker guard mutation baseline",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=changed recovery seed or request binding",
+        "tests/replicate-generation.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-mutation-baseline.log",
+      "at": "2026-10-03T12:37:05.848111+00:00"
+    },
+    {
+      "name": "worker guard mutation disabled recovery comparison",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=changed recovery seed or request binding",
+        "tests/replicate-generation.test.js"
+      ],
+      "exit_code": 1,
+      "log": "replicate-i4b-mutation-mutant.log",
+      "at": "2026-10-03T12:37:06.921910+00:00"
+    },
+    {
+      "name": "worker guard mutation restored",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=changed recovery seed or request binding",
+        "tests/replicate-generation.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-mutation-restored.log",
+      "at": "2026-10-03T12:37:08.188178+00:00"
+    },
+    {
+      "name": "exact final ESM static build",
+      "command": [
+        "/tmp/n8-node22",
+        "scripts/check.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-build-freeze.log",
+      "at": "2026-10-03T12:39:12.918271+00:00"
+    },
+    {
+      "name": "final worker timing guard units",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "tests/replicate-generation.test.js",
+        "tests/replicate-worker-config.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-worker-freeze.log",
+      "at": "2026-10-03T12:39:15.614391+00:00"
+    },
+    {
+      "name": "frozen worker guard mutation baseline",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=changed recovery seed or request binding",
+        "tests/replicate-generation.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-mutation-freeze-baseline.log",
+      "at": "2026-10-03T12:39:16.587301+00:00"
+    },
+    {
+      "name": "frozen worker guard mutation disabled recovery comparison",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=changed recovery seed or request binding",
+        "tests/replicate-generation.test.js"
+      ],
+      "exit_code": 1,
+      "log": "replicate-i4b-mutation-freeze-mutant.log",
+      "at": "2026-10-03T12:39:17.645864+00:00"
+    },
+    {
+      "name": "frozen worker guard mutation restored",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=changed recovery seed or request binding",
+        "tests/replicate-generation.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-mutation-freeze-restored.log",
+      "at": "2026-10-03T12:39:18.605589+00:00"
+    },
+    {
+      "name": "final PG suite syntax only",
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate-generation.integration.test.js"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-pg-syntax.log"
+    },
+    {
+      "name": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "replicate-i4b-whitespace.log"
+    },
+    {
+      "name": "scope/protected/pin/line guards",
+      "exit_code": 0,
+      "log": "replicate-i4b-scope.log"
+    }
+  ],
+  "mutation": {
+    "production_sha256": "52a42dbfc5091735659f57574f86d72fad171fb6057ccbf930f676e749e4f89f",
+    "oracle_sha256": "9be9355860ffa0e4ffe656b239ae26b1b97032d66a282a83860cdcbb91a2711e",
+    "mutant_sha256": "27d85a6a950b173d95163b5878d49694faa8b8c515c158186fde078cad1aa58e",
+    "restored_sha256": "52a42dbfc5091735659f57574f86d72fad171fb6057ccbf930f676e749e4f89f",
+    "baseline_exit": 0,
+    "mutant_exit": 1,
+    "restored_exit": 0,
+    "meaning": "unchanged zero-GET oracle; disable recovery binding comparison; production never mutated",
+    "pass": true
+  },
+  "previous_mutation": {
+    "production_sha256": "34f6ba94a345615ae916ee9d434499be63a4e81c8715d2f6d2d6f4972f710661",
+    "oracle_sha256": "99c3466851fdef78f2202cbe69063e016fa81100872ee405fe83a97cd3226792",
+    "mutant_sha256": "cd0df6e577d6998421cf6942bb43ef786b95c334d3a34e4a398c82824ba51956",
+    "restored_sha256": "34f6ba94a345615ae916ee9d434499be63a4e81c8715d2f6d2d6f4972f710661",
+    "baseline_exit": 0,
+    "mutant_exit": 1,
+    "restored_exit": 0,
+    "meaning": "unchanged zero-GET oracle; disable recovery binding comparison; production never mutated",
+    "pass": true
+  },
+  "frozen_at": "2026-10-03T12:43:54.281727+00:00",
+  "product_test_files": [
+    {
+      "path": "web/replicate-generation.js",
+      "sha256": "52a42dbfc5091735659f57574f86d72fad171fb6057ccbf930f676e749e4f89f"
+    },
+    {
+      "path": "web/replicate-worker-config.js",
+      "sha256": "209846a9ac796abf142f452890e965dee71947468d3fa01d4eca92bd07d103d4"
+    },
+    {
+      "path": "scripts/worker.js",
+      "sha256": "e03c8225e5194d0b9bb90beec07df4b44bd371a3f71e472cfd019e7585694bbf"
+    },
+    {
+      "path": "web/provider-submissions.js",
+      "sha256": "f3c0330adfa05a010ac07e731ac097cc9fe9f1d36aebe79195cab94ecae84590"
+    },
+    {
+      "path": "tests/replicate-generation.test.js",
+      "sha256": "9be9355860ffa0e4ffe656b239ae26b1b97032d66a282a83860cdcbb91a2711e"
+    },
+    {
+      "path": "tests/replicate-generation.integration.test.js",
+      "sha256": "220f050a2797d20ca2689bd5cc51f374eb67906d3d9d23a6f094836ba0056ecc"
+    },
+    {
+      "path": "tests/replicate-generation-fixtures.js",
+      "sha256": "7b60f56b257ee404fe107c3ba45b9b6256456e43edd2b1629f434c659e848d1b"
+    },
+    {
+      "path": "tests/replicate-worker-config.test.js",
+      "sha256": "218aa6d5fb878536e5b8d9fcc54fffe94ecfce8ca6709a2fe0e812223ae769cb"
+    }
+  ],
+  "pending": [
+    "parent exact-source PG16 execution",
+    "parent fresh independent review",
+    "I4c remote cleanup",
+    "I6 actual send-CAS mutation",
+    "I7 full regression",
+    "I8 actual browser",
+    "separately authorized paid real-quality pilot"
+  ],
+  "elapsed_wall_ms": 1322677,
+  "active_wall_ms": null
+}

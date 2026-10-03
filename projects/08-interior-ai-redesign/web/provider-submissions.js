@@ -137,7 +137,7 @@ export function createProviderSubmissions(pool,config,{trustedClock}={}) {
     const budget=s?(await c.query('SELECT * FROM provider_spend_budget WHERE id=$1 FOR UPDATE',[s.spend_budget_id])).rows[0]:null;
     const now=await clock(c); // In particular AFTER a contended envelope lock.
     if (!live(j,now,claim.fence)) deny('submission_fence_expired');
-    const input=(await c.query('SELECT id,private_key,sha256,width,height,mime,deleted_at FROM upload WHERE id=$1 AND account_id=$2',
+    const input=(await c.query('SELECT id,account_id,private_key,sha256,width,height,mime,deleted_at FROM upload WHERE id=$1 AND account_id=$2',
       [j.upload_id,j.account_id])).rows[0];
     if (!input || input.deleted_at || (s && input.sha256!==s.source_input_sha)) deny('submission_input_revoked');
     if (s) {
@@ -156,10 +156,12 @@ export function createProviderSubmissions(pool,config,{trustedClock}={}) {
       const account=(await c.query('SELECT billing_hold FROM account WHERE id=$1',[j.account_id])).rows[0];
       if (account.billing_hold) deny('submission_billing_hold');
     }
+    const consumed_ticket=(await c.query(`SELECT id,consumed_at FROM attempt_ticket
+      WHERE job_id=$1 AND attempt_number=$2 AND NOT superseded`,[j.id,j.attempts])).rows[0]??null;
     const remaining_ms=Math.min(j.attempt_deadline.getTime(),j.hard_deadline.getTime())-now.getTime();
     return {claim:{job_id:j.id,account_id:j.account_id,fence:j.fence,attempt:j.attempts,
       attempt_deadline:j.attempt_deadline,hard_deadline:j.hard_deadline,lease_until:j.lease_until},
-      input,submission:s,db_now:now,remaining_ms};
+      input,submission:s,db_now:now,remaining_ms,style:j.style,job_created_at:j.created_at,consumed_ticket};
   }
   return {
     // Read-only worker context; never a browser response or a new send permit.

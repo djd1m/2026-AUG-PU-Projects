@@ -1,0 +1,47 @@
+TAP version 13
+# Subtest: changed recovery seed or request binding makes ZERO GET/POST
+    # Subtest: seed
+    ok 1 - seed
+      ---
+      duration_ms: 148.347853
+      type: 'test'
+      ...
+    # Subtest: request
+    ok 2 - request
+      ---
+      duration_ms: 118.730533
+      type: 'test'
+      ...
+    # Subtest: transmitted
+    ok 3 - transmitted
+      ---
+      duration_ms: 111.52491
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 4 - transform
+      ---
+      duration_ms: 100.709506
+      type: 'test'
+      ...
+    # Subtest: settings
+    ok 5 - settings
+      ---
+      duration_ms: 103.466307
+      type: 'test'
+      ...
+    1..5
+ok 1 - changed recovery seed or request binding makes ZERO GET/POST
+  ---
+  duration_ms: 587.447459
+  type: 'test'
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 893.98476
