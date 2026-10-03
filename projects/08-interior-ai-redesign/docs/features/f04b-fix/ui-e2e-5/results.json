@@ -1,0 +1,58 @@
+{
+  "source_revision": "6d04b91e545822b723bedd49f794f6aa228d4a69",
+  "snapshot_sha256": "bc2f8877c43c883c3c5a0b60d59dfbd7dc416b376947f2126c61aa5483cf70d2",
+  "started_at": "2026-10-03T02:49:43.338751+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 143,
+      "log": "/tmp/n8-ui-e2e-5/compose-config.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 1647,
+      "log": "/tmp/n8-ui-e2e-5/build.log"
+    },
+    {
+      "name": "startup",
+      "exit_code": 0,
+      "duration_ms": 8778,
+      "log": "/tmp/n8-ui-e2e-5/startup.log"
+    },
+    {
+      "name": "init-exit",
+      "exit_code": 0,
+      "duration_ms": 40,
+      "log": "/tmp/n8-ui-e2e-5/init-exit.log"
+    },
+    {
+      "name": "source-image",
+      "exit_code": 0,
+      "duration_ms": 48,
+      "log": "/tmp/n8-ui-e2e-5/source-image.log"
+    },
+    {
+      "name": "copy-client",
+      "exit_code": 0,
+      "duration_ms": 266,
+      "log": "/tmp/n8-ui-e2e-5/copy-client.log"
+    },
+    {
+      "name": "https",
+      "exit_code": 0,
+      "duration_ms": 728,
+      "log": "/tmp/n8-ui-e2e-5/https.log"
+    },
+    {
+      "name": "schema",
+      "exit_code": 0,
+      "duration_ms": 474,
+      "log": "/tmp/n8-ui-e2e-5/schema.log"
+    }
+  ],
+  "status": "startup_ready_browser_not_run",
+  "finished_at": "2026-10-03T02:49:55.465931+00:00",
+  "duration_ms": 12128
+}

@@ -1,0 +1,45 @@
+{
+  "status": "ready",
+  "reason": "Fresh92 host/83container/176client hashes checked, HTTPS200/schema6, fresh Astra real-delete ordering ACCEPT; actual browser pending.",
+  "at": "2026-10-03T02:51:49.307772+00:00",
+  "source_revision": "6d04b91e545822b723bedd49f794f6aa228d4a69",
+  "build_revision": "bc2f8877c43c883c3c5a0b60d59dfbd7dc416b376947f2126c61aa5483cf70d2",
+  "environment": "Owned n8-ui-e2e internal network; app image sha256:b2598431260c376d0c3bd14908b1d7779a50189577828a158c104021483516e5; Node22.20.0/PG16.10; exact HTTPS origin https://n8-ui.test; fixture provider; CPUtotal2; sharedbrowser remote9320 only temporarynetworkattachment, no sharedbrowsermount/secretenv.",
+  "environment_available": true,
+  "test_command": "docker exec n8-ui-e2e-web-1 timeout 600 node scripts/ui/browser.js",
+  "inputs": [
+    {
+      "name": "92 committed source files and83 matching runtime/container files",
+      "available": true
+    },
+    {
+      "name": "Owned PG16 DB marker/schema with6 migrations and synthetic upload fixture",
+      "available": true
+    },
+    {
+      "name": "HTTPS200, server test/fixture env exists with random secrets (values excluded)",
+      "available": true
+    },
+    {
+      "name": "Existing Playwright1.63 client packages tree 6751980766486b8c09a9158160008a10c0ca38f05e17fca64f45925d4d8b0e6a",
+      "available": true
+    },
+    {
+      "name": "Fresh Astra real-delete ordering ACCEPT; prior upload/payment/product findings closed",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Create synthetic local accounts, media, fenced jobs and verified fixture payments in owned schema only",
+    "Trusted owned SQL seeds for history/expiry/error-state UI tests, visibly software-only",
+    "Forward/delay/drop actual responses and inject native-share promises only for named failure tests",
+    "Write screenshots/results; close owncontexts; later detach browser and remove own stack",
+    "No GPU, external provider, mail, rental, deployment, live charges or public posting"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/features/f04b-fix/ui-e2e-5"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

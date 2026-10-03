@@ -1,0 +1,7 @@
+# Конкретная коррекция: завершение входа во время выхода
+
+Actual UI5 source6d04b91e failed at browser-cases.js209: login button enabled while actual logout response was held. app.js auth-form finally unconditionally sets disabled=false after pending load(); newer logout has already set logoutPending and disabled auth controls. Submit handler still checks logoutPending; no authentication bypass is claimed.
+
+Preserve existing AUTH-02, GALLERY-02 and R4 control-state expectations from accepted F04 design. Substantive XL privacy/session boundary remains, no new owner checkpoint within decisions-owner.md autonomy. Scope one minimal app.js correction plus deterministic actual-app race test in tests/ui-app-races.test.js and Markdown evidence. Do not hide the real interaction by waiting in the browser test, weakening disabled assertions or changing the matrix. Delay previous login load, start/logout and hold real logout promise, release previous login completion, assert controls stay disabled and login cannot issue until logout settles. Old product logic must fail, restored logic pass.
+
+Separate Sol6.1high≤10min, fresh Astra≤3min review, exact source/build test binding. Affected actual-app/state/unit suites and syntaxbuild; browserfullmatrix rerun mandatory. Backend/payment/schema/worker unchanged, do not repeat unrelated successful PG sets. Current failed browser attempts remain preserved. Product fix precedes resumption of independent F06 docs, whose prior attempt was explicitly interrupted. No provider/live/GPU/spend/deploy.
