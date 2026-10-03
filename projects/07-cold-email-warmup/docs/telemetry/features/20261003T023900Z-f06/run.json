@@ -12,7 +12,7 @@
   "started_at": "2026-10-03T02:41:50.928106+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "A implemented, unit31/PG115/401mutation/canary/imagePASS; fresh REVIEW A next",
+  "current_stage": "A fresh review REQUEST_CHANGES R1 passive cross-tab auth rebroadcast; correction next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -24,5 +24,6 @@
     "ac_met": 0,
     "ac_total": 12
   },
-  "author_a_runtime": "sol-a-runtime.json"
+  "author_a_runtime": "sol-a-runtime.json",
+  "review_a_runtime": "astra-a-runtime.json"
 }
