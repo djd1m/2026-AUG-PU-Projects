@@ -106,3 +106,7 @@ Private image preparation/import passed150 affected Node22 TAP tests after indep
 ### 2026-10-03 — Replicate I4a lifecycle accepted
 
 Durable hosted recovery now retains the original attempt, ticket and deadline; cleanup-only late identities cannot regain active authority. I4a F1 independent closure ACCEPT after realPG18/16/21 and unique-release/identity preservation checks. Initial review timeout and unexpected delegation remain in telemetry; actualAstra continuation and Sol author are separately attested. Hosted completion/evidence, worker/maintenance wiring, send-CASmutation, final regression/browser and real provider pilot remain pending. Current externalspend0.
+
+### 2026-10-03 — Replicate I5a evidence/completion accepted
+
+Append-only migration008 and strict hosted evidence preserve old local rows and unknown vendor metrics. Atomic completion remains private/unverified and binds durable succeeded identity, original ticket/input/deadline and current fence. Freshreview found deadline terminal regression; Sol restored shared expiry, meaningfuloldcodeRED andcorrectedPG16/18/21 passed, Astra F1closureACCEPT. Initialreviewtimeout andsame-threaddelivery retained; noactualprovidermeasurements claimed. NextI5b real-corpus/publicpredicateintegration, thenworker/maintenance, mutation/fullregression/browser. Externalspend0.
