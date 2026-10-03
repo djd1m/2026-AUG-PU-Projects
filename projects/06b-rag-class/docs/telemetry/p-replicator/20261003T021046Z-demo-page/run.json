@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "policy_version": "compact-quality-first-v2",
+  "project": "projects/06b-rag-class",
+  "pipeline": "go via existing fresh SPARC",
+  "profile": "compact-quality-first-v2",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex API native coordinator + bounded CLI workers",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "run_id": "20261003T021046Z-demo-page",
+  "feature": "demo-page",
+  "tier": "M (fresh SPARC exception to L)",
+  "started_at": "2026-10-03T02:10:46.364147+00:00",
+  "ended_at": null,
+  "status": "active",
+  "baseline_revision": "023cc72302235061681902faec86a7363a8664e3",
+  "final_revision": null,
+  "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
+  "risk_flags": [
+    "New public demo route",
+    "Same-origin quota gate and frame denial",
+    "Existing paid gateway reused without real paid calls"
+  ],
+  "quality": {},
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator actual model/usage/cost unavailable",
+    "Pre-record worktree preparation and roadmap context read unmeasured"
+  ]
+}
