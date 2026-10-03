@@ -1,0 +1,909 @@
+TAP version 13
+# Subtest: missing hosted authorization makes zero creates
+    # Subtest: absent
+    ok 1 - absent
+      ---
+      duration_ms: 2.18047
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 2 - empty
+      ---
+      duration_ms: 0.34093
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 3 - model
+      ---
+      duration_ms: 0.31347
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 4 - version
+      ---
+      duration_ms: 0.29732
+      type: 'test'
+      ...
+    # Subtest: digest
+    ok 5 - digest
+      ---
+      duration_ms: 0.26542
+      type: 'test'
+      ...
+    # Subtest: missing token
+    ok 6 - missing token
+      ---
+      duration_ms: 0.39911
+      type: 'test'
+      ...
+    # Subtest: empty token
+    ok 7 - empty token
+      ---
+      duration_ms: 0.275461
+      type: 'test'
+      ...
+    # Subtest: whitespace token
+    ok 8 - whitespace token
+      ---
+      duration_ms: 0.34982
+      type: 'test'
+      ...
+    # Subtest: newline token
+    ok 9 - newline token
+      ---
+      duration_ms: 0.61829
+      type: 'test'
+      ...
+    # Subtest: token too long
+    ok 10 - token too long
+      ---
+      duration_ms: 0.70972
+      type: 'test'
+      ...
+    # Subtest: origin override
+    ok 11 - origin override
+      ---
+      duration_ms: 0.36191
+      type: 'test'
+      ...
+    # Subtest: TLS override
+    ok 12 - TLS override
+      ---
+      duration_ms: 0.15491
+      type: 'test'
+      ...
+    # Subtest: response limit override
+    ok 13 - response limit override
+      ---
+      duration_ms: 0.14536
+      type: 'test'
+      ...
+    1..13
+ok 1 - missing hosted authorization makes zero creates
+  ---
+  duration_ms: 9.976454
+  type: 'test'
+  ...
+# Subtest: prepared request is closed, bounded, pinned and cryptographically bound
+    # Subtest: version
+    ok 1 - version
+      ---
+      duration_ms: 2.708821
+      type: 'test'
+      ...
+    # Subtest: extra top field
+    ok 2 - extra top field
+      ---
+      duration_ms: 0.85578
+      type: 'test'
+      ...
+    # Subtest: unknown input
+    ok 3 - unknown input
+      ---
+      duration_ms: 0.57239
+      type: 'test'
+      ...
+    # Subtest: URL image
+    ok 4 - URL image
+      ---
+      duration_ms: 0.60738
+      type: 'test'
+      ...
+    # Subtest: PNG not prepared JPEG
+    ok 5 - PNG not prepared JPEG
+      ---
+      duration_ms: 0.74166
+      type: 'test'
+      ...
+    # Subtest: noncanonical base64
+    ok 6 - noncanonical base64
+      ---
+      duration_ms: 0.420201
+      type: 'test'
+      ...
+    # Subtest: empty image
+    ok 7 - empty image
+      ---
+      duration_ms: 0.44163
+      type: 'test'
+      ...
+    # Subtest: oversize image
+    ok 8 - oversize image
+      ---
+      duration_ms: 3.061051
+      type: 'test'
+      ...
+    # Subtest: oversize JSON
+    ok 9 - oversize JSON
+      ---
+      duration_ms: 1.51341
+      type: 'test'
+      ...
+    # Subtest: prompt bytes
+    ok 10 - prompt bytes
+      ---
+      duration_ms: 2.941431
+      type: 'test'
+      ...
+    # Subtest: empty prompt
+    ok 11 - empty prompt
+      ---
+      duration_ms: 0.78734
+      type: 'test'
+      ...
+    # Subtest: samples
+    ok 12 - samples
+      ---
+      duration_ms: 0.58811
+      type: 'test'
+      ...
+    # Subtest: resolution
+    ok 13 - resolution
+      ---
+      duration_ms: 0.37066
+      type: 'test'
+      ...
+    # Subtest: detect
+    ok 14 - detect
+      ---
+      duration_ms: 0.358161
+      type: 'test'
+      ...
+    # Subtest: steps
+    ok 15 - steps
+      ---
+      duration_ms: 0.3367
+      type: 'test'
+      ...
+    # Subtest: scale
+    ok 16 - scale
+      ---
+      duration_ms: 0.40076
+      type: 'test'
+      ...
+    # Subtest: eta
+    ok 17 - eta
+      ---
+      duration_ms: 0.3511
+      type: 'test'
+      ...
+    # Subtest: random seed
+    ok 18 - random seed
+      ---
+      duration_ms: 0.33122
+      type: 'test'
+      ...
+    # Subtest: seed fraction
+    ok 19 - seed fraction
+      ---
+      duration_ms: 0.45801
+      type: 'test'
+      ...
+    # Subtest: large seed
+    ok 20 - large seed
+      ---
+      duration_ms: 0.404741
+      type: 'test'
+      ...
+    # Subtest: getter
+    ok 21 - getter
+      ---
+      duration_ms: 0.59809
+      type: 'test'
+      ...
+    # Subtest: bad request_sha
+    ok 22 - bad request_sha
+      ---
+      duration_ms: 1.31925
+      type: 'test'
+      ...
+    # Subtest: bad transmitted_input_sha
+    ok 23 - bad transmitted_input_sha
+      ---
+      duration_ms: 0.511801
+      type: 'test'
+      ...
+    # Subtest: bad contract_sha
+    ok 24 - bad contract_sha
+      ---
+      duration_ms: 0.45533
+      type: 'test'
+      ...
+    # Subtest: bad version
+    ok 25 - bad version
+      ---
+      duration_ms: 0.42351
+      type: 'test'
+      ...
+    # Subtest: bad source_input_sha
+    ok 26 - bad source_input_sha
+      ---
+      duration_ms: 0.56765
+      type: 'test'
+      ...
+    1..26
+ok 2 - prepared request is closed, bounded, pinned and cryptographically bound
+  ---
+  duration_ms: 50.994278
+  type: 'test'
+  ...
+# Subtest: async create/get/cancel use exact fixed paths, TLS and header flags
+ok 3 - async create/get/cancel use exact fixed paths, TLS and header flags
+  ---
+  duration_ms: 15.380986
+  type: 'test'
+  ...
+# Subtest: durable authority denial and throw cause zero POST
+    # Subtest: false
+    ok 1 - false
+      ---
+      duration_ms: 1.45117
+      type: 'test'
+      ...
+    # Subtest: throw
+    ok 2 - throw
+      ---
+      duration_ms: 1.250401
+      type: 'test'
+      ...
+    # Subtest: truthy
+    ok 3 - truthy
+      ---
+      duration_ms: 2.236441
+      type: 'test'
+      ...
+    # Subtest: missing final callback
+    ok 4 - missing final callback
+      ---
+      duration_ms: 0.66519
+      type: 'test'
+      ...
+    # Subtest: throwing final callback
+    ok 5 - throwing final callback
+      ---
+      duration_ms: 1.159671
+      type: 'test'
+      ...
+    1..5
+ok 4 - durable authority denial and throw cause zero POST
+  ---
+  duration_ms: 7.932693
+  type: 'test'
+  ...
+# Subtest: lost create response never creates twice
+ok 5 - lost create response never creates twice
+  ---
+  duration_ms: 2.573921
+  type: 'test'
+  ...
+# Subtest: crash after committed submitting before invocation remains no-replay to another caller
+ok 6 - crash after committed submitting before invocation remains no-replay to another caller
+  ---
+  duration_ms: 0.99531
+  type: 'test'
+  ...
+# Subtest: every bad POST class is one-shot and keeps conservative reservation
+    # Subtest: HTTP 400
+    ok 1 - HTTP 400
+      ---
+      duration_ms: 2.065201
+      type: 'test'
+      ...
+    # Subtest: HTTP 401
+    ok 2 - HTTP 401
+      ---
+      duration_ms: 1.274111
+      type: 'test'
+      ...
+    # Subtest: HTTP 403
+    ok 3 - HTTP 403
+      ---
+      duration_ms: 0.81813
+      type: 'test'
+      ...
+    # Subtest: HTTP 404
+    ok 4 - HTTP 404
+      ---
+      duration_ms: 0.81975
+      type: 'test'
+      ...
+    # Subtest: HTTP 422
+    ok 5 - HTTP 422
+      ---
+      duration_ms: 1.694461
+      type: 'test'
+      ...
+    # Subtest: HTTP 429
+    ok 6 - HTTP 429
+      ---
+      duration_ms: 2.037401
+      type: 'test'
+      ...
+    # Subtest: HTTP 500
+    ok 7 - HTTP 500
+      ---
+      duration_ms: 1.37821
+      type: 'test'
+      ...
+    # Subtest: HTTP 502
+    ok 8 - HTTP 502
+      ---
+      duration_ms: 1.176191
+      type: 'test'
+      ...
+    # Subtest: HTTP 503
+    ok 9 - HTTP 503
+      ---
+      duration_ms: 1.37028
+      type: 'test'
+      ...
+    # Subtest: reset
+    ok 10 - reset
+      ---
+      duration_ms: 1.494991
+      type: 'test'
+      ...
+    # Subtest: timeout
+    ok 11 - timeout
+      ---
+      duration_ms: 1.07869
+      type: 'test'
+      ...
+    # Subtest: socket error
+    ok 12 - socket error
+      ---
+      duration_ms: 0.851611
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 13 - malformed
+      ---
+      duration_ms: 1.95702
+      type: 'test'
+      ...
+    # Subtest: lost ID
+    ok 14 - lost ID
+      ---
+      duration_ms: 1.739911
+      type: 'test'
+      ...
+    # Subtest: invalid ID
+    ok 15 - invalid ID
+      ---
+      duration_ms: 2.294131
+      type: 'test'
+      ...
+    # Subtest: oversized ID
+    ok 16 - oversized ID
+      ---
+      duration_ms: 2.067121
+      type: 'test'
+      ...
+    # Subtest: unicode ID
+    ok 17 - unicode ID
+      ---
+      duration_ms: 1.69858
+      type: 'test'
+      ...
+    # Subtest: wrong model
+    ok 18 - wrong model
+      ---
+      duration_ms: 1.874731
+      type: 'test'
+      ...
+    # Subtest: wrong version
+    ok 19 - wrong version
+      ---
+      duration_ms: 1.930061
+      type: 'test'
+      ...
+    # Subtest: unknown status
+    ok 20 - unknown status
+      ---
+      duration_ms: 1.782381
+      type: 'test'
+      ...
+    # Subtest: redirect
+    ok 21 - redirect
+      ---
+      duration_ms: 2.663851
+      type: 'test'
+      ...
+    # Subtest: header oversize
+    ok 22 - header oversize
+      ---
+      duration_ms: 1.28942
+      type: 'test'
+      ...
+    # Subtest: stream oversize
+    ok 23 - stream oversize
+      ---
+      duration_ms: 1.676451
+      type: 'test'
+      ...
+    # Subtest: encoded response
+    ok 24 - encoded response
+      ---
+      duration_ms: 1.32171
+      type: 'test'
+      ...
+    # Subtest: wrong MIME
+    ok 25 - wrong MIME
+      ---
+      duration_ms: 4.369992
+      type: 'test'
+      ...
+    # Subtest: length mismatch
+    ok 26 - length mismatch
+      ---
+      duration_ms: 1.416161
+      type: 'test'
+      ...
+    # Subtest: wrong output count
+    ok 27 - wrong output count
+      ---
+      duration_ms: 1.03807
+      type: 'test'
+      ...
+    # Subtest: wrong output slots
+    ok 28 - wrong output slots
+      ---
+      duration_ms: 1.556171
+      type: 'test'
+      ...
+    1..28
+ok 7 - every bad POST class is one-shot and keeps conservative reservation
+  ---
+  duration_ms: 52.390989
+  type: 'test'
+  ...
+# Subtest: returned authorization must match immutable request, version, claim and prepared binding
+    # Subtest: request
+    ok 1 - request
+      ---
+      duration_ms: 0.75288
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 2 - version
+      ---
+      duration_ms: 0.46703
+      type: 'test'
+      ...
+    # Subtest: contract
+    ok 3 - contract
+      ---
+      duration_ms: 0.53368
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 4 - model
+      ---
+      duration_ms: 1.14722
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 5 - transform
+      ---
+      duration_ms: 0.65806
+      type: 'test'
+      ...
+    # Subtest: job
+    ok 6 - job
+      ---
+      duration_ms: 0.758391
+      type: 'test'
+      ...
+    # Subtest: attempt
+    ok 7 - attempt
+      ---
+      duration_ms: 0.67576
+      type: 'test'
+      ...
+    # Subtest: fence
+    ok 8 - fence
+      ---
+      duration_ms: 1.0713
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 9 - deadline
+      ---
+      duration_ms: 1.483421
+      type: 'test'
+      ...
+    # Subtest: state
+    ok 10 - state
+      ---
+      duration_ms: 1.1974
+      type: 'test'
+      ...
+    # Subtest: identity already known
+    ok 11 - identity already known
+      ---
+      duration_ms: 0.857311
+      type: 'test'
+      ...
+    # Subtest: quarantine
+    ok 12 - quarantine
+      ---
+      duration_ms: 0.57544
+      type: 'test'
+      ...
+    # Subtest: bad submission ID
+    ok 13 - bad submission ID
+      ---
+      duration_ms: 0.97291
+      type: 'test'
+      ...
+    # Subtest: bad ticket
+    ok 14 - bad ticket
+      ---
+      duration_ms: 0.872311
+      type: 'test'
+      ...
+    # Subtest: acceptance
+    ok 15 - acceptance
+      ---
+      duration_ms: 0.81296
+      type: 'test'
+      ...
+    1..15
+ok 8 - returned authorization must match immutable request, version, claim and prepared binding
+  ---
+  duration_ms: 15.353775
+  type: 'test'
+  ...
+# Subtest: final abort, deadline and revocation prevent invocation after committed authorization
+    # Subtest: abort
+    ok 1 - abort
+      ---
+      duration_ms: 1.094131
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 2 - deadline
+      ---
+      duration_ms: 1.27314
+      type: 'test'
+      ...
+    # Subtest: revoked
+    ok 3 - revoked
+      ---
+      duration_ms: 0.776761
+      type: 'test'
+      ...
+    # Subtest: final clock throw
+    ok 4 - final clock throw
+      ---
+      duration_ms: 1.07627
+      type: 'test'
+      ...
+    # Subtest: final binding mutation
+    ok 5 - final binding mutation
+      ---
+      duration_ms: 0.91651
+      type: 'test'
+      ...
+    # Subtest: claim mutation
+    ok 6 - claim mutation
+      ---
+      duration_ms: 0.783321
+      type: 'test'
+      ...
+    1..6
+ok 9 - final abort, deadline and revocation prevent invocation after committed authorization
+  ---
+  duration_ms: 9.073133
+  type: 'test'
+  ...
+# Subtest: late valid ID is bound for cleanup after abort/deadline and never grants output
+    # Subtest: abort
+    ok 1 - abort
+      ---
+      duration_ms: 2.913221
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 2 - deadline
+      ---
+      duration_ms: 1.3033
+      type: 'test'
+      ...
+    # Subtest: lease expired
+    ok 3 - lease expired
+      ---
+      duration_ms: 1.570911
+      type: 'test'
+      ...
+    1..3
+ok 10 - late valid ID is bound for cleanup after abort/deadline and never grants output
+  ---
+  duration_ms: 6.842363
+  type: 'test'
+  ...
+# Subtest: lost ID commit and identity conflict never replay or overwrite/publish
+    # Subtest: lost ID commit
+    ok 1 - lost ID commit
+      ---
+      duration_ms: 1.957971
+      type: 'test'
+      ...
+    # Subtest: durably bound but commit acknowledgement lost
+    ok 2 - durably bound but commit acknowledgement lost
+      ---
+      duration_ms: 4.676522
+      type: 'test'
+      ...
+    # Subtest: identity conflict quarantined
+    ok 3 - identity conflict quarantined
+      ---
+      duration_ms: 3.650271
+      type: 'test'
+      ...
+    1..3
+ok 11 - lost ID commit and identity conflict never replay or overwrite/publish
+  ---
+  duration_ms: 11.378404
+  type: 'test'
+  ...
+# Subtest: provider bodies and unknown metrics cannot leak or become measurements
+ok 12 - provider bodies and unknown metrics cannot leak or become measurements
+  ---
+  duration_ms: 1.800661
+  type: 'test'
+  ...
+# Subtest: GET validates identity and status, rejects redirects and bounds streamed responses
+    # Subtest: identity
+    ok 1 - identity
+      ---
+      duration_ms: 6.184812
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 2 - status
+      ---
+      duration_ms: 1.738661
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 3 - model
+      ---
+      duration_ms: 1.930691
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 4 - version
+      ---
+      duration_ms: 2.449861
+      type: 'test'
+      ...
+    # Subtest: redirect
+    ok 5 - redirect
+      ---
+      duration_ms: 2.529321
+      type: 'test'
+      ...
+    # Subtest: body oversize
+    ok 6 - body oversize
+      ---
+      duration_ms: 1.43437
+      type: 'test'
+      ...
+    # Subtest: header oversize
+    ok 7 - header oversize
+      ---
+      duration_ms: 0.958641
+      type: 'test'
+      ...
+    # Subtest: succeeded missing depth
+    ok 8 - succeeded missing depth
+      ---
+      duration_ms: 1.26206
+      type: 'test'
+      ...
+    # Subtest: succeeded extra output
+    ok 9 - succeeded extra output
+      ---
+      duration_ms: 2.648031
+      type: 'test'
+      ...
+    # Subtest: succeeded raw invalid URI
+    ok 10 - succeeded raw invalid URI
+      ---
+      duration_ms: 1.279181
+      type: 'test'
+      ...
+    # Subtest: succeeded HTTP URI
+    ok 11 - succeeded HTTP URI
+      ---
+      duration_ms: 2.06848
+      type: 'test'
+      ...
+    # Subtest: succeeded long URI
+    ok 12 - succeeded long URI
+      ---
+      duration_ms: 1.347911
+      type: 'test'
+      ...
+    1..12
+ok 13 - GET validates identity and status, rejects redirects and bounds streamed responses
+  ---
+  duration_ms: 28.8134
+  type: 'test'
+  ...
+# Subtest: bounded GET retries handle 429, faults, fixed deadline and abort
+    # Subtest: 429 Retry-After is at most five seconds
+    ok 1 - 429 Retry-After is at most five seconds
+      ---
+      duration_ms: 2.001411
+      type: 'test'
+      ...
+    # Subtest: 429 fractional Retry-After
+    ok 2 - 429 fractional Retry-After
+      ---
+      duration_ms: 1.897011
+      type: 'test'
+      ...
+    # Subtest: transient faults stop at three consecutive failures
+    ok 3 - transient faults stop at three consecutive failures
+      ---
+      duration_ms: 2.09797
+      type: 'test'
+      ...
+    # Subtest: success resets consecutive fault count; ordinary interval is two seconds
+    ok 4 - success resets consecutive fault count; ordinary interval is two seconds
+      ---
+      duration_ms: 2.100641
+      type: 'test'
+      ...
+    # Subtest: wait is capped at original remaining deadline
+    ok 5 - wait is capped at original remaining deadline
+      ---
+      duration_ms: 1.393971
+      type: 'test'
+      ...
+    # Subtest: abort during retry wait prevents another GET
+    ok 6 - abort during retry wait prevents another GET
+      ---
+      duration_ms: 1.739
+      type: 'test'
+      ...
+    # Subtest: total HTTP timer caps a stalled injected stream
+    ok 7 - total HTTP timer caps a stalled injected stream
+      ---
+      duration_ms: 54.18238
+      type: 'test'
+      ...
+    1..7
+ok 14 - bounded GET retries handle 429, faults, fixed deadline and abort
+  ---
+  duration_ms: 66.701884
+  type: 'test'
+  ...
+# Subtest: budgets cannot reset, increase, run backwards or hide invalid trusted values
+ok 15 - budgets cannot reset, increase, run backwards or hide invalid trusted values
+  ---
+  duration_ms: 2.379441
+  type: 'test'
+  ...
+# Subtest: cancellation is safe observation without replay, completion or refund authority
+ok 16 - cancellation is safe observation without replay, completion or refund authority
+  ---
+  duration_ms: 2.978101
+  type: 'test'
+  ...
+# Subtest: hosted mode remains disabled without activation evidence
+ok 17 - hosted mode remains disabled without activation evidence
+  ---
+  duration_ms: 0.8126
+  type: 'test'
+  ...
+# Subtest: maximum prepared JPEG and prompts stay below literal request limit; response limit is inclusive
+ok 18 - maximum prepared JPEG and prompts stay below literal request limit; response limit is inclusive
+  ---
+  duration_ms: 20.934498
+  type: 'test'
+  ...
+# Subtest: trailing newline token and IDs fail closed before transport or identity binding
+ok 19 - trailing newline token and IDs fail closed before transport or identity binding
+  ---
+  duration_ms: 1.78228
+  type: 'test'
+  ...
+# Subtest: all provider terminal statuses are observations without local job completion
+    # Subtest: starting
+    ok 1 - starting
+      ---
+      duration_ms: 1.418131
+      type: 'test'
+      ...
+    # Subtest: processing
+    ok 2 - processing
+      ---
+      duration_ms: 0.8106
+      type: 'test'
+      ...
+    # Subtest: succeeded
+    ok 3 - succeeded
+      ---
+      duration_ms: 0.704761
+      type: 'test'
+      ...
+    # Subtest: failed
+    ok 4 - failed
+      ---
+      duration_ms: 0.71819
+      type: 'test'
+      ...
+    # Subtest: canceled
+    ok 5 - canceled
+      ---
+      duration_ms: 2.605611
+      type: 'test'
+      ...
+    # Subtest: aborted
+    ok 6 - aborted
+      ---
+      duration_ms: 1.842451
+      type: 'test'
+      ...
+    1..6
+ok 20 - all provider terminal statuses are observations without local job completion
+  ---
+  duration_ms: 9.456344
+  type: 'test'
+  ...
+# Subtest: abort in flight is ambiguous, attempts no retry and exposes no raw error
+ok 21 - abort in flight is ambiguous, attempts no retry and exposes no raw error
+  ---
+  duration_ms: 19.261117
+  type: 'test'
+  ...
+# Subtest: invalid UTF8 response fails closed and does not bind an ID
+ok 22 - invalid UTF8 response fails closed and does not bind an ID
+  ---
+  duration_ms: 1.63338
+  type: 'test'
+  ...
+# Subtest: injected sleepers remain abortable and capped at the original deadline
+ok 23 - injected sleepers remain abortable and capped at the original deadline
+  ---
+  duration_ms: 22.341348
+  type: 'test'
+  ...
+# Subtest: observation crossing the deadline cannot make private output eligible
+ok 24 - observation crossing the deadline cannot make private output eligible
+  ---
+  duration_ms: 3.191111
+  type: 'test'
+  ...
+1..24
+# tests 148
+# suites 0
+# pass 148
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 377.477485

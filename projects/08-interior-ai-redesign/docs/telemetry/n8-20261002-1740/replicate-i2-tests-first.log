@@ -1,0 +1,1010 @@
+TAP version 13
+# Subtest: missing hosted authorization makes zero creates
+    # Subtest: absent
+    ok 1 - absent
+      ---
+      duration_ms: 3.573262
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 2 - empty
+      ---
+      duration_ms: 0.46047
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 3 - model
+      ---
+      duration_ms: 0.651811
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 4 - version
+      ---
+      duration_ms: 0.66342
+      type: 'test'
+      ...
+    # Subtest: digest
+    ok 5 - digest
+      ---
+      duration_ms: 0.86675
+      type: 'test'
+      ...
+    # Subtest: missing token
+    ok 6 - missing token
+      ---
+      duration_ms: 0.468831
+      type: 'test'
+      ...
+    # Subtest: empty token
+    ok 7 - empty token
+      ---
+      duration_ms: 0.45558
+      type: 'test'
+      ...
+    # Subtest: whitespace token
+    ok 8 - whitespace token
+      ---
+      duration_ms: 0.88093
+      type: 'test'
+      ...
+    # Subtest: newline token
+    ok 9 - newline token
+      ---
+      duration_ms: 1.134661
+      type: 'test'
+      ...
+    # Subtest: token too long
+    ok 10 - token too long
+      ---
+      duration_ms: 0.9973
+      type: 'test'
+      ...
+    # Subtest: origin override
+    ok 11 - origin override
+      ---
+      duration_ms: 0.35199
+      type: 'test'
+      ...
+    # Subtest: TLS override
+    ok 12 - TLS override
+      ---
+      duration_ms: 0.25036
+      type: 'test'
+      ...
+    # Subtest: response limit override
+    ok 13 - response limit override
+      ---
+      duration_ms: 0.4505
+      type: 'test'
+      ...
+    1..13
+ok 1 - missing hosted authorization makes zero creates
+  ---
+  duration_ms: 18.674737
+  type: 'test'
+  ...
+# Subtest: prepared request is closed, bounded, pinned and cryptographically bound
+    # Subtest: version
+    ok 1 - version
+      ---
+      duration_ms: 6.286652
+      type: 'test'
+      ...
+    # Subtest: extra top field
+    ok 2 - extra top field
+      ---
+      duration_ms: 1.102861
+      type: 'test'
+      ...
+    # Subtest: unknown input
+    ok 3 - unknown input
+      ---
+      duration_ms: 1.07856
+      type: 'test'
+      ...
+    # Subtest: URL image
+    ok 4 - URL image
+      ---
+      duration_ms: 1.098151
+      type: 'test'
+      ...
+    # Subtest: PNG not prepared JPEG
+    ok 5 - PNG not prepared JPEG
+      ---
+      duration_ms: 0.99461
+      type: 'test'
+      ...
+    # Subtest: noncanonical base64
+    ok 6 - noncanonical base64
+      ---
+      duration_ms: 0.68538
+      type: 'test'
+      ...
+    # Subtest: empty image
+    ok 7 - empty image
+      ---
+      duration_ms: 0.392931
+      type: 'test'
+      ...
+    # Subtest: oversize image
+    ok 8 - oversize image
+      ---
+      duration_ms: 3.113741
+      type: 'test'
+      ...
+    # Subtest: oversize JSON
+    ok 9 - oversize JSON
+      ---
+      duration_ms: 1.4413
+      type: 'test'
+      ...
+    # Subtest: prompt bytes
+    ok 10 - prompt bytes
+      ---
+      duration_ms: 0.963211
+      type: 'test'
+      ...
+    # Subtest: empty prompt
+    ok 11 - empty prompt
+      ---
+      duration_ms: 0.59635
+      type: 'test'
+      ...
+    # Subtest: samples
+    ok 12 - samples
+      ---
+      duration_ms: 3.580081
+      type: 'test'
+      ...
+    # Subtest: resolution
+    ok 13 - resolution
+      ---
+      duration_ms: 0.510861
+      type: 'test'
+      ...
+    # Subtest: detect
+    ok 14 - detect
+      ---
+      duration_ms: 0.30501
+      type: 'test'
+      ...
+    # Subtest: steps
+    ok 15 - steps
+      ---
+      duration_ms: 0.24915
+      type: 'test'
+      ...
+    # Subtest: scale
+    ok 16 - scale
+      ---
+      duration_ms: 0.27242
+      type: 'test'
+      ...
+    # Subtest: eta
+    ok 17 - eta
+      ---
+      duration_ms: 0.27366
+      type: 'test'
+      ...
+    # Subtest: random seed
+    ok 18 - random seed
+      ---
+      duration_ms: 0.25666
+      type: 'test'
+      ...
+    # Subtest: seed fraction
+    ok 19 - seed fraction
+      ---
+      duration_ms: 0.36026
+      type: 'test'
+      ...
+    # Subtest: large seed
+    ok 20 - large seed
+      ---
+      duration_ms: 0.241291
+      type: 'test'
+      ...
+    # Subtest: getter
+    ok 21 - getter
+      ---
+      duration_ms: 0.37005
+      type: 'test'
+      ...
+    # Subtest: bad request_sha
+    ok 22 - bad request_sha
+      ---
+      duration_ms: 0.43515
+      type: 'test'
+      ...
+    # Subtest: bad transmitted_input_sha
+    ok 23 - bad transmitted_input_sha
+      ---
+      duration_ms: 0.33508
+      type: 'test'
+      ...
+    # Subtest: bad contract_sha
+    ok 24 - bad contract_sha
+      ---
+      duration_ms: 0.36976
+      type: 'test'
+      ...
+    # Subtest: bad version
+    ok 25 - bad version
+      ---
+      duration_ms: 0.32179
+      type: 'test'
+      ...
+    # Subtest: bad source_input_sha
+    ok 26 - bad source_input_sha
+      ---
+      duration_ms: 0.450611
+      type: 'test'
+      ...
+    1..26
+ok 2 - prepared request is closed, bounded, pinned and cryptographically bound
+  ---
+  duration_ms: 53.847829
+  type: 'test'
+  ...
+# Subtest: async create/get/cancel use exact fixed paths, TLS and header flags
+not ok 3 - async create/get/cancel use exact fixed paths, TLS and header flags
+  ---
+  duration_ms: 14.053685
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:134:1'
+  failureType: 'testCodeFailure'
+  error: 'provider_authority_unavailable'
+  code: 'provider_authority_unavailable'
+  name: 'ReplicateError'
+  stack: |-
+    deny (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate.js:23:25)
+    Object.create (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate.js:203:66)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:137:16)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: durable authority denial and throw cause zero POST
+    # Subtest: false
+    ok 1 - false
+      ---
+      duration_ms: 1.225841
+      type: 'test'
+      ...
+    # Subtest: throw
+    ok 2 - throw
+      ---
+      duration_ms: 1.001331
+      type: 'test'
+      ...
+    # Subtest: truthy
+    ok 3 - truthy
+      ---
+      duration_ms: 0.66417
+      type: 'test'
+      ...
+    # Subtest: missing final callback
+    ok 4 - missing final callback
+      ---
+      duration_ms: 0.79226
+      type: 'test'
+      ...
+    # Subtest: throwing final callback
+    ok 5 - throwing final callback
+      ---
+      duration_ms: 1.708821
+      type: 'test'
+      ...
+    1..5
+ok 4 - durable authority denial and throw cause zero POST
+  ---
+  duration_ms: 8.563323
+  type: 'test'
+  ...
+# Subtest: lost create response never creates twice
+ok 5 - lost create response never creates twice
+  ---
+  duration_ms: 2.824041
+  type: 'test'
+  ...
+# Subtest: crash after committed submitting before invocation remains no-replay to another caller
+ok 6 - crash after committed submitting before invocation remains no-replay to another caller
+  ---
+  duration_ms: 1.228101
+  type: 'test'
+  ...
+# Subtest: every bad POST class is one-shot and keeps conservative reservation
+    # Subtest: HTTP 400
+    ok 1 - HTTP 400
+      ---
+      duration_ms: 2.934591
+      type: 'test'
+      ...
+    # Subtest: HTTP 401
+    ok 2 - HTTP 401
+      ---
+      duration_ms: 1.417111
+      type: 'test'
+      ...
+    # Subtest: HTTP 403
+    ok 3 - HTTP 403
+      ---
+      duration_ms: 1.11582
+      type: 'test'
+      ...
+    # Subtest: HTTP 404
+    ok 4 - HTTP 404
+      ---
+      duration_ms: 0.98334
+      type: 'test'
+      ...
+    # Subtest: HTTP 422
+    ok 5 - HTTP 422
+      ---
+      duration_ms: 1.53619
+      type: 'test'
+      ...
+    # Subtest: HTTP 429
+    ok 6 - HTTP 429
+      ---
+      duration_ms: 1.645761
+      type: 'test'
+      ...
+    # Subtest: HTTP 500
+    ok 7 - HTTP 500
+      ---
+      duration_ms: 1.28761
+      type: 'test'
+      ...
+    # Subtest: HTTP 502
+    ok 8 - HTTP 502
+      ---
+      duration_ms: 1.628111
+      type: 'test'
+      ...
+    # Subtest: HTTP 503
+    ok 9 - HTTP 503
+      ---
+      duration_ms: 2.034691
+      type: 'test'
+      ...
+    # Subtest: reset
+    ok 10 - reset
+      ---
+      duration_ms: 1.75517
+      type: 'test'
+      ...
+    # Subtest: timeout
+    ok 11 - timeout
+      ---
+      duration_ms: 1.52641
+      type: 'test'
+      ...
+    # Subtest: socket error
+    ok 12 - socket error
+      ---
+      duration_ms: 1.276641
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 13 - malformed
+      ---
+      duration_ms: 4.078731
+      type: 'test'
+      ...
+    # Subtest: lost ID
+    not ok 14 - lost ID
+      ---
+      duration_ms: 4.020332
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: invalid ID
+    not ok 15 - invalid ID
+      ---
+      duration_ms: 3.087331
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: oversized ID
+    not ok 16 - oversized ID
+      ---
+      duration_ms: 2.469581
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: unicode ID
+    not ok 17 - unicode ID
+      ---
+      duration_ms: 2.026861
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: wrong model
+    not ok 18 - wrong model
+      ---
+      duration_ms: 2.12467
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: wrong version
+    not ok 19 - wrong version
+      ---
+      duration_ms: 1.70976
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: unknown status
+    not ok 20 - unknown status
+      ---
+      duration_ms: 1.412971
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: redirect
+    ok 21 - redirect
+      ---
+      duration_ms: 1.16763
+      type: 'test'
+      ...
+    # Subtest: header oversize
+    ok 22 - header oversize
+      ---
+      duration_ms: 1.319181
+      type: 'test'
+      ...
+    # Subtest: stream oversize
+    ok 23 - stream oversize
+      ---
+      duration_ms: 2.12429
+      type: 'test'
+      ...
+    # Subtest: encoded response
+    ok 24 - encoded response
+      ---
+      duration_ms: 1.29781
+      type: 'test'
+      ...
+    # Subtest: wrong MIME
+    ok 25 - wrong MIME
+      ---
+      duration_ms: 0.93858
+      type: 'test'
+      ...
+    # Subtest: length mismatch
+    ok 26 - length mismatch
+      ---
+      duration_ms: 1.446571
+      type: 'test'
+      ...
+    # Subtest: wrong output count
+    not ok 27 - wrong output count
+      ---
+      duration_ms: 3.646932
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: wrong output slots
+    not ok 28 - wrong output slots
+      ---
+      duration_ms: 3.901621
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:196:91)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:193:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..28
+not ok 7 - every bad POST class is one-shot and keeps conservative reservation
+  ---
+  duration_ms: 70.740305
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js:180:1'
+  failureType: 'subtestsFailed'
+  error: '9 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: returned authorization must match immutable request, version, claim and prepared binding
+    # Subtest: request
+    ok 1 - request
+      ---
+      duration_ms: 1.28427
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 2 - version
+      ---
+      duration_ms: 0.52111
+      type: 'test'
+      ...
+    # Subtest: contract
+    ok 3 - contract
+      ---
+      duration_ms: 0.54443
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 4 - model
+      ---
+      duration_ms: 0.45827
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 5 - transform
+      ---
+      duration_ms: 0.52084
+      type: 'test'
+      ...
+    # Subtest: job
+    ok 6 - job
+      ---
+      duration_ms: 1.39761
+      type: 'test'
+      ...
+    # Subtest: attempt
+    ok 7 - attempt
+      ---
+      duration_ms: 0.88737
+      type: 'test'
+      ...
+    # Subtest: fence
+    ok 8 - fence
+      ---
+      duration_ms: 0.56811
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 9 - deadline
+      ---
+      duration_ms: 0.66725
+      type: 'test'
+      ...
+    # Subtest: state
+    ok 10 - state
+      ---
+      duration_ms: 0.691741
+      type: 'test'
+      ...
+    # Subtest: identity already known
+    ok 11 - identity already known
+      ---
+      duration_ms: 0.87257
+      type: 'test'
+      ...
+    # Subtest: quarantine
+    ok 12 - quarantine
+      ---
+      duration_ms: 3.708731
+      type: 'test'
+      ...
+    # Subtest: bad submission ID
+    ok 13 - bad submission ID
+      ---
+      duration_ms: 5.232432
+      type: 'test'
+      ...
+    # Subtest: bad ticket
+    ok 14 - bad ticket
+      ---
+      duration_ms: 4.926762
+      type: 'test'
+      ...
+    # Subtest: acceptance
+    ok 15 - acceptance
+      ---
+      duration_ms: 2.851621
+      type: 'test'
+      ...
+    1..15
+ok 8 - returned authorization must match immutable request, version, claim and prepared binding
+  ---
+  duration_ms: 28.82169
+  type: 'test'
+  ...
+# Subtest: final abort, deadline and revocation prevent invocation after committed authorization
+    # Subtest: abort
+    ok 1 - abort
+      ---
+      duration_ms: 1.068291
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 2 - deadline
+      ---
+      duration_ms: 2.518131
+      type: 'test'
+      ...
+    # Subtest: revoked
+    ok 3 - revoked
+      ---
+      duration_ms: 0.98957
+      type: 'test'
+      ...
+    # Subtest: final clock throw
+    ok 4 - final clock throw
+      ---
+      duration_ms: 0.773201
+      type: 'test'
+      ...
+    # Subtest: final binding mutation
+    ok 5 - final binding mutation
+      ---
+      duration_ms: 0.97483
+      type: 'test'
+      ...
+    # Subtest: claim mutation
+    ok 6 - claim mutation
+      ---
+      duration_ms: 0.83985
+      type: 'test'
+      ...
+    1..6
+ok 9 - final abort, deadline and revocation prevent invocation after committed authorization
+  ---
+  duration_ms: 12.188065
+  type: 'test'
+  ...
+# Subtest: late valid ID is bound for cleanup after abort/deadline and never grants output
+    # Subtest: abort
+    ok 1 - abort
+      ---
+      duration_ms: 2.956591
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 2 - deadline
+      ---
+      duration_ms: 1.54528
+      type: 'test'
+      ...
+    # Subtest: lease expired
+    ok 3 - lease expired
+      ---
+      duration_ms: 1.09651
+      type: 'test'
+      ...
+    1..3
+ok 10 - late valid ID is bound for cleanup after abort/deadline and never grants output
+  ---
+  duration_ms: 6.370952
+  type: 'test'
+  ...
+# Subtest: lost ID commit and identity conflict never replay or overwrite/publish
+    # Subtest: lost ID commit
+    ok 1 - lost ID commit
+      ---
+      duration_ms: 1.140161
+      type: 'test'
+      ...
+    # Subtest: durably bound but commit acknowledgement lost
+    ok 2 - durably bound but commit acknowledgement lost
+      ---
+      duration_ms: 2.48096
+      type: 'test'
+      ...
+    # Subtest: identity conflict quarantined
+    ok 3 - identity conflict quarantined
+      ---
+      duration_ms: 1.81588
+      type: 'test'
+      ...
+    1..3
+ok 11 - lost ID commit and identity conflict never replay or overwrite/publish
+  ---
+  duration_ms: 6.227282
+  type: 'test'
+  ...
+# Subtest: provider bodies and unknown metrics cannot leak or become measurements
+ok 12 - provider bodies and unknown metrics cannot leak or become measurements
+  ---
+  duration_ms: 3.674912
+  type: 'test'
+  ...
+# Subtest: GET validates identity and status, rejects redirects and bounds streamed responses
+    # Subtest: identity
+    ok 1 - identity
+      ---
+      duration_ms: 2.981721
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 2 - status
+      ---
+      duration_ms: 4.562352
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 3 - model
+      ---
+      duration_ms: 5.729462
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 4 - version
+      ---
+      duration_ms: 1.78875
+      type: 'test'
+      ...
+    # Subtest: redirect
+    ok 5 - redirect
+      ---
+      duration_ms: 1.456701
+      type: 'test'
+      ...
+    # Subtest: body oversize
+    ok 6 - body oversize
+      ---
+      duration_ms: 1.997901
+      type: 'test'
+      ...
+    # Subtest: header oversize
+    ok 7 - header oversize
+      ---
+      duration_ms: 1.24731
+      type: 'test'
+      ...
+    # Subtest: succeeded missing depth
+    ok 8 - succeeded missing depth
+      ---
+      duration_ms: 1.739971
+      type: 'test'
+      ...
+    # Subtest: succeeded extra output
+    ok 9 - succeeded extra output
+      ---
+      duration_ms: 2.129421
+      type: 'test'
+      ...
+    # Subtest: succeeded raw invalid URI
+    ok 10 - succeeded raw invalid URI
+      ---
+      duration_ms: 1.35573
+      type: 'test'
+      ...
+    # Subtest: succeeded HTTP URI
+    ok 11 - succeeded HTTP URI
+      ---
+      duration_ms: 1.220241
+      type: 'test'
+      ...
+    # Subtest: succeeded long URI
+    ok 12 - succeeded long URI
+      ---
+      duration_ms: 2.422611
+      type: 'test'
+      ...
+    1..12
+ok 13 - GET validates identity and status, rejects redirects and bounds streamed responses
+  ---
+  duration_ms: 31.218151
+  type: 'test'
+  ...
+# Subtest: bounded GET retries handle 429, faults, fixed deadline and abort
+    # Subtest: 429 Retry-After is at most five seconds
+    ok 1 - 429 Retry-After is at most five seconds
+      ---
+      duration_ms: 1.846301
+      type: 'test'
+      ...
+    # Subtest: 429 fractional Retry-After
+    ok 2 - 429 fractional Retry-After
+      ---
+      duration_ms: 1.8781
+      type: 'test'
+      ...
+    # Subtest: transient faults stop at three consecutive failures
+    ok 3 - transient faults stop at three consecutive failures
+      ---
+      duration_ms: 2.458051
+      type: 'test'
+      ...
+    # Subtest: success resets consecutive fault count; ordinary interval is two seconds
+    ok 4 - success resets consecutive fault count; ordinary interval is two seconds
+      ---
+      duration_ms: 2.593881
+      type: 'test'
+      ...
+    # Subtest: wait is capped at original remaining deadline
+    ok 5 - wait is capped at original remaining deadline
+      ---
+      duration_ms: 1.936421
+      type: 'test'
+      ...
+    # Subtest: abort during retry wait prevents another GET
+    ok 6 - abort during retry wait prevents another GET
+      ---
+      duration_ms: 2.023301
+      type: 'test'
+      ...
+    # Subtest: total HTTP timer caps a stalled injected stream
+    ok 7 - total HTTP timer caps a stalled injected stream
+      ---
+      duration_ms: 68.424154
+      type: 'test'
+      ...
+    1..7
+ok 14 - bounded GET retries handle 429, faults, fixed deadline and abort
+  ---
+  duration_ms: 83.46837
+  type: 'test'
+  ...
+# Subtest: budgets cannot reset, increase, run backwards or hide invalid trusted values
+ok 15 - budgets cannot reset, increase, run backwards or hide invalid trusted values
+  ---
+  duration_ms: 5.837202
+  type: 'test'
+  ...
+# Subtest: cancellation is safe observation without replay, completion or refund authority
+ok 16 - cancellation is safe observation without replay, completion or refund authority
+  ---
+  duration_ms: 4.247351
+  type: 'test'
+  ...
+1..16
+# tests 134
+# suites 0
+# pass 123
+# fail 11
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 383.441966

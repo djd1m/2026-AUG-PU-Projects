@@ -1,0 +1,69 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i2",
+  "attempt_id": "replicate-i2-1",
+  "source_revision": "ef6758b0b42f61ed5e2e54c7cf1d82c5e7e72461",
+  "frozen_at": "2026-10-03T08:27:12.942132+00:00",
+  "launch_sha256": "2596a8c6b2bd5e3b174a02f59cc4bfcdcb9b9fcc1d1cb7ff537cfb8efe777c9e",
+  "product_sha256": {
+    "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+    "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+  },
+  "contract_sha256": {
+    "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "docs/features/f07-replicate/02_pseudocode.md": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d",
+    "docs/features/f07-replicate/03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "docs/features/f07-replicate/04_refinement.md": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e",
+    "docs/features/f07-replicate/05_completion.md": "91541235061c856f42882e64b047882f8f6fb83b44fcc11708edd510598e491b",
+    "docs/features/f07-replicate/validation-report.md": "69bb791ed3ee076331430d7481568e7bb63e0b767a42dd1381a8603304a40ca3",
+    "docs/features/f07-replicate/validation-v01-closure.md": "35c3b7234b10d161233390e103fe21465394be93c7b843074da1895116c55353",
+    "docs/features/f07-replicate/replicate-research.md": "a3246fd4d5e0184b62b8bada1ab162e9f6785c228e895d244df8989d758e4a2d",
+    "docs/features/f07-replicate/i1-implementation.md": "c864c879f20adb2021e8f7466db6be0972414e99dc0c4e3eea8a259be8afaf8d",
+    "docs/features/f07-replicate/i1-review.md": "e3e86d2e19520883196636ad78970bc268a742cc3e908e475cf8461d60b98d09",
+    "docs/features/f07-replicate/i1-r01-closure.md": "ed2df24d782aaa6e1a0ac3fba51f6d0907df201689a408a7cb6406d664bcebae"
+  },
+  "protected_unchanged_sha256": {
+    "db/007-replicate.sql": "3bce94bab8d6fd8ef9b45e810e1e26ccda8648a213665f64403501ab80b5a05f",
+    "web/provider-submissions.js": "7afadfe4f9cab76d655bcd9de7718d734beeef0d63cc290144d6e19546b87709",
+    "scripts/migrate.js": "57ded58e0ac6baf60f5a2b797d1566faafb566946ff72e4cf780a2dc6d8beb86",
+    "tests/provider-submissions.test.js": "a2f44276eb51ef08dbf06a1b48ae933d701ff45d0465b2993377d8faf2e5d954",
+    "tests/replicate.integration.test.js": "46a81a01707373d248b784bacf8edabdc978bcb5e41aed5f023f3c07adacb004"
+  },
+  "scope_check": {
+    "tracked_changes": [],
+    "untracked_paths": [
+      "projects/08-interior-ai-redesign/docs/features/f07-replicate/i2-implementation.md",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-authority-units.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-checks.json",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-implementation-route.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-launch.json",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-product-whitespace.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-progress.json",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-syntax-delivery.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-syntax-final.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-syntax-freeze.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-syntax.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-test-syntax-delivery.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-test-syntax-final.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-test-syntax-freeze.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-test-syntax.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-test-whitespace.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-tests-delivery.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-tests-final.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-tests-first.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-tests-freeze.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-tests.log",
+      "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-worktree-whitespace.log",
+      "projects/08-interior-ai-redesign/node_modules",
+      "projects/08-interior-ai-redesign/tests/replicate.test.js",
+      "projects/08-interior-ai-redesign/web/replicate.js"
+    ],
+    "preexisting_exclusions": [
+      "node_modules symlink",
+      "replicate-i2-launch.json readonly"
+    ]
+  },
+  "implementation_sha256": "5ae9a4513a41206b93855e9fdc8add0a1f8ffdf76751c4fbb7f371778748f3dc",
+  "checks_sha256": "3085fccf3de77ff25b800f3d7a7fbb21fc7e44a4d8c9a172ac9705f85e8c608e",
+  "node_version": "v22.20.0"
+}

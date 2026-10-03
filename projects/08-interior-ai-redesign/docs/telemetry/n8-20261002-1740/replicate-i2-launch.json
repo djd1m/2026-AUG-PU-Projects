@@ -1,0 +1,27 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i2",
+  "attempt_id": "replicate-i2-1",
+  "created_at": "2026-10-03T08:03:28.259515+00:00",
+  "source_revision": "ef6758b0b42f61ed5e2e54c7cf1d82c5e7e72461",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i2-receipt.md",
+  "trace_prelaunch_state": "absent",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "owned_paths": [
+    "web/replicate.js",
+    "tests/replicate.test.js",
+    "docs/features/f07-replicate/i2-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i2-*"
+  ],
+  "route": {
+    "mechanical_log": "replicate-i2-route.log",
+    "substantive_tier": "XL",
+    "reason": "remote chargeable create one-shot boundary; existing owner-approved and independently validated full plan applies"
+  },
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad"
+}

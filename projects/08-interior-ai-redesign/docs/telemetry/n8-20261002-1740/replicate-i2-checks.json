@@ -1,0 +1,282 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i2",
+  "attempt_id": "replicate-i2-1",
+  "node_version": "v22.20.0",
+  "checks": [
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate.test.js"
+      ],
+      "exit_code": null,
+      "evidence": "replicate-i2-tests-first.log",
+      "counts": {
+        "tests": 134,
+        "pass": 123,
+        "fail": 11
+      },
+      "note": "Original inner test process exit not captured; summary shell exit0. TAP failure is preserved without estimating process exit.",
+      "wrapper_exit_code": 0,
+      "result": "failed"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "web/replicate.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 59.746,
+      "evidence": "replicate-i2-syntax.log"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 68.914,
+      "evidence": "replicate-i2-test-syntax.log"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 1,
+      "duration_ms": 552.89,
+      "evidence": "replicate-i2-tests.log",
+      "counts": {
+        "tests": 134,
+        "pass": 133,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "tests/provider-submissions.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 162.538,
+      "evidence": "replicate-i2-authority-units.log",
+      "counts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "web/replicate.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 61.074,
+      "evidence": "replicate-i2-syntax-final.log"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 73.356,
+      "evidence": "replicate-i2-test-syntax-final.log"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 552.227,
+      "evidence": "replicate-i2-tests-final.log",
+      "counts": {
+        "tests": 147,
+        "pass": 147,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "web/replicate.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 52.347,
+      "evidence": "replicate-i2-syntax-freeze.log"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 50.447,
+      "evidence": "replicate-i2-test-syntax-freeze.log"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": 527.857,
+      "evidence": "replicate-i2-tests-freeze.log",
+      "counts": {
+        "tests": 148,
+        "pass": 148,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "web/replicate.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": null,
+      "evidence": "replicate-i2-syntax-delivery.log",
+      "product_sha256": {
+        "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+        "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+      },
+      "note": "Executed in final check wrapper; timings unavailable after wrapper prematurely treated no-index diff exit1 as whitespace failure."
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": null,
+      "evidence": "replicate-i2-test-syntax-delivery.log",
+      "product_sha256": {
+        "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+        "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+      },
+      "note": "Executed in final check wrapper; timings unavailable after wrapper prematurely treated no-index diff exit1 as whitespace failure."
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "duration_ms": null,
+      "evidence": "replicate-i2-tests-delivery.log",
+      "product_sha256": {
+        "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+        "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+      },
+      "note": "Executed in final check wrapper; timings unavailable after wrapper prematurely treated no-index diff exit1 as whitespace failure.",
+      "counts": {
+        "tests": 149,
+        "pass": 149,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "web/replicate.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 1,
+      "duration_ms": null,
+      "evidence": "replicate-i2-product-whitespace.log",
+      "product_sha256": {
+        "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+        "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+      },
+      "note": "Actual git no-index exit1 indicates new-file difference; --check output empty means no whitespace diagnostics. Original wrapper exit1 retained.",
+      "result": "pass"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "tests/replicate.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 1,
+      "result": "pass",
+      "evidence": "replicate-i2-test-whitespace.log",
+      "product_sha256": {
+        "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+        "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+      },
+      "note": "No whitespace diagnostics; no-index new-file difference may exit1."
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "pass",
+      "evidence": "replicate-i2-worktree-whitespace.log",
+      "product_sha256": {
+        "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+        "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+      },
+      "note": "No whitespace diagnostics; no-index new-file difference may exit1."
+    }
+  ],
+  "source_revision": "ef6758b0b42f61ed5e2e54c7cf1d82c5e7e72461",
+  "product_sha256": {
+    "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+    "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd"
+  },
+  "measurement_gaps": [
+    "Actual model/effort/usage/cost unavailable until host confirmation",
+    "First failed inner process exit unavailable; TAP failure retained",
+    "Intermediate file hashes and final check wrapper timings unavailable"
+  ]
+}
