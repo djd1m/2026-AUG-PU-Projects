@@ -21,3 +21,7 @@ Actual rollback-2 preflight passed; heavy lock held17:53:22.978464–17:58:23.33
 Current free disk approximately5.51GiB is below unchanged6GiB start/build threshold; repeat is blocked. Overall1.5GiB reserve and4GiB availableRAM guard remain enforced. Do not retry unchanged without resource availability and explicit bounded operation plan. No additional deletion authorized in this resume. Live provider config/budget and publicstand authorization remain absent. NFR200k remains unexecuted; next local preparation is exact query/corpus/resource plan, not a substitute for measured NFR.
 
 Evidence: tests/artifacts/release-gate/rollback-2-{preflight-result,result,guard-checks,floor-checks}.json; telemetry evidence/rollback-2-floor-review.md, rollback-2-build-diagnosis.json and rollback-2-model-telemetry.json. Accepted roadmap remains15/16.
+
+### NFR preparation continuation 2026-10-03T18:23:26.511563+00:00
+
+Source-only benchmark preparation completed and independently accepted;11offlinechecks/0DBconnections, scriptSHA00f7f822dc65d93e08b5203fa5bfb9586cec2ec26f870814461f548e0bd14c35. See14_nfr-readiness.md. ActualNFR remains NOT_EXECUTED; currentdisk5100343296bytes is below conservative8GiB benchmark estimate and unchanged6GiB rollbackbuildguard. No local workers/ownruntime/locks remain. Remaining blockers are external resources, authorizedprivate livekey/spendconfig and publicstand gate; root owns provisioning/integration. Preparedsource acceptance does not markF16 done.

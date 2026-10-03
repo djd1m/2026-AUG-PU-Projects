@@ -1,0 +1,42 @@
+{
+  "recorded_at": "2026-10-03T18:23:26.511563+00:00",
+  "attempts": [
+    {
+      "attempt": "nfr-200k-prepare-1",
+      "thread_id": "01a102f2-e13d-7f63-af09-3bc8b871b817",
+      "actual_model": "gpt-6.1-sol",
+      "actual_effort": "high",
+      "usage": {
+        "input_tokens": 703584,
+        "cached_input_tokens": 628480,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 17532,
+        "reasoning_output_tokens": 3978
+      },
+      "cost": null,
+      "exit_code": 0,
+      "raw_activity_sha256": "6b8d18db7476fca81afa7f2cf881731226b660fbb890c6a1f61c53636dc6382a",
+      "receipt_gap": "Author final receipt lacks Status line; not strict companion delivered"
+    },
+    {
+      "attempt": "nfr-200k-review-1",
+      "thread_id": "01a102fe-3a45-7592-a69f-9cada515a2ae",
+      "actual_model": "gpt-6-astra",
+      "actual_effort": "high",
+      "usage": {
+        "input_tokens": 268230,
+        "cached_input_tokens": 219776,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2522,
+        "reasoning_output_tokens": 773
+      },
+      "cost": null,
+      "exit_code": 0,
+      "raw_activity_sha256": "102a8a80cfa2ebbcda136e6050b2cdf1e7eae7286eceeb4bfb3f71ed9a7f6c39",
+      "receipt_gap": null
+    }
+  ],
+  "coordinator_actual_model": null,
+  "coordinator_usage": null,
+  "cost": null
+}

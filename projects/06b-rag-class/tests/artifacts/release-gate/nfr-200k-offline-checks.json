@@ -1,0 +1,216 @@
+{
+  "status": "OFFLINE_PREPARATION_PASS",
+  "runtime": "NOT_EXECUTED",
+  "sourceRevision": "1070ac4d483742797c00c768ab02e25f7436b9c8",
+  "startedAt": "2026-10-03T18:07:23Z",
+  "scope": "Only future local benchmark artifact and focused offline tests",
+  "profile": "compact-quality-first-v2; S, user-bounded preparation",
+  "actualModel": null,
+  "modelReason": "Exact execution model metadata is unavailable; no model switch or children",
+  "tokens": null,
+  "cost": null,
+  "measurementGaps": [
+    "Provider usage metadata unavailable",
+    "200k runtime prohibited by resource gate"
+  ],
+  "route": {
+    "plan": "S: no product/schema edits or actual external calls; offline guards plus negative control",
+    "mechanicalExit": 0,
+    "implementation": "S: scope unchanged; future owned DB writes stay unexecuted; focused guards and mutation only",
+    "implementationMechanicalExit": 0
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Code preparation only; DB/Docker/network/heavy workloads forbidden"
+  },
+  "events": [
+    {
+      "stage": "prepare",
+      "at": "2026-10-03T18:07:28Z"
+    },
+    {
+      "stage": "implement",
+      "scope": "Three allowed artifact paths; no children"
+    },
+    {
+      "stage": "review",
+      "result": "Self-review only; user forbids children; public-id and text-hash findings corrected"
+    },
+    {
+      "stage": "checks",
+      "result": "11 focused tests and ownership mutation PASS; zero connection attempts"
+    },
+    {
+      "stage": "complete",
+      "at": "2026-10-03T18:17:38.668Z",
+      "result": "Code preparation complete; runtime NOT_EXECUTED"
+    }
+  ],
+  "finishedAt": "2026-10-03T18:17:38.668Z",
+  "elapsedSeconds": 615.668,
+  "node": "v22.20.0",
+  "checks": [
+    {
+      "command": "/tmp/n8-node22 --check tests/artifacts/release-gate/nfr-200k.mjs",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "syntax valid"
+    },
+    {
+      "command": "/tmp/n8-node22 --check tests/artifacts/release-gate/nfr-200k.test.mjs",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "syntax valid"
+    },
+    {
+      "command": "/tmp/n8-node22 tests/artifacts/release-gate/nfr-200k.test.mjs",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": {
+        "status": "PASS",
+        "runtime": "v22.20.0",
+        "checks": [
+          {
+            "name": "import and default control flow never reads credentials or connects",
+            "status": "PASS"
+          },
+          {
+            "name": "CLI rejects unknown/duplicate arguments, malformed limits and missing ownership",
+            "status": "PASS"
+          },
+          {
+            "name": "configuration requires exact private keys and separate local service login",
+            "status": "PASS"
+          },
+          {
+            "name": "execute rejects missing config and wrong source binding before any connection",
+            "status": "PASS"
+          },
+          {
+            "name": "dense finite 1536 float32 vectors are deterministic, different and bounded",
+            "status": "PASS"
+          },
+          {
+            "name": "query schedule varies all ten bots and vectors; fixture identifiers/text obey format",
+            "status": "PASS"
+          },
+          {
+            "name": "ceil-rank statistics, singleton, ties, boundary and invalid samples",
+            "status": "PASS"
+          },
+          {
+            "name": "five owned hits accepted; wrong bot, duplicate/missing and invalid sim rejected",
+            "status": "PASS"
+          },
+          {
+            "name": "natural HNSW guard rejects sequential and unrelated index plans",
+            "status": "PASS"
+          },
+          {
+            "name": "small smoke is deterministic offline and never accepted as NFR",
+            "status": "PASS"
+          },
+          {
+            "name": "meaningful negative control: disabling ownership guard makes unchanged assertion fail",
+            "status": "PASS"
+          }
+        ],
+        "attemptedConnections": 0,
+        "nfrRuntime": "NOT_EXECUTED",
+        "scriptSha256": "00f7f822dc65d93e08b5203fa5bfb9586cec2ec26f870814461f548e0bd14c35"
+      }
+    },
+    {
+      "command": "/tmp/n8-node22 tests/artifacts/release-gate/nfr-200k.mjs",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": {
+        "status": "PREPARE_REFUSE_EXECUTION",
+        "runtime": "NOT_EXECUTED",
+        "nfr": "NOT_ACCEPTED",
+        "reason": "Explicit execution, owned isolated empty migrated fixture, private configuration and coordinator resource gate required"
+      }
+    },
+    {
+      "command": "/tmp/n8-node22 tests/artifacts/release-gate/nfr-200k.mjs --execute",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "result": {
+        "status": "REFUSED",
+        "runtime": "NOT_EXECUTED",
+        "nfr": "NOT_ACCEPTED",
+        "reason": "Invalid explicit arguments, ownership or configuration; sensitive errors suppressed"
+      }
+    },
+    {
+      "command": "/tmp/n8-node22 tests/artifacts/release-gate/nfr-200k.mjs --offline-smoke=3",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": {
+        "status": "OFFLINE_SMOKE",
+        "runtime": "NOT_EXECUTED",
+        "nfr": "NOT_ACCEPTED",
+        "rows": 3,
+        "sha256": "922b96cc6e8c9ffa6f859511d4f1cb2cd782aab9d63110a348880e4b2790a8f3"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "tests/artifacts/release-gate/nfr-200k.mjs",
+      "sha256": "00f7f822dc65d93e08b5203fa5bfb9586cec2ec26f870814461f548e0bd14c35",
+      "lines": 310
+    },
+    {
+      "path": "tests/artifacts/release-gate/nfr-200k.test.mjs",
+      "sha256": "51f2f609377c5c78ad035dd2bab571b0d712d428ea181089f4413335dab593cc",
+      "lines": 122
+    }
+  ],
+  "runtimeContractCheck": {
+    "node": "v22.20.0",
+    "canonicalSearchIdentity": true,
+    "searchSqlExport": "string",
+    "tokenSamples": [
+      [
+        0,
+        6
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        999,
+        6
+      ],
+      [
+        20000,
+        6
+      ],
+      [
+        199999,
+        6
+      ]
+    ],
+    "connections": 0,
+    "method": "Read-only compiled imports with Socket.connect blocked"
+  },
+  "resourceGate": {
+    "status": "BLOCKED",
+    "runtime": "NOT_EXECUTED",
+    "reason": "Readiness snapshot ~5.5GiB free; 8GiB conservative initial budget not satisfied; peak unmeasured",
+    "remaining": [
+      "Coordinator fresh preflight and CPU2/shared heavy lock",
+      "Source-bound Node22/pgvector0.8.6-pg16 images and private isolated empty migrated owned DB",
+      "Continuous host 1.5GiB floor and external <=20min watchdog",
+      "Coordinator cleanup of only its fixture/DB; independent runtime review",
+      "Actual exact-200k execution and evidence; full live NFR remains out of scope"
+    ]
+  },
+  "exclusions": [
+    "No DB/Docker/network/provider calls/heavy workload",
+    "No product/dependency/config edits, symlinks, children or commit",
+    "No schema issue observed offline; schema execution unverified"
+  ]
+}

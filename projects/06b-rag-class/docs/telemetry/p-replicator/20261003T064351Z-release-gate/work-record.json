@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261003T064351Z-release-gate",
     "work_unit_id": "release-gate-feature",
-    "current_attempt_id": "rollback-2-runtime"
+    "current_attempt_id": "nfr-200k-review-1"
   },
   "telemetry": {
     "run": {
@@ -208,6 +208,16 @@
       "id": "rollback-2-runtime",
       "status": "failed",
       "reason": "first canonical worker build timeout300s; no actualrollback"
+    },
+    {
+      "id": "nfr-200k-prepare-1",
+      "status": "completed",
+      "receipt_caveat": "missing terminalStatus line; strictdeliveryunproven"
+    },
+    {
+      "id": "nfr-200k-review-1",
+      "status": "completed",
+      "verdict": "ACCEPT preparationonly"
     }
   ],
   "work_units": [
