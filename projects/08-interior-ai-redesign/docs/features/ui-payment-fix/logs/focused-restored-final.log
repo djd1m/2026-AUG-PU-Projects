@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+ok 1 - preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+  ---
+  duration_ms: 5.333632
+  type: 'test'
+  ...
+# Subtest: unleased target becomes ready after preceding queue item, with no unnecessary sleep
+ok 2 - unleased target becomes ready after preceding queue item, with no unnecessary sleep
+  ---
+  duration_ms: 2.490851
+  type: 'test'
+  ...
+# Subtest: already-ready target is signaled without running an unrelated queue candidate
+ok 3 - already-ready target is signaled without running an unrelated queue candidate
+  ---
+  duration_ms: 0.54766
+  type: 'test'
+  ...
+# Subtest: missing, terminal and wrong fixture binding fail before queue or settlement
+ok 4 - missing, terminal and wrong fixture binding fail before queue or settlement
+  ---
+  duration_ms: 1.764591
+  type: 'test'
+  ...
+# Subtest: terminal transition during worker pass fails without a success signal
+ok 5 - terminal transition during worker pass fails without a success signal
+  ---
+  duration_ms: 0.57386
+  type: 'test'
+  ...
+# Subtest: not-ready target exhausts finite tries even when injected clock never advances
+ok 6 - not-ready target exhausts finite tries even when injected clock never advances
+  ---
+  duration_ms: 12.988294
+  type: 'test'
+  ...
+# Subtest: deadline stops retries and prevents signaling readiness attached too late
+ok 7 - deadline stops retries and prevents signaling readiness attached too late
+  ---
+  duration_ms: 0.86896
+  type: 'test'
+  ...
+# Subtest: deadline reached during a readiness read prevents a late success signal
+ok 8 - deadline reached during a readiness read prevents a late success signal
+  ---
+  duration_ms: 0.36301
+  type: 'test'
+  ...
+# Subtest: runtime/mode/UUID and existing dedicated ownership guards remain strict
+ok 9 - runtime/mode/UUID and existing dedicated ownership guards remain strict
+  ---
+  duration_ms: 1.31609
+  type: 'test'
+  ...
+# Subtest: query and worker failures propagate instead of reporting fixture success
+ok 10 - query and worker failures propagate instead of reporting fixture success
+  ---
+  duration_ms: 1.0704
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 51.676539

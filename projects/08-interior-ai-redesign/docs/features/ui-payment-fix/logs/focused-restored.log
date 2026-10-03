@@ -1,0 +1,283 @@
+TAP version 13
+# Subtest: preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+not ok 1 - preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+  ---
+  duration_ms: 2.808991
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:26:1'
+  failureType: 'testCodeFailure'
+  error: 'Invalid attempt budget configuration'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:39:28)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: unleased target becomes ready after preceding queue item, with no unnecessary sleep
+not ok 2 - unleased target becomes ready after preceding queue item, with no unnecessary sleep
+  ---
+  duration_ms: 0.65239
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:47:1'
+  failureType: 'testCodeFailure'
+  error: 'Invalid attempt budget configuration'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:52:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  ...
+# Subtest: already-ready target is signaled without running an unrelated queue candidate
+not ok 3 - already-ready target is signaled without running an unrelated queue candidate
+  ---
+  duration_ms: 0.57352
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:56:1'
+  failureType: 'testCodeFailure'
+  error: 'Invalid attempt budget configuration'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:57:72)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  ...
+# Subtest: missing, terminal and wrong fixture binding fail before queue or settlement
+not ok 4 - missing, terminal and wrong fixture binding fail before queue or settlement
+  ---
+  duration_ms: 1.652381
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_missing/. Input:
+    
+    'Error: Invalid attempt budget configuration'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Invalid attempt budget configuration'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:62:74)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:62:45)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: terminal transition during worker pass fails without a success signal
+not ok 5 - terminal transition during worker pass fails without a success signal
+  ---
+  duration_ms: 0.69421
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:71:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_terminal:review/. Input:
+    
+    'Error: Invalid attempt budget configuration'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Invalid attempt budget configuration'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:73:26)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:73:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: not-ready target exhausts finite tries even when injected clock never advances
+not ok 6 - not-ready target exhausts finite tries even when injected clock never advances
+  ---
+  duration_ms: 0.47876
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:76:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_readiness_exhausted/. Input:
+    
+    'Error: Invalid attempt budget configuration'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Invalid attempt budget configuration'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:79:28)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:79:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: deadline stops retries and prevents signaling readiness attached too late
+not ok 7 - deadline stops retries and prevents signaling readiness attached too late
+  ---
+  duration_ms: 0.521251
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:84:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_readiness_exhausted/. Input:
+    
+    'Error: Invalid attempt budget configuration'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Invalid attempt budget configuration'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:88:26)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:88:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: deadline reached during a readiness read prevents a late success signal
+not ok 8 - deadline reached during a readiness read prevents a late success signal
+  ---
+  duration_ms: 0.84046
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:92:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_readiness_exhausted/. Input:
+    
+    'Error: Invalid attempt budget configuration'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Invalid attempt budget configuration'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:95:26)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:95:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: runtime/mode/UUID and existing dedicated ownership guards remain strict
+ok 9 - runtime/mode/UUID and existing dedicated ownership guards remain strict
+  ---
+  duration_ms: 2.750621
+  type: 'test'
+  ...
+# Subtest: query and worker failures propagate instead of reporting fixture success
+not ok 10 - query and worker failures propagate instead of reporting fixture success
+  ---
+  duration_ms: 1.11225
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:108:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /worker_failure/. Input:
+    
+    'Error: Invalid attempt budget configuration'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Invalid attempt budget configuration'
+  stack: |-
+    budgetLimits (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:17:69)
+    createJobs (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/jobs.js:34:3)
+    createPayments (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/web/payments.js:23:63)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:15:18)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:110:26)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:110:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 1
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 40.323104
