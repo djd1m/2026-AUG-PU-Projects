@@ -1,0 +1,32 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4b",
+  "attempt_id": "replicate-i4b-1",
+  "created_at": "2026-10-03T12:21:51.605052+00:00",
+  "source_revision": "4ebca31b55235076a5812894148135b6c4bd699e",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i4b-receipt.md",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "budget_seconds": 1500,
+  "owned_paths": [
+    "web/replicate-generation.js",
+    "web/replicate-worker-config.js",
+    "scripts/worker.js",
+    "web/provider-submissions.js additive workerContext only",
+    "tests/replicate-generation.test.js",
+    "tests/replicate-generation.integration.test.js",
+    "tests/replicate-generation-fixtures.js",
+    "tests/replicate-worker-config.test.js optional split",
+    "docs/features/f07-replicate/i4b-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i4b-*"
+  ],
+  "route": {
+    "mechanical_log": "replicate-i4b-route.log",
+    "substantive_tier": "XL",
+    "approved_plan": "F07 READY preserved"
+  },
+  "no_delegation": true,
+  "actual_model": null,
+  "usage": null,
+  "cost": null
+}
