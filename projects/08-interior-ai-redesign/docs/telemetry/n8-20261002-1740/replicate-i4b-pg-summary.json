@@ -1,0 +1,60 @@
+{
+  "started_at": "2026-10-03T12:46:16.466612+00:00",
+  "finished_at": "2026-10-03T12:47:59.062557+00:00",
+  "elapsed_seconds": 102.59593307401519,
+  "source_revision": "deaeac071403c39b826b4c050d2bd2ffd9415f22",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.2863510290626436,
+      "log": "replicate-i4b-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 5.875047267996706,
+      "log": "replicate-i4b-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.2032807789510116,
+      "log": "replicate-i4b-pg-binding.log"
+    },
+    {
+      "name": "worker-pg16",
+      "exit_code": 1,
+      "elapsed_seconds": 13.044628826901317,
+      "log": "replicate-i4b-pg-worker-pg16.log"
+    },
+    {
+      "name": "authority-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 17.59914929198567,
+      "log": "replicate-i4b-pg-authority-pg16.log"
+    },
+    {
+      "name": "lifecycle-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 21.73876775999088,
+      "log": "replicate-i4b-pg-lifecycle-pg16.log"
+    },
+    {
+      "name": "evidence-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 36.64130959997419,
+      "log": "replicate-i4b-pg-evidence-pg16.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 5.200180926010944,
+      "log": "replicate-i4b-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 1
+}

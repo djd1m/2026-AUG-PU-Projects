@@ -1,0 +1,109 @@
+TAP version 13
+# Subtest: F07 I1 real PostgreSQL immutable one-shot submission and spend authority
+    # Subtest: two CAS contenders produce literal one authorization and one spend reservation
+    ok 1 - two CAS contenders produce literal one authorization and one spend reservation
+      ---
+      duration_ms: 485.642514
+      type: 'test'
+      ...
+    # Subtest: last envelope reservation races across accounts; loser has zero authorization
+    ok 2 - last envelope reservation races across accounts; loser has zero authorization
+      ---
+      duration_ms: 390.58509
+      type: 'test'
+      ...
+    # Subtest: missing zero revoked expired and mismatched authorizations fail closed atomically
+    ok 3 - missing zero revoked expired and mismatched authorizations fail closed atomically
+      ---
+      duration_ms: 3259.142663
+      type: 'test'
+      ...
+    # Subtest: expired revoked deleted held wrong input and missing consumed ticket deny before authorization
+    ok 4 - expired revoked deleted held wrong input and missing consumed ticket deny before authorization
+      ---
+      duration_ms: 4042.124243
+      type: 'test'
+      ...
+    # Subtest: hold commits at account barrier and blocks both contenders with zero reservations
+    ok 5 - hold commits at account barrier and blocks both contenders with zero reservations
+      ---
+      duration_ms: 523.143217
+      type: 'test'
+      ...
+    # Subtest: lease expiry while waiting on envelope denies both contenders before CAS
+    ok 6 - lease expiry while waiting on envelope denies both contenders before CAS
+      ---
+      duration_ms: 368.999012
+      type: 'test'
+      ...
+    # Subtest: UTC rollover while blocked on envelope retries both contenders with current-day ticket
+    ok 7 - UTC rollover while blocked on envelope retries both contenders with current-day ticket
+      ---
+      duration_ms: 361.898379
+      type: 'test'
+      ...
+    # Subtest: CAS-stage SQL failure rolls back reservation identity and midnight ticket changes
+    ok 8 - CAS-stage SQL failure rolls back reservation identity and midnight ticket changes
+      ---
+      duration_ms: 430.512294
+      type: 'test'
+      ...
+    # Subtest: midnight submission replaces consumed ticket once without moving attempt or deadline
+    ok 9 - midnight submission replaces consumed ticket once without moving attempt or deadline
+      ---
+      duration_ms: 446.460139
+      type: 'test'
+      ...
+    # Subtest: midnight ticket exhaustion and failed envelope admission leave original ticket intact
+    ok 10 - midnight ticket exhaustion and failed envelope admission leave original ticket intact
+      ---
+      duration_ms: 854.658695
+      type: 'test'
+      ...
+    # Subtest: immutable binding mismatch and direct SQL changes reject; spend never refunds
+    ok 11 - immutable binding mismatch and direct SQL changes reject; spend never refunds
+      ---
+      duration_ms: 1488.302531
+      type: 'test'
+      ...
+    # Subtest: prediction unique conflict is quarantined and known ID cannot be overwritten
+    ok 12 - prediction unique conflict is quarantined and known ID cannot be overwritten
+      ---
+      duration_ms: 703.179821
+      type: 'test'
+      ...
+    # Subtest: late known ID records cleanup identity after expiry deletion or failure without job revival
+    ok 13 - late known ID records cleanup identity after expiry deletion or failure without job revival
+      ---
+      duration_ms: 1181.839352
+      type: 'test'
+      ...
+    # Subtest: ambiguous observation is nonreplayable; known statuses are monotonic and never revive job
+    ok 14 - ambiguous observation is nonreplayable; known statuses are monotonic and never revive job
+      ---
+      duration_ms: 395.383261
+      type: 'test'
+      ...
+    # Subtest: strictly local preflight failure can retry without a false immutable binding
+    ok 15 - strictly local preflight failure can retry without a false immutable binding
+      ---
+      duration_ms: 529.759059
+      type: 'test'
+      ...
+    1..15
+ok 1 - F07 I1 real PostgreSQL immutable one-shot submission and spend authority
+  ---
+  duration_ms: 16099.181537
+  type: 'test'
+  ...
+1..1
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16377.547127
+ Container n8f07i4b-tests-run-3ca2db2e1a7b Creating 
+ Container n8f07i4b-tests-run-3ca2db2e1a7b Created 
