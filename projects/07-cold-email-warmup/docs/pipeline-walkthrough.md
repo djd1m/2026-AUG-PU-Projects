@@ -175,3 +175,7 @@ F05 accepted12/12 onf0fb8556: fresh Astra293.623s closesF1/F2. Final109PG/unit27
 F06a realcabinet candidate4858549a: Solprocess1439.769s, type/lint/build0/unit31/fullPG115/401guardmutantRED-restoredGREEN/canary/imagePASS. Image79c996d66355dbdd6d2d87b4fb5e0723d4d899651b798b1ce6d34a1d98b7ecf9, ownURL127.0.0.1:18709/app. CheckerDockerfileassumption correctedonlyinevidence script, preservedfailure. FreshAstrareviewandBbrowser/perf/docs/PRpending.
 
 F06a: независимое ревью Astra (406.031с) нашло R1 — пассивная авторизация повторно уведомляет другие вкладки и сбрасывает форму. Остальные A2–A5 приняты по исходникам и runtime. Узкая правка и регрессионный тест перед браузерной стадией.
+
+### F06a: исправление R1 и доставка результатов
+
+Пассивная проверка сессии больше не рассылает событие login. Семь тестов исполняют реальный authScript; unit38 и PG115 прошли, возвращённый дефект делает тест красным. Первая попытка завершилась тайм-аутом 600 секунд без обязательной квитанции; история сохранена. Отдельная доставка сохранённых результатов завершилась за133,844 секунды. Свежая независимая проверка R1 и реальный браузер F06b ещё впереди.
