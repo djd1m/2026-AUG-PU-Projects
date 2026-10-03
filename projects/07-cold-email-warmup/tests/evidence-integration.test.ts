@@ -15,7 +15,7 @@ function observation(end:number,numerator=10,denominator=30):Observation {
 test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t=>{
  const config={...loadConfig(),billingMode:'local_test' as const},pool=createPool(config.databaseUrl);await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket,public_stop_bucket CASCADE');
  const app=await application(config,pool);await new Promise<void>(r=>app.server.listen(0,'127.0.0.1',r));const addr=app.server.address();assert.ok(addr && typeof addr==='object');const base=`http://127.0.0.1:${addr.port}`;
- const request=async(path:string,method='GET',cookie?:string,payload:unknown={},origin:string|undefined=config.origin)=>{
+ const request=async(path:string,method='GET',cookie?:string,payload:unknown={},origin:string|null=config.origin)=>{
   const response=await fetch(base+path,{method,headers:{'Content-Type':'application/json',...(origin?{Origin:origin}:{}),...(cookie?{Cookie:cookie}:{})},body:method==='GET'?undefined:JSON.stringify(payload)});
   const text=await response.text();return {status:response.status,text,data:response.headers.get('content-type')?.includes('application/json')?JSON.parse(text):null,cookie:response.headers.get('set-cookie')?.split(';')[0]};
  };
@@ -49,7 +49,7 @@ test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t
   await t.test('B3 concurrent explicit share yields ONE report/event and payload409',async()=>{
    const key=randomUUID(),payload={baselineId,latestId,idempotencyKey:key};
    assert.equal((await request('/api/reports','POST',undefined,payload)).status,401);
-   assert.equal((await request('/api/reports','POST',owner.cookie,payload,undefined)).status,403);
+   assert.equal((await request('/api/reports','POST',owner.cookie,payload,null)).status,403);
    assert.equal((await request('/api/reports','POST',owner.cookie,{...payload,paid:true})).status,400);
    const results=await Promise.all(Array.from({length:12},()=>request('/api/reports','POST',owner.cookie,payload)));
    assert.ok(results.every(r=>r.status===201));assert.equal(new Set(results.map(r=>r.data.data.url)).size,1);
@@ -60,6 +60,15 @@ test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t
    const html=await request(reportUrl+'?paid=true');assert.equal(html.status,200);assert.ok(html.text.includes('manual/user-confirmed'));
    for(const forbidden of ['PII_EMAIL_CANARY','PII_CREDENTIAL_CANARY','PII_TENANT_CANARY','PII_MAILBOX_CANARY','<script>',tenant,owner.identity.account_id,baselineId,latestId]) assert.ok(!html.text.includes(forbidden));
    assert.ok(html.text.includes('https://source.example'));assert.equal((html.text.match(/data-n7-source-badge/g)??[]).length,1);
+  });
+  await t.test('B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard',async()=>{
+   const b29=await record({...baseline,denominator:29}),l30=await record({...latest,numerator:11});
+   const raw=(await request('/api/reports','POST',owner.cookie,{baselineId:b29,latestId:l30,idempotencyKey:randomUUID()}));assert.equal(raw.status,201);
+   const rawHtml=await request(raw.data.data.url);assert.ok(!rawHtml.text.includes('%'));assert.ok(rawHtml.text.includes('<td>29</td>'));
+   const b30=await record(baseline);
+   const ratio=await request('/api/reports','POST',owner.cookie,{baselineId:b30,latestId:l30,idempotencyKey:randomUUID()});assert.equal(ratio.status,201);assert.ok((await request(ratio.data.data.url)).text.includes('%'));
+   const equalRatio=await record({...latest,numerator:20,denominator:60});assert.equal((await request('/api/reports','POST',owner.cookie,{baselineId:b30,latestId:equalRatio,idempotencyKey:randomUUID()})).data.error.code,'noimprovement');
+   const badWindow=await record({...latest,windowStart:new Date(Date.parse(latest.windowStart)+1).toISOString()});assert.equal((await request('/api/reports','POST',owner.cookie,{baselineId,latestId:badWindow,idempotencyKey:randomUUID()})).data.error.code,'incomparable');
   });
   await t.test('B3 authoritative clock after waiting lock blocks expired create',async()=>{
    const b=await record(observation(Date.now()-8*day)),l=await record(observation(Date.now()-7*day+150,20));
@@ -94,7 +103,7 @@ test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t
    assert.equal((await request('/api/reports/'+reportId+'/events','POST',owner.cookie,{...payload,kind:'link'})).status,409);
    assert.equal((await request('/api/reports/'+reportId+'/events','POST',other.cookie,payload)).status,404);
    assert.equal((await request('/api/reports/'+reportId+'/events','POST',owner.cookie,{kind:'link',idempotencyKey:randomUUID()})).status,200);
-   const status=await request('/api/partner','GET',owner.cookie);assert.equal(status.data.data.events.shares,1);assert.equal(status.data.data.events.copies,1);assert.equal(status.data.data.events.links,1);assert.equal(status.data.data.reward,null);assert.equal(status.data.data.label,'TEST');assert.equal(status.data.data.events.display,'counts_only');
+   const status=await request('/api/partner','GET',owner.cookie);assert.equal(status.data.data.events.shares,3);assert.equal(status.data.data.events.copies,1);assert.equal(status.data.data.events.links,1);assert.equal(status.data.data.reward,null);assert.equal(status.data.data.label,'TEST');assert.equal(status.data.data.events.display,'counts_only');
    assert.equal((await request('/api/partner/'+status.data.data.code,'GET',other.cookie)).status,404);
    const events=await request('/api/growth/events?limit=1','GET',owner.cookie);assert.equal(events.data.data.length,1);assert.deepEqual(Object.keys(events.data.data[0]).sort(),['created_at','kind']);
    assert.deepEqual((await request('/api/growth/events','GET',other.cookie)).data.data,[]);
@@ -109,11 +118,11 @@ test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t
    await pool.query('INSERT INTO evidence_observation(tenant_id,evidence) SELECT $1,$2 FROM generate_series(1,998)',[o,baseline]);
    assert.equal((await request('/api/evidence','POST',other.cookie,baseline)).data.error.code,'history_limit');
    const ids=(await pool.query('SELECT id FROM evidence_observation WHERE tenant_id=$1 LIMIT 2',[o])).rows;
-   await pool.query('UPDATE evidence_observation SET created_at=created_at WHERE id=$1',[ids[0].id]).then(()=>assert.fail('immutable observation'),()=>{});
-   await pool.query('INSERT INTO evidence_report(tenant_id,token,idempotency_key,baseline_id,latest_id,snapshot) SELECT $1,gen_random_uuid()::text,gen_random_uuid()::text,$2,$3,$4 FROM generate_series(1,200)',[o,ids[0].id,ids[1].id,publicProjection(baseline,latest,'ratios')]);
+   await pool.query('UPDATE evidence_observation SET created_at=created_at WHERE id=$1',[ids[0]!.id]).then(()=>assert.fail('immutable observation'),()=>{});
+   await pool.query('INSERT INTO evidence_report(tenant_id,token,idempotency_key,baseline_id,latest_id,snapshot) SELECT $1,gen_random_uuid()::text,gen_random_uuid()::text,$2,$3,$4 FROM generate_series(1,200)',[o,ids[0]!.id,ids[1]!.id,publicProjection(baseline,latest,'ratios')]);
    assert.equal((await request('/api/reports','POST',other.cookie,{baselineId:ob,latestId:ol,idempotencyKey:randomUUID()})).data.error.code,'history_limit');
    const validB=await record(baseline),validL=await record(latest); // owner remains below caps
-   await pool.query('INSERT INTO evidence_event(tenant_id,report_id,kind,idempotency_key) SELECT $1,$2,\'copy\',gen_random_uuid()::text FROM generate_series(1,597)',[tenant,reportId]);
+   await pool.query('INSERT INTO evidence_event(tenant_id,report_id,kind,idempotency_key) SELECT $1,$2,\'copy\',gen_random_uuid()::text FROM generate_series(1,595)',[tenant,reportId]);
    assert.equal((await request('/api/reports','POST',owner.cookie,{baselineId:validB,latestId:validL,idempotencyKey:randomUUID()})).data.error.code,'history_limit');
    const activeReport=(await pool.query('SELECT id FROM evidence_report WHERE tenant_id=$1 AND revoked_at IS NULL LIMIT 1',[tenant])).rows[0].id;
    assert.equal((await request('/api/reports/'+activeReport+'/events','POST',owner.cookie,{kind:'copy',idempotencyKey:randomUUID()})).data.error.code,'history_limit');

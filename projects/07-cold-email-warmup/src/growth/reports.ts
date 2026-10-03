@@ -28,6 +28,7 @@ export class ReportStore {
    const baseline=await ownObservation(db,tenant,baselineId),latest=await ownObservation(db,tenant,latestId);
    const existing=(await db.query('SELECT id,token,baseline_id,latest_id FROM evidence_report WHERE tenant_id=$1 AND idempotency_key=$2',[tenant,key])).rows[0];
    if(existing) {if(existing.baseline_id!==baselineId || existing.latest_id!==latestId) throw new HttpError(409,'idempotency_conflict');return {id:existing.id,url:'/reports/'+existing.token};}
+   if((await db.query('SELECT id FROM evidence_event WHERE tenant_id=$1 AND idempotency_key=$2',[tenant,key])).rowCount) throw new HttpError(409,'idempotency_conflict');
    const result=compare(baseline,latest,await serverNow(db));
    if(!result.shareAllowed) throw new HttpError(409,result.reason);
    const counts=(await db.query('SELECT (SELECT count(*) FROM evidence_report WHERE tenant_id=$1) reports,(SELECT count(*) FROM evidence_event WHERE tenant_id=$1) events',[tenant])).rows[0];

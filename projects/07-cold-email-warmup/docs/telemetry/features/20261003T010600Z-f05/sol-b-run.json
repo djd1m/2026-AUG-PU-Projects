@@ -31,5 +31,21 @@
     "B4",
     "B5",
     "B6"
-  ]
+  ],
+  "local_checks": {
+    "typecheck": 0,
+    "lint": 0,
+    "unit": {
+      "exit": 0,
+      "pass": 25,
+      "fail": 0
+    },
+    "build": null,
+    "pg": null
+  },
+  "queue": {
+    "expected_grant": "2026-10-03T01:53:00Z..01:54:00Z",
+    "source": "parent control01:43:50",
+    "global_lock_held": false
+  }
 }

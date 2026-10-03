@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T010600Z-f05",
+    "work_unit_id": "n7-f05b-sol",
+    "current_attempt_id": "implement-b1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05/sol-b-run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05/sol-b-events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "9944b189a054afd5e7d08a3238226e1109deeda9",
+    "current_revision": "fc1efde8",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/f05-evidence-billing-growth/01-specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/features/f05-evidence-billing-growth/03-architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "9944b189a054afd5e7d08a3238226e1109deeda9",
+      "observed_revision": "9944b189a054afd5e7d08a3238226e1109deeda9",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+    "scope": [
+      "B1 manual observations",
+      "B2 strict comparison",
+      "B3 explicit private-safe shares",
+      "B4 dynamic server entitlement badge",
+      "B5 aggregate events and bounds",
+      "B6 PostgreSQL HTTP evidence"
+    ],
+    "exclusions": [
+      "A accepted code changes",
+      "F06 whole cabinet browser",
+      "real SMTP/IMAP/charges/LLM/deploy/shared proxy"
+    ],
+    "action_limits": [
+      "one writer no agents",
+      "CPU2 global flock ownstack18708 no DBhostports",
+      "HARD deadline01:58 UTC freeze01:51"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-B1",
+        "required": true
+      },
+      {
+        "id": "AC-B2",
+        "required": true
+      },
+      {
+        "id": "AC-B3",
+        "required": true
+      },
+      {
+        "id": "AC-B4",
+        "required": true
+      },
+      {
+        "id": "AC-B5",
+        "required": true
+      },
+      {
+        "id": "AC-B6",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/features/f05-evidence-billing-growth/implementation-a.md"
+          }
+        },
+        "provenance": "accepted revision9944b189",
+        "useful_fragment": "currentEntitlement and PartnerStore API contracts; existing heavy/canary/snapshot scripts",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "no new billing truth or dependency; narrow ownstack adaptation"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; owner hard1500s budget is a bound, not measured prediction",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "A accepted code changes",
+        "F06 whole cabinet browser",
+        "real SMTP/IMAP/charges/LLM/deploy/shared proxy"
+      ],
+      "external_expectations": [
+        "owner hard1500s"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "stage": "plan",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "substantive_rationale": "Retain approved F05 XL public privacy/server entitlement scope; OWN-N7-002",
+      "risk_tier": "XL",
+      "script_input": "src/billing/service.ts db/010-billing.sql",
+      "exit_code": 1
+    },
+    {
+      "stage": "implement",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "substantive_rationale": "Repeated XL before IMPLEMENT; current entitlement authority/public privacy/durable idempotency, no money truth edits",
+      "risk_tier": "XL",
+      "script_input": "src/evidence/store.ts src/growth/reports.ts db/011-evidence.sql proposed new paths",
+      "exit_code": 0
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "XL owner approval, already covered by OWN-N7-002 and explicit work order",
+    "evidence": {
+      "id": "OWN-N7-002",
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "plan_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ]
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "implementation, runtime build pending grant"
+  },
+  "attempts": [
+    {
+      "id": "implement-b1",
+      "status": "running"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n7-f05b-sol",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/f05-evidence-billing-growth/implementation-b.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/telemetry/features/20261003T010600Z-f05/sol-b-receipt.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}
