@@ -1,0 +1,41 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.overlay
+#1 transferring dockerfile: 131B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/n8-ui-e2e-6:8030270f
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 101B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 14.97kB 0.0s done
+#4 DONE 0.0s
+
+#5 [1/4] FROM docker.io/library/n8-ui-e2e-6:8030270f@sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18
+#5 resolve docker.io/library/n8-ui-e2e-6:8030270f@sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18 0.1s done
+#5 DONE 0.1s
+
+#6 [2/4] COPY web /app/web
+#6 CACHED
+
+#7 [3/4] COPY db /app/db
+#7 CACHED
+
+#8 [4/4] COPY scripts /app/scripts
+#8 DONE 0.1s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 0.2s done
+#9 exporting manifest sha256:0441ba0cadd9307d05c62d65e590c2ccfe0a7852639b3ceeecf97196c746c02a 0.1s done
+#9 exporting config sha256:6fa9e483b5b7f6df192f9e1ceddbfe9047479c29872ae85742295efd415c0ae7 0.1s done
+#9 exporting attestation manifest sha256:c8807f0b8fec795f193ca585edb0591add13ce36f3e43d62aa77a9d8df0d590d 0.0s done
+#9 exporting manifest list sha256:1691e968d24c828504b71d122b06992bc0f7c2084ea74c3ff9030a69f74843cf 0.0s done
+#9 naming to docker.io/library/n8-replicate-i8-3:493b7d0c
+#9 naming to docker.io/library/n8-replicate-i8-3:493b7d0c 0.0s done
+#9 unpacking to docker.io/library/n8-replicate-i8-3:493b7d0c 0.1s done
+#9 DONE 0.7s

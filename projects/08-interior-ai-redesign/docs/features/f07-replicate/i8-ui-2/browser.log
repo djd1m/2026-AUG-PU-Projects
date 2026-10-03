@@ -1,0 +1,41 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: all delete refreshes must succeed
++ actual - expected
+
+  [
+    [
++     '/api/jobs?limit=50',
++     200
++   ],
++   [
+      '/api/uploads',
+      200
+    ],
+    [
+      '/api/me',
+
+    at file:///app/scripts/ui/browser-cases.js:185:14
+    at async check (file:///app/scripts/ui/browser.js:23:34)
+    at async extendedCases (file:///app/scripts/ui/browser-cases.js:170:3)
+    at async file:///app/scripts/ui/browser.js:130:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    [ '/api/jobs?limit=50', 200 ],
+    [ '/api/uploads', 200 ],
+    [ '/api/me', 200 ],
+    [ '/api/jobs?limit=50', 200 ]
+  ],
+  expected: [
+    [ '/api/uploads', 200 ],
+    [ '/api/me', 200 ],
+    [ '/api/jobs?limit=50', 200 ]
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.20.0
