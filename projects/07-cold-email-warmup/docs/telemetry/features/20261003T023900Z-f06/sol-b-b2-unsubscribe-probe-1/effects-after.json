@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "result": {
+    "jobs": [
+      {
+        "state": "cancelled",
+        "count": 1
+      },
+      {
+        "state": "submitted",
+        "count": 3
+      },
+      {
+        "state": "queued",
+        "count": 2
+      }
+    ],
+    "consents": [
+      {
+        "scope": "pool",
+        "revoked_at": "2026-10-03T04:27:30.942Z"
+      },
+      {
+        "scope": "campaign",
+        "revoked_at": null
+      }
+    ],
+    "grants": 0
+  }
+}

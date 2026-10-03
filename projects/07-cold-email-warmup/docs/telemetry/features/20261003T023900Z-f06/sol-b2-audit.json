@@ -1,0 +1,260 @@
+{
+  "at": "2026-10-03T04:30:50.061865+00:00",
+  "source_revision": "50e3c26d93327dc16fee89cfbf8252bf5466cffe",
+  "source_sha256": "cbe07f1ca34ec24312cc77ca14625be26dcf7ed07f79a44656b55e6b8cb9d047",
+  "source_mismatches": [],
+  "image_id": "sha256:d537403b927dff7dbdf6a01845545c1430820a9c2da015c49d39fde172a082af",
+  "build_sha256": "45385ec142c3cf23790226575dcbe2b4f7d2d760cd108cab5383e18a81fd8ae8",
+  "build_files": {
+    "dist/auth/password.js": "3decbfaf152c313910d9375d1e8f559df4aa2b40389b1c63561261d5147b594e",
+    "dist/auth/service.js": "5537019db7c50c93d8a61fd00194330558eb01898726ed5017c4d3bf47b1dd2e",
+    "dist/auth/session.js": "a84490dbbd8589da6ae79cecbf7bf9a04c76a9676d3ca948cc8fb811d1a5ffce",
+    "dist/auth/store.js": "0f6a4de099ec4570e9a2a73f03c2364c92fc01af42e228950844a01f0d6f8605",
+    "dist/billing/plans.js": "e60f18d23a9137dc3855135394417f1d50049ef200ee383e384c882e2b996014",
+    "dist/billing/provider.js": "c0010017201707d13c2810741ef90b991dffa91d3792c570ea0fa5954880f6d1",
+    "dist/billing/service.js": "53ecc4f98112c38ffdc947ba4eba782844a16a5074bb2f73cba4d1895b7228f5",
+    "dist/billing/transaction.js": "32cadf1259627dba17799639216cfdb4d115d6393193462983f01e779186148a",
+    "dist/campaigns/input.js": "158771b68468eb317e469a2d10c301235f8258a8a75d6236dfe5bf96c8c8314b",
+    "dist/campaigns/store.js": "ea08589081cda4ae0a6109fa969da951bba6cf35e45fbf5199a4ed3819ee9a8d",
+    "dist/config.js": "048f66e58416f97f375b137e4a849b83a47a3dd16b7cb96d6e4a3cb6b715f3f2",
+    "dist/consent/store.js": "16978d51391388740ba91e20e8074eae2d0563078cfea7250b3300c9ed38d36e",
+    "dist/consent/transaction.js": "3a268f4003f30b94ef64a0cb365c93ac7fdc701eff3a8ab6fe733158c372d46d",
+    "dist/db.js": "8f4f48e3fdcadb34c9c793428736f210dcfbb6103d30fbfa3057ad65c92beb56",
+    "dist/dispatch/adapter.js": "256b32a9deca1bb16f6cab4a4b9678be6f6af7ceb5788a15489668a432272594",
+    "dist/dispatch/eligibility.js": "4784fc9232b20192e8bd36bf0c711f3cbb1a606eac92dab969c228a6716eb713",
+    "dist/dispatch/message.js": "4e0e800ffc4db523cc0a42a491001084fc7e9e74e68aac72adfdd34b4a73f75e",
+    "dist/dispatch/seams.js": "589665ddba8d9d953e0cd4ed6f92c2af5b6496be441d39f3f312f8e81694e8c1",
+    "dist/dispatch/store.js": "bf6a9722d5bd5c4335c3751482433dcb947579f23e6cac1bb2ed2bbc5d9c8150",
+    "dist/dispatch/submission.js": "6978855ae8a31593c99155210484f7becede4ac669a9dce0dabd053f5eadc357",
+    "dist/dispatch/worker.js": "f31cf7ff40b820d14512925b92b27d630b0ce4ce831469cdd4ca1eb278d40006",
+    "dist/errors.js": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+    "dist/evidence/compare.js": "4c6bf10142d92183948ef28f8b091a452439c131598a1f434c9170fa521a1401",
+    "dist/evidence/input.js": "20c881038c36d1cfac6054cd5b54e6110856c9da6c69de49cb8e0a792904a171",
+    "dist/evidence/store.js": "0ecf18bfc6d034fe97a64a13f0b2661480345d564376aeb97d0e06b166652f6a",
+    "dist/growth/attribution.js": "77a5436123d647a265f2ee8cd8e9fb7be915ff1d73f1fca3188517a26e170496",
+    "dist/growth/partner.js": "6de3407bcafcd93c82abc7bf33558fad6237e3e5eec131dbec468c32029e1d71",
+    "dist/growth/reports.js": "9b7674794e103ec5f871eab9f7e14ec83da768b477cc070d32d47e3c09f4d05e",
+    "dist/mailboxes/crypto.js": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+    "dist/mailboxes/input.js": "c98480d2c225225cff7f3ff95e0a47cfc254e9812ea70a9e7bbc372a81e69349",
+    "dist/mailboxes/network.js": "a488dfb27971125116877f3a474286443cbe53dff45513296e7830c221ccaba4",
+    "dist/mailboxes/provider.js": "39dc8b289b8adbd05a5787430ac5f81906f65a1ce0e0328ff504bd7646ce4120",
+    "dist/mailboxes/store.js": "d71528d4bf13d90c1fc198d6d8931410e85e7e1e7bbc78176638993d2ba45934",
+    "dist/main.js": "f87eff8a29e75435ed40957521d348c520b3d0b0feae2fd66ca48460665ce39e",
+    "dist/migrate.js": "4e1d6e130120b08b91404a01325e3a6877f2730ec27f6b49c14e4855e84b4c04",
+    "dist/pool/store.js": "226a25d986e54024534bf2ccd19de76db0d76403ef01db14ed89122c52d6c447",
+    "dist/replies/adapter.js": "5ab2639e9ea3959d7796acc48654a898c688ae7115f4db714459691879fc24b4",
+    "dist/replies/fixture.js": "0ad1425e24bfb1086817483b13b48c0c1cc81fdec89e324f5ef203f55e7a243a",
+    "dist/replies/input.js": "f3555237ed6a4a5d6f9afe9e76457bdef8d131012105a8e603873f97a2dcf666",
+    "dist/replies/operator.js": "2efe8f825d753be0b6c411fb1453fbec57cb60e32b79a837499d5ef82aa190b5",
+    "dist/replies/store.js": "fbd693f3d401dc4b14a8c0e1aff21f8c90339d1d9ec03e3ab66e0404bd612e95",
+    "dist/replies/worker.js": "45ef523ee64d2f9bf901aab58ed60e743679119f5e838340d00d39dbad0c4915",
+    "dist/server.js": "d712c084f55b3cb7fad4ad5eef2a2d6161c488837af78f0a6f541cfca2a10c4b",
+    "dist/suppression/http.js": "6456d9d41cb1b974a69027cd484ba8853dcfcd905e7e92c90f8800b615bb85fd",
+    "dist/suppression/store.js": "7f4b52491cfc211edbd9b5237269854198a2c87e19c8e2721a74a64b487186f7",
+    "dist/web/app.js": "c32f0c87c81e02c2c3d4ed61c1262ccf116a9b7a707df020b81c8004a916a931",
+    "dist/web/billing.js": "101f5fc9c0bf8ddc397f334da1a0991150581b6a34df1cc2f9e4d1b0b221296b",
+    "dist/web/cabinet.js": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+    "dist/web/campaigns.js": "74b45d57c61c144cb2d8e4010535987cb463fefe8be6df8f3edd1bcdf7212920",
+    "dist/web/client.js": "7f1a6b43ef93cf307ef6ca474bac1f2dca6936275a92b12710aebb2308d7337f",
+    "dist/web/dom.js": "56bcb0f26340e34e7f665ada006812025249fdce3f8b8fa6e423bb1cfd31d4d2",
+    "dist/web/evidence.js": "631c2016d1b0a5b457968a59e62a2f9985cb4f685915656422fae205c85a0227",
+    "dist/web/mailboxes.js": "21d5c67257016924e1ad6b6449e628ebf34f8445733a06fe236d538552b9d032",
+    "dist/web/models.js": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+    "dist/web/page.js": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5"
+  },
+  "secret_values_suppressed": true,
+  "runtime_secrets_count": 5,
+  "project_files_scanned": 937,
+  "secret_file_leaks": [],
+  "own_web_logs_secret_leak": false,
+  "credential_canary_web_logs_absent": true,
+  "credential_canary_browser_api": "actual credential submission exercised in b2; response-body absence assertion not instrumented before STOP",
+  "db_no_host_ports": true,
+  "web_loopback_only": true,
+  "cpu_limit": 2.0,
+  "own_network_detached": true,
+  "ui_container_running": true,
+  "http_console_classification": [
+    {
+      "attempt": "sol-b-attempt-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-attempt-2",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-attempt-3",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b2-attempt-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "unsubscribe",
+          "path": "/unsubscribe/q74Aus_JTnWg4DnBAqk4v8bqefgRqYe-nsGkLuOtWDI",
+          "status": 403,
+          "method": "POST",
+          "classification": "unexpected HTTP failure"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "unsubscribe",
+          "url": "http://127.0.0.1:18709/unsubscribe/q74Aus_JTnWg4DnBAqk4v8bqefgRqYe-nsGkLuOtWDI",
+          "http_status": "403",
+          "kind": "error",
+          "classification": "unexpected console error"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "unsubscribe",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-diagnostic-4",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    }
+  ]
+}

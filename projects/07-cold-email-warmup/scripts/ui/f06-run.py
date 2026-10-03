@@ -16,11 +16,11 @@ EXPECTED_IMAGE=binding['image_id'] if binding else 'sha256:a65867e3f1af46b3f4d8a
 EXPECTED_BUILD=binding['build_sha256'] if binding else '110c84753e81699007417bba0cd92e20288bbee938921657c58e33c183299ac6'
 DEST=TRACE/('sol-b-'+RUN); DEST.mkdir(exist_ok=False)
 REMOTE='/opt/browser/n7-f06b-20261003T023900Z-'+RUN
-PROGRESS=pathlib.Path('/tmp/n7-f06b-sol-run/progress.md')
+PROGRESS=pathlib.Path('/tmp/n7-f06b-resume-run/progress.md')
 def now(): return datetime.datetime.now(datetime.timezone.utc).isoformat()
 def call(args, **kw): return subprocess.run(args,check=True,capture_output=True,**kw)
 def event(kind,**kw):
- with (TRACE/('sol-b-r1-browser-events.jsonl' if binding else 'sol-b-events.jsonl')).open('a') as f: f.write(json.dumps({'at':now(),'event':kind,**kw})+'\n')
+ with (TRACE/('sol-b2-browser-events.jsonl' if binding else 'sol-b-events.jsonl')).open('a') as f: f.write(json.dumps({'at':now(),'event':kind,**kw})+'\n')
 lock=open('/tmp/codex-ui-e2e.lock','a'); event('ui-lock-wait'); fcntl.flock(lock,fcntl.LOCK_EX)
 PROGRESS.write_text('UI acquired: '+now()+'\n'); event('ui-lock-acquired')
 added=False; child=None; result_code=1

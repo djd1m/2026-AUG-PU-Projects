@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-03T04:29:58.567937+00:00",
+  "status": "ready",
+  "source_sha256": "cbe07f1ca34ec24312cc77ca14625be26dcf7ed07f79a44656b55e6b8cb9d047",
+  "source_files_matched": 93,
+  "build_sha256": "45385ec142c3cf23790226575dcbe2b4f7d2d760cd108cab5383e18a81fd8ae8",
+  "image_id": "sha256:d537403b927dff7dbdf6a01845545c1430820a9c2da015c49d39fde172a082af",
+  "origin": "http://127.0.0.1:18709",
+  "public_test_url": "http://127.0.0.1:18709/unsubscribe/q74Aus_JTnWg4DnBAqk4v8bqefgRqYe-nsGkLuOtWDI",
+  "scripts": {
+    "f06-unsubscribe-probe.mjs": "38c70714221e0b2a9af858e93554c70df72e857443353ca667371a0458fd015e",
+    "f06-unsubscribe-probe.py": "c1e26091e1e2610460e2a424259f9f17762564b449091b6bee5e77a796ff39b7"
+  },
+  "environment": "own running web CPU2/privatePG; shared Playwright1.63.0 Chromium390",
+  "input_names": [
+    "public TEST token",
+    "existing external runtime files; presence only"
+  ],
+  "command_as_data": [
+    "docker",
+    "exec",
+    "-e",
+    "N7_UI_EVIDENCE=/opt/browser/n7-f06b-20261003T023900Z-b2-unsubscribe-probe-1",
+    "codex-ui-playwright",
+    "node",
+    "/opt/browser/n7-f06b-20261003T023900Z-b2-unsubscribe-probe-1/probe.mjs"
+  ],
+  "effects": [
+    "actual TEST unsubscribe form POST; no browser operator credential",
+    "own network and browser context cleanup"
+  ],
+  "evidence_destination": "/tmp/n7-f06b-resume/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-b2-unsubscribe-probe-1",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}
