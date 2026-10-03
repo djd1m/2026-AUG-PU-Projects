@@ -74,7 +74,7 @@
       "id": "f04-product-ui",
       "name": "Comparison gallery branded sharing and opt-in pages",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f02-generation",
@@ -84,7 +84,8 @@
         "web/public/app.js",
         "web/sharing.js"
       ],
-      "blockers": []
+      "blockers": [],
+      "acceptance": "docs/features/f04b/acceptance.md; local software UI only, realGPU remains f05"
     },
     {
       "id": "f05-real-gpu",
@@ -117,8 +118,10 @@
         "docs/README/ru.md",
         "docs/README/en.md"
       ],
-      "blockers": []
+      "blockers": [
+        "Full acceptance depends on f05 realGPU; independent docs/browser/backup evidence prepared without waiving dependency"
+      ]
     }
   ],
-  "last_completed": "f03-payments"
+  "last_completed": "f04-product-ui"
 }

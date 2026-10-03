@@ -1,0 +1,45 @@
+{
+  "status": "ready",
+  "reason": "Actual same frozen image recreated with PROVIDER_MODE=disabled; HTTPS responds; main42 browser checks passed. Separate disabled-server browser result pending.",
+  "at": "2026-10-03T03:22:01.326237+00:00",
+  "source_revision": "8030270f023d83c9cdd597c4578517a1b58b4b35",
+  "build_revision": "19ea9d39d31aab8b2a7ce005b79e091fadce203d1272c0c44bf1396aa228c00a",
+  "environment": "Owned n8-ui-e2e internal network; app image sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18; Node22.20.0/PG16.10; exact HTTPS origin https://n8-ui.test; disabled provider; CPUtotal2; sharedbrowser remote9320 only temporarynetworkattachment, no sharedbrowsermount/secretenv.",
+  "environment_available": true,
+  "test_command": "docker exec n8-ui-e2e-web-1 timeout 120 node scripts/ui/browser-disabled.js",
+  "inputs": [
+    {
+      "name": "92 committed source files and83 matching runtime/container files",
+      "available": true
+    },
+    {
+      "name": "Owned PG16 DB marker/schema with6 migrations and synthetic upload fixture",
+      "available": true
+    },
+    {
+      "name": "Actual ownweb runtime PROVIDER_MODE=disabled and HTTPS response verified",
+      "available": true
+    },
+    {
+      "name": "Existing Playwright1.63 client packages tree 6751980766486b8c09a9158160008a10c0ca38f05e17fca64f45925d4d8b0e6a",
+      "available": true
+    },
+    {
+      "name": "Fresh Astra logout-control correction ACCEPT; prior source-bound findings closed",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Create synthetic local accounts, media, fenced jobs and verified fixture payments in owned schema only",
+    "Trusted owned SQL seeds for history/expiry/error-state UI tests, visibly software-only",
+    "Forward/delay/drop actual responses and inject native-share promises only for named failure tests",
+    "Write screenshots/results; close owncontexts; later detach browser and remove own stack",
+    "No GPU, external provider, mail, rental, deployment, live charges or public posting"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/features/f04b-fix/ui-e2e-6/disabled"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}
