@@ -1,3 +1,4 @@
+import { createSourceManagementHandler } from './source-management-handler';
 // Синглтоны процесса web: конфигурация, два пула, сервис входа. Создаются лениво при первом запросе (сборка Next.js
 // импортирует модули маршрутов без окружения); отказ конфигурации при старте делает instrumentation.ts.
 // Лимитер и пулы — синглтоны: экземпляр на запрос обходил бы защиту (coding-style.md → Known Gotchas).
@@ -112,5 +113,13 @@ export function handoverRoute(kind: 'issue' | 'accept') {
     return createAcceptHandoverHandler({ ...common, auth, hasher, visitorSecret: config.VISITOR_SECRET,
       authLimitPerHour: config.LIMIT_AUTH_ADDR_HOUR, production: config.production,
       reserve: (keys) => reserveQuotaNow(servicePool, keys) })(request, params.token ?? '');
+  };
+}
+
+export function sourceManagementRoute(kind: 'delete' | 'recrawl' | 'stats') {
+  return async (request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> => {
+    const { config, tenantPool, auth } = getRuntime();
+    return createSourceManagementHandler(kind, { tenantPool, publicBaseUrl: config.PUBLIC_BASE_URL,
+      authenticate: (token) => auth.authenticate(token) })(request, (await context.params).id);
   };
 }

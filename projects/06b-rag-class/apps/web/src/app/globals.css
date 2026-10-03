@@ -81,3 +81,7 @@ button:disabled { opacity: 0.6; cursor: progress; }
 .handover-link { margin: 8px 0; }
 .handover-link p { overflow-wrap: anywhere; }
 .handover-link button { max-width: 100%; }
+
+.source-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.source-actions [role="group"] { flex-basis: 100%; }
+.source-actions button { max-width: 100%; overflow-wrap: anywhere; }

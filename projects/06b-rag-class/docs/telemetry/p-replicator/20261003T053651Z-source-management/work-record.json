@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T053651Z-source-management",
+    "work_unit_id": "source-management-feature",
+    "current_attempt_id": "implementation-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261003T053651Z-source-management/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261003T053651Z-source-management/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "c7e5c65fcf7d880c8eae686d4221053085ca692f",
+    "current_revision": "c7e5c65fcf7d880c8eae686d4221053085ca692f",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "c7e5c65fcf7d880c8eae686d4221053085ca692f",
+      "observed_revision": "c7e5c65fcf7d880c8eae686d4221053085ca692f",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "3915a37da9adc3a6628a79f6a08a10ffca4399e7a585d64be634cb3fe7fbf77e",
+    "scope": [
+      "FR17 SC0171..3 deletion, recrawl, 7day numeric stats; NFR4 retention"
+    ],
+    "exclusions": [
+      "Schema/grants/dependencies unless concrete approvedneed",
+      "Publicdeployment",
+      "Donors",
+      "Transfers into existingaccounts"
+    ],
+    "action_limits": [
+      "Sol high25min exact paths",
+      "Fresh Astra medium8min",
+      "Full mandatory CPU2 mutex checks and realUI"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "SRC-01",
+        "required": true
+      },
+      {
+        "id": "SRC-02",
+        "required": true
+      },
+      {
+        "id": "SRC-03",
+        "required": true
+      },
+      {
+        "id": "SRC-04",
+        "required": true
+      },
+      {
+        "id": "SRC-05",
+        "required": true
+      },
+      {
+        "id": "SRC-06",
+        "required": true
+      },
+      {
+        "id": "SRC-07",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Accepted own N6b foundation/F10/F12",
+        "useful_fragment": "Existing RLS and referral/publication/job/answer seams",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "External donors unnecessary, N6 forbidden"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable ownership-boundary feature",
+      "scope_revision": "3915a37da9adc3a6628a79f6a08a10ffca4399e7a585d64be634cb3fe7fbf77e",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "3915a37da9adc3a6628a79f6a08a10ffca4399e7a585d64be634cb3fe7fbf77e",
+      "tier": "M",
+      "rationale": "Existing tenant lifecycle; full destructive/race/time checks mandatory; mechanicalS lowerbound",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T053651Z-source-management/evidence/route-plan.txt"
+      },
+      "script": {
+        "input": "Three explicit source-management paths",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "3915a37da9adc3a6628a79f6a08a10ffca4399e7a585d64be634cb3fe7fbf77e",
+      "tier": "M",
+      "rationale": "Deletion/retry/worker lock races and retention full gates; mechanicalS lowerbound",
+      "evidence": {
+        "root": "project",
+        "path": "docs/features/source-management/02_validation.md"
+      },
+      "script": {
+        "input": "Explicit DB/handler/retention paths",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Existing explicit continuous owner/root authorization; no new schema/deps/publicrelease scope",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Preparation only; actual E2E requires fresh source/build preflight",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "source-management-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/source-management/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null,
+  "ownership": []
+}

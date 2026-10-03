@@ -79,9 +79,9 @@ export function enqueueSiteSource(pool: Pool, accountId: string, botId: string, 
     await c.query(`INSERT INTO source (bot_id, account_id, kind, url) VALUES ($1, $2, 'site', $3)
       ON CONFLICT (bot_id, url) WHERE kind = 'site' DO NOTHING`, [botId, owner, url]);
     const src = await c.query<{ id: string; account_id: string }>(
-      "SELECT id, account_id FROM source WHERE bot_id = $1 AND kind = 'site' AND url = $2", [botId, url]);
+      "SELECT id, account_id FROM source WHERE bot_id = $1 AND kind = 'site' AND url = $2 FOR UPDATE", [botId, url]);
     const source = src.rows[0];
-    if (!source) throw new Error('источник не найден после вставки: идемпотентный ключ источника не сработал');
+    if (!source) return null; // concurrent source deletion won before our lock
     // Живая задача могла завершиться между конфликтом и чтением — тогда следующая вставка пройдёт. Три круга с запасом.
     for (let round = 0; round < 3; round += 1) {
       const ins = await c.query<{ id: string }>(`INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
@@ -152,7 +152,7 @@ export function listCabinetSources(pool: Pool, accountId: string, selectedId?: s
              (SELECT count(*) FROM chunk ch JOIN document d ON d.id = ch.document_id WHERE d.source_id = s.id) AS fragments
       FROM bot b
       LEFT JOIN source s ON s.bot_id = b.id
-      LEFT JOIN LATERAL (SELECT * FROM index_job x WHERE x.source_id = s.id ORDER BY x.created_at DESC LIMIT 1) j ON true
+      LEFT JOIN LATERAL (SELECT * FROM index_job x WHERE x.source_id = s.id ORDER BY x.created_at DESC, x.id DESC LIMIT 1) j ON true
       WHERE ($1::uuid IS NULL OR b.account_id = $1)
       ORDER BY b.created_at, b.id, s.created_at, s.id`, [selectedId ?? null]);
     return rows.rows.map((r) => ({ bot_id: r.bot_id, bot_name: r.bot_name, source_id: r.source_id, kind: r.kind,

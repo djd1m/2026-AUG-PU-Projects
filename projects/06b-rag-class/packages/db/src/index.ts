@@ -19,3 +19,4 @@ export * from './referral.js';
 export * from './metrics.js';
 export * from './studio.js';
 export * from './handover.js';
+export * from './source-management.js';

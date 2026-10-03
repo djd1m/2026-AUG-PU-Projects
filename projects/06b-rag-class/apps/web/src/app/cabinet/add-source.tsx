@@ -25,7 +25,7 @@ export function AddSource({ botId, busy }: { botId: string; busy: boolean }) {
   }
 
   return (
-    <form className="add-source" onSubmit={submit}>
+    <form id={`add-source-${botId}`} className="add-source" onSubmit={submit}>
       <input type="url" required placeholder="https://ваш-сайт.ru" value={url} onChange={(e) => setUrl(e.target.value)}
         aria-label="Адрес сайта" disabled={busy || pending} />
       <button type="submit" disabled={busy || pending}>Добавить сайт</button>

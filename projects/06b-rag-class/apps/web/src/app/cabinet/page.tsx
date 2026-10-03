@@ -3,7 +3,7 @@
 // колонку password_hash роль кабинета не видит (foundation F-4). Создание бота — следующие фичи дорожной карты.
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import { listHandoverCandidates, listCabinetBots, listCabinetSources, planOf, readCabinetContext } from '@n6b/db';
+import { readBotStats, listHandoverCandidates, listCabinetBots, listCabinetSources, planOf, readCabinetContext } from '@n6b/db';
 import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
 import { publicationOrigins } from '@/server/origin';
@@ -11,7 +11,8 @@ import { publicationEmbedCode } from '@/server/publish-handler';
 import { CreateBot } from './create-bot';
 import { AddSource } from './add-source';
 import { AddPdf } from './add-pdf';
-import { JobStatus } from './job-status';
+import { SourceActions } from './source-actions';
+import { BotStats } from './bot-stats';
 import { LogoutButton } from './logout-button';
 import { BotInteractions } from './bot-interactions';
 import { BadgeRemoval } from './badge-removal';
@@ -39,8 +40,9 @@ export default async function CabinetPage({ searchParams }: {
   const [publicationBots, sources] = await Promise.all([
     listCabinetBots(tenantPool, accountId, selected.id), listCabinetSources(tenantPool, accountId, selected.id),
   ]);
-  const bots = publicationBots.map((bot) => ({ ...bot,
-    sources: sources.filter((source) => source.bot_id === bot.id && source.source_id) }));
+  const bots = await Promise.all(publicationBots.map(async (bot) => ({ ...bot,
+    stats: bot.published ? await readBotStats(tenantPool, accountId, bot.id) : null,
+    sources: sources.filter((source) => source.bot_id === bot.id && source.source_id) })));
 
   return (
     <main className="cabinet">
@@ -58,11 +60,12 @@ export default async function CabinetPage({ searchParams }: {
       {bots.map((bot) => (
         <section key={bot.id} className="bot-card">
           <h2>{bot.name}</h2>
+          {bot.published && bot.stats && <BotStats botId={bot.id} stats={bot.stats} />}
           {bot.sources.map((s) => (
-            <div key={s.source_id} className="source-row">
+            <div key={s.source_id} className="source-row" data-source-id={s.source_id}>
               <p className="source-locator">{s.locator}</p>
-              {s.job ? <JobStatus botId={bot.id} key={`${s.job.job_id}-${s.job.state}`} initial={s.job} />
-                : <p className="job-detail">Задач индексации ещё не было.</p>}
+              <SourceActions key={`${s.source_id}-${s.job?.job_id}-${s.job?.state}`} sourceId={s.source_id!}
+                botId={bot.id} initial={s.job} />
             </div>
           ))}
           <AddSource botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
