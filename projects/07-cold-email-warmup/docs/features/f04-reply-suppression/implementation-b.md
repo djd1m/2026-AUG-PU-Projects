@@ -17,3 +17,12 @@ Poll mode defaults disabled; local_test is explicit, never real IMAP. Each opera
 Runtime: generate files using `N7_RUNTIME_DIR=/tmp/n7-f04b-runtime scripts/local-runtime.sh`; set N7_POLL_MODE=local_test only for local fixtures. Compose `--profile local-poll` adds the isolated poll process without another host port. No live sockets or dependencies added. Operator fixture file paths remain local runtime inputs; do not commit them.
 
 Validation and source/image identities are in `docs/telemetry/features/20261002T232200Z-f04/sol-b-*`. Canonical FR-n7-007 and SC-US-007-4 remain authoritative. Renderer all3kind regressions retained; full cabinet browser UX remains F06. Final receipt declares actual pass/failure and parent review pending.
+
+
+## B-R1 correction: internal polling ownership API
+
+Additive migration009 adds `mailbox_poll.poll_owner` and `local_reply_fixture.generation`; migrations001–008 remain immutable. Every local poll claims a fresh durable UUID without clearing existing completion. `observePoll` records current owner and source generation before adapter I/O. Its trusted transaction guard checks both inside the same eligibility transaction as capture, page, or failure. Seed updates generation for every update, including unchanged UIDVALIDITY, using that same shared lock. A newer owner or generation makes old callbacks no-ops. Adapter snapshots and header reads remain outside DB/advisory transactions; a tail snapshot and the subsequent read share the observed generation until page commit.
+
+`ReplyStore.capture/page/failTail` accept one optional internal `TransactionGuard` parameter. Existing A callers omit it and retain their semantics, signatures' existing arguments, immutable H/tailH, dedup, attempt budgets and explicit retry. No HTTP contract changes. Current missing/failed fixture still pauses. A stale operation can return internal `superseded`; it cannot change the newer run, completion, cursor, attempt, timestamps, observations or effects.
+
+The B5 101-header growth fixture now seeds immediately after the real scan page commits, before the next operation observes generation. Updating the source while an earlier read is pending is deliberately rejected by B-R1. The coverage/H/tailH assertions and all A tests remain intact. Detailed correction evidence belongs to `correction-b-r1.md` and `sol-b-r1-*`; the original review and telemetry remain retained.
